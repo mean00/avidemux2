@@ -1,0 +1,142 @@
+#!/usr/local/bin/perl
+
+###
+### created by: JSC
+### version:    1.1
+### initial:    28.06.2003
+### changelog:  28.07.2003 JSC
+###             * input vs. idx file relation fixed
+###
+
+my ($in,$aFrame,$bFrame,$out) = ("","");
+my ($firstR,$curR,$aR,$bByte,$idy) = (0,0,0,0,"");
+my $inidx = "";
+
+sub usage(){
+   die "Error: $_[0]\nUsage: $0 infile startframe stopframe outfile\n".
+       "   infile     - A NuppelVideo file as input. The corresponding index file\n".
+       "                should be named \"infile.idx\".\n".
+       "                You can simple choose a index file as infile.\n".
+       "   outfile    - The output file in NuppelVideo format. Should not exist.\n".
+       "   startframe - the first wanted frame\n".
+       "   stopframe  - the last wanted frame\n\n";
+}
+
+$in     = shift @ARGV;
+$aFrame = shift @ARGV;
+$bFrame = shift @ARGV;
+$out    = shift @ARGV;
+
+&usage("can't read infile \"$in\"")              if( ! -r "$in" );
+&usage("2. parameter should be a number or '-'") if( $aFrame !~ /^(-|\d+)$/ );
+&usage("3. parameter should be a number or '-'") if( $bFrame !~ /^(-|\d+)$/ );
+&usage("$out already exist")                     if( -r "$out" );
+
+$inidx = "${in}.idx";
+
+{ # check for index file as infile
+  my $buffer;
+   open(IN,"< $in") or die;
+   $_ = sysread(IN,$buffer,5);
+   die "short read ($_)" if( $_ != 5 );
+   if( $buffer eq "ADNV\n" ){
+      print "infile is a NuppelVideo index file\n";
+      $_ = sysread(IN,$buffer,2048);      # $MAXPATH + $MAXFILE + some extra
+      die "short read ($_)" if( $_ < 9 ); # min: "File: a\n"
+      $buffer =~ s/^File: //;
+      $buffer =~ s/\n.*//s;
+      $inidx = $in;
+      $in    = $buffer;
+      print "infile now $in\n";
+   }
+   close(IN);
+}
+
+if( -r "$inidx" ){
+  my $fnum = 0;
+  my ($fR,$cR) = (0,0);
+  my ($aB,$bB) = (0,0);
+  my $AudioSection = 0;
+   open(IN,"< $inidx") or die;
+   while( <IN> ){
+      # a lost V-frame is named L-frame and replaced by it's previous frame
+      # * we have:
+      #   * 3% chance to have a droped frame after a R-frame
+      #   * < 0,1% droped frames
+      #   * no problem for end-cut
+      #   = 3% * 0,1% = 0.003% probability for a L-frame direct after R-frame
+      # * if we cut (start-cut) before a L-frame, we loose all following frames
+      #   until a valid V-frame
+      if( /^Comp:[1L]  Pos :(\d+)/ ){
+        my $pos = $1 - 12;
+         if( $fnum == $aFrame ){
+            $aB = $pos;
+         }
+         if( $fnum == $bFrame + 1){
+            $bB = $pos;
+         }
+         $fnum++;
+      }
+      $AudioSection = 1 if( /^Audio :/ );
+      $AudioSection = 0 if( /^RSync :/ );
+      next if( $AudioSection );
+      if( /^Comp:R  Pos :(\d+)/ ){
+        my $pos = $1 -12;
+         if( $fR == 0 ){
+            $fR = $pos;
+         }else{
+            $cR = $pos if( $pos < $aB );
+         }
+      }
+   }
+   close(IN);
+   $firstR=$fR;
+   $aR=$cR;
+   $bByte=$bB;
+}
+
+{ # error check and parameter consolidation
+  my $msg = "can't cut: 0-$firstR $aR-$bByte\n";
+   die $msg if( $firstR == 0 );
+   if( $aFrame != "-" ){
+      die $msg if( $aR <= $firstR );
+   }else{
+      $aR = $firstR;
+   }
+   if( $bFrame != "-" ){
+      die $msg if( $bByte <= $aR );
+   }else{
+      @_ = stat $in;
+      die "can't stat $in: $!" if( $#_ == -1 );
+      $bByte = $_[7];
+   }
+}
+
+my $buffer;
+open(IN,"< $in")   or die "can't open \"$in\" for reading";
+open(OUT,"> $out") or die "can't open \"$out\" for writing";
+
+# copy trailer up to first R-frame
+$_ = sysread(IN,$buffer,$firstR);
+die "short read ($_)" if( $_ != $firstR );
+$_ = syswrite(OUT,$buffer,$firstR);
+die "short write ($_,$!)" if( ! defined $_ or $_ != $firstR );
+
+# copy the movie
+die "can't seek: $!" if( seek(IN,$aR,0) == 0);
+my $cur = $aR;
+my $len;
+while( $cur < $bByte ){
+   $len = sysread(IN,$buffer,1000000);
+   die "eof found cur=$cur bByte=$bByte len=$len" if( $len == 0);
+   die "error"     if( $len < 0 );
+   $len = $bByte - $cur if( $cur + $len > $bByte );
+   $_ = syswrite(OUT,$buffer,$len);
+   die sprintf("short write ($_,%d)",$!) if( ! defined $_ or $_ != $len );
+   $cur += $len;
+}
+
+close(OUT);
+close(IN);
+
+exit(0);

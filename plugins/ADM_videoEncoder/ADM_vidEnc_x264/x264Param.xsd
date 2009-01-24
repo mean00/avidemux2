@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="x264Config">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="presetConfiguration" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element name="type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="default"/>
+                    <xs:enumeration value="user"/>
+                    <xs:enumeration value="system"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="encodeOptions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="mode">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="CBR"/>
+                    <xs:enumeration value="CQP"/>
+                    <xs:enumeration value="AQP"/>
+                    <xs:enumeration value="2PASS SIZE"/>
+                    <xs:enumeration value="2PASS ABR"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="parameter" type="uint"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="x264Options">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="threads" type="uint"/>
+              <xs:element name="deterministic" type="xs:boolean"/>
+              <xs:element name="idcLevel">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="11"/>
+                    <xs:enumeration value="12"/>
+                    <xs:enumeration value="13"/>
+                    <xs:enumeration value="2"/>
+                    <xs:enumeration value="21"/>
+                    <xs:enumeration value="22"/>
+                    <xs:enumeration value="3"/>
+                    <xs:enumeration value="31"/>
+                    <xs:enumeration value="32"/>
+                    <xs:enumeration value="4"/>
+                    <xs:enumeration value="41"/>
+                    <xs:enumeration value="42"/>
+                    <xs:enumeration value="5"/>
+                    <xs:enumeration value="51"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="vui">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="sarAsInput" type="xs:boolean"/>
+                    <xs:element name="sarHeight" type="uint"/>
+                    <xs:element name="sarWidth" type="uint"/>
+                    <xs:element name="overscan">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="undefined"/>
+                          <xs:enumeration value="show"/>
+                          <xs:enumeration value="crop"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="videoFormat">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="component"/>
+                          <xs:enumeration value="pal"/>
+                          <xs:enumeration value="ntsc"/>
+                          <xs:enumeration value="secam"/>
+                          <xs:enumeration value="mac"/>
+                          <xs:enumeration value="undefined"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="fullRangeSamples" type="xs:boolean"/>
+                    <xs:element name="colorPrimaries">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="undefined"/>
+                          <xs:enumeration value="bt709"/>
+                          <xs:enumeration value="bt470m"/>
+                          <xs:enumeration value="bt470bg"/>
+                          <xs:enumeration value="smpte170m"/>
+                          <xs:enumeration value="smpte240m"/>
+                          <xs:enumeration value="film"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="transfer">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="undefined"/>
+                          <xs:enumeration value="bt709"/>
+                          <xs:enumeration value="bt470m"/>
+                          <xs:enumeration value="bt470bg"/>
+                          <xs:enumeration value="linear"/>
+                          <xs:enumeration value="log100"/>
+                          <xs:enumeration value="log316"/>
+                          <xs:enumeration value="smpte170m"/>
+                          <xs:enumeration value="smpte240m"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="colorMatrix">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="undefined"/>
+                          <xs:enumeration value="bt709"/>
+                          <xs:enumeration value="fcc"/>
+                          <xs:enumeration value="bt470bg"/>
+                          <xs:enumeration value="smpte170m"/>
+                          <xs:enumeration value="smpte240m"/>
+                          <xs:enumeration value="gbr"/>
+                          <xs:enumeration value="ycgco"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="chromaSampleLocation">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="5"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="referenceFrames">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="1"/>
+                    <xs:maxInclusive value="16"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="gopMaximumSize">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="1000"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="gopMinimumSize">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="100"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="scenecutThreshold">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="100"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="preScenecutDetection" type="xs:boolean"/>
+              <xs:element name="bFrames">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="16"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="adaptiveBframeDecision" type="xs:boolean"/>
+              <xs:element name="bFrameBias">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="-100"/>
+                    <xs:maxInclusive value="100"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="bFrameReferences" type="xs:boolean"/>
+              <xs:element name="loopFilter" type="xs:boolean"/>
+              <xs:element name="loopFilterAlphaC0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="-6"/>
+                    <xs:maxInclusive value="6"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="loopFilterBeta">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="-6"/>
+                    <xs:maxInclusive value="6"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cabac" type="xs:boolean"/>
+              <xs:element name="interlaced" type="xs:boolean"/>
+              <xs:element name="cqmPreset">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="flat"/>
+                    <xs:enumeration value="jvt"/>
+                    <xs:enumeration value="custom"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="intra4x4Luma">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="value" type="uint8" minOccurs="16" maxOccurs="16"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="intraChroma">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="value" type="uint8" minOccurs="16" maxOccurs="16"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="inter4x4Luma">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="value" type="uint8" minOccurs="16" maxOccurs="16"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="interChroma">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="value" type="uint8" minOccurs="16" maxOccurs="16"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="intra8x8Luma">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="value" type="uint8" minOccurs="64" maxOccurs="64"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="inter8x8Luma">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="value" type="uint8" minOccurs="64" maxOccurs="64"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="analyse">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="partitionI4x4" type="xs:boolean"/>
+                    <xs:element name="partitionI8x8" type="xs:boolean"/>
+                    <xs:element name="partitionP8x8" type="xs:boolean"/>
+                    <xs:element name="partitionP4x4" type="xs:boolean"/>
+                    <xs:element name="partitionB8x8" type="xs:boolean"/>
+                    <xs:element name="dct8x8" type="xs:boolean"/>
+                    <xs:element name="weightedPrediction" type="xs:boolean"/>
+                    <xs:element name="directPredictionMode">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="none"/>
+                          <xs:enumeration value="spatial"/>
+                          <xs:enumeration value="temporal"/>
+                          <xs:enumeration value="auto"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="directPredictionSize">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="4x4"/>
+                          <xs:enumeration value="8x8"/>
+                          <xs:enumeration value="smallest"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="chromaLumaQuantiserDifference">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="-12"/>
+                          <xs:maxInclusive value="12"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="motionEstimationMethod">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="diamond"/>
+                          <xs:enumeration value="hexagonal"/>
+                          <xs:enumeration value="multi-hexagonal"/>
+                          <xs:enumeration value="exhaustive"/>
+                          <xs:enumeration value="hadamard"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="motionVectorSearchRange">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="64"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="motionVectorLength">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="-1"/>
+                          <xs:maxInclusive value="512"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="motionVectorThreadBuffer" type="xs:integer"/>
+                    <xs:element name="subpixelRefinement">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="1"/>
+                          <xs:maxInclusive value="7"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bidirectionalMotionEstimation" type="xs:boolean"/>
+                    <xs:element name="chromaMotionEstimation" type="xs:boolean"/>
+                    <xs:element name="bFrameRdo" type="xs:boolean"/>
+                    <xs:element name="mixedReferences" type="xs:boolean"/>
+                    <xs:element name="trellis">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="disabled"/>
+                          <xs:enumeration value="finalMacroblock"/>
+                          <xs:enumeration value="allModeDecisions"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="fastPSkip" type="xs:boolean"/>
+                    <xs:element name="dctDecimate" type="xs:boolean"/>
+                    <xs:element name="noiseReduction">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="65536"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="interLumaDeadzone">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="32"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="intraLumaDeadzone">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="32"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="rateControl">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="quantiserMinimum">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="10"/>
+                          <xs:maxInclusive value="51"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="quantiserMaximum">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="10"/>
+                          <xs:maxInclusive value="51"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="quantiserStep">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="10"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="averageBitrateTolerance">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="1"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="vbvMaximumBitrate">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="99999"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="vbvBufferSize">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="99999"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="vbvInitialOccupancy">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="1"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="ipFrameQuantiser">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="1"/>
+                          <xs:maxInclusive value="10"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="pbFrameQuantiser">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="1"/>
+                          <xs:maxInclusive value="10"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="adaptiveQuantiserMode" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="none"/>
+                          <xs:enumeration value="local"/>
+                          <xs:enumeration value="global"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="adaptiveQuantiserStrength" type="xs:float" minOccurs="0"/>
+                    <xs:element name="quantiserCurveCompression">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="1"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="reduceFluxBeforeCurveCompression">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="999"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="reduceFluxAfterCurveCompression">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:float">
+                          <xs:minInclusive value="0"/>
+                          <xs:maxInclusive value="1"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="zone" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="frameStart" type="xs:integer"/>
+                          <xs:element name="frameEnd" type="xs:integer"/>
+                          <xs:choice>
+                            <xs:element name="quantiser" type="quantiser"/>
+                            <xs:element name="bitrateFactor" type="xs:float"/>
+                          </xs:choice>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="accessUnitDelimiters" type="xs:boolean"/>
+              <xs:element name="spsIdentifier">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="3"/>
+                    <xs:enumeration value="7"/>
+                    <xs:enumeration value="15"/>
+                    <xs:enumeration value="31"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="uint">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="uint8">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="quantiser">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="51"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

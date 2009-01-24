@@ -1,0 +1,118 @@
+                                                                                                      |
+                                   TIsophote for AviSynth v2.5.x                                      |
+                                       v0.9.1 (24 July 2004)                                          |
+                                            by tritical                                               |
+                                                                                                      |
+                                             HELP FILE                                                |
+-------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+
+
+INFO:
+
+
+      TIsophote is a level-set (isophote) smoothing filter.  It does simple unconstrained level-set
+   smoothing.  Basically, it can smooth jagged edges in an image.  If over used it will remove jagged 
+   edges as well as object features and eventually completely eliminate all level curves. For a more 
+   in-depth explanation see the technical info towards the bottom of the help file. 
+
+    Or for more info (includes information besides simple unconstrained smoothing):
+
+              http://neuron2.net/library/LSImageReconstruction.pdf
+
+   Syntax =>    TIsophote(int iterations, float tStep, int type, bool chroma)
+
+
+
+PARAMETERS:
+
+
+   iterations
+  
+      Sets the number of iterations used.  More iterations will take more processing time.
+      Increasing the number of iterations while holding tStep constant will result in more and
+      more shortening of the level curves.  Total 'time' of the filter is equal to -
+      iterations*tStep. iterations must be set to at least 1.
+
+      default -  4  (int)
+
+
+   tStep
+
+      Sets the update per iteration.  At 1.0, each iteration is a full cycle of the flow equation.
+      At 0, the original image is always returned.  Generally, lower values produce more "stable"
+      flow but require more iterations.  Recommended values are between 0.1 and 0.5, though setting
+      this to 1.0 is usually ok and simply results in an extra overall smoothing.  While this
+      value can be anything, it really only makes sense when it is 0.0 <= tStep <= 1.0, other values
+      will generally result in garbage output.  This setting could be seen as a strength of smoothing
+      per iteration setting (1.0 being strongest, 0.0 being nothing).  Note:  technically for long run
+      numerical stability this value must be less then 0.25!
+
+      default -  0.2  (float)
+
+
+   type
+
+      Sets how the needed derivatives are calculated.
+
+         type 0 - simplest possible estimate of both first and second derivatives 
+                  (fastest, probably best clean video)
+
+         type 1 - sobel operator for first derivatives, simple estimate for second
+                  (in-between 0 and 2 speed wise and noise wise)
+
+         type 2 - sobel operator for first and similar inherent denoising operator for second
+                  (slowest, probably best for noisy video)   
+  
+      default -  2 (int)
+
+
+   chroma
+
+      If set to true the chroma planes are processed.  If set to false the chroma planes from the
+      source are simply copied to the output frame.
+
+      default - false  (bool)
+   
+
+
+TECHNICAL INFO:
+
+
+   The filter operation is really quite simple, all it does is use the following equation to update the 
+   value of each pixel in the frame after each iteration.
+
+    I(n) = a pixel in the frame at iteration n
+
+    I(n+1) = I(n) + It
+
+    It = ((Ix*Ix*Iyy + 2*Ix*Iy*Ixy + Iy*Iy*Ixx) * tStep) / (Ix*Ix + Iy*Iy + e)
+
+        - e = a very small constant (ex. 10^-10) to prevent division by 0
+        - Ix, Iy, Ixy, Iyy, Ixx are the first and second derivatives of
+          the image at the current pixel location, i.e.
+             Ix = first derivative in x direction
+             Iy = first derivative in y direction, etc...
+      
+
+
+CHANGE LIST:
+
+   07/24/2004  v0.9.1
+       - Changed default values for iterations, type, and chroma parameters
+       - Fixed incorrect clipping for values below 0.  Pixel values were clipped 
+            to 0-255 range but values below 0 were getting clipped to abs(pixel)
+            instead of 0 which would lead to artifacts.
+
+   06/25/2004  v0.9
+       - Initial Release
+
+
+
+TO DO LIST:  
+
+     - bug fixes as needed
+
+
+
+contact:    doom9.org forum (nick = tritical)

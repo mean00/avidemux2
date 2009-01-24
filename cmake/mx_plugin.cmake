@@ -1,0 +1,13 @@
+MACRO(INIT_MUXER _lib)
+    INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_core/include")
+    INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreAudio/include")
+    INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreMuxer/include")
+    INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreUI/include")
+    INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreImage/include")
+    INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreUtils/include")
+ENDMACRO(INIT_MUXER)
+
+MACRO(INSTALL_MUXER _lib)
+        TARGET_LINK_LIBRARIES(${_lib} ADM_core ADM_coreUtils ADM_coreAudio ADM_coreImage ADM_coreUI ADM_core ADM_coreMuxer)
+	INSTALL(TARGETS ${_lib} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins/muxers/")
+ENDMACRO(INSTALL_MUXER)

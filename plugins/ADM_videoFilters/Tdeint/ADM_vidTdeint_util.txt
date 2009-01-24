@@ -1,0 +1,3144 @@
+
+
+ unsigned char vidTDeint::cubicInt(unsigned char p1, unsigned char p2, unsigned char p3, 
+	unsigned char p4)
+{
+	int temp = (int)((19*(p2+p3)-3*(p1+p4)+16)>>5);
+	if (temp>255) temp = 255; 
+	else if (temp<0) temp = 0;
+	return (unsigned char)temp;
+}
+
+void vidTDeint::createMotionMapYV12(ADMImage *prv2, ADMImage *prv, 
+	ADMImage *src, ADMImage *nxt, ADMImage *nxt2, ADMImage *mask, int n)
+{
+	const unsigned char *prv2pY = prv2->GetReadPtr(PLANAR_Y);
+	const unsigned char *prv2pV = prv2->GetReadPtr(PLANAR_V);
+	const unsigned char *prv2pU = prv2->GetReadPtr(PLANAR_U);
+	int prv2_pitchY = prv2->GetPitch(PLANAR_Y);
+	int prv2_pitchUV = prv2->GetPitch(PLANAR_V);
+	prv2pY += prv2_pitchY*(2-PRM(field));
+	prv2pV += prv2_pitchUV*(2-PRM(field));
+	prv2pU += prv2_pitchUV*(2-PRM(field));
+	prv2_pitchY *= 2;
+	prv2_pitchUV *= 2;
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	prvpY += prv_pitchY*(2-PRM(field));
+	prvpV += prv_pitchUV*(2-PRM(field));
+	prvpU += prv_pitchUV*(2-PRM(field));
+	const unsigned char *prvppY = prvpY - prv_pitchY;
+	const unsigned char *prvppV = prvpV - prv_pitchUV;
+	const unsigned char *prvppU = prvpU - prv_pitchUV;
+	const unsigned char *prvpnY = prvpY + prv_pitchY;
+	const unsigned char *prvpnV = prvpV + prv_pitchUV;
+	const unsigned char *prvpnU = prvpU + prv_pitchUV;
+	prv_pitchY *= 2;
+	prv_pitchUV *= 2;
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int WidthY = src->GetRowSize(PLANAR_Y);
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V);
+	int HeightUV = src->GetHeight(PLANAR_V);
+	srcpY += src_pitchY*(2-PRM(field));
+	srcpV += src_pitchUV*(2-PRM(field));
+	srcpU += src_pitchUV*(2-PRM(field));
+	const unsigned char *srcppY = srcpY - src_pitchY;
+	const unsigned char *srcppV = srcpV - src_pitchUV;
+	const unsigned char *srcppU = srcpU - src_pitchUV;
+	const unsigned char *srcpnY = srcpY + src_pitchY;
+	const unsigned char *srcpnV = srcpV + src_pitchUV;
+	const unsigned char *srcpnU = srcpU + src_pitchUV;
+	src_pitchY *= 2;
+	src_pitchUV *= 2;
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	nxtpY += nxt_pitchY*(2-PRM(field));
+	nxtpV += nxt_pitchUV*(2-PRM(field));
+	nxtpU += nxt_pitchUV*(2-PRM(field));
+	const unsigned char *nxtppY = nxtpY - nxt_pitchY;
+	const unsigned char *nxtppV = nxtpV - nxt_pitchUV;
+	const unsigned char *nxtppU = nxtpU - nxt_pitchUV;
+	const unsigned char *nxtpnY = nxtpY + nxt_pitchY;
+	const unsigned char *nxtpnV = nxtpV + nxt_pitchUV;
+	const unsigned char *nxtpnU = nxtpU + nxt_pitchUV;
+	nxt_pitchY *= 2;
+	nxt_pitchUV *= 2;
+	const unsigned char *nxt2pY = nxt2->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxt2pV = nxt2->GetReadPtr(PLANAR_V);
+	const unsigned char *nxt2pU = nxt2->GetReadPtr(PLANAR_U);
+	int nxt2_pitchY = nxt2->GetPitch(PLANAR_Y);
+	int nxt2_pitchUV = nxt2->GetPitch(PLANAR_V);
+	nxt2pY += nxt2_pitchY*(2-PRM(field));
+	nxt2pV += nxt2_pitchUV*(2-PRM(field));
+	nxt2pU += nxt2_pitchUV*(2-PRM(field));
+	nxt2_pitchY *= 2;
+	nxt2_pitchUV *= 2;
+	unsigned char *maskwY = mask->GetWritePtr(PLANAR_Y);
+	unsigned char *maskwV = mask->GetWritePtr(PLANAR_V);
+	unsigned char *maskwU = mask->GetWritePtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	memset(maskwY,10,mask_pitchY*HeightY);
+	memset(maskwU,10,mask_pitchUV*HeightUV);
+	memset(maskwV,10,mask_pitchUV*HeightUV);
+	maskwY += mask_pitchY*(2-PRM(field));
+	maskwV += mask_pitchUV*(2-PRM(field));
+	maskwU += mask_pitchUV*(2-PRM(field));
+	mask_pitchY *= 2;
+	mask_pitchUV *= 2;
+	int x, y;
+	unsigned char val1;
+	bool t1, t2, t3, t4, t5, t6, t7;
+	if (PRM(field)^PRM(order))
+	{
+		val1 = PRM(mntmode) > 1 ? (accumP <= accumN ? 10 : 30) : 40;
+		if (n <= 1 || n >= nfrms-1)
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = n == 0 ? false : (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = n == nfrms ? false : (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = n == nfrms ? false : (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = n == 0 ? false : (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t6 = n == nfrms ? false : (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					t7 = n >= nfrms-1 ? false : (abs(nxtpY[x] - nxt2pY[x]) < mthreshL);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwY[x] = val1;
+					else if (t1 && t5 && t2) maskwY[x] = 10;
+					else if (t3 && t7 && t4) maskwY[x] = 30;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else if (abs(nxtpY[x]-srcppY[x])<4 && abs(nxtpY[x]-srcpnY[x])<4) maskwY[x] = 130;
+					else maskwY[x] = 60;
+				}
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				nxt2pY += nxt2_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = n == 0 ? false : (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t6 = n == nfrms ? false : (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					t7 = n >= nfrms-1 ? false : (abs(nxtpV[x] - nxt2pV[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwV[x] = val1;
+					else if (t1 && t5 && t2) maskwV[x] = 10;
+					else if (t3 && t7 && t4) maskwV[x] = 30;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else if (abs(nxtpV[x]-srcppV[x])<4 && abs(nxtpV[x]-srcpnV[x])<4) maskwV[x] = 130;
+					else maskwV[x] = 60;
+					t1 = n == 0 ? false : (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = n == 0 ? false : (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t6 = n == nfrms ? false : (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					t7 = n >= nfrms-1 ? false : (abs(nxtpU[x] - nxt2pU[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwU[x] = val1;
+					else if (t1 && t5 && t2) maskwU[x] = 10;
+					else if (t3 && t7 && t4) maskwU[x] = 30;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else if (abs(nxtpU[x]-srcppU[x])<4 && abs(nxtpU[x]-srcpnU[x])<4) maskwU[x] = 130;
+					else maskwU[x] = 60;
+				}
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				nxt2pV += nxt2_pitchUV;
+				nxt2pU += nxt2_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+		else
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t6 = (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					t7 = (abs(nxtpY[x] - nxt2pY[x]) < mthreshL);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwY[x] = val1;
+					else if (t1 && t5 && t2) maskwY[x] = 10;
+					else if (t3 && t7 && t4) maskwY[x] = 30;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else if (abs(nxtpY[x]-srcppY[x])<4 && abs(nxtpY[x]-srcpnY[x])<4) maskwY[x] = 130;
+					else maskwY[x] = 60;
+				}
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				nxt2pY += nxt2_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t6 = (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					t7 = (abs(nxtpV[x] - nxt2pV[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwV[x] = val1;
+					else if (t1 && t5 && t2) maskwV[x] = 10;
+					else if (t3 && t7 && t4) maskwV[x] = 30;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else if (abs(nxtpV[x]-srcppV[x])<4 && abs(nxtpV[x]-srcpnV[x])<4) maskwV[x] = 130;
+					else maskwV[x] = 60;
+					t1 = (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t6 = (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					t7 = (abs(nxtpU[x] - nxt2pU[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwU[x] = val1;
+					else if (t1 && t5 && t2) maskwU[x] = 10;
+					else if (t3 && t7 && t4) maskwU[x] = 30;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else if (abs(nxtpU[x]-srcppU[x])<4 && abs(nxtpU[x]-srcpnU[x])<4) maskwU[x] = 130;
+					else maskwU[x] = 60;
+				}
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				nxt2pV += nxt2_pitchUV;
+				nxt2pU += nxt2_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+	}
+	else
+	{
+		val1 = PRM(mntmode) > 1 ? (accumP < accumN ? 20 : 10) : 50;
+		if (n <= 1 || n >= nfrms-1)
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = n == 0 ? false : (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = n == nfrms ? false : (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = n == nfrms ? false : (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = n <= 1 ? false : (abs(prvpY[x] - prv2pY[x]) < mthreshL);
+					t6 = n == 0 ? false : (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t7 = n == nfrms ? false : (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwY[x] = val1;
+					else if (t1 && t5 && t2) maskwY[x] = 20;
+					else if (t3 && t7 && t4) maskwY[x] = 10;
+					else if (abs(prvpY[x]-srcppY[x])<4 && abs(prvpY[x]-srcpnY[x])<4) maskwY[x] = 120;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else maskwY[x] = 60;
+				}
+				prv2pY += prv2_pitchY;
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = n <= 1 ? false : (abs(prvpV[x] - prv2pV[x]) < mthreshC);
+					t6 = n == 0 ? false : (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t7 = n == nfrms ? false : (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwV[x] = val1;
+					else if (t1 && t5 && t2) maskwV[x] = 20;
+					else if (t3 && t7 && t4) maskwV[x] = 10;
+					else if (abs(prvpV[x]-srcppV[x])<4 && abs(prvpV[x]-srcpnV[x])<4) maskwV[x] = 120;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else maskwV[x] = 60;
+					t1 = n == 0 ? false : (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = n <= 1 ? false : (abs(prvpU[x] - prv2pU[x]) < mthreshC);
+					t6 = n == 0 ? false : (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t7 = n == nfrms ? false : (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwU[x] = val1;
+					else if (t1 && t5 && t2) maskwU[x] = 20;
+					else if (t3 && t7 && t4) maskwU[x] = 10;
+					else if (abs(prvpU[x]-srcppU[x])<4 && abs(prvpU[x]-srcpnU[x])<4) maskwU[x] = 120;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else maskwU[x] = 60;
+				}
+				prv2pV += prv2_pitchUV;
+				prv2pU += prv2_pitchUV;
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+		else
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = (abs(prvpY[x] - prv2pY[x]) < mthreshL);
+					t6 = (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t7 = (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwY[x] = val1;
+					else if (t1 && t5 && t2) maskwY[x] = 20;
+					else if (t3 && t7 && t4) maskwY[x] = 10;
+					else if (abs(prvpY[x]-srcppY[x])<4 && abs(prvpY[x]-srcpnY[x])<4) maskwY[x] = 120;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else maskwY[x] = 60;
+				}
+				prv2pY += prv2_pitchY;
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = (abs(prvpV[x] - prv2pV[x]) < mthreshC);
+					t6 = (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t7 = (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwV[x] = val1;
+					else if (t1 && t5 && t2) maskwV[x] = 20;
+					else if (t3 && t7 && t4) maskwV[x] = 10;
+					else if (abs(prvpV[x]-srcppV[x])<4 && abs(prvpV[x]-srcpnV[x])<4) maskwV[x] = 120;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else maskwV[x] = 60;
+					t1 = (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = (abs(prvpU[x] - prv2pU[x]) < mthreshC);
+					t6 = (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t7 = (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					if (t6 && ((t1 && t2) || (t3 && t4) || (t2 && t4 && (t5 || t7)) || (t1 && t3 && (t5 || t7))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7) maskwU[x] = val1;
+					else if (t1 && t5 && t2) maskwU[x] = 20;
+					else if (t3 && t7 && t4) maskwU[x] = 10;
+					else if (abs(prvpU[x]-srcppU[x])<4 && abs(prvpU[x]-srcpnU[x])<4) maskwU[x] = 120;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else maskwU[x] = 60;
+				}
+				prv2pV += prv2_pitchUV;
+				prv2pU += prv2_pitchUV;
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+	}
+}
+
+void vidTDeint::createMotionMap2YV12(ADMImage *prv2, ADMImage *prv, 
+	ADMImage *src, ADMImage *nxt, ADMImage *nxt2, ADMImage *mask, int n)
+{
+	const unsigned char *prv2pY = prv2->GetReadPtr(PLANAR_Y);
+	const unsigned char *prv2pV = prv2->GetReadPtr(PLANAR_V);
+	const unsigned char *prv2pU = prv2->GetReadPtr(PLANAR_U);
+	int prv2_pitchY = prv2->GetPitch(PLANAR_Y);
+	int prv2_pitchUV = prv2->GetPitch(PLANAR_V);
+	prv2pY += prv2_pitchY*(2-PRM(field));
+	prv2pV += prv2_pitchUV*(2-PRM(field));
+	prv2pU += prv2_pitchUV*(2-PRM(field));
+	const unsigned char *prv2ppY = prv2pY - prv2_pitchY;
+	const unsigned char *prv2ppV = prv2pV - prv2_pitchUV;
+	const unsigned char *prv2ppU = prv2pU - prv2_pitchUV;
+	const unsigned char *prv2pnY = prv2pY + prv2_pitchY;
+	const unsigned char *prv2pnV = prv2pV + prv2_pitchUV;
+	const unsigned char *prv2pnU = prv2pU + prv2_pitchUV;
+	prv2_pitchY *= 2;
+	prv2_pitchUV *= 2;
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	prvpY += prv_pitchY*(2-PRM(field));
+	prvpV += prv_pitchUV*(2-PRM(field));
+	prvpU += prv_pitchUV*(2-PRM(field));
+	const unsigned char *prvppY = prvpY - prv_pitchY;
+	const unsigned char *prvppV = prvpV - prv_pitchUV;
+	const unsigned char *prvppU = prvpU - prv_pitchUV;
+	const unsigned char *prvpnY = prvpY + prv_pitchY;
+	const unsigned char *prvpnV = prvpV + prv_pitchUV;
+	const unsigned char *prvpnU = prvpU + prv_pitchUV;
+	prv_pitchY *= 2;
+	prv_pitchUV *= 2;
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int WidthY = src->GetRowSize(PLANAR_Y);
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V);
+	int HeightUV = src->GetHeight(PLANAR_V);
+	srcpY += src_pitchY*(2-PRM(field));
+	srcpV += src_pitchUV*(2-PRM(field));
+	srcpU += src_pitchUV*(2-PRM(field));
+	const unsigned char *srcppY = srcpY - src_pitchY;
+	const unsigned char *srcppV = srcpV - src_pitchUV;
+	const unsigned char *srcppU = srcpU - src_pitchUV;
+	const unsigned char *srcpnY = srcpY + src_pitchY;
+	const unsigned char *srcpnV = srcpV + src_pitchUV;
+	const unsigned char *srcpnU = srcpU + src_pitchUV;
+	src_pitchY *= 2;
+	src_pitchUV *= 2;
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	nxtpY += nxt_pitchY*(2-PRM(field));
+	nxtpV += nxt_pitchUV*(2-PRM(field));
+	nxtpU += nxt_pitchUV*(2-PRM(field));
+	const unsigned char *nxtppY = nxtpY - nxt_pitchY;
+	const unsigned char *nxtppV = nxtpV - nxt_pitchUV;
+	const unsigned char *nxtppU = nxtpU - nxt_pitchUV;
+	const unsigned char *nxtpnY = nxtpY + nxt_pitchY;
+	const unsigned char *nxtpnV = nxtpV + nxt_pitchUV;
+	const unsigned char *nxtpnU = nxtpU + nxt_pitchUV;
+	nxt_pitchY *= 2;
+	nxt_pitchUV *= 2;
+	const unsigned char *nxt2pY = nxt2->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxt2pV = nxt2->GetReadPtr(PLANAR_V);
+	const unsigned char *nxt2pU = nxt2->GetReadPtr(PLANAR_U);
+	int nxt2_pitchY = nxt2->GetPitch(PLANAR_Y);
+	int nxt2_pitchUV = nxt2->GetPitch(PLANAR_V);
+	nxt2pY += nxt2_pitchY*(2-PRM(field));
+	nxt2pV += nxt2_pitchUV*(2-PRM(field));
+	nxt2pU += nxt2_pitchUV*(2-PRM(field));
+	const unsigned char *nxt2ppY = nxt2pY - nxt2_pitchY;
+	const unsigned char *nxt2ppV = nxt2pV - nxt2_pitchUV;
+	const unsigned char *nxt2ppU = nxt2pU - nxt2_pitchUV;
+	const unsigned char *nxt2pnY = nxt2pY + nxt2_pitchY;
+	const unsigned char *nxt2pnV = nxt2pV + nxt2_pitchUV;
+	const unsigned char *nxt2pnU = nxt2pU + nxt2_pitchUV;
+	nxt2_pitchY *= 2;
+	nxt2_pitchUV *= 2;
+	unsigned char *maskwY = mask->GetWritePtr(PLANAR_Y);
+	unsigned char *maskwV = mask->GetWritePtr(PLANAR_V);
+	unsigned char *maskwU = mask->GetWritePtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	memset(maskwY,10,mask_pitchY*HeightY);
+	memset(maskwU,10,mask_pitchUV*HeightUV);
+	memset(maskwV,10,mask_pitchUV*HeightUV);
+	maskwY += mask_pitchY*(2-PRM(field));
+	maskwV += mask_pitchUV*(2-PRM(field));
+	maskwU += mask_pitchUV*(2-PRM(field));
+	mask_pitchY *= 2;
+	mask_pitchUV *= 2;
+	int x, y;
+	unsigned char val1;
+	bool t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
+	bool t11, t12, t13, t14, t15, t16, t17, t18, t19;
+	if (PRM(field)^PRM(order))
+	{
+		val1 = PRM(mntmode) > 1 ? (accumP <= accumN ? 10 : 30) : 40;
+		if (n <= 1 || n >= nfrms-1)
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = n == 0 ? false : (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = n == nfrms ? false : (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = n == nfrms ? false : (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = n == 0 ? false : (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t6 = n == nfrms ? false : (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					t7 = n >= nfrms-1 ? false : (abs(nxtpY[x] - nxt2pY[x]) < mthreshL);
+					t8 = n <= 1 ? false : (abs(prvppY[x] - prv2ppY[x]) < mthreshL);
+					t9 = n <= 1 ? false : (abs(prvpnY[x] - prv2pnY[x]) < mthreshL);
+					t10 = n >= nfrms-1 ? false : (abs(nxtppY[x] - nxt2ppY[x]) < mthreshL);
+					t11 = n >= nfrms-1 ? false : (abs(nxtpnY[x] - nxt2pnY[x]) < mthreshL);
+					t12 = (abs(srcppY[x] - prv2ppY[x]) < mthreshL);
+					t13 = (abs(srcpnY[x] - prv2pnY[x]) < mthreshL);
+					t14 = (abs(nxtppY[x] - prvppY[x]) < mthreshL);
+					t15 = (abs(nxtpnY[x] - prvpnY[x]) < mthreshL);
+					t16 = (abs(nxt2ppY[x] - srcppY[x]) < mthreshL);
+					t17 = (abs(nxt2pnY[x] - srcpnY[x]) < mthreshL);
+					t18 = (abs(nxtpY[x] - prvpY[x]) < mthreshL);
+					t19 = (abs(nxt2pY[x] - srcpY[x]) < mthreshL);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwY[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwY[x] = 10;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwY[x] = 30;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else if (abs(nxtpY[x]-srcppY[x])<4 && abs(nxtpY[x]-srcpnY[x])<4) maskwY[x] = 130;
+					else maskwY[x] = 60;
+				}
+				prv2ppY += prv2_pitchY;
+				prv2pY += prv2_pitchY;
+				prv2pnY += prv2_pitchY;
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				nxt2ppY += nxt2_pitchY;
+				nxt2pY += nxt2_pitchY;
+				nxt2pnY += nxt2_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = n == 0 ? false : (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t6 = n == nfrms ? false : (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					t7 = n >= nfrms-1 ? false : (abs(nxtpV[x] - nxt2pV[x]) < mthreshC);
+					t8 = n <= 1 ? false : (abs(prvppV[x] - prv2ppV[x]) < mthreshC);
+					t9 = n <= 1 ? false : (abs(prvpnV[x] - prv2pnV[x]) < mthreshC);
+					t10 = n >= nfrms-1 ? false : (abs(nxtppV[x] - nxt2ppV[x]) < mthreshC);
+					t11 = n >= nfrms-1 ? false : (abs(nxtpnV[x] - nxt2pnV[x]) < mthreshC);
+					t12 = (abs(srcppV[x] - prv2ppV[x]) < mthreshC);
+					t13 = (abs(srcpnV[x] - prv2pnV[x]) < mthreshC);
+					t14 = (abs(nxtppV[x] - prvppV[x]) < mthreshC);
+					t15 = (abs(nxtpnV[x] - prvpnV[x]) < mthreshC);
+					t16 = (abs(nxt2ppV[x] - srcppV[x]) < mthreshC);
+					t17 = (abs(nxt2pnV[x] - srcpnV[x]) < mthreshC);
+					t18 = (abs(nxtpV[x] - prvpV[x]) < mthreshC);
+					t19 = (abs(nxt2pV[x] - srcpV[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwV[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwV[x] = 10;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwV[x] = 30;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else if (abs(nxtpV[x]-srcppV[x])<4 && abs(nxtpV[x]-srcpnV[x])<4) maskwV[x] = 130;
+					else maskwV[x] = 60;
+					t1 = n == 0 ? false : (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = n == 0 ? false : (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t6 = n == nfrms ? false : (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					t7 = n >= nfrms-1 ? false : (abs(nxtpU[x] - nxt2pU[x]) < mthreshC);
+					t8 = n <= 1 ? false : (abs(prvppU[x] - prv2ppU[x]) < mthreshC);
+					t9 = n <= 1 ? false : (abs(prvpnU[x] - prv2pnU[x]) < mthreshC);
+					t10 = n >= nfrms-1 ? false : (abs(nxtppU[x] - nxt2ppU[x]) < mthreshC);
+					t11 = n >= nfrms-1 ? false : (abs(nxtpnU[x] - nxt2pnU[x]) < mthreshC);
+					t12 = (abs(srcppU[x] - prv2ppU[x]) < mthreshC);
+					t13 = (abs(srcpnU[x] - prv2pnU[x]) < mthreshC);
+					t14 = (abs(nxtppU[x] - prvppU[x]) < mthreshC);
+					t15 = (abs(nxtpnU[x] - prvpnU[x]) < mthreshC);
+					t16 = (abs(nxt2ppU[x] - srcppU[x]) < mthreshC);
+					t17 = (abs(nxt2pnU[x] - srcpnU[x]) < mthreshC);
+					t18 = (abs(nxtpU[x] - prvpU[x]) < mthreshC);
+					t19 = (abs(nxt2pU[x] - srcpU[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwU[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwU[x] = 10;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwU[x] = 30;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else if (abs(nxtpU[x]-srcppU[x])<4 && abs(nxtpU[x]-srcpnU[x])<4) maskwU[x] = 130;
+					else maskwU[x] = 60;
+				}
+				prv2ppV += prv2_pitchUV;
+				prv2pV += prv2_pitchUV;
+				prv2pnV += prv2_pitchUV;
+				prv2ppU += prv2_pitchUV;
+				prv2pU += prv2_pitchUV;
+				prv2pnU += prv2_pitchUV;
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				nxt2ppV += nxt2_pitchUV;
+				nxt2pV += nxt2_pitchUV;
+				nxt2pnV += nxt2_pitchUV;
+				nxt2ppU += nxt2_pitchUV;
+				nxt2pU += nxt2_pitchUV;
+				nxt2pnU += nxt2_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+		else
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t6 = (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					t7 = (abs(nxtpY[x] - nxt2pY[x]) < mthreshL);
+					t8 = (abs(prvppY[x] - prv2ppY[x]) < mthreshL);
+					t9 = (abs(prvpnY[x] - prv2pnY[x]) < mthreshL);
+					t10 = (abs(nxtppY[x] - nxt2ppY[x]) < mthreshL);
+					t11 = (abs(nxtpnY[x] - nxt2pnY[x]) < mthreshL);
+					t12 = (abs(srcppY[x] - prv2ppY[x]) < mthreshL);
+					t13 = (abs(srcpnY[x] - prv2pnY[x]) < mthreshL);
+					t14 = (abs(nxtppY[x] - prvppY[x]) < mthreshL);
+					t15 = (abs(nxtpnY[x] - prvpnY[x]) < mthreshL);
+					t16 = (abs(nxt2ppY[x] - srcppY[x]) < mthreshL);
+					t17 = (abs(nxt2pnY[x] - srcpnY[x]) < mthreshL);
+					t18 = (abs(nxtpY[x] - prvpY[x]) < mthreshL);
+					t19 = (abs(nxt2pY[x] - srcpY[x]) < mthreshL);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwY[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwY[x] = 10;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwY[x] = 30;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else if (abs(nxtpY[x]-srcppY[x])<4 && abs(nxtpY[x]-srcpnY[x])<4) maskwY[x] = 130;
+					else maskwY[x] = 60;
+				}
+				prv2ppY += prv2_pitchY;
+				prv2pY += prv2_pitchY;
+				prv2pnY += prv2_pitchY;
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				nxt2ppY += nxt2_pitchY;
+				nxt2pY += nxt2_pitchY;
+				nxt2pnY += nxt2_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t6 = (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					t7 = (abs(nxtpV[x] - nxt2pV[x]) < mthreshC);
+					t8 = (abs(prvppV[x] - prv2ppV[x]) < mthreshC);
+					t9 = (abs(prvpnV[x] - prv2pnV[x]) < mthreshC);
+					t10 = (abs(nxtppV[x] - nxt2ppV[x]) < mthreshC);
+					t11 = (abs(nxtpnV[x] - nxt2pnV[x]) < mthreshC);
+					t12 = (abs(srcppV[x] - prv2ppV[x]) < mthreshC);
+					t13 = (abs(srcpnV[x] - prv2pnV[x]) < mthreshC);
+					t14 = (abs(nxtppV[x] - prvppV[x]) < mthreshC);
+					t15 = (abs(nxtpnV[x] - prvpnV[x]) < mthreshC);
+					t16 = (abs(nxt2ppV[x] - srcppV[x]) < mthreshC);
+					t17 = (abs(nxt2pnV[x] - srcpnV[x]) < mthreshC);
+					t18 = (abs(nxtpV[x] - prvpV[x]) < mthreshC);
+					t19 = (abs(nxt2pV[x] - srcpV[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwV[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwV[x] = 10;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwV[x] = 30;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else if (abs(nxtpV[x]-srcppV[x])<4 && abs(nxtpV[x]-srcpnV[x])<4) maskwV[x] = 130;
+					else maskwV[x] = 60;
+					t1 = (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t6 = (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					t7 = (abs(nxtpU[x] - nxt2pU[x]) < mthreshC);
+					t8 = (abs(prvppU[x] - prv2ppU[x]) < mthreshC);
+					t9 = (abs(prvpnU[x] - prv2pnU[x]) < mthreshC);
+					t10 = (abs(nxtppU[x] - nxt2ppU[x]) < mthreshC);
+					t11 = (abs(nxtpnU[x] - nxt2pnU[x]) < mthreshC);
+					t12 = (abs(srcppU[x] - prv2ppU[x]) < mthreshC);
+					t13 = (abs(srcpnU[x] - prv2pnU[x]) < mthreshC);
+					t14 = (abs(nxtppU[x] - prvppU[x]) < mthreshC);
+					t15 = (abs(nxtpnU[x] - prvpnU[x]) < mthreshC);
+					t16 = (abs(nxt2ppU[x] - srcppU[x]) < mthreshC);
+					t17 = (abs(nxt2pnU[x] - srcpnU[x]) < mthreshC);
+					t18 = (abs(nxtpU[x] - prvpU[x]) < mthreshC);
+					t19 = (abs(nxt2pU[x] - srcpU[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwU[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwU[x] = 10;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwU[x] = 30;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else if (abs(nxtpU[x]-srcppU[x])<4 && abs(nxtpU[x]-srcpnU[x])<4) maskwU[x] = 130;
+					else maskwU[x] = 60;
+				}
+				prv2ppV += prv2_pitchUV;
+				prv2pV += prv2_pitchUV;
+				prv2pnV += prv2_pitchUV;
+				prv2ppU += prv2_pitchUV;
+				prv2pU += prv2_pitchUV;
+				prv2pnU += prv2_pitchUV;
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				nxt2ppV += nxt2_pitchUV;
+				nxt2pV += nxt2_pitchUV;
+				nxt2pnV += nxt2_pitchUV;
+				nxt2ppU += nxt2_pitchUV;
+				nxt2pU += nxt2_pitchUV;
+				nxt2pnU += nxt2_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+	}
+	else
+	{
+		val1 = PRM(mntmode) > 1 ? (accumP < accumN ? 20 : 10) : 50;
+		if (n <= 1 || n >= nfrms-1)
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = n == 0 ? false : (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = n == nfrms ? false : (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = n == nfrms ? false : (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = n <= 1 ? false : (abs(prvpY[x] - prv2pY[x]) < mthreshL);
+					t6 = n == 0 ? false : (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t7 = n == nfrms ? false : (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					t8 = n <= 1 ? false : (abs(prvppY[x] - prv2ppY[x]) < mthreshL);
+					t9 = n <= 1 ? false : (abs(prvpnY[x] - prv2pnY[x]) < mthreshL);
+					t10 = n >= nfrms-1 ? false : (abs(nxtppY[x] - nxt2ppY[x]) < mthreshL);
+					t11 = n >= nfrms-1 ? false : (abs(nxtpnY[x] - nxt2pnY[x]) < mthreshL);
+					t12 = (abs(srcppY[x] - prv2ppY[x]) < mthreshL);
+					t13 = (abs(srcpnY[x] - prv2pnY[x]) < mthreshL);
+					t14 = (abs(nxtppY[x] - prvppY[x]) < mthreshL);
+					t15 = (abs(nxtpnY[x] - prvpnY[x]) < mthreshL);
+					t16 = (abs(nxt2ppY[x] - srcppY[x]) < mthreshL);
+					t17 = (abs(nxt2pnY[x] - srcpnY[x]) < mthreshL);
+					t18 = (abs(srcpY[x] - prv2pY[x]) < mthreshL);
+					t19 = (abs(nxtpY[x] - prvpY[x]) < mthreshL);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwY[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwY[x] = 20;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwY[x] = 10;
+					else if (abs(prvpY[x]-srcppY[x])<4 && abs(prvpY[x]-srcpnY[x])<4) maskwY[x] = 120;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else maskwY[x] = 60;
+				}
+				prv2ppY += prv2_pitchY;
+				prv2pY += prv2_pitchY;
+				prv2pnY += prv2_pitchY;
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				nxt2ppY += nxt2_pitchY;
+				nxt2pY += nxt2_pitchY;
+				nxt2pnY += nxt2_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = n == 0 ? false : (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = n <= 1 ? false : (abs(prvpV[x] - prv2pV[x]) < mthreshC);
+					t6 = n == 0 ? false : (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t7 = n == nfrms ? false : (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					t8 = n <= 1 ? false : (abs(prvppV[x] - prv2ppV[x]) < mthreshC);
+					t9 = n <= 1 ? false : (abs(prvpnV[x] - prv2pnV[x]) < mthreshC);
+					t10 = n >= nfrms-1 ? false : (abs(nxtppV[x] - nxt2ppV[x]) < mthreshC);
+					t11 = n >= nfrms-1 ? false : (abs(nxtpnV[x] - nxt2pnV[x]) < mthreshC);
+					t12 = (abs(srcppV[x] - prv2ppV[x]) < mthreshC);
+					t13 = (abs(srcpnV[x] - prv2pnV[x]) < mthreshC);
+					t14 = (abs(nxtppV[x] - prvppV[x]) < mthreshC);
+					t15 = (abs(nxtpnV[x] - prvpnV[x]) < mthreshC);
+					t16 = (abs(nxt2ppV[x] - srcppV[x]) < mthreshC);
+					t17 = (abs(nxt2pnV[x] - srcpnV[x]) < mthreshC);
+					t18 = (abs(srcpV[x] - prv2pV[x]) < mthreshC);
+					t19 = (abs(nxtpV[x] - prvpV[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwV[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwV[x] = 20;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwV[x] = 10;
+					else if (abs(prvpV[x]-srcppV[x])<4 && abs(prvpV[x]-srcpnV[x])<4) maskwV[x] = 120;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else maskwV[x] = 60;
+					t1 = n == 0 ? false : (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = n == 0 ? false : (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = n == nfrms ? false : (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = n == nfrms ? false : (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = n <= 1 ? false : (abs(prvpU[x] - prv2pU[x]) < mthreshC);
+					t6 = n == 0 ? false : (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t7 = n == nfrms ? false : (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					t8 = n <= 1 ? false : (abs(prvppU[x] - prv2ppU[x]) < mthreshC);
+					t9 = n <= 1 ? false : (abs(prvpnU[x] - prv2pnU[x]) < mthreshC);
+					t10 = n >= nfrms-1 ? false : (abs(nxtppU[x] - nxt2ppU[x]) < mthreshC);
+					t11 = n >= nfrms-1 ? false : (abs(nxtpnU[x] - nxt2pnU[x]) < mthreshC);
+					t12 = (abs(srcppU[x] - prv2ppU[x]) < mthreshC);
+					t13 = (abs(srcpnU[x] - prv2pnU[x]) < mthreshC);
+					t14 = (abs(nxtppU[x] - prvppU[x]) < mthreshC);
+					t15 = (abs(nxtpnU[x] - prvpnU[x]) < mthreshC);
+					t16 = (abs(nxt2ppU[x] - srcppU[x]) < mthreshC);
+					t17 = (abs(nxt2pnU[x] - srcpnU[x]) < mthreshC);
+					t18 = (abs(srcpU[x] - prv2pU[x]) < mthreshC);
+					t19 = (abs(nxtpU[x] - prvpU[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwU[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwU[x] = 20;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwU[x] = 10;
+					else if (abs(prvpU[x]-srcppU[x])<4 && abs(prvpU[x]-srcpnU[x])<4) maskwU[x] = 120;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else maskwU[x] = 60;
+				}
+				prv2ppV += prv2_pitchUV;
+				prv2pV += prv2_pitchUV;
+				prv2pnV += prv2_pitchUV;
+				prv2ppU += prv2_pitchUV;
+				prv2pU += prv2_pitchUV;
+				prv2pnU += prv2_pitchUV;
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				nxt2ppV += nxt2_pitchUV;
+				nxt2pV += nxt2_pitchUV;
+				nxt2pnV += nxt2_pitchUV;
+				nxt2ppU += nxt2_pitchUV;
+				nxt2pU += nxt2_pitchUV;
+				nxt2pnU += nxt2_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+		else
+		{
+			for (y=1; y<HeightY-1; y+=2)
+			{
+				for (x=0; x<WidthY; ++x)
+				{
+					t1 = (abs(srcppY[x] - prvppY[x]) < mthreshL);
+					t2 = (abs(srcpnY[x] - prvpnY[x]) < mthreshL);
+					t3 = (abs(srcppY[x] - nxtppY[x]) < mthreshL);
+					t4 = (abs(srcpnY[x] - nxtpnY[x]) < mthreshL);
+					t5 = (abs(prvpY[x] - prv2pY[x]) < mthreshL);
+					t6 = (abs(srcpY[x] - prvpY[x]) < mthreshL);
+					t7 = (abs(srcpY[x] - nxtpY[x]) < mthreshL);
+					t8 = (abs(prvppY[x] - prv2ppY[x]) < mthreshL);
+					t9 = (abs(prvpnY[x] - prv2pnY[x]) < mthreshL);
+					t10 = (abs(nxtppY[x] - nxt2ppY[x]) < mthreshL);
+					t11 = (abs(nxtpnY[x] - nxt2pnY[x]) < mthreshL);
+					t12 = (abs(srcppY[x] - prv2ppY[x]) < mthreshL);
+					t13 = (abs(srcpnY[x] - prv2pnY[x]) < mthreshL);
+					t14 = (abs(nxtppY[x] - prvppY[x]) < mthreshL);
+					t15 = (abs(nxtpnY[x] - prvpnY[x]) < mthreshL);
+					t16 = (abs(nxt2ppY[x] - srcppY[x]) < mthreshL);
+					t17 = (abs(nxt2pnY[x] - srcpnY[x]) < mthreshL);
+					t18 = (abs(srcpY[x] - prv2pY[x]) < mthreshL);
+					t19 = (abs(nxtpY[x] - prvpY[x]) < mthreshL);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwY[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwY[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwY[x] = 20;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwY[x] = 10;
+					else if (abs(prvpY[x]-srcppY[x])<4 && abs(prvpY[x]-srcpnY[x])<4) maskwY[x] = 120;
+					else if (abs(srcpY[x]-srcppY[x])<4 && abs(srcpY[x]-srcpnY[x])<4) maskwY[x] = 110;
+					else maskwY[x] = 60;
+				}
+				prv2ppY += prv2_pitchY;
+				prv2pY += prv2_pitchY;
+				prv2pnY += prv2_pitchY;
+				prvppY += prv_pitchY;
+				prvpY += prv_pitchY;
+				prvpnY += prv_pitchY;
+				srcppY += src_pitchY;
+				srcpY += src_pitchY;
+				srcpnY += src_pitchY;
+				nxtppY += nxt_pitchY;
+				nxtpY += nxt_pitchY;
+				nxtpnY += nxt_pitchY;
+				nxt2ppY += nxt2_pitchY;
+				nxt2pY += nxt2_pitchY;
+				nxt2pnY += nxt2_pitchY;
+				maskwY += mask_pitchY;
+			}
+			for (y=1; y<HeightUV-1; y+=2)
+			{
+				for (x=0; x<WidthUV; ++x)
+				{
+					t1 = (abs(srcppV[x] - prvppV[x]) < mthreshC);
+					t2 = (abs(srcpnV[x] - prvpnV[x]) < mthreshC);
+					t3 = (abs(srcppV[x] - nxtppV[x]) < mthreshC);
+					t4 = (abs(srcpnV[x] - nxtpnV[x]) < mthreshC);
+					t5 = (abs(prvpV[x] - prv2pV[x]) < mthreshC);
+					t6 = (abs(srcpV[x] - prvpV[x]) < mthreshC);
+					t7 = (abs(srcpV[x] - nxtpV[x]) < mthreshC);
+					t8 = (abs(prvppV[x] - prv2ppV[x]) < mthreshC);
+					t9 = (abs(prvpnV[x] - prv2pnV[x]) < mthreshC);
+					t10 = (abs(nxtppV[x] - nxt2ppV[x]) < mthreshC);
+					t11 = (abs(nxtpnV[x] - nxt2pnV[x]) < mthreshC);
+					t12 = (abs(srcppV[x] - prv2ppV[x]) < mthreshC);
+					t13 = (abs(srcpnV[x] - prv2pnV[x]) < mthreshC);
+					t14 = (abs(nxtppV[x] - prvppV[x]) < mthreshC);
+					t15 = (abs(nxtpnV[x] - prvpnV[x]) < mthreshC);
+					t16 = (abs(nxt2ppV[x] - srcppV[x]) < mthreshC);
+					t17 = (abs(nxt2pnV[x] - srcpnV[x]) < mthreshC);
+					t18 = (abs(srcpV[x] - prv2pV[x]) < mthreshC);
+					t19 = (abs(nxtpV[x] - prvpV[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwV[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwV[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwV[x] = 20;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwV[x] = 10;
+					else if (abs(prvpV[x]-srcppV[x])<4 && abs(prvpV[x]-srcpnV[x])<4) maskwV[x] = 120;
+					else if (abs(srcpV[x]-srcppV[x])<4 && abs(srcpV[x]-srcpnV[x])<4) maskwV[x] = 110;
+					else maskwV[x] = 60;
+					t1 = (abs(srcppU[x] - prvppU[x]) < mthreshC);
+					t2 = (abs(srcpnU[x] - prvpnU[x]) < mthreshC);
+					t3 = (abs(srcppU[x] - nxtppU[x]) < mthreshC);
+					t4 = (abs(srcpnU[x] - nxtpnU[x]) < mthreshC);
+					t5 = (abs(prvpU[x] - prv2pU[x]) < mthreshC);
+					t6 = (abs(srcpU[x] - prvpU[x]) < mthreshC);
+					t7 = (abs(srcpU[x] - nxtpU[x]) < mthreshC);
+					t8 = (abs(prvppU[x] - prv2ppU[x]) < mthreshC);
+					t9 = (abs(prvpnU[x] - prv2pnU[x]) < mthreshC);
+					t10 = (abs(nxtppU[x] - nxt2ppU[x]) < mthreshC);
+					t11 = (abs(nxtpnU[x] - nxt2pnU[x]) < mthreshC);
+					t12 = (abs(srcppU[x] - prv2ppU[x]) < mthreshC);
+					t13 = (abs(srcpnU[x] - prv2pnU[x]) < mthreshC);
+					t14 = (abs(nxtppU[x] - prvppU[x]) < mthreshC);
+					t15 = (abs(nxtpnU[x] - prvpnU[x]) < mthreshC);
+					t16 = (abs(nxt2ppU[x] - srcppU[x]) < mthreshC);
+					t17 = (abs(nxt2pnU[x] - srcpnU[x]) < mthreshC);
+					t18 = (abs(srcpU[x] - prv2pU[x]) < mthreshC);
+					t19 = (abs(nxtpU[x] - prvpU[x]) < mthreshC);
+					if (t6 && ((t1 && t2 && ((t3 && t4 && t14 && t15) || (t5 && t18))) || 
+							(t3 && t4 && t7 && t19) || 
+							(t5 && t18 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t1 && t8 && t12) || (t2 && t9 && t13))) ||
+							(t7 && t19 && ((t1 && t3 && t14) || (t2 && t4 && t15) || (t3 && t10 && t16) || (t4 && t11 && t17)))))
+						maskwU[x] = val1;
+					else if (t1 && t2 && t3 && t4 && t5 && t7 && t14 && t15) maskwU[x] = val1;
+					else if (t1 && t5 && t2 && t8 && t9 && t12 && t13) maskwU[x] = 20;
+					else if (t3 && t7 && t4 && t10 && t11 && t16 && t17) maskwU[x] = 10;
+					else if (abs(prvpU[x]-srcppU[x])<4 && abs(prvpU[x]-srcpnU[x])<4) maskwU[x] = 120;
+					else if (abs(srcpU[x]-srcppU[x])<4 && abs(srcpU[x]-srcpnU[x])<4) maskwU[x] = 110;
+					else maskwU[x] = 60;
+				}
+				prv2ppV += prv2_pitchUV;
+				prv2pV += prv2_pitchUV;
+				prv2pnV += prv2_pitchUV;
+				prv2ppU += prv2_pitchUV;
+				prv2pU += prv2_pitchUV;
+				prv2pnU += prv2_pitchUV;
+				prvppV += prv_pitchUV;
+				prvpV += prv_pitchUV;
+				prvpnV += prv_pitchUV;
+				prvppU += prv_pitchUV;
+				prvpU += prv_pitchUV;
+				prvpnU += prv_pitchUV;
+				srcppV += src_pitchUV;
+				srcpV += src_pitchUV;
+				srcpnV += src_pitchUV;
+				srcppU += src_pitchUV;
+				srcpU += src_pitchUV;
+				srcpnU += src_pitchUV;
+				nxtppV += nxt_pitchUV;
+				nxtpV += nxt_pitchUV;
+				nxtpnV += nxt_pitchUV;
+				nxtppU += nxt_pitchUV;
+				nxtpU += nxt_pitchUV;
+				nxtpnU += nxt_pitchUV;
+				nxt2ppV += nxt2_pitchUV;
+				nxt2pV += nxt2_pitchUV;
+				nxt2pnV += nxt2_pitchUV;
+				nxt2ppU += nxt2_pitchUV;
+				nxt2pU += nxt2_pitchUV;
+				nxt2pnU += nxt2_pitchUV;
+				maskwV += mask_pitchUV;
+				maskwU += mask_pitchUV;
+			}
+		}
+	}
+}
+
+void vidTDeint::linkFULL_YV12(ADMImage *mask) 
+{
+	unsigned char *maskpY = mask->GetWritePtr(PLANAR_Y);
+	unsigned char *maskpV = mask->GetWritePtr(PLANAR_V);
+	unsigned char *maskpU = mask->GetWritePtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchY2 = mask_pitchY<<1;
+	int mask_pitchY4 = mask_pitchY<<2;
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	int mask_pitchUV2 = mask_pitchUV<<1;
+	int HeightUV = mask->GetHeight(PLANAR_V);
+	int WidthUV = mask->GetRowSize(PLANAR_V);
+	maskpY += mask_pitchY*PRM(field);
+	maskpV += mask_pitchUV*PRM(field);
+	maskpU += mask_pitchUV*PRM(field);
+	unsigned char *maskpnY = maskpY + mask_pitchY2;
+	int x, y;
+	for (y=PRM(field); y<HeightUV; y+=2)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (((((unsigned short*)maskpY)[x] == (unsigned short)0x3C3C) && 
+				 (((unsigned short*)maskpnY)[x] == (unsigned short)0x3C3C)) ||
+				maskpV[x] == 0x3C || maskpU[x] == 0x3C)
+			{
+				((unsigned short*)maskpY)[x] = (unsigned short) 0x3C3C;
+				((unsigned short*)maskpnY)[x] = (unsigned short) 0x3C3C;
+				maskpV[x] = maskpU[x] = 0x3C;
+			}
+		}
+		maskpY += mask_pitchY4;
+		maskpnY += mask_pitchY4;
+		maskpV += mask_pitchUV2;
+		maskpU += mask_pitchUV2;
+	}
+}
+
+void vidTDeint::linkYtoUV_YV12(ADMImage *mask) 
+{
+	unsigned char *maskpY = mask->GetWritePtr(PLANAR_Y);
+	unsigned char *maskpV = mask->GetWritePtr(PLANAR_V);
+	unsigned char *maskpU = mask->GetWritePtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchY2 = mask_pitchY<<1;
+	int mask_pitchY4 = mask_pitchY<<2;
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	int mask_pitchUV2 = mask_pitchUV<<1;
+	int HeightUV = mask->GetHeight(PLANAR_V);
+	int WidthUV = mask->GetRowSize(PLANAR_V);
+	maskpY += mask_pitchY*PRM(field);
+	maskpV += mask_pitchUV*PRM(field);
+	maskpU += mask_pitchUV*PRM(field);
+	unsigned char *maskpnY = maskpY + mask_pitchY2;
+	int x, y;
+	for (y=PRM(field); y<HeightUV; y+=2)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (((unsigned short*)maskpY)[x] == (unsigned short)0x3C3C && 
+				((unsigned short*)maskpnY)[x] == (unsigned short)0x3C3C)
+			{
+				maskpV[x] = maskpU[x] = 0x3C;
+			}
+		}
+		maskpY += mask_pitchY4;
+		maskpnY += mask_pitchY4;
+		maskpV += mask_pitchUV2;
+		maskpU += mask_pitchUV2;
+	}
+}
+
+void vidTDeint::linkUVtoY_YV12(ADMImage *mask) 
+{
+	unsigned char *maskpY = mask->GetWritePtr(PLANAR_Y);
+	unsigned char *maskpV = mask->GetWritePtr(PLANAR_V);
+	unsigned char *maskpU = mask->GetWritePtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchY2 = mask_pitchY<<1;
+	int mask_pitchY4 = mask_pitchY<<2;
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	int mask_pitchUV2 = mask_pitchUV<<1;
+	int HeightUV = mask->GetHeight(PLANAR_V);
+	int WidthUV = mask->GetRowSize(PLANAR_V);
+	maskpY += mask_pitchY*PRM(field);
+	maskpV += mask_pitchUV*PRM(field);
+	maskpU += mask_pitchUV*PRM(field);
+	unsigned char *maskpnY = maskpY + mask_pitchY2;
+	int x, y;
+	for (y=PRM(field); y<HeightUV; y+=2)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpV[x] == 0x3C || maskpU[x] == 0x3C)
+			{
+				((unsigned short*)maskpY)[x] = (unsigned short) 0x3C3C;
+				((unsigned short*)maskpnY)[x] = (unsigned short) 0x3C3C;
+			}
+		}
+		maskpY += mask_pitchY4;
+		maskpnY += mask_pitchY4;
+		maskpV += mask_pitchUV2;
+		maskpU += mask_pitchUV2;
+	}
+}
+
+void vidTDeint::denoiseYV12(ADMImage *mask) 
+{
+	unsigned char *maskpY = mask->GetWritePtr(PLANAR_Y);
+	unsigned char *maskpV = mask->GetWritePtr(PLANAR_V);
+	unsigned char *maskpU = mask->GetWritePtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchY2 = mask_pitchY<<1;
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	int mask_pitchUV2 = mask_pitchUV<<1;
+	int HeightY = mask->GetHeight(PLANAR_Y);
+	int HeightUV = mask->GetHeight(PLANAR_V);
+	int WidthY = mask->GetRowSize(PLANAR_Y);
+	int WidthUV = mask->GetRowSize(PLANAR_V);
+	maskpY += mask_pitchY*(2+PRM(field));
+	maskpV += mask_pitchUV*(2+PRM(field));
+	maskpU += mask_pitchUV*(2+PRM(field));
+	unsigned char *maskppY = maskpY - mask_pitchY2;
+	unsigned char *maskppV = maskpV - mask_pitchUV2;
+	unsigned char *maskppU = maskpU - mask_pitchUV2;
+	unsigned char *maskpnY = maskpY + mask_pitchY2;
+	unsigned char *maskpnV = maskpV + mask_pitchUV2;
+	unsigned char *maskpnU = maskpU + mask_pitchUV2;
+	int sum, xhi, v, x, y;
+	for (y=2; y<HeightY-2; y+=2)
+	{
+		for (x=1; x<WidthY-1; ++x)
+		{
+			if (maskpY[x] == 0x3C)
+			{
+				for (sum=0,v=x-1,xhi=x+2; v<xhi && sum<2; ++v)
+				{
+					if (maskppY[v] == 0x3C) ++sum;
+					if (maskpY[v] == 0x3C) ++sum;
+					if (maskpnY[v] == 0x3C) ++sum;
+				}
+				if (sum < 2) maskpY[x] = (maskpY[x-1] == maskpY[x+1]) ? maskpY[x-1] :
+								(maskppY[x] == maskpnY[x]) ? maskppY[x] : maskpY[x-1];
+			}
+		}
+		maskppY += mask_pitchY2;
+		maskpY += mask_pitchY2;
+		maskpnY += mask_pitchY2;
+	}
+	for (y=2; y<HeightUV-2; y+=2)
+	{
+		for (x=1; x<WidthUV-1; ++x)
+		{
+			if (maskpV[x] == 0x3C)
+			{
+				for (sum=0,v=x-1,xhi=x+2; v<xhi && sum<2; ++v)
+				{
+					if (maskppV[v] == 0x3C) ++sum;
+					if (maskpV[v] == 0x3C) ++sum;
+					if (maskpnV[v] == 0x3C) ++sum;
+				}
+				if (sum < 2) maskpV[x] = (maskpV[x-1] == maskpV[x+1]) ? maskpV[x-1] :
+								(maskppV[x] == maskpnV[x]) ? maskppV[x] : maskpV[x-1];
+			}
+			if (maskpU[x] == 0x3C)
+			{
+				for (sum=0,v=x-1,xhi=x+2; v<xhi && sum<2; ++v)
+				{
+					if (maskppU[v] == 0x3C) ++sum;
+					if (maskpU[v] == 0x3C) ++sum;
+					if (maskpnU[v] == 0x3C) ++sum;
+				}
+				if (sum < 2) maskpU[x] = (maskpU[x-1] == maskpU[x+1]) ? maskpU[x-1] :
+								(maskppU[x] == maskpnU[x]) ? maskppU[x] : maskpU[x-1];
+			}
+		}
+		maskppV += mask_pitchUV2;
+		maskpV += mask_pitchUV2;
+		maskpnV += mask_pitchUV2;
+		maskppU += mask_pitchUV2;
+		maskpU += mask_pitchUV2;
+		maskpnU += mask_pitchUV2;
+	}
+}
+
+bool vidTDeint::checkCombedYV12(ADMImage *src) 
+{
+	ADMImage *cmask = scratch;
+	const unsigned char *srcp, *srcpp, *srcppp, *srcpn, *srcpnn;
+	unsigned char *cmkp, *cmkpp, *cmkpn, *cmkpV, *cmkpU;
+	unsigned char *cmkpnn, *cmkppV, *cmkppU, *cmkpnV, *cmkpnU;
+	int cmk_pitch, src_pitch, Width, Height,  box1, box2;
+	ADM_PLANE plane;
+	int xblocks, yblocks, xblocks4, arraysize, cmk_pitchUV;
+	int x, y, b, sFirst, sSecond, temp1, temp2;
+	for (b=chroma ? 3 : 1; b>0; --b)
+	{
+		if (b == 3) plane = PLANAR_U;
+		else if (b == 2) plane = PLANAR_V;
+		else plane = PLANAR_Y;
+		srcp = src->GetReadPtr(plane);
+		src_pitch = src->GetPitch(plane);
+		Width = src->GetRowSize(plane);
+		Height = src->GetHeight(plane);
+		srcpp = srcp - src_pitch;
+		srcppp = srcpp - src_pitch;
+		srcpn = srcp + src_pitch;
+		srcpnn = srcpn + src_pitch;
+		cmkp = cmask->GetWritePtr(plane);
+		cmk_pitch = cmask->GetPitch(plane);
+		memset(cmkp,0,Height*cmk_pitch);
+		for (x=0; x<Width; ++x)
+		{
+			sFirst = srcp[x] - srcpn[x];
+			if (sFirst > cthresh || sFirst < -cthresh)
+			{
+				sFirst = abs(srcpnn[x]+(srcp[x]<<2)+srcpnn[x]-(3*(srcpn[x]+srcpn[x])));
+				if (sFirst > cthresh6) cmkp[x] = 0x3C;
+			}
+		}
+		srcppp += src_pitch;
+		srcpp += src_pitch;
+		srcp += src_pitch;
+		srcpn += src_pitch;
+		srcpnn += src_pitch;
+		cmkp += cmk_pitch;
+		for (x=0; x<Width; ++x)
+		{
+			sFirst = srcp[x] - srcpp[x];
+			sSecond = srcp[x] - srcpn[x];
+			if ((sFirst > cthresh && sSecond > cthresh) || (sFirst < -cthresh && sSecond < -cthresh))
+			{
+				sFirst = abs(srcpnn[x]+(srcp[x]<<2)+srcpnn[x]-(3*(srcpp[x]+srcpn[x])));
+				if (sFirst > cthresh6) cmkp[x] = 0x3C;
+			}
+		}
+		srcppp += src_pitch;
+		srcpp += src_pitch;
+		srcp += src_pitch;
+		srcpn += src_pitch;
+		srcpnn += src_pitch;
+		cmkp += cmk_pitch;
+		for (y=2; y<Height-2; ++y)
+		{
+			for (x=0; x<Width; ++x)
+			{
+				sFirst = srcp[x] - srcpp[x];
+				sSecond = srcp[x] - srcpn[x];
+				if ((sFirst > cthresh && sSecond > cthresh) || (sFirst < -cthresh && sSecond < -cthresh))
+				{
+					sFirst = abs(srcppp[x]+(srcp[x]<<2)+srcpnn[x]-(3*(srcpp[x]+srcpn[x])));
+					if (sFirst > cthresh6) cmkp[x] = 0x3C;
+				}	
+			}
+			srcppp += src_pitch;
+			srcpp += src_pitch;
+			srcp += src_pitch;
+			srcpn += src_pitch;
+			srcpnn += src_pitch;
+			cmkp += cmk_pitch;
+		}
+		for (x=0; x<Width; ++x)
+		{
+			sFirst = srcp[x] - srcpp[x];
+			sSecond = srcp[x] - srcpn[x];
+			if ((sFirst > cthresh && sSecond > cthresh) || (sFirst < -cthresh && sSecond < -cthresh))
+			{
+				sFirst = abs(srcppp[x]+(srcp[x]<<2)+srcppp[x]-(3*(srcpp[x]+srcpn[x])));
+				if (sFirst > cthresh6) cmkp[x] = 0x3C;
+			}
+		}
+		srcppp += src_pitch;
+		srcpp += src_pitch;
+		srcp += src_pitch;
+		srcpn += src_pitch;
+		srcpnn += src_pitch;
+		cmkp += cmk_pitch;
+		for (x=0; x<Width; ++x)
+		{
+			sFirst = srcp[x] - srcpp[x];
+			if (sFirst > cthresh || sFirst < -cthresh)
+			{
+				sFirst = abs(srcppp[x]+(srcp[x]<<2)+srcppp[x]-(3*(srcpp[x]+srcpp[x])));
+				if (sFirst > cthresh6) cmkp[x] = 0x3C;
+			}
+		}
+	}
+	if (chroma) 
+	{
+		cmkp = cmask->GetWritePtr(PLANAR_Y);
+		cmkpU = cmask->GetWritePtr(PLANAR_U);
+		cmkpV = cmask->GetWritePtr(PLANAR_V);
+		Width = cmask->GetRowSize(PLANAR_V);
+		Height = cmask->GetHeight(PLANAR_V);
+		cmk_pitch = cmask->GetPitch(PLANAR_Y);
+		cmk_pitchUV = cmask->GetPitch(PLANAR_V);
+		cmkpp = cmkp - cmk_pitch;
+		cmkpn = cmkp + cmk_pitch;
+		cmkpnn = cmkpn + cmk_pitch;
+		cmkppU = cmkpU - cmk_pitchUV;
+		cmkpnU = cmkpU + cmk_pitchUV;
+		cmkppV = cmkpV - cmk_pitchUV;
+		cmkpnV = cmkpV + cmk_pitchUV;
+		cmk_pitch <<= 1;
+		for (y=1; y<Height-1; ++y)
+		{
+			cmkpp += cmk_pitch;
+			cmkp += cmk_pitch;
+			cmkpn += cmk_pitch;
+			cmkpnn += cmk_pitch;
+			cmkppV += cmk_pitchUV;
+			cmkpV += cmk_pitchUV;
+			cmkpnV += cmk_pitchUV;
+			cmkppU += cmk_pitchUV;
+			cmkpU += cmk_pitchUV;
+			cmkpnU += cmk_pitchUV;
+			for (x=1; x<Width-1; ++x)
+			{
+				if ((cmkpV[x] == 0x3C && (cmkpV[x-1] == 0x3C || cmkpV[x+1] == 0x3C ||
+					 cmkppV[x-1] == 0x3C || cmkppV[x] == 0x3C || cmkppV[x+1] == 0x3C ||
+					 cmkpnV[x-1] == 0x3C || cmkpnV[x] == 0x3C || cmkpnV[x+1] == 0x3C)) || 
+					(cmkpU[x] == 0x3C && (cmkpU[x-1] == 0x3C || cmkpU[x+1] == 0x3C ||
+					 cmkppU[x-1] == 0x3C || cmkppU[x] == 0x3C || cmkppU[x+1] == 0x3C ||
+					 cmkpnU[x-1] == 0x3C || cmkpnU[x] == 0x3C || cmkpnU[x+1] == 0x3C)))
+				{
+					((unsigned short*)cmkp)[x] = (unsigned short) 0x3C3C;
+					((unsigned short*)cmkpn)[x] = (unsigned short) 0x3C3C;
+					if (y&1) ((unsigned short*)cmkpp)[x] = (unsigned short) 0x3C3C;
+					else ((unsigned short*)cmkpnn)[x] = (unsigned short) 0x3C3C;
+				}
+			}
+		}
+	}
+	cmk_pitch = cmask->GetPitch(PLANAR_Y);
+	cmkp = cmask->GetWritePtr(PLANAR_Y) + cmk_pitch;
+	cmkpp = cmkp - cmk_pitch;
+	cmkpn = cmkp + cmk_pitch;
+	Width = cmask->GetRowSize(PLANAR_Y);
+	Height = cmask->GetHeight(PLANAR_Y);
+	xblocks = ((Width+xhalf)>>xshift) + 1;
+	xblocks4 = xblocks<<2;
+	yblocks = ((Height+yhalf)>>yshift) + 1;
+	arraysize = (xblocks*yblocks)<<2;
+	memset(cArray,0,arraysize*sizeof(int));
+	for (y=1; y<Height-1; ++y)
+	{
+		temp1 = (y>>yshift)*xblocks4;
+		temp2 = ((y+yhalf)>>yshift)*xblocks4;
+		for (x=0; x<Width; ++x)
+		{
+			if (cmkpp[x] == 0x3C && cmkp[x] == 0x3C && cmkpn[x] == 0x3C)
+			{
+				box1 = (x>>xshift)<<2;
+				box2 = ((x+xhalf)>>xshift)<<2;
+				++cArray[temp1+box1+0];
+				++cArray[temp1+box2+1];
+				++cArray[temp2+box1+2];
+				++cArray[temp2+box2+3];
+			}
+		}
+		cmkpp += cmk_pitch;
+		cmkp += cmk_pitch;
+		cmkpn += cmk_pitch;
+	}
+	for (x=0; x<arraysize; ++x)
+	{
+		if (cArray[x] > MI) return true;
+	}
+	return false;
+}
+
+void vidTDeint::subtractFieldsYV12(ADMImage *prv, ADMImage *src, ADMImage *nxt) 
+{
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int WidthY = src->GetRowSize(PLANAR_Y)-8;
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V)-4;
+	int HeightUV = src->GetHeight(PLANAR_V);
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	const unsigned char *prvpfY, *prvnfY, *nxtpfY, *nxtnfY;
+	const unsigned char *prvpfU, *prvnfU, *nxtpfU, *nxtnfU;
+	const unsigned char *prvpfV, *prvnfV, *nxtpfV, *nxtnfV;
+	const unsigned char *curpfY, *curfY, *curnfY;
+	const unsigned char *curpfU, *curfU, *curnfU;
+	const unsigned char *curpfV, *curfV, *curnfV;
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	int prvf_pitchY, prvf_pitchUV;
+	int curf_pitchY, curf_pitchUV;
+	int nxtf_pitchY, nxtf_pitchUV;
+	int x, y, temp, temp2;
+	accumP = accumN = 0;
+	if (PRM(field)^PRM(order))
+	{
+		prvf_pitchY = src_pitchY<<1;
+		prvf_pitchUV = src_pitchUV<<1;
+		curf_pitchY = src_pitchY<<1;
+		curf_pitchUV = src_pitchUV<<1;
+		nxtf_pitchY = nxt_pitchY<<1;
+		nxtf_pitchUV = nxt_pitchUV<<1;
+		prvpfY = srcpY + ((PRM(field) == 1 ? 1 : 2)*src_pitchY);
+		prvpfU = srcpU + ((PRM(field) == 1 ? 1 : 2)*src_pitchUV);
+		prvpfV = srcpV + ((PRM(field) == 1 ? 1 : 2)*src_pitchUV);
+		curfY = srcpY + ((3-PRM(field))*src_pitchY);
+		curfU = srcpU + ((3-PRM(field))*src_pitchUV);
+		curfV = srcpV + ((3-PRM(field))*src_pitchUV);
+		nxtpfY = nxtpY + ((PRM(field) == 1 ? 1 : 2)*nxt_pitchY);
+		nxtpfU = nxtpU + ((PRM(field) == 1 ? 1 : 2)*nxt_pitchUV);
+		nxtpfV = nxtpV + ((PRM(field) == 1 ? 1 : 2)*nxt_pitchUV);
+	}
+	else
+	{
+		prvf_pitchY = prv_pitchY<<1;
+		prvf_pitchUV = prv_pitchUV<<1;
+		curf_pitchY = src_pitchY<<1;
+		curf_pitchUV = src_pitchUV<<1;
+		nxtf_pitchY = src_pitchY<<1;
+		nxtf_pitchUV = src_pitchUV<<1;
+		prvpfY = prvpY + ((PRM(field) == 1 ? 1 : 2)*prv_pitchY);
+		prvpfU = prvpU + ((PRM(field) == 1 ? 1 : 2)*prv_pitchUV);
+		prvpfV = prvpV + ((PRM(field) == 1 ? 1 : 2)*prv_pitchUV);
+		curfY = srcpY + ((3-PRM(field))*src_pitchY);
+		curfU = srcpU + ((3-PRM(field))*src_pitchUV);
+		curfV = srcpV + ((3-PRM(field))*src_pitchUV);
+		nxtpfY = srcpY + ((PRM(field) == 1 ? 1 : 2)*src_pitchY);
+		nxtpfU = srcpU + ((PRM(field) == 1 ? 1 : 2)*src_pitchUV);
+		nxtpfV = srcpV + ((PRM(field) == 1 ? 1 : 2)*src_pitchUV);
+	}
+	prvnfY = prvpfY + prvf_pitchY;
+	prvnfU = prvpfU + prvf_pitchUV;
+	prvnfV = prvpfV + prvf_pitchUV;
+	curpfY = curfY - curf_pitchY;
+	curpfU = curfU - curf_pitchUV;
+	curpfV = curfV - curf_pitchUV;
+	curnfY = curfY + curf_pitchY;
+	curnfU = curfU + curf_pitchUV;
+	curnfV = curfV + curf_pitchUV;
+	nxtnfY = nxtpfY + nxtf_pitchY;
+	nxtnfU = nxtpfU + nxtf_pitchUV;
+	nxtnfV = nxtpfV + nxtf_pitchUV;
+	for (y=2; y<HeightY-2; y+=2)
+	{
+		for (x=8; x<WidthY; ++x)
+		{
+			if (abs(prvpfY[x]-nxtpfY[x]) > 3 || abs(prvnfY[x]-nxtnfY[x]) > 3)
+			{
+				temp = (curpfY[x]+(curfY[x]<<2)+curnfY[x]);
+				temp2 = abs(3*(prvpfY[x]+prvnfY[x])-temp);
+				if (temp2 > 23) accumP += temp2;
+				temp2 = abs(3*(nxtpfY[x]+nxtnfY[x])-temp);
+				if (temp2 > 23) accumN += temp2;
+			}
+		}
+		prvpfY += prvf_pitchY;
+		prvnfY += prvf_pitchY;
+		curpfY += curf_pitchY;
+		curfY += curf_pitchY;
+		curnfY += curf_pitchY;
+		nxtpfY += nxtf_pitchY;
+		nxtnfY += nxtf_pitchY;
+	}
+	for (y=2; y<HeightUV-2; y+=2)
+	{
+		for (x=4; x<WidthUV; ++x)
+		{
+			if (abs(prvpfU[x]-nxtpfU[x]) > 3 || abs(prvnfU[x]-nxtnfU[x]) > 3)
+			{
+				temp = (curpfU[x]+(curfU[x]<<2)+curnfU[x]);
+				temp2 = abs(3*(prvpfU[x]+prvnfU[x])-temp);
+				if (temp2 > 23) accumP += temp2;
+				temp2 = abs(3*(nxtpfU[x]+nxtnfU[x])-temp);
+				if (temp2 > 23) accumN += temp2;
+			}
+			if (abs(prvpfV[x]-nxtpfV[x]) > 3 || abs(prvnfV[x]-nxtnfV[x]) > 3)
+			{
+				temp = (curpfV[x]+(curfV[x]<<2)+curnfV[x]);
+				temp2 = abs(3*(prvpfV[x]+prvnfV[x])-temp);
+				if (temp2 > 23) accumP += temp2;
+				temp2 = abs(3*(nxtpfV[x]+nxtnfV[x])-temp);
+				if (temp2 > 23) accumN += temp2;
+			}
+		}
+		prvpfU += prvf_pitchUV;
+		prvnfU += prvf_pitchUV;
+		prvpfV += prvf_pitchUV;
+		prvnfV += prvf_pitchUV;
+		curpfU += curf_pitchUV;
+		curfU += curf_pitchUV;
+		curnfU += curf_pitchUV;
+		curpfV += curf_pitchUV;
+		curfV += curf_pitchUV;
+		curnfV += curf_pitchUV;
+		nxtpfU += nxtf_pitchUV;
+		nxtnfU += nxtf_pitchUV;
+		nxtpfV += nxtf_pitchUV;
+		nxtnfV += nxtf_pitchUV;
+	}
+}
+
+void vidTDeint::mapColorsYV12(ADMImage *dst, ADMImage *mask)
+{
+	const unsigned char *maskpY = mask->GetReadPtr(PLANAR_Y);
+	const unsigned char *maskpV = mask->GetReadPtr(PLANAR_V);
+	const unsigned char *maskpU = mask->GetReadPtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	int HeightY = mask->GetHeight(PLANAR_Y);
+	int HeightUV = mask->GetHeight(PLANAR_V);
+	int WidthY = mask->GetRowSize(PLANAR_Y);
+	int WidthUV = mask->GetRowSize(PLANAR_V);
+	unsigned char *dstpY = dst->GetWritePtr(PLANAR_Y);
+	unsigned char *dstpV = dst->GetWritePtr(PLANAR_V);
+	unsigned char *dstpU = dst->GetWritePtr(PLANAR_U);
+	int dst_pitchY = dst->GetPitch(PLANAR_Y);
+	int dst_pitchUV = dst->GetPitch(PLANAR_V);
+	int x, y;
+	for (y=0; y<HeightY; ++y)
+	{
+		for (x=0; x<WidthY; ++x)
+		{
+			if (maskpY[x] == 10 || maskpY[x] == 110) dstpY[x] = 0;
+			else if (maskpY[x] == 20 || maskpY[x] == 120) dstpY[x] = 51;
+			else if (maskpY[x] == 30 || maskpY[x] == 130) dstpY[x] = 102;
+			else if (maskpY[x] == 40) dstpY[x] = 153;
+			else if (maskpY[x] == 50) dstpY[x] = 204;
+			else if (maskpY[x] == 60) dstpY[x] = 255;
+		}
+		maskpY += mask_pitchY;
+		dstpY += dst_pitchY;
+	}
+	for (y=0; y<HeightUV; ++y)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpV[x] == 10 || maskpV[x] == 110) dstpV[x] = 0;
+			else if (maskpV[x] == 20 || maskpV[x] == 120) dstpV[x] = 51;
+			else if (maskpV[x] == 30 || maskpV[x] == 130) dstpV[x] = 102;
+			else if (maskpV[x] == 40) dstpV[x] = 153;
+			else if (maskpV[x] == 50) dstpV[x] = 204;
+			else if (maskpV[x] == 60) dstpV[x] = 255;
+			if (maskpU[x] == 10 || maskpU[x] == 110) dstpU[x] = 0;
+			else if (maskpU[x] == 20 || maskpU[x] == 120) dstpU[x] = 51;
+			else if (maskpU[x] == 30 || maskpU[x] == 130) dstpU[x] = 102;
+			else if (maskpU[x] == 40) dstpU[x] = 153;
+			else if (maskpU[x] == 50) dstpU[x] = 204;
+			else if (maskpU[x] == 60) dstpU[x] = 255;
+		}
+		maskpV += mask_pitchUV;
+		maskpU += mask_pitchUV;
+		dstpV += dst_pitchUV;
+		dstpU += dst_pitchUV;
+	}
+}
+
+void vidTDeint::mapMergeYV12(ADMImage *dst, ADMImage *mask, 
+		ADMImage *prv, ADMImage *src, ADMImage *nxt)
+{
+	const unsigned char *maskpY = mask->GetReadPtr(PLANAR_Y);
+	const unsigned char *maskpV = mask->GetReadPtr(PLANAR_V);
+	const unsigned char *maskpU = mask->GetReadPtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	int HeightY = mask->GetHeight(PLANAR_Y);
+	int HeightUV = mask->GetHeight(PLANAR_V);
+	int WidthY = mask->GetRowSize(PLANAR_Y);
+	int WidthUV = mask->GetRowSize(PLANAR_V);
+	unsigned char *dstpY = dst->GetWritePtr(PLANAR_Y);
+	unsigned char *dstpV = dst->GetWritePtr(PLANAR_V);
+	unsigned char *dstpU = dst->GetWritePtr(PLANAR_U);
+	int dst_pitchY = dst->GetPitch(PLANAR_Y);
+	int dst_pitchUV = dst->GetPitch(PLANAR_V);
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	int x, y;
+	for (y=0; y<HeightY; ++y)
+	{
+		for (x=0; x<WidthY; ++x)
+		{
+			if (maskpY[x] == 10 || maskpY[x] == 110) dstpY[x] = srcpY[x];
+			else if (maskpY[x] == 20 || maskpY[x] == 120) dstpY[x] = prvpY[x];
+			else if (maskpY[x] == 30 || maskpY[x] == 130) dstpY[x] = nxtpY[x];
+			else if (maskpY[x] == 40) dstpY[x] = (srcpY[x]+nxtpY[x]+1)>>1;
+			else if (maskpY[x] == 50) dstpY[x] = (srcpY[x]+prvpY[x]+1)>>1;
+			else if (maskpY[x] == 60) dstpY[x] = 255;
+		}
+		prvpY += prv_pitchY;
+		srcpY += src_pitchY;
+		nxtpY += nxt_pitchY;
+		maskpY += mask_pitchY;
+		dstpY += dst_pitchY;
+	}
+	for (y=0; y<HeightUV; ++y)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpV[x] == 10 || maskpV[x] == 110) dstpV[x] = srcpV[x];
+			else if (maskpV[x] == 20 || maskpV[x] == 120) dstpV[x] = prvpV[x];
+			else if (maskpV[x] == 30 || maskpV[x] == 130) dstpV[x] = nxtpV[x];
+			else if (maskpV[x] == 40) dstpV[x] = (srcpV[x]+nxtpV[x]+1)>>1;
+			else if (maskpV[x] == 50) dstpV[x] = (srcpV[x]+prvpV[x]+1)>>1;
+			else if (maskpV[x] == 60) dstpV[x] = 255;
+			if (maskpU[x] == 10 || maskpU[x] == 110) dstpU[x] = srcpU[x];
+			else if (maskpU[x] == 20 || maskpU[x] == 120) dstpU[x] = prvpU[x];
+			else if (maskpU[x] == 30 || maskpU[x] == 130) dstpU[x] = nxtpU[x];
+			else if (maskpU[x] == 40) dstpU[x] = (srcpU[x]+nxtpU[x]+1)>>1;
+			else if (maskpU[x] == 50) dstpU[x] = (srcpU[x]+prvpU[x]+1)>>1;
+			else if (maskpU[x] == 60) dstpU[x] = 255;
+		}
+		prvpV += prv_pitchUV;
+		prvpU += prv_pitchUV;
+		srcpV += src_pitchUV;
+		srcpU += src_pitchUV;
+		nxtpV += nxt_pitchUV;
+		nxtpU += nxt_pitchUV;
+		maskpV += mask_pitchUV;
+		maskpU += mask_pitchUV;
+		dstpV += dst_pitchUV;
+		dstpU += dst_pitchUV;
+	}
+}
+
+void vidTDeint::cubicDeintYV12(ADMImage *dst, ADMImage *mask, 
+		ADMImage *prv, ADMImage *src, ADMImage *nxt)
+{
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchY2 = src_pitchY<<1;
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int src_pitchUV2 = src_pitchUV<<1;
+	int WidthY = src->GetRowSize(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V);
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int HeightUV = src->GetHeight(PLANAR_V);
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	unsigned char *dstpY = dst->GetWritePtr(PLANAR_Y);
+	unsigned char *dstpV = dst->GetWritePtr(PLANAR_V);
+	unsigned char *dstpU = dst->GetWritePtr(PLANAR_U);
+	int dst_pitchY = dst->GetPitch(PLANAR_Y);
+	int dst_pitchUV = dst->GetPitch(PLANAR_V);
+	const unsigned char *maskpY = mask->GetReadPtr(PLANAR_Y);
+	const unsigned char *maskpV = mask->GetReadPtr(PLANAR_V);
+	const unsigned char *maskpU = mask->GetReadPtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	const unsigned char *srcppY = srcpY - src_pitchY;
+	const unsigned char *srcpppY = srcppY - src_pitchY2;
+	const unsigned char *srcpnY = srcpY + src_pitchY;
+	const unsigned char *srcpnnY = srcpnY + src_pitchY2;
+	const unsigned char *srcppV = srcpV - src_pitchUV;
+	const unsigned char *srcpppV = srcppV - src_pitchUV2;
+	const unsigned char *srcpnV = srcpV + src_pitchUV;
+	const unsigned char *srcpnnV = srcpnV + src_pitchUV2;
+	const unsigned char *srcppU = srcpU - src_pitchUV;
+	const unsigned char *srcpppU = srcppU - src_pitchUV2;
+	const unsigned char *srcpnU = srcpU + src_pitchUV;
+	const unsigned char *srcpnnU = srcpnU + src_pitchUV2;
+	int x, y;
+	for (y=0; y<HeightY; ++y)
+	{
+		for (x=0; x<WidthY; ++x)
+		{
+			if (maskpY[x] == 10 || maskpY[x] == 110) dstpY[x] = srcpY[x];
+			else if (maskpY[x] == 20 || maskpY[x] == 120) dstpY[x] = prvpY[x];
+			else if (maskpY[x] == 30 || maskpY[x] == 130) dstpY[x] = nxtpY[x];
+			else if (maskpY[x] == 40) dstpY[x] = (srcpY[x]+nxtpY[x]+1)>>1;
+			else if (maskpY[x] == 50) dstpY[x] = (srcpY[x]+prvpY[x]+1)>>1;
+			else if (maskpY[x] == 60)
+			{
+				if (y<3 || y>HeightY-4) dstpY[x] = (srcpnY[x]+srcppY[x]+1)>>1;
+				else dstpY[x] = cubicInt(srcpppY[x],srcppY[x],srcpnY[x],srcpnnY[x]);
+			}
+		}
+		prvpY += prv_pitchY;
+		srcpppY += src_pitchY;
+		srcppY += src_pitchY;
+		srcpY += src_pitchY;
+		srcpnY += src_pitchY;
+		srcpnnY += src_pitchY;
+		nxtpY += nxt_pitchY;
+		maskpY += mask_pitchY;
+		dstpY += dst_pitchY;
+	}
+	for (y=0; y<HeightUV; ++y)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpV[x] == 10 || maskpV[x] == 110) dstpV[x] = srcpV[x];
+			else if (maskpV[x] == 20 || maskpV[x] == 120) dstpV[x] = prvpV[x];
+			else if (maskpV[x] == 30 || maskpV[x] == 130) dstpV[x] = nxtpV[x];
+			else if (maskpV[x] == 40) dstpV[x] = (srcpV[x]+nxtpV[x]+1)>>1;
+			else if (maskpV[x] == 50) dstpV[x] = (srcpV[x]+prvpV[x]+1)>>1;
+			else if (maskpV[x] == 60)
+			{
+				if (y<3 || y>HeightUV-4) dstpV[x] = (srcpnV[x]+srcppV[x]+1)>>1;
+				else dstpV[x] = cubicInt(srcpppV[x],srcppV[x],srcpnV[x],srcpnnV[x]);
+			}
+			if (maskpU[x] == 10 || maskpU[x] == 110) dstpU[x] = srcpU[x];
+			else if (maskpU[x] == 20 || maskpU[x] == 120) dstpU[x] = prvpU[x];
+			else if (maskpU[x] == 30 || maskpU[x] == 130) dstpU[x] = nxtpU[x];
+			else if (maskpU[x] == 40) dstpU[x] = (srcpU[x]+nxtpU[x]+1)>>1;
+			else if (maskpU[x] == 50) dstpU[x] = (srcpU[x]+prvpU[x]+1)>>1;
+			else if (maskpU[x] == 60)
+			{
+				if (y<3 || y>HeightUV-4) dstpU[x] = (srcpnU[x]+srcppU[x]+1)>>1;
+				else dstpU[x] = cubicInt(srcpppU[x],srcppU[x],srcpnU[x],srcpnnU[x]);
+			}
+		}
+		prvpV += prv_pitchUV;
+		prvpU += prv_pitchUV;
+		srcpppV += src_pitchUV;
+		srcppV += src_pitchUV;
+		srcpV += src_pitchUV;
+		srcpnV += src_pitchUV;
+		srcpnnV += src_pitchUV;
+		srcpppU += src_pitchUV;
+		srcppU += src_pitchUV;
+		srcpU += src_pitchUV;
+		srcpnU += src_pitchUV;
+		srcpnnU += src_pitchUV;
+		nxtpV += nxt_pitchUV;
+		nxtpU += nxt_pitchUV;
+		maskpV += mask_pitchUV;
+		maskpU += mask_pitchUV;
+		dstpV += dst_pitchUV;
+		dstpU += dst_pitchUV;
+	}
+}
+
+void vidTDeint::ELADeintYV12(ADMImage *dst, ADMImage *mask, 
+		ADMImage *prv, ADMImage *src, ADMImage *nxt)
+{
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int WidthY = src->GetRowSize(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V);
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int HeightUV = src->GetHeight(PLANAR_V);
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	unsigned char *dstpY = dst->GetWritePtr(PLANAR_Y);
+	unsigned char *dstpV = dst->GetWritePtr(PLANAR_V);
+	unsigned char *dstpU = dst->GetWritePtr(PLANAR_U);
+	int dst_pitchY = dst->GetPitch(PLANAR_Y);
+	int dst_pitchUV = dst->GetPitch(PLANAR_V);
+	const unsigned char *maskpY = mask->GetReadPtr(PLANAR_Y);
+	const unsigned char *maskpV = mask->GetReadPtr(PLANAR_V);
+	const unsigned char *maskpU = mask->GetReadPtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	const unsigned char *srcppY = srcpY - src_pitchY;
+	const unsigned char *srcpnY = srcpY + src_pitchY;
+	const unsigned char *srcppV = srcpV - src_pitchUV;
+	const unsigned char *srcpnV = srcpV + src_pitchUV;
+	const unsigned char *srcppU = srcpU - src_pitchUV;
+	const unsigned char *srcpnU = srcpU + src_pitchUV;
+	int x, y, u, val, stop, temp1, temp2, min, minf, maxf, s1, s2;
+	for (y=0; y<HeightY; ++y)
+	{
+		for (x=0; x<WidthY; ++x)
+		{
+			if (maskpY[x] == 10 || maskpY[x] == 110) dstpY[x] = srcpY[x];
+			else if (maskpY[x] == 20 || maskpY[x] == 120) dstpY[x] = prvpY[x];
+			else if (maskpY[x] == 30 || maskpY[x] == 130) dstpY[x] = nxtpY[x];
+			else if (maskpY[x] == 40) dstpY[x] = (srcpY[x]+nxtpY[x]+1)>>1;
+			else if (maskpY[x] == 50) dstpY[x] = (srcpY[x]+prvpY[x]+1)>>1;
+			else if (maskpY[x] == 60)
+			{
+				if (x < 2 || x > WidthY-3 || (abs(srcppY[x]-srcpnY[x]) < 10 &&
+					abs(srcppY[x-2]-srcppY[x+2]) < 10 && abs(srcpnY[x-2]-srcpnY[x+2]) < 10))
+				{
+					dstpY[x] = (srcppY[x]+srcpnY[x]+1)>>1;
+				}
+				else
+				{
+					stop = min(x-1,min(8,WidthY-2-x));
+					minf = min(srcppY[x],srcpnY[x])-2;
+					maxf = max(srcppY[x],srcpnY[x])+2;
+					val = (srcppY[x]+srcpnY[x]+1)>>1;
+					for (min=450, u=0; u<=stop; ++u)
+					{
+						s1 = srcppY[x+(u>>1)]+srcppY[x+((u+1)>>1)];
+						s2 = srcpnY[x-(u>>1)]+srcpnY[x-((u+1)>>1)];
+						temp1 = abs(s1-s2) + abs(srcppY[x-1]-srcpnY[x-1-u]) + 
+							(abs(srcppY[x]-srcpnY[x-u])<<1) + abs(srcppY[x+1]-srcpnY[x+1-u]) +
+							abs(srcpnY[x-1]-srcppY[x-1+u]) + (abs(srcpnY[x]-srcppY[x+u])<<1) + 
+							abs(srcpnY[x+1]-srcppY[x+1+u]);
+						temp2 = (s1+s2+2)>>2;
+						if (temp1 < min && temp2 >= minf && temp2 <= maxf)
+						{
+							min = temp1;
+							val = temp2;
+						}
+						s1 = srcppY[x-(u>>1)]+srcppY[x-((u+1)>>1)];
+						s2 = srcpnY[x+(u>>1)]+srcpnY[x+((u+1)>>1)];
+						temp1 = abs(s1-s2) + abs(srcppY[x-1]-srcpnY[x-1+u]) + 
+							(abs(srcppY[x]-srcpnY[x+u])<<1) + abs(srcppY[x+1]-srcpnY[x+1+u])+
+							abs(srcpnY[x-1]-srcppY[x-1-u]) + (abs(srcpnY[x]-srcppY[x-u])<<1) +
+							abs(srcpnY[x+1]-srcppY[x+1-u]);
+						temp2 = (s1+s2+2)>>2;
+						if (temp1 < min && temp2 >= minf && temp2 <= maxf)
+						{
+							min = temp1;
+							val = temp2;
+						}
+					}
+					dstpY[x] = val;
+				}
+			}
+		}
+		prvpY += prv_pitchY;
+		srcppY += src_pitchY;
+		srcpY += src_pitchY;
+		srcpnY += src_pitchY;
+		nxtpY += nxt_pitchY;
+		maskpY += mask_pitchY;
+		dstpY += dst_pitchY;
+	}
+	for (y=0; y<HeightUV; ++y)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpV[x] == 10 || maskpV[x] == 110) dstpV[x] = srcpV[x];
+			else if (maskpV[x] == 20 || maskpV[x] == 120) dstpV[x] = prvpV[x];
+			else if (maskpV[x] == 30 || maskpV[x] == 130) dstpV[x] = nxtpV[x];
+			else if (maskpV[x] == 40) dstpV[x] = (srcpV[x]+nxtpV[x]+1)>>1;
+			else if (maskpV[x] == 50) dstpV[x] = (srcpV[x]+prvpV[x]+1)>>1;
+			else if (maskpV[x] == 60)
+			{
+				if (x < 2 || x > WidthUV-3 || (abs(srcppV[x]-srcpnV[x]) < 10 &&
+					abs(srcppV[x-2]-srcppV[x+2]) < 10 && abs(srcpnV[x-2]-srcpnV[x+2]) < 10)) 
+				{
+					dstpV[x] = (srcppV[x]+srcpnV[x]+1)>>1;
+				}
+				else
+				{
+					stop = min(x-1,min(4,WidthUV-2-x));
+					minf = min(srcppV[x],srcpnV[x])-2;
+					maxf = max(srcppV[x],srcpnV[x])+2;
+					val = (srcppV[x]+srcpnV[x]+1)>>1;
+					for (min=450, u=0; u<=stop; ++u) 
+					{
+						s1 = srcppV[x+(u>>1)]+srcppV[x+((u+1)>>1)];
+						s2 = srcpnV[x-(u>>1)]+srcpnV[x-((u+1)>>1)];
+						temp1 = abs(s1-s2) + abs(srcppV[x-1]-srcpnV[x-1-u]) +
+							(abs(srcppV[x]-srcpnV[x-u])<<1) + abs(srcppV[x+1]-srcpnV[x+1-u]) +
+							abs(srcpnV[x-1]-srcppV[x-1+u]) + (abs(srcpnV[x]-srcppV[x+u])<<1) +
+							abs(srcpnV[x+1]-srcppV[x+1+u]);
+						temp2 = (s1+s2+2)>>2;
+						if (temp1 < min && temp2 >= minf && temp2 <= maxf)
+						{
+							min = temp1;
+							val = temp2;
+						}
+						s1 = srcppV[x-(u>>1)]+srcppV[x-((u+1)>>1)];
+						s2 = srcpnV[x+(u>>1)]+srcpnV[x+((u+1)>>1)];
+						temp1 = abs(s1-s2) + abs(srcppV[x-1]-srcpnV[x-1+u]) + 
+							(abs(srcppV[x]-srcpnV[x+u])<<1) + abs(srcppV[x+1]-srcpnV[x+1+u]) +
+							abs(srcpnV[x-1]-srcppV[x-1-u]) + (abs(srcpnV[x]-srcppV[x-u])<<1) + 
+							abs(srcpnV[x+1]-srcppV[x+1-u]);
+						temp2 = (s1+s2+2)>>2;
+						if (temp1 < min && temp2 >= minf && temp2 <= maxf)
+						{
+							min = temp1;
+							val = temp2;
+						}
+					}
+					dstpV[x] = val;
+				}
+			}
+			if (maskpU[x] == 10 || maskpU[x] == 110) dstpU[x] = srcpU[x];
+			else if (maskpU[x] == 20 || maskpU[x] == 120) dstpU[x] = prvpU[x];
+			else if (maskpU[x] == 30 || maskpU[x] == 130) dstpU[x] = nxtpU[x];
+			else if (maskpU[x] == 40) dstpU[x] = (srcpU[x]+nxtpU[x]+1)>>1;
+			else if (maskpU[x] == 50) dstpU[x] = (srcpU[x]+prvpU[x]+1)>>1;
+			else if (maskpU[x] == 60)
+			{
+				if (x < 2 || x > WidthUV-3 || (abs(srcppU[x]-srcpnU[x]) < 10 &&
+					abs(srcppU[x-2]-srcppU[x+2]) < 10 && abs(srcpnU[x-2]-srcpnU[x+2]) < 10)) 
+				{
+					dstpU[x] = (srcppU[x]+srcpnU[x]+1)>>1;
+				}
+				else
+				{
+					stop = min(x-1,min(4,WidthUV-2-x));
+					minf = min(srcppU[x],srcpnU[x])-2;
+					maxf = max(srcppU[x],srcpnU[x])+2;
+					val = (srcppU[x]+srcpnU[x]+1)>>1;
+					for (min=450, u=0; u<=stop; ++u) 
+					{
+						s1 = srcppU[x+(u>>1)]+srcppU[x+((u+1)>>1)];
+						s2 = srcpnU[x-(u>>1)]+srcpnU[x-((u+1)>>1)];
+						temp1 = abs(s1-s2) + abs(srcppU[x-1]-srcpnU[x-1-u]) +
+							(abs(srcppU[x]-srcpnU[x-u])<<1) + abs(srcppU[x+1]-srcpnU[x+1-u]) +
+							abs(srcpnU[x-1]-srcppU[x-1+u]) + (abs(srcpnU[x]-srcppU[x+u])<<1) +
+							abs(srcpnU[x+1]-srcppU[x+1+u]);
+						temp2 = (s1+s2+2)>>2;
+						if (temp1 < min && temp2 >= minf && temp2 <= maxf)
+						{
+							min = temp1;
+							val = temp2;
+						}
+						s1 = srcppU[x-(u>>1)]+srcppU[x-((u+1)>>1)];
+						s2 = srcpnU[x+(u>>1)]+srcpnU[x+((u+1)>>1)];
+						temp1 = abs(s1-s2) + abs(srcppU[x-1]-srcpnU[x-1+u]) + 
+							(abs(srcppU[x]-srcpnU[x+u])<<1) + abs(srcppU[x+1]-srcpnU[x+1+u]) +
+							abs(srcpnU[x-1]-srcppU[x-1-u]) + (abs(srcpnU[x]-srcppU[x-u])<<1) +
+							abs(srcpnU[x+1]-srcppU[x+1-u]);
+						temp2 = (s1+s2+2)>>2;
+						if (temp1 < min && temp2 >= minf && temp2 <= maxf)
+						{
+							min = temp1;
+							val = temp2;
+						}
+					}
+					dstpU[x] = val;
+				}
+			}
+		}
+		prvpV += prv_pitchUV;
+		prvpU += prv_pitchUV;
+		srcppV += src_pitchUV;
+		srcpV += src_pitchUV;
+		srcpnV += src_pitchUV;
+		srcppU += src_pitchUV;
+		srcpU += src_pitchUV;
+		srcpnU += src_pitchUV;
+		nxtpV += nxt_pitchUV;
+		nxtpU += nxt_pitchUV;
+		maskpV += mask_pitchUV;
+		maskpU += mask_pitchUV;
+		dstpV += dst_pitchUV;
+		dstpU += dst_pitchUV;
+	}
+}
+
+void vidTDeint::kernelDeintYV12(ADMImage *dst, ADMImage *mask, 
+		ADMImage *prv, ADMImage *src, ADMImage *nxt)
+{
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchY2 = prv_pitchY<<1;
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	int prv_pitchUV2 = prv_pitchUV<<1;
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int src_pitchY2 = src_pitchY<<1;
+	int src_pitchUV2 = src_pitchUV<<1;
+	int WidthY = src->GetRowSize(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V);
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int HeightUV = src->GetHeight(PLANAR_V);
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchY2 = nxt_pitchY<<1;
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	int nxt_pitchUV2 = nxt_pitchUV<<1;
+	unsigned char *dstpY = dst->GetWritePtr(PLANAR_Y);
+	unsigned char *dstpU = dst->GetWritePtr(PLANAR_U);
+	unsigned char *dstpV = dst->GetWritePtr(PLANAR_V);
+	int dst_pitchY = dst->GetPitch(PLANAR_Y);
+	int dst_pitchUV = dst->GetPitch(PLANAR_V);
+	const unsigned char *maskpY = mask->GetReadPtr(PLANAR_Y);
+	const unsigned char *maskpU = mask->GetReadPtr(PLANAR_U);
+	const unsigned char *maskpV = mask->GetReadPtr(PLANAR_V);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	const unsigned char *srcppY = srcpY - src_pitchY;
+	const unsigned char *srcppU = srcpU - src_pitchUV;
+	const unsigned char *srcppV = srcpV - src_pitchUV;
+	const unsigned char *srcpppY = srcppY - src_pitchY2;
+	const unsigned char *srcpppU = srcppU - src_pitchUV2;
+	const unsigned char *srcpppV = srcppV - src_pitchUV2;
+	const unsigned char *srcpnY = srcpY + src_pitchY;
+	const unsigned char *srcpnU = srcpU + src_pitchUV;
+	const unsigned char *srcpnV = srcpV + src_pitchUV;
+	const unsigned char *srcpnnY = srcpnY + src_pitchY2;
+	const unsigned char *srcpnnU = srcpnU + src_pitchUV2;
+	const unsigned char *srcpnnV = srcpnV + src_pitchUV2;
+	const unsigned char *kercY, *kerpY, *kerppY, *kernY, *kernnY;
+	const unsigned char *kercU, *kerpU, *kerppU, *kernU, *kernnU;
+	const unsigned char *kercV, *kerpV, *kerppV, *kernV, *kernnV;
+	int ker_pitchY, ker_pitchUV, x, y, temp;
+	if (accumP <= accumN)
+	{
+		if (PRM(field)^PRM(order))
+		{
+			ker_pitchY = src_pitchY;
+			ker_pitchUV = src_pitchUV;
+			kerppY = srcpY - (src_pitchY2<<1);
+			kerppU = srcpU - (src_pitchUV2<<1);
+			kerppV = srcpV - (src_pitchUV2<<1);
+			kerpY = srcpY - src_pitchY2;
+			kerpU = srcpU - src_pitchUV2;
+			kerpV = srcpV - src_pitchUV2;
+			kercY = srcpY;
+			kercU = srcpU;
+			kercV = srcpV;
+			kernY = srcpY + src_pitchY2;
+			kernU = srcpU + src_pitchUV2;
+			kernV = srcpV + src_pitchUV2;
+			kernnY = srcpY + (src_pitchY2<<1);
+			kernnU = srcpU + (src_pitchUV2<<1);
+			kernnV = srcpV + (src_pitchUV2<<1);
+		}
+		else
+		{
+			ker_pitchY = prv_pitchY;
+			ker_pitchUV = prv_pitchUV;
+			kerppY = prvpY - (prv_pitchY2<<1);
+			kerppU = prvpU - (prv_pitchUV2<<1);
+			kerppV = prvpV - (prv_pitchUV2<<1);
+			kerpY = prvpY - prv_pitchY2;
+			kerpU = prvpU - prv_pitchUV2;
+			kerpV = prvpV - prv_pitchUV2;
+			kercY = prvpY;
+			kercU = prvpU;
+			kercV = prvpV;
+			kernY = prvpY + prv_pitchY2;
+			kernU = prvpU + prv_pitchUV2;
+			kernV = prvpV + prv_pitchUV2;
+			kernnY = prvpY + (prv_pitchY2<<1);
+			kernnU = prvpU + (prv_pitchUV2<<1);
+			kernnV = prvpV + (prv_pitchUV2<<1);
+		}
+	}
+	else
+	{
+		if (PRM(field)^PRM(order))
+		{
+			ker_pitchY = nxt_pitchY;
+			ker_pitchUV = nxt_pitchUV;
+			kerppY = nxtpY - (nxt_pitchY2<<1);
+			kerppU = nxtpU - (nxt_pitchUV2<<1);
+			kerppV = nxtpV - (nxt_pitchUV2<<1);
+			kerpY = nxtpY - nxt_pitchY2;
+			kerpU = nxtpU - nxt_pitchUV2;
+			kerpV = nxtpV - nxt_pitchUV2;
+			kercY = nxtpY;
+			kercU = nxtpU;
+			kercV = nxtpV;
+			kernY = nxtpY + nxt_pitchY2;
+			kernU = nxtpU + nxt_pitchUV2;
+			kernV = nxtpV + nxt_pitchUV2;
+			kernnY = nxtpY + (nxt_pitchY2<<1);
+			kernnU = nxtpU + (nxt_pitchUV2<<1);
+			kernnV = nxtpV + (nxt_pitchUV2<<1);
+		}
+		else
+		{
+			ker_pitchY = src_pitchY;
+			ker_pitchUV = src_pitchUV;
+			kerppY = srcpY - (src_pitchY2<<1);
+			kerppU = srcpU - (src_pitchUV2<<1);
+			kerppV = srcpV - (src_pitchUV2<<1);
+			kerpY = srcpY - src_pitchY2;
+			kerpU = srcpU - src_pitchUV2;
+			kerpV = srcpV - src_pitchUV2;
+			kercY = srcpY;
+			kercU = srcpU;
+			kercV = srcpV;
+			kernY = srcpY + src_pitchY2;
+			kernU = srcpU + src_pitchUV2;
+			kernV = srcpV + src_pitchUV2;
+			kernnY = srcpY + (src_pitchY2<<1);
+			kernnU = srcpU + (src_pitchUV2<<1);
+			kernnV = srcpV + (src_pitchUV2<<1);
+		}
+	}
+	for (y=0; y<HeightY; ++y)
+	{
+		for (x=0; x<WidthY; ++x)
+		{
+			if (maskpY[x] == 10 || maskpY[x] == 110) dstpY[x] = srcpY[x];
+			else if (maskpY[x] == 20 || maskpY[x] == 120) dstpY[x] = prvpY[x];
+			else if (maskpY[x] == 30 || maskpY[x] == 130) dstpY[x] = nxtpY[x];
+			else if (maskpY[x] == 40) dstpY[x] = (srcpY[x]+nxtpY[x]+1)>>1;
+			else if (maskpY[x] == 50) dstpY[x] = (srcpY[x]+prvpY[x]+1)>>1;
+			else if (maskpY[x] == 60)
+			{
+				if (sharp && y>3 && y<HeightY-4)
+				{
+					temp = (int)((0.526*(srcppY[x]+srcpnY[x]) + 
+								  0.170*(kercY[x]) - 
+								  0.116*(kerpY[x]+kernY[x]) - 
+								  0.026*(srcpppY[x]+srcpnnY[x]) + 
+								  0.031*(kerppY[x] + kernnY[x])) + 0.5f);
+					if (temp > 255) dstpY[x] = 255;
+					else if (temp < 0) dstpY[x] = 0;
+					else dstpY[x] = temp;
+				}
+				else if (y>1 && y<HeightY-2)
+				{
+					temp = (((srcppY[x]+srcpnY[x])<<3)+
+							(kercY[x]<<1)-(kerpY[x]+kernY[x])+8) >> 4;
+					if (temp > 255) dstpY[x] = 255;
+					else if (temp < 0) dstpY[x] = 0;
+					else dstpY[x] = temp;
+				}
+				else dstpY[x] = (srcpnY[x]+srcppY[x]+1)>>1;
+			}
+		}
+		prvpY += prv_pitchY;
+		srcpppY += src_pitchY;
+		srcppY += src_pitchY;
+		srcpY += src_pitchY;
+		srcpnY += src_pitchY;
+		srcpnnY += src_pitchY;
+		kerppY += ker_pitchY;
+		kerpY += ker_pitchY;
+		kercY += ker_pitchY;
+		kernY += ker_pitchY;
+		kernnY += ker_pitchY;
+		nxtpY += nxt_pitchY;
+		maskpY += mask_pitchY;
+		dstpY += dst_pitchY;
+	}
+	for (y=0; y<HeightUV; ++y)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpU[x] == 10 || maskpU[x] == 110) dstpU[x] = srcpU[x];
+			else if (maskpU[x] == 20 || maskpU[x] == 120) dstpU[x] = prvpU[x];
+			else if (maskpU[x] == 30 || maskpU[x] == 130) dstpU[x] = nxtpU[x];
+			else if (maskpU[x] == 40) dstpU[x] = (srcpU[x]+nxtpU[x]+1)>>1;
+			else if (maskpU[x] == 50) dstpU[x] = (srcpU[x]+prvpU[x]+1)>>1;
+			else if (maskpU[x] == 60)
+			{
+				if (sharp && y>3 && y<HeightUV-4)
+				{
+					temp = (int)((0.526*(srcppU[x]+srcpnU[x]) + 
+								  0.170*(kercU[x]) - 
+								  0.116*(kerpU[x]+kernU[x]) - 
+								  0.026*(srcpppU[x]+srcpnnU[x]) + 
+								  0.031*(kerppU[x] + kernnU[x])) + 0.5f);
+					if (temp > 255) dstpU[x] = 255;
+					else if (temp < 0) dstpU[x] = 0;
+					else dstpU[x] = temp;
+				}
+				else if (y>1 && y<HeightUV-2)
+				{
+					temp = (((srcppU[x]+srcpnU[x])<<3)+
+							(kercU[x]<<1)-(kerpU[x]+kernU[x])+8) >> 4;
+					if (temp > 255) dstpU[x] = 255;
+					else if (temp < 0) dstpU[x] = 0;
+					else dstpU[x] = temp;
+				}
+				else dstpU[x] = (srcpnU[x]+srcppU[x]+1)>>1;
+			}
+			if (maskpV[x] == 10 || maskpV[x] == 110) dstpV[x] = srcpV[x];
+			else if (maskpV[x] == 20 || maskpV[x] == 120) dstpV[x] = prvpV[x];
+			else if (maskpV[x] == 30 || maskpV[x] == 130) dstpV[x] = nxtpV[x];
+			else if (maskpV[x] == 40) dstpV[x] = (srcpV[x]+nxtpV[x]+1)>>1;
+			else if (maskpV[x] == 50) dstpV[x] = (srcpV[x]+prvpV[x]+1)>>1;
+			else if (maskpV[x] == 60)
+			{
+				if (sharp && y>3 && y<HeightUV-4)
+				{
+					temp = (int)((0.526*(srcppV[x]+srcpnV[x]) + 
+								  0.170*(kercV[x]) - 
+								  0.116*(kerpV[x]+kernV[x]) - 
+								  0.026*(srcpppV[x]+srcpnnV[x]) + 
+								  0.031*(kerppV[x] + kernnV[x])) + 0.5f);
+					if (temp > 255) dstpV[x] = 255;
+					else if (temp < 0) dstpV[x] = 0;
+					else dstpV[x] = temp;
+				}
+				else if (y>1 && y<HeightUV-2)
+				{
+					temp = (((srcppV[x]+srcpnV[x])<<3)+
+							(kercV[x]<<1)-(kerpV[x]+kernV[x])+8) >> 4;
+					if (temp > 255) dstpV[x] = 255;
+					else if (temp < 0) dstpV[x] = 0;
+					else dstpV[x] = temp;
+				}
+				else dstpV[x] = (srcpnV[x]+srcppV[x]+1)>>1;
+			}
+
+		}
+		prvpU += prv_pitchUV;
+		prvpV += prv_pitchUV;
+		srcpppU += src_pitchUV;
+		srcpppV += src_pitchUV;
+		srcppU += src_pitchUV;
+		srcppV += src_pitchUV;
+		srcpU += src_pitchUV;
+		srcpV += src_pitchUV;
+		srcpnU += src_pitchUV;
+		srcpnV += src_pitchUV;
+		srcpnnU += src_pitchUV;
+		srcpnnV += src_pitchUV;
+		kerppU += ker_pitchUV;
+		kerppV += ker_pitchUV;
+		kerpU += ker_pitchUV;
+		kerpV += ker_pitchUV;
+		kercU += ker_pitchUV;
+		kercV += ker_pitchUV;
+		kernU += ker_pitchUV;
+		kernV += ker_pitchUV;
+		kernnU += ker_pitchUV;
+		kernnV += ker_pitchUV;
+		nxtpU += nxt_pitchUV;
+		nxtpV += nxt_pitchUV;
+		maskpU += mask_pitchUV;
+		maskpV += mask_pitchUV;
+		dstpU += dst_pitchUV;
+		dstpV += dst_pitchUV;
+	}
+}
+
+void vidTDeint::smartELADeintYV12(ADMImage *dst, ADMImage *mask, 
+		ADMImage *prv, ADMImage *src, ADMImage *nxt)
+{
+	const unsigned char *prvpY = prv->GetReadPtr(PLANAR_Y);
+	const unsigned char *prvpV = prv->GetReadPtr(PLANAR_V);
+	const unsigned char *prvpU = prv->GetReadPtr(PLANAR_U);
+	int prv_pitchY = prv->GetPitch(PLANAR_Y);
+	int prv_pitchUV = prv->GetPitch(PLANAR_V);
+	const unsigned char *srcpY = src->GetReadPtr(PLANAR_Y);
+	const unsigned char *srcpV = src->GetReadPtr(PLANAR_V);
+	const unsigned char *srcpU = src->GetReadPtr(PLANAR_U);
+	int src_pitchY = src->GetPitch(PLANAR_Y);
+	int src_pitchY2 = src_pitchY<<1;
+	int src_pitchUV = src->GetPitch(PLANAR_V);
+	int src_pitchUV2 = src_pitchUV<<1;
+	int WidthY = src->GetRowSize(PLANAR_Y);
+	int WidthUV = src->GetRowSize(PLANAR_V);
+	int HeightY = src->GetHeight(PLANAR_Y);
+	int HeightUV = src->GetHeight(PLANAR_V);
+	const unsigned char *nxtpY = nxt->GetReadPtr(PLANAR_Y);
+	const unsigned char *nxtpV = nxt->GetReadPtr(PLANAR_V);
+	const unsigned char *nxtpU = nxt->GetReadPtr(PLANAR_U);
+	int nxt_pitchY = nxt->GetPitch(PLANAR_Y);
+	int nxt_pitchUV = nxt->GetPitch(PLANAR_V);
+	unsigned char *dstpY = dst->GetWritePtr(PLANAR_Y);
+	unsigned char *dstpV = dst->GetWritePtr(PLANAR_V);
+	unsigned char *dstpU = dst->GetWritePtr(PLANAR_U);
+	int dst_pitchY = dst->GetPitch(PLANAR_Y);
+	int dst_pitchUV = dst->GetPitch(PLANAR_V);
+	const unsigned char *maskpY = mask->GetReadPtr(PLANAR_Y);
+	const unsigned char *maskpV = mask->GetReadPtr(PLANAR_V);
+	const unsigned char *maskpU = mask->GetReadPtr(PLANAR_U);
+	int mask_pitchY = mask->GetPitch(PLANAR_Y);
+	int mask_pitchUV = mask->GetPitch(PLANAR_V);
+	const unsigned char *srcppY = srcpY - src_pitchY;
+	const unsigned char *srcpppY = srcppY - src_pitchY2;
+	const unsigned char *srcpnY = srcpY + src_pitchY;
+	const unsigned char *srcpnnY = srcpnY + src_pitchY2;
+	const unsigned char *srcppV = srcpV - src_pitchUV;
+	const unsigned char *srcpppV = srcppV - src_pitchUV2;
+	const unsigned char *srcpnV = srcpV + src_pitchUV;
+	const unsigned char *srcpnnV = srcpnV + src_pitchUV2;
+	const unsigned char *srcppU = srcpU - src_pitchUV;
+	const unsigned char *srcpppU = srcppU - src_pitchUV2;
+	const unsigned char *srcpnU = srcpU + src_pitchUV;
+	const unsigned char *srcpnnU = srcpnU + src_pitchUV2;
+	int x, y, Iy1, Iy2, Iye, Ix1, Ix2, edgeS1, edgeS2;
+	int sum, sumsq, temp, temp1, temp2, minN, maxN;
+	double dir1, dir2, dir, dirF;
+	for (y=0; y<HeightY; ++y)
+	{
+		for (x=0; x<WidthY; ++x)
+		{
+			if (maskpY[x] == 10 || maskpY[x] == 110) dstpY[x] = srcpY[x];
+			else if (maskpY[x] == 20 || maskpY[x] == 120) dstpY[x] = prvpY[x];
+			else if (maskpY[x] == 30 || maskpY[x] == 130) dstpY[x] = nxtpY[x];
+			else if (maskpY[x] == 40) dstpY[x] = (srcpY[x]+nxtpY[x]+1)>>1;
+			else if (maskpY[x] == 50) dstpY[x] = (srcpY[x]+prvpY[x]+1)>>1;
+			else if (maskpY[x] == 60)
+			{
+				if (y>2 && y<HeightY-3 && x>3 && x<WidthY-4)
+				{
+					Iy1 = srcpppY[x-1]+srcpppY[x]+srcpppY[x]+srcpppY[x+1]-srcpnY[x-1]-srcpnY[x]-srcpnY[x]-srcpnY[x+1];
+					Iy2 = srcppY[x-1]+srcppY[x]+srcppY[x]+srcppY[x+1]-srcpnnY[x-1]-srcpnnY[x]-srcpnnY[x]-srcpnnY[x+1];
+					Ix1 = srcpppY[x+1]+srcppY[x+1]+srcppY[x+1]+srcpnY[x+1]-srcpppY[x-1]-srcppY[x-1]-srcppY[x-1]-srcpnY[x-1];
+					Ix2 = srcppY[x+1]+srcpnY[x+1]+srcpnY[x+1]+srcpnnY[x+1]-srcppY[x-1]-srcpnY[x-1]-srcpnY[x-1]-srcpnnY[x-1];
+					edgeS1 = Ix1*Ix1 + Iy1*Iy1;
+					edgeS2 = Ix2*Ix2 + Iy2*Iy2;
+					if (edgeS1 < 1600 && edgeS2 < 1600) 
+					{
+						dstpY[x] = (srcppY[x]+srcpnY[x]+1)>>1;
+						continue;
+					}
+					if (abs(srcppY[x]-srcpnY[x]) < 10 && (edgeS1 < 1600 || edgeS2 < 1600))
+					{
+						dstpY[x] = (srcppY[x]+srcpnY[x]+1)>>1;
+						continue;
+					}
+					sum = srcppY[x-1] + srcppY[x] + srcppY[x+1] + srcpnY[x-1] + srcpnY[x] + srcpnY[x+1];
+					sumsq = srcppY[x-1]*srcppY[x-1] + srcppY[x]*srcppY[x] + srcppY[x+1]*srcppY[x+1] +
+							srcpnY[x-1]*srcpnY[x-1] + srcpnY[x]*srcpnY[x] + srcpnY[x+1]*srcpnY[x+1];
+					if ((6*sumsq - sum*sum) < 432)
+					{
+						dstpY[x] = (srcppY[x]+srcpnY[x]+1)>>1;
+						continue;
+					}
+					if (Ix1 == 0) dir1 = 3.1415926;
+					else
+					{
+						dir1 = atan(Iy1/(Ix1*2.0f)) + 1.5707963;
+						if (Iy1 >= 0) { if (Ix1 < 0) dir1 += 3.1415927; }
+						else { if (Ix1 >= 0) dir1 += 3.1415927; }
+						if (dir1 >= 3.1415927) dir1 -= 3.1415927;
+					}
+					if (Ix2 == 0) dir2 = 3.1415926;
+					else 
+					{
+						dir2 = atan(Iy2/(Ix2*2.0f)) + 1.5707963;
+						if (Iy2 >= 0) { if (Ix2 < 0) dir2 += 3.1415927; }
+						else { if (Ix2 >= 0) dir2 += 3.1415927; }
+						if (dir2 >= 3.1415927) dir2 -= 3.1415927;
+					}
+					if (fabs(dir1-dir2) < 0.5)
+					{
+						if (edgeS1 >= 3600 && edgeS2 >= 3600) dir = (dir1 + dir2) * 0.5f;
+						else dir = edgeS1 >= edgeS2 ? dir1 : dir2;
+					}
+					else
+					{
+						if (edgeS1 >= 5000 && edgeS2 >= 5000)
+						{
+							Iye = srcppY[x-1]+srcppY[x]+srcppY[x]+srcppY[x+1]-srcpnY[x-1]-srcpnY[x]-srcpnY[x]-srcpnY[x+1];
+							if ((Iy1*Iye > 0) && (Iy2*Iye < 0)) dir = dir1;
+							else if ((Iy1*Iye < 0) && (Iy2*Iye > 0)) dir = dir2;
+							else
+							{
+								if (abs(Iye-Iy1) <= abs(Iye-Iy2)) dir = dir1;
+								else dir = dir2;
+							}
+						}
+						else dir = edgeS1 >= edgeS2 ? dir1 : dir2;
+					}
+					dirF = 0.5f/tan(dir);
+					if (dirF >= 0.0f)
+					{
+						if (dirF >= 0.5f)
+						{
+							if (dirF >= 1.0f)
+							{
+								if (dirF >= 1.5f)
+								{
+									if (dirF >= 2.0f)
+									{
+										if (dirF <= 2.50f)
+										{
+											temp1 = srcppY[x+4];
+											temp2 = srcpnY[x-4];
+											temp = (srcppY[x+4]+srcpnY[x-4]+1)>>1;
+										}
+										else 
+										{
+											temp1 = temp2 = srcpnY[x];
+											temp = cubicInt(srcpppY[x],srcppY[x],srcpnY[x],srcpnnY[x]);
+										}
+									}
+									else 
+									{
+										temp1 = (int)((dirF-1.5f)*(srcppY[x+4]) + (2.0f-dirF)*(srcppY[x+3]) + 0.5f);
+										temp2 = (int)((dirF-1.5f)*(srcpnY[x-4]) + (2.0f-dirF)*(srcpnY[x-3]) + 0.5f);
+										temp = (int)((dirF-1.5f)*(srcppY[x+4]+srcpnY[x-4]) + (2.0f-dirF)*(srcppY[x+3]+srcpnY[x-3]) + 0.5f);
+									}
+								}
+								else 
+								{
+									temp1 = (int)((dirF-1.0f)*(srcppY[x+3]) + (1.5f-dirF)*(srcppY[x+2]) + 0.5f);
+									temp2 = (int)((dirF-1.0f)*(srcpnY[x-3]) + (1.5f-dirF)*(srcpnY[x-2]) + 0.5f);
+									temp = (int)((dirF-1.0f)*(srcppY[x+3]+srcpnY[x-3]) + (1.5f-dirF)*(srcppY[x+2]+srcpnY[x-2]) + 0.5f);
+								}
+							}
+							else 
+							{
+								temp1 = (int)((dirF-0.5f)*(srcppY[x+2]) + (1.0f-dirF)*(srcppY[x+1]) + 0.5f);
+								temp2 = (int)((dirF-0.5f)*(srcpnY[x-2]) + (1.0f-dirF)*(srcpnY[x-1]) + 0.5f);
+								temp = (int)((dirF-0.5f)*(srcppY[x+2]+srcpnY[x-2]) + (1.0f-dirF)*(srcppY[x+1]+srcpnY[x-1]) + 0.5f);
+							}
+						}
+						else 
+						{
+							temp1 = (int)(dirF*(srcppY[x+1]) + (0.5f-dirF)*(srcppY[x]) + 0.5f);
+							temp2 = (int)(dirF*(srcpnY[x-1]) + (0.5f-dirF)*(srcpnY[x]) + 0.5f);
+							temp = (int)(dirF*(srcppY[x+1]+srcpnY[x-1]) + (0.5f-dirF)*(srcppY[x]+srcpnY[x]) + 0.5f);
+						}
+					}
+					else
+					{
+						if (dirF <= -0.5f)
+						{
+							if (dirF <= -1.0f)
+							{
+								if (dirF <= -1.5f)
+								{
+									if (dirF <= -2.0f)
+									{
+										if (dirF >= -2.50f) 
+										{
+											temp1 = srcppY[x-4];
+											temp2 = srcpnY[x+4];
+											temp = (srcppY[x-4]+srcpnY[x+4]+1)>>1;
+										}
+										else 
+										{
+											temp1 = temp2 = srcpnY[x];
+											temp = cubicInt(srcpppY[x],srcppY[x],srcpnY[x],srcpnnY[x]);
+										}
+									}
+									else
+									{
+										temp1 = (int)((-dirF-1.5f)*(srcppY[x-4]) + (2.0f+dirF)*(srcppY[x-3]) + 0.5f);
+										temp2 = (int)((-dirF-1.5f)*(srcpnY[x+4]) + (2.0f+dirF)*(srcpnY[x+3]) + 0.5f);
+										temp = (int)((-dirF-1.5f)*(srcppY[x-4]+srcpnY[x+4]) + (2.0f+dirF)*(srcppY[x-3]+srcpnY[x+3]) + 0.5f);
+									}
+								}
+								else 
+								{
+									temp1 = (int)((-dirF-1.0f)*(srcppY[x-3]) + (1.5f+dirF)*(srcppY[x-2]) + 0.5f);
+									temp2 = (int)((-dirF-1.0f)*(srcpnY[x+3]) + (1.5f+dirF)*(srcpnY[x+2]) + 0.5f);
+									temp = (int)((-dirF-1.0f)*(srcppY[x-3]+srcpnY[x+3]) + (1.5f+dirF)*(srcppY[x-2]+srcpnY[x+2]) + 0.5f);
+								}
+							}
+							else 
+							{
+								temp1 = (int)((-dirF-0.5f)*(srcppY[x-2]) + (1.0f+dirF)*(srcppY[x-1]) + 0.5f);
+								temp2 = (int)((-dirF-0.5f)*(srcpnY[x+2]) + (1.0f+dirF)*(srcpnY[x+1]) + 0.5f);
+								temp = (int)((-dirF-0.5f)*(srcppY[x-2]+srcpnY[x+2]) + (1.0f+dirF)*(srcppY[x-1]+srcpnY[x+1]) + 0.5f);
+							}
+						}
+						else 
+						{
+							temp1 = (int)((-dirF)*(srcppY[x-1]) + (0.5f+dirF)*(srcppY[x]) + 0.5f);
+							temp2 = (int)((-dirF)*(srcpnY[x+1]) + (0.5f+dirF)*(srcpnY[x]) + 0.5f);
+							temp = (int)((-dirF)*(srcppY[x-1]+srcpnY[x+1]) + (0.5f+dirF)*(srcppY[x]+srcpnY[x]) + 0.5f);
+						}
+					}
+					maxN = max(srcppY[x],srcpnY[x]) + 25;
+					minN = min(srcppY[x],srcpnY[x]) - 25;
+					if (abs(temp1-temp2) > 20 || abs(srcppY[x]+srcpnY[x]-temp-temp) > 60 || temp < minN || temp > maxN)
+					{
+						temp = cubicInt(srcpppY[x],srcppY[x],srcpnY[x],srcpnnY[x]);
+					}
+					if (temp > 255) temp = 255;
+					else if (temp < 0) temp = 0;
+					dstpY[x] = temp;
+				}
+				else
+				{
+					if (y<3 || y>HeightY-4) dstpY[x] = (srcpnY[x]+srcppY[x]+1)>>1;
+					else dstpY[x] = cubicInt(srcpppY[x],srcppY[x],srcpnY[x],srcpnnY[x]);
+				}
+			}
+		}
+		prvpY += prv_pitchY;
+		srcpppY += src_pitchY;
+		srcppY += src_pitchY;
+		srcpY += src_pitchY;
+		srcpnY += src_pitchY;
+		srcpnnY += src_pitchY;
+		nxtpY += nxt_pitchY;
+		maskpY += mask_pitchY;
+		dstpY += dst_pitchY;
+	}
+	for (y=0; y<HeightUV; ++y)
+	{
+		for (x=0; x<WidthUV; ++x)
+		{
+			if (maskpV[x] == 10 || maskpV[x] == 110) dstpV[x] = srcpV[x];
+			else if (maskpV[x] == 20 || maskpV[x] == 120) dstpV[x] = prvpV[x];
+			else if (maskpV[x] == 30 || maskpV[x] == 130) dstpV[x] = nxtpV[x];
+			else if (maskpV[x] == 40) dstpV[x] = (srcpV[x]+nxtpV[x]+1)>>1;
+			else if (maskpV[x] == 50) dstpV[x] = (srcpV[x]+prvpV[x]+1)>>1;
+			else if (maskpV[x] == 60)
+			{
+				if (y<3 || y>HeightUV-4) dstpV[x] = (srcpnV[x]+srcppV[x]+1)>>1;
+				else dstpV[x] = cubicInt(srcpppV[x],srcppV[x],srcpnV[x],srcpnnV[x]);
+			}
+			if (maskpU[x] == 10 || maskpU[x] == 110) dstpU[x] = srcpU[x];
+			else if (maskpU[x] == 20 || maskpU[x] == 120) dstpU[x] = prvpU[x];
+			else if (maskpU[x] == 30 || maskpU[x] == 130) dstpU[x] = nxtpU[x];
+			else if (maskpU[x] == 40) dstpU[x] = (srcpU[x]+nxtpU[x]+1)>>1;
+			else if (maskpU[x] == 50) dstpU[x] = (srcpU[x]+prvpU[x]+1)>>1;
+			else if (maskpU[x] == 60)
+			{
+				if (y<3 || y>HeightUV-4) dstpU[x] = (srcpnU[x]+srcppU[x]+1)>>1;
+				else dstpU[x] = cubicInt(srcpppU[x],srcppU[x],srcpnU[x],srcpnnU[x]);
+			}
+		}
+		prvpV += prv_pitchUV;
+		prvpU += prv_pitchUV;
+		srcpppV += src_pitchUV;
+		srcppV += src_pitchUV;
+		srcpV += src_pitchUV;
+		srcpnV += src_pitchUV;
+		srcpnnV += src_pitchUV;
+		srcpppU += src_pitchUV;
+		srcppU += src_pitchUV;
+		srcpU += src_pitchUV;
+		srcpnU += src_pitchUV;
+		srcpnnU += src_pitchUV;
+		nxtpV += nxt_pitchUV;
+		nxtpU += nxt_pitchUV;
+		maskpV += mask_pitchUV;
+		maskpU += mask_pitchUV;
+		dstpV += dst_pitchUV;
+		dstpU += dst_pitchUV;
+	}
+}
+
+void vidTDeint::createWeaveFrameYV12(ADMImage *dst, ADMImage *prv, 
+		ADMImage *src, ADMImage *nxt)
+{
+	int b;
+	ADM_PLANE plane;
+	for (b=0; b<3; ++b)
+	{
+		if (b == 0) plane = PLANAR_Y;
+		else if (b == 1) plane = PLANAR_V;
+		else plane = PLANAR_U;
+		if (PRM(field)^PRM(order))
+		{
+			if (accumP <= accumN)
+			{
+				BitBlit(dst->GetWritePtr(plane), dst->GetPitch(plane), src->GetReadPtr(plane), 
+					src->GetPitch(plane), src->GetRowSize(plane), src->GetHeight(plane));
+			}
+			else
+			{
+				BitBlit(dst->GetWritePtr(plane)+(1-PRM(field))*dst->GetPitch(plane), dst->GetPitch(plane)<<1,
+					src->GetReadPtr(plane)+(1-PRM(field))*src->GetPitch(plane), src->GetPitch(plane)<<1, 
+					src->GetRowSize(plane), src->GetHeight(plane)>>1);
+				BitBlit(dst->GetWritePtr(plane)+PRM(field)*dst->GetPitch(plane), dst->GetPitch(plane)<<1, 
+					nxt->GetReadPtr(plane)+PRM(field)*nxt->GetPitch(plane), nxt->GetPitch(plane)<<1, nxt->GetRowSize(plane),
+					nxt->GetHeight(plane)>>1);
+			}
+		}
+		else
+		{
+			if (accumN <= accumP)
+			{
+				BitBlit(dst->GetWritePtr(plane), dst->GetPitch(plane), src->GetReadPtr(plane), 
+					src->GetPitch(plane), src->GetRowSize(plane), src->GetHeight(plane));
+			}
+			else
+			{
+				BitBlit(dst->GetWritePtr(plane)+(1-PRM(field))*dst->GetPitch(plane), dst->GetPitch(plane)<<1,
+					src->GetReadPtr(plane)+(1-PRM(field))*src->GetPitch(plane), src->GetPitch(plane)<<1, 
+					src->GetRowSize(plane), src->GetHeight(plane)>>1);
+				BitBlit(dst->GetWritePtr(plane)+PRM(field)*dst->GetPitch(plane), dst->GetPitch(plane)<<1, 
+					prv->GetReadPtr(plane)+PRM(field)*prv->GetPitch(plane), prv->GetPitch(plane)<<1, prv->GetRowSize(plane),
+					prv->GetHeight(plane)>>1);
+			}
+		}
+	}
+}
+
+//*********************************************************
+//*********************************************************
+//*********************************************************
+//*********************************************************
+int vidTDeint::getHint(ADMImage *src, unsigned int &storeHint, int &hintfield)
+{
+	hintfield = -1;
+	const unsigned char *p = YPLANE(src); //src->GetReadPtr(PLANAR_Y);
+	unsigned int i, magic_number = 0, hint = 0;
+	storeHint = 0xFFFFFFFF;
+	for (i=0; i<32; ++i)
+	{
+		magic_number |= ((*p++ & 1) << i);
+	}
+	if (magic_number != 0xdeadbeef && magic_number != 0xdeadfeed) return -1;
+	for (i=0; i<32; ++i)
+	{
+		hint |= ((*p++ & 1) << i);
+	}
+	if (magic_number == 0xdeadbeef && hint&0xFFFFFF00) return -1;
+	if (magic_number == 0xdeadfeed && hint&0xFFFFFF00) return -1;
+	storeHint = hint;
+	if (magic_number == 0xdeadbeef)
+	{
+		storeHint |= 0x00100000;
+		if (hint&0x00000001) return 0;
+		return 1;
+	}
+	if (hint&0x00000008) hintfield = 1;
+	else hintfield = 0;
+	if (hint&0x00000010) return 1;
+	return 0;
+}
+
+void vidTDeint::putHint(ADMImage *src, unsigned int hint, int fieldt)
+{
+	int type = hint&0x00100000 ? 0 : 1;
+	hint &= ~0x00100000;
+	if (hint&0xFFFFFF00) return;
+	if (type == 1)
+	{
+		hint &= 0x00000020;
+		if (fieldt == 1) hint |= 0x0000000E;
+		else hint |= 0x00000005;
+	}
+	unsigned char *p = YPLANE(src); //src->GetWritePtr(PLANAR_Y);
+	unsigned int i;
+	for (i=0; i<32; ++i)
+	{
+		*p &= ~1;
+		if (type == 0) *p++ |= ((0xdeadbeef & (1 << i)) >> i);
+		else *p++ |= ((0xdeadfeed & (1 << i)) >> i);
+	}
+	for (i=0; i<32; ++i)
+	{
+		*p &= ~1;
+		*p++ |= ((hint & (1 << i)) >> i);
+	}
+}
+/****************************************/
+void vidTDeint::copyFrame(ADMImage *dst,ADMImage *src)
+{
+	int b, stop =  3 ;
+	ADM_PLANE plane[3] = { PLANAR_Y, PLANAR_U, PLANAR_V };
+	for (b=0; b<stop; ++b)
+	{
+		BitBlit(dst->GetWritePtr(plane[b]),dst->GetPitch(plane[b]),src->GetReadPtr(plane[b]),
+			src->GetPitch(plane[b]),src->GetRowSize(plane[b]),src->GetHeight(plane[b]));
+	}
+}
+/****************************************/
+  void vidTDeint::copyForUpsize(ADMImage *dst, ADMImage *src, int np)
+{
+	int b;
+	ADM_PLANE plane[3] = { PLANAR_Y, PLANAR_U, PLANAR_V };
+	for (b=0; b<np; ++b)
+	{
+		BitBlit(dst->GetWritePtr(plane[b]),dst->GetPitch(plane[b])*2,src->GetReadPtr(plane[b]),
+			src->GetPitch(plane[b]),src->GetRowSize(plane[b]),src->GetHeight(plane[b]));
+		BitBlit(dst->GetWritePtr(plane[b])+(dst->GetPitch(plane[b])*(dst->GetHeight(plane[b])-1)),
+			dst->GetPitch(plane[b]),src->GetReadPtr(plane[b])+(src->GetPitch(plane[b])*(src->GetHeight(plane[b])-1)),
+			src->GetPitch(plane[b]),src->GetRowSize(plane[b]),1);
+	}	
+}
+/****************************************/
+void vidTDeint::setMaskForUpsize(ADMImage *msk, int np)
+{
+	unsigned char *maskwc, *maskwn;
+	int msk_pitch, height, width, y;
+	int b;
+	ADM_PLANE plane[3] = { PLANAR_Y, PLANAR_U, PLANAR_V };
+	for (b=0; b<np; ++b)
+	{
+		maskwc = msk->GetWritePtr(plane[b]);
+		msk_pitch = msk->GetPitch(plane[b]);
+		height = msk->GetHeight(plane[b])>>1;
+		width = msk->GetRowSize(plane[b]);
+		maskwn = maskwc + msk_pitch;
+		msk_pitch <<= 1;
+		if (PRM(field) == 1)
+		{
+			for (y=0; y<height-1; ++y)
+			{
+				memset(maskwc, 10, width);
+				memset(maskwn, 60, width);
+				maskwc += msk_pitch;
+				maskwn += msk_pitch;
+			}
+			memset(maskwc, 10, width);
+			memset(maskwn, 10, width);
+		}
+		else
+		{
+			memset(maskwc, 10, width);
+			memset(maskwn, 10, width);
+			for (y=0; y<height-1; ++y)
+			{
+				maskwc += msk_pitch;
+				maskwn += msk_pitch;
+				memset(maskwc, 60, width);
+				memset(maskwn, 10, width);
+			}
+		}
+	}
+}
+//**************************************
+void vidTDeint::apPostCheck(ADMImage *dst, ADMImage *mask)
+{
+	ADMImage * maskt;
+	if (APType > 0)
+	{
+		maskt = scratch; //_env->NewVideoFrame(vi);
+		copyFrame(maskt, mask);
+	}
+	unsigned char *maskw;
+	const unsigned char *dstp, *dstpp, *dstpn, *dstppp, *dstpnn, *maskp, *maskpT;
+	int dst_pitch, dst_pitch2, mask_pitch, mask_pitch2, Width, Height;
+	int x, y, b, stop =3 , count = 0, maskp_pitch, maskp_pitch2;
+	int sFirst, sSecond, AP6 = AP*6, moving, neighbors, u, v;
+	int starty, stopy, startx, stopx, inc;
+	ADM_PLANE plane;
+	
+	for (b=0; b<stop; ++b)
+	{
+		if (b == 0) plane = PLANAR_Y;
+		else if (b == 1) plane = PLANAR_U;
+		else plane = PLANAR_V;
+		dstp = dst->GetReadPtr(plane);
+		dst_pitch = dst->GetPitch(plane);
+		dst_pitch2 = dst_pitch<<1;
+		Width = dst->GetRowSize(plane);
+		Height = dst->GetHeight(plane);
+		dstp += (2-PRM(field))*dst_pitch;
+		dstppp = dstp - dst_pitch2;
+		dstpp = dstp - dst_pitch;
+		dstpn = dstp + dst_pitch;
+		dstpnn = dstp + dst_pitch2;
+		maskw = mask->GetWritePtr(plane);
+		mask_pitch = mask->GetPitch(plane);
+		mask_pitch2 = mask_pitch<<1;
+		if (APType > 0)
+		{
+			maskp = maskt->GetReadPtr(plane);
+			maskp_pitch = maskt->GetPitch(plane);
+			maskp_pitch2 = maskp_pitch<<1;
+		}
+		maskw += (2-PRM(field))*mask_pitch;
+		y = 2-PRM(field);
+		for (x=0; x<Width; ++x)
+		{
+			if (maskw[x] == 60) { maskw[x] = 10; continue; };
+			maskw[x] = 10;
+			sFirst = dstp[x] - dstpp[x];
+			sSecond = dstp[x] - dstpn[x];
+			if ((sFirst > AP && sSecond > AP) || (sFirst < -AP && sSecond < -AP))
+			{
+				sFirst = abs(dstpnn[x]+(dstp[x]<<2)+dstpnn[x]-(3*(dstpp[x]+dstpn[x])));
+				if (sFirst > AP6) 
+				{
+					if (APType > 0)
+					{
+						inc = stop > 1 ? 1 : x&1 ? 4 : 2;
+						startx = x-(inc<<1) < 0 ? x-inc < 0 ? x : x-inc : x-(inc<<1);
+						stopx = x+(inc<<1) > Width-1 ? x+inc > Width-1 ? x : x+inc : x+(inc<<1);
+						starty = y-4 < 0 ? y-2 < 0 ? y : y-2 : y-4;
+						stopy = y+4 > Height-1 ? y+2 > Height-1 ? y : y+2 : y+4;
+						neighbors = moving = 0;
+						maskpT = maskp + starty*maskp_pitch;
+						for (u=starty; u<=stopy; u+=2)
+						{
+							for (v=startx; v<=stopx; v+=inc)
+							{
+								if (maskpT[v] >= 60) ++moving;
+								++neighbors;
+							}
+							maskpT += maskp_pitch2;
+						}
+						if ((APType == 1 && (moving<<1) >= neighbors) ||
+							(APType == 2 && (moving*3)  >= neighbors))
+						{
+							maskw[x] = 60;
+							++count;
+						}
+					}
+					else
+					{
+						maskw[x] = 60;
+						++count;
+					}
+				}
+			}
+		}
+		dstppp += dst_pitch2;
+		dstpp += dst_pitch2;
+		dstp += dst_pitch2;
+		dstpn += dst_pitch2;
+		dstpnn += dst_pitch2;
+		maskw += mask_pitch2;
+		y += 2;
+		for (; y<Height-3; y+=2)
+		{
+			starty = y-4 < 0 ? y-2 < 0 ? y : y-2 : y-4;
+			stopy = y+4 > Height-1 ? y+2 > Height-1 ? y : y+2 : y+4;
+			for (x=0; x<Width; ++x)
+			{
+				if (maskw[x] == 60) { maskw[x] = 10; continue; }
+				maskw[x] = 10;
+				sFirst = dstp[x] - dstpp[x];
+				sSecond = dstp[x] - dstpn[x];
+				if ((sFirst > AP && sSecond > AP) || (sFirst < -AP && sSecond < -AP))
+				{
+					sFirst = abs(dstppp[x]+(dstp[x]<<2)+dstpnn[x]-(3*(dstpp[x]+dstpn[x])));
+					if (sFirst > AP6) 
+					{ 
+						if (APType > 0)
+						{
+							inc = stop > 1 ? 1 : x&1 ? 4 : 2;
+							startx = x-(inc<<1) < 0 ? x-inc < 0 ? x : x-inc : x-(inc<<1);
+							stopx = x+(inc<<1) > Width-1 ? x+inc > Width-1 ? x : x+inc : x+(inc<<1);
+							neighbors = moving = 0;
+							maskpT = maskp + starty*maskp_pitch;
+							for (u=starty; u<=stopy; u+=2)
+							{
+								for (v=startx; v<=stopx; v+=inc)
+								{
+									if (maskpT[v] >= 60) ++moving;
+									++neighbors;
+								}
+								maskpT += maskp_pitch2;
+							}
+							if ((APType == 1 && (moving<<1) >= neighbors) ||
+								(APType == 2 && (moving*3)  >= neighbors))
+							{
+								maskw[x] = 60;
+								++count;
+							}
+						}
+						else
+						{
+							maskw[x] = 60;
+							++count;
+						}
+					}
+				}	
+			}
+			dstppp += dst_pitch2;
+			dstpp += dst_pitch2;
+			dstp += dst_pitch2;
+			dstpn += dst_pitch2;
+			dstpnn += dst_pitch2;
+			maskw += mask_pitch2;
+		}
+		for (x=0; x<Width; ++x)
+		{
+			if (maskw[x] == 60) { maskw[x] = 10; continue; }
+			maskw[x] = 10;
+			sFirst = dstp[x] - dstpp[x];
+			sSecond = dstp[x] - dstpn[x];
+			if ((sFirst > AP && sSecond > AP) || (sFirst < -AP && sSecond < -AP))
+			{
+				sFirst = abs(dstppp[x]+(dstp[x]<<2)+dstppp[x]-(3*(dstpp[x]+dstpn[x])));
+				if (sFirst > AP6) 
+				{ 
+					if (APType > 0)
+					{
+						inc = stop > 1 ? 1 : x&1 ? 4 : 2;
+						startx = x-(inc<<1) < 0 ? x-inc < 0 ? x : x-inc : x-(inc<<1);
+						stopx = x+(inc<<1) > Width-1 ? x+inc > Width-1 ? x : x+inc : x+(inc<<1);
+						starty = y-4 < 0 ? y-2 < 0 ? y : y-2 : y-4;
+						stopy = y+4 > Height-1 ? y+2 > Height-1 ? y : y+2 : y+4;
+						neighbors = moving = 0;
+						maskpT = maskp + starty*maskp_pitch;
+						for (u=starty; u<=stopy; u+=2)
+						{
+							for (v=startx; v<=stopx; v+=inc)
+							{
+								if (maskpT[v] >= 60) ++moving;
+								++neighbors;
+							}
+							maskpT += maskp_pitch2;
+						}
+						if ((APType == 1 && (moving<<1) >= neighbors) ||
+							(APType == 2 && (moving*3)  >= neighbors))
+						{
+							maskw[x] = 60;
+							++count;
+						}
+					}
+					else
+					{
+						maskw[x] = 60;
+						++count;
+					}
+				}
+			}
+		}
+	}
+	if (count > 0)
+	{
+		//if (vi.IsYV12())
+		{
+			if (type == 0) cubicDeintYV12(dst, mask, dst, dst, dst);
+			else if (type == 1) smartELADeintYV12(dst, mask, dst, dst, dst);
+			else if (type == 2) kernelDeintYV12(dst, mask, dst, dst, dst);
+			else if (type == 3) ELADeintYV12(dst, mask, dst, dst, dst);
+		}
+		
+	}
+}
+

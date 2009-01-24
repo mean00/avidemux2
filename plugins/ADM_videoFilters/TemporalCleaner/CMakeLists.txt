@@ -1,0 +1,9 @@
+INCLUDE(vf_plugin)
+
+
+SET(ADM_vf_vlad_SRCS ADM_vidVlad.cpp)
+
+ADD_LIBRARY(ADM_vf_vlad SHARED ${ADM_vf_vlad_SRCS})
+
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_vlad)
+INSTALL_VIDEOFILTER(ADM_vf_vlad)

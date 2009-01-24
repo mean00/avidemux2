@@ -1,0 +1,271 @@
+mpeg2enc encodes MJPEG AVIs, Quicktime Files or Edit List Files
+to MPEG-1/2 video streams.
+
+DISCLAIMER:
+
+This software is from the MPEG Software Simulation Group.  See notices
+in source code regarding Patents and miscellaneous IP issues.
+
+POST  MPEG SSG Development
+
+Rainer Johanni changed the input routine so that "lavtools" Edit
+Lists, AVI's and Quicktime input is accepted, introduced command line
+params instead of a param file and made some simple optimizations.
+Rainer also did the initial mod to accept the new special yuv format.
+
+Andrew Stevens added more intelligent motion compensation and
+optimised some key calculations that run badly on modern highly
+pipelined machines.  These were then further refined based on the
+results of some work by Juan Remero Arroyo (who would have guessed 4*4
+blocks still produce useful results!).
+ 
+Chris Atenasio's contributed MMX2/SSE code for the motion compensation
+macroblock group difference calculation.
+
+Andrew Stevens added a lot more MMX1 code for motion compensation and
+adapted Chris' code for his intelligent motion compensation mods and
+ported the fdct/idct MMX code to nasm.
+
+Andrew Stevens added some simple pre-processing filters to improve
+output quality when using noisy (e.g. broadcast) source video.
+
+Andrew Stevens modified the bit-allocation routines to use a more
+accurate method of estimating bits needed for good quality results.
+
+Andrew Stevens fixed a number of overflow and calculation errors
+associated with large files.
+
+Andrew Stevens ported in and tidied up a number of MMX routines from
+the bbmpeg project for windows (see www.delphi.com/bbmpeg_ug) to
+accelerate a few "second line" but nonetheless significantly
+time-consuming functions.
+
+Andrew Stevens added a new much faster MMX / 3Dnow / ISSE based
+quantization routines.
+
+Andrew Stevens replaced the use of SAD with variance for selecting
+ motion compensations. Slightly more expensive but produces *markedly*
+ better results.  Similarly added support for checking the
+ quality of the chrominance match achieved.
+
+Andrew Stevens added limited SMP support and basic chrominance match
+checking in motion compensation.
+
+Andrew Stevens added support for variable-sized GOP's and sequence
+splitting at file-size boundaries.
+
+James Klikman ported all the SSE/MMX etc stuff to AltiVec
+
+In case you're wondering: the upshot of this disclaimer is that the
+functionality is exactly as per the original but the software now runs
+around 12 times as fast with sensible (search radius 15) motion
+compensation settings, and you can now get half-decent looking results
+when working with typical broadcast quality sources.
+
+
+FAST MOTION COMPENSATION:
+
+For MPEG to achieve good quality results it has to find a good match
+between each 16*16 "macro-block" of pixels in the current frame and
+a 16*16 region in a preceding or following frame.  The better the match
+the less information it has to drop when compressing.  Obviously, finding
+such a good match in *moving* pictures requires a lot of searching.
+
+To do this (reasonably) quickly we use a trick: we first search
+coarsely comparing sums of 4*4 pixel groups and then 2*2 pixel
+groups rather than individual pixels. Technically: we do an initial
+search using sub-sampled data and use this to choose the places to
+search for detailed single pixel and sub-pixel matches.
+This reduces the amount of search *dramatically*.  
+
+
+Since a good exact matches (down to half-pixels) will also give a good
+2*2 match we know the best match should be in amoungst the best 2*2
+matches. Similarly for the 2*2 in the 4*4 matches.  However, there may
+be some false positives.  So we can't just work with the very best 4*4
+and the best 2*2 near that.  Instead we discard only those above some
+threshold.  Experiments and a bit of simple statistics revealed that
+it was exceedingly rare to miss the best match doing this, and even
+when we did miss the match found was *almost* as good.  You can adjust
+the threshold with the -4 and -2 flags.
+
+Between the settings
+
+-4 1 -2 1  (highest quality)
+
+-4 4 -2 4	(fastest)
+
+Quality is impacted by about 10% quantisation (thats around 0.2 of a
+bit of precision in texture coefficients).  Speed is impacted by a
+factor of 2.  One older Pentium-II and P-III Katmai machines the speed factor
+is more like 3.     For most purposes the default settings will be fine.
+However on P-III Katmai etc -4 2 -2 1 gives a good near-optimum quality
+setting with reasonably speed.
+For MPEG-2 encoding it is better to have the search radius set higher
+than the default of 16. There's very little point going below a radius
+of 16 as the speed gains are pretty limited.
+
+Obviously, your mileage may vary so you may want to fiddle with the
+setting if you're getting rotten results.  Contact
+andrew.stevens@planet-interkom.de
+if you think you have found a case where the fast compensation fails!
+
+In case you're wondering: the performance gain over brute force search
+is something like a factor of 5.
+
+NOISE FILTERING and BIT DROPPING
+
+MPEG compression assumes that the pictures in a video sequence are
+closely correlated (once you've applied motion compensatino to search
+for good matches).  Unfortunately, if you have a noisy original video
+source this assumption isn't really true.  The noise introduces lots
+of spurious differences betwen actually very similar pictures.  The
+end result is ugly "artifacted" results where MPEG has dropped real
+information in favour of spurious noise.  The solution is to try to
+filter the noise out of the source. 
+
+For mildy noisy stuff mpeg2enc's -N option (which slightly suppresses
+high-frequency information during compression) works well.
+Try this for stuff like captures from a good quality broadcast
+source.  However, if that isn't enough lav2yuv has a simple low-pass
+filtering options -n. -n 1 smooths gently and is mostly imperceptible,
+-n 2 is rather stronger and is noticeable if you compare source video.
+However, if you really have noisy sources then -n 1 or -n 2 is
+infinitely preferable to the swimming sea of artefacts MPEG otherwise
+generates.  If you need -n 2 and aren't in a hurry then the more
+sophisticated filtering in the yuv2dfilter program does a better job!
+What's really needed is dynamic noise-reduction in the MPEG
+encoder... but that's a job for another release!
+
+SMARTER BIT ALLOCATION (A.Stevens Aug and Nov 2000)
+
+The original source code made heavy use of the variance of
+blocks as a measure of their information content.  This is actually
+pretty poor as what really counts is how many bits it will take
+to encoded the quantised DCT of the block without excessive losses.
+The bit allocation strategy is also very naive, essentially the
+encoder (more or less) tries to keep the bits allocated to each
+block the same.   This is bad news if you have a picture where
+a lot of the information content comes low down....
+
+As a first step to better quality encoding the current source now
+uses the sum of absolute block coefficients as a measure of information
+content. Bits are then allocated on the basis of how much information
+is being covered so that bits are held back if high information
+material comes late in the frame.  As a second step some attempt is made to
+guess the "right" level of quantisation for a frame in advance so that
+the (inevitably lagging) feedback control of bit-allocation only deals with
+minor fine-tuning.  This prevents annoying "oscillation" of bit-allocation".
+
+These modifications appear to give noticeable better results, greatly
+reducing fringes around sharp contrasts (e.g. titles) whilst still
+ensuring no significant bit-rate overshoots.
+
+The encoder now also tries to predict the likely bit-demand for each
+frame so it can set quantisation roughly right so that there isn't a
+"ramping" of quality down a frame with the top (too) good and the
+bottom (excessively) poor.  There is also the -Q option for boosting
+the bits allocated to very active blocks (ones where motion
+compensation wasn't possible).  The advantage is nice sharp logos and
+suchlike.  The drawback is that noisy material can become "swimmy".
+If you're getting swimminess try using -Q 1.0.
+
+
+VARIABLE BIT RATE ENCODING
+
+The encoder now supports a form of variable bit-rate encoding.  You
+can specify a quality ceiling (for the technical: a quantisation
+floor).  In this case the bitrate is interpeted as a "do not exceed
+ceiling".  The encoder bumps quality up as high as it can without
+exceeding this rate and the specified quality ceiling.  For this
+option to be usefully use the speed ceiling should be high enough that
+it is rarely if ever reached and a large video buffer size (say 250 or
+400K specified).  Sensible numbers for quality ceiling are between 4
+and 8.  Below 4 and quality gains are probably no longer visible.
+Above 8 and artefacting may occur.  An interesting effect of setting a
+fixed quality rate is that encoding is actually marginally more
+efficient as the encoder encodes *changes* in quality setting from
+screen block to block.. If they don't change they don't use any bits!
+
+PERFORMANCE: MMX/MMXEXT/SSE/3D-NOW (A.Stevens Jul/Aug 2000)
+
+In addition to improved fast motion compensation the updated code also
+has x86 assembly language routines for key calculations: 4*4. 8*8 and
+16*16 block absolute difference sums, interpolated and simple
+prediction variances, prediction addition and subtraction, foward and
+inverse discrete cosine transforms, and quantisation and inverse
+quantisation.
+
+Unfortunately, the original MMX (MMX1) instruction set on the Pentium
+MMX is somewhat deficient in a couple of key areas (it has obvious
+"gaps").  Subsequent CPU's all started to fill these gaps in.  Thus
+there is core MMX plus MMX extensions from one or all of: K6,
+Athlon/Duron, P-III and now even P-IV.  Where relevant routines come
+in several versions to make the most of what is available. As an
+extra-special bonus for AMD owners some of the quantisation
+calculations are done (much faster) with the 3D-Now! instructions.
+Similar stuff for P-III/P-IV SSE instructions is being written.
+
+There have also been some gross-me-out hacky optimisations made
+to the non-MMX code to make it run better on modern pipelined CPU's.
+However, if you're trying to compress long MPEG sequences on a pre-MMX
+x86 CPU you *will* need some serious patience ;-).  I reckon compressing
+a 1 hour TV show is now tolerable with the new super-duper fast
+mpeg2enc and a  300Mhz+  CPU on the job.  Personally, I split the
+work between 4 CPU's: Celeron 366, 2*PIII-450 and a K6-2 500.
+
+Anyway to give you some idea what to expect here are some peformance
+figures.  They're for the normal default settings and -4 1 -2 1 which 
+tries to squeeze the last few drops of quality out.
+
+Duron-700	  : 19fps / 13fps 
+PIII-450 (katmai) :  11    / 6fps
+PII-400		  :   8fps  /  4fps
+Celeron-366       : 7fps / 3fps
+
+It is interesting to note the how much less efficient the Intel CPU's are at 
+the motion compensation searches controlled by the -4 and -2 flags.  I can 
+only assume an Athlon would absolutely *fly* at this workload.
+
+
+VARIABLE SIZE GOOP's
+
+The encoder can be told to dynamically vary the size of groups of
+pictures to try to avoid scene changes in the middle of groups of
+pictures.  This can help produce better results in sudden cuts and
+action scenes (especially in conjunction with VBR coding).  However,
+the effect on "normal" video is marginal and for MPEG-1 at least many
+hardware decoders react allergically to variable-size GOP's.
+
+STILL MORE PERFORMANCE?
+
+Buy a multi-processor Athlon or P-IV machine!  The SMP support now
+gives a speed up of around 1.9 on dual CPU machines.  It should give
+useful speed scaling on 3 and 4 CPU machines too. Apart from this it
+is hard to see how big improvements can be made without radical
+rebuilding of the code.  The program now spends around 50% of its time
+in routines that are already aggressively implement in MMX (etc).
+
+Note: the Athlon CPU's are a *lot* faster at a couple of key MMX instructions
+than the original P-III Katmai's. 
+
+BETTER QUALITY?
+
+- There is still a lot of room for improvements to bit-allocation.
+
+- It should also be possible to intelligently use switching of
+quantisation matrices to suppress mosaicing in very active scenes. I.e.
+to "blur" rather than "mosaic".
+
+- Some minor gains could be made by intelligently selecting f-code's
+
+- There are easy gains to be made (for people intending to use
+software decoders or suitable hardware) by gettting veriable-bit-rate
+encoding working once again.  This is one of the next things on the
+list and should be pretty easy.
+
+
+
+
+
+

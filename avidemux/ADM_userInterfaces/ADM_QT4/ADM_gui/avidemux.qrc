@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/new/prefix1" >
+        <file>pics/add_sub_task.png</file>
+        <file>pics/arts.png</file>
+        <file>pics/avidemux_icon_small.png</file>
+        <file>pics/back.png</file>
+        <file>pics/calc.png</file>
+        <file>pics/fileopen.png</file>
+        <file>pics/filesave.png</file>
+        <file>pics/filesaveas.png</file>
+        <file>pics/forward.png</file>
+        <file>pics/gotoA.png</file>
+        <file>pics/gotoB.png</file>
+        <file>pics/info.png</file>
+        <file>pics/markA.png</file>
+        <file>pics/markB.png</file>
+        <file>pics/next.png</file>
+        <file>pics/next_black.png</file>
+        <file>pics/player_end.png</file>
+        <file>pics/player_fwd.png</file>
+        <file>pics/player_play.png</file>
+        <file>pics/player_rew.png</file>
+        <file>pics/player_start.png</file>
+        <file>pics/player_stop.png</file>
+        <file>pics/prev_black.png</file>
+        <file>pics/preview_input.png</file>
+        <file>pics/preview_output.png</file>
+        <file>pics/preview_separate.png</file>
+        <file>pics/preview_side.png</file>
+        <file>pics/preview_top.png</file>
+        <file>pics/previous.png</file>
+        <file>pics/project_open.png</file>
+        <file>pics/thumbnail.png</file>
+        <file>pics/volume.png</file>
+    </qresource>
+</RCC>

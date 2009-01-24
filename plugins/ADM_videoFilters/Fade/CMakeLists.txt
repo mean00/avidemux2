@@ -1,0 +1,9 @@
+INCLUDE(vf_plugin)
+
+
+SET(ADM_vf_fade_SRCS ADM_vidFade.cpp)
+
+ADD_LIBRARY(ADM_vf_fade SHARED ${ADM_vf_fade_SRCS})
+
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_fade)
+INSTALL_VIDEOFILTER(ADM_vf_fade)

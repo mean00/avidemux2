@@ -1,0 +1,18 @@
+AUTOMAKE_OPTIONS = -Wno-portability
+
+AQ_%.cpp : Q_%.cpp %.ui
+	$(UIC) $*.ui -o ui_$*.h
+	$(MOC) Q_$*.cpp -o Q_$*.moc
+	echo "#include \""Q_$*.cpp"\"" > AQ_$*.cpp
+	echo "#include \""Q_$*.moc"\"" >> AQ_$*.cpp
+
+AT_%.cpp : T_%.cpp  
+	$(MOC) T_$*.cpp -o T_$*.moc
+	echo "#include \""T_$*.cpp"\"" > AT_$*.cpp
+	echo "#include \""T_$*.moc"\"" >> AT_$*.cpp
+
+
+
+qclean:
+	rm -f ui_*.h AT_*.cpp AQ_*.cpp  *.moc
+

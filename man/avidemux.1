@@ -1,0 +1,202 @@
+.TH "AVIDEMUX" "1" "May 30, 2007" "Avidemux 2.4" "Avidemux documentation"
+.SH "NAME"
+Avidemux \(em a free video editor
+.SH "SYNOPSIS"
+.PP 
+\fBavidemux\fR [\fBoptions\fP]
+.PP 
+\fBavidemux_gtk\fR [\fBoptions\fP]
+.PP 
+\fBavidemux_cli\fR [\fBoptions\fP] [\fBfiles ...\fP]
+.SH "DESCRIPTION"
+.PP 
+Avidemux is a free video editor designed for simple cutting, filtering and encoding tasks. It supports many file types, including AVI, MPG (VCD, SVCD), DVD compatible MPEG, MP4 and ASF, using a variety of codecs. Tasks can be automated using projects, job queue and powerful scripting capabilities.
+.PP 
+Homepage: http://avidemux.sourceforge.net/
+.SH "OPTIONS"
+.TP 
+\fB\-\-nogui\fR
+run in silent mode
+.TP 
+\fB\-\-listfilters\fR
+list all filters by name
+.TP 
+\fB\-\-run\fR \fIscript\fR
+load and run a script
+.TP 
+\fB\-\-audio\-normalize\fR \fImode\fR
+activate normalization with \fImode\fR
+.TP 
+\fB\-\-audio\-resample\fR \fInum\fR
+resample to \fInum\fR Hz
+.TP 
+\fB\-\-filters\fR \fIfilter\fR
+load a \fIfilter\fR preset
+.TP 
+\fB\-\-codec\-conf\fR \fIconfig\fR
+load a codec configuration
+.TP 
+\fB\-\-vcd\-res\fR
+set to VCD resolution
+.TP 
+\fB\-\-svcd\-res\fR
+set to SVCD resolution
+.TP 
+\fB\-\-dvd\-res\fR
+set to DVD resolution
+.TP 
+\fB\-\-halfd1\-res\fR
+set to 1/2 DVD resolution
+.TP 
+\fB\-\-save\-jpg\fR \fIfilename\fR
+save to a jpeg file
+.TP 
+\fB\-\-begin\fR \fIframe\fR
+set start \fIframe\fR
+.TP 
+\fB\-\-end\fR \fIframe\fR
+set end \fIframe\fR
+.TP 
+\fB\-\-save\-unpacked\-vop\fR \fIfilename\fR
+save as avi file, unpacking vop
+.TP 
+\fB\-\-save\-packed\-vop\fR \fIfilename\fR
+save as avi file, packing vop 
+.TP 
+\fB\-\-save\-ogm\fR \fIfilename\fR
+save as ogm file
+.TP 
+\fB\-\-save\-raw\-audio\fR \fIfilename\fR
+save audio as\-is
+.TP 
+\fB\-\-save\-raw\-video\fR \fIfilename\fR
+save as raw video stream (mpeg/... )
+.TP 
+\fB\-\-save\-uncompressed\-audio\fR \fIfilename\fR
+save as uncompressed audio
+.TP 
+\fB\-\-load\fR \fIfilename\fR
+load video or workbench
+.TP 
+\fB\-\-load\-workbench\fR \fIfilename\fR
+load workbench file
+.TP 
+\fB\-\-append\fR \fIfilename\fR
+append a video
+.TP 
+\fB\-\-save\fR \fIfilename\fR
+save as avi file
+.TP 
+\fB\-\-save\-workbench\fR \fIfilename\fR
+save as workbench file
+.TP 
+\fB\-\-force\-b\-frame\fR
+Force detection of bframe in next loaded file
+.TP 
+\fB\-\-force\-alt\-h264\fR
+Force use of alternate read mode for h264
+.TP 
+\fB\-\-force\-unpack\fR
+Force detection of packed vop in next loaded file
+.TP 
+\fB\-\-force\-smart\fR
+Engage smart copy mode with CQ=3 at next save
+.TP 
+\fB\-\-external\-mp3\fR \fIfilename\fR
+load external mpeg audio as audio track
+.TP 
+\fB\-\-external\-ac3\fR \fIfilename\fR
+load external ac3 audio as audio track
+.TP 
+\fB\-\-external\-wav\fR \fIfilename\fR
+load external wav audio as audio track
+.TP 
+\fB\-\-no\-audio\fR
+load external wav audio as audio track
+.TP 
+\fB\-\-audio\-delay\fR \fI+msec|\-msec\fR
+set audio time shift in ms (+ or \-)
+.TP 
+\fB\-\-audio\-map\fR
+build audio map (MP3 VBR)
+.TP 
+\fB\-\-audio\-bitrate\fR \fIbitrate\fR
+set audio encoding \fIbitrate\fR
+.TP 
+\fB\-\-fps\fR \fIfps\fR
+set frames per second
+.TP 
+\fB\-\-audio\-codec\fR \fIcodec\fR
+set audio \fIcodec\fR (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)
+.TP 
+\fB\-\-video\-codec\fR \fIcodec\fR
+set video \fIcodec\fR (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)
+.TP 
+\fB\-\-video\-conf\fR \fIconfig\fR
+set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]
+.TP 
+\fB\-\-reuse\-2pass\-log\fR
+reuse 2pass logfile if it exists
+.TP 
+\fB\-\-set\-pp\fR \fIvalue\fR \fIstrength\fR
+set post processing default value, \fIvalue\fR (1=hdeblok|2=vdeblock|4=dering) and \fIstrength\fR (0\-5)
+.TP 
+\fB\-\-vobsub\fR \fIvobfile\fR \fIvosubfile\fR \fIifofile\fR
+Create vobsub file (\fIvobfile\fR \fIvosubfile\fR \fIifofile\fR)
+.TP 
+\fB\-\-autosplit\fR \fInum\fR
+split every \fInum\fR MBytes
+.TP 
+\fB\-\-info\fR
+show information about loaded video and audio streams
+.TP 
+\fB\-\-autoindex\fR
+try to generate required index files
+.TP 
+\fB\-\-output\-format\fR \fIformat\fR
+set output \fIformat\fR (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...), often named as container format
+.TP 
+\fB\-\-rebuild\-index\fR
+rebuild index with correct frame type
+.TP 
+\fB\-\-var\fR \fIname=value\fR
+set a variable i.e. '\-\-var myvar=3'
+.TP 
+\fB\-\-help\fR
+print a quick help
+.TP 
+\fB\-\-quit\fR
+exit the program quickly
+.TP 
+\fB\-\-probePat\fR \fIprobe\fR
+Probe for PAT//PMT..
+.SH "CUSTOM SCRIPTS"
+.TP  5
+Custom encoding settings can be created with the scripting engine. Do the following steps:
+.TP  5
+1. Start avidemux and open any video file.
+.TP  5
+2. Configure you own encoding settings.
+.TP  5
+3. Save the settings as project (File \-> Save project as...) with suffix ".js".
+.TP  5
+4. Quit avidemux.
+.TP  5
+5. Open the project file in a simple editor and delete useless lines.
+* You need the first line "//AD" and the line "app = new Avidemux()"
+.br 
+* and the encoding settings beginning with "app.video.codec(...)".
+.TP  5
+6. Save this script file with suffix ".js" in the user directory "~/.avidemux/custom".
+.TP  5
+7. This custom script is now available in avidemux under the menu item "Custom".
+.SH "NOTES"
+.PP 
+For more information see Avidemux Wiki at http://www.avidemux.org/admWiki/ and Forum at http://www.avidemux.org/admForum/.
+.PP 
+Avidemux sources and executables are available from the project web site at http://avidemux.sourceforge.net/.
+.SH "AUTHOR"
+.PP 
+Avidemux was written by Mean <fixounet@free.fr>. Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 2 any later version published by the Free Software Foundation.
+.PP 
+This manual page was original written by Joo Martin <debian@joomart.de>, for the Debian system (but may be used by others).

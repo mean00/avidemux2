@@ -1,0 +1,13 @@
+INCLUDE(vf_plugin)
+
+
+SET(ADM_vidChromaU_SRCS ADM_vidChromaU.cpp)
+ADD_LIBRARY(ADM_vidChromaU SHARED ${ADM_vidChromaU_SRCS})
+INIT_VIDEOFILTER_PLUGIN(ADM_vidChromaU)
+INSTALL_VIDEOFILTER(ADM_vidChromaU)
+
+
+SET(ADM_vidChromaV_SRCS ADM_vidChromaV.cpp)
+ADD_LIBRARY(ADM_vidChromaV SHARED ${ADM_vidChromaV_SRCS})
+INIT_VIDEOFILTER_PLUGIN(ADM_vidChromaV)
+INSTALL_VIDEOFILTER(ADM_vidChromaV)

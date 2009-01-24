@@ -1,0 +1,21 @@
+23/08/2003
+	- Any audio fq input
+	- Merged Jens : Do not split at 2g patch
+	- Display also hh:mm:ss
+18/08/2003
+	- Began using adm codec interface instead of raw one
+	- Changed write to fwrite
+02/08/2003
+	- switched to c++
+	- added ME/Qual/key dist to CLI
+	- sync keyframes between header and codec
+
+31/07/2003
+	- pthread instead of fork
+	- xvid added
+	- huffyuv added
+	- mjpeg added
+27/07/2003
+	- Rmed RTjpeg stuff
+	- Added FFV1
+	- splitted the big files into components 

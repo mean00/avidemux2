@@ -1,0 +1,69 @@
+#!/usr/bin/perl
+
+###
+### ad2_vcdimager - a helper script to detect (avidemux2) the length
+### of a mpeg-stream and create a svcd with chapters (vcdxgen/vcdxbuild)
+###
+### Usage: ad2_vcdimager -t svcd stream.mpg
+###
+### written by JSC
+### v1.0 - Thu Jan  6 05:29:13 CET 2005
+###
+
+my @args = @ARGV;
+my @data;
+my $avidemux = "avidemux2";
+my $vcdxgen = "vcdxgen";
+my $vcdxbuild = "vcdxbuild";
+my $chapter_length = 300;
+my $last_chapter = "";
+
+system($vcdxgen, @args);
+open(FD,"< videocd.xml") or die;
+while( <FD> ){
+   push @data,$_;
+   if( /sequence-item src="([^"]+)/ ){
+     my $mpg = $1;
+     my ($line,$sec,$chapter,$c_offset) = (0,0,"chapter01",0);
+      open(FE,"$avidemux --autoindex --load \"$mpg\" --info --quit 2>&1 |") or die;
+      while( $line = <FE> ){
+         if( $line =~ /^   Duration: 0?(\d+):0?(\d+):0?(\d+)/ ){
+            $sec = $1*60*60 + $2*60 + $3;
+         }
+      }
+      close(FE);
+      die "can't detect length" if( ! $sec );
+      $data[$#data] =~ s/\/>/>/;
+      while( $c_offset < $sec ){
+         push @data,"      <entry id=\"$chapter\">$c_offset.00</entry>\n";
+         $last_chapter = $chapter++; $c_offset += $chapter_length;
+      }
+      push @data,"    </sequence-item>\n";
+   }
+   if( /^  <pbc>/ ){
+     my ($sidprev,$sid,$sidnext) = ("","selectchapter01","selectchapter02");
+     my $chapter = "chapter01";
+      while( 1 ){
+         push @data,"    <selection id=\"$sid\">\n";
+         push @data,"      <prev    ref=\"$sidprev\"/>\n" if( $sidprev ne "" );
+         push @data,"      <next    ref=\"$sidnext\"/>\n" if( $chapter ne $last_chapter );
+         push @data,"      <timeout ref=\"end\"     />\n";
+         push @data,"      <wait>1</wait>\n";
+         push @data,"      <loop jump-timing=\"immediate\">1</loop>\n";
+         push @data,"      <play-item ref=\"$chapter\"/>\n";
+         push @data,"    </selection>\n";
+         last if( $chapter eq $last_chapter );
+         $sidprev = $sid; $sid = $sidnext; $sidnext++; $chapter++;
+      }
+      push @data,"    <endlist id=\"end\" rejected=\"true\"/>\n";
+      while( <FD> ){
+         last if( /<\/pbc>/ );
+      }
+      push @data,$_;
+   }
+}
+close(FD);
+open(FD,"> videocd.xml") or die;
+print FD @data;
+close(FD);
+system($vcdxbuild,"videocd.xml");

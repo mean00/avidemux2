@@ -1,0 +1,572 @@
+<ui version="4.0" >
+ <class>mainFilterDialog</class>
+ <widget class="QDialog" name="mainFilterDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>913</width>
+    <height>545</height>
+   </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle" >
+   <string>Video Filter Manager</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item row="4" column="0" colspan="2" >
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item row="0" column="1" >
+        <widget class="QPushButton" name="pushButtonSVCD" >
+         <property name="sizePolicy" >
+          <sizepolicy>
+           <hsizetype>5</hsizetype>
+           <vsizetype>0</vsizetype>
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>72</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>&amp;SVCD res</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/cd.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="QPushButton" name="pushButtonVCD" >
+         <property name="sizePolicy" >
+          <sizepolicy>
+           <hsizetype>5</hsizetype>
+           <vsizetype>0</vsizetype>
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>72</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>&amp;VCD res</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/cd.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" >
+        <widget class="QPushButton" name="pushButtonHalfDVD" >
+         <property name="sizePolicy" >
+          <sizepolicy>
+           <hsizetype>7</hsizetype>
+           <vsizetype>5</vsizetype>
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>72</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>&amp;Half D1 res</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/cd.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" >
+        <widget class="QPushButton" name="pushButtonDVD" >
+         <property name="sizePolicy" >
+          <sizepolicy>
+           <hsizetype>5</hsizetype>
+           <vsizetype>0</vsizetype>
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>72</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>&amp;DVD res</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/cd.png</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item rowspan="4" row="1" column="2" colspan="2" >
+      <widget class="QListWidget" name="listWidgetAvailable" >
+       <property name="sizePolicy" >
+        <sizepolicy>
+         <hsizetype>7</hsizetype>
+         <vsizetype>7</vsizetype>
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>340</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="spacing" >
+        <number>2</number>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="3" row="1" column="0" colspan="2" >
+      <widget class="QListWidget" name="listFilterCategory" >
+       <property name="sizePolicy" >
+        <sizepolicy>
+         <hsizetype>0</hsizetype>
+         <vsizetype>7</vsizetype>
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>100</width>
+         <height>340</height>
+        </size>
+       </property>
+       <property name="selectionBehavior" >
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="resizeMode" >
+        <enum>QListView::Adjust</enum>
+       </property>
+       <property name="spacing" >
+        <number>3</number>
+       </property>
+       <property name="currentRow" >
+        <number>0</number>
+       </property>
+       <item>
+        <property name="text" >
+         <string>Transform</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/1.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Interlacing</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/2.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Colors</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/4.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Noise</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/5.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Sharpness</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/3.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Subtitles</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/7.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Miscellaneous</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/6.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>External</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="filter.qrc" >:/new/prefix1/icons/exec.png</iconset>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="4" >
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>12</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="5" >
+      <widget class="QLabel" name="label_2" >
+       <property name="sizePolicy" >
+        <sizepolicy>
+         <hsizetype>5</hsizetype>
+         <vsizetype>4</vsizetype>
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>&lt;big>&lt;b>Active Filters&lt;/b>&lt;/big></string>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="4" row="1" column="5" colspan="11" >
+      <widget class="QListWidget" name="listWidgetActive" >
+       <property name="sizePolicy" >
+        <sizepolicy>
+         <hsizetype>7</hsizetype>
+         <vsizetype>7</vsizetype>
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>340</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="spacing" >
+        <number>2</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5" colspan="11" >
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>0</width>
+           <height>22</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonConfigure" >
+         <property name="sizePolicy" >
+          <sizepolicy>
+           <hsizetype>0</hsizetype>
+           <vsizetype>5</vsizetype>
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string>C&amp;onfigure</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonPartial" >
+         <property name="sizePolicy" >
+          <sizepolicy>
+           <hsizetype>0</hsizetype>
+           <vsizetype>5</vsizetype>
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string>P&amp;artial</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonLoad" >
+         <property name="text" >
+          <string>Load</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/fileopen.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonSave" >
+         <property name="text" >
+          <string>Save</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/filesave.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonSaveScript" >
+         <property name="text" >
+          <string>Save Script</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/filesaveas.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonDown" >
+         <property name="text" >
+          <string>Down</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/down.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonUp" >
+         <property name="text" >
+          <string>Up</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/up.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="pushButtonRemove" >
+         <property name="text" >
+          <string>Remove</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/remove.png</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="2" colspan="2" >
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>0</width>
+           <height>22</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonAdd" >
+         <property name="text" >
+          <string>Add</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="filter.qrc" >:/new/prefix1/icons/add.png</iconset>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonIconOnly</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="2" >
+      <widget class="QLabel" name="label" >
+       <property name="sizePolicy" >
+        <sizepolicy>
+         <hsizetype>5</hsizetype>
+         <vsizetype>4</vsizetype>
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>&lt;big>&lt;b>Available Filters&lt;/b>&lt;/big></string>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::RichText</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>707</width>
+       <height>16</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonPreview" >
+       <property name="text" >
+        <string>&amp;Preview</string>
+       </property>
+       <property name="icon" >
+        <iconset resource="filter.qrc" >:/new/prefix1/icons/thumbnail.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonClose" >
+       <property name="text" >
+        <string>&amp;Close</string>
+       </property>
+       <property name="icon" >
+        <iconset resource="filter.qrc" >:/new/prefix1/icons/close.png</iconset>
+       </property>
+       <property name="default" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>listFilterCategory</tabstop>
+  <tabstop>listWidgetAvailable</tabstop>
+  <tabstop>listWidgetActive</tabstop>
+  <tabstop>pushButtonDVD</tabstop>
+  <tabstop>pushButtonSVCD</tabstop>
+  <tabstop>pushButtonHalfDVD</tabstop>
+  <tabstop>pushButtonVCD</tabstop>
+  <tabstop>toolButtonAdd</tabstop>
+  <tabstop>toolButtonConfigure</tabstop>
+  <tabstop>toolButtonPartial</tabstop>
+  <tabstop>toolButtonLoad</tabstop>
+  <tabstop>toolButtonSave</tabstop>
+  <tabstop>toolButtonSaveScript</tabstop>
+  <tabstop>toolButtonDown</tabstop>
+  <tabstop>toolButtonUp</tabstop>
+  <tabstop>pushButtonRemove</tabstop>
+  <tabstop>pushButtonPreview</tabstop>
+  <tabstop>buttonClose</tabstop>
+ </tabstops>
+ <resources>
+  <include location="filter.qrc" />
+ </resources>
+ <connections/>
+</ui>

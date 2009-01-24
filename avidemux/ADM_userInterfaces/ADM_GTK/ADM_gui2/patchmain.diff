@@ -1,0 +1,45 @@
+--- GUI_rain2.cpp	2003-05-04 22:09:37.000000000 +0000
++++ intface.c	2003-05-04 22:04:14.000000000 +0000
+@@ -26,8 +26,6 @@
+ #define GLADE_HOOKUP_OBJECT_NO_REF(component,widget,name) \
+   g_object_set_data (G_OBJECT (component), name, widget)
+ 
+-  GtkObject *sliderAdjustment=NULL;         
+-
+ GtkWidget*
+ create_mainWindow (void)
+ {
+@@ -712,7 +710,7 @@
+   gtk_widget_set_name (hbuttonbox1, "hbuttonbox1");
+   gtk_widget_show (hbuttonbox1);
+   gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, FALSE, 0);
+-  gtk_widget_set_size_request (hbuttonbox1, -1, 20);
++  gtk_widget_set_size_request (hbuttonbox1, -2, 20);
+   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_START);
+ 
+   buttonOpen = gtk_button_new ();
+@@ -834,13 +832,11 @@
+   gtk_widget_set_size_request (guiDrawing, 512, 300);
+   gtk_widget_set_sensitive (guiDrawing, FALSE);
+ 
+- sliderAdjustment=gtk_adjustment_new (52.1, 0, 99.99, 0.01, 1, 0);
+- sliderNavigate = gtk_hscale_new (GTK_ADJUSTMENT (sliderAdjustment));  gtk_widget_set_name (sliderNavigate, "sliderNavigate");
+-
++  sliderNavigate = gtk_hscale_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 99.99, 0.01, 1, 0)));
+   gtk_widget_set_name (sliderNavigate, "sliderNavigate");
+   gtk_widget_show (sliderNavigate);
+   gtk_box_pack_start (GTK_BOX (vbox1), sliderNavigate, FALSE, FALSE, 0);
+-  gtk_widget_set_size_request (sliderNavigate, -1, 24);
++  gtk_widget_set_size_request (sliderNavigate, -2, 24);
+   GTK_WIDGET_UNSET_FLAGS (sliderNavigate, GTK_CAN_FOCUS);
+   gtk_scale_set_value_pos (GTK_SCALE (sliderNavigate), GTK_POS_LEFT);
+ 
+@@ -901,7 +897,7 @@
+   gtk_widget_set_name (hbox1, "hbox1");
+   gtk_widget_show (hbox1);
+   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 0);
+-  gtk_widget_set_size_request (hbox1, -1, 24);
++  gtk_widget_set_size_request (hbox1, -2, 24);
+ 
+   buttonPlay = gtk_button_new ();
+   gtk_widget_set_name (buttonPlay, "buttonPlay");

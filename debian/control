@@ -1,0 +1,24 @@
+Source: avidemux
+Section: graphics
+Priority: optional
+Maintainer: mean <fixounet@free.fr>
+Bugs: mailto:fixounet@free.fr
+Standards-Version: 3.6.2
+Build-Depends: debhelper (>> 4), libgtk2.0-dev, libvorbis-dev,
+ libfreetype6-dev, libxml2-dev, libasound2-dev, libsdl-dev, 
+ libfaac-dev (>= 1.24), libfaad-dev, libxv-dev, dpatch,
+ libx264-dev (>= 1:0.cvs20060720-0.0), libfontconfig1-dev, libxv-dev,
+ liblame-dev, libvorbisenc2, cmake, desktop-file-utils
+
+Package: avidemux
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: lame
+Description: a small editing software for avi (especially DivX)
+ With avidemux you can open divx, process the audio track with the included
+ filters and save a part of the avi (i.e. split).
+ .
+ De-multiplex audio & video is also possible, the audio track can be coming
+ from the avi or an external Wav/MP3 file.
+ .
+ http://fixounet.free.fr/avidemux/

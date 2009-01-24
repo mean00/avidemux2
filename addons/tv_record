@@ -1,0 +1,51 @@
+#!/bin/bash
+# record script for nxtvepg
+# add the following to nxtvepg's context menu:
+# Title:   record
+# Command: tv_record ${title} ${network} ${start} ${stop} ${relstart} ${duration}
+
+videorecdir=/home/mteske/DVD/videoaufnahmen
+
+title=`echo $1 | sed 's/\///g'`
+network=$2
+start=$3
+stop=$4
+relstart=$5
+duration=$6
+
+
+filename="$videorecdir/$network-$title-$start"
+logfilename="$filename.log"
+echo 2>&1 > "$logfilename"  $relstart $duration 
+
+# start recording 5 minutes before, if possible
+let relstart=$relstart-5
+
+if [ $relstart -lt 0 ] ; then
+   #let duration=$duration+5+$relstart
+   relstart=0
+else
+  #enough time. increase duration as well!
+  let duration=$duration+5 
+fi
+
+# 5 minutes longer
+let duration=$duration+5
+
+
+echo 2>&1 >> "$logfilename"  $relstart $duration  
+
+at -m now + $relstart minutes <<EOF
+echo >> "$logfilename" "Will kill all running xawdecode/nxtvepg!"
+xawdecode_cmd "quit"
+sleep 2
+killall xawdecode 2>/dev/null
+killall nxtvepg 2>/dev/null
+killall ffv1rec
+echo >> "$logfilename" "see: $filename"
+#cd $videorecdir
+
+ffv1rec 2>&1  >> "$logfilename" -t $duration -P "$network" -C MPEG4 -W 704 -H 576 "$filename" 
+EOF
+
+

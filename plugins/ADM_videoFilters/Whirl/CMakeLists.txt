@@ -1,0 +1,9 @@
+INCLUDE(vf_plugin)
+
+
+SET(ADM_vf_Whirl_SRCS ADM_vidWhirl.cpp)
+
+ADD_LIBRARY(ADM_vf_Whirl SHARED ${ADM_vf_Whirl_SRCS})
+
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_Whirl)
+INSTALL_VIDEOFILTER(ADM_vf_Whirl)

@@ -1,0 +1,6 @@
+*~
+*.rej
+*.orig
+[tT]ags
+Doxyfile
+*.kdev*

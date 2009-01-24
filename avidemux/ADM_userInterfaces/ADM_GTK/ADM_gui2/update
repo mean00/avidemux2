@@ -1,0 +1,2 @@
+cp ../glade/src/interface.c ./GUI_main2.cpp
+bash patch.bash

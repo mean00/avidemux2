@@ -1,0 +1,17 @@
+SET(ADM_LIB ADM_libsamplerate)
+
+SET(${ADM_LIB}_SRCS 
+src_linear.c
+src_sinc.c
+src_zoh.c
+)
+
+ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})
+ADD_DEFINITIONS( "-I${CMAKE_CURRENT_SOURCE_DIR} ")
+ADD_DEFINITIONS( "-DADM_LEGACY_PROGGY")
+if(unix)
+ADD_DEFINITIONS( "-fpic ")
+endif(unix)
+# FIXME!
+ADD_DEFINITIONS( "-DHAVE_LRINT -DHAVE_LRINTF ")
+

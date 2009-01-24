@@ -1,0 +1,177 @@
+# This is a sample button mapping file.  If you copy it to
+# ~/.avidemux/button_mapping, avidemux will read it at startup and use it
+# to map buttons on a jog shuttle device to actions in the avidemux user
+# interface.
+#
+# Each line to map a button should contain a number, at least one space or
+# tab character, and then an action name (see below for list).
+#
+# If you aren't sure what button numbers are produced by your device, set
+# the environment variable SHOW_BUTTONS (e.g., "export SHOW_BUTTONS=1" if
+# you're using the bash shell).  Then, watch the window from which you
+# started avidemux, and press the buttons, and it will tell you the number
+# for each one you press.
+#
+# Action names (which can be used in ~/.avidemux/button_mapping, 
+# though some should not be):
+#
+#     About
+#     ADD_JOB
+#     AllBlackFrames
+#     AppendAvi
+#     AudioCodec
+#     AudioCodecChanged
+#     AudioConfigure
+#     AudioFilters
+#     AudioMap
+#     AudioModeCopy
+#     AudioModeProcess
+#     AudioModeToggle
+#     AudioSourceAC3
+#     AudioSourceAvi
+#     AudioSourceMP3
+#     AudioSourceNone
+#     AudioSourceWAV
+#     AUTO_DVD
+#     AUTO_FLV
+#     AUTO_PSP
+#     AUTO_PSP_H264
+#     AUTO_SVCD
+#     AUTO_VCD
+#     AviInfo
+#     AVS_PROXY
+#     Back25Frames
+#     Back50Frames
+#     Begin
+#     Bitrate
+#     BitRate
+#     BrokenAvi
+#     BUILT_IN
+#     ChangeFPS
+#     CLOSE
+#     Copy
+#     Cut
+#     CutWizard
+#     DecoderOption
+#     Delete
+#     DVB_Ocr
+#     End
+#     Exit
+#     Fast
+#     Forward25Frames
+#     Forward50Frames
+#     GLYPHEDIT
+#     Goto
+#     GotoMarkA
+#     GotoMarkB
+#     GotoTime
+#     HANDLE_JOB
+#     HEX_DUMP
+#     JOG
+#     JumpToFrame
+#     JumpToTime
+#     MarkA
+#     MarkB
+#     MpegIndex
+#     NextBlackFrame
+#     NextFrame
+#     NextKFrame
+#     Ocr
+#     OpenAvi
+#     OuputToggle
+#     Paste
+#     Pipe2Lame
+#     Pipe2Other
+#     PipeLame
+#     PlayAvi
+#     Pref
+#     PrevBlackFrame
+#     PreviewChanged
+#     PreviewToggle
+#     PreviousFrame
+#     PreviousKFrame
+#     RebuildKF
+#     RECENT0
+#     RECENT1
+#     RECENT2
+#     RECENT3
+#     RecentFiles
+#     Requant
+#     ResetSegments
+#     RunScript
+#     SaveAvi
+#     SaveBunchJPG
+#     SaveCurrentWork
+#     SaveDualAudio
+#     SaveDVDPS
+#     SaveImg
+#     SaveJPG
+#     SaveMpeg1vcd
+#     SaveMpeg2dvd
+#     SaveMpeg2svcd
+#     SaveOGM
+#     SavePref
+#     SaveRaw
+#     SaveUnpackedMpeg4
+#     SaveWave
+#     SaveWork
+#     Scale
+#     SecondAudioTrack
+#     SelectDevALSA
+#     SelectDevArts
+#     SelectDevDummy
+#     SelectDevOSS
+#     SelectEncoder
+#     SelectTrack1
+#     SetLogFile
+#     SetMuxParam
+#     SetPostProcessing
+#     StopAvi
+#     TimeShift
+#     V2V
+#     VideoCheck
+#     VideoCodec
+#     VideoCodecChanged
+#     VideoConfigure
+#     VideoModeCopy
+#     VideoModeProcess
+#     VideoModeToggle
+#     VideoParameter
+#     ViewMain
+#     ViewSide
+#     XVCD
+#     ZOOM_1_1
+#     ZOOM_1_2
+#     ZOOM_1_4
+#     ZOOM_2_1
+#     ZOOM_4_1
+
+# To get an up-to-date version of the preceding list, uncomment the
+# following line, and watch the output from avidemux as it starts up:
+#    help
+
+# The following button setup is for a Contour ShuttlePRO (though of course
+# you may want different mappings even if you have the same device):
+
+# first row:
+256 PlayAvi
+257 StopAvi
+258 MarkA
+259 MarkB
+
+# second row:
+272 VideoParameter
+273 SaveAvi
+274 SaveWork
+275 GotoMarkA
+276 GotoMarkB
+
+# left rear:
+277 Back100Frames
+279 Begin
+
+# right rear:
+278 Forward100Frames
+280 End
+
+

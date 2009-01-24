@@ -1,0 +1,23 @@
+INCLUDE(vf_plugin)
+
+
+SET(ADM_vf_fastconvolutionmean_SRCS ADM_vidFastConvolution.cpp Mean.cpp )
+ADD_LIBRARY(ADM_vf_fastconvolutionmean SHARED ${ADM_vf_fastconvolutionmean_SRCS})
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_fastconvolutionmean)
+INSTALL_VIDEOFILTER(ADM_vf_fastconvolutionmean)
+
+SET(ADM_vf_fastconvolutiongauss_SRCS ADM_vidFastConvolution.cpp Gauss.cpp )
+ADD_LIBRARY(ADM_vf_fastconvolutiongauss SHARED ${ADM_vf_fastconvolutiongauss_SRCS})
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_fastconvolutiongauss)
+INSTALL_VIDEOFILTER(ADM_vf_fastconvolutiongauss)
+
+SET(ADM_vf_fastconvolutionmedian_SRCS ADM_vidFastConvolution.cpp Median.cpp )
+ADD_LIBRARY(ADM_vf_fastconvolutionmedian SHARED ${ADM_vf_fastconvolutionmedian_SRCS})
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_fastconvolutionmedian)
+INSTALL_VIDEOFILTER(ADM_vf_fastconvolutionmedian)
+
+SET(ADM_vf_fastconvolutionsharpen_SRCS ADM_vidFastConvolution.cpp Sharpen.cpp )
+ADD_LIBRARY(ADM_vf_fastconvolutionsharpen SHARED ${ADM_vf_fastconvolutionsharpen_SRCS})
+INIT_VIDEOFILTER_PLUGIN(ADM_vf_fastconvolutionsharpen)
+INSTALL_VIDEOFILTER(ADM_vf_fastconvolutionsharpen)
+

@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/new/prefix1" >
+        <file>icons/1.png</file>
+        <file>icons/2.png</file>
+        <file>icons/3.png</file>
+        <file>icons/4.png</file>
+        <file>icons/5.png</file>
+        <file>icons/6.png</file>
+        <file>icons/7.png</file>
+        <file>icons/add.png</file>
+        <file>icons/cd.png</file>
+        <file>icons/close.png</file>
+        <file>icons/down.png</file>
+        <file>icons/exec.png</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/filesave.png</file>
+        <file>icons/filesaveas.png</file>
+        <file>icons/remove.png</file>
+        <file>icons/thumbnail.png</file>
+        <file>icons/up.png</file>
+    </qresource>
+</RCC>

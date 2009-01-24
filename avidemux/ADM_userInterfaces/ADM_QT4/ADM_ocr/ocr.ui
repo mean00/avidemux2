@@ -1,0 +1,148 @@
+<ui version="4.0" >
+ <class>DialogOcr</class>
+ <widget class="QDialog" name="DialogOcr" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>559</width>
+    <height>474</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="2" column="0" colspan="5" >
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="pushButtonCalibrate" >
+       <property name="text" >
+        <string>Calibrate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonSkipAll" >
+       <property name="text" >
+        <string>Skip All</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonSkip" >
+       <property name="text" >
+        <string>Skip Glyph</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonIgnore" >
+       <property name="text" >
+        <string>Ignore</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonOk" >
+       <property name="text" >
+        <string>Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item rowspan="2" row="3" column="3" colspan="2" >
+    <widget class="QTextEdit" name="textEdit" />
+   </item>
+   <item row="6" column="0" colspan="5" >
+    <widget class="QGraphicsView" name="bigView" />
+   </item>
+   <item row="3" column="0" colspan="3" >
+    <widget class="QLineEdit" name="lineEdit" />
+   </item>
+   <item row="7" column="4" >
+    <widget class="QPushButton" name="pushButtonClose" >
+     <property name="text" >
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item rowspan="2" row="4" column="0" colspan="2" >
+    <widget class="QGraphicsView" name="smallView" />
+   </item>
+   <item row="1" column="1" colspan="3" >
+    <widget class="QLabel" name="labelTimecode" >
+     <property name="text" >
+      <string>00:00:00/000</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QLabel" name="label_2" >
+     <property name="text" >
+      <string>Timecode:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="3" >
+    <widget class="QLabel" name="labelNbLines" >
+     <property name="text" >
+      <string>0/0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" >
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>Nb Lines :</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>lineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pushButtonOk</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>61</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>420</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
