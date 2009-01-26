@@ -91,8 +91,18 @@ uint8_t psHeader::open(const char *name)
         goto abt;
     }
     r=true;
-  
-
+    for(int i=0;i<listOfAudioTracks.size();i++)
+    {
+        ADM_psTrackDescriptor *desc=listOfAudioTracks[i];
+        ADM_audioStream *audioStream=ADM_audioCreateStream(&desc->header,desc->access);
+        if(!audioStream)
+        {
+            
+        }else       
+        {
+                desc->stream=audioStream;
+        }
+    }
 abt:
     index.close();
     printf("[psDemuxer] Loaded %d\n",r);

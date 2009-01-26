@@ -84,6 +84,9 @@ public:
                         bool      push(uint64_t at, uint64_t dts,uint32_t size);
                                     /// Convert raw timestamp to scaled timestamp in us
                 uint64_t          timeConvert(uint64_t x);
+
+                virtual uint32_t  getLength(void);
+
 };
 /**
     \class ADM_psTrackDescriptor
@@ -93,6 +96,7 @@ class ADM_psTrackDescriptor
 public:
         ADM_audioStream *stream;
         ADM_psAccess    *access;
+        WAVHeader       header;
         ADM_psTrackDescriptor()
             {
                 stream=NULL;

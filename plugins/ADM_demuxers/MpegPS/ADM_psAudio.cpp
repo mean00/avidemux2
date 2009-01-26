@@ -52,20 +52,41 @@ ADM_psAudioSeekPoint s;
             seekPoints.push_back(s);
             return true;
 }
+/**
+    \fn getLength
+*/
+uint32_t  ADM_psAccess::getLength(void)
+{
+  return (seekPoints[seekPoints.size()-1].size);
 
+}
 /**
     \fn getDurationInUs
 */
 uint64_t  ADM_psAccess::getDurationInUs(void)
 {
     // Take last seek point; should be accurate enough
-    return seekPoints[seekPoints.size()-1].dts;
+    return timeConvert(seekPoints[seekPoints.size()-1].dts);
 }
 /**
     \fn goToTime
 */                              
 bool      ADM_psAccess::goToTime(uint64_t timeUs)
 {
+    // Convert time in us to scaled 90 kHz tick
+    double f=timeUs;
+    f*=90;
+    f/=1000;
+    f+=dtsOffset;
+    uint64_t n=(uint64_t)f;
+    for(int i=0;i<seekPoints.size()-1;i++)
+    {
+        if(seekPoints[i].dts >=n && seekPoints[i+1].dts>n)
+        {
+            demuxer.setPos(seekPoints[i].position);
+            return true;
+        }
+    }
     return false;
 }
 uint64_t ADM_psAccess::timeConvert(uint64_t x)

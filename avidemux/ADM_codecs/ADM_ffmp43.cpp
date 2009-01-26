@@ -106,7 +106,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
       out->_qSize = out->_qStride = 0;
       out->quant = NULL;
     }
-    printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, (uint64_t)(src->opaque));
+//    printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, (uint64_t)(src->opaque));
     out->Pts= (uint64_t)(src->opaque);
     return 1;
 }

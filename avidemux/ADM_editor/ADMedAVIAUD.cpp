@@ -132,9 +132,11 @@ again:
     uint32_t decodedSample=nbOut;
     decodedSample/=trk->wavheader.channels;
     if(!decodedSample && !fillerSample) goto again;
-    if(nbSamples!=decodedSample)
+#define ADM_MAX_JITTER 5000  // in samples
+    if(abs(nbSamples-decodedSample)>ADM_MAX_JITTER)
+    {
         printf("[Composer::getPCMPacket] Demuxer was wrong %d vs %d samples!\n",nbSamples,decodedSample);
-    
+    }
     
     // This packet has been dropped, try the next one
     if(drop==true && !fillerSample) goto again;

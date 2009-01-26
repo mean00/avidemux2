@@ -45,7 +45,8 @@ bool firstAudio=true;
             }
             if(!strncmp(buffer,"Audio ",6))
             {
-                if(firstAudio) firstAudio=false;
+                if(firstAudio) 
+                    firstAudio=false; // Ignore first line
                 else
                     processAudioIndex(buffer+6);
             }
@@ -300,17 +301,12 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
             hdr.channels=chan;
             hdr.encoding=codec;
         ADM_psAccess *access=new ADM_psAccess(name,pid,true);
-        ADM_audioStream *audioStream=ADM_audioCreateStream(&hdr,access);
-        if(!audioStream)
-        {
-            delete access;
-        }else       
-        {
             ADM_psTrackDescriptor *desc=new ADM_psTrackDescriptor;
-            desc->stream=audioStream;
+            desc->stream=NULL;
             desc->access=access;
+            memcpy(&(desc->header),&hdr,sizeof(hdr));
             listOfAudioTracks.push_back(desc);
-        }
+
 
     }
     return true;
