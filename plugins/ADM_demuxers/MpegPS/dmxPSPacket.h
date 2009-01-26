@@ -88,8 +88,11 @@ typedef struct
 {
     uint32_t count;
     uint32_t size;
-    uint64_t firstDts;
-    uint64_t lastDts;
+    
+    uint64_t startAt;
+    uint32_t startCount;
+    uint32_t startSize;
+    uint64_t startDts;
 }packetStats;
 
 class psPacketLinearTracker : public psPacketLinear

@@ -625,13 +625,17 @@ bool           psPacketLinearTracker::getPacketOfType(uint8_t pid,uint32_t maxSi
                 // Update 
                 ADM_assert(tmppid<0x100);
                 packetStats *p=stats+tmppid;
-                p->count++;
-                p->size+=*packetSize;
                 uint64_t ts=*pts;
                 if(ts==ADM_NO_PTS) ts=*dts;
-                if(p->firstDts==ADM_NO_PTS) p->firstDts=ts;
                 if(ts!=ADM_NO_PTS)
-                    p->lastDts=ts;
+                {
+                    p->startCount=p->count;
+                    p->startAt=*startAt;
+                    p->startSize=p->size;
+                    p->startDts=ts;
+                }
+                p->count++;
+                p->size+=*packetSize;
                 if(tmppid==pid) return true;
         }
     }
@@ -646,8 +650,7 @@ bool           psPacketLinearTracker::resetStats(void)
     for(int i=0;i<256;i++)
     {
         packetStats *p=stats+i;
-        p->firstDts=ADM_NO_PTS;
-        p->lastDts=ADM_NO_PTS;
+        p->startDts=ADM_NO_PTS;
     }
 }
 //EOF

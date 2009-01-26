@@ -310,7 +310,7 @@ bool  PsIndexer::Mark(indexerData *data,psPacketInfo *info,markType update)
                     uint8_t e=(*audioTracks)[i]->esID;
                     packetStats *s=pkt->getStat(e);
                     
-                    qfprintf(index,"Pes:%x:%08"LLD":%"LLD" ",e,s->lastDts,s->size);
+                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",e,s->startAt,s->startSize,s->startDts);
                 }
                 
             }

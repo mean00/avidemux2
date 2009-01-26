@@ -29,6 +29,7 @@
 bool    psHeader::readIndex(indexFile *index)
 {
 char buffer[2000];
+bool firstAudio=true;
         printf("[psDemuxer] Reading index\n");
         if(!index->goToSection("Data")) return false;
       
@@ -44,7 +45,9 @@ char buffer[2000];
             }
             if(!strncmp(buffer,"Audio ",6))
             {
-                processAudioIndex(buffer+6);
+                if(firstAudio) firstAudio=false;
+                else
+                    processAudioIndex(buffer+6);
             }
         }
     return true;
@@ -55,21 +58,27 @@ char buffer[2000];
 */
 bool psHeader::processAudioIndex(char *buffer)
 {
-    int64_t startAt,size,dts;
+    int64_t startAt,dts;
+    uint32_t size;
     uint32_t pes;
     char *head,*tail;
+    int trackNb=0;
         sscanf(buffer,"bf:%"LLX,&startAt);
         head=strstr(buffer," ");
         if(!head) return false;
         head++;
         while(tail=strstr(head," "))
         {
-            if(3!=sscanf(head,"Pes:%"LX":%"LLD":%"LLD" ",&pes,&dts,&size))
+            if(4!=sscanf(head,"Pes:%"LX":%"LLX":%"LD":%"LLD" ",&pes,&startAt,&size,&dts))
             {
+// qfprintf(index,"Pes:%x:%08"LLX":%"LD":%LLD ",e,s->startAt,s->startSize,s->startDts);
                 printf("[PsHeader::processAudioIndex] Reading index %s failed\n",buffer);
             }
             head=tail+1;
-            
+            ADM_psAccess *track=listOfAudioTracks[trackNb]->access;
+            track->push(startAt,dts,size);
+
+            trackNb++;
             //printf("[%s] => %"LX" Dts:%"LLD" Size:%"LLD"\n",buffer,pes,dts,size);
             if(strlen(head)<4) break;
         }
@@ -159,6 +168,34 @@ TODO / FIXME : Handle PTS reordering
 bool psHeader::updatePtsDts(void)
 {
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
+
+        // Make sure everyone starts at 0
+        // Search first timestamp (audio/video)
+        uint64_t startDts=ListOfFrames[0]->dts;
+        for(int i=0;i<listOfAudioTracks.size();i++)
+        {
+            uint64_t a=listOfAudioTracks[i]->access->seekPoints[0].dts;
+            if(a<startDts) startDts=a;
+        }
+        // Rescale all so that it starts ~ 0
+        // Video..
+        for(int i=0;i<ListOfFrames.size();i++)
+        {
+            dmxFrame *f=ListOfFrames[i];
+            if(f->pts!=ADM_NO_PTS) f->pts-=startDts;
+            if(f->dts!=ADM_NO_PTS) f->dts-=startDts;
+        }
+        // Audio start at 0 too
+        for(int i=0;i<listOfAudioTracks.size();i++)
+        {
+            ADM_psTrackDescriptor *track=listOfAudioTracks[i];
+            ADM_psAccess    *access=track->access;
+            access->setTimeOffset(startDts);
+        }
+
+        // Now fill in the missing timestamp and convert to us
+        // for video
+
         switch( _videostream.dwRate)
         {
             case 25000:   dtsIncrement=40000;break;
@@ -182,6 +219,18 @@ bool psHeader::updatePtsDts(void)
             {
                 frame->dts=lastDts=timeConvert(frame->dts);
                 frame->pts=lastPts=timeConvert(frame->pts);
+            }
+        }
+        // convert to us for Audio tracks
+        for(int i=0;i<listOfAudioTracks.size();i++)
+        {
+            ADM_psTrackDescriptor *track=listOfAudioTracks[i];
+            ADM_psAccess    *access=track->access;
+            
+            for(int j=0;j<access->seekPoints.size();j++)
+            {
+                if( access->seekPoints[j].dts!=ADM_NO_PTS) 
+                    access->seekPoints[j].dts=access->timeConvert( access->seekPoints[j].dts);
             }
         }
         return 1;

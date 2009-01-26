@@ -46,6 +46,7 @@ typedef struct
 {            
       uint64_t position;
       uint64_t dts;
+      uint32_t size;
 
 }ADM_psAudioSeekPoint;
 
@@ -55,11 +56,14 @@ typedef struct
 class ADM_psAccess : public ADM_audioAccess
 {
 protected:
-                vector          <ADM_psAudioSeekPoint >seekPoints;
+                
                 psPacket        demuxer;
                 uint8_t         pid;
+                uint64_t        dtsOffset;
                 
 public:
+                bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
+                vector          <ADM_psAudioSeekPoint >seekPoints;
                                   ADM_psAccess(const char *name,uint8_t pid,bool append); 
                 virtual           ~ADM_psAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
@@ -77,8 +81,9 @@ public:
                                     /// Get a packet
                 virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
 
-                        bool      push(uint64_t at, uint64_t dts);
-
+                        bool      push(uint64_t at, uint64_t dts,uint32_t size);
+                                    /// Convert raw timestamp to scaled timestamp in us
+                uint64_t          timeConvert(uint64_t x);
 };
 /**
     \class ADM_psTrackDescriptor

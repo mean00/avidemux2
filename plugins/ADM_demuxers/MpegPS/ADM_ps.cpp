@@ -36,6 +36,7 @@ uint8_t psHeader::open(const char *name)
     FP_TYPE appendType=FP_DONT_APPEND;
     uint32_t append;
     char *type;
+    uint64_t startDts;
 
     sprintf(idxName,"%s.idx",name);
     indexFile index;
@@ -90,6 +91,8 @@ uint8_t psHeader::open(const char *name)
         goto abt;
     }
     r=true;
+  
+
 abt:
     index.close();
     printf("[psDemuxer] Loaded %d\n",r);

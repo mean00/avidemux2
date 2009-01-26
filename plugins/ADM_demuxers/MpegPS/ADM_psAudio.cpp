@@ -43,11 +43,12 @@ ADM_psAccess::~ADM_psAccess()
     \fn push
     \brief add a seek point.
 */
-bool      ADM_psAccess::push(uint64_t at, uint64_t dts)
+bool      ADM_psAccess::push(uint64_t at, uint64_t dts,uint32_t size)
 {
 ADM_psAudioSeekPoint s;
             s.position=at;
             s.dts=dts;
+            s.size=size;
             seekPoints.push_back(s);
             return true;
 }
@@ -57,7 +58,8 @@ ADM_psAudioSeekPoint s;
 */
 uint64_t  ADM_psAccess::getDurationInUs(void)
 {
-    return 1000000LL; // FIXLE
+    // Take last seek point; should be accurate enough
+    return seekPoints[seekPoints.size()-1].dts;
 }
 /**
     \fn goToTime
@@ -65,6 +67,15 @@ uint64_t  ADM_psAccess::getDurationInUs(void)
 bool      ADM_psAccess::goToTime(uint64_t timeUs)
 {
     return false;
+}
+uint64_t ADM_psAccess::timeConvert(uint64_t x)
+{
+    if(x==ADM_NO_PTS) return ADM_NO_PTS;
+    x=x-dtsOffset;
+    x=x*1000;
+    x/=90;
+    return x;
+
 }
 /**
     \fn getPacket
@@ -75,6 +86,7 @@ uint64_t p,d,start;
     if(false==demuxer.getPacketOfType(pid,maxSize,size,&p,&d,buffer,&start)) return false;
     if(d==ADM_NO_PTS) *dts=p;
             else *dts=d;
+    *dts=timeConvert(*dts);
     return true;
 }
 
