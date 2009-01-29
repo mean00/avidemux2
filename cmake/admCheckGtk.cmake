@@ -1,3 +1,7 @@
+# we also need libglade from now on
+# So we search for both, them merge the flags into the gtk one
+include(admCheckGlade)
+
 MACRO(checkGtk)
 	IF (NOT GTK_CHECKED)
 		OPTION(GTK "" ON)
@@ -8,7 +12,12 @@ MACRO(checkGtk)
 		IF (GTK)
 			PKG_CHECK_MODULES(GTK gtk+-2.0)
 			PRINT_LIBRARY_INFO("GTK+" GTK_FOUND "${GTK_CFLAGS}" "${GTK_LDFLAGS}")
-
+                        checkGlade()
+                        if  (GLADE_FOUND)
+                        else(GLADE_FOUND)
+                                set(GTK_FOUND false)
+                        endif(GLADE_FOUND)
+                        
 			IF (GTK_FOUND)
 				ADM_COMPILE(gtk_x11_check.cpp "${GTK_CFLAGS}" "" "${GTK_LDFLAGS}" GTK_X11_SUPPORTED outputGtkX11Test)
 
@@ -23,6 +32,10 @@ MACRO(checkGtk)
 						MESSAGE("Error Message: ${outputGtkX11Test}")
 					ENDIF (VERBOSE)
 				ENDIF (GTK_X11_SUPPORTED)
+                               # Merge glade flags into gtk flags
+                                SET(  GTK_CFLAGS "${GTK_CFLAGS} ${GLADE_CFLAGS}")
+                                SET(  GTK_LDFLAGS "${GTK_LDFLAGS} ${GLADE_LDFLAGS}")
+                               # /Merge glade flags into gtk flags
 			ENDIF (GTK_FOUND)
 		ELSE (GTK)
 			MESSAGE("${MSG_DISABLE_OPTION}")
