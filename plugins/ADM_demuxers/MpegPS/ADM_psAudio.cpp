@@ -79,6 +79,13 @@ bool      ADM_psAccess::goToTime(uint64_t timeUs)
     f/=1000;
     f+=dtsOffset;
     uint64_t n=(uint64_t)f;
+
+    if(n<=seekPoints[seekPoints.size()-1].dts)
+    {
+            demuxer.setPos(seekPoints[0].position);
+            return true;
+    }
+
     for(int i=0;i<seekPoints.size()-1;i++)
     {
         if(seekPoints[i].dts >=n && seekPoints[i+1].dts>n)
@@ -89,6 +96,10 @@ bool      ADM_psAccess::goToTime(uint64_t timeUs)
     }
     return false;
 }
+/**
+    \fn timeConvert
+    \brief Convert time in ticks raw from the stream to avidemux time in us starting from the beginning of the file
+*/
 uint64_t ADM_psAccess::timeConvert(uint64_t x)
 {
     if(x==ADM_NO_PTS) return ADM_NO_PTS;

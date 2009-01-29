@@ -24,6 +24,7 @@
 #include "avidemutils.h"
 #include "ADM_quota.h"
 #include "ADM_psAudioProbe.h"
+#include "DIA_encoding.h"
 
 static const char Type[5]={'X','I','P','B','P'};
 
@@ -87,6 +88,7 @@ protected:
         FILE *index;
         psPacketLinearTracker *pkt;
         listOfPsAudioTracks *audioTracks;
+        DIA_encodingBase  *ui;
 public:
                 PsIndexer(void);
                 ~PsIndexer();
@@ -118,6 +120,7 @@ PsIndexer::PsIndexer(void)
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
+    ui=createEncoding (25000);
 }
 
 /**
@@ -128,6 +131,8 @@ PsIndexer::~PsIndexer()
     if(index) qfclose(index);
     if(pkt) delete pkt;
     if( audioTracks) DestroyListOfPsAudioTracks(audioTracks);
+    if(ui) delete ui;
+    ui=NULL;
 }
 /**
     \fn run
@@ -135,7 +140,7 @@ PsIndexer::~PsIndexer()
 bool PsIndexer::run(const char *file)
 {
 uint32_t temporal_ref,val;
-
+uint64_t fullSize;
 uint8_t buffer[50*1024];
 bool seq_found=false;
 
@@ -172,6 +177,7 @@ psPacketInfo info;
     }
     pkt->open(file,false);
     data.pkt=pkt;
+    fullSize=pkt->getSize();
       while(1)
       {
         uint32_t code=0xffff+0xffff0000;
@@ -213,7 +219,15 @@ psPacketInfo info;
                           qfprintf(index,"[Data]");
                           break;
                   case 0xb8: // GOP
-                          
+                          // Update ui
+                            {
+                                float pos=data.startAt;
+                                pos=pos/(float)fullSize;
+                                pos*=100;
+                                ui->setPercent( (uint32_t)pos);
+
+                            }
+
                           if(!seq_found) continue;
                           if(data.state==idx_startAtGopOrSeq) 
                           {         

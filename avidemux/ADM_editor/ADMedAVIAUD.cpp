@@ -41,7 +41,7 @@ Todo:
 #define AUDIOSEG 	_segments[_audioseg]._reference
 #define SEG 		_segments[seg]._reference
 
-#define ADM_ALLOWED_DRIFT_US 30000 // Allow 30 ms jitter on audio
+#define ADM_ALLOWED_DRIFT_US 40000 // Allow 40 ms jitter on audio
 
 #if 1
 #define vprintf(...) {}
