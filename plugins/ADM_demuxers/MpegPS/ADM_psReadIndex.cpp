@@ -170,8 +170,42 @@ bool psHeader::updatePtsDts(void)
 {
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
 
+
+        // For audio, The first packet in the seekpoints happens a bit after the action
+        // It means some audio may have been seen since we locked on video.
+        // So we compute the DTS of the first real packet
+        // by using the size field and byterate and arbitrarily make it begins
+        // at video
+        for(int i=0;i<listOfAudioTracks.size();i++)
+        {
+            vector          <ADM_psAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            uint64_t secondDts=(*seekPoints)[0].dts;
+            uint64_t secondSize=(*seekPoints)[0].size;
+            if(secondSize && listOfAudioTracks[i]->header.byterate)
+            {
+                    // it is actually an offset in time to the 2nd packet Dts
+                double  firstFloatDts=secondSize*1000*1000.; 
+                        firstFloatDts/=listOfAudioTracks[i]->header.byterate; // in us
+                uint64_t firstDts=(uint64_t)firstFloatDts;
+
+                        if(firstDts>secondDts) firstDts=0;
+                            else firstDts=secondDts-firstDts;
+
+                // Now add our seek point
+                ADM_psAudioSeekPoint sk;
+                sk.dts=firstDts;
+                sk.size=0;
+                sk.position=ListOfFrames[0]->startAt;
+                (*seekPoints).insert( (*seekPoints).begin(),sk);
+
+            }
+        }
+
+
         // Make sure everyone starts at 0
         // Search first timestamp (audio/video)
+
+
         uint64_t startDts=ListOfFrames[0]->dts;
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
