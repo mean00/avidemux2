@@ -52,18 +52,16 @@ void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm,
 
 static admGlade glade;
 
-GtkWidget *guiRootWindow=NULL;
+GtkWidget        *guiRootWindow=NULL;
 static GtkWidget *guiDrawingArea=NULL;
 static GtkWidget *guiSlider=NULL;
 
-static GtkWidget *guiMarkA=NULL;
-static GtkWidget *guiMarkB=NULL;
 static GtkWidget *guiCurFrame=NULL;
 static GtkWidget *guiTotalFrame=NULL;
 static GtkWidget *guiCurTime=NULL;
 static GtkWidget *guiTotalTime=NULL;
 
-static GtkWidget *guiAudioToggle=NULL;
+
 static GtkWidget *guiVideoToggle=NULL;
 static GdkCursor *guiCursorBusy=NULL;
 static GdkCursor *guiCursorNormal=NULL;
@@ -72,7 +70,6 @@ static  GtkAdjustment *sliderAdjustment;
 
 static int keyPressHandlerId=0;
 
-//static gint	  guiCursorEvtMask=0;
 static gint       jogChange( void );
 static void volumeChange( void );
 static char     *customNames[ADM_MAC_CUSTOM_SCRIPT];
@@ -102,9 +99,9 @@ extern const char *ADM_mx_getDisplayName(uint32_t i);
 extern uint8_t AVDM_setVolume(int volume);
 #endif
 extern void checkCrashFile(void);
-#define AUDIO_WIDGET "comboboxAudio"
-#define VIDEO_WIDGET "comboboxVideo"
-#define FORMAT_WIDGET "comboboxFormat"
+#define AUDIO_WIDGET   "comboboxAudio"
+#define VIDEO_WIDGET   "comboboxVideo"
+#define FORMAT_WIDGET  "comboboxFormat"
 #define PREVIEW_WIDGET "comboboxPreview"
 //
 enum
@@ -181,12 +178,12 @@ buttonCallBack_S buttonCallback[]=
 	{"buttonMarkB"			,"clicked"		,ACT_MarkB},
 	{"buttonBegin"			,"clicked"		,ACT_Begin},
 	{"buttonEnd"			,"clicked"		,ACT_End},
-	{"menutoolbuttonOpen"		,"clicked"		,ACT_OpenAvi},
-	{"toolbuttonInfo"			,"clicked"		,ACT_AviInfo},
+	{"menutoolbuttonOpen"	,"clicked"		,ACT_OpenAvi},
+	{"toolbuttonInfo"		,"clicked"		,ACT_AviInfo},
 	{"toolbuttonSave"		,"clicked"		,ACT_SaveAvi},
 
 	{"buttonFilters"		,"clicked"		,ACT_VideoParameter},
-	{"buttonAudioFilter"		,"clicked"		,ACT_AudioFilters},
+	{"buttonAudioFilter"	,"clicked"		,ACT_AudioFilters},
 	{"buttonConfV"			,"clicked"		,ACT_VideoCodec},
 	{"buttonConfA"			,"clicked"		,ACT_AudioCodec},
 
@@ -301,9 +298,10 @@ void jogRing (void *, gfloat angle) // angle is -1.0 to 0 to +1.0
         jog_shuttle_set_value (jsw, angle);
 }
 
-///
-///	Create main window and bind to it
-///
+/**
+        \fn initGUI
+        \brief Create main window and bind to it
+*/
 uint8_t initGUI( void )
 {
 uint8_t ret=0;
@@ -350,7 +348,9 @@ uint32_t w,h;
 
 	return ret;
 }
-
+/**
+    \fn destroyGUI
+*/
 void destroyGUI(void)
 {
 	renderDestroy();
@@ -399,24 +399,15 @@ uint8_t  bindGUI( void )
 
 	sliderAdjustment=gtk_range_get_adjustment (GTK_RANGE(guiSlider));
 
-	ADM_LOOKUP(guiMarkA,labelMarkA);
-	ADM_LOOKUP(guiMarkB,labelMarkB);
 	ADM_LOOKUP(guiCurFrame,boxCurFrame);
 	ADM_LOOKUP(guiTotalFrame,labelTotalFrame);
 
 	ADM_LOOKUP(guiCurTime,boxCurTime);
 	ADM_LOOKUP(guiTotalTime,labelTotalTime);
 
-#if 0
-	ADM_LOOKUP(guiPreviewToggle,toggletoolbuttonPreview);
-	ADM_LOOKUP(guiOutputToggle,toggletoolbuttonOutput);
-
-	ADM_LOOKUP(guiAudioToggle,togglebuttonAudio);
-	ADM_LOOKUP(guiVideoToggle,togglebuttonVideo);
-#endif
 #undef ADM_LOOKUP
   // bind menu
- #define CALLBACK(x,y) gtk_signal_connect(GTK_OBJECT(lookup_widget(guiRootWindow,#x)), "activate", \
+ #define CALLBACK(x,y) gtk_signal_connect(GTK_OBJECT( glade.getWidget(#x)), "activate", \
                       GTK_SIGNAL_FUNC(guiCallback),                   (void *) y)
 
  	#include "GUI_menumap.h"
@@ -535,15 +526,16 @@ uint8_t  bindGUI( void )
         /*   Fill in output format window */
         uint32_t nbFormat;
 
-                nbFormat=ADM_mx_getNbMuxers();
-                combo_box=GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET));
-                gtk_combo_box_remove_text(combo_box,0);
-                printf("Found %d Format \n",nbFormat);
-                for(uint32_t i=0;i<nbFormat;i++)
-                {
-                        name=ADM_mx_getDisplayName(i);
-                        gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
-                }
+        nbFormat=ADM_mx_getNbMuxers();
+        combo_box=GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET));
+        ADM_assert(combo_box);
+        gtk_combo_box_remove_text(combo_box,0);
+        printf("Found %d Format \n",nbFormat);
+        for(uint32_t i=0;i<nbFormat;i++)
+        {
+                name=ADM_mx_getDisplayName(i);
+                gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
+        }
         gtk_combo_box_set_active(combo_box,0);
 
 
@@ -607,9 +599,9 @@ uint8_t  bindGUI( void )
     return 1;
 
 }
-/****
-
-**/
+/**
+    \fn GUI_initCustom
+*/
 void GUI_initCustom(void )
 {
   GtkWidget *menuEntry=glade.getWidget("custom1");
@@ -665,17 +657,19 @@ UNUSED_ARG(user_data);
         return true;
 }
 
-///
-///	Return the widget containing the image
-///
+/**
+        \fn getDrawWidget
+        \brief Return the widget containing the image
+*/
 GtkWidget *getDrawWidget( void )
 {
 	return guiDrawingArea;
 
 }
-///
-///	Set slider position
-///
+/**
+        \fn UI_setScale
+        \briefSet slider position
+*/
 static int _upd_in_progres=0;
 void UI_setScale( double val )
 {
@@ -703,7 +697,9 @@ int32_t UI_readJog(void)
         return (int32_t )val;
 
 }
-
+/**
+        \fn UI_setTitle
+*/
 void UI_setTitle(const char *name)
 {
 	char *title;
@@ -727,6 +723,9 @@ void UI_setTitle(const char *name)
 	gtk_window_set_title(GTK_WINDOW (guiRootWindow), title);
 	delete [] title;
 }
+/**
+    \fn UI_setFrameType
+*/
 void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
 GtkLabel *wid=(GtkLabel *)glade.getWidget("labelFrameType");
@@ -744,15 +743,21 @@ char	c='?';
 	gtk_label_set_text( wid,string);
 
 }
-///
-///	Get slider position
-///
+/**
+    \fn UI_readScale
+	\brief Get slider position, return double between 0.0 and 1.0
+*/
 double  UI_readScale( void )
 {
 
 	return (double)GTK_ADJUSTMENT(sliderAdjustment)->value;
 
 }
+/**
+    \fn UI_updateFrameCount
+	
+*/
+
 void UI_updateFrameCount(uint32_t curFrame)
 {
     //char text[80];
@@ -762,6 +767,11 @@ void UI_updateFrameCount(uint32_t curFrame)
 	gtk_write_entry(guiCurFrame,curFrame);
 
 }
+/**
+    \fn UI_setFrameCount
+	
+*/
+
 void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 {
     char text[80];
@@ -831,6 +841,9 @@ gboolean destroyCallback(GtkWidget * widget,
     HandleAction(ACT_Exit);
     return 1;
 }
+/**
+    \fn UI_grabFocus
+*/
 int UI_grabFocus( void)
 {
 #define RM(x,y)   gtk_widget_remove_accelerator (glade.getWidget(#x), accel_group, \
@@ -861,6 +874,9 @@ int UI_grabFocus( void)
 	return FALSE;
 
 }
+/**
+    \fn UI_loseFocus
+*/
 int UI_loseFocus( void)
 {
 #define ADD(x,y)  gtk_widget_add_accelerator (glade.getWidget(#x), "clicked", accel_group, \
@@ -892,7 +908,9 @@ int UI_loseFocus( void)
 
 	return FALSE;
 }
-
+/**
+    \fn UI_focusAfterActivate
+*/
 void UI_focusAfterActivate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	// return focus to window once Enter has been pressed
@@ -908,20 +926,24 @@ void UI_focusAfterActivate(GtkMenuItem * menuitem, gpointer user_data)
 
 	gtk_widget_grab_focus(glade.getWidget( "menuBar"));
 }
-
+/**
+    \fn UI_returnFocus
+*/
 gboolean UI_returnFocus(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
 	gtk_widget_grab_focus(glade.getWidget( "menuBar"));
 	return FALSE;
 }
-
+/**
+    \fn UI_setMarkers
+*/
 void UI_setMarkers(uint32_t a, uint32_t b )
 {
 char string[500];
 		sprintf(string," %06"LU,a);
-        	gtk_label_set_text(GTK_LABEL(guiMarkA),string);
+        	gtk_label_set_text(GTK_LABEL(glade.getWidget("labelMarkA")),string);
 		sprintf(string," %06"LU,b);
-        	gtk_label_set_text(GTK_LABEL(guiMarkB),string);
+        	gtk_label_set_text(GTK_LABEL(glade.getWidget("labelMarkB")),string);
 			gtk_markscale_setA(guiSlider, a);
 			gtk_markscale_setB(guiSlider, b);
 }
@@ -935,31 +957,33 @@ gint b;
 	 if(status) b=TRUE;
   	else			b=FALSE;
 
-	if(b!=gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(guiAudioToggle)))
-     		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON(guiAudioToggle),b);
+	if(b!=gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(glade.getWidget("togglebuttonAudio"))))
+     		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON(glade.getWidget("togglebuttonAudio")),b);
 	aprintf("++ audio toggle : %d(%d)\n",b,status);
 
 }
-/*
-	Set/unset the toggle button video process
+/**
+    \fn UI_setVProcessToggleStatus
+	\brief Set/unset the toggle button video process
 */
 void UI_setVProcessToggleStatus( uint8_t status )
 {
 gint b;
 	 if(status) 		b=TRUE;
   	else			b=FALSE;
-	if(b!=gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(guiVideoToggle)))
+	if(b!=gtk_toggle_tool_button_get_active(GTK_TOGGLE_TOOL_BUTTON(glade.getWidget("togglebuttonVideo"))))
 	{
-     		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON(guiVideoToggle),b);
+     		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON(glade.getWidget("togglebuttonVideo")),b);
 		aprintf("Changing it to %d\n",b);
 	}
 	aprintf("++ video toggle : %d\n",b);
 
 }
 
-///
-///	This is a relay function to do UI events -> gtk_gui.cpp
-///
+/**
+            \fn guiCallback
+            \brief This is a relay function to do UI events -> gtk_gui.cpp
+*/
 void guiCallback(GtkMenuItem * menuitem, gpointer user_data)
 {
     UNUSED_ARG(menuitem);
@@ -979,11 +1003,18 @@ void guiCallback(GtkMenuItem * menuitem, gpointer user_data)
     }
      HandleAction(act);
 }
+/**
+    \fn UI_JumpDone
+*/
 void UI_JumpDone(void )
 {
 
 
 }
+/**
+    \fn UI_readCurFrame
+*/
+
 int UI_readCurFrame( void )
 {
 	int i = gtk_read_entry(guiCurFrame);
@@ -993,7 +1024,9 @@ int UI_readCurFrame( void )
 
 	return i;
 }
-
+/**
+    \fn UI_readCurTime
+*/
 int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms)
 {
 	return 0;
@@ -1025,13 +1058,11 @@ void UI_BusyCursor( void )
 {
 	 gdk_window_set_cursor((guiRootWindow->window),
                                           guiCursorBusy);
-/*
-	guiCursorEvtMask=gtk_widget_get_events(guiRootWindow);
-	gtk_widget_set_events(guiRootWindow,0);
-*/
-
 
 }
+/**
+    \fn on_video_change
+*/
 void on_video_change(void)
 {
 int enable;
@@ -1050,6 +1081,10 @@ int enable;
         gtk_widget_set_sensitive(glade.getWidget("buttonFilters"),enable);
         HandleAction(ACT_VideoCodecChanged);
 }
+/**
+    \fn on_audio_change
+*/
+
 void on_audio_change(void)
 {
 int enable;
@@ -1064,6 +1099,9 @@ int enable;
         HandleAction(ACT_AudioCodecChanged);
 
 }
+/**
+    \fn on_preview_change
+*/
 void on_preview_change(void)
 {
 int enable;
@@ -1071,6 +1109,10 @@ int enable;
         HandleAction(ACT_PreviewChanged);
 
 }
+/**
+    \fn on_format_change
+*/
+
 void on_format_change(void)
 {
 
@@ -1105,7 +1147,9 @@ void   UI_setCurrentPreview(int ne)
         return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)));
 
  }
-
+/**
+    \fn UI_setAudioCodec
+*/
 void UI_setAudioCodec( int i)
 {
         //gtk_option_menu_set_history(GTK_OPTION_MENU(lookup_widget(guiRootWindow,AUDIO_WIDGET)), i);
@@ -1115,6 +1159,10 @@ void UI_setAudioCodec( int i)
         gtk_widget_set_sensitive(glade.getWidget("buttonAudioFilter"),i);
         update_ui=0;
 }
+/**
+    \fn UI_setVideoCodec
+*/
+
 void UI_setVideoCodec( int i)
 {
         //gtk_option_menu_set_history(GTK_OPTION_MENU(lookup_widget(guiRootWindow,VIDEO_WIDGET)), i);
@@ -1131,11 +1179,6 @@ void UI_NormalCursor( void )
 //	gtk_widget_set_events(guiRootWindow,guiCursorEvtMask);
 	gdk_window_set_cursor((guiRootWindow->window),
                                           NULL); //guiCursorNormal);
-
-
-}
-void UI_PrintCurrentVCodec(const char *str)
-{
 
 
 }
@@ -1245,6 +1288,9 @@ void DNDDataReceived( GtkWidget *widget, GdkDragContext *dc,
     }
     gtk_drag_finish(dc,TRUE,FALSE,t);
 }
+/**
+    \fn UI_toogleMain
+*/
 void UI_toogleMain(void)
 {
 static int show=1;
@@ -1254,6 +1300,9 @@ static int show=1;
         else
                 gtk_widget_show(GTK_WIDGET(glade.getWidget("toolbar2")) );
 }
+/**
+    \fn UI_toogleSide
+*/
 void UI_toogleSide(void)
 {
 static int show=1;
@@ -1263,22 +1312,9 @@ static int show=1;
         else
                 gtk_widget_show(GTK_WIDGET(glade.getWidget("vbox9")));
 }
-uint8_t UI_getTimeShift(int *onoff,int *value)
-{
-
-        *onoff=gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (glade.getWidget("CheckButtonTimeshift")));
-        *value=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade.getWidget("spinbuttonTimeShift"))) ;
-        return 1;
-}
-uint8_t UI_setTimeShift(int onoff,int value)
-{
-	if (!value)
-		onoff = 0;
-
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (glade.getWidget("CheckButtonTimeshift")),onoff);
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade.getWidget("spinbuttonTimeShift")),value) ;
-        return 1;
-}
+/**
+    \fn UI_updateRecentMenu
+*/
 uint8_t UI_updateRecentMenu( void )
 {
 const char **names;

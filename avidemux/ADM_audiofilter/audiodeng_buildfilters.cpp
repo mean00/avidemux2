@@ -263,7 +263,7 @@ void audioFilter_configureFilters( void )
          if(audioDelay!=olddelay ||oldshift!= audioShift)
          {  // Refresh
 
-             UI_setTimeShift(audioShift,audioDelay);
+
 
          }
 

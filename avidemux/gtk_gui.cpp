@@ -366,9 +366,6 @@ int nw;
 	{
           case ACT_JOG:
                 break;
-        case ACT_TimeShift:
-                A_TimeShift();
-                break;
 	case ACT_OpenAvi:
           GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), (SELFILE_CB *)A_openAvi);
 	  break;
@@ -416,9 +413,6 @@ int nw;
         case ACT_AUTO_FLV:
         case ACT_AUTO_PSP_H264:
                 A_autoDrive( action);
-                break;
-     case ACT_TimeShift:
-                A_TimeShift();
                 break;
 
    case ACT_SelectTrack1:
@@ -2166,25 +2160,6 @@ uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name)
 }
 
 
-//****************
-uint8_t A_TimeShift(void)
-{
-static int update=0;
-int onoff;
-int value;
-        if(update) return 1;
-        update=1;
-
-        // Read and update
-        update=0;
-        UI_getTimeShift(&onoff,&value);
-        if(onoff && value) audioFilterDelay(value);
-                else audioFilterDelay(0);
-        //****
-
-        update=0;
-
-}
 void A_Resync(void)
 {
 // Just in case update file info

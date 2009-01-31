@@ -209,7 +209,7 @@ JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id
                                 priv->getObject()->m_nDelay = JSVAL_TO_INT(*vp);
                                 //audioFilterDelay(priv->getObject()->m_nDelay);
                                 enterLock();
-                                UI_setTimeShift(1, priv->getObject()->m_nDelay); 
+                                //UI_setTimeShift(1, priv->getObject()->m_nDelay); 
                                 leaveLock();
                                 break;
                         }
