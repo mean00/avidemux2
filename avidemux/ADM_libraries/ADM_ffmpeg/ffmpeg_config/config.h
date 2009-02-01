@@ -482,5 +482,9 @@
 #define HAVE_ROUNDF 1
 #define HAVE_THREADS 1
 #define RUNTIME_CPUDETECT 1
+#ifdef __MINGW32__
+#define EXTERN_PREFIX "_"
+#else // __MINGW32__
 #define EXTERN_PREFIX
+#endif // __MINGW32__
 #define restrict __restrict__

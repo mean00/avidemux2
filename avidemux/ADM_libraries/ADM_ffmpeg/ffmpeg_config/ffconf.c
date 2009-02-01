@@ -472,6 +472,10 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
 	printf("#define HAVE_ROUNDF 1\n");
 	printf("#define HAVE_THREADS 1\n");
 	printf("#define RUNTIME_CPUDETECT 1\n");
-	printf("#define EXTERN_PREFIX\n");
+    printf("#ifdef __MINGW32__\n");
+        printf("#define EXTERN_PREFIX \"_\"\n");
+    printf("#else // __MINGW32__\n");
+        printf("#define EXTERN_PREFIX\n");
+    printf("#endif // __MINGW32__\n");
 	printf("#define restrict __restrict__\n");
 }
