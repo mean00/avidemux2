@@ -1,7 +1,6 @@
 
 SET(ADMcoreMuxer_SRCS
 ADM_dynaMuxer.cpp
-ADM_videoCopy.cpp
 ADM_muxerUtils.cpp
 ADM_audioClock.cpp
 )	
