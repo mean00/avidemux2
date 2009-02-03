@@ -49,9 +49,9 @@ uint8_t	DIA_filterPreview(const char *captionText, AVDMGenericVideoStream *video
 	ADM_assert(frame <= videoStream->getInfo()->nb_frames);
 
 	printf("** DIA_filterPreview %i **\n", frame);
-	Ui_seekablePreviewWindow previewDialog(videoStream, frame);
+//	Ui_seekablePreviewWindow previewDialog(videoStream, frame);
 
-	previewDialog.exec();
+//	previewDialog.exec();
 }
 
 //****************************************************************************************************

@@ -422,7 +422,7 @@ int nw;
     case ACT_Bitrate:
     			{
 				uint32_t a,b;
-				DIA_Calculator(&a,&b );
+//				DIA_Calculator(&a,&b );
 			}
     			break;
     case ACT_SaveUnpackedMpeg4:

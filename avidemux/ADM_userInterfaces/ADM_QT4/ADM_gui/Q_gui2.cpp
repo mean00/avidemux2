@@ -77,11 +77,12 @@ extern uint8_t AVDM_setVolume(int volume);
 /*
     Declare the table converting widget name to our internal signal           
 */
-typedef struct adm_qt4_translation
+typedef struct 
 {
 	const char *name;
 	Action     action; 
-};
+}adm_qt4_translation;
+
 const adm_qt4_translation myTranslationTable[]=
 {
 #define PROCESS DECLARE_VAR
@@ -858,7 +859,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 void UI_updateFrameCount(uint32_t curFrame)
 {
 	char string[30];
-	sprintf(string,"%lu",curFrame);
+	sprintf(string,"%"LU,curFrame);
 	WIDGET(lineEdit)->setText(string);
 
 	currentFrame = curFrame;
@@ -875,7 +876,7 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 
 	UI_updateFrameCount(curFrame);
 
-	sprintf(text, "/ %lu", total);
+	sprintf(text, "/ %"LU, total);
 	WIDGET(label_2)->setText(text);
 
 	((QIntValidator*)(WIDGET(lineEdit)->validator()))->setTop(total);
@@ -918,6 +919,36 @@ void UI_setTimeCount(uint32_t curFrame,uint32_t total, uint32_t fps)
 }
 
 /**
+    \fn UI_setCurrentTime
+    \brief Set current PTS of displayed video
+*/
+void UI_setCurrentTime(uint64_t curTime)
+{
+  char text[80];
+ uint16_t mm,hh,ss,ms;
+ uint32_t shorty=(uint32_t)(curTime/1000);
+
+    ms2time(shorty,&hh,&mm,&ss,&ms);
+  	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+	WIDGET(label_7)->setText(text);
+
+}
+
+/**
+    \fn UI_setTotalTime
+    \brief SEt the total duration of video
+*/
+void UI_setTotalTime(uint64_t curTime)
+{
+  char text[80];
+ uint16_t mm,hh,ss,ms;
+ uint32_t shorty=(uint32_t)(curTime/1000);
+
+    ms2time(shorty,&hh,&mm,&ss,&ms);
+  	sprintf(text, "/%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+    //WIDGET(label_7)->setText(text);
+}
+/**
     \fn     UI_setMarkers(uint32_t a, uint32_t b )
     \brief  Display frame # for marker A & B
 */
@@ -925,10 +956,10 @@ void UI_setMarkers(uint32_t a, uint32_t b)
 {
 	char text[80];
 
-	snprintf(text,79,"%06lu",a);
+	snprintf(text,79,"%06"LU,a);
 	WIDGET(pushButtonJumpToMarkerA)->setText(text);
 
-	snprintf(text,79,"%06lu",b);
+	snprintf(text,79,"%06"LU,b);
 	WIDGET(pushButtonJumpToMarkerB)->setText(text);
 
 	slider->setMarkers(a, b);
@@ -994,7 +1025,7 @@ ADM_OUT_FORMAT 	UI_GetCurrentFormat( void )
     \fn     UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )
     \brief  Select  output format
 */
-uint8_t 	UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )
+uint8_t 	UI_SetCurrentFormat( uint32_t fmt )
 {
 	WIDGET(comboBoxFormat)->setCurrentIndex((int)fmt);
 }
