@@ -87,7 +87,7 @@ SET(VERSION 2.5.0)
 # since it uses the minimum set of required libraries and CMake will 
 # fail if these aren't met.
 SET(ADM_UI_GTK 1)
-SET(ADM_UI_QT4 0)
+SET(ADM_UI_QT4 1)
 
 SET(ADM_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 

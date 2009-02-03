@@ -31,7 +31,7 @@
 #include "DIA_fileSel.h"
 
 # include "prefs.h"
-#include "ADM_audiodevice/audio_out.h"
+//#include "ADM_audiodevice/audio_out.h"
 
 #include "ADM_userInterfaces/ADM_render/GUI_render.h"
 

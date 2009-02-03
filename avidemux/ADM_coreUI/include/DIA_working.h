@@ -20,7 +20,7 @@
 
 #ifndef __DIA_WK__
 #define __DIA_WK__
-
+#include "ADM_clock.h"
 	class DIA_workingBase
 	{
 		protected :
