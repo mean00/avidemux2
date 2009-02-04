@@ -48,6 +48,7 @@ bool  sdlAudioDevice::localStop(void)
 */
 void SDL_callback(void *userdata, Uint8 *stream, int len)
 {
+
     sdlAudioDevice *me=(sdlAudioDevice *)userdata;
     me->callback(stream,len);
 }
@@ -62,6 +63,8 @@ uint8_t sdlAudioDevice::callback( Uint8 *stream, int len)
         memset(stream,0,len);
         return true;
     }
+    // Make sure there is no race with the other thread...
+    if(stopRequest!=AUDIO_DEVICE_STARTED || !audioBuffer) return true;
     mutex.lock();
     uint32_t avail=wrIndex-rdIndex;
     if(avail<len)
