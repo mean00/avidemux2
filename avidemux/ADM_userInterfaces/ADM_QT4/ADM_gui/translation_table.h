@@ -68,7 +68,8 @@ PROCESS(actionFLV,ACT_AUTO_FLV) \
 PROCESS(actionPSP_H264,ACT_AUTO_PSP_H264)\
 PROCESS(actionIPOD,ACT_AUTO_IPOD) \
 PROCESS(actionAdd_to_joblist,ACT_ADD_JOB) \
-PROCESS(actionShow_Joblist,ACT_HANDLE_JOB)  
+PROCESS(actionShow_Joblist,ACT_HANDLE_JOB)  \
+PROCESS(actionPlugins,ACT_PLUGIN_INFO)  
 
 #if 0
 PROCESS(actionPrevious_intra_frame,ACT_PreviousKFrame) \
@@ -80,6 +81,7 @@ PROCESS(actionA_V_toolbar,ACT_DUMMY)
 #define LIST_OF_BUTTONS     PROCESS(pushButtonVideoConf, ACT_VideoCodec)  \
 PROCESS(pushButtonVideoFilter, ACT_VideoParameter) \
 PROCESS(pushButtonAudioConf, ACT_AudioCodec) \
+PROCESS(pushButtonFormatConfigure, ACT_SetMuxParam) \
 PROCESS(pushButtonAudioFilter, ACT_AudioFilters) \
 PROCESS(toolButtonPlay, ACT_PlayAvi) \
 PROCESS(toolButtonStop, ACT_StopAvi) \

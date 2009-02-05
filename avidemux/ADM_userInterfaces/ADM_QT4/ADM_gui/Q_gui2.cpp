@@ -51,6 +51,10 @@ extern int A_appendAvi(const char *name);
 extern char *actual_workbench_file;
 extern void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file);
 
+uint32_t ADM_mx_getNbMuxers(void);
+const char *ADM_mx_getName(uint32_t i);
+
+
 int SliderIsShifted=0;
 static void setupMenus(void);
 static int shiftKeyHeld=0;
@@ -733,13 +737,13 @@ void setupMenus(void)
 	}
 
 	/*   Fill in output format window */
-	uint32_t nbFormat;
+	uint32_t nbFormat=ADM_mx_getNbMuxers();
 
-	nbFormat=sizeof(ADM_allOutputFormat)/sizeof(ADM_FORMAT_DESC);
 	printf("Found %d format(s)\n",nbFormat);
 	for(uint32_t i=0;i<nbFormat;i++)
 	{
-		WIDGET(comboBoxFormat)->addItem(QT_TR_NOOP(ADM_allOutputFormat[i].text));	
+        const char *name=ADM_mx_getName(i);
+		WIDGET(comboBoxFormat)->addItem(name);	
 	}
 
 }

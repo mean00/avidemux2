@@ -7,14 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>838</width>
-    <height>568</height>
+    <height>606</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Avidemux</string>
   </property>
   <property name="windowIcon" >
-   <iconset/>
+   <iconset>
+    <normaloff/>
+   </iconset>
   </property>
   <property name="iconSize" >
    <size>
@@ -27,16 +29,7 @@
     <property name="spacing" >
      <number>6</number>
     </property>
-    <property name="leftMargin" >
-     <number>9</number>
-    </property>
-    <property name="topMargin" >
-     <number>9</number>
-    </property>
-    <property name="rightMargin" >
-     <number>9</number>
-    </property>
-    <property name="bottomMargin" >
+    <property name="margin" >
      <number>9</number>
     </property>
     <item>
@@ -44,16 +37,7 @@
       <property name="spacing" >
        <number>6</number>
       </property>
-      <property name="leftMargin" >
-       <number>0</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
+      <property name="margin" >
        <number>0</number>
       </property>
       <item>
@@ -61,16 +45,7 @@
         <property name="spacing" >
          <number>6</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -78,16 +53,7 @@
           <property name="spacing" >
            <number>0</number>
           </property>
-          <property name="leftMargin" >
-           <number>0</number>
-          </property>
-          <property name="topMargin" >
-           <number>0</number>
-          </property>
-          <property name="rightMargin" >
-           <number>0</number>
-          </property>
-          <property name="bottomMargin" >
+          <property name="margin" >
            <number>0</number>
           </property>
           <item>
@@ -120,7 +86,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>5</height>
@@ -133,16 +99,7 @@
             <property name="spacing" >
              <number>0</number>
             </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
+            <property name="margin" >
              <number>0</number>
             </property>
             <item>
@@ -153,7 +110,7 @@
               <property name="sizeType" >
                <enum>QSizePolicy::Fixed</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0" >
                <size>
                 <width>12</width>
                 <height>0</height>
@@ -166,16 +123,7 @@
               <property name="spacing" >
                <number>6</number>
               </property>
-              <property name="leftMargin" >
-               <number>0</number>
-              </property>
-              <property name="topMargin" >
-               <number>0</number>
-              </property>
-              <property name="rightMargin" >
-               <number>0</number>
-              </property>
-              <property name="bottomMargin" >
+              <property name="margin" >
                <number>0</number>
               </property>
               <item>
@@ -237,7 +185,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>1</width>
               <height>14</height>
@@ -275,7 +223,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>5</height>
@@ -288,16 +236,7 @@
             <property name="spacing" >
              <number>0</number>
             </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
+            <property name="margin" >
              <number>0</number>
             </property>
             <item>
@@ -308,7 +247,7 @@
               <property name="sizeType" >
                <enum>QSizePolicy::Fixed</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0" >
                <size>
                 <width>12</width>
                 <height>0</height>
@@ -321,16 +260,7 @@
               <property name="spacing" >
                <number>6</number>
               </property>
-              <property name="leftMargin" >
-               <number>0</number>
-              </property>
-              <property name="topMargin" >
-               <number>0</number>
-              </property>
-              <property name="rightMargin" >
-               <number>0</number>
-              </property>
-              <property name="bottomMargin" >
+              <property name="margin" >
                <number>0</number>
               </property>
               <item>
@@ -385,16 +315,7 @@
                 <property name="spacing" >
                  <number>6</number>
                 </property>
-                <property name="leftMargin" >
-                 <number>0</number>
-                </property>
-                <property name="topMargin" >
-                 <number>0</number>
-                </property>
-                <property name="rightMargin" >
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin" >
+                <property name="margin" >
                  <number>0</number>
                 </property>
                 <item>
@@ -434,7 +355,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>1</width>
               <height>14</height>
@@ -466,58 +387,13 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>5</height>
              </size>
             </property>
            </spacer>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" >
-            <property name="spacing" >
-             <number>0</number>
-            </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
-             <number>0</number>
-            </property>
-            <item>
-             <spacer>
-              <property name="orientation" >
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType" >
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" >
-               <size>
-                <width>12</width>
-                <height>1</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QComboBox" name="comboBoxFormat" >
-              <property name="sizePolicy" >
-               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
           <item>
            <spacer>
@@ -527,7 +403,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Expanding</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>10</height>
@@ -537,6 +413,58 @@
           </item>
          </layout>
         </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="spacing" >
+           <number>0</number>
+          </property>
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <item>
+           <spacer>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType" >
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0" >
+             <size>
+              <width>12</width>
+              <height>1</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBoxFormat" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonFormatConfigure" >
+          <property name="enabled" >
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text" >
+           <string>Configure</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -544,16 +472,7 @@
         <property name="spacing" >
          <number>6</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -592,7 +511,7 @@
           <property name="sizeType" >
            <enum>QSizePolicy::Expanding</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>0</width>
             <height>0</height>
@@ -609,16 +528,7 @@
       <property name="spacing" >
        <number>6</number>
       </property>
-      <property name="leftMargin" >
-       <number>0</number>
-      </property>
-      <property name="topMargin" >
-       <number>0</number>
-      </property>
-      <property name="rightMargin" >
-       <number>0</number>
-      </property>
-      <property name="bottomMargin" >
+      <property name="margin" >
        <number>0</number>
       </property>
       <item>
@@ -626,16 +536,7 @@
         <property name="spacing" >
          <number>6</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -646,7 +547,7 @@
           <property name="sizeType" >
            <enum>QSizePolicy::Expanding</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>0</width>
             <height>0</height>
@@ -672,16 +573,7 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <property name="leftMargin" >
-           <number>0</number>
-          </property>
-          <property name="topMargin" >
-           <number>0</number>
-          </property>
-          <property name="rightMargin" >
-           <number>0</number>
-          </property>
-          <property name="bottomMargin" >
+          <property name="margin" >
            <number>0</number>
           </property>
           <item>
@@ -690,7 +582,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_play.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -709,7 +602,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_stop.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/player_stop.png</normaloff>:/new/prefix1/pics/player_stop.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -728,7 +622,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/back.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/back.png</normaloff>:/new/prefix1/pics/back.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -747,7 +642,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/forward.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/forward.png</normaloff>:/new/prefix1/pics/forward.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -766,7 +662,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_rew.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>:/new/prefix1/pics/player_rew.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -785,7 +682,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_fwd.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>:/new/prefix1/pics/player_fwd.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -804,7 +702,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/markA.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -823,7 +722,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/markB.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -842,7 +742,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/prev_black.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>:/new/prefix1/pics/prev_black.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -861,7 +762,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/next_black.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/next_black.png</normaloff>:/new/prefix1/pics/next_black.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -880,7 +782,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_start.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -899,7 +802,8 @@
              <string>...</string>
             </property>
             <property name="icon" >
-             <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_end.png</iconset>
+             <iconset resource="avidemux.qrc" >
+              <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
             </property>
             <property name="iconSize" >
              <size>
@@ -917,7 +821,7 @@
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>20</height>
@@ -932,16 +836,7 @@
           <property name="spacing" >
            <number>6</number>
           </property>
-          <property name="leftMargin" >
-           <number>0</number>
-          </property>
-          <property name="topMargin" >
-           <number>0</number>
-          </property>
-          <property name="rightMargin" >
-           <number>0</number>
-          </property>
-          <property name="bottomMargin" >
+          <property name="margin" >
            <number>0</number>
           </property>
           <item>
@@ -1023,7 +918,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>20</height>
@@ -1098,7 +993,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Fixed</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>20</height>
@@ -1142,7 +1037,7 @@
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>60</width>
               <height>20</height>
@@ -1162,7 +1057,7 @@
         <property name="sizeType" >
          <enum>QSizePolicy::Fixed</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>14</width>
           <height>95</height>
@@ -1175,16 +1070,7 @@
         <property name="spacing" >
          <number>6</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -1195,7 +1081,7 @@
           <property name="sizeType" >
            <enum>QSizePolicy::Expanding</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>0</width>
             <height>0</height>
@@ -1357,7 +1243,7 @@
         <property name="sizeType" >
          <enum>QSizePolicy::Fixed</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>14</width>
           <height>95</height>
@@ -1370,16 +1256,7 @@
         <property name="spacing" >
          <number>4</number>
         </property>
-        <property name="leftMargin" >
-         <number>0</number>
-        </property>
-        <property name="topMargin" >
-         <number>0</number>
-        </property>
-        <property name="rightMargin" >
-         <number>0</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>0</number>
         </property>
         <item>
@@ -1390,7 +1267,7 @@
           <property name="sizeType" >
            <enum>QSizePolicy::Expanding</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>0</width>
             <height>0</height>
@@ -1407,7 +1284,8 @@
            <string>...</string>
           </property>
           <property name="icon" >
-           <iconset resource="avidemux.qrc" >:/new/prefix1/pics/arts.png</iconset>
+           <iconset resource="avidemux.qrc" >
+            <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
           </property>
           <property name="checkable" >
            <bool>true</bool>
@@ -1454,7 +1332,7 @@
      <x>0</x>
      <y>0</y>
      <width>838</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp" >
@@ -1462,6 +1340,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionShow_built_in_support" />
+    <addaction name="actionPlugins" />
     <addaction name="actionAbout_avidemux" />
    </widget>
    <widget class="QMenu" name="menuVideo" >
@@ -1665,7 +1544,8 @@
   </widget>
   <action name="actionOpen" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/fileopen.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/fileopen.png</normaloff>:/new/prefix1/pics/fileopen.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Open...</string>
@@ -1721,7 +1601,8 @@
   </action>
   <action name="actionSet_marker_A" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/markA.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
    </property>
    <property name="text" >
     <string>Set Marker A</string>
@@ -1738,7 +1619,8 @@
   </action>
   <action name="actionSet_marker_B" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/markB.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
    </property>
    <property name="text" >
     <string>Set Marker B</string>
@@ -1760,7 +1642,8 @@
   </action>
   <action name="actionProperties" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/info.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/info.png</normaloff>:/new/prefix1/pics/info.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Information...</string>
@@ -1771,7 +1654,8 @@
   </action>
   <action name="actionSave_video" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/filesave.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/filesave.png</normaloff>:/new/prefix1/pics/filesave.png</iconset>
    </property>
    <property name="text" >
     <string>Save &amp;Video...</string>
@@ -1810,7 +1694,8 @@
   </action>
   <action name="actionLoad_run_project" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/project_open.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/project_open.png</normaloff>:/new/prefix1/pics/project_open.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Load/Run Project...</string>
@@ -1824,7 +1709,8 @@
   </action>
   <action name="actionSave_project" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/filesave.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/filesave.png</normaloff>:/new/prefix1/pics/filesave.png</iconset>
    </property>
    <property name="text" >
     <string>Save &amp;Project</string>
@@ -1838,7 +1724,8 @@
   </action>
   <action name="actionSave_project_as" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/filesaveas.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/filesaveas.png</normaloff>:/new/prefix1/pics/filesaveas.png</iconset>
    </property>
    <property name="text" >
     <string>Save P&amp;roject As...</string>
@@ -2008,7 +1895,8 @@
   </action>
   <action name="actionCalculator" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/calc.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/calc.png</normaloff>:/new/prefix1/pics/calc.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Calculator...</string>
@@ -2074,7 +1962,8 @@
   </action>
   <action name="actionPlay_Stop" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_stop.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/player_stop.png</normaloff>:/new/prefix1/pics/player_stop.png</iconset>
    </property>
    <property name="text" >
     <string>Stop</string>
@@ -2091,7 +1980,8 @@
   </action>
   <action name="actionPrevious_Frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/back.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/back.png</normaloff>:/new/prefix1/pics/back.png</iconset>
    </property>
    <property name="text" >
     <string>P&amp;revious Frame</string>
@@ -2102,7 +1992,8 @@
   </action>
   <action name="actionNext_Frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/forward.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/forward.png</normaloff>:/new/prefix1/pics/forward.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Next Frame</string>
@@ -2113,7 +2004,8 @@
   </action>
   <action name="actionPrevious_intra_frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_rew.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>:/new/prefix1/pics/player_rew.png</iconset>
    </property>
    <property name="text" >
     <string>Pr&amp;evious Intra Frame</string>
@@ -2130,7 +2022,8 @@
   </action>
   <action name="actionNext_intra_frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_fwd.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>:/new/prefix1/pics/player_fwd.png</iconset>
    </property>
    <property name="text" >
     <string>Next &amp;Intra Frame</string>
@@ -2147,7 +2040,8 @@
   </action>
   <action name="actionPrevious_black_frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/prev_black.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>:/new/prefix1/pics/prev_black.png</iconset>
    </property>
    <property name="text" >
     <string>Previou&amp;s Black Frame</string>
@@ -2161,7 +2055,8 @@
   </action>
   <action name="actionNext_blak_frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/next_black.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/next_black.png</normaloff>:/new/prefix1/pics/next_black.png</iconset>
    </property>
    <property name="text" >
     <string>Ne&amp;xt Black Frame</string>
@@ -2175,7 +2070,8 @@
   </action>
   <action name="actionFirst_Frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_start.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;First Frame</string>
@@ -2186,7 +2082,8 @@
   </action>
   <action name="actionLast_Frame" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_end.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Last Frame</string>
@@ -2197,7 +2094,8 @@
   </action>
   <action name="actionGo_to_Marker_A" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/gotoA.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/gotoA.png</normaloff>:/new/prefix1/pics/gotoA.png</iconset>
    </property>
    <property name="text" >
     <string>Jump to Marker &amp;A</string>
@@ -2214,7 +2112,8 @@
   </action>
   <action name="actionGo_to_Marker_B" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/gotoB.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/gotoB.png</normaloff>:/new/prefix1/pics/gotoB.png</iconset>
    </property>
    <property name="text" >
     <string>Jump to Marker &amp;B</string>
@@ -2269,7 +2168,8 @@
   </action>
   <action name="actionPlay" >
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/player_play.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Play/Stop</string>
@@ -2411,7 +2311,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/preview_input.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/preview_input.png</normaloff>:/new/prefix1/pics/preview_input.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Input</string>
@@ -2422,7 +2323,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/preview_output.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/preview_output.png</normaloff>:/new/prefix1/pics/preview_output.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Output</string>
@@ -2433,7 +2335,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/preview_side.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/preview_side.png</normaloff>:/new/prefix1/pics/preview_side.png</iconset>
    </property>
    <property name="text" >
     <string>Si&amp;de</string>
@@ -2444,7 +2347,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/preview_top.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/preview_top.png</normaloff>:/new/prefix1/pics/preview_top.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Top</string>
@@ -2455,7 +2359,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="avidemux.qrc" >:/new/prefix1/pics/preview_separate.png</iconset>
+    <iconset resource="avidemux.qrc" >
+     <normaloff>:/new/prefix1/pics/preview_separate.png</normaloff>:/new/prefix1/pics/preview_separate.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Separate</string>
@@ -2502,6 +2407,11 @@
    </property>
    <property name="shortcut" >
     <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionPlugins" >
+   <property name="text" >
+    <string>Plugins</string>
    </property>
   </action>
  </widget>
