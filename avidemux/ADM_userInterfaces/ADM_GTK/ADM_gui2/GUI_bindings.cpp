@@ -184,8 +184,9 @@ buttonCallBack_S buttonCallback[]=
 
 	{"buttonFilters"		,"clicked"		,ACT_VideoParameter},
 	{"buttonAudioFilter"	,"clicked"		,ACT_AudioFilters},
-	{"buttonConfV"			,"clicked"		,ACT_VideoCodec},
+	{"buttonConfV"			,"clicked"		,ACT_SetMuxParam},
 	{"buttonConfA"			,"clicked"		,ACT_AudioCodec},
+	{"buttonConfF"			,"clicked"		,ACT_SetMuxParam},
 
 	{"buttonPrevBlack"		,"clicked"		,ACT_PrevBlackFrame},
 	{"buttonNextBlack"		,"clicked"		,ACT_NextBlackFrame},
