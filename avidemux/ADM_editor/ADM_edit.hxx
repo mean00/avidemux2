@@ -111,15 +111,15 @@ typedef struct
  	uint32_t  							_audio_start;
 }_SEGMENT;
 /**
-        
+            \class ADM_Composer
 */
 class ADM_Composer : public ADM_audioStream
 {
   private:
                 
-    uint8_t                             audioBuffer[ADM_EDITOR_AUDIO_BUFFER_SIZE];
-    uint32_t                            audioBufferStart;
-    uint32_t                            audioBufferEnd;
+//    uint8_t                             audioBuffer[ADM_EDITOR_AUDIO_BUFFER_SIZE];
+//    uint32_t                            audioBufferStart;
+//    uint32_t                            audioBufferEnd;
 
                     uint8_t dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid); 
                                                             // Duplicate img, do colorspace
@@ -254,7 +254,15 @@ public:
 					//______________________________
 					//   audioStream
 					//______________________________
+protected:
+#define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)
+                        uint8_t  packetBuffer[ADM_EDITOR_PACKET_BUFFER_SIZE];
+                        uint32_t packetBufferSize;
+                        uint64_t packetBufferDts;
+                        uint32_t packetBufferSamples;
+                        bool     refillPacketBuffer(void);
   
+public:
         
 virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
         uint8_t         getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);

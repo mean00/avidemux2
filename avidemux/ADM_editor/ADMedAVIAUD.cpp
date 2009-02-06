@@ -53,6 +53,25 @@ Todo:
 #define MYAUDIO (_videos[0].audioTracks[_videos[0].currentAudioStream])
 
 /**
+    \fn refillPacketBuffer
+    \brief Fetch a new packet
+*/
+bool ADM_Composer::refillPacketBuffer(void)
+{
+   packetBufferSize=0; 
+   ADM_audioStreamTrack *trk=getTrack(0);
+    if(!trk) return false;    
+   if(!trk->stream->getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
+                        &packetBufferSamples,&packetBufferDts))
+    {
+            adm_printf(ADM_PRINT_ERROR,"[Composer::getPCMPacket] Read failed\n");
+            return false;
+    }
+    return true;
+}
+
+
+/**
     \fn     getPCMPacket
     \brief  Get audio packet
 
@@ -60,93 +79,100 @@ Todo:
 
 uint8_t ADM_Composer::getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
-uint32_t nbSamples,fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
-uint64_t dts;
-uint32_t inSize,nbOut;
+uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
+uint32_t inSize;
 bool drop=false;
 
+
+again:
     *samples=0;
     ADM_audioStreamTrack *trk=getTrack(0);
-    if(!trk) return 0;    
-
-    // Read a packet from stream 0
-again:
-    drop=false;
-    fillerSample=0;
-    if(!trk->stream->getPacket(audioBuffer,&inSize,ADM_EDITOR_AUDIO_BUFFER_SIZE,&nbSamples,&dts))
+    if(!trk) return false;
+    // Do we already have a packet ?
+    if(!packetBufferSize)
     {
-            adm_printf(ADM_PRINT_ERROR,"[Composer::getPCMPacket] Read failed\n");
-            return 0;
+        if(!refillPacketBuffer())
+        {
+            printf("[Editor] Cannot refill audio\n");
+        }
     }
-    vprintf("[PCMPacket]  Got %d samples, time code %08lu  lastDts=%08lu delta =%08ld\n",nbSamples,dts,lastDts,dts-lastDts);
-    // Check if the Dts matches
-    if(lastDts!=ADM_AUDIO_NO_DTS && dts!=ADM_AUDIO_NO_DTS)
-    {
-        if(abs(lastDts-dts)>ADM_ALLOWED_DRIFT_US)
-        {
-        printf("[Composer::getPCMPacket] drift %d, computed :%lu got %lu\n",(int)(lastDts-dts),lastDts,dts);
-        if(dts<lastDts)
-        {
-            printf("[Composer::getPCMPacket] Dropping packet\n");
-            drop=true;
-        }else 
-        {
-            // Else add filler 
-            // Compute filler size
-            float f=dts-lastDts; // in us
-            f*=wavHeader.frequency;
-            f/=1000000.;
-            // in samples!
-            uint32_t fillerSample=(uint32_t )(f+0.49);
-            uint32_t mx=sizeMax/trk->wavheader.channels;
-            
-            if(mx<fillerSample) fillerSample=mx;
-            // arbitrary cap, max 4kSample in one go
-            // about 100 ms
-            if(fillerSample>4*1024) 
-            {
-                fillerSample=4*1024;
-            }
-            uint32_t start=fillerSample*sizeof(float)*trk->wavheader.channels;
-            memset(dest,0,start);
+    // We do now
+    vprintf("[PCMPacket]  Got %d samples, time code %08lu  lastDts=%08lu delta =%08ld\n",packetBufferSamples,packetBufferDts,lastDts,packetBufferDts-lastDts);
 
-            advanceDtsBySample(fillerSample);
-            dest+=fillerSample*trk->wavheader.channels;
-            vprintf("[Composer::getPCMPacket] Adding %u padding samples, dts is now %lu\n",fillerSample,lastDts);
+
+    // Check if the Dts matches
+    if(lastDts!=ADM_AUDIO_NO_DTS &&packetBufferDts!=ADM_AUDIO_NO_DTS)
+    {
+        if(abs(lastDts-packetBufferDts)>ADM_ALLOWED_DRIFT_US)
+        {
+            printf("[Composer::getPCMPacket] drift %d, computed :%lu got %lu\n",(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
+            if(packetBufferDts<lastDts)
+            {
+                printf("[Composer::getPCMPacket] Dropping packet %"LU" last =%"LU"\n",lastDts/1000,packetBufferDts/1000);
+                drop=true;
+            }else 
+            {
+                // There is a "hole" in audio
+                // Let's add some filler
+                // Compute filler size
+                float f=packetBufferDts-lastDts; // in us
+                f*=wavHeader.frequency;
+                f/=1000000.;
+                // in samples!
+                uint32_t fillerSample=(uint32_t )(f+0.49);
+                uint32_t mx=sizeMax/trk->wavheader.channels;
+                
+                if(mx<fillerSample) fillerSample=mx;
+                // arbitrary cap, max 4kSample in one go
+                // about 100 ms
+                if(fillerSample>4*1024) 
+                {
+                    fillerSample=4*1024;
+                }
+                uint32_t start=fillerSample*sizeof(float)*trk->wavheader.channels;
+                memset(dest,0,start);
+
+                advanceDtsBySample(fillerSample);
+                dest+=fillerSample*trk->wavheader.channels;
+                vprintf("[Composer::getPCMPacket] Adding %u padding samples, dts is now %lu\n",fillerSample,lastDts);
+                return true;
        }
       }
-    }else
-    {
-        // If lastDts is not initialized....
-        if(lastDts==ADM_AUDIO_NO_DTS) lastDts=dts;
     }
-    // Call codec...
-    if(!trk->codec->run(audioBuffer, inSize, dest, &nbOut))
-    {
-            adm_printf(ADM_PRINT_ERROR,"[Composer::getPCMPacket] codec failed failed\n");
-            return 0;
-    }
+    // If lastDts is not initialized....
+    if(lastDts==ADM_AUDIO_NO_DTS) lastDts=packetBufferDts;
     
     //
+    //  The packet is ok, decode it...
     //
+    uint32_t nbOut=0; // Nb sample as seen by codec
+    if(!trk->codec->run(packetBuffer, packetBufferSize, dest, &nbOut))
+    {
+            packetBufferSize=0; // consume
+            adm_printf(ADM_PRINT_ERROR,"[Composer::getPCMPacket] codec failed failed\n");
+            return false;
+    }
+    packetBufferSize=0; // consume
+
+    // Compute how much decoded sample to compare with what demuxer said
     uint32_t decodedSample=nbOut;
     decodedSample/=trk->wavheader.channels;
-    if(!decodedSample && !fillerSample) goto again;
-#define ADM_MAX_JITTER 5000  // in samples
-    if(abs(nbSamples-decodedSample)>ADM_MAX_JITTER)
+    if(!decodedSample) goto again;
+#define ADM_MAX_JITTER 5000  // in samples, due to clock accuracy, it can be +er, -er, + er, -er etc etc
+    if(abs(decodedSample-packetBufferSamples)>ADM_MAX_JITTER)
     {
-        printf("[Composer::getPCMPacket] Demuxer was wrong %d vs %d samples!\n",nbSamples,decodedSample);
+        printf("[Composer::getPCMPacket] Demuxer was wrong %d vs %d samples!\n",packetBufferSamples,decodedSample);
     }
     
-    // This packet has been dropped, try the next one
-    if(drop==true && !fillerSample) goto again;
+    // This packet has been dropped (too early packt), try the next one
+    if(drop==true) goto again;
     // Update infos
-    *samples=(decodedSample+fillerSample);
+    *samples=(decodedSample);
     *odts=lastDts;
     advanceDtsBySample(decodedSample);
     vprintf("[Composer::getPCMPacket] Adding %u decodedSample, dts is not %lu\n",fillerSample,lastDts);
     ADM_assert(sizeMax>=(fillerSample+decodedSample)*trk->wavheader.channels);
-    return 1;
+    return true;
 }
 /**
         \fn getPacket
