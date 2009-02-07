@@ -22,7 +22,11 @@
 
 #include "ADM_ps.h"
 
-#define aprintf printf
+#if 0
+    #define aprintf printf
+#else
+    #define aprintf(...) {}
+#endif
 
 /**
     \fn ADM_psAccess
