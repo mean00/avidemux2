@@ -21,6 +21,9 @@
 #include <math.h>
 
 #include "ADM_ps.h"
+
+#define aprintf printf
+
 /**
     \fn ADM_psAccess
 */
@@ -70,27 +73,27 @@ uint64_t  ADM_psAccess::getDurationInUs(void)
 }
 /**
     \fn goToTime
+    \brief Rememember seekPoint.dts time is already scaled and in us
 */                              
 bool      ADM_psAccess::goToTime(uint64_t timeUs)
 {
     // Convert time in us to scaled 90 kHz tick
-    double f=timeUs;
-    f*=90;
-    f/=1000;
-    f+=dtsOffset;
-    uint64_t n=(uint64_t)f;
-
-    if(n<=seekPoints[seekPoints.size()-1].dts)
+    
+    if(timeUs<seekPoints[0].dts)
     {
+            aprintf("[PsAudio] Requested %"LU" tick before 1st seek point at :%"LU"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
             demuxer.setPos(seekPoints[0].position);
             return true;
     }
 
-    for(int i=0;i<seekPoints.size()-1;i++)
+    for(int i=1;i<seekPoints.size();i++)
     {
-        if(seekPoints[i].dts >=n && seekPoints[i+1].dts>n)
+        if(seekPoints[i].dts >=timeUs )
         {
-            demuxer.setPos(seekPoints[i].position);
+            aprintf("[PsAudio] Requested %"LU" tick seeking to  at :%"LU" us (next is %"LU"ms \n",(uint32_t)timeUs/1000,
+                    (uint32_t)seekPoints[i-1].dts/1000,
+                    (uint32_t)seekPoints[i].dts/1000);
+            demuxer.setPos(seekPoints[i-1].position);
             return true;
         }
     }
@@ -119,6 +122,11 @@ uint64_t p,d,start;
     if(d==ADM_NO_PTS) *dts=p;
             else *dts=d;
     *dts=timeConvert(*dts);
+    if(*dts!=ADM_NO_PTS) 
+    {
+        aprintf("[psAudio] getPacket dts = %"LU" ms\n",(uint32_t)*dts/1000);
+    }
+
     return true;
 }
 

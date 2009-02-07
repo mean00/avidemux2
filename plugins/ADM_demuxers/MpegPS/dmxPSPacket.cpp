@@ -81,7 +81,11 @@ uint64_t    psPacket::getPos(void)
 
 bool    psPacket::setPos(uint64_t pos)
 {
-    return true;
+    if(!_file->setpos(pos))
+    {
+        printf("[psPacket] Cannot seek to %"LLX"\n", pos);
+        return false;
+    }
 }
 
 /**

@@ -41,6 +41,7 @@ typedef struct
 }dmxFrame;
 /**
     \struct ADM_psAudioSeekPoint
+    \brief The dts are stored in rescaled us. Warning the low level getpacket is getting absolute 90 khzTick
 */
 typedef struct
 {            

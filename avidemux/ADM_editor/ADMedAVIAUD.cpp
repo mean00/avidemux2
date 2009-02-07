@@ -165,7 +165,11 @@ again:
     }
     
     // This packet has been dropped (too early packt), try the next one
-    if(drop==true) goto again;
+    if(drop==true)
+    {
+        // TODO Check if the packet somehow overlaps, i.e. starts too early but finish ok
+        goto again;
+    }
     // Update infos
     *samples=(decodedSample);
     *odts=lastDts;
