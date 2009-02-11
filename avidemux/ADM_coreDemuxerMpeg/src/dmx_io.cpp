@@ -22,9 +22,9 @@
 #include <math.h>
 
 #include "ADM_default.h"
-
 #include "dmx_io.h"
 
+#define aprintf(...) {}
 
 fileParser::fileParser( void )
 {
@@ -55,6 +55,7 @@ fileParser::~fileParser()
         }
         if(_buffer) delete [] _buffer;
         _buffer=NULL;
+        _nbFd=0;
 }
 
 /*
@@ -102,7 +103,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         // no number sequence
         if( decimals == 0 )
         {
-                printf( "\nSimple loading: \n" );
+                aprintf( "\nSimple loading: \n" );
                 delete [] followup;
                 _nbFd = 1;
                 _curFd = 0;
@@ -120,9 +121,9 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 fseeko( _fd[0], 0, SEEK_SET );
                 _sizeFdCumul[0]=0;
                 _size=_sizeFd[0];
-                printf( " file: %s, size: %"LLU"\n", filename, _sizeFd[0] );
-                printf( " found 1 files \n" );
-                printf( "Done \n" );
+                aprintf( " file: %s, size: %"LLU"\n", filename, _sizeFd[0] );
+                aprintf( " found 1 files \n" );
+                aprintf( "Done \n" );
                 return 1;
         }
 
@@ -154,7 +155,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 buffer_fd = new FILE * [tabSize];
                 buffer_sizeFd = new uint64_t [tabSize];
 
-                printf( "\nAuto adding: \n" );
+                aprintf( "\nAuto adding: \n" );
                 while( last_followup == 0 )
                 {
                         strcpy( followup, left );
@@ -177,7 +178,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                         buffer_sizeFd[count] = ftello( buffer_fd[count] );
                         fseeko( buffer_fd[count], 0, SEEK_SET );
 
-                        printf( " file %d: %s, size: %"LLU"\n", (count + 1), followup, buffer_sizeFd[count] );
+                        aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), followup, buffer_sizeFd[count] );
 
                         // increase number
                         number[decimals - 1] = number[decimals - 1] + 1;
@@ -226,8 +227,8 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                                 *multi=FP_DONT_APPEND;
                 }
 
-                printf( " found %d files \n", count );
-                printf( "Done \n" );
+                aprintf( " found %d files \n", count );
+                aprintf( "Done \n" );
         } // if( decimals == 0 )
                 return 1;
 } // fileParser::open()
@@ -305,7 +306,7 @@ uint32_t val,hnt;
         // preload
         if((4+_off)>=_size)
         {
-                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg%"LU")\n",_off,_size,_nbFd);
+                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%"LU")\n",_off,_size,_nbFd);
                 return 0;
         }
         hnt=(read8i()<<16) + (read8i()<<8) +read8i();
@@ -338,7 +339,7 @@ uint32_t val,hnt;
         // preload
         if((5+_off)>=_size)
         {
-                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg%"LU")\n",_off,_size,_nbFd);
+                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%"LU")\n",_off,_size,_nbFd);
                 return 0;
         }
         hnt=(read8i()<<24)+(read8i()<<16) + (read8i()<<8) +read8i();
@@ -500,3 +501,40 @@ uint8_t r;
         return r;
 }
 #endif
+
+void fileParser::hexDump(uint8_t *buf, int size)
+{
+	int len, i, j, c;
+
+	for(i=0;i<size;i+=16)
+	{
+		len = size - i;
+
+		if (len > 16)
+			len = 16;
+
+		printf("%08x ", i);
+
+		for(j=0;j<16;j++)
+		{
+			if (j < len)
+				printf(" %02x", buf[i+j]);
+			else
+				printf("   ");
+		}
+
+		printf(" ");
+
+		for(j=0;j<len;j++)
+		{
+			c = buf[i+j];
+
+			if (c < ' ' || c > '~')
+				c = '.';
+
+			printf("%c", c);
+		}
+
+		printf("\n");
+	}
+}

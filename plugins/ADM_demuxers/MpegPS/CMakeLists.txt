@@ -7,13 +7,11 @@ SET(ADM_ps_SRCS
 	ADM_psAudio.cpp
 	ADM_psAudioProbe.cpp
 	ADM_psAudioProbe.h
-
-    dmxPSPacket.cpp
-    dmx_io.cpp
-    ADM_indexFile.cpp
 )
 
 ADD_LIBRARY(ADM_dm_ps SHARED ${ADM_ps_SRCS})
+TARGET_LINK_LIBRARIES(ADM_dm_ps ADM_coreDemuxerMpeg)
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxerMpeg/include")
 
 
 

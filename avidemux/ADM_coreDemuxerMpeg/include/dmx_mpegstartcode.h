@@ -13,7 +13,7 @@
 
 #define USER_DATA_START_CODE    0xb2
 #define SYSTEM_START_CODE       0xbb
-#define PADDING_CODE                                            0xbe
+#define PADDING_CODE            0xbe
 #define PRIVATE_STREAM_1        0xbd
 #define PRIVATE_STREAM_2        0xbf
 #define SYSTEM_END_CODE         0xb9
