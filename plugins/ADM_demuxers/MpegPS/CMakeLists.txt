@@ -7,6 +7,7 @@ SET(ADM_ps_SRCS
 	ADM_psAudio.cpp
 	ADM_psAudioProbe.cpp
 	ADM_psAudioProbe.h
+        ADM_psComputeTimeStamp.cpp
 )
 
 ADD_LIBRARY(ADM_dm_ps SHARED ${ADM_ps_SRCS})
