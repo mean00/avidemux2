@@ -125,7 +125,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     bool found=false;
     vid->lastSentFrame=frame;
     uint32_t nbFrames=vid->_nb_video_frames;
-    cache->flush();
+    //cache->flush();
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=vid->_aviheader->getTime(frame);
     uint32_t tries=8;
@@ -139,7 +139,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
          if (!demuxer->getFrame (vid->lastSentFrame,&img))
          {
                 printf("[DecodePictureUpToIntra] getFrame failed for frame %"LU"\n",vid->lastSentFrame);
-                cache->flush();
+                //cache->flush();
                 return false;
          }
          // Now uncompress it...
