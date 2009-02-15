@@ -106,8 +106,9 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
       out->_qSize = out->_qStride = 0;
       out->quant = NULL;
     }
-//    printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, (uint64_t)(src->opaque));
-    out->Pts= (uint64_t)(src->opaque);
+    //printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, (uint64_t)(src->reordered_opaque));
+    //printf("[LAVC] pts: %"LLU"\n",src->pts);
+    out->Pts= (uint64_t)(src->reordered_opaque);
     return 1;
 }
 /**
@@ -354,13 +355,14 @@ uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
    // Put a safe value....
    out->Pts=in->demuxerPts;
-  _frame.opaque=(void *)out->Pts;
-  
+    _context->reordered_opaque=in->demuxerPts;
+  //_frame.opaque=(void *)out->Pts;
+  //printf("Incoming Pts :%"LLD"\n",out->Pts);
   ret = avcodec_decode_video (_context, &_frame, &got_picture, in->data, in->dataLength);
   if(!bFramePossible())
   {
     // No delay, the value is sure, no need to hide it in opaque
-    _frame.opaque=(void *)in->demuxerPts;
+    _context->reordered_opaque=(int64_t)in->demuxerPts;
   }
   out->_qStride = 0;		//Default = no quant
   if (0 > ret && !_context->hurry_up)
