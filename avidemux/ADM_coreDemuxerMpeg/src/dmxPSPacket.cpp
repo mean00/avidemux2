@@ -23,10 +23,9 @@
     \fn psPacket
     \brief ctor
 */
-psPacket::psPacket(void)
+psPacket::psPacket(void) 
 {
-    doNoComplainAnyMore=0;
-    _file=NULL;
+
 }
 /**
     \fn psPacket
@@ -88,25 +87,6 @@ bool    psPacket::setPos(uint64_t pos)
     }
 }
 
-/**
-    \fn getPacketOfType
-    \brief Only returns packet of type pid
-*/      
-
-bool        psPacket::getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt)
-{
-
-    bool xit=false;
-    uint8_t tmppid;
-    while(1)
-    {
-        if(true!=getPacket(maxSize,&tmppid,packetSize,pts,dts,buffer,startAt))
-                return false;
-        else
-                if(tmppid==pid) return true;
-    }
-    return false;
-}
 /**
     \fn getPacket
 */      
@@ -531,7 +511,7 @@ bool    psPacketLinear::read(uint32_t len, uint8_t *out)
             It is expected that the caller will do -4 to the index to get the start of the 
             startCode
 */
-bool    psPacketLinear::getInfo(psPacketInfo *info)
+bool    psPacketLinear::getInfo(dmxPacketInfo *info)
 {
     if(bufferIndex<4)
     {

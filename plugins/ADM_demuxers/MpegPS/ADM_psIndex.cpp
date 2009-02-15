@@ -96,7 +96,7 @@ public:
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
-        bool    Mark(indexerData *data,psPacketInfo *s,markType update);
+        bool    Mark(indexerData *data,dmxPacketInfo *s,markType update);
 
 };
 /**
@@ -146,7 +146,7 @@ bool seq_found=false;
 
 PSVideo video;
 indexerData  data;    
-psPacketInfo info;
+dmxPacketInfo info;
 
     memset(&data,0,sizeof(data));
     char indexName[strlen(file)+5];
@@ -293,7 +293,7 @@ psPacketInfo info;
     If the beginning is not a pic, but a gop start for example, we had to add/remove those.
 
 */
-bool  PsIndexer::Mark(indexerData *data,psPacketInfo *info,markType update)
+bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
 {
     int offset=data->nextOffset;
     data->nextOffset=0;

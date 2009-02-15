@@ -6,6 +6,7 @@
 SET(ADMcoreDemuxerMpeg_SRCS
 ADM_indexFile.cpp
 dmx_io.cpp
+dmxPacket.cpp
 dmxPSPacket.cpp
 )	
 #*************************************************
