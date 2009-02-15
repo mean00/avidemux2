@@ -205,8 +205,29 @@ bool psHeader::updatePtsDts(void)
         // Make sure everyone starts at 0
         // Search first timestamp (audio/video)
 
+        switch( _videostream.dwRate)
+        {
+            case 25000:   dtsIncrement=40000;break;
+            case 23976:   dtsIncrement=41708;break;
+            case 29970:   dtsIncrement=33367;break;
+            default : dtsIncrement=1;
+                    printf("[psDemux] Fps not handled for DTS increment\n");
 
+        }
         uint64_t startDts=ListOfFrames[0]->dts;
+        uint64_t startPts=ListOfFrames[0]->pts;
+        // Special case when we dont have DTS but only PTS
+        if(startDts==ADM_NO_PTS) // Do we have DTS ?
+        {
+            if(startPts!=ADM_NO_PTS)
+            {
+                if(startPts>=2*dtsIncrement)
+                {
+                    startDts=startPts-2*dtsIncrement;
+                } else startDts=0;
+                ListOfFrames[0]->dts=startDts;
+            }
+        }
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
             uint64_t a=listOfAudioTracks[i]->access->seekPoints[0].dts;
@@ -230,33 +251,30 @@ bool psHeader::updatePtsDts(void)
 
         // Now fill in the missing timestamp and convert to us
         // for video
-
-        switch( _videostream.dwRate)
-        {
-            case 25000:   dtsIncrement=40000;break;
-            case 23976:   dtsIncrement=41708;break;
-            case 29970:   dtsIncrement=33367;break;
-            default : dtsIncrement=1;
-                    printf("[psDemux] Fps not handled for DTS increment\n");
-
-        }
+        // We are sure to have both PTS & DTS for 1st image
+        // Guess missing DTS/PTS for video
         for(int i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *frame=ListOfFrames[i];
+            printf("[psUpdate] raw DTS: %"LLU" PTS:%"LLU"\n",frame->dts,frame->pts);
             if(frame->pts==ADM_NO_PTS || frame->dts==ADM_NO_PTS)
             {
                 lastDts+=dtsIncrement;
                 lastPts+=dtsIncrement;
                 frame->dts=lastDts;
+                // If we have PTS keep it...
+                if(frame->pts!=ADM_NO_PTS)
+                    frame->pts=timeConvert(frame->pts);
                 //frame->pts=lastPts; // THIS IS WRONG NEED REORDERING
 
-            }else      
+            }else    // We got both, use them  
             {
+                
                 frame->dts=lastDts=timeConvert(frame->dts);
                 frame->pts=lastPts=timeConvert(frame->pts);
             }
         }
-        // convert to us for Audio tracks
+        // convert to us for Audio tracks (seek points)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
             ADM_psTrackDescriptor *track=listOfAudioTracks[i];
@@ -268,6 +286,18 @@ bool psHeader::updatePtsDts(void)
                     access->seekPoints[j].dts=access->timeConvert( access->seekPoints[j].dts);
             }
         }
+#if 1
+        for(int i=0;i<ListOfFrames.size();i++)
+        {
+            dmxFrame *frame=ListOfFrames[i];
+            int64_t pts,dts;
+            pts=frame->pts;
+            dts=frame->dts;
+            if(pts!=ADM_NO_PTS) pts/=1000;
+            if(dts!=ADM_NO_PTS) dts/=1000;
+            printf("[psVideo] Framex %d PTS:%"LLD" ms DTS:%"LLD" ms\n",i,pts,dts);
+        }
+#endif
         return 1;
                     
 }
