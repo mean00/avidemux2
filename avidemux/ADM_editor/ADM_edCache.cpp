@@ -16,7 +16,11 @@
 #define MODULE_NAME MODULE_EDITOR
 #include "ADM_osSupport/ADM_debug.h"
 #undef aprintf
+#if 1
 #define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
 /**
     \fn EditorCache
     \brief Constructor
@@ -83,9 +87,12 @@ ADMImage	*EditorCache::getFreeImage(void)
     {
         if(_elem[i].frameNum==ADM_INVALID_CACHE);
         found=i;
+        aprintf("[edCache] Buffer %d free\n",found);
     }
     // Then the older one/LRU
     if(found==-1)
+    {
+        aprintf("[edCache] looking for older cache entry\n");
         for(int i=0;i<_nbImage;i++)
         {
             delta=abs((int)(_counter-_elem[i].lastUse));
@@ -93,9 +100,10 @@ ADMImage	*EditorCache::getFreeImage(void)
             {
                 min=delta;
                 found=i;
-
+                
             }
         }
+    }
     if(found==-1) ADM_assert("Could not get a free image\n");
 	_elem[found].lastUse=_counter+1;;
 	_elem[found].frameNum=ADM_IN_USE_CACHE;
@@ -110,7 +118,8 @@ ADMImage	*EditorCache::getFreeImage(void)
 */
  void        EditorCache::flush(void)
 {
- for(int i=0;i<_nbImage;i++)
+    aprintf("[edCache] Flush\n");
+    for(int i=0;i<_nbImage;i++)
     {
         _elem[i].frameNum==ADM_INVALID_CACHE;
     }
@@ -121,13 +130,14 @@ ADMImage	*EditorCache::getFreeImage(void)
 */
 void        EditorCache::invalidate(ADMImage *image)
 {
-   // First search for a really free image
+   
     for(int i=0;i<_nbImage;i++)
     {
         if(_elem[i].image==image);
             {
                    _elem[i].lastUse=ADM_INVALID_CACHE;;
                    _elem[i].frameNum=ADM_INVALID_CACHE;
+                    aprintf("[edCache] Invalidating %d\n",i);
                   return;
             }
     }
@@ -147,6 +157,7 @@ uint8_t		EditorCache::updateFrameNum(ADMImage *image,uint32_t frameno)
 			ADM_assert(_elem[i].frameNum==ADM_IN_USE_CACHE);
 			_elem[i].frameNum=frameno;
 			_elem[i].lastUse=_counter;
+            aprintf("[edCache] Updatding %d with framenum %"LU"\n",i,frameno);
 			_counter++;
 			return 1;
 
@@ -156,11 +167,23 @@ uint8_t		EditorCache::updateFrameNum(ADMImage *image,uint32_t frameno)
 	ADM_assert(0);
 
 }
+/**
+    \fn dump
+    \brief dump the content of cache in a human readable way (sort of)
+*/
 void EditorCache::dump( void)
 {
 	for(int i=0;i<_nbImage;i++)
 	{
-		aprintf("Edcache content:%d %lu\n",i,_elem[i].frameNum);
+        cacheElem *e=&(_elem[i]);
+        switch(e->frameNum)
+        {
+            case ADM_IN_USE_CACHE:  printf("Edcache content[%d] In use\n",i);break;
+            case ADM_INVALID_CACHE: printf("Edcache content[%d] Free\n",i);break;
+            default:
+                printf("Edcache content[%d]: Num:%"LU" PTS : %"LLU" us%"LLU" ms\n",i,e->frameNum,
+                                                                    e->image->Pts,e->image->Pts/1000);
+        }
 	}
 }
 /**
