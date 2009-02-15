@@ -134,6 +134,7 @@ again:
 
                 advanceDtsBySample(fillerSample);
                 dest+=fillerSample*trk->wavheader.channels;
+                *samples=fillerSample;
                 vprintf("[Composer::getPCMPacket] Adding %u padding samples, dts is now %lu\n",fillerSample,lastDts);
                 return true;
        }
