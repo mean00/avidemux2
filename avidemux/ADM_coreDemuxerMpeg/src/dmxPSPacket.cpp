@@ -399,13 +399,19 @@ psPacketLinear::~psPacketLinear()
 */
 bool psPacketLinear::refill(void) 
 {
-// In case a startcade spawns across 2 packets
+// In case a startcode spawns across 2 packets
 // we have to keep track of the old one
         oldBufferDts=bufferDts;
         oldBufferPts=bufferPts;
         oldStartAt=startAt;
         oldBufferLen=bufferLen;
-        if( false== getPacketOfType(myPid,ADM_PACKET_LINEAR, &bufferLen,&bufferPts,&bufferDts,buffer,&startAt)) return false;
+        if( false== getPacketOfType(myPid,ADM_PACKET_LINEAR, &bufferLen,&bufferPts,&bufferDts,buffer,&startAt)) 
+        {
+            printf("[PsPacketLinear] Refill failed for pid :%x\n",myPid);
+            bufferIndex=bufferLen=0;
+            return false;
+        }
+        //printf("Refill : At :%"LLX" size :%"LD"\n",startAt,bufferLen);
         bufferIndex=0;
         return true;
 }
@@ -463,17 +469,22 @@ uint32_t psPacketLinear::readi32(void)
 */
 bool psPacketLinear::forward(uint32_t v)
 {
-    if(bufferIndex+v-1<bufferLen)
+next:
+ uint32_t delta=bufferLen-bufferIndex;
+    if(v>100*1000)
+    {
+        ADM_assert(0);
+    }
+    if(v<=delta)
     {
         bufferIndex+=v;
         consumed+=v;
         return true;
     }
-    if(!refill()) return false;
-    uint32_t delta=bufferLen-bufferIndex;
+    // v>delta
     v-=delta;
-    consumed+=delta;
-    return forward(v);
+    if(!refill()) return false;
+    goto next;
 }
 
 /**
@@ -541,7 +552,11 @@ bool    psPacketLinear::seek(uint64_t packetStart, uint32_t offset)
         printf("[psPacket] Cannot seek to %"LLX"\n",packetStart);
         return 0;
     }
-    refill();
+    if(!refill())
+    {
+        printf("[PsPacketLinear] Seek to %"LLX":%"LX" failed\n",packetStart,offset);
+        return false;
+    }
     ADM_assert(offset<bufferLen);
     bufferIndex=offset;
     
@@ -573,7 +588,7 @@ bool    psPacketLinear::changePid(uint32_t pid)
 */
  psPacketLinearTracker::psPacketLinearTracker(uint8_t pid)  : psPacketLinear(pid)
 {
-   
+   resetStats();
 }
 /**
     \fn ~psPacketLinearTracker
@@ -581,7 +596,7 @@ bool    psPacketLinear::changePid(uint32_t pid)
 psPacketLinearTracker::~psPacketLinearTracker()
 {
 
-    resetStats();
+    
 }
 /**
         \fn getStat
