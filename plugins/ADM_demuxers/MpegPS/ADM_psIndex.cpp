@@ -24,7 +24,7 @@
 #include "avidemutils.h"
 #include "ADM_quota.h"
 #include "ADM_psAudioProbe.h"
-#include "DIA_encoding.h"
+#include "DIA_working.h"
 
 static const char Type[5]={'X','I','P','B','P'};
 
@@ -88,7 +88,7 @@ protected:
         FILE *index;
         psPacketLinearTracker *pkt;
         listOfPsAudioTracks *audioTracks;
-        DIA_encodingBase  *ui;
+        DIA_workingBase  *ui;
 public:
                 PsIndexer(void);
                 ~PsIndexer();
@@ -120,7 +120,7 @@ PsIndexer::PsIndexer(void)
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
-    ui=createEncoding (25000);
+    ui=createWorking ("Indexing");
 }
 
 /**
@@ -224,7 +224,7 @@ dmxPacketInfo info;
                                 float pos=data.startAt;
                                 pos=pos/(float)fullSize;
                                 pos*=100;
-                                ui->setPercent( (uint32_t)pos);
+                                ui->update( (uint32_t)pos);
 
                             }
 

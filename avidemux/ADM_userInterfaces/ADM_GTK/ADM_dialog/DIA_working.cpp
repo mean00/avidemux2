@@ -36,11 +36,11 @@ static gint on_destroy_abort(GtkObject * object, gpointer user_data);
 
 void on_work_abort(GtkObject * object, gpointer user_data)
 {
-DIA_working *dial;
+DIA_workingBase *dial;
 GtkWidget *dialog;
 
 	UNUSED_ARG(object);
-	dial=(DIA_working *)user_data;
+	dial=(DIA_workingBase *)user_data;
 	dialog=(GtkWidget *)dial->_priv;
         gtk_unregister_dialog(dialog);
 	gtk_widget_destroy(dialog);

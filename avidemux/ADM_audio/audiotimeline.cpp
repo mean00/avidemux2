@@ -73,9 +73,9 @@ uint32_t retry=50;
 
       ADM_assert(_audioMap);
 
-      DIA_working *work;
+      DIA_workingBase *work;
 
-      work=new DIA_working(QT_TR_NOOP("Building VBR map"));
+      work=createWorking(QT_TR_NOOP("Building VBR map"));
 
       goTo(0);
       uint32_t Mul=2*_wavheader->channels;
@@ -86,7 +86,7 @@ uint32_t retry=50;
 				if(!work->isAlive())
 				{
 					delete work;
-					work=new DIA_working(QT_TR_NOOP("Building VBR map"));
+					work=createWorking(QT_TR_NOOP("Building VBR map"));
 					work->update(offset,_length);
 				}
 

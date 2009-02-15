@@ -133,7 +133,7 @@ bool ADM_audioStreamMP3::buildTimeMap(void)
 {
 uint32_t size;
 uint64_t newDts,pos;
-DIA_working *work=new DIA_working("Building time map");
+DIA_workingBase *work=createWorking("Building time map");
     
     ADM_assert(access->canSeekOffset()==true);
     access->setPos(0);

@@ -213,7 +213,7 @@ DIA_encodingGtk::~DIA_encodingGtk( )
 
 	if (shutdownRequired && !stopReq)
 	{
-		DIA_working *work=new DIA_working(QT_TR_NOOP("Shutting down"));
+		DIA_workingBase *work=createWorking(QT_TR_NOOP("Shutting down"));
 		bool performShutdown=true;
 
 		for(int i = 0; i <= 30; i++)

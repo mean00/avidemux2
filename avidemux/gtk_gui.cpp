@@ -1167,7 +1167,7 @@ A_saveAudio (char *name)
   uint32_t len2;
   uint32_t written, max;
   uint64_t dts;
-  DIA_working *work;
+  DIA_workingBase *work;
   FILE *out;
 
 #define ONE_STRIKE (64*1024)
@@ -1181,7 +1181,7 @@ A_saveAudio (char *name)
   out = fopen (name, "wb");
   if (!out) return;
 
-  work=new DIA_working(QT_TR_NOOP("Saving audio"));
+  work=createWorking(QT_TR_NOOP("Saving audio"));
 
   uint32_t timeEnd,timeStart,sample,hold,len;
   uint64_t tgt_sample,cur_sample;
@@ -1291,7 +1291,7 @@ void A_saveBunchJpg(const char *name)
   uint32_t curImg;
   char	 fullName[2048],*ext;
   char *baseName;
-  DIA_working *working;
+  DIA_workingBase *working;
   uint8_t success=0;
 
         if(frameStart>frameEnd)
@@ -1305,7 +1305,7 @@ void A_saveBunchJpg(const char *name)
         src=new ADMImage(avifileinfo->width,avifileinfo->height);
         ADM_assert(src);
 
-        working=new DIA_working(QT_TR_NOOP("Saving as set of jpegs"));
+        working=createWorking(QT_TR_NOOP("Saving as set of jpegs"));
         for(curImg=frameStart;curImg<=frameEnd;curImg++)
         {
                 working->update(curImg-frameStart,frameEnd-frameStart);
@@ -1633,7 +1633,7 @@ uint8_t ADM_saveRaw (const char *name)
   FILE *fd, *fi;
   uint8_t *buffer = new uint8_t[avifileinfo->width * avifileinfo->height * 3],ret=0;
   char *idx;
-  DIA_working *work;
+  DIA_workingBase *work;
   uint8_t seq;
   idx = new char[strlen (name) + 8];
   strcpy (idx, name);
@@ -1642,7 +1642,7 @@ uint8_t ADM_saveRaw (const char *name)
   fi = fopen (idx, "wt");
   if (!fd)
     return 0;
-  work=new DIA_working(QT_TR_NOOP("Saving raw video stream"));
+  work=createWorking(QT_TR_NOOP("Saving raw video stream"));
   ADMCompressedImage image;
   image.data=buffer;
   image.dataLength=avifileinfo->width * avifileinfo->height * 3;
@@ -1788,10 +1788,10 @@ uint32_t nb=0;
 //uint32_t buf[720*576*2];
 uint32_t error=0;
 ADMImage *aImage;
-DIA_working *work;
+DIA_workingBase *work;
 
 	nb = avifileinfo->nb_frames;
-	work=new DIA_working(QT_TR_NOOP("Checking video"));
+	work=createWorking(QT_TR_NOOP("Checking video"));
 	aImage=new ADMImage(avifileinfo->width,avifileinfo->height);
   for(uint32_t i=0;i<nb;i++)
   {

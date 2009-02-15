@@ -157,7 +157,7 @@ void GUI_NextPrevBlackFrame(int dir)
 
    const int darkness=40;
 
-   DIA_working *work=new DIA_working(QT_TR_NOOP("Seeking"));
+   DIA_workingBase *work=createWorking(QT_TR_NOOP("Seeking"));
    orgFrame=curframe;
    int total;
     // Avoid it being 0
@@ -238,7 +238,7 @@ uint8_t A_ListAllBlackFrames(char *name)
     const int darkness=40;
 
     startframe=curframe;
-    DIA_working *work=new DIA_working(QT_TR_NOOP("Finding black frames"));
+    DIA_workingBase *work=createWorking(QT_TR_NOOP("Finding black frames"));
     printf("\n** Listing all black frames **\n");
 
     for (f=0; f<avifileinfo->nb_frames; f++) {

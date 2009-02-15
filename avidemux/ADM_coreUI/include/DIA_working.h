@@ -1,11 +1,10 @@
 /***************************************************************************
-                          DIA_working.cpp  -  description
-                             -------------------
-    begin                : Thu Apr 21 2003
-    copyright            : (C) 2003 by mean
-    email                : fixounet@free.fr
+    \fn DIA_working.cpp 
+    \brief UI that handles working state with cancel & percent
 
-	This class deals with the working window
+    copyright            : (C) 2003/2009 by mean fixounet@free.fr
+
+
 
  ***************************************************************************/
 
@@ -21,38 +20,46 @@
 #ifndef __DIA_WK__
 #define __DIA_WK__
 #include "ADM_clock.h"
-	class DIA_workingBase
-	{
-		protected :
-				uint32_t 	lastper;
-				Clock	    _clock;
-				uint32_t	_nextUpdate;
-				uint32_t 	elapsed;
-				
-		public:
-				void 		*_priv;
-                            DIA_workingBase( const char *title=NULL ) {};
-				virtual		~DIA_workingBase(){};
-				// If returns 1 -> Means aborted
-				virtual uint8_t  	update(uint32_t percent) {ADM_assert(0);}
-				virtual uint8_t 	update(uint32_t current,uint32_t total){ADM_assert(0);};
-				virtual uint8_t  	isAlive (void ){ADM_assert(0);};
-				
-	};
-
-    class DIA_working : public DIA_workingBase
-    {
+/**
+    \class DIA_workingBase
+*/
+class DIA_workingBase
+{
+    protected :
+            uint32_t 	lastper;
+            Clock	    _clock;
+            uint32_t	_nextUpdate;
+            uint32_t 	elapsed;
+            
+    public:
+            void 		*_priv;
+                        DIA_workingBase( const char *title=NULL ) {};
+            virtual		~DIA_workingBase(){};
+            // If returns 1 -> Means aborted
+            virtual uint8_t  	update(uint32_t percent) {ADM_assert(0);}
+            virtual uint8_t 	update(uint32_t current,uint32_t total){ADM_assert(0);};
+            virtual uint8_t  	isAlive (void ){ADM_assert(0);};
+            
+};
+/**
+    \class DIA_working
+*/
+#if 0
+class DIA_working : public DIA_workingBase
+{
 protected:
-                    void        *son;
-            
+                void        *son;
+        
 public:
-                                DIA_working( const char *title=NULL );
-            virtual		        ~DIA_working();
-				// If returns 1 -> Means aborted
-			virtual uint8_t  	update(uint32_t percent);
-            virtual uint8_t 	update(uint32_t current,uint32_t total);
-            virtual uint8_t  	isAlive (void );
-            
-    };
+                            DIA_working( const char *title=NULL );
+        virtual		        ~DIA_working();
+            // If returns 1 -> Means aborted
+        virtual uint8_t  	update(uint32_t percent);
+        virtual uint8_t 	update(uint32_t current,uint32_t total);
+        virtual uint8_t  	isAlive (void );
+        
+};
+#endif
+DIA_workingBase *createWorking(const char *title);
 
 #endif

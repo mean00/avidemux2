@@ -26,14 +26,33 @@ workWindow::workWindow()     : QDialog()
  }
 //*******************************************
 
-DIA_working::DIA_working( void )
+namespace ADM_Qt4CoreUIToolkit
 {
-  workWindow *wind;
-  wind=new workWindow();
-  _priv=(void *)wind;
-  postCtor();
-}
-DIA_working::DIA_working( const char *title )
+
+class DIA_workingQt4 : public DIA_workingBase
+{
+protected:
+        virtual void 	    postCtor( void ) ;
+public:
+                            DIA_workingQt4( const char *title=NULL );
+        virtual		        ~DIA_workingQt4();
+            // If returns 1 -> Means aborted
+        virtual uint8_t  	update(uint32_t percent);
+        virtual uint8_t 	update(uint32_t current,uint32_t total);
+        virtual uint8_t  	isAlive (void );
+                void        closeDialog(void);
+        
+};
+
+
+
+
+
+
+/****************************************/
+//*******************************************
+
+DIA_workingQt4::DIA_workingQt4( const char *title ) : DIA_workingBase(title)
 {
   workWindow *wind;
   wind=new workWindow();
@@ -41,14 +60,14 @@ DIA_working::DIA_working( const char *title )
   wind->setWindowTitle(title);
   postCtor();
 }
-void DIA_working :: postCtor( void )
+void DIA_workingQt4 :: postCtor( void )
 {
   workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
       wind->show();
       lastper=0;
       _nextUpdate=0;
 }
-uint8_t DIA_working::update(uint32_t percent)
+uint8_t DIA_workingQt4::update(uint32_t percent)
 {
 		#define GUI_UPDATE_RATE 1000
 
@@ -86,7 +105,7 @@ uint8_t DIA_working::update(uint32_t percent)
         return 0;
 }
 
-uint8_t DIA_working::update(uint32_t cur, uint32_t total)
+uint8_t DIA_workingQt4::update(uint32_t cur, uint32_t total)
 {
         double d,n;
         uint32_t percent;
@@ -105,23 +124,32 @@ uint8_t DIA_working::update(uint32_t cur, uint32_t total)
 
 }
 
-uint8_t DIA_working::isAlive (void )
+uint8_t DIA_workingQt4::isAlive (void )
 {
 	if(!_priv) return 0;
 	return 1;
 }
 
-DIA_working::~DIA_working()
+DIA_workingQt4::~DIA_workingQt4()
 {
     closeDialog();
 }
 
-void DIA_working::closeDialog( void )
+void DIA_workingQt4::closeDialog( void )
 {
   workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
     if(wind) delete wind;
     wind=NULL;
 }
+/**
+    \fn createWorking
+*/
+DIA_workingBase *createWorking(const char *title)
+{
+    return new DIA_workingQt4(title);
+}   
 
+
+}
 //********************************************
 //EOF

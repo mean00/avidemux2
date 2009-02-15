@@ -226,6 +226,7 @@ void            GUI_Quiet(void)
   beQuiet=1;
 }
 //****************************************************************************************************
+extern DIA_workingBase *createWorking(const char *title);
 }
 
 static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
@@ -238,7 +239,9 @@ static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
 		&ADM_Qt4CoreUIToolkit::GUI_Alternate,
 		&ADM_Qt4CoreUIToolkit::GUI_Verbose,
 		&ADM_Qt4CoreUIToolkit::GUI_Quiet,
-		&ADM_Qt4CoreUIToolkit::GUI_isQuiet
+		&ADM_Qt4CoreUIToolkit::GUI_isQuiet,
+        &ADM_Qt4CoreUIToolkit::createWorking,
+        //&ADM_Qt4CoreUIToolkit::createEncodingQt4
 };
 
 void InitCoreToolkit(void )

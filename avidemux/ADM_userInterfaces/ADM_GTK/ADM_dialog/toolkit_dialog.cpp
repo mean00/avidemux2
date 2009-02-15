@@ -364,8 +364,8 @@ static CoreToolkitDescriptor GtkCoreToolkitDescriptor=
 		&ADM_GtkCoreUIToolkit::GUI_Verbose,
 		&ADM_GtkCoreUIToolkit::GUI_Quiet,
 		&ADM_GtkCoreUIToolkit::GUI_isQuiet,
-        &ADM_GtkCoreUIToolkit::createWorking,
-        &ADM_GtkCoreUIToolkit::createEncodingGtk
+        &ADM_GtkCoreUIToolkit::createWorking
+        // &ADM_GtkCoreUIToolkit::createEncodingQt4
 };
 
 void InitCoreToolkit(void )

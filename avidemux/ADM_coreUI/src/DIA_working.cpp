@@ -20,7 +20,7 @@
 
 #define SON ((DIA_workingBase *)son)
 #include "DIA_coreUI_internal.h"
-
+#if 0
 extern DIA_workingBase *createWorking(const char *title);
 /**
     \fn DIA_working
@@ -65,3 +65,4 @@ uint8_t  	DIA_working::isAlive (void )
     if(son) return SON->isAlive();
     return 0;
 }
+#endif

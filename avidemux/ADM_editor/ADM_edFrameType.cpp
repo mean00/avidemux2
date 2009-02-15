@@ -86,9 +86,9 @@ aviInfo    info;
 	{
 		frames+=_videos[i]._nb_video_frames;
 	}
-	DIA_working *work;
-        uint8_t nocopy;
-	work=new DIA_working(QT_TR_NOOP("Rebuilding Frames"));
+	DIA_workingBase *work;
+    uint8_t nocopy;
+	work=createWorking(QT_TR_NOOP("Rebuilding Frames"));
 
 
 	for(uint32_t vid=0;vid<_nb_video;vid++)
