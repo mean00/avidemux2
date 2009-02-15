@@ -68,10 +68,10 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
     // Now synthetize
     for(int i=0x0;i<0xFF;i++)   
     {
-         packetStats *stat=packet->getStat(i);
+        packetStats *stat=packet->getStat(i);
         if(stat->count)
         {
-            printf("[PsProbeAudo] Pid:%x count:%d size:%d\n",i,stat->count,stat->size);
+            printf("[PsProbeAudo] Pid:%x count:%"LX" size:%"LD"\n",i,stat->count,stat->size);
         }
 
          if(stat->count>=PROBE_MIN_PACKET && stat->size>PROBE_MIN_SIZE)
