@@ -221,9 +221,9 @@ bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
   ADMImage	*result;
   _VIDEOS *vid=&_videos[ref];
 
-   uint32_t loop=3;
+   uint32_t loop=20; // Try 20 frames ahead
 
-	// Try decoding 3 frames ahead, if not we can consider it fails
+	// Try decoding loopŔ rames ahead, if not we can consider it fails
     while(loop--)
     {
         // first decode a picture, cannot hurt...
@@ -244,9 +244,15 @@ bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
                 currentFrame++;
             }
             return true;
+        }else   
+        {
+            printf("[getNextPic] Loop:%d, looking for pts :%"LLU"\n",loop,vid->lastReadPts/1000);
+            cache->dump();
         }
     }
     printf("[ADM_Composer::getPicture] Failed\n");
+    printf("[ADM_composer] while looking for %"LLU" us, %"LLU" ms\n",vid->lastReadPts,vid->lastReadPts/1000);
+    cache->dump();
     return false;
 }
 
@@ -308,7 +314,10 @@ uint8_t ret = 0;
         result->Pts=vid->lastDecodedPts;
     }else
         vid->lastDecodedPts=pts;
-
+    printf("Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms\n",
+            frame,
+            vid->lastDecodedPts,
+            vid->lastDecodedPts/1000);
     return true;
 }
 /**
@@ -542,7 +551,12 @@ uint8_t  ADM_Composer::getUncompressedFrame (uint32_t frame, ADMImage * out,
   ADMImage	*result;
 
 //    static uint32_t lastlen=0;
-
+    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
+    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
+    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
+    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
+    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
+    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
 	if(flagz)
 			*flagz=0;
 
@@ -581,8 +595,6 @@ uint8_t  ADM_Composer::getUncompressedFrame (uint32_t frame, ADMImage * out,
 //	Prepare the destination...
 	result=cache->getFreeImage();
 
-
-
 	cache->dump();
   // now we got segment and frame
   //*************************
@@ -590,19 +602,20 @@ uint8_t  ADM_Composer::getUncompressedFrame (uint32_t frame, ADMImage * out,
   //*************************
   _videos[ref]._aviheader->getFlags (relframe, &flags);
 
-     if (flags & AVI_KEY_FRAME)
+    if (flags & AVI_KEY_FRAME)
     {
-    	aprintf("keyframe\n");     	if(!decodeCache(relframe,ref, result))
+    	aprintf("keyframe\n");     	
+        if(!decodeCache(relframe,ref, result))
 		{
-			printf("Editor: Cannot key frame %"LU"\n",relframe);
+			printf("[edRender]Editor: Cannot deccode keyframe %"LU"\n",relframe);
 			return 0;
 		}
-	  _lastseg = seg;
-	  _lastframe = relframe;
-	  if(flagz)
-	  	*flagz=result->flags;
-	  out->duplicate(result);
-	  return (1);
+        _lastseg = seg;
+        _lastframe = relframe;
+        if(flagz)
+            *flagz=result->flags;
+        out->duplicate(result);
+        return (1);
     }
 
     //*************************
