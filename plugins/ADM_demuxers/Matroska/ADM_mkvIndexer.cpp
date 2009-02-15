@@ -36,7 +36,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
   const char *ss;
 
    parser->seek(0);
-   DIA_working *work=new DIA_working("Matroska Images");
+   DIA_workingBase *work=createWorking("Matroska Images");
    // Start with a small index, it will grow automatically afterward
    for(int i=0;i<_nbAudioTrack+1;i++)
    {
@@ -304,7 +304,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
      return 0;
    }
    ADM_ebml_file segment(parser,vlen);
-   DIA_working *work=new DIA_working("Matroska clusters");
+   DIA_workingBase *work=createWorking("Matroska clusters");
    while(segment.simplefind(MKV_CLUSTER,&alen,0))
    {
 
