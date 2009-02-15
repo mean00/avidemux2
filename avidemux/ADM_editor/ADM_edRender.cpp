@@ -314,7 +314,7 @@ uint8_t ret = 0;
         result->Pts=vid->lastDecodedPts;
     }else
         vid->lastDecodedPts=pts;
-    printf("Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms\n",
+    aprintf("Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms\n",
             frame,
             vid->lastDecodedPts,
             vid->lastDecodedPts/1000);
