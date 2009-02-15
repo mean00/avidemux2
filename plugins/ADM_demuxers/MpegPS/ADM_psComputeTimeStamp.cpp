@@ -132,10 +132,12 @@ bool psHeader::updatePtsDts(void)
                     {
                         frame->pts=frame->dts+2*dtsIncrement;
                     }
-                    if(frame->dts<lastDts) printf("[psRead] Warning DTS going backward old:%"LLD" new:%"LLD" delta=%"LLD"\n",
-                                                                                            lastDts/1000,frame->dts/1000,(lastDts-frame->dts)/1000);
+                    uint64_t oldDts=lastDts;
                     frame->dts=lastDts=timeConvert(frame->dts);
                     frame->pts=lastPts=timeConvert(frame->pts);
+                    if(oldDts>lastDts) printf("[psRead] Warning DTS going backward frame %d, old:%"LLD" new:%"LLD" delta=%"LLD"\n",
+                                                       i,oldDts/1000,lastDts/1000,(oldDts-lastDts)/1000);
+
                 }else
                 {
                     lastDts+=dtsIncrement;
