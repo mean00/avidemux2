@@ -517,6 +517,7 @@ uint8_t admPreview::nextPicture(void)
 #endif
       default: ADM_assert(0);
     }
+    return true;
 }
 /**
       \fn previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
