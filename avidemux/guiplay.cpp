@@ -119,7 +119,11 @@ void GUI_PlayAvi(void)
         
         admPreview::displayNow();;
         GUI_setCurrentFrameAndTime();
-        if(false==admPreview::nextPicture()) break;
+        if(false==admPreview::nextPicture()) 
+        {
+            printf("[Play] Cancelling playback, nextPicture failed\n");
+            break;
+        }
         ADM_playFillAudio();
         lastPts=admPreview::getCurrentPts();
         systemTime = ticktock.getElapsedMS();
