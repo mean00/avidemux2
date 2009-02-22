@@ -43,7 +43,129 @@
 #include "ADM_preview.h"
 
 extern void    UI_purge(void );
+/**
+    \fn HandleAction_Navigate
 
+*/
+void HandleAction_Navigate (Action action)
+{
+    switch(action)
+    {
+  case ACT_GotoMarkA:
+    case ACT_GotoMarkB:
+
+      if (action == ACT_GotoMarkA)
+	nf = frameStart;
+      else
+	nf = frameEnd;
+      GUI_GoToFrame (nf);
+      break;
+    case ACT_Goto:
+      uint32_t fn;
+      fn=video_body->getCurrentFrame();
+      if (DIA_GetIntegerValue ((int *)&fn,0,avifileinfo->nb_frames,QT_TR_NOOP("Go to Frame"),QT_TR_NOOP("_Go to frame:")))
+	{
+		if (fn < avifileinfo->nb_frames)
+			GUI_GoToFrame (fn);
+		else
+			GUI_Error_HIG (QT_TR_NOOP("Out of bounds"), NULL);
+	}
+      break;
+   case ACT_Back25Frames:
+    //  if (curframe >= 25)
+	{
+	  DIA_StartBusy ();
+	  //GUI_GoToFrame (curframe - 25);
+	  DIA_StopBusy ();
+
+	}
+      break;
+
+    case ACT_PreviousKFrame:
+      GUI_PreviousKeyFrame ();
+      break;
+   case ACT_PreviousFrame:
+        GUI_PrevFrame();
+      break;
+    case ACT_Forward100Frames:
+      //GUI_GoToKFrame (curframe + (avifileinfo->fps1000 / 1000 * 4));
+      break;
+
+    case ACT_Back100Frames:
+      //GUI_GoToKFrame (curframe - (avifileinfo->fps1000 / 1000 * 4));
+      break;
+
+
+    case ACT_Forward50Frames:
+      //GUI_GoToFrame (curframe + 50);
+      break;
+
+    case ACT_Forward25Frames:
+      //GUI_GoToFrame (curframe + 25);
+      break;
+
+    case ACT_Back50Frames:
+      //if (curframe >= 50)
+	{
+	  DIA_StartBusy ();
+	  //GUI_GoToFrame (curframe - 50);
+	  DIA_StopBusy ();
+	}
+      break;
+ case ACT_NextFrame:
+      GUI_NextFrame ();
+      break;
+    case ACT_NextKFrame:
+      GUI_NextKeyFrame ();
+      break;
+    case ACT_NextBlackFrame:
+      GUI_NextPrevBlackFrame(1);
+      break;
+    case ACT_PrevBlackFrame:
+      GUI_NextPrevBlackFrame(-1);
+      break;
+   case ACT_End:
+
+      nf = avifileinfo->nb_frames;
+      GUI_GoToFrame (nf - 1);
+
+      break;
+  case ACT_Begin:
+      GUI_GoToKFrame (0);
+
+      break;
+  case ACT_JumpToFrame:
+                // read value
+                nf=UI_readCurFrame();
+				if(nf< avifileinfo->nb_frames)
+					GUI_GoToFrame(nf);
+                UI_JumpDone();
+                break;
+	case ACT_JumpToTime:
+		{
+			uint16_t hh, mm, ss, ms;
+
+			if (UI_readCurTime(hh, mm, ss, ms))
+				A_jumpToTime(hh, mm, ss, ms);
+		}
+		break;
+    case ACT_GotoTime:
+                {
+#if 0
+                        uint16_t mm,hh,ss,ms;
+                             frame2time(curframe,avifileinfo->fps1000,&hh,&mm,&ss,&ms);
+                             if(DIA_gotoTime(&hh,&mm,&ss))
+                                {
+                                        A_jumpToTime(hh,mm,ss, 0);
+                                }
+#endif
+                }
+                break;
+    default:
+        ADM_assert(0);
+        break;
+    }
+}
 /**
     \fn GUI_NextFrame
     \brief next frame
