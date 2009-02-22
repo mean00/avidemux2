@@ -1276,6 +1276,30 @@ uint8_t ADM_Composer::rebuildDuration(void)
 {
   return 1;
 }
-
+/**
+    \fn estimatePts
+    \brief Get or estimate PTS of given frame
+*/
+uint64_t    ADM_Composer::estimatePts(uint32_t frame)
+{
+    uint32_t flags;
+    _VIDEOS *vid=&_videos[0];
+    vidHeader *demuxer=vid->_aviheader;
+    int count=0;
+    uint64_t  wantedPts;
+	while(1)
+    {
+        demuxer->getFlags(frame,&flags);
+        wantedPts=vid->_aviheader->getTime(frame);
+        if((flags & AVI_KEY_FRAME)&&(wantedPts!=ADM_NO_PTS))
+        {
+                break;
+        }
+        count++;
+        frame--;
+    }
+    wantedPts+=vid->timeIncrementInUs*count;
+    return wantedPts;
+}
 //
 //

@@ -36,7 +36,7 @@ uint32_t GUI_GetScale( void );
 void GUI_detransient(void );
 void GUI_retransient(void );
 
-uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
+//
 
 //EOF
 

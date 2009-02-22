@@ -218,6 +218,7 @@ public:
                         bool        NextPicture(ADMImage *image);
                         bool        samePicture(ADMImage *image);
                         bool        getCompressedPicure(uint32_t framenum,ADMCompressedImage *img);
+                        uint64_t    estimatePts(uint32_t frame);
 /************************************ Internal ******************************/
 public:
                                     /// Decode frame and on until frame is popped out of decoders

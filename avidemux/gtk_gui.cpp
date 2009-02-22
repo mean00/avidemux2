@@ -81,7 +81,7 @@ void A_openBrokenAvi (const char *name);
 int A_openAvi2 (const char *name, uint8_t mode);
 int A_appendAvi (const char *name);
 void A_externalAudioTrack( void );
-
+uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
 void HandleAction (Action action);
 uint8_t A_rebuildKeyFrame (void);
 extern int GUI_handleVFilter (void);
@@ -139,7 +139,7 @@ extern void audioCodecChanged(int newcodec);
 extern void videoCodecChanged(int newcodec);
 extern void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );
 extern uint8_t A_autoDrive(Action action);
-int ignore_change;
+
 
 extern uint8_t DIA_ocrGen(void);
 extern uint8_t DIA_ocrDvb(void);
@@ -156,7 +156,7 @@ uint8_t DIA_builtin(void);
 renderZoom currentZoom=ZOOM_1_1;
 uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name);
 extern const char * GUI_getCustomScript(uint32_t nb);
-extern bool SliderIsShifted;
+
 
 void GUI_showCurrentFrameHex(void);
 void GUI_avsProxy(void);
@@ -165,6 +165,7 @@ extern void A_jog(void);
 extern void DIA_glyphEdit(void);
 extern uint8_t DIA_pluginsInfo(void);
 extern bool ADM_mux_configure(int index);
+void HandleAction_Navigate(Action action);
 //___________________________________________
 // serialization of user event through gui
 //
@@ -384,7 +385,11 @@ int nw;
 
 //#define TEST_UNPACK
   // we have an AVI loaded
-  switch (action)
+  if(action>ACT_NAVIGATE_BEGIN && action < ACT_NAVIGATE_END)
+  {
+    HandleAction_Navigate(action);
+  }
+  else switch (action)
     {
        case ACT_JOG:
                 A_jog();
@@ -454,33 +459,7 @@ int nw;
 		UI_refreshCustomMenu();
       }
       break;
-        case ACT_JumpToFrame:
-                // read value
-                nf=UI_readCurFrame();
-				if(nf< avifileinfo->nb_frames)
-					GUI_GoToFrame(nf);
-                UI_JumpDone();
-                break;
-	case ACT_JumpToTime:
-		{
-			uint16_t hh, mm, ss, ms;
-
-			if (UI_readCurTime(hh, mm, ss, ms))
-				A_jumpToTime(hh, mm, ss, ms);
-		}
-		break;
-    case ACT_GotoTime:
-                {
-#if 0
-                        uint16_t mm,hh,ss,ms;
-                             frame2time(curframe,avifileinfo->fps1000,&hh,&mm,&ss,&ms);
-                             if(DIA_gotoTime(&hh,&mm,&ss))
-                                {
-                                        A_jumpToTime(hh,mm,ss, 0);
-                                }
-#endif
-                }
-                break;
+      
     case ACT_SaveRaw:
       GUI_FileSelWrite (QT_TR_NOOP("Select Raw File to Save"), (SELFILE_CB *)ADM_saveRaw);
       break;
@@ -511,20 +490,12 @@ int nw;
     case ACT_AviInfo:
       DIA_properties ();
       break;
-    case ACT_Begin:
-      GUI_GoToKFrame (0);
-
-      break;
+  
 	case ACT_BitRate:
 		 GUI_displayBitrate(  );
 	break;
 
-    case ACT_End:
-
-      nf = avifileinfo->nb_frames;
-      GUI_GoToFrame (nf - 1);
-
-      break;
+ 
 
     case ACT_PlayAvi:
       GUI_PlayAvi ();
@@ -547,18 +518,7 @@ int nw;
       	//GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       	break;
 
-    case ACT_Scale:
-      if (!ignore_change)
-	{
-	  ignore_change++;
-	  nf = GUI_GetScale ();
-	  if (!SliderIsShifted) GUI_GoToKFrame (nf);
-	  else GUI_GoToFrame (nf);
-	  ignore_change--;
-
-	}
-//        printf("\n new frame : %lu",nf);
-      break;
+  
 #define TOGGLE_PREVIEW ADM_PREVIEW_OUTPUT
     case ACT_PreviewChanged:
     {
@@ -583,64 +543,14 @@ int nw;
       A_setPostproc();
       break;
 
-    case ACT_NextFrame:
-      GUI_NextFrame ();
-      break;
-    case ACT_NextKFrame:
-      GUI_NextKeyFrame ();
-      break;
-    case ACT_NextBlackFrame:
-      GUI_NextPrevBlackFrame(1);
-      break;
-    case ACT_PrevBlackFrame:
-      GUI_NextPrevBlackFrame(-1);
-      break;
+   
     case ACT_AllBlackFrames:
       GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"), (SELFILE_CB *)A_ListAllBlackFrames);
         break;
 
-    case ACT_PreviousFrame:
-        GUI_PrevFrame();
-      break;
-    case ACT_Forward100Frames:
-      //GUI_GoToKFrame (curframe + (avifileinfo->fps1000 / 1000 * 4));
-      break;
+ 
 
-    case ACT_Back100Frames:
-      //GUI_GoToKFrame (curframe - (avifileinfo->fps1000 / 1000 * 4));
-      break;
-
-
-    case ACT_Forward50Frames:
-      //GUI_GoToFrame (curframe + 50);
-      break;
-
-    case ACT_Forward25Frames:
-      //GUI_GoToFrame (curframe + 25);
-      break;
-
-    case ACT_Back50Frames:
-      //if (curframe >= 50)
-	{
-	  DIA_StartBusy ();
-	  //GUI_GoToFrame (curframe - 50);
-	  DIA_StopBusy ();
-	}
-      break;
-
-    case ACT_Back25Frames:
-    //  if (curframe >= 25)
-	{
-	  DIA_StartBusy ();
-	  //GUI_GoToFrame (curframe - 25);
-	  DIA_StopBusy ();
-
-	}
-      break;
-
-    case ACT_PreviousKFrame:
-      GUI_PreviousKeyFrame ();
-      break;
+ 
     case ACT_AudioSourceAvi:
       //currentaudiostream=aviaudiostream;
       A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
@@ -680,26 +590,7 @@ int nw;
 	}
       UI_setMarkers (frameStart, frameEnd);
       break;
-    case ACT_GotoMarkA:
-    case ACT_GotoMarkB:
-
-      if (action == ACT_GotoMarkA)
-	nf = frameStart;
-      else
-	nf = frameEnd;
-      GUI_GoToFrame (nf);
-      break;
-    case ACT_Goto:
-      uint32_t fn;
-      fn=video_body->getCurrentFrame();
-      if (DIA_GetIntegerValue ((int *)&fn,0,avifileinfo->nb_frames,QT_TR_NOOP("Go to Frame"),QT_TR_NOOP("_Go to frame:")))
-	{
-		if (fn < avifileinfo->nb_frames)
-			GUI_GoToFrame (fn);
-		else
-			GUI_Error_HIG (QT_TR_NOOP("Out of bounds"), NULL);
-	}
-      break;
+  
 //----------------------test-----------------------
     case ACT_SaveAvi:
       GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"),(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
@@ -1886,18 +1777,6 @@ uint32_t count;
 }
 extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,uint32_t *swap);
 //
-uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
-{
-uint32_t frame;
-        time2frame(&frame,avifileinfo->fps1000,hh,mm,ss,ms);
-        if(frame>=avifileinfo->nb_frames)
-        {
-                printf("Frame is out of bound\n");
-                return 0;
-        }
-        return GUI_GoToFrame(frame);
-
-}
 
 //
 void	A_setPostproc( void )

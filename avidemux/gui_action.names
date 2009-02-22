@@ -30,6 +30,8 @@ ACT(SaveRaw)
 ACT(XVCD)
 
 ACT(SetPostProcessing)
+//--- NAVIGATE----
+ACT(NAVIGATE_BEGIN)
 ACT(NextFrame)
 ACT(Back100Frames)
 ACT(Back50Frames)
@@ -42,15 +44,20 @@ ACT(PreviousKFrame)
 ACT(PreviousFrame)
 ACT(PrevBlackFrame)
 ACT(NextBlackFrame)
-ACT(AllBlackFrames)
-
-ACT(Scale)
-
 ACT(Goto)
 ACT(GotoTime)
-
 ACT(Begin)
 ACT(End)
+ACT(GotoMarkA)
+ACT(GotoMarkB)
+ACT(Scale)
+ACT(NAVIGATE_END)
+//--- NAVIGATE----
+ACT(AllBlackFrames)
+
+
+
+
 
 ACT(AudioSourceAvi)
 ACT(AudioSourceMP3)
@@ -60,8 +67,6 @@ ACT(AudioSourceNone)
 
 ACT(MarkA)
 ACT(MarkB)
-ACT(GotoMarkA)
-ACT(GotoMarkB)
 
 ACT(AudioModeProcess)
 ACT(AudioModeCopy)
