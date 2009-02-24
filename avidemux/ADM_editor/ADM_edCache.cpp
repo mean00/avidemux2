@@ -85,8 +85,8 @@ ADMImage	*EditorCache::getFreeImage(void)
     // First search for a really free image
     for(int i=0;i<_nbImage;i++)
     {
-        if(_elem[i].frameNum==ADM_INVALID_CACHE);
-        found=i;
+        if(_elem[i].frameNum==ADM_INVALID_CACHE)
+                found=i;
         aprintf("[edCache] Buffer %d free\n",found);
     }
     // Then the older one/LRU
@@ -104,7 +104,7 @@ ADMImage	*EditorCache::getFreeImage(void)
             }
         }
     }
-    if(found==-1) ADM_assert("Could not get a free image\n");
+    if(found==-1) ADM_assert(0);
 	_elem[found].lastUse=_counter+1;;
 	_elem[found].frameNum=ADM_IN_USE_CACHE;
 
@@ -118,7 +118,7 @@ ADMImage	*EditorCache::getFreeImage(void)
 */
  void        EditorCache::flush(void)
 {
-    aprintf("[edCache] Flush\n");
+    printf("[edCache] Flush\n");
     for(int i=0;i<_nbImage;i++)
     {
         _elem[i].frameNum==ADM_INVALID_CACHE;
@@ -194,7 +194,7 @@ void EditorCache::dump( void)
 ADMImage    *EditorCache::findJustAfter(uint64_t pts)
 {
 int smallest=-1;
-uint64_t value=0x100000000LL;
+uint64_t value=0xF000000000000000LL;
 
     for(uint32_t i=0;i<_nbImage;i++)
 	{
