@@ -37,7 +37,7 @@ protected:
 public:
                         ADMMpegPacket(void);
     virtual             ~ADMMpegPacket();
-    virtual bool        open(const char *filenames,bool dontappend)=0;
+    virtual bool        open(const char *filenames,FP_TYPE append)=0;
     virtual bool        close(void)=0;
     virtual bool        getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt)=0;
     virtual bool        getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);

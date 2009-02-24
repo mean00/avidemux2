@@ -39,12 +39,10 @@ psPacket::~psPacket()
     \fn open
     \brief dtor
 */
-bool psPacket::open(const char *filenames,bool dontappend)
+bool psPacket::open(const char *filenames,FP_TYPE append)
 {
-FP_TYPE opentype=FP_APPEND;
-    if(dontappend) opentype=FP_DONT_APPEND;
     _file=new fileParser();
-    if(!_file->open(filenames,&opentype))
+    if(!_file->open(filenames,&append))
     {
         printf("[DmxPS] cannot open %s\n",filenames);
         delete _file;

@@ -138,6 +138,7 @@ gui_autodrive.cpp
 GUI_jobs.cpp  
 gui_navigate.cpp  
 guiplay.cpp  
+gui_save.cpp  
 gui_savenew.cpp  
 main.cpp  
 gui_action.cpp

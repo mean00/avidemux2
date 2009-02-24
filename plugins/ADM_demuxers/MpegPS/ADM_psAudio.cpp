@@ -36,7 +36,7 @@ ADM_psAccess::ADM_psAccess(const char *name,uint8_t pid,bool append)
 FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;
         this->pid=pid;
-        if(!demuxer.open(name,&fp)) ADM_assert(0);
+        if(!demuxer.open(name,fp)) ADM_assert(0);
 }
 
 /**

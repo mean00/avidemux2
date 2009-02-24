@@ -54,7 +54,7 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
 
     printf("[MpegPS] Probing audio for %s\n",fileName);
 
-    if(!packet->open(fileName,1)) goto end;
+    if(!packet->open(fileName,FP_APPEND)) goto end;
     fileSize=packet->getSize();
 
     packet->setPos(fileSize/2); // Jump in the middle of the stream

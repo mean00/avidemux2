@@ -57,7 +57,7 @@ uint8_t psHeader::open(const char *name)
         goto abt;
     }
     append=index.getAsUint32("Append");
-
+    printf("[psDemux] Append=%"LU"\n",append);
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))
     {
@@ -85,7 +85,7 @@ uint8_t psHeader::open(const char *name)
 //***********
     
     psPacket=new psPacketLinear(0xE0);
-    if(psPacket->open(name,append)==false) 
+    if(psPacket->open(name,appendType)==false) 
     {
         printf("psDemux] Cannot psPacket open the file\n");
         goto abt;

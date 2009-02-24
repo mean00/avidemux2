@@ -1,3 +1,4 @@
+// 
 ACT(OpenAvi)
 ACT(AppendAvi)
 ACT(BrokenAvi)
@@ -6,30 +7,28 @@ ACT(CLOSE)
 ACT(Exit)
 ACT(PlayAvi)
 ACT(StopAvi)
+ACT(RecentFiles)
+
+ACT(SetPostProcessing)
+//----- SAVE -----
+ACT(SAVE_BEGIN)
 ACT(SaveImg)
 ACT(SaveOGM)
 ACT(SaveJPG)
 ACT(SaveBunchJPG)
 ACT(SaveDVDPS)
 ACT(SaveUnpackedMpeg4)
-ACT(RecentFiles)
-
+ACT(SAVE_END)
 ACT(SaveDualAudio)
 ACT(SaveAvi)
 ACT(SaveWave)
-ACT(Pipe2Lame)
-ACT(PipeLame)
-ACT(Pipe2Other)
-
 ACT(SaveMpeg1vcd)
 ACT(SaveMpeg2svcd)
 ACT(SaveMpeg2dvd)
-
 ACT(SaveRaw)
-
 ACT(XVCD)
+// /SAVE
 
-ACT(SetPostProcessing)
 //--- NAVIGATE----
 ACT(NAVIGATE_BEGIN)
 ACT(NextFrame)
@@ -52,13 +51,8 @@ ACT(GotoMarkA)
 ACT(GotoMarkB)
 ACT(Scale)
 ACT(NAVIGATE_END)
-//--- NAVIGATE----
+//--- /NAVIGATE----
 ACT(AllBlackFrames)
-
-
-
-
-
 ACT(AudioSourceAvi)
 ACT(AudioSourceMP3)
 ACT(AudioSourceWAV)
@@ -96,11 +90,6 @@ ACT(SelectEncoder)
 ACT(Fast)
 
 ACT(SecondAudioTrack)
-
-ACT(SelectDevOSS)
-ACT(SelectDevDummy)
-ACT(SelectDevArts)
-ACT(SelectDevALSA)
 
 ACT(CutWizard)
 

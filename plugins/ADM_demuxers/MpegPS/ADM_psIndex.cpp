@@ -175,7 +175,9 @@ dmxPacketInfo info;
         }
 
     }
-    pkt->open(file,false);
+
+    FP_TYPE append=FP_APPEND;
+    pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
       while(1)
