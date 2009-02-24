@@ -443,20 +443,14 @@ void GUI_setCurrentFrameAndTime(void)
     \fn A_jumpToTime
     \brief Jump to a given time
 */
-#warning CFR ASSUMED FIXME
-#warning CFR ASSUMED FIXME
-#warning CFR ASSUMED FIXME
-#warning CFR ASSUMED FIXME
-#warning CFR ASSUMED FIXME
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
 {
-uint32_t frame;
-        time2frame(&frame,avifileinfo->fps1000,hh,mm,ss,ms);
-        if(frame>=avifileinfo->nb_frames)
-        {
-                printf("Frame is out of bound\n");
-                return 0;
-        }
+uint64_t pts;
+        pts=hh*3600+mm*60+ss;
+        pts*=1000;
+        pts+=ms;
+        pts*=1000;
+        uint32_t frame=video_body->searchFrameBefore(pts);
         return GUI_GoToFrame(frame);
 
 }

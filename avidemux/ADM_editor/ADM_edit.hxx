@@ -219,6 +219,7 @@ public:
                         bool        samePicture(ADMImage *image);
                         bool        getCompressedPicure(uint32_t framenum,ADMCompressedImage *img);
                         uint64_t    estimatePts(uint32_t frame);
+                        uint32_t    searchFrameBefore(uint64_t pts);
 /************************************ Internal ******************************/
 public:
                                     /// Decode frame and on until frame is popped out of decoders

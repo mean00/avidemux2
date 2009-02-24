@@ -1092,6 +1092,9 @@ _next:
 		aprintf("EdCache: Postproc done\n");
 		return 1;
 }
+/**
+        \fn dupe
+*/
 uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 {
                 if(src->_colorspace!=ADM_COLOR_YV12)
@@ -1114,7 +1117,9 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
                         dst->duplicate(src);
                 return 1;
 }
-
+/**
+    \fn setPostProc
+*/
 uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t swapuv)
 {
 	if(!_nb_video) return 0;
@@ -1124,6 +1129,10 @@ uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t sw
 	updatePostProc(&_pp); // DeletePostproc/ini missing ?
 	return 1;
 }
+/**
+    \fn getPostProc
+*/
+
 uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t *swapuv)
 {
 	if(!_nb_video) return 0;
@@ -1226,5 +1235,29 @@ bool        ADM_Composer::setCurrentFrame(uint32_t frame)
         }
     }
     return true;
+}
+/**
+    \fn searchFrameBefore
+    \brief rEturn the frame number with pts just before pts
+*/
+uint32_t ADM_Composer::searchFrameBefore(uint64_t pts)
+{
+    _VIDEOS   *vid=&_videos[0];
+    vidHeader *demuxer=vid->_aviheader;
+    uint64_t  lastPts=demuxer->getTime(0);
+    uint32_t  nb=demuxer->getVideoStreamHeader()->dwLength;
+
+    if(lastPts>pts) return 0;
+
+	for(int i=1;i<nb-2;i++)
+    {
+        uint64_t cur,next;
+        cur=lastPts;
+        next=demuxer->getTime(i+1);
+        if(next==ADM_NO_PTS) next=cur+vid->timeIncrementInUs;
+        if(pts>=cur && pts<next) return i-1;
+        lastPts=next;
+    }
+    return nb-1;
 }
 //EOF
