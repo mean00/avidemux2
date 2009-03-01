@@ -1,9 +1,8 @@
 /***************************************************************************
-                          gtk_gui.cpp  -  description
-                             -------------------
-    begin                : Mon Dec 10 2001
-    copyright            : (C) 2001 by mean
-    email                : fixounet@free.fr
+                          \file gtk_gui.cpp  
+                          \brief Main UI even loop
+                             
+    copyright            : (C) 2001-2009 by mean, fixounet@free.fr
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,14 +13,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <errno.h>
+
 #include "config.h"
 #include "ADM_default.h"
 #include <math.h>
-
-//#include <time.h>
-//#include <sys/time.h>
-
+#include <errno.h>
 
 #include "ADM_lavcodec.h"
 #include "fourcc.h"
@@ -847,6 +843,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
 }
 /**
     \fn updateLoaded
+    \brief update the UI after loading a file
 
 */
 void  updateLoaded ()

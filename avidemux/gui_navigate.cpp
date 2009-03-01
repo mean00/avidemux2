@@ -63,27 +63,27 @@ static int ignore_change=0;
       case ACT_GotoMarkA:
       case ACT_GotoMarkB:
             {
-                uint32_t nf;
-                  if (action == ACT_GotoMarkA)
-                      nf = frameStart;
-                  else
-                      nf = frameEnd;
-                  GUI_GoToFrame(nf);
+                uint64_t pts;
+                if(action==ACT_GotoMarkA) pts=video_body->getMarkerAPts();
+                        else  pts=video_body->getMarkerBPts();
+                 uint32_t frame=video_body->searchFrameBefore(pts);
+                  GUI_GoToFrame(frame);
+                 
             }
-	  break;
+            break;
       case ACT_Goto:
-	  uint32_t fn;
-	  fn = video_body->getCurrentFrame();
-	  if (DIA_GetIntegerValue
-	      ((int *) &fn, 0, avifileinfo->nb_frames,
-	       QT_TR_NOOP("Go to Frame"), QT_TR_NOOP("_Go to frame:")))
-	    {
-		if (fn < avifileinfo->nb_frames)
-		    GUI_GoToFrame(fn);
-		else
-		    GUI_Error_HIG(QT_TR_NOOP("Out of bounds"), NULL);
-	    }
-	  break;
+          uint32_t fn;
+          fn = video_body->getCurrentFrame();
+          if (DIA_GetIntegerValue
+              ((int *) &fn, 0, avifileinfo->nb_frames,
+               QT_TR_NOOP("Go to Frame"), QT_TR_NOOP("_Go to frame:")))
+            {
+            if (fn < avifileinfo->nb_frames)
+                GUI_GoToFrame(fn);
+            else
+                GUI_Error_HIG(QT_TR_NOOP("Out of bounds"), NULL);
+            }
+          break;
       case ACT_Back25Frames:
           if (video_body->getCurrentFrame() >= 25)
           {

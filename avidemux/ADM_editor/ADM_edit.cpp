@@ -504,6 +504,7 @@ TryAgain:
 		}
 
 		GoToIntra(0);
+        durationInUs=vid->_aviheader->getVideoDuration();
 		printf(" End of B-frame check\n");
 
   return 1;

@@ -959,15 +959,19 @@ void UI_setTotalTime(uint64_t curTime)
 void UI_setMarkers(uint64_t a, uint64_t b)
 {
 	char text[80];
-    uint16_t hh,mm,ss,ms,timems;
-    timems=(uint32_t)(a/1000);
+    uint16_t hh,mm,ss,ms;
+    uint32_t timems;
+    a/=1000;
+    b/=1000;
+
+    timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU"ms",hh,mm,ss,ms);
+	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerA)->setText(text);
 
-	timems=(uint32_t)(b/1000);
+	timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU"ms",hh,mm,ss,ms);
+	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerB)->setText(text);
 
 	//slider->setMarkers(a, b);

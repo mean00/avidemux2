@@ -941,16 +941,19 @@ gboolean UI_returnFocus(GtkWidget *widget, GdkEventButton *event, gpointer user_
 void UI_setMarkers(uint64_t a, uint64_t b )
 {
 char text[500];
-  uint16_t hh,mm,ss,ms,timems;
-    timems=(uint32_t)(a/1000);
+  uint16_t hh,mm,ss,ms;
+  uint32_t timems;
+    a/=1000;
+    b/=1000;
+    timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU" ms",hh,mm,ss,ms);
+	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
 	
     gtk_label_set_text(GTK_LABEL(glade.getWidget("labelMarkA")),text);
 
-	timems=(uint32_t)(b/1000);
+	timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU" ms",hh,mm,ss,ms);
+	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
 	gtk_label_set_text(GTK_LABEL(glade.getWidget("labelMarkB")),text);
     //gtk_markscale_setA(guiSlider, a);
     //gtk_markscale_setB(guiSlider, b);
