@@ -206,6 +206,14 @@ class ADM_Composer : public ADM_audioStream
   				//_____________________________
   				// navigation & frame functions
   				//_____________________________
+/************************************* Markers *****************************/
+private:        
+                        uint64_t markerAPts,markerBPts;
+public:
+                        uint64_t    getMarkerAPts();
+                        uint64_t    getMarkerBPts();
+                        bool        setMarkerAPts(uint64_t pts);
+                        bool        setMarkerBPts(uint64_t pts);
 public:
 /************************************ Public API ***************************/
 protected:

@@ -51,9 +51,9 @@ extern uint8_t loadVideoCodecConf( const char *name);
 extern int A_saveJpg (char *name);
 extern void filterLoadXml(const char *n);
 extern int A_appendAvi (const char *name);
-extern void A_saveAudio(char *name);
+extern void A_saveAudioCopy(char *name);
 extern int A_loadNone( void );
-extern void A_saveAudioDecodedTest(char *name);
+extern void A_saveAudioProcessed(char *name);
 extern uint8_t A_SaveAudioNVideo(char *name);
 extern int A_loadMP3(char *name);
 extern int A_loadAC3(char *name);
@@ -160,9 +160,9 @@ AUTOMATON reaction_table[]=
         {"save-unpacked-vop",	1,"save avi, unpacking vop",(one_arg_type)A_SaveUnpackedVop},
         {"save-packed-vop",	1,"save avi, packing vop",(one_arg_type)A_SavePackedVop},
 //        {"save-ogm",		1,"save as ogm file ",			(one_arg_type)ogmSave},
-        {"save-raw-audio",	1,"save audio as-is ",			A_saveAudio},
+        {"save-raw-audio",	1,"save audio as-is ",			        A_saveAudioCopy},
         {"save-raw-video",	1,"save raw video stream (mpeg/... ) ",	(one_arg_type)ADM_saveRaw},
-        {"save-uncompressed-audio",1,"save uncompressed audio",A_saveAudioDecodedTest},
+        {"save-uncompressed-audio",1,"save uncompressed audio",A_saveAudioProcessed},
         {"load",		1,"load video or workbench", (one_arg_type)A_openAvi},
         {"load-workbench",	1,"load workbench file", (one_arg_type)A_openAvi},
         {"append",		1,"append video",			(one_arg_type)A_appendAvi},

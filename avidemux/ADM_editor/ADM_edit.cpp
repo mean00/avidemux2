@@ -461,6 +461,7 @@ UNUSED_ARG(mode);
 
 
   // next one please
+#if 0
         if(_videos[_nb_video].audioTracks)
         {
             WAVHeader *    _wavinfo=&(_videos[_nb_video].audioTracks[0]->wavheader);
@@ -474,7 +475,7 @@ UNUSED_ARG(mode);
                     }
             }
         }
-
+#endif
 	_nb_video++;
 	_nb_segment++;
 

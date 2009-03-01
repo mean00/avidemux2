@@ -31,7 +31,7 @@
 #include "DIA_fileSel.h"
 #include "DIA_working.h"
 // Local prototypes
-void A_saveAudio (char *name);
+void A_saveAudioCopy (char *name);
 int  A_saveJpg (char *name);
 void A_saveBunchJpg(const char *name);
 void A_saveImg (const char *name);
@@ -39,7 +39,7 @@ uint8_t ADM_saveRaw (const char *name);
 void A_saveWorkbench (const char *name);
 int  A_audioSave(char *name);
 int  A_SaveWrapper(char *name);
-void A_saveAudioDecodedTest (char *name);
+void A_saveAudioProcessed (char *name);
 // Xternal prototypes
 int      A_SaveUnpackedVop(const char *name);
 uint8_t  A_SaveAudioDualAudio(const char *inname);
@@ -115,21 +115,21 @@ int A_audioSave(char *name)
 	{
 		// if we get here, either not compressed
 		// or decompressable
-		A_saveAudioDecodedTest(name);
+		A_saveAudioProcessed(name);
     }
 	else			// copy mode...
     {
-       A_saveAudio(name);
+        A_saveAudioCopy(name);
     }
 	return 1;
 }
 
 /**
-    \fn A_saveAudioDecodedTest
+    \fn A_saveAudioProcessed
     \brief Save current stream (generally avi...)
      in decoded mode (assuming MP3)
 */
-void A_saveAudioDecodedTest (char *name)
+void A_saveAudioProcessed (char *name)
 {
 #if 0
 // debug audio seek
@@ -254,10 +254,10 @@ void A_saveAudioDecodedTest (char *name)
 #endif
 }
 /**
-        \fn A_saveAudio
+        \fn A_saveAudioCopy
         \brief Save current stream (generally avi...)     in raw mode
 */
-void A_saveAudio (char *name)
+void A_saveAudioCopy (char *name)
 {
 
 // debug audio seek
@@ -273,8 +273,6 @@ void A_saveAudio (char *name)
   if (!currentaudiostream)
     return;
 
-
-
   out = fopen (name, "wb");
   if (!out) return;
 
@@ -289,16 +287,17 @@ void A_saveAudio (char *name)
 
    timeStart=video_body->estimatePts (frameStart);
    timeEnd=video_body->estimatePts (frameEnd+1);
-
    currentaudiostream->goToTime (timeStart);
    duration=timeEnd-timeStart;
-   printf("Duration:%f ms\n",duration);
    if(duration<0) duration=-duration;
 
-   duration/=1000;
    duration*=currentaudiostream->getInfo()->frequency;
-
+   duration/=1000000; // in seconds to have samples
    tgt_sample=(uint64_t)floor(duration);
+   printf("[saveAudio] Start time :%"LLU" ms\n",timeStart/1000);
+   printf("[saveAudio] End time :%"LLU" ms\n",timeEnd/1000);
+   printf("[saveAudio]Duration:%f ms\n",duration/1000);
+   printf("[saveAudio]Samples:%"LLU" ms\n",tgt_sample);
 
    cur_sample=0;
    written = 0;
@@ -306,19 +305,19 @@ void A_saveAudio (char *name)
    buffer=new uint8_t[ONE_STRIKE*2];
    while (1)
     {
-    	if(!currentaudiostream->getPacket(buffer+hold,&len,64*1024,&sample,&dts)) break;
-	hold+=len;
-	written+=len;
-	cur_sample+=sample;
-	if(hold>ONE_STRIKE)
-	{
-		fwrite(buffer,hold,1,out);
-		hold=0;
-	}
-	if(cur_sample>tgt_sample)
-		break;
-      work->update(cur_sample>>10, tgt_sample>>10);
-      if(!work->isAlive()) break;
+    	if(!currentaudiostream->getPacket(buffer+hold,&len,ONE_STRIKE,&sample,&dts)) break;
+        hold+=len;
+        written+=len;
+        cur_sample+=sample;
+        if(hold>ONE_STRIKE) // flush
+        {
+            fwrite(buffer,hold,1,out);
+            hold=0;
+        }
+        if(cur_sample>tgt_sample)
+            break;
+        work->update(cur_sample>>10, tgt_sample>>10);
+        if(!work->isAlive()) break;
     };
   if(hold)
   {
@@ -330,7 +329,6 @@ void A_saveAudio (char *name)
   delete work;
   delete[] buffer;
   printf ("\n wanted %"LLU" samples, goto %"LLU" samples, written %"LU" bytes\n", tgt_sample,cur_sample, written);
-
 
 }
 

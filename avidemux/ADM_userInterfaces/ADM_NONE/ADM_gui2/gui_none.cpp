@@ -87,7 +87,7 @@ void 	UI_setScale( double  val )
 {}
 void 	UI_setFrameType( uint32_t frametype,uint32_t qp)
 {}
-void 	UI_setMarkers(uint32_t a, uint32_t b )
+void 	UI_setMarkers(uint64_t a, uint64_t b )
 {}
 void 	UI_setTitle(const char *name)
 {}

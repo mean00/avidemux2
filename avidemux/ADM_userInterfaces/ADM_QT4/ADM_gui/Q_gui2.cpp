@@ -953,20 +953,24 @@ void UI_setTotalTime(uint64_t curTime)
     //WIDGET(label_7)->setText(text);
 }
 /**
-    \fn     UI_setMarkers(uint32_t a, uint32_t b )
+    \fn     UI_setMarkers(uint64_t Ptsa, uint32_t Ptsb )
     \brief  Display frame # for marker A & B
 */
-void UI_setMarkers(uint32_t a, uint32_t b)
+void UI_setMarkers(uint64_t a, uint64_t b)
 {
 	char text[80];
-
-	snprintf(text,79,"%06"LU,a);
+    uint16_t hh,mm,ss,ms,timems;
+    timems=(uint32_t)(a/1000);
+    ms2time(timems,&hh,&mm,&ss,&ms);
+	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU"ms",hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerA)->setText(text);
 
-	snprintf(text,79,"%06"LU,b);
+	timems=(uint32_t)(b/1000);
+    ms2time(timems,&hh,&mm,&ss,&ms);
+	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU"ms",hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerB)->setText(text);
 
-	slider->setMarkers(a, b);
+	//slider->setMarkers(a, b);
 }
 
 /**
