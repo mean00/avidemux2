@@ -1,6 +1,6 @@
 /** *************************************************************************
             \file gui_save.cpp
-            \brief handle all kind of sabe
+            \brief handle all kind of save
     
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
@@ -55,17 +55,6 @@ void HandleAction_Save(Action action)
 {
     switch(action)
     {
-    case ACT_SaveUnpackedMpeg4:
-      if(GUI_Question(QT_TR_NOOP("This is to be used to undo packed VOP on MPEG-4.\nContinue ?")))
-			{
-                          GUI_FileSelWrite (QT_TR_NOOP("Select AVI File to Write"), (SELFILE_CB *)A_SaveUnpackedVop);
-
-			}
-    			break;
-
-    case ACT_SaveOGM:
-//                        GUI_FileSelWrite (QT_TR_NOOP("Select OGM File to Write"), (SELFILE_CB *)ogmSave);
-    			break;
 
     case ACT_SaveWork:
       GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveWorkbench);
@@ -88,13 +77,7 @@ void HandleAction_Save(Action action)
     case ACT_SaveWave:
       	{
           GUI_FileSelWrite (QT_TR_NOOP("Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
-
-	}
-      break;
-
-    case ACT_SaveDualAudio:
-      //GUI_FileSelWrite ("Select AVI to save ",
-      A_SaveAudioDualAudio(NULL);
+        }
       break;
 
     case ACT_SaveBunchJPG:
@@ -118,6 +101,157 @@ void HandleAction_Save(Action action)
         ADM_assert(0);
         break;
     }
+}
+/**
+    \fn A_audioSave
+    \brief Save audio track
+*/
+
+int A_audioSave(char *name)
+{
+	if (!currentaudiostream)	// yes it is checked 2 times so what ?
+	return 0;
+	if (audioProcessMode())
+	{
+		// if we get here, either not compressed
+		// or decompressable
+		A_saveAudioDecodedTest(name);
+    }
+	else			// copy mode...
+    {
+       A_saveAudio(name);
+    }
+	return 1;
+}
+
+/**
+    \fn A_saveAudioDecodedTest
+    \brief Save current stream (generally avi...)
+     in decoded mode (assuming MP3)
+*/
+void A_saveAudioDecodedTest (char *name)
+{
+#if 0
+// debug audio seek
+  uint32_t len, gauge = 0;
+  uint32_t written = 0;
+  FILE *out;
+  AVDMGenericAudioStream *saveFilter;
+
+  uint64_t sampleTarget,sampleCurrent;
+
+#undef BITT
+#define BITT 4*1152
+#define OUTCHUNK 1024*1024
+  uint8_t *outbuffer;
+
+  if (!currentaudiostream)
+    return;
+
+
+  if (!(out = fopen (name, "wb")))
+    {
+      GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Cannot open \"%s\" for writing."), name);
+      return;
+    }
+
+  outbuffer = (uint8_t *) ADM_alloc (2 * OUTCHUNK);	// 1Meg cache;
+  if (!outbuffer)
+    {
+      GUI_Error_HIG (QT_TR_NOOP("Memory Error"), NULL);
+      return;
+    }
+
+
+
+// re-ignite first filter...
+
+
+
+
+  // Write Wav header
+
+  /* Sat Nov 09 06:11:52 CET 2002 Fixes from Maik Broemme <mbroemme@plusserver.de> */
+  /* If you set negative delay and save the audio stream, the saved stream was shorter than the video stream. */
+
+  /* Example: video stream is 10 minutes long, audio stream perhaps 20 minutes, you need the audio stream from */
+  /*          minute 1 until 11, so you setup an audio delay from -60 seconds, but this 60 seconds were removed */
+  /*          from begin and end of the audio stream. That was not good :) Now it runs correctly also if you use */
+  /*          audio stream with same length then video, therefore is premature ending :) */
+
+
+
+//        saveFilter =  buildAudioFilter (currentaudiostream,video_body->getTime (frameStart));
+
+		if (saveFilter == NULL)
+		{
+			fclose(out);
+			ADM_dealloc(outbuffer);
+			return;
+		}
+
+    	DIA_working *work=new DIA_working(QT_TR_NOOP("Saving audio"));
+
+
+//
+//  Create First filter that is null filter
+//
+  saveFilter->writeHeader (out);
+  uint32_t tstart,tend,samples;
+  double duration;
+  tstart=video_body->getTime(frameStart);
+  tend=video_body->getTime(frameEnd+1);
+  duration=(tend-tstart);
+  duration*=saveFilter->getInfo()->frequency;
+  duration/=1000.;
+
+  sampleTarget=(uint64_t)floor(duration);
+  sampleCurrent=0;
+  gauge=0;
+
+  if( frameStart == frameEnd ){
+     /* JSC: we will write some bytes, but nobody should expect useful data */
+    GUI_Error_HIG(QT_TR_NOOP("No frames to encode"),QT_TR_NOOP("Please check markers. Is \"A>\" == \">B\"?"));
+  }
+
+  while ((sampleCurrent<sampleTarget))
+    {
+      if(!saveFilter->getPacket(outbuffer + gauge,&len,&samples))
+      {
+        printf("Audio save:Read error\n");
+      	break;
+      }
+      //      printf("Got : %lu\n",len2);
+      gauge += len;
+      sampleCurrent+=samples;
+      // update GUI
+	// JSC: if "A>" == ">B" we will get >100% here => assert in work->update()
+	if (work->update ((sampleCurrent>>10 > sampleTarget>>10 ? sampleTarget>>10 : sampleCurrent>>10), sampleTarget>>10))	// abort request ?
+	    break;;
+      if (gauge > OUTCHUNK)	// either out buffer is full
+	{
+	  fwrite (outbuffer, 1, gauge, out);
+	  written += gauge;
+	  gauge = 0;
+	}
+    };
+// Clean up
+	if(gauge)
+	{
+		fwrite (outbuffer,  gauge,1, out);
+		written += gauge;
+		gauge = 0;
+	}
+  saveFilter->endWrite (out, written);
+  fclose (out);
+  ADM_dealloc (outbuffer);
+  delete work;
+//  deleteAudioFilter (saveFilter);
+//  currentaudiostream->endDecompress ();
+  printf ("AudioSave: actually written %u\n", written);
+  printf ("Audiosave: target sample:%llu, got :%llu\n",sampleTarget,sampleCurrent);
+
+#endif
 }
 /**
         \fn A_saveAudio
@@ -146,14 +280,15 @@ void A_saveAudio (char *name)
 
   work=createWorking(QT_TR_NOOP("Saving audio"));
 
-  uint32_t timeEnd,timeStart,sample,hold,len;
+  uint64_t timeEnd,timeStart;
+  uint32_t hold,len,sample;
   uint64_t tgt_sample,cur_sample;
   double   duration;
 
   // compute start position and duration in samples
 
-   timeStart=video_body->getTime (frameStart);
-   timeEnd=video_body->getTime (frameEnd+1);
+   timeStart=video_body->estimatePts (frameStart);
+   timeEnd=video_body->estimatePts (frameEnd+1);
 
    currentaudiostream->goToTime (timeStart);
    duration=timeEnd-timeStart;
@@ -411,28 +546,7 @@ void A_saveWorkbench (const char *name)
      ADM_dealloc(actual_workbench_file);
   actual_workbench_file = ADM_strdup(name);
 }
-/**
-    \fn A_audioSave
-    \brief Save audio track
-*/
 
-int A_audioSave(char *name)
-{
-	if (!currentaudiostream)	// yes it is checked 2 times so what ?
-	return 0;
-	if (audioProcessMode())
-	{
-
-		// if we get here, either not compressed
-		// or decompressable
-		A_saveAudioDecodedTest(name);
-	    }
-	else			// copy mode...
-	    {
-	       A_saveAudio(name);
-	    }
-	return 1;
-}
 int A_SaveWrapper(char *name)
 {
 
@@ -447,134 +561,5 @@ int A_SaveWrapper(char *name)
         return 1;
 }
 
-/**
-    \fn A_saveAudioDecodedTest
-    \brief Save current stream (generally avi...)
-     in decoded mode (assuming MP3)
-*/
-void A_saveAudioDecodedTest (char *name)
-{
-#if 0
-// debug audio seek
-  uint32_t len, gauge = 0;
-  uint32_t written = 0;
-  FILE *out;
-  AVDMGenericAudioStream *saveFilter;
-
-  uint64_t sampleTarget,sampleCurrent;
-
-#undef BITT
-#define BITT 4*1152
-#define OUTCHUNK 1024*1024
-  uint8_t *outbuffer;
-
-  if (!currentaudiostream)
-    return;
-
-
-  if (!(out = fopen (name, "wb")))
-    {
-      GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Cannot open \"%s\" for writing."), name);
-      return;
-    }
-
-  outbuffer = (uint8_t *) ADM_alloc (2 * OUTCHUNK);	// 1Meg cache;
-  if (!outbuffer)
-    {
-      GUI_Error_HIG (QT_TR_NOOP("Memory Error"), NULL);
-      return;
-    }
-
-
-
-// re-ignite first filter...
-
-
-
-
-  // Write Wav header
-
-  /* Sat Nov 09 06:11:52 CET 2002 Fixes from Maik Broemme <mbroemme@plusserver.de> */
-  /* If you set negative delay and save the audio stream, the saved stream was shorter than the video stream. */
-
-  /* Example: video stream is 10 minutes long, audio stream perhaps 20 minutes, you need the audio stream from */
-  /*          minute 1 until 11, so you setup an audio delay from -60 seconds, but this 60 seconds were removed */
-  /*          from begin and end of the audio stream. That was not good :) Now it runs correctly also if you use */
-  /*          audio stream with same length then video, therefore is premature ending :) */
-
-
-
-//        saveFilter =  buildAudioFilter (currentaudiostream,video_body->getTime (frameStart));
-
-		if (saveFilter == NULL)
-		{
-			fclose(out);
-			ADM_dealloc(outbuffer);
-			return;
-		}
-
-    	DIA_working *work=new DIA_working(QT_TR_NOOP("Saving audio"));
-
-
-//
-//  Create First filter that is null filter
-//
-  saveFilter->writeHeader (out);
-  uint32_t tstart,tend,samples;
-  double duration;
-  tstart=video_body->getTime(frameStart);
-  tend=video_body->getTime(frameEnd+1);
-  duration=(tend-tstart);
-  duration*=saveFilter->getInfo()->frequency;
-  duration/=1000.;
-
-  sampleTarget=(uint64_t)floor(duration);
-  sampleCurrent=0;
-  gauge=0;
-
-  if( frameStart == frameEnd ){
-     /* JSC: we will write some bytes, but nobody should expect useful data */
-    GUI_Error_HIG(QT_TR_NOOP("No frames to encode"),QT_TR_NOOP("Please check markers. Is \"A>\" == \">B\"?"));
-  }
-
-  while ((sampleCurrent<sampleTarget))
-    {
-      if(!saveFilter->getPacket(outbuffer + gauge,&len,&samples))
-      {
-        printf("Audio save:Read error\n");
-      	break;
-      }
-      //      printf("Got : %lu\n",len2);
-      gauge += len;
-      sampleCurrent+=samples;
-      // update GUI
-	// JSC: if "A>" == ">B" we will get >100% here => assert in work->update()
-	if (work->update ((sampleCurrent>>10 > sampleTarget>>10 ? sampleTarget>>10 : sampleCurrent>>10), sampleTarget>>10))	// abort request ?
-	    break;;
-      if (gauge > OUTCHUNK)	// either out buffer is full
-	{
-	  fwrite (outbuffer, 1, gauge, out);
-	  written += gauge;
-	  gauge = 0;
-	}
-    };
-// Clean up
-	if(gauge)
-	{
-		fwrite (outbuffer,  gauge,1, out);
-		written += gauge;
-		gauge = 0;
-	}
-  saveFilter->endWrite (out, written);
-  fclose (out);
-  ADM_dealloc (outbuffer);
-  delete work;
-//  deleteAudioFilter (saveFilter);
-//  currentaudiostream->endDecompress ();
-  printf ("AudioSave: actually written %u\n", written);
-  printf ("Audiosave: target sample:%llu, got :%llu\n",sampleTarget,sampleCurrent);
-
-#endif
-}
 //EOF
 

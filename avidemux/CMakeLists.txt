@@ -140,6 +140,7 @@ gui_navigate.cpp
 guiplay.cpp  
 gui_save.cpp  
 gui_savenew.cpp  
+gui_misc.cpp
 main.cpp  
 gui_action.cpp
 gui_blackframes.cpp

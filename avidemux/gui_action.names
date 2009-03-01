@@ -13,20 +13,13 @@ ACT(SetPostProcessing)
 //----- SAVE -----
 ACT(SAVE_BEGIN)
 ACT(SaveImg)
-ACT(SaveOGM)
 ACT(SaveJPG)
 ACT(SaveBunchJPG)
 ACT(SaveDVDPS)
-ACT(SaveUnpackedMpeg4)
-ACT(SAVE_END)
-ACT(SaveDualAudio)
 ACT(SaveAvi)
 ACT(SaveWave)
-ACT(SaveMpeg1vcd)
-ACT(SaveMpeg2svcd)
-ACT(SaveMpeg2dvd)
 ACT(SaveRaw)
-ACT(XVCD)
+ACT(SAVE_END)
 // /SAVE
 
 //--- NAVIGATE----

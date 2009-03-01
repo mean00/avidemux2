@@ -21,6 +21,7 @@
  ***************************************************************************/
 #ifndef ADM_FFCONFIG
 #define ADM_FFCONFIG
+#include "avcodec.h"
 typedef struct FFcodecSetting
 {
   Motion_Est_ID me_method;
