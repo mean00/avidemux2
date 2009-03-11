@@ -1,10 +1,8 @@
 /***************************************************************************
-         Bridge
-         
-         This file is a bridge from output of decoder to filter api
-         
+            \file audiofilter_access.h
+            \brief convert audiofilter to audioaccess (used for playback for example)
+            (C) Mean 2009 fixounet@free.fr
  ***************************************************************************/
- 
  
 /***************************************************************************
  *                                                                         *
@@ -14,27 +12,48 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef AUDM_BRIDGE_H
-#include "audioencoder.h"
-#include "ADM_audio/aviaudio.hxx"
+#ifndef AUDM_ACCESS_H
+#define AUDM_ACCESS_H
+
 #include "ADM_audioStream.h"
-#include "../ADM_editor/ADM_edit.hxx"
-class AUDMAudioFilter_Bridge : public AUDMAudioFilter
+/**
+    \class ADMAudioFilter_Access
+    \brief Bridge audioFilter->Access
+
+*/
+class ADMAudioFilter_Access : public ADM_audioAccess
 {
   protected:
-    ADM_Composer  *_incoming;
-    uint32_t _startTime; /*< Starting time in ms */
-    int32_t  _shift;  /*< Shift in Ms */
-    int32_t  _hold;   /*< Nb Sample to repeat */
-    virtual uint8_t fillIncomingBuffer(AUD_Status *status);
+    uint64_t            startTimeUs; /*< Starting time in us */
+    AUDMAudioFilter     *filter;
+    WAVHeader           header;
   public:
-    AUDMAudioFilter_Bridge(ADM_Composer *incoming, uint32_t startInMs,int32_t shiftMS);
-    virtual                ~AUDMAudioFilter_Bridge();
-    virtual    uint32_t   fill(uint32_t max,float *output,AUD_Status *status);      // Fill buffer: incoming -> us
-                                                                                           // Output MAXIMUM max float value
-                                                                                           // Not sample! float!
-    virtual    uint8_t    rewind(void)  ;                                              // go back to the beginning
-    virtual CHANNEL_TYPE *getChannelMapping(void);
+                WAVHeader         *getWavHeader(void) {return &header;}
+
+                                    ADMAudioFilter_Access(AUDMAudioFilter *incoming,uint64_t timeUs) ;
+                virtual           ~ADMAudioFilter_Access();
+                                    /// Return true if the demuxer can seek in time
+                virtual bool      canSeekTime(void) {return false;};
+                                    /// Return true if the demuxer can seek by offser
+                virtual bool      canSeekOffset(void) {return true;};
+                                    /// Return true if we can have the audio duration
+                virtual bool      canGetDuration(void) {return false;};
+                                    /// Returns length in bytes of the audio stream
+                virtual uint32_t  getLength(void){return 0;}
+                                    /// Set position in bytes
+                virtual bool      setPos(uint64_t pos);
+                                    /// Get position in bytes
+                virtual uint64_t  getPos(void);
+                                    /// Grab extra data
+                virtual bool      getExtraData(uint32_t *l, uint8_t **d)
+                                    {
+                                            *l=extraDataLen;    
+                                            *d=extraData;
+                                            return true;
+                                    };
+
+                
+                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);    
 };
 
 
