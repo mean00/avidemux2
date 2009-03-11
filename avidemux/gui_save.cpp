@@ -221,7 +221,7 @@ void A_saveAudioProcessed (char *name)
         printf("Audio save:Read error\n");
       	break;
       }
-      //      printf("Got : %lu\n",len2);
+      
       gauge += len;
       sampleCurrent+=samples;
       // update GUI
@@ -258,10 +258,7 @@ void A_saveAudioProcessed (char *name)
         \brief Save current stream (generally avi...)     in raw mode
 */
 void A_saveAudioCopy (char *name)
-{
-
-// debug audio seek
-  uint32_t len2;
+{ 
   uint32_t written, max;
   uint64_t dts;
   DIA_workingBase *work;
@@ -285,12 +282,18 @@ void A_saveAudioCopy (char *name)
 
   // compute start position and duration in samples
 
-   timeStart=video_body->estimatePts (frameStart);
-   timeEnd=video_body->estimatePts (frameEnd+1);
-   currentaudiostream->goToTime (timeStart);
+   timeStart=video_body->getMarkerAPts ();
+   timeEnd=video_body->getMarkerBPts ();
+   
    duration=timeEnd-timeStart;
-   if(duration<0) duration=-duration;
-
+   if(duration<0) 
+    {
+            currentaudiostream->goToTime (timeEnd);
+            duration=-duration;
+    }else
+    {
+            currentaudiostream->goToTime (timeStart);
+    }
    duration*=currentaudiostream->getInfo()->frequency;
    duration/=1000000; // in seconds to have samples
    tgt_sample=(uint64_t)floor(duration);
@@ -324,7 +327,6 @@ void A_saveAudioCopy (char *name)
   	fwrite(buffer,hold,1,out);
 	hold=0;
   }
-
   fclose (out);
   delete work;
   delete[] buffer;
