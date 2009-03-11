@@ -12,10 +12,6 @@ ADM_libsamplerate/samplerate.c
 ADM_libsamplerate/src_linear.c
 ADM_libsamplerate/src_sinc.c
 ADM_libsamplerate/src_zoh.c
-ADM_aacinfo.cpp 
-ADM_mp3info.cpp  
-ADM_a52info.cpp 
-ADM_dcainfo.cpp  
 )	
 #*************************************************
 ADD_DEFINITIONS( "-DADM_LEGACY_PROGGY")
