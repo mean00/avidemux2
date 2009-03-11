@@ -840,10 +840,20 @@ nextAtom:
                                               left=0;
                                         }
                                         break;
+                                    
+                                    {
+                                            audioCodec(MSADPCM);
+                                            break;
+                                    }
+                                
                                     case MKFCCR('m','s',0,0x55): // why 55 ???
+                                    case MKFCCR('m','s',0,0x11): // why 11 ???
                                     case MKFCCR('m','p','4','a'):
                                     {
-                                              audioCodec(AAC);
+                                              if(entryName==MKFCCR('m','s',0,0x11))
+                                                        audioCodec(MSADPCM)
+                                                else
+                                                        audioCodec(AAC);
                                             if(left>10)
                                             {
                                               adm_atom wave(&son);
@@ -869,6 +879,7 @@ nextAtom:
                                                           }
                                                           break;
                                                        case MKFCCR('m','s',0,0x55):
+                                                       case MKFCCR('m','s',0,0x11):
                                                         {
                                                           // We have a waveformat here
                                                           printf("[STSD]Found MS audio header:\n");
