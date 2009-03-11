@@ -261,9 +261,7 @@ public:
                                                 uint32_t        ptsDtsDelta(uint32_t framenum) ;
 					//*******************************************	
 						uint32_t 	getSpecificMpeg4Info( void );
-					//______________________________
-					//   audioStream
-					//______________________________
+/************************************ audioStream ******************************/
 protected:
 #define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)
                         uint8_t  packetBuffer[ADM_EDITOR_PACKET_BUFFER_SIZE];
@@ -282,12 +280,14 @@ virtual bool            goToTime(uint64_t nbUs);
         uint8_t			getAudioStream(ADM_audioStream **audio);
 virtual WAVHeader       *getInfo(void);
 virtual CHANNEL_TYPE    *getChannelMapping(void );
+/************************************ /audioStream ******************************/
 					//______________________________
 					//   /audioStream
 					//______________________________
                     uint8_t         getAudioStreamsInfo(uint32_t frame,uint32_t *nbStreams, audioInfo **infos);
                     uint8_t         changeAudioStream(uint32_t frame,uint32_t newstream);
                     uint32_t        getCurrentAudioStreamNumber(uint32_t frame);
+
                     // /other audio stuff
 
 			     		uint8_t 			setDecodeParam( uint32_t frame );

@@ -109,7 +109,7 @@ AUDMAudioFilter *buildInternalAudioFilter(ADM_audioStream *currentaudiostream,ui
   int32_t timeShiftMs=audioDelay*audioShift;
   
   
-  firstFilter = new AUDMAudioFilter_Bridge(NULL,video_body, starttime,timeShiftMs);
+  firstFilter = new AUDMAudioFilter_Bridge(video_body, starttime,timeShiftMs);
   filtercount = 0;
   lastFilter = firstFilter;
   filtersFloat[filtercount++] = firstFilter;
@@ -212,7 +212,7 @@ AUDMAudioFilter *buildPlaybackFilter(ADM_audioStream *currentaudiostream, uint32
         
 //  deleteAudioFilter(NULL);
   
-  lastFilter = new AUDMAudioFilter_Bridge(NULL,video_body,sstart,timeShiftMs);
+  lastFilter = new AUDMAudioFilter_Bridge(video_body,sstart,timeShiftMs);
         filtercount = 0;
         filtersFloat[filtercount++] = lastFilter;
         

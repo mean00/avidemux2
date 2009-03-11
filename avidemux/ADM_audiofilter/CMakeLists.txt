@@ -1,7 +1,7 @@
 SET(ADMaudiofilter_SRCS 
 	audiodeng_buildfilters.cpp    
 #        audiofilter_film2pal.cpp   
-	audiofilter_bridge.cpp         
+#	audiofilter_bridge.cpp         
 #        audiofilter_limiter.cpp    
 	audiofilter_buildchain.cpp     
         audiofilter_mixer.cpp
