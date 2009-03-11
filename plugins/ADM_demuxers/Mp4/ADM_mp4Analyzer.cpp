@@ -841,10 +841,6 @@ nextAtom:
                                         }
                                         break;
                                     
-                                    {
-                                            audioCodec(MSADPCM);
-                                            break;
-                                    }
                                 
                                     case MKFCCR('m','s',0,0x55): // why 55 ???
                                     case MKFCCR('m','s',0,0x11): // why 11 ???
