@@ -23,8 +23,10 @@
 #define MODULE_NAME MODULE_AUDIO_FILTER
 #include "ADM_osSupport/ADM_debug.h"
 
-
-AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(AUDMAudioFilter *previous,ADM_Composer *incoming,
+/**
+    \fn AUDMAudioFilter_Bridge
+*/
+AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_Composer *incoming,
                           uint32_t startInMs,int32_t shiftMs) : AUDMAudioFilter(NULL)
 {
   _incoming=incoming;
@@ -34,9 +36,7 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(AUDMAudioFilter *previous,ADM_Com
   _shift=shiftMs;
   _hold=0;
   rewind();
-  /*  */
-  WAVHeader *hdr=incoming->getInfo();
-
+  
   printf("[Bridge] Starting with time %u, shift %d\n",startInMs,-shiftMs);
   // If shiftMS is > 0, it means we have to go in the future, just increse _startTime
   if(shiftMs>0)
@@ -60,14 +60,16 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(AUDMAudioFilter *previous,ADM_Com
       nbSample/=1000.;
       nbSample*=_wavHeader.channels;
       _hold=(int32_t)nbSample;
-      
-      
     }
     
   }
   printf("[Bridge] Ending with time %u, sample %u\n",_startTime,_hold);
   rewind();
 }
+/**
+    \fn ~AUDMAudioFilter_Bridge
+*/
+
 AUDMAudioFilter_Bridge::~AUDMAudioFilter_Bridge()
 {
   printf("[Bridge] Destroying bridge\n");
@@ -108,11 +110,12 @@ uint32_t   AUDMAudioFilter_Bridge::fill(uint32_t max,float *output,AUD_Status *s
   {
     printf("[bridge] No data in %u max %u out %u\n",_tail-_head,max,available);
   }
-
   return available;
 
 }
-
+/**
+    \fn fillIncomingBuffer
+*/
 uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
 {
   uint32_t asked,got;
