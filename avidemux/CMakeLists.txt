@@ -139,7 +139,7 @@ gtk_gui.cpp
 gui_autodrive.cpp  
 GUI_jobs.cpp  
 gui_navigate.cpp  
-guiplay.cpp  
+gui_play.cpp  
 gui_save.cpp  
 gui_savenew.cpp  
 gui_misc.cpp

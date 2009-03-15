@@ -1,9 +1,9 @@
 
 /***************************************************************************
-    \file  guiplay.cpp
+    \file  gui_play.cpp
 	\brief Playback loop
     
-    copyright            : (C) 2001/2008 by mean
+    copyright            : (C) 2001/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -15,51 +15,75 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
- 
+#include "ADM_default.h" 
 #include <math.h>
 #include "prefs.h"
-#include "fourcc.h"
 #include "avi_vars.h"
-#include "ADM_assert.h" 
-
-#include "DIA_fileSel.h"
-#include "prototype.h"
 #include "audio_out.h"
-
 #include "DIA_coreToolkit.h"
-#include "ADM_audio/aviaudio.hxx"
-#include "ADM_audiofilter/audioprocess.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
 #include "gtkgui.h"
 #include "ADM_userInterfaces/ADM_render/GUI_render.h"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
 #include "avidemutils.h"
 #include "ADM_preview.h"
+#include "audiofilter.h"
 //___________________________________
+// In ms
 #define AUDIO_PRELOAD 200
+#define EVEN(x) (x&0xffffffe)
 //___________________________________
 
-static void resetTime(void);
-static void ADM_playPreloadAudio(void);
-static void ADM_playFillAudio(void);
 extern void UI_purge(void);
-#define EVEN(x) (x&0xffffffe)
 
 //___________________________________
 uint8_t stop_req;
-static uint32_t auds = 0, nbSamplesSent = 0;
 
-
-static uint16_t audio_available = 0;
-static uint32_t one_audio_frame = 0;
-static uint32_t one_frame;
-static float *wavbuf = NULL;
-AUDMAudioFilter *playback = NULL;
 extern renderZoom currentZoom;
-static Clock    ticktock;
-uint64_t firstPts,lastPts;
+
+
+/**
+    \class GUIPlayback
+    \brief Wrapper for the playback stuff
+*/  
+class GUIPlayback
+{
+private:
+        AUDMAudioFilter *playbackAudio;
+        Clock           ticktock;
+        uint32_t        nbSamplesSent ;        
+        float           *wavbuf ;
+        uint64_t        firstPts,lastPts;
+
+private : 
+        bool initialized;
+        bool initializeAudio();
+        bool cleanup(void);
+        bool audioPump(void);
+        bool cleanupAudio(void);
+public:
+        bool run(void);
+        bool initialize(void);
+        GUIPlayback();
+        ~GUIPlayback();
+
+};
+/**
+    \fn GUIPlayback
+*/
+GUIPlayback::GUIPlayback(void)
+{
+    playbackAudio=NULL;
+    wavbuf=NULL;
+}
+/**
+    \fn ~GUIPlayback
+*/
+
+GUIPlayback::~GUIPlayback()
+{
+    cleanup();
+}
 /**
     \fn         GUI_PlayAvi
     \brief      MainLoop for internal movie playback
@@ -100,16 +124,76 @@ void GUI_PlayAvi(void)
     stop_req = 0;
     playing = 1;
 
-
-    
-
-
     admPreview::deferDisplay(1,curframe);
     admPreview::samePicture();
 
-    firstPts=admPreview::getCurrentPts();
-    ADM_playPreloadAudio();
+    GUIPlayback *playLoop=new GUIPlayback;
+    playLoop->initialize();
+    playLoop->run();
+    
+    delete playLoop;
+   playing = 0;
+            
+   getFirstVideoFilter( );
 
+   admPreview::deferDisplay(0,0);
+   
+   
+   UI_purge();
+   video_body->setCurrentFrame(oldFrame);
+   admPreview::samePicture();
+   GUI_setCurrentFrameAndTime();
+   UI_purge();
+      
+
+}
+/**
+    \fn cleanupAudio
+*/
+bool GUIPlayback::cleanupAudio(void)
+{
+      if (wavbuf)
+              ADM_dealloc(wavbuf);
+          wavbuf=NULL;
+    
+      AVDM_AudioClose();
+      
+      if (playbackAudio)
+       {
+            destroyPlaybackFilter();
+            playbackAudio=NULL;
+       }
+       return true;
+
+}
+/**
+    \fn cleanupAudio
+*/
+bool GUIPlayback::cleanup(void)
+{
+        cleanupAudio();
+       // done.
+	   setpriority(PRIO_PROCESS, 0, originalPriority);
+       return true;
+
+}
+
+/**
+        \fn initialize
+*/
+bool GUIPlayback::initialize(void)
+{
+    firstPts=admPreview::getCurrentPts();
+    initializeAudio();
+    return true;
+}
+/**
+        \fn run
+*/
+
+bool GUIPlayback::run(void)
+{
+   
     uint32_t movieTime;
     uint32_t systemTime;
     
@@ -124,7 +208,7 @@ void GUI_PlayAvi(void)
             printf("[Play] Cancelling playback, nextPicture failed\n");
             break;
         }
-        ADM_playFillAudio();
+        audioPump();
         lastPts=admPreview::getCurrentPts();
         systemTime = ticktock.getElapsedMS();
         movieTime=(uint32_t)((lastPts-firstPts)/1000);
@@ -144,8 +228,8 @@ void GUI_PlayAvi(void)
                 {
                     if(delta>10)
                     {
-                        GUI_Sleep(delta - 10);
-                        ADM_playFillAudio();
+                        GUI_Sleep(10);
+                        audioPump();
                     }
                     
                     UI_purge();
@@ -163,74 +247,37 @@ void GUI_PlayAvi(void)
     while (!stop_req);
 
 abort_play:
-	// ___________________________________
-    // go back to normal display mode
-    //____________________________________
-       playing = 0;
-          
-	   getFirstVideoFilter( );
-
-       admPreview::deferDisplay(0,0);
-       
-       
-       UI_purge();
-       video_body->setCurrentFrame(oldFrame);
-       admPreview::samePicture();
-       GUI_setCurrentFrameAndTime();
-       UI_purge();
-       if (currentaudiostream)
-       {
-          if (wavbuf)
-              ADM_dealloc(wavbuf);
-          wavbuf=NULL;
-          AVDM_AudioClose();
-       }
-       // done.
-	   setpriority(PRIO_PROCESS, 0, originalPriority);
+        return true;
 };
 
 /**
-    \fn ADM_playFillAudio
+    \fn audioPump
     \brief send ~ worth of one video frame of audio
 */
 
-void ADM_playFillAudio(void)
+bool  GUIPlayback::audioPump(void)
 {
     uint32_t oaf = 0;
     uint32_t load = 0;
 	uint8_t channels;
 	uint32_t fq;
 
-    if (!audio_available)	    return;
-    if (!currentaudiostream)	return;			// audio ?
+    if (!playbackAudio)	    return false;
 
   
-    channels= playback->getInfo()->channels;
-    fq=playback->getInfo()->frequency;  
-	double db_clock, db_wav,db_sys;
-    int32_t delta=0;
+    channels= playbackAudio->getInfo()->channels;
+    fq=playbackAudio->getInfo()->frequency;  
 
-    db_clock = admPreview::getCurrentPts()-firstPts;
-    db_clock /= 1000000.;  // in seconds
-
-    db_sys=ticktock.getElapsedMS();
-    db_sys/=1000;
 
      while(AVDM_getMsFullness() < AUDIO_PRELOAD)
       {
-          //printf("Fullness:%u\n",AVDM_getMsFullness());
-          db_wav = nbSamplesSent;	// in seconds also
-          db_wav /= fq;
 
-          delta = (long int) floor(1000. * (db_wav - db_clock));
-          int deltaSys=( int) floor(1000. * (db_sys - db_clock));
-
-           AUD_Status status;
-             if (! (oaf = playback->fill(256*16,  wavbuf,&status)))
+             AUD_Status status;
+             if (! (oaf = playbackAudio->fill(256*16,  wavbuf,&status)))
              {
                   printf("[Playback] Error reading audio stream...\n");
-                  audio_available=0;
-                  return;
+                  
+                  return false;
              }
             AVDM_AudioPlay(wavbuf, oaf);
             nbSamplesSent += oaf/channels;
@@ -238,14 +285,14 @@ void ADM_playFillAudio(void)
     }
     //printf("[Playback] Wrote %u bytes\n",load);
     // finally play the filled up buffer
-    
+    return true;
 }
 
 /**
-    \fn ADM_playPreloadAudio
-    \brief Preload audio
+    \fn initializeAudio
+    \brief Initialize audio
 */
-void ADM_playPreloadAudio(void)
+bool  GUIPlayback::initializeAudio(void)
 
 {
     uint32_t state,latency, preload;
@@ -254,35 +301,36 @@ void ADM_playPreloadAudio(void)
 
     wavbuf = 0;
 
-    if (!currentaudiostream)	  return;
+//    if (!currentaudiostream)	  return;
     
     double db;
-    uint64_t startPts=video_body->getTime(video_body->getCurrentFrame());
+    uint64_t startPts=firstPts;
 
-    playback = buildPlaybackFilter(currentaudiostream,startPts/1000, 0xffffffff);
+    playbackAudio = createPlaybackFilter(startPts,0);
     
-    channels= playback->getInfo()->channels;
+    channels= playbackAudio->getInfo()->channels;
     preload=  (wavinfo->frequency * channels)/5;	// 200 ms preload
     // 4 sec buffer..               
     wavbuf =  (float *)  ADM_alloc((20*sizeof(float)*preload)); // 4 secs buffers
     ADM_assert(wavbuf);
     // Call it twice to be sure it is properly setup
-     state = AVDM_AudioSetup(playback->getInfo()->frequency,  channels );
+     state = AVDM_AudioSetup(playbackAudio->getInfo()->frequency,  channels );
      AVDM_AudioClose();
-     state = AVDM_AudioSetup(playback->getInfo()->frequency,  channels );
+     state = AVDM_AudioSetup(playbackAudio->getInfo()->frequency,  channels );
      latency=AVDM_GetLayencyMs();
      printf("[Playback] Latency : %d ms\n",latency);
       if (!state)
       {
           GUI_Error_HIG(QT_TR_NOOP("Trouble initializing audio device"), NULL);
-          return;
+          cleanupAudio();
+          return false;
       }
      
      AUD_Status status;
     uint32_t fill=0;
     while(fill<preload)
     {
-      if (!(small_ = playback->fill(preload-fill, wavbuf+fill,&status)))
+      if (!(small_ = playbackAudio->fill(preload-fill, wavbuf+fill,&status)))
       {
         break;
       }
@@ -298,7 +346,7 @@ void ADM_playPreloadAudio(void)
     {
         if(AVDM_getMsFullness()<AUDIO_PRELOAD)
         {
-          if (!(small_ = playback->fill(slice, wavbuf,&status)))
+          if (!(small_ = playbackAudio->fill(slice, wavbuf,&status)))
           {
             printf("[Playback] Compensating for latency failed\n");
             break;
@@ -308,7 +356,7 @@ void ADM_playPreloadAudio(void)
        ADM_usleep(10*1000);
     }
     printf("[Playback] Latency is now %u\n",ticktock.getElapsedMS());
-    audio_available = 1;
+    return true;
 }
 
 // EOF

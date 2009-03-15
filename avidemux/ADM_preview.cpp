@@ -625,6 +625,7 @@ bool admPreview::nextKeyFrame(void)
     uint32_t frame=video_body->getCurrentFrame();
     if(!video_body->getNKFrame(&frame)) return false;
     if(!video_body->GoToIntra(frame)) return false;
+    video_body->setCurrentFrame(frame);
     samePicture();
     return true;
 }
@@ -637,6 +638,7 @@ bool admPreview::previousKeyFrame(void)
     uint32_t frame=video_body->getCurrentFrame();
     if(!video_body->getPKFrame(&frame)) return false;
     if(!video_body->GoToIntra(frame)) return false;
+    video_body->setCurrentFrame(frame);
     samePicture();
     return true;
 }

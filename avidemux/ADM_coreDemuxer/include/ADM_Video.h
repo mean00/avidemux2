@@ -111,7 +111,7 @@ virtual 	uint8_t                 setFlag(uint32_t frame,uint32_t flags)=0;
 virtual 	uint32_t                getFlags(uint32_t frame,uint32_t *flags)=0;			
 virtual 	uint8_t                 getFrameSize(uint32_t frame,uint32_t *size)=0;
 virtual 	uint8_t                 getFrame(uint32_t framenum,ADMCompressedImage *img)=0;
-
+virtual     uint64_t                estimatePts(uint32_t frame); // Returns or guess the PTS of given frame
 // New write avi engine
           AVIStreamHeader           *getVideoStreamHeader(void ) { return &_videostream;}
           MainAVIHeader             *getMainHeader(void ) { return &_mainaviheader;}
@@ -122,5 +122,8 @@ virtual   uint64_t                   getVideoDuration(void)=0;
 
 // Return true if the container provides pts informations
 virtual   bool                       providePts(void) {return false;};
+//
+virtual   bool                       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)=0;
+virtual   bool                       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)=0;
 };
 #endif

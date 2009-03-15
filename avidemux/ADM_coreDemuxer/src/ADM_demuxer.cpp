@@ -102,6 +102,26 @@ uint8_t vidHeader::getFrameSize (uint32_t frame, uint32_t * size)
   UNUSED_ARG (size);
   return 0;
 }
+/**
+    \fn estimatePts
+    \brief Returns Pts of given frame or estimate if unknown
 
-
+*/
+uint64_t vidHeader::estimatePts(uint32_t frame)
+{
+    uint64_t pts=getTime(frame);
+    if(pts!=ADM_NO_PTS) return pts; // The demuxer can provide the PTS
+    // Else guesstimate...
+    uint32_t count=0;
+    while(frame && getTime(frame)==ADM_NO_PTS)
+    {
+        count++;
+        frame--;
+    }
+    float f=_videostream.dwScale;
+    f*=1000*1000;
+    f/=_videostream.dwRate;
+    f*=count;
+    pts=getTime(frame)+count*(uint32_t)f;
+}
 //

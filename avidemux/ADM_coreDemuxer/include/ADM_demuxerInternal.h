@@ -16,7 +16,7 @@
 #ifndef  ADM_videoInternal_H
 #define  ADM_videoInternal_H
 
-#define ADM_DEMUXER_API_VERSION 2
+#define ADM_DEMUXER_API_VERSION 3
 #include "ADM_dynamicLoading.h"
 #include "ADM_Video.h"
 class ADM_demuxer :public ADM_LibWrapper
