@@ -1,5 +1,8 @@
 /***************************************************************************
-         Downmixer
+       \file audiofilter_mixer.cpp
+       \brief Change channels configuration (down/up channels)
+
+    (C) Mihail Zenkov <kreator@tut.by> & mean
  ***************************************************************************/
  
  

@@ -1,8 +1,9 @@
 /***************************************************************************
-                          audiofilter_normalize
+                          \file  audiofilter_normalize
+                          \brief absolute or automatic gain filter
                              -------------------
     
-    copyright            : (C) 2002/2006 by mean
+    copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
     
     Compute the ratio so that the maximum is at -3db
@@ -17,9 +18,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 
 #include <math.h>
 

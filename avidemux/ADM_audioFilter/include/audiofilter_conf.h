@@ -19,6 +19,7 @@
 #include "ADM_audioFilter.h"
 #include "audiofilter.h"
 #include "audiofilter_mixer.h"
+#include "audiofilter_SRC.h"
 
 /**
     \class ADM_AUDIOFILTER_CONFIG
@@ -33,15 +34,18 @@ public    :
                 shiftInMs=0;
                 mixerEnabled=false;
                 mixerConf=CHANNEL_STEREO;
-
+                resamplerEnabled=false;
+                resamplerFrequency=44100;
         }
 
     uint64_t     startTimeInUs;
     int32_t      shiftInMs;
-    
+    // Mixer
     bool         mixerEnabled;
     CHANNEL_CONF mixerConf;
-
+    // Resampler
+    bool         resamplerEnabled;
+    uint32_t     resamplerFrequency;
 
 
 };

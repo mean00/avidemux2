@@ -62,9 +62,12 @@ bool            destroyPlaybackFilter(void)
 
 }
 /***********************************************************************/
+#define ADD_FILTER(x) { vec->push_back(x);last=x;}
 /**
     \fn ADM_buildFilterChain
     \brief Create a filterchain
+    @param vec : VectorFilter to build filters into
+    @param config: Filters configuration
 */
 bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config)
 {
@@ -75,16 +78,22 @@ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *confi
     // Bridge
     AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(video_body,(uint32_t)( config->startTimeInUs/1000),
                                                                                 config->shiftInMs);
-    vec->push_back(nw);
-    last=nw;
+    ADD_FILTER(nw);
 
     // Mixer
     if(config->mixerEnabled)
     {
         AUDMAudioFilterMixer *mixer=new AUDMAudioFilterMixer(last,config->mixerConf);
-        vec->push_back(mixer);
-        last=mixer;
+        ADD_FILTER(mixer);
     }
+    // Resample
+    if(config->resamplerEnabled && config->resamplerFrequency!=last->getInfo()->frequency)
+    {
+        AUDMAudioFilterSrc *src=new AUDMAudioFilterSrc(last,config->resamplerFrequency);
+        ADD_FILTER(src);
+    }
+    // Normalize
+
     return true;
 }
 /**
