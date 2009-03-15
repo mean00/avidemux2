@@ -495,5 +495,45 @@ uint8_t                 mkvHeader::getAudioStream(uint32_t i,ADM_audioStream  **
   return 0;
 
 }
+
+
+/**
+    \fn getPtsDts
+*/
+bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+     ADM_assert(_parser);
+     if(frame>=_tracks[0]._nbIndex) 
+     {
+            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0]._nbIndex);
+            return false;
+     }
+    mkvIndex *dx=&(_tracks[0]._index[frame]);
+    
+    *dts=dx->Dts; // FIXME
+    *pts=dx->Pts;
+    return true;
+}
+/**
+        \fn setPtsDts
+*/
+bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+      ADM_assert(_parser);
+     if(frame>=_tracks[0]._nbIndex) 
+     {
+            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0]._nbIndex);
+            return false;
+     }
+    mkvIndex *dx=&(_tracks[0]._index[frame]);
+    
+    dx->Dts=dts; // FIXME
+    dx->Pts=pts;
+    
+
+}
+
+
+
 //****************************************
 //EOF

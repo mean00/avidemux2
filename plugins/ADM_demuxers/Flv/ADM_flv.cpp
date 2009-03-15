@@ -682,6 +682,42 @@ uint8_t flvHeader::getFrameSize (uint32_t frame, uint32_t * size)
   *size = videoTrack->_index[frame].size;
   return 1;
 }
+//!!
 
+/**
+    \fn getPtsDts
+*/
+bool    flvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+
+    if(frame>=videoTrack->_nbIndex)
+    {
+      printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,videoTrack->_nbIndex);
+      return 0;
+    }
+
+     flvIndex *idx=&(videoTrack->_index[frame]);
+    
+    *dts=idx->timeCodeUs; // FIXME
+    *pts=idx->timeCodeUs;
+    return true;
+}
+/**
+        \fn setPtsDts
+*/
+bool    flvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+    if(frame>=videoTrack->_nbIndex)
+    {
+      printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,videoTrack->_nbIndex);
+      return 0;
+    }
+
+     flvIndex *idx=&(videoTrack->_index[frame]);
+    
+    idx->timeCodeUs=dts; // FIXME
+    //*pts=idx->timeCodeUs; // FIXME PTS=DTS ??
+    return true;
+}
 
 //EOF

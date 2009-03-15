@@ -414,4 +414,40 @@ uint32_t     MP4Header::getCurrentAudioStreamNumber(void)
     return _currentAudioTrack;
 }
 
+/**
+    \fn getPtsDts
+*/
+bool    MP4Header::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+
+    if(frame>=VDEO.nbIndex)
+    {
+      printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,VDEO.nbIndex);
+      return 0;
+    }
+
+    MP4Index *idx=&(VDEO.index[frame]);
+    
+    *dts=idx->dts; // FIXME
+    *pts=idx->pts;
+    return true;
+}
+/**
+        \fn setPtsDts
+*/
+bool    MP4Header::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+    if(frame>=VDEO.nbIndex)
+    {
+      printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,VDEO.nbIndex);
+      return 0;
+    }
+
+    MP4Index *idx=&(VDEO.index[frame]);
+
+    idx->dts=dts; // FIXME
+    idx->pts=pts;
+    return true;
+}
+
 //EOF
