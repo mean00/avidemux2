@@ -15,15 +15,12 @@
 
 #include "ADM_default.h"
 #include "ADM_Video.h"
-
-#include "fourcc.h"
-
-
 #include "ADM_mkv.h"
-
 #include "mkv_tags.h"
-/*
-    __________________________________________________________
+/**
+    \fn open
+    \brief Try to open the mkv file given as parameter
+    
 */
 
 uint8_t mkvHeader::open(const char *name)
@@ -289,8 +286,9 @@ uint8_t mkvHeader::close(void)
     }
 
 }
-/*
-    __________________________________________________________
+/**
+    \fn mkvHeader
+    \brief constructor
 */
 
  mkvHeader::mkvHeader( void ) : vidHeader()
@@ -308,21 +306,18 @@ uint8_t mkvHeader::close(void)
   _access=NULL;
   _audioStreams=NULL;
 }
-/*
-    __________________________________________________________
+/**
+    \fn ~mkvHeader
+    \brief constructor
 */
-
  mkvHeader::~mkvHeader(  )
 {
   close();
 }
 
-/*
-    __________________________________________________________
-*/
-
-/*
-    __________________________________________________________
+/**
+    \fn setFlag
+    \brief setFlag
 */
 
   uint8_t  mkvHeader::setFlag(uint32_t frame,uint32_t flags)
@@ -331,10 +326,11 @@ uint8_t mkvHeader::close(void)
   _tracks[0]._index[frame].flags=flags;
   return 1;
 }
-/*
-    __________________________________________________________
-*/
 
+/**
+    \fn getFlags
+    \brief getFlags
+*/
 uint32_t mkvHeader::getFlags(uint32_t frame,uint32_t *flags)
 {
   if(frame>=_tracks[0]._nbIndex) return 0;
