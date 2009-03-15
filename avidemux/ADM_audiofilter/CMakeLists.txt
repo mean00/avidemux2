@@ -4,7 +4,7 @@ SET(ADMaudiofilter_SRCS
 #	audiofilter_bridge.cpp         
 #        audiofilter_limiter.cpp    
 	audiofilter_buildchain.cpp     
-        audiofilter_mixer.cpp
+#        audiofilter_mixer.cpp
 #	audiofilter_normalize.cpp
 #        audiofilter_dolby.cpp          
 #        audiofilter_SRC.cpp

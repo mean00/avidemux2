@@ -532,23 +532,5 @@ uint8_t AVDMGenericAudioStream::endWrite(FILE * out, uint32_t len)
 
 }
 #endif
-/**
- * 	\fn ADM_audioCompareChannelMapping
- *  \brief return true if the two channel mapping are identical, false else.
- */
-bool ADM_audioCompareChannelMapping(WAVHeader *wh1, WAVHeader *wh2,CHANNEL_TYPE *map1,CHANNEL_TYPE *map2)
-{
-	if(wh1->channels != wh2->channels) return false; // cannot be identical..
-		
-			for (int j = 0; j < wh1->channels; j++)
-			{
-				if (map1[j] != map2[j]) 
-				{
-					return false;
-					
-				}
-			}
-	return true;
-}
 
 //

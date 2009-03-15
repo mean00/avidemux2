@@ -21,7 +21,7 @@
 
 #include "audioencoder.h"
 
-#include "ADM_audiofilter/audiofilter_limiter_param.h"
+#include "audiofilter_limiter_param.h"
 #include "audiofilter_normalize_param.h"
 #include "audio_encoderWrapper.h"
 

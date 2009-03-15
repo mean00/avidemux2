@@ -20,9 +20,14 @@
 #include "audiofilter_bridge.h"
 #include "audiofilter_access.h"
 #include "audiofilter_internal.h"
+#include "audiofilter_conf.h"
 
 VectorOfAudioFilter PlaybackVector;
 extern ADM_Composer *video_body;
+
+//
+static bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
+static bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
 /**
         \fn createPlaybackFilter
         \brief Create a float output filter for playback
@@ -31,14 +36,16 @@ extern ADM_Composer *video_body;
 */
 AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
 {
-AUDMAudioFilter *nw;
-    ADM_assert(0==PlaybackVector.size());
-    // The First one is always the bridge
-    nw=new AUDMAudioFilter_Bridge(video_body,(uint32_t)( startTime/1000),shift);
-    PlaybackVector.push_back(nw);
-
     //
-int last=PlaybackVector.size();
+    ADM_AUDIOFILTER_CONFIG playback;
+    playback.startTimeInUs=startTime;
+    playback.shiftInMs=shift;
+    playback.mixerEnabled=true;
+    playback.mixerConf=CHANNEL_STEREO;
+    //
+    ADM_buildFilterChain(&PlaybackVector,&playback);
+    //
+    int last=PlaybackVector.size();
     ADM_assert(last);
     return PlaybackVector[last-1];
 }
@@ -50,14 +57,66 @@ int last=PlaybackVector.size();
 bool            destroyPlaybackFilter(void)
 {
 
-    while(PlaybackVector.size())
-    {
-        delete PlaybackVector[0];
-        PlaybackVector.erase(PlaybackVector.begin());
-
-    }
+    ADM_emptyFilterChain(&PlaybackVector);
     return true;
 
+}
+/***********************************************************************/
+/**
+    \fn ADM_buildFilterChain
+    \brief Create a filterchain
+*/
+bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config)
+{
+    // make sure the chain is empty...
+    AUDMAudioFilter *last=NULL;
+    ADM_emptyFilterChain(vec);
+    
+    // Bridge
+    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(video_body,(uint32_t)( config->startTimeInUs/1000),
+                                                                                config->shiftInMs);
+    vec->push_back(nw);
+    last=nw;
+
+    // Mixer
+    if(config->mixerEnabled)
+    {
+        AUDMAudioFilterMixer *mixer=new AUDMAudioFilterMixer(last,config->mixerConf);
+        vec->push_back(mixer);
+        last=mixer;
+    }
+    return true;
+}
+/**
+    \fn ADM_emptyFilterChain
+    \brief Destroy a filter chain
+*/
+bool ADM_emptyFilterChain(VectorOfAudioFilter *vec)
+{
+   while(vec->size())
+    {
+        delete (*vec)[0];
+        vec->erase(vec->begin());
+    }
+    return true;
+}
+/**
+ * 	\fn ADM_audioCompareChannelMapping
+ *  \brief return true if the two channel mapping are identical, false else.
+ */
+bool ADM_audioCompareChannelMapping(WAVHeader *wh1, WAVHeader *wh2,CHANNEL_TYPE *map1,CHANNEL_TYPE *map2)
+{
+	if(wh1->channels != wh2->channels) return false; // cannot be identical..
+		
+			for (int j = 0; j < wh1->channels; j++)
+			{
+				if (map1[j] != map2[j]) 
+				{
+					return false;
+					
+				}
+			}
+	return true;
 }
 
 // EOF

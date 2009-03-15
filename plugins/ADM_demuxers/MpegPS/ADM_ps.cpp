@@ -322,5 +322,32 @@ uint8_t psHeader::getFrameSize (uint32_t frame, uint32_t * size)
     return true;
 }
 
+/**
+    \fn getPtsDts
+*/
+bool    psHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+    if(frame>=ListOfFrames.size()) return false;
+    dmxFrame *pk=ListOfFrames[frame];
+
+    *dts=pk->dts;
+    *pts=pk->pts;
+    return true;
+}
+/**
+        \fn setPtsDts
+*/
+bool    psHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+      if(frame>=ListOfFrames.size()) return false;
+    dmxFrame *pk=ListOfFrames[frame];
+
+    pk->dts=dts;
+    pk->pts=pts;
+    return true;
+
+
+}
+
 
 //EOF
