@@ -77,6 +77,8 @@ public:
                                     /// Go to a given time
                 virtual bool      goToTime(uint64_t timeUs);
                 virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+
+
 };
 
 
@@ -146,6 +148,10 @@ virtual     uint8_t                 getNbAudioStreams(void);
     virtual uint64_t getTime(uint32_t frame);
             uint8_t  getExtraHeaderData(uint32_t *len, uint8_t **data);
     virtual uint64_t getVideoDuration(void);
+
+virtual   bool                    getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+virtual   bool                    setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+
 
 };
 #endif

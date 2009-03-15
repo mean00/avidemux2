@@ -186,6 +186,8 @@ uint32_t       getCurrentAudioStreamNumber(void);
 uint8_t        getAudioStreamsInfo(uint32_t *nbStreams, audioInfo **infos);
 virtual   uint64_t                   getTime(uint32_t frameNum);
 virtual   uint64_t                   getVideoDuration(void);
+virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
 
 };
 

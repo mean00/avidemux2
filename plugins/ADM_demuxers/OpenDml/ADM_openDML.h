@@ -155,6 +155,9 @@ virtual	    uint8_t	 getExtraHeaderData(uint32_t *len, uint8_t **data);
 virtual     uint64_t getTime(uint32_t frameNum);
 virtual     uint64_t getVideoDuration(void);
 virtual     bool     providePts(void) {return ptsAvailable;};
+bool                 getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+bool                 setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+
 };
 
 #endif

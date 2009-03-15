@@ -89,6 +89,11 @@ virtual 	uint8_t  getFrame(uint32_t framenum,ADMCompressedImage *);
 virtual   uint64_t                   getTime(uint32_t frameNum);
 virtual   uint64_t                   getVideoDuration(void);
 virtual 	uint8_t                 getFrameSize(uint32_t frame,uint32_t *size);
+
+virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+
+
 };
 
 

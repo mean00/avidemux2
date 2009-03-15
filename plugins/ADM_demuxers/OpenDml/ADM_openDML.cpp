@@ -860,4 +860,32 @@ odmlAudioTrack::~odmlAudioTrack()
         if(extraData) delete [] extraData;
         if(avistream) delete avistream;
 }
+/**
+    \fn getPtsDts
+*/
+bool    OpenDMLHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+    if(frame>_videostream.dwLength)
+    {
+        printf("[Odml] %"LU" exceeds nb of video frames %"LU"\n",frame,_videostream.dwLength);
+        return false;
+    }
+    *dts=_idx[frame].dts; // FIXME
+    *pts=_idx[frame].pts;
+    return true;
+}
+/**
+        \fn setPtsDts
+*/
+bool    OpenDMLHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+    if(frame>_videostream.dwLength)
+    {
+        printf("[Odml] %"LU" exceeds nb of video frames %"LU"\n",frame,_videostream.dwLength);
+        return false;
+    }
+    _idx[frame].dts=dts;
+    _idx[frame].pts=pts;
+    return true;
 
+}
