@@ -46,11 +46,6 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
-//#include "ADM_dialog/DIA_working.h"
-
-//#include "ADM_inputs/ADM_mpegdemuxer/dmx_video.h"
-//#include "ADM_inputs/ADM_mpegdemuxer/dmx_identify.h"
-//#include "ADM_inputs/ADM_mpegdemuxer/dmx_probe.h"
 #include "prefs.h"
 
 #include "ADM_osSupport/ADM_debugID.h"
@@ -59,7 +54,7 @@
 
 #//include "ADM_inputs/ADM_mpegdemuxer/dmx_indexer.h"
 #include "ADM_outputfmt.h"
-//#include "ADM_gui2/GUI_ui.h"
+#include "ADM_edPtsDts.h"
 
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
@@ -323,7 +318,7 @@ UNUSED_ARG(mode);
     _videos[_nb_video]._aviheader->getExtraHeaderData(&l,&d);
     if(l && d)
     {
-        printf("The video codec has some extradata (%d bytes)\n",l);
+        printf("[Editor]The video codec has some extradata (%d bytes)\n",l);
         mixDump(d,l);
         printf("\n");
     }
@@ -363,7 +358,7 @@ UNUSED_ARG(mode);
 
   if (!nbAStream)
     {
-      printf ("\n *** NO AUDIO ***\n");
+      printf ("[Editor] *** NO AUDIO ***\n");
       _videos[_nb_video].audioTracks = NULL;
       _videos[_nb_video].nbAudioStream=0;
       _videos[_nb_video].currentAudioStream=0;
@@ -414,12 +409,12 @@ UNUSED_ARG(mode);
 //      printf("[Editor] Duration in seconds: %"LLU", in samples: %"LLU"\n",_videos[_nb_video]._audio_duration/_wavinfo->frequency,_videos[_nb_video]._audio_duration);
     }
 
-  printf ("\n Decoder FCC: ");
+  printf ("[Editor] Decoder FCC: ");
   fourCC::print (info.fcc);
   // ugly hack
   if (info.fps1000 > 2000 * 1000)
     {
-      printf (" FPS too high, switching to 25 fps hardcoded\n");
+      printf ("[Editor] FPS too high, switching to 25 fps hardcoded\n");
       info.fps1000 = 25 * 1000;
       updateVideoInfo (&info);
     }
@@ -490,22 +485,36 @@ TryAgain:
 
 		vid= &(_videos[_nb_video-1]);
 		vid->_reorderReady=0;
-                vid->_unpackReady=0;
+        vid->_unpackReady=0;
 		// we only try if we got everything needed...
 		if(!vid->decoder)
 		{
-			printf("\n no decoder to check for B- frame\n");
-			return 1;
-		}
-		if(!vid->decoder->bFramePossible())
-		{
-			printf("\n no  B- frame with that codec \n");
-			return 1;
-		}
-
+			printf("[Editor] no decoder to check for B- frame\n");
+		}else
+        {
+            decoders *decoder=vid->decoder;
+            if(vid->_aviheader->providePts()==false) // Else we rely on demuxer PTS
+            {
+                printf("[Editor] This container does not provide PTS \n");
+                if(decoder->bFramePossible())
+                {
+                    printf("[Editor] B- frame possible with that codec \n");
+                    if(isMpeg4Compatible(info.fcc))
+                    {
+                        printf("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");                        
+                        setMpeg4PtsFromDts(vid->_aviheader,vid->timeIncrementInUs);
+                    }
+                }
+                else   
+                {
+                        printf("[Editor] No B frame with that codec\n");
+                        setPtsEqualDts(vid->_aviheader,vid->timeIncrementInUs);
+                }
+            }
+        }
 		GoToIntra(0);
         durationInUs=vid->_aviheader->getVideoDuration();
-		printf(" End of B-frame check\n");
+		printf("[Editor] End of B-frame check\n");
 
   return 1;
 }

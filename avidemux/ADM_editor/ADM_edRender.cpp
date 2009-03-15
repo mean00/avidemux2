@@ -127,7 +127,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     uint32_t nbFrames=vid->_nb_video_frames;
     //cache->flush();
     // The PTS associated with our frame is the one we are looking for
-    uint64_t wantedPts=vid->_aviheader->getTime(frame);
+    uint64_t wantedPts=vid->_aviheader->estimatePts(frame);
     uint32_t tries=8;
 
     while(found==false && tries--)

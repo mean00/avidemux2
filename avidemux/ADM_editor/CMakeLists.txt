@@ -9,6 +9,8 @@ ADM_edFrameType.cpp
 ADM_edit.cpp 
 ADM_edRender.cpp 
 ADM_edMarker.cpp
-ADM_edStub.cpp)
+ADM_edStub.cpp
+ADM_edPtsDts.cpp
+)
 
 ADD_ADM_LIB_ALL_TARGETS(ADM_editor ${ADM_editor_SRCS})
