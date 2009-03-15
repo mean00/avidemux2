@@ -28,7 +28,7 @@ ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,uint64_t 
     ADM_assert(filter);
     startTimeUs=timeUs;
     memcpy(&header,incoming->getInfo(),sizeof(header));
-    
+    samplesSeen=0;
     printf("[FilterAccess] Created, starting at %"LU" ms\n",(uint32_t)(timeUs/1000));
 }
 /**
@@ -44,6 +44,7 @@ ADMAudioFilter_Access::~ADMAudioFilter_Access()
 */
 bool      ADMAudioFilter_Access::setPos(uint64_t pos)
 {
+    samplesSeen=0;
     return filter->rewind();
 }
 /**
@@ -60,6 +61,23 @@ uint64_t  ADMAudioFilter_Access::getPos(void)
 */                
 bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
+    maxSize/=sizeof(float);
+    *size=0;
 
+    AUD_Status status;
+    uint32_t rd=filter->fill(maxSize,(float *)buffer,&status);
+    if(!rd)
+    {
+        printf("[Filter_access] Fill error!\n");
+        return false;
+    }
+    *size=rd*sizeof(float);
+
+    float d=(float)samplesSeen/(float)(rd/header.channels);
+    *dts=startTimeUs+(uint64_t)d;
+    samplesSeen+=(rd/header.channels);
+    return true;
 }
+
+
 //EOF

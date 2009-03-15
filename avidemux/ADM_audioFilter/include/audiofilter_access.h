@@ -27,6 +27,7 @@ class ADMAudioFilter_Access : public ADM_audioAccess
     uint64_t            startTimeUs; /*< Starting time in us */
     AUDMAudioFilter     *filter;
     WAVHeader           header;
+    uint64_t            samplesSeen;
   public:
                 WAVHeader         *getWavHeader(void) {return &header;}
 
