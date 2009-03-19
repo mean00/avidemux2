@@ -1,5 +1,7 @@
 /***************************************************************************
-    copyright            : (C) 2006 by mean
+  \file audioencoder.cpp
+
+    copyright            : (C) 2002-6 by mean/gruntster/Mihail 
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -21,7 +23,6 @@
 
 #define AUDIOENC_COPY 0
 
-//class AUDMAudioFilter;
 
 typedef int AUDIOENCODER;
 
@@ -41,19 +42,19 @@ class ADM_AudioEncoder
     uint8_t         *_extraData;
     uint32_t        _extraSize;
     AUDMAudioFilter *_incoming;
-    uint8_t         cleanup(void);
+
     
     float           tmpbuffer[ADM_AUDIO_ENCODER_BUFFER_SIZE*2];  // incoming samples are stored here before encofing
     uint32_t        tmphead,tmptail;
 
     bool            refillBuffer(int minimum); // Mininum is in float
     
-    void            reorderChannels(float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
+    bool            reorderChannels(float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
 
     
     // The encoder can remap the audio channel (or not). If so, let's store the the configuration here
     CHANNEL_TYPE    outputChannelMapping[MAX_CHANNELS];
-    WAVHeader       wavheader; 
+    WAVHeader       wavheader;  /// To be filled by the encoder, especially byterate and codec Id.
   public:
     //
 
@@ -62,6 +63,8 @@ class ADM_AudioEncoder
 
                     ADM_AudioEncoder(AUDMAudioFilter *in);	
                     virtual ~ADM_AudioEncoder();
+
+
     virtual bool    initialize(void)=0; /// Returns true if init ok, false if encoding is impossible
     virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples)=0; /// returns false if eof met
 };

@@ -675,7 +675,7 @@ char *script_getVar(char *in, int *r)
 
                 }
         }
-        printf("Warning: var [%s] is unknown !\n");
+        printf("Warning: var [%s] is unknown !\n",in);
         return NULL;
 
 }
