@@ -261,6 +261,7 @@ AUDMAudioFilter *buildPlaybackFilter(ADM_audioStream *currentaudiostream, uint32
 
 ADM_audioStream *buildAudioFilter(ADM_audioStream *currentaudiostream,  uint32_t starttime)
 {
+#if 0
   AUDMAudioFilter         *lastFilter=NULL;
   ADM_audioStream         *output=NULL;
   AUDMEncoder             *tmpfilter=NULL;
@@ -310,6 +311,7 @@ ADM_audioStream *buildAudioFilter(ADM_audioStream *currentaudiostream,  uint32_t
 
   ADM_assert(output);
   return output;
+#endif
 }
 
 

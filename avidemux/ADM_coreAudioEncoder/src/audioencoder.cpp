@@ -18,6 +18,7 @@
 #include "ADM_audioFilter.h"
 #include "audioencoder.h"
 #include "ADM_audioCodecEnum.h"
+#if 0
 AUDMEncoder::AUDMEncoder(AUDMAudioFilter *in) // :AVDMGenericAudioStream  ()
 {
   _wavheader = new WAVHeader;
@@ -142,5 +143,5 @@ uint32_t AUDMEncoder::grab(uint8_t * obuffer)
     return len;
   return MINUS_ONE;
 }
-
+#endif
 //EOF

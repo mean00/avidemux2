@@ -6,6 +6,7 @@
 #ifndef audio_encoderWrapper_H
 #define audio_encoderWrapper_H
 #include "ADM_audioStream.h"
+#if 0
 class ADM_audioEncoderWrapper :  public ADM_audioStream
 {
 protected:
@@ -23,5 +24,5 @@ public:
 };
 
 #endif
-
+#endif
 //EOF

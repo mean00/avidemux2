@@ -10,7 +10,7 @@
 #include "audioencoder.h"
 
 #include "audio_encoderWrapper.h"
-
+#if 0
 /**
     \fn ADM_audioEncoderWrapper
     \brief Constructor to wrap an encoder inside ADMgenericblah blah
@@ -81,6 +81,6 @@ uint8_t		ADM_audioEncoderWrapper::extraData(uint32_t *l,uint8_t **d)
     return _encoder->extraData(l,d);
 
 }
-
+#endif
 //EOF
 

@@ -15,7 +15,7 @@ uint8_t audio_setCopyCodec(void);
 /// Directly set the codec, *only to be used
 uint8_t audioCodecSetByIndex(int i);
 /// Spawn a new encoder
-AUDMEncoder *audioEncoderCreate(AUDMAudioFilter *filter);
+ADM_AudioEncoder *audioEncoderCreate(AUDMAudioFilter *filter);
 /// Select a encoder by its name e.g. "lame", used only by JS. Update UI as well
 uint8_t audioCodecSetByName( const char *name);
 /// Returns the name of the currently selected codec

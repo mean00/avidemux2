@@ -17,68 +17,52 @@
 */
 #include "ADM_coreAudio.h"
 #include "ADM_audioCodecEnum.h"
-
+#include "ADM_audioFilter.h" 
 
 #define AUDIOENC_COPY 0
 
-class AUDMEncoder;
-class AUDMAudioFilter;
+//class AUDMAudioFilter;
 
 typedef int AUDIOENCODER;
 
-/*!
-  Base class for all audio encoder.It does the reverse of the bridge class and offers a proper GenericAudioStreamAPI
+/**
+    \class AUDMEncoder
+    \brief audio encoder base class. Combined with the audioaccess class it makes the exact opposite
+            of the bridge class, i.e. convert audioFilter to ADM_access then ADM_stream.
 
 */
-// // FIXME!!!!
-#include "ADM_audioFilter.h" // FIXME!!!
- //_____________________________________________
-class AUDMEncoder //: public AVDMGenericAudioStream
+#define ADM_AUDIO_ENCODER_BUFFER_SIZE (6*32*1024)
+class ADM_AudioEncoder 
 {
   protected:
-    
-    //
-    uint32_t grab(uint8_t *outbuffer);
-    uint32_t grab(float *outbuffer) {ADM_assert(0);return 1;}
-    uint32_t  eof_met;
-    uint32_t  _chunk;
+
+    bool            eof_met;    // True if cannot encode anymore
     //
     uint8_t         *_extraData;
     uint32_t        _extraSize;
     AUDMAudioFilter *_incoming;
     uint8_t         cleanup(void);
     
-    float          *tmpbuffer;
-    uint8_t        refillBuffer(int minimum); // Mininum is in float
+    float           tmpbuffer[ADM_AUDIO_ENCODER_BUFFER_SIZE*2];  // incoming samples are stored here before encofing
+    uint32_t        tmphead,tmptail;
+
+    bool            refillBuffer(int minimum); // Mininum is in float
+    
+    void            reorderChannels(float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
 
     
-    void reorderChannels(float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
-
-    uint32_t       tmphead,tmptail;
     // The encoder can remap the audio channel (or not). If so, let's store the the configuration here
-    CHANNEL_TYPE outputChannelMapping[MAX_CHANNELS];
+    CHANNEL_TYPE    outputChannelMapping[MAX_CHANNELS];
+    WAVHeader       wavheader; 
   public:
     //
-    WAVHeader       *_wavheader;
-    //
-    uint32_t read(uint32_t len,uint8_t *buffer);
-    uint32_t read(uint32_t len,float *buffer) {ADM_assert(0);return 1;}
-    //
-    virtual ~AUDMEncoder();
-    AUDMEncoder(AUDMAudioFilter *in);	
 
-    virtual uint8_t initialize(void)=0;
-    virtual uint8_t getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)=0;
-    virtual uint8_t packetPerFrame( void) {return 1;}
     virtual uint8_t extraData(uint32_t *l,uint8_t **d) {*l=_extraSize;*d=_extraData;return 1;}
-            uint8_t  goTo(uint32_t timeMS) {ADM_assert(0);return 1;}
-};
-// Used by some old code (lame/twolame) OBSOLETE   / DO NOT USE
-typedef enum  
-{
-   	ADM_STEREO=1,
-   	ADM_JSTEREO,
-   	ADM_MONO
-} ADM_mode;
+    WAVHeader       *getInfo(void) {return &wavheader;}
 
+                    ADM_AudioEncoder(AUDMAudioFilter *in);	
+                    virtual ~ADM_AudioEncoder();
+    virtual bool    initialize(void)=0; /// Returns true if init ok, false if encoding is impossible
+    virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples)=0; /// returns false if eof met
+};
 #endif
