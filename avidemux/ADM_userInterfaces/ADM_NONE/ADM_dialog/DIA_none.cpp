@@ -34,7 +34,7 @@
 #include "ADM_videoFilter/ADM_vidVobSub.h"
 
 #include "ADM_encoder/ADM_vidEncode.hxx"
-#include "ADM_coreAudio/include/audioencoder.h"
+#include "audioencoder.h"
 #include "ADM_lavcodec.h"
 #include "ADM_codecs/ADM_ffmpegConfig.h"
 
