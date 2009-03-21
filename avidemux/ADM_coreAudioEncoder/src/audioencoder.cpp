@@ -43,6 +43,7 @@ ADM_AudioEncoder::~ADM_AudioEncoder()
         _extraData=NULL;
     }
 }
+
 /**
     \fn refillBuffer
 */

@@ -210,8 +210,10 @@ AUDIOENCODER AVDM_getCurrentAudioEncoder( void)
 uint8_t DIA_audioCodec( int *codec );
 void audioCodecSelect( void )
 {
- 
-	DIA_audioCodec( &currentEncoder );
+#warning FIXME 
+#warning FIXME 
+#warning FIXME 
+	//DIA_audioCodec( &currentEncoder );
 	audioPrintCurrentCodec();
 }
 /**
@@ -333,7 +335,7 @@ const char  *audioEncoderGetDisplayName(uint32_t i)
         \fn audioEncoderCreate
         \brief Spawn an audio encoder
 */
-AUDMEncoder *audioEncoderCreate(AUDMAudioFilter *filter)
+ADM_AudioEncoder *audioEncoderCreate(AUDMAudioFilter *filter)
 {
       ADM_assert(currentEncoder<ListOfAudioEncoder.size());
       static ADM_audioEncoder *enc=ListOfAudioEncoder[currentEncoder];

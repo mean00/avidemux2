@@ -12,25 +12,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef AUDMaudioLame
-#define AUDMaudioLame
+#ifndef AUDMaudioLame_H
+#define AUDMaudioLame_H
 
- //_____________________________________________
-class AUDMEncoder_Lame : public AUDMEncoder
+ /**
+        \class AUDMEncoder_Lame
+        \brief Front end for libmp3lame
+*/
+class AUDMEncoder_Lame : public ADM_AudioEncoder
 {
   protected:
    
     void              *lameFlags;
-    
+    uint32_t          _chunk; // Nb of float we encode each time
          
   public:
-//            uint8_t     init(ADM_audioEncoderDescriptor *config);
     virtual             ~AUDMEncoder_Lame();
                         AUDMEncoder_Lame(AUDMAudioFilter *instream);	
-            uint8_t	isVBR(void );
+            bool	    isVBR(void );
             
-   virtual uint8_t	getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
-   virtual uint8_t  initialize(void);
+   virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+   virtual bool         initialize(void);
 };
 
 #endif

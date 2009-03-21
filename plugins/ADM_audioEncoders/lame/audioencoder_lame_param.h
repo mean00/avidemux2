@@ -26,7 +26,6 @@ typedef struct
 {
   uint32_t        bitrate; // in kbps
   ADM_LAME_PRESET preset;
-  ADM_mode        mode;
   uint32_t        quality;
   uint32_t        disableReservoir; // usefull for strict CBR (FLV)
 }LAME_encoderParam;

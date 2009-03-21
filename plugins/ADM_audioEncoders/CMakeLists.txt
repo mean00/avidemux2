@@ -9,9 +9,9 @@ ADM_DISPLAY("Vorbis    " "${USE_VORBIS}")
 MESSAGE("***  /Audio Codec  ***")
 
 
-ADD_SUBDIRECTORY(twolame)
-ADD_SUBDIRECTORY(pcm)
-ADD_SUBDIRECTORY(lavcodec)
+#ADD_SUBDIRECTORY(twolame)
+#ADD_SUBDIRECTORY(pcm)
+#ADD_SUBDIRECTORY(lavcodec)
 
 if(USE_LAME)
 ADD_SUBDIRECTORY(lame)
@@ -22,9 +22,9 @@ if(USE_AFTEN)
 endif(USE_AFTEN)
 
 if(USE_VORBIS)
-ADD_SUBDIRECTORY(vorbis)
+#ADD_SUBDIRECTORY(vorbis)
 endif(USE_VORBIS)
 
 if(USE_FAAC)
-ADD_SUBDIRECTORY(faac)
+#ADD_SUBDIRECTORY(faac)
 endif(USE_FAAC)

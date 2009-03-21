@@ -10,8 +10,8 @@ SET(ADMaudiofilter_SRCS
 #        audiofilter_SRC.cpp
         audio_raw.cpp
 	audioeng_buff.cpp          
-        audio_encoderWrapper.cpp
-        audio_encoderPlugin.cpp
+#        audio_encoderWrapper.cpp
+#        audio_encoderPlugin.cpp
 )
 	
 ADD_ADM_LIB_ALL_TARGETS(ADM_audiofilter ${ADMaudiofilter_SRCS})

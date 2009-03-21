@@ -5,18 +5,18 @@
     email                : fixounet@free.fr
  ***************************************************************************/
 
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 
 #ifndef AUDIO_ENCODER_H
 #define AUDIO_ENCODER_H
-/*!
-  This structure defines an audio encoder
-  \param encoder Encoder attached to this descriptor
-   \param name The name of the codec
-  \param bitrate The bitrate in kb/s
-  \param configure Function to call to configure the codec
-  \param maxChannels The maximum # of channels this codec supports
-  \param param : An opaque structure that contains the codec specific configuration datas
-*/
+
 #include "ADM_coreAudio.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioFilter.h" 
@@ -64,7 +64,7 @@ class ADM_AudioEncoder
                     ADM_AudioEncoder(AUDMAudioFilter *in);	
                     virtual ~ADM_AudioEncoder();
 
-
+    virtual bool    isVBR(void) {return true;}
     virtual bool    initialize(void)=0; /// Returns true if init ok, false if encoding is impossible
     virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples)=0; /// returns false if eof met
 };

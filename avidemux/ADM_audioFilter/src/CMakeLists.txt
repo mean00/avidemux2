@@ -8,6 +8,7 @@ audiofilter_film2pal.cpp
 audiofilter_limiter.cpp
 audiofilter_normalize.cpp
 audiofilter_SRC.cpp
+audio_encoderPlugin.cpp
 ADM_audioResample.cpp
 audiofilter.cpp
 ADM_libsamplerate/samplerate.c  
