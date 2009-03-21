@@ -66,7 +66,7 @@ bool            destroyEncodingFilter(void)
 /**
     \fn createEncodingAccess
 */
-ADM_audioAccess *createEncodingAccess(uint64_t startTime,int32_t shift)
+ADM_audioStream *createEncodingStream(uint64_t startTime,int32_t shift)
 {
     printf("[AccessFilter] Creating access filter\n");
     // 1-Create access filter
@@ -85,11 +85,17 @@ ADM_audioAccess *createEncodingAccess(uint64_t startTime,int32_t shift)
         return NULL;
     }
     // 3- Create access
-    ADM_audioAccess *access=new ADMAudioFilter_Access(filter,encoder,0);
+    ADMAudioFilter_Access *access=new ADMAudioFilter_Access(filter,encoder,0);
     if(!access)
     {
         printf("[Access] Cannot create access\n");
     }
-    return access;
+    // 4- Create Stream // MEMLEAK!!!!
+    ADM_audioStream *stream=ADM_audioCreateStream(access->getWavHeader(), access);
+    if(!access)
+    {
+        printf("[Access] Cannot create access\n");
+    }
+    return (ADM_audioStream *)access;
 }
 // EOF

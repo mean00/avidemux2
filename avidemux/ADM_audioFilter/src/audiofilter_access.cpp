@@ -32,7 +32,6 @@ ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_Audio
     this->encoder=encoder;
     ADM_assert(filter);
     startTimeUs=timeUs;
-    memcpy(&header,incoming->getInfo(),sizeof(header));
     samplesSeen=0;
     printf("[FilterAccess] Created, starting at %"LU" ms\n",(uint32_t)(timeUs/1000));
 }
@@ -84,7 +83,7 @@ bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32
         return false;
     }
 
-    float d=(float)samplesSeen/(float)(header.frequency);
+    float d=(float)samplesSeen/(float)(filter->getInfo()->frequency);
     d*=1000*1000;
     *dts=startTimeUs+(uint64_t)d;
     samplesSeen+=samples;

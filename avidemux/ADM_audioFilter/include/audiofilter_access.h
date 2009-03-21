@@ -16,7 +16,7 @@
 #define AUDM_ACCESS_H
 
 #include "ADM_audioStream.h"
-class ADM_AudioEncoder;
+#include "audioencoder.h"
 /**
     \class ADMAudioFilter_Access
     \brief Bridge audioFilter->Access
@@ -27,11 +27,10 @@ class ADMAudioFilter_Access : public ADM_audioAccess
   protected:
     uint64_t            startTimeUs; /*< Starting time in us */
     AUDMAudioFilter     *filter;
-    WAVHeader           header;
     uint64_t            samplesSeen;
     ADM_AudioEncoder    *encoder;
   public:
-                WAVHeader         *getWavHeader(void) {return &header;}
+                WAVHeader         *getWavHeader(void) {return encoder->getInfo();}
 
                                     ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_AudioEncoder *encoder,uint64_t timeUs) ;
                 virtual           ~ADMAudioFilter_Access();

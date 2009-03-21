@@ -47,6 +47,8 @@ static uint8_t  A_SaveAudioNVideo(const char *name);
  extern uint8_t mpeg_passthrough(const char *name,ADM_OUT_FORMAT format);
 ADM_muxer *ADM_MuxerSpawnFromIndex(int index);
 
+extern ADM_audioStream *createEncodingStream(uint64_t startTime,int32_t shift);
+
 /**
     \fn A_Save
 */
@@ -74,7 +76,21 @@ int A_Save(const char *name)
     // Video Stream ?
     ADM_videoStream *video=new ADM_videoStreamCopy();
     //
-    ADM_audioStream *astreams[1]={audio};
+    ADM_audioStream *astreams[1];
+    if (!audioProcessMode())
+    {
+        astreams[0]=audio;
+    }else   
+    {
+        if(audio)
+        {
+            // Access..
+            ADM_audioStream *access=createEncodingStream(0,0); // FIXME LEAK
+            astreams[0]=access;
+
+            
+        }
+    }
     if(!muxer->open(name,video,nbAStream,astreams))
     {
         GUI_Error_HIG("Muxer","Cannot open ");
@@ -87,6 +103,8 @@ int A_Save(const char *name)
     //
 
     if(muxer) delete muxer;
+    if (!audioProcessMode() && astreams[0])
+        delete astreams[0];
     return ret;
 }
 #if 0
