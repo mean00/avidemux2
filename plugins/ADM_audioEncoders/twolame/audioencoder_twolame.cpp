@@ -1,5 +1,6 @@
 /***************************************************************************
-    copyright            : (C) 2006 by mean
+    \file audioencoder_twolame.cpp
+    copyright            : (C) 2006/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -32,10 +33,9 @@ extern "C"
 
 static TWOLAME_encoderParam twolameParam=
 {
-    128,
-    ADM_STEREO
+    128
 };
-static uint8_t configure (void);
+static bool configure (void);
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Twolame);
 
@@ -64,15 +64,19 @@ static ADM_audioEncoder encoderDesc = {
 ADM_DECLARE_AUDIO_ENCODER_CONFIG(twolameParam);
 
 /******************* / Declare plugin*******************************************************/
+/**
 
-AUDMEncoder_Twolame::AUDMEncoder_Twolame(AUDMAudioFilter * instream)  :AUDMEncoder    (instream)
+*/
+AUDMEncoder_Twolame::AUDMEncoder_Twolame(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
 {
   printf("[TwoLame] Creating Twolame\n");
   _twolameOptions=NULL;
-  _wavheader->encoding=WAV_MP2;
+  wavheader.encoding=WAV_MP2;
 };
 
+/**
 
+*/
 AUDMEncoder_Twolame::~AUDMEncoder_Twolame()
 {
   printf("[TwoLame] Deleting TwoLame\n");
@@ -81,62 +85,45 @@ AUDMEncoder_Twolame::~AUDMEncoder_Twolame()
     twolame_close((twolame_options_struct **)&_twolameOptions);
   }
   _twolameOptions=NULL;
-  cleanup();
+
 };
 /**
     \fn initialize
 
 */
-uint8_t AUDMEncoder_Twolame::initialize(void)
+bool AUDMEncoder_Twolame::initialize(void)
 {
   int ret;
   TWOLAME_MPEG_mode mmode;
   uint32_t frequence;
   TWOLAME_encoderParam *lameConf=&twolameParam;
-
+    int channels=wavheader.channels;
 
   _twolameOptions = twolame_init();
   if (_twolameOptions == NULL)
     return 0;
 
-  if(_wavheader->channels>2)
+  if(channels>2)
   {
     printf("[TwoLame]Too many channels\n");
     return 0;
   }
-  _wavheader->byterate=(lameConf->bitrate*1000)>>3;
+  wavheader.byterate=(lameConf->bitrate*1000)>>3;
 
 
-  _chunk = 1152*_wavheader->channels;
+  _chunk = 1152*channels;
 
 
   printf("[TwoLame]Incoming :fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
-        _wavheader->frequency,_wavheader->channels,lameConf->bitrate);
+        wavheader.frequency,channels,lameConf->bitrate);
 
 
-  twolame_set_in_samplerate(OPTIONS, _wavheader->frequency);
-  twolame_set_out_samplerate (OPTIONS, _wavheader->frequency);
-  twolame_set_num_channels(OPTIONS, _wavheader->channels);
-  if(_wavheader->channels==1) mmode=TWOLAME_MONO;
+  twolame_set_in_samplerate(OPTIONS, wavheader.frequency);
+  twolame_set_out_samplerate (OPTIONS, wavheader.frequency);
+  twolame_set_num_channels(OPTIONS, channels);
+  if(channels==1) mmode=TWOLAME_MONO;
   else
-    switch (lameConf->mode)
-  {
-    case ADM_STEREO:
       mmode = TWOLAME_STEREO;
-      break;
-    case ADM_JSTEREO:
-      mmode = TWOLAME_JOINT_STEREO;
-      break;
-    case ADM_MONO:
-      mmode=TWOLAME_MONO;
-      break;
-
-    default:
-      printf("\n **** unknown mode, going stereo ***\n");
-      mmode = TWOLAME_STEREO;
-      break;
-
-  }
   twolame_set_mode(OPTIONS,mmode);
   twolame_set_error_protection(OPTIONS,TRUE);
     	//toolame_setPadding (options,TRUE);
@@ -145,38 +132,35 @@ uint8_t AUDMEncoder_Twolame::initialize(void)
   if(twolame_init_params(OPTIONS))
   {
     printf("[TwoLame]Twolame init failed\n");
-    return 0;
+    return false;
   }
-
-
-
   printf("[TwoLame]Libtoolame successfully initialized\n");
-  return 1;
+  return true;
 }
 /**
         \fn getPacket
 */
-uint8_t	AUDMEncoder_Twolame::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
+bool 	AUDMEncoder_Twolame::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
   int nbout;
-
+  int channels=wavheader.channels;
   *samples = 1152; //FIXME
   *len = 0;
   ADM_assert(tmptail>=tmphead);
   if(!refillBuffer(_chunk ))
   {
-    return 0;
+    return false;
   }
 
   if(tmptail-tmphead<_chunk)
   {
-    return 0;
+    return false;
   }
 
-  dither16(&(tmpbuffer[tmphead]),_chunk,_wavheader->channels);
+  dither16(&(tmpbuffer[tmphead]),_chunk,channels);
 
   ADM_assert(tmptail>=tmphead);
-  if (_wavheader->channels == 1)
+  if (channels == 1)
   {
     nbout =twolame_encode_buffer(OPTIONS, (int16_t *)&(tmpbuffer[tmphead]),(int16_t *)&(tmpbuffer[tmphead]), _chunk, dest, 16 * 1024);
   }
@@ -187,11 +171,11 @@ uint8_t	AUDMEncoder_Twolame::getPacket(uint8_t *dest, uint32_t *len, uint32_t *s
   tmphead+=_chunk;
   ADM_assert(tmptail>=tmphead);
   if (nbout < 0) {
-    printf("\n Error !!! : %d\n", nbout);
-    return 0;
+    printf("[TwoLame] Error !!! : %d\n", nbout);
+    return false;
   }
   *len=nbout;
-  return 1;
+  return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
 #define BITRATE(x) {x,QT_TR_NOOP(#x)}
@@ -199,18 +183,10 @@ uint8_t	AUDMEncoder_Twolame::getPacket(uint8_t *dest, uint32_t *len, uint32_t *s
 /**
     \fn configure
 */
-uint8_t configure (void)
+bool configure (void)
 {
  int ret=0;
 
-  uint32_t m=(uint32_t)twolameParam.mode;
-
-    diaMenuEntry channelMode[] =
-    {
-        {ADM_STEREO, QT_TR_NOOP ("Stereo"), NULL},
-        {ADM_JSTEREO, QT_TR_NOOP ("Joint stereo"), NULL},
-        {ADM_MONO, QT_TR_NOOP ("Mono"), NULL}
-    };
     diaMenuEntry bitrateM[]={
                               BITRATE(56),
                               BITRATE(64),
@@ -225,16 +201,15 @@ uint8_t configure (void)
                           };
     diaElemMenu bitrate(&(twolameParam.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
 
-    diaElemMenu menuMode (&m, QT_TR_NOOP ("C_hannel mode:"),SZT (channelMode), channelMode);
 
-    diaElem *elems[]={&bitrate,&menuMode};
+    diaElem *elems[]={&bitrate};
 
-    if( diaFactoryRun(QT_TR_NOOP("TwoLame Configuration"),2,elems))
+    if( diaFactoryRun(QT_TR_NOOP("TwoLame Configuration"),1,elems))
     {
-        twolameParam.mode=(ADM_mode)m;
-        return 1;
+        
+        return true;
     }
 
-    return 0;
+    return false;
 }
 // EOF

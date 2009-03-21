@@ -20,7 +20,7 @@
 #include "audioencoder.h"
 #include "ADM_audio/aviaudio.hxx"
 
-#include "ADM_audiofilter/audioEncoderApi.h"
+#include "audioEncoderApi.h"
 #include "ADM_audioStream.h"
 
  ADM_audioStream *buildAudioFilter(ADM_audioStream *stream, uint32_t startTime);

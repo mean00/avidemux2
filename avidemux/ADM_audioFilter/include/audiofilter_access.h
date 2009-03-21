@@ -16,6 +16,7 @@
 #define AUDM_ACCESS_H
 
 #include "ADM_audioStream.h"
+class ADM_AudioEncoder;
 /**
     \class ADMAudioFilter_Access
     \brief Bridge audioFilter->Access
@@ -28,10 +29,11 @@ class ADMAudioFilter_Access : public ADM_audioAccess
     AUDMAudioFilter     *filter;
     WAVHeader           header;
     uint64_t            samplesSeen;
+    ADM_AudioEncoder    *encoder;
   public:
                 WAVHeader         *getWavHeader(void) {return &header;}
 
-                                    ADMAudioFilter_Access(AUDMAudioFilter *incoming,uint64_t timeUs) ;
+                                    ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_AudioEncoder *encoder,uint64_t timeUs) ;
                 virtual           ~ADMAudioFilter_Access();
                                     /// Return true if the demuxer can seek in time
                 virtual bool      canSeekTime(void) {return false;};

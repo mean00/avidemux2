@@ -19,12 +19,17 @@
 
 #include "ADM_audioFilter.h"
 #include "audiofilter_access.h"
+#include "audioencoder.h"
+
+extern bool            destroyEncodingFilter(void);
+
 /**
     \fn ADMAudioFilter_Access
 */
-ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,uint64_t timeUs)
+ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_AudioEncoder *encoder,uint64_t timeUs)
 {
     filter=incoming;
+    this->encoder=encoder;
     ADM_assert(filter);
     startTimeUs=timeUs;
     memcpy(&header,incoming->getInfo(),sizeof(header));
@@ -37,6 +42,16 @@ ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,uint64_t 
 ADMAudioFilter_Access::~ADMAudioFilter_Access()
 {
     printf("[FilterAccess] Destroyed\n");
+    if(filter)
+    {
+        destroyEncodingFilter();
+        filter=NULL;
+    }
+    if(encoder)
+    {
+        delete encoder;
+        encoder=NULL;
+    }
 }
 /**
     \fn setPos
@@ -61,21 +76,18 @@ uint64_t  ADMAudioFilter_Access::getPos(void)
 */                
 bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
-    maxSize/=sizeof(float);
-    *size=0;
-
-    AUD_Status status;
-    uint32_t rd=filter->fill(maxSize,(float *)buffer,&status);
-    if(!rd)
+    uint32_t samples;
+    bool r=encoder->encode(buffer,size,&samples);
+    if(false==r)
     {
-        printf("[Filter_access] Fill error!\n");
+        printf("[Access] getpacket failed for encoding\n");
         return false;
     }
-    *size=rd*sizeof(float);
 
-    float d=(float)samplesSeen/(float)(rd/header.channels);
+    float d=(float)samplesSeen/(float)(header.frequency);
+    d*=1000*1000;
     *dts=startTimeUs+(uint64_t)d;
-    samplesSeen+=(rd/header.channels);
+    samplesSeen+=samples;
     return true;
 }
 

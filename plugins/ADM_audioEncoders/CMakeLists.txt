@@ -9,7 +9,7 @@ ADM_DISPLAY("Vorbis    " "${USE_VORBIS}")
 MESSAGE("***  /Audio Codec  ***")
 
 
-#ADD_SUBDIRECTORY(twolame)
+ADD_SUBDIRECTORY(twolame)
 #ADD_SUBDIRECTORY(pcm)
 #ADD_SUBDIRECTORY(lavcodec)
 

@@ -31,8 +31,8 @@ static LAME_encoderParam myLameParam = {
 };
 extern "C"
 {
-static uint8_t configure (void);
-static uint8_t setOption(const char *paramName, uint32_t value);
+static bool configure (void);
+static bool setOption(const char *paramName, uint32_t value);
 };
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lame);
@@ -252,7 +252,7 @@ bool AUDMEncoder_Lame::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 */
 #define QT_TR_NOOP(x) x
 
-uint8_t configure (void)
+bool configure (void)
 {
   int ret = 0;
   char string[400];
@@ -301,7 +301,7 @@ uint8_t configure (void)
      \fn setOption
      \brief Allow giving codec specific options as string+value
 */
-uint8_t setOption(const char *paramName, uint32_t value)
+bool setOption(const char *paramName, uint32_t value)
 {
     if(!strcasecmp(paramName,"MP3DisableReservoir"))
     {

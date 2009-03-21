@@ -1,5 +1,6 @@
 /***************************************************************************
-    copyright            : (C) 2002-6 by mean
+    \file audioencoder_twolame.h
+    copyright            : (C) 2002-9 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -15,16 +16,18 @@
 #define AUDMaudioTwoLame
 
  //_____________________________________________
-class AUDMEncoder_Twolame : public AUDMEncoder
+class AUDMEncoder_Twolame : public ADM_AudioEncoder
 {
   protected:
     void           *_twolameOptions;
+    uint32_t        _chunk;
          
   public:
-            uint8_t     initialize(void);
+            bool     initialize(void);
     virtual             ~AUDMEncoder_Twolame();
                         AUDMEncoder_Twolame(AUDMAudioFilter *instream);	
-    virtual uint8_t	    getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
+    virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+    virtual bool    isVBR(void) {return false;}
 };
 
 #endif

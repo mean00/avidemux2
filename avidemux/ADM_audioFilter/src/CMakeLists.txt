@@ -1,5 +1,8 @@
 # Filters
 SET(ADM_audioFilter_SRCS
+
+audio_encoderPlugin.cpp
+
 audiofilter_bridge.cpp
 audiofilter_access.cpp
 audiofilter_mixer.cpp
@@ -8,7 +11,7 @@ audiofilter_film2pal.cpp
 audiofilter_limiter.cpp
 audiofilter_normalize.cpp
 audiofilter_SRC.cpp
-audio_encoderPlugin.cpp
+audiofilter_encoder.cpp
 ADM_audioResample.cpp
 audiofilter.cpp
 ADM_libsamplerate/samplerate.c  

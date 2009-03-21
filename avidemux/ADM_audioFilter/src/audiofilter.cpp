@@ -26,8 +26,8 @@ VectorOfAudioFilter PlaybackVector;
 extern ADM_Composer *video_body;
 
 //
-static bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
-static bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
+ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
+ bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
 /**
         \fn createPlaybackFilter
         \brief Create a float output filter for playback
