@@ -6,7 +6,7 @@
 #include "ADM_default.h"
 #include "ADM_audioStreamBuffered.h"
 
-#define ADM_MAX_SKEW 30000
+#define ADM_MAX_SKEW 10000
 
 /**
     \fn ADM_audioStreamBuffered
@@ -64,10 +64,10 @@ uint32_t   ADM_audioStreamBuffered::read8()
 uint32_t   ADM_audioStreamBuffered::read16()
 {
 uint32_t r;
-    ADM_assert(start+1<=limit);
+    ADM_assert(start+1<limit);
     r=(buffer[start]<<8)+buffer[start+1];
     start+=2;
-    return start;
+    return r;
 }
 /**
     \fn read32
@@ -75,10 +75,10 @@ uint32_t r;
 uint32_t   ADM_audioStreamBuffered::read32()
 {
 uint32_t r;
-    ADM_assert(start+3<=limit);
+    ADM_assert(start+3<limit);
     r=(buffer[start]<<24)+(buffer[start+1]<<16)+(buffer[start+2]<<8)+buffer[start+3];
     start+=4;
-    return start;
+    return r;
 }
 /**
         \fn read
