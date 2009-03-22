@@ -61,7 +61,7 @@ muxerAvi::muxerAvi()
 
 muxerAvi::~muxerAvi()
 {
-    printf("[AVI] Destructing\n");
+    printf("[AviMuxer] Destructing\n");
     if(clocks)
     {
         for(int i=0;i<nbAStreams;i++)
@@ -120,7 +120,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                     if(audioDts!=ADM_NO_PTS)
                         if( abs(audioDts-clk->getTimeUs())>5000)
                         {
-                            printf("[Avi] Audio skew!");
+                            printf("[AviMuxer] Audio skew!");
                             clk->setTimeUs(audioDts);
                         }
                     nb=writter.saveAudioFrame(audioIndex,audioSize,audioBuffer) ;
@@ -131,7 +131,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                         if(audioDts>targetDts) break;
                     }
                 }
-                if(!nb) aprintf("[AVI] No audio for video frame %lu\n",targetDts);
+                if(!nb) aprintf("[AviMuxer] No audio for video frame %lu\n",targetDts);
             }
             return true;
 }
@@ -140,7 +140,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
 */
 bool muxerAvi::save(void)
 {
-    printf("[AVI] Saving\n");
+    printf("[AviMuxer] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
 
     uint32_t len,flags;
@@ -158,7 +158,7 @@ bool muxerAvi::save(void)
     audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
     videoBuffer=new uint8_t[bufSize];
 
-    printf("[AVI]avg fps=%u\n",vStream->getAvgFps1000());
+    printf("[AviMuxer]avg fps=%u\n",vStream->getAvgFps1000());
     DIA_encodingBase  *progress=createEncoding(vStream->getAvgFps1000());
     progress->setContainer("AVI");
 
@@ -175,7 +175,7 @@ bool muxerAvi::save(void)
             {
                 if(!writter.saveVideoFrame( len, flags,videoBuffer))  // Put our real video
                 {
-                        printf("[AVI] Error writting video frame\n");
+                        printf("[AviMuxer] Error writting video frame\n");
                         goto abt;
                 }
                 if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
@@ -203,7 +203,7 @@ abt:
     videoBuffer=NULL;
     delete [] audioBuffer;
     audioBuffer=NULL;
-    printf("[AVI] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
+    printf("[AviMuxer] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
     delete progress;
     return true;
 }
@@ -214,7 +214,7 @@ abt:
 bool muxerAvi::close(void)
 {
 
-    printf("[AVI] Closing\n");
+    printf("[AviMuxer] Closing\n");
     return true;
 }
 //EOF
