@@ -82,6 +82,14 @@ ADM_audioStream *createEncodingStream(uint64_t startTime,int32_t shift)
     if(!encoder) 
     {
         printf("[Access] Cannot create audio encoder\n");
+        destroyEncodingFilter();
+        return NULL;
+    }
+    if(true!=encoder->initialize())
+    {
+        printf("[Access] Encoder initialization failed\n");
+        delete encoder;
+        destroyEncodingFilter();
         return NULL;
     }
     // 3- Create access
@@ -89,13 +97,18 @@ ADM_audioStream *createEncodingStream(uint64_t startTime,int32_t shift)
     if(!access)
     {
         printf("[Access] Cannot create access\n");
+        delete encoder;
+        destroyEncodingFilter();
+        return NULL;
     }
     // 4- Create Stream // MEMLEAK!!!!
-    ADM_audioStream *stream=ADM_audioCreateStream(access->getWavHeader(), access);
-    if(!access)
+    ADM_audioStream *stream=ADM_audioCreateStream(encoder->getInfo(), access);
+    if(!stream)
     {
-        printf("[Access] Cannot create access\n");
+        printf("[Access] Cannot create stream\n");
+        delete access; // Access will destroy filter & encoder
+        return NULL;
     }
-    return (ADM_audioStream *)access;
+    return stream;
 }
 // EOF

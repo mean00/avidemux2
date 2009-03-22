@@ -53,6 +53,14 @@ ADMAudioFilter_Access::~ADMAudioFilter_Access()
     }
 }
 /**
+    \fn isCBR
+*/
+bool      ADMAudioFilter_Access::isCBR(void)
+{
+    if(encoder->isVBR()) return false;
+    return true;
+}
+/**
     \fn setPos
     \brief only goto 0 is allowed
 */

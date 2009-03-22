@@ -31,6 +31,10 @@ ADM_AudioEncoder::ADM_AudioEncoder(AUDMAudioFilter *in)
     _incoming=in;
     memset(&wavheader,0,sizeof(wavheader));
     tmphead=tmptail=0;
+    WAVHeader  *info=in->getInfo();
+    // Copy channels etc.. from incoming
+    wavheader.channels=info->channels;
+    wavheader.frequency=info->frequency;
 }
 /**
 

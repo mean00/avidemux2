@@ -56,6 +56,7 @@ class ADMAudioFilter_Access : public ADM_audioAccess
 
                 
                 virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);    
+                virtual bool    isCBR(void);
 };
 
 

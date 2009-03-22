@@ -94,6 +94,7 @@ again:
         if(!refillPacketBuffer())
         {
             printf("[Editor] Cannot refill audio\n");
+            return 0;
         }
     }
     // We do now
