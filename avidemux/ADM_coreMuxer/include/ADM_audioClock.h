@@ -10,7 +10,7 @@ class audioClock
 {
         protected:
                 uint32_t        _frequency;
-                uint32_t        _nbSamples;
+                uint64_t        _nbSamples;
                 uint64_t        _baseClock;
 
         public:
