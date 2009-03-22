@@ -112,6 +112,7 @@ uint32_t offset;
                 *size=info.size;
                 read(*size,buffer);
                 *nbSample=info.samples;
+                //if(info.samples!=1152) ADM_assert(0);
                 *dts=lastDts;
                 advanceDtsBySample(*nbSample);
                 return 1;
@@ -119,6 +120,7 @@ uint32_t offset;
             
         }
         //discard one byte
+        printf("[MP3 Stream] Syncing...\n");
         read8();
     }
 }
