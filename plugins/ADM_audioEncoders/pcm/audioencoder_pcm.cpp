@@ -61,10 +61,10 @@ extern "C" ADM_audioEncoder *getInfo (void)
 // Ctor: Duplicate
 //__________
 
-AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream)  :AUDMEncoder    (instream)
+AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
 {
   printf("[PCM] Creating PCM\n");
-  _wavheader->encoding=WAV_PCM;
+  wavheader.encoding=WAV_PCM;
 
 };
 
@@ -72,35 +72,34 @@ AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream)  :AUDMEncoder    (i
 AUDMEncoder_PCM::~AUDMEncoder_PCM()
 {
   printf("[PCM] Deleting PCM\n");
-  cleanup();
+
 };
 
 /**
     \fn initialize
 */
-uint8_t AUDMEncoder_PCM::initialize(void)
+bool AUDMEncoder_PCM::initialize(void)
 {
 
-  _wavheader->byterate=_wavheader->channels*_wavheader->frequency*2;
-  _chunk = (_wavheader->frequency/100)*_wavheader->channels*2;
+  wavheader.byterate=wavheader.channels*wavheader.frequency*2;
+  _chunk = (wavheader.frequency/100)*wavheader.channels*2;
 
 
 
-  printf("[PCM]Incoming :fq : %"LU", channel : %"LU" \n",_wavheader->frequency,_wavheader->channels);
+  printf("[PCM]Incoming :fq : %"LU", channel : %"LU" \n",wavheader.frequency,wavheader.channels);
   printf("[PCM]PCM successfully initialized\n");
   return 1;
 }
 /**
     \fn getPacket
 */
-
-uint8_t	AUDMEncoder_PCM::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
+bool         AUDMEncoder_PCM::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
   uint32_t nbout;
 
   *samples = _chunk; //FIXME
   *len = 0;
-
+  uint32_t channels=wavheader.channels;
   if(!refillBuffer(_chunk ))
   {
     return 0;
@@ -111,7 +110,7 @@ uint8_t	AUDMEncoder_PCM::getPacket(uint8_t *dest, uint32_t *len, uint32_t *sampl
     return 0;
   }
         // Do in place replace
-  dither16(&(tmpbuffer[tmphead]),_chunk,_wavheader->channels);
+  dither16(&(tmpbuffer[tmphead]),_chunk,channels);
   if(1) //!revert)
     memcpy(dest,&(tmpbuffer[tmphead]),_chunk*2);
   else
@@ -128,7 +127,7 @@ uint8_t	AUDMEncoder_PCM::getPacket(uint8_t *dest, uint32_t *len, uint32_t *sampl
   }
   tmphead+=_chunk;
   *len=_chunk*2;
-  *samples=_chunk/_wavheader->channels;
+  *samples=_chunk/channels;
   return 1;
 }
 

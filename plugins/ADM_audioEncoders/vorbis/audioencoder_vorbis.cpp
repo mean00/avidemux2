@@ -48,7 +48,7 @@ static VORBIS_encoderParam vorbisParam=
     9
 };
 
-static uint8_t configure(void);
+static bool configure(void);
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Vorbis);
 
@@ -81,11 +81,11 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(vorbisParam);
 
 //__________
 
-AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream)  :AUDMEncoder    (instream)
+AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
 {
   printf("[Vorbis] Creating Vorbis\n");
   _handle=NULL;
-  _wavheader->encoding=WAV_OGG;
+  wavheader.encoding=WAV_OGG;
   _oldpos=0;
   _handle=(void *)new  vorbisStruct;
   outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
@@ -111,14 +111,13 @@ AUDMEncoder_Vorbis::~AUDMEncoder_Vorbis()
   }
   _handle=NULL;
 
-  cleanup();
 };
 
 /**
     \fn initialize
 
 */
-uint8_t AUDMEncoder_Vorbis::initialize(void)
+bool AUDMEncoder_Vorbis::initialize(void)
 {
   int ret;
   VORBIS_encoderParam *vorbisConf=&vorbisParam;
@@ -136,8 +135,8 @@ uint8_t AUDMEncoder_Vorbis::initialize(void)
 
     case ADM_VORBIS_VBR:
                       err=vorbis_encode_init(&VI,
-                              _wavheader->channels,
-                              _wavheader->frequency,
+                              wavheader.channels,
+                              wavheader.frequency,
                               -1, // Max bitrate
                               vorbisConf->bitrate*1000, //long nominal_bitrate,
                               -1 //long min_bitrate))
@@ -145,8 +144,8 @@ uint8_t AUDMEncoder_Vorbis::initialize(void)
                       break;
     case  ADM_VORBIS_QUALITY :
                     err=vorbis_encode_init_vbr(&VI,
-                                _wavheader->channels,
-                                _wavheader->frequency,
+                                wavheader.channels,
+                                wavheader.frequency,
                                 vorbisConf->quality/10
                               );
                     break;
@@ -204,25 +203,26 @@ uint8_t AUDMEncoder_Vorbis::initialize(void)
       ADM_assert(0);
   }
 
-  printf("[Vorbis]Channels  :%"LU"\n",_wavheader->channels);
-  printf("[Vorbis]Frequency :%"LU"\n",_wavheader->frequency);
+  printf("[Vorbis]Channels  :%"LU"\n",wavheader.channels);
+  printf("[Vorbis]Frequency :%"LU"\n",wavheader.frequency);
   return 1;
 }
 
 #define ROUNDMAX 3000
 /**
-    \fn getPacket
+    \fn encode
 
 */
-uint8_t	AUDMEncoder_Vorbis::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
+bool	AUDMEncoder_Vorbis::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
   uint32_t nbout;
   uint32_t consumed=0;
   float **float_samples;
+    int channels=wavheader.channels;
   ogg_packet op ;
 
   *len = 0;
-  _chunk=1024*_wavheader->channels;
+  _chunk=1024*channels;
   int count=ROUNDMAX;
 // Check that we have packet from previous pass
   while(count--)
@@ -256,21 +256,21 @@ uint8_t	AUDMEncoder_Vorbis::getPacket(uint8_t *dest, uint32_t *len, uint32_t *sa
     }
 
 
-    uint32_t nbSample=(tmptail-tmphead)/_wavheader->channels;
+    uint32_t nbSample=(tmptail-tmphead)/channels;
     if(nbSample>1024) nbSample=1024;
     float_samples=vorbis_analysis_buffer(&VD, nbSample) ;
     int index=tmphead;
     // Put our samples in incoming buffer
     reorderChannels(&(tmpbuffer[tmphead]), nbSample,_incoming->getChannelMapping(),outputChannelMapping);
     for (int i = 0; i < nbSample; i++)
-      for (int j = 0; j < _wavheader->channels; j++) {
+      for (int j = 0; j < channels; j++) {
       float_samples[j][i] = tmpbuffer[index++];
       if (float_samples[j][i] > 1) float_samples[j][i] = 1;
       if (float_samples[j][i] < -1) float_samples[j][i] = -1;
       }
       // Buffer full, go go go
       vorbis_analysis_wrote(&VD, nbSample) ;
-      tmphead+=nbSample*_wavheader->channels;
+      tmphead+=nbSample*channels;
   }
   return 0;
 
@@ -285,7 +285,7 @@ uint8_t	AUDMEncoder_Vorbis::getPacket(uint8_t *dest, uint32_t *len, uint32_t *sa
 
 */
 
-uint8_t configure(void)
+bool configure(void)
 {
 
     uint32_t mmode,ppreset;

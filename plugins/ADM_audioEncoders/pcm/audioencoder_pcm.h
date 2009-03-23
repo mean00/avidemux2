@@ -15,22 +15,23 @@
 #define AUDMaudioPCM
 
 /*!
+    \class AUDMEncoder_PCM
     This class is the float->PCM encoder.
     It is somehow special as it can alsa be a LPCM encoder and a bigendian/littleendian swapper
 */
-class AUDMEncoder_PCM : public AUDMEncoder
+class AUDMEncoder_PCM : public ADM_AudioEncoder
 {
   protected:
     uint32_t            revert;
-         
+    uint32_t            _chunk;
   public:
-            uint8_t     initialize(void);
             virtual     ~AUDMEncoder_PCM();
                         /*! \param reverted : Should the endianness be reverted compared to system  
                             \param fourCC   : FourCC to use (WAV_PCM/WAV_LPCM)
                         */
                          AUDMEncoder_PCM(AUDMAudioFilter * instream);
-    virtual uint8_t	     getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
+   virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+   virtual bool         initialize(void);
 };
 
 #endif

@@ -16,16 +16,17 @@
 #define AUDMaudioAAC
 
  //_____________________________________________
-class AUDMEncoder_Faac : public AUDMEncoder
+class AUDMEncoder_Faac : public ADM_AudioEncoder
 {
 protected:
          void           *_handle;
+         uint32_t        _chunk;
          uint8_t        refillBuffer(int minimum);
 public:
-                 uint8_t initialize(void);
-                virtual ~AUDMEncoder_Faac();
+                 bool   initialize(void);
+    virtual             ~AUDMEncoder_Faac();
                         AUDMEncoder_Faac(AUDMAudioFilter *instream);	
-                virtual uint8_t	getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
+    virtual bool	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 
 #endif

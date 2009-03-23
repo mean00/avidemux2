@@ -49,7 +49,7 @@ typedef struct
     uint32_t bitrate;
 }LavAudioEncoder_PARAM;
 static LavAudioEncoder_PARAM lavConfig={128};
-static uint8_t configure (void);
+static bool configure (void);
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lavcodec);
 
@@ -92,20 +92,23 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(lavConfig);
 #define CONTEXT ((AVCodecContext  	*)_context)
 
 
-// Ctor: Duplicate
-//__________
-
-AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream)  :AUDMEncoder    (instream)
+/**
+    \fn AUDMEncoder_Lavcodec
+*/
+AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
 {
   
   _context=NULL;
    printf("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
 
-  _wavheader->encoding=makeName(WAV);
+  wavheader.encoding=makeName(WAV);
   
   
 };
 
+/**
+    \fn ~AUDMEncoder_Lavcodec
+*/
 
 AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
 {
@@ -116,17 +119,16 @@ AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
     ADM_dealloc(_context);
   }
   _context=NULL;
-  cleanup();
 };
 
-//________________________________________________
-//   Init lame encoder
-//_______________________________________________
-uint8_t AUDMEncoder_Lavcodec::initialize(void)
+/**
+    \fn initialize
+*/
+bool AUDMEncoder_Lavcodec::initialize(void)
 {
   int ret;
   _context=( void *)avcodec_alloc_context();
-  _wavheader->byterate=(lavConfig.bitrate*1000)>>3;
+  
 
 #ifdef ADM_LAV_MP2      
   if( _incoming->getInfo()->channels>2)
@@ -135,19 +137,19 @@ uint8_t AUDMEncoder_Lavcodec::initialize(void)
     return 0; 
   }
 #endif
-  _wavheader->byterate=(lavConfig.bitrate*1000)>>3;         
+  wavheader.byterate=(lavConfig.bitrate*1000)>>3;         
       
 #ifdef ADM_LAV_MP2 
-    _chunk = 1152*_wavheader->channels;
+    _chunk = 1152*wavheader.channels;
 #else
-    _chunk = 1536*_wavheader->channels; // AC3
+    _chunk = 1536*wavheader.channels; // AC3
 #endif
   printf("[Lavcodec]Incoming : fq : %lu, channel : %lu bitrate: %lu \n",
-         _wavheader->frequency,_wavheader->channels,lavConfig.bitrate);
+         wavheader.frequency,wavheader.channels,lavConfig.bitrate);
   
   
-  CONTEXT->channels     =  _wavheader->channels;
-  CONTEXT->sample_rate  =  _wavheader->frequency;
+  CONTEXT->channels     =  wavheader.channels;
+  CONTEXT->sample_rate  =  wavheader.frequency;
   CONTEXT->bit_rate     = (lavConfig.bitrate*1000); // bits -> kbits
 
   AVCodec *codec;
@@ -169,12 +171,14 @@ uint8_t AUDMEncoder_Lavcodec::initialize(void)
   printf("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
   return 1;       
 }
-//*********************************
-uint8_t	AUDMEncoder_Lavcodec::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
+/**
+    \fn encode
+*/
+bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
   uint32_t nbout;
-  
-  *samples = _chunk/_wavheader->channels; //FIXME
+  int channels=wavheader.channels;
+  *samples = _chunk/channels; //FIXME
   *len = 0;
 
   if(!refillBuffer(_chunk ))
@@ -187,7 +191,7 @@ uint8_t	AUDMEncoder_Lavcodec::getPacket(uint8_t *dest, uint32_t *len, uint32_t *
     return 0; 
   }
 
-  dither16(&(tmpbuffer[tmphead]),_chunk,_wavheader->channels);
+  dither16(&(tmpbuffer[tmphead]),_chunk,channels);
 
   ADM_assert(tmptail>=tmphead);
   nbout = avcodec_encode_audio(CONTEXT, dest, 5000, (short *) &(tmpbuffer[tmphead]));
@@ -199,7 +203,7 @@ uint8_t	AUDMEncoder_Lavcodec::getPacket(uint8_t *dest, uint32_t *len, uint32_t *
     return 0;
   }
   *len=nbout;
-  return 1;
+  return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
 #define BITRATE(x) {x,QT_TR_NOOP(#x)}
@@ -207,7 +211,7 @@ uint8_t	AUDMEncoder_Lavcodec::getPacket(uint8_t *dest, uint32_t *len, uint32_t *
 /**
     \fn configure
 */
-uint8_t configure (void)
+bool configure (void)
 {
  int ret=0;
 
@@ -232,6 +236,5 @@ uint8_t configure (void)
     return ( diaFactoryRun(QT_TR_NOOP("Aften Configuration"),1,elems));
     
 }	
-// EOF
 
 // EOF

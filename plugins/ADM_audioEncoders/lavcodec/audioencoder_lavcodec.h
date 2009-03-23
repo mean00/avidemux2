@@ -15,18 +15,19 @@
 #ifndef AUDMaudioLavcodec
 #define AUDMaudioLavcodec
  //_____________________________________________
-class AUDMEncoder_Lavcodec : public AUDMEncoder
+class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
 {
   protected:
    
     void              *_context;
+    uint32_t            _chunk;
     
          
   public:
-            uint8_t     initialize(void);
+            bool        initialize(void);
    virtual             ~AUDMEncoder_Lavcodec();
                         AUDMEncoder_Lavcodec(AUDMAudioFilter *instream);	
-   virtual uint8_t	    getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
+   virtual bool  	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 
 #endif

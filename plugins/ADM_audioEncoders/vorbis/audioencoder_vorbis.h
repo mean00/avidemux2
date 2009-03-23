@@ -16,20 +16,21 @@
 #define AUDMaudioVorbis
 
  //_____________________________________________
-class AUDMEncoder_Vorbis : public AUDMEncoder
+class AUDMEncoder_Vorbis : public ADM_AudioEncoder
 {
   protected:
    
     void              *_handle;
     uint64_t          _oldpos;
+    uint32_t          _chunk;
 
          
   public:
-            uint8_t     initialize(void);
+            bool     initialize(void);
             virtual     ~AUDMEncoder_Vorbis();
                         AUDMEncoder_Vorbis(AUDMAudioFilter *instream);	
             
-   virtual uint8_t	getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
+   virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 
 #endif
