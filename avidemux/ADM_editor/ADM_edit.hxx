@@ -173,6 +173,7 @@ class ADM_Composer : public ADM_audioStream
 
 						uint32_t 	searchForwardSeg(uint32_t startframe);
                         uint8_t     tryIndexing(const char *name, const char *idxname=NULL);
+                        bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
                             uint8_t hasVBRVideos(void);
@@ -314,7 +315,6 @@ protected:					// Obsolete
               				uint8_t			searchNextKeyFrame(uint32_t in,uint32_t *oseg, uint32_t * orel);
                  			uint8_t			searchPreviousKeyFrame(uint32_t in,uint32_t *oseg, uint32_t * orel);
 public:
-					uint8_t   		rebuildFrameType ( void);
                   // kludg
                   			void 			propagateBuildMap( void );
 

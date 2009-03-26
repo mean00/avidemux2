@@ -471,16 +471,24 @@ UNUSED_ARG(mode);
             }
         }
 #endif
-	_nb_video++;
-	_nb_segment++;
+        // B Frames check....
+        _VIDEOS 	*vid;
+        vid=&(_videos[_nb_video]);
+        decoders *decoder=vid->decoder;
+        rederiveFrameType(_videos[_nb_video]._aviheader);
 
+
+        //
+        _nb_video++;
+        _nb_segment++;
+#if 0
 //______________________________________
 // 1-  check for B _ frame  existence
 // 2- check  for consistency with reported flags
 //______________________________________
 	uint8_t count=0;
 TryAgain:
-	_VIDEOS 	*vid;
+
 	uint32_t err=0;
 
 		vid= &(_videos[_nb_video-1]);
@@ -492,7 +500,7 @@ TryAgain:
 			printf("[Editor] no decoder to check for B- frame\n");
 		}else
         {
-            decoders *decoder=vid->decoder;
+           
             if(vid->_aviheader->providePts()==false) // Else we rely on demuxer PTS
             {
                 printf("[Editor] This container does not provide PTS \n");
@@ -512,6 +520,7 @@ TryAgain:
                 }
             }
         }
+#endif
 		GoToIntra(0);
         durationInUs=vid->_aviheader->getVideoDuration();
 		printf("[Editor] End of B-frame check\n");

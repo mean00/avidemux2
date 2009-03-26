@@ -305,7 +305,7 @@ void GUI_PreviousKeyFrame(void)
 uint8_t A_rebuildKeyFrame(void)
 {
 
-    return video_body->rebuildFrameType();
+//    return video_body->rebuildFrameType();
 }
 /**
     \fn GUI_PrevFrame

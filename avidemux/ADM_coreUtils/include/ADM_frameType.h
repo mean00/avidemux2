@@ -26,7 +26,7 @@ typedef int (*frameIdentifier)(uint32_t len,uint8_t *data);
 /// \fn    ADM_getFrameIdentifier
 /// \brief Returns a function that identify the frametype according to its bitstream
 
-frameIdentifier *ADM_getFrameIdentifier(uint32_t fourcc);
+frameIdentifier ADM_getFrameIdentifier(uint32_t fourcc);
 
 
 #endif
