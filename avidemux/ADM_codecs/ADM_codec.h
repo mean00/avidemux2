@@ -16,11 +16,10 @@
  ***************************************************************************/
 #ifndef __CODECS__
 #define __CODECS__
-#include "ADM_image.h"
 
-#define AVI_KEY_FRAME	0x10
-#define AVI_B_FRAME	0x4000	// hopefully it is not used..
-#define AVI_P_FRAME   	0x0
+#include "ADM_image.h"
+#include "ADM_frameType.h"
+#include "ADM_codecType.h"
 
 #define ADM_QPEL_ON	1
 #define ADM_GMC_ON	2
@@ -127,12 +126,6 @@ public:
   virtual uint8_t compress (ADMImage * in, ADMBitstream * out);
 };
 decoders *getCoder (uint32_t fcc, uint32_t w, uint32_t h);
-uint8_t isMpeg4Compatible (uint32_t fourcc);
-uint8_t isH264Compatible (uint32_t fourcc);
-uint8_t isMSMpeg4Compatible (uint32_t fourcc);
-uint8_t isDVCompatible (uint32_t fourcc);
-uint8_t isVP6Compatible (uint32_t fourcc);
-
 /*----------------------------------------------------------*/
 class encoder
 {

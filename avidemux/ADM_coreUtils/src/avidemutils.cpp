@@ -29,7 +29,7 @@
 #define QT_TR_NOOP(x) x
 
 char *ADM_escape(const ADM_filename *incoming);
-uint8_t ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
+bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 void memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);
 uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
@@ -193,14 +193,14 @@ void memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size)
 	}
 
 }
-/*
-
-    Find mpeg1/2/4 video startcode
+/**
+    \file ADM_findMpegStartCode
+    \brief    Find mpeg1/2/4 video startcode
     00 00 01 xx yy
     return xx + offset to yy
 
 */
-uint8_t ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset)
+bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset)
 {
     uint32_t startcode=0xffffffff;
     uint8_t  *ptr=start;
@@ -213,11 +213,11 @@ uint8_t ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode
 		{
 			*outstartcode=*ptr;
 			*offset=ptr-start+1;
-			return 1;
+			return true;
 		}
 		ptr++;
 	}
-	return 0; // startcode not found
+	return false; // startcode not found
 }
 //**********************************************************
 // Convert \ to \\
@@ -370,119 +370,6 @@ int32_t ADM_getNiceValue(uint32_t priorityLevel)
 			return 18;
 			break;
 	}
-}
-
-uint8_t isMpeg4Compatible (uint32_t fourcc)
-{
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx4=1; }
-
-  uint8_t divx4 = 0;
-
-  CHECK ("FMP4");
-  CHECK ("fmp4");
-  CHECK ("DIVX");
-  CHECK ("divx");
-  CHECK ("DX50");
-  CHECK ("xvid");
-  CHECK ("XVID");
-  CHECK ("BLZ0");
-  CHECK ("M4S2");
-  CHECK ("3IV2");
-
-  return divx4;
-
-#undef CHECK
-}
-#ifdef ADM_BIG_ENDIAN
-#define SWAP32(x) x=R32(x)
-#else
-#define SWAP32(x) ;
-#endif
-
-uint8_t isMpeg12Compatible (uint32_t fourcc)
-{
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{mpeg=1; }
-
-  uint8_t mpeg = 0;
-  CHECK ("MPEG");
-  CHECK ("mpg1");
-  CHECK ("mpg2");
-  SWAP32 (fourcc);
-  if (fourcc == 0x10000002 || fourcc==0x10000001) //Mplayer fourcc
-    mpeg = 1;
-  return mpeg;
-#undef CHECK
-}
-uint8_t isH264Compatible (uint32_t fourcc)
-{
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-                                                {h264=1; }
-
-  uint8_t h264 = 0;
-
-  CHECK ("X264");
-  CHECK ("x264");
-  CHECK ("h264");
-  CHECK ("H264");
-  CHECK ("AVC1");
-  CHECK ("avc1");
-  return h264;
-
-#undef CHECK
-}
-
-uint8_t isMSMpeg4Compatible (uint32_t fourcc)
-{
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx3=1; }
-
-  uint8_t divx3 = 0;
-
-  CHECK ("MP43");
-  CHECK ("mp43");
-  CHECK ("div3");
-  CHECK ("DIV3");
-  CHECK ("DIV4");
-  CHECK ("div4");
-  CHECK ("COL1");
-
-  return divx3;
-
-#undef CHECK
-}
-uint8_t isVP6Compatible (uint32_t fourcc)
-{
-
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{divx3=1; }
-
-  uint8_t divx3 = 0;
-
-  CHECK ("VP6F");
-  CHECK ("VP6 ");
-  CHECK ("VP61");
-  CHECK ("VP62");
-
-  return divx3;
-
-#undef CHECK
-}
-uint8_t isDVCompatible (uint32_t fourcc)
-{
-#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
-						{dv=1; }
-
-  uint8_t dv = 0;
-
-  CHECK ("dvsd");
-  CHECK ("DVDS");
-  CHECK ("dvpp");
-
-  return dv;
-
-#undef CHECK
 }
 
 //EOF
