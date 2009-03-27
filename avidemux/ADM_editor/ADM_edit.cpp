@@ -471,7 +471,7 @@ UNUSED_ARG(mode);
             }
         }
 #endif
-        // B Frames check....
+        // Update frametype if needed...
         _VIDEOS 	*vid;
         vid=&(_videos[_nb_video]);
         decoders *decoder=vid->decoder;
@@ -481,17 +481,8 @@ UNUSED_ARG(mode);
         //
         _nb_video++;
         _nb_segment++;
-#if 0
-//______________________________________
-// 1-  check for B _ frame  existence
-// 2- check  for consistency with reported flags
-//______________________________________
-	uint8_t count=0;
-TryAgain:
 
-	uint32_t err=0;
-
-		vid= &(_videos[_nb_video-1]);
+        //Update time stamps if needed....
 		vid->_reorderReady=0;
         vid->_unpackReady=0;
 		// we only try if we got everything needed...
@@ -515,12 +506,11 @@ TryAgain:
                 }
                 else   
                 {
-                        printf("[Editor] No B frame with that codec\n");
+                        printf("[Editor] No B frame with that codec, PTS=DTS\n");
                         setPtsEqualDts(vid->_aviheader,vid->timeIncrementInUs);
                 }
             }
         }
-#endif
 		GoToIntra(0);
         durationInUs=vid->_aviheader->getVideoDuration();
 		printf("[Editor] End of B-frame check\n");

@@ -1,6 +1,7 @@
 /***************************************************************************
            \file               ADM_edFrameType.cpp  -  description
-           \brief              Rederive Frame type if needed
+           \brief              Rederive Frame type if needed. Works only with a few
+                                                    codecs (mpeg1/2/4)
 
     
     copyright            : (C) 2002/2009 by mean
@@ -18,12 +19,10 @@
 #include "ADM_default.h"
 
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_videoFilter.h"
-#include "DIA_working.h"
 #include "DIA_coreToolkit.h"
 #include "avidemutils.h"
 #include "ADM_frameType.h"
+#include "DIA_working.h"
  
 /**
     \fn rederiveFrameType
@@ -66,6 +65,15 @@ bool        ADM_Composer::rederiveFrameType(vidHeader *demuxer)
     printf("[Editor] Muxer has %d frames right, %d frames wrong\n",nbOk,nbKo);
     if(!nbKo)     return true;
     // Demuxer is wrong, rederive all frames...
+    DIA_workingBase *work=createWorking("Updating frametype");
+    for(int i=0;i<info.nb_frames;i++)
+    {
+        work->update(i,info.nb_frames);
+        demuxer->getFrame(i,&img);
+        flagsDecoded=id(img.dataLength,img.data);
+        demuxer->setFlag(i,flagsDecoded);
+    }
+    delete work;
     return false;
 }
 // EOF
