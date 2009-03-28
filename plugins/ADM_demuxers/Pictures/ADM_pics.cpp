@@ -98,6 +98,10 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
 	fread(img->data, _imgSize[framenum] - _offset, 1, fd);
 	img->dataLength = _imgSize[framenum] - _offset;
 
+    uint64_t timeP=40000;
+    timeP*=framenum;
+    img->demuxerDts=timeP;
+    img->demuxerPts=timeP;
 	fclose(fd);
 
 	return 1;
@@ -475,3 +479,17 @@ FILE* picHeader::openFrameFile(uint32_t frameNum)
 
 	return fopen(filename, "rb");
 }
+bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+ uint64_t timeP=40000;
+    timeP*=frame;
+    *pts=timeP;
+    *dts=timeP;
+    return true;
+
+}
+bool       picHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+    return false;
+}
+// EOF
