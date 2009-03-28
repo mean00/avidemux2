@@ -638,7 +638,7 @@ void OpenDMLHeader::Dump( void )
         printf(  "Main header\n" );
         printf(  "______________________\n" );  
 
-#define X_DUMP(x) printf(#x":\t\t:%d\n",_mainaviheader.x);
+#define X_DUMP(x) printf("[Avi] "#x":\t\t:%d\n",_mainaviheader.x);
     	X_DUMP(dwStreams);
     	X_DUMP(dwMicroSecPerFrame) ;
 	X_DUMP(dwMaxBytesPerSec);
@@ -650,21 +650,22 @@ void OpenDMLHeader::Dump( void )
     	X_DUMP(dwHeight);
  	printf("\n");
 #undef X_DUMP
-#define X_DUMP(x) printf("\n "#x":\t\t:%d",_videostream.x);
+#define X_DUMP(x) printf("[Avi]  "#x":\t\t:%d\n",_videostream.x);
 
 				
-	printf(  "video stream attached:\n" );
-	printf(  "______________________\n" );	
-	printf(" Extra Data  : %u",_videoExtraLen);
+	printf(  "[Avi] video stream attached:\n" );
+	printf(  "[Avi] ______________________\n" );	
+	printf(  "[Avi] Extra Data  : %u",_videoExtraLen);
 	if(_videoExtraLen)
 	{
 		mixDump( _videoExtraData, _videoExtraLen);
+        printf("\n");
 	}
 
-	printf("\n fccType     :");
-	fourCC::print(_videostream.fccType);
-	printf("\n fccHandler :");
-	fourCC::print(_videostream.fccHandler);
+	printf("[Avi]  fccType     :");
+	fourCC::print(_videostream.fccType);printf("\n");
+	printf("[Avi]  fccHandler :");
+	fourCC::print(_videostream.fccHandler);printf("\n");
 
 	X_DUMP(dwFlags);
 	X_DUMP(dwInitialFrames);
@@ -686,19 +687,19 @@ void OpenDMLHeader::Dump( void )
         for(int i=0;i<_nbAudioTracks;i++)
      	{
 #undef X_DUMP
-#define X_DUMP(x) printf("\n "#x":\t\t:%d",_audioTracks[i].avistream->x);
+#define X_DUMP(x) printf("[Avi] "#x":\t\t:%d\n",_audioTracks[i].avistream->x);
 
 
 
-	   printf(  "\naudio stream attached:\n" );
-	   printf(  "______________________\n" );
+	   printf(  "[Avi] audio stream attached:\n" );
+	   printf(  "[Avi] ______________________\n" );
 
 
-	  printf("\n fccType     :");
-	  fourCC::print(_audioTracks[i].avistream->fccType);
-	  printf("\n fccHandler :");
-	  fourCC::print(_audioTracks[i].avistream->fccHandler);
-	  printf("\n fccHandler :0x%x", _audioTracks[i].avistream->fccHandler);
+	  printf("[Avi]  fccType     :");
+	  fourCC::print(_audioTracks[i].avistream->fccType);printf("\n");
+	  printf("[Avi]  fccHandler :");
+	  fourCC::print(_audioTracks[i].avistream->fccHandler);printf("\n");
+	  printf("[Avi]  fccHandler :0x%x\n", _audioTracks[i].avistream->fccHandler);
 
 
 	  X_DUMP(dwFlags);
@@ -716,7 +717,7 @@ void OpenDMLHeader::Dump( void )
 #undef X_DUMP
 
         printWavHeader(_audioTracks[i].wavHeader);
-        printf(" Extra Data  : %u\n",_audioTracks[i].extraDataLen);
+        printf("[Avi]  Extra Data  : %u\n",_audioTracks[i].extraDataLen);
 	if(_audioTracks[i].extraDataLen)
 	{
 		mixDump( _audioTracks[i].extraData, _audioTracks[i].extraDataLen);
@@ -759,11 +760,11 @@ void OpenDMLHeader::walk(riffParser *p)
 #ifdef ADM_BIG_ENDIAN
 			Endian_AviMainHeader(&_mainaviheader);
 #endif
-				printf("\n Main avi header :\n");				
+				printf("[Avi]  Main avi header :\n");				
 				break;
 		case MKFCC('i','d','x','1'):
                                 _regularIndex.offset=p->getPos();
-                                printf("Idx1 found at offset %lx\n",_regularIndex.offset);
+                                printf("[Avi] Idx1 found at offset %lx\n",_regularIndex.offset);
                                 _regularIndex.size=len;
 				return;
 				break;				
@@ -792,7 +793,7 @@ void OpenDMLHeader::walk(riffParser *p)
 					DUMP_TRACK(_nbTrack);
 					break;
 		case MKFCC('i','n','d','x'):
-					printf("Indx found for track %d\n",_nbTrack);
+					printf("[Avi] Indx found for track %d\n",_nbTrack);
 					_Tracks[_nbTrack].indx.offset=p->getPos();
 					_Tracks[_nbTrack].indx.size=len;
 					p->skip(len);
@@ -830,7 +831,7 @@ void OpenDMLHeader::walk(riffParser *p)
 				break;
 		default:
 			PAD;
-			aprintf("\tskipping %lu bytes\n");
+			aprintf("[Avi] \tskipping %lu bytes\n");
 			p->skip(len);
 			break;
 		

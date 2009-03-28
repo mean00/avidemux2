@@ -96,7 +96,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 	prefs->get(PRIORITY_INDEXING,&priorityLevel);
 	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
 #endif
-	printf("Trying to unpack the stream\n");
+	printf("[Avi] Trying to unpack the stream\n");
 	DIA_workingBase *working=createWorking(QT_TR_NOOP("Unpacking bitstream"));
 	ADMCompressedImage image;
     image.data=buffer;
@@ -110,7 +110,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 		working->update(img,nbFrame);
 		if(!getFrame(img,&image))
         {
-            printf("Error could not get frame %"LU"\n",img);
+            printf("[Avi] Error could not get frame %"LU"\n",img);
             goto _abortUnpack;
         }
 		aprintf("--Frame:%lu/%lu, len %lu, nbDuped%u\n",img,nbFrame,image.dataLength,nbDuped);
@@ -136,7 +136,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
                 /* Cannot find vop, corrupted or WTF ...*/
                 if(!searchVop(buffer,buffer+image.dataLength,&nbVop,myVops,&timcincbits))
                 {
-                    printf("img :%u failed to find vop!\n",img);
+                    printf("[Avi] img :%u failed to find vop!\n",img);
                     memcpy(&newIndex[targetIndex],&_idx[img],sizeof(_idx[0]));
                     targetIndex++;
                     img++;
@@ -185,7 +185,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
                         {
                           if(nbDuped)
                           {
-                              printf("WARNING*************** Missing one NVOP, dropping one b frame instead  at image %u\n",img);
+                              printf("[Avi] WARNING*************** Missing one NVOP, dropping one b frame instead  at image %u\n",img);
                               nbDuped--;
                           }else
                           {
@@ -215,7 +215,7 @@ _abortUnpack:
 #endif
 	if(ret==1)
 	{
-		printf("Sucessfully unpacked the bitstream\n");
+		printf("[Avi] Sucessfully unpacked the bitstream\n");
 
 		delete [] _idx;
 		_idx=newIndex;
@@ -223,9 +223,9 @@ _abortUnpack:
 	else
 	{
 		delete [] newIndex;
-		printf("Could not unpack this...\n");
+		printf("[Avi] Could not unpack this...\n");
 	}
-	printf("Initial # of images : %"LU", now we have %"LU" \n",nbFrame,targetIndex);
+	printf("[Avi] Initial # of images : %"LU", now we have %"LU" \n",nbFrame,targetIndex);
 	nbFrame=targetIndex;
 
 	setpriority(PRIO_PROCESS, 0, originalPriority);
@@ -260,7 +260,7 @@ uint32_t searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, vopS *vop,uint32_t
 					case 0: voptype=AVI_KEY_FRAME;break;
 					case 1: voptype=0;break;
 					case 2: voptype=AVI_B_FRAME;break;
-					case 3: printf("Glouglou\n");voptype=0;break;
+					case 3: printf("[Avi] Glouglou\n");voptype=0;break;
 
 				}
         	                vop[*nb].offset=globalOff+off-4;
