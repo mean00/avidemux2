@@ -20,6 +20,10 @@
 
 #include "ADM_edPtsDts.h"
 
+#define GOT_NO_PTS 2
+#define GOT_NO_DTS 1
+#define GOT_NONE   3
+#define GOT_BOTH   0
 /**
     \fn setPtsEqualDts
     \brief for Low delay codec, set PTS=DTS, fill the missing values
@@ -38,11 +42,11 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
             return false;
         }
         int k=0;
-        if(pts==ADM_NO_PTS) k+=2;
-        if(dts==ADM_NO_PTS) k+=1;
+        if(pts==ADM_NO_PTS) k+=GOT_NO_PTS;
+        if(dts==ADM_NO_PTS) k+=GOT_NO_DTS;
         switch(k)
         {
-            case 0 : // Got both
+            case GOT_BOTH : // Got both
                 if(pts!=dts)
                             {
                                     printf("[Editor] Pts!=Dts for frame %"LU"\n",i);
@@ -50,7 +54,7 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
                 first=pts; // do nothing since we already have both...
                 continue;            
                 break;
-            case 3: // Got none
+            case GOT_NONE: // Got none
                 {
                         if(first!=ADM_NO_PTS)
                         {
@@ -60,10 +64,10 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
                             continue;   // We dont have a previous skip that one
                 }
                 break;
-            case 2 :  // got only pts
-                    first=dts=pts;
-                    break;
-            case 1: // got only dts
+            case GOT_NO_DTS :  // got only pts
+                first=dts=pts;
+                break;
+            case GOT_NO_PTS: // got only dts
                 first=pts=dts;
                 break;
             default:

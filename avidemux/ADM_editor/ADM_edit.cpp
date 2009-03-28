@@ -498,7 +498,7 @@ UNUSED_ARG(mode);
                 if(decoder->bFramePossible())
                 {
                     printf("[Editor] B- frame possible with that codec \n");
-                    if(isMpeg4Compatible(info.fcc))
+                    if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc))
                     {
                         printf("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");                        
                         setMpeg4PtsFromDts(vid->_aviheader,vid->timeIncrementInUs);
