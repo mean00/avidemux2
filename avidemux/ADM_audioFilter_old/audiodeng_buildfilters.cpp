@@ -22,7 +22,7 @@
 #include "audiofilter_limiter_param.h"
 #include "audiofilter_normalize_param.h"
 
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 
 
 #include "audioencoder.h"

@@ -41,8 +41,8 @@ extern "C" {
 #include "../oplug_mpegFF/oplug_vcdff.h"
 
 #include "ADM_userInterfaces/ADM_commonUI/DIA_encoding.h"
-#include "ADM_audiofilter/audioprocess.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioprocess.hxx"
+#include "audioeng_buildfilters.h"
 #include "../ADM_lavformat.h"
 #include "fourcc.h"
 #include "ADM_encoder/adm_encConfig.h"

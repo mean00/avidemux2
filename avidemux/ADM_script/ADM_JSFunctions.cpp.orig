@@ -29,7 +29,7 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_outputfmt.h"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "adm_scanner.h" 
 #include "avi_vars.h"
 #include "gui_action.hxx"

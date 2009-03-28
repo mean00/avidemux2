@@ -33,14 +33,14 @@
 #include "ADM_encoder/ADM_vidEncode.hxx"
 
 #include "ADM_audio/aviaudio.hxx"
-#include "ADM_audiofilter/audioprocess.hxx"
+#include "audioprocess.hxx"
 #include "op_aviwrite.hxx"
 #include "op_avisave.h"
 #include "op_savecopy.h"
 
-#include "ADM_audiofilter/audioprocess.hxx"
+#include "audioprocess.hxx"
 #include "ADM_audio/audioex.h"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 
 GenericAviSaveCopyDualAudio::GenericAviSaveCopyDualAudio (void	*track)
 			: GenericAviSaveCopy()

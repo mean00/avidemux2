@@ -23,7 +23,7 @@
 #include "DIA_coreToolkit.h"
 #include "DIA_enter.h"
 #include "ADM_audio/aviaudio.hxx"
-#include "ADM_audiofilter/audioprocess.hxx"
+#include "audioprocess.hxx"
 
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"

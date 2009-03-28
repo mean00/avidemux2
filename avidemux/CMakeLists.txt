@@ -53,6 +53,8 @@ ENDIF (ADM_DEBUG)
 
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}")
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config")
+# temp
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_audioFilter_old/")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_core/include")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreUI/include")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreImage/include")
@@ -174,7 +176,7 @@ ADD_SOURCE_CFLAGS(main.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
 # Compile and link general subdirs
 ########################################
 SET(ADM_SUBDIR 
-	ADM_audiofilter
+	ADM_audioFilter_old
 	#ADM_audioEncoder
 	ADM_editor
 	ADM_muxerGate

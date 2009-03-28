@@ -16,7 +16,7 @@
 #include "ADM_JSAvidemuxAudio.h"
 
 #include "../ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "avi_vars.h"
 #include "gui_action.hxx"
 #include "ADM_encoder/ADM_vidEncode.hxx"

@@ -4,8 +4,8 @@
 
 #include "ADM_toolkitGtk.h"
 
-#include "ADM_audiofilter/audioprocess.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioprocess.hxx"
+#include "audioeng_buildfilters.h"
 //#include "ADM_audiocodec/ADM_audiocodeclist.h"
 
 extern uint32_t audioEncoderGetNumberOfEncoders(void);

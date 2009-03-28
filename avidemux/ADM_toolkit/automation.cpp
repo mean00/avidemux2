@@ -32,7 +32,7 @@
 
 #include "gui_action.hxx"
 #include "ADM_encoder/ADM_vidEncode.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "prefs.h"
 #include "gtkgui.h"
 

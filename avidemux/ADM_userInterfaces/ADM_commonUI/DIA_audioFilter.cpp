@@ -18,7 +18,7 @@
 
 #include "DIA_factory.h"
 #include "audiofilter_normalize_param.h"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 /**
     \fn DIA_getAudioFilter
     \brief Dialog to manage audio filters

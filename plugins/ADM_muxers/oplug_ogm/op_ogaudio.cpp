@@ -38,8 +38,8 @@
 #include "ADM_encoder/ADM_vidEncode.hxx"
 
 #include "ADM_audio/aviaudio.hxx"
-#include "ADM_audiofilter/audioprocess.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioprocess.hxx"
+#include "audioeng_buildfilters.h"
 #include "ADM_audio/ADM_a52info.h"
 
 #include "op_ogsave.h"

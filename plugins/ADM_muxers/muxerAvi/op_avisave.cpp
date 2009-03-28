@@ -47,7 +47,7 @@ extern int muxParam;
 
 
 
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "ADM_coreUI/include/DIA_factory.h"
 const char *getStrFromAudioCodec( uint32_t codec);
 //_________________________

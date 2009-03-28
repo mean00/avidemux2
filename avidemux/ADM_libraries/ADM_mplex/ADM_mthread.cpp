@@ -23,8 +23,8 @@
 #include "ADM_encoder/ADM_vidEncode.hxx"
 #include "ADM_encoder/adm_encoder.h"
 #include "ADM_userInterfaces/ADM_commonUI/DIA_encoding.h"
-#include "ADM_audiofilter/audioprocess.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioprocess.hxx"
+#include "audioeng_buildfilters.h"
 //#include "ADM_outputs/ADM_lavformat.h"
 #include "ADM_mthread.h"
 

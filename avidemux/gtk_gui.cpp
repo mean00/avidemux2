@@ -29,11 +29,11 @@
 
 #include "ADM_audio/aviaudio.hxx"
 #include "ADM_audio/audioex.h"
-#include "ADM_audiofilter/audioprocess.hxx"
+#include "audioprocess.hxx"
 #include "gui_action.hxx"
 #include "gtkgui.h"
 
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "prefs.h"
 #include "ADM_encoder/adm_encConfig.h"
 #include "ADM_userInterfaces/ADM_render/GUI_render.h"

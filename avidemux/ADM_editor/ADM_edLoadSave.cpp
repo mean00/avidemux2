@@ -40,7 +40,7 @@
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
 
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "ADM_encoder/adm_encConfig.h"
 #include "prefs.h"
 #include "avi_vars.h"

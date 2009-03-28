@@ -21,7 +21,7 @@
 #include "avi_vars.h"
 #include "ADM_videoFilter.h"
 #include "ADM_audio/aviaudio.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "ADM_video/ADM_vidMisc.h"
 #include "ADM_encoder/adm_encConfig.h"
 

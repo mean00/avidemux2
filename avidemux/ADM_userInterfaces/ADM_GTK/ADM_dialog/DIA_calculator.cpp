@@ -25,8 +25,8 @@
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
 
-#include "ADM_audiofilter/audioprocess.hxx"
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioprocess.hxx"
+#include "audioeng_buildfilters.h"
 
 
 #include "ADM_video/ADM_vidMisc.h"

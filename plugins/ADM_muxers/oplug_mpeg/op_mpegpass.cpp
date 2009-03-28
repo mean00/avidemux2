@@ -18,11 +18,11 @@
 #include "ADM_threads.h"
 
 #include "avi_vars.h"
-#include "ADM_audiofilter/audioprocess.hxx"
+#include "audioprocess.hxx"
 
 #include "ADM_userInterfaces/ADM_commonUI/DIA_encoding.h"
 
-#include "ADM_audiofilter/audioeng_buildfilters.h"
+#include "audioeng_buildfilters.h"
 #include "prefs.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_outputfmt.h"
