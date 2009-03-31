@@ -5,6 +5,9 @@
 #ifndef AUDIO_DEF
 #define AUDIO_DEF
 #include <string.h>
+/**
+    \struct WAVHeader
+*/
 typedef struct
 {
     uint16_t	encoding;	

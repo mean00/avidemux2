@@ -18,7 +18,7 @@
 #define  ADM_AUDIO_BUILDFILTER_H
 
 #include "audioencoder.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_audioCodecEnum.h"
 
 #include "audioEncoderApi.h"
 #include "ADM_audioStream.h"

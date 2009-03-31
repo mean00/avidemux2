@@ -28,7 +28,7 @@
 #include "ADM_assert.h"
 
 #include "audio_out.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 #include "audioprocess.hxx"
 #include "audioeng_buildfilters.h"
 #include "gui_action.hxx"

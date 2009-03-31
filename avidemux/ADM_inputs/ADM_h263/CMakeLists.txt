@@ -1,4 +1,0 @@
-SET(ADM_h263_SRCS 
-	ADM_h263.cpp  ADM_mp4.cpp  bitsRead.cpp)
-	
-ADD_ADM_LIB_ALL_TARGETS(ADM_h263 ${ADM_h263_SRCS})

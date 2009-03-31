@@ -12,16 +12,10 @@
       
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "config.h"
 #include "ADM_default.h"
 #include "common.h"
 #include "bswap.h"
-#include "ADM_assert.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 #include "ADM_audiocodec.h"
 
 static int ms_adapt_table[] =

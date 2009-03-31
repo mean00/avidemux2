@@ -16,18 +16,13 @@
     0x1100736d: IMA ADPCM coded like in MS AVI/ASF/WAV found in QT files
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "config.h"
 #include "ADM_default.h"
 #include "common.h"
 #include "bswap.h"
 #include "ADM_assert.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 #include "ADM_audiocodec.h"
-//#include "../../adm_lavcodec/ad_internal.h"
+
 
 #define MS_IMA_ADPCM_PREAMBLE_SIZE 4
 

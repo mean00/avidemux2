@@ -181,7 +181,7 @@ SET(ADM_SUBDIR
 	ADM_editor
 	ADM_muxerGate
 	ADM_audiocodec
-	ADM_audio
+	#ADM_audio
 	ADM_script
 	ADM_filter
 	ADM_videoFilter

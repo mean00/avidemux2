@@ -21,16 +21,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-//#include <sstream>
-#include "ADM_assert.h"
+#include "ADM_default.h"
 #include <math.h>
 
-#include "config.h"
+
 #include "fourcc.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
 
 

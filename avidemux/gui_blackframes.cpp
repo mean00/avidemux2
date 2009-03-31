@@ -27,7 +27,7 @@
 #include "ADM_assert.h"
 #include "prototype.h"
 #include "audio_out.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 #include "audioprocess.hxx"
 #include "gui_action.hxx"
 #include "gtkgui.h"

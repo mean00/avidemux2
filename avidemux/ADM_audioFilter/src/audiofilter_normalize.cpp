@@ -28,10 +28,10 @@
 #include "audiofilter_normalize.h"
 #include "audiofilter_dolby.h"
 
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 //#include "ADM_dialog/DIA_busy.h" //CANNOT USE IT! We are in another thread!
 
-extern AVDMGenericAudioStream *currentaudiostream;
+//extern AVDMGenericAudioStream *currentaudiostream;
 
 #ifdef __WIN32
 #define POW10(x)   pow(10,x)

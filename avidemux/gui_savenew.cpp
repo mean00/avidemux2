@@ -22,7 +22,7 @@
 #include "prototype.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_enter.h"
-#include "ADM_audio/aviaudio.hxx"
+#include "ADM_coreAudio.h"
 #include "audioprocess.hxx"
 
 #include "ADM_videoFilter.h"

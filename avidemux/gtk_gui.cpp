@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
+
 #include "ADM_default.h"
 #include <math.h>
 #include <errno.h>
@@ -27,8 +27,8 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_bitmap.h"
 
-#include "ADM_audio/aviaudio.hxx"
-#include "ADM_audio/audioex.h"
+#include "ADM_coreAudio.h"
+
 #include "audioprocess.hxx"
 #include "gui_action.hxx"
 #include "gtkgui.h"
