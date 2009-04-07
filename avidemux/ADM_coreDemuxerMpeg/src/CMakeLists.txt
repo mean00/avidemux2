@@ -8,7 +8,6 @@ ADM_indexFile.cpp
 dmx_io.cpp
 dmxPacket.cpp
 dmxPSPacket.cpp
-dmxTSPacket.cpp
 )	
 #*************************************************
 ADD_LIBRARY(ADM_coreDemuxerMpeg SHARED ${ADMcoreDemuxerMpeg_SRCS})

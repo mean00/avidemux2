@@ -14,19 +14,19 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_ps.h"
+#include "ADM_ts.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 #include "avidemutils.h"
 
-ADM_DEMUXER_BEGIN( psHeader,
+ADM_DEMUXER_BEGIN( tsHeader,
                     1,0,0,
-                    "ps",
-                    "mpeg ps demuxer plugin (c) Mean 2007/2008"
+                    "ts",
+                    "mpeg ps demuxer plugin (c) Mean 2007/2009"
                 );
 
-static bool detectPs(const char *file);
-uint8_t   psIndexer(const char *file);
+static bool detectTs(const char *file);
+uint8_t   tsIndexer(const char *file);
 /**
     \fn Probe
 */
@@ -35,7 +35,7 @@ extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
 {
 char index[strlen(fileName)+4];
 int count=0;
-    if(!detectPs(fileName))
+    if(!detectTs(fileName))
     {
         printf(" [PS Demuxer] Not a ps file\n");
         return false;
@@ -52,14 +52,14 @@ again:
         signature[4]=0;
         fclose(f);
         if(!strcmp(signature,"PSD1")) return 50;
-        printf("[PsDemuxer] Not a valid index\n");
+        printf("[TSDemuxer] Not a valid index\n");
         return false;
     }
     if(count) return false;
-    printf("[PSDemuxer] Creating index..\n");
+    printf("[TSDemuxer] Creating index..\n");
     count++;
-    if(true==psIndexer(fileName)) goto again;
-    printf("[PSDemuxer] Failed..\n");
+    if(true==tsIndexer(fileName)) goto again;
+    printf("[TSDemuxer] Failed..\n");
    return 0;
 }
 #define PROBE_SIZE (1024*1024)
@@ -68,7 +68,7 @@ again:
     \brief returns true if the file seems to be mpeg PS
 
 */
-bool detectPs(const char *file)
+bool detectTs(const char *file)
 {
     uint8_t *buffer=new uint8_t [PROBE_SIZE];
     uint32_t bufferSize;

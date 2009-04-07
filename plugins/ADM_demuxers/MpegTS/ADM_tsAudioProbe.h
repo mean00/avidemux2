@@ -14,21 +14,21 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_PS_AUDIO_PROBE_H
-#define ADM_PS_AUDIO_PROBE_H
+#ifndef ADM_TS_AUDIO_PROBE_H
+#define ADM_TS_AUDIO_PROBE_H
 #include <vector>
 using std::vector;
 typedef struct
 {
     WAVHeader header;
     uint8_t   esID;
-}psAudioTrackInfo;
+}tsAudioTrackInfo;
 
-typedef vector <psAudioTrackInfo*> listOfPsAudioTracks;
+typedef vector <tsAudioTrackInfo*> listOfTsAudioTracks;
 
 /// Returns a list of audio tracks found in the file.
-listOfPsAudioTracks *psProbeAudio(const char *fileName);
-bool DestroyListOfPsAudioTracks(listOfPsAudioTracks *list);
+listOfTsAudioTracks *tsProbeAudio(const char *fileName);
+bool DestroyListOfTsAudioTracks(listOfTsAudioTracks *list);
 
 
 #endif

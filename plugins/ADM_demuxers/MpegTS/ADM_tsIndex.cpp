@@ -19,11 +19,11 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-#include "dmxPSPacket.h"
+#include "dmxTSPacket.h"
 
 #include "avidemutils.h"
 #include "ADM_quota.h"
-#include "ADM_psAudioProbe.h"
+#include "ADM_tsAudioProbe.h"
 #include "DIA_working.h"
 
 static const char Type[5]={'X','I','P','B','P'};
@@ -68,7 +68,7 @@ typedef struct
     uint32_t frameType;
     uint32_t nbPics;
     indexerState state;
-    psPacketLinear *pkt;
+    tsPacketLinear *pkt;
     int32_t        nextOffset;
 }indexerData;
 
@@ -80,18 +80,18 @@ typedef enum
 }markType;
 
 /**
-    \class PsIndexer
+    \class TsIndexer
 */
-class PsIndexer
+class TsIndexer
 {
 protected:
         FILE *index;
-        psPacketLinearTracker *pkt;
-        listOfPsAudioTracks *audioTracks;
+        tsPacketLinearTracker *pkt;
+        listOfTsAudioTracks *audioTracks;
         DIA_workingBase  *ui;
 public:
-                PsIndexer(void);
-                ~PsIndexer();
+                TsIndexer(void);
+                ~TsIndexer();
         bool    run(const char *file);
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
@@ -100,22 +100,22 @@ public:
 
 };
 /**
-      \fn psIndexer 
+      \fn TsIndexer 
       \brief main indexing loop for mpeg2 payload
 */
-uint8_t   psIndexer(const char *file)
+uint8_t   tsIndexer(const char *file)
 {
 bool r;
-    PsIndexer *dx=new PsIndexer;
+    TsIndexer *dx=new TsIndexer;
     r=dx->run(file);
     delete dx;
     return r;
 }
 
 /**
-    \fn PsIndexer
+    \fn TsIndexer
 */
-PsIndexer::PsIndexer(void)
+TsIndexer::TsIndexer(void)
 {
     index=NULL;
     pkt=NULL;
@@ -124,20 +124,20 @@ PsIndexer::PsIndexer(void)
 }
 
 /**
-    \fn ~PsIndexer
+    \fn ~TsIndexer
 */
-PsIndexer::~PsIndexer()
+TsIndexer::~TsIndexer()
 {
     if(index) qfclose(index);
     if(pkt) delete pkt;
-    if( audioTracks) DestroyListOfPsAudioTracks(audioTracks);
+    if( audioTracks) DestroyListOfTsAudioTracks(audioTracks);
     if(ui) delete ui;
     ui=NULL;
 }
 /**
     \fn run
 */  
-bool PsIndexer::run(const char *file)
+bool TsIndexer::run(const char *file)
 {
 uint32_t temporal_ref,val;
 uint64_t fullSize;
@@ -158,9 +158,9 @@ dmxPacketInfo info;
         return false;
     }
     writeSystem(file,true);
-    pkt=new psPacketLinearTracker(0xE0);
+    pkt=new tsPacketLinearTracker(0xE0);
 
-    audioTracks=psProbeAudio(file);
+    audioTracks=tsProbeAudio(file);
     if(audioTracks)
     {
         for(int i=0;i<audioTracks->size();i++)
@@ -246,7 +246,7 @@ dmxPacketInfo info;
                           if(!seq_found)
                           { 
                                   continue;
-                                  printf("[psIndexer]No sequence start yet, skipping..\n");
+                                  printf("[TsIndexer]No sequence start yet, skipping..\n");
                           }
                           
                           val=pkt->readi16();
@@ -280,7 +280,7 @@ dmxPacketInfo info;
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
-        if(audioTracks) DestroyListOfPsAudioTracks( audioTracks);
+        if(audioTracks) DestroyListOfTsAudioTracks( audioTracks);
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
@@ -295,7 +295,7 @@ dmxPacketInfo info;
     If the beginning is not a pic, but a gop start for example, we had to add/remove those.
 
 */
-bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
+bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
 {
     int offset=data->nextOffset;
     data->nextOffset=0;
@@ -353,7 +353,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
     \fn writeVideo
     \brief Write Video section of index file
 */
-bool PsIndexer::writeVideo(PSVideo *video)
+bool TsIndexer::writeVideo(PSVideo *video)
 {
     qfprintf(index,"[Video]\n");
     qfprintf(index,"Width=%d\n",video->w);
@@ -367,7 +367,7 @@ bool PsIndexer::writeVideo(PSVideo *video)
     \fn writeSystem
     \brief Write system part of index file
 */
-bool PsIndexer::writeSystem(const char *filename,bool append)
+bool TsIndexer::writeSystem(const char *filename,bool append)
 {
     qfprintf(index,"PSD1\n");
     qfprintf(index,"[System]\n");
@@ -380,7 +380,7 @@ bool PsIndexer::writeSystem(const char *filename,bool append)
     \fn     writeAudio
     \brief  Write audio headers
 */
-bool PsIndexer::writeAudio(void)
+bool TsIndexer::writeAudio(void)
 {
     if(!audioTracks) return false;
     qfprintf(index,"[Audio]\n");
@@ -388,7 +388,7 @@ bool PsIndexer::writeAudio(void)
     for(int i=0;i<audioTracks->size();i++)
     {
         char head[30];
-        psAudioTrackInfo *t=(*audioTracks)[i];
+        tsAudioTrackInfo *t=(*audioTracks)[i];
         sprintf(head,"Track%1d",i);
         qfprintf(index,"%s.pid=%x\n",head,t->esID);
         qfprintf(index,"%s.codec=%d\n",head,t->header.encoding);

@@ -8,7 +8,7 @@
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
-#include "ADM_ps.h"
+#include "ADM_ts.h"
 
 #include <math.h>
 
@@ -27,7 +27,7 @@ TODO / FIXME : Handle wrap
 TODO / FIXME : Handle PTS reordering 
 */
 
-bool psHeader::updatePtsDts(void)
+bool tsHeader::updatePtsDts(void)
 {
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
 
@@ -39,7 +39,7 @@ bool psHeader::updatePtsDts(void)
         // at video
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
-            vector          <ADM_psAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            vector          <ADM_tsAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
             uint64_t secondDts=(*seekPoints)[0].dts;
             uint64_t secondSize=(*seekPoints)[0].size;
             if(secondSize && listOfAudioTracks[i]->header.byterate)
@@ -53,7 +53,7 @@ bool psHeader::updatePtsDts(void)
                             else firstDts=secondDts-firstDts;
 
                 // Now add our seek point
-                ADM_psAudioSeekPoint sk;
+                ADM_tsAudioSeekPoint sk;
                 sk.dts=firstDts;
                 sk.size=0;
                 sk.position=ListOfFrames[0]->startAt;
@@ -105,8 +105,8 @@ bool psHeader::updatePtsDts(void)
         // Audio start at 0 too
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
-            ADM_psTrackDescriptor *track=listOfAudioTracks[i];
-            ADM_psAccess    *access=track->access;
+            ADM_tsTrackDescriptor *track=listOfAudioTracks[i];
+            ADM_tsAccess    *access=track->access;
             access->setTimeOffset(startDts);
         }
 
@@ -155,8 +155,8 @@ bool psHeader::updatePtsDts(void)
         // convert to us for Audio tracks (seek points)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
-            ADM_psTrackDescriptor *track=listOfAudioTracks[i];
-            ADM_psAccess    *access=track->access;
+            ADM_tsTrackDescriptor *track=listOfAudioTracks[i];
+            ADM_tsAccess    *access=track->access;
             
             for(int j=0;j<access->seekPoints.size();j++)
             {

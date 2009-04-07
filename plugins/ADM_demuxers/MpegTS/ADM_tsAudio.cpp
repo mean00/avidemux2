@@ -20,7 +20,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "ADM_ps.h"
+#include "ADM_ts.h"
 
 #if 0
     #define aprintf printf
@@ -29,9 +29,9 @@
 #endif
 
 /**
-    \fn ADM_psAccess
+    \fn ADM_tsAccess
 */
-ADM_psAccess::ADM_psAccess(const char *name,uint8_t pid,bool append)
+ADM_tsAccess::ADM_tsAccess(const char *name,uint8_t pid,bool append)
 {
 FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;
@@ -40,9 +40,9 @@ FP_TYPE fp=FP_DONT_APPEND;
 }
 
 /**
-    \fn ~ADM_psAccess
+    \fn ~ADM_tsAccess
 */
-ADM_psAccess::~ADM_psAccess()
+ADM_tsAccess::~ADM_tsAccess()
 {
     demuxer.close();
 }
@@ -50,9 +50,9 @@ ADM_psAccess::~ADM_psAccess()
     \fn push
     \brief add a seek point.
 */
-bool      ADM_psAccess::push(uint64_t at, uint64_t dts,uint32_t size)
+bool      ADM_tsAccess::push(uint64_t at, uint64_t dts,uint32_t size)
 {
-ADM_psAudioSeekPoint s;
+ADM_tsAudioSeekPoint s;
             s.position=at;
             s.dts=dts;
             s.size=size;
@@ -62,7 +62,7 @@ ADM_psAudioSeekPoint s;
 /**
     \fn getLength
 */
-uint32_t  ADM_psAccess::getLength(void)
+uint32_t  ADM_tsAccess::getLength(void)
 {
   return (seekPoints[seekPoints.size()-1].size);
 
@@ -70,7 +70,7 @@ uint32_t  ADM_psAccess::getLength(void)
 /**
     \fn getDurationInUs
 */
-uint64_t  ADM_psAccess::getDurationInUs(void)
+uint64_t  ADM_tsAccess::getDurationInUs(void)
 {
     // Take last seek point; should be accurate enough
     return timeConvert(seekPoints[seekPoints.size()-1].dts);
@@ -79,7 +79,7 @@ uint64_t  ADM_psAccess::getDurationInUs(void)
     \fn goToTime
     \brief Rememember seekPoint.dts time is already scaled and in us
 */                              
-bool      ADM_psAccess::goToTime(uint64_t timeUs)
+bool      ADM_tsAccess::goToTime(uint64_t timeUs)
 {
     // Convert time in us to scaled 90 kHz tick
     
@@ -107,7 +107,7 @@ bool      ADM_psAccess::goToTime(uint64_t timeUs)
     \fn timeConvert
     \brief Convert time in ticks raw from the stream to avidemux time in us starting from the beginning of the file
 */
-uint64_t ADM_psAccess::timeConvert(uint64_t x)
+uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 {
     if(x==ADM_NO_PTS) return ADM_NO_PTS;
     x=x-dtsOffset;
@@ -119,7 +119,7 @@ uint64_t ADM_psAccess::timeConvert(uint64_t x)
 /**
     \fn getPacket
 */
-bool      ADM_psAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
+bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
 uint64_t p,d,start;
     if(false==demuxer.getPacketOfType(pid,maxSize,size,&p,&d,buffer,&start)) return false;

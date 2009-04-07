@@ -1,7 +1,7 @@
 /***************************************************************************
-                         ADM_PS
+                         ADM_PT
                              -------------------
-    begin                : Mon Jun 3 2002
+    
     copyright            : (C) 2002 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -17,14 +17,14 @@
  
 
 
-#ifndef ADM_PS_H
-#define ADM_PS_H
+#ifndef ADM_TS_H
+#define ADM_TS_H
 
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 #include "dmx_io.h"
 #include "ADM_indexFile.h"
-#include "dmxPSPacket.h"
+#include "dmxTSPacket.h"
 #include <vector>
 using std::vector;
 /**
@@ -49,24 +49,24 @@ typedef struct
       uint64_t dts;
       uint32_t size;
 
-}ADM_psAudioSeekPoint;
+}ADM_tsAudioSeekPoint;
 
 /**
     \fn ADM_psAccess
 */
-class ADM_psAccess : public ADM_audioAccess
+class ADM_tsAccess : public ADM_audioAccess
 {
 protected:
                 
-                psPacket        demuxer;
+                tsPacket        demuxer;
                 uint8_t         pid;
                 uint64_t        dtsOffset;
                 
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
-                vector          <ADM_psAudioSeekPoint >seekPoints;
-                                  ADM_psAccess(const char *name,uint8_t pid,bool append); 
-                virtual           ~ADM_psAccess();
+                vector          <ADM_tsAudioSeekPoint >seekPoints;
+                                  ADM_tsAccess(const char *name,uint8_t pid,bool append); 
+                virtual           ~ADM_tsAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return true;}
                                     /// Return true if the demuxer can seek in time
@@ -92,18 +92,18 @@ public:
 /**
     \class ADM_psTrackDescriptor
 */
-class ADM_psTrackDescriptor
+class ADM_tsTrackDescriptor
 {
 public:
         ADM_audioStream *stream;
-        ADM_psAccess    *access;
+        ADM_tsAccess    *access;
         WAVHeader       header;
-        ADM_psTrackDescriptor()
+        ADM_tsTrackDescriptor()
             {
                 stream=NULL;
                 access=NULL;
             }
-        ~ADM_psTrackDescriptor()
+        ~ADM_tsTrackDescriptor()
             {
                 if(stream) delete stream;
                 stream=NULL;
@@ -119,7 +119,7 @@ public:
     \brief mpeg ps demuxer
 
 */
-class psHeader         :public vidHeader
+class tsHeader         :public vidHeader
 {
   protected:
     
@@ -134,18 +134,18 @@ class psHeader         :public vidHeader
     std::vector <dmxFrame *> ListOfFrames;      
     fileParser      parser;
     uint32_t       lastFrame;
-    psPacketLinear *psPacket;
+    tsPacketLinear *tsPacket;
     uint64_t        timeConvert(uint64_t x);
     bool            updatePtsDts(void);
 protected:
-    vector <ADM_psTrackDescriptor *>listOfAudioTracks;
+    vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
   public:
 
 
     virtual   void          Dump(void);
 
-            psHeader( void ) ;
-   virtual  ~psHeader(  ) ;
+            tsHeader( void ) ;
+   virtual  ~tsHeader(  ) ;
 // AVI io
     virtual uint8_t  open(const char *name);
     virtual uint8_t  close(void) ;

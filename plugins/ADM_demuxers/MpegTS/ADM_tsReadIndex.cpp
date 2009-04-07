@@ -18,7 +18,7 @@
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
-#include "ADM_ps.h"
+#include "ADM_ts.h"
 
 #include <math.h>
 /**
@@ -26,7 +26,7 @@
         \brief Read the [video] section of the index file
 
 */
-bool    psHeader::readIndex(indexFile *index)
+bool    tsHeader::readIndex(indexFile *index)
 {
 char buffer[2000];
 bool firstAudio=true;
@@ -57,7 +57,7 @@ bool firstAudio=true;
     \fn processAudioIndex
     \brief process audio seek points from a line from the index file
 */
-bool psHeader::processAudioIndex(char *buffer)
+bool tsHeader::processAudioIndex(char *buffer)
 {
     int64_t startAt,dts;
     uint32_t size;
@@ -73,10 +73,10 @@ bool psHeader::processAudioIndex(char *buffer)
             if(4!=sscanf(head,"Pes:%"LX":%"LLX":%"LD":%"LLD" ",&pes,&startAt,&size,&dts))
             {
 // qfprintf(index,"Pes:%x:%08"LLX":%"LD":%LLD ",e,s->startAt,s->startSize,s->startDts);
-                printf("[PsHeader::processAudioIndex] Reading index %s failed\n",buffer);
+                printf("[tsHeader::processAudioIndex] Reading index %s failed\n",buffer);
             }
             head=tail+1;
-            ADM_psAccess *track=listOfAudioTracks[trackNb]->access;
+            ADM_tsAccess *track=listOfAudioTracks[trackNb]->access;
             track->push(startAt,dts,size);
 
             trackNb++;
@@ -91,7 +91,7 @@ bool psHeader::processAudioIndex(char *buffer)
     \fn processVideoIndex
     \brief process an mpeg index entry from a line from the index file
 */
-bool psHeader::processVideoIndex(char *buffer)
+bool tsHeader::processVideoIndex(char *buffer)
 {
             char *head=buffer;
             uint64_t pts,dts,startAt;
@@ -165,7 +165,7 @@ bool psHeader::processVideoIndex(char *buffer)
         \brief Read the [video] section of the index file
 
 */
-bool    psHeader::readVideo(indexFile *index)
+bool    tsHeader::readVideo(indexFile *index)
 {
     printf("[psDemuxer] Reading Video\n");
     if(!index->readSection("Video")) return false;
@@ -193,7 +193,7 @@ bool    psHeader::readVideo(indexFile *index)
         \brief Read the [Audio] section of the index file
 
 */
-bool    psHeader::readAudio(indexFile *index,const char *name)
+bool    tsHeader::readAudio(indexFile *index,const char *name)
 {
     printf("[psDemuxer] Reading Audio\n");
     if(!index->readSection("Audio")) return false;
@@ -223,8 +223,8 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
             hdr.byterate=br;
             hdr.channels=chan;
             hdr.encoding=codec;
-        ADM_psAccess *access=new ADM_psAccess(name,pid,true);
-            ADM_psTrackDescriptor *desc=new ADM_psTrackDescriptor;
+        ADM_tsAccess *access=new ADM_tsAccess(name,pid,true);
+            ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;
             desc->stream=NULL;
             desc->access=access;
             memcpy(&(desc->header),&hdr,sizeof(hdr));

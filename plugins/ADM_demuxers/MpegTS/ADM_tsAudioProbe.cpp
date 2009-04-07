@@ -17,8 +17,8 @@
 
 #include "ADM_default.h"
 #include "ADM_audiodef.h"
-#include "dmxPSPacket.h"
-#include "ADM_psAudioProbe.h"
+#include "dmxTSPacket.h"
+#include "ADM_tsAudioProbe.h"
 //
 #include "ADM_a52info.h"
 #include "ADM_mp3info.h"
@@ -35,22 +35,22 @@
 #define LPCM_AUDIO_VALUE 0xA0
 #define DTS_AC3_AUDIO_VALUE 0x00
 
-static bool addAudioTrack(int pid, listOfPsAudioTracks *list, psPacketLinearTracker *p);
-static bool psCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
+static bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinearTracker *p);
+static bool tsCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
 /**
     \fn listOfPsAudioTracks
     \brief returns a list of audio track found, null if none found
 
 */
-listOfPsAudioTracks *psProbeAudio(const char *fileName)
+listOfTsAudioTracks *tsProbeAudio(const char *fileName)
 {
     uint32_t size;
     uint64_t dts,pts,startAt;
     uint8_t buffer[PACKET_PROBE_SIZE];
     uint64_t fileSize;
 
-    listOfPsAudioTracks *tracks=new listOfPsAudioTracks;
-    psPacketLinearTracker *packet=new psPacketLinearTracker(0xE0);
+    listOfTsAudioTracks *tracks=new listOfTsAudioTracks;
+    tsPacketLinearTracker *packet=new tsPacketLinearTracker(0xE0);
 
     printf("[MpegPS] Probing audio for %s\n",fileName);
 
@@ -98,7 +98,7 @@ end:
     \brief gather information about audio & add audio track to the list
 
 */
-bool addAudioTrack(int pid, listOfPsAudioTracks *list, psPacketLinearTracker *p)
+bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinearTracker *p)
 {
 #define PROBE_ANALYZE_SIZE 6000 // Should be enough in all cases (need ~ 2 blocks)
 uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
@@ -120,7 +120,7 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         int rd=PROBE_ANALYZE_SIZE;
         if(!p->read(PROBE_ANALYZE_SIZE,audioBuffer))
             return false;
-        psAudioTrackInfo *info=new psAudioTrackInfo;
+        tsAudioTrackInfo *info=new tsAudioTrackInfo;
         info->esID=pid;
         uint32_t fq,br,chan,off;
         switch(pid & 0xF0)
@@ -133,7 +133,7 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                             break;
             case MP2_AUDIO_VALUE: // MP2
                             {
-                                if(! psCheckMp2Audio(&(info->header),audioBuffer,rd))
+                                if(! tsCheckMp2Audio(&(info->header),audioBuffer,rd))
                                 {
                                     printf("[PsProbeAudio] Failed to get info on track :%x (MP2)\n",pid);
                                     goto er;
@@ -182,7 +182,7 @@ er:
         \fn DestroyListOfPsAudioTracks
         \brief cleanly destroy it
 */
-bool DestroyListOfPsAudioTracks(listOfPsAudioTracks *list)
+bool DestroyListOfTsAudioTracks(listOfTsAudioTracks *list)
 {
     while( list->size())
     {
@@ -196,7 +196,7 @@ bool DestroyListOfPsAudioTracks(listOfPsAudioTracks *list)
     \fn psCheckMp2Audio
     \brief Wait to have 2 audio packets to make sure it is not a false detection (that happens with mp2/mp3 audio)
 */
-bool psCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize)
+bool tsCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize)
 {
     MpegAudioInfo mpeg,first;
     uint32_t off2,off;

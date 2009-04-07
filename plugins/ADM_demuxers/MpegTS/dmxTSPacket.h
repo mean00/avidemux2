@@ -1,5 +1,7 @@
 /**
-    dmxtsPacket.cpp
+   \file dmxtsPacket.h
+    \brief demuxer for TS stream
+    (C) Mean fixounet@free.fr 2003-2009
 
 */
 

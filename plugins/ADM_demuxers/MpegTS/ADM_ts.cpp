@@ -18,7 +18,7 @@
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
-#include "ADM_ps.h"
+#include "ADM_ts.h"
 
 #include <math.h>
 
@@ -29,7 +29,7 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
       \brief open the flv file, gather infos and build index(es).
 */
 
-uint8_t psHeader::open(const char *name)
+uint8_t tsHeader::open(const char *name)
 {
     char idxName[strlen(name)+4];
     bool r=false;
@@ -84,16 +84,16 @@ uint8_t psHeader::open(const char *name)
     if(_videostream.dwLength)_isvideopresent=1;
 //***********
     
-    psPacket=new psPacketLinear(0xE0);
-    if(psPacket->open(name,appendType)==false) 
+    tsPacket=new tsPacketLinear(0xE0);
+    if(tsPacket->open(name,appendType)==false) 
     {
-        printf("psDemux] Cannot psPacket open the file\n");
+        printf("psDemux] Cannot tsPacket open the file\n");
         goto abt;
     }
     r=true;
     for(int i=0;i<listOfAudioTracks.size();i++)
     {
-        ADM_psTrackDescriptor *desc=listOfAudioTracks[i];
+        ADM_tsTrackDescriptor *desc=listOfAudioTracks[i];
         ADM_audioStream *audioStream=ADM_audioCreateStream(&desc->header,desc->access);
         if(!audioStream)
         {
@@ -112,7 +112,7 @@ abt:
         \fn getVideoDuration
         \brief Returns duration of video in us
 */
-uint64_t psHeader::getVideoDuration(void)
+uint64_t tsHeader::getVideoDuration(void)
 {
     float f;
         f=1000*1000*1000;
@@ -127,7 +127,7 @@ uint64_t psHeader::getVideoDuration(void)
     \fn getAudioInfo
     \brief returns wav header for stream i (=0)
 */
-WAVHeader *psHeader::getAudioInfo(uint32_t i )
+WAVHeader *tsHeader::getAudioInfo(uint32_t i )
 {
         if(!listOfAudioTracks.size()) return NULL;
       ADM_assert(i<listOfAudioTracks.size());
@@ -138,7 +138,7 @@ WAVHeader *psHeader::getAudioInfo(uint32_t i )
    \fn getAudioStream
 */
 
-uint8_t   psHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio)
+uint8_t   tsHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio)
 {
     if(!listOfAudioTracks.size())
     {
@@ -153,7 +153,7 @@ uint8_t   psHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio)
     \fn getNbAudioStreams
 
 */
-uint8_t   psHeader::getNbAudioStreams(void)
+uint8_t   tsHeader::getNbAudioStreams(void)
 {
  
   return listOfAudioTracks.size(); 
@@ -162,7 +162,7 @@ uint8_t   psHeader::getNbAudioStreams(void)
     __________________________________________________________
 */
 
-void psHeader::Dump(void)
+void tsHeader::Dump(void)
 {
  
 }
@@ -171,7 +171,7 @@ void psHeader::Dump(void)
     \brief cleanup
 */
 
-uint8_t psHeader::close(void)
+uint8_t tsHeader::close(void)
 {
     // Destroy index
     while(ListOfFrames.size())
@@ -179,30 +179,30 @@ uint8_t psHeader::close(void)
         delete ListOfFrames[0];
         ListOfFrames.erase(ListOfFrames.begin());
     }
-    if(psPacket)
+    if(tsPacket)
     {
-        psPacket->close();
-        delete psPacket;
-        psPacket=NULL;
+        tsPacket->close();
+        delete tsPacket;
+        tsPacket=NULL;
     }
 }
 /**
-    \fn psHeader
+    \fn tsHeader
     \brief constructor
 */
 
- psHeader::psHeader( void ) : vidHeader()
+ tsHeader::tsHeader( void ) : vidHeader()
 { 
     interlaced=false;
     lastFrame=0xffffffff;
     
 }
 /**
-    \fn psHeader
+    \fn tsHeader
     \brief destructor
 */
 
- psHeader::~psHeader(  )
+ tsHeader::~tsHeader(  )
 {
   close();
 }
@@ -213,7 +213,7 @@ uint8_t psHeader::close(void)
     \brief Returns timestamp in us of frame "frame" (PTS)
 */
 
-  uint8_t  psHeader::setFlag(uint32_t frame,uint32_t flags)
+  uint8_t  tsHeader::setFlag(uint32_t frame,uint32_t flags)
 {
    
      uint32_t f=2;
@@ -228,7 +228,7 @@ uint8_t psHeader::close(void)
     \brief Returns timestamp in us of frame "frame" (PTS)
 */
 
-uint32_t psHeader::getFlags(uint32_t frame,uint32_t *flags)
+uint32_t tsHeader::getFlags(uint32_t frame,uint32_t *flags)
 {
     if(frame>=ListOfFrames.size()) return 0;
     uint32_t f=ListOfFrames[frame]->type;
@@ -245,7 +245,7 @@ uint32_t psHeader::getFlags(uint32_t frame,uint32_t *flags)
     \fn getTime
     \brief Returns timestamp in us of frame "frame" (PTS)
 */
-uint64_t psHeader::getTime(uint32_t frame)
+uint64_t tsHeader::getTime(uint32_t frame)
 {
    if(frame>=ListOfFrames.size()) return 0;
     uint64_t pts=ListOfFrames[frame]->pts;
@@ -255,7 +255,7 @@ uint64_t psHeader::getTime(uint32_t frame)
     \fn timeConvert
     \brief FIXME
 */
-uint64_t psHeader::timeConvert(uint64_t x)
+uint64_t tsHeader::timeConvert(uint64_t x)
 {
     if(x==ADM_NO_PTS) return ADM_NO_PTS;
     x=x-ListOfFrames[0]->dts;
@@ -268,14 +268,14 @@ uint64_t psHeader::timeConvert(uint64_t x)
         \fn getFrame
 */
 
-uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
+uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
     dmxFrame *pk=ListOfFrames[frame];
     if(frame==(lastFrame+1) && pk->type!=1)
     {
         lastFrame++;
-        bool r=psPacket->read(pk->len,img->data);
+        bool r=tsPacket->read(pk->len,img->data);
              img->dataLength=pk->len;
              img->demuxerFrameNo=frame;
              img->demuxerDts=pk->dts;
@@ -286,8 +286,8 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     }
     if(pk->type==1)
     {
-        if(!psPacket->seek(pk->startAt,pk->index)) return false;
-         bool r=psPacket->read(pk->len,img->data);
+        if(!tsPacket->seek(pk->startAt,pk->index)) return false;
+         bool r=tsPacket->read(pk->len,img->data);
              img->dataLength=pk->len;
              img->demuxerFrameNo=frame;
              img->demuxerDts=pk->dts;
@@ -304,7 +304,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 /**
         \fn getExtraHeaderData
 */
-uint8_t  psHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
+uint8_t  tsHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
 {
                 *len=0; //_tracks[0].extraDataLen;
                 *data=NULL; //_tracks[0].extraData;
@@ -315,7 +315,7 @@ uint8_t  psHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
       \fn getFrameSize
       \brief return the size of frame frame
 */
-uint8_t psHeader::getFrameSize (uint32_t frame, uint32_t * size)
+uint8_t tsHeader::getFrameSize (uint32_t frame, uint32_t * size)
 {
     if(frame>=ListOfFrames.size()) return 0;
     *size=ListOfFrames[frame]->len;
@@ -325,7 +325,7 @@ uint8_t psHeader::getFrameSize (uint32_t frame, uint32_t * size)
 /**
     \fn getPtsDts
 */
-bool    psHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+bool    tsHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
     if(frame>=ListOfFrames.size()) return false;
     dmxFrame *pk=ListOfFrames[frame];
@@ -337,7 +337,7 @@ bool    psHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 /**
         \fn setPtsDts
 */
-bool    psHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+bool    tsHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
       if(frame>=ListOfFrames.size()) return false;
     dmxFrame *pk=ListOfFrames[frame];
