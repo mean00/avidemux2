@@ -1,10 +1,10 @@
 /**
-    dmxPSPacket.cpp
+    dmxtsPacket.cpp
 
 */
 
-#ifndef DMXPSPACKET_H
-#define DMXPSPACKET_H
+#ifndef DMXtsPacket_H
+#define DMXtsPacket_H
 
 #include "dmxPacket.h"
 #include "ADM_Video.h"
@@ -12,15 +12,15 @@
 
 
 /**
-    \class psPacket
+    \class tsPacket
 */
-class psPacket : public ADMMpegPacket
+class tsPacket : public ADMMpegPacket
 {
 protected:
     uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
 public:
-                        psPacket(void);
-    virtual            ~psPacket();
+                        tsPacket(void);
+    virtual            ~tsPacket();
     virtual bool        open(const char *filenames,FP_TYPE append);
     virtual bool        close(void);
     virtual bool        getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);
@@ -28,11 +28,11 @@ public:
     virtual bool        setPos(uint64_t pos);
 };
 /**
-    \class psPacketLinear
+    \class tsPacketLinear
 */
 #define ADM_PACKET_LINEAR 10*1024
 
-class psPacketLinear : public psPacket
+class tsPacketLinear : public tsPacket
 {
 protected:
         uint8_t  myPid;
@@ -51,8 +51,8 @@ protected:
         uint32_t consumed;
 
 public:
-                psPacketLinear(uint8_t pid);
-                ~psPacketLinear();
+                tsPacketLinear(uint8_t pid);
+                ~tsPacketLinear();
         uint32_t getConsumed(void);
         uint8_t  readi8();
         uint16_t readi16();
@@ -66,7 +66,7 @@ public:
         bool    changePid(uint32_t pid) ;
 };
 /**
-    \class psPacketLinearTracker
+    \class tsPacketLinearTracker
 */
 typedef struct
 {
@@ -79,14 +79,14 @@ typedef struct
     uint64_t startDts;
 }packetStats;
 
-class psPacketLinearTracker : public psPacketLinear
+class tsPacketLinearTracker : public tsPacketLinear
 {
 protected:
       packetStats stats[256];
 
 public:
-                        psPacketLinearTracker(uint8_t pid);
-                        ~psPacketLinearTracker();
+                        tsPacketLinearTracker(uint8_t pid);
+                        ~tsPacketLinearTracker();
          packetStats    *getStat(int intdex);
          bool           resetStats(void);
 virtual  bool           getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);

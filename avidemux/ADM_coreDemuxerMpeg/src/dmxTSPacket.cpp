@@ -1,7 +1,7 @@
 /**
-    \file dmxPSPacket
-    \brief Packet demuxer for mpeg PS
-    copyright            : (C) 2005-2008 by mean
+    \file dmxtsPacket
+    \brief Packet demuxer for mpeg TS
+    copyright            : (C) 2005-2009 by mean
     email                : fixounet@free.fr
         
  ***************************************************************************/
@@ -16,22 +16,22 @@
  ***************************************************************************/
 #include "ADM_default.h"
 
-#include "dmxPSPacket.h"
+#include "dmxTSPacket.h"
 #include "dmx_mpegstartcode.h"
 
 /**
-    \fn psPacket
+    \fn tsPacket
     \brief ctor
 */
-psPacket::psPacket(void) 
+tsPacket::tsPacket(void) 
 {
 
 }
 /**
-    \fn psPacket
+    \fn tsPacket
     \brief dtor
 */
-psPacket::~psPacket()
+tsPacket::~tsPacket()
 {
     close();
 }
@@ -39,7 +39,7 @@ psPacket::~psPacket()
     \fn open
     \brief dtor
 */
-bool psPacket::open(const char *filenames,FP_TYPE append)
+bool tsPacket::open(const char *filenames,FP_TYPE append)
 {
     _file=new fileParser();
     if(!_file->open(filenames,&append))
@@ -56,7 +56,7 @@ bool psPacket::open(const char *filenames,FP_TYPE append)
     \fn close
     \brief dtor
 */
-bool psPacket::close(void)
+bool tsPacket::close(void)
 {
     if(_file)
     {
@@ -68,7 +68,7 @@ bool psPacket::close(void)
 /**
     \fn getPos
 */
-uint64_t    psPacket::getPos(void)
+uint64_t    tsPacket::getPos(void)
 {
     return 0;
 }
@@ -76,11 +76,11 @@ uint64_t    psPacket::getPos(void)
     \fn setPos
 */
 
-bool    psPacket::setPos(uint64_t pos)
+bool    tsPacket::setPos(uint64_t pos)
 {
     if(!_file->setpos(pos))
     {
-        printf("[psPacket] Cannot seek to %"LLX"\n", pos);
+        printf("[tsPacket] Cannot seek to %"LLX"\n", pos);
         return false;
     }
 }
@@ -88,7 +88,7 @@ bool    psPacket::setPos(uint64_t pos)
 /**
     \fn getPacket
 */      
-bool        psPacket::getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *opts,uint64_t *odts,uint8_t *buffer,uint64_t *startAt)
+bool        tsPacket::getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *opts,uint64_t *odts,uint8_t *buffer,uint64_t *startAt)
 {
 uint32_t globstream,len;
 uint8_t  stream,substream;
@@ -155,7 +155,7 @@ _again2:
 
 */
 
-uint8_t psPacket::getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts)
+uint8_t tsPacket::getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts)
 {
 
 //uint32_t un ,deux;
@@ -376,9 +376,9 @@ uint8_t align=0;
 
 #define ADM_PACKET_LINEAR 10*1024
 /**
-    \fn psPacket
+    \fn tsPacket
 */
-psPacketLinear::psPacketLinear(uint8_t pid) : psPacket()
+tsPacketLinear::tsPacketLinear(uint8_t pid) : tsPacket()
 {
     oldStartAt=startAt=0xfffffff;
     oldBufferLen=bufferLen=0;
@@ -387,15 +387,15 @@ psPacketLinear::psPacketLinear(uint8_t pid) : psPacket()
     eof=false;
 }
 /**
-    \fn ~psPacket
+    \fn ~tsPacket
 */
-psPacketLinear::~psPacketLinear() 
+tsPacketLinear::~tsPacketLinear() 
 {
 }
 /**
     \fn refill
 */
-bool psPacketLinear::refill(void) 
+bool tsPacketLinear::refill(void) 
 {
 // In case a startcode spawns across 2 packets
 // we have to keep track of the old one
@@ -405,7 +405,7 @@ bool psPacketLinear::refill(void)
         oldBufferLen=bufferLen;
         if( false== getPacketOfType(myPid,ADM_PACKET_LINEAR, &bufferLen,&bufferPts,&bufferDts,buffer,&startAt)) 
         {
-            printf("[PsPacketLinear] Refill failed for pid :%x\n",myPid);
+            printf("[tsPacketLinear] Refill failed for pid :%x\n",myPid);
             bufferIndex=bufferLen=0;
             return false;
         }
@@ -416,7 +416,7 @@ bool psPacketLinear::refill(void)
 /**
     \fn readi8
 */
-uint8_t psPacketLinear::readi8(void)
+uint8_t tsPacketLinear::readi8(void)
 {
     consumed++;
     if(bufferIndex<bufferLen)
@@ -436,7 +436,7 @@ uint8_t psPacketLinear::readi8(void)
 /**
     \fn readi16
 */
-uint16_t psPacketLinear::readi16(void)
+uint16_t tsPacketLinear::readi16(void)
 {
     if(bufferIndex+1<bufferLen)
     {
@@ -450,7 +450,7 @@ uint16_t psPacketLinear::readi16(void)
 /**
     \fn readi32
 */
-uint32_t psPacketLinear::readi32(void)
+uint32_t tsPacketLinear::readi32(void)
 {
     if(bufferIndex+3<bufferLen)
     {
@@ -465,7 +465,7 @@ uint32_t psPacketLinear::readi32(void)
 /**
     \fn forward
 */
-bool psPacketLinear::forward(uint32_t v)
+bool tsPacketLinear::forward(uint32_t v)
 {
 next:
  uint32_t delta=bufferLen-bufferIndex;
@@ -489,7 +489,7 @@ next:
     \fn bool    read(uint32_t len, uint8_t *buffer);
     \brief
 */
-bool    psPacketLinear::read(uint32_t len, uint8_t *out)
+bool    tsPacketLinear::read(uint32_t len, uint8_t *out)
 {
     // Enough already ?
     while(len)
@@ -520,7 +520,7 @@ bool    psPacketLinear::read(uint32_t len, uint8_t *out)
             It is expected that the caller will do -4 to the index to get the start of the 
             startCode
 */
-bool    psPacketLinear::getInfo(dmxPacketInfo *info)
+bool    tsPacketLinear::getInfo(dmxPacketInfo *info)
 {
     if(bufferIndex<4)
     {
@@ -543,16 +543,16 @@ bool    psPacketLinear::getInfo(dmxPacketInfo *info)
     \fn seek
     \brief Async jump
 */
-bool    psPacketLinear::seek(uint64_t packetStart, uint32_t offset)
+bool    tsPacketLinear::seek(uint64_t packetStart, uint32_t offset)
 {
     if(!_file->setpos(packetStart))
     {
-        printf("[psPacket] Cannot seek to %"LLX"\n",packetStart);
+        printf("[tsPacket] Cannot seek to %"LLX"\n",packetStart);
         return 0;
     }
     if(!refill())
     {
-        printf("[PsPacketLinear] Seek to %"LLX":%"LX" failed\n",packetStart,offset);
+        printf("[tsPacketLinear] Seek to %"LLX":%"LX" failed\n",packetStart,offset);
         return false;
     }
     ADM_assert(offset<bufferLen);
@@ -564,7 +564,7 @@ bool    psPacketLinear::seek(uint64_t packetStart, uint32_t offset)
     \fn getConsumed
     \brief returns the # of bytes consumed since the last call
 */
-uint32_t psPacketLinear::getConsumed(void)
+uint32_t tsPacketLinear::getConsumed(void)
 {
     uint32_t c=consumed;
     consumed=0;
@@ -574,7 +574,7 @@ uint32_t psPacketLinear::getConsumed(void)
     \fn changePid
     \brief change the pid of the stream we read (used when probing all tracks)
 */
-bool    psPacketLinear::changePid(uint32_t pid) 
+bool    tsPacketLinear::changePid(uint32_t pid) 
 {
     myPid=(pid&0xff);
     bufferLen=bufferIndex=0;
@@ -582,16 +582,16 @@ bool    psPacketLinear::changePid(uint32_t pid)
 }
 /* ********************************************************* */
 /**
-    \fn psPacketLinearTracker
+    \fn tsPacketLinearTracker
 */
- psPacketLinearTracker::psPacketLinearTracker(uint8_t pid)  : psPacketLinear(pid)
+ tsPacketLinearTracker::tsPacketLinearTracker(uint8_t pid)  : tsPacketLinear(pid)
 {
    resetStats();
 }
 /**
-    \fn ~psPacketLinearTracker
+    \fn ~tsPacketLinearTracker
 */
-psPacketLinearTracker::~psPacketLinearTracker()
+tsPacketLinearTracker::~tsPacketLinearTracker()
 {
 
     
@@ -599,7 +599,7 @@ psPacketLinearTracker::~psPacketLinearTracker()
 /**
         \fn getStat
 */
-packetStats    *psPacketLinearTracker::getStat(int index)
+packetStats    *tsPacketLinearTracker::getStat(int index)
 {   
     if(index<0 || index>=256) ADM_assert(0);
     return stats+index;
@@ -609,7 +609,7 @@ packetStats    *psPacketLinearTracker::getStat(int index)
     \brief Keep track of all the packets we have seen so far.
     Usefull to detect the streams present and to look up the PTS/DTS of audio streams for the audio part of the index
 */
-bool           psPacketLinearTracker::getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt)
+bool           tsPacketLinearTracker::getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt)
 {
  bool xit=false;
     uint8_t tmppid;
@@ -641,7 +641,7 @@ bool           psPacketLinearTracker::getPacketOfType(uint8_t pid,uint32_t maxSi
 /**
     \fn resetStats
 */
-bool           psPacketLinearTracker::resetStats(void)
+bool           tsPacketLinearTracker::resetStats(void)
 {
     memset(stats,0,sizeof(stats));
     for(int i=0;i<256;i++)
