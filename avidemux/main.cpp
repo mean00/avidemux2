@@ -244,10 +244,10 @@ int main(int argc, char *argv[])
 
 	ADM_ad_loadPlugins(adPlugins);
 	delete [] adPlugins;
-
+#if 0 // Dont load video filter now
 	ADM_vf_loadPlugins(vfPlugins);
 	delete [] vfPlugins;
-
+#endif
     ADM_av_loadPlugins(avPlugins);
     delete [] avPlugins;
 
