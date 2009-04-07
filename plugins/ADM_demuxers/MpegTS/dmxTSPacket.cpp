@@ -19,13 +19,26 @@
 #include "dmxTSPacket.h"
 #include "dmx_mpegstartcode.h"
 
+#define TS_PACKET_LEN 188
+
+#define ADM_NO_CONFIG_H
+extern "C"
+{
+#include "libavutil/common.h"
+#include "libavutil/bswap.h"
+#include "ADM_lavcodec/bitstream.h"
+
+}
+#include "ADM_tsCrc.cpp"
+
+
 /**
     \fn tsPacket
     \brief ctor
 */
 tsPacket::tsPacket(void) 
 {
-
+    extraCrap=0; // =4 for ts2
 }
 /**
     \fn tsPacket
@@ -84,7 +97,127 @@ bool    tsPacket::setPos(uint64_t pos)
         return false;
     }
 }
+/**
+    \fn getSinglePacket
+    \brief 
+*/
+bool tsPacket::getSinglePacket(uint8_t *buffer)
+{
+    uint8_t scratch[16];
+again:
+    while(_file->read8i()!=TS_MARKER && _file->end()!=true) ;
+    if(_file->end()==true) 
+    {
+        return false;
+    }
+    _file->read32(TS_PACKET_LEN-1,buffer); // 184-1
+    if(extraCrap)  _file->read32(extraCrap,scratch);
+    if(_file->peek8i()!=TS_MARKER)
+    {
+        printf("[tsPacket] Sync lost\n");
+        goto again;
+    }
+    return true;
+}
 
+/**
+    \fn getNextPsiPacket
+    \brief Take a raw packet of type pid & remove the header
+*/
+bool tsPacket::getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *olen)
+{
+    uint8_t scratch[188+4];
+nextPack:
+
+    if(false==getSinglePacket(scratch)) return false;
+    uint32_t id=scratch[1]+((scratch[0]&0x1F)<<8);
+    if(id!=pid) goto nextPack;
+    
+
+    int payloadUnitStart=scratch[0]&0x40;
+    int fieldControl=(scratch[2]>>4)&3;
+    int continuity=(scratch[2]&0xf);
+    int len=TS_PACKET_LEN-4; // usefull datas
+    // Adaptation field
+    // 11 Adapt+payload
+    // 10 Adapt only
+    // 01 Payload only
+    // 00 forbidden
+    if(!(fieldControl & 1)) 
+    {
+        // No payload, continue
+        goto nextPack;
+    }
+    uint8_t *start,*end;
+    start=scratch+3;
+    end=scratch+187;
+
+    if(fieldControl & 2) // Adaptation layer
+    {
+        int payloadSize=*start++;
+        start+=payloadSize;
+    }
+    int size=(int)(end-start);
+    if(size<=0)  goto nextPack;
+    memcpy(buffer,start,size);
+    *olen=size;
+    return true;
+}
+
+/**
+    \fn getNextPsiPacket
+    \brief Take a raw packet of type pid & remove the header
+*/
+#define DUMMY(x,n) {dummy=get_bits(&s,n);printf("[TS]: "#x" =0x%x %d\n",dummy,dummy);}
+bool tsPacket::getNextPSI(uint32_t pid,uint8_t *buffer,uint32_t *olen,uint32_t *count, uint32_t *countMax)
+{
+    uint8_t scratch[188+4];
+    uint32_t len;
+nextPack2:
+
+    if(false==getNextPacket_NoHeader(pid,(uint8_t *)scratch,&len)) return false;
+
+    // Verify CRC
+    uint32_t crc1=mpegTsCRC(scratch,len-4);
+
+    uint8_t *c=scratch+len-4;
+    uint32_t crc2=(c[0]<<24)+(c[1]<<16)+(c[2]<<8)+c[3];
+    if(crc1!=crc2)
+    {
+        printf("[MpegTs] getNextPSI bad checksum :%04x vs %04x\n",crc1,crc2);
+        goto nextPack2;
+    }
+
+    GetBitContext s;
+    uint32_t tableId;
+    uint32_t sectionLength=0;
+    uint32_t transportStreamId=0;
+    uint32_t dummy;
+    
+
+    init_get_bits( &s,scratch, (len-4)*8);
+
+    DUMMY(tableId,8);
+    printf("[TS] Pid :%x TableId %02x\n",pid,tableId);
+    skip_bits(&s,1);             // Section syntax indicator
+    if(get_bits(&s,1))             // Marker
+    {
+          printf("[MpegTs] getNextPSI Missing 0 marker\n");
+          goto nextPack2;
+    }
+    sectionLength=get_bits(&s,12);    // Section Length
+    transportStreamId=get_bits(&s,16);// transportStreamId
+    skip_bits(&s,2);                  // ignored
+    DUMMY(VersionNumber,5);         // Version number
+    DUMMY(CurrentNext,1);           // Current Next indicator
+    *count=get_bits(&s,8);           // Section number
+    *countMax=get_bits(&s,8);        // Section last number
+
+    int hdr=(8+16+16+8+8+8)/8;
+    *olen=len-4-hdr;
+    memcpy(buffer,scratch+hdr,*olen);
+    return true;
+}
 /**
     \fn getPacket
 */      

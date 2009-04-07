@@ -486,6 +486,7 @@ uint16_t fileParser::read16i(void )
        v= (p[0]<<8)+p[1];
        return v;
 }
+
 uint8_t fileParser::read8i(void )
 {
 uint8_t r;
@@ -501,6 +502,24 @@ uint8_t r;
         return r;
 }
 #endif
+/**
+    \fn peek8i
+    \brief Return the next bytes in the stream without advancing index
+    * BEWARE: Use with caution!
+*/
+uint8_t  fileParser::peek8i(void)
+{
+uint8_t r;
+    if(_off+1<_tail)
+        r= _buffer[_off-_head];
+    else    
+    {
+        read32(1,&r);
+        _off--;
+    }
+    return r;
+
+}
 
 void fileParser::hexDump(uint8_t *buf, int size)
 {

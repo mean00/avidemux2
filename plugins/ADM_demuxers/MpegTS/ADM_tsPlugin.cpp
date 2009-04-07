@@ -22,10 +22,11 @@
 ADM_DEMUXER_BEGIN( tsHeader,
                     1,0,0,
                     "ts",
-                    "mpeg ps demuxer plugin (c) Mean 2007/2009"
+                    "mpeg ts demuxer plugin (c) Mean 2007/2009"
                 );
 
 static bool detectTs(const char *file);
+static bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block);
 uint8_t   tsIndexer(const char *file);
 /**
     \fn Probe
@@ -35,17 +36,27 @@ extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
 {
 char index[strlen(fileName)+4];
 int count=0;
-    if(!detectTs(fileName))
+    printf("[TS Demuxer] Probing...\n");
+    if(0 && !detectTs(fileName))
     {
-        printf(" [PS Demuxer] Not a ps file\n");
+        printf(" [TS Demuxer] Not a ts file\n");
         return false;
     }
+
+    tsPacket *t=new tsPacket();
+    t->open(fileName,FP_PROBE);
+    uint8_t b[200];
+    uint32_t l,current,max;
+    t->getNextPSI(0,b,&l,&current,&max);
+    delete t;
+    printf("[TS Demuxer] Probed...\n");
+    return 0;
 
     sprintf(index,"%s.idx",fileName);
 again:    
     if(ADM_fileExist(index)) 
     {
-        printf(" [PS Demuxer] There is an index for that file \n");
+        printf(" [TS Demuxer] There is an index for that file \n");
         FILE *f=fopen(index,"rt");
         char signature[10];
         fread(signature,4,1,f);
@@ -64,7 +75,7 @@ again:
 }
 #define PROBE_SIZE (1024*1024)
 /**
-    \fn detectPs
+    \fn detectTs
     \brief returns true if the file seems to be mpeg PS
 
 */
@@ -78,21 +89,52 @@ bool detectTs(const char *file)
     if(!f) return false;
     bufferSize=fread(buffer,1,PROBE_SIZE,f);
     fclose(f);
-    nbPacket=bufferSize/2300;
-    uint8_t *head,*tail;
-    head=buffer;
-    tail=buffer+bufferSize;
-    uint8_t code;
-    uint32_t offset;
-    while(ADM_findMpegStartCode(head,tail,&code,&offset))
+    // Do a simple check by checking we have 0x47....0x47 several time in a raw
+    if(true==checkMarker(buffer,bufferSize,188))
     {
-        head+=offset;
-        if(code==0xE0) nbMatch++;
-    }
-    printf(" match :%d / %d (probeSize:%d)\n",nbMatch,nbPacket,bufferSize);
-    if(nbMatch>nbPacket/3)
+        printf("[TS Demuxer] 188 bytes packet detected\n");
         return true;
+    }
+    // Do a simple check by checking we have 0x47....0x47 several time in a raw
+    if(true==checkMarker(buffer,bufferSize,192))
+    {
+        printf("[TS Demuxer] 192 bytes packet detected\n");
+        return true;
+    }
+    printf("[TS Demuxer] Not a TS file\n");
     return false;
-    
-
 }
+
+/**
+        \fn checkMarker
+        \brief return true if the mpeg TS markers are there separated by block bytes
+*/
+bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
+{
+    uint8_t *end=buffer+bufferSize;
+    int syncOk=0;
+    int syncKo=0;
+    // Search Marker    
+    while(buffer<end)
+    {
+        if(*buffer!=TS_MARKER)
+        {
+            while(*buffer!=TS_MARKER && buffer<end) 
+            {
+                buffer++;
+            }
+            syncKo++;
+        }
+        if(*buffer!=TS_MARKER) break;
+        while(buffer<end && buffer[block]==TS_MARKER)
+        {   
+                syncOk++,
+                buffer+=block;
+        }    
+        buffer++;
+    }
+    printf("[Ts Demuxer] Sync ok :%d Sync ko :%d\n",syncOk,syncKo);
+    if(!syncOk) return false;
+    if(syncOk>5*syncKo) return true;
+}
+//EOF

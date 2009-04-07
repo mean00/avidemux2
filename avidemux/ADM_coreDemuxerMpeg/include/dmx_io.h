@@ -59,10 +59,12 @@ typedef enum
                         uint32_t read32(uint32_t l, uint8_t *buffer);
                         uint8_t  end(void) { return _off==_size-1;};
 						void hexDump(uint8_t *buf, int size);
+                        uint8_t  peek8i(void); // Only call it once!!
 #ifdef NO_INLINE_FP
                         uint32_t read32i(void );
                         uint16_t read16i(void );
                         uint8_t  read8i(void );
+                        
                         
 
 #else
