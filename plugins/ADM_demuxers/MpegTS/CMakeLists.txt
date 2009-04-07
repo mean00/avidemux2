@@ -1,0 +1,18 @@
+include(dm_plugin)
+SET(ADM_ts_SRCS 
+	ADM_ts.cpp
+	ADM_tsPlugin.cpp
+	ADM_tsIndex.cpp
+	ADM_tsReadIndex.cpp
+	ADM_tsAudio.cpp
+	ADM_tsAudioProbe.cpp
+	ADM_tsAudioProbe.h
+        ADM_tsComputeTimeStamp.cpp
+)
+
+ADD_LIBRARY(ADM_dm_ts SHARED ${ADM_ts_SRCS})
+TARGET_LINK_LIBRARIES(ADM_dm_ts ADM_coreDemuxerMpeg ADM_audioParser)
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxerMpeg/include")
+
+INIT_DEMUXER(ADM_dm_ts)
+INSTALL_DEMUXER(ADM_dm_ts)
