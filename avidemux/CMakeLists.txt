@@ -55,17 +55,6 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}")
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config")
 # temp
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_audioFilter_old/")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_core/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreUI/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreImage/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreAudio/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreAudioEncoder/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_audioFilter/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_audioParser/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreUtils/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreAudioDevice/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreDemuxer/include")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreMuxer/include")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_libraries/")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_libraries/ADM_ffmpeg/libavutil")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_libraries/ADM_ffmpeg/")
@@ -75,6 +64,28 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_muxerGate/include/")
 IF (GETTEXT_FOUND)
 	INCLUDE_DIRECTORIES(${GETTEXT_INCLUDE_DIR})
 ENDIF (GETTEXT_FOUND)
+
+###########################################
+#  Our own shared libs
+###########################################
+SET(ADM_CORES
+        ADM_core
+        ADM_coreUI
+        ADM_coreImage
+        ADM_audioParser
+        ADM_coreAudioEncoder
+        ADM_coreAudio
+        ADM_audioFilter
+        ADM_coreDemuxer
+        ADM_coreDemuxerMpeg
+        ADM_coreAudioDevice
+        ADM_coreUtils
+        ADM_coreMuxer
+)
+FOREACH(_current ${ADM_CORES})
+        INCLUDE_DIRECTORIES(${_current}/include)
+ENDFOREACH(_current ${ADM_CORES})
+
 
 ########################################
 # Embed resources for executables
@@ -177,7 +188,6 @@ ADD_SOURCE_CFLAGS(main.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
 ########################################
 SET(ADM_SUBDIR 
 	ADM_audioFilter_old
-	#ADM_audioEncoder
 	ADM_editor
 	ADM_muxerGate
 	ADM_audiocodec
@@ -186,8 +196,6 @@ SET(ADM_SUBDIR
 	ADM_filter
 	ADM_videoFilter
 	ADM_video
-	#ADM_audiodevice
-	#ADM_ocr
 )
 FOREACH(_current ${ADM_SUBDIR})
 	ADD_SUBDIRECTORY(${_current})
@@ -195,50 +203,10 @@ FOREACH(_current ${ADM_SUBDIR})
 ENDFOREACH(_current ${ADM_SUBDIR})
 
 ###########################################
-# Construct ADM_outputs
+# Construct ADM_UIs
 ###########################################
-#ADD_SUBDIRECTORY(ADM_outputs)
-
-SET(ADM_OUTPUTS	
-	#oplug_avi
-	#oplug_mp4
-	#oplug_mpeg
-	#oplug_mpegFF
-	#oplug_ogm
-	#oplug_flv
-	#oplug_dummy
-	#ADM_outputs)
-)
-
-ADD_ADMLIB_ALL_TARGETS(${ADM_OUTPUTS})
-
-###########################################
-# Construct ADM_inputs
-###########################################
-#ADD_SUBDIRECTORY(ADM_inputs)
 ADD_SUBDIRECTORY(ADM_UIs)
 
-SET(ADM_INPUTS
-	#ADM_asf
-	#ADM_avsproxy
-	#ADM_h263
-	#ADM_inpics
-	#ADM_matroska
-	#ADM_mp4
-	#ADM_mpegdemuxer
-	#ADM_nuv
-	#ADM_ogm
-	#ADM_openDML
-	#ADM_flv
-	#ADM_amv
-)
-
-ADD_ADMLIB_ALL_TARGETS(${ADM_INPUTS})
-#########################################
-# Mpeg Indexer (Mpeg TS/PS/...)
-#########################################
-#ADD_SUBDIRECTORY(ADM_mpegIndexer)
-#ADD_ADMLIB_ALL_TARGETS(ADM_mpegIndexer)
 
 #########################################
 # Tails
@@ -261,9 +229,7 @@ ENDFOREACH(_current ${ADM_TAILS})
 ADD_SUBDIRECTORY(ADM_libraries)
 
 ADD_ADMLIB_ALL_TARGETS(
-	#ADM_mplex
 	ADM_libmpeg2enc
-	#ADM_lvemux
 	ADM_xvidratectl
 )
 ADD_LIB_ALL_TARGETS(
@@ -336,35 +302,11 @@ IF (ADM_UI_QT4)
                 ADM_render_qt4
 )
 ENDIF (ADM_UI_QT4)
-
-
-###########################################
-#  Our own shared libs
-###########################################
-ADD_SUBDIRECTORY(ADM_core)
-ADD_LIB_ALL_TARGETS(ADM_core)
-ADD_SUBDIRECTORY(ADM_coreUI)
-ADD_LIB_ALL_TARGETS(ADM_coreUI)
-ADD_SUBDIRECTORY(ADM_coreImage)
-ADD_LIB_ALL_TARGETS(ADM_coreImage)
-ADD_SUBDIRECTORY(ADM_audioParser)
-ADD_LIB_ALL_TARGETS(ADM_audioParser)
-ADD_SUBDIRECTORY(ADM_coreAudioEncoder)
-ADD_LIB_ALL_TARGETS(ADM_coreAudioEncoder)
-ADD_SUBDIRECTORY(ADM_coreAudio)
-ADD_LIB_ALL_TARGETS(ADM_coreAudio)
-ADD_SUBDIRECTORY(ADM_audioFilter)
-ADD_LIB_ALL_TARGETS(ADM_audioFilter)
-ADD_SUBDIRECTORY(ADM_coreDemuxer)
-ADD_LIB_ALL_TARGETS(ADM_coreDemuxer)
-ADD_SUBDIRECTORY(ADM_coreDemuxerMpeg)
-ADD_LIB_ALL_TARGETS(ADM_coreDemuxerMpeg)
-ADD_SUBDIRECTORY(ADM_coreAudioDevice)
-ADD_LIB_ALL_TARGETS(ADM_coreAudioDevice)
-ADD_SUBDIRECTORY(ADM_coreUtils)
-ADD_LIB_ALL_TARGETS(ADM_coreUtils)
-ADD_SUBDIRECTORY(ADM_coreMuxer)
-ADD_LIB_ALL_TARGETS(ADM_coreMuxer)
+# Add the core libs
+FOREACH(_current ${ADM_CORES})
+	ADD_SUBDIRECTORY(${_current})
+	ADD_LIB_ALL_TARGETS(${_current})
+ENDFOREACH(_current ${ADM_CORES})
 
 # To be removed
 #ADD_SUBDIRECTORY(ADM_audioEncoder)
