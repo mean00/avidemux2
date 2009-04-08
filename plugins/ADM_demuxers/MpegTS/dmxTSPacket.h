@@ -30,7 +30,7 @@ public:
     virtual uint64_t    getPos(void);
     virtual bool        setPos(uint64_t pos);
 protected:
-    bool                getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *len);
+    bool                getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *len,bool psi);
     bool                getSinglePacket(uint8_t *buffer);
 public:
     bool                getNextPSI(uint32_t pid,uint8_t *buffer,uint32_t *olen,uint32_t *count, uint32_t *countMax);

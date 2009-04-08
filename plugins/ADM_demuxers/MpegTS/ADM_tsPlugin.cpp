@@ -27,6 +27,7 @@ ADM_DEMUXER_BEGIN( tsHeader,
 
 static bool detectTs(const char *file);
 static bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block);
+static bool scanForPrograms(const char *file);
 uint8_t   tsIndexer(const char *file);
 /**
     \fn Probe
@@ -43,14 +44,7 @@ int count=0;
         return false;
     }
 
-    tsPacket *t=new tsPacket();
-    t->open(fileName,FP_PROBE);
-    uint8_t b[200];
-    uint32_t l,current,max;
-    t->getNextPSI(0,b,&l,&current,&max);
-    delete t;
-    printf("[TS Demuxer] Probed...\n");
-    return 0;
+   
 
     sprintf(index,"%s.idx",fileName);
 again:    
@@ -69,6 +63,7 @@ again:
     if(count) return false;
     printf("[TSDemuxer] Creating index..\n");
     count++;
+    if(scanForPrograms(fileName)==false) return 0;
     if(true==tsIndexer(fileName)) goto again;
     printf("[TSDemuxer] Failed..\n");
    return 0;
@@ -136,5 +131,69 @@ bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
     printf("[Ts Demuxer] Sync ok :%d Sync ko :%d\n",syncOk,syncKo);
     if(!syncOk) return false;
     if(syncOk>5*syncKo) return true;
+}
+/**
+    \fn scanForPrograms
+*/
+bool scanForPrograms(const char *file)
+{
+    uint8_t buffer[200];
+    uint32_t len,current,max;
+
+    vector <uint32_t>listOfPmt;
+
+    tsPacket *t=new tsPacket();
+    t->open(file,FP_PROBE);
+    // 1 search the pat...
+    if(t->getNextPSI(0,buffer,&len,&current,&max)==true)
+    {
+        uint8_t *r=buffer;
+        while(len>4)
+        {
+            uint32_t prg=((0x1F&r[0])<<8)+r[1];
+            uint32_t pid=((0x1F&r[2])<<8)+r[3];
+            r+=4;
+            len-=4;
+            printf("[TsDemuxer] Pat : Prg:%d Pid: 0x%04x\n",prg,pid);
+            listOfPmt.push_back(pid);
+        }
+        if(listOfPmt.size())
+        {
+            for(int i=0;i<listOfPmt.size();i++)
+            {
+                uint32_t pid=listOfPmt[i];
+                 if(t->getNextPSI(pid,buffer,&len,&current,&max)==true)
+                 {
+                    // We should be protected by CRC here
+                    r=buffer;
+                    printf("[TsDemuxer] PCR 0x%x\n",(r[0]<<8)+r[1]);
+                    r+=2;  
+                    int programInfoLength=(r[0]<<8)+r[1];
+                            programInfoLength&=0xfff;
+                            r+=2;
+                            while(programInfoLength)
+                            {
+                                    printf("[PMT] PMT :%02x StreamType: 0x%x\n",*r++);    
+                                    printf("[PMT] PMT :%02x Pid:        0x%x\n",(r[0]<<8)+r[1]);
+                                    r+=2;
+                                    int esInfoLength=((r[0]<<8)+r[1])&0xfff;
+                                    printf("[PMT] PMT :%02x Es Info Length: %d\n",esInfoLength);
+                                    r+=esInfoLength;
+                                    programInfoLength-=4;
+                                    programInfoLength=esInfoLength;
+
+                            }
+
+
+                 }
+
+            }
+
+        }
+
+    }
+    delete t;
+    printf("[TS Demuxer] Probed...\n");
+    return 0;
 }
 //EOF

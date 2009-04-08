@@ -4,6 +4,10 @@
     copyright            : (C) 2005-2009 by mean
     email                : fixounet@free.fr
         
+    Warning : For PSI packet (PAT & PMT) we assume they fit into one TS packet
+                Else we fail miserably.
+
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -124,7 +128,7 @@ again:
     \fn getNextPsiPacket
     \brief Take a raw packet of type pid & remove the header
 */
-bool tsPacket::getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *olen)
+bool tsPacket::getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *olen,bool psi)
 {
     uint8_t scratch[188+4];
 nextPack:
@@ -152,7 +156,7 @@ nextPack:
     start=scratch+3;
     end=scratch+187;
 
-    if(fieldControl & 2) // Adaptation layer
+    if((fieldControl & 2)|| psi) // Adaptation layer
     {
         int payloadSize=*start++;
         start+=payloadSize;
@@ -166,7 +170,7 @@ nextPack:
 
 /**
     \fn getNextPsiPacket
-    \brief Take a raw packet of type pid & remove the header
+    \brief Take a raw packet of type pid & remove the header (PSI)
 */
 #define DUMMY(x,n) {dummy=get_bits(&s,n);printf("[TS]: "#x" =0x%x %d\n",dummy,dummy);}
 bool tsPacket::getNextPSI(uint32_t pid,uint8_t *buffer,uint32_t *olen,uint32_t *count, uint32_t *countMax)
@@ -175,18 +179,7 @@ bool tsPacket::getNextPSI(uint32_t pid,uint8_t *buffer,uint32_t *olen,uint32_t *
     uint32_t len;
 nextPack2:
 
-    if(false==getNextPacket_NoHeader(pid,(uint8_t *)scratch,&len)) return false;
-
-    // Verify CRC
-    uint32_t crc1=mpegTsCRC(scratch,len-4);
-
-    uint8_t *c=scratch+len-4;
-    uint32_t crc2=(c[0]<<24)+(c[1]<<16)+(c[2]<<8)+c[3];
-    if(crc1!=crc2)
-    {
-        printf("[MpegTs] getNextPSI bad checksum :%04x vs %04x\n",crc1,crc2);
-        goto nextPack2;
-    }
+    if(false==getNextPacket_NoHeader(pid,(uint8_t *)scratch,&len,true)) return false;    
 
     GetBitContext s;
     uint32_t tableId;
@@ -198,23 +191,42 @@ nextPack2:
     init_get_bits( &s,scratch, (len-4)*8);
 
     DUMMY(tableId,8);
-    printf("[TS] Pid :%x TableId %02x\n",pid,tableId);
     skip_bits(&s,1);             // Section syntax indicator
     if(get_bits(&s,1))             // Marker
     {
           printf("[MpegTs] getNextPSI Missing 0 marker\n");
           goto nextPack2;
     }
+    skip_bits(&s,2);
     sectionLength=get_bits(&s,12);    // Section Length
+    if(sectionLength+3>len) goto nextPack2;
     transportStreamId=get_bits(&s,16);// transportStreamId
+    printf("[MpegTs] Section length    =%d\n",sectionLength);
+    printf("[MpegTs] transportStreamId =%d\n",transportStreamId);
     skip_bits(&s,2);                  // ignored
     DUMMY(VersionNumber,5);         // Version number
     DUMMY(CurrentNext,1);           // Current Next indicator
     *count=get_bits(&s,8);           // Section number
     *countMax=get_bits(&s,8);        // Section last number
 
+    if(*count!=*countMax) return false; // we dont handle split psi at the moment
+
+    uint8_t *c=scratch+sectionLength-4+3;
+
+// Verify CRC
+    uint32_t crc1=mpegTsCRC(scratch,sectionLength-4+3);
+    uint32_t crc2=(c[0]<<24)+(c[1]<<16)+(c[2]<<8)+c[3];
+    if(crc1!=crc2)
+    {
+        printf("[MpegTs] getNextPSI bad checksum :%04x vs %04x\n",crc1,crc2);
+        goto nextPack2;
+    }
+
+
     int hdr=(8+16+16+8+8+8)/8;
-    *olen=len-4-hdr;
+    int payloadsize=sectionLength-4-5; // Remove checksum & header
+    if(payloadsize<4) goto nextPack2;
+    *olen=payloadsize;
     memcpy(buffer,scratch+hdr,*olen);
     return true;
 }
