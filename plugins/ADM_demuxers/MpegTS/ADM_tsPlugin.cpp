@@ -28,6 +28,7 @@ ADM_DEMUXER_BEGIN( tsHeader,
 static bool detectTs(const char *file);
 static bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block);
 static bool scanForPrograms(const char *file);
+static bool scanPmt(tsPacket *t,uint32_t pid);
 uint8_t   tsIndexer(const char *file);
 /**
     \fn Probe
@@ -148,7 +149,7 @@ bool scanForPrograms(const char *file)
     if(t->getNextPSI(0,buffer,&len,&current,&max)==true)
     {
         uint8_t *r=buffer;
-        while(len>4)
+        while(len>=4)
         {
             uint32_t prg=((0x1F&r[0])<<8)+r[1];
             uint32_t pid=((0x1F&r[2])<<8)+r[3];
@@ -159,41 +160,58 @@ bool scanForPrograms(const char *file)
         }
         if(listOfPmt.size())
         {
-            for(int i=0;i<listOfPmt.size();i++)
+            for(int i=1;i<listOfPmt.size();i++) // First PMT is PCR lock ?
             {
+                
                 uint32_t pid=listOfPmt[i];
-                 if(t->getNextPSI(pid,buffer,&len,&current,&max)==true)
-                 {
-                    // We should be protected by CRC here
-                    r=buffer;
-                    printf("[TsDemuxer] PCR 0x%x\n",(r[0]<<8)+r[1]);
-                    r+=2;  
-                    int programInfoLength=(r[0]<<8)+r[1];
-                            programInfoLength&=0xfff;
-                            r+=2;
-                            while(programInfoLength)
-                            {
-                                    printf("[PMT] PMT :%02x StreamType: 0x%x\n",*r++);    
-                                    printf("[PMT] PMT :%02x Pid:        0x%x\n",(r[0]<<8)+r[1]);
-                                    r+=2;
-                                    int esInfoLength=((r[0]<<8)+r[1])&0xfff;
-                                    printf("[PMT] PMT :%02x Es Info Length: %d\n",esInfoLength);
-                                    r+=esInfoLength;
-                                    programInfoLength-=4;
-                                    programInfoLength=esInfoLength;
-
-                            }
-
-
-                 }
-
+                scanPmt(t,pid);
             }
 
         }
-
     }
     delete t;
     printf("[TS Demuxer] Probed...\n");
     return 0;
+}
+/**
+    \fn scanPmt
+*/
+bool scanPmt(tsPacket *t,uint32_t pid)
+{
+    uint8_t buffer[200];
+    uint32_t len,current,max;
+    uint8_t *r=buffer;
+    printf("[TsDemuxer] Looking for PMT : %x\n",pid);
+    if(t->getNextPSI(pid,buffer,&len,&current,&max)==true)
+         {
+            // We should be protected by CRC here
+            int packLen=len;
+            printf("[TsDemuxer] PCR 0x%x, len=%d\n",(r[0]<<8)+r[1],packLen);
+            r+=2;  
+                    int programInfoLength=(r[0]<<8)+r[1];
+                    programInfoLength&=0xfff;
+                    r+=2;
+                    printf("[PMT] PMT :%02x Program Info Len: %d\n",programInfoLength);    
+                    packLen-=(2+4);
+                    while(packLen>4)
+                    {
+                            int streamType,streamPid,esInfoLength;
+                            streamType=r[0];
+                            streamPid=(r[1]<<8)+r[2]&0x1fff;
+                            esInfoLength=((r[3]<<8)+r[4])&0xfff;
+                            r+=5;
+                            r+=esInfoLength;
+                            packLen-=5;
+                            packLen-=esInfoLength;
+
+                            printf("[PMT] PMT :%02x StreamType: 0x%x\n",pid,streamType);    
+                            printf("[PMT] PMT :%02x Pid:        0x%x\n",pid,streamPid);
+                            printf("[PMT] PMT :%02x Es Info Length: %d (0x%x)\n",pid,esInfoLength,esInfoLength);
+
+                    }
+
+
+         }
+        return false;
 }
 //EOF

@@ -108,7 +108,11 @@ bool    tsPacket::setPos(uint64_t pos)
 bool tsPacket::getSinglePacket(uint8_t *buffer)
 {
     uint8_t scratch[16];
+#define MAX_SKIPPED_PACKET 6000
+    int count=MAX_SKIPPED_PACKET;
 again:
+    count--;
+    if(!count) return false;
     while(_file->read8i()!=TS_MARKER && _file->end()!=true) ;
     if(_file->end()==true) 
     {
