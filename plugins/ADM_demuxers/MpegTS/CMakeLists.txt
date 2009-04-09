@@ -9,6 +9,7 @@ SET(ADM_ts_SRCS
 	ADM_tsAudioProbe.h
         ADM_tsComputeTimeStamp.cpp
         dmxTSPacket.cpp
+        ADM_tsPatPmt.cpp
 )
 
 ADD_LIBRARY(ADM_dm_ts SHARED ${ADM_ts_SRCS})
