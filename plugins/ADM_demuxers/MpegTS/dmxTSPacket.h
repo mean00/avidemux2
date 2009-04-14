@@ -14,6 +14,7 @@
 #define TS_MARKER       0x47
 #define TS_PACKET_LEN   188
 #define TS_PSI_MAX_LEN  1024
+#define TS_PES_MAX_LEN  (10*1024)
 /**
     \class TSpacketInfo
 */
@@ -42,11 +43,31 @@ public:
 };
 
 /**
+    \class TS_PESpacket
+*/
+class TS_PESpacket
+{
+public:
+    uint32_t    pid;
+    uint32_t    payloadSize;
+    uint8_t     payload[TS_PES_MAX_LEN];
+    uint64_t    pts;
+    uint64_t    dts;
+};
+
+/**
     \class tsPacket
 */
 class tsPacket : public ADMMpegPacket
 {
 protected:
+    uint8_t             *internalPesBuffer;
+    uint32_t            internalPesBufferSize;
+    uint32_t            internalPesBufferLimit;
+    uint32_t            internalBufferOffset;
+    bool                PesAddData(uint32_t len,uint8_t *data);
+
+
     uint32_t            extraCrap;
     uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
 public:
@@ -58,10 +79,13 @@ public:
     virtual uint64_t    getPos(void);
     virtual bool        setPos(uint64_t pos);
 protected:
-    bool                getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi);
+    
     bool                getSinglePacket(uint8_t *buffer);
 public:
+    bool                getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi);
+
     bool                getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi);
+    bool                getNextPES(uint32_t pid,TS_PESpacket *pes);
 
 };
 /**

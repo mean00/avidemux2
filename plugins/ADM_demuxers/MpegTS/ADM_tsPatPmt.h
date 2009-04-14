@@ -51,11 +51,7 @@ typedef struct
     @param out:tracks, to be freed by delete [] by the caller
 */
 
-bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK *tracks);
+bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **tracks);
 
-/**
-    \fn scanPmt
-*/
-bool TS_scanPmt(tsPacket *t,uint32_t pid,uint32_t *nbTracks, ADM_TS_TRACK *tracks);
 #endif
 //EOF

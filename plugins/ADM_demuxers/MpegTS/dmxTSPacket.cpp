@@ -43,6 +43,11 @@ extern "C"
 tsPacket::tsPacket(void) 
 {
     extraCrap=0; // =4 for ts2
+    internalPesBuffer=(uint8_t *)ADM_alloc(2048);
+    internalPesBufferSize=0;
+    internalPesBufferLimit=2048;
+    internalBufferOffset=0;
+
 }
 /**
     \fn tsPacket
@@ -80,6 +85,25 @@ bool tsPacket::close(void)
         delete _file;
         _file=NULL;
     }
+    if(internalPesBuffer)
+    {
+        ADM_dealloc(internalPesBuffer);
+        internalPesBuffer=NULL;
+    }
+    return true;
+}
+/**
+    \fn PesAddData
+*/
+bool tsPacket::PesAddData(uint32_t len,uint8_t *data)
+{
+    if(internalPesBufferSize+len>internalPesBufferLimit)
+    {
+        internalPesBufferLimit*=2;
+        internalPesBuffer=(uint8_t *)ADM_realloc(internalPesBuffer,internalPesBufferLimit);
+    }
+    memcpy(internalPesBuffer+internalPesBufferSize,data,len);
+    internalPesBufferSize+=len;
     return true;
 }
 /**
@@ -288,6 +312,62 @@ nextPack2:
     memcpy(psi->payload,pkt.payload+hdr,psi->payloadSize);
     return true;
 }
+/**
+        \fn getNextPES
+        \brief Returns the next PES packet
+        Warning : Does not work with unbound packet!
+*/
+extern void mixDump(uint8_t *ptr, uint32_t len);
+bool        tsPacket::getNextPES(uint32_t pid,TS_PESpacket *pes)
+{
+#define zprintf printf
+    TSpacketInfo pkt;
+nextPack3:
+    // Sync at source
+    if(false==getNextPacket_NoHeader(pid,&pkt,false)) return false;    
+    // If it does not contain a payload strat continue
+    if(!pkt.payloadStart)
+    {
+        printf("[Ts Demuxer] Pes for Pid =0x%d does not contain payload start\n",pid);
+        goto nextPack3;
+    }
+    //____________________
+    //____________________
+    // 1- Start Headers
+    //____________________
+    //____________________
+    uint32_t code=(pkt.payload[0]<<24)+(pkt.payload[1]<<16)+(pkt.payload[2]<<8)+pkt.payload[3];
+    zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pid);
+    if((code&0xffffff00)!=0x100)
+    {
+        printf("[Ts Demuxer] No PES startcode\n");
+        goto nextPack3;
+    }
+    mixDump(pkt.payload,pkt.payloadSize);
+    uint32_t pesPacketLen=(pkt.payload[4]<<8)+(pkt.payload[5]);
+    zprintf("[TS Demuxer] Pes Packet Len=%d\n",pesPacketLen);
+    
+    internalPesBufferSize=0;
+    PesAddData(pkt.payloadSize,pkt.payload);
+    while(1)
+    {
+        uint64_t pos;
+        _file->getpos(&pos);
+        if(false==getNextPacket_NoHeader(pid,&pkt,false)) return false;    
+        if(!pkt.payloadStart)
+         {
+                PesAddData(pkt.payloadSize,pkt.payload);
+         }else  
+         {
+                _file->setpos(pos);
+                break;
+         }
+    }
+    // Now decode PES header (extra memcpy)
+    printf("[Ts Demuxer] Found PES of len %d\n",internalPesBufferSize);
+    return true;
+}
+
 /**
     \fn getPacket
 */      

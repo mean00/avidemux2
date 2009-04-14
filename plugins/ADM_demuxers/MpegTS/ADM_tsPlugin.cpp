@@ -59,8 +59,15 @@ again:
     if(count) return false;
     printf("[TSDemuxer] Analyzing file..\n");
     count++;
-    if(TS_scanForPrograms(fileName,NULL,NULL)==false) return 0;
-    if(true==tsIndexer(fileName)) goto again;
+
+    ADM_TS_TRACK *tracks;
+    uint32_t nbTracks;
+
+    if(TS_scanForPrograms(fileName,&nbTracks,&tracks)==false) return 0;
+    ADM_assert(tracks);
+    ADM_assert(nbTracks);
+    delete [] tracks;
+    //if(true==tsIndexer(fileName)) goto again;
     printf("[TSDemuxer] Failed..\n");
    return 0;
 }
