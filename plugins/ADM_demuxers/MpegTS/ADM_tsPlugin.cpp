@@ -42,9 +42,6 @@ int count=0;
         printf(" [TS Demuxer] Not a ts file\n");
         return false;
     }
-
-   
-
     sprintf(index,"%s.idx",fileName);
 again:    
     if(ADM_fileExist(index)) 
@@ -60,7 +57,7 @@ again:
         return false;
     }
     if(count) return false;
-    printf("[TSDemuxer] Creating index..\n");
+    printf("[TSDemuxer] Analyzing file..\n");
     count++;
     if(scanForPrograms(fileName)==false) return 0;
     if(true==tsIndexer(fileName)) goto again;

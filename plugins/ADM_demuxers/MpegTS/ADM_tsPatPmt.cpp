@@ -45,11 +45,12 @@ bool scanForPrograms(const char *file)
             if(prg) // if prg==0, it is network Pid, dont need it
                 listOfPmt.push_back(pid);
         }
-        if(listOfPmt.size())
+        int size=listOfPmt.size();
+        if(size)
         {
-            for(int i=0;i<listOfPmt.size();i++) // First PMT is PCR lock ?
+            for(int i=0;i<size;i++) // First PMT is PCR lock ?
             {
-                
+                printf("<<< PMT : %d/%d>>>\n",i,size);
                 uint32_t pid=listOfPmt[i];
                 scanPmt(t,pid);
             }
@@ -68,36 +69,35 @@ bool scanPmt(tsPacket *t,uint32_t pid)
     uint8_t buffer[200];
     uint32_t len,current,max;
     uint8_t *r=buffer;
-    printf("[TsDemuxer] Looking for PMT : %x\n",pid);
+    printf("[TsDemuxer] Looking for PMT : 0x%x\n",pid);
     if(t->getNextPSI(pid,buffer,&len,&current,&max)==true)
-         {
-            // We should be protected by CRC here
-            int packLen=len;
-            printf("[TsDemuxer] PCR 0x%x, len=%d\n",(r[0]<<8)+r[1],packLen);
-            r+=2;  
-                    int programInfoLength=(r[0]<<8)+r[1];
-                    programInfoLength&=0xff;
-                    r+=2;
-                    printf("[PMT] PMT :%02x Program Info Len: %d\n",pid,programInfoLength);    
-                    packLen-=(2+4);
-                    while(packLen>4)
-                    {
-                            int streamType,streamPid,esInfoLength;
-                            streamType=r[0];
-                            streamPid=(r[1]<<8)+r[2]&0x1fff;
-                            esInfoLength=((r[3]<<8)+r[4])&0xfff;
-                            r+=5;
-                            r+=esInfoLength;
-                            packLen-=5;
-                            packLen-=esInfoLength;
+     {
+        // We should be protected by CRC here
+        int packLen=len;
+        printf("[TsDemuxer] PCR 0x%x, len=%d\n",(r[0]<<8)+r[1],packLen);
+        r+=2;  
+        int programInfoLength=(r[0]<<8)+r[1];
+        programInfoLength&=0xff;
+        r+=2;
+        printf("[PMT] PMT :%02x Program Info Len: %d\n",pid,programInfoLength);    
+        packLen-=(2+4);
+        while(packLen>4)
+        {
+                int streamType,streamPid,esInfoLength;
+                streamType=r[0];
+                streamPid=(r[1]<<8)+r[2]&0x1fff;
+                esInfoLength=((r[3]<<8)+r[4])&0xfff;
+                r+=5;
+                r+=esInfoLength;
+                packLen-=5;
+                packLen-=esInfoLength;
 
-                            printf("[PMT] PMT :%02x StreamType: 0x%x\n",pid,streamType);    
-                            printf("[PMT] PMT :%02x Pid:        0x%x\n",pid,streamPid);
-                            printf("[PMT] PMT :%02x Es Info Length: %d (0x%x)\n",pid,esInfoLength,esInfoLength);
+                printf("[PMT] PMT :%02x StreamType: 0x%x\n",pid,streamType);    
+                printf("[PMT] PMT :%02x Pid:        0x%x\n",pid,streamPid);
+                printf("[PMT] PMT :%02x Es Info Length: %d (0x%x)\n",pid,esInfoLength,esInfoLength);
 
-                    }
-
-
-         }
-        return false;
+        }
+        return true;
+     }
+    return false;
 }

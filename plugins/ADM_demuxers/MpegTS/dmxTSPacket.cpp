@@ -109,20 +109,37 @@ bool tsPacket::getSinglePacket(uint8_t *buffer)
 {
     uint8_t scratch[16];
 #define MAX_SKIPPED_PACKET 6000
-    int count=MAX_SKIPPED_PACKET;
+#define MAX_SEARCH 2048
+    int count=0;
 again:
-    count--;
-    if(!count) return false;
-    while(_file->read8i()!=TS_MARKER && _file->end()!=true) ;
+    while(1)
+    {
+        uint8_t r=_file->read8i();
+        if(r==TS_MARKER || _file->end()) break;
+        count++;
+        if(count>MAX_SEARCH) 
+        {
+            printf("[Mpeg TS] Sync definitevly lost\n");
+            return false;
+        }
+#ifdef TS_DEBUG1
+        uint64_t pos=_file->getpos(&pos);
+        printf("[%02d] count=%d at 0x%x\n",r,count,pos);
+#endif
+    }
     if(_file->end()==true) 
     {
+        printf("[Mpeg Ts] End of file reached\n");
         return false;
     }
     _file->read32(TS_PACKET_LEN-1,buffer); // 184-1
     if(extraCrap)  _file->read32(extraCrap,scratch);
-    if(_file->peek8i()!=TS_MARKER)
+    uint8_t r=_file->peek8i();
+    if(r!=TS_MARKER)
     {
-        printf("[tsPacket] Sync lost\n");
+#ifdef TS_DEBUG1
+        printf("[tsPacket] Sync lost (0x%x)\n",r);
+#endif
         goto again;
     }
     return true;
@@ -135,17 +152,27 @@ again:
 bool tsPacket::getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *olen,bool psi)
 {
     uint8_t scratch[188+4];
+    int count=0;
 nextPack:
 
     if(false==getSinglePacket(scratch)) return false;
     uint32_t id=scratch[1]+((scratch[0]&0x1F)<<8);
-    if(id!=pid) goto nextPack;
-    
+//#define TS_DEBUG2
+#ifdef TS_DEBUG2
+        printf("[Demuxer] Looking for 0x%x found 0x%x\n",pid,id);
+#endif
+    count++;
+    if(count>MAX_SKIPPED_PACKET) return false;
 
+    if(id!=pid) goto nextPack;
+#ifdef TS_DEBUG2
+    printf("[**************> Found matching pid 0x%x\n",pid);
+#endif
+    
     int payloadUnitStart=scratch[0]&0x40;
     int fieldControl=(scratch[2]>>4)&3;
     int continuity=(scratch[2]&0xf);
-    int len=TS_PACKET_LEN-4; // usefull datas
+    int len=TS_PACKET_LEN-4; // useful datas
     // Adaptation field
     // 11 Adapt+payload
     // 10 Adapt only
@@ -154,11 +181,14 @@ nextPack:
     if(!(fieldControl & 1)) 
     {
         // No payload, continue
+#ifdef TS_DEBUG2
+        printf("[Demuxer] No payload\n");
+#endif        
         goto nextPack;
     }
     uint8_t *start,*end;
     start=scratch+3;
-    end=scratch+187;
+    end=scratch+TS_PACKET_LEN-1;
 
     if((fieldControl & 2)|| psi) // Adaptation layer
     {
@@ -166,7 +196,14 @@ nextPack:
         start+=payloadSize;
     }
     int size=(int)(end-start);
-    if(size<=0)  goto nextPack;
+    if(size<=0)  
+    {
+#ifdef TS_DEBUG2
+        printf("[Demuxer] size=%d\n",size);
+#endif        
+
+        goto nextPack;
+    }
     memcpy(buffer,start,size);
     *olen=size;
     return true;
@@ -192,7 +229,7 @@ nextPack2:
     uint32_t dummy;
     
 
-    init_get_bits( &s,scratch, (len-4)*8);
+    init_get_bits( &s,scratch, (len)*8); // dont need checksum
 
     DUMMY(tableId,8);
     skip_bits(&s,1);             // Section syntax indicator
@@ -203,7 +240,13 @@ nextPack2:
     }
     skip_bits(&s,2);
     sectionLength=get_bits(&s,12);    // Section Length
-    if(sectionLength+3>len) goto nextPack2;
+#if 0
+    if(sectionLength+3>len) 
+    {
+        printf("[MpegTs] sectionLength=%d, len=%d\n",sectionLength,len);
+        goto nextPack2;
+    }
+#endif
     transportStreamId=get_bits(&s,16);// transportStreamId
     printf("[MpegTs] Section length    =%d\n",sectionLength);
     printf("[MpegTs] transportStreamId =%d\n",transportStreamId);
@@ -212,7 +255,7 @@ nextPack2:
     DUMMY(CurrentNext,1);           // Current Next indicator
     *count=get_bits(&s,8);           // Section number
     *countMax=get_bits(&s,8);        // Section last number
-
+    printf("[MpegTs] Count=%d CountMax=%d\n",*count,*countMax);
     if(*count!=*countMax) return false; // we dont handle split psi at the moment
 
     uint8_t *c=scratch+sectionLength-4+3;
