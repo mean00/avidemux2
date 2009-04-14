@@ -43,10 +43,7 @@ extern "C"
 tsPacket::tsPacket(void) 
 {
     extraCrap=0; // =4 for ts2
-    internalPesBuffer=(uint8_t *)ADM_alloc(2048);
-    internalPesBufferSize=0;
-    internalPesBufferLimit=2048;
-    internalBufferOffset=0;
+
 
 }
 /**
@@ -85,25 +82,6 @@ bool tsPacket::close(void)
         delete _file;
         _file=NULL;
     }
-    if(internalPesBuffer)
-    {
-        ADM_dealloc(internalPesBuffer);
-        internalPesBuffer=NULL;
-    }
-    return true;
-}
-/**
-    \fn PesAddData
-*/
-bool tsPacket::PesAddData(uint32_t len,uint8_t *data)
-{
-    if(internalPesBufferSize+len>internalPesBufferLimit)
-    {
-        internalPesBufferLimit*=2;
-        internalPesBuffer=(uint8_t *)ADM_realloc(internalPesBuffer,internalPesBufferLimit);
-    }
-    memcpy(internalPesBuffer+internalPesBufferSize,data,len);
-    internalPesBufferSize+=len;
     return true;
 }
 /**
@@ -315,20 +293,20 @@ nextPack2:
 /**
         \fn getNextPES
         \brief Returns the next PES packet
-        Warning : Does not work with unbound packet!
+        
 */
 extern void mixDump(uint8_t *ptr, uint32_t len);
-bool        tsPacket::getNextPES(uint32_t pid,TS_PESpacket *pes)
+bool        tsPacket::getNextPES(TS_PESpacket *pes)
 {
 #define zprintf printf
     TSpacketInfo pkt;
 nextPack3:
     // Sync at source
-    if(false==getNextPacket_NoHeader(pid,&pkt,false)) return false;    
+    if(false==getNextPacket_NoHeader(pes->pid,&pkt,false)) return false;    
     // If it does not contain a payload strat continue
     if(!pkt.payloadStart)
     {
-        printf("[Ts Demuxer] Pes for Pid =0x%d does not contain payload start\n",pid);
+        printf("[Ts Demuxer] Pes for Pid =0x%d does not contain payload start\n",pes->pid);
         goto nextPack3;
     }
     //____________________
@@ -337,26 +315,26 @@ nextPack3:
     //____________________
     //____________________
     uint32_t code=(pkt.payload[0]<<24)+(pkt.payload[1]<<16)+(pkt.payload[2]<<8)+pkt.payload[3];
-    zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pid);
+    zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
         printf("[Ts Demuxer] No PES startcode\n");
         goto nextPack3;
     }
-    mixDump(pkt.payload,pkt.payloadSize);
+    //mixDump(pkt.payload,pkt.payloadSize);
     uint32_t pesPacketLen=(pkt.payload[4]<<8)+(pkt.payload[5]);
     zprintf("[TS Demuxer] Pes Packet Len=%d\n",pesPacketLen);
     
-    internalPesBufferSize=0;
-    PesAddData(pkt.payloadSize,pkt.payload);
+    pes->payloadSize=0;
+    pes->addData(pkt.payloadSize,pkt.payload);
     while(1)
     {
         uint64_t pos;
         _file->getpos(&pos);
-        if(false==getNextPacket_NoHeader(pid,&pkt,false)) return false;    
+        if(false==getNextPacket_NoHeader(pes->pid,&pkt,false)) return false;    
         if(!pkt.payloadStart)
          {
-                PesAddData(pkt.payloadSize,pkt.payload);
+                pes->addData(pkt.payloadSize,pkt.payload);
          }else  
          {
                 _file->setpos(pos);
@@ -364,10 +342,106 @@ nextPack3:
          }
     }
     // Now decode PES header (extra memcpy)
-    printf("[Ts Demuxer] Found PES of len %d\n",internalPesBufferSize);
+    printf("[Ts Demuxer] Full size :%d\n",pes->payloadSize);
+    if(false==decodePesHeader(pes))
+        goto nextPack3;
+
+    //
+    printf("[Ts Demuxer] Found PES of len %d\n",pes->payloadSize);
     return true;
 }
+/**
+    \fn decodePesHeader
+*/
+#define fail(x) {printf("[Ts Demuxer]*********"x"*******\n");return false;}
+bool tsPacket::decodePesHeader(TS_PESpacket *pes)
+{
+    uint8_t  *start=pes->payload+6;
+    uint8_t  *end=pes->payload+pes->payloadSize;
+    uint8_t  stream=pes->payload[3];
+    uint32_t packLen=(pes->payload[4])<<8+(pes->payload[5]);
+    int      align=0,c;
 
+
+    pes->dts=ADM_NO_PTS;
+    pes->pts=ADM_NO_PTS;
+
+    
+    while(*start==0xff && start<end) start++; // Padding
+    if(start>=end) fail("too much padding");
+
+    c=*start++;
+    if((c&0xc0)!=0x80) fail("No Mpeg2 marker");
+    
+        uint32_t ptsdts,len;
+        if(c & 4) align=1;      
+        c=*start++;     // PTS/DTS
+        //printf("%x ptsdts\n",c
+        ptsdts=c>>6;
+        // header len
+        len=*start++;
+
+        switch(ptsdts)
+        {
+                case 2: // PTS=1 DTS=0
+                       
+                        {
+                                uint64_t pts1,pts2,pts0;
+                                //      printf("\n PTS10\n");
+                                        pts0=*start++;  
+                                        pts1=*start++; 
+                                        pts2=*start++;                 
+                                        pes->pts=(pts1>>1)<<15;
+                                        pes->pts+=pts2>>1;
+                                        pes->pts+=(((pts0&6)>>1)<<30);
+                        }
+                        break;
+                case 3: // PTS=1 DTS=1
+                                #define PTS11_ADV 10 // nut monkey
+//                                if(len>=PTS11_ADV)
+                                {
+                                        uint32_t skip=PTS11_ADV;
+                                        uint64_t pts1,pts2,dts,pts0;
+                                                //      printf("\n PTS10\n");
+                                                pts0=*start++;  
+                                                pts1=*start++;; 
+                                                pts2=(start[0]<<8)+start[1]; 
+                                                start+=2;
+                                                                        
+                                                pes->pts=(pts1>>1)<<15;
+                                                pes->pts+=pts2>>1;
+                                                pes->pts+=(((pts0&6)>>1)<<30);
+                                                pts0=*start++;  
+                                                pts1=(start[0]<<8)+start[1]; 
+                                                pts2=(start[2]<<8)+start[3];       
+                                                start+=4;
+                                                pes->dts=(pts1>>1)<<15;
+                                                pes->dts+=pts2>>1;
+                                                pes->dts+=(((pts0&6)>>1)<<30);
+                                   }
+                                   break;               
+                case 1:
+                                fail("unvalid pts/dts");
+                                break;
+                case 0: 
+                                // printf("\n PTS00\n");
+                                break; // no pts nor dts
+                                                                
+        }  
+        int maxLen=(int)(end-start);
+        pes->offset=start-pes->payload;
+        if(packLen)
+        {
+            if(packLen<maxLen) maxLen=packLen;
+            else
+                if(packLen>maxLen)
+                {
+                    fail("Pes too long");
+                }   
+        }
+        pes->payloadSize=maxLen;
+        return true;
+}
 /**
     \fn getPacket
 */      

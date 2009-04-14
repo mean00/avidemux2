@@ -44,15 +44,42 @@ public:
 
 /**
     \class TS_PESpacket
+    \brief Handle exactly one PES packet
+            It is assumed PES packet starts & ends at TS packet boundaries
 */
 class TS_PESpacket
 {
 public:
     uint32_t    pid;
     uint32_t    payloadSize;
-    uint8_t     payload[TS_PES_MAX_LEN];
+    uint32_t    payloadLimit;
+    uint32_t    offset;
+    uint8_t     *payload;
     uint64_t    pts;
     uint64_t    dts;
+                TS_PESpacket(uint32_t pid)
+                {
+                    payload=(uint8_t *)ADM_alloc(2048);
+                    payloadLimit=2048;
+                    offset=0;
+                    payloadSize=0;
+                    this->pid=pid;
+                }
+                ~TS_PESpacket()
+                {
+                    ADM_dealloc(payload);
+                    payload=NULL;
+                }
+    bool        addData(uint32_t len,uint8_t *data)
+                {
+                    if(len+payloadSize>payloadLimit)
+                    {
+                        payloadLimit*=2;
+                        payload=(uint8_t *)ADM_realloc(payload,payloadLimit);
+                    }
+                    memcpy(payload+payloadSize,data,len);
+                    payloadSize+=len;
+                }
 };
 
 /**
@@ -61,12 +88,6 @@ public:
 class tsPacket : public ADMMpegPacket
 {
 protected:
-    uint8_t             *internalPesBuffer;
-    uint32_t            internalPesBufferSize;
-    uint32_t            internalPesBufferLimit;
-    uint32_t            internalBufferOffset;
-    bool                PesAddData(uint32_t len,uint8_t *data);
-
 
     uint32_t            extraCrap;
     uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
@@ -81,11 +102,12 @@ public:
 protected:
     
     bool                getSinglePacket(uint8_t *buffer);
+    bool                decodePesHeader(TS_PESpacket *pes);
 public:
     bool                getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi);
 
     bool                getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi);
-    bool                getNextPES(uint32_t pid,TS_PESpacket *pes);
+    bool                getNextPES(TS_PESpacket *pes);
 
 };
 /**

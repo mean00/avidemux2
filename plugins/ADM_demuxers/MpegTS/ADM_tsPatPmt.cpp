@@ -136,39 +136,42 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
         printf("[Ts Demuxer] Cannot find a video track\n");
         goto _failTs;
     }
-    //
-#if 1 // TO REMOVE
-    TS_PESpacket pes;
-    t->getNextPES(list[videoIndex].trackPid,&pes);
-    t->getNextPES(list[videoIndex].trackPid,&pes);
-    t->getNextPES(list[videoIndex].trackPid,&pes);
-    t->getNextPES(list[videoIndex].trackPid,&pes);
-#endif
-    // After here we cannot fail (normally...)
-    tracks=new ADM_TS_TRACK[list.size()];
-    *outTracks=tracks;
-    // Copy video track
-    tracks[0]=list[videoIndex];
-    // and remove it from the list
-    list.erase(list.begin()+videoIndex);
-    nb++;
-    // Also add audio tracks we know of
-     for(int i=0;i<list.size();i++)
     {
-        ADM_TS_TRACK_TYPE type=list[i].trackType;
-        if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC)
+        //
+    #if 1 // TO REMOVE
+        TS_PESpacket pes(list[videoIndex].trackPid);
+        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
+        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
+        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
+        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
+        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
+        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
+    #endif
+        // After here we cannot fail (normally...)
+        tracks=new ADM_TS_TRACK[list.size()];
+        *outTracks=tracks;
+        // Copy video track
+        tracks[0]=list[videoIndex];
+        // and remove it from the list
+        list.erase(list.begin()+videoIndex);
+        nb++;
+        // Also add audio tracks we know of
+         for(int i=0;i<list.size();i++)
         {
-            TSpacketInfo pkt;
-            t->setPos(0);
-            if(true==t->getNextPacket_NoHeader(list[i].trackPid,&pkt,false))
-                tracks[nb++]=list[i];
-            else        
-                printf("[TS Demuxer] Track %i pid 0x%x does not seem to be there\n",i,list[i].trackPid);
+            ADM_TS_TRACK_TYPE type=list[i].trackType;
+            if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC)
+            {
+                TSpacketInfo pkt;
+                t->setPos(0);
+                if(true==t->getNextPacket_NoHeader(list[i].trackPid,&pkt,false))
+                    tracks[nb++]=list[i];
+                else        
+                    printf("[TS Demuxer] Track %i pid 0x%x does not seem to be there\n",i,list[i].trackPid);
+            }
         }
+        *nbTracks=nb;
+        result=true;
     }
-    *nbTracks=nb;
-    result=true;
-    
 _failTs:
     delete t;
     // Delete the list
