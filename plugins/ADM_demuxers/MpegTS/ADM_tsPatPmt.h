@@ -17,15 +17,45 @@
  ***************************************************************************/
 #ifndef ADM_TS_PAT_PMT_H
 #define ADM_TS_PAT_PMT_H
+
+#define ADM_TS_MAX_EXTRADATA 256
 /**
-    \fn scanForPrograms
+    \typedef ADM_TS_VIDEO_TYPE
+*/
+typedef enum
+{
+    ADM_TS_UNKNOWN=0,
+    ADM_TS_MPEG2,
+    ADM_TS_H264,
+    ADM_TS_MPEG_AUDIO=10,
+    ADM_TS_AC3,
+    ADM_TS_AAC
+}ADM_TS_TRACK_TYPE;
+/**
+    \typedef ADM_TS_TRACK
+*/
+typedef struct
+{
+    uint32_t          trackPid;
+    ADM_TS_TRACK_TYPE trackType;
+    uint32_t          extraDataLen;
+    uint8_t           extraData[ADM_TS_MAX_EXTRADATA];
+}ADM_TS_TRACK;
+
+
+/**
+    \fn TS_scanForPrograms
+    \brief Analyze a stream and returns tracks within
+    @param in:file File to open
+    @param out:nbTracks Number of tracks found
+    @param out:tracks, to be freed by delete [] by the caller
 */
 
-bool scanForPrograms(const char *file);
+bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK *tracks);
 
 /**
     \fn scanPmt
 */
-bool scanPmt(tsPacket *t,uint32_t pid);
+bool TS_scanPmt(tsPacket *t,uint32_t pid,uint32_t *nbTracks, ADM_TS_TRACK *tracks);
 #endif
 //EOF

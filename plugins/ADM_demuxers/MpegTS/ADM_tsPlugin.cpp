@@ -37,7 +37,7 @@ extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
 char index[strlen(fileName)+4];
 int count=0;
     printf("[TS Demuxer] Probing...\n");
-    if(0 && !detectTs(fileName))
+    if( !detectTs(fileName))
     {
         printf(" [TS Demuxer] Not a ts file\n");
         return false;
@@ -59,7 +59,7 @@ again:
     if(count) return false;
     printf("[TSDemuxer] Analyzing file..\n");
     count++;
-    if(scanForPrograms(fileName)==false) return 0;
+    if(TS_scanForPrograms(fileName,NULL,NULL)==false) return 0;
     if(true==tsIndexer(fileName)) goto again;
     printf("[TSDemuxer] Failed..\n");
    return 0;
@@ -81,13 +81,13 @@ bool detectTs(const char *file)
     bufferSize=fread(buffer,1,PROBE_SIZE,f);
     fclose(f);
     // Do a simple check by checking we have 0x47....0x47 several time in a raw
-    if(true==checkMarker(buffer,bufferSize,188))
+    if(true==checkMarker(buffer,bufferSize,TS_PACKET_LEN))
     {
         printf("[TS Demuxer] 188 bytes packet detected\n");
         return true;
     }
     // Do a simple check by checking we have 0x47....0x47 several time in a raw
-    if(true==checkMarker(buffer,bufferSize,192))
+    if(true==checkMarker(buffer,bufferSize,TS_PACKET_LEN+4))
     {
         printf("[TS Demuxer] 192 bytes packet detected\n");
         return true;
@@ -125,7 +125,8 @@ bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
         buffer++;
     }
     printf("[Ts Demuxer] Sync ok :%d Sync ko :%d\n",syncOk,syncKo);
-    if(!syncOk) return false;
+
     if(syncOk>5*syncKo) return true;
+    return false;
 }
 //EOF

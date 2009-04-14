@@ -11,7 +11,35 @@
 #include "dmxPacket.h"
 #include "ADM_Video.h"
 
-#define TS_MARKER 0x47
+#define TS_MARKER       0x47
+#define TS_PACKET_LEN   188
+#define TS_PSI_MAX_LEN  1024
+/**
+    \class TSpacketInfo
+*/
+class TSpacketInfo
+{
+public:
+    uint32_t    pid;
+    uint32_t    payloadSize;
+    bool        payloadStart;
+    uint32_t    continuityCounter;
+    uint8_t     payload[TS_PACKET_LEN];
+};
+
+
+/**
+    \class TS_PSIpacketInfo
+*/
+class TS_PSIpacketInfo
+{
+public:
+    uint32_t    pid;
+    uint32_t    payloadSize;
+    uint8_t     payload[TS_PSI_MAX_LEN];
+    uint32_t    count;
+    uint32_t    countMax;
+};
 
 /**
     \class tsPacket
@@ -30,10 +58,10 @@ public:
     virtual uint64_t    getPos(void);
     virtual bool        setPos(uint64_t pos);
 protected:
-    bool                getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *len,bool psi);
+    bool                getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi);
     bool                getSinglePacket(uint8_t *buffer);
 public:
-    bool                getNextPSI(uint32_t pid,uint8_t *buffer,uint32_t *olen,uint32_t *count, uint32_t *countMax);
+    bool                getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi);
 
 };
 /**

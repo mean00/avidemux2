@@ -23,7 +23,7 @@
 #include "dmxTSPacket.h"
 #include "dmx_mpegstartcode.h"
 
-#define TS_PACKET_LEN 188
+
 
 #define ADM_NO_CONFIG_H
 extern "C"
@@ -149,7 +149,7 @@ again:
     \fn getNextPsiPacket
     \brief Take a raw packet of type pid & remove the header
 */
-bool tsPacket::getNextPacket_NoHeader(uint32_t pid,uint8_t *buffer,uint32_t *olen,bool psi)
+bool tsPacket::getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi)
 {
     uint8_t scratch[188+4];
     int count=0;
@@ -165,6 +165,7 @@ nextPack:
     if(count>MAX_SKIPPED_PACKET) return false;
 
     if(id!=pid) goto nextPack;
+    pkt->pid=pid;
 #ifdef TS_DEBUG2
     printf("[**************> Found matching pid 0x%x\n",pid);
 #endif
@@ -173,6 +174,9 @@ nextPack:
     int fieldControl=(scratch[2]>>4)&3;
     int continuity=(scratch[2]&0xf);
     int len=TS_PACKET_LEN-4; // useful datas
+
+    pkt->continuityCounter=continuity;
+    pkt->payloadStart=payloadUnitStart;
     // Adaptation field
     // 11 Adapt+payload
     // 10 Adapt only
@@ -204,8 +208,8 @@ nextPack:
 
         goto nextPack;
     }
-    memcpy(buffer,start,size);
-    *olen=size;
+    memcpy(pkt->payload,start,size);
+    pkt->payloadSize=size;
     return true;
 }
 
@@ -213,14 +217,17 @@ nextPack:
     \fn getNextPsiPacket
     \brief Take a raw packet of type pid & remove the header (PSI)
 */
+#ifdef VERBOSE_PSI
 #define DUMMY(x,n) {dummy=get_bits(&s,n);printf("[TS]: "#x" =0x%x %d\n",dummy,dummy);}
-bool tsPacket::getNextPSI(uint32_t pid,uint8_t *buffer,uint32_t *olen,uint32_t *count, uint32_t *countMax)
+#else
+#define DUMMY(x,n) {dummy=get_bits(&s,n);}
+#endif
+bool tsPacket::getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi)
 {
-    uint8_t scratch[188+4];
-    uint32_t len;
+    TSpacketInfo pkt;
 nextPack2:
 
-    if(false==getNextPacket_NoHeader(pid,(uint8_t *)scratch,&len,true)) return false;    
+    if(false==getNextPacket_NoHeader(pid,&pkt,true)) return false;    
 
     GetBitContext s;
     uint32_t tableId;
@@ -229,7 +236,7 @@ nextPack2:
     uint32_t dummy;
     
 
-    init_get_bits( &s,scratch, (len)*8); // dont need checksum
+    init_get_bits( &s,pkt.payload, (pkt.payloadSize)*8); // dont need checksum
 
     DUMMY(tableId,8);
     skip_bits(&s,1);             // Section syntax indicator
@@ -240,28 +247,32 @@ nextPack2:
     }
     skip_bits(&s,2);
     sectionLength=get_bits(&s,12);    // Section Length
-#if 0
-    if(sectionLength+3>len) 
+#if 1
+    if(sectionLength+3>pkt.payloadSize) 
     {
-        printf("[MpegTs] sectionLength=%d, len=%d\n",sectionLength,len);
+        printf("[MpegTs] sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
         goto nextPack2;
     }
 #endif
     transportStreamId=get_bits(&s,16);// transportStreamId
+#ifdef VERBOSE_PSI
     printf("[MpegTs] Section length    =%d\n",sectionLength);
     printf("[MpegTs] transportStreamId =%d\n",transportStreamId);
+#endif
     skip_bits(&s,2);                  // ignored
     DUMMY(VersionNumber,5);         // Version number
     DUMMY(CurrentNext,1);           // Current Next indicator
-    *count=get_bits(&s,8);           // Section number
-    *countMax=get_bits(&s,8);        // Section last number
-    printf("[MpegTs] Count=%d CountMax=%d\n",*count,*countMax);
-    if(*count!=*countMax) return false; // we dont handle split psi at the moment
+    psi->count=get_bits(&s,8);           // Section number
+    psi->countMax=get_bits(&s,8);        // Section last number
+#ifdef VERBOSE_PSI
+    printf("[MpegTs] Count=%d CountMax=%d\n",psi->count,psi->countMax);
+#endif
+    if(psi->count!=psi->countMax) return false; // we dont handle split psi at the moment
 
-    uint8_t *c=scratch+sectionLength-4+3;
+    uint8_t *c=pkt.payload+sectionLength-4+3;
 
 // Verify CRC
-    uint32_t crc1=mpegTsCRC(scratch,sectionLength-4+3);
+    uint32_t crc1=mpegTsCRC(pkt.payload,sectionLength-4+3);
     uint32_t crc2=(c[0]<<24)+(c[1]<<16)+(c[2]<<8)+c[3];
     if(crc1!=crc2)
     {
@@ -273,8 +284,8 @@ nextPack2:
     int hdr=(8+16+16+8+8+8)/8;
     int payloadsize=sectionLength-4-5; // Remove checksum & header
     if(payloadsize<4) goto nextPack2;
-    *olen=payloadsize;
-    memcpy(buffer,scratch+hdr,*olen);
+    psi->payloadSize=payloadsize;
+    memcpy(psi->payload,pkt.payload+hdr,psi->payloadSize);
     return true;
 }
 /**
