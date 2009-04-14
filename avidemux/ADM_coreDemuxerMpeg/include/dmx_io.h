@@ -57,7 +57,7 @@ typedef enum
                         uint8_t  setpos(uint64_t o);                
                         uint64_t getSize( void ) ;
                         uint32_t read32(uint32_t l, uint8_t *buffer);
-                        uint8_t  end(void) { return _off==_size-1;};
+                        uint8_t  end(void) { return _off>=_size-1;};
 						void hexDump(uint8_t *buf, int size);
                         uint8_t  peek8i(void); // Only call it once!!
 #ifdef NO_INLINE_FP

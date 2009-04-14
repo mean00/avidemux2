@@ -511,7 +511,9 @@ uint8_t  fileParser::peek8i(void)
 {
 uint8_t r;
     if(_off+1<_tail)
+    {
         r= _buffer[_off-_head];
+    }
     else    
     {
         read32(1,&r);
