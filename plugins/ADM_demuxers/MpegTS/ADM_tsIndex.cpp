@@ -25,6 +25,7 @@
 #include "ADM_quota.h"
 #include "ADM_tsAudioProbe.h"
 #include "DIA_working.h"
+#include "ADM_tsPatPmt.h"
 
 static const char Type[5]={'X','I','P','B','P'};
 
@@ -54,6 +55,7 @@ typedef struct
     uint32_t fps;
     uint32_t interlaced;
     uint32_t ar;
+    uint32_t pid;
 }PSVideo;
 
 typedef enum
@@ -86,13 +88,13 @@ class TsIndexer
 {
 protected:
         FILE *index;
-        tsPacketLinearTracker *pkt;
-        listOfTsAudioTracks *audioTracks;
+        tsPacketLinear       *pkt;
+        listOfTsAudioTracks  *audioTracks;
         DIA_workingBase  *ui;
 public:
                 TsIndexer(void);
                 ~TsIndexer();
-        bool    run(const char *file);
+        bool    run(const char *file,uint32_t nbTracks, ADM_TS_TRACK *Tracks);
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
@@ -106,9 +108,23 @@ public:
 uint8_t   tsIndexer(const char *file)
 {
 bool r;
+
+    ADM_TS_TRACK *tracks;
+    uint32_t nbTracks;
+
+    if(TS_scanForPrograms(file,&nbTracks,&tracks)==false) 
+    {
+        printf("[Ts Indexer] Scan of pmt failed\n");
+        return false;
+    }
+    ADM_assert(tracks);
+    ADM_assert(nbTracks);
+    
+
     TsIndexer *dx=new TsIndexer;
-    r=dx->run(file);
+    r=dx->run(file,nbTracks,tracks);
     delete dx;
+    delete [] tracks;
     return r;
 }
 
@@ -137,7 +153,7 @@ TsIndexer::~TsIndexer()
 /**
     \fn run
 */  
-bool TsIndexer::run(const char *file)
+bool TsIndexer::run(const char *file,uint32_t nbTracks, ADM_TS_TRACK *Tracks)
 {
 uint32_t temporal_ref,val;
 uint64_t fullSize;
@@ -147,6 +163,14 @@ bool seq_found=false;
 PSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
+
+    if(!nbTracks) return false;
+    if(Tracks[0].trackType!=ADM_TS_MPEG2)
+    {
+        printf("[Ts Indexer] Only Mpeg2 video supported\n");
+        return false;
+    }
+    video.pid=Tracks[0].trackPid;
 
     memset(&data,0,sizeof(data));
     char indexName[strlen(file)+5];
@@ -158,23 +182,7 @@ dmxPacketInfo info;
         return false;
     }
     writeSystem(file,true);
-    pkt=new tsPacketLinearTracker(0xE0);
-
-    audioTracks=tsProbeAudio(file);
-    if(audioTracks)
-    {
-        for(int i=0;i<audioTracks->size();i++)
-        {
-                printf("[PsProbe] Found audio Track %d, pid=%x\n",i,(*audioTracks)[i]->esID);
-                WAVHeader *hdr=&((*audioTracks)[i]->header);
-                printf("[PsProbe] codec    : 0x%x \n",hdr->encoding);
-                printf("[PsProbe] frequency: %"LU" Hz\n",hdr->frequency);
-                printf("[PsProbe] channel  : %"LU" \n",hdr->channels);
-                printf("[PsProbe] byterate : %"LU" Byte/s\n",hdr->byterate);
-
-        }
-
-    }
+    pkt=new tsPacketLinear(Tracks[0].trackPid);
 
     FP_TYPE append=FP_APPEND;
     pkt->open(file,append);
@@ -216,8 +224,8 @@ dmxPacketInfo info;
                           video.fps= FPS[val & 0xf];
                           pkt->forward(4);
                           writeVideo(&video);
-                          writeAudio();
-                          pkt->resetStats();
+                          //writeAudio();
+                          //pkt->resetStats();
                           qfprintf(index,"[Data]");
                           break;
                   case 0xb8: // GOP
@@ -317,9 +325,11 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
     {
         if(data->frameType==1)
         {
+#if 0
             // If audio, also dump audio
             if(audioTracks)
             {
+
                 qfprintf(index,"\nAudio bf:%08"LLX" ",data->startAt);
                 for(int i=0;i<audioTracks->size();i++)
                 {
@@ -330,6 +340,7 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
                 }
                 
             }
+#endif
             // start a new line
             qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",data->startAt,data->offset,info->pts,info->dts);
             data->nextOffset=-2;
@@ -361,6 +372,7 @@ bool TsIndexer::writeVideo(PSVideo *video)
     qfprintf(index,"Fps=%d\n",video->fps);
     qfprintf(index,"Interlaced=%d\n",video->interlaced);
     qfprintf(index,"AR=%d\n",video->ar);
+    qfprintf(index,"Pid=%d\n",video->pid);
     return true;
 }
 /**
@@ -371,7 +383,7 @@ bool TsIndexer::writeSystem(const char *filename,bool append)
 {
     qfprintf(index,"PSD1\n");
     qfprintf(index,"[System]\n");
-    qfprintf(index,"Type=P\n");
+    qfprintf(index,"Type=T\n");
     qfprintf(index,"File=%s\n",filename);
     qfprintf(index,"Append=%d\n",append);
     return true;

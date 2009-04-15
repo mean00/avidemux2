@@ -21,7 +21,7 @@ using std::vector;
 typedef struct
 {
     WAVHeader header;
-    uint8_t   esID;
+    uint32_t  esID;
 }tsAudioTrackInfo;
 
 typedef vector <tsAudioTrackInfo*> listOfTsAudioTracks;

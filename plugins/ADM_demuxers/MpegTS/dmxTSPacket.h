@@ -26,6 +26,7 @@ public:
     bool        payloadStart;
     uint32_t    continuityCounter;
     uint8_t     payload[TS_PACKET_LEN];
+    uint64_t    startAt;
 };
 
 
@@ -35,6 +36,7 @@ public:
 class TS_PSIpacketInfo
 {
 public:
+    
     uint32_t    pid;
     uint32_t    payloadSize;
     uint8_t     payload[TS_PSI_MAX_LEN];
@@ -57,6 +59,8 @@ public:
     uint8_t     *payload;
     uint64_t    pts;
     uint64_t    dts;
+    uint64_t    startAt;
+    bool        fresh; // True if we just filled it with a new packet
                 TS_PESpacket(uint32_t pid)
                 {
                     payload=(uint8_t *)ADM_alloc(2048);
@@ -90,7 +94,6 @@ class tsPacket : public ADMMpegPacket
 protected:
 
     uint32_t            extraCrap;
-    uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
 public:
                         tsPacket(void);
     virtual            ~tsPacket();
@@ -118,13 +121,7 @@ public:
 class tsPacketLinear : public tsPacket
 {
 protected:
-        uint8_t  myPid;
-        uint64_t startAt;
-        uint32_t bufferLen;
-        uint64_t bufferPts;
-        uint64_t bufferDts;
-        uint32_t bufferIndex;
-        uint8_t  buffer[ADM_PACKET_LINEAR];
+        TS_PESpacket *pesPacket;
         bool     eof;
         bool     refill(void);
         uint64_t oldStartAt;
@@ -134,7 +131,7 @@ protected:
         uint32_t consumed;
 
 public:
-                tsPacketLinear(uint8_t pid);
+                tsPacketLinear(uint32_t pid);
                 ~tsPacketLinear();
         uint32_t getConsumed(void);
         uint8_t  readi8();
@@ -148,6 +145,7 @@ public:
         bool    seek(uint64_t packetStart, uint32_t offset);
         bool    changePid(uint32_t pid) ;
 };
+
 /**
     \class tsPacketLinearTracker
 */
@@ -161,19 +159,6 @@ typedef struct
     uint32_t startSize;
     uint64_t startDts;
 }packetStats;
-
-class tsPacketLinearTracker : public tsPacketLinear
-{
-protected:
-      packetStats stats[256];
-
-public:
-                        tsPacketLinearTracker(uint8_t pid);
-                        ~tsPacketLinearTracker();
-         packetStats    *getStat(int intdex);
-         bool           resetStats(void);
-virtual  bool           getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);
-};
 
 
 #endif

@@ -35,7 +35,7 @@
 #define LPCM_AUDIO_VALUE 0xA0
 #define DTS_AC3_AUDIO_VALUE 0x00
 
-static bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinearTracker *p);
+static bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinear *p);
 static bool tsCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
 /**
     \fn listOfPsAudioTracks
@@ -50,7 +50,7 @@ listOfTsAudioTracks *tsProbeAudio(const char *fileName)
     uint64_t fileSize;
 
     listOfTsAudioTracks *tracks=new listOfTsAudioTracks;
-    tsPacketLinearTracker *packet=new tsPacketLinearTracker(0xE0);
+    tsPacketLinear *packet=new tsPacketLinear(0xE0);
 
     printf("[MpegPS] Probing audio for %s\n",fileName);
 
@@ -58,12 +58,14 @@ listOfTsAudioTracks *tsProbeAudio(const char *fileName)
     fileSize=packet->getSize();
 
     packet->setPos(fileSize/2); // Jump in the middle of the stream
-
+#if 0
     while(packet->getPacketOfType(0xE0,PACKET_PROBE_SIZE,&size,&dts,&pts,buffer,&startAt))
     {
+
         packetStats *stat=packet->getStat(0xE0);
         if(stat->count > PROBE_PACKET_VIDEO_COUNT)
                 break;
+
     }
     // Now synthetize
     for(int i=0x0;i<0xFF;i++)   
@@ -81,7 +83,7 @@ listOfTsAudioTracks *tsProbeAudio(const char *fileName)
          }
 
     }
-
+#endif
 end:
     printf("[PsDemux] Audio probe done, found %lu tracks\n",tracks->size());
     delete packet;
@@ -98,7 +100,7 @@ end:
     \brief gather information about audio & add audio track to the list
 
 */
-bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinearTracker *p)
+bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinear *p)
 {
 #define PROBE_ANALYZE_SIZE 6000 // Should be enough in all cases (need ~ 2 blocks)
 uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
