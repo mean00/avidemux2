@@ -51,7 +51,31 @@ again:
         fread(signature,4,1,f);
         signature[4]=0;
         fclose(f);
-        if(!strcmp(signature,"PSD1")) return 50;
+        if(!strcmp(signature,"PSD1")) 
+        {
+              indexFile indexFile;
+             char *type;
+             if(!indexFile.open(index))
+             {
+                printf("[psDemux] Cannot open index file %s\n",index);
+                indexFile.close();
+                return false;
+              }
+             if(!indexFile.readSection("System"))
+            {
+                printf("[psDemux] Cannot read system section\n");
+                indexFile.close();
+                return false;
+            }
+            type=indexFile.getAsString("Type");
+            if(!type || type[0]!='P')
+                {
+                    printf("[psDemux] Incorrect or not found type\n");
+                    indexFile.close();
+                    return false;
+                }
+            return 50;
+        }
         printf("[PsDemuxer] Not a valid index\n");
         return false;
     }
@@ -93,6 +117,5 @@ bool detectPs(const char *file)
     if(nbMatch>nbPacket/3)
         return true;
     return false;
-    
-
 }
+//EOF

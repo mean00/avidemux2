@@ -52,10 +52,36 @@ again:
         fread(signature,4,1,f);
         signature[4]=0;
         fclose(f);
-        if(!strcmp(signature,"PSD1")) return 50;
+        if(!strcmp(signature,"PSD1"))
+        {
+                // Check if it is a valid index for us...
+                 indexFile indexFile;
+                 char *type;
+                 if(!indexFile.open(index))
+                 {
+                    printf("[tsDemux] Cannot open index file %s\n",index);
+                    indexFile.close();
+                    return false;
+                  }
+                 if(!indexFile.readSection("System"))
+                {
+                    printf("[tsDemux] Cannot read system section\n");
+                    indexFile.close();
+                    return false;
+                }
+                type=indexFile.getAsString("Type");
+                if(!type || type[0]!='T')
+                    {
+                        printf("[TsDemux] Incorrect or not found type\n");
+                        indexFile.close();
+                        return false;
+                    }
+                return 50;
+        }
         printf("[TSDemuxer] Not a valid index\n");
         return false;
-    }
+
+     }
     if(count) return false;
     printf("[TSDemuxer] Analyzing file..\n");
     count++;

@@ -51,7 +51,7 @@ uint8_t tsHeader::open(const char *name)
         goto abt;
     }
     type=index.getAsString("Type");
-    if(!type || type[0]!='P')
+    if(!type || type[0]!='T')
     {
         printf("[psDemux] Incorrect or not found type\n");
         goto abt;
