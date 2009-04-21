@@ -141,6 +141,7 @@ class tsHeader         :public vidHeader
     bool            updatePtsDts(void);
 protected:
     vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
+    uint32_t        videoPid;             
   public:
 
 

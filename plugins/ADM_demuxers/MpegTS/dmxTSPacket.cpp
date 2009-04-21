@@ -212,6 +212,9 @@ nextPack:
     }
     memcpy(pkt->payload,start,size);
     pkt->payloadSize=size;
+    uint64_t pos;
+    _file->getpos(&pos);
+    pkt->startAt=pos-extraCrap-TS_PACKET_LEN;
     return true;
 }
 
@@ -319,7 +322,8 @@ nextPack3:
     zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
-        printf("[Ts Demuxer] No PES startcode\n");
+        printf("[Ts Demuxer] No PES startcode at 0x%"LLX"\n",pkt.startAt);
+        printf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
         goto nextPack3;
     }
     //mixDump(pkt.payload,pkt.payloadSize);
@@ -328,6 +332,7 @@ nextPack3:
     
     pes->payloadSize=0;
     pes->addData(pkt.payloadSize,pkt.payload);
+    pes->startAt=pkt.startAt;
     while(1)
     {
         uint64_t pos;
@@ -357,6 +362,7 @@ nextPack3:
     //
     printf("[Ts Demuxer] Found PES of len %d\n",pes->payloadSize);  
     pes->fresh=true;
+    
     return true;
 }
 /**
@@ -492,7 +498,7 @@ bool tsPacketLinear::refill(void)
 // In case a startcode spawns across 2 packets
 // we have to keep track of the old one
         oldBufferDts=pesPacket->dts;
-        oldBufferPts=pesPacket->dts;
+        oldBufferPts=pesPacket->pts;
         oldStartAt=pesPacket->startAt;
         oldBufferLen=pesPacket->payloadSize;
         if(false==getNextPES(pesPacket))
@@ -580,6 +586,7 @@ next:
 */
 bool    tsPacketLinear::read(uint32_t len, uint8_t *out)
 {
+    printf("[tsRead] Size 0x%x %d\n",len,len);
     // Enough already ?
     while(len)
     {

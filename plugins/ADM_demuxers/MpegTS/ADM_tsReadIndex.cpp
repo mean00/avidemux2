@@ -174,7 +174,13 @@ bool    tsHeader::readVideo(indexFile *index)
     w=index->getAsUint32("Width");
     h=index->getAsUint32("height");
     fps=index->getAsUint32("Fps");
-
+    videoPid=index->getAsUint32("Pid");
+    if(!videoPid)
+    {
+        printf("[tsDemux] Cannot find Pid\n");
+        return false;
+    }
+    printf("[tsDemux] Video pid is 0x%x %d\n",videoPid,videoPid);
     if(!w || !h || !fps) return false;
 
     interlaced=index->getAsUint32("Interlaced");

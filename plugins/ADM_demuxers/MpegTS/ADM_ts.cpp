@@ -37,57 +37,60 @@ uint8_t tsHeader::open(const char *name)
     uint32_t append;
     char *type;
     uint64_t startDts;
+    
 
     sprintf(idxName,"%s.idx",name);
     indexFile index;
     if(!index.open(idxName))
     {
-        printf("[psDemux] Cannot open index file %s\n",idxName);
+        printf("[tsDemux] Cannot open index file %s\n",idxName);
         return false;
     }
     if(!index.readSection("System"))
     {
-        printf("[psDemux] Cannot read system section\n");
+        printf("[tsDemux] Cannot read system section\n");
         goto abt;
     }
     type=index.getAsString("Type");
     if(!type || type[0]!='T')
     {
-        printf("[psDemux] Incorrect or not found type\n");
+        printf("[tsDemux] Incorrect or not found type\n");
         goto abt;
     }
     append=index.getAsUint32("Append");
-    printf("[psDemux] Append=%"LU"\n",append);
+    printf("[tsDemux] Append=%"LU"\n",append);
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))
     {
-        printf("[psDemux] Cannot open root file\n",name);
+        printf("[tsDemux] Cannot open root file\n",name);
         goto abt;
     }
     if(!readVideo(&index)) 
     {
-        printf("[psDemux] Cannot read Video section of %s\n",idxName);
+        printf("[tsDemux] Cannot read Video section of %s\n",idxName);
         goto abt;
     }
+#if 0
     if(!readAudio(&index,name)) 
     {
-        printf("[psDemux] Cannot read Audio section of %s => No audio\n",idxName);
+        printf("[tsDemux] Cannot read Audio section of %s => No audio\n",idxName);
     }
+#endif
     if(!readIndex(&index))
     {
-        printf("[psDemux] Cannot read index for file %s\n",idxName);
+        printf("[tsDemux] Cannot read index for file %s\n",idxName);
         goto abt;
     }
     updatePtsDts();
     _videostream.dwLength= _mainaviheader.dwTotalFrames=ListOfFrames.size();
-    printf("[psDemux] Found %d video frames\n",_videostream.dwLength);
+    printf("[tsDemux] Found %d video frames\n",_videostream.dwLength);
     if(_videostream.dwLength)_isvideopresent=1;
 //***********
     
-    tsPacket=new tsPacketLinear(0xE0);
+    tsPacket=new tsPacketLinear(videoPid);
     if(tsPacket->open(name,appendType)==false) 
     {
-        printf("psDemux] Cannot tsPacket open the file\n");
+        printf("tsDemux] Cannot tsPacket open the file\n");
         goto abt;
     }
     r=true;
@@ -105,7 +108,7 @@ uint8_t tsHeader::open(const char *name)
     }
 abt:
     index.close();
-    printf("[psDemuxer] Loaded %d\n",r);
+    printf("[tsDemuxer] Loaded %d\n",r);
     return r;
 }
 /**
@@ -195,6 +198,7 @@ uint8_t tsHeader::close(void)
 { 
     interlaced=false;
     lastFrame=0xffffffff;
+    videoPid=0;
     
 }
 /**
@@ -298,7 +302,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              return r;
 
     }
-    printf(" [PsDemux] lastFrame :%d this frame :%d\n",lastFrame,frame);
+    printf(" [tsDemux] lastFrame :%d this frame :%d\n",lastFrame,frame);
     return false;
 }
 /**
