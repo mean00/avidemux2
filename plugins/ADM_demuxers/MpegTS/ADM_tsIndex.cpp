@@ -348,22 +348,24 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
     {
         if(data->frameType==1)
         {
-#if 0
+
             // If audio, also dump audio
             if(audioTracks)
             {
 
                 qfprintf(index,"\nAudio bf:%08"LLX" ",data->startAt);
-                for(int i=0;i<audioTracks->size();i++)
-                {
-                    uint8_t e=(*audioTracks)[i]->esID;
-                    packetStats *s=pkt->getStat(e);
-                    
-                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",e,s->startAt,s->startSize,s->startDts);
+                packetTSStats *s;
+                uint32_t na;
+                pkt->getStats(&na,&s);      
+                ADM_assert(na==audioTracks->size());
+                for(int i=0;i<na;i++)
+                {   
+                    packetTSStats *current=s+i;
+                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",
+                                current->pid,current->startAt,current->startSize,current->startDts);
                 }
                 
             }
-#endif
             // start a new line
             qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",data->startAt,data->offset,info->pts,info->dts);
             data->nextOffset=-2;

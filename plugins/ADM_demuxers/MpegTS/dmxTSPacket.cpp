@@ -738,21 +738,36 @@ tsPacketLinearTracker::~tsPacketLinearTracker()
 /**
     \fn tsPacketLinearTracker
 */
-bool    tsPacketLinearTracker::getStats(uint32_t *nb,packetTSStats *stats)
+bool    tsPacketLinearTracker::getStats(uint32_t *nb,packetTSStats **stats)
 {
     *nb=totalTracks;
-    stats=this->stats;
+    *stats=this->stats;
     return true;
 }
+/**
+        \fn updateStats
+        \brief Decode a bit of PES header, just enough to get PTS or DTS
+            if only PTS is there we assume PTS=DTS
+*/
 bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
 {
     uint32_t id=scratch[1]+((scratch[0]&0x1F)<<8);
+    int found=-1;
+    // Look if it is a pid we are interested in
+    for(int i=0;i<totalTracks;i++)
+        if(id==stats[i].pid) found=i;
+    if(found==-1) return false;
+
+    
     int payloadUnitStart=scratch[0]&0x40;
     int fieldControl=(scratch[2]>>4)&3;
     int continuity=(scratch[2]&0xf);
-    int len=TS_PACKET_LEN-4; // useful datas
+
 
     if(!payloadUnitStart) return false; // no PES start in here...
+
+
+
     // Adaptation field
     // 11 Adapt+payload
     // 10 Adapt only
@@ -781,14 +796,102 @@ bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
 #ifdef TS_DEBUG2
         printf("[Demuxer] size=%d\n",size);
 #endif        
-
         return true;
     }
     // Look into pes packet starting at "start"
     otherPes->payloadSize=size;
     uint64_t pos;
     _file->getpos(&pos);
+
+    //*************************
+    // ENTER PES
+    //*************************
+
     otherPes->startAt=pos-extraCrap-TS_PACKET_LEN;
+    // PES startcode ?
+    if( start[0] || start[1] || start[2]!=1) return false; 
+    int stream=start[3];
+    // Skip startcode + length
+    start+=6;
+    // Update our stats
+    stats[found].startAt=otherPes->startAt;
+    stats[found].count++;
+    //stats[found].startDts=ADM_NO_PTS;
+    
+    // Get PTS, DTS
+#define LEFT (int)(end-start)
+    int c,available;
+    if(LEFT<(4+2+1+2)) return false;
+    
+    while(*start==0xff && start<end) start++; // Padding
+    if(LEFT<5) fail("Not enough data in OES");
+
+    c=*start++;
+    if((c&0xc0)!=0x80) 
+    {
+        printf("[TS Demuxer] stream=0x%x pid=%d PES header :0x%x no mpeg2 PES marker\n",stream,id,c);
+        return false;
+    }
+    
+        uint32_t ptsdts,len;
+        c=*start++;     // PTS/DTS
+        //printf("%x ptsdts\n",c
+        ptsdts=c>>6;
+        // header len
+        len=*start++;
+        available=LEFT;
+        if(len>available) fail("Not enough data for PES header");
+    
+        switch(ptsdts)
+        {
+                case 2: // PTS=1 DTS=0
+                       
+                        {
+                                if(available<5) return false;
+                                uint64_t pts1,pts2,pts0;
+                                //      printf("\n PTS10\n");
+                                        pts0=start[0];  
+                                        pts1=(start[1]<<8)+start[2]; 
+                                        pts2=(start[3]<<8)+start[4]; 
+                                        start+=5;
+                                        stats[found].startDts=(pts1>>1)<<15;
+                                        stats[found].startDts+=pts2>>1;
+                                        stats[found].startDts+=(((pts0&6)>>1)<<30);
+                        }
+                        break;
+                case 3: // PTS=1 DTS=1
+                                if(available<10) return false;
+                                #define PTS11_ADV 10 // nut monkey
+                                if(len>=PTS11_ADV)
+                                {
+                                        uint32_t skip=PTS11_ADV;
+                                        uint64_t pts1,pts2,dts,pts0;
+                                                //      printf("\n PTS10\n");
+                                                pts0=start[0];  
+                                                pts1=(start[1]<<8)+start[2]; 
+                                                pts2=(start[3]<<8)+start[4]; 
+                                                start+=5;
+                                                                        
+                                                // Assume PTS=DTS
+                                                pts0=*start++;  
+                                                pts1=(start[0]<<8)+start[1]; 
+                                                pts2=(start[2]<<8)+start[3];       
+                                                start+=5;
+                                                stats[found].startDts=(pts1>>1)<<15;
+                                                stats[found].startDts+=pts2>>1;
+                                                stats[found].startDts+=(((pts0&6)>>1)<<30);
+                                   }
+                                   break;               
+                case 1:
+                                fail("unvalid pts/dts");
+                                break;
+                case 0: 
+                                // printf("\n PTS00\n");
+                                break; // no pts nor dts
+                                                                
+        }  
+       
+
     return true;
 }
 // EOF

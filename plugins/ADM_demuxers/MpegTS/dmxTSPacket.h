@@ -179,7 +179,7 @@ protected:
 public:
                 tsPacketLinearTracker(uint32_t videoPid,listOfTsAudioTracks *audioTracks);
                 ~tsPacketLinearTracker();
-        bool    getStats(uint32_t *nb,packetTSStats *stats);
+        bool    getStats(uint32_t *nb,packetTSStats **stats);
 virtual bool    updateStats(uint8_t *data);
 };
 #endif
