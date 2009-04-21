@@ -51,7 +51,7 @@ uint64_t pts,dts,startAt;
         
         
         // dont even try if it is not audio
-        if(trackInfo->trackType!=ADM_TS_MPEG2 &&trackInfo->trackType!=ADM_TS_AC3) return false;
+        if(trackInfo->trackType!=ADM_TS_MPEG_AUDIO &&trackInfo->trackType!=ADM_TS_AC3) return false;
 
         // Go back where we were
         p->changePid(trackInfo->esId); 
@@ -66,7 +66,7 @@ uint64_t pts,dts,startAt;
         uint32_t fq,br,chan,off;
         switch(trackInfo->trackType)
         {
-            case ADM_TS_MPEG2: // MP2
+            case ADM_TS_MPEG_AUDIO: // MP2
                             {
                                 if(! tsCheckMp2Audio(&(trackInfo->wav),audioBuffer,rd))
                                 {

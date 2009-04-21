@@ -138,15 +138,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     }
     {
         //
-    #if 0 // TO REMOVE
-        TS_PESpacket pes(list[videoIndex].trackPid);
-        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
-        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
-        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
-        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
-        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
-        t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
-    #endif
+ 
         // After here we cannot fail (normally...)
         tracks=new ADM_TS_TRACK[list.size()];
         *outTracks=tracks;
@@ -156,7 +148,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
         list.erase(list.begin()+videoIndex);
         nb++;
         // Also add audio tracks we know of
-         for(int i=0;i<list.size();i++)
+        for(int i=0;i<list.size();i++)
         {
             ADM_TS_TRACK_TYPE type=list[i].trackType;
             if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC)

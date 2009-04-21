@@ -111,7 +111,7 @@ bool r;
 
     ADM_TS_TRACK *tracks;
     uint32_t nbTracks;
-    listOfTsAudioTracks *audioTrack;
+    listOfTsAudioTracks audioTrack;
 
     if(TS_scanForPrograms(file,&nbTracks,&tracks)==false) 
     {
@@ -127,19 +127,23 @@ bool r;
     for(int i=1;i<nbTracks;i++)
     {
         tsAudioTrackInfo trk;
+        trk.esId=tracks[i].trackPid;
+        trk.trackType=tracks[i].trackType;
         if(true==tsGetAudioInfo(p,&trk))
         {
-                
+              audioTrack.push_back(trk);  
         }
     }
     delete p;
-    printf("[TsIndexer] Audio probed, doing video\n");
+    printf("[TsIndexer] Audio probed, %d found, doing video\n",(int)audioTrack.size());
     //
-    TsIndexer *dx=new TsIndexer(audioTrack);
+    TsIndexer *dx=new TsIndexer(&audioTrack);
     switch(tracks[0].trackType)
     {
-    case ADM_TS_MPEG2: r=dx->runMpeg2(file,&(tracks[0]));break;
-    default:
+            case ADM_TS_MPEG2: 
+                            r=dx->runMpeg2(file,&(tracks[0]));
+                            break;
+            default:
                         r=0;
                         break;
     }

@@ -463,6 +463,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
             else
                 if(packLen>maxLen)
                 {
+                    printf("[TS Packet] PackLen=%d, avalailble=%d\n",packLen,maxLen);
                     fail("Pes too long");
                 }   
         }
