@@ -7,10 +7,12 @@
 
 #ifndef DMXtsPacket_H
 #define DMXtsPacket_H
-
+#include <vector>
+using std::vector;
 #include "dmxPacket.h"
 #include "ADM_tsPatPmt.h"
 #include "ADM_Video.h"
+
 
 #define TS_MARKER       0x47
 #define TS_PACKET_LEN   188
@@ -174,7 +176,7 @@ protected:
         packetTSStats *stats;
         uint32_t      totalTracks;
 public:
-                tsPacketLinearTracker(uint32_t nb,ADM_TS_TRACK *tracks);
+                tsPacketLinearTracker(uint32_t videoPid,listOfTsAudioTracks *audioTracks);
                 ~tsPacketLinearTracker();
         bool    getStats(uint32_t *nb,packetTSStats *stats);
 };

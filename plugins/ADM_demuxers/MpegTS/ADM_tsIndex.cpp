@@ -92,9 +92,9 @@ protected:
         listOfTsAudioTracks    *audioTracks;
         DIA_workingBase  *ui;
 public:
-                TsIndexer(void);
+                TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
-        bool    run(const char *file,uint32_t nbTracks, ADM_TS_TRACK *Tracks);
+        bool    runMpeg2(const char *file,ADM_TS_TRACK *videoTrac);
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
@@ -111,6 +111,7 @@ bool r;
 
     ADM_TS_TRACK *tracks;
     uint32_t nbTracks;
+    listOfTsAudioTracks *audioTrack;
 
     if(TS_scanForPrograms(file,&nbTracks,&tracks)==false) 
     {
@@ -119,10 +120,29 @@ bool r;
     }
     ADM_assert(tracks);
     ADM_assert(nbTracks);
-    
-
-    TsIndexer *dx=new TsIndexer;
-    r=dx->run(file,nbTracks,tracks);
+    //
+    // Now extract the datas from audio tracks & verify they are here
+    tsPacketLinear *p=new tsPacketLinear(0);
+    p->open(file,FP_DONT_APPEND);
+    for(int i=1;i<nbTracks;i++)
+    {
+        tsAudioTrackInfo trk;
+        if(true==tsGetAudioInfo(p,&trk))
+        {
+                
+        }
+    }
+    delete p;
+    printf("[TsIndexer] Audio probed, doing video\n");
+    //
+    TsIndexer *dx=new TsIndexer(audioTrack);
+    switch(tracks[0].trackType)
+    {
+    case ADM_TS_MPEG2: r=dx->runMpeg2(file,&(tracks[0]));break;
+    default:
+                        r=0;
+                        break;
+    }
     delete dx;
     delete [] tracks;
     return r;
@@ -131,12 +151,13 @@ bool r;
 /**
     \fn TsIndexer
 */
-TsIndexer::TsIndexer(void)
+TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
 {
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
     ui=createWorking ("Indexing");
+    audioTracks=trk;
 }
 
 /**
@@ -146,14 +167,13 @@ TsIndexer::~TsIndexer()
 {
     if(index) qfclose(index);
     if(pkt) delete pkt;
-    if( audioTracks) DestroyListOfTsAudioTracks(audioTracks);
     if(ui) delete ui;
     ui=NULL;
 }
 /**
     \fn run
 */  
-bool TsIndexer::run(const char *file,uint32_t nbTracks, ADM_TS_TRACK *Tracks)
+bool TsIndexer::runMpeg2(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
 uint64_t fullSize;
@@ -164,13 +184,13 @@ PSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
 
-    if(!nbTracks) return false;
-    if(Tracks[0].trackType!=ADM_TS_MPEG2)
+    if(!videoTrac) return false;
+    if(videoTrac[0].trackType!=ADM_TS_MPEG2)
     {
         printf("[Ts Indexer] Only Mpeg2 video supported\n");
         return false;
     }
-    video.pid=Tracks[0].trackPid;
+    video.pid=videoTrac[0].trackPid;
 
     memset(&data,0,sizeof(data));
     char indexName[strlen(file)+5];
@@ -182,7 +202,7 @@ dmxPacketInfo info;
         return false;
     }
     writeSystem(file,true);
-    pkt=new tsPacketLinearTracker(nbTracks, Tracks);
+    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
     FP_TYPE append=FP_APPEND;
     pkt->open(file,append);
@@ -224,7 +244,7 @@ dmxPacketInfo info;
                           video.fps= FPS[val & 0xf];
                           pkt->forward(4);
                           writeVideo(&video);
-                          //writeAudio();
+                          writeAudio();
                           //pkt->resetStats();
                           qfprintf(index,"[Data]");
                           break;
@@ -288,7 +308,6 @@ dmxPacketInfo info;
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
-        if(audioTracks) DestroyListOfTsAudioTracks( audioTracks);
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
@@ -400,13 +419,13 @@ bool TsIndexer::writeAudio(void)
     for(int i=0;i<audioTracks->size();i++)
     {
         char head[30];
-        tsAudioTrackInfo *t=(*audioTracks)[i];
+        tsAudioTrackInfo *t=&(*audioTracks)[i];
         sprintf(head,"Track%1d",i);
-        qfprintf(index,"%s.pid=%x\n",head,t->esID);
-        qfprintf(index,"%s.codec=%d\n",head,t->header.encoding);
-        qfprintf(index,"%s.fq=%d\n",head,t->header.frequency);
-        qfprintf(index,"%s.chan=%d\n",head,t->header.channels);
-        qfprintf(index,"%s.br=%d\n",head,t->header.byterate);
+        qfprintf(index,"%s.pid=%x\n",head,t->esId);
+        qfprintf(index,"%s.codec=%d\n",head,t->wav.encoding);
+        qfprintf(index,"%s.fq=%d\n",head,t->wav.frequency);
+        qfprintf(index,"%s.chan=%d\n",head,t->wav.channels);
+        qfprintf(index,"%s.br=%d\n",head,t->wav.byterate);
     }
     return true;
 }

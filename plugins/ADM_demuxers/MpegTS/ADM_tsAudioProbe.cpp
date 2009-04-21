@@ -35,165 +35,72 @@
 #define LPCM_AUDIO_VALUE 0xA0
 #define DTS_AC3_AUDIO_VALUE 0x00
 
-static bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinear *p);
+bool tsGetAudioInfo(tsPacketLinear *p,tsAudioTrackInfo *trackInfo);
 static bool tsCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
-/**
-    \fn listOfPsAudioTracks
-    \brief returns a list of audio track found, null if none found
 
-*/
-listOfTsAudioTracks *tsProbeAudio(const char *fileName)
-{
-    uint32_t size;
-    uint64_t dts,pts,startAt;
-    uint8_t buffer[PACKET_PROBE_SIZE];
-    uint64_t fileSize;
-
-    listOfTsAudioTracks *tracks=new listOfTsAudioTracks;
-    tsPacketLinear *packet=new tsPacketLinear(0xE0);
-
-    printf("[MpegPS] Probing audio for %s\n",fileName);
-
-    if(!packet->open(fileName,FP_APPEND)) goto end;
-    fileSize=packet->getSize();
-
-    packet->setPos(fileSize/2); // Jump in the middle of the stream
-#if 0
-    while(packet->getPacketOfType(0xE0,PACKET_PROBE_SIZE,&size,&dts,&pts,buffer,&startAt))
-    {
-
-        packetStats *stat=packet->getStat(0xE0);
-        if(stat->count > PROBE_PACKET_VIDEO_COUNT)
-                break;
-
-    }
-    // Now synthetize
-    for(int i=0x0;i<0xFF;i++)   
-    {
-        packetStats *stat=packet->getStat(i);
-        if(stat->count)
-        {
-            printf("[PsProbeAudo] Pid:%x count:%"LX" size:%"LD"\n",i,stat->count,stat->size);
-        }
-
-         if(stat->count>=PROBE_MIN_PACKET && stat->size>PROBE_MIN_SIZE)
-         {
-                packet->setPos(fileSize/2); 
-                addAudioTrack(i,tracks,packet);
-         }
-
-    }
-#endif
-end:
-    printf("[PsDemux] Audio probe done, found %lu tracks\n",tracks->size());
-    delete packet;
-    
-    if(tracks->size()==0) 
-    {   
-        delete tracks;
-        return NULL;
-    }
-    return tracks;
-}
 /**
     \fn addAudioTrack
     \brief gather information about audio & add audio track to the list
 
 */
-bool addAudioTrack(int pid, listOfTsAudioTracks *list, tsPacketLinear *p)
+bool tsGetAudioInfo(tsPacketLinear *p,tsAudioTrackInfo *trackInfo)
 {
 #define PROBE_ANALYZE_SIZE 6000 // Should be enough in all cases (need ~ 2 blocks)
 uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
-        uint64_t pts,dts,startAt;
-        uint32_t packetSize;
-
-        //
-        int masked=pid&0xF0;
-        if(masked!=MP2_AUDIO_VALUE &&  // MP2
-            masked!=LPCM_AUDIO_VALUE && // PCM
-            masked!=DTS_AC3_AUDIO_VALUE  // AC3 & DTS
-            ) return false;
+uint64_t pts,dts,startAt;
+        
+        
+        // dont even try if it is not audio
+        if(trackInfo->trackType!=ADM_TS_MPEG2 &&trackInfo->trackType!=ADM_TS_AC3) return false;
 
         // Go back where we were
-        p->changePid(pid); 
-        p->getPacketOfType(pid,PROBE_ANALYZE_SIZE, &packetSize,&pts,&dts,audioBuffer,&startAt);
+        p->changePid(trackInfo->esId); 
         //Realign
-        p->seek(startAt,0);
+        p->seek(0,0);
         int rd=PROBE_ANALYZE_SIZE;
         if(!p->read(PROBE_ANALYZE_SIZE,audioBuffer))
-            return false;
-        tsAudioTrackInfo *info=new tsAudioTrackInfo;
-        info->esID=pid;
-        uint32_t fq,br,chan,off;
-        switch(pid & 0xF0)
         {
-            case LPCM_AUDIO_VALUE: // LPCM
-                            info->header.frequency=48000;
-                            info->header.channels=2;
-                            info->header.byterate=48000*4;
-                            info->header.encoding=WAV_LPCM;
-                            break;
-            case MP2_AUDIO_VALUE: // MP2
+            printf("[tsAudioProbe] Cannot get info about pid %d 0x%x\n",trackInfo->esId,trackInfo->esId);
+            return false;
+        }
+        uint32_t fq,br,chan,off;
+        switch(trackInfo->trackType)
+        {
+            case ADM_TS_MPEG2: // MP2
                             {
-                                if(! tsCheckMp2Audio(&(info->header),audioBuffer,rd))
+                                if(! tsCheckMp2Audio(&(trackInfo->wav),audioBuffer,rd))
                                 {
-                                    printf("[PsProbeAudio] Failed to get info on track :%x (MP2)\n",pid);
+                                    printf("[PsProbeAudio] Failed to get info on track :%x (MP2)\n",trackInfo->esId);
                                     goto er;
                                 }
                             }
                             break;
-            case DTS_AC3_AUDIO_VALUE: // AC3 or DTS
-                            if(pid>=0x8) // DTS
+            case ADM_TS_AC3: // AC3 or DTS
+                            // AC3
                             {
-                                info->header.encoding=WAV_DTS;
-                                uint32_t flags,nbSample;
-                                if(!ADM_DCAGetInfo(audioBuffer, rd, &fq, &br, &chan,&off,&flags,&nbSample))
-                                {
-                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",pid);
-                                        goto er;
-                                }
-                                info->header.frequency=fq;
-                                info->header.channels=chan;
-                                info->header.byterate=(br);
-                                break;
-                            }else // AC3
-                            {
-                                info->header.encoding=WAV_AC3;
+                                trackInfo->wav.encoding=WAV_AC3;
                                 if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
                                 {
-                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",pid);
+                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",trackInfo->esId);
                                         goto er;
                                 }
-                                info->header.frequency=fq;
-                                info->header.channels=chan;
-                                info->header.byterate=(br);
+                                trackInfo->wav.frequency=fq;
+                                trackInfo->wav.channels=chan;
+                                trackInfo->wav.byterate=(br);
                                 break;
                             }
                             
             default:
-                        ADM_assert(0);
+                        printf("[tsAudioProbe] Unsupported audio format pid %d 0x%x\n",trackInfo->esId,trackInfo->esId);
+                        return false;
 
         }
-        list->push_back(info);
         return true;
 er:
-        delete info;
         return false;
+
 }
-/**
-        \fn DestroyListOfPsAudioTracks
-        \brief cleanly destroy it
-*/
-bool DestroyListOfTsAudioTracks(listOfTsAudioTracks *list)
-{
-    while( list->size())
-    {
-        delete (*list)[0];
-        list->erase(list->begin());
-    }
-    delete list;
-    return true;
-}
+
 /**
     \fn psCheckMp2Audio
     \brief Wait to have 2 audio packets to make sure it is not a false detection (that happens with mp2/mp3 audio)

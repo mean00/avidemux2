@@ -17,7 +17,7 @@
  ***************************************************************************/
 #ifndef ADM_TS_PAT_PMT_H
 #define ADM_TS_PAT_PMT_H
-
+#include "ADM_audiodef.h"
 #define ADM_TS_MAX_EXTRADATA 256
 /**
     \typedef ADM_TS_VIDEO_TYPE
@@ -41,6 +41,20 @@ typedef struct
     uint32_t          extraDataLen;
     uint8_t           extraData[ADM_TS_MAX_EXTRADATA];
 }ADM_TS_TRACK;
+
+/**
+    \struct tsAudioTrackInfo
+*/
+typedef struct
+{
+    WAVHeader         wav;
+    uint32_t          esId;
+    ADM_TS_TRACK_TYPE trackType;
+    uint32_t          extraDataLen;
+    uint8_t           extraData[ADM_TS_MAX_EXTRADATA];
+}tsAudioTrackInfo;
+
+typedef vector <tsAudioTrackInfo > listOfTsAudioTracks;
 
 
 /**

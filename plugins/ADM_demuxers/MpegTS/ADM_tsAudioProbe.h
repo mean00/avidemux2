@@ -16,19 +16,9 @@
  ***************************************************************************/
 #ifndef ADM_TS_AUDIO_PROBE_H
 #define ADM_TS_AUDIO_PROBE_H
-#include <vector>
-using std::vector;
-typedef struct
-{
-    WAVHeader header;
-    uint32_t  esID;
-}tsAudioTrackInfo;
+#include "ADM_tsPatPmt.h"
 
-typedef vector <tsAudioTrackInfo*> listOfTsAudioTracks;
-
-/// Returns a list of audio tracks found in the file.
-listOfTsAudioTracks *tsProbeAudio(const char *fileName);
-bool DestroyListOfTsAudioTracks(listOfTsAudioTracks *list);
-
+// Get infos about one audio track
+bool tsGetAudioInfo(tsPacketLinear *p,tsAudioTrackInfo *trackInfo);
 
 #endif

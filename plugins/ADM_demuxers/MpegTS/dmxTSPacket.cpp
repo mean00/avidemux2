@@ -681,7 +681,7 @@ uint32_t tsPacketLinear::getConsumed(void)
 */
 bool    tsPacketLinear::changePid(uint32_t pid) 
 {
-    pesPacket->pid=(pid&0xff);
+    pesPacket->pid=pid;
     pesPacket->offset=pesPacket->payloadSize;
     return true;
 }
@@ -689,10 +689,10 @@ bool    tsPacketLinear::changePid(uint32_t pid)
 /**
     \fn tsPacketLinearTracker
 */
-tsPacketLinearTracker::tsPacketLinearTracker(uint32_t nb,ADM_TS_TRACK *tracks) : tsPacketLinear(tracks[0].trackPid)
+tsPacketLinearTracker::tsPacketLinearTracker(uint32_t pid,listOfTsAudioTracks *audio) : tsPacketLinear(pid)
 {
+    int nb=audio->size();
     otherPes=new TS_PESpacket(0);
-    ADM_assert(nb);
     totalTracks=nb;
     if(!nb)    
     {
@@ -705,7 +705,8 @@ tsPacketLinearTracker::tsPacketLinearTracker(uint32_t nb,ADM_TS_TRACK *tracks) :
     memset(stats,0,sizeof(packetTSStats)*nb);
     for(int i=0;i<nb;i++)
     {
-        stats[i].pid=tracks[i].trackPid;
+        
+        stats[i].pid=(*audio)[i].esId;
         stats[i].startDts=ADM_NO_PTS;
     }
 }

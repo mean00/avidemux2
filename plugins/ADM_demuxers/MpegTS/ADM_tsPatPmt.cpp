@@ -138,7 +138,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     }
     {
         //
-    #if 1 // TO REMOVE
+    #if 0 // TO REMOVE
         TS_PESpacket pes(list[videoIndex].trackPid);
         t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
         t->getNextPES(&pes);printf("pts :%lld dts:%lld\n",pes.pts,pes.dts);
