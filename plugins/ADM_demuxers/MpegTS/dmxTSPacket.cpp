@@ -301,7 +301,11 @@ nextPack2:
 
 bool        tsPacket::getNextPES(TS_PESpacket *pes)
 {
+#if 1
+#define zprintf(...) {}
+#else
 #define zprintf printf
+#endif
     TSpacketInfo pkt;
     pes->fresh=false;
 nextPack3:
@@ -322,8 +326,8 @@ nextPack3:
     zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
-        printf("[Ts Demuxer] No PES startcode at 0x%"LLX"\n",pkt.startAt);
-        printf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
+        zprintf("[Ts Demuxer] No PES startcode at 0x%"LLX"\n",pkt.startAt);
+        zprintf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
         goto nextPack3;
     }
     //mixDump(pkt.payload,pkt.payloadSize);
@@ -355,12 +359,12 @@ nextPack3:
     //____________________
     // Now decode PES header (extra memcpy)
     //____________________
-    printf("[Ts Demuxer] Full size :%d\n",pes->payloadSize);
+    zprintf("[Ts Demuxer] Full size :%d\n",pes->payloadSize);
     if(false==decodePesHeader(pes))
         goto nextPack3;
 
     //
-    printf("[Ts Demuxer] Found PES of len %d\n",pes->payloadSize);  
+    zprintf("[Ts Demuxer] Found PES of len %d\n",pes->payloadSize);  
     pes->fresh=true;
     
     return true;
@@ -451,14 +455,17 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
         pes->offset=start-pes->payload;
         if(packLen)
         {
-            if(packLen<maxLen) maxLen=packLen;
+            //printf("***Zimbla***\n");
+            if(packLen<maxLen) 
+            {
+                maxLen=packLen;
+            }
             else
                 if(packLen>maxLen)
                 {
                     fail("Pes too long");
                 }   
         }
-        pes->payloadSize=maxLen;
         return true;
 }
 /**
@@ -586,7 +593,9 @@ next:
 */
 bool    tsPacketLinear::read(uint32_t len, uint8_t *out)
 {
+#if 0
     printf("[tsRead] Size 0x%x %d\n",len,len);
+#endif
     // Enough already ?
     while(len)
     {
