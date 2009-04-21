@@ -88,8 +88,8 @@ class TsIndexer
 {
 protected:
         FILE *index;
-        tsPacketLinear       *pkt;
-        listOfTsAudioTracks  *audioTracks;
+        tsPacketLinearTracker  *pkt;
+        listOfTsAudioTracks    *audioTracks;
         DIA_workingBase  *ui;
 public:
                 TsIndexer(void);
@@ -182,7 +182,7 @@ dmxPacketInfo info;
         return false;
     }
     writeSystem(file,true);
-    pkt=new tsPacketLinear(Tracks[0].trackPid);
+    pkt=new tsPacketLinearTracker(nbTracks, Tracks);
 
     FP_TYPE append=FP_APPEND;
     pkt->open(file,append);

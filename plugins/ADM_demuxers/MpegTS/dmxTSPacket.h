@@ -9,6 +9,7 @@
 #define DMXtsPacket_H
 
 #include "dmxPacket.h"
+#include "ADM_tsPatPmt.h"
 #include "ADM_Video.h"
 
 #define TS_MARKER       0x47
@@ -147,10 +148,11 @@ public:
 };
 
 /**
-    \class tsPacketLinearTracker
+    \class packetTSStats
 */
 typedef struct
 {
+    uint32_t pid;
     uint32_t count;
     uint32_t size;
     
@@ -158,7 +160,22 @@ typedef struct
     uint32_t startCount;
     uint32_t startSize;
     uint64_t startDts;
-}packetStats;
+}packetTSStats;
 
-
+/**
+        \class tsPacketLinearTracker
+        \brieg similar to tsPacketLinear, but also keeps stat of others tracks. Needed to index audio
+*/
+class tsPacketLinearTracker : public tsPacketLinear
+{
+protected:
+        TS_PESpacket *pesPacket;
+        TS_PESpacket *otherPes;
+        packetTSStats *stats;
+        uint32_t      totalTracks;
+public:
+                tsPacketLinearTracker(uint32_t nb,ADM_TS_TRACK *tracks);
+                ~tsPacketLinearTracker();
+        bool    getStats(uint32_t *nb,packetTSStats *stats);
+};
 #endif

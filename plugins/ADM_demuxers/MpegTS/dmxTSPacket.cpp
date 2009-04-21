@@ -686,5 +686,47 @@ bool    tsPacketLinear::changePid(uint32_t pid)
     return true;
 }
 /* ********************************************************* */
+/**
+    \fn tsPacketLinearTracker
+*/
+tsPacketLinearTracker::tsPacketLinearTracker(uint32_t nb,ADM_TS_TRACK *tracks) : tsPacketLinear(tracks[0].trackPid)
+{
+    otherPes=new TS_PESpacket(0);
+    ADM_assert(nb);
+    totalTracks=nb;
+    if(!nb)    
+    {
+        this->stats=NULL;
+        return;
+    }
+
+    // Convert ADM_TS_TRACKS to ststa
+    stats=new packetTSStats[nb];    
+    memset(stats,0,sizeof(packetTSStats)*nb);
+    for(int i=0;i<nb;i++)
+    {
+        stats[i].pid=tracks[i].trackPid;
+        stats[i].startDts=ADM_NO_PTS;
+    }
+}
+/**
+    \fn ~tsPacketLinearTracker
+*/
+tsPacketLinearTracker::~tsPacketLinearTracker()
+{
+    if(otherPes) delete otherPes;
+    otherPes=NULL;
+    if(stats) delete [] stats;
+    stats=NULL;
+}
+/**
+    \fn tsPacketLinearTracker
+*/
+bool    tsPacketLinearTracker::getStats(uint32_t *nb,packetTSStats *stats)
+{
+    *nb=totalTracks;
+    stats=this->stats;
+    return true;
+}
 
 //EOF
