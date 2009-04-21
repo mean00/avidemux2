@@ -109,8 +109,9 @@ protected:
     
     bool                getSinglePacket(uint8_t *buffer);
     bool                decodePesHeader(TS_PESpacket *pes);
+    virtual bool        updateStats(uint8_t *data);
 public:
-    bool                getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi);
+    virtual bool                getNextPacket_NoHeader(uint32_t pid,TSpacketInfo *pkt,bool psi);
 
     bool                getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi);
     bool                getNextPES(TS_PESpacket *pes);
@@ -179,5 +180,6 @@ public:
                 tsPacketLinearTracker(uint32_t videoPid,listOfTsAudioTracks *audioTracks);
                 ~tsPacketLinearTracker();
         bool    getStats(uint32_t *nb,packetTSStats *stats);
+virtual bool    updateStats(uint8_t *data);
 };
 #endif

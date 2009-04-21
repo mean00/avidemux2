@@ -166,7 +166,11 @@ nextPack:
     count++;
     if(count>MAX_SKIPPED_PACKET) return false;
 
-    if(id!=pid) goto nextPack;
+    if(id!=pid) 
+    {
+        updateStats(scratch);
+        goto nextPack;
+    }
     pkt->pid=pid;
 #ifdef TS_DEBUG2
     printf("[**************> Found matching pid 0x%x\n",pid);
@@ -217,7 +221,14 @@ nextPack:
     pkt->startAt=pos-extraCrap-TS_PACKET_LEN;
     return true;
 }
-
+/**
+        \fn updateStats
+        \brief Hook for tracker
+*/
+bool        tsPacket::updateStats(uint8_t *data)
+{
+    return true;
+}
 /**
     \fn getNextPsiPacket
     \brief Take a raw packet of type pid & remove the header (PSI)
@@ -378,7 +389,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
     uint8_t  *start=pes->payload+6;
     uint8_t  *end=pes->payload+pes->payloadSize;
     uint8_t  stream=pes->payload[3];
-    uint32_t packLen=(pes->payload[4])<<8+(pes->payload[5]);
+    uint32_t packLen=(pes->payload[4]<<8)+(pes->payload[5]);
     int      align=0,c;
 
 
@@ -451,19 +462,22 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                                 break; // no pts nor dts
                                                                 
         }  
-        int maxLen=(int)(end-start);
+       
+        int sizeCheck=pes->payloadSize-6;
+        int tail=0;
         pes->offset=start-pes->payload;
         if(packLen)
         {
             //printf("***Zimbla***\n");
-            if(packLen<maxLen) 
+            if(packLen<sizeCheck) 
             {
-                maxLen=packLen;
+                tail=sizeCheck-packLen;
+                pes->payloadSize-=tail;
             }
             else
-                if(packLen>maxLen)
+                if(packLen>sizeCheck)
                 {
-                    printf("[TS Packet] PackLen=%d, avalailble=%d\n",packLen,maxLen);
+                    printf("[TS Packet] PackLen=%d, avalailble=%d\n",packLen,sizeCheck);
                     fail("Pes too long");
                 }   
         }
@@ -730,5 +744,51 @@ bool    tsPacketLinearTracker::getStats(uint32_t *nb,packetTSStats *stats)
     stats=this->stats;
     return true;
 }
+bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
+{
+    uint32_t id=scratch[1]+((scratch[0]&0x1F)<<8);
+    int payloadUnitStart=scratch[0]&0x40;
+    int fieldControl=(scratch[2]>>4)&3;
+    int continuity=(scratch[2]&0xf);
+    int len=TS_PACKET_LEN-4; // useful datas
 
-//EOF
+    if(!payloadUnitStart) return false; // no PES start in here...
+    // Adaptation field
+    // 11 Adapt+payload
+    // 10 Adapt only
+    // 01 Payload only
+    // 00 forbidden
+    if(!(fieldControl & 1)) 
+    {
+        // No payload, continue
+#ifdef TS_DEBUG2
+        printf("[Demuxer] No payload\n");
+#endif        
+        return true;
+    }
+    uint8_t *start,*end;
+    start=scratch+3;
+    end=scratch+TS_PACKET_LEN-1;
+
+    if((fieldControl & 2)) // Adaptation layer
+    {
+        int payloadSize=*start++;
+        start+=payloadSize;
+    }
+    int size=(int)(end-start);
+    if(size<=0)  
+    {
+#ifdef TS_DEBUG2
+        printf("[Demuxer] size=%d\n",size);
+#endif        
+
+        return true;
+    }
+    // Look into pes packet starting at "start"
+    otherPes->payloadSize=size;
+    uint64_t pos;
+    _file->getpos(&pos);
+    otherPes->startAt=pos-extraCrap-TS_PACKET_LEN;
+    return true;
+}
+// EOF
