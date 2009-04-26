@@ -174,6 +174,21 @@ bool    tsHeader::readVideo(indexFile *index)
     w=index->getAsUint32("Width");
     h=index->getAsUint32("height");
     fps=index->getAsUint32("Fps");
+    char *type=index->getAsString("VideoCodec");
+    if(type)
+    {
+        printf("[TsIndex] codec :<%s>\n",type);
+        if(!strcmp(type,"H264"))
+        {
+             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"H264");
+        }else
+        {
+            _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
+        }
+    }else
+    {
+       _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
+    }
     videoPid=index->getAsUint32("Pid");
     if(!videoPid)
     {
@@ -189,9 +204,6 @@ bool    tsHeader::readVideo(indexFile *index)
     _video_bih.biHeight=_mainaviheader.dwHeight=h;             
     _videostream.dwScale=1000;
     _videostream.dwRate=fps;
-
-    _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
-
     return true;
 }
 /**

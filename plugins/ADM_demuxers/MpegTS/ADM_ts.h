@@ -63,6 +63,7 @@ protected:
                 tsPacket        demuxer;
                 uint8_t         pid;
                 uint64_t        dtsOffset;
+                uint32_t        videoCodec;
                 
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}

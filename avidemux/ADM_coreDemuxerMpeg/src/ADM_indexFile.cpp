@@ -170,12 +170,14 @@ bool indexFile::readSection(const char *section)
         if(!tail) 
         {
             printf("[psIndexer]Weird line :%s\n",buffer);
+            break;
+        }else
+        {
+            *tail=0;
+            tail++;
+            dmxToken *tk=new dmxToken(head,tail);
+            ListOfTokens.push_back(tk);
         }
-        *tail=0;
-        tail++;
-        dmxToken *tk=new dmxToken(head,tail);
-        ListOfTokens.push_back(tk);
-
     }
     return true;
 }
@@ -230,6 +232,19 @@ bool  indexFile::readString(uint32_t maxLen,uint8_t *buffer)
 {
     if(!fgets((char *)buffer,maxLen,file)) return false;
     buffer[maxLen-1]=0;
+    if(buffer[0])
+        while(1)
+        {
+            int l=strlen((char *)buffer);
+            if(!l) break;
+            char c=buffer[l-1];
+            if(c==0xa || c==0xd)
+            {
+                   buffer[l-1]=0;
+                   continue;
+            }
+            break;
+        }
     return true;
 }
 

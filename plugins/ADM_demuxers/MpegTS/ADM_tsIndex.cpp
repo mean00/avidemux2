@@ -26,6 +26,19 @@
 #include "ADM_tsAudioProbe.h"
 #include "DIA_working.h"
 #include "ADM_tsPatPmt.h"
+#include "ADM_videoInfoExtractor.h"
+#include "ADM_h264_tag.h"
+
+extern "C"
+{
+#define ADM_NO_CONFIG_H
+#include "libavutil/common.h"
+#include "libavutil/bswap.h"
+#define INT_MAX (0x7FFFFFFF)
+#include "ADM_lavcodec/bitstream.h"
+#include "ADM_lavcodec/golomb.h"
+}
+
 
 static const char Type[5]={'X','I','P','B','P'};
 
@@ -81,6 +94,12 @@ typedef enum
     markNow
 }markType;
 
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
+
 /**
     \class TsIndexer
 */
@@ -95,10 +114,11 @@ public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
         bool    runMpeg2(const char *file,ADM_TS_TRACK *videoTrac);
-        bool    writeVideo(PSVideo *video);
+        bool    runH264(const char *file,ADM_TS_TRACK *videoTrac);
+        bool    writeVideo(PSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
-        bool    Mark(indexerData *data,dmxPacketInfo *s,markType update);
+        bool    Mark(indexerData *data,dmxPacketInfo *s,markType update,uint32_t formatOffset);
 
 };
 /**
@@ -143,6 +163,9 @@ bool r;
             case ADM_TS_MPEG2: 
                             r=dx->runMpeg2(file,&(tracks[0]));
                             break;
+            case ADM_TS_H264: 
+                            r=dx->runH264(file,&(tracks[0]));
+                            break;
             default:
                         r=0;
                         break;
@@ -175,7 +198,195 @@ TsIndexer::~TsIndexer()
     ui=NULL;
 }
 /**
-    \fn run
+    \fn runH264
+    \brief Index H264 stream
+*/  
+bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
+{
+bool    pic_started=false;
+bool    seq_found=false;
+
+PSVideo video;
+indexerData  data;    
+uint64_t fullSize;
+dmxPacketInfo info;
+
+    printf("Starting H264 indexer\n");
+    if(!videoTrac) return false;
+    if(videoTrac[0].trackType!=ADM_TS_H264)
+    {
+        printf("[Ts Indexer] Only H264 video supported\n");
+        return false;
+    }
+    video.pid=videoTrac[0].trackPid;
+
+    memset(&data,0,sizeof(data));
+    char indexName[strlen(file)+5];
+    sprintf(indexName,"%s.idx",file);
+    index=qfopen(indexName,"wt");
+    if(!index)
+    {
+        printf("[PsIndex] Cannot create %s\n",indexName);
+        return false;
+    }
+
+    writeSystem(file,true);
+    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
+
+    FP_TYPE append=FP_APPEND;
+    pkt->open(file,append);
+    data.pkt=pkt;
+    fullSize=pkt->getSize();
+      while(1)
+      {
+
+        uint32_t code=0xffff+0xffff0000;
+        while((code!=1) && pkt->stillOk())
+        {
+            code=(code<<8)+pkt->readi8();
+        }
+        if(!pkt->stillOk()) break;
+        uint8_t startCode=pkt->readi8();
+
+        pkt->getInfo(&info);
+        info.offset-=5;
+
+//  1:0 2:Nal ref idc 5:Nal Type
+        if(startCode&0x80) continue; // Marker missing
+        
+
+#define T(x) case NAL_##x: aprintf(#x" found\n");break;
+        startCode&=0x1f;
+#ifdef ADM_H264_VERBOSE
+        switch(startCode)
+        {
+            T(NON_IDR);
+            T(IDR);
+            T(SPS);
+            T(PPS);
+            T(SEI);
+            T(AU_DELIMITER);
+            T(FILLER);
+          default :aprintf("0x%02x ?\n",startCode);
+        }
+#endif
+          
+              /* Till we have a SPS no need to continue */
+              if(!seq_found && startCode!=NAL_SPS) continue;
+              if(!seq_found) // It is a SPS
+              {
+                    // Our firt frame is here
+                    // Important to initialize the H264 decoder !
+                      uint8_t buffer[60] ; // should be enough
+                      uint32_t xA,xR;
+                      // Get info
+                      pkt->read(60,buffer);
+                      if (extractSPSInfo(buffer, 60, &video.w,&video.h,&video.fps,&xA,&xR))
+                      {
+						  
+                          printf("[TsIndexer] Found video %"LU"x%"LU", fps=%"LU"\n",video.w,video.h,video.fps);
+                          seq_found=1;
+                          Mark(&data,&info,markStart,4);
+                          data.state=idx_startAtGopOrSeq;
+                          writeVideo(&video,ADM_TS_H264);
+                          writeAudio();
+                          qfprintf(index,"[Data]");
+                          // Rewind
+#warning TODO
+                      }
+                      continue;
+              }
+              
+              // Ignore multiple chunk of the same pic
+              if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started) 
+              {
+                aprintf("Still capturing, ignore\n");
+                continue;
+              }
+           
+              
+              switch(startCode)
+                      {
+                      case NAL_AU_DELIMITER:
+							  pic_started = false;
+                              break;
+                      case NAL_SPS:
+                              pic_started = false;
+                              aprintf("Sps \n");
+							  Mark(&data,&info,markStart,4);
+                              data.state=idx_startAtGopOrSeq;
+							  break;
+                      case NAL_IDR:
+                        {
+                          markType update=markNow;
+						  uint32_t frameType = 1 ;
+                          if(data.state==idx_startAtGopOrSeq) 
+                          {
+                                update=markEnd;
+                          }
+						 
+						  data.frameType=frameType;
+                          pkt->readi8();
+                          pkt->readi8();
+                          pkt->readi8();
+                          pkt->readi8();
+                          Mark(&data,&info,update,4);
+                          data.state=idx_startAtImage;
+                          data.nbPics++;
+						  pic_started = true;
+                        }
+					  case NAL_NON_IDR:
+                        {
+                            #define NON_IDR_PRE_READ 8
+                          uint8_t header[NON_IDR_PRE_READ+4];
+                          GetBitContext s;
+
+                          markType update=markNow;
+						  uint32_t frameType = 2;
+                          if(data.state==idx_startAtGopOrSeq) 
+                          {
+                                update=markEnd;
+                          }
+#warning : need un-escaping!!!						 
+						  data.frameType=frameType;
+                          // Let's refine a bit the frame type...
+                          pkt->read(4,header);
+                          init_get_bits(&s, header, NON_IDR_PRE_READ*8);
+                          int first_mb_in_slice,slice_type;
+
+                            first_mb_in_slice= get_ue_golomb(&s);
+                            slice_type= get_ue_golomb_31(&s);
+                            if(slice_type>4) slice_type-=5;
+                            switch(slice_type)
+                            {
+
+                                case 0 : data.frameType=2;break; // P
+                                case 1 : data.frameType=3;break; // B
+                                case 2 : data.frameType=1;break; // I
+                                default : data.frameType=2;break; // SP/SI
+                            }
+                          Mark(&data,&info,update,4);
+                          data.state=idx_startAtImage;
+                          data.nbPics++;
+						  pic_started = true;
+                        }
+						  break;
+					  default:
+						  break;
+			  }
+      }
+        printf("\n");
+        Mark(&data,&info,markStart,0);
+        qfprintf(index,"\n[End]\n");
+        qfclose(index);
+        index=NULL;
+        audioTracks=NULL;
+        delete pkt;
+        pkt=NULL;
+        return true; 
+}
+/**
+    \fn runMpeg2
 */  
 bool TsIndexer::runMpeg2(const char *file,ADM_TS_TRACK *videoTrac)
 {
@@ -228,7 +439,7 @@ dmxPacketInfo info;
           switch(startCode)
                   {
                   case 0xB3: // sequence start
-                          Mark(&data,&info,markStart);
+                          Mark(&data,&info,markStart,2);
                           data.state=idx_startAtGopOrSeq;
                           if(seq_found)
                           {
@@ -247,7 +458,7 @@ dmxPacketInfo info;
                           
                           video.fps= FPS[val & 0xf];
                           pkt->forward(4);
-                          writeVideo(&video);
+                          writeVideo(&video,ADM_TS_MPEG2);
                           writeAudio();
                           //pkt->resetStats();
                           qfprintf(index,"[Data]");
@@ -268,7 +479,7 @@ dmxPacketInfo info;
                                   continue;;
                           }
                           
-                          Mark(&data,&info,markStart);
+                          Mark(&data,&info,markStart,2);
                           data.state=idx_startAtGopOrSeq;
                           break;
                   case 0x00 : // picture
@@ -297,7 +508,7 @@ dmxPacketInfo info;
                                 update=markEnd;
                           }
                           data.frameType=type;
-                          Mark(&data,&info,update);
+                          Mark(&data,&info,update,2);
                           data.state=idx_startAtImage;
                           data.nbPics++;
                         }
@@ -308,7 +519,7 @@ dmxPacketInfo info;
       }
     
         printf("\n");
-        Mark(&data,&info,markStart);
+        Mark(&data,&info,markStart,2);
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
@@ -326,14 +537,16 @@ dmxPacketInfo info;
     If the beginning is not a pic, but a gop start for example, we had to add/remove those.
 
 */
-bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
+bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update,uint32_t formatOffset)
 {
     int offset=data->nextOffset;
     data->nextOffset=0;
     
+
+ 
      if( update==markStart)
      {
-                offset=2;
+                offset=formatOffset;
      }
     if(update==markStart || update==markNow)
     {
@@ -368,7 +581,7 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
             }
             // start a new line
             qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",data->startAt,data->offset,info->pts,info->dts);
-            data->nextOffset=-2;
+            data->nextOffset=-formatOffset;
         }
     
         qfprintf(index,"%c",Type[data->frameType]);
@@ -389,7 +602,7 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
     \fn writeVideo
     \brief Write Video section of index file
 */
-bool TsIndexer::writeVideo(PSVideo *video)
+bool TsIndexer::writeVideo(PSVideo *video,ADM_TS_TRACK_TYPE trkType)
 {
     qfprintf(index,"[Video]\n");
     qfprintf(index,"Width=%d\n",video->w);
@@ -398,6 +611,13 @@ bool TsIndexer::writeVideo(PSVideo *video)
     qfprintf(index,"Interlaced=%d\n",video->interlaced);
     qfprintf(index,"AR=%d\n",video->ar);
     qfprintf(index,"Pid=%d\n",video->pid);
+ switch(trkType)
+    {
+        case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;;
+        case ADM_TS_H264: qfprintf(index,"VideoCodec=H264\n");break;
+        default: printf("[TsIndexer] Unsupported video codec\n");return false;
+
+    }
     return true;
 }
 /**
