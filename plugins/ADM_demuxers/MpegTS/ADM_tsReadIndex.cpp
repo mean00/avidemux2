@@ -30,7 +30,7 @@ bool    tsHeader::readIndex(indexFile *index)
 {
 char buffer[2000];
 bool firstAudio=true;
-        printf("[psDemuxer] Reading index\n");
+        printf("[TsDemuxerer] Reading index\n");
         if(!index->goToSection("Data")) return false;
       
         while(1)
@@ -98,7 +98,7 @@ bool tsHeader::processVideoIndex(char *buffer)
             uint32_t offset;
             if(4!=sscanf(head,"at:%"LLX":%"LX" Pts:%"LLD":%"LLD,&startAt,&offset,&pts,&dts))
             {
-                    printf("[psDemuxer] cannot read fields in  :%s\n",buffer);
+                    printf("[TsDemuxerer] cannot read fields in  :%s\n",buffer);
                     return false;
             }
             
@@ -117,7 +117,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                 cur++;
                 if(*(cur)!=':')
                 {
-                    printf("[psDemux]  instead of : (%c %x %x):\n",*cur,*(cur-1),*cur);
+                    printf("[TsDemuxer]  instead of : (%c %x %x):\n",*cur,*(cur-1),*cur);
                 }
                 *cur++;
                 next=strstr(start," ");
@@ -167,7 +167,7 @@ bool tsHeader::processVideoIndex(char *buffer)
 */
 bool    tsHeader::readVideo(indexFile *index)
 {
-    printf("[psDemuxer] Reading Video\n");
+    printf("[TsDemuxerer] Reading Video\n");
     if(!index->readSection("Video")) return false;
     uint32_t w,h,fps,ar;
     
@@ -208,7 +208,7 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
     nbTracks=index->getAsUint32("Tracks");
     if(!nbTracks)
     {
-        printf("[PsDemux] No audio\n");
+        printf("[TsDemuxer] No audio\n");
         return true;
     }
     for(int i=0;i<nbTracks;i++)
@@ -229,14 +229,13 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
             hdr.byterate=br;
             hdr.channels=chan;
             hdr.encoding=codec;
+
         ADM_tsAccess *access=new ADM_tsAccess(name,pid,true);
             ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;
             desc->stream=NULL;
             desc->access=access;
             memcpy(&(desc->header),&hdr,sizeof(hdr));
             listOfAudioTracks.push_back(desc);
-
-
     }
     return true;
 }

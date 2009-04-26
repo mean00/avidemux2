@@ -1,5 +1,5 @@
 /***************************************************************************
-    \file ADM_psAudio.cpp
+    \file ADM_tsAudio.cpp
 
     copyright            : (C) 2006/2009 by mean
     email                : fixounet@free.fr
@@ -37,6 +37,7 @@ FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;
         this->pid=pid;
         if(!demuxer.open(name,fp)) ADM_assert(0);
+        packet=new TS_PESpacket(pid);
 }
 
 /**
@@ -45,6 +46,8 @@ FP_TYPE fp=FP_DONT_APPEND;
 ADM_tsAccess::~ADM_tsAccess()
 {
     demuxer.close();
+    if(packet) delete packet;
+    packet=NULL;
 }
 /**
     \fn push
@@ -122,15 +125,17 @@ uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
 uint64_t p,d,start;
-    if(false==demuxer.getPacketOfType(pid,maxSize,size,&p,&d,buffer,&start)) return false;
-    if(d==ADM_NO_PTS) *dts=p;
-            else *dts=d;
-    *dts=timeConvert(*dts);
+    if(false==demuxer.getNextPES(packet)) return false;
+    int avail=packet->payloadSize-packet->offset;
+    if(avail>maxSize) ADM_assert(0);
+    *dts=packet->pts;
+    *size=avail;
+    memcpy(buffer,packet->payload+packet->offset,avail);
+    *dts=timeConvert(packet->pts);
     if(*dts!=ADM_NO_PTS) 
     {
         aprintf("[psAudio] getPacket dts = %"LU" ms\n",(uint32_t)*dts/1000);
     }
-
     return true;
 }
 

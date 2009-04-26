@@ -70,12 +70,12 @@ uint8_t tsHeader::open(const char *name)
         printf("[tsDemux] Cannot read Video section of %s\n",idxName);
         goto abt;
     }
-#if 0
+
     if(!readAudio(&index,name)) 
     {
         printf("[tsDemux] Cannot read Audio section of %s => No audio\n",idxName);
     }
-#endif
+
     if(!readIndex(&index))
     {
         printf("[tsDemux] Cannot read index for file %s\n",idxName);

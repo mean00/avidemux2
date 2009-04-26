@@ -59,7 +59,7 @@ typedef struct
 class ADM_tsAccess : public ADM_audioAccess
 {
 protected:
-                
+                TS_PESpacket    *packet;
                 tsPacket        demuxer;
                 uint8_t         pid;
                 uint64_t        dtsOffset;
