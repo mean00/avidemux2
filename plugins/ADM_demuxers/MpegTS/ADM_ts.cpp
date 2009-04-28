@@ -276,6 +276,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
     dmxFrame *pk=ListOfFrames[frame];
+    // next frame
     if(frame==(lastFrame+1) && pk->type!=1)
     {
         lastFrame++;
@@ -288,6 +289,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              getFlags(frame,&(img->flags));
              return r;
     }
+    // Intra ?
     if(pk->type==1)
     {
         if(!tsPacket->seek(pk->startAt,pk->index)) return false;
@@ -302,8 +304,41 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              return r;
 
     }
-    printf(" [tsDemux] lastFrame :%d this frame :%d\n",lastFrame,frame);
-    return false;
+    
+    // Random frame
+    // Need to rewind, then forward
+    int startPoint=frame;
+    while(startPoint && !ListOfFrames[startPoint]->startAt) startPoint--;
+    printf("[tsDemux] Wanted frame %"LU", going back to frame %"LU", last frame was %"LU",\n",frame,startPoint,lastFrame);
+    pk=ListOfFrames[startPoint];
+    if(!tsPacket->seek(pk->startAt,pk->index)) 
+    {
+            printf("[tsDemux] Failed to rewind to frame %"LU"\n",startPoint);
+            return false;
+    }
+    // Now forward
+    while(startPoint<frame)
+    {
+        pk=ListOfFrames[startPoint];
+        if(!tsPacket->read(pk->len,img->data))
+        {
+            printf("[tsDemux] Read fail for frame %"LU"\n",startPoint);
+            lastFrame=0xffffffff;
+            return false;
+        }
+        startPoint++;
+        lastFrame=startPoint;
+    }
+    pk=ListOfFrames[frame];
+    lastFrame++;
+    bool r=tsPacket->read(pk->len,img->data);
+         img->dataLength=pk->len;
+         img->demuxerFrameNo=frame;
+         img->demuxerDts=pk->dts;
+         img->demuxerPts=pk->pts;
+         //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+         getFlags(frame,&(img->flags));
+         return r;
 }
 /**
         \fn getExtraHeaderData

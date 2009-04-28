@@ -113,7 +113,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                 char *next;
                 uint32_t len;
                 type=*cur;
-                if(type==0x0a || type==0x0d) break;
+                if(type==0x0a || type==0x0d || !type) break;
                 cur++;
                 if(*(cur)!=':')
                 {

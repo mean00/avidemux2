@@ -167,7 +167,8 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
 _failTs:
     delete t;
     // Delete the list
-    list.erase(list.begin(),list.end()-1);
+    if(list.size())
+        list.erase(list.begin(),list.end()-1);
     if(result==true)
     {
         printf("[T Demuxer] Kept %d tracks\n",*nbTracks);
