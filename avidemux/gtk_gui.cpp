@@ -1689,9 +1689,9 @@ void GUI_showCurrentFrameHex(void)
  image.data=buffer;
 
 
- video_body->getFrame (curframe,&image,&seq);
+ video_body->getFrame (video_body->getCurrentFrame(),&image,&seq);
  fullLen=image.dataLength;
- video_body->getFlags (curframe, &flags);
+ video_body->getFlags (video_body->getCurrentFrame(), &flags);
 
  diaElemHex binhex("*****",fullLen,buffer);
 
