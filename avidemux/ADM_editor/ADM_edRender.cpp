@@ -175,7 +175,8 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     }
     if(found==false)
     {
-        printf("[GoToIntra] Could not find decoded frame!\n");
+        printf("[GoToIntra] Could not find decoded frame :%"LU" PTS=%"LLU" ms, %"LLU" us\n",frame,wantedPts/1000,wantedPts);
+        cache->dump();
         return false;
     }
     vid->lastReadPts=wantedPts;
@@ -246,7 +247,7 @@ bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
             return true;
         }else   
         {
-            printf("[getNextPic] Loop:%d, looking for pts :%"LLU"\n",loop,vid->lastReadPts/1000);
+            printf("[getNextPic] Loop:%d, looking for pts :%"LLU" ms %"LLU" us\n",loop,vid->lastReadPts/1000,vid->lastReadPts);
             cache->dump();
         }
     }
