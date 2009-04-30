@@ -115,7 +115,7 @@ public:
 
     bool                getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi);
     bool                getNextPES(TS_PESpacket *pes);
-
+    
 };
 /**
     \class tsPacketLinear
@@ -148,6 +148,7 @@ public:
         bool    getInfo(dmxPacketInfo *info);
         bool    seek(uint64_t packetStart, uint32_t offset);
         bool    changePid(uint32_t pid) ;
+        bool    setConsumed(uint32_t v);
 };
 
 /**

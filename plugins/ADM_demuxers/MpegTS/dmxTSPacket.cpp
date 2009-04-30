@@ -687,9 +687,18 @@ bool    tsPacketLinear::seek(uint64_t packetStart, uint32_t offset)
 uint32_t tsPacketLinear::getConsumed(void)
 {
     uint32_t c=consumed;
-    consumed=0;
     return c;
 }
+/**
+    \fn setConsumed
+    \brief set consumed bytes
+*/
+bool tsPacketLinear::setConsumed(uint32_t v)
+{
+    consumed=v;
+    return true;
+}
+
 /**
     \fn changePid
     \brief change the pid of the stream we read (used when probing all tracks)

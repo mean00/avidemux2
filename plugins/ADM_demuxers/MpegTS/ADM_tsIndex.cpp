@@ -78,8 +78,8 @@ typedef enum
 }indexerState;
 typedef struct
 {
-    uint64_t pts,dts,startAt;
-    uint32_t offset;
+    uint64_t pts,dts; //startAt;
+    //uint32_t offset;
     uint32_t frameType;
     uint32_t nbPics;
     indexerState state;
@@ -106,6 +106,10 @@ typedef enum
 class TsIndexer
 {
 protected:
+        uint32_t        currentFrameType;
+        uint32_t        beginConsuming;
+        indexerState    currentIndexState;
+protected:
         FILE *index;
         tsPacketLinearTracker  *pkt;
         listOfTsAudioTracks    *audioTracks;
@@ -118,7 +122,7 @@ public:
         bool    writeVideo(PSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
-        bool    Mark(indexerData *data,dmxPacketInfo *s,markType update,uint32_t formatOffset);
+        bool    Mark(indexerData *data,dmxPacketInfo *s,uint32_t overRead);
 
 };
 /**
@@ -210,7 +214,7 @@ PSVideo video;
 indexerData  data;    
 uint64_t fullSize;
 dmxPacketInfo info;
-
+#if 0
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
     if(videoTrac[0].trackType!=ADM_TS_H264)
@@ -280,13 +284,13 @@ dmxPacketInfo info;
                       uint8_t buffer[60] ; // should be enough
                       uint32_t xA,xR;
                       // Get info
-                      pkt->read(60,buffer);
-                      if (extractSPSInfo(buffer, 60, &video.w,&video.h,&video.fps,&xA,&xR))
+                      pkt->read(16,buffer);
+                      if (extractSPSInfo(buffer, 16, &video.w,&video.h,&video.fps,&xA,&xR))
                       {
 						  
                           printf("[TsIndexer] Found video %"LU"x%"LU", fps=%"LU"\n",video.w,video.h,video.fps);
                           seq_found=1;
-                          Mark(&data,&info,markStart,4);
+                          Mark(&data,&info,markStart,4+16);
                           data.state=idx_startAtGopOrSeq;
                           writeVideo(&video,ADM_TS_H264);
                           writeAudio();
@@ -383,8 +387,10 @@ dmxPacketInfo info;
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
+#endif
         return true; 
 }
+//***********************************************************************
 /**
     \fn runMpeg2
 */  
@@ -408,6 +414,8 @@ dmxPacketInfo info;
     video.pid=videoTrac[0].trackPid;
 
     memset(&data,0,sizeof(data));
+
+
     char indexName[strlen(file)+5];
     sprintf(indexName,"%s.idx",file);
     index=qfopen(indexName,"wt");
@@ -433,16 +441,16 @@ dmxPacketInfo info;
         if(!pkt->stillOk()) break;
         uint8_t startCode=pkt->readi8();
 
-        pkt->getInfo(&info);
-        info.offset-=4;
 
           switch(startCode)
                   {
                   case 0xB3: // sequence start
-                          Mark(&data,&info,markStart,2);
-                          data.state=idx_startAtGopOrSeq;
                           if(seq_found)
                           {
+                                  pkt->getInfo(&info);
+                                  data.frameType=1;
+                                  Mark(&data,&info,4);
+                                  data.state=idx_startAtGopOrSeq;
                                   pkt->forward(8);  // Ignore
                                   continue;
                           }
@@ -454,19 +462,24 @@ dmxPacketInfo info;
                           video.h= (((val>>8) & 0xfff)+15)& ~15;
 
                           video.ar = (val >> 4) & 0xf;
-
-                          
                           video.fps= FPS[val & 0xf];
                           pkt->forward(4);
                           writeVideo(&video,ADM_TS_MPEG2);
                           writeAudio();
-                          //pkt->resetStats();
                           qfprintf(index,"[Data]");
+                          pkt->getInfo(&info);
+                          data.frameType=1;
+                          Mark(&data,&info,4+8);
+                          data.state=idx_startAtGopOrSeq;
+                          continue;
+
                           break;
                   case 0xb8: // GOP
                           // Update ui
                             {
-                                float pos=data.startAt;
+                                uint64_t p;
+                                p=pkt->getPos();
+                                float pos=p;
                                 pos=pos/(float)fullSize;
                                 pos*=100;
                                 ui->update( (uint32_t)pos);
@@ -478,8 +491,8 @@ dmxPacketInfo info;
                           {         
                                   continue;;
                           }
-                          
-                          Mark(&data,&info,markStart,2);
+                          pkt->getInfo(&info);
+                          Mark(&data,&info,4);
                           data.state=idx_startAtGopOrSeq;
                           break;
                   case 0x00 : // picture
@@ -505,12 +518,17 @@ dmxPacketInfo info;
                           
                           if(data.state==idx_startAtGopOrSeq) 
                           {
-                                update=markEnd;
-                          }
-                          data.frameType=type;
-                          Mark(&data,&info,update,2);
-                          data.state=idx_startAtImage;
-                          data.nbPics++;
+                                  currentFrameType=type;
+                          }else
+                            {
+                                  data.frameType=type;
+                                  pkt->getInfo(&info);
+                                  Mark(&data,&info,4+2);
+
+
+                            }
+                            data.state=idx_startAtImage;
+                            data.nbPics++;
                         }
                           break;
                   default:
@@ -519,7 +537,7 @@ dmxPacketInfo info;
       }
     
         printf("\n");
-        Mark(&data,&info,markStart,2);
+        Mark(&data,&info,2);
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
@@ -537,36 +555,26 @@ dmxPacketInfo info;
     If the beginning is not a pic, but a gop start for example, we had to add/remove those.
 
 */
-bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update,uint32_t formatOffset)
+bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
 {
-    int offset=data->nextOffset;
-    data->nextOffset=0;
-    
-
- 
-     if( update==markStart)
-     {
-                offset=formatOffset;
-     }
-    if(update==markStart || update==markNow)
-    {
+      
+        uint32_t consumed=pkt->getConsumed()-overRead;
         if(data->nbPics)
         {
-            // Write previous image data (size) : TODO
-            qfprintf(index,":%06"LX" ",data->pkt->getConsumed()+offset); // Size
+            qfprintf(index," %c:%06"LX,Type[currentFrameType],consumed-beginConsuming);
+            beginConsuming=consumed;
+        }else
+        {
+            beginConsuming=overRead;
+            pkt->setConsumed(beginConsuming);
         }
-        else data->pkt->getConsumed();
-    }
-    if(update==markEnd || update==markNow)
-    {
+            
+        // If audio, also dump audio
         if(data->frameType==1)
         {
-
-            // If audio, also dump audio
             if(audioTracks)
             {
-
-                qfprintf(index,"\nAudio bf:%08"LLX" ",data->startAt);
+                qfprintf(index,"\nAudio bf:%08"LLX" ",info->startAt);
                 packetTSStats *s;
                 uint32_t na;
                 pkt->getStats(&na,&s);      
@@ -576,26 +584,14 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update,uint
                     packetTSStats *current=s+i;
                     qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",
                                 current->pid,current->startAt,current->startSize,current->startDts);
-                }
-                
+                }                
             }
             // start a new line
-            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",data->startAt,data->offset,info->pts,info->dts);
-            data->nextOffset=-formatOffset;
+            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",info->startAt,info->offset-overRead,info->pts,info->dts);
         }
-    
-        qfprintf(index,"%c",Type[data->frameType]);
-    }
-    if(update==markEnd || update==markNow)
-    {
-        data->pts=info->pts;
-        data->dts=info->dts;
-    }
-    if(update==markStart || update==markNow)
-    {
-        data->startAt=info->startAt;
-        data->offset=info->offset;
-    }
+        currentFrameType=data->frameType;
+        
+    return true;
 }
 
 /**
