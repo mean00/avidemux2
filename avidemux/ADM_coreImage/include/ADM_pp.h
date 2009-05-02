@@ -12,7 +12,7 @@
 #ifndef ADMPP
 #define ADMPP
 extern "C" {
-#include "../ADM_libpostproc/postprocess.h"
+#include "../libpostproc/postprocess.h"
 }
 typedef struct ADM_PP
 {

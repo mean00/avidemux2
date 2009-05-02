@@ -34,7 +34,11 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
+// MEANX
+#ifndef ADM_NO_CONFIG_H
 #include "config.h"
+#endif
+// MEANX
 #include "common.h"
 #include "mem.h"
 #include "timer.h"

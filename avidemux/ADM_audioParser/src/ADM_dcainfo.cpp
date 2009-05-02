@@ -11,12 +11,14 @@
 #define ADM_NO_CONFIG_H
 extern "C"
 {
+#include "ADM_libraries/ADM_ffmpeg/ffmpeg_config/config.h"
+#include "ADM_libraries/ADM_ffmpeg/libavutil/internal.h"
 #include "ADM_libraries/ADM_ffmpeg/libavutil/common.h"
 #include "ADM_libraries/ADM_ffmpeg/libavutil/bswap.h"
 #include "ADM_libraries/ADM_ffmpeg/libavcodec/get_bits.h"
 
 }
-
+#undef printf
 /*
         Borrowed from libdca
 */
