@@ -168,8 +168,8 @@ ADM_muxer *ADM_MuxerSpawnFromIndex(int index)
 //___________________________________________
 extern "C"
 {
-    #include "ADM_libraries/ADM_ffmpeg/ADM_lavformat/avformat.h"
-    #include "ADM_libraries/ADM_ffmpeg/ADM_lavformat/avio.h" // to get regiter protocol
+    #include "ADM_libraries/ADM_ffmpeg/libavformat/avformat.h"
+    #include "ADM_libraries/ADM_ffmpeg/libavformat/avio.h" // to get regiter protocol
 };
 extern "C"
 {

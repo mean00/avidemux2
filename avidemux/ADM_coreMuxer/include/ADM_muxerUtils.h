@@ -17,7 +17,7 @@
 #define ADM_MUXER_UTILS_H
 extern "C" 
 {
-#include "ADM_lavformat/avformat.h"
+#include "libavformat/avformat.h"
 };
 
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME

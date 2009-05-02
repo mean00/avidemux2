@@ -19,7 +19,7 @@
 #include "ADM_assert.h"
 
 extern "C" {
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/avcodec.h"
+#include "ADM_libraries/ADM_ffmpeg/libavcodec/avcodec.h"
 }
 
 ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,AVDMGenericVideoStream *in,
