@@ -20,7 +20,7 @@
  */
 
 /**
- * @file riff.h
+ * @file libavformat/riff.h
  * internal header for RIFF based (de)muxers
  * do NOT include this in end user applications
  */
@@ -28,7 +28,7 @@
 #ifndef AVFORMAT_RIFF_H
 #define AVFORMAT_RIFF_H
 
-#include "ADM_lavcodec/avcodec.h"
+#include "libavcodec/avcodec.h"
 #include "avio.h"
 
 int64_t start_tag(ByteIOContext *pb, const char *tag);

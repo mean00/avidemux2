@@ -20,7 +20,7 @@
  */
 
 #include "libavutil/avstring.h"
-#include "ADM_lavcodec/opt.h"
+#include "libavcodec/opt.h"
 #include "os_support.h"
 #include "avformat.h"
 
@@ -50,7 +50,7 @@ URLProtocol *av_protocol_next(URLProtocol *p)
     else  return first_protocol;
 }
 
-int register_protocol(URLProtocol *protocol)
+int av_register_protocol(URLProtocol *protocol)
 {
     URLProtocol **p;
     p = &first_protocol;
@@ -59,6 +59,13 @@ int register_protocol(URLProtocol *protocol)
     protocol->next = NULL;
     return 0;
 }
+
+#if LIBAVFORMAT_VERSION_MAJOR < 53
+int register_protocol(URLProtocol *protocol)
+{
+    return av_register_protocol(protocol);
+}
+#endif
 
 int url_open_protocol (URLContext **puc, struct URLProtocol *up,
                        const char *filename, int flags)
@@ -197,6 +204,13 @@ int64_t url_filesize(URLContext *h)
         url_seek(h, pos, SEEK_SET);
     }
     return size;
+}
+
+int url_get_file_handle(URLContext *h)
+{
+    if (!h->prot->url_get_file_handle)
+        return -1;
+    return h->prot->url_get_file_handle(h);
 }
 
 int url_get_max_packet_size(URLContext *h)

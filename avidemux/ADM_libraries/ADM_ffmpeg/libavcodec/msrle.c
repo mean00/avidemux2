@@ -20,7 +20,7 @@
  */
 
 /**
- * @file msrle.c
+ * @file libavcodec/msrle.c
  * MS RLE Video Decoder by Mike Melanson (melanson@pcisys.net)
  * For more information about the MS RLE format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -63,8 +63,10 @@ static av_cold int msrle_decode_init(AVCodecContext *avctx)
 
 static int msrle_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MsrleContext *s = avctx->priv_data;
 
     s->buf = buf;
@@ -84,7 +86,7 @@ static int msrle_decode_frame(AVCodecContext *avctx,
         s->avctx->palctrl->palette_changed = 0;
     }
 
-    ff_msrle_decode(avctx, &s->frame, avctx->bits_per_coded_sample, buf, buf_size);
+    ff_msrle_decode(avctx, (AVPicture*)&s->frame, avctx->bits_per_coded_sample, buf, buf_size);
 
     *data_size = sizeof(AVFrame);
     *(AVFrame*)data = s->frame;

@@ -1,4 +1,5 @@
-/* adler32.c -- compute the Adler-32 checksum of a data stream
+/*
+ * Compute the Adler-32 checksum of a data stream.
  * This is a modified version based on adler32.c from the zlib library.
  *
  * Copyright (C) 1995 Mark Adler
@@ -35,7 +36,7 @@ unsigned long av_adler32_update(unsigned long adler, const uint8_t *buf, unsigne
     unsigned long s2 = adler >> 16;
 
     while (len>0) {
-#ifdef CONFIG_SMALL
+#if CONFIG_SMALL
         while(len>4 && s2 < (1U<<31)){
             DO4(buf); len-=4;
 #else
@@ -57,7 +58,7 @@ volatile int checksum;
 int main(void){
     int i;
     char data[LEN];
-    av_log_level = AV_LOG_DEBUG;
+    av_log_set_level(AV_LOG_DEBUG);
     for(i=0; i<LEN; i++)
         data[i]= ((i*i)>>3) + 123*i;
     for(i=0; i<1000; i++){

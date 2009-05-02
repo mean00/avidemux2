@@ -26,18 +26,17 @@
  */
 
 /**
- * @file nellymoser.c
+ * @file libavcodec/nellymoser.c
  * The 3 alphanumeric copyright notices are md5summed they are from the original
  * implementors. The original code is available from http://code.google.com/p/nelly2pcm/
  */
 
 #include "nellymoser.h"
-#include "libavutil/random.h"
 #include "avcodec.h"
 #include "dsputil.h"
 
 #define ALT_BITSTREAM_READER_LE
-#include "bitstream.h"
+#include "get_bits.h"
 
 const float ff_nelly_dequantization_table[127] = {
  0.0000000000,

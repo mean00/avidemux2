@@ -61,15 +61,14 @@ int ff_celp_lp_synthesis_filter(
 {
     int i,n;
 
-    // These two lines are to avoid a -1 subtraction in the main loop
+    // Avoids a +1 in the inner loop.
     filter_length++;
-    filter_coeffs--;
 
     for(n=0; n<buffer_length; n++)
     {
         int sum = rounder;
         for(i=1; i<filter_length; i++)
-            sum -= filter_coeffs[i] * out[n-i];
+            sum -= filter_coeffs[i-1] * out[n-i];
 
         sum = (sum >> 12) + in[n];
 
@@ -94,14 +93,33 @@ void ff_celp_lp_synthesis_filterf(
 {
     int i,n;
 
-    // These two lines are to avoid a -1 subtraction in the main loop
+    // Avoids a +1 in the inner loop.
     filter_length++;
-    filter_coeffs--;
 
     for(n=0; n<buffer_length; n++)
     {
         out[n] = in[n];
         for(i=1; i<filter_length; i++)
-            out[n] += filter_coeffs[i] * out[n-i];
+            out[n] -= filter_coeffs[i-1] * out[n-i];
+    }
+}
+
+void ff_celp_lp_zero_synthesis_filterf(
+        float *out,
+        const float* filter_coeffs,
+        const float* in,
+        int buffer_length,
+        int filter_length)
+{
+    int i,n;
+
+    // Avoids a +1 in the inner loop.
+    filter_length++;
+
+    for(n=0; n<buffer_length; n++)
+    {
+        out[n] = in[n];
+        for(i=1; i<filter_length; i++)
+            out[n] -= filter_coeffs[i-1] * in[n-i];
     }
 }

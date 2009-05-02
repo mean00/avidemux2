@@ -1,6 +1,6 @@
 /*
  * AVI muxer
- * Copyright (c) 2000 Fabrice Bellard.
+ * Copyright (c) 2000 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -27,7 +27,6 @@
  *  - fill all fields if non streamed (nb_frames for example)
  */
 
-#ifdef CONFIG_AVI_MUXER
 typedef struct AVIIentry {
     unsigned int flags, pos, len;
 } AVIIentry;
@@ -105,9 +104,9 @@ static void avi_write_info_tag(ByteIOContext *pb, const char *tag, const char *s
 
 static void avi_write_info_tag2(AVFormatContext *s, const char *fourcc, const char *key1, const char *key2)
 {
-    AVMetadataTag *tag= av_metadata_get(s->metadata, key1, NULL, AV_METADATA_IGNORE_CASE);
+    AVMetadataTag *tag= av_metadata_get(s->metadata, key1, NULL, 0);
     if(!tag && key2)
-        tag= av_metadata_get(s->metadata, key2, NULL, AV_METADATA_IGNORE_CASE);
+        tag= av_metadata_get(s->metadata, key2, NULL, 0);
     if(tag)
         avi_write_info_tag(s->pb, fourcc, tag->value);
 }
@@ -587,8 +586,7 @@ static int avi_write_trailer(AVFormatContext *s)
     for (i=0; i<MAX_STREAMS; i++) {
          for (j=0; j<avi->indexes[i].ents_allocated/AVI_INDEX_CLUSTER_SIZE; j++)
               av_free(avi->indexes[i].cluster[j]);
-         av_free(avi->indexes[i].cluster);
-         avi->indexes[i].cluster = NULL;
+         av_freep(&avi->indexes[i].cluster);
          avi->indexes[i].ents_allocated = avi->indexes[i].entry = 0;
     }
 
@@ -607,5 +605,5 @@ AVOutputFormat avi_muxer = {
     avi_write_packet,
     avi_write_trailer,
     .codec_tag= (const AVCodecTag* const []){codec_bmp_tags, codec_wav_tags, 0},
+    .flags= AVFMT_VARIABLE_FPS,
 };
-#endif //CONFIG_AVI_MUXER

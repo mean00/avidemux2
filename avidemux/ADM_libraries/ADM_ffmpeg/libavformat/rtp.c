@@ -1,6 +1,6 @@
 /*
  * RTP input/output format
- * Copyright (c) 2002 Fabrice Bellard.
+ * Copyright (c) 2002 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -19,13 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 #include "avformat.h"
 
 #include <unistd.h>
 #include "network.h"
 
-#include "rtp_internal.h"
+#include "rtp.h"
 
 //#define DEBUG
 
@@ -74,7 +74,7 @@ static const struct
   {-1, "",           CODEC_TYPE_UNKNOWN, CODEC_ID_NONE, -1, -1}
 };
 
-int rtp_get_codec_info(AVCodecContext *codec, int payload_type)
+int ff_rtp_get_codec_info(AVCodecContext *codec, int payload_type)
 {
     int i = 0;
 
@@ -93,13 +93,15 @@ int rtp_get_codec_info(AVCodecContext *codec, int payload_type)
     return -1;
 }
 
-int rtp_get_payload_type(AVCodecContext *codec)
+int ff_rtp_get_payload_type(AVCodecContext *codec)
 {
     int i, payload_type;
 
     /* compute the payload type */
     for (payload_type = -1, i = 0; AVRtpPayloadTypes[i].pt >= 0; ++i)
         if (AVRtpPayloadTypes[i].codec_id == codec->codec_id) {
+            if (codec->codec_id == CODEC_ID_H263)
+                continue;
             if (codec->codec_id == CODEC_ID_PCM_S16BE)
                 if (codec->channels != AVRtpPayloadTypes[i].audio_channels)
                     continue;

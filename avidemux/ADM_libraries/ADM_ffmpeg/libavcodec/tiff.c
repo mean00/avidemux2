@@ -21,11 +21,11 @@
 
 /**
  * TIFF image decoder
- * @file tiff.c
+ * @file libavcodec/tiff.c
  * @author Konstantin Shishkov
  */
 #include "avcodec.h"
-#ifdef CONFIG_ZLIB
+#if CONFIG_ZLIB
 #include <zlib.h>
 #endif
 #include "lzw.h"
@@ -78,7 +78,7 @@ static int tiff_unpack_strip(TiffContext *s, uint8_t* dst, int stride, const uin
     int c, line, pixels, code;
     const uint8_t *ssrc = src;
     int width = s->width * s->bpp >> 3;
-#ifdef CONFIG_ZLIB
+#if CONFIG_ZLIB
     uint8_t *zbuf; unsigned long outlen;
 
     if(s->compr == TIFF_DEFLATE || s->compr == TIFF_ADOBE_DEFLATE){
@@ -298,7 +298,7 @@ static int tiff_decode_tag(TiffContext *s, const uint8_t *start, const uint8_t *
             break;
         case TIFF_DEFLATE:
         case TIFF_ADOBE_DEFLATE:
-#ifdef CONFIG_ZLIB
+#if CONFIG_ZLIB
             break;
 #else
             av_log(s->avctx, AV_LOG_ERROR, "Deflate: ZLib not compiled in\n");
@@ -404,8 +404,10 @@ static int tiff_decode_tag(TiffContext *s, const uint8_t *start, const uint8_t *
 
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TiffContext * const s = avctx->priv_data;
     AVFrame *picture = data;
     AVFrame * const p= (AVFrame*)&s->picture;
@@ -510,7 +512,6 @@ static av_cold int tiff_init(AVCodecContext *avctx){
     s->avctx = avctx;
     avcodec_get_frame_defaults((AVFrame*)&s->picture);
     avctx->coded_frame= (AVFrame*)&s->picture;
-    s->picture.data[0] = NULL;
     ff_lzw_decode_open(&s->lzw);
     ff_ccitt_unpack_init();
 

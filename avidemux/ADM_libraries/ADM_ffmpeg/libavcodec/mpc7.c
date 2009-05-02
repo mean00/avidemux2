@@ -20,19 +20,15 @@
  */
 
 /**
- * @file mpc7.c Musepack SV7 decoder
+ * @file libavcodec/mpc7.c Musepack SV7 decoder
  * MPEG Audio Layer 1/2 -like codec with frames of 1152 samples
  * divided into 32 subbands.
  */
 
-#include "libavutil/random.h"
+#include "libavutil/lfg.h"
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
-
-#ifdef CONFIG_MPEGAUDIO_HP
-#define USE_HIGHPRECISION
-#endif
 #include "mpegaudio.h"
 
 #include "mpc.h"
@@ -44,6 +40,13 @@
 
 static VLC scfi_vlc, dscf_vlc, hdr_vlc, quant_vlc[MPC7_QUANT_VLC_TABLES][2];
 
+static const uint16_t quant_offsets[MPC7_QUANT_VLC_TABLES*2 + 1] =
+{
+       0, 512, 1024, 1536, 2052, 2564, 3076, 3588, 4100, 4612, 5124,
+       5636, 6164, 6676, 7224
+};
+
+
 static av_cold int mpc7_decode_init(AVCodecContext * avctx)
 {
     int i, j;
@@ -52,12 +55,17 @@ static av_cold int mpc7_decode_init(AVCodecContext * avctx)
     uint8_t buf[16];
     static int vlc_initialized = 0;
 
+    static VLC_TYPE scfi_table[1 << MPC7_SCFI_BITS][2];
+    static VLC_TYPE dscf_table[1 << MPC7_DSCF_BITS][2];
+    static VLC_TYPE hdr_table[1 << MPC7_HDR_BITS][2];
+    static VLC_TYPE quant_tables[7224][2];
+
     if(avctx->extradata_size < 16){
         av_log(avctx, AV_LOG_ERROR, "Too small extradata size (%i)!\n", avctx->extradata_size);
         return -1;
     }
     memset(c->oldDSCF, 0, sizeof(c->oldDSCF));
-    av_init_random(0xDEADBEEF, &c->rnd);
+    av_lfg_init(&c->rnd, 0xDEADBEEF);
     dsputil_init(&c->dsp, avctx);
     c->dsp.bswap_buf((uint32_t*)buf, (const uint32_t*)avctx->extradata, 4);
     ff_mpc_init();
@@ -79,29 +87,37 @@ static av_cold int mpc7_decode_init(AVCodecContext * avctx)
 
     if(vlc_initialized) return 0;
     av_log(avctx, AV_LOG_DEBUG, "Initing VLC\n");
+    scfi_vlc.table = scfi_table;
+    scfi_vlc.table_allocated = 1 << MPC7_SCFI_BITS;
     if(init_vlc(&scfi_vlc, MPC7_SCFI_BITS, MPC7_SCFI_SIZE,
                 &mpc7_scfi[1], 2, 1,
-                &mpc7_scfi[0], 2, 1, INIT_VLC_USE_STATIC)){
+                &mpc7_scfi[0], 2, 1, INIT_VLC_USE_NEW_STATIC)){
         av_log(avctx, AV_LOG_ERROR, "Cannot init SCFI VLC\n");
         return -1;
     }
+    dscf_vlc.table = dscf_table;
+    dscf_vlc.table_allocated = 1 << MPC7_DSCF_BITS;
     if(init_vlc(&dscf_vlc, MPC7_DSCF_BITS, MPC7_DSCF_SIZE,
                 &mpc7_dscf[1], 2, 1,
-                &mpc7_dscf[0], 2, 1, INIT_VLC_USE_STATIC)){
+                &mpc7_dscf[0], 2, 1, INIT_VLC_USE_NEW_STATIC)){
         av_log(avctx, AV_LOG_ERROR, "Cannot init DSCF VLC\n");
         return -1;
     }
+    hdr_vlc.table = hdr_table;
+    hdr_vlc.table_allocated = 1 << MPC7_HDR_BITS;
     if(init_vlc(&hdr_vlc, MPC7_HDR_BITS, MPC7_HDR_SIZE,
                 &mpc7_hdr[1], 2, 1,
-                &mpc7_hdr[0], 2, 1, INIT_VLC_USE_STATIC)){
+                &mpc7_hdr[0], 2, 1, INIT_VLC_USE_NEW_STATIC)){
         av_log(avctx, AV_LOG_ERROR, "Cannot init HDR VLC\n");
         return -1;
     }
     for(i = 0; i < MPC7_QUANT_VLC_TABLES; i++){
         for(j = 0; j < 2; j++){
+            quant_vlc[i][j].table = &quant_tables[quant_offsets[i*2 + j]];
+            quant_vlc[i][j].table_allocated = quant_offsets[i*2 + j + 1] - quant_offsets[i*2 + j];
             if(init_vlc(&quant_vlc[i][j], 9, mpc7_quant_vlc_sizes[i],
                         &mpc7_quant_vlc[i][j][1], 4, 2,
-                        &mpc7_quant_vlc[i][j][0], 4, 2, INIT_VLC_USE_STATIC)){
+                        &mpc7_quant_vlc[i][j][0], 4, 2, INIT_VLC_USE_NEW_STATIC)){
                 av_log(avctx, AV_LOG_ERROR, "Cannot init QUANT VLC %i,%i\n",i,j);
                 return -1;
             }
@@ -122,7 +138,7 @@ static inline void idx_to_quant(MPCContext *c, GetBitContext *gb, int idx, int *
     switch(idx){
     case -1:
         for(i = 0; i < SAMPLES_PER_BAND; i++){
-            *dst++ = (av_random(&c->rnd) & 0x3FC) - 510;
+            *dst++ = (av_lfg_get(&c->rnd) & 0x3FC) - 510;
         }
         break;
     case 1:
@@ -160,8 +176,10 @@ static inline void idx_to_quant(MPCContext *c, GetBitContext *gb, int idx, int *
 
 static int mpc7_decode_frame(AVCodecContext * avctx,
                             void *data, int *data_size,
-                            const uint8_t * buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MPCContext *c = avctx->priv_data;
     GetBitContext gb;
     uint8_t *bits;

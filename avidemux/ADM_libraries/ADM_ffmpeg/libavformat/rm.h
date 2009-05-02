@@ -1,6 +1,6 @@
 /*
  * "Real" compatible muxer and demuxer.
- * Copyright (c) 2000, 2001 Fabrice Bellard.
+ * Copyright (c) 2000, 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -23,6 +23,8 @@
 #define AVFORMAT_RM_H
 
 #include "avformat.h"
+
+extern const char *ff_rm_metadata[4];
 
 typedef struct RMStream RMStream;
 
@@ -62,9 +64,9 @@ int ff_rm_read_mdpr_codecdata (AVFormatContext *s, ByteIOContext *pb,
  * @param flags pointer to an integer containing the packet flags, may be
                 updated
  * @param ts pointer to timestamp, may be updated
- * @return >=0 on success (where >0 indicates there are cached samples that
- *         can be retrieved with subsequent calls to ff_rm_retrieve_cache()),
- *         errno codes on error
+ * @return <0 on error, 0 if a packet was placed in the \p pkt pointer. A
+ *         value >0 means that no data was placed in \p pkt, but that cached
+ *         data is available by calling ff_rm_retrieve_cache().
  */
 int ff_rm_parse_packet (AVFormatContext *s, ByteIOContext *pb,
                         AVStream *st, RMStream *rst, int len,

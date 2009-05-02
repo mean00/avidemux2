@@ -27,6 +27,7 @@ const CodecTags ff_mkv_codec_tags[]={
     {"A_DTS"            , CODEC_ID_DTS},
     {"A_EAC3"           , CODEC_ID_EAC3},
     {"A_FLAC"           , CODEC_ID_FLAC},
+    {"A_MLP"            , CODEC_ID_MLP},
     {"A_MPEG/L2"        , CODEC_ID_MP2},
     {"A_MPEG/L1"        , CODEC_ID_MP2},
     {"A_MPEG/L3"        , CODEC_ID_MP3},
@@ -45,6 +46,7 @@ const CodecTags ff_mkv_codec_tags[]={
     {"A_REAL/ATRC"      , CODEC_ID_ATRAC3},
     {"A_REAL/COOK"      , CODEC_ID_COOK},
 //    {"A_REAL/SIPR"      , CODEC_ID_SIPRO},
+    {"A_TRUEHD"         , CODEC_ID_TRUEHD},
     {"A_TTA1"           , CODEC_ID_TTA},
     {"A_VORBIS"         , CODEC_ID_VORBIS},
     {"A_WAVPACK4"       , CODEC_ID_WAVPACK},
@@ -87,4 +89,11 @@ const CodecMime ff_mkv_mime_tags[] = {
     {"application/x-font"         , CODEC_ID_TTF},
 
     {""                           , CODEC_ID_NONE}
+};
+
+const AVMetadataConv ff_mkv_metadata_conv[] = {
+    { "ARTIST"        , "artist" },
+    { "LEAD_PERFORMER", "artist" },
+    { "PART_NUMBER"   , "track"  },
+    { 0 }
 };

@@ -1,6 +1,6 @@
 /*
  * DVB subtitle decoding for ffmpeg
- * Copyright (c) 2005 Ian Caulfield.
+ * Copyright (c) 2005 Ian Caulfield
  *
  * This file is part of FFmpeg.
  *
@@ -20,7 +20,7 @@
  */
 #include "avcodec.h"
 #include "dsputil.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "colorspace.h"
 
 //#define DEBUG
@@ -439,9 +439,9 @@ static int dvbsub_read_2bit_string(uint8_t *destbuf, int dbuf_len,
     int run_length;
     int pixels_read = 0;
 
-    init_get_bits(&gb, *srcbuf, buf_size << 8);
+    init_get_bits(&gb, *srcbuf, buf_size << 3);
 
-    while (get_bits_count(&gb) < (buf_size << 8) && pixels_read < dbuf_len) {
+    while (get_bits_count(&gb) < buf_size << 3 && pixels_read < dbuf_len) {
         bits = get_bits(&gb, 2);
 
         if (bits) {
@@ -544,9 +544,9 @@ static int dvbsub_read_4bit_string(uint8_t *destbuf, int dbuf_len,
     int run_length;
     int pixels_read = 0;
 
-    init_get_bits(&gb, *srcbuf, buf_size << 8);
+    init_get_bits(&gb, *srcbuf, buf_size << 3);
 
-    while (get_bits_count(&gb) < (buf_size << 8) && pixels_read < dbuf_len) {
+    while (get_bits_count(&gb) < buf_size << 3 && pixels_read < dbuf_len) {
         bits = get_bits(&gb, 4);
 
         if (bits) {
@@ -1345,8 +1345,10 @@ static int dvbsub_display_end_segment(AVCodecContext *avctx, const uint8_t *buf,
 
 static int dvbsub_decode(AVCodecContext *avctx,
                          void *data, int *data_size,
-                         const uint8_t *buf, int buf_size)
+                         AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     DVBSubContext *ctx = (DVBSubContext*) avctx->priv_data;
     AVSubtitle *sub = (AVSubtitle*) data;
     const uint8_t *p, *p_end;

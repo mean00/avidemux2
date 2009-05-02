@@ -116,7 +116,7 @@ static int codec_reinit(AVCodecContext *avctx, int width, int height, int qualit
         avctx->width = c->width = width;
         avctx->height = c->height = height;
         c->decomp_size = c->height * c->width * 3 / 2;
-        c->decomp_buf = av_realloc(c->decomp_buf, c->decomp_size + LZO_OUTPUT_PADDING);
+        c->decomp_buf = av_realloc(c->decomp_buf, c->decomp_size + AV_LZO_OUTPUT_PADDING);
         if (!c->decomp_buf) {
             av_log(avctx, AV_LOG_ERROR, "Can't allocate decompression buffer.\n");
             return 0;
@@ -128,7 +128,9 @@ static int codec_reinit(AVCodecContext *avctx, int width, int height, int qualit
 }
 
 static int decode_frame(AVCodecContext *avctx, void *data, int *data_size,
-                        const uint8_t *buf, int buf_size) {
+                        AVPacket *avpkt) {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     NuvContext *c = avctx->priv_data;
     AVFrame *picture = data;
     int orig_size = buf_size;
@@ -175,7 +177,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size,
     buf_size -= 12;
     if (comptype == NUV_RTJPEG_IN_LZO || comptype == NUV_LZO) {
         int outlen = c->decomp_size, inlen = buf_size;
-        if (lzo1x_decode(c->decomp_buf, &outlen, buf, &inlen))
+        if (av_lzo1x_decode(c->decomp_buf, &outlen, buf, &inlen))
             av_log(avctx, AV_LOG_ERROR, "error during lzo decompression\n");
         buf = c->decomp_buf;
         buf_size = c->decomp_size;
@@ -197,7 +199,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size,
 
     if (keyframe && c->pic.data[0])
         avctx->release_buffer(avctx, &c->pic);
-    c->pic.reference = 1;
+    c->pic.reference = 3;
     c->pic.buffer_hints = FF_BUFFER_HINTS_VALID | FF_BUFFER_HINTS_READABLE |
                           FF_BUFFER_HINTS_PRESERVE | FF_BUFFER_HINTS_REUSABLE;
     result = keyframe ? avctx->get_buffer(avctx, &c->pic) : avctx->reget_buffer(avctx, &c->pic);
@@ -280,6 +282,6 @@ AVCodec nuv_decoder = {
     decode_end,
     decode_frame,
     CODEC_CAP_DR1,
-    .long_name = NULL_IF_CONFIG_SMALL("NuppelVideo"),
+    .long_name = NULL_IF_CONFIG_SMALL("NuppelVideo/RTJPEG"),
 };
 

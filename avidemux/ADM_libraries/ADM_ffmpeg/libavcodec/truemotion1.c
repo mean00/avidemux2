@@ -20,7 +20,7 @@
  */
 
 /**
- * @file truemotion1.c
+ * @file libavcodec/truemotion1.c
  * Duck TrueMotion v1 Video Decoder by
  * Alex Beregszaszi and
  * Mike Melanson (melanson@pcisys.net)
@@ -846,8 +846,10 @@ static void truemotion1_decode_24bit(TrueMotion1Context *s)
 
 static int truemotion1_decode_frame(AVCodecContext *avctx,
                                     void *data, int *data_size,
-                                    const uint8_t *buf, int buf_size)
+                                    AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TrueMotion1Context *s = avctx->priv_data;
 
     s->buf = buf;

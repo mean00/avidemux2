@@ -1,6 +1,6 @@
 /*
  * FLV demuxer
- * Copyright (c) 2003 The FFmpeg Project.
+ * Copyright (c) 2003 The FFmpeg Project
  *
  * This demuxer will generate a 1 byte extradata for VP6F content.
  * It is composed of:
@@ -23,6 +23,8 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+
+#include "libavcodec/mpeg4audio.h"
 #include "avformat.h"
 #include "flv.h"
 
@@ -187,6 +189,8 @@ static int amf_parse_object(AVFormatContext *s, AVStream *astream, AVStream *vst
             if(!strcmp(key, "duration")) s->duration = num_val * AV_TIME_BASE;
 //            else if(!strcmp(key, "width")  && vcodec && num_val > 0) vcodec->width  = num_val;
 //            else if(!strcmp(key, "height") && vcodec && num_val > 0) vcodec->height = num_val;
+            else if(!strcmp(key, "videodatarate") && vcodec && 0 <= (int)(num_val * 1024.0))
+                vcodec->bit_rate = num_val * 1024.0;
             else if(!strcmp(key, "audiocodecid") && acodec && 0 <= (int)num_val)
                 flv_set_audio_codec(s, astream, (int)num_val << FLV_AUDIO_CODECID_OFFSET);
             else if(!strcmp(key, "videocodecid") && vcodec && 0 <= (int)num_val)
@@ -219,12 +223,11 @@ static int flv_read_metabody(AVFormatContext *s, int64_t next_pos) {
     AMFDataType type;
     AVStream *stream, *astream, *vstream;
     ByteIOContext *ioc;
-    int i, keylen;
+    int i;
     char buffer[11]; //only needs to hold the string "onMetaData". Anything longer is something we don't want.
 
     astream = NULL;
     vstream = NULL;
-    keylen = 0;
     ioc = s->pb;
 
     //first object needs to be "onMetaData" string
@@ -309,7 +312,6 @@ static int flv_read_packet(AVFormatContext *s, AVPacket *pkt)
     int64_t dts, pts = AV_NOPTS_VALUE;
     AVStream *st = NULL;
 
- retry:
  for(;;){
     pos = url_ftell(s->pb);
     url_fskip(s->pb, 4); /* size of previous packet */
@@ -319,7 +321,7 @@ static int flv_read_packet(AVFormatContext *s, AVPacket *pkt)
     dts |= get_byte(s->pb) << 24;
 //    av_log(s, AV_LOG_DEBUG, "type:%d, size:%d, dts:%d\n", type, size, dts);
     if (url_feof(s->pb))
-        return AVERROR(EIO);
+        return AVERROR_EOF;
     url_fskip(s->pb, 3); /* stream id, always 0 */
     flags = 0;
 
@@ -339,7 +341,7 @@ static int flv_read_packet(AVFormatContext *s, AVPacket *pkt)
         if ((flags & 0xf0) == 0x50) /* video info / command frame */
             goto skip;
     } else {
-        if (type == FLV_TAG_TYPE_META && size > 13+1+4)
+        if (type == FLV_TAG_TYPE_META && size > 13+1+4 && 0)
             flv_read_metabody(s, next);
         else /* skip packet */
             av_log(s, AV_LOG_ERROR, "skipping flv packet: type %d, size %d, flags %d\n", type, size, flags);
@@ -359,11 +361,11 @@ static int flv_read_packet(AVFormatContext *s, AVPacket *pkt)
             break;
     }
     if(i == s->nb_streams){
-        av_log(NULL, AV_LOG_ERROR, "invalid stream\n");
+        av_log(s, AV_LOG_ERROR, "invalid stream\n");
         st= create_stream(s, is_audio);
         s->ctx_flags &= ~AVFMTCTX_NOHEADER;
     }
-//    av_log(NULL, AV_LOG_DEBUG, "%d %X %d \n", is_audio, flags, st->discard);
+//    av_log(s, AV_LOG_DEBUG, "%d %X %d \n", is_audio, flags, st->discard);
     if(  (st->discard >= AVDISCARD_NONKEY && !((flags & FLV_VIDEO_FRAMETYPE_MASK) == FLV_FRAME_KEY ||         is_audio))
        ||(st->discard >= AVDISCARD_BIDIR  &&  ((flags & FLV_VIDEO_FRAMETYPE_MASK) == FLV_FRAME_DISP_INTER && !is_audio))
        || st->discard >= AVDISCARD_ALL
@@ -420,12 +422,28 @@ static int flv_read_packet(AVFormatContext *s, AVPacket *pkt)
         if (type == 0) {
             if ((ret = flv_get_extradata(s, st, size)) < 0)
                 return ret;
-            goto retry;
+            if (st->codec->codec_id == CODEC_ID_AAC) {
+                MPEG4AudioConfig cfg;
+                ff_mpeg4audio_get_config(&cfg, st->codec->extradata,
+                                         st->codec->extradata_size);
+                if (cfg.chan_config > 7)
+                    return -1;
+                st->codec->channels = ff_mpeg4audio_channels[cfg.chan_config];
+                st->codec->sample_rate = cfg.sample_rate;
+                dprintf(s, "mp4a config channels %d sample rate %d\n",
+                        st->codec->channels, st->codec->sample_rate);
+            }
+
+            return AVERROR(EAGAIN);
         }
     }
 
+    /* skip empty data packets */
+    if (!size)
+        return AVERROR(EAGAIN);
+
     ret= av_get_packet(s->pb, pkt, size);
-    if (ret <= 0) {
+    if (ret < 0) {
         return AVERROR(EIO);
     }
     /* note: we need to modify the packet size here to handle the last

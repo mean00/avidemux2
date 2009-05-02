@@ -22,7 +22,7 @@
 #define AVFORMAT_METADATA_H
 
 /**
- * @file metadata.h
+ * @file libavformat/metadata.h
  * internal metadata API header
  * see avformat.h or the public API!
  */
@@ -33,6 +33,11 @@
 struct AVMetadata{
     int count;
     AVMetadataTag *elems;
+};
+
+struct AVMetadataConv{
+    const char *native;
+    const char *generic;
 };
 
 #if LIBAVFORMAT_VERSION_MAJOR < 53

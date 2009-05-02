@@ -1,6 +1,6 @@
 /*
  * "Real" compatible muxer.
- * Copyright (c) 2000, 2001 Fabrice Bellard.
+ * Copyright (c) 2000, 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -70,6 +70,7 @@ static void rv10_write_header(AVFormatContext *ctx,
     const char *desc, *mimetype;
     int nb_packets, packet_total_size, packet_max_size, size, packet_avg_size, i;
     int bit_rate, v, duration, flags, data_pos;
+    AVMetadataTag *tag;
 
     start_ptr = s->buf_ptr;
 
@@ -123,14 +124,17 @@ static void rv10_write_header(AVFormatContext *ctx,
     /* comments */
 
     put_tag(s,"CONT");
-    size = strlen(ctx->title) + strlen(ctx->author) + strlen(ctx->copyright) +
-        strlen(ctx->comment) + 4 * 2 + 10;
+    size =  4 * 2 + 10;
+    for(i=0; i<FF_ARRAY_ELEMS(ff_rm_metadata); i++) {
+        tag = av_metadata_get(ctx->metadata, ff_rm_metadata[i], NULL, 0);
+        if(tag) size += strlen(tag->value);
+    }
     put_be32(s,size);
     put_be16(s,0);
-    put_str(s, ctx->title);
-    put_str(s, ctx->author);
-    put_str(s, ctx->copyright);
-    put_str(s, ctx->comment);
+    for(i=0; i<FF_ARRAY_ELEMS(ff_rm_metadata); i++) {
+        tag = av_metadata_get(ctx->metadata, ff_rm_metadata[i], NULL, 0);
+        put_str(s, tag ? tag->value : "");
+    }
 
     for(i=0;i<ctx->nb_streams;i++) {
         int codec_data_size;
@@ -421,16 +425,8 @@ static int rm_write_trailer(AVFormatContext *s)
         index_pos = url_fseek(pb, 0, SEEK_CUR);
         data_size = index_pos - rm->data_pos;
 
-        /* index */
-        put_tag(pb, "INDX");
-        put_be32(pb, 10 + 10 * s->nb_streams);
-        put_be16(pb, 0);
+        /* FIXME: write index */
 
-        for(i=0;i<s->nb_streams;i++) {
-            put_be32(pb, 0); /* zero indexes */
-            put_be16(pb, i); /* stream number */
-            put_be32(pb, 0); /* next index */
-        }
         /* undocumented end header */
         put_be32(pb, 0);
         put_be32(pb, 0);
@@ -438,7 +434,7 @@ static int rm_write_trailer(AVFormatContext *s)
         url_fseek(pb, 0, SEEK_SET);
         for(i=0;i<s->nb_streams;i++)
             rm->streams[i].total_frames = rm->streams[i].nb_frames;
-        rv10_write_header(s, data_size, index_pos);
+        rv10_write_header(s, data_size, 0);
     } else {
         /* undocumented end header */
         put_be32(pb, 0);
@@ -451,7 +447,7 @@ static int rm_write_trailer(AVFormatContext *s)
 
 AVOutputFormat rm_muxer = {
     "rm",
-    NULL_IF_CONFIG_SMALL("RM format"),
+    NULL_IF_CONFIG_SMALL("RealMedia format"),
     "application/vnd.rn-realmedia",
     "rm,ra",
     sizeof(RMMuxContext),

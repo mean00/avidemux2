@@ -1,7 +1,7 @@
 /*
  * Audio and Video frame extraction
- * Copyright (c) 2003 Fabrice Bellard.
- * Copyright (c) 2003 Michael Niedermayer.
+ * Copyright (c) 2003 Fabrice Bellard
+ * Copyright (c) 2003 Michael Niedermayer
  *
  * This file is part of FFmpeg.
  *
@@ -23,7 +23,7 @@
 #include "parser.h"
 #include "aac_ac3_parser.h"
 #include "aac_parser.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "mpeg4audio.h"
 
 #define AAC_HEADER_SIZE 7
@@ -62,7 +62,7 @@ int ff_aac_parse_header(GetBitContext *gbc, AACADTSHeaderInfo *hdr)
     skip_bits(gbc, 11);          /* adts_buffer_fullness */
     rdb = get_bits(gbc, 2);      /* number_of_raw_data_blocks_in_frame */
 
-    hdr->object_type    = aot;
+    hdr->object_type    = aot + 1;
     hdr->chan_config    = ch;
     hdr->crc_absent     = crc_abs;
     hdr->num_aac_frames = rdb + 1;
@@ -113,5 +113,5 @@ AVCodecParser aac_parser = {
     sizeof(AACAC3ParseContext),
     aac_parse_init,
     ff_aac_ac3_parse,
-    NULL,
+    ff_parse_close,
 };

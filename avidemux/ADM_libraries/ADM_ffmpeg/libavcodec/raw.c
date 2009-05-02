@@ -1,6 +1,6 @@
 /*
  * Raw Video Codec
- * Copyright (c) 2001 Fabrice Bellard.
+ * Copyright (c) 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -20,7 +20,7 @@
  */
 
 /**
- * @file raw.c
+ * @file libavcodec/raw.c
  * Raw Video Codec
  */
 
@@ -51,6 +51,7 @@ const PixelFormatTag ff_raw_pixelFormatTags[] = {
     /* quicktime */
     { PIX_FMT_UYVY422, MKTAG('2', 'v', 'u', 'y') },
     { PIX_FMT_UYVY422, MKTAG('A', 'V', 'U', 'I') }, /* FIXME merge both fields */
+    { PIX_FMT_YUYV422, MKTAG('y', 'u', 'v', '2') },
     { PIX_FMT_PAL8,    MKTAG('W', 'R', 'A', 'W') },
 
     { PIX_FMT_NONE, 0 },

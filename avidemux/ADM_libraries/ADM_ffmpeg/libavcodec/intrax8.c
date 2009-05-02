@@ -17,12 +17,12 @@
  */
 
 /**
- * @file intrax8.c
+ * @file libavcodec/intrax8.c
  * @brief IntraX8 (J-Frame) subdecoder, used by WMV2 and VC-1
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "mpegvideo.h"
 #include "msmpeg4data.h"
 #include "intrax8huf.h"
@@ -42,7 +42,7 @@ static VLC j_ac_vlc[2][2][8];  //[quant<13],[intra/inter],[select]
 static VLC j_dc_vlc[2][8];     //[quant], [select]
 static VLC j_orient_vlc[2][4]; //[quant], [select]
 
-static void x8_vlc_init(void){
+static av_cold void x8_vlc_init(void){
     int i;
 
 #define  init_ac_vlc(dst,src) \
@@ -50,7 +50,7 @@ static void x8_vlc_init(void){
               AC_VLC_BITS,77, \
               &src[1],4,2, \
               &src[0],4,2, \
-              1)
+              INIT_VLC_USE_STATIC)
 //set ac tables
     for(i=0;i<8;i++){
         init_ac_vlc( j_ac_vlc[0][0][i], x8_ac0_highquant_table[i][0] );
@@ -66,7 +66,7 @@ static void x8_vlc_init(void){
         DC_VLC_BITS,34, \
         &src[1],4,2, \
         &src[0],4,2, \
-        1);
+        INIT_VLC_USE_STATIC);
     for(i=0;i<8;i++){
         init_dc_vlc( j_dc_vlc[0][i], x8_dc_highquant_table[i][0]);
         init_dc_vlc( j_dc_vlc[1][i], x8_dc_lowquant_table [i][0]);
@@ -79,7 +79,7 @@ static void x8_vlc_init(void){
     OR_VLC_BITS,12, \
     &src[1],4,2, \
     &src[0],4,2, \
-    1);
+    INIT_VLC_USE_STATIC);
     for(i=0;i<2;i++){
         init_or_vlc( j_orient_vlc[0][i], x8_orient_highquant_table[i][0]);
     }
@@ -664,7 +664,7 @@ static void x8_init_block_index(MpegEncContext *s){ //FIXME maybe merge with ff_
  * @param w pointer to IntraX8Context
  * @param s pointer to MpegEncContext of the parent codec
  */
-void ff_intrax8_common_init(IntraX8Context * w, MpegEncContext * const s){
+av_cold void ff_intrax8_common_init(IntraX8Context * w, MpegEncContext * const s){
 
     w->s=s;
     x8_vlc_init();
@@ -680,7 +680,7 @@ void ff_intrax8_common_init(IntraX8Context * w, MpegEncContext * const s){
  * Destroy IntraX8 frame structure.
  * @param w pointer to IntraX8Context
  */
-void ff_intrax8_common_end(IntraX8Context * w)
+av_cold void ff_intrax8_common_end(IntraX8Context * w)
 {
     av_freep(&w->prediction_table);
 }

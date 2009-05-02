@@ -20,13 +20,14 @@
  */
 
 /**
- * @file zmbvenc.c
+ * @file libavcodec/zmbvenc.c
  * Zip Motion Blocks Video encoder
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
 #include <zlib.h>
@@ -250,7 +251,6 @@ static av_cold int encode_init(AVCodecContext *avctx)
 
     c->avctx = avctx;
 
-    c->pic.data[0] = NULL;
     c->curfrm = 0;
     c->keyint = avctx->keyint_min;
     c->range = 8;

@@ -20,7 +20,7 @@
  */
 
 /**
- * @file mm.c
+ * @file libavcodec/mmvideo.c
  * American Laser Games MM Video Decoder
  * by Peter Ross (suxen_drol at hotmail dot com)
  *
@@ -31,6 +31,7 @@
  *  http://wiki.multimedia.cx/index.php?title=American_Laser_Games_MM
  */
 
+#include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
 #define MM_PREAMBLE_SIZE    6
@@ -158,8 +159,10 @@ static void mm_decode_inter(MmContext * s, int half_horiz, int half_vert, const 
 
 static int mm_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MmContext *s = avctx->priv_data;
     const uint8_t *buf_end = buf+buf_size;
     int type;

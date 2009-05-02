@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "libavutil/intreadwrite.h"
 #include "avformat.h"
 
 #define TXD_FILE            0x16
@@ -63,7 +64,7 @@ next_chunk:
     if (url_feof(s->pb))
         return AVERROR(EIO);
     if (marker != TXD_MARKER && marker != TXD_MARKER2) {
-        av_log(NULL, AV_LOG_ERROR, "marker does not match\n");
+        av_log(s, AV_LOG_ERROR, "marker does not match\n");
         return AVERROR(EIO);
     }
 
@@ -77,7 +78,7 @@ next_chunk:
         case TXD_TEXTURE:
             goto next_chunk;
         default:
-            av_log(NULL, AV_LOG_ERROR, "unknown chunk id %i\n", id);
+            av_log(s, AV_LOG_ERROR, "unknown chunk id %i\n", id);
             return AVERROR(EIO);
     }
 
@@ -90,7 +91,7 @@ next_chunk:
 AVInputFormat txd_demuxer =
 {
     "txd",
-    NULL_IF_CONFIG_SMALL("txd format"),
+    NULL_IF_CONFIG_SMALL("Renderware TeXture Dictionary"),
     0,
     txd_probe,
     txd_read_header,

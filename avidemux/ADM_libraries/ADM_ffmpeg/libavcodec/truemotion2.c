@@ -20,12 +20,12 @@
  */
 
 /**
- * @file truemotion2.c
+ * @file libavcodec/truemotion2.c
  * Duck TrueMotion2 decoder.
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
 
 #define TM2_ESCAPE 0x80000000
@@ -365,10 +365,10 @@ static inline int GET_TOK(TM2Context *ctx,int type) {
 
 /* recalculate last and delta values for next blocks */
 #define TM2_RECALC_BLOCK(CHR, stride, last, CD) {\
-    CD[0] = (CHR[1] - 128) - last[1];\
+    CD[0] = CHR[1] - last[1];\
     CD[1] = (int)CHR[stride + 1] - (int)CHR[1];\
-    last[0] = (int)CHR[stride + 0] - 128;\
-    last[1] = (int)CHR[stride + 1] - 128;}
+    last[0] = (int)CHR[stride + 0];\
+    last[1] = (int)CHR[stride + 1];}
 
 /* common operations - add deltas to 4x4 block of luma or 2x2 blocks of chroma */
 static inline void tm2_apply_deltas(TM2Context *ctx, int* Y, int stride, int *deltas, int *last)
@@ -396,7 +396,7 @@ static inline void tm2_high_chroma(int *data, int stride, int *last, int *CD, in
         for(i = 0; i < 2; i++){
             CD[j] += deltas[i + j * 2];
             last[i] += CD[j];
-            data[i] = last[i] + 128;
+            data[i] = last[i];
         }
         data += stride;
     }
@@ -675,8 +675,8 @@ static int tm2_decode_blocks(TM2Context *ctx, AVFrame *p)
     int bw, bh;
     int type;
     int keyframe = 1;
-    uint8_t *Y, *U, *V;
-    int *src;
+    int *Y, *U, *V;
+    uint8_t *dst;
 
     bw = ctx->avctx->width >> 2;
     bh = ctx->avctx->height >> 2;
@@ -729,82 +729,72 @@ static int tm2_decode_blocks(TM2Context *ctx, AVFrame *p)
     }
 
     /* copy data from our buffer to AVFrame */
-    Y = p->data[0];
-    src = (ctx->cur?ctx->Y2:ctx->Y1);
+    Y = (ctx->cur?ctx->Y2:ctx->Y1);
+    U = (ctx->cur?ctx->U2:ctx->U1);
+    V = (ctx->cur?ctx->V2:ctx->V1);
+    dst = p->data[0];
     for(j = 0; j < ctx->avctx->height; j++){
         for(i = 0; i < ctx->avctx->width; i++){
-            Y[i] = av_clip_uint8(*src++);
+            int y = Y[i], u = U[i >> 1], v = V[i >> 1];
+            dst[3*i+0] = av_clip_uint8(y + v);
+            dst[3*i+1] = av_clip_uint8(y);
+            dst[3*i+2] = av_clip_uint8(y + u);
         }
-        Y += p->linesize[0];
-    }
-    U = p->data[2];
-    src = (ctx->cur?ctx->U2:ctx->U1);
-    for(j = 0; j < (ctx->avctx->height + 1) >> 1; j++){
-        for(i = 0; i < (ctx->avctx->width + 1) >> 1; i++){
-            U[i] = av_clip_uint8(*src++);
+        Y += ctx->avctx->width;
+        if (j & 1) {
+            U += ctx->avctx->width >> 1;
+            V += ctx->avctx->width >> 1;
         }
-        U += p->linesize[2];
-    }
-    V = p->data[1];
-    src = (ctx->cur?ctx->V2:ctx->V1);
-    for(j = 0; j < (ctx->avctx->height + 1) >> 1; j++){
-        for(i = 0; i < (ctx->avctx->width + 1) >> 1; i++){
-            V[i] = av_clip_uint8(*src++);
-        }
-        V += p->linesize[1];
+        dst += p->linesize[0];
     }
 
     return keyframe;
 }
 
+static const int tm2_stream_order[TM2_NUM_STREAMS] = {
+    TM2_C_HI, TM2_C_LO, TM2_L_HI, TM2_L_LO, TM2_UPD, TM2_MOT, TM2_TYPE
+};
+
 static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
-                        const uint8_t *buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TM2Context * const l = avctx->priv_data;
     AVFrame * const p= (AVFrame*)&l->pic;
-    int skip, t;
+    int i, skip, t;
+    uint8_t *swbuf;
 
+    swbuf = av_malloc(buf_size + FF_INPUT_BUFFER_PADDING_SIZE);
+    if(!swbuf){
+        av_log(avctx, AV_LOG_ERROR, "Cannot allocate temporary buffer\n");
+        return -1;
+    }
     p->reference = 1;
     p->buffer_hints = FF_BUFFER_HINTS_VALID | FF_BUFFER_HINTS_PRESERVE | FF_BUFFER_HINTS_REUSABLE;
     if(avctx->reget_buffer(avctx, p) < 0){
         av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
+        av_free(swbuf);
         return -1;
     }
 
-    l->dsp.bswap_buf((uint32_t*)buf, (const uint32_t*)buf, buf_size >> 2); //FIXME SERIOUS BUG
-    skip = tm2_read_header(l, buf);
+    l->dsp.bswap_buf((uint32_t*)swbuf, (const uint32_t*)buf, buf_size >> 2);
+    skip = tm2_read_header(l, swbuf);
 
-    if(skip == -1)
+    if(skip == -1){
+        av_free(swbuf);
         return -1;
+    }
 
-    t = tm2_read_stream(l, buf + skip, TM2_C_HI);
-    if(t == -1)
-        return -1;
-    skip += t;
-    t = tm2_read_stream(l, buf + skip, TM2_C_LO);
-    if(t == -1)
-        return -1;
-    skip += t;
-    t = tm2_read_stream(l, buf + skip, TM2_L_HI);
-    if(t == -1)
-        return -1;
-    skip += t;
-    t = tm2_read_stream(l, buf + skip, TM2_L_LO);
-    if(t == -1)
-        return -1;
-    skip += t;
-    t = tm2_read_stream(l, buf + skip, TM2_UPD);
-    if(t == -1)
-        return -1;
-    skip += t;
-    t = tm2_read_stream(l, buf + skip, TM2_MOT);
-    if(t == -1)
-        return -1;
-    skip += t;
-    t = tm2_read_stream(l, buf + skip, TM2_TYPE);
-    if(t == -1)
-        return -1;
+    for(i = 0; i < TM2_NUM_STREAMS; i++){
+        t = tm2_read_stream(l, swbuf + skip, tm2_stream_order[i]);
+        if(t == -1){
+            av_free(swbuf);
+            return -1;
+        }
+        skip += t;
+    }
     p->key_frame = tm2_decode_blocks(l, p);
     if(p->key_frame)
         p->pict_type = FF_I_TYPE;
@@ -814,6 +804,7 @@ static int decode_frame(AVCodecContext *avctx,
     l->cur = !l->cur;
     *data_size = sizeof(AVFrame);
     *(AVFrame*)data = l->pic;
+    av_free(swbuf);
 
     return buf_size;
 }
@@ -832,7 +823,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
 
     l->avctx = avctx;
     l->pic.data[0]=NULL;
-    avctx->pix_fmt = PIX_FMT_YUV420P;
+    avctx->pix_fmt = PIX_FMT_BGR24;
 
     dsputil_init(&l->dsp, avctx);
 

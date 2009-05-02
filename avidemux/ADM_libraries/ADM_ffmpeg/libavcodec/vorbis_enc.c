@@ -19,7 +19,7 @@
  */
 
 /**
- * @file vorbis_enc.c
+ * @file libavcodec/vorbis_enc.c
  * Native Vorbis encoder.
  * @author Oded Shimon <ods15@ods15.dyndns.org>
  */
@@ -31,7 +31,7 @@
 #include "vorbis_enc_data.h"
 
 #define BITSTREAM_WRITER_LE
-#include "bitstream.h"
+#include "put_bits.h"
 
 #undef NDEBUG
 #include <assert.h>

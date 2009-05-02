@@ -1,7 +1,7 @@
 /*
  * Faad decoder
- * Copyright (c) 2003 Zdenek Kabelac.
- * Copyright (c) 2004 Thomas Raivio.
+ * Copyright (c) 2003 Zdenek Kabelac
+ * Copyright (c) 2004 Thomas Raivio
  *
  * This file is part of FFmpeg.
  *
@@ -21,7 +21,7 @@
  */
 
 /**
- * @file faad.c
+ * @file libavcodec/libfaad.c
  * AAC decoder.
  *
  * still a bit unfinished - but it plays something
@@ -35,12 +35,13 @@
 #endif
 
 /*
- * when CONFIG_LIBFAADBIN is defined the libfaad will be opened at runtime
+ * when CONFIG_LIBFAADBIN is true libfaad will be opened at runtime
  */
 //#undef CONFIG_LIBFAADBIN
-//#define CONFIG_LIBFAADBIN
+//#define CONFIG_LIBFAADBIN 0
+//#define CONFIG_LIBFAADBIN 1
 
-#ifdef CONFIG_LIBFAADBIN
+#if CONFIG_LIBFAADBIN
 #include <dlfcn.h>
 static const char* const libfaadname = "libfaad.so";
 #else
@@ -116,7 +117,7 @@ static void channel_setup(AVCodecContext *avctx)
 #endif
 }
 
-static int faac_init_mp4(AVCodecContext *avctx)
+static av_cold int faac_init_mp4(AVCodecContext *avctx)
 {
     FAACContext *s = avctx->priv_data;
     unsigned long samplerate;
@@ -148,8 +149,10 @@ static int faac_init_mp4(AVCodecContext *avctx)
 
 static int faac_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     FAACContext *s = avctx->priv_data;
 #ifndef FAAD2_VERSION
     unsigned long bytesconsumed;
@@ -224,7 +227,7 @@ static av_cold int faac_decode_init(AVCodecContext *avctx)
     FAACContext *s = avctx->priv_data;
     faacDecConfigurationPtr faac_cfg;
 
-#ifdef CONFIG_LIBFAADBIN
+#if CONFIG_LIBFAADBIN
     const char* err = 0;
 
     s->handle = dlopen(libfaadname, RTLD_LAZY);
@@ -259,7 +262,7 @@ static av_cold int faac_decode_init(AVCodecContext *avctx)
 
 #undef dfaac
 
-#ifdef CONFIG_LIBFAADBIN
+#if CONFIG_LIBFAADBIN
     if (err) {
         dlclose(s->handle);
         av_log(avctx, AV_LOG_ERROR, "FAAD library: cannot resolve %s in %s!\n",
@@ -317,20 +320,14 @@ static av_cold int faac_decode_init(AVCodecContext *avctx)
     return 0;
 }
 
-#define AAC_CODEC(id, name, long_name_) \
-AVCodec name ## _decoder = {    \
-    #name,                      \
-    CODEC_TYPE_AUDIO,           \
-    id,                         \
-    sizeof(FAACContext),        \
-    faac_decode_init,           \
-    NULL,                       \
-    faac_decode_end,            \
-    faac_decode_frame,          \
-    .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
-}
-
-// FIXME - raw AAC files - maybe just one entry will be enough
-AAC_CODEC(CODEC_ID_AAC, libfaad, "libfaad AAC (Advanced Audio Codec)");
-
-#undef AAC_CODEC
+AVCodec libfaad_decoder = {
+    "libfaad",
+    CODEC_TYPE_AUDIO,
+    CODEC_ID_AAC,
+    sizeof(FAACContext),
+    faac_decode_init,
+    NULL,
+    faac_decode_end,
+    faac_decode_frame,
+    .long_name = NULL_IF_CONFIG_SMALL("libfaad AAC (Advanced Audio Codec)"),
+};

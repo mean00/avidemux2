@@ -1,5 +1,4 @@
-/* ffmpeg/libavcodec/ppc/fdct_altivec.c, this file is part of the
- * AltiVec optimized library for the FFMPEG Multimedia System
+/*
  * Copyright (C) 2003  James Klicman <james@klicman.org>
  *
  * This file is part of FFmpeg.
@@ -19,11 +18,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
-#include "common.h"
-#include "dsputil.h"
+#include "config.h"
+#if HAVE_ALTIVEC_H
+#include <altivec.h>
+#endif
+#include "libavutil/common.h"
+#include "libavcodec/dsputil.h"
 #include "dsputil_ppc.h"
-#include "gcc_fixes.h"
 
 
 #define vs16(v) ((vector signed short)(v))
@@ -58,9 +59,9 @@
 
 
 static vector float fdctconsts[3] = {
-    (vector float)AVV( W0, W1, W2, W3 ),
-    (vector float)AVV( W4, W5, W6, W7 ),
-    (vector float)AVV( W8, W9, WA, WB )
+    { W0, W1, W2, W3 },
+    { W4, W5, W6, W7 },
+    { W8, W9, WA, WB }
 };
 
 #define LD_W0 vec_splat(cnsts0, 0)

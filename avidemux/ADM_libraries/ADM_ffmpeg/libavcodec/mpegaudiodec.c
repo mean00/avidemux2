@@ -1,6 +1,6 @@
 /*
  * MPEG Audio decoder
- * Copyright (c) 2001, 2002 Fabrice Bellard.
+ * Copyright (c) 2001, 2002 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -20,12 +20,12 @@
  */
 
 /**
- * @file mpegaudiodec.c
+ * @file libavcodec/mpegaudiodec.c
  * MPEG Audio decoder.
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
 
 /*
@@ -33,12 +33,6 @@
  *  - in low precision mode, use more 16 bit multiplies in synth filter
  *  - test lsf / mpeg25 extensively.
  */
-
-/* define USE_HIGHPRECISION to have a bit exact (but slower) mpeg
-   audio decoder */
-#ifdef CONFIG_MPEGAUDIO_HP
-#   define USE_HIGHPRECISION
-#endif
 
 #include "mpegaudio.h"
 #include "mpegaudiodecheader.h"
@@ -256,7 +250,7 @@ static int pow_mult3[3] = {
 };
 #endif
 
-static void int_pow_init(void)
+static av_cold void int_pow_init(void)
 {
     int i, a;
 
@@ -314,7 +308,7 @@ static int int_pow(int i, int *exp_ptr)
 }
 #endif
 
-static int decode_init(AVCodecContext * avctx)
+static av_cold int decode_init(AVCodecContext * avctx)
 {
     MPADecodeContext *s = avctx->priv_data;
     static int init=0;
@@ -322,11 +316,7 @@ static int decode_init(AVCodecContext * avctx)
 
     s->avctx = avctx;
 
-#if defined(USE_HIGHPRECISION) && defined(CONFIG_AUDIO_NONSHORT)
-    avctx->sample_fmt= SAMPLE_FMT_S32;
-#else
-    avctx->sample_fmt= SAMPLE_FMT_S16;
-#endif
+    avctx->sample_fmt= OUT_FMT;
     s->error_recognition= avctx->error_recognition;
 
     if(avctx->antialias_algo != FF_AA_FLOAT)
@@ -368,7 +358,6 @@ static int decode_init(AVCodecContext * avctx)
         for(i=1;i<16;i++) {
             const HuffTable *h = &mpa_huff_tables[i];
             int xsize, x, y;
-            unsigned int n;
             uint8_t  tmp_bits [512];
             uint16_t tmp_codes[512];
 
@@ -376,7 +365,6 @@ static int decode_init(AVCodecContext * avctx)
             memset(tmp_codes, 0, sizeof(tmp_codes));
 
             xsize = h->xsize;
-            n = xsize * xsize;
 
             j = 0;
             for(x=0;x<xsize;x++) {
@@ -839,7 +827,7 @@ static inline int round_sample(int64_t *sum)
     op2(sum2, (w2)[7 * 64], tmp);\
 }
 
-void ff_mpa_synth_init(MPA_INT *window)
+void av_cold ff_mpa_synth_init(MPA_INT *window)
 {
     int i;
 
@@ -2268,8 +2256,10 @@ static int mp_decode_frame(MPADecodeContext *s,
 
 static int decode_frame(AVCodecContext * avctx,
                         void *data, int *data_size,
-                        const uint8_t * buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MPADecodeContext *s = avctx->priv_data;
     uint32_t header;
     int out_size;
@@ -2287,7 +2277,7 @@ retry:
         goto retry;
     }
 
-    if (ff_mpegaudio_decode_header(s, header) == 1) {
+    if (ff_mpegaudio_decode_header((MPADecodeHeader *)s, header) == 1) {
         /* free format: prepare to compute frame size */
         s->frame_size = -1;
         return -1;
@@ -2322,11 +2312,13 @@ static void flush(AVCodecContext *avctx){
     s->last_buf_size= 0;
 }
 
-#ifdef CONFIG_MP3ADU_DECODER
+#if CONFIG_MP3ADU_DECODER
 static int decode_frame_adu(AVCodecContext * avctx,
                         void *data, int *data_size,
-                        const uint8_t * buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MPADecodeContext *s = avctx->priv_data;
     uint32_t header;
     int len, out_size;
@@ -2352,7 +2344,7 @@ static int decode_frame_adu(AVCodecContext * avctx,
         return buf_size;
     }
 
-    ff_mpegaudio_decode_header(s, header);
+    ff_mpegaudio_decode_header((MPADecodeHeader *)s, header);
     /* update codec info */
     avctx->sample_rate = s->sample_rate;
     avctx->channels = s->nb_channels;
@@ -2372,7 +2364,7 @@ static int decode_frame_adu(AVCodecContext * avctx,
 }
 #endif /* CONFIG_MP3ADU_DECODER */
 
-#ifdef CONFIG_MP3ON4_DECODER
+#if CONFIG_MP3ON4_DECODER
 
 /**
  * Context for MP3On4 decoder
@@ -2454,7 +2446,7 @@ static int decode_init_mp3on4(AVCodecContext * avctx)
 }
 
 
-static int decode_close_mp3on4(AVCodecContext * avctx)
+static av_cold int decode_close_mp3on4(AVCodecContext * avctx)
 {
     MP3On4DecodeContext *s = avctx->priv_data;
     int i;
@@ -2469,8 +2461,10 @@ static int decode_close_mp3on4(AVCodecContext * avctx)
 
 static int decode_frame_mp3on4(AVCodecContext * avctx,
                         void *data, int *data_size,
-                        const uint8_t * buf, int buf_size)
+                        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MP3On4DecodeContext *s = avctx->priv_data;
     MPADecodeContext *m;
     int fsize, len = buf_size, out_size = 0;
@@ -2501,7 +2495,7 @@ static int decode_frame_mp3on4(AVCodecContext * avctx,
         if (ff_mpa_check_header(header) < 0) // Bad header, discard block
             break;
 
-        ff_mpegaudio_decode_header(m, header);
+        ff_mpegaudio_decode_header((MPADecodeHeader *)m, header);
         out_size += mp_decode_frame(m, outptr, buf, fsize);
         buf += fsize;
         len -= fsize;
@@ -2534,7 +2528,23 @@ static int decode_frame_mp3on4(AVCodecContext * avctx,
 }
 #endif /* CONFIG_MP3ON4_DECODER */
 
-#ifdef CONFIG_MP2_DECODER
+#if CONFIG_MP1_DECODER
+AVCodec mp1_decoder =
+{
+    "mp1",
+    CODEC_TYPE_AUDIO,
+    CODEC_ID_MP1,
+    sizeof(MPADecodeContext),
+    decode_init,
+    NULL,
+    NULL,
+    decode_frame,
+    CODEC_CAP_PARSE_ONLY,
+    .flush= flush,
+    .long_name= NULL_IF_CONFIG_SMALL("MP1 (MPEG audio layer 1)"),
+};
+#endif
+#if CONFIG_MP2_DECODER
 AVCodec mp2_decoder =
 {
     "mp2",
@@ -2550,7 +2560,7 @@ AVCodec mp2_decoder =
     .long_name= NULL_IF_CONFIG_SMALL("MP2 (MPEG audio layer 2)"),
 };
 #endif
-#ifdef CONFIG_MP3_DECODER
+#if CONFIG_MP3_DECODER
 AVCodec mp3_decoder =
 {
     "mp3",
@@ -2566,7 +2576,7 @@ AVCodec mp3_decoder =
     .long_name= NULL_IF_CONFIG_SMALL("MP3 (MPEG audio layer 3)"),
 };
 #endif
-#ifdef CONFIG_MP3ADU_DECODER
+#if CONFIG_MP3ADU_DECODER
 AVCodec mp3adu_decoder =
 {
     "mp3adu",
@@ -2582,7 +2592,7 @@ AVCodec mp3adu_decoder =
     .long_name= NULL_IF_CONFIG_SMALL("ADU (Application Data Unit) MP3 (MPEG audio layer 3)"),
 };
 #endif
-#ifdef CONFIG_MP3ON4_DECODER
+#if CONFIG_MP3ON4_DECODER
 AVCodec mp3on4_decoder =
 {
     "mp3on4",

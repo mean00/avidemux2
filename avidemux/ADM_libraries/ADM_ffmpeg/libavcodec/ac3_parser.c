@@ -1,7 +1,7 @@
 /*
  * AC-3 parser
- * Copyright (c) 2003 Fabrice Bellard.
- * Copyright (c) 2003 Michael Niedermayer.
+ * Copyright (c) 2003 Fabrice Bellard
+ * Copyright (c) 2003 Michael Niedermayer
  *
  * This file is part of FFmpeg.
  *
@@ -23,7 +23,7 @@
 #include "parser.h"
 #include "ac3_parser.h"
 #include "aac_ac3_parser.h"
-#include "bitstream.h"
+#include "get_bits.h"
 
 
 #define AC3_HEADER_SIZE 7
@@ -121,6 +121,9 @@ int ff_ac3_parse_header(GetBitContext *gbc, AC3HeaderInfo *hdr)
                         (hdr->num_blocks * 256.0));
         hdr->channels = ff_ac3_channels_tab[hdr->channel_mode] + hdr->lfe_on;
     }
+    hdr->channel_layout = ff_ac3_channel_layout_tab[hdr->channel_mode];
+    if (hdr->lfe_on)
+        hdr->channel_layout |= CH_LOW_FREQUENCY;
 
     return 0;
 }
@@ -174,7 +177,12 @@ static int ac3_sync(uint64_t state, AACAC3ParseContext *hdr_info,
     hdr_info->sample_rate = hdr.sample_rate;
     hdr_info->bit_rate = hdr.bit_rate;
     hdr_info->channels = hdr.channels;
-    hdr_info->samples = AC3_FRAME_SIZE;
+    hdr_info->channel_layout = hdr.channel_layout;
+    hdr_info->samples = hdr.num_blocks * 256;
+    if(hdr.bitstream_id>10)
+        hdr_info->codec_id = CODEC_ID_EAC3;
+    else
+        hdr_info->codec_id = CODEC_ID_AC3;
 
     *need_next_header = (hdr.frame_type != EAC3_FRAME_TYPE_AC3_CONVERT);
     *new_frame_start  = (hdr.frame_type != EAC3_FRAME_TYPE_DEPENDENT);

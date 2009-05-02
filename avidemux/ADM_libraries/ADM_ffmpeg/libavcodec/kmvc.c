@@ -20,7 +20,7 @@
  */
 
 /**
- * @file kmvc.c
+ * @file libavcodec/kmvc.c
  * Karl Morton's Video Codec decoder
  */
 
@@ -224,9 +224,10 @@ static void kmvc_decode_inter_8x8(KmvcContext * ctx, const uint8_t * src, int w,
         }
 }
 
-static int decode_frame(AVCodecContext * avctx, void *data, int *data_size, const uint8_t * buf,
-                        int buf_size)
+static int decode_frame(AVCodecContext * avctx, void *data, int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     KmvcContext *const ctx = avctx->priv_data;
     uint8_t *out, *src;
     int i;
@@ -344,8 +345,6 @@ static av_cold int decode_init(AVCodecContext * avctx)
     int i;
 
     c->avctx = avctx;
-
-    c->pic.data[0] = NULL;
 
     if (avctx->width > 320 || avctx->height > 200) {
         av_log(avctx, AV_LOG_ERROR, "KMVC supports frames <= 320x200\n");

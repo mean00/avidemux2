@@ -1,6 +1,6 @@
 /*
  * DVD subtitle decoding for ffmpeg
- * Copyright (c) 2005 Fabrice Bellard.
+ * Copyright (c) 2005 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "colorspace.h"
 #include "dsputil.h"
 
@@ -175,6 +175,7 @@ static int decode_dvd_subtitles(AVSubtitle *sub_header,
         return -1;
     sub_header->rects = NULL;
     sub_header->num_rects = 0;
+    sub_header->format = 0;
     sub_header->start_display_time = 0;
     sub_header->end_display_time = 0;
 
@@ -474,8 +475,10 @@ static void ppm_save(const char *filename, uint8_t *bitmap, int w, int h,
 
 static int dvdsub_decode(AVCodecContext *avctx,
                          void *data, int *data_size,
-                         const uint8_t *buf, int buf_size)
+                         AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     AVSubtitle *sub = (void *)data;
     int is_menu;
 

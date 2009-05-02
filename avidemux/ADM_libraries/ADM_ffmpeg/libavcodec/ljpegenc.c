@@ -1,6 +1,6 @@
 /*
  * lossless JPEG encoder
- * Copyright (c) 2000, 2001 Fabrice Bellard.
+ * Copyright (c) 2000, 2001 Fabrice Bellard
  * Copyright (c) 2003 Alex Beregszaszi
  * Copyright (c) 2003-2004 Michael Niedermayer
  *
@@ -26,7 +26,7 @@
  */
 
 /**
- * @file ljpegenc.c
+ * @file libavcodec/ljpegenc.c
  * lossless JPEG encoder.
  */
 
@@ -181,7 +181,7 @@ static int encode_picture_lossless(AVCodecContext *avctx, unsigned char *buf, in
     s->picture_number++;
 
     flush_put_bits(&s->pb);
-    return pbBufPtr(&s->pb) - s->pb.buf;
+    return put_bits_ptr(&s->pb) - s->pb.buf;
 //    return (put_bits_count(&f->pb)+7)/8;
 }
 

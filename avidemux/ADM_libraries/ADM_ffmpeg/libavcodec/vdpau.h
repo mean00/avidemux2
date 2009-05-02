@@ -71,6 +71,8 @@ struct vdpau_render_state {
     /** picture parameter information for all supported codecs */
     union VdpPictureInfo {
         VdpPictureInfoH264     h264;
+        VdpPictureInfoMPEG1Or2 mpeg;
+        VdpPictureInfoVC1       vc1;
     } info;
 
     /** Describe size/location of the compressed video data. */

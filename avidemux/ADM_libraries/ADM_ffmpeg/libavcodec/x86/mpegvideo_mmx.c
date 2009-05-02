@@ -1,6 +1,6 @@
 /*
  * The simplest mpeg encoder (well, it was the simplest!)
- * Copyright (c) 2000,2001 Fabrice Bellard.
+ * Copyright (c) 2000,2001 Fabrice Bellard
  *
  * Optimized for ia32 CPUs by Nick Kurshev <nickols_k@mail.ru>
  * h263, mpeg1, mpeg2 dequantizer & draw_edges by Michael Niedermayer <michaelni@gmx.at>
@@ -23,9 +23,9 @@
  */
 
 #include "libavutil/x86_cpu.h"
-#include "ADM_lavcodec/avcodec.h"
-#include "ADM_lavcodec/dsputil.h"
-#include "ADM_lavcodec/mpegvideo.h"
+#include "libavcodec/avcodec.h"
+#include "libavcodec/dsputil.h"
+#include "libavcodec/mpegvideo.h"
 #include "dsputil_mmx.h"
 
 extern uint16_t inv_zigzag_direct16[64];
@@ -583,25 +583,30 @@ static void  denoise_dct_sse2(MpegEncContext *s, DCTELEM *block){
     );
 }
 
-#ifdef HAVE_SSSE3
+#if HAVE_SSSE3
 #define HAVE_SSSE3_BAK
 #endif
 #undef HAVE_SSSE3
+#define HAVE_SSSE3 0
 
 #undef HAVE_SSE2
 #undef HAVE_MMX2
+#define HAVE_SSE2 0
+#define HAVE_MMX2 0
 #define RENAME(a) a ## _MMX
 #define RENAMEl(a) a ## _mmx
 #include "mpegvideo_mmx_template.c"
 
-#define HAVE_MMX2
+#undef HAVE_MMX2
+#define HAVE_MMX2 1
 #undef RENAME
 #undef RENAMEl
 #define RENAME(a) a ## _MMX2
 #define RENAMEl(a) a ## _mmx2
 #include "mpegvideo_mmx_template.c"
 
-#define HAVE_SSE2
+#undef HAVE_SSE2
+#define HAVE_SSE2 1
 #undef RENAME
 #undef RENAMEl
 #define RENAME(a) a ## _SSE2
@@ -609,7 +614,8 @@ static void  denoise_dct_sse2(MpegEncContext *s, DCTELEM *block){
 #include "mpegvideo_mmx_template.c"
 
 #ifdef HAVE_SSSE3_BAK
-#define HAVE_SSSE3
+#undef HAVE_SSSE3
+#define HAVE_SSSE3 1
 #undef RENAME
 #undef RENAMEl
 #define RENAME(a) a ## _SSSE3
@@ -637,14 +643,14 @@ void MPV_common_init_mmx(MpegEncContext *s)
         }
 
         if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){
-#ifdef HAVE_SSSE3
+#if HAVE_SSSE3
             if(mm_flags & FF_MM_SSSE3){
                 s->dct_quantize= dct_quantize_SSSE3;
             } else
 #endif
             if(mm_flags & FF_MM_SSE2){
                 s->dct_quantize= dct_quantize_SSE2;
-            } else if(mm_flags & FF_MM_MMXEXT){
+            } else if(mm_flags & FF_MM_MMX2){
                 s->dct_quantize= dct_quantize_MMX2;
             } else {
                 s->dct_quantize= dct_quantize_MMX;

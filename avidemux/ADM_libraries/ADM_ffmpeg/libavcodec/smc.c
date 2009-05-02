@@ -20,7 +20,7 @@
  */
 
 /**
- * @file smc.c
+ * @file libavcodec/smc.c
  * QT SMC Video Decoder by Mike Melanson (melanson@pcisys.net)
  * For more information about the SMC format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -33,6 +33,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
 #define CPAIR 2
@@ -440,8 +441,10 @@ static av_cold int smc_decode_init(AVCodecContext *avctx)
 
 static int smc_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     SmcContext *s = avctx->priv_data;
 
     s->buf = buf;

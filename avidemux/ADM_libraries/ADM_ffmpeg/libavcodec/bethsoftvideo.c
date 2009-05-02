@@ -20,7 +20,7 @@
  */
 
 /**
- * @file bethsoftvideo.c
+ * @file libavcodec/bethsoftvideo.c
  * @brief Bethesda Softworks VID Video Decoder
  * @author Nicholas Tung [ntung (at. ntung com] (2007-03)
  * @sa http://wiki.multimedia.cx/index.php?title=Bethsoft_VID
@@ -58,8 +58,10 @@ static void set_palette(AVFrame * frame, const uint8_t * palette_buffer)
 
 static int bethsoftvid_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     BethsoftvidContext * vid = avctx->priv_data;
     char block_type;
     uint8_t * dst;

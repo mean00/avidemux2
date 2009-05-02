@@ -20,7 +20,7 @@
  */
 
 /**
- * @file tscc.c
+ * @file libavcodec/tscc.c
  * TechSmith Camtasia decoder
  *
  * Fourcc: TSCC
@@ -67,8 +67,10 @@ typedef struct TsccContext {
  * Decode a frame
  *
  */
-static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, const uint8_t *buf, int buf_size)
+static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     CamtasiaContext * const c = avctx->priv_data;
     const unsigned char *encoded = buf;
     unsigned char *outptr;
@@ -105,7 +107,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, const
 
 
     if(zret != Z_DATA_ERROR)
-        ff_msrle_decode(avctx, &c->pic, c->bpp, c->decomp_buf, c->zstream.avail_out);
+        ff_msrle_decode(avctx, (AVPicture*)&c->pic, c->bpp, c->decomp_buf, c->zstream.avail_out);
 
     /* make the palette available on the way out */
     if (c->avctx->pix_fmt == PIX_FMT_PAL8) {
@@ -137,7 +139,6 @@ static av_cold int decode_init(AVCodecContext *avctx)
 
     c->avctx = avctx;
 
-    c->pic.data[0] = NULL;
     c->height = avctx->height;
 
     if (avcodec_check_dimensions(avctx, avctx->width, avctx->height) < 0) {

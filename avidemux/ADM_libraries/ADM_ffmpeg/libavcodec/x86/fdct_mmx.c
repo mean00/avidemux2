@@ -31,7 +31,7 @@
  */
 
 #include "libavutil/common.h"
-#include "ADM_lavcodec/dsputil.h"
+#include "libavcodec/dsputil.h"
 
 #define ATTR_ALIGN(align) __attribute__ ((__aligned__ (align)))
 

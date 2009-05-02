@@ -2,7 +2,7 @@
  * Video Decode and Presentation API for UNIX (VDPAU) is used for
  * HW decode acceleration for MPEG-1/2, H.264 and VC-1.
  *
- * Copyright (C) 2008 NVIDIA.
+ * Copyright (C) 2008 NVIDIA
  *
  * This file is part of FFmpeg.
  *
@@ -25,11 +25,18 @@
 #define AVCODEC_VDPAU_INTERNAL_H
 
 #include <stdint.h>
-#include "h264.h"
+#include "mpegvideo.h"
 
-void ff_vdpau_h264_add_data_chunk(H264Context *h, const uint8_t *buf,
-                                  int buf_size);
-void ff_vdpau_h264_set_reference_frames(H264Context *h);
-void ff_vdpau_h264_picture_complete(H264Context *h);
+void ff_vdpau_add_data_chunk(MpegEncContext *s, const uint8_t *buf,
+                             int buf_size);
+
+void ff_vdpau_mpeg_picture_complete(MpegEncContext *s, const uint8_t *buf,
+                                    int buf_size, int slice_count);
+
+void ff_vdpau_h264_set_reference_frames(MpegEncContext *s);
+void ff_vdpau_h264_picture_complete(MpegEncContext *s);
+
+void ff_vdpau_vc1_decode_picture(MpegEncContext *s, const uint8_t *buf,
+                                 int buf_size);
 
 #endif /* AVCODEC_VDPAU_INTERNAL_H */

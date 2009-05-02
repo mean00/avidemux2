@@ -20,7 +20,7 @@
  */
 
 /**
- * @file tta.c
+ * @file libavcodec/tta.c
  * TTA (The Lossless True Audio) decoder
  * (www.true-audio.com or tta.corecodec.org)
  * @author Alex Beregszaszi
@@ -31,7 +31,7 @@
 //#define DEBUG
 #include <limits.h>
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 
 #define FORMAT_INT 1
 #define FORMAT_FLOAT 3
@@ -209,11 +209,11 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
         return -1;
 
     init_get_bits(&s->gb, avctx->extradata, avctx->extradata_size);
-    if (show_bits_long(&s->gb, 32) == ff_get_fourcc("TTA1"))
+    if (show_bits_long(&s->gb, 32) == AV_RL32("TTA1"))
     {
         /* signature */
         skip_bits(&s->gb, 32);
-//        if (get_bits_long(&s->gb, 32) != bswap_32(ff_get_fourcc("TTA1"))) {
+//        if (get_bits_long(&s->gb, 32) != bswap_32(AV_RL32("TTA1"))) {
 //            av_log(s->avctx, AV_LOG_ERROR, "Missing magic\n");
 //            return -1;
 //        }
@@ -287,8 +287,10 @@ static av_cold int tta_decode_init(AVCodecContext * avctx)
 
 static int tta_decode_frame(AVCodecContext *avctx,
         void *data, int *data_size,
-        const uint8_t *buf, int buf_size)
+        AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     TTAContext *s = avctx->priv_data;
     int i;
 
@@ -443,5 +445,5 @@ AVCodec tta_decoder = {
     NULL,
     tta_decode_close,
     tta_decode_frame,
-    .long_name = NULL_IF_CONFIG_SMALL("True Audio"),
+    .long_name = NULL_IF_CONFIG_SMALL("True Audio (TTA)"),
 };

@@ -1,6 +1,6 @@
 /*
  * RV10 codec
- * Copyright (c) 2000,2001 Fabrice Bellard.
+ * Copyright (c) 2000,2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
  */
 
 /**
- * @file rv10.c
+ * @file libavcodec/rv10.c
  * RV10 codec.
  */
 
@@ -230,7 +230,7 @@ int rv_decode_dc(MpegEncContext *s, int n)
 }
 
 
-#if defined(CONFIG_RV10_ENCODER) || defined(CONFIG_RV20_ENCODER)
+#if CONFIG_RV10_ENCODER || CONFIG_RV20_ENCODER
 /* write RV 1.0 compatible frame header */
 void rv10_encode_picture_header(MpegEncContext *s, int picture_number)
 {
@@ -304,7 +304,7 @@ static int get_num(GetBitContext *gb)
 }
 #endif
 
-#endif /* defined(CONFIG_RV10_ENCODER) || defined(CONFIG_RV20_ENCODER) */
+#endif /* CONFIG_RV10_ENCODER || CONFIG_RV20_ENCODER */
 
 /* read RV 1.0 compatible frame header */
 static int rv10_decode_picture_header(MpegEncContext *s)
@@ -547,6 +547,9 @@ static av_cold int rv10_decode_init(AVCodecContext *avctx)
     if (avctx->sub_id == 0x10000000) {
         s->rv10_version= 0;
         s->low_delay=1;
+    } else if (avctx->sub_id == 0x10001000) {
+        s->rv10_version= 3;
+        s->low_delay=1;
     } else if (avctx->sub_id == 0x10002000) {
         s->rv10_version= 3;
         s->low_delay=1;
@@ -581,12 +584,12 @@ static av_cold int rv10_decode_init(AVCodecContext *avctx)
 
     /* init rv vlc */
     if (!done) {
-        init_vlc(&rv_dc_lum, DC_VLC_BITS, 256,
+        INIT_VLC_STATIC(&rv_dc_lum, DC_VLC_BITS, 256,
                  rv_lum_bits, 1, 1,
-                 rv_lum_code, 2, 2, 1);
-        init_vlc(&rv_dc_chrom, DC_VLC_BITS, 256,
+                 rv_lum_code, 2, 2, 16384);
+        INIT_VLC_STATIC(&rv_dc_chrom, DC_VLC_BITS, 256,
                  rv_chrom_bits, 1, 1,
-                 rv_chrom_code, 2, 2, 1);
+                 rv_chrom_code, 2, 2, 16388);
         done = 1;
     }
 
@@ -724,8 +727,10 @@ static int get_slice_offset(AVCodecContext *avctx, const uint8_t *buf, int n)
 
 static int rv10_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     MpegEncContext *s = avctx->priv_data;
     int i;
     AVFrame *pict = data;
@@ -791,6 +796,7 @@ AVCodec rv10_decoder = {
     rv10_decode_frame,
     CODEC_CAP_DR1,
     .long_name = NULL_IF_CONFIG_SMALL("RealVideo 1.0"),
+    .pix_fmts= ff_pixfmt_list_420,
 };
 
 AVCodec rv20_decoder = {
@@ -805,5 +811,6 @@ AVCodec rv20_decoder = {
     CODEC_CAP_DR1 | CODEC_CAP_DELAY,
     .flush= ff_mpeg_flush,
     .long_name = NULL_IF_CONFIG_SMALL("RealVideo 2.0"),
+    .pix_fmts= ff_pixfmt_list_420,
 };
 

@@ -20,7 +20,7 @@
  */
 
 #include "libavutil/x86_cpu.h"
-#include "ADM_lavcodec/dsputil.h"
+#include "libavcodec/dsputil.h"
 
 static const int m1m1m1m1[4] __attribute__((aligned(16))) =
     { 1 << 31, 1 << 31, 1 << 31, 1 << 31 };
@@ -108,7 +108,7 @@ void ff_imdct_half_sse(MDCTContext *s, FFTSample *output, const FFTSample *input
             ::"r"(-4*k), "r"(4*k),
               "r"(input+n4), "r"(tcos+n8), "r"(tsin+n8)
         );
-#ifdef ARCH_X86_64
+#if ARCH_X86_64
         // if we have enough regs, don't let gcc make the luts latency-bound
         // but if not, latency is faster than spilling
         __asm__("movlps %%xmm0, %0 \n"

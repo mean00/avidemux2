@@ -1,6 +1,6 @@
 /*
  * G.726 ADPCM audio codec
- * Copyright (c) 2004 Roman Shaposhnik.
+ * Copyright (c) 2004 Roman Shaposhnik
  *
  * This is a very straightforward rendition of the G.726
  * Section 4 "Computational Details".
@@ -23,7 +23,8 @@
  */
 #include <limits.h>
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
+#include "put_bits.h"
 
 /**
  * G.726 11bit float.
@@ -285,7 +286,7 @@ static av_cold int g726_reset(G726Context* c, int index)
     return 0;
 }
 
-#ifdef CONFIG_ADPCM_G726_ENCODER
+#if CONFIG_ADPCM_G726_ENCODER
 static int16_t g726_encode(G726Context* c, int16_t sig)
 {
     uint8_t i;
@@ -342,7 +343,7 @@ static av_cold int g726_close(AVCodecContext *avctx)
     return 0;
 }
 
-#ifdef CONFIG_ADPCM_G726_ENCODER
+#if CONFIG_ADPCM_G726_ENCODER
 static int g726_encode_frame(AVCodecContext *avctx,
                             uint8_t *dst, int buf_size, void *data)
 {
@@ -363,8 +364,10 @@ static int g726_encode_frame(AVCodecContext *avctx,
 
 static int g726_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     G726Context *c = avctx->priv_data;
     short *samples = data;
     GetBitContext gb;
@@ -381,7 +384,7 @@ static int g726_decode_frame(AVCodecContext *avctx,
     return buf_size;
 }
 
-#ifdef CONFIG_ADPCM_G726_ENCODER
+#if CONFIG_ADPCM_G726_ENCODER
 AVCodec adpcm_g726_encoder = {
     "g726",
     CODEC_TYPE_AUDIO,

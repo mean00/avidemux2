@@ -35,8 +35,10 @@ static av_cold int bmp_decode_init(AVCodecContext *avctx){
 
 static int bmp_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     BMPContext *s = avctx->priv_data;
     AVFrame *picture = data;
     AVFrame *p = &s->picture;
@@ -64,9 +66,9 @@ static int bmp_decode_frame(AVCodecContext *avctx,
 
     fsize = bytestream_get_le32(&buf);
     if(buf_size < fsize){
-        av_log(avctx, AV_LOG_ERROR, "not enough data (%d < %d)\n",
+        av_log(avctx, AV_LOG_ERROR, "not enough data (%d < %d), trying to decode anyway\n",
                buf_size, fsize);
-        return -1;
+        fsize = buf_size;
     }
 
     buf += 2; /* reserved1 */
@@ -240,10 +242,12 @@ static int bmp_decode_frame(AVCodecContext *avctx,
         buf = buf0 + hsize;
     }
     if(comp == BMP_RLE4 || comp == BMP_RLE8){
-        ff_msrle_decode(avctx, p, depth, buf, dsize);
+        ff_msrle_decode(avctx, (AVPicture*)p, depth, buf, dsize);
     }else{
         switch(depth){
         case 1:
+        case 8:
+        case 24:
             for(i = 0; i < avctx->height; i++){
                 memcpy(ptr, buf, n);
                 buf += n;
@@ -257,20 +261,6 @@ static int bmp_decode_frame(AVCodecContext *avctx,
                     ptr[j*2+0] = (buf[j] >> 4) & 0xF;
                     ptr[j*2+1] = buf[j] & 0xF;
                 }
-                buf += n;
-                ptr += linesize;
-            }
-            break;
-        case 8:
-            for(i = 0; i < avctx->height; i++){
-                memcpy(ptr, buf, avctx->width);
-                buf += n;
-                ptr += linesize;
-            }
-            break;
-        case 24:
-            for(i = 0; i < avctx->height; i++){
-                memcpy(ptr, buf, avctx->width*(depth>>3));
                 buf += n;
                 ptr += linesize;
             }

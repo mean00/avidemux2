@@ -21,10 +21,11 @@
 
 #include "avcodec.h"
 #define ALT_BITSTREAM_READER_LE
-#include "bitstream.h"
+#include "get_bits.h"
 #include "ra288.h"
 #include "lpc.h"
 #include "celp_math.h"
+#include "celp_filters.h"
 
 typedef struct {
     float sp_lpc[36];      ///< LPC coefficients for speech data (spec: A)
@@ -68,7 +69,7 @@ static void convolve(float *tgt, const float *src, int len, int n)
 
 static void decode(RA288Context *ractx, float gain, int cb_coef)
 {
-    int i, j;
+    int i;
     double sumsum;
     float sum, buffer[5];
     float *block = ractx->sp_hist + 70 + 36; // current block
@@ -100,11 +101,7 @@ static void decode(RA288Context *ractx, float gain, int cb_coef)
 
     gain_block[9] = 10 * log10(sum) - 32;
 
-    for (i=0; i < 5; i++) {
-        block[i] = buffer[i];
-        for (j=0; j < 36; j++)
-            block[i] -= block[i-1-j]*ractx->sp_lpc[j];
-    }
+    ff_celp_lp_synthesis_filterf(block, ractx->sp_lpc, buffer, 5, 36);
 
     /* output */
     for (i=0; i < 5; i++)
@@ -163,9 +160,10 @@ static void backward_filter(float *hist, float *rec, const float *window,
 }
 
 static int ra288_decode_frame(AVCodecContext * avctx, void *data,
-                              int *data_size, const uint8_t * buf,
-                              int buf_size)
+                              int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     float *out = data;
     int i, j;
     RA288Context *ractx = avctx->priv_data;

@@ -20,7 +20,7 @@
  */
 
 /**
- * @file rv34.h
+ * @file libavcodec/rv34.h
  * RV30 and RV40 decoder common data declarations
  */
 
@@ -123,7 +123,7 @@ typedef struct RV34DecContext{
  */
 int ff_rv34_get_start_offset(GetBitContext *gb, int blocks);
 int ff_rv34_decode_init(AVCodecContext *avctx);
-int ff_rv34_decode_frame(AVCodecContext *avctx, void *data, int *data_size, const uint8_t *buf, int buf_size);
+int ff_rv34_decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt);
 int ff_rv34_decode_end(AVCodecContext *avctx);
 
 #endif /* AVCODEC_RV34_H */

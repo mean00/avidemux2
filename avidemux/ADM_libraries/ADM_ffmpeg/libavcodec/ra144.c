@@ -23,7 +23,7 @@
  */
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "ra144.h"
 #include "celp_filters.h"
 
@@ -138,8 +138,13 @@ static void add_wav(int16_t *dest, int n, int skip_first, int *m,
     for (i=!skip_first; i<3; i++)
         v[i] = (gain_val_tab[n][i] * m[i]) >> gain_exp_tab[n];
 
-    for (i=0; i < BLOCKSIZE; i++)
-        dest[i] = (s1[i]*v[0] + s2[i]*v[1] + s3[i]*v[2]) >> 12;
+    if (v[0]) {
+        for (i=0; i < BLOCKSIZE; i++)
+            dest[i] = (s1[i]*v[0] + s2[i]*v[1] + s3[i]*v[2]) >> 12;
+    } else {
+        for (i=0; i < BLOCKSIZE; i++)
+            dest[i] = (             s2[i]*v[1] + s3[i]*v[2]) >> 12;
+    }
 }
 
 static unsigned int rescale_rms(unsigned int rms, unsigned int energy)
@@ -195,7 +200,7 @@ static void do_output_subblock(RA144Context *ractx, const uint16_t  *lpc_coefs,
 
     block = ractx->adapt_cb + BUFFERSIZE - BLOCKSIZE;
 
-    add_wav(block, gain, cba_idx, m, buffer_a,
+    add_wav(block, gain, cba_idx, m, cba_idx? buffer_a: NULL,
             cb1_vects[cb1_idx], cb2_vects[cb2_idx]);
 
     memcpy(ractx->curr_sblock, ractx->curr_sblock + 40,
@@ -282,8 +287,10 @@ static int interp(RA144Context *ractx, int16_t *out, int a,
 
 /** Uncompress one block (20 bytes -> 160*2 bytes). */
 static int ra144_decode_frame(AVCodecContext * avctx, void *vdata,
-                              int *data_size, const uint8_t *buf, int buf_size)
+                              int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     static const uint8_t sizes[10] = {6, 5, 5, 4, 4, 3, 3, 3, 3, 2};
     unsigned int refl_rms[4];    // RMS of the reflection coefficients
     uint16_t block_coefs[4][30]; // LPC coefficients of each sub-block

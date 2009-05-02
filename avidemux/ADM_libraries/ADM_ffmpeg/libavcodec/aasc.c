@@ -20,7 +20,7 @@
  */
 
 /**
- * @file aasc.c
+ * @file libavcodec/aasc.c
  * Autodesk RLE Video Decoder by Konstantin Shishkov
  */
 
@@ -52,15 +52,16 @@ static av_cold int aasc_decode_init(AVCodecContext *avctx)
     s->avctx = avctx;
 
     avctx->pix_fmt = PIX_FMT_BGR24;
-    s->frame.data[0] = NULL;
 
     return 0;
 }
 
 static int aasc_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
-                              const uint8_t *buf, int buf_size)
+                              AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     AascContext *s = avctx->priv_data;
     int compr, i, stride;
 
@@ -83,7 +84,7 @@ static int aasc_decode_frame(AVCodecContext *avctx,
         }
         break;
     case 1:
-        ff_msrle_decode(avctx, &s->frame, 8, buf - 4, buf_size + 4);
+        ff_msrle_decode(avctx, (AVPicture*)&s->frame, 8, buf - 4, buf_size + 4);
         break;
     default:
         av_log(avctx, AV_LOG_ERROR, "Unknown compression type %d\n", compr);

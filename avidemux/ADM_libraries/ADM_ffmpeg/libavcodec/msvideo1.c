@@ -20,7 +20,7 @@
  */
 
 /**
- * @file msvideo1.c
+ * @file libavcodec/msvideo1.c
  * Microsoft Video-1 Decoder by Mike Melanson (melanson@pcisys.net)
  * For more information about the MS Video-1 format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -35,6 +35,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
 #define PALETTE_COUNT 256
@@ -293,8 +294,10 @@ static void msvideo1_decode_16bit(Msvideo1Context *s)
 
 static int msvideo1_decode_frame(AVCodecContext *avctx,
                                 void *data, int *data_size,
-                                const uint8_t *buf, int buf_size)
+                                AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     Msvideo1Context *s = avctx->priv_data;
 
     s->buf = buf;

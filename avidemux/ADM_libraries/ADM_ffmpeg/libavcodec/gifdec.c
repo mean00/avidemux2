@@ -1,7 +1,7 @@
 /*
  * GIF decoder
- * Copyright (c) 2003 Fabrice Bellard.
- * Copyright (c) 2006 Baptiste Coudurier.
+ * Copyright (c) 2003 Fabrice Bellard
+ * Copyright (c) 2006 Baptiste Coudurier
  *
  * This file is part of FFmpeg.
  *
@@ -282,8 +282,10 @@ static av_cold int gif_decode_init(AVCodecContext *avctx)
     return 0;
 }
 
-static int gif_decode_frame(AVCodecContext *avctx, void *data, int *data_size, const uint8_t *buf, int buf_size)
+static int gif_decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     GifState *s = avctx->priv_data;
     AVFrame *picture = data;
     int ret;

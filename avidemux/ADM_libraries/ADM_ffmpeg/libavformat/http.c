@@ -1,6 +1,6 @@
 /*
  * HTTP protocol for ffmpeg client
- * Copyright (c) 2000, 2001 Fabrice Bellard.
+ * Copyright (c) 2000, 2001 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -212,7 +212,7 @@ static int http_connect(URLContext *h, const char *path, const char *hoststr,
     int post, err, ch;
     char line[1024], *q;
     char *auth_b64;
-    int auth_b64_len = strlen(auth)* 4 / 3 + 12;
+    int auth_b64_len = (strlen(auth) + 2) / 3 * 4 + 1;
     int64_t off = s->off;
 
 
@@ -345,6 +345,13 @@ static int64_t http_seek(URLContext *h, int64_t off, int whence)
     return off;
 }
 
+static int
+http_get_file_handle(URLContext *h)
+{
+    HTTPContext *s = h->priv_data;
+    return url_get_file_handle(s->hd);
+}
+
 URLProtocol http_protocol = {
     "http",
     http_open,
@@ -352,4 +359,5 @@ URLProtocol http_protocol = {
     http_write,
     http_seek,
     http_close,
+    .url_get_file_handle = http_get_file_handle,
 };

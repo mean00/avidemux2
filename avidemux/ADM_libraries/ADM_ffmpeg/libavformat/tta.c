@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavcodec/bitstream.h"
+#include "libavcodec/get_bits.h"
 #include "avformat.h"
 
 typedef struct {
@@ -41,7 +41,7 @@ static int tta_read_header(AVFormatContext *s, AVFormatParameters *ap)
     int i, channels, bps, samplerate, datalen, framelen;
     uint64_t framepos;
 
-    if (get_le32(s->pb) != ff_get_fourcc("TTA1"))
+    if (get_le32(s->pb) != AV_RL32("TTA1"))
         return -1; // not tta file
 
     url_fskip(s->pb, 2); // FIXME: flags

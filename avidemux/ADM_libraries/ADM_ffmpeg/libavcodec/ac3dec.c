@@ -3,7 +3,7 @@
  * This code was developed as part of Google Summer of Code 2006.
  * E-AC-3 support was added as part of Google Summer of Code 2007.
  *
- * Copyright (c) 2006 Kartikey Mahendra BHATT (bhattkm at gmail dot com).
+ * Copyright (c) 2006 Kartikey Mahendra BHATT (bhattkm at gmail dot com)
  * Copyright (c) 2007-2008 Bartlomiej Wolowiec <bartek.wolowiec@gmail.com>
  * Copyright (c) 2007 Justin Ruggles <justin.ruggles@gmail.com>
  *
@@ -285,6 +285,7 @@ static int parse_frame_header(AC3DecodeContext *s)
     /* get decoding parameters from header info */
     s->bit_alloc_params.sr_code     = hdr.sr_code;
     s->channel_mode                 = hdr.channel_mode;
+    s->channel_layout               = hdr.channel_layout;
     s->lfe_on                       = hdr.lfe_on;
     s->bit_alloc_params.sr_shift    = hdr.sr_shift;
     s->sample_rate                  = hdr.sample_rate;
@@ -1226,11 +1227,14 @@ static int decode_audio_block(AC3DecodeContext *s, int blk)
  * Decode a single AC-3 frame.
  */
 static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     AC3DecodeContext *s = avctx->priv_data;
     int16_t *out_samples = (int16_t *)data;
     int blk, ch, err;
+    const uint8_t *channel_map;
 
     /* initialize the GetBitContext with the start of valid AC-3 Frame */
     if (s->input_buffer) {
@@ -1304,8 +1308,10 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
                 avctx->request_channels < s->channels) {
             s->out_channels = avctx->request_channels;
             s->output_mode  = avctx->request_channels == 1 ? AC3_CHMODE_MONO : AC3_CHMODE_STEREO;
+            s->channel_layout = ff_ac3_channel_layout_tab[s->output_mode];
         }
         avctx->channels = s->out_channels;
+        avctx->channel_layout = s->channel_layout;
 
         /* set downmixing coefficients if needed */
         if(s->channels != s->out_channels && !((s->output_mode & AC3_OUTPUT_LFEON) &&
@@ -1319,6 +1325,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
     }
 
     /* decode the audio blocks */
+    channel_map = ff_ac3_dec_channel_map[s->output_mode & ~AC3_OUTPUT_LFEON][s->lfe_on];
     for (blk = 0; blk < s->num_blocks; blk++) {
         const float *output[s->out_channels];
         if (!err && decode_audio_block(s, blk)) {
@@ -1326,7 +1333,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
             err = 1;
         }
         for (ch = 0; ch < s->out_channels; ch++)
-            output[ch] = s->output[ch];
+            output[ch] = s->output[channel_map[ch]];
         s->dsp.float_to_int16_interleave(out_samples, output, 256, s->out_channels);
         out_samples += 256 * s->out_channels;
     }

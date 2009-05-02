@@ -1,6 +1,6 @@
 /*
  * DVB subtitle parser for FFmpeg
- * Copyright (c) 2005 Ian Caulfield.
+ * Copyright (c) 2005 Ian Caulfield
  *
  * This file is part of FFmpeg.
  *
@@ -20,7 +20,7 @@
  */
 #include "avcodec.h"
 #include "dsputil.h"
-#include "bitstream.h"
+#include "get_bits.h"
 
 //#define DEBUG
 //#define DEBUG_PACKET_CONTENTS

@@ -1,5 +1,5 @@
 /**
- * @file vp56.h
+ * @file libavcodec/vp56.h
  * VP5 and VP6 compatible video decoder (common features)
  *
  * Copyright (C) 2006  Aurelien Jacobs <aurel@gnuage.org>
@@ -26,7 +26,7 @@
 
 #include "vp56data.h"
 #include "dsputil.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "bytestream.h"
 
 
@@ -172,7 +172,7 @@ void vp56_init(AVCodecContext *avctx, int flip, int has_alpha);
 int vp56_free(AVCodecContext *avctx);
 void vp56_init_dequant(VP56Context *s, int quantizer);
 int vp56_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
-                      const uint8_t *buf, int buf_size);
+                      AVPacket *avpkt);
 
 
 /**

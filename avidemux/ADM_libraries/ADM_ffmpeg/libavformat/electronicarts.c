@@ -20,11 +20,12 @@
  */
 
 /**
- * @file electronicarts.c
+ * @file libavformat/electronicarts.c
  * Electronic Arts Multimedia file demuxer (WVE/UV2/etc.)
  * by Robin Kay (komadori at gekkou.co.uk)
  */
 
+#include "libavutil/intreadwrite.h"
 #include "avformat.h"
 
 #define SCHl_TAG MKTAG('S', 'C', 'H', 'l')
@@ -49,6 +50,7 @@
 #define MPCh_TAG MKTAG('M', 'P', 'C', 'h')    /* MPEG2 */
 #define TGQs_TAG MKTAG('T', 'G', 'Q', 's')    /* TGQ i-frame (appears in .TGQ files) */
 #define pQGT_TAG MKTAG('p', 'Q', 'G', 'T')    /* TGQ i-frame (appears in .UV files) */
+#define pIQT_TAG MKTAG('p', 'I', 'Q', 'T')    /* TQI/UV2 i-frame (.UV2/.WVE) */
 #define MVhd_TAG MKTAG('M', 'V', 'h', 'd')
 #define MV0K_TAG MKTAG('M', 'V', '0', 'K')
 #define MV0F_TAG MKTAG('M', 'V', '0', 'F')
@@ -66,8 +68,6 @@ typedef struct EaDemuxContext {
     enum CodecID audio_codec;
     int audio_stream_index;
     int audio_frame_counter;
-
-    int64_t audio_pts;
 
     int bytes;
     int sample_rate;
@@ -114,7 +114,7 @@ static int process_audio_header_elements(AVFormatContext *s)
 
         switch (byte) {
         case 0xFD:
-            av_log (s, AV_LOG_INFO, "entered audio subheader\n");
+            av_log (s, AV_LOG_DEBUG, "entered audio subheader\n");
             inSubheader = 1;
             while (inSubheader) {
                 uint8_t subbyte;
@@ -123,50 +123,50 @@ static int process_audio_header_elements(AVFormatContext *s)
                 switch (subbyte) {
                 case 0x80:
                     revision = read_arbitary(pb);
-                    av_log (s, AV_LOG_INFO, "revision (element 0x80) set to 0x%08x\n", revision);
+                    av_log (s, AV_LOG_DEBUG, "revision (element 0x80) set to 0x%08x\n", revision);
                     break;
                 case 0x82:
                     ea->num_channels = read_arbitary(pb);
-                    av_log (s, AV_LOG_INFO, "num_channels (element 0x82) set to 0x%08x\n", ea->num_channels);
+                    av_log (s, AV_LOG_DEBUG, "num_channels (element 0x82) set to 0x%08x\n", ea->num_channels);
                     break;
                 case 0x83:
                     compression_type = read_arbitary(pb);
-                    av_log (s, AV_LOG_INFO, "compression_type (element 0x83) set to 0x%08x\n", compression_type);
+                    av_log (s, AV_LOG_DEBUG, "compression_type (element 0x83) set to 0x%08x\n", compression_type);
                     break;
                 case 0x84:
                     ea->sample_rate = read_arbitary(pb);
-                    av_log (s, AV_LOG_INFO, "sample_rate (element 0x84) set to %i\n", ea->sample_rate);
+                    av_log (s, AV_LOG_DEBUG, "sample_rate (element 0x84) set to %i\n", ea->sample_rate);
                     break;
                 case 0x85:
                     ea->num_samples = read_arbitary(pb);
-                    av_log (s, AV_LOG_INFO, "num_samples (element 0x85) set to 0x%08x\n", ea->num_samples);
+                    av_log (s, AV_LOG_DEBUG, "num_samples (element 0x85) set to 0x%08x\n", ea->num_samples);
                     break;
                 case 0x8A:
-                    av_log (s, AV_LOG_INFO, "element 0x%02x set to 0x%08x\n", subbyte, read_arbitary(pb));
-                    av_log (s, AV_LOG_INFO, "exited audio subheader\n");
+                    av_log (s, AV_LOG_DEBUG, "element 0x%02x set to 0x%08x\n", subbyte, read_arbitary(pb));
+                    av_log (s, AV_LOG_DEBUG, "exited audio subheader\n");
                     inSubheader = 0;
                     break;
                 case 0xA0:
                     revision2 = read_arbitary(pb);
-                    av_log (s, AV_LOG_INFO, "revision2 (element 0xA0) set to 0x%08x\n", revision2);
+                    av_log (s, AV_LOG_DEBUG, "revision2 (element 0xA0) set to 0x%08x\n", revision2);
                     break;
                 case 0xFF:
-                    av_log (s, AV_LOG_INFO, "end of header block reached (within audio subheader)\n");
+                    av_log (s, AV_LOG_DEBUG, "end of header block reached (within audio subheader)\n");
                     inSubheader = 0;
                     inHeader = 0;
                     break;
                 default:
-                    av_log (s, AV_LOG_INFO, "element 0x%02x set to 0x%08x\n", subbyte, read_arbitary(pb));
+                    av_log (s, AV_LOG_DEBUG, "element 0x%02x set to 0x%08x\n", subbyte, read_arbitary(pb));
                     break;
                 }
             }
             break;
         case 0xFF:
-            av_log (s, AV_LOG_INFO, "end of header block reached\n");
+            av_log (s, AV_LOG_DEBUG, "end of header block reached\n");
             inHeader = 0;
             break;
         default:
-            av_log (s, AV_LOG_INFO, "header element 0x%02x set to 0x%08x\n", byte, read_arbitary(pb));
+            av_log (s, AV_LOG_DEBUG, "header element 0x%02x set to 0x%08x\n", byte, read_arbitary(pb));
             break;
         }
     }
@@ -348,6 +348,10 @@ static int process_ea_header(AVFormatContext *s) {
                 ea->video_codec = CODEC_ID_TGQ;
                 break;
 
+            case pIQT_TAG:
+                ea->video_codec = CODEC_ID_TQI;
+                break;
+
             case MVhd_TAG :
                 err = process_video_header_vp6(s);
                 break;
@@ -438,7 +442,7 @@ static int ea_read_packet(AVFormatContext *s,
     int packet_read = 0;
     unsigned int chunk_type, chunk_size;
     int key = 0;
-    int num_samples;
+    int av_uninit(num_samples);
 
     while (!packet_read) {
         chunk_type = get_le32(pb);
@@ -464,29 +468,27 @@ static int ea_read_packet(AVFormatContext *s,
                 chunk_size -= 12;
             }
             ret = av_get_packet(pb, pkt, chunk_size);
-            if (ret != chunk_size)
-                ret = AVERROR(EIO);
-            else {
-                    pkt->stream_index = ea->audio_stream_index;
-                    pkt->pts = 90000;
-                    pkt->pts *= ea->audio_frame_counter;
-                    pkt->pts /= ea->sample_rate;
+            if (ret < 0)
+                return ret;
+            pkt->stream_index = ea->audio_stream_index;
+            pkt->pts = 90000;
+            pkt->pts *= ea->audio_frame_counter;
+            pkt->pts /= ea->sample_rate;
 
-                    switch (ea->audio_codec) {
-                    case CODEC_ID_ADPCM_EA:
-                    /* 2 samples/byte, 1 or 2 samples per frame depending
-                     * on stereo; chunk also has 12-byte header */
-                    ea->audio_frame_counter += ((chunk_size - 12) * 2) /
-                        ea->num_channels;
-                        break;
-                    case CODEC_ID_PCM_S16LE_PLANAR:
-                    case CODEC_ID_MP3:
-                        ea->audio_frame_counter += num_samples;
-                        break;
-                    default:
-                        ea->audio_frame_counter += chunk_size /
-                            (ea->bytes * ea->num_channels);
-                    }
+            switch (ea->audio_codec) {
+            case CODEC_ID_ADPCM_EA:
+                /* 2 samples/byte, 1 or 2 samples per frame depending
+                 * on stereo; chunk also has 12-byte header */
+                ea->audio_frame_counter += ((chunk_size - 12) * 2) /
+                    ea->num_channels;
+                break;
+            case CODEC_ID_PCM_S16LE_PLANAR:
+            case CODEC_ID_MP3:
+                ea->audio_frame_counter += num_samples;
+                break;
+            default:
+                ea->audio_frame_counter += chunk_size /
+                    (ea->bytes * ea->num_channels);
             }
 
             packet_read = 1;
@@ -520,16 +522,15 @@ static int ea_read_packet(AVFormatContext *s,
 
         case MV0K_TAG:
         case MPCh_TAG:
+        case pIQT_TAG:
             key = PKT_FLAG_KEY;
         case MV0F_TAG:
 get_video_packet:
             ret = av_get_packet(pb, pkt, chunk_size);
-            if (ret != chunk_size)
-                ret = AVERROR_IO;
-            else {
-                pkt->stream_index = ea->video_stream_index;
-                pkt->flags |= key;
-            }
+            if (ret < 0)
+                return ret;
+            pkt->stream_index = ea->video_stream_index;
+            pkt->flags |= key;
             packet_read = 1;
             break;
 

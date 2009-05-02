@@ -19,11 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "golomb.h"
 
 /**
- * @file sonic.c
+ * @file libavcodec/sonic.c
  * Simple free lossless/lossy audio codec
  * Based on Paul Francis Harrison's Bonk (http://www.logarithmic.net/pfh/bonk)
  * Written and designed by Alex Beregszaszi
@@ -408,7 +408,7 @@ static int predictor_calc_error(int *k, int *state, int order, int error)
     return x;
 }
 
-#if defined(CONFIG_SONIC_ENCODER) || defined(CONFIG_SONIC_LS_ENCODER)
+#if CONFIG_SONIC_ENCODER || CONFIG_SONIC_LS_ENCODER
 // Heavily modified Levinson-Durbin algorithm which
 // copes better with quantization, and calculates the
 // actual whitened result as it goes.
@@ -479,12 +479,12 @@ static void modified_levinson_durbin(int *window, int window_entries,
 
     av_free(state);
 }
-#endif /* defined(CONFIG_SONIC_ENCODER) || defined(CONFIG_SONIC_LS_ENCODER) */
+#endif /* CONFIG_SONIC_ENCODER || CONFIG_SONIC_LS_ENCODER */
 
 static const int samplerate_table[] =
     { 44100, 22050, 11025, 96000, 48000, 32000, 24000, 16000, 8000 };
 
-#if defined(CONFIG_SONIC_ENCODER) || defined(CONFIG_SONIC_LS_ENCODER)
+#if CONFIG_SONIC_ENCODER || CONFIG_SONIC_LS_ENCODER
 static inline int code_samplerate(int samplerate)
 {
     switch (samplerate)
@@ -747,9 +747,9 @@ static int sonic_encode_frame(AVCodecContext *avctx,
     flush_put_bits(&pb);
     return (put_bits_count(&pb)+7)/8;
 }
-#endif /* defined(CONFIG_SONIC_ENCODER) || defined(CONFIG_SONIC_LS_ENCODER) */
+#endif /* CONFIG_SONIC_ENCODER || CONFIG_SONIC_LS_ENCODER */
 
-#ifdef CONFIG_SONIC_DECODER
+#if CONFIG_SONIC_DECODER
 static av_cold int sonic_decode_init(AVCodecContext *avctx)
 {
     SonicContext *s = avctx->priv_data;
@@ -851,8 +851,10 @@ static av_cold int sonic_decode_close(AVCodecContext *avctx)
 
 static int sonic_decode_frame(AVCodecContext *avctx,
                             void *data, int *data_size,
-                            const uint8_t *buf, int buf_size)
+                            AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     SonicContext *s = avctx->priv_data;
     GetBitContext gb;
     int i, quant, ch, j;
@@ -936,7 +938,7 @@ static int sonic_decode_frame(AVCodecContext *avctx,
 }
 #endif /* CONFIG_SONIC_DECODER */
 
-#ifdef CONFIG_SONIC_ENCODER
+#if CONFIG_SONIC_ENCODER
 AVCodec sonic_encoder = {
     "sonic",
     CODEC_TYPE_AUDIO,
@@ -950,7 +952,7 @@ AVCodec sonic_encoder = {
 };
 #endif
 
-#ifdef CONFIG_SONIC_LS_ENCODER
+#if CONFIG_SONIC_LS_ENCODER
 AVCodec sonic_ls_encoder = {
     "sonicls",
     CODEC_TYPE_AUDIO,
@@ -964,7 +966,7 @@ AVCodec sonic_ls_encoder = {
 };
 #endif
 
-#ifdef CONFIG_SONIC_DECODER
+#if CONFIG_SONIC_DECODER
 AVCodec sonic_decoder = {
     "sonic",
     CODEC_TYPE_AUDIO,

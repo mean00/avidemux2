@@ -1,6 +1,6 @@
 /*
  * MMX optimized motion estimation
- * Copyright (c) 2001 Fabrice Bellard.
+ * Copyright (c) 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer
  *
  * mostly by Michael Niedermayer <michaelni@gmx.at>
@@ -23,7 +23,7 @@
  */
 
 #include "libavutil/x86_cpu.h"
-#include "ADM_lavcodec/dsputil.h"
+#include "libavcodec/dsputil.h"
 
 DECLARE_ASM_CONST(8, uint64_t, round_tab[3])={
 0x0000000000000000ULL,
@@ -439,7 +439,7 @@ void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx)
         c->sad[0]= sad16_mmx;
         c->sad[1]= sad8_mmx;
     }
-    if (mm_flags & FF_MM_MMXEXT) {
+    if (mm_flags & FF_MM_MMX2) {
         c->pix_abs[0][0] = sad16_mmx2;
         c->pix_abs[1][0] = sad8_mmx2;
 
@@ -455,7 +455,7 @@ void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx)
             c->pix_abs[1][3] = sad8_xy2_mmx2;
         }
     }
-    if ((mm_flags & FF_MM_SSE2) && !(mm_flags & FF_MM_3DNOW)) {
+    if ((mm_flags & FF_MM_SSE2) && !(mm_flags & FF_MM_3DNOW) && avctx->codec_id != CODEC_ID_SNOW) {
         c->sad[0]= sad16_sse2;
     }
 }

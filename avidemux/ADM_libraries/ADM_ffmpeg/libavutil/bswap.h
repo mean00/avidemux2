@@ -19,7 +19,7 @@
  */
 
 /**
- * @file bswap.h
+ * @file libavutil/bswap.h
  * byte swapping routines
  */
 
@@ -27,21 +27,16 @@
 #define AVUTIL_BSWAP_H
 
 #include <stdint.h>
-// MEANX
-#ifndef ADM_NO_CONFIG_H
 #include "config.h"
-#endif
-// MEANX
-
 #include "common.h"
 
-#if defined(ARCH_ARM)
+#if   ARCH_ARM
 #   include "arm/bswap.h"
-#elif defined(ARCH_BFIN)
+#elif ARCH_BFIN
 #   include "bfin/bswap.h"
-#elif defined(ARCH_SH4)
+#elif ARCH_SH4
 #   include "sh4/bswap.h"
-#elif defined(ARCH_X86)
+#elif ARCH_X86
 #   include "x86/bswap.h"
 #endif
 
@@ -82,8 +77,8 @@ static inline uint64_t av_const bswap_64(uint64_t x)
 }
 #endif
 
-// be2me ... BigEndian to MachineEndian
-// le2me ... LittleEndian to MachineEndian
+// be2me ... big-endian to machine-endian
+// le2me ... little-endian to machine-endian
 
 #ifdef WORDS_BIGENDIAN
 #define be2me_16(x) (x)

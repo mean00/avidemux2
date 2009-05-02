@@ -1,5 +1,5 @@
 /**
- * @file vp56.c
+ * @file libavcodec/vp56.c
  * VP5 and VP6 compatible video decoder (common features)
  *
  * Copyright (C) 2006  Aurelien Jacobs <aurel@gnuage.org>
@@ -495,12 +495,13 @@ static int vp56_size_changed(AVCodecContext *avctx)
 }
 
 int vp56_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
-                      const uint8_t *buf, int buf_size)
+                      AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
     VP56Context *s = avctx->priv_data;
     AVFrame *const p = s->framep[VP56_FRAME_CURRENT];
-    int remaining_buf_size = buf_size;
-    int is_alpha, alpha_offset;
+    int remaining_buf_size = avpkt->size;
+    int is_alpha, av_uninit(alpha_offset);
 
     if (s->has_alpha) {
         alpha_offset = bytestream_get_be24(&buf);
@@ -641,7 +642,7 @@ int vp56_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
     *(AVFrame*)data = *p;
     *data_size = sizeof(AVFrame);
 
-    return buf_size;
+    return avpkt->size;
 }
 
 av_cold void vp56_init(AVCodecContext *avctx, int flip, int has_alpha)

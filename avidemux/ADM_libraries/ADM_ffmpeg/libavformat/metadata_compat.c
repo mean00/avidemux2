@@ -18,11 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#if LIBAVFORMAT_VERSION_MAJOR < 53
-
 #include <strings.h>
+#include "avformat.h"
 #include "metadata.h"
 #include "libavutil/avstring.h"
+
+#if LIBAVFORMAT_VERSION_MAJOR < 53
 
 #define SIZE_OFFSET(x) sizeof(((AVFormatContext*)0)->x),offsetof(AVFormatContext,x)
 
@@ -104,9 +105,8 @@ void ff_metadata_demux_compat(AVFormatContext *ctx)
 
 
 #define FILL_METADATA(s, key, value) {                                        \
-    if (value && *value &&                                                    \
-        !av_metadata_get(s->metadata, #key, NULL, AV_METADATA_IGNORE_CASE))   \
-        av_metadata_set(&s->metadata, (const AVMetadataTag){#key, value});    \
+    if (value && *value && !av_metadata_get(s->metadata, #key, NULL, 0))      \
+        av_metadata_set(&s->metadata, #key, value);                           \
     }
 #define FILL_METADATA_STR(s, key)  FILL_METADATA(s, key, s->key)
 #define FILL_METADATA_INT(s, key) {                                           \
@@ -117,6 +117,9 @@ void ff_metadata_demux_compat(AVFormatContext *ctx)
 void ff_metadata_mux_compat(AVFormatContext *ctx)
 {
     int i;
+
+    if (ctx->metadata && ctx->metadata->count > 0)
+        return;
 
     FILL_METADATA_STR(ctx, title);
     FILL_METADATA_STR(ctx, author);

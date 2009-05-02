@@ -23,7 +23,7 @@
 /* Encoding development sponsored by http://fh-campuswien.ac.at */
 
 /**
- * @file flashsvenc.c
+ * @file libavcodec/flashsvenc.c
  * Flash Screen Video encoder
  * @author Alex Beregszaszi
  * @author Benjamin Larsson
@@ -59,7 +59,7 @@
 #include <zlib.h>
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "put_bits.h"
 #include "bytestream.h"
 
 

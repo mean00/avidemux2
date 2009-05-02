@@ -20,7 +20,7 @@
  */
 
 /**
- * @file rpza.c
+ * @file libavcodec/rpza.c
  * QT RPZA Video Decoder by Roberto Togni
  * For more information about the RPZA format, visit:
  *   http://www.pcisys.net/~melanson/codecs/
@@ -39,6 +39,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
 typedef struct RpzaContext {
@@ -240,8 +241,10 @@ static av_cold int rpza_decode_init(AVCodecContext *avctx)
 
 static int rpza_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             const uint8_t *buf, int buf_size)
+                             AVPacket *avpkt)
 {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     RpzaContext *s = avctx->priv_data;
 
     s->buf = buf;

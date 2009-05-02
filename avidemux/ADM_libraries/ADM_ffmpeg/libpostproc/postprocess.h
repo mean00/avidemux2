@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef POSTPROCESS_POSTPROCESS_H
-#define POSTPROCESS_POSTPROCESS_H
+#ifndef POSTPROC_POSTPROCESS_H
+#define POSTPROC_POSTPROCESS_H
 
 /**
- * @file postprocess.h
+ * @file libpostproc/postprocess.h
  * @brief
  *     external postprocessing API
  */
 
-#include "../libavutil/avutil.h"
+#include "libavutil/avutil.h"
 
 #define LIBPOSTPROC_VERSION_MAJOR 51
 #define LIBPOSTPROC_VERSION_MINOR  2
@@ -96,4 +96,4 @@ void pp_free_context(pp_context *ppContext);
 
 #define PP_PICT_TYPE_QP2  0x00000010 ///< MPEG2 style QScale
 
-#endif /* POSTPROCESS_POSTPROCESS_H */
+#endif /* POSTPROC_POSTPROCESS_H */

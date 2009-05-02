@@ -21,7 +21,7 @@
  */
 
 /**
- * @file atrac3.c
+ * @file libavcodec/atrac3.c
  * Atrac 3 compatible decoder.
  * This decoder handles Sony's ATRAC3 data.
  *
@@ -37,7 +37,7 @@
 #include <stdio.h>
 
 #include "avcodec.h"
-#include "bitstream.h"
+#include "get_bits.h"
 #include "dsputil.h"
 #include "bytestream.h"
 
@@ -230,7 +230,7 @@ static int decode_bytes(const uint8_t* inbuffer, uint8_t* out, int bytes){
     const uint32_t* buf;
     uint32_t* obuf = (uint32_t*) out;
 
-    off = (int)((long)inbuffer & 3);
+    off = (intptr_t)inbuffer & 3;
     buf = (const uint32_t*) (inbuffer - off);
     c = be2me_32((0x537F6103 >> (off*8)) | (0x537F6103 << (32-(off*8))));
     bytes += 3 + off;
@@ -244,7 +244,7 @@ static int decode_bytes(const uint8_t* inbuffer, uint8_t* out, int bytes){
 }
 
 
-static void init_atrac3_transforms(ATRAC3Context *q) {
+static av_cold void init_atrac3_transforms(ATRAC3Context *q) {
     float enc_window[256];
     float s;
     int i;
@@ -275,7 +275,7 @@ static void init_atrac3_transforms(ATRAC3Context *q) {
  * Atrac3 uninit, free all allocated memory
  */
 
-static int atrac3_decode_close(AVCodecContext *avctx)
+static av_cold int atrac3_decode_close(AVCodecContext *avctx)
 {
     ATRAC3Context *q = avctx->priv_data;
 
@@ -878,7 +878,9 @@ static int decodeFrame(ATRAC3Context *q, const uint8_t* databuf)
 
 static int atrac3_decode_frame(AVCodecContext *avctx,
             void *data, int *data_size,
-            const uint8_t *buf, int buf_size) {
+            AVPacket *avpkt) {
+    const uint8_t *buf = avpkt->data;
+    int buf_size = avpkt->size;
     ATRAC3Context *q = avctx->priv_data;
     int result = 0, i;
     const uint8_t* databuf;
@@ -926,7 +928,7 @@ static int atrac3_decode_frame(AVCodecContext *avctx,
  * @param avctx     pointer to the AVCodecContext
  */
 
-static int atrac3_decode_init(AVCodecContext *avctx)
+static av_cold int atrac3_decode_init(AVCodecContext *avctx)
 {
     int i;
     const uint8_t *edata_ptr = avctx->extradata;
