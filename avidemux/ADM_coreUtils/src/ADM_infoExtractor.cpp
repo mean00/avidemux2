@@ -20,16 +20,7 @@
 //#include "ADM_mp4.h"
 
 #define aprintf(...) {}
-extern "C"
-{
-#define ADM_NO_CONFIG_H
-#include "common.h"
-#include "bswap.h"
-#define INT_MAX (0x7FFFFFFF)
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/bitstream.h"
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/golomb.h"
-}
-
+#include "ADM_getbits.h"
 #include "ADM_h264_tag.h"
 
 static void refineH264FrameType(uint8_t *head,uint8_t *tail,uint32_t *flags);
