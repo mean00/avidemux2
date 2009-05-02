@@ -430,6 +430,7 @@ int main(void)
 
 	printf("#define CONFIG_MUXERS 1\n");
 	DECLARE_MUXER(MOV, mov)
+	DECLARE_MUXER(IPOD, mov)
 	DECLARE_MUXER(MP4, mp4)
 	DECLARE_MUXER(PSP, psp)
 	DECLARE_MUXER(TG2, tg2)
