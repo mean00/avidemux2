@@ -81,6 +81,7 @@ uint8_t tsHeader::open(const char *name)
         printf("[tsDemux] Cannot read index for file %s\n",idxName);
         goto abt;
     }
+    updateIdr();
     updatePtsDts();
     _videostream.dwLength= _mainaviheader.dwTotalFrames=ListOfFrames.size();
     printf("[tsDemux] Found %d video frames\n",_videostream.dwLength);
@@ -124,8 +125,34 @@ uint64_t tsHeader::getVideoDuration(void)
         f*=ListOfFrames.size();
      return (uint64_t)f;
 }
-
-
+/**
+    \fn updateIdr
+    \brief if IDR are present, handle them as intra and I as P frame
+            if not, handle I as intra, there might be some badly decoded frames (missing ref)
+*/
+bool tsHeader::updateIdr()
+{
+    int nbIdr=0;
+    if(!ListOfFrames.size()) return false;
+    for(int i=0;i<ListOfFrames.size();i++)
+    {
+        if(ListOfFrames[i]->type==4) nbIdr++;
+    }
+    printf("[TsH264] Found %d IDR\n",nbIdr);
+    if(nbIdr) // Change IDR to I and I to P...
+    { 
+        printf("[TsH264] Remapping IDR to I and I TO P\n");
+        for(int i=0;i<ListOfFrames.size();i++)
+        {
+            switch(ListOfFrames[i]->type)
+            {
+                case 4: ListOfFrames[i]->type=1;break;
+                case 1: ListOfFrames[i]->type=2;break;
+                default: break;
+            }
+        }
+    }
+}
 /**
     \fn getAudioInfo
     \brief returns wav header for stream i (=0)

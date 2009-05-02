@@ -40,7 +40,7 @@ extern "C"
 }
 
 
-static const char Type[5]={'X','I','P','B','P'};
+static const char Type[5]={'X','I','P','B','D'};
 
 static const uint32_t FPS[16]={
                 0,                      // 0
@@ -342,7 +342,7 @@ bool result=false;
                             case 2 : data.frameType=1;break; // I
                             default : data.frameType=2;break; // SP/SI
                         }
-
+                      if(startCode==NAL_IDR) data.frameType=4; // IDR
                       if(data.state==idx_startAtGopOrSeq) 
                       {
                               currentFrameType=data.frameType;;
