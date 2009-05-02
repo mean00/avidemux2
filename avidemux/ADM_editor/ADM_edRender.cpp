@@ -135,7 +135,8 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
         // Last frame ? if so repeat
         if(vid->lastSentFrame>=nbFrames-1) vid->lastSentFrame=nbFrames-1;
         // Fetch frame
-         aprintf("[Editor] Decoding I frame %u\n",vid->lastSentFrame);
+         printf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
+         
          if (!demuxer->getFrame (vid->lastSentFrame,&img))
          {
                 printf("[DecodePictureUpToIntra] getFrame failed for frame %"LU"\n",vid->lastSentFrame);
@@ -153,7 +154,11 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
           if(!decompressImage(result,&img,ref))
           {
              printf("[DecodePictureUpToIntra] decode error for frame %"LU"\n",vid->lastSentFrame);
+             //cache->dump();
              cache->invalidate(result);
+             //cache->dump();
+             vid->lastSentFrame++;
+             continue;
           }else
             {
                 cache->updateFrameNum(result,vid->lastSentFrame);
