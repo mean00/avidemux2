@@ -1,0 +1,18 @@
+*** libavutil/avutil.h.old	Sat Jan 24 22:57:50 2009
+--- libavutil/avutil.h	Sat Jan 24 22:57:49 2009
+***************
+*** 26,31 ****
+--- 26,38 ----
+   * external API header
+   */
+  
++ /* MEANX
++  * - */
++ #define ASMALIGN(ZEROBITS) ".p2align " #ZEROBITS "\n\t"
++ /* /MEANX
++  */
++ 
++ 
+  
+  #define AV_STRINGIFY(s)         AV_TOSTRING(s)
+  #define AV_TOSTRING(s) #s

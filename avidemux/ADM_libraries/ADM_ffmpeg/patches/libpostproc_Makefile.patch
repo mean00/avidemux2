@@ -1,0 +1,14 @@
+Index: Makefile
+===================================================================
+--- Makefile	(revision 18300)
++++ Makefile	(working copy)
+@@ -1,7 +1,7 @@
+ include $(SUBDIR)../config.mak
+ 
+-NAME = postproc
+-FFLIBS = avutil
++NAME = ADMpostproc
++FFLIBS = ADMavutil
+ 
+ HEADERS = postprocess.h
+ 

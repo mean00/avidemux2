@@ -1,0 +1,14 @@
+Index: libavcodec/Makefile
+===================================================================
+--- libavcodec/Makefile	(revision 18300)
++++ libavcodec/Makefile	(working copy)
+@@ -1,7 +1,7 @@
+ include $(SUBDIR)../config.mak
+ 
+-NAME = avcodec
+-FFLIBS = avutil
++NAME = ADMavcodec
++FFLIBS = ADMavutil
+ 
+ HEADERS = avcodec.h opt.h vdpau.h xvmc.h
+ 
