@@ -19,7 +19,7 @@
  */
 
 #include "libavutil/avutil.h"
-#include "ADM_lavcodec/opt.h"
+#include "libavcodec/opt.h"
 #include "swscale.h"
 #include "swscale_internal.h"
 
