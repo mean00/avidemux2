@@ -25,15 +25,7 @@
 
 #define TS_PES_MAX_LIMIT (1024*1024*2)
 
-
-#define ADM_NO_CONFIG_H
-extern "C"
-{
-#include "libavutil/common.h"
-#include "libavutil/bswap.h"
-#include "ADM_lavcodec/bitstream.h"
-
-}
+#include "ADM_getbits.h"
 #include "ADM_tsCrc.cpp"
 
 extern void mixDump(uint8_t *ptr, uint32_t len);

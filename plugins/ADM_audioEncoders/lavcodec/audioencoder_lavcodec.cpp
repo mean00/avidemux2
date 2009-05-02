@@ -144,7 +144,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
 #else
     _chunk = 1536*wavheader.channels; // AC3
 #endif
-  printf("[Lavcodec]Incoming : fq : %lu, channel : %lu bitrate: %lu \n",
+  printf("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
          wavheader.frequency,wavheader.channels,lavConfig.bitrate);
   
   
@@ -199,7 +199,7 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
   tmphead+=_chunk;
   if (nbout < 0) 
   {
-    printf("[Lavcodec] Error !!! : %ld\n", nbout);
+    printf("[Lavcodec] Error !!! : %"LD"\n", nbout);
     return 0;
   }
   *len=nbout;

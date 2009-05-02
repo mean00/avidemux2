@@ -29,6 +29,8 @@
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 
+#include "ADM_getbits.h"
+#if 0
 extern "C"
 {
 #define ADM_NO_CONFIG_H
@@ -38,6 +40,7 @@ extern "C"
 #include "ADM_lavcodec/bitstream.h"
 #include "ADM_lavcodec/golomb.h"
 }
+#endif
 
 
 static const char Type[5]={'X','I','P','B','D'};

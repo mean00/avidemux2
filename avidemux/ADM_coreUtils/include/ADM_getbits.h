@@ -20,16 +20,17 @@
 extern "C"
 {
 #define ADM_NO_CONFIG_H
-#include "common.h"
-#include "bswap.h"
+#include "ADM_libraries/ADM_ffmpeg/libavutil/common.h"
+#include "ADM_libraries/ADM_ffmpeg/libavutil/bswap.h"
+#ifndef INT_MAX
 #define INT_MAX (0x7FFFFFFF)
+#endif
 #include "ADM_libraries/ADM_ffmpeg/ffmpeg_config/config.h"
 #include "ADM_libraries/ADM_ffmpeg/libavutil/internal.h"
 #include "ADM_libraries/ADM_ffmpeg/libavcodec/get_bits.h"
 #include "ADM_libraries/ADM_ffmpeg/libavcodec/golomb.h"
 }
 #undef printf
-
-
+#undef sprintf
 #endif
 

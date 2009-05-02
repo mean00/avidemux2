@@ -1,7 +1,6 @@
 	INCLUDE(ae_plugin)
         INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/../avidemux/")
-        INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/../avidemux/ADM_libraries/ADM_ffmpeg/ADM_lavcodec/")
-        INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/../avidemux/ADM_libraries/ADM_ffmpeg/ADM_lavutil/")
+        INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/../avidemux/ADM_libraries/ADM_ffmpeg/")
 
 	SET(ADM_ae_lav_mp2_SRCS audioencoder_lavcodec.cpp)
 
