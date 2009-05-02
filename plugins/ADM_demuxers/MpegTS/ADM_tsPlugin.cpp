@@ -133,7 +133,7 @@ bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
     int syncOk=0;
     int syncKo=0;
     // Search Marker    
-    while(buffer<end)
+    while(buffer+block<end)
     {
         if(*buffer!=TS_MARKER)
         {
@@ -144,7 +144,7 @@ bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
             syncKo++;
         }
         if(*buffer!=TS_MARKER) break;
-        while(buffer<end && buffer[block]==TS_MARKER)
+        while(buffer+block<end && buffer[block]==TS_MARKER)
         {   
                 syncOk++,
                 buffer+=block;
