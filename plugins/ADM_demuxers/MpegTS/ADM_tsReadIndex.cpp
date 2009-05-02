@@ -145,6 +145,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                     case 'I': frame->type=1;break;
                     case 'P': frame->type=2;break;
                     case 'B': frame->type=3;break;
+                    case 'D': frame->type=4;break;
                     default: ADM_assert(0);
                 }
                 frame->len=len;

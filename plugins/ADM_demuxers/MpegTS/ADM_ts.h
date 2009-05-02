@@ -140,6 +140,7 @@ class tsHeader         :public vidHeader
     tsPacketLinear *tsPacket;
     uint64_t        timeConvert(uint64_t x);
     bool            updatePtsDts(void);
+    bool            updateIdr(void);
 protected:
     vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
     uint32_t        videoPid;             
