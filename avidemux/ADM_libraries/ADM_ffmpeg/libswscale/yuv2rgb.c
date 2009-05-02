@@ -509,6 +509,7 @@ SwsFunc yuv2rgb_get_func_ptr (SwsContext *c)
         }
     }
 #endif
+#if 0 // MEANX
 #ifdef HAVE_VIS
     {
         SwsFunc t= yuv2rgb_init_vis(c);
@@ -521,6 +522,7 @@ SwsFunc yuv2rgb_get_func_ptr (SwsContext *c)
         if (t) return t;
     }
 #endif
+#endif
 #ifdef HAVE_ALTIVEC
     if (c->flags & SWS_CPU_CAPS_ALTIVEC)
     {
@@ -528,13 +530,14 @@ SwsFunc yuv2rgb_get_func_ptr (SwsContext *c)
         if (t) return t;
     }
 #endif
-
+#if 0
 #ifdef ARCH_BFIN
     if (c->flags & SWS_CPU_CAPS_BFIN)
     {
         SwsFunc t = ff_bfin_yuv2rgb_get_func_ptr (c);
         if (t) return t;
     }
+#endif
 #endif
 
     av_log(c, AV_LOG_WARNING, "No accelerated colorspace conversion found.\n");

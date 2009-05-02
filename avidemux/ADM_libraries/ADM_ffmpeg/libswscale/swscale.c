@@ -2421,12 +2421,12 @@ SwsContext *sws_getContext(int srcW, int srcH, enum PixelFormat srcFormat, int d
         {
             c->swScale= gray16swap;
         }
-
+#if 0 // MEANX
 #ifdef ARCH_BFIN
         if (flags & SWS_CPU_CAPS_BFIN)
             ff_bfin_get_unscaled_swscale (c);
 #endif
-
+#endif
         if (c->swScale){
             if (flags&SWS_PRINT_INFO)
                 av_log(c, AV_LOG_INFO, "using unscaled %s -> %s special converter\n",
