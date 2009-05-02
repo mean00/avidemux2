@@ -511,6 +511,8 @@ typedef struct RcOverride{
 #define CODEC_FLAG2_CHUNKS        0x00008000 ///< Input bitstream might be truncated at a packet boundaries instead of only at frame boundaries.
 #define CODEC_FLAG2_NON_LINEAR_QUANT 0x00010000 ///< Use MPEG-2 nonlinear quantizer.
 #define CODEC_FLAG2_BIT_RESERVOIR 0x00020000 ///< Use a bit reservoir when encoding if possible
+//MEANX: NEVER EVER USE CLOSED GOP ?
+#define CODEC_FLAG2_32_PULLDOWN   0x80000000 
 
 /* Unsupported options :
  *              Syntax Arithmetic coding (SAC)
@@ -1357,6 +1359,7 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     int rc_max_rate;
+    int rc_max_rate_header; /*< That one is set in the header MEANX */
 
     /**
      * minimum bitrate
@@ -1371,6 +1374,8 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     int rc_buffer_size;
+    int rc_buffer_size_header;  /*< That one is set in the header MEANX*/
+
     float rc_buffer_aggressivity;
 
     /**

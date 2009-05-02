@@ -960,11 +960,14 @@ static inline void yuv2rgbXinC_full(SwsContext *c, int16_t *lumFilter, int16_t *
 #define COMPILE_C
 #endif
 
+#if 0 // MEANX
 #ifdef ARCH_PPC
 #if (defined (HAVE_ALTIVEC) || defined (RUNTIME_CPUDETECT)) && defined (CONFIG_GPL)
 #define COMPILE_ALTIVEC
 #endif //HAVE_ALTIVEC
 #endif //ARCH_PPC
+#endif // MEANX
+
 
 #if defined(ARCH_X86)
 

@@ -27,7 +27,12 @@
 #define AVUTIL_BSWAP_H
 
 #include <stdint.h>
+// MEANX
+#ifndef ADM_NO_CONFIG_H
 #include "config.h"
+#endif
+// MEANX
+
 #include "common.h"
 
 #if   ARCH_ARM
