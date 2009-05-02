@@ -1,8 +1,8 @@
 #include "ADM_default.h"
-#ifdef ADM_CPU_X86
-#include "ADM_lavcodec.h"
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/dsputil_cpu.h"
-#endif
+extern "C"
+{
+#include "avcodec.h"
+}
 /**
  * 		\fn lavcodec_mm_support
  * 		\brief Give lavcodec CPU supported ( FF_MM_MMX)
@@ -17,7 +17,7 @@ int rval=0;
 
 #ifdef ADM_CPU_X86
 #undef MATCH
-#define MATCH(x,y) if(CpuCaps::myCpuCaps &  CpuCaps::myCpuMask & ADM_CPUCAP_##x) rval|=MM_##x;
+#define MATCH(x,y) if(CpuCaps::myCpuCaps &  CpuCaps::myCpuMask & ADM_CPUCAP_##x) rval|=FF_MM_##x;
 
 	MATCH(MMX,MMX);
 	MATCH(MMXEXT,MMXEXT);
