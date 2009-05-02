@@ -8,7 +8,25 @@ int main(void)
 {
 	printf("#include \"ADM_coreConfig.h\"\n");
 
-#define DECLARE_DECODER(a,b); printf("#define ENABLE_"#a"_DECODER 1\n"); printf("#define CONFIG_"#a"_DECODER 1\n");
+
+// VDPAU
+#define DECLARE_HW(a,b); printf("#define CONFIG_"#a"_HWACCEL 0\n");
+    DECLARE_HW(H263_VAAPI,nellymoser);
+    DECLARE_HW(MPEG2_VAAPI,nellymoser);
+    DECLARE_HW(MPEG4_VAAPI,nellymoser);
+    DECLARE_HW(VC1_VAAPI,nellymoser);
+    DECLARE_HW(WMV3_VAAPI,nellymoser);
+
+#define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 0\n");
+    DECLARE_VDPAU(MPEG,nellymoser);
+    DECLARE_VDPAU(MPEG1,nellymoser);
+    DECLARE_VDPAU(VDPAU,nellymoser);
+    DECLARE_VDPAU(VC1,nellymoser);
+    DECLARE_VDPAU(WMV3,nellymoser);
+    DECLARE_VDPAU(H264, h264_vdpau);
+
+
+#define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");
   
     DECLARE_DECODER(NELLYMOSER,nellymoser);
     DECLARE_DECODER(ADPCM_IMA_AMV, amv);
@@ -56,9 +74,48 @@ int main(void)
     DECLARE_DECODER (SNOW, snow);
     DECLARE_DECODER (AMV, amv);
 #undef DECLARE_DECODER
-#define DECLARE_DECODER(a,b); printf("#define ENABLE_"#a"_DECODER 0\n"); 
+#define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 0\n"); 
 
-    DECLARE_DECODER(H264_VDPAU, h264_vdpau);
+    DECLARE_DECODER(LIBSPEEX, eatgq);
+    DECLARE_DECODER(LIBSCHROEDINGER, eatgq);
+    DECLARE_DECODER(LIBOPENJPEG, eatgq);
+    DECLARE_DECODER(LIBDIRAC, eatgq);
+    DECLARE_DECODER(ADPCM_IMA_ISS, eatgq);
+    DECLARE_DECODER(ADPCM_EA_MAXIS_XA, eatgq);
+
+    DECLARE_DECODER(PCM_F64LE, eatgq);
+    DECLARE_DECODER(PCM_F64BE, eatgq);
+    DECLARE_DECODER(PCM_F32LE, eatgq);
+    DECLARE_DECODER(PCM_F32BE, eatgq);
+    DECLARE_DECODER(PCM_DVD, eatgq);
+    DECLARE_DECODER(TRUEHD, eatgq);
+    DECLARE_DECODER(QCELP, eatgq);
+    DECLARE_DECODER(MP1, eatgq);
+    DECLARE_DECODER(MLP, eatgq);
+    DECLARE_DECODER(ALAC, eatgq);
+    DECLARE_DECODER(EAC3, eatgq);
+    DECLARE_DECODER(AAC, eatgq);
+    DECLARE_DECODER(PGMYUV, eatgq);
+    DECLARE_DECODER(PPM, eatgq);
+
+
+    DECLARE_DECODER(EATGV, eatgq);
+    DECLARE_DECODER(EATQI, eatgq);
+    DECLARE_DECODER(EIGHTSVX_EXP, eatgq);
+    DECLARE_DECODER(EIGHTSVX_FIB, eatgq);
+    DECLARE_DECODER(ESCAPE124, eatgq);
+    DECLARE_DECODER(MIMIC, eatgq);
+    DECLARE_DECODER(MOTIONPIXELS, eatgq);
+    DECLARE_DECODER(PAM, eatgq);
+    DECLARE_DECODER(PBM, eatgq);
+    DECLARE_DECODER(PGM, eatgq);
+    DECLARE_DECODER(RL2, eatgq);
+    DECLARE_DECODER(RV30, eatgq);
+    DECLARE_DECODER(RV40, eatgq);
+    DECLARE_DECODER(V210X, eatgq);
+
+    DECLARE_DECODER(BFI, eatgq);
+    DECLARE_DECODER(EACMV, eatgq);
     DECLARE_DECODER(EATGQ, eatgq);
     DECLARE_DECODER(PCX, aasc);
     DECLARE_DECODER(SUNRAST, aasc);
@@ -213,13 +270,13 @@ int main(void)
     DECLARE_DECODER (DVDSUB, dvdsub);
 	DECLARE_DECODER (LIBVORBIS, libvorbis);
 
-#define DECLARE_PARSER(a,b); printf("#define ENABLE_"#a"_PARSER 1\n"); 
+#define DECLARE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 1\n"); 
     DECLARE_PARSER (H263, h263);
     DECLARE_PARSER (H264, h264);
     DECLARE_PARSER (MPEG4VIDEO, mpeg4video);
 
 #undef DECLARE_PARSER
-#define DECLARE_PARSER(a,b); printf("#define ENABLE_"#a"_PARSER 0\n"); 
+#define DECLARE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 0\n"); 
     DECLARE_PARSER (AAC, aac);
     DECLARE_PARSER (AC3, ac3);
     DECLARE_PARSER (CAVSVIDEO, cavsvideo);
@@ -232,8 +289,11 @@ int main(void)
     DECLARE_PARSER (MPEGVIDEO, mpegvideo);
     DECLARE_PARSER (PNM, pnm);
     DECLARE_PARSER (VC1, vc1);
+    DECLARE_PARSER (VP3, vp3);
+    DECLARE_PARSER (DNXHD, dnxhd);
+    DECLARE_PARSER (DIRAC, dirac);
 
-#define DECLARE_ENCODER(a,b); printf("#define ENABLE_"#a"_ENCODER 1\n"); printf("#define CONFIG_"#a"_ENCODER 1\n");
+#define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 1\n");
 
     DECLARE_ENCODER (MJPEG, mjpeg);
     DECLARE_ENCODER (MSMPEG4V3, msmpeg4v3);
@@ -254,7 +314,18 @@ int main(void)
     DECLARE_ENCODER (SNOW, snow);
 
 #undef DECLARE_ENCODER
-#define DECLARE_ENCODER(a,b); printf("#define ENABLE_"#a"_ENCODER 0\n"); 
+#define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 0\n"); 
+    DECLARE_ENCODER(LIBSCHROEDINGER, amv);
+    DECLARE_ENCODER(LIBDIRAC, amv);
+
+    DECLARE_ENCODER(PCM_F64LE, amv);
+    DECLARE_ENCODER(PCM_F64BE, amv);
+    DECLARE_ENCODER(PCM_F32BE, amv);
+    DECLARE_ENCODER(PCM_F32LE, amv);
+    DECLARE_ENCODER(NELLYMOSER, amv);
+    DECLARE_ENCODER(ALAC, amv);
+
+    DECLARE_ENCODER(PCX, amv);
     DECLARE_ENCODER(DNXHD, amv);
     DECLARE_ENCODER(PCM_ZORK, amv);
     DECLARE_ENCODER(ADPCM_IMA_AMV, amv);
@@ -342,7 +413,7 @@ int main(void)
     DECLARE_ENCODER (DVDSUB, dvdsub);
 	DECLARE_ENCODER (LIBVORBIS, libvorbis);
 
-#define DECLARE_BSF(a,b); printf("#define ENABLE_"#a"_BSF 0\n");
+#define DECLARE_BSF(a,b); printf("#define CONFIG_"#a"_BSF 0\n");
 
 	DECLARE_BSF(MP3_HEADER_COMPRESS, mp3_header_compress);
 	DECLARE_BSF(IMX_DUMP_HEADER, imx_dump_header);
@@ -383,7 +454,7 @@ int main(void)
 	printf("#define CONFIG_ZLIB 1\n");
 	printf("#define CONFIG_GPL 1\n");
 
-#define ENABLE(a,b); printf("#define ENABLE_"#a" 0\n");
+#define ENABLE(a,b); printf("#define CONFIG_"#a" 0\n");
 
 	ENABLE(ARMV4L, armv4l);
 	ENABLE(MLIB, mlib);
@@ -393,9 +464,20 @@ int main(void)
 	ENABLE(SH4, sh4);
 	ENABLE(BFIN, bfin);
 	ENABLE(SMALL, small);
-#define DECLARE_ENABLE_PARSER(a,b); printf("#define ENABLE_"#a"_PARSER 0\n");
+#define DECLARE_ENABLE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 0\n");
 	DECLARE_ENABLE_PARSER(MLP, wmv3);
         printf("//****************** SYSTEM *******************\n");
+	printf("#	define ARCH_ARM 0\n");
+	printf("#	define ARCH_ALPHA 0\n");
+	printf("#	define ARCH_PPC 0\n");
+	printf("#	define ARCH_SH4 0\n");
+	printf("#	define ARCH_BFIN 0\n");
+	printf("#	define HAVE_MMI 0\n");
+	printf("#	define HAVE_VIS 0\n");
+	printf("#	define CONFIG_GRAY 0\n");
+	printf("#	define HAVE_TRUNCF 1\n");
+
+
 	printf("#ifdef __APPLE__\n");
 	printf("#	define CONFIG_DARWIN 1\n");
 	printf("#endif\n");
