@@ -38,7 +38,7 @@
 
 extern "C"
 {
-	#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/dsputil_cpu.h"
+	#include "ADM_libraries/ADM_ffmpeg/libavcodec/avcodec.h"
 
 adm_fast_memcpy myAdmMemcpy=NULL;
 /* Original comments from mplayer (file: aclib.c)
@@ -389,14 +389,14 @@ static struct {
 #if defined(ADM_CPU_X86)
   { "linux kernel memcpy()", linux_kernel_memcpy, 0, 0 },
 #if defined(ADM_CPU_X86)
-  { "MMX optimized memcpy()", mmx_memcpy, 0, MM_MMX },
-  { "MMXEXT optimized memcpy()", mmx2_memcpy, 0, MM_MMXEXT },
-  { "SSE optimized memcpy()", sse_memcpy, 0, MM_MMXEXT|MM_SSE },
+  { "MMX optimized memcpy()", mmx_memcpy, 0, FF_MM_MMX },
+  { "MMXEXT optimized memcpy()", mmx2_memcpy, 0, FF_MM_MMXEXT },
+  { "SSE optimized memcpy()", sse_memcpy, 0, FF_MM_MMXEXT|FF_MM_SSE },
 #endif
 #endif /* ARCH_X86 */
 #if 0 && defined(ADM_CPU_PPC) && !defined (__APPLE__)
   { "ppcasm_memcpy()", ppcasm_memcpy, 0, 0 },
-  { "ppcasm_cacheable_memcpy()", ppcasm_cacheable_memcpy, 0, MM_ACCEL_PPC_CACHE32 },
+  { "ppcasm_cacheable_memcpy()", ppcasm_cacheable_memcpy, 0, FF_MM_ACCEL_PPC_CACHE32 },
 #endif /* ARCH_PPC && !HOST_OS_DARWIN */
   { NULL, NULL, 0, 0 }
 };

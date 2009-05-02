@@ -37,7 +37,7 @@ extern "C"{
 #ifdef ADM_CPU_X86
 extern "C" 
 {
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/dsputil_cpu.h"
+#include "ADM_libraries/ADM_ffmpeg/libavcodec/avcodec.h"
 }
 #endif
 

@@ -26,12 +26,8 @@
 #include "avio.h"
 #include "isom.h"
 #include "avc.h"
-<<<<<<< HEAD:libavformat/movenc.c
-#include "ADM_lavcodec/bitstream.h"
-=======
 #include "libavcodec/get_bits.h"
 #include "libavcodec/put_bits.h"
->>>>>>> master:libavformat/movenc.c
 
 #undef NDEBUG
 #include <assert.h>
@@ -1140,11 +1136,8 @@ static int mov_write_edts_tag(ByteIOContext *pb, MOVTrack *track)
 
     put_be32(pb, av_rescale_rnd(track->trackDuration, globalTimescale, track->timescale, AV_ROUND_UP)); /* duration   ... doesn't seem to effect psp */
 
-    // MEANX : NO put_be32(pb, track->cluster[0].cts); /* first pts is cts since dts is 0 */
-    // MEANX : NO put_be32(pb, 0x00010000);
- put_be32(pb, 0x00000000);
- put_be32(pb, 0x00000001);
-
+    put_be32(pb, track->cluster[0].cts); /* first pts is cts since dts is 0 */
+    put_be32(pb, 0x00010000);
     return 0x24;
 }
 
@@ -2024,15 +2017,3 @@ AVOutputFormat ipod_muxer = {
     .codec_tag = (const AVCodecTag* const []){codec_ipod_tags, 0},
 };
 #endif
-/* MEANX */
-int movenc_init(void)
-{
-    av_register_output_format(&mov_muxer);
-    av_register_output_format(&tgp_muxer);
-    av_register_output_format(&mp4_muxer);
-    av_register_output_format(&psp_muxer);
-    av_register_output_format(&tg2_muxer);
-    // FIXME av_register_output_format(&ipod_muxer);
-    return 0;
-}
-/* MEANX */

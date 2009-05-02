@@ -33,7 +33,7 @@
 
 #define MAX_FILTER_SIZE 256
 
-#define VOFW 2048
+#define VOFW 4096
 #define VOF  (VOFW*2)
 
 #ifdef WORDS_BIGENDIAN
