@@ -106,6 +106,6 @@ MACRO(COMPILE_TS_FILES ts_subdir _sources)
 	FIND_XSLTPROC()
 	FIND_LRELEASE()
 	
-	COMPILE_AVIDEMUX_TS_FILES(${ts_subdir} ${_sources})
-	COMPILE_QT_TS_FILES(${ts_subdir} ${_sources})
+	#COMPILE_AVIDEMUX_TS_FILES(${ts_subdir} ${_sources})
+	#COMPILE_QT_TS_FILES(${ts_subdir} ${_sources})
 ENDMACRO(COMPILE_TS_FILES)
