@@ -121,7 +121,7 @@ ADMImage	*EditorCache::getFreeImage(void)
     printf("[edCache] Flush\n");
     for(int i=0;i<_nbImage;i++)
     {
-        _elem[i].frameNum==ADM_INVALID_CACHE;
+        _elem[i].frameNum=ADM_INVALID_CACHE;
     }
 }
 /**
@@ -133,15 +133,15 @@ void        EditorCache::invalidate(ADMImage *image)
    
     for(int i=0;i<_nbImage;i++)
     {
-        if(_elem[i].image==image);
+        if(_elem[i].image==image)
             {
-                   _elem[i].lastUse=ADM_INVALID_CACHE;;
                    _elem[i].frameNum=ADM_INVALID_CACHE;
                     aprintf("[edCache] Invalidating %d\n",i);
                   return;
             }
     }
-    ADM_assert("Image not in cache\n");
+    printf("[edCache]Image not in cache\n");
+    ADM_assert(0);
 }
 /**
         \fn updateFrameNum
