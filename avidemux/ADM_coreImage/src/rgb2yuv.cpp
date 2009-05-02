@@ -26,8 +26,8 @@
 
 
 extern "C" {
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/avcodec.h"
-#include "ADM_libraries/ADM_ffmpeg/ADM_libswscale/swscale.h"
+#include "ADM_libraries/ADM_ffmpeg/libavcodec/avcodec.h"
+#include "ADM_libraries/ADM_ffmpeg/libswscale/swscale.h"
 }
 
 #include "ADM_colorspace.h"
