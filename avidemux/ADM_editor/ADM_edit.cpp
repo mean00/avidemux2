@@ -423,7 +423,7 @@ UNUSED_ARG(mode);
   _videos[_nb_video]._aviheader->getExtraHeaderData (&l, &d);
   _videos[_nb_video].decoder = getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
 
-  _videos[_nb_video]._videoCache   =   new EditorCache(10,info.width,info.height) ;
+  _videos[_nb_video]._videoCache   =   new EditorCache(32,info.width,info.height) ;
 
   float frameD=info.fps1000;
   frameD=frameD/1000;

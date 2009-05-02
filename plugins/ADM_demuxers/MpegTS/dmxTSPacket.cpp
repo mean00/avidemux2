@@ -598,6 +598,7 @@ next:
     }
     // v>delta
     v-=delta;
+    consumed+=delta;
     if(!refill()) return false;
     goto next;
 }

@@ -128,7 +128,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     //cache->flush();
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=vid->_aviheader->estimatePts(frame);
-    uint32_t tries=8;
+    uint32_t tries=16; // Max Ref frames for H264=Max delay
 
     while(found==false && tries--)
     {
@@ -158,6 +158,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
             {
                 cache->updateFrameNum(result,vid->lastSentFrame);
                 uint64_t pts=result->Pts;
+                printf("[Decoder] Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,result->Pts,result->Pts);
                 if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
                 {
                     // increment it using average fps

@@ -76,6 +76,7 @@ typedef enum
     idx_startAtImage,
     idx_startAtGopOrSeq
 }indexerState;
+
 typedef struct
 {
     uint64_t pts,dts; //startAt;
@@ -110,10 +111,10 @@ protected:
         uint32_t        beginConsuming;
         indexerState    currentIndexState;
 protected:
-        FILE *index;
-        tsPacketLinearTracker  *pkt;
-        listOfTsAudioTracks    *audioTracks;
-        DIA_workingBase  *ui;
+        FILE                    *index;
+        tsPacketLinearTracker   *pkt;
+        listOfTsAudioTracks     *audioTracks;
+        DIA_workingBase         *ui;
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
@@ -215,6 +216,8 @@ indexerData  data;
 uint64_t fullSize;
 dmxPacketInfo info;
 
+bool result=false;
+
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
     if(videoTrac[0].trackType!=ADM_TS_H264)
@@ -241,6 +244,47 @@ dmxPacketInfo info;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
+
+    //******************
+    // 1 search SPS
+    //******************
+#define SPS_READ_AHEAD 32
+      while(1)
+      {
+        uint32_t code=0xffff+0xffff0000;
+        while((code!=1) && pkt->stillOk())
+        {
+            code=(code<<8)+pkt->readi8();
+        }
+        if(!pkt->stillOk()) break;
+        uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
+        if(startCode&0x80) continue; // Marker missing
+        startCode&=0x1f;
+        if(startCode!=NAL_SPS) continue;
+
+          // Got SPS!
+          uint8_t buffer[60] ; // should be enough
+          uint32_t xA,xR;
+          // Get info
+          pkt->getInfo(&info);
+          pkt->read(SPS_READ_AHEAD,buffer);
+          if (extractSPSInfo(buffer, SPS_READ_AHEAD, &video.w,&video.h,&video.fps,&xA,&xR))
+          {
+              
+              printf("[TsIndexer] Found video %"LU"x%"LU", fps=%"LU"\n",video.w,video.h,video.fps);
+              seq_found=1;
+              writeVideo(&video,ADM_TS_H264);
+              writeAudio();
+              qfprintf(index,"[Data]");
+              // Rewind
+              pkt->seek(info.startAt,info.offset-5);
+              break;              
+          };
+      }
+        if(!seq_found) goto the_end;
+    //******************
+    // 2 Index
+    //******************
       while(1)
       {
 
@@ -251,122 +295,75 @@ dmxPacketInfo info;
         }
         if(!pkt->stillOk()) break;
         uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
-
-       
-
 //  1:0 2:Nal ref idc 5:Nal Type
         if(startCode&0x80) continue; // Marker missing
-        
-
-#define T(x) case NAL_##x: aprintf(#x" found\n");break;
         startCode&=0x1f;
-#ifdef ADM_H264_VERBOSE
-        switch(startCode)
-        {
-            T(NON_IDR);
-            T(IDR);
-            T(SPS);
-            T(PPS);
-            T(SEI);
-            T(AU_DELIMITER);
-            T(FILLER);
-          default :aprintf("0x%02x ?\n",startCode);
-        }
-#endif
-          
-              /* Till we have a SPS no need to continue */
-              if(!seq_found && startCode!=NAL_SPS) continue;
-              if(!seq_found) // It is a SPS
-              {
-                    // Our firt frame is here
-                    // Important to initialize the H264 decoder !
-                      uint8_t buffer[60] ; // should be enough
-                      uint32_t xA,xR;
-                      // Get info
-                      pkt->read(16,buffer);
-                      if (extractSPSInfo(buffer, 16, &video.w,&video.h,&video.fps,&xA,&xR))
-                      {
-						  
-                          printf("[TsIndexer] Found video %"LU"x%"LU", fps=%"LU"\n",video.w,video.h,video.fps);
-                          seq_found=1;
+          // Ignore multiple chunk of the same pic
+          if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started) 
+          {
+           // aprintf("Still capturing, ignore\n");
+            continue;
+          }
+                     
+          switch(startCode)
+                  {
+                  case NAL_AU_DELIMITER:
+                          pic_started = false;
+                          break;
+
+                  case NAL_SPS:
+                          pic_started = false;
+                          aprintf("Sps \n");
+                          pkt->getInfo(&info);
+                          data.frameType=1;
+                          Mark(&data,&info,5);
                           data.state=idx_startAtGopOrSeq;
-                          writeVideo(&video,ADM_TS_H264);
-                          writeAudio();
-                          qfprintf(index,"[Data]");
-                          data.frameType=1; // Force dump
-                          pkt->getInfo(&info);                          
-                          Mark(&data,&info,5+16);
-                          // Rewind
-#warning TODO
-                      }
-                      continue;
-              }
-              
-              // Ignore multiple chunk of the same pic
-              if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started) 
-              {
-                aprintf("Still capturing, ignore\n");
-                continue;
-              }
-           
-              
-              switch(startCode)
-                      {
-                      case NAL_AU_DELIMITER:
-							  pic_started = false;
-                              break;
-#if 0
-                      case NAL_SPS:
-                              pic_started = false;
-                              aprintf("Sps \n");
-                              pkt->getInfo(&info);
-                              data.frameType=1;
-							  Mark(&data,&info,5);
-                              data.state=idx_startAtGopOrSeq;
-							  break;
-#endif
-                      case NAL_IDR:
-                      case NAL_NON_IDR:
-                        {
+                          break;
+
+                  case NAL_IDR:
+                  case NAL_NON_IDR:
+                    {
 #define NON_IDR_PRE_READ 8
-                          uint8_t header[NON_IDR_PRE_READ+4];
-                          GetBitContext s;
-                       
-                            pkt->read(4,header);
-                            init_get_bits(&s, header, NON_IDR_PRE_READ*8);
-                            int first_mb_in_slice,slice_type;
+                      uint8_t header[NON_IDR_PRE_READ+4];
+                      GetBitContext s;
+                   
+                        pkt->read(4,header);
+                        init_get_bits(&s, header, NON_IDR_PRE_READ*8);
+                        int first_mb_in_slice,slice_type;
 
-                            first_mb_in_slice= get_ue_golomb(&s);
-                            slice_type= get_ue_golomb_31(&s);
-                            if(slice_type>4) slice_type-=5;
-                            switch(slice_type)
-                            {
+                        first_mb_in_slice= get_ue_golomb(&s);
+                        slice_type= get_ue_golomb_31(&s);
+                        if(slice_type>4) slice_type-=5;
+                        switch(slice_type)
+                        {
 
-                                case 0 : data.frameType=2;break; // P
-                                case 1 : data.frameType=3;break; // B
-                                case 2 : data.frameType=1;break; // I
-                                default : data.frameType=2;break; // SP/SI
-                            }
-
-                          if(data.state==idx_startAtGopOrSeq) 
-                          {
-                                  currentFrameType=data.frameType;;
-                                  
-                          }else
-                          {
-                                pkt->getInfo(&info);
-                                Mark(&data,&info,5+4);
-                           }
-                          data.state=idx_startAtImage;
-                          data.nbPics++;
-						  pic_started = true;
+                            case 0 : data.frameType=2;break; // P
+                            case 1 : data.frameType=3;break; // B
+                            case 2 : data.frameType=1;break; // I
+                            default : data.frameType=2;break; // SP/SI
                         }
-					  
-                        break;
-					  default:
-						  break;
-			  }
-      }
+
+                      if(data.state==idx_startAtGopOrSeq) 
+                      {
+                              currentFrameType=data.frameType;;
+                              
+                      }else
+                      {
+                            pkt->getInfo(&info);
+                            Mark(&data,&info,5+4);
+                       }
+                      data.state=idx_startAtImage;
+                      data.nbPics++;
+                      pic_started = true;
+                    }
+                  
+                    break;
+                  default:
+                      break;
+          }
+      } // End while
+      result=true;
+the_end:
         printf("\n");
         Mark(&data,&info,0);
         qfprintf(index,"\n[End]\n");
@@ -375,7 +372,7 @@ dmxPacketInfo info;
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
-        return true; 
+        return result; 
 }
 //***********************************************************************
 /**
@@ -552,8 +549,8 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
             beginConsuming=consumed;
         }else
         {  // Our first Pic
-            beginConsuming=overRead;
-            pkt->setConsumed(beginConsuming);
+            beginConsuming=0;
+            pkt->setConsumed(overRead);
         }
             
         // If audio, also dump audio

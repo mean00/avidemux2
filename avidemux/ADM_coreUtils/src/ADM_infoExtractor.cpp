@@ -321,7 +321,9 @@ static uint32_t unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
     return outlen;
     
 }
-
+/**
+        \fn extractVUIInfo
+*/
 static uint8_t extractVUIInfo(GetBitContext *s, uint32_t *fps1000, uint32_t *darNum, uint32_t *darDen)
 {
 	*fps1000 = *darNum = *darDen = 0;
@@ -470,8 +472,14 @@ uint8_t extractSPSInfo(uint8_t *data, uint32_t len,uint32_t *wwidth,uint32_t *hh
 		   }
 
 		   if(get_bits1(&s))
+           {
 			   extractVUIInfo(&s, fps1000, darNum, darDen);
-
+               printf("[H264] Fps %"LU", a.r. %"LU",%"LU"\n",*fps1000,*darNum,*darDen);
+           }else
+            {
+                printf("[H264] Unknown FPS, setting 25\n");
+                *fps1000=25000;
+            }
            return 1;
 }
 /**

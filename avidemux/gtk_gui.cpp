@@ -895,7 +895,7 @@ void  updateLoaded ()
   /* Zoom out if needed */
   uint32_t phyW,phyH;
   UI_getPhysicalScreenSize(NULL, &phyW,&phyH);
-  if(phyW<avifileinfo->width || phyH<avifileinfo->height)
+  if(3*phyW<4*avifileinfo->width || 3*phyH<4*avifileinfo->height)
   {
       if(phyW<avifileinfo->width/2 || phyH<avifileinfo->height/2)
       {
