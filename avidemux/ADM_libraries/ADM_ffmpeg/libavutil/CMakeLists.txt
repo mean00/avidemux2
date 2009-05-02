@@ -15,11 +15,14 @@ lzo.c
 mathematics.c
 md5.c
 #random.c
+random_seed.c
 rational.c
 rc4.c
 sha1.c
 #string.c
+avstring.c
 tree.c
+lfg.c
 )
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
