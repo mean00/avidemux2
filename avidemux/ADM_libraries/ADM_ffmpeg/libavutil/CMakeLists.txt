@@ -14,11 +14,11 @@ log.c
 lzo.c
 mathematics.c
 md5.c
-random.c
+#random.c
 rational.c
 rc4.c
 sha1.c
-string.c
+#string.c
 tree.c
 )
 
