@@ -1072,8 +1072,6 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPac
         clear_state(f);
     }else{
         p->key_frame= 0;
-         p->pict_type= FF_P_TYPE; // MEANX : looks more like a P to me as user
-
     }
     if(!f->plane[0].state && !f->plane[0].vlc_state)
         return -1;

@@ -13,7 +13,7 @@ extern "C"
 {
 #include "ADM_libraries/ADM_ffmpeg/libavutil/common.h"
 #include "ADM_libraries/ADM_ffmpeg/libavutil/bswap.h"
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/bitstream.h"
+#include "ADM_libraries/ADM_ffmpeg/libavcodec/get_bits.h"
 
 }
 
