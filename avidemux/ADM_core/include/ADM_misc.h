@@ -45,7 +45,7 @@ uint32_t 	getTimeOfTheDay(void);
 			long int tv_nsec;
 		};
 
-		void gettimeofday(struct timeval *p, void *tz);
+		//void gettimeofday(struct timeval *p, void *tz);
 		};
 		#define timezone int
 		#define TIMZ int
