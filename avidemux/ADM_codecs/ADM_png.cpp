@@ -30,7 +30,7 @@
 #include "ADM_codecs/ADM_png.h"
 extern "C"
 {
-#include "/usr/include/png.h"
+#include "png.h"
 }
 #include "ADM_assert.h"
 
