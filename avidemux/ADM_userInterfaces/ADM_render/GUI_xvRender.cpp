@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#define VERBOSE_XV
+#define VERBOSE_XV
 
 #ifdef USE_XV
 #include <X11/Xlib.h>
@@ -57,13 +57,13 @@ XvAccelRender::XvAccelRender( void )
 }
 uint8_t XvAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
 {
-	printf("Xv start\n");
+	printf("[Xvideo]Xv start\n");
 	return  GUI_XvInit( window,  w,  h);
 }
 uint8_t XvAccelRender::end(void)
 {
 	 GUI_XvEnd( );
-	 printf("Xv end\n");
+	 printf("[Xvideo]Xv end\n");
 	 return 1;
 }
 
@@ -93,10 +93,10 @@ void GUI_XvEnd( void )
  	ADM_assert(xv_display);
 
 
-  	printf("\n Releasing Xv Port\n");
+  	printf("[Xvideo] Releasing Xv Port\n");
   	XLockDisplay (xv_display);
 	if(XvUngrabPort(xv_display,xv_port,0)!=Success)
- 				printf("\n Trouble releasing port...\n");
+ 				printf("[Xvideo] Trouble releasing port...\n");
 	XUnlockDisplay (xv_display);
 
 
@@ -188,14 +188,14 @@ uint8_t GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
     if (Success != XvQueryExtension(WDN, &ver, &rel, &req, &ev, &err))
       {
-	  printf("\n Query Extension failed\n");
+	  printf("[Xvideo] Query Extension failed\n");
 	  goto failed;
       }
     /* check for Xvideo support */
     if (Success != XvQueryAdaptors(WDN,
 				   DefaultRootWindow(WDN), &adaptors, &ai))
       {
-	  printf("\n Query Adaptor failed\n");
+	  printf("[Xvideo] Query Adaptor failed\n");
 	  goto failed;
       }
     curai = ai;
@@ -214,12 +214,11 @@ XvFormat *formats;
 unsigned long num_adaptors;
 */
 #ifdef VERBOSE_XV
-	  printf("\n_______________________________\n");
-	  printf("\n Adaptor 		: %d", i);
-	  printf("\n Base ID		: %ld", curai->base_id);
-	  printf("\n Nb Port	 	: %lu", curai->num_ports);
-	  printf("\n Type			 	: %d,",
-		 curai->type);
+	  printf("[Xvideo]_______________________________\n");
+	  printf("[Xvideo] Adaptor 		: %d\n", i);
+	  printf("[Xvideo] Base ID		: %ld\n", curai->base_id);
+	  printf("[Xvideo] Nb Port	 	: %lu\n", curai->num_ports);
+	  printf("[Xvideo] Type			 	: %d,", curai->type);
 #define CHECK(x) if(curai->type & x) printf("|"#x);
 	  CHECK(XvInputMask);
 	  CHECK(XvOutputMask);
@@ -227,10 +226,10 @@ unsigned long num_adaptors;
 	  CHECK(XvStillMask);
 	  CHECK(XvImageMask);
 
-	  printf("\n Name			 	: %s",
+	  printf("\n[Xvideo] Name			 	: %s\n",
 		 curai->name);
-	  printf("\n Num Adap	 	: %lu", curai->num_adaptors);
-	  printf("\n Num fmt	 	: %lu", curai->num_formats);
+	  printf("[Xvideo] Num Adap	 	: %lu\n", curai->num_adaptors);
+	  printf("[Xvideo] Num fmt	 	: %lu\n", curai->num_formats);
 #endif
 	  formats = curai->formats;
 
@@ -249,13 +248,13 @@ unsigned long num_adaptors;
     //
     if (!port)
       {
-	  printf("\n no port found");
+	  printf("[Xvideo] no port found\n");
 	  goto failed;
       }
 #ifdef 	COLORSPACE_YV12
-    printf("\n Xv YV12 found at port :%d, format : %"LD, port, xv_format);
+    printf("[Xvideo] Xv YV12 found at port :%d, format : %"LD"\n", port, xv_format);
 #else
-    printf("\n Xv YUY2 found at port :%d, format : %"LD, port, xv_format);
+    printf("[Xvideo] Xv YUY2 found at port :%d, format : %"LD"\n", port, xv_format);
 #endif
 
     if (Success != XvGrabPort(WDN, port, 0))
@@ -322,11 +321,11 @@ unsigned long num_adaptors;
 	//ADM_assert(BadWindow!=XSelectInput(xv_display, xv_win, ExposureMask | VisibilityChangeMask));
 
     }
-    printf("\n Xv init succeedeed\n");
+    printf("[Xvideo] Xv init succeedeed\n");
 
     return 1;
   failed:
-    printf("\n Xv init failed..\n");
+    printf("[Xvideo] Xv init failed..\n");
     return 0;
 }
 
@@ -348,14 +347,10 @@ uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
 	for (k = 0; !f && (k < imgfmt); k++)
 	  {
 #ifdef VERBOSE_XV
-	      printf("\n %lx %d --> %s", port, formatValues[k].id,
-		     formatValues[k].guid);
+	      printf("[Xvideo]%d/%d: %lx %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
 #endif
-#ifdef 	COLORSPACE_YV12
+
 	      if (!strcmp(formatValues[k].guid, "YV12"))
-#else
-	      if (!strcmp(formatValues[k].guid, "YUY2"))
-#endif
 		{
 		    f = 1;
 		    *fmt = formatValues[k].id;
