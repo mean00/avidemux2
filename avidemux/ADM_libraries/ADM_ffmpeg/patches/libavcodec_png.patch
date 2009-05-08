@@ -1,0 +1,39 @@
+diff --git a/avidemux/ADM_libraries/ADM_ffmpeg/libavcodec/png.c b/avidemux/ADM_libraries/ADM_ffmpeg/libavcodec/png.c
+index 534dc68..1a6e137 100644
+--- libavcodec/png.c
++++ libavcodec/png.c
+@@ -20,7 +20,7 @@
+  */
+ #include "avcodec.h"
+ #include "bytestream.h"
+-#include "png.h"
++#include "ffpng.h"
+ 
+ const uint8_t ff_pngsig[8] = {137, 80, 78, 71, 13, 10, 26, 10};
+ const uint8_t ff_mngsig[8] = {138, 77, 78, 71, 13, 10, 26, 10};
+diff --git a/avidemux/ADM_libraries/ADM_ffmpeg/libavcodec/pngdec.c b/avidemux/ADM_libraries/ADM_ffmpeg/libavcodec/pngdec.c
+index bf719b2..d069d44 100644
+--- libavcodec/pngdec.c
++++ libavcodec/pngdec.c
+@@ -20,7 +20,7 @@
+  */
+ #include "avcodec.h"
+ #include "bytestream.h"
+-#include "png.h"
++#include "ffpng.h"
+ #include "dsputil.h"
+ 
+ /* TODO:
+diff --git a/avidemux/ADM_libraries/ADM_ffmpeg/libavcodec/pngenc.c b/avidemux/ADM_libraries/ADM_ffmpeg/libavcodec/pngenc.c
+index 40dadc8..0204064 100644
+--- libavcodec/pngenc.c
++++ libavcodec/pngenc.c
+@@ -21,7 +21,7 @@
+ #include "avcodec.h"
+ #include "bytestream.h"
+ #include "dsputil.h"
+-#include "png.h"
++#include "ffpng.h"
+ 
+ /* TODO:
+  * - add 2, 4 and 16 bit depth support
