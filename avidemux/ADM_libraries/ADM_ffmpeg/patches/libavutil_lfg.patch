@@ -1,0 +1,13 @@
+diff --git a/avidemux/ADM_libraries/ADM_ffmpeg/libavutil/lfg.c b/avidemux/ADM_libraries/ADM_ffmpeg/libavutil/lfg.c
+index e876d18..ff6a888 100644
+--- a/avidemux/ADM_libraries/ADM_ffmpeg/libavutil/lfg.c
++++ b/avidemux/ADM_libraries/ADM_ffmpeg/libavutil/lfg.c
+@@ -23,7 +23,7 @@
+ #include "lfg.h"
+ #include "md5.h"
+ #include "intreadwrite.h"
+-
++#undef index
+ void av_cold av_lfg_init(AVLFG *c, unsigned int seed){
+     uint8_t tmp[16]={0};
+     int i;
