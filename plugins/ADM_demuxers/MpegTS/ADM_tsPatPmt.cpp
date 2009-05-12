@@ -26,8 +26,8 @@ typedef vector <ADM_TS_TRACK> listOfTsTracks;
     \fn scanPmt
 */
 static bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list);
-
-
+static bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen);
+static ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str);
 /**
     \class TrackTypeDescriptor
 */
@@ -202,7 +202,75 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
         int programInfoLength=(r[0]<<8)+r[1];
         programInfoLength&=0xff;
         r+=2;
-        printf("[PMT] PMT :%02x Program Info Len: %d\n",pid,programInfoLength);    
+        packLen-=4;
+        // Program Descriptor
+        if(programInfoLength && programInfoLength<=packLen)
+        {
+            decodeProgrameDescriptor(r, programInfoLength);
+            packLen-=programInfoLength;
+            r+=programInfoLength;
+        }
+        printf("[PMT]            Left : %d bytes\n",packLen);
+        // Es Type Descriptor
+        while(packLen>4)
+        {
+            int type=r[0];
+            int pid=(r[1]<<8)+r[2];
+            int size=(r[3]<<8)+r[4];
+
+            size&=0xfff;
+            pid&=0x1fff;
+            r+=size+5;
+            packLen-=5+size;
+            printf("[PMT]          Type=0x%x pid=%x size=%d\n",type,pid,size);
+            const char *str;
+            ADM_TS_TRACK_TYPE trackType=EsType(type,&str);;
+            if(trackType!=ADM_TS_UNKNOWN) 
+            {
+                    ADM_TS_TRACK trk2;
+                    trk2.trackPid=pid;
+                    trk2.trackType=trackType;
+                    printf("[PMT]  Adding pid 0x%x (%d) , type %s\n",pid,pid,str);
+                    list->push_back(trk2);
+            }
+           
+        }
+        if(trk.trackType!=ADM_TS_UNKNOWN) list->push_back(trk);
+        return true;
+       }
+    return false;
+}
+/**
+    \fn EsType
+    \brief returns type and string attached to a ES type
+*/
+ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
+{
+    *str="????";
+    switch(type)
+    {
+                case 1:case 2: *str= "Mpeg Video";return ADM_TS_MPEG2;break;
+                case 3:case 4: *str= "Mpeg Audio";return ADM_TS_MPEG_AUDIO;break;
+                case 0x11: case 0xF:     *str= "Mpeg AAC";return ADM_TS_AAC;break;
+             //   case 0x10:        *streamType=ADM_STREAM_MPEG4;return "MP4 Video";
+                case 0x1B:  *str= "H264 Video";return ADM_TS_H264;break;
+                case 0x81:  *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
+                default : break;
+    }
+    return ADM_TS_UNKNOWN;
+}
+
+/**
+    \fn decodeProgrameDescriptor
+    \brief decodeProgramDescriptor
+
+    http://www.coolstf.com/tsreader/descriptors.html
+
+*/
+bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
+{
+        printf("[PMT] Program Info Len: %d\n",maxlen); 
+        int packLen=maxlen;
         packLen-=(2+4);
         while(packLen>4)
         {
@@ -214,12 +282,16 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                 packLen-=5;
                 packLen-=esInfoLength;
                 TrackTypeDescriptor *td=TrackTypeDescriptor::find(streamType);
-                printf("[PMT] PMT :%02x StreamType: 0x%x,<<%s>>\n",pid,streamType,td->desc);    
+                printf("[PMT]           StreamType: 0x%x,<<%s>>\n",streamType,td->desc);    
                 printf("[PMT]           Pid:        0x%x\n",streamPid);
                 printf("[PMT]           Es Info Length: %d (0x%x)\n",esInfoLength,esInfoLength);
-                
-                trk.trackType=td->trackType;
-                trk.trackPid=streamPid;
+                if(packLen<1) 
+                {
+                    printf("[PMT             ES Info length bigger than section\n");
+                    return true;
+                }
+                //trk.trackType=td->trackType;
+                //trk.trackPid=streamPid;
                 uint8_t *p=r,*pend=r+esInfoLength;
                 r+=esInfoLength;
                 while(p<pend)
@@ -248,10 +320,12 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                     p+=2+taglen;
                 }
                 // 
-                if(trk.trackType!=ADM_TS_UNKNOWN) list->push_back(trk);
+                
         }
         return true;
-     }
-    return false;
+
 }
+
+
+
 //EOF
