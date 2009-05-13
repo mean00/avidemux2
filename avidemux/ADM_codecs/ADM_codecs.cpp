@@ -60,7 +60,7 @@ extern "C"
 
 extern uint8_t GUI_Question (char *);
 extern uint8_t use_fast_ffmpeg;
-
+extern bool vdpauUsable(void);
 
 uint8_t
   decoders::uncompress (ADMCompressedImage * in, ADMImage * out)
@@ -199,8 +199,12 @@ if (fourCC::check (fcc, (uint8_t *) "FFV1"))
     }
   if (isH264Compatible (fcc))
     {
-
-      return (decoders *) (new decoderFFH264 (w, h, extraLen, extraData,1));
+#ifdef USE_VDPAU
+        if(vdpauUsable()==true)
+            return (decoders *) (new decoderFFVDPAU (w, h, extraLen, extraData));
+        else
+#endif
+            return (decoders *) (new decoderFFH264 (w, h, extraLen, extraData,1));
     }
 #endif
 

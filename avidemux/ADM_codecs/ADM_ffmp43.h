@@ -351,8 +351,16 @@ public:
 class decoderFFVDPAU:public decoderFF
 {
 protected:
+        
+       
+                    ADMImage *scratch;
 public:
-  decoderFFVDPAU (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+                    decoderFFVDPAU (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+    virtual uint8_t uncompress (ADMCompressedImage * in, ADMImage * out);
+    virtual uint8_t dontcopy (void)
+                      {
+                        return 0;
+                      }
 };
 
 #endif

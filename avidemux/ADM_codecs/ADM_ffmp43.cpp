@@ -457,6 +457,9 @@ uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case PIX_FMT_RGB555:
       out->_colorspace = ADM_COLOR_RGB555;
       break;
+    case PIX_FMT_VDPAU_H264:
+        out->_colorspace=ADM_COLOR_VDPAU;
+        break;
     default:
       printf ("[lavc] Unhandled colorspace: %d\n", _context->pix_fmt);
       return 0;
