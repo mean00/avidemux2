@@ -37,25 +37,38 @@ extern "C" {
 #include "ADM_videoInfoExtractor.h"
 
 extern int ADM_cpu_num_processors(void);
+extern "C"
+{
+    static void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
+    static int  ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic);
+}
 
-#define WRAP_Open(x) \
+#define ADM_VDPAU 0
+
+
+#define WRAP_Open_Template(funcz,argz,display,codecid) \
 {\
-AVCodec *codec=avcodec_find_decoder(x);\
-if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"#x));ADM_assert(0);} \
-  codecId=x; \
-  _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING;/**/ \
+AVCodec *codec=funcz(argz);\
+if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"display));ADM_assert(0);} \
+  codecId=codecid; \
+  _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
   if (avcodec_open(_context, codec) < 0)  \
                       { \
-                                        printf("[lavc] Decoder init: "#x" video decoder failed!\n"); \
-                                        GUI_Error_HIG("Codec","Internal error opening "#x); \
+                                        printf("[lavc] Decoder init: "display" video decoder failed!\n"); \
+                                        GUI_Error_HIG("Codec","Internal error opening "display); \
                                         ADM_assert(0); \
                                 } \
                                 else \
                                 { \
-                                        printf("[lavc] Decoder init: "#x" video decoder initialized!\n"); \
+                                        printf("[lavc] Decoder init: "display" video decoder initialized! (%s)\n",codec->long_name); \
                                 } \
 }
+
+#define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x);}
+#define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y);}
+
+
 //****************************
 extern uint8_t DIA_lavDecoder (uint32_t * swapUv, uint32_t * showU);
 extern "C"
@@ -431,7 +444,6 @@ uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case PIX_FMT_YUVJ444P:
       out->_colorspace = ADM_COLOR_YUV444;
       break;
-
     case PIX_FMT_YUV420P:
     case PIX_FMT_YUVJ420P:
       // Default is YV12 or I420
@@ -583,7 +595,20 @@ decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d, u
   if(lowdelay)
     LOWDELAY();
   printf ("[lavc] Initializing H264 decoder with %d extradata\n", l);
-  WRAP_Open (CODEC_ID_H264);
+
+    if(ADM_VDPAU)
+    {
+        _context->get_buffer      = ADM_getBuffer;
+        _context->release_buffer  = ADM_releaseBuffer;
+        _context->reget_buffer    = ADM_getBuffer;
+
+        WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
+    }
+    else  
+    {
+        WRAP_Open(CODEC_ID_H264);
+    }
+
 
 }
 //*********************
@@ -787,4 +812,36 @@ void ADM_lavDestroy(void)
 {
 	//av_free_static();
 }
+
+int ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic)
+{
+    uint32_t w= avctx->width;
+    uint32_t h= avctx->height;
+
+    uint32_t rounded_w=(w+63)&~63;
+    uint32_t rounded_h=(h+63)&~63;
+    uint32_t page=rounded_w*rounded_h;
+
+    pic->data[0]=new uint8_t [page];
+    pic->data[1]=new uint8_t [page/4];
+    pic->data[2]=new uint8_t [page/4];
+
+    pic->linesize[0]=rounded_w;
+    pic->linesize[1]=rounded_w/2;
+    pic->linesize[2]=rounded_w/2;
+    pic->type= FF_BUFFER_TYPE_USER;
+    pic->age=1;
+    return 0;
+}
+
+ void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
+{
+    #define F(x) if(pic->x) delete [] pic->x;pic->x=NULL;
+    F(data[0]);
+    F(data[1]);
+    F(data[2]);
+    return;
+}
+
+
 // EOF

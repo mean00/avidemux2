@@ -144,6 +144,7 @@ ENDIF (NOT QT4_FOUND)
 #INCLUDE(admCheckAudioCodecLibs)
 #INCLUDE(admCheckAudioDeviceLibs)
 INCLUDE(admCheckMiscLibs)
+INCLUDE(admCheckVDPAU)
 
 ########################################
 # Check functions and includes
@@ -167,7 +168,10 @@ IF (NOT SYSTEM_HEADERS_CHECKED)
 
 	MESSAGE("")
 ENDIF (NOT SYSTEM_HEADERS_CHECKED)
-
+########################################
+# VDPAU
+########################################
+checkVDPAU()
 ########################################
 # Debug Summary
 ########################################

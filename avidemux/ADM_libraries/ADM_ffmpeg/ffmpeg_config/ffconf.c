@@ -17,13 +17,20 @@ int main(void)
     DECLARE_HW(VC1_VAAPI,nellymoser);
     DECLARE_HW(WMV3_VAAPI,nellymoser);
 
+#define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 1\n");
+        printf("#ifdef USE_VDPAU\n");
+        printf("#define CONFIG_H264_VDPAU_DECODER 1\n");
+        printf("#else // USE_VDPAU\n");
+        printf("#define CONFIG_H264_VDPAU_DECODER 0\n");
+        printf("#endif // \n");
+        
+
+#undef DECLARE_VDPAU
 #define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 0\n");
     DECLARE_VDPAU(MPEG,nellymoser);
     DECLARE_VDPAU(MPEG1,nellymoser);
-    DECLARE_VDPAU(VDPAU,nellymoser);
     DECLARE_VDPAU(VC1,nellymoser);
     DECLARE_VDPAU(WMV3,nellymoser);
-    DECLARE_VDPAU(H264, h264_vdpau);
 
 
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");

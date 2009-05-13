@@ -92,6 +92,9 @@
 /* use Nvwa memory leak detector */
 #cmakedefine FIND_LEAKS
 
+/* use vdpau h264 hw decoding */
+#cmakedefine USE_VDPAU
+
 #if defined(OSS_SUPPORT) || defined (USE_ARTS) || defined(USE_SDL) || defined(__APPLE__) || defined(__WIN32) || defined(ALSA_SUPPORT)
 #define HAVE_AUDIO
 #endif

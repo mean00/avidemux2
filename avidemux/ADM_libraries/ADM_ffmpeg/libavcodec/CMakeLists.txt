@@ -17,6 +17,7 @@ SET(${ADM_LIB}_SRCS
         avpacket.c
         flacdec.c
         flacdata.c
+        vdpau.c
         vp6dsp.c
         tscc.c  resample2.c    qdm2.c  bitstream_filter.c  eval.c  vc1.c
 	vc1dsp.c  vp56.c  vp6.c  vp5.c  indeo2.c  smacker.c  opt.c  fraps.c  dnxhddec.c
