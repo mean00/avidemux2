@@ -22,7 +22,12 @@
 #include "ADM_default.h"
 #include "ADM_editor/ADM_edit.hxx"
 
+#if defined(ADM_DEBUG) && 0
+#define aprintf printf
+#else
 #define aprintf(...) {}// printf
+#endif
+
 #include "ADM_pp.h"
 
 // FIXME BADLY !!!
@@ -125,17 +130,17 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     bool found=false;
     vid->lastSentFrame=frame;
     uint32_t nbFrames=vid->_nb_video_frames;
-    //cache->flush();
+    cache->flush();
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=vid->_aviheader->estimatePts(frame);
     uint32_t tries=16; // Max Ref frames for H264=Max delay
-
+    bool syncFound=false;
     while(found==false && tries--)
     {
         // Last frame ? if so repeat
         if(vid->lastSentFrame>=nbFrames-1) vid->lastSentFrame=nbFrames-1;
         // Fetch frame
-         printf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
+         aprintf("[Editor] Decoding  frame %u\n",vid->lastSentFrame);
          
          if (!demuxer->getFrame (vid->lastSentFrame,&img))
          {
@@ -150,7 +155,8 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
                 printf("[DecodePictureUpToIntra] Cache full for frame %"LU"\n",vid->lastSentFrame);
                 return false;
           }
-
+           aprintf("[Decoder] Demuxer Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,img.demuxerPts/1000,
+                                                                    img.demuxerPts);
           if(!decompressImage(result,&img,ref))
           {
              printf("[DecodePictureUpToIntra] decode error for frame %"LU"\n",vid->lastSentFrame);
@@ -163,14 +169,30 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
             {
                 cache->updateFrameNum(result,vid->lastSentFrame);
                 uint64_t pts=result->Pts;
-                printf("[Decoder] Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,result->Pts,result->Pts);
+                aprintf("[Decoder] Decoder Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,
+                                                        result->Pts/1000,result->Pts);
                 if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
                 {
-                    // increment it using average fps
-                    vid->lastDecodedPts+=vid->timeIncrementInUs;
-                    result->Pts=vid->lastDecodedPts;
+                   
+                    if(false==syncFound)
+                    {
+                        aprintf("[DecodePictureUpToIntra] No time stamp yet, dropping picture\n");
+                        cache->invalidate(result);
+                    }else
+                    {
+                        // increment it using average fps
+                        vid->lastDecodedPts+=vid->timeIncrementInUs;
+                        result->Pts=vid->lastDecodedPts;
+                    }
                 }else
+                {
+                    if(false==syncFound)
+                    {
+                        aprintf("[DecodePictureUpToIntra] Sync found\n");
+                        syncFound=true;
+                    }
                     vid->lastDecodedPts=pts;
+                }
             }
 
             // Found our image ?
@@ -181,7 +203,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     }
     if(found==false)
     {
-        printf("[GoToIntra] Could not find decoded frame :%"LU" PTS=%"LLU" ms, %"LLU" us\n",frame,wantedPts/1000,wantedPts);
+        printf("[GoToIntra] Could not find decoded frame, wanted PTS :%"LU" PTS=%"LLU" ms, %"LLU" us\n",frame,wantedPts/1000,wantedPts);
         cache->dump();
         return false;
     }
@@ -254,7 +276,10 @@ bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
         }else   
         {
             printf("[getNextPic] Loop:%d, looking for pts :%"LLU" ms %"LLU" us\n",loop,vid->lastReadPts/1000,vid->lastReadPts);
+#ifdef VERBOSE
             cache->dump();
+#endif
+
         }
     }
     printf("[ADM_Composer::getPicture] Failed\n");
@@ -306,6 +331,11 @@ uint8_t ret = 0;
             printf("[DecodePictureUpToIntra] Cache full for frame %"LU"\n",vid->lastSentFrame);
             return false;
       }
+        aprintf("Demuxed frame %"LU" with pts=%"LLD" us, %"LLD" ms\n",
+            frame,
+            img.demuxerPts,
+            img.demuxerPts/1000);
+    
       if(!decompressImage(result,&img,ref))
       {
          printf("[DecodePictureUpToIntra] decode error for frame %"LU"\n",vid->lastSentFrame);
@@ -601,8 +631,10 @@ uint8_t  ADM_Composer::getUncompressedFrame (uint32_t frame, ADMImage * out,
 
 //	Prepare the destination...
 	result=cache->getFreeImage();
-
+#ifdef VERBOSE
 	cache->dump();
+#endif
+
   // now we got segment and frame
   //*************************
   // Is is a key frame ?
