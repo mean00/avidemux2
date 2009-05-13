@@ -89,6 +89,7 @@ typedef struct
     indexerState state;
     tsPacketLinear *pkt;
     int32_t        nextOffset;
+    uint64_t beginPts,beginDts;
 }indexerData;
 
 typedef enum
@@ -548,7 +549,16 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
         uint32_t consumed=pkt->getConsumed()-overRead;
         if(data->nbPics)
         {
-            qfprintf(index," %c:%06"LX,Type[currentFrameType],consumed-beginConsuming);
+            int64_t deltaPts,deltaDts;
+
+            if(data->beginPts==-1 || info->pts==-1) deltaPts=-1;
+                else deltaPts=info->pts-data->beginPts;
+
+            if(data->beginDts==-1 || info->dts==-1) deltaDts=-1;
+                else deltaDts=info->dts-data->beginDts;
+
+            qfprintf(index," %c:%06"LX":%"LLD":%"LLD,Type[currentFrameType],consumed-beginConsuming,
+                                    deltaPts,deltaDts);
             beginConsuming=consumed;
         }else
         {  // Our first Pic
@@ -559,6 +569,8 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
         // If audio, also dump audio
         if(data->frameType==1)
         {
+            data->beginPts=info->pts;
+            data->beginDts=info->dts;
             if(audioTracks)
             {
                 qfprintf(index,"\nAudio bf:%08"LLX" ",info->startAt);

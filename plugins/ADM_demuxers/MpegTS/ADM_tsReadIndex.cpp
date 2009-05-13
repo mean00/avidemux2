@@ -121,7 +121,8 @@ bool tsHeader::processVideoIndex(char *buffer)
                 }
                 *cur++;
                 next=strstr(start," ");
-                ADM_assert(1==sscanf(cur,"%"LX,&len));
+                int64_t ppts,ddts;
+                ADM_assert(3==sscanf(cur,"%"LX":%"LLD":%"LLD,&len,&ppts,&ddts));
                 
                 
                 dmxFrame *frame=new dmxFrame;
@@ -135,8 +136,15 @@ bool tsHeader::processVideoIndex(char *buffer)
 
                 }else       
                 {
-                    frame->pts=ADM_NO_PTS;
-                    frame->dts=ADM_NO_PTS;
+                    if(ppts==-1 || pts==-1)
+                        frame->pts=ADM_NO_PTS;
+                    else
+                        frame->pts=pts+ppts;
+                    if(ddts==-1 || dts==-1)
+                        frame->dts=ADM_NO_PTS;
+                    else
+                        frame->dts=dts+ddts;
+
                     frame->startAt=0;
                     frame->index=0;
                 }
