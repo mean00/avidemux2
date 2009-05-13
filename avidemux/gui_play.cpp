@@ -196,7 +196,7 @@ bool GUIPlayback::run(void)
    
     uint32_t movieTime;
     uint32_t systemTime;
-    
+    int refreshCounter=0;
     ticktock.reset();
     do
     {
@@ -215,8 +215,16 @@ bool GUIPlayback::run(void)
        // printf("[Playback] systemTime: %lu movieTime : %lu  \r",systemTime,movieTime);
         if(systemTime>movieTime) // We are late, the current PTS is after current closk
         {
-            if(movieTime>systemTime+20)
-                printf("[Playback] We are late!\n");
+            if(systemTime >movieTime+20)
+            {
+                refreshCounter++;
+            }
+            if(refreshCounter>15)
+            {
+                UI_purge();
+                UI_purge();
+                refreshCounter=0;
+            }
         }
 	    else
 	    {
@@ -233,6 +241,7 @@ bool GUIPlayback::run(void)
                     }
                     
                     UI_purge();
+                    refreshCounter=0;
                     systemTime = ticktock.getElapsedMS();
                     delta=movieTime-systemTime;                
                 }
@@ -241,6 +250,7 @@ bool GUIPlayback::run(void)
                 {
                   UI_purge();
                   UI_purge(); 
+                  refreshCounter=0;
                 }
         }
       }
