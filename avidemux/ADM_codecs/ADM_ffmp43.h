@@ -347,4 +347,14 @@ public:
   decoderFFMjpegB (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
 };
 
+#ifdef USE_VDPAU
+class decoderFFVDPAU:public decoderFF
+{
+protected:
+public:
+  decoderFFVDPAU (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+};
+
+#endif
+// EOF
 

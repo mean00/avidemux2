@@ -88,7 +88,7 @@ static void MUI_purge(void)
   RENDER_CHECK(UI_purge); 
   HookFunc->UI_purge();
  }
-static void MUI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
+void MUI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
   RENDER_CHECK(UI_getWindowInfo);
   HookFunc->UI_getWindowInfo(draw, xinfo);

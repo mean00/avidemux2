@@ -34,7 +34,7 @@ class ADM_LibWrapper
 	#ifdef __WIN32
 		virtual char* formatMessage(uint32_t msgCode);
 	#endif
-
+    public:
 		ADM_LibWrapper();
 		virtual ~ADM_LibWrapper();		
 		virtual bool loadLibrary(const char* path);

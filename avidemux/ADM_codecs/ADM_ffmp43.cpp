@@ -43,7 +43,6 @@ extern "C"
     static int  ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic);
 }
 
-#define ADM_VDPAU 0
 
 
 #define WRAP_Open_Template(funcz,argz,display,codecid) \
@@ -596,16 +595,7 @@ decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d, u
     LOWDELAY();
   printf ("[lavc] Initializing H264 decoder with %d extradata\n", l);
 
-    if(ADM_VDPAU)
-    {
-        _context->get_buffer      = ADM_getBuffer;
-        _context->release_buffer  = ADM_releaseBuffer;
-        _context->reget_buffer    = ADM_getBuffer;
-
-        WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
-    }
-    else  
-    {
+       {
         WRAP_Open(CODEC_ID_H264);
     }
 
@@ -812,36 +802,5 @@ void ADM_lavDestroy(void)
 {
 	//av_free_static();
 }
-
-int ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic)
-{
-    uint32_t w= avctx->width;
-    uint32_t h= avctx->height;
-
-    uint32_t rounded_w=(w+63)&~63;
-    uint32_t rounded_h=(h+63)&~63;
-    uint32_t page=rounded_w*rounded_h;
-
-    pic->data[0]=new uint8_t [page];
-    pic->data[1]=new uint8_t [page/4];
-    pic->data[2]=new uint8_t [page/4];
-
-    pic->linesize[0]=rounded_w;
-    pic->linesize[1]=rounded_w/2;
-    pic->linesize[2]=rounded_w/2;
-    pic->type= FF_BUFFER_TYPE_USER;
-    pic->age=1;
-    return 0;
-}
-
- void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
-{
-    #define F(x) if(pic->x) delete [] pic->x;pic->x=NULL;
-    F(data[0]);
-    F(data[1]);
-    F(data[2]);
-    return;
-}
-
 
 // EOF

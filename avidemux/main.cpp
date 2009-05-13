@@ -42,6 +42,7 @@ extern void xvid4_init(void);
 extern void  ADM_lavInit();
 extern void  ADM_lavDestroy();
 extern void  ADM_lavFormatInit(void);
+extern bool  vdpauProbe(void);
 extern "C" {
      extern uint8_t     ADM_InitMemcpy(void);
 };
@@ -76,6 +77,8 @@ extern uint8_t ADM_av_loadPlugins(const char *path);
 extern uint8_t ADM_ae_loadPlugins(const char *path);
 extern uint8_t ADM_dm_loadPlugins(const char *path);
 extern uint8_t ADM_mx_loadPlugins(const char *path);
+
+extern bool vdpauProbe(void);
 extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
@@ -292,6 +295,12 @@ int main(int argc, char *argv[])
 
 #ifdef __MINGW32__
 	__try1(exceptionHandler);
+#endif
+
+#ifdef USE_VDPAU
+    printf("Probing for VDPAU...\n");
+    if(vdpauProbe()==true) printf("VDPAU available\n");
+        else printf("VDPAU not available\n");
 #endif
 
     UI_RunApp();

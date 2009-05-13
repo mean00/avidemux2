@@ -18,6 +18,9 @@
 // GCC - Operating System
 #cmakedefine ADM_BSD_FAMILY
 
+// use vdpau h264 hw decoding 
+#cmakedefine USE_VDPAU
+
 // 'gettimeofday' function is present
 #cmakedefine HAVE_GETTIMEOFDAY
 
