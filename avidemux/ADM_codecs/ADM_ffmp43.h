@@ -372,6 +372,11 @@ public:
                       {
                         return 0;
                       }
+     virtual uint8_t bFramePossible (void)
+      {
+        return 1;
+      }
+
 };
 
 #endif

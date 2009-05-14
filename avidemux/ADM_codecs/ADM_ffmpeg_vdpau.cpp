@@ -7,7 +7,7 @@
         and have something working even if the target machine
         does not have vdpau
     Some part, especially get/buffer and ip_age borrowed from xbmc
-        as the api from ffmpeg is far from clean....
+        as the api from ffmpeg is far from clear....
 
 
  ***************************************************************************/
@@ -205,6 +205,8 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):
         _context->release_buffer  = ADM_VDPAUreleaseBuffer;
         _context->draw_horiz_band = draw;
         _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
+        _context->extradata = (uint8_t *) d;
+        _context->extradata_size = (int) l;
 
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
@@ -253,35 +255,17 @@ VdpStatus status;
         printf("[VDPAU] No data from libavcodec\n");
         return 0;
     }
+    if(decode_status!=true)
+    {
+        printf("[VDPAU] error in renderDecode\n");
+        return 0;
+    }
     // other part will be done in goOn
-    out->Pts=vdpau_pts;
-    return (uint8_t)decode_status;
-}
-/**
-    \fn goOn
-    \brief Callback from ffmpeg when a pic is ready to be decoded
-*/
-void decoderFFVDPAU::goOn( const AVFrame *d)
-{
-   VdpStatus status;
-   struct vdpau_render_state *rndr = (struct vdpau_render_state *)d->data[0];
+  struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->_planes[0];
    VdpVideoSurface  surface;
 
     surface=rndr->surface;
-    vdpau_pts=d->reordered_opaque; // Retrieve our PTS
-
-     aprintf("[VDPAU] Decoding Using surface %d\n", surface);
-    status=funcs.decoderRender(VDPAU->vdpDecoder, surface,
-                            (void * const *)&rndr->info, rndr->bitstream_buffers_used, rndr->bitstream_buffers);
-    if(VDP_STATUS_OK!=status)
-    {
-        printf("[VDPAU] No data after decoderRender <%s>\n",funcs.getErrorString(status));
-        return ;
-    }
-    aprintf("[VDPAU] DecodeRender Ok***\n");
-  
-  
-  void *planes[3];
+ void *planes[3];
             planes[0]=vdpau_copy->GetWritePtr(PLANAR_Y);
             planes[1]=vdpau_copy->GetWritePtr(PLANAR_U);
             planes[2]=vdpau_copy->GetWritePtr(PLANAR_V);
@@ -304,10 +288,37 @@ void decoderFFVDPAU::goOn( const AVFrame *d)
         
         printf("[VDPAU] Cannot get data from surface <%s>\n",funcs.getErrorString(status));
         decode_status=false;
-        return ;
+        return 0 ;
     }
     
-    aprintf("[VDPAU] Success\n");
+
+    //
+    out->Pts=scratch->Pts;
+    return (uint8_t)decode_status;
+}
+/**
+    \fn goOn
+    \brief Callback from ffmpeg when a pic is ready to be decoded
+*/
+void decoderFFVDPAU::goOn( const AVFrame *d)
+{
+   VdpStatus status;
+   struct vdpau_render_state *rndr = (struct vdpau_render_state *)d->data[0];
+   VdpVideoSurface  surface;
+
+    surface=rndr->surface;
+    vdpau_pts=d->reordered_opaque; // Retrieve our PTS
+
+     aprintf("[VDPAU] Decoding Using surface %d\n", surface);
+    status=funcs.decoderRender(VDPAU->vdpDecoder, surface,
+                            (void * const *)&rndr->info, rndr->bitstream_buffers_used, rndr->bitstream_buffers);
+    if(VDP_STATUS_OK!=status)
+    {
+        printf("[VDPAU] No data after decoderRender <%s>\n",funcs.getErrorString(status));
+        decode_status=false;
+        return ;
+    }
+    aprintf("[VDPAU] DecodeRender Ok***\n");
     decode_status=true;
     return;
 }
