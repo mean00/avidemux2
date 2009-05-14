@@ -31,7 +31,7 @@
 /**
     \fn ADM_tsAccess
 */
-ADM_tsAccess::ADM_tsAccess(const char *name,uint8_t pid,bool append)
+ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append)
 {
 FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;

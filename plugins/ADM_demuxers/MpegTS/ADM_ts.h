@@ -61,14 +61,14 @@ class ADM_tsAccess : public ADM_audioAccess
 protected:
                 TS_PESpacket    *packet;
                 tsPacket        demuxer;
-                uint8_t         pid;
+                uint32_t         pid;
                 uint64_t        dtsOffset;
                 uint32_t        videoCodec;
                 
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
                 vector          <ADM_tsAudioSeekPoint >seekPoints;
-                                  ADM_tsAccess(const char *name,uint8_t pid,bool append); 
+                                  ADM_tsAccess(const char *name,uint32_t pid,bool append); 
                 virtual           ~ADM_tsAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return true;}
