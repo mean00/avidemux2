@@ -6,6 +6,8 @@
     VDPAU is loaded dynamically to be able to make a binary
         and have something working even if the target machine
         does not have vdpau
+    Some part, especially get/buffer and ip_age borrowed from xbmc
+        as the api from ffmpeg is far from clean....
 
 
  ***************************************************************************/
@@ -33,7 +35,10 @@ extern "C" {
 #include "DIA_coreToolkit.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_ffmpeg_vdpau_internal.h"
+#include "prefs.h"
 
+static VdpFunctions funcs;
 
 static bool vdpauWorking=false;
 
@@ -41,50 +46,8 @@ static ADM_LibWrapper        vdpauDynaLoader;
 static VdpDeviceCreateX11    *ADM_createVdpX11;
 static VdpDevice             vdpDevice;
 static VdpGetProcAddress     *vdpProcAddress;
-static VdpDecoder            vdpDecoder;
 
-// VDPAU internal linker
-
-typedef struct 
-{
-    VdpGetErrorString       *getErrorString;
-    VdpGetApiVersion        *getApiVersion;
-    VdpGetInformationString *getInformationString;
-
-    VdpVideoSurfaceCreate   *createSurface;
-    VdpVideoSurfaceDestroy  *destroySurface;
-    VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
-
-    VdpDecoderCreate        *decoderCreate;
-    VdpDecoderDestroy       *decoderDestroy;
-    VdpDecoderRender        *decoderRender;
-
-}VdpFunctions;
-
-static VdpFunctions funcs;
-
-#define WRAP_Open_Template(funcz,argz,display,codecid) \
-{\
-AVCodec *codec=funcz(argz);\
-if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"display));ADM_assert(0);} \
-  codecId=codecid; \
-  _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
-  _context->error_concealment=3; \
-  if (avcodec_open(_context, codec) < 0)  \
-                      { \
-                                        printf("[lavc] Decoder init: "display" video decoder failed!\n"); \
-                                        GUI_Error_HIG("Codec","Internal error opening "display); \
-                                        ADM_assert(0); \
-                                } \
-                                else \
-                                { \
-                                        printf("[lavc] Decoder init: "display" video decoder initialized! (%s)\n",codec->long_name); \
-                                } \
-}
-
-#define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x);}
-#define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y);}
-
+#define aprintf(...) {}
 
 /**
     \fn vdpauUsable
@@ -92,10 +55,14 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"displ
 */
 bool vdpauUsable(void)
 {
-    return vdpauWorking;
+    uint32_t v=false;
+    if(!vdpauWorking) return false;
+    if(!prefs->get(FEATURE_VDPAU,&v)) v=false;
+    return v;
 }
 /**
-
+    \fn getFunc
+    \brief vdpau function pointers from ID
 */
 static void *getFunc(uint32_t id)
 {
@@ -155,60 +122,121 @@ bool vdpauProbe(void)
     return true;
 }
 /**
-
+    \fn ADM_VDPAUgetBuffer
+    \brief trampoline to get a VDPAU surface
 */
-int ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic)
+int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-    uint32_t w= avctx->width;
-    uint32_t h= avctx->height;
-
-    uint32_t rounded_w=(w+63)&~63;
-    uint32_t rounded_h=(h+63)&~63;
-    uint32_t page=rounded_w*rounded_h;
-
-    pic->data[0]=new uint8_t [page];
-    pic->data[1]=new uint8_t [page/4];
-    pic->data[2]=new uint8_t [page/4];
-
-    pic->linesize[0]=rounded_w;
-    pic->linesize[1]=rounded_w/2;
-    pic->linesize[2]=rounded_w/2;
-    pic->type= FF_BUFFER_TYPE_USER;
-    pic->age=1;
+    decoderFFVDPAU *dec=(decoderFFVDPAU *)avctx->opaque;
+    return dec->getBuffer(avctx,pic);
+}
+/**
+    \fn getBuffer
+    \brief returns a VDPAU render masquerading as a AVFrame
+*/
+int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
+{
+    vdpau_render_state * render;
+    if(VDPAU->freeQueue.size()==0)
+    {
+        printf("[VDPAU] No more available surface\n");
+        return -1;
+    }
+    // Get an image   
+    render=VDPAU->freeQueue.back();
+    VDPAU->freeQueue.pop_back();
+    render->state=0;
+    pic->data[0]=(uint8_t *)render;
+    pic->data[1]=(uint8_t *)render;
+    pic->data[2]=(uint8_t *)render;
+    pic->linesize[0]=0;
+    pic->linesize[1]=0;
+    pic->linesize[2]=0;
+    pic->type=FF_BUFFER_TYPE_USER;
+    render->state |= FF_VDPAU_STATE_USED_FOR_REFERENCE;
+    pic->reordered_opaque= avctx->reordered_opaque;
+    if(pic->reference)
+    {
+        pic->age=ip_age[0];
+        ip_age[0]=ip_age[1]+1;
+        ip_age[1]=1;
+        b_age++;
+    }else
+    {
+        pic->age=b_age;
+        ip_age[0]++;
+        ip_age[1]++;
+        b_age=1;
+    }
     return 0;
 }
 /**
-
+    \fn releaseBuffer
 */
- void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
+void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-    #define F(x) if(pic->x) delete [] pic->x;pic->x=NULL;
-    F(data[0]);
-    F(data[1]);
-    F(data[2]);
-    return;
+  vdpau_render_state * render;
+  int i;
+
+  render=(vdpau_render_state*)pic->data[0];
+  ADM_assert(render);
+
+  render->state &= ~FF_VDPAU_STATE_USED_FOR_REFERENCE;
+  for(i=0; i<4; i++){
+    pic->data[i]= NULL;
+  }
+  VDPAU->freeQueue.push_back(render);
 }
-#define NB_SURFACE 12
-static VdpVideoSurface surface[NB_SURFACE];
+/**
+    \fn ADM_VDPAUreleaseBuffer
+*/
+ void ADM_VDPAUreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
+{
+    decoderFFVDPAU *dec=(decoderFFVDPAU *)avctx->opaque;
+    dec->releaseBuffer(avctx,pic);
+}
 /**
     \fn decoderFFVDPAU
 */
 decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
 {
-        _context->get_buffer      = ADM_getBuffer;
-        _context->release_buffer  = ADM_releaseBuffer;
-        _context->reget_buffer    = ADM_getBuffer;
+        _context->opaque          = this;
+        _context->get_buffer      = ADM_VDPAUgetBuffer;
+        _context->release_buffer  = ADM_VDPAUreleaseBuffer;
+        _context->draw_horiz_band = draw;
+        _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
 
+        vdpau=(void *)new vdpauContext;
+        VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
         WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
-
+        
         // Now instantiate our VDPAU surface & decoder
-        ADM_assert(VDP_STATUS_OK==funcs.decoderCreate(vdpDevice,VDP_DECODER_PROFILE_H264_HIGH,w,h,16,&vdpDecoder));
+        ADM_assert(VDP_STATUS_OK==funcs.decoderCreate(vdpDevice,VDP_DECODER_PROFILE_H264_HIGH,w,h,15,&(VDPAU->vdpDecoder)));
         // Create our surfaces...
         for(int i=0;i<NB_SURFACE;i++)
         {
-            ADM_assert(VDP_STATUS_OK==funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,w,h,&(surface[i])));
+            VDPAU->renders[i]=new vdpau_render_state;
+            ADM_assert(VDP_STATUS_OK==funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,w,h,&(VDPAU->renders[i]->surface)));
+            VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
         scratch=new ADMImage(w,h,1);
+        b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
+
+}
+/**
+    \fn ~            void    goOn( const AVFrame *d);
+*/
+decoderFFVDPAU::~decoderFFVDPAU()
+{
+        printf("[VDPAU] Cleaning up\n");
+        for(int i=0;i<NB_SURFACE;i++)
+        {
+            ADM_assert(VDP_STATUS_OK==funcs.destroySurface((VDPAU->renders[i]->surface)));
+            delete VDPAU->renders[i];
+        }
+         ADM_assert(VDP_STATUS_OK==funcs.decoderDestroy(VDPAU->vdpDecoder));
+         delete VDPAU;
+         vdpau=NULL;
 }
 /**
     \fn uncompress
@@ -216,43 +244,57 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):
 uint8_t decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
 VdpStatus status;
-    static int ping=0;
+    
     // First let ffmpeg prepare datas...
+    vdpau_copy=out;
+    decode_status=false;
     if(!decoderFF::uncompress (in, scratch))
     {
         printf("[VDPAU] No data from libavcodec\n");
         return 0;
     }
-    printf("[VDPAU] OK*0***\n");
-    
-    // Borrowed from mplayer
-    struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->_planes[0];
-    
-    status=funcs.decoderRender(vdpDecoder,surface[ping],
+    // other part will be done in goOn
+    out->Pts=vdpau_pts;
+    return (uint8_t)decode_status;
+}
+/**
+    \fn goOn
+    \brief Callback from ffmpeg when a pic is ready to be decoded
+*/
+void decoderFFVDPAU::goOn( const AVFrame *d)
+{
+   VdpStatus status;
+   struct vdpau_render_state *rndr = (struct vdpau_render_state *)d->data[0];
+   VdpVideoSurface  surface;
+
+    surface=rndr->surface;
+    vdpau_pts=d->reordered_opaque; // Retrieve our PTS
+
+     aprintf("[VDPAU] Decoding Using surface %d\n", surface);
+    status=funcs.decoderRender(VDPAU->vdpDecoder, surface,
                             (void * const *)&rndr->info, rndr->bitstream_buffers_used, rndr->bitstream_buffers);
     if(VDP_STATUS_OK!=status)
     {
-        
         printf("[VDPAU] No data after decoderRender <%s>\n",funcs.getErrorString(status));
-        return 0;
+        return ;
     }
-    printf("[VDPAU] OK*1***\n");
-    
-    out->_colorspace=ADM_COLOR_YV12;
-    // Now get back our image...
-    // Copy back from decompressed stuff to our own
- 
-    void *planes[3];
-            planes[0]=out->GetWritePtr(PLANAR_Y);
-            planes[1]=out->GetWritePtr(PLANAR_U);
-            planes[2]=out->GetWritePtr(PLANAR_V);
+    aprintf("[VDPAU] DecodeRender Ok***\n");
+  
+  
+  void *planes[3];
+            planes[0]=vdpau_copy->GetWritePtr(PLANAR_Y);
+            planes[1]=vdpau_copy->GetWritePtr(PLANAR_U);
+            planes[2]=vdpau_copy->GetWritePtr(PLANAR_V);
     uint32_t stride[3];
-            stride[0]=out->GetPitch(PLANAR_Y);
-            stride[1]=out->GetPitch(PLANAR_U);
-            stride[2]=out->GetPitch(PLANAR_V);
+            stride[0]=vdpau_copy->GetPitch(PLANAR_Y);
+            stride[1]=vdpau_copy->GetPitch(PLANAR_U);
+            stride[2]=vdpau_copy->GetPitch(PLANAR_V);
 
+    
+   // Copy back the decoded image to our output ADM_image
+   aprintf("[VDPAU] Getting datas from surface %d\n",surface);
     status=funcs.getDataSurface(
-                surface[ping],
+                surface,
                 VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
                 planes, //void * const *   destination_data,
                 stride //destination_pitches
@@ -261,13 +303,24 @@ VdpStatus status;
     {
         
         printf("[VDPAU] Cannot get data from surface <%s>\n",funcs.getErrorString(status));
-        return 0;
+        decode_status=false;
+        return ;
     }
-    ping++;
-    ping%=NB_SURFACE;
-    printf("[VDPAU] OK*2***\n");
-    out->Pts=in->demuxerPts;
-    return 1;
+    
+    aprintf("[VDPAU] Success\n");
+    decode_status=true;
+    return;
+}
+
+
+/**
+    \fn draw
+    \brief callback invoked by lavcodec when a pic is ready to be decoded
+*/
+void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height)
+{
+    decoderFFVDPAU *dec=(decoderFFVDPAU *)s->opaque;
+    dec->goOn(src);
 }
 
 #endif

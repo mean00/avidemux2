@@ -49,7 +49,7 @@ uint32_t useMaster=0;
 uint32_t useAutoIndex=0;
 uint32_t useSwap=0;
 uint32_t useNuv=0;
-uint32_t lavcThreads=0,x264Threads=0,xvidThreads=0;
+uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
 uint32_t indexPriority=2;
 uint32_t playbackPriority=0;
@@ -66,6 +66,7 @@ uint32_t autounpack=0;
 uint32_t alternate_mp3_tag=1;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
+uint32_t vdpau=0;
 uint32_t hzd,vzd,dring;
 uint32_t capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 
@@ -103,6 +104,8 @@ char     *globalGlyphName=NULL;
 #endif
         // autovbr
         prefs->get(FEATURE_AUTO_BUILDMAP,&autovbr);
+        // vdpau
+        prefs->get(FEATURE_VDPAU,&vdpau);
         // autoindex
         prefs->get(FEATURE_AUTO_REBUILDINDEX,&autoindex);
         // Global glyph
@@ -126,8 +129,7 @@ char     *globalGlyphName=NULL;
 
         // Multithreads
         prefs->get(FEATURE_THREADING_LAVC, &lavcThreads);
-        prefs->get(FEATURE_THREADING_X264, &x264Threads);
-        prefs->get(FEATURE_THREADING_XVID, &xvidThreads);
+
 
 		// Encoding priority
 		if(!prefs->get(PRIORITY_ENCODING, &encodePriority))
@@ -173,6 +175,7 @@ char     *globalGlyphName=NULL;
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
+        diaElemToggle useVdpau(&vdpau,QT_TR_NOOP("_Use VDPAU for decoding H264"));
         diaElemToggle useSysTray(&useTray,QT_TR_NOOP("_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TR_NOOP("_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TR_NOOP("Create _OpenDML files"));
@@ -216,13 +219,9 @@ char     *globalGlyphName=NULL;
 		frameSimd.swallow(&capsToggleSSSE3);
 
 		diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TR_NOOP("_lavc threads:"));
-		diaElemThreadCount x264ThreadCount(&x264Threads, QT_TR_NOOP("_x264 threads:"));
-		diaElemThreadCount xvidThreadCount(&xvidThreads, QT_TR_NOOP("X_vid threads:"));
 
 		diaElemFrame frameThread(QT_TR_NOOP("Multi-threading"));
 		frameThread.swallow(&lavcThreadCount);
-		frameThread.swallow(&x264ThreadCount);
-		frameThread.swallow(&xvidThreadCount);
 
 		diaMenuEntry priorityEntries[] = {
                              {0,       QT_TR_NOOP("High"),NULL}
@@ -360,8 +359,8 @@ char     *globalGlyphName=NULL;
 
         
         /* Video */
-        diaElem *diaVideo[]={&menuVideoMode,&framePP};
-        diaElemTabs tabVideo(QT_TR_NOOP("Video"),2,(diaElem **)diaVideo);
+        diaElem *diaVideo[]={&menuVideoMode,&framePP,&useVdpau};
+        diaElemTabs tabVideo(QT_TR_NOOP("Video"),3,(diaElem **)diaVideo);
         
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
@@ -454,8 +453,6 @@ char     *globalGlyphName=NULL;
                 
                 // number of threads
                 prefs->set(FEATURE_THREADING_LAVC, lavcThreads);
-				prefs->set(FEATURE_THREADING_X264, x264Threads);
-				prefs->set(FEATURE_THREADING_XVID, xvidThreads);
 
 				// Encoding priority
 				prefs->set(PRIORITY_ENCODING, encodePriority);
@@ -475,7 +472,8 @@ char     *globalGlyphName=NULL;
                 prefs->set(FEATURE_USE_SYSTRAY,useTray);
                 // Filter directory
 				prefs->set(FILTERS_AUTOLOAD_ACTIVE, activeXfilter);
-
+                // VDPAU
+                prefs->set(FEATURE_VDPAU,vdpau);
                 if(filterPath)
                   prefs->set(FILTERS_AUTOLOAD_PATH, filterPath);
                 // Alternate mp3 tag (haali)

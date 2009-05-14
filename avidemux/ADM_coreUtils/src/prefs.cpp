@@ -76,11 +76,7 @@ static opt_def opt_defs [] = {
 	{"codecs.xvid.bitrate",		UINT,	"1500000",NULL,	"17",	"5900000"},
 	{"codecs.xvid.finalsize",	UINT,	"700",	NULL,	"0",	"3999"	},
 	{"codecs.preferredcodec",		STRING,"FFmpeg4",NULL, NULL, NULL },
-#ifdef __WIN32
-	{"filters.subtitle.fontname",		FILENAME,"C:\\Windows\\Fonts\\arial.ttf",NULL, NULL, NULL },
-#else
 	{"filters.subtitle.fontname",		FILENAME,"/usr/share/fonts/truetype/DejaVuSans.ttf",NULL, NULL, NULL },
-#endif
 	{"filters.subtitle.charset",		STRING,"ISO-8859-1",NULL, NULL, NULL },
 	{"filters.subtitle.fontsize",		UINT,	"24",	NULL,	"1",	"576"	},
 	{"filters.subtitle.ypercent",	INT,	"255",	NULL,	"0",	"255"	},
@@ -89,11 +85,7 @@ static opt_def opt_defs [] = {
 	{"filters.subtitle.selfadjustable",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"filters.subtitle.usebackgroundcolor",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"settings.mpegsplit",	UINT,	"790",	NULL,	"400",	"5000"	},
-#ifdef __WIN32
-	{"device.audiodevice",		STRING,"WIN32",NULL, NULL, NULL },
-#else
 	{"device.audiodevice",		STRING,"ALSA",	NULL, NULL, NULL },
-#endif
 	{"device.audio.alsa_device",		STRING,"dmix",	NULL, NULL, NULL },
 	{"device.videodevice",		UINT,	"0",	NULL,	"0",	"10"	},
 	{"default.postproc_type",		UINT,	"3",	NULL,	"0",	"7"	},
@@ -123,8 +115,6 @@ static opt_def opt_defs [] = {
 	{"feature.reuse_2pass_log",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"feature.audiobar_uses_master",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"feature.threading.lavc",		UINT,	"0",	NULL,	"0",	"32"	},
-	{"feature.threading.x264",		UINT,	"0",	NULL,	"0",	"32"	},
-	{"feature.threading.xvid",		UINT,	"0",	NULL,	"0",	"32"	},
 	{"feature.cpu_caps",		UINT,	"4294967295",NULL,	"0",	"4294967295"},
 	{"feature.mpeg_no_limit",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"feature.auto_buildmap",		UINT,	"0",	NULL,	"0",	"1"	},
@@ -134,6 +124,7 @@ static opt_def opt_defs [] = {
 	{"filters.autoload.path",		STRING,"/tmp/",NULL, NULL, NULL },
 	{"filters.autoload.active",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"feature.alternate_mp3_tag",		UINT,	"1",	NULL,	"0",	"1"	},
+	{"feature.vdpau",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"feature.global_glyph.active",		UINT,	"1",	NULL,	"0",	"1"	},
 	{"feature.global_glyph.name",		STRING,"",	NULL, NULL, NULL },
 	{"priority.encoding",		UINT,	"3",	NULL,	"0",	"4"	},
@@ -141,7 +132,7 @@ static opt_def opt_defs [] = {
 	{"priority.playback",		UINT,	"0",	NULL,	"0",	"4"	}
 };
 
-int num_opts = 80;
+int num_opts = 79;
 // </prefs_gen>
 
 

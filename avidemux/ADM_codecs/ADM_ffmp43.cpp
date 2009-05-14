@@ -794,7 +794,7 @@ void ADM_lavInit(void)
 }
 void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list list)
 {
-    if(level>1) return;
+   // if(level>1) return;
     char buf[256];
   
     vsnprintf(buf, sizeof(buf), fmt, list);
