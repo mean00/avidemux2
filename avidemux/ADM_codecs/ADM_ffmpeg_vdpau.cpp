@@ -20,14 +20,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
 extern "C" {
 #include "ADM_lavcodec.h"
+}
+#include "ADM_default.h"
+#ifdef USE_VDPAU
+extern "C" {
  #include "ADM_libraries/ADM_ffmpeg/libavcodec/vdpau.h"
 }
 
-#include "ADM_default.h"
-#ifdef USE_VDPAU
 #include "vdpau/vdpau_x11.h"
 #include "vdpau/vdpau.h"
 #include "ADM_codecs/ADM_codec.h"

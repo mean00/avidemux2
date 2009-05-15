@@ -17,7 +17,6 @@ SET(${ADM_LIB}_SRCS
         avpacket.c
         flacdec.c
         flacdata.c
-        vdpau.c
         vp6dsp.c
         tscc.c  resample2.c    qdm2.c  bitstream_filter.c  eval.c  vc1.c
 	vc1dsp.c  vp56.c  vp6.c  vp5.c  indeo2.c  smacker.c  opt.c  fraps.c  dnxhddec.c
@@ -30,6 +29,10 @@ SET(${ADM_LIB}_SRCS
 	intrax8dsp.c  dnxhddata.c  faanidct.c  ac3_parser.c  aac_ac3_parser.c
         celp_math.c options.c aandcttab.c audioconvert.c mpeg4audio.c svq1dec.c celp_filters.c
 	aac_parser.c  mpegaudiodecheader.c)
+
+if(USE_VDPAU)
+	SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS} vdpau.c)
+endif(USE_VDPAU)
 
 IF(ADM_CPU_X86)
 	SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS}
