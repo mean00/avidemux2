@@ -139,8 +139,9 @@ int er;
     uint32_t avail=wrIndex-rdIndex;
     if(!avail)
     {
-        pa_simple_write(INSTANCE,silence, sizeOf10ms,&er);
         mutex.unlock();
+        pa_simple_write(INSTANCE,silence, sizeOf10ms,&er);
+        
         return ;
     }
     if(avail>sizeOf10ms) avail=sizeOf10ms;
