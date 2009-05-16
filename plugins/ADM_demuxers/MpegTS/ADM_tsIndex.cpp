@@ -90,6 +90,7 @@ typedef struct
     tsPacketLinear *pkt;
     int32_t        nextOffset;
     uint64_t beginPts,beginDts;
+    uint64_t prevPts,prevDts;
 }indexerData;
 
 typedef enum
@@ -207,6 +208,34 @@ TsIndexer::~TsIndexer()
     ui=NULL;
 }
 /**
+
+*/
+static uint32_t unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
+{
+  uint32_t outlen=0;
+  uint8_t *tail=in+len;
+    if(len<3) return 0;
+    while(in<tail-3)
+    {
+      if(!in[0]  && !in[1] && in[2]==3)
+      {
+        out[0]=0;
+        out[1]=0;
+        out+=2;
+        outlen+=2;
+        in+=3; 
+      }
+      *out++=*in++;
+      outlen++;
+    }
+    // copy last bytes
+    uint32_t left=tail-in;
+    memcpy(out,in,left);
+    outlen+=left;
+    return outlen;
+    
+}
+/**
     \fn runH264
     \brief Index H264 stream
 */  
@@ -311,11 +340,13 @@ bool result=false;
                      
           switch(startCode)
                   {
+                  case NAL_SEI:
                   case NAL_AU_DELIMITER:
                           pic_started = false;
                           break;
 
                   case NAL_SPS:
+                            
                           pic_started = false;
                           aprintf("Sps \n");
                           pkt->getInfo(&info);
@@ -328,15 +359,23 @@ bool result=false;
                   case NAL_NON_IDR:
                     {
 #define NON_IDR_PRE_READ 8
+                      uint8_t bufr[NON_IDR_PRE_READ+4];
                       uint8_t header[NON_IDR_PRE_READ+4];
                       GetBitContext s;
                    
-                        pkt->read(4,header);
+                        pkt->read(NON_IDR_PRE_READ,bufr);
+                        // unescape...
+                        unescapeH264(NON_IDR_PRE_READ,bufr,header);
+                        //
                         init_get_bits(&s, header, NON_IDR_PRE_READ*8);
                         int first_mb_in_slice,slice_type;
 
                         first_mb_in_slice= get_ue_golomb(&s);
                         slice_type= get_ue_golomb_31(&s);
+                        if(slice_type>9) 
+                        {
+                            printf("[TsIndexer] Bad slice type\n");
+                        }
                         if(slice_type>4) slice_type-=5;
                         switch(slice_type)
                         {
@@ -354,7 +393,7 @@ bool result=false;
                       }else
                       {
                             pkt->getInfo(&info);
-                            Mark(&data,&info,5+4);
+                            Mark(&data,&info,5+NON_IDR_PRE_READ);
                        }
                       data.state=idx_startAtImage;
                       data.nbPics++;
@@ -551,11 +590,11 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
         {
             int64_t deltaPts,deltaDts;
 
-            if(data->beginPts==-1 || info->pts==-1) deltaPts=-1;
-                else deltaPts=info->pts-data->beginPts;
+            if(data->beginPts==-1 || data->prevPts==-1) deltaPts=-1;
+                else deltaPts=data->prevPts-data->beginPts;
 
-            if(data->beginDts==-1 || info->dts==-1) deltaDts=-1;
-                else deltaDts=info->dts-data->beginDts;
+            if(data->beginDts==-1 || data->prevDts==-1) deltaDts=-1;
+                else deltaDts=data->prevDts-data->beginDts;
 
             qfprintf(index," %c:%06"LX":%"LLD":%"LLD,Type[currentFrameType],consumed-beginConsuming,
                                     deltaPts,deltaDts);
@@ -567,7 +606,7 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
         }
             
         // If audio, also dump audio
-        if(data->frameType==1)
+        if(data->frameType==1 || data->frameType==4) // I or IDR
         {
             data->beginPts=info->pts;
             data->beginDts=info->dts;
@@ -589,7 +628,8 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
             qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",info->startAt,info->offset-overRead,info->pts,info->dts);
         }
         currentFrameType=data->frameType;
-        
+        data->prevDts=info->dts;
+        data->prevPts=info->pts;
     return true;
 }
 
