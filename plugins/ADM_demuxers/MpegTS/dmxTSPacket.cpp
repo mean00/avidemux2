@@ -437,9 +437,9 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                                                 pes->pts=(pts1>>1)<<15;
                                                 pes->pts+=pts2>>1;
                                                 pes->pts+=(((pts0&6)>>1)<<30);
-                                                pts0=*start++;  
-                                                pts1=(start[0]<<8)+start[1]; 
-                                                pts2=(start[2]<<8)+start[3];       
+                                                pts0=start[0];  
+                                                pts1=(start[1]<<8)+start[2]; 
+                                                pts2=(start[3]<<8)+start[4];       
                                                 start+=5;
                                                 pes->dts=(pts1>>1)<<15;
                                                 pes->dts+=pts2>>1;
@@ -875,9 +875,9 @@ bool tsPacketLinearTracker::updateStats(uint8_t *scratch)
                                                 start+=5;
                                                                         
                                                 // Assume PTS=DTS
-                                                pts0=*start++;  
-                                                pts1=(start[0]<<8)+start[1]; 
-                                                pts2=(start[2]<<8)+start[3];       
+                                                pts0=start[0];  
+                                                pts1=(start[1]<<8)+start[2]; 
+                                                pts2=(start[3]<<8)+start[4];       
                                                 start+=5;
                                                 stats[found].startDts=(pts1>>1)<<15;
                                                 stats[found].startDts+=pts2>>1;
