@@ -9,6 +9,7 @@
 
 CALLBACK( connect_to_avsproxy1                  ,ACT_AVS_PROXY);
 CALLBACK( see_hex1                              ,ACT_HEX_DUMP);
+CALLBACK( see_size                              ,ACT_SIZE_DUMP);
 
 CALLBACK( close1                                ,ACT_CLOSE);
 

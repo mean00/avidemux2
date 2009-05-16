@@ -107,6 +107,7 @@ extern int GUI_handleVFilter (void);
 extern void GUI_setMarks (uint32_t a, uint32_t b);
 extern void  GUI_displayBitrate( void );
 void GUI_showCurrentFrameHex(void);
+void GUI_showSize(void);
 void GUI_avsProxy(void);
 uint8_t GUI_close(void);
 
@@ -688,7 +689,9 @@ int nw;
    case ACT_HEX_DUMP:
       GUI_showCurrentFrameHex();
       break;
-
+   case ACT_SIZE_DUMP:
+      GUI_showSize();
+      break;
     default:
       printf ("\n unhandled action %d\n", action);
       ADM_assert (0);
@@ -1707,6 +1710,45 @@ void GUI_showCurrentFrameHex(void)
 
  delete [] buffer;
 }
+/**
+    \fn GUI_showSize
+    \brief Show frame size
+
+*/
+#define DUMP_SIZE 30
+void GUI_showSize(void)
+{
+uint8_t *buffer;
+ uint32_t fullLen,flags;
+ ADMCompressedImage image;
+ uint8_t seq;
+ char                text[DUMP_SIZE][100];
+ 
+ if (!avifileinfo) return;
+
+ buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
+ image.data=buffer;
+
+
+
+
+    for(int i=0;i<DUMP_SIZE;i++)
+    {
+        int target=video_body->getCurrentFrame()+i;
+        video_body->getFlags ( target,&flags);
+        video_body->getFrame ( target,&image,&seq);
+        fullLen=image.dataLength;
+        sprintf(text[i],"Frame %d:%d",target,fullLen);
+        printf("%s\n",text[i]);
+    }
+ 
+
+
+ 
+ delete [] buffer;
+ 
+}
+
 // Temporary place...
 
 /**
