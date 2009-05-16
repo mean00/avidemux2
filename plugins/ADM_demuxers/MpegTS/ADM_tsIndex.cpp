@@ -42,6 +42,7 @@ extern "C"
 }
 #endif
 
+#define zprintf(...) {}
 
 static const char Type[5]={'X','I','P','B','D'};
 
@@ -277,7 +278,7 @@ bool result=false;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
-
+    int lastRefIdc=0;
     //******************
     // 1 search SPS
     //******************
@@ -329,10 +330,20 @@ bool result=false;
         if(!pkt->stillOk()) break;
         uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
 //  1:0 2:Nal ref idc 5:Nal Type
-        if(startCode&0x80) continue; // Marker missing
-        startCode&=0x1f;
+        if(startCode&0x80) 
+        {
+            printf("[Ts] Nal Marker missing:%x\n",startCode);
+            continue; // Marker missing
+        }
+        int fullStartCode=startCode;
+        int ref=(startCode>>5)&3;
+
+        startCode&=0x1f; // Ignore nal ref IDR
+        
+        zprintf("[%02x] Nal :0x%x,ref=%d,lastRef=%d at : %d \n",fullStartCode,startCode,ref,lastRefIdc,pkt->getConsumed()-beginConsuming);
+        
           // Ignore multiple chunk of the same pic
-          if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started) 
+          if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started )  //&& ref==lastRefIdc) 
           {
            // aprintf("Still capturing, ignore\n");
             continue;
@@ -341,6 +352,7 @@ bool result=false;
           switch(startCode)
                   {
                   case NAL_SEI:
+                            break;
                   case NAL_AU_DELIMITER:
                           pic_started = false;
                           break;
@@ -359,6 +371,9 @@ bool result=false;
                   case NAL_NON_IDR:
                     {
 #define NON_IDR_PRE_READ 8
+                      zprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
+                      lastRefIdc=ref;
+                        
                       uint8_t bufr[NON_IDR_PRE_READ+4];
                       uint8_t header[NON_IDR_PRE_READ+4];
                       GetBitContext s;
