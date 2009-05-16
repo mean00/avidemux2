@@ -119,6 +119,7 @@ bool tsHeader::updatePtsDts(void)
         {
             dmxFrame *frame=ListOfFrames[i];
             aprintf("[psUpdate] frame:%d raw DTS: %"LLD" PTS:%"LLD"\n",i,frame->dts,frame->pts);
+#if 0
             if(frame->pts==ADM_NO_PTS || frame->dts==ADM_NO_PTS)
             {
                 noUpdate++;
@@ -146,11 +147,13 @@ bool tsHeader::updatePtsDts(void)
                     frame->pts=ADM_NO_PTS;
                 }
             }else    // We got both, use them  
+#endif
             {
                 
                 frame->dts=lastDts=timeConvert(frame->dts);
                 frame->pts=lastPts=timeConvert(frame->pts);
             }
+
         }
         // convert to us for Audio tracks (seek points)
         for(int i=0;i<listOfAudioTracks.size();i++)
