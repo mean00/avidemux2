@@ -173,7 +173,7 @@ typedef struct
 class tsPacketLinearTracker : public tsPacketLinear
 {
 protected:
-        TS_PESpacket *pesPacket;
+        
         TS_PESpacket *otherPes;
         packetTSStats *stats;
         uint32_t      totalTracks;
