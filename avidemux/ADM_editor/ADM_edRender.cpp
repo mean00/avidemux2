@@ -259,15 +259,16 @@ bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
         if(DecodeNextPicture(ref)==false)
         {
             printf("[AdmComposer::getPicture] Next picture failed\n");
+            continue;
         }
-        // Search the lowest PTS above our current DTS...
+        // Search the lowest PTS above our current PTS...
         ADMImage *img=cache->findJustAfter(vid->lastReadPts);
         if(img)
         {
             // Duplicate
             if(out)
             {
-                aprintf("[getNextPicture] Looking for after %"LU", got %"LU" delta=%u ms\n",vid->lastReadPts,img->Pts,(img->Pts-vid->lastReadPts)/1000);
+                aprintf("[getNextPicture] Looking for after> %"LLU", got %"LLU" delta=%"LD" ms\n",vid->lastReadPts,img->Pts,(img->Pts-vid->lastReadPts)/1000);
                 out->duplicate(img);
                 vid->lastReadPts=img->Pts;
                 currentFrame++;
@@ -275,7 +276,7 @@ bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
             return true;
         }else   
         {
-            printf("[getNextPic] Loop:%d, looking for pts :%"LLU" ms %"LLU" us\n",loop,vid->lastReadPts/1000,vid->lastReadPts);
+            aprintf("[getNextPic] Loop:%d, looking for pts> :%"LLU" ms %"LLU" us\n",loop,vid->lastReadPts/1000,vid->lastReadPts);
 #ifdef VERBOSE
             cache->dump();
 #endif
@@ -344,17 +345,23 @@ uint8_t ret = 0;
       }
      cache->updateFrameNum(result,vid->lastSentFrame);
      uint64_t pts=result->Pts;
-
-    if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
-    {
-        vid->lastDecodedPts+=vid->timeIncrementInUs;
-        result->Pts=vid->lastDecodedPts;
-    }else
-        vid->lastDecodedPts=pts;
-    aprintf("Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms\n",
-            frame,
-            vid->lastDecodedPts,
-            vid->lastDecodedPts/1000);
+     uint64_t old=vid->lastDecodedPts;
+        if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
+        {
+                aprintf("[Editor] No PTS, guessing value\n");
+                vid->lastDecodedPts+=vid->timeIncrementInUs;
+                result->Pts=vid->lastDecodedPts;
+        }else
+           {
+                aprintf("[Editor] got PTS\n");
+                vid->lastDecodedPts=pts;
+            }
+    aprintf(">>Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms, ptsdelta=%"LLD" ms \n",
+    frame,
+    vid->lastDecodedPts,
+    vid->lastDecodedPts/1000,
+    (vid->lastDecodedPts-old)/1000);
+    if(old>vid->lastDecodedPts) printf(">>>>> PTS going backward by %"LLD" ms\n",(old-vid->lastDecodedPts)/1000);
     return true;
 }
 /**
