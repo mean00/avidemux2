@@ -295,13 +295,14 @@ VdpStatus status;
 
     //
     out->Pts=scratch->Pts;
+    out->flags=scratch->flags;
     return (uint8_t)decode_status;
 }
 /**
     \fn goOn
     \brief Callback from ffmpeg when a pic is ready to be decoded
 */
-void decoderFFVDPAU::goOn( const AVFrame *d)
+void decoderFFVDPAU::goOn( const AVFrame *d,int type)
 {
    VdpStatus status;
    struct vdpau_render_state *rndr = (struct vdpau_render_state *)d->data[0];
@@ -332,7 +333,7 @@ void decoderFFVDPAU::goOn( const AVFrame *d)
 void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height)
 {
     decoderFFVDPAU *dec=(decoderFFVDPAU *)s->opaque;
-    dec->goOn(src);
+    dec->goOn(src,type);
 }
 
 #endif

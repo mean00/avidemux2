@@ -362,7 +362,7 @@ protected:
 public:     // Callbacks
                     int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-                    void    goOn( const AVFrame *d);            
+                    void    goOn( const AVFrame *d,int type);            
 public:
             // public API
                     decoderFFVDPAU (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
