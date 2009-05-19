@@ -323,6 +323,17 @@ uint8_t decoderFF::decodeFull (void)
   printf ("\n[lavc] full decoding\n");
   return 1;
 }
+
+/**
+    \fn flush
+    \brief empty internal buffer
+*/
+bool    decoderFF::flush(void)
+{
+    if(_context)
+        avcodec_flush_buffers(_context);
+    return true;
+}
 /**
     \fn uncompress
     \brief Actually decode an image

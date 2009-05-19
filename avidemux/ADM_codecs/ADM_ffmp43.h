@@ -70,7 +70,7 @@ public:
   virtual uint32_t getSpecificMpeg4Info (void);
   virtual uint8_t getPARWidth (void);
   virtual uint8_t getPARHeight (void);
-  
+  virtual bool    flush(void);
 };
 
 class decoderFFDiv3:public decoderFF

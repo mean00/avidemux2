@@ -91,6 +91,10 @@ public:
   {
     return 1;
   };
+  virtual bool flush(void)
+    {
+        return true;
+    }
 };
 /* Dummy decoder in case we don't have the desired one */
 class decoderEmpty : public decoders
