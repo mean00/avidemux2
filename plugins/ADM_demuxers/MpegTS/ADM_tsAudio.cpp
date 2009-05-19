@@ -128,7 +128,6 @@ uint64_t p,d,start;
     if(false==demuxer.getNextPES(packet)) return false;
     int avail=packet->payloadSize-packet->offset;
     if(avail>maxSize) ADM_assert(0);
-    *dts=packet->pts;
     *size=avail;
     memcpy(buffer,packet->payload+packet->offset,avail);
     *dts=timeConvert(packet->pts);
