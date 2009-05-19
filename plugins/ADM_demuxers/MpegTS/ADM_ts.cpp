@@ -133,11 +133,23 @@ uint64_t tsHeader::getVideoDuration(void)
 bool tsHeader::updateIdr()
 {
     int nbIdr=0;
+    int nbI=0,nbP=0,nbB=0;
     if(!ListOfFrames.size()) return false;
     for(int i=0;i<ListOfFrames.size();i++)
     {
-        if(ListOfFrames[i]->type==4) nbIdr++;
+        int type=ListOfFrames[i]->type;
+        switch(type)
+        {
+            case 1: nbI++;break;
+            case 2: nbP++;break;
+            case 3: nbB++;break;
+            case 4: nbIdr++;break;
+            default:
+                    ADM_assert(0);
+                    break;
+        }
     }
+    printf("[TsDemuxer] Found %d I, %d B, %d P\n",nbI,nbB,nbP);
     printf("[TsH264] Found %d IDR\n",nbIdr);
     if(nbIdr) // Change IDR to I and I to P...
     { 
@@ -147,7 +159,9 @@ bool tsHeader::updateIdr()
             switch(ListOfFrames[i]->type)
             {
                 case 4: ListOfFrames[i]->type=1;break;
-                case 1: ListOfFrames[i]->type=2;break;
+                case 1: 
+                        if(i)
+                            ListOfFrames[i]->type=2;break;
                 default: break;
             }
         }
