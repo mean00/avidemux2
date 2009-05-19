@@ -103,6 +103,7 @@ bool tsHeader::processVideoIndex(char *buffer)
             }
             
             char *start=strstr(buffer," I:");
+            if(!start) start=strstr(buffer," D:");
             if(!start) return true;
             start+=1;
             int count=0;
