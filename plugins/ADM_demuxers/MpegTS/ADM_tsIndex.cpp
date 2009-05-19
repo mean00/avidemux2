@@ -352,6 +352,21 @@ bool result=false;
           switch(startCode)
                   {
                   case NAL_SEI:
+                    {
+                        uint32_t sei_type=pkt->readi8();
+                                if(sei_type!=6) break;
+                        uint32_t sei_size=pkt->readi8();
+                                if(sei_size==0xff) sei_size=0xff00+pkt->readi8(); // should be enough
+                        uint8_t buffer1[sei_size];
+                        uint8_t buffer2[sei_size];
+                        GetBitContext s;
+                                unescapeH264(sei_size,buffer1,buffer2);
+                                init_get_bits(&s, buffer2, sei_size*8);
+                                zprintf(" [SEI]   recovery_frame_cnt: %u\n", get_ue_golomb(&s));
+                                
+
+
+                    }
                             break;
                   case NAL_AU_DELIMITER:
                           pic_started = false;
@@ -368,6 +383,7 @@ bool result=false;
                           break;
 
                   case NAL_IDR:
+                    zprintf("KOWABOUNGA\n");
                   case NAL_NON_IDR:
                     {
 #define NON_IDR_PRE_READ 8
