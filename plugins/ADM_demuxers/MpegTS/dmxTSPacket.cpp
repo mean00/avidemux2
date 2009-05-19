@@ -131,8 +131,9 @@ again:
     uint8_t r=_file->peek8i();
     if(r!=TS_MARKER)
     {
-#ifdef TS_DEBUG1
+
         printf("[tsPacket] Sync lost (0x%x)\n",r);
+#ifdef TS_DEBUG1
 #endif
         goto again;
     }
@@ -314,7 +315,7 @@ bool        tsPacket::getNextPES(TS_PESpacket *pes)
 nextPack3:
     // Sync at source
     if(false==getNextPacket_NoHeader(pes->pid,&pkt,false)) return false;    
-    // If it does not contain a payload strat continue
+    // If it does not contain a payload start continue
     if(!pkt.payloadStart)
     {
         printf("[Ts Demuxer] Pes for Pid =0x%d does not contain payload start\n",pes->pid);
@@ -329,8 +330,8 @@ nextPack3:
     zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
-        zprintf("[Ts Demuxer] No PES startcode at 0x%"LLX"\n",pkt.startAt);
-        zprintf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
+        printf("[Ts Demuxer] No PES startcode at 0x%"LLX"\n",pkt.startAt);
+        printf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
         goto nextPack3;
     }
     //mixDump(pkt.payload,pkt.payloadSize);
@@ -388,8 +389,11 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
     pes->dts=ADM_NO_PTS;
     pes->pts=ADM_NO_PTS;
 
-    if(pes->payloadSize<(4+2+1+2)) return false;
-    
+    if(pes->payloadSize<(4+2+1+2)) 
+    {
+            printf("[Ts] Pes size too small\n");
+            return false;
+    }
     while(*start==0xff && start<end) start++; // Padding
     if(start>=end) fail("too much padding");
 
@@ -409,7 +413,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                 case 2: // PTS=1 DTS=0
                        
                         {
-                                if(available<5) return false;
+                                if(available<5) fail("Not enough bytes for PTS");
                                 uint64_t pts1,pts2,pts0;
                                 //      printf("\n PTS10\n");
                                         pts0=start[0];  
@@ -422,7 +426,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                         }
                         break;
                 case 3: // PTS=1 DTS=1
-                                if(available<10) return false;
+                                if(available<10) fail("Not enough bytes for PTS/DTS");
                                 #define PTS11_ADV 10 // nut monkey
                                 if(len>=PTS11_ADV)
                                 {
@@ -464,7 +468,8 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
             if(packLen<sizeCheck) 
             {
                 tail=sizeCheck-packLen;
-                pes->payloadSize-=tail;
+                pes->payloadSize-=tail; 
+                printf("[TS Packet]extra crap at the end %d\n",tail);
             }
             else
                 if(packLen>sizeCheck)

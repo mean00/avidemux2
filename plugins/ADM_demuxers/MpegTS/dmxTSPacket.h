@@ -66,8 +66,9 @@ public:
     bool        fresh; // True if we just filled it with a new packet
                 TS_PESpacket(uint32_t pid)
                 {
-                    payload=(uint8_t *)ADM_alloc(2048);
-                    payloadLimit=2048;
+#define PES_DEF_SIZE (5*1024)
+                    payload=(uint8_t *)ADM_alloc(PES_DEF_SIZE);
+                    payloadLimit=PES_DEF_SIZE;
                     offset=0;
                     payloadSize=0;
                     this->pid=pid;
@@ -81,11 +82,13 @@ public:
                 {
                     if(len+payloadSize>payloadLimit)
                     {
+                       // printf("[Ts] Realloc %d -> %d\n",payloadLimit,payloadLimit*2);
                         payloadLimit*=2;
                         payload=(uint8_t *)ADM_realloc(payload,payloadLimit);
                     }
                     memcpy(payload+payloadSize,data,len);
                     payloadSize+=len;
+                    return true;
                 }
 };
 
