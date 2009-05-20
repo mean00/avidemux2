@@ -12,7 +12,7 @@ IF(USE_LIBVORBIS)
         TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${VORBIS_LIBRARY_DIR})
         TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${VORBISENC_LIBRARY_DIR})
 
-        ADD_TARGET_CFLAGS(ADM_ad_vorbis "-I${VORBIS_INCLUDE_DIR}")
+        include_directories(${VORBIS_INCLUDE_DIR})
 
         INIT_AUDIO_PLUGIN(ADM_ad_vorbis)
         INSTALL_AUDIODECODER(ADM_ad_vorbis)

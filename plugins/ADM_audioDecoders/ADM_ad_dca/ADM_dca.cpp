@@ -174,48 +174,48 @@ uint8_t ADM_AudiocodecDCA::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uin
 		switch (flags & DTS(CHANNEL_MASK)) 
 		{
 			case DTS(MONO):
-				*(p_ch_type++) = CH_MONO;
+				*(p_ch_type++) =ADM_CH_MONO;
 			break;
 			case DTS(STEREO):
 			case DTS(DOLBY):
-				*(p_ch_type++) = CH_FRONT_LEFT;
-				*(p_ch_type++) = CH_FRONT_RIGHT;
+				*(p_ch_type++) =ADM_CH_FRONT_LEFT;
+				*(p_ch_type++) =ADM_CH_FRONT_RIGHT;
 			break;
 			case DTS(3F):
-				*(p_ch_type++) = CH_FRONT_CENTER;
-				*(p_ch_type++) = CH_FRONT_LEFT;
-				*(p_ch_type++) = CH_FRONT_RIGHT;
+				*(p_ch_type++) =ADM_CH_FRONT_CENTER;
+				*(p_ch_type++) =ADM_CH_FRONT_LEFT;
+				*(p_ch_type++) =ADM_CH_FRONT_RIGHT;
 			break;
 			case DTS(2F1R):
-				*(p_ch_type++) = CH_FRONT_LEFT;
-				*(p_ch_type++) = CH_FRONT_RIGHT;
-				*(p_ch_type++) = CH_REAR_CENTER;
+				*(p_ch_type++) =ADM_CH_FRONT_LEFT;
+				*(p_ch_type++) =ADM_CH_FRONT_RIGHT;
+				*(p_ch_type++) =ADM_CH_REAR_CENTER;
 			break;
 			case DTS(3F1R):
-				*(p_ch_type++) = CH_FRONT_CENTER;
-				*(p_ch_type++) = CH_FRONT_LEFT;
-				*(p_ch_type++) = CH_FRONT_RIGHT;
-				*(p_ch_type++) = CH_REAR_CENTER;
+				*(p_ch_type++) =ADM_CH_FRONT_CENTER;
+				*(p_ch_type++) =ADM_CH_FRONT_LEFT;
+				*(p_ch_type++) =ADM_CH_FRONT_RIGHT;
+				*(p_ch_type++) =ADM_CH_REAR_CENTER;
 			break;
 			case DTS(2F2R):
-				*(p_ch_type++) = CH_FRONT_LEFT;
-				*(p_ch_type++) = CH_FRONT_RIGHT;
-				*(p_ch_type++) = CH_REAR_LEFT;
-				*(p_ch_type++) = CH_REAR_RIGHT;
+				*(p_ch_type++) =ADM_CH_FRONT_LEFT;
+				*(p_ch_type++) =ADM_CH_FRONT_RIGHT;
+				*(p_ch_type++) =ADM_CH_REAR_LEFT;
+				*(p_ch_type++) =ADM_CH_REAR_RIGHT;
 			break;
 			case DTS(3F2R):
-				*(p_ch_type++) = CH_FRONT_CENTER;
-				*(p_ch_type++) = CH_FRONT_LEFT;
-				*(p_ch_type++) = CH_FRONT_RIGHT;
-				*(p_ch_type++) = CH_REAR_LEFT;
-				*(p_ch_type++) = CH_REAR_RIGHT;
+				*(p_ch_type++) =ADM_CH_FRONT_CENTER;
+				*(p_ch_type++) =ADM_CH_FRONT_LEFT;
+				*(p_ch_type++) =ADM_CH_FRONT_RIGHT;
+				*(p_ch_type++) =ADM_CH_REAR_LEFT;
+				*(p_ch_type++) =ADM_CH_REAR_RIGHT;
 			break;
 			default:
 				ADM_assert(0);
 		} // End switch
 		if (flags & DTS(LFE)) 
 		{
-			*(p_ch_type++) = CH_LFE;
+			*(p_ch_type++) =ADM_CH_LFE;
 		}
 	
 
