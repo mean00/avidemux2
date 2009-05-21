@@ -242,6 +242,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                          _parser->readBin(dest,_Laces[0]);
                         *packlen=_Laces[0];
                         *timecode=time;
+                        _Laces[nbLaces-1]=size; // Last lace is remaining size
                         _currentBlock++;
                         _maxLace=nbLaces;
                         return 1;
