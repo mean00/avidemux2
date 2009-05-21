@@ -17,6 +17,7 @@
 
 #include "ADM_mkv.h"
 #include "ADM_a52info.h"
+#include "ADM_dcainfo.h"
 
 #define vprintf(...) {}
 
@@ -27,6 +28,9 @@
 */
 mkvAccess::mkvAccess(const char *name,mkvTrak *track)
 {
+    uint8_t ac3Buffer[20000];
+    uint32_t len,sample;
+    uint64_t timecode;
 
    _parser=new ADM_ebml_file();
    ADM_assert(_parser->open(name));
@@ -39,9 +43,6 @@ mkvAccess::mkvAccess(const char *name,mkvTrak *track)
   /* In case of AC3, do not trust the header...*/
   if(_track->wavHeader.encoding==WAV_AC3)
   {
-    uint8_t ac3Buffer[20000];
-    uint32_t len,sample;
-    uint64_t timecode;
      if( getPacket(ac3Buffer, &len, 20000,&timecode))
      {
        uint32_t fq,br,chan,syncoff;
@@ -54,6 +55,23 @@ mkvAccess::mkvAccess(const char *name,mkvTrak *track)
      }
      goToBlock(0);
   }
+
+  if(_track->wavHeader.encoding==WAV_DTS)
+  {
+     if( getPacket(ac3Buffer, &len, 20000,&timecode))
+     {
+       uint32_t fq,br,chan,syncoff,flags,nbsample;
+        if( ADM_DCAGetInfo(ac3Buffer, len, &fq, &br, &chan,&syncoff,&flags,&nbsample) )
+        {
+            track->wavHeader.channels=chan;
+            track->wavHeader.frequency=fq;
+            track->wavHeader.byterate=br;
+        }
+     }
+     goToBlock(0);
+  }
+
+
 }
 /**
     \fn getExtraData
