@@ -178,7 +178,7 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
   vdpau_render_state * render;
   int i;
-
+  if(destroying==true) return; // They are already freed...
   render=(vdpau_render_state*)pic->data[0];
   ADM_assert(render);
 
@@ -201,6 +201,7 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 */
 decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
 {
+        destroying=false;
         _context->opaque          = this;
         _context->get_buffer      = ADM_VDPAUgetBuffer;
         _context->release_buffer  = ADM_VDPAUreleaseBuffer;
@@ -219,6 +220,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):
         for(int i=0;i<NB_SURFACE;i++)
         {
             VDPAU->renders[i]=new vdpau_render_state;
+            memset(VDPAU->renders[i],0,sizeof( vdpau_render_state));
             ADM_assert(VDP_STATUS_OK==funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,w,h,&(VDPAU->renders[i]->surface)));
             VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
@@ -232,6 +234,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):
 decoderFFVDPAU::~decoderFFVDPAU()
 {
         printf("[VDPAU] Cleaning up\n");
+        destroying=true;
         for(int i=0;i<NB_SURFACE;i++)
         {
             ADM_assert(VDP_STATUS_OK==funcs.destroySurface((VDPAU->renders[i]->surface)));

@@ -359,6 +359,7 @@ protected:
                     ADMImage *vdpau_copy;
                     uint64_t vdpau_pts;
                     bool     decode_status;
+                    bool     destroying;
 public:     // Callbacks
                     int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
