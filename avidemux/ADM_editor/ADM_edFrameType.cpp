@@ -61,7 +61,6 @@ bool        ADM_Composer::rederiveFrameType(vidHeader *demuxer)
         if(flagsDecoded==flags) nbOk++;
             else nbKo++;
     }
-    delete [] buffer;
     printf("[Editor] Muxer has %d frames right, %d frames wrong\n",nbOk,nbKo);
     if(!nbKo)     return true;
     // Demuxer is wrong, rederive all frames...
@@ -73,6 +72,8 @@ bool        ADM_Composer::rederiveFrameType(vidHeader *demuxer)
         flagsDecoded=id(img.dataLength,img.data);
         demuxer->setFlag(i,flagsDecoded);
     }
+    delete [] buffer;
+    buffer=NULL;
     delete work;
     return false;
 }
