@@ -278,11 +278,13 @@ uint8_t mkvHeader::close(void)
     {
         for(int i=0;i<_nbAudioTrack;i++) if(_audioStreams[i]) delete _audioStreams[i];
         delete [] _audioStreams;
+        _audioStreams=NULL;
     }
     if(_access)
     {
         for(int i=0;i<_nbAudioTrack;i++) if(_access[i]) delete _access[i];
         delete [] _access;
+        _access=NULL;
     }
 
 }
