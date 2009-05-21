@@ -1088,13 +1088,13 @@ void cleanUp (void)
 		delete avifileinfo;
 		avifileinfo=NULL;
 	}
-
+#if 0
 	if (aviaudiostream)
 	{
 		delete aviaudiostream;
 		aviaudiostream=NULL;
 	}
-
+#endif
 	if (secondaudiostream)
 	{
 		delete secondaudiostream;
