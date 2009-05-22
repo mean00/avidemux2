@@ -419,7 +419,6 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                                         pts0=start[0];  
                                         pts1=(start[1]<<8)+start[2]; 
                                         pts2=(start[3]<<8)+start[4]; 
-                                        start+=5;
                                         pes->pts=(pts1>>1)<<15;
                                         pes->pts+=pts2>>1;
                                         pes->pts+=(((pts0&6)>>1)<<30);
@@ -436,15 +435,13 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                                                 pts0=start[0];  
                                                 pts1=(start[1]<<8)+start[2]; 
                                                 pts2=(start[3]<<8)+start[4]; 
-                                                start+=5;
                                                                         
                                                 pes->pts=(pts1>>1)<<15;
                                                 pes->pts+=pts2>>1;
                                                 pes->pts+=(((pts0&6)>>1)<<30);
-                                                pts0=start[0];  
-                                                pts1=(start[1]<<8)+start[2]; 
-                                                pts2=(start[3]<<8)+start[4];       
-                                                start+=5;
+                                                pts0=start[5];  
+                                                pts1=(start[6]<<8)+start[7]; 
+                                                pts2=(start[8]<<8)+start[9];       
                                                 pes->dts=(pts1>>1)<<15;
                                                 pes->dts+=pts2>>1;
                                                 pes->dts+=(((pts0&6)>>1)<<30);
@@ -458,7 +455,7 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
                                 break; // no pts nor dts
                                                                 
         }  
-       
+        start+=len; 
         int sizeCheck=pes->payloadSize-6;
         int tail=0;
         pes->offset=start-pes->payload;
