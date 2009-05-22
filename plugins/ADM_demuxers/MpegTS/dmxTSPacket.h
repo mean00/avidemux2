@@ -90,6 +90,21 @@ public:
                     payloadSize+=len;
                     return true;
                 }
+     bool empty(void)
+     {
+            payloadSize=0;
+            return true;
+     }
+     bool pushByte(uint8_t byte)
+     {
+            if(payloadSize>=payloadLimit)
+            {
+                        payloadLimit*=2;
+                        payload=(uint8_t *)ADM_realloc(payload,payloadLimit);
+            }
+            payload[payloadSize++]=byte;
+            return true;
+     }
 };
 
 /**
