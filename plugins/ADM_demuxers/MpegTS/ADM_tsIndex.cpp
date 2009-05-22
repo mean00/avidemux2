@@ -121,6 +121,9 @@ protected:
         tsPacketLinearTracker   *pkt;
         listOfTsAudioTracks     *audioTracks;
         DIA_workingBase         *ui;
+
+        bool    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
+
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
@@ -237,6 +240,35 @@ static uint32_t unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
     
 }
 /**
+        \fn decodeSEI
+        \brief decode SEI to get short ref I
+        @param recoveryLength # of recovery frame
+        \return true if recovery found
+*/
+bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
+{
+    GetBitContext s;
+    uint8_t payload[nalSize+16];
+    nalSize=unescapeH264(nalSize,org,payload);
+    init_get_bits(&s, payload, nalSize*8);
+    while( get_bits_count(&s)<(nalSize-4)*8)
+    {
+        uint32_t sei_type=get_bits(&s,8);
+        uint32_t sei_size=get_bits(&s,8);
+                if(sei_size==0xff) sei_size=0xff00+get_bits(&s,8);; // should be enough
+                zprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+                if(sei_type==6) // Recovery point
+                {
+                        *recoveryLength=get_ue_golomb(&s);
+                        zprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
+                        return true;
+                }
+                skip_bits(&s,sei_size*8);
+    }
+    return false;
+}
+
+/**
     \fn runH264
     \brief Index H264 stream
 */  
@@ -249,8 +281,9 @@ PSVideo video;
 indexerData  data;    
 uint64_t fullSize;
 dmxPacketInfo info;
-
+TS_PESpacket SEI_nal(0);
 bool result=false;
+uint32_t recoveryCount=0xff;
 
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
@@ -286,11 +319,12 @@ bool result=false;
       while(1)
       {
         uint32_t code=0xffff+0xffff0000;
-        while((code!=1) && pkt->stillOk())
+        while(((code&0x00ffffff)!=1) && pkt->stillOk())
         {
             code=(code<<8)+pkt->readi8();
         }
         if(!pkt->stillOk()) break;
+        
         uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
@@ -323,10 +357,11 @@ bool result=false;
       {
 
         uint32_t code=0xffff+0xffff0000;
-        while((code!=1) && pkt->stillOk())
+        while(((code&0x00ffffff)!=1) && pkt->stillOk())
         {
             code=(code<<8)+pkt->readi8();
         }
+resume:
         if(!pkt->stillOk()) break;
         uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
 //  1:0 2:Nal ref idc 5:Nal Type
@@ -353,19 +388,23 @@ bool result=false;
                   {
                   case NAL_SEI:
                     {
-                        uint32_t sei_type=pkt->readi8();
-                                if(sei_type!=6) break;
-                        uint32_t sei_size=pkt->readi8();
-                                if(sei_size==0xff) sei_size=0xff00+pkt->readi8(); // should be enough
-                        uint8_t buffer1[sei_size];
-                        uint8_t buffer2[sei_size];
-                        GetBitContext s;
-                                unescapeH264(sei_size,buffer1,buffer2);
-                                init_get_bits(&s, buffer2, sei_size*8);
-                                zprintf(" [SEI]   recovery_frame_cnt: %u\n", get_ue_golomb(&s));
-                                
+                        // Load the whole NAL
+                            SEI_nal.empty();
+                            code=0xffff+0xffff0000;
+                            while((code!=1) && pkt->stillOk())
+                            {
+                                uint8_t r=pkt->readi8();
+                                code=(code<<8)+r;
+                                SEI_nal.pushByte(r);
+                            }
+                            if(!pkt->stillOk()) goto resume;
+                            zprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
+                            if(SEI_nal.payloadSize>=7)
+                                decodeSEI(SEI_nal.payloadSize-4,SEI_nal.payload,&recoveryCount);
+                            else printf("[SEI] Too short size+4=%d\n",SEI_nal.payload);
+                        
 
-
+                            goto resume;
                     }
                             break;
                   case NAL_AU_DELIMITER:
@@ -380,6 +419,7 @@ bool result=false;
                           data.frameType=1;
                           Mark(&data,&info,5);
                           data.state=idx_startAtGopOrSeq;
+                          recoveryCount=0xff;
                           break;
 
                   case NAL_IDR:
@@ -417,6 +457,8 @@ bool result=false;
                             default : data.frameType=2;break; // SP/SI
                         }
                       if(startCode==NAL_IDR) data.frameType=4; // IDR
+                      zprintf("[>>>>>>>>] Pic Type %"LU" Recovery %"LU"\n",data.frameType,recoveryCount);
+                      if(data.frameType==1 && !recoveryCount) data.frameType=4; //I  + Recovery=0 = IDR!
                       if(data.state==idx_startAtGopOrSeq) 
                       {
                               currentFrameType=data.frameType;;
@@ -429,6 +471,7 @@ bool result=false;
                       data.state=idx_startAtImage;
                       data.nbPics++;
                       pic_started = true;
+                      recoveryCount=0xff;
                     }
                   
                     break;
