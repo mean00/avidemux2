@@ -68,6 +68,7 @@ bool tsHeader::updatePtsDts(void)
 
         switch( _videostream.dwRate)
         {
+            case 50000:   dtsIncrement=20000;break;
             case 25000:   dtsIncrement=40000;break;
             case 23976:   dtsIncrement=41708;break;
             case 29970:   dtsIncrement=33367;break;
