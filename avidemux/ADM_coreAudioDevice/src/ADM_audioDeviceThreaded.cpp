@@ -25,7 +25,8 @@
 */
 audioDeviceThreaded::audioDeviceThreaded(void)
 {
-
+    audioBuffer=NULL;
+    silence=NULL;
 }
 /**
     \fn audioDeviceThreaded
@@ -33,7 +34,7 @@ audioDeviceThreaded::audioDeviceThreaded(void)
 */
 audioDeviceThreaded::~audioDeviceThreaded()
 {
-
+   // PURE! stop();
 }
 /**
     \fn bouncer
