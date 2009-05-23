@@ -42,6 +42,8 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     playback.shiftInMs=shift;
     playback.mixerEnabled=true;
     playback.mixerConf=CHANNEL_STEREO;
+    // If we have no audio, dont even try...
+    if(!video_body->getInfo()) return NULL;
     //
     ADM_buildFilterChain(&PlaybackVector,&playback);
     //

@@ -317,7 +317,8 @@ bool  GUIPlayback::initializeAudio(void)
     uint64_t startPts=firstPts;
 
     playbackAudio = createPlaybackFilter(startPts,0);
-    
+    if(!playbackAudio) return false;
+
     channels= playbackAudio->getInfo()->channels;
     preload=  (wavinfo->frequency * channels)/5;	// 200 ms preload
     // 4 sec buffer..               
