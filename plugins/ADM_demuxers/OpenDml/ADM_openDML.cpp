@@ -33,7 +33,7 @@ uint8_t OpenDMLHeader::setFlag(uint32_t frame,uint32_t flags)
 {
     UNUSED_ARG(frame);
     UNUSED_ARG(flags);
-    
+    if(frame>= (uint32_t)_videostream.dwLength) return 0;
 	_idx[frame].intra=flags;    
 	return 1;
 }
@@ -102,9 +102,8 @@ uint64_t OpenDMLHeader::frameToUs(uint32_t frame)
 */
 uint8_t  OpenDMLHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
+    if(framenum>= (uint32_t)_videostream.dwLength) return 0;
 uint64_t offset=_idx[framenum].offset; //+_mdatOffset;
-	
-	if(framenum>= (uint32_t)_videostream.dwLength) return 0;
 	
  	fseeko(_fd,offset,SEEK_SET);
  	fread(img->data, _idx[framenum].size, 1, _fd);
@@ -124,6 +123,7 @@ uint64_t offset=_idx[framenum].offset; //+_mdatOffset;
 */
 uint64_t OpenDMLHeader::getTime(uint32_t frameNum)
 {
+    if(frameNum>= (uint32_t)_videostream.dwLength) return ADM_NO_PTS;
     return _idx[frameNum].pts; 
 
 }
@@ -145,8 +145,8 @@ uint8_t    OpenDMLHeader::close( void )
 	if(_fd)
  		{
                	fclose(_fd);
-             	}
-              _fd=NULL;
+        }
+    _fd=NULL;
 	if(_idx)
 	{
 		delete [] _idx;
@@ -162,11 +162,11 @@ uint8_t    OpenDMLHeader::close( void )
 		delete [] _audioTracks;
 		_audioTracks=NULL;
 	}
-        if(myName)
-        {
-          ADM_dealloc(myName);
-          myName=NULL; 
-        }
+    if(myName)
+    {
+      ADM_dealloc(myName);
+      myName=NULL; 
+    }
     // Destroy audioStreams
     if(_audioStreams)
     {
@@ -196,6 +196,7 @@ OpenDMLHeader::OpenDMLHeader(void)
 	_recHack=0;
     // Audio
     _audioTracks=NULL;
+    _audioStreams=NULL;
     _nbAudioTracks=0;
     _currentAudioTrack=0;
     myName=NULL;
@@ -208,7 +209,7 @@ OpenDMLHeader::OpenDMLHeader(void)
 */
 WAVHeader              *OpenDMLHeader::getAudioInfo(uint32_t i ) 
 {
-if(_nbAudioTracks)
+    if(_nbAudioTracks)
 		return _audioStreams[_currentAudioTrack]->getInfo();
 	else
 		return NULL;
@@ -259,8 +260,8 @@ uint32_t rd;
         myName=ADM_strdup(name);
 #define CLR(x)              memset(& x,0,sizeof(  x));
 
-              CLR( _videostream);
-              CLR( _mainaviheader);
+          CLR( _videostream);
+          CLR( _mainaviheader);
 	      _isvideopresent=1;
 	      _isaudiopresent=0;    	     	      	 	      
 	      
