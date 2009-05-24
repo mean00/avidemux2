@@ -118,7 +118,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     img.data=compBuffer;
     img.cleanup(frame);
 
-    aprintf("[EditorRender] DecodeUpToInta %u ref:%u\n",frame,ref);
+    printf("[EditorRender] DecodeUpToInta %u ref:%u\n",frame,ref);
 	_VIDEOS *vid=&_videos[ref];
     vidHeader *demuxer=vid->_aviheader;
 	cache=_videos[ref]._videoCache;
@@ -130,10 +130,12 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     bool found=false;
     vid->lastSentFrame=frame;
     uint32_t nbFrames=vid->_nb_video_frames;
+    aprintf("[EditorRender] DecodeUpToIntra flushing cache & codec\n");
     cache->flush();
+    _videos[ref].decoder->flush();
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=vid->_aviheader->estimatePts(frame);
-    uint32_t tries=16; // Max Ref frames for H264=Max delay
+    uint32_t tries=15+7; // Max Ref frames for H264 + MaxRecovery , let's say 7 is ok for recovery
     bool syncFound=false;
     while(found==false && tries--)
     {
@@ -1256,6 +1258,7 @@ uint32_t    ADM_Composer::getCurrentFrame(void)
 bool        ADM_Composer::setCurrentFrame(uint32_t frame)
 {
     // Seatch previous keyFrame
+    printf("[setCurrentFrame] >>> REQ for frame %"LU"\n",frame);
     uint32_t keyFrame=frame,f;
     while(keyFrame)
     {
@@ -1265,6 +1268,7 @@ bool        ADM_Composer::setCurrentFrame(uint32_t frame)
         }
         keyFrame--;
     }
+    printf("[setCurrentFrame] >>> Prev KeyFrame %"LU"\n",keyFrame);
     if(false==GoToIntra(keyFrame))
     {
         printf("[setCurrentFrame] GoToIntra failed for frame %u\n",keyFrame);
