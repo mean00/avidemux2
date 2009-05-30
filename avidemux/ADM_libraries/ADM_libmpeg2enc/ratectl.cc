@@ -45,7 +45,7 @@
  *
  */
 
-#include "config.h"
+#include "ADM_default.h"
 #include <math.h>
 #include <limits.h>
 #include "mjpeg_types.h"

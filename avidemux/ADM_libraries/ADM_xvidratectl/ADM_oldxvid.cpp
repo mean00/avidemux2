@@ -9,10 +9,8 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "config.h"
+#include "ADM_default.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 

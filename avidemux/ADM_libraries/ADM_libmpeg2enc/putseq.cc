@@ -42,7 +42,7 @@
  *
  */
 
-#include "config.h"
+#include "ADM_default.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

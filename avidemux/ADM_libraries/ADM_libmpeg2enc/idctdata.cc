@@ -10,7 +10,7 @@
 // assumes the programmer is familiar with IDCT mathematics, leaving the
 // form of the complete function up to the programmer's imagination.
 
-#include <config.h>
+#include <ADM_default.h>
 #include <mjpeg_types.h>
 
 //  ALGORITHM OVERVIEW

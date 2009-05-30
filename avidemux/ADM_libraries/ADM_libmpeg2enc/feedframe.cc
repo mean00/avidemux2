@@ -21,7 +21,7 @@
 	We prebuff PREFILL frame to not have problems
 		then do 1 in/ 1 out.
 */
-#include <config.h>
+#include <ADM_default.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

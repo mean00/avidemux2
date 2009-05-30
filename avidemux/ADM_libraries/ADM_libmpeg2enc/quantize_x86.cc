@@ -24,7 +24,7 @@
 
 
 
-#include <config.h>
+#include <ADM_default.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>

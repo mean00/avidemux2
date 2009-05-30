@@ -46,7 +46,7 @@
  */
 
 
-#include "config.h"
+#include "ADM_default.h"
 #include "global.h"
 #include "quantize_ref.h"
 

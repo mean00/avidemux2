@@ -49,7 +49,6 @@
  */
 #include "ADM_default.h"
 #include <stdio.h>
-#include "config.h"
 #include <math.h>
 #include "mjpeg_types.h"
 #include "mjpeg_logging.h"

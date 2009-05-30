@@ -20,7 +20,7 @@
  *
  */
 
-#include <config.h>
+#include <ADM_default.h>
 
 #include <string.h>
 #include "yuv4mpeg.h"

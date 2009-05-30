@@ -43,7 +43,7 @@
 	to fight most common problems without user's knowladge */
 #define SMART_OVERFLOW_SETTING
 #define VBV
-#include "config.h"
+#include "ADM_default.h"
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>

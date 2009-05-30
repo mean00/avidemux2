@@ -1,4 +1,4 @@
-#include "config.h"
+#include "ADM_default.h"
 #include "mmxsse_motion.h"
 
 int (*pmblocks_sub44_mests)( uint8_t *blk,  uint8_t *ref,

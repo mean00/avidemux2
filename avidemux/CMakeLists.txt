@@ -224,6 +224,9 @@ FOREACH(_current ${ADM_TAILS})
 	ADD_LIB_ALL_TARGETS(${_current})
 ENDFOREACH(_current ${ADM_TAILS})
 #
+# These libs depend (for now) on config.h
+# so we have to build them for each UI
+#
 	ADD_SUBDIRECTORY(ADM_codecs)
 	ADD_ADMLIB_ALL_TARGETS(ADM_codecs)
 ###########################################
@@ -231,7 +234,7 @@ ENDFOREACH(_current ${ADM_TAILS})
 ###########################################
 ADD_SUBDIRECTORY(ADM_libraries)
 
-ADD_ADMLIB_ALL_TARGETS(
+ADD_LIB_ALL_TARGETS(
 	ADM_libmpeg2enc
 	ADM_xvidratectl
 )

@@ -46,7 +46,7 @@
  */
 
 
-#include "config.h"
+#include "ADM_default.h"
 #include "mjpeg_logging.h"
 #include "global.h"
 #include "predict_ref.h"

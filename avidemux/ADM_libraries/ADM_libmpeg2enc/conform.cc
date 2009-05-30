@@ -27,7 +27,7 @@
  *
  */
 
-#include "config.h"
+#include "ADM_default.h"
 #include <stdlib.h>
 #include "mjpeg_logging.h"
 

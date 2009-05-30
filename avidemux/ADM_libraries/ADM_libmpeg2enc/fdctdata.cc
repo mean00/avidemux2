@@ -27,9 +27,7 @@
 //  liaor@iname.com  http://members.tripod.com/~liaor  
 //////////////////////////////////////////////////////////////////////////////
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "ADM_default.h"
 
 #include "mjpeg_types.h"
 #include "attributes.h"

@@ -30,7 +30,7 @@
  *  G.Vervoort Jan 2005: ported to inline asm.
  */
 
-#include <config.h>
+#include <ADM_default.h>
 #ifdef HAVE_X86CPU
 #include "mjpeg_types.h"
 #include "attributes.h"

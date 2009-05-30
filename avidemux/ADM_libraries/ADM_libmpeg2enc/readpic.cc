@@ -68,7 +68,7 @@
  */
 
 
-#include <config.h>
+#include "ADM_default.h" 
 #include <stdio.h>
 #include <stdlib.h>
 //#include <unistd.h>
@@ -79,7 +79,6 @@
 
 #include "mpegconsts.h"
 #include "yuv4mpeg.h"
-#include "ADM_default.h" 
 
 
    /* NOTE: access toframes_read *must* be read-only in other threads

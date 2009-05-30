@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include "config.h"
+#include "ADM_default.h""
 #include "mjpeg_logging.h"
 
 #define SILENT

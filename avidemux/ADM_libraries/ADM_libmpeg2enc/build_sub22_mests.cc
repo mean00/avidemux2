@@ -1,4 +1,4 @@
-#include "config.h"
+#include "ADM_default.h"
 #include "mmxsse_motion.h"
 #include "fastintfns.h"
 

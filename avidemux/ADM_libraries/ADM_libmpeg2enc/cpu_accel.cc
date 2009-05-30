@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <config.h>
+#include <ADM_default.h>
 #include <stdio.h>
 #include <signal.h>
 #include <setjmp.h>

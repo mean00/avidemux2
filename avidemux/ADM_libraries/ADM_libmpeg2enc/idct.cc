@@ -1,6 +1,6 @@
 /* idct.c, inverse fast discrete cosine transform                           */
 
-#include <config.h>
+#include <ADM_default.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -20,7 +20,7 @@
  *
  */
 #if 0
-#include <config.h>
+#include <ADM_default.h">
 
 #include <unistd.h>
 #include <stdio.h>

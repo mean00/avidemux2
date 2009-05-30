@@ -21,7 +21,7 @@
  */
 
 
-#include <config.h>
+#include <ADM_default.h">
 #include <math.h>
 #include "mjpeg_types.h"
 #include "syntaxparams.h"

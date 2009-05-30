@@ -49,7 +49,7 @@
 
 
 #include <stdio.h>
-#include "config.h"
+#include "ADM_default.h"
 #include <math.h>
 #include <stdlib.h>
 #ifdef HAVE_FENV_H

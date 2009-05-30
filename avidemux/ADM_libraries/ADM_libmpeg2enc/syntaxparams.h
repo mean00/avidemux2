@@ -7,7 +7,7 @@
 #define _SYNTAXPARAMS_H
 
 
-#include "config.h"
+#include "ADM_default.h"
 #include "mjpeg_types.h"
 
 /* choose between declaration (GLOBAL undefined) and definition

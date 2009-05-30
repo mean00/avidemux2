@@ -20,7 +20,7 @@
 #ifndef __MOTIONSEARCH_H__
 #define __MOTIONSEARCH_H__
 
-#include "config.h"
+#include "ADM_default.h"
 #include "mjpeg_types.h"
 
 struct me_result

@@ -48,7 +48,7 @@
  *
  */
 
-#include "config.h"
+#include "ADM_default.h"
 #include <vector>
 #include "mjpeg_types.h"
 

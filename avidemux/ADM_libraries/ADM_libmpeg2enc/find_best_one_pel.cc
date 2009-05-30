@@ -1,4 +1,4 @@
-#include "config.h"
+#include "ADM_default.h"
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>

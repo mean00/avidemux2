@@ -27,7 +27,7 @@
  */
 #ifndef __SIMD_H__
 #define __SIMD_H__
-#include <config.h>
+#include <ADM_default.h>
 #include "stdlib.h"
 #include "mjpeg_types.h"
 

@@ -12,13 +12,10 @@
 //
 //	Reuse some of Peter Cheat predictor model
 //
-#include "config.h"
-#include <stdio.h>
-#include <string.h>
+#include "ADM_default.h"
 #include <errno.h>
 #include <math.h>
 #include <limits.h>
-#include "ADM_default.h"
 #include "ADM_assert.h"
 
 #include "ADM_osSupport/ADM_debugID.h"

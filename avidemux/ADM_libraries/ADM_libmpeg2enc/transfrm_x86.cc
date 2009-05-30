@@ -21,7 +21,7 @@
  */
 
 
-#include <config.h>
+#include <ADM_default.h>
 #ifdef HAVE_X86CPU
 #include <math.h>
 #include "mjpeg_types.h"

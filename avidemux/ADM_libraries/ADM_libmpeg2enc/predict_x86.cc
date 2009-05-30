@@ -21,7 +21,7 @@
  */
 
 
-#include "config.h"
+#include "ADM_default.h"
 #include "mjpeg_types.h"
 #include "simd.h"
 #include "predict_ref.h"

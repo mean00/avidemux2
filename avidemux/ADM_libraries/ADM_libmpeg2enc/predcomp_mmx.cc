@@ -23,7 +23,7 @@
  *   02111-1307, USA.
  */
 
-#include <config.h>
+#include <ADM_default.h>
 #include "mjpeg_types.h"
 #ifdef HAVE_X86CPU
 #include "mmx.h"

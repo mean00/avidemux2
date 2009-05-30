@@ -20,7 +20,7 @@
  *
  */
 #include <stdio.h>
-#include "config.h"
+#include "ADM_default.h"
 #include <limits.h>
 #include <stdlib.h>
 #if defined(ADM_BSD_FAMILY) || defined(ADM_SPARC)

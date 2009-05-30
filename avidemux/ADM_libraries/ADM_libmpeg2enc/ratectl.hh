@@ -23,7 +23,7 @@
 #define K_AVG_WINDOW_P   10.0
 #define	K_AVG_WINDOW_B   20.0
 
-#include <config.h>
+#include <ADM_default.h>
 class MacroBlock;
 // MEANX : UGLY
 extern int rateCtlDisablePadding;
