@@ -2,7 +2,7 @@
 #define _ADM_JSAVIDEMUX_H
 
 #pragma once
-#include "config.h"
+
 
 // Spidermonkey
 #include "ADM_libraries/ADM_smjs/jsapi.h"

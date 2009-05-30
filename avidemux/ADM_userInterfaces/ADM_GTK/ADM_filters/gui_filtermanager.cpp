@@ -6,9 +6,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "ADM_toolkitGtk.h"
 #include <vector>
+#include "ADM_toolkitGtk.h"
+#include "ADM_default.h"
+
+
 
 #include "DIA_coreToolkit.h"
 #include "DIA_fileSel.h"
@@ -333,11 +335,8 @@ void on_action (gui_act action)
         break;
 
     case A_LOAD:
-#ifdef USE_LIBXML2
+
         GUI_FileSelRead (QT_TR_NOOP("Load set of filters"), filterLoadXml);
-#else
-        GUI_FileSelRead (QT_TR_NOOP("Load set of filters"), filterLoad);
-#endif
         updateFilterList ();
         setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], 0);
         break;
@@ -352,11 +351,8 @@ void on_action (gui_act action)
             GUI_Error_HIG (QT_TR_NOOP("Nothing to save"), NULL);
         }
         else
-#ifdef USE_LIBXML2
+
             GUI_FileSelWrite (QT_TR_NOOP("Save set of filters"), filterSaveXml);
-#else
-            GUI_FileSelWrite (QT_TR_NOOP("Save set of filters"), filterSave);
-#endif
         break;
 #if 0
     default:

@@ -18,6 +18,7 @@
 
 #include "ADM_default.h"
 #include "common.h"
+#define ADM_NO_CONFIG_H
 #include "bswap.h"
 #include "ADM_assert.h"
 #include "ADM_coreAudio.h"

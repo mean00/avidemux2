@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "config.h"
+
 
 // Spidermonkey
 #include "ADM_libraries/ADM_smjs/jsapi.h"

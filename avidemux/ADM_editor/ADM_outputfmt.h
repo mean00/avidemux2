@@ -11,7 +11,7 @@
 //
 #ifndef ADM_OUT_FMT
 #define ADM_OUT_FMT
-#include "config.h"
+
 typedef enum 
 {
 	ADM_AVI=0,

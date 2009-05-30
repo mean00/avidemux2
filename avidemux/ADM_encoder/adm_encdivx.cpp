@@ -22,7 +22,7 @@
 
 #include <time.h>
 #include <sys/time.h>
-#include "config.h"
+
 #ifdef USE_DIVX
 
 #include "fourcc.h"

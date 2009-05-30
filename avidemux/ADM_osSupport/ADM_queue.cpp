@@ -12,14 +12,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
- 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "ADM_assert.h"
 #include "ADM_default.h"
-
 #include "ADM_queue.h"
 
 ADM_queue::ADM_queue()

@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
+
 
 #include <time.h>
 #include <sys/time.h>
@@ -24,11 +24,11 @@
 #ifdef USE_FFMPEG
 #include "ADM_lavcodec.h"
 #endif
-
+#include "ADM_default.h"
 #include "fourcc.h"
 #include "avi_vars.h"
 
-#include "ADM_assert.h"
+
 
 #include "ADM_encoder/ADM_vidEncode.hxx"
 

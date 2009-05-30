@@ -17,7 +17,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
+
 
 #include <stdlib.h>
 #include <signal.h>
@@ -26,9 +26,9 @@
 #endif
 #include <math.h>
 #include <ctype.h>
-
+#include "ADM_default.h"
 #include "avi_vars.h"
-#include "ADM_assert.h"
+
 
 #include "gui_action.hxx"
 #include "ADM_encoder/ADM_vidEncode.hxx"

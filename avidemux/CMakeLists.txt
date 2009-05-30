@@ -81,6 +81,7 @@ SET(ADM_CORES
         ADM_coreAudioDevice
         ADM_coreUtils
         ADM_coreMuxer
+        ADM_coreVideoFilter
 )
 FOREACH(_current ${ADM_CORES})
         INCLUDE_DIRECTORIES(${_current}/include)
@@ -199,7 +200,7 @@ SET(ADM_SUBDIR
 )
 FOREACH(_current ${ADM_SUBDIR})
 	ADD_SUBDIRECTORY(${_current})
-	ADD_ADMLIB_ALL_TARGETS(${_current})
+	ADD_LIB_ALL_TARGETS(${_current})
 ENDFOREACH(_current ${ADM_SUBDIR})
 
 ###########################################
@@ -215,14 +216,16 @@ SET(ADM_TAILS
 	ADM_osSupport
 	ADM_encoder
 	ADM_toolkit
-	ADM_codecs
 	ADM_requant
 	)
 
 FOREACH(_current ${ADM_TAILS})
 	ADD_SUBDIRECTORY(${_current})
-	ADD_ADMLIB_ALL_TARGETS(${_current})
+	ADD_LIB_ALL_TARGETS(${_current})
 ENDFOREACH(_current ${ADM_TAILS})
+#
+	ADD_SUBDIRECTORY(ADM_codecs)
+	ADD_ADMLIB_ALL_TARGETS(ADM_codecs)
 ###########################################
 # Construct ADM_libraries
 ###########################################

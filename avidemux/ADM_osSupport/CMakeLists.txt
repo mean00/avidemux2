@@ -5,5 +5,5 @@ ADM_misc.cpp
 ADM_queue.cpp 
 )
 
-ADD_ADM_LIB_ALL_TARGETS(ADM_osSupport ${ADM_osSupport_SRCS})
+ADD_LIBRARY(ADM_osSupport STATIC ${ADM_osSupport_SRCS})
 

@@ -14,14 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "ADM_default.h"
 #include <vector>
-
-#include "ADM_assert.h"
-#include "config.h"
 #include "fourcc.h"
 #include "DIA_fileSel.h"
 #include "ADM_dynamicLoading.h"

@@ -251,6 +251,7 @@ COMPRES_PARAMS ffmpegFFV1 = {
   sizeof (ffmpeg4Extra),
   NULL
 };
+#if 0
 static MJPEGConfig MjpegExtra = { 90, 0 };
 extern uint8_t DIA_mjpegCodecSetting (COMPRES_PARAMS * param);
 COMPRES_PARAMS MjpegCodec = {
@@ -266,7 +267,7 @@ COMPRES_PARAMS MjpegCodec = {
   sizeof (MjpegExtra),
   &DIA_mjpegCodecSetting
 };
-
+#endif
 //************************* FFMpeg mpeg1 **********************
 FFcodecSetting ffmpeg1Extra = {
   ME_EPZS,			//     ME
@@ -711,7 +712,7 @@ COMPRES_PARAMS *internalVideoCodec[] = {
   &ffmpegFFV1,
   &yv12codec,
   &ffmpegH263Codec,
-  &MjpegCodec,
+  //&MjpegCodec,
   &ffmpegFLV1,
   &DUMMYONE
 };

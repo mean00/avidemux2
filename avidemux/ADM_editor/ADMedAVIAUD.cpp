@@ -28,7 +28,7 @@ Todo:
 #include "ADM_default.h"
 #include <math.h>
 
-#include "config.h"
+
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_editor/ADM_edAudio.hxx"

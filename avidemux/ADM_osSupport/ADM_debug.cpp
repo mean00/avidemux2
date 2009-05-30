@@ -16,14 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
 #include "ADM_default.h"
-#include "ADM_assert.h"
+#include <stdarg.h>
 #include <math.h>
 
 

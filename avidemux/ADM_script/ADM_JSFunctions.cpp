@@ -9,9 +9,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "config.h"
-#include <stdlib.h>
-#include <unistd.h>
+#include "ADM_default.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #if defined( ADM_WIN32 ) || defined(__MINGW32__)

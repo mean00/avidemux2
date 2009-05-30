@@ -41,9 +41,7 @@
 // - intra blocks quantiser is incremented two step
 // - drop a few coefficients but always keep the first one
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "ADM_default.h"
 
 // includes
 #include <stdio.h>
@@ -55,7 +53,6 @@
 
 
 // MEANX
-#include "ADM_default.h"
 #include "tcrequant.h"
 
 #include "ADM_osSupport/ADM_debugID.h"

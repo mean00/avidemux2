@@ -14,7 +14,7 @@ at amistry@am-productions.biz
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-#include "config.h"
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>

@@ -8,5 +8,5 @@ SET(ADM_videoFilter_SRCS
 	ADM_vidThreshold.cpp
 	ADM_vidNumber.cpp)
 
-ADD_ADM_LIB_ALL_TARGETS(ADM_videoFilter ${ADM_videoFilter_SRCS})
+ADD_LIBRARY(ADM_videoFilter STATIC ${ADM_videoFilter_SRCS})
 

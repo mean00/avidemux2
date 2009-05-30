@@ -21,7 +21,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
 #include "ADM_default.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"

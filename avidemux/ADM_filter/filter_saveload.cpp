@@ -17,17 +17,14 @@
  *                                                                         *
  ***************************************************************************/
 #define ADM_LEGACY_PROGGY
-#include "config.h"
 
-#ifdef USE_LIBXML2
-	#include <libxml/tree.h>
-	#include <libxml/parser.h>
-#endif
-
+#include "ADM_default.h"
+#include <libxml/tree.h>
+#include <libxml/parser.h>
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_quota.h"
-#include "ADM_assert.h"
+
 
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
@@ -49,7 +46,7 @@ extern void filterCleanUp( void );
 
 
 */
-#ifdef USE_LIBXML2
+
 static int32_t getIntegerAttribute(xmlNodePtr node, char *name, char *atrname);
 static xmlNodePtr nextByName(xmlNodePtr node,char *name);
 static CONFcouple *buildCouple(uint32_t nb, xmlNodePtr node);
@@ -302,4 +299,4 @@ int32_t getIntegerAttribute(xmlNodePtr node, char *name, char *atrname)
 	return -1;
 }
 
-#endif
+//EOF

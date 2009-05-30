@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +27,7 @@
 
 #ifdef USE_FFMPEG
 #include "ADM_lavcodec.h"
+#include "ADM_default.h"
 #include "fourcc.h"
 #include "avi_vars.h"
 

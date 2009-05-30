@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
+
 
 #include "ADM_lavcodec.h"
 
@@ -44,7 +44,7 @@ extern void getMainWindowHandles(long int *handle, long int *nativeHandle);
 void setVideoEncoderSettings(COMPRESSION_MODE mode, uint32_t param, uint32_t extraConf, uint8_t *extraData);
 static void encoderPrint(void);
 
-#include "adm_encConfig.h"
+
 #include "adm_encoder.h"
 
 #ifdef USE_XVID_4
@@ -66,8 +66,10 @@ static void encoderPrint(void);
 #include "adm_encmjpeg.h"
 #include "adm_encCopy.h"
 #include "adm_encyv12.h"
+#include "adm_encConfig.h"
 #include "ADM_pluginLoad.h"
 #include "ADM_externalEncoder.h"
+
 
 /*
   	Codec settings here
@@ -591,9 +593,11 @@ Encoder *getVideoEncoder(uint32_t w, uint32_t h, uint32_t globalHeaderFlag)
 	case CodecFF:
 		e = new EncoderFFMPEG (FF_MPEG4, desc);
 		break;
+#if 0
 	case CodecMjpeg:
 		e = new EncoderMjpeg (&MjpegCodec);
 		break;
+#endif
 	case CodecFFhuff:
 		e = new EncoderFFMPEGFFHuff (desc);
 		break;

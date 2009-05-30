@@ -11,7 +11,7 @@
 //
 
 #include "ADM_default.h"
-#include "config.h"
+
 #include "ADM_JSGlobal.h"
 #include "ADM_JSAvidemuxAudio.h"
 

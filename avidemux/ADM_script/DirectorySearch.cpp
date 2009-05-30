@@ -8,7 +8,7 @@ Note:  This file is available under a BSD license.  Contact the author
 at amistry@am-productions.biz
 */
 #include <string.h>
-#include "config.h"
+#include "ADM_default.h"
 #include "DirectorySearch.h"
 
 //////////////////////////////////////////////////////////////////////
