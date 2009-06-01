@@ -30,8 +30,8 @@ uint32_t ADM_dm_getNbDemuxers(void);
 bool     ADM_dm_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_mx_getNbMuxers(void);
 bool     ADM_mx_getMuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
-bool     ADM_ve6_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
-uint32_t ADM_ve6_getNbDemuxers(void);
+bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
+uint32_t ADM_ve6_getNbEncoders(void);
 #define QT_TR_NOOP(x) x
 
 /* /Functions */
@@ -47,7 +47,7 @@ uint8_t DIA_pluginsInfo(void)
     uint32_t aeNbPlugin=ADM_ae_getPluginNbEncoders();
     uint32_t dmNbPlugin=ADM_dm_getNbDemuxers();
     uint32_t mxNbPlugin=ADM_mx_getNbMuxers();
-    uint32_t ve6NbPlugin=ADM_ve6_getNbDemuxers();
+    uint32_t ve6NbPlugin=ADM_ve6_getNbEncoders();
 
     // Audio Plugins
 
@@ -92,7 +92,7 @@ uint8_t DIA_pluginsInfo(void)
         char versionString[256];
         char infoString[256];
         char *end;
-            ADM_ve6_getDemuxerInfo(i, &name,&major,&minor,&patch);
+            ADM_ve6_getEncoderInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
             if(strlen(infoString))

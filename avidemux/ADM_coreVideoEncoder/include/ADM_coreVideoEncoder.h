@@ -61,5 +61,7 @@ virtual        bool        setConfiguration(uint32_t l,uint8_t *d)=0;   /// Set 
                uint32_t    getFrameIncrement(void) {return source->getInfo()->frameIncrement;}
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 };
+// Spawn a new encoder using the index from the menu = the index in the vector
+ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
 
 #endif

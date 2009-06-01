@@ -24,6 +24,8 @@
 #include "ADM_coreVideoEncoderInternal.h"
 #include "DIA_uiTypes.h"
 #include "ADM_dynamicLoading.h"
+
+static int currentVideoCodec=0;
 /**
     \class ADM_videoEncoder6
     \brief Plugin Wrapper Class
@@ -54,21 +56,38 @@ public:
 };
 
 std::vector <ADM_videoEncoder6 *> ListOfEncoders;
+// 
+ADM_videoEncoderDesc copyDesc={
+        "Copy",
+        "Copy",
+        "Copy",
+        "Copy encoder",
+        ADM_VIDEO_ENCODER_API_VERSION, //uint32_t     apiVersion;            // const
 
+        NULL, //ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head);  
+        NULL, //void         (*destroy)(ADM_coreVideoEncoder *codec);
+        NULL, //bool         (*configure)(void);                                // Call UI to set it up
+        NULL, //bool         (*getConfigurationData)(uint32_t *l, uint8_t **d); // Get the encoder private conf
+        NULL, //bool         (*setConfigurationData)(uint32_t l, uint8_t *d);   // Set the encoder private conf
+
+        ADM_UI_ALL, //ADM_UI_TYPE  UIType;                // Type of UI
+        1,0,0, //uint32_t     major,minor,patch;     // Version of the plugin
+        NULL  //void         *opaque;               // Hide stuff in here
+};
 
 /**
-        \fn ADM_ve6_getNbDemuxers
+        \fn ADM_ve6_getNbEncoders
         \brief Returns the number of demuxers plugins except one
 */
-uint32_t ADM_ve6_getNbDemuxers(void)
+uint32_t ADM_ve6_getNbEncoders(void)
 {
     return ListOfEncoders.size();
 }
 /**
-    \fn     ADM_dm_getDemuxerInfo
+    \fn     ADM_ve6_getEncoderInfo
     \brief  Get Infos about the demuxer #th plugin
 */
-bool     ADM_ve6_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch)
+bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch)
 {
     ADM_assert(filter<ListOfEncoders.size());
     ADM_videoEncoderDesc *desc=ListOfEncoders[filter]->desc;
@@ -120,10 +139,14 @@ uint8_t ADM_ve6_loadPlugins(const char *path)
 		printf("[ADM_ve6_plugin] Cannot parse plugin\n");
 		return 0;
 	}
+    // Add our copy encoder....
+    ADM_videoEncoder6 *dll=new ADM_videoEncoder6("copyADM");
+    dll->desc=&copyDesc;
+    ListOfEncoders.push_back(dll);
 
 	for(int i=0;i<nbFile;i++)
 		tryLoadingEncoderPlugin(files[i]);
-
+    
 	printf("[ADM_ve6_plugin] Scanning done\n");
 
 	return 1;
@@ -141,5 +164,44 @@ void ADM_ve6_cleanup(void)
                         ListOfEncoders[i]=NULL;
                 }
 }
+
+/**
+    \fn ADM_ve6_getMenuName
+    \brief IT starts from 0, ignoring the copy one
+*/
+const char *ADM_ve6_getMenuName(uint32_t i)
+{
+	 int nb=ListOfEncoders.size();
+
+	ADM_assert(i < nb);
+
+	return ListOfEncoders[i]->desc->menuName;
+}
+/**
+    \fn ADM_ve6_Changed
+*/
+void ADM_ve6_Changed(int newCodecIndex)
+{
+	int nb=ListOfEncoders.size();
+	ADM_assert(newCodecIndex < nb);
+
+	currentVideoCodec=newCodecIndex;
+}
+
+
+/**
+    \fn createVideoEncoder
+*/
+ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index)
+{
+    int nb=ListOfEncoders.size();
+	ADM_assert(index < nb);
+    ADM_assert(index); // 0 is for copy, should not get it through here
+    ADM_videoEncoder6 *plugin=ListOfEncoders[index];
+
+    ADM_coreVideoEncoder *enc=plugin->desc->create(chain);
+    return enc;
+}
+
 
 //EOF

@@ -19,13 +19,4 @@
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_yv12Encoder.h"
 #include "ADM_filterChain.h"
-/**
-    \fn createVideoEncoder
-*/
-ADM_coreVideoEncoder *createVideoEncoder(ADM_coreVideoFilter *chain)
-{
-    // 1- Create encoder itself...
-    ADM_yv12Encoder *yv=new ADM_yv12Encoder(chain);
-    return yv;
-}
 // EOF

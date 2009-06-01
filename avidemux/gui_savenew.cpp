@@ -40,7 +40,7 @@
 
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 extern ADM_audioStream  *createEncodingStream(uint64_t startTime,int32_t shift);
-extern ADM_videoStream  *createVideoEncoder(ADM_videoFilterChain *chain);
+extern ADM_videoStream  *createVideoStream(ADM_videoFilterChain *chain,int index);
 /**
     \fn A_Save
     \brief Instantiate & initiate streams to feed muxer
@@ -87,7 +87,7 @@ int A_Save(const char *name)
                 return 0;
         }
         // 2- Create Encoder
-        video=createVideoEncoder(chain);
+        video=createVideoStream(chain,1);
         if(!video)
         {
                 GUI_Error_HIG("Video","Cannot create encoder");

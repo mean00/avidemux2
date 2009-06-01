@@ -94,6 +94,8 @@ const char  *audioEncoderGetDisplayName(uint32_t i);
 extern uint32_t ADM_mx_getNbMuxers(void);
 extern const char *ADM_mx_getDisplayName(uint32_t i);
 
+extern const char *ADM_ve6_getMenuName(uint32_t index);
+extern uint32_t    ADM_ve6_getNbEncoders(void);
 
 #ifdef HAVE_AUDIO
 extern uint8_t AVDM_setVolume(int volume);
@@ -497,13 +499,13 @@ uint8_t  bindGUI( void )
 	const char *name;
         GtkComboBox     *combo_box;
 
-                nbVid=encoderGetEncoderCount();
+                nbVid=ADM_ve6_getNbEncoders();
                 combo_box=GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET));
                 gtk_combo_box_remove_text(combo_box,0);
                 printf("Found %d video encoder\n",nbVid);
                 for(uint32_t i=0;i<nbVid;i++)
                 {
-                        name=encoderGetIndexedName(i);
+                        name=ADM_ve6_getMenuName(i);
                         gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
                 }
 
