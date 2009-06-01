@@ -20,7 +20,7 @@
 
 #include "ADM_coreVideoFilter.h"
 #include "ADM_bitstream.h"
-
+#include "ADM_frameType.h"
 typedef enum
 {
     ADM_ENCODER_OPTION_MOV_MODE=1

@@ -32,6 +32,10 @@
 
 #include "ADM_bitstream.h"
 #include "ADM_compressedImage.h"
+/**
+    \class decoders
+    \brief base class for video decoders
+*/
 class decoders
 {
 protected:

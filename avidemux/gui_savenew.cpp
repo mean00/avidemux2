@@ -53,6 +53,8 @@ int A_Save(const char *name)
     bool process=true;
     ADM_videoFilterChain *chain=NULL;
     
+    printf("[A_Save] Saving..\n");
+
     if(!(muxer=ADM_MuxerSpawnFromIndex(index)))
     {
         GUI_Error_HIG("Muxer","Cannot instantiante muxer");
@@ -71,7 +73,7 @@ int A_Save(const char *name)
     }
     ADM_videoStream *video=NULL;
     // Video Stream 
-    if(process) // Copy
+    if(!process) // Copy
     {
         video=new ADM_videoStreamCopy();
     }else

@@ -88,8 +88,11 @@ decoders *getDecoderH264noLogic (uint32_t fcc, uint32_t w, uint32_t h, uint32_t 
   return (decoders *) (new decoderFFH264 (w, h, extraLen, extraData,0));
 
 }
-decoders *
-getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen,
+/**
+    \fn getDecoder
+    \brief returns the correct decoder for a stream
+*/
+decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen,
 	    uint8_t * extraData,uint32_t bpp)
 {
   printf("\nSearching decoder (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
@@ -240,6 +243,7 @@ if (fourCC::check (fcc, (uint8_t *) "MJPG")
 
     }
   if (fourCC::check (fcc, (uint8_t *) "YV12")
+      || fourCC::check (fcc, (uint8_t *) "yv12")
       || fourCC::check (fcc, (uint8_t *) "I420"))
     {
       printf ("\n using null codec\n");

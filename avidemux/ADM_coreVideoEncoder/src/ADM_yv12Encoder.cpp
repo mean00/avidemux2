@@ -100,8 +100,11 @@ bool         ADM_yv12Encoder::encode (ADMBitstream * out)
         printf("[YV12] Cannot get next image\n");
         return false;
     }
+    ADM_assert(out->bufferSize>plane);
     memcpy(out->data,image->data,plane);
+    out->len=plane;
     out->pts=out->dts=image->Pts;
+    out->flags=AVI_KEY_FRAME;
     return true;
 }
 

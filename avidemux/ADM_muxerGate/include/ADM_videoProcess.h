@@ -32,6 +32,7 @@ protected:
             
             ADMBitstream         *bitstream;
             ADM_coreVideoEncoder *encoder;
+            uint8_t              *data;
 public:
              ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder);
     virtual ~ADM_videoStreamProcess();
