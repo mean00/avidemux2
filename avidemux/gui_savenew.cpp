@@ -79,7 +79,7 @@ int A_Save(const char *name)
     }else
     {
         // 1- create filter chain
-        chain=createVideoFilterChain(0,10000000000);
+        chain=createVideoFilterChain(0,10000000000LL);
         if(!chain)
         {
                 GUI_Error_HIG("Video","Cannot instantiante video Chain");

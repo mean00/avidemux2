@@ -519,10 +519,12 @@ filtermainWindow::filtermainWindow()     : QDialog()
     connect((ui.toolButtonDown),SIGNAL(clicked(bool)),this,SLOT(down(bool)));
     connect((ui.toolButtonPartial),SIGNAL(clicked(bool)),this,SLOT(partial(bool)));
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
+#if 0
     connect(ui.pushButtonDVD, SIGNAL(clicked(bool)), this, SLOT(DVD(bool)));
     connect(ui.pushButtonVCD, SIGNAL(clicked(bool)), this, SLOT(VCD(bool)));
     connect(ui.pushButtonSVCD, SIGNAL(clicked(bool)), this, SLOT(SVCD(bool)));
     connect(ui.pushButtonHalfDVD, SIGNAL(clicked(bool)), this, SLOT(halfD1(bool)));
+#endif
 	connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
 	activeList->setItemDelegate(new FilterItemDelegate(activeList));
