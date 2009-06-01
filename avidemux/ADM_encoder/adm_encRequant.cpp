@@ -157,7 +157,7 @@ uint8_t
 EncoderRequant::encode (uint32_t frame, ADMBitstream *out)
 {
   uint8_t ret = 0;
-  out->dtsFrame = frame;
+//  out->dtsFrame = frame;
 
   if (frame >= _total)
     {
@@ -174,7 +174,7 @@ EncoderRequant::encode (uint32_t frame, ADMBitstream *out)
     {
 
           ret =code(_frameStart + frame, out->data, &out->len);
-          out->ptsFrame = frame;
+//          out->ptsFrame = frame;
           return ret;
     }
   // it has PTS/DTS stuff so we need to reorder it
@@ -193,7 +193,7 @@ EncoderRequant::encode (uint32_t frame, ADMBitstream *out)
           ret =code(forward, out->data, &out->len);
           //ret = video_body->getRaw (forward, out->data, &out->len);
           _lastIPFrameSent = forward;
-          out->ptsFrame = forward - _frameStart;
+//          out->ptsFrame = forward - _frameStart;
         }
     else
         {
@@ -204,7 +204,7 @@ EncoderRequant::encode (uint32_t frame, ADMBitstream *out)
             ret =code(_frameStart + frame - 1, out->data, &out->len);
 //             ret =video_body->getFrameNoAlloc (_frameStart + frame - 1, out->data,
 //                                               &out->len,&out->flags);
-            out->ptsFrame = frame - 1;
+//            out->ptsFrame = frame - 1;
         }
     }
   else	     // it is not a B frame and we have nothing on hold, sent it..
@@ -216,7 +216,7 @@ EncoderRequant::encode (uint32_t frame, ADMBitstream *out)
                     _frameStart + frame - 1);
             //ret=video_body->getFrameNoAlloc (_frameStart+frame - 1,out->data,&out->len,&out->flags);
             ret =code(_frameStart + frame - 1, out->data, &out->len);
-            out->ptsFrame  = frame - 1;
+//            out->ptsFrame  = frame - 1;
 
         }
       else
@@ -225,7 +225,7 @@ EncoderRequant::encode (uint32_t frame, ADMBitstream *out)
                     _lastIPFrameSent);
             ret =code(_frameStart + frame , out->data, &out->len);
               //  ret=video_body->getFrameNoAlloc (_frameStart+frame, out->data,&out->len,&out->flags);
-            out->ptsFrame  = frame;
+//            out->ptsFrame  = frame;
             if(!frame) // First frame ?
             {
                   // It does not start by a seqstart, add it if possible

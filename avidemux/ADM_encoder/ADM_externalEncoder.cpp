@@ -100,7 +100,7 @@ uint8_t externalEncoder::encode(uint32_t frame, ADMBitstream *out)
 		memcpy(out->data, params.encodedData, params.encodedDataSize);
 
 		out->len = params.encodedDataSize;
-		out->ptsFrame = params.ptsFrame;
+//		out->ptsFrame = params.ptsFrame;
 		out->out_quantizer = params.quantiser;
 
 		switch (params.frameType)

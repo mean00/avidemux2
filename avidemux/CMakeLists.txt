@@ -82,6 +82,7 @@ SET(ADM_CORES
         ADM_coreUtils
         ADM_coreMuxer
         ADM_coreVideoFilter
+        ADM_coreVideoEncoder
 )
 FOREACH(_current ${ADM_CORES})
         INCLUDE_DIRECTORIES(${_current}/include)
@@ -202,7 +203,10 @@ FOREACH(_current ${ADM_SUBDIR})
 	ADD_SUBDIRECTORY(${_current})
 	ADD_LIB_ALL_TARGETS(${_current})
 ENDFOREACH(_current ${ADM_SUBDIR})
-
+########################################################
+# The part of the video filter that is inside avidemux
+########################################################
+ADD_LIB_ALL_TARGETS(ADM_internalVideoFilter)
 ###########################################
 # Construct ADM_UIs
 ###########################################
@@ -419,7 +423,7 @@ ENDIF (ADM_UI_QT4)
 # OS Specific
 ###########################################
 IF (WIN32)
-	ADD_ADMLIB_ALL_TARGETS(ADM_osSupport)
+	ADD_LIB_ALL_TARGETS(ADM_osSupport)
 
 	IF (MINGW)
 		ADD_LIB_ALL_TARGETS(-mno-cygwin)

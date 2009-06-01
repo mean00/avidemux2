@@ -585,7 +585,14 @@ uint32_t ADM_Composer::getPARHeight()
   return 1;
 
 }
-
+/**
+    \fn getFrameIncrement
+*/
+uint64_t ADM_Composer::getFrameIncrement(void)
+{
+    if (!_nb_video) return 0;
+    return _videos[0].timeIncrementInUs;
+}
 /**
 	Set decoder settings (post process/swap u&v...)
 	for the segment referred by frame

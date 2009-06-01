@@ -132,7 +132,7 @@ EncoderCopy::encode (uint32_t frame, ADMBitstream *out)
 {
   uint8_t ret = 0;
   uint8_t seq;
-  out->dtsFrame = frame;
+//  out->dtsFrame = frame;
   
   if (frame >= _total)
     {
@@ -154,7 +154,7 @@ EncoderCopy::encode (uint32_t frame, ADMBitstream *out)
         out->ptsFrame = frame+video_body->ptsDtsDelta(frameStart+frame);
       }else
 #endif
-        out->ptsFrame = frame;
+//        out->ptsFrame = frame;
       return ret;
     }
   // it has PTS/DTS stuff so we need to reorder it
@@ -174,7 +174,7 @@ EncoderCopy::encode (uint32_t frame, ADMBitstream *out)
           out->len=img.dataLength;
           out->flags=img.flags;
           _lastIPFrameSent = forward;
-          out->ptsFrame = forward - _frameStart;
+//          out->ptsFrame = forward - _frameStart;
         }
     else
         {
@@ -185,7 +185,7 @@ EncoderCopy::encode (uint32_t frame, ADMBitstream *out)
             ret =video_body->getFrame (_frameStart + frame - 1, &img,&seq);
             out->len=img.dataLength;
             out->flags=img.flags;
-            out->ptsFrame = frame - 1;
+//            out->ptsFrame = frame - 1;
         }
     }
   else	     // it is not a B frame and we have nothing on hold, sent it..
@@ -198,7 +198,7 @@ EncoderCopy::encode (uint32_t frame, ADMBitstream *out)
             ret=video_body->getFrame (_frameStart+frame - 1,&img,&seq);
             out->len=img.dataLength;
             out->flags=img.flags;
-            out->ptsFrame  = frame - 1;
+//            out->ptsFrame  = frame - 1;
 
         }
       else
@@ -208,7 +208,7 @@ EncoderCopy::encode (uint32_t frame, ADMBitstream *out)
         ret=video_body->getFrame (_frameStart+frame, &img,&seq);
         out->len=img.dataLength;
         out->flags=img.flags;
-        out->ptsFrame  = frame;
+//        out->ptsFrame  = frame;
 
 	}
     }

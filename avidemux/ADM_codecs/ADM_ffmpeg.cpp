@@ -77,7 +77,7 @@ ffmpegEncoderCQ::~ffmpegEncoderCQ ()
 /*****************************************/
 void ffmpegEncoder::postAmble (ADMBitstream * out, uint32_t sz)
 {
-  out->ptsFrame = _context->coded_frame->display_picture_number; //real_pict_num;;
+//  out->ptsFrame = _context->coded_frame->display_picture_number; //real_pict_num;;
  //printf("Out : %u\n",out->ptsFrame);
   out->len = (uint32_t) sz;
   out->flags = frameType ();;

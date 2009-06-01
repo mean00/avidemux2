@@ -1,5 +1,9 @@
 /***************************************************************************
-    copyright            : (C) 2003-2008 by mean
+                          \fn ADM_coreVideoEncoder
+                          \brief Base class for video encoder plugin
+                             -------------------
+    
+    copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -12,25 +16,24 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_bitstream.h"
+#include "ADM_coreVideoEncoder.h"
 
+/**
+    \fn ADM_coreVideoEncoder
+*/                          
+ADM_coreVideoEncoder::ADM_coreVideoEncoder(ADM_coreVideoFilter *src)
+{
+    source=src;
+    image=NULL;
 
-
-ADMBitstream::ADMBitstream(uint32_t size)
-{
-    memset(this,0,sizeof(this));
-    bufferSize=size;
-}
-ADMBitstream::~ADMBitstream()
-{
-}
-void ADMBitstream::cleanup (uint32_t framenum)
-{
-//    ptsFrame=dtsFrame=0;
-    pts=dts=0;
-    out_quantizer=0;
-    flags=0;
-    len=0;
-//    dtsFrame=framenum;
 }
 
+/**
+    \fn ADM_coreVideoEncoder
+*/                          
+ADM_coreVideoEncoder::~ADM_coreVideoEncoder()
+{
+    if(image) delete image;
+    image=NULL;
+}
+// EOF

@@ -292,14 +292,16 @@ virtual CHANNEL_TYPE    *getChannelMapping(void );
                     // /other audio stuff
 
 			     		uint8_t 			setDecodeParam( uint32_t frame );
+/**************************************** Video Info **************************/
 	 				AVIStreamHeader 	*getVideoStreamHeader(void ) ;
 	 				MainAVIHeader 		*getMainHeader(void );
 	 				ADM_BITMAPINFOHEADER 	*getBIH(void ) ;
 
 	  				uint8_t			getVideoInfo(aviInfo *info);
                     uint64_t        getVideoDuration(void);
+                    uint64_t        getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
 
-					
+/**************************************** /Video Info **************************/					
 					
 					
                   //
