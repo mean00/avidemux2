@@ -77,7 +77,7 @@ extern uint8_t ADM_av_loadPlugins(const char *path);
 extern uint8_t ADM_ae_loadPlugins(const char *path);
 extern uint8_t ADM_dm_loadPlugins(const char *path);
 extern uint8_t ADM_mx_loadPlugins(const char *path);
-
+extern uint8_t ADM_ve6_loadPlugins(const char *path);
 extern bool vdpauProbe(void);
 extern void loadPlugins(void);
 extern void InitFactory(void);
@@ -236,11 +236,12 @@ int main(int argc, char *argv[])
     const char *startDir="lib";
 #endif
 	char *adPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDecoder");
-	char *vfPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoFilter");
     char *avPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDevices");    
     char *aePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioEncoders");    
     char *dmPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","demuxers");    
     char *mxPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","muxers");    
+    char *vePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoEncoders");    
+    char *vfPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoFilter");
 
     ADM_mx_loadPlugins(mxPlugins);
     delete [] mxPlugins;
@@ -259,6 +260,10 @@ int main(int argc, char *argv[])
 
 	ADM_dm_loadPlugins(dmPlugins);
     delete [] dmPlugins;
+
+    ADM_ve6_loadPlugins(vePlugins);
+    delete [] vePlugins;
+
 
     // load local audio decoder plugins
 	adPlugins=ADM_getHomeRelativePath("plugins6","audioDecoder");

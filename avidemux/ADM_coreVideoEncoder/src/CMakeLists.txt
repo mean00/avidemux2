@@ -10,5 +10,6 @@ INSTALL(TARGETS ADM_coreVideoEncoder RUNTIME DESTINATION ${BIN_DIR}  LIBRARY DES
 SET(ADM_internalVideoEncoder_SRCS 
 	ADM_VideoEncoders.cpp
         ADM_yv12Encoder.cpp
+        ADM_dynVideoEncoder.cpp
 )
 ADD_LIBRARY(ADM_internalVideoEncoder STATIC ${ADM_internalVideoEncoder_SRCS})

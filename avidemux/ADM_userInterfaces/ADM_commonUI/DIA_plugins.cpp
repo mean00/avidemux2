@@ -30,6 +30,8 @@ uint32_t ADM_dm_getNbDemuxers(void);
 bool     ADM_dm_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_mx_getNbMuxers(void);
 bool     ADM_mx_getMuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
+bool     ADM_ve6_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
+uint32_t ADM_ve6_getNbDemuxers(void);
 #define QT_TR_NOOP(x) x
 
 /* /Functions */
@@ -41,11 +43,11 @@ bool     ADM_mx_getMuxerInfo(int filter, const char **name, uint32_t *major,uint
 uint8_t DIA_pluginsInfo(void)
 {
     uint32_t aNbPlugin=ADM_ad_getNbFilters();
-    uint32_t veNbPlugin=ADM_ve_getNbEncoders();
     uint32_t avNbPlugin=ADM_av_getNbDevices();
     uint32_t aeNbPlugin=ADM_ae_getPluginNbEncoders();
     uint32_t dmNbPlugin=ADM_dm_getNbDemuxers();
     uint32_t mxNbPlugin=ADM_mx_getNbMuxers();
+    uint32_t ve6NbPlugin=ADM_ve6_getNbDemuxers();
 
     // Audio Plugins
 
@@ -78,19 +80,19 @@ uint8_t DIA_pluginsInfo(void)
     // /Audio
 
     // Encoder
-    printf("[VideoEncoder Plugins] Found %u plugins\n",veNbPlugin);
-    diaElemReadOnlyText *veText[veNbPlugin];
+    printf("[VideoEncoder6 Plugins] Found %u plugins\n",ve6NbPlugin);
+    diaElemReadOnlyText *veText[ve6NbPlugin];
     diaElemFrame frameVE(QT_TR_NOOP("Video Encoder Plugins"));
         
        
-    for(int i=0;i<veNbPlugin;i++)
+    for(int i=0;i<ve6NbPlugin;i++)
     {
         const char *name;
         uint32_t major,minor,patch;
         char versionString[256];
         char infoString[256];
         char *end;
-            ADM_ve_getEncoderInfo(i, &name,&major,&minor,&patch);
+            ADM_ve6_getDemuxerInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
             if(strlen(infoString))
@@ -228,7 +230,7 @@ uint8_t DIA_pluginsInfo(void)
 
     for(int i=0;i<aNbPlugin;i++)
         delete aText[i];
-    for(int i=0;i<veNbPlugin;i++)
+    for(int i=0;i<ve6NbPlugin;i++)
         delete veText[i];
     for(int i=0;i<avNbPlugin;i++)
         delete avText[i];
