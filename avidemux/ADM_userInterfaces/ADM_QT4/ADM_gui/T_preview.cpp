@@ -165,6 +165,7 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 */
 void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
+    ADM_assert(videoWindow);
 	QWidget* widget = videoWindow->parentWidget();
 
 #if defined(__WIN32)

@@ -69,6 +69,10 @@ static int frameCount = 0;
 static int currentFrame = 0;
 bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_ve6_getNbEncoders(void);
+void UI_refreshCustomMenu(void);
+QWidget *QuiMainWindows=NULL;
+QGraphicsView *drawWindow=NULL;
+uint8_t UI_updateRecentMenu( void );
 
 #ifdef HAVE_AUDIO
 extern uint8_t AVDM_setVolume(int volume);
@@ -562,6 +566,12 @@ static const UI_FUNCTIONS_T UI_Hooks=
         UI_getPreferredRender
         
     };
+QApplication *myApplication=NULL;
+/**
+    \fn  UI_Init
+    \brief First part of UI initialization
+
+*/
 int UI_Init(int nargc,char **nargv)
 {
 	initTranslator();
@@ -569,11 +579,28 @@ int UI_Init(int nargc,char **nargv)
 	global_argc=nargc;
 	global_argv=nargv;
 	ADM_renderLibInit(&UI_Hooks);
+    Q_INIT_RESOURCE(avidemux);
+	Q_INIT_RESOURCE(filter);
+
+	myApplication=new QApplication (global_argc, global_argv);
+	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
+
+	loadTranslator();
+
+	MainWindow *mw = new MainWindow();
+	mw->show();
+
+	QuiMainWindows = (QWidget*)mw;
+
+	uint32_t w, h;
+
+	UI_getPhysicalScreenSize(QuiMainWindows, &w,&h);
+	printf("The screen seems to be %u x %u px\n",w,h);
+
+	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
+	UI_updateRecentMenu();
 	return 0;
 }
-QWidget *QuiMainWindows=NULL;
-QGraphicsView *drawWindow=NULL;
-uint8_t UI_updateRecentMenu( void );
 
 void UI_refreshCustomMenu(void)
 {
@@ -633,35 +660,18 @@ void UI_setCurrentPreview(int ne)
 */
 int UI_RunApp(void)
 {
-	Q_INIT_RESOURCE(avidemux);
-	Q_INIT_RESOURCE(filter);
-
-	QApplication a(global_argc, global_argv);
-	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
-
-	loadTranslator();
-
-	MainWindow *mw = new MainWindow();
-	mw->show();
-
-	QuiMainWindows = (QWidget*)mw;
-
-	uint32_t w, h;
-
-	UI_getPhysicalScreenSize(QuiMainWindows, &w,&h);
-	printf("The screen seems to be %u x %u px\n",w,h);
-
-	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
-	UI_updateRecentMenu();
+	
 	setupMenus();
 	checkCrashFile();
 
 	if (global_argc >= 2)
 		automation();
 
-	a.exec();
+	myApplication->exec();
 
 	destroyTranslator();
+    delete myApplication;
+    myApplication=NULL;
 }
 /**
     \fn searchTranslationTable(const char *name))
