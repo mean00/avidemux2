@@ -21,7 +21,7 @@
 
 
 
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
 //#include "ADM_audioEncoder/include/audioencoder_enum.h"
 
 

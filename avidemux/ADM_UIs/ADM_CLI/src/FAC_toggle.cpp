@@ -189,7 +189,7 @@ void diaElemFile::getMe(void)
 }
 void   diaElemFile::enable(uint32_t onoff)
 {}
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
   diaElemBitrate::diaElemBitrate(COMPRES_PARAMS *p,const char *toggleTitle,const char *tip)
   : diaElemBitrateBase()
 {

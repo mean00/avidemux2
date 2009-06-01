@@ -29,7 +29,7 @@
 #define __DECLARE__
 #include "avi_vars.h"
 
-#include "ADM_encoder/adm_encConfig.h"
+//#include "ADM_encoder/adm_encConfig.h"
 #include "prefs.h"
 #include "audio_out.h"
 
@@ -190,8 +190,6 @@ int main(int argc, char *argv[])
 	prefs->load();
     CpuCaps::init();
 
-	register_Encoders();
-
 #ifdef USE_SDL
 	uint32_t videoDevice = RENDER_LAST;
 
@@ -274,11 +272,7 @@ int main(int argc, char *argv[])
 	vfPlugins=ADM_getHomeRelativePath("plugins6","videoFilter");
 	ADM_vf_loadPlugins(vfPlugins);
 	delete [] vfPlugins;
-	// load encoder plugins...
-	loadPlugins();
-
-    // load demuxer plugins
-    
+	
 
 	//***************Plugins *********************
 

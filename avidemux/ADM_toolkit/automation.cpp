@@ -31,7 +31,7 @@
 
 
 #include "gui_action.hxx"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+//#include "ADM_encoder/ADM_vidEncode.hxx"
 #include "audioeng_buildfilters.h"
 #include "prefs.h"
 #include "gtkgui.h"
@@ -44,10 +44,11 @@
 
 #include "ADM_filter/vidVCD.h"
 #include "ADM_video/ADM_vidMisc.h"
+#include "ADM_coreVideoEncoder.h"
 
 extern void filterListAll(void );
 
-extern uint8_t loadVideoCodecConf( const char *name);
+//extern uint8_t loadVideoCodecConf( const char *name);
 extern int A_saveJpg (char *name);
 extern void filterLoadXml(const char *n);
 extern int A_appendAvi (const char *name);
@@ -149,11 +150,11 @@ AUTOMATON reaction_table[]=
         {"audio-normalize",	1,"activate normalization",		call_normalize},
         {"audio-resample",	1,"resample to x hz",			call_resample},
         {"filters",		1,"load a filter preset",		(one_arg_type)filterLoadXml}   ,
-        {"codec-conf",		1,"load a codec configuration",		(one_arg_type )loadVideoCodecConf}   ,
-        {"vcd-res",		0,"set VCD resolution",			(one_arg_type)setVCD}              ,
-        {"svcd-res",		0,"set SVCD resolution",		(one_arg_type)setSVCD}              ,
-        {"dvd-res",		0,"set DVD resolution",			(one_arg_type)setDVD}  ,
-        {"halfd1-res",		0,"set 1/2 DVD resolution",		(one_arg_type)setHalfD1} ,
+//        {"codec-conf",		1,"load a codec configuration",		(one_arg_type )loadVideoCodecConf}   ,
+//        {"vcd-res",		0,"set VCD resolution",			(one_arg_type)setVCD}              ,
+//        {"svcd-res",		0,"set SVCD resolution",		(one_arg_type)setSVCD}              ,
+//        {"dvd-res",		0,"set DVD resolution",			(one_arg_type)setDVD}  ,
+//        {"halfd1-res",		0,"set 1/2 DVD resolution",		(one_arg_type)setHalfD1} ,
         {"save-jpg",		1,"save a jpeg",			(one_arg_type)A_saveJpg}        ,
         {"begin",		1,"set start frame",			setBegin},
         {"end",			1,"set end frame",			setEnd},
@@ -408,14 +409,14 @@ void call_probePat(char *p)
 }
 void call_videocodec(char *p)
 {
-#warning fixme : Name does not match !
-
-	videoCodecSelectByName(p);
+	videoEncoder6SelectByName(p);
 
 }
 static void call_videoconf(char *p)
 {
-	videoCodecConfigure(p,0,NULL);
+	//videoCodecConfigure(p,0,NULL);
+
+    //videoEncoder6Configure
 
 }
 void call_audiobitrate(char *p)

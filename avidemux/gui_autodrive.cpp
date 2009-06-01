@@ -33,14 +33,15 @@
 #include "audioeng_buildfilters.h"
 #include "gui_action.hxx"
 
-#include "ADM_encoder/adm_encConfig.h"
+//#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_filter/vidVCD.h"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+//#include "ADM_encoder/ADM_vidEncode.hxx"
 
-extern void setVideoEncoderSettings (COMPRESSION_MODE mode, uint32_t param,     uint32_t extraConf, uint8_t * extraData);
+//extern void setVideoEncoderSettings (COMPRESSION_MODE mode, uint32_t param,     uint32_t extraConf, uint8_t * extraData);
 
 uint8_t A_autoDrive(Action action)
 {
+#if 0
   uint32_t fq;
         //
         if(!currentaudiostream)
@@ -309,6 +310,7 @@ uint8_t A_autoDrive(Action action)
           default:
               UI_SetCurrentFormat(ADM_PS);
         }
+#endif
         return 1;
 }
 //EOF

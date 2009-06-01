@@ -16,7 +16,7 @@ Indexer progress dialog
  *                                                                         *
  ***************************************************************************/
 #include <math.h>
-
+#if 0
 #include "ADM_toolkitGtk.h"
 #include "DIA_coreToolkit.h"
 
@@ -241,3 +241,4 @@ GtkWidget       *create_dialog1 (void)
 
   return dialog1;
 }
+#endif

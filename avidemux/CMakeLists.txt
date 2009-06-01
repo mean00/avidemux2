@@ -219,7 +219,7 @@ ADD_SUBDIRECTORY(ADM_UIs)
 #########################################
 SET(ADM_TAILS
 	ADM_osSupport
-	ADM_encoder
+	#ADM_encoder
 	ADM_toolkit
 	ADM_requant
 	)
@@ -240,7 +240,7 @@ ENDFOREACH(_current ${ADM_TAILS})
 ADD_SUBDIRECTORY(ADM_libraries)
 
 ADD_LIB_ALL_TARGETS(
-	ADM_libmpeg2enc
+	#ADM_libmpeg2enc
 	ADM_xvidratectl
 )
 ADD_LIB_ALL_TARGETS(

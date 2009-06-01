@@ -27,9 +27,9 @@
 
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
 
-#include "ADM_encoder/adm_encoder.h"
+#include "ADM_encoderConf.h"
 
 
 #include "DIA_fileSel.h"

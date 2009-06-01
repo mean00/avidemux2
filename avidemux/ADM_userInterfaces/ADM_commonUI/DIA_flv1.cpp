@@ -5,7 +5,7 @@
 
 */
 #include "config.h"
-
+#if 0
 #include "ADM_lavcodec.h"
 
 #include "ADM_default.h"
@@ -44,5 +44,6 @@ uint8_t DIA_flv1Param(COMPRES_PARAMS *incoming)
   }
   return 0;
 }	
+#endif
 // EOF
 

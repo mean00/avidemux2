@@ -251,10 +251,10 @@ void filtermainWindow::button( bool b) \
     buildActiveFilterList ();  \
 	setSelected(nb_active_filter - 1); \
 }
-MAKE_BUTTON(DVD,setDVD)
-MAKE_BUTTON(VCD,setVCD)
-MAKE_BUTTON(SVCD,setSVCD)
-MAKE_BUTTON(halfD1,setHalfD1)
+//MAKE_BUTTON(DVD,setDVD)
+//MAKE_BUTTON(VCD,setVCD)
+//MAKE_BUTTON(SVCD,setSVCD)
+//MAKE_BUTTON(halfD1,setHalfD1)
 /**
         \fn     configure( bool b)
         \brief  Configure the selected active filter

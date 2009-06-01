@@ -35,7 +35,6 @@
 
 #include "audioeng_buildfilters.h"
 #include "prefs.h"
-#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_userInterfaces/ADM_render/GUI_render.h"
 #include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
 
@@ -48,11 +47,10 @@
 
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_encoder/ADM_vidEncode.hxx"
 #include "ADM_codecs/ADM_ffmpeg.h"
-#include "ADM_libraries/ADM_libmpeg2enc/ADM_mpeg2enc.h"
 #include "ADM_video/ADM_vidMisc.h"
 #include "ADM_preview.h"
+#include "ADM_coreVideoEncoder.h"
 
 
 static AudioSource currentAudioSource = AudioAvi;
@@ -221,11 +219,11 @@ int nw;
     		audioCodecSelect();
 		return;
 	case ACT_VideoConfigure:
-    		videoCodecSelect();
+    		videoEncoder6Configure();
 		return;
     case ACT_VideoCodecChanged:
     		nw=UI_getCurrentVCodec();
-    		videoCodecChanged(nw);
+    		videoEncoder6_SetCurrentEncoder(nw);
 		return;
    case ACT_AudioCodecChanged:
                 nw=UI_getCurrentACodec();
@@ -253,7 +251,7 @@ int nw;
 		 return;
     case ACT_VideoCodec:
       //videoCodecSelect ();
-      videoCodecConfigureUI();
+      videoEncoder6Configure();
       return;
     case ACT_AudioCodec:
       //audioCodecSelect ();
@@ -267,7 +265,7 @@ int nw;
         if(playing) return;
     	if(DIA_Preferences())
 	{
-	saveEncoderConfig ();
+//	saveEncoderConfig ();
  	#ifdef HAVE_AUDIO
       		AVDM_audioSave();
  	#endif
@@ -275,7 +273,7 @@ int nw;
 	}
 	return;
     case ACT_SavePref:
-      saveEncoderConfig ();
+//      saveEncoderConfig ();
  #ifdef HAVE_AUDIO
       AVDM_audioSave();
  #endif

@@ -11,10 +11,10 @@
 
 
 #include "ADM_codecs/ADM_codec.h"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
 #include "ADM_codecs/ADM_ffmpegConfig.h"
 #include "DIA_factory.h"
-
+#if 0
 #include "../../ADM_encoder/adm_encmjpeg_param.h"
 
 /**
@@ -37,5 +37,6 @@ uint8_t DIA_mjpegCodecSetting(COMPRES_PARAMS *param)
         return ret;
         
 }   
+#endif
 // EOF
 

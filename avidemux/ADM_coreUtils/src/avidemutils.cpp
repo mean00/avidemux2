@@ -27,10 +27,10 @@
 
 
 #define QT_TR_NOOP(x) x
-
-char *ADM_escape(const ADM_filename *incoming);
-bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
-void memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);
+uint8_t  mk_hex(uint8_t a, uint8_t b);
+char    *ADM_escape(const ADM_filename *incoming);
+bool     ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
+void     memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);
 uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 //_________________________________________________
@@ -370,6 +370,28 @@ int32_t ADM_getNiceValue(uint32_t priorityLevel)
 			return 18;
 			break;
 	}
+}
+uint8_t mk_hex(uint8_t a, uint8_t b)
+{
+	int a1 = a, b1 = b;
+
+	if (a >= 'a')
+	{
+		a1 = a1 + 10;
+		a1 = a1 - 'a';
+	}
+	else
+		a1 = a1 - '0';
+
+	if (b >= 'a')
+	{
+		b1 = b1 + 10;
+		b1 = b1 - 'a';
+	}
+	else
+		b1 = b1 - '0';
+
+	return (a1 << 4) + b1;
 }
 
 //EOF

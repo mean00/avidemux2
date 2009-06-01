@@ -19,10 +19,10 @@
 #include "audioeng_buildfilters.h"
 #include "avi_vars.h"
 #include "gui_action.hxx"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+//#include "ADM_encoder/ADM_vidEncode.hxx"
 #include "ADM_videoFilter.h"
-#include "ADM_encoder/adm_encoder.h"
-#include "ADM_encoder/adm_encConfig.h"
+//#include "ADM_encoder/adm_encoder.h"
+//#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_editor/ADM_outputfmt.h"
 
 

@@ -30,6 +30,7 @@
 #include "avi_vars.h"
 
 #include "ADM_userInterfaces/ADM_render/GUI_renderInternal.h"
+#include "ADM_coreVideoEncoderInternal.h"
 extern int global_argc;
 extern char **global_argv;
 
@@ -66,6 +67,8 @@ static uint32_t ADM_nbCustom=0;
 static int currentFps = 0;
 static int frameCount = 0;
 static int currentFrame = 0;
+bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
+uint32_t ADM_ve6_getNbEncoders(void);
 
 #ifdef HAVE_AUDIO
 extern uint8_t AVDM_setVolume(int volume);
@@ -714,13 +717,14 @@ uint8_t UI_updateRecentMenu( void )
 void setupMenus(void)
 {
 	uint32_t nbVid;
+    uint32_t maj,mn,pa;
 	const char *name;
 
-	nbVid=encoderGetEncoderCount();
+	nbVid=ADM_ve6_getNbEncoders();
 	printf("Found %d video encoder(s)\n",nbVid);
 	for(uint32_t i=1;i<nbVid;i++)
 	{
-		name=encoderGetIndexedName(i);
+		ADM_ve6_getEncoderInfo(i,&name,&maj,&mn,&pa);
 		WIDGET(comboBoxVideo)->addItem(name);
 	}
 

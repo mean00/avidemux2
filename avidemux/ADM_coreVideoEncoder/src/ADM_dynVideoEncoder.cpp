@@ -202,6 +202,42 @@ ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int
     ADM_coreVideoEncoder *enc=plugin->desc->create(chain);
     return enc;
 }
+/**
+    \fn videoEncoder6SelectByName
+*/
+bool videoEncoder6SelectByName(const char *name)
+{
+    int nb=ListOfEncoders.size();
+    for(int i=0;i<nb;i++)
+    {
+        ADM_videoEncoderDesc *desc=ListOfEncoders[i]->desc;
+        if(!strcasecmp(name,desc->encoderName))
+        {
+            currentVideoCodec=i;
+            return true;
+        }
+    }
+    return false;
+}
+/**
+    \fn videoEncoder6Configure
 
+*/
+bool                  videoEncoder6Configure(void)
+{
+    ADM_videoEncoderDesc *desc=ListOfEncoders[currentVideoCodec]->desc;
+    if(desc->configure) return desc->configure();
+    return true;
+}
+/**
+    \fn videoEncoder6_SetCurrentEncoder
 
+*/
+bool                  videoEncoder6_SetCurrentEncoder(uint32_t index)
+{
+      int nb=ListOfEncoders.size();
+      if(index>=nb) return false;
+      currentVideoCodec=index;
+      return true;
+}
 //EOF

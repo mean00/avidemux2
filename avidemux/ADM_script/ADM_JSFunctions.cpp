@@ -35,10 +35,10 @@
 #include "adm_scanner.h" 
 #include "avi_vars.h"
 #include "gui_action.hxx"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+//#include "ADM_encoder/ADM_vidEncode.hxx"
 #include "ADM_videoFilter.h"
-#include "ADM_encoder/adm_encoder.h"
-#include "ADM_encoder/adm_encConfig.h"
+//#include "ADM_encoder/adm_encoder.h"
+//#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_editor/ADM_outputfmt.h"
 
 #include "ADM_script/ADM_container.h"
@@ -112,7 +112,7 @@ static JSFunctionSpec adm_functions[] = {
   {"dialogFactoryMenu",         facMenu,          0},
   {"dialogFactoryFileSel",      facFile,          0},
   {"dialogFactoryBitrate",      facBitrate,       0},
-  {"dialogFactoryBar",        facBar,             0},
+//  {"dialogFactoryBar",        facBar,             0},
   {"dialogFactoryRoText",     facRoText,          0},
   {"dialogFactoryText",       facText,            0},
   {"dialogFactoryTabs",       facTab,             0},
@@ -615,6 +615,7 @@ JSBool facDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 
 JSBool facBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
+#if 0
    COMPRES_PARAMS test={
   CodecYV12,
   "YV12 (raw)",
@@ -640,9 +641,10 @@ JSBool facBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
     
   }else
     *rval = BOOLEAN_TO_JSVAL(0);
-  
+#endif  
   return JS_TRUE;
 }
+#if 0
 JSBool facBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     
@@ -658,6 +660,7 @@ JSBool facBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
   
   return JS_TRUE;
 }
+#endif
 void clickMe(void *cookie)
 {
   GUI_Error_HIG("Button","Button pressed!"); 

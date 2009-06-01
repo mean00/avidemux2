@@ -3,7 +3,6 @@
 #include "config.h"
 #include "ADM_inttype.h"
 #include "ADM_files.h"
-#include "ADM_encoder/ADM_pluginLoad.h"
 #include "DIA_uiTypes.h"
 
 #ifdef HAVE_GETTEXT

@@ -7,7 +7,7 @@
 #include <QtGui/QSpinBox>
 
 #include "ADM_inttype.h"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
 
 namespace ADM_Qt4Factory
 {

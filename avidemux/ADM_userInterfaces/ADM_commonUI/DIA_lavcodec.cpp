@@ -15,7 +15,7 @@
 #include "config.h"
 #include "ADM_default.h"
 
-
+#if 0
 #include "DIA_factory.h"
 #include "ADM_lavcodec.h"
 #include "ADM_codecs/ADM_ffmpegConfig.h"
@@ -110,4 +110,5 @@ uint32_t me=(uint32_t)conf->me_method;
         }
          return 0;
 }
+#endif
 // EOF

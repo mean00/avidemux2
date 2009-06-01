@@ -23,7 +23,7 @@
 
 #include "DIA_coreToolkit.h"
 
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
 
 #include "ADM_codecs/ADM_codec.h"
 #include "ADM_lavcodec.h"

@@ -2,8 +2,8 @@
 #include "ADM_lavcodec.h"
 
 
-
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#if 0
+//#include "ADM_encoder/ADM_vidEncode.hxx"
 //#include "ADM_gui/GUI_xvidparam.h"
 #include "prefs.h"
 
@@ -543,5 +543,5 @@ GtkWidget *create_dialog1 (void)
   return dialog1;
 }
 
-
+#endif
 #endif

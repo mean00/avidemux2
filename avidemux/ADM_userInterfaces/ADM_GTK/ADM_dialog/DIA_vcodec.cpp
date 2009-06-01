@@ -8,8 +8,8 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 
-#include "ADM_encoder/ADM_vidEncode.hxx"
-#include "ADM_encoder/adm_encoder.h"
+//#include "ADM_encoder/ADM_vidEncode.hxx"
+//#include "ADM_encoder/adm_encoder.h"
 
 //___________________________________
  
@@ -22,6 +22,7 @@ static GtkWidget *create_dialog1 (void);
 //___________________________________________________________
 uint8_t DIA_videoCodec(int *codecIndex)
 {
+#if 0
 #define CONFIGURE 99
 	uint8_t ret = 0;
 	uint32_t nb = encoderGetEncoderCount();
@@ -61,6 +62,8 @@ uint8_t DIA_videoCodec(int *codecIndex)
 	gtk_unregister_dialog(dialog);
 
 	return ret;
+#endif
+    return 0;
 } 
 
 GtkWidget *create_dialog1 (void)

@@ -20,11 +20,11 @@
 #include "audioeng_buildfilters.h"
 #include "avi_vars.h"
 #include "gui_action.hxx"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+//#include "ADM_encoder/ADM_vidEncode.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_encoder/adm_encoder.h"
-#include "ADM_encoder/adm_encConfig.h"
+//#include "ADM_encoder/adm_encoder.h"
+//#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_editor/ADM_outputfmt.h"
 #include "../ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
 #include "ADM_script/ADM_container.h"
@@ -257,6 +257,7 @@ JSBool ADM_JSAvidemuxVideo::Codec(JSContext *cx, JSObject *obj, uintN argc,
                 conf = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));
                 codecConfString = JS_GetStringBytes(JSVAL_TO_STRING(argv[2]));
                 enterLock();
+#if 0
                 if(!videoCodecSelectByName(codec))
                         *rval = BOOLEAN_TO_JSVAL(false);
                 else
@@ -278,6 +279,7 @@ JSBool ADM_JSAvidemuxVideo::Codec(JSContext *cx, JSObject *obj, uintN argc,
                         }
 
                 }// end conf
+#endif
                 leaveLock();
 
         return JS_TRUE;
@@ -286,7 +288,7 @@ JSBool ADM_JSAvidemuxVideo::Codec(JSContext *cx, JSObject *obj, uintN argc,
 JSBool ADM_JSAvidemuxVideo::codecPlugin(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = BOOLEAN_TO_JSVAL(false);
-
+#if 0
 	if (argc != 4)
 		return JS_FALSE;
 
@@ -313,7 +315,7 @@ JSBool ADM_JSAvidemuxVideo::codecPlugin(JSContext *cx, JSObject *obj, uintN argc
 		*rval = BOOLEAN_TO_JSVAL(videoCodecConfigure(conf, 0, (uint8_t*)data));
 
 	leaveLock();
-
+#endif
 	return JS_TRUE;
 }
 
@@ -321,7 +323,7 @@ JSBool ADM_JSAvidemuxVideo::CodecConf(JSContext *cx, JSObject *obj, uintN argc,
                                        jsval *argv, jsval *rval)
 {
 	*rval = BOOLEAN_TO_JSVAL(false);
-
+#if 0
 	if (argc != 1)
 		return JS_FALSE;
 
@@ -335,7 +337,7 @@ JSBool ADM_JSAvidemuxVideo::CodecConf(JSContext *cx, JSObject *obj, uintN argc,
 	enterLock();
 	*rval = INT_TO_JSVAL(loadVideoCodecConf(pTempStr));
 	leaveLock();
-
+#endif
 	return JS_TRUE;
 }
 
@@ -344,6 +346,7 @@ JSBool ADM_JSAvidemuxVideo::Save(JSContext *cx, JSObject *obj, uintN argc,
 {// begin Save
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
+#if 0
         if(argc != 1)
                 return JS_FALSE;
         if(JSVAL_IS_STRING(argv[0]) == false)
@@ -353,6 +356,7 @@ JSBool ADM_JSAvidemuxVideo::Save(JSContext *cx, JSObject *obj, uintN argc,
         enterLock();
         *rval = INT_TO_JSVAL(ADM_saveRaw(pTempStr));
         leaveLock();
+#endif
         return JS_TRUE;
 }// end Save
 
@@ -361,6 +365,7 @@ JSBool ADM_JSAvidemuxVideo::SaveJPEG(JSContext *cx, JSObject *obj, uintN argc,
 {// begin SaveJPG
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
+#if 0
         if(argc != 1)
                 return JS_FALSE;
         if(JSVAL_IS_STRING(argv[0]) == false)
@@ -370,6 +375,7 @@ JSBool ADM_JSAvidemuxVideo::SaveJPEG(JSContext *cx, JSObject *obj, uintN argc,
         enterLock();
         *rval = INT_TO_JSVAL(A_saveJpg(pTempStr));
         leaveLock();
+#endif
         return JS_TRUE;
 }// end SaveJPG
 
@@ -379,6 +385,7 @@ JSBool ADM_JSAvidemuxVideo::ListBlackFrames(JSContext *cx, JSObject *obj, uintN 
         
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
+#if 0
         if(argc != 1)
           return JS_FALSE;
         if(JSVAL_IS_STRING(argv[0]) == false)
@@ -388,6 +395,7 @@ JSBool ADM_JSAvidemuxVideo::ListBlackFrames(JSContext *cx, JSObject *obj, uintN 
         A_ListAllBlackFrames(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
         leaveLock();
         *rval = BOOLEAN_TO_JSVAL(true);
+#endif
         return JS_TRUE;
 }// end ListBlackFrames
 

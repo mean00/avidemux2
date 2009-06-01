@@ -33,7 +33,7 @@
 #include "ADM_videoFilter/ADM_vobsubinfo.h"
 #include "ADM_videoFilter/ADM_vidVobSub.h"
 
-#include "ADM_encoder/ADM_vidEncode.hxx"
+
 #include "audioencoder.h"
 #include "ADM_lavcodec.h"
 #include "ADM_codecs/ADM_ffmpegConfig.h"
@@ -64,9 +64,6 @@ int  DIA_getXvidCompressParams(COMPRESSION_MODE * mode, uint32_t * qz,
 uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous) {return 0;}
 uint8_t DIA_pipe(char **cmd,char **param) {return 0;}
 uint8_t DIA_vobsub(vobSubParam *param) {return 0;}
-uint8_t DIA_XVCDParam(char *title,COMPRESSION_MODE * mode, uint32_t * qz,
-		   				   uint32_t * br,uint32_t *fsize,FFcodecSetting *conf) {return 0;}
-uint8_t DIA_xvid4(COMPRES_PARAMS *incoming) {return 0;}
 uint8_t DIA_quota(char *) {return 0;}
 const char * GUI_getCustomScript(uint32_t nb) {return 0;}
 uint8_t DIA_RecentFiles( char **name ) {return 0;}

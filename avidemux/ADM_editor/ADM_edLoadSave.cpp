@@ -29,7 +29,7 @@
 #include "ADM_videoFilter_internal.h"
 
 #include "audioeng_buildfilters.h"
-#include "ADM_encoder/adm_encConfig.h"
+//#include "ADM_encoder/adm_encConfig.h"
 #include "prefs.h"
 #include "avi_vars.h"
 
@@ -157,6 +157,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
 
 // Video codec
 //___________________________
+#if 0
 		uint8_t *extraData;
 		uint32_t extraDataSize;
 
@@ -178,7 +179,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
 
 			qfprintf(fd, "\");\n");
 		}
-        
+#endif        
 // Audio Source
 //______________________________________________
 
@@ -211,6 +212,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
                         qfprintf(fd,"app.audio.setTrack(%d);\n", source); 
                         
         }
+#if 0
    getAudioExtraConf(&bitrate,&extraDataSize,&extraData);
    qfprintf(fd,"app.audio.codec(\"%s\",%d,%d,\"", audioCodecGetName(),bitrate,extraDataSize); 
    for(int i=0;i<extraDataSize;i++)
@@ -254,7 +256,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
         }
         if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
         
-        
+#endif        
   // Mixer
 
   // container

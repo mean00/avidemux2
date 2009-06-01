@@ -11,7 +11,7 @@
 
 
 #include "ADM_codecs/ADM_codec.h"
-#include "ADM_encoder/ADM_vidEncode.hxx"
+#include "ADM_encoderConf.h"
 #include "ADM_codecs/ADM_ffmpegConfig.h"
 #include "DIA_factory.h"
 
@@ -21,7 +21,7 @@
 #warning FIXME Old : MaxBitrate in Byte/s new entry in kb/s
 #warning FIXME Old : MaxBitrate in Byte/s new entry in kb/s
 #warning FIXME Old : MaxBitrate in Byte/s new entry in kb/s
-
+#if 0
 #include "../../ADM_libraries/ADM_libmpeg2enc/ADM_mpeg2enc.h"
 
 /**
@@ -92,5 +92,6 @@ uint32_t inter;
   }
   return 0;
 }	
+#endif
 // EOF
 

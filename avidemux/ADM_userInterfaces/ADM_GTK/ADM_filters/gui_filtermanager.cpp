@@ -193,27 +193,27 @@ void on_action (gui_act action)
         break;
 
     case A_VCD:
-        setVCD ();
-        updateFilterList ();
-        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
+//        setVCD ();
+//        updateFilterList ();
+//        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
         break;
 
     case A_SVCD:
-        setSVCD ();
-        updateFilterList ();
-        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
+//        setSVCD ();
+//        updateFilterList ();
+//        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
         break;
 
     case A_DVD:
-        setDVD ();
-        updateFilterList ();
-        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
+//        setDVD ();
+//        updateFilterList ();
+//        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
         break;
 
     case A_HALFD1:
-        setHalfD1 ();
-        updateFilterList ();
-        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
+//        setHalfD1 ();
+//        updateFilterList ();
+//        setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], nb_active_filter-2);
         break;
 
     default:

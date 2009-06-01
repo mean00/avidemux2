@@ -5,7 +5,7 @@
 */
 #include "config.h"
 
-
+#if 0
 #include "ADM_lavcodec.h"
 
 #include "ADM_default.h"
@@ -47,5 +47,6 @@ uint8_t DIA_requant(COMPRES_PARAMS *param)
         return ret;
         
 }   
+#endif
 // EOF
 

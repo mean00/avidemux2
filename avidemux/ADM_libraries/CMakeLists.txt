@@ -1,5 +1,5 @@
 subdirs (PREORDER ADM_ffmpeg)
-subdirs (PREORDER ADM_libmpeg2enc)
+#subdirs (PREORDER ADM_libmpeg2enc)
 #subdirs (PREORDER ADM_lvemux)
 #subdirs (PREORDER ADM_mplex)
 subdirs (PREORDER ADM_smjs)

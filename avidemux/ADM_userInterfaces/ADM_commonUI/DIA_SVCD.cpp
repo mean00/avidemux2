@@ -14,7 +14,7 @@
 #include "config.h"
 //#include "ADM_lavcodec.h"
 
-
+#if 0
 #include <string.h>
 #include <stdio.h>
 
@@ -80,4 +80,5 @@ uint32_t inter;
   }
   return 0;
 }	
+#endif
 // EOF
