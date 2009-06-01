@@ -1,6 +1,16 @@
 /**
-
+    \file ADM_videoProcess.h
+    \brief Wrap an encoder as a VideoStream
 */
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #ifndef ADM_VIDEOPROCESS_H
 #define ADM_VIDEOPROCESS_H
 #include "ADM_muxer.h"
@@ -13,6 +23,7 @@
 /**
     \class ADM_videoStreamProcess
     \brief Wrapper around encoder
+    @warning After creation, the VideoStream becomes the owner of the encoder and it will deleted here
 
 */
 class ADM_videoStreamProcess: public ADM_videoStream

@@ -207,6 +207,7 @@ ENDFOREACH(_current ${ADM_SUBDIR})
 # The part of the video filter that is inside avidemux
 ########################################################
 ADD_LIB_ALL_TARGETS(ADM_internalVideoFilter)
+ADD_LIB_ALL_TARGETS(ADM_internalVideoEncoder)
 ###########################################
 # Construct ADM_UIs
 ###########################################

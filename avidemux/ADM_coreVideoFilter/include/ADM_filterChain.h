@@ -1,10 +1,10 @@
 /***************************************************************************
-                          \fn ADM_VideoEncoders
-                          \brief Internal handling of video encoders
-                             -------------------
-    
-    copyright            : (C) 2002/2009 by mean
-    email                : fixounet@free.fr
+                          \fn ADM_filterChain.h
+                          \brief Base class for Video Filters
+                           (c) Mean 2009
+
+
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,17 +15,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_default.h"
-#include "ADM_coreVideoEncoder.h"
-#include "ADM_yv12Encoder.h"
-#include "ADM_filterChain.h"
-/**
-    \fn createVideoEncoder
-*/
-ADM_coreVideoEncoder *createVideoEncoder(ADM_coreVideoFilter *chain)
-{
-    // 1- Create encoder itself...
-    ADM_yv12Encoder *yv=new ADM_yv12Encoder(chain);
-    return yv;
-}
-// EOF
+
+#ifndef ADM_filterChain_H
+#define ADM_filterChain_H
+#include "ADM_coreVideoFilter.h"
+#include <vector>
+typedef std::vector <ADM_coreVideoFilter *>ADM_videoFilterChain;
+
+
+ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt);
+bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain);
+
+
+#endif
