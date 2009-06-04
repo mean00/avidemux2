@@ -1,0 +1,12 @@
+INCLUDE(ve_plugin)
+
+SET(png_SRCS 
+        pngPlugin.cpp
+        ADM_pngEncoder.cpp
+)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+ADD_LIBRARY(ADM_ve_png SHARED ${png_SRCS})
+TARGET_LINK_LIBRARIES(ADM_ve_png ${PNG_LIBRARIES})
+INIT_VIDEO_ENCODER(ADM_ve_png)
+INSTALL_VIDEO_ENCODER(ADM_ve_png)
