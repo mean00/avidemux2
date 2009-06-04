@@ -1,6 +1,7 @@
 #
 #  Macro to declare an video encoder plugin
 #
+SET(VE_PLUGIN_DIR "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins6/videoEncoders/")
 MACRO(INIT_VIDEO_ENCODER _lib)
 	INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_core/include")
 	INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreVideoEncoder/include")
@@ -13,6 +14,7 @@ MACRO(INIT_VIDEO_ENCODER _lib)
 ENDMACRO(INIT_VIDEO_ENCODER)
 
 MACRO(INSTALL_VIDEO_ENCODER _lib)
-	INSTALL(TARGETS ${_lib} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins6/videoEncoders/")
+	INSTALL(TARGETS ${_lib} DESTINATION "${VE_PLUGIN_DIR}")
 	TARGET_LINK_LIBRARIES(${_lib} ADM_core ADM_coreUI ADM_coreVideoEncoder ADM_coreImage)
 ENDMACRO(INSTALL_VIDEO_ENCODER)
+
