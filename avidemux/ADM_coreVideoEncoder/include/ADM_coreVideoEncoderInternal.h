@@ -30,7 +30,6 @@ typedef struct
 {
     const char   *encoderName;        // Internal name (tag)
     const char   *menuName;         // Displayed name (in menu)
-    const char   *fourCC;
     const char   *description;      // Short description
 
     uint32_t     apiVersion;            // const
@@ -97,11 +96,10 @@ bool setConfigurationData (uint32_t l, uint8_t * d)\
 }
 
 
-#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,fourcc,desc,configure,uiType,maj,minV,patch) \
+#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch) \
 static ADM_videoEncoderDesc encoderDesc={\
     name,\
     menuName,\
-    fourcc,\
     desc,\
     ADM_VIDEO_ENCODER_API_VERSION,\
     &create,\

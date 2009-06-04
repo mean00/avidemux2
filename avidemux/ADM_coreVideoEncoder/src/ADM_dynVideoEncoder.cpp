@@ -60,7 +60,6 @@ std::vector <ADM_videoEncoder6 *> ListOfEncoders;
 ADM_videoEncoderDesc copyDesc={
         "Copy",
         "Copy",
-        "Copy",
         "Copy encoder",
         ADM_VIDEO_ENCODER_API_VERSION, //uint32_t     apiVersion;            // const
 
@@ -200,6 +199,15 @@ ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int
     ADM_videoEncoder6 *plugin=ListOfEncoders[index];
 
     ADM_coreVideoEncoder *enc=plugin->desc->create(chain);
+    if(enc)
+    {
+        if(false==enc->setup())
+        {
+            printf("[createVideoEncoderFromIndex] Cannot setup encoder\n");
+            delete enc;
+            return NULL;
+        }
+    }
     return enc;
 }
 /**

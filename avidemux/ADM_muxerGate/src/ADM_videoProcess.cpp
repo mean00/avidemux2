@@ -27,7 +27,7 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
 
     width=encoder->getWidth();
     height=encoder->getHeight();
-    fcc=encoder->getFCCHandler();
+    fcc=encoder->getFourcc();
     printf("[StreamProcess] Stream %"LU"x%"LU", codec : %s\n",width,height,fcc);
     fourCC=fourCC::get((uint8_t *)fcc);
     float f=encoder->getFrameIncrement();

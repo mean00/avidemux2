@@ -34,13 +34,7 @@ public:
                             ADM_yv12Encoder(ADM_coreVideoFilter *src);
                             ~ADM_yv12Encoder();
 virtual        bool         encode (ADMBitstream * out);
-virtual        const char *getDisplayName(void);       /// E.g. FFmpeg mpeg4      
-virtual        const char *getCodecName(void);         /// aka fourcc
-virtual        const char *getFCCHandler(void);        /// fourcc 2, needed to build AVI header
-
-virtual        bool        configure(void);           /// Pop-up UI
-virtual        bool        getConfiguration(uint32_t *l,uint8_t **d); /// Get current conf to save it
-virtual        bool        setConfiguration(uint32_t l,uint8_t *d);   /// Set conf, call it just after creation
+virtual const  char         *getFourcc(void) {return "YV12";}
 };
 
 

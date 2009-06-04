@@ -24,7 +24,6 @@ ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_jpegEncoder);
 ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
 ADM_DECLARE_VIDEO_ENCODER_MAIN("Mjpeg",
                                "Mjpeg Encoder",
-                               "jpeg",
                                "Simple jpeg Encoder (c) 2009 Mean",
                                 NULL, // No configuration
                                 ADM_UI_ALL,

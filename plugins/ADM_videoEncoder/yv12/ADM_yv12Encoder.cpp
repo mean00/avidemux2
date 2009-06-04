@@ -38,57 +38,7 @@ ADM_yv12Encoder::~ADM_yv12Encoder()
 {
     printf("[YV12Encoder] Destroying.\n");
 }
-/**
-    \fn getDisplayName
-*/
 
-const char *ADM_yv12Encoder::getDisplayName(void)
-{
-    return "YV12 Encoder";
-
-}
-/**
-    \fn getCodecName
-*/
-
-const char *ADM_yv12Encoder::getCodecName(void)
-{
-    return "yv12";
-}
-/**
-    \fn getFCCHandler
-*/
-
-const char *ADM_yv12Encoder::getFCCHandler(void)
-{
-    return "yv12";
-
-}
-/**
-    \fn configure
-*/
-bool        ADM_yv12Encoder::configure(void)
-{
-    return true;
-}
-
-/**
-    \fn getConfiguration
-*/
-bool        ADM_yv12Encoder::getConfiguration(uint32_t *l,uint8_t **d)
-{
-        *l=0;
-        *d=NULL;
-        return true;
-}
-
-/**
-    \fn setConfiguration
-*/
-bool        ADM_yv12Encoder::setConfiguration(uint32_t l,uint8_t *d)
-{
-        return true;
-}
 
 /**
     \fn encode
