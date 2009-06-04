@@ -1,0 +1,26 @@
+<?xml version='1.0'?>
+<x264Config>
+  <encodeOptions>
+    <mode>2PASS ABR</mode>
+    <parameter>600</parameter>
+  </encodeOptions>
+  <x264Options>
+    <idcLevel>13</idcLevel>
+    <cabac>false</cabac>
+    <analyse>
+      <partitionI4x4>true</partitionI4x4>
+      <partitionI8x8>false</partitionI8x8>
+      <partitionP8x8>true</partitionP8x8>
+      <partitionP4x4>true</partitionP4x4>
+      <partitionB8x8>true</partitionB8x8>
+      <motionEstimationMethod>multi-hexagonal</motionEstimationMethod>
+      <motionVectorSearchRange>12</motionVectorSearchRange>
+      <trellis>disabled</trellis>
+    </analyse>
+    <rateControl>
+      <quantiserMinimum>16</quantiserMinimum>
+      <vbvMaximumBitrate>768</vbvMaximumBitrate>
+      <vbvBufferSize>768</vbvBufferSize>
+    </rateControl>
+  </x264Options>
+</x264Config>

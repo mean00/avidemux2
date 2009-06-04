@@ -1,0 +1,30 @@
+<?xml version='1.0'?>
+<x264Config>
+  <encodeOptions>
+    <mode>2PASS ABR</mode>
+    <parameter>1000</parameter>
+  </encodeOptions>
+  <x264Options>
+    <idcLevel>3</idcLevel>
+    <referenceFrames>3</referenceFrames>
+    <bFrames>3</bFrames>
+    <adaptiveBframeDecision>2</adaptiveBframeDecision>
+    <analyse>
+      <partitionI4x4>true</partitionI4x4>
+      <partitionI8x8>false</partitionI8x8>
+      <partitionP8x8>true</partitionP8x8>
+      <partitionP4x4>false</partitionP4x4>
+      <partitionB8x8>true</partitionB8x8>
+      <weightedPrediction>true</weightedPrediction>
+      <directPredictionMode>auto</directPredictionMode>
+      <motionEstimationMethod>multi-hexagonal</motionEstimationMethod>
+      <subpixelRefinement>7</subpixelRefinement>
+      <mixedReferences>true</mixedReferences>
+      <trellis>finalMacroblock</trellis>
+    </analyse>
+    <rateControl>
+      <vbvMaximumBitrate>10000</vbvMaximumBitrate>
+      <vbvBufferSize>10000</vbvBufferSize>
+    </rateControl>
+  </x264Options>
+</x264Config>

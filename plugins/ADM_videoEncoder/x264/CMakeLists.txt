@@ -1,0 +1,30 @@
+INCLUDE(ve_plugin)
+INCLUDE(admCheckX264)
+INCLUDE(admCheckLibxml2)
+
+checkX264()
+
+IF (X264_FOUND)
+	checkLibxml2()
+
+	IF (LIBXML2_FOUND)
+		INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${X264_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
+		ADD_DEFINITIONS(${LIBXML2_DEFINITIONS})
+		
+		SET(QT_PLUGIN_NAME "ADM_vidEnc_x264_Qt")
+		SET(GTK_PLUGIN_NAME "ADM_vidEnc_x264_Gtk")
+		SET(PLUGIN_SUBDIR "x264")
+		SET(ADM_ve_x264_SRCS interface.c configGuiLoader.cpp encoder.cpp guiHelper.cpp options.cpp presetOptions.cpp zoneOptions.cpp x264Plugin.cpp)
+
+		CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+
+		ADD_SUBDIRECTORY(gtk)
+		ADD_SUBDIRECTORY(qt4)
+		ADD_SUBDIRECTORY(xml)
+                ADD_LIBRARY(ADM_ve_x264 shared ADM_ve_x264_SRCS)
+                INIT_VIDEO_ENCODER(ADM_ve_x264)
+		TARGET_LINK_LIBRARIES(ADM_ve_x264 ADM_core ${X264_LIBRARY_DIR} ${LIBXML2_LIBRARIES})
+		INSTALL_VIDEO_ENCODER(ADM_ve_x264)
+		INSTALL(FILES x264Param.xsd DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins6/videoEncoders/")
+	ENDIF (LIBXML2_FOUND)
+ENDIF (X264_FOUND)
