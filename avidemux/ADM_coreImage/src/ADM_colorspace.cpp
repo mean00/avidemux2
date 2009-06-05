@@ -52,6 +52,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
   {
     case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
     case ADM_COLOR_YUV422P: return PIX_FMT_YUV422P;
+    case ADM_COLOR_RGB32A: return PIX_FMT_RGB32;
     default : ADM_assert(0); 
   }
   return PIX_FMT_YUV420P;
@@ -80,7 +81,14 @@ uint8_t ADMColorspace::getStrideAndPointers(uint8_t  *from,ADM_colorspace fromCo
             srcStride[1]=width>>1;
             srcStride[2]=width>>1;
             break;
-
+    case ADM_COLOR_RGB32A:
+            srcData[0]=from;
+            srcData[1]=NULL;
+            srcData[2]=NULL;
+            srcStride[0]=width*4;
+            srcStride[1]=0;
+            srcStride[2]=0;
+            break;
     default:
         ADM_assert(0);
   }

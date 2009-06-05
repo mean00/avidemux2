@@ -19,12 +19,13 @@
 #include "ADM_jpegEncoder.h"
 #include "ADM_coreVideoEncoderInternal.h"
 
+extern bool         jpegConfigure(void);
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_jpegEncoder);
 ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
 ADM_DECLARE_VIDEO_ENCODER_MAIN("Mjpeg",
                                "Mjpeg Encoder",
                                "Simple jpeg Encoder (c) 2009 Mean",
-                                NULL, // No configuration
+                                jpegConfigure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0);

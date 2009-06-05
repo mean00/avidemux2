@@ -18,10 +18,10 @@
 #include "ADM_lavcodec.h"
 #include "ADM_default.h"
 #include "ADM_jpegEncoder.h"
+#include "DIA_factory.h"
 
-
-static int Quantizer=2;
-static ADM_colorspace color=ADM_COLOR_YV12; //ADM_COLOR_RGB32A; //ADM_COLOR_YV12;
+static uint32_t Quantizer=2;
+static ADM_colorspace color=ADM_COLOR_YUV422P; //ADM_COLOR_YUV422P; //ADM_COLOR_YV12;
 /**
         \fn ADM_jpegEncoder
 */
@@ -29,9 +29,10 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncode
 {
     printf("[jpegEncoder] Creating.\n");
     int w,h;
-    FilterInfo *info=src->getInfo();
-    w=info->width;
-    h=info->height;
+   
+    w=getWidth();
+    h=getHeight();
+
     image=new ADMImage(w,h);
     plane=(w*h*3)/2;
     _context = avcodec_alloc_context ();
@@ -41,8 +42,7 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncode
     _context->width = w;
     _context->height = h;
     _context->strict_std_compliance = -1;
-    // YV12
-  
+    // For RGB we need a temp buffer...  
     rgbBuffer=new uint8_t [(w+7)*(h+7)*4];
 }
 /**
@@ -52,13 +52,19 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncode
 
 bool ADM_jpegEncoder::prolog(void)
 {
-  uint32_t w=getWidth();
+  int w=getWidth();
+  int h=getHeight();
+
   switch(color)
     {
         case ADM_COLOR_YV12:    _frame.linesize[0] = w; 
                                 _frame.linesize[1] = w>>1; 
                                 _frame.linesize[2] = w>>1; 
                                 _context->pix_fmt =PIX_FMT_YUV420P;break;
+        case ADM_COLOR_YUV422P: _frame.linesize[0] = w; 
+                                _frame.linesize[1] = w>>1;
+                                _frame.linesize[2] = w>>1;
+                                _context->pix_fmt =PIX_FMT_YUV422P;break;
         case ADM_COLOR_RGB32A : _frame.linesize[0] = w*4;
                                 _frame.linesize[1] = 0;//w >> 1;
                                 _frame.linesize[2] = 0;//w >> 1;
@@ -156,8 +162,23 @@ uint8_t *from;
                 _frame.data[2] = image->GetWritePtr(PLANAR_U);
                 _frame.data[1] = image->GetWritePtr(PLANAR_V);
                 break;
+
+        case ADM_COLOR_YUV422P:
+        {
+              int w=getWidth();
+              int h=getHeight();
+
+                if(!colorSpace->convert(image->data,rgbBuffer))
+                {
+                    printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
+                    return false;
+                }
+                _frame.data[0] = rgbBuffer;
+                _frame.data[2] = rgbBuffer+(w*h);
+                _frame.data[1] = rgbBuffer+(w*h*3)/2;
+                break;
+        }
         case ADM_COLOR_RGB32A:
-          
                 if(!colorSpace->convert(image->data,rgbBuffer))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
@@ -182,5 +203,32 @@ uint8_t *from;
     out->flags=AVI_KEY_FRAME;
     return true;
 }
+/**
+    \fn jpegConfigure
+    \brief UI configuration for jpeg encoder
+*/
+static const diaMenuEntry colorMenus[2]=
+    {
+	{ADM_COLOR_YUV422P,QT_TR_NOOP("YUV422")},
+	{ADM_COLOR_YV12,QT_TR_NOOP("YUV420")},
+};
 
+bool         jpegConfigure(void)
+{
+uint32_t colorM;
+    printf("[jpeg] Configure\n");
+    colorM=(uint32_t)color;
+
+    diaElemUInteger  q(&(Quantizer),QT_TR_NOOP("_Quantizer:"),2,31);
+    diaElemMenu      c(&colorM,QT_TR_NOOP("_ColorSpace:"),2,colorMenus);
+
+    diaElem *elems[2]={&q,&c};
+    
+  if( diaFactoryRun(QT_TR_NOOP("Mjpeg Configuration"),2 ,elems))
+  {
+    color=(ADM_colorspace)colorM;
+    return false;
+  }
+  return true;
+}
 // EOF
