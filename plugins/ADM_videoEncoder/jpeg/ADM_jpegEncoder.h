@@ -36,6 +36,7 @@ protected:
                AVFrame          _frame;
                ADMColorspace    *colorSpace;
                uint8_t          *rgbBuffer;
+                bool            prolog(void);
 public:
 
                             ADM_jpegEncoder(ADM_coreVideoFilter *src);

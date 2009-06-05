@@ -21,7 +21,7 @@
 
 
 static int Quantizer=2;
-static ADM_colorspace color=ADM_COLOR_RGB24; //ADM_COLOR_YUV422;
+static ADM_colorspace color=ADM_COLOR_YV12; //ADM_COLOR_RGB32A; //ADM_COLOR_YV12;
 /**
         \fn ADM_jpegEncoder
 */
@@ -42,18 +42,38 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncode
     _context->height = h;
     _context->strict_std_compliance = -1;
     // YV12
-    switch(color)
+  
+    rgbBuffer=new uint8_t [(w+7)*(h+7)*4];
+}
+/**
+    \fn prolog
+
+*/
+
+bool ADM_jpegEncoder::prolog(void)
+{
+  uint32_t w=getWidth();
+  switch(color)
     {
-        case ADM_COLOR_YUV422: _frame.linesize[0] = w*2; _context->pix_fmt =PIX_FMT_YUYV422;break;
-        case ADM_COLOR_RGB24 : _frame.linesize[0] = w*3; _context->pix_fmt =PIX_FMT_RGB24;break;
+        case ADM_COLOR_YV12:    _frame.linesize[0] = w; 
+                                _frame.linesize[1] = w>>1; 
+                                _frame.linesize[2] = w>>1; 
+                                _context->pix_fmt =PIX_FMT_YUV420P;break;
+        case ADM_COLOR_RGB32A : _frame.linesize[0] = w*4;
+                                _frame.linesize[1] = 0;//w >> 1;
+                                _frame.linesize[2] = 0;//w >> 1;
+                                _context->pix_fmt =PIX_FMT_RGB32;break;
         default: ADM_assert(0);
 
     }
-    _frame.linesize[1] = 0;//w >> 1;
-    _frame.linesize[2] = 0;//w >> 1;
-    //   
     _frame.quality = (int) floor (FF_QP2LAMBDA * Quantizer+ 0.5);
-    rgbBuffer=new uint8_t [(w+7)*(h+7)*4];
+    // Eval fps
+    uint64_t f=source->getInfo()->frameIncrement;
+    if(!f) f=40000;
+    _context->time_base.den=f;
+    _context->time_base.num=1000000;
+    
+    return true;
 }
 /**
     \fn setup
@@ -68,6 +88,7 @@ if(!codec)
         return false;
     }
    // capabilities = codec->capabilities & CODEC_CAP_DELAY ? ADM_ENC_REQ_NULL_FLUSH : 0; 
+   prolog();
    res=avcodec_open(_context, codec); 
    if(res<0) 
     {   printf("[Jpeg] Cannot open codec\n");
@@ -79,12 +100,14 @@ if(!codec)
     FilterInfo *info=source->getInfo();
     w=info->width;
     h=info->height;
-    
-    colorSpace=new ADMColorspace(w,h,ADM_COLOR_YV12,color);
-    if(!colorSpace)
+    if(color!=ADM_COLOR_YV12)
     {
-        printf("[ADM_jpegEncoder] Cannot allocate colorspace\n");
-        return false;
+        colorSpace=new ADMColorspace(w,h,ADM_COLOR_YV12,color);
+        if(!colorSpace)
+        {
+            printf("[ADM_jpegEncoder] Cannot allocate colorspace\n");
+            return false;
+        }
     }
     return true;
 }
@@ -119,22 +142,34 @@ ADM_jpegEncoder::~ADM_jpegEncoder()
 */
 bool         ADM_jpegEncoder::encode (ADMBitstream * out)
 {
+uint8_t *from;
     if(source->getNextFrame(image)==false)
     {
         printf("[jpeg] Cannot get next image\n");
         return false;
     }
-    // 1- Convert to RGB24
-     if(!colorSpace->convert(image->data,rgbBuffer))
-        {
-            printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
-            return false;
-        }
-           
-    _frame.data[0] = rgbBuffer;
-    _frame.data[2] = NULL;
-    _frame.data[1] = NULL;
-
+    prolog();
+    switch(color)
+    {
+        case ADM_COLOR_YV12:      
+                _frame.data[0] = image->GetWritePtr(PLANAR_Y);
+                _frame.data[2] = image->GetWritePtr(PLANAR_U);
+                _frame.data[1] = image->GetWritePtr(PLANAR_V);
+                break;
+        case ADM_COLOR_RGB32A:
+          
+                if(!colorSpace->convert(image->data,rgbBuffer))
+                {
+                    printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
+                    return false;
+                }
+                _frame.data[0] = rgbBuffer;
+                _frame.data[2] = NULL;
+                _frame.data[1] = NULL;
+                break;
+        default:
+                ADM_assert(0);
+    }
     int sz=0;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
     {
