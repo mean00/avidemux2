@@ -20,7 +20,7 @@
 #include "fourcc.h"
 #include "muxerRaw.h"
 #include "DIA_coreToolkit.h"
-
+#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 
 
 #if 1
@@ -78,10 +78,20 @@ bool muxerRaw::save(void)
     uint64_t pts,dts,rawDts;
     uint64_t lastVideoDts=0;
     int written=0;
-    
+    uint64_t videoDuration=vStream->getVideoDuration();
 
+    encoding=createWorking("Saving raw video");
     while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
     {
+            float p=0.5;
+            if(videoDuration && dts!=ADM_NO_PTS)
+                    p=dts/videoDuration;
+            p=p*100;
+            encoding->update((uint32_t)p);
+            if(!encoding->isAlive()) 
+            {
+                break;
+            }
         fwrite(buffer,len,1,file);
         written++;
 

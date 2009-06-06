@@ -308,6 +308,8 @@ bool muxerMP4::save(void)
     uint64_t videoIncrement;
     int ret;
     int written=0;
+    bool result=true;
+
     float f=(float)vStream->getAvgFps1000();
     f=1000./f;
     f*=1000000;
@@ -318,9 +320,28 @@ bool muxerMP4::save(void)
 
     printf("[MP4]avg fps=%u\n",vStream->getAvgFps1000());
     AVRational *scale=&(video_st->codec->time_base);
+    uint64_t videoDuration=vStream->getVideoDuration();
+
+    char *title=QT_TR_NOOP("Saving mp4");
+    if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TR_NOOP("Saving PSP");
+    encoding=createWorking(title);
+
     while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
     {
 	AVPacket pkt;
+
+            float p=0.5;
+            if(videoDuration)
+                    p=lastVideoDts/videoDuration;
+            p=p*100;
+            encoding->update((uint32_t)p);
+            if(!encoding->isAlive()) 
+            {
+                result=false;
+                break;
+            }
+
+
             aprintf("[MP5] LastDts:%08lu Dts:%08lu (%04.4lu) Delta : %u\n",lastVideoDts,dts,dts/1000000,dts-lastVideoDts);
             rawDts=dts;
             if(rawDts==ADM_NO_PTS)
@@ -402,7 +423,7 @@ bool muxerMP4::save(void)
     delete [] buffer;
     delete [] audioBuffer;
     printf("[MP4] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
-    return true;
+    return result;
 }
 /**
     \fn close

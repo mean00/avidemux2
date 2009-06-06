@@ -8,6 +8,7 @@
 #define ADM_muxer_H
 #include "ADM_default.h"
 #include "ADM_audioStream.h"
+#include "DIA_working.h"
 /**
     \class ADM_videoStream
 
@@ -18,6 +19,7 @@ protected:
             uint32_t width,height,averageFps1000;
             uint32_t fourCC;
             bool     isCFR;
+            DIA_workingBase *encoding;
 public:
                       ADM_videoStream() {};
             virtual ~ADM_videoStream() {};
@@ -43,10 +45,11 @@ protected:
                 ADM_videoStream *vStream;       // Internal copy of the parameters
                 ADM_audioStream  **aStreams;
                 uint32_t         nbAStreams;
+                DIA_workingBase  *encoding;
                 
 public:
-                          ADM_muxer() {vStream=NULL;aStreams=NULL;nbAStreams=0;};
-        virtual           ~ADM_muxer() {};
+                          ADM_muxer() {vStream=NULL;aStreams=NULL;nbAStreams=0;encoding=NULL;};
+        virtual           ~ADM_muxer() {if(encoding) delete encoding;encoding=NULL;};
         virtual bool      open(const char *filename,   ADM_videoStream *videoStream,
                                 uint32_t nbAudioTrack, ADM_audioStream **audioStreams)=0;
 

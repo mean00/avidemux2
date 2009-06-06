@@ -142,7 +142,7 @@ bool muxerAvi::save(void)
 {
     printf("[AviMuxer] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
-
+    bool result=true;
     uint32_t len,flags;
     uint64_t pts,dts,rawDts;
     uint64_t lastVideoDts=0;
@@ -159,13 +159,14 @@ bool muxerAvi::save(void)
     videoBuffer=new uint8_t[bufSize];
 
     printf("[AviMuxer]avg fps=%u\n",vStream->getAvgFps1000());
-    DIA_encodingBase  *progress=createEncoding(vStream->getAvgFps1000());
-    progress->setContainer("AVI");
 
     uint64_t aviTime=0;
     if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
     if(dts==ADM_NO_PTS) dts=0;
     lastVideoDts=dts;
+
+    encoding=createWorking("Saving avi");
+
     while(1)
     {
             if(dts>aviTime+videoIncrement)
@@ -176,6 +177,7 @@ bool muxerAvi::save(void)
                 if(!writter.saveVideoFrame( len, flags,videoBuffer))  // Put our real video
                 {
                         printf("[AviMuxer] Error writting video frame\n");
+                        result=false;
                         goto abt;
                 }
                 if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
@@ -191,21 +193,26 @@ bool muxerAvi::save(void)
 
             uint32_t  percent=(100*aviTime)/videoDuration;
             if(percent>100) percent=100;
-            progress->setPercent(percent);
+            
+            encoding->update(percent);
+            if(!encoding->isAlive()) 
+            {
+                result=false;
+                goto abt;
+            }
 
             written++;
             aviTime+=videoIncrement;
     }
 abt:
     writter.setEnd();
-
     delete [] videoBuffer;
     videoBuffer=NULL;
     delete [] audioBuffer;
     audioBuffer=NULL;
     printf("[AviMuxer] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
-    delete progress;
-    return true;
+    
+    return result;
 }
 /**
     \fn close
