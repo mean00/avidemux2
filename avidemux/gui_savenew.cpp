@@ -123,7 +123,7 @@ int A_Save(const char *name)
     //
 
     if(muxer) delete muxer;
-    if (!audioProcessMode() && astreams[0])
+    if (audioProcessMode() && astreams[0])
         delete astreams[0];
     delete video;
     return ret;
