@@ -78,6 +78,7 @@ bool ADM_jpegEncoder::prolog(void)
     if(!f) f=40000;
     _context->time_base.den=f;
     _context->time_base.num=1000000;
+    _context->flags |= CODEC_FLAG_QSCALE;
     
     return true;
 }
@@ -100,7 +101,7 @@ if(!codec)
     {   printf("[Jpeg] Cannot open codec\n");
         return false;
     }
-    _context->flags |= CODEC_FLAG_QSCALE;
+   
     // Now allocate colorspace
     int w,h;
     FilterInfo *info=source->getInfo();
