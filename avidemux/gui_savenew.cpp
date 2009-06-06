@@ -50,7 +50,7 @@ int A_Save(const char *name)
     int ret=1;
     ADM_muxer *muxer=NULL;
     int index=UI_GetCurrentFormat();
-    bool process=true;
+    int process=UI_getCurrentVCodec();
     ADM_videoFilterChain *chain=NULL;
     
     printf("[A_Save] Saving..\n");
@@ -87,7 +87,7 @@ int A_Save(const char *name)
                 return 0;
         }
         // 2- Create Encoder
-        video=createVideoStream(chain,UI_GetCurrentFormat());
+        video=createVideoStream(chain,process);
         if(!video)
         {
                 GUI_Error_HIG("Video","Cannot create encoder");
