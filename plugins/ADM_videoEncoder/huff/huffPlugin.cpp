@@ -1,6 +1,6 @@
 /***************************************************************************
-                          \fn ADM_VideoEncoders
-                          \brief Internal handling of video encoders
+                          \fn     jpegPlugin
+                          \brief  Plugin for jpeg dummy encoder
                              -------------------
     
     copyright            : (C) 2002/2009 by mean
@@ -15,26 +15,17 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_jpeg_ENCODER_H
-#define ADM_jpeg_ENCODER_H
-#include "ADM_coreVideoEncoderFFmpeg.h"
-/**
-        \class ADM_jpegEncoder
-        \brief Dummy encoder that does nothing
+#include "ADM_default.h"
+#include "ADM_huffEncoder.h"
+#include "ADM_coreVideoEncoderInternal.h"
 
-*/
-class ADM_jpegEncoder : public ADM_coreVideoEncoderFFmpeg
-{
-protected:
-               int              plane;
-public:
+extern bool         huffConfigure(void);
 
-                           ADM_jpegEncoder(ADM_coreVideoFilter *src);
-                           ~ADM_jpegEncoder();
-virtual        bool        setup(void); 
-virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "jpeg";}
-};
-
-
-#endif
+ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_huffEncoder);
+ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
+ADM_DECLARE_VIDEO_ENCODER_MAIN("HUFFYUV",
+                               "(FF)HuffYUV",
+                               "FF Huffyuv (c) 2009 Mean",
+                                huffConfigure, // No configuration
+                                ADM_UI_ALL,
+                                1,0,0);

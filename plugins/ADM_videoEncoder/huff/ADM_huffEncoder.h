@@ -15,25 +15,26 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_jpeg_ENCODER_H
-#define ADM_jpeg_ENCODER_H
+#ifndef ADM_huff_ENCODER_H
+#define ADM_huff_ENCODER_H
 #include "ADM_coreVideoEncoderFFmpeg.h"
 /**
-        \class ADM_jpegEncoder
+        \class ADM_huffEncoder
         \brief Dummy encoder that does nothing
 
 */
-class ADM_jpegEncoder : public ADM_coreVideoEncoderFFmpeg
+class ADM_huffEncoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
                int              plane;
 public:
 
-                           ADM_jpegEncoder(ADM_coreVideoFilter *src);
-                           ~ADM_jpegEncoder();
+                           ADM_huffEncoder(ADM_coreVideoFilter *src);
+                           ~ADM_huffEncoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "jpeg";}
+virtual const  char        *getFourcc(void);
+virtual        bool         getExtraData(uint32_t *l,uint8_t **d);
 };
 
 

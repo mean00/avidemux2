@@ -1,5 +1,6 @@
 SET(ADM_CoreVideoEncoder_SRCS 
 	ADM_coreVideoEncoder.cpp
+        ADM_coreVideoEncoderFFmpeg.cpp
 )
 
 ADD_LIBRARY(ADM_coreVideoEncoder SHARED ${ADM_CoreVideoEncoder_SRCS})
