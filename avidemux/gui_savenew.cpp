@@ -52,7 +52,9 @@ int A_Save(const char *name)
     int index=UI_GetCurrentFormat();
     int process=UI_getCurrentVCodec();
     ADM_videoFilterChain *chain=NULL;
-    
+     uint64_t markerA,markerB;
+        markerA=video_body->getMarkerAPts();
+        markerB=video_body->getMarkerBPts();
     printf("[A_Save] Saving..\n");
 
     if(!(muxer=ADM_MuxerSpawnFromIndex(index)))
@@ -79,7 +81,8 @@ int A_Save(const char *name)
     }else
     {
         // 1- create filter chain
-        chain=createVideoFilterChain(0,10000000000LL);
+       
+        chain=createVideoFilterChain(markerA,markerB);
         if(!chain)
         {
                 GUI_Error_HIG("Video","Cannot instantiante video Chain");
@@ -107,7 +110,7 @@ int A_Save(const char *name)
         if(audio)
         {
             // Access..
-            ADM_audioStream *access=createEncodingStream(0,0); // FIXME LEAK
+            ADM_audioStream *access=createEncodingStream(markerA,0); // FIXME LEAK
             astreams[0]=access;
         }
     }

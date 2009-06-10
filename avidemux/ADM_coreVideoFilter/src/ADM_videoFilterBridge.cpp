@@ -26,6 +26,7 @@ extern ADM_Composer *video_body;
 */
 ADM_videoFilterBridge::ADM_videoFilterBridge(uint64_t startTime, uint64_t endTime) : ADM_coreVideoFilter(NULL,NULL)
 {
+    printf("[VideoFilterBridge] Creating bridge from %"LU" s to %"LU" s\n",(uint32_t)(startTime/1000000LL),(uint32_t)(endTime/1000000LL));
     this->startTime=startTime;
     this->endTime=endTime;
     
@@ -62,7 +63,24 @@ ADM_videoFilterBridge::~ADM_videoFilterBridge()
 */
 bool         ADM_videoFilterBridge::getNextFrame(ADMImage *image)
 {
-    return   video_body->NextPicture(image);
+again:
+    bool r=   video_body->NextPicture(image);
+    if(r==false) return false;
+    // Translate pts if any
+    int64_t pts=image->Pts;
+    if(pts>endTime)
+    {
+        printf("[VideoBridge] This frame is too late (%"LU" vs %"LU")\n",pts,startTime);
+        return false;
+    }
+    if(pts<startTime) 
+    {
+            printf("[VideoBridge] This frame is too early (%"LU" vs %"LU")\n",pts,endTime);
+            goto again;
+    }
+    // Rescale time
+    image->Pts-=startTime;
+    return true;
 }
 /**
     \fn ADM_videoFilterBridge

@@ -57,7 +57,19 @@ uint32_t relframe, seg, flags, len;
 */
 bool        ADM_Composer::GoToTime(uint64_t time)
 {
-    return GoToIntra(0);
+    // 1st go to the previous intra...
+      uint32_t frame=searchFrameBefore(time+1);
+      while(frame)
+      {
+            uint32_t flags;
+                getFlags(frame,&flags);
+                if(flags & AVI_KEY_FRAME) break;
+                frame--;
+      }
+        // Now go forward if needed
+#warning todo fixme!
+    printf("[Composer:GoToTime] Going to frame %"LU"\n",frame);
+    return GoToIntra(frame);
 }
 /**
     \fn NextPicture
