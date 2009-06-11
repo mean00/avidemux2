@@ -13,10 +13,13 @@
 class ADM_videoStreamCopy: public ADM_videoStream
 {
 protected:
-            uint32_t start,end;
+            uint64_t startTime,endTime;
+            uint32_t currentFrame;
             ADMCompressedImage image;
+            bool eofMet;
+            uint64_t  rescaleTs(uint64_t in);
 public:
-             ADM_videoStreamCopy();
+             ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime);
     virtual ~ADM_videoStreamCopy();
 
 virtual     bool     getPacket(uint32_t *len, uint8_t *data, uint32_t maxLen,uint64_t *pts,uint64_t *dts,

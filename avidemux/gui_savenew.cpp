@@ -77,7 +77,7 @@ int A_Save(const char *name)
     // Video Stream 
     if(!process) // Copy
     {
-        video=new ADM_videoStreamCopy();
+        video=new ADM_videoStreamCopy(markerA,markerB);
     }else
     {
         // 1- create filter chain
