@@ -210,4 +210,8 @@ ADD_SUBDIRECTORY(po)
 # Config Summary
 ########################################
 INCLUDE(admConfigSummary)
+#
+# Packaging
+#
+INCLUDE(./avidemux/avidemuxPackageDebian.cmake)
 MESSAGE("")
