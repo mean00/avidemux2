@@ -211,6 +211,7 @@ ADD_SUBDIRECTORY(ADM_coreUtils)
 ADD_SUBDIRECTORY(ADM_coreVideoEncoder)
 ADD_SUBDIRECTORY(ADM_coreVideoFilter)
 ADD_SUBDIRECTORY(ADM_ffmpeg)
+ADD_SUBDIRECTORY(ADM_smjs)
 
 ########################################
 # Config Summary
