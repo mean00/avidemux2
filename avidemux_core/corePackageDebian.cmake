@@ -1,7 +1,7 @@
 ##############################
 # DEBIAN
 ##############################
-SET(CPACK_DEBIAN_PACKAGE_NAME "avidemux")
+SET(CPACK_DEBIAN_PACKAGE_NAME "avidemuxi-core")
 SET (CPACK_GENERATOR "DEB")
 # ARCH
 IF (X86_64_SUPPORTED)
@@ -11,7 +11,7 @@ SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
 ENDIF (X86_64_SUPPORTED)
 # Mandatory
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "mean")
-SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Simple video editor")
+SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Simple video editori,core libraries")
 
 # Build our deps list
 # Build deps SET(DEPS "debhelper (>> 4), libfreetype6-dev, libxml2-dev,  libxv-dev, dpatch , cmake, desktop-file-utils")
@@ -26,7 +26,7 @@ SET(CPACK_PACKAGE_VERSION_MAJOR "2")
 SET(CPACK_PACKAGE_VERSION_MINOR "6")
 SET(CPACK_PACKAGE_VERSION_PATCH "0")
 #
-SET(CPACK_PACKAGE_NAME "avidemux")
+SET(CPACK_PACKAGE_NAME "avidemux-core")
 #
 
 include(CPack)
