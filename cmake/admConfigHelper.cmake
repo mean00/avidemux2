@@ -77,7 +77,7 @@ MACRO (ADM_COMPILE _file _def _include _lib _varToSet _output)
 
 		TRY_COMPILE(${_varToSet}
 			  ${CMAKE_BINARY_DIR}
-			  ${AVIDEMUX_SOURCE_DIR}/cmake_compile_check/${_file}
+			  ${AVIDEMUX_TOP_SOURCE_DIR}/cmake_compile_check/${_file}
 			  CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${_include}" "-DLINK_LIBRARIES:STRING=${_lib}"
 			  COMPILE_DEFINITIONS ${_def}
 			  OUTPUT_VARIABLE ${_output})

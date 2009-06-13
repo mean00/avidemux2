@@ -203,9 +203,20 @@ MESSAGE("")
 ########################################
 # Directories to build
 ########################################
-ADD_SUBDIRECTORY(avidemux)
-ADD_SUBDIRECTORY(po)
 
+ADD_SUBDIRECTORY(ADM_core)
+ADD_SUBDIRECTORY(ADM_coreAudio)
+ADD_SUBDIRECTORY(ADM_coreAudioDevice)
+ADD_SUBDIRECTORY(ADM_coreAudioEncoder)
+ADD_SUBDIRECTORY(ADM_coreDemuxer)
+ADD_SUBDIRECTORY(ADM_coreDemuxerMpeg)
+ADD_SUBDIRECTORY(ADM_coreImage)
+ADD_SUBDIRECTORY(ADM_coreMuxer)
+ADD_SUBDIRECTORY(ADM_coreUI)
+ADD_SUBDIRECTORY(ADM_coreUtils)
+ADD_SUBDIRECTORY(ADM_coreVideoEncoder)
+ADD_SUBDIRECTORY(ADM_coreVideoFilter)
+ADD_SUBDIRECTORY(ADM_ffmpeg)
 ########################################
 # Config Summary
 ########################################
