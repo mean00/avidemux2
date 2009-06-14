@@ -37,13 +37,13 @@
 #include "gtkgui.h"
 
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME  MODULE_COMMANDLINE
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 #include "avidemutils.h"
 
 #include "ADM_filter/vidVCD.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 #include "ADM_coreVideoEncoder.h"
 
 extern void filterListAll(void );

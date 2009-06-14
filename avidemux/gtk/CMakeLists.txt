@@ -59,6 +59,7 @@ IF (GETTEXT_FOUND)
 ENDIF (GETTEXT_FOUND)
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_audioFilter_old")
+# 
 ##########################################
 # Config
 ##########################################
@@ -108,6 +109,49 @@ IF (ADM_DEBUG AND FIND_LEAKS)
 	ADD_ADMLIB_ALL_TARGETS(ADM_nvwa)
 ENDIF (ADM_DEBUG AND FIND_LEAKS)
 
+SET(commonLibs
+ADM_audiocodec 
+ADM_audioFilter_old 
+ADM_editor 
+ADM_filter 
+ADM_osSupport 
+ADM_requant 
+ADM_script 
+ADM_toolkit 
+ADM_video 
+ADM_videoFilter )
+FOREACH (_libName ${commonLibs})
+        TARGET_LINK_LIBRARIES(avidemux2_gtk ${_libName})
+ENDFOREACH (_libName ${commonLibs})
+
+#############################################
+# Add core libs
+#############################################
+SET(coreLibs
+ADM_core
+ADM_audioParser
+ADM_coreAudio
+ADM_coreAudioFilterAPI
+ADM_coreAudioDevice
+ADM_coreAudioEncoder
+ADM_coreDemuxer
+ADM_coreDemuxerMpeg
+ADM_coreImage
+ADM_coreMuxer
+ADM_coreUI
+ADM_coreUtils
+ADM_coreVideoEncoder
+ADM_coreVideoFilter
+ADM_libavcodec
+ADM_libavformat
+ADM_libavutil
+ADM_libswscale
+ADM_libpostproc
+ADM_smjs
+)
+FOREACH (_libName ${coreLibs})
+        TARGET_LINK_LIBRARIES(avidemux2_gtk ${_libName})
+ENDFOREACH (_libName ${commonLibs})
 
 ###########################################
 # External libs

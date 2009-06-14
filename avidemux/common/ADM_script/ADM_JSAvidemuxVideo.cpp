@@ -16,7 +16,7 @@
 #include "ADM_JSGlobal.h"
 
 
-#include "../ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "audioeng_buildfilters.h"
 #include "avi_vars.h"
 #include "gui_action.hxx"
@@ -26,7 +26,7 @@
 //#include "ADM_encoder/adm_encoder.h"
 //#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_editor/ADM_outputfmt.h"
-#include "../ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_script/ADM_container.h"
 
 extern VF_FILTERS filterGetTagFromName(const char *inname);

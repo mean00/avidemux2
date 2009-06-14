@@ -37,9 +37,9 @@
 
 #include "prefs.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_AUDIO_FILTER
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 
 extern void UI_setAProcessToggleStatus( uint8_t status );
 extern uint8_t DIA_audioCodec( int *codec );

@@ -48,9 +48,9 @@
 #include "ADM_videoFilter.h"
 #include "prefs.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_EDITOR
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 
 #//include "ADM_inputs/ADM_mpegdemuxer/dmx_indexer.h"
 #include "ADM_outputfmt.h"

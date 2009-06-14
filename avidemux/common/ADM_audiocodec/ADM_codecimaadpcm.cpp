@@ -17,13 +17,12 @@
 */
 
 #include "ADM_default.h"
-#include "common.h"
 #define ADM_NO_CONFIG_H
-#include "bswap.h"
 #include "ADM_assert.h"
 #include "ADM_coreAudio.h"
 #include "ADM_audiocodec.h"
 
+extern uint16_t le2me_16(uint16_t x);
 
 #define MS_IMA_ADPCM_PREAMBLE_SIZE 4
 

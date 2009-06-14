@@ -1,6 +1,5 @@
 SET(ADM_osSupport_SRCS 
 ADM_crashHook.cpp 
-ADM_debug.cpp    
 ADM_misc.cpp 
 ADM_queue.cpp 
 )

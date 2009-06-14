@@ -26,11 +26,11 @@
 #include "ADM_videoFilter_internal.h"
 #include "ADM_videoFilterDynamic.h"
 #include "ADM_video/ADM_vidPartial.h"
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_PREVIEW
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 #include "ADM_quota.h"
 #include "ADM_preview.h"
 //

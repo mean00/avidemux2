@@ -38,8 +38,8 @@
 #include "ADM_videoFilter_internal.h"
 #include "ADM_filter/vidVCD.h"
 #include "prefs.h"
-#include "ADM_userInterfaces/ADM_commonUI/DIA_resizeWiz.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_commonUI/DIA_resizeWiz.h"
+#include "ADM_vidMisc.h"
 //___________________________________________
 extern FILTER videofilters[VF_MAX_FILTER];
 extern uint32_t nb_active_filter;

@@ -16,12 +16,12 @@
 #include "ADM_JSAvidemux.h"
 #include "avi_vars.h"
 #include "DIA_coreToolkit.h"
-#include "../ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_script/ADM_container.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_SCRIPT
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 
 extern int A_openAvi (const char *name);
 extern int A_Save (const char *name);

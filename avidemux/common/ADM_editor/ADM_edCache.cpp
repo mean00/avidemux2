@@ -12,9 +12,9 @@
 #include "ADM_editor/ADM_edCache.h"
 
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_EDITOR
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 #undef aprintf
 #if 1
 #define aprintf(...) {}
