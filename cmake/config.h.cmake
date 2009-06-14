@@ -1,7 +1,7 @@
 #ifndef ADM_CONFIG_H
 #define ADM_CONFIG_H
 
-#include "../ADM_coreConfig.h"
+#include "ADM_coreConfig.h"
 
 #define ADM_BUILD_CLI 1
 #define ADM_BUILD_GTK 2

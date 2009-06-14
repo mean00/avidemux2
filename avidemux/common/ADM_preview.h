@@ -5,7 +5,7 @@
 */
 #ifndef ADM_PREVIEW_H
 #define ADM_PREVIEW_H
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 typedef enum 
 {
     ADM_PREVIEW_NONE, 

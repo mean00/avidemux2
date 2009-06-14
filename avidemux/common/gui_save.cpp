@@ -24,10 +24,10 @@
 #include "gtkgui.h"
 
 #include "DIA_coreToolkit.h"
-#include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "DIA_enter.h"
 
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 #include "DIA_fileSel.h"
 #include "DIA_working.h"
 // Local prototypes

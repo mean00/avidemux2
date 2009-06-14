@@ -39,13 +39,13 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_PREVIEW
-#include "ADM_osSupport/ADM_debug.h"
-#include "ADM_libraries/ADM_ffmpeg/libswscale/ADM_mp.h"
-#include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_debug.h"
+#include "ADM_ffmpeg/libswscale/ADM_mp.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
 #define MAX(a,b) ( (a)>(b) ? (a) : (b) )
 

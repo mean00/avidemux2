@@ -32,14 +32,14 @@
 #include "gui_action.hxx"
 #include "gtkgui.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 #include "DIA_working.h"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_userInterfaces/ADM_commonUI/DIA_busy.h"
-#include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/DIA_busy.h"
+#include "ADM_commonUI/GUI_ui.h"
 
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
 

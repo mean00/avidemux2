@@ -35,20 +35,20 @@
 
 #include "audioeng_buildfilters.h"
 #include "prefs.h"
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
-#include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_render/GUI_render.h"
+#include "ADM_commonUI/GUI_ui.h"
 
 #include "audio_out.h"
 
-#include "ADM_userInterfaces/ADM_commonUI/DIA_busy.h"
+#include "ADM_commonUI/DIA_busy.h"
 #include "DIA_working.h"
 #include "DIA_factory.h"
 #include "DIA_enter.h"
 
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_codecs/ADM_ffmpeg.h"
-#include "ADM_video/ADM_vidMisc.h"
+
+#include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 #include "ADM_coreVideoEncoder.h"
 

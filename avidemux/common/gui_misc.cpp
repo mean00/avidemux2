@@ -9,7 +9,7 @@
 #include "ADM_colorspace.h"
 #include "ADM_bitstream.h"
 #include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_ffmpeg.h"
+//#include "ADM_codecs/ADM_ffmpeg.h"
 /**
     \fn saveAsBmp
     \brief save current image into filename, into bmp format
@@ -110,6 +110,7 @@ uint8_t  ADMImage::saveAsBmp(const char *filename)
 */
 uint8_t  ADMImage::saveAsJpg(const char *filename)
 {
+    #if 0
  ffmpegEncoderFFMjpeg *codec=NULL;
   FILE *fd;
   uint8_t *buffer=NULL;
@@ -141,4 +142,7 @@ uint8_t  ADMImage::saveAsJpg(const char *filename)
         fclose(fd);
         delete [] buffer;
         return 1;
+        #endif
+#warning save as jpeg disabled
+        return false;
 }

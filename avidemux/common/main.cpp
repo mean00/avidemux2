@@ -52,7 +52,7 @@ extern "C" {
 	#include "SDL.h"
 }
 
-#include "ADM_userInterfaces/ADM_render/GUI_sdlRender.h"
+#include "ADM_render/GUI_sdlRender.h"
 #endif
 
 
@@ -127,12 +127,12 @@ int main(int argc, char *argv[])
 
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
-
+#if 0
   	if(ADM_SUBVERSION)
 	{
 		printf(" (r%04u)", ADM_SUBVERSION);
 	}
-
+#endif
     printf("\n*************************\n");
     printf(" http://www.avidemux.org\n");
     printf(" Code      : Mean, JSC, Gruntster \n");

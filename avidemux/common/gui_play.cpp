@@ -24,7 +24,7 @@
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
 #include "gtkgui.h"
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 #include "avidemutils.h"
 #include "ADM_preview.h"
 #include "audiofilter.h"

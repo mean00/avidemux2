@@ -33,9 +33,9 @@
 
 
 #include "DIA_fileSel.h"
-#include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_muxer.h"
-#include "ADM_videoCopy.h"
+#include "ADM_muxerGate/include/ADM_videoCopy.h"
 #include "ADM_filterChain.h"
 
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);

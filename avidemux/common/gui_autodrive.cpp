@@ -23,7 +23,7 @@
 #include <math.h>
 
 #include "avi_vars.h"
-#include "ADM_userInterfaces/ADM_commonUI/GUI_ui.h"
+#include "ADM_commonUI/GUI_ui.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_assert.h"
 
