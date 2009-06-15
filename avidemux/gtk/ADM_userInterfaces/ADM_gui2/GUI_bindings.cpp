@@ -20,9 +20,9 @@
 #include "../ADM_render/GUI_render.h"
 #include "gui_action.hxx"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_UI
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 
 #include "ADM_codecs/ADM_codec.h"
 #include "../ADM_commonUI/GUI_ui.h"
@@ -36,8 +36,8 @@
 #include "../ADM_toolkit_gtk/ADM_jogshuttle.h"
 #include "gtkgui.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_userInterfaces/ADM_render/GUI_renderInternal.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_render/GUI_renderInternal.h"
+#include "ADM_vidMisc.h"
 #include "GUI_glade.h"
 
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);

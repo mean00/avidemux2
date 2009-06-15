@@ -15,6 +15,7 @@ endif (COMMAND cmake_policy)
 ########################################
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 ADD_DEFINITIONS(-DHAVE_CONFIG_H)
+ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_GTK)
 ########################################
 # Where is the config.h dir
 ########################################
@@ -59,6 +60,7 @@ IF (GETTEXT_FOUND)
 ENDIF (GETTEXT_FOUND)
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_audioFilter_old")
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_commonUI")
 # 
 ##########################################
 # Config
@@ -74,8 +76,8 @@ INCLUDE_DIRECTORIES("${AVIDEMUX_CORE_BUILD_DIR}/config")
 # Add subdirectories 
 ########################################
 ADD_SUBDIRECTORY(../common ./common)
-ADD_SUBDIRECTORY(ADM_UIs)
-ADD_SUBDIRECTORY(ADM_userInterfaces)
+ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsGtk)
+ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesGtk)
 #
 # Add main source
 #
@@ -102,7 +104,7 @@ ADD_TARGET_CFLAGS(avidemux2_gtk "-I${CMAKE_BINARY_DIR}/config/gtk")
 SDLify(../common/main.cpp)
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
 ###########################################
-# Construct ADM_libraries
+# Construct common libraries
 ###########################################
 
 IF (ADM_DEBUG AND FIND_LEAKS)
@@ -152,6 +154,16 @@ ADM_smjs
 FOREACH (_libName ${coreLibs})
         TARGET_LINK_LIBRARIES(avidemux2_gtk ${_libName})
 ENDFOREACH (_libName ${commonLibs})
+
+#############################################
+# Add gtk specific libs
+#############################################
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_UIGtk)
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_dialogGtk)
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_filtersGtk)
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_gui2Gtk)
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_ocrGtk)
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_toolkitGtk)
 
 ###########################################
 # External libs

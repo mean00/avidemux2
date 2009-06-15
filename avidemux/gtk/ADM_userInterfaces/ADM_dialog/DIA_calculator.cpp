@@ -29,7 +29,7 @@
 #include "audioeng_buildfilters.h"
 
 
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 #include "avi_vars.h"
 
 void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );

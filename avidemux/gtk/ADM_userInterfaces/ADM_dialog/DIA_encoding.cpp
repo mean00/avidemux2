@@ -16,7 +16,7 @@
 #include "avidemutils.h"
 #include "DIA_working.h"
 #include "DIA_encoding.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 
 /**
     \class DIA_encodingGtk

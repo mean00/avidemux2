@@ -23,12 +23,12 @@
 
 #include "ADM_misc.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_CLOCKnTIMELEFT
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 
 #include "DIA_working.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 
 static GtkWidget	*create_dialog1 (void);
 static void on_work_abort(GtkObject * object, gpointer user_data);

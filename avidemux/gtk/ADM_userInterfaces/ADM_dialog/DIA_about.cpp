@@ -42,12 +42,12 @@ create_aboutdialog1 (void)
   GdkPixbuf *aboutdialog1_logo_pixbuf;
   // MEANX : PATCH SVN VERSION
   char subversion[1024];
-
+#if 0
   if(!ADM_SUBVERSION)
 	strcpy(subversion,VERSION);
   else
 	sprintf(subversion,"%s (r%04u):",VERSION,ADM_SUBVERSION);
-
+#endif
   aboutdialog1 = gtk_about_dialog_new ();
   gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (aboutdialog1), subversion);
 // /MEANX

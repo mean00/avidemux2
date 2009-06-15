@@ -6,7 +6,7 @@
 #include "ADM_toolkitGtk.h"
 
 #include "avidemutils.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 
 #include "avi_vars.h"
 #define FILL_ENTRY(x) gtk_label_set_text((GtkLabel *) lookup_widget(dialog,#x),text);

@@ -17,7 +17,7 @@
 #define GUI_RENDER_INTERNAL_H
 
 #define ADM_RENDER_API_VERSION_NUMBER 2
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "GUI_render.h"
 typedef struct
 {
   int   apiVersion;

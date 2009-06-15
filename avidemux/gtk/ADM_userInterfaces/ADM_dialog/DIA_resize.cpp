@@ -14,9 +14,9 @@
 #include <math.h>
 
 #include "ADM_toolkitGtk.h"
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_UI
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 
 
 #define FILL_ENTRY(widget_name,string) 		{r=-1;   \
