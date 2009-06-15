@@ -113,6 +113,7 @@ ENDIF (ADM_DEBUG AND FIND_LEAKS)
 
 SET(commonLibs
 ADM_audiocodec 
+ADM_audioFilter
 ADM_audioFilter_old 
 ADM_editor 
 ADM_filter 
@@ -120,8 +121,11 @@ ADM_osSupport
 ADM_requant 
 ADM_script 
 ADM_toolkit 
+ADM_videoEncoder 
 ADM_video 
-ADM_videoFilter )
+ADM_videoFilter 
+ADM_internalVideoFilter
+)
 FOREACH (_libName ${commonLibs})
         TARGET_LINK_LIBRARIES(avidemux2_gtk ${_libName})
 ENDFOREACH (_libName ${commonLibs})
@@ -164,7 +168,7 @@ TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_filtersGtk)
 TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_gui2Gtk)
 TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_ocrGtk)
 TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_toolkitGtk)
-
+TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_UI_GTK)
 ###########################################
 # External libs
 ###########################################
