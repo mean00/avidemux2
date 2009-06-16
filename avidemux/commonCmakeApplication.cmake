@@ -96,4 +96,29 @@ ADM_libswscale
 ADM_libpostproc
 ADM_smjs
 )
+
+#############################################
+# Add common libs
+#############################################
+SET(commonLibs1
+ADM_muxerGate 
+ADM_audioFilter
+ADM_audioFilter_old 
+ADM_editor 
+ADM_audiocodec 
+ADM_codecs 
+ADM_commonUI
+)
+SET(commonLibs2
+ADM_filter 
+ADM_osSupport 
+ADM_requant 
+ADM_script 
+ADM_toolkit 
+ADM_videoEncoder 
+ADM_video 
+ADM_videoFilter 
+ADM_internalVideoFilter
+)
+
 # END
