@@ -21,13 +21,13 @@
 
 #include "DIA_fileSel.h"
 #include "ADM_quota.h"
-#include "ADM_userInterfaces/ADM_commonUI/DIA_idx_pg.h"
+#include "ADM_commonUI/DIA_idx_pg.h"
 
 
 
-#include "ADM_osSupport/ADM_debugID.h"
+#include "ADM_debugID.h"
 #define MODULE_NAME MODULE_MPEG
-#include "ADM_osSupport/ADM_debug.h"
+#include "ADM_debug.h"
 #include "dmx_demuxerEs.h"
 #include "dmx_demuxerPS.h"
 #include "dmx_demuxerTS.h"
@@ -35,9 +35,6 @@
 #include "dmx_identify.h"
 
 #define MIN_DELTA_PTS 150 // autofix in ms
-#include "ADM_osSupport/ADM_debugID.h"
-#define MODULE_NAME MODULE_MPEG
-#include "ADM_osSupport/ADM_debug.h"
 
 #include "dmx_indexer_internal.h"
 

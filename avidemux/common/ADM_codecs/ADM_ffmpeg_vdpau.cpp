@@ -26,7 +26,7 @@ extern "C" {
 #include "ADM_default.h"
 #ifdef USE_VDPAU
 extern "C" {
- #include "ADM_libraries/ADM_ffmpeg/libavcodec/vdpau.h"
+ #include "ADM_ffmpeg/libavcodec/vdpau.h"
 }
 
 #include "vdpau/vdpau_x11.h"
@@ -35,7 +35,7 @@ extern "C" {
 #include "ADM_codecs/ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_dynamicLoading.h"
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_vdpau_internal.h"
 #include "prefs.h"
 
