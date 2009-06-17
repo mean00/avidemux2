@@ -30,12 +30,12 @@ Ui_aboutWindow::Ui_aboutWindow()
 	connect(ui.licenseButton, SIGNAL(clicked(bool)), this, SLOT(licenseButton_clicked(bool)));
 
 	char subversion[20];
-
+#if 0
 	if (!ADM_SUBVERSION)
 		strcpy(subversion, VERSION);
 	else
 		sprintf(subversion,"%s (r%04u)", VERSION, ADM_SUBVERSION);
-
+#endif
 	ui.versionLabel->setText(ui.versionLabel->text() + subversion);
 }
 

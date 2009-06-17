@@ -10,7 +10,6 @@ endif (COMMAND cmake_policy)
 ########################################
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 ADD_DEFINITIONS(-DHAVE_CONFIG_H)
-ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_GTK)
 ########################################
 # Where is the config.h dir
 ########################################

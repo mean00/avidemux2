@@ -15,7 +15,7 @@
 
 #include "Q_working.h"
 #include "ADM_default.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 #include "DIA_working.h"
 
 extern void UI_purge(void);

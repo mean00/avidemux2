@@ -25,11 +25,11 @@
 #include "gui_action.hxx"
 #include "ADM_editor/ADM_outputfmt.h"
 #include "DIA_fileSel.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 #include "prefs.h"
 #include "avi_vars.h"
 
-#include "ADM_userInterfaces/ADM_render/GUI_renderInternal.h"
+#include "ADM_render/GUI_renderInternal.h"
 #include "ADM_coreVideoEncoderInternal.h"
 extern int global_argc;
 extern char **global_argv;

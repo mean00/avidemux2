@@ -8,4 +8,4 @@ SET(${ADM_LIB}_SRCS
 	filter_none.cpp  Q_mainfilter.cpp Q_seekablePreview.cpp ${${ADM_LIB}_header}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-ADD_ADM_LIB_QT4_TARGET(${ADM_LIB} ${${ADM_LIB}_SRCS})
+ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})

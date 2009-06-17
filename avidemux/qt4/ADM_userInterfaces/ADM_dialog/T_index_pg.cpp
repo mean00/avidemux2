@@ -25,7 +25,7 @@ Indexer progress dialog
 //#include "ADM_encoderConf.h"
 //#include "ADM_encoder/adm_encoder.h"
 #include "DIA_idx_pg.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 
 extern void UI_purge( void );
 

@@ -12,7 +12,7 @@ checkGlade()
 ##########################################
 # Config
 ##########################################
-
+ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_GTK)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_GTK)
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/gtk/config.h")
 MESSAGE(STATUS "GTK config.h generated")

@@ -17,7 +17,7 @@
 #include "Q_props.h"
 #include "avi_vars.h"
 #include "avidemutils.h"
-#include "ADM_video/ADM_vidMisc.h"
+#include "ADM_vidMisc.h"
 
 static const char *yesno[2]={QT_TR_NOOP("No"),QT_TR_NOOP("Yes")};
 extern const char *getStrFromAudioCodec( uint32_t codec);

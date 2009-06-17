@@ -20,6 +20,7 @@ ENDIF (NOT QT4_FOUND)
 ##########################################
 
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
+ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/qt4/config.h")
 MESSAGE(STATUS "QT4 config.h generated")
 
@@ -32,6 +33,7 @@ ADD_EXECUTABLE(avidemux2_qt4 ${ADM_EXE_SRCS})
 ########################################
 # Add subdirectories 
 ########################################
+INCLUDE_DIRECTORIES(ADM_UIs/include/)
 ADD_SUBDIRECTORY(../common ./common)
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesQt4)
@@ -62,13 +64,13 @@ ENDFOREACH (_libName ${commonLibs})
 #############################################
 # Add qt specific libs
 #############################################
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UIGtk)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_dialogGtk)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filtersGtk)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_gui2Gtk)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UIQT4)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_dialogQt4)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filtersQt4)
+#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_guiQt4)
 #TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_ocrGtk)
 #TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_toolkitGtk)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UI_GTK)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UI_QT4)
 ###########################################
 # External libs
 ###########################################
