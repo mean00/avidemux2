@@ -36,7 +36,7 @@ ADD_EXECUTABLE(avidemux2_qt4 ${ADM_EXE_SRCS})
 INCLUDE_DIRECTORIES(ADM_UIs/include/)
 ADD_SUBDIRECTORY(../common ./common)
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
-ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesQt4)
+ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesQT4)
 # Executable
 
 SDLify(../common/main.cpp)
@@ -60,16 +60,16 @@ ENDFOREACH (_libName ${commonLibs})
 FOREACH (_libName ${coreLibs})
         TARGET_LINK_LIBRARIES(avidemux2_qt4 ${_libName})
 ENDFOREACH (_libName ${commonLibs})
+        TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filter)
 
 #############################################
 # Add qt specific libs
 #############################################
 TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UIQT4)
 TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_dialogQt4)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_guiQt4)
 TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filtersQt4)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_guiQt4)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_ocrGtk)
-#TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_toolkitGtk)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_guiQt4)
 TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UI_QT4)
 ###########################################
 # External libs
