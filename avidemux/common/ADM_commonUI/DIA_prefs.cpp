@@ -24,7 +24,7 @@
 #include "DIA_factory.h"
 
 #ifdef __WIN32
-#include "ADM_userInterfaces/ADM_render/GUI_sdlRender.h"
+#include "ADM_render/GUI_sdlRender.h"
 #endif
 
 extern void 		AVDM_audioPref( void );
