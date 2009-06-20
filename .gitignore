@@ -5,3 +5,4 @@
 Doxyfile
 *.kdev*
 ffconf
+*.sw*

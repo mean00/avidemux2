@@ -2,11 +2,7 @@
 #  Macro to declare an audio encoder plugin
 #
 MACRO(INIT_AUDIO_ENCODER _lib)
-	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_core/include")
-	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_coreAudio/include")
-	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_coreUI/include")
-	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_audioFilter/include")
-    INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_coreAudioEncoder/include")
+	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_audioFilter/include")
 
     ADD_DEFINITIONS("-DADM_MINIMAL_UI_INTERFACE")
 
