@@ -14,11 +14,12 @@ checkGlade()
 ##########################################
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_GTK)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_GTK)
+SET(UI_SUFFIX gtk)
+#
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/gtk/config.h")
 MESSAGE(STATUS "GTK config.h generated")
 
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/gtk/")
-INCLUDE_DIRECTORIES("${AVIDEMUX_CORE_BUILD_DIR}/config")
 ###########################################
 # Executable
 ###########################################
@@ -119,5 +120,5 @@ ENDIF (WIN32)
 ###########################################
 # Install
 ###########################################
-INSTALL(TARGETS avidemux2_gtk RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin LIBRARY DESTINATION lib)
+ADM_INSTALL_BIN(avidemux2_gtk)
 include(./gtkPackageDebian.cmake)

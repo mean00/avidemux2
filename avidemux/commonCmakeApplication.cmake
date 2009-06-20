@@ -13,11 +13,6 @@ ADD_DEFINITIONS(-DHAVE_CONFIG_H)
 ########################################
 # Where is the config.h dir
 ########################################
-IF (NOT AVIDEMUX_CORE_BUILD_DIR)
-	MESSAGE(FATAL_ERROR "Please add -DAVIDEMUX_CORECONFIG_DIR=path_to_avidemux_core_build_dir")
-ELSE (NOT AVIDEMUX_CORE_BUILD_DIR)
-	SET(AVIDEMUX_CORE_BUILD_DIR "${AVIDEMUX_CORE_BUILD_DIR}" CACHE STRING "")
-ENDIF (NOT AVIDEMUX_CORE_BUILD_DIR)
 #
 # Access to our cmake lib
 #
@@ -40,8 +35,12 @@ include(admCheckMiscLibs)
 ########################################
 # Add include dirs
 ########################################
+SET(AVIDEMUX_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
+MARK_AS_ADVANCED(AVIDEMUX_INSTALL_DIR)
+include(admInstallDir)
 include(admCoreIncludes)
-
+LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
+#
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_muxerGate/include/")
 
 IF (GETTEXT_FOUND)

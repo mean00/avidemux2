@@ -20,12 +20,13 @@ ENDIF (NOT QT4_FOUND)
 ##########################################
 
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
+SET(UI_SUFFIX qt4)
+#
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/qt4/config.h")
 MESSAGE(STATUS "QT4 config.h generated")
 
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/qt4/")
-INCLUDE_DIRECTORIES("${AVIDEMUX_CORE_BUILD_DIR}/config")
 ###########################################
 # Executable
 ###########################################
@@ -125,5 +126,5 @@ ENDIF (WIN32)
 ###########################################
 # Install
 ###########################################
-INSTALL(TARGETS avidemux2_qt4 RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin LIBRARY DESTINATION lib)
+ADM_INSTALL_BIN(avidemux2_qt4)
 include(./qt4PackageDebian.cmake)
