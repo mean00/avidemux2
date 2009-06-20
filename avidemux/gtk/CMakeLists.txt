@@ -116,7 +116,10 @@ IF (WIN32)
         ADD_TARGET_LDFLAGS(avidemux2_gtk "-mwindows")
 
 ENDIF (WIN32)
-
+#
+# libxml2
+#
+TARGET_LINK_LIBRARIES(avidemux2_gtk ${LIBXML2_LIBRARIES})
 ###########################################
 # Install
 ###########################################

@@ -122,6 +122,10 @@ IF (WIN32)
         ADD_TARGET_LDFLAGS(avidemux2_qt4 "-mwindows")
 
 ENDIF (WIN32)
+#
+# xml
+#
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ${LIBXML2_LIBRARIES})
 
 ###########################################
 # Install
