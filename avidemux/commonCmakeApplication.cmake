@@ -32,7 +32,6 @@ ENDIF (ADM_DEBUG)
 include(admConfigHelper)
 INCLUDE(admCheckRequiredLibs)
 include(admCheckMiscLibs)
-include(FindThreads)
 ########################################
 # Add include dirs
 ########################################

@@ -133,6 +133,7 @@ SET(MSG_DISABLE_OPTION "Disabled per request")
 INCLUDE(admCheckRequiredLibs)
 INCLUDE(admCheckMiscLibs)
 INCLUDE(admCheckVDPAU)
+INCLUDE(FindThreads)
 
 ########################################
 # Check functions and includes

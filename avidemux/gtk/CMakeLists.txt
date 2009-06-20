@@ -73,12 +73,6 @@ TARGET_LINK_LIBRARIES(avidemux2_gtk ADM_UI_GTK)
 IF (GETTEXT_FOUND)
 	TARGET_LINK_LIBRARIES(avidemux2_gtk ${GETTEXT_LIBRARY_DIR})
 ENDIF (GETTEXT_FOUND)
-
-# pthreads
-IF (UNIX AND PTHREAD_FOUND)
-        TARGET_LINK_LIBRARIES(avidemux2_gtk ${PTHREAD_LIBRARIES})
-ENDIF (UNIX AND PTHREAD_FOUND)
-
 # PNG
 IF (USE_PNG)
         TARGET_LINK_LIBRARIES(avidemux2_gtk ${PNG_LIBRARIES})
@@ -120,13 +114,6 @@ ENDIF (WIN32)
 # libxml2
 #
 TARGET_LINK_LIBRARIES(avidemux2_gtk ${LIBXML2_LIBRARIES})
-# pthread
-IF (WIN32)
-        TARGET_LINK_LIBRARIES(avidemux2_gtk "${PTHREAD_LIBRARIES}")
-ENDIF (WIN32)
-IF (UNIX AND PTHREAD_FOUND)
-        TARGET_LINK_LIBRARIES(avidemux2_gtk "${PTHREAD_LIBRARIES}")
-ENDIF (UNIX AND PTHREAD_FOUND)
 ###########################################
 # Install
 ###########################################
