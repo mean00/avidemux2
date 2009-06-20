@@ -106,7 +106,7 @@ ENDIF (USE_SDL)
 # UI Specific
 ###########################################
 ADD_TARGET_LDFLAGS(avidemux2_qt4  ${GTHREAD_LDFLAGS})
-
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 
 ###########################################
 # OS Specific
@@ -126,6 +126,13 @@ ENDIF (WIN32)
 # xml
 #
 TARGET_LINK_LIBRARIES(avidemux2_qt4 ${LIBXML2_LIBRARIES})
+# pthread
+IF (WIN32)
+        TARGET_LINK_LIBRARIES(avidemux2_qt4 "${PTHREAD_LIBRARIES}")
+ENDIF (WIN32)
+IF (UNIX AND PTHREAD_FOUND)
+        TARGET_LINK_LIBRARIES(avidemux2_qt4 "${PTHREAD_LIBRARIES}")
+ENDIF (UNIX AND PTHREAD_FOUND)
 
 ###########################################
 # Install
