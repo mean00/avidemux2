@@ -121,4 +121,5 @@ ENDIF (WIN32)
 # Install
 ###########################################
 ADM_INSTALL_BIN(avidemux2_gtk)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk") 
 include(./gtkPackageDebian.cmake)

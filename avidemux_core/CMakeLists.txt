@@ -172,6 +172,7 @@ ENDIF (VERBOSE)
 # Generate config.h
 ########################################
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h")
+include_directories( "${CMAKE_BINARY_DIR}/config")
 MESSAGE(STATUS "ADM_coreConfig.h generated")
 MESSAGE("")
 ########################################
