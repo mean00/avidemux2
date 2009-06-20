@@ -90,15 +90,14 @@ SET(VERSION 2.6.0)
 # if a showstopper is found.  CLI is automatically assumed as possible
 # since it uses the minimum set of required libraries and CMake will 
 # fail if these aren't met.
-SET(ADM_UI_GTK 1)
-SET(ADM_UI_QT4 1)
 
-SET(ADM_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
+SET(AVIDEMUX_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
+MARK_AS_ADVANCED(AVIDEMUX_INSTALL_DIR)
+include(admInstallDir)
 
 IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	SET(ADM_DEBUG 1)
 ENDIF (CMAKE_BUILD_TYPE STREQUAL "Debug")
-
 ########################################
 # Subversion
 ########################################
