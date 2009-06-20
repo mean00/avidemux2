@@ -30,6 +30,7 @@ ENDIF (ADM_DEBUG)
 #  Basic cmake helper script
 ###########################################
 include(admConfigHelper)
+include(FindThreads)
 INCLUDE(admCheckRequiredLibs)
 include(admCheckMiscLibs)
 ########################################

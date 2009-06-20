@@ -117,6 +117,7 @@ TARGET_LINK_LIBRARIES(avidemux2_gtk ${LIBXML2_LIBRARIES})
 ###########################################
 # Install
 ###########################################
+ADM_LINK_THREAD(avidemux2_gtk)
 ADM_INSTALL_BIN(avidemux2_gtk)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk") 
 include(./gtkPackageDebian.cmake)

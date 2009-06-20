@@ -126,6 +126,7 @@ TARGET_LINK_LIBRARIES(avidemux2_qt4 ${LIBXML2_LIBRARIES})
 ###########################################
 # Install
 ###########################################
+ADM_LINK_THREAD(avidemux2_qt4)
 ADM_INSTALL_BIN(avidemux2_qt4)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/qt4/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/qt4") 
 include(./qt4PackageDebian.cmake)
