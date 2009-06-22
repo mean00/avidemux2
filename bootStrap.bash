@@ -26,10 +26,10 @@ sudo -v
 echo "**BootStrapping avidemux **"
 echo "** CORE **"
 cd $TOP
-#Process buildCore ../avidemux_core
+Process buildCore ../avidemux_core
 echo "** QT4 **"
 cd $TOP
-#Process buildQt4 ../avidemux/qt4
+Process buildQt4 ../avidemux/qt4
 echo "** GTK **"
 cd $TOP
 Process buildGtk ../avidemux/gtk
