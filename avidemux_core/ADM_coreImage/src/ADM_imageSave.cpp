@@ -7,9 +7,6 @@
 #include "ADM_bitmap.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_colorspace.h"
-#include "ADM_bitstream.h"
-#include "ADM_codecs/ADM_codec.h"
-//#include "ADM_codecs/ADM_ffmpeg.h"
 /**
     \fn saveAsBmp
     \brief save current image into filename, into bmp format

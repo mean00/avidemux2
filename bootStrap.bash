@@ -33,4 +33,11 @@ Process buildQt4 ../avidemux/qt4
 echo "** GTK **"
 cd $TOP
 Process buildGtk ../avidemux/gtk
+echo "** Preparing debs **"
+cd $TOP
+rm -Rf debs
+mkdir debs
+find . -name "*.deb" | grep -vi cpa | xargs cp -t debs
+echo "** debs directory ready **"
+ls -l debs
 echo "** ALL DONE **"

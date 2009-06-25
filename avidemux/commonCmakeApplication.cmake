@@ -87,7 +87,6 @@ SET(ADM_EXE_SRCS
 ../common/gui_play.cpp  
 ../common/gui_save.cpp  
 ../common/gui_savenew.cpp  
-../common/gui_misc.cpp
 ../common/main.cpp  
 ../common/gui_action.cpp
 ../common/gui_blackframes.cpp
