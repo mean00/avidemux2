@@ -14,7 +14,7 @@ Process()
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake -DCMAKE_INSTALL_PREFIX=/usr $SOURCEDIR || fail cmake
+        cmake -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $SOURCEDIR || fail cmake
         make -j 2 > /tmp/log$BUILDDIR || fail make
         fakeroot make package DESTDIR=debPack || fail package
 }
@@ -25,12 +25,17 @@ echo "Top dir : $TOP"
 echo "** CORE **"
 cd $TOP
 Process buildCore ../avidemux_core
+echo " Core needs to be installed, installing through sudo make install ...."
+cd $TOP/buildCore && sudo make install
 echo "** QT4 **"
 cd $TOP
 Process buildQt4 ../avidemux/qt4
 echo "** GTK **"
 cd $TOP
 Process buildGtk ../avidemux/gtk
+echo "** Plugins **"
+cd $TOP
+Process buildPlugins ../avidemux_plugins
 echo "** Preparing debs **"
 cd $TOP
 rm -Rf debs

@@ -70,3 +70,4 @@ ADD_SUBDIRECTORY(ADM_muxers)
 ########################################
 INCLUDE(admPluginConfigSummary)
 MESSAGE("")
+include(./pluginsPackageDebian.cmake)
