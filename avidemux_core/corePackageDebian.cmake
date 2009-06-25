@@ -1,6 +1,7 @@
 ##############################
 # DEBIAN
 ##############################
+SET(CPACK_SET_DESTDIR "ON")
 SET(CPACK_DEBIAN_PACKAGE_NAME "avidemuxi-core")
 SET (CPACK_GENERATOR "DEB")
 # ARCH
