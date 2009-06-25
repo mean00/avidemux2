@@ -134,6 +134,10 @@ int              sz=0,r=0;
     }
     context->pix_fmt =PIX_FMT_YUV420P;
     context->strict_std_compliance = -1;
+    context->time_base.den=1;
+    context->time_base.num=1;
+    context->width=_width;
+    context->height=_height;
     r=avcodec_open(context, codec); 
     if(r<0)
     {

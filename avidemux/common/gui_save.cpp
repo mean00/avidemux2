@@ -348,7 +348,12 @@ int A_saveJpg (char *name)
       GUI_Error_HIG(QT_TR_NOOP("Get Frame"),QT_TR_NOOP("Cannot get this frame to save"));
       return 0;
     }
-    return (int) image.saveAsJpg (name);
+    if(!image.saveAsJpg (name))
+    {
+        GUI_Error_HIG(QT_TR_NOOP("Jpeg"),QT_TR_NOOP("Fail to save as jpeg"));
+        return false;
+    }
+    return true ;
 }
 #else
 /**
