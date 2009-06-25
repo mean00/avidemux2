@@ -30,6 +30,38 @@ ENDIF (ADM_DEBUG)
 #  Basic cmake helper script
 ###########################################
 include(admConfigHelper)
+
+########################################
+# Avidemux system specific tweaks
+########################################
+INCLUDE(admDetermineSystem)
+
+IF (CYGWIN)
+	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwin32")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwin32")
+ENDIF (CYGWIN)
+
+IF (ADM_CPU_ALTIVEC)
+	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADM_ALTIVEC_FLAGS}")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADM_ALTIVEC_FLAGS}")
+ENDIF (ADM_CPU_ALTIVEC)
+
+IF (UNIX AND NOT APPLE)
+	# jog shuttle is only available on Linux due to its interface
+	SET(USE_JOG 1)
+ENDIF (UNIX AND NOT APPLE)
+
+IF (WIN32)
+	SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-enable-auto-image-base -Wl,-enable-auto-import")
+	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-enable-auto-import")
+
+	IF (CMAKE_BUILD_TYPE STREQUAL "Release")
+		SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-s")
+		SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-s")
+	ENDIF (CMAKE_BUILD_TYPE STREQUAL "Release")
+ENDIF (WIN32)
+
+
 include(FindThreads)
 INCLUDE(admCheckRequiredLibs)
 include(admCheckMiscLibs)
