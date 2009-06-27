@@ -135,14 +135,3 @@ int A_Save(const char *name)
 uint8_t  A_SaveAudioDualAudio(const char *inname)
 {
 }
-//___________________________________
-int A_SaveUnpackedVop(const char *name)
-{
-}
-int A_SavePackedVop(const char *name)
-{
-}
-//___________________________________
-uint8_t  A_SaveAudioNVideo(const char *name)
-{
-}

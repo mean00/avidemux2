@@ -41,9 +41,7 @@ void A_saveWorkbench (const char *name);
 int  A_audioSave(char *name);
 int  A_SaveWrapper(char *name);
 void A_saveAudioProcessed (char *name);
-// Xternal prototypes
-int      A_SaveUnpackedVop(const char *name);
-uint8_t  A_SaveAudioDualAudio(const char *inname);
+
 int      A_Save(const char *name);
 uint8_t  GUI_getFrameContent(ADMImage *image, uint32_t frame);
 
@@ -73,7 +71,7 @@ void HandleAction_Save(Action action)
       break;
       
     case ACT_SaveRaw:
-      GUI_FileSelWrite (QT_TR_NOOP("Select Raw File to Save"), (SELFILE_CB *)ADM_saveRaw);
+        GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Deprecated function."));        
       break;
     case ACT_SaveWave:
       	{
@@ -427,104 +425,6 @@ void A_saveImg (const char *name)
         GUI_Error_HIG (QT_TR_NOOP("BMP op failed"),QT_TR_NOOP( "Saving %s as a BMP file failed."), ADM_GetFileName(name));
 }
 
-/*
-	Save a raw video stream without any container
-	Usefull to cut mpeg stream or extract raw h263/mpeg4 stream
-
-*/
-uint8_t ADM_saveRaw (const char *name)
-{
-  uint32_t len, flags;
-  FILE *fd, *fi;
-  uint8_t *buffer = new uint8_t[avifileinfo->width * avifileinfo->height * 3],ret=0;
-  char *idx;
-  DIA_workingBase *work;
-  uint8_t seq;
-  idx = new char[strlen (name) + 8];
-  strcpy (idx, name);
-  strcat (idx, ".idx");
-  fd = fopen (name, "wb");
-  fi = fopen (idx, "wt");
-  if (!fd)
-    return 0;
-  work=createWorking(QT_TR_NOOP("Saving raw video stream"));
-  ADMCompressedImage image;
-  image.data=buffer;
-  image.dataLength=avifileinfo->width * avifileinfo->height * 3;
-  // preamble
-#if 0
-  video_body->getRawStart (frameStart, buffer, &len);
-  fwrite (buffer, len, 1, fd);
-#endif
-  for (uint32_t i = frameStart; i < frameEnd; i++)
-    {
-      work->update (i - frameStart, frameEnd - frameStart);
-      if(!work->isAlive())
-      {
-                 ret=0;
-                 goto _abt;
-      }
-      if(!video_body->getFlags (i, &flags))
-        {
-                if(i==frameEnd-1)
-                {
-                         ret=1;
-                         goto _abt;
-                }
-                ADM_assert (video_body->getFlags (i, &flags));
-        }
-
-      if (flags & AVI_B_FRAME)	// oops
-	{
-	  // se search for the next i /p
-	  uint32_t found = 0;
-
-	  for (uint32_t j = i + 1; j < frameEnd; j++)
-	    {
-	      ADM_assert (video_body->getFlags (j, &flags));
-	      if (!(flags & AVI_B_FRAME))
-		{
-		  found = j;
-		  break;
-		}
-
-	    }
-	  if (!found)
-          {
-            if(abs(i-frameEnd)>2)
-                ret=0;
-            else
-                ret=1;  // Good enough
-	    goto _abt;
-          }
-	  // Write the found frame
-
-	  video_body->getFrame (found, &image, &seq);
-	  fwrite (buffer, len, 1, fd);
-	  // and the B frames
-	  for (uint32_t j = i; j < found; j++)
-	    {
-	      video_body->getFrame (j, &image,&seq);
-	      fwrite (buffer, len, 1, fd);
-	    }
-	  i = found;		// Will be plussed by for
-	}
-      else			// P or I frame
-	{
-	  video_body->getFrame (i, &image, &seq);
-	  fwrite (buffer, len, 1, fd);
-	  fprintf (fi, "%u,\n", len);
-	}
-
-    }
-    ret=1;
-_abt:
-  fclose (fd);
-  fclose (fi);
-  delete work;
-  return ret;
-
-}
 /**
     \fn A_saveWorkbench
     \brief Save current workbench as ecmascript
@@ -540,7 +440,10 @@ void A_saveWorkbench (const char *name)
      ADM_dealloc(actual_workbench_file);
   actual_workbench_file = ADM_strdup(name);
 }
+/**
+    \fn A_SaveWrapper
 
+*/
 int A_SaveWrapper(char *name)
 {
 
