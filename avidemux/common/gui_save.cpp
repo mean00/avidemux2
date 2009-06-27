@@ -30,6 +30,7 @@
 #include "ADM_vidMisc.h"
 #include "DIA_fileSel.h"
 #include "DIA_working.h"
+#include "ADM_preview.h"
 // Local prototypes
 void A_saveAudioCopy (char *name);
 int  A_saveJpg (char *name);
@@ -334,7 +335,7 @@ void A_saveAudioCopy (char *name)
 
 }
 
-#ifndef TEST_MP2
+
 /**
         \fn A_saveJpg
         \brief Save a Jpg image from current display buffer
@@ -342,34 +343,20 @@ void A_saveAudioCopy (char *name)
 int A_saveJpg (char *name)
 {
   uint8_t fl;
-    ADMImage image(avifileinfo->width, avifileinfo->height);
-    if(!GUI_getFrameContent(&image, curframe))
+    ADMImage *image=admPreview::getBuffer();
+    if(!image)
     {
-      GUI_Error_HIG(QT_TR_NOOP("Get Frame"),QT_TR_NOOP("Cannot get this frame to save"));
-      return 0;
+        printf("[SaveJpeg] No image\n");
+        return false;
+
     }
-    if(!image.saveAsJpg (name))
+    if(!image->saveAsJpg (name))
     {
         GUI_Error_HIG(QT_TR_NOOP("Jpeg"),QT_TR_NOOP("Fail to save as jpeg"));
         return false;
     }
     return true ;
 }
-#else
-/**
-      \fn A_saveJpg
-      \brief Save current image as jpeg 95% qual
-
-*/
-int A_saveJpg (char *name)
-{
-static int b=1;
-         video_body->changeAudioStream(0,b);
-        b^=1;
-        return 1;
-
-}
-#endif
 
 
 /**
@@ -429,12 +416,14 @@ _bunch_abort:
 */
 void A_saveImg (const char *name)
 {
+  ADMImage *image=admPreview::getBuffer();
+    if(!image)
+    {
+        printf("[SaveJpeg] No image\n");
+        return ;
 
-  ADMImage image(avifileinfo->width,avifileinfo->height);
-  GUI_getFrameContent(&image, video_body->getCurrentFrame());
-  if(image.saveAsBmp(name))
-        GUI_Info_HIG (ADM_LOG_INFO,QT_TR_NOOP("Done"),QT_TR_NOOP( "Saved \"%s\"."), ADM_GetFileName(name));
-  else
+    }
+  if(!image->saveAsBmp(name))
         GUI_Error_HIG (QT_TR_NOOP("BMP op failed"),QT_TR_NOOP( "Saving %s as a BMP file failed."), ADM_GetFileName(name));
 }
 
