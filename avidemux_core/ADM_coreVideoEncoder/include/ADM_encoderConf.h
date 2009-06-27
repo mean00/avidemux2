@@ -38,21 +38,21 @@ typedef enum
 
 #define ADM_EXTRA_PARAM_JS 0x100
 #define ADM_EXTRA_PARAM    0x200
+/**
+    \struct COMPRES_PARAMS
+    \brief Simple declaration of an encoder setting
 
-struct COMPRES_PARAMS
+*/
+typedef struct 
 {
-  const char *menuName;
-  const char *tagName;
-  const char *descriptor;
-  COMPRESSION_MODE mode;
-  uint32_t qz, bitrate, finalsize,avg_bitrate;  // avg_bitrate is in kb/s!!
-  uint32_t capabilities;
-  uint32_t extra_param;
-  void *extraSettings;
-  uint32_t extraSettingsLen;
-  uint8_t (*configure) (struct COMPRES_PARAMS * par);
-};
+  COMPRESSION_MODE  mode;
+  uint32_t          qz;           /// Quantizer
+  uint32_t          bitrate;      /// In kb/s ?
+  uint32_t          finalsize;    /// In ?
+  uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
+  uint32_t          capabilities;
+}COMPRES_PARAMS;
 
-//typedef struct COMPRES_PARAMS;
+
 
 #endif
