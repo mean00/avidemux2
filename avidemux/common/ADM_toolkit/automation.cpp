@@ -97,8 +97,6 @@ extern void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * m
 extern uint8_t ADM_aviSetSplitSize(uint32_t size);
 extern uint8_t ogmSave(const char *fd);
 static void set_autoindex(char *p);
-extern int A_SaveUnpackedVop(const char *name);
-extern int A_SavePackedVop(const char *name);
 extern int A_saveDVDPS(char *name);
 extern void A_saveWorkbench (const char *name);
 extern uint8_t A_rebuildKeyFrame (void);
@@ -112,7 +110,6 @@ extern uint8_t ADM_vob2vobsub(char *nameVob, char *nameVobSub, char *nameIfo);
 
 static int call_bframe(void);
 static int call_x264(void);
-static int call_packedvop(void);
 static int call_forcesmart(void);
 static int set_output_format(const char *str);
 static void set_reuse_2pass_log(char *p);
@@ -125,7 +122,7 @@ extern uint8_t runProbe(const char *file);
 
 int global_argc;
 char **global_argv;
-extern uint8_t	ADM_saveRaw(const char *name );
+//extern uint8_t	ADM_saveRaw(const char *name );
 //_________________________________________________________________________
 
 typedef void (*one_arg_type)(char *arg);
@@ -158,11 +155,11 @@ AUTOMATON reaction_table[]=
         {"save-jpg",		1,"save a jpeg",			(one_arg_type)A_saveJpg}        ,
         {"begin",		1,"set start frame",			setBegin},
         {"end",			1,"set end frame",			setEnd},
-        {"save-unpacked-vop",	1,"save avi, unpacking vop",(one_arg_type)A_SaveUnpackedVop},
-        {"save-packed-vop",	1,"save avi, packing vop",(one_arg_type)A_SavePackedVop},
+//        {"save-unpacked-vop",	1,"save avi, unpacking vop",(one_arg_type)A_SaveUnpackedVop},
+//        {"save-packed-vop",	1,"save avi, packing vop",(one_arg_type)A_SavePackedVop},
 //        {"save-ogm",		1,"save as ogm file ",			(one_arg_type)ogmSave},
         {"save-raw-audio",	1,"save audio as-is ",			        A_saveAudioCopy},
-        {"save-raw-video",	1,"save raw video stream (mpeg/... ) ",	(one_arg_type)ADM_saveRaw},
+//        {"save-raw-video",	1,"save raw video stream (mpeg/... ) ",	(one_arg_type)ADM_saveRaw},
         {"save-uncompressed-audio",1,"save uncompressed audio",A_saveAudioProcessed},
         {"load",		1,"load video or workbench", (one_arg_type)A_openAvi},
         {"load-workbench",	1,"load workbench file", (one_arg_type)A_openAvi},
@@ -172,8 +169,8 @@ AUTOMATON reaction_table[]=
 
         {"force-b-frame",	0,"Force detection of bframe in next loaded file", (one_arg_type)call_bframe},
         {"force-alt-h264",	0,"Force use of alternate read mode for h264", (one_arg_type)call_x264},
-        {"force-unpack",	0,"Force detection of packed vop in next loaded file"
-                                                          ,(one_arg_type)call_packedvop},
+//        {"force-unpack",	0,"Force detection of packed vop in next loaded file"
+//                                                          ,(one_arg_type)call_packedvop},
         {"force-smart",   	0,"Engage smart copy mode with CQ=3 at next save"
                                                           ,(one_arg_type)call_forcesmart},
         {"external-mp3",	1,"load external mpeg audio as audio track",(one_arg_type)A_loadMP3},
