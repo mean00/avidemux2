@@ -112,7 +112,7 @@ static JSFunctionSpec adm_functions[] = {
   {"dialogFactoryMenu",         facMenu,          0},
   {"dialogFactoryFileSel",      facFile,          0},
   {"dialogFactoryBitrate",      facBitrate,       0},
-//  {"dialogFactoryBar",        facBar,             0},
+  {"dialogFactoryBar",        facBar,             0},
   {"dialogFactoryRoText",     facRoText,          0},
   {"dialogFactoryText",       facText,            0},
   {"dialogFactoryTabs",       facTab,             0},

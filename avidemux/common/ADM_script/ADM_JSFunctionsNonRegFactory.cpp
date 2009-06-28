@@ -204,7 +204,7 @@ JSBool facBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
     *rval = BOOLEAN_TO_JSVAL(0);
   return JS_TRUE;
 }
-#if 0
+
 JSBool facBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     
@@ -220,7 +220,7 @@ JSBool facBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
   
   return JS_TRUE;
 }
-#endif
+
 void clickMe(void *cookie)
 {
   GUI_Error_HIG("Button","Button pressed!"); 
