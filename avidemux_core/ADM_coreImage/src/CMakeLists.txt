@@ -27,4 +27,5 @@ IF (APPLE)
 ENDIF (APPLE)
 
 TARGET_LINK_LIBRARIES(ADM_coreImage ADM_core ADM_coreUI ADM_libswscale ADM_libpostproc)
+TARGET_LINK_LIBRARIES(ADM_coreImage ADM_libavcodec ADM_libavutil )
 ADM_INSTALL_LIB(ADM_coreImage)
