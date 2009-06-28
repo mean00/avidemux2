@@ -20,6 +20,7 @@
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
 
@@ -29,20 +30,23 @@ namespace ADM_qt4Factory
 
 class diaElemFloat : public diaElem
 {
+protected:
+	int decimals;
 
 public:
   ELEM_TYPE_FLOAT min,max;
   diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min, 
-               ELEM_TYPE_FLOAT max,const char *tip=NULL);
+               ELEM_TYPE_FLOAT max,const char *tip=NULL, int decimals = 2);
   virtual ~diaElemFloat() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 
 
 //********************************************************************
-diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip)
+diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip, int decimals)
   : diaElem(ELEM_TOGGLE)
 {
   param=(void *)intValue;
@@ -50,6 +54,7 @@ diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, EL
   this->min=min;
   this->max=max;
   this->tip=tip;
+  this->decimals = decimals;
  }
 
 diaElemFloat::~diaElemFloat()
@@ -61,18 +66,25 @@ void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
 {
   QDoubleSpinBox *box=new QDoubleSpinBox((QWidget *)dialog);
   QGridLayout *layout=(QGridLayout*) opaque;
+  QHBoxLayout *hboxLayout = new QHBoxLayout();
  myWidget=(void *)box; 
    
  box->setMinimum(min);
  box->setMaximum(max);
+ box->setDecimals(decimals);
+ box->setSingleStep(0.1);
  box->setValue(*(ELEM_TYPE_FLOAT *)param);
- 
- box->show();
  
  QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
  text->setBuddy(box);
+
+ QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+ hboxLayout->addWidget(box);
+ hboxLayout->addItem(spacer);
+
  layout->addWidget(text,line,0);
- layout->addWidget(box,line,1);
+ layout->addLayout(hboxLayout,line,1);
  
 }
 void diaElemFloat::getMe(void)
@@ -94,13 +106,15 @@ void diaElemFloat::enable(uint32_t onoff)
   else
     box->setDisabled(1);
 }
+
+int diaElemFloat::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 } // End of namespace
 //****************************Hoook*****************
 
 diaElem  *qt4CreateFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,
-        ELEM_TYPE_FLOAT max,const char *tip)
+        ELEM_TYPE_FLOAT max,const char *tip, int decimals)
 {
-	return new  ADM_qt4Factory::diaElemFloat(intValue,toggleTitle,min,max,tip);
+	return new  ADM_qt4Factory::diaElemFloat(intValue,toggleTitle,min,max,tip, decimals);
 }
 void qt4DestroyFloat(diaElem *e)
 {

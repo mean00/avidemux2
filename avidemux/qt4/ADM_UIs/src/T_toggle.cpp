@@ -19,6 +19,7 @@
 #include "T_toggle.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
 
@@ -36,6 +37,7 @@ public:
   void      finalize(void);
   void      updateMe();
   uint8_t   link(uint32_t onoff,diaElem *w);
+  int getRequiredLayout(void);
 };
 
 class diaElemToggleUint : public diaElem
@@ -54,6 +56,7 @@ public:
   void      enable(uint32_t onoff) ;
   void      finalize(void);
   void      updateMe();
+  int getRequiredLayout(void);
 };
 class diaElemToggleInt : public diaElem
 {
@@ -71,6 +74,7 @@ public:
   void      finalize(void);
   void      updateMe();
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 
 void ADM_QCheckBox::changed(int i)
@@ -120,14 +124,14 @@ diaElemToggle::~diaElemToggle()
 void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t l)
 {
  ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE);
- QGridLayout *layout=(QGridLayout*) opaque;
+ QVBoxLayout *layout=(QVBoxLayout*) opaque;
  myWidget=(void *)box; 
  if( *(uint32_t *)param)
  {
     box->setCheckState(Qt::Checked); 
  }
- box->show();
- layout->addWidget(box,l,0);
+
+ layout->addWidget(box);
  box->connectMe();
 }
 void diaElemToggle::getMe(void)
@@ -192,6 +196,9 @@ uint8_t   diaElemToggle::link(uint32_t onoff,diaElem *w)
     nbLink++;
     return 1;
 }
+
+int diaElemToggle::getRequiredLayout(void) { return FAC_QT_VBOXLAYOUT; }
+
 //******************************************************
 // An UInt and a toggle linked...
 //******************************************************
@@ -217,13 +224,13 @@ void diaElemToggleUint::setMe(void *dialog, void *opaque,uint32_t line)
 {
  ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE_UINT);
  QGridLayout *layout=(QGridLayout*) opaque;
+ QHBoxLayout *hboxLayout = new QHBoxLayout();
  myWidget=(void *)box; 
  if( *(uint32_t *)param)
  {
     box->setCheckState(Qt::Checked); 
  }
- box->show();
- layout->addWidget(box,line,0);
+
  // Now add spin
  QSpinBox *spin=new QSpinBox((QWidget *)dialog);
  widgetUint=(void *)spin; 
@@ -231,8 +238,14 @@ void diaElemToggleUint::setMe(void *dialog, void *opaque,uint32_t line)
  spin->setMinimum(_min);
  spin->setMaximum(_max);
  spin->setValue(*(uint32_t *)emb);
- spin->show();
- layout->addWidget(spin,line,1);
+
+ QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+ hboxLayout->addWidget(spin);
+ hboxLayout->addItem(spacer);
+
+ layout->addWidget(box,line,0);
+ layout->addLayout(hboxLayout,line,1);
  box->connectMe();
 }
 
@@ -290,6 +303,8 @@ void   diaElemToggleUint::enable(uint32_t onoff)
   }
 }
 
+int diaElemToggleUint::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
+
 //******************************************************
 // An Int and a toggle linked...
 //******************************************************
@@ -315,13 +330,13 @@ void diaElemToggleInt::setMe(void *dialog, void *opaque,uint32_t line)
 {
  ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE_INT);
  QGridLayout *layout=(QGridLayout*) opaque;
+ QHBoxLayout *hboxLayout = new QHBoxLayout();
  myWidget=(void *)box; 
  if( *(uint32_t *)param)
  {
     box->setCheckState(Qt::Checked); 
  }
- box->show();
- layout->addWidget(box,line,0);
+
  // Now add spin
  QSpinBox *spin=new QSpinBox((QWidget *)dialog);
  widgetUint=(void *)spin; 
@@ -329,8 +344,14 @@ void diaElemToggleInt::setMe(void *dialog, void *opaque,uint32_t line)
  spin->setMinimum(_min);
  spin->setMaximum(_max);
  spin->setValue(*emb);
- spin->show();
- layout->addWidget(spin,line,1);
+
+ QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+ hboxLayout->addWidget(spin);
+ hboxLayout->addItem(spacer);
+
+ layout->addWidget(box,line,0);
+ layout->addLayout(hboxLayout,line,1);
  box->connectMe();
 }
 
@@ -351,6 +372,8 @@ void diaElemToggleInt::getMe(void)
  if(u>_max) u=_max;
  *emb=u;
 }
+
+int diaElemToggleInt::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 
 void   diaElemToggleInt::finalize(void)
 {

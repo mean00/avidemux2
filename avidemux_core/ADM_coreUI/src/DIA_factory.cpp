@@ -93,10 +93,10 @@ DIA_MKSTUBS(diaElemBar)
 
 // ****************** Buttons ********************
 diaElemFloat ::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,
-        ELEM_TYPE_FLOAT max,const char *tip) :diaElem(ELEM_FLOAT)
+        ELEM_TYPE_FLOAT max,const char *tip, int decimals) :diaElem(ELEM_FLOAT)
 {
 	ADM_assert(Factory); 
-	internalPointer=Factory->CreateFloat(intValue,toggleTitle, min,max,tip);
+	internalPointer=Factory->CreateFloat(intValue,toggleTitle, min,max,tip, decimals);
 }
 diaElemFloat ::~diaElemFloat()
 {

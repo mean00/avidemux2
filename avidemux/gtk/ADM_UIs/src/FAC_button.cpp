@@ -31,6 +31,7 @@ class diaElemButton : public diaElem
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 
 
@@ -73,6 +74,8 @@ void   diaElemButton::enable(uint32_t onoff)
 {
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);  
 }
+
+int diaElemButton::getRequiredLayout(void) { return 0; }
 
 void cb_button (GtkWidget *widget,gpointer callback_data)
 {

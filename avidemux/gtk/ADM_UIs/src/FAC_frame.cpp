@@ -29,6 +29,7 @@ public:
   void swallow(diaElem *widget);
   void enable(uint32_t onoff);
   void finalize(void);
+  int getRequiredLayout(void);
 };
 diaElemFrame::diaElemFrame(const char *toggleTitle, const char *tip)
   : diaElemFrameBase()
@@ -115,6 +116,8 @@ void diaElemFrame::enable(uint32_t onoff)
    GtkWidget *widget=(GtkWidget *)myWidget;
    gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
+
+int diaElemFrame::getRequiredLayout(void) { return 0; }
 } // End of namespace
 //****************************Hoook*****************
 
@@ -127,5 +130,4 @@ void gtkDestroyFrame(diaElem *e)
 	ADM_GtkFactory::diaElemFrame *a=(ADM_GtkFactory::diaElemFrame *)e;
 	delete a;
 }
-//EOF
 //EOF

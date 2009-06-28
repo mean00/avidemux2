@@ -38,7 +38,7 @@ ADM_flyDialogGtk::ADM_flyDialogGtk(uint32_t width, uint32_t height, AVDMGenericV
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod)
   {
-  
+		EndConstructor();
   }
 void ADM_flyDialogGtk::postInit(uint8_t reInit)
 {

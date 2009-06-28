@@ -16,6 +16,7 @@
 #include "T_slider.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QHBoxLayout>
@@ -35,6 +36,7 @@ public:
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
   
 };
 class diaElemSlider : public diaElemSliderBase
@@ -49,8 +51,7 @@ public:
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
   void      enable(uint32_t onoff) ;
-  
-  
+  int getRequiredLayout(void);
 };
 
 int SpinSlider::value()
@@ -149,6 +150,8 @@ void diaElemUSlider::enable(uint32_t onoff)
     box->setDisabled(1);
 }
 
+int diaElemUSlider::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
+
 diaElemSlider::diaElemSlider(int32_t *value,const char *toggleTitle, int32_t min,int32_t max,int32_t incr,const char *tip)
   : diaElemSliderBase()
 {
@@ -204,6 +207,7 @@ void diaElemSlider::enable(uint32_t onoff)
     box->setDisabled(1);
 }
 
+int diaElemSlider::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 //****************************************************
 } // End of namespace
 //****************************Hoook*****************

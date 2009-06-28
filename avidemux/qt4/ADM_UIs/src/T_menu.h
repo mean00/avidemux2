@@ -20,6 +20,7 @@ namespace ADM_qt4Factory
 		virtual void      updateMe(void);
 		virtual void      enable(uint32_t onoff) ;
 		virtual void      finalize(void);
+		int getRequiredLayout(void);
 	};
 
 	class ADM_QComboBox : public QComboBox
@@ -33,7 +34,7 @@ namespace ADM_qt4Factory
 		diaElemMenuDynamic *_menu;
 
 	public:
-		ADM_QComboBox(QWidget *root,diaElemMenuDynamic *menu);
+		ADM_QComboBox(diaElemMenuDynamic *menu);
 		void connectMe(void);
 	};
 }

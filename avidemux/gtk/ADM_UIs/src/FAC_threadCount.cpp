@@ -29,6 +29,7 @@ public:
   virtual ~diaElemThreadCount() ;
   void setMe(void *dialog, void *opaque, uint32_t line);
   void getMe(void);
+  int getRequiredLayout(void);
 };
 
 static void customToggled(void *widget, void *userData);
@@ -99,7 +100,7 @@ void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)
 	gtk_widget_show (radiobutton3);
 	gtk_box_pack_start (GTK_BOX (hbox2), radiobutton3, TRUE, TRUE, 0);
 
-	spinbutton1_adj = gtk_adjustment_new (2, 2, 32, 1, 10, 10);
+	spinbutton1_adj = gtk_adjustment_new (2, 2, 32, 1, 10, 0);
 	spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
 	gtk_widget_show (spinbutton1);
 	gtk_box_pack_start (GTK_BOX (hbox2), spinbutton1, TRUE, TRUE, 0);
@@ -136,6 +137,8 @@ void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON(spinbutton1), val);
 	}
 }
+
+int diaElemThreadCount::getRequiredLayout(void) { return 0; }
 
 void customToggled(void *widget, void *userData)
 {

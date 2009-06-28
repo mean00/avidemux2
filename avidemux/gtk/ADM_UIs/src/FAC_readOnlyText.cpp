@@ -27,7 +27,7 @@ public:
   virtual ~diaElemReadOnlyText() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
-  
+  int getRequiredLayout(void);
 };
 
 class diaElemText : public diaElem
@@ -40,6 +40,7 @@ public:
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
   void enable(uint32_t onoff);
+  int getRequiredLayout(void);
 };
 
 
@@ -90,6 +91,9 @@ void diaElemReadOnlyText::getMe(void)
  
   
 }
+
+int diaElemReadOnlyText::getRequiredLayout(void) { return 0; }
+
 /***************************************************************/
 diaElemText::diaElemText(char **text,const char *toggleTitle,const char *tip)
   : diaElem(ELEM_ROTEXT)
@@ -148,6 +152,8 @@ void diaElemText::enable(uint32_t onoff)
   GtkWidget *widget=(GtkWidget *)myWidget;
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
+
+int diaElemText::getRequiredLayout(void) { return 0; }
 } // End of namespace
 //****************************Hoook*****************
 

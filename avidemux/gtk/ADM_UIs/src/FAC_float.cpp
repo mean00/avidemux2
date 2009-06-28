@@ -22,19 +22,22 @@ namespace ADM_GtkFactory
 
 class diaElemFloat : public diaElem
 {
+protected:
+	int decimals;
 
 public:
   ELEM_TYPE_FLOAT min,max;
   diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min, 
-               ELEM_TYPE_FLOAT max,const char *tip=NULL);
+               ELEM_TYPE_FLOAT max,const char *tip=NULL, int decimals = 2);
   virtual ~diaElemFloat() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 
 diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, 
-                            ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip)
+                            ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip, int decimals)
   : diaElem(ELEM_FLOAT)
 {
   param=(void *)intValue;
@@ -42,6 +45,7 @@ diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle,
   this->min=min;
   this->max=max;
   this->tip=tip;
+  this->decimals = decimals;
 }
 
 diaElemFloat::~diaElemFloat()
@@ -98,13 +102,15 @@ void diaElemFloat::enable(uint32_t onoff)
   GtkWidget *widget=(GtkWidget *)myWidget;
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
+
+int diaElemFloat::getRequiredLayout(void) { return 0; }
 } // End of namespace
 //****************************Hoook*****************
 
 diaElem  *gtkCreateFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,
-        ELEM_TYPE_FLOAT max,const char *tip)
+        ELEM_TYPE_FLOAT max,const char *tip, int decimals)
 {
-	return new  ADM_GtkFactory::diaElemFloat(intValue,toggleTitle,min,max,tip);
+	return new  ADM_GtkFactory::diaElemFloat(intValue,toggleTitle,min,max,tip, decimals);
 }
 void gtkDeleteFloat(diaElem *e)
 {

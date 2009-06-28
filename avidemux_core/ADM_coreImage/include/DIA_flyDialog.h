@@ -122,10 +122,9 @@ class ADM_flyDialog
   virtual uint32_t sliderGet(void)=0;
   virtual uint8_t  sliderSet(uint32_t value) =0;
   virtual void    postInit(uint8_t reInit)=0;
-  virtual uint8_t    sliderChanged(void)=0;
-  
-  
-};          
+  virtual uint8_t sliderChanged(void);
+};
+
 #ifdef ADM_UI_TYPE_BUILD
 #if ADM_UI_TYPE_BUILD == ADM_UI_QT4
   #include "DIA_flyDialogQt4.h"

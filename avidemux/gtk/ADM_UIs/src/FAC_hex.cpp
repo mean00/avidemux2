@@ -29,6 +29,7 @@ public:
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void) ;
   void finalize(void);
+  int getRequiredLayout(void);
 };
 
 #define HEX_NB_LINE   8
@@ -226,6 +227,8 @@ void diaElemHex::finalize(void)
 
 };
 
+int diaElemHex::getRequiredLayout(void) { return 0; }
+
 } // End of namespace
 //****************************Hoook*****************
 
@@ -238,7 +241,4 @@ void gtkDestroyHex(diaElem *e)
 	ADM_GtkFactory::diaElemHex *a=(ADM_GtkFactory::diaElemHex *)e;
 	delete a;
 }
-//EOF
-
-
 //EOF

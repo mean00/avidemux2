@@ -19,6 +19,19 @@
 #include "ADM_image.h"
 #include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
+
+class FlyDialogEventFilter : public QObject
+{
+	ADM_flyDialog *flyDialog;
+	bool recomputed;
+
+public:
+	FlyDialogEventFilter(ADM_flyDialog *flyDialog);
+
+protected:
+	bool eventFilter(QObject *obj, QEvent *event);
+};
+
 class ADM_flyDialogQt4 : public ADM_flyDialog
 {
 public:
@@ -32,8 +45,6 @@ public:
   virtual uint32_t sliderGet(void);
   virtual uint8_t  sliderSet(uint32_t value);
   virtual void    postInit(uint8_t reInit);
-  virtual uint8_t    sliderChanged(void){return 0;};
-            
 };
 
 

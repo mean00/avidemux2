@@ -47,15 +47,11 @@ void gtk_register_dialog(GtkWidget *newdialog)
         // old one is no longer modal
         if(widgetCount)
         {
-#ifndef __WIN32                
                 gtk_window_set_modal(GTK_WINDOW(widgetStack[widgetCount-1]), 0);
-#endif
                 gtk_window_set_transient_for (GTK_WINDOW(newdialog),GTK_WINDOW(widgetStack[widgetCount-1]));
+				gtk_window_set_modal(GTK_WINDOW(widgetStack[widgetCount]), 1);
         }
-        gtk_window_set_modal(GTK_WINDOW(widgetStack[widgetCount]), 1);
-#ifdef __WIN32
-        gtk_window_set_icon(GTK_WINDOW(widgetStack[widgetCount]), gtk_window_get_icon (GTK_WINDOW(widgetStack[0])));
-#endif
+
         widgetCount++;
 }
 void gtk_unregister_dialog(GtkWidget *newdialog)
@@ -63,15 +59,11 @@ void gtk_unregister_dialog(GtkWidget *newdialog)
 	ADM_assert(widgetCount);
 	ADM_assert(widgetStack[widgetCount-1]==newdialog);
 	widgetCount--;
-	if(widgetCount)
+	if(widgetCount > 1)
 	{
 		// Reset the old one modal
 		gtk_window_set_modal(GTK_WINDOW(widgetStack[widgetCount-1]), 1);
-#ifdef __WIN32
-		gtk_window_present(GTK_WINDOW(widgetStack[widgetCount-1]));
-#endif
 	}
-
 }
 void		gtk_transient(GtkWidget *widget)
 {

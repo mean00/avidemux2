@@ -29,6 +29,7 @@ public:
   void setMaxQz(uint32_t qz);
   void setMinQz(uint32_t qz);
   void updateMe(void);
+  int getRequiredLayout(void);
 };
 
 static void cb_mod(void *w,void *p);
@@ -257,6 +258,9 @@ void diaElemBitrate::getMe(void)
   }
   memcpy(param,&copy,sizeof(copy));
 }
+
+int diaElemBitrate::getRequiredLayout(void) { return 0; }
+
 void diaElemBitrate::updateMe(void)
 {
   // Read current value

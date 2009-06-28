@@ -13,6 +13,8 @@
 ***************************************************************************///
 
 
+#include <QtCore/QEvent>
+#include <QtCore/QCoreApplication>
 #include <QtGui/QGraphicsView>
 #include <QtGui/QSlider>
 
@@ -21,6 +23,33 @@
 #include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 #include "DIA_flyDialogQt4.h"
+
+extern float UI_calcZoomToFitScreen(QWidget* window, QWidget* canvas, uint32_t imageWidth, uint32_t imageHeight);
+extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w, uint32_t *h);
+
+FlyDialogEventFilter::FlyDialogEventFilter(ADM_flyDialog *flyDialog)
+{
+	recomputed = false;
+	this->flyDialog = flyDialog;
+}
+
+bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::Show && !recomputed)
+	{
+		recomputed = true;
+		QWidget* parent = (QWidget*)obj;
+		uint32_t screenWidth, screenHeight;
+
+		UI_getPhysicalScreenSize(parent, &screenWidth, &screenHeight);
+		flyDialog->recomputeSize();
+		QCoreApplication::processEvents();
+		parent->move((((int)screenWidth) - parent->frameSize().width()) / 2, (((int)screenHeight) - parent->frameSize().height()) / 2);
+	}
+
+	return QObject::eventFilter(obj, event);
+}
+
   ADM_flyDialogQt4::ADM_flyDialogQt4(uint32_t width, uint32_t height, AVDMGenericVideoStream *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod) 
@@ -32,14 +61,26 @@ void ADM_flyDialogQt4::postInit(uint8_t reInit)
 {
 	QWidget *graphicsView = ((ADM_QCanvas*)_canvas)->parentWidget();
 	QSlider  *slider=(QSlider *)_slider;
-	
-	graphicsView->setMinimumSize(_w, _h);
-	graphicsView->resize(_w, _h);
-	uint32_t nbFrames=_in->getInfo()->nb_frames; 
-	slider->setMaximum(nbFrames);
+
+	if (!reInit)
+	{
+		FlyDialogEventFilter *eventFilter = new FlyDialogEventFilter(this);
+
+		if (slider)
+			slider->setMaximum(_in->getInfo()->nb_frames);
+
+		graphicsView->parentWidget()->installEventFilter(eventFilter);
+	}
+
+	((ADM_QCanvas*)_canvas)->changeSize(_zoomW, _zoomH);
+	graphicsView->setMinimumSize(_zoomW, _zoomH);
+	graphicsView->resize(_zoomW, _zoomH);
 }
 
-float ADM_flyDialogQt4::calcZoomFactor(void) {return 1;}
+float ADM_flyDialogQt4::calcZoomFactor(void)
+{
+	return UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
+}
 
 uint8_t  ADM_flyDialogQt4::display(void)
 {

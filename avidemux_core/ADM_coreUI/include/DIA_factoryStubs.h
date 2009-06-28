@@ -27,6 +27,10 @@ void      aClass::getMe(void)\
 	{ \
 	ADM_assert(internalPointer); \
 	internalPointer->getMe(); \
+	} \
+int      aClass::getRequiredLayout(void)\
+	{ \
+	ADM_assert(internalPointer); \
+	return internalPointer->getRequiredLayout(); \
 	} 
-
 #endif

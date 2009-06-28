@@ -37,6 +37,7 @@ public:
   virtual void      updateMe(void);
   virtual void      enable(uint32_t onoff) ;
   virtual void      finalize(void);
+  int getRequiredLayout(void);
 };
 //**********************
 class diaElemMenu : public diaElemMenuBase
@@ -56,7 +57,8 @@ public:
   virtual uint8_t   link(diaMenuEntry *entry,uint32_t onoff,diaElem *w);
   virtual void      updateMe(void);
   void      enable(uint32_t onoff) ;
-  void      finalize(void);;
+  void      finalize(void);
+  int getRequiredLayout(void);
 };
 //**********************
 diaElemMenu::diaElemMenu(uint32_t *intValue,const char *itle, uint32_t nb, 
@@ -116,6 +118,9 @@ void   diaElemMenu::finalize(void)
 {
   dyna->finalize();
 }
+
+int diaElemMenu::getRequiredLayout(void) { return 0; }
+
 //*******************************
 diaElemMenuDynamic::diaElemMenuDynamic(uint32_t *intValue,const char *itle, uint32_t nb, 
                 diaMenuEntryDynamic **menu,const char *tip)
@@ -249,6 +254,9 @@ void   diaElemMenuDynamic::enable(uint32_t onoff)
 {
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);  
 }
+
+int diaElemMenuDynamic::getRequiredLayout(void) { return 0; }
+
 //** C callback **
 void cb_menu(void *w,void *p)
 {

@@ -16,6 +16,7 @@
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 namespace ADM_qt4Factory
 {
@@ -31,6 +32,7 @@ public:
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void) ;
   void finalize(void);
+  int getRequiredLayout(void);
 };
 extern const char *shortkey(const char *);
   diaElemHex::diaElemHex(const char *toggleTitle, uint32_t dataSize,uint8_t *data) :diaElem(ELEM_HEXDUMP){};
@@ -38,6 +40,7 @@ extern const char *shortkey(const char *);
   void diaElemHex::setMe(void *dialog, void *opaque,uint32_t line) {};
   void diaElemHex::getMe(void) {} ;
   void diaElemHex::finalize(void) {};
+  int diaElemHex::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 //******************************************************
 } // End of namespace
 //****************************Hoook*****************

@@ -37,7 +37,6 @@ public:
   virtual uint32_t sliderGet(void);
   virtual uint8_t  sliderSet(uint32_t value);
   virtual void    postInit(uint8_t reInit);
-  virtual uint8_t    sliderChanged(void) {return 0;};
-  };
+};
 
 #endif

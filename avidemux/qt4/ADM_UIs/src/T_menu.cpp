@@ -15,6 +15,7 @@
 
 #include "T_menu.h"
 #include "ADM_default.h"
+#include "ADM_dialogFactoryQt4.h"
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -40,11 +41,12 @@ public:
   virtual void      updateMe(void);
   void      enable(uint32_t onoff) ;
   void      finalize(void);;
+  int getRequiredLayout(void);
 };
 
 /**/
 
-ADM_QComboBox::ADM_QComboBox(QWidget *root,diaElemMenuDynamic *menu) : QComboBox(root)
+ADM_QComboBox::ADM_QComboBox(diaElemMenuDynamic *menu)
 {
 	_menu=menu;
 }
@@ -117,6 +119,9 @@ void   diaElemMenu::finalize(void)
 {
   dyna->finalize();
 }
+
+int diaElemMenu::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
+
 //*********************************
 //* DYNAMIC                       *
 //*********************************
@@ -140,11 +145,15 @@ diaElemMenuDynamic::~diaElemMenuDynamic()
 }
 void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
 {
-  ADM_QComboBox *combo=new ADM_QComboBox( (QWidget *)dialog,this);
+  ADM_QComboBox *combo=new ADM_QComboBox(this);
+
   QGridLayout *layout=(QGridLayout*) opaque;
      myWidget=(void *)combo; 
 
-	 QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+	 QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle));
+	 text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+	 QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
   
   // Fill in combobox
   int mem=0;
@@ -158,6 +167,7 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
    text->setBuddy(combo);
    layout->addWidget(text,line,0);
    layout->addWidget(combo,line,1);
+   layout->addItem(spacer,line,2);
    
    combo->connectMe();
 }
@@ -236,7 +246,8 @@ void   diaElemMenuDynamic::updateMe(void)
 {
   finalize();
 }
-//********************
+
+int diaElemMenuDynamic::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 }; // End of namespace
 
 diaElem  *qt4CreateMenu(uint32_t *intValue,const char *itle, uint32_t nb,         const diaMenuEntry *menu,const char *tip)
@@ -258,7 +269,5 @@ void qt4DestroyMenuDynamic(diaElem *e)
 	ADM_qt4Factory::diaElemMenuDynamic *a=(ADM_qt4Factory::diaElemMenuDynamic *)e;
 	delete a;
 }
-
-//EOF
 
 //EOF

@@ -13,12 +13,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ADM_toolkitGtk.h"
+#include "T_notch.h"
+#include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
-namespace ADM_GtkFactory
+extern const char *shortkey(const char *);
+
+namespace ADM_qt4Factory
 {
 
+QCheckBoxReadOnly::QCheckBoxReadOnly(QCheckBox *box, bool state)
+{
+	this->box = box;
+	this->state = state;
+}
+
+void QCheckBoxReadOnly::stateChanged(int state)
+{
+	box->setCheckState(this->state ? Qt::Checked : Qt::Unchecked);
+}
 
 class diaElemNotch : public diaElem
 {
@@ -31,7 +45,6 @@ public:
   void getMe(void) {};
   int getRequiredLayout(void);
 };
-
 
 diaElemNotch::diaElemNotch(uint32_t yes,const char *toggleTitle, const char *tip)
   : diaElem(ELEM_NOTCH)
@@ -47,43 +60,30 @@ diaElemNotch::~diaElemNotch()
 }
 void diaElemNotch::setMe(void *dialog, void *opaque,uint32_t line)
 {
-  GtkWidget *widget;
-  
-  if(yesno)
-    widget = gtk_image_new_from_stock ("gtk-apply", GTK_ICON_SIZE_BUTTON);
-  else
-    widget = gtk_image_new_from_stock ("gtk-cancel", GTK_ICON_SIZE_BUTTON);
-  
-  gtk_widget_show (widget);
-  myWidget=(void *)widget;
-  
-  gtk_table_attach (GTK_TABLE (opaque), widget, 0, 1, line, line+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  
-  GtkWidget *label;
-  
-  label = gtk_label_new_with_mnemonic (paramTitle);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_widget_show(label);
-  
-  gtk_table_attach (GTK_TABLE (opaque), label, 1, 2, line, line+1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  
+  QCheckBox *box=new QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog);
+  QCheckBoxReadOnly *readOnlyReceiver = new QCheckBoxReadOnly(box, yesno);
+ QGridLayout *layout=(QGridLayout*) opaque;
+ myWidget=(void *)box; 
+ if( yesno)
+ {
+    box->setCheckState(Qt::Checked); 
+ }
+
+ QObject::connect(box, SIGNAL(stateChanged(int)), readOnlyReceiver, SLOT(stateChanged(int)));
+ layout->addWidget(box,line,0);
 }
 
-int diaElemNotch::getRequiredLayout(void) { return 0; }
+int diaElemNotch::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 } // End of namespace
 //****************************Hoook*****************
 
-diaElem  *gtkCreateNotch(uint32_t yes,const char *toggleTitle, const char *tip)
+diaElem  *qt4CreateNotch(uint32_t yes,const char *toggleTitle, const char *tip)
 {
-	return new  ADM_GtkFactory::diaElemNotch(yes,toggleTitle, tip);
+	return new  ADM_qt4Factory::diaElemNotch(yes,toggleTitle, tip);
 }
-void gtkDestroyNotch(diaElem *e)
+void qt4DestroyNotch(diaElem *e)
 {
-	ADM_GtkFactory::diaElemNotch *a=(ADM_GtkFactory::diaElemNotch *)e;
+	ADM_qt4Factory::diaElemNotch *a=(ADM_qt4Factory::diaElemNotch *)e;
 	delete a;
 }
 //EOF

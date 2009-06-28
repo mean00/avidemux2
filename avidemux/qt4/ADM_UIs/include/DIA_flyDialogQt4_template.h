@@ -46,7 +46,7 @@ class WINDOW_NAME : public QDialog
  public:
      FLY_NAME *myCrop;
      ADM_QCanvas *canvas;
-     WINDOW_NAME(PARAM_NAME *param,AVDMGenericVideoStream *in);
+     WINDOW_NAME(QWidget *parent, PARAM_NAME *param,AVDMGenericVideoStream *in);
      ~WINDOW_NAME();
      DIALOG_NAME ui;
  public slots:
@@ -88,12 +88,17 @@ uint8_t FUNC_NAME(PARAM_NAME *param, AVDMGenericVideoStream *in)
 {
         uint8_t ret=0;
         
-        WINDOW_NAME dialog(param,in);        
+        WINDOW_NAME dialog(qtLastRegisteredDialog(), param,in);
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(param); 
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
+
         return ret;
 }
 //____________________________________

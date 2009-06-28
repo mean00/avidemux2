@@ -20,6 +20,7 @@
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
 
@@ -35,6 +36,7 @@ public:
   virtual ~diaElemBar() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
+  int getRequiredLayout(void);
 };
 
 //********************************************************************
@@ -69,6 +71,8 @@ void diaElemBar::setMe(void *dialog, void *opaque,uint32_t line)
 void diaElemBar::getMe(void)
 {
 }
+
+int diaElemBar::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 } // nameapsce
 
 diaElem  *qt4CreateBar(uint32_t percent,const char *toggleTitle)

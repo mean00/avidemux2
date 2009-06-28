@@ -22,14 +22,10 @@
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_coreUI_internal.h"
+#include "ADM_toolkitQt.h"
+#include "ADM_dialogFactoryQt4.h"
 
 static void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab);
-factoryWindow::factoryWindow()     : QDialog()
- {
-//     ui.setupUi(this);
-     //connect( (ui.pushButton),SIGNAL(pressed()),this,SLOT(buttonPressed()));
- }
-
 
 /**
     \fn qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
@@ -39,7 +35,8 @@ factoryWindow::factoryWindow()     : QDialog()
 
 uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
 {
-  factoryWindow dialog;
+  QDialog dialog(qtLastRegisteredDialog());
+  qtRegisterDialog(&dialog);
   
   ADM_assert(title);
   ADM_assert(nb);
@@ -47,38 +44,61 @@ uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
   
   dialog.setWindowTitle(QString::fromUtf8(title));
   
-  QGridLayout layout(&dialog);
-  
-  /* First compute the size of our window */
-  int vsize=0;
-  for(int i=0;i<nb;i++)
-  {
-    ADM_assert(elems[i]);
-     vsize+=elems[i]->getSize(); 
-  }
+  QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
+  QDialogButtonBox *buttonBox = new QDialogButtonBox();
+  QVBoxLayout *vboxLayout = new QVBoxLayout();
+  QLayout *layout = NULL;
+  int currentLayout = 0;
 
  int  v=0;
-  for(int i=0;i<nb;i++)
-  {
-    ADM_assert(elems[i]);
-     elems[i]->setMe( (void *)&dialog,&layout,v); 
-     v+=elems[i]->getSize();
-    
-  }
+
+ for(int i=0;i<nb;i++)
+ {
+	 ADM_assert(elems[i]);
+
+	 if (elems[i]->getRequiredLayout() != currentLayout)
+	 {
+		 if (layout)
+			 vboxLayout->addLayout(layout);
+
+		 switch (elems[i]->getRequiredLayout())
+		 {
+			 case FAC_QT_GRIDLAYOUT:
+				 layout = new QGridLayout();
+				 break;
+			 case FAC_QT_VBOXLAYOUT:
+				 layout = new QVBoxLayout();
+				 break;
+		 }
+
+		 currentLayout = elems[i]->getRequiredLayout();
+		 v = 0;
+	 }
+
+	 elems[i]->setMe( (void *)&dialog,layout,v);
+	 v+=elems[i]->getSize();
+ }
+
    for(int i=0;i<nb;i++)
   {
     ADM_assert(elems[i]);
      elems[i]->finalize(); 
   }
+
   // Add buttons
-   QDialogButtonBox buttonBox((QWidget *)&dialog);
-    buttonBox.setStandardButtons(QDialogButtonBox::Ok
-                            | QDialogButtonBox::Cancel);
-     QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-     QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-     layout.addWidget(&buttonBox,vsize,0);
-  // run
-  dialog.setLayout(&layout);
+   buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+   QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+   QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+
+   if (layout)
+	   vboxLayout->addLayout(layout);
+
+   vboxLayout->addItem(spacer);
+   vboxLayout->addWidget(buttonBox);
+
+   dialog.setLayout(vboxLayout);
+
   if(dialog.exec()==QDialog::Accepted)
   {
      for(int i=0;i<nb;i++)
@@ -87,8 +107,14 @@ uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
         elems[i]->getMe(); 
     
       }
+
+	 qtUnregisterDialog(&dialog);
+
     return 1;
   }
+
+  qtUnregisterDialog(&dialog);
+
   return 0;
   
 }
@@ -98,48 +124,58 @@ uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
 */
 const char *shortkey(const char *in)
 {
- char *t=ADM_strdup(in);
- for(int i=0;i<strlen(t);i++)
- {
-    if(t[i]=='_') t[i]='&'; 
- }
-  return t;
+	QString escaped = QString::fromUtf8(in);
+
+	escaped.replace("&", "&&");
+	escaped.replace("_", "&");
+
+	return ADM_strdup(escaped.toUtf8().constData());
 }
+
 /**
  * 	\fn qt4DiaFactoryRunTabs
  */
 uint8_t qt4DiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
-    factoryWindow dialog;
+    QDialog dialog(qtLastRegisteredDialog());
+
+	qtRegisterDialog(&dialog);
   
   ADM_assert(title);
   ADM_assert(nb);
   ADM_assert(tabs);
   
   dialog.setWindowTitle(QString::fromUtf8(title));
-  
-  QGridLayout layout(&dialog);
 
-  // Add tabs
-  QTabWidget wtabs((QWidget *)&dialog);
-  // Add buttons
-   QDialogButtonBox buttonBox((QWidget *)&dialog);
-    buttonBox.setStandardButtons(QDialogButtonBox::Ok
-                            | QDialogButtonBox::Cancel);
-     QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-     QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-     
+  QVBoxLayout *vboxLayout = new QVBoxLayout();
+  QGridLayout *layout = new QGridLayout();
+  QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
+  QTabWidget *wtabs = new QTabWidget();
+  QDialogButtonBox *buttonBox = new QDialogButtonBox();
+
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+     QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+     QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+
      for(int i=0;i<nb;i++)
      {
         ADM_assert(tabs[i]);
-        insertTab(i,tabs[i],&wtabs); 
-    
+        insertTab(i,tabs[i],wtabs);
       }
-     
-     layout.addWidget(&wtabs,0,0);
-     layout.addWidget(&buttonBox,1,0);
-  // run
-  dialog.setLayout(&layout);
+
+	 vboxLayout->addLayout(layout);
+     vboxLayout->addWidget(wtabs,0,0);
+	 vboxLayout->addItem(spacer);
+     vboxLayout->addWidget(buttonBox,1,0);
+
+	 dialog.setLayout(vboxLayout);
+
+	 // Expand to see all tabs but still allow the window to be resized smaller
+	 wtabs->setUsesScrollButtons(false);
+	 dialog.adjustSize();
+	 wtabs->setUsesScrollButtons(true);
+
   if(dialog.exec()==QDialog::Accepted)
   {
       // Read tabs
@@ -153,8 +189,13 @@ uint8_t qt4DiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
         }
     
       }
+	   qtUnregisterDialog(&dialog);
+
       return 1;
   }
+
+  qtUnregisterDialog(&dialog);
+
   return 0;
   
 }
@@ -162,9 +203,11 @@ uint8_t qt4DiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
 void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
 {
 
-  QWidget *wid=new QWidget;
-  QGridLayout *layout=new QGridLayout(wid);
+  QWidget *wid=new QWidget;  
   QSpacerItem *spacerItem = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  int currentLayout = 0;
+  QVBoxLayout *vboxLayout = new QVBoxLayout(wid);
+  QLayout *layout = NULL;
   
   /* First compute the size of our window */
   int vsize=0;
@@ -174,14 +217,34 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
      vsize+=tab->dias[i]->getSize(); 
   }
 
- int  v=0;
-  for(int i=0;i<tab->nbElems;i++)
-  {
-     ADM_assert(tab->dias[i]);
-     tab->dias[i]->setMe( wid,layout,v); 
-     v+=tab->dias[i]->getSize();
-    
-  }
+	int  v=0;
+
+	for(int i=0;i<tab->nbElems;i++)
+	{
+		ADM_assert(tab->dias[i]);
+
+		if (tab->dias[i]->getRequiredLayout() != currentLayout)
+		{
+			if (layout)
+				vboxLayout->addLayout(layout);
+
+			switch (tab->dias[i]->getRequiredLayout())
+			{
+				case FAC_QT_GRIDLAYOUT:
+					layout = new QGridLayout();
+					break;
+				case FAC_QT_VBOXLAYOUT:
+					layout = new QVBoxLayout();
+					break;
+			}
+
+			currentLayout = tab->dias[i]->getRequiredLayout();
+			v = 0;
+		}
+
+		tab->dias[i]->setMe( wid,layout,v); 
+		v+=tab->dias[i]->getSize();
+	}
   
   wtab->addTab(wid,QString::fromUtf8(tab->title));
   for(int i=0;i<tab->nbElems;i++)
@@ -189,7 +252,10 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
     tab->dias[i]->finalize(); 
   }
 
-  layout->addItem(spacerItem, v, 0);
+  if (layout)
+	  vboxLayout->addLayout(layout);
+
+  vboxLayout->addItem(spacerItem);
 }
 
 /**

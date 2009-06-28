@@ -30,6 +30,7 @@ public:
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 /* Same but unsigned */
 class diaElemUInteger : public diaElem
@@ -42,6 +43,7 @@ public:
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
   
 };
 
@@ -114,6 +116,8 @@ void diaElemInteger::enable(uint32_t onoff)
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
 
+int diaElemInteger::getRequiredLayout(void) { return 0; }
+
 //**********************************************************************************
 
 diaElemUInteger::diaElemUInteger(uint32_t *intValue,const char *toggleTitle, uint32_t min, uint32_t max,const char *tip)
@@ -185,6 +189,8 @@ void diaElemUInteger::enable(uint32_t onoff)
   GtkWidget *widget=(GtkWidget *)myWidget;
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
+
+int diaElemUInteger::getRequiredLayout(void) { return 0; }
 
 //****************************************************
 } // End of namespace

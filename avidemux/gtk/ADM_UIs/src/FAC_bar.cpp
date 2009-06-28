@@ -27,6 +27,7 @@ public:
   virtual ~diaElemBar() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
+  int getRequiredLayout(void);
 };
 
 diaElemBar::diaElemBar(uint32_t percent,const char *toggleTitle)
@@ -73,6 +74,8 @@ void diaElemBar::getMe(void)
 {
   
 }
+
+int diaElemBar::getRequiredLayout(void) { return 0; }
 } // End of namespace
 //****************************Hoook*****************
 

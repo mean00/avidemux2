@@ -1,6 +1,6 @@
 /***************************************************************************
-  FAC_toggle.cpp
-  Handle dialog factory element : Toggle
+  FAC_frame.cpp
+  Handle dialog factory element : Frame
   (C) 2006 Mean Fixounet@free.fr 
 ***************************************************************************/
 
@@ -16,9 +16,11 @@
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
+#include <QtGui/QGroupBox>
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
 
@@ -37,6 +39,7 @@ public:
   void swallow(diaElem *widget);
   void enable(uint32_t onoff);
   void finalize(void);
+  int getRequiredLayout(void);
 };
 
 diaElemFrame::diaElemFrame(const char *toggleTitle, const char *tip)
@@ -62,30 +65,47 @@ diaElemFrame::~diaElemFrame()
   if(paramTitle)
     delete paramTitle;
 }
+
 void diaElemFrame::setMe(void *dialog, void *opaque,uint32_t line)
 {
-  
-   QGridLayout *layout=(QGridLayout*) opaque;  
-   QGridLayout *layout2;
-   
-   layout2=new QGridLayout((QWidget *)dialog);
-   myWidget=(void *)layout2; 
+	QVBoxLayout *layout = (QVBoxLayout*)opaque;
+	QGroupBox *groupBox = new QGroupBox(QString::fromUtf8(paramTitle));
+	QVBoxLayout *vboxlayout = new QVBoxLayout(groupBox);
+	QLayout *layout2 = NULL;
+	int currentLayout = 0;
+	int v;
 
-    QLabel *text=new QLabel( (QWidget *)dialog);
-    QString string = QString::fromUtf8(paramTitle);
-    
-    string="<b>"+string+"</b>";
-    text->setText(string);
- layout->addWidget(text,line,0);
- layout->addLayout(layout2,line+1,0);
- int  v=0;
-  for(int i=0;i<nbElems;i++)
-  {
-    elems[i]->setMe(dialog,layout2,v); 
-    v+=elems[i]->getSize();
-  }
-  myWidget=(void *)layout2;
+	for (int i = 0; i < nbElems; i++)
+	{
+		if (elems[i]->getRequiredLayout() != currentLayout)
+		{
+			if (layout2)
+				vboxlayout->addLayout(layout2);
+
+			switch (elems[i]->getRequiredLayout())
+			{
+				case FAC_QT_GRIDLAYOUT:
+					layout2 = new QGridLayout();
+					break;
+				case FAC_QT_VBOXLAYOUT:
+					layout2 = new QVBoxLayout();
+					break;
+			}
+
+			currentLayout = elems[i]->getRequiredLayout();
+			v = 0;
+		}
+
+		elems[i]->setMe(groupBox, layout2, v); 
+		v += elems[i]->getSize();
+	}
+
+	if (layout2)
+		vboxlayout->addLayout(layout2);
+
+	layout->addWidget(groupBox);
 }
+
 //*****************************
 void diaElemFrame::getMe(void)
 {
@@ -105,6 +125,8 @@ void diaElemFrame::enable(uint32_t onoff)
 {
   
 }
+
+int diaElemFrame::getRequiredLayout(void) { return FAC_QT_VBOXLAYOUT; }
 } // End of namespace
 //****************************Hoook*****************
 

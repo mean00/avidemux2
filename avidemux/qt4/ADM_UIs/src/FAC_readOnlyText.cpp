@@ -20,6 +20,7 @@
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
 
@@ -35,7 +36,7 @@ public:
   virtual ~diaElemReadOnlyText() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
-  
+  int getRequiredLayout(void);
 };
 
 class diaElemText : public diaElem
@@ -48,6 +49,7 @@ public:
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
   void enable(uint32_t onoff);
+  int getRequiredLayout(void);
 };
 
 //********************************************************************
@@ -84,6 +86,9 @@ void diaElemReadOnlyText::getMe(void)
 
  
 }
+
+int diaElemReadOnlyText::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
+
 //*********************************
 
 diaElemText::diaElemText(char **text,const char *toggleTitle,const char *tip)
@@ -133,6 +138,8 @@ void diaElemText::enable(uint32_t onoff)
   else
     lineEdit->setDisabled(TRUE);
 }
+
+int diaElemText::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 } // End of namespace
 //****************************Hoook*****************
 
@@ -155,6 +162,4 @@ void qt4DestroyText(diaElem *e)
 	ADM_qt4Factory::diaElemText *a=(ADM_qt4Factory::diaElemText *)e;
 	delete a;
 }
-//EOF
-
 //EOF

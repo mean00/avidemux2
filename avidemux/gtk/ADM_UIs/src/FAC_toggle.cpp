@@ -30,6 +30,7 @@ public:
   void      finalize(void);
   void      updateMe();
   uint8_t   link(uint32_t onoff,diaElem *w);
+  int getRequiredLayout(void);
 };
 
 class diaElemToggleUint : public diaElem
@@ -48,6 +49,7 @@ public:
   void      enable(uint32_t onoff) ;
   void      finalize(void);
   void      updateMe();
+  int getRequiredLayout(void);
 };
 class diaElemToggleInt : public diaElem
 {
@@ -65,6 +67,7 @@ public:
   void      finalize(void);
   void      updateMe();
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 
 static void cb_menu(void *w,void *p);
@@ -155,6 +158,8 @@ void   diaElemToggle::enable(uint32_t onoff)
 {
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);  
 }
+
+int diaElemToggle::getRequiredLayout(void) { return 0; }
 
 //** C callback **
 void cb_menu(void *w,void *p)
@@ -251,6 +256,8 @@ void   diaElemToggleUint::enable(uint32_t onoff)
   gtk_widget_set_sensitive(GTK_WIDGET(wuint),onoff);
 }
 
+int diaElemToggleUint::getRequiredLayout(void) { return 0; }
+
 //** C callback **
 void cb_menu2(void *w,void *p)
 {
@@ -320,6 +327,8 @@ void diaElemToggleInt::getMe(void)
   if(*emb<_min) *emb=_min;
   if(*emb>_max) *emb=_max;
 }
+
+int diaElemToggleInt::getRequiredLayout(void) { return 0; }
 
 //** C callback **
 void cb_menu3(void *w,void *p)

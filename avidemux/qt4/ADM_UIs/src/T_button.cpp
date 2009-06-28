@@ -15,6 +15,7 @@
 
 #include "T_button.h"
 #include "ADM_default.h"
+#include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
 namespace ADM_Qt4Factory
@@ -30,6 +31,7 @@ class diaElemButton : public diaElem
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
 };
 
 ADM_Qbutton::ADM_Qbutton(QWidget *z,QGridLayout *layout,const char *blah,int line,ADM_FAC_CALLBACK *cb, void *cookie) : QWidget(z) 
@@ -85,6 +87,8 @@ void   diaElemButton::enable(uint32_t onoff)
 {
 
 }
+
+int diaElemButton::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 
 }; // End of namespace
 //****************************Hoook*****************

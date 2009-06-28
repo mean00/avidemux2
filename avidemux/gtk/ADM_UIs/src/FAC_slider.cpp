@@ -32,6 +32,7 @@ public:
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
   void      enable(uint32_t onoff) ;
+  int getRequiredLayout(void);
   
 };
 class diaElemSlider : public diaElemSliderBase
@@ -46,8 +47,7 @@ public:
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
   void      enable(uint32_t onoff) ;
-  
-  
+  int getRequiredLayout(void);
 };
 
 //****************************************************
@@ -137,6 +137,9 @@ void diaElemSlider::enable(uint32_t onoff)
   GtkWidget *widget=(GtkWidget *)myWidget;
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
+
+int diaElemSlider::getRequiredLayout(void) { return 0; }
+
 //********************** USLIDER***********
 
 
@@ -224,6 +227,9 @@ void diaElemUSlider::enable(uint32_t onoff)
   GtkWidget *widget=(GtkWidget *)myWidget;
   gtk_widget_set_sensitive(GTK_WIDGET(myWidget),onoff);
 }
+
+int diaElemUSlider::getRequiredLayout(void) { return 0; }
+
 //****************************************************
 } // End of namespace
 //****************************Hoook*****************
