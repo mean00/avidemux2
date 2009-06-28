@@ -126,7 +126,7 @@ bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
         return false;
     }
     postEncode(out,sz);
-    
+    printf("[ffMpeg4] Out Quant :%d\n",out->out_quantizer);
     return true;
 }
 /**
@@ -146,6 +146,12 @@ bool ADM_ffMpeg4Encoder::postEncode(ADMBitstream *out, uint32_t size)
     // Update PTS/Dts
     out->pts=_frame.reordered_opaque;
     out->dts=-1; // FIXME
+
+    // Update quant
+    if(!_context->coded_frame->quality)
+      out->out_quantizer=(int) floor (_frame.quality / (float) FF_QP2LAMBDA);
+    else
+      out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
     return true;
 }
 /**
