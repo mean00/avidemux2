@@ -23,11 +23,4 @@ void UI_toogleMain(void) {}
 uint8_t UI_arrow_enabled(void) {return 1;}
 uint8_t UI_arrow_disabled(void) {return 1;}
 
-uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h)
-{
-	QRect qrect = QApplication::desktop()->availableGeometry();
-
-	*w = (uint32_t)qrect.width();
-	*h = (uint32_t)qrect.height();
-}
 // EOF
