@@ -89,6 +89,7 @@ class ADM_ffMpeg4Encoder : public ADM_coreVideoEncoderFFmpeg
 protected:
                int              plane;
                bool            presetContext(FFcodecSetting *set);
+               bool            postEncode(ADMBitstream *out, uint32_t size);
 public:
 
                            ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src);

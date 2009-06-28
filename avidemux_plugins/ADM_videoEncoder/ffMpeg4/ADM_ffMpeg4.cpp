@@ -119,18 +119,33 @@ bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
             return false;
     }
     int sz=0;
+    _frame.reordered_opaque=image->Pts;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
     {
-        printf("[jpeg] Error %d encoding video\n",sz);
+        printf("[ffmpeg4] Error %d encoding video\n",sz);
         return false;
     }
+    postEncode(out,sz);
     
-    out->len=sz;
-#warning     Update pts dts
+    return true;
+}
+/**
+        \fn postEncode
+        \brief update bitstream info from output of lavcodec
+*/
+bool ADM_ffMpeg4Encoder::postEncode(ADMBitstream *out, uint32_t size)
+{
 
+    out->len=size;
+    out->flags=0;
+    if(_frame.key_frame) 
+        out->flags=AVI_KEY_FRAME;
+    else if(_frame.pict_type==FF_B_TYPE)
+            out->flags=AVI_B_FRAME;
     out->pts=out->dts=image->Pts;
-    //if(_frame.
-    out->flags=AVI_KEY_FRAME;
+    // Update PTS/Dts
+    out->pts=_frame.reordered_opaque;
+    out->dts=-1; // FIXME
     return true;
 }
 /**
@@ -190,9 +205,8 @@ bool ADM_ffMpeg4Encoder::presetContext(FFcodecSetting *set)
       
       SETX (_4MV);
       SETX (_QPEL);
-#warning FIXME TRELLIS
+      if(set->_TRELLIS_QUANT) _context->trellis=1;
       //SETX(_HQ);
-      //SETX (_TRELLIS_QUANT);
       //SETX (_NORMALIZE_AQP);
 
       if (set->widescreen)
