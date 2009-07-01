@@ -82,8 +82,19 @@ ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src) : ADM_coreVideo
 */
 bool ADM_ffMpeg4Encoder::setup(void)
 {
+    switch(Settings.params.mode)
+    {
+      case COMPRESS_CQ:
+            _context->flags |= CODEC_FLAG_QSCALE;
+            break;
+     default:
+            return false;
+    }
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
         return false;
+
+
+
     presetContext(&Settings);
     printf("[ffMpeg] Setup ok\n");
     return true;
@@ -118,6 +129,8 @@ bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
      default:
             return false;
     }
+    printf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
+                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA);     
     int sz=0;
     _frame.reordered_opaque=image->Pts;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
@@ -247,12 +260,8 @@ bool ADM_ffMpeg4Encoder::presetContext(FFcodecSetting *set)
   _context->p_masking = 0.0;
   _context->bit_rate = 0;
 
-  // Compute den/num from source (type ADM_coreVideoFilter)
-  FilterInfo *info=source->getInfo();
-  uint64_t frameIncrement=info->frameIncrement;
-  _context->time_base.num=frameIncrement;
-  _context->time_base.den=1000000LL;
-  printf("[LAVCODEC] Frame increment ~ %d ms\n",(int)(frameIncrement/1000));
+  // Set frame rate den/num
+  prolog();
   return true;
 }
 /**
