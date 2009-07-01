@@ -87,6 +87,9 @@ bool ADM_ffMpeg4Encoder::setup(void)
       case COMPRESS_CQ:
             _context->flags |= CODEC_FLAG_QSCALE;
             break;
+      case COMPRESS_CBR:
+              _context->bit_rate=Settings.params.bitrate*1000; // kb->b;
+            break;
      default:
             return false;
     }
@@ -119,14 +122,13 @@ bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
     switch(Settings.params.mode)
     {
       case COMPRESS_CQ:
-            _context->flags |= CODEC_FLAG_QSCALE;
             _frame.quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
             break;
+            break;
       case COMPRESS_CBR:
-            _context->flags &= ~CODEC_FLAG_QSCALE;
-            _context->bit_rate=Settings.params.bitrate*1000; // kb->b
             break;
      default:
+            printf("[ffMpeg4] Unsupported encoding mode\n");
             return false;
     }
     printf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
