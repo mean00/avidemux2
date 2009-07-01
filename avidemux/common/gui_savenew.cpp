@@ -72,6 +72,9 @@ int A_Save(const char *name)
         //return 0;
         audio=NULL;
         nbAStream=0; // FIXME
+    }else
+    {
+        audio->goToTime(markerA); // Rewind audio
     }
     ADM_videoStream *video=NULL;
     // Video Stream 

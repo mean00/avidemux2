@@ -34,6 +34,7 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     if(f) f=1000000000./f;
         else f=25000;
     averageFps1000=(uint32_t)f;
+    printf("[StreamProcess] Average FPS1000=%"LU"\n",averageFps1000);
     isCFR=false;
     bitstream=new ADMBitstream(width*height*4);
     data=new uint8_t [width*height*4];
