@@ -35,11 +35,11 @@ static FFcodecSetting Settings=
           0,				//          GMC     
           1,				// 4MV
           0,				//           _QPEL;   
-          0,				//           _TREILLIS_QUANT
+          1,				//           _TREILLIS_QUANT
           2,				//           qmin;
           31,				//          qmax;
           3,				//           max_qdiff;
-          0,				//           max_b_frames;
+          2,				//           max_b_frames;
           0,				//          mpeg_quant;
           1,				//
           -2,				//                 luma_elim_threshold;
@@ -93,12 +93,10 @@ bool ADM_ffMpeg4Encoder::setup(void)
      default:
             return false;
     }
+    presetContext(&Settings);
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
         return false;
 
-
-
-    presetContext(&Settings);
     printf("[ffMpeg] Setup ok\n");
     return true;
 }
@@ -118,6 +116,7 @@ ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 */
 bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
 {
+again:
     if(false==preEncode()) return false;
     switch(Settings.params.mode)
     {
@@ -140,8 +139,10 @@ bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
         printf("[ffmpeg4] Error %d encoding video\n",sz);
         return false;
     }
+    if(sz==0) // no pic, probably pre filling, try again
+        goto again;
     postEncode(out,sz);
-    printf("[ffMpeg4] Out Quant :%d\n",out->out_quantizer);
+   
     return true;
 }
 /**
@@ -150,12 +151,19 @@ bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
 */
 bool ADM_ffMpeg4Encoder::postEncode(ADMBitstream *out, uint32_t size)
 {
-
+    int pict_type=FF_P_TYPE;
+    int keyframe=false;
+    if(_context->coded_frame)
+    {
+        pict_type=_context->coded_frame->pict_type;
+        keyframe=_context->coded_frame->key_frame;
+    }
+    printf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d\n",out->out_quantizer,pict_type,keyframe);
     out->len=size;
     out->flags=0;
-    if(_frame.key_frame) 
+    if(keyframe) 
         out->flags=AVI_KEY_FRAME;
-    else if(_frame.pict_type==FF_B_TYPE)
+    else if(pict_type==FF_B_TYPE)
             out->flags=AVI_B_FRAME;
     out->pts=out->dts=image->Pts;
     // Update PTS/Dts
