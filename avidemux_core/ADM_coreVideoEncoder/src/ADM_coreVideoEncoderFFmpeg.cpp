@@ -32,7 +32,7 @@ uint32_t w,h;
     h=getHeight();
 
     image=new ADMImage(w,h);
-    _context = avcodec_alloc_context ();
+    _context = avcodec_alloc_context2 (CODEC_TYPE_VIDEO);
     ADM_assert (_context);
     memset (&_frame, 0, sizeof (_frame));
     _frame.pts = AV_NOPTS_VALUE;
@@ -96,9 +96,9 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     // Eval fps
     uint64_t f=source->getInfo()->frameIncrement;
     if(!f) f=40000;
-    _context->time_base.den=f;
-    _context->time_base.num=1000000;
-   
+    _context->time_base.den=1000LL;
+    _context->time_base.num=f/1000;
+    printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
     return true;
 }
 /**
@@ -156,6 +156,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 }
 /**
     \fn setup
+    \brief put flags before calling setup!
 */
 bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
 {
