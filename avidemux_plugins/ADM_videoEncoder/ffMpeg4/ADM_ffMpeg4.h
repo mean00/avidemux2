@@ -97,6 +97,9 @@ public:
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "DIVX";}
+
+virtual        bool         isDualPass(void) ;
+virtual        bool         startPass2(void) ;
 };
 
 #endif

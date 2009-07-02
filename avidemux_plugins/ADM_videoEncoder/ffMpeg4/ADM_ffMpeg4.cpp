@@ -84,6 +84,7 @@ bool ADM_ffMpeg4Encoder::setup(void)
 {
     switch(Settings.params.mode)
     {
+      case COMPRESS_SAME:
       case COMPRESS_CQ:
             _context->flags |= CODEC_FLAG_QSCALE;
             break;
@@ -116,13 +117,35 @@ ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 */
 bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
 {
+int sz,q;
 again:
-    if(false==preEncode()) return false;
+    sz=0;
+    if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
+    {
+        if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, NULL)) <= 0)
+        {
+            printf("[ffmpeg4] Error %d encoding video\n",sz);
+            return false;
+        }
+        printf("[ffmpeg4] Popping delayed bframes (%d)\n",sz);
+        goto link;
+    }
+    q=image->_Qp;
+    
+    if(!q) q=2;
     switch(Settings.params.mode)
     {
+      case COMPRESS_SAME:
+                // Keep same frame type & same Qz as the incoming frame...
+            _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
+
+            if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
+            else if(image->flags & AVI_B_FRAME) _frame.pict_type=FF_B_TYPE;
+            else                               _frame.pict_type=FF_P_TYPE;
+
+            break;
       case COMPRESS_CQ:
             _frame.quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
-            break;
             break;
       case COMPRESS_CBR:
             break;
@@ -130,9 +153,9 @@ again:
             printf("[ffMpeg4] Unsupported encoding mode\n");
             return false;
     }
-    printf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
-                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA);     
-    int sz=0;
+    printf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
+                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
+    
     _frame.reordered_opaque=image->Pts;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
     {
@@ -141,6 +164,7 @@ again:
     }
     if(sz==0) // no pic, probably pre filling, try again
         goto again;
+link:
     postEncode(out,sz);
    
     return true;
@@ -169,6 +193,7 @@ bool ADM_ffMpeg4Encoder::postEncode(ADMBitstream *out, uint32_t size)
     // Update PTS/Dts
     out->pts=_frame.reordered_opaque;
     out->dts=-1; // FIXME
+    
 
     // Update quant
     if(!_context->coded_frame->quality)
@@ -274,6 +299,30 @@ bool ADM_ffMpeg4Encoder::presetContext(FFcodecSetting *set)
   prolog();
   return true;
 }
+
+/**
+    \fn isDualPass
+
+*/
+bool         ADM_ffMpeg4Encoder::isDualPass(void) 
+{
+    if(Settings.params.mode==COMPRESS_2PASS) return true;
+    return false;
+
+}
+
+/**
+    \fn isDualPass
+
+*/
+bool         ADM_ffMpeg4Encoder::startPass2(void) 
+{
+    // Redo a partial init
+    #warning TOTO
+    return true;
+
+}
+
 /**
     \fn jpegConfigure
     \brief UI configuration for jpeg encoder
