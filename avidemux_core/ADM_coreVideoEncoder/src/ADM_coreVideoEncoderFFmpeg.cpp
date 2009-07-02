@@ -18,6 +18,7 @@
 #define __STDC_CONSTANT_MACROS
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
+#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 /**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor
@@ -94,10 +95,10 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     }
     
     // Eval fps
-    uint64_t f=source->getInfo()->frameIncrement;
-    if(!f) f=40000;
-    _context->time_base.den=1000LL;
-    _context->time_base.num=f/1000;
+    //uint64_t f=source->getInfo()->frameIncrement;
+    // Let's put 100 us as time  base
+    _context->time_base.den=10000LL;
+    _context->time_base.num=1;
     printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
     return true;
 }
@@ -115,7 +116,10 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
         return false;
     }
     prolog();
-  
+    // put a time stamp...
+    if(image->Pts==ADM_NO_PTS) _frame.pts=AV_NOPTS_VALUE;
+    _frame.pts=(image->Pts)/100;
+    //
     switch(targetColorSpace)
     {
         case ADM_COLOR_YV12:      
@@ -188,6 +192,17 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
             return false;
         }
     }
+    return true;
+}
+/**
+    \fn getExtraData
+    \brief
+
+*/
+bool             ADM_coreVideoEncoderFFmpeg::getExtraData(uint32_t *l,uint8_t **d)
+{
+    *l=_context->extradata_size;
+    *d=_context->extradata;
     return true;
 
 }

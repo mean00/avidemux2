@@ -41,7 +41,7 @@ protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
     virtual               bool             setup(CodecID codecId);
-
+    virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
 public:
                             ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src);
                             ~ADM_coreVideoEncoderFFmpeg();
