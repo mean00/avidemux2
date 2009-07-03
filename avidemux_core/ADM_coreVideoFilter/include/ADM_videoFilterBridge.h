@@ -29,6 +29,7 @@ class ADM_videoFilterBridge : public ADM_coreVideoFilter
 protected:
         uint64_t            startTime,endTime;
         FilterInfo          bridgeInfo;
+        bool                firstImage;
 public:
                             ADM_videoFilterBridge(uint64_t startTime, uint64_t endTime);
                             ~ADM_videoFilterBridge();

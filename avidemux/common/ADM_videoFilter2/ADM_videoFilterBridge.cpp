@@ -47,6 +47,7 @@ bool ADM_videoFilterBridge::rewind(void)
 {
     printf("[VideoBridge] Goint to %"LU" ms\n",(uint32_t)(startTime/1000));
     video_body->GoToTime(startTime);
+    firstImage=true;
     return true;
 }
 
@@ -65,7 +66,15 @@ ADM_videoFilterBridge::~ADM_videoFilterBridge()
 bool         ADM_videoFilterBridge::getNextFrame(ADMImage *image)
 {
 again:
-    bool r=   video_body->NextPicture(image);
+    bool r=false;
+    if(firstImage==true)
+    {
+        firstImage=false;
+        r=video_body->samePicture(image);
+    }else
+    {
+        r=   video_body->NextPicture(image);
+    }
     if(r==false) return false;
     // Translate pts if any
     int64_t pts=image->Pts;
