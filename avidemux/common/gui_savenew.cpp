@@ -137,7 +137,17 @@ int A_Save(const char *name)
 ADM_coreVideoEncoder *admSaver::handleFirstPass(ADM_coreVideoEncoder *pass1)
 {
 #define BUFFER_SIZE 1920*1800*3
+ADM_coreVideoFilter  *last;
+                int sze=chain->size();
+                ADM_assert(sze);
+                last=(*chain)[sze-1]; // Grab last filter
 
+
+uint64_t videoDuration=last->getInfo()->totalDuration;
+
+
+
+                if(videoDuration<5000) videoDuration=5000;
                 printf("[Save] Performing Pass one,using %s as log file\n",logFileName);
                 pass1->setPassAndLogFile(1,logFileName);
                 if(false==pass1->setup())
@@ -151,11 +161,20 @@ ADM_coreVideoEncoder *admSaver::handleFirstPass(ADM_coreVideoEncoder *pass1)
                 uint8_t *buffer=new uint8_t[BUFFER_SIZE];
                 bitstream.data=buffer;
                 bitstream.bufferSize=BUFFER_SIZE;
-                
+                DIA_workingBase  *encoding=createWorking("Pass1");
+             
                 while(pass1->encode(&bitstream))
                 {
-
+                    if(bitstream.pts!=ADM_NO_PTS)
+                    {
+                        float f=100;
+                        f/=videoDuration;
+                        f*=bitstream.pts;
+                        uint32_t percent=(uint32_t)f;
+                        encoding->update(percent);
+                    }
                 }
+                delete encoding;
                 delete [] buffer;
                 printf("[Save] Pass 1 done, restarting for pass 2\n");
                 // Destroy filter chain & create the new encoder
@@ -170,7 +189,6 @@ ADM_coreVideoEncoder *admSaver::handleFirstPass(ADM_coreVideoEncoder *pass1)
                 }
                 int sz=chain->size();
                 ADM_assert(sz);
-                ADM_coreVideoFilter  *last;
                 last=(*chain)[sz-1]; // Grab last filter
                 ADM_coreVideoEncoder *pass2=createVideoEncoderFromIndex(last,videoEncoderIndex);
                 if(!pass2) 
