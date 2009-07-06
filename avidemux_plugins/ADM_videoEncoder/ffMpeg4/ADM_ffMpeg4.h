@@ -87,9 +87,15 @@ typedef struct
 class ADM_ffMpeg4Encoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
-               int              plane;
+               
                bool            presetContext(FFcodecSetting *set);
                bool            postEncode(ADMBitstream *out, uint32_t size);
+               bool            loadStatFile(const char *file);
+               bool            setupPass(void);
+               int             pass;
+               int             plane;
+               char            *statFileName;
+               FILE            *statFile;
 public:
 
                            ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src);
@@ -99,7 +105,7 @@ virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "DIVX";}
 
 virtual        bool         isDualPass(void) ;
-virtual        bool         startPass2(void) ;
+virtual        bool         setPassAndLogFile(int pass,const char *name); // Call this before setup if needed !
 };
 
 #endif

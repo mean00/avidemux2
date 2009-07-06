@@ -21,25 +21,27 @@
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_muxer.h"
 #include "ADM_videoProcess.h"
-
+#if 0
 extern ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
 /**
     \fn createVideoStream
     \brief Create encoder then VideoStream from filterChain
     @return created VideoStream
 */
-ADM_videoStream  *createVideoStream(ADM_videoFilterChain *chain,int index)
+ADM_videoStream  *createVideoStream(ADM_coreVideoEncoder *encoder)
+{
+   
+    ADM_videoStreamProcess *stream=new ADM_videoStreamProcess(encoder);
+    return stream;
+}
+
+ADM_coreVideoFilter *getLastFilter(void)
 {
     int sz=chain->size();
     ADM_assert(sz);
     ADM_coreVideoFilter *filter=(*chain)[sz-1];
     ADM_assert(filter);
-    ADM_coreVideoEncoder *encoder=createVideoEncoderFromIndex(filter,index);
-    if(!encoder)
-    {
-        printf("[createVideoEncoder] Cannot create encoder\n");
-        return NULL;
-    }
-    ADM_videoStreamProcess *stream=new ADM_videoStreamProcess(encoder);
-    return stream;
+    return filter;
 }
+#endif
+//EOF

@@ -48,7 +48,7 @@ typedef struct
   COMPRESSION_MODE  mode;
   uint32_t          qz;           /// Quantizer
   uint32_t          bitrate;      /// In kb/s ?
-  uint32_t          finalsize;    /// In ?
+  uint32_t          finalsize;    /// In MB ?
   uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
   uint32_t          capabilities;
 }COMPRES_PARAMS;

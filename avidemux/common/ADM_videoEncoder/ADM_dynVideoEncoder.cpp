@@ -199,15 +199,6 @@ ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int
     ADM_videoEncoder6 *plugin=ListOfEncoders[index];
 
     ADM_coreVideoEncoder *enc=plugin->desc->create(chain);
-    if(enc)
-    {
-        if(false==enc->setup())
-        {
-            printf("[createVideoEncoderFromIndex] Cannot setup encoder\n");
-            delete enc;
-            return NULL;
-        }
-    }
     return enc;
 }
 /**

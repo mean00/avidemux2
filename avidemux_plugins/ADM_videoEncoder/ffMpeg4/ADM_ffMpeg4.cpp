@@ -1,6 +1,6 @@
 /***************************************************************************
-                          \fn ADM_VideoEncoders
-                          \brief Internal handling of video encoders
+                          \fn ADM_ffMpeg4
+                          \brief Front end for libavcodec Mpeg4 asp encoder
                              -------------------
     
     copyright            : (C) 2002/2009 by mean
@@ -75,15 +75,87 @@ static FFcodecSetting Settings=
 ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[ffMpeg4Encoder] Creating.\n");
+    pass=0;
+    statFileName=NULL;
+    statFile=NULL;
 
+}
+/**
+    \fn setupPass
+    \brief Setup in case of multipass
+
+*/
+bool ADM_ffMpeg4Encoder::setupPass(void)
+{
+    int averageBitrate; // Fixme
+   
+    // Compute average bitrate
+
+        if(Settings.params.mode==COMPRESS_2PASS_BITRATE) averageBitrate=Settings.params.avg_bitrate*1000;
+            else
+            {
+                uint64_t duration=source->getInfo()->totalDuration; // in us
+                float f;
+                if(!duration) 
+                {
+                    printf("[ffMpeg4] No source duration!\n");
+                    return false;
+                }
+                f=Settings.params.finalsize; 
+                f=f*1024*1024*8; // in bits
+                f*=1000*1000;
+                f/=duration;
+                averageBitrate=(uint32_t)f;
+            }
+
+        printf("[ffmpeg4] Average bitrate =%"LU" kb/s\n",averageBitrate/1000);
+        switch(pass)
+        {
+                case 1:
+                    printf("[ffMpeg4] Setup-ing Pass 1\n");
+                    _context->flags |= CODEC_FLAG_PASS1;
+                    _context->bit_rate=averageBitrate;
+                    // Open stat file
+                    statFile=fopen(statFileName,"wt");
+                    if(!statFile)
+                    {
+                        printf("[ffmpeg] Cannot open statfile %s for writing\n",statFileName);
+                        return false;
+                    }
+                    break;
+                case 2:
+                    printf("[ffMpeg4] Setup-ing Pass 2\n");
+                    _context->flags |= CODEC_FLAG_PASS2;
+                    if(false==loadStatFile(statFileName))
+                    {
+                        printf("[ffmpeg4] Cannot load stat file\n");
+                        return false;
+                    }
+                    break;
+                default:
+                        printf("[ffmpeg] Pass=0, fail\n");
+                        return false;
+                    break;
+
+        }
+        return true;
 }
 /**
     \fn setup
 */
 bool ADM_ffMpeg4Encoder::setup(void)
 {
+    
     switch(Settings.params.mode)
     {
+      case COMPRESS_2PASS:
+      case COMPRESS_2PASS_BITRATE:
+           if(false==setupPass())
+            {
+                printf("[ffmpeg] Multipass setup failed\n");
+                return false;
+            }
+            break;
       case COMPRESS_SAME:
       case COMPRESS_CQ:
             _context->flags |= CODEC_FLAG_QSCALE;
@@ -109,6 +181,10 @@ bool ADM_ffMpeg4Encoder::setup(void)
 ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 {
     printf("[ffMpeg4Encoder] Destroying.\n");
+    if(statFile) fclose(statFile);
+    statFile=NULL;
+    if(statFileName) ADM_dealloc(statFileName);
+    statFileName=NULL;
     
 }
 
@@ -141,9 +217,18 @@ again:
 
             if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
             else if(image->flags & AVI_B_FRAME) _frame.pict_type=FF_B_TYPE;
-            else                               _frame.pict_type=FF_P_TYPE;
+            else                                _frame.pict_type=FF_P_TYPE;
 
             break;
+      case COMPRESS_2PASS:
+      case COMPRESS_2PASS_BITRATE:
+            switch(pass)
+            {
+                case 1: 
+                        break;
+                case 2: 
+                        break; // Get Qz for this frame...
+            }
       case COMPRESS_CQ:
             _frame.quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
             break;
@@ -162,6 +247,7 @@ again:
         printf("[ffmpeg4] Error %d encoding video\n",sz);
         return false;
     }
+    
     if(sz==0) // no pic, probably pre filling, try again
         goto again;
 link:
@@ -200,6 +286,14 @@ bool ADM_ffMpeg4Encoder::postEncode(ADMBitstream *out, uint32_t size)
       out->out_quantizer=(int) floor (_frame.quality / (float) FF_QP2LAMBDA);
     else
       out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
+
+    // Update stats
+    if(Settings.params.mode==COMPRESS_2PASS   || Settings.params.mode==COMPRESS_2PASS_BITRATE)
+    {
+        if(pass==1)
+            if (_context->stats_out)
+                fprintf (statFile, "%s", _context->stats_out);
+    }
     return true;
 }
 /**
@@ -299,30 +393,54 @@ bool ADM_ffMpeg4Encoder::presetContext(FFcodecSetting *set)
   prolog();
   return true;
 }
-
+/**
+    \fn setLogFile
+*/
+ bool         ADM_ffMpeg4Encoder::setPassAndLogFile(int pass,const char *name)
+{
+    if(!pass || pass >2) return false;
+    if(!name) return false;
+    this->pass=pass;
+    statFileName=ADM_strdup(name);
+    return true;
+}
 /**
     \fn isDualPass
 
 */
 bool         ADM_ffMpeg4Encoder::isDualPass(void) 
 {
-    if(Settings.params.mode==COMPRESS_2PASS) return true;
+    if(Settings.params.mode==COMPRESS_2PASS || Settings.params.mode==COMPRESS_2PASS_BITRATE ) return true;
     return false;
 
 }
 
 /**
-    \fn isDualPass
-
+    \fn loadStatFile
+    \brief load the stat file from pass 1
 */
-bool         ADM_ffMpeg4Encoder::startPass2(void) 
+bool ADM_ffMpeg4Encoder::loadStatFile(const char *file)
 {
-    // Redo a partial init
-    #warning TOTO
-    return true;
+  printf("[FFmpeg] Loading stat file :%s\n",file);
+  FILE *_statfile = fopen (file, "rb");
+  int statSize;
 
+  if (!_statfile)
+    {
+      printf ("[ffmpeg] internal file does not exists ?\n");
+      return false;
+    }
+
+  fseek (_statfile, 0, SEEK_END);
+  statSize = ftello (_statfile);
+  fseek (_statfile, 0, SEEK_SET);
+  _context->stats_in = (char *) ADM_alloc (statSize + 1);
+  _context->stats_in[statSize] = 0;
+  fread (_context->stats_in, statSize, 1, _statfile);
+  fclose(_statfile);
+  printf("[FFmpeg] stat file loaded ok\n");
+  return true;
 }
-
 /**
     \fn jpegConfigure
     \brief UI configuration for jpeg encoder

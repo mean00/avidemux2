@@ -50,10 +50,12 @@ virtual const  char         *getFourcc(void) =0;
                uint32_t    getHeight(void) {return source->getInfo()->height;}
                uint32_t    getFrameIncrement(void) {return source->getInfo()->frameIncrement;}
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
+virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
 };
 // Spawn a new encoder using the index from the menu = the index in the vector
 ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
 bool                  videoEncoder6SelectByName(const char *name);
 bool                  videoEncoder6Configure(void);
 bool                  videoEncoder6_SetCurrentEncoder(uint32_t index);
+
 #endif

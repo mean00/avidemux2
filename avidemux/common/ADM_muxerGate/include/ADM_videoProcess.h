@@ -42,6 +42,8 @@ virtual     bool     getPacket(uint32_t *len, uint8_t *data, uint32_t maxLen,uin
 virtual     bool     getExtraData(uint32_t *extraLen, uint8_t **extraData) ;
 virtual     bool     providePts(void) {return false;}
 virtual     uint64_t getVideoDuration(void);
+virtual     bool     isDualPass(void) { ADM_assert(encoder);return encoder->isDualPass();}
+ADM_coreVideoEncoder *getEncoder(void) {return encoder;}
 };
 
 #endif
