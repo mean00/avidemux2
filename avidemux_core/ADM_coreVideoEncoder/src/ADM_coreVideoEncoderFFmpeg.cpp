@@ -99,7 +99,7 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     // Let's put 100 us as time  base
     _context->time_base.den=10000LL;
     _context->time_base.num=1;
-    printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
+    //printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
     return true;
 }
 /**
