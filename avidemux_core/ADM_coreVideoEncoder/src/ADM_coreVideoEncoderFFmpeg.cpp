@@ -95,10 +95,10 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     }
     
     // Eval fps
-    //uint64_t f=source->getInfo()->frameIncrement;
+    uint64_t f=source->getInfo()->frameIncrement;
     // Let's put 100 us as time  base
     _context->time_base.den=10000LL;
-    _context->time_base.num=1;
+    _context->time_base.num=f/100;
     //printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
     return true;
 }
