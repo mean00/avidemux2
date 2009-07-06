@@ -21,6 +21,12 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
+#if 1
+#define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
+
 static FFcodecSetting Settings=
 {
     {
@@ -109,12 +115,12 @@ bool ADM_ffMpeg4Encoder::setupPass(void)
             }
 
         printf("[ffmpeg4] Average bitrate =%"LU" kb/s\n",averageBitrate/1000);
+        _context->bit_rate=averageBitrate;
         switch(pass)
         {
                 case 1:
                     printf("[ffMpeg4] Setup-ing Pass 1\n");
                     _context->flags |= CODEC_FLAG_PASS1;
-                    _context->bit_rate=averageBitrate;
                     // Open stat file
                     statFile=fopen(statFileName,"wt");
                     if(!statFile)
@@ -159,6 +165,7 @@ bool ADM_ffMpeg4Encoder::setup(void)
       case COMPRESS_SAME:
       case COMPRESS_CQ:
             _context->flags |= CODEC_FLAG_QSCALE;
+  	    _context->bit_rate = 0;
             break;
       case COMPRESS_CBR:
               _context->bit_rate=Settings.params.bitrate*1000; // kb->b;
@@ -181,8 +188,11 @@ bool ADM_ffMpeg4Encoder::setup(void)
 ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 {
     printf("[ffMpeg4Encoder] Destroying.\n");
-    if(statFile) fclose(statFile);
-    statFile=NULL;
+    if(statFile)
+    {
+        fclose(statFile);
+        statFile=NULL;
+    }
     if(statFileName) ADM_dealloc(statFileName);
     statFileName=NULL;
     
@@ -238,7 +248,7 @@ again:
             printf("[ffMpeg4] Unsupported encoding mode\n");
             return false;
     }
-    printf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
+    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
     
     _frame.reordered_opaque=image->Pts;
@@ -268,7 +278,7 @@ bool ADM_ffMpeg4Encoder::postEncode(ADMBitstream *out, uint32_t size)
         pict_type=_context->coded_frame->pict_type;
         keyframe=_context->coded_frame->key_frame;
     }
-    printf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d\n",out->out_quantizer,pict_type,keyframe);
+    aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d\n",out->out_quantizer,pict_type,keyframe);
     out->len=size;
     out->flags=0;
     if(keyframe) 
@@ -387,7 +397,6 @@ bool ADM_ffMpeg4Encoder::presetContext(FFcodecSetting *set)
   _context->dct_algo = 0;
   _context->idct_algo = 0;
   _context->p_masking = 0.0;
-  _context->bit_rate = 0;
 
   // Set frame rate den/num
   prolog();
