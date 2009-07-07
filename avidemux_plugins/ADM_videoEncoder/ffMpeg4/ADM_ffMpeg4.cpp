@@ -190,6 +190,7 @@ ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
     printf("[ffMpeg4Encoder] Destroying.\n");
     if(statFile)
     {
+        printf("[ffMpeg4Encoder] Closing stat file\n");
         fclose(statFile);
         statFile=NULL;
     }
@@ -215,6 +216,7 @@ again:
         }
         printf("[ffmpeg4] Popping delayed bframes (%d)\n",sz);
         goto link;
+        return false;
     }
     q=image->_Qp;
     
@@ -447,7 +449,14 @@ bool ADM_ffMpeg4Encoder::loadStatFile(const char *file)
   _context->stats_in[statSize] = 0;
   fread (_context->stats_in, statSize, 1, _statfile);
   fclose(_statfile);
-  printf("[FFmpeg] stat file loaded ok\n");
+
+
+    int i;
+    char *p=_context->stats_in;
+   for(i=-1; p; i++){
+            p= strchr(p+1, ';');
+        }
+  printf("[FFmpeg] stat file loaded ok, %d frames found\n",i);
   return true;
 }
 /**
