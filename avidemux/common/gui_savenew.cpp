@@ -162,7 +162,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                 bitstream.data=buffer;
                 bitstream.bufferSize=BUFFER_SIZE;
                 DIA_workingBase  *encoding=createWorking("Pass1");
-             
+                int nbFrames=0;
                 while(pass1->encode(&bitstream))
                 {
                     if(bitstream.pts!=ADM_NO_PTS)
@@ -173,15 +173,21 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                         uint32_t percent=(uint32_t)f;
                         encoding->update(percent);
                     }
+                    nbFrames++;
                 }
                 delete encoding;
                 delete [] buffer;
-                printf("[Save] Pass 1 done, restarting for pass 2\n");
+                delete pass1;
+                encoding=NULL;
+                buffer=NULL;
+                pass1=NULL;
+
+                printf("[Save] Pass 1 done, encoded %d frames, restarting for pass 2\n",nbFrames);
                 // Destroy filter chain & create the new encoder
                 destroyVideoFilterChain(chain);
                 chain=NULL;
                 chain=createVideoFilterChain(markerA,markerB);
-                delete pass1;
+                
                 if(!chain)
                 {
                     printf("[Save] Cannot recreate video filter chain\n");
@@ -197,6 +203,29 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                     return NULL;
                 }
                 pass2->setPassAndLogFile(2,logFileName);
+#if 0
+                buffer=new uint8_t[BUFFER_SIZE];
+                pass2->setup();
+                nbFrames=0;
+                bitstream.data=buffer;
+                encoding=createWorking("Pass2");
+                while(pass2->encode(&bitstream))
+                {
+                    if(bitstream.pts!=ADM_NO_PTS)
+                    {
+                        float f=100;
+                        f/=videoDuration;
+                        f*=bitstream.pts;
+                        uint32_t percent=(uint32_t)f;
+                        encoding->update(percent);
+                    }
+                    nbFrames++;
+                }
+                printf(": Pass2 done : %d frames this time\n",nbFrames);
+                delete [] buffer;
+                delete encoding;
+                
+#endif
     return pass2;
 }
 /**

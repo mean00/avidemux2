@@ -41,6 +41,7 @@ uint32_t w,h;
     _context->height = h;
     _context->strict_std_compliance = -1;
     rgbBuffer=new uint8_t [(w+7)*(h+7)*4];
+    colorSpace=NULL;
 
 }
 /**
