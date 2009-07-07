@@ -44,7 +44,7 @@ protected:
     virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
 public:
                             ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src);
-                            ~ADM_coreVideoEncoderFFmpeg();
+virtual                     ~ADM_coreVideoEncoderFFmpeg();
 
 };
 #endif

@@ -38,7 +38,7 @@ protected:
                             ADMImage            *image;
 public:
                             ADM_coreVideoEncoder(ADM_coreVideoFilter *src);
-                            ~ADM_coreVideoEncoder();
+virtual                     ~ADM_coreVideoEncoder();
 virtual        bool         setup(void) {return true;}    /// Call once before using            
 virtual        bool         encode (ADMBitstream * out)=0;
 
