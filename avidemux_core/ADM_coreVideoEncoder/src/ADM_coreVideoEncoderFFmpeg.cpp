@@ -99,7 +99,10 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     uint64_t f=source->getInfo()->frameIncrement;
     // Let's put 100 us as time  base
     _context->time_base.den=10000LL;
-    _context->time_base.num=f/100;
+    if(f>=100)
+        _context->time_base.num=f/100;
+    else
+        _context->time_base.num=1;
     //printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
     return true;
 }
@@ -118,8 +121,17 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     }
     prolog();
     // put a time stamp...
-    if(image->Pts==ADM_NO_PTS) _frame.pts=AV_NOPTS_VALUE;
-    _frame.pts=(image->Pts)/100;
+    if(image->Pts==ADM_NO_PTS) 
+        _frame.pts=AV_NOPTS_VALUE;
+    else
+    {
+        float f=image->Pts,n=_context->time_base.num,d=_context->time_base.den;
+        f=f/100;
+        f=f/n;
+        _frame.pts=f;
+    }
+    //
+    //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
     {
