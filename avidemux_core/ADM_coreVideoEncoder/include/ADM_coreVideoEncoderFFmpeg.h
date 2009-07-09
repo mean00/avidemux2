@@ -100,7 +100,8 @@ protected:
                bool             loadStatFile(const char *file);
                char             *statFileName;
                FILE             *statFile;
-               int              pass;
+               int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
+               bool             _isMT; // True if multithreaded
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
@@ -109,7 +110,8 @@ protected:
                           bool             presetContext(FFcodecSetting *set);
                           bool             postEncode(ADMBitstream *out, uint32_t size);
     virtual               bool             setPassAndLogFile(int pass,const char *name); // Call this before setup if needed !
-                          bool             setupPass(void);               
+                          bool             setupPass(void);  
+                          bool             encoderMT (void);
 public:
                             ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSetting *settings=NULL);
 virtual                     ~ADM_coreVideoEncoderFFmpeg();

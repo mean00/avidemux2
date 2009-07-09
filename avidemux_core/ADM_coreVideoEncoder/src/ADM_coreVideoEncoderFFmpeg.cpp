@@ -18,6 +18,7 @@
 #define __STDC_CONSTANT_MACROS
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
+#include "prefs.h"
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 
 #define aprintf(...) {}
@@ -49,6 +50,7 @@ uint32_t w,h;
     pass=0;
     statFileName=NULL;
     statFile=NULL;
+    _isMT=false;
 
 }
 /**
@@ -59,6 +61,12 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
 {
     if (_context)
     {
+        if (_isMT )
+        {
+          printf ("[lavc] killing threads\n");
+          avcodec_thread_free (_context);
+          _isMT = false;
+        }
         avcodec_close (_context);
         ADM_dealloc (_context);
         _context = NULL;
@@ -199,6 +207,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
         return false;
     }
    prolog();
+   encoderMT();
    res=avcodec_open(_context, codec); 
    if(res<0) 
     {   printf("[ff] Cannot open codec\n");
@@ -477,4 +486,33 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
         }
         return true;
 }
+/**
+    \fn encoderMT
+    \brief handle multithreaded encoding
+*/  
+bool ADM_coreVideoEncoderFFmpeg::encoderMT (void)
+{
+  uint32_t threads = 0;
+
+  prefs->get(FEATURE_THREADING_LAVC, &threads);
+
+  if (threads == 0)
+	  threads = ADM_cpu_num_processors();
+
+  if (threads == 1)
+	  threads = 0;
+
+  if (threads)
+  {
+      printf ("[lavc] Enabling MT encoder with %u threads\n", threads);
+
+      if (avcodec_thread_init (_context, threads) == -1)
+	      printf ("[lavc] Failed!!\n");
+	  else
+          _isMT = 1;
+  }
+  return true;
+}
+
+
 // EOF

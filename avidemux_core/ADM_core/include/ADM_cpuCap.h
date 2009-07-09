@@ -41,7 +41,10 @@ typedef enum
         
         ADM_CPUCAP_ALL=0xffffffff
 } ADM_CPUCAP;
-
+/**
+    \class CpuCaps
+    \brief Helper class to get CPU capabilities (MMX/SSE/...)
+*/
 class CpuCaps
 {
 public:
@@ -60,4 +63,5 @@ public:
 
 
 };
+int ADM_cpu_num_processors(void); // Returns the # of cores/CPUs
 #endif
