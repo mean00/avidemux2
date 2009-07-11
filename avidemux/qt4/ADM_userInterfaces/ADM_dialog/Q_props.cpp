@@ -75,10 +75,10 @@ propWindow::propWindow() : QDialog()
               switch (wavinfo->channels)
                 {
                 case 1:
-                    sprintf(text, QT_TR_NOOP("Mono"));
+                    sprintf(text,"%s", QT_TR_NOOP("Mono"));
                     break;
                 case 2:
-                    sprintf(text, QT_TR_NOOP("Stereo"));
+                    sprintf(text,"%s", QT_TR_NOOP("Stereo"));
                     break;
                 default:
                     sprintf(text, "%d",wavinfo->channels);

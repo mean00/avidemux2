@@ -20,7 +20,7 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
-
+#define TIME_TENTH_MILLISEC
 #define aprintf(...) {}
 /**
     \fn ADM_coreVideoEncoderFFmpeg
@@ -121,10 +121,14 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     uint64_t f=source->getInfo()->frameIncrement;
     // Let's put 100 us as time  base
     _context->time_base.den=10000LL;
+#ifdef TIME_TENTH_MILLISEC
+    _context->time_base.num=1;
+#else
     if(f>=100)
         _context->time_base.num=f/100;
     else
         _context->time_base.num=1;
+#endif
     //printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
     return true;
 }
@@ -144,13 +148,22 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     prolog();
     // put a time stamp...
     if(image->Pts==ADM_NO_PTS) 
+    {
+        ADM_assert(0);
         _frame.pts=AV_NOPTS_VALUE;
+    }
     else
     {
         float f=image->Pts,n=_context->time_base.num,d=_context->time_base.den;
+#ifdef TIME_TENTH_MILLISEC
+        f=f/100;
+#else
         f=f/100;
         f=f/n;
+#endif
         _frame.pts=f;
+
+        printf("*** PTS:%d time_base :%d/%d\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     }
     //
     //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
