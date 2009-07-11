@@ -6,6 +6,7 @@ fourcc.cpp
 ADM_infoExtractor.cpp
 ADM_frameType.cpp
 ADM_codecType.cpp
+ADM_file.cpp
 prefs.cpp)
 
 ADD_LIBRARY(ADM_coreUtils SHARED ${ADM_coreUtils_SRCS})
