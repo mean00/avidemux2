@@ -2282,14 +2282,12 @@ static void mpeg4_encode_gop_header(MpegEncContext * s){
         time= FFMIN(time, s->reordered_input_picture[1]->pts);
     time= time*s->avctx->time_base.num;
 
-    #undef printf
     
 
     seconds= time/s->avctx->time_base.den;
     minutes= seconds/60; seconds %= 60;
     hours= minutes/60; minutes %= 60;
     hours%=24;
-printf("%02d:%02d:%02d\n",hours,minutes,seconds);
     put_bits(&s->pb, 5, hours);
     put_bits(&s->pb, 6, minutes);
     put_bits(&s->pb, 1, 1);
