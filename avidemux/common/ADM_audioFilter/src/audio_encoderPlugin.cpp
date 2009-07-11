@@ -338,7 +338,7 @@ const char  *audioEncoderGetDisplayName(uint32_t i)
 ADM_AudioEncoder *audioEncoderCreate(AUDMAudioFilter *filter)
 {
       ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-      static ADM_audioEncoder *enc=ListOfAudioEncoder[currentEncoder];
+      ADM_audioEncoder *enc=ListOfAudioEncoder[currentEncoder];
      return enc->create(filter);
 }
 /**
