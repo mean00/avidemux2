@@ -287,7 +287,7 @@ uint32_t extraLen=0;
       header->dwQuality = 0xffffffff;
       header->dwSuggestedBufferSize = 8000;
 
-
+      printf("[ODML/Audio] Encoding 0x%x\n",wav.encoding);
 	switch(wav.encoding)
 	{
         case WAV_IMAADPCM:
@@ -488,7 +488,7 @@ uint8_t aviWrite::saveBegin (
 
         // test for free data structures
         if(odml_indexes!=NULL){
-            aprintf("\n ODML writer error: data structures not empty for init!");
+            aprintf("[ODML] ODML writer error: data structures not empty for init!");
             return 0;
         }
 
@@ -496,21 +496,21 @@ uint8_t aviWrite::saveBegin (
 	if(doODML!=NO){
 		// get number of streams
 		odml_nbrof_streams=_mainheader.dwStreams;
-		aprintf("\nnumber of streams: %d\n",odml_nbrof_streams);
+		aprintf("[ODML]number of streams: %d\n",odml_nbrof_streams);
 		// get number of frames per index
 
 		odml_index_size=(long)ceil(1000000.0/(double)_mainheader.dwMicroSecPerFrame*600.0);	// one index per 10 Minutes; decrease if 4GB are not enough for this amount of time
-                aprintf("\n old number of frames per index: %d\n",odml_index_size);
+                aprintf("[ODML] old number of frames per index: %d\n",odml_index_size);
                 double fps=video->getAvgFps1000();
                         fps/=1000;
                         aprintf("Fps1000:%f\n",fps);
                         fps=600*fps; // 10 mn worth;
                         odml_index_size=(int)floor(fps);
 
-		aprintf("\nnumber of frames per index: %d\n",odml_index_size);
+		aprintf("[ODML]number of frames per index: %d\n",odml_index_size);
 		// get number or indexes per stream
 		odml_default_nbrof_index=2048;
-		aprintf("\nnumber of indexes per stream: %d\n",odml_default_nbrof_index);
+		aprintf("[ODML]number of indexes per stream: %d\n",odml_default_nbrof_index);
 		// init some other values
 		odml_header_fpos=0;
 		odml_riff_fpos[0]=0;odml_riff_fpos[1]=0;odml_riff_fpos[2]=0;odml_riff_fpos[3]=0;
@@ -889,7 +889,7 @@ void aviWrite::odml_write_dummy_chunk(AviList* alist, uint64_t* fpos, uint32_t s
 	if(doODML!=NO){
 		// save file position
 		*fpos=alist->Tell();
-		aprintf("\nwrite dummy chunk at file position %lu with data size %u\n",*fpos, size);
+		aprintf("[ODML]write dummy chunk at file position %lu with data size %u\n",*fpos, size);
 		// generate dummy data
 		uint8_t* dummy=(uint8_t*)ADM_alloc (size);
 		memset(dummy,0,size);
