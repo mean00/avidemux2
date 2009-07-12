@@ -30,6 +30,7 @@ extern "C"
 */
 typedef struct 
 {
+  const bool MultiThreaded;
   COMPRES_PARAMS params;
 //
 

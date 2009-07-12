@@ -220,7 +220,8 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
         return false;
     }
    prolog();
-   encoderMT();
+   if(Settings.MultiThreaded==true)
+        encoderMT();
    res=avcodec_open(_context, codec); 
    if(res<0) 
     {   printf("[ff] Cannot open codec\n");
