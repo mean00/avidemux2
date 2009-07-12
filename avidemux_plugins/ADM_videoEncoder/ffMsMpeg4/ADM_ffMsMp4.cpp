@@ -152,7 +152,6 @@ again:
       case COMPRESS_SAME:
                 // Keep same frame type & same Qz as the incoming frame...
             _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
-
             if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
             else                                _frame.pict_type=FF_P_TYPE;
 
@@ -179,17 +178,12 @@ again:
                                      _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
     
     _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) <= 0)
     {
         printf("[ffMsMP4] Error %d encoding video\n",sz);
         return false;
     }
-    
-    if(sz==0) // no pic, probably pre filling, try again
-        goto again;
-link:
     postEncode(out,sz);
-   
     return true;
 }
 
