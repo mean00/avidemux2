@@ -342,6 +342,7 @@ UNUSED_ARG(mode);
 	_imageBuffer=new ADMImage(info.width,info.height);
  	_imageBuffer->_qSize= ((info.width+15)>>4)*((info.height+15)>>4);
 	_imageBuffer->quant=new uint8_t[_imageBuffer->_qSize];
+    memset(_imageBuffer->quant,0,_imageBuffer->_qSize);
 	_imageBuffer->_qStride=(info.width+15)>>4;
  }
 
