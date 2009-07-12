@@ -177,7 +177,7 @@ again:
     }
     if(_file->end()==true) 
     {
-        printf("[Mpeg Ts] End of file reached\n");
+        //printf("[Mpeg Ts] End of file reached\n");
         return false;
     }
     _file->read32(TS_PACKET_LEN-1,buffer); // 184-1
