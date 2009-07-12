@@ -223,6 +223,13 @@ uint8_t tsHeader::close(void)
         delete ListOfFrames[0];
         ListOfFrames.erase(ListOfFrames.begin());
     }
+    // Destroy audio tracks
+    for(int i=0;i<listOfAudioTracks.size();i++)
+    {
+        ADM_tsTrackDescriptor *desc=listOfAudioTracks[i];
+        delete desc;
+        listOfAudioTracks[i]=NULL;
+    } // Container will be destroyed by vector destructor
     if(tsPacket)
     {
         tsPacket->close();
