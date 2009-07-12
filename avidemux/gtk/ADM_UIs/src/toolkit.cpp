@@ -148,7 +148,7 @@ void UI_purge( void )
 int gtk_read_entry(GtkWidget *entry)
 {
 char *str;
-int value;
+int value=0;
                 str =		  gtk_editable_get_chars(GTK_EDITABLE ((entry)), 0, -1);
                 value = (int) atoi(str);
                 return value;
@@ -156,7 +156,7 @@ int value;
 float gtk_read_entry_float(GtkWidget *entry)
 {
 char *str;
-float value;
+float value=0;
                 str =		  gtk_editable_get_chars(GTK_EDITABLE ((entry)), 0, -1);
                 value = (int) atof(str);
                 return value;
@@ -165,7 +165,7 @@ float value;
 void gtk_write_entry(GtkWidget *entry, int value)
 {
 char string[400];
-gint r;
+gint r=0;
                 sprintf(string,"%d",value);
                 gtk_editable_delete_text(GTK_EDITABLE(entry), 0,-1);
                 gtk_editable_insert_text(GTK_EDITABLE(entry), string, strlen(string), &r);
@@ -173,7 +173,7 @@ gint r;
 void gtk_write_entry_float(GtkWidget *entry, float value)
 {
 
-gint r;
+gint r=0;
 char string[400];
                 sprintf(string,"%f",value);		
                 gtk_editable_delete_text(GTK_EDITABLE(entry), 0,-1);
@@ -183,7 +183,7 @@ char string[400];
 void gtk_write_entry_string(GtkWidget *entry, char *value)
 {
 
-gint r;
+gint r=0;
                 if(!value) return;
                 
                 gtk_editable_delete_text(GTK_EDITABLE(entry), 0,-1);

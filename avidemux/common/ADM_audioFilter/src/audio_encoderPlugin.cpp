@@ -69,6 +69,7 @@ public:
         ADM_AudioEncoderLoader(const char *name, const char *menuName) : ADM_LibWrapper()
 		{
                     encoderBlock=new ADM_audioEncoder;
+                    memset(encoderBlock,0,sizeof(*encoderBlock));
                     encoderBlock->codecName=name;
                     encoderBlock->menuName=menuName;                    
                     encoderBlock->opaque=(void *)this;
