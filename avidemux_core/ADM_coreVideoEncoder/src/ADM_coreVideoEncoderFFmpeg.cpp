@@ -20,8 +20,65 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
-#define TIME_TENTH_MILLISEC
+//#define TIME_TENTH_MILLISEC
 #define aprintf(...) {}
+
+typedef struct
+{
+    uint64_t mn,mx;
+    int n,d;
+
+}TimeIncrementType;
+
+TimeIncrementType fpsTable[]=
+{
+    {  40000,40000,1 ,25},
+    {  20000,20000,1 ,50},
+    {  33360,33369,30,1001},
+    {  41700,41710,24,1001},
+}; 
+
+/**
+    \fn usSecondsToFrac
+    \brief Convert a duration in useconds into Rationnal
+*/
+bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
+{
+    // First search for known value...
+    int nb=sizeof(fpsTable)/sizeof(TimeIncrementType);
+    for(int i=0;i<nb;i++)
+    {
+        TimeIncrementType *t=fpsTable+i;
+        if( useconds>=t->mn && useconds<=t->mx)
+        {
+            *n=t->n;
+            *d=t->d;
+            return true;
+        }
+    }
+    // Else try to squish it to low value..
+    int base=1000000; // value is in us
+    while(!( useconds % 9)&& useconds)
+    {
+        base/=10;
+        useconds/=10;
+    }
+    // Then try 2 and 5
+    while(!( useconds &1)&& useconds)
+    {
+        base/=2;
+        useconds/=2;
+    }
+    while(!( useconds %5)&& useconds)
+    {
+        base/=5;
+        useconds/=5;
+    }
+    *n=useconds;
+    *d=base;
+    return true;
+}
+
 /**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor
@@ -120,16 +177,19 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     // Eval fps
     uint64_t f=source->getInfo()->frameIncrement;
     // Let's put 100 us as time  base
-    _context->time_base.den=10000LL;
+    
 #ifdef TIME_TENTH_MILLISEC
     _context->time_base.num=1;
+    _context->time_base.den=10000LL;
 #else
-    if(f>=100)
-        _context->time_base.num=f/100;
-    else
-        _context->time_base.num=1;
+
+    int n,d;
+    usSecondsToFrac(f,&n,&d);
+ //   printf("[ff] Converted a time increment of %d ms to %d /%d seconds\n",f/1000,n,d);
+    _context->time_base.num=n;
+    _context->time_base.den=d;
 #endif
-    //printf("[Time base] %d/%d\n", _context->time_base.num,_context->time_base.den);
+    
     return true;
 }
 /**
@@ -158,7 +218,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 #ifdef TIME_TENTH_MILLISEC
         f=f/100;
 #else
-        f=f/100;
+        f=f/1000;
         f=f/n;
 #endif
         _frame.pts=f;
@@ -220,6 +280,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
         return false;
     }
    prolog();
+   printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
    if(Settings.MultiThreaded==true)
         encoderMT();
    res=avcodec_open(_context, codec); 
