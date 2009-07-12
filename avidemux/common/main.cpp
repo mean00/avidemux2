@@ -335,7 +335,11 @@ void onexit( void )
 #endif
 
 	destroyGUI();
-
+    if(prefs)
+    {
+        delete prefs;
+        prefs=NULL;
+    }
     printf("End of cleanup\n");
     ADMImage_stat();
     ADM_memStat();
