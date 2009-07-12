@@ -31,12 +31,14 @@ uint8_t GUI_jobs(void)
 uint32_t nb;
 char     *name;
         memset(jobName,0,sizeof(jobName));
-
+char *jobDir=ADM_getJobDir();
         if(!buildDirectoryContent(&nb,ADM_getJobDir(),jobName,MAX_JOBS,".js"))
         {
+          delete [] jobDir;
           GUI_Error_HIG(QT_TR_NOOP("Oops"),QT_TR_NOOP("Something very wrong happened when building joblist."));
                 return 0;
         }
+        delete [] jobDir;
         if(!nb)
         {
           GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TR_NOOP("There are no jobs stored"), NULL);

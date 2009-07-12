@@ -62,7 +62,12 @@ bool        ADM_Composer::rederiveFrameType(vidHeader *demuxer)
             else nbKo++;
     }
     printf("[Editor] Muxer has %d frames right, %d frames wrong\n",nbOk,nbKo);
-    if(!nbKo)     return true;
+    if(!nbKo)  
+    {
+        delete [] buffer;
+        buffer=NULL;
+        return true;
+    }
     // Demuxer is wrong, rederive all frames...
     DIA_workingBase *work=createWorking("Updating frametype");
     for(int i=0;i<info.nb_frames;i++)

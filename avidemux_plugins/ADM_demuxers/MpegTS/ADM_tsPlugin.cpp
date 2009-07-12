@@ -99,7 +99,7 @@ again:
 */
 bool detectTs(const char *file)
 {
-    uint8_t *buffer=new uint8_t [PROBE_SIZE];
+    uint8_t buffer[PROBE_SIZE];
     uint32_t bufferSize;
     uint32_t nbPacket,nbMatch=0;
 

@@ -1547,7 +1547,8 @@ void A_addJob(void)
           GUI_Error_HIG(QT_TR_NOOP("Saving failed"),QT_TR_NOOP("Saving the job failed. Maybe you have permission issue with ~/.avidemux"));
         }
 
-        delete fullname;
+        delete [] fullname;
+        delete [] base;
         ADM_dealloc(name);
         ADM_dealloc(final);
 }

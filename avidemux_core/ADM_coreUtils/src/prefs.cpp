@@ -261,7 +261,7 @@ int preferences::load(){
         strcpy(rcfile,dir_adm);
         strcat(rcfile,"/");
         strcat(rcfile,CONFIG);
-
+        delete [] dir_adm;
         
         // Now build the filename
 	if( access(rcfile,R_OK) == -1 ){
