@@ -163,7 +163,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 #endif
         _frame.pts=f;
 
-        printf("*** PTS:%d time_base :%d/%d\n",_frame.pts,_context->time_base.num,_context->time_base.den);
+        //printf("*** PTS:%d time_base :%d/%d\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     }
     //
     //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
