@@ -46,6 +46,23 @@ tsPacket::~tsPacket()
     close();
 }
 /**
+    \fn score
+    \return the number of TS packet of size TS_PACKET_SIZE+extraData in a raw, nbTry tries
+
+*/
+static int score(fileParser *parser, int nbTry, int extraData)
+{
+int count=0;
+int round=nbTry;
+    while(round--)
+    {
+        if(parser->read8i()!=TS_MARKER) break;
+        count++;
+        parser->forward(TS_PACKET_LEN-1+extraData);
+    }
+    return count;
+}
+/**
     \fn open
     \brief dtor
 */
@@ -60,7 +77,44 @@ bool tsPacket::open(const char *filenames,FP_TYPE append)
         return false;
     }
     _size=_file->getSize();
-    return true;
+
+    // Detect TS1/TS2...
+        printf("[TsPacket] Detecting TS/TS2...\n");
+
+        uint8_t r;
+        int tryMe=250;
+        while(tryMe--)
+        {
+            r=_file->read8i();
+            if(r==TS_MARKER) break;
+            if(_file->end()) 
+            {
+                tryMe=0;
+            }
+        }
+        if(!tryMe) 
+        {
+            printf("[TsPacket] Cannot sync ???\n");
+            return true;
+        }
+        uint64_t startPos=getPos()-1;
+        int score1,score2;
+
+        setPos(startPos);
+        score1=score(_file,20,0);
+        setPos(startPos);
+        score2=score(_file,20,4);
+        printf("[TsPacket] Score : 188:%d, 192:%d out of 20\n",score1,score2);
+        if(score2 && score2>score1)
+        {
+            printf("[TsPacket] Probably TS2 (192)...\n");
+            extraCrap=4;
+        }else
+        {
+            printf("[TsPacket] Probably TS1 (188)...\n");
+        }
+        setPos(0);
+        return true;
 }
 /**
     \fn close
