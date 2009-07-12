@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_render_${UI_SUFFIX})
+SET(ADM_LIB ADM_render6_${UI_SUFFIX})
 
 SET(${ADM_LIB}_SRCS
 GUI_render.cpp
