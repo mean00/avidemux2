@@ -1614,7 +1614,7 @@ uint8_t GUI_close(void)
       admPreview::setMainDimension(0, 0);
       if(getPreviewMode()!=ADM_PREVIEW_NONE)
       {
-	admPreview::stop();
+        admPreview::stop();
         setPreviewMode(ADM_PREVIEW_NONE);
       }
       delete avifileinfo;
@@ -1625,11 +1625,7 @@ uint8_t GUI_close(void)
       curframe = 0;
       A_changeAudioStream (NULL, AudioNone,NULL);
 
-	  if (aviaudiostream)
-		delete aviaudiostream;
-
-	  if (secondaudiostream)
-		delete secondaudiostream;
+      // Audio streams are cleared by editor
 
 	  aviaudiostream=NULL;
 	  secondaudiostream=NULL;
