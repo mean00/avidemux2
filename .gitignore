@@ -6,3 +6,5 @@ Doxyfile
 *.kdev*
 ffconf
 *.sw*
+build*
+debs
