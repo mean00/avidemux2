@@ -68,8 +68,19 @@ public:
     uint64_t         duration;
     uint64_t         size;
 
-protected:
+public:
+    ADM_audioStreamTrack() {memset(this,0,sizeof(*this));}
+    ~ADM_audioStreamTrack()
+    {
+        stream=NULL;
+        info=NULL;   // These 2 are destroyed by the demuxer itself
+        if(codec) 
+        {
+            delete codec;
+            codec=NULL;
+        }
 
+    }
 };
 //
 //  The start frame correspond to the frame 0 of the segment (quite obvisous)
