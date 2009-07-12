@@ -1,6 +1,6 @@
 /***************************************************************************
-                          \fn ADM_ffMpeg4
-                          \brief Front end for libavcodec Mpeg4 asp encoder
+                          \fn ADM_ffMsMpeg4
+                          \brief Front end for libavcodec MsMpeg4 aka divx3 encoder
                              -------------------
     
     copyright            : (C) 2002/2009 by mean
@@ -17,7 +17,7 @@
  ***************************************************************************/
 #include "ADM_lavcodec.h"
 #include "ADM_default.h"
-#include "ADM_ffMpeg4.h"
+#include "ADM_ffMsMp4.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
@@ -27,9 +27,9 @@
 #define aprintf printf
 #endif
 
-static FFcodecSetting Mp4Settings=
+static FFcodecSetting MsMp4Settings=
 {
-    true, // Multithreaded
+    false,
     {
     COMPRESS_CQ, //COMPRESSION_MODE  mode;
     2,              // uint32_t          qz;           /// Quantizer
@@ -40,13 +40,13 @@ static FFcodecSetting Mp4Settings=
     },
           ME_EPZS,			// ME
           0,				// GMC     
-          1,				// 4MV
+          0,				// 4MV
           0,				// _QPEL;   
           1,				// _TREILLIS_QUANT
           2,				// qmin;
           31,				// qmax;
           3,				// max_qdiff;
-          2,				// max_b_frames;
+          0,				// max_b_frames;
           0,				// mpeg_quant;
           1,				// is_luma_elim_threshold
           -2,				// luma_elim_threshold;
@@ -77,11 +77,11 @@ static FFcodecSetting Mp4Settings=
           0				    // DUMMY 
 };
 /**
-        \fn ADM_ffMpeg4Encoder
+        \fn ADM_ffMsMp4Encoder
 */
-ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src,&Mp4Settings)
+ADM_ffMsMp4Encoder::ADM_ffMsMp4Encoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src,&MsMp4Settings)
 {
-    printf("[ffMpeg4Encoder] Creating.\n");
+    printf("[ffMsMP4] Creating.\n");
    
 
 }
@@ -89,7 +89,7 @@ ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src) : ADM_coreVideo
 /**
     \fn setup
 */
-bool ADM_ffMpeg4Encoder::setup(void)
+bool ADM_ffMsMp4Encoder::setup(void)
 {
     
     switch(Settings.params.mode)
@@ -98,7 +98,7 @@ bool ADM_ffMpeg4Encoder::setup(void)
       case COMPRESS_2PASS_BITRATE:
            if(false==setupPass())
             {
-                printf("[ffmpeg] Multipass setup failed\n");
+                printf("[ffMsMP4] Multipass setup failed\n");
                 return false;
             }
             break;
@@ -114,20 +114,20 @@ bool ADM_ffMpeg4Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
-    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
+    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MSMPEG4V3))
         return false;
 
-    printf("[ffMpeg] Setup ok\n");
+    printf("[ffMsMP4] Setup ok\n");
     return true;
 }
 
 
 /** 
-    \fn ~ADM_ffMpeg4Encoder
+    \fn ~ADM_ffMsMp4Encoder
 */
-ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
+ADM_ffMsMp4Encoder::~ADM_ffMsMp4Encoder()
 {
-    printf("[ffMpeg4Encoder] Destroying.\n");
+    printf("[ffMsMP4] Destroying.\n");
    
     
 }
@@ -135,20 +135,13 @@ ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 /**
     \fn encode
 */
-bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
+bool         ADM_ffMsMp4Encoder::encode (ADMBitstream * out)
 {
 int sz,q;
 again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
-        if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, NULL)) <= 0)
-        {
-            printf("[ffmpeg4] Error %d encoding video\n",sz);
-            return false;
-        }
-        printf("[ffmpeg4] Popping delayed bframes (%d)\n",sz);
-        goto link;
         return false;
     }
     q=image->_Qp;
@@ -161,7 +154,6 @@ again:
             _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
 
             if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
-            else if(image->flags & AVI_B_FRAME) _frame.pict_type=FF_B_TYPE;
             else                                _frame.pict_type=FF_P_TYPE;
 
             break;
@@ -180,7 +172,7 @@ again:
       case COMPRESS_CBR:
             break;
      default:
-            printf("[ffMpeg4] Unsupported encoding mode\n");
+            printf("[ffMsMP4] Unsupported encoding mode\n");
             return false;
     }
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
@@ -189,7 +181,7 @@ again:
     _frame.reordered_opaque=image->Pts;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
     {
-        printf("[ffmpeg4] Error %d encoding video\n",sz);
+        printf("[ffMsMP4] Error %d encoding video\n",sz);
         return false;
     }
     
@@ -205,7 +197,7 @@ link:
     \fn isDualPass
 
 */
-bool         ADM_ffMpeg4Encoder::isDualPass(void) 
+bool         ADM_ffMsMp4Encoder::isDualPass(void) 
 {
     if(Settings.params.mode==COMPRESS_2PASS || Settings.params.mode==COMPRESS_2PASS_BITRATE ) return true;
     return false;
@@ -217,7 +209,7 @@ bool         ADM_ffMpeg4Encoder::isDualPass(void)
     \brief UI configuration for jpeg encoder
 */
 
-bool         ffMpeg4Configure(void)
+bool         ffMsMp4Configure(void)
 {         
 diaMenuEntry meE[]={
   {1,QT_TR_NOOP("None")},
@@ -239,29 +231,16 @@ diaMenuEntry rdE[]={
   {2,QT_TR_NOOP("Rate distortion")}
 };     
 
-        FFcodecSetting *conf=&Mp4Settings;
+        FFcodecSetting *conf=&MsMp4Settings;
 
 uint32_t me=(uint32_t)conf->me_method;  
 #define PX(x) &(conf->x)
 
-         diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
-         diaElemMenu      meM(&me,QT_TR_NOOP("Matrices"),4,meE);
+         diaElemBitrate   bitrate(&(MsMp4Settings.params),NULL);
          diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
          diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
-         
-         diaElemToggle    fourMv(PX(_4MV),QT_TR_NOOP("4_MV"));
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
-         
-         diaElemToggle    qpel(PX(_QPEL),QT_TR_NOOP("_Quarter pixel"));
-         diaElemToggle    gmc(PX(_GMC),QT_TR_NOOP("_GMC"));
-
-         
-         diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
-         diaElemMenu     qzM(PX(mpeg_quant),QT_TR_NOOP("_Quantization type:"),2,qzE);
-         
-         diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
-         
          diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
          
          diaElemFloat    qzComp(PX(qcompress),QT_TR_NOOP("_Quantizer compression:"),0,1);
@@ -272,27 +251,18 @@ uint32_t me=(uint32_t)conf->me_method;
         diaElem *diamode[]={&GopSize,&bitrate};
         diaElemTabs tabMode(QT_TR_NOOP("User Interface"),2,diamode);
         
-        /* 2nd Tab : ME */
-        diaElemFrame frameMe(QT_TR_NOOP("Advanced Simple Profile"));
-        
-        frameMe.swallow(&max_b_frames);
-        frameMe.swallow(&qpel);
-        frameMe.swallow(&gmc);
-        
-        diaElem *diaME[]={&fourMv,&frameMe};
-        diaElemTabs tabME(QT_TR_NOOP("Motion Estimation"),2,diaME);
         /* 3nd Tab : Qz */
         
-         diaElem *diaQze[]={&qzM,&rdM,&qminM,&qmaxM,&qdiffM,&trellis};
-        diaElemTabs tabQz(QT_TR_NOOP("Quantization"),6,diaQze);
+         diaElem *diaQze[]={&qminM,&qmaxM,&qdiffM,&trellis};
+        diaElemTabs tabQz(QT_TR_NOOP("Quantization"),4,diaQze);
         
         /* 4th Tab : RControl */
         
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
         diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
         
-         diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),4,tabs))
+         diaElemTabs *tabs[]={&tabMode,&tabQz,&tabRC};
+        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),3,tabs))
         {
           conf->me_method=(Motion_Est_ID)me;
           return true;
