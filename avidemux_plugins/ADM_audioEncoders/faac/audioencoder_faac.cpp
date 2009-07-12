@@ -81,6 +81,7 @@ AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream)  :ADM_AudioEncode
     	outputChannelMapping[4] = ADM_CH_REAR_RIGHT;
     	outputChannelMapping[5] = ADM_CH_LFE;
   }
+  wavheader.encoding=WAV_AAC;
 };
 
 /**
