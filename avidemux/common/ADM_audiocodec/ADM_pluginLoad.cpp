@@ -164,7 +164,7 @@ ADM_Audiocodec *ADM_ad_searchCodec(uint32_t fourcc,	WAVHeader *info,uint32_t ext
 		ADM_ad_plugin *a=ADM_audioPlugins[i];
 		ADM_assert(a);
 		ADM_assert(a->supportedFormat);
-		aprintf("Format 0x%x : probing %s\n",fourcc,a->name);
+		aprintf("[ADM_ad_plugin]Format 0x%x : probing %s\n",fourcc,a->name);
 		if(a->supportedFormat(fourcc)==true)
 		{
 			ADM_assert(a->create);

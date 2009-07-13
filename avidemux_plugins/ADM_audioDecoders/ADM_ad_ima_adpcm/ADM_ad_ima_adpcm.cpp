@@ -1,3 +1,9 @@
+/**
+    \file ADM_ad_ima_adpcm.cpp
+    \brief Audio decoders built ulaw from mplayer or ffmpeg (??, can't remember)
+    \author mean (c) 2009
+
+*/
 /*
     IMA ADPCM Decoder for MPlayer
       by Mike Melanson
@@ -16,15 +22,52 @@
     0x1100736d: IMA ADPCM coded like in MS AVI/ASF/WAV found in QT files
 */
 
-
-#define ADM_NO_CONFIG_H
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #include "ADM_default.h"
+#include <math.h>
+#define ADM_NO_CONFIG_H
 #include "ADM_ffmpeg/libavutil/bswap.h"
+#include "ADM_ad_plugin.h"
 
-#include "ADM_assert.h"
-#include "ADM_coreAudio.h"
-#include "ADM_audiocodec.h"
+/**
+    \class ADM_AudiocodecImaAdpcm
+    \brief
+*/
 
+ 
+#define IMA_BUFFER 4096*8
+class ADM_AudiocodecImaAdpcm : public     ADM_Audiocodec
+{
+	protected:
+		uint32_t _inStock,_me,_channels;
+		int ss_div,ss_mul; // ???
+		void *_contextVoid;
+		uint8_t _buffer[ IMA_BUFFER];
+		uint32_t _head,_tail;
+
+	public:
+		ADM_AudiocodecImaAdpcm(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
+		virtual	~ADM_AudiocodecImaAdpcm();
+		virtual	uint8_t beginDecompress(void) {_head=_tail=0;return 1;}
+		virtual	uint8_t endDecompress(void) {_head=_tail=0;return 1;}
+		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
+		virtual	uint8_t isCompressed(void) {return 1;}
+};
+// Supported formats + declare our plugin
+//*******************************************************
+static uint32_t Formats[]={WAV_IMAADPCM};
+DECLARE_AUDIO_DECODER(ADM_AudiocodecImaAdpcm,						// Class
+			0,0,1, 												// Major, minor,patch
+			Formats, 											// Supported formats
+			"IMA ADPCM decoder plugin for avidemux (c) Mean\n"); 	// Desc
+//********************************************************
 
 
 #define MS_IMA_ADPCM_PREAMBLE_SIZE 4
@@ -40,14 +83,6 @@
 
 int ms_ima_adpcm_decode_block(unsigned short *output,
   unsigned char *input, int channels, int block_size);
-#if 0
-int dk4_ima_adpcm_decode_block(unsigned short *output,
-  unsigned char *input, int channels, int block_size);
-int qt_ima_adpcm_decode_block(unsigned short *output,
-  unsigned char *input, int channels);
-#endif
-
-
 
 // pertinent tables for IMA ADPCM
 static int adpcm_step[89] =
@@ -91,7 +126,7 @@ static int adpcm_index[16] =
 // 	""
 // };
 
-ADM_AudiocodecImaAdpcm::ADM_AudiocodecImaAdpcm( uint32_t fourcc ,WAVHeader *info)
+ADM_AudiocodecImaAdpcm::ADM_AudiocodecImaAdpcm( uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d)
         : ADM_Audiocodec(fourcc)
 {
         _me=info->encoding;
@@ -173,31 +208,7 @@ int16_t *run16;
 #endif
         return 0;
 }
-#if 0
-static int preinit(sh_audio_t *sh_audio)
-{
-  // not exactly sure what this field is for
-  sh_audio->audio_out_minsize = 8192;
 
-  // if format is "ima4", assume the audio is coming from a QT file which
-  // indicates constant block size, whereas an AVI/ASF/WAV file will fill
-  // in this field with 0x11
-  if ((sh_audio->format == 0x11) || (sh_audio->format == 0x61) ||
-      (sh_audio->format == 0x1100736d))
-  {
-    sh_audio->ds->ss_div = (sh_audio->wf->nBlockAlign - 
-      (MS_IMA_ADPCM_PREAMBLE_SIZE * sh_audio->wf->nChannels)) * 2;
-    sh_audio->ds->ss_mul = sh_audio->wf->nBlockAlign;
-  }
-  else
-  {
-    sh_audio->ds->ss_div = QT_IMA_ADPCM_SAMPLES_PER_BLOCK;
-    sh_audio->ds->ss_mul = QT_IMA_ADPCM_BLOCK_SIZE * sh_audio->wf->nChannels;
-  }
-  sh_audio->audio_in_minsize=sh_audio->ds->ss_mul;
-  return 1;
-}
-#endif
 
 static void decode_nibbles(unsigned short *output,
   int output_size, int channels,
@@ -249,69 +260,6 @@ static void decode_nibbles(unsigned short *output,
 
   }
 }
-
-#if 0
-int qt_ima_adpcm_decode_block(unsigned short *output,
-  unsigned char *input, int channels)
-{
-  int initial_predictor_l = 0;
-  int initial_predictor_r = 0;
-  int initial_index_l = 0;
-  int initial_index_r = 0;
-  int i;
-
-  initial_predictor_l = BE_16(&input[0]);
-  initial_index_l = initial_predictor_l;
-
-  // mask, sign-extend, and clamp the predictor portion
-  initial_predictor_l &= 0xFF80;
-  SE_16BIT(initial_predictor_l);
-  CLAMP_S16(initial_predictor_l);
-
-  // mask and clamp the index portion
-  initial_index_l &= 0x7F;
-  CLAMP_0_TO_88(initial_index_l);
-
-  // handle stereo
-  if (channels > 1)
-  {
-    initial_predictor_r = BE_16(&input[QT_IMA_ADPCM_BLOCK_SIZE]);
-    initial_index_r = initial_predictor_r;
-
-    // mask, sign-extend, and clamp the predictor portion
-    initial_predictor_r &= 0xFF80;
-    SE_16BIT(initial_predictor_r);
-    CLAMP_S16(initial_predictor_r);
-
-    // mask and clamp the index portion
-    initial_index_r &= 0x7F;
-    CLAMP_0_TO_88(initial_index_r);
-  }
-
-  // break apart all of the nibbles in the block
-  if (channels == 1)
-    for (i = 0; i < QT_IMA_ADPCM_SAMPLES_PER_BLOCK / 2; i++)
-    {
-      output[i * 2 + 0] = input[2 + i] & 0x0F;
-      output[i * 2 + 1] = input[2 + i] >> 4;
-    }
-  else
-    for (i = 0; i < QT_IMA_ADPCM_SAMPLES_PER_BLOCK / 2 * 2; i++)
-    {
-      output[i * 4 + 0] = input[2 + i] & 0x0F;
-      output[i * 4 + 1] = input[2 + QT_IMA_ADPCM_BLOCK_SIZE + i] & 0x0F;
-      output[i * 4 + 2] = input[2 + i] >> 4;
-      output[i * 4 + 3] = input[2 + QT_IMA_ADPCM_BLOCK_SIZE + i] >> 4;
-    }
-
-  decode_nibbles(output,
-    QT_IMA_ADPCM_SAMPLES_PER_BLOCK * channels, channels,
-    initial_predictor_l, initial_index_l,
-    initial_predictor_r, initial_index_r);
-
-  return QT_IMA_ADPCM_SAMPLES_PER_BLOCK * channels;
-}
-#endif
 
 int ms_ima_adpcm_decode_block(unsigned short *output,
   unsigned char *input, int channels, int block_size)
@@ -382,70 +330,6 @@ int ms_ima_adpcm_decode_block(unsigned short *output,
 
   return (block_size - MS_IMA_ADPCM_PREAMBLE_SIZE * channels) * 2;
 }
-#if 0
-int dk4_ima_adpcm_decode_block(unsigned short *output,
-  unsigned char *input, int channels, int block_size)
-{
-  int i;
-  int output_ptr;
-  int predictor_l = 0;
-  int predictor_r = 0;
-  int index_l = 0;
-  int index_r = 0;
 
-  // the first predictor value goes straight to the output
-  predictor_l = output[0] = LE_16(&input[0]);
-  SE_16BIT(predictor_l);
-  index_l = input[2];
-  if (channels == 2)
-  {
-    predictor_r = output[1] = LE_16(&input[4]);
-    SE_16BIT(predictor_r);
-    index_r = input[6];
-  }
 
-  output_ptr = channels;
-  for (i = MS_IMA_ADPCM_PREAMBLE_SIZE * channels; i < block_size; i++)
-  {
-    output[output_ptr++] = input[i] >> 4;
-    output[output_ptr++] = input[i] & 0x0F;
-  }
-
-  decode_nibbles(&output[channels],
-    (block_size - MS_IMA_ADPCM_PREAMBLE_SIZE * channels) * 2 - channels,
-    channels,
-    predictor_l, index_l,
-    predictor_r, index_r);
-
-  return (block_size - MS_IMA_ADPCM_PREAMBLE_SIZE * channels) * 2 - channels;
-}
-#endif
-/********************************************************************************/
-/********************************************************************************/
-#if 0
-static int decode_audio(sh_audio_t *sh_audio,unsigned char *buf,int minlen,int maxlen)
-{
-  if (demux_read_data(sh_audio->ds, sh_audio->a_in_buffer,
-    sh_audio->ds->ss_mul) != 
-    sh_audio->ds->ss_mul) 
-    return -1;
-
-  if ((sh_audio->format == 0x11) || (sh_audio->format == 0x1100736d))
-  {
-    return 2 * ms_ima_adpcm_decode_block(
-      (unsigned short*)buf, sh_audio->a_in_buffer, sh_audio->wf->nChannels,
-      sh_audio->ds->ss_mul);
-  }
-  else if (sh_audio->format == 0x61)
-  {
-    return 2 * dk4_ima_adpcm_decode_block(
-      (unsigned short*)buf, sh_audio->a_in_buffer, sh_audio->wf->nChannels,
-      sh_audio->ds->ss_mul);
-  }
-  else
-  {
-    return 2 * qt_ima_adpcm_decode_block(
-      (unsigned short*)buf, sh_audio->a_in_buffer, sh_audio->wf->nChannels);
-  }
-}
-#endif
+// EOF

@@ -1,3 +1,10 @@
+/**
+    \file ADM_ad_msadpcm.cpp
+    \brief Audio decoders built ulaw from mplayer or ffmpeg (??, can't remember)
+    \author mean (c) 2009
+
+*/
+//********************************************************
 /*
     MS ADPCM Decoder for MPlayer
       by Mike Melanson
@@ -11,6 +18,50 @@
 
       
 */
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+#include "ADM_default.h"
+#include <math.h>
+
+#include "ADM_default.h"
+#include "ADM_ad_plugin.h"
+#define IMA_BUFFER 4096*8
+/**
+    \class ADM_AudiocodecUlaw
+    \brief
+*/
+
+class ADM_AudiocodecMsAdpcm : public     ADM_Audiocodec
+{
+	protected:
+		uint32_t _inStock,_me,_channels;
+		int ss_div,ss_mul; // ???
+		void *_contextVoid;
+		uint8_t _buffer[ IMA_BUFFER];
+		uint32_t _head,_tail;
+
+	public:
+		ADM_AudiocodecMsAdpcm(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
+		virtual	~ADM_AudiocodecMsAdpcm();
+		virtual	uint8_t beginDecompress(void) {_head=_tail=0;return 1;}
+		virtual	uint8_t endDecompress(void) {_head=_tail=0;return 1;}
+		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
+		virtual	uint8_t isCompressed(void) {return 1;}
+};
+// Supported formats + declare our plugin
+//*******************************************************
+static uint32_t Formats[]={WAV_MSADPCM};
+DECLARE_AUDIO_DECODER(ADM_AudiocodecMsAdpcm,						// Class
+			0,0,1, 												// Major, minor,patch
+			Formats, 											// Supported formats
+			"Ulaw decoder plugin for avidemux (c) Mean\n"); 	// Desc
+
 
 #include "ADM_default.h"
 #define ADM_NO_CONFIG_H
@@ -157,8 +208,11 @@ static int ms_adpcm_decode_block(unsigned short *output, unsigned char *input,
 
   return (block_size - (MS_ADPCM_PREAMBLE_SIZE * channels)) * 2;
 }
-
-ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc ,WAVHeader *info)
+/**
+    \fn     ADM_AudiocodecMsAdpcm
+    \brief
+*/
+ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d)
         : ADM_Audiocodec(fourcc)
 {
         _me=info->encoding;
@@ -172,10 +226,19 @@ ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc ,WAVHeader *info)
   _tail=_head=0;
   printf("Block size: %d\n",ss_mul);
 }
+/**
+    \fn 
+    \brief
+*/
+
 ADM_AudiocodecMsAdpcm::~ADM_AudiocodecMsAdpcm()
 {
 
 }
+/**
+    \fn     run
+    \brief
+*/
 
 uint8_t ADM_AudiocodecMsAdpcm::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
 {
