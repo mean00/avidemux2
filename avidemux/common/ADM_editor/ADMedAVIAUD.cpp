@@ -109,7 +109,7 @@ again:
             printf("[Composer::getPCMPacket] drift %d, computed :%lu got %lu\n",(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
             if(packetBufferDts<lastDts)
             {
-                printf("[Composer::getPCMPacket] Dropping packet %"LU" last =%"LU"\n",lastDts/1000,packetBufferDts/1000);
+                printf("[Composer::getPCMPacket] Dropping packet %"LU" last =%"LU"\n",(uint32_t)(lastDts/1000),(uint32_t)(packetBufferDts/1000));
                 drop=true;
             }else 
             {

@@ -228,7 +228,7 @@ static two_arg_type two;
 static int index;
           argv=global_argv;
           argc=global_argc;
-          printf("\n *** Automated : %"LU" entries*************\n",NB_AUTO);
+          printf("\n *** Automated : %"LU" entries*************\n",(uint32_t)NB_AUTO);
           // we need to process
           argc-=1;
           cur=1;

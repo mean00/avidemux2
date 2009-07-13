@@ -80,12 +80,12 @@ again:
     int64_t pts=image->Pts;
     if(pts>endTime)
     {
-        printf("[VideoBridge] This frame is too late (%"LU" vs %"LU")\n",pts,startTime);
+        printf("[VideoBridge] This frame is too late (%"LLD" vs %"LLU")\n",pts,startTime);
         return false;
     }
     if(pts<startTime) 
     {
-            printf("[VideoBridge] This frame is too early (%"LU" vs %"LU")\n",pts,endTime);
+            printf("[VideoBridge] This frame is too early (%"LLD" vs %"LLU")\n",pts,endTime);
             goto again;
     }
     // Rescale time

@@ -44,13 +44,13 @@ void DIA_properties( void )
 
         gtk_register_dialog(dialog);
 
-        sprintf(text, QT_TR_NOOP("%lu x %lu"), avifileinfo->width,avifileinfo->height);
+        sprintf(text, QT_TR_NOOP("%"LU" x %"LU), avifileinfo->width,avifileinfo->height);
         FILL_ENTRY(label_size);
 
         sprintf(text, QT_TR_NOOP("%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
         FILL_ENTRY(label_fps);
 
-        sprintf(text, QT_TR_NOOP("%ld frames"), avifileinfo->nb_frames);
+        sprintf(text, QT_TR_NOOP("%"LD" frames"), avifileinfo->nb_frames);
         FILL_ENTRY(label_number);
 
         sprintf(text, "%s", fourCC::tostring(avifileinfo->fcc));
@@ -92,9 +92,9 @@ void DIA_properties( void )
                 }
                 FILL_ENTRY(label1_audiomode);
 
-                sprintf(text, QT_TR_NOOP("%lu Hz"), wavinfo->frequency);
+                sprintf(text, QT_TR_NOOP("%"LU" Hz"), wavinfo->frequency);
                 FILL_ENTRY(label_fq);
-                sprintf(text, QT_TR_NOOP("%lu Bps / %lu kbps"), wavinfo->byterate,      wavinfo->byterate * 8 / 1000);
+                sprintf(text, QT_TR_NOOP("%"LU" Bps / %"LU" kbps"), wavinfo->byterate,      wavinfo->byterate * 8 / 1000);
                 FILL_ENTRY(label_bitrate);
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
                 FILL_ENTRY(label1_audiofourcc);

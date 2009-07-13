@@ -980,7 +980,7 @@ ADMCompressedImage img;
         //
         if(tmpImage->_noPicture && refOnly && frame)
         {
-                cache->updateFrameNum(image,0xfffffffffLL);
+                cache->updateFrameNum(image,0xfffffffffU);
                 return 0;
         }
 	// If not quant and it is already YV12, we can stop here
