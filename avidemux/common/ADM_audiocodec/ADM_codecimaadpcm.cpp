@@ -47,7 +47,7 @@ int qt_ima_adpcm_decode_block(unsigned short *output,
   unsigned char *input, int channels);
 #endif
 
-extern uint8_t scratchPad[];
+
 
 // pertinent tables for IMA ADPCM
 static int adpcm_step[89] =
