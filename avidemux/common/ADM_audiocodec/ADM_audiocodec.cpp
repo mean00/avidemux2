@@ -1,11 +1,8 @@
 /***************************************************************************
-                          ADM_audiocodec.cpp  -  description
-                             -------------------
-    begin                : Sat Jun 1 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
- ***************************************************************************/
-
+     \file                     ADM_audiocodec.cpp  
+     \brief   Front end for audio decoder
+    copyright            : (C) 2002/2009 by mean fixounet@free.fr
+ **************************************************************************/
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -31,90 +28,46 @@ ADM_Audiocodec *out = NULL;
 			{
 				if(info)
 					if(info->bitspersample==8)
-                                        {
-                                                info->encoding=fourcc=WAV_8BITS_UNSIGNED;
-                                        }
+                        {
+                            info->encoding=fourcc=WAV_8BITS_UNSIGNED;
+                        }
 
 			}
 
  		switch(fourcc)
    			{
-#if 0
-                                case WAV_NELLYMOSER:
-                                        printf("\n Audio codec:  NELLYMOSER\n");
-                                        out= (ADM_Audiocodec *)new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
-                                        break;
 
-                                case WAV_IMAADPCM:
-                                        printf("\n Audio codec:  IMA MS ADPCM\n");
-                                        out= (ADM_Audiocodec *)new ADM_AudiocodecImaAdpcm(fourcc,info);
-                                        break;
-                                case WAV_MSADPCM:
-                                        printf("\n Audio codec:   MS ADPCM\n");
-                                        out= (ADM_Audiocodec *)new ADM_AudiocodecMsAdpcm(fourcc,info);
-                                        break;
-#endif
 				case WAV_PCM:
-    					printf("\n Audio codec:  WAV\n");
+                    printf("[audioCodec] Audio codec:  WAV\n");
 #ifdef ADM_BIG_ENDIAN
-    					out= (ADM_Audiocodec *)new ADM_AudiocodecWavSwapped(fourcc);
+                    out= (ADM_Audiocodec *)new ADM_AudiocodecWavSwapped(fourcc);
 #else
 					out= (ADM_Audiocodec *)new ADM_AudiocodecWav(fourcc);
 #endif
                   			break;
 				case WAV_8BITS:
-					printf("\n 8 BIts pseudo codec\n");
-    					out= (ADM_Audiocodec *)new ADM_Audiocodec8Bits(fourcc);
+					printf("[audioCodec] 8 BIts pseudo codec\n");
+                    out= (ADM_Audiocodec *)new ADM_Audiocodec8Bits(fourcc);
 					break;
 				case WAV_8BITS_UNSIGNED:
-					printf("\n 8 BIts pseudo codec unsigned\n");
+					printf("[audioCodec] 8 BIts pseudo codec unsigned\n");
     					out= (ADM_Audiocodec *)new ADM_Audiocodec8Bits(fourcc);
 					break;
 		  		case WAV_LPCM:
-					printf("\n Audio codec:  LPCM swapped\n");
+					printf("[audioCodec] Audio codec:  LPCM swapped\n");
 #ifndef ADM_BIG_ENDIAN
-    					out= (ADM_Audiocodec *)new ADM_AudiocodecWavSwapped(fourcc);
+                    out= (ADM_Audiocodec *)new ADM_AudiocodecWavSwapped(fourcc);
 #else
 					out= (ADM_Audiocodec *)new ADM_AudiocodecWav(fourcc);
 #endif
                   		break;
-#ifdef USE_LIBDCA
-                case WAV_DTS:
-					if (dca->isAvailable())
-					{
-						printf("\n Audio codec:  DTS\n");
-						out= (ADM_Audiocodec *) new ADM_AudiocodecDCA(fourcc, info);
-					}
-
-					break;
-#endif
-#if 0
-				case WAV_ULAW:
-						printf("\n ULAW codec\n");
-						out=(ADM_Audiocodec *) new ADM_AudiocodecUlaw(fourcc,info);
-						break;
-
-            case WAV_AMV_ADPCM:
-                printf("\n Audio codec:  ffAMV\n");
-                out= (ADM_Audiocodec *) new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
-                break;
-
-            case WAV_WMA:
-                printf("\n Audio codec:  ffWMA\n");
-                out= (ADM_Audiocodec *) new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
-                break;
-            case WAV_QDM2:
-                printf("\n Audio codec:  ffQDM2\n");
-                out= (ADM_Audiocodec *) new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
-                break;
-#endif
             default:
             	out= ADM_ad_searchCodec(fourcc,info,extra,extraData);
         	}
 
 	if (out == NULL)
 	{
-		printf("\n Unknown codec : %"LU,fourcc);
+		printf("[audioCodec] Unknown codec : %"LU"\n",fourcc);
 		out = (ADM_Audiocodec *) new ADM_AudiocodecUnknown(fourcc);
 	}
 	// For channel mapping, simple case we do it here so that the decoder does not have
