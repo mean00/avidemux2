@@ -95,29 +95,6 @@ class ADM_Audiocodec8Bits : public     ADM_Audiocodec
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 };
-
-
-
-#define ADMWA_BUF (4*1024*16) // 64 kB internal
-class ADM_AudiocodecWMA : public     ADM_Audiocodec
-{
-	protected:
-		void *_contextVoid;
-		uint8_t _buffer[ ADMWA_BUF];
-		uint32_t _tail,_head;
-		uint32_t _blockalign;
-
-	public:
-		ADM_AudiocodecWMA(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
-		virtual	~ADM_AudiocodecWMA() ;
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
-		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
-		virtual	uint8_t isCompressed(void) {return 1;}
-};
-
-
-
  class ADM_AudiocodecUlaw : public     ADM_Audiocodec
  {
  	public:

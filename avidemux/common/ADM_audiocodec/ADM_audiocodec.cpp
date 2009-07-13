@@ -19,8 +19,7 @@
 #include "fourcc.h"
 #include "ADM_coreAudio.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
-
-
+uint8_t scratchPad[SCRATCH_PAD_SIZE];
 extern ADM_Audiocodec *ADM_ad_searchCodec(uint32_t fourcc,	WAVHeader *info,uint32_t extraLength,uint8_t *extraData);
 
 ADM_Audiocodec	*getAudioCodec(uint32_t fourcc,WAVHeader *info,uint32_t extra,uint8_t *extraData)
@@ -37,12 +36,15 @@ ADM_Audiocodec *out = NULL;
                                         }
 
 			}
+
  		switch(fourcc)
    			{
+#if 0
                                 case WAV_NELLYMOSER:
                                         printf("\n Audio codec:  NELLYMOSER\n");
                                         out= (ADM_Audiocodec *)new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
                                         break;
+#endif
                                 case WAV_IMAADPCM:
                                         printf("\n Audio codec:  IMA MS ADPCM\n");
                                         out= (ADM_Audiocodec *)new ADM_AudiocodecImaAdpcm(fourcc,info);
@@ -89,6 +91,7 @@ ADM_Audiocodec *out = NULL;
 						printf("\n ULAW codec\n");
 						out=(ADM_Audiocodec *) new ADM_AudiocodecUlaw(fourcc,info);
 						break;
+#if 0
             case WAV_AMV_ADPCM:
                 printf("\n Audio codec:  ffAMV\n");
                 out= (ADM_Audiocodec *) new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
@@ -102,6 +105,7 @@ ADM_Audiocodec *out = NULL;
                 printf("\n Audio codec:  ffQDM2\n");
                 out= (ADM_Audiocodec *) new ADM_AudiocodecWMA(fourcc,info,extra,extraData);
                 break;
+#endif
             default:
             	out= ADM_ad_searchCodec(fourcc,info,extra,extraData);
         	}
