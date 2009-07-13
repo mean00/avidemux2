@@ -19,7 +19,7 @@
 #define WAV_AAC_HE 	0xfe // dummy id
 #define WAV_8BITS_UNSIGNED 	55 // dummy id
 #define WAV_AMRNB 	56 // dummy id
-#define WAV_ULAW	57 // dummy id
+#define WAV_ULAW	7 
 #define WAV_QDM2 	58
 #define WAV_IMAADPCM    17
 #define WAV_AMV_ADPCM    9900
