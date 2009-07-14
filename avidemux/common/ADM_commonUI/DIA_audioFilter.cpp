@@ -52,10 +52,11 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     };
 
  diaElemMenu      eMixer(&vChan,QT_TR_NOOP("_Mixer:"),11,menuMixer);
- 
+ diaElemToggle    tMixer(PX(mixerEnabled),QT_TR_NOOP("Remix:"));
+ tMixer.link(1,&eMixer);
  /************************************/
- diaElem *elems[]={&eFPS, &eMixer, &eResample};
-  if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),3,elems))
+ diaElem *elems[]={&eFPS, &tMixer,&eMixer, &eResample};
+  if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),4,elems))
     {
         config->mixerConf=(CHANNEL_CONF)vChan;
         config->film2pal=(FILMCONV)vFilm;
