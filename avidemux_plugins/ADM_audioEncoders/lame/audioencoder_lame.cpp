@@ -293,6 +293,7 @@ bool configure (void)
 
   if (diaFactoryRun (QT_TR_NOOP ("LAME Configuration"), 4, elems))
     {
+      lameParam->preset=(ADM_LAME_PRESET)ppreset;
       return 1;
     }
   return 0;

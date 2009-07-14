@@ -322,6 +322,7 @@ JSBool ADM_JSAvidemux::Load(JSContext *cx, JSObject *obj, uintN argc,
 JSBool ADM_JSAvidemux::LoadFilters(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin LoadFilters
+#if 0
         ADM_JSAvidemux *p = (ADM_JSAvidemux *)JS_GetPrivate(cx, obj);
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
@@ -334,6 +335,7 @@ JSBool ADM_JSAvidemux::LoadFilters(JSContext *cx, JSObject *obj, uintN argc,
         enterLock();
         *rval = BOOLEAN_TO_JSVAL(filterLoadXml(pTempStr,0));
         leaveLock();
+#endif
 	return JS_TRUE;
 }// end LoadFilters
 

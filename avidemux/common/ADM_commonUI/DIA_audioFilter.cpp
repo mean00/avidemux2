@@ -22,13 +22,10 @@
 */
 int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
 {
-  
-  uint32_t vFreq=config->resamplerFrequency;
   uint32_t vChan=config->mixerConf;
-  uint32_t vDownsample=config->mixerEnabled;
   uint32_t vFilm=config->film2pal;
-
-   diaElemToggleUint eResample(&vDownsample,QT_TR_NOOP("R_esampling (Hz):"),&vFreq,QT_TR_NOOP("Resampling frequency (Hz)"),6000,64000);
+#define PX(x) (&(config->x))
+   diaElemToggleUint eResample(PX(resamplerEnabled),QT_TR_NOOP("R_esampling (Hz):"),PX(resamplerFrequency),QT_TR_NOOP("Resampling frequency (Hz)"),6000,64000);
     
     //**********************************
     diaMenuEntry menuFPS[]={
@@ -60,9 +57,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  diaElem *elems[]={&eFPS, &eMixer, &eResample};
   if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),3,elems))
     {
-        config->resamplerFrequency=vFreq;
         config->mixerConf=(CHANNEL_CONF)vChan;
-        config->mixerEnabled=vDownsample;
         config->film2pal=(FILMCONV)vFilm;
       return true;
     }

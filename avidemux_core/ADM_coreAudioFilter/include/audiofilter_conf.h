@@ -46,10 +46,10 @@ public    :
     uint64_t     startTimeInUs;
     int32_t      shiftInMs;
     // Mixer
-    bool         mixerEnabled;
+    uint32_t     mixerEnabled;
     CHANNEL_CONF mixerConf;
     // Resampler
-    bool         resamplerEnabled;
+    uint32_t     resamplerEnabled;
     uint32_t     resamplerFrequency;
     // film2pal & pal2film
     FILMCONV     film2pal;

@@ -48,7 +48,7 @@ extern void filterListAll(void );
 
 //extern uint8_t loadVideoCodecConf( const char *name);
 extern int A_saveJpg (char *name);
-extern void filterLoadXml(const char *n);
+//extern void filterLoadXml(const char *n);
 extern int A_appendAvi (const char *name);
 extern void A_saveAudioCopy(char *name);
 extern int A_loadNone( void );
@@ -144,7 +144,7 @@ AUTOMATON reaction_table[]=
         {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},
         {"audio-normalize",	1,"activate normalization",		call_normalize},
         {"audio-resample",	1,"resample to x hz",			call_resample},
-        {"filters",		1,"load a filter preset",		(one_arg_type)filterLoadXml}   ,
+//        {"filters",		1,"load a filter preset",		(one_arg_type)filterLoadXml}   ,
 //        {"codec-conf",		1,"load a codec configuration",		(one_arg_type )loadVideoCodecConf}   ,
 //        {"vcd-res",		0,"set VCD resolution",			(one_arg_type)setVCD}              ,
 //        {"svcd-res",		0,"set SVCD resolution",		(one_arg_type)setSVCD}              ,

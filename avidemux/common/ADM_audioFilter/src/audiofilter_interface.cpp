@@ -22,6 +22,16 @@
 // Warning, we have another one for playback
 
 ADM_AUDIOFILTER_CONFIG audioEncodingConfig;
+extern int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config);
+
+/**
+    \fn audioFilterconfigure
+    \brief
+*/
+bool audioFilterConfigure(void)
+{
+    return DIA_getAudioFilter(&audioEncodingConfig);
+}
 /**
     \fn audioFilterReset
     \brief Put back default value on audio filter chain

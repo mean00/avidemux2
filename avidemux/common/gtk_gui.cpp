@@ -13,21 +13,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-
 #include "ADM_default.h"
 #include <math.h>
 #include <errno.h>
 
-#include "ADM_lavcodec.h"
 #include "fourcc.h"
-#include "avi_vars.h"
-#include "DIA_fileSel.h"
-#include "prototype.h"
-#include "DIA_coreToolkit.h"
-#include "ADM_bitmap.h"
 
-#include "ADM_coreAudio.h"
+#include "DIA_fileSel.h"
+#include "DIA_coreToolkit.h"
 
 #include "gui_action.hxx"
 #include "gtkgui.h"
@@ -36,21 +29,15 @@
 #include "ADM_render/GUI_render.h"
 #include "ADM_commonUI/GUI_ui.h"
 
-#include "audio_out.h"
-
-#include "ADM_commonUI/DIA_busy.h"
 #include "DIA_working.h"
 #include "DIA_factory.h"
-#include "DIA_enter.h"
-
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
 
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
+#include "avi_vars.h"
 
 char * actual_workbench_file;
 renderZoom currentZoom=ZOOM_1_1;
@@ -129,7 +116,7 @@ extern void videoCodecSelect (void);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 //__________
 
-
+extern int  GUI_GoToFrame(uint32_t frame);;
 extern void videoCodecConfigureUI(int codecIndex = -1);
 extern void audioCodecChanged(int newcodec);
 extern void videoCodecChanged(int newcodec);
@@ -171,15 +158,6 @@ int nw;
         case ACT_BUILT_IN:
                                 DIA_builtin();
                                 return;
-#if BAZOOKA
-        case ACT_GLYPHEDIT:
-                                DIA_glyphEdit();
-                                return;
-
-        case ACT_V2V:
-                                A_vob2vobsub();
-                                return;
-#endif
         case ACT_HANDLE_JOB:
                                 GUI_jobs();
                                 return;
@@ -187,48 +165,36 @@ int nw;
         case ACT_RECENT1:
         case ACT_RECENT2:
         case ACT_RECENT3:
-                        const char **name;
-						char* fileName;
-                        int rank;
-                                name=prefs->get_lastfiles();
-                                rank=(int)action-ACT_RECENT0;
-                                ADM_assert(name[rank]);
-                                A_openAvi2 (name[rank], 0);
+                const char **name;
+                char* fileName;
+                int rank;
 
+                name=prefs->get_lastfiles();
+                rank=(int)action-ACT_RECENT0;
+                ADM_assert(name[rank]);
+                A_openAvi2 (name[rank], 0);
                 return;
         case ACT_ViewMain: UI_toogleMain();return;
         case ACT_ViewSide: UI_toogleSide();return;
-#ifdef BAZOOKA
-        case ACT_DVB_Ocr:
-        		DIA_ocrDvb();
-        		return;
-
-      case ACT_Ocr:
-                DIA_ocrGen(); //
-                return;
-#endif
       case ACT_AudioConfigure:
 //    		audioCodecSelect();
 		return;
 	case ACT_VideoConfigure:
     		videoEncoder6Configure();
-		return;
+            return;
     case ACT_VideoCodecChanged:
     		nw=UI_getCurrentVCodec();
     		videoEncoder6_SetCurrentEncoder(nw);
-		return;
+            return;
    case ACT_AudioCodecChanged:
-                nw=UI_getCurrentACodec();
-                audioCodecSetByIndex(nw);
-
-		return;
+            nw=UI_getCurrentACodec();
+            audioCodecSetByIndex(nw);
+            return;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
     case ACT_RunScript:
-                GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
-
-                        //
+            GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
 
     case ACT_RecentFiles:
@@ -242,49 +208,32 @@ int nw;
     		 DIA_about( );
 		 return;
     case ACT_VideoCodec:
-      //videoCodecSelect ();
       videoEncoder6Configure();
       return;
     case ACT_AudioCodec:
-      //audioCodecSelect ();
       audioCodecConfigure();
       return;
 
     case ACT_AudioFilters:
     //  audioFilter_configureFilters ();
+      audioFilterConfigure();
       return;
     case ACT_Pref:
         if(playing) return;
     	if(DIA_Preferences())
-	{
-//	saveEncoderConfig ();
- 	#ifdef HAVE_AUDIO
-      		AVDM_audioSave();
- 	#endif
-      	prefs->save ();
-	}
-	return;
+        {
+            prefs->save ();
+        }
+        return;
     case ACT_SavePref:
-//      saveEncoderConfig ();
- #ifdef HAVE_AUDIO
-      AVDM_audioSave();
- #endif
-      prefs->save ();
-      return;
-    case ACT_SetLogFile:
-//      GUI_FileSelWrite ("Select log File to use", encoderSetLogFile);
-      GUI_Error_HIG(QT_TR_NOOP("Obsolete"), NULL);
-      return;
-      break;
+        prefs->save ();
+        return;
     case ACT_SetMuxParam:
         {
         int index=UI_GetCurrentFormat();
         ADM_mux_configure(index);
+        return;
         }
-      return;
-      break;
-    case ACT_Fast:
-      ADM_assert(0);
       break;
     case ACT_Exit:
       { uint32_t saveprefsonexit;
@@ -295,79 +244,58 @@ int nw;
       cleanUp ();
       exit (0);
       break;
-/*			case ACT_SelectEncoder:
-
-						A_selectEncoder();
-  	  			return;
-						break;*/
-    case ACT_SelectEncoder:
-      GUI_Error_HIG (QT_TR_NOOP("Obsolete"), NULL);
-      break;
-
     default:
       break;
 
     }
-//------------------------------------------------
 
   if (playing)			// only allow some action
     {
       switch (action)
-	{
-	case ACT_PlayAvi:
+        {
+        case ACT_PlayAvi:
 
-	case ACT_StopAvi:
-	  A_playAvi ();
-	  break;
-	default:
-	  return;
-	}
+        case ACT_StopAvi:
+          A_playAvi ();
+          break;
+        default:
+          return;
+        }
     }
-  // not playing
-  // allow all actions
-
+  // not playing,
   // restict disabled uncoded actions
   if ((int) action >= ACT_DUMMY)
     {
       GUI_Error_HIG (QT_TR_NOOP("Not coded in this version"), NULL);
       return;
-
     }
   // allow only if avi loaded
   if (!avifileinfo)
     {
       switch (action)
-	{
+        {
           case ACT_JOG:
                 break;
-	case ACT_OpenAvi:
-          GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), (SELFILE_CB *)A_openAvi);
-	  break;
-
-	case ACT_BrokenAvi:
-	  printf ("\n Opening in broken mode...\n");
-          GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), A_openBrokenAvi);
-	  break;
-
-
-	default:
-	  ;
-	}
-      return;
+          case ACT_OpenAvi:
+                GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), (SELFILE_CB *)A_openAvi);
+                break;
+          default:
+            break;
+        }
+        return;
     }
 
-//#define TEST_UNPACK
-  // we have an AVI loaded
+  // Dispatch actions, we have a file loaded
   if(action>ACT_NAVIGATE_BEGIN && action < ACT_NAVIGATE_END)
   {
-    HandleAction_Navigate(action);
+    return HandleAction_Navigate(action);
   }
-  else if(action>ACT_SAVE_BEGIN && action < ACT_SAVE_END)
+  if(action>ACT_SAVE_BEGIN && action < ACT_SAVE_END)
   {
-    HandleAction_Save(action);
+    return HandleAction_Save(action);
   }
 
-  else switch (action)
+  switch (action)
     {
        case ACT_JOG:
                 A_jog();
@@ -410,42 +338,24 @@ int nw;
     			break;
 
     case ACT_ADD_JOB:
-        A_addJob();
-        break;
- 
-    case ACT_CutWizard:
-      ADM_cutWizard ();
-      break;
-    case ACT_SecondAudioTrack:
-                A_externalAudioTrack();
-                break;
+            A_addJob();
+            break;
 
     case ACT_OpenAvi:
-      GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."),(SELFILE_CB *) A_openAvi);
-      break;
-    case ACT_BrokenAvi:
-      GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), A_openBrokenAvi);
-      break;
+        GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."),(SELFILE_CB *) A_openAvi);
+        break;
     case ACT_AppendAvi:
-      GUI_FileSelRead (QT_TR_NOOP("Select AVI File to Append..."),(SELFILE_CB *) A_appendAvi);
-      break;
-
+        GUI_FileSelRead (QT_TR_NOOP("Select AVI File to Append..."),(SELFILE_CB *) A_appendAvi);
+        break;
     case ACT_AviInfo:
-      DIA_properties ();
-      break;
-  
+        DIA_properties ();
+        break;
 	case ACT_BitRate:
 		 GUI_displayBitrate(  );
-	break;
-
- 
-
+        break;
     case ACT_PlayAvi:
       GUI_PlayAvi ();
       break;
-
-
-
   
 #define TOGGLE_PREVIEW ADM_PREVIEW_OUTPUT
     case ACT_PreviewChanged:
@@ -651,6 +561,7 @@ int nw;
 
       break;
     case ACT_VideoParameter:
+#if 0
       // first remove current viewer
       if (getPreviewMode()!=ADM_PREVIEW_NONE)
         {
@@ -666,6 +577,7 @@ int nw;
          admPreview::start();
 //         admPreview::update (curframe);
       }
+#endif
       break;
 
     case ACT_RebuildKF:
@@ -688,12 +600,7 @@ int nw;
       return;
 
     }
-
-
-  // gtk_widget_grab_focus(sb_frame);
 }
-
-
 
 //_____________________________________________________________
 //
@@ -742,7 +649,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
 
   GUI_close(); // Cleanup
 
-  DIA_StartBusy ();
+//  DIA_StartBusy ();
   /*
   ** we may get a relative path by cmdline
   */
@@ -753,7 +660,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
   {
     res = video_body->addFile (longname);
   }
-  DIA_StopBusy ();
+//  DIA_StopBusy ();
 
   // forget last project file
   if( actual_workbench_file ){
@@ -854,7 +761,7 @@ void  updateLoaded ()
     }
 
 
-  getFirstVideoFilter(); // reinit first filter
+//  getFirstVideoFilter(); // reinit first filter
 
   // now get audio information if exists
   wavinfo = video_body->getInfo ();	//wavinfo); // will be null if no audio
@@ -884,7 +791,7 @@ void  updateLoaded ()
   // Draw first frame
   GUI_setAllFrameAndTime();
   A_ResetMarkers();
-  getFirstVideoFilter(); // Rebuild filter if needed
+//  getFirstVideoFilter(); // Rebuild filter if needed
 
   /* Zoom out if needed */
   uint32_t phyW,phyH;
@@ -925,14 +832,14 @@ A_appendAvi (const char *name)
 
   if (playing)
     return 0;
-  DIA_StartBusy ();
+//  DIA_StartBusy ();
   if (!video_body->addFile (name))
     {
-      DIA_StopBusy ();
+//      DIA_StopBusy ();
       GUI_Error_HIG (QT_TR_NOOP("Something failed when appending"), NULL);
       return 0;
     }
-  DIA_StopBusy ();
+//  DIA_StopBusy ();
 
 
   video_body->dumpSeg ();
@@ -977,7 +884,7 @@ void ReSync (void)
 //      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
     }
   	//updateVideoFilters ();
-	getFirstVideoFilter();
+//	getFirstVideoFilter();
 
 }
 

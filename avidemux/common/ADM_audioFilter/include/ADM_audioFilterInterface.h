@@ -31,6 +31,8 @@ uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency
 FILMCONV        audioFilterGetFrameRate(void);
 CHANNEL_CONF    audioFilterGetMixer(void); // Invalid to disable
 
+bool            audioFilterConfigure(void);
+
 /* Encoder part */
 uint8_t         audioCodecSetByIndex(int i);
 void            audioCodecConfigure( void );
