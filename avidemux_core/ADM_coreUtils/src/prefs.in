@@ -44,6 +44,10 @@ filters.subtitle.upercent,		INT,	0,	0,	255
 filters.subtitle.vpercent,		INT,	0,	0,	255
 filters.subtitle.selfadjustable,	UINT,	0,	0,	1
 filters.subtitle.usebackgroundcolor,	UINT,	0,	0,	1
+filters.avsfilter.avs_script,		FILENAME,	""
+filters.avsfilter.avs_loader,		FILENAME,	""
+filters.avsfilter.pipe_timeout,		UINT,	10,     1,       30
+filters.avsfilter.debug_msg,		UINT,	1,      0,       1
 # codec metasettings for mpeg2enc based
 settings.mpegsplit, 			UINT,	790,	400,	5000
 device.audiodevice,			STRING,	ALSA

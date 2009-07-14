@@ -84,6 +84,10 @@ static opt_def opt_defs [] = {
 	{"filters.subtitle.vpercent",		INT,	"0",	NULL,	"0",	"255"	},
 	{"filters.subtitle.selfadjustable",		UINT,	"0",	NULL,	"0",	"1"	},
 	{"filters.subtitle.usebackgroundcolor",		UINT,	"0",	NULL,	"0",	"1"	},
+	{"filters.avsfilter.avs_script",		FILENAME,"",	NULL, NULL, NULL },
+	{"filters.avsfilter.avs_loader",		FILENAME,"",	NULL, NULL, NULL },
+	{"filters.avsfilter.pipe_timeout",		UINT,	"10",	NULL,	"1",	"30"	},
+	{"filters.avsfilter.debug_msg",		UINT,	"1",	NULL,	"0",	"1"	},
 	{"settings.mpegsplit",	UINT,	"790",	NULL,	"400",	"5000"	},
 	{"device.audiodevice",		STRING,"ALSA",	NULL, NULL, NULL },
 	{"device.audio.alsa_device",		STRING,"dmix",	NULL, NULL, NULL },
@@ -132,7 +136,7 @@ static opt_def opt_defs [] = {
 	{"priority.playback",		UINT,	"0",	NULL,	"0",	"4"	}
 };
 
-int num_opts = 79;
+int num_opts = 83;
 // </prefs_gen>
 
 

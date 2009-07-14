@@ -5,8 +5,8 @@ use IO::Handle;
 
 my $srcdir=".";
 my $in  = "$srcdir/prefs.in";
-my $h   = "$srcdir/prefs.h";
-my $cpp = "$srcdir/ADM_coreUtils/src/prefs.cpp";
+my $h   = "$srcdir/../include/prefs.h";
+my $cpp = "$srcdir/prefs.cpp";
 #print "In:$in\n";
 my $h_str = "typedef enum {\n";
 my $cpp_str = "typedef enum {\n".
