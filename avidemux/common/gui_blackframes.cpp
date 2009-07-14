@@ -28,7 +28,6 @@
 #include "prototype.h"
 #include "audio_out.h"
 #include "ADM_coreAudio.h"
-#include "audioprocess.hxx"
 #include "gui_action.hxx"
 #include "gtkgui.h"
 #include "DIA_coreToolkit.h"

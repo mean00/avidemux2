@@ -29,8 +29,6 @@
 
 #include "audio_out.h"
 #include "ADM_coreAudio.h"
-#include "audioprocess.hxx"
-#include "audioeng_buildfilters.h"
 #include "gui_action.hxx"
 
 //#include "ADM_encoder/adm_encConfig.h"

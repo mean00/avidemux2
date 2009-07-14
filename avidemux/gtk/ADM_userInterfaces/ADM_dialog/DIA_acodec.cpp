@@ -4,10 +4,6 @@
 
 #include "ADM_toolkitGtk.h"
 
-#include "audioprocess.hxx"
-#include "audioeng_buildfilters.h"
-//#include "ADM_audiocodec/ADM_audiocodeclist.h"
-
 extern uint32_t audioEncoderGetNumberOfEncoders(void);
 extern const char  *audioEncoderGetDisplayName(uint32_t i);
 extern uint8_t audioCodecSetByIndex(int i);
@@ -36,7 +32,7 @@ static GtkWidget	*create_dialogAudioCodec (void);
 
 		cur=findCodec();
 		audioCodecSetByIndex(cur);
-		audioCodecConfigure();
+//		audioCodecConfigure();
 
 }
 

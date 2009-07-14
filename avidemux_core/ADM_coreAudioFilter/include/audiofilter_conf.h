@@ -29,14 +29,19 @@ class ADM_AUDIOFILTER_CONFIG
 public    :
 
     ADM_AUDIOFILTER_CONFIG(void)
-        {
-                startTimeInUs=0;
-                shiftInMs=0;
-                mixerEnabled=false;
-                mixerConf=CHANNEL_STEREO;
-                resamplerEnabled=false;
-                resamplerFrequency=44100;
-        }
+                {
+                    reset();
+                }
+    bool        reset()
+                {
+                        startTimeInUs=0;
+                        shiftInMs=0;
+                        mixerEnabled=false;
+                        mixerConf=CHANNEL_STEREO;
+                        resamplerEnabled=false;
+                        resamplerFrequency=44100;
+                        film2pal    =FILMCONV_NONE;
+                }
 
     uint64_t     startTimeInUs;
     int32_t      shiftInMs;
@@ -46,7 +51,11 @@ public    :
     // Resampler
     bool         resamplerEnabled;
     uint32_t     resamplerFrequency;
-
+    // film2pal & pal2film
+    FILMCONV     film2pal;
+    // Gain filter
+    //GAINparam    gainParam;
+     
 
 };
 

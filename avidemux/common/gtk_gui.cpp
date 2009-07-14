@@ -29,11 +29,9 @@
 
 #include "ADM_coreAudio.h"
 
-#include "audioprocess.hxx"
 #include "gui_action.hxx"
 #include "gtkgui.h"
 
-#include "audioeng_buildfilters.h"
 #include "prefs.h"
 #include "ADM_render/GUI_render.h"
 #include "ADM_commonUI/GUI_ui.h"
@@ -51,13 +49,8 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 #include "ADM_coreVideoEncoder.h"
+#include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
-
-static AudioSource currentAudioSource = AudioAvi;
-static AudioSource secondAudioSource = AudioNone;
-
-static char *currentAudioName = NULL;
-static char *secondAudioName = NULL;
 
 char * actual_workbench_file;
 renderZoom currentZoom=ZOOM_1_1;
@@ -88,7 +81,6 @@ extern int A_SaveUnpackedVop(const char *name);
 extern int A_SavePackedVop(const char *name);
 uint8_t A_TimeShift(void);
 void A_ResetMarkers(void);
-uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name);
 extern void A_jog(void);
 //***********************************
 //******** GUI Function**************
@@ -216,7 +208,7 @@ int nw;
                 return;
 #endif
       case ACT_AudioConfigure:
-    		audioCodecSelect();
+//    		audioCodecSelect();
 		return;
 	case ACT_VideoConfigure:
     		videoEncoder6Configure();
@@ -259,7 +251,7 @@ int nw;
       return;
 
     case ACT_AudioFilters:
-      audioFilter_configureFilters ();
+    //  audioFilter_configureFilters ();
       return;
     case ACT_Pref:
         if(playing) return;
@@ -489,7 +481,7 @@ int nw;
  
     case ACT_AudioSourceAvi:
       //currentaudiostream=aviaudiostream;
-      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
+//      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
       //wavinfo= currentaudiostream->getInfo();
       break;
 
@@ -821,7 +813,8 @@ int A_openAvi2 (const char *name, uint8_t mode)
             }
             if(infos) delete [] infos;
             // Revert mixer to copy
-            setCurrentMixerFromString("NONE");
+            //setCurrentMixerFromString("NONE");
+            audioFilterSetMixer(CHANNEL_INVALID);
         }
 	for(i=strlen(longname);i>=0;i--)
     {
@@ -873,7 +866,7 @@ void  updateLoaded ()
   else
     {
 	  video_body->getAudioStream (&aviaudiostream);
-      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
+//      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
 #if 0
       if (aviaudiostream)
 	if (!aviaudiostream->isDecompressable ())
@@ -981,7 +974,7 @@ void ReSync (void)
   video_body->getAudioStream (&aviaudiostream);
   if (isaviaud)
     {
-      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
+//      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
     }
   	//updateVideoFilters ();
 	getFirstVideoFilter();
@@ -1038,16 +1031,20 @@ int A_loadWave (char *name)
 {
 
 }
+#if 0
 AudioSource getCurrentAudioSource(char **name)
 {
         *name=currentAudioName;
         return currentAudioSource;
 }
+#endif
 //________________________________________________________
 // Change audio stream and delete the old one if needed
 //________________________________________________________
+#if 0
 uint8_t A_changeAudioStream (ADM_audioStream * newaudio, AudioSource nwsource,char *myname)
 {
+
 	if (currentaudiostream)
 	{
 		if (currentaudiostream != aviaudiostream)
@@ -1069,9 +1066,10 @@ uint8_t A_changeAudioStream (ADM_audioStream * newaudio, AudioSource nwsource,ch
     if(myname)
         currentAudioName=ADM_strdup(myname);
   }
+
   return 1;
 }
-
+#endif
 
 
 
@@ -1098,7 +1096,7 @@ void cleanUp (void)
 		delete secondaudiostream;
 		secondaudiostream=NULL;
 	}
-
+#if 0
 	if (currentAudioName)
 	{
 		ADM_dealloc(currentAudioName);
@@ -1110,7 +1108,7 @@ void cleanUp (void)
 		ADM_dealloc(secondAudioName);
 		secondAudioName = NULL;
 	}
-
+#endif
 	if (actual_workbench_file)
 	{
 		ADM_dealloc(actual_workbench_file);
@@ -1164,10 +1162,6 @@ void A_parseECMAScript(const char *name){
    }
    ADM_dealloc(longname);
 }
-/**---------------------------------------------------
-		Pipe to toolame
--------------------------------------------------------**/
-extern  void audioCodecSetcodec(AUDIOENCODER codec);
 
 /*
 	Unpack all frames without displaying them to check for error
@@ -1266,7 +1260,6 @@ uint32_t type,strength,swap;
  	}
 
 }
-extern uint8_t DIA_audioTrack(AudioSource *source, uint32_t *track,uint32_t nbTrack, audioInfo *infos);
 extern const char *getStrFromAudioCodec( uint32_t codec);
 /**
       \fn A_audioTrack
@@ -1274,6 +1267,7 @@ extern const char *getStrFromAudioCodec( uint32_t codec);
 */
 void A_audioTrack( void )
 {
+#if 0
         uint32_t nb;
         audioInfo *infos=NULL;
 
@@ -1379,7 +1373,7 @@ roger_and_out:
          for(int i=0;i<nb;i++)
             delete sourceavitracks[i];
         return;
-
+#endif
 }
 /**
         \fn A_externalAudioTrack
@@ -1387,6 +1381,7 @@ roger_and_out:
 */
 void A_externalAudioTrack( void )
 {
+#if 0
         uint32_t old,nw;
         uint32_t oldtrack,newtrack;
         char  *newtrackname=ADM_strdup(secondAudioName);
@@ -1427,11 +1422,12 @@ void A_externalAudioTrack( void )
        secondAudioSource=(AudioSource)nw;
         A_setSecondAudioTrack(secondAudioSource,newtrackname);
         if(newtrackname) ADM_dealloc(newtrackname);
+#endif
 }
-
+#if 0
 uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name)
 {
-#if 0
+
         switch(nw)
         {
                 case AudioNone:break;
@@ -1509,9 +1505,9 @@ uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name)
                 ADM_assert(0);
         }
         return 0;
-#endif
-}
 
+}
+#endif
 
 void A_Resync(void)
 {
@@ -1624,7 +1620,7 @@ uint8_t GUI_close(void)
       avifileinfo = NULL;
       video_body->cleanup ();
       curframe = 0;
-      A_changeAudioStream (NULL, AudioNone,NULL);
+//      A_changeAudioStream (NULL, AudioNone,NULL);
 
       // Audio streams are cleared by editor
 

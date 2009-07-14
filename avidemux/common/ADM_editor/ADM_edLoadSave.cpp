@@ -27,9 +27,6 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-
-#include "audioeng_buildfilters.h"
-//#include "ADM_encoder/adm_encConfig.h"
 #include "prefs.h"
 #include "avi_vars.h"
 
@@ -190,7 +187,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
    
    qfprintf(fd,"\n//** Audio **\n");
    qfprintf(fd,"app.audio.reset();\n");
-
+#if 0
    // External audio ?
         char *audioName;
         AudioSource  source;
@@ -212,7 +209,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
                         qfprintf(fd,"app.audio.setTrack(%d);\n", source); 
                         
         }
-#if 0
+
    getAudioExtraConf(&bitrate,&extraDataSize,&extraData);
    qfprintf(fd,"app.audio.codec(\"%s\",%d,%d,\"", audioCodecGetName(),bitrate,extraDataSize); 
    for(int i=0;i<extraDataSize;i++)

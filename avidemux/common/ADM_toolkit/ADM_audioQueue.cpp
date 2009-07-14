@@ -14,9 +14,6 @@
 #include "ADM_default.h"
 #include "ADM_threads.h"
 
-#include "audioprocess.hxx"
-#include "audioeng_buildfilters.h"
-
 #include "ADM_audioQueue.h"
 
 /*

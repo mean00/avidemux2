@@ -31,8 +31,6 @@
 
 
 #include "gui_action.hxx"
-//#include "ADM_encoder/ADM_vidEncode.hxx"
-#include "audioeng_buildfilters.h"
 #include "prefs.h"
 #include "gtkgui.h"
 
@@ -45,7 +43,7 @@
 #include "ADM_filter/vidVCD.h"
 #include "ADM_vidMisc.h"
 #include "ADM_coreVideoEncoder.h"
-
+#include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 extern void filterListAll(void );
 
 //extern uint8_t loadVideoCodecConf( const char *name);
@@ -323,7 +321,7 @@ void call_normalize   (char *p)
 {
   int32_t i;
   sscanf(p,"%d",&i);
-        audioFilterNormalizeMode(i);
+  //audioFilterNormalizeMode(i);
 }
 void call_resample    (char *p)
 {
@@ -331,7 +329,7 @@ int fq;
         fq=atoi(p);
         if(fq>1000)
         {
-                audioSetResample(fq);
+                audioFilterSetResample(fq);
                 printf("resample to %d\n",fq);
         }
         else
@@ -379,10 +377,11 @@ void call_setAudio (char *p)
 
 		int32_t i;
 		sscanf(p,"%"LD,&i);
-		audioFilterDelay(i);
+//		audioFilterDelay(i);
 }
 void call_audiocodec(char *p)
 {
+#if 0
 	if(!strcasecmp(p,"MP2"))
 		audio_selectCodecByTag(WAV_MP2);
 	else if(!strcasecmp(p,"AC3"))
@@ -399,6 +398,7 @@ void call_audiocodec(char *p)
 		audio_selectCodecByTag( WAV_PCM );
 		fprintf(stderr,"audio codec \"%s\" unknown.\n",p);
 	}
+#endif
 }
 void call_probePat(char *p)
 {

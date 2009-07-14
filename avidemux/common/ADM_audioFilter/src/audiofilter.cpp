@@ -21,6 +21,7 @@
 #include "audiofilter_access.h"
 #include "audiofilter_internal.h"
 #include "audiofilter_conf.h"
+#include "audiofilter_film2pal.h"
 
 VectorOfAudioFilter PlaybackVector;
 extern ADM_Composer *video_body;
@@ -87,6 +88,28 @@ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *confi
     {
         AUDMAudioFilterMixer *mixer=new AUDMAudioFilterMixer(last,config->mixerConf);
         ADD_FILTER(mixer);
+    }
+    // Pal 2 film & friends
+    switch(config->film2pal)
+    {
+        case FILMCONV_NONE:
+            break;
+        case FILMCONV_FILM2PAL:
+            {
+            AUDMAudioFilterFilm2Pal *f2p=new AUDMAudioFilterFilm2Pal(last);
+            ADD_FILTER(f2p);
+            }
+            break;
+        case FILMCONV_PAL2FILM:
+            {
+            AUDMAudioFilterPal2Film *f2p=new AUDMAudioFilterPal2Film(last);
+            ADD_FILTER(f2p);
+            }
+            break;
+        default:
+            ADM_assert(0);
+            break;
+
     }
     // Resample
     if(config->resamplerEnabled && config->resamplerFrequency!=last->getInfo()->frequency)

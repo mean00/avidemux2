@@ -26,6 +26,7 @@
 
 VectorOfAudioFilter EncodingVector;
 extern ADM_Composer *video_body;
+extern ADM_AUDIOFILTER_CONFIG audioEncodingConfig;
 
 //
  extern bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
@@ -39,13 +40,10 @@ extern ADM_Composer *video_body;
 AUDMAudioFilter *createEncodingFilter(uint64_t startTime,int32_t shift)
 {
     //
-    ADM_AUDIOFILTER_CONFIG playback;
-    playback.startTimeInUs=startTime;
-    playback.shiftInMs=shift;
-    playback.mixerEnabled=true;
-    playback.mixerConf=CHANNEL_STEREO;
+    audioEncodingConfig.startTimeInUs=startTime;
+    audioEncodingConfig.shiftInMs=shift;
     //
-    ADM_buildFilterChain(&EncodingVector,&playback);
+    ADM_buildFilterChain(&EncodingVector,&audioEncodingConfig);
     //
     int last=EncodingVector.size();
     ADM_assert(last);

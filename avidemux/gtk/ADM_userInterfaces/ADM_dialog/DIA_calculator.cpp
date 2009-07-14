@@ -25,10 +25,6 @@
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
 
-#include "audioprocess.hxx"
-#include "audioeng_buildfilters.h"
-
-
 #include "ADM_vidMisc.h"
 #include "avi_vars.h"
 

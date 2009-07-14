@@ -16,25 +16,18 @@
 #include "ADM_JSAvidemuxAudio.h"
 
 #include "ADM_commonUI/GUI_ui.h"
-#include "audioeng_buildfilters.h"
 #include "avi_vars.h"
 #include "gui_action.hxx"
-//#include "ADM_encoder/ADM_vidEncode.hxx"
 #include "ADM_videoFilter.h"
-//#include "ADM_encoder/adm_encoder.h"
-//#include "ADM_encoder/adm_encConfig.h"
 #include "ADM_editor/ADM_outputfmt.h"
-
-
-
 #include "ADM_script/ADM_container.h"
+#include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
 extern int A_audioSave(char *name);
 extern int A_loadAC3 (char *name);
 extern int A_loadMP3 (char *name);
 extern int A_loadWave (char *name);
 extern void HandleAction(Action act);
-extern uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name);
 
 JSPropertySpec ADM_JSAvidemuxAudio::avidemuxaudio_properties[] = 
 { 
@@ -166,6 +159,7 @@ JSBool ADM_JSAvidemuxAudio::JSGetProperty(JSContext *cx, JSObject *obj, jsval id
 
 JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
+#if 0
         if (JSVAL_IS_INT(id)) 
         {
                 
@@ -253,6 +247,7 @@ JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id
                         return JS_FALSE;
                 }
         }
+#endif
         return JS_TRUE;
 }
 
@@ -293,6 +288,7 @@ JSBool ADM_JSAvidemuxAudio::Save(JSContext *cx, JSObject *obj, uintN argc,
 JSBool ADM_JSAvidemuxAudio::Load(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {// begin Load
+#if 0
         ADM_JSAvidemuxAudio *p = (ADM_JSAvidemuxAudio *)JS_GetPrivate(cx, obj);
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
@@ -342,6 +338,7 @@ JSBool ADM_JSAvidemuxAudio::Load(JSContext *cx, JSObject *obj, uintN argc,
         printf(" external source %d (%s) \n", src,pTempStr);
 
         *rval = INT_TO_JSVAL(result);
+#endif
         return JS_TRUE;
 }// end Load
 
@@ -354,7 +351,7 @@ JSBool ADM_JSAvidemuxAudio::Reset(JSContext *cx, JSObject *obj, uintN argc,
         if(argc != 0)
                 return JS_FALSE;
         enterLock();
-        audioReset();
+        audioFilterReset();
         leaveLock()
         *rval = BOOLEAN_TO_JSVAL(true);
         return JS_TRUE;
@@ -364,6 +361,7 @@ extern uint8_t mk_hex (uint8_t a, uint8_t b);
 JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {// begin Codec
+#if 0
         ADM_JSAvidemuxAudio *p = (ADM_JSAvidemuxAudio *)JS_GetPrivate(cx, obj);
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
@@ -401,6 +399,7 @@ JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc,
                 *rval = BOOLEAN_TO_JSVAL(true);
         }// end set bitrate
         leaveLock();
+#endif
         return JS_TRUE;
 }// end Codec
 JSBool ADM_JSAvidemuxAudio::getNbTracks(JSContext *cx, JSObject *obj, uintN argc, 
@@ -446,6 +445,7 @@ audioInfo *infos=NULL;
 }// end Codec
 JSBool ADM_JSAvidemuxAudio::secondAudioTrack(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
+#if 0
         ADM_JSAvidemuxAudio *p = (ADM_JSAvidemuxAudio *)JS_GetPrivate(cx, obj);
         if(argc != 2)
                 return JS_FALSE;
@@ -467,11 +467,13 @@ JSBool ADM_JSAvidemuxAudio::secondAudioTrack(JSContext *cx, JSObject *obj, uintN
                 return JS_TRUE;
         }
         leaveLock();
+#endif
       return JS_FALSE;
 }
 JSBool ADM_JSAvidemuxAudio::mixer(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {
+#if 0
 uint32_t nb=0,nw=0;
 uint32_t *infos=NULL;
         // default return value
@@ -488,6 +490,7 @@ uint32_t *infos=NULL;
         else
                 *rval=BOOLEAN_TO_JSVAL(false);
         leaveLock();
+#endif
         return JS_TRUE;
 
 }// end Codec

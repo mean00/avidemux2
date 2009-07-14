@@ -5,6 +5,18 @@
 #ifndef AUDIO_DEF
 #define AUDIO_DEF
 #include <string.h>
+
+
+/**
+    \enum FILMCONV
+*/
+typedef enum 
+{
+	FILMCONV_NONE=0,
+	FILMCONV_FILM2PAL=1,
+	FILMCONV_PAL2FILM=2,
+	FILMCONV_LAST
+}FILMCONV;
 /**
     \struct WAVHeader
 */

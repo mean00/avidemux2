@@ -107,7 +107,7 @@ IF (GETTEXT_FOUND)
 	INCLUDE_DIRECTORIES(${GETTEXT_INCLUDE_DIR})
 ENDIF (GETTEXT_FOUND)
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/")
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_audioFilter_old")
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_audioFilter/include")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_commonUI")
 #
 # Add main source
@@ -160,7 +160,6 @@ ADM_smjs
 SET(commonLibs1
 ADM_muxerGate 
 ADM_audioFilter
-ADM_audioFilter_old 
 ADM_editor 
 ADM_audiocodec 
 ADM_codecs 
