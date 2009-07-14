@@ -41,7 +41,7 @@
     \brief
 */
 
- 
+ uint8_t scratchPad[SCRATCH_PAD_SIZE];
 #define IMA_BUFFER 4096*8
 class ADM_AudiocodecImaAdpcm : public     ADM_Audiocodec
 {

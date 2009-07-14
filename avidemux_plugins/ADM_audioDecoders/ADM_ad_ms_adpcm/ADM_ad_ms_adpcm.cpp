@@ -36,7 +36,7 @@
     \class ADM_AudiocodecUlaw
     \brief
 */
-
+uint8_t scratchPad[SCRATCH_PAD_SIZE];
 class ADM_AudiocodecMsAdpcm : public     ADM_Audiocodec
 {
 	protected:
