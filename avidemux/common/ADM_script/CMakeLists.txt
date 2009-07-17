@@ -3,5 +3,5 @@ SET(ADM_script_SRCS
 	ADM_Avidemux.cpp       ADM_JSAvidemuxAudio.cpp  ADM_JSAvidemuxVideo.cpp  ADM_JSFunctions.cpp        DirectorySearch.cpp
         ADM_JSFunctionsNonRegFactory.cpp)
 
-ADD_LIBRARY(ADM_script STATIC ${ADM_script_SRCS})
-ADD_TARGET_CFLAGS(ADM_script "-DJS_THREADSAFE -DXP_UNIX")
+ADD_LIBRARY(ADM_script6 STATIC ${ADM_script_SRCS})
+ADD_TARGET_CFLAGS(ADM_script6 "-DJS_THREADSAFE -DXP_UNIX")

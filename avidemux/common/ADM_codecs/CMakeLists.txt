@@ -9,7 +9,7 @@ ADM_uyvy.cpp
 ADM_ffmpeg_vdpau.cpp
 )
 
-ADD_LIBRARY(ADM_codecs STATIC ${ADM_codecs_SRCS})
+ADD_LIBRARY(ADM_codecs6 STATIC ${ADM_codecs_SRCS})
 
 IF (USE_PNG)
 	 ADD_SOURCE_CFLAGS(ADM_png.cpp ${PNG_CFLAGS})

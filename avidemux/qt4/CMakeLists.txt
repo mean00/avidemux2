@@ -58,7 +58,7 @@ ENDFOREACH (_libName ${commonLibs})
 FOREACH (_libName ${commonLibs2})
         TARGET_LINK_LIBRARIES(avidemux2_qt4 ${_libName})
 ENDFOREACH (_libName ${commonLibs})
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filter)
+TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filter6)
 #############################################
 # Add qt specific libs
 #############################################

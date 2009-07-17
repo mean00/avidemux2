@@ -159,23 +159,23 @@ ADM_smjs
 # Add common libs
 #############################################
 SET(commonLibs1
-ADM_muxerGate 
-ADM_audioFilter
-ADM_editor 
-ADM_audiocodec 
-ADM_codecs 
-ADM_commonUI
+ADM_muxerGate6
+ADM_audioFilter6
+ADM_editor6
+ADM_audiocodec6 
+ADM_codecs6 
+ADM_commonUI6
 )
 SET(commonLibs2
-ADM_filter 
-ADM_osSupport 
-ADM_requant 
-ADM_script 
-ADM_toolkit 
-ADM_videoEncoder 
-ADM_video 
-ADM_videoFilter 
-ADM_internalVideoFilter
+ADM_filter6 
+ADM_osSupport6 
+ADM_requant6 
+ADM_script6 
+ADM_toolkit6
+ADM_videoEncoder6 
+ADM_video6 
+ADM_videoFilter6 
+ADM_internalVideoFilter6
 )
 
 # END

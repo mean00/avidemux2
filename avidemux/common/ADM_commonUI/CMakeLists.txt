@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_commonUI)
+SET(ADM_LIB ADM_commonUI6)
 
 SET(${ADM_LIB}_SRCS
 DIA_resizeWiz.cpp  

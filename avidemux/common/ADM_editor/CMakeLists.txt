@@ -13,4 +13,4 @@ ADM_edStub.cpp
 ADM_edPtsDts.cpp
 )
 
-ADD_LIBRARY(ADM_editor STATIC ${ADM_editor_SRCS})
+ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})

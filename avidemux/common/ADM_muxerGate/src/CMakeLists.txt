@@ -4,4 +4,4 @@ ADM_videoProcess.cpp
 ADM_createStreams.cpp
 )
 include_directories(../include)
-ADD_LIBRARY(ADM_muxerGate STATIC ${ADM_muxerGate_SRCS})
+ADD_LIBRARY(ADM_muxerGate6 STATIC ${ADM_muxerGate_SRCS})
