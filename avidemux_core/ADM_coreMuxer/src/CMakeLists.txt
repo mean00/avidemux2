@@ -5,9 +5,9 @@ ADM_muxerUtils.cpp
 ADM_audioClock.cpp
 )	
 #*************************************************
-ADD_LIBRARY(ADM_coreMuxer SHARED ${ADMcoreMuxer_SRCS})
+ADD_LIBRARY(ADM_coreMuxer6 SHARED ${ADMcoreMuxer_SRCS})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/avidemux/ADM_coreAudio/include)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/avidemux/ADM_libraries/ADM_ffmpeg)
-TARGET_LINK_LIBRARIES(ADM_coreMuxer ADM_coreImage ADM_coreAudio ADM_core ADM_libavcodec ADM_libavformat ADM_libavutil)
+TARGET_LINK_LIBRARIES(ADM_coreMuxer6 ADM_coreImage6 ADM_coreAudio6 ADM_core6 ADM_libavcodec6 ADM_libavformat6 ADM_libavutil6)
 
-ADM_INSTALL_LIB(ADM_coreMuxer)
+ADM_INSTALL_LIB(ADM_coreMuxer6)

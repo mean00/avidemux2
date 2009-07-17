@@ -5,7 +5,7 @@
 
 	ADD_LIBRARY(ADM_ae_twolame SHARED ${ADM_ae_twolame_SRCS})
 
-	TARGET_LINK_LIBRARIES(ADM_ae_twolame ADM_libtwolame ADM_core ADM_coreAudio ADM_coreUI)
+	TARGET_LINK_LIBRARIES(ADM_ae_twolame ADM_libtwolame )
         include_directories(ADM_libtwolame)
 
 

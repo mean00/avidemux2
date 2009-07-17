@@ -3,8 +3,8 @@ SET(ADM_CoreVideoEncoder_SRCS
         ADM_coreVideoEncoderFFmpeg.cpp
 )
 
-ADD_LIBRARY(ADM_coreVideoEncoder SHARED ${ADM_CoreVideoEncoder_SRCS})
-TARGET_LINK_LIBRARIES(ADM_coreVideoEncoder ADM_core ADM_coreUtils ADM_coreImage ADM_libavcodec ADM_libavutil )
+ADD_LIBRARY(ADM_coreVideoEncoder6 SHARED ${ADM_CoreVideoEncoder_SRCS})
+TARGET_LINK_LIBRARIES(ADM_coreVideoEncoder6 ADM_core6 ADM_coreUtils6 ADM_coreImage6 ADM_libavcodec6 ADM_libavutil6 )
 
-ADM_INSTALL_LIB(ADM_coreVideoEncoder)
+ADM_INSTALL_LIB(ADM_coreVideoEncoder6)
 

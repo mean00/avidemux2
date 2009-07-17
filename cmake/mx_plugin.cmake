@@ -2,6 +2,6 @@ MACRO(INIT_MUXER _lib)
 ENDMACRO(INIT_MUXER)
 
 MACRO(INSTALL_MUXER _lib)
-        TARGET_LINK_LIBRARIES(${_lib} ADM_core ADM_coreUtils ADM_coreAudio ADM_coreImage ADM_coreUI ADM_core ADM_coreMuxer)
+        TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUtils6 ADM_coreAudio6 ADM_coreImage6 ADM_coreUI6 ADM_core6 ADM_coreMuxer6)
 	INSTALL(TARGETS ${_lib} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins6/muxers/")
 ENDMACRO(INSTALL_MUXER)

@@ -7,7 +7,7 @@ SET(ADM_flv_SRCS
 
 ADD_LIBRARY(ADM_dm_flv SHARED ${ADM_flv_SRCS})
 
-TARGET_LINK_LIBRARIES(ADM_dm_flv ADM_libavutil)
+TARGET_LINK_LIBRARIES(ADM_dm_flv ADM_libavutil6)
 
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_libraries/ADM_ffmpeg")
 

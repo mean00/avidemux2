@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_smjs)
+SET(ADM_LIB ADM_smjs6)
 
 SET(${ADM_LIB}_SRCS 
 	jsapi.c    jsatom.c  jscntxt.c   jsdbgapi.c  jsemit.c  jsfun.c   jsinterp.c  jslong.c  jsobj.c     jsprf.c     jsscope.c   jsutil.c    prmjtime.c
@@ -20,6 +20,6 @@ ADD_TARGET_CFLAGS(${ADM_LIB} "-Dfree=ADM_dezalloc")
 ADD_TARGET_CFLAGS(${ADM_LIB} "-Dcalloc=ADM_calloc -I/usr/include/nspr")
 ADD_TARGET_CFLAGS(${ADM_LIB} "-Dfopen=ADM_fopen")
 
-TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core)
+TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6)
 
 ADM_INSTALL_LIB(${ADM_LIB} )

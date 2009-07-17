@@ -2,6 +2,6 @@ MACRO(INIT_DEMUXER _lib)
 ENDMACRO(INIT_DEMUXER)
 
 MACRO(INSTALL_DEMUXER _lib)
-        TARGET_LINK_LIBRARIES(${_lib} ADM_core ADM_coreUtils ADM_coreAudio ADM_coreImage ADM_coreUI ADM_core ADM_coreDemuxer)
+        TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUtils6 ADM_coreAudio6 ADM_coreImage6 ADM_coreUI6 ADM_core6 ADM_coreDemuxer6)
 	INSTALL(TARGETS ${_lib} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins6/demuxers/")
 ENDMACRO(INSTALL_DEMUXER)

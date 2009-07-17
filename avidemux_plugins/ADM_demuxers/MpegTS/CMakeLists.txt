@@ -13,7 +13,7 @@ SET(ADM_ts_SRCS
 )
 
 ADD_LIBRARY(ADM_dm_ts SHARED ${ADM_ts_SRCS})
-TARGET_LINK_LIBRARIES(ADM_dm_ts ADM_coreDemuxerMpeg ADM_audioParser  ADM_libavutil ADM_libavcodec ADM_libavformat)
+TARGET_LINK_LIBRARIES(ADM_dm_ts ADM_coreDemuxerMpeg6 ADM_audioParser6  ADM_libavutil6 ADM_libavcodec6 ADM_libavformat6)
 # For ffmpeg includes
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/") 
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_libraries") 

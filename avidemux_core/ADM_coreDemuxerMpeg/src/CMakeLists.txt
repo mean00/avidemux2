@@ -10,7 +10,7 @@ dmxPacket.cpp
 dmxPSPacket.cpp
 )	
 #*************************************************
-ADD_LIBRARY(ADM_coreDemuxerMpeg SHARED ${ADMcoreDemuxerMpeg_SRCS})
-TARGET_LINK_LIBRARIES(ADM_coreDemuxerMpeg ADM_core)
+ADD_LIBRARY(ADM_coreDemuxerMpeg6 SHARED ${ADMcoreDemuxerMpeg_SRCS})
+TARGET_LINK_LIBRARIES(ADM_coreDemuxerMpeg6 ADM_core6)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
-ADM_INSTALL_LIB(ADM_coreDemuxerMpeg)
+ADM_INSTALL_LIB(ADM_coreDemuxerMpeg6)

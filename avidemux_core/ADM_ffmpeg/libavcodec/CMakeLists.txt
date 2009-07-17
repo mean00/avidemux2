@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_libavcodec)
+SET(ADM_LIB ADM_libavcodec6)
 
 SET(${ADM_LIB}_SRCS 
 	adpcm.c  allcodecs.c  cyuv.c  dsputil.c  dv.c  error_resilience.c  fft.c  h263.c
@@ -66,6 +66,6 @@ IF (ADM_DEBUG AND ADM_CPU_X86_32)
 	ADD_SOURCE_CFLAGS(x86/snowdsp_mmx.c -O2)
 ENDIF (ADM_DEBUG AND ADM_CPU_X86_32)
 
-TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core ADM_libavutil ${ZLIB_LIBRARY})
+TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6 ADM_libavutil6 ${ZLIB_LIBRARY})
 
 ADM_INSTALL_LIB(${ADM_LIB} )
