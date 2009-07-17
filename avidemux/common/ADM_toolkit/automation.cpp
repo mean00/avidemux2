@@ -54,9 +54,6 @@ extern void A_saveAudioCopy(char *name);
 extern int A_loadNone( void );
 extern void A_saveAudioProcessed(char *name);
 extern uint8_t A_SaveAudioNVideo(char *name);
-extern int A_loadMP3(char *name);
-extern int A_loadAC3(char *name);
-extern int A_loadWave(char *name);
 extern void GUI_Quiet( void);
 extern bool A_parseECMAScript(const char *name);
 extern void GUI_Verbose( void);
@@ -171,10 +168,6 @@ AUTOMATON reaction_table[]=
 //                                                          ,(one_arg_type)call_packedvop},
         {"force-smart",   	0,"Engage smart copy mode with CQ=3 at next save"
                                                           ,(one_arg_type)call_forcesmart},
-        {"external-mp3",	1,"load external mpeg audio as audio track",(one_arg_type)A_loadMP3},
-        {"external-ac3",	1,"load external ac3 audio as audio track",(one_arg_type)A_loadAC3},
-        {"external-wav",	1,"load external wav audio as audio track",(one_arg_type)A_loadWave},
-        {"no-audio",		0,"load external wav audio as audio track",(one_arg_type)A_loadNone},
         {"audio-delay",		1,"set audio time shift in ms (+ or -)",	call_setAudio},
         {"audio-map",		0,"build audio map (MP3 VBR)",	call_buildtimemap},
         {"audio-bitrate",	1,"set audio encoding bitrate",	call_audiobitrate},

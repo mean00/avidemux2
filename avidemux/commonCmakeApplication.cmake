@@ -123,6 +123,7 @@ SET(ADM_EXE_SRCS
 ../common/gui_savenew.cpp  
 ../common/main.cpp  
 ../common/gui_action.cpp
+../common/gui_audio.cpp
 ../common/gui_blackframes.cpp
 ../common/ADM_imageLoader.cpp  
 ../common/ADM_gettext.cpp

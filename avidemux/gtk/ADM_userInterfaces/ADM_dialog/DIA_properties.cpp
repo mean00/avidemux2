@@ -15,7 +15,6 @@
 
 extern const char *getStrFromAudioCodec( uint32_t codec);
 static GtkWidget	*create_dialog1 (void);
-
 void DIA_properties( void )
 {
 

@@ -44,90 +44,78 @@ renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** A Function ***************
 //***********************************
-int A_delete(uint32_t start, uint32_t end);
-int A_loadWave (char *name);
-int A_loadAC3 (char *name);
-int A_loadMP3 (char *name);
-int A_loadNone( void );
-void A_externalAudioTrack( void );
+int     A_delete(uint32_t start, uint32_t end);
+void    A_externalAudioTrack( void );
 uint8_t A_rebuildKeyFrame (void);
-void A_openBrokenAvi (const char *name);
-int A_openAvi2 (const char *name, uint8_t mode);
-int A_appendAvi (const char *name);
-void A_saveWorkbench (const char *name);
+void    A_openBrokenAvi (const char *name);
+int     A_openAvi2 (const char *name, uint8_t mode);
+int     A_appendAvi (const char *name);
+void    A_saveWorkbench (const char *name);
 static void A_videoCheck( void);
 static void	A_setPostproc( void );
-void A_Resync(void);
-void A_addJob(void);
-void A_audioTrack(void);
+void    A_Resync(void);
+void    A_addJob(void);
+void    A_audioTrack(void);
 extern int A_Save(const char *name);
-int A_SaveWrapper( char *name);
-void A_parseECMAScript(const char *name);
+int     A_SaveWrapper( char *name);
+void    A_parseECMAScript(const char *name);
 extern uint8_t A_autoDrive(Action action);
-extern int A_SaveUnpackedVop(const char *name);
-extern int A_SavePackedVop(const char *name);
 uint8_t A_TimeShift(void);
-void A_ResetMarkers(void);
+void    A_ResetMarkers(void);
 extern void A_jog(void);
+uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 //***********************************
 //******** GUI Function**************
 //***********************************
 
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern uint8_t GUI_jobs(void);
-extern uint8_t GUI_getFrame(uint32_t frameno,  uint32_t *flags);
 extern const char * GUI_getCustomScript(uint32_t nb);
 
-extern void GUI_setName (char *n);
-uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
-extern int GUI_handleVFilter (void);
-extern void GUI_setMarks (uint32_t a, uint32_t b);
-extern void  GUI_displayBitrate( void );
-void GUI_showCurrentFrameHex(void);
-void GUI_showSize(void);
-void GUI_avsProxy(void);
-uint8_t GUI_close(void);
+extern uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
+extern int     GUI_handleVFilter (void);
+extern void    GUI_setMarks (uint32_t a, uint32_t b);
+extern void    GUI_displayBitrate( void );
+// Debug functions
+       void    GUI_showCurrentFrameHex(void);
+       void    GUI_showSize(void);
 
+       void    GUI_avsProxy(void);
+       uint8_t GUI_close(void);
+extern int     GUI_GoToFrame(uint32_t frame);;
 //***********************************
 //******** DIA Function**************
 //***********************************
 extern uint8_t DIA_about( void );
 extern uint8_t DIA_RecentFiles( char **name );
-extern void DIA_properties( void);
+extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
 extern uint8_t DIA_gotoTime(uint16_t *hh, uint16_t *mm, uint16_t *ss);
-extern uint8_t DIA_ocrGen(void);
-extern uint8_t DIA_ocrDvb(void);
-uint8_t DIA_builtin(void);
-extern void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );
-extern void DIA_glyphEdit(void);
+extern uint8_t DIA_builtin(void);
+extern void    DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );
 extern uint8_t DIA_pluginsInfo(void);
+
 extern void filterCleanUp (void);
 static void ReSync (void);
 static void cleanUp (void);
-void test_mpeg (char *name);
-void ADM_cutWizard (void);
-void updateLoaded (void);
+void        updateLoaded (void);
 extern void encoderSetLogFile (char *name);
 extern void videoCodecSelect (void);
-
-//
-
-uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 //__________
+extern bool parseECMAScript(const char *name);
 
-extern int  GUI_GoToFrame(uint32_t frame);;
 extern void videoCodecConfigureUI(int codecIndex = -1);
 extern void audioCodecChanged(int newcodec);
 extern void videoCodecChanged(int newcodec);
-
-extern bool parseECMAScript(const char *name);
-
 extern bool ADM_mux_configure(int index);
+//
+//  Sub gui files...
 //
 void HandleAction (Action action);
 void HandleAction_Navigate(Action action);
 void HandleAction_Save(Action action);
+//
+//
 /**
     \fn HandleAction
     \brief  serialization of user event through gui
@@ -213,9 +201,7 @@ int nw;
     case ACT_AudioCodec:
       audioCodecConfigure();
       return;
-
     case ACT_AudioFilters:
-    //  audioFilter_configureFilters ();
       audioFilterConfigure();
       return;
     case ACT_Pref:
@@ -254,9 +240,7 @@ int nw;
       switch (action)
         {
         case ACT_PlayAvi:
-
         case ACT_StopAvi:
-          A_playAvi ();
           break;
         default:
           return;
@@ -314,30 +298,18 @@ int nw;
                 changePreviewZoom(currentZoom);
                 admPreview::samePicture();
                 break;
-
-
-        case ACT_AUTO_VCD:
-        case ACT_AUTO_SVCD:
-        case ACT_AUTO_DVD:
-        case ACT_AUTO_PSP:
-        case ACT_AUTO_IPOD:
-        case ACT_AUTO_FLV:
-        case ACT_AUTO_PSP_H264:
-                A_autoDrive( action);
-                break;
-
-   case ACT_SelectTrack1:
+        case ACT_SelectTrack1:
                 A_audioTrack();
                 break;
 
-    case ACT_Bitrate:
+        case ACT_Bitrate:
     			{
 				uint32_t a,b;
 //				DIA_Calculator(&a,&b );
 			}
     			break;
 
-    case ACT_ADD_JOB:
+        case ACT_ADD_JOB:
             A_addJob();
             break;
 
@@ -380,36 +352,9 @@ int nw;
     case ACT_SetPostProcessing:
       A_setPostproc();
       break;
-
-   
     case ACT_AllBlackFrames:
       GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"), (SELFILE_CB *)A_ListAllBlackFrames);
         break;
-
- 
-
- 
-    case ACT_AudioSourceAvi:
-      //currentaudiostream=aviaudiostream;
-//      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
-      //wavinfo= currentaudiostream->getInfo();
-      break;
-
-    case ACT_AudioSourceMP3:
-      GUI_FileSelRead (QT_TR_NOOP("Select MP3 to Load"), (SELFILE_CB *)A_loadMP3);
-      break;
-    case ACT_AudioSourceAC3:
-      GUI_FileSelRead (QT_TR_NOOP("Select AC3 to Load"), (SELFILE_CB *)A_loadAC3);
-      break;
-    case ACT_AudioSourceWAV:
-      GUI_FileSelRead (QT_TR_NOOP("Select WAV to Load"),(SELFILE_CB *) A_loadWave);
-      break;
-    case ACT_AudioSourceNone:
-      //currentaudiostream=(AVDMGenericAudioStream *)NULL;
-//       A_changeAudioStream((AVDMGenericAudioStream *) NULL, AudioNone,NULL);
-      break;
-
-
     case ACT_MarkA:
     case ACT_MarkB:
     {
@@ -498,16 +443,6 @@ int nw;
       }
 
 #endif
-      break;
-
-    case ACT_AudioMap:
-      printf ("\n making audio timeline\n");
-      if (currentaudiostream)
-	{
-
-//	  currentaudiostream->buildAudioTimeLine ();
-
-	}
       break;
 
     case ACT_ChangeFPS:
@@ -621,6 +556,7 @@ A_openAvi (const char *name)
   return A_openAvi2 (name, 0);
 }
 extern void GUI_PreviewEnd (void);
+
 int A_openAvi2 (const char *name, uint8_t mode)
 {
   uint8_t res;
@@ -891,96 +827,6 @@ void ReSync (void)
 
 
 
-
-//____________________________________________________________
-//
-//      Play AVI  + Audio if possible
-//_____________________________________________________________
-void
-A_playAvi (void)
-{
-
-}
-
-//_____________________________________________________________
-//
-//              Load AC3
-//
-//
-//_____________________________________________________________
-int
-A_loadAC3 (char *name)
-{
-
-}
-int A_loadNone( void )
-{
-// 	A_changeAudioStream ((AVDMGenericAudioStream *) NULL, AudioNone,NULL);
-}
-
-//_____________________________________________________________
-//
-//              Load MP3 and identify wavfmt infos to fill avi header
-//              -> use mad ?
-//
-//_____________________________________________________________
-int A_loadMP3(char *name)
-{
-  }
-//_____________________________________________________________
-//
-//              Load wave
-//
-//
-//_____________________________________________________________
-
-int A_loadWave (char *name)
-{
-
-}
-#if 0
-AudioSource getCurrentAudioSource(char **name)
-{
-        *name=currentAudioName;
-        return currentAudioSource;
-}
-#endif
-//________________________________________________________
-// Change audio stream and delete the old one if needed
-//________________________________________________________
-#if 0
-uint8_t A_changeAudioStream (ADM_audioStream * newaudio, AudioSource nwsource,char *myname)
-{
-
-	if (currentaudiostream)
-	{
-		if (currentaudiostream != aviaudiostream)
-			delete currentaudiostream;
-
-		if(currentAudioName)
-			ADM_dealloc(currentAudioName);
-
-		currentAudioName = NULL;
-		currentAudioSource = AudioNone;
-	}
-
-  currentaudiostream = newaudio;
-
-  if (currentaudiostream)
-  {
-    wavinfo = currentaudiostream->getInfo ();
-    currentAudioSource=nwsource;
-    if(myname)
-        currentAudioName=ADM_strdup(myname);
-  }
-
-  return 1;
-}
-#endif
-
-
-
-
 //      Clean up
 //      free all pending stuff, make leakchecker happy
 //
@@ -1036,30 +882,12 @@ void cleanUp (void)
 #warning fixme
 
 
-extern void getCutPoints (int br);
-void
-ADM_cutWizard (void)
-{
-#if 0
-  int br;
-  if (currentaudiostream)
-    {
-      br = currentaudiostream->getInfo ()->byterate * 8 / 1000;
-    }
-  else
-    br = 128;
-
-  getCutPoints (br);
-#endif
-}
-
 
 void A_parseECMAScript(const char *name){
   bool ret;
   char *longname = ADM_PathCanonize(name);
    if (playing){
       GUI_PlayAvi();
-      curframe = 0;
    }
    ret = parseECMAScript(longname);
    if( ret == 0 ){
@@ -1107,7 +935,7 @@ else
 		GUI_Info_HIG(ADM_LOG_IMPORTANT,str, NULL);
 
 	}
-	GUI_GoToFrame(curframe);
+	GUI_GoToFrame(0);
 
 }
 int A_delete(uint32_t start, uint32_t end)
@@ -1415,18 +1243,16 @@ uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name)
 
 }
 #endif
-
+/**
+    \fn A_Resync
+    \brief 
+*/
 void A_Resync(void)
 {
-// Just in case update file info
         if(!avifileinfo) return;
         GUI_setAllFrameAndTime();
-
-        if(curframe>avifileinfo->nb_frames) curframe=frameEnd;
-        
         UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
-
-        GUI_GoToFrame(curframe);
+        GUI_GoToFrame(0);
 }
 uint8_t  DIA_job_select(char **jobname, char **filename);
 void A_addJob(void)
@@ -1455,26 +1281,6 @@ void A_addJob(void)
         ADM_dealloc(name);
         ADM_dealloc(final);
 }
-uint8_t  DIA_v2v(char **vobname, char **ifoname,char **vobsubname);
-uint8_t ADM_vob2vobsub(char *nameVob, char *nameVobSub, char *nameIfo);
-#if BAZOOKA
-int A_vob2vobsub(void)
-{
-        char *vob=NULL;
-        char *ifo=NULL;
-        char *vsub=NULL;
-        int r=0;
-        if(DIA_v2v(&vob,&ifo,&vsub))
-        {
-                r=ADM_vob2vobsub(vob,vsub,ifo);
-                ADM_dealloc(vob);
-                ADM_dealloc(ifo);
-                ADM_dealloc(vsub);
-        }
-        return r;
-
-}
-#endif
 ///
 ///	Return the frame # corresponding to the position of the scale/slider
 ///	Rougth estimation in fact
@@ -1489,8 +1295,6 @@ uint32_t GUI_GetScale(void)
     tg= (avifileinfo->nb_frames-1) * percent / 100.;
 
     return (uint32_t)floor(tg);;
-
-
 }
 
 
@@ -1526,9 +1330,6 @@ uint8_t GUI_close(void)
       wavinfo = NULL;
       avifileinfo = NULL;
       video_body->cleanup ();
-      curframe = 0;
-//      A_changeAudioStream (NULL, AudioNone,NULL);
-
       // Audio streams are cleared by editor
 
 	  aviaudiostream=NULL;
@@ -1647,8 +1448,6 @@ uint8_t *buffer;
  
 }
 
-// Temporary place...
-
 /**
  *      \fn UI_getPreferredRender
  *      \brief Returns to render lib the user preferred rendering method
@@ -1688,33 +1487,7 @@ ADM_RENDER_TYPE UI_getPreferredRender(void)
 
         return render;
 }
-/**
-        \fn getStrFromAudioCodec
-        \brief Return a plain string from the codec_id
-*/
-const char *getStrFromAudioCodec( uint32_t codec)
-{
-      switch(codec)
-      {
-              case WAV_DTS: return QT_TR_NOOP("DTS");
-              case WAV_PCM: return QT_TR_NOOP("PCM");
-              case WAV_MP2: return QT_TR_NOOP("MP2");
-              case WAV_MP3: return QT_TR_NOOP("MP3");
-              case WAV_WMA:  return QT_TR_NOOP("WMA");
-              case WAV_LPCM: return QT_TR_NOOP("LPCM");
-              case WAV_AC3:  return QT_TR_NOOP("AC3");
-              case WAV_OGG: return QT_TR_NOOP("Ogg Vorbis");
-              case WAV_MP4: return QT_TR_NOOP("MP4");
-              case WAV_AAC: return QT_TR_NOOP("AAC");
-              case WAV_QDM2: return QT_TR_NOOP("QDM2");
-              case WAV_AMRNB: return QT_TR_NOOP("AMR-NB");
-              case WAV_MSADPCM: return QT_TR_NOOP("MSADPCM");
-              case WAV_ULAW: return QT_TR_NOOP("ULAW");
-              case WAV_IMAADPCM: return QT_TR_NOOP("IMA ADPCM");
-              case WAV_8BITS_UNSIGNED:return QT_TR_NOOP("8-bit PCM");
-      }
-      return QT_TR_NOOP("Unknown codec");
-}
+
 /**
     \fn A_ResetMarkers
 */
