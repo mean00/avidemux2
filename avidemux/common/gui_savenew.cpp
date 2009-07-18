@@ -88,7 +88,7 @@ public:
         markerB=video_body->getMarkerBPts();
         muxerIndex=UI_GetCurrentFormat();
         videoEncoderIndex=UI_getCurrentVCodec();
-        printf("[Save] Encoder index=%d\n",index);
+        printf("[Save] Encoder index=%d\n",videoEncoderIndex);
 }
 /**
     \fn ~admSaver
