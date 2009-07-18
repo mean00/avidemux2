@@ -556,7 +556,7 @@ class diaElemTabs
   }
 };
 /**********************************************/
-#define DIA_MAX_FRAME 10
+#define DIA_MAX_FRAME 20
 class diaElemFrameBase :public diaElem
 {
 protected:
