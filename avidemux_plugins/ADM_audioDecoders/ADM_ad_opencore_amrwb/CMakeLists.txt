@@ -8,7 +8,7 @@ IF (OPENCORE_AMRWB_FOUND)
 	SET(ADM_ad_opencore_amrwb_SRCS ADM_ad_opencore_amrwb.cpp)
 
 	ADD_LIBRARY(ADM_ad_opencore_amrwb SHARED ${ADM_ad_opencore_amrwb_SRCS})
-	TARGET_LINK_LIBRARIES(ADM_ad_opencore_amrwb ADM_core ${OPENCORE_AMRWB_LIBRARY_DIR})
+	TARGET_LINK_LIBRARIES(ADM_ad_opencore_amrwb  ${OPENCORE_AMRWB_LIBRARY_DIR})
 
 	ADD_TARGET_CFLAGS(ADM_ad_opencore_amrwb "-I${OPENCORE_AMRWB_INCLUDE_DIR}")
 
