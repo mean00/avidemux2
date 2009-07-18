@@ -106,7 +106,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     }
     _context->extradata=(uint8_t *)d;
     _context->extradata_size=(int)l;
-    printf(" Using %"LU" bytes of extra header data\n",l);
+    //printf(" Using %"LU" bytes of extra header data\n",l);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
 
    AVCodec *codec=avcodec_find_decoder(_context->codec_id);
