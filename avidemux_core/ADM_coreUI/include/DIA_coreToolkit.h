@@ -41,7 +41,7 @@ int             GUI_Question(const char *alertstring);
 // Give some time to the UI to handle its events
 void            GUI_Sleep(uint32_t ms);
 // Ask to choose between choice1 and choice2
-int             GUI_Alternate(char *title,char *choice1,char *choice2);
+int             GUI_Alternate(const char *title,const char *choice1,const char *choice2);
 
 
 // Set ui in verbose mode (default). Show all popup & questions

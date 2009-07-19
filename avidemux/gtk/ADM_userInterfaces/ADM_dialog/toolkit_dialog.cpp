@@ -348,7 +348,7 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
 	UI_purge();
 	return ret;
 }
-extern int GUI_Alternate(char *title,char *choice1,char *choice2);
+extern int GUI_Alternate(const char *title,const char *choice1,const char *choice2);
 extern DIA_workingBase *createWorking(const char *title);
 extern DIA_encodingBase *createEncodingGtk(uint32_t fps1000);
 } // End of namespace

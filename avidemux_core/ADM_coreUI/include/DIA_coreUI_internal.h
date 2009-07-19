@@ -121,7 +121,7 @@ typedef void            CREATE_GUI_ERROR_HIG(const char *primary, const char *se
 typedef int             CREATE_GUI_CONFIRMATION_HIG(const char *button_confirm, const char *primary, const char *secondary_format);
 typedef int             CREATE_GUI_YESNO(const char *primary, const char *secondary_format);
 typedef int             CREATE_GUI_QUESTION(const char *alertstring);
-typedef int             CREATE_GUI_ALTERNATE(char *title,char *choice1,char *choice2);
+typedef int             CREATE_GUI_ALTERNATE(const char *title,const char *choice1,const char *choice2);
 typedef void            CREATE_GUI_VERBOSE(void);
 typedef void            CREATE_GUI_QUIET(void);
 typedef uint8_t			CREATE_GUI_IS_GUIET(void);

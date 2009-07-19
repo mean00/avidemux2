@@ -65,7 +65,7 @@ void alert_cb_ko(void)
 //_______________________________
 namespace ADM_GtkCoreUIToolkit
 {
-int GUI_Alternate(char *title,char *choice1,char *choice2)
+int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
     GtkWidget *window1;
     GtkWidget *vbox1;

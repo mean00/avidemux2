@@ -171,7 +171,7 @@ int             GUI_Question(const char *alertstring)
     \brief Popup a dialog box name title with 2 buttons (choice1/choice2)
     \return 0 if first is selected, 1 if second
 */
-int      GUI_Alternate(char *title,char *choice1,char *choice2)
+int      GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
 int reply;
 QMessageBox *box;

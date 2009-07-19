@@ -46,9 +46,9 @@ propWindow::propWindow() : QDialog()
 #define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d);ui.a->setText(text);}
 #define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e);ui.a->setText(text);}
         
-        FILLTEXT4(labeImageSize,QT_TR_NOOP("%lu x %lu"), avifileinfo->width,avifileinfo->height);
+        FILLTEXT4(labeImageSize,QT_TR_NOOP("%"LU" x %"LU), avifileinfo->width,avifileinfo->height);
         FILLTEXT(labelFrameRate, QT_TR_NOOP("%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
-        FILLTEXT(labelNbOfFrames,QT_TR_NOOP("%ld frames"), avifileinfo->nb_frames);
+        FILLTEXT(labelNbOfFrames,QT_TR_NOOP("%"LU" frames"), avifileinfo->nb_frames);
         FILLTEXT(label4CC, "%s",      fourCC::tostring(avifileinfo->fcc));
         if (avifileinfo->nb_frames)
           {
@@ -86,8 +86,8 @@ propWindow::propWindow() : QDialog()
                 }
 
                 FILLQT_TR_NOOP(labelChannels);
-                FILLTEXT(labelFrequency, QT_TR_NOOP("%lu Hz"), wavinfo->frequency);
-                FILLTEXT4(labelBitrate, QT_TR_NOOP("%lu Bps / %lu kbps"), wavinfo->byterate,wavinfo->byterate * 8 / 1000);
+                FILLTEXT(labelFrequency, QT_TR_NOOP("%"LU" Hz"), wavinfo->frequency);
+                FILLTEXT4(labelBitrate, QT_TR_NOOP("%"LU" Bps / %"LU" kbps"), wavinfo->byterate,wavinfo->byterate * 8 / 1000);
                 
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
                 FILLQT_TR_NOOP(labelACodec);

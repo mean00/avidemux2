@@ -149,7 +149,7 @@ uint8_t ADM_ad_loadPlugins(const char *path)
 	for(int i=0;i<nbFile;i++)
 		tryLoadingAudioPlugin(files[i]);
 
-	printf("[ADM_ad_plugin] Scanning done, found %u codec\n", ADM_audioPlugins.size());
+	printf("[ADM_ad_plugin] Scanning done, found %d codec\n", (int)ADM_audioPlugins.size());
 
 	return 1;
 }

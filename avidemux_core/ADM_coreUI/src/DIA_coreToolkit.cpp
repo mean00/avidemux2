@@ -135,7 +135,7 @@ int             GUI_Question(const char *alertstring)
  *  \brief Ask to choose between choice1 and choice2
  * 
  */
-int             GUI_Alternate(char *title,char *choice1,char *choice2)
+int             GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
 	ADM_assert(Toolkit);
 	return Toolkit->alternate(title,choice1,choice2);	

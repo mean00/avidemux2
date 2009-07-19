@@ -11,11 +11,11 @@ char* ms2timedisplay(uint32_t ms)
 	
 	if (mm > 1)
 	{
-		sprintf(string, QT_TR_NOOP("%lu minutes"), mm);
+		sprintf(string, QT_TR_NOOP("%"LU" minutes"), mm);
 	}
 	else if (mm == 1)
 	{
-		sprintf(string, QT_TR_NOOP("%lu minute"), mm);
+		sprintf(string, QT_TR_NOOP("%"LU" minute"), mm);
 	}
 	else
 	{
@@ -23,11 +23,11 @@ char* ms2timedisplay(uint32_t ms)
 
 		if (ss == 1)
 		{
-			sprintf(string, QT_TR_NOOP("%lu second"), ss);
+			sprintf(string, QT_TR_NOOP("%"LU" second"), ss);
 		}
 		else
 		{
-			sprintf(string, QT_TR_NOOP("%lu seconds"), ss);
+			sprintf(string, QT_TR_NOOP("%"LU" seconds"), ss);
 		}
 	}
 

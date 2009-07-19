@@ -347,7 +347,7 @@ uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
 	for (k = 0; !f && (k < imgfmt); k++)
 	  {
 #ifdef VERBOSE_XV
-	      printf("[Xvideo]%d/%d: %lx %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
+	      printf("[Xvideo]%d/%d: %"LX" %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
 #endif
 
 	      if (!strcmp(formatValues[k].guid, "YV12"))

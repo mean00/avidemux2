@@ -137,7 +137,7 @@ uint8_t       DIA_progressIndexing::update(uint32_t done,uint32_t total, uint32_
         dialog->setTime(string);
         
 
-        sprintf(string,QT_TR_NOOP("# Images :%0lu"),nbImage);
+        sprintf(string,QT_TR_NOOP("# Images :%0"LU),nbImage);
         dialog->setImage(string);
 
         f=done;

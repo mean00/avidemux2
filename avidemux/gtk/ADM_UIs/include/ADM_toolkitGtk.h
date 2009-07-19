@@ -53,7 +53,7 @@ void  UI_centreCanvasWindow(GtkWindow *window, GtkWidget *canvas, int newCanvasW
 #endif
 
 #define QT_TR_NOOP(String) String // FIXME
-#warning FIXME TRANSLATE
+//#warning FIXME TRANSLATE
 
 
 #endif

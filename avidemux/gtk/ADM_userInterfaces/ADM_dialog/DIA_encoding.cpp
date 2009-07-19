@@ -436,7 +436,7 @@ uint32_t tim;
 void DIA_encodingGtk::setQuantIn(int size)
 {
       ADM_assert(dialog);
-          sprintf(string,"%lu",size);
+          sprintf(string,"%d",size);
           gtk_label_set_text(GTK_LABEL(WID(label_quant)),string);
 
 }
