@@ -204,8 +204,10 @@ void AVDM_cleanup(void)
 		device=NULL;
 	}
 }
-// Switch the audio device class we are using
-//
+/**
+    \fn AVDM_switch
+    \brief Change audio device
+*/
 void AVDM_switch(AUDIO_DEVICE action)
 {
 	if(device)

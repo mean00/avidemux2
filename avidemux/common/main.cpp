@@ -283,9 +283,7 @@ int main(int argc, char *argv[])
 	}
 
     ADM_lavInit();
-#ifdef HAVE_AUDIO
     AVDM_audioInit();
-#endif
 
     if(SpidermonkeyInit() == true)
         printf("Spidermonkey initialized.\n");

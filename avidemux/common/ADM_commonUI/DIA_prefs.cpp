@@ -432,9 +432,12 @@ char     *globalGlyphName=NULL;
                 }
 #endif
                 // Device
+                //printf("[AudioDevice] Old : %d, new :%d\n",olddevice,newdevice);
                 if(olddevice!=newdevice)
                 {
-                      AVDM_switch((AUDIO_DEVICE)newdevice);
+                      AVDM_switch((AUDIO_DEVICE)newdevice); // Change current device
+                      AVDM_audioSave();                     // Save it in prefs
+                      AVDM_audioInit();                     // Respawn
                 }
                 // Downmixing (default)
                 prefs->set(DOWNMIXING_PROLOGIC,downmix);
@@ -483,6 +486,7 @@ char     *globalGlyphName=NULL;
 				// Initialise SDL again as driver may have changed
 				initSdl(render);
 			#endif
+                
 	}
         for(int i=0;i<nbAudioDevice+1;i++)
         {
