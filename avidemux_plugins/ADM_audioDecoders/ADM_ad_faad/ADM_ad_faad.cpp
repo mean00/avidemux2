@@ -150,7 +150,7 @@ uint8_t first=0;
 			res=faacDecInit(_instance,inptr,nbIn,&srate,&chan);
 			if(res>=0)
 			{
-				printf("Faad Inited : rate:%"LU" chan:%"LU" off:%"LD"\n",srate,chan,res);
+				printf("Faad Inited : rate:%"LU" chan:%"LU" off:%ld\n",srate,chan,res);
 				_inited=1;
 				first=1;
 				_inbuffer=0;
