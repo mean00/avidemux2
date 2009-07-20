@@ -328,14 +328,14 @@ uint32_t rd;
 			fseeko(_fd,_Tracks[i].strh.offset,SEEK_SET);
 			if(_Tracks[i].strh.size!=sizeof(_videostream))
 			{
-				printf("Mmm(1) we have a bogey here, size mismatch : %lu\n",_Tracks[i].strh.size);
-				printf("expected %lu\n",sizeof(_videostream));
+				printf("[AVI]Mmm(1) we have a bogey here, size mismatch : %"LLU"\n",_Tracks[i].strh.size);
+				printf("[AVI]expected %d\n",(int)sizeof(_videostream));
 				if(_Tracks[i].strh.size<sizeof(_videostream)-8) // RECT is not mandatory
 				{
                                   GUI_Error_HIG(QT_TR_NOOP("Malformed header"), NULL);
 					return 0;
 				}		
-				printf("Trying to continue anyway\n");			
+				printf("[AVI]Trying to continue anyway\n");			
 			}
 			fread(&_videostream,sizeof(_videostream),1,_fd);
 #ifdef ADM_BIG_ENDIAN
@@ -362,7 +362,7 @@ uint32_t rd;
 		extra=_Tracks[vidTrack].strf.size-sizeof(_video_bih);
 		if(extra<0)
 		{	
-			printf("bih is not big enough (%lu/%lu)!\n",_Tracks[vidTrack].strf.size,sizeof(_video_bih));
+			printf("[AVI]bih is not big enough (%"LLU"/%d)!\n",_Tracks[vidTrack].strf.size,(int)sizeof(_video_bih));
 			return 0;
 		}
 		fread(&_video_bih,sizeof(_video_bih),1,_fd);
@@ -403,14 +403,14 @@ uint32_t rd;
                                         fseeko(_fd,_Tracks[run].strh.offset,SEEK_SET);
                                         if(_Tracks[run].strh.size != sizeof(_audiostream))
                                         {
-                                                printf("Mmm(2) we have a bogey here, size mismatch : %lu\n",_Tracks[run].strh.size);
-                                                printf("expected %lu\n",sizeof(_audiostream));
+                                                printf("[AVI]Mmm(2) we have a bogey here, size mismatch : %"LLU"\n",_Tracks[run].strh.size);
+                                                printf("[AVI]expected %d\n",(int)sizeof(_audiostream));
                                                 if(_Tracks[run].strh.size<sizeof(_audiostream)-8)
                                                 {
                                                   GUI_Error_HIG(QT_TR_NOOP("Malformed header"), NULL);
                                                         return 0;
                                                 }
-                                                printf("Trying to continue anyway\n");			
+                                                printf("[AVI]Trying to continue anyway\n");			
                                         }
                                         fread(track->avistream,sizeof(_audiostream),1,_fd);
 #ifdef ADM_BIG_ENDIAN
@@ -427,8 +427,8 @@ uint32_t rd;
                                         extra=_Tracks[run].strf.size-sizeof(WAVHeader);
                                         if(extra<0)
                                         {	
-                                                printf("WavHeader is not big enough (%lu/%lu)!\n",
-                                                _Tracks[run].strf.size,sizeof(WAVHeader));
+                                                printf("[AVI]WavHeader is not big enough (%"LLU"/%d)!\n",
+                                                _Tracks[run].strf.size,(int)sizeof(WAVHeader));
                                                 return 0;
                                         }
                                         fread(track->wavHeader,sizeof(WAVHeader),1,_fd);				
@@ -589,14 +589,14 @@ uint32_t count=0;
 			if(_Tracks[i].strh.size!=sizeof(tmp))
 			{
 				
-				printf("Mmm(3) we have a bogey here, size mismatch : %lu\n",_Tracks[i].strh.size);
-				printf("expected %lu\n",sizeof(tmp));
+				printf("[AVI]Mmm(3) we have a bogey here, size mismatch : %"LLU"\n",_Tracks[i].strh.size);
+				printf("[AVI]expected %d\n",(int)sizeof(tmp));
 				if(_Tracks[i].strh.size<sizeof(tmp)-8)
 				{
                                   GUI_Error_HIG(QT_TR_NOOP("Malformed header"), NULL);
 					return 0;
 				}		
-				printf("Trying to continue anyway\n");			
+				printf("[AVI]Trying to continue anyway\n");			
 			}
 			
 			
@@ -754,7 +754,7 @@ void OpenDMLHeader::walk(riffParser *p)
 				aprintf("main header found \n");
 				if(len!=sizeof(_mainaviheader))
 				{
-					printf("oops : %u / %lu\n",len,sizeof(_mainaviheader));
+					printf("[AVI]oops : %"LU" / %d\n",len,(int)sizeof(_mainaviheader));
 				}
 				p->read(len,(uint8_t *)&_mainaviheader);
 
@@ -765,7 +765,7 @@ void OpenDMLHeader::walk(riffParser *p)
 				break;
 		case MKFCC('i','d','x','1'):
                                 _regularIndex.offset=p->getPos();
-                                printf("[Avi] Idx1 found at offset %lx\n",_regularIndex.offset);
+                                printf("[Avi] Idx1 found at offset %"LLX"\n",_regularIndex.offset);
                                 _regularIndex.size=len;
 				return;
 				break;				

@@ -889,7 +889,7 @@ void aviWrite::odml_write_dummy_chunk(AviList* alist, uint64_t* fpos, uint32_t s
 	if(doODML!=NO){
 		// save file position
 		*fpos=alist->Tell();
-		aprintf("[ODML]write dummy chunk at file position %lu with data size %u\n",*fpos, size);
+		aprintf("[ODML]write dummy chunk at file position %"LLU" with data size %"LU"\n",*fpos, size);
 		// generate dummy data
 		uint8_t* dummy=(uint8_t*)ADM_alloc (size);
 		memset(dummy,0,size);
@@ -979,7 +979,8 @@ void aviWrite::odml_write_sindex(int stream_nbr, const char* stream_fcc)
 #ifndef MOVINDEX
 		_file->seek(startAt);
 #endif
-		aprintf("\nwriting super index at file pos %lu, total available size %u\n",odml_indexes[stream_nbr].fpos,pad);
+		aprintf("[AVI]writing super index at file pos %"LLU", total available size %"LU"\n",
+                            odml_indexes[stream_nbr].fpos,pad);
 		AviList* LIndex =  new AviList("JUNK", _file);	// abused writing aid (don't call Begin or End; the fcc is unused until 'Begin')
                 uint32_t nbEntries=odml_indexes[stream_nbr].index_count+1;
 		LIndex->Write32("indx");			// 4cc
@@ -999,14 +1000,14 @@ void aviWrite::odml_write_sindex(int stream_nbr, const char* stream_fcc)
                         LIndex->Write64(pos);	//absolute file position
                         LIndex->Write32(32 + 8 * odml_index_size);	// complete index chunk size
                         LIndex->Write32(odml_indexes[stream_nbr].odml_index[a].nEntriesInUse);	// duration
-                        aprintf("\nstream %u, index %u Position: %lu  EntriesInUse:%u\n",stream_nbr, a ,pos,
+                        aprintf("[AVI]stream %d, index %"LU" Position: %"LLU"  EntriesInUse:%"LU"\n",stream_nbr, a ,pos,
                         odml_indexes[stream_nbr].odml_index[a].nEntriesInUse);
 		}
                 uint32_t at=LIndex->Tell();
 
                 int32_t junkLen=endAt-at-8;
                 ADM_assert(junkLen>=9);
-                printf("Padding ODML index with junk of size %d, total padding %u\n",junkLen, odml_indexes[stream_nbr].pad);
+                printf("[AVI]Padding ODML index with junk of size %"LD", total padding %u\n",junkLen, odml_indexes[stream_nbr].pad);
 		delete LIndex;
 // Now create out junk chunk if needed, to padd the odml
                 AviList *Junk=new AviList("JUNK",_file);
@@ -1047,8 +1048,8 @@ bool aviWrite::odml_write_index(int stream_nbr, const char* stream_fcc, const ch
 				odml_index_data_t* idxd=idx->index+b;	// access to index data
 				rel_pos=idxd->fpos-base_off;	// get relative file position
 				if(rel_pos>(uint64_t)4*1024*1024*1024){	// index chunks have a maximum offset of 4GB
-					printf("\nData rate too high for index size. Decrease index duration.\n"); // decrease the multiplicator in saveBegin that calculates odml_index_size
-					printf("base:%lu abs:%lu rel:%lu stream:%d index:%d entry:%d",base_off,idxd->fpos,rel_pos,stream_nbr,a,b);
+					printf("[AVI]Data rate too high for index size. Decrease index duration.\n"); // decrease the multiplicator in saveBegin that calculates odml_index_size
+					printf("[AVI]base:%"LLU" abs:%"LLU" rel:%"LLU" stream:%d index:%d entry:%d",base_off,idxd->fpos,rel_pos,stream_nbr,a,b);
 					delete LIndex;
 					return false;
 				}
@@ -1073,12 +1074,12 @@ void aviWrite::odml_riff_break(uint32_t len){	// advance to the next riff if req
 		// will we get over the next GB border?
 		if( len2>((uint64_t)1024*1024*1024*(odml_riff_count+1)) ){
 			if(doODML==HIDDEN){
-				aprintf("\nstarting new (hidden) RIFF at %lu\n",LMovie->Tell());
+				aprintf("[AVI]starting new (hidden) RIFF at %"LLU"\n",LMovie->Tell());
 				if(odml_riff_count<4)	// we have only 4 buffers but this has to be enough
 					odml_write_dummy_chunk(LMovie, odml_riff_fpos+odml_riff_count, 16);	// write dummy
 				if(odml_riff_count==0) odml_frames_inAVI=vframe-1;	// rescue number of frames in first AVI (-1 since there may be no audio for the last video frame)
 			}else{	// restart riff and movie
-				aprintf("\nstarting new RIFF at %lu\n",LMovie->Tell());
+				aprintf("[AVI]starting new RIFF at %"LLU"\n",LMovie->Tell());
 				// restart lists
 				LMovie->End();
 				LAll->End();
@@ -1090,7 +1091,7 @@ void aviWrite::odml_riff_break(uint32_t len){	// advance to the next riff if req
 		// ODML required for movie?
 		if(doODML==HIDDEN){
 			if( ((uint64_t)getPos()+len+17) >= ((uint64_t)4*1024*1024*1024) ){	//if (written data + new chunk + index (old type) for new chunk + possible padding) does not fit into 4GB
-				printf("\nswitching to ODML mode at %lu\n",LMovie->Tell());
+				printf("[AVI]switching to ODML mode at %"LLU"\n",LMovie->Tell());
 				uint64_t last_pos=LMovie->Tell();	// rescue current file position
 				// close First RIFF
 				for(int a=0;a<4;++a){	// for each hidden riff

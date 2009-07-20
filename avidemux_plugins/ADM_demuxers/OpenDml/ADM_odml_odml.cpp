@@ -167,8 +167,8 @@ OPENDML_INDEX 	masterIndex;
 uint32_t 	i,j;
 
 	// Jump to index of vidTrack
-	printf("Trying ODML super index..\n");
-#define szeof(x) printf("Sizeof "#x":%"LLU"\n",sizeof(x));
+	printf("[AVI]Trying ODML super index..\n");
+#define szeof(x) printf("Sizeof "#x":%d\n",(int)sizeof(x));
         szeof(OPENDML_INDEX);
         szeof(OPENDML_ENTRY);
         szeof(OPENML_SECONDARY_INDEX);
@@ -176,30 +176,30 @@ uint32_t 	i,j;
 
 	if(!_Tracks[track].indx.offset)
 	{
-		printf("No indx field.\n");
+		printf("[AVI]No indx field.\n");
 		return 0;
 	}
 	fseeko(_fd,_Tracks[track].indx.offset,SEEK_SET);
         if(!readMasterIndex(&masterIndex,_fd))   //if(1!=fread(&masterIndex,sizeof(masterIndex),1,_fd))
 		{
-			printf("Problem reading master index\n");
+			printf("[AVI]Problem reading master index\n");
 			return 0;
 		}
 	if(masterIndex.indexType) // not a super index ?
 		{
-			printf("Not a super index!\n");
+			printf("[AVI]Not a super index!\n");
 			return 0;
 		}
-	printf("Master index of "),fourCC::print(masterIndex.chunkId);printf(" found\n");
-	printf("SubType : %"LU"\n",masterIndex.indexSubType);
+	printf("[AVI]Master index of "),fourCC::print(masterIndex.chunkId);printf(" found\n");
+	printf("[AVI]SubType : %"LU"\n",masterIndex.indexSubType);
 
 
 
 	OPENDML_ENTRY superEntries[masterIndex.nbEntryInUse];
-	printf("We have %"LU" indeces\n",masterIndex.nbEntryInUse);
+	printf("[AVI]We have %"LU" indeces\n",masterIndex.nbEntryInUse);
         if(!readSuperEntries(superEntries,masterIndex.nbEntryInUse,_fd)) //if(1!=fread(superEntries,sizeof(OPENDML_ENTRY)*masterIndex.nbEntryInUse,1,_fd))
 	{
-		printf("Problem reading indices\n");
+		printf("[AVI]Problem reading indices\n");
 		return 0;
 	}
 	// now we have the master index complete
@@ -214,7 +214,7 @@ uint32_t 	i,j;
 		fread(&len,4,1,_fd);
                 if(!readSecondary(&second,_fd)) //if(1!=fread(&second,sizeof(second),1,_fd))
 		{
-			printf("Problem reading secondary index (%u/%u) trying to continue \n",i,masterIndex.nbEntryInUse);
+			printf("[AVI]Problem reading secondary index (%u/%u) trying to continue \n",i,masterIndex.nbEntryInUse);
 			goto _cntue;
 		}
 		total+=second.nbEntryInUse;
