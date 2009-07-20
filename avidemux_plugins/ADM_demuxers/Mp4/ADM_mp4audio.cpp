@@ -93,7 +93,7 @@ bool      ADM_mp4AudioAccess::goToTime(uint64_t timeUs)
 uint64_t target=timeUs;
 		if(target>_index[_nb_chunks-1].dts)
 		{
-			printf("[MP4]: going out of time asked %lu : avail %lu\n",timeUs/1000,_index[_nb_chunks-1].dts/1000);
+			printf("[MP4]: going out of time asked %"LLU" : avail %"LLU"\n",timeUs/1000,_index[_nb_chunks-1].dts/1000);
 			_current_index=_nb_chunks-1;
 			return true;
 		}

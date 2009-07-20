@@ -106,7 +106,7 @@ again:
     {
         if(abs(lastDts-packetBufferDts)>ADM_ALLOWED_DRIFT_US)
         {
-            printf("[Composer::getPCMPacket] drift %d, computed :%lu got %lu\n",(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
+            printf("[Composer::getPCMPacket] drift %d, computed :%"LLU" got %"LLU"\n",(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
             if(packetBufferDts<lastDts)
             {
                 printf("[Composer::getPCMPacket] Dropping packet %"LU" last =%"LU"\n",(uint32_t)(lastDts/1000),(uint32_t)(packetBufferDts/1000));

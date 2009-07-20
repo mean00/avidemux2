@@ -29,7 +29,7 @@ echo " Core needs to be installed, installing through sudo make install ...."
 cd $TOP/buildCore && sudo make install
 echo "** QT4 **"
 cd $TOP
-Process buildQt4 ../avidemux/qt4
+#Process buildQt4 ../avidemux/qt4
 echo "** GTK **"
 cd $TOP
 Process buildGtk ../avidemux/gtk

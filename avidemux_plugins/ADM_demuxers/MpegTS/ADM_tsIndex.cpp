@@ -401,7 +401,7 @@ resume:
                             zprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
                             if(SEI_nal.payloadSize>=7)
                                 decodeSEI(SEI_nal.payloadSize-4,SEI_nal.payload,&recoveryCount);
-                            else printf("[SEI] Too short size+4=%d\n",SEI_nal.payload);
+                            else printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                         
 
                             goto resume;

@@ -104,7 +104,7 @@ bool ossAudioDevice::localInit(void)
 {
 	
     int fq=_frequency;
-    printf("[OSSS]: %lu Hz, %lu channels\n", _frequency, _channels);
+    printf("[OSSS]: %"LU" Hz, %"LU" channels\n", _frequency, _channels);
     // open OSS device
     oss_fd = open(dsp, O_WRONLY /*| O_NONBLOCK*/);
     if (oss_fd == -1) {

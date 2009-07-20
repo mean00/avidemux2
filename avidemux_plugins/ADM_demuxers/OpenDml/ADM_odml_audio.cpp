@@ -109,7 +109,7 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
         }
         total+=index[i].size;
     }
-    printf("[aviAudioAccess] Seek to pos %lu failed\n",pos);
+    printf("[aviAudioAccess] Seek to pos %"LLU" failed\n",pos);
     return 0;
 }
 /**

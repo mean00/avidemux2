@@ -436,7 +436,7 @@ uint8_t probe(adm_fast_memcpy func,char *name)
 	stop=rdtsc();
 	ADM_dealloc(src);
 	ADM_dealloc(dst);
-	printf("Method :%s \tTime:%lu\n",name,stop-start);
+	printf("Method :%s \tTime:%"LLU"\n",name,stop-start);
 	return 1;
 
 }

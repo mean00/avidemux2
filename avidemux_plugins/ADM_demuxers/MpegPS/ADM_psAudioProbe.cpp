@@ -83,7 +83,7 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
     }
 
 end:
-    printf("[PsDemux] Audio probe done, found %lu tracks\n",tracks->size());
+    printf("[PsDemux] Audio probe done, found %d tracks\n",(int)tracks->size());
     delete packet;
     
     if(tracks->size()==0) 

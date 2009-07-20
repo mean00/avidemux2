@@ -149,7 +149,7 @@ uint8_t adm_atom::readPayload( uint8_t *whereto, uint32_t rd)
 	pos=ftello(_fd);
 	if(pos+rd>_atomSize+_atomStart)
 	{
-		printf("\n Going out of atom's bound!! (%ld  / %ld )\n",pos+rd,_atomSize+_atomStart);
+		printf("\n Going out of atom's bound!! (%"LLD"  / %"LLD" )\n",pos+rd,_atomSize+_atomStart);
 		dumpAtom();
 		exit(0);
 	}

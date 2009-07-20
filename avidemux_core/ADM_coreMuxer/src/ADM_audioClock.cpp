@@ -51,7 +51,7 @@ bool           audioClock::setTimeUs(uint64_t clk)
                 uint64_t curTime=getTimeUs();
                 int64_t delta=(int64_t)clk-(int64_t)curTime;
                 if(abs(delta)<2000) return true;
-                printf("[audioClock] Drift detected :%lu vs %lu, delta=%ld\n",curTime,clk,delta);
+                printf("[audioClock] Drift detected :%"LLU" vs %"LLU", delta=%"LLD"\n",curTime,clk,delta);
                 _nbSamples=0;
                 _baseClock=clk;
                 return true; 
