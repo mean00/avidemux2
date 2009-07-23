@@ -1440,7 +1440,7 @@
                         <child>
                           <widget class="GtkImage" id="image591">
                             <property name="visible">True</property>
-                            <property name="pixbuf">play.xpm</property>
+                            <property name="pixbuf">play.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1461,7 +1461,7 @@
                         <child>
                           <widget class="GtkImage" id="image5056">
                             <property name="visible">True</property>
-                            <property name="pixbuf">stop.xpm</property>
+                            <property name="pixbuf">stop.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1483,7 +1483,7 @@
                         <child>
                           <widget class="GtkImage" id="image593">
                             <property name="visible">True</property>
-                            <property name="pixbuf">backward.xpm</property>
+                            <property name="pixbuf">previous-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1505,7 +1505,7 @@
                         <child>
                           <widget class="GtkImage" id="image594">
                             <property name="visible">True</property>
-                            <property name="pixbuf">forward.xpm</property>
+                            <property name="pixbuf">next-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1527,7 +1527,7 @@
                         <child>
                           <widget class="GtkImage" id="image595">
                             <property name="visible">True</property>
-                            <property name="pixbuf">Kbackward.xpm</property>
+                            <property name="pixbuf">previous-key-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1549,7 +1549,7 @@
                         <child>
                           <widget class="GtkImage" id="image596">
                             <property name="visible">True</property>
-                            <property name="pixbuf">Kforward.xpm</property>
+                            <property name="pixbuf">next-key-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1570,7 +1570,7 @@
                         <child>
                           <widget class="GtkImage" id="image2306">
                             <property name="visible">True</property>
-                            <property name="pixbuf">markA.xpm</property>
+                            <property name="pixbuf">markA.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1591,7 +1591,7 @@
                         <child>
                           <widget class="GtkImage" id="image2307">
                             <property name="visible">True</property>
-                            <property name="pixbuf">markB.xpm</property>
+                            <property name="pixbuf">markB.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1612,7 +1612,7 @@
                         <child>
                           <widget class="GtkImage" id="image2308">
                             <property name="visible">True</property>
-                            <property name="pixbuf">xpm_prevblack.xpm</property>
+                            <property name="pixbuf">previous-black-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1633,7 +1633,7 @@
                         <child>
                           <widget class="GtkImage" id="image2309">
                             <property name="visible">True</property>
-                            <property name="pixbuf">xpm_nextblack.xpm</property>
+                            <property name="pixbuf">next-black-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1654,7 +1654,7 @@
                         <child>
                           <widget class="GtkImage" id="image5057">
                             <property name="visible">True</property>
-                            <property name="pixbuf">begin.xpm</property>
+                            <property name="pixbuf">first-frame.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -1675,7 +1675,7 @@
                         <child>
                           <widget class="GtkImage" id="image2245">
                             <property name="visible">True</property>
-                            <property name="pixbuf">end.xpm</property>
+                            <property name="pixbuf">last-frame.png</property>
                           </widget>
                         </child>
                       </widget>
