@@ -87,6 +87,11 @@ muxerFlv::~muxerFlv()
 bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
     uint32_t fcc=s->getFCC();
+    bool r=true;
+    uint32_t videoExtraDataSize=0;
+    uint8_t  *videoExtraData;
+    char *fileTitle=NULL;
+        
      if(fourCC::check(fcc,(uint8_t *)"FLV1") || isVP6Compatible(fcc))
      {
 
@@ -136,15 +141,17 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 	if (!video_st)
 	{
 		printf("[FLV] new stream failed\n");
-		return false;
+		r=false;
+        goto finish;
 	}
     AVCodecContext *c;
 	c = video_st->codec;
-
+        video_st->sample_aspect_ratio.num=1;
+        video_st->sample_aspect_ratio.den=1;
   // probably a memeleak here
-        char *foo=ADM_strdup(file);
+        fileTitle=ADM_strdup(file);
 
-        strcpy(oc->title,ADM_GetFileName(foo));
+        strcpy(oc->title,ADM_GetFileName(fileTitle));
         strcpy(oc->author,"Avidemux");
         c->sample_aspect_ratio.num=1;
         c->sample_aspect_ratio.den=1;
@@ -171,8 +178,6 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
                         ADM_assert(0);
                 }
 
-        uint32_t videoExtraDataSize=0;
-        uint8_t  *videoExtraData;
         s->getExtraData(&videoExtraDataSize,&videoExtraData);
         if(videoExtraDataSize)
         {
@@ -191,7 +196,7 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c->flags=CODEC_FLAG_QSCALE;
         c->width = s->getWidth();
         c->height =s->getHeight();
-
+        
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         c->gop_size=15;
 
@@ -213,7 +218,9 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
           if (!audio_st)
           {
                   printf("[FLV]: new stream failed (audio)\n");
-                  return false;
+                  r=false;
+                  goto finish;
+                                 
           }
           WAVHeader *audioheader=a[0]->getInfo();;
 
@@ -241,6 +248,8 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
                                   break;
                   default:
                                  printf("[FLV]: Unsupported audio\n");
+                                 r=false;
+                                 goto finish;
                                  return false;
                           break;
           }
@@ -253,6 +262,7 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         }
         // /audio
+        
         oc->mux_rate=10080*1000;
         oc->preload=AV_TIME_BASE/10; // 100 ms preloading
         oc->max_delay=200*1000; // 500 ms
@@ -264,14 +274,21 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         if (url_fopen(&(oc->pb), file, URL_WRONLY) < 0)
         {
             printf("[FLV]: Failed to open file :%s\n",file);
-            return false;
+            r=false;
+            goto finish;
         }
 
-        ADM_assert(av_write_header(oc)>=0);
+        if(av_write_header(oc)<0)
+        {
+            printf("[Flv Muxer] Muxer rejected the parameters\n");
+            r=false;
+            
+        }
+finish:
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
-        return true;
+        return r;
 }
 
 /**

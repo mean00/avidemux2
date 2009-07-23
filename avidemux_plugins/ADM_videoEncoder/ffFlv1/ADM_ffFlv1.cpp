@@ -1,6 +1,6 @@
 /***************************************************************************
-                          \fn ADM_ffMsMpeg4
-                          \brief Front end for libavcodec MsMpeg4 aka divx3 encoder
+                          \fn ADM_ffFlv1
+                          \brief Front end for libavcodec Flv1 encoder
                              -------------------
     
     copyright            : (C) 2002/2009 by mean
@@ -36,7 +36,7 @@ static FFcodecSetting Flv1Settings=
     1500,           //uint32_t          bitrate;      /// In kb/s 
     700,            //uint32_t          finalsize;    /// In ?
     1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
-    ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
+    ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR
     },
           ME_EPZS,			// ME
           0,				// GMC     
@@ -102,7 +102,6 @@ bool ADM_ffFlv1Encoder::setup(void)
                 return false;
             }
             break;
-      case COMPRESS_SAME:
       case COMPRESS_CQ:
             _context->flags |= CODEC_FLAG_QSCALE;
             _context->bit_rate = 0;
@@ -114,7 +113,7 @@ bool ADM_ffFlv1Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
-    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MSMPEG4V3))
+    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_FLV1))
         return false;
 
     printf("[ffFlv1] Setup ok\n");
@@ -149,13 +148,6 @@ again:
     if(!q) q=2;
     switch(Settings.params.mode)
     {
-      case COMPRESS_SAME:
-                // Keep same frame type & same Qz as the incoming frame...
-            _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
-            if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
-            else                                _frame.pict_type=FF_P_TYPE;
-
-            break;
       case COMPRESS_2PASS:
       case COMPRESS_2PASS_BITRATE:
             switch(pass)
@@ -256,7 +248,7 @@ uint32_t me=(uint32_t)conf->me_method;
         diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
         
          diaElemTabs *tabs[]={&tabMode,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),3,tabs))
+        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec FLV1 configuration"),3,tabs))
         {
           conf->me_method=(Motion_Est_ID)me;
           return true;
