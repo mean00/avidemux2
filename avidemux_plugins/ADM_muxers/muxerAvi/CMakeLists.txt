@@ -6,8 +6,6 @@ SET(ADM_avi_SRCS
         op_aviwrite.cpp
         avilist.cpp
 
-#	avilist.cpp  op_avisavecopy_pack.cpp   op_avisave.cpp   op_aviwrite.cpp   op_savesmart.cpp
-#	op_avisavecopy.cpp  op_avisavecopy_unpack.cpp  op_avisavedual.cpp  op_saveprocess.cpp
 )
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxer/include")
 
