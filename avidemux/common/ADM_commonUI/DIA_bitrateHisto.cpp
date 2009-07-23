@@ -1,11 +1,8 @@
 /***************************************************************************
-                          ADM_guiBitrate  -  description
-                             -------------------
+                            \file   ADM_guiBitrate 
+                            \brief	Simple bitrate analyzer
 
-	Simple bitrate analyzer
-
-    begin                : Mon Aug 31 2003
-    copyright            : (C) 2003 by mean
+    copyright            : (C) 2003/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -19,18 +16,15 @@
  ***************************************************************************/
 
 #include <math.h>
-
-#include "config.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_factory.h"
-#include "avi_vars.h"
-
+#include "ADM_editor/ADM_edit.hxx"
 /**
       \fn GUI_displayBitrate
       \brief display a bargraph with bitrates
 */
-
+extern ADM_Composer *video_body;
 void GUI_displayBitrate( void )
 {
 
@@ -40,7 +34,7 @@ void GUI_displayBitrate( void )
 
  float f;
 
- float display[20];
+float    display[20];
 uint32_t medium=0;
 uint32_t nbIFrame=0;
 uint32_t nbPFrame=0;
@@ -48,33 +42,44 @@ uint32_t nbBFrame=0;
 uint32_t curBFrame=0;
 uint32_t maxBFrame=0;
 	// 1st compute the total
-	
+	uint32_t start,end;
+    uint64_t deltaTime=video_body->getMarkerBPts()-video_body->getMarkerAPts();
+    start=video_body->searchFrameBefore(video_body->getMarkerAPts());
+    end=video_body->searchFrameBefore(video_body->getMarkerBPts());
+    
+    // Se
 	max=0;
-	if(!(frameEnd>frameStart) || abs(frameStart-frameEnd)<5)
+	if((deltaTime<100000LL) || abs(start-end)<5)
 	{
           GUI_Error_HIG(QT_TR_NOOP("No data"), NULL);
 		return ;
 	}
+    uint64_t increment=video_body->getFrameIncrement();
+    f=increment;
+    if(f<1000) f=1000;
 
-	round=((avifileinfo->fps1000+990)/1000);
+    f=1000000./f; // ~ FPS
+    f=f*1000;     // 1000*fps
+    uint32_t fps1000=(uint32_t)f;
+	round= (fps1000+990)/1000; // round up of fps
 	if(!round) return;
 
-	video_body->getFrameSize (frameStart, &len);
+    printf("[Histogram] fps roundup %"LU" fps, time increment=%"LLU" us\n",round,increment);
+	video_body->getFrameSize (start, &len);
 	for(k=0;k<round;k++) average[k]=0;
 
 	sum=0;
 	changed=0;
-        total=0;
-        uint32_t flags;
-	// 1 st pass, compute max
-        /*
-            to do so : We compute the sum of frame size on [changed] frames i.e ~ 1 second
-        
+    total=0;
+    uint32_t flags;
+
+        /*  1 st pass, compute max
+            to do so : We compute the sum of frame size on [changed] frames i.e ~ 1 second        
         */
-	for( k=frameStart;k<frameEnd;k++)
+	for( k=start;k<end;k++)
 	{
  		video_body->getFrameSize (k, &len);
-                total+=len;
+        total+=len;
 		sum-=average[changed];
 		average[changed]=len;
 		sum+=average[changed];
@@ -82,30 +87,30 @@ uint32_t maxBFrame=0;
 		if(sum>max) max=sum;
 		changed++;
 		changed%=round;
-                video_body->getFlags (k, &flags);
-                if(!flags) 
-                {
-                  nbPFrame++;
-                  curBFrame=0;
-                }
-                if(flags==AVI_KEY_FRAME) 
-                {
-                  nbIFrame++;
-                  curBFrame=0;
-                }
-                if(flags==AVI_B_FRAME)
-                {
-                  nbBFrame++;
-                  curBFrame++;
-                  if(curBFrame>maxBFrame) 
-                    maxBFrame=curBFrame;
-                  
-                }
+        video_body->getFlags (k, &flags);
+        if(!flags) 
+        {
+          nbPFrame++;
+          curBFrame=0;
+        }
+        if(flags==AVI_KEY_FRAME) 
+        {
+          nbIFrame++;
+          curBFrame=0;
+        }
+        if(flags==AVI_B_FRAME)
+        {
+          nbBFrame++;
+          curBFrame++;
+          if(curBFrame>maxBFrame) 
+            maxBFrame=curBFrame;
+          
+        }
 	}
         
         float g=total;
-        g/=(frameEnd-frameStart);
-        g*=avifileinfo->fps1000;
+        g/=(end-start);
+        g*=fps1000; //avifileinfo->fps1000;
         g/=(1000.*1000.);
         medium=(uint32_t)(g*8);
         
@@ -124,11 +129,11 @@ uint32_t maxBFrame=0;
           GUI_Error_HIG(QT_TR_NOOP("No data"), NULL);
 		return ;
 	}
-	nb_frame=frameEnd-frameStart;
+	nb_frame=end-start;
 	// and now build an histogram
 	for(k=0;k<20;k++) display[k]=0;
 
-	video_body->getFrameSize (frameStart, &len);
+	video_body->getFrameSize (start, &len);
 	for(k=0;k<round;k++) average[k]=0;
 
 	sum=0;
@@ -136,7 +141,7 @@ uint32_t maxBFrame=0;
         uint32_t step=max/20;
         uint32_t sumkb;
         
-	for(uint32_t k=frameStart;k<frameEnd;k++)
+	for(uint32_t k=start;k<end;k++)
 	{
 		video_body->getFrameSize (k, &len);
 		// which case ?
@@ -190,21 +195,6 @@ uint32_t maxBFrame=0;
           bar[19-i]=new  diaElemBar((uint32_t)display[i],str);
             
         }
-/*
-        diaElemUInteger mx(&max,"Max bitrate",0,9999999);
-        diaElemUInteger med(&medium,"Average bitrate",0,9999999);
-        diaElemUInteger nI(&nbIFrame,"Number of I frames",0,9999999);
-        diaElemUInteger nP(&nbPFrame,"Number of P frames",0,9999999);
-        diaElemUInteger nB(&nbBFrame,"Number of B frames",0,9999999);
-        diaElemUInteger nMB(&maxBFrame,"Max B frames",0,9999999);
-
-        mx.setRo();
-        med.setRo();
-        nI.setRo();
-        nP.setRo();
-        nB.setRo();
-        nMB.setRo();
-*/
 #define DOME(a,b,c)       sprintf(bf,"%u",b); diaElemReadOnlyText a(bf,c);
         char bf[100];
         DOME(mx,max,QT_TR_NOOP("Max. bitrate:"));
@@ -233,5 +223,4 @@ uint32_t maxBFrame=0;
           delete bar[i];
         }
 }
-
-
+//EOF
