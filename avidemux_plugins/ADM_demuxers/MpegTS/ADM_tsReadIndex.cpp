@@ -1,4 +1,7 @@
 /***************************************************************************
+        \file ADM_tsReadIndex.cpp
+        \brief Read ts index
+
     copyright            : (C) 2007/2009 by mean
     email                : fixounet@free.fr
     
