@@ -21,6 +21,7 @@
 #include "ADM_ts.h"
 
 #include <math.h>
+#define TS_MAX_LINE 10000
 /**
         \fn readIndex
         \brief Read the [video] section of the index file
@@ -28,14 +29,14 @@
 */
 bool    tsHeader::readIndex(indexFile *index)
 {
-char buffer[2000];
+char buffer[TS_MAX_LINE];
 bool firstAudio=true;
         printf("[TsDemuxerer] Reading index\n");
         if(!index->goToSection("Data")) return false;
       
         while(1)
         {
-            if(!index->readString(2000,(uint8_t *)buffer)) return true;
+            if(!index->readString(TS_MAX_LINE,(uint8_t *)buffer)) return true;
             if(buffer[0]=='[') return true;
             if(buffer[0]==0xa || buffer[0]==0xd) continue; // blank line
             // Now split the line
