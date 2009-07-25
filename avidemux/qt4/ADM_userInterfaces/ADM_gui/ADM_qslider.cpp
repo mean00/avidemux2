@@ -11,10 +11,11 @@ Custom slider
 *   (at your option) any later version.                                   *
 *                                                                         *
 ***************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <QtGui/QPainter>
 #include <QtGui/QSlider>
-
 #include "ADM_qslider.h"
 
 ADM_QSlider::ADM_QSlider(QWidget *parent) : QSlider(parent)
