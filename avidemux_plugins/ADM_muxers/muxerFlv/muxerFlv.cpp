@@ -302,19 +302,16 @@ bool muxerFlv::save(void)
     uint32_t len,flags;
     uint64_t pts,dts,rawDts;
     uint64_t lastVideoDts=0;
-    uint64_t videoIncrement;
     int ret;
+    bool result=true;
     int written=0;
-    float f=(float)vStream->getAvgFps1000();
-    f=1000./f;
-    f*=1000000;
-    videoIncrement=(uint64_t)f;
 #define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
     uint8_t *audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
 
 
     printf("[FLV]avg fps=%u\n",vStream->getAvgFps1000());
     AVRational *scale=&(video_st->codec->time_base);
+    initUI("Saving Flv file..");
     while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
     {
 	AVPacket pkt;
@@ -327,6 +324,11 @@ bool muxerFlv::save(void)
             {
                 lastVideoDts=dts;
             }
+            if(false==updateUI(lastVideoDts))
+            {
+                result=false;
+                goto abt;
+             }
 #define RESCALE(x) x=rescaleLavPts(x,scale);
 
             dts=lastVideoDts/1000;
@@ -394,10 +396,12 @@ bool muxerFlv::save(void)
             }
 
     }
+abt:
+    closeUI();
     delete [] buffer;
     delete [] audioBuffer;
     printf("[FLV] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
-    return true;
+    return result;
 }
 /**
     \fn close

@@ -61,3 +61,47 @@ uint64_t rescaleLavPts(uint64_t us, AVRational *scale)
     i*=scale->num;
     return i;
 }
+/**
+    \fn     initUI
+    \brief  initialize the progress bar
+*/
+bool     ADM_muxer::initUI(const char *title)
+{
+ float f=(float)vStream->getAvgFps1000();
+        f=1000./f;
+        f*=1000000;
+        videoIncrement=(uint64_t)f;  // Video increment in AVI-Tick
+        videoDuration=vStream->getVideoDuration();
+
+        encoding=createWorking(title);
+        return true;
+}
+/**
+        \fn updateUI
+        \brief Update the progress bar
+        @return false if abort request, true if keep going
+*/
+
+bool     ADM_muxer::updateUI(uint64_t time)
+{
+            ADM_assert(encoding);
+            uint32_t  percent=(100*time)/videoDuration;
+            if(percent>100) percent=100;
+            encoding->update(percent);
+            if(!encoding->isAlive()) 
+            {
+                return false;
+            }
+            return true;
+}
+/**
+        \fn closeUI
+*/
+
+bool     ADM_muxer::closeUI(void)
+{
+        if(encoding) delete encoding;
+        encoding=NULL;
+        return true;
+}
+// EOF

@@ -20,9 +20,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "muxerAvi.h"
-#include "DIA_coreToolkit.h"
-#include "DIA_encoding.h"
-//#include "DIA_encoding.h"
+
 
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 #define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
@@ -146,14 +144,9 @@ bool muxerAvi::save(void)
     uint32_t len,flags;
     uint64_t pts,dts,rawDts;
     uint64_t lastVideoDts=0;
-    uint64_t videoIncrement;
-    uint64_t videoDuration=vStream->getVideoDuration();
     int ret;
     int written=0;
-    float f=(float)vStream->getAvgFps1000();
-    f=1000./f;
-    f*=1000000;
-    videoIncrement=(uint64_t)f;  // Video increment in AVI-Tick
+   
 
     audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
     videoBuffer=new uint8_t[bufSize];
@@ -165,7 +158,8 @@ bool muxerAvi::save(void)
     if(dts==ADM_NO_PTS) dts=0;
     lastVideoDts=dts;
 
-    encoding=createWorking("Saving avi");
+    initUI("Saving Avi");
+    
 
     while(1)
     {
@@ -190,28 +184,23 @@ bool muxerAvi::save(void)
 
             fillAudio(aviTime+videoIncrement);    // and matching audio
 
-
-            uint32_t  percent=(100*aviTime)/videoDuration;
-            if(percent>100) percent=100;
-            
-            encoding->update(percent);
-            if(!encoding->isAlive()) 
-            {
+            if(updateUI(aviTime)==false)
+            {  
                 result=false;
                 goto abt;
             }
-
+           
             written++;
             aviTime+=videoIncrement;
     }
 abt:
+    closeUI();
     writter.setEnd();
     delete [] videoBuffer;
     videoBuffer=NULL;
     delete [] audioBuffer;
     audioBuffer=NULL;
     printf("[AviMuxer] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
-    
     return result;
 }
 /**

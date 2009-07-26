@@ -9,6 +9,9 @@
 #include "ADM_default.h"
 #include "ADM_audioStream.h"
 #include "DIA_working.h"
+#include "DIA_coreToolkit.h"
+#include "DIA_encoding.h"
+
 /**
     \class ADM_videoStream
 
@@ -19,6 +22,8 @@ protected:
             uint32_t width,height,averageFps1000;
             uint32_t fourCC;
             bool     isCFR;
+
+
             DIA_workingBase *encoding;
 public:
                       ADM_videoStream() {};
@@ -45,18 +50,24 @@ protected:
                 ADM_videoStream *vStream;       // Internal copy of the parameters
                 ADM_audioStream  **aStreams;
                 uint32_t         nbAStreams;
+
+
+                uint64_t videoIncrement; // Used/set by initUI
+                uint64_t videoDuration;
                 DIA_workingBase  *encoding;
                 
 public:
                           ADM_muxer() {vStream=NULL;aStreams=NULL;nbAStreams=0;encoding=NULL;};
-        virtual           ~ADM_muxer() {if(encoding) delete encoding;encoding=NULL;};
+        virtual           ~ADM_muxer() {closeUI();};
         virtual bool      open(const char *filename,   ADM_videoStream *videoStream,
                                 uint32_t nbAudioTrack, ADM_audioStream **audioStreams)=0;
 
         virtual  bool     save(void)=0;
         virtual  bool     close(void)=0; 
         
-
+        virtual  bool     initUI(const char *title);
+        virtual  bool     updateUI(uint64_t time);
+        virtual  bool     closeUI(void);
 
 };
 #endif

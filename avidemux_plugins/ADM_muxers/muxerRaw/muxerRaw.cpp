@@ -78,29 +78,29 @@ bool muxerRaw::save(void)
     uint64_t pts,dts,rawDts;
     uint64_t lastVideoDts=0;
     int written=0;
-    uint64_t videoDuration=vStream->getVideoDuration();
+    bool result=true;
 
-    encoding=createWorking("Saving raw video");
+    initUI("Saving raw video");
     while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
     {
-            float p=0.5;
-            if(videoDuration && dts!=ADM_NO_PTS)
-                    p=dts/videoDuration;
-            p=p*100;
-            encoding->update((uint32_t)p);
-            if(!encoding->isAlive()) 
-            {
-                break;
-            }
+        if(dts==ADM_NO_PTS)
+            dts=lastVideoDts+videoIncrement;
+        if(updateUI(dts)==false)
+        {
+            result=false;
+            goto abt;
+        }
         fwrite(buffer,len,1,file);
         written++;
 
     }
+abt:
+    closeUI();
     delete [] buffer;
     fclose(file);
     file=NULL;
     printf("[RAW] Wrote %d frames \n",written);
-    return true;
+    return result;
 }
 /**
     \fn close
