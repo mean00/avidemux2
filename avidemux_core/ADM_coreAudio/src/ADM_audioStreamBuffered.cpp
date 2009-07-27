@@ -120,11 +120,11 @@ bool      ADM_audioStreamBuffered::goToTime(uint64_t nbUs)
 */
 bool      ADM_audioStreamBuffered::needBytes(uint32_t nbBytes)
 {
-    if((limit-start)>=nbBytes) return true;
-    refill();
-    if((limit-start)>=nbBytes) return true;
-    return false;
-
+    while(1)
+    {
+        if((limit-start)>=nbBytes) return true;
+        if(false==refill()) return false;
+    }
 }
 /**
     \fn skipBytes

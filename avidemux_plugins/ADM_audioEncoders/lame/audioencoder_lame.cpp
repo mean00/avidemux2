@@ -220,17 +220,19 @@ bool AUDMEncoder_Lame::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
     }
   dither16 (&(tmpbuffer[tmphead]), _chunk, wavheader.channels);
   ADM_assert (tmptail >= tmphead);
+  int16_t *sample16=(int16_t *)& (tmpbuffer[tmphead]);
   if (wavheader.channels == 1)
     {
-      nbout =	lame_encode_buffer (MYFLAGS, (int16_t *) & (tmpbuffer[tmphead]),
-			    (int16_t *) & (tmpbuffer[tmphead]), _chunk, dest,
+      nbout =	lame_encode_buffer (MYFLAGS, 
+                sample16,
+			    sample16, _chunk, dest,
 			    16 * 1024);
 
     }
   else
     {
       nbout =	lame_encode_buffer_interleaved (MYFLAGS,
-					(int16_t *) & (tmpbuffer[tmphead]),
+					sample16,
 					_chunk / 2, dest, 16 * 1024);
     }
   tmphead += _chunk;
