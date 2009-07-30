@@ -62,9 +62,10 @@ create_aboutdialog1 (void)
   gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (aboutdialog1), authors);
   gtk_about_dialog_set_artists (GTK_ABOUT_DIALOG (aboutdialog1), artists);
   gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (aboutdialog1), QT_TR_NOOP("translator-credits"));
+#if 0
   aboutdialog1_logo_pixbuf = create_pixbuf ("avidemux_icon.xpm");
   gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (aboutdialog1), aboutdialog1_logo_pixbuf);
-
+#endif
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (aboutdialog1, aboutdialog1, "aboutdialog1");
 
