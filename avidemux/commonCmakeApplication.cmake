@@ -70,14 +70,14 @@ ENDIF (WIN32)
 include(FindThreads)
 INCLUDE(admCheckRequiredLibs)
 include(admCheckMiscLibs)
+include( admGetRevision)
 ########################################
 # Subversion
 ########################################
 MESSAGE("")
 MESSAGE(STATUS "Checking for SCM")
 MESSAGE(STATUS "****************")
-include( admGetRevision)
-admGetRevision()
+admGetRevision( ${AVIDEMUX_TOP_SOURCE_DIR} ADM_SUBVERSION)
 MESSAGE("")
 ########################################
 # Add include dirs
