@@ -34,6 +34,7 @@ IF (${Avidemux_SOURCE_DIR} MATCHES ${Avidemux_BINARY_DIR})
 ENDIF (${Avidemux_SOURCE_DIR} MATCHES ${Avidemux_BINARY_DIR})
 
 INCLUDE(admConfigHelper)
+include( admGetRevision)
 
 IF (FRESH_BUILD)
 	MESSAGE("")
@@ -105,8 +106,7 @@ ENDIF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 MESSAGE("")
 MESSAGE(STATUS "Checking for SCM")
 MESSAGE(STATUS "****************")
-include( admGetRevision)
-admGetRevision()
+admGetRevision( ${AVIDEMUX_TOP_SOURCE_DIR} ADM_SUBVERSION)
 MESSAGE("")
 
 
