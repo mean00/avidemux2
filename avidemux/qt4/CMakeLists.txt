@@ -30,7 +30,7 @@ INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/qt4/")
 ###########################################
 # Executable
 ###########################################
-ADD_EXECUTABLE(avidemux2_qt4 ${ADM_EXE_SRCS})
+ADD_EXECUTABLE(avidemux3_qt4 ${ADM_EXE_SRCS})
 ########################################
 # Add subdirectories 
 ########################################
@@ -47,34 +47,34 @@ ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
 ###########################################
 
 IF (ADM_DEBUG AND FIND_LEAKS)
-	TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_nvwa)
+	TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_nvwa)
 ENDIF (ADM_DEBUG AND FIND_LEAKS)
 
 FOREACH (_libName ${commonLibs1})
-        TARGET_LINK_LIBRARIES(avidemux2_qt4 ${_libName})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${_libName})
 ENDFOREACH (_libName ${commonLibs})
 
 
 FOREACH (_libName ${commonLibs2})
-        TARGET_LINK_LIBRARIES(avidemux2_qt4 ${_libName})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${_libName})
 ENDFOREACH (_libName ${commonLibs})
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filter6)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_filter6)
 #############################################
 # Add qt specific libs
 #############################################
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UIQT4)
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_dialogQt4)
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_guiQt4)
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_filtersQt4)
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UIQT4)
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_guiQt4)
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ADM_UI_QT4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UIQT4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_dialogQt4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_guiQt4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_filtersQt4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UIQT4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_guiQt4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UI_QT4)
 ###########################################
 # Construct Core libraries
 ###########################################
 
 FOREACH (_libName ${coreLibs})
-        TARGET_LINK_LIBRARIES(avidemux2_qt4 ${_libName})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${_libName})
 ENDFOREACH (_libName ${commonLibs})
         
 
@@ -83,32 +83,32 @@ ENDFOREACH (_libName ${commonLibs})
 ###########################################
 # gettext
 IF (GETTEXT_FOUND)
-	TARGET_LINK_LIBRARIES(avidemux2_qt4 ${GETTEXT_LIBRARY_DIR})
+	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${GETTEXT_LIBRARY_DIR})
 ENDIF (GETTEXT_FOUND)
 
 
 # PNG
 IF (USE_PNG)
-        TARGET_LINK_LIBRARIES(avidemux2_qt4 ${PNG_LIBRARIES})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${PNG_LIBRARIES})
 	
 ENDIF (USE_PNG)
 
 
 # XVideo
 IF (USE_XV)
-        TARGET_LINK_LIBRARIES(avidemux2_qt4 ${XVIDEO_LIBRARY_DIR})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${XVIDEO_LIBRARY_DIR})
 ENDIF (USE_XV)
 
 # SDL
 IF (USE_SDL)
-        TARGET_LINK_LIBRARIES(avidemux2_qt4 ${SDL_LIBRARY})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${SDL_LIBRARY})
 ENDIF (USE_SDL)
 
 ###########################################
 # UI Specific
 ###########################################
-ADD_TARGET_LDFLAGS(avidemux2_qt4  ${GTHREAD_LDFLAGS})
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
+ADD_TARGET_LDFLAGS(avidemux3_qt4  ${GTHREAD_LDFLAGS})
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 
 ###########################################
 # OS Specific
@@ -117,22 +117,22 @@ IF (WIN32)
 	target_link_libraries(ADM_osSupport)
 
 	IF (MINGW)
-		target_link_libraries(avidemux2_qt4 -mno-cygwin)
+		target_link_libraries(avidemux3_qt4 -mno-cygwin)
 	ENDIF (MINGW)
 
-	target_link_libraries(avidemux2_qt4 winmm)
-        ADD_TARGET_LDFLAGS(avidemux2_qt4 "-mwindows")
+	target_link_libraries(avidemux3_qt4 winmm)
+        ADD_TARGET_LDFLAGS(avidemux3_qt4 "-mwindows")
 
 ENDIF (WIN32)
 #
 # xml
 #
-TARGET_LINK_LIBRARIES(avidemux2_qt4 ${LIBXML2_LIBRARIES})
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ${LIBXML2_LIBRARIES})
 
 ###########################################
 # Install
 ###########################################
-ADM_LINK_THREAD(avidemux2_qt4)
-ADM_INSTALL_BIN(avidemux2_qt4)
+ADM_LINK_THREAD(avidemux3_qt4)
+ADM_INSTALL_BIN(avidemux3_qt4)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/qt4/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/qt4") 
 include(./qt4PackageDebian.cmake)
