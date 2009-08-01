@@ -159,18 +159,28 @@ uint8_t ADM_ad_loadPlugins(const char *path)
  */
 ADM_Audiocodec *ADM_ad_searchCodec(uint32_t fourcc,	WAVHeader *info,uint32_t extraLength,uint8_t *extraData)
 {
+    int best=0;
+    int index=-1;
 	for(int i=0;i<ADM_audioPlugins.size();i++)
 	{
 		ADM_ad_plugin *a=ADM_audioPlugins[i];
 		ADM_assert(a);
 		ADM_assert(a->supportedFormat);
-		aprintf("[ADM_ad_plugin]Format 0x%x : probing %s\n",fourcc,a->name);
-		if(a->supportedFormat(fourcc)==true)
-		{
-			ADM_assert(a->create);
-			return a->create(fourcc, info,extraLength,extraData);
-		}
+		
+        int score=a->supportedFormat(fourcc);
+        aprintf("[ADM_ad_plugin]Format 0x%x : probing %s score %d\n",fourcc,a->name,score);
+        if(score>best)
+        {
+            index=i;
+            best=score;
+        }
 	}
+    if(index!=-1 && best >0)
+    {
+        ADM_ad_plugin *a=ADM_audioPlugins[index];
+        ADM_assert(a->create);
+        return a->create(fourcc, info,extraLength,extraData);
+    }
 	return NULL;
 }
 

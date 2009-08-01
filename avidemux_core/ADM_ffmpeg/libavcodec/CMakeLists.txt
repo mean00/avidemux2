@@ -22,7 +22,11 @@ SET(${ADM_LIB}_SRCS
 	vc1dsp.c  vp56.c  vp6.c  vp5.c  indeo2.c  smacker.c  opt.c  fraps.c  dnxhddec.c
 	mpeg12data.c  mpegaudiodata.c  msmpeg4data.c  vc1data.c  vp56data.c  mjpegbdec.c
 	h263_parser.c  h264_parser.c  mpeg4video_parser.c  mpegvideo_enc.c  mpeg12enc.c
-	mpegaudioenc.c  ac3enc.c  ac3.c  ac3tab.c  mjpegenc.c  mjpegdec.c  wma.c  
+	mpegaudioenc.c  
+        mjpegenc.c  mjpegdec.c  wma.c  
+        dca.c
+        ac3enc.c  ac3.c  ac3tab.c   ac3_parser.c
+        eac3dec.c ac3dec.c ac3dec_data.c
 	dvbsub_parser.c  dvbsubdec.c  dvbsub.c  xiph.c  sp5xdec.c  
         nellymoserdec.c nellymoser.c
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c

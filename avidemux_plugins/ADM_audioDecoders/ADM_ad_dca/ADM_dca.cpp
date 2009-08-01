@@ -87,7 +87,7 @@ DCA_func_struct *dca=&dcaFunctions;
 #define DTS_HANDLE ((LIBDCA_STATE *)dts_handle)
 // Supported formats + declare our plugin
 //*******************************************************
-static uint32_t Formats[]={WAV_DTS};
+ static  ad_supportedFormat Formats[]={{WAV_DTS,AD_LOW_QUAL}};
 DECLARE_AUDIO_DECODER(ADM_AudiocodecDCA,						// Class
 			0,0,1, 												// Major, minor,patch 
 			Formats, 											// Supported formats

@@ -36,7 +36,10 @@
 };
 // Supported formats + declare our plugin
 //*******************************************************
-static uint32_t Formats[]={WAV_ULAW};
+static  ad_supportedFormat Formats[]={
+        {WAV_ULAW,AD_MEDIUM_QUAL},
+};
+
 DECLARE_AUDIO_DECODER(ADM_AudiocodecUlaw,						// Class
 			0,0,1, 												// Major, minor,patch
 			Formats, 											// Supported formats

@@ -35,6 +35,11 @@ int main(void)
 
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");
   
+    DECLARE_DECODER(DCA, dca);
+    DECLARE_DECODER(MP3, mp3);
+    DECLARE_DECODER(MP2, mp2);
+    DECLARE_DECODER(AC3, aasc);
+    DECLARE_DECODER(EAC3, eatgq);
     DECLARE_DECODER(NELLYMOSER,nellymoser);
     DECLARE_DECODER(ADPCM_IMA_AMV, amv);
     DECLARE_DECODER(CINEPAK, cinepak);
@@ -100,7 +105,6 @@ int main(void)
     DECLARE_DECODER(MP1, eatgq);
     DECLARE_DECODER(MLP, eatgq);
     DECLARE_DECODER(ALAC, eatgq);
-    DECLARE_DECODER(EAC3, eatgq);
     DECLARE_DECODER(AAC, eatgq);
     DECLARE_DECODER(PGMYUV, eatgq);
     DECLARE_DECODER(PPM, eatgq);
@@ -128,7 +132,6 @@ int main(void)
     DECLARE_DECODER(SUNRAST, aasc);
     DECLARE_DECODER(VB, aasc);
     DECLARE_DECODER(XSUB, aasc);
-    DECLARE_DECODER(AC3, aasc);
     DECLARE_DECODER(APE, aasc);
     DECLARE_DECODER(MPC8, aasc);
     DECLARE_DECODER(PCM_S16LE_PLANAR, aasc);
@@ -186,14 +189,12 @@ int main(void)
     DECLARE_DECODER(ALAC, alac);
     DECLARE_DECODER(ATRAC3, atrac3);
     DECLARE_DECODER(COOK, cook);
-    DECLARE_DECODER(DCA, dca);
     DECLARE_DECODER(DSICINAUDIO, dsicinaudio);
     DECLARE_DECODER(IMC, imc);
     DECLARE_DECODER(LIBA52, liba52);
     DECLARE_DECODER(LIBFAAD, libfaad);
     DECLARE_DECODER(MACE3, mace3);
     DECLARE_DECODER(MACE6, mace6);
-    DECLARE_DECODER(MP3, mp3);
     DECLARE_DECODER(MP3ADU, mp3adu);
     DECLARE_DECODER(MP3ON4, mp3on4);
     DECLARE_DECODER(MPC7, mpc7);
@@ -234,7 +235,6 @@ int main(void)
     DECLARE_DECODER (LIBAMR_WB, libamr_wb);
     DECLARE_DECODER (LIBGSM, libgsm);
     DECLARE_DECODER (LIBGSM_MS, libgsm_ms);
-    DECLARE_DECODER (MP2, mp2);
     DECLARE_DECODER (SONIC, sonic);
     DECLARE_DECODER (VORBIS, vorbis);
     DECLARE_DECODER(WMAV1, wmav1);

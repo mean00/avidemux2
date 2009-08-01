@@ -41,7 +41,20 @@ class ADM_AudiocodecWMA : public     ADM_Audiocodec
 
 // Supported formats + declare our plugin
 //*******************************************************
-static uint32_t Formats[]={ WAV_WMA,WAV_QDM2,WAV_AMV_ADPCM,WAV_NELLYMOSER,WAV_DTS};
+
+static  ad_supportedFormat Formats[]={
+        {WAV_WMA,AD_MEDIUM_QUAL},
+        {WAV_QDM2,AD_MEDIUM_QUAL},
+        {WAV_AMV_ADPCM,AD_MEDIUM_QUAL},
+        {WAV_NELLYMOSER,AD_MEDIUM_QUAL},
+        {WAV_DTS,AD_MEDIUM_QUAL},
+        {WAV_MP3,AD_MEDIUM_QUAL},
+        {WAV_MP2,AD_MEDIUM_QUAL},
+        {WAV_AC3,AD_LOW_QUAL},   // liba52 preferred ???
+        {WAV_EAC3,AD_MEDIUM_QUAL}
+  
+};
+
 DECLARE_AUDIO_DECODER(ADM_AudiocodecWMA,						// Class
 			0,0,1, 							       // Major, minor,patch
 			Formats, 							// Supported formats
@@ -102,6 +115,22 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         break;
       case WAV_DTS:
         _context->codec_id = CODEC_ID_DTS;
+        _blockalign = 1;
+        break;
+      case WAV_MP3:
+        _context->codec_id = CODEC_ID_MP3;
+        _blockalign = 1;
+        break;
+      case WAV_MP2:
+        _context->codec_id = CODEC_ID_MP2;
+        _blockalign = 1;
+        break;
+      case WAV_AC3:
+        _context->codec_id = CODEC_ID_AC3;
+        _blockalign = 1;
+        break;
+      case WAV_EAC3:
+        _context->codec_id = CODEC_ID_EAC3;
         _blockalign = 1;
         break;
       default:
