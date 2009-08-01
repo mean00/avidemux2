@@ -41,11 +41,11 @@ class ADM_AudiocodecWMA : public     ADM_Audiocodec
 
 // Supported formats + declare our plugin
 //*******************************************************
-static uint32_t Formats[]={ WAV_WMA,WAV_QDM2,WAV_AMV_ADPCM,WAV_NELLYMOSER};
+static uint32_t Formats[]={ WAV_WMA,WAV_QDM2,WAV_AMV_ADPCM,WAV_NELLYMOSER,WAV_DTS};
 DECLARE_AUDIO_DECODER(ADM_AudiocodecWMA,						// Class
-			0,0,1, 												// Major, minor,patch
-			Formats, 											// Supported formats
-			"Lavcodec decoder plugin for avidemux (c) Mean\n"); 	// Desc
+			0,0,1, 							       // Major, minor,patch
+			Formats, 							// Supported formats
+			"Lavcodec decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
 //********************************************************
 
 #define _context ((AVCodecContext *)_contextVoid)
@@ -100,7 +100,10 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         _context->codec_id = CODEC_ID_NELLYMOSER;
         _blockalign=1;
         break;
-
+      case WAV_DTS:
+        _context->codec_id = CODEC_ID_DTS;
+        _blockalign = 1;
+        break;
       default:
              ADM_assert(0);
     }
