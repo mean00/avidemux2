@@ -38,6 +38,12 @@ MESSAGE(STATUS "Checking for libpng")
 MESSAGE(STATUS "*******************")
 
 FIND_PACKAGE(PNG)
+if(CROSS)
+                        MESSAGE(STATUS "Cross compile override")
+                          SET(ZLIB_LIBRARY "-lz -L${CROSS}/lib")
+                          SET(PNG_LIBRARIES " ${ZLIB_LIBRARY} -lpng12 -L${CROSS}/lib")
+endif(CROSS)
+
 PRINT_LIBRARY_INFO("libpng" PNG_FOUND "${PNG_INCLUDE_DIR} ${PNG_DEFINITIONS}" "${PNG_LIBRARIES}" FATAL_ERROR)
 
 FOREACH(_flag ${PNG_INCLUDE_DIR})
@@ -55,6 +61,11 @@ MESSAGE(STATUS "Checking for pthreads")
 MESSAGE(STATUS "*********************")
 
 FIND_PACKAGE(Threads)
+if(CROSS)
+                          MESSAGE(STATUS "Cross compile override")
+                          SET(PTHREAD_LIBRARIES "-lpthreadGC2")
+endif(CROSS)
+
 PRINT_LIBRARY_INFO("pthreads" PTHREAD_FOUND "${PTHREAD_INCLUDE_DIR}" "${PTHREAD_LIBRARIES}" FATAL_ERROR)
 
 MESSAGE("")

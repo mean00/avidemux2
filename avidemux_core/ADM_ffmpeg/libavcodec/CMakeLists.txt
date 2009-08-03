@@ -30,7 +30,7 @@ SET(${ADM_LIB}_SRCS
 	dvbsub_parser.c  dvbsubdec.c  dvbsub.c  xiph.c  sp5xdec.c  
         nellymoserdec.c nellymoser.c
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c
-	intrax8dsp.c  dnxhddata.c  faanidct.c  ac3_parser.c  aac_ac3_parser.c
+	intrax8dsp.c  dnxhddata.c  faanidct.c    aac_ac3_parser.c
         celp_math.c options.c aandcttab.c audioconvert.c mpeg4audio.c svq1dec.c celp_filters.c
 	aac_parser.c  mpegaudiodecheader.c)
 

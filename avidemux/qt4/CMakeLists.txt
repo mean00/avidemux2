@@ -2,7 +2,15 @@ MESSAGE("#########################################")
 MESSAGE("Configure for avidemux Qt4 Started")
 MESSAGE("#########################################")
 MESSAGE("")
-PROJECT(Avidemux_qt4)
+SET(VERSION 2.6.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
+if (COMMAND cmake_policy)
+	cmake_policy(VERSION 2.4)
+	cmake_policy(SET CMP0003 NEW)
+	cmake_policy(SET CMP0011 OLD)
+endif (COMMAND cmake_policy)
+SET( ADM_PROJECT Avidemux_qt4)
+# Use old behaviour
 include(../commonCmakeApplication.cmake)
 INCLUDE(admCheckQt4)
 checkQt4()
@@ -10,11 +18,6 @@ IF (NOT QT4_FOUND)
         MESSAGE(FATAL_ERROR "Qt4 NOT FOUND")
 ENDIF (NOT QT4_FOUND)
 
-#include(admCheckGtk)
-#include(admCheckGlade)
-#
-#checkGtk()
-#checkGlade()
 ##########################################
 # Config
 ##########################################
