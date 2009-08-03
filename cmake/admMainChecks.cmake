@@ -20,7 +20,7 @@ MESSAGE(STATUS "[BUILD] Linker   ${CMAKE_LINKER}")
 MESSAGE(STATUS "Top Source dir is ${AVIDEMUX_TOP_SOURCE_DIR}")
 MESSAGE("")
 
-PROJECT(Avidemux_core)
+PROJECT(${ADM_PROJECT})
 
 IF (${Avidemux_SOURCE_DIR} MATCHES ${Avidemux_BINARY_DIR})
 	MESSAGE("Please do an out-of-tree build:")

@@ -3,7 +3,7 @@ MESSAGE("Plugins Configure Started")
 MESSAGE("#####################################")
 MESSAGE("")
 
-PROJECT(AdmPlugins)
+SET(ADM_PROJECT AdmPlugins)
 SET(PLUGINS TRUE)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
 ########################################

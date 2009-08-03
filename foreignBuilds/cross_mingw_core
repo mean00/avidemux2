@@ -18,5 +18,5 @@ cmake   -DCROSS=$MINGW \
         -DCMAKE_AR:STRING=$PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         $DEBUG\
-        -DAVIDEMUX_TOP_SOURCE_DIR="/home/fx/workspace/gitted/"  \
+        -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
         $TOP/avidemux_core

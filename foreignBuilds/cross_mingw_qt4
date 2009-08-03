@@ -21,5 +21,5 @@ cmake   -DCROSS=$MINGW \
         -DQT_HOME:STRING=$QT_HOME \
         $DEBUG \
          -G "CodeBlocks - Unix Makefiles"  \
-        -DAVIDEMUX_TOP_SOURCE_DIR="/home/fx/workspace/gitted/"  \
+        -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
         $TOP/avidemux/qt4

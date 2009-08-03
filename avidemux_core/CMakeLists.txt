@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.6)
 if (COMMAND cmake_policy)
 	cmake_policy(VERSION 2.4)
 	cmake_policy(SET CMP0003 NEW)
-	cmake_policy(SET CMP0011 OLD)
+	#cmake_policy(SET CMP0011 OLD)
 endif (COMMAND cmake_policy)
 
 # need for shared cmake script between avidemux & plugins
@@ -15,7 +15,7 @@ SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/..)
 SET(AVIDEMUX_CORE_BUILD_DIR ${CMAKE_BINARY_DIR})
 
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
-
+SET(ADM_PROJECT admCore)
 include(admMainChecks)
 ########################################
 # VDPAU
