@@ -19,6 +19,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_WMA:  return QT_TR_NOOP("WMA");
               case WAV_LPCM: return QT_TR_NOOP("LPCM");
               case WAV_AC3:  return QT_TR_NOOP("AC3");
+              case WAV_EAC3:  return QT_TR_NOOP("E-AC3");
               case WAV_OGG: return QT_TR_NOOP("Ogg Vorbis");
               case WAV_MP4: return QT_TR_NOOP("MP4");
               case WAV_AAC: return QT_TR_NOOP("AAC");
