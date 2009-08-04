@@ -59,12 +59,14 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
     switch(avctx->codec->id) {
     case CODEC_ID_H263:
         s->unrestricted_mv= 0;
+        avctx->chroma_sample_location = AVCHROMA_LOC_CENTER;
         break;
     case CODEC_ID_MPEG4:
         s->decode_mb= ff_mpeg4_decode_mb;
         s->time_increment_bits = 4; /* default value for broken headers */
         s->h263_pred = 1;
         s->low_delay = 0; //default, might be overriden in the vol header during header parsing
+        avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
         break;
     case CODEC_ID_MSMPEG4V1:
         s->h263_msmpeg4 = 1;
@@ -96,6 +98,7 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
         s->h263_msmpeg4 = 1;
         s->h263_pred = 1;
         s->msmpeg4_version=6;
+        avctx->chroma_sample_location = AVCHROMA_LOC_LEFT;
         break;
     case CODEC_ID_H263I:
         break;
@@ -358,11 +361,6 @@ int ff_h263_decode_frame(AVCodecContext *avctx,
 
 #ifdef PRINT_FRAME_TIME
 uint64_t time= rdtsc();
-#endif
-#ifdef DEBUG
-    av_log(avctx, AV_LOG_DEBUG, "*****frame %d size=%d\n", avctx->frame_number, buf_size);
-    if(buf_size>0)
-        av_log(avctx, AV_LOG_DEBUG, "bytes=%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
 #endif
     s->flags= avctx->flags;
     s->flags2= avctx->flags2;
@@ -651,10 +649,6 @@ retry:
             return -1;
     }
 
-#ifdef DEBUG
-    av_log(avctx, AV_LOG_DEBUG, "qscale=%d\n", s->qscale);
-#endif
-
     ff_er_frame_start(s);
 
     //the second part of the wmv2 header contains the MB skip bits which are stored in current_picture->mb_type
@@ -751,10 +745,6 @@ assert(s->current_picture.pict_type == s->pict_type);
         *data_size = sizeof(AVFrame);
         ff_print_debug_info(s, pict);
     }
-
-    /* Return the Picture timestamp as the frame number */
-    /* we subtract 1 because it is added on utils.c     */
-    avctx->frame_number = s->picture_number - 1;
 
 #ifdef PRINT_FRAME_TIME
 av_log(avctx, AV_LOG_DEBUG, "%"PRId64"\n", rdtsc()-time);

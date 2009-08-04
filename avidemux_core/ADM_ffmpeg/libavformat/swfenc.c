@@ -193,6 +193,8 @@ static int swf_write_header(AVFormatContext *s)
                 }
                 swf->audio_enc = enc;
                 swf->audio_fifo= av_fifo_alloc(AUDIO_FIFO_SIZE);
+                if (!swf->audio_fifo)
+                    return AVERROR(ENOMEM);
             } else {
                 av_log(s, AV_LOG_ERROR, "SWF muxer only supports MP3\n");
                 return -1;
@@ -349,7 +351,7 @@ static int swf_write_video(AVFormatContext *s,
             put_le16(pb, enc->width);
             put_le16(pb, enc->height);
             put_byte(pb, 0);
-            put_byte(pb,codec_get_tag(swf_codec_tags,enc->codec_id));
+            put_byte(pb,ff_codec_get_tag(swf_codec_tags,enc->codec_id));
             put_swf_end_tag(s);
 
             /* place the video object for the first time */

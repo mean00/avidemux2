@@ -88,6 +88,14 @@ int main(void)
 #undef DECLARE_DECODER
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 0\n"); 
 
+    DECLARE_DECODER(DPX, eatgq);
+    DECLARE_DECODER(EAMAD, eatgq);
+    DECLARE_DECODER(TMV, eatgq);
+    DECLARE_DECODER(V210, eatgq);
+    DECLARE_DECODER(LIBOPENCORE_AMRNB, eatgq);
+    DECLARE_DECODER(LIBOPENCORE_AMRWB, eatgq);
+
+
     DECLARE_DECODER(LIBSPEEX, eatgq);
     DECLARE_DECODER(LIBSCHROEDINGER, eatgq);
     DECLARE_DECODER(LIBOPENJPEG, eatgq);
@@ -322,6 +330,10 @@ int main(void)
 
 #undef DECLARE_ENCODER
 #define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 0\n"); 
+    DECLARE_ENCODER (AAC, mjpeg);
+    DECLARE_ENCODER(XSUB, amv);
+    DECLARE_ENCODER(V210, amv);
+    DECLARE_ENCODER(LIBOPENCORE_AMRNB, amv);
     DECLARE_ENCODER(LIBSCHROEDINGER, amv);
     DECLARE_ENCODER(LIBDIRAC, amv);
 
@@ -422,6 +434,7 @@ int main(void)
 
 #define DECLARE_BSF(a,b); printf("#define CONFIG_"#a"_BSF 0\n");
 
+	DECLARE_BSF(AAC_ADTSTOASC, mp3_header_compress);
 	DECLARE_BSF(MP3_HEADER_COMPRESS, mp3_header_compress);
 	DECLARE_BSF(IMX_DUMP_HEADER, imx_dump_header);
 	DECLARE_BSF(DUMP_EXTRADATA, dump_extradata);
@@ -558,6 +571,7 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
 	printf("#define HAVE_LRINTF 1\n");
 	printf("#define HAVE_LLRINT 1\n");
 	printf("#define HAVE_LRINT 1\n");
+	printf("#define HAVE_LOG2 1\n");
 	printf("#define HAVE_ROUND 1\n");
 	printf("#define HAVE_ROUNDF 1\n");
 	printf("#define HAVE_THREADS 1\n");

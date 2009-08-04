@@ -107,7 +107,6 @@ static const struct {
 } channel_layout_map[] = {
     { "mono",        1,  CH_LAYOUT_MONO },
     { "stereo",      2,  CH_LAYOUT_STEREO },
-    { "surround",    3,  CH_LAYOUT_SURROUND },
     { "4.0",         4,  CH_LAYOUT_4POINT0 },
     { "quad",        4,  CH_LAYOUT_QUAD },
     { "5.0",         5,  CH_LAYOUT_5POINT0 },
@@ -124,9 +123,6 @@ static const struct {
 void avcodec_get_channel_layout_string(char *buf, int buf_size, int nb_channels, int64_t channel_layout)
 {
     int i;
-
-    if (channel_layout==0)
-        channel_layout = avcodec_guess_channel_layout(nb_channels, CODEC_ID_NONE, NULL);
 
     for (i=0; channel_layout_map[i].name; i++)
         if (nb_channels    == channel_layout_map[i].nb_channels &&

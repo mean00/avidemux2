@@ -199,7 +199,7 @@ static int decode_frame(AVCodecContext *avctx,
             targa_decode_rle(avctx, s, buf, dst, avctx->width, avctx->height, stride, bpp);
         else{
             for(y = 0; y < s->height; y++){
-#ifdef WORDS_BIGENDIAN
+#if HAVE_BIGENDIAN
                 if((s->bpp + 1) >> 3 == 2){
                     uint16_t *dst16 = (uint16_t*)dst;
                     for(x = 0; x < s->width; x++)
@@ -251,7 +251,7 @@ AVCodec targa_decoder = {
     NULL,
     targa_end,
     decode_frame,
-    0,
+    CODEC_CAP_DR1,
     NULL,
     .long_name = NULL_IF_CONFIG_SMALL("Truevision Targa image"),
 };

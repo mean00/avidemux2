@@ -29,8 +29,7 @@
  * arbitrary struct of which the first field is a pointer to an
  * AVClass struct (e.g. AVCodecContext, AVFormatContext etc.).
  */
-typedef struct AVCLASS AVClass;
-struct AVCLASS {
+typedef struct {
     /**
      * The name of the class; usually it is the same name as the
      * context structure type to which the AVClass is associated.
@@ -39,7 +38,7 @@ struct AVCLASS {
 
     /**
      * A pointer to a function which returns the name of a context
-     * instance \p ctx associated with the class.
+     * instance ctx associated with the class.
      */
     const char* (*item_name)(void* ctx);
 
@@ -49,7 +48,7 @@ struct AVCLASS {
      * @see av_set_default_options()
      */
     const struct AVOption *option;
-};
+} AVClass;
 
 /* av_log API */
 

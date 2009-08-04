@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavutil/fifo.h"
 #include "avformat.h"
 #include "gxf.h"
 #include "riff.h"
@@ -644,7 +643,7 @@ static int gxf_write_header(AVFormatContext *s)
             return AVERROR(ENOMEM);
         st->priv_data = sc;
 
-        sc->media_type = codec_get_tag(gxf_media_types, st->codec->codec_id);
+        sc->media_type = ff_codec_get_tag(gxf_media_types, st->codec->codec_id);
         if (st->codec->codec_type == CODEC_TYPE_AUDIO) {
             if (st->codec->codec_id != CODEC_ID_PCM_S16LE) {
                 av_log(s, AV_LOG_ERROR, "only 16 BIT PCM LE allowed for now\n");

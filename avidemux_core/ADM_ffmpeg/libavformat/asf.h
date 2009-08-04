@@ -42,6 +42,8 @@ typedef struct {
 
     int64_t packet_pos;
 
+    uint16_t stream_language_index;
+
 } ASFStream;
 
 typedef uint8_t ff_asf_guid[16];
@@ -66,7 +68,7 @@ typedef struct {
                                  *   invalid if broadcasting */
     uint32_t max_pktsize;       /**< shall be the same as for min_pktsize
                                  *   invalid if broadcasting */
-    uint32_t max_bitrate;       /**< bandwith of stream in bps
+    uint32_t max_bitrate;       /**< bandwidth of stream in bps
                                  *   should be the sum of bitrates of the
                                  *   individual media streams */
 } ASFMainHeader;
@@ -80,11 +82,11 @@ typedef struct {
 
 typedef struct {
     uint32_t seqno;
-    unsigned int packet_size;
     int is_streamed;
     int asfid2avid[128];                 ///< conversion table from asf ID 2 AVStream ID
     ASFStream streams[128];              ///< it's max number and it's not that big
     uint32_t stream_bitrates[128];       ///< max number of streams, bitrate for each (for streaming)
+    char stream_languages[128][6];       ///< max number of streams, language for each (RFC1766, e.g. en-US)
     /* non streamed additonnal info */
     uint64_t nb_packets;                 ///< how many packets are there in the file, invalid if broadcasting
     int64_t duration;                    ///< in 100ns units
@@ -157,6 +159,7 @@ extern const ff_asf_guid ff_asf_ext_stream_embed_stream_header;
 extern const ff_asf_guid ff_asf_ext_stream_audio_stream;
 extern const ff_asf_guid ff_asf_metadata_header;
 extern const ff_asf_guid ff_asf_my_guid;
+extern const ff_asf_guid ff_asf_language_guid;
 
 extern const AVMetadataConv ff_asf_metadata_conv[];
 
@@ -222,24 +225,5 @@ extern const AVMetadataConv ff_asf_metadata_conv[];
 #define ASF_PL_FLAG_KEY_FRAME 0x80 //1000 0000
 
 extern AVInputFormat asf_demuxer;
-
-/**
- * Load a single ASF packet into the demuxer.
- * @param s demux context
- * @param pb context to read data from
- * @returns 0 on success, <0 on error
- */
-int ff_asf_get_packet(AVFormatContext *s, ByteIOContext *pb);
-
-/**
- * Parse data from individual ASF packets (which were previously loaded
- * with asf_get_packet()).
- * @param s demux context
- * @param pb context to read data from
- * @param pkt pointer to store packet data into
- * @returns 0 if data was stored in pkt, <0 on error or 1 if more ASF
- *          packets need to be loaded (through asf_get_packet())
- */
-int ff_asf_parse_packet(AVFormatContext *s, ByteIOContext *pb, AVPacket *pkt);
 
 #endif /* AVFORMAT_ASF_H */

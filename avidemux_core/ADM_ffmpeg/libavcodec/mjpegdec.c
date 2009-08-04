@@ -85,6 +85,7 @@ av_cold int ff_mjpeg_decode_init(AVCodecContext *avctx)
     s->start_code = -1;
     s->first_picture = 1;
     s->org_height = avctx->coded_height;
+    avctx->chroma_sample_location = AVCHROMA_LOC_CENTER;
 
     build_basic_mjpeg_vlc(s);
 
@@ -337,6 +338,7 @@ int ff_mjpeg_decode_sof(MJpegDecodeContext *s)
     }
     s->picture.pict_type= FF_I_TYPE;
     s->picture.key_frame= 1;
+    s->got_picture = 1;
 
     for(i=0; i<3; i++){
         s->linesize[i]= s->picture.linesize[i] << s->interlaced;
@@ -826,9 +828,8 @@ static int mjpeg_decode_scan(MJpegDecodeContext *s, int nb_components, int Ah, i
                     }
                 }
             }
-            /* (< 1350) buggy workaround for Spectralfan.mov, should be fixed */
-            if (s->restart_interval && (s->restart_interval < 1350) &&
-                !--s->restart_count) {
+
+            if (s->restart_interval && !--s->restart_count) {
                 align_get_bits(&s->gb);
                 skip_bits(&s->gb, 16); /* skip RSTn */
                 for (i=0; i<nb_components; i++) /* reset dc */
@@ -922,24 +923,8 @@ int ff_mjpeg_decode_sos(MJpegDecodeContext *s)
         if (s->dc_index[i] <  0 || s->ac_index[i] < 0 ||
             s->dc_index[i] >= 4 || s->ac_index[i] >= 4)
             goto out_of_range;
-#if 0 //buggy
-        switch(s->start_code)
-        {
-            case SOF0:
-                if (dc_index[i] > 1 || ac_index[i] > 1)
-                    goto out_of_range;
-                break;
-            case SOF1:
-            case SOF2:
-                if (dc_index[i] > 3 || ac_index[i] > 3)
-                    goto out_of_range;
-                break;
-            case SOF3:
-                if (dc_index[i] > 3 || ac_index[i] != 0)
-                    goto out_of_range;
-                break;
-        }
-#endif
+        if (!s->vlcs[0][s->dc_index[i]].table || !s->vlcs[1][s->ac_index[i]].table)
+            goto out_of_range;
     }
 
     predictor= get_bits(&s->gb, 8); /* JPEG Ss / lossless JPEG predictor /JPEG-LS NEAR */
@@ -1247,9 +1232,7 @@ static int find_marker(const uint8_t **pbuf_ptr, const uint8_t *buf_end)
     }
     val = -1;
 found:
-#ifdef DEBUG
-    av_log(NULL, AV_LOG_VERBOSE, "find_marker skipped %d bytes\n", skipped);
-#endif
+    dprintf(NULL, "find_marker skipped %d bytes\n", skipped);
     *pbuf_ptr = buf_ptr;
     return val;
 }
@@ -1265,6 +1248,7 @@ int ff_mjpeg_decode_frame(AVCodecContext *avctx,
     int start_code;
     AVFrame *picture = data;
 
+    s->got_picture = 0; // picture from previous image can not be reused
     buf_ptr = buf;
     buf_end = buf + buf_size;
     while (buf_ptr < buf_end) {
@@ -1426,6 +1410,10 @@ int ff_mjpeg_decode_frame(AVCodecContext *avctx,
                     if ((s->buggy_avid && !s->interlaced) || s->restart_interval)
                         break;
 eoi_parser:
+                    if (!s->got_picture) {
+                        av_log(avctx, AV_LOG_WARNING, "Found EOI before any SOF, ignoring\n");
+                        break;
+                    }
                     {
                         if (s->interlaced) {
                             s->bottom_field ^= 1;
@@ -1450,6 +1438,10 @@ eoi_parser:
                     }
                     break;
                 case SOS:
+                    if (!s->got_picture) {
+                        av_log(avctx, AV_LOG_WARNING, "Can not process SOS before SOF, skipping\n");
+                        break;
+                    }
                     ff_mjpeg_decode_sos(s);
                     /* buggy avid puts EOI every 10-20th frame */
                     /* if restart period is over process EOI */
@@ -1485,6 +1477,12 @@ not_the_end:
             }
         }
     }
+    if (s->got_picture) {
+        av_log(avctx, AV_LOG_WARNING, "EOI missing, emulating\n");
+        goto eoi_parser;
+    }
+    av_log(avctx, AV_LOG_FATAL, "No JPEG data found in image\n");
+    return -1;
 the_end:
     av_log(avctx, AV_LOG_DEBUG, "mjpeg decode frame unused %td bytes\n", buf_end - buf_ptr);
 //    return buf_end - buf_ptr;

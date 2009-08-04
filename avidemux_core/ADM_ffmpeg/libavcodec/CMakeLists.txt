@@ -14,6 +14,7 @@ SET(${ADM_LIB}_SRCS
         snow.c  rangecoder.c  bitstream.c  h264idct.c  h261.c
 	#amr.c  
         rdft.c
+        vc1dec.c vc1data.c vc1dsp.c vc1_parser.c
         avpacket.c
         flacdec.c
         flacdata.c
@@ -26,7 +27,8 @@ SET(${ADM_LIB}_SRCS
         mjpegenc.c  mjpegdec.c  wma.c  
         dca.c
         ac3enc.c  ac3.c  ac3tab.c   ac3_parser.c
-        eac3dec.c ac3dec.c ac3dec_data.c
+        eac3dec.c ac3dec.c ac3dec_data.c eac3dec_data.c
+        #aacenc.c aaccoder.c
 	dvbsub_parser.c  dvbsubdec.c  dvbsub.c  xiph.c  sp5xdec.c  
         nellymoserdec.c nellymoser.c
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c

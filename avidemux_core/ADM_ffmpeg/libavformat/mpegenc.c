@@ -157,7 +157,7 @@ static int put_system_header(AVFormatContext *ctx, uint8_t *buf,int only_for_str
 
     put_bits(&pb, 1, 1); /* marker */
 
-    if (s->is_vcd && only_for_stream_id==AUDIO_ID) {
+    if (s->is_vcd && (only_for_stream_id & 0xe0) == AUDIO_ID) {
         /* This header applies only to the audio stream (see VCD standard p. IV-7)*/
         put_bits(&pb, 5, 0);
     } else
@@ -304,9 +304,14 @@ static int mpeg_mux_init(AVFormatContext *ctx)
                    (CONFIG_MPEG2SVCD_MUXER && ctx->oformat == &mpeg2svcd_muxer));
     s->is_dvd =    (CONFIG_MPEG2DVD_MUXER  && ctx->oformat == &mpeg2dvd_muxer);
 
-    if(ctx->packet_size)
+    if(ctx->packet_size) {
+        if (ctx->packet_size < 20 || ctx->packet_size > (1 << 23) + 10) {
+            av_log(ctx, AV_LOG_ERROR, "Invalid packet size %d\n",
+                   ctx->packet_size);
+            goto fail;
+        }
         s->packet_size = ctx->packet_size;
-    else
+    } else
         s->packet_size = 2048;
 
     s->vcd_padding_bytes_written = 0;
@@ -382,6 +387,8 @@ static int mpeg_mux_init(AVFormatContext *ctx)
             return -1;
         }
         stream->fifo= av_fifo_alloc(16);
+        if (!stream->fifo)
+            goto fail;
     }
     bitrate = 0;
     audio_bitrate = 0;
@@ -401,7 +408,7 @@ static int mpeg_mux_init(AVFormatContext *ctx)
 
         bitrate += codec_rate;
 
-        if (stream->id==AUDIO_ID)
+        if ((stream->id & 0xe0) == AUDIO_ID)
             audio_bitrate += codec_rate;
         else if (stream->id==VIDEO_ID)
             video_bitrate += codec_rate;
@@ -594,7 +601,7 @@ static int get_packet_payload_size(AVFormatContext *ctx, int stream_index,
             }
         }
 
-        if (s->is_vcd && stream->id == AUDIO_ID)
+        if (s->is_vcd && (stream->id & 0xe0) == AUDIO_ID)
             /* The VCD standard demands that 20 zero bytes follow
                each audio packet (see standard p. IV-8).*/
             buf_index+=20;
@@ -729,7 +736,7 @@ static int flush_packet(AVFormatContext *ctx, int stream_index,
 
     packet_size = s->packet_size - size;
 
-    if (s->is_vcd && id == AUDIO_ID)
+    if (s->is_vcd && (id & 0xe0) == AUDIO_ID)
         /* The VCD standard demands that 20 zero bytes follow
            each audio pack (see standard p. IV-8).*/
         zero_trail_bytes += 20;
@@ -868,7 +875,7 @@ static int flush_packet(AVFormatContext *ctx, int stream_index,
                 put_byte(ctx->pb, 0x10); /* flags */
 
                 /* P-STD buffer info */
-                if (id == AUDIO_ID)
+                if ((id & 0xe0) == AUDIO_ID)
                     put_be16(ctx->pb, 0x4000 | stream->max_buffer_size/ 128);
                 else
                     put_be16(ctx->pb, 0x6000 | stream->max_buffer_size/1024);

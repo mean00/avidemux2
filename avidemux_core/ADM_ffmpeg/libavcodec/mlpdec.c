@@ -344,12 +344,17 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
                                  : MAX_MATRIX_CHANNEL_TRUEHD;
 
     sync_word = get_bits(gbp, 13);
-    s->noise_type = get_bits1(gbp);
 
-    if ((m->avctx->codec_id == CODEC_ID_MLP && s->noise_type) ||
-        sync_word != 0x31ea >> 1) {
+    if (sync_word != 0x31ea >> 1) {
         av_log(m->avctx, AV_LOG_ERROR,
                "restart header sync incorrect (got 0x%04x)\n", sync_word);
+        return -1;
+    }
+
+    s->noise_type = get_bits1(gbp);
+
+    if (m->avctx->codec_id == CODEC_ID_MLP && s->noise_type) {
+        av_log(m->avctx, AV_LOG_ERROR, "MLP must have 0x31ea sync word.\n");
         return -1;
     }
 
@@ -369,6 +374,15 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
     if (s->max_channel != s->max_matrix_channel) {
         av_log(m->avctx, AV_LOG_ERROR,
                "Max channel must be equal max matrix channel.\n");
+        return -1;
+    }
+
+    /* This should happen for TrueHD streams with >6 channels and MLP's noise
+     * type. It is not yet known if this is allowed. */
+    if (s->max_channel > MAX_MATRIX_CHANNEL_MLP && !s->noise_type) {
+        av_log(m->avctx, AV_LOG_ERROR,
+               "Number of channels %d is larger than the maximum supported "
+               "by the decoder. %s\n", s->max_channel+2, sample_message);
         return -1;
     }
 
@@ -481,6 +495,7 @@ static int read_filter_params(MLPDecodeContext *m, GetBitContext *gbp,
     fp->order = order;
 
     if (order > 0) {
+        int32_t *fcoeff = m->channel_params[channel].coeff[filter];
         int coeff_bits, coeff_shift;
 
         fp->shift = get_bits(gbp, 4);
@@ -501,7 +516,7 @@ static int read_filter_params(MLPDecodeContext *m, GetBitContext *gbp,
         }
 
         for (i = 0; i < order; i++)
-            fp->coeff[i] = get_sbits(gbp, coeff_bits) << coeff_shift;
+            fcoeff[i] = get_sbits(gbp, coeff_bits) << coeff_shift;
 
         if (get_bits1(gbp)) {
             int state_bits, state_shift;
@@ -620,10 +635,10 @@ static int read_channel_params(MLPDecodeContext *m, unsigned int substr,
         return -1;
     }
     /* The FIR and IIR filters must have the same precision.
-        * To simplify the filtering code, only the precision of the
-        * FIR filter is considered. If only the IIR filter is employed,
-        * the FIR filter precision is set to that of the IIR filter, so
-        * that the filtering code can use it. */
+     * To simplify the filtering code, only the precision of the
+     * FIR filter is considered. If only the IIR filter is employed,
+     * the FIR filter precision is set to that of the IIR filter, so
+     * that the filtering code can use it. */
     if (!fir->order && iir->order)
         fir->shift = iir->shift;
 
@@ -704,10 +719,10 @@ static void filter_channel(MLPDecodeContext *m, unsigned int substr,
                            unsigned int channel)
 {
     SubStream *s = &m->substream[substr];
-    int32_t fir_state_buffer[MAX_BLOCKSIZE + MAX_FIR_ORDER];
-    int32_t iir_state_buffer[MAX_BLOCKSIZE + MAX_IIR_ORDER];
-    int32_t *firbuf = fir_state_buffer + MAX_BLOCKSIZE;
-    int32_t *iirbuf = iir_state_buffer + MAX_BLOCKSIZE;
+    const int32_t *fircoeff = m->channel_params[channel].coeff[FIR];
+    int32_t state_buffer[NUM_FILTERS][MAX_BLOCKSIZE + MAX_FIR_ORDER];
+    int32_t *firbuf = state_buffer[FIR] + MAX_BLOCKSIZE;
+    int32_t *iirbuf = state_buffer[IIR] + MAX_BLOCKSIZE;
     FilterParams *fir = &m->channel_params[channel].filter_params[FIR];
     FilterParams *iir = &m->channel_params[channel].filter_params[IIR];
     unsigned int filter_shift = fir->shift;
@@ -716,8 +731,8 @@ static void filter_channel(MLPDecodeContext *m, unsigned int substr,
     memcpy(firbuf, fir->state, MAX_FIR_ORDER * sizeof(int32_t));
     memcpy(iirbuf, iir->state, MAX_IIR_ORDER * sizeof(int32_t));
 
-    m->dsp.mlp_filter_channel(firbuf, fir->coeff, fir->order,
-                              iirbuf, iir->coeff, iir->order,
+    m->dsp.mlp_filter_channel(firbuf, fircoeff,
+                              fir->order, iir->order,
                               filter_shift, mask, s->blocksize,
                               &m->sample_buffer[s->blockpos][channel]);
 

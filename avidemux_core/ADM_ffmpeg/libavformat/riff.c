@@ -26,7 +26,7 @@
 
 /* Note: when encoding, the first matching tag is used, so order is
    important if multiple tags possible for a given codec. */
-const AVCodecTag codec_bmp_tags[] = {
+const AVCodecTag ff_codec_bmp_tags[] = {
     { CODEC_ID_H264,         MKTAG('H', '2', '6', '4') },
     { CODEC_ID_H264,         MKTAG('h', '2', '6', '4') },
     { CODEC_ID_H264,         MKTAG('X', '2', '6', '4') },
@@ -95,12 +95,14 @@ const AVCodecTag codec_bmp_tags[] = {
     { CODEC_ID_WMV2,         MKTAG('W', 'M', 'V', '2') },
     { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', 's', 'd') },
     { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', 'h', 'd') },
+    { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', 'h', '1') },
     { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', 's', 'l') },
     { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', '2', '5') },
     { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', '5', '0') },
     { CODEC_ID_DVVIDEO,      MKTAG('c', 'd', 'v', 'c') }, /* Canopus DV */
     { CODEC_ID_DVVIDEO,      MKTAG('C', 'D', 'V', 'H') }, /* Canopus DV */
     { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', 'c', ' ') },
+    { CODEC_ID_DVVIDEO,      MKTAG('d', 'v', 'h', '1') },
     { CODEC_ID_MPEG1VIDEO,   MKTAG('m', 'p', 'g', '1') },
     { CODEC_ID_MPEG1VIDEO,   MKTAG('m', 'p', 'g', '2') },
     { CODEC_ID_MPEG2VIDEO,   MKTAG('m', 'p', 'g', '2') },
@@ -110,6 +112,7 @@ const AVCodecTag codec_bmp_tags[] = {
     { CODEC_ID_MPEG1VIDEO,   MKTAG('V', 'C', 'R', '2') },
     { CODEC_ID_MPEG1VIDEO,   MKTAG( 1 ,  0 ,  0 ,  16) },
     { CODEC_ID_MPEG2VIDEO,   MKTAG( 2 ,  0 ,  0 ,  16) },
+    { CODEC_ID_MPEG4,        MKTAG( 4 ,  0 ,  0 ,  16) },
     { CODEC_ID_MPEG2VIDEO,   MKTAG('D', 'V', 'R', ' ') },
     { CODEC_ID_MPEG2VIDEO,   MKTAG('M', 'M', 'E', 'S') },
     { CODEC_ID_MPEG2VIDEO,   MKTAG('L', 'M', 'P', '2') }, /* Lead MPEG2 in avi */
@@ -131,6 +134,7 @@ const AVCodecTag codec_bmp_tags[] = {
     { CODEC_ID_FFVHUFF,      MKTAG('F', 'F', 'V', 'H') },
     { CODEC_ID_CYUV,         MKTAG('C', 'Y', 'U', 'V') },
     { CODEC_ID_RAWVIDEO,     MKTAG( 0 ,  0 ,  0 ,  0 ) },
+    { CODEC_ID_RAWVIDEO,     MKTAG( 3 ,  0 ,  0 ,  0 ) },
     { CODEC_ID_RAWVIDEO,     MKTAG('I', '4', '2', '0') },
     { CODEC_ID_RAWVIDEO,     MKTAG('Y', 'U', 'Y', '2') },
     { CODEC_ID_RAWVIDEO,     MKTAG('Y', '4', '2', '2') },
@@ -139,6 +143,8 @@ const AVCodecTag codec_bmp_tags[] = {
     { CODEC_ID_RAWVIDEO,     MKTAG('I', 'Y', 'U', 'V') },
     { CODEC_ID_RAWVIDEO,     MKTAG('Y', '8', '0', '0') },
     { CODEC_ID_RAWVIDEO,     MKTAG('H', 'D', 'Y', 'C') },
+    { CODEC_ID_RAWVIDEO,     MKTAG('Y', 'V', 'U', '9') },
+    { CODEC_ID_V210,         MKTAG('v', '2', '1', '0') },
     { CODEC_ID_INDEO3,       MKTAG('I', 'V', '3', '1') },
     { CODEC_ID_INDEO3,       MKTAG('I', 'V', '3', '2') },
     { CODEC_ID_INDEO4,       MKTAG('I', 'V', '4', '1') },
@@ -208,10 +214,11 @@ const AVCodecTag codec_bmp_tags[] = {
     { CODEC_ID_SP5X,         MKTAG('S', 'P', '5', '4') },
     { CODEC_ID_AURA,         MKTAG('A', 'U', 'R', 'A') },
     { CODEC_ID_AURA2,        MKTAG('A', 'U', 'R', '2') },
+    { CODEC_ID_DPX,          MKTAG('d', 'p', 'x', ' ') },
     { CODEC_ID_NONE,         0 }
 };
 
-const AVCodecTag codec_wav_tags[] = {
+const AVCodecTag ff_codec_wav_tags[] = {
     { CODEC_ID_PCM_S16LE,       0x0001 },
     { CODEC_ID_PCM_U8,          0x0001 }, /* must come after s16le in this list */
     { CODEC_ID_PCM_S24LE,       0x0001 },
@@ -249,6 +256,7 @@ const AVCodecTag codec_wav_tags[] = {
     { CODEC_ID_DTS,             0x2001 },
     { CODEC_ID_SONIC,           0x2048 },
     { CODEC_ID_SONIC_LS,        0x2048 },
+    { CODEC_ID_PCM_MULAW,       0x6c75 },
     { CODEC_ID_AAC,             0x706d },
     { CODEC_ID_AAC,             0x4143 },
     { CODEC_ID_FLAC,            0xF1AC },
@@ -264,14 +272,14 @@ const AVCodecTag codec_wav_tags[] = {
 };
 
 #if CONFIG_MUXERS
-int64_t start_tag(ByteIOContext *pb, const char *tag)
+int64_t ff_start_tag(ByteIOContext *pb, const char *tag)
 {
     put_tag(pb, tag);
     put_le32(pb, 0);
     return url_ftell(pb);
 }
 
-void end_tag(ByteIOContext *pb, int64_t start)
+void ff_end_tag(ByteIOContext *pb, int64_t start)
 {
     int64_t pos;
 
@@ -283,7 +291,7 @@ void end_tag(ByteIOContext *pb, int64_t start)
 
 /* WAVEFORMATEX header */
 /* returns the size or -1 on error */
-int put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
+int ff_put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
 {
     int bps, blkalign, bytespersec;
     int hdrsize = 18;
@@ -386,7 +394,7 @@ int put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
 }
 
 /* BITMAPINFOHEADER header */
-void put_bmp_header(ByteIOContext *pb, AVCodecContext *enc, const AVCodecTag *tags, int for_asf)
+void ff_put_bmp_header(ByteIOContext *pb, AVCodecContext *enc, const AVCodecTag *tags, int for_asf)
 {
     put_le32(pb, 40 + enc->extradata_size); /* size */
     put_le32(pb, enc->width);
@@ -418,7 +426,7 @@ void put_bmp_header(ByteIOContext *pb, AVCodecContext *enc, const AVCodecTag *ta
  * WAVEFORMATEX adds 'WORD  cbSize' and basically makes itself
  * an openended structure.
  */
-void get_wav_header(ByteIOContext *pb, AVCodecContext *codec, int size)
+void ff_get_wav_header(ByteIOContext *pb, AVCodecContext *codec, int size)
 {
     int id;
 
@@ -456,14 +464,14 @@ void get_wav_header(ByteIOContext *pb, AVCodecContext *codec, int size)
         if (size > 0)
             url_fskip(pb, size);
     }
-    codec->codec_id = wav_codec_get_id(id, codec->bits_per_coded_sample);
+    codec->codec_id = ff_wav_codec_get_id(id, codec->bits_per_coded_sample);
 }
 
 
-enum CodecID wav_codec_get_id(unsigned int tag, int bps)
+enum CodecID ff_wav_codec_get_id(unsigned int tag, int bps)
 {
     enum CodecID id;
-    id = codec_get_id(codec_wav_tags, tag);
+    id = ff_codec_get_id(ff_codec_wav_tags, tag);
     if (id <= 0)
         return id;
     /* handle specific u8 codec */

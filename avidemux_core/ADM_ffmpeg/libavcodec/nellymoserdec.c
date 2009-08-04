@@ -103,7 +103,7 @@ static void nelly_decode_block(NellyMoserDecodeContext *s,
         aptr = audio + i * NELLY_BUF_LEN;
 
         init_get_bits(&s->gb, block, NELLY_BLOCK_LEN * 8);
-        skip_bits(&s->gb, NELLY_HEADER_BITS + i*NELLY_DETAIL_BITS);
+        skip_bits_long(&s->gb, NELLY_HEADER_BITS + i*NELLY_DETAIL_BITS);
 
         for (j = 0; j < NELLY_FILL_LEN; j++) {
             if (bits[j] <= 0) {
@@ -130,7 +130,7 @@ static av_cold int decode_init(AVCodecContext * avctx) {
 
     s->avctx = avctx;
     av_lfg_init(&s->random_state, ff_random_get_seed());
-    ff_mdct_init(&s->imdct_ctx, 8, 1);
+    ff_mdct_init(&s->imdct_ctx, 8, 1, 1.0);
 
     dsputil_init(&s->dsp, avctx);
 
@@ -170,6 +170,8 @@ static int decode_tag(AVCodecContext * avctx,
             blocks = 1; break;
         case 128:   // 11025Hz
             blocks = 2; break;
+        case 192:   // 16000Hz
+            blocks = 3; break;
         case 256:   // 22050Hz
             blocks = 4; break;
         case 512:   // 44100Hz

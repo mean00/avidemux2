@@ -548,7 +548,7 @@ static enum PixelFormat avcodec_get_pix_fmt_internal(const char *name)
     return PIX_FMT_NONE;
 }
 
-#ifdef WORDS_BIGENDIAN
+#if HAVE_BIGENDIAN
 #   define X_NE(be, le) be
 #else
 #   define X_NE(be, le) le
@@ -1288,7 +1288,7 @@ static inline int is_yuv_planar(const PixFmtInfo *ps)
 }
 
 int av_picture_crop(AVPicture *dst, const AVPicture *src,
-              int pix_fmt, int top_band, int left_band)
+                    enum PixelFormat pix_fmt, int top_band, int left_band)
 {
     int y_shift;
     int x_shift;

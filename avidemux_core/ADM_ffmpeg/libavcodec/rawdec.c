@@ -46,10 +46,10 @@ static const PixelFormatTag pixelFormatBpsAVI[] = {
 };
 
 static const PixelFormatTag pixelFormatBpsMOV[] = {
-    /* FIXME fix swscaler to support those */
-    /* http://developer.apple.com/documentation/QuickTime/QTFF/QTFFChap3/chapter_4_section_2.html */
     { PIX_FMT_PAL8,      4 },
     { PIX_FMT_PAL8,      8 },
+    // FIXME swscale does not support 16 bit in .mov, sample 16bit.mov
+    // http://developer.apple.com/documentation/QuickTime/QTFF/QTFFChap3/qtff3.html
     { PIX_FMT_BGR555,   16 },
     { PIX_FMT_RGB24,    24 },
     { PIX_FMT_BGR32_1,  32 },
@@ -87,7 +87,8 @@ static av_cold int raw_init_decoder(AVCodecContext *avctx)
     if (!context->buffer)
         return -1;
 
-    if(avctx->extradata_size >= 9 && !memcmp(avctx->extradata + avctx->extradata_size - 9, "BottomUp", 9))
+    if((avctx->extradata_size >= 9 && !memcmp(avctx->extradata + avctx->extradata_size - 9, "BottomUp", 9)) ||
+       avctx->codec_tag == MKTAG( 3 ,  0 ,  0 ,  0 ))
         context->flip=1;
 
     return 0;
@@ -139,7 +140,8 @@ static int raw_decode(AVCodecContext *avctx,
     if(context->flip)
         flip(avctx, picture);
 
-    if (avctx->codec_tag == MKTAG('Y', 'V', '1', '2'))
+    if (   avctx->codec_tag == MKTAG('Y', 'V', '1', '2')
+        || avctx->codec_tag == MKTAG('Y', 'V', 'U', '9'))
     {
         // swap fields
         unsigned char *tmp = picture->data[1];

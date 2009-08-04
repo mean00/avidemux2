@@ -157,6 +157,7 @@ void av_register_all(void)
     REGISTER_MUXDEMUX (PCM_U8,    pcm_u8);
     REGISTER_MUXER    (PSP, psp);
     REGISTER_DEMUXER  (PVA, pva);
+    REGISTER_DEMUXER  (QCP, qcp);
     REGISTER_DEMUXER  (R3D, r3d);
     REGISTER_MUXDEMUX (RAWVIDEO, rawvideo);
     REGISTER_DEMUXER  (REDIR, redir);
@@ -176,12 +177,14 @@ void av_register_all(void)
     REGISTER_DEMUXER  (SIFF, siff);
     REGISTER_DEMUXER  (SMACKER, smacker);
     REGISTER_DEMUXER  (SOL, sol);
+    REGISTER_MUXDEMUX (SOX, sox);
     REGISTER_DEMUXER  (STR, str);
     REGISTER_MUXDEMUX (SWF, swf);
     REGISTER_MUXER    (TG2, tg2);
     REGISTER_MUXER    (TGP, tgp);
     REGISTER_DEMUXER  (THP, thp);
     REGISTER_DEMUXER  (TIERTEXSEQ, tiertexseq);
+    REGISTER_DEMUXER  (TMV, tmv);
     REGISTER_MUXDEMUX (TRUEHD, truehd);
     REGISTER_DEMUXER  (TTA, tta);
     REGISTER_DEMUXER  (TXD, txd);
@@ -206,6 +209,7 @@ void av_register_all(void)
     REGISTER_PROTOCOL (GOPHER, gopher);
     REGISTER_PROTOCOL (HTTP, http);
     REGISTER_PROTOCOL (PIPE, pipe);
+    REGISTER_PROTOCOL (RTMP, rtmp);
     REGISTER_PROTOCOL (RTP, rtp);
     REGISTER_PROTOCOL (TCP, tcp);
     REGISTER_PROTOCOL (UDP, udp);

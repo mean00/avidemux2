@@ -181,6 +181,13 @@ void ff_add_png_paeth_prediction(uint8_t *dst, uint8_t *src, uint8_t *top, int w
     else if(bpp == 2) UNROLL1(2, op)\
     else if(bpp == 3) UNROLL1(3, op)\
     else if(bpp == 4) UNROLL1(4, op)\
+    else {\
+        for (; i < size; i += bpp) {\
+            int j;\
+            for (j = 0; j < bpp; j++)\
+                dst[i+j] = op(dst[i+j-bpp], src[i+j], last[i+j]);\
+        }\
+    }
 
 /* NOTE: 'dst' can be equal to 'last' */
 static void png_filter_row(DSPContext *dsp, uint8_t *dst, int filter_type,
@@ -387,6 +394,7 @@ static int decode_frame(AVCodecContext *avctx,
     PNGDecContext * const s = avctx->priv_data;
     AVFrame *picture = data;
     AVFrame *p;
+    uint8_t *crow_buf_base = NULL;
     uint32_t tag, length;
     int ret, crc;
 
@@ -422,13 +430,11 @@ static int decode_frame(AVCodecContext *avctx,
             goto fail;
         tag32 = bytestream_get_be32(&s->bytestream);
         tag = bswap_32(tag32);
-#ifdef DEBUG
-        av_log(avctx, AV_LOG_DEBUG, "png: tag=%c%c%c%c length=%u\n",
-               (tag & 0xff),
-               ((tag >> 8) & 0xff),
-               ((tag >> 16) & 0xff),
-               ((tag >> 24) & 0xff), length);
-#endif
+        dprintf(avctx, "png: tag=%c%c%c%c length=%u\n",
+                (tag & 0xff),
+                ((tag >> 8) & 0xff),
+                ((tag >> 16) & 0xff),
+                ((tag >> 24) & 0xff), length);
         switch(tag) {
         case MKTAG('I', 'H', 'D', 'R'):
             if (length != 13)
@@ -446,11 +452,9 @@ static int decode_frame(AVCodecContext *avctx,
             s->interlace_type = *s->bytestream++;
             crc = bytestream_get_be32(&s->bytestream);
             s->state |= PNG_IHDR;
-#ifdef DEBUG
-            av_log(avctx, AV_LOG_DEBUG, "width=%d height=%d depth=%d color_type=%d compression_type=%d filter_type=%d interlace_type=%d\n",
-                   s->width, s->height, s->bit_depth, s->color_type,
-                   s->compression_type, s->filter_type, s->interlace_type);
-#endif
+            dprintf(avctx, "width=%d height=%d depth=%d color_type=%d compression_type=%d filter_type=%d interlace_type=%d\n",
+                    s->width, s->height, s->bit_depth, s->color_type,
+                    s->compression_type, s->filter_type, s->interlace_type);
             break;
         case MKTAG('I', 'D', 'A', 'T'):
             if (!(s->state & PNG_IHDR))
@@ -477,6 +481,9 @@ static int decode_frame(AVCodecContext *avctx,
                 } else if (s->bit_depth == 16 &&
                            s->color_type == PNG_COLOR_TYPE_GRAY) {
                     avctx->pix_fmt = PIX_FMT_GRAY16BE;
+                } else if (s->bit_depth == 16 &&
+                           s->color_type == PNG_COLOR_TYPE_RGB) {
+                    avctx->pix_fmt = PIX_FMT_RGB48BE;
                 } else if (s->bit_depth == 1 &&
                            s->color_type == PNG_COLOR_TYPE_GRAY) {
                     avctx->pix_fmt = PIX_FMT_MONOBLACK;
@@ -507,10 +514,8 @@ static int decode_frame(AVCodecContext *avctx,
                                                          s->width);
                     s->crow_size = s->pass_row_size + 1;
                 }
-#ifdef DEBUG
-                av_log(avctx, AV_LOG_DEBUG, "row_size=%d crow_size =%d\n",
-                       s->row_size, s->crow_size);
-#endif
+                dprintf(avctx, "row_size=%d crow_size =%d\n",
+                        s->row_size, s->crow_size);
                 s->image_buf = p->data[0];
                 s->image_linesize = p->linesize[0];
                 /* copy the palette if needed */
@@ -527,9 +532,12 @@ static int decode_frame(AVCodecContext *avctx,
                         goto fail;
                 }
                 /* compressed row */
-                s->crow_buf = av_malloc(s->row_size + 1);
-                if (!s->crow_buf)
+                crow_buf_base = av_malloc(s->row_size + 16);
+                if (!crow_buf_base)
                     goto fail;
+
+                /* we want crow_buf+1 to be 16-byte aligned */
+                s->crow_buf = crow_buf_base + 15;
                 s->zstream.avail_out = s->crow_size;
                 s->zstream.next_out = s->crow_buf;
             }
@@ -612,7 +620,8 @@ static int decode_frame(AVCodecContext *avctx,
     ret = s->bytestream - s->bytestream_start;
  the_end:
     inflateEnd(&s->zstream);
-    av_freep(&s->crow_buf);
+    av_free(crow_buf_base);
+    s->crow_buf = NULL;
     av_freep(&s->last_row);
     av_freep(&s->tmp_row);
     return ret;
@@ -642,7 +651,7 @@ AVCodec png_decoder = {
     NULL,
     NULL, //decode_end,
     decode_frame,
-    0 /*CODEC_CAP_DR1*/ /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
+    CODEC_CAP_DR1 /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
     NULL,
     .long_name = NULL_IF_CONFIG_SMALL("PNG image"),
 };

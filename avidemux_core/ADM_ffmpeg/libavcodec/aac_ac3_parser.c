@@ -83,7 +83,7 @@ get_next:
             (avctx->codec_id == CODEC_ID_AC3 ||
              avctx->codec_id == CODEC_ID_EAC3)))) {
         avctx->channels = avctx->request_channels;
-    } else {
+    } else if (avctx->codec_id != CODEC_ID_AAC || s->channels) {
         avctx->channels = s->channels;
         avctx->channel_layout = s->channel_layout;
     }

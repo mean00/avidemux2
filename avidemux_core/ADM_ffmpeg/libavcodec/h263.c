@@ -2282,12 +2282,11 @@ static void mpeg4_encode_gop_header(MpegEncContext * s){
         time= FFMIN(time, s->reordered_input_picture[1]->pts);
     time= time*s->avctx->time_base.num;
 
-    
-
     seconds= time/s->avctx->time_base.den;
     minutes= seconds/60; seconds %= 60;
     hours= minutes/60; minutes %= 60;
     hours%=24;
+
     put_bits(&s->pb, 5, hours);
     put_bits(&s->pb, 6, minutes);
     put_bits(&s->pb, 1, 1);
@@ -4587,9 +4586,7 @@ static int h263p_decode_umotion(MpegEncContext * s, int pred)
    code >>= 1;
 
    code = (sign) ? (pred - code) : (pred + code);
-#ifdef DEBUG
-   av_log( s->avctx, AV_LOG_DEBUG,"H.263+ UMV Motion = %d\n", code);
-#endif
+   dprintf(s->avctx,"H.263+ UMV Motion = %d\n", code);
    return code;
 
 }
