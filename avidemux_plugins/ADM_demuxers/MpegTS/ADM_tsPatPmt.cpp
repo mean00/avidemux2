@@ -151,7 +151,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
         for(int i=0;i<list.size();i++)
         {
             ADM_TS_TRACK_TYPE type=list[i].trackType;
-            if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC)
+            if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC || type==ADM_TS_EAC3)
             {
                 TSpacketInfo pkt;
                 t->setPos(0);
@@ -220,10 +220,30 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
 
             size&=0xfff;
             pid&=0x1fff;
+            uint8_t *base=r+5;
             r+=size+5;
             packLen-=5+size;
             printf("[PMT]          Type=0x%x pid=%x size=%d\n",type,pid,size);
             const char *str;
+            
+            if(type==6) // Private data
+            {
+                
+                uint8_t *head=base;
+                uint8_t *tail=r;
+                while(head<tail)
+                {
+                    uint8_t tag=head[0];
+                    uint8_t tag_len=head[1];
+                    printf("[PMT]  Tag 0x%x , len %d, ",tag,tag_len);
+                    for(int i=0;i<tag_len;i++) printf(" %02x",head[2+i]);
+                    printf("\n");
+                    head+=2+tag_len;
+                    if(tag==0x7A) type=0x84;
+                    if(tag==0x6A) type=0x81;
+                }
+
+            }
             ADM_TS_TRACK_TYPE trackType=EsType(type,&str);;
             if(trackType!=ADM_TS_UNKNOWN) 
             {
@@ -233,8 +253,11 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                     printf("[PMT]  Adding pid 0x%x (%d) , type %s\n",pid,pid,str);
                     list->push_back(trk2);
             }
+            
            
         }
+        
+        printf("[PMT] Left :%d bytes\n",packLen);
         if(trk.trackType!=ADM_TS_UNKNOWN) list->push_back(trk);
         return true;
        }
@@ -255,6 +278,7 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
              //   case 0x10:        *streamType=ADM_STREAM_MPEG4;return "MP4 Video";
                 case 0x1B:  *str= "H264 Video";return ADM_TS_H264;break;
                 case 0x81:  *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
+                case 0x84:  *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
                 default : break;
     }
     return ADM_TS_UNKNOWN;
@@ -312,7 +336,7 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
                         case 0x56: printf("Teletext");break;
                         case 0x59: printf("DVB subtitles");break;
                         case 0x7b: printf("DTS Descriptor");break;
-                        case 0x7a:
+                        case 0x7a: printf("EAC3 Descriptor");break;
                         case 0x6a: printf("AC3 Descriptor");break;
                         default : printf("unknown");break;
                     }

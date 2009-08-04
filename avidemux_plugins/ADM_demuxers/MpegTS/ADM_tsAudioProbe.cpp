@@ -51,7 +51,8 @@ uint64_t pts,dts,startAt;
         
         
         // dont even try if it is not audio
-        if(trackInfo->trackType!=ADM_TS_MPEG_AUDIO &&trackInfo->trackType!=ADM_TS_AC3) return false;
+        if(trackInfo->trackType!=ADM_TS_MPEG_AUDIO &&trackInfo->trackType!=ADM_TS_AC3
+                && trackInfo->trackType!=ADM_TS_EAC3) return false;
 
         // Go back where we were
         p->changePid(trackInfo->esId); 
@@ -87,6 +88,25 @@ uint64_t pts,dts,startAt;
                                 trackInfo->wav.frequency=fq;
                                 trackInfo->wav.channels=chan;
                                 trackInfo->wav.byterate=(br);
+                                break;
+                            }
+            case ADM_TS_EAC3: 
+                            {
+                                trackInfo->wav.encoding=WAV_EAC3;
+#if 0
+                                if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
+                                {
+                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",trackInfo->esId);
+                                        goto er;
+                                }
+                                trackInfo->wav.frequency=fq;
+                                trackInfo->wav.channels=chan;
+                                trackInfo->wav.byterate=(br);
+#else
+                                trackInfo->wav.frequency=48000;
+                                trackInfo->wav.channels=2;
+                                trackInfo->wav.byterate=128000>>3;
+#endif
                                 break;
                             }
                             
