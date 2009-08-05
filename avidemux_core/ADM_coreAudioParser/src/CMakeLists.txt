@@ -4,6 +4,7 @@ ADM_aacinfo.cpp
 ADM_mp3info.cpp  
 ADM_a52info.cpp 
 ADM_dcainfo.cpp  
+ADM_eac3info.cpp
 )	
 #*************************************************
 ADD_DEFINITIONS( "-DADM_LEGACY_PROGGY")
