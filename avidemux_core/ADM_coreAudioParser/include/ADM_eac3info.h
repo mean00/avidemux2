@@ -9,6 +9,17 @@
 
 #ifndef ADM_EAC3INFO_H
 #define ADM_EAC3INFO_H
-bool     ADM_a52b_syncinfo (uint8_t * buf, int * flags, int * sample_rate, int * bit_rate);
-bool     ADM_EAC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *byterate, uint32_t *chan,uint32_t *syncoff);
+/**
+    \struct ADM_EAC3_INFO
+*/
+typedef struct
+{
+    uint32_t frequency;
+    uint32_t byterate;
+    uint32_t channels;
+    uint32_t frameSizeInBytes;
+    uint32_t samples;
+}ADM_EAC3_INFO;
+
+bool     ADM_EAC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *syncoff,ADM_EAC3_INFO *info);
 #endif //ADM_EAC3INFO_H
