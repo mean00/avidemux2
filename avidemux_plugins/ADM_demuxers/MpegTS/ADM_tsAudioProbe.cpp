@@ -94,20 +94,15 @@ uint64_t pts,dts,startAt;
             case ADM_TS_EAC3: 
                             {
                                 trackInfo->wav.encoding=WAV_EAC3;
-#if 1
-                                if(!ADM_EAC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
+                                ADM_EAC3_INFO info;
+                                if(!ADM_EAC3GetInfo(audioBuffer, rd, &off,&info))
                                 {
                                         printf("[PsProbeAudio] Failed to get info on track :%x\n",trackInfo->esId);
                                         goto er;
                                 }
-                                trackInfo->wav.frequency=fq;
-                                trackInfo->wav.channels=chan;
-                                trackInfo->wav.byterate=(br);
-#else
-                                trackInfo->wav.frequency=48000;
-                                trackInfo->wav.channels=2;
-                                trackInfo->wav.byterate=128000>>3;
-#endif
+                                trackInfo->wav.frequency=info.frequency;
+                                trackInfo->wav.channels=info.channels;
+                                trackInfo->wav.byterate=info.byterate;
                                 break;
                             }
                             
