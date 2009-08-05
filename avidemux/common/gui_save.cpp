@@ -108,8 +108,12 @@ void HandleAction_Save(Action action)
 
 int A_audioSave(char *name)
 {
-	if (!currentaudiostream)	// yes it is checked 2 times so what ?
-	return 0;
+    ADM_audioStream *stream;
+    if(false==video_body->getAudioStream( &stream)) 
+    {
+        printf("[A_audioSave] No stream\n");
+        return 0;
+    }
 	if (audioProcessMode())
 	{
 		// if we get here, either not compressed
@@ -265,9 +269,13 @@ void A_saveAudioCopy (char *name)
 
 #define ONE_STRIKE (64*1024)
   uint8_t *buffer=NULL;
+  ADM_audioStream *stream;
+  if(false==video_body->getAudioStream( &stream)) 
+    {
+        printf("[A_audioSave] No stream\n");
+        return ;
+    }
 
-  if (!currentaudiostream)
-    return;
 
   out = fopen (name, "wb");
   if (!out) return;
@@ -287,13 +295,13 @@ void A_saveAudioCopy (char *name)
    duration=timeEnd-timeStart;
    if(duration<0) 
     {
-            currentaudiostream->goToTime (timeEnd);
+            stream->goToTime (timeEnd);
             duration=-duration;
     }else
     {
-            currentaudiostream->goToTime (timeStart);
+            stream->goToTime (timeStart);
     }
-   duration*=currentaudiostream->getInfo()->frequency;
+   duration*=stream->getInfo()->frequency;
    duration/=1000000; // in seconds to have samples
    tgt_sample=(uint64_t)floor(duration);
    printf("[saveAudio] Start time :%"LLU" ms\n",timeStart/1000);
@@ -307,7 +315,7 @@ void A_saveAudioCopy (char *name)
    buffer=new uint8_t[ONE_STRIKE*2];
    while (1)
     {
-    	if(!currentaudiostream->getPacket(buffer+hold,&len,ONE_STRIKE,&sample,&dts)) break;
+    	if(!stream->getPacket(buffer+hold,&len,ONE_STRIKE,&sample,&dts)) break;
         hold+=len;
         written+=len;
         cur_sample+=sample;
