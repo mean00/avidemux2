@@ -21,6 +21,7 @@
 #include "ADM_tsAudioProbe.h"
 //
 #include "ADM_a52info.h"
+#include "ADM_eac3info.h"
 #include "ADM_mp3info.h"
 #include "ADM_dcainfo.h"
 // Number of video packet seen to be enough to sample the audio tracks
@@ -93,8 +94,8 @@ uint64_t pts,dts,startAt;
             case ADM_TS_EAC3: 
                             {
                                 trackInfo->wav.encoding=WAV_EAC3;
-#if 0
-                                if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
+#if 1
+                                if(!ADM_EAC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
                                 {
                                         printf("[PsProbeAudio] Failed to get info on track :%x\n",trackInfo->esId);
                                         goto er;
