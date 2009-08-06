@@ -5,6 +5,7 @@ ADM_audioStream.cpp
 ADM_audioStreamBuffered.cpp
 ADM_audioStreamMP3.cpp
 ADM_audioStreamAC3.cpp
+ADM_audioStreamEac3.cpp
 )	
 #*************************************************
 #*************************************************

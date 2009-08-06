@@ -7,6 +7,7 @@
 #include "ADM_audioStream.h"
 #include "ADM_audioStreamMP3.h"
 #include "ADM_audioStreamAC3.h"
+#include "ADM_audioStreamEac3.h"
 
 /**
     \fn ADM_audioStream
@@ -134,6 +135,8 @@ uint8_t *data;
 uint32_t size;
     switch(wavheader->encoding)
     {
+        case WAV_EAC3:
+            return new ADM_audioStreamEAC3(wavheader,access);    
         case WAV_AC3:
             return new ADM_audioStreamAC3(wavheader,access);
         case WAV_MP3:
