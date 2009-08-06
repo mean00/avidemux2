@@ -29,7 +29,7 @@ int ibr,ifq,flags;
 uint32_t of=0;
 
 	*syncoff=of=0;
-     	printf("\n Syncing on %d \n",len);
+ //    	printf("\n Syncing on %d \n",len);
 	// Search for startcode
 	// 0x0b 0x77
 	while(1)
@@ -57,7 +57,7 @@ uint32_t of=0;
                 printf("Sync failed..continuing\n");
                 continue;
             }
-            printf("Sync found at offset %"LU"\n",of);
+//            printf("Sync found at offset %"LU"\n",of);
             *syncoff=of;
             info->frequency=(uint32_t)hdr.sample_rate;
             info->byterate=(uint32_t)hdr.bit_rate>>3;
