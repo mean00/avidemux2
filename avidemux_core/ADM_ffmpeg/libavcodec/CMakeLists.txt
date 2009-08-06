@@ -20,8 +20,8 @@ SET(${ADM_LIB}_SRCS
         flacdata.c
         vp6dsp.c
         tscc.c  resample2.c    qdm2.c  bitstream_filter.c  eval.c  vc1.c
-	vc1dsp.c  vp56.c  vp6.c  vp5.c  indeo2.c  smacker.c  opt.c  fraps.c  dnxhddec.c
-	mpeg12data.c  mpegaudiodata.c  msmpeg4data.c  vc1data.c  vp56data.c  mjpegbdec.c
+	vp56.c  vp6.c  vp5.c  indeo2.c  smacker.c  opt.c  fraps.c  dnxhddec.c
+	mpeg12data.c  mpegaudiodata.c  msmpeg4data.c   vp56data.c  mjpegbdec.c
 	h263_parser.c  h264_parser.c  mpeg4video_parser.c  mpegvideo_enc.c  mpeg12enc.c
 	mpegaudioenc.c  
         mjpegenc.c  mjpegdec.c  wma.c  

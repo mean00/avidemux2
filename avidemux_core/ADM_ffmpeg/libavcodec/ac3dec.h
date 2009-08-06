@@ -42,6 +42,7 @@
 #define AC3_MAX_COEFS   256
 #define AC3_BLOCK_SIZE  256
 #define MAX_BLOCKS        6
+#define SPX_MAX_BANDS    17
 
 typedef struct {
     AVCodecContext *avctx;                  ///< parent context
@@ -86,6 +87,23 @@ typedef struct {
     int firstchincpl;                       ///< first channel in coupling
     int first_cpl_coords[AC3_MAX_CHANNELS]; ///< first coupling coordinates states      (firstcplcos)
     int cpl_coords[AC3_MAX_CHANNELS][18];   ///< coupling coordinates                   (cplco)
+///@}
+
+///@defgroup spx spectral extension
+///@{
+    int spx_in_use;                             ///< spectral extension in use              (spxinu)
+    uint8_t channel_in_spx[AC3_MAX_CHANNELS];   ///< channel in spectral extension          (chinspx)
+    int8_t spx_atten_code[AC3_MAX_CHANNELS];    ///< spx attenuation code                   (spxattencod)
+    int spx_start_subband;                      ///< spx beginning frequency band           (spxbegf)
+    int spx_start_freq;                         ///< spx start frequency bin
+    int spx_end_freq;                           ///< spx end frequency bin
+    int spx_copy_start_freq;                    ///< spx starting frequency for copying     (copystartmant)
+    int num_spx_bands;                          ///< number of spx bands                    (nspxbnds)
+    uint8_t spx_band_struct[SPX_MAX_BANDS];     ///< spectral extension band structure      (spxbndstrc)
+    uint8_t spx_band_sizes[SPX_MAX_BANDS];      ///< number of bins in each band            (spxbndsztab)
+    uint8_t first_spx_coords[AC3_MAX_CHANNELS]; ///< first spx coordinates states           (firstspxcos)
+    float spx_noise_blend[AC3_MAX_CHANNELS][SPX_MAX_BANDS]; ///< spx noise blending factor  (nblendfact)
+    float spx_signal_blend[AC3_MAX_CHANNELS][SPX_MAX_BANDS];///< spx signal blending factor (sblendfact)
 ///@}
 
 ///@defgroup aht adaptive hybrid transform
@@ -178,5 +196,12 @@ int ff_eac3_parse_header(AC3DecodeContext *s);
  * This is used when AHT mode is enabled.
  */
 void ff_eac3_decode_transform_coeffs_aht_ch(AC3DecodeContext *s, int ch);
+
+/**
+ * Apply spectral extension to each channel by copying lower frequency
+ * coefficients to higher frequency bins and applying side information to
+ * approximate the original high frequency signal.
+ */
+void ff_eac3_apply_spectral_extension(AC3DecodeContext *s);
 
 #endif /* AVCODEC_AC3DEC_H */
