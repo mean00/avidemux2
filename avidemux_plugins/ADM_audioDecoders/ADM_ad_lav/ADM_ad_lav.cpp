@@ -145,7 +145,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
    if(!codec) {ADM_assert(0);}
     if (avcodec_open(_context, codec) < 0)
     {
-        printf("\n Lavc audio decoder init failed !\n");
+        printf("[audioCodec] Lavc audio decoder init failed !\n");
         ADM_assert(0);
     }
     if(!_blockalign)
@@ -153,11 +153,11 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
       if(_context->block_align) _blockalign=_context->block_align;
       else
       {
-        printf("FFWMA : no blockalign taking 378\n");
+        printf("[ADM_ad_lav] : no blockalign taking 378\n");
         _blockalign=378;
       }
     }
-    printf("FFwma init successful (blockalign %d)\n",info->blockalign);
+    printf("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
 }
  ADM_AudiocodecWMA::~ADM_AudiocodecWMA()
  {
@@ -197,13 +197,13 @@ int nbChunk;
 
           if(out<0)
           {
-            printf( " *** WMA decoding error (%u)***\n",_blockalign);
+            printf( "[ADM_ad_lav] *** WMA decoding error (%u)***\n",_blockalign);
             _head+=1; // Try skipping some bytes
             continue;
           }
           if(pout>=SCRATCH_PAD_SIZE)
           {
-            printf("Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
+            printf("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
             ADM_assert(0);
           }
           if(_context->codec_id == CODEC_ID_NELLYMOSER)
