@@ -362,18 +362,23 @@ uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   if (in->dataLength == 0 && !_allowNull)	// Null frame, silently skipped
     {
       
-      printf ("[lavc] null frame\n");
-      {
+      printf ("[Codec] null frame\n");
         // search the last image
-        if (_context->coded_frame && _context->coded_frame->data)
+        if (_context->coded_frame && 
+            _context->coded_frame->data &&
+            _context->coded_frame->data[0]
+            )
           {
-            
+            printf("[Codec] Cloning older pic\n");
             clonePic (_context->coded_frame, out);
             out->Pts=ADM_COMPRESSED_NO_PTS;
           }
         else
-          out->_noPicture = 1;
-          }
+            {
+                out->_noPicture = 1;
+                out->Pts=ADM_COMPRESSED_NO_PTS;
+                printf("[Codec] No Picture\n");
+            }
           return 1;
     }
    // Put a safe value....

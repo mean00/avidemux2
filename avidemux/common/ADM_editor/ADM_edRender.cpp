@@ -429,7 +429,8 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         if(tmpImage->_noPicture && refOnly)
         {
             printf("[decompressImage] NoPicture\n");
-            return false;
+            // Fill in with black
+            return true;
         }
         aprintf("[::Decompress] in:%"LU" out:%"LU" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
 	// If not quant and it is already YV12, we can stop here
