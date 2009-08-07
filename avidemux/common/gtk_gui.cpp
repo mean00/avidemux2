@@ -1001,114 +1001,46 @@ extern const char *getStrFromAudioCodec( uint32_t codec);
       \brief Allow to select audio track
 */
 void A_audioTrack( void )
-{
-#if 0
-        uint32_t nb;
+{        
         audioInfo *infos=NULL;
+        uint32_t nbAudioTracks,currentAudioTrack;
+        uint32_t newTrack;
 
-        uint32_t old,nw;
-        uint8_t r=0;
-        uint32_t oldtrack,newtrack;
-        char *newtrackname=ADM_strdup(currentAudioName);
-
-        if(!video_body->getAudioStreamsInfo(0,&nb, &infos))
-        {
-          GUI_Error_HIG(QT_TR_NOOP("Could not get tracks info"), NULL);
-                return ;
-        }
-        newtrack=oldtrack=(uint32_t)video_body->getCurrentAudioStreamNumber(0);
-        nw=old=currentAudioSource;
-
-        /* Build dialog factory widget */
-        diaMenuEntry sourcesStream[]={
-            {AudioAvi,QT_TR_NOOP("Video"),QT_TR_NOOP("Take audio from video file")},
-            {AudioNone,QT_TR_NOOP("None"),QT_TR_NOOP("No audio")},
-            {AudioAC3,QT_TR_NOOP("External AC3"),QT_TR_NOOP("Take audio from external AC3 file")},
-            {AudioMP3,QT_TR_NOOP("External MP3"),QT_TR_NOOP("Take audio from external MP3 file")},
-            {AudioWav,QT_TR_NOOP("External WAV"),QT_TR_NOOP("Take audio from external WAV file")}
-        };
-
-
-        diaElemMenu   sourceMenu(&nw,QT_TR_NOOP("_Audio source:"),5,sourcesStream,NULL);
-
-
-
-        diaElemFile  sourceName(0,&newtrackname,QT_TR_NOOP("_External file:"), NULL, QT_TR_NOOP("Select file"));
-
+        if(!video_body->getAudioStreamsInfo(0,&nbAudioTracks,&infos)) return;
+        currentAudioTrack=video_body->getCurrentAudioStreamNumber(0);
+        newTrack=currentAudioTrack;
         // Now build the list of embedded track
 #define MAX_AUDIO_TRACK 10
 #define MAX_AUDIO_TRACK_NAME 100
         diaMenuEntryDynamic *sourceavitracks[MAX_AUDIO_TRACK];
         char string[MAX_AUDIO_TRACK_NAME];
-        for(int i=0;i<nb;i++)
+        for(int i=0;i<nbAudioTracks;i++)
         {
-          sprintf(string,"Audio track %d (%s/%d channels/%d kbit per s/%d ms shift)",i,getStrFromAudioCodec(infos[i].encoding),
-                        infos[i].channels,infos[i].bitrate,infos[i].av_sync);
+          sprintf(string,"Audio track %d (%s, %d channels, %d kbit/s)",i,
+                        getStrFromAudioCodec(infos[i].encoding),
+                        infos[i].channels,infos[i].bitrate);
            sourceavitracks[i]=new diaMenuEntryDynamic(i,string,NULL);
         }
          if(infos) delete [] infos;
 
-         diaElemMenuDynamic   sourceFromVideo(&newtrack,QT_TR_NOOP("_Track from video:"),nb,sourceavitracks);
-         diaElem *allWidgets[]={&sourceMenu,&sourceFromVideo,&sourceName};
+         diaElemMenuDynamic   sourceFromVideo(&newTrack,QT_TR_NOOP("_Track from video:"),nbAudioTracks,sourceavitracks);
+         diaElem *allWidgets[]={&sourceFromVideo};
 
-         /* Link..*/
-         sourceMenu.link(&(sourcesStream[0]),1,&sourceFromVideo);
-         sourceMenu.link(&(sourcesStream[2]),1,&sourceName);
-         sourceMenu.link(&(sourcesStream[3]),1,&sourceName);
-         sourceMenu.link(&(sourcesStream[4]),1,&sourceName);
-
-
-         if( diaFactoryRun(QT_TR_NOOP("Main Audio Track"),3,allWidgets))
+         if( diaFactoryRun(QT_TR_NOOP("Main Audio Track"),1,allWidgets))
          {
-           if(nw!=AudioNone && nw!=AudioAvi)
-           {
-              if( !ADM_fileExist(newtrackname))
-              {
-                GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Cannot load"),QT_TR_NOOP("The selected audio file does not exist."));
-                goto roger_and_out;
-              }
-           }
-            switch( nw)
+            if(newTrack!=currentAudioTrack)
             {
-                    case AudioMP3:
-                            if( ADM_fileExist(newtrackname))
-                              A_loadMP3(newtrackname);
-                            break;
-                    case AudioAC3:
-                            if( ADM_fileExist(newtrackname))
-                              A_loadAC3(newtrackname);
-                            break;
-                    case AudioWav:
-                            if( ADM_fileExist(newtrackname))
-                              A_loadWave(newtrackname);
-                            break;
-                    case AudioNone:
-//                              A_changeAudioStream((AVDMGenericAudioStream *) NULL, AudioNone,NULL);
-                            break;
-                    case AudioAvi:
-                            //printf("New :%d old:%d\n",newtrack,oldtrack);
-                            if(oldtrack!=newtrack)
-                            {
-                                    video_body->changeAudioStream(0,newtrack);
-                                    //
-                                    if(aviaudiostream==currentaudiostream)
-                                            currentaudiostream=NULL;
-                                    delete aviaudiostream;
-                                    aviaudiostream=NULL;
-                                    video_body->getAudioStream(&aviaudiostream);
-                            }
-                            A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
-                            break;
-                    default:
-                            ADM_assert(0);
+                    video_body->changeAudioStream(0,newTrack);
+                    video_body->getAudioStream(&aviaudiostream);
+            }
         }
-         }
+      
 roger_and_out:
          /* Clean up */
-         for(int i=0;i<nb;i++)
+         for(int i=0;i<nbAudioTracks;i++)
             delete sourceavitracks[i];
         return;
-#endif
+
 }
 /**
         \fn A_externalAudioTrack

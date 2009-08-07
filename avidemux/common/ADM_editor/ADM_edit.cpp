@@ -758,10 +758,11 @@ uint8_t ADM_Composer::removeFrames (uint32_t start, uint32_t end)
   return 1;
 
 }
-//******************************
-// Select audio track
-//
-//******************************
+/**
+    \fn getAudioStreamsInfo
+    \brief Returns a copy of all audio trackes at frame frame
+    call delete [] infos when you dont need them anymore
+*/
 uint8_t ADM_Composer::getAudioStreamsInfo(uint32_t frame,uint32_t *nbStreams, audioInfo **infos)
 {
 uint32_t seg,rel,reference;
@@ -784,11 +785,12 @@ uint32_t seg,rel,reference;
         for(int i=0;i<*nbStreams;i++)
         {
             WAVHeader *wav=&(_videos[reference].audioTracks[i]->wavheader);
-            (*infos)->bitrate=(wav->byterate*8)/1000;
-            (*infos)->channels=wav->channels;
-            (*infos)->encoding=wav->encoding;
-            (*infos)->frequency=wav->frequency;
-            (*infos)->av_sync=0;
+            audioInfo *t=(*infos)+i;
+            t->bitrate=(wav->byterate*8)/1000;
+            t->channels=wav->channels;
+            t->encoding=wav->encoding;
+            t->frequency=wav->frequency;
+            t->av_sync=0;
          }
         return 1;
     return 0;
