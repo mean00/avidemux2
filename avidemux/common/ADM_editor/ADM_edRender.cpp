@@ -164,6 +164,10 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
          }
          // Now uncompress it...
          result=cache->getFreeImage();
+         if(frame==0) // out first frame, make sure it starts black to avoid the all green effect
+         {
+            result->blacken();
+         }
          if(!result)
          {
                 printf("[DecodePictureUpToIntra] Cache full for frame %"LU"\n",vid->lastSentFrame);
