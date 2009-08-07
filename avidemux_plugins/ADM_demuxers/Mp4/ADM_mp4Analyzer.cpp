@@ -758,13 +758,19 @@ nextAtom:
                                 left-=4;
                                 if(atomVersion)
                                 {
+                                    
                                     info.samplePerPacket=son.read32();
                                     info.bytePerPacket=son.read32();
                                     info.bytePerFrame=son.read32();
+                                        #define ADM_NOT_NULL(x)          if(!info.x) info.x=1;
                                     printf("[STSD] Sample per packet %u\n",info.samplePerPacket);
                                     printf("[STSD] Bytes per packet  %u\n",info.bytePerPacket);
                                     printf("[STSD] Bytes per frame   %u\n",info.bytePerFrame);
                                     printf("[STSD] Bytes per sample   %u\n",son.read32());
+                                    ADM_NOT_NULL(samplePerPacket);  
+                                    ADM_NOT_NULL(bytePerPacket);
+                                    ADM_NOT_NULL(bytePerFrame);
+                                    
                                     left-=16;
                                 }else
                                 {
@@ -1128,4 +1134,5 @@ MPsampleinfo::~MPsampleinfo()
 }
 
 // EOF
+
 
