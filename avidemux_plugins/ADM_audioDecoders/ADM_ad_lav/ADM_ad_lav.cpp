@@ -26,6 +26,7 @@ class ADM_AudiocodecWMA : public     ADM_Audiocodec
 		uint8_t _buffer[ ADMWA_BUF];
 		uint32_t _tail,_head;
 		uint32_t _blockalign;
+        uint32_t channels;
 
 	public:
 		ADM_AudiocodecWMA(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -88,8 +89,10 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
  ADM_AudiocodecWMA::ADM_AudiocodecWMA(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
        :  ADM_Audiocodec(fourcc)
  {
+    printf(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
+    printf(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
-
+    channels=info->channels;
     _contextVoid=(void *)avcodec_alloc_context();
     ADM_assert(_contextVoid);
     // Fills in some values...
@@ -136,9 +139,14 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
       default:
              ADM_assert(0);
     }
+
+
+
+
+
     _context->extradata=(uint8_t *)d;
     _context->extradata_size=(int)l;
-    //printf(" Using %"LU" bytes of extra header data\n",l);
+    printf("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
 
    AVCodec *codec=avcodec_find_decoder(_context->codec_id);
@@ -158,6 +166,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
       }
     }
     printf("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
+  
 }
  ADM_AudiocodecWMA::~ADM_AudiocodecWMA()
  {
@@ -206,6 +215,9 @@ int nbChunk;
             printf("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
             ADM_assert(0);
           }
+
+//            printf("Channel layout :%llx\n",_context->channel_layout);
+
           if(_context->codec_id == CODEC_ID_NELLYMOSER)
           { // Hack, it returns inconsistent size
             out=nbChunk*_blockalign;
@@ -218,6 +230,18 @@ int nbChunk;
           {
             *outptr++=((float)run16[i])/32767.;
           }
+          if(channels>=5 )
+            {
+            CHANNEL_TYPE *p_ch_type = channelMapping;
+        #define DOIT(x,y) if(_context->channel_layout & CH_##x) *(p_ch_type++)=ADM_CH_##y;
+                DOIT(LOW_FREQUENCY,LFE);
+                DOIT(FRONT_LEFT,FRONT_LEFT);
+                DOIT(FRONT_CENTER,FRONT_CENTER);
+                DOIT(FRONT_RIGHT,FRONT_RIGHT);
+                DOIT(SIDE_LEFT,REAR_LEFT);
+                DOIT(SIDE_RIGHT,REAR_RIGHT);
+
+            }
         }
         return 1;
 }
