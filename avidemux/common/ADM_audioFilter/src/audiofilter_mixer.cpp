@@ -450,7 +450,7 @@ static int M3F2RLFE(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL
 static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
 {
 	memset(out, 0, sizeof(float) * nbSample * 2);
-#if 0
+
 	for (int i = 0; i < nbSample; i++) {
 		for (int c = 0; c < chan; c++) {
 			switch (chanMap[c]) {
@@ -487,14 +487,14 @@ static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,C
 		}
 		out += 2;
 	}
-#endif
+
 	return nbSample*2;
 }
 
 static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
 {
 	memset(out, 0, sizeof(float) * nbSample * 2);
-#if 0
+
 	for (int i = 0; i < nbSample; i++) {
 		for (int c = 0; c < chan; c++) {
 			switch (chanMap[c]) {
@@ -537,7 +537,7 @@ static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,
 		}
 		out += 2;
 	}
-#endif
+
 	return nbSample*2;
 }
 
