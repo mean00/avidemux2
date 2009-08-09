@@ -67,7 +67,7 @@ ENDFOREACH (_libName ${commonLibs})
 #############################################
 # Add gtk specific libs
 #############################################
-TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_UIGtk)
+TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_UIGtk6)
 TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_dialogGtk)
 #TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_filtersGtk)
 TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_gui2Gtk)

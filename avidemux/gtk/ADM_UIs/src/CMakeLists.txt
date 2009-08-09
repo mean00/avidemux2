@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_UIGtk)
+SET(ADM_LIB ADM_UIGtk6)
 
 SET(${ADM_LIB}_SRCS
 	DIA_color.cpp
