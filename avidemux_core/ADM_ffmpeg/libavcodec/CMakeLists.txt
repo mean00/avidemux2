@@ -28,7 +28,7 @@ SET(${ADM_LIB}_SRCS
         dca.c
         ac3enc.c  ac3.c  ac3tab.c   ac3_parser.c
         eac3dec.c ac3dec.c ac3dec_data.c eac3dec_data.c
-        #aacenc.c aaccoder.c
+        aacenc.c aaccoder.c
 	dvbsub_parser.c  dvbsubdec.c  dvbsub.c  xiph.c  sp5xdec.c  
         nellymoserdec.c nellymoser.c
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c
@@ -63,7 +63,7 @@ IF (ADM_CPU_ALTIVEC)
 ENDIF (ADM_CPU_ALTIVEC)
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
-
+ADD_DEFINITIONS(-std=c99)
 IF (ADM_DEBUG AND ADM_CPU_X86_32)
 	ADD_SOURCE_CFLAGS(cabac.c -O2)
 	ADD_SOURCE_CFLAGS(h264.c -O2)

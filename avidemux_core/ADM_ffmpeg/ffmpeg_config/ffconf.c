@@ -35,6 +35,8 @@ int main(void)
 
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");
   
+    DECLARE_DECODER(AAC, eatgq);
+    DECLARE_DECODER(MPEG4AAC, mpeg4aac);
     DECLARE_DECODER(DCA, dca);
     DECLARE_DECODER(MP3, mp3);
     DECLARE_DECODER(MP2, mp2);
@@ -113,7 +115,6 @@ int main(void)
     DECLARE_DECODER(MP1, eatgq);
     DECLARE_DECODER(MLP, eatgq);
     DECLARE_DECODER(ALAC, eatgq);
-    DECLARE_DECODER(AAC, eatgq);
     DECLARE_DECODER(PGMYUV, eatgq);
     DECLARE_DECODER(PPM, eatgq);
 
@@ -193,7 +194,6 @@ int main(void)
     DECLARE_DECODER(WNV1, wnv1);
     DECLARE_DECODER(XAN_WC3, xan_wc3);
     DECLARE_DECODER(XL, xl);
-    DECLARE_DECODER(MPEG4AAC, mpeg4aac);
     DECLARE_DECODER(ALAC, alac);
     DECLARE_DECODER(ATRAC3, atrac3);
     DECLARE_DECODER(COOK, cook);
@@ -286,13 +286,13 @@ int main(void)
 	DECLARE_DECODER (LIBVORBIS, libvorbis);
 
 #define DECLARE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 1\n"); 
+    DECLARE_PARSER (AAC, aac);
     DECLARE_PARSER (H263, h263);
     DECLARE_PARSER (H264, h264);
     DECLARE_PARSER (MPEG4VIDEO, mpeg4video);
 
 #undef DECLARE_PARSER
 #define DECLARE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 0\n"); 
-    DECLARE_PARSER (AAC, aac);
     DECLARE_PARSER (AC3, ac3);
     DECLARE_PARSER (CAVSVIDEO, cavsvideo);
     DECLARE_PARSER (DCA, dca);
@@ -310,6 +310,7 @@ int main(void)
 
 #define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 1\n");
 
+    DECLARE_ENCODER (AAC, mjpeg);
     DECLARE_ENCODER (MJPEG, mjpeg);
     DECLARE_ENCODER (MSMPEG4V3, msmpeg4v3);
     DECLARE_ENCODER(H263P, h263p);
@@ -330,7 +331,6 @@ int main(void)
 
 #undef DECLARE_ENCODER
 #define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 0\n"); 
-    DECLARE_ENCODER (AAC, mjpeg);
     DECLARE_ENCODER(XSUB, amv);
     DECLARE_ENCODER(V210, amv);
     DECLARE_ENCODER(LIBOPENCORE_AMRNB, amv);
