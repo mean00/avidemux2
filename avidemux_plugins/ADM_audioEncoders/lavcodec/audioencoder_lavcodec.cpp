@@ -27,20 +27,7 @@
 
 #include "ADM_lavcodec.h"
 
-
-
-#define Join(x,y) x##_##y
-#if defined(ADM_LAV_MP2) && !defined(ADM_LAV_AC3)
-  #define makeName(x) Join(x,MP2)
-  #define AUDMEncoder_Lavcodec AUDMEncoder_Lavcodec_MP2
-#else
- #if !defined(ADM_LAV_MP2) && defined(ADM_LAV_AC3)
-  #define makeName(x) Join(x,AC3)
-  #define AUDMEncoder_Lavcodec AUDMEncoder_Lavcodec_AC3
- #else
-   #error
- #endif
-#endif
+#include ADM_AE_SET
 
 #include "audioencoder_lavcodec.h"
 
@@ -58,21 +45,11 @@ static ADM_audioEncoder encoderDesc = {
   create,			// Defined by macro automatically
   destroy,			// Defined by macro automatically
   configure,		//** put your own function here**
-#ifdef ADM_LAV_MP2      
-  "LavMP2",            
-  "MP2 (lav)",      
-  "MP2 LavCodec encoder plugin Mean 2008",             
-  2,                    // Max channels
-  1,0,0,                // Version
-#else
-  
-
- "LavAC3",            
-  "AC3 (lav)",      
-  "AC3 LavEncoder encoder plugin Mean 2008",             
-  6,                    // Max channels
-  1,0,0,                // Version
-#endif
+  ADM_LAV_NAME,
+  ADM_LAV_MENU,
+  ADM_LAV_DESC,
+  ADM_LAV_MAX_CHANNEL,
+  ADM_LAV_VERSION,
   makeName(WAV),
 
   100,                  // Priority
@@ -130,20 +107,14 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   _context=( void *)avcodec_alloc_context();
   
 
-#ifdef ADM_LAV_MP2      
-  if( _incoming->getInfo()->channels>2)
+  if( _incoming->getInfo()->channels>ADM_LAV_MAX_CHANNEL)
   {
     printf("[Lavcodec]Too many channels\n");
     return 0; 
   }
-#endif
   wavheader.byterate=(lavConfig.bitrate*1000)>>3;         
       
-#ifdef ADM_LAV_MP2 
-    _chunk = 1152*wavheader.channels;
-#else
-    _chunk = 1536*wavheader.channels; // AC3
-#endif
+    _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
   printf("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
          wavheader.frequency,wavheader.channels,lavConfig.bitrate);
   
