@@ -52,6 +52,7 @@ static  ad_supportedFormat Formats[]={
         {WAV_MP3,AD_MEDIUM_QUAL},
         {WAV_MP2,AD_MEDIUM_QUAL},
         {WAV_AC3,AD_LOW_QUAL},   // liba52 preferred ???
+        {WAV_AAC,AD_LOW_QUAL},   // liba52 preferred ???
         {WAV_EAC3,AD_MEDIUM_QUAL}
   
 };
@@ -134,6 +135,10 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         break;
       case WAV_EAC3:
         _context->codec_id = CODEC_ID_EAC3;
+        _blockalign = 1;
+        break;
+      case WAV_AAC:
+        _context->codec_id = CODEC_ID_AAC;
         _blockalign = 1;
         break;
       default:
