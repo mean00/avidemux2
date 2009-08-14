@@ -67,7 +67,7 @@ fileParser::~fileParser()
 */
 uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
 {
-        char *dot = NULL;                   // pointer to the last dot in filename
+        const char *dot = NULL;                   // pointer to the last dot in filename
         uint8_t decimals = 0;               // number of decimals
         char *left = NULL, *number = NULL, *right = NULL; // parts of filename (after splitting)
 
