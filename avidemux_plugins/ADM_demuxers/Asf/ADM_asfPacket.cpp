@@ -1,5 +1,6 @@
-/***************************************************************************
-    copyright            : (C) 2006 by mean
+/** *************************************************************************
+    \file ADM_asfPacket.cpp
+    copyright            : (C) 2006/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -11,27 +12,23 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
-#include <string.h>
-
-#include <math.h>
 
 #include "ADM_default.h"
-#include "ADM_editor/ADM_Video.h"
-#include "ADM_assert.h"
+#include <math.h>
+#include "ADM_Video.h"
 
 #include "fourcc.h"
 
 
 #include "ADM_asfPacket.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
-#define MODULE_NAME MODULE_ASF
-#include "ADM_osSupport/ADM_debug.h"
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
  
 asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t startDataOffset)
@@ -113,7 +110,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    _offset=0;
    if(read8()!=0x82) 
    {
-     printf("[ASF PACKET]At pos %x \n",ftello(_fd));
+     printf("[ASF PACKET]At pos 0x%"LLX" \n",(uint64_t)ftello(_fd));
      printf("[ASF PACKET]not a 82 packet\n");
      printf("[ASF PACKET]not a 82 packet\n");
      printf("[ASF PACKET]not a 82 packet\n");
@@ -334,7 +331,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  {
    uint32_t go;
    go=packetStart+ pakSize;
-   aprintf("Pos %x\n",ftello(_fd));
+   aprintf("Pos 0x%"LLX"\n",(uint64_t)ftello(_fd));
    fseeko(_fd,go,SEEK_SET);
    aprintf("Skipping to %x\n",go);
   

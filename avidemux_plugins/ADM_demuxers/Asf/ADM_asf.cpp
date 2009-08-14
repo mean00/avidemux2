@@ -1,5 +1,7 @@
-/***************************************************************************
-    copyright            : (C) 2006 by mean
+/** *************************************************************************
+    \file ADM_asf.cpp
+    \brief ASF/WMV demuxer
+    copyright            : (C) 2006/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -11,45 +13,57 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
-
-#include <math.h>
 
 #include "ADM_default.h"
-#include "ADM_editor/ADM_Video.h"
+#include "ADM_Video.h"
 #include "ADM_assert.h"
 
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
-//#include "DIA_working.h"
 #include "ADM_asf.h"
 #include "ADM_asfPacket.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
-#define MODULE_NAME MODULE_ASF
-#include "ADM_osSupport/ADM_debug.h"
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
 static const uint8_t asf_audio[16]={0x40,0x9e,0x69,0xf8,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 static const uint8_t asf_video[16]={0xc0,0xef,0x19,0xbc,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 
-
-WAVHeader *asfHeader::getAudioInfo(void )
-{
-  if(!_curAudio) return NULL;
-  return _curAudio->getInfo();
-}
-/*
-    __________________________________________________________
+/**
+    \fn getAudioInfo
 */
-
-uint8_t asfHeader::getAudioStream(AVDMGenericAudioStream **audio)
+WAVHeader *asfHeader::getAudioInfo(uint32_t i )
 {
- 
-  *audio=_curAudio;
-  return 1; 
+  if(!_nbAudioTrack) return NULL;
+  
+  ADM_assert(i<_nbAudioTrack);
+  if(!_audioAccess) return NULL;
+  return &(_allAudioTracks[i].wavHeader);
 }
-/*
-    __________________________________________________________
+/**
+    \fn getAudioStream
+*/
+uint8_t    asfHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio)
+{
+ *audio=NULL;
+  if(!_nbAudioTrack) return true;
+  ADM_assert(i<_nbAudioTrack); 
+  *audio=_audioStreams[i];
+ return 1; 
+}
+/**
+    \fn getNbAudioStreams
+*/
+uint8_t                 asfHeader::getNbAudioStreams(void)
+{
+    return _nbAudioTrack;
+}
+
+/**
+    \fn Dump
 */
 
 void asfHeader::Dump(void)
@@ -57,8 +71,30 @@ void asfHeader::Dump(void)
  
   printf("*********** ASF INFO***********\n");
 }
-/*
-    __________________________________________________________
+/**
+    \fn getTime
+*/
+uint64_t                   asfHeader::getTime(uint32_t frameNum)
+{
+    return 0;
+}
+
+uint64_t                   asfHeader::getVideoDuration(void)
+{
+    return 0;
+}
+bool                       asfHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+    *pts=ADM_NO_PTS;
+    *dts=ADM_NO_PTS;
+    return true;
+}
+bool                       asfHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+    return true;
+}
+/**
+    \fn close
 */
 
 uint8_t asfHeader::close(void)
@@ -97,48 +133,43 @@ uint8_t asfHeader::close(void)
     asfAudioTrak *trk=&(_allAudioTracks[i]);
     if(trk->extraData) delete [] trk->extraData;
     trk->extraData=NULL;
+    delete    _audioAccess[i];
+    _audioAccess[i]=NULL;
+    delete _audioStreams[i];
+    _audioStreams[i]=NULL;    
   }
 }
-uint8_t       asfHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
-{
-  *len=_extraDataLen;
-  *data=_extraData;
-  return 1; 
-}
-/*
-    __________________________________________________________
+/**
+    \fn asfHeader
 */
+
 
  asfHeader::asfHeader( void ) : vidHeader()
 {
   _fd=NULL;
   _videoIndex=-1;
   myName=NULL;
-  _extraDataLen=0;
-  _extraData=NULL;
   _packetSize=0;
   _videoStreamId=0;
   nbImage=0;
   _index=NULL;
   _packet=NULL;
-  _curAudio=NULL;
   _nbPackets=0;
-  printf("%u\n",sizeof(_allAudioTracks));
+//  printf("%u\n",sizeof(_allAudioTracks));
   memset(&(_allAudioTracks[0]),0,sizeof(_allAudioTracks));
-
   _nbAudioTrack=0;
-  _currentAudioStream=0;
+
 }
-/*
-    __________________________________________________________
+/**
+    \fn ~ asfHeader
 */
 
  asfHeader::~asfHeader(  )
 {
   close();
 }
-/*
-    __________________________________________________________
+/**
+    \fn open
 */
 
 uint8_t asfHeader::open(const char *name)
@@ -158,19 +189,15 @@ uint8_t asfHeader::open(const char *name)
   fseeko(_fd,_dataStartOffset,SEEK_SET);
   _packet=new asfPacket(_fd,_nbPackets,_packetSize,&readQueue,_dataStartOffset);
   curSeq=1;
-  if(_nbAudioTrack)
+  for(int i=0;i<_nbAudioTrack;i++)
   {
-    _curAudio=new asfAudio(this,_currentAudioStream);
+        _audioAccess[i]=new asfAudioAccess(this,i);
+        _audioStreams[i]=ADM_audioCreateStream(&(_allAudioTracks[i].wavHeader), _audioAccess[i]);
   }
   return 1;
 }
-/*
-    __________________________________________________________
-*/
-
- 
-/*
-    __________________________________________________________
+/**
+    \fn setFlag
 */
 
   uint8_t  asfHeader::setFlag(uint32_t frame,uint32_t flags)
@@ -179,8 +206,8 @@ uint8_t asfHeader::open(const char *name)
   _index[frame].flags=flags;
   return 1; 
 }
-/*
-    __________________________________________________________
+/**
+    \fn getFlags
 */
 
 uint32_t asfHeader::getFlags(uint32_t frame,uint32_t *flags)
@@ -191,11 +218,20 @@ uint32_t asfHeader::getFlags(uint32_t frame,uint32_t *flags)
       *flags=_index[frame].flags;
   return 1; 
 }
-/*
-    __________________________________________________________
-*/
-
-uint8_t  asfHeader::getFrameNoAlloc(uint32_t framenum,ADMCompressedImage *img)
+/**
+    \fn getFrameSize
+*/ 
+uint8_t     asfHeader::getFrameSize(uint32_t frame,uint32_t *size)
+{
+    *size=0;
+    if(frame>=nbImage) return 0;
+    *size=_index[frame].frameLen;
+    return true;
+}
+/**
+    \fn getFrame
+*/    
+uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
   img->dataLength=0;
   img->flags=AVI_KEY_FRAME;
@@ -457,12 +493,12 @@ uint8_t asfHeader::getHeaders(void)
         printf("\nConceal       :");
         for(int z=0;z<16;z++) printf(":%02x",s->read8());
         printf("\n");
-        printf("Reserved    : %08x\n",s->read64());
-        printf("Total Size  : %04x\n",s->read32());
-        printf("Size        : %04x\n",s->read32());
+        printf("Reserved    : %08"LLX"\n",s->read64());
+        printf("Total Size  : %04"LX"\n",s->read32());
+        printf("Size        : %04"LX"\n",s->read32());
         sid=s->read16();
-        printf("Stream nb   : %04x\n",sid);
-        printf("Reserved    : %04x\n",s->read32());
+        printf("Stream nb   : %04d\n",sid);
+        printf("Reserved    : %04"LX"\n",s->read32());
         switch(audiovideo)
         {
           case 1: // Video
@@ -516,29 +552,10 @@ uint8_t asfHeader::getHeaders(void)
   printf("End of headers\n");
   return 1;
 }
-uint8_t    asfHeader::changeAudioStream(uint32_t newstream)
-{
-  ADM_assert(_currentAudioStream<_nbAudioTrack);
-  _currentAudioStream=newstream;
-  return 1;
-}
-uint32_t    asfHeader::getCurrentAudioStreamNumber(void)
-{
-  return _currentAudioStream;
-}
-uint8_t     asfHeader::getAudioStreamsInfo(uint32_t *nbStreams, audioInfo **infos)
-{
-    *nbStreams=_nbAudioTrack;
-    if(_nbAudioTrack)
-    {
-      *infos=new audioInfo[_nbAudioTrack];
-      for(int i=0;i<_nbAudioTrack;i++)
-      {
-        WAV2AudioInfo(&(_allAudioTracks[i].wavHeader),&((*infos)[i]));
-      }
-    }
-    return 1;
-}
+/**
+    \fn loadVideo
+*/
+
 uint8_t asfHeader::loadVideo(asfChunk *s)
 {
   uint32_t w,h,x;
@@ -555,7 +572,7 @@ uint8_t asfHeader::loadVideo(asfChunk *s)
             _video_bih.biHeight=h;
             printf("Pic Width  %04d\n",w);
             printf("Pic Height %04d\n",h);
-            printf(" BMP size  %04d (%04d)\n",x,sizeof(ADM_BITMAPINFOHEADER));
+            printf(" BMP size  %04d (%04d)\n",x,(int)sizeof(ADM_BITMAPINFOHEADER));
             s->read((uint8_t *)&_video_bih,sizeof(ADM_BITMAPINFOHEADER));
 
 		#ifdef ADM_BIG_ENDIAN

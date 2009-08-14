@@ -17,7 +17,7 @@
 #ifndef ASF_PACKET_H
 #define ASF_PACKET_H
 
-#include "ADM_osSupport/ADM_queue.h"
+#include "ADM_queue.h"
 
 typedef struct 
 {

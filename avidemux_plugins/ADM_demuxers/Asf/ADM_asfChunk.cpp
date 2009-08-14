@@ -11,17 +11,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <string.h>
-
-#include <math.h>
 
 #include "ADM_default.h"
-#include "ADM_editor/ADM_Video.h"
+#include "ADM_Video.h"
 #include "ADM_assert.h"
 
 #include "fourcc.h"
@@ -119,7 +111,7 @@ uint8_t   asfChunk::nextChunk(int shortChunk)
   chunkLen<<=32;
   chunkLen+=low;
   
-  printf("Next chunk from %x +%u to %x\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
+  printf("Next chunk from %"LLX" +%"LX" to %"LLX"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
   
   return 1;
   
@@ -128,9 +120,9 @@ uint8_t   asfChunk::skipChunk(void)
 {
   uint32_t go;
   go=_chunkStart+ chunkLen;
-  printf("Pos %x\n",ftello(_fd));
+  printf("Pos 0x%"LLX"\n",ftello(_fd));
   fseeko(_fd,go,SEEK_SET);
-  printf("Skipping to %x\n",go);
+  printf("Skipping to 0x%"LX"\n",go);
   
   return 1; 
 }
@@ -187,8 +179,8 @@ uint8_t   asfChunk::dump(void)
   const chunky *id;
   id=chunkId();
   printf("Chunk type  : <<<<%s>>>>\n",id->name);
-  printf("Chunk Start : %x\n",_chunkStart);
-  printf("Chunk Len   : %lu\n",(uint32_t)chunkLen);
+  printf("Chunk Start : %"LX"\n",_chunkStart);
+  printf("Chunk Len   : %"LU"\n",(uint32_t)chunkLen);
   for(int i=0;i<16;i++) printf("%02x ",guId[i]);
   printf("\n");
   return 1;

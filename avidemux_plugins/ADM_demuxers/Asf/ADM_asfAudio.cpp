@@ -11,58 +11,50 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <string.h>
-
-#include <math.h>
 
 #include "ADM_default.h"
-#include "ADM_editor/ADM_Video.h"
-#include "ADM_assert.h"
+#include "ADM_Video.h"
 
 #include "fourcc.h"
-
-
 #include "ADM_asf.h"
-
-
-/*
-    __________________________________________________________
+/**
+    \fn getDurationInUs
+*/
+uint64_t  asfAudioAccess::getDurationInUs(void)
+{
+    return 0;
+}
+/**
+    \fn asfAudioAccess
 */
 
-asfAudio::~asfAudio()
+asfAudioAccess::~asfAudioAccess()
 {
 	printf("[asfAudio] Destroying track\n");
 
 	fclose(_fd);
 	_fd = NULL;
 
-	delete _wavheader;
+
 	delete _packet;
 
-	_wavheader = NULL;
+
 	_packet = NULL;
 }
-/*
-    __________________________________________________________
+
+/**
+    \fn asfAudioAccess
 */
                                
-asfAudio::asfAudio(asfHeader *father,uint32_t myRank)
+asfAudioAccess::asfAudioAccess(asfHeader *father,uint32_t myRank)
 {
   printf("[asfAudio] Creating track\n");
     _myRank=myRank;
     _father=father;
     _track=&(_father->_allAudioTracks[myRank]);
-    
-    _wavheader=new WAVHeader;
-    memcpy(_wavheader,&(_track->wavHeader),sizeof(WAVHeader));
-    _extraDataLen=_track->extraDataLen;
-    _extraData= _track->extraData;
-    _length=_track->length;
+    extraDataLen=_track->extraDataLen;
+    extraData= _track->extraData;
     _streamId=_track->streamIndex;
     _dataStart=_father->_dataStartOffset;
     _fd=fopen(_father->myName,"rb");
@@ -71,25 +63,21 @@ asfAudio::asfAudio(asfHeader *father,uint32_t myRank)
     _packetSize=_father->_packetSize;
     _packet=new asfPacket(_fd,_father->_nbPackets,_packetSize,
                           &readQueue,_dataStart);
-    _destroyable=1;
-    printf("[asfAudio] Length %u\n",_length);
+    
+    printf("[asfAudio] Length %u\n",getLength());
   
 }
-/*
-    __________________________________________________________
-*/
 
-uint32_t            asfAudio::read(uint32_t len,uint8_t *buffer)
+uint64_t  asfAudioAccess::getPos(void)
 {
-  uint32_t lan,samples;
-  if(!getPacket(      buffer,    &lan, &samples)) return 0;
-  return lan;
+    return 0;
 }
-/*
-    __________________________________________________________
+
+/**
+    \fn setPos
 */
 
-uint8_t   asfAudio::goTo(uint32_t newoffset)
+bool   asfAudioAccess::setPos(uint64_t newoffset)
 {
   // Look into the index until we find the audio
   // just after the wanted value
@@ -106,55 +94,39 @@ uint8_t   asfAudio::goTo(uint32_t newoffset)
         printf("[asfAudio] Cannot seek to frame %u\n",i);
         return 0; 
       }
-      printf("[asfAudio]For audio %u, seeking to packet %u\n",newoffset,_father->_index[i].packetNb);
+      printf("[asfAudio]For audio %"LLU", seeking to packet %"LU"\n",newoffset,_father->_index[i].packetNb);
       _packet->nextPacket(_streamId);
       _packet->skipPacket();
       return 1;
     }
   }
-  printf("[asfAudio] Seek failed for offset=%u\n",newoffset);
+  printf("[asfAudio] Seek failed for offset=%"LLU"\n",newoffset);
   return 1; 
 }
-/*
-    __________________________________________________________
+
+/**
+    \fn goToTime
 */
 
-uint8_t   asfAudio::goToTime(uint32_t newoffset)
+bool   asfAudioAccess::goToTime(uint64_t dts_us)
 {
   // Compute the linear version
   float f;
   uint32_t val;
   
-  f=newoffset;
-  f*=_wavheader->byterate;
+  f=dts_us;
+  f/=1000;
+  f*=_track->wavHeader.byterate;
   
   val=(uint32_t)((f+459.)/1000.);
-  goTo(val);
-  return 1; 
+  return setPos(val);
 }
-/*
-    __________________________________________________________
-*/
 
-uint8_t   asfAudio::extraData(uint32_t *l,uint8_t **d)
-{
-  if(_extraData)
-  {
-    *l=_extraDataLen;
-    *d=_extraData;  
-  }
-  else
-  {
-    *l=0;
-    *d=NULL; 
-  }
-  return 1;
-}
-/*
-    __________________________________________________________
-*/
+/**
+    \fn getPacket
 
-uint8_t  asfAudio::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
+*/
+bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,uint64_t *dts)
 {
   *len=0;
   uint32_t delta;
@@ -171,8 +143,7 @@ uint8_t  asfAudio::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
       // still same sequence ...add
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
-#warning FIXME      
-      *samples=384; // ?
+      *dts=ADM_NO_PTS;
 	  delete[] bit->data;
       delete bit;
       return 1;

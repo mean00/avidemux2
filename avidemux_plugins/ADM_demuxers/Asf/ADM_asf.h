@@ -2,7 +2,7 @@
                           ADM_pics.h  -  description
                              -------------------
     begin                : Mon Jun 3 2002
-    copyright            : (C) 2002 by mean
+    copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -15,15 +15,11 @@
  *                                                                         *
  ***************************************************************************/
  
-
-
 #ifndef ADM_ASF_H
 #define ADM_ASF_H
 
-#include "ADM_editor/ADM_Video.h"
-#include "ADM_audio/aviaudio.hxx"
-
-#include "ADM_osSupport/ADM_queue.h"
+#include "ADM_Video.h"
+#include "ADM_queue.h"
 #include "ADM_asfPacket.h"
 
 #define ASF_MAX_AUDIO_TRACK 8
@@ -51,6 +47,7 @@ typedef enum
   ADM_CHUNK_EXTENDED_STREAM_PROP,
   ADM_CHUNK_UNKNOWN_CHUNK
 }ADM_KNOWN_CHUNK;
+
 typedef struct 
 {
   const char *name;
@@ -58,6 +55,7 @@ typedef struct
   uint8_t val[16];
   ADM_KNOWN_CHUNK id; 
 }chunky;
+
 class asfChunk
 {
   protected:
@@ -92,15 +90,16 @@ typedef struct
   uint32_t     nbPackets;
   uint32_t     length;
   WAVHeader    wavHeader;
-  
 }asfAudioTrak;
 
-class asfAudio : public AVDMGenericAudioStream
+/**
+    \class asfAudioAccess
+    \brief Audio access class for asf/wmv
+*/
+class asfAudioAccess : public ADM_audioAccess
 {
   protected:
     uint32_t                _myRank;
-    uint32_t                _extraDataLen;
-    uint8_t                 *_extraData;
     char                    *myName;
     uint32_t                _streamId;
     uint32_t                _dataStart;
@@ -111,16 +110,30 @@ class asfAudio : public AVDMGenericAudioStream
     class asfHeader         *_father;
     asfAudioTrak            *_track;
   public:
-                                asfAudio(asfHeader *father,uint32_t rank);
-    virtual                     ~asfAudio();
-    virtual uint32_t            read(uint32_t len,uint8_t *buffer);
-    virtual uint8_t             goTo(uint32_t newoffset);
-    virtual uint8_t             getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
-    virtual uint8_t             goToTime(uint32_t mstime);
-    virtual uint8_t             extraData(uint32_t *l,uint8_t **d);
+                                asfAudioAccess(asfHeader *father,uint32_t rank);
+    virtual                     ~asfAudioAccess();
+
+    virtual bool      canSeekTime(void) {return true;};
+    virtual bool      canSeekOffset(void) {return true;};
+    virtual bool      canGetDuration(void) {return true;};
+    
+    virtual uint32_t  getLength(void) {return _track->length;}
+    virtual bool      goToTime(uint64_t timeUs) ;
+    virtual bool      isCBR(void) {return true;};
+    
+    
+    virtual uint64_t  getPos(void);
+    virtual bool      setPos(uint64_t pos);
+    virtual uint64_t  getDurationInUs(void) ;
+
+    virtual bool   getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+    
 };
 
-
+/**
+    \class asfHeader
+    \brief Asf Demuxer
+*/  
 
 class asfHeader         :public vidHeader
 {
@@ -132,7 +145,7 @@ class asfHeader         :public vidHeader
     ADM_queue               readQueue;
     uint32_t                curSeq;
     asfPacket               *_packet;
-    uint32_t                _currentAudioStream;
+    //uint32_t                _currentAudioStream;
     uint64_t                _duration;  // Duration 100 ns
   protected:
                                 
@@ -144,6 +157,9 @@ class asfHeader         :public vidHeader
     
     
     uint32_t                _videoStreamId;
+
+    uint8_t                 close(void);
+
     
   public: // Shared with audio track
     char                    *myName;
@@ -153,47 +169,43 @@ class asfHeader         :public vidHeader
     uint32_t                _packetSize;
     uint32_t                _dataStartOffset;
     uint32_t                _nbAudioTrack;
-    asfAudio                *_curAudio;
+    asfAudioAccess          *_audioAccess[ASF_MAX_AUDIO_TRACK];
     asfAudioTrak             _allAudioTracks[ASF_MAX_AUDIO_TRACK];
+    ADM_audioStream         *_audioStreams[ASF_MAX_AUDIO_TRACK];
     uint32_t                 _nbPackets;
     
     // / Shared
   public:
+                                        asfHeader(void);
+   virtual                              ~asfHeader();
+                uint8_t                 open(const char *name);
+      //__________________________
+      //				 Audio
+      //__________________________
 
+    virtual 	WAVHeader              *getAudioInfo(uint32_t i )  ;
+    virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio);
+    virtual     uint8_t                 getNbAudioStreams(void);
+    // Frames
+      //__________________________
+      //				 video
+      //__________________________
 
-    virtual   void          Dump(void);
-    virtual   uint8_t       getExtraHeaderData(uint32_t *len, uint8_t **data);
-             asfHeader( void );
-    virtual  ~asfHeader(  ) ;
-// AVI io
-    virtual uint8_t  open(const char *name);
-    virtual uint8_t  close(void) ;
-  //__________________________
-  //  Info
-  //__________________________
+    virtual 	uint8_t                 setFlag(uint32_t frame,uint32_t flags);
+    virtual 	uint32_t                getFlags(uint32_t frame,uint32_t *flags);			
+    virtual 	uint8_t                 getFrameSize(uint32_t frame,uint32_t *size);
+    virtual 	uint8_t                 getFrame(uint32_t framenum,ADMCompressedImage *img);
 
-  //__________________________
-  //  Audio
-  //__________________________
+    virtual   void                       Dump(void);
+    virtual   uint64_t                   getTime(uint32_t frameNum);
+    virtual   uint64_t                   getVideoDuration(void);
 
-    virtual   WAVHeader *getAudioInfo(void ) ;
-    virtual uint8_t getAudioStream(AVDMGenericAudioStream **audio);
-
-
-// Frames
-  //__________________________
-  //  video
-  //__________________________
-
-    virtual uint8_t  setFlag(uint32_t frame,uint32_t flags);
-    virtual uint32_t getFlags(uint32_t frame,uint32_t *flags);
-    virtual uint8_t  getFrameNoAlloc(uint32_t framenum,ADMCompressedImage *img)	;
+    // Return true if the container provides pts informations
+    virtual   bool                       providePts(void) {return false;};
     //
-    //  Multiple audio channels
-    //
-    uint8_t           changeAudioStream(uint32_t newstream);
-    uint32_t          getCurrentAudioStreamNumber(void) ;
-    uint8_t           getAudioStreamsInfo(uint32_t *nbStreams, audioInfo **infos);
+    virtual   bool                       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+    virtual   bool                       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+ 
 
 };
 #endif
