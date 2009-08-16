@@ -17,12 +17,15 @@
  
 #ifndef ADM_ASF_H
 #define ADM_ASF_H
-
+#include <vector>
+using std::vector;
 #include "ADM_Video.h"
 #include "ADM_queue.h"
 #include "ADM_asfPacket.h"
 
 #define ASF_MAX_AUDIO_TRACK 8
+
+
 
 typedef struct 
 {
@@ -30,8 +33,13 @@ typedef struct
   uint32_t frameLen;
   uint32_t segNb;
   uint32_t flags;
+  uint64_t dts;
+  uint64_t pts;
   uint32_t audioSeen[ASF_MAX_AUDIO_TRACK];
+  uint64_t audioDts[ASF_MAX_AUDIO_TRACK];
 }asfIndex;
+
+typedef  vector <asfIndex> AsfVectorIndex;
 
 typedef enum 
 {
@@ -151,11 +159,7 @@ class asfHeader         :public vidHeader
                                 
     FILE                    *_fd;
 
-    int32_t                 _videoIndex;
-    uint32_t                _extraDataLen;
-    uint8_t                 *_extraData;
-    
-    
+    int32_t                 _videoIndex;    
     uint32_t                _videoStreamId;
 
     uint8_t                 close(void);
@@ -165,7 +169,7 @@ class asfHeader         :public vidHeader
     char                    *myName;
     
     uint32_t                nbImage;
-    asfIndex                *_index;
+    AsfVectorIndex          _index;
     uint32_t                _packetSize;
     uint32_t                _dataStartOffset;
     uint32_t                _nbAudioTrack;
@@ -173,6 +177,7 @@ class asfHeader         :public vidHeader
     asfAudioTrak             _allAudioTracks[ASF_MAX_AUDIO_TRACK];
     ADM_audioStream         *_audioStreams[ASF_MAX_AUDIO_TRACK];
     uint32_t                 _nbPackets;
+    
     
     // / Shared
   public:

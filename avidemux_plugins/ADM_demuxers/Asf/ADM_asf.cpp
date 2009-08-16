@@ -23,7 +23,7 @@
 #include "ADM_asf.h"
 #include "ADM_asfPacket.h"
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -71,28 +71,7 @@ void asfHeader::Dump(void)
  
   printf("*********** ASF INFO***********\n");
 }
-/**
-    \fn getTime
-*/
-uint64_t                   asfHeader::getTime(uint32_t frameNum)
-{
-    return 0;
-}
 
-uint64_t                   asfHeader::getVideoDuration(void)
-{
-    return 0;
-}
-bool                       asfHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
-{
-    *pts=ADM_NO_PTS;
-    *dts=ADM_NO_PTS;
-    return true;
-}
-bool                       asfHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
-{
-    return true;
-}
 /**
     \fn close
 */
@@ -114,16 +93,12 @@ uint8_t asfHeader::close(void)
     delete myName;
     myName=NULL; 
   }
-  if(_extraData)
+  if(_videoExtraData)
   {
-    delete [] _extraData;
-    _extraData=NULL; 
+    delete [] _videoExtraData;
+    _videoExtraData=NULL; 
   }
-  if(_index)
-  {
-    delete [] _index; 
-  }
-  _index=NULL;
+
   if(_packet)
     delete _packet;
   _packet=NULL;
@@ -152,11 +127,12 @@ uint8_t asfHeader::close(void)
   _packetSize=0;
   _videoStreamId=0;
   nbImage=0;
-  _index=NULL;
+  
   _packet=NULL;
   _nbPackets=0;
-//  printf("%u\n",sizeof(_allAudioTracks));
   memset(&(_allAudioTracks[0]),0,sizeof(_allAudioTracks));
+  memset(&(_audioAccess[0]),0,sizeof(_audioAccess));
+  memset(&(_audioStreams[0]),0,sizeof(_audioStreams));
   _nbAudioTrack=0;
 
 }
@@ -226,6 +202,44 @@ uint8_t     asfHeader::getFrameSize(uint32_t frame,uint32_t *size)
     *size=0;
     if(frame>=nbImage) return 0;
     *size=_index[frame].frameLen;
+    return true;
+}
+/**
+    \fn getTime
+*/
+uint64_t                   asfHeader::getTime(uint32_t frameNum)
+{
+     if(frameNum>=nbImage) return 0;
+     return _index[frameNum].dts; // ??PTS??
+}
+/**
+    \fn getTime
+*/
+
+uint64_t                   asfHeader::getVideoDuration(void)
+{
+    return _index[nbImage-1].dts;
+}
+/**
+    \fn getTime
+*/
+
+bool                       asfHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+    if(frame>=nbImage) return false;
+    *pts=_index[frame].pts;
+    *dts=_index[frame].dts;
+    return true;
+}
+/**
+    \fn getTime
+*/
+
+bool                       asfHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
+{
+     if(frame>=nbImage) return false;
+    _index[frame].pts=pts;
+    _index[frame].dts=dts;;
     return true;
 }
 /**
@@ -337,6 +351,8 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 gotcha:
   
   img->dataLength=len;
+  img->demuxerDts=_index[framenum].dts;
+  img->demuxerPts=_index[framenum].pts;
   if(len!=_index[framenum].frameLen)
   {
     printf("[ASF] Frame=%u :-> Mismatch found len : %u expected %u\n",framenum,len, _index[framenum].frameLen);
@@ -348,8 +364,9 @@ gotcha:
     __________________________________________________________
 */
 
-/*******************************************
-  Read Headers to collect information 
+/** *****************************************
+    \fn getHeaders
+    \brief Read Headers to collect information 
 ********************************************/
 uint8_t asfHeader::getHeaders(void)
 {
@@ -518,7 +535,7 @@ uint8_t asfHeader::getHeaders(void)
             ADM_assert(_nbAudioTrack<ASF_MAX_AUDIO_TRACK);
             trk->streamIndex=sid;
             s->read((uint8_t *)&(trk->wavHeader),sizeof(WAVHeader));
-
+            printf("[Asf] Encoding for audio 0x%x\n",trk->wavHeader.encoding);
 		#ifdef ADM_BIG_ENDIAN
 			Endian_WavHeader(&(trk->wavHeader));
 		#endif
@@ -595,14 +612,15 @@ uint8_t asfHeader::loadVideo(asfChunk *s)
             printBih(&_video_bih);
             if(x>sizeof(ADM_BITMAPINFOHEADER))
             {
-              _extraDataLen=x-sizeof(ADM_BITMAPINFOHEADER);
-              _extraData=new uint8_t[_extraDataLen];
-              s->read(_extraData,_extraDataLen);
+              _videoExtraLen=x-sizeof(ADM_BITMAPINFOHEADER);
+              _videoExtraData=new uint8_t[_videoExtraLen];
+              s->read(_videoExtraData,_videoExtraLen);
             }
             return 1;
 }
-/*
-    Scan the file to build an index
+/**
+    \fn      buildIndex
+    \brief   Scan the file to build an index
     
     Header Chunk
             Chunk
@@ -670,37 +688,31 @@ uint8_t asfHeader::buildIndex(void)
   uint32_t ceilImage=MAXIMAGE;
 
   nbImage=0;
-  asfIndex *tmpIndex=new asfIndex[ceilImage];
-  memset(tmpIndex,0,sizeof(asfIndex)*ceilImage);
+  
   len=0;
-  tmpIndex[0].segNb=1;
+  asfIndex indexEntry;
+  memset(&indexEntry,0,sizeof(indexEntry));
   while(packet<_nbPackets)
   {
     while(!readQueue.isEmpty())
     {
       asfBit *bit=NULL;
+      
       ADM_assert(readQueue.pop((void**)&bit));
-      if(nbImage>=ceilImage-1)
-      {  // Expand if our first guess was too small
-           uint32_t newceil=ceilImage*2;
-           asfIndex *tmptmpIndex=new asfIndex[newceil];
-           memset(tmptmpIndex,0,sizeof(asfIndex)*newceil);
-           memcpy(tmptmpIndex,tmpIndex,sizeof(asfIndex)*ceilImage);
-           delete [] tmpIndex;
-           tmpIndex=tmptmpIndex;
-           ceilImage=newceil;
-      }
+      uint64_t dts=bit->dts;
       if(bit->stream==_videoStreamId)
       {
           aprintf(">found packet of size %d seq %d, while curseq =%d\n",bit->len,bit->sequence,curSeq);
           if(bit->sequence!=sequence)
           {
-            tmpIndex[nbImage].frameLen=len;
+            
+            indexEntry.frameLen=len;
+            _index.push_back(indexEntry);
             aprintf("New sequence\n");
             if( ((sequence+1)&0xff)!=(bit->sequence&0xff))
             {
                 printf("!!!!!!!!!!!! non continuous sequence %u %u\n",sequence,bit->sequence); 
-    #if 1         
+    #if 0         
                 // Let's insert a couple of null frame
                 int32_t delta,start,end;
                 
@@ -714,16 +726,18 @@ uint8_t asfHeader::buildIndex(void)
                 }
     #endif            
             }
-            nbImage++;
-            ADM_assert(nbImage<ceilImage);
-            tmpIndex[nbImage].frameLen=0;
-            tmpIndex[nbImage].segNb=bit->sequence;
-            tmpIndex[nbImage].packetNb=bit->packet;
-            tmpIndex[nbImage].flags=bit->flags;
+            
+            
+            indexEntry.frameLen=0;
+            indexEntry.segNb=bit->sequence;
+            indexEntry.packetNb=bit->packet;
+            indexEntry.flags=bit->flags;
+            indexEntry.dts=dts;
+            indexEntry.pts=ADM_NO_PTS;
 
             for(int z=0;z<_nbAudioTrack;z++)
             {
-              tmpIndex[nbImage].audioSeen[z]=_allAudioTracks[z].length;
+              indexEntry.audioSeen[z]=_allAudioTracks[z].length;
             }
             readQueue.pushBack(bit);
     
@@ -762,31 +776,28 @@ uint8_t asfHeader::buildIndex(void)
   delete aPacket;
   //delete working;
   /* Compact index */
-  _index=new asfIndex[nbImage];
-  memcpy(_index,tmpIndex,sizeof(asfIndex)*nbImage);
-  delete [] tmpIndex;
   
   fseeko(_fd,_dataStartOffset,SEEK_SET);
   printf("[ASF] %u images found\n",nbImage);
   printf("[ASF] ******** End of buildindex *******\n");
+
+  nbImage=_index.size();;
+
   _videostream.dwLength=_mainaviheader.dwTotalFrames=nbImage;
   if(!nbImage) return 0;
   
   // Update fps
   // In fact it is an average fps
-  // FIXME
-  float f=nbImage;
-  uint32_t ps;
-  
-  f*=1000.*1000.*10000.;
-  f=f/_duration;
-  ps=(uint32_t)f;
-  // Round up to the closed 0.5 = 500
-  ps=(ps+490)/500;
-  ps*=500;
+  //
+  float f=_index[nbImage-1].dts;
+   f/=nbImage; // average duration of 1 image in us
+    if(f<10) f=10;
+   f=1000000.*1000./f;
+  uint32_t avgFps=(uint32_t) f;
+    printf("[Asf] Average fps=%d\n",avgFps);
   
   _videostream.dwScale=1000;
-  _videostream.dwRate=ps;
+  _videostream.dwRate=(uint32_t)avgFps;;
 
   return 1;
   
