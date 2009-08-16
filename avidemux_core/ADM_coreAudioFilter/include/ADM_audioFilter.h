@@ -18,7 +18,7 @@
 #ifndef __Audio_ENG_Process__
 #define __Audio_ENG_Process__
 
-#define AUD_PROCESS_BUFFER_SIZE 48000*2*4 // should be enougth 4 seconds of stereo
+#define AUD_PROCESS_BUFFER_SIZE 48000*4*4 // should be enougth 4 seconds of stereo
 #include "ADM_coreAudio.h"
 /**
   This enumerate is used to give a more accurate error when no audio is output from
