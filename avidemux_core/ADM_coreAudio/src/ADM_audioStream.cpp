@@ -8,6 +8,7 @@
 #include "ADM_audioStreamMP3.h"
 #include "ADM_audioStreamAC3.h"
 #include "ADM_audioStreamEac3.h"
+#include "ADM_audioStreamConstantChunk.h"
 
 /**
     \fn ADM_audioStream
@@ -141,9 +142,14 @@ uint32_t size;
             return new ADM_audioStreamAC3(wavheader,access);
         case WAV_MP3:
             return new ADM_audioStreamMP3(wavheader,access);
+#if 0
+        case WAV_WMA:
+            return new ADM_audioStreamConstantChunk(wavheader,access);
+#endif
         default:
             return new ADM_audioStream(wavheader,access);
     }
 
 }
 // EOF
+
