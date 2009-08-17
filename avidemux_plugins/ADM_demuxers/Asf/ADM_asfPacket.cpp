@@ -205,7 +205,29 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
      replica=readVCL(segmentId);
      aprintf("replica                %d\n",replica);
      // Skip replica data_len
-     skip(replica);
+     if(replica>=8) // Grab timestamp
+     {
+        uint32_t time1=read32();
+        
+        //printf("Time 1 : %"LU"\n",time1);
+         if(replica >= 8+38+4)
+         {
+            uint64_t time2;
+            uint32_t a,b;
+            skip(10);
+            a=read32();
+            b=read32();
+            time2=a+(b<<32);
+            skip(8); 
+            skip(12);
+            skip(4);
+            skip(replica - 8 - 38 - 4);
+            printf("Time 2 : %"LLU"\n",time2);
+            }else
+            skip(replica-4);
+     }
+      else 
+        skip(replica);
      
      payloadLen=0;
      if(flags &1)  // multi seg
@@ -300,7 +322,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  uint8_t asfPacket::pushPacket(uint32_t keyframe,uint32_t packetnb,uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,uint64_t dts)
  {
    asfBit *bit=new asfBit;
-   printf("Pushing packet stream=%d len=%d seq=%d dts=%d ms\n",stream,payloadLen,sequence,dts/1000);
+   //printf("Pushing packet stream=%d len=%d seq=%d dts=%d ms\n",stream,payloadLen,sequence,dts/1000);
    bit->sequence=sequence;
    bit->offset=offset;
    bit->len=payloadLen;

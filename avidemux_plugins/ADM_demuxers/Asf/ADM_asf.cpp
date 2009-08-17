@@ -692,6 +692,7 @@ uint8_t asfHeader::buildIndex(void)
   len=0;
   asfIndex indexEntry;
   memset(&indexEntry,0,sizeof(indexEntry));
+  bool first=true;
   while(packet<_nbPackets)
   {
     while(!readQueue.isEmpty())
@@ -703,11 +704,14 @@ uint8_t asfHeader::buildIndex(void)
       if(bit->stream==_videoStreamId)
       {
           aprintf(">found packet of size %d seq %d, while curseq =%d\n",bit->len,bit->sequence,curSeq);
-          if(bit->sequence!=sequence)
+          if(bit->sequence!=sequence || first==true)
           {
-            
-            indexEntry.frameLen=len;
-            _index.push_back(indexEntry);
+            if(first==false)
+            {
+                indexEntry.frameLen=len;
+                _index.push_back(indexEntry);
+            }
+            first=false;
             aprintf("New sequence\n");
             if( ((sequence+1)&0xff)!=(bit->sequence&0xff))
             {
@@ -738,6 +742,7 @@ uint8_t asfHeader::buildIndex(void)
             for(int z=0;z<_nbAudioTrack;z++)
             {
               indexEntry.audioSeen[z]=_allAudioTracks[z].length;
+              indexEntry.audioDts[z]=_allAudioTracks[z].lastDts;
             }
             readQueue.pushBack(bit);
     
@@ -756,6 +761,8 @@ uint8_t asfHeader::buildIndex(void)
           {
             
             _allAudioTracks[i].length+=bit->len;
+            _allAudioTracks[i].lastDts=bit->dts;
+            
             found=1;
           }
         }

@@ -110,16 +110,21 @@ bool   asfAudioAccess::setPos(uint64_t newoffset)
 
 bool   asfAudioAccess::goToTime(uint64_t dts_us)
 {
-  // Compute the linear version
-  float f;
-  uint32_t val;
-  
-  f=dts_us;
-  f/=1000;
-  f*=_track->wavHeader.byterate;
-  
-  val=(uint32_t)((f+459.)/1000.);
-  return setPos(val);
+    AsfVectorIndex     *idx=&(_father->_index);
+    // Search
+    int size=idx->size();
+    if(dts_us<=(*idx)[0].audioDts[_myRank])
+    {
+          return setPos( 0);
+    }
+    for(int i=0;i<size-1;i++)
+    {
+        if(dts_us>=(*idx)[i].audioDts[_myRank] && dts_us<(*idx)[i+1].audioDts[_myRank])
+        {
+            return setPos( (*idx)[i].packetNb);
+        }
+    }
+    return false;
 }
 
 /**
@@ -138,12 +143,12 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
     {
       asfBit *bit;
       ADM_assert(readQueue.pop((void**)&bit));
-      printf("Audio found packet of size %d seq %d\n",bit->len,bit->sequence);
+      //printf("[Asf] Audio found packet of size %d seq %d\n",bit->len,bit->sequence);
       
       // still same sequence ...add
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
-      *dts=ADM_NO_PTS;
+      *dts=bit->dts;
 	  delete[] bit->data;
       delete bit;
       return 1;

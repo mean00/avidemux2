@@ -97,6 +97,7 @@ typedef struct
   uint8_t      *extraData;
   uint32_t     nbPackets;
   uint32_t     length;
+  uint64_t     lastDts;
   WAVHeader    wavHeader;
 }asfAudioTrak;
 
