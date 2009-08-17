@@ -35,7 +35,7 @@ typedef struct
 class asfPacket
 {
   protected:
-    uint32_t        readVCL(uint32_t bitwise);
+    uint32_t        readVCL(uint32_t bitwise,uint32_t defaultValue);
     uint8_t         pushPacket(uint32_t flags,uint32_t packetnb,
                                 uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,
                                 uint64_t dtsus);

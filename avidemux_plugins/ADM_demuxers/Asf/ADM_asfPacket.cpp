@@ -129,18 +129,18 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    
 
    // Read packetLen
-   packetLen=readVCL(flags>>5);
+   packetLen=readVCL(flags>>5,pakSize);
    // Sequence len
-   sequenceLen=readVCL(flags>>1);
+   sequenceLen=readVCL(flags>>1,0);
    // Read padding size (padding):
-   paddingLen=readVCL(flags>>3);
+   paddingLen=readVCL(flags>>3,0);
    
    aprintf("paddingLen :         %d\n",paddingLen);
    
 // Explicit (absolute) packet size	    
    if(((flags>>5)&3))
    {
-     printf("## Explicit packet size %d\n",packetLen);
+     //printf("## Explicit packet size %d\n",packetLen);
      if(packetLen>pakSize) printf("**************Len > packet size!! (%d /%d)\n",packetLen,pakSize);
    } 
    if(!packetLen)
@@ -200,9 +200,9 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
      {
        aprintf("KeyFrame\n");
      }
-     sequence=readVCL(segmentId>>4);
-     offset=readVCL(segmentId>>2);
-     replica=readVCL(segmentId);
+     sequence=readVCL(segmentId>>4,0);
+     offset=readVCL(segmentId>>2,0);
+     replica=readVCL(segmentId,0);
      aprintf("replica                %d\n",replica);
      // Skip replica data_len
      if(replica>=8) // Grab timestamp
@@ -232,7 +232,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
      payloadLen=0;
      if(flags &1)  // multi seg
      {
-       payloadLen=readVCL(segType);
+       payloadLen=readVCL(segType,0);
        if(payloadLen)
         aprintf("##len                    %d\n",payloadLen);
        
@@ -343,7 +343,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    return 1;
  }
  
- uint32_t asfPacket::readVCL(uint32_t bitwise)
+ uint32_t asfPacket::readVCL(uint32_t bitwise,uint32_t def)
  {
    uint32_t r;
    switch(bitwise&3)
@@ -351,7 +351,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
      case 3: r=read32();break;  // dword
      case 2: r=read16();break;  // word
      case 1: r=read8();break;   // byte
-     default: r=0;
+     default: r=def;
    }
    return r;
  }
