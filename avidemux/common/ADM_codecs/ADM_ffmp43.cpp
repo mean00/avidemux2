@@ -461,6 +461,7 @@ uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       break;
     case PIX_FMT_YUV420P:
     case PIX_FMT_YUVJ420P:
+    case PIX_FMT_YUVA420P:
       // Default is YV12 or I420
       // In that case depending on swap u/v
       // we do it or not
@@ -727,6 +728,12 @@ decoderFFVP6F::decoderFFVP6F (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):d
 {
   WRAP_Open (CODEC_ID_VP6F);
 }
+//*************
+decoderFFVP6A::decoderFFVP6A (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+{
+  WRAP_Open (CODEC_ID_VP6A);
+}
+
 //************
 decoderFFFLV1::decoderFFFLV1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
 {

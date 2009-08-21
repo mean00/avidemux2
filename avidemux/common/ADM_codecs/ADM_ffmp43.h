@@ -322,6 +322,12 @@ protected:
 public:
   decoderFFVP6F (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
 };
+class decoderFFVP6A:public decoderFF
+{
+protected:
+public:
+  decoderFFVP6A (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+};
 class decoderFFFLV1:public decoderFF
 {
 protected:

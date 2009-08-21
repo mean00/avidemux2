@@ -265,7 +265,11 @@ if (fourCC::check (fcc, (uint8_t *) "MJPG")
       return (decoders *) (new decoderFFAMV (w, h,extraLen,extraData));
     }
 
-
+ if (fourCC::check (fcc, (uint8_t *) "VP6A"))
+    {
+      printf ("\n using YUY2 codec\n");
+      return (decoders *) (new decoderFFVP6A (w, h,extraLen,extraData));
+    }
   if (isVP6Compatible(fcc))
     {
       printf ("\n using VP6F codec\n");
