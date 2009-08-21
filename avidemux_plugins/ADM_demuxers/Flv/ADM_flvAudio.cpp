@@ -25,8 +25,15 @@
 */
 bool      ADM_flvAccess::getExtraData(uint32_t *l, uint8_t **d)
 {
+#if 0
+        uint8_t dd[2]={0x12,0x10};
+        *l=2;
+        *d=dd;
+        return true;
+#else
     *l=_track->extraDataLen;
     *d=_track->extraData;
+#endif
     return true;
 }   
 

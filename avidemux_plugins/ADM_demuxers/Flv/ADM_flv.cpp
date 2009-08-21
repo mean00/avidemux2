@@ -329,7 +329,7 @@ uint8_t flvHeader::open(const char *name)
                 if(extraHeader(audioTrack,&remaining,false,&cts)) continue;
             }
             if(remaining)
-                insertAudio(pos+of,remaining,dts);
+                insertAudio(ftello(_fd),remaining,dts);
           }
           break;
       case FLV_TAG_TYPE_META:
@@ -364,7 +364,7 @@ uint8_t flvHeader::open(const char *name)
 
             }
             if(remaining)
-                insertVideo(pos+of,remaining,frameType,dts);
+                insertVideo(ftello(_fd),remaining,frameType,dts);
           }
            break;
       default: printf("[FLV]At 0x%x, unhandled type %u\n",pos,type);
