@@ -145,6 +145,14 @@ uint8_t flvHeader::parseMetaData(uint32_t remaining)
             type=read8();
             switch(type)
             {
+                case AMF_DATA_TYPE_ARRAY:
+                                    {
+                                            uint32_t len=read32();
+                                            printf("[FLV] Array :");
+                                            for(int i=0;i<len;i++) printf("%02x ",read8());
+                                            printf("\n");
+                                            break;
+                                    }
                 case AMF_DATA_TYPE_DATE: Skip(8+2);break;
                 case AMF_DATA_TYPE_NUMBER:
                                         {
