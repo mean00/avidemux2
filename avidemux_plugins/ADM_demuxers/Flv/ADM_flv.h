@@ -60,6 +60,9 @@ protected:
                 flvTrak          *_track;
                 uint32_t         currentBlock;
                 bool             goToBlock(uint32_t block);
+
+
+                
                 
 public:
                                   ADM_flvAccess(const char *name,flvTrak *trak); 
@@ -99,7 +102,8 @@ class flvHeader         :public vidHeader
     ADM_audioStream         *_audioStream;
     ADM_flvAccess           *access;
     /* */
-    
+    uint32_t            metaWidth,metaHeight,metaFps1000;
+
     uint8_t     read(uint32_t len, uint8_t *where);
     uint8_t     read8(void);
     uint32_t    read16(void);

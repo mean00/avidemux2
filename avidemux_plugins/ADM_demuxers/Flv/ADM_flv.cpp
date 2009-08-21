@@ -108,6 +108,15 @@ void flvHeader::setProperties(const char *name,float value)
         _videostream.dwRate=(uint32_t)(value*1000);
         return;
     }
+    if(!strcmp(name,"width"))
+    {
+        metaWidth=(uint32_t)value;
+    }
+    if(!strcmp(name,"height"))
+    {
+        metaHeight=(uint32_t)value;
+    }
+
 }
 /**
     \fn parseMetaData
@@ -295,7 +304,7 @@ uint8_t flvHeader::open(const char *name)
 
             int codec=(flags)&0xf;
 
-            if(codec==FLV_CODECID_VP6)
+            if(codec==FLV_CODECID_VP6 || codec==FLV_CODECID_VP6A)
             {
               read8(); // 1 byte of extraData
               remaining--;
@@ -389,12 +398,20 @@ uint8_t flvHeader::setVideoHeader(uint8_t codec,uint32_t *remaining)
     switch(codec)
     {
       case FLV_CODECID_H263:            _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"FLV1");break;
-      case FLV_CODECID_VP6:             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"VP6F");break;
+      case FLV_CODECID_VP6:
+                        _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"VP6F");break;
+      case FLV_CODECID_VP6A:
+                        _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"VP6A");break;
     //???   case FLV_CODECID_SCREEN:          _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"VP6F");break;
       default :                         _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"XXX");break;
 
     }
-    if(codec==FLV_CODECID_VP6)
+    if(codec==FLV_CODECID_VP6A && metaWidth && metaHeight )
+    {
+         _video_bih.biHeight=_mainaviheader.dwHeight=metaHeight ;
+         _video_bih.biWidth=_mainaviheader.dwWidth=metaWidth;
+    }
+    if(codec==FLV_CODECID_VP6 )
     {
         read8();
         read8();
@@ -585,6 +602,9 @@ uint8_t flvHeader::close(void)
     _audioStream=NULL;
     access=NULL;
     memset(&wavHeader,0,sizeof(wavHeader));
+    metaWidth=0;
+    metaHeight=0;
+    metaFps1000=0;
 
 }
 /**
