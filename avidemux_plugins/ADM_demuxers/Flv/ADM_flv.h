@@ -81,7 +81,7 @@ public:
                 virtual bool      goToTime(uint64_t timeUs);
                 virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
 
-
+                bool              getExtraData(uint32_t *l, uint8_t **d);
 };
 
 
@@ -114,7 +114,7 @@ class flvHeader         :public vidHeader
     uint8_t     insertAudio(uint32_t pos,uint32_t size,uint32_t pts);
     uint8_t     setAudioHeader(uint32_t format,uint32_t fq,uint32_t bps,uint32_t channels);
     uint8_t     setVideoHeader(uint8_t codec,uint32_t *remaining);
-    
+    bool        extraHeader(flvTrak *trk,uint32_t *remain,bool haveCts,uint64_t *cts);
     
     uint8_t     getFrameSize (uint32_t frame, uint32_t * size);
     char        *readFlvString(void);

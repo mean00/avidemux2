@@ -20,8 +20,15 @@
 
 #include "ADM_flv.h"
 
-
-
+/**
+    \fn getExtraData
+*/
+bool      ADM_flvAccess::getExtraData(uint32_t *l, uint8_t **d)
+{
+    *l=_track->extraDataLen;
+    *d=_track->extraData;
+    return true;
+}   
 
 /**
     \fn ADM_audioAccess
