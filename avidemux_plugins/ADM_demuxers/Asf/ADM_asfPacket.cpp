@@ -67,6 +67,7 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
    uint32_t offset=_startDataOffset+packet*pakSize;
    fseeko(_fd,offset,SEEK_SET);
    currentPacket=packet;
+   purge();
    return 1;
  }
  /*

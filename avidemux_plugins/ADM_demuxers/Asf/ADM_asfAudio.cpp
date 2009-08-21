@@ -65,7 +65,6 @@ asfAudioAccess::asfAudioAccess(asfHeader *father,uint32_t myRank)
                           &readQueue,_dataStart);
     
     printf("[asfAudio] Length %u\n",getLength());
-  
 }
 
 uint64_t  asfAudioAccess::getPos(void)
@@ -121,7 +120,7 @@ bool   asfAudioAccess::goToTime(uint64_t dts_us)
     {
         if(dts_us>=(*idx)[i].audioDts[_myRank] && dts_us<(*idx)[i+1].audioDts[_myRank])
         {
-            return setPos( (*idx)[i].packetNb);
+            return _packet->goToPacket( (*idx)[i].packetNb);
         }
     }
     return false;
@@ -148,8 +147,8 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       // still same sequence ...add
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
-      *dts=bit->dts;
-	  delete[] bit->data;
+      *dts=ADM_NO_PTS;
+      delete[] bit->data;
       delete bit;
       return 1;
     }
@@ -160,7 +159,8 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       printf("[ASF] Audio Packet Error\n");
       return 0; 
     }
-    _packet->skipPacket();
+    
+   // _packet->skipPacket();
   }
   
   return 0; 

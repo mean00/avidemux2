@@ -150,6 +150,7 @@ class asfHeader         :public vidHeader
     uint8_t                 getHeaders( void);
     uint8_t                 buildIndex(void);
     uint8_t                 loadVideo(asfChunk *s);
+    bool                    loadAudio(asfChunk *s,uint32_t sid);
     
     ADM_queue               readQueue;
     uint32_t                curSeq;
