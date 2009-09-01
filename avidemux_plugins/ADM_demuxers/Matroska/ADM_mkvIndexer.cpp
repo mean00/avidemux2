@@ -22,6 +22,8 @@
 
 #include "mkv_tags.h"
 #include "DIA_working.h"
+#include "ADM_codecType.h"
+#include "ADM_videoInfoExtractor.h"
 #define VIDEO _tracks[0]
 /**
     \fn videoIndexer
@@ -133,7 +135,7 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
 
       lacing=((flags>>1)&3);
 
-      addIndexEntry(track,blockBegin,tail-blockBegin,entryFlags,clusterTimeCodeMs+timecode);
+      addIndexEntry(track,parser,blockBegin,tail-blockBegin,entryFlags,clusterTimeCodeMs+timecode);
       parser->seek(tail);
       return 1;
 }
@@ -143,7 +145,7 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
     \brief add an entry to the video index
     @param timecodeMS PTS of the frame in ms!
 */
-uint8_t mkvHeader::addIndexEntry(uint32_t track,uint64_t where, uint32_t size,uint32_t flags,uint32_t timecodeMS)
+uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t where, uint32_t size,uint32_t flags,uint32_t timecodeMS)
 {
   //
   mkvTrak *Track=&(_tracks[track]);
@@ -154,7 +156,41 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,uint64_t where, uint32_t size,ui
   ix.flags=AVI_KEY_FRAME;
   ix.Dts=timecodeMS*1000;
   ix.Pts=timecodeMS*1000;
+  
+  // since frame type is unreliable for mkv, we scan each frame
+  // For the 2 most common cases : mp4 & h264.
+  // Hackish, we already read the 3 bytes header
+  // But they are already taken into account in the size part 
+  if(!track) // Track 0 is video
+  {
+    if( isMpeg4Compatible(_videostream.fccHandler))
+    {
+        uint8_t buffer[size];
+        
+            parser->readBin(buffer,size-3);
+            // Search the frame type...
 
+             uint32_t nb,vopType,timeinc=16;
+             ADM_vopS vops[10];
+             vops[0].type=AVI_KEY_FRAME;
+             ADM_searchVop(buffer,buffer+size-3,&nb,vops, &timeinc);
+             ix.flags=vops[0].type;
+        
+    }else
+    if(isH264Compatible(_videostream.fccHandler))
+    {
+            uint8_t buffer[size];
+                uint32_t flags=AVI_KEY_FRAME;
+                parser->readBin(buffer,size-3);
+                extractH264FrameType(2,buffer,size-3,&flags); // Nal size is not used in that case
+                if(flags & AVI_KEY_FRAME)
+                {
+                    printf("[MKV/H264] Frame %"LU" is a keyframe\n",(uint32_t)Track->index.size());
+                }
+                //printf("[] Flags=%x\n",flags);
+
+    }
+  }
   Track->index.push_back(ix);
 
   return 1;

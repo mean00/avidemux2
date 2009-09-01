@@ -136,7 +136,7 @@ class mkvHeader         :public vidHeader
     uint8_t                 reformatVorbisHeader(mkvTrak *trk);
     // Indexers
 
-    uint8_t                 addIndexEntry(uint32_t track,uint64_t where, uint32_t size,uint32_t flags,
+    uint8_t                 addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t where, uint32_t size,uint32_t flags,
                                             uint32_t timecodeMS);
     uint8_t                 videoIndexer(ADM_ebml_file *parser);
     uint8_t                 readCue(ADM_ebml_file *parser);

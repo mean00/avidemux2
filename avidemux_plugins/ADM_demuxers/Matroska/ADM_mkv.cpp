@@ -491,7 +491,7 @@ bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
      ADM_assert(_parser);
      if(frame>=_tracks[0].index.size()) 
      {
-            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0].index.size());
+            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,(uint32_t)_tracks[0].index.size());
             return false;
      }
     mkvIndex *dx=&(_tracks[0].index[frame]);
@@ -508,7 +508,7 @@ bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
       ADM_assert(_parser);
      if(frame>=_tracks[0].index.size()) 
      {
-            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0].index.size());
+            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,(uint32_t)_tracks[0].index.size());
             return false;
      }
     mkvIndex *dx=&(_tracks[0].index[frame]);
