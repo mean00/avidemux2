@@ -21,9 +21,11 @@
 
 #define aprintf(...) {}
 #include "ADM_getbits.h"
+#include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 
 static void refineH264FrameType(uint8_t *head,uint8_t *tail,uint32_t *flags);
+bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 /*
     Extract width & height from vol header passed as arg
 
@@ -593,4 +595,76 @@ uint32_t sliceType;
                 sliceType -= 5;
             if(sliceType==3) *flags=AVI_B_FRAME;  
 }
+/**
+    \fn ADM_searchVop
+    \brief search vop header in a bitstream 
+    Used for packed bitstream and also to identify the frametype
+
+*/
+uint32_t ADM_searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, ADM_vopS *vop,uint32_t *timeincbits)
+{
+
+	uint32_t off=0;
+	uint32_t globalOff=0;
+	uint32_t voptype;
+	uint8_t code;
+        uint32_t w,h,t;
+        uint32_t modulo,time_inc,vopcoded,vopType;
+	*nb=0;
+	while(begin<end-3)
+	{
+    	if( ADM_findMpegStartCode(begin, end,&code,&off))
+    	{
+        	if(code==0xb6)
+			{
+				// Analyse a bit the vop header
+				uint8_t coding_type=begin[off];
+				coding_type>>=6;
+				aprintf("\t at %u %d Img type:%s\n",off,*nb,s_voptype[coding_type]);
+				switch(coding_type)
+				{
+					case 0: voptype=AVI_KEY_FRAME;break;
+					case 1: voptype=0;break;
+					case 2: voptype=AVI_B_FRAME;break;
+					case 3: printf("[Avi] Glouglou\n");voptype=0;break;
+
+				}
+        	                vop[*nb].offset=globalOff+off-4;
+				vop[*nb].type=voptype;
+
+
+
+                                /* Get more info */
+                                if( extractVopInfo(begin+off, end-begin-off, *timeincbits,&vopType,&modulo, &time_inc,&vopcoded))
+                                {
+                                    aprintf(" frame found: vopType:%x modulo:%d time_inc:%d vopcoded:%d\n",vopType,modulo,time_inc,vopcoded);
+                                    vop[*nb].modulo=modulo;
+                                    vop[*nb].timeInc=time_inc;
+                                    vop[*nb].vopCoded=vopcoded;
+                                }
+                                *nb=(*nb)+1;
+                                begin+=off+1;
+				globalOff+=off+1;
+				continue;
+
+			}
+                else if(code==0x20 && off>=4	) // Vol start
+                {
+
+                   if(extractMpeg4Info(begin+off-4,end+4-off-begin,&w,&h,timeincbits))
+                   {
+                      aprintf("Found Vol header : w:%d h:%d timeincbits:%d\n",w,h,*timeincbits);
+                   }
+
+                }
+        	begin+=off;
+        	globalOff+=off;
+        	continue;
+    	}
+    	return 1;
+    }
+	return 1;
+}
+
+
 //EOF

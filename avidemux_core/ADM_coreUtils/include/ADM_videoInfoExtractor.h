@@ -22,5 +22,20 @@ uint8_t extractSPSInfo(uint8_t *data, uint32_t len,uint32_t *wwidth,uint32_t *hh
 uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 
+/**
+    \struct ADM_vopS
+    \brief describe a vop inside a bitstream (mpeg4 SP/ASP)
+*/
+typedef struct 
+{
+	uint32_t offset;
+	uint32_t type;
+    uint32_t vopCoded;
+    uint32_t modulo;
+    uint32_t timeInc;
+}ADM_vopS;
+
+
+uint32_t ADM_searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, ADM_vopS *vop,uint32_t *timeincbits);
 #endif
 //EOF

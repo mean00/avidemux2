@@ -29,7 +29,7 @@ It is an fopen/fwrite lookalike interface to chunks
 #include "ADM_openDML.h"
 
 #include "DIA_working.h"
-//#include "ADM_libraries/ADM_utilities/avidemutils.h"
+#include "ADM_videoInfoExtractor.h"
 
 
 #define aprintf(...) {}
@@ -39,14 +39,7 @@ It is an fopen/fwrite lookalike interface to chunks
 #endif
 #define DEPACK_VERBOSE
 #define QT_TR_NOOP(x) x
-typedef struct vopS
-{
-	uint32_t offset;
-	uint32_t type;
-        uint32_t vopCoded;
-        uint32_t modulo;
-        uint32_t timeInc;
-}vopS;
+
 #define MAX_VOP 10
 
 /* Forward declaration */
@@ -55,7 +48,7 @@ uint8_t extractVopInfo(uint8_t *data, uint32_t len,uint32_t timeincbits,uint32_t
 uint8_t extractMpeg4Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h,uint32_t *time_inc);
 
 /* Static ones */
-static uint32_t searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, vopS *vop,uint32_t *timeincbits);
+
 static const char *s_voptype[4]={"I frame","P frame","B frame","D frame"};
 /**
     \fn unpackPacked
@@ -68,9 +61,9 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 	uint32_t firstType, secondType,thirdType;
 	uint32_t targetIndex=0,nbVop;
 	uint32_t nbDuped=0;
-        uint32_t timcincbits=16;  /* Nb bits used to code time_inc 16 is a safe default */
+    uint32_t timcincbits=16;  /* Nb bits used to code time_inc 16 is a safe default */
 
-	vopS	myVops[MAX_VOP]; // should be enough
+	ADM_vopS	myVops[MAX_VOP]; // should be enough
 	// here we got the vidHeader to get the file easily
 	// we only deal with avi now, so cast it to its proper type (i.e. avi)
 
@@ -134,7 +127,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
                                 continue;
                 }
                 /* Cannot find vop, corrupted or WTF ...*/
-                if(!searchVop(buffer,buffer+image.dataLength,&nbVop,myVops,&timcincbits))
+                if(!ADM_searchVop(buffer,buffer+image.dataLength,&nbVop,myVops,&timcincbits))
                 {
                     printf("[Avi] img :%u failed to find vop!\n",img);
                     memcpy(&newIndex[targetIndex],&_idx[img],sizeof(_idx[0]));
@@ -231,71 +224,4 @@ _abortUnpack:
 	setpriority(PRIO_PROCESS, 0, originalPriority);
 
 	return ret;
-}
-// Search a start vop in it
-// and return also the vop type
-// needed to update the index
-uint32_t searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, vopS *vop,uint32_t *timeincbits)
-{
-
-	uint32_t off=0;
-	uint32_t globalOff=0;
-	uint32_t voptype;
-	uint8_t code;
-        uint32_t w,h,t;
-        uint32_t modulo,time_inc,vopcoded,vopType;
-	*nb=0;
-	while(begin<end-3)
-	{
-    	if( ADM_findMpegStartCode(begin, end,&code,&off))
-    	{
-        	if(code==0xb6)
-			{
-				// Analyse a bit the vop header
-				uint8_t coding_type=begin[off];
-				coding_type>>=6;
-				aprintf("\t at %u %d Img type:%s\n",off,*nb,s_voptype[coding_type]);
-				switch(coding_type)
-				{
-					case 0: voptype=AVI_KEY_FRAME;break;
-					case 1: voptype=0;break;
-					case 2: voptype=AVI_B_FRAME;break;
-					case 3: printf("[Avi] Glouglou\n");voptype=0;break;
-
-				}
-        	                vop[*nb].offset=globalOff+off-4;
-				vop[*nb].type=voptype;
-
-
-
-                                /* Get more info */
-                                if( extractVopInfo(begin+off, end-begin-off, *timeincbits,&vopType,&modulo, &time_inc,&vopcoded))
-                                {
-                                    aprintf(" frame found: vopType:%x modulo:%d time_inc:%d vopcoded:%d\n",vopType,modulo,time_inc,vopcoded);
-                                    vop[*nb].modulo=modulo;
-                                    vop[*nb].timeInc=time_inc;
-                                    vop[*nb].vopCoded=vopcoded;
-                                }
-                                *nb=(*nb)+1;
-                                begin+=off+1;
-				globalOff+=off+1;
-				continue;
-
-			}
-                else if(code==0x20 && off>=4	) // Vol start
-                {
-
-                   if(extractMpeg4Info(begin+off-4,end+4-off-begin,&w,&h,timeincbits))
-                   {
-                      aprintf("Found Vol header : w:%d h:%d timeincbits:%d\n",w,h,*timeincbits);
-                   }
-
-                }
-        	begin+=off;
-        	globalOff+=off;
-        	continue;
-    	}
-    	return 1;
-    }
-	return 1;
 }
