@@ -37,12 +37,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
 
    parser->seek(0);
    DIA_workingBase *work=createWorking("Matroska Images");
-   // Start with a small index, it will grow automatically afterward
-   for(int i=0;i<_nbAudioTrack+1;i++)
-   {
-    _tracks[i]._indexMax=1000;
-    _tracks[i]._index=new mkvIndex[_tracks[i]._indexMax];
-   }
+ 
     //************
    work->update(0);
    for(int clusters=0;clusters<_nbClusters;clusters++)
@@ -107,7 +102,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
      }
    // printf("[MKV] ending cluster at 0x%llx\n",segment.tell());
   }
-     printf("Found %"LU" images in this cluster\n",VIDEO._nbIndex);
+     printf("Found %"LU" images in this cluster\n",(uint32_t)VIDEO.index.size());
      delete work;
      return 1;
 }
@@ -152,25 +147,16 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,uint64_t where, uint32_t size,ui
 {
   //
   mkvTrak *Track=&(_tracks[track]);
-  // Need to grow index ?
-  if(Track->_nbIndex==Track->_indexMax-1)
-  {
-    // Realloc
-    mkvIndex *dx=new mkvIndex[Track->_indexMax*2];
-    memcpy(dx, Track->_index,sizeof(mkvIndex)*Track->_nbIndex);
-    Track->_indexMax*=2;
-    delete [] Track->_index;
-    Track->_index=dx;
-  }
+  mkvIndex ix;
 
-  mkvIndex *index=Track->_index;
-  int x=Track->_nbIndex;
-  index[x].pos=where;
-  index[x].size=size;
-  index[x].flags=AVI_KEY_FRAME;
-  index[x].Dts=timecodeMS*1000;
-  index[x].Pts=timecodeMS*1000;
-  Track->_nbIndex++;
+  ix.pos=where;
+  ix.size=size;
+  ix.flags=AVI_KEY_FRAME;
+  ix.Dts=timecodeMS*1000;
+  ix.Pts=timecodeMS*1000;
+
+  Track->index.push_back(ix);
+
   return 1;
 }
 

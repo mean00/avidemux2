@@ -87,9 +87,10 @@ bool      mkvAccess::getExtraData(uint32_t *l, uint8_t **d)
 */
 uint64_t  mkvAccess::getDurationInUs(void)
 {
-    uint32_t limit=_track->_nbIndex;
-    mkvIndex *dex=_track->_index;
-    return dex[limit-1].Dts;
+    
+    uint32_t limit=_track->index.size();
+    if(!limit) return 0;
+    return _track->index[limit-1].Dts;
 }
 /**
     \fn mkvAccess
@@ -106,14 +107,14 @@ mkvAccess::~mkvAccess()
 */
 uint8_t mkvAccess::goToBlock(uint32_t x)
 {
-
-  if(x>=_track->_nbIndex)
+  uint32_t limit=_track->index.size();
+  if(x>=limit)
   {
-    printf("Exceeding max cluster : asked: %u max :%u\n",x,_track->_nbIndex);
+    printf("Exceeding max cluster : asked: %u max :%u\n",x,limit);
     return 0;  // FIXME
   }
 
-  _parser->seek(_track->_index[x].pos);
+  _parser->seek(_track->index[x].pos);
   _currentLace=_maxLace=0;
   _currentBlock=x;
   return 1;
@@ -125,13 +126,13 @@ bool      mkvAccess::goToTime(uint64_t timeUs)
 {
 uint64_t targetUs=timeUs;
 
-    uint32_t limit=_track->_nbIndex;
-    mkvIndex *dex=_track->_index;
+    uint32_t limit=_track->index.size();
+    mkvListOfIndex *dex=&(_track->index);
       // First identify the cluster...
       int clus=-1;
             for(int i=0;i<limit-1;i++)
             {
-              if(targetUs>=dex[i].Dts && targetUs<dex[i+1].Dts)
+              if(targetUs>=(*dex)[i].Dts && targetUs<(*dex)[i+1].Dts)
               {
                 clus=i;
                 break;
@@ -139,7 +140,7 @@ uint64_t targetUs=timeUs;
             }
             if(clus==-1) clus=limit-1; // Hopefully in the last one
 
-            targetUs-=dex[clus].Dts; // now the time is relative
+            targetUs-=(*dex)[clus].Dts; // now the time is relative
             goToBlock(clus);
 
             printf("[MKVAUDIO] Asked for %"LLU" us, go to block %d, which starts at %"LLU" ms\n",timeUs,clus,targetUs);
@@ -193,12 +194,12 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
       _currentLace++;
       return true;
     }
-    if(_currentBlock>=_track->_nbIndex) return false;
+    if(_currentBlock>=_track->index.size()) return false;
     // Else we start a new lace (or no lacing at all)
     goToBlock(_currentBlock);
-    mkvIndex *dex=_track->_index;
-    uint64_t size=dex[_currentBlock].size-3;
-    uint64_t time=dex[_currentBlock].Dts;
+    mkvIndex *dex=&(_track->index[_currentBlock]);
+    uint64_t size=dex->size-3;
+    uint64_t time=dex->Dts;
     if(!time && _currentBlock) time=ADM_AUDIO_NO_DTS;
     vprintf("[MKV] Time :%lu block:%u\n",time,_currentBlock);
     // Read headers & flags

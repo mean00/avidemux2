@@ -25,7 +25,7 @@
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 #include "ADM_ebml.h"
-
+#include <vector>
 /**
     \struct mkvIndex
     \brief defines a frame, audio or video
@@ -39,7 +39,7 @@ typedef struct
     uint64_t Pts;   // Pts in us
 }mkvIndex;
 
-
+typedef std::vector <mkvIndex > mkvListOfIndex;
 /**
     \struct mkvTrak
     \brief Hold information about a give track, the track #0  is always video.
@@ -53,14 +53,14 @@ typedef struct
   WAVHeader wavHeader;
   uint32_t  nbPackets; // number of blocks (used for audio)
   uint32_t  nbFrames;  // number of distinct frames
-  uint32_t  length;    // Number of bytes seen
+  uint32_t  length;    // Number o;f bytes seen
   
   /* Used for both */
   uint8_t    *extraData;
   uint32_t   extraDataLen;
-  mkvIndex  *_index;
-  uint32_t  _nbIndex;  // current size of the index
-  uint32_t  _indexMax; // Max size of the index
+  
+  mkvListOfIndex  index;
+
   uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
 }mkvTrak;

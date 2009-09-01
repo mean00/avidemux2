@@ -81,7 +81,7 @@ uint8_t mkvHeader::open(const char *name)
       return 0;
     }
   // update some infos
-  _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0]._nbIndex;
+  _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].index.size();;
 
   _parser=new ADM_ebml_file();
   ADM_assert(_parser->open(name));
@@ -259,21 +259,7 @@ uint8_t mkvHeader::close(void)
   {
     FREEIF(1+i);
   }
-  // Delete index
-  if(_isvideopresent && _tracks[0]._index)
-  {
-    delete []  _tracks[0]._index;
-    _tracks[0]._index=NULL;
-  }
-  for(int i=0;i<_nbAudioTrack;i++)
-  {
-    mkvIndex **dx=&(_tracks[1+i]._index);
-    if(*dx)
-    {
-        delete []  *dx;
-        *dx=NULL;
-    }
-  }
+
     if(_audioStreams)
     {
         for(int i=0;i<_nbAudioTrack;i++) if(_audioStreams[i]) delete _audioStreams[i];
@@ -324,8 +310,8 @@ uint8_t mkvHeader::close(void)
 
   uint8_t  mkvHeader::setFlag(uint32_t frame,uint32_t flags)
 {
-  if(frame>=_tracks[0]._nbIndex) return 0;
-  _tracks[0]._index[frame].flags=flags;
+  if(frame>=_tracks[0].index.size()) return 0;
+  _tracks[0].index[frame].flags=flags;
   return 1;
 }
 
@@ -335,8 +321,8 @@ uint8_t mkvHeader::close(void)
 */
 uint32_t mkvHeader::getFlags(uint32_t frame,uint32_t *flags)
 {
-  if(frame>=_tracks[0]._nbIndex) return 0;
-  *flags=_tracks[0]._index[frame].flags;
+  if(frame>=_tracks[0].index.size()) return 0;
+  *flags=_tracks[0].index[frame].flags;
   if(!frame) *flags=AVI_KEY_FRAME;
   return 1;
 }
@@ -345,8 +331,8 @@ uint32_t mkvHeader::getFlags(uint32_t frame,uint32_t *flags)
 */
 uint64_t mkvHeader::getTime(uint32_t frame)
 {
- if(frame>=_tracks[0]._nbIndex) return ADM_COMPRESSED_NO_PTS;
-  return _tracks[0]._index[frame].Pts;
+ if(frame>=_tracks[0].index.size()) return ADM_COMPRESSED_NO_PTS;
+  return _tracks[0].index[frame].Pts;
 }
 /**
     \fn getVideoDuration
@@ -354,7 +340,9 @@ uint64_t mkvHeader::getTime(uint32_t frame)
 */
 uint64_t mkvHeader::getVideoDuration(void)
 {
-    return _tracks[0]._index[_tracks[0]._nbIndex-1].Pts;
+    uint32_t limit=_tracks[0].index.size();
+    if(!limit) return 0;
+    return _tracks[0].index[limit-1].Pts;
 }
 
 /**
@@ -362,8 +350,8 @@ uint64_t mkvHeader::getVideoDuration(void)
 */
 uint8_t                 mkvHeader::getFrameSize(uint32_t frame,uint32_t *size)
 {
-    if(frame>=_tracks[0]._nbIndex) return 0;
-    *size=_tracks[0]._index[frame].size;
+    if(frame>=_tracks[0].index.size()) return 0;
+    *size=_tracks[0].index[frame].size;
     return 1;
 }
 
@@ -375,9 +363,9 @@ uint8_t                 mkvHeader::getFrameSize(uint32_t frame,uint32_t *size)
 uint8_t  mkvHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
   ADM_assert(_parser);
-  if(framenum>=_tracks[0]._nbIndex) return 0;
+  if(framenum>=_tracks[0].index.size()) return 0;
 
-  mkvIndex *dx=&(_tracks[0]._index[framenum]);
+  mkvIndex *dx=&(_tracks[0].index[framenum]);
 
   _parser->seek(dx->pos);
   _parser->readSignedInt(2); // Timecode
@@ -501,12 +489,12 @@ uint8_t                 mkvHeader::getAudioStream(uint32_t i,ADM_audioStream  **
 bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
      ADM_assert(_parser);
-     if(frame>=_tracks[0]._nbIndex) 
+     if(frame>=_tracks[0].index.size()) 
      {
-            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0]._nbIndex);
+            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0].index.size());
             return false;
      }
-    mkvIndex *dx=&(_tracks[0]._index[frame]);
+    mkvIndex *dx=&(_tracks[0].index[frame]);
     
     *dts=dx->Dts; // FIXME
     *pts=dx->Pts;
@@ -518,12 +506,12 @@ bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
       ADM_assert(_parser);
-     if(frame>=_tracks[0]._nbIndex) 
+     if(frame>=_tracks[0].index.size()) 
      {
-            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0]._nbIndex);
+            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,_tracks[0].index.size());
             return false;
      }
-    mkvIndex *dx=&(_tracks[0]._index[frame]);
+    mkvIndex *dx=&(_tracks[0].index[frame]);
     
     dx->Dts=dts; // FIXME
     dx->Pts=pts;
