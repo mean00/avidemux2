@@ -216,15 +216,15 @@ bool flvHeader::extraHeader(flvTrak *trk,uint32_t *remain,bool have_cts,int32_t 
     {  // Grab extra data
         if(trk->extraData) 
         {
-            Skip(*remain);
+            Skip(r);
             r=0;
         }
         else    
         {
-            printf("[FLV] found some extradata %"LU"\n",*remain);
-            trk->extraData=new uint8_t[*remain];
-            trk->extraDataLen=*remain;
-            read(*remain,trk->extraData);
+            printf("[FLV] found some extradata %"LU"\n",r);
+            trk->extraData=new uint8_t[r];
+            trk->extraDataLen=r;
+            read(r,trk->extraData);
             r=0;            
         }
         *remain=r;
