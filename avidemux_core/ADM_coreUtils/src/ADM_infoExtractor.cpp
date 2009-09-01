@@ -493,6 +493,7 @@ uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint3
   {
     
               uint32_t length=(head[0]<<24) + (head[1]<<16) +(head[2]<<8)+(head[3]);
+              //printf("Block size : %"LU", available : %"LU"\n",length,len);
               if(length>len||length<6)
               {
                 printf("Warning , incomplete nal (%u/%u),(%0x/%0x)\n",length,len,length,len);
@@ -500,8 +501,7 @@ uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint3
                 return 0;
               }
               head+=4; // Skip nal lenth
-              length-=4;
-              stream=*(head++)&0x1F;
+              stream=*(head)&0x1F;
                 switch(stream)
                 {
                   case NAL_IDR: 
@@ -510,12 +510,13 @@ uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint3
                                   return 1;
                                   break; 
                   case NAL_NON_IDR: 
-                                  refineH264FrameType(head,tail,flags);
+                                  refineH264FrameType(head+1,tail,flags);
                                   return 1;
-                                  break;
+                                  break;                  
                   default:
                           printf("??0x%x\n",stream);
-                          head+=length-5;
+                  case NAL_SEI:  
+                          head+=length;
                           continue;
                 }
   }
@@ -585,7 +586,7 @@ uint32_t sliceType;
             *flags=0;
             init_get_bits(&s,head, (tail-head)*8);
             get_ue_golomb(&s);
-            sliceType= get_ue_golomb(&s);
+            sliceType= get_ue_golomb_31(&s);
             if(sliceType > 9) 
             {
               printf("Weird Slice %d\n",sliceType);
@@ -593,7 +594,8 @@ uint32_t sliceType;
             }
             if(sliceType > 4)
                 sliceType -= 5;
-            if(sliceType==3) *flags=AVI_B_FRAME;  
+            if(sliceType==1) *flags=AVI_B_FRAME;
+            //printf("[H264] Slice type : %"LU"\n",sliceType);
 }
 /**
     \fn ADM_searchVop
