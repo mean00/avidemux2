@@ -191,7 +191,7 @@ uint32_t flvHeader::searchMinimum(void)
     for(int i=0;i<videoTrack->_nbIndex-1;i++)
     {
         flvIndex *x=&(videoTrack->_index[i]);
-        if((x[1].timeCodeUs-x[0].timeCodeUs)<delta) delta=x[1].timeCodeUs-x[0].timeCodeUs;
+        if((x[1].dtsUs-x[0].dtsUs)<delta) delta=x[1].dtsUs-x[0].dtsUs;
 
     }
     return delta;
@@ -200,14 +200,15 @@ uint32_t flvHeader::searchMinimum(void)
     \fn extraHeader
     \brief if returns true means we must skip the remainder
 */
-bool flvHeader::extraHeader(flvTrak *trk,uint32_t *remain,bool have_cts,uint64_t *cts)
+bool flvHeader::extraHeader(flvTrak *trk,uint32_t *remain,bool have_cts,int32_t *cts)
 {
     int type=read8();
     int r=*remain;
     r--;
     if(have_cts)
     {
-        *cts=read24();
+        uint32_t c=read24();
+         *cts=(c+0xff800000)^0xff800000;
         //printf("Type :%d\n",type);
         r-=3;
     }
@@ -303,7 +304,9 @@ uint8_t flvHeader::open(const char *name)
   // Loop
   while(pos<fileSize-14)
   {
-    uint64_t cts;
+    int32_t cts=0;
+    uint32_t pts=0xffffffff;
+
     pos=ftello(_fd);
     prevLen=read32();
     type=read8();
@@ -369,10 +372,13 @@ uint8_t flvHeader::open(const char *name)
             if(codec==FLV_CODECID_H264)
             {
                 if(true==extraHeader(videoTrack,&remaining,true,&cts)) continue;
+                int64_t sum=cts+dts;
+                if(sum<0) pts=0xffffffff;
+                    else pts=dts+(int32_t)cts;
 
             }
             if(remaining)
-                insertVideo(ftello(_fd),remaining,frameType,dts);
+                insertVideo(ftello(_fd),remaining,frameType,dts,pts);
           }
            break;
       default: printf("[FLV]At 0x%x, unhandled type %u\n",pos,type);
@@ -385,7 +391,7 @@ uint8_t flvHeader::open(const char *name)
    _videostream.dwLength= _mainaviheader.dwTotalFrames=videoTrack->_nbIndex;
    // Compute average fps
     float f=_videostream.dwLength;
-    uint64_t duration=videoTrack->_index[videoTrack->_nbIndex-1].timeCodeUs;
+    uint64_t duration=videoTrack->_index[videoTrack->_nbIndex-1].dtsUs;
 
     if(duration)
           f=1000.*1000.*1000.*f/duration;
@@ -406,7 +412,7 @@ uint8_t flvHeader::open(const char *name)
     }
     _videostream.dwScale=1000;
     _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
-   printf("[FLV] Duration %"LLU" ms\n",videoTrack->_index[videoTrack->_nbIndex-1].timeCodeUs/1000);
+   printf("[FLV] Duration %"LLU" ms\n",videoTrack->_index[videoTrack->_nbIndex-1].dtsUs/1000);
 
    //
     _videostream.fccType=fourCC::get((uint8_t *)"vids");
@@ -437,7 +443,7 @@ uint8_t flvHeader::open(const char *name)
 */
 uint64_t flvHeader::getVideoDuration(void)
 {
-     uint64_t dur=videoTrack->_index[videoTrack->_nbIndex-1].timeCodeUs;
+     uint64_t dur=videoTrack->_index[videoTrack->_nbIndex-1].dtsUs;
     return dur;
 }
 
@@ -534,13 +540,16 @@ uint8_t   flvHeader::setAudioHeader(uint32_t format,uint32_t fq,uint32_t bps,uin
       \fn insertVideo
       \brief add a frame to the index, grow the index if needed
 */
-uint8_t flvHeader::insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uint32_t dts)
+uint8_t flvHeader::insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uint32_t dts,uint32_t pts)
 {
     videoTrack->grow();
     flvIndex *x=&(videoTrack->_index[videoTrack->_nbIndex]);
     x->size=size;
     x->pos=pos;
-    x->timeCodeUs=dts*1000LL;
+    x->dtsUs=dts*1000LL;
+    if(pts==0xffffffff) x->ptsUs=ADM_NO_PTS;
+        else
+      x->ptsUs=pts*1000LL;
     if(frameType==1)
     {
         x->flags=AVI_KEY_FRAME;
@@ -562,7 +571,7 @@ uint8_t flvHeader::insertAudio(uint32_t pos,uint32_t size,uint32_t pts)
     flvIndex *x=&(audioTrack->_index[audioTrack->_nbIndex]);
     x->size=size;
     x->pos=pos;
-    x->timeCodeUs=pts*1000LL;
+    x->dtsUs=pts*1000LL;
     x->flags=0;
     audioTrack->_nbIndex++;
     return 1;
@@ -717,7 +726,7 @@ uint64_t flvHeader::getTime(uint32_t frame)
 {
      if(frame>=videoTrack->_nbIndex) return 0;
      flvIndex *idx=&(videoTrack->_index[frame]);
-     return idx->timeCodeUs;
+     return idx->dtsUs;
 }
 /**
         \fn getFrame
@@ -733,8 +742,8 @@ uint8_t  flvHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
      img->flags=idx->flags;
      //img->demuxerDts=ADM_COMPRESSED_NO_PTS;
     // For flash assume PTS=DTS (???)
-     img->demuxerDts=idx->timeCodeUs;;
-     img->demuxerPts=idx->timeCodeUs;;
+     img->demuxerDts=idx->dtsUs;;
+     img->demuxerPts=idx->ptsUs;;
      return 1;
 }
 /**
@@ -783,8 +792,8 @@ bool    flvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 
      flvIndex *idx=&(videoTrack->_index[frame]);
     
-    *dts=idx->timeCodeUs; // FIXME
-    *pts=idx->timeCodeUs;
+    *dts=idx->dtsUs; // FIXME
+    *pts=idx->ptsUs;
     return true;
 }
 /**
@@ -800,7 +809,8 @@ bool    flvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 
      flvIndex *idx=&(videoTrack->_index[frame]);
     
-    idx->timeCodeUs=dts; // FIXME
+    idx->dtsUs=dts; // FIXME
+    idx->ptsUs=pts;
     //*pts=idx->timeCodeUs; // FIXME PTS=DTS ??
     return true;
 }

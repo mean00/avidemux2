@@ -29,7 +29,8 @@ typedef struct
     uint64_t pos;       // Absolute position in bytes
     uint32_t size;      // Size in bytes
     uint32_t flags;
-    uint64_t timeCodeUs;  // Time code in us from start
+    uint64_t dtsUs;  // Time code in us from start
+    uint64_t ptsUs;  // Time code in us from start
 }flvIndex;
 //**********************************************
 class flvTrak 
@@ -110,11 +111,11 @@ class flvHeader         :public vidHeader
     uint32_t    read24(void);
     uint32_t    read32(void);
     uint8_t     Skip(uint32_t len);
-    uint8_t     insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uint32_t pts);
+    uint8_t     insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uint32_t dts,uint32_t pts);
     uint8_t     insertAudio(uint32_t pos,uint32_t size,uint32_t pts);
     uint8_t     setAudioHeader(uint32_t format,uint32_t fq,uint32_t bps,uint32_t channels);
     uint8_t     setVideoHeader(uint8_t codec,uint32_t *remaining);
-    bool        extraHeader(flvTrak *trk,uint32_t *remain,bool haveCts,uint64_t *cts);
+    bool        extraHeader(flvTrak *trk,uint32_t *remain,bool haveCts,int32_t *cts);
     
     uint8_t     getFrameSize (uint32_t frame, uint32_t * size);
     char        *readFlvString(void);

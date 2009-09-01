@@ -68,7 +68,7 @@ uint64_t  ADM_flvAccess::getDurationInUs(void)
 {
     if(!_track->_nbIndex) return 0;
     // ms -> us
-    uint64_t dur=_track->_index[_track->_nbIndex-1].timeCodeUs;
+    uint64_t dur=_track->_index[_track->_nbIndex-1].dtsUs;
     
     return dur;
 }
@@ -85,7 +85,7 @@ uint32_t _nbClusters=_track->_nbIndex;
 
       // First identify the cluster...
       // Special case when first chunk does not start at 0
-      if(_nbClusters && mstime<_track->_index[0].timeCodeUs)
+      if(_nbClusters && mstime<_track->_index[0].dtsUs)
       {
             goToBlock(0);
             return true;
@@ -93,7 +93,7 @@ uint32_t _nbClusters=_track->_nbIndex;
       int clus=-1;
             for(int i=0;i<_nbClusters-1;i++)
             {
-              if(target>=_track->_index[i].timeCodeUs && target<_track->_index[i+1].timeCodeUs)
+              if(target>=_track->_index[i].dtsUs && target<_track->_index[i+1].dtsUs)
               {
                 clus=i;
                 i=_nbClusters; 
@@ -117,7 +117,7 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
     x=&(_track->_index[currentBlock]);
     fread(buffer,x->size,1,_fd);
     *osize=x->size;
-    *dts=((uint64_t)x->timeCodeUs);
+    *dts=((uint64_t)x->dtsUs);
     
     currentBlock++;
     //
