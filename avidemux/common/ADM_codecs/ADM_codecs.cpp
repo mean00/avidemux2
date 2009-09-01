@@ -178,13 +178,13 @@ decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen,
       return (decoders *) (new decoderFFWMV1 (w, h, extraLen, extraData));
     }
 
-  if (fourCC::check (fcc, (uint8_t *) "WMV3"))
+  if (fourCC::check (fcc, (uint8_t *) "WMV3") )
     {
 
       return (decoders *) (new decoderFFWMV3 (w, h, extraLen, extraData));
     }
 
-    if (fourCC::check (fcc, (uint8_t *) "WVC1"))
+    if (fourCC::check (fcc, (uint8_t *) "WVC1")|| fourCC::check (fcc, (uint8_t *) "WMVA"))
     {
 
       return (decoders *) (new decoderFFVC1 (w, h, extraLen, extraData));
