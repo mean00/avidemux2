@@ -127,138 +127,28 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 */
 bool muxerMP4::save(void) 
 {
-    printf("[MP4] Saving\n");
-    uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
-    uint8_t *buffer=new uint8_t[bufSize];
-    uint32_t len,flags;
-    uint64_t pts,dts,rawDts;
-    uint64_t lastVideoDts=0;
-    uint64_t videoIncrement;
-    int ret;
-    int written=0;
-    bool result=true;
-
-    float f=(float)vStream->getAvgFps1000();
-    f=1000./f;
-    f*=1000000;
-    videoIncrement=(uint64_t)f;
-#define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
-    uint8_t *audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
-
-
-    printf("[MP4]avg fps=%u\n",vStream->getAvgFps1000());
-    AVRational *scale=&(video_st->codec->time_base);
-    uint64_t videoDuration=vStream->getVideoDuration();
-
     const char *title=QT_TR_NOOP("Saving mp4");
     if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TR_NOOP("Saving PSP");
-    encoding=createWorking(title);
-
-    while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
-    {
-	AVPacket pkt;
-
-            float p=0.5;
-            if(videoDuration)
-                    p=lastVideoDts/videoDuration;
-            p=p*100;
-            encoding->update((uint32_t)p);
-            if(!encoding->isAlive()) 
-            {
-                result=false;
-                break;
-            }
-            int64_t xpts=(int64_t)pts;
-            int64_t xdts=(int64_t)dts;
-            if(pts==ADM_NO_PTS) xpts=-1;
-            if(dts==ADM_NO_PTS) xdts=-1;
-            aprintf("[MP4:V] Pts: %"LLD" DTS:%"LLD" ms\n",xpts/1000,xdts/1000);
-
-            aprintf("[MP4:V] LastDts:%08"LLU" Dts:%08"LLU" (%04"LLU") Delta : %"LLU"\n",
-                        lastVideoDts,dts,dts/1000000,dts-lastVideoDts);
-            rawDts=dts;
-            if(rawDts==ADM_NO_PTS)
-            {
-                lastVideoDts+=videoIncrement;
-            }else
-            {
-                lastVideoDts=dts;
-            }
-            pts=rescaleLavPts(pts,scale);
-            dts=rescaleLavPts(dts,scale);
-            aprintf("[MP4:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
-            aprintf("[MP4:V] Rescaled: Len : %d flags:%x Pts:%"LLU" Dts:%"LLU"\n",len,flags,pts,dts);
-
-            av_init_packet(&pkt);
-            pkt.dts=dts;
-            if(vStream->providePts()==true)
-            {
-                pkt.pts=pts;
-            }else
-            {
-                pkt.pts=pkt.dts;
-            }
-            pkt.stream_index=0;
-            pkt.data= buffer;
-            pkt.size= len;
-            if(flags & 0x10) // FIXME AVI_KEY_FRAME
-                        pkt.flags |= PKT_FLAG_KEY;
-            ret =av_write_frame(oc, &pkt);
-            aprintf("[MP4]Frame:%u, DTS=%08lu PTS=%08lu\n",written,dts,pts);
-            if(ret)
-            {
-                printf("[LavFormat]Error writing video packet\n");
-                break;
-            }
-            written++;
-            // Now send audio until they all have DTS > lastVideoDts+increment
-            for(int audio=0;audio<nbAStreams;audio++)
-            {
-                uint32_t audioSize,nbSample;
-                uint64_t audioDts;
-                ADM_audioStream*a=aStreams[audio];
-                uint32_t fq=a->getInfo()->frequency;
-                int nb=0;
-                while(a->getPacket(audioBuffer,&audioSize, AUDIO_BUFFER_SIZE,&nbSample,&audioDts))
-                {
-                    // Write...
-                    nb++;
-                    AVPacket pkt;
-                    double f=audioDts;
-                    f*=fq; // In samples
-                    f/=1000.*1000.; // In sec
-                   
-                    
-                    uint64_t rescaledDts=(uint64_t)(f+0.4);
-                    aprintf("[MP4] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
-                                    written,audioDts,audioSize,nbSample,rescaledDts);
-                    av_init_packet(&pkt);
-                    pkt.dts=rescaledDts;
-                    pkt.pts=rescaledDts;
-                    pkt.stream_index=1+audio;
-                    pkt.data= audioBuffer;
-                    pkt.size= audioSize;
-                    ret =av_write_frame(oc, &pkt);
-                    if(ret)
-                    {
-                        printf("[LavFormat]Error writing audio packet\n");
-                        break;
-                    }
-                    aprintf("[MP4] A:%"LU" ms vs V: %"LU" ms\n",(uint32_t)audioDts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
-                    if(audioDts!=ADM_NO_PTS)
-                    {
-                        if(audioDts>lastVideoDts+videoIncrement) break;
-                    }
-                }
-                if(!nb) printf("[MP4] A: No audio for video frame %d\n",written);
-            }
-
-    }
-    delete [] buffer;
-    delete [] audioBuffer;
-    printf("[MP4] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
-    return result;
+    return saveLoop(title);
 }
+
+bool muxerMP4::muxerRescaleVideoTime(uint64_t *time)
+{
+    AVRational *scale=&(video_st->codec->time_base);
+    *time=rescaleLavPts(*time,scale);
+    return true;
+}
+bool muxerMP4::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
+{
+  AVPacket pkt;
+    double f=*time;
+    f*=fq; // In samples
+    f/=1000.*1000.; // In sec
+
+
+    *time=(uint64_t)(f+0.4);
+}
+  
 /**
     \fn close
     \brief Cleanup is done in the dtor

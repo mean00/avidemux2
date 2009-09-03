@@ -141,113 +141,22 @@ finish:
 */
 bool muxerFlv::save(void)
 {
-    printf("[FLV] Saving\n");
-    uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
-    uint8_t *buffer=new uint8_t[bufSize];
-    uint32_t len,flags;
-    uint64_t pts,dts,rawDts;
-    uint64_t lastVideoDts=0;
-    int ret;
-    bool result=true;
-    int written=0;
-#define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
-    uint8_t *audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
-
-
-    printf("[FLV]avg fps=%u\n",vStream->getAvgFps1000());
-    AVRational *scale=&(video_st->codec->time_base);
-    initUI("Saving Flv file..");
-    while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
-    {
-	AVPacket pkt;
-            printf("[MP5] LastDts:%08"LLU" Dts:%08"LLU" (%04"LLU") Delta : %"LLD"\n",lastVideoDts,dts,dts/1000000,dts-lastVideoDts);
-            rawDts=dts;
-            if(rawDts==ADM_NO_PTS)
-            {
-                lastVideoDts+=videoIncrement;
-            }else
-            {
-                lastVideoDts=dts;
-            }
-            if(false==updateUI(lastVideoDts))
-            {
-                result=false;
-                goto abt;
-             }
-#define RESCALE(x) x=rescaleLavPts(x,scale);
-
-            dts=lastVideoDts/1000;
-
-            aprintf("[FLV] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
-            aprintf("[FLV] Rescaled: Len : %d flags:%x Pts:%llu Dts:%llu\n",len,flags,pts,dts);
-            RESCALE(pts);
-            av_init_packet(&pkt);
-            pkt.dts=dts;
-            if(vStream->providePts()==true)
-            {
-                pkt.pts=pts;
-            }else
-            {
-                pkt.pts=pkt.dts;
-            }
-            pkt.stream_index=0;
-            pkt.data= buffer;
-            pkt.size= len;
-            if(flags & 0x10) // FIXME AVI_KEY_FRAME
-                        pkt.flags |= PKT_FLAG_KEY;
-            ret =av_write_frame(oc, &pkt);
-            aprintf("[FLV]Frame:%u, DTS=%08lu PTS=%08lu\n",written,dts,pts);
-            if(ret)
-            {
-                printf("[LavFormat]Error writing video packet\n");
-                break;
-            }
-            written++;
-            // Now send audio until they all have DTS > lastVideoDts+increment
-            for(int audio=0;audio<nbAStreams;audio++)
-            {
-                uint32_t audioSize,nbSample;
-                uint64_t audioDts,rescaled;
-                ADM_audioStream*a=aStreams[audio];
-                uint32_t fq=a->getInfo()->frequency;
-                int nb=0;
-                while(a->getPacket(audioBuffer,&audioSize, AUDIO_BUFFER_SIZE,&nbSample,&audioDts))
-                {
-                    // Write...
-                    nb++;
-                    AVPacket pkt;
-                    rescaled=audioDts/1000;
-
-                    aprintf("[FLV] Video frame  %d, audio Dts :%lu size :%lu nbSample : %lu rescaled:%lu\n",written,audioDts,audioSize,nbSample,rescaledDts);
-                    av_init_packet(&pkt);
-                    pkt.dts=rescaled;
-                    pkt.pts=rescaled;
-                    pkt.stream_index=1+audio;
-                    pkt.data= audioBuffer;
-                    pkt.size= audioSize;
-                    ret =av_write_frame(oc, &pkt);
-                    if(ret)
-                    {
-                        printf("[LavFormat]Error writing audio packet\n");
-                        break;
-                    }
-                    aprintf("%u vs %u\n",audioDts/1000,(lastVideoDts+videoIncrement)/1000);
-                    if(audioDts!=ADM_NO_PTS)
-                    {
-                        if(audioDts>lastVideoDts+videoIncrement) break;
-                    }
-                }
-                if(!nb) printf("[FLV] No audio for video frame %d\n",written);
-            }
-
-    }
-abt:
-    closeUI();
-    delete [] buffer;
-    delete [] audioBuffer;
-    printf("[FLV] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
-    return result;
+    return saveLoop("FLV");
 }
+
+
+bool muxerFlv::muxerRescaleVideoTime(uint64_t *time)
+{
+    AVRational *scale=&(video_st->codec->time_base);
+    *time=rescaleLavPts(*time,scale);
+    return true;
+}
+bool muxerFlv::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
+{
+    *time=*time/1000;
+    return true;
+}
+
 /**
     \fn close
     \brief Cleanup is done in the dtor

@@ -32,6 +32,11 @@ extern "C"
 class muxerFFmpeg : public ADM_muxer
 {
 protected:
+        virtual bool muxerRescaleVideoTime(uint64_t *time)=0;
+        virtual bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq)=0;
+protected:
+        bool saveLoop(const char *title);
+protected:
         AVOutputFormat *fmt;
         AVFormatContext *oc;
         AVStream *audio_st;
