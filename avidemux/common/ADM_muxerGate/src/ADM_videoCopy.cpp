@@ -106,4 +106,10 @@ uint64_t        ADM_videoStreamCopy::getVideoDuration(void)
     return video_body->getVideoDuration();
 
 }
-     
+/**
+
+*/
+bool     ADM_videoStreamCopy::providePts(void)
+{
+    return true;
+}

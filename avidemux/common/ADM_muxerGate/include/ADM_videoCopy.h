@@ -25,7 +25,7 @@ public:
 virtual     bool     getPacket(uint32_t *len, uint8_t *data, uint32_t maxLen,uint64_t *pts,uint64_t *dts,
                                     uint32_t *flags);
 virtual     bool     getExtraData(uint32_t *extraLen, uint8_t **extraData) ;
-virtual     bool     providePts(void) {return false;}
+virtual     bool     providePts(void);
 virtual     uint64_t getVideoDuration(void);
 };
 
