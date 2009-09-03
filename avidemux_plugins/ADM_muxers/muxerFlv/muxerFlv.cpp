@@ -1,9 +1,9 @@
 /***************************************************************************
             \file            muxerFlv
-            \brief           i/f to lavformat mpeg4 muxer
+            \brief           i/f to lavformat Flv muxer
                              -------------------
 
-    copyright            : (C) 2008 by mean
+    copyright            : (C) 2009 by mean
     email                : fixounet@free.fr
 
  ***************************************************************************/
@@ -73,7 +73,6 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         }
 
     if(nbAudioTrack)
-    {
         for(int i=0;i<nbAudioTrack;i++)
         {
             uint32_t acc=a[i]->getInfo()->encoding;
@@ -84,8 +83,6 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             }
 
         }
-
-    }
 
     if(false==setupMuxer("flv",file))
     {
@@ -257,25 +254,8 @@ abt:
 */
 bool muxerFlv::close(void)
 {
-    if(oc)
-    {
-        av_write_trailer(oc);
-        url_fclose((oc->pb));
-        if(audio_st)
-        {
-             av_free(audio_st);
-        }
-        if(video_st)
-        {
-             av_free(video_st);
-        }
-        video_st=NULL;
-        audio_st=NULL;
-        if(oc)
-            av_free(oc);
-        oc=NULL;
-    }
     printf("[FLV] Closing\n");
+    closeMuxer();
     return true;
 }
 
