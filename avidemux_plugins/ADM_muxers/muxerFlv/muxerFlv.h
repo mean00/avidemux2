@@ -18,7 +18,7 @@
 #define ADM_MUXER_FLV
 
 #include "ADM_muxer.h"
-
+#include "ADM_coreMuxerFfmpeg.h"
 typedef struct
 {
     
@@ -27,7 +27,7 @@ typedef struct
 
 extern FLVMUXERCONFIG muxerConfig;
 
-class muxerFlv : public ADM_muxer
+class muxerFlv : public muxerFFmpeg
 {
 protected:
 

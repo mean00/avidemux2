@@ -22,16 +22,6 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_muxerUtils.h"
 
-
-
-
-
-static    AVOutputFormat *fmt=NULL;
-static    AVFormatContext *oc=NULL;
-static    AVStream *audio_st;
-static    AVStream *video_st;
-static    double audio_pts, video_pts;
-
 #if 0
 #define aprintf(...) {}
 #else
@@ -97,57 +87,10 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         printf("[MP4] Failed to init video\n");
         return false;
     }
-   AVCodecContext *c;
-        c = video_st->codec;
-        if(isMpeg4Compatible(s->getFCC()))
-        {
-                c->codec_id = CODEC_ID_MPEG4;
-                if(s->providePts()==true)
-                {
-                    c->has_b_frames=1; // in doubt...
-                    c->max_b_frames=2;
-                }else   
-                {
-                    c->has_b_frames=0; // No PTS=cannot handle CTS...
-                    c->max_b_frames=0;
-                }
-        }else
-        {
-                if(isH264Compatible(s->getFCC()))
-                {
-                        if(s->providePts()==true)
-                        {
-                            c->has_b_frames=1; // in doubt...
-                            c->max_b_frames=2;
-                        }else
-                        {
-                            printf("[MP4] Source video has no PTS information, assuming no b frames\n");
-                            c->has_b_frames=0; // No PTS=cannot handle CTS...
-                            c->max_b_frames=0;
-                        }
-                        c->codec_id = CODEC_ID_H264;
-                        c->codec=new AVCodec;
-                        memset(c->codec,0,sizeof(AVCodec));
-                        c->codec->name=ADM_strdup("H264");
-                }
-                else
-                {
-                        if(isDVCompatible(s->getFCC()))
-                        {
-                          c->codec_id = CODEC_ID_DVVIDEO;
-                        }else
-                        {
-                          if(fourCC::check(s->getFCC(),(uint8_t *)"H263"))
-                          {
-                                    c->codec_id=CODEC_ID_H263;
-                            }else{
-                                    return false;
-                                }
-                        }
-                }
-        }
+  
     
-
+        AVCodecContext *c;
+        c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         c->gop_size=15;
         

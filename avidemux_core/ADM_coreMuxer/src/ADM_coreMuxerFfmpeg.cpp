@@ -126,6 +126,77 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         c->flags=CODEC_FLAG_QSCALE;
         c->width = stream->getWidth();
         c->height =stream->getHeight();
+
+        if(isMpeg4Compatible(stream->getFCC()))
+        {
+                c->codec_id = CODEC_ID_MPEG4;
+                if(stream->providePts()==true)
+                {
+                    c->has_b_frames=1; // in doubt...
+                    c->max_b_frames=2;
+                }else   
+                {
+                    c->has_b_frames=0; // No PTS=cannot handle CTS...
+                    c->max_b_frames=0;
+                }
+        }else
+        {
+                if(isH264Compatible(stream->getFCC()))
+                {
+                        if(stream->providePts()==true)
+                        {
+                            c->has_b_frames=1; // in doubt...
+                            c->max_b_frames=2;
+                        }else
+                        {
+                            printf("[MP4] Source video has no PTS information, assuming no b frames\n");
+                            c->has_b_frames=0; // No PTS=cannot handle CTS...
+                            c->max_b_frames=0;
+                        }
+                        c->codec_id = CODEC_ID_H264;
+                        c->codec=new AVCodec;
+                        memset(c->codec,0,sizeof(AVCodec));
+                        c->codec->name=ADM_strdup("H264");
+                }
+                else
+                {
+                        if(isDVCompatible(stream->getFCC()))
+                        {
+                          c->codec_id = CODEC_ID_DVVIDEO;
+                        }else
+                        {
+                          if(fourCC::check(stream->getFCC(),(uint8_t *)"H263"))
+                          {
+                                    c->codec_id=CODEC_ID_H263;
+                            }else
+
+                           if(isVP6Compatible(stream->getFCC()))
+                                {
+                                         c->codec=new AVCodec;
+                                         c->codec_id=CODEC_ID_VP6F;
+                                         c->codec->name=ADM_strdup("VP6F");
+                                         c->has_b_frames=0; // No PTS=cannot handle CTS...
+                                         c->max_b_frames=0;
+                                }else
+                                        if(fourCC::check(stream->getFCC(),(uint8_t *)"FLV1"))
+                                        {
+                                                c->has_b_frames=0; // No PTS=cannot handle CTS...
+                                                c->max_b_frames=0;
+                                                c->codec_id=CODEC_ID_FLV1;
+
+                                                c->codec=new AVCodec;
+                                                memset(c->codec,0,sizeof(AVCodec));
+                                                c->codec->name=ADM_strdup("FLV1");
+                                        }else
+                                        {
+                                            printf("[FF] Unknown video codec\n");
+                                            return false;
+                                        }
+                        }
+                }
+        }
+
+
         printf("[FF] Video initialized\n");
 
     return true;

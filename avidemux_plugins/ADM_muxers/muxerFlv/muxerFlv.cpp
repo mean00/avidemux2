@@ -22,16 +22,6 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_muxerUtils.h"
 
-
-
-
-
-static    AVOutputFormat *fmt=NULL;
-static    AVFormatContext *oc=NULL;
-static    AVStream *audio_st;
-static    AVStream *video_st;
-static    double audio_pts, video_pts;
-
 #if 1
 #define aprintf(...) {}
 #else
@@ -59,24 +49,7 @@ muxerFlv::muxerFlv()
 muxerFlv::~muxerFlv()
 {
     printf("[FLV] Destructing\n");
-    if(oc)
-    {
-        av_write_trailer(oc);
-		url_fclose((oc->pb));
-	}
-	if(audio_st)
-	{
-		 av_free(audio_st);
-	}
-	if(video_st)
-	{
-		 av_free(video_st);
-	}
-	video_st=NULL;
-	audio_st=NULL;
-	if(oc)
-		av_free(oc);
-	oc=NULL;
+    closeMuxer();
 
 }
 /**
@@ -88,8 +61,6 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 {
     uint32_t fcc=s->getFCC();
     bool r=true;
-    uint32_t videoExtraDataSize=0;
-    uint8_t  *videoExtraData;
     char *fileTitle=NULL;
         
      if(fourCC::check(fcc,(uint8_t *)"FLV1") || isVP6Compatible(fcc))
@@ -115,160 +86,37 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         }
 
     }
-    /* All seems fine, open stuff */
-    const char *f="flv";
 
-    fmt=guess_format(f, NULL, NULL);
-    if(!fmt)
+    if(false==setupMuxer("flv",file))
     {
-            printf("[FLV] guess format failed\n");
-            return false;
+        printf("[FLV] Failed to open muxer\n");
+        return false;
     }
-    oc = av_alloc_format_context();
-	if (!oc)
-	{
-       		printf("[FLV] alloc format context failed\n");
-            return false;
-	}
-	oc->oformat = fmt;
-	snprintf(oc->filename,1000,"file://%s",file);
-// *******************************************
-// *******************************************
-//                  VIDEO
-// *******************************************
-// *******************************************
-    video_st = av_new_stream(oc, 0);
-	if (!video_st)
-	{
-		printf("[FLV] new stream failed\n");
-		r=false;
-        goto finish;
-	}
+ 
+   if(initVideo(s)==false) 
+    {
+        printf("[FLV] Failed to init video\n");
+        return false;
+    }
+  
     AVCodecContext *c;
-	c = video_st->codec;
-        video_st->sample_aspect_ratio.num=1;
-        video_st->sample_aspect_ratio.den=1;
-  // probably a memeleak here
-        fileTitle=ADM_strdup(file);
+    c = video_st->codec;   
+    rescaleFps(s->getAvgFps1000(),&(c->time_base));
+    c->gop_size=15;
 
-        strcpy(oc->title,ADM_GetFileName(fileTitle));
-        strcpy(oc->author,"Avidemux");
-        c->sample_aspect_ratio.num=1;
-        c->sample_aspect_ratio.den=1;
-        if(isVP6Compatible(s->getFCC()))
-        {
-                 c->codec=new AVCodec;
-                 c->codec_id=CODEC_ID_VP6F;
-                 c->codec->name=ADM_strdup("VP6F");
-                 c->has_b_frames=0; // No PTS=cannot handle CTS...
-                 c->max_b_frames=0;
-        }else
-                if(fourCC::check(fcc,(uint8_t *)"FLV1"))
-                {
-                        c->has_b_frames=0; // No PTS=cannot handle CTS...
-                        c->max_b_frames=0;
-                        c->codec_id=CODEC_ID_FLV1;
+    if(initAudio(nbAudioTrack,a)==false)
+    {
+        printf("[FLV] Failed to init audio\n");
+        return false;
+    }
 
-                        c->codec=new AVCodec;
-                        memset(c->codec,0,sizeof(AVCodec));
-                        c->codec->name=ADM_strdup("FLV1");
-                }
-                else
-                {
-                        ADM_assert(0);
-                }
-
-        s->getExtraData(&videoExtraDataSize,&videoExtraData);
-        if(videoExtraDataSize)
-        {
-                c->extradata=videoExtraData;
-                c->extradata_size= videoExtraDataSize;
-        }
-
-        c->rc_buffer_size=8*1024*224;
-        c->rc_max_rate=9500*1000;
-        c->rc_min_rate=0;
-//        if(!inbitrate)
-                c->bit_rate=9000*1000;
-        //else
-          //      c->bit_rate=inbitrate;
-        c->codec_type = CODEC_TYPE_VIDEO;
-        c->flags=CODEC_FLAG_QSCALE;
-        c->width = s->getWidth();
-        c->height =s->getHeight();
-        
-        rescaleFps(s->getAvgFps1000(),&(c->time_base));
-        c->gop_size=15;
-
-
-
-// *******************************************
-// *******************************************
-//                  AUDIO
-// *******************************************
-// *******************************************
-        if(nbAudioTrack)
-        {
-          uint32_t audioextraSize;
-          uint8_t  *audioextraData;
-
-          a[0]->getExtraData(&audioextraSize,&audioextraData);
-
-          audio_st = av_new_stream(oc, 1);
-          if (!audio_st)
-          {
-                  printf("[FLV]: new stream failed (audio)\n");
-                  r=false;
-                  goto finish;
-                                 
-          }
-          WAVHeader *audioheader=a[0]->getInfo();;
-
-          c = audio_st->codec;
-          c->frame_size=1024; //For AAC mainly, sample per frame
-          printf("[FLV] Bitrate %u\n",(audioheader->byterate*8)/1000);
-          c->sample_rate = audioheader->frequency;
-          switch(audioheader->encoding)
-          {
-                  case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
-                  case WAV_MP2: c->codec_id = CODEC_ID_MP2;break;
-                  case WAV_MP3:
-  #warning FIXME : Probe deeper
-                              c->frame_size=1152;
-                              c->codec_id = CODEC_ID_MP3;
-                              break;
-                  case WAV_PCM:
-                                  // One chunk is 10 ms (1/100 of fq)
-                                  c->frame_size=4;
-                                  c->codec_id = CODEC_ID_PCM_S16LE;break;
-                  case WAV_AAC:
-                                  c->extradata=audioextraData;
-                                  c->extradata_size= audioextraSize;
-                                  c->codec_id = CODEC_ID_AAC;
-                                  break;
-                  default:
-                                 printf("[FLV]: Unsupported audio\n");
-                                 r=false;
-                                 goto finish;
-                                 return false;
-                          break;
-          }
-          c->codec_type = CODEC_TYPE_AUDIO;
-
-          c->bit_rate = audioheader->byterate*8;
-          c->rc_buffer_size=(c->bit_rate/(2*8)); // 500 ms worth
-
-          c->channels = audioheader->channels;
-
-        }
-        // /audio
         
         oc->mux_rate=10080*1000;
         oc->preload=AV_TIME_BASE/10; // 100 ms preloading
         oc->max_delay=200*1000; // 500 ms
         if (av_set_parameters(oc, NULL) < 0)
         {
-            printf("Lav: set param failed \n");
+            printf("[FLV]: set param failed \n");
             return false;
         }
         if (url_fopen(&(oc->pb), file, URL_WRONLY) < 0)
