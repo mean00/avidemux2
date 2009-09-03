@@ -28,8 +28,8 @@ void ADMImage_stat( void )
 {
 	printf("\nImages stat:\n");
 	printf("___________\n");
-	printf("Max memory consumed (MB)     : %"LU"\n",imgMaxMem>>10);
-	printf("Current memory consumed (MB) : %"LU"\n",imgCurMem>>10);
+	printf("Max memory consumed (MB)     : %"LU"\n",imgMaxMem>>20);
+	printf("Current memory consumed (MB) : %"LU"\n",imgCurMem>>20);
 	printf("Max image used               : %"LU"\n",imgMaxNb);
 	printf("Cur image used               : %"LU"\n",imgCurNb);
 
@@ -79,13 +79,13 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,uint32_t dummy)
 //
 ADMImage::~ADMImage()
 {
-        if(!_isRef)
-        {
-	       if(quant) delete [] quant;
-	       quant=NULL;
-	       if(data) delete [] data;
-	       data=NULL;
-               imgCurMem-=(_width*_height*3)>>1;
+    if(!_isRef)
+    {
+       if(quant) delete [] quant;
+       quant=NULL;
+       if(data) delete [] data;
+       data=NULL;
+       imgCurMem-=(_width*_height*3)>>1;
 	}
 	imgCurNb--;
 

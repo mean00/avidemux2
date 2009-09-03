@@ -32,6 +32,7 @@
 #undef realloc
 
 static uint32_t ADM_consumed = 0;
+static uint32_t ADM_maxConsumed = 0;
 static admMutex memAccess("MemAccess");
 static int doMemStat = 0;
 
@@ -68,6 +69,8 @@ void ADM_memStat(void)
 {
 	printf("Global mem stat\n______________\n");
 	printf("\tMemory consumed: %"LU" (MB)\n", ADM_consumed >> 20);
+    printf("\tMax consumed   : %"LU" (MB)\n", ADM_maxConsumed >> 20);
+
 }
 
 #if !defined(ADM_DEBUG) || !defined(FIND_LEAKS)
@@ -109,11 +112,14 @@ void *ADM_alloc(size_t size)
 	backdoor = (uint32_t*)(c - 8);
 	*backdoor = (0xdead << 16) + l - lorg;
 	backdoor[1] = size;
+    
+    ADM_consumed += size;
+    if(ADM_consumed>ADM_maxConsumed) ADM_maxConsumed=ADM_consumed;
 
-	if(dome)
+    if(dome)
 		memAccess.unlock();
 
-	ADM_consumed += size;
+	
 
 	return c;
 #endif
