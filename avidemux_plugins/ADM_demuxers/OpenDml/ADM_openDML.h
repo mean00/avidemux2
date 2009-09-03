@@ -120,7 +120,8 @@ protected:
 
 	  uint8_t           computePtsDts(void);
       uint8_t           mpegReorder(void);
-	  uint8_t			unpackPacked( void );	  	
+	  uint8_t			unpackPacked( void );	
+      bool              removeEmptyFrames (void);
 public:
 	  
 virtual   void 				Dump(void) ;

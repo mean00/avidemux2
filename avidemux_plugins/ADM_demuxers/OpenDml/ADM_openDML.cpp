@@ -132,7 +132,8 @@ uint64_t OpenDMLHeader::getTime(uint32_t frameNum)
 */
 uint64_t  OpenDMLHeader::getVideoDuration(void)
 {
-    return frameToUs(_videostream.dwLength); 
+    if(!_videostream.dwLength) return 0;
+    return _idx[_videostream.dwLength-1].dts; 
 }
 
 OpenDMLHeader::~OpenDMLHeader()
@@ -521,8 +522,42 @@ uint32_t rd;
                 else
                 _videostream.fccHandler=_video_bih.biCompression;
                 printf("\nOpenDML file successfully read..\n");
-                if(ret==1) computePtsDts();
+                if(ret==1) 
+                {
+                    computePtsDts();
+                    removeEmptyFrames();
+                }
                 return ret;
+}
+/**
+    \fn removeEmptyFrames
+    \brief Remove the null padding frames, they are not needed and indeed harmful
+*/
+bool OpenDMLHeader::removeEmptyFrames(void)
+{
+    
+    odmlIndex *nwIdx=new odmlIndex[_videostream.dwLength];
+    int index=0;
+    for(int i=0;i<_videostream.dwLength;i++)
+    {
+        if(_idx[i].size)
+        {
+            nwIdx[index++]=_idx[i];
+        }
+    }
+    if(index==_videostream.dwLength)
+    {
+        delete [] nwIdx;
+        printf("[openDml] No empty frames\n");
+        return true;
+    }
+    int delta=_videostream.dwLength-index;
+
+    printf("[openDml] Removed %d empty frames\n",(int)delta);
+    _mainaviheader.dwTotalFrames=_videostream.dwLength=index;
+    delete [] _idx;
+    _idx=nwIdx;
+    return true;
 }
 /**
     \fn computePtsDts
