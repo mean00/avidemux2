@@ -40,11 +40,11 @@ public:
             ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
             ~ADM_coreVideoFilter();
 
-       virtual const char   *getConfiguration(void);                    /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(ADMImage *image)=0;    /// Return the next image
-	   virtual FilterInfo  *getInfo(void);                                      /// Return picture parameters after this filter
-	   virtual bool         getCoupledConf(CONFcouple **couples)=0 ; /// Return the current filter configuration
-
+       virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
+       virtual bool         getNextFrame(ADMImage *image)=0;           /// Return the next image
+	   virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
+	   virtual bool         getCoupledConf(CONFcouple **couples)=0 ;   /// Return the current filter configuration
+       virtual bool         configure(void) {return true;}             /// Start graphical user interface
 protected:
             ADM_coreVideoFilter *previousFilter;
 };

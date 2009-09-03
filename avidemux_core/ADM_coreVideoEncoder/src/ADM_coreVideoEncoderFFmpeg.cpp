@@ -206,6 +206,9 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
         return false;
     }
     prolog();
+#if 1
+    _frame.pts=AV_NOPTS_VALUE;
+#else
     // put a time stamp...
     if(image->Pts==ADM_NO_PTS) 
     {
@@ -225,6 +228,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 
         //printf("*** PTS:%d time_base :%d/%d\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     }
+#endif
     //
     //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     //
