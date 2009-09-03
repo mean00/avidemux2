@@ -32,7 +32,7 @@ static    AVStream *audio_st;
 static    AVStream *video_st;
 static    double audio_pts, video_pts;
 
-#if 1
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf printf
@@ -59,26 +59,7 @@ muxerMP4::muxerMP4()
 
 muxerMP4::~muxerMP4() 
 {
-    printf("[MP4] Destructing\n");
-    if(oc)
-    {
-        av_write_trailer(oc);
-		url_fclose((oc->pb));
-	}
-	if(audio_st)
-	{
-		 av_free(audio_st);
-	}
-	if(video_st)
-	{
-		 av_free(video_st);
-	}
-	video_st=NULL;
-	audio_st=NULL;
-	if(oc)
-		av_free(oc);
-	oc=NULL;
-
+   
 }
 /**
     \fn open
@@ -93,7 +74,6 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             return false;
     }
     if(nbAudioTrack)
-    {
         for(int i=0;i<nbAudioTrack;i++)
         {
             uint32_t acc=a[i]->getInfo()->encoding;
@@ -102,48 +82,23 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
                 GUI_Error_HIG("Unsupported","Only AAC & mpegaudio supported for audio");
                 return false;
             }
-
         }
-
-    }
     /* All seems fine, open stuff */
     const char *f="mp4";
     if(muxerConfig.muxerType==MP4_MUXER_PSP) f="psp";
-    fmt=guess_format(f, NULL, NULL);
-    if(!fmt)
+    if(false==setupMuxer(f,file))
     {
-            printf("[Mp4] guess format failed\n");
-            return false;
+        printf("[MP4] Failed to open muxer\n");
+        return false;
     }
-    oc = av_alloc_format_context();
-	if (!oc)
-	{
-       		printf("[Mp4] alloc format context failed\n");
-            return false;
-	}
-	oc->oformat = fmt;
-	snprintf(oc->filename,1000,"file://%s",file);
-// *******************************************
-// *******************************************
-//                  VIDEO
-// *******************************************
-// *******************************************
-    video_st = av_new_stream(oc, 0);
-	if (!video_st)
-	{
-		printf("[Mp4] new stream failed\n");
-		return false;
-	}
-    AVCodecContext *c;
-	c = video_st->codec;
-    
-  // probably a memeleak here
-        char *foo=ADM_strdup(file);
-        
-        strcpy(oc->title,ADM_GetFileName(foo));
-        strcpy(oc->author,"Avidemux");
-        c->sample_aspect_ratio.num=1;
-        c->sample_aspect_ratio.den=1;
+ 
+   if(initVideo(s)==false) 
+    {
+        printf("[MP4] Failed to init video\n");
+        return false;
+    }
+   AVCodecContext *c;
+        c = video_st->codec;
         if(isMpeg4Compatible(s->getFCC()))
         {
                 c->codec_id = CODEC_ID_MPEG4;
@@ -191,87 +146,17 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
                         }
                 }
         }
-        uint32_t videoExtraDataSize=0;
-        uint8_t  *videoExtraData;
-        s->getExtraData(&videoExtraDataSize,&videoExtraData);
-        if(videoExtraDataSize)
-        {
-                c->extradata=videoExtraData;
-                c->extradata_size= videoExtraDataSize;
-        }
-        
-        c->rc_buffer_size=8*1024*224;
-        c->rc_max_rate=9500*1000;
-        c->rc_min_rate=0;
-//        if(!inbitrate)
-                c->bit_rate=9000*1000;
-        //else
-          //      c->bit_rate=inbitrate;
-        c->codec_type = CODEC_TYPE_VIDEO;
-        c->flags=CODEC_FLAG_QSCALE;
-        c->width = s->getWidth();
-        c->height =s->getHeight();
+    
 
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         c->gop_size=15;
         
-        
-
-// *******************************************
-// *******************************************
-//                  AUDIO
-// *******************************************
-// *******************************************
-        if(nbAudioTrack)
+        if(initAudio(nbAudioTrack,a)==false)
         {
-          uint32_t audioextraSize;
-          uint8_t  *audioextraData;
-          
-          a[0]->getExtraData(&audioextraSize,&audioextraData);
-
-          audio_st = av_new_stream(oc, 1);
-          if (!audio_st)
-          {
-                  printf("[MP4]: new stream failed (audio)\n");
-                  return false;
-          }
-          WAVHeader *audioheader=a[0]->getInfo();;
-
-          c = audio_st->codec;
-          c->frame_size=1024; //For AAC mainly, sample per frame
-          printf("[MP4] Bitrate %u\n",(audioheader->byterate*8)/1000);
-          c->sample_rate = audioheader->frequency;
-          switch(audioheader->encoding)
-          {
-                  case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
-                  case WAV_MP2: c->codec_id = CODEC_ID_MP2;break;
-                  case WAV_MP3:
-  #warning FIXME : Probe deeper
-                              c->frame_size=1152;
-                              c->codec_id = CODEC_ID_MP3;
-                              break;
-                  case WAV_PCM:
-                                  // One chunk is 10 ms (1/100 of fq)
-                                  c->frame_size=4;
-                                  c->codec_id = CODEC_ID_PCM_S16LE;break;
-                  case WAV_AAC:
-                                  c->extradata=audioextraData;
-                                  c->extradata_size= audioextraSize;
-                                  c->codec_id = CODEC_ID_AAC;
-                                  break;
-                  default:
-                                 printf("[MP4]: Unsupported audio\n");
-                                 return false; 
-                          break;
-          }
-          c->codec_type = CODEC_TYPE_AUDIO;
-
-          c->bit_rate = audioheader->byterate*8;
-          c->rc_buffer_size=(c->bit_rate/(2*8)); // 500 ms worth
-
-          c->channels = audioheader->channels;
-
+            printf("[MP4] Failed to init audio\n");
+            return false;
         }
+        
         // /audio
         oc->mux_rate=10080*1000;
         oc->preload=AV_TIME_BASE/10; // 100 ms preloading
@@ -322,7 +207,7 @@ bool muxerMP4::save(void)
     AVRational *scale=&(video_st->codec->time_base);
     uint64_t videoDuration=vStream->getVideoDuration();
 
-    char *title=QT_TR_NOOP("Saving mp4");
+    const char *title=QT_TR_NOOP("Saving mp4");
     if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TR_NOOP("Saving PSP");
     encoding=createWorking(title);
 
@@ -340,9 +225,14 @@ bool muxerMP4::save(void)
                 result=false;
                 break;
             }
+            int64_t xpts=(int64_t)pts;
+            int64_t xdts=(int64_t)dts;
+            if(pts==ADM_NO_PTS) xpts=-1;
+            if(dts==ADM_NO_PTS) xdts=-1;
+            aprintf("[MP4:V] Pts: %"LLD" DTS:%"LLD" ms\n",xpts/1000,xdts/1000);
 
-
-            aprintf("[MP5] LastDts:%08lu Dts:%08lu (%04.4lu) Delta : %u\n",lastVideoDts,dts,dts/1000000,dts-lastVideoDts);
+            aprintf("[MP4:V] LastDts:%08"LLU" Dts:%08"LLU" (%04"LLU") Delta : %"LLU"\n",
+                        lastVideoDts,dts,dts/1000000,dts-lastVideoDts);
             rawDts=dts;
             if(rawDts==ADM_NO_PTS)
             {
@@ -353,8 +243,8 @@ bool muxerMP4::save(void)
             }
             pts=rescaleLavPts(pts,scale);
             dts=rescaleLavPts(dts,scale);
-            aprintf("[MP4] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
-            aprintf("[MP4] Rescaled: Len : %d flags:%x Pts:%llu Dts:%llu\n",len,flags,pts,dts);
+            aprintf("[MP4:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
+            aprintf("[MP4:V] Rescaled: Len : %d flags:%x Pts:%"LLU" Dts:%"LLU"\n",len,flags,pts,dts);
 
             av_init_packet(&pkt);
             pkt.dts=dts;
@@ -397,7 +287,8 @@ bool muxerMP4::save(void)
                    
                     
                     uint64_t rescaledDts=(uint64_t)(f+0.4);
-                    aprintf("[MP4] Video frame  %d, audio Dts :%lu size :%lu nbSample : %lu rescaled:%lu\n",written,audioDts,audioSize,nbSample,rescaledDts);
+                    aprintf("[MP4] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
+                                    written,audioDts,audioSize,nbSample,rescaledDts);
                     av_init_packet(&pkt);
                     pkt.dts=rescaledDts;
                     pkt.pts=rescaledDts;
@@ -410,13 +301,13 @@ bool muxerMP4::save(void)
                         printf("[LavFormat]Error writing audio packet\n");
                         break;
                     }
-                    aprintf("%u vs %u\n",audioDts/1000,(lastVideoDts+videoIncrement)/1000);
+                    aprintf("[MP4] A:%"LU" ms vs V: %"LU" ms\n",(uint32_t)audioDts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
                     if(audioDts!=ADM_NO_PTS)
                     {
                         if(audioDts>lastVideoDts+videoIncrement) break;
                     }
                 }
-                if(!nb) printf("[MP4] No audio for video frame %d\n",written);
+                if(!nb) printf("[MP4] A: No audio for video frame %d\n",written);
             }
 
     }
@@ -431,26 +322,9 @@ bool muxerMP4::save(void)
 */
 bool muxerMP4::close(void) 
 {
-    if(oc)
-    {
-        av_write_trailer(oc);
-        url_fclose((oc->pb));
-        if(audio_st)
-        {
-             av_free(audio_st);
-        }
-        if(video_st)
-        {
-             av_free(video_st);
-        }
-        video_st=NULL;
-        audio_st=NULL;
-        if(oc)
-            av_free(oc);
-        oc=NULL;
-    }
+   
     printf("[MP4] Closing\n");
-    return true;
+    return closeMuxer();
 }
 
 //EOF

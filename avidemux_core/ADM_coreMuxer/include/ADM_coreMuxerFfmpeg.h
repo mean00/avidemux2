@@ -1,9 +1,11 @@
 /***************************************************************************
-                          oplug_vcdff.h  -  description
+            \file            ADM_coreMuxerFfmpeg.h
+            \brief           Base class for ffmpeg based muxers
                              -------------------
-    begin                : Sun Nov 10 2002
-    copyright            : (C) 2002 by mean
+    
+    copyright            : (C) 2009 by mean
     email                : fixounet@free.fr
+        
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,35 +16,35 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_MUXER_MP4
-#define ADM_MUXER_MP4
-
+#ifndef ADM_COREMUXERFFMPEG_H
+#define ADM_COREMUXERFFMPEG_H
+#include "ADM_default.h"
+#include "fourcc.h"
 #include "ADM_muxer.h"
-#include "ADM_coreMuxerFfmpeg.h"
-typedef enum
+#include "ADM_lavcodec.h"
+extern "C"
 {
-    MP4_MUXER_MP4,
-    MP4_MUXER_PSP
-}MP4_MUXER_TYPE;
-
-typedef struct
-{
-    MP4_MUXER_TYPE muxerType;
-    uint32_t       useAlternateMP3Tag;
-}M4MUXERCONFIG;
-
-extern M4MUXERCONFIG muxerConfig;
-
-class muxerMP4 : public muxerFFmpeg
+    #include "libavformat/avformat.h"
+};
+/**
+    \class muxerFFmpeg
+*/
+class muxerFFmpeg : public ADM_muxer
 {
 protected:
+        AVOutputFormat *fmt;
+        AVFormatContext *oc;
+        AVStream *audio_st;
+        AVStream *video_st;
+        double audio_pts, video_pts;
 
+        bool closeMuxer(void);
+        bool setupMuxer(const char *format,const char *filename);
+        bool initVideo(ADM_videoStream *stream);
+        bool initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio);
 public:
-                muxerMP4();
-        virtual ~muxerMP4();
-        virtual bool open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a);
-        virtual bool save(void) ;
-        virtual bool close(void) ;
+                muxerFFmpeg();
+        virtual ~muxerFFmpeg();
 
 };
 

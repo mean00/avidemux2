@@ -3,6 +3,7 @@ SET(ADMcoreMuxer_SRCS
 ADM_dynaMuxer.cpp
 ADM_muxerUtils.cpp
 ADM_audioClock.cpp
+ADM_coreMuxerFfmpeg.cpp
 )	
 #*************************************************
 ADD_LIBRARY(ADM_coreMuxer6 SHARED ${ADMcoreMuxer_SRCS})
