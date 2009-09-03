@@ -3,16 +3,4 @@ ADD_SUBDIRECTORY(muxerMp4)
 ADD_SUBDIRECTORY(muxerAvi)
 ADD_SUBDIRECTORY(muxerRaw)
 ADD_SUBDIRECTORY(muxerFlv)
-#ADD_SUBDIRECTORY(oplug_avi)
-#ADD_SUBDIRECTORY(oplug_mp4)
-#ADD_SUBDIRECTORY(oplug_mpeg)
-#ADD_SUBDIRECTORY(oplug_mpegFF)
-#ADD_SUBDIRECTORY(oplug_ogm)
-#ADD_SUBDIRECTORY(oplug_flv)
-#ADD_SUBDIRECTORY(oplug_dummy)
-
-#SET(ADM_LIB ADM_outputs)
-#SET(${ADM_LIB}_SRCS 
-#	ADM_lavformat.cpp  ADM_muxts.cpp)
-
-#ADD_ADM_LIB_ALL_TARGETS(${ADM_LIB} ${${ADM_LIB}_SRCS})
+ADD_SUBDIRECTORY(muxerMkv)
