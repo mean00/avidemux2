@@ -37,6 +37,8 @@ class EditorCache
             void        flush(void);
             void        invalidate(ADMImage *image);
             ADMImage    *findJustAfter(uint64_t pts);
+            ADMImage    *findLastBefore(uint64_t pts);
             ADMImage    *getByPts(uint64_t Pts);
+            
 };
 #endif

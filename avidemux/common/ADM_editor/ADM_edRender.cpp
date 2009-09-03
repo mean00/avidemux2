@@ -1327,4 +1327,21 @@ uint32_t ADM_Composer::searchFrameBefore(uint64_t pts)
     }
     return nb-1;
 }
+/**
+    \fn getImageFromCacheForFrameBefore
+    \brief Search the cache for the image with PTS just before the input PTS
+*/
+bool    ADM_Composer::getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out)
+{
+    int ref=0;
+    EditorCache   *cache;
+	_VIDEOS *vid=&_videos[ref];
+	cache=_videos[ref]._videoCache;
+	ADM_assert(cache);
+        ADMImage *r=cache->findLastBefore(pts);
+        if(!r) return false;
+        out->duplicateFull(r);
+        return true;
+
+}
 //EOF

@@ -36,5 +36,6 @@ class admPreview
       static uint64_t getCurrentPts(void);
       static bool nextKeyFrame(void);
       static bool previousKeyFrame(void);
+      static bool previousFrame(void);
 };
 #endif

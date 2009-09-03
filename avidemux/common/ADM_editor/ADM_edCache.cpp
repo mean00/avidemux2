@@ -230,3 +230,28 @@ ADMImage *EditorCache::getByPts(uint64_t Pts)
     }
     return NULL;
 }
+/**
+        \fn findLastBefore
+        \brief Search the cache for the image just before pts
+*/
+ADMImage    *EditorCache::findLastBefore(uint64_t pts)
+{
+  uint64_t delta=1<<31; // should be enough
+  int index=-1;
+  for(int i=0;i<_nbImage;i++)
+	{
+        cacheElem *elem=&(_elem[i]);
+		if(elem->frameNum==ADM_INVALID_CACHE) continue;
+		if(elem->image->Pts>=pts)  continue;
+        uint64_t d=abs(pts-elem->image->Pts);
+        if(d<delta)
+        {
+            delta=d;
+            index=i;
+        }
+    }
+    if(index==-1)
+        return NULL;
+    return _elem[index].image;
+}
+// EOF

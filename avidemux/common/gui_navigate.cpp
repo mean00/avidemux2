@@ -95,17 +95,17 @@ static int ignore_change=0;
 
       case ACT_PreviousKFrame:
         GUI_PreviousKeyFrame();
-	  break;
+        break;
       case ACT_PreviousFrame:
         GUI_PrevFrame();
-	  break;
+        break;
       case ACT_Forward100Frames:
         //GUI_GoToKFrame (curframe + (avifileinfo->fps1000 / 1000 * 4));
-	  break;
+        break;
 
       case ACT_Back100Frames:
         //GUI_GoToKFrame (curframe - (avifileinfo->fps1000 / 1000 * 4));
-	  break;
+        break;
 
 
       case ACT_Forward50Frames:
@@ -313,7 +313,17 @@ uint8_t A_rebuildKeyFrame(void)
 */
 void GUI_PrevFrame(uint32_t frameCount)
 {
-    return;
+     if (playing)	    return;
+    if (!avifileinfo)	return;
+
+
+    if (!admPreview::previousFrame())
+      {
+            GUI_Error_HIG(QT_TR_NOOP("Error"),	QT_TR_NOOP("Cannot go to previous frame"));
+            return;
+      }
+    GUI_setCurrentFrameAndTime();
+    UI_purge();
 }
 /**
       \fn A_jogRead

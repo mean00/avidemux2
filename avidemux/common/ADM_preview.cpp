@@ -641,5 +641,49 @@ bool admPreview::previousKeyFrame(void)
     video_body->setCurrentFrame(frame);
     samePicture();
     return true;
+}/**
+    \fn previousFrame
+
+*/
+bool admPreview::previousFrame(void)
+{
+    uint64_t pts=rdrImage->Pts;
+    uint32_t frame=video_body->getCurrentFrame();
+    if(!frame) return false;
+    // If the frame is not an intra, the previous one
+    // is still in the cache
+    if(rdrImage->flags!=AVI_KEY_FRAME)
+    {
+        
+        if(true==video_body->getImageFromCacheForFrameBefore(pts,rdrImage))
+        {
+            renderUpdateImage(rdrImage->data,zoom);
+            return true;
+        }
+        return false;
+    }
+
+    // Else go to the previous  keyframe...
+    if(!video_body->getPKFrame(&frame)) return false;
+    if(!video_body->GoToIntra(frame)) return false;
+    // Now forward until we reach our frame
+    if(!video_body->samePicture(rdrImage)) return false;
+    if(rdrImage->Pts==pts) 
+    {
+            renderUpdateImage(rdrImage->data,zoom);
+            return true;
+    }
+    while(1)
+    {
+        if(!video_body->NextPicture(rdrImage)) return false;
+        if(rdrImage->Pts==pts) break;
+    }
+    if(rdrImage->Pts!=pts) return false;
+    if(true==video_body->getImageFromCacheForFrameBefore(pts,rdrImage))
+    {
+        renderUpdateImage(rdrImage->data,zoom);
+        return true;
+    }
+    return false;
 }
 // EOF

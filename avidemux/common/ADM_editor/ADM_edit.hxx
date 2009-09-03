@@ -232,6 +232,7 @@ protected:
                         uint32_t    currentFrame;
 public:
                         uint32_t    getCurrentFrame(void);
+                        
                         bool        setCurrentFrame(uint32_t frame);
                         bool        GoToIntra(uint32_t frame);
                         bool        GoToTime(uint64_t time);
@@ -240,6 +241,8 @@ public:
                         bool        getCompressedPicure(uint32_t framenum,ADMCompressedImage *img);
                         uint64_t    estimatePts(uint32_t frame);
                         uint32_t    searchFrameBefore(uint64_t pts);
+                        bool        getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out);
+                        bool        getPictureJustBefore(uint64_t pts);
 /************************************ Internal ******************************/
 public:
                                     /// Decode frame and on until frame is popped out of decoders
