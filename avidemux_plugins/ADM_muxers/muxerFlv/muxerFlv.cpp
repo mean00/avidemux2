@@ -145,17 +145,6 @@ bool muxerFlv::save(void)
 }
 
 
-bool muxerFlv::muxerRescaleVideoTime(uint64_t *time)
-{
-    AVRational *scale=&(video_st->codec->time_base);
-    *time=rescaleLavPts(*time,scale);
-    return true;
-}
-bool muxerFlv::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
-{
-    *time=*time/1000;
-    return true;
-}
 
 /**
     \fn close

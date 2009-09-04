@@ -36,8 +36,6 @@ extern M4MUXERCONFIG muxerConfig;
 class muxerMP4 : public muxerFFmpeg
 {
 protected:
-        bool muxerRescaleVideoTime(uint64_t *time);
-        bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq);
 public:
                 muxerMP4();
         virtual ~muxerMP4();

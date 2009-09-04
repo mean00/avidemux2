@@ -21,6 +21,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "ADM_muxer.h"
+#include "ADM_muxerUtils.h"
 #include "ADM_lavcodec.h"
 extern "C"
 {
@@ -35,13 +36,24 @@ extern "C"
 class muxerFFmpeg : public ADM_muxer
 {
 protected:
-        virtual bool muxerRescaleVideoTime(uint64_t *time)=0;
+        virtual bool muxerRescaleVideoTime(uint64_t *time)
+        {
+             AVRational *scale=&(video_st->time_base);
+            *time=rescaleLavPts(*time,scale);
+            return true;
+        }
+        virtual bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
+        {       
+             AVRational *scale=&(audio_st->time_base);
+            *time=rescaleLavPts(*time,scale);
+            return true;
+        }
+        // On case the muxer does not accept ADM_NO_PTS we can use computedDts
+        // The default is use ADM_NO_PTS
         virtual bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
-                    {
-                        return muxerRescaleVideoTime(time);
-                    }
-        virtual bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq)=0;
-
+        {
+            return muxerRescaleVideoTime(time);
+        }
 protected:
         bool saveLoop(const char *title);
 protected:

@@ -132,23 +132,6 @@ bool muxerMP4::save(void)
     return saveLoop(title);
 }
 
-bool muxerMP4::muxerRescaleVideoTime(uint64_t *time)
-{
-    AVRational *scale=&(video_st->codec->time_base);
-    *time=rescaleLavPts(*time,scale);
-    return true;
-}
-bool muxerMP4::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
-{
-  AVPacket pkt;
-    double f=*time;
-    f*=fq; // In samples
-    f/=1000.*1000.; // In sec
-
-
-    *time=(uint64_t)(f+0.4);
-}
-  
 /**
     \fn close
     \brief Cleanup is done in the dtor

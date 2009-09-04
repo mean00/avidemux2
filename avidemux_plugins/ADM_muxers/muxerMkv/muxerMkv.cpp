@@ -109,23 +109,6 @@ bool muxerMkv::save(void)
     return saveLoop(title);
 }
 
-bool muxerMkv::muxerRescaleVideoTime(uint64_t *time)
-{
-    if(*time==ADM_NO_PTS)
-    {
-        *time=AV_NOPTS_VALUE;
-        return true;
-    }
-    *time=*time/1000;
-
-    return true;
-}
-bool muxerMkv::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
-{
-
-   *time=*time/1000;
-    return true;
-}
 bool muxerMkv::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
 {
     if(*time==ADM_NO_PTS)

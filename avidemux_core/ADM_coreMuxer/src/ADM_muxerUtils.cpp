@@ -49,8 +49,10 @@ void  rescaleFps(uint32_t fps1000, AVRational *rational)
 */
 uint64_t rescaleLavPts(uint64_t us, AVRational *scale)
 {
-
-     if(us==ADM_NO_PTS) return 0x8000000000000000LL;  // AV_NOPTS_VALUE
+#ifndef INT64_C
+#define INT64_C (uint64_t)
+#endif
+     if(us==ADM_NO_PTS) return AV_NOPTS_VALUE;  // AV_NOPTS_VALUE
     double db=(double)us;
     double s=scale->den;
 

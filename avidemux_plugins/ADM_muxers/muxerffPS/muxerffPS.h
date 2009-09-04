@@ -41,10 +41,8 @@ extern psMuxerConfig_s psMuxerConfig;
 class muxerffPS : public muxerFFmpeg
 {
 protected:
-        bool muxerRescaleVideoTime(uint64_t *time);
-        bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
         
-        bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq);
+        bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
 
 public:
                 muxerffPS();

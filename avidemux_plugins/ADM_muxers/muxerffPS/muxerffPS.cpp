@@ -159,6 +159,15 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         AVCodecContext *c;
         c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
+        // Override codec settings
+#define MKX(a,bsize,maxb) case a: c->bit_rate=maxb*1000;c->rc_buffer_size=bsize*8*1000;break;
+        switch(psMuxerConfig.muxingType)
+        {
+            MKX(MUXER_VCD,  40,1152)
+            MKX(MUXER_SVCD,112,2400)
+            MKX(MUXER_DVD, 224,9800)
+        }
+
         c->gop_size=15;
         
         if(initAudio(nbAudioTrack,a)==false)
@@ -175,8 +184,8 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
             case MUXER_DVD:  oc->mux_rate=1152*1000;;break;
         }
        
-        oc->preload=AV_TIME_BASE/10; // 100 ms preloading
-        oc->max_delay=200*1000; // 500 ms
+        oc->preload=0; // 100 ms preloading
+        oc->max_delay=2000; // 500 ms
         if (av_set_parameters(oc, NULL) < 0)
         {
             printf("[ffPs]Lav: set param failed \n");
@@ -203,32 +212,17 @@ bool muxerffPS::save(void)
     const char *title=QT_TR_NOOP("Saving mpeg PS (ff)");
     return saveLoop(title);
 }
-#define INT64_C (uint64_t)
-bool muxerffPS::muxerRescaleVideoTime(uint64_t *time)
-{
-    if(*time==ADM_NO_PTS)
-    {
-        *time=AV_NOPTS_VALUE;
-        return true;
-    }
-    *time=*time/90;
-    
-    return true;
-}
+// Clock is 90 Khz for all mpeg streams
+// Since the unit is in us=10e6,
+// time=time/10E6*90E3
+// time=(time*9)/100
 bool muxerffPS::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
 {
     if(*time==ADM_NO_PTS)
     {
         *time=computedDts;
-        return muxerRescaleVideoTime(time);
     }
     return muxerRescaleVideoTime(time);
-}
-
-bool muxerffPS::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
-{
-    *time=*time/90;
-    return true;
 }
   
 /**

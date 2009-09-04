@@ -31,8 +31,6 @@ class muxerFlv : public muxerFFmpeg
 {
 protected:
 
-        bool muxerRescaleVideoTime(uint64_t *time);
-        bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq);
 public:
                 muxerFlv();
         virtual ~muxerFlv();
