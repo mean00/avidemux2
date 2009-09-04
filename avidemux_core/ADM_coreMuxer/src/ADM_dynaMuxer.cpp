@@ -177,6 +177,7 @@ extern void movenc_init(void);
 extern void flvenc_init(void);
 extern void matroskaenc_init(void);
 extern void mpegenc_init(void);
+extern void mpegtsenc_init(void);
 }
 extern struct URLProtocol file_protocol ;
 /**
@@ -191,6 +192,7 @@ void ADM_lavFormatInit(void)
         flvenc_init();
         matroskaenc_init();
         mpegenc_init();
+        mpegtsenc_init();
         av_register_protocol(&file_protocol);
 }
 // EOF
