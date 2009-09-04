@@ -203,16 +203,16 @@ bool muxerffPS::save(void)
     const char *title=QT_TR_NOOP("Saving mpeg PS (ff)");
     return saveLoop(title);
 }
+#define INT64_C (uint64_t)
 bool muxerffPS::muxerRescaleVideoTime(uint64_t *time)
 {
-#if 0
-    printf("<<in Video TS: %"LLU"\n",*time);
-    AVRational *scale=&(video_st->codec->time_base);
-    *time=rescaleLavPts(*time,scale);
-    printf(">>out Video TS: %"LLU"\n",*time);
-#endif
-#define INT64_C (uint64_t)
-    if(*time==ADM_NO_PTS) *time=AV_NOPTS_VALUE;
+    if(*time==ADM_NO_PTS)
+    {
+        *time=AV_NOPTS_VALUE;
+        return true;
+    }
+    *time=*time/90;
+    
     return true;
 }
 bool muxerffPS::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
@@ -227,14 +227,7 @@ bool muxerffPS::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
 
 bool muxerffPS::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
 {
-#if 0
-    printf("Audio TS: %"LLU"\n",*time);
- AVPacket pkt;
-    double f=*time;
-    f*=fq; // In samples
-    f/=1000.*1000.; // In sec
-    *time=(uint64_t)(f+0.4);
-#endif
+    *time=*time/90;
     return true;
 }
   

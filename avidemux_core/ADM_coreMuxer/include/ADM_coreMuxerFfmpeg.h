@@ -26,6 +26,9 @@ extern "C"
 {
     #include "libavformat/avformat.h"
 };
+#ifndef INT64_C
+#define INT64_C (uint64_t)
+#endif
 /**
     \class muxerFFmpeg
 */

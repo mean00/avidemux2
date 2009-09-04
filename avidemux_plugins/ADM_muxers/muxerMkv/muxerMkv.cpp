@@ -111,28 +111,30 @@ bool muxerMkv::save(void)
 
 bool muxerMkv::muxerRescaleVideoTime(uint64_t *time)
 {
-#if 0
-    AVRational *scale=&(video_st->codec->time_base);
-    *time=rescaleLavPts(*time,scale);
-#else
+    if(*time==ADM_NO_PTS)
+    {
+        *time=AV_NOPTS_VALUE;
+        return true;
+    }
     *time=*time/1000;
-#endif
+
     return true;
 }
 bool muxerMkv::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
 {
-#if 1
+
    *time=*time/1000;
     return true;
-#else
- AVPacket pkt;
-    double f=*time;
-    f*=fq; // In samples
-    f/=1000.*1000.; // In sec
-    *time=(uint64_t)(f+0.4);
-#endif
 }
-  
+bool muxerMkv::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
+{
+    if(*time==ADM_NO_PTS)
+    {
+        *time=computedDts;
+        return muxerRescaleVideoTime(time);
+    }
+    return muxerRescaleVideoTime(time);
+}  
 /**
     \fn close
     \brief Cleanup is done in the dtor

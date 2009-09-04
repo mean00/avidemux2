@@ -25,6 +25,7 @@ class muxerMkv : public muxerFFmpeg
 protected:
         bool muxerRescaleVideoTime(uint64_t *time);
         bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq);
+        bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
 public:
                 muxerMkv();
         virtual ~muxerMkv();
