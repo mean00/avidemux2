@@ -348,9 +348,8 @@ bool muxerFFmpeg::saveLoop(const char *title)
             {
                 lastVideoDts=dts;
             }
+            muxerRescaleVideoTimeDts(&dts,lastVideoDts);
             muxerRescaleVideoTime(&pts);
-            muxerRescaleVideoTime(&dts);
-
             aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
             aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%"LLU" Dts:%"LLU"\n",len,flags,pts,dts);
 

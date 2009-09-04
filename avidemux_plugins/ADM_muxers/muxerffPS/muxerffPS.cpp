@@ -168,12 +168,18 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         }
         
         // /audio
-        oc->mux_rate=10080*1000;
+        switch(psMuxerConfig.muxingType)
+        {
+            case MUXER_VCD:  oc->mux_rate=10080*1000;;break;
+            case MUXER_SVCD: oc->mux_rate=2500*1000;;break;
+            case MUXER_DVD:  oc->mux_rate=1152*1000;;break;
+        }
+       
         oc->preload=AV_TIME_BASE/10; // 100 ms preloading
         oc->max_delay=200*1000; // 500 ms
         if (av_set_parameters(oc, NULL) < 0)
         {
-            printf("Lav: set param failed \n");
+            printf("[ffPs]Lav: set param failed \n");
             return false;
         }
         if (url_fopen(&(oc->pb), file, URL_WRONLY) < 0)
@@ -197,29 +203,39 @@ bool muxerffPS::save(void)
     const char *title=QT_TR_NOOP("Saving mpeg PS (ff)");
     return saveLoop(title);
 }
-
 bool muxerffPS::muxerRescaleVideoTime(uint64_t *time)
 {
 #if 0
+    printf("<<in Video TS: %"LLU"\n",*time);
     AVRational *scale=&(video_st->codec->time_base);
     *time=rescaleLavPts(*time,scale);
-#else
-    *time=*time/1000;
+    printf(">>out Video TS: %"LLU"\n",*time);
 #endif
+#define INT64_C (uint64_t)
+    if(*time==ADM_NO_PTS) *time=AV_NOPTS_VALUE;
     return true;
 }
+bool muxerffPS::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
+{
+    if(*time==ADM_NO_PTS)
+    {
+        *time=computedDts;
+        return muxerRescaleVideoTime(time);
+    }
+    return muxerRescaleVideoTime(time);
+}
+
 bool muxerffPS::muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
 {
-#if 1
-   *time=*time/1000;
-    return true;
-#else
+#if 0
+    printf("Audio TS: %"LLU"\n",*time);
  AVPacket pkt;
     double f=*time;
     f*=fq; // In samples
     f/=1000.*1000.; // In sec
     *time=(uint64_t)(f+0.4);
 #endif
+    return true;
 }
   
 /**
