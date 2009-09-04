@@ -5,7 +5,9 @@ SET(${ADM_LIB}_SRCS
 	movenc.c  avienc.c  wav.c  mov.c  matroska.c  isom.c  isom.h  
 	flvenc.c  matroskaenc.c metadata.c metadata_compat.c options.c
         flacenc.c
-	avc.c raw.c  riff.c)
+	avc.c raw.c  riff.c
+        mpegenc.c
+)
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
 TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6 ADM_libavutil6 ADM_libavcodec6)
