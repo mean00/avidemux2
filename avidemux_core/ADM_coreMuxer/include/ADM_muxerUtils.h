@@ -21,13 +21,7 @@ extern "C"
 };
 
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
-
-// Fwd ref
-uint8_t isMpeg4Compatible (uint32_t fourcc);
-uint8_t isH264Compatible (uint32_t fourcc);
-uint8_t isMSMpeg4Compatible (uint32_t fourcc);
-uint8_t isDVCompatible (uint32_t fourcc);
-uint8_t isVP6Compatible (uint32_t fourcc);
+#include "ADM_codecType.h"
 
 /**
     \fn rescaleFps

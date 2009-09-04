@@ -133,8 +133,8 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         c->flags=CODEC_FLAG_QSCALE;
         c->width = stream->getWidth();
         c->height =stream->getHeight();
-
-        if(isMpeg4Compatible(stream->getFCC()))
+        uint32_t fcc=stream->getFCC();
+        if(isMpeg4Compatible(fcc))
         {
                 c->codec_id = CODEC_ID_MPEG4;
                 if(stream->providePts()==true)
@@ -148,7 +148,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 }
         }else
         {
-                if(isH264Compatible(stream->getFCC()))
+                if(isH264Compatible(fcc))
                 {
                         if(stream->providePts()==true)
                         {
@@ -167,12 +167,12 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 }
                 else
                 {
-                        if(isDVCompatible(stream->getFCC()))
+                        if(isDVCompatible(fcc))
                         {
                           c->codec_id = CODEC_ID_DVVIDEO;
                         }else
                         {
-                          if(fourCC::check(stream->getFCC(),(uint8_t *)"H263"))
+                          if(fourCC::check(fcc,(uint8_t *)"H263"))
                           {
                                     c->codec_id=CODEC_ID_H263;
                             }else
@@ -196,8 +196,22 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                                 c->codec->name=ADM_strdup("FLV1");
                                         }else
                                         {
-                                            printf("[FF] Unknown video codec\n");
-                                            return false;
+                                            if(fourCC::check(stream->getFCC(),(uint8_t *)"MPEG1"))
+                                            {
+                                                c->has_b_frames=1; // No PTS=cannot handle CTS...
+                                                c->max_b_frames=2;
+                                                c->codec_id=CODEC_ID_MPEG1VIDEO;
+                                            }
+                                            else if(fourCC::check(stream->getFCC(),(uint8_t *)"MPEG2"))
+                                            {
+                                                c->has_b_frames=1; // No PTS=cannot handle CTS...
+                                                c->max_b_frames=2;
+                                                c->codec_id=CODEC_ID_MPEG2VIDEO;
+                                            }else
+                                            {
+                                                printf("[FF] Unknown video codec\n");
+                                                return false;
+                                            }
                                         }
                         }
                 }
