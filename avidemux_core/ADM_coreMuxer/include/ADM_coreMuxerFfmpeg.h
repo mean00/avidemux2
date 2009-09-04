@@ -33,7 +33,12 @@ class muxerFFmpeg : public ADM_muxer
 {
 protected:
         virtual bool muxerRescaleVideoTime(uint64_t *time)=0;
+        virtual bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
+                    {
+                        return muxerRescaleVideoTime(time);
+                    }
         virtual bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq)=0;
+
 protected:
         bool saveLoop(const char *title);
 protected:
