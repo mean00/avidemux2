@@ -110,7 +110,7 @@ const char *er;
         }
         audio_st->codec->bit_rate=a[0]->getInfo()->byterate*8;        
         // /audio
-        oc->mux_rate=myself.muxRatekBits*1024;
+        oc->mux_rate=myself.muxRatekBits*1000;
         // Also copy audio & video bitrate
 
 
