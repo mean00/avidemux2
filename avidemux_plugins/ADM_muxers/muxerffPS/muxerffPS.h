@@ -22,9 +22,9 @@
 
 typedef enum
 {
-    MUXER_VCD,
-    MUXER_SVCD,
-    MUXER_DVD
+    MUXER_VCD=0,
+    MUXER_SVCD=1,
+    MUXER_DVD=2
 }psMuxingType;
 
 typedef struct
@@ -43,6 +43,9 @@ class muxerffPS : public muxerFFmpeg
 protected:
         
         bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
+        bool verifyCompatibility(bool nonCompliantOk, psMuxingType muxingType,
+                                    ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a, 
+                                    const char **er);
 
 public:
                 muxerffPS();

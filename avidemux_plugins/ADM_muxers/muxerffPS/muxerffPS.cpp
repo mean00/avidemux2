@@ -28,6 +28,21 @@
 #define aprintf printf
 #endif
 
+typedef struct
+{
+    const char *fmt;
+    uint32_t   bufferSizekBytes;
+    uint32_t   muxRatekBits;
+    uint32_t   videoRatekBits;
+}mpegPsStruct;
+
+const mpegPsStruct psDescriptor[3]=
+{
+    { "vcd",  40,1400,1152},  // Verify, not sure!
+    { "svcd",112,2800,2400},
+    { "dvd", 224,11000,9800},
+};
+
 psMuxerConfig_s psMuxerConfig=
 {
     MUXER_DVD,false
@@ -53,97 +68,18 @@ muxerffPS::~muxerffPS()
     \fn open
     \brief Check that the streams are ok, initialize context...
 */
-
 bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
-    uint32_t fcc=s->getFCC();
-    uint32_t w,h;
-     w=s->getWidth();
-     h=s->getHeight();
-        
-     if(!isMpeg12Compatible(fcc))
-     {
-            printf("[ffPs] video not compatible\n");
-            return false;
-     }
-    if(!psMuxerConfig.acceptNonCompliant)
+const char *er;
+
+    if(verifyCompatibility(psMuxerConfig.acceptNonCompliant,psMuxerConfig.muxingType,s,nbAudioTrack,a,&er)==false)
     {
-        switch(psMuxerConfig.muxingType)
-        {
-            case MUXER_VCD:
-                    if(w!=352 || (h!=240 && h!=288))
-                    {
-                            printf("[ffPs] Bad width/height for VCD\n");
-                            return false;
-                    }
-                    break;
-            case MUXER_SVCD:
-                    if((w!=352 && w!=480)|| (h!=576 && h!=480))
-                    {
-                            printf("[ffPs] Bad width/height for SVCD\n");
-                            return false;
-                    }
-                    break;
-            case MUXER_DVD:
-                    if((w!=720 && w!=704)|| (h!=576 && h!=480))
-                    {
-                            printf("[ffPs] Bad width/height for DVD\n");
-                            return false;
-                    }
-                    break;
-            default:
-                    ADM_assert(0);
-        }
-    }
-    if(!nbAudioTrack) 
-        {
-            printf("[ffPS] One audio track needed\n");
-            return false;
-        }
-    for(int i=0;i<nbAudioTrack;i++)
-    {
-        WAVHeader *head=a[i]->getInfo();
-        switch(psMuxerConfig.muxingType)
-        {
-            case MUXER_VCD:
-            case MUXER_SVCD:
-                    if(head->encoding!=WAV_MP2) 
-                    {
-                        printf("[ffPS] VCD : only MP2 audio accepted\n");
-                        return false;
-                    }
-                    if(head->frequency!=44100) 
-                    {
-                        printf("[ffPS] VCD : only 44.1 khz audio accepted\n");
-                        return false;
-                    }
-                    break;
-            case MUXER_DVD:
-                    if(head->encoding!=WAV_MP2 && head->encoding!=WAV_AC3 && head->encoding!=WAV_DTS) 
-                    {
-                        printf("[ffPS] DVD : only MP2/AC3/DTS audio accepted\n");
-                        return false;
-                    }
-                    if(head->frequency!=48000) 
-                    {
-                        printf("[ffPS] DVD : only 48 khz audio accepted\n");
-                        return false;
-                    }
-                    break;
-            default:
-                    ADM_assert(0);
-        }
+        GUI_Error_HIG("[Mismatch]","%s",er);
+        return false;
     }
 
-    /* All seems fine, open stuff */
-    const char *fmt;
-     switch(psMuxerConfig.muxingType)
-        {
-            case MUXER_VCD: fmt="vcd";break;
-            case MUXER_SVCD:fmt="svcd";break;
-            case MUXER_DVD: fmt="dvd";break;
-        }
-    if(false==setupMuxer(fmt,file))
+    mpegPsStruct myself=psDescriptor[psMuxerConfig.muxingType];
+    if(false==setupMuxer(myself.fmt,file))
     {
         printf("[ffPS] Failed to open muxer\n");
         return false;
@@ -158,32 +94,26 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
     
         AVCodecContext *c;
         c = video_st->codec;
-        rescaleFps(s->getAvgFps1000(),&(c->time_base));
-        // Override codec settings
-#define MKX(a,bsize,maxb) case a: c->bit_rate=maxb*1000;c->rc_buffer_size=bsize*8*1000;break;
-        switch(psMuxerConfig.muxingType)
-        {
-            MKX(MUXER_VCD,  40,1152)
-            MKX(MUXER_SVCD,112,2400)
-            MKX(MUXER_DVD, 224,9800)
-        }
 
+        // Override codec settings
+        rescaleFps(s->getAvgFps1000(),&(c->time_base));
+        c->bit_rate=myself.videoRatekBits*1000;
+        c->rc_buffer_size=myself.bufferSizekBytes*8*1024;
+        c->rc_buffer_size_header=myself.bufferSizekBytes*8*1024;
         c->gop_size=15;
-        
+
+        // Audio
         if(initAudio(nbAudioTrack,a)==false)
         {
             printf("[ffPS] Failed to init audio\n");
             return false;
         }
-        
+        audio_st->codec->bit_rate=a[0]->getInfo()->byterate*8;        
         // /audio
-        switch(psMuxerConfig.muxingType)
-        {
-            case MUXER_VCD:  oc->mux_rate=10080*1000;;break;
-            case MUXER_SVCD: oc->mux_rate=2500*1000;;break;
-            case MUXER_DVD:  oc->mux_rate=1152*1000;;break;
-        }
-       
+        oc->mux_rate=myself.muxRatekBits*1024;
+        // Also copy audio & video bitrate
+
+
         oc->preload=0; // 100 ms preloading
         oc->max_delay=2000; // 500 ms
         if (av_set_parameters(oc, NULL) < 0)
@@ -236,6 +166,89 @@ bool muxerffPS::close(void)
     return closeMuxer();
 }
 
+/**
+    \fn verifyCompatibility
+    \return true if the streams are ok to be muxed by selected muxer
+
+*/
+#define FAIL(x) {*er=x;return false;}
+bool muxerffPS::verifyCompatibility(bool nonCompliantOk, psMuxingType muxingType,
+                                    ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a, 
+                                    const char **er)
+{
+    uint32_t fcc=s->getFCC();
+    uint32_t w,h;
+     w=s->getWidth();
+     h=s->getHeight();
+     *er="??";
+
+     if(!isMpeg12Compatible(fcc))
+     {
+            FAIL(" video not compatible\n");
+     }
+    if(!nonCompliantOk)
+    {
+        switch(muxingType)
+        {
+            case MUXER_VCD:
+                    if(w!=352 || (h!=240 && h!=288))
+                    {
+                            FAIL(" Bad width/height for VCD\n");
+                    }
+                    break;
+            case MUXER_SVCD:
+                    if((w!=352 && w!=480)|| (h!=576 && h!=480))
+                    {
+                            FAIL(" Bad width/height for SVCD\n");
+                    }
+                    break;
+            case MUXER_DVD:
+                    if((w!=720 && w!=704)|| (h!=576 && h!=480))
+                    {
+                            FAIL(" Bad width/height for DVD\n");
+                    }
+                    break;
+            default:
+                    ADM_assert(0);
+        }
+    }
+    if(!nbAudioTrack) 
+        {
+            FAIL(" One audio track needed\n");
+            
+        }
+    for(int i=0;i<nbAudioTrack;i++)
+    {
+        WAVHeader *head=a[i]->getInfo();
+        switch(muxingType)
+        {
+            case MUXER_VCD:
+            case MUXER_SVCD:
+                    if(head->encoding!=WAV_MP2) 
+                    {
+                        FAIL(" VCD : only MP2 audio accepted\n");
+                    }
+                    if(head->frequency!=44100) 
+                    {
+                        FAIL(" VCD : only 44.1 khz audio accepted\n");
+                    }
+                    break;
+            case MUXER_DVD:
+                    if(head->encoding!=WAV_MP2 && head->encoding!=WAV_AC3 && head->encoding!=WAV_DTS) 
+                    {
+                        FAIL("[ffPS] DVD : only MP2/AC3/DTS audio accepted\n");
+                    }
+                    if(head->frequency!=48000) 
+                    {
+                        FAIL(" DVD : only 48 khz audio accepted\n");
+                    }
+                    break;
+            default:
+                    ADM_assert(0);
+        }
+    }
+    return true;
+}
 //EOF
 
 
