@@ -42,6 +42,12 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
  
     //************
    work->update(0);
+#if 0
+   for(int clusters=0;clusters<_nbClusters;clusters++)
+    {
+        printf("[Cluster] %d/%d StartTimecode=%"LLU" ms\n",clusters,_nbClusters,_clusters[clusters].Dts);
+    }
+#endif
    for(int clusters=0;clusters<_nbClusters;clusters++)
    {
    parser->seek(_clusters[clusters].pos);
@@ -154,8 +160,8 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   ix.pos=where;
   ix.size=size;
   ix.flags=AVI_KEY_FRAME;
-  ix.Dts=timecodeMS*1000;
-  ix.Pts=timecodeMS*1000;
+  ix.Dts=timecodeMS*1000LL;
+  ix.Pts=timecodeMS*1000LL;
   
   // since frame type is unreliable for mkv, we scan each frame
   // For the 2 most common cases : mp4 & h264.
