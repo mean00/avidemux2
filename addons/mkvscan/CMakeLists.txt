@@ -1,6 +1,6 @@
 PROJECT(mkv)
 INCLUDE_DIRECTORIES( .) 
-set(MKV ../../plugins/ADM_demuxers/Matroska/)
+set(MKV ../../avidemux_plugins/ADM_demuxers/Matroska/)
 INCLUDE_DIRECTORIES( ${MKV})
 #LINK_DIRECTORIES(${ITK_LIBRARY_DIRS})
 ADD_DEFINITIONS("-g")

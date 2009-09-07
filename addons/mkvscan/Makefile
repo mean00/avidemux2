@@ -112,34 +112,34 @@ mkv/fast:
 .PHONY : mkv/fast
 
 # target to build an object file
-home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.o:
-	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.o
-.PHONY : home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.o
+home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.o:
+	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.o
+.PHONY : home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.o
 
 # target to preprocess a source file
-home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.i:
-	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.i
-.PHONY : home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.i
+home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.i:
+	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.i
+.PHONY : home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.i
 
 # target to generate assembly for a file
-home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.s:
-	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.s
-.PHONY : home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.s
+home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.s:
+	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.s
+.PHONY : home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.s
 
 # target to build an object file
-home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.o:
-	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.o
-.PHONY : home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.o
+home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.o:
+	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.o
+.PHONY : home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.o
 
 # target to preprocess a source file
-home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.i:
-	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.i
-.PHONY : home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.i
+home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.i:
+	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.i
+.PHONY : home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.i
 
 # target to generate assembly for a file
-home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.s:
-	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.s
-.PHONY : home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.s
+home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.s:
+	$(MAKE) -f CMakeFiles/mkv.dir/build.make CMakeFiles/mkv.dir/home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.s
+.PHONY : home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.s
 
 # target to build an object file
 mkv_c.o:
@@ -165,12 +165,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... mkv"
 	@echo "... rebuild_cache"
-	@echo "... home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.o"
-	@echo "... home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.i"
-	@echo "... home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/ebml.s"
-	@echo "... home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.o"
-	@echo "... home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.i"
-	@echo "... home/fx/workspace/gitted/plugins/ADM_demuxers/Matroska/mkv_tags.s"
+	@echo "... home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.o"
+	@echo "... home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.i"
+	@echo "... home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/ebml.s"
+	@echo "... home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.o"
+	@echo "... home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.i"
+	@echo "... home/fx/workspace/gitted/avidemux_plugins/ADM_demuxers/Matroska/mkv_tags.s"
 	@echo "... mkv_c.o"
 	@echo "... mkv_c.i"
 	@echo "... mkv_c.s"
