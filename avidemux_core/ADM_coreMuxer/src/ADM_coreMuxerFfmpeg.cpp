@@ -327,10 +327,14 @@ bool muxerFFmpeg::saveLoop(const char *title)
     {
 	AVPacket pkt;
 
-            float p=0.5;
+            float p=1;
             if(videoDuration)
-                    p=lastVideoDts/videoDuration;
-            p=p*100;
+            {
+                    p=lastVideoDts;
+                    p/=videoDuration;
+                    p=p*100;
+            }
+            
             encoding->update((uint32_t)p);
             if(!encoding->isAlive()) 
             {
