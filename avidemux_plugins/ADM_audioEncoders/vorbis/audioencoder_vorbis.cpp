@@ -62,7 +62,7 @@ static ADM_audioEncoder encoderDesc = {
   "Vorbis encoder plugin Mean 2008",
   6,                    // Max channels
   1,0,0,                // Version
-  WAV_OGG,
+  WAV_OGG_VORBIS,
   200,                  // Priority
   getConfigurationData,  // Defined by macro automatically
   setConfigurationData,  // Defined by macro automatically
@@ -85,7 +85,7 @@ AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream)  :ADM_AudioEn
 {
   printf("[Vorbis] Creating Vorbis\n");
   _handle=NULL;
-  wavheader.encoding=WAV_OGG;
+  wavheader.encoding=WAV_OGG_VORBIS;
   _oldpos=0;
   _handle=(void *)new  vorbisStruct;
   outputChannelMapping[0] = ADM_CH_FRONT_LEFT;

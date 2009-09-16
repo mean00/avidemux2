@@ -255,6 +255,11 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           c->sample_rate = audioheader->frequency;
           switch(audioheader->encoding)
           {
+                  case WAV_OGG_VORBIS: 
+                                c->codec_id = CODEC_ID_VORBIS;c->frame_size=6*256;
+                                c->extradata=audioextraData;
+                                c->extradata_size= audioextraSize;
+                                break;
                   case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
                   case WAV_MP2: c->codec_id = CODEC_ID_MP2;c->frame_size=1152;break;
                   case WAV_MP3:

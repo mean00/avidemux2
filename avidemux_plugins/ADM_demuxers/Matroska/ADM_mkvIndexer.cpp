@@ -194,6 +194,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                     printf("[MKV/H264] Frame %"LU" is a keyframe\n",(uint32_t)Track->index.size());
                 }
                 ix.flags=flags;
+                if(Track->index.size()) ix.Dts=ADM_NO_PTS;
                 //printf("[] Flags=%x\n",flags);
 
     }

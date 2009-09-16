@@ -96,7 +96,7 @@ uint8_t mkvHeader::open(const char *name)
   for(int i=0;i<_nbAudioTrack;i++)
   {
     rescaleTrack(&(_tracks[1+i]),duration32);
-    if(_tracks[1+i].wavHeader.encoding==WAV_OGG)
+    if(_tracks[1+i].wavHeader.encoding==WAV_OGG_VORBIS)
     {
         printf("[MKV] Reformatting vorbis header for track %u\n",i);
         reformatVorbisHeader(&(_tracks[1+i]));
