@@ -222,7 +222,7 @@ void  ADM_LowerCase(char *string)
 uint8_t         ADM_fileExist(const char *name)
 {
 FILE *file;
-                file=fopen(name,"rb");
+                file=ADM_fopen(name,"rb");
                 if(!file) return 0;
                 fclose(file);
                 return 1;
