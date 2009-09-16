@@ -144,6 +144,10 @@ class mkvHeader         :public vidHeader
     uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);
 
     uint8_t                 rescaleTrack(mkvTrak *track,uint32_t durationMs);
+
+    bool                    delayTrack(mkvTrak *track, uint64_t value);
+    bool                    delayFrameIfBFrames(void);
+
   public:
 
 

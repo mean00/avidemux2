@@ -109,10 +109,41 @@ uint8_t mkvHeader::open(const char *name)
         _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
     }
-
+  delayFrameIfBFrames();
   printf("[MKV]Matroska successfully read\n");
 
   return 1;
+}
+/**
+    \fn delayFrameIfBFrames
+    \brief delay audio and video by 2 * time increment if b frames present
+                else we may have PTS<DTS
+*/
+bool mkvHeader::delayTrack(mkvTrak *track, uint64_t value)
+{
+    int nb=track->index.size();
+    for(int i=0;i<nb;i++)
+    {
+        if(track->index[i].Pts!=ADM_NO_PTS) track->index[i].Pts+=value;
+    }
+    return true;
+}
+bool mkvHeader::delayFrameIfBFrames(void)
+{
+    mkvTrak *track=_tracks;
+    int nb=track->index.size();
+    int nbBFrame=0;
+    for(int i=0;i<nb;i++) if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
+    if(nbBFrame<2)
+    {
+        printf("[Mkv] no b frames detected\n");
+        return true;
+    }
+    uint64_t twoFrames=track->_defaultFrameDuration*2;
+    printf("[mkv] Delaying PTS by %"LLU" us\n",twoFrames);
+    for(int i=0;i<_nbAudioTrack+1;i++)
+        delayTrack(&(_tracks[i]),twoFrames);
+    return true;
 }
 /**
     \fn rescaleTrack
