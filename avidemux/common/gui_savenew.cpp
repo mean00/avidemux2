@@ -232,14 +232,9 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
 */
 bool admSaver::save(void)
 {
-    
-    int ret=1;
-    
-    
-     
-     
+    int ret=1; 
+    uint64_t startAudioTime=markerA; // Actual start time (for both audio & video actually)
     printf("[A_Save] Saving..\n");
-
     
     if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
@@ -256,13 +251,18 @@ bool admSaver::save(void)
         nbAStream=0; // FIXME
     }else
     {
-        audio->goToTime(markerA); // Rewind audio
+        audio->goToTime(startAudioTime); // Rewind audio
     }
     ADM_videoStream *video=NULL;
     // Video Stream 
     if(!videoEncoderIndex) // Copy
     {
-        video=new ADM_videoStreamCopy(markerA,markerB);
+        ADM_videoStreamCopy *copy=new ADM_videoStreamCopy(markerA,markerB);
+        video=copy;
+        // In that case, get the real time and update audio with it...
+        // Because we might have go back in time to catch the first intra
+        startAudioTime=copy->getStartTime();
+        audio->goToTime(startAudioTime);
     }else
     {
         // 1- create filter chain
@@ -303,7 +303,6 @@ bool admSaver::save(void)
             delete encoder;
             encoder=NULL;
             return false;
-
         }
         video= new ADM_videoStreamProcess(encoder);
         if(!video)
@@ -312,7 +311,6 @@ bool admSaver::save(void)
                 delete encoder;
                 return 0;
         }
-        
     }
     //
     ADM_audioStream *astreams[1];
@@ -324,17 +322,15 @@ bool admSaver::save(void)
         if(audio)   // Process
         {
             // Access..
-            ADM_audioStream *access=createEncodingStream(markerA,0); // FIXME LEAK
+            ADM_audioStream *access=createEncodingStream(startAudioTime,0); // FIXME LEAK
             astreams[0]=access;
         }
     }
     if(!muxer->open(fileName,video,nbAStream,astreams))
     {
         GUI_Error_HIG("Muxer","Cannot open ");
-        
     }else   
     {
-
         muxer->save();
         muxer->close();
     }
