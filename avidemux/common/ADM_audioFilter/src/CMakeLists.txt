@@ -13,6 +13,7 @@ audiofilter_normalize.cpp
 audiofilter_SRC.cpp
 audiofilter_encoder.cpp
 audiofilter_interface.cpp
+audiocopy.cpp
 ADM_audioResample.cpp
 audiofilter.cpp
 ADM_libsamplerate/samplerate.c  
