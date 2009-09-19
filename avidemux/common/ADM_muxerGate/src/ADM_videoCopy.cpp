@@ -42,6 +42,19 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     eofMet=false;
     this->startTime=startTime;
     this->endTime=endTime;
+    // Update start time if needed
+    uint64_t sPts,sDts,sStart=ADM_NO_PTS;
+    video_body->getPtsDts(currentFrame,&sPts,&sDts);
+    if(sDts!=ADM_NO_PTS) sStart=sDts;
+    else
+        if(sPts!=ADM_NO_PTS)
+        {
+            sStart=sPts;
+            printf("[Warning] No Dts available for first frame, guessing ...\n");
+        }
+    if(sStart!=ADM_NO_PTS)
+        this->startTime=sStart;
+    printf("[StreamCopy] Fixating start time by %u\n",abs((int)(this->startTime-startTime)));
 }
 /**
     \fn ADM_videoStreamCopy
@@ -66,6 +79,13 @@ uint64_t  ADM_videoStreamCopy::rescaleTs(uint64_t in)
     if(in==ADM_NO_PTS) return in;
     if(in>startTime) return in-startTime;
     return 0;
+}
+/**
+    \fn getStartTime
+*/
+uint64_t  ADM_videoStreamCopy::getStartTime(void)
+{
+    return this->startTime;
 }
 /**
     \fn getPacket
