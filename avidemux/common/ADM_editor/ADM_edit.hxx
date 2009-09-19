@@ -243,6 +243,7 @@ public:
                         uint32_t    searchFrameBefore(uint64_t pts);
                         bool        getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out);
                         bool        getPictureJustBefore(uint64_t pts);
+                        bool        getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 /************************************ Internal ******************************/
 public:
                                     /// Decode frame and on until frame is popped out of decoders

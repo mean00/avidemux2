@@ -1344,4 +1344,17 @@ bool    ADM_Composer::getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out
         return true;
 
 }
+/**
+    \fn getPtsDts
+    \brief Return PTS & DTS for a given frame (in bitstream order)
+*/
+bool        ADM_Composer::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+     _VIDEOS   *vid=&_videos[0];
+    vidHeader *demuxer=vid->_aviheader;
+    return demuxer->getPtsDts(frame,pts,dts); // FIXME : Rescale frame number
+
+}
+
+
 //EOF
