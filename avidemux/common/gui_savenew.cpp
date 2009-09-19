@@ -41,7 +41,8 @@
 #include "ADM_filterChain.h"
 
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
-extern ADM_audioStream  *createEncodingStream(uint64_t startTime,int32_t shift);
+extern ADM_audioStream  *audioCreateEncodingStream(uint64_t startTime,int32_t shift);
+extern ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
 extern ADM_videoStream  *createVideoStream(ADM_coreVideoEncoder *encoder);
 
 /**
@@ -101,7 +102,7 @@ admSaver::~admSaver()
  if(logFileName) 
         delete [] logFileName;
  logFileName=NULL;
- if (audioProcessMode() && astreams[0])
+ if ( astreams[0])
         delete astreams[0];
  astreams[0]=NULL;
  if(video)   
@@ -313,16 +314,17 @@ bool admSaver::save(void)
         }
     }
     //
-    ADM_audioStream *astreams[1];
+    ADM_audioStream *astreams[1]={NULL};
     if (!audioProcessMode())
     {
-        astreams[0]=audio; //copy
+        if(audio)
+            astreams[0]=audioCreateCopyStream(startAudioTime,0,audio); //copy
     }else    
     {
         if(audio)   // Process
         {
             // Access..
-            ADM_audioStream *access=createEncodingStream(startAudioTime,0); // FIXME LEAK
+            ADM_audioStream *access=audioCreateEncodingStream(startAudioTime,0); // FIXME LEAK
             astreams[0]=access;
         }
     }
