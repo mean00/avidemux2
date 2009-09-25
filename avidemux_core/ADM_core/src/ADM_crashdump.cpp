@@ -44,7 +44,6 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
         myFatalFunction=fatal;
 }
 
-static void saveCrashProject(void);
 extern char *ADM_getBaseDir(void);
 extern void A_parseECMAScript(const char *name);
 
@@ -75,10 +74,16 @@ typedef struct STACK_FRAME
 
 static void dumpFrame(void* processId, void* frameAddr)
 {
+#ifdef ADM_CPU_X86_64
+#define ARCH_DWORD DWORD64
+#else
+#define ARCH_DWORD DWORD
+#endif
+
 	MEMORY_BASIC_INFORMATION mbi;
 	char moduleName[MAX_PATH];
 	HMODULE moduleAddr;
-	DWORD symDisplacement;
+	ARCH_DWORD symDisplacement;
 	IMAGEHLP_SYMBOL* pSymbol;
 
 	if (VirtualQuery(frameAddr, &mbi, sizeof(mbi)))
@@ -90,12 +95,12 @@ static void dumpFrame(void* processId, void* frameAddr)
 
 		printf("%s(", moduleName);
 
-		if (SymGetSymFromAddr(processId, (uint32_t)frameAddr, &symDisplacement, pSymbol))
+		if (SymGetSymFromAddr(processId, (ARCH_DWORD)frameAddr, &symDisplacement, pSymbol))
 			printf("%s", pSymbol->Name);
 		else
 			printf("<unknown>");
 
-		printf("+0x%X) [0x%08X]\n", (uint32_t)frameAddr - (uint32_t)moduleAddr, frameAddr);
+		printf("+0x%X) [0x%08X]\n", (ARCH_DWORD)frameAddr - (ARCH_DWORD)moduleAddr, frameAddr);
 
 		fflush(stdout);
 	}
@@ -105,8 +110,14 @@ static void dumpExceptionInfo(void* processId, struct _EXCEPTION_RECORD* pExcept
 {
 	printf("\n*********** EXCEPTION **************\n");
 	printf("Registers:\n");
+#ifdef ADM_CPU_X86_64
+	printf("RAX: %08X  RBX: %08X  RCX: %08X  RDX: %08X  RSI: %08X  RDI: %08X  RSP: %08X  RBP: %08X\n", pContextRecord->Rax, pContextRecord->Rbx, pContextRecord->Rcx, pContextRecord->Rdx, pContextRecord->Rsi, pContextRecord->Rdi, pContextRecord->Rsp, pContextRecord->Rbp);
+	printf("R8: %08X  R9: %08X  R10: %08X  R11: %08X  R12: %08X  R13: %08X  R14: %08X  R15: %08X\n", pContextRecord->R8, pContextRecord->R9, pContextRecord->R10, pContextRecord->R11, pContextRecord->R12, pContextRecord->R13, pContextRecord->R14, pContextRecord->R15);
+	printf("RIP: %08X  EFlags: %08X\n\n", pContextRecord->Rip, pContextRecord->EFlags);
+#else
 	printf("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X  ESI: %08X\n", pContextRecord->Eax, pContextRecord->Ebx, pContextRecord->Ecx, pContextRecord->Edx, pContextRecord->Esi);
 	printf("EDI: %08X  ESP: %08X  EBP: %08X  EIP: %08X  EFlags: %08X\n\n", pContextRecord->Edi, pContextRecord->Esp, pContextRecord->Ebp, pContextRecord->Eip, pContextRecord->EFlags);
+#endif
 
 	printf("Exception Code: ");
 
@@ -180,7 +191,13 @@ static void dumpExceptionInfo(void* processId, struct _EXCEPTION_RECORD* pExcept
 	printf("Exception Flags: %08X\n", pExceptionRec->ExceptionFlags);
 
 	printf("\nOrigin:\n");
+
+#ifdef ADM_CPU_X86_64
+	dumpFrame(processId, (void*)pContextRecord->Rip);
+#else
 	dumpFrame(processId, (void*)pContextRecord->Eip);
+#endif
+
 	printf("*********** EXCEPTION **************\n");
 	fflush(stdout);
 }
