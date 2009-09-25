@@ -31,6 +31,7 @@
 #include "ADM_pp.h"
 
 // FIXME BADLY !!!
+// This should be in a context somewhere
 static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
 /**
         \fn GoToIntra

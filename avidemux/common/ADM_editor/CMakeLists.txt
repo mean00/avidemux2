@@ -1,5 +1,4 @@
 SET(ADM_editor_SRCS
-ADM_edAudio.cpp 
 ADM_edCache.cpp 
 ADM_edIdentify.cpp 
 ADM_edLoadSave.cpp 

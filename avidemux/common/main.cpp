@@ -239,17 +239,14 @@ int main(int argc, char *argv[])
     char *dmPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","demuxers");    
     char *mxPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","muxers");    
     char *vePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoEncoders");    
-    char *vfPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoFilter");
+    char *vfPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoFilters");
 
     ADM_mx_loadPlugins(mxPlugins);
     delete [] mxPlugins;
 
 	ADM_ad_loadPlugins(adPlugins);
 	delete [] adPlugins;
-#if 0 // Dont load video filter now
-	ADM_vf_loadPlugins(vfPlugins);
-	delete [] vfPlugins;
-#endif
+
     ADM_av_loadPlugins(avPlugins);
     delete [] avPlugins;
 
@@ -262,6 +259,8 @@ int main(int argc, char *argv[])
     ADM_ve6_loadPlugins(vePlugins);
     delete [] vePlugins;
 
+    ADM_vf_loadPlugins(vfPlugins);
+    delete [] vfPlugins;
 
     // load local audio decoder plugins
 	adPlugins=ADM_getHomeRelativePath("plugins6","audioDecoder");

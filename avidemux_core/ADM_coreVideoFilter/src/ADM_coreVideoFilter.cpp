@@ -37,6 +37,7 @@ if needed.
  ADM_coreVideoFilter::ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf)
 {
     previousFilter=previous;
+    nextFrame=0;
 }
 /**
     \fn  ~ADM_coreVideoFilter
@@ -60,5 +61,15 @@ FilterInfo  *ADM_coreVideoFilter::getInfo(void)
 {
     ADM_assert(previousFilter);
     return previousFilter->getInfo();
+}
+/**
+        \fn getNextFrame
+        \brief 
+*/  
+bool         ADM_coreVideoFilter::getNextFrame(ADMImage *image)     
+{
+      bool r=getFrame(nextFrame,image);
+      nextFrame++;
+      return true;
 }
 // EOF
