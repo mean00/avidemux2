@@ -38,6 +38,7 @@ if needed.
 {
     previousFilter=previous;
     nextFrame=0;
+    if(previous) memcpy(&info,previous->getInfo(),sizeof(info));
 }
 /**
     \fn  ~ADM_coreVideoFilter

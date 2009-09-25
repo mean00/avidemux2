@@ -37,6 +37,7 @@ typedef struct
 class ADM_coreVideoFilter
 {
 protected:
+            FilterInfo           info;
             uint32_t             nextFrame;
 public:
             ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
