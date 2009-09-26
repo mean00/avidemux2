@@ -31,7 +31,6 @@ Todo:
 
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_editor/ADM_edAudio.hxx"
 
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_AUDIO_EDITOR
