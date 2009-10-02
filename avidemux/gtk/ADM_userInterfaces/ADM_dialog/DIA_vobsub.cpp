@@ -21,7 +21,7 @@
 
 #include "DIA_coreToolkit.h"
 #include "DIA_fileSel.h"
-
+#if 0
 #define CHECK_GET(x,y) {*y=gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(WID(x)));}
 #define CHECK_SET(x,y) {gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(WID(x)),*y);}   
 #include "ADM_videoFilter.h"
@@ -315,4 +315,4 @@ GtkWidget*
 
   return dialog1;
 }
-
+#endif

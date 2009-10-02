@@ -32,7 +32,7 @@
 #include "gui_action.hxx"
 
 //#include "ADM_encoder/adm_encConfig.h"
-#include "ADM_filter/vidVCD.h"
+//#include "ADM_filter/vidVCD.h"
 //#include "ADM_encoder/ADM_vidEncode.hxx"
 
 //extern void setVideoEncoderSettings (COMPRESSION_MODE mode, uint32_t param,     uint32_t extraConf, uint8_t * extraData);

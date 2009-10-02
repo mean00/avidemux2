@@ -37,9 +37,9 @@
 #include "ADM_videoFilter.h"
 #include "DIA_fileSel.h"
 
-
-#include "ADM_videoFilter/ADM_vobsubinfo.h"
-#include "ADM_videoFilter/ADM_vidVobSub.h"
+#if 0
+//#include "ADM_videoFilter/ADM_vobsubinfo.h"
+//#include "ADM_videoFilter/ADM_vidVobSub.h"
 #include "ADM_ocr/ADM_leftturn.h"
 #include "DIA_enter.h"
 
@@ -367,4 +367,5 @@ void *ADM_ocrUiSetup(void)
 	    return (void *)dialog;
 	
 }
+#endif
 //;

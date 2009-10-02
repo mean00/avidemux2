@@ -18,7 +18,7 @@
 #include "ADM_videoFilter_internal.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "avi_vars.h"
-#include "ADM_filter/vidVCD.h"
+//#include "ADM_filter/vidVCD.h"
 //___________________________________________
 typedef enum 
 {

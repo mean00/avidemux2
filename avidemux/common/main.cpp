@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
     video_body = new ADM_Composer;
 
 #ifdef HAVE_ENCODER
-     registerVideoFilters();
+//     registerVideoFilters();
 #endif
     ADM_lavFormatInit();
 	//***************Plugins *********************

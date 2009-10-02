@@ -40,7 +40,7 @@
 #include "ADM_debug.h"
 #include "avidemutils.h"
 
-#include "ADM_filter/vidVCD.h"
+
 #include "ADM_vidMisc.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"

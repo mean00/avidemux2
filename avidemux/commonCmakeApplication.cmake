@@ -90,15 +90,16 @@ ADM_codecs6
 ADM_commonUI6
 )
 SET(commonLibs2
-ADM_filter6 
+#ADM_filter6 
 ADM_osSupport6 
 ADM_requant6 
 ADM_script6 
 ADM_toolkit6
 ADM_videoEncoder6 
-#ADM_video6 
-ADM_videoFilter6 
 ADM_internalVideoFilter6
+
+#ADM_video6 
+#ADM_videoFilter6 
 )
 
 # END
