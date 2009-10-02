@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#if 0
 #include "ADM_default.h"
 #include <vector>
 #include "fourcc.h"
@@ -474,4 +475,5 @@ void filterSaveScriptJS(FILE *f)
                 }
 
 }
+#endif
 // EOF

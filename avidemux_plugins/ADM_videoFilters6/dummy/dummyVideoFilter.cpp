@@ -37,7 +37,8 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   dummyVideoFilter,   // Class
                         1,0,0,              // Version
-                        0,                  // UI
+                        ADM_UI_ALL,         // UI
+                        VF_MISC,            // Category
                         "dummy",            // internal name (must be uniq!)
                         "Dummy",            // Display name
                         "Null filter, it does nothing at all." // Description

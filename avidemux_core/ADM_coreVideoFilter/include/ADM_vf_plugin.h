@@ -5,19 +5,21 @@
 #ifndef ADM_vf_plugin_h
 #define ADM_vf_plugin_h
 #include "ADM_default.h"
+#include "DIA_uiTypes.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_filterCategory.h"
 
 #define VF_API_VERSION 1
 /* These are the 6 functions exported by each plugin ...*/
 typedef ADM_coreVideoFilter  *(ADM_vf_CreateFunction)(ADM_coreVideoFilter *previous,CONFcouple *conf);
-typedef void             (ADM_vf_DeleteFunction)(ADM_coreVideoFilter *codec);
-typedef int             (ADM_vf_SupportedUI)(void); //  QT4/GTK / ALL
-typedef uint32_t         (ADM_vf_GetApiVersion)(void);
-typedef bool            (ADM_ad_GetPluginVersion)(uint32_t *major, uint32_t *minor, uint32_t *patch);
-typedef const char       *(ADM_ADM_vf_GetString)(void);
+typedef void              (ADM_vf_DeleteFunction)(ADM_coreVideoFilter *codec);
+typedef int               (ADM_vf_SupportedUI)(void); //  QT4/GTK / ALL
+typedef uint32_t          (ADM_vf_GetApiVersion)(void);
+typedef bool              (ADM_vf_GetPluginVersion)(uint32_t *major, uint32_t *minor, uint32_t *patch);
+typedef const char       *(ADM_vf_GetString)(void);
+typedef VF_CATEGORY       (ADM_vf_getCategory)(void);
 
-
-#define DECLARE_VIDEO_FILTER(Class,Major,Minor,Patch,UI,internalName,displayName,Desc) \
+#define DECLARE_VIDEO_FILTER(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc) \
 	extern "C" { \
 	ADM_coreVideoFilter *create(ADM_coreVideoFilter *previous,CONFcouple *conf)\
 	{ \
@@ -30,7 +32,7 @@ typedef const char       *(ADM_ADM_vf_GetString)(void);
 	}\
 	int supportedUI(void) \
 	{ \
-		return 0; \
+		return UI; \
 	} \
 	uint32_t getApiVersion(void)\
 	{\
@@ -55,6 +57,10 @@ typedef const char       *(ADM_ADM_vf_GetString)(void);
 	{\
 		return displayName; \
 	}\
+    VF_CATEGORY getCategory(void) \
+    { \
+        return category;\
+    }\
 	}
 
 #endif

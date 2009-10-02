@@ -24,10 +24,20 @@
 #else
 #define aprintf(...) {}
 #endif
-
+/**
+    \struct admVideoFilterInfo
+*/
+typedef struct  
+{
+        const char                  *internalName;
+        const char                  *displayName;
+        const char                  *desc;
+        VF_CATEGORY                 category;   
+}admVideoFilterInfo;
 
 /**
- *
+ *  \class ADM_vf_plugin
+ *  \brief Base class for video filter loader
  */
 class ADM_vf_plugin : public ADM_LibWrapper
 {
@@ -35,20 +45,21 @@ class ADM_vf_plugin : public ADM_LibWrapper
 		ADM_vf_CreateFunction		*create;
 		ADM_vf_DeleteFunction		*destroy;
 		ADM_vf_SupportedUI		    *supportedUI;
-		ADM_vf_GetApiVersion		*getApiVersion;
-		ADM_ad_GetPluginVersion	    *getFilterVersion;
-		ADM_ADM_vf_GetString    	*getDesc;
-        ADM_ADM_vf_GetString    	*getInternalName;
-        ADM_ADM_vf_GetString    	*getDisplayName;
         
-		const char 					*nameOfLibrary;
-        const char                  *internalName;
-        const char                  *displayName;
-        const char                  *desc;
+		ADM_vf_GetApiVersion		*getApiVersion;
+		ADM_vf_GetPluginVersion	    *getFilterVersion;
+		ADM_vf_GetString    	    *getDesc;
+        ADM_vf_GetString    	    *getInternalName;
+        ADM_vf_GetString    	    *getDisplayName;
+        ADM_vf_getCategory          *getCategory;
+
+        const char 					*nameOfLibrary;
+	
+        admVideoFilterInfo          info;
 
 		ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 		{
-			initialised = (loadLibrary(file) && getSymbols(6,
+			initialised = (loadLibrary(file) && getSymbols(7,
 				&create, "create",
 				&destroy, "destroy",
 				&getApiVersion, "getApiVersion",
@@ -56,7 +67,8 @@ class ADM_vf_plugin : public ADM_LibWrapper
 				&getFilterVersion, "getFilterVersion",
 				&getDesc, "getDesc",
 				&getInternalName, "getInternalName",
-				&getDisplayName, "getDisplayName"
+				&getDisplayName, "getDisplayName",
+                &getCategory,"getCategory"
                 ));
 		};
 };
@@ -69,6 +81,7 @@ std::vector<ADM_vf_plugin *> ADM_videoFilterPluginsList;
 static uint8_t tryLoadingVideoFilterPlugin(const char *file)
 {
 	ADM_vf_plugin *plugin = new ADM_vf_plugin(file);
+    admVideoFilterInfo          *info=NULL;
 
 	if (!plugin->isAvailable())
 	{
@@ -83,19 +96,27 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
 			ADM_GetFileName(file), plugin->getApiVersion(), VF_API_VERSION);
 		goto Err_ad;
 	}
+    if(!(plugin->supportedUI() & 0xff))
+    {  // FIXME
 
+
+    }
 	// Get infos
 	uint32_t major, minor, patch;
 
 	plugin->getFilterVersion(&major, &minor, &patch);
 	plugin->nameOfLibrary = ADM_strdup(ADM_GetFileName(file));
 
-    plugin->internalName=plugin->getInternalName();
-    plugin->desc=plugin->getDesc();
-    plugin->displayName=plugin->getDisplayName();
+    info=&(plugin->info);
+
+
+    info->internalName=plugin->getInternalName();
+    info->desc=plugin->getDesc();
+    info->displayName=plugin->getDisplayName();
+    info->category=plugin->getCategory();
 
 	printf("[ADM_vf_plugin] Plugin loaded version %d.%d.%d, name %s/%s\n",
-		major, minor, patch, plugin->internalName, plugin->displayName);
+		major, minor, patch, info->internalName, info->displayName);
 
 	ADM_videoFilterPluginsList.push_back(plugin);
 
@@ -129,7 +150,7 @@ bool ADM_vf_getFilterInfo(int filter, const char **name, uint32_t *major,uint32_
     	ADM_vf_plugin *a=ADM_videoFilterPluginsList[filter];
         a->getFilterVersion(major, minor, patch);
 
-        *name=a->displayName;
+        *name=a->info.displayName;
         return 1;
 }
 
