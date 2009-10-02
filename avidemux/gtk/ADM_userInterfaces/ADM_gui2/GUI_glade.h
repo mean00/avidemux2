@@ -16,7 +16,8 @@ protected:
         void *gxml;
         bool tryLoad(const char *prefix, const char *file);
 public:
-                admGlade() {gxml=NULL;}
+                admGlade() ;
+        void    init(void);
                 ~admGlade();
         bool    loadFile(const char *file);   
         GtkWidget *getWidget(const char *widgetName);

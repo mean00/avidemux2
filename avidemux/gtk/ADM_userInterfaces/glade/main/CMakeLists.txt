@@ -1,5 +1,6 @@
 # Install glade file into FOO/lib/ADM_glade/
 set(ADM_glade
+gtk2_build.gtkBuilder
 gtk2_build.glade
 avidemux_icon_small.png
 audio-volume-medium.png

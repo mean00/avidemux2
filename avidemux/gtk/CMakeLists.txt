@@ -13,10 +13,10 @@ SET( ADM_PROJECT Avidemux_gtk)
 
 include(../commonCmakeApplication.cmake)
 include(admCheckGtk)
-include(admCheckGlade)
+#include(admCheckGlade)
 #
 checkGtk()
-checkGlade()
+#checkGlade()
 ##########################################
 # Config
 ##########################################

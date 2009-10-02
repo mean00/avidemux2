@@ -595,12 +595,6 @@
           <accelerator key="T" modifiers="GDK_CONTROL_MASK"/>
         </child>
         <child>
-          <object class="GtkAction" id="custom1">
-            <property name="name">custom1</property>
-            <property name="label" translatable="yes">_Custom</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkAction" id="help2">
             <property name="name">help2</property>
             <property name="label" translatable="yes">_Help</property>
@@ -1262,18 +1256,6 @@
                 <property name="n_rows">3</property>
                 <property name="n_columns">2</property>
                 <property name="column_spacing">6</property>
-                <child>
-                  <object class="Custom" id="jogg">
-                    <property name="visible">True</property>
-                    <property name="creation_function">jog_shuttle_new</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options">GTK_EXPAND</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkVBox" id="vbox14">
                     <property name="visible">True</property>

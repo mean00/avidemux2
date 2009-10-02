@@ -309,7 +309,8 @@ uint8_t initGUI( void )
 {
 uint8_t ret=0;
 uint32_t w,h;
-        if(!glade.loadFile("main/gtk2_build.glade"))
+        glade.init();
+        if(!glade.loadFile("main/gtk2_build.gtkBuilder"))
         {
             GUI_Error_HIG("Glade","Cannot load glade file");
             ADM_assert(0);
@@ -1428,6 +1429,7 @@ int UI_Init(int argc, char **argv)
 
     ADM_renderLibInit(&UI_Hooks);
 
+    printf("[Gtk] Entering gtk_init\n");
     gtk_init(&global_argc, &global_argv);
     gdk_rgb_init();
 
@@ -1448,6 +1450,7 @@ int UI_RunApp(void)
     // Install our crash handler
     ADM_setCrashHook(&saveCrashProject, &gtk_fatalFunction);
     checkCrashFile();
+    printf("[Gtk] Entering gtk_main\n");
     gtk_main();
     gdk_threads_leave();
 

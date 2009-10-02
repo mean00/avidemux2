@@ -2,9 +2,27 @@
  *      \file GUI_glade.cpp
  *      \brief simple utility class to deal with glade class
  */
-
+#include <stdlib.h>
 #include "GUI_glade.h"
-#define GXML (GladeXML *)gxml
+#define GXML (GtkBuilder *)gxml
+
+admGlade::admGlade()
+{
+    gxml=NULL;
+}
+void admGlade::init(void)
+{
+GtkBuilder *x=NULL;
+    x =gtk_builder_new ();
+    if(!x)
+    {
+        printf("[GtkBuilder] Cannot create a builder\n");
+        exit(-1);
+    }
+    gxml=(void *)x; // Memleak!
+
+}
+
 /**
  *
  */
@@ -31,13 +49,17 @@ bool admGlade::tryLoad(const char *prefix, const char *file)
 {
 #define ADM_GLADE_PATH 1024
 char path[ADM_GLADE_PATH];
-            GladeXML *x;
+GError *er=NULL;
+            GtkBuilder *x;
             snprintf(path,ADM_GLADE_PATH,"%s/%s",prefix,file);
             printf("Trying :<%s>\n",path);
-            x = glade_xml_new (path, NULL, NULL);
-            if(!x) return false;
-            gxml=(void *)x;
-           // glade_xml_signal_autoconnect (x);
+           
+            gtk_builder_add_from_file(GXML,path,&er);
+            if(er)
+            {
+                printf("[GtkBuilder] %s\n",er->message);
+                return false;
+            }
             return true;
 
 
@@ -49,7 +71,7 @@ char path[ADM_GLADE_PATH];
 GtkWidget *admGlade::getWidget(const char *widgetName)
 {
         if(!gxml) return NULL;
-        GtkWidget *w= glade_xml_get_widget (GXML, widgetName);
+        GtkWidget *w= (GtkWidget *)gtk_builder_get_object (GXML, widgetName);
         if(!w) printf("[admGlade] Cannot locate widget %s\n",widgetName);
         return w;
 }   
