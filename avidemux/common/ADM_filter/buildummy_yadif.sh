@@ -1,4 +1,0 @@
-g++ -DHAVE_CONFIG_H -I. -I. -I../..  -I../ADM_libraries -I../ADM_libraries/ADM_utilities -I../ADM_libraries/ADM_lavutil -I/usr/include/libxml2  -I/usr/include/malloc -I/usr/include/libxml2 -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT  -I.. -I../ADM_lavutil -IADM_utilities -I../ADM_utilities  -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g -O2 -I../.. -O1 -g3 -falign-loops=16  -o dummy.o ../ADM_videoFilter/ADM_vidYadif.cpp  -c -fPIC
-gcc -DHAVE_CONFIG_H -I. -I. -I../..  -I../ADM_libraries -I../ADM_libraries/ADM_utilities -I../ADM_libraries/ADM_lavutil -I/usr/include/libxml2  -I/usr/include/malloc -I/usr/include/libxml2 -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT  -I.. -I../ADM_lavutil -IADM_utilities -I../ADM_utilities  -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g -O2 -I../.. -O1 -g3 -falign-loops=16  -o dummy2.o ../ADM_videoFilter/ADM_vidYadif_asm.c  -c -fPIC
-g++ -shared dummy.o dummy2.o -o yadif.so
-cp yadif.so ~/Xfilters

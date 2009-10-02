@@ -175,6 +175,7 @@ void 	admPreview::start( void )
 {
             aprintf("--killing\n");
             renderLock();
+#if 0
             getFirstVideoFilter();
             
             preview=videofilters[  nb_active_filter-1].filter;
@@ -182,7 +183,7 @@ void 	admPreview::start( void )
             ADM_assert(!previewImage)
                 
             previewImage=new ADMImage(preview->getInfo()->width,preview->getInfo()->height);
-            
+#endif            
             ADM_assert(!original);
             switch(previewMode)
             {

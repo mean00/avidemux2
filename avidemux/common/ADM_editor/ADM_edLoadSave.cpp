@@ -150,7 +150,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
 // Filter
 //___________________________
         qfprintf(fd,"\n//** Filters **\n");
-        filterSaveScriptJS(fd);
+//        filterSaveScriptJS(fd);
 
 // Video codec
 //___________________________

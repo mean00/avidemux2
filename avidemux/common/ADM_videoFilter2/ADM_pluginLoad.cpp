@@ -59,7 +59,7 @@ class ADM_vf_plugin : public ADM_LibWrapper
 
 		ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 		{
-			initialised = (loadLibrary(file) && getSymbols(7,
+			initialised = (loadLibrary(file) && getSymbols(9,
 				&create, "create",
 				&destroy, "destroy",
 				&getApiVersion, "getApiVersion",

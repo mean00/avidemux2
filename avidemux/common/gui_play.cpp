@@ -114,11 +114,11 @@ void GUI_PlayAvi(void)
     
     if(getPreviewMode()==ADM_PREVIEW_OUTPUT)
     {
-            filter=getLastVideoFilter();
+//            filter=getLastVideoFilter();
     }
     else
     {
-            filter=getFirstVideoFilter( );
+  //          filter=getFirstVideoFilter( );
     }
     
     stop_req = 0;
@@ -134,7 +134,7 @@ void GUI_PlayAvi(void)
     delete playLoop;
    playing = 0;
             
-   getFirstVideoFilter( );
+//   getFirstVideoFilter( );
 
    admPreview::deferDisplay(0,0);
    

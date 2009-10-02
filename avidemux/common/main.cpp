@@ -320,7 +320,7 @@ void onexit( void )
     SpidermonkeyDestroy();
     pthread_mutex_unlock(&g_pSpiderMonkeyMutex);
     destroyPrefs();
-    filterCleanUp();
+//    filterCleanUp();
 	ADM_lavDestroy();
 
 #ifdef USE_SDL

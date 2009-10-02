@@ -28,9 +28,9 @@
 
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
-#include "ADM_video/ADM_videoNull.h"
+//#include "ADM_video/ADM_videoNull.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_video/ADM_vidPartial.h"
+//#include "ADM_video/ADM_vidPartial.h"
 #include "avi_vars.h"
 // exported vars
 extern uint32_t nb_active_filter;
@@ -134,6 +134,7 @@ void filterLoadXml(const char *docname)
 
 int filterLoadXml(const char *docname,uint8_t silent)
 {
+#if 0
  xmlDocPtr xdoc;
  xmlNodePtr node,subnode;
 int32_t nb_filters,itag;
@@ -237,6 +238,7 @@ CONFcouple *couple;
 			}
 			printf("\n found : %"LU" filters\n",nb_filters);
 	xmlFreeDoc(xdoc);
+#endif
 	return 1;
 }
 CONFcouple *buildCouple(uint32_t nb, xmlNodePtr node)

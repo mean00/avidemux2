@@ -192,7 +192,7 @@ JSBool ADM_JSAvidemuxVideo::Add(JSContext *cx, JSObject *obj, uintN argc,
 JSBool ADM_JSAvidemuxVideo::ClearFilters(JSContext *cx, JSObject *obj, uintN argc,
                                        jsval *argv, jsval *rval)
 {// begin Clear
-	filterCleanUp();
+//	filterCleanUp();
         return JS_TRUE;
 }// end Clear
 
@@ -200,6 +200,7 @@ JSBool ADM_JSAvidemuxVideo::ClearFilters(JSContext *cx, JSObject *obj, uintN arg
 JSBool ADM_JSAvidemuxVideo::AddFilter(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin AddFilter
+#if 0
         VF_FILTERS filter;
 
         // default return value
@@ -230,7 +231,7 @@ JSBool ADM_JSAvidemuxVideo::AddFilter(JSContext *cx, JSObject *obj, uintN argc,
         {
             ADM_dealloc(args[i].arg.string);
         }
-        
+#endif        
         return JS_TRUE;
 }// end AddFilter
 

@@ -17,9 +17,6 @@
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_video/ADM_videoNull.h"
-
-#include "ADM_video/ADM_vidPartial.h"
 #include "avi_vars.h"
 #include "ADM_filter/vidVCD.h"
 //___________________________________________
@@ -92,7 +89,7 @@ static GtkWidget *dialog = 0;
 int
 GUI_handleVFilter (void)
 {
-
+#if 0
     getLastVideoFilter ();	// expand video to full size
 
     // sanity check
@@ -127,7 +124,7 @@ GUI_handleVFilter (void)
         gtk_unregister_dialog (dialog);
         gtk_widget_destroy(dialog);
         dialog=NULL;
-        
+#endif        
     return 1;
     
 }
@@ -232,6 +229,7 @@ void on_action (gui_act action)
         break;
 
     case A_PARTIAL:
+#if 0
         if (!action_parameter) break;
         AVDMGenericVideoStream *replace;
         CONFcouple *conf;
@@ -259,6 +257,7 @@ void on_action (gui_act action)
 			setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], action_parameter-1);
         }
         else delete replace;
+#endif
         break;
 
     case A_UP:

@@ -54,8 +54,8 @@ printf(  "******************************\n");
 	REGISTERX("swissarmyknife",QT_TR_NOOP("Swiss Army Knife"),QT_TR_NOOP("Apply operation like P'=P*A, P-A, P+A, etc. using a convolution, rolling average, image from file, or constant"),VF_SWISSARMYKNIFE,1,swissarmyknife_create,swissarmyknife_script);
 #endif
 // Misc filter, internal only
-	REGISTERX(VF_MISC,"partial",QT_TR_NOOP("Partial"),"",VF_PARTIAL,0,partial_create,partial_script);
-	REGISTERX(VF_MISC,"framenum",QT_TR_NOOP("Add Framenumber"),QT_TR_NOOP("Print frame number directly in image"),VF_FRAMENUM,1,number_create,number_script);
+//	REGISTERX(VF_MISC,"partial",QT_TR_NOOP("Partial"),"",VF_PARTIAL,0,partial_create,partial_script);
+//	REGISTERX(VF_MISC,"framenum",QT_TR_NOOP("Add Framenumber"),QT_TR_NOOP("Print frame number directly in image"),VF_FRAMENUM,1,number_create,number_script);
  printf("\n");
 }
 

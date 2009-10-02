@@ -1,5 +1,4 @@
 SET(ADM_filter_SRCS 
-ADM_vidDummyFilter.cpp  
 filter.cpp  
 filter_declaration.cpp  
 filter_saveload.cpp  

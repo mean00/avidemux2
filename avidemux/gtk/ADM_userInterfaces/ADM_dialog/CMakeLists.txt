@@ -12,7 +12,7 @@ DIA_about.cpp
  DIA_vcodec.cpp  
  DIA_xvid.cpp
  DIA_idx_pg.cpp    
- DIA_partial.cpp  
+ #DIA_partial.cpp  
  DIA_quota.cpp      
  DIA_vobsub.cpp
  DIA_jobs.cpp      

@@ -875,7 +875,7 @@ void cleanUp (void)
 	}
 
 	currentaudiostream=NULL;
-	filterCleanUp();
+//	filterCleanUp();
 	admPreview::cleanUp();
 }
 
@@ -1267,7 +1267,7 @@ uint8_t GUI_close(void)
 	  aviaudiostream=NULL;
 	  secondaudiostream=NULL;
 
-      filterCleanUp ();
+//      filterCleanUp ();
 	  UI_setTitle(NULL);
 
       return 1;
