@@ -1,6 +1,6 @@
 #ifndef Q_vobsub_h
 #define Q_vobsub_h
-
+#if 0
 #include "ui_vobsub.h"
 #include "ADM_image.h"
 #include "ADM_videoFilter.h"
@@ -26,3 +26,4 @@ private slots:
 	void idxSel(bool i);
 };
 #endif	// Q_vobsub_h
+#endif

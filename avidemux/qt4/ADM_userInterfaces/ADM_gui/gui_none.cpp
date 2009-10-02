@@ -9,7 +9,7 @@
 //
 
 #include "config.h"
-
+#include "ADM_inttype.h"
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 

@@ -10,7 +10,7 @@
 #define ADM_MISC_H
 
 #include "ADM_coreConfig.h"
-
+#include "ADM_inttype.h"
 
 typedef struct 
 {

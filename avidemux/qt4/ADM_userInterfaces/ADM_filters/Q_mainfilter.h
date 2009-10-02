@@ -3,7 +3,7 @@
 
 #include <QtGui/QItemDelegate>
 #include "ui_mainfilter.h"
-
+#include "ADM_inttype.h"
 class FilterItemEventFilter : public QObject
 {
 	Q_OBJECT

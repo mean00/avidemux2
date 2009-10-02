@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_inttype.h"
 #include "Q_license.h"
 
 Ui_licenseWindow::Ui_licenseWindow()

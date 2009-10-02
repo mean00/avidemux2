@@ -13,7 +13,7 @@ Custom slider
 ***************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "ADM_inttype.h"
 #include <QtGui/QPainter>
 #include <QtGui/QSlider>
 #include "ADM_qslider.h"

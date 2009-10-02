@@ -23,7 +23,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
+
 #include <vector>
 
 #include "Q_mainfilter.h"
@@ -39,8 +39,8 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
-#include "ADM_video/ADM_vidPartial.h"
-#include "ADM_filter/vidVCD.h"
+//#include "ADM_video/ADM_vidPartial.h"
+//#include "ADM_filter/vidVCD.h"
 #include "DIA_factory.h"
 /*******************************************************/
 #define NB_TREE 8
@@ -418,6 +418,7 @@ void filtermainWindow::allDoubleClick( QListWidgetItem  *item)
 */
 void filtermainWindow::partial( bool b)
 {
+#if 0
   printf("partial\n"); 
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
@@ -460,6 +461,7 @@ void filtermainWindow::partial( bool b)
 			setSelected(itag);
         }
         else delete replace;
+#endif
 }
 /**
         \fn setup
@@ -576,9 +578,10 @@ void partialCb(void *cookie)
     \brief Partial dialog
     
 */
-
+#if 0
 uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous)
 {
+
 #define PX(x) &(param->x)
   void *params[2]={son,previous};
          uint32_t fmax=previous->getInfo()->nb_frames;
@@ -590,6 +593,9 @@ uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGen
          
          diaElem *tabs[]={&start,&end,&button};
         return diaFactoryRun(QT_TR_NOOP("Partial Video Filter"),3,tabs);
+
+    
 }
+#endif
 //EOF
 

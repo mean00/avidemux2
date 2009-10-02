@@ -12,7 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "config.h"
-
+#include "ADM_inttype.h"
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>

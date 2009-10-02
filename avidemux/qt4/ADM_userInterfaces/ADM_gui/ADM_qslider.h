@@ -1,6 +1,6 @@
 #ifndef ADM_Q_SLIDER_H
 #define ADM_Q_SLIDER_H
-
+#include "ADM_inttype.h"
 class ADM_QSlider : public QSlider
 {
 protected:

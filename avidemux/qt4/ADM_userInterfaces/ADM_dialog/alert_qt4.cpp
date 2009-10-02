@@ -12,7 +12,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_inttype.h"
 #include <QtGui/QDialog>
 #include <QtGui/QMessageBox>
 #include "DIA_coreToolkit.h"

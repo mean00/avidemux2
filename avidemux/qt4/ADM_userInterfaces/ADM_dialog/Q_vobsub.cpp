@@ -18,7 +18,7 @@
 
 #include "Q_vobsub.h"
 #include "DIA_fileSel.h"
-
+#if 0
 //
 //	Video is in YV12 Colorspace
 //
@@ -112,3 +112,4 @@ uint8_t DIA_vobsub(vobSubParam *param)
 // EOF
 
 
+#endif
