@@ -31,7 +31,20 @@
 #include "ADM_cpuCap.h"
 #include "ADM_clock.h"
 #include "ADM_misc.h"
+
 #endif
+#ifdef __cplusplus
+extern "C" 
+{
+#endif
+void ADM_warning(const char *st, ...) ;
+void ADM_info(const char *st, ...) ;
+void ADM_error(const char *st, ...) ;
+#ifdef __cplusplus
+}
+#endif
+
+
 
 #include "ADM_mangle.h"
 #include "ADM_files.h"

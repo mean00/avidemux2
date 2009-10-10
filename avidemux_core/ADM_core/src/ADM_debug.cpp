@@ -77,5 +77,57 @@ void indirect_printf_long(int level,const char *modname,int entity,const char *p
 		return;
 	}
 }
+
+
+#define ADM_COLOR_YELLOW  "\e[33m"
+#define ADM_COLOR_RED     "\e[31m"
+#define ADM_DEFAULT_COLOR "\e[32m"
+
+
+static void ADM_prettyPrint(const char *color, const char *p)
+{
+    printf("%s %s %s",color,p,ADM_DEFAULT_COLOR);
+
+}
+
+
+ void ADM_info( const char *prf, ...)
+  {
+  static char print_buffer[1024];
+  	
+		va_list 	list;
+		va_start(list,	prf);
+		vsnprintf(print_buffer,1023,prf,list);
+		va_end(list);
+		print_buffer[1023]=0; // ensure the string is terminated
+        ADM_prettyPrint(ADM_DEFAULT_COLOR,print_buffer);
+		
+  }
+ void ADM_warning( const char *prf, ...)
+  {
+  static char print_buffer[1024];
+  	
+		va_list 	list;
+		va_start(list,	prf);
+		vsnprintf(print_buffer,1023,prf,list);
+		va_end(list);
+		print_buffer[1023]=0; // ensure the string is terminated
+        ADM_prettyPrint(ADM_COLOR_YELLOW,print_buffer);
+		
+  }
+ void ADM_error( const char *prf, ...)
+  {
+  static char print_buffer[1024];
+  	
+		va_list 	list;
+		va_start(list,	prf);
+		vsnprintf(print_buffer,1023,prf,list);
+		va_end(list);
+		print_buffer[1023]=0; // ensure the string is terminated
+        ADM_prettyPrint(ADM_COLOR_RED,print_buffer);
+		
+  }
+
+
 }
 //EOF
