@@ -6,16 +6,12 @@
 //
 
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdint.h>
-
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
-#include "ADM_assert.h"
+#include "ADM_audioDeviceInternal.h"
 #include "ADM_deviceJack.h"
 
-
+ADM_DECLARE_AUDIODEVICE(Jack,jackAudioDevice,1,0,0,"Jack audio device (c) M. Zenkov");
 #define BUFSIZE 16385
 
 jackAudioDevice::jackAudioDevice()
@@ -33,7 +29,7 @@ void jackAudioDevice::jack_shutdown(void *arg)
 	((jackAudioDevice*)arg)->stop();
 }
 
-uint8_t jackAudioDevice::stop()
+bool jackAudioDevice::localStop()
 {
 	if (client) {
 		printf("[JACK] Stop\n");
@@ -52,15 +48,17 @@ uint8_t jackAudioDevice::stop()
 
 	return 1;
 }
+/**
 
-uint8_t jackAudioDevice::init(uint8_t channels, uint32_t fq)
+*/
+bool jackAudioDevice::localInit(void)
 {
 	jack_status_t status;
-	_channels = channels;
+
 
 	if (sizeof(jack_default_audio_sample_t) != sizeof(float)) {
 		printf("[JACK] jack_default_audio_sample_t != float\n");
-		return 0;
+		return false;
 	}
 
 	client = jack_client_open("avidemux", JackNullOption, &status, NULL);
@@ -69,24 +67,26 @@ uint8_t jackAudioDevice::init(uint8_t channels, uint32_t fq)
 		printf("[JACK] jack_client_open() failed, status = 0x%2.0x\n", status);
 		if (status & JackServerFailed)
 			printf(("[JACK] Unable to connect to server\n"));
-		return 0;
+		return false;
 	}
 
 	if (status & JackServerStarted)
 		printf("[JACK] Server started\n");
 
-	if (jack_get_sample_rate(client) == fq) {
+	if (jack_get_sample_rate(client) == _frequency) 
+    {
 		jack_set_process_callback(client, process_callback, this);
-	} else {
-		printf("[JACK] audio stream sample rate: %i\n", fq);
+	} else 
+    {
+		printf("[JACK] audio stream sample rate: %i\n", _frequency);
 		printf("[JACK] jack server sample rate: %i\n", (int)jack_get_sample_rate(client));
 		#ifdef USE_SRC
 			src_out_buf = new float[BUFSIZE * channels];
 			src_state = src_new(SRC_SINC_FASTEST, channels, NULL);
 			if (!src_state) {
 				printf("[JACK] Can't init libsamplerate\n");
-				stop();
-				return 0;
+				localStop();
+				return false;
 			}
 			src_data.data_out = src_out_buf;
 			src_data.output_frames = BUFSIZE;
@@ -95,47 +95,48 @@ uint8_t jackAudioDevice::init(uint8_t channels, uint32_t fq)
 //			printf("[JACK] ratio: %f\n", src_data.src_ratio);
 		#else
 			printf("[JACK] For play this, you need avidemux compiled with libsamplerate support\n");
-			stop();
-			return 0;
+			localStop();
+			return false;
 		#endif
 	}
 
-	ringbuffer = jack_ringbuffer_create(BUFSIZE * channels * sizeof(jack_default_audio_sample_t));
+	ringbuffer = jack_ringbuffer_create(BUFSIZE * _channels * sizeof(jack_default_audio_sample_t));
 
 	jack_set_process_callback(client, process_callback, this);
 	jack_on_shutdown(client, jack_shutdown, this);
 
 	char name[10];
-	for (int i = 0; i < channels; i++) {
+	for (int i = 0; i < _channels; i++) {
 		snprintf(name, 10, "output-%d", i);
 		ports[i] = jack_port_register(client, name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
 		if (!ports[i]) {
 			printf("[JACK] Can't create new port\n");
-			stop();
-			return 0;
+			localStop();
+			return false;
 		}
 	}
 
 	if (jack_activate(client)) {
 		printf("[JACK] Cannot activate client\n");
-		stop();
+		localStop();
 		return 0;
 	}
 
 	const char **input_ports = jack_get_ports(client, NULL, NULL, JackPortIsInput|JackPortIsPhysical);
 
-	for (int i = 0; i < channels && input_ports[i]; i++) {
+	for (int i = 0; i < _channels && input_ports[i]; i++) {
 		if (jack_connect(client, jack_port_name(ports[i]), input_ports[i]))
 			printf("[JACK] Connecting failed\n");
 	}
 
-	if (channels == 1 && input_ports[1])
+	if (_channels == 1 && input_ports[1])
 		if (jack_connect(client, jack_port_name(ports[0]), input_ports[1]))
 			printf("[JACK] Connecting failed\n");
 
 	return 1;
 }
-
+/**
+*/
 int jackAudioDevice::process(jack_nframes_t nframes)
 {
 	jack_default_audio_sample_t *pbuf[_channels];
@@ -171,8 +172,21 @@ int jackAudioDevice::process_callback(jack_nframes_t nframes, void* arg)
 	return ((jackAudioDevice*)arg)->process(nframes);
 }
 
+void jackAudioDevice::sendData(void)
+{
+	mutex.lock();
+    uint32_t avail=wrIndex-rdIndex;
+    if(avail>sizeOf10ms) avail=sizeOf10ms;
+    mutex.unlock();
+    //play(avail,audioBuffer+rdIndex);
+	//int w=write(esdDevice, audioBuffer+rdIndex, avail);
+    mutex.lock();
+    rdIndex+=avail;
+    mutex.unlock();
+	return ;
+}
 
-uint8_t jackAudioDevice::play(uint32_t len, float *data)
+bool jackAudioDevice::tempplay(uint32_t len, float *data)
 {
 //	static int min = 5000;
 	static int sleep = (int)((float)BUFSIZE / jack_get_sample_rate(client) / 2. * 1000000.);

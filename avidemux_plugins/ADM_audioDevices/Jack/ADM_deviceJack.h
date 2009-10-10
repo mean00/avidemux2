@@ -16,17 +16,20 @@
 
 #define MAX_CHANNELS 9
 
-class jackAudioDevice : public audioDevice
+class jackAudioDevice : public audioDeviceThreaded
 {
 public:
 	jackAudioDevice();
-	virtual uint8_t init(uint8_t channel,uint32_t fq);
-	virtual uint8_t play(uint32_t len, float *data);
-	virtual uint8_t stop();
-	uint8_t setVolume(int volume);
-	int process(jack_nframes_t nframes);
+    virtual     bool     localInit(void);
+    virtual     bool     localStop(void);
+    virtual     void     sendData(void); 
+                uint8_t  setVolume(int volume);
+                int      process(jack_nframes_t nframes);
 
 protected:
+
+    bool tempplay(uint32_t len, float *data); // FIXME: DOES NOT WORK!
+
 	static void jack_shutdown(void *arg);
 	static int process_callback(jack_nframes_t nframes, void *arg);
 
