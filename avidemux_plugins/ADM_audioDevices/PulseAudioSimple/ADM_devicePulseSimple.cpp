@@ -18,8 +18,6 @@
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
 
-
-#include  "ADM_audiodevice.h"
 #include  "ADM_audioDeviceInternal.h"
 #include  "ADM_devicePulseSimple.h"
 #include  "pulse/simple.h"
