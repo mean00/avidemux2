@@ -17,9 +17,6 @@
 #include "ADM_default.h"
 #include <math.h>
 
-#define ADM_warning printf
-#define ADM_info    printf
-#define ADM_error   printf
 
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"

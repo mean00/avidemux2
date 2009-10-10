@@ -22,11 +22,6 @@
  #include "ADM_pp.h"
  #include "ADM_colorspace.h"
 
-
-#define ADM_warning printf
-#define ADM_info    printf
-#define ADM_error   printf
-
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 
@@ -78,34 +73,6 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     decoders *decoder=vid->decoder;
 //    rederiveFrameType(_videos[_nb_video]._aviheader);
 
-#if 0
-    // we only try if we got everything needed...
-    if(!vid->decoder)
-    {
-        printf("[Editor] no decoder to check for B- frame\n");
-    }else
-    {
-       
-        if(vid->_aviheader->providePts()==false) // Else we rely on demuxer PTS
-        {
-            printf("[Editor] This container does not provide PTS \n");
-            if(decoder->bFramePossible())
-            {
-                printf("[Editor] B- frame possible with that codec \n");
-                if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc))
-                {
-                    printf("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");                        
-                    setMpeg4PtsFromDts(vid->_aviheader,vid->timeIncrementInUs);
-                }
-            }
-            else   
-            {
-                    printf("[Editor] No B frame with that codec, PTS=DTS\n");
-                    setPtsEqualDts(vid->_aviheader,vid->timeIncrementInUs);
-            }
-        }
-     }
-#endif    
     segments.push_back(seg);
     videos.push_back(*ref);
     updateStartTime();

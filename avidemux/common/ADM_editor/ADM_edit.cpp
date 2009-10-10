@@ -47,10 +47,6 @@ const char *VBR_MSG = QT_TR_NOOP("Avidemux detected VBR MP3 audio in this file. 
 //
 //
 
-#define ADM_warning printf
-#define ADM_info    printf
-#define ADM_error   printf
-
 #define TEST_MPEG2DEC
 
 ADM_Composer::ADM_Composer (void) : ADM_audioStream(NULL,NULL)
@@ -309,10 +305,34 @@ bool ADM_Composer::addFile (const char *name)
       info.fps1000 = 25 * 1000;
       updateVideoInfo (&info);
     }
-
-    // From here we cannot fail, let the segment handler make the other part of the job
     _segments.addReferenceVideo(&video);
-
+    // we only try if we got everything needed...
+    if(!video.decoder)
+    {
+        ADM_info("[Editor] no decoder to check for B- frame\n");
+    }else
+    {
+       
+        if(video._aviheader->providePts()==false) // Else we rely on demuxer PTS
+        {
+            ADM_info("[Editor] This container does not provide PTS \n");
+            if(video.decoder->bFramePossible())
+            {
+                printf("[Editor] B- frame possible with that codec \n");
+                if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc))
+                {
+                    ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");                        
+                    setMpeg4PtsFromDts(video._aviheader,video.timeIncrementInUs);
+                }
+            }
+            else   
+            {
+                    printf("[Editor] No B frame with that codec, PTS=DTS\n");
+                    setPtsEqualDts(video._aviheader,video.timeIncrementInUs);
+            }
+        }
+     }
+  
   return 1;
 }
 

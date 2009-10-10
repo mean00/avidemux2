@@ -341,7 +341,7 @@ void onexit( void )
     ADMImage_stat();
     ADM_memStat();
     ADM_memStatEnd();
-    printf("\nGoodbye...\n\n");
+    ADM_info("\nGoodbye...\n\n");
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 	check_leaks();

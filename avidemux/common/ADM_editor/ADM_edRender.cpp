@@ -29,9 +29,6 @@
 #endif
 
 #include "ADM_pp.h"
-#define ADM_warning printf
-#define ADM_info    printf
-#define ADM_error   printf
 
 // FIXME BADLY !!!
 // This should be in a context somewhere
