@@ -39,12 +39,18 @@ ADM_DECLARE_AUDIODEVICE(AlsaDmix,alsaAudioDevice,1,0,0,"Alsa Audio Device (dmix)
 #define ADEVICE "dmix"
 #endif
 
-#if ADM_ADEVICE_HW
+#ifdef ADM_ADEVICE_HW
 #define alsaAudioDevice alsaAudioDeviceHw0
 #include  "ADM_deviceALSA.h"
-
 ADM_DECLARE_AUDIODEVICE(AlsaHw0,alsaAudioDevice,1,0,0,"Alsa Audio Device (hw:0) (c) Mean 2008");
 #define ADEVICE "hw:0"
+#endif
+
+#ifdef ADM_ADEVICE_DEFAULT
+#define alsaAudioDevice alsaAudioDeviceDefault
+#include  "ADM_deviceALSA.h"
+ADM_DECLARE_AUDIODEVICE(AlsaDefault,alsaAudioDevice,1,0,0,"Alsa Audio Device (default) (c) Mean 2009");
+#define ADEVICE "default"
 #endif
 
 
@@ -152,7 +158,7 @@ bool alsaAudioDevice::localInit( void )
     }
 #else
 
- 	unsigned int buffer_time = 800000;
+ 	unsigned int buffer_time = 100LL*1000LL; // 800 Ms ?
 	int er;
 	unsigned int buff;
 	dir=0;
@@ -332,7 +338,7 @@ uint8_t alsaAudioDevice::setVolume(int volume){
 		snd_mixer_close(mixer_handle);
 		ADM_dealloc(pcm_name);
 		return 0;
-	}
+}
 	ADM_dealloc(pcm_name);
 	if( (rc=snd_mixer_selem_register(mixer_handle,NULL,NULL)) < 0 ){
 		printf("[Alsa]: snd_mixer_selem_register failed: %d\n",rc);
@@ -342,8 +348,7 @@ uint8_t alsaAudioDevice::setVolume(int volume){
 	if( (rc=snd_mixer_load(mixer_handle)) < 0 ){
 		printf("[Alsa]: snd_mixer_load failed: %d\n",rc);
 		snd_mixer_close(mixer_handle);
-		return 0;
-	}
+		return 0;}
 	{ snd_mixer_elem_t *elem;
 	  snd_mixer_selem_id_t *sid;
 	  const char *str;
