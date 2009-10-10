@@ -418,7 +418,7 @@ JSBool ADM_JSAvidemux::ClearSegments(JSContext *cx, JSObject *obj, uintN argc,
                 return JS_FALSE;
         printf("clearing segments \n");
         enterLock();
-        *rval = BOOLEAN_TO_JSVAL(video_body->deleteAllSegments());
+//        *rval = BOOLEAN_TO_JSVAL(video_body->deleteAllSegments());
 	leaveLock();
         updateAll();
         return JS_TRUE;
@@ -441,7 +441,7 @@ JSBool ADM_JSAvidemux::AddSegment(JSContext *cx, JSObject *obj, uintN argc,
         int c = JSVAL_TO_INT(argv[2]);
         aprintf("adding segment :%d %d %d\n",a,b,c);
         enterLock();
-        *rval = BOOLEAN_TO_JSVAL( video_body->addSegment(a,b,c));
+//        *rval = BOOLEAN_TO_JSVAL( video_body->addSegment(a,b,c));
 	leaveLock();
         updateAll();
         return JS_TRUE;

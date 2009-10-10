@@ -385,7 +385,7 @@ int nw;
       		if( frameEnd < frameStart ){
                   GUI_Error_HIG(QT_TR_NOOP("Marker A > B"), QT_TR_NOOP("Cannot copy."));
       		}else{
-    		   video_body->copyToClipBoard (frameStart,frameEnd);
+//    		   video_body->copyToClipBoard (frameStart,frameEnd);
       		}
 		break;
     case ACT_Paste:
@@ -590,12 +590,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
   ** we may get a relative path by cmdline
   */
   longname = ADM_PathCanonize(name);
-  if (mode)
-    res = video_body->addFile (longname, 1);
-  else
-  {
-    res = video_body->addFile (longname);
-  }
+  res = video_body->addFile (longname);
 //  DIA_StopBusy ();
 
   // forget last project file
@@ -778,7 +773,7 @@ A_appendAvi (const char *name)
 //  DIA_StopBusy ();
 
 
-  video_body->dumpSeg ();
+//  video_body->dumpSeg ();
   if (!video_body->updateVideoInfo (avifileinfo))
     {
       GUI_Error_HIG (QT_TR_NOOP("Something bad happened (II)"), NULL);
@@ -904,6 +899,7 @@ void A_parseECMAScript(const char *name){
 */
 void A_videoCheck( void)
 {
+#if 0
 uint32_t nb=0;
 //uint32_t buf[720*576*2];
 uint32_t error=0;
@@ -936,7 +932,7 @@ else
 
 	}
 	GUI_GoToFrame(0);
-
+#endif
 }
 int A_delete(uint32_t start, uint32_t end)
 {
@@ -956,13 +952,14 @@ uint32_t count;
 	  return 0;
 	}
 
-      video_body->dumpSeg ();
-      if (!video_body->removeFrames (start, end))
+//      video_body->dumpSeg ();
+//      if (!video_body->removeFrames (start, end))
+    if(0)
 	{
           GUI_Error_HIG (QT_TR_NOOP("Something bad happened"), NULL);
 	  return 0;
 	}
-      video_body->dumpSeg ();
+//      video_body->dumpSeg ();
       //resync GUI and video
       if (!video_body->updateVideoInfo (avifileinfo))
 	{
@@ -1238,8 +1235,8 @@ uint32_t GUI_GetScale(void)
 */
 uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame)
 {
-  uint32_t flags;
-  if(!video_body->getUncompressedFrame(frame,image,&flags)) return 0;
+//  uint32_t flags;
+//  if(!video_body->getUncompressedFrame(frame,image,&flags)) return 0;
   return 1;
 }
 /**
@@ -1285,7 +1282,7 @@ void GUI_avsProxy(void)
 
 
   GUI_close();
-  res = video_body->addFile ("avsproxy.avs",0);
+  res = video_body->addFile ("avsproxy.avs");
   // forget last project file
   if( actual_workbench_file ){
      ADM_dealloc(actual_workbench_file);

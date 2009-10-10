@@ -261,6 +261,16 @@ bool            ADM_Composer::getExtraData(uint32_t *l, uint8_t **d)
     return trk->stream->getExtraData(l,d); 
 
 }
+/**
+    \fn getTrack
+*/
+ADM_audioStreamTrack *ADM_Composer::getTrack(uint32_t i)
+{
+    _VIDEOS *v=_segments.getRefVideo(0);
+    if(!v->audioTracks) return NULL;
+
+    return v->audioTracks[v->currentAudioStream];
+}
 
 //EOF
 

@@ -18,14 +18,16 @@
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
 
-
+/**
+    \fn searchNextKeyFrame
  //             Input : frame <b>as seen by GUI  </b>
  //     Output, segment & relframe previous keyframe
  //
-uint8_t
-  ADM_Composer::searchNextKeyFrame (uint32_t in, uint32_t * oseg,
+*/
+uint8_t   ADM_Composer::searchNextKeyFrame (uint32_t in, uint32_t * oseg,
 				    uint32_t * orel)
 {
+#if 0
   uint32_t relframe;
   uint32_t seg, flags;
   uint8_t switched = 0;
@@ -44,7 +46,7 @@ uint8_t
       return 0;
     }
 
-  while (seg < _nb_segment)
+  while (seg < _segments.size())
     {
       ref = _segments[seg]._reference;
       // Search next kf in seg
@@ -77,6 +79,8 @@ uint8_t
       relframe = _segments[seg]._start_frame;
       switched = 1;
     }
+#endif
+#warning : Obsolete!
   return 0;
 
 }
@@ -86,6 +90,7 @@ uint8_t
   ADM_Composer::searchPreviousKeyFrame (uint32_t in, uint32_t * oseg,
 					uint32_t * orel)
 {
+#if 0
   uint32_t relframe;
   uint32_t seg, flags;
   uint32_t ref;
@@ -149,6 +154,8 @@ uint8_t
     }
   while (1);
   printf ("\n failed pkf..\n");
+#endif
+#warning obsolete
   return 0;
 
 }

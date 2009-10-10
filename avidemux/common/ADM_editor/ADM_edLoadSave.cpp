@@ -35,20 +35,7 @@ extern uint32_t frameStart,frameEnd;
 static uint32_t edFrameStart,edFrameEnd;
 const char *getCurrentContainerAsString(void);
 
-uint8_t ADM_Composer::getMarkers(uint32_t *start, uint32_t *end)
-{
-	if(_haveMarkers)
-		{
-			*start=edFrameStart;
-			*end=edFrameEnd;		
-		}
-	else
-		{
-			*start=0;
-			*end=_total_frames-1;
-		}
-	return 1;		
-}
+
 //______________________________________________
 // Save the config, including name, segment etc...
 //______________________________________________
@@ -67,7 +54,7 @@ const char *truefalse[]={"false","true"};
 printf("\n **Saving script project **\n");
   char *    tmp;
 
-  if (!_nb_segment)
+  if (!_segments.getNbSegments())
     return 1;
 
   FILE *    fd;
@@ -87,11 +74,11 @@ printf("\n **Saving script project **\n");
 
   qfprintf (fd, "var app = new Avidemux();\n");
   qfprintf (fd,"\n//** Video **\n");
-  qfprintf (fd,"// %02ld videos source \n", _nb_video);
+  qfprintf (fd,"// %02ld videos source \n", _segments.getNbRefVideos());
   char *nm;
   uint32_t vop=!!(video_body->getSpecificMpeg4Info()&ADM_VOP_ON);
-
-  for (uint32_t i = 0; i < _nb_video; i++)
+#if 0
+  for (uint32_t i = 0; i < _videos.size(); i++)
     {
         nm=ADM_cleanupPath(_videos[i]._aviheader->getMyName() );
         if(vop)
@@ -108,12 +95,12 @@ printf("\n **Saving script project **\n");
         }
         ADM_dealloc(nm);
     }
-  
-  qfprintf (fd,"//%02ld segments\n", _nb_segment);
+#endif  
+  qfprintf (fd,"//%02ld segments\n", _segments.getNbSegments());
   qfprintf (fd,"app.clearSegments();\n");
   
  
-
+#if 0
 for (uint32_t i = 0; i < _nb_segment; i++)
     {
         uint32_t src,start,nb;
@@ -122,6 +109,7 @@ for (uint32_t i = 0; i < _nb_segment; i++)
                 nb=_segments[i]._nb_frames;
                 qfprintf (fd, "app.addSegment(%lu,%lu,%lu);\n",src,start,nb);
     }
+#endif
 // Markers
 //
         qfprintf(fd,"app.markerA=%d;\n",frameStart);

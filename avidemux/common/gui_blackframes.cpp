@@ -141,6 +141,7 @@ uint8_t  fastIsNotBlack(int darkness,ADMImage *img)
 
 void GUI_NextPrevBlackFrame(int dir)
 {
+#if 0
    uint32_t f;
    uint32_t flags;
    uint16_t reresh_count=0;
@@ -197,7 +198,7 @@ void GUI_NextPrevBlackFrame(int dir)
    }
 //    admPreview::update( curframe) ;
     GUI_setCurrentFrameAndTime();
-
+#endif
    return ;
 }
 /**
@@ -206,6 +207,7 @@ void GUI_NextPrevBlackFrame(int dir)
 */
 uint8_t A_ListAllBlackFrames(char *name)
 {
+#if 0
     uint32_t f;
     uint32_t flags;
     uint32_t startframe;
@@ -267,6 +269,7 @@ uint8_t A_ListAllBlackFrames(char *name)
     fclose(fd);
     delete work;
     GUI_GoToFrame(startframe);
+#endif
     return 1;
 }
 //EOF

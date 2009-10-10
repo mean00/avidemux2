@@ -29,6 +29,9 @@
 #endif
 
 #include "ADM_pp.h"
+#define ADM_warning printf
+#define ADM_info    printf
+#define ADM_error   printf
 
 // FIXME BADLY !!!
 // This should be in a context somewhere
@@ -41,15 +44,14 @@ static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
 */
 bool        ADM_Composer::GoToIntra(uint32_t frame)
 {
-uint32_t relframe, seg, flags, len;
+uint32_t relframe, ref, flags, len;
 
-  // convert frame to block, relative frame
-  if (!convFrame2Seg (frame, &seg, &relframe))
+    if(_segments.getRefFromFrame(frame,&ref,&relframe)==false)
     {
-      printf ("[ADMComposer::goToIntra] Conversion failed for frame %"LU" !\n",frame);
-      return false;
+        ADM_warning("[GoToIntra] Cannot convert frame %"LU"\n",frame);
+        return false;
     }
-    return DecodePictureUpToIntra(relframe,seg);
+    return DecodePictureUpToIntra(relframe,ref);
 }
 /**
     \fn GoToTime
@@ -97,14 +99,18 @@ bool        ADM_Composer::samePicture(ADMImage *image)
 */
 bool        ADM_Composer::getCompressedPicure(uint32_t framenum,ADMCompressedImage *img)
 {
-uint8_t ref = 0;
-
-    _VIDEOS *vid=&_videos[ref];
+uint32_t ref = 0,relative=0;
+    if(false==_segments.getRefFromFrame(framenum,&ref,&relative))
+    {
+        ADM_warning("[getCompressedPicure] Cannot get ref+frame to frame %"LD"\n",framenum);
+        return false;
+    }
+    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
 
     img->cleanup(framenum);
 
-    if (!demuxer->getFrame (framenum,img)) return false;
+    if (!demuxer->getFrame (relative,img)) return false;
     return true;
 }
 //***************************** Internal API**************************
@@ -132,9 +138,9 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     img.cleanup(frame);
 
     printf("[EditorRender] DecodeUpToInta %u ref:%u\n",frame,ref);
-	_VIDEOS *vid=&_videos[ref];
+	_VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
-	cache=_videos[ref]._videoCache;
+	cache=_segments.getRefVideo(ref)->_videoCache;
 	ADM_assert(cache);
     // Make sure frame is an intra
     demuxer->getFlags(frame,&flags);
@@ -145,7 +151,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
     uint32_t nbFrames=vid->_nb_video_frames;
     aprintf("[EditorRender] DecodeUpToIntra flushing cache & codec\n");
     cache->flush();
-    _videos[ref].decoder->flush();
+    vid->decoder->flush();
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=vid->_aviheader->estimatePts(frame);
     uint32_t tries=15+7; // Max Ref frames for H264 + MaxRecovery , let's say 7 is ok for recovery
@@ -240,9 +246,9 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t frame,uint32_t ref)
 */
 bool ADM_Composer::getSamePicture(ADMImage *out,uint32_t ref)
 {
-    _VIDEOS *vid=&_videos[ref];
+    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
-	EditorCache   *cache =_videos[ref]._videoCache;
+	EditorCache   *cache =vid->_videoCache;
 	ADM_assert(cache);
 
   ADMImage *in=cache->getByPts(vid->lastDecodedPts);
@@ -265,9 +271,9 @@ bool ADM_Composer::getSamePicture(ADMImage *out,uint32_t ref)
 */
 bool ADM_Composer::getNextPicture(ADMImage *out,uint32_t ref)
 {
-  EditorCache   *cache=_videos[ref]._videoCache;
+  EditorCache   *cache=_segments.getRefVideo(ref)->_videoCache;
   ADMImage	*result;
-  _VIDEOS *vid=&_videos[ref];
+  _VIDEOS *vid=_segments.getRefVideo(ref);
 
    uint32_t loop=20; // Try 20 frames ahead
 
@@ -324,9 +330,9 @@ uint8_t ret = 0;
   ADMImage	*result;
   uint32_t  flags;
   ADMCompressedImage img;
-   _VIDEOS *vid=&_videos[ref];
+   _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
-	cache=_videos[ref]._videoCache;
+	cache=vid->_videoCache;
     // PlaceHolder...
     img.data=compBuffer;
     img.cleanup(vid->lastSentFrame+1);
@@ -392,7 +398,8 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 {
  ADMImage *tmpImage=NULL;
  uint32_t ww,hh,left,right;
- uint32_t refOnly=_videos[ref].decoder->dontcopy(); // can we skip one memcpy ?
+ _VIDEOS *v=_segments.getRefVideo(ref);
+ uint32_t refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
 // This is only an empty Shell
     if(refOnly)
     {
@@ -424,7 +431,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     //
     tmpImage->_colorspace=ADM_COLOR_YV12;
 	// Decode it
-        if (!_videos[ref].decoder->uncompress (in, tmpImage))
+        if (!v->decoder->uncompress (in, tmpImage))
 	    {
             printf("[decompressImage] uncompress failed\n");
             return false;
@@ -472,7 +479,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 	// Pp deactivated ?
 	if(!_pp.postProcType || !_pp.postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
     {
-        dupe(tmpImage,out,&(_videos[ref]));
+        dupe(tmpImage,out,v);
         aprintf("EdCache: Postproc disabled\n");
 		return 1;
 	}
@@ -596,293 +603,6 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     return true;
 }
 
-/**_____________________________________________________________________
-		Main function
-		Caller ask for a frame from the editor
-		We first split it to segment and frame from that segment
-			then look if it is in the cache
-		If not and if there is Bframe we look if it is the forward
-			reference frame we currently have
-
-_______________________________________________________________________*/
-uint8_t  ADM_Composer::getUncompressedFrame (uint32_t frame, ADMImage * out,
-				      uint32_t * flagz)
-{
-  // first get segment
-  uint32_t relframe, seg, flags, len;
-  uint8_t ret = 0;
-  EditorCache   *cache;
-  ADMImage	*result;
-
-//    static uint32_t lastlen=0;
-    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
-    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
-    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
-    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
-    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
-    printf("[getUncompressedFrame] *************** OBSOLETE FUNCTION CALLED **********************\n");
-	if(flagz)
-			*flagz=0;
-
-  // convert frame to block, relative frame
-  if (!convFrame2Seg (frame, &seg, &relframe))
-    {
-      printf ("\n Conversion failed !\n");
-      return 0;
-    }
-  uint32_t ref = _segments[seg]._reference;
-  uint32_t llen = _videos[ref]._aviheader->getWidth ()
-  				  * _videos[ref]._aviheader->getHeight ();
-	llen = llen + (llen >> 1);
-	_VIDEOS *vid=&_videos[ref];
-	cache=_videos[ref]._videoCache;
-	ADM_assert(cache);
-
-	aprintf("Ed: Request for frame %"LU" seg %"LU", old frame:%"LU" old seg:%"LU"\n",relframe,seg,_lastframe,_lastseg);
-
-	// First look in the cache
-
-	if((result=cache->getImage(relframe)))
-	{
-		aprintf(">>frame %"LU" is cached...\n",relframe);
-		out->duplicate(result);
-		if(flagz)
-			*flagz=result->flags;
-		return 1;
-	}
-	else
-	{
-		aprintf("frame %"LU" is not cached...\n",relframe);
-	}
-//
-
-//	Prepare the destination...
-	result=cache->getFreeImage();
-#ifdef VERBOSE
-	cache->dump();
-#endif
-
-  // now we got segment and frame
-  //*************************
-  // Is is a key frame ?
-  //*************************
-  _videos[ref]._aviheader->getFlags (relframe, &flags);
-
-    if (flags & AVI_KEY_FRAME)
-    {
-    	aprintf("keyframe\n");     	
-        if(!decodeCache(relframe,ref, result))
-		{
-			printf("[edRender]Editor: Cannot deccode keyframe %"LU"\n",relframe);
-			return 0;
-		}
-        _lastseg = seg;
-        _lastframe = relframe;
-        if(flagz)
-            *flagz=result->flags;
-        out->duplicate(result);
-        return (1);
-    }
-
-    //*************************
-    // following frame ?
-    // If it a  next b-frame we already have the forward reference set
-    // if it is a first B-frame --> do it
-    //
-    //*************************
-      if ((seg == _lastseg) && ((_lastframe + 1) == relframe))
-	{
-	aprintf("following frame\n");
-	// B Frame ?
-#if 0
-	if(_videos[ref]._aviheader->isReordered())
-	{
-		// The frame we seek is not in cache, so
-		if(!_videos[ref]._aviheader->getFlags (relframe, &flags))
-		{
-			printf("Editor : Getflags failed\n");
-			return 0;
-		}
-		// if it is a b frame we decode all of them up to
-		// the next ip included and put all this in cache
-		if(flags & AVI_B_FRAME)
-		{
-			// decode all of them up to the next I/P frame
-			uint32_t nextIp=relframe;
-
-			while((flags&AVI_B_FRAME))
-			{
-				nextIp++;
-				_videos[ref]._aviheader->getFlags (nextIp, &flags);
-
-			}
-			// Decode it
-			if(!decodeCache(nextIp,ref, result))
-			{
-				printf("Editor: Cannot read ip frame %"LU"\n",nextIp);
-				return 0;
-			}
-
-
-			// And now go forward...
-			uint32_t seeked=relframe;
-			while(seeked<nextIp)
-			{
-				result=cache->getFreeImage();
-				if(!decodeCache(seeked,ref, result))
-				{
-					printf("Editor: Cannot read ip frame %"LU"\n",nextIp);
-					return 0;
-				}
-				if(seeked==relframe)
-				{
-					 out->duplicate(result);
-					 if(flagz) *flagz=result->flags;
-				}
-				seeked++;
-			}
-			_lastframe=nextIp;
-			_lastseg = seg;
-			return 1;
-		}
-
-	}
-#endif
-	// No b frame...
-
-      	 if(!decodeCache(relframe,ref, result))
-			{
-				printf("Editor: Cannot read ip frame %"LU"\n",relframe);
-				return 0;
-			}
-	if(flagz)
-		*flagz=result->flags;
-	out->duplicate(result);
-	_lastframe=relframe;
-	_lastseg = seg;
-	return 1;
-    }
-  //*************************
-  // completly async frame
-  // rewind ?
-  //*************************
-
-  aprintf("async  frame, wanted : %"LU" last %"LU" (%"LU" - %"LU" seg)\n",relframe,_lastframe,seg,_lastseg);
-  uint32_t rewind;
-  uint32_t seekFlag=0;
-
-  _videos[ref]._aviheader->getFlags (relframe, &seekFlag);
-
-  flags = 0;
-  uint32_t need_rewind=1;
-  rewind = relframe;
-  ADM_assert(rewind); // the first frame should be a keyframe !
-  while (!(flags & AVI_KEY_FRAME))
-  {
-  	rewind--;
-  	_videos[ref]._aviheader->getFlags (rewind, &flags);
-   }
-   // Optimize for resample FPS*************************
-   // If we are in the same segment, look if it is better to decode
-    // From where we are or to seek the previous intra
-   if ((seg == _lastseg))
-   {
-     if(rewind<_lastframe && relframe>_lastframe) // we have a better position to go from
-     {
-       for (uint32_t i = _lastframe+1; i <relframe; i++)
-       {
-
-         _videos[ref]._aviheader->getFlags (i, &flags);
-      // Skip B frames, there can be a lot of them
-         if((flags&AVI_B_FRAME)) continue;
-
-         if(!decodeCache(i,ref, result))
-         {
-           printf("Editor: Cannot read ip frame %"LU"\n",relframe);
-           return 0;
-         }
-         result=cache->getFreeImage();
-       }
-       need_rewind=0;
-     }
-   }
-   // Optimize for resample FPS*************************
-   //
-  // now forward
-  // IP seen is the last P (or I) before the frame we seek
-   if(need_rewind)
-   {
-        for (uint32_t i = rewind; i <relframe; i++)
-        {
-
-                _videos[ref]._aviheader->getFlags (i, &flags);
-                // Skip B frames, there can be a lot of them
-                if((flags&AVI_B_FRAME)) continue;
-
-                if(!decodeCache(i,ref, result))
-	        {
-		      printf("Editor: Cannot read ip frame %"LU"\n",relframe);
-		      return 0;
-	        }
-	        result=cache->getFreeImage();
-        }
-   }
-      // Time to decode our frame
-      // if it is not a B, just decode it
-      // it it is a B, the usual stuff
-      if(!seekFlag)
-      {
-      		if(!decodeCache(relframe,ref, result))
-			{
-				printf("Editor: Cannot read ip frame %"LU"\n",relframe);
-				return 0;
-			}
-		if(flagz)
-			*flagz=result->flags;
-		out->duplicate(result);
-		_lastframe=relframe;
-		_lastseg=seg;
-		return 1;
-
-      }
-      // it is a b frame
-      // decode all of them up to the next I/P frame
-	uint32_t nextIp=relframe;
-	flags=AVI_B_FRAME;
-	while((flags&AVI_B_FRAME))
-	{
-		nextIp++;
-		_videos[ref]._aviheader->getFlags (nextIp, &flags);
-	}
-	// Decode it
-	if(!decodeCache(nextIp,ref, result))
-	{
-		printf("Editor: Cannot read ip frame %"LU"\n",nextIp);
-		return 0;
-	}
-
-
-	// And now go forward...
-	uint32_t seeked=relframe;
-	while(seeked<nextIp)
-	{
-		result=cache->getFreeImage();
-		if(!decodeCache(seeked,ref, result))
-		{
-			printf("Editor: Cannot read ip frame %"LU"\n",nextIp);
-			return 0;
-		}
-		if(seeked==relframe)
-		{
-			 out->duplicate(result);
-			 if(flagz) *flagz=result->flags;
-		}
-		seeked++;
-	}
-	_lastframe=nextIp;
-	_lastseg=seg;
-  	return 1;
-}
 
 
 /**
@@ -896,29 +616,40 @@ uint8_t		ADM_Composer::decodeCache(uint32_t frame,uint32_t seg, ADMImage *image)
 
 uint32_t sumit;
 float	 sum;
-EditorCache *cache=_videos[seg]._videoCache;
+
+uint32_t ref,refOffset;
+
+        if(false==_segments.getRefFromFrame(frame,&ref,&refOffset))
+        {
+            ADM_warning("[decodeCache] Cannot get ref for frame %"LD"\n",frame);
+            return false;
+        }
+
+
+_VIDEOS *v=_segments.getRefVideo(ref); // FIXME!!!!
+EditorCache *cache=v->_videoCache;
 ADMImage *tmpImage=NULL;
 uint8_t refOnly=0;
 uint32_t left,ww;
 ADMCompressedImage img;
 
-        aprintf("decodeCache : Frame %u\n",frame);
+        aprintf("decodeCache : original :%"LD" Frame in ref %"LD"\n",frame,refOffset);
         img.data=compBuffer;
         img.cleanup(frame);
-    // Step 1, retrieve the compressed datas, including PTS & DTS infos
-	 if (!_videos[seg]._aviheader->getFrame (frame,&img))
-	{
-	  printf ("\nEditor: last decoding failed.%"LD")\n",   frame );
-	  return 0;
-	}
+        // Step 1, retrieve the compressed datas, including PTS & DTS infos
+         if (!v->_aviheader->getFrame (refOffset,&img))
+        {
+          ADM_warning ("Editor: last decoding failed.%"LD")\n",   refOffset );
+          return 0;
+        }
         ADM_assert(_imageBuffer);
 
         // if len is 0 then take the previous image
         //
 
-        refOnly=_videos[seg].decoder->dontcopy(); // can we skip one memcpy ?
+        refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
 
-        if(!img.dataLength & refOnly & !frame)      // Size is null = no image and we only got a pointer
+        if(!img.dataLength & refOnly & !refOffset)      // Size is null = no image and we only got a pointer
                                 // copy the previous one
         {
                 // First image
@@ -927,7 +658,7 @@ ADMCompressedImage img;
                         memset(YPLANE(image),0,page);
                         memset(UPLANE(image),128,page>>2);
                         memset(VPLANE(image),128,page>>2);
-                        if(!frame)
+                        if(!refOffset)
                                 image->flags=AVI_KEY_FRAME;
                         else
                                 image->flags=AVI_P_FRAME;
@@ -965,18 +696,18 @@ ADMCompressedImage img;
        }
 	tmpImage->_colorspace=ADM_COLOR_YV12;
 	// Do pp, and use imageBuffer as intermediate buffer
-	if (!_videos[seg].decoder->uncompress (&img, tmpImage))
+	if (!v->decoder->uncompress (&img, tmpImage))
 	    {
-	      printf ("\nEditor: Last Decoding2 failed for frame %"LU"\n",frame);
+	      printf ("\nEditor: Last Decoding2 failed for frame %"LU"\n",refOffset);
 	       // Try to dupe previous frame
-                if(frame)
+                if(refOffset)
                 {
                         ADMImage *prev;
-                        prev=cache->getImage(frame-1);
+                        prev=cache->getImage(refOffset-1);
                         if(prev)
                         {
                                 image->duplicate(prev);
-                                cache->updateFrameNum(image,frame);
+                                cache->updateFrameNum(image,refOffset);
                                 return 1;
                         }
                 }
@@ -984,7 +715,7 @@ ADMCompressedImage img;
            }
 
         //
-        if(tmpImage->_noPicture && refOnly && frame)
+        if(tmpImage->_noPicture && refOnly && refOffset)
         {
                 cache->updateFrameNum(image,0xffffffffU);
                 return 0;
@@ -994,7 +725,7 @@ ADMCompressedImage img;
 	{
 		image->_Qp=2;
 		image->duplicate(tmpImage);
-		cache->updateFrameNum(image,frame);
+		cache->updateFrameNum(image,refOffset);
           //      if(refOnly) delete tmpImage;
 		aprintf("EdCache: No quant avail\n");
 		return 1;
@@ -1025,9 +756,9 @@ ADMCompressedImage img;
 
 	// Pp deactivated ?
 	if(!_pp.postProcType || !_pp.postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
-         {
-                dupe(tmpImage,image,&(_videos[seg]));
-		cache->updateFrameNum(image,frame);
+     {
+        dupe(tmpImage,image,v);
+		cache->updateFrameNum(image,refOffset);
                // if(refOnly) delete tmpImage;
 		aprintf("EdCache: Postproc disabled\n");
 		return 1;
@@ -1154,7 +885,7 @@ ADMCompressedImage img;
 _next:
         // update some infos
         //   if(refOnly) delete tmpImage;
-		cache->updateFrameNum(image,frame);
+		cache->updateFrameNum(image,refOffset);
 		aprintf("EdCache: Postproc done\n");
 		return 1;
 }
@@ -1188,7 +919,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 */
 uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t swapuv)
 {
-	if(!_nb_video) return 0;
+	if(!_segments.getNbRefVideos()) return 0;
 	_pp.postProcType=type;
 	_pp.postProcStrength=strength;
         _pp.swapuv=swapuv;
@@ -1201,7 +932,7 @@ uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t sw
 
 uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t *swapuv)
 {
-	if(!_nb_video) return 0;
+	if(!_segments.getNbRefVideos()) return 0;
 	*type=_pp.postProcType;
 	*strength=_pp.postProcStrength;
 	*swapuv=_pp.swapuv;
@@ -1213,7 +944,7 @@ uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t 
     \fn getPKFrame
     \brief returns the keyFrame strictly before *frame
 */
-uint8_t	ADM_Composer::getPKFrame(uint32_t *frame)
+bool	ADM_Composer::getPKFrame(uint32_t *frame)
 {
 	uint32_t fr, seg, relframe;	//,len; //flags,ret,nf;
 
@@ -1221,22 +952,27 @@ uint8_t	ADM_Composer::getPKFrame(uint32_t *frame)
 
   if (*frame == 0)
     {
-      return 0;
+      return false;
     }
   if (!searchPreviousKeyFrame (fr, &seg, &relframe))
     {
       printf (" NKF not found\n");
-      return 0;
+      return false;
     }
-  ADM_assert (convSeg2Frame (frame, seg, relframe));
-  return 1;
+    if(false==_segments.getFrameFromRef(frame,seg,relframe))
+    {
+        ADM_warning("[getPKFrame] getFrameFromRef failed for sefg : %"LD" reframe %"LD"\n",seg,relframe);
+        return false;
+    }
+  return true;
+
 }
 /**
     \fn getNKFrame
     \brief returns the keyFrame strictly after *frame
 */
 
-uint8_t	ADM_Composer::getNKFrame(uint32_t *frame)
+bool	ADM_Composer::getNKFrame(uint32_t *frame)
 {
 	uint32_t fr, seg, relframe;	//,len; //flags,ret,nf;
 
@@ -1246,8 +982,12 @@ uint8_t	ADM_Composer::getNKFrame(uint32_t *frame)
       printf (" NKF not found\n");
       return 0;
     }
-  ADM_assert (convSeg2Frame (frame, seg, relframe));
-  return 1;
+    if(false==_segments.getFrameFromRef(frame,seg,relframe))
+    {
+        ADM_warning("[getNKFrame] getFrameFromRef failed for sefg : %"LD" reframe %"LD"\n",seg,relframe);
+        return false;
+    }
+  return true;
 }
 
 #if 0
@@ -1306,11 +1046,20 @@ bool        ADM_Composer::setCurrentFrame(uint32_t frame)
 }
 /**
     \fn searchFrameBefore
-    \brief rEturn the frame number with pts just before pts
+    \brief Return the frame number with pts just before pts
 */
 uint32_t ADM_Composer::searchFrameBefore(uint64_t pts)
 {
-    _VIDEOS   *vid=&_videos[0];
+uint64_t refTime;
+uint32_t ref;
+    if(false==_segments.getRefFromTime(pts,&ref,&refTime))
+    {
+        ADM_warning("[searchFrameBefore] Failed for pts %"LLU"\n",pts);
+        ref=0;
+        refTime=pts;
+    }
+#warning fix over-seg issue
+    _VIDEOS   *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     uint64_t  lastPts=demuxer->getTime(0);
     uint32_t  nb=demuxer->getVideoStreamHeader()->dwLength;
@@ -1336,8 +1085,8 @@ bool    ADM_Composer::getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out
 {
     int ref=0;
     EditorCache   *cache;
-	_VIDEOS *vid=&_videos[ref];
-	cache=_videos[ref]._videoCache;
+	_VIDEOS *vid=_segments.getRefVideo(0);
+	cache=vid->_videoCache;
 	ADM_assert(cache);
         ADMImage *r=cache->findLastBefore(pts);
         if(!r) return false;
@@ -1351,7 +1100,14 @@ bool    ADM_Composer::getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out
 */
 bool        ADM_Composer::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
-     _VIDEOS   *vid=&_videos[0];
+uint32_t ref,refOffset;
+    if(_segments.getRefFromFrame(frame,&ref,&refOffset)==false)
+    {
+        ADM_warning("[Composer::getPtsDts] Cannot get ref video for frame %"LD"\n",frame);
+        return false;
+    }
+ 
+     _VIDEOS   *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     return demuxer->getPtsDts(frame,pts,dts); // FIXME : Rescale frame number
 

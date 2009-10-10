@@ -1,0 +1,131 @@
+/***************************************************************************
+     \file  ADM_segment.h
+     \brief Handle segment
+
+    (C) 2002-2009 Mean, fixounet@free.Fr
+
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+#ifndef ADM_SEGMENT_H
+#define ADM_SEGMENT_H
+#include <vector>
+class ADM_audioStream;
+class ADM_Audiocodec;
+class decoders;
+class COL_Generic2YV12;
+class EditorCache;
+#include "ADM_Video.h"
+/**
+    \class ADM_audioStreamTack
+    \brief Place Holder for demuxer audio tracks.
+*/
+class ADM_audioStreamTrack
+{
+public:
+    ADM_audioStream  *stream;
+    audioInfo        *info;
+    ADM_Audiocodec   *codec;
+    WAVHeader		 wavheader;
+    bool             vbr;
+    uint64_t         duration;
+    uint64_t         size;
+
+public:
+    ADM_audioStreamTrack() {memset(this,0,sizeof(*this));}
+    ~ADM_audioStreamTrack()
+    {
+        stream=NULL;
+        info=NULL;   // These 2 are destroyed by the demuxer itself
+        if(codec) 
+        {
+            delete codec;
+            codec=NULL;
+        }
+    }
+};
+/**
+    \struct _VIDEOS
+    \brief The _VIDEOS struct is a video we have loaded.
+*/
+typedef struct
+{
+  	vidHeader 							*_aviheader;  /// Demuxer
+  	decoders							*decoder;     /// Video codec
+    COL_Generic2YV12                    *color;       /// Color conversion if needed
+
+	/* Audio part */
+
+    uint32_t                            nbAudioStream;   
+    uint32_t                            currentAudioStream;
+    ADM_audioStreamTrack                **audioTracks;
+
+	uint32_t							_nb_video_frames;  /// Really needed ?	
+	EditorCache							*_videoCache;      /// Decoded video cache
+
+    /* Timeing info */
+
+    uint32_t                            lastSentFrame;     /// Last frame read/sent to decoder
+    uint64_t                            lastDecodedPts;    /// Pts of last frame out of decoder
+    uint64_t                            lastReadPts;       /// Pts of the last frame we read
+    uint64_t                            timeIncrementInUs; /// in case the video has no PTS, time increment (us)
+}_VIDEOS;
+
+/**
+    \struct _SEGMENT
+    \brief The video is a collection of segment.
+            Each segment refers to its source (the reference) and the part of the source the segment is made of.
+*/
+typedef struct
+{
+  	uint32_t							_reference;       /// Reference video
+ 	uint64_t							_refStartTimeUs;  /// Starting time in reference
+    uint64_t                            _startTimeUs;     /// Start time in current (=sum(_duration of previous seg))
+	uint64_t							_durationUs;      ///
+
+}_SEGMENT;
+/*
+    Use vectors to store our videos & segments
+*/
+typedef std::vector <_VIDEOS>  ListOfVideos;
+typedef std::vector <_SEGMENT> ListOfSegments;
+
+/**
+    \class ADM_EditorSegment
+*/
+class ADM_EditorSegment
+{
+protected:
+        ListOfSegments segments;
+        ListOfVideos   videos;
+        bool           updateStartTime(void);
+
+public:
+                        ADM_EditorSegment(void);
+                        ~ADM_EditorSegment();
+            bool        addReferenceVideo(_VIDEOS *ref);
+            bool        deleteAll(void);
+            bool        resetSegment(void);
+
+            _VIDEOS     *getRefVideo(int i);
+            int         getNbRefVideos(void);
+
+            int         getNbSegments(void);
+            uint64_t    getTotalDuration(void);
+            uint32_t    getNbFrames(void);
+
+            bool        getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset);
+            bool        getRefFromFrame(uint32_t frame,uint32_t *refVideo, uint32_t *frameOffset);
+            bool        getFrameFromRef(uint32_t *frame,uint32_t refVideo, uint32_t frameOffset);
+
+};
+
+#endif
+//EOF
