@@ -69,8 +69,6 @@ class ADM_Composer : public ADM_audioStream
   					ADM_PP 		_pp;
 					ADMImage	*_imageBuffer;
   					uint8_t		decodeCache(uint32_t frame,uint32_t seg, ADMImage *image);
-  					uint32_t 	_total_frames;
-  					uint32_t 	_audio_size;
   					// _audiooffset points to the offset / the total segment
   					// not the used part !
   					uint32_t  _audioseg;
@@ -81,34 +79,15 @@ class ADM_Composer : public ADM_audioStream
        				uint32_t _lastseg,_lastframe,_lastlen;
 
                     ADM_audioStreamTrack *getTrack(uint32_t i);
-#if 0
-                                            {
-                                                if(!_videos[i].audioTracks) return NULL;
-                                                return _videos[i].audioTracks[_videos[i].currentAudioStream];
-                                            }
-#endif
-                    ADMImage        *_scratch;
-                    uint8_t 	crunch( void)																			;
-                    uint8_t 	duplicateSegment( uint32_t segno);
-                    uint32_t 	computeTotalFrames(void) ;
-
-                    uint8_t 	removeTo( 	uint32_t to, uint32_t seg,uint8_t included);
-                    uint8_t 	removeFrom( uint32_t from, uint32_t seg,uint8_t included);
-                    uint8_t 	checkInSeg( uint32_t seg, uint32_t frame);
-                    uint8_t 	sanityCheck( void);
+                    ADMImage    *_scratch;																		;
                     uint8_t  	updateAudioTrack(uint32_t seg);			   	
                     void 		deleteAllVideos(void );
-
                     uint8_t 	getMagic(const char *name,uint32_t *magic);
-
                     uint32_t 	searchForwardSeg(uint32_t startframe);
-                    uint8_t     tryIndexing(const char *name, const char *idxname=NULL);
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
                     bool        hasVBRAudio(void);
-                    uint8_t     addSegment(uint32_t source,uint32_t start, uint32_t nb);
-                    uint8_t     deleteAllSegments(void);
                     bool     	getExtraHeaderData(uint32_t *len, uint8_t **data);
                     uint32_t    getPARWidth(void);
                     uint32_t    getPARHeight(void);
@@ -116,27 +95,13 @@ class ADM_Composer : public ADM_audioStream
   								ADM_Composer();
   				virtual 			~ADM_Composer();
                     void		clean( void );
-                    void		dumpSeg(void);
                     uint8_t     saveAsScript (const char *name, const char *out);
                     uint8_t 	saveWorbench(const char *name);
                     uint8_t 	loadWorbench(const char *name);
                     uint8_t     resetSeg( void );
-                    uint8_t	    reorder( void );
-                    uint8_t	    isReordered( uint32_t framenum ) {return true;}
-                    uint8_t	    isIndexable( void);
-            //_______________________
-            // specific to composer
-            //_______________________
                     bool     	addFile (const char *name);
                     uint8_t 	cleanup( void);
                     bool 	    isMultiSeg( void);
-                    uint8_t 	removeFrames(uint32_t start,uint32_t end);
-                    uint8_t 	addFrameFrom(uint32_t to,uint32_t frombegin,uint32_t fromend);
-                    uint8_t 	copyToClipBoard (uint32_t start, uint32_t end);
-                    uint8_t 	pasteFromClipBoard (uint32_t whereto);
-            //_____________________________
-  				// navigation & frame functions
-  				//_____________________________
 /************************************* Markers *****************************/
 private:        
                     uint64_t    markerAPts,markerBPts;
@@ -151,7 +116,7 @@ protected:
                     uint32_t    currentFrame;
 public:
                     uint32_t    getCurrentFrame(void);
-                    
+                    uint64_t    getCurrentFramePts(void);
                     bool        setCurrentFrame(uint32_t frame);
                     bool        GoToIntra(uint32_t frame);
                     bool        GoToTime(uint64_t time);
@@ -175,26 +140,21 @@ public:
                     bool     	getNextPicture(ADMImage *out,uint32_t ref);
                                 /// Get again last decoded picture
                     bool        getSamePicture(ADMImage *out,uint32_t ref);
+
+                    bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
 /************************************ Internal ******************************/
                     uint8_t 	getFrame(uint32_t   framenum,ADMCompressedImage *img,uint8_t *isSequential);
                     
                 
                     uint64_t 	getTime(uint32_t fn);
                     uint32_t 	getFlags(uint32_t frame,uint32_t *flags);
-                    uint8_t   	isSequential (uint32_t framenum);
+
                             // B follow A with just Bframes in between
-                    uint8_t 	sequentialFramesB(uint32_t frameA,uint32_t frameB);
                     uint32_t 	getFlagsAndSeg (uint32_t frame, 
                                 uint32_t * flags,uint32_t *segs);
                     uint8_t  	setFlag(uint32_t frame,uint32_t flags);
                     uint8_t	    updateVideoInfo(aviInfo *info);
-
                     uint8_t  	getFrameSize(uint32_t frame,uint32_t *size) ;
-                    uint8_t		sanityCheckRef(uint32_t start, uint32_t end,
-                                uint32_t *fatal);
-                                            uint8_t         hasPtsDts(uint32_t ); // Return 1 if the container gives PTS & DTS info
-                                            uint32_t        ptsDtsDelta(uint32_t framenum) ;
-                //*******************************************	
                     uint32_t 	getSpecificMpeg4Info( void );
 /************************************ audioStream ******************************/
 protected:
@@ -235,7 +195,8 @@ public:
 /***************************************** Seeking *****************************/            
 		  			bool			getPKFrame(uint32_t *frame);
 					bool			getNKFrame(uint32_t *frame);
-					
+                    bool			getNKFramePTS(uint64_t *frameTime);
+                    bool			getPKFramePTS(uint64_t *frameTime);
                     bool			getUncompressedFrame(uint32_t frame,ADMImage *out,uint32_t *flagz=NULL);
 public:
                     
@@ -246,14 +207,7 @@ public:
 /******************************* Misc ************************************/				
 					uint8_t			setEnv(_ENV_EDITOR_FLAGS newflag);
 					uint8_t			getEnv(_ENV_EDITOR_FLAGS newflag);
-					decoders 		*rawGetDecoder(uint32_t frame);
 /******************************* /Misc ************************************/				
-/***** OBSOLETE API *****/
-/***** OBSOLETE API *****/
-/***** OBSOLETE API *****/
-protected:					// Obsolete									
-                    uint8_t			searchNextKeyFrame(uint32_t in,uint32_t *oseg, uint32_t * orel);
-                    uint8_t			searchPreviousKeyFrame(uint32_t in,uint32_t *oseg, uint32_t * orel);
 
 };
 #endif

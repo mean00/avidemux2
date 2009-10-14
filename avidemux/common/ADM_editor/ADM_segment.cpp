@@ -22,6 +22,8 @@
  #include "ADM_pp.h"
  #include "ADM_colorspace.h"
 
+#include "ADM_audiocodec/ADM_audiocodec.h"
+
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 
@@ -79,65 +81,49 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     return true;
 }
 
-/**
-    \fn deleteAll
-    \brief Delete all segments & ref video
-*/
-bool        ADM_EditorSegment::deleteAll(void)
-{
-#warning todo
-    return true;
-}
 
-#if 0
 /**
-	\fn Purge all videos
+	\fn deleteAll
     \brief delete datas associated with all video
 */
-void getFlags::deleteAllVideos (void)
+bool ADM_EditorSegment::deleteAll (void)
 {
-
-  for (uint32_t vid = 0; vid < _videos.size(); vid++)
+  ADM_info("[Editor] Deleting all video\n");
+  int n=videos.size();
+  for (uint32_t vid = 0; vid < n; vid++)
     {
-
+        _VIDEOS *v=&(videos[vid]);
       // if there is a video decoder...
-      if (_videos[vid].decoder)
-            delete _videos[vid].decoder;
-      if(_videos[vid].color)
-            delete _videos[vid].color;
-      // prevent from crashing
-      _videos[vid]._aviheader->close ();
-      delete _videos[vid]._aviheader;
-      if(_videos[vid]._videoCache)
-      	delete  _videos[vid]._videoCache;
-      _videos[vid]._videoCache=NULL;
+      if (v->decoder)
+            delete v->decoder;
+      if(v->color)
+            delete v->color;
+      v->_aviheader->close ();
+      delete v->_aviheader;
+      if(v->_videoCache)
+      	delete  v->_videoCache;
+      v->_videoCache=NULL;
+      v->color=NULL;
+      v->decoder=NULL;
+      v->_aviheader=NULL;
      // Delete audio codec too
      // audioStream will be deleted by the demuxer
-      if(_videos[vid].audioTracks)
+      if(v->audioTracks)
       {
-            for(int i=0;i<_videos[vid].nbAudioStream;i++)
+            for(int i=0;i<v->nbAudioStream;i++)
             {
-                delete _videos[vid].audioTracks[i];
+                delete v->audioTracks[i];
             }
-            delete [] _videos[vid].audioTracks;
-            _videos[vid].audioTracks=NULL;
+            delete [] v->audioTracks;
+            v->audioTracks=NULL;
       }
     }
 
-   if(_videos.size())
-    {
-        _videos.erase(_videos.begin(),_videos.begin()+_videos.size()-1);
-    }
-
-
-  if(_imageBuffer)
-  	delete _imageBuffer;
-  _imageBuffer=NULL;
-
+    videos.clear();
+    return true;
 }
 
-}
-#endif
+
 /**
     \fn resetSegment
     \brief Redo a 1:1 mapping between videos and segments
@@ -155,9 +141,19 @@ bool        ADM_EditorSegment::resetSegment(void)
         memset(&seg,0,sizeof(seg));
         seg._durationUs=vid->_aviheader->getVideoDuration();
         seg._reference=i;
+        segments.push_back(seg);
     }
     updateStartTime();
     return true;
+}
+/**
+    \fn getSegment
+    \brief getRefVideo
+*/
+_SEGMENT     *ADM_EditorSegment::getSegment(int i)
+{
+    ADM_assert(i<segments.size());
+    return &(segments[i]);
 }
 /**
     \fn getRefVideo
@@ -252,5 +248,37 @@ bool        ADM_EditorSegment::getFrameFromRef(uint32_t *frame,uint32_t refVideo
     *frame=frameOffset;
     return true;
 
+}
+/**
+    \fn ~ADM_audioStreamTrack
+*/
+ ADM_audioStreamTrack::~ADM_audioStreamTrack()
+    {
+        stream=NULL;
+        info=NULL;   // These 2 are destroyed by the demuxer itself
+        if(codec) 
+        {
+            delete codec;
+            codec=NULL;
+        }
+    }
+/**
+    \fn getCurrentSeg
+*/
+_SEGMENT   * ADM_EditorSegment::getCurrentSeg(void)
+{
+    return &(segments[0]);
+}
+
+bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime)
+{
+    *seg=0;
+    *segTime=frameTime;
+    return true;
+}
+bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime)
+{
+    *frameTime=segTime;
+    return true;
 }
 //EOF

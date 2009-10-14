@@ -935,57 +935,7 @@ uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t 
 	*swapuv=_pp.swapuv;
 	return 1;
 }
-//______________________________________________
-//_______________________________________________
-/**
-    \fn getPKFrame
-    \brief returns the keyFrame strictly before *frame
-*/
-bool	ADM_Composer::getPKFrame(uint32_t *frame)
-{
-	uint32_t fr, seg, relframe;	//,len; //flags,ret,nf;
 
-  fr = *frame;
-
-  if (*frame == 0)
-    {
-      return false;
-    }
-  if (!searchPreviousKeyFrame (fr, &seg, &relframe))
-    {
-      printf (" NKF not found\n");
-      return false;
-    }
-    if(false==_segments.getFrameFromRef(frame,seg,relframe))
-    {
-        ADM_warning("[getPKFrame] getFrameFromRef failed for sefg : %"LD" reframe %"LD"\n",seg,relframe);
-        return false;
-    }
-  return true;
-
-}
-/**
-    \fn getNKFrame
-    \brief returns the keyFrame strictly after *frame
-*/
-
-bool	ADM_Composer::getNKFrame(uint32_t *frame)
-{
-	uint32_t fr, seg, relframe;	//,len; //flags,ret,nf;
-
-  fr = *frame;
-  if (!searchNextKeyFrame (fr, &seg, &relframe))
-    {
-      printf (" NKF not found\n");
-      return 0;
-    }
-    if(false==_segments.getFrameFromRef(frame,seg,relframe))
-    {
-        ADM_warning("[getNKFrame] getFrameFromRef failed for sefg : %"LD" reframe %"LD"\n",seg,relframe);
-        return false;
-    }
-  return true;
-}
 
 #if 0
 uint8_t	ADM_Composer::isReordered( uint32_t framenum )
@@ -1041,74 +991,7 @@ bool        ADM_Composer::setCurrentFrame(uint32_t frame)
     }
     return true;
 }
-/**
-    \fn searchFrameBefore
-    \brief Return the frame number with pts just before pts
-*/
-uint32_t ADM_Composer::searchFrameBefore(uint64_t pts)
-{
-uint64_t refTime;
-uint32_t ref;
-    if(false==_segments.getRefFromTime(pts,&ref,&refTime))
-    {
-        ADM_warning("[searchFrameBefore] Failed for pts %"LLU"\n",pts);
-        ref=0;
-        refTime=pts;
-    }
-#warning fix over-seg issue
-    _VIDEOS   *vid=_segments.getRefVideo(ref);
-    vidHeader *demuxer=vid->_aviheader;
-    uint64_t  lastPts=demuxer->getTime(0);
-    uint32_t  nb=demuxer->getVideoStreamHeader()->dwLength;
 
-    if(lastPts>pts) return 0;
-
-	for(int i=1;i<nb-2;i++)
-    {
-        uint64_t cur,next;
-        cur=lastPts;
-        next=demuxer->getTime(i+1);
-        if(next==ADM_NO_PTS) next=cur+vid->timeIncrementInUs;
-        if(pts>=cur && pts<next) return i-1;
-        lastPts=next;
-    }
-    return nb-1;
-}
-/**
-    \fn getImageFromCacheForFrameBefore
-    \brief Search the cache for the image with PTS just before the input PTS
-*/
-bool    ADM_Composer::getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out)
-{
-    int ref=0;
-    EditorCache   *cache;
-	_VIDEOS *vid=_segments.getRefVideo(0);
-	cache=vid->_videoCache;
-	ADM_assert(cache);
-        ADMImage *r=cache->findLastBefore(pts);
-        if(!r) return false;
-        out->duplicateFull(r);
-        return true;
-
-}
-/**
-    \fn getPtsDts
-    \brief Return PTS & DTS for a given frame (in bitstream order)
-*/
-bool        ADM_Composer::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
-{
-uint32_t ref,refOffset;
-    if(_segments.getRefFromFrame(frame,&ref,&refOffset)==false)
-    {
-        ADM_warning("[Composer::getPtsDts] Cannot get ref video for frame %"LD"\n",frame);
-        return false;
-    }
- 
-     _VIDEOS   *vid=_segments.getRefVideo(ref);
-    vidHeader *demuxer=vid->_aviheader;
-    return demuxer->getPtsDts(frame,pts,dts); // FIXME : Rescale frame number
-
-}
 
 
 //EOF

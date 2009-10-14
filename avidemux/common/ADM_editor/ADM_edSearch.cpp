@@ -19,143 +19,153 @@
 #include "ADM_editor/ADM_edit.hxx"
 
 /**
-    \fn searchNextKeyFrame
- //             Input : frame <b>as seen by GUI  </b>
- //     Output, segment & relframe previous keyframe
- //
+    \fn getNKFramePTS
 */
-uint8_t   ADM_Composer::searchNextKeyFrame (uint32_t in, uint32_t * oseg,
-				    uint32_t * orel)
+bool	ADM_Composer::getNKFramePTS(uint64_t *frameTime)
 {
-#if 0
-  uint32_t relframe;
-  uint32_t seg, flags;
-  uint8_t switched = 0;
-  uint32_t ref;
-
-
-  if (in >= (_total_frames - 1))
+uint64_t refTime,nkTime,segTime;
+int lastSeg=_segments.getNbSegments();
+uint32_t seg;
+bool r;
+    // 1- Convert frameTime to segments
+    if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
     {
-      printf ("\nNKF  out of bounds\n");
-      return 0;;
-    }
-  // convert frame to block, relative frame
-  if (!convFrame2Seg (in, &seg, &relframe))
+        ADM_warning("[getSegmentFromTime] Cannot find seg for time %"LLD"\n",*frameTime);
+        return false;
+    }   
+    // 
+again:
+    _SEGMENT *s=_segments.getSegment(seg);
+    uint32_t ref=s->_reference;
+    // 2- Now search the previous keyframe in the ref image...
+    // The time in reference = relTime+segmentStartTime
+    refTime=s->_startTimeUs+segTime; // Absolute time in the reference image
+    
+    r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
+
+    // 3- if it does not belong to the same seg  ....
+    if(r==false || nkTime > (s->_refStartTimeUs+s->_refStartTimeUs))
     {
-      printf ("\n Conversion failed !\n");
-      return 0;
+        if(seg>=lastSeg-1)
+        {
+            ADM_warning("[getSegmentFromTime] No next keyframe keyfr for frameTime \n");
+            return false;
+        }
+        // Go to the next segment
+        seg++;
+        goto again;
     }
-
-  while (seg < _segments.size())
-    {
-      ref = _segments[seg]._reference;
-      // Search next kf in seg
-      if (!switched)
-	flags = 0;
-      else
-	_videos[ref]._aviheader->getFlags (relframe, &flags);
-
-
-      while (!(flags & AVI_KEY_FRAME) && (relframe != 0xffffffff))
-	{
-	  relframe++;
-	  if (!_videos[ref]._aviheader->getFlags (relframe, &flags))
-	    relframe = 0xffffffff;
-	}
-      // verify it is within the segment
-
-      if (relframe == 0xffffffff)
-	printf ("\n not found in current seg\n");
-      if (relframe <
-	  (_segments[seg]._start_frame + _segments[seg]._nb_frames))
-	{			// It is ...
-	  *oseg = seg;
-	  *orel = relframe;
-	  return 1;
-	}
-      // Not in segment
-      printf ("\n trying next seg...\n");
-      seg++;
-      relframe = _segments[seg]._start_frame;
-      switched = 1;
-    }
-#endif
-#warning : Obsolete!
-  return 0;
+    // Gotit, now convert it to the linear time
+    nkTime-=s->_startTimeUs;  // Ref to segment...
+    _segments.convertSegTimeToLinear(seg,nkTime,frameTime);
+    return true;
 
 }
 
-//_________________________________________
-uint8_t
-  ADM_Composer::searchPreviousKeyFrame (uint32_t in, uint32_t * oseg,
-					uint32_t * orel)
+/**
+    \fn getPKFramePTS
+*/
+
+bool			ADM_Composer::getPKFramePTS(uint64_t *frameTime)
 {
-#if 0
-  uint32_t relframe;
-  uint32_t seg, flags;
-  uint32_t ref;
 
 
-  if (in == 0)
+}
+/**
+    \fn searchNextKeyFrameInRef
+    \brief Search next key frame in ref video ref
+    @param ref: # of ref video
+    @param refTime : PTS to search keyframe after   
+    @param nkTime : Time of the ref video
+
+*/
+bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime)
+{
+    // Search from the end till we get a keyframe
+    _VIDEOS *v=_segments.getRefVideo(ref);
+    uint32_t nbFrame=v->_nb_video_frames;
+    
+    for(int i=0;i<nbFrame;i++)
     {
-      printf ("\n PKF out of bounds\n");
-      return 0;;
+        uint64_t p;
+        uint32_t flags;
+        v->_aviheader->getFlags(i,&flags);
+        if(!(flags & AVI_KEY_FRAME)) continue;
+        p=v->_aviheader->estimatePts(i);
+        if(p>refTime &&p!=ADM_NO_PTS)
+        {
+            *nkTime=p;
+            return true;
+        }
     }
-  // convert frame to block, relative frame
-  if (!convFrame2Seg (in, &seg, &relframe))
+    return false;
+}
+
+/**
+    \fn searchFrameBefore
+    \brief Return the frame number with pts just before pts
+*/
+uint32_t ADM_Composer::searchFrameBefore(uint64_t pts)
+{
+uint64_t refTime;
+uint32_t ref;
+    if(false==_segments.getRefFromTime(pts,&ref,&refTime))
     {
-      printf ("\n Conversion failed !\n");
-      return 0;
+        ADM_warning("[searchFrameBefore] Failed for pts %"LLU"\n",pts);
+        ref=0;
+        refTime=pts;
     }
+#warning fix over-seg issue
+    _VIDEOS   *vid=_segments.getRefVideo(ref);
+    vidHeader *demuxer=vid->_aviheader;
+    uint64_t  lastPts=demuxer->getTime(0);
+    uint32_t  nb=demuxer->getVideoStreamHeader()->dwLength;
 
-  if (relframe == 0)		//switch to last frame of prev seg
+    if(lastPts>pts) return 0;
+
+	for(int i=1;i<nb-2;i++)
     {
-      ADM_assert (seg);
-      seg--;
-      relframe = _segments[seg]._nb_frames - 1;
-
+        uint64_t cur,next;
+        cur=lastPts;
+        next=demuxer->getTime(i+1);
+        if(next==ADM_NO_PTS) next=cur+vid->timeIncrementInUs;
+        if(pts>=cur && pts<next) return i-1;
+        lastPts=next;
     }
+    return nb-1;
+}
+/**
+    \fn getImageFromCacheForFrameBefore
+    \brief Search the cache for the image with PTS just before the input PTS
+*/
+bool    ADM_Composer::getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out)
+{
+    int ref=0;
+    EditorCache   *cache;
+	_VIDEOS *vid=_segments.getRefVideo(0);
+	cache=vid->_videoCache;
+	ADM_assert(cache);
+        ADMImage *r=cache->findLastBefore(pts);
+        if(!r) return false;
+        out->duplicateFull(r);
+        return true;
 
-  do
+}
+/**
+    \fn getPtsDts
+    \brief Return PTS & DTS for a given frame (in bitstream order)
+*/
+bool        ADM_Composer::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
+{
+uint32_t ref,refOffset;
+    if(_segments.getRefFromFrame(frame,&ref,&refOffset)==false)
     {
-      ref = _segments[seg]._reference;
-      // Search next kf in seg
-      flags = 0;
-      while (!(flags & AVI_KEY_FRAME) && (relframe > 0))
-	{
-	  relframe--;
-	  if (!_videos[ref]._aviheader->getFlags (relframe, &flags))
-          {
-	    relframe = 0xffffffff;
-            break;
-          }
-	}
-      // verify it is within the segment
-
-      if ((relframe <
-	   (_segments[seg]._start_frame +
-	    _segments[seg]._nb_frames)) &&
-	  (relframe >= _segments[seg]._start_frame))
-
-	{			// It is ...
-	  *oseg = seg;
-	  *orel = relframe;
-	  return 1;
-	}
-      // Not in segment
-      printf ("\n trying previous seg...\n");
-      if (seg == 0)
-	{
-	  printf ("\n failed..\n");
-	  return 0;
-	}
-      seg--;
-      relframe = _segments[seg]._start_frame + _segments[seg]._nb_frames - 1;
+        ADM_warning("[Composer::getPtsDts] Cannot get ref video for frame %"LD"\n",frame);
+        return false;
     }
-  while (1);
-  printf ("\n failed pkf..\n");
-#endif
-#warning obsolete
-  return 0;
+ 
+     _VIDEOS   *vid=_segments.getRefVideo(ref);
+    vidHeader *demuxer=vid->_aviheader;
+    return demuxer->getPtsDts(frame,pts,dts); // FIXME : Rescale frame number
 
 }

@@ -500,7 +500,7 @@ JSBool ADM_JSAvidemux::rebuildIndex(JSContext *cx, JSObject *obj, uintN argc,
         if(argc != 0)
                 return JS_FALSE;
         enterLock();
-        if(!video_body->isReordered(0)) // already done
+//        if(!video_body->isReordered(0)) // already done
         {
           //video_body->rebuildFrameType();
         }

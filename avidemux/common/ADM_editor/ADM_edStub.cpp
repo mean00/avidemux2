@@ -29,7 +29,8 @@ uint32_t ref,refOffset;\
         ADM_warning(#func " cannot translate fame %"LD"\n",frame); \
         return false; \
     }
-/*
+/**
+    \fn getSpecificMpeg4Info
 	Propagate this hack to the underlying decoder
 */
 uint32_t ADM_Composer::getSpecificMpeg4Info( void )
@@ -92,7 +93,7 @@ uint64_t ADM_Composer::getTime (uint32_t fn)
             return t;
         }
     }
-    printf("[ADM_Composer::getTime] Cannot estimate time for frame %u\n",org);
+    ADM_warning("[ADM_Composer::getTime] Cannot estimate time for frame %u\n",org);
     return 0;
 }
 /**
@@ -108,16 +109,10 @@ uint32_t ADM_Composer::getFlags (uint32_t frame, uint32_t * flags)
 */
 uint32_t ADM_Composer::getFlagsAndSeg (uint32_t frame, uint32_t * flags,uint32_t *segs)
 {
-#if 0
-  uint32_t    relframe;
-  uint32_t    seg;
-  if (!convFrame2Seg (frame, &seg, &relframe))
-    return 0;
-  uint32_t    ref =   _segments[seg]._reference;
-
-    *segs=seg;
-#endif
-    return _segments.getRefVideo(0)->_aviheader->getFlags (frame, flags);
+ ADM_TRANSLATE(getFlagsAndSeg,frame);
+*segs=0;
+#warning fixme
+ return _segments.getRefVideo(ref)->_aviheader->getFlags (refOffset, flags);
 }
 /**
     \fn getFrameSize
@@ -127,11 +122,11 @@ uint8_t ADM_Composer::getFrameSize (uint32_t frame, uint32_t * size)
  
   ADM_TRANSLATE(getframeSize,frame);
   return _segments.getRefVideo(ref)->_aviheader->getFrameSize (refOffset, size);
-
-
 }
 
-
+/**
+    \fn setFlag
+*/
 uint8_t ADM_Composer::setFlag (uint32_t frame, uint32_t flags)
 {
     ADM_TRANSLATE(setFlag,frame);
@@ -174,7 +169,7 @@ uint8_t ADM_Composer::getVideoInfo (aviInfo * info)
   ret = STUBB->getVideoInfo (info);
   if (ret)
     {
-      info->nb_frames = _total_frames;
+      info->nb_frames = _segments.getNbFrames();
     }
   return ret;
 }
@@ -195,92 +190,7 @@ ADM_BITMAPINFOHEADER *ADM_Composer::getBIH (void)
 {
   return STUBB->getBIH ();
 };
-/**
-    \fn sanityCheckRef
-//	Do a sanity check for copy mode
-//	Check that B frames did not loose there backward/forward ref frame
-// 	It is brute force as we only need to check begin/end of each segment
-//	But it should be fast anyway
-*/
-uint8_t		ADM_Composer::sanityCheckRef(uint32_t start, uint32_t end,uint32_t *fatal)
-{
-#if 0
-uint32_t flags,seg;
-uint32_t lastnonb=0,segnonB=0xffff;
-uint32_t forward=0,forwardseg=0xffff;
 
-uint8_t ok=0;
-uint32_t i=0;
-	*fatal=0;
-	// If it is not in PTS, no need to bother
-	if(!isReordered(start))
-	{
-		printf("Not reordered or no B frame, nothing to check\n");
-		return 1;
-	}
-	// If the last frames are B frames it is fatal
-	if(!getFlagsAndSeg (end-1, &flags,&seg))
-	{
-				printf("Cannot get flags for frame %"LU"\n",end-1);
-				goto _abt;
-	}
-	if(flags & AVI_B_FRAME)
-	{
-		printf("Ending B frame -> abort (%"LU")\n",end-1);
-		*fatal=1;
-		return 0;
-	}
-	if(!getFlagsAndSeg (start, &flags,&seg))
-	{
-				printf("Cannot get flags for frame %"LU"\n",start);
-				goto _abt;
-	}
-	if(flags & AVI_B_FRAME)
-	{
-		printf("Starting B frame -> abort\n");
-		*fatal=1;
-		return 0;
-	}
-	for( i=start;i<end;i++)
-	{
-			//printf("%08lu/%08lu\r",i,end-start);
-			if(!getFlagsAndSeg (i, &flags,&seg))
-			{
-				printf("Cannot get flags for frame %"LU"\n",i);
-				goto _abt;
-			}
-			if(flags & AVI_B_FRAME)
-			{ 	// search if we have to send a I/P frame in adance
-				if(segnonB!=seg)
-				{
-					printf("bw failed! (%"LU"/%"LU")\n",seg,segnonB);
-					 goto _abt;
-				}
-;
-
-				forwardseg=searchForwardSeg(i);
-				if(seg!=forwardseg)
-				{
-					printf("Fw failed! (%"LU"/%"LU")\n",seg,forwardseg);
-					 goto _abt;
-				}
-			}
-			else // it is not a B frame and we have nothing on hold, sent it..
-			{
-				lastnonb=i;
-				segnonB=seg;
-			}
-	}
-	ok=1;
-_abt:
-	if(!ok)
-	{
-		printf("Frame %d has lost its fw/bw reference frame (%"LU"/%"LU")\n",i,start,end);
-	}
-	return ok;
-#endif
-    return true;
-}
 
 /**
     \fn getVideoDuration

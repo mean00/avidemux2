@@ -36,27 +36,22 @@
 #define MODULE_NAME MODULE_EDITOR
 #include "ADM_debug.h"
 
-#include "ADM_outputfmt.h"
+//#include "ADM_outputfmt.h"
 #include "ADM_edPtsDts.h"
 
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
-extern uint8_t parseScript(char *name);
-uint8_t UI_SetCurrentFormat( ADM_OUT_FORMAT fmt );
-const char *VBR_MSG = QT_TR_NOOP("Avidemux detected VBR MP3 audio in this file. For keeping audio/video in sync, time map is needed. Build it now?\n\nYou can do it later with \"Audio -> Build VBR Time Map\".");
-//
-//
+//#define TEST_MPEG2DEC
+/**
+    \fn ADM_Composer
 
-#define TEST_MPEG2DEC
-
+*/
 ADM_Composer::ADM_Composer (void) : ADM_audioStream(NULL,NULL)
 {
 uint32_t type,value;
 
    packetBufferSize=0;
    packetBufferDts=ADM_NO_PTS;
-
-  _total_frames = 0;
   _audioseg = 0;
   _audiooffset = 0;
   _audioSample=0;
@@ -90,9 +85,6 @@ uint32_t type,value;
 uint8_t ADM_Composer::resetSeg( void )
 {
 	_segments.resetSegment();
-
-  	computeTotalFrames();
-//	dumpSeg();
 	return 1;
 }
 /**
@@ -235,11 +227,6 @@ bool ADM_Composer::addFile (const char *name)
         memset(_imageBuffer->quant,0,_imageBuffer->_qSize);
         _imageBuffer->_qStride=(info.width+15)>>4;
     }
-
-
-//    fourCC::print( info.fcc );
-    _total_frames += info.nb_frames;
-
 
 
   // Update audio infos
@@ -421,128 +408,7 @@ uint8_t ADM_Composer::cleanup (void)
   _segments.deleteAll();
   return 1;
 }
-#if 0
-/*
-        param:
-                source : source #
-                start : start frame in source #
-                nb    : nb frame to copy into segment
-*/
-uint8_t ADM_Composer::addSegment(uint32_t source,uint32_t start, uint32_t nb)
-{
-        // do some sanity check
-        if(_nb_segment==max_seg-1)
-	{
-	   _SEGMENT *s;
-            max_seg += MAX_SEG;
-            s = new _SEGMENT[max_seg];
-            memset (s, 0, sizeof(_SEGMENT)*max_seg);
-            memcpy(s,_segments,sizeof(_SEGMENT)*(max_seg-MAX_SEG));
-            delete _segments;
-            _segments = s;
-        }
-        if(_nb_video<=source)
-        {
-                printf("[editor]: No such source %d/%d\n",source,_nb_video);
-                 return 0;
-        }
-        if(_videos[source]._nb_video_frames<=start)
-        {
-                printf("[editor]:start out of bound %d/%d\n",start,_videos[source]._nb_video_frames);
-                 return 0;
-        }
-        if(_videos[source]._nb_video_frames<start+nb)
-        {
-                printf("[editor]:end out of bound %d/%d\n",start+nb,_videos[source]._nb_video_frames);
-                 return 0;
-        }
-        // ok, let's go
-        _SEGMENT *seg=&(_segments[_nb_segment]);
-        seg->_reference=source;
-        seg->_start_frame=start;
-        seg->_nb_frames=nb;
-        _nb_segment++;
-        updateAudioTrack (_nb_segment-1);
-        _total_frames=computeTotalFrames();
 
-        return 1;
-}
-/**
-______________________________________________________
-//  Remove frames , the frame are given as seen by GUI
-//  We remove from start to end -1
-// [start,end[
-//______________________________________________________
-*/
-uint8_t ADM_Composer::removeFrames (uint32_t start, uint32_t end)
-{
-
-  uint32_t
-    seg1,
-    seg2,
-    rel1,
-    rel2;
-  uint8_t
-    lastone =
-    0;
-
-  if (end == _total_frames - 1)
-    lastone = 1;
-
-  // sanity check
-  if (start > end)
-    return 0;
-  //if((1+start)==end) return 0;
-
-  // convert frame to block, relative frame
-  if (!convFrame2Seg (start, &seg1, &rel1) ||
-      !convFrame2Seg (end, &seg2, &rel2))
-    {
-      ADM_assert (0);
-    }
-  // if seg1 != seg2 we can just modify seg1 and seg2
-  if (seg1 != seg2)
-    {
-      // remove end of seg1
-
-      removeFrom (rel1, seg1, 1);
-      //  delete in between seg
-      for (uint32_t seg = seg1 + 1; seg < (seg2); seg++)
-	_segments[seg]._nb_frames = 0;
-      // remove beginning of seg2
-      removeTo (rel2, seg2, lastone);
-    }
-  else
-    {
-      // it is in the same segment, split it...
-      // complete seg ?
-      if ((rel1 == _segments[seg1]._start_frame)
-	  && (rel2 ==
-	      (_segments[seg1]._start_frame +
-	       _segments[seg1]._nb_frames - 1)))
-	{
-	  _segments[seg1]._nb_frames = 0;
-	}
-      else
-	{
-	  // split in between.... duh !
-	  duplicateSegment (seg1);
-	  //
-	  removeFrom (rel1, seg1, 1);
-	  removeTo (rel2, seg1 + 1, lastone);
-	}
-    }
-
-  // Crunch
-  crunch ();
-  sanityCheck ();
-  // Compute total nb of frame
-  _total_frames = computeTotalFrames ();
-  printf ("\n %"LU" frames ", _total_frames);
-  return 1;
-
-}
-#endif
 /**
     \fn getAudioStreamsInfo
     \brief Returns a copy of all audio trackes at frame frame
@@ -632,293 +498,7 @@ aviInfo    info;
         v->currentAudioStream=newstream;
         return true;
 }
-#if 0
-/**
-______________________________________________________
-//
-//	Copy the start/eng seg  to clipboard
-//______________________________________________________
-*/
-uint8_t ADM_Composer::copyToClipBoard (uint32_t start, uint32_t end)
-{
 
-  uint32_t	    seg1,    seg2,    rel1,    rel2;
-  uint8_t    lastone =    0;
-uint32_t seg=0xfff;
-
-  if (end == _total_frames - 1)
-    lastone = 1;
-
-  // sanity check
-  if (start > end)
-  {
-    printf("End < Start \n");
-    return 0;
-   }
-  //if((1+start)==end) return 0;
-
-  // convert frame to block, relative frame
-  if (!convFrame2Seg (start, &seg1, &rel1) ||
-      !convFrame2Seg (end, &seg2, &rel2))
-    {
-      ADM_assert (0);
-    }
-    _nb_clipboard=0;
-  // if seg1 != seg2 we can just modify seg1 and seg2
-  if (seg1 != seg2)
-    {
-    aprintf("Diff  seg: %"LU" /%"LU" from %"LU" to %"LU" \n",seg1,seg2,rel1,rel2);
-      // remove end of seg1
-	_clipboard[_nb_clipboard]._reference=_segments[seg1]._reference;
-	_clipboard[_nb_clipboard]._start_frame=rel1;
- 	_clipboard[_nb_clipboard]._nb_frames =_segments[seg]._nb_frames- (rel1 - _segments[seg]._start_frame);
-	_nb_clipboard++;
-      // copy  in between seg
-      for ( seg = seg1 + 1; seg <=seg2; seg++)
-		memcpy(&_clipboard[_nb_clipboard++], &_segments[seg],sizeof(_segments[0]));
-      // Adjust nb frame for last seg
-      uint32_t l;
-      l=_nb_clipboard-1;
-	_clipboard[l]._nb_frames=rel2-_segments[seg2]._start_frame;
-    }
-  else
-    {
-      // it is in the same segment, split it...
-      // complete seg ?
-      if ((rel1 == _segments[seg1]._start_frame)
-	  && (rel2 ==
-	      (_segments[seg1]._start_frame +
-	       _segments[seg1]._nb_frames - 1)))
-	{
-	  aprintf("Full seg: %"LU" from %"LU" to %"LU" \n",seg1,rel1,rel2);
-		memcpy(&_clipboard[_nb_clipboard++], &_segments[seg1],sizeof(_segments[0]));
-	}
-      else
-	{
-	  // we just take a part of one chunk
-	  aprintf("Same seg: %"LU" from %"LU" to %"LU" \n",seg1,rel1,rel2);
-	  memcpy(&_clipboard[_nb_clipboard], &_segments[seg1],sizeof(_segments[0]));
-	  _clipboard[_nb_clipboard]._start_frame=rel1;
-	  _clipboard[_nb_clipboard]._nb_frames=rel2-rel1;
-	_nb_clipboard++;
-	aprintf("clipboard: %"LU" \n",_nb_clipboard);
-	}
-    }
-	dumpSeg();
-  return 1;
-
-}
-uint8_t ADM_Composer::pasteFromClipBoard (uint32_t whereto)
-{
-uint32_t rel,seg;
-
-	if (!convFrame2Seg (whereto, &seg, &rel) )
-    	{
-      		ADM_assert (0);
-    	}
-	dumpSeg();
-
-	// past at frame 0
-	if(	seg==0 && rel==_segments[0]._start_frame)
-	{
-		aprintf("Pasting at frame 0\n");
-		for(uint32_t i=0;i<_nb_clipboard;i++)
-			duplicateSegment(seg);
-		memcpy(&_segments[0],&_clipboard[0],_nb_clipboard*sizeof(_clipboard[0]));
-	}
-	else
-	if(rel==_segments[seg]._start_frame+_segments[seg]._nb_frames )
-	{
-		aprintf("\n setting at the end of seg %"LU"\n",seg);
-		// we put it after OLD insert OLD+1
-		for(uint32_t i=0;i<_nb_clipboard;i++)
-			duplicateSegment(seg);
-		memcpy(&_segments[seg+1],&_clipboard[0],_nb_clipboard*sizeof(_clipboard[0]));
-
-	}
-	else // need to split it
-	{
-		for(uint32_t i=0;i<_nb_clipboard+1;i++)
-			duplicateSegment(seg);
-		memcpy(&_segments[seg+1],&_clipboard[0],_nb_clipboard*sizeof(_clipboard[0]));
-
-		// and the last one
-		_segments[seg+_nb_clipboard+1]._nb_frames=(_segments[seg]._start_frame+_segments[seg]._nb_frames)-rel;
-		_segments[seg+_nb_clipboard+1]._start_frame=rel;
-		// adjust the current one
-		_segments[seg]._nb_frames=rel-_segments[seg]._start_frame;
-	}
-	 _total_frames = computeTotalFrames ();
-	for(uint32_t i=0;i<_nb_segment;i++)
- 		updateAudioTrack(i);
-  dumpSeg();
-  return 1;
-
-}
-
-//____________________________________
-//      Duplicate a segment
-//____________________________________
-
-uint8_t ADM_Composer::duplicateSegment (uint32_t segno)
-{
-
-  for (uint32_t i = _nb_segment; i > segno; i--)
-    {
-
-      memcpy (&_segments[i], &_segments[i - 1], sizeof (_SEGMENT));
-
-    }
-  _nb_segment++;
-  return 1;
-
-
-}
-
-//____________________________________
-//      Remove empty segments
-//____________________________________
-uint8_t ADM_Composer::crunch (void)
-{
-  uint32_t
-    seg =
-    0;
-  while (seg < _nb_segment)
-    {
-      if (_segments[seg]._nb_frames == 0)
-	{
-	  //
-
-	  for (uint32_t c = seg + 1; c < _nb_segment; c++)
-	    {
-	      memcpy (&_segments[c - 1], &_segments[c], sizeof (_SEGMENT));
-	    }
-	  _nb_segment--;
-
-	}
-      else
-	{
-	  seg++;
-	}
-    }
-  // Remove last seg if there is only one frame in it
-  if (_nb_segment)
-    {
-      if (_segments[_nb_segment - 1]._nb_frames == 1)
-	{
-	  _nb_segment--;
-	}
-    }
-  return 1;
-
-}
-#endif
-//____________________________________
-//      Remove empty segments
-//____________________________________
-uint32_t ADM_Composer::computeTotalFrames (void)
-{
-#if 0
-  uint32_t
-    seg,
-    tf =
-    0;
-  for (seg = 0; seg < _nb_segment; seg++)
-    {
-      tf += _segments[seg]._nb_frames;
-
-    }
-
-  return tf;
-#endif
-}
-#if 0
-//____________________________________
-//      Remove empty segments
-//____________________________________
-void
-ADM_Composer::dumpSeg (void)
-{
-  uint32_t seg;
-  printf ("\n________Video______________");
-  for (seg = 0; seg < _nb_video; seg++)
-    {
-//      printf ("\n Video : %"LU", nb video  :%"LU", audio size:%"LU"  audioDuration:%"LU"",
-//	      seg, _videos[seg]._nb_video_frames, _videos[seg]._audio_size,_videos[seg]._audio_duration);
-
-    }
-
-  printf ("\n______________________");
-  for (seg = 0; seg < _nb_segment; seg++)
-    {
-      printf
-	("\n Seg : %"LU", ref: %"LU" start :%"LU", size:%"LU" audio size : %"LU" audio start : %"LU" duration:%"LLU"",
-	 seg, _segments[seg]._reference, _segments[seg]._start_frame,
-	 _segments[seg]._nb_frames, _segments[seg]._audio_size,
-	 _segments[seg]._audio_start,
-	  _segments[seg]._audio_duration
-	 );
-
-    }
-  printf ("\n_________Clipboard_____________");
-  for (seg = 0; seg < _nb_clipboard; seg++)
-    {
-      printf
-	("\n Seg : %"LU", ref: %"LU" start :%"LU", size:%"LU" audio size : %"LU" audio start : %"LU"  duration:%"LLU"\n",
-	 seg, _clipboard[seg]._reference, _clipboard[seg]._start_frame,
-	 _clipboard[seg]._nb_frames, _clipboard[seg]._audio_size,
-	 _clipboard[seg]._audio_start,
-	 _segments[seg]._audio_duration);
-
-    }
-
-
-}
-
-// Clear from position to/from
-//
-// 0------To------end
-//  xxxxxx removed
-
-uint8_t ADM_Composer::removeTo (uint32_t to, uint32_t seg, uint8_t included)
-{
-  uint32_t
-    ref;
-
-  ADM_assert (checkInSeg (seg, to));
-  ref = _segments[seg]._start_frame;
-  _segments[seg]._start_frame = to;
-  if (included)
-    _segments[seg]._start_frame++;
-  _segments[seg]._nb_frames -= (_segments[seg]._start_frame - ref);
-
-
-  updateAudioTrack (seg);
-
-//---------------------------------------
-
-
-
-  return 1;
-}
-
-//
-// 0------From------end
-//            xxxxxx removed
-
-uint8_t
-  ADM_Composer::removeFrom (uint32_t from, uint32_t seg, uint8_t included)
-{
-  ADM_assert (checkInSeg (seg, from));
-  _segments[seg]._nb_frames = (from - _segments[seg]._start_frame);
-
-  if (!included)
-    _segments[seg]._nb_frames++;
-
-  updateAudioTrack (seg);
-  return 1;
-}
-#endif
 //
 //      Update the real size of audio track by computing the
 // delta between sync @end and sync@begin
@@ -950,42 +530,6 @@ uint8_t ADM_Composer::updateAudioTrack (uint32_t seg)
 }
 
 
-#if 0
-//__________________________________________________
-// check that the given frame is inside the segment
-//__________________________________________________
-uint8_t ADM_Composer::checkInSeg (uint32_t seg, uint32_t frame)
-{
-  if (frame < _segments[seg]._start_frame)
-    return 0;
-  if (frame > (_segments[seg]._nb_frames + _segments[seg]._start_frame))
-    return 0;
-  return 1;
-
-}
-uint8_t	ADM_Composer::isIndexable( void)
-{
-	if(!_nb_video) ADM_assert(0);
-	return _videos[0].decoder->isIndexable();
-
-}
-
-uint8_t ADM_Composer::sanityCheck (void)
-{
-  uint32_t
-    ref,
-    seg;
-
-  for (seg = 0; seg < _nb_segment; seg++)
-    {
-      ref = _segments[seg]._start_frame + _segments[seg]._nb_frames - 1;
-
-    }
-  return 1;
-
-
-}
-#endif
 
 //_________________________________________
 uint8_t		ADM_Composer::setEnv(_ENV_EDITOR_FLAGS newflag)
@@ -1006,74 +550,7 @@ uint8_t r=0;
 		return r;
 
 }
-#if BAZOOKA
-//_________________________________________
-//    Try indexing the file, return 1 if file successfully indexed
-//              0 else
-//_________________________________________
-//
-uint8_t         ADM_Composer::tryIndexing(const char *name, const char *idxname)
-{
- unsigned int autoidx = 0;
-      prefs->get(FEATURE_TRYAUTOIDX,&autoidx);
-      if (!autoidx)
-        {
-          if (!GUI_Question (QT_TR_NOOP("This looks like mpeg\n Do you want to index it?")))
-            {
-                return 0;
-            }
-		}
-          char      *idx;
-          DMX_TYPE  type;
-          uint32_t  nbTrack=0,audioTrack=0;
-          MPEG_TRACK *tracks=NULL;
-          uint8_t r=1;
 
-                if(!dmx_probe(name,&type,&nbTrack,&tracks))
-                {
-                        printf("This is not mpeg\n");
-                        return 0;
-                }
-
-
-                if(type==DMX_MPG_PS || type==DMX_MPG_TS || type==DMX_MPG_TS2)
-                {
-                       if(nbTrack>2)
-		       if(autoidx)
-			{
-				printf("Using autoindex\n");
-			}
-/*                        else
-		       {
-
-                        if(!DIA_dmx(name,type,nbTrack,tracks,&audioTrack))
-                        {
-                                delete [] tracks;
-                                return 0;
-                        }
-		       }
-*/
-                        audioTrack=0;
-                }
-		if( idxname ){
-			idx=new char[strlen(idxname)];
-			strcpy(idx,idxname);
-		}else{
-                	idx=new char[strlen(name)+5];
-                	strcpy(idx,name);
-                	strcat(idx,".idx");
-		}
-
-                r=dmx_indexer(name,idx,audioTrack,0,nbTrack,tracks);
-
-                if(tracks)
-                        delete [] tracks;
-                delete [] idx;
-
-                if(!r) GUI_Error_HIG(QT_TR_NOOP("Indexing failed"), NULL);
-                return r;
-}
-#endif
 /**
       If a parameter has changed, rebuild the duration of the streams
       It can happen, for example in case of SBR audio such as AAC
@@ -1107,6 +584,17 @@ uint64_t    ADM_Composer::estimatePts(uint32_t frame)
     }
     wantedPts+=vid->timeIncrementInUs*count;
     return wantedPts;
+}
+/**
+    \fn getCurrentFramePts
+    \brief Get the PTS of current frame
+
+*/
+uint64_t    ADM_Composer::getCurrentFramePts(void)
+{
+    _SEGMENT *seg=_segments.getCurrentSeg();
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    return vid->lastDecodedPts;
 }
 //
 //

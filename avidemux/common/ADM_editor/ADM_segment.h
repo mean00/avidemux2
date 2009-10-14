@@ -40,16 +40,7 @@ public:
 
 public:
     ADM_audioStreamTrack() {memset(this,0,sizeof(*this));}
-    ~ADM_audioStreamTrack()
-    {
-        stream=NULL;
-        info=NULL;   // These 2 are destroyed by the demuxer itself
-        if(codec) 
-        {
-            delete codec;
-            codec=NULL;
-        }
-    }
+virtual    ~ADM_audioStreamTrack();
 };
 /**
     \struct _VIDEOS
@@ -89,7 +80,7 @@ typedef struct
  	uint64_t							_refStartTimeUs;  /// Starting time in reference
     uint64_t                            _startTimeUs;     /// Start time in current (=sum(_duration of previous seg))
 	uint64_t							_durationUs;      ///
-
+    uint32_t                            _nbFrame;
 }_SEGMENT;
 /*
     Use vectors to store our videos & segments
@@ -106,6 +97,7 @@ protected:
         ListOfSegments segments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
+        uint32_t       currentSeg;
 
 public:
                         ADM_EditorSegment(void);
@@ -117,14 +109,22 @@ public:
             _VIDEOS     *getRefVideo(int i);
             int         getNbRefVideos(void);
 
+            _SEGMENT    *getSegment(int i);
             int         getNbSegments(void);
+
             uint64_t    getTotalDuration(void);
             uint32_t    getNbFrames(void);
 
             bool        getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset);
             bool        getRefFromFrame(uint32_t frame,uint32_t *refVideo, uint32_t *frameOffset);
+
             bool        getFrameFromRef(uint32_t *frame,uint32_t refVideo, uint32_t frameOffset);
 
+
+            bool        convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime);
+            bool        convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime);
+
+            _SEGMENT    *getCurrentSeg(void);
 };
 
 #endif

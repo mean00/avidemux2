@@ -239,7 +239,7 @@ void GUI_GoToKFrame(uint32_t frame)
 
     } else
       {
-	  if (!video_body->getPKFrame(&frame))
+//	  if (!video_body->getPKFrame(&frame))
 	    {
 		printf("[GUI_GoToKFrame] failed for frame %u\n", frame);
 		return;

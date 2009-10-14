@@ -623,11 +623,22 @@ void admPreview::cleanUp(void)
 */
 bool admPreview::nextKeyFrame(void)
 {
+    uint64_t pts=getCurrentPts();
+    ADM_info("Current PTS :%"LLD" ms\n",pts/1000LL);
+    if(false==video_body->getNKFramePTS(&pts))
+    {
+        ADM_warning("Cannot find next keyframe\n");
+        return false;
+    }
+    ADM_info("next kf PTS :%"LLD" ms\n",pts/1000LL);
+    return true;
+/*
     uint32_t frame=video_body->getCurrentFrame();
     if(!video_body->getNKFrame(&frame)) return false;
     if(!video_body->GoToIntra(frame)) return false;
     video_body->setCurrentFrame(frame);
     samePicture();
+*/
     return true;
 }
 /**
@@ -636,11 +647,13 @@ bool admPreview::nextKeyFrame(void)
 */
 bool admPreview::previousKeyFrame(void)
 {
+/*
     uint32_t frame=video_body->getCurrentFrame();
     if(!video_body->getPKFrame(&frame)) return false;
     if(!video_body->GoToIntra(frame)) return false;
     video_body->setCurrentFrame(frame);
     samePicture();
+*/
     return true;
 }/**
     \fn previousFrame
@@ -663,7 +676,7 @@ bool admPreview::previousFrame(void)
         }
         return false;
     }
-
+#if 0
     // Else go to the previous  keyframe...
     if(!video_body->getPKFrame(&frame)) return false;
     if(!video_body->GoToIntra(frame)) return false;
@@ -685,6 +698,7 @@ bool admPreview::previousFrame(void)
         renderUpdateImage(rdrImage->data,zoom);
         return true;
     }
+#endif
     return false;
 }
 // EOF
