@@ -45,7 +45,7 @@ uint32_t relframe, ref, flags, len;
 
     if(_segments.getRefFromFrame(frame,&ref,&relframe)==false)
     {
-        ADM_warning("[GoToIntra] Cannot convert frame %"LU"\n",frame);
+        ADM_warning(" Cannot convert frame %"LU"\n",frame);
         return false;
     }
     return DecodePictureUpToIntra(relframe,ref);
@@ -69,6 +69,18 @@ bool        ADM_Composer::GoToTime(uint64_t time)
         // Now go forward if needed
 #warning todo fixme!
     printf("[Composer:GoToTime] Going to frame %"LU"\n",frame);
+    return GoToIntra(frame);
+}
+/**
+    \fn GoToIntraTime
+    \brief Go to an intra at time time (exact)
+    \return true on success, false on error
+*/
+bool        ADM_Composer::GoToIntraTime(uint64_t time)
+{
+    // 1st go to the previous intra...
+      uint32_t frame=searchFrameAt(time);
+    ADM_info("When looking for frame at %"LLU" ms, found frame %"LU" as candidate\n",time,frame);
     return GoToIntra(frame);
 }
 /**

@@ -9,8 +9,8 @@ uint8_t	 GUI_Refresh( void );
 uint8_t	GUI_XvRedraw(void);
 
 // GUI
-
-void GUI_GoToKFrame(uint32_t frame); // same as below execpt								                     // closest previous frame
+#define ADM_SCALE_SIZE 10000
+void GUI_GoToKFrameTime(uint64_t frame); // same as below execpt								                     // closest previous frame
 int GUI_GoToFrame(uint32_t frame);
 // not in callback.h to avoid importing COMPRESSION MODE in interface.cpp
 

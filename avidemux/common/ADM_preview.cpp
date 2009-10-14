@@ -324,6 +324,7 @@ uint64_t admPreview::getCurrentPts(void)
         if(rdrImage) return rdrImage->Pts;
 
 }
+
 /**
       \fn admPreview::update
       \brief display data associated with framenum image
@@ -340,6 +341,23 @@ uint8_t admPreview::seekToIntra(uint32_t frame)
     }
     return samePicture();
 
+}
+
+/**
+      \fn admPreview::seekToIntraPts
+      \brief Seek to intra at PTS given as arg
+      
+      @param timeframe Time of the image 
+*/
+
+bool admPreview::seekToIntraPts(uint64_t timeframe)
+{
+    if(!video_body->GoToIntraTime(timeframe)) 
+    {
+        ADM_warning(" seeking for frame at %"LLU" ms failed\n",timeframe/1000LL);
+        return false;
+    }
+    return samePicture();
 }
 /**
     \fn samePicture
@@ -631,15 +649,7 @@ bool admPreview::nextKeyFrame(void)
         return false;
     }
     ADM_info("next kf PTS :%"LLD" ms\n",pts/1000LL);
-    return true;
-/*
-    uint32_t frame=video_body->getCurrentFrame();
-    if(!video_body->getNKFrame(&frame)) return false;
-    if(!video_body->GoToIntra(frame)) return false;
-    video_body->setCurrentFrame(frame);
-    samePicture();
-*/
-    return true;
+    return seekToIntraPts(pts);
 }
 /**
     \fn previousKeyFrame
@@ -647,13 +657,15 @@ bool admPreview::nextKeyFrame(void)
 */
 bool admPreview::previousKeyFrame(void)
 {
-/*
-    uint32_t frame=video_body->getCurrentFrame();
-    if(!video_body->getPKFrame(&frame)) return false;
-    if(!video_body->GoToIntra(frame)) return false;
-    video_body->setCurrentFrame(frame);
-    samePicture();
-*/
+    uint64_t pts=getCurrentPts();
+    ADM_info("Current PTS :%"LLD" ms\n",pts/1000LL);
+    if(false==video_body->getPKFramePTS(&pts))
+    {
+        ADM_warning("Cannot find previous keyframe\n");
+        return false;
+    }
+    ADM_info("next kf PTS :%"LLD" ms\n",pts/1000LL);
+    return seekToIntraPts(pts);
     return true;
 }/**
     \fn previousFrame

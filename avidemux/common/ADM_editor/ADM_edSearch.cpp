@@ -30,7 +30,7 @@ bool r;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
     {
-        ADM_warning("[getSegmentFromTime] Cannot find seg for time %"LLD"\n",*frameTime);
+        ADM_warning(" Cannot find seg for time %"LLD"\n",*frameTime);
         return false;
     }   
     // 
@@ -44,11 +44,11 @@ again:
     r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
 
     // 3- if it does not belong to the same seg  ....
-    if(r==false || nkTime > (s->_refStartTimeUs+s->_refStartTimeUs))
+    if(r==false || nkTime > (s->_refStartTimeUs+s->_durationUs))
     {
         if(seg>=lastSeg-1)
         {
-            ADM_warning("[getSegmentFromTime] No next keyframe keyfr for frameTime \n");
+            ADM_warning(" No next keyframe keyfr for frameTime \n");
             return false;
         }
         // Go to the next segment
@@ -68,8 +68,42 @@ again:
 
 bool			ADM_Composer::getPKFramePTS(uint64_t *frameTime)
 {
+uint64_t refTime,nkTime,segTime;
+int lastSeg=_segments.getNbSegments();
+uint32_t seg;
+bool r;
+    // 1- Convert frameTime to segments
+    if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
+    {
+        ADM_warning(" Cannot find seg for time %"LLD"\n",*frameTime);
+        return false;
+    }   
+    // 
+again:
+    _SEGMENT *s=_segments.getSegment(seg);
+    uint32_t ref=s->_reference;
+    // 2- Now search the previous keyframe in the ref image...
+    // The time in reference = relTime+segmentStartTime
+    refTime=s->_startTimeUs+segTime; // Absolute time in the reference image
+    
+    r=searchPreviousKeyFrameInRef(ref,refTime,&nkTime);
 
-
+    // 3- if it does not belong to the same seg  ....
+    if(r==false || nkTime < (s->_refStartTimeUs))
+    {
+        if(!seg)
+        {
+            ADM_warning(" No next previous keyfr for frameTime %"LLU"\n",*frameTime);
+            return false;
+        }
+        // Go to the next segment
+        seg--;
+        goto again;
+    }
+    // Gotit, now convert it to the linear time
+    nkTime-=s->_startTimeUs;  // Ref to segment...
+    _segments.convertSegTimeToLinear(seg,nkTime,frameTime);
+    return true;
 }
 /**
     \fn searchNextKeyFrameInRef
@@ -84,17 +118,48 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
     // Search from the end till we get a keyframe
     _VIDEOS *v=_segments.getRefVideo(ref);
     uint32_t nbFrame=v->_nb_video_frames;
-    
+    uint64_t pts,dts;
     for(int i=0;i<nbFrame;i++)
     {
         uint64_t p;
         uint32_t flags;
         v->_aviheader->getFlags(i,&flags);
         if(!(flags & AVI_KEY_FRAME)) continue;
-        p=v->_aviheader->estimatePts(i);
-        if(p>refTime &&p!=ADM_NO_PTS)
+        v->_aviheader->getPtsDts(i,&pts,&dts);
+        if(pts==ADM_NO_PTS) continue;
+        if(pts>refTime)
         {
-            *nkTime=p;
+            *nkTime=pts;
+            return true;
+        }
+    }
+    return false;
+}
+/**
+    \fn searchPreviousKeyFrameInRef
+    \brief Search next key frame in ref video ref
+    @param ref: # of ref video
+    @param refTime : PTS to search keyframe after   
+    @param nkTime : Time of the ref video
+
+*/
+bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime)
+{
+    // Search from the end till we get a keyframe
+    _VIDEOS *v=_segments.getRefVideo(ref);
+    uint32_t nbFrame=v->_nb_video_frames;
+    uint64_t pts,dts;
+    for(int i=nbFrame-1;i>=0;i--)
+    {
+        uint64_t p;
+        uint32_t flags;
+        v->_aviheader->getFlags(i,&flags);
+        if(!(flags & AVI_KEY_FRAME)) continue;
+        v->_aviheader->getPtsDts(i,&pts,&dts);
+        if(pts==ADM_NO_PTS) continue;
+        if(pts<refTime)
+        {
+            *nkTime=pts;
             return true;
         }
     }
@@ -111,7 +176,7 @@ uint64_t refTime;
 uint32_t ref;
     if(false==_segments.getRefFromTime(pts,&ref,&refTime))
     {
-        ADM_warning("[searchFrameBefore] Failed for pts %"LLU"\n",pts);
+        ADM_warning(" Failed for pts %"LLU"\n",pts);
         ref=0;
         refTime=pts;
     }
@@ -133,6 +198,41 @@ uint32_t ref;
         lastPts=next;
     }
     return nb-1;
+}
+/**
+    \fn searchFrameBefore
+    \brief Return the frame number with pts just before pts
+*/
+uint32_t ADM_Composer::searchFrameAt(uint64_t pts)
+{
+uint64_t refTime;
+uint32_t ref;
+    if(false==_segments.getRefFromTime(pts,&ref,&refTime))
+    {
+        ADM_warning(" Failed for pts %"LLU"\n",pts);
+        ref=0;
+        refTime=pts;
+    }
+#warning fix over-seg issue
+    _VIDEOS   *vid=_segments.getRefVideo(ref);
+    vidHeader *demuxer=vid->_aviheader;
+    
+    uint32_t  nb=demuxer->getVideoStreamHeader()->dwLength;
+;
+
+	for(int i=0;i<nb;i++)
+    {
+        uint64_t thisPts,thisDts;
+        demuxer->getPtsDts(i,&thisPts,&thisDts);
+        if(thisPts==ADM_NO_PTS) continue;
+        if(refTime==thisPts)
+        {
+            ADM_info("Found frame %"LU" for time %"LLU" ms\n",i,thisPts/1000);
+            return i;
+        }
+    }
+    ADM_warning("Cannot find frame at %"LLU"\n",pts);
+    return 0;
 }
 /**
     \fn getImageFromCacheForFrameBefore
@@ -160,12 +260,12 @@ bool        ADM_Composer::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 uint32_t ref,refOffset;
     if(_segments.getRefFromFrame(frame,&ref,&refOffset)==false)
     {
-        ADM_warning("[Composer::getPtsDts] Cannot get ref video for frame %"LD"\n",frame);
+        ADM_warning("Cannot get ref video for frame %"LD"\n",frame);
         return false;
     }
  
      _VIDEOS   *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     return demuxer->getPtsDts(frame,pts,dts); // FIXME : Rescale frame number
-
 }
+//EOF

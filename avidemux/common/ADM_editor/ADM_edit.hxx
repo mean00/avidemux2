@@ -120,11 +120,14 @@ public:
                     bool        setCurrentFrame(uint32_t frame);
                     bool        GoToIntra(uint32_t frame);
                     bool        GoToTime(uint64_t time);
+                    bool        GoToIntraTime(uint64_t time);
                     bool        NextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
+
                     bool        getCompressedPicure(uint32_t framenum,ADMCompressedImage *img);
                     uint64_t    estimatePts(uint32_t frame);
                     uint32_t    searchFrameBefore(uint64_t pts);
+                    uint32_t    searchFrameAt(uint64_t pts);
                     bool        getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out);
                     bool        getPictureJustBefore(uint64_t pts);
                     bool        getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
@@ -142,6 +145,8 @@ public:
                     bool        getSamePicture(ADMImage *out,uint32_t ref);
 
                     bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
+                    bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
+
 /************************************ Internal ******************************/
                     uint8_t 	getFrame(uint32_t   framenum,ADMCompressedImage *img,uint8_t *isSequential);
                     

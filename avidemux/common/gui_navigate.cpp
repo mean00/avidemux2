@@ -54,7 +54,10 @@ static int ignore_change=0;
           uint32_t nf;
           ignore_change++;
           nf = GUI_GetScale ();
-          if (!SliderIsShifted) GUI_GoToKFrame (nf);
+          double tme=nf;
+          tme=video_body->getDurationInUs();
+          tme/=ADM_SCALE_SIZE;
+          if (!SliderIsShifted) GUI_GoToKFrameTime (tme);
           else GUI_GoToFrame (nf);
           ignore_change--;
 
@@ -143,7 +146,7 @@ static int ignore_change=0;
             }
 	  break;
       case ACT_Begin:
-        GUI_GoToKFrame(0);
+        GUI_GoToKFrameTime(0);
 	  break;
       case ACT_JumpToFrame:
         {
@@ -225,27 +228,15 @@ void GUI_NextKeyFrame(void)
     \fn GUI_GoToKFrame
     \brief Go to the nearest previous keyframe
 */
-void GUI_GoToKFrame(uint32_t frame)
+void GUI_GoToKFrameTime(uint64_t timeFrame)
 {
 
     if (playing)
 	return;
     if (!avifileinfo)
 	return;
-    uint32_t f;
-    video_body->getFlags(0, &f);
-    if (!frame && (f & AVI_KEY_FRAME))
-      {
 
-    } else
-      {
-//	  if (!video_body->getPKFrame(&frame))
-	    {
-		printf("[GUI_GoToKFrame] failed for frame %u\n", frame);
-		return;
-	    }
-      }
-    admPreview::seekToIntra(frame);
+    admPreview::seekToIntraPts(timeFrame);
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     UI_purge();
@@ -411,14 +402,7 @@ void GUI_setAllFrameAndTime(void)
     UI_setTotalTime(video_body->getVideoDuration());
 
     // progress bar
-    len = 100;
-    if (avifileinfo->nb_frames > 1)
-	len = len / (double) (avifileinfo->nb_frames - 1);
-    len *= (double) video_body->getCurrentFrame();
-
-
-
-    UI_setScale(len);
+    UI_setScale(ADM_SCALE_SIZE);
 
 }
 
@@ -439,15 +423,8 @@ void GUI_setCurrentFrameAndTime(void)
 		     avifileinfo->nb_frames);
     UI_setCurrentTime(admPreview::getCurrentPts());
 
-    // progress bar
-    len = 100;
-    if (avifileinfo->nb_frames > 1)
-	len = len / (double) (avifileinfo->nb_frames - 1);
-    len *= (double) video_body->getCurrentFrame();
 
-
-
-    UI_setScale(len);
+    UI_setScale(ADM_SCALE_SIZE);
 }
 /**
     \fn A_jumpToTime
