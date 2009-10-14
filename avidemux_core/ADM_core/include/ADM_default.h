@@ -37,9 +37,13 @@
 extern "C" 
 {
 #endif
-void ADM_warning(const char *st, ...) ;
-void ADM_info(const char *st, ...) ;
-void ADM_error(const char *st, ...) ;
+void ADM_warning2(const char *f,const char *st, ...) ;
+void ADM_info2(const char *f,const char *st, ...) ;
+void ADM_error2(const char *f,const char *st, ...) ;
+
+#define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
+#define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)
+#define ADM_error(a,...)    ADM_error2(__FUNCTION__,a,   ##__VA_ARGS__)
 #ifdef __cplusplus
 }
 #endif
