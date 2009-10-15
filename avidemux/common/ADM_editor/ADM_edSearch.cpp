@@ -39,7 +39,7 @@ again:
     uint32_t ref=s->_reference;
     // 2- Now search the previous keyframe in the ref image...
     // The time in reference = relTime+segmentStartTime
-    refTime=s->_startTimeUs+segTime; // Absolute time in the reference image
+    refTime=s->_refStartTimeUs+segTime; // Absolute time in the reference image
     
     r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
 
@@ -56,7 +56,8 @@ again:
         goto again;
     }
     // Gotit, now convert it to the linear time
-    nkTime-=s->_startTimeUs;  // Ref to segment...
+    // We have the time in the ref video, convert it to relatative to this segment
+    nkTime-=s->_refStartTimeUs;  // Ref to segment...
     _segments.convertSegTimeToLinear(seg,nkTime,frameTime);
     return true;
 
@@ -84,7 +85,7 @@ again:
     uint32_t ref=s->_reference;
     // 2- Now search the previous keyframe in the ref image...
     // The time in reference = relTime+segmentStartTime
-    refTime=s->_startTimeUs+segTime; // Absolute time in the reference image
+    refTime=s->_refStartTimeUs+segTime; // Absolute time in the reference image
     
     r=searchPreviousKeyFrameInRef(ref,refTime,&nkTime);
 
@@ -101,7 +102,7 @@ again:
         goto again;
     }
     // Gotit, now convert it to the linear time
-    nkTime-=s->_startTimeUs;  // Ref to segment...
+    nkTime-=s->_refStartTimeUs;  // Ref to segment...
     _segments.convertSegTimeToLinear(seg,nkTime,frameTime);
     return true;
 }
@@ -267,5 +268,13 @@ uint32_t ref,refOffset;
      _VIDEOS   *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
     return demuxer->getPtsDts(frame,pts,dts); // FIXME : Rescale frame number
+}
+/**
+    \fn getDurationInUs
+    \brief Return total duration of video in us
+*/
+ uint64_t        ADM_Composer::getDurationInUs(void) 
+{
+    return _segments.getTotalDuration();
 }
 //EOF

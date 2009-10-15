@@ -38,7 +38,7 @@
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
 #include "avi_vars.h"
-
+#include "prototype.h" // FIXME
 char * actual_workbench_file;
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
@@ -1221,7 +1221,7 @@ uint32_t GUI_GetScale(void)
     float tg;
 
     percent = UI_readScale();
-    tg= (avifileinfo->nb_frames-1) * percent / 100.;
+    tg= ADM_SCALE_SIZE * percent / 100.;
 
     return (uint32_t)floor(tg);;
 }

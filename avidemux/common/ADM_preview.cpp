@@ -666,7 +666,6 @@ bool admPreview::previousKeyFrame(void)
     }
     ADM_info("next kf PTS :%"LLD" ms\n",pts/1000LL);
     return seekToIntraPts(pts);
-    return true;
 }/**
     \fn previousFrame
 

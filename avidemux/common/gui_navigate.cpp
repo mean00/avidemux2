@@ -54,13 +54,24 @@ static int ignore_change=0;
           uint32_t nf;
           ignore_change++;
           nf = GUI_GetScale ();
+          ADM_info("Scale :%"LU"\n",nf);
           double tme=nf;
-          tme=video_body->getDurationInUs();
+          tme*=video_body->getDurationInUs();
           tme/=ADM_SCALE_SIZE;
-          if (!SliderIsShifted) GUI_GoToKFrameTime (tme);
-          else GUI_GoToFrame (nf);
-          ignore_change--;
-
+          uint64_t pts=(uint64_t)tme;
+          ADM_info("Scale Time:%"LLU" ms (total=%"LLU" ms)\n",pts/1000,video_body->getDurationInUs()/1000);
+           if(false==video_body->getPKFramePTS(&pts))
+            {
+                ADM_warning("Cannot seel to %"LLU" ms\n",pts/1000);
+                ignore_change--;
+                break;
+            }
+            
+            if(true!=admPreview::seekToIntraPts(pts))
+            {
+                ADM_warning("Scale: Seeking to intra at %"LLU" ms failed\n",pts/1000);
+            }
+            ignore_change--;
         }
         break;
       case ACT_GotoMarkA:

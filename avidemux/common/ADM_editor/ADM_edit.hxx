@@ -176,7 +176,7 @@ public:
                     uint8_t         getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
             virtual bool            goToTime(uint64_t nbUs);
                     bool            getExtraData(uint32_t *l, uint8_t **d);
-                    uint64_t        getDurationInUs(void) {return durationInUs;}
+                    uint64_t        getDurationInUs(void);
                     uint8_t			getAudioStream(ADM_audioStream **audio);
             virtual WAVHeader       *getInfo(void);
             virtual CHANNEL_TYPE    *getChannelMapping(void );
