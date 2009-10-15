@@ -398,14 +398,17 @@ uint8_t extractSPSInfo(uint8_t *data, uint32_t len,uint32_t *wwidth,uint32_t *hh
            printf("[H264]Profile : %u, Level :%u, SPSid:%u\n",profile,level,id);
            if(profile>=100) // ?? Borrowed from H264.C/FFMPEG
            {
-              printf("[H264]Warning : High profile\n");
-              if(get_ue_golomb(&s) == 3) //chroma_format_idc
-                get_bits1(&s);  //residual_color_transform_flag
-            get_ue_golomb(&s);  //bit_depth_luma_minus8
-            get_ue_golomb(&s);  //bit_depth_chroma_minus8
-            get_bits1(&s);
-			if (get_bits1(&s))
-				get_bits(&s, 8);
+                printf("[H264]Warning : High profile\n");
+                if(get_ue_golomb(&s) == 3) //chroma_format_idc
+                    get_bits1(&s);  //residual_color_transform_flag
+                get_ue_golomb(&s);  //bit_depth_luma_minus8
+                get_ue_golomb(&s);  //bit_depth_chroma_minus8
+                get_bits1(&s);      // Transform bypass
+                if (get_bits1(&s)) // Scaling matrix
+                {
+                    printf("[H264] Scaling matrix present\n");
+                    get_bits(&s, 8);
+                }
            }
            
 
@@ -430,7 +433,7 @@ uint8_t extractSPSInfo(uint8_t *data, uint32_t len,uint32_t *wwidth,uint32_t *hh
                  {
                       get_se_golomb(&s);
                  }
-             }else 
+             }else if(pic_order_cnt_type!=2)
              {
                printf("Error in SPS\n");
                return 0;
