@@ -38,7 +38,7 @@ uint8_t psHeader::open(const char *name)
     char *type;
     uint64_t startDts;
 
-    sprintf(idxName,"%s.idx",name);
+    sprintf(idxName,"%s.idx2",name);
     indexFile index;
     if(!index.open(idxName))
     {

@@ -39,7 +39,7 @@ uint8_t tsHeader::open(const char *name)
     uint64_t startDts;
     
 
-    sprintf(idxName,"%s.idx",name);
+    sprintf(idxName,"%s.idx2",name);
     indexFile index;
     if(!index.open(idxName))
     {

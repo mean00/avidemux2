@@ -42,7 +42,7 @@ int count=0;
         printf(" [TS Demuxer] Not a ts file\n");
         return false;
     }
-    sprintf(index,"%s.idx",fileName);
+    sprintf(index,"%s.idx2",fileName);
 again:    
     if(ADM_fileExist(index)) 
     {

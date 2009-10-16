@@ -296,7 +296,7 @@ uint32_t recoveryCount=0xff;
 
     memset(&data,0,sizeof(data));
     char indexName[strlen(file)+5];
-    sprintf(indexName,"%s.idx",file);
+    sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
     if(!index)
     {
@@ -518,7 +518,7 @@ dmxPacketInfo info;
 
 
     char indexName[strlen(file)+5];
-    sprintf(indexName,"%s.idx",file);
+    sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
     if(!index)
     {
