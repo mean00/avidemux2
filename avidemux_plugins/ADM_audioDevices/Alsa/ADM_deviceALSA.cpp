@@ -158,7 +158,7 @@ bool alsaAudioDevice::localInit( void )
     }
 #else
 
- 	unsigned int buffer_time = 100LL*1000LL; // 800 Ms ?
+ 	unsigned int buffer_time = 1000LL*1000LL; // 60 Ms ?
 	int er;
 	unsigned int buff;
 	dir=0;
@@ -250,7 +250,7 @@ _again:
     lenInSample=lenInBytes/(_channels*2);
     if(!lenInSample)
     {
-        printf("[Alsa] Underflow\n");
+       // printf("[Alsa] Underflow\n");
         mutex.unlock();
         return ;
     }
