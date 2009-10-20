@@ -579,13 +579,14 @@ uint32_t frame;
 uint32_t sz;
         if(argc != 1)
           return JS_FALSE;
-        
+#if 0        
         enterLock();
         frame=JSVAL_TO_INT(argv[0]);
         if(!video_body->getFrameSize(frame,&sz)) return JS_FALSE;
         leaveLock(); 
         
         *rval=INT_TO_JSVAL(sz);
+#endif
         return JS_TRUE;
 }// end PostProcess
 JSBool ADM_JSAvidemuxVideo::getFrameType(JSContext *cx, JSObject *obj, uintN argc, 
@@ -596,13 +597,14 @@ uint32_t frame;
 uint32_t sz;
         if(argc != 1)
           return JS_FALSE;
-        
+#if 0        
         enterLock();
         frame=JSVAL_TO_INT(argv[0]);
         if(!video_body->getFlags(frame,&sz)) return JS_FALSE;
         leaveLock(); 
         
         *rval=INT_TO_JSVAL(sz);
+#endif
         return JS_TRUE;
 }// end PostProcess
 /* EOF */

@@ -331,7 +331,7 @@ uint64_t admPreview::getCurrentPts(void)
       @param image : current main image (input)
       @param framenum, framenumber
 */
-
+#if 0 // OBSOLETE
 uint8_t admPreview::seekToIntra(uint32_t frame)
 {
     if(!video_body->GoToIntra(frame)) 
@@ -342,7 +342,7 @@ uint8_t admPreview::seekToIntra(uint32_t frame)
     return samePicture();
 
 }
-
+#endif
 /**
       \fn admPreview::seekToIntraPts
       \brief Seek to intra at PTS given as arg
@@ -673,8 +673,6 @@ bool admPreview::previousKeyFrame(void)
 bool admPreview::previousFrame(void)
 {
     uint64_t pts=rdrImage->Pts;
-    uint32_t frame=video_body->getCurrentFrame();
-    if(!frame) return false;
     // If the frame is not an intra, the previous one
     // is still in the cache
     if(rdrImage->flags!=AVI_KEY_FRAME)

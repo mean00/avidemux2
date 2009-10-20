@@ -87,6 +87,7 @@ static int ignore_change=0;
             }
             break;
       case ACT_Goto:
+#if 0
           uint32_t fn;
           fn = video_body->getCurrentFrame();
           if (DIA_GetIntegerValue
@@ -98,14 +99,17 @@ static int ignore_change=0;
             else
                 GUI_Error_HIG(QT_TR_NOOP("Out of bounds"), NULL);
             }
+#endif
           break;
       case ACT_Back25Frames:
+#if 0
           if (video_body->getCurrentFrame() >= 25)
           {
               DIA_StartBusy();
               GUI_GoToFrame (video_body->getCurrentFrame() - 25);
               DIA_StopBusy();
           }
+#endif
 	  break;
 
       case ACT_PreviousKFrame:
@@ -180,7 +184,7 @@ static int ignore_change=0;
       case ACT_GotoTime:
 	  {
            // Get current time
-            uint64_t pts=video_body->estimatePts(video_body->getCurrentFrame());
+            uint64_t pts=admPreview::getCurrentPts();
 
 	      uint16_t mm, hh, ss, ms;
             ms2time((uint32_t)(pts/1000),&hh,&mm,&ss,&ms);
@@ -259,6 +263,7 @@ void GUI_GoToKFrameTime(uint64_t timeFrame)
 */
 int GUI_GoToFrame(uint32_t frame)
 {
+#if 0
     uint32_t flags;
 
     if (playing)
@@ -273,6 +278,7 @@ int GUI_GoToFrame(uint32_t frame)
 
     if(!admPreview::samePicture()) return 0;
     GUI_setAllFrameAndTime();
+#endif
     return 1;
 }
 
@@ -409,7 +415,7 @@ void GUI_setAllFrameAndTime(void)
     // if(!guiReady) return ;
     text[0] = 0;
 
-    UI_updateFrameCount(video_body->getCurrentFrame());
+    //UI_updateFrameCount(video_body->getCurrentFrame());
     UI_setCurrentTime(admPreview::getCurrentPts());
     UI_setTotalTime(video_body->getVideoDuration());
 

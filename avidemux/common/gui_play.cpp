@@ -94,7 +94,8 @@ void GUI_PlayAvi(void)
     
     uint32_t framelen,flags;
     AVDMGenericVideoStream *filter;
-    uint32_t max,err,oldFrame;
+    uint32_t max,err;
+    uint64_t oldTimeFrame;
    
     // check we got everything...
     if (!avifileinfo)	return;
@@ -105,7 +106,7 @@ void GUI_PlayAvi(void)
         stop_req = 1;
         return;
       }
-    oldFrame=video_body->getCurrentFrame();
+    oldTimeFrame=admPreview::getCurrentPts();
 	uint32_t priorityLevel;
 
 	originalPriority = getpriority(PRIO_PROCESS, 0);
@@ -140,7 +141,8 @@ void GUI_PlayAvi(void)
    
    
    UI_purge();
-   video_body->setCurrentFrame(oldFrame);
+#warning FIXME
+//   admPreview::seekToFrame(oldTimeFrame);
    admPreview::samePicture();
    GUI_setCurrentFrameAndTime();
    UI_purge();

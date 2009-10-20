@@ -492,7 +492,7 @@ int nw;
       break;
       // set decoder option (post processing ...)
     case ACT_DecoderOption:
-      video_body->setDecodeParam ( video_body->getCurrentFrame());
+      video_body->setDecodeParam ( admPreview::getCurrentPts());
 
       break;
     case ACT_VideoParameter:
@@ -641,7 +641,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
         {
             uint32_t nbAudio;
             audioInfo *infos=NULL;
-            if(video_body->getAudioStreamsInfo(video_body->getCurrentFrame()+1,&nbAudio,&infos))
+            if(video_body->getAudioStreamsInfo(admPreview::getCurrentPts()+1,&nbAudio,&infos))
             {
                 if(nbAudio>1)
                 {   // Multiple track warn user
@@ -746,11 +746,11 @@ void  updateLoaded ()
 
 
 
-      admPreview::seekToIntra (0);
+   //   admPreview::seekToIntraPts (0);
       admPreview::samePicture();
       GUI_setCurrentFrameAndTime();
 
-   printf("\n** conf updated **\n");
+   ADM_info(" conf updated \n");
 }
 
 //___________________________________________
@@ -1325,6 +1325,7 @@ void GUI_showCurrentFrameHex(void)
  char sSize[15];
  ADMCompressedImage image;
  uint8_t seq;
+#if 0
  if (!avifileinfo) return;
 
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
@@ -1348,6 +1349,7 @@ void GUI_showCurrentFrameHex(void)
  if(diaFactoryRun(QT_TR_NOOP("Frame Hex Dump"),3,elems))
 
  delete [] buffer;
+#endif
 }
 /**
     \fn GUI_showSize
@@ -1364,13 +1366,9 @@ uint8_t *buffer;
  char                text[DUMP_SIZE][100];
  
  if (!avifileinfo) return;
-
+#if 0
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
  image.data=buffer;
-
-
-
-
     for(int i=0;i<DUMP_SIZE;i++)
     {
         int target=video_body->getCurrentFrame()+i;
@@ -1385,7 +1383,7 @@ uint8_t *buffer;
 
  
  delete [] buffer;
- 
+ #endif
 }
 
 /**
