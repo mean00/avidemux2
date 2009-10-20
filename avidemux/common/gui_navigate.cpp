@@ -71,6 +71,7 @@ static int ignore_change=0;
             {
                 ADM_warning("Scale: Seeking to intra at %"LLU" ms failed\n",pts/1000);
             }
+            GUI_setCurrentFrameAndTime();
             ignore_change--;
         }
         break;
@@ -425,17 +426,9 @@ void GUI_setCurrentFrameAndTime(void)
 {
     char text[80];
     double len;
-    // int val;
-
-    // if(!guiReady) return ;
-    text[0] = 0;
-
-    UI_setFrameCount(video_body->getCurrentFrame(),
-		     avifileinfo->nb_frames);
+   
     UI_setCurrentTime(admPreview::getCurrentPts());
-
-
-    UI_setScale(ADM_SCALE_SIZE);
+    //UI_setScale(ADM_SCALE_SIZE);
 }
 /**
     \fn A_jumpToTime

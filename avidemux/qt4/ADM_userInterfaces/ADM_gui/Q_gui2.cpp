@@ -284,27 +284,23 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
 	connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
 
-	connect(ui.lineEdit, SIGNAL(editingFinished()), this, SLOT(currentFrameChanged()));
 
-	QIntValidator *frameValidator = new QIntValidator(0, 0x7FFFFFFF, this);
-	ui.lineEdit->setValidator(frameValidator);
 
-	connect(ui.lineEdit, SIGNAL(editingFinished()), this, SLOT(currentFrameChanged()));
 
 	QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
 	QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
-	ui.lineEdit_2->setValidator(timeValidator);
-	ui.lineEdit_2->setInputMask("99:99:99.999");
+	ui.currentTime->setValidator(timeValidator);
+	ui.currentTime->setInputMask("99:99:99.999");
 
-	connect(ui.lineEdit_2, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+	connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
 	/* Build the custom menu */
 	buildCustomMenu();
 
 	this->installEventFilter(this);
 	slider->installEventFilter(this);
-	ui.lineEdit->installEventFilter(this);
-	ui.lineEdit_2->installEventFilter(this);
+	
+	ui.currentTime->installEventFilter(this);
 
 	this->setFocus(Qt::OtherFocusReason);
 
@@ -424,15 +420,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 			break;
 		case QEvent::FocusOut:
-			if (watched == ui.lineEdit)
-			{
-				QString temp(ui.lineEdit->text());
-				int pos = 0;
-
-				if (ui.lineEdit->validator()->validate(temp, pos) != QValidator::Acceptable)
-					UI_updateFrameCount(currentFrame);
-			}
-			else if (watched == ui.lineEdit_2)
+			if (watched == ui.currentTime)
 			{
 				uint16_t hh, mm, ss, ms;
 
@@ -782,19 +770,17 @@ void UI_setScale( double val )
 
 int UI_readCurFrame(void)
 {
-	bool ok;
-	
-	return WIDGET(lineEdit)->text().toInt(&ok);
+	return 0;
 }
 
 int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms)
 {
 	int success = 0;
 
-	QString timeText = WIDGET(lineEdit_2)->text();
+	QString timeText = WIDGET(currentTime)->text();
 	int pos;
 
-	if (WIDGET(lineEdit_2)->validator()->validate(timeText, pos) == QValidator::Acceptable)
+	if (WIDGET(currentTime)->validator()->validate(timeText, pos) == QValidator::Acceptable)
 	{
 		uint32_t frame;
 
@@ -876,11 +862,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 */
 void UI_updateFrameCount(uint32_t curFrame)
 {
-	char string[30];
-	sprintf(string,"%"LU,curFrame);
-	WIDGET(lineEdit)->setText(string);
-
-	currentFrame = curFrame;
+	
 }
 
 /**
@@ -889,16 +871,7 @@ void UI_updateFrameCount(uint32_t curFrame)
 */
 void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 {
-	char text[80]; 
-	if (total) total--; // We display from 0 to X  
-
-	UI_updateFrameCount(curFrame);
-
-	sprintf(text, "/ %"LU, total);
-	WIDGET(label_2)->setText(text);
-
-	((QIntValidator*)(WIDGET(lineEdit)->validator()))->setTop(total);
-	frameCount = total;
+	
 }
 
 /**
@@ -912,7 +885,7 @@ void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
 
 	frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
 	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-	WIDGET(lineEdit_2)->setText(text);
+	WIDGET(currentTime)->setText(text);
 }
 
 /**
@@ -929,7 +902,7 @@ void UI_setTimeCount(uint32_t curFrame,uint32_t total, uint32_t fps)
 	UI_updateTimeCount(curFrame,fps);
 	frame2time(total,fps, &hh, &mm, &ss, &ms);
 	sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
-	WIDGET(label_7)->setText(text);
+	WIDGET(totalTime)->setText(text);
 
 	slider->setFrameCount(total);
 
@@ -948,7 +921,7 @@ void UI_setCurrentTime(uint64_t curTime)
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
   	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-	WIDGET(label_7)->setText(text);
+	WIDGET(currentTime)->setText(text);
 
 }
 
@@ -964,7 +937,7 @@ void UI_setTotalTime(uint64_t curTime)
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
   	sprintf(text, "/%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    //WIDGET(label_7)->setText(text);
+    WIDGET(totalTime)->setText(text);
 }
 /**
     \fn     UI_setMarkers(uint64_t Ptsa, uint32_t Ptsb )
