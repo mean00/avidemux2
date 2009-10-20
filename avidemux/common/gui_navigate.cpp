@@ -414,7 +414,7 @@ void GUI_setAllFrameAndTime(void)
     UI_setTotalTime(video_body->getVideoDuration());
 
     // progress bar
-    UI_setScale(ADM_SCALE_SIZE);
+    GUI_SetScale(0);
 
 }
 
@@ -424,11 +424,14 @@ void GUI_setAllFrameAndTime(void)
 */
 void GUI_setCurrentFrameAndTime(void)
 {
-    char text[80];
+    uint64_t pts=admPreview::getCurrentPts();
     double len;
    
-    UI_setCurrentTime(admPreview::getCurrentPts());
-    //UI_setScale(ADM_SCALE_SIZE);
+    UI_setCurrentTime(pts);
+    len=pts;
+    len*=ADM_SCALE_SIZE;
+    len/=video_body->getVideoDuration();  
+    GUI_SetScale(len);
 }
 /**
     \fn A_jumpToTime

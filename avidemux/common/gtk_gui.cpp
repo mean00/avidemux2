@@ -1210,10 +1210,11 @@ void A_addJob(void)
         ADM_dealloc(name);
         ADM_dealloc(final);
 }
-///
-///	Return the frame # corresponding to the position of the scale/slider
-///	Rougth estimation in fact
-///
+/**
+    \fn GUI_GetScale
+    \brief Return the % of the scale, between 0 and ADM_SCALE_SIZE
+
+*/
 uint32_t GUI_GetScale(void)
 {
 
@@ -1225,8 +1226,18 @@ uint32_t GUI_GetScale(void)
 
     return (uint32_t)floor(tg);;
 }
-
-
+/**
+    \fn GUI_SetScale
+    \brief Set the scale, input is between 0 and ADM_SCALE_SIZE (max)
+*/
+void     GUI_SetScale( uint32_t scale )
+{
+    double percent;
+    percent=scale;
+    percent/=ADM_SCALE_SIZE;
+    percent*=100;
+    UI_setScale(percent);
+}
 
 
 /**

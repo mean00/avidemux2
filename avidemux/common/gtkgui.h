@@ -33,6 +33,7 @@ void GUI_PreviousKeyFrame( void );
 uint8_t A_ListAllBlackFrames( char *name);
 void GUI_PlayAvi( void );
 uint32_t GUI_GetScale( void );
+void     GUI_SetScale( uint32_t scale );
 void GUI_detransient(void );
 void GUI_retransient(void );
 
