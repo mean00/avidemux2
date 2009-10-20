@@ -24,6 +24,8 @@ extern ADM_Composer *video_body; // Fixme!
 ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
 {
     aviInfo info;
+    uint64_t realStart=startTime;
+
     video_body->getVideoInfo(&info);
     width=info.width;
     height=info.height;
@@ -31,30 +33,15 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     averageFps1000=info.fps1000;
     isCFR=false;
     // Estimate start frame
-    currentFrame= video_body->searchFrameBefore(startTime+1);
-    while(currentFrame)
+    if(false==video_body->getPKFramePTS(&realStart))
     {
-        uint32_t flags;
-        video_body->getFlags(currentFrame,&flags);
-        if(flags&AVI_KEY_FRAME) break;
-        currentFrame--;
+        ADM_warning("Cannot find previous keyframe\n");
     }
     eofMet=false;
-    this->startTime=startTime;
+    this->startTime=realStart;
     this->endTime=endTime;
-    // Update start time if needed
-    uint64_t sPts,sDts,sStart=ADM_NO_PTS;
-    video_body->getPtsDts(currentFrame,&sPts,&sDts);
-    if(sDts!=ADM_NO_PTS) sStart=sDts;
-    else
-        if(sPts!=ADM_NO_PTS)
-        {
-            sStart=sPts;
-            printf("[Warning] No Dts available for first frame, guessing ...\n");
-        }
-    if(sStart!=ADM_NO_PTS)
-        this->startTime=sStart;
-    printf("[StreamCopy] Fixating start time by %u\n",abs((int)(this->startTime-startTime)));
+    video_body->GoToIntraTime(realStart);
+    ADM_info(" Fixating start time by %u\n",abs((int)(this->startTime-startTime)));
 }
 /**
     \fn ADM_videoStreamCopy
@@ -96,9 +83,9 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
 {
     if(true==eofMet) return false;
     image.data=data;
-    if(false==video_body->getCompressedPicure(currentFrame,&image))
+    if(false==video_body->getCompressedPicure(&image))
     {
-            printf("[StreamCopy] Get packet failed for frame %d\n",currentFrame);
+            ADM_warning(" Get packet failed ");
             return false;
     }
     *len=image.dataLength;

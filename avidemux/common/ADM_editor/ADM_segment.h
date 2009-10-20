@@ -116,8 +116,8 @@ public:
             uint32_t    getNbFrames(void);
 
             bool        getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset);
-            bool        getRefFromFrame(uint32_t frame,uint32_t *refVideo, uint32_t *frameOffset);
 
+            bool        getRefFromFrame(uint32_t frame,uint32_t *refVideo, uint32_t *frameOffset);
             bool        getFrameFromRef(uint32_t *frame,uint32_t refVideo, uint32_t frameOffset);
 
 

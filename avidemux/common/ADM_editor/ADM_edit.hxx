@@ -40,7 +40,9 @@
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 
-
+/**
+    \enum _ENV_EDITOR_FLAGS
+*/
 typedef enum
 {
 	ENV_EDITOR_NONE=   0x0000,
@@ -114,25 +116,32 @@ public:
 /************************************ Public API ***************************/
 protected:
                     uint32_t    currentFrame;
-public:
-                    uint32_t    getCurrentFrame(void);
-                    uint64_t    getCurrentFramePts(void);
-                    bool        setCurrentFrame(uint32_t frame);
                     bool        GoToIntra(uint32_t frame);
+                    uint32_t    getCurrentFrame(void); 
+                    bool        setCurrentFrame(uint32_t frame);
+
+                    uint64_t    estimatePts(uint32_t frame);
+public:
+                    bool        getCompressedPicure(ADMCompressedImage *img);
+      
+public:
+                   
+                    uint64_t    getCurrentFramePts(void);
+                   
+                    
                     bool        GoToTime(uint64_t time);
                     bool        GoToIntraTime(uint64_t time);
                     bool        NextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
 
-                    bool        getCompressedPicure(uint32_t framenum,ADMCompressedImage *img);
-                    uint64_t    estimatePts(uint32_t frame);
+                   // Fixme, framenumber !
                     uint32_t    searchFrameBefore(uint64_t pts);
                     uint32_t    searchFrameAt(uint64_t pts);
                     bool        getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out);
                     bool        getPictureJustBefore(uint64_t pts);
                     bool        getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 /************************************ Internal ******************************/
-public:
+protected:
                                 /// Decode frame and on until frame is popped out of decoders
                     bool        DecodePictureUpToIntra(uint32_t frame,uint32_t ref);
                                 /// compressed image->yb12 image image and do postproc/colorconversion
@@ -148,6 +157,7 @@ public:
                     bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
 
 /************************************ Internal ******************************/
+protected:
                     uint8_t 	getFrame(uint32_t   framenum,ADMCompressedImage *img,uint8_t *isSequential);
                     
                 
@@ -155,11 +165,13 @@ public:
                     uint32_t 	getFlags(uint32_t frame,uint32_t *flags);
 
                             // B follow A with just Bframes in between
-                    uint32_t 	getFlagsAndSeg (uint32_t frame, 
-                                uint32_t * flags,uint32_t *segs);
+                    uint32_t 	getFlagsAndSeg (uint32_t frame,    uint32_t * flags,uint32_t *segs);
                     uint8_t  	setFlag(uint32_t frame,uint32_t flags);
-                    uint8_t	    updateVideoInfo(aviInfo *info);
+
                     uint8_t  	getFrameSize(uint32_t frame,uint32_t *size) ;
+
+public:
+                    uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
 /************************************ audioStream ******************************/
 protected:
@@ -198,13 +210,15 @@ public:
 					
 					
 /***************************************** Seeking *****************************/            
+protected:
 		  			bool			getPKFrame(uint32_t *frame);
 					bool			getNKFrame(uint32_t *frame);
-                    bool			getNKFramePTS(uint64_t *frameTime);
-                    bool			getPKFramePTS(uint64_t *frameTime);
+
+                    
                     bool			getUncompressedFrame(uint32_t frame,ADMImage *out,uint32_t *flagz=NULL);
 public:
-                    
+                    bool			getNKFramePTS(uint64_t *frameTime);
+                    bool			getPKFramePTS(uint64_t *frameTime);   
 /******************************* Post Processing ************************************/
 					uint8_t 		setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
 					uint8_t 		getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);

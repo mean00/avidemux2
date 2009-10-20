@@ -41,6 +41,7 @@ uint32_t nbPFrame=0;
 uint32_t nbBFrame=0;
 uint32_t curBFrame=0;
 uint32_t maxBFrame=0;
+#if 0
 	// 1st compute the total
 	uint32_t start,end;
     uint64_t deltaTime=video_body->getMarkerBPts()-video_body->getMarkerAPts();
@@ -222,5 +223,6 @@ uint32_t maxBFrame=0;
         {
           delete bar[i];
         }
+#endif
 }
 //EOF

@@ -131,7 +131,7 @@ bool ADM_EditorSegment::deleteAll (void)
 bool        ADM_EditorSegment::resetSegment(void)
 {
     //
-    
+    aviInfo info;
     segments.clear();
     int n=videos.size();
     for(int i=0;i<n;i++)
@@ -141,6 +141,8 @@ bool        ADM_EditorSegment::resetSegment(void)
         memset(&seg,0,sizeof(seg));
         seg._durationUs=vid->_aviheader->getVideoDuration();
         seg._reference=i;
+        vid->_aviheader->getVideoInfo(&info);
+        seg._nbFrame=info.nb_frames;
         segments.push_back(seg);
     }
     updateStartTime();
@@ -210,20 +212,25 @@ uint64_t ADM_EditorSegment::getTotalDuration(void)
 }
 /**
     \fn getNbFrames
-    \brief 
+    \brief Weak, avoid using it
 */
 uint32_t ADM_EditorSegment::getNbFrames(void)
 {
     uint32_t dur;
     uint32_t nb=0;
-    int n=videos.size();
+    int n=segments.size();
     for(int i=0;i<n;i++)
-        dur+=videos[i]._nb_video_frames;
+        dur+=segments[i]._nbFrame;
     return nb;
 
 }
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 /**
-    \fn getTotalDuration
+    \fn getRefFromTime
+    \brief convert linear time to a ref video+ offset in the refvideo
 */
 bool        ADM_EditorSegment::getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset)
 {
@@ -269,16 +276,28 @@ _SEGMENT   * ADM_EditorSegment::getCurrentSeg(void)
 {
     return &(segments[0]);
 }
-
+/**
+    \fn convertLinearTimeToSeg
+    \brief convert linear time to a segment+ offset in the segment
+*/
 bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime)
 {
-    *seg=0;
-    *segTime=frameTime;
-    return true;
+    for(int i=0;i<segments.size();i++)
+    {
+        if(segments[i]._startTimeUs<=frameTime && segments[i]._startTimeUs+segments[i]._durationUs>frameTime)
+        {
+            *seg=i;
+            *segTime=frameTime-segments[i]._startTimeUs;
+            return true;
+        }
+    }
+    ADM_warning("Cannot find segment matching time %"LLU"ms \n",frameTime/1000);
+    return false;
 }
 bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime)
 {
-    *frameTime=segTime;
+    ADM_assert(seg<segments.size());
+    *frameTime=segTime+segments[seg]._startTimeUs;
     return true;
 }
 //EOF

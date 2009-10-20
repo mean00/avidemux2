@@ -106,8 +106,10 @@ bool        ADM_Composer::samePicture(ADMImage *image)
         \brief bypass decoder and directly get the source image
 
 */
-bool        ADM_Composer::getCompressedPicure(uint32_t framenum,ADMCompressedImage *img)
+bool        ADM_Composer::getCompressedPicure(ADMCompressedImage *img)
 {
+    return false;
+#if 0
 uint32_t ref = 0,relative=0;
     if(false==_segments.getRefFromFrame(framenum,&ref,&relative))
     {
@@ -121,6 +123,7 @@ uint32_t ref = 0,relative=0;
 
     if (!demuxer->getFrame (relative,img)) return false;
     return true;
+#endif
 }
 //***************************** Internal API**************************
 /**
