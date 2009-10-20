@@ -7,6 +7,7 @@ ADMedAVIAUD.cpp
 ADM_edFrameType.cpp 
 ADM_edit.cpp 
 ADM_edRender.cpp 
+ADM_edRenderInternal.cpp 
 ADM_edMarker.cpp
 ADM_edStub.cpp
 ADM_edPtsDts.cpp

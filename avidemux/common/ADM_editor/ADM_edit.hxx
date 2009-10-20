@@ -63,6 +63,31 @@ typedef enum
 class ADM_Composer : public ADM_audioStream
 {
   private:
+//*********************************PRIVATE API *******************************************
+                    bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
+                    bool        switchToNextSegment(void);
+                    bool        switchToSegment(uint32_t s);
+                    uint32_t    currentFrame;
+
+                    bool        nextPictureInternal(uint32_t ref,ADMImage *image);
+                    bool        samePictureInternal(uint32_t ref,ADMImage *image);
+
+protected:
+                                /// Decode frame and on until frame is popped out of decoders
+                    bool        DecodePictureUpToIntra(uint32_t frame,uint32_t ref);
+                                /// compressed image->yb12 image image and do postproc/colorconversion
+                    bool        decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t ref);
+                                /// Decode next image
+                    bool        DecodeNextPicture(uint32_t ref);
+                                /// Get the next decoded picture
+                    bool     	getNextPicture(ADMImage *out,uint32_t ref);
+                                /// Get again last decoded picture
+                    bool        getSamePicture(ADMImage *out,uint32_t ref);
+
+                    bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
+                    bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
+//******************************************************************************************
+  private:
                     ADM_EditorSegment _segments;
                     uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid); 
                                                             // Duplicate img, do colorspace
@@ -70,15 +95,15 @@ class ADM_Composer : public ADM_audioStream
   					uint32_t	_internalFlags;
   					ADM_PP 		_pp;
 					ADMImage	*_imageBuffer;
-  					uint8_t		decodeCache(uint32_t frame,uint32_t seg, ADMImage *image);
+  				
   					// _audiooffset points to the offset / the total segment
   					// not the used part !
   					uint32_t  _audioseg;
 					int64_t   _audioSample;
   					uint32_t  _audiooffset;
-					uint8_t	  _haveMarkers; // used for load/save edl
-                    
-       				uint32_t _lastseg,_lastframe,_lastlen;
+
+                    uint32_t  _currentSegment;
+       				//uint32_t _lastseg,_lastframe,_lastlen;
 
                     ADM_audioStreamTrack *getTrack(uint32_t i);
                     ADMImage    *_scratch;																		;
@@ -93,7 +118,7 @@ class ADM_Composer : public ADM_audioStream
                     bool     	getExtraHeaderData(uint32_t *len, uint8_t **data);
                     uint32_t    getPARWidth(void);
                     uint32_t    getPARHeight(void);
-                    uint8_t     rebuildDuration(void);
+                    bool        rebuildDuration(void);
   								ADM_Composer();
   				virtual 			~ADM_Composer();
                     void		clean( void );
@@ -114,62 +139,13 @@ public:
                     bool        setMarkerBPts(uint64_t pts);
 public:
 /************************************ Public API ***************************/
-protected:
-                    uint32_t    currentFrame;
-                    bool        GoToIntra(uint32_t frame);
-                    uint32_t    getCurrentFrame(void); 
-                    bool        setCurrentFrame(uint32_t frame);
-
-                    uint64_t    estimatePts(uint32_t frame);
 public:
-                    bool        getCompressedPicure(ADMCompressedImage *img);
-      
-public:
-                   
+                    bool        getCompressedPicture(ADMCompressedImage *img);
                     uint64_t    getCurrentFramePts(void);
-                   
-                    
-                    bool        GoToTime(uint64_t time);
-                    bool        GoToIntraTime(uint64_t time);
-                    bool        NextPicture(ADMImage *image);
+                    bool        goToTimeVideo(uint64_t time);
+                    bool        goToIntraTimeVideo(uint64_t time);
+                    bool        nextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
-
-                   // Fixme, framenumber !
-                    uint32_t    searchFrameBefore(uint64_t pts);
-                    uint32_t    searchFrameAt(uint64_t pts);
-                    bool        getImageFromCacheForFrameBefore(uint64_t pts,ADMImage *out);
-                    bool        getPictureJustBefore(uint64_t pts);
-                    bool        getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
-/************************************ Internal ******************************/
-protected:
-                                /// Decode frame and on until frame is popped out of decoders
-                    bool        DecodePictureUpToIntra(uint32_t frame,uint32_t ref);
-                                /// compressed image->yb12 image image and do postproc/colorconversion
-                    bool        decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t ref);
-                                /// Decode next image
-                    bool        DecodeNextPicture(uint32_t ref);
-                                /// Get the next decoded picture
-                    bool     	getNextPicture(ADMImage *out,uint32_t ref);
-                                /// Get again last decoded picture
-                    bool        getSamePicture(ADMImage *out,uint32_t ref);
-
-                    bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
-                    bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
-
-/************************************ Internal ******************************/
-protected:
-                    uint8_t 	getFrame(uint32_t   framenum,ADMCompressedImage *img,uint8_t *isSequential);
-                    
-                
-                    uint64_t 	getTime(uint32_t fn);
-                    uint32_t 	getFlags(uint32_t frame,uint32_t *flags);
-
-                            // B follow A with just Bframes in between
-                    uint32_t 	getFlagsAndSeg (uint32_t frame,    uint32_t * flags,uint32_t *segs);
-                    uint8_t  	setFlag(uint32_t frame,uint32_t flags);
-
-                    uint8_t  	getFrameSize(uint32_t frame,uint32_t *size) ;
-
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
@@ -210,12 +186,6 @@ public:
 					
 					
 /***************************************** Seeking *****************************/            
-protected:
-		  			bool			getPKFrame(uint32_t *frame);
-					bool			getNKFrame(uint32_t *frame);
-
-                    
-                    bool			getUncompressedFrame(uint32_t frame,ADMImage *out,uint32_t *flagz=NULL);
 public:
                     bool			getNKFramePTS(uint64_t *frameTime);
                     bool			getPKFramePTS(uint64_t *frameTime);   

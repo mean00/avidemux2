@@ -40,7 +40,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     eofMet=false;
     this->startTime=realStart;
     this->endTime=endTime;
-    video_body->GoToIntraTime(realStart);
+    video_body->goToIntraTimeVideo(realStart);
     ADM_info(" Fixating start time by %u\n",abs((int)(this->startTime-startTime)));
 }
 /**
@@ -83,7 +83,7 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
 {
     if(true==eofMet) return false;
     image.data=data;
-    if(false==video_body->getCompressedPicure(&image))
+    if(false==video_body->getCompressedPicture(&image))
     {
             ADM_warning(" Get packet failed ");
             return false;

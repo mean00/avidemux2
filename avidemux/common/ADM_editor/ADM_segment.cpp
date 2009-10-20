@@ -239,24 +239,6 @@ bool        ADM_EditorSegment::getRefFromTime(uint64_t time,uint32_t *refVideo, 
     return true;
 }
 /**
-    \fn getRefFromFrame
-*/
-bool        ADM_EditorSegment::getRefFromFrame(uint32_t frame,uint32_t *refVideo, uint32_t *frameOffset)
-{
-    *refVideo=0;
-    *frameOffset=frame;
-    return true;
-}
-/**
-    \fn getFrameFromRef
-*/
-bool        ADM_EditorSegment::getFrameFromRef(uint32_t *frame,uint32_t refVideo, uint32_t frameOffset)
-{
-    *frame=frameOffset;
-    return true;
-
-}
-/**
     \fn ~ADM_audioStreamTrack
 */
  ADM_audioStreamTrack::~ADM_audioStreamTrack()
@@ -299,5 +281,60 @@ bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t se
     ADM_assert(seg<segments.size());
     *frameTime=segTime+segments[seg]._startTimeUs;
     return true;
+}
+/**
+    \fn TimeToFrame
+    \brief return the frameno whose PTS==time
+*/
+static bool TimeToFrame(_VIDEOS *v,uint64_t time,uint32_t *frame,uint32_t *oflags)
+{
+    vidHeader 							*demuxer=v->_aviheader;  
+    int nb=demuxer->getMainHeader()->dwTotalFrames;
+    for(int i=0;i<nb;i++)
+    {
+        uint64_t pts,dts;
+        uint32_t flags;
+            demuxer->getPtsDts(i,&pts,&dts);
+            demuxer->getFlags(i,&flags);
+            if(pts==time)
+            {
+                *frame=i;
+                *oflags=flags;
+                return true;
+            }
+            if(pts!=ADM_NO_PTS &&pts>time) return false;
+    }
+    return false;
+}
+/**
+    \fn intraTimeToFrame
+    \brief Return the frame whosePTS==seektime, assert if does not exist
+*/
+uint32_t    ADM_EditorSegment::intraTimeToFrame(uint32_t refVideo,uint64_t seekTime)
+{
+        uint32_t frame;
+        uint32_t flags;
+        _VIDEOS *v=getRefVideo(refVideo);
+        ADM_assert(v);
+        if(false==TimeToFrame(v,seekTime,&frame,&flags))
+        {
+            ADM_assert(0);
+        }
+        ADM_assert(flags & AVI_KEY_FRAME);
+        return frame;
+}
+/**
+    \fn         isKeyFrameByTime
+    \brief      Return true if frame with PTS==seektime is a keyframe
+*/
+bool        ADM_EditorSegment::isKeyFrameByTime(uint32_t refVideo,uint64_t seekTime)
+{
+        uint32_t frame;
+        uint32_t flags;
+        _VIDEOS *v=getRefVideo(refVideo);
+        ADM_assert(v);
+        if(false==TimeToFrame(v,seekTime,&frame,&flags)) return false;
+        if(flags & AVI_KEY_FRAME) return true;
+        return false;
 }
 //EOF

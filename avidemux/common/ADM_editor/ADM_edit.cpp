@@ -55,9 +55,7 @@ uint32_t type,value;
   _audioseg = 0;
   _audiooffset = 0;
   _audioSample=0;
-  _lastseg = 99;
-  _lastframe = 99;
-  _haveMarkers=0; // only edl have markers
+
   // Initialize a default postprocessing (dummy)
   initPostProc(&_pp,16,16);
   if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
@@ -70,8 +68,7 @@ uint32_t type,value;
   updatePostProc(&_pp);
   _imageBuffer=NULL;
   _internalFlags=0;
-  // Start with a clean base
-
+  _currentSegment=0;
 }
 /**
 	Remap 1:1 video to segments
@@ -132,7 +129,7 @@ bool ADM_Composer::addFile (const char *name)
   _VIDEOS video;
     memset(&video,0,sizeof(video));
 
-	_haveMarkers=0; // by default no markers are present
+	
   
     FILE *f=fopen(name,"r");
     uint8_t buffer[4];
@@ -556,34 +553,9 @@ uint8_t r=0;
       It can happen, for example in case of SBR audio such as AAC
       The demuxer says it is xx kHz, but the codec updates it to 2*xx kHz
 */
-uint8_t ADM_Composer::rebuildDuration(void)
+bool  ADM_Composer::rebuildDuration(void)
 {
-  return 1;
-}
-/**
-    \fn estimatePts
-    \brief Get or estimate PTS of given frame
-*/
-uint64_t    ADM_Composer::estimatePts(uint32_t frame)
-{
-    uint32_t flags;
-    _VIDEOS *vid=_segments.getRefVideo(0);
-    vidHeader *demuxer=vid->_aviheader;
-    int count=0;
-    uint64_t  wantedPts;
-	while(1)
-    {
-        demuxer->getFlags(frame,&flags);
-        wantedPts=vid->_aviheader->getTime(frame);
-        if((flags & AVI_KEY_FRAME)&&(wantedPts!=ADM_NO_PTS))
-        {
-                break;
-        }
-        count++;
-        frame--;
-    }
-    wantedPts+=vid->timeIncrementInUs*count;
-    return wantedPts;
+  return true;
 }
 /**
     \fn getCurrentFramePts

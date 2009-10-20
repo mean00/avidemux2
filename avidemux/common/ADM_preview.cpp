@@ -352,7 +352,7 @@ uint8_t admPreview::seekToIntra(uint32_t frame)
 
 bool admPreview::seekToIntraPts(uint64_t timeframe)
 {
-    if(!video_body->GoToIntraTime(timeframe)) 
+    if(!video_body->goToIntraTimeVideo(timeframe)) 
     {
         ADM_warning(" seeking for frame at %"LLU" ms failed\n",timeframe/1000LL);
         return false;
@@ -405,7 +405,7 @@ uint8_t admPreview::nextPicture(void)
         }
 #else
 
-        if(!video_body->NextPicture(rdrImage)) return 0;
+        if(!video_body->nextPicture(rdrImage)) return 0;
 #endif
             UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
 
@@ -672,6 +672,7 @@ bool admPreview::previousKeyFrame(void)
 */
 bool admPreview::previousFrame(void)
 {
+#if 0
     uint64_t pts=rdrImage->Pts;
     // If the frame is not an intra, the previous one
     // is still in the cache
@@ -685,7 +686,7 @@ bool admPreview::previousFrame(void)
         }
         return false;
     }
-#if 0
+
     // Else go to the previous  keyframe...
     if(!video_body->getPKFrame(&frame)) return false;
     if(!video_body->GoToIntra(frame)) return false;

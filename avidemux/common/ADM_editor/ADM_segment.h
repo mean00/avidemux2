@@ -81,6 +81,7 @@ typedef struct
     uint64_t                            _startTimeUs;     /// Start time in current (=sum(_duration of previous seg))
 	uint64_t							_durationUs;      ///
     uint32_t                            _nbFrame;
+    uint32_t                            _curFrame;        ///
 }_SEGMENT;
 /*
     Use vectors to store our videos & segments
@@ -97,7 +98,6 @@ protected:
         ListOfSegments segments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
-        uint32_t       currentSeg;
 
 public:
                         ADM_EditorSegment(void);
@@ -117,14 +117,14 @@ public:
 
             bool        getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset);
 
-            bool        getRefFromFrame(uint32_t frame,uint32_t *refVideo, uint32_t *frameOffset);
-            bool        getFrameFromRef(uint32_t *frame,uint32_t refVideo, uint32_t frameOffset);
-
-
             bool        convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime);
             bool        convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime);
 
             _SEGMENT    *getCurrentSeg(void);
+
+
+            uint32_t    intraTimeToFrame(uint32_t refVideo,uint64_t seekTime);       
+            bool        isKeyFrameByTime(uint32_t refVideo,uint64_t seekTime);
 };
 
 #endif

@@ -37,7 +37,7 @@
 extern void UI_purge(void);
 extern uint8_t DIA_gotoTime(uint16_t *hh, uint16_t *mm, uint16_t *ss);
 extern bool SliderIsShifted;
-
+bool   GUI_GoToTime(uint64_t time);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**
     \fn HandleAction_Navigate
@@ -81,8 +81,7 @@ static int ignore_change=0;
                 uint64_t pts;
                 if(action==ACT_GotoMarkA) pts=video_body->getMarkerAPts();
                         else  pts=video_body->getMarkerBPts();
-                 uint32_t frame=video_body->searchFrameBefore(pts);
-                  GUI_GoToFrame(frame);
+                GUI_GoToTime(pts);
                  
             }
             break;
@@ -450,9 +449,16 @@ uint64_t pts;
         pts*=1000;
         pts+=ms;
         pts*=1000;
-        uint32_t frame=video_body->searchFrameBefore(pts);
-        return GUI_GoToFrame(frame);
+
+        return GUI_GoToTime(pts);
 
 }
-
+/**
+    \fn GUI_GoToTime
+*/
+bool GUI_GoToTime(uint64_t time)
+{
+    ADM_warning("GUI_GoToTime called\n");
+    return false; 
+}   
 // EOF
