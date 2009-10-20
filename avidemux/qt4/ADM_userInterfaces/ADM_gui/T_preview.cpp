@@ -177,7 +177,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     const QX11Info &info=videoWindow->x11Info();
     xinfo->display=info.display();
    // xinfo->window=videoWindow->winId();
-    xinfo->window=videoWindow->window()->winId();
+    xinfo->window=videoWindow->winId();
 #endif
 
 	xinfo->x = widget->x();
