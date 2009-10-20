@@ -69,6 +69,7 @@ uint32_t type,value;
   _imageBuffer=NULL;
   _internalFlags=0;
   _currentSegment=0;
+  _scratch=NULL;
 }
 /**
 	Remap 1:1 video to segments
@@ -555,7 +556,8 @@ uint8_t r=0;
 */
 bool  ADM_Composer::rebuildDuration(void)
 {
-  return true;
+  switchToSegment(0);
+  return true; nextPictureInternal(0,NULL);
 }
 /**
     \fn getCurrentFramePts

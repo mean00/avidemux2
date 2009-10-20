@@ -746,7 +746,7 @@ void  updateLoaded ()
 
 
 
-   //   admPreview::seekToIntraPts (0);
+      video_body->rewind();
       admPreview::samePicture();
       GUI_setCurrentFrameAndTime();
 

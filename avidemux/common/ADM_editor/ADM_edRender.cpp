@@ -82,7 +82,7 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
         ADM_warning("Cannot go to segment %"LU"\n",s);
         return false;
     }
-    if(false== DecodePictureUpToIntra(frame,seg->_reference))
+    if(false== DecodePictureUpToIntra(seg->_reference,frame))
     {
         return false;
     }
@@ -286,16 +286,35 @@ bool        ADM_Composer::switchToSegment(uint32_t s)
     }
     _SEGMENT *seg=_segments.getSegment(s);
     ADM_assert(seg);
-    ADM_info("Switching to seg %"LU" with startTime in reference pic= %"LU" ms\n",s,seg->_refStartTimeUs/1000);
+    ADM_info("Trying to switch to seg %"LU" with startTime in reference pic= %"LU" ms\n",s,seg->_refStartTimeUs/1000);
+        // If the refStartTime is 0, it is the first image
+        // But the fist image might not be = 0
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        vidHeader 	*demuxer=vid->_aviheader;  
+        ADM_assert(vid);
+        uint64_t from=seg->_refStartTimeUs;
+      uint32_t flags;
+      uint64_t pts,dts;
+        demuxer->getFlags(0,&flags);
+        demuxer->getPtsDts(0,&pts,&dts);
+    if(!seg->_refStartTimeUs)
+    {
+        if(pts!=ADM_NO_PTS && pts)
+        {
+                ADM_info("This segment does not start at 0,...\n");
+                from=pts;
+        }
+    }
+    
     // Search the previous keyframe for segment....
     uint64_t seekTime;
-    if(_segments.isKeyFrameByTime(seg->_reference,seg->_refStartTimeUs))
+    if(_segments.isKeyFrameByTime(seg->_reference,from))
     {
-        seekTime=seg->_refStartTimeUs;
+        seekTime=from;
         ADM_info("First frame of the new segment is a keyframe at %"LU"ms\n",seekTime/1000);
     }else   
     {
-        if(false==searchPreviousKeyFrameInRef(seg->_reference,seg->_refStartTimeUs,&seekTime))
+        if(false==searchPreviousKeyFrameInRef(seg->_reference,from,&seekTime))
         {
             ADM_warning("Cannot identify the keyframe before %"LLU" ms\n",seekTime/1000);
             return false;
@@ -303,7 +322,7 @@ bool        ADM_Composer::switchToSegment(uint32_t s)
     }
     // ok now seek...
     uint32_t frame=_segments.intraTimeToFrame(seg->_reference,seekTime);
-    if(false==DecodePictureUpToIntra(frame,seg->_reference))
+    if(false==DecodePictureUpToIntra(seg->_reference,frame))
     {
         return false;
     }
@@ -313,6 +332,14 @@ bool        ADM_Composer::switchToSegment(uint32_t s)
     seg->_curFrame=ref->lastSentFrame;
     return true;
 }
+/**
+    \fn rewind
+    \brief
+*/
+bool ADM_Composer::rewind(void)
+{
+        ADM_info("Rewinding\n");
+        return DecodePictureUpToIntra(0,0);
 
-
+}
 //EOF

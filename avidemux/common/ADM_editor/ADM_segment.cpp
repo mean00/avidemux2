@@ -70,10 +70,20 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
    }
    seg._durationUs=ref->_aviheader->getVideoDuration();
 
-    // Update frametype if needed...
-    _VIDEOS 	*vid=ref;
-    decoders *decoder=vid->decoder;
-//    rederiveFrameType(_videos[_nb_video]._aviheader);
+    // Set the default startTime to the pts of first Pic
+    vidHeader *demuxer=	ref->_aviheader;
+    uint32_t flags;
+    uint64_t pts,dts;
+        demuxer->getFlags(0,&flags);
+        demuxer->getPtsDts(0,&pts,&dts);
+
+        if(pts!=ADM_NO_PTS &&pts)
+        {
+            ADM_warning("The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
+//            seg._refStartTimeUs=pts;
+        }
+    //
+
 
     segments.push_back(seg);
     videos.push_back(*ref);
@@ -98,8 +108,11 @@ bool ADM_EditorSegment::deleteAll (void)
             delete v->decoder;
       if(v->color)
             delete v->color;
-      v->_aviheader->close ();
-      delete v->_aviheader;
+      if(v->_aviheader)
+      {
+          v->_aviheader->close ();
+          delete v->_aviheader;
+      }
       if(v->_videoCache)
       	delete  v->_videoCache;
       v->_videoCache=NULL;
@@ -112,7 +125,9 @@ bool ADM_EditorSegment::deleteAll (void)
       {
             for(int i=0;i<v->nbAudioStream;i++)
             {
-                delete v->audioTracks[i];
+                if(v->audioTracks[i])
+                    delete v->audioTracks[i];
+                v->audioTracks[i]=NULL;
             }
             delete [] v->audioTracks;
             v->audioTracks=NULL;
@@ -302,7 +317,6 @@ static bool TimeToFrame(_VIDEOS *v,uint64_t time,uint32_t *frame,uint32_t *oflag
                 *oflags=flags;
                 return true;
             }
-            if(pts!=ADM_NO_PTS &&pts>time) return false;
     }
     return false;
 }
@@ -318,6 +332,7 @@ uint32_t    ADM_EditorSegment::intraTimeToFrame(uint32_t refVideo,uint64_t seekT
         ADM_assert(v);
         if(false==TimeToFrame(v,seekTime,&frame,&flags))
         {
+            ADM_error("Cannot find frame with time %"LLU"ms\n",seekTime/1000);
             ADM_assert(0);
         }
         ADM_assert(flags & AVI_KEY_FRAME);

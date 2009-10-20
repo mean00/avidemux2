@@ -130,6 +130,7 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
         if(pts==ADM_NO_PTS) continue;
         if(pts>refTime)
         {
+            ADM_info("Found nextkeyframe %"LLU" at frame %"LU"\n",pts/1000,i);
             *nkTime=pts;
             return true;
         }
@@ -164,6 +165,7 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
             return true;
         }
     }
+    ADM_warning("Cannot find keyframe with PTS less than %"LU"ms\n",refTime/1000);
     return false;
 }
 

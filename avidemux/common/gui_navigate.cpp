@@ -161,8 +161,11 @@ static int ignore_change=0;
             }
 	  break;
       case ACT_Begin:
-        GUI_GoToKFrameTime(0);
-	  break;
+            video_body->rewind();
+            admPreview::samePicture(); // Ugly FIXME TODO
+             GUI_setCurrentFrameAndTime();
+            //GUI_GoToKFrameTime(0);
+            break;
       case ACT_JumpToFrame:
         {
               // read value

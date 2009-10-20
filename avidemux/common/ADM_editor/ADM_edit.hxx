@@ -64,7 +64,7 @@ class ADM_Composer : public ADM_audioStream
 {
   private:
 //*********************************PRIVATE API *******************************************
-                    bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
+                    //bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
                     bool        switchToNextSegment(void);
                     bool        switchToSegment(uint32_t s);
                     uint32_t    currentFrame;
@@ -146,6 +146,7 @@ public:
                     bool        goToIntraTimeVideo(uint64_t time);
                     bool        nextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
+                    bool        rewind(void);
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );

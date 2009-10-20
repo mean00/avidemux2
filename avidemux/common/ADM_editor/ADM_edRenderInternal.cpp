@@ -50,7 +50,7 @@ bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
   ADMImage *in=cache->getByPts(vid->lastDecodedPts);
   if(!in)
   {
-    printf("[ADM_Composer::getSamePicture] Failed, while looking for Pts=%"LU" ms\n",vid->lastDecodedPts);
+    printf("[ADM_Composer::getSamePicture] Failed, while looking for Pts=%"LLU" ms\n",vid->lastDecodedPts);
     cache->dump();
     return false;
   }
