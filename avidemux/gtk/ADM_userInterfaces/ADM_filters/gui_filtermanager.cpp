@@ -328,8 +328,8 @@ void on_action (gui_act action)
     case A_PREVIEW:
         if (!action_parameter) break;
         {
-            uint32_t curframe=video_body->getCurrentFrame();
-            DIA_filterPreview(QT_TR_NOOP("Preview"), videofilters[action_parameter].filter, curframe);
+            //uint32_t curframe=video_body->getCurrentFrame();
+            //DIA_filterPreview(QT_TR_NOOP("Preview"), videofilters[action_parameter].filter, curframe);
         }
         break;
 
