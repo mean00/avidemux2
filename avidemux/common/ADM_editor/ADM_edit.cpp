@@ -550,14 +550,16 @@ uint8_t r=0;
 }
 
 /**
-      If a parameter has changed, rebuild the duration of the streams
+    \fn rebuildDuration
+    \brief      If a parameter has changed, rebuild the duration of the streams
       It can happen, for example in case of SBR audio such as AAC
       The demuxer says it is xx kHz, but the codec updates it to 2*xx kHz
+
+    Should not be needed with 2.6
 */
 bool  ADM_Composer::rebuildDuration(void)
 {
-  switchToSegment(0);
-  return true; nextPictureInternal(0,NULL);
+  return true;
 }
 /**
     \fn getCurrentFramePts
