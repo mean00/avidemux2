@@ -31,7 +31,64 @@
 // This should be in a context somewhere
 static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
 
+/**
+    \fn seektoFrame
+    \brief Seek to frame with timestamp given as arg
 
+*/
+bool ADM_Composer::seektoFrame(uint32_t ref,uint64_t timeToSeek)
+{
+   _VIDEOS *vid=_segments.getRefVideo(ref);
+    vidHeader *demuxer=vid->_aviheader;
+	EditorCache   *cache =vid->_videoCache;
+	ADM_assert(cache);
+    bool found=false;
+   // Search the previous keyframe for segment....
+    uint64_t seekTime;
+    if(_segments.isKeyFrameByTime(ref,timeToSeek))
+    {
+        seekTime=timeToSeek;
+        ADM_info("First frame of the new segment is a keyframe at %"LU"ms\n",seekTime/1000);
+        found=true;
+    }else   
+    {
+        if(false==searchPreviousKeyFrameInRef(ref,timeToSeek,&seekTime))
+        {
+            ADM_warning("Cannot identify the keyframe before %"LLU" ms\n",seekTime/1000);
+            return false;
+        }
+    }
+    // ok now seek...
+    uint32_t frame=_segments.intraTimeToFrame(ref,seekTime);
+    if(false==DecodePictureUpToIntra(ref,frame))
+    {
+        ADM_warning("Cannot decode up to intra %"LLU" at %"LLU" ms\n",frame,seekTime/1000);
+        return false;
+    }
+    if(found==true) return true;
+    // Now forward...
+    while(nextPictureInternal(ref,NULL)==true)
+    {
+        uint64_t pts=vid->lastDecodedPts;
+        if(pts==ADM_NO_PTS)     
+        {
+            ADM_warning("No PTS out of decoder\n");
+            continue;
+        }
+        if(pts==timeToSeek)
+        {
+            ADM_info("Image found, pts=%"LLU" ms\n",pts/1000);
+            return true;
+        }
+        if(pts>timeToSeek)
+        {
+            ADM_info("Image not found,searching %"LLU" ms, got  pts=%"LLU" ms\n",timeToSeek/1000,pts/1000);
+            return false;
+        }
+    }
+    ADM_warning("seekToFrame failed for frame at PTS= %"LLU" ms, next image failed\n",timeToSeek/1000);
+    return false;
+}
 /**
     \fn samePictureInternal
     \brief returns the last already decoded picture

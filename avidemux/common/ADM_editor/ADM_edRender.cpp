@@ -93,6 +93,8 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
 */
 bool  ADM_Composer::goToTimeVideo(uint64_t startTime)
 {
+    // Search the previous keyframe...
+
     return goToIntraTimeVideo(startTime);
 
 }
@@ -305,31 +307,13 @@ bool        ADM_Composer::switchToSegment(uint32_t s)
                 from=pts;
         }
     }
-    
-    // Search the previous keyframe for segment....
-    uint64_t seekTime;
-    if(_segments.isKeyFrameByTime(seg->_reference,from))
+    if(false==seektoFrame(seg->_reference,from))
     {
-        seekTime=from;
-        ADM_info("First frame of the new segment is a keyframe at %"LU"ms\n",seekTime/1000);
-    }else   
-    {
-        if(false==searchPreviousKeyFrameInRef(seg->_reference,from,&seekTime))
-        {
-            ADM_warning("Cannot identify the keyframe before %"LLU" ms\n",seekTime/1000);
+            ADM_warning("Cannot seek to beginning of segment %"LU" at  %"LLU" ms\n",s,from/1000);
             return false;
-        }
     }
-    // ok now seek...
-    uint32_t frame=_segments.intraTimeToFrame(seg->_reference,seekTime);
-    if(false==DecodePictureUpToIntra(seg->_reference,frame))
-    {
-        return false;
-    }
-    // Now forward to the frame we want...
-#warning TODO do not seek only on intra
-    _VIDEOS *ref=_segments.getRefVideo(seg->_reference);
-    seg->_curFrame=ref->lastSentFrame;
+    _currentSegment=s;
+    ADM_info("Switched ok to segment %"LU"\n",s);
     return true;
 }
 /**

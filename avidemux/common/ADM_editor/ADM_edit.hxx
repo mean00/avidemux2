@@ -71,6 +71,7 @@ class ADM_Composer : public ADM_audioStream
 
                     bool        nextPictureInternal(uint32_t ref,ADMImage *image);
                     bool        samePictureInternal(uint32_t ref,ADMImage *image);
+                    bool        seektoFrame(uint32_t ref,uint64_t timeToSeek);
 
 protected:
                                 /// Decode frame and on until frame is popped out of decoders
