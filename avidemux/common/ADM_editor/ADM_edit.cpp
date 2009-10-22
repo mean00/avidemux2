@@ -381,11 +381,10 @@ uint64_t ADM_Composer::getFrameIncrement(void)
 */
 bool ADM_Composer::setDecodeParam (uint64_t time)
 {
-uint64_t offset;
 uint32_t ref;
   if (_segments.getNbRefVideos())
   {
-    if(false==_segments.getRefFromTime(time,&ref,&offset))
+    if(false==_segments.getRefFromTime(time,&ref))
     {
         ADM_warning("Cannot get ref from time %"LLD" ms\n",time/1000);
         return false;
@@ -415,10 +414,9 @@ uint8_t ADM_Composer::cleanup (void)
 bool ADM_Composer::getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audioInfo **infos)
 {
 
-uint64_t offset;
 uint32_t ref;
   
-    if(false==_segments.getRefFromTime(xtime,&ref,&offset))
+    if(false==_segments.getRefFromTime(xtime,&ref))
     {
         ADM_warning("[Editor] getAudioStreamsInfo failed for time %"LLD" ms\n",xtime);
         return false;
@@ -456,9 +454,8 @@ uint32_t ref;
 uint32_t ADM_Composer::getCurrentAudioStreamNumber(uint64_t  xtime)
 {
 uint32_t ref;
-uint64_t offset;
 
-        if(false==_segments.getRefFromTime(xtime,&ref,&offset))  
+        if(false==_segments.getRefFromTime(xtime,&ref))  
         {
             ADM_warning("[Editor::getCurrentAudioStreamNumber] Cannot get ref video for time %"LLD" ms\n",xtime/1000);
             return 0;
@@ -475,11 +472,10 @@ bool ADM_Composer::changeAudioStream(uint64_t xtime,uint32_t newstream)
 double     duration;
 WAVHeader *wav;
 aviInfo    info;
+uint32_t ref;
 
-       uint32_t ref;
-        uint64_t offset;
 
-        if(false==_segments.getRefFromTime(xtime,&ref,&offset))  
+        if(false==_segments.getRefFromTime(xtime,&ref))  
         {
             ADM_warning("[Editor::changeAudioStream] Cannot get ref video for time %"LLD" ms\n",xtime/1000);
             return 0;

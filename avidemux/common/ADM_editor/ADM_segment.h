@@ -115,7 +115,7 @@ public:
             uint64_t    getTotalDuration(void);
             uint32_t    getNbFrames(void);
 
-            bool        getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset);
+            bool        getRefFromTime(uint64_t time,uint32_t *refVideo);
 
             bool        convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime);
             bool        convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime);

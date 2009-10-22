@@ -36,7 +36,7 @@ static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
     \brief Seek to frame with timestamp given as arg
 
 */
-bool ADM_Composer::seektoFrame(uint32_t ref,uint64_t timeToSeek)
+bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek)
 {
    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;

@@ -247,9 +247,8 @@ uint32_t ADM_EditorSegment::getNbFrames(void)
     \fn getRefFromTime
     \brief convert linear time to a ref video+ offset in the refvideo
 */
-bool        ADM_EditorSegment::getRefFromTime(uint64_t time,uint32_t *refVideo, uint64_t *offset)
+bool        ADM_EditorSegment::getRefFromTime(uint64_t time,uint32_t *refVideo)
 {
-    *offset=time;
     *refVideo=0;
     return true;
 }

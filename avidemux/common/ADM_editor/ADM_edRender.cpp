@@ -89,13 +89,29 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
     return true;
 }
 /**
-    \fn GoToTime
+    \fn goToTimeVideo
+    \brief Seek video to the given time. Must be an exact time.
 */
 bool  ADM_Composer::goToTimeVideo(uint64_t startTime)
 {
-    // Search the previous keyframe...
-
-    return goToIntraTimeVideo(startTime);
+uint64_t segTime;
+uint32_t seg;
+    if(false==_segments.convertLinearTimeToSeg(startTime,&seg,&segTime))
+    {
+        ADM_warning("Cannot find segment for time %"LLU" ms\n",startTime/1000);
+        return false;
+    }
+    
+    // Try to seek...
+    _SEGMENT *s=_segments.getSegment(seg);
+    uint64_t to=segTime+s->_refStartTimeUs;
+    if(false==seektoTime(s->_reference,to))
+    {
+            ADM_warning("Cannot seek to beginning of segment %"LU" at  %"LLU" ms\n",s,to/1000);
+            return false;
+    }
+    _currentSegment=seg;
+    return true;
 
 }
 /**
@@ -307,7 +323,7 @@ bool        ADM_Composer::switchToSegment(uint32_t s)
                 from=pts;
         }
     }
-    if(false==seektoFrame(seg->_reference,from))
+    if(false==seektoTime(seg->_reference,from))
     {
             ADM_warning("Cannot seek to beginning of segment %"LU" at  %"LLU" ms\n",s,from/1000);
             return false;
