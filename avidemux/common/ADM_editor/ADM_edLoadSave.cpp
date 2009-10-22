@@ -36,15 +36,6 @@ static uint32_t edFrameStart,edFrameEnd;
 const char *getCurrentContainerAsString(void);
 
 
-//______________________________________________
-// Save the config, including name, segment etc...
-//______________________________________________
-
-uint8_t ADM_Composer::saveWorbench (const char *name)
-{
-        GUI_Error_HIG(QT_TR_NOOP("Unsupported"), NULL);
-        return 0;
-}
 /*______________________________________________
         Save the project as a script
 ______________________________________________*/
@@ -267,13 +258,4 @@ for (uint32_t i = 0; i < _nb_segment; i++)
 
 }
 
-//______________________________________________
-// Save the config, including name, segment etc...
-//______________________________________________
-
-uint8_t ADM_Composer::loadWorbench (const char *name)
-{
-  GUI_Error_HIG(QT_TR_NOOP("Old format project file"),QT_TR_NOOP( "No more supported."));
- return 0;
-}
 //EOF
