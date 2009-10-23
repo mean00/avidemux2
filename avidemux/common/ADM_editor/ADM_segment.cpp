@@ -355,4 +355,67 @@ bool        ADM_EditorSegment::isKeyFrameByTime(uint32_t refVideo,uint64_t seekT
         if(flags & AVI_KEY_FRAME) return true;
         return false;
 }
+/**
+    \fn removeChunk
+    \brief 
+*/
+bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
+{
+    uint32_t startSeg,endSeg;
+    uint64_t startOffset,endOffset;
+    if(false==convertLinearTimeToSeg( from,&startSeg,&startOffset))
+    {
+        ADM_warning("Cannot get starting point (%"LLU" ms\n",from/1000);
+        return false;
+    }
+    if(false==convertLinearTimeToSeg( to,&endSeg,&endOffset))
+    {
+        ADM_warning("Cannot get starting point (%"LLU" ms\n",from/1000);
+        return false;
+    }
+    _SEGMENT *first=getSegment(startSeg);
+    if(startSeg==endSeg)
+    {
+        // Split the seg int two..
+        segments.push_back(*first); 
+        endSeg=startSeg+1;
+#warning FiXME! they are not necessarily the last
+    }
+      // Span over several seg...
+    // 1- shorten the start segment..
+  
+    first->_durationUs=startOffset;
+    // 2- Kill the segment in between
+    for(int i=startSeg+1;i<endSeg;i++)
+    {
+        segments.erase(segments.begin()+i);
+    }
+    // 3- Shorten last segment
+    _SEGMENT *last=getSegment(endSeg);
+    last->_refStartTimeUs+=endOffset;
+    last->_durationUs-=endOffset;
+
+    updateStartTime();
+    dump();
+    return true;
+}
+/**
+    \fn dump
+    \brief Dump the segment content
+*/
+void ADM_EditorSegment::dump(void)
+{
+    int n=segments.size();
+    printf("We have %d segments\n",n);
+    for(int i=0;i<n;i++)
+    {
+        _SEGMENT *s=getSegment(i);
+        printf("Segment :%d/%d\n",i,n);
+        printf("\tReference    :%"LU"\n",s->_reference);
+        printf("\tstartLinear  :%"LLU"\n",s->_startTimeUs);
+        printf("\tduration     :%"LLU"\n",s->_durationUs);
+        printf("\trefStart     :%"LLU"\n",s->_refStartTimeUs);
+
+    }
+}
 //EOF

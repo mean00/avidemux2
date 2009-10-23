@@ -568,5 +568,13 @@ uint64_t    ADM_Composer::getCurrentFramePts(void)
     _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
     return vid->lastDecodedPts;
 }
+/**
+    \fn remove
+    \brief Remove part of the video
+*/
+bool            ADM_Composer::remove(uint64_t start,uint64_t end)
+{
+    return _segments.removeChunk(start,end);
+}
 //
 //

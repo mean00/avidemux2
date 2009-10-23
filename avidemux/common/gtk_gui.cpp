@@ -429,20 +429,15 @@ int nw;
 
     case ACT_Delete:
     case ACT_Cut:
-
-#if 0
-      old=frameStart;
-      if( A_delete(frameStart,frameEnd))
-      {
-      	if (old >= avifileinfo->nb_frames)
-	{			// we removed too much
-	  old = avifileinfo->nb_frames - 1;
-	}
-      	curframe=old;
-      	GUI_GoToFrame (old);
-      }
-
-#endif
+        {
+            uint64_t a=video_body->getMarkerAPts();
+            uint64_t b=video_body->getMarkerBPts();
+            if(false==video_body->remove(a,b))
+            {
+                GUI_Error_HIG("Cutting","Error while cutting out.");
+            }
+        }
+        
       break;
 
     case ACT_ChangeFPS:

@@ -98,6 +98,7 @@ protected:
         ListOfSegments segments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
+        void           dump(void);
 
 public:
                         ADM_EditorSegment(void);
@@ -123,6 +124,7 @@ public:
 
             uint32_t    intraTimeToFrame(uint32_t refVideo,uint64_t seekTime);       
             bool        isKeyFrameByTime(uint32_t refVideo,uint64_t seekTime);
+            bool        removeChunk(uint64_t from, uint64_t to);
 };
 
 #endif

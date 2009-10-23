@@ -194,7 +194,10 @@ public:
 /******************************* Post Processing ************************************/
 					uint8_t 		setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
 					uint8_t 		getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);
-/******************************* /Post Processing ************************************/										
+/******************************* /Post Processing ************************************/	
+/******************************* Editing ************************************/	
+                    bool            remove(uint64_t start,uint64_t end);
+/******************************* /Editing **********************************/										
 /******************************* Misc ************************************/				
 					uint8_t			setEnv(_ENV_EDITOR_FLAGS newflag);
 					uint8_t			getEnv(_ENV_EDITOR_FLAGS newflag);
