@@ -363,6 +363,9 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
 {
     uint32_t startSeg,endSeg;
     uint64_t startOffset,endOffset;
+    
+    ADM_info("Cutting from %"LLU" to %"LLU" ms\n",from/1000,to/1000);
+    dump();
     if(false==convertLinearTimeToSeg( from,&startSeg,&startOffset))
     {
         ADM_warning("Cannot get starting point (%"LLU" ms\n",from/1000);
@@ -373,28 +376,33 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
         ADM_warning("Cannot get starting point (%"LLU" ms\n",from/1000);
         return false;
     }
-    _SEGMENT *first=getSegment(startSeg);
+
+    ADM_info("Start, seg %"LU" Offset :%"LLU" ms\n",startSeg,startOffset);
+    ADM_info("End  , seg %"LU" Offset :%"LLU" ms\n",endSeg,endOffset);
+
+    
     if(startSeg==endSeg)
     {
         // Split the seg int two..
-        segments.push_back(*first); 
+        segments.insert(segments.begin()+startSeg+1,*getSegment(startSeg)); 
         endSeg=startSeg+1;
-#warning FiXME! they are not necessarily the last
+
     }
+    _SEGMENT *first=getSegment(startSeg);
       // Span over several seg...
     // 1- shorten the start segment..
   
     first->_durationUs=startOffset;
-    // 2- Kill the segment in between
-    for(int i=startSeg+1;i<endSeg;i++)
-    {
-        segments.erase(segments.begin()+i);
-    }
+   
     // 3- Shorten last segment
     _SEGMENT *last=getSegment(endSeg);
     last->_refStartTimeUs+=endOffset;
     last->_durationUs-=endOffset;
-
+    // 2- Kill the segment in between
+    for(int i=startSeg+1;i<endSeg;i++)
+    {
+        segments.erase(segments.begin()+startSeg+1);
+    }
     updateStartTime();
     dump();
     return true;
