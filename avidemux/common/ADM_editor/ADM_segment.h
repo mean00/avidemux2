@@ -120,8 +120,6 @@ public:
             bool        convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime);
             bool        convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime);
 
-            _SEGMENT    *getCurrentSeg(void);
-
 
             uint32_t    intraTimeToFrame(uint32_t refVideo,uint64_t seekTime);       
             bool        isKeyFrameByTime(uint32_t refVideo,uint64_t seekTime);

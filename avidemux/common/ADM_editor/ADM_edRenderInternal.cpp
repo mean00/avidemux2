@@ -220,7 +220,7 @@ uint8_t ret = 0;
     
       if(!decompressImage(result,&img,ref))
       {
-         ADM_warning("Decoding error for frame %"LU"\n",vid->lastSentFrame);
+         ADM_info("Decoding error for frame %"LU", not necessarily a problem\n",vid->lastSentFrame);
          cache->invalidate(result);
          return true; // Not an error in itself
       }
@@ -531,7 +531,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
                                                                     img.demuxerPts);
           if(!decompressImage(result,&img,ref))
           {
-             ADM_warning(" decode error for frame %"LU"\n",vid->lastSentFrame);
+             ADM_info(" decode error for frame %"LU", not necessarily a problem\n",vid->lastSentFrame);
              //cache->dump();
              cache->invalidate(result);
              //cache->dump();

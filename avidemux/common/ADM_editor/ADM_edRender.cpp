@@ -76,7 +76,7 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
 
     uint64_t refTime=seg->_refStartTimeUs+segTime;
 
-    uint32_t frame=_segments.intraTimeToFrame(seg->_reference,time);       
+    uint32_t frame=_segments.intraTimeToFrame(seg->_reference,refTime);       
     if(false==switchToSegment(s))
     {
         ADM_warning("Cannot go to segment %"LU"\n",s);

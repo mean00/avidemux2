@@ -245,11 +245,21 @@ uint32_t ADM_EditorSegment::getNbFrames(void)
 /***********************************************************************/
 /**
     \fn getRefFromTime
-    \brief convert linear time to a ref video+ offset in the refvideo
+    \brief Return the ref video where xtime is 
 */
-bool        ADM_EditorSegment::getRefFromTime(uint64_t time,uint32_t *refVideo)
+bool        ADM_EditorSegment::getRefFromTime(uint64_t xtime,uint32_t *refVideo)
 {
-    *refVideo=0;
+    // What segments does it belong to ?
+    uint32_t seg;
+    uint64_t segTime;
+    if(false== convertLinearTimeToSeg(  xtime, &seg, &segTime))
+    {
+        ADM_warning("Cannot identify segment for time %"LLU" ms\n",xtime/1000);
+        return false;
+    }
+    _SEGMENT *s=getSegment(seg);
+    ADM_assert(s);
+    *refVideo=s->_reference;
     return true;
 }
 /**
@@ -265,13 +275,7 @@ bool        ADM_EditorSegment::getRefFromTime(uint64_t time,uint32_t *refVideo)
             codec=NULL;
         }
     }
-/**
-    \fn getCurrentSeg
-*/
-_SEGMENT   * ADM_EditorSegment::getCurrentSeg(void)
-{
-    return &(segments[0]);
-}
+
 /**
     \fn convertLinearTimeToSeg
     \brief convert linear time to a segment+ offset in the segment
