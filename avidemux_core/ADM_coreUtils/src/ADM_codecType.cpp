@@ -38,6 +38,7 @@ bool  isMpeg4Compatible (uint32_t fourcc)
   CHECK ("BLZ0");
   CHECK ("M4S2");
   CHECK ("3IV2");
+  CHECK ("SEDG");
 
   return divx4;
 
