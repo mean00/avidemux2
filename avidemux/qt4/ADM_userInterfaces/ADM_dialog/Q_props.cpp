@@ -48,15 +48,12 @@ propWindow::propWindow() : QDialog()
         
         FILLTEXT4(labeImageSize,QT_TR_NOOP("%"LU" x %"LU), avifileinfo->width,avifileinfo->height);
         FILLTEXT(labelFrameRate, QT_TR_NOOP("%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
-        FILLTEXT(labelNbOfFrames,QT_TR_NOOP("%"LU" frames"), avifileinfo->nb_frames);
         FILLTEXT(label4CC, "%s",      fourCC::tostring(avifileinfo->fcc));
-        if (avifileinfo->nb_frames)
-          {
-                frame2time(avifileinfo->nb_frames, avifileinfo->fps1000,
-                          &hh, &mm, &ss, &ms);
-                snprintf(text,79, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
-                ui.labelVideoDuration->setText(text);
-          }
+        uint64_t duration=video_body->getVideoDuration();
+        ms2time(duration/1000,&hh,&mm,&ss,&ms);
+        snprintf(text,79, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
+        ui.labelVideoDuration->setText(text);
+
         war=video_body->getPARWidth();
         har=video_body->getPARHeight();
         getAspectRatioFromAR(war,har, &s);
@@ -68,7 +65,7 @@ propWindow::propWindow() : QDialog()
         SET_YES(LabelGMC,gmc);
         
          WAVHeader *wavinfo=NULL;
-        if (currentaudiostream) wavinfo=currentaudiostream->getInfo();
+         wavinfo=video_body->getInfo();
           if(wavinfo)
           {
               
@@ -91,23 +88,14 @@ propWindow::propWindow() : QDialog()
                 
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
                 FILLQT_TR_NOOP(labelACodec);
+                //
+                duration=video_body->getDurationInUs();
+                ms2time(duration/1000,&hh,&mm,&ss,&ms);
 
-                // Duration in seconds too
-                if(currentaudiostream && wavinfo->byterate>1)
-                {
-                        uint32_t l; //=currentaudiostream->getLength();
-                        double du;
-                        du=l;
-                        du*=1000;
-                        du/=wavinfo->byterate;
-                        ms2time((uint32_t)floor(du), &hh, &mm, &ss, &ms);
+                sprintf(text, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
+                FILLQT_TR_NOOP(labelAudioDuration);
 
-						sprintf(text, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
-						FILLQT_TR_NOOP(labelAudioDuration);
 
-						sprintf(text, QT_TR_NOOP("%.2f MB"), l / 1048576.F);
-						FILLQT_TR_NOOP(labelFileSize);
-                }
 
 //                SET_YES(labelVBR,currentaudiostream->isVBR());
         } else

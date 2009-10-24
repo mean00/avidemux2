@@ -1,140 +1,106 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>propsDialog</class>
- <widget class="QDialog" name="propsDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="propsDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>245</width>
-    <height>465</height>
+    <width>271</width>
+    <height>531</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Properties</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <property name="spacing" >
+  <layout class="QVBoxLayout">
+   <property name="spacing">
     <number>6</number>
    </property>
-   <property name="leftMargin" >
-    <number>9</number>
-   </property>
-   <property name="topMargin" >
-    <number>9</number>
-   </property>
-   <property name="rightMargin" >
-    <number>9</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin">
     <number>9</number>
    </property>
    <item>
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Video</string>
      </property>
-     <property name="flat" >
+     <property name="flat">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" >
-      <property name="leftMargin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>9</number>
       </property>
-      <property name="topMargin" >
-       <number>9</number>
-      </property>
-      <property name="rightMargin" >
-       <number>9</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>9</number>
-      </property>
-      <property name="horizontalSpacing" >
+      <property name="spacing">
        <number>6</number>
       </property>
-      <property name="verticalSpacing" >
-       <number>6</number>
-      </property>
-      <item row="3" column="1" >
-       <widget class="QLabel" name="labelFrameRate" >
-        <property name="text" >
+      <item row="3" column="1">
+       <widget class="QLabel" name="labelFrameRate">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" >
-       <widget class="QLabel" name="label_2" >
-        <property name="text" >
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
          <string>Frame Rate:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1" >
-       <widget class="QLabel" name="labelNbOfFrames" >
-        <property name="text" >
+      <item row="4" column="1">
+       <widget class="QLabel" name="labelVideoDuration">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" >
-       <widget class="QLabel" name="label_3" >
-        <property name="text" >
-         <string>Frame Count: </string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" >
-       <widget class="QLabel" name="labelVideoDuration" >
-        <property name="text" >
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" >
-       <widget class="QLabel" name="label_5" >
-        <property name="text" >
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
          <string>Total Duration:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
-       <widget class="QLabel" name="LabelAspectRatio" >
-        <property name="text" >
+      <item row="2" column="1">
+       <widget class="QLabel" name="LabelAspectRatio">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="label_6" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
          <string>Aspect Ratio:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QLabel" name="labeImageSize" >
-        <property name="text" >
+      <item row="1" column="1">
+       <widget class="QLabel" name="labeImageSize">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
          <string>Image Size:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLabel" name="label4CC" >
-        <property name="text" >
+      <item row="0" column="1">
+       <widget class="QLabel" name="label4CC">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label_4" >
-        <property name="text" >
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
          <string>Codec 4CC:</string>
         </property>
        </widget>
@@ -143,67 +109,55 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Extra Video Properties</string>
      </property>
-     <layout class="QGridLayout" >
-      <property name="leftMargin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>9</number>
       </property>
-      <property name="topMargin" >
-       <number>9</number>
-      </property>
-      <property name="rightMargin" >
-       <number>9</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>9</number>
-      </property>
-      <property name="horizontalSpacing" >
+      <property name="spacing">
        <number>6</number>
       </property>
-      <property name="verticalSpacing" >
-       <number>6</number>
-      </property>
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label_9" >
-        <property name="text" >
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
          <string>Global Motion Compensation:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QLabel" name="LabelPackedBitstream" >
-        <property name="text" >
+      <item row="1" column="1">
+       <widget class="QLabel" name="LabelPackedBitstream">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_8" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
          <string>Packed Bitstream:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
-       <widget class="QLabel" name="LabelQuarterPixel" >
-        <property name="text" >
+      <item row="2" column="1">
+       <widget class="QLabel" name="LabelQuarterPixel">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="label_7" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
          <string>Quarter Pixel:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLabel" name="LabelGMC" >
-        <property name="text" >
+      <item row="0" column="1">
+       <widget class="QLabel" name="LabelGMC">
+        <property name="text">
          <string>TextLabel</string>
         </property>
        </widget>
@@ -212,126 +166,100 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBoxAudio" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBoxAudio">
+     <property name="title">
       <string>Audio</string>
      </property>
-     <property name="flat" >
+     <property name="flat">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" >
-      <property name="leftMargin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>9</number>
       </property>
-      <property name="topMargin" >
-       <number>9</number>
-      </property>
-      <property name="rightMargin" >
-       <number>9</number>
-      </property>
-      <property name="bottomMargin" >
-       <number>9</number>
-      </property>
-      <property name="horizontalSpacing" >
+      <property name="spacing">
        <number>6</number>
       </property>
-      <property name="verticalSpacing" >
-       <number>6</number>
-      </property>
-      <item row="6" column="1" >
-       <widget class="QLabel" name="labelFileSize" >
-        <property name="text" >
+      <item row="5" column="1">
+       <widget class="QLabel" name="labelAudioDuration">
+        <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="6" column="0" >
-       <widget class="QLabel" name="label_16" >
-        <property name="text" >
-         <string>File Size:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" >
-       <widget class="QLabel" name="labelAudioDuration" >
-        <property name="text" >
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" >
-       <widget class="QLabel" name="label_13" >
-        <property name="text" >
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
          <string>Total Duration:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" >
-       <widget class="QLabel" name="label_11" >
-        <property name="text" >
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
          <string>Frequency:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1" >
-       <widget class="QLabel" name="labelFrequency" >
-        <property name="text" >
+      <item row="4" column="1">
+       <widget class="QLabel" name="labelFrequency">
+        <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" >
-       <widget class="QLabel" name="label_14" >
-        <property name="text" >
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
          <string>Variable Bitrate:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1" >
-       <widget class="QLabel" name="labelVBR" >
-        <property name="text" >
+      <item row="3" column="1">
+       <widget class="QLabel" name="labelVBR">
+        <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
-       <widget class="QLabel" name="labelBitrate" >
-        <property name="text" >
+      <item row="2" column="1">
+       <widget class="QLabel" name="labelBitrate">
+        <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="label_15" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
          <string>Bitrate:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QLabel" name="labelChannels" >
-        <property name="text" >
+      <item row="1" column="1">
+       <widget class="QLabel" name="labelChannels">
+        <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_10" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
          <string>Channels:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLabel" name="labelACodec" >
-        <property name="text" >
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelACodec">
+        <property name="text">
          <string/>
         </property>
        </widget>
       </item>
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label_12" >
-        <property name="text" >
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
          <string>Codec:</string>
         </property>
        </widget>
@@ -340,20 +268,20 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+    <widget class="QPushButton" name="pushButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="layoutDirection" >
+     <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>OK</string>
      </property>
-     <property name="default" >
+     <property name="default">
       <bool>true</bool>
      </property>
     </widget>
@@ -368,11 +296,11 @@
    <receiver>propsDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>284</x>
      <y>424</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>167</x>
      <y>252</y>
     </hint>
