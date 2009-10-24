@@ -38,7 +38,18 @@ ADD_EXECUTABLE(avidemux3_qt4 ${ADM_EXE_SRCS})
 # Add subdirectories 
 ########################################
 INCLUDE_DIRECTORIES(ADM_UIs/include/)
-ADD_SUBDIRECTORY(../common ./commonQt4)
+if(WIN32)
+        ADD_SUBDIRECTORY(../common ./commonQt4)
+else(WIN32)
+        # Make symlink else eclipe and kdev4 are puzzled by the tree structure
+        # Not needed for plain build
+        MESSAGE(STATUS "Creating common symlink in ${CMAKE_CURRENT_SOURCE_DIR}") 
+	execute_process(COMMAND rm -f common 	
+                                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+	execute_process(COMMAND ln -s ../common .
+                                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        ADD_SUBDIRECTORY(common ./commonQt4)
+endif(WIN32)
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesQT4)
 # Executable
