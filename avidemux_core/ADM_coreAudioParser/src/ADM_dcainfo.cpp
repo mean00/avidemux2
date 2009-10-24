@@ -98,8 +98,12 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
 #endif
                 *syncoff=cur-buf;
                 if(*syncoff) printf("[dts] Dropped %u bytes\n",*syncoff);
-                *chan=dts_channels[flags & 0xf];
-//                if(*chan==5 && (flags & 0X80)) *chan++;
+                get_bits(&s,10);
+                int lfe=get_bits(&s,2);
+                int c;
+                c=dts_channels[flags & 0xf];
+                if(c==5 && lfe) c++; // LFE
+                *chan=c;
                 *nbSample=nbBlocks*32;
                 return framesize;
                 
