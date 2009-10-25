@@ -48,8 +48,6 @@ Todo:
 #define vprintf printf
 #endif
 
-// ADM_audioStreamTack *
-#define MYAUDIO (_videos[0].audioTracks[_videos[0].currentAudioStream])
 /**
  *      \fn switchToNextAudioSegment
  *
@@ -268,6 +266,7 @@ bool ADM_Composer::goToTime (uint64_t ustime)
     seekTime=segTime+s->_refStartTimeUs;
     if(true==trk->stream->goToTime(seekTime))
     {
+        _audioSeg=seg;
         setDts(ustime);
         return true;
     }
