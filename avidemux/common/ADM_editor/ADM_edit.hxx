@@ -45,12 +45,12 @@
 */
 typedef enum
 {
-	ENV_EDITOR_NONE=   0x0000,
-	ENV_EDITOR_BFRAME= 0x0001,
-	ENV_EDITOR_PVOP=   0x0002,
-    ENV_EDITOR_X264=   0x0004,
-    ENV_EDITOR_SMART=  0x0005,
-	ENV_EDITOR_LAST=   0x8000
+        ENV_EDITOR_NONE=   0x0000,
+        ENV_EDITOR_BFRAME= 0x0001,
+        ENV_EDITOR_PVOP=   0x0002,
+        ENV_EDITOR_X264=   0x0004,
+        ENV_EDITOR_SMART=  0x0005,
+        ENV_EDITOR_LAST=   0x8000
 }_ENV_EDITOR_FLAGS;
 
 
@@ -91,27 +91,24 @@ protected:
   private:
                     ADM_EditorSegment _segments;
                     uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid); 
-                                                            // Duplicate img, do colorspace
-                                                            // if needed
-  					uint32_t	_internalFlags;
-  					ADM_PP 		_pp;
-					ADMImage	*_imageBuffer;
-  				
-  					// _audiooffset points to the offset / the total segment
-  					// not the used part !
-  					uint32_t  _audioseg;
-					int64_t   _audioSample;
-  					uint32_t  _audiooffset;
-
-                    uint32_t  _currentSegment;
-       				//uint32_t _lastseg,_lastframe,_lastlen;
+                    uint32_t	_internalFlags;  // Flags :
+                    ADM_PP      _pp;             // Postprocessing settings
+                    ADMImage	*_imageBuffer;   // Temp buffer used for decoding
+                    uint32_t    _currentSegment;   // Current video segment
+//****************************** Audio **********************************
+                    // _audiooffset points to the offset / the total segment
+                    // not the used part !
+                    uint32_t  _audioSeg;
+                    int64_t   _audioSample;
 
                     ADM_audioStreamTrack *getTrack(uint32_t i);
                     ADMImage    *_scratch;																		;
-                    uint8_t  	updateAudioTrack(uint32_t seg);			   	
-                    void 		deleteAllVideos(void );
-                    uint8_t 	getMagic(const char *name,uint32_t *magic);
-                    uint32_t 	searchForwardSeg(uint32_t startframe);
+                    uint8_t  	updateAudioTrack(uint32_t seg);
+                    bool        switchToNextAudioSegment(void);
+//****************************** Audio **********************************
+                    void        deleteAllVideos(void );
+                    uint8_t     getMagic(const char *name,uint32_t *magic);
+                    uint32_t    searchForwardSeg(uint32_t startframe);
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
@@ -120,16 +117,16 @@ protected:
                     uint32_t    getPARWidth(void);
                     uint32_t    getPARHeight(void);
                     bool        rebuildDuration(void);
-  								ADM_Composer();
-  				virtual 			~ADM_Composer();
-                    void		clean( void );
+                                ADM_Composer();
+virtual                         ~ADM_Composer();
+                    void        clean( void );
                     uint8_t     saveAsScript (const char *name, const char *out);
                     uint8_t 	saveWorbench(const char *name);
                     uint8_t 	loadWorbench(const char *name);
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
                     uint8_t 	cleanup( void);
-                    bool 	    isMultiSeg( void);
+                    bool        isMultiSeg( void);
 /************************************* Markers *****************************/
 private:        
                     uint64_t    markerAPts,markerBPts;
@@ -163,7 +160,7 @@ protected:
 public:
                     
             virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
-                    uint8_t         getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
+                    bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
             virtual bool            goToTime(uint64_t nbUs);
                     bool            getExtraData(uint32_t *l, uint8_t **d);
                     uint64_t        getDurationInUs(void);
@@ -174,13 +171,13 @@ public:
                     bool            getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audioInfo **infos);
                     bool            changeAudioStream(uint64_t xtime,uint32_t newstream);
                     uint32_t        getCurrentAudioStreamNumber(uint64_t xframe);
-                    bool    		setDecodeParam( uint64_t frameTime );
+                    bool            setDecodeParam( uint64_t frameTime );
 /**************************************** Video Info **************************/
-	 				AVIStreamHeader 	*getVideoStreamHeader(void ) ;
-	 				MainAVIHeader 		*getMainHeader(void );
-	 				ADM_BITMAPINFOHEADER 	*getBIH(void ) ;
+                    AVIStreamHeader 	*getVideoStreamHeader(void ) ;
+                    MainAVIHeader 		*getMainHeader(void );
+                    ADM_BITMAPINFOHEADER 	*getBIH(void ) ;
 
-	  				uint8_t			getVideoInfo(aviInfo *info);
+                    uint8_t			getVideoInfo(aviInfo *info);
                     uint64_t        getVideoDuration(void);
                     uint64_t        getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
 
@@ -189,18 +186,18 @@ public:
 					
 /***************************************** Seeking *****************************/            
 public:
-                    bool			getNKFramePTS(uint64_t *frameTime);
-                    bool			getPKFramePTS(uint64_t *frameTime);   
+                    bool                getNKFramePTS(uint64_t *frameTime);
+                    bool                getPKFramePTS(uint64_t *frameTime);
 /******************************* Post Processing ************************************/
-					uint8_t 		setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
-					uint8_t 		getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);
+                    uint8_t             setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
+                    uint8_t             getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);
 /******************************* /Post Processing ************************************/	
 /******************************* Editing ************************************/	
-                    bool            remove(uint64_t start,uint64_t end);
+                    bool                remove(uint64_t start,uint64_t end);
 /******************************* /Editing **********************************/										
 /******************************* Misc ************************************/				
-					uint8_t			setEnv(_ENV_EDITOR_FLAGS newflag);
-					uint8_t			getEnv(_ENV_EDITOR_FLAGS newflag);
+                    uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);
+                    uint8_t             getEnv(_ENV_EDITOR_FLAGS newflag);
 /******************************* /Misc ************************************/				
 
 };

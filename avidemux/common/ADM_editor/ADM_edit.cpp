@@ -52,8 +52,7 @@ uint32_t type,value;
 
    packetBufferSize=0;
    packetBufferDts=ADM_NO_PTS;
-  _audioseg = 0;
-  _audiooffset = 0;
+  _audioSeg = 0;
   _audioSample=0;
 
   // Initialize a default postprocessing (dummy)

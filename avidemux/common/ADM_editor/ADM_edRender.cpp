@@ -129,6 +129,9 @@ uint64_t tail;
     {
         goto np_nextSeg;
     }
+        // Refresh in case we switched....
+        seg=_segments.getSegment(_currentSegment);
+        updateImageTiming(seg,image);
         // no we have our image, let's check it is within this segment range..
         pts=image->Pts;
         tail=seg->_startTimeUs+seg->_durationUs;
@@ -136,10 +139,11 @@ uint64_t tail;
         {
                 ADM_info("Got an image (%"LU" ms, but is out of this segment (%"LU"+%"LU"=%"LU" ms)\n",
                                                                     pts,seg->_startTimeUs,seg->_durationUs,tail);
+                _segments.dump();
                 goto np_nextSeg;
         }
         
-        updateImageTiming(seg,image);
+
         return true;
 
 // Try to get an image for the following segment....

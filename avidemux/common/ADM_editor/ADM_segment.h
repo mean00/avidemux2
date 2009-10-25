@@ -33,7 +33,7 @@ public:
     ADM_audioStream  *stream;
     audioInfo        *info;
     ADM_Audiocodec   *codec;
-    WAVHeader		 wavheader;
+    WAVHeader        wavheader;
     bool             vbr;
     uint64_t         duration;
     uint64_t         size;
@@ -48,25 +48,25 @@ virtual    ~ADM_audioStreamTrack();
 */
 typedef struct
 {
-  	vidHeader 							*_aviheader;  /// Demuxer
-  	decoders							*decoder;     /// Video codec
-    COL_Generic2YV12                    *color;       /// Color conversion if needed
+      vidHeader *_aviheader; /// Demuxer
+      decoders *decoder; /// Video codec
+      COL_Generic2YV12 *color; /// Color conversion if needed
 
-	/* Audio part */
+      /* Audio part */
 
-    uint32_t                            nbAudioStream;   
-    uint32_t                            currentAudioStream;
-    ADM_audioStreamTrack                **audioTracks;
+      uint32_t nbAudioStream;
+      uint32_t currentAudioStream;
+      ADM_audioStreamTrack **audioTracks;
 
-	uint32_t							_nb_video_frames;  /// Really needed ?	
-	EditorCache							*_videoCache;      /// Decoded video cache
+      uint32_t _nb_video_frames; /// Really needed ?
+      EditorCache *_videoCache; /// Decoded video cache
 
-    /* Timeing info */
+      /* Timeing info */
 
-    uint32_t                            lastSentFrame;     /// Last frame read/sent to decoder
-    uint64_t                            lastDecodedPts;    /// Pts of last frame out of decoder
-    uint64_t                            lastReadPts;       /// Pts of the last frame we read
-    uint64_t                            timeIncrementInUs; /// in case the video has no PTS, time increment (us)
+      uint32_t lastSentFrame; /// Last frame read/sent to decoder
+      uint64_t lastDecodedPts; /// Pts of last frame out of decoder
+      uint64_t lastReadPts; /// Pts of the last frame we read
+      uint64_t timeIncrementInUs; /// in case the video has no PTS, time increment (us)
 }_VIDEOS;
 
 /**
@@ -76,13 +76,13 @@ typedef struct
 */
 typedef struct
 {
-  	uint32_t							_reference;       /// Reference video
- 	uint64_t							_refStartTimeUs;  /// Starting time in reference
-    uint64_t                            _startTimeUs;     /// Start time in current (=sum(_duration of previous seg))
-	uint64_t							_durationUs;      ///
-    uint32_t                            _nbFrame;
-    uint32_t                            _curFrame;        ///
-}_SEGMENT;
+        uint32_t _reference; /// Reference video
+        uint64_t _refStartTimeUs; /// Starting time in reference
+        uint64_t _startTimeUs; /// Start time in current (=sum(_duration of previous seg))
+        uint64_t _durationUs; ///
+        uint32_t _nbFrame;
+        uint32_t _curFrame; ///
+} _SEGMENT;
 /*
     Use vectors to store our videos & segments
 */
@@ -98,9 +98,10 @@ protected:
         ListOfSegments segments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
-        void           dump(void);
+
 
 public:
+            void        dump(void);
                         ADM_EditorSegment(void);
                         ~ADM_EditorSegment();
             bool        addReferenceVideo(_VIDEOS *ref);
