@@ -35,10 +35,10 @@
 
 #ifdef __WIN32
 static const char *separator="\\";
-const char *ADM_DIR_NAME="\\avidemux";
+const char *ADM_DIR_NAME="\\avidemux6";
 #else
 static const char *separator="/";
-const char *ADM_DIR_NAME="/.avidemux";
+const char *ADM_DIR_NAME="/.avidemux6";
 #endif
 
 static char ADM_basedir[1024] = {0};
