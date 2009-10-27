@@ -79,6 +79,21 @@ bool r;
         ADM_warning(" Cannot find seg for time %"LLD"\n",*frameTime);
         return false;
     }   
+    // Special case : The very first frame
+    if(*frameTime<=1)
+      {
+          _VIDEOS *vid=_segments.getRefVideo(0);
+          uint64_t pts,dts;
+          vid->_aviheader->getPtsDts(0,&pts,&dts);
+          if(pts!=ADM_NO_PTS)
+            {
+              if(pts>0)
+                {
+                    ADM_warning("This video does not start at 0 but at %"LLU" ms, compensating\n",pts/1000);
+                    _segments.convertLinearTimeToSeg(  *frameTime+pts, &seg, &segTime);
+                }
+            }
+      }
     // 
 again:
     _SEGMENT *s=_segments.getSegment(seg);
@@ -94,7 +109,7 @@ again:
     {
         if(!seg)
         {
-            ADM_warning(" No next previous keyfr for frameTime %"LLU"\n",*frameTime);
+            ADM_warning(" No previous previous keyfr for frameTime %"LLU"\n",*frameTime);
             return false;
         }
         // Go to the next segment
@@ -176,5 +191,41 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
  uint64_t        ADM_Composer::getDurationInUs(void) 
 {
     return _segments.getTotalDuration();
+}
+/**
+    \fn getDtsFromPts
+    \brief Estimate DTS from PTS
+
+*/
+bool        ADM_Composer::getDtsFromPts(uint64_t *time)
+{
+uint64_t refTime,nkTime,segTime;
+int lastSeg=_segments.getNbSegments();
+uint32_t seg;
+    // 1- Convert frameTime to segments
+    if(false== _segments.convertLinearTimeToSeg(  *time, &seg, &segTime))
+    {
+        ADM_warning(" Cannot find seg for time %"LLD"\n",*time);
+        return false;
+    }  
+    _SEGMENT *s=_segments.getSegment(seg);
+    //
+    // Search the frame with correct PTS
+    uint64_t pts=segTime+s->_refStartTimeUs;
+    uint64_t dts;
+    if(false==_segments.ptsFromDts(s->_reference,pts,&dts))
+    {
+        ADM_warning("Cannot get DTS from PTS=%"LLU"ms\n",pts/1000);
+        return false;
+    }
+    dts=dts+s->_startTimeUs;
+    if(dts<s->_refStartTimeUs)
+    {
+        ADM_warning("Warning DTS time is negative\n");
+        dts=0;
+    }else
+        dts=dts-s->_refStartTimeUs;
+    *time=dts;
+    return true;
 }
 //EOF

@@ -428,4 +428,36 @@ void ADM_EditorSegment::dump(void)
 
     }
 }
+/**
+    \fn ptsFromDts
+    \brief guestimate DTS from PTS
+*/
+ bool        ADM_EditorSegment::ptsFromDts(uint32_t refVideo,uint64_t pts,uint64_t *dts)
+{
+    uint32_t frame,flags;
+    _VIDEOS *vid=getRefVideo(refVideo);
+    vidHeader *demuxer=vid->_aviheader;
+    if(false==TimeToFrame(vid,pts,&frame,&flags))
+    {
+            ADM_warning("Cannot get frame with pts=%"LLU" ms\n",pts/1000);
+            return false;
+    }
+    // No get DTS..
+    int32_t deltaFrame=frame;
+    uint64_t p,d;
+    while(deltaFrame>0)
+    {
+            demuxer->getPtsDts(deltaFrame,&p,&d);
+            if(d!=ADM_NO_PTS) break;
+            deltaFrame--;
+    }
+    if(deltaFrame<0)    
+    {
+        ADM_warning("Cannot find a valid DTS for pts=%"LLU"ms\n",pts/1000);
+        return false;
+    }
+    deltaFrame=frame-deltaFrame;
+    *dts=d+deltaFrame*vid->timeIncrementInUs;
+    return true;
+}
 //EOF

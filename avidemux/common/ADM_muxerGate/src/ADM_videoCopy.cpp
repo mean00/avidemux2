@@ -24,8 +24,9 @@ extern ADM_Composer *video_body; // Fixme!
 ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
 {
     aviInfo info;
-    uint64_t realStart=startTime;
-
+    uint64_t ptsStart=startTime+1;
+    uint64_t dtsStart;
+    ADM_info("Creating copy video stream\n");
     video_body->getVideoInfo(&info);
     width=info.width;
     height=info.height;
@@ -33,15 +34,28 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     averageFps1000=info.fps1000;
     isCFR=false;
     // Estimate start frame
-    if(false==video_body->getPKFramePTS(&realStart))
+    if(false==video_body->getPKFramePTS(&ptsStart))
     {
         ADM_warning("Cannot find previous keyframe\n");
+        ptsStart=dtsStart=startTime;
+    }else   
+    {
+        // Now search the DTS associated with it...
+        dtsStart=ptsStart;
+        if(false==video_body->getDtsFromPts(&dtsStart))
+        {
+                ADM_warning("Cannot get DTS for PTS=%"LLU" ms, expect problems\n",ptsStart/1000);
+                dtsStart=ptsStart;
+        }else
+        {
+            ADM_info("Using %"LLU" ms as startTime\n",dtsStart/1000);
+        }
     }
     eofMet=false;
-    this->startTime=realStart;
+    this->startTime=dtsStart;
     this->endTime=endTime;
-    video_body->goToIntraTimeVideo(realStart);
-    ADM_info(" Fixating start time by %u\n",abs((int)(this->startTime-startTime)));
+    video_body->goToIntraTimeVideo(ptsStart);
+    ADM_info(" Fixating start time by %u\n",abs((int)(this->startTime-dtsStart)));
 }
 /**
     \fn ADM_videoStreamCopy
@@ -65,6 +79,7 @@ uint64_t  ADM_videoStreamCopy::rescaleTs(uint64_t in)
 {
     if(in==ADM_NO_PTS) return in;
     if(in>startTime) return in-startTime;
+    ADM_warning("Negative time!\n");
     return 0;
 }
 /**
@@ -95,6 +110,15 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
     *dts=rescaleTs(image.demuxerDts);
     if(image.demuxerDts!=ADM_NO_PTS)
     {
+        if(image.demuxerPts!=ADM_NO_PTS)
+          {
+            if(image.demuxerPts<image.demuxerDts)
+              {
+                ADM_warning("PTS<DTS : PTS=%"LLU" ms , DTS=%"LLU"ms\n",image.demuxerPts/1000,image.demuxerDts/1000);
+
+              }
+
+          }
         if(image.demuxerDts>endTime ) 
         {
             eofMet=true;

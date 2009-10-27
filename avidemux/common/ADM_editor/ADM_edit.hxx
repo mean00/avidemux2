@@ -87,6 +87,9 @@ protected:
 
                     bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
                     bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
+
+
+
 //******************************************************************************************
   private:
                     ADM_EditorSegment _segments;
@@ -188,6 +191,7 @@ public:
 public:
                     bool                getNKFramePTS(uint64_t *frameTime);
                     bool                getPKFramePTS(uint64_t *frameTime);
+                    bool                getDtsFromPts(uint64_t *time);
 /******************************* Post Processing ************************************/
                     uint8_t             setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
                     uint8_t             getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);
