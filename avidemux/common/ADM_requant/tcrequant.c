@@ -249,7 +249,7 @@ static uint64 cnt_b_i, cnt_b_ni;
 			inbytecnt += mloka1; \
 			rbuf += mloka1; \
 			if((rbuf-cbuf)<x)  \
-				{printf("Not enough : %"LU" %"LLD"\n",x,rbuf-cbuf);RETURN}\
+				{printf("Not enough : %"LU" %"LLD"\n",x,(int64_t)(rbuf-cbuf));RETURN}\
 		}
 
 	#define FORCE_LOCK() \
@@ -2388,7 +2388,7 @@ _req_exit:
 	// Some leftovers, 4 we added to force a startsync and hopefully some crap
 	if(rbuf!=cbuf)
 	{
-    	printf("LeftOver..:%"LLD"\n",rbuf-cbuf);
+    	printf("LeftOver..:%"LLD"\n",(int64_t)(rbuf-cbuf));
     	mixDump_c(cbuf,rbuf-cbuf);
     	rbuf=cbuf;
     }
