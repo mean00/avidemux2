@@ -319,7 +319,6 @@ void onexit( void )
     printf("Cleaning up Spidermonkey.\n");
     SpidermonkeyDestroy();
     pthread_mutex_unlock(&g_pSpiderMonkeyMutex);
-    destroyPrefs();
 //    filterCleanUp();
 	ADM_lavDestroy();
 
@@ -332,11 +331,7 @@ void onexit( void )
 #endif
 
 	destroyGUI();
-    if(prefs)
-    {
-        delete prefs;
-        prefs=NULL;
-    }
+    destroyPrefs();
     printf("End of cleanup\n");
     ADMImage_stat();
     ADM_memStat();
