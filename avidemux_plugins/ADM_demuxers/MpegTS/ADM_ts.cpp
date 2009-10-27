@@ -217,19 +217,22 @@ void tsHeader::Dump(void)
 
 uint8_t tsHeader::close(void)
 {
+    ADM_info("Destroying TS demuxer\n");
     // Destroy index
-    while(ListOfFrames.size())
-    {
-        delete ListOfFrames[0];
-        ListOfFrames.erase(ListOfFrames.begin());
-    }
+    int n=ListOfFrames.size();
+    for(int i=0;i<n;i++)
+        delete ListOfFrames[i];
+    ListOfFrames.clear();
+
     // Destroy audio tracks
-    for(int i=0;i<listOfAudioTracks.size();i++)
+    n=listOfAudioTracks.size();
+    for(int i=0;i<n;i++)
     {
         ADM_tsTrackDescriptor *desc=listOfAudioTracks[i];
         delete desc;
         listOfAudioTracks[i]=NULL;
     } // Container will be destroyed by vector destructor
+    listOfAudioTracks.clear();
     if(tsPacket)
     {
         tsPacket->close();
