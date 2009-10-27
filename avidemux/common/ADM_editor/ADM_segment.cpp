@@ -125,8 +125,10 @@ bool ADM_EditorSegment::deleteAll (void)
       {
             for(int i=0;i<v->nbAudioStream;i++)
             {
+#if 0 // Deleted elsewhere ?
                 if(v->audioTracks[i])
                     delete v->audioTracks[i];
+#endif
                 v->audioTracks[i]=NULL;
             }
             delete [] v->audioTracks;
