@@ -39,12 +39,14 @@
 #include "ADM_muxerGate/include/ADM_videoProcess.h"
 #include "ADM_bitstream.h"
 #include "ADM_filterChain.h"
-
+/*
+    
+*/
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 extern ADM_audioStream  *audioCreateEncodingStream(uint64_t startTime,int32_t shift);
-extern ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
+extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
 extern ADM_videoStream  *createVideoStream(ADM_coreVideoEncoder *encoder);
-
+extern int              ADM_MuxerIndexFromName(const char *name);
 /**
     \class admSaver
     \brief Wrapper for saving

@@ -56,7 +56,7 @@ void HandleAction_Save(Action action)
     {
 
     case ACT_SaveWork:
-      GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveWorkbench);
+      GUI_FileSelWrite (QT_TR_NOOP("Select Project to Save"), A_saveWorkbench);
 	  UI_refreshCustomMenu();
       break;
    case ACT_SaveCurrentWork:

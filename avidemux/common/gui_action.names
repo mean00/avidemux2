@@ -18,6 +18,9 @@ ACT(SaveBunchJPG)
 ACT(SaveAvi)
 ACT(SaveWave)
 ACT(SaveRaw)
+ACT(SaveWork)
+ACT(SaveCurrentWork)
+
 ACT(SAVE_END)
 // /SAVE
 
@@ -94,8 +97,6 @@ ACT(OutputToggle)
 
 ACT(VideoConfigure)
 
-ACT(SaveWork)
-ACT(SaveCurrentWork)
 ACT(ResetSegments)
 
 ACT(SetLogFile)
