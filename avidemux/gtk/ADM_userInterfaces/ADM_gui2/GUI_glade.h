@@ -5,7 +5,7 @@
 
 #ifndef ADM_GLADE_H
 #define ADM_GLADE_H
-#include <glade/glade.h>
+#include <gtk/gtk.h>
 /**
     \class admGlade
     \brief simple glade wrapping class
