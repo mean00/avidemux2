@@ -17,7 +17,7 @@
 #include "avi_vars.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_commonUI/GUI_ui.h"
-#include "ADM_script/ADM_container.h"
+
 
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_SCRIPT
@@ -35,8 +35,9 @@ extern uint8_t A_ListAllBlackFrames( char *file );
 extern uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 extern uint8_t addFile(char *name);
 
-uint8_t A_setContainer(const char *cont);
-const char *getCurrentContainerAsString(void);
+bool           A_setContainer(const char *cont);
+const char     *getCurrentContainerAsString(void);
+extern int     ADM_MuxerIndexFromName(const char *name);
 
 JSPropertySpec ADM_JSAvidemux::avidemux_properties[] = 
 { 
@@ -138,10 +139,10 @@ JSBool ADM_JSAvidemux::JSGetProperty(JSContext *cx, JSObject *obj, jsval id, jsv
                 {
 
                         case markerA_prop:
-                                *vp = INT_TO_JSVAL(frameStart);
+                                *vp = INT_TO_JSVAL(video_body->getMarkerAPts());
                                 break;
                         case markerB_prop:
-                                *vp = INT_TO_JSVAL(frameEnd);
+                                *vp = INT_TO_JSVAL(video_body->getMarkerBPts());
                                 break;
                         case audio_prop:
                                 *vp = OBJECT_TO_JSVAL(priv->getObject()->m_pAudio);
@@ -196,11 +197,7 @@ JSBool ADM_JSAvidemux::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsv
 					{
 						return JS_FALSE;
 					} 
-					if(f==-1)
-						f=avifileinfo->nb_frames-1;
-					if(f<0 || f>avifileinfo->nb_frames-1)
-						return JS_FALSE;
-					frameStart=f;
+                    video_body->setMarkerAPts(f);
 				}
 				break;
 			case markerB_prop:
@@ -212,11 +209,7 @@ JSBool ADM_JSAvidemux::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsv
 					{
 						return JS_FALSE;
 					} 
-					if(f==-1)
-						f=avifileinfo->nb_frames-1;
-					if(f<0 || f>avifileinfo->nb_frames-1)
-						return JS_FALSE;
-					frameEnd=f;
+                    video_body->setMarkerBPts(f);
 				}
 				break;
 			case audio_prop:
@@ -541,19 +534,20 @@ ADM_JSAvidemux *p = (ADM_JSAvidemux *)JS_GetPrivate(cx, obj);
         leaveLock();
         return JS_TRUE;
 }
-uint8_t A_setContainer(const char *cont)
+/**
+    \fn ADM_JSAvidemux
+    \brief Select the current container from a string
+*/
+bool A_setContainer(const char *cont)
 {
-       for(int i=0;i<NB_CONT;i++)
-       {
-                printf("%s\n",container[i].name);
-                if(!strcasecmp(cont,container[i].name))
-                {
-                        UI_SetCurrentFormat(container[i].type);
-                        return 1;
-                }
-       }
-       printf("Cannot set output format \"%s\"\n",cont);
-       return 0;
+    int idx=ADM_MuxerIndexFromName(cont);
+    if(idx==-1)
+    {
+        ADM_error("Cannot find muxer for format=%s\n",cont);
+        return false;
+    }
+    UI_SetCurrentFormat(idx);
+    return true;
 }
 /**
     \fn getCurrentContainerAsString

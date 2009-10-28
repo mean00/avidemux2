@@ -131,6 +131,21 @@ void ADM_MuxersCleanup(void)
                         ListOfMuxers[i]=NULL;
                 }
 }
+
+/**
+    \fn ADM_muxerIndexFromName
+    \brief return muxer index from name, -1 if error
+*/
+int ADM_MuxerIndexFromName(const char *name)
+{
+    int n=ListOfMuxers.size();
+    for(int i=0;i<n;i++)
+    {
+        ADM_dynMuxer *mux=ListOfMuxers[i];
+        if(!strcasecmp(mux->name,name)) return i;
+    }
+    return -1;
+}
 /**
     \fn ADM_MuxerSpawn
     \brief Locate the correct demuxer and instantiate it
@@ -141,13 +156,7 @@ ADM_muxer *ADM_MuxerSpawn(const char *name)
 int found=-1;
 uint32_t score=0;
 uint32_t mark;
-    for(int i=0;i<ListOfMuxers.size();i++)
-    {
-       
-            score=1;
-            found=i;
-        
-    }
+    found=ADM_MuxerIndexFromName(name);
     if(score && found!=-1)
     {
         return ListOfMuxers[found]->createmuxer();

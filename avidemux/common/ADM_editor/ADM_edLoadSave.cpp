@@ -68,10 +68,10 @@ printf("\n **Saving script project **\n");
   qfprintf (fd,"// %02ld videos source \n", _segments.getNbRefVideos());
   char *nm;
   uint32_t vop=!!(video_body->getSpecificMpeg4Info()&ADM_VOP_ON);
-#if 0
-  for (uint32_t i = 0; i < _videos.size(); i++)
+
+  for (uint32_t i = 0; i < _segments.getNbRefVideos(); i++)
     {
-        nm=ADM_cleanupPath(_videos[i]._aviheader->getMyName() );
+        nm=ADM_cleanupPath(_segments.getRefVideo(i)->_aviheader->getMyName() );
         if(vop)
         {
           qfprintf(fd,"app.forceUnpack();\n");
@@ -86,30 +86,22 @@ printf("\n **Saving script project **\n");
         }
         ADM_dealloc(nm);
     }
-#endif  
+
   qfprintf (fd,"//%02ld segments\n", _segments.getNbSegments());
   qfprintf (fd,"app.clearSegments();\n");
   
  
-#if 0
-for (uint32_t i = 0; i < _nb_segment; i++)
+
+    for (uint32_t i = 0; i < _segments.getNbSegments(); i++)
     {
-        uint32_t src,start,nb;
-                src=_segments[i]._reference;
-                start=_segments[i]._start_frame;
-                nb=_segments[i]._nb_frames;
-                qfprintf (fd, "app.addSegment(%lu,%lu,%lu);\n",src,start,nb);
+        _SEGMENT *seg=_segments.getSegment(i);
+        qfprintf (fd, "app.addSegment(%"LU",%"LLU",%"LLU");\n",seg->_reference,seg->_refStartTimeUs,seg->_durationUs);
     }
-#endif
+
 // Markers
 //
-        qfprintf(fd,"app.markerA=%d;\n",frameStart);
-        qfprintf(fd,"app.markerB=%d;\n",frameEnd);
-// Reordering : Warning works only for video with one source video
-//        if(video_body->isReordered(0) && !vop)
-        {
- //           qfprintf(fd,"app.rebuildIndex();\n");
-        }
+        qfprintf(fd,"app.markerA=%"LLU";\n",getMarkerAPts());
+        qfprintf(fd,"app.markerB=%"LLU";\n",getMarkerBPts());
         
 // postproc
 //___________________________
@@ -120,12 +112,14 @@ for (uint32_t i = 0; i < _nb_segment; i++)
                 qfprintf(fd,"app.video.setPostProc(%d,%d,%d);\n",pptype,ppstrength,ppswap);
 
 // fps
-	if( avifileinfo ){
+#if 0
+	if( avifileinfo )
+    {
 	  aviInfo info;
 		video_body->getVideoInfo(&info);
 		qfprintf(fd,"\napp.video.setFps1000(%u);\n",info.fps1000);
 	}
-
+#endif
 // Filter
 //___________________________
         qfprintf(fd,"\n//** Filters **\n");
