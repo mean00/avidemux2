@@ -52,10 +52,13 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         }
     }
     eofMet=false;
-    this->startTime=dtsStart;
-    this->endTime=endTime;
+
+    this->startTimeDts=dtsStart;
+    this->startTimePts=ptsStart;
+    this->endTimePts=endTime;
+
     video_body->goToIntraTimeVideo(ptsStart);
-    ADM_info(" Fixating start time by %u\n",abs((int)(this->startTime-dtsStart)));
+    ADM_info(" Fixating start time by %d\n",abs((int)(startTime-startTimeDts)));
 }
 /**
     \fn ADM_videoStreamCopy
@@ -78,7 +81,7 @@ bool     ADM_videoStreamCopy::getExtraData(uint32_t *extraLen, uint8_t **extraDa
 uint64_t  ADM_videoStreamCopy::rescaleTs(uint64_t in)
 {
     if(in==ADM_NO_PTS) return in;
-    if(in>startTime) return in-startTime;
+    if(in>startTimeDts) return in-startTimeDts;
     ADM_warning("Negative time!\n");
     return 0;
 }
@@ -87,7 +90,7 @@ uint64_t  ADM_videoStreamCopy::rescaleTs(uint64_t in)
 */
 uint64_t  ADM_videoStreamCopy::getStartTime(void)
 {
-    return this->startTime;
+    return this->startTimeDts;
 }
 /**
     \fn getPacket
@@ -97,6 +100,7 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
                     uint32_t *flags)
 {
     if(true==eofMet) return false;
+again:
     image.data=data;
     if(false==video_body->getCompressedPicture(&image))
     {
@@ -105,12 +109,20 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
     }
     *len=image.dataLength;
     ADM_assert(*len<maxLen);
-    
+    if(image.demuxerPts!=ADM_NO_PTS)
+        if(image.demuxerPts<startTimePts)   
+        {
+            if(image.flags & AVI_B_FRAME) 
+            {
+                ADM_warning("Dropping orphean B frame (PTS=%"LLU" ms)\n",image.demuxerPts/1000);
+                goto again;
+            }
+        }
     *pts=rescaleTs(image.demuxerPts);
     *dts=rescaleTs(image.demuxerDts);
-    if(image.demuxerDts!=ADM_NO_PTS)
+    if(image.demuxerPts!=ADM_NO_PTS)
     {
-        if(image.demuxerPts!=ADM_NO_PTS)
+          if(image.demuxerDts!=ADM_NO_PTS)
           {
             if(image.demuxerPts<image.demuxerDts)
               {
@@ -119,7 +131,7 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
               }
 
           }
-        if(image.demuxerDts>endTime ) 
+        if(image.demuxerPts>endTimePts ) 
         {
             eofMet=true;
             return false;

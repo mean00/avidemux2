@@ -13,7 +13,8 @@
 class ADM_videoStreamCopy: public ADM_videoStream
 {
 protected:
-            uint64_t startTime,endTime;
+            uint64_t startTimePts,startTimeDts;
+            uint64_t endTimePts;
             uint32_t currentFrame;
             ADMCompressedImage image;
             bool eofMet;
