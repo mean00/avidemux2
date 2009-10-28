@@ -30,7 +30,7 @@
     \fn recalibrate
     \brief Convert time given in time from absolute ref video to linear time
 */
-static void recalibrate(uint64_t *time,_SEGMENT *seg)
+void ADM_Composer::recalibrate(uint64_t *time,_SEGMENT *seg)
 {
 int64_t t=(int64_t)*time;
         if(*time==ADM_NO_PTS) return;
@@ -38,8 +38,9 @@ int64_t t=(int64_t)*time;
         t-=seg->_refStartTimeUs;
         if(t<0)
         {
-            ADM_warning("Segment time is negative!\n");
+            ADM_warning("Segment time is negative time : %"LLU" ms, refStartTime:%"LLU" ms!\n",*time/1000,seg->_refStartTimeUs/1000);
             t=0;
+            _segments.dump();
         }
         t+=seg->_startTimeUs;
         *time=(uint64_t )t;
@@ -47,7 +48,7 @@ int64_t t=(int64_t)*time;
 /**
     \fn updateImageTiming
 */
-bool updateImageTiming(_SEGMENT *seg,ADMImage *image)
+bool ADM_Composer::updateImageTiming(_SEGMENT *seg,ADMImage *image)
 {
     recalibrate(&(image->Pts),seg);
 //    recalibrate(&(image->Dts),seg);
