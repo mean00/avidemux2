@@ -436,6 +436,11 @@ int nw;
             {
                 GUI_Error_HIG("Cutting","Error while cutting out.");
             }
+            else    
+            {
+              A_ResetMarkers();              
+              A_Resync();
+            }
         }
         
       break;
@@ -1426,7 +1431,7 @@ ADM_RENDER_TYPE UI_getPreferredRender(void)
 */
 void A_ResetMarkers(void)
 {
-uint64_t duration=video_body->getDurationInUs();
+uint64_t duration=video_body->getVideoDuration();
         video_body->setMarkerAPts(0);
         video_body->setMarkerBPts(duration);
 }
