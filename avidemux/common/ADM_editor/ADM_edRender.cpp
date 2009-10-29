@@ -39,10 +39,13 @@ int64_t t=(int64_t)*time;
         if(t<0)
         {
             ADM_warning("Segment time is negative time : %"LLU" ms, refStartTime:%"LLU" ms!\n",*time/1000,seg->_refStartTimeUs/1000);
-            t=0;
-            _segments.dump();
         }
         t+=seg->_startTimeUs;
+        if(t<0)
+        {
+            ADM_error("Absolute time is negative time : %"LLD" ms, _startTime:%"LLU" ms!\n",t/1000,seg->_startTimeUs/1000);
+            t=0;
+        }
         *time=(uint64_t )t;
 }
 /**
@@ -55,11 +58,11 @@ bool ADM_Composer::updateImageTiming(_SEGMENT *seg,ADMImage *image)
     return true;
 }
 /**
-    \fn GoToIntraTime
-    \brief Go to an intra at time time (exact)
+    \fn GoToIntraTime_noDecoding
+    \brief Go to an intra at time time (exact) but do not decode frames
     \return true on success, false on error
 */
-bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
+bool        ADM_Composer::GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe)
 {
     uint32_t s;
     uint64_t segTime;
@@ -83,6 +86,24 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
         ADM_warning("Cannot go to segment %"LU"\n",s);
         return false;
     }
+    if(toframe) *toframe=frame;
+    ref->lastSentFrame=frame; // For copy
+    return true;
+}
+/**
+    \fn GoToIntraTime
+    \brief Go to an intra at time time (exact)
+    \return true on success, false on error
+*/
+bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
+{
+    uint32_t frame;
+    if(false==GoToIntraTime_noDecoding(time,&frame))
+    {
+        ADM_warning("Seek failed.\n");
+        return false;
+    }
+    _SEGMENT *seg=_segments.getSegment(_currentSegment);
     if(false== DecodePictureUpToIntra(seg->_reference,frame))
     {
         return false;
@@ -201,12 +222,12 @@ bool        ADM_Composer::getCompressedPicture(ADMCompressedImage *img)
     ADM_assert(demuxer);
 
     // Get next pic?
-    if(false==demuxer->getFrame (seg->_curFrame,img))
+    if(false==demuxer->getFrame (vid->lastSentFrame,img))
     {
         ADM_info("Failed to get next frame for ref %"LU"\n",seg->_reference);
         goto nextSeg;
     }
-    seg->_curFrame++;
+    vid->lastSentFrame++;
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>tail) goto nextSeg;

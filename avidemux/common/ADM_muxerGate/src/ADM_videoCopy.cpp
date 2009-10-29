@@ -26,7 +26,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     aviInfo info;
     uint64_t ptsStart=startTime+1;
     uint64_t dtsStart;
-    ADM_info("Creating copy video stream\n");
+    ADM_info("Creating copy video stream, start time=%2.2f s\n",(float)startTime/1000000.);
     video_body->getVideoInfo(&info);
     width=info.width;
     height=info.height;
@@ -57,8 +57,9 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     this->startTimePts=ptsStart;
     this->endTimePts=endTime;
 
-    video_body->goToIntraTimeVideo(ptsStart);
+    video_body->GoToIntraTime_noDecoding(ptsStart);
     ADM_info(" Fixating start time by %d\n",abs((int)(startTime-startTimeDts)));
+    ADM_info(" Starting DTS=%"LLU", PTS=%"LLU" ms\n",startTimeDts/1000,startTimePts/1000);
 }
 /**
     \fn ADM_videoStreamCopy

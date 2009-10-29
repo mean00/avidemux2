@@ -144,13 +144,16 @@ public:
 public:
 /************************************ Public API ***************************/
 public:
-                    bool        getCompressedPicture(ADMCompressedImage *img);
+
                     uint64_t    getCurrentFramePts(void);
                     bool        goToTimeVideo(uint64_t time);
                     bool        goToIntraTimeVideo(uint64_t time);
                     bool        nextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
                     bool        rewind(void);
+// Used for stream copy
+                    bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
+                    bool        getCompressedPicture(ADMCompressedImage *img);                    
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
