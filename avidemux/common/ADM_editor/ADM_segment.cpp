@@ -159,7 +159,6 @@ bool        ADM_EditorSegment::resetSegment(void)
         seg._durationUs=vid->_aviheader->getVideoDuration();
         seg._reference=i;
         vid->_aviheader->getVideoInfo(&info);
-        seg._nbFrame=info.nb_frames;
         segments.push_back(seg);
     }
     updateStartTime();
@@ -233,13 +232,7 @@ uint64_t ADM_EditorSegment::getTotalDuration(void)
 */
 uint32_t ADM_EditorSegment::getNbFrames(void)
 {
-    uint32_t dur;
-    uint32_t nb=0;
-    int n=segments.size();
-    for(int i=0;i<n;i++)
-        dur+=segments[i]._nbFrame;
-    return nb;
-
+    return 1;
 }
 /***********************************************************************/
 /***********************************************************************/

@@ -80,8 +80,7 @@ typedef struct
         uint64_t _refStartTimeUs; /// Starting time in reference
         uint64_t _startTimeUs; /// Start time in current (=sum(_duration of previous seg))
         uint64_t _durationUs; ///
-        uint32_t _nbFrame;
-        uint32_t _curFrame; ///
+        
 } _SEGMENT;
 /*
     Use vectors to store our videos & segments
