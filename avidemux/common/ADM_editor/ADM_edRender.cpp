@@ -230,8 +230,8 @@ bool        ADM_Composer::getCompressedPicture(ADMCompressedImage *img)
     vid->lastSentFrame++;
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
-    if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>tail) goto nextSeg;
-    if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>tail) goto nextSeg;
+    if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
+    if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
     {
     // Recalibrate PTS & DTS...
     int64_t offset=seg->_refStartTimeUs;

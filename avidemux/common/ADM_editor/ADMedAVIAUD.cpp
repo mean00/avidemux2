@@ -234,11 +234,44 @@ again:
 */
 uint8_t ADM_Composer::getPacket(uint8_t  *dest, uint32_t *len,uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
-     ADM_audioStreamTrack *trk=getTrack(0);
+        
+    _SEGMENT *seg=_segments.getSegment(_audioSeg);
+    ADM_audioStreamTrack *trk=getTrack(seg->_reference);
     if(!trk) return 0;
-    // Read a packet from stream 0
-     return trk->stream->getPacket(dest,len,sizeMax,samples,odts);
-    
+    uint64_t off=lastDts-seg->_startTimeUs;
+   
+    // Read a packet
+zgain:
+    bool r=trk->stream->getPacket(dest,len,sizeMax,samples,odts);
+    if(r==false) return false;
+    //
+
+
+    // Rescale odts
+    if(*odts!=ADM_NO_PTS)
+    {
+        if(*odts<seg->_refStartTimeUs)
+        {
+            ADM_warning("Audio packet is too early %"LLU" ms, this segment starts at %"LLU"ms\n",*odts,seg->_refStartTimeUs);
+            goto zgain;
+        }
+        
+        *odts-=seg->_refStartTimeUs;
+        if(*odts>seg->_durationUs)
+        {
+            if(switchToNextAudioSegment()==false)
+            {
+                return false;
+            }
+            goto zgain;
+        }
+        *odts+=seg->_startTimeUs;
+    }else
+    {
+        *odts=ADM_NO_PTS;
+    }
+    //advanceDtsBySample(*samples);
+    return true;
 }
 /**
     \fn goToTime
