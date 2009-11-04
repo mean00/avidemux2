@@ -401,6 +401,10 @@ static void updateAll(void)
         else
                 frameEnd=0;
 }
+/**
+    \fn ClearSegments
+    \brief empty the segment list
+*/
 JSBool ADM_JSAvidemux::ClearSegments(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin ClearSegments
@@ -411,13 +415,15 @@ JSBool ADM_JSAvidemux::ClearSegments(JSContext *cx, JSObject *obj, uintN argc,
                 return JS_FALSE;
         printf("clearing segments \n");
         enterLock();
-//        *rval = BOOLEAN_TO_JSVAL(video_body->deleteAllSegments());
-	leaveLock();
+        *rval = BOOLEAN_TO_JSVAL(video_body->clearSegment());
+        leaveLock();
         updateAll();
         return JS_TRUE;
 }// end ClearSegments
-/*
-add a segment. addsegment(source video,startframe, nbframes)",     
+/**
+    \fn AddSegment
+    \brief add a segment. addsegment(ref video,refStartTime, duration) 
+    
 */
 JSBool ADM_JSAvidemux::AddSegment(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
@@ -429,13 +435,13 @@ JSBool ADM_JSAvidemux::AddSegment(JSContext *cx, JSObject *obj, uintN argc,
                 return JS_FALSE;
 	if(JSVAL_IS_INT(argv[0]) == false || JSVAL_IS_INT(argv[1]) == false || JSVAL_IS_INT(argv[2]) == false)
 		return JS_FALSE;
-        int a = JSVAL_TO_INT(argv[0]);
-        int b = JSVAL_TO_INT(argv[1]);
-        int c = JSVAL_TO_INT(argv[2]);
+        uint64_t ref = JSVAL_TO_INT(argv[0]);
+        uint64_t start= JSVAL_TO_INT(argv[1]);
+        uint64_t duration= JSVAL_TO_INT(argv[2]);
         aprintf("adding segment :%d %d %d\n",a,b,c);
         enterLock();
-//        *rval = BOOLEAN_TO_JSVAL( video_body->addSegment(a,b,c));
-	leaveLock();
+        *rval = BOOLEAN_TO_JSVAL( video_body->addSegment(ref,start,duration));
+        leaveLock();
         updateAll();
         return JS_TRUE;
 }// end AddSegment

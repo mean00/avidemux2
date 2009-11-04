@@ -82,7 +82,7 @@ againGet:
     recalibrate(&(img->demuxerPts),seg);
     recalibrate(&(img->demuxerDts),seg);
     }
-    
+    ADM_info("Frame after RECAL: Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     return true;
 
 nextSeg:

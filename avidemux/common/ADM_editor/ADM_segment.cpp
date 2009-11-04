@@ -90,7 +90,27 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     updateStartTime();
     return true;
 }
-
+/**
+    \fn deleteSegments
+    \brief Empty the segments list
+*/
+bool        ADM_EditorSegment::deleteSegments()
+{
+    ADM_info("Clearing a new segment\n");
+    segments.clear();
+    return true;
+}
+/**
+    \fn deleteSegments
+    \brief Empty the segments list
+*/
+bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
+{
+    ADM_info("Adding a new segment\n");
+    segments.push_back(*seg);
+    updateStartTime();
+    return true;
+}
 
 /**
 	\fn deleteAll

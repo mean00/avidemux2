@@ -322,4 +322,27 @@ bool ADM_Composer::rewind(void)
         return DecodePictureUpToIntra(0,0);
 
 }
+/**
+    \fn addSegment
+    \brief add a segment. The startTime will be computed later.
+*/
+bool    ADM_Composer::addSegment(uint32_t ref, uint64_t startRef, uint64_t duration)
+{
+    ADM_assert(ref<_segments.getNbRefVideos());
+    _SEGMENT seg;
+    memset(&seg,0,sizeof(seg));
+    seg._durationUs=duration;
+    seg._reference=ref;
+    seg._refStartTimeUs=startRef;
+    return _segments.addSegment(&seg);
+}
+/**
+    \fn clearSegment
+    \brief empty the segment list
+*/  
+bool   ADM_Composer::clearSegment(void)
+{
+    return _segments.deleteSegments();
+}
+
 //EOF

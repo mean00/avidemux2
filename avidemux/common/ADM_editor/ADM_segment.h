@@ -104,9 +104,13 @@ public:
             void        dump(void);
                         ADM_EditorSegment(void);
                         ~ADM_EditorSegment();
+
             bool        addReferenceVideo(_VIDEOS *ref);
             bool        deleteAll(void);
+
             bool        resetSegment(void);
+            bool        deleteSegments(void);
+            bool        addSegment(_SEGMENT *seg);
 
             _VIDEOS     *getRefVideo(int i);
             int         getNbRefVideos(void);
