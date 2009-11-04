@@ -100,7 +100,7 @@ static void ReSync (void);
 static void cleanUp (void);
 void        updateLoaded (void);
 extern void encoderSetLogFile (char *name);
-extern void videoCodecSelect (void);
+
 //__________
 extern bool parseECMAScript(const char *name);
 
@@ -439,7 +439,11 @@ int nw;
             else    
             {
               A_ResetMarkers();              
-              A_Resync();
+              A_Resync(); // total duration & stuff
+            // Rewind to first frame...
+               video_body->rewind();
+               admPreview::samePicture();
+               GUI_setCurrentFrameAndTime();
             }
         }
         
