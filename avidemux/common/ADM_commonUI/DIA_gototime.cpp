@@ -2,7 +2,7 @@
 #include "ADM_default.h"
 #include "DIA_factory.h"
 
-uint8_t DIA_gotoTime(uint16_t *hh, uint16_t *mm, uint16_t *ss)
+uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss)
 {
 uint32_t h=*hh,m=*mm,s=*ss;
 
