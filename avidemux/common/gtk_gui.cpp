@@ -62,6 +62,7 @@ void    A_parseECMAScript(const char *name);
 extern uint8_t A_autoDrive(Action action);
 uint8_t A_TimeShift(void);
 void    A_ResetMarkers(void);
+void    A_Rewind(void);
 extern void A_jog(void);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 //***********************************
@@ -441,9 +442,7 @@ int nw;
               A_ResetMarkers();              
               A_Resync(); // total duration & stuff
             // Rewind to first frame...
-               video_body->rewind();
-               admPreview::samePicture();
-               GUI_setCurrentFrameAndTime();
+                A_Rewind();
             }
         }
         
@@ -749,11 +748,7 @@ void  updateLoaded ()
   }
 
 
-
-      video_body->rewind();
-      admPreview::samePicture();
-      GUI_setCurrentFrameAndTime();
-
+    A_Rewind();
    ADM_info(" conf updated \n");
 }
 
@@ -1438,6 +1433,16 @@ void A_ResetMarkers(void)
 uint64_t duration=video_body->getVideoDuration();
         video_body->setMarkerAPts(0);
         video_body->setMarkerBPts(duration);
+}
+/**
+    \fn A_Rewind
+    \brief Go back to the first frame
+*/
+void A_Rewind(void)
+{
+               video_body->rewind();
+               admPreview::samePicture();
+               GUI_setCurrentFrameAndTime();
 }
 //
 // EOF

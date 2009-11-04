@@ -319,7 +319,7 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
 bool ADM_Composer::rewind(void)
 {
         ADM_info("Rewinding\n");
-        return DecodePictureUpToIntra(0,0);
+        return switchToSegment(0);
 
 }
 /**

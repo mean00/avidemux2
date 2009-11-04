@@ -21,7 +21,7 @@
  #include "../ADM_editor/ADM_edCache.h"
  #include "ADM_pp.h"
  #include "ADM_colorspace.h"
-
+#include "ADM_vidMisc.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
 
 ADM_EditorSegment::ADM_EditorSegment(void)
@@ -423,6 +423,18 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     dump();
     return true;
 }
+
+
+static const char *us2plain(uint64_t ams)
+{
+static char buffer[256];
+uint32_t ms=(uint32_t)(ams/1000);
+    uint32_t hh,mm,ss,mms;
+    ms2time(ms,&hh,&mm,&ss,&mms);
+    sprintf(buffer," %02"LU":%02"LU":%02"LU",%03"LU" ",hh,mm,ss,mms);
+    return buffer;
+
+}
 /**
     \fn dump
     \brief Dump the segment content
@@ -434,11 +446,12 @@ void ADM_EditorSegment::dump(void)
     for(int i=0;i<n;i++)
     {
         _SEGMENT *s=getSegment(i);
+        
         printf("Segment :%d/%d\n",i,n);
-        printf("\tReference    :%"LU"\n",s->_reference);
-        printf("\tstartLinear  :%"LLU"\n",s->_startTimeUs);
-        printf("\tduration     :%"LLU"\n",s->_durationUs);
-        printf("\trefStart     :%"LLU"\n",s->_refStartTimeUs);
+        printf("\tReference    :%"LU"\n",s->_reference,us2plain(s->_reference));
+        printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,us2plain(s->_startTimeUs));
+        printf("\tduration     :%08"LLU" %s\n",s->_durationUs,us2plain(s->_durationUs));
+        printf("\trefStart     :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartTimeUs));
 
     }
 }
