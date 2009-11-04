@@ -91,10 +91,10 @@ uint8_t DIA_workingQt4::update(uint32_t percent)
         _nextUpdate=elapsed+1000;
         lastper=percent;
 
-		uint32_t hh,mm,ss;
+		uint32_t hh,mm,ss,mms;
 		char string[9];
 
-		ms2time(elapsed,&hh,&mm,&ss);
+		ms2time(elapsed,&hh,&mm,&ss,&mms);
 		sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
 
         workWindow *wind=(workWindow *)_priv; ADM_assert(wind);

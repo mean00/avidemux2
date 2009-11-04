@@ -28,7 +28,7 @@ propWindow::propWindow() : QDialog()
      uint8_t gmc, qpel,vop;
  uint32_t info=0;
  uint32_t war,har;
- uint16_t hh, mm, ss, ms;
+ uint32_t hh, mm, ss, ms;
  char text[80];
  const char *s;
   

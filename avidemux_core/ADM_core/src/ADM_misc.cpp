@@ -91,8 +91,8 @@ uint32_t getTimeOfTheDay(void)
 
 }
 /// convert frame number and fps to hour/mn/sec/ms
-void  frame2time(	uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm,
-                                uint16_t * ss, uint16_t * ms)
+void  frame2time(	uint32_t frame, uint32_t fps, uint32_t * hh, uint32_t * mm,
+                                uint32_t * ss, uint32_t * ms)
 {
     UNUSED_ARG(fps);
 double d;
@@ -105,18 +105,6 @@ double d;
     ms2time(len2,hh,mm,ss,ms);
 }
 
-void ms2time(uint32_t len2,uint16_t * hh, uint16_t * mm,
-	 			uint16_t * ss, uint16_t * ms)
-{
-    *hh = (uint32_t) floor(len2 / (3600.F * 1000.F));
-    len2 -= (uint32_t) floor(*hh * 3600.F * 1000.F);
-    *mm = (uint32_t) floor(len2 / (60.F * 1000.F));
-    len2 -= (uint32_t) floor(*mm * 60.F * 1000.F);
-    *ss = (uint32_t) floor(len2 / (1000.F));
-    len2 -= (uint32_t) floor((*ss * 1000.F));
-    *ms = (uint32_t) floor(len2);
-
-}
 void            time2frame(uint32_t *frame, uint32_t fps, uint32_t hh, uint32_t mm,
                                 uint32_t ss, uint32_t ms)
 {
@@ -185,7 +173,7 @@ uint8_t 	identMovieType(uint32_t fps1000)
 
       return r;
 }
-uint8_t ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s)
+uint8_t ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s,uint32_t *mms)
 {
       uint32_t sectogo;
       int  mm,ss,hh;
@@ -201,6 +189,7 @@ uint8_t ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s)
                               *h=hh;
                               *m=mm;
                               *s=ss;
+                              *mms=ms-1000*(ms/1000);
       return 1;
 }
 

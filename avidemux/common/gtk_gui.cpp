@@ -90,7 +90,7 @@ extern uint8_t DIA_about( void );
 extern uint8_t DIA_RecentFiles( char **name );
 extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
-extern uint8_t DIA_gotoTime(uint16_t *hh, uint16_t *mm, uint16_t *ss);
+extern uint8_t DIA_gotoTime(uint16_t *hh, uint32_t *mm, uint32_t *ss);
 extern uint8_t DIA_builtin(void);
 extern void    DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );
 extern uint8_t DIA_pluginsInfo(void);

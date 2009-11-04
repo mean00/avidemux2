@@ -35,7 +35,7 @@
 #include "ADM_preview.h"
 
 extern void UI_purge(void);
-extern uint8_t DIA_gotoTime(uint16_t *hh, uint16_t *mm, uint16_t *ss);
+extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss);
 extern bool SliderIsShifted;
 bool   GUI_GoToTime(uint64_t time);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
@@ -188,7 +188,7 @@ static int ignore_change=0;
            // Get current time
             uint64_t pts=admPreview::getCurrentPts();
 
-	      uint16_t mm, hh, ss, ms;
+	      uint32_t mm, hh, ss, ms;
             ms2time((uint32_t)(pts/1000),&hh,&mm,&ss,&ms);
 	      if (DIA_gotoTime(&hh, &mm, &ss))
           {

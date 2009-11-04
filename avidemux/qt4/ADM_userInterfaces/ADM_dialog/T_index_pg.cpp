@@ -130,7 +130,7 @@ uint8_t       DIA_progressIndexing::update(uint32_t done,uint32_t total, uint32_
 	{
         char string[256];
         double f;
-        	uint32_t   tom,zhh,zmm,zss;
+        	uint32_t   tom,zhh,zmm,zss,zmms;
 
 		_nextUpdate=tim+GUI_UPDATE_RATE;
         sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
@@ -154,7 +154,7 @@ uint8_t       DIA_progressIndexing::update(uint32_t done,uint32_t total, uint32_
         tom=(uint32_t)floor(f);
         if(tim>tom) return 1;
         tom=tom-tim;
-        ms2time(tom,&zhh,&zmm,&zss);
+        ms2time(tom,&zhh,&zmm,&zss,&zmms);
         sprintf(string,QT_TR_NOOP("Time Left :%02d:%02d:%02d"),zhh,zmm,zss);
         dialog->setETA(string);
         UI_purge();
