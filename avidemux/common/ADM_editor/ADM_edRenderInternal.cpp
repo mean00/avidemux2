@@ -36,7 +36,7 @@ static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
     \brief Seek to frame with timestamp given as arg
 
 */
-bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek)
+bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 {
    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
@@ -58,8 +58,15 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek)
             return false;
         }
     }
-    // ok now seek...
     uint32_t frame=_segments.intraTimeToFrame(ref,seekTime);
+    if(dontdecode==true)
+    {
+        vid->lastSentFrame=frame;
+        ADM_info("Seek to time without decoding ok\n");
+        return true;
+    }
+    // ok now seek...
+    
     if(false==DecodePictureUpToIntra(ref,frame))
     {
         ADM_warning("Cannot decode up to intra %"LLU" at %"LLU" ms\n",frame,seekTime/1000);

@@ -17,7 +17,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
-
+#include "ADM_vidMisc.h"
 /**
     \fn getNKFramePTS
 */
@@ -52,6 +52,11 @@ again:
             return false;
         }
         // Go to the next segment
+        if(seg==_segments.getNbSegments()-1)
+        {
+            ADM_warning("Last segment\n");
+            return false;
+        }
         seg++;
         goto again;
     }
@@ -145,7 +150,10 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
         if(pts==ADM_NO_PTS) continue;
         if(pts>refTime)
         {
-            ADM_info("Found nextkeyframe %"LLU" at frame %"LU"\n",pts/1000,i);
+            uint32_t hh,mm,ss,ms,ms2;
+            ms=pts/1000;
+            ms2time(ms,&hh,&mm,&ss,&ms2);
+            ADM_info("Found nextkeyframe %"LLU" %u:%u:%u at frame %"LU"\n",ms,hh,mm,ss,i);
             *nkTime=pts;
             return true;
         }

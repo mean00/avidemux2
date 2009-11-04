@@ -65,13 +65,13 @@ class ADM_Composer : public ADM_audioStream
   private:
 //*********************************PRIVATE API *******************************************
                     //bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
-                    bool        switchToNextSegment(void);
-                    bool        switchToSegment(uint32_t s);
+                    bool        switchToNextSegment(bool dontdecode=false);
+                    bool        switchToSegment(uint32_t s,bool dontdecode=false);
                     uint32_t    currentFrame;
 
                     bool        nextPictureInternal(uint32_t ref,ADMImage *image);
                     bool        samePictureInternal(uint32_t ref,ADMImage *image);
-                    bool        seektoTime(uint32_t ref,uint64_t timeToSeek);
+                    bool        seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode=false);
                     // Some useful functions...
                     void        recalibrate(uint64_t *time,_SEGMENT *seg);
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);

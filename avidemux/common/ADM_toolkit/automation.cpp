@@ -501,7 +501,7 @@ void show_info(char *p){
    printf("   Number of frames: %d frames\n", avifileinfo->nb_frames);
    printf("   Codec FourCC: %s\n", fourCC::tostring(avifileinfo->fcc));
    if(avifileinfo->nb_frames){
-     uint16_t hh, mm, ss, ms;
+     uint32_t hh, mm, ss, ms;
       frame2time(avifileinfo->nb_frames, avifileinfo->fps1000,&hh, &mm, &ss, &ms);
       printf("   Duration: %02d:%02d:%02d.%03d\n", hh, mm, ss, ms);
    }else{
@@ -526,7 +526,7 @@ void show_info(char *p){
       printf("   Frequency: %u Hz\n", wavinfo->frequency);
       {
 double du = 0;// BAZOOKA video_body->getAudioLength();
-        uint16_t hh, mm, ss, ms;
+        uint32_t hh, mm, ss, ms;
          du*=1000;
          du/=wavinfo->byterate;
          ms2time((uint32_t)floor(du), &hh, &mm, &ss, &ms);

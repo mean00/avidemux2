@@ -11,6 +11,7 @@ ADM_edRenderInternal.cpp
 ADM_edMarker.cpp
 ADM_edStub.cpp
 ADM_edPtsDts.cpp
+ADM_edVideoCopy.cpp
 ADM_segment.cpp
 )
 

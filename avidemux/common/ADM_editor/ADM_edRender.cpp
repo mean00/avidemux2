@@ -205,52 +205,6 @@ bool        ADM_Composer::samePicture(ADMImage *image)
         return true;
 }
 
-/**
-        \fn getCompressedPicture
-        \brief bypass decoder and directly get the source image
-
-*/
-bool        ADM_Composer::getCompressedPicture(ADMCompressedImage *img)
-{
-    uint64_t tail;
-    //
-    _SEGMENT *seg=_segments.getSegment(_currentSegment);
-    ADM_assert(seg);
-    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-    ADM_assert(vid);
-    vidHeader *demuxer=vid->_aviheader;
-    ADM_assert(demuxer);
-
-    // Get next pic?
-    if(false==demuxer->getFrame (vid->lastSentFrame,img))
-    {
-        ADM_info("Failed to get next frame for ref %"LU"\n",seg->_reference);
-        goto nextSeg;
-    }
-    vid->lastSentFrame++;
-    // Need to switch seg ?
-    tail=seg->_refStartTimeUs+seg->_durationUs;
-    if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
-    if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
-    {
-    // Recalibrate PTS & DTS...
-    int64_t offset=seg->_refStartTimeUs;
-    offset=seg->_startTimeUs;
-    recalibrate(&(img->demuxerPts),seg);
-    recalibrate(&(img->demuxerDts),seg);
-    }
-    return true;
-
-nextSeg:
-    if(false==switchToNextSegment())
-    {
-        ADM_warning("Cannot update to new segment\n");
-        return false;
-    }
-    ADM_info("Retrying for next segment\n");
-    return getCompressedPicture(img);
-   
-}
 
 /**
         \fn dupe
@@ -305,15 +259,15 @@ uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t 
     \fn switchToNextSegment
     \brief Switch to the next segment
 
-*/
-bool        ADM_Composer::switchToNextSegment(void)
+*/  
+bool        ADM_Composer::switchToNextSegment(bool dontdecode)
 {
     if(_currentSegment==_segments.getNbSegments()-1)
     {
         ADM_warning("This is the last segment (%"LU")\n",_currentSegment);
         return false;
     }
-    if(true==switchToSegment(_currentSegment+1)) return true;
+    if(true==switchToSegment(_currentSegment+1,dontdecode)) return true;
     return false;
 }
 /**
@@ -321,7 +275,7 @@ bool        ADM_Composer::switchToNextSegment(void)
     \brief Switch to the segment given as argument
 
 */
-bool        ADM_Composer::switchToSegment(uint32_t s)
+bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
 {
     if(s+1>_segments.getNbSegments())
     {
@@ -349,13 +303,13 @@ bool        ADM_Composer::switchToSegment(uint32_t s)
                 from=pts;
         }
     }
-    if(false==seektoTime(seg->_reference,from))
+    if(false==seektoTime(seg->_reference,from,dontdecode))
     {
             ADM_warning("Cannot seek to beginning of segment %"LU" at  %"LLU" ms\n",s,from/1000);
             return false;
     }
     _currentSegment=s;
-    ADM_info("Switched ok to segment %"LU"\n",s);
+    ADM_info("Switched ok to segment %"LU" (dontdecode=%d)\n",s,dontdecode);
     return true;
 }
 /**
