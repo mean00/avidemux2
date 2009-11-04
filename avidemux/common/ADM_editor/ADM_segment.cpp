@@ -231,6 +231,18 @@ bool         ADM_EditorSegment::updateStartTime(void)
         segments[i]._startTimeUs=t;
         t+=segments[i]._durationUs;
     }
+    // Now set the _refStartDts field
+    for(int i=0;i<n;i++)
+    {
+        _VIDEOS *vid=getRefVideo(segments[i]._reference);
+        _SEGMENT *seg=getSegment(i);
+
+        uint64_t pts,dts;
+        pts=seg->_refStartTimeUs;
+        dtsFromPts(seg->_reference,pts,&dts);
+        seg->_refStartDts=dts;
+    }
+
     return true;
 }
 /**
@@ -451,15 +463,17 @@ void ADM_EditorSegment::dump(void)
         printf("\tReference    :%"LU"\n",s->_reference,us2plain(s->_reference));
         printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,us2plain(s->_startTimeUs));
         printf("\tduration     :%08"LLU" %s\n",s->_durationUs,us2plain(s->_durationUs));
-        printf("\trefStart     :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartTimeUs));
+        printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartTimeUs));
+        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartDts));
 
     }
 }
+
 /**
-    \fn ptsFromDts
+    \fn dtsFromPts
     \brief guestimate DTS from PTS
 */
- bool        ADM_EditorSegment::ptsFromDts(uint32_t refVideo,uint64_t pts,uint64_t *dts)
+ bool        ADM_EditorSegment::dtsFromPts(uint32_t refVideo,uint64_t pts,uint64_t *dts)
 {
     uint32_t frame,flags;
     _VIDEOS *vid=getRefVideo(refVideo);

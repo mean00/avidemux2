@@ -74,15 +74,35 @@ againGet:
     }
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
-    ADM_info("Frame : Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
+   // ADM_info("Frame : Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
     if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
     {
-    // Recalibrate PTS & DTS...
-    recalibrate(&(img->demuxerPts),seg);
-    recalibrate(&(img->demuxerDts),seg);
+        // Recalibrate PTS & DTS...
+        recalibrate(&(img->demuxerPts),seg);
+        recalibrate(&(img->demuxerDts),seg);
     }
-    ADM_info("Frame after RECAL: Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
+    // Check the DTS is not too late compared to next seg beginning...
+    if(_currentSegment+1<_segments.getNbSegments() && img->demuxerDts!=ADM_NO_PTS)
+    {
+        _SEGMENT *nextSeg=_segments.getSegment(_currentSegment+1);
+        int64_t nextDts=nextSeg->_startTimeUs+nextSeg->_refStartDts;
+        if(nextDts<nextSeg->_refStartTimeUs)
+        {
+            ADM_warning("next DTS is negative %"LLU" %"LLU" ms\n",nextDts,nextSeg->_refStartTimeUs);
+        }else       
+        {
+            nextDts-=nextSeg->_refStartTimeUs;
+            if(img->demuxerDts>=nextDts)
+            {
+                ADM_warning("have to switch segment, DTS limit reached %"LLU" %"LLU"\n",img->demuxerDts/1000,nextDts/1000);
+                goto nextSeg;
+            }
+        }
+
+
+    }
+   // ADM_info("Frame after RECAL: Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     return true;
 
 nextSeg:

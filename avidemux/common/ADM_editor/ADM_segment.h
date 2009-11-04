@@ -81,6 +81,7 @@ typedef struct
         uint64_t _startTimeUs; /// Start time in current (=sum(_duration of previous seg))
         uint64_t _durationUs; ///
         uint32_t _dropBframes;
+        uint64_t _refStartDts;
         
 } _SEGMENT;
 /*
@@ -133,7 +134,7 @@ public:
             bool        isKeyFrameByTime(uint32_t refVideo,uint64_t seekTime);
 
             bool        removeChunk(uint64_t from, uint64_t to);
-            bool        ptsFromDts(uint32_t refVideo,uint64_t pts,uint64_t *dts);
+            bool        dtsFromPts(uint32_t refVideo,uint64_t pts,uint64_t *dts);
 };
 
 #endif

@@ -221,7 +221,7 @@ uint32_t seg;
     // Search the frame with correct PTS
     uint64_t pts=segTime+s->_refStartTimeUs;
     uint64_t dts;
-    if(false==_segments.ptsFromDts(s->_reference,pts,&dts))
+    if(false==_segments.dtsFromPts(s->_reference,pts,&dts))
     {
         ADM_warning("Cannot get DTS from PTS=%"LLU"ms\n",pts/1000);
         return false;
