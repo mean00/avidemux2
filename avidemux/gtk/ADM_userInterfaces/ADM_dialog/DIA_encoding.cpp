@@ -392,11 +392,11 @@ uint32_t tim;
           sprintf(string,"%.2f",_fps_average);
           gtk_label_set_text(GTK_LABEL(WID(label_fps)),string);
 
-          uint32_t   hh,mm,ss;
+          uint32_t   hh,mm,ss,mms;
 
             double framesLeft=(_total-_lastnb);
 
-			ms2time(tim,&hh,&mm,&ss);
+			ms2time(tim,&hh,&mm,&ss,&mms);
 			sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
 			gtk_label_set_text(GTK_LABEL(WID(label_elapsed)),string);
 

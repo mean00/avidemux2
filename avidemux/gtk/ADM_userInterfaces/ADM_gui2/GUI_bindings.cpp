@@ -798,7 +798,7 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 void UI_setTotalTime(uint64_t curTime)
 {
   char text[80];
- uint16_t mm,hh,ss,ms;
+ uint32_t mm,hh,ss,ms;
  uint32_t shorty=(uint32_t)(curTime/1000);
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
@@ -814,7 +814,7 @@ void UI_setTotalTime(uint64_t curTime)
 void UI_setCurrentTime(uint64_t curTime)
 {
   char text[80];
- uint16_t mm,hh,ss,ms;
+ uint32_t mm,hh,ss,ms;
  uint32_t shorty=(uint32_t)(curTime/1000);
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
@@ -826,7 +826,7 @@ void UI_setCurrentTime(uint64_t curTime)
 void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
 {
   char text[80];
- uint16_t mm,hh,ss,ms;
+ uint32_t mm,hh,ss,ms;
 
  	frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
   	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
@@ -947,7 +947,7 @@ gboolean UI_returnFocus(GtkWidget *widget, GdkEventButton *event, gpointer user_
 void UI_setMarkers(uint64_t a, uint64_t b )
 {
 char text[500];
-  uint16_t hh,mm,ss,ms;
+  uint32_t hh,mm,ss,ms;
   uint32_t timems;
     a/=1000;
     b/=1000;

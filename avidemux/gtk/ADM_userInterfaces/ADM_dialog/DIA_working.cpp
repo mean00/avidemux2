@@ -132,10 +132,10 @@ uint8_t DIA_workingGtk::update(uint32_t percent)
 	GtkWidget *dialog;
 	dialog=(GtkWidget *)_priv;
 
-	uint32_t hh,mm,ss;
+	uint32_t hh,mm,ss,mms;
 	char string[9];
 
-	ms2time(elapsed,&hh,&mm,&ss);
+	ms2time(elapsed,&hh,&mm,&ss,&mms);
 	sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
 	gtk_label_set_text(GTK_LABEL(WID(labelElapsed)),string);
 
