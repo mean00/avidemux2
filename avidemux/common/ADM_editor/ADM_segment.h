@@ -112,6 +112,8 @@ public:
             bool        deleteSegments(void);
             bool        addSegment(_SEGMENT *seg);
 
+            bool        removeEmptySegments(void);
+
             _VIDEOS     *getRefVideo(int i);
             int         getNbRefVideos(void);
 

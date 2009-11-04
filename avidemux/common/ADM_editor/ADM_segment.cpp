@@ -419,6 +419,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
         segments.erase(segments.begin()+startSeg+1);
     }
     updateStartTime();
+    removeEmptySegments();
     dump();
     return true;
 }
@@ -471,6 +472,26 @@ void ADM_EditorSegment::dump(void)
     }
     deltaFrame=frame-deltaFrame;
     *dts=d+deltaFrame*vid->timeIncrementInUs;
+    return true;
+}
+/**
+    \fn removeEmptySegments
+    \brief Remove empty segments after a cut.
+*/
+bool        ADM_EditorSegment::removeEmptySegments(void)
+{
+    while(1)
+    {
+        int index=-1;
+        int n=getNbSegments();
+        for(int i=0;i<n;i++)
+        {
+                _SEGMENT *seg=getSegment(i);
+                if(seg->_durationUs==0) index=i;
+        }
+        if(index==-1) break;
+        segments.erase(segments.begin()+index);
+    }
     return true;
 }
 //EOF
