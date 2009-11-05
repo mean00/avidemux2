@@ -41,6 +41,9 @@ bool        ADM_Composer::getCompressedPicture(ADMCompressedImage *img)
     uint64_t tail;
     //
 againGet:
+    static uint32_t fn;
+    fn++;
+
     _SEGMENT *seg=_segments.getSegment(_currentSegment);
     ADM_assert(seg);
     _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
@@ -60,7 +63,7 @@ againGet:
     {
         if(seg->_dropBframes==2) 
         {
-            ADM_warning("Dropping bframes\n");
+            ADM_warning("%"LU" Dropping bframes\n",fn);
             goto againGet;
         }
     }else
@@ -74,6 +77,8 @@ againGet:
     }
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
+    // Guess DTS
+
    // ADM_info("Frame : Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
     if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
@@ -82,6 +87,20 @@ againGet:
         recalibrate(&(img->demuxerPts),seg);
         recalibrate(&(img->demuxerDts),seg);
     }
+    // From here we are in linear time...
+    if(img->demuxerDts==ADM_NO_PTS)
+    {
+        img->demuxerDts=_nextFrameDts;
+    }else
+    {
+        if(_nextFrameDts>img->demuxerDts) 
+        {
+         ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLU" ms got : %"LLU" ms\n",fn,_nextFrameDts/1000,img->demuxerDts/1000);
+        }
+        _nextFrameDts=img->demuxerDts;
+    }
+    // Increase for next one
+    _nextFrameDts+=vid->timeIncrementInUs;
     // Check the DTS is not too late compared to next seg beginning...
     if(_currentSegment+1<_segments.getNbSegments() && img->demuxerDts!=ADM_NO_PTS)
     {
@@ -89,13 +108,13 @@ againGet:
         int64_t nextDts=nextSeg->_startTimeUs+nextSeg->_refStartDts;
         if(nextDts<nextSeg->_refStartTimeUs)
         {
-            ADM_warning("next DTS is negative %"LLU" %"LLU" ms\n",nextDts,nextSeg->_refStartTimeUs);
+            ADM_warning("%"LU" next DTS is negative %"LLU" %"LLU" ms\n",fn,nextDts,nextSeg->_refStartTimeUs);
         }else       
         {
             nextDts-=nextSeg->_refStartTimeUs;
             if(img->demuxerDts>=nextDts)
             {
-                ADM_warning("have to switch segment, DTS limit reached %"LLU" %"LLU"\n",img->demuxerDts/1000,nextDts/1000);
+                ADM_warning("%"LU" have to switch segment, DTS limit reached %"LLU" %"LLU"\n",fn,img->demuxerDts/1000,nextDts/1000);
                 goto nextSeg;
             }
         }

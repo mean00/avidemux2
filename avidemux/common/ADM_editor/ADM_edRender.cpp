@@ -88,6 +88,26 @@ bool        ADM_Composer::GoToIntraTime_noDecoding(uint64_t time,uint32_t *tofra
     }
     if(toframe) *toframe=frame;
     ref->lastSentFrame=frame; // For copy
+    // Initialize _nextFrameDts, in fact next DTS
+    uint64_t pts,dts;
+    ref->_aviheader->getPtsDts(frame,&pts,&dts);
+    if(dts==ADM_NO_PTS)
+    {
+        if(pts==ADM_NO_PTS) 
+        {
+            ADM_warning("No PTS nor DTS, cannot set start DTS");
+            return false; // Fixme we can still guess DTS
+        }
+        // convert to linear time
+        _segments.dtsFromPts(seg->_reference,pts,&dts);
+    }
+        time=(int64_t)dts;
+        time-=seg->_refStartTimeUs;
+        time+=seg->_startTimeUs;
+        dts=time;
+    
+    _nextFrameDts=dts;
+    seg->_dropBframes=1;
     return true;
 }
 /**
@@ -287,22 +307,15 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
     ADM_info("Trying to switch to seg %"LU" with startTime in reference pic= %"LU" ms\n",s,seg->_refStartTimeUs/1000);
         // If the refStartTime is 0, it is the first image
         // But the fist image might not be = 0
-        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-        vidHeader 	*demuxer=vid->_aviheader;  
-        ADM_assert(vid);
-        uint64_t from=seg->_refStartTimeUs;
-      uint32_t flags;
+      _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+      vidHeader 	*demuxer=vid->_aviheader;  
+      ADM_assert(vid);
+      uint64_t from=seg->_refStartTimeUs;
       uint64_t pts,dts;
-        demuxer->getFlags(0,&flags);
-        demuxer->getPtsDts(0,&pts,&dts);
-    if(!seg->_refStartTimeUs)
-    {
-        if(pts!=ADM_NO_PTS && pts)
-        {
-                ADM_info("This segment does not start at 0,...\n");
-                from=pts;
-        }
-    }
+
+      if(!from) from=vid->firstFramePts;
+
+    
     if(false==seektoTime(seg->_reference,from,dontdecode))
     {
             ADM_warning("Cannot seek to beginning of segment %"LU" at  %"LLU" ms\n",s,from/1000);

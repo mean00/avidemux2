@@ -76,14 +76,12 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     uint64_t pts,dts;
         demuxer->getFlags(0,&flags);
         demuxer->getPtsDts(0,&pts,&dts);
-
+        ref->firstFramePts=0;
         if(pts!=ADM_NO_PTS &&pts)
         {
             ADM_warning("The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
-//            seg._refStartTimeUs=pts;
+            ref->firstFramePts=pts;
         }
-    //
-
 
     segments.push_back(seg);
     videos.push_back(*ref);
@@ -464,8 +462,7 @@ void ADM_EditorSegment::dump(void)
         printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,us2plain(s->_startTimeUs));
         printf("\tduration     :%08"LLU" %s\n",s->_durationUs,us2plain(s->_durationUs));
         printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartTimeUs));
-        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartDts));
-
+        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,us2plain(s->_refStartDts));
     }
 }
 
