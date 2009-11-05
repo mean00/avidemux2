@@ -110,6 +110,7 @@ again:
     }
     *len=image.dataLength;
     ADM_assert(*len<maxLen);
+#if 0
     if(image.demuxerPts!=ADM_NO_PTS)
         if(image.demuxerPts<startTimePts)   
         {
@@ -119,6 +120,7 @@ again:
                 goto again;
             }
         }
+#endif
     *pts=rescaleTs(image.demuxerPts);
     *dts=rescaleTs(image.demuxerDts);
     if(image.demuxerPts!=ADM_NO_PTS)
