@@ -52,17 +52,20 @@ JSFunctionSpec ADM_JSAvidemuxVideo::avidemuxvideo_methods[] =
 	{ "saveJpeg", SaveJPEG, 1, 0, 0 },	// save the current frame as a JPEG
 	{ "listBlackFrames", ListBlackFrames, 1, 0, 0 },	// output a list of the black frame to a file
 	{ "setPostProc", PostProcess, 3, 0, 0 },	// Postprocess
-        { "setFps1000", SetFps1000, 1, 0, 0 },        // Postprocess
-        { "getFps1000", GetFps1000, 0, 0, 0 },        // Postprocess
-        { "getNbFrames", GetNbFrames, 0, 0, 0 },        // Postprocess
-        { "getWidth", GetWidth, 0, 0, 0 },        // Postprocess
-        { "getHeight", GetHeight, 0, 0, 0 },        // Postprocess
-        { "getFCC", GetFCC, 0, 0, 0 },        // Postprocess
-        { "isVopPacked", isVopPacked, 0, 0, 0 },        // Postprocess
-        { "hasQpel", hasQpel, 0, 0, 0 },        // Postprocess
-        { "hasGmc", hasGmc, 0, 0, 0 },        // Postprocess
-        { "frameSize", getFrameSize, 1, 0, 0 },        // FrameSize
-        { "frameType", getFrameType, 1, 0, 0 },        // Postprocess
+    { "setFps1000", SetFps1000, 1, 0, 0 },        // Postprocess
+    { "getFps1000", GetFps1000, 0, 0, 0 },        // Postprocess
+    { "getNbFrames", GetNbFrames, 0, 0, 0 },        // Postprocess
+    { "getWidth", GetWidth, 0, 0, 0 },        // Postprocess
+    { "getHeight", GetHeight, 0, 0, 0 },        // Postprocess
+    { "getFCC", GetFCC, 0, 0, 0 },        // Postprocess
+    { "isVopPacked", isVopPacked, 0, 0, 0 },        // Postprocess
+    { "hasQpel", hasQpel, 0, 0, 0 },        // Postprocess
+    { "hasGmc", hasGmc, 0, 0, 0 },        // Postprocess
+    { "frameSize", getFrameSize, 1, 0, 0 },        // FrameSize
+    { "frameType", getFrameType, 1, 0, 0 },        // Postprocess
+
+
+    { "dumpEditing", dumpEditing,0,0,0},
 	{ 0 }
 };
 
@@ -605,6 +608,25 @@ uint32_t sz;
         
         *rval=INT_TO_JSVAL(sz);
 #endif
+        return JS_TRUE;
+}// end PostProcess
+/**
+    \fn dumpEditing
+    \brief dump segment, video & all
+*/
+JSBool ADM_JSAvidemuxVideo::dumpEditing(JSContext *cx, JSObject *obj, uintN argc, 
+                                       jsval *argv, jsval *rval)
+{// begin PostProcess
+uint32_t info;
+uint32_t frame;
+uint32_t sz;
+        if(argc != 0)
+          return JS_FALSE;
+  
+        enterLock();
+        video_body->dumpEditing();
+        leaveLock(); 
+        
         return JS_TRUE;
 }// end PostProcess
 /* EOF */

@@ -101,6 +101,8 @@ protected:
                     ADM_PP      _pp;             // Postprocessing settings
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
                     uint32_t    _currentSegment;   // Current video segment
+                    uint64_t    _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
+                                                    // Warning, it is actually the DTS of the NEXT frame to fetch
 //****************************** Audio **********************************
                     // _audiooffset points to the offset / the total segment
                     // not the used part !
@@ -153,7 +155,7 @@ public:
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
-                    bool        getCompressedPicture(ADMCompressedImage *img);                    
+                    bool        getCompressedPicture(ADMCompressedImage *img);     //COPYMODE                
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
@@ -206,6 +208,7 @@ public:
                     bool                remove(uint64_t start,uint64_t end);
                     bool                addSegment(uint32_t ref, uint64_t startRef, uint64_t duration);
                     bool                clearSegment(void);
+                    bool                dumpEditing(void);
 /******************************* /Editing **********************************/										
 /******************************* Misc ************************************/				
                     uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);

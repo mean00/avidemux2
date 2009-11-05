@@ -575,5 +575,15 @@ bool            ADM_Composer::remove(uint64_t start,uint64_t end)
 {
     return _segments.removeChunk(start,end);
 }
+/**
+    \fn dumpEditing
+    \brief Dump segment, video & al
+*/
+bool            ADM_Composer::dumpEditing(void)
+{
+    _segments.dump();
+    return true;
+}
+
 //
 //
