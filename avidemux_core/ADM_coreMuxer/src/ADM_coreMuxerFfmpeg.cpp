@@ -421,7 +421,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                         if(audioDts>lastVideoDts+videoIncrement) break;
                     }
                 }
-                if(!nb) printf("[FF] A: No audio for video frame %d\n",written);
+                //if(!nb) printf("[FF] A: No audio for video frame %d\n",written);
             }
 
     }
