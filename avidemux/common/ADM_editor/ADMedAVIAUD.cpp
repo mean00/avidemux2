@@ -238,7 +238,6 @@ uint8_t ADM_Composer::getPacket(uint8_t  *dest, uint32_t *len,uint32_t sizeMax, 
     _SEGMENT *seg=_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrack(seg->_reference);
     if(!trk) return 0;
-    uint64_t off=lastDts-seg->_startTimeUs;
    
     // Read a packet
 zgain:
@@ -255,14 +254,19 @@ zgain:
             ADM_warning("Audio packet is too early %"LLU" ms, this segment starts at %"LLU"ms\n",*odts,seg->_refStartTimeUs);
             goto zgain;
         }
-        
+#if 0
+        ADM_info("Audio DTS:%"LLU" ms, ref StartTime :%"LLU" Delta:%"LLU" duration :%"LLU"\n",
+                    *odts/1000,seg->_refStartTimeUs/1000,(*odts-seg->_refStartTimeUs)/1000,seg->_durationUs/1000);
+#endif
         *odts-=seg->_refStartTimeUs;
         if(*odts>seg->_durationUs)
         {
             if(switchToNextAudioSegment()==false)
             {
+                
                 return false;
             }
+            seg=_segments.getSegment(_audioSeg);
             goto zgain;
         }
         *odts+=seg->_startTimeUs;
