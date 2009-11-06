@@ -44,27 +44,7 @@ renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** A Function ***************
 //***********************************
-int     A_delete(uint32_t start, uint32_t end);
-void    A_externalAudioTrack( void );
-uint8_t A_rebuildKeyFrame (void);
-void    A_openBrokenAvi (const char *name);
-int     A_openAvi2 (const char *name, uint8_t mode);
-int     A_appendAvi (const char *name);
-void    A_saveWorkbench (const char *name);
-static void A_videoCheck( void);
-static void	A_setPostproc( void );
-void    A_Resync(void);
-void    A_addJob(void);
-void    A_audioTrack(void);
-extern int A_Save(const char *name);
-int     A_SaveWrapper( char *name);
-void    A_parseECMAScript(const char *name);
-extern uint8_t A_autoDrive(Action action);
-uint8_t A_TimeShift(void);
-void    A_ResetMarkers(void);
-void    A_Rewind(void);
-extern void A_jog(void);
-uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
+#include "A_functions.h"
 //***********************************
 //******** GUI Function**************
 //***********************************
@@ -84,6 +64,7 @@ extern void    GUI_displayBitrate( void );
        void    GUI_avsProxy(void);
        uint8_t GUI_close(void);
 extern int     GUI_GoToFrame(uint32_t frame);;
+extern bool    GUI_GoToTime(uint64_t time);
 //***********************************
 //******** DIA Function**************
 //***********************************
@@ -441,8 +422,10 @@ int nw;
             {
               A_ResetMarkers();              
               A_Resync(); // total duration & stuff
-            // Rewind to first frame...
-                A_Rewind();
+              // Rewind to first frame...
+              //A_Rewind();
+              GUI_GoToTime(a);
+                
             }
         }
         
