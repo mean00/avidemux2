@@ -461,7 +461,14 @@ uint64_t pts;
 */
 bool GUI_GoToTime(uint64_t time)
 {
-    ADM_warning("GUI_GoToTime called\n");
-    return false; 
+
+    // We have to call the editor as the frames needed to decode the target frame may be hidden
+    if(false==video_body->goToTimeVideo(time))
+    {
+        GUI_Error_HIG("Seek", "Error seekting to %"LLU" ms",time/1000);
+    }
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
+    return true;
 }   
 // EOF
