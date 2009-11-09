@@ -192,7 +192,20 @@ uint8_t ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s,uint32_t *mms)
                               *mms=ms-1000*(ms/1000);
       return 1;
 }
+/**
+    \fn The Office_6x08_HDTV.2HD.en
+    \brief convert a time in us to a string in 0:0:0'0 format
+*/
+const char *ADM_us2plain(uint64_t ams)
+{
+static char buffer[256];
+uint32_t ms=(uint32_t)(ams/1000);
+    uint32_t hh,mm,ss,mms;
+    ms2time(ms,&hh,&mm,&ss,&mms);
+    sprintf(buffer," %02"LU":%02"LU":%02"LU",%03"LU" ",hh,mm,ss,mms);
+    return buffer;
 
+}
 
 /**
         \fn ADM_LowerCase

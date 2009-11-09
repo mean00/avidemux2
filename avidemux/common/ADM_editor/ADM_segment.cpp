@@ -435,16 +435,6 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
 }
 
 
-static const char *us2plain(uint64_t ams)
-{
-static char buffer[256];
-uint32_t ms=(uint32_t)(ams/1000);
-    uint32_t hh,mm,ss,mms;
-    ms2time(ms,&hh,&mm,&ss,&mms);
-    sprintf(buffer," %02"LU":%02"LU":%02"LU",%03"LU" ",hh,mm,ss,mms);
-    return buffer;
-
-}
 /**
     \fn dump
     \brief Dump the segment content
@@ -458,11 +448,11 @@ void ADM_EditorSegment::dump(void)
         _SEGMENT *s=getSegment(i);
         
         printf("Segment :%d/%d\n",i,n);
-        printf("\tReference    :%"LU"\n",s->_reference,us2plain(s->_reference));
-        printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,us2plain(s->_startTimeUs));
-        printf("\tduration     :%08"LLU" %s\n",s->_durationUs,us2plain(s->_durationUs));
-        printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,us2plain(s->_refStartTimeUs));
-        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,us2plain(s->_refStartDts));
+        printf("\tReference    :%"LU"\n",s->_reference,ADM_us2plain(s->_reference));
+        printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
+        printf("\tduration     :%08"LLU" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
+        printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
+        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,ADM_us2plain(s->_refStartDts));
     }
 }
 
