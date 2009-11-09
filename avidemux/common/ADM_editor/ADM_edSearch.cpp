@@ -95,10 +95,18 @@ bool r;
     // 
 again:
     _SEGMENT *s=_segments.getSegment(seg);
+    int64_t delta=*frameTime-s->_startTimeUs; // Delta compared to the beginning of this seg
+    
+    delta+=s->_refStartTimeUs;
+    if(delta<0)
+    {
+        ADM_error("Time is negative\n");
+        return false;
+    }
     uint32_t ref=s->_reference;
     // 2- Now search the previous keyframe in the ref image...
     // The time in reference = relTime+segmentStartTime
-    refTime=s->_refStartTimeUs+segTime; // Absolute time in the reference image
+    refTime=delta;
     
     r=searchPreviousKeyFrameInRef(ref,refTime,&nkTime);
 
@@ -107,7 +115,8 @@ again:
     {
         if(!seg)
         {
-            ADM_warning(" No previous previous keyfr for frameTime %"LLU"\n",*frameTime);
+            ADM_warning(" No previous previous keyfr for frameTime %"LLU" in ref %"LU" seg:%"LU" nkTime %"LLU" refTime:%"LLU" ms startTime=%"LLU" r=%d\n",
+                            *frameTime,ref,seg,nkTime/1000,refTime/1000,s->_refStartTimeUs/1000,r);
             return false;
         }
         // Go to the next segment
