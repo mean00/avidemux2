@@ -108,7 +108,7 @@ dmxToken        *indexFile::searchToken(const char *name)
 
 bool indexFile::open(const char *name)
 {
-    file=fopen(name,"rt");
+    file=ADM_fopen(name,"rt");
     if(!file) return false;
     return true;
 }

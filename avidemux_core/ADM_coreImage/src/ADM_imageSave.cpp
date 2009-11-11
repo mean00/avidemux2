@@ -68,7 +68,7 @@ uint8_t  ADMImage::saveAsBmp(const char *filename)
               ADM_dealloc(out);
               return 0;
         }
-        fd = fopen (filename, "wb");
+        fd = ADM_fopen (filename, "wb");
         if (!fd)
         {
                 GUI_Error_HIG (QT_TR_NOOP("Something bad happened"), NULL);
@@ -168,7 +168,7 @@ int              sz=0,r=0;
         }
         // Ok now write our file...
         {
-            FILE *f=fopen(filename,"wb");
+            FILE *f=ADM_fopen(filename,"wb");
             if(f)
             {
                 fwrite(buffer,sz,1,f);

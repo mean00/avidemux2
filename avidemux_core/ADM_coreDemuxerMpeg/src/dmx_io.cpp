@@ -112,7 +112,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 _sizeFdCumul = new uint64_t [_nbFd];
 
                 // open file
-                if(! (_fd[0] = fopen(filename, "rb")) )
+                if(! (_fd[0] = ADM_fopen(filename, "rb")) )
                   { return 0; }
 
                 // calculate file-size
@@ -163,7 +163,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                         strcat( followup, right );
 
                         // open file
-                        buffer_fd[count] = fopen(followup, "rb");
+                        buffer_fd[count] = ADM_fopen(followup, "rb");
                         if(! buffer_fd[count] )
                         {
                                 // we need at least one file!

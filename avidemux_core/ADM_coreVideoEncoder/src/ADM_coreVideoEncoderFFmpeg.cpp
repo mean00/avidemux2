@@ -329,7 +329,7 @@ bool             ADM_coreVideoEncoderFFmpeg::getExtraData(uint32_t *l,uint8_t **
 bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
 {
   printf("[FFmpeg] Loading stat file :%s\n",file);
-  FILE *_statfile = fopen (file, "rb");
+  FILE *_statfile = ADM_fopen (file, "rb");
   int statSize;
 
   if (!_statfile)
@@ -541,7 +541,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
                     printf("[ffMpeg4] Setup-ing Pass 1\n");
                     _context->flags |= CODEC_FLAG_PASS1;
                     // Open stat file
-                    statFile=fopen(statFileName,"wt");
+                    statFile=ADM_fopen(statFileName,"wt");
                     if(!statFile)
                     {
                         printf("[ffmpeg] Cannot open statfile %s for writing\n",statFileName);

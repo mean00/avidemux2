@@ -72,7 +72,7 @@ FILE *qfopen(const char *path, const char *mode){
   FILE * FD = NULL;
   int fd;
 	while( !FD ){
-		FD = fopen (path,mode);
+		FD = ADM_fopen (path,mode);
 		if( !FD && (errno == ENOSPC 
 #ifndef __MINGW32__
 || errno == EDQUOT
