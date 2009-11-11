@@ -42,8 +42,9 @@ bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain)
     {
         ADM_coreVideoFilter *filter=(*chain)[i];
         delete filter;
+        (*chain)[i]=NULL;
     }
-    chain->erase(chain->begin(),chain->end()-1);
+    chain->clear();
     return true;
 }
 
