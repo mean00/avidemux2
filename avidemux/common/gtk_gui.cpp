@@ -554,7 +554,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
     return 0;
   /// check if name exists
   FILE *fd;
-  fd = fopen (name, "rb");
+  fd = ADM_fopen (name, "rb");
   if (!fd){
     if( errno == EACCES ){
       GUI_Error_HIG(QT_TR_NOOP("Permission error"), QT_TR_NOOP("Cannot open \"%s\"."), name);
@@ -609,7 +609,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
 	/* check myself it is a project file (transparent detected and read
         ** by video_body->addFile (name);
 	*/
-	if( (fd = fopen(longname,"rb"))  ){
+	if( (fd = ADM_fopen(longname,"rb"))  ){
 		if( fread(magic,4,1,fd) == 4 ){
 			/* remember a workbench file */
 			if( !strncmp(magic,"ADMW",4) ){

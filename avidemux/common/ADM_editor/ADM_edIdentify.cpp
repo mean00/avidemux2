@@ -35,7 +35,7 @@ uint8_t ADM_Composer::getMagic (const char *name, uint32_t * magic)
   FILE *    tmp;
   uint8_t    ret =    1;
 
-  tmp = fopen (name, "rb");
+  tmp = ADM_fopen (name, "rb");
   if (!tmp)
     return 0;
 

@@ -229,7 +229,7 @@ uint8_t A_ListAllBlackFrames(char *name)
    
     if ( !outfile )
         return 0;
-    fd=fopen(outfile, "wb");
+    fd=ADM_fopen(outfile, "wb");
     if ( fd == NULL )
     {
         fprintf(stderr, "cannot create output file for list of black frames\n");

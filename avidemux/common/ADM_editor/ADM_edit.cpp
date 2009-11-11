@@ -131,7 +131,7 @@ bool ADM_Composer::addFile (const char *name)
 
 	
   
-    FILE *f=fopen(name,"r");
+    FILE *f=ADM_fopen(name,"r");
     uint8_t buffer[4];
     if(!f) return 0;
     fread(buffer,4,1,f);

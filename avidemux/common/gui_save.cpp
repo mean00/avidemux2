@@ -152,7 +152,7 @@ void A_saveAudioProcessed (char *name)
     return;
 
 
-  if (!(out = fopen (name, "wb")))
+  if (!(out = ADM_fopen (name, "wb")))
     {
       GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Cannot open \"%s\" for writing."), name);
       return;
@@ -277,7 +277,7 @@ void A_saveAudioCopy (char *name)
     }
 
 
-  out = fopen (name, "wb");
+  out = ADM_fopen (name, "wb");
   if (!out) return;
 
   work=createWorking(QT_TR_NOOP("Saving audio"));

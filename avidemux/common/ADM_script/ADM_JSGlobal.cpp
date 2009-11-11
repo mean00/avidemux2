@@ -28,7 +28,7 @@ printJSError(JSContext *cx, const char *message, JSErrorReport *report)
 {// begin printJSError
 int quiet=GUI_isQuiet();
 char buf[4];
-FILE *fd = fopen(report->filename,"rb");
+FILE *fd = ADM_fopen(report->filename,"rb");
         if(quiet)
                 GUI_Verbose();
 	if( fd ){

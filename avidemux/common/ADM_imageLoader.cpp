@@ -100,7 +100,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 	uint32_t w = 0, h = 0;
 	   
 
-		fd = fopen(filename, "rb");
+		fd = ADM_fopen(filename, "rb");
 		fseek(fd, 0, SEEK_END);
 		_imgSize = ftell(fd);
 		fseek(fd, 0, SEEK_SET);
@@ -206,7 +206,7 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
     uint16_t  s16;
     uint32_t s32;
 
-		fd = fopen(filename, "rb");
+		fd = ADM_fopen(filename, "rb");
 		fseek(fd, 0, SEEK_END);
 		_imgSize = ftell(fd);
 		fseek(fd, 0, SEEK_SET);
@@ -265,7 +265,7 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     FILE *fd=NULL;
     uint32_t w,h;
 
-		fd = fopen(filename, "rb");
+		fd = ADM_fopen(filename, "rb");
  	    fseek(fd, 10, SEEK_SET);
 
  #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
@@ -315,7 +315,7 @@ ADMImage *createImageFromFile_png(const char *filename)
     FILE *fd=NULL;
     uint32_t w,h;
 
-		fd = fopen(filename, "rb");
+		fd = ADM_fopen(filename, "rb");
  	    fseek(fd, 0, SEEK_END);
  	    size=ftell(fd);
  	   fseek(fd, 0, SEEK_SET);
@@ -362,7 +362,7 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		    // 1- identity the file type
 		    //
 		    fcc = (uint32_t *) fcc_tab;
-		    fd = fopen(filename, "rb");
+		    fd = ADM_fopen(filename, "rb");
 		    if (!fd) 
 		    {
 		    	printf("[imageIdentify] Cannot open that file!\n");
