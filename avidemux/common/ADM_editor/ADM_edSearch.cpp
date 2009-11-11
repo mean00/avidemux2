@@ -89,8 +89,10 @@ bool r;
       {
           _VIDEOS *vid=_segments.getRefVideo(0);
           uint64_t pts=vid->firstFramePts;
+          //
+          *frameTime+=pts;
           ADM_warning("This video does not start at 0 but at %"LLU" ms, compensating\n",pts/1000);
-          _segments.convertLinearTimeToSeg(  *frameTime+pts, &seg, &segTime);
+          _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime);
       }
     // 
 again:
