@@ -147,7 +147,7 @@ uint8_t asfHeader::close(void)
 
 uint8_t asfHeader::open(const char *name)
 {
-  _fd=fopen(name,"rb");
+  _fd=ADM_fopen(name,"rb");
   if(!_fd)
   {
     GUI_Error_HIG("File Error.","Cannot open file\n");

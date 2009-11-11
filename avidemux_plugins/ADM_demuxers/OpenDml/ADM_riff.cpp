@@ -73,7 +73,7 @@ riffParser::~riffParser()
 }
 riffParser::riffParser(const char *name)
 {
-	ADM_assert(fd=fopen(name,"rb"));
+	ADM_assert(fd=ADM_fopen(name,"rb"));
 	startPos=0;
 	fseeko(fd,0,SEEK_END);
 	endPos=ftello(fd);

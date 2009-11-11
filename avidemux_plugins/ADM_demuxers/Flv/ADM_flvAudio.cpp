@@ -44,7 +44,7 @@ bool      ADM_flvAccess::getExtraData(uint32_t *l, uint8_t **d)
 */
 ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess()
 {
-        _fd=fopen(name,"rb");
+        _fd=ADM_fopen(name,"rb");
         ADM_assert(_fd);
         _track=track;
         goToBlock(0);

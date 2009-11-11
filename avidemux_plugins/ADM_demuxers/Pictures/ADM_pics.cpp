@@ -178,7 +178,7 @@ uint8_t picHeader::open(const char *inname)
     // 1- identity the file type
     //
     fcc = (uint32_t *) fcc_tab;
-    fd = fopen(inname, "rb");
+    fd = ADM_fopen(inname, "rb");
     if (!fd) {
 	printf("\n Cannot open that file!\n");
 	return 0;
@@ -250,7 +250,7 @@ char realstring[250];
 		sprintf(realname, realstring, i + _first);
 		printf(" %"LU" : %s\n", i, realname);
 
-		fd = fopen(realname, "rb");
+		fd = ADM_fopen(realname, "rb");
 
 		if (fd == NULL)
 			break;
@@ -477,7 +477,7 @@ FILE* picHeader::openFrameFile(uint32_t frameNum)
 
 	sprintf(filename, _fileMask, frameNum + _first);
 
-	return fopen(filename, "rb");
+	return ADM_fopen(filename, "rb");
 }
 bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {

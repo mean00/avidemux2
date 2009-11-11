@@ -46,7 +46,7 @@ again:
     if(ADM_fileExist(index)) 
     {
         printf(" [PS Demuxer] There is an index for that file \n");
-        FILE *f=fopen(index,"rt");
+        FILE *f=ADM_fopen(index,"rt");
         char signature[10];
         fread(signature,4,1,f);
         signature[4]=0;
@@ -98,7 +98,7 @@ bool detectPs(const char *file)
     uint32_t bufferSize;
     uint32_t nbPacket,nbMatch=0;
 
-    FILE *f=fopen(file,"rb");
+    FILE *f=ADM_fopen(file,"rb");
     if(!f) return false;
     bufferSize=fread(buffer,1,PROBE_SIZE,f);
     fclose(f);

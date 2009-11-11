@@ -248,7 +248,7 @@ uint8_t flvHeader::open(const char *name)
   videoTrack=NULL;
   _videostream.dwRate=0;
   _filename=ADM_strdup(name);
-  _fd=fopen(name,"rb");
+  _fd=ADM_fopen(name,"rb");
   if(!_fd)
   {
     printf("[FLV] Cannot open %s\n",name);

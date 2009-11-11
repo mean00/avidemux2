@@ -34,7 +34,7 @@ extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
     if (fourCC::check (magic, (uint8_t *) "RIFF"))
     {
         // Make sure it is really an avi...
-          FILE *f=fopen(fileName,"r");
+          FILE *f=ADM_fopen(fileName,"r");
           if(!f) return 0;
           uint8_t buf[12];
           fread(buf,12,1,f);

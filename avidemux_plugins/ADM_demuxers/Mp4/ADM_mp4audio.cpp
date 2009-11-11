@@ -46,7 +46,7 @@
  ADM_mp4AudioAccess::ADM_mp4AudioAccess(const char *name,MP4Track *track)
 {
 	_nb_chunks=track->nbIndex;
-	_fd=fopen(name,"rb");
+	_fd=ADM_fopen(name,"rb");
     ADM_assert(_fd);
 	_current_index=0;
 	_index=track->index;

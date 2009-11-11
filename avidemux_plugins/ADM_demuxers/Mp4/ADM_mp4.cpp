@@ -246,7 +246,7 @@ uint32_t old;
 uint8_t    MP4Header::open(const char *name)
 {
         printf("** opening 3gpp files **");
-        _fd=fopen(name,"rb");
+        _fd=ADM_fopen(name,"rb");
         if(!_fd)
         {
                 printf("\n cannot open %s \n",name);

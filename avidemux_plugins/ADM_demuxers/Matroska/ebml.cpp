@@ -269,7 +269,7 @@ ADM_ebml_file::~ADM_ebml_file()
 uint8_t ADM_ebml_file::open(const char *name)
 {
 
-  fp=fopen(name,"rb");
+  fp=ADM_fopen(name,"rb");
   if(!fp)
   {
     aprintf("[EBML FILE] Failed to open <%s>\n",name);

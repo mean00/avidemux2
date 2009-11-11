@@ -50,7 +50,7 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
     nbIndex=nbchunk;
     length=0;
     for(int i=0;i<nbIndex;i++) length+=idx[i].size;
-    fd=fopen(name,"r");
+    fd=ADM_fopen(name,"r");
     ADM_assert(fd);
     pos=0;
     currentIndex=0;

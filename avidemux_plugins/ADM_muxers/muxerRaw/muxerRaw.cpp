@@ -57,7 +57,7 @@ bool muxerRaw::open(const char *fil, ADM_videoStream *s,uint32_t nbAudioTrack,AD
 {
 
     vStream=s;
-    file=fopen(fil,"w");
+    file=ADM_fopen(fil,"w");
     if(!file) 
     {
         printf("[RawMuxer] Cannot open %s\n",fil);

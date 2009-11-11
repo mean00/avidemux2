@@ -57,7 +57,7 @@ asfAudioAccess::asfAudioAccess(asfHeader *father,uint32_t myRank)
     extraData= _track->extraData;
     _streamId=_track->streamIndex;
     _dataStart=_father->_dataStartOffset;
-    _fd=fopen(_father->myName,"rb");
+    _fd=ADM_fopen(_father->myName,"rb");
     ADM_assert(_fd);
     fseeko(_fd,_dataStart,SEEK_SET);
     _packetSize=_father->_packetSize;
