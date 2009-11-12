@@ -15,8 +15,9 @@
 #ifndef AUDIOENCODERINTERNAL_H
 #define AUDIOENCODERINTERNAL_H
 
-#define ADM_AUDIO_ENCODER_API_VERSION 2
+#define ADM_AUDIO_ENCODER_API_VERSION 3
 #include "audioencoder.h"
+#include "ADM_paramList.h"
 class AUDMEncoder;
 class ADM_AudioEncoder;
 
@@ -42,8 +43,8 @@ typedef struct
     uint32_t     major,minor,patch;     // Const
     uint32_t     wavTag;                // const Avi fourcc
     uint32_t     priority;              // const Higher means the codec is prefered and should appear first in the list
-    bool         (*getConfigurationData)(uint32_t *l, uint8_t **d); // Get the encoder private conf
-    bool         (*setConfigurationData)(uint32_t l, uint8_t *d); // Get the encoder private conf
+    bool         (*getConfigurationData)(CONFcouple **conf); // Get the encoder private conf
+    bool         (*setConfigurationData)(CONFcouple *conf); // Get the encoder private conf
 
     uint32_t     (*getBitrate)(void);
     void         (*setBitrate)(uint32_t br);
@@ -56,8 +57,8 @@ typedef struct
 // Macros to declare audio encoder
 /**************************************************************************/
 #define ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(Class) \
-static bool getConfigurationData (uint32_t * l, uint8_t ** d); \
-static bool setConfigurationData (uint32_t l, uint8_t * d);\
+static bool getConfigurationData (CONFcouple **conf); \
+static bool setConfigurationData (CONFcouple *conf);\
 static uint32_t     getBitrate(void); \
 static void         setBitrate(uint32_t br); \
 \
@@ -71,23 +72,15 @@ static void destroy (ADM_AudioEncoder * in) \
   delete z; \
 } 
 //******************************************************
-#define ADM_DECLARE_AUDIO_ENCODER_CONFIG(configData) \
-bool getConfigurationData (uint32_t * l, uint8_t ** d)\
+#define ADM_DECLARE_AUDIO_ENCODER_CONFIG(templ,configData,bitrateVar) \
+bool         getConfigurationData(CONFcouple **conf) \
 {\
-  *l = sizeof (configData); \
-  *d = (uint8_t *) & configData; \
-  return 1; \
+    if(configData==NULL) {*conf=NULL;return true;} \
+    return ADM_paramSave(conf,templ,configData); \
 } \
-bool setConfigurationData (uint32_t l, uint8_t * d)\
+bool setConfigurationData (CONFcouple *conf)\
 {\
-  if (sizeof (configData) != l) \
-    {\
-      GUI_Error_HIG ("Audio Encoder",\
-		     "The configuration size does not match the codec size"); \
-      return 0; \
-    }\
-  memcpy (&configData, d, l); \
-  return 1;\
+ return ADM_paramLoad(conf,templ,configData); \
 }\
 \
 \
@@ -95,8 +88,8 @@ extern "C" ADM_audioEncoder *getInfo (void) \
 { \
   return &encoderDesc; \
 }  \
-uint32_t     getBitrate(void) {return configData.bitrate;};\
-void         setBitrate(uint32_t br) {configData.bitrate=br;}
+uint32_t     getBitrate(void) {return bitrateVar;};\
+void         setBitrate(uint32_t br) {bitrateVar=br;}
 
 #ifndef QT_TR_NOOP
 #define QT_TR_NOOP(x) x

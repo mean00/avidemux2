@@ -5,7 +5,9 @@
 */
 #ifndef AUDIOENCODERAPI_H
 #define AUDIOENCODERAPI_H
-
+#include "ADM_confCouple.h"
+class AUDMAudioFilter;
+class ADM_AudioEncoder;
 /// Select the best encoder using the audio fourcc : WAV_MP3 etc...
 uint8_t audio_selectCodecByTag(uint32_t tag);
 /// Set an option for example "DISABLERESERVOIR",1
@@ -25,9 +27,9 @@ void audioPrintCurrentCodec(void);
 /// Returns 1 if we are in process mode, 0 if in copy mode
 uint32_t audioProcessMode(void);
 /// Retrieve current audio encoder configuration
-uint8_t getAudioExtraConf(uint32_t *bitrate,uint32_t *extraDataSize, uint8_t **extradata);
+bool getAudioExtraConf(uint32_t *bitrate,CONFcouple **c);
 /// Set current audio encoder configuration
-uint8_t setAudioExtraConf(uint32_t bitrate,uint32_t extraDataSize, uint8_t *extradata);
+bool setAudioExtraConf(uint32_t bitrate,CONFcouple *c);
 
 
 
