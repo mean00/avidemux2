@@ -1,4 +1,5 @@
 SET(ADM_coreUtils_SRCS 
+ADM_confCouple.cpp  
 ADM_bitstream.cpp 
 avidemutils.cpp  
 ADM_quota.cpp
@@ -7,6 +8,7 @@ ADM_infoExtractor.cpp
 ADM_frameType.cpp
 ADM_codecType.cpp
 ADM_file.cpp
+ADM_paramList.cpp
 prefs.cpp)
 
 ADD_LIBRARY(ADM_coreUtils6 SHARED ${ADM_coreUtils_SRCS})
