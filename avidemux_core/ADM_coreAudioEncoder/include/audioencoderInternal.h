@@ -16,6 +16,7 @@
 #define AUDIOENCODERINTERNAL_H
 
 #define ADM_AUDIO_ENCODER_API_VERSION 3
+#include "stddef.h"
 #include "audioencoder.h"
 #include "ADM_paramList.h"
 class AUDMEncoder;

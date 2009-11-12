@@ -26,13 +26,10 @@
 
 #include "faac.h"
 #include "audioencoder_faac.h"
-#include "audioencoder_faac_param.h"
+
 
 static bool configure(void);
 static uint32_t faacBitrate;
-static FAAC_encoderParam faacParm={
-    128
-};
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Faac);
 
@@ -117,7 +114,7 @@ int channels=wavheader.channels;
     if(!_handle)
     {
           printf("[FAAC]Cannot open faac with fq=%"LU" chan=%"LU" br=%"LU"\n",
-          wavheader.frequency,channels,faacParm.bitrate);
+          wavheader.frequency,channels,faacBitrate);
           return 0;
     }
     printf(" [FAAC] : Sample input:%"LU", max byte output%"LU" \n",(uint32_t)samples_input,(uint32_t)max_bytes_output);
@@ -129,14 +126,14 @@ int channels=wavheader.channels;
     cfg->bandWidth= (wavheader.frequency*3)/4; // Should be relevant
     cfg->useTns = 0;
     cfg->allowMidside = 0;
-    cfg->bitRate = (faacParm.bitrate*1000)/channels; // It is per channel
+    cfg->bitRate = (faacBitrate*1000)/channels; // It is per channel
     cfg->outputFormat = 0; // 0 Raw 1 ADTS
     cfg->inputFormat = FAAC_INPUT_FLOAT;
     cfg->useLfe=0;	
     if (!(ret=faacEncSetConfiguration(_handle, cfg))) 
     {
         printf("[FAAC] Cannot set conf for faac with fq=%"LU" chan=%"LU" br=%"LU" (err:%d)\n",
-				wavheader.frequency,channels,faacParm.bitrate,ret);
+				wavheader.frequency,channels,faacBitrate,ret);
 	return 0;
     }
      unsigned char *data=NULL;
@@ -151,7 +148,7 @@ int channels=wavheader.channels;
      memcpy(_extraData,data,size);
 
     // update
-     wavheader.byterate=(faacParm.bitrate*1000)/8;
+     wavheader.byterate=(faacBitrate*1000)/8;
 //    _wavheader->dwScale=1024;
 //    _wavheader->dwSampleSize=0;
     wavheader.blockalign=4096;
@@ -274,7 +271,7 @@ bool configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(faacParm.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(faacBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
   
     
 

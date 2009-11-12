@@ -12,10 +12,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef AUDMaudioVorbis
-#define AUDMaudioVorbis
+#ifndef AUDMaudioVorbis_H
+#define AUDMaudioVorbis_H
 
- //_____________________________________________
+/**
+    \fn AUDMEncoder_Vorbis
+    \brief Vorbis encoder
+*/
 class AUDMEncoder_Vorbis : public ADM_AudioEncoder
 {
   protected:
@@ -26,11 +29,11 @@ class AUDMEncoder_Vorbis : public ADM_AudioEncoder
 
          
   public:
-            bool     initialize(void);
-            virtual     ~AUDMEncoder_Vorbis();
-                        AUDMEncoder_Vorbis(AUDMAudioFilter *instream);	
+                    bool     initialize(void);
+        virtual     ~AUDMEncoder_Vorbis();
+                    AUDMEncoder_Vorbis(AUDMAudioFilter *instream);	
             
-   virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+        virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 
 #endif

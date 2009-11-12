@@ -12,12 +12,14 @@ $ctypes{"int32_t"}="int32_t";
 $ctypes{"bool"}="bool";
 $ctypes{"string"}="char *";
 $ctypes{"bool"}="bool";
+$ctypes{"float"}="float";
 
 $atypes{"uint32_t"}="ADM_param_uint32_t";
 $atypes{"int32_t"}="ADM_param_int32_t";
 $atypes{"float"}="ADM_param_float";
 $atypes{"bool"}="ADM_param_bool";
 $atypes{"string"}="ADM_param_string";
+$atypes{"float"}="ADM_param_float";
 
 #
 sub processLine
