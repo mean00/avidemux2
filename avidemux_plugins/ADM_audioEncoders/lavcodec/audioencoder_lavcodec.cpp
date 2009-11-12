@@ -19,7 +19,6 @@
 #include "ADM_default.h"
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
-//#include <lame/lame.h>
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
 //
@@ -31,12 +30,8 @@
 
 #include "audioencoder_lavcodec.h"
 
-typedef struct 
-{
-    uint32_t bitrate;
-}LavAudioEncoder_PARAM;
-static LavAudioEncoder_PARAM lavConfig={128};
 static bool configure (void);
+static uint32_t lavBitrate=128;
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lavcodec);
 
@@ -63,7 +58,7 @@ static ADM_audioEncoder encoderDesc = {
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(lavConfig);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,lavBitrate);
 
 /******************* / Declare plugin*******************************************************/
 #define CONTEXT ((AVCodecContext  	*)_context)
@@ -112,16 +107,16 @@ bool AUDMEncoder_Lavcodec::initialize(void)
     printf("[Lavcodec]Too many channels\n");
     return 0; 
   }
-  wavheader.byterate=(lavConfig.bitrate*1000)>>3;         
+  wavheader.byterate=(lavBitrate*1000)>>3;         
       
     _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
   printf("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
-         wavheader.frequency,wavheader.channels,lavConfig.bitrate);
+         wavheader.frequency,wavheader.channels,lavBitrate);
   
   
   CONTEXT->channels     =  wavheader.channels;
   CONTEXT->sample_rate  =  wavheader.frequency;
-  CONTEXT->bit_rate     = (lavConfig.bitrate*1000); // bits -> kbits
+  CONTEXT->bit_rate     = (lavBitrate*1000); // bits -> kbits
 
   AVCodec *codec;
   CodecID codecID;
@@ -198,7 +193,7 @@ bool configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(lavConfig.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(lavBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
   
     
 

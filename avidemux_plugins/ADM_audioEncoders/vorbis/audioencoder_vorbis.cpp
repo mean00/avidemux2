@@ -40,6 +40,8 @@ typedef struct vorbisStruct
 	vorbis_block     vb ;
 	vorbis_comment   vc ;
 }vorbisStruct;
+//
+static uint32_t vorbisBitrate=128;
 //___________
 static VORBIS_encoderParam vorbisParam=
 {
@@ -74,7 +76,7 @@ static ADM_audioEncoder encoderDesc = {
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(vorbisParam);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,vorbisBitrate);
 
 /******************* / Declare plugin*******************************************************/
 

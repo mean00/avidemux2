@@ -29,7 +29,7 @@
 #include "audioencoder_faac_param.h"
 
 static bool configure(void);
-
+static uint32_t faacBitrate;
 static FAAC_encoderParam faacParm={
     128
 };
@@ -58,7 +58,7 @@ static ADM_audioEncoder encoderDesc = {
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG( faacParm);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG( NULL,NULL,faacBitrate);
 
 /******************* / Declare plugin*******************************************************/
 

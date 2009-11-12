@@ -15,7 +15,7 @@
  ***************************************************************************/
 #ifndef AUDMaudioLame_H
 #define AUDMaudioLame_H
-
+#include "lame_encoder.h"
  /**
         \class AUDMEncoder_Lame
         \brief Front end for libmp3lame

@@ -1,6 +1,6 @@
 	INCLUDE(ae_plugin)
 
-	SET(ADM_ae_lame_SRCS audioencoder_lame.cpp)
+	SET(ADM_ae_lame_SRCS audioencoder_lame.cpp )
 
 	ADD_LIBRARY(ADM_ae_lame SHARED ${ADM_ae_lame_SRCS})
 

@@ -22,7 +22,6 @@
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
 #include "audioencoder_twolame.h"
-#include "audioencoder_twolame_param.h"
 
 extern "C"
 {
@@ -30,11 +29,7 @@ extern "C"
 }
 
 #define OPTIONS (twolame_options_struct *)_twolameOptions
-
-static TWOLAME_encoderParam twolameParam=
-{
-    128
-};
+uint32_t bitrateTwoLame=128;
 static bool configure (void);
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Twolame);
@@ -61,7 +56,7 @@ static ADM_audioEncoder encoderDesc = {
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(twolameParam);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,bitrateTwoLame);
 
 /******************* / Declare plugin*******************************************************/
 /**
@@ -96,8 +91,7 @@ bool AUDMEncoder_Twolame::initialize(void)
   int ret;
   TWOLAME_MPEG_mode mmode;
   uint32_t frequence;
-  TWOLAME_encoderParam *lameConf=&twolameParam;
-    int channels=wavheader.channels;
+  int channels=wavheader.channels;
 
   _twolameOptions = twolame_init();
   if (_twolameOptions == NULL)
@@ -108,14 +102,14 @@ bool AUDMEncoder_Twolame::initialize(void)
     printf("[TwoLame]Too many channels\n");
     return 0;
   }
-  wavheader.byterate=(lameConf->bitrate*1000)>>3;
+  wavheader.byterate=(bitrateTwoLame*1000)>>3;
 
 
   _chunk = 1152*channels;
 
 
   printf("[TwoLame]Incoming :fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
-        wavheader.frequency,channels,lameConf->bitrate);
+        wavheader.frequency,channels,bitrateTwoLame);
 
 
   twolame_set_in_samplerate(OPTIONS, wavheader.frequency);
@@ -127,7 +121,7 @@ bool AUDMEncoder_Twolame::initialize(void)
   twolame_set_mode(OPTIONS,mmode);
   twolame_set_error_protection(OPTIONS,TRUE);
     	//toolame_setPadding (options,TRUE);
-  twolame_set_bitrate (OPTIONS,lameConf->bitrate);
+  twolame_set_bitrate (OPTIONS,bitrateTwoLame);
   twolame_set_verbosity(OPTIONS, 2);
   if(twolame_init_params(OPTIONS))
   {
@@ -199,7 +193,7 @@ bool configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(twolameParam.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(bitrateTwoLame),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
     diaElem *elems[]={&bitrate};
