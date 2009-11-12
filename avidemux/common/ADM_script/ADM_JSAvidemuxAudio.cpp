@@ -22,6 +22,7 @@
 #include "ADM_editor/ADM_outputfmt.h"
 #include "ADM_script/ADM_container.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
+#include "audioEncoderApi.h"
 
 extern int A_audioSave(char *name);
 extern int A_loadAC3 (char *name);
@@ -361,45 +362,63 @@ extern uint8_t mk_hex (uint8_t a, uint8_t b);
 JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {// begin Codec
-#if 0
         ADM_JSAvidemuxAudio *p = (ADM_JSAvidemuxAudio *)JS_GetPrivate(cx, obj);
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
-        if(argc != 4)
+        if(argc < 2)
                 return JS_FALSE;
-        if(JSVAL_IS_STRING(argv[0]) == false || JSVAL_IS_INT(argv[1]) == false || JSVAL_IS_INT(argv[2]) == false  ||  JSVAL_IS_STRING(argv[3]) == false  )
-                return JS_FALSE;
+        if(JSVAL_IS_STRING(argv[0]) == false || JSVAL_IS_INT(argv[1]) == false )            return JS_FALSE;
+        for(int i=2;i<argc;i++)  if(JSVAL_IS_STRING(argv[i]) == false) return JS_FALSE;
+
+        // Get Codec...
         char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
         ADM_LowerCase(name);
         enterLock();
         // First search the codec by its name
         if(!audioCodecSetByName(name))
+        {
                 *rval = BOOLEAN_TO_JSVAL(false);
+                ADM_error("Cannot set audio codec %s\n",name);
+        }
         else
-        {// begin set bitrate
-        //audioFilter_SetBitrate(JSVAL_TO_INT(argv[1]));
-          uint32_t bitrate,size;
-          char  *extra;
-          uint8_t *data=NULL;
-                bitrate=JSVAL_TO_INT(argv[1]);
-                size=JSVAL_TO_INT(argv[2]);
-                extra=JS_GetStringBytes(JSVAL_TO_STRING(argv[3])); 
-                if(size)
+        {
+        // begin set bitrate
+        uint32_t bitrate=JSVAL_TO_INT(argv[1]);
+        // Construct couples
+        CONFcouple *c=NULL;
+        if(argc>2)
+        {
+            int nb=argc-2;
+            c=new CONFcouple(nb);
+            for(int i=0;i<nb;i++)
+            {
+                char *param = JS_GetStringBytes(JSVAL_TO_STRING(argv[2+i]));
+                char *dupe=   ADM_strdup(param);
+                char *name,*value;
+                // dupe is in the form name=value
+                name=dupe;
+                value=name;
+                char *tail=dupe+strlen(dupe);
+                while(value<tail)
                 {
-                          data=new uint8_t[size];
-                          for (uint32_t k = 0; k < size; k++)
-                            {
-                              data[k] = mk_hex (*extra, *(extra + 1));
-                              extra += 3;
-                            }
-                        setAudioExtraConf(bitrate,size,data);
-                        delete [] data; 
+                    if(*value=='=') 
+                        {
+                            *value=0;
+                            value++;
+                            break;
+                        }
+                    value++;
                 }
+                c->setCouple(name,value);
+                //printf("%s -> [%s,%s]\n",param,name,value);
+                ADM_dezalloc(dupe);
+            }
 
-                *rval = BOOLEAN_TO_JSVAL(true);
+        }
+
+            *rval = BOOLEAN_TO_JSVAL(setAudioExtraConf(bitrate,c));
         }// end set bitrate
         leaveLock();
-#endif
         return JS_TRUE;
 }// end Codec
 JSBool ADM_JSAvidemuxAudio::getNbTracks(JSContext *cx, JSObject *obj, uintN argc, 

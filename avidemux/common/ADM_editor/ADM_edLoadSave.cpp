@@ -22,11 +22,12 @@
 #include "ADM_quota.h"
 #include "ADM_editor/ADM_edit.hxx"
 
-
+#include "audioEncoderApi.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
+#include "ADM_paramList.h"
 #include "prefs.h"
 #include "avi_vars.h"
 
@@ -182,16 +183,28 @@ printf("\n **Saving script project **\n");
                         qfprintf(fd,"app.audio.setTrack(%d);\n", source); 
                         
         }
-
-   getAudioExtraConf(&bitrate,&extraDataSize,&extraData);
-   qfprintf(fd,"app.audio.codec(\"%s\",%d,%d,\"", audioCodecGetName(),bitrate,extraDataSize); 
-   for(int i=0;i<extraDataSize;i++)
-   {
-     qfprintf(fd,"%02x ",extraData[i]);
-   }
-   qfprintf(fd,"\");\n");
+#endif
+   CONFcouple *couples=NULL;
+   getAudioExtraConf(&bitrate,&couples);
+   if(couples==NULL)
+    qfprintf(fd,"app.audio.codec(\"%s\",%d);\n",audioCodecGetName(),bitrate); 
+   else
+    {
+        qfprintf(fd,"app.audio.codec(\"%s\",%d", audioCodecGetName(),bitrate); 
+        uint32_t n=couples->getNumber();
+        
+        for(int i=0;i<n;i++)
+        {
+            char *name,*value;
+            couples->getEntry(i,&name,&value);
+            qfprintf(fd,",\"%s=%s\"",name,value);
+        }
+        qfprintf(fd,");\n");
+        delete couples;
+        couples=NULL;
+    }
    
-   
+#if 0   
    //qfprintf(fd,"app.audio.process=%s;\n",truefalse[audioProcessMode()]);
    qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
    qfprintf(fd,"app.audio.normalizeValue=%d;\n",audioGetNormalizeValue());

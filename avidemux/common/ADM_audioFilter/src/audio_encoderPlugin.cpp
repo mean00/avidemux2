@@ -347,7 +347,7 @@ ADM_AudioEncoder *audioEncoderCreate(AUDMAudioFilter *filter)
         \brief 
 */
 
-uint8_t getAudioExtraConf(uint32_t *bitrate,uint32_t *extraDataSize, uint8_t **extradata)
+bool getAudioExtraConf(uint32_t *bitrate,CONFcouple **couple)
 {
     if(!currentEncoder)
     {
@@ -358,25 +358,28 @@ uint8_t getAudioExtraConf(uint32_t *bitrate,uint32_t *extraDataSize, uint8_t **e
      ADM_audioEncoder *encoder= ListOfAudioEncoder[currentEncoder];
      *bitrate=encoder->getBitrate();
      if(encoder->getConfigurationData)
-        return encoder->getConfigurationData(extraDataSize,extradata);
+        return encoder->getConfigurationData(couple);
      else return 1;
 }
 /**
     \fn setAudioExtraConf
 */
-uint8_t setAudioExtraConf(uint32_t bitrate,uint32_t extraDataSize, uint8_t *extradata)
+bool setAudioExtraConf(uint32_t bitrate,CONFcouple *c)
 {
     if(!currentEncoder)
     {
         printf("[AudioEncoder] Cannot set conf on copy!\n");
-        return 0;
+        return false;
     }
      ADM_assert(currentEncoder<ListOfAudioEncoder.size());
      ADM_audioEncoder *encoder= ListOfAudioEncoder[currentEncoder];
      encoder->setBitrate(bitrate);
      if(encoder->setConfigurationData)
-        return encoder->setConfigurationData(extraDataSize,extradata);
-    else return 1;
+     {
+        if(c)             return encoder->setConfigurationData(c);
+        ADM_warning("Null extra configuration given to audio codec!\n");
+     }
+     return true;
 }     
 /**
         \fn audio_selectCodecByTag
