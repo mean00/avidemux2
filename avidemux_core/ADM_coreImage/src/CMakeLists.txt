@@ -1,5 +1,4 @@
 SET(ADM_coreImage_SRCS 
-	ADM_confCouple.cpp  
         ADM_videoFilter.cpp  
         ADM_videoFilterCache.cpp
         ADM_image.cpp  
