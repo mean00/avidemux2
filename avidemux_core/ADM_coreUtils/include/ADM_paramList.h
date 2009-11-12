@@ -27,7 +27,7 @@ typedef enum
         ADM_param_uint32_t=1,
         ADM_param_int32_t=2,
         ADM_param_float=3,
-       // ADM_param_bool=4,
+        ADM_param_bool=4,
         ADM_param_string=5
 }ADM_paramType;
 

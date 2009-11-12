@@ -1,8 +1,8 @@
-/***************************************************************************
-                          ADM_genvideo.cpp  -  description
-                             -------------------
-    begin                : Sun Apr 14 2002
-    copyright            : (C) 2002 by mean
+/** *************************************************************************
+        \file ADM_confCouple.cpp
+        \brief Handle storage of data into key/value pairs
+
+    copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -16,12 +16,10 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-
-//#include "fourcc.h"
-
 #include "ADM_confCouple.h"
-//#include "ADM_videoFilter.h"
+
 static char tmpstring[1024]; // should be enougth
+
 CONFcouple::CONFcouple(uint32_t nub)
 {
 	nb=nub;
@@ -49,8 +47,16 @@ CONFcouple::~CONFcouple()
 
 
 };
-
-uint8_t CONFcouple::setCouple(const char *myname,uint32_t val)
+/**
+    \fn exist
+*/
+bool CONFcouple::exist(const char *name)
+{
+    int i=lookupName(name);
+    if(i==-1) return false;
+    return true;
+}
+bool CONFcouple::writeAsUint32(const char *myname,uint32_t val)
 {
 	ADM_assert(cur<nb);
 
@@ -60,7 +66,7 @@ uint8_t CONFcouple::setCouple(const char *myname,uint32_t val)
 	cur++;
 	return 1;
 }
-uint8_t CONFcouple::setCouple(const char *myname,float val)
+bool CONFcouple::writeAsFloat(const char *myname,float val)
 {
 	ADM_assert(cur<nb);
 
@@ -70,17 +76,7 @@ uint8_t CONFcouple::setCouple(const char *myname,float val)
 	cur++;
 	return 1;
 }
-uint8_t CONFcouple::setCouple(const char *myname,double val)
-{
-	ADM_assert(cur<nb);
-
-	name[cur]=ADM_strdup(myname);
-	sprintf(tmpstring,"%f",val);
-	value[cur]=ADM_strdup(tmpstring);
-	cur++;
-	return 1;
-}
-uint8_t CONFcouple::setCouple(const char *myname,int32_t val)
+bool CONFcouple::writeAsInt32(const char *myname,int32_t val)
 {
 	ADM_assert(cur<nb);
 
@@ -90,7 +86,8 @@ uint8_t CONFcouple::setCouple(const char *myname,int32_t val)
 	cur++;
 	return 1;
 }
-uint8_t CONFcouple::setCouple(const char *myname,const char *val)
+#warning TODO: ESCAPE!
+bool CONFcouple::writeAsString(const char *myname,const char *val)
 {
 	ADM_assert(cur<nb);
 
@@ -99,17 +96,31 @@ uint8_t CONFcouple::setCouple(const char *myname,const char *val)
 	cur++;
 	return 1;
 }
-uint8_t CONFcouple::setCouple(const char *myname,const ADM_filename *val)
+bool CONFcouple::writeAsBool(const char *myname,bool v)
 {
 	ADM_assert(cur<nb);
 
 	name[cur]=ADM_strdup(myname);
-	value[cur]=ADM_strdup((char *)val);
+    if(v==true) value[cur]=ADM_strdup("True");
+        else value[cur]=ADM_strdup("False");
+	
 	cur++;
 	return 1;
 }
 
-uint8_t CONFcouple::getCouple(const char *myname,uint32_t *val)
+// ******************************************
+bool CONFcouple::readAsBool(const char *myname,bool *v)
+{
+	int32_t index=lookupName(myname);
+
+	ADM_assert(index!=-1);
+	ADM_assert(index<(int)nb);
+    char *test=value[index];
+    if(!strcasecmp(test,"true")) *v=true;
+        else *v=false;
+	return 1;
+}
+bool CONFcouple::readAsUint32(const char *myname,uint32_t *val)
 {
 	int32_t index=lookupName(myname);
 
@@ -118,7 +129,7 @@ uint8_t CONFcouple::getCouple(const char *myname,uint32_t *val)
 	*val=(int)atoi(value[index]);
 	return 1;
 }
-uint8_t CONFcouple::getCouple(const char *myname,int32_t *val)
+bool CONFcouple::readAsInt32(const char *myname,int32_t *val)
 {
 	int32_t index=lookupName(myname);
 
@@ -127,26 +138,17 @@ uint8_t CONFcouple::getCouple(const char *myname,int32_t *val)
 	*val=(int)atoi(value[index]);
 	return 1;
 }
-uint8_t CONFcouple::getCouple(const char *myname,char **val)
+bool CONFcouple::readAsString(const char *myname,char **val)
 {
 	int32_t index=lookupName(myname);
-
+#warning TODO : unescape
 	ADM_assert(index!=-1);
 	ADM_assert(index<(int)nb);
 	*val=ADM_strdup(value[index]);
 	return 1;
 }
-uint8_t CONFcouple::getCouple(const char *myname,ADM_filename **val)
-{
-	int32_t index=lookupName(myname);
 
-	ADM_assert(index!=-1);
-	ADM_assert(index<(int)nb);
-	*val=(ADM_filename *)ADM_strdup(value[index]);
-	return 1;
-}
-
-uint8_t CONFcouple::getCouple(const char *myname,float *val)
+bool CONFcouple::readAsFloat(const char *myname,float *val)
 {
 	int32_t index=lookupName(myname);
 
@@ -155,16 +157,10 @@ uint8_t CONFcouple::getCouple(const char *myname,float *val)
 	sscanf(value[index],"%f",val);;
 	return 1;
 }
-uint8_t CONFcouple::getCouple(const char *myname,double *val)
-{
-	int32_t index=lookupName(myname);
-
-	ADM_assert(index!=-1);
-	ADM_assert(index<(int)nb);
-	sscanf(value[index],"%lf",val);;
-	return 1;
-}
-
+/**
+    \fn lookupName
+    \brief Return index of name in the couples, -1 if not fount
+*/
 int32_t CONFcouple::lookupName(const char *myname)
 {
 	for(uint32_t i=0;i<nb;i++)
@@ -184,3 +180,19 @@ void CONFcouple::dump(void )
 	}
 }
 
+ bool     CONFcouple::setInternalName(const char *nm, const char *val)
+{
+   ADM_assert(cur<nb);
+
+	name[cur]=ADM_strdup(nm);
+	value[cur]=ADM_strdup(val);
+	cur++;
+	return 1;
+}
+bool  CONFcouple::getInternalName(uint32_t n, char **nm, char **val)
+{ 
+    assert(n<nb); 
+    *nm=name[n];
+    *val=value[n];
+    return true;
+};

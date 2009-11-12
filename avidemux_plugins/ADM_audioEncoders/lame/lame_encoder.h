@@ -4,7 +4,7 @@
 typedef struct {
    uint32_t preset;
    uint32_t quality;
-   uint32_t disableBitReservoir;
+   bool disableBitReservoir;
 }lame_encoder;
 #endif //lame_encoder
 //EOF

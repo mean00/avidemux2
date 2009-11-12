@@ -39,8 +39,8 @@ ADMVideoFields::ADMVideoFields(
 	if(couples)
 	{
 			_param=NEW(DEINT_PARAM);
-			GET(motion_trigger);
-			GET(blend_trigger);
+//			GET(motion_trigger);
+			//GET(blend_trigger);
 	}
 	else
 	{
@@ -57,8 +57,8 @@ uint8_t	ADMVideoFields::getCoupledConf( CONFcouple **couples)
 			*couples=new CONFcouple(2);
 
 #define CSET(x)  (*couples)->setCouple((char *)#x,(_param->x))
-	CSET(motion_trigger);
-	CSET(blend_trigger);
+//	CSET(motion_trigger);
+//	CSET(blend_trigger);
 			return 1;
 
 }

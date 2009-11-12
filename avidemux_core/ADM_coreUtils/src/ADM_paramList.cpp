@@ -21,7 +21,7 @@
 */
 bool ADM_paramValidate(CONFcouple *couples, const ADM_paramList *params)
 {
-    int n=couples->getNumber();
+    int n=couples->getSize();
     int found=0;
     int p=0;
     const ADM_paramList *l=params;
@@ -39,8 +39,7 @@ bool ADM_paramValidate(CONFcouple *couples, const ADM_paramList *params)
     for(int i=0;i<p;i++)
     {
         const char *name=params[i].paramName;
-        int index=couples->lookupName(name);
-        if(index==-1)
+        if(false==couples->exist(name))
         {
             ADM_warning("Cannot find param with name %s in configuration\n",name);
             return false;
@@ -56,7 +55,7 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
 {
     uint8_t *address=(uint8_t *)s;
     if(false==ADM_paramValidate(couples,params)) return false;
-    int n=couples->getNumber();
+    int n=couples->getSize();
     for(int i=0;i<n;i++)
     {
         const char *name=params[i].paramName;
@@ -64,13 +63,13 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
         ADM_assert(index!=-1);
         switch(params[i].type)
         {
-#define SWAL(entry,type,var) case  entry: {type   var;\
-                        couples->getCouple(name,&var); \
+#define SWAL(entry,type,var,access) case  entry: {type   var;\
+                        couples->readAs##access(name,&var); \
                         *(type *)(address+params[i].offset)=var;}break;
-           SWAL(ADM_param_uint32_t,uint32_t,u32)
-           SWAL(ADM_param_int32_t, int32_t, i32)
-           SWAL(ADM_param_float,   float ,  f)
-     //      SWAL(ADM_param_bool,    bool ,   b)
+           SWAL(ADM_param_uint32_t,uint32_t,u32,Uint32)
+           SWAL(ADM_param_int32_t, int32_t, i32,Int32)
+           SWAL(ADM_param_float,   float ,  f,Float)
+           SWAL(ADM_param_bool,    bool ,   b,Bool)
            case ADM_param_string: ADM_error("not implemented string for paramList\n");ADM_assert(0);
         }
     }
@@ -100,14 +99,14 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
         switch(params[i].type)
         {
 #undef SWAL
-#define SWAL(entry,type,var) case  entry: \
+#define SWAL(entry,type,var,access) case  entry: \
                                     {type var; \
                                     var=*(type *)(address+params[i].offset);\
-                                    c->setCouple(name,var);}break;
-           SWAL(ADM_param_uint32_t,uint32_t,u32)
-           SWAL(ADM_param_int32_t, int32_t, i32)
-           SWAL(ADM_param_float,   float ,  f)
-    //       SWAL(ADM_param_bool,    bool ,   b)
+                                    c->writeAs##access(name,var);}break;
+           SWAL(ADM_param_uint32_t,uint32_t,u32,Uint32)
+           SWAL(ADM_param_int32_t, int32_t, i32,Int32)
+           SWAL(ADM_param_float,   float ,  f,Float)
+           SWAL(ADM_param_bool,    bool ,   b,Bool)
            case ADM_param_string: ADM_error("not implemented string for paramList\n");ADM_assert(0);
         }
     }

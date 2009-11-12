@@ -1,11 +1,7 @@
-/***************************************************************************
-                          CONFcouple.cpp  -  description
-                             -------------------
-	Used to set a pair name/value
-	--> filters
-
-    begin                : Sun Apr 14 2002
-    copyright            : (C) 2002 by mean
+/** *************************************************************************
+    \file ADM_confCouple.h
+    \brief Handle Key/value pair
+    copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -27,28 +23,34 @@ class CONFcouple
 			char 		**name;
 			char 		**value;
 			uint8_t	cur;
-
+            
 
 	public:
 			int32_t lookupName(const char *myname);
+
 			CONFcouple(uint32_t nb);
 			~CONFcouple();
-			uint8_t setCouple(const char *name,uint32_t value);
-			uint8_t setCouple(const char *name,int32_t value);
-			uint8_t setCouple(const char *name,const char *value);
-			uint8_t setCouple(const char *name,const ADM_filename *value);
-			uint8_t setCouple(const char *name,double value);
-			uint8_t setCouple(const char *name,float value);
 
-			uint8_t getCouple(const char *name,int32_t *value);
-			uint8_t getCouple(const char *name,uint32_t *value);
-			uint8_t getCouple(const char *name,char **value);
-			uint8_t getCouple(const char *name,ADM_filename **value);
-			uint8_t getCouple(const char *name,double *value);
-			uint8_t getCouple(const char *name,float *value);
-			uint32_t getNumber(void) { return nb;};
-			uint8_t getEntry(uint32_t n, char **nm, char **val)
-				 { assert(n<nb); *nm=name[n];*val=value[n];return 1;};
+			bool writeAsUint32(const char *name,uint32_t value);
+			bool writeAsInt32(const char *name,int32_t value);
+			bool writeAsString(const char *name,const char *value);
+			bool writeAsFloat(const char *name,float value);
+            bool writeAsBool(const char *name,bool value);
+			
+
+
+            bool readAsUint32(const char *name,uint32_t *value);    
+			bool readAsInt32(const char *name,int32_t *value);
+			bool readAsString(const char *name,char **value);
+			bool readAsFloat(const char *name,float *value);
+            bool readAsBool(const char *name,bool *value);
+
+            bool exist(const char *name);
+
+			uint32_t getSize(void) { return nb;};
+
+            bool     setInternalName(const char *name, const char *key);
+			bool     getInternalName(uint32_t n, char **nm, char **val);
 			void dump(void );
 
 };

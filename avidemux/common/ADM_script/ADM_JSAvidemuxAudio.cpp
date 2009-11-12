@@ -409,7 +409,7 @@ JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc,
                         }
                     value++;
                 }
-                c->setCouple(name,value);
+                c->setInternalName(name,value);
                 //printf("%s -> [%s,%s]\n",param,name,value);
                 ADM_dezalloc(dupe);
             }

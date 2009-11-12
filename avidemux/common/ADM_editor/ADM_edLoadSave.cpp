@@ -191,12 +191,12 @@ printf("\n **Saving script project **\n");
    else
     {
         qfprintf(fd,"app.audio.codec(\"%s\",%d", audioCodecGetName(),bitrate); 
-        uint32_t n=couples->getNumber();
+        uint32_t n=couples->getSize();
         
         for(int i=0;i<n;i++)
         {
             char *name,*value;
-            couples->getEntry(i,&name,&value);
+            couples->getInternalName(i,&name,&value);
             qfprintf(fd,",\"%s=%s\"",name,value);
         }
         qfprintf(fd,");\n");

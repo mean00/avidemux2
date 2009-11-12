@@ -151,6 +151,7 @@ uint8_t *src,*dst,*srcu,*srcv; //,*dstu,*dstv;
 //______________________________________________________
 CONFcouple *filterBuildCouple(FILTER_PARAM *param,uint32_t nb,Arg *args)
 {
+#if 0
 int found,l;
 int trans[MAXPARAM];
 	if(param->nb>VARIABLE_PARAMS)
@@ -248,5 +249,6 @@ int trans[MAXPARAM];
 		}
 		return couple;
 	}
-
+#endif
+    return NULL;
 }
