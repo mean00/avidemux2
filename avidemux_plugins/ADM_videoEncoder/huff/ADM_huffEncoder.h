@@ -18,11 +18,13 @@
 #ifndef ADM_huff_ENCODER_H
 #define ADM_huff_ENCODER_H
 #include "ADM_coreVideoEncoderFFmpeg.h"
+#include "huff_encoder.h"
 /**
         \class ADM_huffEncoder
         \brief Dummy encoder that does nothing
 
 */
+extern huff_encoder huffType;
 class ADM_huffEncoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:

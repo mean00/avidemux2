@@ -21,6 +21,7 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_bitstream.h"
 #include "ADM_frameType.h"
+#include "stddef.h"
 typedef enum
 {
     ADM_ENCODER_OPTION_MOV_MODE=1
@@ -52,11 +53,6 @@ virtual const  char         *getFourcc(void) =0;
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
 };
-// Spawn a new encoder using the index from the menu = the index in the vector
-ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
-bool                  videoEncoder6SelectByName(const char *name);
-bool                  videoEncoder6Configure(void);
-bool                  videoEncoder6_SetCurrentEncoder(uint32_t index);
 
 #endif
 

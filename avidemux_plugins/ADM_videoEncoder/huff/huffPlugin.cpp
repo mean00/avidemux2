@@ -18,6 +18,7 @@
 #include "ADM_default.h"
 #include "ADM_huffEncoder.h"
 #include "ADM_coreVideoEncoderInternal.h"
+#include "huff_encoder_desc.cpp"
 
 extern bool         huffConfigure(void);
 
@@ -28,6 +29,6 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("HUFFYUV",
                                 huffConfigure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
-                                NULL, // conf template
-                                NULL // conf var
+                                huff_encoder_param, // conf template
+                                &huffType // conf var
 );

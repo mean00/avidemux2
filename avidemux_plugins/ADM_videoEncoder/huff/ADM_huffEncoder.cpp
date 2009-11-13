@@ -25,7 +25,7 @@ typedef enum
     ADM_HUFF_YUV,
     ADM_FF_HUFF_YUV
 };
-int huffType=ADM_HUFF_YUV;
+huff_encoder huffType={ADM_HUFF_YUV};
 //
 /**
         \fn ADM_huffEncoder
@@ -33,7 +33,7 @@ int huffType=ADM_HUFF_YUV;
 ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[huffEncoder] Creating.\n");
-    if(huffType==ADM_HUFF_YUV)
+    if(huffType.encoderType==ADM_HUFF_YUV)
         targetColorSpace=ADM_COLOR_YUV422P;
     else
         targetColorSpace=ADM_COLOR_YV12;
@@ -44,7 +44,7 @@ ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncode
 bool ADM_huffEncoder::setup(void)
 {
     CodecID id=CODEC_ID_HUFFYUV;
-    if(huffType==ADM_FF_HUFF_YUV) id=CODEC_ID_FFVHUFF;
+    if(huffType.encoderType==ADM_FF_HUFF_YUV) id=CODEC_ID_FFVHUFF;
     return ADM_coreVideoEncoderFFmpeg::setup(id);
 }
 
@@ -62,7 +62,7 @@ ADM_huffEncoder::~ADM_huffEncoder()
 */
 const  char        *ADM_huffEncoder::getFourcc(void)
 {
-    if(huffType==ADM_HUFF_YUV) return "HFYU";
+    if(huffType.encoderType==ADM_HUFF_YUV) return "HFYU";
     else return "FFVH";
 
 }
@@ -109,14 +109,14 @@ bool         huffConfigure(void)
 {
 uint32_t colorM;
     printf("[huff] Configure\n");
-    colorM=(uint32_t)huffType;
+    colorM=(uint32_t)huffType.encoderType;
 
     diaElemMenu      c(&colorM,QT_TR_NOOP("Type:"),2,colorMenus);
     diaElem *elems[1]={&c};
     
       if( diaFactoryRun(QT_TR_NOOP("HuffYUV Configuration"),1 ,elems))
       {
-        huffType=colorM;
+        huffType.encoderType=colorM;
         return false;
       }
       return true;

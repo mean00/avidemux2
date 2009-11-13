@@ -24,7 +24,7 @@
 #include "ADM_coreVideoEncoderInternal.h"
 #include "DIA_uiTypes.h"
 #include "ADM_dynamicLoading.h"
-
+#include "ADM_videoEncoderApi.h"
 static int currentVideoCodec=0;
 /**
     \class ADM_videoEncoder6
@@ -206,17 +206,11 @@ ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int
 */
 bool videoEncoder6SelectByName(const char *name)
 {
-    int nb=ListOfEncoders.size();
-    for(int i=0;i<nb;i++)
-    {
-        ADM_videoEncoderDesc *desc=ListOfEncoders[i]->desc;
-        if(!strcasecmp(name,desc->encoderName))
-        {
-            currentVideoCodec=i;
-            return true;
-        }
-    }
-    return false;
+    int i=videoEncoder6_GetIndexFromName(name);
+    if(i==-1) return false;
+    
+    currentVideoCodec=i;
+    return true;
 }
 /**
     \fn videoEncoder6Configure
@@ -238,5 +232,52 @@ bool                  videoEncoder6_SetCurrentEncoder(uint32_t index)
       if(index>=nb) return false;
       currentVideoCodec=index;
       return true;
+}
+/**
+    \fn videoEncoder6_GetCurrentEncoderName
+*/
+const char            *videoEncoder6_GetCurrentEncoderName(void)
+{
+    ADM_assert(currentVideoCodec<ListOfEncoders.size());
+    ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
+    return e->desc->encoderName;
+}
+/**
+    \fn videoEncoder6_GetCurrentEncoderName
+*/
+
+bool                  videoEncoder6_SetConfiguration(CONFcouple *c)
+{
+    if(!c) return true;
+    ADM_assert(currentVideoCodec<ListOfEncoders.size());
+    ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
+    return e->desc->setConfigurationData(c);
+}
+/**
+    \fn videoEncoder6_GetConfiguration
+*/
+
+bool                  videoEncoder6_GetConfiguration(CONFcouple **c)
+{
+    ADM_assert(currentVideoCodec<ListOfEncoders.size());
+    ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
+    return e->desc->getConfigurationData(c);
+}
+/**
+    \fn videoEncoder6_GetIndexFromName
+*/
+int                   videoEncoder6_GetIndexFromName(const char *name)
+{
+    int nb=ListOfEncoders.size();
+    for(int i=0;i<nb;i++)
+    {
+        ADM_videoEncoderDesc *desc=ListOfEncoders[i]->desc;
+        if(!strcasecmp(name,desc->encoderName))
+        {
+           
+            return i;
+        }
+    }
+    return -1;
 }
 //EOF

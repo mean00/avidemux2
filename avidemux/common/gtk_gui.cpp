@@ -35,6 +35,7 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 #include "ADM_coreVideoEncoder.h"
+#include "ADM_videoEncoderApi.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
 #include "avi_vars.h"

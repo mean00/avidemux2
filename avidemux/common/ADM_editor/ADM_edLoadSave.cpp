@@ -27,6 +27,7 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 #include "ADM_videoFilter_internal.h"
+#include "ADM_videoEncoderApi.h"
 #include "ADM_paramList.h"
 #include "prefs.h"
 #include "avi_vars.h"
@@ -125,29 +126,27 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
 
 // Video codec
 //___________________________
-#if 0
-		uint8_t *extraData;
-		uint32_t extraDataSize;
-
+        
 		qfprintf(fd, "\n//** Video Codec conf **\n");
-		videoCodecGetConf(&extraDataSize, &extraData);
+        CONFcouple *couples=NULL;
+    
+        qfprintf(fd, "app.video.codec(\"%s\"", videoEncoder6_GetCurrentEncoderName());
+        videoEncoder6_GetConfiguration(&couples);
+        if(couples)
+        {
+            uint32_t n=couples->getSize();
+        
+            for(int i=0;i<n;i++)
+            {
+                char *name,*value;
+                couples->getInternalName(i,&name,&value);
+                qfprintf(fd,",\"%s=%s\"",name,value);
+            }
+            delete couples;
+            couples=NULL;
+        }
+        qfprintf(fd,");\n");
 
-		if (videoCodecGetType() == CodecExternal)
-			qfprintf(fd, "app.video.codecPlugin(\"%s\", \"%s\", \"%s\", \"%s\");\n", videoCodecPluginGetGuid(), videoCodecGetName(), videoCodecGetMode(), extraData);
-		else
-		{
-			qfprintf(fd, "app.video.codec(\"%s\", \"%s\", \"", videoCodecGetName(), videoCodecGetMode());
-
-			// Now deal with extra data
-			qfprintf(fd, "%d ", extraDataSize);
-
-			if (extraDataSize)
-				for(int i = 0; i < extraDataSize; i++)
-					qfprintf(fd, "%02x ", extraData[i]);
-
-			qfprintf(fd, "\");\n");
-		}
-#endif        
 // Audio Source
 //______________________________________________
 
@@ -181,7 +180,7 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
                         
         }
 #endif
-   CONFcouple *couples=NULL;
+   couples=NULL;
    getAudioExtraConf(&bitrate,&couples);
     qfprintf(fd,"app.audio.codec(\"%s\",%d",audioCodecGetName(),bitrate); 
    if(couples)

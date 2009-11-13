@@ -39,6 +39,7 @@
 #include "ADM_muxerGate/include/ADM_videoProcess.h"
 #include "ADM_bitstream.h"
 #include "ADM_filterChain.h"
+#include "ADM_videoEncoderApi.h"
 /*
     
 */

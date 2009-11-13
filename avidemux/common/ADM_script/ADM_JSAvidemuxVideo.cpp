@@ -24,6 +24,7 @@
 #include "ADM_editor/ADM_outputfmt.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_script/ADM_container.h"
+#include "ADM_videoEncoderApi.h"
 
 extern VF_FILTERS filterGetTagFromName(const char *inname);
 extern uint8_t A_ListAllBlackFrames( char *file );
@@ -32,6 +33,9 @@ extern uint8_t ADM_saveRaw (const char *name);
 extern int A_saveJpg (char *name);
 extern uint8_t loadVideoCodecConf( const char *name);
 extern void filterCleanUp( void );
+extern bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
+bool A_setVideoCodec(const char *nm);
+
 
 JSPropertySpec ADM_JSAvidemuxVideo::avidemuxvideo_properties[] = 
 { 
@@ -45,9 +49,7 @@ JSFunctionSpec ADM_JSAvidemuxVideo::avidemuxvideo_methods[] =
 	{ "add", Add, 3, 0, 0 },	// add
     { "clearFilters", ClearFilters, 0, 0, 0 }, // Delete all filters
 	{ "addFilter", AddFilter, 10, 0, 0 },	// Add filter to filter chain
-	{ "codec", Codec, 3, 0, 0 },	// Set the video codec
-	{ "codecPlugin", codecPlugin, 4, 0, 0 },	// Set the video codec plugin
-	{ "codecConf", CodecConf, 1, 0, 0 },	// load video codec config
+	{ "codec", Codec, 1, 0, 0 },	// Set the video codec
 	{ "save", Save, 1, 0, 0 },	// save video portion of the stream
 	{ "saveJpeg", SaveJPEG, 1, 0, 0 },	// save the current frame as a JPEG
 	{ "listBlackFrames", ListBlackFrames, 1, 0, 0 },	// output a list of the black frame to a file
@@ -246,109 +248,38 @@ JSBool ADM_JSAvidemuxVideo::AddFilter(JSContext *cx, JSObject *obj, uintN argc,
 #endif        
         return JS_TRUE;
 }// end AddFilter
-
+/**
+    \fn Codec
+*/
 JSBool ADM_JSAvidemuxVideo::Codec(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin Codec
         *rval = BOOLEAN_TO_JSVAL(false);
-        if(argc > 3)
+        if(argc <1)
                 return JS_FALSE;
-        printf("Codec ... \n");
-        if(JSVAL_IS_STRING(argv[0]) == false || JSVAL_IS_STRING(argv[1]) == false  || JSVAL_IS_STRING(argv[2]) == false)
+        if(JSVAL_IS_STRING(argv[0]) == false )
+        {
+                ADM_error("Cannot set codec\n");
                 return JS_FALSE;
-        
-                printf("[codec]%s\n",JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
-                printf("[conf ]%s\n",JS_GetStringBytes(JSVAL_TO_STRING(argv[1])));
-                printf("[xtra ]%s\n",JS_GetStringBytes(JSVAL_TO_STRING(argv[2])));
-                
-                char *codec,*conf,*codecConfString;
-                codec = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-                conf = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));
-                codecConfString = JS_GetStringBytes(JSVAL_TO_STRING(argv[2]));
-                enterLock();
-#if 0
-                if(!videoCodecSelectByName(codec))
-                        *rval = BOOLEAN_TO_JSVAL(false);
-                else
-                {// begin conf
-                        // now do the conf
-                        // format CBR=bitrate in kbits
-                        //	  CQ=Q
-                        //	  2 Pass=size
-                        // We have to replace
-                        if(!videoCodecConfigure(conf,0,NULL))
-                                *rval = BOOLEAN_TO_JSVAL(false);
-                        else
-                        {
-                                *rval = BOOLEAN_TO_JSVAL(true);
-                                if(!loadVideoCodecConfString(codecConfString))
-                                        *rval = BOOLEAN_TO_JSVAL(false);
-                                else
-                                        *rval = BOOLEAN_TO_JSVAL(true);
-                        }
-
-                }// end conf
-#endif
-                leaveLock();
+        }
+        char *codec=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+        // Set codec.
+        enterLock();
+        if(A_setVideoCodec(codec)==false)
+        {
+            ADM_error("Could not select codec %s\n",codec);
+            leaveLock();
+            return JS_FALSE;
+        }
+        CONFcouple *c;
+        jsArgToConfCouple(argc-1,&c,argv+1);
+        *rval = BOOLEAN_TO_JSVAL( videoEncoder6_SetConfiguration(c));
+        printf("Selected codec %s\n",codec);
+        leaveLock();
 
         return JS_TRUE;
 }// end Codec
 
-JSBool ADM_JSAvidemuxVideo::codecPlugin(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-	*rval = BOOLEAN_TO_JSVAL(false);
-#if 0
-	if (argc != 4)
-		return JS_FALSE;
-
-	printf("Codec Plugin ... \n");
-
-	if (!JSVAL_IS_STRING(argv[0]) || !JSVAL_IS_STRING(argv[1]) || !JSVAL_IS_STRING(argv[2]) || !JSVAL_IS_STRING(argv[3]))
-		return JS_FALSE;
-
-	char *guid = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-	char *desc = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));
-	char *conf = JS_GetStringBytes(JSVAL_TO_STRING(argv[2]));
-	char *data = JS_GetStringBytes(JSVAL_TO_STRING(argv[3]));
-
-	printf("[guid] %s\n", guid);
-	printf("[desc] %s\n", desc);
-	printf("[conf] %s\n", conf);
-	printf("[data] %s\n", data);
-
-	enterLock();
-
-	if (!videoCodecPluginSelectByGuid(guid))
-		*rval = BOOLEAN_TO_JSVAL(false);
-	else
-		*rval = BOOLEAN_TO_JSVAL(videoCodecConfigure(conf, 0, (uint8_t*)data));
-
-	leaveLock();
-#endif
-	return JS_TRUE;
-}
-
-JSBool ADM_JSAvidemuxVideo::CodecConf(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{
-	*rval = BOOLEAN_TO_JSVAL(false);
-#if 0
-	if (argc != 1)
-		return JS_FALSE;
-
-	if (!JSVAL_IS_STRING(argv[0]))
-		return JS_FALSE;
-
-	char *pTempStr = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-
-	printf("Codec Conf Video \"%s\"\n", pTempStr);
-
-	enterLock();
-	*rval = INT_TO_JSVAL(loadVideoCodecConf(pTempStr));
-	leaveLock();
-#endif
-	return JS_TRUE;
-}
 
 JSBool ADM_JSAvidemuxVideo::Save(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
@@ -638,4 +569,20 @@ uint32_t sz;
         
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn A_setVideoCodec
+*/
+bool A_setVideoCodec(const char *nm)
+{
+    int idx=videoEncoder6_GetIndexFromName(nm);
+    if(idx==-1)
+    {
+        ADM_error("No such encoder :%s\n",nm);
+    }
+    // Select by index
+    videoEncoder6_SetCurrentEncoder(idx);
+    UI_setVideoCodec(idx);
+    return true;
+}
+
 /* EOF */
