@@ -36,7 +36,7 @@ uint8_t isDVCompatible (uint32_t fourcc);
 #define aprintf printf
 #endif
 
-AVIMUXERCONFIG muxerConfig=
+avi_muxer muxerConfig=
 {
     HIDDEN
 };

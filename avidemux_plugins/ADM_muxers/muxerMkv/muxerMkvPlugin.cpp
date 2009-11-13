@@ -27,6 +27,6 @@ ADM_MUXER_BEGIN( muxerMkv,
                     "Mkv Muxer", // DIsplay name
                     mkvConfigure,
                     NULL,
-                    0
+                    NULL
                 );
 

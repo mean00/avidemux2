@@ -28,7 +28,7 @@
 #define aprintf printf
 #endif
 
-tsMuxerConfig_s tsMuxerConfig=
+ts_muxer tsMuxerConfig=
 {
     false
 };

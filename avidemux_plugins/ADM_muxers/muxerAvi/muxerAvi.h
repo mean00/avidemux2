@@ -20,13 +20,10 @@
 #include "ADM_muxer.h"
 #include "op_aviwrite.hxx"
 #include "ADM_audioClock.h"
+#include "avi_muxer.h"
 
-typedef struct
-{
-        doODML_t odmlType;
-}AVIMUXERCONFIG;
 
-extern AVIMUXERCONFIG muxerConfig;
+extern avi_muxer muxerConfig;
 
 /**
     \class muxerAvi

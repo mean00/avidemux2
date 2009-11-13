@@ -43,7 +43,7 @@ const mpegPsStruct psDescriptor[3]=
     { "dvd", 224,11000,9800},
 };
 
-psMuxerConfig_s psMuxerConfig=
+ps_muxer psMuxerConfig=
 {
     MUXER_DVD,false
 };
@@ -172,7 +172,7 @@ bool muxerffPS::close(void)
 
 */
 #define FAIL(x) {*er=x;return false;}
-bool muxerffPS::verifyCompatibility(bool nonCompliantOk, psMuxingType muxingType,
+bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                                     ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a, 
                                     const char **er)
 {

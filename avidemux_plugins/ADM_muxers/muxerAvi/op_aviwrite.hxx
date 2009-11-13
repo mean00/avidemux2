@@ -86,7 +86,7 @@ typedef struct
  class  aviWrite
  {
  protected:
-        doODML_t             doODML;
+        uint32_t             doODML;
 		FILE 		         *_out;
         ADMFile              *_file;
 		MainAVIHeader	     _mainheader;

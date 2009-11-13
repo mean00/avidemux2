@@ -19,13 +19,6 @@
 
 #include "ADM_muxer.h"
 #include "ADM_coreMuxerFfmpeg.h"
-typedef struct
-{
-    
-    uint32_t       dummy;
-}FLVMUXERCONFIG;
-
-extern FLVMUXERCONFIG muxerConfig;
 
 class muxerFlv : public muxerFFmpeg
 {

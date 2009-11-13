@@ -19,14 +19,9 @@
 
 #include "ADM_muxer.h"
 #include "ADM_coreMuxerFfmpeg.h"
+#include "ts_muxer.h"
 
-typedef struct
-{
- 
-    bool         acceptNonCompliant;
-}tsMuxerConfig_s;
-
-extern tsMuxerConfig_s tsMuxerConfig;
+extern ts_muxer tsMuxerConfig;
 
 /**
     \fn class muxerffTS

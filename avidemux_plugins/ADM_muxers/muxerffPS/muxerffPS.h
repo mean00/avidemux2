@@ -19,7 +19,7 @@
 
 #include "ADM_muxer.h"
 #include "ADM_coreMuxerFfmpeg.h"
-
+#include "ps_muxer.h"
 typedef enum
 {
     MUXER_VCD=0,
@@ -27,13 +27,9 @@ typedef enum
     MUXER_DVD=2
 }psMuxingType;
 
-typedef struct
-{
-    psMuxingType muxingType;
-    bool         acceptNonCompliant;
-}psMuxerConfig_s;
 
-extern psMuxerConfig_s psMuxerConfig;
+
+extern ps_muxer psMuxerConfig;
 
 /**
     \fn class muxerffPS
@@ -43,7 +39,7 @@ class muxerffPS : public muxerFFmpeg
 protected:
         
         bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
-        bool verifyCompatibility(bool nonCompliantOk, psMuxingType muxingType,
+        bool verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                                     ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a, 
                                     const char **er);
 

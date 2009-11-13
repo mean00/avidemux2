@@ -20,22 +20,7 @@
 #include "fourcc.h"
 bool flvConfigure(void)
 {
-/*
-        uint32_t fmt=(uint32_t)muxerConfig.muxerType;
-        uint32_t alt=(uint32_t)muxerConfig.useAlternateMP3Tag;
-        diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
-        diaElemMenu  menuFormat(&fmt,"Muxing Format",2,format,"");
-        diaElemToggle alternate(&alt,"Use alternate MP3 tag");
 
-        diaElem *tabs[]={&menuFormat,&alternate};
-        if( diaFactoryRun(("MP4 Muxer"),2,tabs))
-        {
-            muxerConfig.muxerType=(MP4_MUXER_TYPE)fmt;
-            muxerConfig.useAlternateMP3Tag=alt;
-            return true;
-        }
-        return false;
-*/
     return true;
 }
 

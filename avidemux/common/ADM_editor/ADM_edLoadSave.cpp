@@ -187,11 +187,9 @@ printf("\n **Saving script project **\n");
 #endif
    CONFcouple *couples=NULL;
    getAudioExtraConf(&bitrate,&couples);
-   if(couples==NULL)
-    qfprintf(fd,"app.audio.codec(\"%s\",%d);\n",audioCodecGetName(),bitrate); 
-   else
+    qfprintf(fd,"app.audio.codec(\"%s\",%d",audioCodecGetName(),bitrate); 
+   if(couples)
     {
-        qfprintf(fd,"app.audio.codec(\"%s\",%d", audioCodecGetName(),bitrate); 
         uint32_t n=couples->getSize();
         
         for(int i=0;i<n;i++)
@@ -200,10 +198,10 @@ printf("\n **Saving script project **\n");
             couples->getInternalName(i,&name,&value);
             qfprintf(fd,",\"%s=%s\"",name,value);
         }
-        qfprintf(fd,");\n");
         delete couples;
         couples=NULL;
     }
+    qfprintf(fd,");\n");
    
 #if 0   
    //qfprintf(fd,"app.audio.process=%s;\n",truefalse[audioProcessMode()]);
@@ -242,15 +240,15 @@ printf("\n **Saving script project **\n");
         
 #endif        
   // -------- Muxer -----------------------
+        qfprintf(fd,"\n//** Muxer **\n");
         CONFcouple *containerConf=NULL;
         uint32_t index=UI_GetCurrentFormat();
         const char *containerName=ADM_mx_getName(index);
         ADM_mx_getExtraConf( index,&containerConf);
-        if(containerConf==NULL)
-            qfprintf(fd,"app.setContainer(\"%s\");\n",containerName); 
-        else
+        
+        qfprintf(fd,"app.setContainer(\"%s\"",containerName); 
+        if(containerConf)
         {
-            qfprintf(fd,"app.setContainer(\"%s\"", containerName); 
             uint32_t n=containerConf->getSize();
             
             for(int i=0;i<n;i++)
@@ -259,10 +257,11 @@ printf("\n **Saving script project **\n");
                 containerConf->getInternalName(i,&name,&value);
                 qfprintf(fd,",\"%s=%s\"",name,value);
             }
-            qfprintf(fd,");\n");
+         
             delete couples;
             couples=NULL;
         }
+        qfprintf(fd,");\n");
   // -------- /Muxer -----------------------
   if(outputname)
   {

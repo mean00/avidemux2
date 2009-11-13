@@ -28,10 +28,6 @@
 #define aprintf printf
 #endif
 
-FLVMUXERCONFIG muxerConfig=
-{
-    0
-};
 
 
 /**

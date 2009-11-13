@@ -16,7 +16,7 @@
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "muxerffTS.h"
-
+#include "ts_muxer_desc.cpp"
 #include "fourcc.h"
  bool ffTSConfigure(void);
 
@@ -26,7 +26,7 @@ ADM_MUXER_BEGIN( muxerffTS,
                     "ffMpeg PS muxer plugin (c) Mean 2009",
                     "ffTS Muxer", // DIsplay name
                     ffTSConfigure,
-                    NULL,
-                    NULL
+                    ts_muxer_param, //template
+                    &tsMuxerConfig //config
                 );
 
