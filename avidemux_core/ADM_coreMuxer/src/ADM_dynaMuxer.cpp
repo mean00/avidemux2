@@ -16,6 +16,7 @@
 #include <vector>
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
+#include "ADM_muxerProto.h"
 
 void ADM_muxersCleanup(void);
 ADM_muxer *ADM_muxerSpawn(uint32_t magic,const char *name);
@@ -119,6 +120,38 @@ uint8_t ADM_mx_loadPlugins(const char *path)
 	return 1;
 }
 /**
+    \fn ADM_mx_getExtraConf
+    \brief Retrieve extra configuration from current muxer
+*/
+bool ADM_mx_getExtraConf(int index,CONFcouple **c)
+{
+    *c=NULL;
+    if(index>=ListOfMuxers.size())
+    {
+        ADM_error("Given index exceeds muxer list\n",index);
+        return false;
+    }
+    ADM_dynMuxer *mux=ListOfMuxers[index];
+    return mux->getConfiguration(c);
+    
+}
+/**
+    \fn ADM_mx_setExtraConf
+    \brief Set extra configuration from current muxer
+*/
+bool ADM_mx_setExtraConf(int index,CONFcouple *c)
+{
+    if(!c) return true;
+    if(index>=ListOfMuxers.size())
+    {
+        ADM_error("Given index exceeds muxer list\n",index);
+        return false;
+    }
+    ADM_dynMuxer *mux=ListOfMuxers[index];
+    return mux->setConfiguration(c);
+    
+}
+/**
         \fn ADM_MuxersCleanup
         \brief Current device is no longer used, delete
 */
@@ -174,6 +207,8 @@ ADM_muxer *ADM_MuxerSpawnFromIndex(int index)
     ADM_assert(index<ListOfMuxers.size());
     return ListOfMuxers[index]->createmuxer();
 }
+
+
 //___________________________________________
 extern "C"
 {

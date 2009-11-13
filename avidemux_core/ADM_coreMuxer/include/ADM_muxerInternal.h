@@ -16,9 +16,11 @@
 #ifndef  ADM_muxerInternal_H
 #define  ADM_muxerInternal_H
 
-#define ADM_MUXER_API_VERSION 2
+#define ADM_MUXER_API_VERSION 3
+#include <stddef.h>
 #include "ADM_dynamicLoading.h"
 #include "ADM_muxer.h"
+#include "ADM_paramList.h"
 class ADM_dynMuxer :public ADM_LibWrapper
 {
 public:
@@ -31,8 +33,8 @@ public:
         const char    *descriptor;
         uint32_t      apiVersion;
         bool  (*configure)(void);
-        bool  (*getConfiguration)(uint32_t *len,uint8_t *data);
-        bool  (*setConfiguration)(uint32_t *len,uint8_t *data);
+        bool  (*getConfiguration)(CONFcouple **conf);
+        bool  (*setConfiguration)(CONFcouple *conf);
 
         ADM_dynMuxer(const char *file) : ADM_LibWrapper()
         {
@@ -69,7 +71,7 @@ public:
         }
 };
 
-#define ADM_MUXER_BEGIN( Class,maj,mn,pat,name,desc,displayName,configureFunc,conf,confSize) \
+#define ADM_MUXER_BEGIN( Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar) \
 extern "C" {\
 ADM_muxer   *create(void){ return new Class; } \
 void         destroy(ADM_muxer *h){ Class *z=(Class *)h;delete z;} \
@@ -78,14 +80,19 @@ uint32_t     getApiVersion(void) {return ADM_MUXER_API_VERSION;} \
 const char  *getName(void) {return name;} \
 const char  *getDescriptor(void) {return desc;} \
 const char  *getDisplayName(void) { return displayName;} \
-bool        getConfiguration(uint32_t *len,uint8_t **data) \
-                    {*len=confSize;*data=(uint8_t *)conf;return true;}\
-bool        setConfiguration(uint32_t *len,uint8_t *data)\
-                    {\
-                    if(*len!=confSize) return false;\
-                    if(conf) memcpy(conf,data,confSize);\
-                    return true;} \
- bool  configure(void) {return configureFunc();}\
+bool        getConfiguration(CONFcouple **conf) \
+{\
+         if(confTemplate==NULL) {*conf=NULL;return true;} \
+         return ADM_paramSave(conf,confTemplate,confVar); \
+}\
+bool        setConfiguration(CONFcouple *conf)\
+{\
+                  return ADM_paramLoad(conf,confTemplate,confVar); \
+} \
+ bool  configure(void) \
+{ \
+ if(configureFunc==NULL) return true;\
+ return configureFunc();}\
 }
 
 #endif
