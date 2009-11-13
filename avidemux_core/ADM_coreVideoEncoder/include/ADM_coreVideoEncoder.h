@@ -59,3 +59,4 @@ bool                  videoEncoder6Configure(void);
 bool                  videoEncoder6_SetCurrentEncoder(uint32_t index);
 
 #endif
+
