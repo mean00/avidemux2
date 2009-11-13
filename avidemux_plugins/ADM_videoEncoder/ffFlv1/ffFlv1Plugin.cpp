@@ -22,10 +22,12 @@
 extern bool         ffFlv1Configure(void);
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffFlv1Encoder);
-ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffFlv1",
                                "FLV1(flash)",
                                "Simple ffmpeg based Flv1 Encoder (c) 2009 Mean",
                                 ffFlv1Configure, // No configuration
                                 ADM_UI_ALL,
-                                1,0,0);
+                                1,0,0,
+                                NULL, // conf template
+                                NULL // conf var
+);

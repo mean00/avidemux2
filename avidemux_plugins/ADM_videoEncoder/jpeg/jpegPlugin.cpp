@@ -22,10 +22,12 @@
 extern bool         jpegConfigure(void);
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_jpegEncoder);
-ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
 ADM_DECLARE_VIDEO_ENCODER_MAIN("Mjpeg",
                                "Mjpeg Encoder",
                                "Simple jpeg Encoder (c) 2009 Mean",
                                 jpegConfigure, // No configuration
                                 ADM_UI_ALL,
-                                1,0,0);
+                                1,0,0,
+                                NULL, // conf template
+                                NULL // conf var
+);

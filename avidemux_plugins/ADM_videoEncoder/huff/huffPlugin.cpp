@@ -22,10 +22,12 @@
 extern bool         huffConfigure(void);
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_huffEncoder);
-ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
 ADM_DECLARE_VIDEO_ENCODER_MAIN("HUFFYUV",
                                "(FF)HuffYUV",
                                "FF Huffyuv (c) 2009 Mean",
                                 huffConfigure, // No configuration
                                 ADM_UI_ALL,
-                                1,0,0);
+                                1,0,0,
+                                NULL, // conf template
+                                NULL // conf var
+);

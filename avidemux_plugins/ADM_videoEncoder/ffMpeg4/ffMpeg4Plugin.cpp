@@ -22,10 +22,12 @@
 extern bool         ffMpeg4Configure(void);
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffMpeg4Encoder);
-ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg4",
                                "Mpeg4 ASP (ff)",
                                "Simple ffmpeg based mpeg4 Encoder (c) 2009 Mean",
                                 ffMpeg4Configure, // No configuration
                                 ADM_UI_ALL,
-                                1,0,0);
+                                1,0,0,
+                                NULL, // conf template
+                                NULL // conf var
+);
