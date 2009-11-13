@@ -31,6 +31,8 @@
 
 #include "ADM_render/GUI_renderInternal.h"
 #include "ADM_coreVideoEncoderInternal.h"
+#include "ADM_muxerProto.h"
+
 extern int global_argc;
 extern char **global_argv;
 
@@ -51,9 +53,6 @@ extern int A_openAvi(const char *name);
 extern int A_appendAvi(const char *name);
 extern char *actual_workbench_file;
 extern void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file);
-
-uint32_t ADM_mx_getNbMuxers(void);
-const char *ADM_mx_getName(uint32_t i);
 
 
 int SliderIsShifted=0;
