@@ -97,6 +97,7 @@ extern void A_saveWorkbench (const char *name);
 extern uint8_t A_rebuildKeyFrame (void);
 extern uint8_t A_setContainer(const char *cont);
 uint8_t scriptAddVar(char *var,char *value);
+extern void ADM_dumpJSHooks(void);
 extern uint8_t ADM_vob2vobsub(char *nameVob, char *nameVobSub, char *nameIfo);
 
 #ifdef __WIN32
@@ -136,6 +137,7 @@ typedef struct
 
 AUTOMATON reaction_table[]=
 {
+        {"js",                  0,"Dump the javascript functions",(one_arg_type)ADM_dumpJSHooks},
         {"nogui",               0,"Run in silent mode",		(one_arg_type)GUI_Quiet}   ,
 //        {"listfilters",		0,"list all filters by name",		(one_arg_type)filterListAll}   ,
         {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},

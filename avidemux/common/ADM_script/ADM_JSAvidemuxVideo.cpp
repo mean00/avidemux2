@@ -35,7 +35,7 @@ extern void filterCleanUp( void );
 
 JSPropertySpec ADM_JSAvidemuxVideo::avidemuxvideo_properties[] = 
 { 
-        { "process", videoprocess_prop, JSPROP_ENUMERATE },        // process video when saving
+       
 	{ 0 }
 };
 
@@ -43,7 +43,7 @@ JSFunctionSpec ADM_JSAvidemuxVideo::avidemuxvideo_methods[] =
 {
 	{ "clear", Clear, 0, 0, 0 },	// clear
 	{ "add", Add, 3, 0, 0 },	// add
-        { "clearFilters", ClearFilters, 0, 0, 0 }, // Delete all filters
+    { "clearFilters", ClearFilters, 0, 0, 0 }, // Delete all filters
 	{ "addFilter", AddFilter, 10, 0, 0 },	// Add filter to filter chain
 	{ "codec", Codec, 3, 0, 0 },	// Set the video codec
 	{ "codecPlugin", codecPlugin, 4, 0, 0 },	// Set the video codec plugin
@@ -68,7 +68,16 @@ JSFunctionSpec ADM_JSAvidemuxVideo::avidemuxvideo_methods[] =
     { "dumpEditing", dumpEditing,0,0,0},
 	{ 0 }
 };
-
+/*********************************/
+JSPropertySpec *ADM_JsVideoGetProperties(void)
+{
+    return ADM_JSAvidemuxVideo::avidemuxvideo_properties;
+}
+JSFunctionSpec *ADM_JsVideoGetFunctions(void)
+{
+    return ADM_JSAvidemuxVideo::avidemuxvideo_methods;
+}
+/*********************************/
 JSClass ADM_JSAvidemuxVideo::m_classAvidemuxVideo = 
 {
 	"AvidemuxVideo", JSCLASS_HAS_PRIVATE,

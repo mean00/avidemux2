@@ -32,3 +32,48 @@ ADM_Avidemux::~ADM_Avidemux()
 {// begin ~ADM_Avidemux
 
 }// end ~ADM_Avidemux
+/******************************************/
+JSPropertySpec *ADM_JsAudioGetProperties(void);
+JSFunctionSpec *ADM_JsAudioGetFunctions(void);
+JSPropertySpec *ADM_JsVideoGetProperties(void);
+JSFunctionSpec *ADM_JsVideoGetFunctions(void);
+JSPropertySpec *ADM_JsClassGetProperties(void);
+JSFunctionSpec *ADM_JsClassGetFunctions(void);
+
+static void dumpFunc(JSFunctionSpec *f)
+{
+    while(f->name)
+    {
+        printf("\t%s(..)\n",f->name);
+        f++;
+    }
+}
+static void dumpProps(JSPropertySpec *f)
+{
+    while(f->name)
+    {
+        printf("\t%s=xxx\n",f->name);
+        f++;
+    }
+}
+/**
+    \fn ADM_dumpJSHooks
+    \brief Printf the additional avidemux functions/properties
+*/
+void ADM_dumpJSHooks(void)
+{
+    printf("Dumping JS interface\n");
+    printf("********************\n");
+    printf("app.\n");
+    dumpFunc(ADM_JsClassGetFunctions());
+    dumpProps(ADM_JsClassGetProperties());
+    printf("app.video\n");
+    dumpFunc(ADM_JsVideoGetFunctions());
+    dumpProps(ADM_JsVideoGetProperties());
+    printf("app.audio\n");
+    dumpFunc(ADM_JsAudioGetFunctions());
+    dumpProps(ADM_JsAudioGetProperties());
+    printf("Done\n");
+    printf("****\n");
+
+}

@@ -49,7 +49,6 @@ JSPropertySpec ADM_JSAvidemuxAudio::avidemuxaudio_properties[] =
 
 JSFunctionSpec ADM_JSAvidemuxAudio::avidemuxaudio_methods[] = 
 {
-        { "scanVBR", ScanVBR, 0, 0, 0 },	// scan variable bit rate audio
         { "save", Save, 1, 0, 0 },	// save audio stream
         { "load", Load, 2, 0, 0 },	// load audio stream
         { "reset", Reset, 0, 0, 0 },	// reset audio stream
@@ -62,7 +61,16 @@ JSFunctionSpec ADM_JSAvidemuxAudio::avidemuxaudio_methods[] =
         { "getBitrate", getBitrate, 1, 0, 0 },
         { 0 }
 };
-
+//*******************************
+JSPropertySpec *ADM_JsAudioGetProperties(void)
+{
+    return ADM_JSAvidemuxAudio::avidemuxaudio_properties;
+}
+JSFunctionSpec *ADM_JsAudioGetFunctions(void)
+{
+    return ADM_JSAvidemuxAudio::avidemuxaudio_methods;
+}
+//*******************************
 JSClass ADM_JSAvidemuxAudio::m_classAvidemuxAudio = 
 {
         "AvidemuxAudio", JSCLASS_HAS_PRIVATE,
@@ -268,21 +276,6 @@ JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id
         return JS_TRUE;
 }
 
-JSBool ADM_JSAvidemuxAudio::ScanVBR(JSContext *cx, JSObject *obj, uintN argc, 
-                                      jsval *argv, jsval *rval)
-{// begin ScanVBR
-        ADM_JSAvidemuxAudio *p = (ADM_JSAvidemuxAudio *)JS_GetPrivate(cx, obj);
-        // default return value
-        *rval = BOOLEAN_TO_JSVAL(false);
-        if(argc != 0)
-                return JS_FALSE;
-        printf("Scaning Audio... \n");
-        enterLock();
-        HandleAction(ACT_AudioMap);
-        leaveLock()
-        *rval = BOOLEAN_TO_JSVAL(true);
-        return JS_TRUE;
-}// end ScanVBR
 
 JSBool ADM_JSAvidemuxAudio::Save(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)

@@ -64,19 +64,26 @@ JSFunctionSpec ADM_JSAvidemux::avidemux_methods[] =
 	{ "load", Load, 1, 0, 0 },	// Load movie
 	{ "loadFilters", LoadFilters, 1, 0, 0 },	// Load filters from file
 	{ "save", Save, 1, 0, 0 },	// Save movie
-/*	{ "saveDVD", SaveDVD, 1, 0, 0 },	// Save movie as DVD
-	{ "saveOGM", SaveOGM, 1, 0, 0 },	// Save movie as OGM*/
-        { "clearSegments", ClearSegments ,0,0,0}, // Clear all segments
-        { "addSegment", AddSegment ,3,0,0}, // Clear all segments
+    { "clearSegments", ClearSegments ,0,0,0}, // Clear all segments
+    { "addSegment", AddSegment ,3,0,0}, // Clear all segments
 	{ "goToTime", GoToTime, 3, 0, 0 },	// more current frame to time index
 	{ "forceUnpack", forceUnpack, 0, 0, 0 },
-        { "smartCopyMode", smartcopyMode, 0, 0, 0 },
-        { "setContainer", setContainer, 1, 0, 0 },
-        { "rebuildIndex", rebuildIndex, 0, 0, 0 },
+    { "smartCopyMode", smartcopyMode, 0, 0, 0 },
+    { "setContainer", setContainer, 1, 0, 0 },
+    { "rebuildIndex", rebuildIndex, 0, 0, 0 },
 
 	{ 0 }
 };
-
+/*******************************************/
+JSPropertySpec *ADM_JsClassGetProperties(void)
+{
+    return ADM_JSAvidemux::avidemux_properties;
+}
+JSFunctionSpec *ADM_JsClassGetFunctions(void)
+{
+    return ADM_JSAvidemux::avidemux_methods;
+}
+/*******************************************/
 JSClass ADM_JSAvidemux::m_classAvidemux = 
 {
 	"Avidemux", JSCLASS_HAS_PRIVATE,
