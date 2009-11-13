@@ -155,6 +155,7 @@ wrapToolButton(GtkWidget * wid, gpointer user_data)
 //______________________________________________________
 void on_action (gui_act action)
 {
+#if 0
     uint32_t action_parameter;
     VF_FILTERS tag = VF_INVALID;
 
@@ -229,7 +230,8 @@ void on_action (gui_act action)
         break;
 
     case A_PARTIAL:
-#if 0
+
+
         if (!action_parameter) break;
         AVDMGenericVideoStream *replace;
         CONFcouple *conf;
@@ -257,9 +259,7 @@ void on_action (gui_act action)
 			setSelectionNumber(nb_active_filter-1, WID(treeview0), stores[0], action_parameter-1);
         }
         else delete replace;
-#endif
         break;
-
     case A_UP:
         if (action_parameter < 2) break;
         // swap action parameter & action parameter -1
@@ -353,12 +353,14 @@ void on_action (gui_act action)
 
             GUI_FileSelWrite (QT_TR_NOOP("Save set of filters"), filterSaveXml);
         break;
-#if 0
+
+
     default:
         printf ("Unknown action :%d, action param %d\n", action, action_parameter);
         ADM_assert (0);
-#endif
+
     } //end of switch
+#endif
 }
 /*
  	\fn getFilterFromSelection
@@ -366,6 +368,7 @@ void on_action (gui_act action)
 */
 VF_FILTERS getFilterFromSelection (void)
 {
+#if 0
     uint32_t sel = 0;
 	uint8_t ret = 0;
     VF_FILTERS tag = VF_INVALID;
@@ -378,6 +381,7 @@ VF_FILTERS getFilterFromSelection (void)
         tag = filterCategories[page-1][sel]->tag;
 	}
     return tag;
+#endif
 }
 /**
  * 	\fn createFilterDialog
@@ -387,8 +391,9 @@ VF_FILTERS getFilterFromSelection (void)
 GtkWidget *
 createFilterDialog (void)
 {
-    dialog = create_dialog1();
 
+    dialog = create_dialog1();
+#if 0
     //connect toolbar
 #define CALLME_TOOLBAR(x,y) gtk_signal_connect(GTK_OBJECT(WID(x)),"clicked",  GTK_SIGNAL_FUNC(wrapToolButton), (void *) y);
 #define CALLME(x,y) gtk_dialog_add_action_widget (GTK_DIALOG (dialog), WID(x), y)
@@ -493,6 +498,7 @@ createFilterDialog (void)
                       G_CALLBACK(on_treeview1_size_allocate),
                       renderers[i]);
     }
+#endif
     return dialog;
 }
 /**
@@ -501,6 +507,7 @@ createFilterDialog (void)
  */
 void updateFilterList (void)
 {
+#if 0
     g_signal_handler_block(stores[0], row_inserted_id);
     g_signal_handler_block(stores[0], row_deleted_id);
     GtkTreeIter iter;
@@ -558,6 +565,7 @@ void updateFilterList (void)
     }
     g_signal_handler_unblock(stores[0], row_inserted_id);
     g_signal_handler_unblock(stores[0], row_deleted_id);
+#endif
 }
 
 void
@@ -583,6 +591,7 @@ on_treeview1_size_allocate(GtkWidget *widget, GtkAllocation *allocation, GtkCell
 void
 on_treeview0_row_deleted(GtkTreeModel *treemodel, GtkTreePath *arg1, gpointer user_data)
 {
+#if 0
     GtkTreeIter iter;
     VF_FILTERS				tag;
 	CONFcouple				*conf = 0;
@@ -606,6 +615,7 @@ on_treeview0_row_deleted(GtkTreeModel *treemodel, GtkTreePath *arg1, gpointer us
 	    }
     updateFilterList();
     //on_action(A_REORDERED);
+#endif
 }
 void
 on_treeview0_row_inserted(GtkTreeModel *treemodel, GtkTreePath *arg1, GtkTreeIter *arg2, gpointer user_data)
