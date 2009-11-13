@@ -24,11 +24,15 @@
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 #include "audioEncoderApi.h"
 
+
+
 extern int A_audioSave(char *name);
 extern int A_loadAC3 (char *name);
 extern int A_loadMP3 (char *name);
 extern int A_loadWave (char *name);
 extern void HandleAction(Action act);
+
+bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
 
 JSPropertySpec ADM_JSAvidemuxAudio::avidemuxaudio_properties[] = 
 { 
@@ -359,6 +363,9 @@ JSBool ADM_JSAvidemuxAudio::Reset(JSContext *cx, JSObject *obj, uintN argc,
 }// end Reset
 // app.audio.codec("lame",128,8,"00 00 00 00 01 00 00 00 ");
 extern uint8_t mk_hex (uint8_t a, uint8_t b);
+/**
+    \fn Codec
+*/
 JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {// begin Codec
@@ -382,45 +389,59 @@ JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc,
         }
         else
         {
-        // begin set bitrate
-        uint32_t bitrate=JSVAL_TO_INT(argv[1]);
-        // Construct couples
-        CONFcouple *c=NULL;
-        if(argc>2)
-        {
-            int nb=argc-2;
-            c=new CONFcouple(nb);
-            for(int i=0;i<nb;i++)
+            // begin set bitrate
+            uint32_t bitrate=JSVAL_TO_INT(argv[1]);
+            // Construct couples
+            CONFcouple *c=NULL;
+            if(argc>2)
             {
-                char *param = JS_GetStringBytes(JSVAL_TO_STRING(argv[2+i]));
-                char *dupe=   ADM_strdup(param);
-                char *name,*value;
-                // dupe is in the form name=value
-                name=dupe;
-                value=name;
-                char *tail=dupe+strlen(dupe);
-                while(value<tail)
-                {
-                    if(*value=='=') 
-                        {
-                            *value=0;
-                            value++;
-                            break;
-                        }
-                    value++;
-                }
-                c->setInternalName(name,value);
-                //printf("%s -> [%s,%s]\n",param,name,value);
-                ADM_dezalloc(dupe);
+                int nb=argc-2;
+                jsArgToConfCouple( nb,&c,  argv+2);
             }
 
-        }
-
             *rval = BOOLEAN_TO_JSVAL(setAudioExtraConf(bitrate,c));
-        }// end set bitrate
+        }
+        // end set bitrate
         leaveLock();
         return JS_TRUE;
 }// end Codec
+/**
+    \fn jsArgToConfCouple
+    \brief Convert js args to confcouple
+
+*/
+bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv)
+{
+  *conf=NULL;
+  if(!nb) return true;
+  CONFcouple *c=new CONFcouple(nb);
+  *conf=c;
+    for(int i=0;i<nb;i++)
+    {
+        char *param = JS_GetStringBytes(JSVAL_TO_STRING(argv[i]));
+        char *dupe=   ADM_strdup(param);
+        char *name,*value;
+        // dupe is in the form name=value
+        name=dupe;
+        value=name;
+        char *tail=dupe+strlen(dupe);
+        while(value<tail)
+        {
+            if(*value=='=') 
+                {
+                    *value=0;
+                    value++;
+                    break;
+                }
+            value++;
+        }
+        c->setInternalName(name,value);
+        //printf("%s -> [%s,%s]\n",param,name,value);
+        ADM_dezalloc(dupe);
+    }
+    return true;
+}
+
 JSBool ADM_JSAvidemuxAudio::getNbTracks(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {

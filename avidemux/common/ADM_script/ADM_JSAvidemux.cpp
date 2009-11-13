@@ -1,15 +1,18 @@
-// // C++ Interface: Spider Monkey interface
-//
-// Description: 
-//
-//
-// Author: Anish Mistry
-//      Some modification by mean
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/**
+    \file ADM_JSAvidemux
+    \brief SpiderMonkey<->Avidemux interface for avidemux class
+    \author Anish Mistry, modified by mean & gruntster also
 
+*/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #include <math.h>
 
 #include "ADM_default.h"
@@ -17,7 +20,7 @@
 #include "avi_vars.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_commonUI/GUI_ui.h"
-
+#include "ADM_muxerProto.h"
 
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_SCRIPT
@@ -36,8 +39,9 @@ extern uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 extern uint8_t addFile(char *name);
 
 bool           A_setContainer(const char *cont);
-const char     *getCurrentContainerAsString(void);
-extern int     ADM_MuxerIndexFromName(const char *name);
+
+
+bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
 
 JSPropertySpec ADM_JSAvidemux::avidemux_properties[] = 
 { 
@@ -523,20 +527,34 @@ ADM_JSAvidemux *p = (ADM_JSAvidemux *)JS_GetPrivate(cx, obj);
         leaveLock();
         return JS_TRUE;
 }
+/**
+    \fn setContainer
+bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
+*/
 JSBool ADM_JSAvidemux::setContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 
-ADM_JSAvidemux *p = (ADM_JSAvidemux *)JS_GetPrivate(cx, obj);
+        ADM_JSAvidemux *p = (ADM_JSAvidemux *)JS_GetPrivate(cx, obj);
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
-        if(argc != 1)
+        if(argc < 1)
                 return JS_FALSE;
         if(JSVAL_IS_STRING(argv[0]) == false)
                 return JS_FALSE;
         char *str = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
         enterLock();
         if(A_setContainer(str))
-                *rval = BOOLEAN_TO_JSVAL( true);
+        {
+            CONFcouple *c;
+            jsArgToConfCouple(argc-1,&c,argv+1);
+            int idx=ADM_MuxerIndexFromName(str);
+            if(idx!=-1)
+            {
+                *rval = BOOLEAN_TO_JSVAL( ADM_mx_setExtraConf(idx,c));
+            }
+        }
+        /* Now lockup extra params....*/
+        
         leaveLock();
         return JS_TRUE;
 }
@@ -554,16 +572,5 @@ bool A_setContainer(const char *cont)
     }
     UI_SetCurrentFormat(idx);
     return true;
-}
-/**
-    \fn getCurrentContainerAsString
-    \brief
-*/
-extern const char *ADM_mx_getName(uint32_t i);
-const char *getCurrentContainerAsString(void)
-{
-        uint32_t index=UI_GetCurrentFormat();
-    
-        return ADM_mx_getName(index);
 }
 //EOF

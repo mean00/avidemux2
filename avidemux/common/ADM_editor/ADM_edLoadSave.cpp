@@ -30,7 +30,8 @@
 #include "ADM_paramList.h"
 #include "prefs.h"
 #include "avi_vars.h"
-
+#include "ADM_muxerProto.h"
+#include "GUI_ui.h"
 // Ugly but sooo usefull
 extern uint32_t frameStart,frameEnd;
 static uint32_t edFrameStart,edFrameEnd;
@@ -240,11 +241,29 @@ printf("\n **Saving script project **\n");
         if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
         
 #endif        
-  // Mixer
-
-  // container
-        
-  qfprintf(fd,"app.setContainer(\"%s\");\n",getCurrentContainerAsString());
+  // -------- Muxer -----------------------
+        CONFcouple *containerConf=NULL;
+        uint32_t index=UI_GetCurrentFormat();
+        const char *containerName=ADM_mx_getName(index);
+        ADM_mx_getExtraConf( index,&containerConf);
+        if(containerConf==NULL)
+            qfprintf(fd,"app.setContainer(\"%s\");\n",containerName); 
+        else
+        {
+            qfprintf(fd,"app.setContainer(\"%s\"", containerName); 
+            uint32_t n=containerConf->getSize();
+            
+            for(int i=0;i<n;i++)
+            {
+                char *name,*value;
+                containerConf->getInternalName(i,&name,&value);
+                qfprintf(fd,",\"%s=%s\"",name,value);
+            }
+            qfprintf(fd,");\n");
+            delete couples;
+            couples=NULL;
+        }
+  // -------- /Muxer -----------------------
   if(outputname)
   {
         char *o=ADM_cleanupPath(outputname);
