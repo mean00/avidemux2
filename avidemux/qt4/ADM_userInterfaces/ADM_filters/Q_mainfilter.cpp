@@ -1,6 +1,8 @@
 /***************************************************************************
-    copyright            : (C) 2007 by mean
-    email                : fixounet@free.fr
+
+    \file Q_mainfilter.cpp
+    \brief UI for filters
+    \author mean, fixount@free.fr 2007/2009
     
     * We hide some info the the "type"
     * I.e.
@@ -22,26 +24,22 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-
 #include <vector>
-
 #include "Q_mainfilter.h"
 #include "ADM_default.h"
 #include "DIA_fileSel.h"
-
-# include "prefs.h"
-//#include "ADM_audiodevice/audio_out.h"
-
+#include "DIA_factory.h"
 #include "ADM_render/GUI_render.h"
 
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
-//#include "ADM_video/ADM_vidPartial.h"
-//#include "ADM_filter/vidVCD.h"
-#include "DIA_factory.h"
+#include "ADM_coreVideoFilter.h"
+#include "ADM_filterCategory.h"
+#include "ADM_videoFilterApi.h"
+
+#include "prefs.h"
+
+
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -49,19 +47,10 @@
 static int max=0;
 /******************************************************/
 #define ALL_FILTER_BASE       1000
-#define EXTERNAL_FILTER_BASE  2000
 #define ACTIVE_FILTER_BASE    3000
 /******************************************************/
-extern FILTER videofilters[VF_MAX_FILTER];
-extern uint32_t nb_active_filter;
-extern std::vector <FilterDescriptor *> allfilters;
-extern std::vector <FilterDescriptor *> filterCategories[VF_MAX];
+uint32_t nb_active_filter=1;
 
-
-extern const char  *filterGetNameFromTag(VF_FILTERS tag);
-extern ADM_Composer *video_body;
-extern AVDMGenericVideoStream *filterCreateFromTag(VF_FILTERS tag,CONFcouple *conf, AVDMGenericVideoStream *in) ;
-extern uint32_t curframe;
 /*******************************************************/
 
 FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) {}
@@ -120,19 +109,7 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 
 void filtermainWindow::preview(bool b)
 {
-	QListWidgetItem *item = activeList->currentItem();
 
-	if (!item)
-	{
-		printf("No selection\n");
-		return;
-	}
-
-	int itag = item->type();
-	ADM_assert(itag > ACTIVE_FILTER_BASE);
-	itag -= ACTIVE_FILTER_BASE;
-
-	DIA_filterPreview(QT_TR_NOOP("Preview"), videofilters[itag].filter, curframe);
 }
 
 /**
@@ -151,6 +128,7 @@ void filtermainWindow::setSelected( int sel)
 */
 void filtermainWindow::add( bool b)
 {
+#if 0
   /* Now that we have the tab, get the selection */
    QListWidgetItem *item=availableList->currentItem();
    VF_FILTERS tag;
@@ -188,7 +166,7 @@ void filtermainWindow::add( bool b)
 		buildActiveFilterList();
         setSelected(nb_active_filter - 1);
    }
-
+#endif
 }
 /**
         \fn     remove( bool b)
@@ -196,6 +174,7 @@ void filtermainWindow::add( bool b)
 */
 void filtermainWindow::remove( bool b)
 {
+#if 0
    /* Get selection if any */
   /* Now that we have the tab, get the selection */
    QListWidgetItem *item=activeList->currentItem();
@@ -241,7 +220,7 @@ void filtermainWindow::remove( bool b)
               else
                   setSelected(nb_active_filter-1);
             }
-  
+#endif  
 }
 #if 1
 #define MAKE_BUTTON(button,call) \
@@ -266,6 +245,7 @@ MAKE_BUTTON(halfD1,setHalfD1)
 */
 void filtermainWindow::configure( bool b)
 {
+#if 0
    /* Get selection if any */
   /* Now that we have the tab, get the selection */
    QListWidgetItem *item=activeList->currentItem();
@@ -291,6 +271,7 @@ void filtermainWindow::configure( bool b)
         getFirstVideoFilter ();
         buildActiveFilterList ();
 		setSelected(itag);
+#endif
 }
 /**
         \fn     up( bool b)
@@ -298,6 +279,7 @@ void filtermainWindow::configure( bool b)
 */
 void filtermainWindow::up( bool b)
 {
+#if 0
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
@@ -322,6 +304,7 @@ void filtermainWindow::up( bool b)
         getFirstVideoFilter ();
         buildActiveFilterList ();
         setSelected(itag-1);
+#endif
 }
 /**
         \fn     down( bool b)
@@ -329,6 +312,7 @@ void filtermainWindow::up( bool b)
 */
 void filtermainWindow::down( bool b)
 {
+#if 0
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
@@ -355,6 +339,7 @@ void filtermainWindow::down( bool b)
             buildActiveFilterList ();
             setSelected(itag+1);
         }
+#endif
 }
 /**
         \fn     filtermainWindow::filterFamilyClick( QListWidgetItem  *item)
@@ -363,34 +348,43 @@ void filtermainWindow::down( bool b)
 
 void filtermainWindow::filterFamilyClick(QListWidgetItem *item)
 {
+
     int family= ui.listFilterCategory->currentRow();
     if(family>=0)
         displayFamily(family);
+
 }
 void filtermainWindow::filterFamilyClick(int  m)
 {
+
         if(m>=0)
                 displayFamily(m);
+
 }
 void filtermainWindow::displayFamily(uint32_t family)
 {
-  printf("Family :%u\n",family);
-  ADM_assert(family<VF_MAX);
-  std::vector <FilterDescriptor *> vec=filterCategories[family];
-  availableList->clear();
-  QSize sz;
+
   
-  for (uint32_t i = 0; i < vec.size(); i++)
+  ADM_assert(family<VF_MAX);
+ 
+  uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
+    ADM_info("Video filter Family :%u, nb %d\n",family,nb);
+  QSize sz;
+  availableList->clear();
+  for (uint32_t i = 0; i < nb; i++)
     {
-          QString str = QString("<b>") + vec[i]->name + QString("</b><br>\n<small>") + vec[i]->description + QString("</small>");
+        const char *name,*desc;
+        uint32_t major,minor,patch;
+          ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
+          QString str = QString("<b>") + name + QString("</b><br>\n<small>") + desc + QString("</small>");
          
           QListWidgetItem *item;
           item=new QListWidgetItem(str,availableList,ALL_FILTER_BASE+i+family*100);
-          item->setToolTip(vec[i]->description);
+          item->setToolTip(desc);
           availableList->addItem(item);
      }
 
-  if (vec.size())
+  if (nb)
 	  availableList->setCurrentRow(0);
 }
 
@@ -478,6 +472,7 @@ void filtermainWindow::setupFilters(void)
 */
 void filtermainWindow::buildActiveFilterList(void)
 {
+#if 0
 	activeList->clear();
 
 	for (uint32_t i = 1; i < nb_active_filter; i++)
@@ -500,6 +495,7 @@ void filtermainWindow::buildActiveFilterList(void)
 		QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
 		activeList->addItem(item);
 	}
+#endif
 }
   /**
   */
@@ -568,10 +564,12 @@ int GUI_handleVFilter(void)
 static void partialCb(void *cookie);
 void partialCb(void *cookie)
 {
+#if 0
   void **params=(void **)cookie;
   AVDMGenericVideoStream *son=(AVDMGenericVideoStream *)params[0];
   AVDMGenericVideoStream *previous=(AVDMGenericVideoStream *)params[1];
   son->configure(previous);
+#endif
 }
 /** 
     \fn DIA_getPartial

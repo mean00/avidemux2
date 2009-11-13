@@ -482,13 +482,14 @@ int nw;
 
       break;
     case ACT_VideoParameter:
+        GUI_handleVFilter();
+        break;
 #if 0
       // first remove current viewer
       if (getPreviewMode()!=ADM_PREVIEW_NONE)
         {
 	         admPreview::stop();
         }
-      GUI_handleVFilter();
       if( getLastVideoFilter()->getInfo()->width % 8 ){
         GUI_Error_HIG(QT_TR_NOOP("Width is not a multiple of 8"),
                       QT_TR_NOOP("This will make trouble for AVI files."));
