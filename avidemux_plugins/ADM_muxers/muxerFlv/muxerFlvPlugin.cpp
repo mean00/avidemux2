@@ -26,7 +26,7 @@ ADM_MUXER_BEGIN( muxerFlv,
                     "FLV muxer plugin (c) Mean 2008",
                     "FLV Muxer", // DIsplay name
                     flvConfigure,
-                    &muxerConfig,
-                    sizeof(muxerConfig)
+                    NULL,
+                    NULL
                 );
 

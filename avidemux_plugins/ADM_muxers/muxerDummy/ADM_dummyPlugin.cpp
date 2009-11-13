@@ -26,8 +26,8 @@ ADM_MUXER_BEGIN( muxerDummy,
                     "dummy",    // Internal name
                     "dummy2 muxer plugin (c) Mean 2008",
                     "Dummy Muxer", // Display name
-                    confDummy,
-                    NULL,
-                    0
+                    confDummy, //conf func
+                    NULL, // template
+                    NULL  // conf data
                 );
 

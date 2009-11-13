@@ -26,7 +26,7 @@ ADM_MUXER_BEGIN( muxerffPS,
                     "ffMpeg PS muxer plugin (c) Mean 2009",
                     "ffPS Muxer", // DIsplay name
                     ffPSConfigure,
-                    &psMuxerConfig,
-                    sizeof(psMuxerConfig)
+                    NULL,
+                    NULL
                 );
 

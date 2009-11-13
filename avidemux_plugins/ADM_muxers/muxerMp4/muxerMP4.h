@@ -25,13 +25,8 @@ typedef enum
     MP4_MUXER_PSP
 }MP4_MUXER_TYPE;
 
-typedef struct
-{
-    MP4_MUXER_TYPE muxerType;
-    uint32_t       useAlternateMP3Tag;
-}M4MUXERCONFIG;
-
-extern M4MUXERCONFIG muxerConfig;
+#include "mp4_muxer.h"
+extern mp4_muxer muxerConfig;
 
 class muxerMP4 : public muxerFFmpeg
 {

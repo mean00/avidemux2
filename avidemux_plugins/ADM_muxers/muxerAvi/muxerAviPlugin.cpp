@@ -26,7 +26,7 @@ ADM_MUXER_BEGIN( muxerAvi,
                     "AVI muxer plugin (c) Mean 2008",
                     "AVI Muxer", // DIsplay name
                     AviConfigure,
-                    &muxerConfig,
-                    sizeof(muxerConfig)
+                    NULL,
+                    NULL
                 );
 

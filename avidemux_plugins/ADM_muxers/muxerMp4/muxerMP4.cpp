@@ -28,7 +28,7 @@
 #define aprintf printf
 #endif
 
-M4MUXERCONFIG muxerConfig=
+mp4_muxer muxerConfig=
 {
     MP4_MUXER_MP4,
     true
