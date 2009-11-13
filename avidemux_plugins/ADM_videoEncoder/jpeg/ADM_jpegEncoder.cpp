@@ -19,16 +19,14 @@
 #include "ADM_default.h"
 #include "ADM_jpegEncoder.h"
 #include "DIA_factory.h"
-
-static uint32_t Quantizer=2;
-static ADM_colorspace jpegColor=ADM_COLOR_YV12; //ADM_COLOR_YUV422P; //ADM_COLOR_YV12;
+jpeg_encoder jpegConf= {ADM_COLOR_YV12,2};
 /**
         \fn ADM_jpegEncoder
 */
 ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[jpegEncoder] Creating.\n");
-    targetColorSpace=jpegColor;
+    targetColorSpace=(ADM_colorspace)jpegConf.colorSpace;
 }
 /**
     \fn setup
@@ -44,7 +42,7 @@ bool ADM_jpegEncoder::setup(void)
 */
 ADM_jpegEncoder::~ADM_jpegEncoder()
 {
-    printf("[jpegEncoder] Destroying.\n");
+    ADM_info("[jpegEncoder] Destroying.\n");
     
 }
 
@@ -55,11 +53,11 @@ bool         ADM_jpegEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
     _context->flags |= CODEC_FLAG_QSCALE;
-    _frame.quality = (int) floor (FF_QP2LAMBDA * Quantizer+ 0.5);
+    _frame.quality = (int) floor (FF_QP2LAMBDA * jpegConf.quantizer+ 0.5);
     int sz=0;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
     {
-        printf("[jpeg] Error %d encoding video\n",sz);
+        ADM_error("[jpeg] Error %d encoding video\n",sz);
         return false;
     }
     
@@ -77,21 +75,23 @@ static const diaMenuEntry colorMenus[2]=
 	{ADM_COLOR_YUV422P,QT_TR_NOOP("YUV422")},
 	{ADM_COLOR_YV12,QT_TR_NOOP("YUV420")},
 };
-
+/**
+    \fn jpegConfigure
+*/
 bool         jpegConfigure(void)
 {
 uint32_t colorM;
     printf("[jpeg] Configure\n");
-    colorM=(uint32_t)jpegColor;
+    colorM=(uint32_t)jpegConf.colorSpace;
 
-    diaElemUInteger  q(&(Quantizer),QT_TR_NOOP("_Quantizer:"),2,31);
+    diaElemUInteger  q(&(jpegConf.quantizer),QT_TR_NOOP("_Quantizer:"),2,31);
     diaElemMenu      c(&colorM,QT_TR_NOOP("_ColorSpace:"),2,colorMenus);
 
     diaElem *elems[2]={&q,&c};
     
   if( diaFactoryRun(QT_TR_NOOP("Mjpeg Configuration"),2 ,elems))
   {
-    jpegColor=(ADM_colorspace)colorM;
+    jpegConf.colorSpace=colorM;
     return false;
   }
   return true;

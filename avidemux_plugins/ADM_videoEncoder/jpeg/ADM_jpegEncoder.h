@@ -18,11 +18,13 @@
 #ifndef ADM_jpeg_ENCODER_H
 #define ADM_jpeg_ENCODER_H
 #include "ADM_coreVideoEncoderFFmpeg.h"
+#include "jpeg_encoder.h"
 /**
         \class ADM_jpegEncoder
         \brief Dummy encoder that does nothing
 
 */
+extern jpeg_encoder jpegConf;
 class ADM_jpegEncoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:

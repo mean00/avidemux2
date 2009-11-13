@@ -16,8 +16,10 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_jpegEncoder.h"
 #include "ADM_coreVideoEncoderInternal.h"
+#include "ADM_jpegEncoder.h"
+
+#include "jpeg_encoder_desc.cpp"
 
 extern bool         jpegConfigure(void);
 
@@ -28,6 +30,6 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("Mjpeg",
                                 jpegConfigure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
-                                NULL, // conf template
-                                NULL // conf var
+                                jpeg_encoder_param, // conf template
+                                &jpegConf // conf var
 );
