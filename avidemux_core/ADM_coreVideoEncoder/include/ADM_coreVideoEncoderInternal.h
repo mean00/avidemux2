@@ -15,9 +15,10 @@
 #ifndef VIDEOENCODERINTERNAL_H
 #define VIDEOENCODERINTERNAL_H
 
-#define ADM_VIDEO_ENCODER_API_VERSION 1
+#define ADM_VIDEO_ENCODER_API_VERSION 2
 #include "ADM_coreVideoEncoder.h"
 #include "DIA_uiTypes.h"
+#include "ADM_paramList.h"
 
 /*!
   This structure defines a video encoder
@@ -36,8 +37,8 @@ typedef struct
     ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head);  
     void         (*destroy)(ADM_coreVideoEncoder *codec);
     bool         (*configure)(void);                                // Call UI to set it up
-    bool         (*getConfigurationData)(uint32_t *l, uint8_t **d); // Get the encoder private conf
-    bool         (*setConfigurationData)(uint32_t l, uint8_t *d);   // Set the encoder private conf
+    bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
+    bool         (*setConfigurationData)(CONFcouple *c);   // Set the encoder private conf
 
     ADM_UI_TYPE  UIType;                // Type of UI
     uint32_t     major,minor,patch;     // Version of the plugin
@@ -48,8 +49,8 @@ typedef struct
 // Macros to declare audio encoder
 /**************************************************************************/
 #define ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(Class) \
-static bool getConfigurationData (uint32_t * l, uint8_t ** d); \
-static bool setConfigurationData (uint32_t l, uint8_t * d);\
+static bool getConfigurationData (CONFcouple **c); \
+static bool setConfigurationData (CONFcouple *c);\
 \
 static ADM_coreVideoEncoder * create (ADM_coreVideoFilter * head) \
 { \
@@ -61,42 +62,8 @@ static void destroy (ADM_coreVideoEncoder * in) \
   delete z; \
 } 
 //******************************************************
-#define ADM_DECLARE_VIDEO_ENCODER_CONFIG(configData) \
-bool getConfigurationData (uint32_t * l, uint8_t ** d)\
-{\
-  *l = sizeof (configData); \
-  *d = (uint8_t *) & configData; \
-  return 1; \
-} \
-bool setConfigurationData (uint32_t l, uint8_t * d)\
-{\
-  if (sizeof (configData) != l) \
-    {\
-      GUI_Error_HIG ("Audio Encoder",\
-		     "The configuration size does not match the codec size"); \
-      return 0; \
-    }\
-  memcpy (&configData, d, l); \
-  return 1;\
-}
 
-
-// Use that one is the encoder has not configuration
-
-#define ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG() \
-bool getConfigurationData (uint32_t * l, uint8_t ** d)\
-{\
-  *l =0; \
-  *d = NULL; \
-  return 1; \
-} \
-bool setConfigurationData (uint32_t l, uint8_t * d)\
-{\
-  return 1;\
-}
-
-
-#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch) \
+#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar) \
 static ADM_videoEncoderDesc encoderDesc={\
     name,\
     menuName,\
@@ -111,6 +78,15 @@ static ADM_videoEncoderDesc encoderDesc={\
     maj,minV,patch,\
     NULL\
 };\
+bool getConfigurationData (CONFcouple **c)\
+{\
+         if(confTemplate==NULL) {*c=NULL;return true;} \
+         return ADM_paramSave(c,confTemplate,confVar); \
+}\
+bool setConfigurationData (CONFcouple *c)\
+{\
+        return ADM_paramLoad(c,confTemplate,confVar); \
+} \
 extern "C" ADM_videoEncoderDesc *getInfo (void) \
 { \
   return &encoderDesc; \
