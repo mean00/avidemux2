@@ -605,4 +605,26 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
     return rd;
     
 }
-
+/**
+    \fn AudioMixerIdToString
+    \brief convert channel conf to plain string
+*/
+const char *AudioMixerIdToString(CHANNEL_CONF  cnf)
+{
+    for(int i=0;i<NB_MIXER_DESC;i++)
+        if(cnf==mixerStringDescriptor[i].conf) return mixerStringDescriptor[i].desc;
+    return NULL;
+}
+/**
+    \fn AudioMuxerStringToId
+    \brief convert channel conf from plain string
+*/
+CHANNEL_CONF AudioMuxerStringToId(const char *st)
+{
+  for(int i=0;i<NB_MIXER_DESC;i++)
+  {
+        const AudioChannelDesc *s=&(mixerStringDescriptor[i]);
+        if(!strcasecmp(st,s->desc)) return s->conf;
+  }
+  return CHANNEL_INVALID;
+}

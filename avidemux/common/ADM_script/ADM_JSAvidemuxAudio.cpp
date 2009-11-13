@@ -37,7 +37,6 @@ bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
 JSPropertySpec ADM_JSAvidemuxAudio::avidemuxaudio_properties[] = 
 { 
 
-        { "process", audioprocess_prop, JSPROP_ENUMERATE },        // process audio when saving
         { "resample", resample_prop, JSPROP_ENUMERATE },	// resample
         { "delay", delay_prop, JSPROP_ENUMERATE },	// set audio delay
         { "film2pal", film2pal_prop, JSPROP_ENUMERATE },	// convert film to pal
@@ -128,29 +127,26 @@ JSBool ADM_JSAvidemuxAudio::JSGetProperty(JSContext *cx, JSObject *obj, jsval id
                 ADM_JSAvidemuxAudio *priv = (ADM_JSAvidemuxAudio *) JS_GetPrivate(cx, obj);
                 switch(JSVAL_TO_INT(id))
                 {
-                        case audioprocess_prop:
-                                *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bAudioProcess);
-                                break;
                         case resample_prop:
-                                *vp = INT_TO_JSVAL(priv->getObject()->m_nResample);
+                                *vp=INT_TO_JSVAL(audioFilterGetResample());
                                 break;
                         case delay_prop:
-                                *vp = INT_TO_JSVAL(priv->getObject()->m_nDelay);
+//                                *vp = INT_TO_JSVAL(priv->getObject()->m_nDelay);
                                 break;
                         case film2pal_prop:
-                                *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bFilm2PAL);
+//                                *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bFilm2PAL);
                                 break;
                         case pal2film_prop:
-                                *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bPAL2Film);
+//                                *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bPAL2Film);
                                 break;
                         case normalizemode_prop:
-                              *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_nNormalizeMode);
+//                              *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_nNormalizeMode);
                               break;
                         case normalizevalue_prop:
-                          *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_nNormalizeValue);
+//                          *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_nNormalizeValue);
                           break;
                         case drc_prop:
-                            *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bDRC);
+//                            *vp = BOOLEAN_TO_JSVAL(priv->getObject()->m_bDRC);
                             break;
 /*
                         case audio_prop:
@@ -164,23 +160,13 @@ JSBool ADM_JSAvidemuxAudio::JSGetProperty(JSContext *cx, JSObject *obj, jsval id
 
 JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
-#if 0
         if (JSVAL_IS_INT(id)) 
         {
                 
                 ADM_JSAvidemuxAudio *priv = (ADM_JSAvidemuxAudio *) JS_GetPrivate(cx, obj);
                 switch(JSVAL_TO_INT(id))
                 {
-                        case audioprocess_prop:
-                        {
-                                if(JSVAL_IS_BOOLEAN(*vp) == false)
-                                        break;
-                                priv->getObject()->m_bNormalize = JSVAL_TO_BOOLEAN(*vp);
-                                enterLock();
-                                UI_setAProcessToggleStatus(priv->getObject()->m_bAudioProcess);
-                                leaveLock();
-                                break;
-                        }
+#if 0                     
                         case drc_prop:
                         {
                                 if(JSVAL_IS_BOOLEAN(*vp) == false)
@@ -191,16 +177,7 @@ JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id
                                 leaveLock();
                                 break;
                         }
-                        case resample_prop:
-                        {
-                                if(JSVAL_IS_INT(*vp) == false)
-                                        break;
-                                priv->getObject()->m_nResample = JSVAL_TO_INT(*vp);
-                                enterLock();
-                                audioFilterResample(priv->getObject()->m_nResample);
-                                leaveLock();
-                                break;
-                        }
+                       
                         case delay_prop:
                         {
                                 if(JSVAL_IS_INT(*vp) == false)
@@ -248,11 +225,46 @@ JSBool ADM_JSAvidemuxAudio::JSSetProperty(JSContext *cx, JSObject *obj, jsval id
                                   leaveLock();
                                   break;
                         }
+#endif
+
+                        case film2pal_prop:
+                        {
+                                if(JSVAL_IS_BOOLEAN(*vp) == false)
+                                        break;
+                                enterLock();
+                                if(JSVAL_TO_BOOLEAN(*vp)) 
+                                    audioFilterSetFrameRate(FILMCONV_FILM2PAL);
+                                else
+                                    audioFilterSetFrameRate(FILMCONV_NONE);
+                                leaveLock();
+                                break;
+                        }
+                        case pal2film_prop:
+                        {
+                                if(JSVAL_IS_BOOLEAN(*vp) == false)
+                                        break;
+                                enterLock();
+                                if(JSVAL_TO_BOOLEAN(*vp)) 
+                                    audioFilterSetFrameRate(FILMCONV_PAL2FILM);
+                                else
+                                    audioFilterSetFrameRate(FILMCONV_NONE);
+                                leaveLock();
+                                break;
+                        }
+                    case resample_prop:
+                        {
+                                if(JSVAL_IS_INT(*vp) == false)
+                                        break;
+                                enterLock();
+                                audioFilterSetResample(JSVAL_TO_INT(*vp));
+                                leaveLock();
+                                break;
+                        }
                         default : printf("UNKNOWN AUDIO PROP\n");
                         return JS_FALSE;
                 }
         }
-#endif
+
         return JS_TRUE;
 }
 
@@ -513,24 +525,21 @@ JSBool ADM_JSAvidemuxAudio::secondAudioTrack(JSContext *cx, JSObject *obj, uintN
 JSBool ADM_JSAvidemuxAudio::mixer(JSContext *cx, JSObject *obj, uintN argc, 
                                       jsval *argv, jsval *rval)
 {
-#if 0
 uint32_t nb=0,nw=0;
 uint32_t *infos=NULL;
         // default return value
         ADM_JSAvidemuxAudio *p = (ADM_JSAvidemuxAudio *)JS_GetPrivate(cx, obj);
 
         // default return value
-      if(argc != 1)
+        if(argc != 1)
+                return JS_FALSE;
+        if(JSVAL_IS_STRING(argv[0]) == false) 
                 return JS_FALSE;
         char *pArg0 = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
         enterLock();
-
-        if(setCurrentMixerFromString(pArg0))
-                *rval=BOOLEAN_TO_JSVAL(true);
-        else
-                *rval=BOOLEAN_TO_JSVAL(false);
+        CHANNEL_CONF c=AudioMuxerStringToId(pArg0);
+        *rval=BOOLEAN_TO_JSVAL(audioFilterSetMixer(c));
         leaveLock();
-#endif
         return JS_TRUE;
 
 }// end Codec

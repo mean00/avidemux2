@@ -31,32 +31,31 @@
 #include "prefs.h"
 #include "avi_vars.h"
 #include "ADM_muxerProto.h"
+#include "ADM_audioFilterInterface.h"
 #include "GUI_ui.h"
-// Ugly but sooo usefull
-extern uint32_t frameStart,frameEnd;
-static uint32_t edFrameStart,edFrameEnd;
-const char *getCurrentContainerAsString(void);
 
 
-/*______________________________________________
-        Save the project as a script
-______________________________________________*/
+/**
+    \fn        saveAsScript
+    \brief     Save the project as a script
+*/
 uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
 {
-const char *truefalse[]={"false","true"};
-printf("\n **Saving script project **\n");
-  char *    tmp;
+    const char *truefalse[]={"false","true"};
+    ADM_info(" **Saving script project %s**\n",name);
+    char *    tmp;
 
-  if (!_segments.getNbSegments())
-    return 1;
+    if (!_segments.getNbSegments())
+        return 1;
 
-  FILE *    fd;
+    FILE *fd=NULL;
 
-  if( !(fd = qfopen (name, "wt")) ){
+    if( !(fd = qfopen (name, "wt")) )
+    {
     fprintf(stderr,"\ncan't open script file \"%s\" for writing: %u (%s)\n",
                    name, errno, strerror(errno));
     return 0;
-  }
+    }
 
 // Save source and segment
 //______________________________________________
@@ -68,23 +67,20 @@ printf("\n **Saving script project **\n");
   qfprintf (fd, "var app = new Avidemux();\n");
   qfprintf (fd,"\n//** Video **\n");
   qfprintf (fd,"// %02ld videos source \n", _segments.getNbRefVideos());
+
   char *nm;
-  uint32_t vop=!!(video_body->getSpecificMpeg4Info()&ADM_VOP_ON);
+  
 
   for (uint32_t i = 0; i < _segments.getNbRefVideos(); i++)
     {
         nm=ADM_cleanupPath(_segments.getRefVideo(i)->_aviheader->getMyName() );
-        if(vop)
-        {
-          qfprintf(fd,"app.forceUnpack();\n");
-        }
         if(!i)
         {
                 qfprintf (fd, "app.load(\"%s\");\n", nm);
         }
         else
         {
-            qfprintf (fd, "app.append(\"%s\");\n", nm);
+                qfprintf (fd, "app.append(\"%s\");\n", nm);
         }
         ADM_dealloc(nm);
     }
@@ -202,43 +198,33 @@ printf("\n **Saving script project **\n");
         couples=NULL;
     }
     qfprintf(fd,");\n");
+
+
+    uint32_t x=audioFilterGetResample();
+    if(x) qfprintf(fd,"app.audio.resample=%u;\n",audioFilterGetResample());
+
+    
+//   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
+//   qfprintf(fd,"app.audio.normalizeValue=%d;\n",audioGetNormalizeValue());
+//   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
+// if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
+   if(CHANNEL_INVALID!=audioFilterGetMixer())
+        qfprintf(fd,"app.audio.mixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
+
    
-#if 0   
-   //qfprintf(fd,"app.audio.process=%s;\n",truefalse[audioProcessMode()]);
-   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
-   qfprintf(fd,"app.audio.normalizeValue=%d;\n",audioGetNormalizeValue());
-   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
-   qfprintf(fd,"app.audio.mixer(\"%s\");\n",getCurrentMixerString());
-
-    // VBR ?
-    if(currentaudiostream)
-    {
-        uint32_t encoding=currentaudiostream->getInfo()->encoding;
-        if((encoding==WAV_MP3 || encoding==WAV_MP2))
-        {
-            qfprintf(fd,"app.audio.scanVBR();\n");
-        }
-    }
-
 
    // Change fps ?
-        switch(audioGetFpsConv())
+        switch(audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
                 case FILMCONV_PAL2FILM:  qfprintf(fd,"app.audio.pal2film=true;\n");break;
                 case FILMCONV_FILM2PAL:  qfprintf(fd,"app.audio.film2pal=true;\n");break;
                 default:ADM_assert(0);
         }
-   // Resampling
-        switch(audioGetResampling())
-        {
-                case RESAMPLING_NONE:         ;break;
-                case RESAMPLING_CUSTOM:        qfprintf(fd,"app.audio.resample=%u;\n",audioGetResample());break;
-                default:ADM_assert(0);
-        }
-        if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
+   
+       
         
-#endif        
+  
   // -------- Muxer -----------------------
         qfprintf(fd,"\n//** Muxer **\n");
         CONFcouple *containerConf=NULL;

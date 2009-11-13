@@ -67,11 +67,28 @@ typedef enum
 bool ADM_audioCompareChannelMapping(WAVHeader *wh1, WAVHeader *wh2,CHANNEL_TYPE *map1,CHANNEL_TYPE *map2);
 
 
+
 typedef struct
 {
   const char    *desc;
   CHANNEL_CONF  conf;
 }AudioChannelDesc;
+
+const AudioChannelDesc mixerStringDescriptor[]=
+{
+#define MUXERSTRING(x) {#x,CHANNEL_##x}
+    MUXERSTRING(MONO),
+    MUXERSTRING(STEREO),
+    MUXERSTRING(2F_1R),
+    MUXERSTRING(3F),
+    MUXERSTRING(3F_1R),
+    MUXERSTRING(2F_2R),
+    MUXERSTRING(3F_2R),
+    MUXERSTRING(3F_2R_LFE),
+    MUXERSTRING(DOLBY_PROLOGIC),
+    MUXERSTRING(DOLBY_PROLOGIC2)
+};
+#undef MUXERSTRING
 const AudioChannelDesc localDownmixing[]=
 {
   {"No downmixing (multichannel)", CHANNEL_INVALID},
@@ -80,5 +97,11 @@ const AudioChannelDesc localDownmixing[]=
   {"Dolby Prologic II", CHANNEL_DOLBY_PROLOGIC2}
   
 };
+
+const char *AudioMixerIdToString(CHANNEL_CONF  cnf);
+CHANNEL_CONF AudioMuxerStringToId(const char *st);
+
 #define NB_LOCAL_DOWNMIX (sizeof(localDownmixing)/sizeof(AudioChannelDesc))
+#define NB_MIXER_DESC    (sizeof(mixerStringDescriptor)/sizeof(AudioChannelDesc))
+
 #endif
