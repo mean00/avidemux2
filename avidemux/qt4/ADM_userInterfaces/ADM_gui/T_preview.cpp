@@ -27,7 +27,7 @@
 #endif
 
 #include "T_preview.h"
-#include "Q_seekablePreview.h"
+//#include "Q_seekablePreview.h"
 #include "../ADM_render/GUI_render.h"
 #include "../ADM_render/GUI_accelRender.h"
     
