@@ -35,4 +35,7 @@ uint32_t                ADM_vf_getTag(int index);
 
 bool                    ADM_vf_addFilterFromTag(uint32_t tag);
 bool                    ADM_vf_removeFilterAtIndex(int index);
+bool                    ADM_vf_configureFilterAtIndex(int index);
+bool                    ADM_vf_moveFilterDown(int index);
+bool                    ADM_vf_moveFilterUp(int index);
 #endif

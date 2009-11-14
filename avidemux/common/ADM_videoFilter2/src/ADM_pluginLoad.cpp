@@ -125,7 +125,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
     
     }else   
     {
-        plugin->tag=ADM_videoFilterPluginsList[info->category].size();
+        plugin->tag=ADM_videoFilterPluginsList[info->category].size()+info->category*100;
         ADM_videoFilterPluginsList[info->category].push_back(plugin);
     }
 

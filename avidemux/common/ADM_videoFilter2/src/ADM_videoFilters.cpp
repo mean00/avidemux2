@@ -87,6 +87,37 @@ bool                    ADM_vf_addFilterFromTag(uint32_t tag)
     return true;
 }
 /**
+    \fn ADM_vf_recreateChain
+    \brief Rebuild the whole filterchain
+*/
+static bool ADM_vf_recreateChain(void)
+{
+    ADM_assert(bridge);
+    ADM_coreVideoFilter *f=bridge;
+    
+    std::vector<ADM_coreVideoFilter *> bin;
+    for(int i=0;i<ADM_VideoFilters.size();i++)
+    {
+            // Get configuration
+            CONFcouple *c;
+            ADM_coreVideoFilter *old=ADM_VideoFilters[i].instance;
+            uint32_t tag=ADM_VideoFilters[i].tag;
+            old->getCoupledConf(&c);
+            ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
+            ADM_VideoFilters[i].instance=nw;
+            bin.push_back(old);
+            if(c) delete c;
+            f=nw;
+    }
+    // Now delete bin
+    for(int i=0;i<bin.size();i++)
+    {
+        delete bin[i];
+    }
+    bin.clear();
+    return true;
+}
+/**
     \fn ADM_vf_removeFilterAtIndex
     
 */
@@ -95,17 +126,60 @@ bool ADM_vf_removeFilterAtIndex(int index)
     ADM_info("Deleting video filter at index %d\n",index);
     //
     ADM_assert(index<ADM_vf_getSize());
-    if(index==ADM_vf_getSize()-1)
+    // last filter, destroy..
+    ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
+    delete e->instance;
+    ADM_VideoFilters.erase(ADM_VideoFilters.begin() + index);        
+    return ADM_vf_recreateChain();
+}
+/**
+    \fn ADM_vf_configureFilterAtIndex
+*/
+bool ADM_vf_configureFilterAtIndex(int index)
+{
+    ADM_info("Configuring filter at index %d\n",index);
+    //
+    ADM_assert(index<ADM_vf_getSize());
+    ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
+    if(e->instance->configure())
     {
-        // last filter, destroy..
-        ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
-        delete e->instance;
-        ADM_VideoFilters.clear();
-        ADM_info("Deleting last filter\n");
-        return true;
+        if(e->instance->configure())
+        {
+            return ADM_vf_recreateChain();
+        }
     }
-    // Else we have a==b==c => a==c==d ...
-    // So we need to create an new string from c to the end...
     return true;
+}
+
+/**
+    \fn ADM_vf_moveFilterUp
+*/
+bool ADM_vf_moveFilterUp(int index)
+{
+    ADM_info("Moving up filter at index %d\n",index);
+    //
+    ADM_assert(index);
+    uint32_t top=index-1;
+    ADM_VideoFilterElement scratch=ADM_VideoFilters[top];
+
+    ADM_VideoFilters[top]=ADM_VideoFilters[top+1];
+    ADM_VideoFilters[top+1]=scratch;
+    return ADM_vf_recreateChain();
+}
+
+/**
+    \fn ADM_vf_moveFilterDown
+*/
+bool ADM_vf_moveFilterDown(int index)
+{
+    ADM_info("Moving down filter at index %d\n",index);
+    //
+    ADM_assert(index+1<ADM_VideoFilters.size());
+    uint32_t top=index;
+    ADM_VideoFilterElement scratch=ADM_VideoFilters[top];
+
+    ADM_VideoFilters[top]=ADM_VideoFilters[top+1];
+    ADM_VideoFilters[top+1]=scratch;
+    return ADM_vf_recreateChain();
 }
 // EOF

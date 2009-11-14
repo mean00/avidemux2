@@ -148,7 +148,7 @@ void filtermainWindow::add( bool b)
      tag=index; //filterCategories[family][index]->tag;
      ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
 
-     if(true==ADM_vf_addFilterFromTag(tag))
+     if(true==ADM_vf_addFilterFromTag(itag))
         {
             buildActiveFilterList();
             setSelected(nb_active_filter-1);
@@ -206,33 +206,25 @@ MAKE_BUTTON(halfD1,setHalfD1)
 */
 void filtermainWindow::configure( bool b)
 {
-#if 0
    /* Get selection if any */
   /* Now that we have the tab, get the selection */
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
-      printf("No selection\n");
+      ADM_warning("No selection\n");
       return;
    }
     
      int itag=item->type();
-     ADM_assert(itag>ACTIVE_FILTER_BASE);
+     ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-      printf("Rank : %d\n",itag); 
-     ADM_assert(itag);
+      ADM_info("Rank : %d\n",itag); 
+   //   ADM_assert(itag);
      /**/
-     
-        if(!videofilters[itag].filter->configure (videofilters[itag - 1].filter)) return;
-        /* Recreate chain if needed , config has changed */
-        CONFcouple *couple;
-        videofilters[itag].filter->getCoupledConf (&couple);
-        videofilters[itag].conf = couple;
-        getFirstVideoFilter ();
+        ADM_vf_configureFilterAtIndex(itag);
         buildActiveFilterList ();
 		setSelected(itag);
-#endif
 }
 /**
         \fn     up( bool b)
@@ -240,32 +232,22 @@ void filtermainWindow::configure( bool b)
 */
 void filtermainWindow::up( bool b)
 {
-#if 0
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
-      printf("No selection\n");
+      ADM_warning("No selection\n");
       return;
    }
     
      int itag=item->type();
-     ADM_assert(itag>ACTIVE_FILTER_BASE);
+     ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
-     /* Filter 0 is the decoder ...*/
-      printf("Rank : %d\n",itag); 
-     ADM_assert(itag);
+      ADM_info("Rank : %d\n",itag); 
      
-     if (itag < 2) return;
-        // swap action parameter & action parameter -1
-        FILTER tmp;
-        memcpy (&tmp, &videofilters[itag - 1], sizeof (FILTER));
-        memcpy (&videofilters[itag - 1],
-            &videofilters[itag], sizeof (FILTER));
-        memcpy (&videofilters[itag], &tmp, sizeof (FILTER));
-        getFirstVideoFilter ();
+        if (!itag ) return;
+        ADM_vf_moveFilterUp(itag);
         buildActiveFilterList ();
         setSelected(itag-1);
-#endif
 }
 /**
         \fn     down( bool b)
@@ -273,34 +255,26 @@ void filtermainWindow::up( bool b)
 */
 void filtermainWindow::down( bool b)
 {
-#if 0
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
-      printf("No selection\n");
+      ADM_warning("No selection\n");
       return;
    }
     
      int itag=item->type();
-     ADM_assert(itag>ACTIVE_FILTER_BASE);
+     ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-      printf("Rank : %d\n",itag); 
-     ADM_assert(itag);
+      ADM_info("Rank : %d\n",itag); 
+     //ADM_assert(itag);
      
-    if (((int) itag < (int) (nb_active_filter - 1)) && (itag))
+    if (((int) itag < (int) (nb_active_filter - 1)))
         {
-            // swap action parameter & action parameter -1
-            FILTER tmp;
-            memcpy (&tmp, &videofilters[itag + 1], sizeof (FILTER));
-            memcpy (&videofilters[itag + 1],
-                        &videofilters[itag], sizeof (FILTER));
-            memcpy (&videofilters[itag], &tmp, sizeof (FILTER));
-            getFirstVideoFilter ();
+            ADM_vf_moveFilterDown(itag);
             buildActiveFilterList ();
             setSelected(itag+1);
         }
-#endif
 }
 /**
         \fn     filtermainWindow::filterFamilyClick( QListWidgetItem  *item)
@@ -383,11 +357,11 @@ void filtermainWindow::partial( bool b)
    }
     
      int itag=item->type();
-     ADM_assert(itag>ACTIVE_FILTER_BASE);
+     ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-      printf("Rank : %d\n",itag); 
-      ADM_assert(itag);
+      ADM_info("Rank : %d\n",itag); 
+      //ADM_assert(itag);
      
         AVDMGenericVideoStream *replace;
         CONFcouple *conf;
@@ -442,6 +416,7 @@ void filtermainWindow::buildActiveFilterList(void)
             ADM_coreVideoFilter     *instance=ADM_vf_getInstance(i);
             const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
             const char *conf=instance->getConfiguration();
+            printf("%d %s\n",i,name);
 #if 0            
 		const char *name = instance->;
 		const char *conf = videofilters[i].filter->printConf ();
