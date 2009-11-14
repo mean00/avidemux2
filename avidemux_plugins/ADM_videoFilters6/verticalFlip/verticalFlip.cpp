@@ -64,6 +64,20 @@ verticalFlipFilter::~verticalFlipFilter()
 {
 		
 }
+
+static void flipMe(uint8_t *data, uint32_t w,uint32_t h)
+{
+    uint8_t scratch[w];
+    int count=h>>1;
+    for(int i=0;i<count;i++)
+    {
+        uint8_t *top=data+w*i;
+        uint8_t *bottom=data+(h-i-1)*w;
+        memcpy(scratch, top,w);
+        memcpy(top, bottom,w);
+        memcpy(bottom,scratch,w);
+    }
+}
 /**
     \fn getFrame
     \brief Get a processed frame
@@ -71,7 +85,18 @@ verticalFlipFilter::~verticalFlipFilter()
 bool verticalFlipFilter::getFrame(uint32_t frame,ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
-    return previousFilter->getFrame(frame,image);
+    if(false==previousFilter->getFrame(frame,image))
+    {
+        ADM_warning("Vertical flip : Cannot get frame\n");
+        return false;
+    }
+    // do in place flip
+    int w=info.width;
+    int h=info.height;
+    flipMe(YPLANE(image),w,h);
+    flipMe(UPLANE(image),w>>1,h>>1);
+    flipMe(VPLANE(image),w>>1,h>>1);
+    return true;
 }
 /**
     \fn getCoupledConf
