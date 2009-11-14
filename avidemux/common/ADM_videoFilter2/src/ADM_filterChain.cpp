@@ -23,33 +23,4 @@
 
 
 
-/**
-    \fn createVideoFilterChain
-    \brief Create a filter chain
-*/
-ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
-{
-    ADM_videoFilterChain *chain=new ADM_videoFilterChain;
-    // 1- Add bridge always # 1
-    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(startAt,endAt);
-    chain->push_back(bridge);
-    return chain;
-}
-/**
-        \fn destroyVideoFilterChain
-        \brief Destroy a filter chain
-*/
-bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain)
-{
-    ADM_assert(chain->size());
-    for(int i=0;i<chain->size();i++)
-    {
-        ADM_coreVideoFilter *filter=(*chain)[i];
-        delete filter;
-        (*chain)[i]=NULL;
-    }
-    chain->clear();
-    return true;
-}
-
 // EOF

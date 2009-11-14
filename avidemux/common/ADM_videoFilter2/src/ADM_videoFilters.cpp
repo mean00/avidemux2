@@ -17,6 +17,7 @@
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterBridge.h"
+#include "ADM_filterChain.h"
 static ADM_coreVideoFilter *bridge=NULL;
 
 std::vector<ADM_VideoFilterElement> ADM_VideoFilters;
@@ -181,5 +182,53 @@ bool ADM_vf_moveFilterDown(int index)
     ADM_VideoFilters[top]=ADM_VideoFilters[top+1];
     ADM_VideoFilters[top+1]=scratch;
     return ADM_vf_recreateChain();
+}
+
+
+
+/**
+    \fn createVideoFilterChain
+    \brief Create a filter chain
+*/
+ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
+{
+    ADM_videoFilterChain *chain=new ADM_videoFilterChain;
+    // 1- Add bridge always # 1
+    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(startAt,endAt);
+    chain->push_back(bridge);
+    ADM_coreVideoFilter *f=bridge;
+    // Now create a clone of the videoFilterChain we have here
+    int nb=ADM_VideoFilters.size();
+    for(int i=0;i<nb;i++)
+    {
+            // Get configuration
+            CONFcouple *c;
+            ADM_coreVideoFilter *old=ADM_VideoFilters[i].instance;
+            uint32_t tag=ADM_VideoFilters[i].tag;
+            old->getCoupledConf(&c);
+
+            ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
+            if(c) delete c;
+            f=nw;
+            chain->push_back(nw);
+    }
+    return chain;
+}
+/**
+        \fn destroyVideoFilterChain
+        \brief Destroy a filter chain
+*/
+bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain)
+{
+    ADM_assert(chain->size());
+    int nb=chain->size();
+    for(int i=0;i<nb;i++)
+    {
+        ADM_coreVideoFilter *filter=(*chain)[i];
+        delete filter;
+        (*chain)[i]=NULL;
+    }
+    chain->clear();
+    return true;
 }
 // EOF
