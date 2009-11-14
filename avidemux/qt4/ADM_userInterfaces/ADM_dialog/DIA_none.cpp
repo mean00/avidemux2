@@ -15,11 +15,7 @@
  ***************************************************************************/
 #include "config.h"
 #include "ADM_default.h"
-#include "ADM_videoFilter.h"
-
-
-
-
+//#include "ADM_videoFilter.h"
 
 #include "ADM_encoderConf.h"
 //#include "ADM_audioEncoder/include/audioencoder_enum.h"
@@ -43,9 +39,10 @@ uint8_t DIA_glyphEdit(void){ return 0;};
 int32_t UI_readJog(void) {return 0;}
 struct THRESHOLD_PARAM;
 struct ADMVideoThreshold;
-uint8_t DIA_threshold(AVDMGenericVideoStream *in,
+/*uint8_t DIA_threshold(AVDMGenericVideoStream *in,
                       ADMVideoThreshold * thresholdp,
                       THRESHOLD_PARAM * param) { return 255; }
+
 struct SWISSARMYKNIFE_PARAM;
 struct ADMVideoSwissArmyKnife;
 struct MenuMapping;
@@ -68,5 +65,6 @@ uint8_t DIA_particle (AVDMGenericVideoStream *in,
                       PARTICLE_PARAM * param,
                       const MenuMapping * menu_mapping,
                       uint32_t menu_mapping_count) { return 255; }
+*/
 
 //EOF

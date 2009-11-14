@@ -29,7 +29,7 @@
 
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 #include "prefs.h"
 
 #include "ADM_debugID.h"

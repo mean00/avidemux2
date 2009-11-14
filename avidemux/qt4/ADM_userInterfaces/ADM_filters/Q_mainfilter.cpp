@@ -36,6 +36,7 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_filterCategory.h"
 #include "ADM_videoFilterApi.h"
+#include "ADM_videoFilters.h"
 
 #include "prefs.h"
 
@@ -49,7 +50,7 @@ static int max=0;
 #define ALL_FILTER_BASE       1000
 #define ACTIVE_FILTER_BASE    3000
 /******************************************************/
-uint32_t nb_active_filter=1;
+#define nb_active_filter ADM_vf_getSize()
 
 /*******************************************************/
 
@@ -118,8 +119,7 @@ void filtermainWindow::preview(bool b)
 */
 void filtermainWindow::setSelected( int sel)
 {
-  if(!sel) return;
-  activeList->setCurrentRow(sel-1);
+  activeList->setCurrentRow(sel);
 }
 
 /**
@@ -128,45 +128,34 @@ void filtermainWindow::setSelected( int sel)
 */
 void filtermainWindow::add( bool b)
 {
-#if 0
   /* Now that we have the tab, get the selection */
    QListWidgetItem *item=availableList->currentItem();
    VF_FILTERS tag;
    if(item)
    {
      int itag=item->type();
-     if(itag>=ALL_FILTER_BASE && itag < EXTERNAL_FILTER_BASE)
+
+     if(itag<ALL_FILTER_BASE || itag >= ALL_FILTER_BASE+(VF_MAX*100))
      {
-    	 // Extract family & index
-    	 itag-=ALL_FILTER_BASE;
-    	 int index=itag%100;
-    	 int family=(itag-index)/100;
-    	 ADM_assert(family<VF_MAX);
-    	 ADM_assert(index<filterCategories[family].size());
-         tag=filterCategories[family][index]->tag;
-     }else
-     {
-        ADM_assert(0); 
+            ADM_assert(0); 
      }
-      printf("Tag : %d\n",itag);
-      
-      // Create our filter...
-      
-       CONFcouple *coup;
-        videofilters[nb_active_filter].filter = filterCreateFromTag (tag, NULL, videofilters[nb_active_filter - 1].filter);
-        if(!videofilters[nb_active_filter].filter->    configure (videofilters[nb_active_filter - 1].filter))
+     // Extract family & index
+     itag-=ALL_FILTER_BASE;
+     int index=itag%100;
+     int family=(itag-index)/100;
+     ADM_assert(family<VF_MAX);
+     ADM_assert(index<ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family));
+     tag=index; //filterCategories[family][index]->tag;
+     ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
+
+     if(true==ADM_vf_addFilterFromTag(tag))
         {
-            delete videofilters[nb_active_filter].filter;
-            return;
+            buildActiveFilterList();
+            setSelected(nb_active_filter-1);
         }
-        videofilters[nb_active_filter].filter->getCoupledConf (&coup);
-        videofilters[nb_active_filter].tag = tag;
-        videofilters[nb_active_filter].conf = coup;
-        nb_active_filter++;
-		buildActiveFilterList();
-        setSelected(nb_active_filter - 1);
+     
    }
-#endif
+
 }
 /**
         \fn     remove( bool b)
@@ -174,53 +163,25 @@ void filtermainWindow::add( bool b)
 */
 void filtermainWindow::remove( bool b)
 {
-#if 0
    /* Get selection if any */
   /* Now that we have the tab, get the selection */
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
-      printf("No selection\n");
+      ADM_warning("No selection\n");
       return;
    }
-    
+     
      int itag=item->type();
-     ADM_assert(itag>ACTIVE_FILTER_BASE);
+     ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
-     /* Filter 0 is the decoder ...*/
-      printf("Rank : %d\n",itag); 
-     ADM_assert(itag);
-     /**/
-      if (videofilters[itag].conf)
-            {
-                    delete videofilters[itag].conf;
-                    videofilters[itag].conf = NULL;
-            }
-        // recreate derivated filters
-
-        for (uint32_t i = itag ; i < nb_active_filter-1; i++)
-        {
-                    delete videofilters[i ].filter;
-                    videofilters[i ].filter = filterCreateFromTag(videofilters[i+1].tag,
-                                                    videofilters[i+1].conf,
-                                                    videofilters[i - 1].filter);
-                    videofilters[i ].conf = videofilters[i+1].conf;
-                    videofilters[i ].tag = videofilters[i+1].tag;
-        }
-        
-        /* Delete last filter which is now at last filter -1 */
-            delete videofilters[nb_active_filter - 1].filter;
-            videofilters[nb_active_filter - 1].filter = NULL;
-            nb_active_filter--;
-            buildActiveFilterList ();
-            if(nb_active_filter>1)
-            {
-              if(itag<nb_active_filter-1)
-                  setSelected(itag);
-              else
-                  setSelected(nb_active_filter-1);
-            }
-#endif  
+     ADM_info("Deleting item %d\n",itag);
+     ADM_vf_removeFilterAtIndex(itag);
+     buildActiveFilterList ();
+     if(nb_active_filter)
+     {
+          setSelected(nb_active_filter-1);
+     }
 }
 #if 1
 #define MAKE_BUTTON(button,call) \
@@ -472,12 +433,17 @@ void filtermainWindow::setupFilters(void)
 */
 void filtermainWindow::buildActiveFilterList(void)
 {
-#if 0
-	activeList->clear();
 
-	for (uint32_t i = 1; i < nb_active_filter; i++)
+	activeList->clear();
+    int nb=ADM_vf_getSize();
+	for (uint32_t i = 0; i < nb; i++)
 	{
-		const char *name = filterGetNameFromTag(videofilters[i].tag);
+            uint32_t                instanceTag=ADM_vf_getTag(i);
+            ADM_coreVideoFilter     *instance=ADM_vf_getInstance(i);
+            const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
+            const char *conf=instance->getConfiguration();
+#if 0            
+		const char *name = instance->;
 		const char *conf = videofilters[i].filter->printConf ();
 		int namelen = strlen (name);
 
@@ -490,12 +456,12 @@ void filtermainWindow::buildActiveFilterList(void)
 			while (*conf == ' ' || *conf == ':')
 				++conf;
 		}
-
+#endif
 		QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
 		QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
 		activeList->addItem(item);
 	}
-#endif
+
 }
   /**
   */

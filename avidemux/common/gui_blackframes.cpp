@@ -33,8 +33,8 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_render/GUI_render.h"
 #include "DIA_working.h"
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
+//#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter_internal.h"
 #include "ADM_commonUI/DIA_busy.h"
 #include "ADM_commonUI/GUI_ui.h"
 

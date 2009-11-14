@@ -37,8 +37,8 @@
 
 
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
+//#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter_internal.h"
 #include "ADM_render/GUI_render.h"
 
 #include "ADM_debugID.h"
@@ -49,8 +49,8 @@
 #include "ADM_preview.h"
 #define MAX(a,b) ( (a)>(b) ? (a) : (b) )
 
-extern FILTER  videofilters[VF_MAX_FILTER];
-extern uint32_t nb_active_filter;
+//extern FILTER  videofilters[VF_MAX_FILTER];
+//extern uint32_t nb_active_filter;
 extern void    UI_setCurrentTime(uint64_t curTime);
 
 static void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
@@ -187,15 +187,17 @@ void 	admPreview::start( void )
             ADM_assert(!original);
             switch(previewMode)
             {
+#if 0
               case  ADM_PREVIEW_SEPARATE:
                   DIA_previewInit(preview->getInfo()->width,preview->getInfo()->height);
-                  
+#endif                  
                   /* no break here, not a mistake */
               case  ADM_PREVIEW_NONE:
               
                   rdrWindowWUnzoomed=rdrPhysicalW;
                   rdrWindowHUnzoomed=rdrPhysicalH;
                   break;
+#if 0
               case  ADM_PREVIEW_OUTPUT:
                   rdrWindowWUnzoomed=preview->getInfo()->width;
                   rdrWindowHUnzoomed=preview->getInfo()->height;
@@ -215,6 +217,7 @@ void 	admPreview::start( void )
                   original=new ADMImage(rdrWindowWUnzoomed,rdrWindowHUnzoomed);
                   break;
               }
+#endif
               default: ADM_assert(0);
             }
         if(zoom!=ZOOM_1_1)
@@ -255,6 +258,7 @@ void 	admPreview::start( void )
 void admPreview::stop( void )
 {
   renderLock();
+#if 0
       if(previewMode==ADM_PREVIEW_SEPARATE)
                 DIA_previewEnd();
       if(  previewMode==ADM_PREVIEW_SIDE || previewMode==ADM_PREVIEW_TOP)
@@ -263,6 +267,7 @@ void admPreview::stop( void )
         delete original;
         original=NULL; 
       }
+#endif
       renderResize(rdrWindowWUnzoomed,rdrWindowHUnzoomed,rdrWindowWUnzoomed,rdrWindowHUnzoomed);
       if(previewImage)
       {
@@ -582,6 +587,7 @@ void admPreview::displayNow(void)
                 renderUpdateImage(resized->data,zoom);
             }
             break;
+#if 0
       case ADM_PREVIEW_SEPARATE:
             if(zoom==ZOOM_1_1 || renderHasAccelZoom()  )
             {
@@ -606,6 +612,7 @@ void admPreview::displayNow(void)
               renderUpdateImage(resized->data,zoom);
             }
               break;
+#endif
       default: ADM_assert(0);
     }
 }

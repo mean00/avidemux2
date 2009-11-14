@@ -21,7 +21,7 @@ Indexer progress dialog
 
 #include "T_index_pg.h"
 #include "ADM_default.h"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 //#include "ADM_encoderConf.h"
 //#include "ADM_encoder/adm_encoder.h"
 #include "DIA_idx_pg.h"

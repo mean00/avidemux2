@@ -7,7 +7,8 @@ QT4_WRAP_CPP(${ADM_LIB}_source
 SET(${ADM_LIB}_T
 	T_bitrate.cpp  T_button.cpp  T_dialogFactory.cpp  T_filesel.cpp  T_menu.cpp
 	T_slider.cpp  T_threadCount.cpp  T_toggle.cpp  T_notch.cpp
-    T_flyDialogQt4.cpp T_QCanvas.cpp
+        #T_flyDialogQt4.cpp 
+        #T_QCanvas.cpp
 )
 
 SET(${ADM_LIB}_SRCS

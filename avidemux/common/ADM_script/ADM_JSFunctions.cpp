@@ -34,7 +34,7 @@
 #include "adm_scanner.h" 
 #include "avi_vars.h"
 #include "gui_action.hxx"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 #include "ADM_editor/ADM_outputfmt.h"
 
 #include "ADM_script/ADM_container.h"

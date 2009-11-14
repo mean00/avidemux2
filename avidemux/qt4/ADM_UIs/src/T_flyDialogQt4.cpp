@@ -20,7 +20,7 @@
 
 #include "ADM_default.h"
 
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 #include "DIA_flyDialogQt4.h"
 

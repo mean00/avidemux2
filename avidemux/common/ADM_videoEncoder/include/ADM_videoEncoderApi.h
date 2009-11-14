@@ -19,6 +19,7 @@
 #define ADM_VIDEO_ENCODER_API_H
 class ADM_coreVideoEncoder;
 class ADM_coreVideoFilter;
+class CONFcouple;
 // Spawn a new encoder using the index from the menu = the index in the vector
 ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
 

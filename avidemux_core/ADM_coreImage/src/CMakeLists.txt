@@ -1,6 +1,6 @@
 SET(ADM_coreImage_SRCS 
-        ADM_videoFilter.cpp  
-        ADM_videoFilterCache.cpp
+#        ADM_videoFilter.cpp  
+        #ADM_videoFilterCache.cpp
         ADM_image.cpp  
         ADM_imageUtils.cpp
         ADM_imageResizer.cpp
@@ -10,12 +10,12 @@ SET(ADM_coreImage_SRCS
         ADM_rgb.cpp
         ADM_pp.cpp
         ADM_print.cpp
-        ADM_vidFieldUtil.cpp
-        ADM_vidFields.cpp
-        ADM_vidFieldASM.cpp
-        ADM_vidFieldBlend.cpp
-        ADM_interlaceUtil.cpp
-        DIA_flyDialog.cpp
+        #ADM_vidFieldUtil.cpp
+        #ADM_vidFields.cpp
+        #ADM_vidFieldASM.cpp
+        #ADM_vidFieldBlend.cpp
+#        ADM_interlaceUtil.cpp
+#        DIA_flyDialog.cpp
         ADM_imageSave.cpp
 )
 

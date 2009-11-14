@@ -18,7 +18,7 @@
 #include "ui_seekablePreview.h"
 
 #include "ADM_assert.h"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 #include "../ADM_dialog/DIA_flyPreview.h"
 

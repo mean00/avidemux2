@@ -125,7 +125,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
     
     }else   
     {
-        plugin->tag=lastTag++;
+        plugin->tag=ADM_videoFilterPluginsList[info->category].size();
         ADM_videoFilterPluginsList[info->category].push_back(plugin);
     }
 
@@ -206,6 +206,42 @@ uint8_t ADM_vf_loadPlugins(const char *path)
 
 	return 1;
 }
-
-
+/**
+    \fn ADM_vf_getPluginFromTag
+    \brief 
+*/
+static ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag)
+{
+    for(int cat=0;cat<VF_MAX;cat++)
+    {
+        int nb=ADM_videoFilterPluginsList[cat].size();
+        for(int i=0;i<nb;i++)
+        {
+            if(ADM_videoFilterPluginsList[cat][i]->tag==tag)
+            {
+                return ADM_videoFilterPluginsList[cat][i];
+            }
+        }
+    }
+    ADM_error("Cannot get video filter from tag %"LU"\n",tag);
+    ADM_assert(0);
+}
+/**
+    \fn ADM_VideoFilters
+    \brief
+*/
+const char *ADM_vf_getDisplayNameFromTag(uint32_t tag)
+{
+    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    return plugin->info.displayName;
+}
+/**
+    \fn ADM_vf_createFromTag
+    \brief Create a new filter from its tag
+*/
+ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag,ADM_coreVideoFilter *last,CONFcouple *couples)
+{
+     ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+     return plugin->create(last,couples);
+}
 //EOF

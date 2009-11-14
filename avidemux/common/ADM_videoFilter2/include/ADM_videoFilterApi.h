@@ -13,13 +13,18 @@
  ***************************************************************************/
 #ifndef ADM_VIDEO_FILTER_API_H
 #define ADM_VIDEO_FILTER_API_H
+#include <vector>
+#include "ADM_filterCategory.h"
+class ADM_coreVideoFilter;
+class CONFcouple;
+uint8_t     ADM_vf_loadPlugins(const char *path);
 
-uint8_t ADM_vf_loadPlugins(const char *path);
+uint32_t    ADM_vf_getNbFilters(void);
+uint32_t    ADM_vf_getNbFiltersInCategory(VF_CATEGORY cat);
 
-uint32_t ADM_vf_getNbFilters(void);
-uint32_t ADM_vf_getNbFiltersInCategory(VF_CATEGORY cat);
+bool        ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const char **desc, uint32_t *major,uint32_t *minor,uint32_t *patch);
+const char *ADM_vf_getDisplayNameFromTag(uint32_t tag);
 
-bool     ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const char **desc, uint32_t *major,uint32_t *minor,uint32_t *patch);
-
+ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag,ADM_coreVideoFilter *last,CONFcouple *couples);
 
 #endif //ADM_VIDEO_FILTER_API_H

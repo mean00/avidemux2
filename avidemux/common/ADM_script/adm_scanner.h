@@ -6,7 +6,7 @@
 #define ADMSCANNER
 
 #define ADM_MAX_VAR 50
-#include "ADM_videoFilter_iface.h"
+//#include "ADM_videoFilter_iface.h"
 
 typedef enum
 {
@@ -17,7 +17,7 @@ typedef enum
 	ASC_EXEC_FAILED
 }ASC_ERROR;
 
-int PushParam(APM_TYPE, char *value);
+//int PushParam(APM_TYPE, char *value);
 int Call(char *string);
 
 

@@ -19,14 +19,14 @@
 #include "ADM_commonUI/GUI_ui.h"
 #include "avi_vars.h"
 #include "gui_action.hxx"
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
+
+
 #include "ADM_editor/ADM_outputfmt.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_script/ADM_container.h"
 #include "ADM_videoEncoderApi.h"
 
-extern VF_FILTERS filterGetTagFromName(const char *inname);
+//extern VF_FILTERS filterGetTagFromName(const char *inname);
 extern uint8_t A_ListAllBlackFrames( char *file );
 extern uint8_t loadVideoCodecConfString( const char *name);
 extern uint8_t ADM_saveRaw (const char *name);

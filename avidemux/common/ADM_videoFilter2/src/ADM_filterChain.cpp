@@ -19,6 +19,10 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_filterChain.h"
 #include "ADM_videoFilterBridge.h"
+
+
+
+
 /**
     \fn createVideoFilterChain
     \brief Create a filter chain

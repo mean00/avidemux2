@@ -20,7 +20,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 
 #include "ADM_coreDemuxerMpeg/include/dmx_identify.h"
 
