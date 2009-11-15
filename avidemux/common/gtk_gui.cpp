@@ -394,20 +394,21 @@ int nw;
     case ACT_ResetSegments:
        if(avifileinfo)
          if(GUI_Question(QT_TR_NOOP("Are you sure?")))
-	{
-		video_body->resetSeg();
-  		video_body->getVideoInfo (avifileinfo);
+        {
+            video_body->resetSeg();
+            video_body->getVideoInfo (avifileinfo);
 		
       		GUI_setAllFrameAndTime ();
             A_ResetMarkers();
       		ReSync ();
 
-		// forget last project file
-		if( actual_workbench_file ){
-			ADM_dealloc(actual_workbench_file);
-			actual_workbench_file = NULL;
-		}
-	}
+            // forget last project file
+            if( actual_workbench_file )
+            {
+                ADM_dealloc(actual_workbench_file);
+                actual_workbench_file = NULL;
+            }
+        }
 	break;
 
     case ACT_Delete:
@@ -1165,7 +1166,6 @@ void A_Resync(void)
         if(!avifileinfo) return;
         GUI_setAllFrameAndTime();
         UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
-        GUI_GoToFrame(0);
 }
 uint8_t  DIA_job_select(char **jobname, char **filename);
 void A_addJob(void)
@@ -1416,8 +1416,11 @@ ADM_RENDER_TYPE UI_getPreferredRender(void)
 void A_ResetMarkers(void)
 {
 uint64_t duration=video_body->getVideoDuration();
+        ADM_info("Video Total duration : %s ms\n",ADM_us2plain(duration));
         video_body->setMarkerAPts(0);
         video_body->setMarkerBPts(duration);
+        UI_setMarkers(0,duration);
+        
 }
 /**
     \fn A_Rewind
