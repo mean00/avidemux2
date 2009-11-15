@@ -4,10 +4,12 @@
 */
 #ifndef ADM_vf_plugin_h
 #define ADM_vf_plugin_h
+#include <stddef.h>
 #include "ADM_default.h"
 #include "DIA_uiTypes.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_filterCategory.h"
+#include "ADM_paramList.h"
 
 #define VF_API_VERSION 1
 /* These are the 6 functions exported by each plugin ...*/
