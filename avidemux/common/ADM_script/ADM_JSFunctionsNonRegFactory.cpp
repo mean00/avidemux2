@@ -9,6 +9,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include <string>
 #include "ADM_default.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -25,7 +26,6 @@
 #include <limits.h>
 #include <math.h>
 #include <vector>
-#include <string>
 #include "ADM_JSAvidemux.h"
 #include "ADM_JSGlobal.h"
 #include "ADM_default.h"

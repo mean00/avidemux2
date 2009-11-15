@@ -12,10 +12,10 @@ echo "<<<<<<<<<<<<Cross compiling plugins>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$MINGW \
         -DCMAKE_INCLUDE_PATH=$MINGW/include -DCMAKE_LIBRARY_PATH=$MINGW/lib \
         -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
-        -DCMAKE_C_COMPILER:STRING=$PREFIX-gcc \
-        -DCMAKE_CXX_COMPILER:STRING=$PREFIX-g++ \
-        -DCMAKE_LINKER:STRING=$PREFIX-ld \
-        -DCMAKE_AR:STRING=$PREFIX-ar \
+        -DCMAKE_C_COMPILER:STRING=$CROSS_PREFIX-gcc \
+        -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
+        -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
+        -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         -DQT_HOME:STRING=$QT_HOME \
          $DEBUG -G "CodeBlocks - Unix Makefiles"  \

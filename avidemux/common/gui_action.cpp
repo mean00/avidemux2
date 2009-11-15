@@ -1,3 +1,4 @@
+#include <iterator>
 #include "ADM_default.h"
 #include <strings.h>
 
@@ -6,7 +7,6 @@ using std::vector;
 #include <utility>
 using std::pair;
 using std::make_pair;
-#include <iterator>
 using std::back_inserter;
 #include <algorithm>
 using std::transform;

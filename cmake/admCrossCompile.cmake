@@ -3,12 +3,12 @@ if(CROSS)
         MESSAGE(STATUS " ** Win32 Cross compiling activated, overriding cmake internals **")
         # the name of the target operating system
         SET(CMAKE_SYSTEM_NAME Windows)
-        
+        SET(PFIX  $ENV{CROSS_PREFIX})        
         # which compilers to use for C and C++
-        SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
-        SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
-        SET(CMAKE_LINKER i586-mingw32msvc-ld)
-        SET(CMAKE_AR i586-mingw32msvc-ar)
+        SET(CMAKE_C_COMPILER ${PFIX}-gcc)
+        SET(CMAKE_CXX_COMPILER ${PFIX}-g++)
+        SET(CMAKE_LINKER ${PFIX}-ld)
+        SET(CMAKE_AR ${PFIX}-ar)
         
         # here is the target environment located
         SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc ${CROSS} )

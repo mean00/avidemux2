@@ -1,6 +1,6 @@
 #!/bin/bash
 # ** Put your config here **
-export PREFIX=i586-mingw32msvc
+export CROSS_PREFIX=i586-mingw32msvc
 export SDLDIR=/mingw
 export MINGW=/mingw
 export QT_HOME=/mingw/Qt/4.5.2

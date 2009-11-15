@@ -12,7 +12,7 @@
 
 #ifndef NOAVIFMT
 
-#if !defined(__WINE_WINDEF_H) && !defined(_WINDEF_H)
+#if !defined(__WINE_WINDEF_H) && !defined(_WINDEF_H) && !defined(_WINDEF_)
 #define LOBYTE(w)              ((uint8_t)(uint16_t)(w))
 #define HIBYTE(w)              ((uint8_t)((uint16_t)(w) >> 8))
 
