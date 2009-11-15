@@ -316,6 +316,18 @@ bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint
             return true;
         }
     }
+    int max=segments.size();
+    if(max)
+    {
+        _SEGMENT *last=&(segments[max-1]);
+        if(frameTime==last->_startTimeUs+last->_durationUs)
+        {
+            ADM_info("End of last segment\n");
+            *seg=max-1;
+            *segTime=frameTime-last->_startTimeUs;
+            return true;
+        }
+    }
     ADM_warning("Cannot find segment matching time %"LLU"ms \n",frameTime/1000);
     return false;
 }
