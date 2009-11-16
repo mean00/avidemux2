@@ -36,6 +36,8 @@
 #include "ADM_vidMisc.h"
 #undef fopen
 #undef fclose
+#warning FIXME
+#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 //
 //    Sleep for n ms
 //
@@ -201,8 +203,13 @@ const char *ADM_us2plain(uint64_t ams)
 static char buffer[256];
 uint32_t ms=(uint32_t)(ams/1000);
     uint32_t hh,mm,ss,mms;
-    ms2time(ms,&hh,&mm,&ss,&mms);
-    sprintf(buffer," %02"LU":%02"LU":%02"LU",%03"LU" ",hh,mm,ss,mms);
+    if(ams==ADM_NO_PTS)
+        sprintf(buffer," xx:xx:xx,xxx ",hh,mm,ss,mms);
+    else    
+    {
+        ms2time(ms,&hh,&mm,&ss,&mms);
+        sprintf(buffer," %02"LU":%02"LU":%02"LU",%03"LU" ",hh,mm,ss,mms);
+    }
     return buffer;
 
 }
