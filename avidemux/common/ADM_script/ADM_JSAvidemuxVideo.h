@@ -46,6 +46,7 @@ public:
         static JSBool getFrameSize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	static JSBool getFrameType(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	static JSBool dumpEditing(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	static JSBool dumpTiming(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 
 	static JSPropertySpec avidemuxvideo_properties[];

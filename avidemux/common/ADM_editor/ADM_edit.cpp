@@ -38,6 +38,7 @@
 
 //#include "ADM_outputfmt.h"
 #include "ADM_edPtsDts.h"
+#include "ADM_vidMisc.h"
 
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
@@ -584,6 +585,29 @@ bool            ADM_Composer::dumpEditing(void)
     _segments.dump();
     return true;
 }
+/**
+    \fn dumpTiming
+*/
+bool               ADM_Composer::dumpTiming(void)
+{
+    if(!_segments.getNbRefVideos()) return true;
+    _VIDEOS *v=_segments.getRefVideo(0);
+   
+    aviInfo info;
+    v->_aviheader->getVideoInfo(&info);
+    int nb=info.nb_frames;
+    for(int i=0;i<nb;i++)
+    {
+        uint64_t pts,dts;
+        uint32_t flags;
 
+            v->_aviheader->getFlags(i,&flags);
+            v->_aviheader->getPtsDts(i,&pts,&dts);
+            printf("%"LU" flags:%04"LX" ",i,flags);
+            printf("pts :%s ",ADM_us2plain(pts));
+            printf("dts :%s \n",ADM_us2plain(dts));
+    }
+    return true;
+}
 //
 //

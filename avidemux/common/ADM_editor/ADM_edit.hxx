@@ -209,6 +209,7 @@ public:
                     bool                addSegment(uint32_t ref, uint64_t startRef, uint64_t duration);
                     bool                clearSegment(void);
                     bool                dumpEditing(void);
+                    bool                dumpTiming(void);
 /******************************* /Editing **********************************/										
 /******************************* Misc ************************************/				
                     uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);
