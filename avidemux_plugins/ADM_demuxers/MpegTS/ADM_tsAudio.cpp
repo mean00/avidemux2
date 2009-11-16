@@ -113,6 +113,10 @@ bool      ADM_tsAccess::goToTime(uint64_t timeUs)
 uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 {
     if(x==ADM_NO_PTS) return ADM_NO_PTS;
+    if(x<dtsOffset)
+    {
+        x+=1LL<<32;
+    }
     x=x-dtsOffset;
     x=x*1000;
     x/=90;

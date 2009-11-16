@@ -26,7 +26,7 @@
 TODO / FIXME : Handle wrap
 TODO / FIXME : Handle PTS reordering 
 */
-static uint64_t wrapIt(uint64_t val, uint64_t start)
+uint64_t wrapIt(uint64_t val, uint64_t start)
 {
     if(val==ADM_NO_PTS) return val;
     if(val>=start) return val-start;
