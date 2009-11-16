@@ -91,5 +91,89 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
 */
 bool setMpeg4PtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs)
 {
+    bool bframe=false;
+    aviInfo info;
+    uint32_t flags;
+    hdr->getVideoInfo(&info);
+
+    uint64_t lastPts=ADM_NO_PTS;
+    uint64_t lastDts=ADM_NO_PTS;
+    // Scan to see if we have b-frames
+    for(int i=0;i<info.nb_frames;i++)
+    {
+        hdr->getFlags(i,&flags);
+        if(flags & AVI_B_FRAME)
+        {
+            bframe=true;
+            break;
+        }
+    }
+    if(false==bframe)
+    {
+        ADM_info("No B frame found, settings PTS=DTS\n");
+        return setPtsEqualDts(hdr,timeIncrementUs);
+    }
+#if 0
+    for(int i=0;i<info.nb_frames;i++)
+    {
+        uint64_t pts,dts;
+        if(true!=hdr->getPtsDts(i,&pts,&dts))
+        {
+            printf("[Editor] GetPtsDts failed for frame %"LU"\n",i);
+            return false;
+        }
+        int k=0;
+        if(pts==ADM_NO_PTS) k+=GOT_NO_PTS;
+        if(dts==ADM_NO_PTS) k+=GOT_NO_DTS;
+        switch(k)
+        {
+            case GOT_BOTH : // Got both
+                    lastPts=pts;
+                    lastDts=dts;
+                continue;            
+                break;
+            case GOT_NONE: // Got none
+                {
+                        if(lastDts!=ADM_NO_PTS)
+                        {
+                            lastDts+=timeIncrementUs; // Say this one = previous + timeIncrement
+                            dts=lastDts;
+                        }else
+                            continue;   // We dont have a previous skip that one
+                }
+                break;
+            case GOT_NO_DTS :  // got only pts
+                        if(lastDts!=ADM_NO_PTS)
+                        {
+                            lastDts+=timeIncrementUs; // Say this one = previous + timeIncrement
+                            dts=lastDts;
+                        }else
+                            continue;   // We dont have a previous skip that one
+                        //
+                        ADM_assert(dts<=pts);
+                // Dts from PTS
+                break;
+            case GOT_NO_PTS: // got only dts
+                lastDts=dts;
+                {
+                    uint32_t flags;
+                    hdr->getFlags(i,&flags);
+                    if(flags & AVI_B_FRAME) pts=dts;
+                }
+                // Pts from DTS
+                break;
+            default:
+                ADM_assert(0);
+                break;
+        }
+        ADM_assert(dts<=pts);
+        // update
+        if(true!=hdr->setPtsDts(i,pts,dts))
+        {
+            printf("[Editor] SetPtsDts failed for frame %"LU"\n",i);
+            return false;
+        }
+    }
+#endif
     return true;
 }
