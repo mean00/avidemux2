@@ -26,7 +26,15 @@
 TODO / FIXME : Handle wrap
 TODO / FIXME : Handle PTS reordering 
 */
-
+static uint64_t wrapIt(uint64_t val, uint64_t start)
+{
+    if(val==ADM_NO_PTS) return val;
+    if(val>=start) return val-start;
+    uint64_t r;
+        r=val+(1LL<<32);
+        r-=start;
+        return r;
+}
 bool tsHeader::updatePtsDts(void)
 {
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
@@ -100,8 +108,8 @@ bool tsHeader::updatePtsDts(void)
         for(int i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *f=ListOfFrames[i];
-            if(f->pts!=ADM_NO_PTS) f->pts-=startDts;
-            if(f->dts!=ADM_NO_PTS) f->dts-=startDts;
+            f->pts=wrapIt(f->pts,startDts);
+            f->dts=wrapIt(f->dts,startDts);
         }
         // Audio start at 0 too
         for(int i=0;i<listOfAudioTracks.size();i++)
