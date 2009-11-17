@@ -71,6 +71,6 @@ bool         ADM_coreVideoFilter::getNextFrame(ADMImage *image)
 {
       bool r=getFrame(nextFrame,image);
       nextFrame++;
-      return true;
+      return r;
 }
 // EOF
