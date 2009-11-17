@@ -114,7 +114,7 @@ bool detectPs(const char *file)
         if(code==0xE0) nbMatch++;
     }
     printf(" match :%d / %d (probeSize:%d)\n",nbMatch,nbPacket,bufferSize);
-    if(nbMatch>nbPacket/3)
+    if(nbMatch*10>nbPacket*4)
         return true;
     return false;
 }
