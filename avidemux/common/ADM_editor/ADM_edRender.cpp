@@ -146,6 +146,12 @@ uint32_t seg;
     
     // Try to seek...
     _SEGMENT *s=_segments.getSegment(seg);
+    if(!s->_reference && !segTime)
+    {
+        _VIDEOS *v=_segments.getRefVideo(s->_reference);
+        segTime=v->firstFramePts;
+        ADM_warning("Fixating start time to %"LLU" ms\n",segTime/1000);
+    }
     uint64_t to=segTime+s->_refStartTimeUs;
     if(false==seektoTime(s->_reference,to))
     {
