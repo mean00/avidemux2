@@ -35,7 +35,7 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(uint64_t startTime, uint64_t endTim
     bridgeInfo.width=fo.width;
     bridgeInfo.height=fo.height;
     bridgeInfo.frameIncrement=video_body->getFrameIncrement();
-    bridgeInfo.totalDuration=video_body->getVideoDuration();
+    bridgeInfo.totalDuration=endTime-startTime;
     bridgeInfo.frameIncrement=video_body->getFrameIncrement();
     rewind();
 }
@@ -83,12 +83,12 @@ again:
     int64_t pts=image->Pts;
     if(pts>endTime)
     {
-        printf("[VideoBridge] This frame is too late (%"LLD" vs %"LLU")\n",pts,startTime);
+        printf("[VideoBridge] This frame is too late (%"LLD" vs %"LLU")\n",pts,endTime);
         return false;
     }
     if(pts<startTime) 
     {
-            printf("[VideoBridge] This frame is too early (%"LLD" vs %"LLU")\n",pts,endTime);
+            printf("[VideoBridge] This frame is too early (%"LLD" vs %"LLU")\n",pts,startTime);
             goto again;
     }
     // Rescale time
