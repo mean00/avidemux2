@@ -23,7 +23,14 @@ extern void UI_purge(void);
 workWindow::workWindow()     : QDialog()
  {
      ui.setupUi(this);
+     active=true;
+     connect( ui.buttonCancel,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
  }
+ void workWindow::stop(bool a) 
+{
+    ADM_info("Stop Request\n");
+    active=false;
+}
 //*******************************************
 
 namespace ADM_Qt4CoreUIToolkit
@@ -31,6 +38,7 @@ namespace ADM_Qt4CoreUIToolkit
 
 class DIA_workingQt4 : public DIA_workingBase
 {
+
 protected:
         virtual void 	    postCtor( void ) ;
 public:
@@ -43,14 +51,7 @@ public:
                 void        closeDialog(void);
         
 };
-
-
-
-
-
-
-/****************************************/
-//*******************************************
+//********************************************************
 
 DIA_workingQt4::DIA_workingQt4( const char *title ) : DIA_workingBase(title)
 {
@@ -59,6 +60,8 @@ DIA_workingQt4::DIA_workingQt4( const char *title ) : DIA_workingBase(title)
   _priv=(void *)wind;
   wind->setWindowTitle(title);
   postCtor();
+
+  
 }
 void DIA_workingQt4 :: postCtor( void )
 {
@@ -127,7 +130,8 @@ uint8_t DIA_workingQt4::update(uint32_t cur, uint32_t total)
 uint8_t DIA_workingQt4::isAlive (void )
 {
 	if(!_priv) return 0;
-	return 1;
+    workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
+	return wind->active;
 }
 
 DIA_workingQt4::~DIA_workingQt4()
@@ -140,6 +144,8 @@ void DIA_workingQt4::closeDialog( void )
   workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
     if(wind) delete wind;
     wind=NULL;
+    _priv=NULL;
+   
 }
 /**
     \fn createWorking
