@@ -24,11 +24,6 @@
 
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 #define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
-// Fwd ref
-uint8_t isMpeg4Compatible (uint32_t fourcc);
-uint8_t isH264Compatible (uint32_t fourcc);
-uint8_t isMSMpeg4Compatible (uint32_t fourcc);
-uint8_t isDVCompatible (uint32_t fourcc);
 
 #if 1
 #define aprintf(...) {}
@@ -43,7 +38,7 @@ avi_muxer muxerConfig=
 
 
 /**
-    \fn     muxerMP4
+    \fn     muxerAVI
     \brief  Constructor
 */
 muxerAvi::muxerAvi()
@@ -53,7 +48,7 @@ muxerAvi::muxerAvi()
     clocks=NULL;
 };
 /**
-    \fn     muxerMP4
+    \fn     muxerAVI
     \brief  Destructor
 */
 
@@ -116,9 +111,9 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                 {
                     aprintf("[Audio] Packet size %"LU" sample:%"LU" dts:%"LLU" target :%"LLU"\n",audioSize,nbSample,audioDts,targetDts);
                     if(audioDts!=ADM_NO_PTS)
-                        if( abs(audioDts-clk->getTimeUs())>5000)
+                        if( abs(audioDts-clk->getTimeUs())>32000)
                         {
-                            printf("[AviMuxer] Audio skew!");
+                            ADM_warning("[AviMuxer] Audio skew!\n");
                             clk->setTimeUs(audioDts);
                         }
                     nb=writter.saveAudioFrame(audioIndex,audioSize,audioBuffer) ;
@@ -151,7 +146,7 @@ bool muxerAvi::save(void)
     audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
     videoBuffer=new uint8_t[bufSize];
 
-    printf("[AviMuxer]avg fps=%u\n",vStream->getAvgFps1000());
+    ADM_info("[AviMuxer]avg fps=%u\n",vStream->getAvgFps1000());
 
     uint64_t aviTime=0;
     if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
@@ -170,7 +165,7 @@ bool muxerAvi::save(void)
             {
                 if(!writter.saveVideoFrame( len, flags,videoBuffer))  // Put our real video
                 {
-                        printf("[AviMuxer] Error writting video frame\n");
+                        ADM_warning("[AviMuxer] Error writting video frame\n");
                         result=false;
                         goto abt;
                 }
@@ -200,7 +195,7 @@ abt:
     videoBuffer=NULL;
     delete [] audioBuffer;
     audioBuffer=NULL;
-    printf("[AviMuxer] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
+    ADM_info("[AviMuxer] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
     return result;
 }
 /**
@@ -210,7 +205,7 @@ abt:
 bool muxerAvi::close(void)
 {
 
-    printf("[AviMuxer] Closing\n");
+    ADM_info("[AviMuxer] Closing\n");
     return true;
 }
 //EOF
