@@ -261,6 +261,12 @@ bool                  videoEncoder6_GetConfiguration(CONFcouple **c)
 {
     ADM_assert(currentVideoCodec<ListOfEncoders.size());
     ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
+    if(!e->desc->getConfigurationData)
+    {
+        ADM_warning("No configuration data for this encoder\n");
+        *c=NULL;
+        return true;
+    }
     return e->desc->getConfigurationData(c);
 }
 /**
