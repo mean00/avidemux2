@@ -24,6 +24,7 @@ workWindow::workWindow()     : QDialog()
  {
      ui.setupUi(this);
      active=true;
+     setWindowModality (Qt::ApplicationModal);
      connect( ui.buttonCancel,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
  }
  void workWindow::stop(bool a) 
