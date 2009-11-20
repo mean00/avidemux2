@@ -266,19 +266,26 @@ uint8_t    MP4Header::open(const char *name)
         // detect and workaround...
         // Check it is not mdat start(ADM_memcpy_0)
         uint8_t check[4];
+        uint64_t fileSize;
+        fseeko(_fd,0,SEEK_END);
+        fileSize=ftello(_fd);
         fseeko(_fd,4,SEEK_SET);
         fread(check,4,1,_fd);
         fseeko(_fd,0,SEEK_SET);
         if(check[0]=='m' && check[1]=='d' &&check[2]=='a' && check[3]=='t')
         {
                         uint64_t of;
+                        uint64_t hi,lo;
                                         printf("Data first, header later...\n");
                                         of=atom->read32();
                                         if(of==1)
                                         {
                                           atom->read32();	// size
                                           atom->read32();	// fcc
-                                          of=atom->read64();
+                                          hi=atom->read32();
+                                          lo=atom->read32();
+                                          of=(hi<<32)+lo;
+                                          if(of>fileSize) of=hi;
                                         }
                                         fseeko(_fd,of,SEEK_SET);
                                         printf("Header starts at %"LLX"\n",of);
