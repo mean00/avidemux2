@@ -376,7 +376,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             pkt.size= len;
             if(flags & 0x10) // FIXME AVI_KEY_FRAME
                         pkt.flags |= PKT_FLAG_KEY;
-            ret =av_interleaved_write_frame(oc, &pkt);
+            ret =av_write_frame(oc, &pkt);
             aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,dts,pts);
             if(ret)
             {
@@ -409,7 +409,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     pkt.stream_index=1+audio;
                     pkt.data= audioBuffer;
                     pkt.size= audioSize;
-                    ret =av_interleaved_write_frame(oc, &pkt);
+                    ret =av_write_frame(oc, &pkt);
                     if(ret)
                     {
                         printf("[FF]Error writing audio packet\n");
