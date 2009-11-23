@@ -310,9 +310,11 @@ static int wav_read_packet(AVFormatContext *s,
 
     left = wav->data_end - url_ftell(s->pb);
     if (left <= 0){
+#if CONFIG_W64_DEMUXER //MEANX
         if (CONFIG_W64_DEMUXER && wav->w64)
             left = find_guid(s->pb, guid_data) - 24;
         else
+#endif
             left = find_tag(s->pb, MKTAG('d', 'a', 't', 'a'));
         if (left < 0)
             return AVERROR(EIO);

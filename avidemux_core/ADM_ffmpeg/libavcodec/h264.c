@@ -8155,6 +8155,17 @@ static av_cold int decode_end(AVCodecContext *avctx)
     return 0;
 }
 
+/* MEANX */
+int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc)
+{
+      H264Context *h = avctx->priv_data;
+      assert(h);
+      *nalSize=h->nal_length_size;
+      *isAvc=h->is_avc;
+	return 1;
+
+  }
+/* MeanX */
 
 AVCodec h264_decoder = {
     "h264",

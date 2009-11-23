@@ -26,7 +26,12 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+// MEANX
+#ifndef ADM_NO_CONFIG_H
 #include "config.h"
+#endif
+// MEANX
+
 
 #if   ARCH_ARM
 #   include "arm/timer.h"
