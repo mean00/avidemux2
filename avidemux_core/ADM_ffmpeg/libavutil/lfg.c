@@ -23,7 +23,7 @@
 #include "lfg.h"
 #include "md5.h"
 #include "intreadwrite.h"
-#undef index
+
 void av_cold av_lfg_init(AVLFG *c, unsigned int seed){
     uint8_t tmp[16]={0};
     int i;

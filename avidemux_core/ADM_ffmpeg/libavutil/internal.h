@@ -34,11 +34,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
-// MEANX
-#ifndef ADM_NO_CONFIG_H
 #include "config.h"
-#endif
-// MEANX
 #include "common.h"
 #include "mem.h"
 #include "timer.h"
@@ -222,14 +218,12 @@ if((y)<(x)){\
 #endif
 
 /* avoid usage of dangerous/inappropriate system functions */
-#if 0 //MEANX
 #undef  malloc
 #define malloc please_use_av_malloc
 #undef  free
 #define free please_use_av_free
 #undef  realloc
 #define realloc please_use_av_realloc
-#endif
 #undef  time
 #define time time_is_forbidden_due_to_security_issues
 #undef  rand

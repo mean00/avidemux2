@@ -20,7 +20,7 @@
  */
 #include "avcodec.h"
 #include "bytestream.h"
-#include "ffpng.h"
+#include "png.h"
 #include "dsputil.h"
 
 /* TODO:

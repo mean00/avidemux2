@@ -25,12 +25,7 @@
 #define AVUTIL_X86_BSWAP_H
 
 #include <stdint.h>
-// MEANX
-#ifndef ADM_NO_CONFIG_H
 #include "config.h"
-#endif
-// MEANX
-
 #include "libavutil/common.h"
 
 #define bswap_16 bswap_16

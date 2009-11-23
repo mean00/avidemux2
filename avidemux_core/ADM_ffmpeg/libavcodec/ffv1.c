@@ -675,7 +675,7 @@ static av_cold int encode_init(AVCodecContext *avctx)
             return -1;
         }
         if(avctx->bits_per_raw_sample <=8){
-            av_log(avctx, AV_LOG_ERROR, "bits_per_raw_sample inavlid\n");
+            av_log(avctx, AV_LOG_ERROR, "bits_per_raw_sample invalid\n");
             return -1;
         }
         s->version= 1;
@@ -1072,8 +1072,6 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPac
         clear_state(f);
     }else{
         p->key_frame= 0;
-         p->pict_type= FF_P_TYPE; // MEANX : looks more like a P to me as user
-
     }
     if(!f->plane[0].state && !f->plane[0].vlc_state)
         return -1;

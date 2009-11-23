@@ -951,7 +951,7 @@ static const AVClass av_codec_context_class = { "Postproc", context_to_name, NUL
 
 pp_context *pp_get_context(int width, int height, int cpuCaps){
     PPContext *c= av_malloc(sizeof(PPContext));
-    int stride= (width+15)&(~15);    //assumed / will realloc if needed
+    int stride= FFALIGN(width, 16);  //assumed / will realloc if needed
     int qpStride= (width+15)/16 + 2; //assumed / will realloc if needed
 
     memset(c, 0, sizeof(PPContext));
@@ -1066,8 +1066,8 @@ void  pp_postprocess(const uint8_t * src[3], const int srcStride[3],
         }
     }
 
-    // MEANX : SILENCE av_log(c, AV_LOG_DEBUG, "using npp filters 0x%X/0x%X\n",
-           // mode->lumMode, mode->chromMode);
+    av_log(c, AV_LOG_DEBUG, "using npp filters 0x%X/0x%X\n",
+           mode->lumMode, mode->chromMode);
 
     postProcess(src[0], srcStride[0], dst[0], dstStride[0],
                 width, height, QP_store, QPStride, 0, mode, c);

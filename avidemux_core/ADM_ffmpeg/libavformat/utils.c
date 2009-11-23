@@ -2601,10 +2601,8 @@ static int compute_pkt_fields2(AVStream *st, AVPacket *pkt){
         av_log(st->codec, AV_LOG_ERROR, "error, non monotone timestamps %"PRId64" >= %"PRId64"\n", st->cur_dts, pkt->dts);
         return -1;
     }
-    if(pkt->dts != AV_NOPTS_VALUE && pkt->pts != AV_NOPTS_VALUE && pkt->pts < pkt->dts)
-    {
-        av_log(st->codec, AV_LOG_ERROR, "error, pts < dts pts=%llu dts=%llu\n",pkt->pts,pkt->dts);
-        
+    if(pkt->dts != AV_NOPTS_VALUE && pkt->pts != AV_NOPTS_VALUE && pkt->pts < pkt->dts){
+        av_log(st->codec, AV_LOG_ERROR, "error, pts < dts\n");
         return -1;
     }
 
@@ -2918,6 +2916,14 @@ void dump_format(AVFormatContext *ic,
     } else
     for(i=0;i<ic->nb_streams;i++)
         dump_stream_format(ic, i, index, is_output);
+    if (ic->metadata) {
+        AVMetadataTag *tag=NULL;
+        av_log(NULL, AV_LOG_INFO, "  Metadata\n");
+        while((tag=av_metadata_get(ic->metadata, "", tag, AV_METADATA_IGNORE_SUFFIX))) {
+            av_log(NULL, AV_LOG_INFO, "    %-16s: %s\n", tag->key, tag->value);
+        }
+    }
+
 }
 
 #if LIBAVFORMAT_VERSION_MAJOR < 53

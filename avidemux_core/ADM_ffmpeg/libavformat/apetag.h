@@ -1,6 +1,7 @@
 /*
- * AC-3 and E-AC-3 decoder tables
- * Copyright (c) 2007 Bartlomiej Wolowiec <bartek.wolowiec@gmail.com>
+ * APE tag handling
+ * Copyright (c) 2007 Benjamin Zores <ben@geexbox.org>
+ *  based upon libdemac from Dave Chapman.
  *
  * This file is part of FFmpeg.
  *
@@ -19,15 +20,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_AC3DEC_DATA_H
-#define AVCODEC_AC3DEC_DATA_H
+#ifndef AVFORMAT_APETAG_H
+#define AVFORMAT_APETAG_H
 
-#include <stdint.h>
+#include "avformat.h"
 
-extern const uint8_t ff_ac3_ungroup_3_in_5_bits_tab[32][3];
-extern const uint8_t ff_ac3_rematrix_band_tab[5];
+/**
+ * Read and parse an APE tag
+ */
+void ff_ape_parse_tag(AVFormatContext *s);
 
-extern const uint8_t ff_eac3_hebap_tab[64];
-extern const uint8_t ff_eac3_default_cpl_band_struct[18];
-
-#endif /* AVCODEC_AC3DEC_DATA_H */
+#endif /* AVFORMAT_ID3V2_H */
