@@ -446,6 +446,7 @@
 #if defined(ADM_CPU_X86_32)
 #	define ARCH_X86 1
 #	define ARCH_X86_32 1
+#	define ARCH_X86_64 0
 #elif defined(ADM_CPU_X86_64)
 #	define ARCH_X86 1
 #	define ARCH_X86_64 1
