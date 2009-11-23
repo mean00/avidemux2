@@ -514,6 +514,7 @@ int main(void)
 	printf("#if defined(ADM_CPU_X86_32)\n");
 	printf("#	define ARCH_X86 1\n");
 	printf("#	define ARCH_X86_32 1\n");
+	printf("#	define ARCH_X86_64 0\n");
 	printf("#elif defined(ADM_CPU_X86_64)\n");
 	printf("#	define ARCH_X86 1\n");
 	printf("#	define ARCH_X86_64 1\n");
