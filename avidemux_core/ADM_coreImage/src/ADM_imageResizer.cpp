@@ -65,9 +65,9 @@ void ADMImageResizer::init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, i
 #endif
 
 	_context = (void *)sws_getContext(orgWidth, orgHeight,
-									  srcFormat,
+									  (PixelFormat)srcFormat,
 									  destWidth, destHeight,
-									  destFormat,
+									  (PixelFormat)destFormat,
 									  flags, NULL, NULL,NULL);
 }
 

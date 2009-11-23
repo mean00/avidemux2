@@ -459,6 +459,8 @@ int main(void)
 	DECLARE_MUXER(MPEG2SVCD, tgp)
 	DECLARE_MUXER(MPEG2DVD, tgp)
 	DECLARE_MUXER(MPEG2VOB, tgp)
+#define DECLARE_DEMUXER(a,b); printf("#define CONFIG_"#a"_DEMUXER 0\n");
+        DECLARE_DEMUXER(W64,w64)
 
 	printf("#define CONFIG_ENCODERS 1\n");
 	printf("#define CONFIG_DVVIDEO_ENCODER 1\n");
@@ -474,6 +476,8 @@ int main(void)
 	DECLARE_CONFIG_DECODER(VC1, vc1);
 	DECLARE_CONFIG_DECODER(WMV2, wmv2);
 	DECLARE_CONFIG_DECODER(WMV3, wmv3);
+
+	printf("#define CONFIG_SWSCALE_ALPHA 0\n");
 
 	printf("#define CONFIG_MPEGAUDIO_HP 1\n");
 	printf("#define CONFIG_ZLIB 1\n");

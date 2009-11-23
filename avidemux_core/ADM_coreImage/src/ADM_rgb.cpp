@@ -345,7 +345,7 @@ uint8_t ColYv12Rgb24::reset(uint32_t ww, uint32_t hh)
 
          _context=(void *)sws_getContext(
 				    		ww,hh,
-						c ,
+						(PixelFormat)c ,
 		 				ww,hh,
 	   					PIX_FMT_YUV420P,
 	    					flags, NULL, NULL,NULL);
@@ -502,7 +502,7 @@ int c=0;
     }
          _context=(void *)sws_getContext(
                                                 ww,hh,
-                                                c ,
+                                                (PixelFormat)c ,
                                                 ww,hh,
                                                 PIX_FMT_YUV420P,
                                                 flags, NULL, NULL,NULL);
