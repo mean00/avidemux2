@@ -34,7 +34,24 @@
 #include "GUI_ui.h"
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterApi.h"
-
+/**
+    \fn dumpConf
+    \brief dump configuration as name=value pairs
+*/
+static void dumpConf(FILE *fd,CONFcouple *c)
+{
+ if(!c) return;
+        
+    uint32_t n=c->getSize();
+    for(int j=0;j<n;j++)
+    {
+        char *name,*value;
+        c->getInternalName(j,&name,&value);
+        qfprintf(fd,",\"%s=%s\"",name,value);
+    }
+    delete c;
+    c=NULL;
+}
 /**
     \fn        saveAsScript
     \brief     Save the project as a script
@@ -127,19 +144,7 @@ uint32_t pptype, ppstrength,ppswap;
     
         qfprintf(fd, "app.video.codec(\"%s\"", videoEncoder6_GetCurrentEncoderName());
         videoEncoder6_GetConfiguration(&couples);
-        if(couples)
-        {
-            uint32_t n=couples->getSize();
-        
-            for(int i=0;i<n;i++)
-            {
-                char *name,*value;
-                couples->getInternalName(i,&name,&value);
-                qfprintf(fd,",\"%s=%s\"",name,value);
-            }
-            delete couples;
-            couples=NULL;
-        }
+        dumpConf(fd,couples);
         qfprintf(fd,");\n");
 
 // Video filters....
@@ -154,18 +159,7 @@ uint32_t pptype, ppstrength,ppswap;
         // Now get the filter settings (if any)
         CONFcouple *c=NULL;
         ADM_vf_getConfigurationFromIndex(i,&c);
-        if(c)
-        {
-            uint32_t n=c->getSize();
-            for(int j=0;j<n;j++)
-            {
-                char *name,*value;
-                c->getInternalName(j,&name,&value);
-                qfprintf(fd,",\"%s=%s\"",name,value);
-            }
-            delete c;
-            c=NULL;
-        }
+        dumpConf(fd,c);
         qfprintf(fd, ");\n");
     }
 
@@ -206,19 +200,7 @@ uint32_t pptype, ppstrength,ppswap;
    couples=NULL;
    getAudioExtraConf(&bitrate,&couples);
     qfprintf(fd,"app.audio.codec(\"%s\",%d",audioCodecGetName(),bitrate); 
-   if(couples)
-    {
-        uint32_t n=couples->getSize();
-        
-        for(int i=0;i<n;i++)
-        {
-            char *name,*value;
-            couples->getInternalName(i,&name,&value);
-            qfprintf(fd,",\"%s=%s\"",name,value);
-        }
-        delete couples;
-        couples=NULL;
-    }
+    dumpConf(fd,couples);
     qfprintf(fd,");\n");
 
 
@@ -255,20 +237,7 @@ uint32_t pptype, ppstrength,ppswap;
         ADM_mx_getExtraConf( index,&containerConf);
         
         qfprintf(fd,"app.setContainer(\"%s\"",containerName); 
-        if(containerConf)
-        {
-            uint32_t n=containerConf->getSize();
-            
-            for(int i=0;i<n;i++)
-            {
-                char *name,*value;
-                containerConf->getInternalName(i,&name,&value);
-                qfprintf(fd,",\"%s=%s\"",name,value);
-            }
-         
-            delete couples;
-            couples=NULL;
-        }
+        dumpConf(fd,containerConf);
         qfprintf(fd,");\n");
   // -------- /Muxer -----------------------
   if(outputname)
