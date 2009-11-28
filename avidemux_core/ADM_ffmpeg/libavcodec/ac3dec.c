@@ -848,8 +848,8 @@ static int decode_audio_block(AC3DecodeContext *s, int blk)
                                   ff_eac3_default_cpl_band_struct,
                                   &s->num_cpl_bands, s->cpl_band_sizes);
 */
-            decode_band_structure(gbc, blk, s->eac3, 0,
-                                  s->spx_start_subband, spx_end_subband,
+            decode_band_structure(gbc, blk, s->eac3, 0, s->spx_start_subband,
+                                  spx_end_subband,
                                   ff_eac3_default_spx_band_struct,
                                   /*s->spx_band_struct,*/ &s->num_spx_bands,
                                   s->spx_band_sizes);
