@@ -15,7 +15,7 @@
 #include "GUI_ui.h"
 #include "ADM_colorspace.h"
 
-static uint32_t format=0;
+static uint32_t cliFormat=0;
 static int audioCodec=0;
 static int videoCodec=0;
  
@@ -31,15 +31,17 @@ void UI_setAudioCodec( int i)
 }
 
 //**************************************************
-bool 	UI_SetCurrentFormat( uint32_t fmt )
+#if 0
+uint8_t 	UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )
 {
 format=fmt;
 }
 
-uint32_t 	UI_GetCurrentFormat( void )
+ADM_OUT_FORMAT 	UI_GetCurrentFormat( void )
 {
   return format;
 }
+#endif
 //**************************************************
 int 	UI_getCurrentVCodec(void)
 {
@@ -73,11 +75,8 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 
 void UI_updateTimeCount(uint32_t curFrame, uint32_t fps)
 {}
-void UI_setCurrentTime(uint64_t curTime)
+void UI_setTimeCount(uint32_t curFrame,uint32_t total, uint32_t fps)
 {}
-void UI_setTotalTime(uint64_t curTime)
-{}
-
 
 double 	UI_readScale( void )
 {
@@ -86,8 +85,6 @@ double 	UI_readScale( void )
 void 	UI_setScale( double  val )
 {}
 void 	UI_setFrameType( uint32_t frametype,uint32_t qp)
-{}
-void 	UI_setMarkers(uint64_t a, uint64_t b )
 {}
 void 	UI_setTitle(const char *name)
 {}
@@ -144,5 +141,22 @@ uint8_t UI_arrow_disabled(void)
 }
 void UI_purge( void )
 {}
+uint32_t UI_GetCurrentFormat( void )
+{
+	return cliFormat;
+}
+bool UI_SetCurrentFormat( uint32_t f )
+{
+	cliFormat=f;
+}
+void UI_setCurrentTime(uint64_t x)
+{
 
+}
+void UI_setMarkers(uint64_t a,uint64_t b)
+{
+}
+void UI_setTotalTime(uint64_t t)
+{
+}
 // EOF

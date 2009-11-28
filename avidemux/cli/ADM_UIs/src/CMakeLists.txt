@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_UICli)
+SET(ADM_LIB ADM_UI_Cli6)
 
 SET(${ADM_LIB}_SRCS 
 	DIA_dialogFactory.cpp

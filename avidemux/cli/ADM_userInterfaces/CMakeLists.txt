@@ -1,5 +1,5 @@
-ADD_ADM_LIB_CLI_TARGET(ADM_UI_None ui_support.cpp)
 
 ADD_SUBDIRECTORY(ADM_dialog)
 ADD_SUBDIRECTORY(ADM_filters)
 ADD_SUBDIRECTORY(ADM_gui2)
+ADD_LIBRARY(ADM_toolkitCli6 SHARED ui_support.cpp)

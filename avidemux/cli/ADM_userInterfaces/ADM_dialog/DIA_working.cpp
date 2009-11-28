@@ -30,9 +30,7 @@
 #include "config.h"
 #include "ADM_default.h"
 
-#include "ADM_osSupport/ADM_debugID.h"
-#define MODULE_NAME MODULE_CLOCKnTIMELEFT
-#include "ADM_osSupport/ADM_debug.h"
+#define aprintf ADM_info
 
 # include "config.h"
 #include "DIA_working.h"

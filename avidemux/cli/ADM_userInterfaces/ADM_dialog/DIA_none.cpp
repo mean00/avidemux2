@@ -27,20 +27,14 @@
 #include "ADM_videoFilter.h"
 
 
-#include "ADM_video/ADM_vidPartial_param.h"
-
-
-#include "ADM_videoFilter/ADM_vobsubinfo.h"
-#include "ADM_videoFilter/ADM_vidVobSub.h"
 
 
 #include "audioencoder.h"
 #include "ADM_lavcodec.h"
-#include "ADM_codecs/ADM_ffmpegConfig.h"
+#include "ADM_render/GUI_render.cpp"
+//#include "ADM_codecs/ADM_ffmpegConfig.h"
 
-#include "ADM_ocr/ADM_ocr.h"
-#include "ADM_ocr/ADM_ocrInternal.h"
-#include "ADM_userInterfaces/ADM_render/GUI_renderInternal.h"
+//#include "ADM_userInterfaces/ADM_render/GUI_renderInternal.h"
 extern int global_argc;
 extern char **global_argv;
 extern void initTranslator(void);
@@ -61,9 +55,9 @@ int  DIA_getXvidCompressParams(COMPRESSION_MODE * mode, uint32_t * qz,
 
 
 
-uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous) {return 0;}
+//uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous) {return 0;}
 uint8_t DIA_pipe(char **cmd,char **param) {return 0;}
-uint8_t DIA_vobsub(vobSubParam *param) {return 0;}
+//uint8_t DIA_vobsub(vobSubParam *param) {return 0;}
 uint8_t DIA_quota(char *) {return 0;}
 const char * GUI_getCustomScript(uint32_t nb) {return 0;}
 uint8_t DIA_RecentFiles( char **name ) {return 0;}
@@ -112,14 +106,14 @@ uint8_t DIA_particle (AVDMGenericVideoStream *in,
                       PARTICLE_PARAM * param,
                       const MenuMapping * menu_mapping,
                       uint32_t menu_mapping_count) { return 255; }
-uint8_t ADM_ocrUpdateNbLines(void *ui,uint32_t cur,uint32_t total) {return 0;}
-uint8_t ADM_ocrUpdateNbGlyphs(void *ui,uint32_t nbGlyphs) {return 0;}
-uint8_t ADM_ocrUpdateTextAndTime(void *ui,char *decodedString,char *timeCode) {	return 0;}
-uint8_t ADM_ocrDrawFull(void *d,uint8_t *data) {return 0;}
-uint8_t ADM_ocrUiEnd(void *d) {	return 0;}
-void *ADM_ocrUiSetup(void) {return 0;}
-uint8_t ADM_ocrSetRedrawSize(void *ui,uint32_t w,uint32_t h) {return 0;}
-ReplyType glyphToText(admGlyph *glyph,admGlyph *head,char *decodedString) {return ReplyOk;}
+//uint8_t ADM_ocrUpdateNbLines(void *ui,uint32_t cur,uint32_t total) {return 0;}
+//uint8_t ADM_ocrUpdateNbGlyphs(void *ui,uint32_t nbGlyphs) {return 0;}
+//uint8_t ADM_ocrUpdateTextAndTime(void *ui,char *decodedString,char *timeCode) {	return 0;}
+//uint8_t ADM_ocrDrawFull(void *d,uint8_t *data) {return 0;}
+//uint8_t ADM_ocrUiEnd(void *d) {	return 0;}
+//void *ADM_ocrUiSetup(void) {return 0;}
+//uint8_t ADM_ocrSetRedrawSize(void *ui,uint32_t w,uint32_t h) {return 0;}
+//ReplyType glyphToText(admGlyph *glyph,admGlyph *head,char *decodedString) {return ReplyOk;}
 extern void UI_purge(void);
 extern ADM_RENDER_TYPE UI_getPreferredRender(void);
 

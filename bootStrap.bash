@@ -1,5 +1,6 @@
 #!/bin/bash
 do_core=1
+do_cli=0
 do_gtk=1
 do_qt4=0
 do_plugins=1
@@ -38,6 +39,7 @@ config()
         printModule $do_core Core
         printModule $do_gtk Gtk
         printModule $do_qt4 Qt4
+        printModule $do_cli Cli
         printModule $do_plugins Plugins
 }
 usage()
@@ -47,6 +49,8 @@ usage()
         echo "  --help            : Print usage"
         echo "  --with-core       : Build core"
         echo "  --without-core    : Dont build core"
+        echo "  --with-cli        : Build cli"
+        echo "  --without-cli     : Dont build cli"
         echo "  --with-gtk        : Build gtk"
         echo "  --without-gtk     : Dont build gtk"
         echo "  --with-core       : Build core"
@@ -66,6 +70,9 @@ while [ $# != 0 ] ;do
          --without-qt4)
                 do_qt4=0
              ;;
+         --without-cli)
+                do_cli=0
+             ;;
          --without-gtk)
                 do_gtk=0
              ;;
@@ -77,6 +84,9 @@ while [ $# != 0 ] ;do
              ;;
          --with-qt4)
                 do_qt4=1
+             ;;
+         --with-cli)
+                do_cli=1
              ;;
          --with-gtk)
                 do_gtk=1
@@ -110,6 +120,11 @@ if [ "x$do_qt4" = "x1" ] ; then
         echo "** QT4 **"
         cd $TOP
         Process buildQt4 ../avidemux/qt4
+fi
+if [ "x$do_cli" = "x1" ] ; then 
+        echo "** CLI **"
+        cd $TOP
+        Process buildCli ../avidemux/cli
 fi
 if [ "x$do_qt4" = "x1" ] ; then 
         echo "** GTK **"

@@ -97,7 +97,7 @@ void diaElemUInteger::enable(uint32_t onoff) {}
 //******************************************************
 
 diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, 
-                            ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip)
+                            ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip,int decimal)
   : diaElem(ELEM_FLOAT)
 {
 }

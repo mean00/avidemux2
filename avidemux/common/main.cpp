@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 	__try1(exceptionHandler);
 #endif
 
-#ifdef USE_VDPAU
+#if defined( USE_VDPAU) && (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     printf("Probing for VDPAU...\n");
     if(vdpauProbe()==true) printf("VDPAU available\n");
         else printf("VDPAU not available\n");

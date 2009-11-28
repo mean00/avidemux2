@@ -1,6 +1,6 @@
-SET(ADM_LIB ADM_dialogFiltersNone)
+SET(ADM_LIB ADM_filtersCli6)
 
 SET(${ADM_LIB}_SRCS 
 	filter_none.cpp)
 
-ADD_ADM_LIB_CLI_TARGET(${ADM_LIB} ${${ADM_LIB}_SRCS})
+ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})

@@ -12,7 +12,7 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoFilter.h"
 
-#include "ADM_userInterfaces/ADM_render/GUI_render.h"
+#include "ADM_render/GUI_render.h"
 
 void UI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr) {}
 void UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h) {}
@@ -23,4 +23,3 @@ void DIA_previewInit(uint32_t width, uint32_t height) {}
 uint8_t DIA_previewUpdate(uint8_t *buffer) {return 1;}
 void DIA_previewEnd(void) {}
 uint8_t DIA_previewStillAlive(void) {return 1;}
-uint8_t DIA_filterPreview(const char *captionText, AVDMGenericVideoStream *videoStream, uint32_t frame) {}
