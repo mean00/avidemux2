@@ -148,7 +148,7 @@ void filtermainWindow::add( bool b)
      tag=index; //filterCategories[family][index]->tag;
      ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
 
-     if(true==ADM_vf_addFilterFromTag(itag))
+     if(true==ADM_vf_addFilterFromTag(itag,NULL,true))
         {
             buildActiveFilterList();
             setSelected(nb_active_filter-1);
