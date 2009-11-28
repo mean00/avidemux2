@@ -26,6 +26,10 @@
 
 #include "ADM_default.h"
 #include "ADM_dynamicLoading.h"
+#ifdef __WIN32
+extern int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
+#endif
+
 
 // By default the library is silent, being part of ADM_core cannot use the debug_id funcs
 #if 1
@@ -73,7 +77,13 @@ char* ADM_LibWrapper::formatMessage(uint32_t msgCode)
 bool ADM_LibWrapper::loadLibrary(const char* path)
 {
 #ifdef __WIN32
-	hinstLib = LoadLibrary(path);
+	int pathLength = utf8StringToWideChar(path, -1, NULL);
+	wchar_t wcPath[pathLength];
+
+	utf8StringToWideChar(path, -1, wcPath);
+
+	hinstLib = LoadLibraryW(wcPath);
+
 
 	if (hinstLib == NULL)
 	{

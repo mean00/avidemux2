@@ -272,9 +272,15 @@ char *ADM_getHomeRelativePath(const char *base1, const char *base2,const char *b
 char *ADM_getInstallRelativePath(const char *base1, const char *base2,const char *base3)
 {
 #ifdef __WIN32
-	char moduleName[MAX_PATH];
+       	wchar_t wcModuleName[MAX_PATH];
 
-	GetModuleFileName(0, moduleName, sizeof(moduleName) / sizeof(char));
+	GetModuleFileNameW(0, wcModuleName, sizeof(wcModuleName) / sizeof(wchar_t));
+
+	int len = wideCharStringToUtf8(wcModuleName, -1, NULL);
+	char moduleName[len];
+
+	wideCharStringToUtf8(wcModuleName, -1, moduleName);
+
 
 	char *slash = strrchr(moduleName, '\\');
 		
