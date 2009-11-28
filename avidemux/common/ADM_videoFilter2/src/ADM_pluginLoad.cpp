@@ -25,6 +25,7 @@
 #define aprintf(...) {}
 #endif
 static uint32_t lastTag=100;
+extern ADM_UI_TYPE UI_GetCurrentUI(void);
 /**
     \struct admVideoFilterInfo
 */
@@ -97,9 +98,10 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
 			ADM_GetFileName(file), plugin->getApiVersion(), VF_API_VERSION);
 		goto Err_ad;
 	}
-    if(!(plugin->supportedUI() & 0xff))
+    if(!(plugin->supportedUI() & UI_GetCurrentUI()))
     {  // FIXME
-
+        ADM_info("==> wrong UI\n");
+        goto Err_ad;
 
     }
 	// Get infos
