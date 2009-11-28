@@ -248,7 +248,7 @@ extern bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,ui
 */
 bool         swScaleResizeFilter::configure(void) 
 {
-    uint32_t fps1000=23976;
+    uint32_t fps1000=ADM_Fps1000FromUs(info.frameIncrement);
     return DIA_resize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,
                         fps1000,&configuration);
 

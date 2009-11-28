@@ -14,11 +14,12 @@ Process()
 {
         export BUILDDIR=$1
         export SOURCEDIR=$2
-        echo "Building $BUILDDIR from $SOURCEDIR"
+        export EXTRA=$3
+        echo "Building $BUILDDIR from $SOURCEDIRi with EXTRA=$EXTRA"
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $SOURCEDIR || fail cmake
+        cmake -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $SOURCEDIR || fail cmake
         make -j 2 > /tmp/log$BUILDDIR || fail make
         fakeroot make package DESTDIR=debPack || fail package
 }
@@ -134,8 +135,24 @@ fi
 if [ "x$do_plugins" = "x1" ] ; then 
         echo "** Plugins **"
         cd $TOP
-        Process buildPlugins ../avidemux_plugins
+        Process buildPluginsCommon ../avidemux_plugins -DPLUGIN_UI=COMMON
 fi
+if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then 
+        echo "** Plugins Qt4 **"
+        cd $TOP
+        Process buildPluginsQt4 ../avidemux_plugins -DPLUGIN_UI=QT4
+fi
+if [ "x$do_plugins" = "x1" -a "x$do_gtk" = "x1" ] ; then 
+        echo "** Plugins Gtk **"
+        cd $TOP
+        Process buildPluginsGtk ../avidemux_plugins -DPLUGIN_UI=GTK
+fi
+if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
+        echo "** Plugins CLI **"
+        cd $TOP
+        Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI
+fi
+
 echo "** Preparing debs **"
 cd $TOP
 rm -Rf debs
