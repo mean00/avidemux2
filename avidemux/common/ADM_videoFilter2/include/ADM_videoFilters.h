@@ -32,6 +32,7 @@ extern std::vector<ADM_VideoFilterElement> ADM_VideoFilters;
 uint32_t                ADM_vf_getSize(void);
 ADM_coreVideoFilter     *ADM_vf_getInstance(int index);
 uint32_t                ADM_vf_getTag(int index);
+bool                    ADM_vf_getConfigurationFromIndex(int index,CONFcouple **c);
 
 bool                    ADM_vf_addFilterFromTag(uint32_t tag);
 bool                    ADM_vf_removeFilterAtIndex(int index);

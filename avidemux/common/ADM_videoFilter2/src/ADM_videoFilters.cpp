@@ -231,4 +231,15 @@ bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain)
     chain->clear();
     return true;
 }
+/**
+    \fn ADM_vf_getConfigurationFromIndex
+*/
+bool ADM_vf_getConfigurationFromIndex(int index,CONFcouple **c)
+{
+        ADM_assert(index<ADM_VideoFilters.size());
+            ADM_coreVideoFilter *old=ADM_VideoFilters[index].instance;
+            old->getCoupledConf(c);
+
+        return true;
+}
 // EOF

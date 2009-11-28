@@ -244,4 +244,14 @@ ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag,ADM_coreVideoFilter *last
      ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
      return plugin->create(last,couples);
 }
+/**
+    \fn ADM_vf_getNameFromTag
+    \brief return the uniq name of a filter from the tag , which can vary from one run to another
+*/
+const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
+{
+  ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    return plugin->getInternalName();
+}
+
 //EOF

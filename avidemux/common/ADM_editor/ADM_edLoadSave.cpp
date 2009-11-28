@@ -25,8 +25,6 @@
 #include "audioEncoderApi.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
-//#include "ADM_videoFilter.h"
-//#include "ADM_videoFilter_internal.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_paramList.h"
 #include "prefs.h"
@@ -34,7 +32,8 @@
 #include "ADM_muxerProto.h"
 #include "ADM_audioFilterInterface.h"
 #include "GUI_ui.h"
-
+#include "ADM_videoFilters.h"
+#include "ADM_videoFilterApi.h"
 
 /**
     \fn        saveAsScript
@@ -105,10 +104,10 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
 // postproc
 //___________________________
 
-        uint32_t pptype, ppstrength,ppswap;
-                video_body->getPostProc( &pptype, &ppstrength, &ppswap);
-                qfprintf(fd,"\n//** Postproc **\n");
-                qfprintf(fd,"app.video.setPostProc(%d,%d,%d);\n",pptype,ppstrength,ppswap);
+uint32_t pptype, ppstrength,ppswap;
+        video_body->getPostProc( &pptype, &ppstrength, &ppswap);
+        qfprintf(fd,"\n//** Postproc **\n");
+        qfprintf(fd,"app.video.setPostProc(%d,%d,%d);\n",pptype,ppstrength,ppswap);
 
 // fps
 #if 0
@@ -119,10 +118,6 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
 		qfprintf(fd,"\napp.video.setFps1000(%u);\n",info.fps1000);
 	}
 #endif
-// Filter
-//___________________________
-        qfprintf(fd,"\n//** Filters **\n");
-//        filterSaveScriptJS(fd);
 
 // Video codec
 //___________________________
@@ -146,6 +141,34 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
             couples=NULL;
         }
         qfprintf(fd,");\n");
+
+// Video filters....
+//______________________________________________
+    qfprintf(fd,"\n//** Filters **\n");
+    int nbFilter=ADM_vf_getSize();
+    for(int i=0;i<nbFilter;i++)
+    {
+        // Grab its name...
+        uint32_t tag=ADM_vf_getTag(i);
+        qfprintf(fd, "app.video.addFilter(\"%s\"", ADM_vf_getInternalNameFromTag(tag));
+        // Now get the filter settings (if any)
+        CONFcouple *c=NULL;
+        ADM_vf_getConfigurationFromIndex(i,&c);
+        if(c)
+        {
+            uint32_t n=c->getSize();
+            for(int j=0;j<n;j++)
+            {
+                char *name,*value;
+                c->getInternalName(j,&name,&value);
+                qfprintf(fd,",\"%s=%s\"",name,value);
+            }
+            delete c;
+            c=NULL;
+        }
+        qfprintf(fd, ");\n");
+    }
+
 
 // Audio Source
 //______________________________________________
