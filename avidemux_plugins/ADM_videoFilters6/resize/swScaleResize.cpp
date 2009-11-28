@@ -71,7 +71,7 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   swScaleResizeFilter,   // Class
                         1,0,0,              // Version
-                        ADM_UI_ALL,         // UI
+                        ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
                         "swscale",            // internal name (must be uniq!)
                         "swsResize",            // Display name
@@ -240,25 +240,17 @@ bool swScaleResizeFilter::reset(uint32_t nw, uint32_t old,uint32_t algo)
 
 
 }
+
+extern bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize);
 /**
     \fn configure
 
 */
 bool         swScaleResizeFilter::configure(void) 
 {
-    // Simple resampler using dialogFactory
-#define PX(x) &(configuration.x)
-        diaElemUInteger  W(PX(width),"Width", 16, 4096,"");
-        diaElemUInteger  H(PX(height),"Height", 16, 4096,"");
-        diaElem *tabs[]={&W,&H};
-        if( diaFactoryRun(("SwScaler Resize"),2,tabs))
-        {
-            // Update info
-            info.height=configuration.height;
-            info.width=configuration.width;
-            reset(info.width, info.height,configuration.algo);
-            return true;
-        }
-        return false;
+    uint32_t fps1000=23976;
+    return DIA_resize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,
+                        fps1000,&configuration);
+
 }
 //EOF

@@ -15,7 +15,9 @@
 #include <math.h>
 
 #include "Q_resize.h"
+#include "ADM_default.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_toolkitQt.h"
 
 static double aspectRatio[2][3]={
                               {1.,0.888888,1.19}, // NTSC 1:1 4:3 16:9
@@ -23,14 +25,17 @@ static double aspectRatio[2][3]={
                             };
 #define aprintf
 
-resizeWindow::resizeWindow(resParam *param) : QDialog()
+resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
  {
      ui.setupUi(this);
 	 lastPercentage = 100;
      _param=param;
-     ui.spinBoxWidth->setValue(_param->width);
-     ui.spinBoxHeight->setValue(_param->height);
+     ui.spinBoxWidth->setValue(_param->rsz.width);
+     ui.spinBoxHeight->setValue(_param->rsz.height);
      ui.horizontalSlider->setValue(100);
+	 ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
+     ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
+     ui.comboBoxDestination->setCurrentIndex(_param->rsz.targetAR);
      updateWidthHeightSpinners();
 
 	 connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
@@ -44,9 +49,11 @@ resizeWindow::resizeWindow(resParam *param) : QDialog()
 
  void resizeWindow::gather(void)
  {
-    _param->width=ui.spinBoxWidth->value();
-    _param->height=ui.spinBoxHeight->value();
-    _param->algo=ui.comboBoxAlgo->currentIndex();
+    _param->rsz.width=ui.spinBoxWidth->value();
+    _param->rsz.height=ui.spinBoxHeight->value();
+    _param->rsz.algo=ui.comboBoxAlgo->currentIndex();
+    _param->rsz.sourceAR=ui.comboBoxSource->currentIndex();
+    _param->rsz.targetAR=ui.comboBoxDestination->currentIndex();
  }
  
  void resizeWindow::sliderChanged(int value)
@@ -250,10 +257,16 @@ void resizeWindow::okButtonClicked()
     \fn DIA_resize
     \brief Handle resize dialo
 */
-uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *alg,uint32_t originalw, uint32_t originalh,uint32_t fps1000)
+bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize)
 {
-uint8_t r=0;
-      resParam param={*width,*height,originalw,originalh,fps1000,*alg,0};
+bool r=false;
+      resParam param={  
+                        originalWidth,
+                        originalHeight,
+                        fps1000,
+                        0,
+                        *resize
+                    };
       //
       if(fps1000>24600 && fps1000<25400)
         {
@@ -262,16 +275,19 @@ uint8_t r=0;
        
 
      // Fetch info
-     resizeWindow resizewindow(&param) ;
-     ;
+     resizeWindow resizewindow(qtLastRegisteredDialog(), &param);
+
+     qtRegisterDialog(&resizewindow);
+
      if(resizewindow.exec()==QDialog::Accepted)
      {
        resizewindow.gather();
-       *width=param.width;
-       *height=param.height;
-       *alg=param.algo;
-       r=1;
+       *resize=param.rsz;
+       r=true;
      }
+
+	 qtUnregisterDialog(&resizewindow);
+
      return r;
 }  
 //********************************************

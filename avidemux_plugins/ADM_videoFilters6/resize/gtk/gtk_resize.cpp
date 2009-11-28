@@ -16,7 +16,7 @@
 #include "ADM_toolkitGtk.h"
 #include "ADM_default.h"
 #define aprintf(...) {}
-
+#include "swresize.h"
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
@@ -54,11 +54,12 @@ static double aspectRatio[2][3]={
 								{1.,1.066667,1.43} // PAL  1:1 4:3 16:9
 							};
 static int pal=1;
-/*----------------------------------------------*/
-uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *alg,uint32_t originalw, uint32_t originalh,uint32_t fps1000)
+/**
+    \fn DIA_resize
+    \brief Dialog for resizer, gtk flavor
+*/
+bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize)
 {
-
-
 	char str[100];
 	uint8_t ret=0;
 
@@ -74,11 +75,11 @@ uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *alg,uint32_t origi
 		pal=0;
 	}
 
-	ow=originalw;
-	oh=originalh;
+	ow=originalWidth;
+	oh=originalHeight;
 
-	iw=*width;
-	ih=*height;
+	iw=resize->width;
+	ih=resize->height;
 	dialog=create_dialog1();
 	//gtk_transient(dialog);
         gtk_register_dialog(dialog);
@@ -91,13 +92,15 @@ uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *alg,uint32_t origi
 	gtk_adjustment_set_value( GTK_ADJUSTMENT(adj_angle),(  gdouble  ) val );
 
 	// remember algo
- 	gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu1)), *alg);
+ 	gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu1)), resize->algo);
+    gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu_source)), resize->sourceAR);
+    gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu_dest)), resize->targetAR);
 
 
 	#define CONNECT(w,x) gtk_signal_connect(GTK_OBJECT(lookup_widget(dialog,#w)), #x, \
 		       GTK_SIGNAL_FUNC(drag), NULL)
 
-		       	CONNECT(hscale1,drag_data_received);
+            CONNECT(hscale1,drag_data_received);
 			CONNECT(hscale1,drag_motion);
 			CONNECT(hscale1,drag_data_get);
 			CONNECT(hscale1,drag_begin);
@@ -115,9 +118,11 @@ uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *alg,uint32_t origi
 			case GTK_RESPONSE_OK:
 				gchar *s;
 
-                                SPIN_GET(spinbutton_width,*width);
-                                SPIN_GET(spinbutton_height,*height);
-				*alg= getRangeInMenu(lookup_widget(dialog,"optionmenu1"));
+                SPIN_GET(spinbutton_width,resize->width);
+                SPIN_GET(spinbutton_height,resize->height);
+                resize->algo= getRangeInMenu(lookup_widget(dialog,"optionmenu1"));
+                resize->sourceAR=getRangeInMenu(WID(optionmenu_source));
+                resize->targetAR=getRangeInMenu(WID(optionmenu_dest));
 				ret=1;
 				stop=1;
 				break;
@@ -132,7 +137,7 @@ uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *alg,uint32_t origi
 		}
 
 	}
-        gtk_unregister_dialog(dialog);
+    gtk_unregister_dialog(dialog);
 	gtk_widget_destroy(dialog);
 
 	return ret;
