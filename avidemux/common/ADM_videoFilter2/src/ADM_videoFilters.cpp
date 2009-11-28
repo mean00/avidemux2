@@ -143,13 +143,14 @@ bool ADM_vf_configureFilterAtIndex(int index)
     //
     ADM_assert(index<ADM_vf_getSize());
     ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
-    if(e->instance->configure())
-    {
-        if(e->instance->configure())
+    ADM_coreVideoFilter *instance=e->instance;
+    ADM_assert(instance);
+
+        if(instance->configure())
         {
             return ADM_vf_recreateChain();
         }
-    }
+
     return true;
 }
 
