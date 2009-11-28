@@ -27,4 +27,7 @@ const char *ADM_vf_getDisplayNameFromTag(uint32_t tag);
 const char *ADM_vf_getInternalNameFromTag(uint32_t tag);
 ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag,ADM_coreVideoFilter *last,CONFcouple *couples);
 
+uint32_t    ADM_vf_getTagFromInternalName(const char *name);
+bool        ADM_vf_addFilter(uint32_t tag,CONFcouple *couples);
+
 #endif //ADM_VIDEO_FILTER_API_H

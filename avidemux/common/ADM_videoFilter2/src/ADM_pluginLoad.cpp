@@ -227,6 +227,26 @@ static ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag)
     ADM_assert(0);
 }
 /**
+    \fn ADM_vf_getPluginFromTag
+    \brief 
+*/
+static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
+{
+    for(int cat=0;cat<VF_MAX;cat++)
+    {
+        int nb=ADM_videoFilterPluginsList[cat].size();
+        for(int i=0;i<nb;i++)
+        {
+            if(!strcasecmp(ADM_videoFilterPluginsList[cat][i]->getInternalName(),name))
+            {
+                return ADM_videoFilterPluginsList[cat][i];
+            }
+        }
+    }
+    ADM_error("Cannot get video filter from name %s\n",name);
+    ADM_assert(0);
+}
+/**
     \fn ADM_VideoFilters
     \brief
 */
@@ -253,5 +273,14 @@ const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
   ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
     return plugin->getInternalName();
 }
+/**
+    \fn ADM_vf_getTagFromInternalName
+    \brief 
+*/
+uint32_t    ADM_vf_getTagFromInternalName(const char *name)
+{
+    ADM_vf_plugin *plg=ADM_vf_getPluginFromInternalName(name);
+    return plg->tag;
 
+}
 //EOF

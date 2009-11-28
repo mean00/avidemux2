@@ -68,19 +68,20 @@ ADM_coreVideoFilter *last=NULL;
         \fn ADM_vf_addFilterFromTag
         \brief Add a new video filter (identified by tag) at the end of the activate filter list
 */
-bool                    ADM_vf_addFilterFromTag(uint32_t tag)
+bool                    ADM_vf_addFilterFromTag(uint32_t tag,CONFcouple *c,bool configure)
 {
     ADM_info("Creating video filter using tag %"LU" \n",tag);
     // Fetch the descriptor...
     
     ADM_coreVideoFilter *last=getLastVideoFilter();
  
-    ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,last,NULL);
-    if(nw->configure()==false)
-    {
-        delete nw;
-        return false;
-    }
+    ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,last,c);
+    if(true==configure)
+        if(nw->configure()==false)
+        {
+            delete nw;
+            return false;
+        }
     ADM_VideoFilterElement e;
     e.tag=tag;
     e.instance=nw;
