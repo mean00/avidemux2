@@ -559,6 +559,7 @@ JSBool ADM_JSAvidemux::setContainer(JSContext *cx, JSObject *obj, uintN argc, js
             {
                 *rval = BOOLEAN_TO_JSVAL( ADM_mx_setExtraConf(idx,c));
             }
+            if(c) delete c;
         }
         /* Now lockup extra params....*/
         

@@ -25,6 +25,8 @@
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_script/ADM_container.h"
 #include "ADM_videoEncoderApi.h"
+#include "ADM_videoFilterApi.h"
+#include "ADM_videoFilters.h"
 
 //extern VF_FILTERS filterGetTagFromName(const char *inname);
 extern uint8_t A_ListAllBlackFrames( char *file );
@@ -215,38 +217,24 @@ JSBool ADM_JSAvidemuxVideo::ClearFilters(JSContext *cx, JSObject *obj, uintN arg
 JSBool ADM_JSAvidemuxVideo::AddFilter(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin AddFilter
-#if 0
-        VF_FILTERS filter;
+
+        uint32_t filterTag;
 
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
         if(argc == 0)
                 return JS_FALSE;
+        char *filterName=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+        filterTag = ADM_vf_getTagFromInternalName(filterName);
+        ADM_info("Adding Filter %s -> %"LU"... \n",filterName,filterTag);
 
-        filter = filterGetTagFromName(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
-        printf("Adding Filter \"%d\"... \n",filter);
-
-        Arg args[argc];
-        char *v;
-        for(int i=0;i<argc;i++) 
-        {
-                args[i].type=APM_STRING;
-                if(JSVAL_IS_STRING(argv[i]) == false)
-                {
-                        return JS_FALSE;
-                }
-                v=ADM_strdup(JS_GetStringBytes(JSVAL_TO_STRING(argv[i])));
-                args[i].arg.string=v;
-        }
         enterLock();
-        *rval= BOOLEAN_TO_JSVAL(filterAddScript(filter,argc,args));
+        CONFcouple *c=NULL;
+        if(argc)
+            jsArgToConfCouple(argc-1,&c,argv+1);
+        *rval=BOOLEAN_TO_JSVAL(  ADM_vf_addFilterFromTag(filterTag,c,false));
+        if(c) delete c;
         leaveLock();
-        
-        for(int i=0;i<argc;i++) 
-        {
-            ADM_dealloc(args[i].arg.string);
-        }
-#endif        
         return JS_TRUE;
 }// end AddFilter
 /**
@@ -275,7 +263,8 @@ JSBool ADM_JSAvidemuxVideo::Codec(JSContext *cx, JSObject *obj, uintN argc,
         CONFcouple *c;
         jsArgToConfCouple(argc-1,&c,argv+1);
         *rval = BOOLEAN_TO_JSVAL( videoEncoder6_SetConfiguration(c));
-        printf("Selected codec %s\n",codec);
+        ADM_info("Selected codec %s\n",codec);
+        if(c) delete c;
         leaveLock();
 
         return JS_TRUE;

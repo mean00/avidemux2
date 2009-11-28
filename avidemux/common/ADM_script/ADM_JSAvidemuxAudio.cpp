@@ -403,9 +403,10 @@ JSBool ADM_JSAvidemuxAudio::Codec(JSContext *cx, JSObject *obj, uintN argc,
                 int nb=argc-2;
                 jsArgToConfCouple( nb,&c,  argv+2);
             }
-
             *rval = BOOLEAN_TO_JSVAL(setAudioExtraConf(bitrate,c));
+            if(c) delete c;
         }
+
         // end set bitrate
         leaveLock();
         return JS_TRUE;
