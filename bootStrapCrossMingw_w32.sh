@@ -17,11 +17,12 @@ Process()
 {
         export BUILDDIR=$1
         export SCRIPT=$2
-        echo "Building $BUILDDIR from $SOURCEDIR"
+        export EXTRA=$3
+        echo "Building $BUILDDIR from $SOURCEDIR (Extra=$EXTRA)"
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        sh $TOP/foreignBuilds/$SCRIPT || fail cmake
+        sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
         make -j 2 > /tmp/log$BUILDDIR || fail make
         make install || fail make_install
 }
@@ -40,7 +41,8 @@ Process buildMingwQt4 cross_mingw_qt4
 #Process buildGtk ../avidemux/gtk
 echo "** Plugins **"
 cd $TOP
-Process buildMingwPlugins cross_mingw_plugins 
+Process buildMingwPluginsCommon cross_mingw_plugins -DPLUGIN_UI=COMMON
+Process buildMingwPluginsQt4 cross_mingw_plugins -DPLUGIN_UI=QT4
 echo "** All done **"
 cd $TOP
 echo "** ALL DONE **"

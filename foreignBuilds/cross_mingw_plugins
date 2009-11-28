@@ -20,4 +20,5 @@ cmake   -DCROSS=$MINGW \
         -DQT_HOME:STRING=$QT_HOME \
          $DEBUG -G "CodeBlocks - Unix Makefiles"  \
         -DAVIDEMUX_SOURCE_DIR="$TOP"  \
+        $@ \
         $TOP/avidemux_plugins
