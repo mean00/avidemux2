@@ -10,6 +10,7 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_filterCategory.h"
 #include "ADM_paramList.h"
+#include "ADM_coreUtils.h"
 
 #define VF_API_VERSION 1
 /* These are the 6 functions exported by each plugin ...*/

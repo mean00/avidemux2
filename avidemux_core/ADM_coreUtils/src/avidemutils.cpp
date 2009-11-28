@@ -33,6 +33,7 @@ bool     ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcod
 void     memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);
 uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
+uint32_t ADM_Fps1000FromUs(uint64_t us);
 //_________________________________________________
 //      Convert a frame number into equivalent in ms
 //_________________________________________________
@@ -281,6 +282,20 @@ float f;
       f=f*1000; // In seconds
       f=f*1000000; // In us;
       return (uint32_t) floor(f);
+
+}
+/**
+    \fn ADM_Fps1000FromUs
+    \brief time increment to fps1000
+*/
+uint32_t ADM_Fps1000FromUs(uint64_t us)
+{
+    if(us<1000) return 1000;
+    float f;
+    f=us;
+    f=1000000./f;
+    f*=1000;
+    return (uint32_t)(f+0.5);
 
 }
 void printBih(ADM_BITMAPINFOHEADER *bi)
