@@ -19,7 +19,7 @@ Process()
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $SOURCEDIR || fail cmake
+        cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $SOURCEDIR || fail cmake
         make -j 2 > /tmp/log$BUILDDIR || fail make
         fakeroot make package DESTDIR=debPack || fail package
 }
@@ -48,6 +48,7 @@ usage()
         echo "Bootstrap avidemux 2.6:"
         echo "***********************"
         echo "  --help            : Print usage"
+        echo "  --rpm             : Build rpm packages rather than deb"
         echo "  --with-core       : Build core"
         echo "  --without-core    : Dont build core"
         echo "  --with-cli        : Build cli"
@@ -68,6 +69,9 @@ while [ $# != 0 ] ;do
              usage
              exit 1
              ;;
+         --rpm)
+                PKG="$PKG -DRPM=1"
+                ;;
          --without-qt4)
                 do_qt4=0
              ;;

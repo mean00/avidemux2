@@ -70,6 +70,10 @@ INCLUDE(admConfigSummary)
 #
 # Packaging
 #
-INCLUDE(./corePackageDebian.cmake)
+IF(RPM)
+        INCLUDE(./corePackageRpm.cmake)
+ELSE(RPM)
+        INCLUDE(./corePackageDebian.cmake)
+ENDIF(RPM)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6") 
 MESSAGE("")
