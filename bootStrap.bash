@@ -127,16 +127,22 @@ if [ "x$do_qt4" = "x1" ] ; then
         echo "** QT4 **"
         cd $TOP
         Process buildQt4 ../avidemux/qt4
+        echo " Qt4 needs to be installed, installing through sudo make install ...."
+        cd $TOP/buildQt4 && sudo make install
 fi
 if [ "x$do_cli" = "x1" ] ; then 
         echo "** CLI **"
         cd $TOP
         Process buildCli ../avidemux/cli
+        echo " Cli needs to be installed, installing through sudo make install ...."
+        cd $TOP/buildCli && sudo make install
 fi
 if [ "x$do_gtk" = "x1" ] ; then 
         echo "** GTK **"
         cd $TOP
         Process buildGtk ../avidemux/gtk
+        echo " Gtk needs to be installed, installing through sudo make install ...."
+        cd $TOP/buildGtk && sudo make install
 fi
 if [ "x$do_plugins" = "x1" ] ; then 
         echo "** Plugins **"
