@@ -131,7 +131,7 @@ if [ "x$do_cli" = "x1" ] ; then
         cd $TOP
         Process buildCli ../avidemux/cli
 fi
-if [ "x$do_qt4" = "x1" ] ; then 
+if [ "x$do_gtk" = "x1" ] ; then 
         echo "** GTK **"
         cd $TOP
         Process buildGtk ../avidemux/gtk
