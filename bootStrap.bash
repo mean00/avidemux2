@@ -1,4 +1,5 @@
 #!/bin/bash
+packages_ext=deb
 do_core=1
 do_cli=0
 do_gtk=1
@@ -70,6 +71,7 @@ while [ $# != 0 ] ;do
              exit 1
              ;;
          --rpm)
+                packages_ext=rpm
                 PKG="$PKG -DRPM=1"
                 ;;
          --without-qt4)
@@ -161,7 +163,7 @@ echo "** Preparing debs **"
 cd $TOP
 rm -Rf debs
 mkdir debs
-find . -name "*.deb" | grep -vi cpa | xargs cp -t debs
+find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t debs
 echo "** debs directory ready **"
 ls -l debs
 echo "** ALL DONE **"
