@@ -12,7 +12,7 @@ SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
 ENDIF (X86_64_SUPPORTED)
 # Mandatory
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "mean")
-SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Simple video editori,main program qt4 version ")
+SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Simple video editor,main program qt4 version ")
 
 # Build our deps list
 # Build deps SET(DEPS "debhelper (>> 4), libfreetype6-dev, libxml2-dev,  libxv-dev, dpatch , cmake, desktop-file-utils")
