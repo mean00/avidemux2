@@ -47,6 +47,7 @@
 std::vector <std::string> g_vIncludes;
 extern char **environ;
 extern char *script_getVar(char *in, int *r);
+extern bool jsLog(const char *v);
 
 JSBool displayError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool displayInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -242,12 +243,16 @@ JSBool dirSelect(JSContext *cx, JSObject *obj, uintN argc,
         *rval=STRING_TO_JSVAL(JS_NewStringCopyZ(cx,name));
         return JS_TRUE;
 }
+/**
+
+*/
 JSBool print(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin print
         if(argc != 1)
                 return JS_FALSE;
-	fprintf(stderr,"JSConsole: %s\n", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+        char *out=JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+        jsLog(out);
         return JS_TRUE;
 }// end print
 /*****************************************************

@@ -67,6 +67,8 @@ TARGET_LINK_LIBRARIES(avidemux3_cli ADM_dialogCli6)
 TARGET_LINK_LIBRARIES(avidemux3_cli ADM_gui2Cli6)
 TARGET_LINK_LIBRARIES(avidemux3_cli ADM_toolkitCli6)
 TARGET_LINK_LIBRARIES(avidemux3_cli ADM_UI_Cli6)
+TARGET_LINK_LIBRARIES(avidemux3_cli ADM_UI_Cli6)
+TARGET_LINK_LIBRARIES(avidemux3_cli ADM_shellCli)
 ###########################################
 # External libs
 ###########################################

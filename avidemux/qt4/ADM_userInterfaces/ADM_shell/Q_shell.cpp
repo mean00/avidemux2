@@ -52,6 +52,17 @@ bool            qShell::evaluate(bool x)
     evaluator(text.toAscii());
     return true;
 }
+bool qShell::print(const char *s)
+{
+    ui.textBrowser->append(s);
+    return true;
+}
+bool qShell::clear(bool x)
+{
+    ui.textBrowser->clear();
+    return true;
+}
+
 //EOF
 
 

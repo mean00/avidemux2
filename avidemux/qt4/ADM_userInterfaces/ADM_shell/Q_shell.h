@@ -21,8 +21,10 @@ public:
                     qShell(jsShellEvaluate *s) ;
     virtual         ~qShell() ;
     bool            run(void);
+    bool            print(const char *s);
 public slots:
     bool            evaluate(bool x);
+    bool            clear(bool x);
 };
 
 #endif

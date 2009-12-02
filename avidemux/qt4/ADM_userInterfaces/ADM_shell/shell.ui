@@ -25,8 +25,14 @@
      <x>20</x>
      <y>0</y>
      <width>511</width>
-     <height>191</height>
+     <height>161</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
    </property>
   </widget>
   <widget class="QTextBrowser" name="textBrowser_2">
@@ -53,6 +59,22 @@
    </property>
    <property name="text">
     <string>Evaluate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Return</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="clear">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>160</y>
+     <width>97</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear</string>
    </property>
   </widget>
  </widget>

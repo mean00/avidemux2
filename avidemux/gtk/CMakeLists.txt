@@ -74,6 +74,7 @@ TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_gui2Gtk)
 #TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_ocrGtk)
 TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_toolkitGtk)
 TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_UI_GTK)
+TARGET_LINK_LIBRARIES(avidemux3_gtk ADM_shellGtk)
 ###########################################
 # External libs
 ###########################################

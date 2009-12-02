@@ -104,7 +104,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         
         // /audio
         oc->mux_rate=30080*1000;
-        
+        audio_st->codec->bit_rate=a[0]->getInfo()->byterate*8;        
        
         oc->preload=3000; // 30 ms preloading
         oc->max_delay=2000; // 500 ms

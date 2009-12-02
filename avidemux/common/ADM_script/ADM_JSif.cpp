@@ -20,6 +20,10 @@
 #include "ADM_jsShell.h"
 void    A_Resync(void);
 
+
+static jsLoggerFunc *jsLogger=NULL;
+static void *jsLoggerCookie=NULL;
+
 /**
     \fn parseECMAScript
     \brief Compile & execute ecma script
@@ -64,4 +68,32 @@ bool interactiveECMAScript(const char *name)
 	A_Resync();
     ADM_info("Ending JS shell...\n");
 	return true;
+}
+/**
+    \fn jsLog
+*/
+bool jsLog(const char *v)
+{
+    if(!jsLogger)
+        fprintf(stderr,"<i>%s</i>\n",v);
+    else    
+        jsLogger(jsLoggerCookie,v);
+    return true;
+}
+/**
+    \fn ADM_jsRegisterLogger
+*/
+bool ADM_jsRegisterLogger(void *cookie,jsLoggerFunc *fun)
+{
+    jsLoggerCookie=cookie;
+    jsLogger=fun;
+    return true;
+}
+/**
+    \fn ADM_jsUnregisterLogger
+*/
+bool ADM_jsUnregisterLogger(void)
+{
+    jsLogger=NULL;
+    return true;
 }

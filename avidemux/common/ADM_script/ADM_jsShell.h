@@ -19,4 +19,8 @@
 typedef bool (jsShellEvaluate)(const char *str);
 bool ADM_startShell(jsShellEvaluate *eval);
 
+typedef bool (jsLoggerFunc)(void *cookie,const char *);
+bool ADM_jsRegisterLogger(void *cookie,jsLoggerFunc *fun);
+bool ADM_jsUnregisterLogger(void);
+
 #endif // ADM_JS_SHELL_H
