@@ -11,6 +11,7 @@ void printJSError(JSContext *cx, const char *message, JSErrorReport *report);
 bool SpidermonkeyInit();
 void SpidermonkeyDestroy();
 bool parseECMAScript(const char *name);
+bool interactiveECMAScript(const char *name);
 void JS_setSuccess(bool bSuccess);
 void *StartThreadSpidermonkey(void *pData);
 

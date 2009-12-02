@@ -40,6 +40,7 @@
 
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
+#include "ADM_script/ADM_JSif.h"
 char * actual_workbench_file;
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
@@ -83,10 +84,6 @@ static void ReSync (void);
 static void cleanUp (void);
 void        updateLoaded (void);
 extern void encoderSetLogFile (char *name);
-
-//__________
-extern bool parseECMAScript(const char *name);
-
 extern void videoCodecConfigureUI(int codecIndex = -1);
 extern void audioCodecChanged(int newcodec);
 extern void videoCodecChanged(int newcodec);
@@ -123,6 +120,9 @@ int nw;
   }
   switch (action)
     {
+        case ACT_JS_SHELL:
+                                interactiveECMAScript("dummy");
+                                return;
         case ACT_AVS_PROXY:
                                 GUI_avsProxy();
                                 return;

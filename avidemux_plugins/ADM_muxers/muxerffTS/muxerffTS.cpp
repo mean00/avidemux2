@@ -61,7 +61,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
      w=s->getWidth();
      h=s->getHeight();
         
-     if(!isMpeg12Compatible(fcc))
+     if(!isMpeg12Compatible(fcc) && !isH264Compatible(fcc))
      {
             printf("[ffTS] video not compatible\n");
             return false;

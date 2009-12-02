@@ -84,6 +84,7 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_internalVideoFilter6)
 TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UIQT4)
 TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_guiQt4)
 TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UI_QT4)
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_shellQt4)
 ###########################################
 # Construct Core libraries
 ###########################################

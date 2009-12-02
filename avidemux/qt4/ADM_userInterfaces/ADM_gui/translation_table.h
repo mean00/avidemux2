@@ -69,7 +69,8 @@ PROCESS(actionPSP_H264,ACT_AUTO_PSP_H264)\
 PROCESS(actionIPOD,ACT_AUTO_IPOD) \
 PROCESS(actionAdd_to_joblist,ACT_ADD_JOB) \
 PROCESS(actionShow_Joblist,ACT_HANDLE_JOB)  \
-PROCESS(actionPlugins,ACT_PLUGIN_INFO)  
+PROCESS(actionPlugins,ACT_PLUGIN_INFO) \
+PROCESS(actionJavaScript_shell,ACT_JS_SHELL) 
 
 #if 0
 PROCESS(actionPrevious_intra_frame,ACT_PreviousKFrame) \

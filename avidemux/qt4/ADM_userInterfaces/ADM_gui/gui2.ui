@@ -1333,6 +1333,7 @@
     <addaction name="actionOCR"/>
     <addaction name="actionOCR_DVB_T_TS_files"/>
     <addaction name="actionGlyphs_Edit"/>
+    <addaction name="actionJavaScript_shell"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -2326,6 +2327,11 @@
   <action name="actionPlugins">
    <property name="text">
     <string>Plugins</string>
+   </property>
+  </action>
+  <action name="actionJavaScript_shell">
+   <property name="text">
+    <string>JavaScript shell</string>
    </property>
   </action>
  </widget>

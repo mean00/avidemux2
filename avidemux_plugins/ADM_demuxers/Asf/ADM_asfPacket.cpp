@@ -306,7 +306,11 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    // Do some sanity check
    if(_offset+paddingLen!=pakSize)
    {
-     printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d %d\n",_offset,paddingLen);
+     ADM_warning("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d+%d!=%d\n",_offset,paddingLen,pakSize);
+     if(pakSize>(_offset+paddingLen))
+     {
+        skip(pakSize-_offset-paddingLen);
+      }
    }
    currentPacket++;
    return 1;
