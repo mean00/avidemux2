@@ -47,14 +47,11 @@
 std::vector <std::string> g_vIncludes;
 extern char **environ;
 extern char *script_getVar(char *in, int *r);
-extern bool jsLog(const char *v);
 
-JSBool displayError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-JSBool displayInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+
 JSBool fileWriteSelect(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool dirSelect(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool fileReadSelect(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-JSBool print(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 JSBool allFilesFrom(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool nextFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -84,18 +81,13 @@ JSBool facMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 JSBool facNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool facThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool facSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-JSBool crashTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-JSBool assertTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 
 static JSFunctionSpec adm_functions[] = {
   /*    name          native          nargs    */
-  {"displayError",      displayError,         1},
-  {"displayInfo",       displayInfo,        1},
   {"fileReadSelect",    fileReadSelect,        0},
   {"fileWriteSelect",   fileWriteSelect,        0},
   {"dirSelect",         dirSelect,        0},
-  {"print",             print,        1},
   {"allFilesFrom",      allFilesFrom,        0},
   {"nextFile",          nextFile,        0},
   {"setSuccess",          setSuccess,        1},
@@ -121,8 +113,6 @@ static JSFunctionSpec adm_functions[] = {
   {"dialogFactoryMatrix",       facMatrix,        0},
   {"dialogFactoryNotch",       facNotch,		  0},
   {"dialogFactoryThreadCount", facThreadCount,		  0},
-  {"crashTest",               crashTest,          0},
-  {"assertTest",               assertTest,        0},
   {0}
 };
 
@@ -174,36 +164,6 @@ JSBool setSuccess(JSContext *cx, JSObject *obj, uintN argc,
 	return JS_TRUE;
 }// end setSuccess
 
-JSBool displayError(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin displayError
-	// default return value
-	if(argc != 1)
-		return JS_FALSE;
-	if(JSVAL_IS_STRING(argv[0]) == false)
-		return JS_FALSE;
-	char  *stringa = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-	GUI_Verbose();
-	GUI_Error_HIG("Error",stringa);
-	GUI_Quiet();
-
-	return JS_TRUE;
-}// end displayError
-JSBool displayInfo(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin displayInfo
-	// default return value
-	if(argc != 1)
-		return JS_FALSE;
-	if(JSVAL_IS_STRING(argv[0]) == false)
-		return JS_FALSE;
-	char  *stringa = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-	GUI_Verbose();
-	GUI_Info_HIG(ADM_LOG_IMPORTANT,"Info",stringa);
-	GUI_Quiet();
-	return JS_TRUE;
-}// end displayInfo
-
 JSBool fileReadSelect(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin fileReadSelect
@@ -243,18 +203,6 @@ JSBool dirSelect(JSContext *cx, JSObject *obj, uintN argc,
         *rval=STRING_TO_JSVAL(JS_NewStringCopyZ(cx,name));
         return JS_TRUE;
 }
-/**
-
-*/
-JSBool print(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin print
-        if(argc != 1)
-                return JS_FALSE;
-        char *out=JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
-        jsLog(out);
-        return JS_TRUE;
-}// end print
 /*****************************************************
         To process a whole directiry at a time
 *******************************************************/
@@ -503,18 +451,5 @@ JSBool pathOnly(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
   return JS_TRUE;
 }// end systemExecute
 
-JSBool crashTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-  
-  int *foobar=NULL;
-  *foobar=0; // CRASH!
-  return JS_TRUE;
-}
-JSBool assertTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-  
-  ADM_assert(0);
-  return JS_TRUE;
-}
 
 //EOF 

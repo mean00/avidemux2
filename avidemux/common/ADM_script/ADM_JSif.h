@@ -13,6 +13,25 @@
  ***************************************************************************/
 #ifndef ADM_JS_IF_H
 #define ADM_JS_IF_H
+
+/**
+    \enum JS_LOG_TYPE
+*/
+typedef enum
+{
+    JS_LOG_NORMAL,
+    JS_LOG_ERROR
+}JS_LOG_TYPE;
+/**
+    \typedef jsLoggerFunc
+*/
+typedef bool (jsLoggerFunc)(void *cookie,JS_LOG_TYPE type,const char *);
+/*
+
+*/
+bool ADM_jsRegisterLogger(void *cookie,jsLoggerFunc *fun);
+bool ADM_jsUnregisterLogger(void);
+
 /**
     \fn parseECMAScript
     \brief Compile & execute ecma script

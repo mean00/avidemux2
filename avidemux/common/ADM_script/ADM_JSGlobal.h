@@ -5,15 +5,18 @@
 
 #include "ADM_smjs/jsapi.h"
 #include <pthread.h>
+#include "ADM_JSif.h"
+bool jsLog(JS_LOG_TYPE type, const char *fmt,...);
 
 // javscript debugging helper
 void printJSError(JSContext *cx, const char *message, JSErrorReport *report);
 bool SpidermonkeyInit();
 void SpidermonkeyDestroy();
-bool parseECMAScript(const char *name);
-bool interactiveECMAScript(const char *name);
 void JS_setSuccess(bool bSuccess);
 void *StartThreadSpidermonkey(void *pData);
+
+
+typedef JSBool JS_PROTOTYPE(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 #ifdef JSDECLARE
 #define JSVAR(a,b,c) a b=c

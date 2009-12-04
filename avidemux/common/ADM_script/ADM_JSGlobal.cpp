@@ -19,48 +19,45 @@
 #include "ADM_JSAvidemux.h"
 #include "ADM_JSDirectorySearch.h"
 #include "ADM_jsShell.h"
-
+#include <stdarg.h>
 extern uint8_t JS_AvidemuxFunction(JSContext *cx,JSObject *global);
+extern bool JS_AvidemuxRegisterDebugFunction(JSContext *cx,JSObject *global);
 extern void A_Resync(void);
+extern bool isJsLogRedirected(void);
 extern char * actual_workbench_file;
-
-void
-printJSError(JSContext *cx, const char *message, JSErrorReport *report)
+/**
+    \fn printJSError
+*/
+void  printJSError(JSContext *cx, const char *message, JSErrorReport *report)
 {// begin printJSError
 int quiet=GUI_isQuiet();
 char buf[4];
 FILE *fd = ADM_fopen(report->filename,"rb");
-        if(quiet)
-                GUI_Verbose();
-	if( fd ){
+    if(quiet)
+            GUI_Verbose();
+	if( fd )
+    {
 		fread(buf,1,4,fd);
 		fclose(fd);
 	}
-	if( strncmp(buf,"//AD",4) ){
+	if( strncmp(buf,"//AD",4) )
+    {
             if (report->filename || report->lineno)
-		GUI_Error_HIG("Spidermonkey ECMAScript Error",
-		              "%s: line %d:\nMsg: %s\n"
+                jsLog(JS_LOG_ERROR,"%s: line %d:\nMsg: %s\n"
                               "Not an ECMAScript file. Try open it with 'File' -> 'Open...'",
                               report->filename,
                               report->lineno,
                               message);
             else
-		GUI_Error_HIG("Spidermonkey ECMAScript Error",
-                              "Not an ECMAScript file. Try open it with 'File' -> 'Open...'");
-	}else{
-		GUI_Error_HIG("Spidermonkey ECMAScript Error", 
-			"%s: line %d:\nMsg: %s\n",
-			report->filename,
-			report->lineno,
-			message);
+                jsLog(JS_LOG_ERROR,"Not an ECMAScript file. Try open it with 'File' -> 'Open...'");
+    
+	}else
+    {
+            jsLog(JS_LOG_ERROR,"%s: line %d:\nMsg: %s\n",report->filename,report->lineno,message);
 	}
-        fprintf(stderr, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  Spidermonkey ECMAScript Error\n");
-        if (report->filename || report->lineno)
-            fprintf(stderr, "\t%s: line %d:\n\tMsg: %s\n",
-                   report->filename, report->lineno, message);
-
-        if(quiet)
-                GUI_Quiet();
+       
+    if(quiet)
+            GUI_Quiet();
 
 }// end printJSError
 
@@ -97,7 +94,8 @@ bool SpidermonkeyInit()
 			JSObject *dsObj = ADM_JSDirectorySearch::JSInit(cx, global);
 			// register error handler
 			JS_SetErrorReporter(cx, printJSError);
-                        JS_AvidemuxFunction(cx,global);
+            JS_AvidemuxFunction(cx,global);
+            JS_AvidemuxRegisterDebugFunction(cx,global);
 			return true;
 		}// end context created
 	}// end runtime created

@@ -18,9 +18,10 @@
 #include "ADM_JSGlobal.h"
 #include "ADM_JSAvidemux.h"
 #include "ADM_jsShell.h"
+#include "ADM_JSif.h"
+#include <stdarg.h>
+
 void    A_Resync(void);
-
-
 static jsLoggerFunc *jsLogger=NULL;
 static void *jsLoggerCookie=NULL;
 
@@ -49,6 +50,14 @@ bool parseECMAScript(const char *name)
 	return g_bJSSuccess;
 }// end parseECMAScript
 /**
+    \fn jsLogger
+*/
+bool isJsLogRedirected(void)
+{
+    if(jsLogger) return true;
+    return false;
+}
+/**
     \fn jsEvaluate
 */
 static bool jsEvaluate(const char *str)
@@ -72,13 +81,25 @@ bool interactiveECMAScript(const char *name)
 /**
     \fn jsLog
 */
-bool jsLog(const char *v)
+bool jsLog(JS_LOG_TYPE type, const char *prf,...)
 {
-    if(!jsLogger)
-        fprintf(stderr,"<i>%s</i>\n",v);
-    else    
-        jsLogger(jsLoggerCookie,v);
-    return true;
+ static char print_buffer[1024];
+  	
+		va_list 	list;
+		va_start(list,	prf);
+		vsnprintf(print_buffer,1023,prf,list);
+		va_end(list);
+		print_buffer[1023]=0; // ensure the string is terminated
+        if(true==isJsLogRedirected())
+            jsLogger(jsLoggerCookie,type,print_buffer);
+        else
+        {
+            if(type==JS_LOG_ERROR)
+                GUI_Error_HIG("Spidermonkey ECMAScript Error","%s",print_buffer);
+            else
+                ADM_warning("[JS]%s",print_buffer);
+        }
+        return true;
 }
 /**
     \fn ADM_jsRegisterLogger

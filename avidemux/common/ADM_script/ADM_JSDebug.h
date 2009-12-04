@@ -1,9 +1,10 @@
 /**
-    \file ADM_jsShell.h
-    \brief Base class for js interactive shell
-    \author mean, fixounet@free.fr
-*/
+    \file ADM_JSDebug.h
+    \brief Debug oriented functions for avidemux JS/JS shell
+    \author mean (c) 2009 fixounet@free.fr
 
+
+*/
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -13,11 +14,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef ADM_JS_SHELL_H
-#define ADM_JS_SHELL_H
-#include "ADM_JSif.h"
-typedef bool (jsShellEvaluate)(const char *str);
-bool ADM_startShell(jsShellEvaluate *eval);
+#ifndef ADMJS_DEBUG_H
+#define ADMJS_DEBUG_H
 
 
-#endif // ADM_JS_SHELL_H
+
+#endif

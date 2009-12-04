@@ -39,12 +39,13 @@ JSPropertySpec *ADM_JsVideoGetProperties(void);
 JSFunctionSpec *ADM_JsVideoGetFunctions(void);
 JSPropertySpec *ADM_JsClassGetProperties(void);
 JSFunctionSpec *ADM_JsClassGetFunctions(void);
+JSFunctionSpec *ADM_JsDebugGetFunctions(void);
 
 static void dumpFunc(JSFunctionSpec *f)
 {
     while(f->name)
     {
-        printf("\t%s(..)\n",f->name);
+        jsLog(JS_LOG_NORMAL,"     %s(..)\n",f->name);
         f++;
     }
 }
@@ -52,7 +53,7 @@ static void dumpProps(JSPropertySpec *f)
 {
     while(f->name)
     {
-        printf("\t%s=xxx\n",f->name);
+        jsLog(JS_LOG_NORMAL,"     %s=xxx\n",f->name);
         f++;
     }
 }
@@ -62,18 +63,20 @@ static void dumpProps(JSPropertySpec *f)
 */
 void ADM_dumpJSHooks(void)
 {
-    printf("Dumping JS interface\n");
-    printf("********************\n");
-    printf("app.\n");
+    jsLog(JS_LOG_NORMAL,"Dumping JS interface\n");
+    jsLog(JS_LOG_NORMAL,"********************\n");
+    jsLog(JS_LOG_NORMAL,"Debug functions :\n");
+    dumpFunc(ADM_JsDebugGetFunctions());
+    jsLog(JS_LOG_NORMAL,"app.\n");
     dumpFunc(ADM_JsClassGetFunctions());
     dumpProps(ADM_JsClassGetProperties());
-    printf("app.video\n");
+    jsLog(JS_LOG_NORMAL,"app.video\n");
     dumpFunc(ADM_JsVideoGetFunctions());
     dumpProps(ADM_JsVideoGetProperties());
-    printf("app.audio\n");
+    jsLog(JS_LOG_NORMAL,"app.audio\n");
     dumpFunc(ADM_JsAudioGetFunctions());
     dumpProps(ADM_JsAudioGetProperties());
-    printf("Done\n");
-    printf("****\n");
+    jsLog(JS_LOG_NORMAL,"Done\n");
+    jsLog(JS_LOG_NORMAL,"****\n");
 
 }
