@@ -97,7 +97,7 @@ bool jsLog(JS_LOG_TYPE type, const char *prf,...)
             if(type==JS_LOG_ERROR)
                 GUI_Error_HIG("Spidermonkey ECMAScript Error","%s",print_buffer);
             else
-                ADM_warning("[JS]%s",print_buffer);
+                ADM_warning("[JS]%s\n",print_buffer);
         }
         return true;
 }

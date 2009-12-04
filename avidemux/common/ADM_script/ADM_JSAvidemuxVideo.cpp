@@ -67,10 +67,6 @@ JSFunctionSpec ADM_JSAvidemuxVideo::avidemuxvideo_methods[] =
     { "hasGmc", hasGmc, 0, 0, 0 },        // Postprocess
     { "frameSize", getFrameSize, 1, 0, 0 },        // FrameSize
     { "frameType", getFrameType, 1, 0, 0 },        // Postprocess
-
-
-    { "dumpEditing", dumpEditing,0,0,0},
-    { "dumpTiming", dumpTiming,0,0,0},
 	{ 0 }
 };
 /*********************************/
@@ -540,44 +536,7 @@ uint32_t sz;
 #endif
         return JS_TRUE;
 }// end PostProcess
-/**
-    \fn dumpEditing
-    \brief dump segment, video & all
-*/
-JSBool ADM_JSAvidemuxVideo::dumpEditing(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin PostProcess
-uint32_t info;
-uint32_t frame;
-uint32_t sz;
-        if(argc != 0)
-          return JS_FALSE;
-  
-        enterLock();
-        video_body->dumpEditing();
-        leaveLock(); 
-        
-        return JS_TRUE;
-}// end PostProcess
-/**
-    \fn dumpTiming
-    \brief dump segment, video & all
-*/
-JSBool ADM_JSAvidemuxVideo::dumpTiming(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin PostProcess
-uint32_t info;
-uint32_t frame;
-uint32_t sz;
-        if(argc != 0)
-          return JS_FALSE;
-  
-        enterLock();
-        video_body->dumpTiming();
-        leaveLock(); 
-        
-        return JS_TRUE;
-}// end PostProcess
+
 /**
     \fn A_setVideoCodec
 */
