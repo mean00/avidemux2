@@ -9,10 +9,10 @@
     \fn qt4ShellLogger
     \brief Redirect output to the shell
 */
-static bool qt4ShellLogger(void *cookie,const char *v)
+static bool qt4ShellLogger(void *cookie,JS_LOG_TYPE type,const char *v)
 {
     qShell *s=(qShell *)cookie;
-    s->print(v);
+    s->print(type,v);
     return true;
 }
 
