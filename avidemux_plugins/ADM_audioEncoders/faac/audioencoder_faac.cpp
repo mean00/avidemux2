@@ -71,12 +71,17 @@ AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream)  :ADM_AudioEncode
     	outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
       break;
     default :
-    	outputChannelMapping[0] = ADM_CH_FRONT_CENTER;
-    	outputChannelMapping[1] = ADM_CH_FRONT_LEFT;
-    	outputChannelMapping[2] = ADM_CH_FRONT_RIGHT;
-    	outputChannelMapping[3] = ADM_CH_REAR_LEFT;
-    	outputChannelMapping[4] = ADM_CH_REAR_RIGHT;
-    	outputChannelMapping[5] = ADM_CH_LFE;
+
+    CHANNEL_TYPE *f=outputChannelMapping;
+        *f++ = ADM_CH_FRONT_CENTER;
+        *f++ = ADM_CH_FRONT_LEFT;
+        *f++ = ADM_CH_FRONT_RIGHT;
+
+        *f++ = ADM_CH_REAR_LEFT;
+        *f++ = ADM_CH_REAR_RIGHT;
+        *f++ = ADM_CH_LFE;
+        
+
   }
   wavheader.encoding=WAV_AAC;
 };
