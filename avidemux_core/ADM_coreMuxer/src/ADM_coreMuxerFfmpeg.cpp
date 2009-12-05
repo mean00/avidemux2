@@ -291,12 +291,25 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
         printf("[FF] Audio initialized\n");
         return true;
 }
+#define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
+class MuxAudioPacket
+{
+public:
+    MuxAudioPacket() {eof=false;dts=ADM_NO_PTS;present=false;size=0;}
+    uint8_t     buffer[AUDIO_BUFFER_SIZE];
+    uint32_t    size;
+    bool        eof;
+    bool        present;
+    uint64_t    dts;
+    uint32_t    samples;
+};
+
 /**
 
 */
 bool muxerFFmpeg::saveLoop(const char *title)
 {
-#define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
+
 
     printf("[FF] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
@@ -314,14 +327,15 @@ bool muxerFFmpeg::saveLoop(const char *title)
     f*=1000000;
     videoIncrement=(uint64_t)f;
 
-    uint8_t *audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
 
 
-    printf("[MP4]avg fps=%u\n",vStream->getAvgFps1000());
+    ADM_info("avg fps=%u\n",vStream->getAvgFps1000());
     AVRational *scale=&(video_st->codec->time_base);
     uint64_t videoDuration=vStream->getVideoDuration();
     
     encoding=createWorking(title);
+
+    MuxAudioPacket audioPackets[nbAStreams];
 
     while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
     {
@@ -387,47 +401,61 @@ bool muxerFFmpeg::saveLoop(const char *title)
             // Now send audio until they all have DTS > lastVideoDts+increment
             for(int audio=0;audio<nbAStreams;audio++)
             {
-                uint32_t audioSize,nbSample;
-                uint64_t audioDts;
+                MuxAudioPacket *audioTrack=&(audioPackets[audio]);
                 ADM_audioStream*a=aStreams[audio];
                 uint32_t fq=a->getInfo()->frequency;
-                int nb=0;
-                while(a->getPacket(audioBuffer,&audioSize, AUDIO_BUFFER_SIZE,&nbSample,&audioDts))
+            
+                while(1)
                 {
+                    if(audioTrack->eof==true) break; // no more packet for this track
+                    if(audioTrack->present==false)
+                    {
+                        if(false==a->getPacket(audioTrack->buffer,
+                                                &(audioTrack->size), 
+                                                AUDIO_BUFFER_SIZE,
+                                                &(audioTrack->samples),
+                                                &(audioTrack->dts)))
+                        {
+                                audioTrack->eof=true;
+                                ADM_info("No more audio packets for audio track %d\n",audio);
+                                break;
+                        }
+                       // printf("Track %d , new audio packet DTS=%"LLD" size=%"LU"\n",audioTrack->dts,audioTrack->size);
+                        audioTrack->present=true;
+                    }
+                    if(audioTrack->dts!=ADM_NO_PTS)
+                    {
+                        if(audioTrack->dts>lastVideoDts+videoIncrement) break; // This packet is in the future
+                    }
                     // Write...
-                    nb++;
                     AVPacket pkt;
                     uint64_t rescaledDts;
-                    rescaledDts=audioDts;
+                    rescaledDts=audioTrack->dts;
                     muxerRescaleAudioTime(&rescaledDts,a->getInfo()->frequency);
-                    aprintf("[FF] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
-                                    written,audioDts,audioSize,nbSample,rescaledDts);
+                   //printf("[FF] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
+                     //               written,audioTrack->dts,audioTrack->size,audioTrack->samples,rescaledDts);
                     av_init_packet(&pkt);
                     
                     pkt.dts=rescaledDts;
                     pkt.pts=rescaledDts;
                     pkt.stream_index=1+audio;
-                    pkt.data= audioBuffer;
-                    pkt.size= audioSize;
+                    pkt.data= audioTrack->buffer;
+                    pkt.size= audioTrack->size;
                     ret =av_write_frame(oc, &pkt);
+                    audioTrack->present=false; // consumed
                     if(ret)
                     {
-                        printf("[FF]Error writing audio packet\n");
+                        ADM_warning("[FF]Error writing audio packet\n");
                         break;
                     }
-                    aprintf("[FF] A:%"LU" ms vs V: %"LU" ms\n",(uint32_t)audioDts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
-                    if(audioDts!=ADM_NO_PTS)
-                    {
-                        if(audioDts>lastVideoDts+videoIncrement) break;
-                    }
+                   // printf("[FF] A:%"LU" ms vs V: %"LU" ms\n",(uint32_t)audioTrack->dts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
                 }
                 //if(!nb) printf("[FF] A: No audio for video frame %d\n",written);
             }
 
     }
     delete [] buffer;
-    delete [] audioBuffer;
-    printf("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
+    ADM_info("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
     return result;
 }
 // EOF
