@@ -235,19 +235,36 @@ int nbChunk;
           {
             *outptr++=((float)run16[i])/32767.;
           }
+        }
           if(channels>=5 )
             {
             CHANNEL_TYPE *p_ch_type = channelMapping;
-        #define DOIT(x,y) if(_context->channel_layout & CH_##x) *(p_ch_type++)=ADM_CH_##y;
-                DOIT(LOW_FREQUENCY,LFE);
-                DOIT(FRONT_LEFT,FRONT_LEFT);
-                DOIT(FRONT_CENTER,FRONT_CENTER);
-                DOIT(FRONT_RIGHT,FRONT_RIGHT);
-                DOIT(SIDE_LEFT,REAR_LEFT);
-                DOIT(SIDE_RIGHT,REAR_RIGHT);
+#define DOIT(x,y) if(_context->channel_layout & CH_##x) *(p_ch_type++)=ADM_CH_##y;
+            if(_context->codec_id == CODEC_ID_DTS)
+                {
+                    
+                    DOIT(FRONT_LEFT,FRONT_LEFT);
+                    DOIT(FRONT_RIGHT,FRONT_RIGHT);
+                    DOIT(FRONT_CENTER,FRONT_CENTER);
 
+                    
+                    DOIT(LOW_FREQUENCY,LFE);
+                    DOIT(SIDE_LEFT,REAR_LEFT);
+                    DOIT(SIDE_RIGHT,REAR_RIGHT);
+                    
+                    
+ 
+                }else   
+                {
+                    DOIT(LOW_FREQUENCY,LFE);
+                    DOIT(FRONT_LEFT,FRONT_LEFT);
+                    DOIT(FRONT_CENTER,FRONT_CENTER);
+                    DOIT(FRONT_RIGHT,FRONT_RIGHT);
+                    DOIT(SIDE_LEFT,REAR_LEFT);
+                    DOIT(SIDE_RIGHT,REAR_RIGHT);
+                }
             }
-        }
+        
         return 1;
 }
 //---
