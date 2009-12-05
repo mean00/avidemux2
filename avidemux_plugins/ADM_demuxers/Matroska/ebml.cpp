@@ -306,8 +306,8 @@ uint8_t ADM_ebml_file::seek(uint64_t pos)
 }
 uint8_t ADM_ebml_file::finished(void)
 {
-  if(tell()>(_fileSize-4)) return 1;
-  if(tell()>(_begin+_size-4)) return 1;
+  if(tell()>(_fileSize-2)) return 1;
+  if(tell()>(_begin+_size-2)) return 1;
   return 0;
 }
 /**

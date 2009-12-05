@@ -3,7 +3,7 @@ INCLUDE_DIRECTORIES( .)
 set(MKV ../../avidemux_plugins/ADM_demuxers/Matroska/)
 INCLUDE_DIRECTORIES( ${MKV})
 #LINK_DIRECTORIES(${ITK_LIBRARY_DIRS})
-ADD_DEFINITIONS("-g")
+ADD_DEFINITIONS("-g -DADM_fopen=fopen")
 
 
 SET(sources
