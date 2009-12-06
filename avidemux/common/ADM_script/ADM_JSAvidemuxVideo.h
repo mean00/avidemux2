@@ -20,7 +20,6 @@ public:
 	static void JSDestructor(JSContext *cx, JSObject *obj);
 	static JSObject *JSInit(JSContext *cx, JSObject *obj, JSObject *proto = NULL);
 	static JSBool Clear(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	static JSBool Add(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	static JSBool ClearFilters(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	static JSBool AddFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	static JSBool IndexMPEG(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);

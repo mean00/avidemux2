@@ -39,6 +39,7 @@ extern JSFunctionSpec *ADM_JsAudioGetFunctions(void);
 extern JSFunctionSpec *ADM_JsVideoGetFunctions(void);
 extern JSFunctionSpec *ADM_JsClassGetFunctions(void);
 extern JSFunctionSpec *ADM_JsDebugGetFunctions(void);
+extern JSFunctionSpec *ADM_JsFunctionGetFunctions(void);
 
 /**/
 static JSFunctionSpec adm_debug_functions[] = {
@@ -163,7 +164,7 @@ JSBool help(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
         if(!argc)
         {
-            jsLog(JS_LOG_NORMAL,"help(\"video\"); or help(\"audio\"); or help(\"debug\"); or debug(\"functions\"");
+            jsLog(JS_LOG_NORMAL,"help(\"class\"); or help(\"video\"); or help(\"audio\"); or help(\"debug\"); or debug(\"functions\"");
             return JS_TRUE;
         }
         if(argc != 1)
@@ -180,7 +181,8 @@ JSBool help(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
             DUMPTABLE(audio,ADM_JsAudioGetFunctions);
             DUMPTABLE(video,ADM_JsVideoGetFunctions);
             DUMPTABLE(debug,ADM_JsDebugGetFunctions);
-            DUMPTABLE(functions,ADM_JsClassGetFunctions);
+            DUMPTABLE(functions,ADM_JsFunctionGetFunctions);
+            DUMPTABLE(class,ADM_JsClassGetFunctions);
         }
         if(table) dumpFunc(table);
         else jsLog(JS_LOG_ERROR,"%s not found",f);

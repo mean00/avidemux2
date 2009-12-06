@@ -3,6 +3,7 @@ SET(ADM_script_SRCS
 	ADM_Avidemux.cpp       ADM_JSAvidemuxAudio.cpp  ADM_JSAvidemuxVideo.cpp  ADM_JSFunctions.cpp        DirectorySearch.cpp
         ADM_JSFunctionsNonRegFactory.cpp
         ADM_JSif.cpp ADM_JSDebug.cpp
+        ADM_jsUtils.cpp
 )
 
 ADD_LIBRARY(ADM_script6 STATIC ${ADM_script_SRCS})

@@ -16,13 +16,14 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_segment.h"
- #include "../ADM_codecs/ADM_codec.h"
- #include "ADM_image.h"
- #include "../ADM_editor/ADM_edCache.h"
- #include "ADM_pp.h"
- #include "ADM_colorspace.h"
+#include "../ADM_codecs/ADM_codec.h"
+#include "ADM_image.h"
+#include "../ADM_editor/ADM_edCache.h"
+#include "ADM_pp.h"
+#include "ADM_colorspace.h"
 #include "ADM_vidMisc.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_script/ADM_JSif.h"
 
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
@@ -459,12 +460,12 @@ void ADM_EditorSegment::dump(void)
     {
         _SEGMENT *s=getSegment(i);
         
-        printf("Segment :%d/%d\n",i,n);
-        printf("\tReference    :%"LU"\n",s->_reference,ADM_us2plain(s->_reference));
-        printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
-        printf("\tduration     :%08"LLU" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
-        printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
-        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,ADM_us2plain(s->_refStartDts));
+        jsLog(JS_LOG_NORMAL,"Segment :%d/%d",i,n);
+        jsLog(JS_LOG_NORMAL,"\tReference    :%"LU,s->_reference,ADM_us2plain(s->_reference));
+        jsLog(JS_LOG_NORMAL,"\tstartLinear  :%08"LLU" %s",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
+        jsLog(JS_LOG_NORMAL,"\tduration     :%08"LLU" %s",s->_durationUs,ADM_us2plain(s->_durationUs));
+        jsLog(JS_LOG_NORMAL,"\trefStartPts  :%08"LLU" %s",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
+        jsLog(JS_LOG_NORMAL,"\trefStartDts  :%08"LLU" %s",s->_refStartDts,ADM_us2plain(s->_refStartDts));
     }
 }
 

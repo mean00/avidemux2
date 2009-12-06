@@ -43,5 +43,9 @@ bool parseECMAScript(const char *name);
     \brief interprete & execute ecma script (interactive)
 */
 bool interactiveECMAScript(const char *name);
+/**
+    \fn jsLog
 
+*/
+bool jsLog(JS_LOG_TYPE type, const char *fmt,...);
 #endif

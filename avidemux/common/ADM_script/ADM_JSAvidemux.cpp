@@ -21,10 +21,12 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_muxerProto.h"
-
+#include "ADM_confCouple.h"
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_SCRIPT
 #include "ADM_debug.h"
+#include "ADM_JSDebug.h"
+#include "ADM_jsUtils.h"
 
 extern int A_openAvi (const char *name);
 extern int A_Save (const char *name);
@@ -440,16 +442,18 @@ JSBool ADM_JSAvidemux::AddSegment(JSContext *cx, JSObject *obj, uintN argc,
                                        jsval *argv, jsval *rval)
 {// begin AddSegment
         ADM_JSAvidemux *p = (ADM_JSAvidemux *)JS_GetPrivate(cx, obj);
+        //
+        uint32_t ref=0;
+        uint64_t duration=0,start=0;
+        ADM_PARAM_LIST params[3]={{ADM_JS_UINT32_T,&ref},{ADM_JS_UINT64_T,&start},{ADM_JS_UINT64_T,&duration}};
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
-        if(argc != 3)
-                return JS_FALSE;
-	if(JSVAL_IS_INT(argv[0]) == false || JSVAL_IS_INT(argv[1]) == false || JSVAL_IS_INT(argv[2]) == false)
-		return JS_FALSE;
-        uint64_t ref = JSVAL_TO_INT(argv[0]);
-        uint64_t start= JSVAL_TO_INT(argv[1]);
-        uint64_t duration= JSVAL_TO_INT(argv[2]);
-        aprintf("adding segment :%d %d %d\n",a,b,c);
+        if(false==ADM_jsArg2Vars(cx, obj, argc, argv, 3, params))
+        {
+            jsLog(JS_LOG_ERROR,"wrong arguments to AddSegment");
+            return JS_FALSE;
+        }
+        ADM_info("adding segment :%d %d %d\n",ref,start,duration);
         enterLock();
         *rval = BOOLEAN_TO_JSVAL( video_body->addSegment(ref,start,duration));
         leaveLock();

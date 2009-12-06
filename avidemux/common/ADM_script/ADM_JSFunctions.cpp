@@ -115,6 +115,10 @@ static JSFunctionSpec adm_functions[] = {
   {"dialogFactoryThreadCount", facThreadCount,		  0},
   {0}
 };
+JSFunctionSpec *ADM_JsFunctionGetFunctions(void)
+{
+    return adm_functions;
+}
 
 uint8_t JS_AvidemuxFunction(JSContext *cx,JSObject *global)
 {

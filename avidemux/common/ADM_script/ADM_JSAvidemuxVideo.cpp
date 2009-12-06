@@ -30,10 +30,8 @@
 
 //extern VF_FILTERS filterGetTagFromName(const char *inname);
 extern uint8_t A_ListAllBlackFrames( char *file );
-extern uint8_t loadVideoCodecConfString( const char *name);
 extern uint8_t ADM_saveRaw (const char *name);
 extern int A_saveJpg (char *name);
-extern uint8_t loadVideoCodecConf( const char *name);
 extern void filterCleanUp( void );
 extern bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
 bool A_setVideoCodec(const char *nm);
@@ -48,7 +46,6 @@ JSPropertySpec ADM_JSAvidemuxVideo::avidemuxvideo_properties[] =
 JSFunctionSpec ADM_JSAvidemuxVideo::avidemuxvideo_methods[] = 
 {
 	{ "clear", Clear, 0, 0, 0 },	// clear
-	{ "add", Add, 3, 0, 0 },	// add
     { "clearFilters", ClearFilters, 0, 0, 0 }, // Delete all filters
 	{ "addFilter", AddFilter, 10, 0, 0 },	// Add filter to filter chain
 	{ "codec", Codec, 1, 0, 0 },	// Set the video codec
@@ -184,23 +181,6 @@ JSBool ADM_JSAvidemuxVideo::Clear(JSContext *cx, JSObject *obj, uintN argc,
         return JS_TRUE;
 }// end Clear
 
-JSBool ADM_JSAvidemuxVideo::Add(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin Add
-        ADM_JSAvidemuxVideo *p = (ADM_JSAvidemuxVideo *)JS_GetPrivate(cx, obj);
-        // default return value
-        *rval = BOOLEAN_TO_JSVAL(false);
-        if(argc != 3)
-                return JS_FALSE;
-        if(JSVAL_IS_INT(argv[0]) == false || JSVAL_IS_INT(argv[1]) == false  || JSVAL_IS_INT(argv[2]) == false)
-                return JS_FALSE;
-        printf("Adding Video... \n");
-        enterLock();
-//        *rval = BOOLEAN_TO_JSVAL(video_body->addSegment(JSVAL_TO_INT(argv[0]),JSVAL_TO_INT(argv[1]),JSVAL_TO_INT(argv[2])));
-        leaveLock();
-        return JS_TRUE;
-}// end Add
-
 
 JSBool ADM_JSAvidemuxVideo::ClearFilters(JSContext *cx, JSObject *obj, uintN argc,
                                        jsval *argv, jsval *rval)
@@ -209,7 +189,9 @@ JSBool ADM_JSAvidemuxVideo::ClearFilters(JSContext *cx, JSObject *obj, uintN arg
         return JS_TRUE;
 }// end Clear
 
-
+/**
+    \fn AddFilter
+*/
 JSBool ADM_JSAvidemuxVideo::AddFilter(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin AddFilter
@@ -266,7 +248,9 @@ JSBool ADM_JSAvidemuxVideo::Codec(JSContext *cx, JSObject *obj, uintN argc,
         return JS_TRUE;
 }// end Codec
 
-
+/**
+    \fn Save
+*/
 JSBool ADM_JSAvidemuxVideo::Save(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin Save
@@ -285,7 +269,9 @@ JSBool ADM_JSAvidemuxVideo::Save(JSContext *cx, JSObject *obj, uintN argc,
 #endif
         return JS_TRUE;
 }// end Save
-
+/**
+    \fn saveJpeg
+*/
 JSBool ADM_JSAvidemuxVideo::SaveJPEG(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin SaveJPG
@@ -304,7 +290,9 @@ JSBool ADM_JSAvidemuxVideo::SaveJPEG(JSContext *cx, JSObject *obj, uintN argc,
 #endif
         return JS_TRUE;
 }// end SaveJPG
-
+/**
+    \fn ListBlackFrames
+*/
 JSBool ADM_JSAvidemuxVideo::ListBlackFrames(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin ListBlackFrames
@@ -324,7 +312,9 @@ JSBool ADM_JSAvidemuxVideo::ListBlackFrames(JSContext *cx, JSObject *obj, uintN 
 #endif
         return JS_TRUE;
 }// end ListBlackFrames
-
+/**
+    \fn PostProcess
+*/
 JSBool ADM_JSAvidemuxVideo::PostProcess(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -342,7 +332,9 @@ JSBool ADM_JSAvidemuxVideo::PostProcess(JSContext *cx, JSObject *obj, uintN argc
         *rval = BOOLEAN_TO_JSVAL(rtn);
         return JS_TRUE;
 }// end PostProcess
-
+/**
+    \fn GetFps1000
+*/
 JSBool ADM_JSAvidemuxVideo::GetFps1000(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -357,6 +349,9 @@ aviInfo info;
         *rval = INT_TO_JSVAL(info.fps1000);
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn GetNbFrames
+*/
 JSBool ADM_JSAvidemuxVideo::GetNbFrames(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -371,7 +366,9 @@ aviInfo info;
         *rval = INT_TO_JSVAL(info.nb_frames);
         return JS_TRUE;
 }// end PostProcess
-
+/**
+    \fn SetFps1000
+*/
 JSBool ADM_JSAvidemuxVideo::SetFps1000(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -405,7 +402,9 @@ aviInfo info;
         return JS_TRUE;
 }// end PostProcess
 
-
+/**
+    \fn GetWidth
+*/
 JSBool ADM_JSAvidemuxVideo::GetWidth(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -421,6 +420,9 @@ aviInfo info;
         *rval = INT_TO_JSVAL(info.width);
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn SetFps1000
+*/
 JSBool ADM_JSAvidemuxVideo::GetHeight(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -435,6 +437,10 @@ aviInfo info;
         *rval = INT_TO_JSVAL(info.height);
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn GetFCC
+*/
+
 JSBool ADM_JSAvidemuxVideo::GetFCC(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -450,6 +456,9 @@ aviInfo info;
         *rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, fourCC::tostring(info.fcc)));
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn SetFps1000
+*/
 
 JSBool ADM_JSAvidemuxVideo::isVopPacked(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
@@ -467,6 +476,10 @@ int32_t info;
         if(info & ADM_VOP_ON) *rval=JS_TRUE;
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn hasGmc
+*/
+
 JSBool ADM_JSAvidemuxVideo::hasGmc(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -483,6 +496,10 @@ uint32_t info;
         if(info & ADM_GMC_ON) *rval=JS_TRUE;
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn hasQpel
+*/
+
 JSBool ADM_JSAvidemuxVideo::hasQpel(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
@@ -499,6 +516,9 @@ uint32_t info;
         return JS_TRUE;
 }// end PostProcess
 
+/**
+    \fn getFrameSize
+*/
 
 JSBool ADM_JSAvidemuxVideo::getFrameSize(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
@@ -518,6 +538,10 @@ uint32_t sz;
 #endif
         return JS_TRUE;
 }// end PostProcess
+/**
+    \fn getFrameType
+*/
+
 JSBool ADM_JSAvidemuxVideo::getFrameType(JSContext *cx, JSObject *obj, uintN argc, 
                                        jsval *argv, jsval *rval)
 {// begin PostProcess
