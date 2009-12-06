@@ -196,6 +196,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         //case MKV_AUDIO_OUT_FREQUENCY:entry->fq=(uint32_t)floor(father.readFloat(len));break;
         case  MKV_VIDEO_WIDTH: entry->w=father.readUnsignedInt(len);break;
         case  MKV_VIDEO_HEIGHT: entry->h=father.readUnsignedInt(len);break;
+        case  MKV_AUDIO_CHANNELS: entry->chan=father.readUnsignedInt(len);break;
         case  MKV_TRACK_TIMECODESCALE:
                                 {
                                     printf("[Mkv] TimeCodeScale=%"LLU"\n",father.readUnsignedInt(len));
