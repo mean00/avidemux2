@@ -153,13 +153,31 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 	printf("Vorbis init successfull\n");
 	STRUCT->ampscale=1;
 	_init=1;
-
-	channelMapping[0] = ADM_CH_FRONT_LEFT;
-	channelMapping[1] = ADM_CH_FRONT_RIGHT;
-	channelMapping[2] = ADM_CH_REAR_LEFT;
-	channelMapping[3] = ADM_CH_REAR_RIGHT;
-	channelMapping[4] = ADM_CH_FRONT_CENTER;
-	channelMapping[5] = ADM_CH_LFE;
+  CHANNEL_TYPE *p_ch_type = channelMapping;
+#define DOIT(y) *(p_ch_type++)=ADM_CH_##y;
+    switch(STRUCT->vinfo.channels)
+    {
+    case 1:
+    case 2:
+    {
+        DOIT(FRONT_LEFT);
+        DOIT(FRONT_RIGHT);
+        break;
+    }
+    default:
+    case 5:
+    {
+        DOIT(FRONT_LEFT);
+        DOIT(FRONT_CENTER);
+        DOIT(FRONT_RIGHT);
+        
+        
+        DOIT(REAR_LEFT);
+        DOIT(REAR_RIGHT);
+        DOIT(LFE);
+        break;
+    }
+    }
  }
  // This codec expects more or less one packet at a time !
 
@@ -195,7 +213,7 @@ int	nb_synth;
 
 	// Puge them
 	 vorbis_synthesis_read(&STRUCT->vdsp,nb_synth);
-	 printf("This round : in %d bytes, out %d bytes synthetized:%d\n",nbIn,*nbOut,nb_synth);
+	 //printf("This round : in %d bytes, out %d bytes synthetized:%d\n",nbIn,*nbOut,nb_synth);
 	return 1;
 
 }
