@@ -266,7 +266,7 @@ JS_SetDestroyScriptHook(JSRuntime *rt, JSDestroyScriptHook hook,
 
 extern JS_PUBLIC_API(JSBool)
 JS_EvaluateUCInStackFrame(JSContext *cx, JSStackFrame *fp,
-                          const jschar *bytes, uintN length,
+                          const jschar *chars, uintN length,
                           const char *filename, uintN lineno,
                           jsval *rval);
 
@@ -359,8 +359,8 @@ extern JS_PUBLIC_API(uint32)
 JS_GetTopScriptFilenameFlags(JSContext *cx, JSStackFrame *fp);
 
 /*
- * Get the script filename flags for the script.  If the script
- * doesn't have a filename, return JSFILENAME_NULL.
+ * Get the script filename flags for the script.  If the script doesn't have a
+ * filename, return JSFILENAME_NULL.
  */
 extern JS_PUBLIC_API(uint32)
 JS_GetScriptFilenameFlags(JSScript *script);

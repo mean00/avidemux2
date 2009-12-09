@@ -287,22 +287,15 @@ typedef enum JSCharType {
                                    ? (c) + ((int32)JS_CCODE(c) >> 22)         \
                                    : (c)))
 
-/* Shorthands for ASCII (7-bit) decimal and hex conversion. */
-#define JS7_ISDEC(c)    ((c) < 128 && isdigit(c))
+/*
+ * Shorthands for ASCII (7-bit) decimal and hex conversion.
+ * Manually inline isdigit for performance; MSVC doesn't do this for us.
+ */
+#define JS7_ISDEC(c)    ((((unsigned)(c)) - '0') <= 9)
 #define JS7_UNDEC(c)    ((c) - '0')
 #define JS7_ISHEX(c)    ((c) < 128 && isxdigit(c))
-#define JS7_UNHEX(c)    (uintN)(isdigit(c) ? (c) - '0' : 10 + tolower(c) - 'a')
+#define JS7_UNHEX(c)    (uintN)(JS7_ISDEC(c) ? (c) - '0' : 10 + tolower(c) - 'a')
 #define JS7_ISLET(c)    ((c) < 128 && isalpha(c))
-
-/* Initialize truly global state associated with JS strings. */
-extern JSBool
-js_InitStringGlobals(void);
-
-extern void
-js_FreeStringGlobals(void);
-
-extern void
-js_PurgeDeflatedStringCache(JSString *str);
 
 /* Initialize per-runtime string state for the first context in the runtime. */
 extern JSBool
@@ -310,6 +303,9 @@ js_InitRuntimeStringState(JSContext *cx);
 
 extern void
 js_FinishRuntimeStringState(JSContext *cx);
+
+extern void
+js_FinishDeflatedStringCache(JSRuntime *rt);
 
 /* Initialize the String class, returning its prototype object. */
 extern JSClass js_StringClass;
@@ -355,21 +351,29 @@ js_StringToObject(JSContext *cx, JSString *str);
 /*
  * Convert a value to a printable C string.
  */
+typedef JSString *(*JSValueToStringFun)(JSContext *cx, jsval v);
+
 extern JS_FRIEND_API(const char *)
-js_ValueToPrintableString(JSContext *cx, jsval v);
+js_ValueToPrintable(JSContext *cx, jsval v, JSValueToStringFun v2sfun);
+
+#define js_ValueToPrintableString(cx,v) \
+    js_ValueToPrintable(cx, v, js_ValueToString)
+
+#define js_ValueToPrintableSource(cx,v) \
+    js_ValueToPrintable(cx, v, js_ValueToSource)
 
 /*
  * Convert a value to a string, returning null after reporting an error,
  * otherwise returning a new string reference.
  */
-extern JSString *
+extern JS_FRIEND_API(JSString *)
 js_ValueToString(JSContext *cx, jsval v);
 
 /*
  * Convert a value to its source expression, returning null after reporting
  * an error, otherwise returning a new string reference.
  */
-extern JSString *
+extern JS_FRIEND_API(JSString *)
 js_ValueToSource(JSContext *cx, jsval v);
 
 #ifdef HT_ENUMERATE_NEXT        /* XXX don't require jshash.h */
@@ -386,6 +390,12 @@ js_HashString(JSString *str);
  */
 extern intN
 js_CompareStrings(JSString *str1, JSString *str2);
+
+/*
+ * Test if strings are equal.
+ */
+extern JSBool
+js_EqualStrings(JSString *str1, JSString *str2);
 
 /*
  * Boyer-Moore-Horspool superlinear search for pat:patlen in text:textlen.
@@ -437,34 +447,42 @@ js_DeflateString(JSContext *cx, const jschar *chars, size_t length);
  * 'chars' must be large enough for 'length' jschars.
  * The buffer is NOT null-terminated.
  * cx may be NULL, which means no errors are thrown.
- * The destination length needs to be initialized with the buffer size, takes the number of chars moved.
+ * The destination length needs to be initialized with the buffer size, takes
+ * the number of chars moved.
  */
 extern JSBool
-js_InflateStringToBuffer(JSContext* cx, const char *bytes, size_t length, jschar *chars, size_t* charsLength);
+js_InflateStringToBuffer(JSContext* cx, const char *bytes, size_t length,
+                         jschar *chars, size_t* charsLength);
 
 /*
  * Deflate JS chars to bytes into a buffer.
  * 'bytes' must be large enough for 'length chars.
  * The buffer is NOT null-terminated.
  * cx may be NULL, which means no errors are thrown.
- * The destination length needs to be initialized with the buffer size, takes the number of bytes moved.
+ * The destination length needs to be initialized with the buffer size, takes
+ * the number of bytes moved.
  */
 extern JSBool
-js_DeflateStringToBuffer(JSContext* cx, const jschar *chars, size_t charsLength, char *bytes, size_t* length);
+js_DeflateStringToBuffer(JSContext* cx, const jschar *chars,
+                         size_t charsLength, char *bytes, size_t* length);
 
 /*
  * Associate bytes with str in the deflated string cache, returning true on
  * successful association, false on out of memory.
  */
 extern JSBool
-js_SetStringBytes(JSString *str, char *bytes, size_t length);
+js_SetStringBytes(JSRuntime *rt, JSString *str, char *bytes, size_t length);
 
 /*
  * Find or create a deflated string cache entry for str that contains its
  * characters chopped from Unicode code points into bytes.
  */
 extern char *
-js_GetStringBytes(JSString *str);
+js_GetStringBytes(JSRuntime *rt, JSString *str);
+
+/* Remove a deflated string cache entry associated with str if any. */
+extern void
+js_PurgeDeflatedStringCache(JSRuntime *rt, JSString *str);
 
 JSBool
 js_str_escape(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,

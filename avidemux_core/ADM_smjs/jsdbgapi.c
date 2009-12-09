@@ -1,4 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set ts=8 sw=4 et tw=78:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -397,9 +398,11 @@ js_watch_set(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
                              vp, wp->closure);
             if (ok) {
                 /*
-                 * Create pseudo-frame for call to setter so that any
-                 * stack-walking security code in the setter will correctly
-                 * identify the guilty party.
+                 * Create a pseudo-frame for the setter invocation so that any
+                 * stack-walking security code under the setter will correctly
+                 * identify the guilty party.  So that the watcher appears to
+                 * be active to obj_eval and other such code, point frame.pc
+                 * at the JSOP_STOP at the end of the script.
                  */
                 JSObject *closure;
                 JSClass *clasp;
@@ -427,10 +430,10 @@ js_watch_set(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
                 if (fun) {
                     nslots += fun->nargs;
                     if (FUN_NATIVE(fun))
-                        nslots += fun->extra;
+                        nslots += fun->u.n.extra;
                 }
 
-                if (nslots <= sizeof (smallv) / sizeof (smallv[0])) {
+                if (nslots <= JS_ARRAY_LENGTH(smallv)) {
                     argv = smallv;
                 } else {
                     argv = JS_malloc(cx, nslots * sizeof(jsval));
@@ -446,8 +449,11 @@ js_watch_set(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 
                 memset(&frame, 0, sizeof(frame));
                 frame.script = script;
-                if (script)
-                    frame.pc = script->code;
+                if (script) {
+                    JS_ASSERT(script->length >= JSOP_STOP_LENGTH);
+                    frame.pc = script->code + script->length
+                             - JSOP_STOP_LENGTH;
+                }
                 frame.fun = fun;
                 frame.argv = argv + 2;
                 frame.down = cx->fp;
@@ -874,7 +880,7 @@ JS_GetFrameScopeChain(JSContext *cx, JSStackFrame *fp)
 {
     /* Force creation of argument and call objects if not yet created */
     (void) JS_GetFrameCallObject(cx, fp);
-    return fp->scopeChain;
+    return js_GetScopeChain(cx, fp);
 }
 
 JS_PUBLIC_API(JSObject *)
@@ -882,19 +888,15 @@ JS_GetFrameCallObject(JSContext *cx, JSStackFrame *fp)
 {
     if (! fp->fun)
         return NULL;
-#if JS_HAS_ARGS_OBJECT
+
     /* Force creation of argument object if not yet created */
     (void) js_GetArgsObject(cx, fp);
-#endif
-#if JS_HAS_CALL_OBJECT
+
     /*
      * XXX ill-defined: null return here means error was reported, unlike a
      *     null returned above or in the #else
      */
     return js_GetCallObject(cx, fp, NULL);
-#else
-    return NULL;
-#endif /* JS_HAS_CALL_OBJECT */
 }
 
 
@@ -993,13 +995,18 @@ JS_SetDestroyScriptHook(JSRuntime *rt, JSDestroyScriptHook hook,
 
 JS_PUBLIC_API(JSBool)
 JS_EvaluateUCInStackFrame(JSContext *cx, JSStackFrame *fp,
-                          const jschar *bytes, uintN length,
+                          const jschar *chars, uintN length,
                           const char *filename, uintN lineno,
                           jsval *rval)
 {
+    JSObject *scobj;
     uint32 flags, options;
     JSScript *script;
     JSBool ok;
+
+    scobj = JS_GetFrameScopeChain(cx, fp);
+    if (!scobj)
+        return JS_FALSE;
 
     /*
      * XXX Hack around ancient compiler API to propagate the JSFRAME_SPECIAL
@@ -1009,33 +1016,34 @@ JS_EvaluateUCInStackFrame(JSContext *cx, JSStackFrame *fp,
     fp->flags |= JSFRAME_DEBUGGER | JSFRAME_EVAL;
     options = cx->options;
     cx->options = options | JSOPTION_COMPILE_N_GO;
-    script = JS_CompileUCScriptForPrincipals(cx, fp->scopeChain,
+    script = JS_CompileUCScriptForPrincipals(cx, scobj,
                                              JS_StackFramePrincipals(cx, fp),
-                                             bytes, length, filename, lineno);
+                                             chars, length, filename, lineno);
     fp->flags = flags;
     cx->options = options;
     if (!script)
         return JS_FALSE;
 
-    ok = js_Execute(cx, fp->scopeChain, script, fp,
-                    JSFRAME_DEBUGGER | JSFRAME_EVAL, rval);
+    ok = js_Execute(cx, scobj, script, fp, JSFRAME_DEBUGGER | JSFRAME_EVAL,
+                    rval);
     js_DestroyScript(cx, script);
     return ok;
 }
 
 JS_PUBLIC_API(JSBool)
 JS_EvaluateInStackFrame(JSContext *cx, JSStackFrame *fp,
-                        const char *bytes, uintN nbytes,
+                        const char *bytes, uintN length,
                         const char *filename, uintN lineno,
                         jsval *rval)
 {
-    size_t length = nbytes;
     jschar *chars;
     JSBool ok;
+    size_t len = length;
 
-    chars = js_InflateString(cx, bytes, &length);
+    chars = js_InflateString(cx, bytes, &len);
     if (!chars)
         return JS_FALSE;
+    length = (uintN) len;
     ok = JS_EvaluateUCInStackFrame(cx, fp, chars, length, filename, lineno,
                                    rval);
     JS_free(cx, chars);
@@ -1116,12 +1124,10 @@ JS_GetPropertyDesc(JSContext *cx, JSObject *obj, JSScopeProperty *sprop,
     pd->flags |= ((sprop->attrs & JSPROP_ENUMERATE) ? JSPD_ENUMERATE : 0)
               | ((sprop->attrs & JSPROP_READONLY)  ? JSPD_READONLY  : 0)
               | ((sprop->attrs & JSPROP_PERMANENT) ? JSPD_PERMANENT : 0)
-#if JS_HAS_CALL_OBJECT
               | ((getter == js_GetCallVariable)    ? JSPD_VARIABLE  : 0)
-#endif /* JS_HAS_CALL_OBJECT */
               | ((getter == js_GetArgument)        ? JSPD_ARGUMENT  : 0)
               | ((getter == js_GetLocalVariable)   ? JSPD_VARIABLE  : 0);
-#if JS_HAS_CALL_OBJECT
+
     /* for Call Object 'real' getter isn't passed in to us */
     if (OBJ_GET_CLASS(cx, obj) == &js_CallClass &&
         getter == js_CallClass.getProperty) {
@@ -1136,7 +1142,7 @@ JS_GetPropertyDesc(JSContext *cx, JSObject *obj, JSScopeProperty *sprop,
                      ? JSPD_ARGUMENT
                      : JSPD_VARIABLE;
     }
-#endif /* JS_HAS_CALL_OBJECT */
+
     pd->spare = 0;
     pd->slot = (pd->flags & (JSPD_ARGUMENT | JSPD_VARIABLE))
                ? sprop->shortid
@@ -1325,24 +1331,15 @@ GetAtomTotalSize(JSContext *cx, JSAtom *atom)
 JS_PUBLIC_API(size_t)
 JS_GetFunctionTotalSize(JSContext *cx, JSFunction *fun)
 {
-    size_t nbytes, obytes;
-    JSObject *obj;
-    JSAtom *atom;
+    size_t nbytes;
 
     nbytes = sizeof *fun;
-    JS_ASSERT(fun->nrefs);
-    obj = fun->object;
-    if (obj) {
-        obytes = JS_GetObjectTotalSize(cx, obj);
-        if (fun->nrefs > 1)
-            obytes = JS_HOWMANY(obytes, fun->nrefs);
-        nbytes += obytes;
-    }
-    if (fun->interpreted)
-        nbytes += JS_GetScriptTotalSize(cx, fun->u.script);
-    atom = fun->atom;
-    if (atom)
-        nbytes += GetAtomTotalSize(cx, atom);
+    if (fun->object)
+        nbytes += JS_GetObjectTotalSize(cx, fun->object);
+    if (FUN_INTERPRETED(fun))
+        nbytes += JS_GetScriptTotalSize(cx, fun->u.i.script);
+    if (fun->atom)
+        nbytes += GetAtomTotalSize(cx, fun->atom);
     return nbytes;
 }
 
@@ -1415,7 +1412,7 @@ JS_GetScriptFilenameFlags(JSScript *script)
     JS_ASSERT(script);
     if (!script->filename)
         return JSFILENAME_NULL;
-    return js_GetScriptFilenameFlags(script->filename);    
+    return js_GetScriptFilenameFlags(script->filename);
 }
 
 JS_PUBLIC_API(JSBool)
@@ -1436,7 +1433,7 @@ JS_PUBLIC_API(void)
 JS_FlagSystemObject(JSContext *cx, JSObject *obj)
 {
     uint8 *flagp;
-    
+
     flagp = js_GetGCThingFlags(obj);
     *flagp |= GCF_SYSTEM;
 }

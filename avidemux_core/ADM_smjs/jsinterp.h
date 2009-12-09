@@ -48,7 +48,14 @@
 JS_BEGIN_EXTERN_C
 
 /*
- * JS stack frame, allocated on the C stack.
+ * JS stack frame, may be allocated on the C stack by native callers.  Always
+ * allocated on cx->stackPool for calls from the interpreter to an interpreted
+ * function.
+ *
+ * NB: This struct is manually initialized in jsinterp.c and jsiter.c.  If you
+ * add new members, update both files.  But first, try to remove members.  The
+ * sharp* and xml* members should be moved onto the stack as local variables
+ * with well-known slots, if possible.
  */
 struct JSStackFrame {
     JSObject        *callobj;       /* lazily created Call object */
@@ -73,10 +80,12 @@ struct JSStackFrame {
     uint32          flags;          /* frame flags -- see below */
     JSStackFrame    *dormantNext;   /* next dormant frame chain */
     JSObject        *xmlNamespace;  /* null or default xml namespace in E4X */
+    JSObject        *blockChain;    /* active compile-time block scopes */
 };
 
 typedef struct JSInlineFrame {
     JSStackFrame    frame;          /* base struct */
+    jsval           *rvp;           /* ptr to caller's return value slot */
     void            *mark;          /* mark before inline frame */
     void            *hookData;      /* debugger call hook data */
     JSVersion       callerVersion;  /* dynamic version of calling script */
@@ -96,6 +105,11 @@ typedef struct JSInlineFrame {
 #define JSFRAME_COMPILE_N_GO  0x80  /* compiler-and-go mode, can optimize name
                                        references based on scope chain */
 #define JSFRAME_SCRIPT_OBJECT 0x100 /* compiling source for a Script object */
+#define JSFRAME_YIELDING      0x200 /* js_Interpret dispatched JSOP_YIELD */
+#define JSFRAME_FILTERING     0x400 /* XML filtering predicate expression */
+#define JSFRAME_ITERATOR      0x800 /* trying to get an iterator for for-in */
+#define JSFRAME_POP_BLOCKS   0x1000 /* scope chain contains blocks to pop */
+#define JSFRAME_GENERATOR    0x2000 /* frame belongs to generator-iterator */
 
 #define JSFRAME_OVERRIDE_SHIFT 24   /* override bit-set params; see jsfun.c */
 #define JSFRAME_OVERRIDE_BITS  8
@@ -257,18 +271,24 @@ extern void         js_DumpCallTable(JSContext *cx);
 #endif
 
 /*
- * Compute the 'this' parameter and store it in frame as frame.thisp.
+ * Refresh and return fp->scopeChain.  It may be stale if block scopes are
+ * active but not yet reflected by objects in the scope chain.  If a block
+ * scope contains a with, eval, XML filtering predicate, or similar such
+ * dynamically scoped construct, then compile-time block scope at fp->blocks
+ * must reflect at runtime.
+ */
+extern JSObject *
+js_GetScopeChain(JSContext *cx, JSStackFrame *fp);
+
+/*
+ * Compute the 'this' parameter for a call with nominal 'this' given by thisp
+ * and arguments including argv[-1] (nominal 'this') and argv[-2] (callee).
  * Activation objects ("Call" objects not created with "new Call()", i.e.,
  * "Call" objects that have private data) may not be referred to by 'this',
- * as dictated by ECMA.
- *
- * N.B.: fp->argv must be set, fp->argv[-1] the nominal 'this' paramter as
- * a jsval, and fp->argv[-2] must be the callee object reference, usually a
- * function object.  Also, fp->flags must contain JSFRAME_CONSTRUCTING if we
- * are preparing for a constructor call.
+ * per ECMA-262, so js_ComputeThis censors them.
  */
-extern JSBool
-js_ComputeThis(JSContext *cx, JSObject *thisp, JSStackFrame *fp);
+extern JSObject *
+js_ComputeThis(JSContext *cx, JSObject *thisp, jsval *argv);
 
 /*
  * NB: js_Invoke requires that cx is currently running JS (i.e., that cx->fp
@@ -279,11 +299,27 @@ extern JS_FRIEND_API(JSBool)
 js_Invoke(JSContext *cx, uintN argc, uintN flags);
 
 /*
- * Consolidated js_Invoke flags simply rename the low JSFRAME_* flags.
+ * Consolidated js_Invoke flags simply rename certain JSFRAME_* flags, so that
+ * we can share bits stored in JSStackFrame.flags and passed to:
+ *
+ *   js_Invoke
+ *   js_InternalInvoke
+ *   js_ValueToFunction
+ *   js_ValueToFunctionObject
+ *   js_ValueToCallableObject
+ *   js_ReportIsNotFunction
+ *
+ * See jsfun.h for the latter four and flag renaming macros.
  */
 #define JSINVOKE_CONSTRUCT      JSFRAME_CONSTRUCTING
 #define JSINVOKE_INTERNAL       JSFRAME_INTERNAL
 #define JSINVOKE_SKIP_CALLER    JSFRAME_SKIP_CALLER
+#define JSINVOKE_ITERATOR       JSFRAME_ITERATOR
+
+/*
+ * Mask to isolate construct and iterator flags for use with jsfun.h functions.
+ */
+#define JSINVOKE_FUNFLAGS       (JSINVOKE_CONSTRUCT | JSINVOKE_ITERATOR)
 
 /*
  * "Internal" calls may come from C or C++ code using a JSContext on which no
@@ -313,6 +349,9 @@ js_CheckRedeclaration(JSContext *cx, JSObject *obj, jsid id, uintN attrs,
 
 extern JSBool
 js_StrictlyEqual(jsval lval, jsval rval);
+
+extern JSBool
+js_InvokeConstructor(JSContext *cx, jsval *vp, uintN argc);
 
 extern JSBool
 js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result);

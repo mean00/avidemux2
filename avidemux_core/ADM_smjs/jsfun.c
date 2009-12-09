@@ -66,6 +66,10 @@
 #include "jsstr.h"
 #include "jsexn.h"
 
+#if JS_HAS_GENERATORS
+# include "jsiter.h"
+#endif
+
 /* Generic function/call/arguments tinyids -- also reflected bit numbers. */
 enum {
     CALL_ARGUMENTS  = -1,       /* predefined arguments local variable */
@@ -86,8 +90,6 @@ enum {
 
 #define SET_OVERRIDE_BIT(fp, tinyid) \
     ((fp)->flags |= JS_BIT(JSFRAME_OVERRIDE_SHIFT - ((tinyid) + 1)))
-
-#if JS_HAS_ARGS_OBJECT
 
 JSBool
 js_GetArgsValue(JSContext *cx, JSStackFrame *fp, jsval *vp)
@@ -234,7 +236,13 @@ js_GetArgsProperty(JSContext *cx, JSStackFrame *fp, jsid id,
 JSObject *
 js_GetArgsObject(JSContext *cx, JSStackFrame *fp)
 {
-    JSObject *argsobj;
+    JSObject *argsobj, *global, *parent;
+
+    /*
+     * We must be in a function activation; the function must be lightweight
+     * or else fp must have a variable object.
+     */
+    JS_ASSERT(fp->fun && (!(fp->fun->flags & JSFUN_HEAVYWEIGHT) || fp->varobj));
 
     /* Skip eval and debugger frames. */
     while (fp->flags & JSFRAME_SPECIAL)
@@ -251,6 +259,22 @@ js_GetArgsObject(JSContext *cx, JSStackFrame *fp)
         cx->weakRoots.newborn[GCX_OBJECT] = NULL;
         return NULL;
     }
+
+    /*
+     * Give arguments an intrinsic scope chain link to fp's global object.
+     * Since the arguments object lacks a prototype because js_ArgumentsClass
+     * is not initialized, js_NewObject won't assign a default parent to it.
+     *
+     * Therefore if arguments is used as the head of an eval scope chain (via
+     * a direct or indirect call to eval(program, arguments)), any reference
+     * to a standard class object in the program will fail to resolve due to
+     * js_GetClassPrototype not being able to find a global object containing
+     * the standard prototype by starting from arguments and following parent.
+     */
+    global = fp->scopeChain;
+    while ((parent = OBJ_GET_PARENT(cx, global)) != NULL)
+        global = parent;
+    argsobj->slots[JSSLOT_PARENT] = OBJECT_TO_JSVAL(global);
     fp->argsobj = argsobj;
     return argsobj;
 }
@@ -394,7 +418,7 @@ args_setProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
         break;
 
       default:
-        if (fp->fun->interpreted &&
+        if (FUN_INTERPRETED(fp->fun) &&
             (uintN)slot < fp->argc &&
             !ArgWasDeleted(cx, fp, slot)) {
             fp->argv[slot] = *vp;
@@ -518,6 +542,25 @@ args_enumerate(JSContext *cx, JSObject *obj)
     return JS_TRUE;
 }
 
+#if JS_HAS_GENERATORS
+/*
+ * If a generator-iterator's arguments or call object escapes, it needs to
+ * mark its generator object.
+ */
+static uint32
+args_or_call_mark(JSContext *cx, JSObject *obj, void *arg)
+{
+    JSStackFrame *fp;
+
+    fp = JS_GetPrivate(cx, obj);
+    if (fp && (fp->flags & JSFRAME_GENERATOR))
+        GC_MARK(cx, FRAME_TO_GENERATOR(fp)->obj, "FRAME_TO_GENERATOR(fp)->obj");
+    return 0;
+}
+#else
+# define args_or_call_mark NULL
+#endif
+
 /*
  * The Arguments class is not initialized via JS_InitClass, and must not be,
  * because its name is "Object".  Per ECMA, that causes instances of it to
@@ -531,17 +574,17 @@ args_enumerate(JSContext *cx, JSObject *obj)
  */
 JSClass js_ArgumentsClass = {
     js_Object_str,
-    JSCLASS_HAS_PRIVATE | JSCLASS_NEW_RESOLVE | JSCLASS_HAS_RESERVED_SLOTS(1),
-    JS_PropertyStub,  args_delProperty,
-    args_getProperty, args_setProperty,
-    args_enumerate,   (JSResolveOp) args_resolve,
-    JS_ConvertStub,   JS_FinalizeStub,
-    JSCLASS_NO_OPTIONAL_MEMBERS
+    JSCLASS_HAS_PRIVATE | JSCLASS_NEW_RESOLVE | JSCLASS_HAS_RESERVED_SLOTS(1) |
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Object),
+    JS_PropertyStub,    args_delProperty,
+    args_getProperty,   args_setProperty,
+    args_enumerate,     (JSResolveOp) args_resolve,
+    JS_ConvertStub,     JS_FinalizeStub,
+    NULL,               NULL,
+    NULL,               NULL,
+    NULL,               NULL,
+    args_or_call_mark,  NULL
 };
-
-#endif /* JS_HAS_ARGS_OBJECT */
-
-#if JS_HAS_CALL_OBJECT
 
 JSObject *
 js_GetCallObject(JSContext *cx, JSStackFrame *fp, JSObject *parent)
@@ -571,6 +614,7 @@ js_GetCallObject(JSContext *cx, JSStackFrame *fp, JSObject *parent)
     fp->callobj = callobj;
 
     /* Make callobj be the scope chain and the variables object. */
+    JS_ASSERT(fp->scopeChain == parent);
     fp->scopeChain = callobj;
     fp->varobj = callobj;
     return callobj;
@@ -894,15 +938,17 @@ call_convert(JSContext *cx, JSObject *obj, JSType type, jsval *vp)
 
 JSClass js_CallClass = {
     js_Call_str,
-    JSCLASS_HAS_PRIVATE | JSCLASS_NEW_RESOLVE,
-    JS_PropertyStub,  JS_PropertyStub,
-    call_getProperty, call_setProperty,
-    call_enumerate,   (JSResolveOp)call_resolve,
-    call_convert,     JS_FinalizeStub,
-    JSCLASS_NO_OPTIONAL_MEMBERS
+    JSCLASS_HAS_PRIVATE | JSCLASS_NEW_RESOLVE | JSCLASS_IS_ANONYMOUS |
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Call),
+    JS_PropertyStub,    JS_PropertyStub,
+    call_getProperty,   call_setProperty,
+    call_enumerate,     (JSResolveOp)call_resolve,
+    call_convert,       JS_FinalizeStub,
+    NULL,               NULL,
+    NULL,               NULL,
+    NULL,               NULL,
+    args_or_call_mark,  NULL,
 };
-
-#endif /* JS_HAS_CALL_OBJECT */
 
 /*
  * ECMA-262 specifies that length is a property of function object instances,
@@ -974,7 +1020,6 @@ fun_getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 
     switch (slot) {
       case CALL_ARGUMENTS:
-#if JS_HAS_ARGS_OBJECT
         /* Warn if strict about f.arguments or equivalent unqualified uses. */
         if (!JS_ReportErrorFlagsAndNumber(cx,
                                           JSREPORT_WARNING | JSREPORT_STRICT,
@@ -990,15 +1035,8 @@ fun_getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
             *vp = JSVAL_NULL;
         }
         break;
-#else  /* !JS_HAS_ARGS_OBJECT */
-        *vp = OBJECT_TO_JSVAL(fp ? obj : NULL);
-        break;
-#endif /* !JS_HAS_ARGS_OBJECT */
 
       case ARGS_LENGTH:
-        if (!JS_VERSION_IS_ECMA(cx))
-            *vp = INT_TO_JSVAL((jsint)(fp && fp->fun ? fp->argc : fun->nargs));
-        else
       case FUN_ARITY:
             *vp = INT_TO_JSVAL((jsint)fun->nargs);
         break;
@@ -1056,16 +1094,21 @@ fun_resolve(JSContext *cx, JSObject *obj, jsval id, uintN flags,
     JSString *str;
     JSAtom *prototypeAtom;
 
+    /*
+     * No need to reflect fun.prototype in 'fun.prototype = ...' or in an
+     * unqualified reference to prototype, which the emitter looks up as a
+     * hidden atom when attempting to bind to a formal parameter or local
+     * variable slot.
+     */
+    if (flags & (JSRESOLVE_ASSIGNING | JSRESOLVE_HIDDEN))
+        return JS_TRUE;
+
     if (!JSVAL_IS_STRING(id))
         return JS_TRUE;
 
     /* No valid function object should lack private data, but check anyway. */
     fun = (JSFunction *)JS_GetInstancePrivate(cx, obj, &js_FunctionClass, NULL);
     if (!fun || !fun->object)
-        return JS_TRUE;
-
-    /* No need to reflect fun.prototype in 'fun.prototype = ...'. */
-    if (flags & JSRESOLVE_ASSIGNING)
         return JS_TRUE;
 
     /*
@@ -1103,7 +1146,7 @@ fun_resolve(JSContext *cx, JSObject *obj, jsval id, uintN flags,
          * Beware of the wacky case of a user function named Object -- trying
          * to find a prototype for that will recur back here _ad perniciem_.
          */
-        if (!parentProto && fun->atom == cx->runtime->atomState.ObjectAtom)
+        if (!parentProto && fun->atom == CLASS_ATOM(cx, Object))
             return JS_TRUE;
 
         /*
@@ -1150,6 +1193,7 @@ static void
 fun_finalize(JSContext *cx, JSObject *obj)
 {
     JSFunction *fun;
+    JSScript *script;
 
     /* No valid function object should lack private data, but check anyway. */
     fun = (JSFunction *) JS_GetPrivate(cx, obj);
@@ -1157,13 +1201,15 @@ fun_finalize(JSContext *cx, JSObject *obj)
         return;
     if (fun->object == obj)
         fun->object = NULL;
-    JS_ATOMIC_DECREMENT(&fun->nrefs);
-    if (fun->nrefs)
-        return;
 
     /* Null-check required since the parser sets interpreted very early. */
-    if (fun->interpreted && fun->u.script)
-        js_DestroyScript(cx, fun->u.script);
+    if (FUN_INTERPRETED(fun) && fun->u.i.script &&
+        js_IsAboutToBeFinalized(cx, fun))
+    {
+        script = fun->u.i.script;
+        fun->u.i.script = NULL;
+        js_DestroyScript(cx, script);
+    }
 }
 
 #if JS_HAS_XDR
@@ -1182,13 +1228,13 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
 {
     JSContext *cx;
     JSFunction *fun;
-    JSString *atomstr;
+    uint32 nullAtom;            /* flag to indicate if fun->atom is NULL */
     JSTempValueRooter tvr;
     uint32 flagsword;           /* originally only flags was JS_XDRUint8'd */
-    char *propname;
+    uint16 extraUnused;         /* variable for no longer used field */
+    JSAtom *propAtom;
     JSScopeProperty *sprop;
     uint32 userid;              /* NB: holds a signed int-tagged jsval */
-    JSAtom *atom;
     uintN i, n, dupflag;
     uint32 type;
     JSBool ok;
@@ -1206,50 +1252,43 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
         fun = (JSFunction *) JS_GetPrivate(cx, *objp);
         if (!fun)
             return JS_TRUE;
-        if (!fun->interpreted) {
+        if (!FUN_INTERPRETED(fun)) {
             JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                  JSMSG_NOT_SCRIPTED_FUNCTION,
                                  JS_GetFunctionName(fun));
             return JS_FALSE;
         }
-        atomstr = fun->atom ? ATOM_TO_STRING(fun->atom) : NULL;
-        flagsword = ((uint32)fun->nregexps << 16) | fun->flags;
+        nullAtom = !fun->atom;
+        flagsword = ((uint32)fun->u.i.nregexps << 16) | fun->flags;
+        extraUnused = 0;
     } else {
         fun = js_NewFunction(cx, NULL, NULL, 0, 0, NULL, NULL);
         if (!fun)
             return JS_FALSE;
-        atomstr = NULL;
     }
 
     /* From here on, control flow must flow through label out. */
-    JS_PUSH_SINGLE_TEMP_ROOT(cx, OBJECT_TO_JSVAL(fun->object), &tvr);
+    JS_PUSH_TEMP_ROOT_OBJECT(cx, fun->object, &tvr);
     ok = JS_TRUE;
 
-    if (!JS_XDRStringOrNull(xdr, &atomstr) ||
-        !JS_XDRUint16(xdr, &fun->nargs) ||
-        !JS_XDRUint16(xdr, &fun->extra) ||
-        !JS_XDRUint16(xdr, &fun->nvars) ||
+    if (!JS_XDRUint32(xdr, &nullAtom))
+        goto bad;
+    if (!nullAtom && !js_XDRStringAtom(xdr, &fun->atom))
+        goto bad;
+
+    if (!JS_XDRUint16(xdr, &fun->nargs) ||
+        !JS_XDRUint16(xdr, &extraUnused) ||
+        !JS_XDRUint16(xdr, &fun->u.i.nvars) ||
         !JS_XDRUint32(xdr, &flagsword)) {
         goto bad;
     }
 
-    if (xdr->mode == JSXDR_DECODE) {
-        fun->interpreted = JS_TRUE;
-        fun->flags = (uint8) flagsword;
-        fun->nregexps = (uint16) (flagsword >> 16);
-
-        *objp = fun->object;
-        if (atomstr) {
-            /* XXX only if this was a top-level function! */
-            fun->atom = js_AtomizeString(cx, atomstr, 0);
-            if (!fun->atom)
-                goto bad;
-        }
-    }
+    /* Assert that all previous writes of extraUnused were writes of 0. */
+    JS_ASSERT(extraUnused == 0);
 
     /* do arguments and local vars */
     if (fun->object) {
-        n = fun->nargs + fun->nvars;
+        n = fun->nargs + fun->u.i.nvars;
         if (xdr->mode == JSXDR_ENCODE) {
             JSScope *scope;
             JSScopeProperty **spvec, *auto_spvec[8];
@@ -1274,7 +1313,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
                     JS_ASSERT(nargs++ <= fun->nargs);
                     spvec[sprop->shortid] = sprop;
                 } else if (sprop->getter == js_GetLocalVariable) {
-                    JS_ASSERT(nvars++ <= fun->nvars);
+                    JS_ASSERT(nvars++ <= fun->u.i.nvars);
                     spvec[fun->nargs + sprop->shortid] = sprop;
                 }
             }
@@ -1287,12 +1326,10 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
                        ? JSXDR_FUNCONST
                        : JSXDR_FUNVAR;
                 userid = INT_TO_JSVAL(sprop->shortid);
-                /* XXX lossy conversion, need new XDR version for ECMAv3 */
-                propname = JS_GetStringBytes(ATOM_TO_STRING(JSID_TO_ATOM(sprop->id)));
-                if (!propname ||
-                    !JS_XDRUint32(xdr, &type) ||
+                propAtom = JSID_TO_ATOM(sprop->id);
+                if (!JS_XDRUint32(xdr, &type) ||
                     !JS_XDRUint32(xdr, &userid) ||
-                    !JS_XDRCString(xdr, &propname)) {
+                    !js_XDRCStringAtom(xdr, &propAtom)) {
                     if (mark)
                         JS_ARENA_RELEASE(&cx->tempPool, mark);
                     goto bad;
@@ -1308,7 +1345,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
 
                 if (!JS_XDRUint32(xdr, &type) ||
                     !JS_XDRUint32(xdr, &userid) ||
-                    !JS_XDRCString(xdr, &propname)) {
+                    !js_XDRCStringAtom(xdr, &propAtom)) {
                     goto bad;
                 }
                 JS_ASSERT(type == JSXDR_FUNARG || type == JSXDR_FUNVAR ||
@@ -1322,23 +1359,20 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
                     setter = js_SetLocalVariable;
                     if (type == JSXDR_FUNCONST)
                         attrs |= JSPROP_READONLY;
-                    JS_ASSERT(nvars++ <= fun->nvars);
+                    JS_ASSERT(nvars++ <= fun->u.i.nvars);
                 } else {
                     getter = NULL;
                     setter = NULL;
                 }
-                atom = js_Atomize(cx, propname, strlen(propname), 0);
-                JS_free(cx, propname);
-                if (!atom)
-                    goto bad;
 
                 /* Flag duplicate argument if atom is bound in fun->object. */
                 dupflag = SCOPE_GET_PROPERTY(OBJ_SCOPE(fun->object),
-                                             ATOM_TO_JSID(atom))
+                                             ATOM_TO_JSID(propAtom))
                           ? SPROP_IS_DUPLICATE
                           : 0;
 
-                if (!js_AddHiddenProperty(cx, fun->object, ATOM_TO_JSID(atom),
+                if (!js_AddHiddenProperty(cx, fun->object,
+                                          ATOM_TO_JSID(propAtom),
                                           getter, setter, SPROP_INVALID_SLOT,
                                           attrs | JSPROP_SHARED,
                                           dupflag | SPROP_HAS_SHORTID,
@@ -1349,11 +1383,16 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
         }
     }
 
-    if (!js_XDRScript(xdr, &fun->u.script, NULL))
+    if (!js_XDRScript(xdr, &fun->u.i.script, NULL))
         goto bad;
 
-    if (xdr->mode == JSXDR_DECODE)
-        js_CallNewScriptHook(cx, fun->u.script, fun);
+    if (xdr->mode == JSXDR_DECODE) {
+        fun->flags = (uint16) flagsword | JSFUN_INTERPRETED;
+        fun->u.i.nregexps = (uint16) (flagsword >> 16);
+
+        *objp = fun->object;
+        js_CallNewScriptHook(cx, fun->u.i.script, fun);
+    }
 
 out:
     JS_POP_TEMP_ROOT(cx, &tvr);
@@ -1369,8 +1408,6 @@ bad:
 #define fun_xdrObject NULL
 
 #endif /* !JS_HAS_XDR */
-
-#if JS_HAS_INSTANCEOF
 
 /*
  * [[HasInstance]] internal method for Function objects: fetch the .prototype
@@ -1406,12 +1443,6 @@ fun_hasInstance(JSContext *cx, JSObject *obj, jsval v, JSBool *bp)
     return js_IsDelegate(cx, JSVAL_TO_OBJECT(pval), v, bp);
 }
 
-#else  /* !JS_HAS_INSTANCEOF */
-
-#define fun_hasInstance NULL
-
-#endif /* !JS_HAS_INSTANCEOF */
-
 static uint32
 fun_mark(JSContext *cx, JSObject *obj, void *arg)
 {
@@ -1419,11 +1450,11 @@ fun_mark(JSContext *cx, JSObject *obj, void *arg)
 
     fun = (JSFunction *) JS_GetPrivate(cx, obj);
     if (fun) {
-        JS_MarkGCThing(cx, fun, js_private_str, arg);
+        GC_MARK(cx, fun, "private");
         if (fun->atom)
-            GC_MARK_ATOM(cx, fun->atom, arg);
-        if (fun->interpreted && fun->u.script)
-            js_MarkScript(cx, fun->u.script, arg);
+            GC_MARK_ATOM(cx, fun->atom);
+        if (FUN_INTERPRETED(fun) && fun->u.i.script)
+            js_MarkScript(cx, fun->u.i.script);
     }
     return 0;
 }
@@ -1434,7 +1465,7 @@ fun_reserveSlots(JSContext *cx, JSObject *obj)
     JSFunction *fun;
 
     fun = (JSFunction *) JS_GetPrivate(cx, obj);
-    return fun ? fun->nregexps : 0;
+    return (fun && FUN_INTERPRETED(fun)) ? fun->u.i.nregexps : 0;
 }
 
 /*
@@ -1444,7 +1475,8 @@ fun_reserveSlots(JSContext *cx, JSObject *obj)
  */
 JS_FRIEND_DATA(JSClass) js_FunctionClass = {
     js_Function_str,
-    JSCLASS_HAS_PRIVATE | JSCLASS_NEW_RESOLVE | JSCLASS_HAS_RESERVED_SLOTS(2),
+    JSCLASS_HAS_PRIVATE | JSCLASS_NEW_RESOLVE | JSCLASS_HAS_RESERVED_SLOTS(2) |
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Function),
     JS_PropertyStub,  JS_PropertyStub,
     fun_getProperty,  JS_PropertyStub,
     fun_enumerate,    (JSResolveOp)fun_resolve,
@@ -1467,7 +1499,7 @@ js_fun_toString(JSContext *cx, JSObject *obj, uint32 indent,
         JS_ASSERT(JS_ObjectIsFunction(cx, obj));
     } else {
         fval = argv[-1];
-        if (!JSVAL_IS_FUNCTION(cx, fval)) {
+        if (!VALUE_IS_FUNCTION(cx, fval)) {
             /*
              * If we don't have a function to start off with, try converting
              * the object to a function.  If that doesn't work, complain.
@@ -1480,7 +1512,7 @@ js_fun_toString(JSContext *cx, JSObject *obj, uint32 indent,
                 }
                 argv[-1] = fval;
             }
-            if (!JSVAL_IS_FUNCTION(cx, fval)) {
+            if (!VALUE_IS_FUNCTION(cx, fval)) {
                 JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                      JSMSG_INCOMPATIBLE_PROTO,
                                      js_Function_str, js_toString_str,
@@ -1521,7 +1553,6 @@ fun_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 static const char call_str[] = "call";
 
-#if JS_HAS_CALL_FUNCTION
 static JSBool
 fun_call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1536,7 +1567,7 @@ fun_call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
     fval = argv[-1];
 
-    if (!JSVAL_IS_FUNCTION(cx, fval)) {
+    if (!VALUE_IS_FUNCTION(cx, fval)) {
         str = JS_ValueToString(cx, fval);
         if (str) {
             JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
@@ -1581,9 +1612,7 @@ fun_call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     js_FreeStack(cx, mark);
     return ok;
 }
-#endif /* JS_HAS_CALL_FUNCTION */
 
-#if JS_HAS_APPLY_FUNCTION
 static JSBool
 fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1591,9 +1620,9 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     JSString *str;
     JSObject *aobj;
     jsuint length;
+    JSBool arraylike, ok;
     void *mark;
     uintN i;
-    JSBool ok;
     JSStackFrame *fp;
 
     if (argc == 0) {
@@ -1605,7 +1634,7 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
     fval = argv[-1];
 
-    if (!JSVAL_IS_FUNCTION(cx, fval)) {
+    if (!VALUE_IS_FUNCTION(cx, fval)) {
         str = JS_ValueToString(cx, fval);
         if (str) {
             JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
@@ -1626,17 +1655,17 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
             argc = 0;
         } else {
             /* The second arg must be an array (or arguments object). */
-            if (JSVAL_IS_PRIMITIVE(argv[1]) ||
-                (aobj = JSVAL_TO_OBJECT(argv[1]),
-                OBJ_GET_CLASS(cx, aobj) != &js_ArgumentsClass &&
-                OBJ_GET_CLASS(cx, aobj) != &js_ArrayClass))
-            {
+            arraylike = JS_FALSE;
+            if (!JSVAL_IS_PRIMITIVE(argv[1])) {
+                aobj = JSVAL_TO_OBJECT(argv[1]);
+                if (!js_IsArrayLike(cx, aobj, &arraylike, &length))
+                    return JS_FALSE;
+            }
+            if (!arraylike) {
                 JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                                     JSMSG_BAD_APPLY_ARGS);
+                                     JSMSG_BAD_APPLY_ARGS, "apply");
                 return JS_FALSE;
             }
-            if (!js_GetLengthProperty(cx, aobj, &length))
-                return JS_FALSE;
         }
     }
 
@@ -1645,7 +1674,7 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
 
     /* Allocate stack space for fval, obj, and the args. */
-    argc = (uintN)JS_MIN(length, ARGC_LIMIT - 1);
+    argc = (uintN)JS_MIN(length, ARRAY_INIT_LIMIT - 1);
     sp = js_AllocStack(cx, 2 + argc, &mark);
     if (!sp)
         return JS_FALSE;
@@ -1673,18 +1702,69 @@ out:
     js_FreeStack(cx, mark);
     return ok;
 }
-#endif /* JS_HAS_APPLY_FUNCTION */
+
+#ifdef NARCISSUS
+static JSBool
+fun_applyConstructor(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+                     jsval *rval)
+{
+    JSObject *aobj;
+    uintN length, i;
+    void *mark;
+    jsval *sp, *newsp, *oldsp;
+    JSStackFrame *fp;
+    JSBool ok;
+
+    if (JSVAL_IS_PRIMITIVE(argv[0]) ||
+        (aobj = JSVAL_TO_OBJECT(argv[0]),
+         OBJ_GET_CLASS(cx, aobj) != &js_ArrayClass &&
+         OBJ_GET_CLASS(cx, aobj) != &js_ArgumentsClass)) {
+        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                             JSMSG_BAD_APPLY_ARGS, "__applyConstruct__");
+        return JS_FALSE;
+    }
+
+    if (!js_GetLengthProperty(cx, aobj, &length))
+        return JS_FALSE;
+
+    if (length >= ARRAY_INIT_LIMIT)
+        length = ARRAY_INIT_LIMIT - 1;
+    newsp = sp = js_AllocStack(cx, 2 + length, &mark);
+    if (!sp)
+        return JS_FALSE;
+
+    fp = cx->fp;
+    oldsp = fp->sp;
+    *sp++ = OBJECT_TO_JSVAL(obj);
+    *sp++ = JSVAL_NULL; /* This is filled automagically. */
+    for (i = 0; i < length; i++) {
+        ok = JS_GetElement(cx, aobj, (jsint)i, sp);
+        if (!ok)
+            goto out;
+        sp++;
+    }
+
+    oldsp = fp->sp;
+    fp->sp = sp;
+    ok = js_InvokeConstructor(cx, newsp, length);
+
+    *rval = fp->sp[-1];
+    fp->sp = oldsp;
+out:
+    js_FreeStack(cx, mark);
+    return ok;
+}
+#endif
 
 static JSFunctionSpec function_methods[] = {
 #if JS_HAS_TOSOURCE
     {js_toSource_str,   fun_toSource,   0,0,0},
 #endif
     {js_toString_str,   fun_toString,   1,0,0},
-#if JS_HAS_APPLY_FUNCTION
     {"apply",           fun_apply,      2,0,0},
-#endif
-#if JS_HAS_CALL_FUNCTION
     {call_str,          fun_call,       1,0,0},
+#ifdef NARCISSUS
+    {"__applyConstructor__", fun_applyConstructor, 1,0,0},
 #endif
     {0,0,0,0,0}
 };
@@ -1692,22 +1772,23 @@ static JSFunctionSpec function_methods[] = {
 JSBool
 js_IsIdentifier(JSString *str)
 {
-    size_t n;
-    jschar *s, c;
+    size_t length;
+    jschar c, *chars, *end, *s;
 
-    n = JSSTRING_LENGTH(str);
-    if (n == 0)
+    length = JSSTRING_LENGTH(str);
+    if (length == 0)
         return JS_FALSE;
-    s = JSSTRING_CHARS(str);
-    c = *s;
+    chars = JSSTRING_CHARS(str);
+    c = *chars;
     if (!JS_ISIDSTART(c))
         return JS_FALSE;
-    for (n--; n != 0; n--) {
-        c = *++s;
+    end = chars + length;
+    for (s = chars + 1; s != end; ++s) {
+        c = *s;
         if (!JS_ISIDENT(c))
             return JS_FALSE;
     }
-    return JS_TRUE;
+    return !js_IsKeyword(chars, length);
 }
 
 static JSBool
@@ -1732,7 +1813,7 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     JSBool ok;
 
     fp = cx->fp;
-    if (fp && !(fp->flags & JSFRAME_CONSTRUCTING)) {
+    if (!(fp->flags & JSFRAME_CONSTRUCTING)) {
         obj = js_NewObject(cx, &js_FunctionClass, NULL, NULL);
         if (!obj)
             return JS_FALSE;
@@ -1742,7 +1823,6 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     if (fun)
         return JS_TRUE;
 
-#if JS_HAS_CALL_OBJECT
     /*
      * NB: (new Function) is not lexically closed by its caller, it's just an
      * anonymous function in the top-level scope that its constructor inhabits.
@@ -1754,15 +1834,9 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
      * top-level reachable from scopeChain (in HTML frames, e.g.).
      */
     parent = OBJ_GET_PARENT(cx, JSVAL_TO_OBJECT(argv[-2]));
-#else
-    /* Set up for dynamic parenting (see js_Invoke in jsinterp.c). */
-    parent = NULL;
-#endif
 
     fun = js_NewFunction(cx, obj, NULL, 0, JSFUN_LAMBDA, parent,
-                         JS_VERSION_IS_ECMA(cx)
-                         ? cx->runtime->atomState.anonymousAtom
-                         : NULL);
+                         cx->runtime->atomState.anonymousAtom);
 
     if (!fun)
         return JS_FALSE;
@@ -1774,7 +1848,7 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
      * are built for Function.prototype.call or .apply activations that invoke
      * Function indirectly from a script.
      */
-    JS_ASSERT(!fp->script && fp->fun && fp->fun->u.native == Function);
+    JS_ASSERT(!fp->script && fp->fun && fp->fun->u.n.native == Function);
     caller = JS_GetScriptedCaller(cx, fp);
     if (caller) {
         filename = caller->script->filename;
@@ -1787,8 +1861,10 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
 
     /* Belt-and-braces: check that the caller has access to parent. */
-    if (!js_CheckPrincipalsAccess(cx, parent, principals, js_Function_str))
+    if (!js_CheckPrincipalsAccess(cx, parent, principals,
+                                  CLASS_ATOM(cx, Function))) {
         return JS_FALSE;
+    }
 
     n = argc ? argc - 1 : 0;
     if (n > 0) {
@@ -2014,10 +2090,11 @@ js_InitFunctionClass(JSContext *cx, JSObject *obj)
     fun = js_NewFunction(cx, proto, NULL, 0, 0, obj, NULL);
     if (!fun)
         goto bad;
-    fun->u.script = js_NewScript(cx, 0, 0, 0);
-    if (!fun->u.script)
+    fun->u.i.script = js_NewScript(cx, 1, 0, 0);
+    if (!fun->u.i.script)
         goto bad;
-    fun->interpreted = JS_TRUE;
+    fun->u.i.script->code[0] = JSOP_STOP;
+    fun->flags |= JSFUN_INTERPRETED;
     return proto;
 
 bad:
@@ -2025,7 +2102,6 @@ bad:
     return NULL;
 }
 
-#if JS_HAS_CALL_OBJECT
 JSObject *
 js_InitCallClass(JSContext *cx, JSObject *obj)
 {
@@ -2043,7 +2119,6 @@ js_InitCallClass(JSContext *cx, JSObject *obj)
     OBJ_SET_PROTO(cx, proto, NULL);
     return proto;
 }
-#endif
 
 JSFunction *
 js_NewFunction(JSContext *cx, JSObject *funobj, JSNative native, uintN nargs,
@@ -2061,7 +2136,7 @@ js_NewFunction(JSContext *cx, JSObject *funobj, JSNative native, uintN nargs,
             return NULL;
     }
 
-    /* Protect fun from any potential last-ditch GCs. */
+    /* Protect fun from any potential GC callback. */
     JS_PUSH_SINGLE_TEMP_ROOT(cx, OBJECT_TO_JSVAL(funobj), &tvr);
 
     /*
@@ -2073,16 +2148,12 @@ js_NewFunction(JSContext *cx, JSObject *funobj, JSNative native, uintN nargs,
         goto out;
 
     /* Initialize all function members. */
-    fun->nrefs = 0;
     fun->object = NULL;
-    fun->u.native = native;
     fun->nargs = nargs;
-    fun->extra = 0;
-    fun->nvars = 0;
     fun->flags = flags & JSFUN_FLAGS_MASK;
-    fun->interpreted = JS_FALSE;
-    fun->nregexps = 0;
-    fun->spare = 0;
+    fun->u.n.native = native;
+    fun->u.n.extra = 0;
+    fun->u.n.spare = 0;
     fun->atom = atom;
     fun->clasp = NULL;
 
@@ -2120,10 +2191,7 @@ js_LinkFunctionObject(JSContext *cx, JSFunction *fun, JSObject *funobj)
 {
     if (!fun->object)
         fun->object = funobj;
-    if (!JS_SetPrivate(cx, funobj, fun))
-        return JS_FALSE;
-    JS_ATOMIC_INCREMENT(&fun->nrefs);
-    return JS_TRUE;
+    return JS_SetPrivate(cx, funobj, fun);
 }
 
 JSFunction *
@@ -2161,7 +2229,7 @@ js_ValueToFunction(JSContext *cx, jsval *vp, uintN flags)
         if (obj && OBJ_GET_CLASS(cx, obj) != &js_FunctionClass) {
             if (!OBJ_DEFAULT_VALUE(cx, obj, JSTYPE_FUNCTION, &v))
                 return NULL;
-            obj = JSVAL_IS_FUNCTION(cx, v) ? JSVAL_TO_OBJECT(v) : NULL;
+            obj = VALUE_IS_FUNCTION(cx, v) ? JSVAL_TO_OBJECT(v) : NULL;
         }
     }
     if (!obj) {
@@ -2179,7 +2247,7 @@ js_ValueToFunctionObject(JSContext *cx, jsval *vp, uintN flags)
     JSStackFrame *caller;
     JSPrincipals *principals;
 
-    if (JSVAL_IS_FUNCTION(cx, *vp))
+    if (VALUE_IS_FUNCTION(cx, *vp))
         return JSVAL_TO_OBJECT(*vp);
 
     fun = js_ValueToFunction(cx, vp, flags);
@@ -2196,14 +2264,10 @@ js_ValueToFunctionObject(JSContext *cx, jsval *vp, uintN flags)
         principals = NULL;
     }
 
-    /*
-     * FIXME: Reparameterize so we don't call js_AtomToPrintableString unless
-     *        there is an error (bug 324694).
-     */
     if (!js_CheckPrincipalsAccess(cx, funobj, principals,
                                   fun->atom
-                                  ? js_AtomToPrintableString(cx, fun->atom)
-                                  : js_anonymous_str)) {
+                                  ? fun->atom
+                                  : cx->runtime->atomState.anonymousAtom)) {
         return NULL;
     }
     return funobj;
@@ -2229,31 +2293,38 @@ js_ValueToCallableObject(JSContext *cx, jsval *vp, uintN flags)
 void
 js_ReportIsNotFunction(JSContext *cx, jsval *vp, uintN flags)
 {
-    JSType type;
-    JSString *fallback;
+    JSStackFrame *fp;
     JSString *str;
+    JSTempValueRooter tvr;
+    const char *bytes, *source;
 
-    /*
-     * We provide the typename as the fallback to handle the case when
-     * valueOf is not a function, which prevents ValueToString from being
-     * called as the default case inside js_DecompileValueGenerator (and
-     * so recursing back to here).
-     */
-    type = JS_TypeOfValue(cx, *vp);
-    fallback = ATOM_TO_STRING(cx->runtime->atomState.typeAtoms[type]);
+    for (fp = cx->fp; fp && !fp->spbase; fp = fp->down)
+        continue;
     str = js_DecompileValueGenerator(cx,
-                                     (flags & JSV2F_SEARCH_STACK)
+                                     (fp && fp->spbase <= vp && vp < fp->sp)
+                                     ? vp - fp->sp
+                                     : (flags & JSV2F_SEARCH_STACK)
                                      ? JSDVG_SEARCH_STACK
-                                     : cx->fp
-                                     ? vp - cx->fp->sp
                                      : JSDVG_IGNORE_STACK,
                                      *vp,
-                                     fallback);
+                                     NULL);
     if (str) {
-        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                             (uintN)((flags & JSV2F_CONSTRUCT)
-                                     ? JSMSG_NOT_CONSTRUCTOR
-                                     : JSMSG_NOT_FUNCTION),
-                             JS_GetStringBytes(str));
+        JS_PUSH_TEMP_ROOT_STRING(cx, str, &tvr);
+        bytes = JS_GetStringBytes(str);
+        if (flags & JSV2F_ITERATOR) {
+            source = js_ValueToPrintableSource(cx, *vp);
+            if (source) {
+                JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                                     JSMSG_BAD_ITERATOR,
+                                     bytes, js_iterator_str, source);
+            }
+        } else {
+            JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                                 (uintN)((flags & JSV2F_CONSTRUCT)
+                                         ? JSMSG_NOT_CONSTRUCTOR
+                                         : JSMSG_NOT_FUNCTION),
+                                 bytes);
+        }
+        JS_POP_TEMP_ROOT(cx, &tvr);
     }
 }

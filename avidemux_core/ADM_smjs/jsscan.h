@@ -44,11 +44,17 @@
  */
 #include <stddef.h>
 #include <stdio.h>
+#include "jsconfig.h"
 #include "jsopcode.h"
 #include "jsprvtd.h"
 #include "jspubtd.h"
 
 JS_BEGIN_EXTERN_C
+
+#define JS_KEYWORD(keyword, type, op, version) \
+    extern const char js_##keyword##_str[];
+#include "jskeyword.tbl"
+#undef JS_KEYWORD
 
 typedef enum JSTokenType {
     TOK_ERROR = -1,                     /* well-known as the only code < EOF */
@@ -125,6 +131,13 @@ typedef enum JSTokenType {
     TOK_FILTER = 76,                    /* XML filtering predicate op (.()) */
     TOK_XMLELEM = 77,                   /* XML element node type (no token) */
     TOK_XMLLIST = 78,                   /* XML list node type (no token) */
+    TOK_YIELD = 79,                     /* yield from generator function */
+    TOK_ARRAYCOMP = 80,                 /* array comprehension initialiser */
+    TOK_ARRAYPUSH = 81,                 /* array push within comprehension */
+    TOK_LEXICALSCOPE = 82,              /* block scope AST node label */
+    TOK_LET = 83,                       /* let keyword */
+    TOK_BODY = 84,                      /* synthetic body of function with
+                                           destructuring formal parameters */
     TOK_RESERVED,                       /* reserved keywords */
     TOK_LIMIT                           /* domain size */
 } JSTokenType;
@@ -134,6 +147,12 @@ typedef enum JSTokenType {
 
 #define TOKEN_TYPE_IS_XML(tt) \
     (tt == TOK_AT || tt == TOK_DBLCOLON || tt == TOK_ANYNAME)
+
+#if JS_HAS_BLOCK_SCOPE
+# define TOKEN_TYPE_IS_DECL(tt) ((tt) == TOK_VAR || (tt) == TOK_LET)
+#else
+# define TOKEN_TYPE_IS_DECL(tt) ((tt) == TOK_VAR)
+#endif
 
 struct JSStringBuffer {
     jschar      *base;
@@ -272,6 +291,9 @@ struct JSTokenStream {
  */
 #define TSF_IN_HTML_COMMENT 0x2000
 
+/* Ignore keywords and return TOK_NAME instead to the parser. */
+#define TSF_KEYWORD_IS_NAME 0x4000
+
 /* Unicode separators that are treated as line terminators, in addition to \n, \r */
 #define LINE_SEPARATOR  0x2028
 #define PARA_SEPARATOR  0x2029
@@ -301,10 +323,14 @@ extern JS_FRIEND_API(int)
 js_fgets(char *buf, int size, FILE *file);
 
 /*
- * Initialize the scanner, installing JS keywords into cx's global scope.
+ * If the given char array forms JavaScript keyword, return corresponding
+ * token. Otherwise return TOK_EOF.
  */
-extern JSBool
-js_InitScanner(JSContext *cx);
+extern JSTokenType
+js_CheckKeyword(const jschar *chars, size_t length);
+
+#define js_IsKeyword(chars, length) \
+    (js_CheckKeyword(chars, length) != TOK_EOF)
 
 /*
  * Friend-exported API entry point to call a mapping function on each reserved

@@ -91,11 +91,11 @@ typedef uint32 jsatomid;
 typedef struct JSArgumentFormatMap  JSArgumentFormatMap;
 typedef struct JSCodeGenerator      JSCodeGenerator;
 typedef struct JSDependentString    JSDependentString;
-typedef struct JSGCLockHashEntry    JSGCLockHashEntry;
-typedef struct JSGCRootHashEntry    JSGCRootHashEntry;
 typedef struct JSGCThing            JSGCThing;
+typedef struct JSGenerator          JSGenerator;
 typedef struct JSParseNode          JSParseNode;
 typedef struct JSSharpObjectMap     JSSharpObjectMap;
+typedef struct JSThread             JSThread;
 typedef struct JSToken              JSToken;
 typedef struct JSTokenPos           JSTokenPos;
 typedef struct JSTokenPtr           JSTokenPtr;
@@ -116,7 +116,6 @@ typedef struct JSRegExpStatics      JSRegExpStatics;
 typedef struct JSScope              JSScope;
 typedef struct JSScopeOps           JSScopeOps;
 typedef struct JSScopeProperty      JSScopeProperty;
-typedef struct JSStackFrame         JSStackFrame;
 typedef struct JSStackHeader        JSStackHeader;
 typedef struct JSStringBuffer       JSStringBuffer;
 typedef struct JSSubString          JSSubString;
@@ -179,7 +178,7 @@ typedef void
  * The 'closure' param is as passed to JS_SetExecuteHook or JS_SetCallHook
  * for the 'before'invocation, but is whatever value is returned from that
  * invocation for the 'after' invocation. Thus, the hook implementor *could*
- * allocate a stucture in the 'before' invocation and return a pointer to that
+ * allocate a structure in the 'before' invocation and return a pointer to that
  * structure. The pointer would then be handed to the hook for the 'after'
  * invocation. Alternately, the 'before' could just return the same value as
  * in 'closure' to cause the 'after' invocation to be called with the same

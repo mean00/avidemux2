@@ -337,8 +337,8 @@ MakeDay(jsdouble year, jsdouble month, jsdouble date)
 
 #define MakeDate(day, time) ((day) * msPerDay + (time))
 
-/* 
- * Years and leap years on which Jan 1 is a Sunday, Monday, etc. 
+/*
+ * Years and leap years on which Jan 1 is a Sunday, Monday, etc.
  *
  * yearStartingWith[0][i] is an example non-leap year where
  * Jan 1 appears on Sunday (i == 0), Monday (i == 1), etc.
@@ -359,14 +359,15 @@ static jsint yearStartingWith[2][7] = {
  * incorrect year for times near year boundaries.
  */
 static jsint
-EquivalentYearForDST(jsint year) {
+EquivalentYearForDST(jsint year)
+{
     jsint day;
     JSBool isLeapYear;
 
     day = (jsint) DayFromYear(year) + 4;
     day = day % 7;
     if (day < 0)
-	day += 7;
+        day += 7;
 
     isLeapYear = (DaysInYear(year) == 366);
 
@@ -472,9 +473,9 @@ msFromTime(jsdouble t)
  * Other Support routines and definitions
  */
 
-static JSClass date_class = {
+JSClass js_DateClass = {
     js_Date_str,
-    JSCLASS_HAS_PRIVATE,
+    JSCLASS_HAS_PRIVATE | JSCLASS_HAS_CACHED_PROTO(JSProto_Date),
     JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,
     JS_EnumerateStub, JS_ResolveStub,   JS_ConvertStub,   JS_FinalizeStub,
     JSCLASS_NO_OPTIONAL_MEMBERS
@@ -778,7 +779,7 @@ date_parseString(JSString *str, jsdouble *result)
     /*
       Case 1. The input string contains an English month name.
               The form of the string can be month f l, or f month l, or
-              f l month which each evaluate to the same date. 
+              f l month which each evaluate to the same date.
               If f and l are both greater than or equal to 70, or
               both less than 70, the date is invalid.
               The year is taken to be the greater of the values f, l.
@@ -786,7 +787,7 @@ date_parseString(JSString *str, jsdouble *result)
               it is considered to be the number of years after 1900.
       Case 2. The input string is of the form "f/m/l" where f, m and l are
               integers, e.g. 7/16/45.
-              Adjust the mon, mday and year values to achieve 100% MSIE 
+              Adjust the mon, mday and year values to achieve 100% MSIE
               compatibility.
               a. If 0 <= f < 70, f/m/l is interpreted as month/day/year.
                  i.  If year < 100, it is the number of years after 1900
@@ -818,7 +819,7 @@ date_parseString(JSString *str, jsdouble *result)
             year += 1900;
         }
     } else if (mon < 100) { /* (b) year/month/day */
-        if (mday < 70) { 
+        if (mday < 70) {
             temp = year;
             year = mon + 1900;
             mon = mday;
@@ -901,7 +902,7 @@ date_now(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 static jsdouble *
 date_getProlog(JSContext *cx, JSObject *obj, jsval *argv)
 {
-    if (!JS_InstanceOf(cx, obj, &date_class, argv))
+    if (!JS_InstanceOf(cx, obj, &js_DateClass, argv))
         return NULL;
     return JSVAL_TO_DOUBLE(OBJ_GET_SLOT(cx, obj, JSSLOT_PRIVATE));
 }
@@ -924,7 +925,6 @@ date_getYear(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     jsdouble *date;
     jsdouble result;
-    JSVersion version;
 
     date = date_getProlog(cx, obj, argv);
     if (!date)
@@ -936,25 +936,8 @@ date_getYear(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
     result = YearFromTime(LocalTime(result));
 
-    /*
-     * During the great date rewrite of 1.3, we tried to track the evolving ECMA
-     * standard, which then had a definition of getYear which always subtracted
-     * 1900.  Which we implemented, not realizing that it was incompatible with
-     * the old behavior...  now, rather than thrash the behavior yet again,
-     * we've decided to leave it with the - 1900 behavior and point people to
-     * the getFullYear method.  But we try to protect existing scripts that
-     * have specified a version...
-     */
-    version = cx->version & JSVERSION_MASK;
-    if (version == JSVERSION_1_0 ||
-        version == JSVERSION_1_1 ||
-        version == JSVERSION_1_2)
-    {
-        if (result >= 1900 && result < 2000)
-            result -= 1900;
-    } else {
-        result -= 1900;
-    }
+    /* Follow ECMA-262 to the letter, contrary to IE JScript. */
+    result -= 1900;
     return js_NewNumberValue(cx, result, rval);
 }
 
@@ -1413,7 +1396,7 @@ date_makeDate(JSContext *cx, JSObject *obj, uintN argc,
     /* return NaN if date is NaN and we're not setting the year,
      * If we are, use 0 as the time. */
     if (!(JSDOUBLE_IS_FINITE(result))) {
-        if (argc < 3)
+        if (maxargs < 3)
             return js_NewNumberValue(cx, result, rval);
         else
             lorutime = +0.;
@@ -1768,8 +1751,14 @@ date_toLocaleHelper(JSContext *cx, JSObject *obj, uintN argc,
             return date_format(cx, *date, FORMATSPEC_FULL, rval);
 
         /* Hacked check against undesired 2-digit year 00/00/00 form. */
-        if (buf[result_len - 3] == '/' &&
-            isdigit(buf[result_len - 2]) && isdigit(buf[result_len - 1])) {
+        if (strcmp(format, "%x") == 0 && result_len >= 6 &&
+            /* Format %x means use OS settings, which may have 2-digit yr, so
+               hack end of 3/11/22 or 11.03.22 or 11Mar22 to use 4-digit yr...*/
+            !isdigit(buf[result_len - 3]) &&
+            isdigit(buf[result_len - 2]) && isdigit(buf[result_len - 1]) &&
+            /* ...but not if starts with 4-digit year, like 2022/3/11. */
+            !(isdigit(buf[0]) && isdigit(buf[1]) &&
+              isdigit(buf[2]) && isdigit(buf[3]))) {
             JS_snprintf(buf + (result_len - 2), (sizeof buf) - (result_len - 2),
                         "%d", js_DateGetYear(cx, obj));
         }
@@ -1886,7 +1875,7 @@ date_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         return JS_FALSE;
     }
 
-    bytes = JS_smprintf("(new %s(%s))", date_class.name, numStr);
+    bytes = JS_smprintf("(new %s(%s))", js_Date_str, numStr);
     if (!bytes) {
         JS_ReportOutOfMemory(cx);
         return JS_FALSE;
@@ -1912,7 +1901,6 @@ date_toString(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     return date_format(cx, *date, FORMATSPEC_FULL, rval);
 }
 
-#if JS_HAS_VALUEOF_HINT
 static JSBool
 date_valueOf(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
              jsval *rval)
@@ -1934,14 +1922,11 @@ date_valueOf(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         if (!str)
             return JS_FALSE;
         str2 = ATOM_TO_STRING(cx->runtime->atomState.typeAtoms[JSTYPE_NUMBER]);
-        if (!js_CompareStrings(str, str2))
+        if (js_EqualStrings(str, str2))
             return date_getTime(cx, obj, argc, argv, rval);
     }
     return date_toString(cx, obj, argc, argv, rval);
 }
-#else
-#define date_valueOf date_getTime
-#endif
 
 
 /*
@@ -2060,7 +2045,7 @@ Date(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         if (!JSVAL_IS_STRING(argv[0])) {
             /* the argument is a millisecond number */
             if (!js_ValueToNumber(cx, argv[0], &d))
-                    return JS_FALSE;
+                return JS_FALSE;
             date = date_constructor(cx, obj);
             if (!date)
                 return JS_FALSE;
@@ -2134,7 +2119,7 @@ js_InitDateClass(JSContext *cx, JSObject *obj)
 
     /* set static LocalTZA */
     LocalTZA = -(PRMJ_LocalGMTDifference() * msPerSecond);
-    proto = JS_InitClass(cx, obj, NULL, &date_class, Date, MAXARGS,
+    proto = JS_InitClass(cx, obj, NULL, &js_DateClass, Date, MAXARGS,
                          NULL, date_methods, NULL, date_static_methods);
     if (!proto)
         return NULL;
@@ -2158,7 +2143,7 @@ js_NewDateObjectMsec(JSContext *cx, jsdouble msec_time)
     JSObject *obj;
     jsdouble *date;
 
-    obj = js_NewObject(cx, &date_class, NULL, NULL);
+    obj = js_NewObject(cx, &js_DateClass, NULL, NULL);
     if (!obj)
         return NULL;
 

@@ -1,4 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set ts=8 sw=4 et tw=78:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -97,6 +98,14 @@ struct JSScript {
         catchpc = catchpc_;                                                   \
     JS_END_MACRO
 
+/*
+ * Find the innermost finally block that handles the given pc. This is a
+ * version of SCRIPT_FIND_CATCH_START that ignore catch blocks and is used
+ * to implement generator.close().
+ */
+jsbytecode *
+js_FindFinallyHandler(JSScript *script, jsbytecode *pc);
+
 extern JS_FRIEND_DATA(JSClass) js_ScriptClass;
 
 extern JSObject *
@@ -139,7 +148,7 @@ extern void
 js_MarkScriptFilename(const char *filename);
 
 extern void
-js_MarkScriptFilenames(JSRuntime *rt, uintN gcflags);
+js_MarkScriptFilenames(JSRuntime *rt, JSBool keepAtoms);
 
 extern void
 js_SweepScriptFilenames(JSRuntime *rt);
@@ -177,10 +186,17 @@ extern void
 js_DestroyScript(JSContext *cx, JSScript *script);
 
 extern void
-js_MarkScript(JSContext *cx, JSScript *script, void *arg);
+js_MarkScript(JSContext *cx, JSScript *script);
+
+/*
+ * To perturb as little code as possible, we introduce a js_GetSrcNote lookup
+ * cache without adding an explicit cx parameter.  Thus js_GetSrcNote becomes
+ * a macro that uses cx from its calls' lexical environments.
+ */
+#define js_GetSrcNote(script,pc) js_GetSrcNoteCached(cx, script, pc)
 
 extern jssrcnote *
-js_GetSrcNote(JSScript *script, jsbytecode *pc);
+js_GetSrcNoteCached(JSContext *cx, JSScript *script, jsbytecode *pc);
 
 /* XXX need cx to lock function objects declared by prolog bytecodes. */
 extern uintN

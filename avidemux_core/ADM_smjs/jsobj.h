@@ -236,11 +236,17 @@ extern JS_FRIEND_DATA(JSObjectOps) js_ObjectOps;
 extern JS_FRIEND_DATA(JSObjectOps) js_WithObjectOps;
 extern JSClass  js_ObjectClass;
 extern JSClass  js_WithClass;
-
-extern JSObject *
-js_NewWithObject(JSContext *cx, JSObject *proto, JSObject *parent, jsint depth);
+extern JSClass  js_BlockClass;
 
 /*
+ * Block scope object macros.  The slots reserved by js_BlockClass are:
+ *
+ *   JSSLOT_PRIVATE       JSStackFrame *    active frame pointer or null
+ *   JSSLOT_BLOCK_DEPTH   int               depth of block slots in frame
+ *
+ * After JSSLOT_BLOCK_DEPTH come one or more slots for the block locals.
+ * OBJ_BLOCK_COUNT depends on this arrangement.
+ *
  * A With object is like a Block object, in that both have one reserved slot
  * telling the stack depth of the relevant slots (the slot whose value is the
  * object named in the with statement, the slots containing the block's local
@@ -250,10 +256,39 @@ js_NewWithObject(JSContext *cx, JSObject *proto, JSObject *parent, jsint depth);
  */
 #define JSSLOT_BLOCK_DEPTH      (JSSLOT_PRIVATE + 1)
 
+#define OBJ_BLOCK_COUNT(cx,obj) \
+    ((obj)->map->freeslot - (JSSLOT_BLOCK_DEPTH + 1))
 #define OBJ_BLOCK_DEPTH(cx,obj) \
     JSVAL_TO_INT(OBJ_GET_SLOT(cx, obj, JSSLOT_BLOCK_DEPTH))
 #define OBJ_SET_BLOCK_DEPTH(cx,obj,depth) \
     OBJ_SET_SLOT(cx, obj, JSSLOT_BLOCK_DEPTH, INT_TO_JSVAL(depth))
+
+/*
+ * To make sure this slot is well-defined, always call js_NewWithObject to
+ * create a With object, don't call js_NewObject directly.  When creating a
+ * With object that does not correspond to a stack slot, pass -1 for depth.
+ *
+ * When popping the stack across this object's "with" statement, client code
+ * must call JS_SetPrivate(cx, withobj, NULL).
+ */
+extern JSObject *
+js_NewWithObject(JSContext *cx, JSObject *proto, JSObject *parent, jsint depth);
+
+/*
+ * Create a new block scope object not linked to any proto or parent object.
+ * Blocks are created by the compiler to reify let blocks and comprehensions.
+ * Only when dynamic scope is captured do they need to be cloned and spliced
+ * into an active scope chain.
+ */
+extern JSObject *
+js_NewBlockObject(JSContext *cx);
+
+extern JSObject *
+js_CloneBlockObject(JSContext *cx, JSObject *proto, JSObject *parent,
+                    JSStackFrame *fp);
+
+extern JSBool
+js_PutBlockObject(JSContext *cx, JSObject *obj);
 
 struct JSSharpObjectMap {
     jsrefcount  depth;
@@ -296,6 +331,9 @@ extern JSBool
 js_HasOwnPropertyHelper(JSContext *cx, JSObject *obj, JSLookupPropOp lookup,
                         uintN argc, jsval *argv, jsval *rval);
 
+extern JSObject*
+js_InitBlockClass(JSContext *cx, JSObject* obj);
+
 extern JSObject *
 js_InitObjectClass(JSContext *cx, JSObject *obj);
 
@@ -327,11 +365,24 @@ js_HoldObjectMap(JSContext *cx, JSObjectMap *map);
 extern JSObjectMap *
 js_DropObjectMap(JSContext *cx, JSObjectMap *map, JSObject *obj);
 
+extern JSBool
+js_GetClassId(JSContext *cx, JSClass *clasp, jsid *idp);
+
 extern JSObject *
 js_NewObject(JSContext *cx, JSClass *clasp, JSObject *proto, JSObject *parent);
 
+/*
+ * Fast access to immutable standard objects (constructors and prototypes).
+ */
 extern JSBool
-js_FindConstructor(JSContext *cx, JSObject *start, const char *name, jsval *vp);
+js_GetClassObject(JSContext *cx, JSObject *obj, JSProtoKey key,
+                  JSObject **objp);
+
+extern JSBool
+js_SetClassObject(JSContext *cx, JSObject *obj, JSProtoKey key, JSObject *cobj);
+
+extern JSBool
+js_FindClassObject(JSContext *cx, JSObject *start, jsid id, jsval *vp);
 
 extern JSObject *
 js_ConstructObject(JSContext *cx, JSClass *clasp, JSObject *proto,
@@ -410,10 +461,14 @@ js_LookupProperty(JSContext *cx, JSObject *obj, jsid id, JSObject **objp,
 
 /*
  * Specialized subroutine that allows caller to preset JSRESOLVE_* flags.
+ * JSRESOLVE_HIDDEN flags hidden function param/local name lookups, just for
+ * internal use by fun_resolve and similar built-ins.
  */
 extern JSBool
 js_LookupPropertyWithFlags(JSContext *cx, JSObject *obj, jsid id, uintN flags,
                            JSObject **objp, JSProperty **propp);
+
+#define JSRESOLVE_HIDDEN        0x8000
 
 extern JS_FRIEND_API(JSBool)
 js_FindProperty(JSContext *cx, jsid id, JSObject **objp, JSObject **pobjp,
@@ -495,7 +550,8 @@ extern JSBool
 js_IsDelegate(JSContext *cx, JSObject *obj, jsval v, JSBool *bp);
 
 extern JSBool
-js_GetClassPrototype(JSContext *cx, const char *name, JSObject **protop);
+js_GetClassPrototype(JSContext *cx, JSObject *scope, jsid id,
+                     JSObject **protop);
 
 extern JSBool
 js_SetClassPrototype(JSContext *cx, JSObject *ctor, JSObject *proto,
@@ -534,7 +590,7 @@ js_CheckScopeChainValidity(JSContext *cx, JSObject *scopeobj, const char *caller
 
 extern JSBool
 js_CheckPrincipalsAccess(JSContext *cx, JSObject *scopeobj,
-                         JSPrincipals *principals, const char *caller);
+                         JSPrincipals *principals, JSAtom *caller);
 JS_END_EXTERN_C
 
 #endif /* jsobj_h___ */

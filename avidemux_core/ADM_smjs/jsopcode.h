@@ -45,6 +45,7 @@
 #include <stddef.h>
 #include "jsprvtd.h"
 #include "jspubtd.h"
+#include "jsutil.h"
 
 JS_BEGIN_EXTERN_C
 
@@ -59,6 +60,14 @@ typedef enum JSOp {
     JSOP_LIMIT
 } JSOp;
 
+typedef enum JSOpLength {
+#define OPDEF(op,val,name,token,length,nuses,ndefs,prec,format) \
+    op##_LENGTH = length,
+#include "jsopcode.tbl"
+#undef OPDEF
+    JSOP_LIMIT_LENGTH
+} JSOpLength;
+
 /*
  * JS bytecode formats.
  */
@@ -70,7 +79,7 @@ typedef enum JSOp {
 #define JOF_LOOKUPSWITCH  5       /* lookup switch */
 #define JOF_QARG          6       /* quickened get/set function argument ops */
 #define JOF_QVAR          7       /* quickened get/set local variable ops */
-#define JOF_INDEXCONST    8       /* arg or var index + constant pool index */
+#define JOF_INDEXCONST    8       /* uint16 slot index + constant pool index */
 #define JOF_JUMPX         9       /* signed 32-bit jump offset immediate */
 #define JOF_TABLESWITCHX  10      /* extended (32-bit offset) table switch */
 #define JOF_LOOKUPSWITCHX 11      /* extended (32-bit offset) lookup switch */
@@ -78,6 +87,7 @@ typedef enum JSOp {
 #define JOF_LITOPX        13      /* JOF_UINT24 followed by op being extended,
                                      where op if JOF_CONST has no unsigned 16-
                                      bit immediate operand */
+#define JOF_LOCAL         14      /* block-local operand stack variable */
 #define JOF_TYPEMASK      0x000f  /* mask for above immediate types */
 #define JOF_NAME          0x0010  /* name operation */
 #define JOF_PROP          0x0020  /* obj.prop operation */
@@ -164,35 +174,55 @@ typedef enum JSOp {
 #define GET_ATOM(cx,script,pc)  js_GetAtom((cx), &(script)->atomMap,          \
                                            GET_ATOM_INDEX(pc))
 
-/* A full atom index for JSOP_LITERAL uses 24 bits of immediate operand. */
-#define LITERAL_INDEX_LEN       3
-#define LITERAL_INDEX_HI(i)     ((jsbytecode)((i) >> 16))
-#define LITERAL_INDEX_MID(i)    ((jsbytecode)((i) >> 8))
-#define LITERAL_INDEX_LO(i)     ((jsbytecode)(i))
-#define GET_LITERAL_INDEX(pc)   ((jsatomid)(((pc)[1] << 16) |                 \
+/* A full atom index for JSOP_UINT24 uses 24 bits of immediate operand. */
+#define UINT24_HI(i)            ((jsbytecode)((i) >> 16))
+#define UINT24_MID(i)           ((jsbytecode)((i) >> 8))
+#define UINT24_LO(i)            ((jsbytecode)(i))
+#define GET_UINT24(pc)          ((jsatomid)(((pc)[1] << 16) |                 \
                                             ((pc)[2] << 8) |                  \
                                             (pc)[3]))
-#define SET_LITERAL_INDEX(pc,i) ((pc)[1] = LITERAL_INDEX_HI(i),               \
-                                 (pc)[2] = LITERAL_INDEX_MID(i),              \
-                                 (pc)[3] = LITERAL_INDEX_LO(i))
+#define SET_UINT24(pc,i)        ((pc)[1] = UINT24_HI(i),                      \
+                                 (pc)[2] = UINT24_MID(i),                     \
+                                 (pc)[3] = UINT24_LO(i))
+
+/* Same format for JSOP_LITERAL, etc., but future-proof with different names. */
+#define LITERAL_INDEX_LEN       3
+#define LITERAL_INDEX_HI(i)     UINT24_HI(i)
+#define LITERAL_INDEX_MID(i)    UINT24_MID(i)
+#define LITERAL_INDEX_LO(i)     UINT24_LO(i)
+#define GET_LITERAL_INDEX(pc)   GET_UINT24(pc)
+#define SET_LITERAL_INDEX(pc,i) SET_UINT24(pc,i)
 
 /* Atom index limit is determined by SN_3BYTE_OFFSET_FLAG, see jsemit.h. */
 #define ATOM_INDEX_LIMIT_LOG2   23
 #define ATOM_INDEX_LIMIT        ((uint32)1 << ATOM_INDEX_LIMIT_LOG2)
 
+JS_STATIC_ASSERT(sizeof(jsatomid) * JS_BITS_PER_BYTE >=
+                 ATOM_INDEX_LIMIT_LOG2 + 1);
+
+/* Common uint16 immediate format helpers. */
+#define UINT16_HI(i)            ((jsbytecode)((i) >> 8))
+#define UINT16_LO(i)            ((jsbytecode)(i))
+#define GET_UINT16(pc)          ((uintN)(((pc)[1] << 8) | (pc)[2]))
+#define SET_UINT16(pc,i)        ((pc)[1] = UINT16_HI(i), (pc)[2] = UINT16_LO(i))
+#define UINT16_LIMIT            ((uintN)1 << 16)
+
 /* Actual argument count operand format helpers. */
-#define ARGC_HI(argc)           ((jsbytecode)((argc) >> 8))
-#define ARGC_LO(argc)           ((jsbytecode)(argc))
-#define GET_ARGC(pc)            ((uintN)(((pc)[1] << 8) | (pc)[2]))
-#define ARGC_LIMIT              ((uint32)1 << 16)
+#define ARGC_HI(argc)           UINT16_HI(argc)
+#define ARGC_LO(argc)           UINT16_LO(argc)
+#define GET_ARGC(pc)            GET_UINT16(pc)
+#define ARGC_LIMIT              UINT16_LIMIT
 
 /* Synonyms for quick JOF_QARG and JOF_QVAR bytecodes. */
-#define GET_ARGNO(pc)           GET_ARGC(pc)
-#define SET_ARGNO(pc,argno)     SET_JUMP_OFFSET(pc,argno)
-#define ARGNO_LEN               JUMP_OFFSET_LEN
-#define GET_VARNO(pc)           GET_ARGC(pc)
-#define SET_VARNO(pc,varno)     SET_JUMP_OFFSET(pc,varno)
-#define VARNO_LEN               JUMP_OFFSET_LEN
+#define GET_ARGNO(pc)           GET_UINT16(pc)
+#define SET_ARGNO(pc,argno)     SET_UINT16(pc,argno)
+#define ARGNO_LEN               2
+#define ARGNO_LIMIT             UINT16_LIMIT
+
+#define GET_VARNO(pc)           GET_UINT16(pc)
+#define SET_VARNO(pc,varno)     SET_UINT16(pc,varno)
+#define VARNO_LEN               2
+#define VARNO_LIMIT             UINT16_LIMIT
 
 struct JSCodeSpec {
     const char          *name;          /* JS bytecode name */
@@ -204,20 +234,6 @@ struct JSCodeSpec {
     uint32              format;         /* immediate operand format */
 };
 
-extern const char       js_const_str[];
-extern const char       js_var_str[];
-extern const char       js_function_str[];
-extern const char       js_in_str[];
-extern const char       js_instanceof_str[];
-extern const char       js_new_str[];
-extern const char       js_delete_str[];
-extern const char       js_typeof_str[];
-extern const char       js_void_str[];
-extern const char       js_null_str[];
-extern const char       js_this_str[];
-extern const char       js_false_str[];
-extern const char       js_true_str[];
-extern const char       js_default_str[];
 extern const JSCodeSpec js_CodeSpec[];
 extern uintN            js_NumCodeSpecs;
 extern const jschar     js_EscapeMap[];
@@ -268,7 +284,8 @@ js_Disassemble1(JSContext *cx, JSScript *script, jsbytecode *pc, uintN loc,
  * Decompilers, for script, function, and expression pretty-printing.
  */
 extern JSBool
-js_DecompileCode(JSPrinter *jp, JSScript *script, jsbytecode *pc, uintN len);
+js_DecompileCode(JSPrinter *jp, JSScript *script, jsbytecode *pc, uintN len,
+                 uintN pcdepth);
 
 extern JSBool
 js_DecompileScript(JSPrinter *jp, JSScript *script);

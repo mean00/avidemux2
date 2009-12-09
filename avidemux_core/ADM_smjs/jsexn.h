@@ -46,23 +46,13 @@
 
 JS_BEGIN_EXTERN_C
 
+extern JSClass js_ErrorClass;
+
 /*
  * Initialize the exception constructor/prototype hierarchy.
  */
 extern JSObject *
 js_InitExceptionClasses(JSContext *cx, JSObject *obj);
-
-/*
- * String constants naming the exception classes.
- */
-extern const char js_Error_str[];
-extern const char js_InternalError_str[];
-extern const char js_EvalError_str[];
-extern const char js_RangeError_str[];
-extern const char js_ReferenceError_str[];
-extern const char js_SyntaxError_str[];
-extern const char js_TypeError_str[];
-extern const char js_URIError_str[];
 
 /*
  * Given a JSErrorReport, check to see if there is an exception associated with
@@ -96,6 +86,10 @@ js_ReportUncaughtException(JSContext *cx);
 
 extern JSErrorReport *
 js_ErrorFromException(JSContext *cx, jsval exn);
+
+extern const JSErrorFormatString *
+js_GetLocalizedErrorMessage(JSContext* cx, void *userRef, const char *locale,
+                            const uintN errorNumber);
 
 JS_END_EXTERN_C
 

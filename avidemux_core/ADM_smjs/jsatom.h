@@ -63,8 +63,8 @@ JS_BEGIN_EXTERN_C
 #define ATOM_TMPSTR     0x80            /* internal, to avoid extra string */
 
 struct JSAtom {
-    JSHashEntry         entry;          /* key is jsval, value keyword info or
-                                           unhidden atom if ATOM_HIDDEN */
+    JSHashEntry         entry;          /* key is jsval or unhidden atom
+                                           if ATOM_HIDDEN */
     uint32              flags;          /* pinned, interned, and mark flags */
     jsatomid            number;         /* atom serial number and hash code */
 };
@@ -88,9 +88,6 @@ struct JSAtom {
  */
 extern JS_FRIEND_API(const char *)
 js_AtomToPrintableString(JSContext *cx, JSAtom *atom);
-
-#define ATOM_KEYWORD(atom)        ((struct keyword *)(atom)->entry.value)
-#define ATOM_SET_KEYWORD(atom,kw) ((atom)->entry.value = (kw))
 
 struct JSAtomListElement {
     JSHashEntry         entry;
@@ -163,42 +160,34 @@ struct JSAtomState {
     JSAtom              *booleanAtoms[2];
     JSAtom              *nullAtom;
 
+    /* Standard class constructor or prototype names. */
+    JSAtom              *classAtoms[JSProto_LIMIT];
+
     /* Various built-in or commonly-used atoms, pinned on first context. */
-    JSAtom              *ArgumentsAtom;
-    JSAtom              *ArrayAtom;
-    JSAtom              *BooleanAtom;
-    JSAtom              *CallAtom;
-    JSAtom              *DateAtom;
-    JSAtom              *ErrorAtom;
-    JSAtom              *FunctionAtom;
-    JSAtom              *MathAtom;
-    JSAtom              *NamespaceAtom;
-    JSAtom              *NumberAtom;
-    JSAtom              *ObjectAtom;
-    JSAtom              *QNameAtom;
-    JSAtom              *RegExpAtom;
-    JSAtom              *ScriptAtom;
-    JSAtom              *StringAtom;
-    JSAtom              *XMLAtom;
-    JSAtom              *FileAtom;
     JSAtom              *anonymousAtom;
     JSAtom              *argumentsAtom;
     JSAtom              *arityAtom;
     JSAtom              *calleeAtom;
     JSAtom              *callerAtom;
     JSAtom              *classPrototypeAtom;
+    JSAtom              *closeAtom;
     JSAtom              *constructorAtom;
     JSAtom              *countAtom;
     JSAtom              *eachAtom;
     JSAtom              *etagoAtom;
     JSAtom              *evalAtom;
+    JSAtom              *fileNameAtom;
     JSAtom              *getAtom;
     JSAtom              *getterAtom;
     JSAtom              *indexAtom;
     JSAtom              *inputAtom;
+    JSAtom              *iteratorAtom;
     JSAtom              *lengthAtom;
+    JSAtom              *lineNumberAtom;
+    JSAtom              *messageAtom;
     JSAtom              *nameAtom;
     JSAtom              *namespaceAtom;
+    JSAtom              *nextAtom;
     JSAtom              *noSuchMethodAtom;
     JSAtom              *parentAtom;
     JSAtom              *protoAtom;
@@ -207,6 +196,7 @@ struct JSAtomState {
     JSAtom              *setAtom;
     JSAtom              *setterAtom;
     JSAtom              *spaceAtom;
+    JSAtom              *stackAtom;
     JSAtom              *stagoAtom;
     JSAtom              *starAtom;
     JSAtom              *starQualifierAtom;
@@ -219,17 +209,8 @@ struct JSAtomState {
 
     /* Less frequently used atoms, pinned lazily by JS_ResolveStandardClass. */
     struct {
-        JSAtom          *AnyNameAtom;
-        JSAtom          *AttributeNameAtom;
-        JSAtom          *EvalErrorAtom;
         JSAtom          *InfinityAtom;
-        JSAtom          *InternalErrorAtom;
         JSAtom          *NaNAtom;
-        JSAtom          *RangeErrorAtom;
-        JSAtom          *ReferenceErrorAtom;
-        JSAtom          *SyntaxErrorAtom;
-        JSAtom          *TypeErrorAtom;
-        JSAtom          *URIErrorAtom;
         JSAtom          *XMLListAtom;
         JSAtom          *decodeURIAtom;
         JSAtom          *decodeURIComponentAtom;
@@ -268,44 +249,42 @@ struct JSAtomState {
 #endif
 };
 
-/* Well-known predefined strings and their atoms. */
-extern const char   *js_type_str[];
-extern const char   *js_boolean_str[];
+#define CLASS_ATOM(cx,name) \
+    ((cx)->runtime->atomState.classAtoms[JSProto_##name])
 
-extern const char   js_Arguments_str[];
-extern const char   js_Array_str[];
-extern const char   js_Boolean_str[];
-extern const char   js_Call_str[];
-extern const char   js_Date_str[];
-extern const char   js_Function_str[];
-extern const char   js_Math_str[];
-extern const char   js_Namespace_str[];
-extern const char   js_Number_str[];
-extern const char   js_Object_str[];
-extern const char   js_QName_str[];
-extern const char   js_RegExp_str[];
-extern const char   js_Script_str[];
-extern const char   js_String_str[];
-extern const char   js_XML_str[];
-extern const char   js_File_str[];
+/* Well-known predefined strings and their atoms. */
+extern const char   *js_type_strs[];
+extern const char   *js_boolean_strs[];
+extern const char   *js_proto_strs[];
+
+#define JS_PROTO(name,code,init) extern const char js_##name##_str[];
+#include "jsproto.tbl"
+#undef JS_PROTO
+
 extern const char   js_anonymous_str[];
 extern const char   js_arguments_str[];
 extern const char   js_arity_str[];
 extern const char   js_callee_str[];
 extern const char   js_caller_str[];
 extern const char   js_class_prototype_str[];
+extern const char   js_close_str[];
 extern const char   js_constructor_str[];
 extern const char   js_count_str[];
 extern const char   js_etago_str[];
 extern const char   js_each_str[];
 extern const char   js_eval_str[];
-extern const char   js_getter_str[];
+extern const char   js_fileName_str[];
 extern const char   js_get_str[];
+extern const char   js_getter_str[];
 extern const char   js_index_str[];
 extern const char   js_input_str[];
+extern const char   js_iterator_str[];
 extern const char   js_length_str[];
+extern const char   js_lineNumber_str[];
+extern const char   js_message_str[];
 extern const char   js_name_str[];
 extern const char   js_namespace_str[];
+extern const char   js_next_str[];
 extern const char   js_noSuchMethod_str[];
 extern const char   js_object_str[];
 extern const char   js_parent_str[];
@@ -313,9 +292,11 @@ extern const char   js_private_str[];
 extern const char   js_proto_str[];
 extern const char   js_ptagc_str[];
 extern const char   js_qualifier_str[];
+extern const char   js_send_str[];
 extern const char   js_setter_str[];
 extern const char   js_set_str[];
 extern const char   js_space_str[];
+extern const char   js_stack_str[];
 extern const char   js_stago_str[];
 extern const char   js_star_str[];
 extern const char   js_starQualifier_str[];
@@ -370,7 +351,7 @@ typedef void
 (*JSGCThingMarker)(void *thing, void *data);
 
 extern void
-js_MarkAtomState(JSAtomState *state, uintN gcflags, JSGCThingMarker mark,
+js_MarkAtomState(JSAtomState *state, JSBool keepAtoms, JSGCThingMarker mark,
                  void *data);
 
 extern void
@@ -422,6 +403,13 @@ js_Atomize(JSContext *cx, const char *bytes, size_t length, uintN flags);
 
 extern JS_FRIEND_API(JSAtom *)
 js_AtomizeChars(JSContext *cx, const jschar *chars, size_t length, uintN flags);
+
+/*
+ * Return an existing atom for the given char array or null if the char
+ * sequence is currently not atomized.
+ */
+extern JSAtom *
+js_GetExistingStringAtom(JSContext *cx, const jschar *chars, size_t length);
 
 /*
  * This variant handles all value tag types.

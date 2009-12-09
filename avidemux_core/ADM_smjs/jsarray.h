@@ -47,6 +47,9 @@
 
 JS_BEGIN_EXTERN_C
 
+/* Generous sanity-bound on length (in elements) of array initialiser. */
+#define ARRAY_INIT_LIMIT        JS_BIT(24)
+
 extern JSBool
 js_IdIsIndex(jsval id, jsuint *indexp);
 
@@ -68,11 +71,22 @@ extern JSBool
 js_HasLengthProperty(JSContext *cx, JSObject *obj, jsuint *lengthp);
 
 /*
+ * Test whether an object is "array-like".  Currently this means whether obj
+ * is an Array or an arguments object.  We would like an API, and probably a
+ * way in the language, to bless other objects as array-like: having indexed
+ * properties, and a 'length' property of uint32 value equal to one more than
+ * the greatest index.
+ */
+extern JSBool
+js_IsArrayLike(JSContext *cx, JSObject *obj, JSBool *answerp, jsuint *lengthp);
+
+/*
  * JS-specific heap sort function.
  */
-typedef int (*JSComparator)(const void *a, const void *b, void *arg);
+typedef JSBool (*JSComparator)(void *arg, const void *a, const void *b,
+                               int *result);
 
-extern void
+extern JSBool
 js_HeapSort(void *vec, size_t nel, void *pivot, size_t elsize,
             JSComparator cmp, void *arg);
 

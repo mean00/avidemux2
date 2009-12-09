@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -38,26 +38,16 @@
 
 #include "jsstddef.h"
 #include "jsbit.h"
+#include "jsutil.h"
 
 /*
 ** Compute the log of the least power of 2 greater than or equal to n
 */
 JS_PUBLIC_API(JSIntn) JS_CeilingLog2(JSUint32 n)
 {
-    JSIntn log2 = 0;
+    JSIntn log2;
 
-    if (n & (n-1))
-        log2++;
-    if (n >> 16)
-        log2 += 16, n >>= 16;
-    if (n >> 8)
-        log2 += 8, n >>= 8;
-    if (n >> 4)
-        log2 += 4, n >>= 4;
-    if (n >> 2)
-        log2 += 2, n >>= 2;
-    if (n >> 1)
-        log2++;
+    JS_CEILING_LOG2(log2, n);
     return log2;
 }
 
@@ -67,17 +57,38 @@ JS_PUBLIC_API(JSIntn) JS_CeilingLog2(JSUint32 n)
 */
 JS_PUBLIC_API(JSIntn) JS_FloorLog2(JSUint32 n)
 {
-    JSIntn log2 = 0;
+    JSIntn log2;
 
-    if (n >> 16)
-        log2 += 16, n >>= 16;
-    if (n >> 8)
-        log2 += 8, n >>= 8;
-    if (n >> 4)
-        log2 += 4, n >>= 4;
-    if (n >> 2)
-        log2 += 2, n >>= 2;
-    if (n >> 1)
-        log2++;
+    JS_FLOOR_LOG2(log2, n);
     return log2;
 }
+
+/*
+ * js_FloorLog2wImpl has to be defined only for 64-bit non-GCC case.
+ */
+#if !defined(JS_HAS_GCC_BUILTIN_CLZ) && JS_BYTES_PER_WORD == 8
+
+JSUword
+js_FloorLog2wImpl(JSUword n)
+{
+    JSUword log2, m;
+
+    JS_ASSERT(n != 0);
+
+    log2 = 0;
+    m = n >> 32;
+    if (m != 0) { n = m; log2 = 32; }
+    m = n >> 16;
+    if (m != 0) { n = m; log2 |= 16; }
+    m = n >> 8;
+    if (m != 0) { n = m; log2 |= 8; }
+    m = n >> 4;
+    if (m != 0) { n = m; log2 |= 4; }
+    m = n >> 2;
+    if (m != 0) { n = m; log2 |= 2; }
+    log2 |= (n >> 1);
+
+    return log2;
+}
+
+#endif

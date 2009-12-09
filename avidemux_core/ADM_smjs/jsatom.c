@@ -54,7 +54,7 @@
 #include "jsgc.h"
 #include "jslock.h"
 #include "jsnum.h"
-#include "jsopcode.h"
+#include "jsscan.h"
 #include "jsstr.h"
 
 JS_FRIEND_API(const char *)
@@ -63,15 +63,11 @@ js_AtomToPrintableString(JSContext *cx, JSAtom *atom)
     return js_ValueToPrintableString(cx, ATOM_KEY(atom));
 }
 
-#if JS_HAS_ERROR_EXCEPTIONS
-extern const char js_Error_str[];       /* trivial, from jsexn.h */
-#endif
-
 /*
  * Keep this in sync with jspubtd.h -- an assertion below will insist that
  * its length match the JSType enum's JSTYPE_LIMIT limit value.
  */
-const char *js_type_str[] = {
+const char *js_type_strs[] = {
     "undefined",
     js_object_str,
     "function",
@@ -82,27 +78,24 @@ const char *js_type_str[] = {
     "xml",
 };
 
-const char *js_boolean_str[] = {
+JS_STATIC_ASSERT(JSTYPE_LIMIT ==
+                 sizeof js_type_strs / sizeof js_type_strs[0]);
+
+const char *js_boolean_strs[] = {
     js_false_str,
     js_true_str
 };
 
-const char js_Arguments_str[]       = "Arguments";
-const char js_Array_str[]           = "Array";
-const char js_Boolean_str[]         = "Boolean";
-const char js_Call_str[]            = "Call";
-const char js_Date_str[]            = "Date";
-const char js_Function_str[]        = "Function";
-const char js_Math_str[]            = "Math";
-const char js_Namespace_str[]       = "Namespace";
-const char js_Number_str[]          = "Number";
-const char js_Object_str[]          = "Object";
-const char js_QName_str[]           = "QName";
-const char js_RegExp_str[]          = "RegExp";
-const char js_Script_str[]          = "Script";
-const char js_String_str[]          = "String";
-const char js_XML_str[]             = "XML";
-const char js_File_str[]            = "File";
+#define JS_PROTO(name,code,init) const char js_##name##_str[] = #name;
+#include "jsproto.tbl"
+#undef JS_PROTO
+
+const char *js_proto_strs[JSProto_LIMIT] = {
+#define JS_PROTO(name,code,init) js_##name##_str,
+#include "jsproto.tbl"
+#undef JS_PROTO
+};
+
 const char js_anonymous_str[]       = "anonymous";
 const char js_arguments_str[]       = "arguments";
 const char js_arity_str[]           = "arity";
@@ -113,19 +106,24 @@ const char js_constructor_str[]     = "constructor";
 const char js_count_str[]           = "__count__";
 const char js_each_str[]            = "each";
 const char js_eval_str[]            = "eval";
-const char js_getter_str[]          = "getter";
+const char js_fileName_str[]        = "fileName";
 const char js_get_str[]             = "get";
+const char js_getter_str[]          = "getter";
 const char js_index_str[]           = "index";
 const char js_input_str[]           = "input";
+const char js_iterator_str[]        = "__iterator__";
 const char js_length_str[]          = "length";
+const char js_lineNumber_str[]      = "lineNumber";
+const char js_message_str[]         = "message";
 const char js_name_str[]            = "name";
+const char js_next_str[]            = "next";
 const char js_noSuchMethod_str[]    = "__noSuchMethod__";
 const char js_object_str[]          = "object";
 const char js_parent_str[]          = "__parent__";
-const char js_private_str[]         = "private";
 const char js_proto_str[]           = "__proto__";
 const char js_setter_str[]          = "setter";
 const char js_set_str[]             = "set";
+const char js_stack_str[]           = "stack";
 const char js_toSource_str[]        = "toSource";
 const char js_toString_str[]        = "toString";
 const char js_toLocaleString_str[]  = "toLocaleString";
@@ -142,6 +140,11 @@ const char js_star_str[]            = "*";
 const char js_starQualifier_str[]   = "*::";
 const char js_tagc_str[]            = ">";
 const char js_xml_str[]             = "xml";
+#endif
+
+#if JS_HAS_GENERATORS
+const char js_close_str[]           = "close";
+const char js_send_str[]            = "send";
 #endif
 
 #ifdef NARCISSUS
@@ -187,7 +190,7 @@ js_compare_atom_keys(const void *k1, const void *k2)
 
     v1 = (jsval)k1, v2 = (jsval)k2;
     if (JSVAL_IS_STRING(v1) && JSVAL_IS_STRING(v2))
-        return !js_CompareStrings(JSVAL_TO_STRING(v1), JSVAL_TO_STRING(v2));
+        return js_EqualStrings(JSVAL_TO_STRING(v1), JSVAL_TO_STRING(v2));
     if (JSVAL_IS_DOUBLE(v1) && JSVAL_IS_DOUBLE(v2)) {
         double d1 = *JSVAL_TO_DOUBLE(v1);
         double d2 = *JSVAL_TO_DOUBLE(v2);
@@ -294,33 +297,16 @@ js_InitPinnedAtoms(JSContext *cx, JSAtomState *state)
             return JS_FALSE;                                                  \
     JS_END_MACRO
 
-    JS_ASSERT(sizeof js_type_str / sizeof js_type_str[0] == JSTYPE_LIMIT);
     for (i = 0; i < JSTYPE_LIMIT; i++)
-        FROB(typeAtoms[i],        js_type_str[i]);
+        FROB(typeAtoms[i],        js_type_strs[i]);
+
+    for (i = 0; i < JSProto_LIMIT; i++)
+        FROB(classAtoms[i],       js_proto_strs[i]);
 
     FROB(booleanAtoms[0],         js_false_str);
     FROB(booleanAtoms[1],         js_true_str);
     FROB(nullAtom,                js_null_str);
 
-    FROB(ArgumentsAtom,           js_Arguments_str);
-    FROB(ArrayAtom,               js_Array_str);
-    FROB(BooleanAtom,             js_Boolean_str);
-    FROB(CallAtom,                js_Call_str);
-    FROB(DateAtom,                js_Date_str);
-#if JS_HAS_ERROR_EXCEPTIONS
-    FROB(ErrorAtom,               js_Error_str);
-#endif
-    FROB(FunctionAtom,            js_Function_str);
-    FROB(MathAtom,                js_Math_str);
-    FROB(NamespaceAtom,           js_Namespace_str);
-    FROB(NumberAtom,              js_Number_str);
-    FROB(ObjectAtom,              js_Object_str);
-    FROB(QNameAtom,               js_QName_str);
-    FROB(RegExpAtom,              js_RegExp_str);
-    FROB(ScriptAtom,              js_Script_str);
-    FROB(StringAtom,              js_String_str);
-    FROB(XMLAtom,                 js_XML_str);
-    FROB(FileAtom,                js_File_str);
     FROB(anonymousAtom,           js_anonymous_str);
     FROB(argumentsAtom,           js_arguments_str);
     FROB(arityAtom,               js_arity_str);
@@ -331,17 +317,23 @@ js_InitPinnedAtoms(JSContext *cx, JSAtomState *state)
     FROB(countAtom,               js_count_str);
     FROB(eachAtom,                js_each_str);
     FROB(evalAtom,                js_eval_str);
+    FROB(fileNameAtom,            js_fileName_str);
     FROB(getAtom,                 js_get_str);
     FROB(getterAtom,              js_getter_str);
     FROB(indexAtom,               js_index_str);
     FROB(inputAtom,               js_input_str);
+    FROB(iteratorAtom,            js_iterator_str);
     FROB(lengthAtom,              js_length_str);
+    FROB(lineNumberAtom,          js_lineNumber_str);
+    FROB(messageAtom,             js_message_str);
     FROB(nameAtom,                js_name_str);
+    FROB(nextAtom,                js_next_str);
     FROB(noSuchMethodAtom,        js_noSuchMethod_str);
     FROB(parentAtom,              js_parent_str);
     FROB(protoAtom,               js_proto_str);
     FROB(setAtom,                 js_set_str);
     FROB(setterAtom,              js_setter_str);
+    FROB(stackAtom,               js_stack_str);
     FROB(toSourceAtom,            js_toSource_str);
     FROB(toStringAtom,            js_toString_str);
     FROB(toLocaleStringAtom,      js_toLocaleString_str);
@@ -358,6 +350,10 @@ js_InitPinnedAtoms(JSContext *cx, JSAtomState *state)
     FROB(starQualifierAtom,       js_starQualifier_str);
     FROB(tagcAtom,                js_tagc_str);
     FROB(xmlAtom,                 js_xml_str);
+#endif
+
+#if JS_HAS_GENERATORS
+    FROB(closeAtom,               js_close_str);
 #endif
 
 #ifdef NARCISSUS
@@ -429,7 +425,7 @@ js_FinishAtomState(JSAtomState *state)
 }
 
 typedef struct MarkArgs {
-    uintN           gcflags;
+    JSBool          keepAtoms;
     JSGCThingMarker mark;
     void            *data;
 } MarkArgs;
@@ -443,8 +439,7 @@ js_atom_marker(JSHashEntry *he, intN i, void *arg)
 
     atom = (JSAtom *)he;
     args = (MarkArgs *)arg;
-    if ((atom->flags & (ATOM_PINNED | ATOM_INTERNED)) ||
-        (args->gcflags & GC_KEEP_ATOMS)) {
+    if ((atom->flags & (ATOM_PINNED | ATOM_INTERNED)) || args->keepAtoms) {
         atom->flags |= ATOM_MARK;
         key = ATOM_KEY(atom);
         if (JSVAL_IS_GCTHING(key))
@@ -454,14 +449,14 @@ js_atom_marker(JSHashEntry *he, intN i, void *arg)
 }
 
 void
-js_MarkAtomState(JSAtomState *state, uintN gcflags, JSGCThingMarker mark,
+js_MarkAtomState(JSAtomState *state, JSBool keepAtoms, JSGCThingMarker mark,
                  void *data)
 {
     MarkArgs args;
 
     if (!state->table)
         return;
-    args.gcflags = gcflags;
+    args.keepAtoms = keepAtoms;
     args.mark = mark;
     args.data = data;
     JS_HashTableEnumerateEntries(state->table, js_atom_marker, &args);
@@ -753,6 +748,30 @@ js_AtomizeChars(JSContext *cx, const jschar *chars, size_t length, uintN flags)
     str->chars = (jschar *)chars;
     str->length = length;
     return js_AtomizeString(cx, str, ATOM_TMPSTR | flags);
+}
+
+JSAtom *
+js_GetExistingStringAtom(JSContext *cx, const jschar *chars, size_t length)
+{
+    JSString *str;
+    char buf[2 * ALIGNMENT(JSString)];
+    JSHashNumber keyHash;
+    jsval key;
+    JSAtomState *state;
+    JSHashTable *table;
+    JSHashEntry **hep;
+
+    str = ALIGN(buf, JSString);
+    str->chars = (jschar *)chars;
+    str->length = length;
+    keyHash = js_HashString(str);
+    key = STRING_TO_JSVAL(str);
+    state = &cx->runtime->atomState;
+    JS_LOCK(&state->lock, cx);
+    table = state->table;
+    hep = JS_HashTableRawLookup(table, keyHash, (void *)key);
+    JS_UNLOCK(&state->lock, cx);
+    return (hep) ? (JSAtom *)*hep : NULL;
 }
 
 JSAtom *

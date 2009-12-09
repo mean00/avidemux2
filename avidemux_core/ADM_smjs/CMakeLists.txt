@@ -1,9 +1,12 @@
 SET(ADM_LIB ADM_smjs6)
 
 SET(${ADM_LIB}_SRCS 
-	jsapi.c    jsatom.c  jscntxt.c   jsdbgapi.c  jsemit.c  jsfun.c   jsinterp.c  jslong.c  jsobj.c     jsprf.c     jsscope.c   jsutil.c    prmjtime.c
-	jsarena.c  jsbool.c  jsdhash.c   jsexn.c   jsgc.c    jslock.c    jsmath.c  jsopcode.c  jsregexp.c  jsscript.c  jsxdrapi.c
-	jsarray.c  jsdate.c    jsdtoa.c    jsfile.c  jshash.c  jslog2.c    jsnum.c   jsparse.c   jsscan.c    jsstr.c     jsxml.c)
+	jsapi.c    jsatom.c  jscntxt.c   jsdbgapi.c  jsemit.c  jsfun.c   jsinterp.c  jslong.c  jsobj.c     jsprf.c     jsscope.c   
+        jsutil.c   prmjtime.c
+	jsarena.c  jsbool.c    jsdhash.c   jsexn.c   jsgc.c    jslock.c    jsmath.c  jsopcode.c  jsregexp.c  jsscript.c  jsxdrapi.c
+	jsarray.c  jsdate.c    jsdtoa.c    jsfile.c  jshash.c  jslog2.c    jsnum.c   jsparse.c   jsscan.c    jsstr.c     jsxml.c
+        jsiter.c
+)
 	
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
 

@@ -82,18 +82,12 @@ JS_BEGIN_EXTERN_C
 extern uint8 *
 js_GetGCThingFlags(void *thing);
 
-/* These are compatible with JSDHashEntryStub. */
-struct JSGCRootHashEntry {
-    JSDHashEntryHdr hdr;
-    void            *root;
-    const char      *name;
-};
-
-struct JSGCLockHashEntry {
-    JSDHashEntryHdr hdr;
-    const JSGCThing *thing;
-    uint32          count;
-};
+/*
+ * The sole purpose of the function is to preserve public API compatibility
+ * in JS_GetStringBytes which takes only single JSString* argument.
+ */
+JSRuntime*
+js_GetGCStringRuntime(JSString *str);
 
 #if 1
 /*
@@ -125,6 +119,60 @@ js_AddRootRT(JSRuntime *rt, void *rp, const char *name);
 extern JSBool
 js_RemoveRoot(JSRuntime *rt, void *rp);
 
+#ifdef DEBUG
+extern void
+js_DumpNamedRoots(JSRuntime *rt,
+                  void (*dump)(const char *name, void *rp, void *data),
+                  void *data);
+#endif
+
+extern uint32
+js_MapGCRoots(JSRuntime *rt, JSGCRootMapFun map, void *data);
+
+/* Table of pointers with count valid members. */
+typedef struct JSPtrTable {
+    size_t      count;
+    void        **array;
+} JSPtrTable;
+
+extern JSBool
+js_RegisterCloseableIterator(JSContext *cx, JSObject *obj);
+
+#if JS_HAS_GENERATORS
+
+/*
+ * Runtime state to support generators' close hooks.
+ */
+typedef struct JSGCCloseState {
+    /*
+     * Singly linked list of generators that are reachable from GC roots or
+     * were created after the last GC.
+     */
+    JSGenerator         *reachableList;
+
+    /*
+     * Head of the queue of generators that have already become unreachable but
+     * whose close hooks are not yet run.
+     */
+    JSGenerator         *todoQueue;
+
+#ifndef JS_THREADSAFE
+    /*
+     * Flag indicating that the current thread is excuting a close hook for
+     * single thread case.
+     */
+    JSBool              runningCloseHook;
+#endif
+} JSGCCloseState;
+
+extern void
+js_RegisterGenerator(JSContext *cx, JSGenerator *gen);
+
+extern JSBool
+js_RunCloseHooks(JSContext *cx);
+
+#endif
+
 /*
  * The private JSGCThing struct, which describes a gcFreeList element.
  */
@@ -154,70 +202,68 @@ extern JSBool
 js_IsAboutToBeFinalized(JSContext *cx, void *thing);
 
 extern void
-js_MarkAtom(JSContext *cx, JSAtom *atom, void *arg);
+js_MarkAtom(JSContext *cx, JSAtom *atom);
 
 /* We avoid a large number of unnecessary calls by doing the flag check first */
-#define GC_MARK_ATOM(cx, atom, arg)                                           \
+#define GC_MARK_ATOM(cx, atom)                                                \
     JS_BEGIN_MACRO                                                            \
         if (!((atom)->flags & ATOM_MARK))                                     \
-            js_MarkAtom(cx, atom, arg);                                       \
+            js_MarkAtom(cx, atom);                                            \
     JS_END_MACRO
 
+/*
+ * Always use GC_MARK macro and never call js_MarkGCThing directly so
+ * when GC_MARK_DEBUG is defined the dump of live GC things does not miss
+ * a thing.
+ */
 extern void
-js_MarkGCThing(JSContext *cx, void *thing, void *arg);
+js_MarkGCThing(JSContext *cx, void *thing);
 
 #ifdef GC_MARK_DEBUG
 
-typedef struct GCMarkNode GCMarkNode;
+# define GC_MARK(cx, thing, name) js_MarkNamedGCThing(cx, thing, name)
 
-struct GCMarkNode {
-    void        *thing;
-    const char  *name;
-    GCMarkNode  *next;
-    GCMarkNode  *prev;
-};
-
-#define GC_MARK(cx_, thing_, name_, prev_)                                    \
-    JS_BEGIN_MACRO                                                            \
-        GCMarkNode node_;                                                     \
-        node_.thing = thing_;                                                 \
-        node_.name  = name_;                                                  \
-        node_.next  = NULL;                                                   \
-        node_.prev  = prev_;                                                  \
-        if (prev_) ((GCMarkNode *)(prev_))->next = &node_;                    \
-        js_MarkGCThing(cx_, thing_, &node_);                                  \
-    JS_END_MACRO
+extern void
+js_MarkNamedGCThing(JSContext *cx, void *thing, const char *name);
 
 extern JS_FRIEND_DATA(FILE *) js_DumpGCHeap;
 JS_EXTERN_DATA(void *) js_LiveThingToFind;
 
-#else  /* !GC_MARK_DEBUG */
+#else
 
-#define GC_MARK(cx, thing, name, prev)   js_MarkGCThing(cx, thing, NULL)
+# define GC_MARK(cx, thing, name) js_MarkGCThing(cx, thing)
 
-#endif /* !GC_MARK_DEBUG */
+#endif
+
+extern void
+js_MarkStackFrame(JSContext *cx, JSStackFrame *fp);
 
 /*
- * Flags to modify how a GC marks and sweeps:
- *   GC_KEEP_ATOMS      Don't sweep unmarked atoms, they may be in use by the
- *                      compiler, or by an API function that calls js_Atomize,
- *                      when the GC is called from js_NewGCThing, due to a
- *                      malloc failure or the runtime GC-thing limit.
- *   GC_LAST_CONTEXT    Called from js_DestroyContext for last JSContext in a
- *                      JSRuntime, when it is imperative that rt->gcPoke gets
- *                      cleared early in js_GC, if it is set.
- *   GC_ALREADY_LOCKED  rt->gcLock is already held on entry to js_GC, and kept
- *                      on return to its caller.
+ * Kinds of js_GC invocation.
  */
-#define GC_KEEP_ATOMS       0x1
-#define GC_LAST_CONTEXT     0x2
-#define GC_ALREADY_LOCKED   0x4
+typedef enum JSGCInvocationKind {
+    /* Normal invocation. */
+    GC_NORMAL,
+
+    /*
+     * Called from js_DestroyContext for last JSContext in a JSRuntime, when
+     * it is imperative that rt->gcPoke gets cleared early in js_GC.
+     */
+    GC_LAST_CONTEXT,
+
+    /*
+     * Called from js_NewGCThing as a last-ditch GC attempt. See comments
+     * before js_GC definition for details.
+     */
+    GC_LAST_DITCH
+} JSGCInvocationKind;
 
 extern void
-js_ForceGC(JSContext *cx, uintN gcflags);
+js_GC(JSContext *cx, JSGCInvocationKind gckind);
 
+/* Call this after succesful malloc of memory for GC-related things. */
 extern void
-js_GC(JSContext *cx, uintN gcflags);
+js_UpdateMallocCounter(JSContext *cx, size_t nbytes);
 
 #ifdef DEBUG_notme
 #define JS_GCMETER 1
@@ -226,11 +272,10 @@ js_GC(JSContext *cx, uintN gcflags);
 #ifdef JS_GCMETER
 
 typedef struct JSGCStats {
+#ifdef JS_THREADSAFE
+    uint32  localalloc; /* number of succeeded allocations from local lists */
+#endif
     uint32  alloc;      /* number of allocation attempts */
-    uint32  freelen[GC_NUM_FREELISTS];
-                        /* gcFreeList lengths */
-    uint32  recycle[GC_NUM_FREELISTS];
-                        /* number of things recycled through gcFreeList */
     uint32  retry;      /* allocation attempt retries after running the GC */
     uint32  retryhalt;  /* allocation retries halted by the branch callback */
     uint32  fail;       /* allocation failures */
@@ -242,23 +287,59 @@ typedef struct JSGCStats {
     uint32  maxdepth;   /* maximum mark tail recursion depth */
     uint32  cdepth;     /* mark recursion depth of C functions */
     uint32  maxcdepth;  /* maximum mark recursion depth of C functions */
-    uint32  dswmark;    /* mark C stack overflows => Deutsch-Schorr-Waite */
-    uint32  dswdepth;   /* DSW mark depth */
-    uint32  maxdswdepth;/* maximum DSW mark depth */
-    uint32  dswup;      /* DSW moves up the mark spanning tree */
-    uint32  dswupstep;  /* steps in obj->slots to find DSW-reversed pointer */
+    uint32  unscanned;  /* mark C stack overflows or number of times
+                           GC things were put in unscanned bag */
+#ifdef DEBUG
+    uint32  maxunscanned;       /* maximum size of unscanned bag */
+#endif
     uint32  maxlevel;   /* maximum GC nesting (indirect recursion) level */
     uint32  poke;       /* number of potentially useful GC calls */
     uint32  nopoke;     /* useless GC calls where js_PokeGC was not set */
     uint32  afree;      /* thing arenas freed so far */
     uint32  stackseg;   /* total extraordinary stack segments scanned */
     uint32  segslots;   /* total stack segment jsval slots scanned */
+    uint32  nclose;     /* number of objects with close hooks */
+    uint32  maxnclose;  /* max number of objects with close hooks */
+    uint32  closelater; /* number of close hooks scheduled to run */
+    uint32  maxcloselater; /* max number of close hooks scheduled to run */
 } JSGCStats;
 
 extern JS_FRIEND_API(void)
 js_DumpGCStats(JSRuntime *rt, FILE *fp);
 
 #endif /* JS_GCMETER */
+
+typedef struct JSGCArena JSGCArena;
+typedef struct JSGCArenaList JSGCArenaList;
+
+#ifdef JS_GCMETER
+typedef struct JSGCArenaStats JSGCArenaStats;
+
+struct JSGCArenaStats {
+    uint32  narenas;        /* number of arena in list */
+    uint32  maxarenas;      /* maximun number of allocated arenas */
+    uint32  nthings;        /* number of allocates JSGCThing */
+    uint32  maxthings;      /* maximum number number of allocates JSGCThing */
+    uint32  totalnew;       /* number of succeeded calls to js_NewGCThing */
+    uint32  freelen;        /* freeList lengths */
+    uint32  recycle;        /* number of things recycled through freeList */
+    uint32  totalarenas;    /* total number of arenas with live things that
+                               GC scanned so far */
+    uint32  totalfreelen;   /* total number of things that GC put to free
+                               list so far */
+};
+#endif
+
+struct JSGCArenaList {
+    JSGCArena   *last;          /* last allocated GC arena */
+    uint16      lastLimit;      /* end offset of allocated so far things in
+                                   the last arena */
+    uint16      thingSize;      /* size of things to allocate on this list */
+    JSGCThing   *freeList;      /* list of free GC things */
+#ifdef JS_GCMETER
+    JSGCArenaStats stats;
+#endif
+};
 
 typedef struct JSWeakRoots {
     /* Most recently created things by type, members of the GC's root set. */
@@ -271,9 +352,7 @@ typedef struct JSWeakRoots {
     jsval               lastInternalResult;
 } JSWeakRoots;
 
-#if 0
 JS_STATIC_ASSERT(JSVAL_NULL == 0);
-#endif
 #define JS_CLEAR_WEAK_ROOTS(wr) (memset((wr), 0, sizeof(JSWeakRoots)))
 
 #ifdef DEBUG_notme

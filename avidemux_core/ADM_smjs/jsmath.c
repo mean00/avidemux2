@@ -92,9 +92,9 @@ static JSConstDoubleSpec math_constants[] = {
     {0,0,0,{0,0,0}}
 };
 
-static JSClass math_class = {
-    "Math",
-    0,
+JSClass js_MathClass = {
+    js_Math_str,
+    JSCLASS_HAS_CACHED_PROTO(JSProto_Math),
     JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,
     JS_EnumerateStub, JS_ResolveStub,   JS_ConvertStub,   JS_FinalizeStub,
     JSCLASS_NO_OPTIONAL_MEMBERS
@@ -153,6 +153,21 @@ math_atan2(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
     if (!js_ValueToNumber(cx, argv[1], &y))
         return JS_FALSE;
+#if !JS_USE_FDLIBM_MATH && defined(_MSC_VER)
+    /*
+     * MSVC's atan2 does not yield the result demanded by ECMA when both x
+     * and y are infinite.
+     * - The result is a multiple of pi/4.
+     * - The sign of x determines the sign of the result.
+     * - The sign of y determines the multiplicator, 1 or 3.
+     */
+    if (JSDOUBLE_IS_INFINITE(x) && JSDOUBLE_IS_INFINITE(y)) {
+        z = fd_copysign(M_PI / 4, x);
+        if (y < 0)
+            z *= 3;
+        return js_NewDoubleValue(cx, z, rval);
+    }
+#endif
     z = fd_atan2(x, y);
     return js_NewNumberValue(cx, z, rval);
 }
@@ -241,7 +256,7 @@ math_max(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
             *rval = DOUBLE_TO_JSVAL(cx->runtime->jsNaN);
             return JS_TRUE;
         }
-        if ((x==0)&&(x==z)&&(fd_copysign(1.0,z)==-1))
+        if (x == 0 && x == z && fd_copysign(1.0, z) == -1)
             z = x;
         else
             z = (x > z) ? x : z;
@@ -266,7 +281,7 @@ math_min(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
             *rval = DOUBLE_TO_JSVAL(cx->runtime->jsNaN);
             return JS_TRUE;
         }
-        if ((x==0)&&(x==z)&&(fd_copysign(1.0,x)==-1))
+        if (x == 0 && x == z && fd_copysign(1.0,x) == -1)
             z = x;
         else
             z = (x < z) ? x : z;
@@ -290,6 +305,11 @@ math_pow(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
      */
     if (!JSDOUBLE_IS_FINITE(y) && (x == 1.0 || x == -1.0)) {
         *rval = DOUBLE_TO_JSVAL(cx->runtime->jsNaN);
+        return JS_TRUE;
+    }
+    /* pow(x, +-0) is always 1, even for x = NaN. */
+    if (y == 0) {
+        *rval = JSVAL_ONE;
         return JS_TRUE;
     }
 #endif
@@ -384,6 +404,21 @@ math_random(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     return js_NewNumberValue(cx, z, rval);
 }
 
+#if defined _WIN32 && !defined WINCE && _MSC_VER < 1400
+/* Try to work around apparent _copysign bustage in VC6 and VC7. */
+double
+js_copysign(double x, double y)
+{
+    jsdpun xu, yu;
+
+    xu.d = x;
+    yu.d = y;
+    xu.s.hi &= ~JSDOUBLE_HI32_SIGNBIT;
+    xu.s.hi |= yu.s.hi & JSDOUBLE_HI32_SIGNBIT;
+    return xu.d;
+}
+#endif
+
 static JSBool
 math_round(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -433,7 +468,7 @@ static JSBool
 math_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
               jsval *rval)
 {
-    *rval = ATOM_KEY(cx->runtime->atomState.MathAtom);
+    *rval = ATOM_KEY(CLASS_ATOM(cx, Math));
     return JS_TRUE;
 }
 #endif
@@ -468,7 +503,7 @@ js_InitMathClass(JSContext *cx, JSObject *obj)
 {
     JSObject *Math;
 
-    Math = JS_DefineObject(cx, obj, "Math", &math_class, NULL, 0);
+    Math = JS_DefineObject(cx, obj, js_Math_str, &js_MathClass, NULL, 0);
     if (!Math)
         return NULL;
     if (!JS_DefineFunctions(cx, Math, math_static_methods))

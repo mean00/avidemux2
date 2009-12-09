@@ -50,36 +50,15 @@
 #include "jsconfig.h"
 
 /*
- * Define which platforms on which to use fdlibm.  Not used
- * by default since there can be problems with endian-ness and such.
+ * Define on which platforms to use fdlibm. Not used by default under
+ * assumption that native math library works unless proved guilty.
+ * Plus there can be problems with endian-ness and such in fdlibm itself.
+ *
+ * fdlibm compatibility notes:
+ * - fdlibm broken on OSF1/alpha
  */
 
-#if defined(_WIN32) && !defined(__MWERKS__)
-/* MEANX #define JS_USE_FDLIBM_MATH 1*/
-
-#elif defined(SUNOS4)
-#define JS_USE_FDLIBM_MATH 1
-
-#elif defined(IRIX)
-#define JS_USE_FDLIBM_MATH 1
-
-#elif defined(SOLARIS)
-#define JS_USE_FDLIBM_MATH 1
-
-#elif defined(HPUX)
-#define JS_USE_FDLIBM_MATH 1
-
-#elif defined(linux)
-/* MEANX #define JS_USE_FDLIBM_MATH 1 */
-
-#elif defined(OSF1)
-/* Want to use some fdlibm functions but fdlibm broken on OSF1/alpha. */
-#define JS_USE_FDLIBM_MATH 0
-
-#elif defined(AIX)
-#define JS_USE_FDLIBM_MATH 1
-
-#else
+#ifndef JS_USE_FDLIBM_MATH
 #define JS_USE_FDLIBM_MATH 0
 #endif
 
@@ -94,7 +73,24 @@
 #define fd_atan atan
 #define fd_atan2 atan2
 #define fd_ceil ceil
+
+/* The right copysign function is not always named the same thing. */
+#if __GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+#define fd_copysign __builtin_copysign
+#elif defined WINCE
+#define fd_copysign _copysign
+#elif defined _WIN32
+#if _MSC_VER < 1400
+/* Try to work around apparent _copysign bustage in VC6 and VC7. */
+#define fd_copysign js_copysign
+extern double js_copysign(double, double);
+#else
+#define fd_copysign _copysign
+#endif
+#else
 #define fd_copysign copysign
+#endif
+
 #define fd_cos cos
 #define fd_exp exp
 #define fd_fabs fabs
@@ -199,26 +195,6 @@ extern double fd_pow __P((double, double));
 extern double fd_asin __P((double));
 extern double fd_atan __P((double));
 extern double fd_copysign __P((double, double));
-
-#elif defined(linux)
-
-#define fd_atan atan
-#define fd_atan2 atan2
-#define fd_ceil ceil
-#define fd_cos cos
-#define fd_fabs fabs
-#define fd_floor floor
-#define fd_fmod fmod
-#define fd_sin sin
-#define fd_sqrt sqrt
-#define fd_tan tan
-#define fd_copysign copysign
-
-extern double fd_asin __P((double));
-extern double fd_acos __P((double));
-extern double fd_exp __P((double));
-extern double fd_log __P((double));
-extern double fd_pow __P((double, double));
 
 #elif defined(OSF1)
 
