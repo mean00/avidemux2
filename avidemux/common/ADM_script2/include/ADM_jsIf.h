@@ -48,4 +48,17 @@ bool interactiveECMAScript(const char *name);
 
 */
 bool jsLog(JS_LOG_TYPE type, const char *fmt,...);
+
+/**
+    \fn SpidermonkeyInit
+*/
+bool SpidermonkeyInit(void);
+/**
+    \fn SpidermonkeyDestroy
+*/
+void SpidermonkeyDestroy(void);
+/**
+    \fn SpidermonkeyExit
+*/
+bool SpidermonkeyExit(void);
 #endif

@@ -55,7 +55,7 @@ extern "C" {
 #include "ADM_render/GUI_sdlRender.h"
 #endif
 
-
+#include "ADM_script2/include/ADM_jsIf.h"
 void onexit( void );
 //extern void automation(int argc, char **argv);
 
@@ -101,9 +101,6 @@ extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 
 // Spidermonkey/Scripting stuff  
-bool SpidermonkeyInit(void);
-void SpidermonkeyDestroy(void);
-bool ADM_jsExit(void);
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
 extern int check_leaks();
@@ -313,7 +310,7 @@ void onexit( void )
 	printf("Cleaning up\n");
     delete video_body;	
     // wait for thread to finish executing
-    ADM_jsExit();
+    SpidermonkeyExit();
 //    filterCleanUp();
 	ADM_lavDestroy();
 

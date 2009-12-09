@@ -223,9 +223,9 @@ void JS_setSuccess(bool bSuccess)
 	printf("[ECMA] success : %d\n", g_bJSSuccess);
 }// end JS_setSuccess
 /**
-    \fn ADM_jsExit
+    \fn SpidermonkeyExit
 */
-bool ADM_jsExit(void)
+bool SpidermonkeyExit(void)
 {
     ADM_info("Waiting for Spidermonkey to finish...\n");
     pthread_mutex_lock(&g_pSpiderMonkeyMutex);
