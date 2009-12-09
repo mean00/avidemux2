@@ -28,10 +28,11 @@ JSVAR( pthread_t, g_pThreadSpidermonkey , 0);
 #endif
 JSVAR( pthread_mutex_t, g_pSpiderMonkeyMutex , PTHREAD_MUTEX_INITIALIZER);
 // expose our main javascript context to the entire program
-JSVAR( bool, g_bJSSuccess , 0);
-JSVAR( JSObject, *g_pObject,NULL);
-JSVAR( JSContext, *g_pCx,NULL);
-JSVAR( JSRuntime, *g_pRt,NULL);
+static bool g_bJSSuccess=false;
+static JSObject   *g_pObject=NULL;
+static JSContext  *g_pCx=NULL;
+static JSRuntime  *g_pRt=NULL;
+
 
 extern void  printJSError(JSContext *cx, const char *message, JSErrorReport *report);
 /**
@@ -156,6 +157,9 @@ bool SpidermonkeyInit()
 		}
 		else
 		{// begin context created
+            JSObject *global = JS_NewObject(cx, NULL, 0, 0);
+            g_pObject = global;
+            JS_InitStandardClasses(cx, global);
 
 			// register error handler
 			JS_SetErrorReporter(cx, printJSError);
@@ -230,3 +234,4 @@ bool ADM_jsExit(void)
     pthread_mutex_unlock(&g_pSpiderMonkeyMutex);
     return true;
 }
+//EOF
