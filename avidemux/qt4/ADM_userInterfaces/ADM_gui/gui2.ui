@@ -1397,25 +1397,12 @@
     <addaction name="actionJump_to_Frame"/>
     <addaction name="actionJump_to_Time"/>
    </widget>
-   <widget class="QMenu" name="menuAuto">
-    <property name="title">
-     <string>A&amp;uto</string>
-    </property>
-    <addaction name="actionVCD"/>
-    <addaction name="actionSVCD"/>
-    <addaction name="actionDVD"/>
-    <addaction name="actionPSP"/>
-    <addaction name="actionPSP_H264"/>
-    <addaction name="actionFLV"/>
-    <addaction name="actionIPOD"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuVideo"/>
    <addaction name="menuAudio"/>
    <addaction name="menuTools"/>
-   <addaction name="menuAuto"/>
    <addaction name="menuGo"/>
    <addaction name="menuCustom"/>
    <addaction name="menuHelp"/>
