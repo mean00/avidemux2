@@ -20,6 +20,7 @@ extern "C"
 {
 void jsPopupError(const char *s);
 void jsPopupInfo(const char *s);
+void jsPrint(const char *s);
 };
 
 

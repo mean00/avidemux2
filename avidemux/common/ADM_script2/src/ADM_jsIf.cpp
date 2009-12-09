@@ -32,6 +32,14 @@ static bool g_bJSSuccess=false;
 static JSObject   *g_pObject=NULL;
 static JSContext  *g_pCx=NULL;
 static JSRuntime  *g_pRt=NULL;
+static JSClass global_class = {
+   
+"Avidemux", JSCLASS_HAS_PRIVATE,
+        JS_PropertyStub, JS_PropertyStub,
+        JS_PropertyStub, JS_PropertyStub,
+        JS_EnumerateStub, JS_ResolveStub,
+        JS_ConvertStub, JS_FinalizeStub
+};
 
 
 extern void  printJSError(JSContext *cx, const char *message, JSErrorReport *report);
@@ -44,15 +52,15 @@ bool parseECMAScript(const char *name)
 	jsval rval;
 	uintN lineno = 0;
 	g_bJSSuccess = 0;
-	printf("Spidermonkey compiling \"%s\"...",name);
+	ADM_info("Spidermonkey compiling \"%s\"...",name);
 	JSScript *pJSScript = JS_CompileFile(g_pCx, g_pObject, name);
-	printf("Done.\n");
+	ADM_info("Done.\n");
 	if(pJSScript != NULL)
 	{// begin execute external file
 		printf("Spidermonkey executing \"%s\"...",name);
 		JSBool ok = JS_ExecuteScript(g_pCx, g_pObject, pJSScript, &rval);
 		JS_DestroyScript(g_pCx,pJSScript);
-		printf("Done.\n");
+		ADM_info("Done.\n");
 	}// end execute external file
         // Run garbage collector now, it is safe
     JS_GC(g_pCx);
@@ -129,7 +137,22 @@ bool ADM_jsUnregisterLogger(void)
     jsLogger=NULL;
     return true;
 }
+/**
+    \fn jsRegisterAvidemux
+*/
+extern "C" JSFunctionSpec  *jsGetIfFunctions(void);
+static bool jsRegisterAvidemux(JSContext *cx,JSObject *obj)
+{
+    
 
+    JSFunctionSpec *ifFunc=jsGetIfFunctions();
+    if (JS_DefineFunctions(cx, obj, ifFunc) != JS_TRUE) 
+    {
+                    ADM_error("Cannot register jsIf functions\n");
+    }
+	ADM_warning("JS_DefineFunctions: Unable to define functions\n");
+	return true;
+}
 /**
     \fn SpidermonkeyInit
 */
@@ -148,22 +171,23 @@ bool SpidermonkeyInit()
 	}
 	else
 	{// begin runtime created
-		JSContext *cx = JS_NewContext(rt, 8192);
-		g_pCx = cx;
-		if ( cx == NULL )
+		g_pCx = JS_NewContext(rt, 8192);
+		if ( g_pCx == NULL )
 		{
 			// Do some error reporting
 			printf("Spidermonkey failed to initialize context!\n");
 		}
 		else
 		{// begin context created
-            JSObject *global = JS_NewObject(cx, NULL, 0, 0);
-            g_pObject = global;
-            JS_InitStandardClasses(cx, global);
-
+            g_pObject = JS_NewObject(g_pCx, &global_class, 0, 0);
+            
+            if(JS_TRUE!=JS_InitStandardClasses(g_pCx, g_pObject))
+                ADM_error("Cannot inizialize standard classes\n");
 			// register error handler
-			JS_SetErrorReporter(cx, printJSError);
-            //JS_AvidemuxFunction(cx,global);
+			JS_SetErrorReporter(g_pCx, printJSError);
+                
+            //register our functions
+            jsRegisterAvidemux(g_pCx,g_pObject);
             
 			return true;
 		}// end context created
@@ -181,7 +205,9 @@ void SpidermonkeyDestroy()
 	JS_DestroyContext(g_pCx);
 	JS_DestroyRuntime(g_pRt);
 }// end SpidermonkeyDestroy
-
+/**
+    \fn StartThreadSpidermonkey
+*/
 void *StartThreadSpidermonkey(void *pData)
 {// begin StartThreadSpidermonkey
         pthread_mutex_lock(&g_pSpiderMonkeyMutex);

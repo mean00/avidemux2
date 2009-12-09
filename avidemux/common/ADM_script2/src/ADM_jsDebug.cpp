@@ -15,14 +15,10 @@
  ***************************************************************************/
 #include "ADM_js.h"
 #include "ADM_editor/ADM_edit.hxx"
+#include "ADM_jsDebug.h"
 /**/
 /**/
 
-extern JSFunctionSpec *ADM_JsAudioGetFunctions(void);
-extern JSFunctionSpec *ADM_JsVideoGetFunctions(void);
-extern JSFunctionSpec *ADM_JsClassGetFunctions(void);
-extern JSFunctionSpec *ADM_JsDebugGetFunctions(void);
-extern JSFunctionSpec *ADM_JsFunctionGetFunctions(void);
 
 extern ADM_Composer *video_body;
 void ADM_dumpJSHooks(void);

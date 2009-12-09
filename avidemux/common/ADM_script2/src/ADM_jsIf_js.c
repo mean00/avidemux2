@@ -31,7 +31,7 @@ please refer to the software package which it is part of.
 #define JS_FS_END {NULL, NULL, 0, 0, 0}
 #endif
 static JSBool
-jjjsPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var2;
     char *var7;
@@ -90,7 +90,7 @@ jjjsPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
         var7[var11] = '\0';
     }
     }
-    admPopupError(var7);
+    jsPopupError(var7);
     var1 = JS_TRUE;
     do_return:
     if (var14) {
@@ -101,7 +101,7 @@ jjjsPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var1;
 }
 static JSBool
-jjjspPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var16;
     char *var21;
@@ -160,7 +160,7 @@ jjjspPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
         var21[var25] = '\0';
     }
     }
-    admPopupInfo(var21);
+    jsPopupInfo(var21);
     var15 = JS_TRUE;
     do_return:
     if (var28) {
@@ -171,7 +171,7 @@ jjjspPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var15;
 }
 static JSBool
-jjjsPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var30;
     char *var35;
@@ -230,7 +230,7 @@ jjjsPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         var35[var39] = '\0';
     }
     }
-    admPrint(var35);
+    jsPrint(var35);
     var29 = JS_TRUE;
     do_return:
     if (var42) {
@@ -247,14 +247,21 @@ static JSPropertySpec jj_ps[] = {
     {NULL, 0, 0, NULL, NULL}
 };
 static JSFunctionSpec jj_static_fs[] = {
-    JS_FS("jsPopupError", jjjsPopupError, 1, 0, 2),
-    JS_FS("jspPopupInfo", jjjspPopupInfo, 1, 0, 2),
-    JS_FS("jsPrint", jjjsPrint, 1, 0, 2),
+    JS_FS("admPopupError", jjadmPopupError, 1, 0, 2),
+    JS_FS("admpPopupInfo", jjadmpPopupInfo, 1, 0, 2),
+    JS_FS("admPrint", jjadmPrint, 1, 0, 2),
     JS_FS_END
 };
 static JSFunctionSpec jj_fs[] = {
-    JS_FS("jsPopupError", jjjsPopupError, 1, 0, 2),
-    JS_FS("jspPopupInfo", jjjspPopupInfo, 1, 0, 2),
-    JS_FS("jsPrint", jjjsPrint, 1, 0, 2),
+    JS_FS("admPopupError", jjadmPopupError, 1, 0, 2),
+    JS_FS("admpPopupInfo", jjadmpPopupInfo, 1, 0, 2),
+    JS_FS("admPrint", jjadmPrint, 1, 0, 2),
     JS_FS_END
 };
+
+JSFunctionSpec  *jsGetIfFunctions(void)
+{
+        return jj_static_fs;
+}
+
+

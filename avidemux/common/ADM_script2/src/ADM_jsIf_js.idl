@@ -1,10 +1,17 @@
 /*
 ###############################################################
-       return C function     JS Function  params
+       return JS function     CM Function  params
 ###############################################################
 */
-function void jsPopupError : admPopupError   (cstring  ) <static>;
-function void jspPopupInfo : admPopupInfo    (cstring  ) <static>;
-function void jsPrint      : admPrint        (cstring  ) <static>;
+function void admPopupError : jsPopupError   (cstring  ) <static>;
+function void admpPopupInfo : jsPopupInfo    (cstring  ) <static>;
+function void admPrint      : jsPrint        (cstring  ) <static>;
+/*function void print         : jsPrint        (cstring  ) <static>;*/
 
+%<
+JSFunctionSpec  *jsGetIfFunctions(void)
+{
+        return jj_static_fs;
+}
 
+%>
