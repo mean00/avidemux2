@@ -103,8 +103,7 @@ extern int UI_RunApp(void);
 // Spidermonkey/Scripting stuff  
 bool SpidermonkeyInit(void);
 void SpidermonkeyDestroy(void);
-
-extern pthread_mutex_t g_pSpiderMonkeyMutex;
+bool ADM_jsExit(void);
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
 extern int check_leaks();
@@ -314,11 +313,7 @@ void onexit( void )
 	printf("Cleaning up\n");
     delete video_body;	
     // wait for thread to finish executing
-    printf("Waiting for Spidermonkey to finish...\n");
-    pthread_mutex_lock(&g_pSpiderMonkeyMutex);
-    printf("Cleaning up Spidermonkey.\n");
-    SpidermonkeyDestroy();
-    pthread_mutex_unlock(&g_pSpiderMonkeyMutex);
+    ADM_jsExit();
 //    filterCleanUp();
 	ADM_lavDestroy();
 

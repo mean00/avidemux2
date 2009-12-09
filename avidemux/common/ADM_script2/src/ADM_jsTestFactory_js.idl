@@ -1,0 +1,27 @@
+/*
+###############################################################
+       return C function     JS Function  params
+###############################################################
+*/
+function bool jsTestFacInt : admFacInt   (void  ) <static>;
+function bool jsTestFacFloat : admFacFloat   (void  ) <static>;
+function bool jsTestFacToggle : admFacToggle   (void  ) <static>;
+function bool jsTestFacMenu : admFacMenu   (void  ) <static>;
+function bool jsTestFacFile : admFacFile   (void  ) <static>;
+function bool jsTestFacBitrate : admFacBitrate   (void  ) <static>;
+function bool jsTestFacBar : admFacBar   (void  ) <static>;
+function bool jsTestFacRoText : admFacRoText   (void  ) <static>;
+function bool jsTestFacText : admFacText   (void  ) <static>;
+function bool jsTestFacTab :  admFacTab   (void  ) <static>;
+function bool jsTestFrame :   admFacFrame   (void  ) <static>;
+function bool jsTestHex :     admFacHex   (void  ) <static>;
+function bool jsTestDirSel :  admFacDirSel   (void  ) <static>;
+function bool jsTestButton :  admFacButton   (void  ) <static>;
+function bool jsTestMatrix :  admFacMatrix   (void  ) <static>;
+function bool jsTestNotch :   admFacNotch   (void  ) <static>;
+function bool jsTestThreadCount : admFacThreadCount   (void  ) <static>;
+function bool jsTestSlider :  admFacSlider   (void  ) <static>;
+function void jsCrashTest :   crashTest   (void  ) <static>;
+function void jsAssertTest :  assertTest   (void  ) <static>;
+
+

@@ -1,0 +1,10 @@
+/*
+###############################################################
+       return C function     JS Function  params
+###############################################################
+*/
+function void jsPopupError : admPopupError   (cstring  ) <static>;
+function void jspPopupInfo : admPopupInfo    (cstring  ) <static>;
+function void jsPrint      : admPrint        (cstring  ) <static>;
+
+
