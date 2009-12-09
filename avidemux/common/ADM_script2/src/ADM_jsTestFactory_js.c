@@ -12,6 +12,10 @@ jsapigen's license. For licensing information regarding this file,
 please refer to the software package which it is part of.
 
 */
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+#endif
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 #include <jsapi.h>
@@ -30,8 +34,11 @@ please refer to the software package which it is part of.
 #ifndef JS_FS_END
 #define JS_FS_END {NULL, NULL, 0, 0, 0}
 #endif
+#ifdef HAVE_ALLOCA_H
+static size_t jj_alloca_limit = 0;
+#endif
 static JSBool
-jjjsTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var2;
     void *var3;
@@ -75,7 +82,7 @@ jjjsTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var1 = JS_FALSE;
     var2 = obj;
     var6 = argc;
-    var3 = admFacInt();
+    var3 = jsTestFacInt();
     var9 = JS_GetGlobalObject(cx);
     var12 = "bool";
     var14 = JS_GetProperty(cx, var9, var12, &var15);
@@ -108,7 +115,7 @@ jjjsTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var1;
 }
 static JSBool
-jjjsTestFacFloat(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacFloat(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var22;
     void *var23;
@@ -152,7 +159,7 @@ jjjsTestFacFloat(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     var21 = JS_FALSE;
     var22 = obj;
     var26 = argc;
-    var23 = admFacFloat();
+    var23 = jsTestFacFloat();
     var29 = JS_GetGlobalObject(cx);
     var32 = "bool";
     var34 = JS_GetProperty(cx, var29, var32, &var35);
@@ -185,7 +192,7 @@ jjjsTestFacFloat(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     return var21;
 }
 static JSBool
-jjjsTestFacToggle(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacToggle(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var42;
     void *var43;
@@ -229,7 +236,7 @@ jjjsTestFacToggle(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
     var41 = JS_FALSE;
     var42 = obj;
     var46 = argc;
-    var43 = admFacToggle();
+    var43 = jsTestFacToggle();
     var49 = JS_GetGlobalObject(cx);
     var52 = "bool";
     var54 = JS_GetProperty(cx, var49, var52, &var55);
@@ -262,7 +269,7 @@ jjjsTestFacToggle(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
     return var41;
 }
 static JSBool
-jjjsTestFacMenu(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacMenu(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var62;
     void *var63;
@@ -306,7 +313,7 @@ jjjsTestFacMenu(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var61 = JS_FALSE;
     var62 = obj;
     var66 = argc;
-    var63 = admFacMenu();
+    var63 = jsTestFacMenu();
     var69 = JS_GetGlobalObject(cx);
     var72 = "bool";
     var74 = JS_GetProperty(cx, var69, var72, &var75);
@@ -339,7 +346,7 @@ jjjsTestFacMenu(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     return var61;
 }
 static JSBool
-jjjsTestFacFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var82;
     void *var83;
@@ -383,7 +390,7 @@ jjjsTestFacFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var81 = JS_FALSE;
     var82 = obj;
     var86 = argc;
-    var83 = admFacFile();
+    var83 = jsTestFacFile();
     var89 = JS_GetGlobalObject(cx);
     var92 = "bool";
     var94 = JS_GetProperty(cx, var89, var92, &var95);
@@ -416,7 +423,7 @@ jjjsTestFacFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     return var81;
 }
 static JSBool
-jjjsTestFacBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var102;
     void *var103;
@@ -460,7 +467,7 @@ jjjsTestFacBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
     var101 = JS_FALSE;
     var102 = obj;
     var106 = argc;
-    var103 = admFacBitrate();
+    var103 = jsTestFacBitrate();
     var109 = JS_GetGlobalObject(cx);
     var112 = "bool";
     var114 = JS_GetProperty(cx, var109, var112, &var115);
@@ -493,7 +500,7 @@ jjjsTestFacBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
     return var101;
 }
 static JSBool
-jjjsTestFacBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var122;
     void *var123;
@@ -537,7 +544,7 @@ jjjsTestFacBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var121 = JS_FALSE;
     var122 = obj;
     var126 = argc;
-    var123 = admFacBar();
+    var123 = jsTestFacBar();
     var129 = JS_GetGlobalObject(cx);
     var132 = "bool";
     var134 = JS_GetProperty(cx, var129, var132, &var135);
@@ -570,7 +577,7 @@ jjjsTestFacBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var121;
 }
 static JSBool
-jjjsTestFacRoText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacRoText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var142;
     void *var143;
@@ -614,7 +621,7 @@ jjjsTestFacRoText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
     var141 = JS_FALSE;
     var142 = obj;
     var146 = argc;
-    var143 = admFacRoText();
+    var143 = jsTestFacRoText();
     var149 = JS_GetGlobalObject(cx);
     var152 = "bool";
     var154 = JS_GetProperty(cx, var149, var152, &var155);
@@ -647,7 +654,7 @@ jjjsTestFacRoText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
     return var141;
 }
 static JSBool
-jjjsTestFacText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var162;
     void *var163;
@@ -691,7 +698,7 @@ jjjsTestFacText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var161 = JS_FALSE;
     var162 = obj;
     var166 = argc;
-    var163 = admFacText();
+    var163 = jsTestFacText();
     var169 = JS_GetGlobalObject(cx);
     var172 = "bool";
     var174 = JS_GetProperty(cx, var169, var172, &var175);
@@ -724,7 +731,7 @@ jjjsTestFacText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     return var161;
 }
 static JSBool
-jjjsTestFacTab(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFacTab(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var182;
     void *var183;
@@ -768,7 +775,7 @@ jjjsTestFacTab(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var181 = JS_FALSE;
     var182 = obj;
     var186 = argc;
-    var183 = admFacTab();
+    var183 = jsTestFacTab();
     var189 = JS_GetGlobalObject(cx);
     var192 = "bool";
     var194 = JS_GetProperty(cx, var189, var192, &var195);
@@ -801,7 +808,7 @@ jjjsTestFacTab(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var181;
 }
 static JSBool
-jjjsTestFrame(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestFrame(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var202;
     void *var203;
@@ -845,7 +852,7 @@ jjjsTestFrame(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
     var201 = JS_FALSE;
     var202 = obj;
     var206 = argc;
-    var203 = admFacFrame();
+    var203 = jsTestFacFrame();
     var209 = JS_GetGlobalObject(cx);
     var212 = "bool";
     var214 = JS_GetProperty(cx, var209, var212, &var215);
@@ -878,7 +885,7 @@ jjjsTestFrame(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
     return var201;
 }
 static JSBool
-jjjsTestHex(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestHex(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var222;
     void *var223;
@@ -922,7 +929,7 @@ jjjsTestHex(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     var221 = JS_FALSE;
     var222 = obj;
     var226 = argc;
-    var223 = admFacHex();
+    var223 = jsTestFacHex();
     var229 = JS_GetGlobalObject(cx);
     var232 = "bool";
     var234 = JS_GetProperty(cx, var229, var232, &var235);
@@ -955,7 +962,7 @@ jjjsTestHex(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     return var221;
 }
 static JSBool
-jjjsTestDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var242;
     void *var243;
@@ -999,7 +1006,7 @@ jjjsTestDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var241 = JS_FALSE;
     var242 = obj;
     var246 = argc;
-    var243 = admFacDirSel();
+    var243 = jsTestFacDirSel();
     var249 = JS_GetGlobalObject(cx);
     var252 = "bool";
     var254 = JS_GetProperty(cx, var249, var252, &var255);
@@ -1032,7 +1039,7 @@ jjjsTestDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var241;
 }
 static JSBool
-jjjsTestButton(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestButton(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var262;
     void *var263;
@@ -1076,7 +1083,7 @@ jjjsTestButton(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var261 = JS_FALSE;
     var262 = obj;
     var266 = argc;
-    var263 = admFacButton();
+    var263 = jsTestFacButton();
     var269 = JS_GetGlobalObject(cx);
     var272 = "bool";
     var274 = JS_GetProperty(cx, var269, var272, &var275);
@@ -1109,7 +1116,7 @@ jjjsTestButton(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var261;
 }
 static JSBool
-jjjsTestMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var282;
     void *var283;
@@ -1153,7 +1160,7 @@ jjjsTestMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var281 = JS_FALSE;
     var282 = obj;
     var286 = argc;
-    var283 = admFacMatrix();
+    var283 = jsTestFacMatrix();
     var289 = JS_GetGlobalObject(cx);
     var292 = "bool";
     var294 = JS_GetProperty(cx, var289, var292, &var295);
@@ -1186,7 +1193,7 @@ jjjsTestMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var281;
 }
 static JSBool
-jjjsTestNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var302;
     void *var303;
@@ -1230,7 +1237,7 @@ jjjsTestNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
     var301 = JS_FALSE;
     var302 = obj;
     var306 = argc;
-    var303 = admFacNotch();
+    var303 = jsTestFacNotch();
     var309 = JS_GetGlobalObject(cx);
     var312 = "bool";
     var314 = JS_GetProperty(cx, var309, var312, &var315);
@@ -1263,7 +1270,7 @@ jjjsTestNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
     return var301;
 }
 static JSBool
-jjjsTestThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var322;
     void *var323;
@@ -1307,7 +1314,7 @@ jjjsTestThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
     var321 = JS_FALSE;
     var322 = obj;
     var326 = argc;
-    var323 = admFacThreadCount();
+    var323 = jsTestFacThreadCount();
     var329 = JS_GetGlobalObject(cx);
     var332 = "bool";
     var334 = JS_GetProperty(cx, var329, var332, &var335);
@@ -1340,7 +1347,7 @@ jjjsTestThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
     return var321;
 }
 static JSBool
-jjjsTestSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var342;
     void *var343;
@@ -1384,7 +1391,7 @@ jjjsTestSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var341 = JS_FALSE;
     var342 = obj;
     var346 = argc;
-    var343 = admFacSlider();
+    var343 = jsTestFacSlider();
     var349 = JS_GetGlobalObject(cx);
     var352 = "bool";
     var354 = JS_GetProperty(cx, var349, var352, &var355);
@@ -1417,7 +1424,7 @@ jjjsTestSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     return var341;
 }
 static JSBool
-jjjsCrashTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestCrash(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var362;
     int var366;
@@ -1427,12 +1434,12 @@ jjjsCrashTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
     var361 = JS_FALSE;
     var362 = obj;
     var366 = argc;
-    crashTest();
+    jsTestCrash();
     var361 = JS_TRUE;
     return var361;
 }
 static JSBool
-jjjsAssertTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestAssert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var368;
     int var372;
@@ -1442,7 +1449,7 @@ jjjsAssertTest(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var367 = JS_FALSE;
     var368 = obj;
     var372 = argc;
-    assertTest();
+    jsTestAssert();
     var367 = JS_TRUE;
     return var367;
 }
@@ -1453,48 +1460,55 @@ static JSPropertySpec jj_ps[] = {
     {NULL, 0, 0, NULL, NULL}
 };
 static JSFunctionSpec jj_static_fs[] = {
-    JS_FS("jsTestFacInt", jjjsTestFacInt, 0, 0, 3),
-    JS_FS("jsTestFacFloat", jjjsTestFacFloat, 0, 0, 3),
-    JS_FS("jsTestFacToggle", jjjsTestFacToggle, 0, 0, 3),
-    JS_FS("jsTestFacMenu", jjjsTestFacMenu, 0, 0, 3),
-    JS_FS("jsTestFacFile", jjjsTestFacFile, 0, 0, 3),
-    JS_FS("jsTestFacBitrate", jjjsTestFacBitrate, 0, 0, 3),
-    JS_FS("jsTestFacBar", jjjsTestFacBar, 0, 0, 3),
-    JS_FS("jsTestFacRoText", jjjsTestFacRoText, 0, 0, 3),
-    JS_FS("jsTestFacText", jjjsTestFacText, 0, 0, 3),
-    JS_FS("jsTestFacTab", jjjsTestFacTab, 0, 0, 3),
-    JS_FS("jsTestFrame", jjjsTestFrame, 0, 0, 3),
-    JS_FS("jsTestHex", jjjsTestHex, 0, 0, 3),
-    JS_FS("jsTestDirSel", jjjsTestDirSel, 0, 0, 3),
-    JS_FS("jsTestButton", jjjsTestButton, 0, 0, 3),
-    JS_FS("jsTestMatrix", jjjsTestMatrix, 0, 0, 3),
-    JS_FS("jsTestNotch", jjjsTestNotch, 0, 0, 3),
-    JS_FS("jsTestThreadCount", jjjsTestThreadCount, 0, 0, 3),
-    JS_FS("jsTestSlider", jjjsTestSlider, 0, 0, 3),
-    JS_FS("jsCrashTest", jjjsCrashTest, 0, 0, 0),
-    JS_FS("jsAssertTest", jjjsAssertTest, 0, 0, 0),
+    JS_FS("admTestFacInt", jjadmTestFacInt, 0, 0, 3),
+    JS_FS("admTestFacFloat", jjadmTestFacFloat, 0, 0, 3),
+    JS_FS("admTestFacToggle", jjadmTestFacToggle, 0, 0, 3),
+    JS_FS("admTestFacMenu", jjadmTestFacMenu, 0, 0, 3),
+    JS_FS("admTestFacFile", jjadmTestFacFile, 0, 0, 3),
+    JS_FS("admTestFacBitrate", jjadmTestFacBitrate, 0, 0, 3),
+    JS_FS("admTestFacBar", jjadmTestFacBar, 0, 0, 3),
+    JS_FS("admTestFacRoText", jjadmTestFacRoText, 0, 0, 3),
+    JS_FS("admTestFacText", jjadmTestFacText, 0, 0, 3),
+    JS_FS("admTestFacTab", jjadmTestFacTab, 0, 0, 3),
+    JS_FS("admTestFrame", jjadmTestFrame, 0, 0, 3),
+    JS_FS("admTestHex", jjadmTestHex, 0, 0, 3),
+    JS_FS("admTestDirSel", jjadmTestDirSel, 0, 0, 3),
+    JS_FS("admTestButton", jjadmTestButton, 0, 0, 3),
+    JS_FS("admTestMatrix", jjadmTestMatrix, 0, 0, 3),
+    JS_FS("admTestNotch", jjadmTestNotch, 0, 0, 3),
+    JS_FS("admTestThreadCount", jjadmTestThreadCount, 0, 0, 3),
+    JS_FS("admTestSlider", jjadmTestSlider, 0, 0, 3),
+    JS_FS("admTestCrash", jjadmTestCrash, 0, 0, 0),
+    JS_FS("admTestAssert", jjadmTestAssert, 0, 0, 0),
     JS_FS_END
 };
 static JSFunctionSpec jj_fs[] = {
-    JS_FS("jsTestFacInt", jjjsTestFacInt, 0, 0, 3),
-    JS_FS("jsTestFacFloat", jjjsTestFacFloat, 0, 0, 3),
-    JS_FS("jsTestFacToggle", jjjsTestFacToggle, 0, 0, 3),
-    JS_FS("jsTestFacMenu", jjjsTestFacMenu, 0, 0, 3),
-    JS_FS("jsTestFacFile", jjjsTestFacFile, 0, 0, 3),
-    JS_FS("jsTestFacBitrate", jjjsTestFacBitrate, 0, 0, 3),
-    JS_FS("jsTestFacBar", jjjsTestFacBar, 0, 0, 3),
-    JS_FS("jsTestFacRoText", jjjsTestFacRoText, 0, 0, 3),
-    JS_FS("jsTestFacText", jjjsTestFacText, 0, 0, 3),
-    JS_FS("jsTestFacTab", jjjsTestFacTab, 0, 0, 3),
-    JS_FS("jsTestFrame", jjjsTestFrame, 0, 0, 3),
-    JS_FS("jsTestHex", jjjsTestHex, 0, 0, 3),
-    JS_FS("jsTestDirSel", jjjsTestDirSel, 0, 0, 3),
-    JS_FS("jsTestButton", jjjsTestButton, 0, 0, 3),
-    JS_FS("jsTestMatrix", jjjsTestMatrix, 0, 0, 3),
-    JS_FS("jsTestNotch", jjjsTestNotch, 0, 0, 3),
-    JS_FS("jsTestThreadCount", jjjsTestThreadCount, 0, 0, 3),
-    JS_FS("jsTestSlider", jjjsTestSlider, 0, 0, 3),
-    JS_FS("jsCrashTest", jjjsCrashTest, 0, 0, 0),
-    JS_FS("jsAssertTest", jjjsAssertTest, 0, 0, 0),
+    JS_FS("admTestFacInt", jjadmTestFacInt, 0, 0, 3),
+    JS_FS("admTestFacFloat", jjadmTestFacFloat, 0, 0, 3),
+    JS_FS("admTestFacToggle", jjadmTestFacToggle, 0, 0, 3),
+    JS_FS("admTestFacMenu", jjadmTestFacMenu, 0, 0, 3),
+    JS_FS("admTestFacFile", jjadmTestFacFile, 0, 0, 3),
+    JS_FS("admTestFacBitrate", jjadmTestFacBitrate, 0, 0, 3),
+    JS_FS("admTestFacBar", jjadmTestFacBar, 0, 0, 3),
+    JS_FS("admTestFacRoText", jjadmTestFacRoText, 0, 0, 3),
+    JS_FS("admTestFacText", jjadmTestFacText, 0, 0, 3),
+    JS_FS("admTestFacTab", jjadmTestFacTab, 0, 0, 3),
+    JS_FS("admTestFrame", jjadmTestFrame, 0, 0, 3),
+    JS_FS("admTestHex", jjadmTestHex, 0, 0, 3),
+    JS_FS("admTestDirSel", jjadmTestDirSel, 0, 0, 3),
+    JS_FS("admTestButton", jjadmTestButton, 0, 0, 3),
+    JS_FS("admTestMatrix", jjadmTestMatrix, 0, 0, 3),
+    JS_FS("admTestNotch", jjadmTestNotch, 0, 0, 3),
+    JS_FS("admTestThreadCount", jjadmTestThreadCount, 0, 0, 3),
+    JS_FS("admTestSlider", jjadmTestSlider, 0, 0, 3),
+    JS_FS("admTestCrash", jjadmTestCrash, 0, 0, 0),
+    JS_FS("admTestAssert", jjadmTestAssert, 0, 0, 0),
     JS_FS_END
 };
+
+JSFunctionSpec  *jsGetTestFunctions(void)
+{
+        return jj_static_fs;
+}
+
+

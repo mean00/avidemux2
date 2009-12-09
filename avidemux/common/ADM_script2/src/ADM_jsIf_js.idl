@@ -6,7 +6,8 @@
 function void admPopupError : jsPopupError   (cstring  ) <static>;
 function void admpPopupInfo : jsPopupInfo    (cstring  ) <static>;
 function void admPrint      : jsPrint        (cstring  ) <static>;
-/*function void print         : jsPrint        (cstring  ) <static>;*/
+function void print         : jsPrint2       (cstring  ) <static>;
+function void help          : jsHelp         (cstring  ) <static>;
 
 %<
 JSFunctionSpec  *jsGetIfFunctions(void)

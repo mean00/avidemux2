@@ -17,41 +17,36 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "DIA_fileSel.h"
 #include "DIA_factory.h"
+#include "ADM_jsTestFactory.h"
 
-
-extern "C"
-{
-    void jsCrashTest(void);
-    void jsAssertTest(void);
-}
 
 /**
     \fn crashTest
     \brief Force a crash
 */
-void jsCrashTest(void)
+bool jsTestCrash(void)
 {
   
   int *foobar=NULL;
   *foobar=0; // CRASH!
-
+  return true;
 }
 /**
     \fn assertTest
     \brief Force a crash
 */
-void jsAssertTest(void)
+bool jsTestAssert(void)
 {
   
   ADM_assert(0);
-
+  return true;
 }
 
 
 /**
-    \fn jsFacInt
+    \fn jsTestFacInt
 */
-bool jsFacInt(void)
+bool jsTestFacInt(void)
 {
   uint32_t tog=0;
    diaElemUInteger blend(&tog,QT_TR_NOOP("Uinteger"),0,255);
@@ -66,9 +61,9 @@ bool jsFacInt(void)
 }
 
 /**
-    \fn jsFacFloat
+    \fn jsTestFacFloat
 */
-bool jsFacFloat(void)
+bool jsTestFacFloat(void)
 {
   ELEM_TYPE_FLOAT tog=0;
    diaElemFloat blend(&tog,QT_TR_NOOP("Float"),0,255);
@@ -83,9 +78,9 @@ bool jsFacFloat(void)
 }
 
 /**
-    \fn jsFacToggle
+    \fn jsTestFacToggle
 */
-bool jsFacToggle(void)
+bool jsTestFacToggle(void)
 {
   uint32_t tog=0;
   uint32_t test=0;
@@ -105,9 +100,9 @@ bool jsFacToggle(void)
 }
 
 /**
-    \fn jsFacMenu
+    \fn jsTestFacMenu
 */
-bool jsFacMenu(void)
+bool jsTestFacMenu(void)
 {
    uint32_t tog=4;
    ELEM_TYPE_FLOAT f=1; 
@@ -134,9 +129,9 @@ diaElem *elems[]={&blend,&toggle   };
 }
 
 /**
-    \fn jsFacFile
+    \fn jsTestFacFile
 */
-bool jsFacFile(void)
+bool jsTestFacFile(void)
 {
    uint32_t tog=0;
    char *test=ADM_strdup("Entry test1");
@@ -154,9 +149,9 @@ bool jsFacFile(void)
 }
 
 /**
-    \fn jsFacDirSel
+    \fn jsTestFacDirSel
 */
-bool jsFacDirSel(void)
+bool jsTestFacDirSel(void)
 {
    uint32_t tog=0;
    char *test=ADM_strdup("Entry test1");
@@ -174,9 +169,9 @@ bool jsFacDirSel(void)
 }
 
 /**
-    \fn jsFacBitrate
+    \fn jsTestFacBitrate
 */
-bool jsFacBitrate(void)
+bool jsTestFacBitrate(void)
 {
 
    COMPRES_PARAMS test={
@@ -199,9 +194,9 @@ bool jsFacBitrate(void)
 }
 
 /**
-    \fn jsFacInt
+    \fn jsTestFacInt
 */
-bool jsFacBar(void)
+bool jsTestFacBar(void)
 {
     
       diaElemBar bar1(25,"25");
@@ -220,9 +215,9 @@ void clickMe(void *cookie)
 }
 
 /**
-    \fn jsFacButton
+    \fn jsTestFacButton
 */
-bool jsFacButton(void)
+bool jsTestFacButton(void)
 {
     
       diaElemButton bar1("Button",clickMe,NULL);
@@ -235,9 +230,9 @@ bool jsFacButton(void)
 }
 
 /**
-    \fn jsFacSlider
+    \fn jsTestFacSlider
 */
-bool jsFacSlider(void)
+bool jsTestFacSlider(void)
 {
   int32_t val=4;
       diaElemSlider slide(&val,"foo", 0,10);
@@ -252,9 +247,9 @@ bool jsFacSlider(void)
 }
 
 /**
-    \fn jsFacInt
+    \fn jsTestFacInt
 */
-bool jsFacRoText(void)
+bool jsTestFacRoText(void)
 
 {
     
@@ -269,9 +264,9 @@ bool jsFacRoText(void)
 }
 
 /**
-    \fn jsFacText
+    \fn jsTestFacText
 */
-bool jsFacText(void)
+bool jsTestFacText(void)
 {
     
       char *foo=ADM_strdup("blah");
@@ -289,9 +284,9 @@ bool jsFacText(void)
 }
 
 /**
-    \fn jsFacInt
+    \fn jsTestFacInt
 */
-bool jsFacTab(void)
+bool jsTestFacTab(void)
 {
     
       uint32_t test,test2;
@@ -318,9 +313,9 @@ bool jsFacTab(void)
 }
 
 /**
-    \fn jsFacInt
+    \fn jsTestFacInt
 */
-bool jsFacFrame(void)
+bool jsTestFacFrame(void)
 {
     
       uint32_t test,test2;
@@ -345,9 +340,9 @@ bool jsFacFrame(void)
 
 
 /**
-    \fn jsFacHex
+    \fn jsTestFacHex
 */
-bool jsFacHex(void)
+bool jsTestFacHex(void)
 {
     
       uint8_t data[100];
@@ -366,9 +361,9 @@ bool jsFacHex(void)
 }
 
 /**
-    \fn jsFacMatrix
+    \fn jsTestFacMatrix
 */
-bool jsFacMatrix(void)
+bool jsTestFacMatrix(void)
 {
     
       uint8_t data[16];
@@ -392,9 +387,9 @@ bool jsFacMatrix(void)
 }
 
 /**
-    \fn jsFacThreadcount
+    \fn jsTestFacThreadcount
 */
-bool jsFacThreadcount(void)
+bool jsTestFacThreadCount(void)
 {
 	uint32_t val=1;
 	diaElemThreadCount threadcount(&val,"ThreadCount");
@@ -410,9 +405,9 @@ bool jsFacThreadcount(void)
 }
 
 /**
-    \fn jsFacNotch
+    \fn jsTestFacNotch
 */
-bool jsFacNotch(void)
+bool jsTestFacNotch(void)
 {
     
 	diaElemNotch notch(1,"Notch");

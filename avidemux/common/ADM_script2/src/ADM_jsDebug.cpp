@@ -76,6 +76,10 @@ void jsPrint(const char *s)
 {// begin print
         jsLog(JS_LOG_NORMAL,"%s",s);
 }// end print
+void jsPrint2(const char *s)
+{// begin print
+        jsLog(JS_LOG_NORMAL,"%s",s);
+}// end print
 
 
 static void dumpFunc(JSFunctionSpec *f)
