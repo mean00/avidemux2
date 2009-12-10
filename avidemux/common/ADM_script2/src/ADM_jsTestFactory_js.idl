@@ -27,7 +27,7 @@ function void admTestAssert     :  jsTestAssert     (void  ) <static>;
 %<
 JSFunctionSpec  *jsGetTestFunctions(void)
 {
-        return jj_static_fs;
+        return jj_fs;
 }
 
 %>

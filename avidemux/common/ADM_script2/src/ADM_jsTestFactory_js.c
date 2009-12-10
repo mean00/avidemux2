@@ -12,10 +12,6 @@ jsapigen's license. For licensing information regarding this file,
 please refer to the software package which it is part of.
 
 */
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
-#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 #include <jsapi.h>
@@ -33,9 +29,6 @@ please refer to the software package which it is part of.
 #endif
 #ifndef JS_FS_END
 #define JS_FS_END {NULL, NULL, 0, 0, 0}
-#endif
-#ifdef HAVE_ALLOCA_H
-static size_t jj_alloca_limit = 0;
 #endif
 static JSBool
 jjadmTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -1508,7 +1501,7 @@ static JSFunctionSpec jj_fs[] = {
 
 JSFunctionSpec  *jsGetTestFunctions(void)
 {
-        return jj_static_fs;
+        return jj_fs;
 }
 
 
