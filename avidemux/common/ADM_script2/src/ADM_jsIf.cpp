@@ -149,6 +149,8 @@ bool ADM_jsUnregisterLogger(void)
 */
 extern "C" JSFunctionSpec  *jsGetIfFunctions(void);
 extern "C" JSFunctionSpec  *jsGetTestFunctions(void);
+extern "C" JSFunctionSpec  *jsGetAvidemuxFunctions(void);
+extern "C" JSObject *jsAvidemuxInit(JSContext *cx,JSObject *obj);
 static bool registerOne(const char *name,JSFunctionSpec *s,JSContext *cx,JSObject *obj)
 {
     if (JS_DefineFunctions(cx, obj, s) != JS_TRUE) 
@@ -174,6 +176,7 @@ void jsHelp(const char *s)
     if(!s) goto none;
     if(!strcasecmp(s,"debug")) return dump(jsGetIfFunctions());
     if(!strcasecmp(s,"test")) return dump(jsGetTestFunctions());
+//    if(!strcasecmp(s,"load")) return dump(jsGetAvidemuxFunctions());
 none:
         jsLog(JS_LOG_NORMAL,"please use help(\"debug\") or help(\"test\"");
 }
@@ -182,6 +185,8 @@ static bool jsRegisterAvidemux(JSContext *cx,JSObject *obj)
 {
         registerOne("If",   jsGetIfFunctions(),    cx,obj);
         registerOne("Test", jsGetTestFunctions(),  cx,obj);
+      //  registerOne("Load", jsGetAvidemuxFunctions(),  cx,obj);
+        jsAvidemuxInit(cx,obj);
         return true;
 }
 /**
@@ -213,7 +218,11 @@ bool SpidermonkeyInit()
    
    // begin context created
     g_pObject = JS_NewObject(g_pCx, &global_class, 0, 0);
-    
+    if(!g_pObject)
+    {
+        ADM_error("Cannot initialize object\n");
+        return false;
+    }
     if(JS_TRUE!=JS_InitStandardClasses(g_pCx, g_pObject))
     {
         ADM_error("Cannot initialize standard classes\n");

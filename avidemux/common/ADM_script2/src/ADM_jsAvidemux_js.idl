@@ -1,0 +1,26 @@
+%{
+#include "stdio.h"
+#include "ADM_jsAvidemux.h"
+void jsAvidemux(void)
+{
+        printf("Constructor invoked\n");
+}
+%}
+class adm
+{
+        /*            JSFUNC      C FUNC  PARAM     */
+        function int loadVideo  : jsLoadVideo (cstring ) <static>;
+        construct               : jsAvidemux  ( ) <static>      ;
+};
+
+%<
+
+JSObject *jsAvidemuxInit(JSContext *cx,JSObject *obj)
+{
+          if (JS_DefineFunctions(cx, obj, jj_static_fs) != JS_TRUE) 
+          {
+                return NULL;
+          }
+          return jjadm_init(cx,obj);
+}
+%>

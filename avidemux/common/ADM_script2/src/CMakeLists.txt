@@ -7,6 +7,9 @@ SET(ADM_script_SRCS
 # Factory test
         ADM_jsTestFactory.cpp  
         ADM_jsTestFactory_js.c
+# Load segment
+        ADM_jsAvidemux.cpp
+        ADM_jsAvidemux_js.c
 
 )
 
