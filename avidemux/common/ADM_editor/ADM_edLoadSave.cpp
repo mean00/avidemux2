@@ -114,10 +114,10 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
 
 // Markers
 //
-#if 0
-        qfprintf(fd,"app.markerA=%"LLU";\n",getMarkerAPts());
-        qfprintf(fd,"app.markerB=%"LLU";\n",getMarkerBPts());
-#endif        
+
+        qfprintf(fd,"adm.markerA=%"LLU";\n",getMarkerAPts());
+        qfprintf(fd,"adm.markerB=%"LLU";\n",getMarkerBPts());
+
 // postproc
 //___________________________
 
@@ -205,7 +205,7 @@ uint32_t pptype, ppstrength,ppswap;
 
 
     uint32_t x=audioFilterGetResample();
-    if(x) qfprintf(fd,"app.audio.resample=%u;\n",audioFilterGetResample());
+    if(x) qfprintf(fd,"app.audioResample=%u;\n",audioFilterGetResample());
 
     
 //   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
@@ -213,7 +213,7 @@ uint32_t pptype, ppstrength,ppswap;
 //   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
 // if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
    if(CHANNEL_INVALID!=audioFilterGetMixer())
-        qfprintf(fd,"app.audio.mixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
+        qfprintf(fd,"app.audioMixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
 
    
 
@@ -221,8 +221,8 @@ uint32_t pptype, ppstrength,ppswap;
         switch(audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"app.audio.pal2film=true;\n");break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"app.audio.film2pal=true;\n");break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"app.audioPal2film=1;\n");break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"app.audioFilm2pal=1;\n");break;
                 default:ADM_assert(0);
         }
    

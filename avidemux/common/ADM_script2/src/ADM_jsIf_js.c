@@ -39,12 +39,12 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     int var8;
     jsval var9;
     JSString *var10;
-    jsval var71;
+    jsval var81;
     size_t var11;
     size_t var12;
     int var14;
     jschar *var13;
-    jsval var72;
+    jsval var82;
     JSBool var1;
     var2 = NULL;
     var7 = NULL;
@@ -52,12 +52,12 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var8 = 0;
     var9 = JSVAL_NULL;
     var10 = NULL;
-    var71 = JSVAL_NULL;
+    var81 = JSVAL_NULL;
     var11 = 0;
     var12 = 0;
     var14 = 0;
     var13 = NULL;
-    var72 = JSVAL_NULL;
+    var82 = JSVAL_NULL;
     var1 = JS_FALSE;
     var2 = obj;
     var6 = argc;
@@ -69,8 +69,8 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     if (!var10) {
         goto do_return;
     }
-    var71 = STRING_TO_JSVAL(var10);
-    argv[argc+0] = var71;
+    var81 = STRING_TO_JSVAL(var10);
+    argv[argc+0] = var81;
     var11 = JS_GetStringLength(var10);
     var12 = 1;
     var12 += var11;
@@ -80,8 +80,8 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     }
     var14 = 1;
     var13 = JS_GetStringChars(var10);
-    var72 = STRING_TO_JSVAL(var10);
-    argv[argc+1] = var72;
+    var82 = STRING_TO_JSVAL(var10);
+    argv[argc+1] = var82;
     {
         size_t i;
         for (i = 0; i < var11; ++i) {
@@ -109,12 +109,12 @@ jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     int var22;
     jsval var23;
     JSString *var24;
-    jsval var73;
+    jsval var83;
     size_t var25;
     size_t var26;
     int var28;
     jschar *var27;
-    jsval var74;
+    jsval var84;
     JSBool var15;
     var16 = NULL;
     var21 = NULL;
@@ -122,12 +122,12 @@ jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var22 = 0;
     var23 = JSVAL_NULL;
     var24 = NULL;
-    var73 = JSVAL_NULL;
+    var83 = JSVAL_NULL;
     var25 = 0;
     var26 = 0;
     var28 = 0;
     var27 = NULL;
-    var74 = JSVAL_NULL;
+    var84 = JSVAL_NULL;
     var15 = JS_FALSE;
     var16 = obj;
     var20 = argc;
@@ -139,8 +139,8 @@ jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     if (!var24) {
         goto do_return;
     }
-    var73 = STRING_TO_JSVAL(var24);
-    argv[argc+0] = var73;
+    var83 = STRING_TO_JSVAL(var24);
+    argv[argc+0] = var83;
     var25 = JS_GetStringLength(var24);
     var26 = 1;
     var26 += var25;
@@ -150,8 +150,8 @@ jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     }
     var28 = 1;
     var27 = JS_GetStringChars(var24);
-    var74 = STRING_TO_JSVAL(var24);
-    argv[argc+1] = var74;
+    var84 = STRING_TO_JSVAL(var24);
+    argv[argc+1] = var84;
     {
         size_t i;
         for (i = 0; i < var25; ++i) {
@@ -179,12 +179,12 @@ jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     int var36;
     jsval var37;
     JSString *var38;
-    jsval var75;
+    jsval var85;
     size_t var39;
     size_t var40;
     int var42;
     jschar *var41;
-    jsval var76;
+    jsval var86;
     JSBool var29;
     var30 = NULL;
     var35 = NULL;
@@ -192,12 +192,12 @@ jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     var36 = 0;
     var37 = JSVAL_NULL;
     var38 = NULL;
-    var75 = JSVAL_NULL;
+    var85 = JSVAL_NULL;
     var39 = 0;
     var40 = 0;
     var42 = 0;
     var41 = NULL;
-    var76 = JSVAL_NULL;
+    var86 = JSVAL_NULL;
     var29 = JS_FALSE;
     var30 = obj;
     var34 = argc;
@@ -209,8 +209,8 @@ jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     if (!var38) {
         goto do_return;
     }
-    var75 = STRING_TO_JSVAL(var38);
-    argv[argc+0] = var75;
+    var85 = STRING_TO_JSVAL(var38);
+    argv[argc+0] = var85;
     var39 = JS_GetStringLength(var38);
     var40 = 1;
     var40 += var39;
@@ -220,8 +220,8 @@ jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
     var42 = 1;
     var41 = JS_GetStringChars(var38);
-    var76 = STRING_TO_JSVAL(var38);
-    argv[argc+1] = var76;
+    var86 = STRING_TO_JSVAL(var38);
+    argv[argc+1] = var86;
     {
         size_t i;
         for (i = 0; i < var39; ++i) {
@@ -249,12 +249,12 @@ jjprint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     int var50;
     jsval var51;
     JSString *var52;
-    jsval var77;
+    jsval var87;
     size_t var53;
     size_t var54;
     int var56;
     jschar *var55;
-    jsval var78;
+    jsval var88;
     JSBool var43;
     var44 = NULL;
     var49 = NULL;
@@ -262,12 +262,12 @@ jjprint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     var50 = 0;
     var51 = JSVAL_NULL;
     var52 = NULL;
-    var77 = JSVAL_NULL;
+    var87 = JSVAL_NULL;
     var53 = 0;
     var54 = 0;
     var56 = 0;
     var55 = NULL;
-    var78 = JSVAL_NULL;
+    var88 = JSVAL_NULL;
     var43 = JS_FALSE;
     var44 = obj;
     var48 = argc;
@@ -279,8 +279,8 @@ jjprint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     if (!var52) {
         goto do_return;
     }
-    var77 = STRING_TO_JSVAL(var52);
-    argv[argc+0] = var77;
+    var87 = STRING_TO_JSVAL(var52);
+    argv[argc+0] = var87;
     var53 = JS_GetStringLength(var52);
     var54 = 1;
     var54 += var53;
@@ -290,8 +290,8 @@ jjprint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
     var56 = 1;
     var55 = JS_GetStringChars(var52);
-    var78 = STRING_TO_JSVAL(var52);
-    argv[argc+1] = var78;
+    var88 = STRING_TO_JSVAL(var52);
+    argv[argc+1] = var88;
     {
         size_t i;
         for (i = 0; i < var53; ++i) {
@@ -319,12 +319,12 @@ jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     int var64;
     jsval var65;
     JSString *var66;
-    jsval var79;
+    jsval var89;
     size_t var67;
     size_t var68;
     int var70;
     jschar *var69;
-    jsval var80;
+    jsval var90;
     JSBool var57;
     var58 = NULL;
     var63 = NULL;
@@ -332,12 +332,12 @@ jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     var64 = 0;
     var65 = JSVAL_NULL;
     var66 = NULL;
-    var79 = JSVAL_NULL;
+    var89 = JSVAL_NULL;
     var67 = 0;
     var68 = 0;
     var70 = 0;
     var69 = NULL;
-    var80 = JSVAL_NULL;
+    var90 = JSVAL_NULL;
     var57 = JS_FALSE;
     var58 = obj;
     var62 = argc;
@@ -349,8 +349,8 @@ jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     if (!var66) {
         goto do_return;
     }
-    var79 = STRING_TO_JSVAL(var66);
-    argv[argc+0] = var79;
+    var89 = STRING_TO_JSVAL(var66);
+    argv[argc+0] = var89;
     var67 = JS_GetStringLength(var66);
     var68 = 1;
     var68 += var67;
@@ -360,8 +360,8 @@ jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
     var70 = 1;
     var69 = JS_GetStringChars(var66);
-    var80 = STRING_TO_JSVAL(var66);
-    argv[argc+1] = var80;
+    var90 = STRING_TO_JSVAL(var66);
+    argv[argc+1] = var90;
     {
         size_t i;
         for (i = 0; i < var67; ++i) {
@@ -380,6 +380,39 @@ jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
     return var57;
 }
+static JSBool
+jjsetSuccess(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+    JSObject *var72;
+    int var77;
+    int var76;
+    int var78;
+    jsval var79;
+    int32 var80;
+    JSBool var71;
+    var72 = NULL;
+    var77 = 0;
+    var76 = 0;
+    var78 = 0;
+    var79 = JSVAL_NULL;
+    var80 = 0;
+    var71 = JS_FALSE;
+    var72 = obj;
+    var76 = argc;
+    var78 = 0;
+    var78 = var78 < var76;
+    if (var78) {
+    var79 = argv[0];
+    if (JS_ValueToInt32(cx, var79, &var80) != JS_TRUE) {
+        goto do_return;
+    }
+    var77 = (int)var80;
+    }
+    jsSetSuccess(var77);
+    var71 = JS_TRUE;
+    do_return:
+    return var71;
+}
 static JSPropertySpec jj_static_ps[] = {
     {NULL, 0, 0, NULL, NULL}
 };
@@ -392,6 +425,7 @@ static JSFunctionSpec jj_static_fs[] = {
     JS_FS("admPrint", jjadmPrint, 1, 0, 2),
     JS_FS("print", jjprint, 1, 0, 2),
     JS_FS("help", jjhelp, 1, 0, 2),
+    JS_FS("setSuccess", jjsetSuccess, 1, 0, 0),
     JS_FS_END
 };
 static JSFunctionSpec jj_fs[] = {
@@ -400,6 +434,7 @@ static JSFunctionSpec jj_fs[] = {
     JS_FS("admPrint", jjadmPrint, 1, 0, 2),
     JS_FS("print", jjprint, 1, 0, 2),
     JS_FS("help", jjhelp, 1, 0, 2),
+    JS_FS("setSuccess", jjsetSuccess, 1, 0, 0),
     JS_FS_END
 };
 

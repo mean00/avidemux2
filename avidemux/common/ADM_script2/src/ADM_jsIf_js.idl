@@ -8,6 +8,7 @@ function void admpPopupInfo : jsPopupInfo    (cstring  ) <static>;
 function void admPrint      : jsPrint        (cstring  ) <static>;
 function void print         : jsPrint2       (cstring  ) <static>;
 function void help          : jsHelp         (cstring  ) <static>;
+function void setSuccess    : jsSetSuccess   (int  )   <static>;
 
 %<
 JSFunctionSpec  *jsGetIfFunctions(void)

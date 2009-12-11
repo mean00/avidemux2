@@ -286,10 +286,10 @@ void *StartThreadSpidermonkey(void *pData)
 /**
     \fn JS_setSuccess
 */
-void JS_setSuccess(bool bSuccess)
+extern "C" void jsSetSuccess(int bSuccess)
 {// begin JS_setSuccess
 	g_bJSSuccess = bSuccess;
-	printf("[ECMA] success : %d\n", g_bJSSuccess);
+	jsLog(JS_LOG_NORMAL,"[ECMA] success : %d\n", g_bJSSuccess);
 }// end JS_setSuccess
 /**
     \fn SpidermonkeyExit

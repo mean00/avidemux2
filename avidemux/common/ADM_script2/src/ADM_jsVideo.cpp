@@ -109,4 +109,33 @@ bool A_setVideoCodec(const char *nm)
     UI_setVideoCodec(idx);
     return true;
 }
+/**
+    \fn jsGetMarkerA
+*/
+double jsGetMarkerA(void)
+{
+
+}
+/**
+    \fn jsGetMarkerB
+*/
+double jsGetMarkerB(void)
+{
+
+}
+/**
+    \fn jsSetMarkerA
+*/
+void   jsSetMarkerA(double a)
+{
+
+}
+/**
+    \fn jsGetMarkerB
+*/
+void   jsSetMarkerB(double b)
+{
+
+}
+
 //EOF

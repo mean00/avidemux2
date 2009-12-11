@@ -15,11 +15,18 @@ class adm
         function int addSegment     : jsAddSegment (int ,double , double ) <static>;
         function int setPostProc    : jsSetPostProc (int ,int , int ) <static>;
         function int audioReset     : jsAudioReset () <static>;
+        function int audioMixer     : jsAudioMixer (cstring ) <static>;
+        /*            JSFUNC                 C FUNC           PARAM     */
+/* Override as jsapigen cannot handle multiple args the way we need it to */
         function int videoCodec_ignore     : jsVideoCodec(cstring,cstring[])   <static>;
         function int addVideoFilter_ignore : jsVideoFilter(cstring,cstring[])   <static>;
         function int audioCodec_ignore     : jsAudioCodec(cstring,cstring[])   <static>;
         function int setContainer_ignore   : jsSetContainer(cstring,cstring[])   <static>;
-        construct                   : jsAvidemux  ( ) <static>     ; 
+/* Properties */
+        property double markerA            : jsGetMarkerA,jsSetMarkerA <static>;
+        property double markerB            : jsGetMarkerB,jsSetMarkerB <static>;
+        property int    audioResample      : jsGetResample,jsSetResample <static>;
+        construct                          : jsAvidemux  ( ) <static>     ; 
 };
 
 %<

@@ -75,6 +75,26 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         
         return JS_TRUE;
 }
+/**
+    \fn jsAudioMixer
+*/
+int jsAudioMixer(const char *s)
+{
+    CHANNEL_CONF c=AudioMuxerStringToId(s);
+    return audioFilterSetMixer(c);
+}
+/**
+    \fn jsGetResample
+*/
+int32_t jsGetResample(void)
+{
 
+}
+/**
+    \fn jsSetResample
+*/
+void    jsSetResample(int32_t fq)
+{
 
+}
 //EOF

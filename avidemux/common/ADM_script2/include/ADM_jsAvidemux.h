@@ -23,6 +23,15 @@ int jsAppendVideo(const char *c);
 int jsClearSegments(void);
 int jsAddSegment(int ref, double start, double duration);
 int jsAudioReset(void);
+int jsAudioMixer(const char *s);
+// Fq
+int32_t jsGetResample(void);
+void    jsSetResample(int32_t fq);
+// Markers
+double jsGetMarkerA(void);
+double jsGetMarkerB(void);
+void   jsSetMarkerA(double a);
+void   jsSetMarkerB(double b);
 
 // non jsapigen function, variables number of args
 JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
