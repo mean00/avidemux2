@@ -16,34 +16,12 @@
 #include "ADM_js.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_jsDebug.h"
+#include <vector>
 /**/
 /**/
-
-
 extern ADM_Composer *video_body;
 void ADM_dumpJSHooks(void);
-#if 0
-/**
-    \fn JS_AvidemuxRegisterDebugFunction
-*/
-bool JS_AvidemuxRegisterDebugFunction(JSContext *cx,JSObject *global)
-{
-	if(JS_DefineFunctions(cx, global, adm_debug_functions) == true)
-		return true;
-
-	ADM_warning("Unable to define functions\n");
-	return false;
-}
-
-/**
-    \fn ADM_JsDebugGetFunctions
-
-*/
-JSFunctionSpec *ADM_JsDebugGetFunctions(void)
-{
-    return adm_debug_functions;
-}
-#endif
+extern vector <JSFunctionSpec *>listOfHooks;
 /**
     \fn displayError
     \brief error popup

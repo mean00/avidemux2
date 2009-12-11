@@ -18,22 +18,31 @@
 #include "ADM_default.h"
 #include <string.h>
 #include <pthread.h>
+#include <vector>
+using std::vector;
 #include "DIA_coreToolkit.h"
 #include "jsapi.h"
-
 #include "ADM_jsUtils.h"
 #include "ADM_jsShell.h"
 #include "ADM_jsDebug.h"
 
 typedef JSBool JS_PROTOTYPE(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-
+/**
+    \struct ADM_JS_HOOK
+*/
+typedef struct
+{
+    const char      *name;
+    const char      *text;
+    JSFunctionSpec  *jsFunctions;
+}ADM_JS_HOOK;
+extern vector <ADM_JS_HOOK >jsHooks;
 #if !defined(ADM_JS_THREADSAFE)
-#define enterLock() {}
-#define leaveLock() {}
+    #define enterLock() {}
+    #define leaveLock() {}
 #else
-#define enterLock() jsrefcount nRefCount = JS_SuspendRequest(cx)
-#define leaveLock() {JS_ResumeRequest(cx,nRefCount); }
-
+    #define enterLock() jsrefcount nRefCount = JS_SuspendRequest(cx)
+    #define leaveLock() {JS_ResumeRequest(cx,nRefCount); }
 #endif
 
 #endif

@@ -14,10 +14,16 @@
 
 #include "ADM_js.h"
 #include <stdarg.h>
+#include <vector>
+
 void    A_Resync(void);
+
+/* our variables */
 static jsLoggerFunc *jsLogger=NULL;
 static void *jsLoggerCookie=NULL;
 extern char * actual_workbench_file;
+vector <ADM_JS_HOOK >jsHooks;
+
 
 #define JSVAR(a,b,c) a b=c
 
@@ -32,17 +38,8 @@ static bool g_bJSSuccess=false;
 static JSObject   *g_pObject=NULL;
 static JSContext  *g_pCx=NULL;
 static JSRuntime  *g_pRt=NULL;
-/*
+
 static JSClass global_class = {
-   
-"Avidemux", JSCLASS_HAS_PRIVATE,
-        JS_PropertyStub, JS_PropertyStub,
-        JS_PropertyStub, JS_PropertyStub,
-        JS_EnumerateStub, JS_ResolveStub,
-        JS_ConvertStub, JS_FinalizeStub
-};
-*/
-   static JSClass global_class = {
             "global", JSCLASS_GLOBAL_FLAGS,
             JS_PropertyStub, JS_PropertyStub, JS_PropertyStub, JS_PropertyStub,
             JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
@@ -149,9 +146,9 @@ bool ADM_jsUnregisterLogger(void)
 */
 extern "C" JSFunctionSpec  *jsGetIfFunctions(void);
 extern "C" JSFunctionSpec  *jsGetTestFunctions(void);
-extern "C" JSFunctionSpec  *jsGetAvidemuxFunctions(void);
+extern "C" JSFunctionSpec  *jsGetAdmFunctions(void);
 extern "C" JSObject *jsAvidemuxInit(JSContext *cx,JSObject *obj);
-static bool registerOne(const char *name,JSFunctionSpec *s,JSContext *cx,JSObject *obj)
+static bool registerOne(const char *name,const char *text,JSFunctionSpec *s,JSContext *cx,JSObject *obj)
 {
     if (JS_DefineFunctions(cx, obj, s) != JS_TRUE) 
     {
@@ -159,6 +156,11 @@ static bool registerOne(const char *name,JSFunctionSpec *s,JSContext *cx,JSObjec
             return false;
     }
     ADM_info("Registered %s functions\n",name);
+    ADM_JS_HOOK h;
+    h.name=name;    
+    h.text=text;
+    h.jsFunctions=s;
+    jsHooks.push_back(h);
     return true;
 }
 static void  dump(JSFunctionSpec *f)
@@ -169,25 +171,52 @@ static void  dump(JSFunctionSpec *f)
         f++;
     }
 }
+/**
+    \fn jsHelp
+    \brief help command
+
+*/
 extern "C" 
 {
 void jsHelp(const char *s)
 {
+int n=jsHooks.size();
     if(!s) goto none;
-    if(!strcasecmp(s,"debug")) return dump(jsGetIfFunctions());
-    if(!strcasecmp(s,"test")) return dump(jsGetTestFunctions());
+    {
+    for(int i=0;i<n;i++)
+        if(!strcasecmp(s,jsHooks[i].name))
+        {
+            const char *t=jsHooks[i].text;
+            if(t)
+                jsLog(JS_LOG_NORMAL,"%s",t);
+            return dump(jsHooks[i].jsFunctions);
+        }
+    }
 //    if(!strcasecmp(s,"load")) return dump(jsGetAvidemuxFunctions());
 none:
-        jsLog(JS_LOG_NORMAL,"please use help(\"debug\") or help(\"test\"");
+        jsLog(JS_LOG_NORMAL,"please use help(\"xxx\") with xx among");
+
+        for(int i=0;i<n;i++)
+            jsLog(JS_LOG_NORMAL,"    %s",jsHooks[i].name);
+
 }
-}
+} // extern "C"
+/**
+    \fn jsRegisterAvidemux
+    \brief Register avidemux hookd
+*/
 static bool jsRegisterAvidemux(JSContext *cx,JSObject *obj)
 {
-        registerOne("If",   jsGetIfFunctions(),    cx,obj);
-        registerOne("Test", jsGetTestFunctions(),  cx,obj);
-      //  registerOne("Load", jsGetAvidemuxFunctions(),  cx,obj);
-        jsAvidemuxInit(cx,obj);
-        return true;
+ADM_JS_HOOK h;
+        registerOne("Debug","",   jsGetIfFunctions(),    cx,obj);
+        registerOne("Test","", jsGetTestFunctions(),  cx,obj);
+        // Register also our class (for  help() )
+            h.name="adm";
+            h.text="Please prefix this with adm.";
+            h.jsFunctions=jsGetAdmFunctions();
+            jsHooks.push_back(h);
+            jsAvidemuxInit(cx,obj);
+            return true;
 }
 /**
     \fn SpidermonkeyInit

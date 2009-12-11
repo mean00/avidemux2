@@ -1917,3 +1917,9 @@ JSObject *jsAvidemuxInit(JSContext *cx,JSObject *obj)
           return jjadm_init(cx,obj);
 }
 
+JSFunctionSpec  *jsGetAdmFunctions(void)
+{
+        return jjadm_static_fs;
+}
+
+
