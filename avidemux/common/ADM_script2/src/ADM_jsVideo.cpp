@@ -23,6 +23,8 @@
 #include "ADM_jsVideo.h"
 #include "A_functions.h"
 #include "ADM_videoEncoderApi.h"
+#include "ADM_videoFilterApi.h"
+#include "ADM_videoFilters.h"
 #include "GUI_ui.h"
 extern ADM_Composer *video_body;
 bool A_setVideoCodec(const char *nm);
@@ -66,6 +68,32 @@ JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         return JS_TRUE;
 }// end Codec
 
+/**
+    \fn Codec
+    
+*/
+extern "C" int   jsVideoFilter(const char *a,const char **b) {return 0;}
+JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{// begin Codec
+   uint32_t filterTag;
+
+        // default return value
+        *rval = BOOLEAN_TO_JSVAL(false);
+        if(argc == 0)
+                return JS_FALSE;
+        char *filterName=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+        filterTag = ADM_vf_getTagFromInternalName(filterName);
+        jsLog(JS_LOG_NORMAL,"Adding Filter %s -> %"LU"... \n",filterName,filterTag);
+
+        
+        CONFcouple *c=NULL;
+        if(argc)
+            jsArgToConfCouple(argc-1,&c,argv+1);
+        *rval=BOOLEAN_TO_JSVAL(  ADM_vf_addFilterFromTag(filterTag,c,false));
+        if(c) delete c;
+        
+        return JS_TRUE;
+}// end Codec
 /**
     \fn A_setVideoCodec
 */

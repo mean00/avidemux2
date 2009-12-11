@@ -12,6 +12,8 @@ SET(ADM_script_SRCS
         ADM_jsAvidemux_js.c
 #
         ADM_jsVideo.cpp
+#
+        ADM_jsAudio.cpp
 )
 
 ADD_LIBRARY(ADM_script26 STATIC ${ADM_script_SRCS})

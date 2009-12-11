@@ -22,6 +22,12 @@ int jsLoadVideo(const char *c);
 int jsAppendVideo(const char *c);
 int jsClearSegments(void);
 int jsAddSegment(int ref, double start, double duration);
+int jsAudioReset(void);
+
+// non jsapigen function, variables number of args
+JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 #ifdef __cplusplus
 };

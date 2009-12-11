@@ -146,7 +146,7 @@ uint32_t pptype, ppstrength,ppswap;
         videoEncoder6_GetConfiguration(&couples);
         dumpConf(fd,couples);
         qfprintf(fd,");\n");
-#if 0
+
 // Video filters....
 //______________________________________________
     qfprintf(fd,"\n//** Filters **\n");
@@ -155,7 +155,7 @@ uint32_t pptype, ppstrength,ppswap;
     {
         // Grab its name...
         uint32_t tag=ADM_vf_getTag(i);
-        qfprintf(fd, "app.video.addFilter(\"%s\"", ADM_vf_getInternalNameFromTag(tag));
+        qfprintf(fd, "adm.addVideoFilter(\"%s\"", ADM_vf_getInternalNameFromTag(tag));
         // Now get the filter settings (if any)
         CONFcouple *c=NULL;
         ADM_vf_getConfigurationFromIndex(i,&c);
@@ -173,7 +173,7 @@ uint32_t pptype, ppstrength,ppswap;
    uint32_t delay,bitrate;
    
    qfprintf(fd,"\n//** Audio **\n");
-   qfprintf(fd,"app.audio.reset();\n");
+   qfprintf(fd,"adm.audioReset();\n");
 #if 0
    // External audio ?
         char *audioName;
@@ -199,7 +199,7 @@ uint32_t pptype, ppstrength,ppswap;
 #endif
    couples=NULL;
    getAudioExtraConf(&bitrate,&couples);
-    qfprintf(fd,"app.audio.codec(\"%s\",%d",audioCodecGetName(),bitrate); 
+    qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(),bitrate); 
     dumpConf(fd,couples);
     qfprintf(fd,");\n");
 
@@ -236,7 +236,7 @@ uint32_t pptype, ppstrength,ppswap;
         const char *containerName=ADM_mx_getName(index);
         ADM_mx_getExtraConf( index,&containerConf);
         
-        qfprintf(fd,"app.setContainer(\"%s\"",containerName); 
+        qfprintf(fd,"adm.setContainer(\"%s\"",containerName); 
         dumpConf(fd,containerConf);
         qfprintf(fd,");\n");
   // -------- /Muxer -----------------------
@@ -250,7 +250,7 @@ uint32_t pptype, ppstrength,ppswap;
   {
         qfprintf(fd,"setSuccess(%d);\n",1);
   }
-#endif
+
   qfprintf(fd,"//app.Exit();\n");
   qfprintf(fd,"\n//End of script\n");
   // All done

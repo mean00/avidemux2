@@ -17,19 +17,37 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_jsAvidemux.h"
 #include "A_functions.h"
+#include "ADM_muxerProto.h"
+#include "GUI_ui.h"
 extern ADM_Composer *video_body;
+/**
+    \fn ADM_JSAvidemux
+    \brief Select the current container from a string
+*/
+bool A_setContainer(const char *cont)
+{
+    int idx=ADM_MuxerIndexFromName(cont);
+    if(idx==-1)
+    {
+        ADM_error("Cannot find muxer for format=%s\n",cont);
+        return false;
+    }
+    UI_SetCurrentFormat(idx);
+    return true;
+}
+
 /**
     \fn jsLoadFile
 */
 int jsLoadVideo(const char *s)
 {
 int ret=0;
-        enterLock();
+        
         if(A_openAvi(s)) 
         {
           ret=1;
         }
-        leaveLock();
+        
     return ret;
 }
 
@@ -39,12 +57,12 @@ int ret=0;
 int jsAppendVideo(const char *s)
 {
 int ret=0;
-        enterLock();
+        
         if(A_appendAvi(s)) 
         {
           ret=1;
         }
-        leaveLock();
+        
     return ret;
 }
 
@@ -65,6 +83,37 @@ int  jsAddSegment(int ref, double start, double duration)
     if(true==video_body->addSegment(ref,(uint64_t)start,(uint64_t)duration)) return 1;
     return 0;
 }
+
+
+/**
+    \fn Codec
+    
+*/
+extern "C" int   jsSetContainer(const char *a,const char **b) {return 0;}
+JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{// begin Codec
+    
+        // default return value
+        *rval = BOOLEAN_TO_JSVAL(false);
+        if(argc < 1)
+                return JS_FALSE;
+        if(JSVAL_IS_STRING(argv[0]) == false)
+                return JS_FALSE;
+        char *str = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+        
+        if(A_setContainer(str))
+        {
+            CONFcouple *c;
+            jsArgToConfCouple(argc-1,&c,argv+1);
+            int idx=ADM_MuxerIndexFromName(str);
+            if(idx!=-1)
+            {
+                *rval = BOOLEAN_TO_JSVAL( ADM_mx_setExtraConf(idx,c));
+            }
+            if(c) delete c;
+        }
+        return JS_TRUE;
+}// end Codec
 
 
 // EOF
