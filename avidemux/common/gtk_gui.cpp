@@ -863,7 +863,7 @@ void cleanUp (void)
 
 
 
-void A_parseECMAScript(const char *name){
+bool A_parseECMAScript(const char *name){
   bool ret;
   char *longname = ADM_PathCanonize(name);
    if (playing){
@@ -874,8 +874,10 @@ void A_parseECMAScript(const char *name){
       if( actual_workbench_file )
          ADM_dealloc(actual_workbench_file);
       actual_workbench_file = ADM_strdup(longname);
+      
    }
    ADM_dealloc(longname);
+   return ret;
 }
 
 /*

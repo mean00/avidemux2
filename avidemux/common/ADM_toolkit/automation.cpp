@@ -33,6 +33,7 @@
 #include "gui_action.hxx"
 #include "prefs.h"
 #include "gtkgui.h"
+#include "A_functions.h"
 
 
 #include "ADM_debugID.h"
@@ -56,10 +57,8 @@ extern int A_loadNone( void );
 extern void A_saveAudioProcessed(char *name);
 extern uint8_t A_SaveAudioNVideo(char *name);
 extern void GUI_Quiet( void);
-extern bool A_parseECMAScript(const char *name);
 extern void GUI_Verbose( void);
 extern void audioFilter_SetBitrate( int i);
-extern void A_Save(const char *name);
 extern void videoCodecSelectByName(const char *name);
 extern int videoCodecConfigure(char *p,uint32_t i, uint8_t  *c);
 extern void updateLoaded( void );

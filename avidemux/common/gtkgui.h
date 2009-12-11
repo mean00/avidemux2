@@ -15,11 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-int 			A_openAvi		(const char *name);
-void 			A_saveAudio	(char *name);
-void 			A_saveAudioDecoded	(char *name);
-void 			A_saveAVI		(char *name);
-void 			A_playAvi		(void);
 void 			GUI_setCurrentFrameAndTime(void );
 void 			GUI_setAllFrameAndTime(void );
 
