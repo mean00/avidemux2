@@ -24,7 +24,7 @@
     \fn crashTest
     \brief Force a crash
 */
-bool jsTestCrash(void)
+int jsTestCrash(void)
 {
   
   int *foobar=NULL;
@@ -35,7 +35,7 @@ bool jsTestCrash(void)
     \fn assertTest
     \brief Force a crash
 */
-bool jsTestAssert(void)
+int jsTestAssert(void)
 {
   
   ADM_assert(0);
@@ -46,7 +46,7 @@ bool jsTestAssert(void)
 /**
     \fn jsTestFacInt
 */
-bool jsTestFacInt(void)
+int jsTestFacInt(void)
 {
   uint32_t tog=0;
    diaElemUInteger blend(&tog,QT_TR_NOOP("Uinteger"),0,255);
@@ -63,7 +63,7 @@ bool jsTestFacInt(void)
 /**
     \fn jsTestFacFloat
 */
-bool jsTestFacFloat(void)
+int jsTestFacFloat(void)
 {
   ELEM_TYPE_FLOAT tog=0;
    diaElemFloat blend(&tog,QT_TR_NOOP("Float"),0,255);
@@ -80,7 +80,7 @@ bool jsTestFacFloat(void)
 /**
     \fn jsTestFacToggle
 */
-bool jsTestFacToggle(void)
+int jsTestFacToggle(void)
 {
   uint32_t tog=0;
   uint32_t test=0;
@@ -102,7 +102,7 @@ bool jsTestFacToggle(void)
 /**
     \fn jsTestFacMenu
 */
-bool jsTestFacMenu(void)
+int jsTestFacMenu(void)
 {
    uint32_t tog=4;
    ELEM_TYPE_FLOAT f=1; 
@@ -131,7 +131,7 @@ diaElem *elems[]={&blend,&toggle   };
 /**
     \fn jsTestFacFile
 */
-bool jsTestFacFile(void)
+int jsTestFacFile(void)
 {
    uint32_t tog=0;
    char *test=ADM_strdup("Entry test1");
@@ -151,7 +151,7 @@ bool jsTestFacFile(void)
 /**
     \fn jsTestFacDirSel
 */
-bool jsTestFacDirSel(void)
+int jsTestFacDirSel(void)
 {
    uint32_t tog=0;
    char *test=ADM_strdup("Entry test1");
@@ -171,7 +171,7 @@ bool jsTestFacDirSel(void)
 /**
     \fn jsTestFacBitrate
 */
-bool jsTestFacBitrate(void)
+int jsTestFacBitrate(void)
 {
 
    COMPRES_PARAMS test={
@@ -196,7 +196,7 @@ bool jsTestFacBitrate(void)
 /**
     \fn jsTestFacInt
 */
-bool jsTestFacBar(void)
+int jsTestFacBar(void)
 {
     
       diaElemBar bar1(25,"25");
@@ -217,7 +217,7 @@ void clickMe(void *cookie)
 /**
     \fn jsTestFacButton
 */
-bool jsTestFacButton(void)
+int jsTestFacButton(void)
 {
     
       diaElemButton bar1("Button",clickMe,NULL);
@@ -232,7 +232,7 @@ bool jsTestFacButton(void)
 /**
     \fn jsTestFacSlider
 */
-bool jsTestFacSlider(void)
+int jsTestFacSlider(void)
 {
   int32_t val=4;
       diaElemSlider slide(&val,"foo", 0,10);
@@ -249,7 +249,7 @@ bool jsTestFacSlider(void)
 /**
     \fn jsTestFacInt
 */
-bool jsTestFacRoText(void)
+int jsTestFacRoText(void)
 
 {
     
@@ -266,7 +266,7 @@ bool jsTestFacRoText(void)
 /**
     \fn jsTestFacText
 */
-bool jsTestFacText(void)
+int jsTestFacText(void)
 {
     
       char *foo=ADM_strdup("blah");
@@ -286,7 +286,7 @@ bool jsTestFacText(void)
 /**
     \fn jsTestFacInt
 */
-bool jsTestFacTab(void)
+int jsTestFacTab(void)
 {
     
       uint32_t test,test2;
@@ -315,7 +315,7 @@ bool jsTestFacTab(void)
 /**
     \fn jsTestFacInt
 */
-bool jsTestFacFrame(void)
+int jsTestFacFrame(void)
 {
     
       uint32_t test,test2;
@@ -342,7 +342,7 @@ bool jsTestFacFrame(void)
 /**
     \fn jsTestFacHex
 */
-bool jsTestFacHex(void)
+int jsTestFacHex(void)
 {
     
       uint8_t data[100];
@@ -363,7 +363,7 @@ bool jsTestFacHex(void)
 /**
     \fn jsTestFacMatrix
 */
-bool jsTestFacMatrix(void)
+int jsTestFacMatrix(void)
 {
     
       uint8_t data[16];
@@ -389,7 +389,7 @@ bool jsTestFacMatrix(void)
 /**
     \fn jsTestFacThreadcount
 */
-bool jsTestFacThreadCount(void)
+int jsTestFacThreadCount(void)
 {
 	uint32_t val=1;
 	diaElemThreadCount threadcount(&val,"ThreadCount");
@@ -407,7 +407,7 @@ bool jsTestFacThreadCount(void)
 /**
     \fn jsTestFacNotch
 */
-bool jsTestFacNotch(void)
+int jsTestFacNotch(void)
 {
     
 	diaElemNotch notch(1,"Notch");

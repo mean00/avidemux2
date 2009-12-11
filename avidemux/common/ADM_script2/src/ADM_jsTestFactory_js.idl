@@ -3,26 +3,26 @@
        return JS function     C Function  params
 ###############################################################
 */
-function bool admTestFacInt     :  jsTestFacInt     (void  ) <static>;
-function bool admTestFacFloat   :  jsTestFacFloat   (void  ) <static>;
-function bool admTestFacToggle  :  jsTestFacToggle  (void  ) <static>;
-function bool admTestFacMenu    :  jsTestFacMenu    (void  ) <static>;
-function bool admTestFacFile    :  jsTestFacFile    (void  ) <static>;
-function bool admTestFacBitrate :  jsTestFacBitrate (void  ) <static>;
-function bool admTestFacBar     :  jsTestFacBar     (void  ) <static>;
-function bool admTestFacRoText  :  jsTestFacRoText  (void  ) <static>;
-function bool admTestFacText    :  jsTestFacText    (void  ) <static>;
-function bool admTestFacTab     :  jsTestFacTab     (void  ) <static>;
-function bool admTestFrame      :  jsTestFacFrame   (void  ) <static>;
-function bool admTestHex        :  jsTestFacHex     (void  ) <static>;
-function bool admTestDirSel     :  jsTestFacDirSel  (void  ) <static>;
-function bool admTestButton     :  jsTestFacButton  (void  ) <static>;
-function bool admTestMatrix     :  jsTestFacMatrix  (void  ) <static>;
-function bool admTestNotch      :  jsTestFacNotch   (void  ) <static>;
-function bool admTestThreadCount:  jsTestFacThreadCount   (void  ) <static>;
-function bool admTestSlider     :  jsTestFacSlider  (void  ) <static>;
-function void admTestCrash      :  jsTestCrash      (void  ) <static>;
-function void admTestAssert     :  jsTestAssert     (void  ) <static>;
+function int admTestFacInt     :  jsTestFacInt     (void  ) <static>;
+function int admTestFacFloat   :  jsTestFacFloat   (void  ) <static>;
+function int admTestFacToggle  :  jsTestFacToggle  (void  ) <static>;
+function int admTestFacMenu    :  jsTestFacMenu    (void  ) <static>;
+function int admTestFacFile    :  jsTestFacFile    (void  ) <static>;
+function int admTestFacBitrate :  jsTestFacBitrate (void  ) <static>;
+function int admTestFacBar     :  jsTestFacBar     (void  ) <static>;
+function int admTestFacRoText  :  jsTestFacRoText  (void  ) <static>;
+function int admTestFacText    :  jsTestFacText    (void  ) <static>;
+function int admTestFacTab     :  jsTestFacTab     (void  ) <static>;
+function int admTestFacFrame   :  jsTestFacFrame   (void  ) <static>;
+function int admTestFacHex     :  jsTestFacHex     (void  ) <static>;
+function int admTestFacDirSel  :  jsTestFacDirSel  (void  ) <static>;
+function int admTestFacButton  :  jsTestFacButton  (void  ) <static>;
+function int admTestFacMatrix  :  jsTestFacMatrix  (void  ) <static>;
+function int admTestFacNotch   :  jsTestFacNotch   (void  ) <static>;
+function int admTestFacThreadCount:  jsTestFacThreadCount   (void  ) <static>;
+function int admTestFacSlider  :  jsTestFacSlider  (void  ) <static>;
+function void admTestCrash     :  jsTestCrash      (void  ) <static>;
+function void admTestAssert    :  jsTestAssert     (void  ) <static>;
 
 %<
 JSFunctionSpec  *jsGetTestFunctions(void)
