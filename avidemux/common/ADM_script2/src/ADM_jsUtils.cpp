@@ -92,4 +92,40 @@ bool ADM_jsArg2Vars(const char *caller, int argc, jsval *argv, int paramNumber, 
     }
     return true;
 }
+/**
+    \fn stringsToConfCouple
+    \brief Convert js args to confcouple
+
+*/
+bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv)
+{
+  *conf=NULL;
+  if(!nb) return true;
+  CONFcouple *c=new CONFcouple(nb);
+  *conf=c;
+    for(int i=0;i<nb;i++)
+    {
+        
+        char *dupe=   ADM_strdup(argv[i]);
+        char *name,*value;
+        // dupe is in the form name=value
+        name=dupe;
+        value=name;
+        char *tail=dupe+strlen(dupe);
+        while(value<tail)
+        {
+            if(*value=='=') 
+                {
+                    *value=0;
+                    value++;
+                    break;
+                }
+            value++;
+        }
+        c->setInternalName(name,value);
+        //printf("%s -> [%s,%s]\n",param,name,value);
+        ADM_dezalloc(dupe);
+    }
+    return true;
+}
 // EOF

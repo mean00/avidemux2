@@ -10,7 +10,8 @@ SET(ADM_script_SRCS
 # Load segment
         ADM_jsAvidemux.cpp
         ADM_jsAvidemux_js.c
-
+#
+        ADM_jsVideo.cpp
 )
 
 ADD_LIBRARY(ADM_script26 STATIC ${ADM_script_SRCS})

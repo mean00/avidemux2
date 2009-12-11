@@ -13,7 +13,7 @@
  ***************************************************************************/
 #ifndef ADM_JS_UTILS_H
 #define ADM_JS_UTILS_H
-
+#include "ADM_confCouple.h"
 typedef enum
 {
     ADM_JS_INVALID=0,
@@ -35,6 +35,6 @@ typedef struct
 
 // since long int will be coded by js as double, we need a centralized version to convert
 bool ADM_jsArg2Vars(const char *caller, int argc, jsval *argv, int paramNumber, ADM_PARAM_LIST *param);
-
+bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv);
 
 #endif

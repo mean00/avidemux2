@@ -6,11 +6,16 @@ void jsAvidemux(void)
         printf("Constructor invoked\n");
 }
 %}
+        /*            JSFUNC      C FUNC  PARAM     */
 class adm
 {
-        /*            JSFUNC      C FUNC  PARAM     */
-        function int loadVideo  : jsLoadVideo (cstring ) <static>;
-        construct               : jsAvidemux  ( ) <static>      ;
+        function int loadVideo      : jsLoadVideo (cstring ) <static>;
+        function int clearSegments  : jsClearSegments () <static>;
+        function int appendVideo    : jsAppendVideo (cstring ) <static>;
+        function int addSegment     : jsAddSegment (int ,double , double ) <static>;
+        function int setPostProc    : jsSetPostProc (int ,int , int ) <static>;
+        function int videoCodec     : jsVideoCodec(cstring,cstring[])   <static>;
+        construct                   : jsAvidemux  ( ) <static>     ; 
 };
 
 %<

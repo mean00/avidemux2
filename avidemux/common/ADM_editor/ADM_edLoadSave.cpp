@@ -81,7 +81,6 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
   qfprintf (fd, "//--automatically built--\n");
   qfprintf (fd, "//--Project: %s\n\n",name);
 
-  qfprintf (fd, "var app = new Avidemux();\n");
   qfprintf (fd,"\n//** Video **\n");
   qfprintf (fd,"// %02ld videos source \n", _segments.getNbRefVideos());
 
@@ -93,38 +92,39 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
         nm=ADM_cleanupPath(_segments.getRefVideo(i)->_aviheader->getMyName() );
         if(!i)
         {
-                qfprintf (fd, "app.load(\"%s\");\n", nm);
+                qfprintf (fd, "adm.loadVideo(\"%s\");\n", nm);
         }
         else
         {
-                qfprintf (fd, "app.append(\"%s\");\n", nm);
+                qfprintf (fd, "adm.appendVideo(\"%s\");\n", nm);
         }
         ADM_dealloc(nm);
     }
 
   qfprintf (fd,"//%02ld segments\n", _segments.getNbSegments());
-  qfprintf (fd,"app.clearSegments();\n");
+  qfprintf (fd,"adm.clearSegments();\n");
   
  
 
     for (uint32_t i = 0; i < _segments.getNbSegments(); i++)
     {
         _SEGMENT *seg=_segments.getSegment(i);
-        qfprintf (fd, "app.addSegment(%"LU",%"LLU",%"LLU");\n",seg->_reference,seg->_refStartTimeUs,seg->_durationUs);
+        qfprintf (fd, "adm.addSegment(%"LU",%"LLU",%"LLU");\n",seg->_reference,seg->_refStartTimeUs,seg->_durationUs);
     }
 
 // Markers
 //
+#if 0
         qfprintf(fd,"app.markerA=%"LLU";\n",getMarkerAPts());
         qfprintf(fd,"app.markerB=%"LLU";\n",getMarkerBPts());
-        
+#endif        
 // postproc
 //___________________________
 
 uint32_t pptype, ppstrength,ppswap;
         video_body->getPostProc( &pptype, &ppstrength, &ppswap);
         qfprintf(fd,"\n//** Postproc **\n");
-        qfprintf(fd,"app.video.setPostProc(%d,%d,%d);\n",pptype,ppstrength,ppswap);
+        qfprintf(fd,"adm.setPostProc(%d,%d,%d);\n",pptype,ppstrength,ppswap);
 
 // fps
 #if 0
@@ -142,11 +142,11 @@ uint32_t pptype, ppstrength,ppswap;
 		qfprintf(fd, "\n//** Video Codec conf **\n");
         CONFcouple *couples=NULL;
     
-        qfprintf(fd, "app.video.codec(\"%s\"", videoEncoder6_GetCurrentEncoderName());
+        qfprintf(fd, "adm.videoCodec(\"%s\"", videoEncoder6_GetCurrentEncoderName());
         videoEncoder6_GetConfiguration(&couples);
         dumpConf(fd,couples);
         qfprintf(fd,");\n");
-
+#if 0
 // Video filters....
 //______________________________________________
     qfprintf(fd,"\n//** Filters **\n");
@@ -250,6 +250,7 @@ uint32_t pptype, ppstrength,ppswap;
   {
         qfprintf(fd,"setSuccess(%d);\n",1);
   }
+#endif
   qfprintf(fd,"//app.Exit();\n");
   qfprintf(fd,"\n//End of script\n");
   // All done

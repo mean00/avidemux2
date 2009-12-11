@@ -15,7 +15,6 @@
  ***************************************************************************/
 #include "ADM_js.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_jsLoad.h"
 #include "ADM_jsAvidemux.h"
 #include "A_functions.h"
 extern ADM_Composer *video_body;
@@ -33,11 +32,11 @@ int ret=0;
         leaveLock();
     return ret;
 }
-#if 0
+
 /**
     \fn jsAppendFile
 */
-int jsAppendFile(const char *s)
+int jsAppendVideo(const char *s)
 {
 int ret=0;
         enterLock();
@@ -66,5 +65,6 @@ int  jsAddSegment(int ref, double start, double duration)
     if(true==video_body->addSegment(ref,(uint64_t)start,(uint64_t)duration)) return 1;
     return 0;
 }
-#endif
+
+
 // EOF

@@ -181,13 +181,12 @@ FILE *fd = ADM_fopen(report->filename,"rb");
 	if( strncmp(buf,"//AD",4) )
     {
             if (report->filename || report->lineno)
-                jsLog(JS_LOG_ERROR,"%s: line %d:\nMsg: %s\n"
-                              "Not an ECMAScript file. Try open it with 'File' -> 'Open...'",
+                jsLog(JS_LOG_ERROR,"%s: line %d:\nMsg: %s\n",
                               report->filename,
                               report->lineno,
                               message);
             else
-                jsLog(JS_LOG_ERROR,"Not an ECMAScript file. Try open it with 'File' -> 'Open...'");
+                jsLog(JS_LOG_ERROR,"Error");
     
 	}else
     {
