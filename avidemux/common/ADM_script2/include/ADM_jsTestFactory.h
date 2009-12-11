@@ -18,27 +18,27 @@
 #define ADMJS_FACTORY_H
 extern "C"
 {
-bool jsTestCrash(void);
-bool jsTestAssert(void);
-bool jsTestFacNotch(void);
-bool jsTestFacThreadCount(void);
-bool jsTestFacMatrix(void);
-bool jsTestFacMatrix(void);
-bool jsTestFacHex(void);
-bool jsTestFacFrame(void);
-bool jsTestFacTab(void);
-bool jsTestFacText(void);
-bool jsTestFacRoText(void);
-bool jsTestFacSlider(void);
-bool jsTestFacButton(void);
-bool jsTestFacBar(void);
-bool jsTestFacBitrate(void);
-bool jsTestFacDirSel(void);
-bool jsTestFacFile(void);
-bool jsTestFacMenu(void);
-bool jsTestFacToggle(void);
-bool jsTestFacFloat(void);
-bool jsTestFacInt(void);
+int jsTestCrash(void);
+int jsTestAssert(void);
+int jsTestFacNotch(void);
+int jsTestFacThreadCount(void);
+int jsTestFacMatrix(void);
+int jsTestFacMatrix(void);
+int jsTestFacHex(void);
+int jsTestFacFrame(void);
+int jsTestFacTab(void);
+int jsTestFacText(void);
+int jsTestFacRoText(void);
+int jsTestFacSlider(void);
+int jsTestFacButton(void);
+int jsTestFacBar(void);
+int jsTestFacBitrate(void);
+int jsTestFacDirSel(void);
+int jsTestFacFile(void);
+int jsTestFacMenu(void);
+int jsTestFacToggle(void);
+int jsTestFacFloat(void);
+int jsTestFacInt(void);
 };
 
 
