@@ -39,6 +39,7 @@
 #include "ADM_render/GUI_renderInternal.h"
 #include "ADM_vidMisc.h"
 #include "GUI_glade.h"
+#include "A_functions.h"
 
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern void ADM_initUIGtk(GtkWidget *guiRootWindow);
