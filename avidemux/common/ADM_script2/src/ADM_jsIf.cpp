@@ -21,7 +21,7 @@ extern char * actual_workbench_file;
 
 #define JSVAR(a,b,c) a b=c
 
-#if defined( __MINGW32__) && defined(JSDECLARE)
+#if defined( __MINGW32__) 
  pthread_t g_pThreadSpidermonkey ;
 #else
 JSVAR( pthread_t, g_pThreadSpidermonkey , 0);
