@@ -20,6 +20,7 @@ extern "C" {
 
 int jsVideoCodec(const char *codec,const char **p);
 int jsSetPostProc (int a,int b, int c);
+
 #ifdef __cplusplus
 };
 #endif

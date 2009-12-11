@@ -14,7 +14,7 @@ class adm
         function int appendVideo    : jsAppendVideo (cstring ) <static>;
         function int addSegment     : jsAddSegment (int ,double , double ) <static>;
         function int setPostProc    : jsSetPostProc (int ,int , int ) <static>;
-        function int videoCodec     : jsVideoCodec(cstring,cstring[])   <static>;
+        function int videoCodec_ignore     : jsVideoCodec(cstring,cstring[])   <static>;
         construct                   : jsAvidemux  ( ) <static>     ; 
 };
 

@@ -4,6 +4,10 @@
     \author mean (c) 2009 fixounet@free.fr
 
 
+    jsapigen does not like much variable number of arguments
+    In that case, we patch the generated file to go back to native spidermonkey api
+
+
 */
 /***************************************************************************
  *                                                                         *
@@ -30,31 +34,37 @@ int jsSetPostProc (int a,int b, int c)
     return video_body->setPostProc(a,b,c);
 }
 
+
 /**
-    \fn jsLoadFile
+    \fn Codec
+    
 */
-int jsVideoCodec(const char *codec,const char **params)
-{
-    // First how many params ?
-    const char **p=params;
-    int nb=0;
-    while(*p) {nb++;p++;}
-       
+extern "C" int   jsVideoCodec(const char *a,const char **b) {return 0;}
+JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{// begin Codec
+        *rval = BOOLEAN_TO_JSVAL(false);
+        if(argc <1)
+                return JS_FALSE;
+        if(JSVAL_IS_STRING(argv[0]) == false )
+        {
+                jsLog(JS_LOG_ERROR,"Cannot set codec, first parameter is not a string\n");
+                return JS_FALSE;
+        }
+        char *codec=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+        // Set codec.
+        
         if(A_setVideoCodec(codec)==false)
         {
             jsLog(JS_LOG_ERROR,"Could not select codec %s\n",codec);
-            return 0;
+            return JS_FALSE;
         }
         CONFcouple *c;
-        stringsToConfCouple(nb,&c,params);
-        if(false==videoEncoder6_SetConfiguration(c))
-        {
-            jsLog(JS_LOG_NORMAL,"Selected codec %s\n",codec);
-            return 0;
-        }
-    
-    return 1;
-}
+        jsArgToConfCouple(argc-1,&c,argv+1);
+        *rval = BOOLEAN_TO_JSVAL( videoEncoder6_SetConfiguration(c));
+        jsLog(JS_LOG_NORMAL,"Selected codec %s\n",codec);
+        if(c) delete c;
+        return JS_TRUE;
+}// end Codec
 
 /**
     \fn A_setVideoCodec

@@ -128,4 +128,40 @@ bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv)
     }
     return true;
 }
+/**
+    \fn jsArgToConfCouple
+    \brief Convert js args to confcouple
+
+*/
+bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv)
+{
+  *conf=NULL;
+  if(!nb) return true;
+  CONFcouple *c=new CONFcouple(nb);
+  *conf=c;
+    for(int i=0;i<nb;i++)
+    {
+        char *param = JS_GetStringBytes(JSVAL_TO_STRING(argv[i]));
+        char *dupe=   ADM_strdup(param);
+        char *name,*value;
+        // dupe is in the form name=value
+        name=dupe;
+        value=name;
+        char *tail=dupe+strlen(dupe);
+        while(value<tail)
+        {
+            if(*value=='=') 
+                {
+                    *value=0;
+                    value++;
+                    break;
+                }
+            value++;
+        }
+        c->setInternalName(name,value);
+        //printf("%s -> [%s,%s]\n",param,name,value);
+        ADM_dezalloc(dupe);
+    }
+    return true;
+}
 // EOF

@@ -396,7 +396,7 @@ jjadmsetPostProc(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     return var57;
 }
 static JSBool
-jjadmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmvideoCodec_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var77;
     char *var82;
@@ -713,7 +713,7 @@ static JSFunctionSpec jjadm_static_fs[] = {
     JS_FS("appendVideo", jjadmappendVideo, 1, 0, 3),
     JS_FS("addSegment", jjadmaddSegment, 3, 0, 1),
     JS_FS("setPostProc", jjadmsetPostProc, 3, 0, 1),
-    JS_FS("videoCodec", jjadmvideoCodec, 2, 0, 6),
+    JS_FS("videoCodec", jsAdmvideoCodec,  2, 0, 6),
     JS_FS_END
 };
 static JSFunctionSpec jjadm_fs[] = {
