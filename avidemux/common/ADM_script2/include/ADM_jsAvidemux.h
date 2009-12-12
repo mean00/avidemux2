@@ -32,7 +32,8 @@ double jsGetMarkerA(void);
 double jsGetMarkerB(void);
 void   jsSetMarkerA(double a);
 void   jsSetMarkerB(double b);
-
+//
+int    jsClearVideoFilters();
 // non jsapigen function, variables number of args
 JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);

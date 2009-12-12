@@ -207,12 +207,12 @@ jjadmloadVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     int var41;
     jsval var42;
     JSString *var43;
-    jsval var361;
+    jsval var368;
     size_t var44;
     size_t var45;
     int var47;
     jschar *var46;
-    jsval var362;
+    jsval var369;
     jsval var48;
     JSBool var34;
     var35 = NULL;
@@ -222,12 +222,12 @@ jjadmloadVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var41 = 0;
     var42 = JSVAL_NULL;
     var43 = NULL;
-    var361 = JSVAL_NULL;
+    var368 = JSVAL_NULL;
     var44 = 0;
     var45 = 0;
     var47 = 0;
     var46 = NULL;
-    var362 = JSVAL_NULL;
+    var369 = JSVAL_NULL;
     var48 = JSVAL_NULL;
     var34 = JS_FALSE;
     var35 = obj;
@@ -240,8 +240,8 @@ jjadmloadVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     if (!var43) {
         goto do_return;
     }
-    var361 = STRING_TO_JSVAL(var43);
-    argv[argc+0] = var361;
+    var368 = STRING_TO_JSVAL(var43);
+    argv[argc+0] = var368;
     var44 = JS_GetStringLength(var43);
     var45 = 1;
     var45 += var44;
@@ -251,8 +251,8 @@ jjadmloadVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     }
     var47 = 1;
     var46 = JS_GetStringChars(var43);
-    var362 = STRING_TO_JSVAL(var43);
-    argv[argc+1] = var362;
+    var369 = STRING_TO_JSVAL(var43);
+    argv[argc+1] = var369;
     {
         size_t i;
         for (i = 0; i < var44; ++i) {
@@ -315,12 +315,12 @@ jjadmappendVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     int var63;
     jsval var64;
     JSString *var65;
-    jsval var365;
+    jsval var372;
     size_t var66;
     size_t var67;
     int var69;
     jschar *var68;
-    jsval var366;
+    jsval var373;
     jsval var70;
     JSBool var56;
     var57 = NULL;
@@ -330,12 +330,12 @@ jjadmappendVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     var63 = 0;
     var64 = JSVAL_NULL;
     var65 = NULL;
-    var365 = JSVAL_NULL;
+    var372 = JSVAL_NULL;
     var66 = 0;
     var67 = 0;
     var69 = 0;
     var68 = NULL;
-    var366 = JSVAL_NULL;
+    var373 = JSVAL_NULL;
     var70 = JSVAL_NULL;
     var56 = JS_FALSE;
     var57 = obj;
@@ -348,8 +348,8 @@ jjadmappendVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     if (!var65) {
         goto do_return;
     }
-    var365 = STRING_TO_JSVAL(var65);
-    argv[argc+0] = var365;
+    var372 = STRING_TO_JSVAL(var65);
+    argv[argc+0] = var372;
     var66 = JS_GetStringLength(var65);
     var67 = 1;
     var67 += var66;
@@ -359,8 +359,8 @@ jjadmappendVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     }
     var69 = 1;
     var68 = JS_GetStringChars(var65);
-    var366 = STRING_TO_JSVAL(var65);
-    argv[argc+1] = var366;
+    var373 = STRING_TO_JSVAL(var65);
+    argv[argc+1] = var373;
     {
         size_t i;
         for (i = 0; i < var66; ++i) {
@@ -579,12 +579,12 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     int var123;
     jsval var124;
     JSString *var125;
-    jsval var371;
+    jsval var378;
     size_t var126;
     size_t var127;
     int var129;
     jschar *var128;
-    jsval var372;
+    jsval var379;
     jsval var130;
     JSBool var116;
     var117 = NULL;
@@ -594,12 +594,12 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var123 = 0;
     var124 = JSVAL_NULL;
     var125 = NULL;
-    var371 = JSVAL_NULL;
+    var378 = JSVAL_NULL;
     var126 = 0;
     var127 = 0;
     var129 = 0;
     var128 = NULL;
-    var372 = JSVAL_NULL;
+    var379 = JSVAL_NULL;
     var130 = JSVAL_NULL;
     var116 = JS_FALSE;
     var117 = obj;
@@ -612,8 +612,8 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     if (!var125) {
         goto do_return;
     }
-    var371 = STRING_TO_JSVAL(var125);
-    argv[argc+0] = var371;
+    var378 = STRING_TO_JSVAL(var125);
+    argv[argc+0] = var378;
     var126 = JS_GetStringLength(var125);
     var127 = 1;
     var127 += var126;
@@ -623,8 +623,8 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     }
     var129 = 1;
     var128 = JS_GetStringChars(var125);
-    var372 = STRING_TO_JSVAL(var125);
-    argv[argc+1] = var372;
+    var379 = STRING_TO_JSVAL(var125);
+    argv[argc+1] = var379;
     {
         size_t i;
         for (i = 0; i < var126; ++i) {
@@ -651,1183 +651,1210 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     return var116;
 }
 static JSBool
-jjadmvideoCodec_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmclearVideoFilters(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var132;
-    char *var137;
-    char **var138;
     int var133;
     int var136;
-    int var139;
-    jsval var140;
-    JSString *var141;
-    jsval var374;
-    size_t var142;
-    size_t var143;
-    int var145;
-    jschar *var144;
-    jsval var375;
-    int var146;
-    jsval var147;
-    JSObject *var148;
-    jsval var376;
-    jsuint var149;
-    char **var151;
-    size_t var152;
-    int var178;
-    size_t var153;
-    JSString *var154;
-    size_t var155;
-    JSString **var161;
-    int var179;
-    jsuint var156;
-    jsint var157;
-    JSBool var158;
-    jsval var159;
-    JSString *var160;
-    jsval var377;
-    size_t var164;
-    jsuint var162;
-    jsint var163;
-    JSString *var166;
-    size_t var165;
-    size_t var167;
-    char var176;
-    size_t var177;
-    char *var168;
-    int var180;
-    char *var169;
-    size_t var170;
-    int var181;
-    char *var173;
-    jsuint var171;
-    jsint var172;
-    JSString *var175;
-    size_t var174;
-    size_t var182;
-    size_t var183;
-    int var185;
-    jschar *var184;
-    jsval var378;
-    jsval var186;
+    jsval var137;
     JSBool var131;
     var132 = NULL;
-    var137 = NULL;
-    var138 = NULL;
     var133 = 0;
     var136 = 0;
-    var139 = 0;
-    var140 = JSVAL_NULL;
-    var141 = NULL;
-    var374 = JSVAL_NULL;
-    var142 = 0;
-    var143 = 0;
-    var145 = 0;
-    var144 = NULL;
-    var375 = JSVAL_NULL;
-    var146 = 0;
-    var147 = JSVAL_NULL;
-    var148 = NULL;
-    var376 = JSVAL_NULL;
-    var149 = 0;
-    var151 = NULL;
-    var152 = 0;
-    var178 = 0;
-    var153 = 0;
-    var154 = NULL;
-    var155 = 0;
-    var161 = NULL;
-    var179 = 0;
-    var156 = 0;
-    var157 = 0;
-    var158 = JS_FALSE;
-    var159 = JSVAL_NULL;
-    var160 = NULL;
-    var377 = JSVAL_NULL;
-    var164 = 0;
-    var162 = 0;
-    var163 = 0;
-    var166 = NULL;
-    var165 = 0;
-    var167 = 0;
-    var176 = 0;
-    var177 = 0;
-    var168 = NULL;
-    var180 = 0;
-    var169 = NULL;
-    var170 = 0;
-    var181 = 0;
-    var173 = NULL;
-    var171 = 0;
-    var172 = 0;
-    var175 = NULL;
-    var174 = 0;
-    var182 = 0;
-    var183 = 0;
-    var185 = 0;
-    var184 = NULL;
-    var378 = JSVAL_NULL;
-    var186 = JSVAL_NULL;
+    var137 = JSVAL_NULL;
     var131 = JS_FALSE;
     var132 = obj;
     var136 = argc;
-    var139 = 0;
-    var139 = var139 < var136;
-    if (var139) {
-    var140 = argv[0];
-    var141 = JS_ValueToString(cx, var140);
-    if (!var141) {
+    var133 = jsClearVideoFilters();
+    if (JS_NewNumberValue(cx, var133, &var137) != JS_TRUE) {
         goto do_return;
     }
-    var374 = STRING_TO_JSVAL(var141);
-    argv[argc+0] = var374;
-    var142 = JS_GetStringLength(var141);
-    var143 = 1;
-    var143 += var142;
-    var137 = JS_malloc(cx, var143);
-    if (!var137) {
-        goto do_return;
-    }
-    var145 = 1;
-    var144 = JS_GetStringChars(var141);
-    var375 = STRING_TO_JSVAL(var141);
-    argv[argc+1] = var375;
-    {
-        size_t i;
-        for (i = 0; i < var142; ++i) {
-            var137[i] = wctob(var144[i]);
-        }
-        var137[var142] = '\0';
-    }
-    }
-    var146 = 1;
-    var146 = var146 < var136;
-    if (var146) {
-    var147 = argv[1];
-    if (JS_ValueToObject(cx, var147, &var148) != JS_TRUE) {
-        goto do_return;
-    }
-    var376 = OBJECT_TO_JSVAL(var148);
-    argv[argc+2] = var376;
-    if (JS_GetArrayLength(cx, var148, &var149) != JS_TRUE) {
-        goto do_return;
-    }
-    var152 = sizeof(var151);
-    var152 *= var149;
-    var138 = JS_malloc(cx, var152);
-    if (!var138) {
-        goto do_return;
-    }
-    var178 = 1;
-    var153 = var149;
-    var155 = sizeof(var154);
-    var153 *= var155;
-    var161 = JS_malloc(cx, var153);
-    if (!var161) {
-        goto do_return;
-    }
-    var179 = 1;
-    var156 = var149;
-    var157 = -1;
-    while (var156)
-    {
-    var156 += var157;
-    var158 = JS_GetElement(cx, var148, var156, &var159);
-    var160 = JS_ValueToString(cx, var159);
-    if (!var160) {
-        goto do_return;
-    }
-    var377 = STRING_TO_JSVAL(var160);
-    argv[argc+3] = var377;
-    var161[var156] = var160;
-    }
-    var164 = 0;
-    var162 = var149;
-    var163 = -1;
-    while (var162)
-    {
-    var162 += var163;
-    var166 = var161[var162];
-    var165 = JS_GetStringLength(var166);
-    var164 += var165;
-    var167 = 1;
-    var164 += var167;
-    }
-    var177 = sizeof(var176);
-    var177 *= var164;
-    var168 = JS_malloc(cx, var177);
-    if (!var168) {
-        goto do_return;
-    }
-    var180 = 1;
-    var170 = sizeof(var169);
-    var170 *= var149;
-    var138 = JS_malloc(cx, var170);
-    if (!var138) {
-        goto do_return;
-    }
-    var181 = 1;
-    var173 = var168;
-    var173 += var164;
-    var171 = var149;
-    var172 = -1;
-    while (var171)
-    {
-    var171 += var172;
-    var175 = var161[var171];
-    var174 = JS_GetStringLength(var175);
-    var173 -= var174;
-    var173 += var172;
-    var182 = JS_GetStringLength(var175);
-    var183 = 1;
-    var183 += var182;
-    var173 = JS_malloc(cx, var183);
-    if (!var173) {
-        goto do_return;
-    }
-    var185 = 1;
-    var184 = JS_GetStringChars(var175);
-    var378 = STRING_TO_JSVAL(var175);
-    argv[argc+4] = var378;
-    {
-        size_t i;
-        for (i = 0; i < var182; ++i) {
-            var173[i] = wctob(var184[i]);
-        }
-        var173[var182] = '\0';
-    }
-    var138[var171] = var173;
-    }
-    }
-    var133 = jsVideoCodec(var137, var138);
-    if (JS_NewNumberValue(cx, var133, &var186) != JS_TRUE) {
-        goto do_return;
-    }
-    argv[argc+5] = var186;
+    argv[argc+0] = var137;
     if (rval) {
-        *rval = var186;
+        *rval = var137;
     }
     var131 = JS_TRUE;
     do_return:
-    if (var185) {
-        JS_free(cx, var173);
-        var173 = NULL;
-        var185 = 0;
+    return var131;
+}
+static JSBool
+jjadmvideoCodec_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+    JSObject *var139;
+    char *var144;
+    char **var145;
+    int var140;
+    int var143;
+    int var146;
+    jsval var147;
+    JSString *var148;
+    jsval var382;
+    size_t var149;
+    size_t var150;
+    int var152;
+    jschar *var151;
+    jsval var383;
+    int var153;
+    jsval var154;
+    JSObject *var155;
+    jsval var384;
+    jsuint var156;
+    char **var158;
+    size_t var159;
+    int var185;
+    size_t var160;
+    JSString *var161;
+    size_t var162;
+    JSString **var168;
+    int var186;
+    jsuint var163;
+    jsint var164;
+    JSBool var165;
+    jsval var166;
+    JSString *var167;
+    jsval var385;
+    size_t var171;
+    jsuint var169;
+    jsint var170;
+    JSString *var173;
+    size_t var172;
+    size_t var174;
+    char var183;
+    size_t var184;
+    char *var175;
+    int var187;
+    char *var176;
+    size_t var177;
+    int var188;
+    char *var180;
+    jsuint var178;
+    jsint var179;
+    JSString *var182;
+    size_t var181;
+    size_t var189;
+    size_t var190;
+    int var192;
+    jschar *var191;
+    jsval var386;
+    jsval var193;
+    JSBool var138;
+    var139 = NULL;
+    var144 = NULL;
+    var145 = NULL;
+    var140 = 0;
+    var143 = 0;
+    var146 = 0;
+    var147 = JSVAL_NULL;
+    var148 = NULL;
+    var382 = JSVAL_NULL;
+    var149 = 0;
+    var150 = 0;
+    var152 = 0;
+    var151 = NULL;
+    var383 = JSVAL_NULL;
+    var153 = 0;
+    var154 = JSVAL_NULL;
+    var155 = NULL;
+    var384 = JSVAL_NULL;
+    var156 = 0;
+    var158 = NULL;
+    var159 = 0;
+    var185 = 0;
+    var160 = 0;
+    var161 = NULL;
+    var162 = 0;
+    var168 = NULL;
+    var186 = 0;
+    var163 = 0;
+    var164 = 0;
+    var165 = JS_FALSE;
+    var166 = JSVAL_NULL;
+    var167 = NULL;
+    var385 = JSVAL_NULL;
+    var171 = 0;
+    var169 = 0;
+    var170 = 0;
+    var173 = NULL;
+    var172 = 0;
+    var174 = 0;
+    var183 = 0;
+    var184 = 0;
+    var175 = NULL;
+    var187 = 0;
+    var176 = NULL;
+    var177 = 0;
+    var188 = 0;
+    var180 = NULL;
+    var178 = 0;
+    var179 = 0;
+    var182 = NULL;
+    var181 = 0;
+    var189 = 0;
+    var190 = 0;
+    var192 = 0;
+    var191 = NULL;
+    var386 = JSVAL_NULL;
+    var193 = JSVAL_NULL;
+    var138 = JS_FALSE;
+    var139 = obj;
+    var143 = argc;
+    var146 = 0;
+    var146 = var146 < var143;
+    if (var146) {
+    var147 = argv[0];
+    var148 = JS_ValueToString(cx, var147);
+    if (!var148) {
+        goto do_return;
     }
-    if (var181) {
-        JS_free(cx, var138);
-        var138 = NULL;
-        var181 = 0;
+    var382 = STRING_TO_JSVAL(var148);
+    argv[argc+0] = var382;
+    var149 = JS_GetStringLength(var148);
+    var150 = 1;
+    var150 += var149;
+    var144 = JS_malloc(cx, var150);
+    if (!var144) {
+        goto do_return;
     }
-    if (var180) {
+    var152 = 1;
+    var151 = JS_GetStringChars(var148);
+    var383 = STRING_TO_JSVAL(var148);
+    argv[argc+1] = var383;
+    {
+        size_t i;
+        for (i = 0; i < var149; ++i) {
+            var144[i] = wctob(var151[i]);
+        }
+        var144[var149] = '\0';
+    }
+    }
+    var153 = 1;
+    var153 = var153 < var143;
+    if (var153) {
+    var154 = argv[1];
+    if (JS_ValueToObject(cx, var154, &var155) != JS_TRUE) {
+        goto do_return;
+    }
+    var384 = OBJECT_TO_JSVAL(var155);
+    argv[argc+2] = var384;
+    if (JS_GetArrayLength(cx, var155, &var156) != JS_TRUE) {
+        goto do_return;
+    }
+    var159 = sizeof(var158);
+    var159 *= var156;
+    var145 = JS_malloc(cx, var159);
+    if (!var145) {
+        goto do_return;
+    }
+    var185 = 1;
+    var160 = var156;
+    var162 = sizeof(var161);
+    var160 *= var162;
+    var168 = JS_malloc(cx, var160);
+    if (!var168) {
+        goto do_return;
+    }
+    var186 = 1;
+    var163 = var156;
+    var164 = -1;
+    while (var163)
+    {
+    var163 += var164;
+    var165 = JS_GetElement(cx, var155, var163, &var166);
+    var167 = JS_ValueToString(cx, var166);
+    if (!var167) {
+        goto do_return;
+    }
+    var385 = STRING_TO_JSVAL(var167);
+    argv[argc+3] = var385;
+    var168[var163] = var167;
+    }
+    var171 = 0;
+    var169 = var156;
+    var170 = -1;
+    while (var169)
+    {
+    var169 += var170;
+    var173 = var168[var169];
+    var172 = JS_GetStringLength(var173);
+    var171 += var172;
+    var174 = 1;
+    var171 += var174;
+    }
+    var184 = sizeof(var183);
+    var184 *= var171;
+    var175 = JS_malloc(cx, var184);
+    if (!var175) {
+        goto do_return;
+    }
+    var187 = 1;
+    var177 = sizeof(var176);
+    var177 *= var156;
+    var145 = JS_malloc(cx, var177);
+    if (!var145) {
+        goto do_return;
+    }
+    var188 = 1;
+    var180 = var175;
+    var180 += var171;
+    var178 = var156;
+    var179 = -1;
+    while (var178)
+    {
+    var178 += var179;
+    var182 = var168[var178];
+    var181 = JS_GetStringLength(var182);
+    var180 -= var181;
+    var180 += var179;
+    var189 = JS_GetStringLength(var182);
+    var190 = 1;
+    var190 += var189;
+    var180 = JS_malloc(cx, var190);
+    if (!var180) {
+        goto do_return;
+    }
+    var192 = 1;
+    var191 = JS_GetStringChars(var182);
+    var386 = STRING_TO_JSVAL(var182);
+    argv[argc+4] = var386;
+    {
+        size_t i;
+        for (i = 0; i < var189; ++i) {
+            var180[i] = wctob(var191[i]);
+        }
+        var180[var189] = '\0';
+    }
+    var145[var178] = var180;
+    }
+    }
+    var140 = jsVideoCodec(var144, var145);
+    if (JS_NewNumberValue(cx, var140, &var193) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+5] = var193;
+    if (rval) {
+        *rval = var193;
+    }
+    var138 = JS_TRUE;
+    do_return:
+    if (var192) {
+        JS_free(cx, var180);
+        var180 = NULL;
+        var192 = 0;
+    }
+    if (var188) {
+        JS_free(cx, var145);
+        var145 = NULL;
+        var188 = 0;
+    }
+    if (var187) {
+        JS_free(cx, var175);
+        var175 = NULL;
+        var187 = 0;
+    }
+    if (var186) {
         JS_free(cx, var168);
         var168 = NULL;
-        var180 = 0;
+        var186 = 0;
     }
-    if (var179) {
-        JS_free(cx, var161);
-        var161 = NULL;
-        var179 = 0;
+    if (var185) {
+        JS_free(cx, var145);
+        var145 = NULL;
+        var185 = 0;
     }
-    if (var178) {
-        JS_free(cx, var138);
-        var138 = NULL;
-        var178 = 0;
+    if (var152) {
+        JS_free(cx, var144);
+        var144 = NULL;
+        var152 = 0;
     }
-    if (var145) {
-        JS_free(cx, var137);
-        var137 = NULL;
-        var145 = 0;
-    }
-    return var131;
+    return var138;
 }
 static JSBool
 jjadmaddVideoFilter_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var188;
-    char *var193;
-    char **var194;
-    int var189;
-    int var192;
-    int var195;
-    jsval var196;
-    JSString *var197;
-    jsval var380;
-    size_t var198;
-    size_t var199;
-    int var201;
-    jschar *var200;
-    jsval var381;
+    JSObject *var195;
+    char *var200;
+    char **var201;
+    int var196;
+    int var199;
     int var202;
     jsval var203;
-    JSObject *var204;
-    jsval var382;
-    jsuint var205;
-    char **var207;
-    size_t var208;
-    int var234;
-    size_t var209;
-    JSString *var210;
-    size_t var211;
-    JSString **var217;
-    int var235;
+    JSString *var204;
+    jsval var388;
+    size_t var205;
+    size_t var206;
+    int var208;
+    jschar *var207;
+    jsval var389;
+    int var209;
+    jsval var210;
+    JSObject *var211;
+    jsval var390;
     jsuint var212;
-    jsint var213;
-    JSBool var214;
-    jsval var215;
-    JSString *var216;
-    jsval var383;
-    size_t var220;
-    jsuint var218;
-    jsint var219;
-    JSString *var222;
-    size_t var221;
-    size_t var223;
-    char var232;
-    size_t var233;
-    char *var224;
-    int var236;
-    char *var225;
-    size_t var226;
-    int var237;
-    char *var229;
-    jsuint var227;
-    jsint var228;
-    JSString *var231;
-    size_t var230;
-    size_t var238;
-    size_t var239;
+    char **var214;
+    size_t var215;
     int var241;
-    jschar *var240;
-    jsval var384;
-    jsval var242;
-    JSBool var187;
-    var188 = NULL;
-    var193 = NULL;
-    var194 = NULL;
-    var189 = 0;
-    var192 = 0;
-    var195 = 0;
-    var196 = JSVAL_NULL;
-    var197 = NULL;
-    var380 = JSVAL_NULL;
-    var198 = 0;
-    var199 = 0;
-    var201 = 0;
+    size_t var216;
+    JSString *var217;
+    size_t var218;
+    JSString **var224;
+    int var242;
+    jsuint var219;
+    jsint var220;
+    JSBool var221;
+    jsval var222;
+    JSString *var223;
+    jsval var391;
+    size_t var227;
+    jsuint var225;
+    jsint var226;
+    JSString *var229;
+    size_t var228;
+    size_t var230;
+    char var239;
+    size_t var240;
+    char *var231;
+    int var243;
+    char *var232;
+    size_t var233;
+    int var244;
+    char *var236;
+    jsuint var234;
+    jsint var235;
+    JSString *var238;
+    size_t var237;
+    size_t var245;
+    size_t var246;
+    int var248;
+    jschar *var247;
+    jsval var392;
+    jsval var249;
+    JSBool var194;
+    var195 = NULL;
     var200 = NULL;
-    var381 = JSVAL_NULL;
+    var201 = NULL;
+    var196 = 0;
+    var199 = 0;
     var202 = 0;
     var203 = JSVAL_NULL;
     var204 = NULL;
-    var382 = JSVAL_NULL;
+    var388 = JSVAL_NULL;
     var205 = 0;
-    var207 = NULL;
+    var206 = 0;
     var208 = 0;
-    var234 = 0;
+    var207 = NULL;
+    var389 = JSVAL_NULL;
     var209 = 0;
-    var210 = NULL;
-    var211 = 0;
-    var217 = NULL;
-    var235 = 0;
+    var210 = JSVAL_NULL;
+    var211 = NULL;
+    var390 = JSVAL_NULL;
     var212 = 0;
-    var213 = 0;
-    var214 = JS_FALSE;
-    var215 = JSVAL_NULL;
-    var216 = NULL;
-    var383 = JSVAL_NULL;
-    var220 = 0;
-    var218 = 0;
-    var219 = 0;
-    var222 = NULL;
-    var221 = 0;
-    var223 = 0;
-    var232 = 0;
-    var233 = 0;
-    var224 = NULL;
-    var236 = 0;
-    var225 = NULL;
-    var226 = 0;
-    var237 = 0;
-    var229 = NULL;
-    var227 = 0;
-    var228 = 0;
-    var231 = NULL;
-    var230 = 0;
-    var238 = 0;
-    var239 = 0;
+    var214 = NULL;
+    var215 = 0;
     var241 = 0;
-    var240 = NULL;
-    var384 = JSVAL_NULL;
-    var242 = JSVAL_NULL;
-    var187 = JS_FALSE;
-    var188 = obj;
-    var192 = argc;
-    var195 = 0;
-    var195 = var195 < var192;
-    if (var195) {
-    var196 = argv[0];
-    var197 = JS_ValueToString(cx, var196);
-    if (!var197) {
+    var216 = 0;
+    var217 = NULL;
+    var218 = 0;
+    var224 = NULL;
+    var242 = 0;
+    var219 = 0;
+    var220 = 0;
+    var221 = JS_FALSE;
+    var222 = JSVAL_NULL;
+    var223 = NULL;
+    var391 = JSVAL_NULL;
+    var227 = 0;
+    var225 = 0;
+    var226 = 0;
+    var229 = NULL;
+    var228 = 0;
+    var230 = 0;
+    var239 = 0;
+    var240 = 0;
+    var231 = NULL;
+    var243 = 0;
+    var232 = NULL;
+    var233 = 0;
+    var244 = 0;
+    var236 = NULL;
+    var234 = 0;
+    var235 = 0;
+    var238 = NULL;
+    var237 = 0;
+    var245 = 0;
+    var246 = 0;
+    var248 = 0;
+    var247 = NULL;
+    var392 = JSVAL_NULL;
+    var249 = JSVAL_NULL;
+    var194 = JS_FALSE;
+    var195 = obj;
+    var199 = argc;
+    var202 = 0;
+    var202 = var202 < var199;
+    if (var202) {
+    var203 = argv[0];
+    var204 = JS_ValueToString(cx, var203);
+    if (!var204) {
         goto do_return;
     }
-    var380 = STRING_TO_JSVAL(var197);
-    argv[argc+0] = var380;
-    var198 = JS_GetStringLength(var197);
-    var199 = 1;
-    var199 += var198;
-    var193 = JS_malloc(cx, var199);
-    if (!var193) {
+    var388 = STRING_TO_JSVAL(var204);
+    argv[argc+0] = var388;
+    var205 = JS_GetStringLength(var204);
+    var206 = 1;
+    var206 += var205;
+    var200 = JS_malloc(cx, var206);
+    if (!var200) {
         goto do_return;
     }
-    var201 = 1;
-    var200 = JS_GetStringChars(var197);
-    var381 = STRING_TO_JSVAL(var197);
-    argv[argc+1] = var381;
+    var208 = 1;
+    var207 = JS_GetStringChars(var204);
+    var389 = STRING_TO_JSVAL(var204);
+    argv[argc+1] = var389;
     {
         size_t i;
-        for (i = 0; i < var198; ++i) {
-            var193[i] = wctob(var200[i]);
+        for (i = 0; i < var205; ++i) {
+            var200[i] = wctob(var207[i]);
         }
-        var193[var198] = '\0';
+        var200[var205] = '\0';
     }
     }
-    var202 = 1;
-    var202 = var202 < var192;
-    if (var202) {
-    var203 = argv[1];
-    if (JS_ValueToObject(cx, var203, &var204) != JS_TRUE) {
+    var209 = 1;
+    var209 = var209 < var199;
+    if (var209) {
+    var210 = argv[1];
+    if (JS_ValueToObject(cx, var210, &var211) != JS_TRUE) {
         goto do_return;
     }
-    var382 = OBJECT_TO_JSVAL(var204);
-    argv[argc+2] = var382;
-    if (JS_GetArrayLength(cx, var204, &var205) != JS_TRUE) {
+    var390 = OBJECT_TO_JSVAL(var211);
+    argv[argc+2] = var390;
+    if (JS_GetArrayLength(cx, var211, &var212) != JS_TRUE) {
         goto do_return;
     }
-    var208 = sizeof(var207);
-    var208 *= var205;
-    var194 = JS_malloc(cx, var208);
-    if (!var194) {
-        goto do_return;
-    }
-    var234 = 1;
-    var209 = var205;
-    var211 = sizeof(var210);
-    var209 *= var211;
-    var217 = JS_malloc(cx, var209);
-    if (!var217) {
-        goto do_return;
-    }
-    var235 = 1;
-    var212 = var205;
-    var213 = -1;
-    while (var212)
-    {
-    var212 += var213;
-    var214 = JS_GetElement(cx, var204, var212, &var215);
-    var216 = JS_ValueToString(cx, var215);
-    if (!var216) {
-        goto do_return;
-    }
-    var383 = STRING_TO_JSVAL(var216);
-    argv[argc+3] = var383;
-    var217[var212] = var216;
-    }
-    var220 = 0;
-    var218 = var205;
-    var219 = -1;
-    while (var218)
-    {
-    var218 += var219;
-    var222 = var217[var218];
-    var221 = JS_GetStringLength(var222);
-    var220 += var221;
-    var223 = 1;
-    var220 += var223;
-    }
-    var233 = sizeof(var232);
-    var233 *= var220;
-    var224 = JS_malloc(cx, var233);
-    if (!var224) {
-        goto do_return;
-    }
-    var236 = 1;
-    var226 = sizeof(var225);
-    var226 *= var205;
-    var194 = JS_malloc(cx, var226);
-    if (!var194) {
-        goto do_return;
-    }
-    var237 = 1;
-    var229 = var224;
-    var229 += var220;
-    var227 = var205;
-    var228 = -1;
-    while (var227)
-    {
-    var227 += var228;
-    var231 = var217[var227];
-    var230 = JS_GetStringLength(var231);
-    var229 -= var230;
-    var229 += var228;
-    var238 = JS_GetStringLength(var231);
-    var239 = 1;
-    var239 += var238;
-    var229 = JS_malloc(cx, var239);
-    if (!var229) {
+    var215 = sizeof(var214);
+    var215 *= var212;
+    var201 = JS_malloc(cx, var215);
+    if (!var201) {
         goto do_return;
     }
     var241 = 1;
-    var240 = JS_GetStringChars(var231);
-    var384 = STRING_TO_JSVAL(var231);
-    argv[argc+4] = var384;
-    {
-        size_t i;
-        for (i = 0; i < var238; ++i) {
-            var229[i] = wctob(var240[i]);
-        }
-        var229[var238] = '\0';
-    }
-    var194[var227] = var229;
-    }
-    }
-    var189 = jsVideoFilter(var193, var194);
-    if (JS_NewNumberValue(cx, var189, &var242) != JS_TRUE) {
+    var216 = var212;
+    var218 = sizeof(var217);
+    var216 *= var218;
+    var224 = JS_malloc(cx, var216);
+    if (!var224) {
         goto do_return;
     }
-    argv[argc+5] = var242;
+    var242 = 1;
+    var219 = var212;
+    var220 = -1;
+    while (var219)
+    {
+    var219 += var220;
+    var221 = JS_GetElement(cx, var211, var219, &var222);
+    var223 = JS_ValueToString(cx, var222);
+    if (!var223) {
+        goto do_return;
+    }
+    var391 = STRING_TO_JSVAL(var223);
+    argv[argc+3] = var391;
+    var224[var219] = var223;
+    }
+    var227 = 0;
+    var225 = var212;
+    var226 = -1;
+    while (var225)
+    {
+    var225 += var226;
+    var229 = var224[var225];
+    var228 = JS_GetStringLength(var229);
+    var227 += var228;
+    var230 = 1;
+    var227 += var230;
+    }
+    var240 = sizeof(var239);
+    var240 *= var227;
+    var231 = JS_malloc(cx, var240);
+    if (!var231) {
+        goto do_return;
+    }
+    var243 = 1;
+    var233 = sizeof(var232);
+    var233 *= var212;
+    var201 = JS_malloc(cx, var233);
+    if (!var201) {
+        goto do_return;
+    }
+    var244 = 1;
+    var236 = var231;
+    var236 += var227;
+    var234 = var212;
+    var235 = -1;
+    while (var234)
+    {
+    var234 += var235;
+    var238 = var224[var234];
+    var237 = JS_GetStringLength(var238);
+    var236 -= var237;
+    var236 += var235;
+    var245 = JS_GetStringLength(var238);
+    var246 = 1;
+    var246 += var245;
+    var236 = JS_malloc(cx, var246);
+    if (!var236) {
+        goto do_return;
+    }
+    var248 = 1;
+    var247 = JS_GetStringChars(var238);
+    var392 = STRING_TO_JSVAL(var238);
+    argv[argc+4] = var392;
+    {
+        size_t i;
+        for (i = 0; i < var245; ++i) {
+            var236[i] = wctob(var247[i]);
+        }
+        var236[var245] = '\0';
+    }
+    var201[var234] = var236;
+    }
+    }
+    var196 = jsVideoFilter(var200, var201);
+    if (JS_NewNumberValue(cx, var196, &var249) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+5] = var249;
     if (rval) {
-        *rval = var242;
+        *rval = var249;
     }
-    var187 = JS_TRUE;
+    var194 = JS_TRUE;
     do_return:
-    if (var241) {
-        JS_free(cx, var229);
-        var229 = NULL;
-        var241 = 0;
+    if (var248) {
+        JS_free(cx, var236);
+        var236 = NULL;
+        var248 = 0;
     }
-    if (var237) {
-        JS_free(cx, var194);
-        var194 = NULL;
-        var237 = 0;
+    if (var244) {
+        JS_free(cx, var201);
+        var201 = NULL;
+        var244 = 0;
     }
-    if (var236) {
+    if (var243) {
+        JS_free(cx, var231);
+        var231 = NULL;
+        var243 = 0;
+    }
+    if (var242) {
         JS_free(cx, var224);
         var224 = NULL;
-        var236 = 0;
+        var242 = 0;
     }
-    if (var235) {
-        JS_free(cx, var217);
-        var217 = NULL;
-        var235 = 0;
+    if (var241) {
+        JS_free(cx, var201);
+        var201 = NULL;
+        var241 = 0;
     }
-    if (var234) {
-        JS_free(cx, var194);
-        var194 = NULL;
-        var234 = 0;
+    if (var208) {
+        JS_free(cx, var200);
+        var200 = NULL;
+        var208 = 0;
     }
-    if (var201) {
-        JS_free(cx, var193);
-        var193 = NULL;
-        var201 = 0;
-    }
-    return var187;
+    return var194;
 }
 static JSBool
 jjadmaudioCodec_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var244;
-    char *var249;
-    char **var250;
-    int var245;
-    int var248;
-    int var251;
-    jsval var252;
-    JSString *var253;
-    jsval var386;
-    size_t var254;
-    size_t var255;
-    int var257;
-    jschar *var256;
-    jsval var387;
+    JSObject *var251;
+    char *var256;
+    char **var257;
+    int var252;
+    int var255;
     int var258;
     jsval var259;
-    JSObject *var260;
-    jsval var388;
-    jsuint var261;
-    char **var263;
-    size_t var264;
-    int var290;
-    size_t var265;
-    JSString *var266;
-    size_t var267;
-    JSString **var273;
-    int var291;
+    JSString *var260;
+    jsval var394;
+    size_t var261;
+    size_t var262;
+    int var264;
+    jschar *var263;
+    jsval var395;
+    int var265;
+    jsval var266;
+    JSObject *var267;
+    jsval var396;
     jsuint var268;
-    jsint var269;
-    JSBool var270;
-    jsval var271;
-    JSString *var272;
-    jsval var389;
-    size_t var276;
-    jsuint var274;
-    jsint var275;
-    JSString *var278;
-    size_t var277;
-    size_t var279;
-    char var288;
-    size_t var289;
-    char *var280;
-    int var292;
-    char *var281;
-    size_t var282;
-    int var293;
-    char *var285;
-    jsuint var283;
-    jsint var284;
-    JSString *var287;
-    size_t var286;
-    size_t var294;
-    size_t var295;
+    char **var270;
+    size_t var271;
     int var297;
-    jschar *var296;
-    jsval var390;
-    jsval var298;
-    JSBool var243;
-    var244 = NULL;
-    var249 = NULL;
-    var250 = NULL;
-    var245 = 0;
-    var248 = 0;
-    var251 = 0;
-    var252 = JSVAL_NULL;
-    var253 = NULL;
-    var386 = JSVAL_NULL;
-    var254 = 0;
-    var255 = 0;
-    var257 = 0;
+    size_t var272;
+    JSString *var273;
+    size_t var274;
+    JSString **var280;
+    int var298;
+    jsuint var275;
+    jsint var276;
+    JSBool var277;
+    jsval var278;
+    JSString *var279;
+    jsval var397;
+    size_t var283;
+    jsuint var281;
+    jsint var282;
+    JSString *var285;
+    size_t var284;
+    size_t var286;
+    char var295;
+    size_t var296;
+    char *var287;
+    int var299;
+    char *var288;
+    size_t var289;
+    int var300;
+    char *var292;
+    jsuint var290;
+    jsint var291;
+    JSString *var294;
+    size_t var293;
+    size_t var301;
+    size_t var302;
+    int var304;
+    jschar *var303;
+    jsval var398;
+    jsval var305;
+    JSBool var250;
+    var251 = NULL;
     var256 = NULL;
-    var387 = JSVAL_NULL;
+    var257 = NULL;
+    var252 = 0;
+    var255 = 0;
     var258 = 0;
     var259 = JSVAL_NULL;
     var260 = NULL;
-    var388 = JSVAL_NULL;
+    var394 = JSVAL_NULL;
     var261 = 0;
-    var263 = NULL;
+    var262 = 0;
     var264 = 0;
-    var290 = 0;
+    var263 = NULL;
+    var395 = JSVAL_NULL;
     var265 = 0;
-    var266 = NULL;
-    var267 = 0;
-    var273 = NULL;
-    var291 = 0;
+    var266 = JSVAL_NULL;
+    var267 = NULL;
+    var396 = JSVAL_NULL;
     var268 = 0;
-    var269 = 0;
-    var270 = JS_FALSE;
-    var271 = JSVAL_NULL;
-    var272 = NULL;
-    var389 = JSVAL_NULL;
-    var276 = 0;
-    var274 = 0;
-    var275 = 0;
-    var278 = NULL;
-    var277 = 0;
-    var279 = 0;
-    var288 = 0;
-    var289 = 0;
-    var280 = NULL;
-    var292 = 0;
-    var281 = NULL;
-    var282 = 0;
-    var293 = 0;
-    var285 = NULL;
-    var283 = 0;
-    var284 = 0;
-    var287 = NULL;
-    var286 = 0;
-    var294 = 0;
-    var295 = 0;
+    var270 = NULL;
+    var271 = 0;
     var297 = 0;
-    var296 = NULL;
-    var390 = JSVAL_NULL;
-    var298 = JSVAL_NULL;
-    var243 = JS_FALSE;
-    var244 = obj;
-    var248 = argc;
-    var251 = 0;
-    var251 = var251 < var248;
-    if (var251) {
-    var252 = argv[0];
-    var253 = JS_ValueToString(cx, var252);
-    if (!var253) {
+    var272 = 0;
+    var273 = NULL;
+    var274 = 0;
+    var280 = NULL;
+    var298 = 0;
+    var275 = 0;
+    var276 = 0;
+    var277 = JS_FALSE;
+    var278 = JSVAL_NULL;
+    var279 = NULL;
+    var397 = JSVAL_NULL;
+    var283 = 0;
+    var281 = 0;
+    var282 = 0;
+    var285 = NULL;
+    var284 = 0;
+    var286 = 0;
+    var295 = 0;
+    var296 = 0;
+    var287 = NULL;
+    var299 = 0;
+    var288 = NULL;
+    var289 = 0;
+    var300 = 0;
+    var292 = NULL;
+    var290 = 0;
+    var291 = 0;
+    var294 = NULL;
+    var293 = 0;
+    var301 = 0;
+    var302 = 0;
+    var304 = 0;
+    var303 = NULL;
+    var398 = JSVAL_NULL;
+    var305 = JSVAL_NULL;
+    var250 = JS_FALSE;
+    var251 = obj;
+    var255 = argc;
+    var258 = 0;
+    var258 = var258 < var255;
+    if (var258) {
+    var259 = argv[0];
+    var260 = JS_ValueToString(cx, var259);
+    if (!var260) {
         goto do_return;
     }
-    var386 = STRING_TO_JSVAL(var253);
-    argv[argc+0] = var386;
-    var254 = JS_GetStringLength(var253);
-    var255 = 1;
-    var255 += var254;
-    var249 = JS_malloc(cx, var255);
-    if (!var249) {
+    var394 = STRING_TO_JSVAL(var260);
+    argv[argc+0] = var394;
+    var261 = JS_GetStringLength(var260);
+    var262 = 1;
+    var262 += var261;
+    var256 = JS_malloc(cx, var262);
+    if (!var256) {
         goto do_return;
     }
-    var257 = 1;
-    var256 = JS_GetStringChars(var253);
-    var387 = STRING_TO_JSVAL(var253);
-    argv[argc+1] = var387;
+    var264 = 1;
+    var263 = JS_GetStringChars(var260);
+    var395 = STRING_TO_JSVAL(var260);
+    argv[argc+1] = var395;
     {
         size_t i;
-        for (i = 0; i < var254; ++i) {
-            var249[i] = wctob(var256[i]);
+        for (i = 0; i < var261; ++i) {
+            var256[i] = wctob(var263[i]);
         }
-        var249[var254] = '\0';
+        var256[var261] = '\0';
     }
     }
-    var258 = 1;
-    var258 = var258 < var248;
-    if (var258) {
-    var259 = argv[1];
-    if (JS_ValueToObject(cx, var259, &var260) != JS_TRUE) {
+    var265 = 1;
+    var265 = var265 < var255;
+    if (var265) {
+    var266 = argv[1];
+    if (JS_ValueToObject(cx, var266, &var267) != JS_TRUE) {
         goto do_return;
     }
-    var388 = OBJECT_TO_JSVAL(var260);
-    argv[argc+2] = var388;
-    if (JS_GetArrayLength(cx, var260, &var261) != JS_TRUE) {
+    var396 = OBJECT_TO_JSVAL(var267);
+    argv[argc+2] = var396;
+    if (JS_GetArrayLength(cx, var267, &var268) != JS_TRUE) {
         goto do_return;
     }
-    var264 = sizeof(var263);
-    var264 *= var261;
-    var250 = JS_malloc(cx, var264);
-    if (!var250) {
-        goto do_return;
-    }
-    var290 = 1;
-    var265 = var261;
-    var267 = sizeof(var266);
-    var265 *= var267;
-    var273 = JS_malloc(cx, var265);
-    if (!var273) {
-        goto do_return;
-    }
-    var291 = 1;
-    var268 = var261;
-    var269 = -1;
-    while (var268)
-    {
-    var268 += var269;
-    var270 = JS_GetElement(cx, var260, var268, &var271);
-    var272 = JS_ValueToString(cx, var271);
-    if (!var272) {
-        goto do_return;
-    }
-    var389 = STRING_TO_JSVAL(var272);
-    argv[argc+3] = var389;
-    var273[var268] = var272;
-    }
-    var276 = 0;
-    var274 = var261;
-    var275 = -1;
-    while (var274)
-    {
-    var274 += var275;
-    var278 = var273[var274];
-    var277 = JS_GetStringLength(var278);
-    var276 += var277;
-    var279 = 1;
-    var276 += var279;
-    }
-    var289 = sizeof(var288);
-    var289 *= var276;
-    var280 = JS_malloc(cx, var289);
-    if (!var280) {
-        goto do_return;
-    }
-    var292 = 1;
-    var282 = sizeof(var281);
-    var282 *= var261;
-    var250 = JS_malloc(cx, var282);
-    if (!var250) {
-        goto do_return;
-    }
-    var293 = 1;
-    var285 = var280;
-    var285 += var276;
-    var283 = var261;
-    var284 = -1;
-    while (var283)
-    {
-    var283 += var284;
-    var287 = var273[var283];
-    var286 = JS_GetStringLength(var287);
-    var285 -= var286;
-    var285 += var284;
-    var294 = JS_GetStringLength(var287);
-    var295 = 1;
-    var295 += var294;
-    var285 = JS_malloc(cx, var295);
-    if (!var285) {
+    var271 = sizeof(var270);
+    var271 *= var268;
+    var257 = JS_malloc(cx, var271);
+    if (!var257) {
         goto do_return;
     }
     var297 = 1;
-    var296 = JS_GetStringChars(var287);
-    var390 = STRING_TO_JSVAL(var287);
-    argv[argc+4] = var390;
-    {
-        size_t i;
-        for (i = 0; i < var294; ++i) {
-            var285[i] = wctob(var296[i]);
-        }
-        var285[var294] = '\0';
-    }
-    var250[var283] = var285;
-    }
-    }
-    var245 = jsAudioCodec(var249, var250);
-    if (JS_NewNumberValue(cx, var245, &var298) != JS_TRUE) {
+    var272 = var268;
+    var274 = sizeof(var273);
+    var272 *= var274;
+    var280 = JS_malloc(cx, var272);
+    if (!var280) {
         goto do_return;
     }
-    argv[argc+5] = var298;
+    var298 = 1;
+    var275 = var268;
+    var276 = -1;
+    while (var275)
+    {
+    var275 += var276;
+    var277 = JS_GetElement(cx, var267, var275, &var278);
+    var279 = JS_ValueToString(cx, var278);
+    if (!var279) {
+        goto do_return;
+    }
+    var397 = STRING_TO_JSVAL(var279);
+    argv[argc+3] = var397;
+    var280[var275] = var279;
+    }
+    var283 = 0;
+    var281 = var268;
+    var282 = -1;
+    while (var281)
+    {
+    var281 += var282;
+    var285 = var280[var281];
+    var284 = JS_GetStringLength(var285);
+    var283 += var284;
+    var286 = 1;
+    var283 += var286;
+    }
+    var296 = sizeof(var295);
+    var296 *= var283;
+    var287 = JS_malloc(cx, var296);
+    if (!var287) {
+        goto do_return;
+    }
+    var299 = 1;
+    var289 = sizeof(var288);
+    var289 *= var268;
+    var257 = JS_malloc(cx, var289);
+    if (!var257) {
+        goto do_return;
+    }
+    var300 = 1;
+    var292 = var287;
+    var292 += var283;
+    var290 = var268;
+    var291 = -1;
+    while (var290)
+    {
+    var290 += var291;
+    var294 = var280[var290];
+    var293 = JS_GetStringLength(var294);
+    var292 -= var293;
+    var292 += var291;
+    var301 = JS_GetStringLength(var294);
+    var302 = 1;
+    var302 += var301;
+    var292 = JS_malloc(cx, var302);
+    if (!var292) {
+        goto do_return;
+    }
+    var304 = 1;
+    var303 = JS_GetStringChars(var294);
+    var398 = STRING_TO_JSVAL(var294);
+    argv[argc+4] = var398;
+    {
+        size_t i;
+        for (i = 0; i < var301; ++i) {
+            var292[i] = wctob(var303[i]);
+        }
+        var292[var301] = '\0';
+    }
+    var257[var290] = var292;
+    }
+    }
+    var252 = jsAudioCodec(var256, var257);
+    if (JS_NewNumberValue(cx, var252, &var305) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+5] = var305;
     if (rval) {
-        *rval = var298;
+        *rval = var305;
     }
-    var243 = JS_TRUE;
+    var250 = JS_TRUE;
     do_return:
-    if (var297) {
-        JS_free(cx, var285);
-        var285 = NULL;
-        var297 = 0;
+    if (var304) {
+        JS_free(cx, var292);
+        var292 = NULL;
+        var304 = 0;
     }
-    if (var293) {
-        JS_free(cx, var250);
-        var250 = NULL;
-        var293 = 0;
+    if (var300) {
+        JS_free(cx, var257);
+        var257 = NULL;
+        var300 = 0;
     }
-    if (var292) {
+    if (var299) {
+        JS_free(cx, var287);
+        var287 = NULL;
+        var299 = 0;
+    }
+    if (var298) {
         JS_free(cx, var280);
         var280 = NULL;
-        var292 = 0;
+        var298 = 0;
     }
-    if (var291) {
-        JS_free(cx, var273);
-        var273 = NULL;
-        var291 = 0;
+    if (var297) {
+        JS_free(cx, var257);
+        var257 = NULL;
+        var297 = 0;
     }
-    if (var290) {
-        JS_free(cx, var250);
-        var250 = NULL;
-        var290 = 0;
+    if (var264) {
+        JS_free(cx, var256);
+        var256 = NULL;
+        var264 = 0;
     }
-    if (var257) {
-        JS_free(cx, var249);
-        var249 = NULL;
-        var257 = 0;
-    }
-    return var243;
+    return var250;
 }
 static JSBool
 jjadmsetContainer_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var300;
-    char *var305;
-    char **var306;
-    int var301;
-    int var304;
-    int var307;
-    jsval var308;
-    JSString *var309;
-    jsval var392;
-    size_t var310;
-    size_t var311;
-    int var313;
-    jschar *var312;
-    jsval var393;
+    JSObject *var307;
+    char *var312;
+    char **var313;
+    int var308;
+    int var311;
     int var314;
     jsval var315;
-    JSObject *var316;
-    jsval var394;
-    jsuint var317;
-    char **var319;
-    size_t var320;
-    int var346;
-    size_t var321;
-    JSString *var322;
-    size_t var323;
-    JSString **var329;
-    int var347;
+    JSString *var316;
+    jsval var400;
+    size_t var317;
+    size_t var318;
+    int var320;
+    jschar *var319;
+    jsval var401;
+    int var321;
+    jsval var322;
+    JSObject *var323;
+    jsval var402;
     jsuint var324;
-    jsint var325;
-    JSBool var326;
-    jsval var327;
-    JSString *var328;
-    jsval var395;
-    size_t var332;
-    jsuint var330;
-    jsint var331;
-    JSString *var334;
-    size_t var333;
-    size_t var335;
-    char var344;
-    size_t var345;
-    char *var336;
-    int var348;
-    char *var337;
-    size_t var338;
-    int var349;
-    char *var341;
-    jsuint var339;
-    jsint var340;
-    JSString *var343;
-    size_t var342;
-    size_t var350;
-    size_t var351;
+    char **var326;
+    size_t var327;
     int var353;
-    jschar *var352;
-    jsval var396;
-    jsval var354;
-    JSBool var299;
-    var300 = NULL;
-    var305 = NULL;
-    var306 = NULL;
-    var301 = 0;
-    var304 = 0;
-    var307 = 0;
-    var308 = JSVAL_NULL;
-    var309 = NULL;
-    var392 = JSVAL_NULL;
-    var310 = 0;
-    var311 = 0;
-    var313 = 0;
+    size_t var328;
+    JSString *var329;
+    size_t var330;
+    JSString **var336;
+    int var354;
+    jsuint var331;
+    jsint var332;
+    JSBool var333;
+    jsval var334;
+    JSString *var335;
+    jsval var403;
+    size_t var339;
+    jsuint var337;
+    jsint var338;
+    JSString *var341;
+    size_t var340;
+    size_t var342;
+    char var351;
+    size_t var352;
+    char *var343;
+    int var355;
+    char *var344;
+    size_t var345;
+    int var356;
+    char *var348;
+    jsuint var346;
+    jsint var347;
+    JSString *var350;
+    size_t var349;
+    size_t var357;
+    size_t var358;
+    int var360;
+    jschar *var359;
+    jsval var404;
+    jsval var361;
+    JSBool var306;
+    var307 = NULL;
     var312 = NULL;
-    var393 = JSVAL_NULL;
+    var313 = NULL;
+    var308 = 0;
+    var311 = 0;
     var314 = 0;
     var315 = JSVAL_NULL;
     var316 = NULL;
-    var394 = JSVAL_NULL;
+    var400 = JSVAL_NULL;
     var317 = 0;
-    var319 = NULL;
+    var318 = 0;
     var320 = 0;
-    var346 = 0;
+    var319 = NULL;
+    var401 = JSVAL_NULL;
     var321 = 0;
-    var322 = NULL;
-    var323 = 0;
-    var329 = NULL;
-    var347 = 0;
+    var322 = JSVAL_NULL;
+    var323 = NULL;
+    var402 = JSVAL_NULL;
     var324 = 0;
-    var325 = 0;
-    var326 = JS_FALSE;
-    var327 = JSVAL_NULL;
-    var328 = NULL;
-    var395 = JSVAL_NULL;
-    var332 = 0;
-    var330 = 0;
-    var331 = 0;
-    var334 = NULL;
-    var333 = 0;
-    var335 = 0;
-    var344 = 0;
-    var345 = 0;
-    var336 = NULL;
-    var348 = 0;
-    var337 = NULL;
-    var338 = 0;
-    var349 = 0;
-    var341 = NULL;
-    var339 = 0;
-    var340 = 0;
-    var343 = NULL;
-    var342 = 0;
-    var350 = 0;
-    var351 = 0;
+    var326 = NULL;
+    var327 = 0;
     var353 = 0;
-    var352 = NULL;
-    var396 = JSVAL_NULL;
-    var354 = JSVAL_NULL;
-    var299 = JS_FALSE;
-    var300 = obj;
-    var304 = argc;
-    var307 = 0;
-    var307 = var307 < var304;
-    if (var307) {
-    var308 = argv[0];
-    var309 = JS_ValueToString(cx, var308);
-    if (!var309) {
+    var328 = 0;
+    var329 = NULL;
+    var330 = 0;
+    var336 = NULL;
+    var354 = 0;
+    var331 = 0;
+    var332 = 0;
+    var333 = JS_FALSE;
+    var334 = JSVAL_NULL;
+    var335 = NULL;
+    var403 = JSVAL_NULL;
+    var339 = 0;
+    var337 = 0;
+    var338 = 0;
+    var341 = NULL;
+    var340 = 0;
+    var342 = 0;
+    var351 = 0;
+    var352 = 0;
+    var343 = NULL;
+    var355 = 0;
+    var344 = NULL;
+    var345 = 0;
+    var356 = 0;
+    var348 = NULL;
+    var346 = 0;
+    var347 = 0;
+    var350 = NULL;
+    var349 = 0;
+    var357 = 0;
+    var358 = 0;
+    var360 = 0;
+    var359 = NULL;
+    var404 = JSVAL_NULL;
+    var361 = JSVAL_NULL;
+    var306 = JS_FALSE;
+    var307 = obj;
+    var311 = argc;
+    var314 = 0;
+    var314 = var314 < var311;
+    if (var314) {
+    var315 = argv[0];
+    var316 = JS_ValueToString(cx, var315);
+    if (!var316) {
         goto do_return;
     }
-    var392 = STRING_TO_JSVAL(var309);
-    argv[argc+0] = var392;
-    var310 = JS_GetStringLength(var309);
-    var311 = 1;
-    var311 += var310;
-    var305 = JS_malloc(cx, var311);
-    if (!var305) {
+    var400 = STRING_TO_JSVAL(var316);
+    argv[argc+0] = var400;
+    var317 = JS_GetStringLength(var316);
+    var318 = 1;
+    var318 += var317;
+    var312 = JS_malloc(cx, var318);
+    if (!var312) {
         goto do_return;
     }
-    var313 = 1;
-    var312 = JS_GetStringChars(var309);
-    var393 = STRING_TO_JSVAL(var309);
-    argv[argc+1] = var393;
+    var320 = 1;
+    var319 = JS_GetStringChars(var316);
+    var401 = STRING_TO_JSVAL(var316);
+    argv[argc+1] = var401;
     {
         size_t i;
-        for (i = 0; i < var310; ++i) {
-            var305[i] = wctob(var312[i]);
+        for (i = 0; i < var317; ++i) {
+            var312[i] = wctob(var319[i]);
         }
-        var305[var310] = '\0';
+        var312[var317] = '\0';
     }
     }
-    var314 = 1;
-    var314 = var314 < var304;
-    if (var314) {
-    var315 = argv[1];
-    if (JS_ValueToObject(cx, var315, &var316) != JS_TRUE) {
+    var321 = 1;
+    var321 = var321 < var311;
+    if (var321) {
+    var322 = argv[1];
+    if (JS_ValueToObject(cx, var322, &var323) != JS_TRUE) {
         goto do_return;
     }
-    var394 = OBJECT_TO_JSVAL(var316);
-    argv[argc+2] = var394;
-    if (JS_GetArrayLength(cx, var316, &var317) != JS_TRUE) {
+    var402 = OBJECT_TO_JSVAL(var323);
+    argv[argc+2] = var402;
+    if (JS_GetArrayLength(cx, var323, &var324) != JS_TRUE) {
         goto do_return;
     }
-    var320 = sizeof(var319);
-    var320 *= var317;
-    var306 = JS_malloc(cx, var320);
-    if (!var306) {
-        goto do_return;
-    }
-    var346 = 1;
-    var321 = var317;
-    var323 = sizeof(var322);
-    var321 *= var323;
-    var329 = JS_malloc(cx, var321);
-    if (!var329) {
-        goto do_return;
-    }
-    var347 = 1;
-    var324 = var317;
-    var325 = -1;
-    while (var324)
-    {
-    var324 += var325;
-    var326 = JS_GetElement(cx, var316, var324, &var327);
-    var328 = JS_ValueToString(cx, var327);
-    if (!var328) {
-        goto do_return;
-    }
-    var395 = STRING_TO_JSVAL(var328);
-    argv[argc+3] = var395;
-    var329[var324] = var328;
-    }
-    var332 = 0;
-    var330 = var317;
-    var331 = -1;
-    while (var330)
-    {
-    var330 += var331;
-    var334 = var329[var330];
-    var333 = JS_GetStringLength(var334);
-    var332 += var333;
-    var335 = 1;
-    var332 += var335;
-    }
-    var345 = sizeof(var344);
-    var345 *= var332;
-    var336 = JS_malloc(cx, var345);
-    if (!var336) {
-        goto do_return;
-    }
-    var348 = 1;
-    var338 = sizeof(var337);
-    var338 *= var317;
-    var306 = JS_malloc(cx, var338);
-    if (!var306) {
-        goto do_return;
-    }
-    var349 = 1;
-    var341 = var336;
-    var341 += var332;
-    var339 = var317;
-    var340 = -1;
-    while (var339)
-    {
-    var339 += var340;
-    var343 = var329[var339];
-    var342 = JS_GetStringLength(var343);
-    var341 -= var342;
-    var341 += var340;
-    var350 = JS_GetStringLength(var343);
-    var351 = 1;
-    var351 += var350;
-    var341 = JS_malloc(cx, var351);
-    if (!var341) {
+    var327 = sizeof(var326);
+    var327 *= var324;
+    var313 = JS_malloc(cx, var327);
+    if (!var313) {
         goto do_return;
     }
     var353 = 1;
-    var352 = JS_GetStringChars(var343);
-    var396 = STRING_TO_JSVAL(var343);
-    argv[argc+4] = var396;
-    {
-        size_t i;
-        for (i = 0; i < var350; ++i) {
-            var341[i] = wctob(var352[i]);
-        }
-        var341[var350] = '\0';
-    }
-    var306[var339] = var341;
-    }
-    }
-    var301 = jsSetContainer(var305, var306);
-    if (JS_NewNumberValue(cx, var301, &var354) != JS_TRUE) {
+    var328 = var324;
+    var330 = sizeof(var329);
+    var328 *= var330;
+    var336 = JS_malloc(cx, var328);
+    if (!var336) {
         goto do_return;
     }
-    argv[argc+5] = var354;
+    var354 = 1;
+    var331 = var324;
+    var332 = -1;
+    while (var331)
+    {
+    var331 += var332;
+    var333 = JS_GetElement(cx, var323, var331, &var334);
+    var335 = JS_ValueToString(cx, var334);
+    if (!var335) {
+        goto do_return;
+    }
+    var403 = STRING_TO_JSVAL(var335);
+    argv[argc+3] = var403;
+    var336[var331] = var335;
+    }
+    var339 = 0;
+    var337 = var324;
+    var338 = -1;
+    while (var337)
+    {
+    var337 += var338;
+    var341 = var336[var337];
+    var340 = JS_GetStringLength(var341);
+    var339 += var340;
+    var342 = 1;
+    var339 += var342;
+    }
+    var352 = sizeof(var351);
+    var352 *= var339;
+    var343 = JS_malloc(cx, var352);
+    if (!var343) {
+        goto do_return;
+    }
+    var355 = 1;
+    var345 = sizeof(var344);
+    var345 *= var324;
+    var313 = JS_malloc(cx, var345);
+    if (!var313) {
+        goto do_return;
+    }
+    var356 = 1;
+    var348 = var343;
+    var348 += var339;
+    var346 = var324;
+    var347 = -1;
+    while (var346)
+    {
+    var346 += var347;
+    var350 = var336[var346];
+    var349 = JS_GetStringLength(var350);
+    var348 -= var349;
+    var348 += var347;
+    var357 = JS_GetStringLength(var350);
+    var358 = 1;
+    var358 += var357;
+    var348 = JS_malloc(cx, var358);
+    if (!var348) {
+        goto do_return;
+    }
+    var360 = 1;
+    var359 = JS_GetStringChars(var350);
+    var404 = STRING_TO_JSVAL(var350);
+    argv[argc+4] = var404;
+    {
+        size_t i;
+        for (i = 0; i < var357; ++i) {
+            var348[i] = wctob(var359[i]);
+        }
+        var348[var357] = '\0';
+    }
+    var313[var346] = var348;
+    }
+    }
+    var308 = jsSetContainer(var312, var313);
+    if (JS_NewNumberValue(cx, var308, &var361) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+5] = var361;
     if (rval) {
-        *rval = var354;
+        *rval = var361;
     }
-    var299 = JS_TRUE;
+    var306 = JS_TRUE;
     do_return:
-    if (var353) {
-        JS_free(cx, var341);
-        var341 = NULL;
-        var353 = 0;
+    if (var360) {
+        JS_free(cx, var348);
+        var348 = NULL;
+        var360 = 0;
     }
-    if (var349) {
-        JS_free(cx, var306);
-        var306 = NULL;
-        var349 = 0;
+    if (var356) {
+        JS_free(cx, var313);
+        var313 = NULL;
+        var356 = 0;
     }
-    if (var348) {
+    if (var355) {
+        JS_free(cx, var343);
+        var343 = NULL;
+        var355 = 0;
+    }
+    if (var354) {
         JS_free(cx, var336);
         var336 = NULL;
-        var348 = 0;
+        var354 = 0;
     }
-    if (var347) {
-        JS_free(cx, var329);
-        var329 = NULL;
-        var347 = 0;
+    if (var353) {
+        JS_free(cx, var313);
+        var313 = NULL;
+        var353 = 0;
     }
-    if (var346) {
-        JS_free(cx, var306);
-        var306 = NULL;
-        var346 = 0;
+    if (var320) {
+        JS_free(cx, var312);
+        var312 = NULL;
+        var320 = 0;
     }
-    if (var313) {
-        JS_free(cx, var305);
-        var305 = NULL;
-        var313 = 0;
-    }
-    return var299;
+    return var306;
 }
 static JSBool
 jjadm__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var356;
-    int var360;
-    JSBool var355;
-    var356 = NULL;
-    var360 = 0;
-    var355 = JS_FALSE;
-    var356 = obj;
-    var360 = argc;
+    JSObject *var363;
+    int var367;
+    JSBool var362;
+    var363 = NULL;
+    var367 = 0;
+    var362 = JS_FALSE;
+    var363 = obj;
+    var367 = argc;
     jsAvidemux();
-    var355 = JS_TRUE;
-    return var355;
+    var362 = JS_TRUE;
+    return var362;
 }
 static JSPropertySpec jjadm_static_ps[] = {
     {"markerA", 0, 0|JSPROP_ENUMERATE, jjadmmarkerA_get, jjadmmarkerA_set},
@@ -1846,6 +1873,7 @@ static JSFunctionSpec jjadm_static_fs[] = {
     JS_FS("setPostProc", jjadmsetPostProc, 3, 0, 1),
     JS_FS("audioReset", jjadmaudioReset, 0, 0, 1),
     JS_FS("audioMixer", jjadmaudioMixer, 1, 0, 3),
+    JS_FS("clearVideoFilters", jjadmclearVideoFilters, 0, 0, 1),
     JS_FS("videoCodec", jsAdmvideoCodec,  2, 0, 6),
     JS_FS("addVideoFilter", jsAdmaddVideoFilter,  2, 0, 6),
     JS_FS("audioCodec", jsAdmaudioCodec,  2, 0, 6),

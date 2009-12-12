@@ -39,4 +39,5 @@ bool                    ADM_vf_removeFilterAtIndex(int index);
 bool                    ADM_vf_configureFilterAtIndex(int index);
 bool                    ADM_vf_moveFilterDown(int index);
 bool                    ADM_vf_moveFilterUp(int index);
+bool                    ADM_vf_clearFilters(void);
 #endif

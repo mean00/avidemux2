@@ -110,6 +110,13 @@ bool A_setVideoCodec(const char *nm)
     return true;
 }
 /**
+     \fn jsClearFilters
+*/
+int jsClearVideoFilters()
+{
+    return ADM_vf_clearFilters();
+}
+/**
     \fn jsGetMarkerA
 */
 double jsGetMarkerA(void)

@@ -186,7 +186,19 @@ bool ADM_vf_moveFilterDown(int index)
     return ADM_vf_recreateChain();
 }
 
-
+/**
+    \fn ADM_vf_clearFilters
+*/
+bool ADM_vf_clearFilters(void)
+{
+    ADM_info("clear filters\n");
+    //
+    int nb=ADM_VideoFilters.size();
+    for(int i=0;i<nb;i++)
+        delete ADM_VideoFilters[i].instance;
+    ADM_VideoFilters.clear();
+    return true;
+}
 
 /**
     \fn createVideoFilterChain
