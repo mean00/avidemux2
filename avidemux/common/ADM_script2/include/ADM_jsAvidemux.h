@@ -13,6 +13,7 @@
  ***************************************************************************/
 #ifndef ADM_JS_AVIDEMUX_H
 #define ADM_JS_AVIDEMUX_H
+#include "ADM_inttype.h"
 #include "jsapi.h"
 #ifdef __cplusplus
 extern "C" {
