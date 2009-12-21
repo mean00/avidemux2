@@ -15,7 +15,7 @@ INIT_VIDEO_FILTER_QT4(ADM_vf_cropQt4 ${ADM_vf_cropQT4_SRCS} ${ADM_vf_cropQT4_Hea
 #------------- Gtk Version ---------------
 INCLUDE(vf_plugin_gtk)
 SET(CropGtk_SRCS gtk/DIA_crop.cpp)
-INIT_VIDEO_FILTER_GTK(ADM_vf_cropGtk ${CropGtk_SRCS} ${CropCommon_SRC})
+INIT_VIDEO_FILTER_GTK(ADM_vf_cropGtk ${CropGtk_SRCS} ${CropCommon_SRCS})
 
 #------------ Cli Version ----------------
 INCLUDE(vf_plugin_cli)

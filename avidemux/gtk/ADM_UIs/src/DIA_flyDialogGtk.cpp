@@ -13,7 +13,6 @@
 ***************************************************************************///
 
 #include "ADM_toolkitGtk.h"
-#include "ADM_videoFilter.h"
 #include "DIA_flyDialogGtk.h"
 #include "DIA_factory.h"
 
@@ -34,7 +33,7 @@ extern void UI_centreCanvasWindow(GtkWindow *window, GtkWidget *canvas, int newC
  * 
  */
 
-ADM_flyDialogGtk::ADM_flyDialogGtk(uint32_t width, uint32_t height, AVDMGenericVideoStream *in,
+ADM_flyDialogGtk::ADM_flyDialogGtk(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod)
   {
@@ -44,7 +43,7 @@ void ADM_flyDialogGtk::postInit(uint8_t reInit)
 {
 	if (_slider)
 	{
-		GtkAdjustment *adj = (GtkAdjustment*)gtk_adjustment_new(0, 0, _in->getInfo()->nb_frames - 1, 0, 1, 0);
+		GtkAdjustment *adj = (GtkAdjustment*)gtk_adjustment_new(0, 0, ADM_FLY_SLIDER_MAX, 0, 1, 0);
 
 		gtk_range_set_adjustment(GTK_RANGE(_slider), adj);
 		gtk_scale_set_digits(GTK_SCALE(_slider), 0);

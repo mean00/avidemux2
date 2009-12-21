@@ -14,8 +14,6 @@
 
 #include "DIA_coreToolkit.h"
 #include "DIA_fileSel.h"
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "avi_vars.h"
 //#include "ADM_filter/vidVCD.h"
@@ -43,10 +41,7 @@ typedef enum
   A_END
 }gui_act;
 //___________________________________________
-extern AVDMGenericVideoStream *filterCreateFromTag (VF_FILTERS tag,
-						    CONFcouple * conf,
-						    AVDMGenericVideoStream *
-						    in);
+#if 0
 extern const char  *filterGetNameFromTag(VF_FILTERS tag);
 //___________________________________________
 extern FILTER videofilters[VF_MAX_FILTER];
@@ -69,6 +64,7 @@ static void on_action_double_click_1 (GtkButton * button, gpointer user_data);
 static void updateFilterList (void);
 static VF_FILTERS getFilterFromSelection (void);
 static void wrapToolButton(GtkWidget * wid, gpointer user_data);
+#endif
 //___________________________________________
 #define NB_TREE 9
 static  uint32_t max = 0;
@@ -146,7 +142,7 @@ wrapToolButton(GtkWidget * wid, gpointer user_data)
         dummy=(TPE)user_data;
 
         action=(gui_act) dummy;
-        on_action(action);
+//        on_action(action);
 }
 //
 // One of the button of the main dialog was pressed
@@ -366,9 +362,10 @@ void on_action (gui_act action)
  	\fn getFilterFromSelection
 	\brief returns the tag of the selected filter
 */
+#if 0
 VF_FILTERS getFilterFromSelection (void)
 {
-#if 0
+
     uint32_t sel = 0;
 	uint8_t ret = 0;
     VF_FILTERS tag = VF_INVALID;
@@ -381,8 +378,9 @@ VF_FILTERS getFilterFromSelection (void)
         tag = filterCategories[page-1][sel]->tag;
 	}
     return tag;
-#endif
+
 }
+#endif
 /**
  * 	\fn createFilterDialog
  *  \brief Create the dialog including list of all filters available on the left.

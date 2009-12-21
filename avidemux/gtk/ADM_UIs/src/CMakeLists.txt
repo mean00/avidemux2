@@ -22,7 +22,7 @@ SET(${ADM_LIB}_SRCS
         choice.cpp       
         toolkit_dialog.cpp
         toolkit.cpp
-#        DIA_flyDialogGtk.cpp
+        DIA_flyDialogGtk.cpp
 )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})

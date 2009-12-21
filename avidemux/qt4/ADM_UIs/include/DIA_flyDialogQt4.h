@@ -17,7 +17,6 @@
 #ifndef ADM_FLY_DIALOG_QT4H
 #define ADM_FLY_DIALOG_QT4H
 #include "ADM_image.h"
-//#include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 
 class FlyDialogEventFilter : public QObject

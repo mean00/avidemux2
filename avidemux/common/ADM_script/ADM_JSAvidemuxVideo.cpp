@@ -27,8 +27,7 @@
 #include "ADM_videoEncoderApi.h"
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
-
-//extern VF_FILTERS filterGetTagFromName(const char *inname);
+#include "ADM_confCouple.h"
 extern uint8_t A_ListAllBlackFrames( char *file );
 extern uint8_t ADM_saveRaw (const char *name);
 extern int A_saveJpg (char *name);

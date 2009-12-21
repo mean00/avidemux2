@@ -34,7 +34,6 @@
 
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
 #include "DIA_fileSel.h"
 
 #if 0

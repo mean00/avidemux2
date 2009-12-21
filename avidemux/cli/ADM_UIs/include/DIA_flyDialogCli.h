@@ -20,7 +20,7 @@
 class ADM_flyDialogCli : public ADM_flyDialog
 {
 public:
-  ADM_flyDialogCli(uint32_t width, uint32_t height, AVDMGenericVideoStream *in,
+  ADM_flyDialogCli(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod) {};
 

@@ -23,12 +23,6 @@
 #include "ADM_default.h"
 
 #include "ADM_assert.h"
-
-#include "ADM_videoFilter.h"
-
-
-
-
 #include "audioencoder.h"
 #include "ADM_lavcodec.h"
 #include "ADM_render/GUI_render.cpp"

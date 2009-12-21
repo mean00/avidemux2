@@ -22,8 +22,7 @@
 #include "DIA_fileSel.h"
 
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
-#include "ADM_videoFilter_internal.h"
+//#include "ADM_videoFilter_internal.h"
 
 #include "ADM_vidMisc.h"
 #include "avi_vars.h"
@@ -146,12 +145,16 @@ void prepare( void )
 /************************************/
 uint32_t getPicSize(void)
 {
+#warning FIXME
+return 720*576;
+#if 0
 uint32_t size;
          AVDMGenericVideoStream *last;
                 last=getLastVideoFilter();
                 size=last->getInfo()->width*last->getInfo()->height;
 
                 return size;
+#endif
 }
 //*************************************
 void update( void )

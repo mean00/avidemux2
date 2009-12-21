@@ -6,7 +6,7 @@
 #include "ADM_toolkitGtk.h"
 //___________________________________
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 
 //#include "ADM_encoder/ADM_vidEncode.hxx"
 //#include "ADM_encoder/adm_encoder.h"

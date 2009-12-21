@@ -15,11 +15,8 @@
 
 
 #include <math.h>
-
 #include "ADM_default.h"
-
 #include "ADM_image.h"
-#include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 #include "DIA_flyDialogCli.h"
 #include "ADM_assert.h"

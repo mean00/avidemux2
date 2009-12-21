@@ -39,7 +39,7 @@ class  CropFilter:public ADM_coreVideoFilter
 
        virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
        virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
-       virtual FilterInfo  *getInfo(void);                    /// Return picture parameters after this filter
+       //virtual FilterInfo  *getInfo(void);                    /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual bool         configure(void) ;                 /// Start graphical user interface
     
