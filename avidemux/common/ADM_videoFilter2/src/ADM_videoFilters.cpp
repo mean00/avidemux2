@@ -57,7 +57,9 @@ ADM_coreVideoFilter *last=NULL;
    if(!ADM_vf_getSize())
     {
         if(!bridge)
-            bridge=new ADM_videoFilterBridge(0,2*3600*1000*1000LL);
+        {
+            bridge=new ADM_videoFilterBridge(0,-1LL);
+        }
         last=bridge;
     }
     else    
