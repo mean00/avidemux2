@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_UIQT4)
+SET(ADM_LIB ADM_UIQT46)
 
 QT4_WRAP_CPP(${ADM_LIB}_source
 	T_bitrate.h  T_button.h  T_dialogFactory.h  T_filesel.h  T_menu.h  T_slider.h
