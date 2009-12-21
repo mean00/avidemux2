@@ -10,6 +10,9 @@
   <object class="GtkListStore" id="liststore5"/>
   <object class="GtkDialog" id="dialog1">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">Video Filters</property>
+    <property name="modal">True</property>
+    <property name="default_height">600</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
