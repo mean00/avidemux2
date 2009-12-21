@@ -28,6 +28,11 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(uint64_t startTime, uint64_t endTim
 {
     printf("[VideoFilterBridge] Creating bridge from %"LU" s to %"LU" s\n",(uint32_t)(startTime/1000000LL),(uint32_t)(endTime/1000000LL));
     this->startTime=startTime;
+    if(endTime==-1LL)
+    {
+        uint64_t total=video_body->getVideoDuration();
+        endTime=total-startTime+1;
+    }
     this->endTime=endTime;
     
     aviInfo fo;
@@ -114,7 +119,16 @@ FilterInfo  *ADM_videoFilterBridge::getInfo(void)
 */
 bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek)
 {
-    video_body->goToTimeVideo(startTime+usSeek);
+    if(!usSeek)
+        video_body->goToTimeVideo(startTime+usSeek);
+    else
+    {
+        uint64_t seek=usSeek;
+        if(true==video_body->getPKFramePTS(&seek))
+        {
+                video_body->goToIntraTimeVideo(seek);
+        }else ADM_warning("Cannot find previous keyframe\n");
+    }
     firstImage=true;
     lastSentImage=0;
     return true;
