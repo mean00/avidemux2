@@ -20,11 +20,11 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
-#ifdef __WIN32
+#ifndef __WIN32
+#include <fcntl.h>
+#else
 #include <direct.h>
 #include <shlobj.h>
-#include <fcntl.h>
 #elif defined(__APPLE__)
 #include <Carbon/Carbon.h>
 #endif
