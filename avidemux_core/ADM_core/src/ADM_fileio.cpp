@@ -22,7 +22,8 @@
 #include <unistd.h>
 #ifndef __WIN32
 #include <fcntl.h>
-#else
+#endif
+#ifdef __WIN32
 #include <direct.h>
 #include <shlobj.h>
 #elif defined(__APPLE__)

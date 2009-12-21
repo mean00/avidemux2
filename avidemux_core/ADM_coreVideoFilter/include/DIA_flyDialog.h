@@ -40,6 +40,9 @@
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
 #include "ADM_coreVideoFilter.h"
+
+#define ADM_FLY_SLIDER_MAX 1000
+
 enum ResizeMethod {
     RESIZE_NONE = 0,	// No automatic resize
 	RESIZE_AUTO = 1,	// Resize image when convenient (YUV: after filter, RGB: before applying filter)
@@ -57,7 +60,10 @@ struct MenuMapping
 };
 
 typedef float gfloat;
-
+/**
+    \class ADM_flyDialog
+    \brief Base class for flyDialog
+*/
 class ADM_flyDialog
 {
   protected:
@@ -120,11 +126,11 @@ class ADM_flyDialog
   
   virtual uint8_t  isRgbInverted(void)=0;
   virtual uint8_t  display(void)=0;
-  virtual float   calcZoomFactor(void)=0;
-  virtual uint32_t sliderGet(void)=0;
-  virtual uint8_t  sliderSet(uint32_t value) =0;
-  virtual void    postInit(uint8_t reInit)=0;
-  virtual uint8_t sliderChanged(void);
+  virtual float    calcZoomFactor(void)=0;
+  virtual uint32_t sliderGet(void)=0;             // Return the slider value between 0 and ADM_FLY_SLIDER_MAX
+  virtual uint8_t  sliderSet(uint32_t value) =0;  // Set slider value between 0 and ADM_FLY_SLIDE_MAX
+  virtual void     postInit(uint8_t reInit)=0;
+  virtual uint8_t  sliderChanged(void);
 };
 #if !defined(ADM_FLY_INTERNAL)
 

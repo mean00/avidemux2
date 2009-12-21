@@ -22,7 +22,10 @@
 extern "C" {
 #include "ADM_ffmpeg/libavcodec/avcodec.h"
 }
-
+/**
+    \fn    ADM_flyDialog
+    \brief Constructor
+*/
 ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                 void *canvas, void *slider,int yuv, ResizeMethod resizeMethod)
 {
@@ -113,6 +116,11 @@ void ADM_flyDialog::EndConstructor(void)
                 }
                 postInit (false);
   }
+/**
+    \fn    recomputeSize
+    \brief recompute zoom factor
+*/
+
 void ADM_flyDialog::recomputeSize(void)
 {
     float new_zoom = calcZoomFactor();
@@ -218,7 +226,9 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
     ADM_assert(_yuvBuffer);
     ADM_assert(_rgbBufferOut);
     ADM_assert(_in);
-    
+
+#warning    DISABLED
+
     //if(!_in->getFrameNumberNoAlloc(fn,&len,_yuvBuffer,&flags))
     {
       printf("[FlyDialog] Cannot get frame %u\n",fn); 
@@ -240,6 +250,10 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
 
     return display();
 }
+/**
+    \fn    copyYuvFinalToRgb
+    \brief
+*/
 
 void ADM_flyDialog::copyYuvFinalToRgb(void)
 {
@@ -248,6 +262,10 @@ void ADM_flyDialog::copyYuvFinalToRgb(void)
 	else
 		_rgb->scale(_yuvBufferOut->data, _rgbBufferOut);
 }
+/**
+    \fn    copyYuvScratchToRgb
+    \brief
+*/
 
 void ADM_flyDialog::copyYuvScratchToRgb(void)
 {
@@ -256,6 +274,10 @@ void ADM_flyDialog::copyYuvScratchToRgb(void)
 	else
 		_rgb->scale(_yuvBuffer->data,_rgbBuffer);
 }
+/**
+    \fn    copyRgbFinalToDisplay
+    \brief
+*/
 
 void ADM_flyDialog::copyRgbFinalToDisplay(void)
 {

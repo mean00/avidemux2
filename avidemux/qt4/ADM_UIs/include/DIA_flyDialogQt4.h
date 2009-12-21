@@ -17,7 +17,7 @@
 #ifndef ADM_FLY_DIALOG_QT4H
 #define ADM_FLY_DIALOG_QT4H
 #include "ADM_image.h"
-#include "ADM_videoFilter.h"
+//#include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 
 class FlyDialogEventFilter : public QObject
@@ -35,7 +35,7 @@ protected:
 class ADM_flyDialogQt4 : public ADM_flyDialog
 {
 public:
-  ADM_flyDialogQt4(uint32_t width, uint32_t height, AVDMGenericVideoStream *in,
+  ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod);
 
   

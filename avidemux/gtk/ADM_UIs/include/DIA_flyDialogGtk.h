@@ -28,7 +28,7 @@
 class ADM_flyDialogGtk : public ADM_flyDialog
 {
 public:
-  ADM_flyDialogGtk(uint32_t width, uint32_t height, AVDMGenericVideoStream *in,
+  ADM_flyDialogGtk(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod);
   virtual           ~ADM_flyDialogGtk(void);
   virtual uint8_t  isRgbInverted(void);

@@ -1,6 +1,7 @@
 /***************************************************************************
-    copyright            : (C) 2006 by mean
-    email                : fixounet@free.fr
+    \file T_flyDialogQt4.cpp
+    \brief QT4 variabt of fly dialogs
+    \author mean (c) 2006, fixounet@free.fr
 ***************************************************************************/
 
 /***************************************************************************
@@ -19,19 +20,25 @@
 #include <QtGui/QSlider>
 
 #include "ADM_default.h"
-
-//#include "ADM_videoFilter.h"
 #include "DIA_flyDialog.h"
 #include "DIA_flyDialogQt4.h"
 
 extern float UI_calcZoomToFitScreen(QWidget* window, QWidget* canvas, uint32_t imageWidth, uint32_t imageHeight);
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w, uint32_t *h);
+/**
+    \fn    FlyDialogEventFilter
+    \brief
+*/
 
 FlyDialogEventFilter::FlyDialogEventFilter(ADM_flyDialog *flyDialog)
 {
 	recomputed = false;
 	this->flyDialog = flyDialog;
 }
+/**
+    \fn    eventFilter
+    \brief
+*/
 
 bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
@@ -49,13 +56,21 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
 
 	return QObject::eventFilter(obj, event);
 }
+/**
+    \fn    ADM_flyDialog
+    \brief
+*/
 
-  ADM_flyDialogQt4::ADM_flyDialogQt4(uint32_t width, uint32_t height, AVDMGenericVideoStream *in,
+  ADM_flyDialogQt4::ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod) 
 {
         EndConstructor();
 }
+/**
+    \fn    postInit
+    \brief
+*/
 
 void ADM_flyDialogQt4::postInit(uint8_t reInit)
 {
@@ -67,7 +82,7 @@ void ADM_flyDialogQt4::postInit(uint8_t reInit)
 		FlyDialogEventFilter *eventFilter = new FlyDialogEventFilter(this);
 
 		if (slider)
-			slider->setMaximum(_in->getInfo()->nb_frames);
+			slider->setMaximum(ADM_FLY_SLIDER_MAX);
 
 		graphicsView->parentWidget()->installEventFilter(eventFilter);
 	}
@@ -76,11 +91,19 @@ void ADM_flyDialogQt4::postInit(uint8_t reInit)
 	graphicsView->setMinimumSize(_zoomW, _zoomH);
 	graphicsView->resize(_zoomW, _zoomH);
 }
+/**
+    \fn    calcZoomFactor
+    \brief
+*/
 
 float ADM_flyDialogQt4::calcZoomFactor(void)
 {
 	return UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
 }
+/**
+    \fn    display
+    \brief
+*/
 
 uint8_t  ADM_flyDialogQt4::display(void)
 {
@@ -89,11 +112,16 @@ uint8_t  ADM_flyDialogQt4::display(void)
    view->dataBuffer=_rgbBufferOut;
    if(!_rgbBufferOut)
    {
-      printf("flyDialog: No rgbuffer ??\n"); 
+      ADM_info("flyDialog: No rgbuffer ??\n"); 
    } 
    view->repaint();
   return 1; 
 }
+/**
+    \fn    sliderGet
+    \brief
+*/
+
 uint32_t ADM_flyDialogQt4::sliderGet(void)
 {
   QSlider  *slide=(QSlider *)_slider;
@@ -101,13 +129,23 @@ uint32_t ADM_flyDialogQt4::sliderGet(void)
   return slide->value();
   
 }
+/**
+    \fn    sliderSet
+    \brief
+*/
+
 uint8_t     ADM_flyDialogQt4::sliderSet(uint32_t value)
 {
   QSlider  *slide=(QSlider *)_slider;
   ADM_assert(slide);
+  if(value>ADM_FLY_SLIDER_MAX) value=ADM_FLY_SLIDER_MAX;
   slide->setValue(value);
   return 1; 
 }
+/**
+    \fn    isRgbInverted
+    \brief
+*/
 uint8_t  ADM_flyDialogQt4::isRgbInverted(void)
 {
   return 1; 
