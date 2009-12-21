@@ -16,7 +16,69 @@
 #include "DIA_fileSel.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "avi_vars.h"
-//#include "ADM_filter/vidVCD.h"
+#include "GUI_glade.h"
+
+static admGlade glade;
+#define WOD(x) glade.getWidget (#x)
+typedef enum
+{
+    actionUp=20,
+    actionDown,
+    actionAdd,
+    actionRemove,
+    actionConfigure
+}vFilterAction;
+/**
+    \fn GUI_handleVFilter
+*/
+int GUI_handleVFilter (void)
+{
+     ADM_info("Entering video filter\n");
+     glade.init();
+     if(!glade.loadFile("videoFilter/videoFilter.gtkBuilder"))
+     {
+            GUI_Error_HIG("Glade","Cannot load glade file");
+            return 0;
+    }
+    // create top window
+    GtkWidget *dialog=glade.getWidget("dialog1");
+    gtk_register_dialog(dialog);
+	#define ASSOCIATE(x,y)   gtk_dialog_add_action_widget (GTK_DIALOG (dialog), WOD(x),y)
+	    
+	    ASSOCIATE(buttonAdd,          actionAdd);
+	    ASSOCIATE(buttonConfigure,    actionConfigure);
+	    ASSOCIATE(buttonUp,           actionUp);
+	    ASSOCIATE(buttonDown,         actionDown);
+	    ASSOCIATE(buttonRemove,       actionRemove);
+	    
+	   
+	gtk_widget_show(dialog);
+    
+    bool ext=false;
+
+    while(false==ext)
+    {
+        gint action=gtk_dialog_run(GTK_DIALOG(dialog));
+        printf("Action:%d\n",action);
+        switch(action)
+        {
+            case actionAdd:
+            case actionUp:
+            case actionDown:
+            case actionRemove:
+            case actionConfigure:
+                    break;
+            default:
+                ext=true;
+
+        }
+    };
+    gtk_widget_destroy(dialog);
+    return 0;
+}
+
+
+#if 0
 //___________________________________________
 typedef enum 
 {
@@ -622,4 +684,4 @@ on_treeview0_row_inserted(GtkTreeModel *treemodel, GtkTreePath *arg1, GtkTreeIte
 
 }
 
-
+#endif
