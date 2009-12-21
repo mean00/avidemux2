@@ -45,11 +45,7 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(uint64_t startTime, uint64_t endTim
 */
 bool ADM_videoFilterBridge::rewind(void)
 {
-    printf("[VideoBridge] Goint to %"LU" ms\n",(uint32_t)(startTime/1000));
-    video_body->goToTimeVideo(startTime);
-    firstImage=true;
-    lastSentImage=0;
-    return true;
+    return goToTime(0);
 }
 
 /**
@@ -101,21 +97,9 @@ again:
             so we in case of non-sequential access we rely on the cache of decoded image.
             (TODO)
 */
-bool         ADM_videoFilterBridge::getFrame(uint32_t frame,ADMImage *image)
-{
-    if(frame==0)
-    {
-        rewind();
+bool         ADM_videoFilterBridge::getNextFrame(ADMImage *image)
+{  
         return nextFrame(image);
-    }
-    // Sequential access ?
-    if(frame==lastSentImage+1)
-    {
-        return nextFrame(image);
-    }
-    // Non sequential access : todo
-    ADM_assert(0);
-    return false;
 }
 /**
     \fn ADM_videoFilterBridge
@@ -124,5 +108,15 @@ bool         ADM_videoFilterBridge::getFrame(uint32_t frame,ADMImage *image)
 FilterInfo  *ADM_videoFilterBridge::getInfo(void)
 {
     return &bridgeInfo;
+}
+/**
+    \fn goToTime
+*/
+bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek)
+{
+    video_body->goToTimeVideo(startTime+usSeek);
+    firstImage=true;
+    lastSentImage=0;
+    return true;
 }
 // EOF
