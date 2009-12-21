@@ -28,7 +28,7 @@ public:
                     ~dummyVideoFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getFrame(uint32_t frame,ADMImage *image);    /// Return the next image
+       virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
@@ -68,10 +68,10 @@ dummyVideoFilter::~dummyVideoFilter()
     \fn getFrame
     \brief Get a processed frame
 */
-bool dummyVideoFilter::getFrame(uint32_t frame,ADMImage *image)
+bool dummyVideoFilter::getNextFrame(ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
-    return previousFilter->getFrame(frame,image);
+    return previousFilter->getNextFrame(image);
 }
 /**
     \fn getCoupledConf

@@ -28,7 +28,7 @@ public:
                     ~verticalFlipFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getFrame(uint32_t frame,ADMImage *image);    /// Return the next image
+       virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
@@ -82,12 +82,12 @@ static void flipMe(uint8_t *data, uint32_t w,uint32_t h)
     \fn getFrame
     \brief Get a processed frame
 */
-bool verticalFlipFilter::getFrame(uint32_t frame,ADMImage *image)
+bool verticalFlipFilter::getNextFrame(ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
-    if(false==previousFilter->getFrame(frame,image))
+    if(false==previousFilter->getNextFrame(image))
     {
-        ADM_warning("Vertical flip : Cannot get frame\n");
+        ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
     // do in place flip

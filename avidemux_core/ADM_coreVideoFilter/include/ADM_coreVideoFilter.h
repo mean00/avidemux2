@@ -44,8 +44,8 @@ public:
             ~ADM_coreVideoFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getFrame(uint32_t frame,ADMImage *image)=0;    /// Return the next image
-       virtual bool         getNextFrame(ADMImage *image);              /// Dont mix getFrame & getNextFrame !
+       virtual bool         goToTime(uint64_t usSeek);              
+       virtual bool         getNextFrame(ADMImage *image)=0;              /// Dont mix getFrame & getNextFrame !
 	   virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples)=0 ;   /// Return the current filter configuration
        virtual bool         configure(void) {return true;}             /// Start graphical user interface

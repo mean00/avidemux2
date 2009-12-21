@@ -64,13 +64,20 @@ FilterInfo  *ADM_coreVideoFilter::getInfo(void)
     return previousFilter->getInfo();
 }
 /**
-        \fn getNextFrame
-        \brief 
-*/  
-bool         ADM_coreVideoFilter::getNextFrame(ADMImage *image)     
+    \fn goToTime
+    \brief sort of seek, used for preview video filters, does not have to be frame accurate
+*/
+bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
 {
-      bool r=getFrame(nextFrame,image);
-      nextFrame++;
-      return r;
+    float thisIncrement=info.frameIncrement;
+    float oldIncrement=previousFilter->getInfo()->frameIncrement;
+    ADM_assert(thisIncrement);
+    ADM_assert(oldIncrement);
+    if(thisIncrement==oldIncrement) return previousFilter->goToTime(usSeek);
+    float newSeek=usSeek;
+    newSeek/=thisIncrement;
+    newSeek*=oldIncrement;
+    return  previousFilter->goToTime((uint64_t)newSeek);
+
 }
 // EOF
