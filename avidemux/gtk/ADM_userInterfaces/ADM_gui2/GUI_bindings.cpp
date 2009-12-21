@@ -424,7 +424,7 @@ uint8_t  bindGUI( void )
 			     "guiRootWindow",
 			     guiRootWindow,
 			     (GtkDestroyNotify) destroyCallback);
-
+    gtk_signal_connect(GTK_OBJECT(guiRootWindow), "delete-event", GTK_SIGNAL_FUNC(destroyCallback), (void *) NULL);
 
 //	now add callbacks
 	 gtk_widget_add_events(guiRootWindow, GDK_BUTTON_PRESS_MASK);
@@ -843,6 +843,7 @@ void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
 gboolean destroyCallback(GtkWidget * widget,
 				  GdkEvent * event, gpointer user_data)
 {
+    ADM_info("Destroy callback for main window\n");
     UNUSED_ARG(widget);
     UNUSED_ARG(event);
     UNUSED_ARG(user_data);
