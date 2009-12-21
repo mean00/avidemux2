@@ -1,6 +1,7 @@
 #ifndef js_cpucfg___
 #define js_cpucfg___
 
+#include "ADM_coreConfig.h"
 /* AUTOMATICALLY GENERATED - DO NOT EDIT */
 #ifdef ADM_BIG_ENDIAN
 #undef   IS_LITTLE_ENDIAN 
