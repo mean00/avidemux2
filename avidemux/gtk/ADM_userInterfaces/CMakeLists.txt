@@ -2,7 +2,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../gtkIncludes.cmake)
 
 SET(ADM_LIB ADM_UI_GTK)
 SET(${ADM_LIB}_SRCS ui_support.cpp)
-
+include_directories(ADM_toolkit_gtk)
 ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})
 ADD_DEFINITIONS(${GTK_CFLAGS})
 
