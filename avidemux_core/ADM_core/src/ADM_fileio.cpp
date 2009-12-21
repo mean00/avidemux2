@@ -20,18 +20,18 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#ifndef __WIN32
-#include <fcntl.h>
-#endif
-#ifdef __WIN32
-#include <direct.h>
-#include <shlobj.h>
-#elif defined(__APPLE__)
-#include <Carbon/Carbon.h>
+
+#if defined(__APPLE__)
+ #include <Carbon/Carbon.h>
+#else
+ #include <fcntl.h>
+ #ifdef __WIN32
+  #include <direct.h>
+  #include <shlobj.h>
+ #endif
 #endif
 
 #include "ADM_default.h"
-//#include "DIA_fileSel.h"
 
 
 #ifdef __WIN32
