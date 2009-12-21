@@ -148,12 +148,12 @@ void ADM_flyDialog::recomputeSize(void)
 
     if (++_zoomChangeCount > 3 || new_zoomH < 30 || new_zoomW < 30)
     {
-        printf ("Resisting zoom size change from %dx%d (zoom %.5f) to %dx%d (zoom %.5f)\n",
+        ADM_info ("Resisting zoom size change from %dx%d (zoom %.5f) to %dx%d (zoom %.5f)\n",
                 _zoomW, _zoomH, _zoom, new_zoomW, new_zoomH, new_zoom);
         return;
     }
 
-    printf ("Fixing zoom size from %dx%d (zoom %.5f) to correct %dx%d (zoom %.5f)\n",
+    ADM_info ("Fixing zoom size from %dx%d (zoom %.5f) to correct %dx%d (zoom %.5f)\n",
             _zoomW, _zoomH, _zoom, new_zoomW, new_zoomH, new_zoom);
 
     _resizeMethod = new_resizeMethod;
@@ -227,11 +227,15 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
     ADM_assert(_rgbBufferOut);
     ADM_assert(_in);
 
-#warning    DISABLED
 
-    //if(!_in->getFrameNumberNoAlloc(fn,&len,_yuvBuffer,&flags))
+    double time;
+    time=fn;
+    time/=ADM_FLY_SLIDER_MAX;
+    time*=_in->getInfo()->totalDuration;
+    _in->goToTime(time);
+    if(!_in->getNextFrame(_yuvBuffer))
     {
-      printf("[FlyDialog] Cannot get frame %u\n",fn); 
+      ADM_warning("[FlyDialog] Cannot get frame %u\n",fn); 
       return 0;
     }
 

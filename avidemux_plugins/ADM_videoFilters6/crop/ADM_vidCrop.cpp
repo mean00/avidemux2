@@ -170,24 +170,22 @@ const char *CropFilter::getConfiguration(void)
 /**
     \fn Configure
 */
-//extern int DIA_getCropParams(const char *name, CROP_PARAMS *param, AVDMGenericVideoStream *in);
+extern int DIA_getCropParams(	const char *name,crop *param,ADM_coreVideoFilter *in);
+
 bool CropFilter::configure(void)
 
 {
-#if 0
 		uint8_t r;
 		uint32_t w,h;
-    	if(r = (DIA_getCropParams("Crop Settings",_param,instream )))
+    	if(r = (DIA_getCropParams("Crop Settings",&configuration,previousFilter )))
     	{
-			w=_param->left+_param->right;
-			h=_param->top+_param->bottom;
-			ADM_assert(w<instream->getInfo()->width);
-			ADM_assert(h<instream->getInfo()->height);
-			_info.width=instream->getInfo()->width-w;
-			_info.height=instream->getInfo()->height-h;
+			w=configuration.left+configuration.right;
+			h=configuration.top+configuration.bottom;
+			ADM_assert(w<previousFilter->getInfo()->width);
+			ADM_assert(h<previousFilter->getInfo()->height);
+			info.width=previousFilter->getInfo()->width-w;
+			info.height=previousFilter->getInfo()->height-h;
 		}
 		return r;
-#endif
-    return false;
 }
 // EOF
