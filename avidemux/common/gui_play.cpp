@@ -21,8 +21,6 @@
 #include "avi_vars.h"
 #include "audio_out.h"
 #include "DIA_coreToolkit.h"
-//#include "ADM_videoFilter.h"
-//#include "ADM_videoFilter_internal.h"
 #include "gtkgui.h"
 #include "ADM_render/GUI_render.h"
 #include "avidemutils.h"
@@ -93,7 +91,6 @@ void GUI_PlayAvi(void)
 {
     
     uint32_t framelen,flags;
-    AVDMGenericVideoStream *filter;
     uint32_t max,err;
     uint64_t oldTimeFrame;
    
