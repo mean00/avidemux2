@@ -1,22 +1,22 @@
 <RCC>
-    <qresource prefix="/new/prefix1" >
-        <file>icons/1.png</file>
-        <file>icons/2.png</file>
-        <file>icons/3.png</file>
-        <file>icons/4.png</file>
-        <file>icons/5.png</file>
-        <file>icons/6.png</file>
-        <file>icons/7.png</file>
-        <file>icons/add.png</file>
-        <file>icons/cd.png</file>
-        <file>icons/close.png</file>
-        <file>icons/down.png</file>
-        <file>icons/exec.png</file>
-        <file>icons/fileopen.png</file>
-        <file>icons/filesave.png</file>
-        <file>icons/filesaveas.png</file>
-        <file>icons/remove.png</file>
-        <file>icons/thumbnail.png</file>
-        <file>icons/up.png</file>
-    </qresource>
+  <qresource prefix="/new/prefix1" >
+    <file>../../../common/ADM_icons/videoFilter/up.png</file>
+    <file>../../common/ADM_icons/videoFilter/add.png</file>
+    <file>../../common/ADM_icons/videoFilter/cd.png</file>
+    <file>../../common/ADM_icons/videoFilter/close.png</file>
+    <file>../../common/ADM_icons/videoFilter/down.png</file>
+    <file>../../common/ADM_icons/videoFilter/exec.png</file>
+    <file>../../common/ADM_icons/videoFilter/fileopen.png</file>
+    <file>../../common/ADM_icons/videoFilter/filesave.png</file>
+    <file>../../common/ADM_icons/videoFilter/filesaveas.png</file>
+    <file>../../common/ADM_icons/videoFilter/remove.png</file>
+    <file>../../common/ADM_icons/videoFilter/thumbnail.png</file>
+    <file>../../../common/ADM_icons/videoFilter/1.png</file>
+    <file>../../../common/ADM_icons/videoFilter/2.png</file>
+    <file>../../../common/ADM_icons/videoFilter/3.png</file>
+    <file>../../../common/ADM_icons/videoFilter/4.png</file>
+    <file>../../../common/ADM_icons/videoFilter/5.png</file>
+    <file>../../../common/ADM_icons/videoFilter/6.png</file>
+    <file>../../../common/ADM_icons/videoFilter/7.png</file>
+  </qresource>
 </RCC>
