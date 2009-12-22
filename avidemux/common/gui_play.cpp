@@ -26,9 +26,10 @@
 #include "avidemutils.h"
 #include "ADM_preview.h"
 #include "audiofilter.h"
+#include "GUI_ui.h"
 //___________________________________
-// In ms
-#define AUDIO_PRELOAD 200
+// In 10 ms chunks
+#define AUDIO_PRELOAD 100
 #define EVEN(x) (x&0xffffffe)
 //___________________________________
 
@@ -285,15 +286,15 @@ bool  GUIPlayback::audioPump(void)
              if (! (oaf = playbackAudio->fill(256*16,  wavbuf,&status)))
              {
                   printf("[Playback] Error reading audio stream...\n");
-                  
-                  return false;
+                  break;
              }
             AVDM_AudioPlay(wavbuf, oaf);
             nbSamplesSent += oaf/channels;
             load+=oaf;
     }
-    //printf("[Playback] Wrote %u bytes\n",load);
-    // finally play the filled up buffer
+    uint32_t stat[6];
+    AVDM_getStats(stat);
+    UI_setVUMeter(stat);
     return true;
 }
 
@@ -306,7 +307,7 @@ bool  GUIPlayback::initializeAudio(void)
 {
     uint32_t state,latency, preload;
     uint32_t small_;
-    uint32_t channels;
+    uint32_t channels,frequency;
 
     wavbuf = 0;
 
@@ -319,14 +320,20 @@ bool  GUIPlayback::initializeAudio(void)
     if(!playbackAudio) return false;
 
     channels= playbackAudio->getInfo()->channels;
+    frequency=playbackAudio->getInfo()->frequency;
     preload=  (wavinfo->frequency * channels)/5;	// 200 ms preload
     // 4 sec buffer..               
     wavbuf =  (float *)  ADM_alloc((20*sizeof(float)*preload)); // 4 secs buffers
     ADM_assert(wavbuf);
+    // Read a at least one block to have the proper channel mapping
+    uint32_t fill=0;
+    AUD_Status status;
+    small_ = playbackAudio->fill(channels, wavbuf,&status);
+    fill+=small_;
     // Call it twice to be sure it is properly setup
-     state = AVDM_AudioSetup(playbackAudio->getInfo()->frequency,  channels );
+     state = AVDM_AudioSetup(frequency,  channels ,playbackAudio->getChannelMapping());
      AVDM_AudioClose();
-     state = AVDM_AudioSetup(playbackAudio->getInfo()->frequency,  channels );
+     state = AVDM_AudioSetup(frequency,  channels ,playbackAudio->getChannelMapping());
      latency=AVDM_GetLayencyMs();
      printf("[Playback] Latency : %d ms\n",latency);
       if (!state)
@@ -335,9 +342,6 @@ bool  GUIPlayback::initializeAudio(void)
           cleanupAudio();
           return false;
       }
-     
-     AUD_Status status;
-    uint32_t fill=0;
     while(fill<preload)
     {
       if (!(small_ = playbackAudio->fill(preload-fill, wavbuf+fill,&status)))
