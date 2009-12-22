@@ -80,6 +80,7 @@ bool ADM_Composer::refillPacketBuffer(void)
    packetBufferSize=0; 
    uint64_t dts;
    _SEGMENT *seg=_segments.getSegment(_audioSeg);
+   static bool endOfAudio=false;
    if(!seg) return false;
 
    if(lastDts>=seg->_startTimeUs+seg->_durationUs)
@@ -98,8 +99,13 @@ bool ADM_Composer::refillPacketBuffer(void)
                         &packetBufferSamples,&dts))
     {
               if(true==switchToNextAudioSegment())
+              {
+                 endOfAudio=false;
                  return refillPacketBuffer();
-             ADM_warning("End of audio\n");
+              }
+             if(endOfAudio==false)
+                ADM_warning("End of audio\n");
+             endOfAudio=true;
              return false;
     }
     //
@@ -114,6 +120,7 @@ bool ADM_Composer::refillPacketBuffer(void)
           return refillPacketBuffer();
         }
     }
+    endOfAudio=false;
     return true;
 }
 
