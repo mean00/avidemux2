@@ -589,6 +589,13 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                         commonPart(MJPB);
                                         left=0;
                                   }
+                                  case MKFCCR('S','V','Q','1'):  //mjpegb
+                                 {
+                                       commonPart(SVQ1);
+                                       left=0;
+                                 }
+                                  break;
+
                                   case MKFCCR('m','j','p','a'):  //mjpegb
                                  {
                                        commonPart(MJPG);
