@@ -151,6 +151,12 @@ decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen,
 
       return (decoders *) (new decoderFF_ffhuff (w, h, extraLen, extraData,bpp));
     }
+if (fourCC::check (fcc, (uint8_t *) "SVQ1"))
+    {
+
+      return (decoders *) (new decoderFFSVQ1 (w, h, extraLen, extraData));
+    }
+
   if (fourCC::check (fcc, (uint8_t *) "SVQ3"))
     {
 
