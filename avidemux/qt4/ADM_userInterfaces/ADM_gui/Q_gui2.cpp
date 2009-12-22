@@ -32,7 +32,7 @@
 #include "ADM_render/GUI_renderInternal.h"
 #include "ADM_coreVideoEncoderInternal.h"
 #include "ADM_muxerProto.h"
-
+#include "T_vumeter.h"
 extern int global_argc;
 extern char **global_argv;
 
@@ -586,6 +586,8 @@ int UI_Init(int nargc,char **nargv)
 
 	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
 	UI_updateRecentMenu();
+    // Init vumeter
+    UI_InitVUMeter(mw->ui.frameVU);
 	return 0;
 }
 
@@ -1055,6 +1057,13 @@ uint8_t UI_setTimeShift(int onoff,int value)
 	WIDGET(spinBox_TimeValue)->setValue(value);
 	return 1;
 }
-
+/**
+    \fn UI_setVUMeter
+*/
+bool UI_setVUMeter( uint32_t volume[6])
+{
+    UI_vuUpdate( volume);
+    return true;
+}
 //********************************************
 //EOF

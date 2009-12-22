@@ -1594,5 +1594,11 @@ if(_upd_in_progres) return;
  _upd_in_progres--;
 #endif
 }
-
+/**
+    \fn UI_setVUMeter
+*/
+bool UI_setVUMeter(uint32_t volume[6])
+{
+    return true;
+}
 // EOF
