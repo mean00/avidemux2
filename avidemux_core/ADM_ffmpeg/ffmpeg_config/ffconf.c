@@ -35,6 +35,7 @@ int main(void)
 
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");
   
+    DECLARE_DECODER (SVQ1, svq1);
     DECLARE_DECODER(AAC, eatgq);
     DECLARE_DECODER(MPEG4AAC, mpeg4aac);
     DECLARE_DECODER(DCA, dca);
@@ -233,7 +234,6 @@ int main(void)
     DECLARE_DECODER (RAWVIDEO, rawvideo);
     DECLARE_DECODER (ROQ, roq);
     DECLARE_DECODER (SGI, sgi);
-    DECLARE_DECODER (SVQ1, svq1);
     DECLARE_DECODER (TARGA, targa);
     DECLARE_DECODER (TIFF, tiff);
     DECLARE_DECODER (ZLIB, zlib);
