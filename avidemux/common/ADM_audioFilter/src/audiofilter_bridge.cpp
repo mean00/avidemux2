@@ -108,7 +108,7 @@ uint32_t   AUDMAudioFilter_Bridge::fill(uint32_t max,float *output,AUD_Status *s
   _head+=available;
   if(!available)
   {
-    printf("[bridge] No data in %u max %u out %u\n",_tail-_head,max,available);
+    //printf("[bridge] No data in %u max %u out %u\n",_tail-_head,max,available);
   }
   return available;
 
@@ -120,6 +120,7 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
 {
   uint32_t asked,got;
   uint64_t dts;
+  static bool endMet=false;
   *status=AUD_OK;
   // Hysteresis
   if((_tail-_head)<(AUD_PROCESS_BUFFER_SIZE>>2)) // Less than 1/4 full
@@ -145,9 +146,13 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
       if (!got )
       {
         *status=AUD_END_OF_STREAM;
-        printf("[Bridge] End of stream\n");
+        if(endMet==false) ADM_warning("[Bridge] End of stream\n");
+        endMet=true;
+    
+    
         break;
       }
+      endMet=false;
       _tail+=got;
       if(_hold>0)
       {
