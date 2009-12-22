@@ -53,6 +53,7 @@ private:
         uint32_t        nbSamplesSent ;        
         float           *wavbuf ;
         uint64_t        firstPts,lastPts;
+        uint64_t        vuMeterPts;
 
 private : 
         bool initialized;
@@ -60,6 +61,7 @@ private :
         bool cleanup(void);
         bool audioPump(void);
         bool cleanupAudio(void);
+        bool updateVu(void);
 public:
         bool run(void);
         bool initialize(void);
@@ -198,6 +200,7 @@ bool GUIPlayback::run(void)
     uint32_t systemTime;
     int refreshCounter=0;
     ticktock.reset();
+    vuMeterPts=0;
     do
     {
         
@@ -271,30 +274,32 @@ bool  GUIPlayback::audioPump(void)
     uint32_t load = 0;
 	uint8_t channels;
 	uint32_t fq;
+    static bool errorMet=false;
 
     if (!playbackAudio)	    return false;
 
   
     channels= playbackAudio->getInfo()->channels;
     fq=playbackAudio->getInfo()->frequency;  
-
+    uint32_t slice=(fq * channels)/50; // 20 ms
 
      while(AVDM_getMsFullness() < AUDIO_PRELOAD)
       {
 
              AUD_Status status;
-             if (! (oaf = playbackAudio->fill(256*16,  wavbuf,&status)))
+             if (! (oaf = playbackAudio->fill(fq,  wavbuf,&status)))
              {
-                  printf("[Playback] Error reading audio stream...\n");
+                  if(errorMet==false)
+                    ADM_warning("[Playback] Error reading audio stream...\n");
+                  errorMet=true;
                   break;
              }
+            errorMet=false;
             AVDM_AudioPlay(wavbuf, oaf);
             nbSamplesSent += oaf/channels;
             load+=oaf;
     }
-    uint32_t stat[6];
-    AVDM_getStats(stat);
-    UI_setVUMeter(stat);
+    updateVu();
     return true;
 }
 
@@ -356,6 +361,7 @@ bool  GUIPlayback::initializeAudio(void)
     ticktock.reset();
     uint32_t slice=(wavinfo->frequency * channels)/100; // 10 ms
     // pump data until latency is over
+    updateVu();
     while(ticktock.getElapsedMS()<latency)
     {
         if(AVDM_getMsFullness()<AUDIO_PRELOAD)
@@ -368,9 +374,26 @@ bool  GUIPlayback::initializeAudio(void)
           AVDM_AudioPlay(wavbuf, slice);
         }
        ADM_usleep(10*1000);
+       updateVu();
     }
     printf("[Playback] Latency is now %u\n",ticktock.getElapsedMS());
     return true;
 }
+/**
+    \fn updateVu
+*/
+bool GUIPlayback::updateVu(void)
+{
+ uint64_t time=  ticktock.getElapsedMS();
+    // Refresh vumeter every 50 ms
+    
+    if(time>(vuMeterPts+50))
+    {
+        uint32_t stat[6];
+        AVDM_getStats(stat);
+        UI_setVUMeter(stat);
+        vuMeterPts=time;
+    }
 
+}
 // EOF
