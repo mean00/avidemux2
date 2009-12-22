@@ -62,7 +62,11 @@ esd_format_t format;
 
 latency=0;
 esd_server_info_t *esdInfo;
-
+    if(_channels>2) 
+    {
+        ADM_warning("Esd does not support more than 2 channels apparently");
+        return false;
+    }
     esdServer=	esd_open_sound(NULL);
     if(esdServer>=0)
     {
@@ -74,9 +78,7 @@ esd_server_info_t *esdInfo;
 
 
     format=ESD_STREAM | ESD_PLAY | ESD_BITS16;
-    if(_channels==1) format|=ESD_MONO;
-        else format|=ESD_STEREO;
-
+    format |=_channels<<4;
     printf("[ESD]  : %"LU" Hz, %"LU" channels\n", _frequency, _channels);
     esdDevice=esd_play_stream(format,_frequency,NULL,"avidemux");
     if(esdDevice<=0)
