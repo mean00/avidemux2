@@ -235,10 +235,10 @@ void AVDM_AudioClose(void)
     \brief Initialize a device
 
 */
-uint32_t AVDM_AudioSetup(uint32_t fq, uint8_t channel)
+uint32_t AVDM_AudioSetup(uint32_t fq, uint8_t channel,CHANNEL_TYPE *channelMapping)
 {
 	
-	return device->init(channel,fq);
+	return device->init(channel,fq,channelMapping);
 }
 /**
     \fn AVDM_setVolume
@@ -281,10 +281,21 @@ uint32_t AVDM_getMsFullness(void)
     return device->getBufferFullness();
 
 }
-
+/**
+    \fn AVDM_getStats
+*/
+bool        AVDM_getStats(uint32_t *vol)
+{
+    return device->getVolumeStats(vol);
+}
 
 
 //**
+const CHANNEL_TYPE dummyAudioDevice::myChannelType[MAX_CHANNELS]=
+                            {ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
+                             ADM_CH_REAR_LEFT, ADM_CH_REAR_RIGHT, ADM_CH_LFE,
+                             ADM_CH_INVALID,   ADM_CH_INVALID
+                            };
 bool dummyAudioDevice::localInit(void)                                {return true;}
 bool dummyAudioDevice::localStop(void)                                {return true;}
 void  dummyAudioDevice::sendData(void)                                {ADM_usleep(5000);}
