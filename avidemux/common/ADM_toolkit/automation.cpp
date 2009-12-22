@@ -219,8 +219,22 @@ static int myargc;
 static three_arg_type three;
 static two_arg_type two;
 static int index;
-          argv=global_argv;
           argc=global_argc;
+#ifdef __WIN32
+	int utf8StringLength;
+
+	argv = new char*[argc];
+
+	for (int arg = 0; arg < argc; arg++)
+	{
+		utf8StringLength = ansiStringToUtf8(global_argv[arg], -1, NULL);
+		argv[arg] = new char[utf8StringLength];
+
+		ansiStringToUtf8(global_argv[arg], -1, argv[arg]);
+	}
+#else
+	argv = global_argv;
+#endif
           printf("\n *** Automated : %"LU" entries*************\n",(uint32_t)NB_AUTO);
           // we need to process
           argc-=1;
@@ -232,17 +246,7 @@ static int index;
                       {
                             if(cur==1)
                             {
-#ifdef __WIN32
-								int utf8StringLength = ansiStringToUtf8(argv[cur], -1, NULL);
-								char utf8FileName[utf8StringLength];
-
-								ansiStringToUtf8(argv[cur], -1, utf8FileName);
-
-								A_openAvi(utf8FileName);
-#else
 								A_openAvi(argv[cur]);
-#endif
-
                             }
                             else
                                 printf("\n Found garbage %s\n",argv[cur]);
@@ -286,6 +290,12 @@ static int index;
           } // end while
           GUI_Verbose();
           printf("\n ********** Automation ended***********\n");
+#ifdef __WIN32
+	for (int arg = 0; arg < argc; arg++)
+		delete [] argv[arg];
+
+	delete argv;
+#endif
           return 0; // Do not call me anymore
 }
 //_________________________________________________________________________
