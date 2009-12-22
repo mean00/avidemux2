@@ -229,12 +229,19 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
     }
     // Move channels around so that they fit Left/Right/Center/Rear Left, Rear Right,LFE
     const CHANNEL_TYPE *chans=this->getWantedChannelMapping(_channels);
-    static const CHANNEL_TYPE output[6]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
-    for(int i=0;i<_channels;i++)
+    static const CHANNEL_TYPE output[6]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,ADM_CH_FRONT_RIGHT,
+                                         ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
+    for(int i=0;i<6;i++)
     {
         CHANNEL_TYPE wanted=output[i];
         for(int j=0;j<_channels;j++)
-            if(chans[j]==wanted) vol[i]=raw[j];
+        {
+            if(chans[j]==wanted) 
+            {
+                vol[i]=raw[j];
+                break;
+            }
+        }
     }
     return true;
     
