@@ -1066,8 +1066,8 @@ void  pp_postprocess(const uint8_t * src[3], const int srcStride[3],
         }
     }
 
-    av_log(c, AV_LOG_DEBUG, "using npp filters 0x%X/0x%X\n",
-           mode->lumMode, mode->chromMode);
+    // MEANX av_log(c, AV_LOG_DEBUG, "using npp filters 0x%X/0x%X\n",
+           //mode->lumMode, mode->chromMode);
 
     postProcess(src[0], srcStride[0], dst[0], dstStride[0],
                 width, height, QP_store, QPStride, 0, mode, c);
