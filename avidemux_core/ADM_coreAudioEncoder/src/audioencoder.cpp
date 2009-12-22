@@ -19,6 +19,9 @@
 #include "ADM_audioFilter.h"
 #include "audioencoder.h"
 #include "ADM_audioCodecEnum.h"
+
+extern bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
+
 /**
 
 */
@@ -93,43 +96,7 @@ bool  ADM_AudioEncoder::refillBuffer(int minimum)
 bool   ADM_AudioEncoder::reorderChannels(float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output)
 {
 int channels=wavheader.channels;
-
-    float tmp [channels];
-	static uint8_t reorder[MAX_CHANNELS];
-	static bool reorder_on;
-	
-	
-		reorder_on = 0;
-		int j = 0;
-        
-		// Should we reorder the channels (might be needed for encoder ?
-		if (channels > 2) 
-		{
-			CHANNEL_TYPE *p_ch_type;
-			for (int i = 0; i < channels; i++) 
-			{
-				for (int c = 0; c < channels; c++) 
-				{
-					if (input[c] == output[i]) 
-					{
-						if (j != c)
-							reorder_on = 1;
-						reorder[j++] = c;
-					}
-				}
-			}
-		}
-	
-
-	if (reorder_on)
-		for (int i = 0; i < nb; i++) 
-        {
-			memcpy(tmp, data, sizeof(tmp));
-			for (int c = 0; c < channels; c++)
-				*data++ = tmp[reorder[c]];
-		}
-
-    return true;
+       return ADM_audioReorderChannels(channels,data,nb,input,output);
 }
 
 //EOF
