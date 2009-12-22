@@ -171,4 +171,23 @@ void    ossAudioDevice::sendData(void)
     return;
    
 }
+/**
+    \fn getWantedChannelMapping
+*/
+const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
+const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
+const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
+                                             ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
+const CHANNEL_TYPE *ossAudioDevice::getWantedChannelMapping(uint32_t channels)
+{
+    switch(channels)
+    {
+        case 1: return mono;break;
+        case 2: return stereo;break;
+        default:
+                return fiveDotOne;
+                break;
+    }
+    return NULL;
+}
 //EOF

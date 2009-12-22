@@ -25,6 +25,7 @@ class esdAudioDevice : public audioDeviceThreaded
          virtual     bool     localInit(void);
          virtual     bool     localStop(void);
          virtual     void     sendData(void); 
+         virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
 		  public:
 		  			esdAudioDevice(void) {esdDevice=-1;esdServer=-1;}
 		     		 

@@ -20,7 +20,11 @@
 #define AUDIO_DEVICE_STARTED  1
 #define AUDIO_DEVICE_STOP_REQ 2
 #define AUDIO_DEVICE_STOP_GR  3
-
+extern bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
+/**
+    \class audioDevice
+    \brief Base class for audioDeviceThreaded, the one actually used.
+*/
  class audioDevice
  {
         protected:
@@ -30,7 +34,7 @@
         public:
                                         audioDevice(void) {};
                         virtual         ~audioDevice() {};
-                        virtual uint8_t  init(uint32_t channel, uint32_t fq ) =0;
+                        virtual uint8_t  init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *channelMapping) =0;
                         virtual uint8_t  stop(void)=0;
                         virtual uint8_t  play(uint32_t len, float *data) =0;
                         virtual uint8_t  setVolume(int volume) {return 1;}
@@ -47,6 +51,7 @@
 class audioDeviceThreaded: public audioDevice
 {
 protected:
+            CHANNEL_TYPE incomingMapping[MAX_CHANNELS];
             uint32_t    rdIndex;
             uint32_t    wrIndex;
             uint8_t     *audioBuffer;
@@ -65,15 +70,16 @@ protected:
     //
     virtual     bool     localInit(void)=0;
     virtual     bool     localStop(void)=0;
-    virtual     void     sendData(void)=0;    
+    virtual     void     sendData(void)=0;   
+    virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels)=0;
 
 public:
     virtual     void        Loop(void);
-    virtual     uint8_t     init(uint32_t channel, uint32_t fq );
+    virtual     uint8_t     init(uint32_t channel, uint32_t fq,CHANNEL_TYPE *channelMapping );
     virtual     uint8_t     stop(void);
 
     virtual     uint8_t     play(uint32_t len, float *data);
-
+    virtual     bool        getVolumeStats(uint32_t *vol); // Vol is 6 channels between 0 and 255
 };
 
 /**
@@ -82,10 +88,12 @@ public:
 */
 class dummyAudioDevice : public audioDeviceThreaded
 {
-		  public:
+ static const   CHANNEL_TYPE myChannelType[MAX_CHANNELS];
+		  protected:
                     virtual     bool     localInit(void);
                     virtual     bool     localStop(void);
                     virtual     void     sendData(void);    
+                    virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels){return myChannelType;}
 }   ;
 
 #endif

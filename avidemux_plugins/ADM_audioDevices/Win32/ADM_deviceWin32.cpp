@@ -168,6 +168,25 @@ void win32AudioDevice::sendData(void)
 	return ;
 }
 
+/**
+    \fn getWantedChannelMapping
+*/
+const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
+const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
+const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
+                                             ADM_CH_LFE,ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT};
+const CHANNEL_TYPE *win32AudioDevice::getWantedChannelMapping(uint32_t channels)
+{
+    switch(channels)
+    {
+        case 1: return mono;break;
+        case 2: return stereo;break;
+        default:
+                return fiveDotOne;
+                break;
+    }
+    return NULL;
+}
 void handleMM(MMRESULT err)
 {
 #define ERMM(x) if(err==x) printf("[Win32] "#x"\n");

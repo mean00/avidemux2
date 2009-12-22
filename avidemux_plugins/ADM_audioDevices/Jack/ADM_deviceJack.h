@@ -20,11 +20,13 @@ class jackAudioDevice : public audioDeviceThreaded
 {
 public:
 	jackAudioDevice();
+protected:
     virtual     bool     localInit(void);
     virtual     bool     localStop(void);
     virtual     void     sendData(void); 
                 uint8_t  setVolume(int volume);
                 int      process(jack_nframes_t nframes);
+    virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
 
 protected:
 

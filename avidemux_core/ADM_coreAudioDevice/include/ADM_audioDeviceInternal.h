@@ -8,7 +8,7 @@
 #ifndef ADM_audioDeviceInternal_H
 #define ADM_audioDeviceInternal_H
 
-#define ADM_AUDIO_DEVICE_API_VERSION 1
+#define ADM_AUDIO_DEVICE_API_VERSION 2
 #include "ADM_dynamicLoading.h"
 class ADM_AudioDevices :public ADM_LibWrapper
 {

@@ -20,15 +20,17 @@
  class alsaAudioDevice : public audioDeviceThreaded
  {
      protected :
+            virtual     bool    localInit(void);
+            virtual     bool    localStop(void);
+            virtual     void    sendData(void); 
+            virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
             //	0-> no init done
             //	1-> device opened but init failed
             //	2->fully initialized
             uint32_t _init;
       public:
                                 alsaAudioDevice(void);
-            virtual     bool    localInit(void);
-            virtual     bool    localStop(void);
-            virtual     void    sendData(void); 
+          
             virtual     uint8_t setVolume(int volume);
      }     ;
 #endif

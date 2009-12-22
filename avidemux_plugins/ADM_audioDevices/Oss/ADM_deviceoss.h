@@ -23,6 +23,7 @@ protected :
     virtual     bool     localInit(void);
     virtual     bool     localStop(void);
     virtual     void     sendData(void); 
+    virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
 public:   
 			uint8_t setVolume(int volume);
 }     ;
