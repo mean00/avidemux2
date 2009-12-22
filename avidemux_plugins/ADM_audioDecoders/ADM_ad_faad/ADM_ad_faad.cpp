@@ -96,13 +96,23 @@ unsigned char chan;
 			printf("No conf header, will try to init later\n");
 
 		}
-
-		channelMapping[0] = ADM_CH_FRONT_CENTER;
-		channelMapping[1] = ADM_CH_FRONT_LEFT;
-		channelMapping[2] = ADM_CH_FRONT_RIGHT;
-		channelMapping[3] = ADM_CH_REAR_LEFT;
-		channelMapping[4] = ADM_CH_REAR_RIGHT;
-		channelMapping[5] = ADM_CH_LFE;
+        // Give our channel configuration
+        switch(info->channels)
+        {
+            case 1: channelMapping[0] = ADM_CH_FRONT_CENTER;
+                    break;
+            case 2: channelMapping[0] = ADM_CH_FRONT_LEFT;
+                    channelMapping[1] = ADM_CH_FRONT_RIGHT;
+                    break;
+            default:
+                channelMapping[0] = ADM_CH_FRONT_CENTER;
+                channelMapping[1] = ADM_CH_FRONT_LEFT;
+                channelMapping[2] = ADM_CH_FRONT_RIGHT;
+                channelMapping[3] = ADM_CH_REAR_LEFT;
+                channelMapping[4] = ADM_CH_REAR_RIGHT;
+                channelMapping[5] = ADM_CH_LFE;
+                break;
+        }
 
 		printf("[FAAD]Faad decoder created\n");
 }
