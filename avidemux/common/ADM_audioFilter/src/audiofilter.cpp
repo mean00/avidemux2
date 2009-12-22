@@ -22,7 +22,7 @@
 #include "audiofilter_internal.h"
 #include "audiofilter_conf.h"
 #include "audiofilter_film2pal.h"
-
+#include "prefs.h"
 VectorOfAudioFilter PlaybackVector;
 extern ADM_Composer *video_body;
 
@@ -38,11 +38,38 @@ extern ADM_Composer *video_body;
 AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
 {
     //
+    uint32_t downmix;
     ADM_AUDIOFILTER_CONFIG playback;
     playback.startTimeInUs=startTime;
     playback.shiftInMs=shift;
     playback.mixerEnabled=true;
-    playback.mixerConf=CHANNEL_STEREO;
+    if(prefs->get(DOWNMIXING_PROLOGIC,&downmix)!=RC_OK)
+    {
+      downmix=0;
+    }
+      switch (downmix) {
+            case 0:
+                    playback.mixerEnabled=false;
+                    break;
+            case 1:
+                    
+                    playback.mixerConf=CHANNEL_STEREO;
+                    break;  
+            case 2:
+                    
+                    playback.mixerConf=CHANNEL_DOLBY_PROLOGIC;
+                    break;
+            case 3:
+                    
+                    playback.mixerConf=CHANNEL_DOLBY_PROLOGIC2;
+                    break;
+            default:
+                    ADM_assert(0);
+      }
+
+
+    // Fetch mixer from prefs...
+
     // If we have no audio, dont even try...
     if(!video_body->getInfo()) return NULL;
     //
