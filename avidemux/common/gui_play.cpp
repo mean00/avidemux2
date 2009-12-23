@@ -59,7 +59,7 @@ private :
         bool initialized;
         bool initializeAudio();
         bool cleanup(void);
-        bool audioPump(void);
+        bool audioPump(bool wait);
         bool cleanupAudio(void);
         bool updateVu(void);
 public:
@@ -239,9 +239,9 @@ bool GUIPlayback::run(void)
                 {
                     if(delta>10)
                     {
-                        GUI_Sleep(10);
-                        audioPump();
-                    }
+                        audioPump(true);
+                    }else   
+                        audioPump(false);
                     
                     UI_purge();
                     refreshCounter=0;
@@ -268,7 +268,7 @@ abort_play:
     \brief send ~ worth of one video frame of audio
 */
 
-bool  GUIPlayback::audioPump(void)
+bool  GUIPlayback::audioPump(bool wait)
 {
     uint32_t oaf = 0;
     uint32_t load = 0;
@@ -282,6 +282,12 @@ bool  GUIPlayback::audioPump(void)
     channels= playbackAudio->getInfo()->channels;
     fq=playbackAudio->getInfo()->frequency;  
     uint32_t slice=(fq * channels)/50; // 20 ms
+    if(AVDM_getMsFullness() >= AUDIO_PRELOAD)
+    {
+        if(wait==true) GUI_Sleep(10);
+        updateVu();
+        return true;
+    }
 
      while(AVDM_getMsFullness() < AUDIO_PRELOAD)
       {
