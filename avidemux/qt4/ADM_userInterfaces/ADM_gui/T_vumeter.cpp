@@ -83,7 +83,7 @@ bool UI_vuUpdate(uint32_t volume[6])
       {
             int vol=volume[i];
             if(vol>63) vol=63;
-            if(vol<5) vol=5;
+            if(vol<3) vol=3;
             uint8_t *ptr=rgbDataBuffer+vuWidth*(2+10*i)*4;
             uint32_t *data=(uint32_t *)(ptr);
             for(int j=0;j<vol;j++)
@@ -93,12 +93,15 @@ bool UI_vuUpdate(uint32_t volume[6])
                 if(j<50) *data++=YELLOW;
                 else *data++=RED;
             }
-            for(int j=vol;j<128;j++)
+            for(int j=vol;j<64;j++)
             {
                 *data++=0;
             }
       }
-     // ADM_info("VU : %"LU" %"LU" %"LU"\n",volume[0],volume[1],volume[2]);
+#if 0
+      ADM_info("VU : LEFT %"LU" CENTER %"LU" RIGHT %"LU" REARLEFT %"LU" REARRIGHT %"LU"\n",
+                    volume[0],volume[1],volume[2],volume[3],volume[4]);
+#endif
       vuWidget->repaint();
       return true;
 }
