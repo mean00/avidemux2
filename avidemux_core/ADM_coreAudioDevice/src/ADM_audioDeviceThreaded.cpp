@@ -83,7 +83,7 @@ uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *c
     // Spawn
     stopRequest=AUDIO_DEVICE_STARTED;
     ADM_assert(!pthread_create(&myThread,NULL,bouncer,this));
-    
+
 
     return 1;
 }
@@ -106,11 +106,7 @@ uint32_t   audioDeviceThreaded:: getBufferFullness(void)
 */
 uint8_t audioDeviceThreaded::stop()
 {
-    if(audioBuffer)
-    {
-        delete [] audioBuffer;
-        audioBuffer=NULL;
-    }
+
 
     if(stopRequest==AUDIO_DEVICE_STARTED)
     {
@@ -120,7 +116,13 @@ uint8_t audioDeviceThreaded::stop()
             ADM_usleep(1000);
         }
     }
+
     localStop();
+    if(audioBuffer)
+    {
+        delete [] audioBuffer;
+        audioBuffer=NULL;
+    }
     if(silence) delete [] silence;
     silence=NULL;
     stopRequest=AUDIO_DEVICE_STOPPED;
@@ -146,7 +148,7 @@ bool        audioDeviceThreaded::writeData(uint8_t *data,uint32_t lenInByte)
         mutex.unlock();
         return false;
     }
-    
+
     memcpy(audioBuffer+wrIndex,data,lenInByte);
     // Reorder channels if needed...
     uint32_t samples=lenInByte;
@@ -204,7 +206,7 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
     if(samples*_channels*2 > (wrIndex-rdIndex))
             samples=(wrIndex-rdIndex)/(2*_channels);
     for(int i=0;i<6;i++) f[i]=0;
-    if(!samples) 
+    if(!samples)
     {
         mutex.unlock();
         return true;
@@ -215,7 +217,7 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         for(int chan=0;chan<_channels;chan++)
         {
                 f[chan]+=abs(*base++);
-                
+
         }
     mutex.unlock();
     // Normalize
@@ -236,7 +238,7 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         CHANNEL_TYPE wanted=output[i];
         for(int j=0;j<_channels;j++)
         {
-            if(chans[j]==wanted) 
+            if(chans[j]==wanted)
             {
                 vol[i]=raw[j];
                 break;
@@ -244,6 +246,6 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         }
     }
     return true;
-    
+
 }
 //**
