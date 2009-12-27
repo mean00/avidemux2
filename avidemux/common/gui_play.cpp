@@ -295,7 +295,7 @@ bool  GUIPlayback::audioPump(bool wait)
       {
 
              AUD_Status status;
-             if (! (oaf = playbackAudio->fill(fq,  wavbuf,&status)))
+             if (! (oaf = playbackAudio->fill(slice,  wavbuf,&status)))
              {
                   if(errorMet==false)
                     ADM_warning("[Playback] Error reading audio stream...\n");
