@@ -29,7 +29,6 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 	protected:
 		void *ac3_handle;
 		void *ac3_sample;
-		uint32_t _downmix;
 
 	public:
 		ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
@@ -54,6 +53,7 @@ ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t 
 		:   ADM_Audiocodec(fourcc)
 {
     int flags=0;
+    _wavHeader = new WAVHeader;
     ADM_assert(fourcc==WAV_AC3);
     ac3_handle=NULL;
     ac3_sample=NULL;
@@ -67,18 +67,17 @@ ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t 
     ac3_handle=(void *)a52_init(flags);
     if(!ac3_handle)
     {
-        printf("Cannot init a52\n");
+        ADM_error("Cannot init a52\n");
         ADM_assert(0);
     }
     ac3_sample=(sample_t *)a52_samples(AC3_HANDLE);
     if(!ac3_sample)
     {
-        printf("Cannot init a52 sample\n");
+        ADM_warning("Cannot init a52 sample\n");
         ADM_assert(0);
     }
-        _downmix=0;
-      _wavHeader = info;
-      ADM_assert(_wavHeader);
+      _wavHeader = new WAVHeader;
+      *_wavHeader=*info;
 }
 
 ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
@@ -88,6 +87,11 @@ ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
         a52_free(AC3_HANDLE);
         ac3_handle=NULL;
         ac3_sample=NULL;
+    }
+    if( _wavHeader)
+    {
+        delete  _wavHeader;
+        _wavHeader=NULL;
     }
 }
 
@@ -115,13 +119,13 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
         if(nbIn<7)
         {
             if(nbIn)
-                printf("[a52]: no data to decode avail %u\n",nbIn);
+                ADM_warning("[a52]: no enough data to decode, available %"LU" bytes, need at least 7\n",nbIn);
             break;
         }
         length = a52_syncinfo(inptr, &flags, &samprate, &bitrate);
         if(length==0)
         {
-            printf("[a52] No startcode found\n");
+            ADM_warning("[a52] No startcode found\n");
             break;
         }
         if(length>nbIn)
@@ -182,7 +186,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
 
         if (a52_frame(AC3_HANDLE, inptr, &flags, &level, bias))
         {
-            printf("\n A52_frame failed!");
+            ADM_warning(" A52_frame failed!\n");
             inptr+=length;
             nbIn-=length;
             *nbOut += 256 * chan * 6;
@@ -195,7 +199,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
         float *cur;
         for (int i = 0; i < 6; i++) {
                 if (a52_block(AC3_HANDLE)) {
-                        printf("\n A52_block failed! on fblock :%"LU"", i);
+                        ADM_warning(" A52_block failed! on fblock :%d\n", i);
                         // in that case we silent out the chunk
                         memset(outptr, 0, 256 * chan * sizeof(float));
                 } else {
