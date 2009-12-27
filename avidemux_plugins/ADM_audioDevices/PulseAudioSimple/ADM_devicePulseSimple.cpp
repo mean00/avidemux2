@@ -44,7 +44,7 @@ pulseSimpleAudioDevice::pulseSimpleAudioDevice()
 */
 uint32_t pulseSimpleAudioDevice::getLatencyMs(void)
 {
-   return 500; //latency;
+   return 20; //latency;
 }
 
 /**
@@ -78,13 +78,19 @@ pa_sample_spec ss;
 int er;
 pa_buffer_attr attr;
 
-    memset(&attr,0,sizeof(attr));
     attr.maxlength = (uint32_t) -1;
     attr.tlength = (uint32_t )-1;
     attr.prebuf =(uint32_t) -1;
     attr.minreq = (uint32_t) -1;
     attr.fragsize =(uint32_t) -1;
-  
+  // We want something like 20 ms latency
+   uint64_t bufSize=_frequency;
+            bufSize*=_channels;
+            bufSize*=2;      // 1 second worth of audio
+
+  attr.maxlength=bufSize/25; // 50 ms
+  attr.tlength=bufSize/50; //  20 ms
+  attr.prebuf=bufSize/100; // 10 ms
 
   ss.format = PA_SAMPLE_S16LE;
   ss.channels = _channels;
@@ -97,12 +103,12 @@ pa_buffer_attr attr;
                     "Sound",            // Description of our stream.
                     &ss,                // Our sample format.
                     NULL,               // Use default channel map
-                    NULL, //&attr ,             // Use default buffering attributes.
+                    &attr ,             // Use default buffering attributes.
                     &er               // Ignore error code.
                     );
   if(!instance)
     {
-        printf("[PulseSimple] open failed :%s\n",pa_strerror(er));
+        ADM_info("[PulseSimple] open failed :%s\n",pa_strerror(er));
         return 0;
     }
 #if 0
@@ -116,9 +122,9 @@ pa_buffer_attr attr;
     }
     pa_simple_drain(INSTANCE,&er);
     latency=ticktock.getElapsedMS();
-    printf("[Pulse] Latency :%lu, total %lu\n",latency,pa_simple_get_latency(INSTANCE,&er)/1000);
+    ADM_info("[Pulse] Latency :%"LU", total %"LU"\n",latency,pa_simple_get_latency(INSTANCE,&er)/1000);
 #endif
-    printf("[PulseSimple] open ok\n");
+    ADM_info("[PulseSimple] open ok\n");
     return 1;
 
 }
