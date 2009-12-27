@@ -18,7 +18,7 @@
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
 #include "ADM_audioDeviceInternal.h"
-
+#include "math.h"
 /**
     \fn audioDeviceThreaded
     \brief constructor
@@ -89,7 +89,7 @@ uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *c
 }
 /**
     \fn getBufferFullness
-    \brief Returns the number of ms of audio in the buffer
+    \brief Returns the number of 10 ms of audio in the buffer
 
 */
 uint32_t   audioDeviceThreaded:: getBufferFullness(void)
@@ -97,7 +97,7 @@ uint32_t   audioDeviceThreaded:: getBufferFullness(void)
     mutex.lock();
     float nbBytes=wrIndex-rdIndex;
     mutex.unlock();
-    nbBytes/=10*sizeOf10ms;
+    nbBytes/=sizeOf10ms;
     return 1+(uint32_t)nbBytes;
 }
 /**
@@ -150,16 +150,7 @@ bool        audioDeviceThreaded::writeData(uint8_t *data,uint32_t lenInByte)
     }
 
     memcpy(audioBuffer+wrIndex,data,lenInByte);
-    // Reorder channels if needed...
-    uint32_t samples=lenInByte;
-    samples/=sizeof(float);
-    samples/=_channels;
-    ADM_audioReorderChannels(_channels,
-                    (float *)(audioBuffer+wrIndex),
-                    samples,
-                    incomingMapping,
-                    (CHANNEL_TYPE*)getWantedChannelMapping(_channels));
-    //
+   
     wrIndex+=lenInByte;
     mutex.unlock();
     return true;
@@ -186,8 +177,18 @@ bool        audioDeviceThreaded::readData(uint8_t *data,uint32_t lenInByte)
 */
 uint8_t     audioDeviceThreaded::play(uint32_t len, float *data)
 {
+    // Reorder channels if needed...
+    uint32_t samples=len;
+    samples/=_channels;
+    ADM_audioReorderChannels(_channels,
+                    (float *)(data),
+                    samples,
+                    incomingMapping,
+                    (CHANNEL_TYPE*)getWantedChannelMapping(_channels));
+    // dither to int16_t
 	dither16(data, len, _channels);
     len*=2;
+    // Store in buffer
     return writeData((uint8_t *)data,len);
 
 }
@@ -200,8 +201,8 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
     float f[6];
     uint32_t raw[6];
     memset(vol,0,sizeof(uint32_t)*6);
-    // 20 ms should be enough, i.e. fq/50
-    uint32_t samples=_frequency/50;
+    // 5 ms should be enough, i.e. fq/200
+    uint32_t samples=_frequency/200;
     mutex.lock();
     if(samples*_channels*2 > (wrIndex-rdIndex))
             samples=(wrIndex-rdIndex)/(2*_channels);
@@ -211,24 +212,33 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         mutex.unlock();
         return true;
     }
-
-    int16_t *base=(int16_t *)(rdIndex+audioBuffer);
+#define USE_MEAN_SQUARE
+    uint8_t *base8=rdIndex+audioBuffer;
+    int16_t *base=(int16_t *)(base8);
     for(int i=0;i<samples;i++)
         for(int chan=0;chan<_channels;chan++)
         {
-                f[chan]+=abs(*base++);
-
+#ifdef USE_MEAN_SQUARE
+                f[chan]+=base[0]*base[0];
+#else
+                f[chan]+=abs(*base);
+#endif
+                base++;
         }
     mutex.unlock();
     // Normalize
     for(int i=0;i<6;i++)
     {
         float d=f[i];
-        d/=samples;
-        d/=128;
-        if(d>127) d=127;
+        d/=samples; // d is now between 0 and 32768
+#ifdef USE_MEAN_SQUARE
+        d=sqrt(d);
+#endif
+        d/=128;     // D is now between 0 and 255
+        if(d>255) d=255;
         raw[i]=(uint32_t)d;
     }
+    
     // Move channels around so that they fit Left/Right/Center/Rear Left, Rear Right,LFE
     const CHANNEL_TYPE *chans=this->getWantedChannelMapping(_channels);
     static const CHANNEL_TYPE output[6]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_CENTER,ADM_CH_FRONT_RIGHT,
@@ -245,6 +255,10 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
             }
         }
     }
+#if 0
+    #define zz vol
+    printf("[%d] %02d %02d %02d %02d %02d %02d\n",samples,zz[0],zz[1],zz[2],zz[3],zz[4],zz[5]);
+#endif
     return true;
 
 }
