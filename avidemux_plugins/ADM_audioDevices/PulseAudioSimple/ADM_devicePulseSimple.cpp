@@ -23,11 +23,12 @@
 #include  "pulse/simple.h"
 #include  "pulse/error.h"
 
-ADM_DECLARE_AUDIODEVICE(PulseAudioS,pulseSimpleAudioDevice,1,0,1,"PulseAudioSimple audio device (c) mean");
+ADM_DECLARE_AUDIODEVICE(PulseAudioS,pulseSimpleAudioDevice,1,0,2,"PulseAudioSimple audio device (c) mean");
 #define INSTANCE  ((pa_simple *)instance)
 
 // By default we use float NOT
 #define ADM_PULSE_INT16
+#define ADM_PULSE_LATENCY 50 // ms
 /**
     \fn pulseSimpleAudioDevice
     \brief Constructor
@@ -44,7 +45,7 @@ pulseSimpleAudioDevice::pulseSimpleAudioDevice()
 */
 uint32_t pulseSimpleAudioDevice::getLatencyMs(void)
 {
-   return 20; //latency;
+   return ADM_PULSE_LATENCY; //latency;
 }
 
 /**
@@ -77,20 +78,35 @@ pa_simple *s;
 pa_sample_spec ss;
 int er;
 pa_buffer_attr attr;
-
+pa_channel_map map,*pmap=NULL;
     attr.maxlength = (uint32_t) -1;
     attr.tlength = (uint32_t )-1;
     attr.prebuf =(uint32_t) -1;
     attr.minreq = (uint32_t) -1;
     attr.fragsize =(uint32_t) -1;
+
   // We want something like 20 ms latency
    uint64_t bufSize=_frequency;
             bufSize*=_channels;
             bufSize*=2;      // 1 second worth of audio
 
-  attr.maxlength=bufSize/25; // 50 ms
-  attr.tlength=bufSize/50; //  20 ms
-  attr.prebuf=bufSize/100; // 10 ms
+  bufSize=bufSize/1000;
+  bufSize*=ADM_PULSE_LATENCY;
+  attr.tlength=bufSize;       // Latency in bytes
+ 
+
+  // Channel mapping
+  if(_channels>2)
+    {
+        pmap=&map;
+        map.channels=_channels;
+        map.map[0]=PA_CHANNEL_POSITION_FRONT_LEFT;
+        map.map[1]=PA_CHANNEL_POSITION_FRONT_RIGHT;
+        map.map[2]=PA_CHANNEL_POSITION_FRONT_CENTER;
+        map.map[3]=PA_CHANNEL_POSITION_REAR_LEFT;
+        map.map[4]=PA_CHANNEL_POSITION_REAR_RIGHT;
+        map.map[5]=PA_CHANNEL_POSITION_SUBWOOFER;
+  }
 
   ss.format = PA_SAMPLE_S16LE;
   ss.channels = _channels;
@@ -102,7 +118,7 @@ pa_buffer_attr attr;
                     NULL,               // Use the default device.
                     "Sound",            // Description of our stream.
                     &ss,                // Our sample format.
-                    NULL,               // Use default channel map
+                    pmap,               // Use default channel map
                     &attr ,             // Use default buffering attributes.
                     &er               // Ignore error code.
                     );
