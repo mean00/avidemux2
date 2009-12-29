@@ -45,7 +45,8 @@ class ADM_faad : public     ADM_Audiocodec
 
 static  ad_supportedFormat Formats[]={
         {WAV_AAC,AD_MEDIUM_QUAL},
-        {WAV_MP4,AD_MEDIUM_QUAL}
+        {WAV_MP4,AD_MEDIUM_QUAL},
+        {0x706D,AD_MEDIUM_QUAL},
 };
 DECLARE_AUDIO_DECODER(ADM_faad,						// Class
 			0,0,1, 												// Major, minor,patch
@@ -105,12 +106,17 @@ unsigned char chan;
                     channelMapping[1] = ADM_CH_FRONT_RIGHT;
                     break;
             default:
-                channelMapping[0] = ADM_CH_FRONT_CENTER;
-                channelMapping[1] = ADM_CH_FRONT_LEFT;
-                channelMapping[2] = ADM_CH_FRONT_RIGHT;
-                channelMapping[3] = ADM_CH_REAR_LEFT;
-                channelMapping[4] = ADM_CH_REAR_RIGHT;
-                channelMapping[5] = ADM_CH_LFE;
+            {
+                CHANNEL_TYPE *p=channelMapping;
+                *p++ = ADM_CH_REAR_RIGHT;
+                *p++ = ADM_CH_FRONT_LEFT;
+                *p++ = ADM_CH_FRONT_CENTER;
+
+                *p++ = ADM_CH_FRONT_RIGHT;
+                *p++ = ADM_CH_REAR_LEFT;
+                
+                *p++ = ADM_CH_REAR_LEFT;
+              }
                 break;
         }
 
