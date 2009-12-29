@@ -8,5 +8,9 @@
 
 	ADD_TARGET_CFLAGS(ADM_ae_aften "-I${AFTEN_INCLUDE_DIR}")
 
+        if(USE_AFTEN_08)
+                ADD_DEFINITIONS(-DAFTEN_08)
+        endif(USE_AFTEN_08)
+
 	INIT_AUDIO_ENCODER(ADM_ae_aften)
 	INSTALL_AUDIOENCODER(ADM_ae_aften)

@@ -193,7 +193,11 @@ _again:
         ptr=(void *)&(tmpbuffer[tmphead]);
         ADM_assert(tmptail>=tmphead);
         reorderChannels(&(tmpbuffer[tmphead]),256*6,_incoming->getChannelMapping(),outputChannelMapping);
-        r=aften_encode_frame(_HANDLE, dest,(void *)ptr,256*6);
+        r=aften_encode_frame(_HANDLE, dest,(void *)ptr
+#ifndef AFTEN_08
+      ,256*6
+#endif
+        );
         if(r<0)
         {
           printf("[Aften] Encoding error %d\n",r);
