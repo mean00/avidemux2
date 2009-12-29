@@ -132,15 +132,15 @@ uint8_t asfHeader::getHeaders(void)
             printf("Client        :");
             for(int z=0;z<16;z++) printf(":%02x",s->read8());
             printf("\n");
-            printf("File size     : %08lx\n",s->read64());
-            printf("Creation time : %08lx\n",s->read64());
-            printf("Number of pack: %08lx\n",s->read64());
-            printf("Timestamp 1   : %08lx\n",s->read64());
+            printf("File size     : %08"LLX"\n",s->read64());
+            printf("Creation time : %08"LLX"\n",s->read64());
+            printf("Number of pack: %08"LLX"\n",s->read64());
+            printf("Timestamp 1   : %08"LLX"\n",s->read64());
             _duration=s->read64();
-            printf("Timestamp 2   : %08lx\n",_duration);
-            printf("Timestamp 3   : %04x\n",s->read32());
-            printf("Preload       : %04x\n",s->read32());
-            printf("Flags         : %04x\n",s->read32());
+            printf("Timestamp 2   : %08"LLX"\n",_duration);
+            printf("Timestamp 3   : %04"LX"\n",s->read32());
+            printf("Preload       : %04"LX"\n",s->read32());
+            printf("Flags         : %04"LX"\n",s->read32());
             mx=s->read32();
             mn=s->read32();
             if(mx!=mn)
@@ -150,9 +150,9 @@ uint8_t asfHeader::getHeaders(void)
               return 0; 
             }
             _packetSize=mx;
-            printf("Min size      : %04x\n",mx);
-            printf("Max size      : %04x\n",mn);
-            printf("Uncompres.size: %04x\n",s->read32());
+            printf("Min size      : %04"LX"\n",mx);
+            printf("Max size      : %04"LX"\n",mn);
+            printf("Uncompres.size: %04"LX"\n",s->read32());
           }
           break;
       case ADM_CHUNK_STREAM_HEADER_CHUNK:

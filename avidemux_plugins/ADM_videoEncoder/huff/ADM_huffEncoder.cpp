@@ -20,7 +20,7 @@
 #include "ADM_huffEncoder.h"
 #include "DIA_factory.h"
 
-typedef enum
+enum
 {
     ADM_HUFF_YUV,
     ADM_FF_HUFF_YUV

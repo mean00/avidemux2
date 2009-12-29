@@ -218,7 +218,8 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
             skip(10);
             a=read32();
             b=read32();
-            time2=a+(b<<32);
+            time2=b;
+            time2=a+(time2<<32);
             skip(8); 
             skip(12);
             skip(4);

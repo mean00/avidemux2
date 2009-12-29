@@ -111,7 +111,7 @@ uint8_t   asfChunk::nextChunk(int shortChunk)
   chunkLen<<=32;
   chunkLen+=low;
   
-  printf("Next chunk from %"LX" +%"LX" to %"LX"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
+  printf("Next chunk from %"LX" +%"LLX" to %"LLX"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
   
   return 1;
   
