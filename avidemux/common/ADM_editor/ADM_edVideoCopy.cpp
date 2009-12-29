@@ -93,7 +93,9 @@ againGet:
         img->demuxerDts=_nextFrameDts;
     }else
     {
-        if(_nextFrameDts>img->demuxerDts) 
+// It means that the incoming image is earlier than the expected time.
+// we add a bit of timeIncrement to compensate for rounding
+        if(_nextFrameDts>img->demuxerDts+vid->timeIncrementInUs/10)
         {
          ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLU" ms got : %"LLU" ms\n",fn,_nextFrameDts/1000,img->demuxerDts/1000);
         }
