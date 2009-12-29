@@ -25,33 +25,33 @@
 //
 extern "C"
 {
-#if defined(USE_AFTEN_06)
-	#include "aften.h"
-#else	// Aften 0.05 & 0.07 onwards
-	#include "aften/aften.h"
-#endif
+#include "aften/aften.h"
 };
-#include "audioencoder_aften_param.h"
 #include "audioencoder_aften.h"
 
 #define _HANDLE ((AftenContext *)_handle)
 
+static uint32_t aftenBitrate=128;
+/*
 static AFTEN_encoderParam aftenParam= {
   128
-  
-};
-static uint8_t configure (void);
+
+};*/
+
+static bool configure (void);
+
+
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Aften);
 
-static ADM_audioEncoder encoderDesc = { 
+static ADM_audioEncoder encoderDesc = {
   ADM_AUDIO_ENCODER_API_VERSION,
   create,			// Defined by macro automatically
   destroy,			// Defined by macro automatically
   configure,		//** put your own function here**
-  "Aften",            
-  "AC3 (Aften)",      
-  "Aften AC3 encoder plugin Mean/Gruntster 2008",             
+  "Aften",
+  "AC3 (Aften)",
+  "Aften AC3 encoder plugin Mean/Gruntster 2008",
   6,                    // Max channels
   1,0,0,                // Version
   WAV_AC3,
@@ -60,13 +60,13 @@ static ADM_audioEncoder encoderDesc = {
   setConfigurationData,  // Defined by macro automatically
 
   getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically 
+  setBitrate,            // Defined by macro automatically
 
   NULL,         //** put your own function here**
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(aftenParam);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,aftenBitrate);
 
 /******************* / Declare plugin*******************************************************/
 
@@ -76,20 +76,42 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(aftenParam);
 
 */
 
-AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream)  :AUDMEncoder    (instream)
+AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
 {
   uint32_t channels;
+  ADM_info("[Aften] Creating aften\n");
   channels=instream->getInfo()->channels;
   _handle=(void *)new AftenContext;
   memset(_handle,0,sizeof(AftenContext));
   aften_set_defaults(_HANDLE);
-  _wavheader->encoding=WAV_AC3;
-#if defined(USE_AFTEN_05) || defined(USE_AFTEN_06)
-#elif defined(USE_AFTEN_07)
-  _HANDLE->params.n_threads=1; // MThread collides with avidemux multithreading
-#else
+  wavheader.encoding=WAV_AC3;
   _HANDLE->system.n_threads=1;
-#endif
+
+
+  switch(channels)
+  {
+    case 1:
+        outputChannelMapping[1] = ADM_CH_FRONT_LEFT;
+        break;
+    case 2:
+    	outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
+    	outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
+      break;
+    default :
+
+    CHANNEL_TYPE *f=outputChannelMapping;
+
+        *f++ = ADM_CH_FRONT_LEFT;
+        *f++ = ADM_CH_FRONT_CENTER;
+        *f++ = ADM_CH_FRONT_RIGHT;
+
+        *f++ = ADM_CH_REAR_LEFT;
+        *f++ = ADM_CH_REAR_RIGHT;
+
+        *f++ = ADM_CH_LFE;
+        break;
+  }
+
 };
 
 /**
@@ -99,13 +121,11 @@ AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream)  :AUDMEncoder  
 
 AUDMEncoder_Aften::~AUDMEncoder_Aften()
 {
+    ADM_info("[Aften] Deleting aften\n");
     if(_handle)
       aften_encode_close(_HANDLE);
     delete(_HANDLE);
     _handle=NULL;
-
-    printf("[Aften] Deleting aften\n");
-    cleanup();
 };
 
 
@@ -113,25 +133,24 @@ AUDMEncoder_Aften::~AUDMEncoder_Aften()
     \fn initialize
 
 */
-uint8_t AUDMEncoder_Aften::initialize(void)
+bool AUDMEncoder_Aften::initialize(void)
 {
-
-
 int ret=0;
-
-#if defined(USE_AFTEN_05) || defined(USE_AFTEN_06)
-int mask;
-#else
 unsigned int mask;
-#endif
 
-    _wavheader->byterate=(aftenParam.bitrate*1000)/8;
+    if(FLOAT_TYPE_FLOAT!=aften_get_float_type())
+    {
+            ADM_error("Aften was configured to use double !");
+            return false;
+    }
+
+    wavheader.byterate=(aftenBitrate*1000)/8;
     _HANDLE->sample_format=A52_SAMPLE_FMT_FLT;
-    _HANDLE->channels=_wavheader->channels;
-    _HANDLE->samplerate=_wavheader->frequency;
-    
-    _HANDLE->params.bitrate=aftenParam.bitrate;
-    switch(_wavheader->channels)
+    _HANDLE->channels=wavheader.channels;
+    _HANDLE->samplerate=wavheader.frequency;
+
+    _HANDLE->params.bitrate=aftenBitrate;
+    switch(wavheader.channels)
     {
         case 1: mask = 0x04;  break;
         case 2: mask = 0x03;  break;
@@ -141,57 +160,46 @@ unsigned int mask;
         case 6: mask = 0x3F;  break;
       }
 
-#if defined(USE_AFTEN_05) || defined(USE_AFTEN_06)
-	aften_wav_chmask_to_acmod(_wavheader->channels, mask, &(_HANDLE->acmod), &(_HANDLE->lfe));
-#else
-	aften_wav_channels_to_acmod(_wavheader->channels, mask, &(_HANDLE->acmod), &(_HANDLE->lfe));
-#endif
+	aften_wav_channels_to_acmod(wavheader.channels, mask, &(_HANDLE->acmod), &(_HANDLE->lfe));
 
-   //   _HANDLE->params.verbose=2;
     int er= aften_encode_init(_HANDLE);
     if(er<0)
     {
-      printf("[Aften] init error %d\n",er); 
-      return 0;
+      ADM_warning("[Aften] init error %d\n",er);
+      return false;
     }
-    _chunk=256*6*_wavheader->channels;
-    printf("[Aften] Initialized with fd %u Channels %u bitrate %u\n",_HANDLE->samplerate,
+    _chunk=256*6*wavheader.channels;
+    ADM_info("[Aften] Initialized with fd %u Channels %u bitrate %u\n",_HANDLE->samplerate,
                                                                     _HANDLE->channels,_HANDLE->params.bitrate);
-    return 1;
+    return true;
 }
 
 
 /**
-        \fn getPacket
+        \fn encode
 */
-uint8_t	AUDMEncoder_Aften::getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples)
+bool    AUDMEncoder_Aften::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
   uint32_t count=0;
   int r;
   void *ptr;
 _again:
         *len = 0;
-        _chunk=256*6*_wavheader->channels;
+        _chunk=256*6*wavheader.channels;
         if(!refillBuffer(_chunk ))
         {
-          return 0; 
+          return 0;
         }
         ptr=(void *)&(tmpbuffer[tmphead]);
         ADM_assert(tmptail>=tmphead);
-
-#ifdef USE_AFTEN_05
-		aften_remap_wav_to_a52(ptr, 256*6, _wavheader->channels, A52_SAMPLE_FMT_FLT, _HANDLE->acmod, _HANDLE->lfe);
-#else
-		aften_remap_wav_to_a52(ptr, 256*6, _wavheader->channels, A52_SAMPLE_FMT_FLT, _HANDLE->acmod);
-#endif
-
-        r=aften_encode_frame(_HANDLE, dest,(void *)ptr);
+        reorderChannels(&(tmpbuffer[tmphead]),256*6,_incoming->getChannelMapping(),outputChannelMapping);
+        r=aften_encode_frame(_HANDLE, dest,(void *)ptr,256*6);
         if(r<0)
         {
           printf("[Aften] Encoding error %d\n",r);
-          return 0; 
+          return 0;
         }
-        
+
         *samples=256*6;
         *len=r;
         tmphead+=_chunk;
@@ -201,7 +209,10 @@ _again:
 /**
     \fn configure
 */
-uint8_t configure (void)
+#define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
+#define BITRATE(x) {x,QT_TR_NOOP(#x)}
+
+bool configure (void)
 {
  int ret=0;
 
@@ -217,13 +228,13 @@ uint8_t configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(aftenParam.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
-  
-    
+    diaElemMenu bitrate(&(aftenBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+
+
 
     diaElem *elems[]={&bitrate};
-    
+
     return ( diaFactoryRun(QT_TR_NOOP("Aften Configuration"),1,elems));
-    
+
 }
 // EOF

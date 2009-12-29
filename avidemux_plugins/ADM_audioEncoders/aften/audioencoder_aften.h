@@ -15,17 +15,21 @@
 #ifndef AUDMaudioAften
 #define AUDMaudioAften
 
- //_____________________________________________
-class AUDMEncoder_Aften : public AUDMEncoder
+/**
+    \class AUDMEncoder_Aften
+    \brief Class wrapping aften ac3 encoder
+*/
+class AUDMEncoder_Aften : public ADM_AudioEncoder
 {
 protected:
          void           *_handle;
-         
+         uint32_t       _chunk;
+
 public:
-                uint8_t initialize(void);
-                virtual ~AUDMEncoder_Aften();
-                        AUDMEncoder_Aften(AUDMAudioFilter *instream);	
-        virtual uint8_t	getPacket(uint8_t *dest, uint32_t *len, uint32_t *samples);
+                bool    initialize(void);
+    virtual     bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+    virtual             ~AUDMEncoder_Aften();
+                        AUDMEncoder_Aften(AUDMAudioFilter *instream);
 };
 #endif
 
