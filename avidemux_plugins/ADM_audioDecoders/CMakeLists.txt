@@ -1,3 +1,4 @@
+include(admSummary)
 ADD_SUBDIRECTORY(ADM_ad_ac3)
 ADD_SUBDIRECTORY(ADM_ad_faad)
 ADD_SUBDIRECTORY(ADM_ad_mad)
@@ -10,3 +11,12 @@ ADD_SUBDIRECTORY(ADM_ad_ms_adpcm)
 ADD_SUBDIRECTORY(ADM_ad_ima_adpcm)
 ADD_SUBDIRECTORY(ADM_ad_opencore_amrwb)
 ADD_SUBDIRECTORY(ADM_ad_opencore_amrnb)
+MESSAGE(STATUS "***  Audio Decoder ***")
+ADM_DISPLAY("FAAD      " "${USE_FAAD}")
+ADM_DISPLAY("Vorbis    " "${USE_LIBVORBIS}")
+ADM_DISPLAY("FAAC      " "${USE_FAAC}")
+ADM_DISPLAY("OpenAMR-NB" "${OPENCORE_AMRNB_FOUND}")
+ADM_DISPLAY("DCA       " "${LIBDCA_FOUND}")
+MESSAGE(STATUS "***  /Audio Decoder  ***")
+
+
