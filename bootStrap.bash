@@ -1,10 +1,14 @@
 #!/bin/bash
+# Bootstrapper to semi-automatically build avidemux deb/rpm from source
+# (c) Mean 2009
+#
 packages_ext=deb
 do_core=1
 do_cli=0
 do_gtk=1
 do_qt4=0
 do_plugins=1
+debug=0
 fail()
 {
         echo "** Failed at $1**"
@@ -16,11 +20,19 @@ Process()
         export BUILDDIR=$1
         export SOURCEDIR=$2
         export EXTRA=$3
-        echo "Building $BUILDDIR from $SOURCEDIRi with EXTRA=$EXTRA"
+        export DEBUG=""
+        BUILDER="Unix Makefiles"
+        if [ "x$debug" = "x1" ] ; then 
+                DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
+                BUILDDIR="${BUILDDIR}_debug"
+                BUILDER="CodeBlocks - Unix Makefiles"
+        fi
+        
+        echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $SOURCEDIR || fail cmake
+        cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make -j 2 > /tmp/log$BUILDDIR || fail make
         fakeroot make package DESTDIR=debPack || fail package
 }
@@ -38,6 +50,10 @@ config()
 {
         echo "Build configuration :"
         echo "******************* :"
+        echo "Build type :"
+        if [ "x$debug" = "x1" ] ; then echo   "Debug build"
+        else echo   "Release build"
+        fi
         printModule $do_core Core
         printModule $do_gtk Gtk
         printModule $do_qt4 Qt4
@@ -50,6 +66,7 @@ usage()
         echo "***********************"
         echo "  --help            : Print usage"
         echo "  --rpm             : Build rpm packages rather than deb"
+        echo "  --debug           : Switch debugging on"
         echo "  --with-core       : Build core"
         echo "  --without-core    : Dont build core"
         echo "  --with-cli        : Build cli"
@@ -70,6 +87,9 @@ while [ $# != 0 ] ;do
              usage
              exit 1
              ;;
+         --debug)
+                debug=1
+                ;;
          --rpm)
                 packages_ext=rpm
                 PKG="$PKG -DRPM=1"
