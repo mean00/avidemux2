@@ -108,14 +108,12 @@ unsigned char chan;
             default:
             {
                 CHANNEL_TYPE *p=channelMapping;
-                *p++ = ADM_CH_REAR_RIGHT;
-                *p++ = ADM_CH_FRONT_LEFT;
                 *p++ = ADM_CH_FRONT_CENTER;
-
+                *p++ = ADM_CH_FRONT_LEFT;
                 *p++ = ADM_CH_FRONT_RIGHT;
                 *p++ = ADM_CH_REAR_LEFT;
-                
-                *p++ = ADM_CH_REAR_LEFT;
+                *p++ = ADM_CH_REAR_RIGHT;                
+                *p++ = ADM_CH_LFE;
               }
                 break;
         }
