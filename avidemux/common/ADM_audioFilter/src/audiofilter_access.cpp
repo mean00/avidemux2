@@ -83,11 +83,16 @@ uint64_t  ADMAudioFilter_Access::getPos(void)
 */
 bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
+static bool endMet=false;
     uint32_t samples;
     bool r=encoder->encode(buffer,size,&samples);
     if(false==r)
     {
-        printf("[Access] getpacket failed for encoding\n");
+        if(endMet==false)
+        {
+            ADM_warning("[Access] getpacket failed for encoding\n");
+            endMet=true;
+        }
         return false;
     }
 
@@ -95,6 +100,7 @@ bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32
     d*=1000*1000;
     *dts=startTimeUs+(uint64_t)d;
     samplesSeen+=samples;
+    endMet=false;
     return true;
 }
 /**
