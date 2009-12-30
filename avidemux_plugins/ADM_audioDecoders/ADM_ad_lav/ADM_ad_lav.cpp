@@ -242,7 +242,7 @@ int nbChunk;
             {
             CHANNEL_TYPE *p_ch_type = channelMapping;
 #define DOIT(x,y) if(_context->channel_layout & CH_##x) *(p_ch_type++)=ADM_CH_##y;
-            if(_context->codec_id == CODEC_ID_DTS)
+            //if(_context->codec_id == CODEC_ID_DTS)
                 {
                     
                     DOIT(FRONT_LEFT,FRONT_LEFT);
@@ -253,10 +253,9 @@ int nbChunk;
                     DOIT(LOW_FREQUENCY,LFE);
                     DOIT(SIDE_LEFT,REAR_LEFT);
                     DOIT(SIDE_RIGHT,REAR_RIGHT);
-                    
-                    
- 
-                }else   
+                }
+#if 0
+else   
                 {
                     DOIT(LOW_FREQUENCY,LFE);
                     DOIT(FRONT_LEFT,FRONT_LEFT);
@@ -265,6 +264,7 @@ int nbChunk;
                     DOIT(SIDE_LEFT,REAR_LEFT);
                     DOIT(SIDE_RIGHT,REAR_RIGHT);
                 }
+#endif
             }
         
         return 1;
