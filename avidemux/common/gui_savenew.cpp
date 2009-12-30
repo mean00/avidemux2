@@ -23,9 +23,6 @@
 #include "DIA_coreToolkit.h"
 #include "DIA_enter.h"
 #include "ADM_coreAudio.h"
-
-//#include "ADM_videoFilter.h"
-//#include "ADM_videoFilter_internal.h"
 #include "ADM_encoderConf.h"
 
 #include "ADM_encoderConf.h"
