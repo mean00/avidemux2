@@ -10,7 +10,11 @@ SET(ADM_script_SRCS
 # Load segment
         ADM_jsAvidemux.cpp
         ADM_jsAvidemux_js.c
-#
+# Debug / editor class
+        ADM_jsEditor.cpp
+        ADM_jsEditor_js.c
+
+# 
         ADM_jsVideo.cpp
 #
         ADM_jsAudio.cpp

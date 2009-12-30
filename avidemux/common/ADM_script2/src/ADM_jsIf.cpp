@@ -147,6 +147,8 @@ bool ADM_jsUnregisterLogger(void)
 extern "C" JSFunctionSpec  *jsGetIfFunctions(void);
 extern "C" JSFunctionSpec  *jsGetTestFunctions(void);
 extern "C" JSFunctionSpec  *jsGetAdmFunctions(void);
+extern "C" JSFunctionSpec  *jsGetEditFunctions(void);
+extern "C" JSObject *jsEditorInit(JSContext *cx,JSObject *obj);
 extern "C" JSObject *jsAvidemuxInit(JSContext *cx,JSObject *obj);
 static bool registerOne(const char *name,const char *text,JSFunctionSpec *s,JSContext *cx,JSObject *obj)
 {
@@ -210,12 +212,19 @@ static bool jsRegisterAvidemux(JSContext *cx,JSObject *obj)
 ADM_JS_HOOK h;
         registerOne("Debug","",   jsGetIfFunctions(),    cx,obj);
         registerOne("Test","", jsGetTestFunctions(),  cx,obj);
+        
         // Register also our class (for  help() )
             h.name="adm";
             h.text="Please prefix this with adm.";
             h.jsFunctions=jsGetAdmFunctions();
             jsHooks.push_back(h);
             jsAvidemuxInit(cx,obj);
+        // Register also edit
+            h.name="editor";
+            h.text="Please prefix this with editor.";
+            h.jsFunctions=jsGetEditFunctions();
+            jsHooks.push_back(h);
+            jsEditorInit(cx,obj);
             return true;
 }
 /**

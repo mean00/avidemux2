@@ -1,0 +1,35 @@
+%{
+#include "stdio.h"
+#include "ADM_jsEditor.h"
+void jsEditor(void)
+{
+        printf("Constructor invoked\n");
+}
+%}
+        /*            JSFUNC      C FUNC  PARAM     */
+class editor
+{
+        /*            JSFUNC                 C FUNC           PARAM     */
+        function int printTiming     : jsPrintTiming(int ) <static>;
+        /*            JSFUNC                 C FUNC           PARAM     */
+        
+        construct                          : jsEditor  ( ) <static>     ; 
+};
+
+%<
+
+JSObject *jsEditorInit(JSContext *cx,JSObject *obj)
+{
+          if (JS_DefineFunctions(cx, obj, jj_static_fs) != JS_TRUE) 
+          {
+                return NULL;
+          }
+          return jjeditor_init(cx,obj);
+}
+
+JSFunctionSpec  *jsGetEditFunctions(void)
+{
+        return jjeditor_static_fs;
+}
+
+%>

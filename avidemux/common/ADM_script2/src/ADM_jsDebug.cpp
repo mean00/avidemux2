@@ -68,40 +68,7 @@ static void dumpFunc(JSFunctionSpec *f)
         f++;
     }
 }
-/**
-    \fn help
-    \brief dump avidemux specific functions
-*/
-JSBool help(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-#if 0
-        if(!argc)
-        {
-            jsLog(JS_LOG_NORMAL,"help(\"class\"); or help(\"video\"); or help(\"audio\"); or help(\"debug\"); or debug(\"functions\"");
-            return JS_TRUE;
-        }
-        if(argc != 1)
-        {
-          jsLog(JS_LOG_ERROR,"help accepts only one arg, type help() to get them\n");
-          return JS_FALSE;
-        } 
-        JSFunctionSpec *table=NULL;
-        char *f=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-        
-#define DUMPTABLE(x,y) if(!strcasecmp(f,#x)) table=y();
-        if(f)
-        {
-            DUMPTABLE(audio,ADM_JsAudioGetFunctions);
-            DUMPTABLE(video,ADM_JsVideoGetFunctions);
-            DUMPTABLE(debug,ADM_JsDebugGetFunctions);
-            DUMPTABLE(functions,ADM_JsFunctionGetFunctions);
-            DUMPTABLE(class,ADM_JsClassGetFunctions);
-        }
-        if(table) dumpFunc(table);
-        else jsLog(JS_LOG_ERROR,"%s not found",f);
-#endif  
-  return JS_TRUE;
-}
+
 /**
     \fn dumpEditing
     \brief dump segment, video & all
