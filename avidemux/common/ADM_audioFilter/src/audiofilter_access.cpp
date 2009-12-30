@@ -72,15 +72,15 @@ bool      ADMAudioFilter_Access::setPos(uint64_t pos)
 /**
     \fn getPos
 */
-              
+
 uint64_t  ADMAudioFilter_Access::getPos(void)
 {
     return 0;
 }
-           
+
 /**
     \fn getPacket
-*/                
+*/
 bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
     uint32_t samples;
@@ -97,6 +97,14 @@ bool    ADMAudioFilter_Access::getPacket(uint8_t *buffer, uint32_t *size, uint32
     samplesSeen+=samples;
     return true;
 }
-
+/**
+    \fn getExtraData
+    \brief Get extradata from encoder
+*/
+bool      ADMAudioFilter_Access::getExtraData(uint32_t *l, uint8_t **d)
+{
+        ADM_assert(encoder);
+        return encoder->extraData(l,d);
+}
 
 //EOF
