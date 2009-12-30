@@ -6,6 +6,15 @@
         Code very derived from libdca
 
 */
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 #include "ADM_default.h"
 #include "ADM_dcainfo.h"
 #define ADM_NO_CONFIG_H
@@ -43,10 +52,12 @@ static const uint8_t dts_channels[] =
     1, 2, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 6, 7, 8, 8
 };
 
-/*
-    Return frame size
+/**
+    \fn ADM_DCAGetInfo
+    @param syncoff: # of dropped bytes from the begining
 */
-int  ADM_DCAGetInfo(uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *br, uint32_t *chan,uint32_t *syncoff,uint32_t *flagso,uint32_t *nbSample)
+bool ADM_DCAGetInfo(uint8_t *buf, uint32_t len,ADM_DCA_INFO *info,uint32_t *syncoff)
+//int  ADM_DCAGetInfo(uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *br, uint32_t *chan,uint32_t *syncoff,uint32_t *flagso,uint32_t *nbSample)
 {
 uint8_t *end=buf+len-4-DTS_HEADER_SIZE;
 uint8_t *cur=buf-1;
@@ -63,7 +74,7 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
                 if(cur[3]!=0x01) continue;
                 // ok we got a starcode
                 // State :      32 bits, already got them
-                // Frame type   1 
+                // Frame type   1
                 // Sample Deficit 5
                 // CRC present  1
                 // Frame length  7
@@ -81,14 +92,14 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
                 len2=get_bits(&s,14);
                 framesize=len2+1;
                 //
-                //  
+                //
                 //
                 flags=get_bits(&s,6);
-                *flagso=flags;
-                index=get_bits(&s,4); 
-                *fq=dts_sample_rates[index];
-                index=get_bits(&s,5); 
-                *br=dts_bit_rates[index];
+                info->flags=flags;
+                index=get_bits(&s,4);
+                info->frequency=dts_sample_rates[index];
+                index=get_bits(&s,5);
+                info->bitrate=dts_bit_rates[index];
 #if 0
                 printf("[dts]Flags  :%u\n",flags);
                 printf("[dts]Fq  :%u\n",*fq);
@@ -97,19 +108,20 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
                 printf("[dts]len2  :%u\n",len2);
 #endif
                 *syncoff=cur-buf;
-                if(*syncoff) printf("[dts] Dropped %u bytes\n",*syncoff);
+                if(*syncoff) ADM_warning("[dts] Dropped %u bytes\n",*syncoff);
                 get_bits(&s,10);
                 int lfe=get_bits(&s,2);
                 int c;
                 c=dts_channels[flags & 0xf];
                 if(c==5 && lfe) c++; // LFE
-                *chan=c;
-                *nbSample=nbBlocks*32;
-                return framesize;
-                
-                
+                info->channels=c;
+                info->samples=nbBlocks*32;
+                info->frameSizeInBytes=framesize;
+                return true;
+
+
             }
-            printf("[DTS] Cannot find sync\n");
-	      return 0;
+            ADM_warning("[DTS] Cannot find sync\n");
+	      return false;
 }
 

@@ -60,12 +60,13 @@ mkvAccess::mkvAccess(const char *name,mkvTrak *track)
   {
      if( getPacket(ac3Buffer, &len, 20000,&timecode))
      {
-       uint32_t fq,br,chan,syncoff,flags,nbsample;
-        if( ADM_DCAGetInfo(ac3Buffer, len, &fq, &br, &chan,&syncoff,&flags,&nbsample) )
+       uint32_t syncoff,flags,nbsample;
+       ADM_DCA_INFO info;
+        if( true==ADM_DCAGetInfo(ac3Buffer, len,&info,&syncoff) )
         {
-            track->wavHeader.channels=chan;
-            track->wavHeader.frequency=fq;
-            track->wavHeader.byterate=br;
+            track->wavHeader.channels=info.channels;
+            track->wavHeader.frequency=info.frequency;
+            track->wavHeader.byterate=info.bitrate/8;
         }
      }
      goToBlock(0);
@@ -87,7 +88,7 @@ bool      mkvAccess::getExtraData(uint32_t *l, uint8_t **d)
 */
 uint64_t  mkvAccess::getDurationInUs(void)
 {
-    
+
     uint32_t limit=_track->index.size();
     if(!limit) return 0;
     return _track->index[limit-1].Dts;

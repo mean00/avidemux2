@@ -3,7 +3,7 @@
     \brief Handle index file reading
     copyright            : (C) 2009 by mean
     email                : fixounet@free.fr
-        
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -66,7 +66,7 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
                 break;
     }
     // Now synthetize
-    for(int i=0x0;i<0xFF;i++)   
+    for(int i=0x0;i<0xFF;i++)
     {
         packetStats *stat=packet->getStat(i);
         if(stat->count)
@@ -76,7 +76,7 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
 
          if(stat->count>=PROBE_MIN_PACKET && stat->size>PROBE_MIN_SIZE)
          {
-                packet->setPos(fileSize/2); 
+                packet->setPos(fileSize/2);
                 addAudioTrack(i,tracks,packet);
          }
 
@@ -85,9 +85,9 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
 end:
     printf("[PsDemux] Audio probe done, found %d tracks\n",(int)tracks->size());
     delete packet;
-    
-    if(tracks->size()==0) 
-    {   
+
+    if(tracks->size()==0)
+    {
         delete tracks;
         return NULL;
     }
@@ -113,7 +113,7 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
             ) return false;
 
         // Go back where we were
-        p->changePid(pid); 
+        p->changePid(pid);
         p->getPacketOfType(pid,PROBE_ANALYZE_SIZE, &packetSize,&pts,&dts,audioBuffer,&startAt);
         //Realign
         p->seek(startAt,0);
@@ -135,7 +135,7 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                             {
                                 if(! psCheckMp2Audio(&(info->header),audioBuffer,rd))
                                 {
-                                    printf("[PsProbeAudio] Failed to get info on track :%x (MP2)\n",pid);
+                                    ADM_warning("[PsProbeAudio] Failed to get info on track :%x (MP2)\n",pid);
                                     goto er;
                                 }
                             }
@@ -144,22 +144,23 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                             if(pid>=0x8) // DTS
                             {
                                 info->header.encoding=WAV_DTS;
-                                uint32_t flags,nbSample;
-                                if(!ADM_DCAGetInfo(audioBuffer, rd, &fq, &br, &chan,&off,&flags,&nbSample))
+                                ADM_DCA_INFO dcainfo;
+
+                                if(false==ADM_DCAGetInfo(audioBuffer, rd, &dcainfo,&off))
                                 {
-                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",pid);
+                                        ADM_warning("[PsProbeAudio] Failed to get info on track :%x\n",pid);
                                         goto er;
                                 }
-                                info->header.frequency=fq;
-                                info->header.channels=chan;
-                                info->header.byterate=(br);
+                                info->header.frequency=dcainfo.frequency;
+                                info->header.channels=dcainfo.channels;
+                                info->header.byterate=dcainfo.bitrate/8;
                                 break;
                             }else // AC3
                             {
                                 info->header.encoding=WAV_AC3;
                                 if(!ADM_AC3GetInfo(audioBuffer, rd, &fq, &br, &chan,&off))
                                 {
-                                        printf("[PsProbeAudio] Failed to get info on track :%x\n",pid);
+                                        ADM_warning("[PsProbeAudio] Failed to get info on track :%x\n",pid);
                                         goto er;
                                 }
                                 info->header.frequency=fq;
@@ -167,7 +168,7 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                                 info->header.byterate=(br);
                                 break;
                             }
-                            
+
             default:
                         ADM_assert(0);
 
