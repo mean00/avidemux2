@@ -1,7 +1,7 @@
 /***************************************************************************
            \file               gui_savenew.cpp
            \brief Save movie files
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -41,7 +41,7 @@
 #include "ADM_filterChain.h"
 #include "ADM_videoEncoderApi.h"
 /*
-    
+
 */
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 extern ADM_audioStream  *audioCreateEncodingStream(uint64_t startTime,int32_t shift);
@@ -67,12 +67,12 @@ protected:
         int                  muxerIndex;
         int                  videoEncoderIndex;
         ADM_coreVideoEncoder *handleFirstPass(ADM_coreVideoEncoder *pass1);
-        
+
 public:
                 admSaver(const char *out);
                 ~admSaver();
         bool    save(void);
-        
+
 };
 /**
     \fn admSaver
@@ -99,16 +99,16 @@ public:
 */
 admSaver::~admSaver()
 {
- if(muxer) 
+ if(muxer)
         delete muxer;
  muxer=NULL;
- if(logFileName) 
+ if(logFileName)
         delete [] logFileName;
  logFileName=NULL;
  if ( astreams[0])
         delete astreams[0];
  astreams[0]=NULL;
- if(video)   
+ if(video)
         delete video;
  video=NULL;
   if(chain)
@@ -160,7 +160,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                     return NULL;
                 }
                 ADMBitstream bitstream;
-    
+
                 uint8_t *buffer=new uint8_t[BUFFER_SIZE];
                 bitstream.data=buffer;
                 bitstream.bufferSize=BUFFER_SIZE;
@@ -190,7 +190,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                 destroyVideoFilterChain(chain);
                 chain=NULL;
                 chain=createVideoFilterChain(markerA,markerB);
-                
+
                 if(!chain)
                 {
                     printf("[Save] Cannot recreate video filter chain\n");
@@ -200,7 +200,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                 ADM_assert(sz);
                 last=(*chain)[sz-1]; // Grab last filter
                 ADM_coreVideoEncoder *pass2=createVideoEncoderFromIndex(last,videoEncoderIndex);
-                if(!pass2) 
+                if(!pass2)
                 {
                     printf("[Save] Cannot create encoder for pass 2\n");
                     return NULL;
@@ -227,7 +227,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                 printf(": Pass2 done : %d frames this time\n",nbFrames);
                 delete [] buffer;
                 delete encoding;
-                
+
 #endif
     return pass2;
 }
@@ -236,10 +236,10 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
 */
 bool admSaver::save(void)
 {
-    int ret=1; 
+    int ret=1;
     uint64_t startAudioTime=markerA; // Actual start time (for both audio & video actually)
     printf("[A_Save] Saving..\n");
-    
+
     if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
         GUI_Error_HIG("Muxer","Cannot instantiante muxer");
@@ -258,7 +258,7 @@ bool admSaver::save(void)
         audio->goToTime(startAudioTime); // Rewind audio
     }
     ADM_videoStream *video=NULL;
-    // Video Stream 
+    // Video Stream
     if(!videoEncoderIndex) // Copy
     {
         ADM_videoStreamCopy *copy=new ADM_videoStreamCopy(markerA,markerB);
@@ -271,7 +271,7 @@ bool admSaver::save(void)
     {
         // 1- create filter chain
         //******************************
-       
+
         chain=createVideoFilterChain(markerA,markerB);
         if(!chain)
         {
@@ -322,19 +322,24 @@ bool admSaver::save(void)
     {
         if(audio)
             astreams[0]=audioCreateCopyStream(startAudioTime,0,audio); //copy
-    }else    
+    }else
     {
         if(audio)   // Process
         {
             // Access..
             ADM_audioStream *access=audioCreateEncodingStream(startAudioTime,0); // FIXME LEAK
             astreams[0]=access;
+            if(!access)
+            {
+                    GUI_Error_HIG("Audio","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)");
+                    return false;
+            }
         }
     }
     if(!muxer->open(fileName,video,nbAStream,astreams))
     {
         GUI_Error_HIG("Muxer","Cannot open ");
-    }else   
+    }else
     {
         muxer->save();
         muxer->close();
