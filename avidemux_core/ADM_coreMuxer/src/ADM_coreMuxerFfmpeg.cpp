@@ -2,10 +2,10 @@
             \file            muxerFFmpeg
             \brief           Base class for ffmpeg based muxer
                              -------------------
-    
+
     copyright            : (C) 2009 by mean
     email                : fixounet@free.fr
-        
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -91,7 +91,7 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
 	snprintf(oc->filename,1000,"file://%s",filename);
     // probably a memeleak here
     char *foo=ADM_strdup(filename);
-    
+
     strcpy(oc->title,ADM_GetFileName(foo));
     strcpy(oc->author,"Avidemux");
     printf("[FF] Muxer opened\n");
@@ -124,7 +124,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 c->extradata=videoExtraData;
                 c->extradata_size= videoExtraDataSize;
         }
-        
+
         c->rc_buffer_size=8*1024*224;
         c->rc_max_rate=9500*1000;
         c->rc_min_rate=0;
@@ -141,7 +141,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 {
                     c->has_b_frames=1; // in doubt...
                     c->max_b_frames=2;
-                }else   
+                }else
                 {
                     c->has_b_frames=0; // No PTS=cannot handle CTS...
                     c->max_b_frames=0;
@@ -238,7 +238,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
     {
           uint32_t audioextraSize;
           uint8_t  *audioextraData;
-          
+
           audio[i]->getExtraData(&audioextraSize,&audioextraData);
 
           audio_st = av_new_stream(oc, 1);
@@ -255,11 +255,12 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           c->sample_rate = audioheader->frequency;
           switch(audioheader->encoding)
           {
-                  case WAV_OGG_VORBIS: 
+                  case WAV_OGG_VORBIS:
                                 c->codec_id = CODEC_ID_VORBIS;c->frame_size=6*256;
                                 c->extradata=audioextraData;
                                 c->extradata_size= audioextraSize;
                                 break;
+                  case WAV_DTS: c->codec_id = CODEC_ID_DTS;c->frame_size=1024;break;
                   case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
                   case WAV_MP2: c->codec_id = CODEC_ID_MP2;c->frame_size=1152;break;
                   case WAV_MP3:
@@ -279,7 +280,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                   break;
                   default:
                                  printf("[FF]: Unsupported audio\n");
-                                 return false; 
+                                 return false;
                           break;
           }
           c->codec_type = CODEC_TYPE_AUDIO;
@@ -332,7 +333,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     ADM_info("avg fps=%u\n",vStream->getAvgFps1000());
     AVRational *scale=&(video_st->codec->time_base);
     uint64_t videoDuration=vStream->getVideoDuration();
-    
+
     encoding=createWorking(title);
 
     MuxAudioPacket audioPackets[nbAStreams];
@@ -348,9 +349,9 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     p/=videoDuration;
                     p=p*100;
             }
-            
+
             encoding->update((uint32_t)p);
-            if(!encoding->isAlive()) 
+            if(!encoding->isAlive())
             {
                 result=false;
                 break;
@@ -404,14 +405,14 @@ bool muxerFFmpeg::saveLoop(const char *title)
                 MuxAudioPacket *audioTrack=&(audioPackets[audio]);
                 ADM_audioStream*a=aStreams[audio];
                 uint32_t fq=a->getInfo()->frequency;
-            
+
                 while(1)
                 {
                     if(audioTrack->eof==true) break; // no more packet for this track
                     if(audioTrack->present==false)
                     {
                         if(false==a->getPacket(audioTrack->buffer,
-                                                &(audioTrack->size), 
+                                                &(audioTrack->size),
                                                 AUDIO_BUFFER_SIZE,
                                                 &(audioTrack->samples),
                                                 &(audioTrack->dts)))
@@ -435,7 +436,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                    //printf("[FF] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
                      //               written,audioTrack->dts,audioTrack->size,audioTrack->samples,rescaledDts);
                     av_init_packet(&pkt);
-                    
+
                     pkt.dts=rescaledDts;
                     pkt.pts=rescaledDts;
                     pkt.stream_index=1+audio;
