@@ -3,7 +3,7 @@
             \brief convert audiofilter to audioaccess (used for playback for example)
             (C) Mean 2009 fixounet@free.fr
  ***************************************************************************/
- 
+
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -47,15 +47,9 @@ class ADMAudioFilter_Access : public ADM_audioAccess
                                     /// Get position in bytes
                 virtual uint64_t  getPos(void);
                                     /// Grab extra data
-                virtual bool      getExtraData(uint32_t *l, uint8_t **d)
-                                    {
-                                            *l=extraDataLen;    
-                                            *d=extraData;
-                                            return true;
-                                    };
+                virtual bool      getExtraData(uint32_t *l, uint8_t **d);
 
-                
-                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);    
+                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
                 virtual bool    isCBR(void);
 };
 
