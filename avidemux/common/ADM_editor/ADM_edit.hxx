@@ -208,8 +208,10 @@ public:
                     bool                remove(uint64_t start,uint64_t end);
                     bool                addSegment(uint32_t ref, uint64_t startRef, uint64_t duration);
                     bool                clearSegment(void);
+// For js
                     bool                dumpEditing(void);
                     bool                dumpTiming(void);
+                    bool                getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts);
 /******************************* /Editing **********************************/										
 /******************************* Misc ************************************/				
                     uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);

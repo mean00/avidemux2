@@ -609,5 +609,24 @@ bool               ADM_Composer::dumpTiming(void)
     }
     return true;
 }
+/**
+     \fn getVideoPtsDts
+*/
+bool                ADM_Composer::getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts)
+{
+    if(!_segments.getNbRefVideos()) return true;
+    _VIDEOS *v=_segments.getRefVideo(0);
+   
+    aviInfo info;
+    v->_aviheader->getVideoInfo(&info);
+    int nb=info.nb_frames;
+    if(frame>=nb) 
+    {
+        return false;
+    }
+    v->_aviheader->getFlags(frame,flags);
+    v->_aviheader->getPtsDts(frame,pts,dts);
+    return true;
+}
 //
 //

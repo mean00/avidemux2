@@ -16,11 +16,23 @@
 #include <stdarg.h>
 #include <vector>
 #include "ADM_jsEditor.h"
+#include "ADM_editor/ADM_edit.hxx"
+extern ADM_Composer *video_body;
+
 /**
     \fn jsPrintTiming
 */
 int jsPrintTiming(int framenumber )
 {
+    uint32_t flags;
+    uint64_t pts,dts;
+    if(true==video_body->getVideoPtsDts(framenumber, &flags,&pts,&dts))
+    {
+        jsLog(JS_LOG_NORMAL,"Frame %"LU" : Flags 0x%"LX" pts=%"LLD" dts=%"LLD"\n",framenumber,flags,pts,dts);
+    }else
+    {
+        jsLog(JS_LOG_NORMAL,"Cannot get info for frame %"LU,framenumber);
+    }
     return 0;
 }
 // EOF
