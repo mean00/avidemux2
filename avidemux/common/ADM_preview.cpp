@@ -48,9 +48,7 @@
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
 #define MAX(a,b) ( (a)>(b) ? (a) : (b) )
-
-//extern FILTER  videofilters[VF_MAX_FILTER];
-//extern uint32_t nb_active_filter;
+#include "DIA_coreToolkit.h"
 extern void    UI_setCurrentTime(uint64_t curTime);
 
 static void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
@@ -679,43 +677,16 @@ bool admPreview::previousKeyFrame(void)
 */
 bool admPreview::previousFrame(void)
 {
-#if 0
     uint64_t pts=rdrImage->Pts;
-    // If the frame is not an intra, the previous one
-    // is still in the cache
-    if(rdrImage->flags!=AVI_KEY_FRAME)
+    ADMImage *tmpImage=NULL;
+    //tmpImage=video_body->seekAndGetImageBefore(pts);
+    if(!tmpImage)
     {
-        
-        if(true==video_body->getImageFromCacheForFrameBefore(pts,rdrImage))
-        {
-            renderUpdateImage(rdrImage->data,zoom);
-            return true;
-        }
+        GUI_Error_HIG("Seek","Cannot find previous frame");
         return false;
     }
-
-    // Else go to the previous  keyframe...
-    if(!video_body->getPKFrame(&frame)) return false;
-    if(!video_body->GoToIntra(frame)) return false;
-    // Now forward until we reach our frame
-    if(!video_body->samePicture(rdrImage)) return false;
-    if(rdrImage->Pts==pts) 
-    {
-            renderUpdateImage(rdrImage->data,zoom);
-            return true;
-    }
-    while(1)
-    {
-        if(!video_body->NextPicture(rdrImage)) return false;
-        if(rdrImage->Pts==pts) break;
-    }
-    if(rdrImage->Pts!=pts) return false;
-    if(true==video_body->getImageFromCacheForFrameBefore(pts,rdrImage))
-    {
-        renderUpdateImage(rdrImage->data,zoom);
-        return true;
-    }
-#endif
-    return false;
+    rdrImage=tmpImage;
+    renderUpdateImage(rdrImage->data,zoom);
+    return true;
 }
 // EOF

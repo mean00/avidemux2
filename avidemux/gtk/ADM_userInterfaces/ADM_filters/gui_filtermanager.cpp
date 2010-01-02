@@ -17,8 +17,10 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "avi_vars.h"
 #include "GUI_glade.h"
+#include "ADM_filterCategory.h"
+#include "ADM_videoFilterApi.h"
 
-static admGlade glade;
+
 #define WOD(x) glade.getWidget (#x)
 typedef enum
 {
@@ -28,17 +30,75 @@ typedef enum
     actionRemove,
     actionConfigure
 }vFilterAction;
+
+static void displayFamily(uint32_t family);
+#define MAX_NB_TREE VF_MAX
+static  uint32_t max = 0;
+
+/**
+    \class VideoFilterHandler
+*/
+class VideoFilterHandler
+{
+protected:
+  GtkWidget *treesAvailable;
+  GtkListStore *storesAvailable[MAX_NB_TREE];
+  GtkTreeViewColumn *columnsAvailable[MAX_NB_TREE];
+  GtkCellRenderer *renderersAvailable[MAX_NB_TREE];
+  admGlade glade;
+
+  void initFamily(int family);
+  void displayFamily(int family);
+
+  void initActive(void);
+  void displayActive(void);
+
+public:
+        VideoFilterHandler();
+        ~VideoFilterHandler();
+    bool run(void);
+
+};
 /**
     \fn GUI_handleVFilter
 */
 int GUI_handleVFilter (void)
 {
      ADM_info("Entering video filter\n");
+     VideoFilterHandler *handler=new VideoFilterHandler;
+     bool r=handler->run();
+     delete handler;
+     return (int)r;
+}
+/**
+
+*/
+VideoFilterHandler::VideoFilterHandler()
+{
+    treesAvailable=NULL;
+    for(int i=0;i<MAX_NB_TREE;i++)
+    {
+        storesAvailable[i]=NULL;
+        columnsAvailable[i]=NULL;
+        renderersAvailable[i]=NULL;
+    }
+}
+/**
+
+*/
+VideoFilterHandler::~VideoFilterHandler()
+{
+}
+/**
+
+*/
+bool VideoFilterHandler::run(void)
+{
      glade.init();
      if(!glade.loadFile("videoFilter/videoFilter.gtkBuilder"))
      {
             GUI_Error_HIG("Glade","Cannot load glade file");
-            return 0;
+            return false;
     }
     // create top window
     GtkWidget *dialog=glade.getWidget("dialog1");
@@ -53,7 +113,14 @@ int GUI_handleVFilter (void)
 	    
 	   
 	gtk_widget_show(dialog);
-    
+    // fill in families
+    int nbFamily=MAX_NB_TREE;
+    for(int i=0;i<nbFamily;i++)     initFamily(i);
+    displayFamily(0);
+
+    initActive();
+    displayActive();
+
     bool ext=false;
 
     while(false==ext)
@@ -63,21 +130,81 @@ int GUI_handleVFilter (void)
         switch(action)
         {
             case actionAdd:
+                        break;
             case actionUp:
+                        break;
             case actionDown:
+                        break;
             case actionRemove:
+                        break;
             case actionConfigure:
-                    break;
+                        break;
             default:
                 ext=true;
-
+                break;
         }
     };
     gtk_widget_destroy(dialog);
-    return 0;
+    return true;
 }
+/**
+    \fn displayFamily
+*/
+void VideoFilterHandler::displayFamily(int family)
+{
+    treesAvailable=WOD(treeviewAvailable);  
+    ADM_assert(treesAvailable);
+    gtk_tree_view_append_column(GTK_TREE_VIEW (treesAvailable), columnsAvailable[family]);
+    gtk_tree_view_set_model(GTK_TREE_VIEW(treesAvailable),GTK_TREE_MODEL (storesAvailable[family]));
+}
+/**
+    \fn initFamily
+*/
+void VideoFilterHandler::initFamily(int family)
+{
+  
+    storesAvailable[family]=gtk_list_store_new (1, G_TYPE_STRING);
 
+    //load stores with filter names, get start filter for each page
+    char *str=NULL;
+    GtkTreeIter iter;
+    uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
+    ADM_info("Video filter Family :%u, nb %d\n",family,nb);
+    for (uint32_t i = 0; i < nb; i++)
+    {
+        const char *name,*desc;
+        uint32_t major,minor,patch;
+          ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
+          str = g_strconcat(
+				 "<span weight=\"bold\">",name, "</span>\n",
+                 "<span size=\"smaller\">",desc, "</span>", NULL);
+            gtk_list_store_append (storesAvailable[family], &iter);
+            gtk_list_store_set (storesAvailable[family], &iter, 0, str ,-1);
+            g_free(str);
+     }
+        renderersAvailable[family] = gtk_cell_renderer_text_new();
+   		columnsAvailable[family] = gtk_tree_view_column_new_with_attributes (
+                            "",
+                            renderersAvailable[family],
+                            "markup", (GdkModifierType) 0,
+                            NULL);
+		gtk_cell_renderer_text_set_fixed_height_from_font
+			(GTK_CELL_RENDERER_TEXT(renderersAvailable[family]), 3);
+        g_object_set(renderersAvailable[family], "wrap-width", 0, NULL);
+       
+}
+/**
+*/
+void VideoFilterHandler::initActive(void)
+{
 
+}
+/**
+*/
+void VideoFilterHandler::displayActive(void)
+{
+
+}
 #if 0
 //___________________________________________
 typedef enum 
