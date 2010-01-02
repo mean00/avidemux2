@@ -93,7 +93,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
                                 //printf(">%s\n",ss);
                                 switch(id)
                                 {
-                                  default: blockGroup.skip(len);
+                                  default: blockGroup.skip(len);break;
                                   case MKV_BLOCK :
                                   case MKV_SIMPLE_BLOCK:
                                   {
@@ -330,7 +330,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
    fileSize=parser->getFileSize();
    if(!parser->simplefind(MKV_SEGMENT,&vlen,1))
    {
-     printf("[MKV] cluster indexer, cannot find CLUSTER atom\n");
+     ADM_warning("[MKV] cluster indexer, cannot find CLUSTER atom\n");
      return 0;
    }
    ADM_ebml_file segment(parser,vlen);
@@ -353,12 +353,24 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
      _clusters[_nbClusters].size=alen;
 
      // Normally the timecode is the 1st one following
+
+tryAgain:
        segment.readElemId(&id,&len);
+       switch(id)
+        {
+            case MKV_CRC32:
+            case MKV_PREV_SIZE:
+            case MKV_POSITION:
+                segment.skip(len);
+                goto tryAgain;
+            default:break;
+        }
        int seekme=_nbClusters;
        if(id!=MKV_TIMECODE)
        {
+          ss=NULL;
           ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-          printf("[MKV] Cluster : no time code Found %s(0x%"LLX"), expected MKV_TIMECODE  (0x%x)\n",
+          ADM_warning("[MKV] Cluster : no time code Found %s(0x%"LLX"), expected MKV_TIMECODE  (0x%x)\n",
                   ss,id,MKV_TIMECODE);
        }
        else
@@ -371,7 +383,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
        //printf("Position :%u %u MB\n", _clusters[seekme].pos+ _clusters[seekme].size,( _clusters[seekme].pos+ _clusters[seekme].size)>>20);
    }
    delete work;
-   printf("[MKV] Found %u clusters\n",_nbClusters);
+   ADM_info("[MKV] Found %u clusters\n",_nbClusters);
    return 1;
 }
 //EOF

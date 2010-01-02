@@ -55,6 +55,8 @@ uint8_t ADM_searchMkvTag(MKV_ELEM_ID tag,const char **asString,ADM_MKV_TYPE *typ
     }
     
   }
+  *asString="??";
+  *type=ADM_MKV_TYPE_UNKNOWN;
   return 0;
 }
 /**
