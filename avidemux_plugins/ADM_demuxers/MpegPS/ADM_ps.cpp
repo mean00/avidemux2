@@ -174,11 +174,13 @@ void psHeader::Dump(void)
 uint8_t psHeader::close(void)
 {
     // Destroy index
-    while(ListOfFrames.size())
+    int nb=ListOfFrames.size();
+    for(int i=0;i<nb;i++)
     {
-        delete ListOfFrames[0];
-        ListOfFrames.erase(ListOfFrames.begin());
+        if(ListOfFrames[i]) delete ListOfFrames[i];
+        ListOfFrames[i]=0;
     }
+    ListOfFrames.clear();
     if(psPacket)
     {
         psPacket->close();
