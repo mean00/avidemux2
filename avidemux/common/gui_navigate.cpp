@@ -60,13 +60,14 @@ static int ignore_change=0;
           tme/=ADM_SCALE_SIZE;
           uint64_t pts=(uint64_t)tme;
           ADM_info("Scale Time:%"LLU" ms (total=%"LLU" ms)\n",pts/1000,video_body->getDurationInUs()/1000);
+          ADM_info("Scale Time:%s ms \n",ADM_us2plain(pts));
            if(false==video_body->getPKFramePTS(&pts))
             {
-                ADM_warning("Cannot seel to %"LLU" ms\n",pts/1000);
+                ADM_warning("Cannot seek to %"LLU" ms\n",pts/1000);
                 ignore_change--;
                 break;
             }
-            
+             ADM_info("Seeking to  Time:%s ms \n",ADM_us2plain(pts));
             if(true!=admPreview::seekToIntraPts(pts))
             {
                 ADM_warning("Scale: Seeking to intra at %"LLU" ms failed\n",pts/1000);
