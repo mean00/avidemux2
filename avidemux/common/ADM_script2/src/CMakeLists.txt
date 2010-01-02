@@ -9,6 +9,7 @@ SET(ADM_script_SRCS
         ADM_jsTestFactory_js.c
 # Load segment
         ADM_jsAvidemux.cpp
+        ADM_jsAvidemuxInfo.cpp
         ADM_jsAvidemux_js.c
 # Debug / editor class
         ADM_jsEditor.cpp

@@ -14,6 +14,10 @@ class adm
         function int appendVideo    : jsAppendVideo (cstring ) <static>;
         function int addSegment     : jsAddSegment (int ,double , double ) <static>;
         function int setPostProc    : jsSetPostProc (int ,int , int ) <static>;
+        function int getWidth       : jsGetWidth ( ) <static>;
+        function int getHeight      : jsGetHeight ( ) <static>;
+        function int getFps1000     : jsGetFps1000 ( ) <static>;
+     function cstring getVideoCodec : jsGetVideoCodec ( ) <static>;
         /*            JSFUNC                 C FUNC           PARAM     */
         function int audioReset     : jsAudioReset () <static>;
         function int audioMixer     : jsAudioMixer (cstring ) <static>;
