@@ -53,6 +53,8 @@ typedef struct
     uint32_t h;
     uint32_t fps;
     uint32_t interlaced;
+    uint32_t frameNumber;
+    uint32_t fieldNumber;
     uint32_t ar;
 }PSVideo;
 
@@ -89,6 +91,8 @@ protected:
         psPacketLinearTracker *pkt;
         listOfPsAudioTracks *audioTracks;
         DIA_workingBase  *ui;
+        bool             headerDumped;
+        uint64_t         lastValidVideoDts;
 public:
                 PsIndexer(void);
                 ~PsIndexer();
@@ -121,6 +125,8 @@ PsIndexer::PsIndexer(void)
     pkt=NULL;
     audioTracks=NULL;
     ui=createWorking ("Indexing");
+    headerDumped=false;
+    lastValidVideoDts=ADM_NO_PTS;
 }
 
 /**
@@ -147,7 +153,7 @@ bool seq_found=false;
 PSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
-
+    memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
     char indexName[strlen(file)+5];
     sprintf(indexName,"%s.idx2",file);
@@ -206,6 +212,7 @@ dmxPacketInfo info;
                           //
                           seq_found=1;
                           val=pkt->readi32();
+                          video.interlaced=0; // how to detect ?
                           video.w=val>>20;
                           video.w=((video.w+15)&~15);
                           video.h= (((val>>8) & 0xfff)+15)& ~15;
@@ -215,11 +222,47 @@ dmxPacketInfo info;
                           
                           video.fps= FPS[val & 0xf];
                           pkt->forward(4);
-                          writeVideo(&video);
-                          writeAudio();
                           pkt->resetStats();
-                          qfprintf(index,"[Data]");
                           break;
+                  case 0xB5: //  extension
+                                { 
+                                    uint8_t id=pkt->readi8()>>4;
+                                    uint8_t two;
+                                    switch(id)
+                                    {
+                                        case 1: // Sequence extension
+                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
+                                            break;
+                                        case 8: // picture coding extension (mpeg2)
+                                        {
+                                            // skip motion vector
+                                            uint8_t picture_structure;
+                                            pkt->forward(1); // 4*4 bits
+                                            two=pkt->readi8();
+                                            picture_structure=(two)&3;
+                                            
+                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
+                                            switch(picture_structure)
+                                            {
+                                            case 3: video.frameNumber++;break;
+                                            case 1:
+                                            case 2:  video.fieldNumber++;break;
+                                            default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            }
+                                        }
+                                        default:break;
+                                    }
+                                }
+#if 0
+#define EXT_SIZE 6
+                                    uint8_t ext[EXT_SIZE];
+                                    pkt->read(EXT_SIZE,ext);
+                                    printf("Sequence Extension :");
+                                    for(int i=0;i<EXT_SIZE;i++) printf("%02x ",ext[i]);
+                                    printf("\n");
+#endif
+                                
+                                break;
                   case 0xb8: // GOP
                           // Update ui
                             {
@@ -231,6 +274,12 @@ dmxPacketInfo info;
                             }
 
                           if(!seq_found) continue;
+                          if(headerDumped==false)
+                          {
+                               
+                                qfprintf(index,"[Data]");
+                                headerDumped=true;
+                          }
                           if(data.state==idx_startAtGopOrSeq) 
                           {         
                                   continue;;
@@ -258,7 +307,19 @@ dmxPacketInfo info;
                                                   info.startAt,info.offset);
                                   continue;
                           }
-                          
+                          if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
+                          {
+                                    if(lastValidVideoDts>info.dts)
+                                    {
+                                            ADM_warning("DTS are going back, aborting, maybe several video appended ?");
+                                            goto theEnd;
+                                     }
+                            }
+                            if(info.dts!=ADM_NO_PTS)
+                            {
+                                    lastValidVideoDts=info.dts;
+                            }
+                           
                           
                           if(data.state==idx_startAtGopOrSeq) 
                           {
@@ -274,9 +335,17 @@ dmxPacketInfo info;
                     break;
                   }
       }
-    
+theEnd:    
         printf("\n");
+        // Dump progressive/frame gop
         Mark(&data,&info,markStart);
+        
+        qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
+        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameNumber); // Size
+        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldNumber); // Size
+        // Now write the header
+        writeVideo(&video);
+        writeAudio();
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
@@ -358,7 +427,10 @@ bool PsIndexer::writeVideo(PSVideo *video)
     qfprintf(index,"[Video]\n");
     qfprintf(index,"Width=%d\n",video->w);
     qfprintf(index,"Height=%d\n",video->h);
-    qfprintf(index,"Fps=%d\n",video->fps);
+    if(video->interlaced)
+        qfprintf(index,"Fps=%d\n",video->fps*2);
+    else
+        qfprintf(index,"Fps=%d\n",video->fps);
     qfprintf(index,"Interlaced=%d\n",video->interlaced);
     qfprintf(index,"AR=%d\n",video->ar);
     return true;
