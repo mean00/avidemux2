@@ -87,21 +87,51 @@ uint8_t mkvHeader::open(const char *name)
   ADM_assert(_parser->open(name));
   _filename=ADM_strdup(name);
 
-  // Finaly update index with queue
-  float duration=_videostream.dwLength*_tracks[0]._defaultFrameDuration;
-  duration/=1000;
-  uint32_t duration32=(uint32_t)duration;
-  printf("[MKV] Video Track duration %u ms\n",_videostream.dwLength);
-  // Useless.....readCue(&ebml);
-  for(int i=0;i<_nbAudioTrack;i++)
+  // Delay frames + recompute frame duration
+// now that we have a good frameduration and max pts dts difference, we can set a proper DTS for all video frame
+  uint64_t ptsdtsdelta=delayFrameIfBFrames();
+  
+  int last=_tracks[0].index.size();
+  uint64_t increment=_tracks[0]._defaultFrameDuration;
+  uint64_t lastDts=0;
+  _tracks[0].index[0].Dts=0;
+  mkvTrak                 *vid=_tracks;
+  for(int i=1;i<last;i++)
   {
-    rescaleTrack(&(_tracks[1+i]),duration32);
-    if(_tracks[1+i].wavHeader.encoding==WAV_OGG_VORBIS)
-    {
-        printf("[MKV] Reformatting vorbis header for track %u\n",i);
-        reformatVorbisHeader(&(_tracks[1+i]));
-    }
+        uint64_t pts,dts;
+        pts=vid->index[i].Pts;
+        lastDts+=increment; // This frame dts with no correction
+        if(pts=ADM_NO_PTS)
+        {
+            vid->index[i].Dts=lastDts;
+            continue;
+        }
+        uint64_t limitDts=vid->index[i].Pts-ptsdtsdelta;
+        if(  lastDts<limitDts)
+        {
+            lastDts=limitDts;
+        }
+        vid->index[i].Dts=lastDts;
   }
+
+
+  if(last)
+  {
+          float duration=_tracks[0].index[last-1].Pts;
+          duration/=1000;
+          uint32_t duration32=(uint32_t)duration;
+          printf("[MKV] Video Track duration for %u ms\n",duration32);
+          // Useless.....readCue(&ebml);
+          for(int i=0;i<_nbAudioTrack;i++)
+          {
+            rescaleTrack(&(_tracks[1+i]),duration32);
+            if(_tracks[1+i].wavHeader.encoding==WAV_OGG_VORBIS)
+            {
+                printf("[MKV] Reformatting vorbis header for track %u\n",i);
+                reformatVorbisHeader(&(_tracks[1+i]));
+            }
+          }
+    }
     _access=new mkvAccess *[_nbAudioTrack];
     _audioStreams=new ADM_audioStream *[_nbAudioTrack];
     for(int i=0;i<_nbAudioTrack;i++)
@@ -109,7 +139,7 @@ uint8_t mkvHeader::open(const char *name)
         _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
     }
-  delayFrameIfBFrames();
+  
   printf("[MKV]Matroska successfully read\n");
 
   return 1;
@@ -128,22 +158,71 @@ bool mkvHeader::delayTrack(mkvTrak *track, uint64_t value)
     }
     return true;
 }
-bool mkvHeader::delayFrameIfBFrames(void)
+/**
+    \fn delayFrameIfBFrames
+    \brief recompute max pts/dts distance and delay all tracks if needed
+    we dont want a negative dts.
+    \return maxdelta in us
+*/
+uint32_t mkvHeader::delayFrameIfBFrames(void)
 {
     mkvTrak *track=_tracks;
     int nb=track->index.size();
     int nbBFrame=0;
-    for(int i=0;i<nb;i++) if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
-    if(nbBFrame<2)
+    int64_t delta,maxDelta=0;
+    int64_t minDelta=100000000;
+    if(nb>1)
     {
-        printf("[Mkv] no b frames detected\n");
-        return true;
+        // Search minimum and maximum between 2 frames
+        // the minimum will give us the maximum fps
+        // the maximum will give us the max PTS-DTS delta so that we can compute DTS
+        for(int i=0;i<nb-1;i++) 
+        {
+            if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
+            delta=(int64_t)track->index[i+1].Pts-(int64_t)track->index[i].Pts;
+            if(delta<0) delta=-delta;
+            if(delta<minDelta) minDelta=delta;
+            if(delta>maxDelta) maxDelta=delta;
+            //printf("\/=%"LLD" Min %"LLD" MAX %"LLD"\n",delta,minDelta,maxDelta);
+        }
     }
-    uint64_t twoFrames=track->_defaultFrameDuration*2;
-    printf("[mkv] Delaying PTS by %"LLU" us\n",twoFrames);
-    for(int i=0;i<_nbAudioTrack+1;i++)
-        delayTrack(&(_tracks[i]),twoFrames);
-    return true;
+    ADM_info("Minimum delta found %"LLD" us\n",minDelta);
+    ADM_info("Maximum delta found %"LLD" us\n",maxDelta);
+    if(minDelta)
+    {
+        if(minDelta<track->_defaultFrameDuration && abs(minDelta-track->_defaultFrameDuration)>1000)
+        {
+            ADM_info("Changing default frame duration from %"LLU" to %"LLU" us\n",
+                    track->_defaultFrameDuration,minDelta);
+            track->_defaultFrameDuration=minDelta;
+            // updated fps also
+            float f=minDelta;
+            f=1000000./f;
+            _videostream.dwScale=1000;
+            _videostream.dwRate=(uint32_t)(f*1000.);
+        }else
+        {
+            ADM_info("Keeping default frame duration  %"LLU" us\n", track->_defaultFrameDuration);
+        }
+
+    }
+    ADM_info("First frame pts     %"LLD" us\n",track->index[0].Pts);
+    uint64_t adj;
+    if(maxDelta>track->index[0].Pts) // need to correct
+    {
+        
+        adj=maxDelta-track->index[0].Pts;
+        ADM_info("Delaying video by %"LLU" us\n",adj);
+        
+        for(int i=0;i<nb;i++)
+                track->index[i].Pts+=adj;
+    
+    
+        printf("[mkv] Delaying audio by %"LLU" us\n",adj);
+        for(int i=0;i<_nbAudioTrack+1;i++)
+            delayTrack(&(_tracks[i]),adj);
+    }
+    return (uint32_t)maxDelta;
 }
 /**
     \fn rescaleTrack

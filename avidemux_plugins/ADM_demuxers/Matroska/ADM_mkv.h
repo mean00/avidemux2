@@ -146,7 +146,7 @@ class mkvHeader         :public vidHeader
     uint8_t                 rescaleTrack(mkvTrak *track,uint32_t durationMs);
 
     bool                    delayTrack(mkvTrak *track, uint64_t value);
-    bool                    delayFrameIfBFrames(void);
+    uint32_t                delayFrameIfBFrames(void);
 
   public:
 
