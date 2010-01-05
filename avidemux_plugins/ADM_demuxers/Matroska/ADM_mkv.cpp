@@ -87,6 +87,11 @@ uint8_t mkvHeader::open(const char *name)
   ADM_assert(_parser->open(name));
   _filename=ADM_strdup(name);
 
+  // Now dump some infos about the track
+    for(int i=0;i<1+_nbAudioTrack;i++)
+        ADM_info("Track %"LU" has an index size of %d entries\n",i,_tracks[i].index.size());
+
+
   // Delay frames + recompute frame duration
 // now that we have a good frameduration and max pts dts difference, we can set a proper DTS for all video frame
   uint64_t ptsdtsdelta=delayFrameIfBFrames();
