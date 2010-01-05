@@ -111,7 +111,7 @@ uint8_t mkvAccess::goToBlock(uint32_t x)
   uint32_t limit=_track->index.size();
   if(x>=limit)
   {
-    printf("Exceeding max cluster : asked: %u max :%u\n",x,limit);
+    ADM_warning("Exceeding max cluster : asked: %u max :%u\n",x,limit);
     return 0;  // FIXME
   }
 
@@ -131,6 +131,10 @@ uint64_t targetUs=timeUs;
     mkvListOfIndex *dex=&(_track->index);
       // First identify the cluster...
       int clus=-1;
+            if(timeUs<(*dex)[0].Dts)
+            {
+                clus=0;
+            }else
             for(int i=0;i<limit-1;i++)
             {
               if(targetUs>=(*dex)[i].Dts && targetUs<(*dex)[i+1].Dts)
