@@ -28,7 +28,9 @@ int jsPrintTiming(int framenumber )
     uint64_t pts,dts;
     if(true==video_body->getVideoPtsDts(framenumber, &flags,&pts,&dts))
     {
-        jsLog(JS_LOG_NORMAL,"Frame %"LU" : Flags 0x%"LX" pts=%"LLD" dts=%"LLD"\n",framenumber,flags,pts,dts);
+        int64_t delta=0;
+        if(pts!=ADM_NO_PTS && dts!=ADM_NO_PTS) delta=(int64_t)pts-(int64_t)dts;
+        jsLog(JS_LOG_NORMAL,"Frame %"LU" : Flags 0x%"LX" pts=%"LLD" dts=%"LLD" delta=%"LLD" ms",framenumber,flags,pts,dts,delta/1000LL);
     }else
     {
         jsLog(JS_LOG_NORMAL,"Cannot get info for frame %"LU,framenumber);
