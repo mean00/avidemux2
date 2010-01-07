@@ -442,6 +442,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     pkt.stream_index=1+audio;
                     pkt.data= audioTrack->buffer;
                     pkt.size= audioTrack->size;
+                    pkt.flags |= PKT_FLAG_KEY; // Assume all audio are keyframe, which is slightly wrong
                     ret =av_write_frame(oc, &pkt);
                     audioTrack->present=false; // consumed
                     if(ret)
