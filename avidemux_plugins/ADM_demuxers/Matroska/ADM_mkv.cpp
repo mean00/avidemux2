@@ -106,7 +106,7 @@ uint8_t mkvHeader::open(const char *name)
         uint64_t pts,dts;
         pts=vid->index[i].Pts;
         lastDts+=increment; // This frame dts with no correction
-        if(pts=ADM_NO_PTS)
+        if(pts==ADM_NO_PTS)
         {
             vid->index[i].Dts=lastDts;
             continue;
