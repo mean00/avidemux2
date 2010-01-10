@@ -20,6 +20,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#if 0
 extern "C" {
 #include "ADM_lavcodec.h"
 }
@@ -31,13 +32,13 @@ extern "C" {
 
 #include "vdpau/vdpau_x11.h"
 #include "vdpau/vdpau.h"
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_ffmp43.h"
+#include "ADM_codec.h"
+#include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_vdpau_internal.h"
-#include "prefs.h"
+//#include "prefs.h"
 
 static VdpFunctions funcs;
 
@@ -339,5 +340,6 @@ void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int
     dec->goOn(src,type);
 }
 
+#endif
 #endif
 // EOF

@@ -21,7 +21,7 @@
 #include "Q_gui2.h"
 #include "ADM_default.h"
 
-#include "ADM_codecs/ADM_codec.h"
+//#include "ADM_codecs/ADM_codec.h"
 #include "gui_action.hxx"
 #include "ADM_editor/ADM_outputfmt.h"
 #include "DIA_fileSel.h"

@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ADM_lavcodec.h"
+#if 0
 class decoderFFSubs
 {
   protected:
@@ -31,8 +32,11 @@ class decoderFFSubs
     virtual ~ decoderFFSubs ();
     virtual uint8_t uncompress (ADMCompressedImage * in, AVSubtitle * out); 
 };
-
-/****************************/
+#endif
+/**
+    \class decoderFF
+    \brief Base class for lavcodec based decoder
+*/
 class decoderFF:public decoders
 {
 protected:
@@ -52,22 +56,21 @@ protected:
   uint32_t _usingMT;
 public:
 
-    decoderFF (uint32_t w, uint32_t h);
+    decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
     virtual ~ decoderFF ();
-  virtual uint8_t dontcopy (void)
+  virtual bool dontcopy (void)
   {
-    return 1;
+    return true;
   }
-  virtual uint8_t uncompress (ADMCompressedImage * in, ADMImage * out);
-  virtual void setParam (void);
-  virtual uint8_t bFramePossible (void)
+  virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+  virtual bool setParam (void);
+  virtual bool bFramePossible (void)
   {
-    return 0;
+    return false;
   }
-  virtual uint8_t decodeHeaderOnly (void);
-  virtual uint8_t decodeFull (void);
-  virtual uint8_t isDivxPacked (void);
-  virtual uint32_t getSpecificMpeg4Info (void);
+  virtual bool decodeHeaderOnly (void);
+  virtual bool decodeFull (void);
+//  virtual uint32_t getSpecificMpeg4Info (void);
   virtual uint8_t getPARWidth (void);
   virtual uint8_t getPARHeight (void);
   virtual bool    flush(void);
@@ -80,9 +83,10 @@ protected:
 
 public:
 
-  decoderFFDiv3 (uint32_t w, uint32_t h);
+  decoderFFDiv3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
+#if 0
 class decoderFFMpeg4VopPacked:public decoderFF
 {
 protected:
@@ -102,16 +106,17 @@ public:
     return 0;
   };
 };
+#endif
 class decoderFFMpeg4:public decoderFF
 {
 protected:
 
 
 public:
-  decoderFFMpeg4 (uint32_t w, uint32_t h, uint32_t fcc,uint32_t l, uint8_t * d);
-  uint8_t uncompress (ADMCompressedImage * in, ADMImage * out);
+        decoderFFMpeg4 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+  bool uncompress (ADMCompressedImage * in, ADMImage * out);
   // mpeg4 can have B-frame
-  virtual uint8_t bFramePossible (void)
+  virtual bool bFramePossible (void)
   {
     return 1;
   }
@@ -123,9 +128,9 @@ protected:
 
 
 public:
-  decoderFFMpeg12 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
   // mpeg1/2 can have B-frame
-  virtual uint8_t bFramePossible (void)
+  virtual bool bFramePossible (void)
   {
     return 1;
   }
@@ -137,8 +142,8 @@ protected:
 
 
 public:
-  decoderFFSVQ3 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
-  virtual uint8_t bFramePossible (void)
+  decoderFFSVQ3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+  virtual bool bFramePossible (void)
   {
     return 0;
   }
@@ -151,7 +156,7 @@ protected:
 
 
 public:
-  decoderFFDV (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFMP42:public decoderFF
@@ -160,7 +165,7 @@ protected:
 
 
 public:
-  decoderFFMP42 (uint32_t w, uint32_t h);
+  decoderFFMP42 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFH263:public decoderFF
@@ -169,7 +174,7 @@ protected:
 
 
 public:
-  decoderFFH263 (uint32_t w, uint32_t h);
+  decoderFFH263 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFH264:public decoderFF
@@ -178,12 +183,12 @@ protected:
   uint32_t _lowDelay;
 
 public:
-  decoderFFH264 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d,uint32_t lowdelay);
-  virtual uint8_t bFramePossible (void)
+  decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+  virtual bool bFramePossible (void)
   {
       return _lowDelay;
   }
-  uint8_t   uncompress (ADMCompressedImage * in, ADMImage * out);
+  bool   uncompress (ADMCompressedImage * in, ADMImage * out);
 
 };
 class decoderFFhuff:public decoderFF
@@ -192,7 +197,7 @@ protected:
 
 
 public:
-  decoderFFhuff (uint32_t w, uint32_t h, uint32_t l, uint8_t * d,uint32_t bpp);
+  decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFF_ffhuff:public decoderFF
@@ -201,7 +206,7 @@ protected:
 
 
 public:
-  decoderFF_ffhuff (uint32_t w, uint32_t h, uint32_t l, uint8_t * d,uint32_t bpp);
+  decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFWMV2:public decoderFF
@@ -210,7 +215,7 @@ protected:
 
 
 public:
-  decoderFFWMV2 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFWMV2 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFWMV1:public decoderFF
@@ -219,7 +224,7 @@ class decoderFFWMV1:public decoderFF
 
 
   public:
-    decoderFFWMV1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+    decoderFFWMV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 
@@ -229,7 +234,7 @@ protected:
 
 
 public:
-  decoderFFWMV3 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFWMV3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 
@@ -239,7 +244,7 @@ protected:
 
 
 public:
-  decoderFFVC1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFVC1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 
@@ -249,7 +254,7 @@ protected:
 
 
 public:
-  decoderFFV1 (uint32_t w, uint32_t h);
+  decoderFFV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFMJPEG:public decoderFF
@@ -258,7 +263,7 @@ protected:
 
 
 public:
-  decoderFFMJPEG (uint32_t w, uint32_t h);
+  decoderFFMJPEG (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderSnow:public decoderFF
@@ -267,7 +272,7 @@ protected:
 
 
 public:
-  decoderSnow (uint32_t w, uint32_t h);
+  decoderSnow (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFcyuv:public decoderFF
@@ -276,7 +281,7 @@ protected:
 
 
 public:
-  decoderFFcyuv (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFcyuv (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderCamtasia:public decoderFF
@@ -285,7 +290,7 @@ protected:
 
 
 public:
-  decoderCamtasia (uint32_t w, uint32_t h,uint32_t bpp);
+  decoderCamtasia (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFTheora:public decoderFF
@@ -294,7 +299,7 @@ protected:
 
 
 public:
-  decoderFFTheora (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFTheora (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 
@@ -304,7 +309,7 @@ protected:
 
 
 public:
-  decoderFFCinepak (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFCinepak (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFCRAM:public decoderFF
@@ -313,50 +318,50 @@ protected:
 
 
 public:
-  decoderFFCRAM (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFCRAM (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
 class decoderFFVP6F:public decoderFF
 {
 protected:
 public:
-  decoderFFVP6F (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFVP6F (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 class decoderFFVP6A:public decoderFF
 {
 protected:
 public:
-  decoderFFVP6A (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFVP6A (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 class decoderFFFLV1:public decoderFF
 {
 protected:
 public:
-  decoderFFFLV1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFFLV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 class decoderFFDVBSub:public decoderFF
 {
 protected:
 public:
-  decoderFFDVBSub (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFDVBSub (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 class decoderFFAMV:public decoderFF
 {
 protected:
 public:
-  decoderFFAMV (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFAMV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 class decoderFFMjpegB:public decoderFF
 {
 protected:
 public:
-  decoderFFMjpegB (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFMjpegB (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 class decoderFFSVQ1:public decoderFF
 {
 protected:
 public:
-  decoderFFSVQ1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
+  decoderFFSVQ1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 
 #ifdef USE_VDPAU
@@ -380,12 +385,12 @@ public:
             // public API
                     decoderFFVDPAU (uint32_t w, uint32_t h, uint32_t l, uint8_t * d);
                     ~decoderFFVDPAU();
-    virtual uint8_t uncompress (ADMCompressedImage * in, ADMImage * out);
-    virtual uint8_t dontcopy (void)
+    virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+    virtual bool dontcopy (void)
                       {
                         return 0;
                       }
-     virtual uint8_t bFramePossible (void)
+    virtual bool bFramePossible (void)
       {
         return 1;
       }

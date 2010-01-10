@@ -16,7 +16,7 @@
  ***************************************************************************/
 #ifndef ADM_RGB16_H
 #define ADM_RGB16_H
-
+#include "ADM_codec.h"
 #include "ADM_colorspace.h"
 
 class decoderRGB16 : decoders
@@ -24,15 +24,15 @@ class decoderRGB16 : decoders
 	protected:
 		uint8_t* planar;
 		ColRgbToYV12* color;
-		uint32_t isRgb; // Else BGR
+		bool     isRgb; // Else BGR
 		uint32_t _bpp;
 		uint8_t* decoded;
 
 	public:
-		uint8_t dontcopy (void) { return 1; }
-		decoderRGB16 (uint32_t w, uint32_t h, uint32_t rgb, uint32_t bpp);
+		bool dontcopy (void) { return 1; }
+		decoderRGB16 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 		virtual ~decoderRGB16();
-		virtual uint8_t uncompress(ADMCompressedImage * in, ADMImage * out);
+		virtual bool uncompress(ADMCompressedImage * in, ADMImage * out);
 };
 
 #endif

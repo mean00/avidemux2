@@ -37,9 +37,9 @@ uint32_t ADM_Composer::getSpecificMpeg4Info( void )
 {
 	if(_segments.getNbSegments())
     {
-        _VIDEOS *vid=_segments.getRefVideo(0);
-		if(vid->decoder)
-	 		return vid->decoder->getSpecificMpeg4Info();
+ //       _VIDEOS *vid=_segments.getRefVideo(0);
+//		if(vid->decoder)
+//	 		return vid->decoder->getSpecificMpeg4Info();
     }
 	return 0;
 

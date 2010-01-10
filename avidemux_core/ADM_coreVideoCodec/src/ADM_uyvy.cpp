@@ -1,34 +1,24 @@
-//
-// C++ Implementation: ADM_uyvy
-//
-// Description: 
-//
-//
-// Author: mean <fixounet@free.fr>, (C) 2004
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
-#include "config.h"
-#include <stdio.h>
+/**
 
-#ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>
-#endif
-#if  defined( __FreeBSD__ ) || defined(__APPLE__)
-#include <sys/types.h>
-#endif
+    \file ADM_uyvy
+    \author mean fixounet@free.fr, 2004-1010
+*/
 
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #include "ADM_default.h"
 #include "avifmt.h"
 #include "avifmt2.h"
 #include "fourcc.h"
+#include "ADM_uyvy.h"
 
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_uyvy.h"
-
-uint8_t
-  decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
+bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
 
   if (in->dataLength < _w * _h * 2)
@@ -68,8 +58,7 @@ uint8_t
   return 1;
 
 }
-uint8_t
-  decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
+bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
 {
 
   if (in->dataLength < _w * _h * 2)

@@ -1,12 +1,7 @@
 /***************************************************************************
-                          ADM_ffmp43.cpp  -  description
-                             -------------------
-                             
-	Decoder for Divx3/4/..., using ffmpeg
-                             
-    begin                : Wed Sep 25 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
+    \file ADM_ffmp43
+    \brief Decoders using lavcodec
+    \author mean & all (c) 2002-2010
  ***************************************************************************/
 
 /***************************************************************************
@@ -17,24 +12,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
 
-
-#include "ADM_assert.h"
-#include "prefs.h"
 extern "C" {
 #include "ADM_lavcodec.h"
 }
 #include "ADM_default.h"
 
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_ffmp43.h"
+#include "ADM_codec.h"
+#include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
-
-#include "ADM_debugID.h"
-#define MODULE_NAME  MODULE_CODEC
-#include "ADM_debug.h"
-#include "ADM_videoInfoExtractor.h"
+//#include "ADM_videoInfoExtractor.h"
 
 extern int ADM_cpu_num_processors(void);
 extern "C"
@@ -43,7 +30,7 @@ extern "C"
     static int  ADM_getBuffer(AVCodecContext *avctx, AVFrame *pic);
 }
 
-
+#define aprintf(...) {}
 
 #define WRAP_Open_Template(funcz,argz,display,codecid) \
 {\
@@ -131,10 +118,10 @@ void decoderFF::decoderMultiThread (void)
 {
   uint32_t threads = 0;
 
-  prefs->get(FEATURE_THREADING_LAVC, &threads);
+//  prefs->get(FEATURE_THREADING_LAVC, &threads);
 
-  if (threads == 0)
-	  threads = ADM_cpu_num_processors();
+//  if (threads == 0)
+//	  threads = ADM_cpu_num_processors();
 
   if (threads == 1)
 	  threads = 0;
@@ -161,7 +148,7 @@ uint8_t decoderFF::getPARHeight (void)
 
 }
 
-  
+#if 0  
 uint8_t decoderFF::isDivxPacked (void)
 {
   int
@@ -194,17 +181,17 @@ uint32_t decoderFF::getSpecificMpeg4Info (void)
 
   return out;
 }
-
+#endif
 //________________________________________________
-void
-decoderFF::setParam (void)
+bool  decoderFF::setParam (void)
 {
   DIA_lavDecoder (&_swapUV, &_showMv);
-  return;			// no param for ffmpeg
+  return true;			// no param for ffmpeg
 }
 
 //-------------------------------
-decoderFF::decoderFF (uint32_t w, uint32_t h):decoders (w, h)
+decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+            :decoders (w, h,fcc,extraDataLen,extraData,bpp)
 {
   codecId = 0;
 //                              memset(&_context,0,sizeof(_context));
@@ -308,7 +295,7 @@ uint32_t decoderFF::frameType (void)
     }
   return flag;
 }
-uint8_t decoderFF::decodeHeaderOnly (void)
+bool decoderFF::decodeHeaderOnly (void)
 {
   if (codecId == CODEC_ID_H264)
     _context->hurry_up = 4;
@@ -317,7 +304,7 @@ uint8_t decoderFF::decodeHeaderOnly (void)
   printf ("\n[lavc] Hurry up\n");
   return 1;
 }
-uint8_t decoderFF::decodeFull (void)
+bool decoderFF::decodeFull (void)
 {
   _context->hurry_up = 0;
   printf ("\n[lavc] full decoding\n");
@@ -338,7 +325,7 @@ bool    decoderFF::flush(void)
     \fn uncompress
     \brief Actually decode an image
 */
-uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
+bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
   int got_picture = 0;
   uint8_t *oBuff[3];
@@ -490,12 +477,14 @@ uint8_t   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 #define LOWDELAY() {} //_context->flags |= CODEC_FLAG_LOW_DELAY
 
 
-decoderFFDiv3::decoderFFDiv3 (uint32_t w, uint32_t h):decoderFF (w, h)
+decoderFFDiv3::decoderFFDiv3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _refCopy = 1;			// YUV420 only
   WRAP_Open (CODEC_ID_MSMPEG4V3);
 }
 //**************************************************
+#if 0
 decoderFFMpeg4VopPacked::decoderFFMpeg4VopPacked (uint32_t w, uint32_t h):decoderFF (w,
 	   h)
 {
@@ -517,24 +506,24 @@ uint8_t decoderFFMpeg4VopPacked::uncompress (ADMCompressedImage * in, ADMImage *
     return decoderFF::uncompress(in,out);
 
 }
-
-decoderFFMpeg4::decoderFFMpeg4 (uint32_t w, uint32_t h, uint32_t fcc,uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+#endif
+decoderFFMpeg4::decoderFFMpeg4 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
 // force low delay as avidemux don't handle B-frames
   LOWDELAY();
-  printf ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", l);
+  ADM_info ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", (int)extraDataLen);
   
   _refCopy = 1;			// YUV420 only
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraDataLen;
+  _context->extradata_size = (int) extraDataLen;
   _context->codec_tag=fcc;
   _context->stream_codec_tag=fcc;
   decoderMultiThread ();
   //  _context->flags|=FF_DEBUG_VIS_MV;
   WRAP_Open (CODEC_ID_MPEG4);
 }
-uint8_t decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
+bool decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
     // For pseudo startcode
     if(in->dataLength)
@@ -546,22 +535,23 @@ uint8_t decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
 
 }
 //************************************
-decoderFFDV::decoderFFDV (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+decoderFFDV::decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
   WRAP_Open (CODEC_ID_DVVIDEO);
 
 }
-decoderFFMP42::decoderFFMP42 (uint32_t w, uint32_t h):decoderFF (w, h)
+decoderFFMP42::decoderFFMP42 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+                decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _refCopy = 1;			// YUV420 only
   WRAP_Open (CODEC_ID_MSMPEG4V2);
 
 }
-decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData):decoderFF (w,
-	   h)
+decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+                decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   int
     got_picture = 0;
@@ -570,64 +560,62 @@ decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h, uint32_t extraLen, uin
   decoderMultiThread ();
   WRAP_Open (CODEC_ID_MPEG2VIDEO);
 }
-decoderFFSVQ3::decoderFFSVQ3 (uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData):decoderFF (w,
-	   h)
+decoderFFSVQ3::decoderFFSVQ3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+        :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   int
     got_picture = 0;
 
   LOWDELAY();
   _context->extradata = (uint8_t *) extraData;
-  _context->extradata_size = (int) extraLen;
+  _context->extradata_size = (int) extraDataLen;
   WRAP_Open (CODEC_ID_SVQ3);
 }
 
-decoderFFH263::decoderFFH263 (uint32_t w, uint32_t h):decoderFF (w, h)
+decoderFFH263::decoderFFH263 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+            :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _refCopy = 1;			// YUV420 only
   WRAP_Open (CODEC_ID_H263);
 
 }
-decoderFFV1::decoderFFV1 (uint32_t w, uint32_t h):decoderFF (w, h)
+decoderFFV1::decoderFFV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+            :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _refCopy = 1;			// YUV420 only
   WRAP_Open (CODEC_ID_FFV1);
 }
-decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h, uint32_t l, uint8_t * d,uint32_t bpp):decoderFF (w,
-	   h)
+decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+:decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
   _context->bits_per_coded_sample=bpp;
-  printf ("[lavc] FFhuff: We have %d bytes of extra data\n", l);
+  ADM_info ("[lavc] FFhuff: We have %d bytes of extra data\n", (int)extraDataLen);
   WRAP_Open (CODEC_ID_FFVHUFF);
 
 }
-decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d, uint32_t lowdelay):decoderFF (w,
-	   h)
+decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+        :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _lowDelay=lowdelay;
+
   _refCopy = 1;			// YUV420 only
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
   decoderMultiThread ();
-  if(lowdelay)
-    LOWDELAY();
-  printf ("[lavc] Initializing H264 decoder with %d extradata\n", l);
-
-       {
-        WRAP_Open(CODEC_ID_H264);
-    }
-
-
+  ADM_info ("[lavc] Initializing H264 decoder with %d extradata\n", (int)extraDataLen);
+  WRAP_Open(CODEC_ID_H264);
 }
 //*********************
 extern "C" {int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc);}
-
-uint8_t   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
+/**
+    \fn uncompress
+*/
+bool   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
   if(!_context->hurry_up) return decoderFF::uncompress (in, out);
-  
+    ADM_assert(0);
+#if 0  
   uint32_t nalSize, isAvc;
   av_getAVCStreamInfo(_context,&nalSize,&isAvc);
   if(isAvc)
@@ -637,125 +625,140 @@ uint8_t   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
   {
     return extractH264FrameType_startCode(nalSize, in->data,in->dataLength,&(out->flags));
   }
+#endif
 }
 //*********************
-decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h, uint32_t l, uint8_t * d,uint32_t bpp):decoderFF (w,
-	   h)
+decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
   _context->bits_per_coded_sample = bpp;
   WRAP_Open (CODEC_ID_HUFFYUV);
 }
-decoderFFWMV2::decoderFFWMV2 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+decoderFFWMV2::decoderFFWMV2 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
 
   WRAP_Open (CODEC_ID_WMV2);
 
 }
-decoderFFWMV1::decoderFFWMV1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+decoderFFWMV1::decoderFFWMV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
 
   WRAP_Open (CODEC_ID_WMV1);
 
 }
 
-decoderFFWMV3::decoderFFWMV3 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+decoderFFWMV3::decoderFFWMV3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
 
   WRAP_Open (CODEC_ID_WMV3);
 
 }
 
-decoderFFVC1::decoderFFVC1(uint32_t w, uint32_t h, uint32_t l, uint8_t * d) : decoderFF(w, h)
+decoderFFVC1::decoderFFVC1(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp) : 
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
 
   WRAP_Open (CODEC_ID_VC1);
 }
 
-decoderFFcyuv::decoderFFcyuv (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+decoderFFcyuv::decoderFFcyuv (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
+
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
 
   WRAP_Open (CODEC_ID_CYUV);
 }
-decoderFFMJPEG::decoderFFMJPEG (uint32_t w, uint32_t h):decoderFF (w, h)
+decoderFFMJPEG::decoderFFMJPEG (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_MJPEG);
 }
-decoderFFTheora::decoderFFTheora (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,
-	   h)
+decoderFFTheora::decoderFFTheora (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+:decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) d;
-  _context->extradata_size = (int) l;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int) extraDataLen;
   WRAP_Open (CODEC_ID_THEORA);
 }
-decoderSnow::decoderSnow (uint32_t w, uint32_t h):decoderFF (w, h)
+decoderSnow::decoderSnow (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+:decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_SNOW);
 }
 //*************
-decoderCamtasia::decoderCamtasia (uint32_t w, uint32_t h,uint32_t bpp):decoderFF (w,  h)
+decoderCamtasia::decoderCamtasia (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+:decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _context->bits_per_coded_sample = bpp;
   WRAP_Open (CODEC_ID_TSCC);
 }
 //*************
-decoderFFCinepak::decoderFFCinepak (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFCinepak::decoderFFCinepak (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_CINEPAK);
 }
 //*************
-decoderFFCRAM::decoderFFCRAM (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFCRAM::decoderFFCRAM (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_MSVIDEO1);
 }
 //*************
-decoderFFVP6F::decoderFFVP6F (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFVP6F::decoderFFVP6F (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_VP6F);
 }
 //*************
-decoderFFVP6A::decoderFFVP6A (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFVP6A::decoderFFVP6A (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_VP6A);
 }
 
 //*************
-decoderFFSVQ1::decoderFFSVQ1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFSVQ1::decoderFFSVQ1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_SVQ1);
 }
 
 //************
-decoderFFFLV1::decoderFFFLV1 (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFFLV1::decoderFFFLV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_FLV1);
 }
-decoderFFAMV::decoderFFAMV (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,   h)
+decoderFFAMV::decoderFFAMV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_AMV);
   //_context->codec_id=CODEC_ID_AMV;
 }
-decoderFFMjpegB::decoderFFMjpegB (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,   h)
+decoderFFMjpegB::decoderFFMjpegB (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   WRAP_Open (CODEC_ID_MJPEGB);
   //_context->codec_id=CODEC_ID_AMV;
 }
-decoderFFDVBSub::decoderFFDVBSub (uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+#if 0
+decoderFFDVBSub::decoderFFDVBSub (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):decoderFF (w,	   h)
 {
   _context->sub_id=1;
   WRAP_Open (CODEC_ID_DVB_SUBTITLE);
@@ -797,7 +800,7 @@ uint8_t decoderFFSubs::uncompress (ADMCompressedImage * in, AVSubtitle * out)
      return 1;
 }
 
-
+#endif
 //***************
 extern uint8_t  lavformat_init(void);
 extern void     avcodec_init(void );

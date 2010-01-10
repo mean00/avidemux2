@@ -15,19 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "ADM_default.h"
-//#include "ADM_colorspace/colorspace.h"
+#include "ADM_codec.h"
+#include "ADM_rgb16.h"
 
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_rgb16.h"
-
-decoderRGB16::decoderRGB16(uint32_t w, uint32_t h, uint32_t rgb, uint32_t bpp) : decoders (w, h)
+decoderRGB16::decoderRGB16(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+    : decoders (  w,   h,  fcc,   extraDataLen,   extraData,  bpp)
 {
-	isRgb = rgb;
+	isRgb = true;
 	_bpp = bpp;
 
 	decoded = new uint8_t[_bpp * w * h];
@@ -38,7 +33,7 @@ decoderRGB16::~decoderRGB16()
 	delete[] decoded;
 }
 
-uint8_t decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
+bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 {
 	int xx = _w * _h;
 	int lineSize = (_w * (_bpp / 8) + 3) & ~3;

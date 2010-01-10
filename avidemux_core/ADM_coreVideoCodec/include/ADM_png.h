@@ -16,63 +16,49 @@
  ***************************************************************************/ 
 #ifndef PNG_H_A
 #define PNG_H_A
-#ifdef USE_PNG
 
+/**
+    \struct memAccess   
+    \brief png io wrapper
+*/
 typedef struct memAccess 
 {
   
-int size;
-   
+int size;   
 int cur;
-   
 uint8_t * data;
-
-
 } memAccess;
 
-
+/**
+    \class decoderPng
+*/
 class decoderPng:public decoders 
 {
 
 protected:
-memAccess io;
-  
-ADM_colorspace colorspace;
-  
-void *png_ptr;
-  
-void *info_ptr;
-  
-void *end_info;
-  
-
-uint8_t ** rows;
-  
-uint8_t * decoded;
-  
-void Init (void);
-  
-void Cleanup (void);
-  
-void recalc (void);
+    memAccess io;      
+    ADM_colorspace colorspace;
+    void *png_ptr;
+    void *info_ptr;
+    void *end_info;
+    uint8_t ** rows;      
+    uint8_t * decoded;
+    void Init (void);
+    void Cleanup (void);
+    void recalc (void);
 
 public:
-decoderPng (uint32_t w, uint32_t h);
+            decoderPng (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
   
-virtual ~ decoderPng ();
+    virtual ~ decoderPng ();
   
-virtual uint8_t uncompress(ADMCompressedImage * in, ADMImage * out);
+    virtual bool uncompress(ADMCompressedImage * in, ADMImage * out);
   
-uint8_t dontcopy (void)
-  {
-    return 1;
-  }
-
-
-
+    bool dontcopy (void)
+            {
+                return true;
+            }
 };
 
-#endif /* 
- */
-#endif /* 
- */
+#endif 
+//EOF

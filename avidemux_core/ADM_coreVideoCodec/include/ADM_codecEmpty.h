@@ -1,9 +1,8 @@
 /***************************************************************************
-                          ADM_mjpeg.h  -  description
-                             -------------------
-    begin                : Sat Apr 13 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
+         \fn ADM_codecEmpty.h
+         \brief Empty decoder
+         \author mean, fixounet@free.fr (C) 2002-2010
+    
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,16 +13,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-class decoderMjpeg:decoders
+#ifndef ADM_codecEmpty_H
+#define ADM_codecEmpty_H
+/* Dummy decoder in case we don't have the desired one */
+class decoderEmpty : public decoders
 {
 protected:
-  uint8_t _swap;
-
 public:
-  decoderMjpeg (uint32_t w, uint32_t h);
-  virtual ~ decoderMjpeg ();
-  virtual void setParam (void);
-  virtual uint8_t uncompress (uint8_t * in, uint8_t * out, uint32_t len,
-			      uint32_t * flag = NULL);
+    decoderEmpty (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+        :decoders (  w,   h,  fcc,   extraDataLen,  extraData,  bpp)
+    {
+
+    }
+    bool uncompress (ADMCompressedImage * in, ADMImage * out) {return true;}
+
 };
+#endif

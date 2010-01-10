@@ -472,7 +472,7 @@ int32_t info;
          
         // default return value
         *rval=JS_FALSE;
-        if(info & ADM_VOP_ON) *rval=JS_TRUE;
+        //if(info & ADM_VOP_ON) *rval=JS_TRUE;
         return JS_TRUE;
 }// end PostProcess
 /**
@@ -492,7 +492,7 @@ uint32_t info;
         
         // default return value
         *rval=JS_FALSE;
-        if(info & ADM_GMC_ON) *rval=JS_TRUE;
+        //if(info & ADM_GMC_ON) *rval=JS_TRUE;
         return JS_TRUE;
 }// end PostProcess
 /**
@@ -511,7 +511,7 @@ uint32_t info;
         leaveLock(); 
         
         *rval=JS_FALSE;
-        if(info & ADM_QPEL_ON) *rval=JS_TRUE;
+        //if(info & ADM_QPEL_ON) *rval=JS_TRUE;
         return JS_TRUE;
 }// end PostProcess
 

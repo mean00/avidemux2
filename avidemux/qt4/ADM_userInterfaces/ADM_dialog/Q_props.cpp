@@ -35,13 +35,13 @@ propWindow::propWindow() : QDialog()
     text[0] = 0;
     if (!avifileinfo)
         return;
-  
+#if 0  
         // Fetch info
         info=video_body->getSpecificMpeg4Info();
         vop=!!(info & ADM_VOP_ON);
         qpel=!!(info & ADM_QPEL_ON);
         gmc=!!(info & ADM_GMC_ON);
-
+#endif
 #define FILLTEXT(a,b,c) {snprintf(text,79,b,c);ui.a->setText(text);}
 #define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d);ui.a->setText(text);}
 #define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e);ui.a->setText(text);}

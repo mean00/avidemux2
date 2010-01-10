@@ -16,7 +16,7 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_segment.h"
-#include "../ADM_codecs/ADM_codec.h"
+#include "ADM_codec.h"
 #include "ADM_image.h"
 #include "../ADM_editor/ADM_edCache.h"
 #include "ADM_pp.h"

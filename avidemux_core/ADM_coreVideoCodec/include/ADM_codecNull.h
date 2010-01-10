@@ -19,13 +19,14 @@ class decoderNull:public decoders
 protected:
 
 public:
-  decoderNull (uint32_t w, uint32_t h):decoders (w, h)
+  decoderNull (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+        :decoders (  w,   h,  fcc,   extraDataLen,  extraData,  bpp)
   {
   }
   virtual ~ decoderNull ()
   {
   };
-  virtual uint8_t uncompress (ADMCompressedImage * in, ADMImage * out)
+  virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)
   {
     memcpy (out->data, in->data, in->dataLength);
     return 1;

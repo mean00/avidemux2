@@ -14,25 +14,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
-#ifdef USE_PNG
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <string.h>
-#include <math.h>
 
 #include "ADM_default.h"
-
-//#include "ADM_colorspace/colorspace.h"
-
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_png.h"
+#include <math.h>
+#include "ADM_codec.h"
+#include "ADM_png.h"
 extern "C"
 {
 #include "png.h"
 }
-#include "ADM_assert.h"
 
 #define PNG_PTR ((png_structp)png_ptr)
 #define INFO_PTR ((png_infop)info_ptr)
@@ -41,7 +31,9 @@ extern "C"
    	Initialize codec
 */
 static void user_read_data (png_structp png_ptr, png_bytep data, png_size_t length);
-
+/**
+    \fn Recalc
+*/
 void decoderPng::recalc (void)
 {
   int mul;
@@ -54,8 +46,11 @@ void decoderPng::recalc (void)
     rows[i] = decoded + mul * _w * i;
 }
 
-
-decoderPng::decoderPng (uint32_t w, uint32_t h):decoders (w, h)
+/**
+    \fn decoderPng
+*/
+decoderPng::decoderPng (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
+                    decoders (w, h,fcc,extraDataLen,extraData,bpp)
 {
   rows = NULL;
   decoded = NULL;
@@ -69,10 +64,12 @@ decoderPng::decoderPng (uint32_t w, uint32_t h):decoders (w, h)
   rows = new uint8_t *[h];
   recalc ();
 }
+/**
+    \fn Init
+*/
  void decoderPng::Init (void)
 {
-  png_ptr =
-    (void *) png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_ptr =    (void *) png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   ADM_assert (png_ptr);
   info_ptr = (void *) png_create_info_struct (PNG_PTR);
   ADM_assert (info_ptr);
@@ -82,20 +79,27 @@ decoderPng::decoderPng (uint32_t w, uint32_t h):decoders (w, h)
   png_set_read_fn (PNG_PTR, &io, user_read_data);
   png_set_rows (PNG_PTR, INFO_PTR, (png_byte **) rows);
 }
+/**
+    \fn Cleanup
+*/
 void decoderPng::Cleanup (void)
 {
   png_destroy_read_struct ((png_structpp) & png_ptr, (png_infopp) & info_ptr,
 			   (png_infopp) & end_info);
 }
+/**
+    \fn dtor
+*/
 decoderPng::~decoderPng ()
 {
   delete[]rows;
   delete[]decoded;
 }
-/*
-   	Uncompress frame, set flags if needed
+/**
+    \fn uncompress
+   	\brief Uncompress frame, set flags if needed
 */
-uint8_t decoderPng::uncompress(ADMCompressedImage * in, ADMImage * out)
+bool decoderPng::uncompress(ADMCompressedImage * in, ADMImage * out)
 {
   int bpp;
   int colortype;
@@ -104,8 +108,8 @@ uint8_t decoderPng::uncompress(ADMCompressedImage * in, ADMImage * out)
   if (!!png_sig_cmp (in->data, 0, 8))
 
     {
-      printf ("[PNG] wrong sig\n");
-      return 0;
+      ADM_warning ("[PNG] wrong sig\n");
+      return false;
     }
 
   //
@@ -154,7 +158,7 @@ gain2:
   out->_planeStride[2] = 0;
   out->_colorspace = colorspace;
   Cleanup ();
-  return 1;
+  return true;
 }
 
 // ******************************************************
@@ -177,4 +181,3 @@ void user_flush_data (png_structp png_ptr)
 {
 }
 //EOF
-#endif /*  */
