@@ -35,7 +35,7 @@ extern "C"
 #include "ADM_png.h"
 #include "ADM_codecEmpty.h"
 #include "ADM_ffmp43.h"
-
+#include "ADM_codecFFsimple.h"
 #include "avidemutils.h"
 #include "fourcc.h"
 
@@ -66,10 +66,7 @@ decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, u
 
       return (decoders *) (new decoderFFMP42 (w,h,fcc,extraLen,extraData,bpp));
     }
-    if (fourCC::check (fcc, (uint8_t *) "FLV1"))
-    {
-      return (decoders *) (new decoderFFFLV1 (w,h,fcc,extraLen,extraData,bpp));
-    }
+  
   if (fourCC::check (fcc, (uint8_t *) "H263"))
     {
 
@@ -85,20 +82,10 @@ decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, u
 
       return (decoders *) (new decoderPng (w,h,fcc,extraLen,extraData,bpp));
     }
- if (fourCC::check (fcc, (uint8_t *) "cvid"))
-    {
-
-      return (decoders *) (new decoderFFCinepak (w,h,fcc,extraLen,extraData,bpp));
-    }
   if (fourCC::check (fcc, (uint8_t *) "FFVH"))
     {
 
       return (decoders *) (new decoderFF_ffhuff (w,h,fcc,extraLen,extraData,bpp));
-    }
-if (fourCC::check (fcc, (uint8_t *) "SVQ1"))
-    {
-
-      return (decoders *) (new decoderFFSVQ1 (w,h,fcc,extraLen,extraData,bpp));
     }
 
   if (fourCC::check (fcc, (uint8_t *) "SVQ3"))
@@ -117,38 +104,12 @@ if (fourCC::check (fcc, (uint8_t *) "SVQ1"))
 
       return (decoders *) (new decoderFFCRAM (w,h,fcc,extraLen,extraData,bpp));
     }
-  if (fourCC::check (fcc, (uint8_t *) "WMV2"))
-    {
-
-      return (decoders *) (new decoderFFWMV2 (w,h,fcc,extraLen,extraData,bpp));
-    }
-    if (fourCC::check (fcc, (uint8_t *) "WMV1"))
-    {
-
-      return (decoders *) (new decoderFFWMV1 (w,h,fcc,extraLen,extraData,bpp));
-    }
-
-  if (fourCC::check (fcc, (uint8_t *) "WMV3") )
-    {
-
-      return (decoders *) (new decoderFFWMV3 (w,h,fcc,extraLen,extraData,bpp));
-    }
-
-    if (fourCC::check (fcc, (uint8_t *) "WVC1")|| fourCC::check (fcc, (uint8_t *) "WMVA"))
-    {
-
-      return (decoders *) (new decoderFFVC1 (w,h,fcc,extraLen,extraData,bpp));
-    }
+ 
 
 if (fourCC::check (fcc, (uint8_t *) "FFV1"))
     {
 
       return (decoders *) (new decoderFFV1 (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "SNOW"))
-    {
-
-      return (decoders *) (new decoderSnow (w,h,fcc,extraLen,extraData,bpp));
     }
   if (isH264Compatible (fcc))
     {
@@ -170,20 +131,6 @@ if (fourCC::check (fcc, (uint8_t *) "FFV1"))
   if (isMpeg4Compatible (fcc) == 1)
     {
       return (decoders *) (new decoderFFMpeg4 (w,h,fcc,extraLen,extraData,bpp));
-      //    return(decoders *)( new decoderXvid(w,h));
-      //    return(decoders *)( new decoderDIVX(w,h));
-    }
-
-  if (fourCC::check (fcc, (uint8_t *) "MJPB"))
-    {
-      printf ("\n using FF mjpeg codec\n");
-      return (decoders *) (new decoderFFMjpegB (w,h,fcc,extraLen,extraData,bpp));
-    }
-if (fourCC::check (fcc, (uint8_t *) "MJPG")
-      || fourCC::check (fcc, (uint8_t *) "mjpa"))
-    {
-      printf ("\n using FF mjpeg codec\n");
-      return (decoders *) (new decoderFFMJPEG (w,h,fcc,extraLen,extraData,bpp));
     }
   if (fourCC::check (fcc, (uint8_t *) "YV12")
       || fourCC::check (fcc, (uint8_t *) "yv12")
@@ -201,25 +148,7 @@ if (fourCC::check (fcc, (uint8_t *) "MJPG")
     {
       printf ("\n using YUY2 codec\n");
       return (decoders *) (new decoderYUY2 (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "AMV "))
-    {
-      printf ("\n using AMV codec\n");
-      return (decoders *) (new decoderFFAMV (w,h,fcc,extraLen,extraData,bpp));
-    }
-
- if (fourCC::check (fcc, (uint8_t *) "VP6A"))
-    {
-      printf ("\n using YUY2 codec\n");
-      return (decoders *) (new decoderFFVP6A (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (isVP6Compatible(fcc))
-    {
-      printf ("\n using VP6F codec\n");
-      return (decoders *) (new decoderFFVP6F (w,h,fcc,extraLen,extraData,bpp));
-    }
-
-
+    } 
   if ((fcc == 0) || fourCC::check (fcc, (uint8_t *) "RGB "))
     {
       // RGB 16 Codecs
@@ -236,6 +165,14 @@ if (fourCC::check (fcc, (uint8_t *) "MJPG")
     }
   if (isMpeg12Compatible (fcc))
 	  return (decoders *) (new decoderFFMpeg12 (w,h,fcc,extraLen,extraData,bpp));
+
+    // Search ffsimple
+    decoders *dec=admCreateFFSimple(w,h,fcc,extraLen,extraData,bpp);
+    if(dec)
+    {
+        printf("using ffSimple\n");
+        return dec;
+    }
 
   // default : null decoder
   printf ("\n using invalid codec for \n");

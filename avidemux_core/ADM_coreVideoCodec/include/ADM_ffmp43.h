@@ -17,22 +17,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifndef ADM_FFMP43_H
+#define ADM_FFMP43_H
 
 #include "ADM_lavcodec.h"
-#if 0
-class decoderFFSubs
-{
-  protected:
-     int      codecId;
-     uint32_t subId;
-     AVCodecContext *_context;
-  public:
 
-    decoderFFSubs (uint32_t subId);
-    virtual ~ decoderFFSubs ();
-    virtual uint8_t uncompress (ADMCompressedImage * in, AVSubtitle * out); 
-};
-#endif
 /**
     \class decoderFF
     \brief Base class for lavcodec based decoder
@@ -209,45 +198,6 @@ public:
   decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
-class decoderFFWMV2:public decoderFF
-{
-protected:
-
-
-public:
-  decoderFFWMV2 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
-class decoderFFWMV1:public decoderFF
-{
-  protected:
-
-
-  public:
-    decoderFFWMV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
-
-class decoderFFWMV3:public decoderFF
-{
-protected:
-
-
-public:
-  decoderFFWMV3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
-
-class decoderFFVC1:public decoderFF
-{
-protected:
-
-
-public:
-  decoderFFVC1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
-
 class decoderFFV1:public decoderFF
 {
 protected:
@@ -257,24 +207,7 @@ public:
   decoderFFV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
 };
-class decoderFFMJPEG:public decoderFF
-{
-protected:
 
-
-public:
-  decoderFFMJPEG (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
-class decoderSnow:public decoderFF
-{
-protected:
-
-
-public:
-  decoderSnow (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
 class decoderFFcyuv:public decoderFF
 {
 protected:
@@ -303,15 +236,6 @@ public:
 
 };
 
-class decoderFFCinepak:public decoderFF
-{
-protected:
-
-
-public:
-  decoderFFCinepak (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-
-};
 class decoderFFCRAM:public decoderFF
 {
 protected:
@@ -320,48 +244,6 @@ protected:
 public:
   decoderFFCRAM (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 
-};
-class decoderFFVP6F:public decoderFF
-{
-protected:
-public:
-  decoderFFVP6F (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-class decoderFFVP6A:public decoderFF
-{
-protected:
-public:
-  decoderFFVP6A (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-class decoderFFFLV1:public decoderFF
-{
-protected:
-public:
-  decoderFFFLV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-class decoderFFDVBSub:public decoderFF
-{
-protected:
-public:
-  decoderFFDVBSub (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-class decoderFFAMV:public decoderFF
-{
-protected:
-public:
-  decoderFFAMV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-class decoderFFMjpegB:public decoderFF
-{
-protected:
-public:
-  decoderFFMjpegB (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-class decoderFFSVQ1:public decoderFF
-{
-protected:
-public:
-  decoderFFSVQ1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
 };
 
 #ifdef USE_VDPAU
@@ -397,6 +279,7 @@ public:
 
 };
 
+#endif
 #endif
 // EOF
 
