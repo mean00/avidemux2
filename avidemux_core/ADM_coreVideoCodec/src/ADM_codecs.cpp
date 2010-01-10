@@ -28,14 +28,4 @@ bool  decoders::uncompress (ADMCompressedImage * in, ADMImage * out)
   UNUSED_ARG (out);
   return false;
 }
-
-#if 0
-uint8_t coders::compress (ADMImage * in, ADMBitstream * out)
-{
-  UNUSED_ARG (in);
-  UNUSED_ARG (out);
-
-  return 0;
-}
-#endif
 //EOF

@@ -52,65 +52,27 @@ decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, u
   ADM_info("Searching decoder (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
   if (isMSMpeg4Compatible (fcc) == 1)
     {
-      // For div3, no problem we take ffmpeg
-
       return (decoders *) (new decoderFFDiv3 (w,h,fcc,extraLen,extraData,bpp));
     }
   if (isDVCompatible(fcc))//"CDVC"))
     {
-
       return (decoders *) (new decoderFFDV (w,h,fcc,extraLen,extraData,bpp));
     }
-  if (fourCC::check (fcc, (uint8_t *) "MP42"))
-    {
-
-      return (decoders *) (new decoderFFMP42 (w,h,fcc,extraLen,extraData,bpp));
-    }
-  
-  if (fourCC::check (fcc, (uint8_t *) "H263"))
-    {
-
-      return (decoders *) (new decoderFFH263 (w,h,fcc,extraLen,extraData,bpp));
-    }
+ 
   if (fourCC::check (fcc, (uint8_t *) "HFYU"))
     {
-
       return (decoders *) (new decoderFFhuff (w,h,fcc,extraLen,extraData,bpp));
     }
   if (fourCC::check (fcc, (uint8_t *) "PNG "))
     {
-
       return (decoders *) (new decoderPng (w,h,fcc,extraLen,extraData,bpp));
     }
   if (fourCC::check (fcc, (uint8_t *) "FFVH"))
     {
-
       return (decoders *) (new decoderFF_ffhuff (w,h,fcc,extraLen,extraData,bpp));
-    }
-
-  if (fourCC::check (fcc, (uint8_t *) "SVQ3"))
-    {
-
-      return (decoders *) (new decoderFFSVQ3 (w,h,fcc,extraLen,extraData,bpp));
-    }
-  if (fourCC::check (fcc, (uint8_t *) "tscc"))
-    {
-
-      return (decoders *) (new decoderCamtasia (w,h,fcc,extraLen,extraData,bpp));
-    }
-
-     if (fourCC::check (fcc, (uint8_t *) "CRAM"))
-    {
-
-      return (decoders *) (new decoderFFCRAM (w,h,fcc,extraLen,extraData,bpp));
     }
  
 
-if (fourCC::check (fcc, (uint8_t *) "FFV1"))
-    {
-
-      return (decoders *) (new decoderFFV1 (w,h,fcc,extraLen,extraData,bpp));
-    }
   if (isH264Compatible (fcc))
     {
 #if defined(USE_VDPAU) && 0

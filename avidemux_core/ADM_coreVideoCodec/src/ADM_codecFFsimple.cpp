@@ -21,30 +21,39 @@ typedef struct
     const char *string;
     CodecID    codecId;
     bool       extraData;
+    bool       refCopy;
 }ffVideoCodec;
 
 const ffVideoCodec ffCodec[]=
 {
 
-  {"SNOW",  CODEC_ID_SNOW,      false},
-  {"cvid",  CODEC_ID_CINEPAK,   false},
-  // ?{,CODEC_ID_MSVIDEO1},
-  {"VP6F",  CODEC_ID_VP6F,      false},
-  {"VP6A",  CODEC_ID_VP6A,      false},
-  {"SVQ1",  CODEC_ID_SVQ1,      false},
-  {"FLV1",  CODEC_ID_FLV1,      false},
-  {"AMV",   CODEC_ID_AMV,       false},
-  {"MJPG",  CODEC_ID_MJPEG,     false},
-  {"mjpa",  CODEC_ID_MJPEG,     false},
-  {"MJPB",  CODEC_ID_MJPEGB,    false},
+  {"SNOW",  CODEC_ID_SNOW,      false, false},
+  {"cvid",  CODEC_ID_CINEPAK,   false, false},
+  {"CRAM",  CODEC_ID_MSVIDEO1,  false, false},
+  {"VP6F",  CODEC_ID_VP6F,      false, false},
+  {"VP6A",  CODEC_ID_VP6A,      false, false},
+  {"SVQ1",  CODEC_ID_SVQ1,      false, false},
+  {"FLV1",  CODEC_ID_FLV1,      false, false},
+  {"AMV",   CODEC_ID_AMV,       false, false},
+  {"MJPG",  CODEC_ID_MJPEG,     false, false},
+  {"mjpa",  CODEC_ID_MJPEG,     false, false},
+  {"MJPB",  CODEC_ID_MJPEGB,    false, false},
+  {"FPS1",  CODEC_ID_FRAPS,     false, false},
+  {"cvid",  CODEC_ID_CINEPAK,   false, false},
+// Need extradata
+  {"WMV2", CODEC_ID_WMV2,       true, false},
+  {"WMV1", CODEC_ID_WMV1,       true, false},
+  {"WMV3", CODEC_ID_WMV3,       true, false},
+  {"WVC1", CODEC_ID_VC1,        true, false},
+  {"WMVA", CODEC_ID_VC1,        true, false},
 
-  {"WMV2", CODEC_ID_WMV2,       true},
-  {"WMV1", CODEC_ID_WMV1,       true},
-  {"WMV3", CODEC_ID_WMV3,       true},
-  {"WVC1", CODEC_ID_VC1,        true},
-  {"WMVA", CODEC_ID_VC1,        true},
+  {"WMVA", CODEC_ID_DVVIDEO,    true, false},
+// RefCopy
+  {"FFV1", CODEC_ID_FFV1,       true, true},
+  {"H263", CODEC_ID_H263,       false, true},
+  {"MP42", CODEC_ID_MSMPEG4V2,  true, true},
+  {"SVQ3", CODEC_ID_SVQ3,       true, true},
 
-  {"WMVA", CODEC_ID_DVVIDEO,        true},
 
   //{"MJPB", CODEC_ID_CYUV,       true},
  // {"MJPB", CODEC_ID_THEORA),    true}
@@ -80,6 +89,9 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
          _context->extradata = (uint8_t *) extraData;
          _context->extradata_size = (int) extraDataLen;
     }
+    if(true==c->refCopy)
+        _refCopy=1;
+
     AVCodec *codec=avcodec_find_decoder(id);
     if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
     codecId=id; 

@@ -473,9 +473,9 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 
   return 1;
 }
-
-#define LOWDELAY() {} //_context->flags |= CODEC_FLAG_LOW_DELAY
-
+// *******************************************************************
+// *******************************************************************
+// *******************************************************************
 
 decoderFFDiv3::decoderFFDiv3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
@@ -483,35 +483,11 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   _refCopy = 1;			// YUV420 only
   WRAP_Open (CODEC_ID_MSMPEG4V3);
 }
-//**************************************************
-#if 0
-decoderFFMpeg4VopPacked::decoderFFMpeg4VopPacked (uint32_t w, uint32_t h):decoderFF (w,
-	   h)
-{
-/* In that case, we cannot use lowdelay...*/
-  _refCopy = 1;			// YUV420 only
-  _allowNull = 1;
-  decoderMultiThread ();
-  WRAP_Open (CODEC_ID_MPEG4);
-  printf("[lavc] Non low delay mpeg4 decoder initialized\n");
-}
-uint8_t decoderFFMpeg4VopPacked::uncompress (ADMCompressedImage * in, ADMImage * out)
-{
-    // For pseudo startcode
-    if(in->dataLength)
-    {
-        in->data[in->dataLength]=0;
-        in->data[in->dataLength+1]=0;
-    }
-    return decoderFF::uncompress(in,out);
 
-}
-#endif
 decoderFFMpeg4::decoderFFMpeg4 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
 // force low delay as avidemux don't handle B-frames
-  LOWDELAY();
   ADM_info ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", (int)extraDataLen);
   
   _refCopy = 1;			// YUV420 only
@@ -543,48 +519,14 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   WRAP_Open (CODEC_ID_DVVIDEO);
 
 }
-decoderFFMP42::decoderFFMP42 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
-                decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
-{
-  _refCopy = 1;			// YUV420 only
-  WRAP_Open (CODEC_ID_MSMPEG4V2);
-
-}
 decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
                 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  int
-    got_picture = 0;
-  LOWDELAY();
   _refCopy = 1;			// YUV420 only
   decoderMultiThread ();
   WRAP_Open (CODEC_ID_MPEG2VIDEO);
 }
-decoderFFSVQ3::decoderFFSVQ3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-        :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
-{
-  int
-    got_picture = 0;
 
-  LOWDELAY();
-  _context->extradata = (uint8_t *) extraData;
-  _context->extradata_size = (int) extraDataLen;
-  WRAP_Open (CODEC_ID_SVQ3);
-}
-
-decoderFFH263::decoderFFH263 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-            :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
-{
-  _refCopy = 1;			// YUV420 only
-  WRAP_Open (CODEC_ID_H263);
-
-}
-decoderFFV1::decoderFFV1 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-            :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
-{
-  _refCopy = 1;			// YUV420 only
-  WRAP_Open (CODEC_ID_FFV1);
-}
 decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
 :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
@@ -635,12 +577,6 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   _context->extradata_size = (int) extraDataLen;
   _context->bits_per_coded_sample = bpp;
   WRAP_Open (CODEC_ID_HUFFYUV);
-}
-decoderCamtasia::decoderCamtasia (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
-:decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
-{
-  _context->bits_per_coded_sample = bpp;
-  WRAP_Open (CODEC_ID_TSCC);
 }
 
 //***************
