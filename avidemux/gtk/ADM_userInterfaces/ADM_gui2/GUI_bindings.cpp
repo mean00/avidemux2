@@ -24,7 +24,7 @@
 #define MODULE_NAME MODULE_UI
 #include "ADM_debug.h"
 
-#include "ADM_codecs/ADM_codec.h"
+//#include "ADM_codecs/ADM_codec.h"
 #include "../ADM_commonUI/GUI_ui.h"
 
 #include "DIA_fileSel.h"

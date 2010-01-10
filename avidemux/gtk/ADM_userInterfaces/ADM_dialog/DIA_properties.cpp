@@ -34,10 +34,10 @@ void DIA_properties( void )
         return;
 
         // Fetch info
-        info=video_body->getSpecificMpeg4Info();
-        vop=!!(info & ADM_VOP_ON);
-        qpel=!!(info & ADM_QPEL_ON);
-        gmc=!!(info & ADM_GMC_ON);
+        //info=video_body->getSpecificMpeg4Info();
+        //vop=!!(info & ADM_VOP_ON);
+        //qpel=!!(info & ADM_QPEL_ON);
+        //gmc=!!(info & ADM_GMC_ON);
 
         dialog = create_dialog1();
 
