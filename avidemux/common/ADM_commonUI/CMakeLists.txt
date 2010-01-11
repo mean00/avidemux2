@@ -10,7 +10,6 @@ DIA_bitrateHisto.cpp
 DIA_prefs.cpp     
 DIA_SVCD.cpp       
 DIA_builtin.cpp       
-DIA_lavDecoder.cpp  
 DIA_requant.cpp   
 #DIA_ocr.cpp             
 #DIA_tsSub.cpp        

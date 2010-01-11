@@ -8,6 +8,7 @@ ADM_uyvy.cpp
 ADM_ffmpeg_vdpau.cpp
 ADM_png.cpp
 ADM_codecSearch.cpp
+DIA_lavDecoder.cpp
 )
 
 ADD_LIBRARY(ADM_coreVideoCodec6 SHARED ${ADM_codecs_SRCS})

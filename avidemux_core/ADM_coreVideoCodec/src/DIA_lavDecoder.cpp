@@ -12,10 +12,9 @@
 //
 //
 
-#include "config.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
-
+#define QT_TR_NOOP(x) x
 /**
       \fn DIA_lavDecoder
       \brief Dialog for lavcodec *DECODER* option
