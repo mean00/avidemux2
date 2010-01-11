@@ -85,55 +85,10 @@ public:
         return true;
     }
 };
-
-decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen,
-		      uint8_t * extraData,uint32_t bpp=0);
-#if 0
-decoders *getDecoderVopPacked (uint32_t fcc, uint32_t w, uint32_t h,
-			       uint32_t extraLen, uint8_t * extraData);
-decoders *getDecoderH264noLogic (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen,
-		     uint8_t * extraData);
-
-//***************************************
-
-class coders
-{
-protected:
-  uint32_t _w;
-  uint32_t _h;
-public:
-    coders (uint32_t w, uint32_t h)
-  {
-    _w = w;
-    _h = h;
-  }
-  virtual ~ coders ()
-  {
-  };
-  virtual uint8_t compress (ADMImage * in, ADMBitstream * out);
-};
-decoders *getCoder (uint32_t fcc, uint32_t w, uint32_t h);
-/*----------------------------------------------------------*/
-class encoder
-{
-protected:uint32_t _w, _h;
-public:encoder (uint32_t width, uint32_t height)
-  {
-    _w = width;
-    _h = height;
-  };
-  virtual uint8_t stopEncoder (void) = 0;
-  virtual uint8_t init (uint32_t val, uint32_t fps1000) = 0;
-  virtual uint8_t encode (ADMImage * in, ADMBitstream *out) = 0;
-  virtual uint8_t getExtraData (uint32_t * l, uint8_t ** d)
-  {
-    *l = 0;
-    *d = NULL;
-    return 0;
-  }
-};
-
-#endif
+/* This function is to be implemented by the application, it is just here for reference */
+decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
+/* This function is implemented in coreVideoCodec, it will return a codec if it can find a suitable one, NULL if not */
+decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
 
 
 #endif

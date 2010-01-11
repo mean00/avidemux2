@@ -24,6 +24,7 @@
 #include "ADM_vidMisc.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
 #include "ADM_script/ADM_JSif.h"
+#include "ADM_codec.h"
 
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
@@ -48,7 +49,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
 
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
-  ref->decoder = getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
+  ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
   ref->_videoCache   =   new EditorCache(32,info.width,info.height) ;
 
   float frameD=info.fps1000;

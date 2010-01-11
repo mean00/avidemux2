@@ -20,7 +20,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#if 0
+
 extern "C" {
 #include "ADM_lavcodec.h"
 }
@@ -38,7 +38,8 @@ extern "C" {
 #include "ADM_dynamicLoading.h"
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_vdpau_internal.h"
-//#include "prefs.h"
+#include "prefs.h"
+#include "ADM_codecVdpau.h"
 
 static VdpFunctions funcs;
 
@@ -200,7 +201,9 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 /**
     \fn decoderFFVDPAU
 */
-decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):decoderFF (w,	   h)
+decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
+        uint8_t *extraData,uint32_t bpp)
+:decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
         destroying=false;
         _context->opaque          = this;
@@ -208,8 +211,8 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h, uint32_t l, uint8_t * d):
         _context->release_buffer  = ADM_VDPAUreleaseBuffer;
         _context->draw_horiz_band = draw;
         _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-        _context->extradata = (uint8_t *) d;
-        _context->extradata_size = (int) l;
+        _context->extradata = (uint8_t *) extraData;
+        _context->extradata_size = (int) extraDataLen;
 
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
@@ -248,7 +251,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
 /**
     \fn uncompress
 */
-uint8_t decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
+bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
 VdpStatus status;
     
@@ -340,6 +343,5 @@ void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int
     dec->goOn(src,type);
 }
 
-#endif
 #endif
 // EOF

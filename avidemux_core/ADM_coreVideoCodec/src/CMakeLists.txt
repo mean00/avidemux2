@@ -5,7 +5,6 @@ ADM_ffmp43.cpp
 ADM_codecFFsimple.cpp
 ADM_rgb16.cpp
 ADM_uyvy.cpp
-ADM_ffmpeg_vdpau.cpp
 ADM_png.cpp
 ADM_codecSearch.cpp
 DIA_lavDecoder.cpp

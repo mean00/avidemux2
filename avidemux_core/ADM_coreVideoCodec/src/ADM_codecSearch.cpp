@@ -39,17 +39,14 @@ extern "C"
 #include "avidemutils.h"
 #include "fourcc.h"
 
-extern uint8_t GUI_Question (char *);
-extern uint8_t use_fast_ffmpeg;
-extern bool vdpauUsable(void);
 
 /**
     \fn getDecoder
     \brief returns the correct decoder for a stream w,h,fcc,extraLen,extraData,bpp
 */
-decoders *getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp)
+decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp)
 {
-  ADM_info("Searching decoder (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
+  ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
   if (isMSMpeg4Compatible (fcc) == 1)
     {
       return (decoders *) (new decoderFFDiv3 (w,h,fcc,extraLen,extraData,bpp));
