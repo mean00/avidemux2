@@ -146,8 +146,8 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         return -1;
     }
     // Get an image   
-    render=VDPAU->freeQueue.back();
-    VDPAU->freeQueue.pop_back();
+    render=VDPAU->freeQueue.front();
+    VDPAU->freeQueue.erase(VDPAU->freeQueue.begin());
     render->state=0;
     pic->data[0]=(uint8_t *)render;
     pic->data[1]=(uint8_t *)render;

@@ -118,10 +118,11 @@ void decoderFF::decoderMultiThread (void)
 {
   uint32_t threads = 0;
 
-//  prefs->get(FEATURE_THREADING_LAVC, &threads);
-
-//  if (threads == 0)
-//	  threads = ADM_cpu_num_processors();
+ // prefs->get(FEATURE_THREADING_LAVC, &threads);
+#warning Fixme
+    threads=1;
+  if (threads == 0)
+	  threads = ADM_cpu_num_processors();
 
   if (threads == 1)
 	  threads = 0;
@@ -148,40 +149,6 @@ uint8_t decoderFF::getPARHeight (void)
 
 }
 
-#if 0  
-uint8_t decoderFF::isDivxPacked (void)
-{
-  int
-    vop,
-    gmc,
-    qpel;
-  av_is_voppacked (_context, &vop, &gmc, &qpel);
-  return vop;
-}
-// Fill the bitfields for some mpeg4 specific info
-// It is a bit of a hack as we make it a general
-// stuff (i.e. shared with all codecs) whereas it is mpeg4 specific
-// and should stay within mpeg4 scope FIXME
-uint32_t decoderFF::getSpecificMpeg4Info (void)
-{
-  int
-    vop,
-    gmc,
-    qpel;
-  uint32_t
-    out = 0;
-  av_is_voppacked (_context, &vop, &gmc, &qpel);
-
-  if (qpel)
-    out += ADM_QPEL_ON;
-  if (_gmc)
-    out += ADM_GMC_ON;
-  if (vop)
-    out += ADM_VOP_ON;
-
-  return out;
-}
-#endif
 //________________________________________________
 bool  decoderFF::setParam (void)
 {
