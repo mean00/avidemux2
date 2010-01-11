@@ -19,8 +19,8 @@ TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6
                                           ADM_coreUtils6
                                           ADM_libavcodec6
                                           ADM_libavformat6
-                                          ADM_libavutil6
-)
+                                          ADM_libavutil6)
+TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 ${PNG_LIBRARIES})
 ADM_INSTALL_LIB(ADM_coreVideoCodec6)
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
