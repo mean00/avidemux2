@@ -88,8 +88,8 @@ ADM_muxerGate6
 ADM_audioFilter6
 ADM_editor6
 ADM_audiocodec6 
-ADM_coreVideoCodec6 
 ADM_videocodec6 
+ADM_coreVideoCodec6 
 ADM_commonUI6
 )
 SET(commonLibs2
