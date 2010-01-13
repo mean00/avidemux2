@@ -13,18 +13,18 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-
-
 #include "ADM_image.h"
 #include "ADM_bitmap.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_imageLoader.h"
 #include "ADM_colorspace.h"
+#include "ADM_codec.h"
+#include "fourcc.h"
 //**********************************
-//static ADMImage *createImageFromFile_jpeg(const char *filename);
+static ADMImage *createImageFromFile_jpeg(const char *filename);
 static ADMImage *createImageFromFile_Bmp(const char *filename);
 static ADMImage *createImageFromFile_Bmp2(const char *filename);
-//static ADMImage *createImageFromFile_png(const char *filename);
+static ADMImage *createImageFromFile_png(const char *filename);
 //***********************************
 static uint8_t read8(FILE *fd)
 {
@@ -64,14 +64,12 @@ ADMImage *createImageFromFile(const char *filename)
 		case  ADM_IMAGE_UNKNOWN: 
 					printf("[imageLoader] Trouble identifying /loading %s\n",filename);
 					return NULL;
-#if 0
 		case ADM_IMAGE_JPG:
 					return createImageFromFile_jpeg(filename);
 					break;
 		case ADM_IMAGE_PNG:
 					return createImageFromFile_png(filename);
 					break;
-#endif
 		case ADM_IMAGE_BMP2:
 					return createImageFromFile_Bmp2(filename);
 					break;
@@ -81,7 +79,6 @@ ADMImage *createImageFromFile(const char *filename)
 	}
 	ADM_assert(0);
 }
-#if 0
 /**
  * 	\fn createImageFromFile_jpeg
  *  \brief Create image from jpeg file
@@ -153,12 +150,17 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    
 		    ADMImage tmpImage(w,h,1); // It is a reference image
 		    // Now unpack it ...
-		    decoderFFMJPEG *decoder=new decoderFFMJPEG(w,h);
+            decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"MJPG"),   w,   h, 0 , NULL,0);
+            if(!dec)
+            {
+                ADM_warning("Cannot find decoder for mpjeg");
+                return NULL;
+            }
 		    ADMCompressedImage bin;
 		    bin.data=data;
 		    bin.dataLength=_imgSize; // This is more than actually, but who cares...
 		    
-		    decoder->uncompress (&bin, &tmpImage);
+		    dec->uncompress (&bin, &tmpImage);
 		    //
 		    ADMImage *image=NULL;
 		    switch(tmpImage._colorspace)
@@ -181,12 +183,11 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    	GUI_Error_HIG(QT_TR_NOOP("Wrong Colorspace"),QT_TR_NOOP("Only YV12/I420 or YUY2/I422 JPegs are supported"));
 		    }
 		    // Cannot destroy decoder earlier as tmpImage has pointers to its internals
-		    delete decoder;
-		    decoder=NULL;
+		    delete dec;
+		    dec=NULL;
 		    delete [] data;
 		    return image;		
 }
-#endif
 /**
  * 	\fn createImageFromFile_jpeg
  *  \brief Create image from Bmp
@@ -295,7 +296,6 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     	delete [] data;
     	return image;		
 }
-#if 0
 /**
  * 	\fn createImageFromFile_png
  *  \brief Create image from PNG
@@ -323,25 +323,28 @@ ADMImage *createImageFromFile_png(const char *filename)
  	   uint8_t *data=new uint8_t[size];
  	   fread(data,size,1,fd);
  	   fclose(fd);
-    
-  
-    
  	   ADMImage tmpImage(w,h,1);
     	// Decode PNG
-    	decoderPng decoder(w,h);
+        decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"PNG "),   w,   h, 0 , NULL,0);
+    	if(!dec)
+        {
+            ADM_warning("Cannot get PNG decoder");
+            return NULL;
+        }
     	ADMCompressedImage bin;
     	bin.data=data;
     	bin.dataLength=size; // This is more than actually, but who cares...
     			    
-    	decoder.uncompress (&bin, &tmpImage);
+    	dec->uncompress (&bin, &tmpImage);
     	
     	ADMImage *image=new ADMImage(w,h);
     	COL_RGB24_to_YV12( w, h,tmpImage._planes[0],image->data);
     
     	delete [] data;
+        delete dec;
+        dec=NULL;
     	return image;		
 }
-#endif
 /**
  * 		\fn ADM_identidyImageFile
  * 		\brief Identidy image type, returns type and width/height
