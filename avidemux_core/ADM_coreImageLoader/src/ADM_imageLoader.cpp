@@ -62,7 +62,7 @@ ADMImage *createImageFromFile(const char *filename)
 	switch(ADM_identidyImageFile(filename,&w,&h))
 	{
 		case  ADM_IMAGE_UNKNOWN: 
-					printf("[imageLoader] Trouble identifying /loading %s\n",filename);
+					ADM_warning("[imageLoader] Trouble identifying /loading %s\n",filename);
 					return NULL;
 		case ADM_IMAGE_JPG:
 					return createImageFromFile_jpeg(filename);
@@ -109,7 +109,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    	tag = read16(fd);
 		    	if ((tag >> 8) != 0xff) 
 		    	{
-		    		printf("[imageLoader]invalid jpeg tag found (%x)\n", tag);
+		    		ADM_warning("[imageLoader]invalid jpeg tag found (%x)\n", tag);
 		    	}
 		    	if (tag == 0xFFC0) 
 		    	{
@@ -125,7 +125,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    		off = read16(fd);
 		    		if (off < 2) 
 		    		{
-		    			printf("[imageLoader]Offset too short!\n");
+		    			ADM_warning("[imageLoader]Offset too short!\n");
 		    		    fclose(fd);
 		    		    return NULL;
 		    		}
@@ -135,11 +135,11 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    }
 		    if (tag != 0xffc0) 
 		    {
-		    	printf("[imageLoader]Cannot fint start of frame\n");
+		    	ADM_warning("[imageLoader]Cannot fint start of frame\n");
 				fclose(fd);
 				return NULL;
 		    }
-		    printf("[imageLoader] %lu x %lu.., total Size : %u, offset %u\n", w, h,_imgSize,off);
+		    ADM_info("[imageLoader] %"LU" x %"LU".., total Size : %u, offset %u\n", w, h,_imgSize,off);
 		    
 		// Load the binary coded image
 		    uint8_t *data=new uint8_t[_imgSize];
@@ -167,14 +167,14 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    {
 		    case ADM_COLOR_YV12:
 		    {
-		    	printf("[imageLoader] YV12\n");
+		    	ADM_info("[imageLoader] YV12\n");
 	    		image=new ADMImage(w,h);
 	    		image->duplicate(&tmpImage);
 	    		break;
 		    }
 		    case ADM_COLOR_YUV422:
 		    {
-		    	printf("[imageLoader] YUY2\n");
+		    	ADM_info("[imageLoader] YUY2\n");
 		    	image=new ADMImage(w,h);
 		    	COL_422_YV12(tmpImage._planes, tmpImage._planeStride,  image->data,w,h);
 		    	break;
@@ -213,7 +213,7 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
 			    fread(&s16, 2, 1, fd);
 			    if (s16 != 0x4D42) 
 			    {
-			    	printf("[imageLoader] incorrect bmp sig.\n");
+			    	ADM_warning("[imageLoader] incorrect bmp sig.\n");
 			    	fclose(fd);
 			    	return NULL;
 			    }
@@ -223,7 +223,7 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
 			    fread(&bmph, sizeof(bmph), 1, fd);
 			    if (bmph.biCompression != 0) 
 			    {
-			    	printf("[imageLoader]cannot handle compressed bmp\n");
+			    	ADM_warning("[imageLoader]cannot handle compressed bmp\n");
 			    	fclose(fd);
 			    	return NULL;
 			    }
@@ -232,7 +232,7 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
 			    h = bmph.biHeight;
 			    
 			    
-			    printf("[ImageLoader] BMP %u * %u\n",w,h);
+			    ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
 
 		// Load the binary coded image
 		    uint8_t *data=new uint8_t[w*h*3];
@@ -275,13 +275,13 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
  #endif
  	    if (bmph.biCompression != 0) 
  	    {
- 	    	printf("[imageLoader] BMP2:Cannot handle compressed bmp\n");
+ 	    	ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp\n");
  	    	fclose(fd);
  	    	return NULL;
  	    }
  	    w = bmph.biWidth;
  	    h = bmph.biHeight;
- 	    printf("[imageLoader] BMP2 W: %d H: %d offset : %d\n", w, h, offset);
+ 	    ADM_info("[imageLoader] BMP2 W: %"LU" H: %"LU" offset : %"LU"\n", w, h, offset);
 // Load the binary coded image
  	fseek(fd,offset,SEEK_SET);
     uint8_t *data=new uint8_t[w*h*3];
@@ -380,7 +380,7 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		    			    	tag = read16(fd);
 		    			    	if ((tag >> 8) != 0xff) 
 		    			    	{
-		    			    		printf("[imageIdentify]invalid jpeg tag found (%x)\n", tag);
+		    			    		ADM_warning("[imageIdentify]invalid jpeg tag found (%x)\n", tag);
 		    			    	}
 		    			    	if (tag == 0xFFC0) 
 		    			    	{
@@ -396,7 +396,7 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		    			    		off = read16(fd);
 		    			    		if (off < 2) 
 		    			    		{
-		    			    			printf("[imageIdentify]Offset too short!\n");
+		    			    			ADM_warning("[imageIdentify]Offset too short!\n");
 		    			    		    fclose(fd);
 		    			    		    return ADM_IMAGE_UNKNOWN;
 		    			    		}
@@ -435,7 +435,7 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		     #endif
 		     	    if (bmph.biCompression != 0) 
 		     	    {
-		     	    	printf("[imageIdentify] BMP2:Cannot handle compressed bmp\n");
+		     	    	ADM_warning("[imageIdentify] BMP2:Cannot handle compressed bmp\n");
 		     	    	fclose(fd);
 		     	    	return ADM_IMAGE_UNKNOWN;
 		     	    }
