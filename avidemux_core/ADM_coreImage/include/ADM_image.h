@@ -46,15 +46,6 @@ typedef enum
         PLANAR_V=3
         
 } ADM_PLANE;
-typedef enum 
-{
-		ADM_IMAGE_UNKNOWN=0,
-        ADM_IMAGE_JPG=1,
-        ADM_IMAGE_PNG=2,
-        ADM_IMAGE_BMP=3,
-        ADM_IMAGE_BMP2=4
-        
-} ADM_IMAGE_TYPE;
 /**
     \class ADMImage
     \brief Stores image
@@ -191,6 +182,4 @@ class ADMImageResizer
 uint8_t BitBlit(uint8_t *dst, uint32_t pitchDest,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height);
 uint8_t BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height,uint32_t alpha);
 
-ADMImage *createImageFromFile(const char *filename);
-ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *h);
 #endif

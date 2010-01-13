@@ -16,16 +16,10 @@
 
 
 #include "ADM_image.h"
-#if 0
-#include "ADM_lavcodec.h"
-#include "ADM_codecs/ADM_codec.h"
-#include "ADM_codecs/ADM_ffmp43.h"
-#include "ADM_codecs/ADM_png.h"
-#endif
-
 #include "ADM_bitmap.h"
-#include "ADM_editor/ADM_edit.hxx"
 #include "DIA_coreToolkit.h"
+#include "ADM_imageLoader.h"
+#include "ADM_colorspace.h"
 //**********************************
 //static ADMImage *createImageFromFile_jpeg(const char *filename);
 static ADMImage *createImageFromFile_Bmp(const char *filename);

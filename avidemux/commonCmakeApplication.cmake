@@ -50,7 +50,6 @@ SET(ADM_EXE_SRCS
 ../common/gui_action.cpp
 ../common/gui_audio.cpp
 ../common/gui_blackframes.cpp
-../common/ADM_imageLoader.cpp  
 ../common/ADM_gettext.cpp
 )
 
@@ -72,6 +71,7 @@ ADM_coreUI6
 ADM_coreUtils6
 ADM_coreVideoEncoder6
 ADM_coreVideoFilter6
+ADM_coreImageLoader6
 ADM_libavcodec6
 ADM_libavformat6
 ADM_libavutil6
