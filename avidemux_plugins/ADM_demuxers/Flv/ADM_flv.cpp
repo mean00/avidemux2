@@ -1,6 +1,6 @@
 /***************************************************************************
-    copyright            : (C) 2007 by mean
-    email                : fixounet@free.fr
+    \file ADM_flv.cpp
+    \author (C) 2007 by mean    email                : fixounet@free.fr
 
 
 Not sure if the timestamp is PTS or DTS (...)
