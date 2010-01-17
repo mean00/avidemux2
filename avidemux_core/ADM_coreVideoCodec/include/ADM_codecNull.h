@@ -29,6 +29,16 @@ public:
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)
   {
     memcpy (out->data, in->data, in->dataLength);
+    uint64_t pts,dts;
+    pts=in->demuxerPts;
+    dts=in->demuxerDts;
+    if(pts!=ADM_COMPRESSED_NO_PTS)
+    {
+        out->Pts=pts;
+    }else
+    {
+        out->Pts=dts;
+    }
     return 1;
   }
 };
