@@ -1,17 +1,21 @@
-/*
-
-
+/**
+	\file sket.cpp
+	\brief Socket handling
+	\author mean fixounet@free.fr
 
 */
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 
+
+//#define DEBUG
 #include <stdio.h>
 #include "sket.h"
 
 Sket::Sket(void)
 {
-
-
-
 	mySocket=0;
 	port=9999;
 
@@ -20,19 +24,49 @@ Sket::Sket(void)
   sockaddr_in service;
   service.sin_family = AF_INET;
 #ifdef DEBUG
-  service.sin_addr.s_addr = inet_addr("192.168.0.10");
+	// Get the local host information
+  hostent* localHost;
+  char* localIP;
+	localHost = gethostbyname("");
+	localIP = inet_ntoa (*(struct in_addr *)*localHost->h_addr_list);
+	service.sin_addr.s_addr = inet_addr(localIP);
+	printf("Binding ...\n");
+	int ip=service.sin_addr.s_addr;
+	for(int i=0;i<4;i++)
+	{
+			printf("%d ",ip&0xff);
+		    ip>>=8;
+	}
+	printf("\n");
 #else
-  service.sin_addr.s_addr = inet_addr("127.0.0.1");
+	#define BIND_ADR "127.0.0.1"
+    service.sin_addr.s_addr = inet_addr(BIND_ADR);
+	printf("Binding on %s\n",BIND_ADR);
 #endif
+  
+  
   service.sin_port = htons(port);
 
-   if (bind( mySocket,   (SOCKADDR*) &service,  sizeof(service)) == SOCKET_ERROR) 
-   {
-    printf("bind() failed to port %u \n",port);
-	fflush(stdout);
-    closesocket(mySocket);
-	mySocket=0;
-    exit(-1);
+
+  int one=true;
+  if (bind( mySocket,   (SOCKADDR*) &service,  sizeof(service)) == SOCKET_ERROR) 
+  {
+	int opt=setsockopt(mySocket,
+				SOL_SOCKET,
+				SO_REUSEADDR,
+				(char *)&one,sizeof(one));
+	printf("Trying to use SO_REUSEADDR\n");
+	if(opt) printf("Error in setsockopt:%d\n",opt);
+  
+	  // Retry with SO_REUSEADDR set...
+	   if (bind( mySocket,   (SOCKADDR*) &service,  sizeof(service)) == SOCKET_ERROR) 
+	   {
+		printf("bind() failed to port %u \n",port);
+		fflush(stdout);
+		closesocket(mySocket);
+		mySocket=0;
+		exit(-1);
+	  }
   }
    // Set high buffer + low delay
   printf("Socket bound to port %u\n",port);
@@ -82,10 +116,10 @@ uint8_t Sket::receive(uint32_t *cmd, uint32_t *frame,uint32_t *payload_size,uint
 	SktHeader header;
 	memset(&header,0,sizeof(header));
 
-
-	if( sizeof(header)!=recv(workSocket,(char *)&header,sizeof(header),0))
+	int rx=recv(workSocket,(char *)&header,sizeof(header),0);
+	if( sizeof(header)!=rx)
 	{
-		printf("Error in receivedata: header\n");
+		printf("Error in receivedata: header, expected %d, received %d\n",(int) sizeof(header),rx);
 		fflush(stdout);
 		exit(-1);
 	}
