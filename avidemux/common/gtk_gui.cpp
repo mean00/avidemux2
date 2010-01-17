@@ -1279,7 +1279,7 @@ void GUI_avsProxy(void)
 
 
   GUI_close();
-  res = video_body->addFile ("avsproxy.avs");
+  res = video_body->addFile (AVS_PROXY_DUMMY_FILE);
   // forget last project file
   if( actual_workbench_file ){
      ADM_dealloc(actual_workbench_file);
