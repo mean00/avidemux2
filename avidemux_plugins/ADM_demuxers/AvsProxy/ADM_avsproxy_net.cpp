@@ -1,4 +1,3 @@
-
 /***************************************************************************
     \file ADM_avsproxy_net.cpp
     \brief Handle the network part of avsproxy demuxer
@@ -25,6 +24,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netinet/tcp.h>
 #endif
 
 #include <stdio.h>
@@ -39,7 +39,7 @@
 #define MAGGIC 0xDEADBEEF
 
 #define aprintf(...) {}
-#define DEBUG_NET
+//#define DEBUG_NET
 /**
     \fn bindMe
 */
@@ -58,12 +58,17 @@ bool avsNet::bindMe(uint32_t port)
     struct sockaddr_in  service;
     service.sin_family = AF_INET;
 #ifdef DEBUG_NET
-    service.sin_addr.s_addr = inet_addr("192.168.0.22");
+    service.sin_addr.s_addr = inet_addr("192.168.0.21");
 #else
     service.sin_addr.s_addr = inet_addr("127.0.0.1");
 #endif    
     service.sin_port = htons(port);
     
+// Set socket to lowdelay, else it will be choppy
+    int flag = 1;
+    setsockopt( mySocket, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(flag) );
+
+
     if(connect(mySocket,(struct sockaddr *)&service,sizeof(service)))
     {
         printf("[avsProxy]Socket connect error %d on port %d\n",errno,port);
@@ -98,9 +103,11 @@ bool avsNet::command(uint32_t cmd,uint32_t frame,avsNetPacket *in,avsNetPacket *
    avsNetPacket dummy={0,0,NULL};
    avsNetPacket *in2=in;
     if(!in2) in2=&dummy;
+    lock.lock();
     if(!sendData(cmd,frame,in2->size,in2->buffer))
     {
         printf("[avsProxy]Send Cmd %u failed for frame %u\n",cmd,frame);
+        lock.unlock();
         return 0;
     }
     // Wait reply
@@ -115,6 +122,7 @@ bool avsNet::command(uint32_t cmd,uint32_t frame,avsNetPacket *in,avsNetPacket *
     ADM_assert(out->size<=out->sizeMax);
     ADM_assert(reply==cmd+1);
     aprintf("[avsProxy]Cmd %u on frame %u succeed\n",cmd,frame);
+    lock.unlock();
     return 1;   
 }
 /**

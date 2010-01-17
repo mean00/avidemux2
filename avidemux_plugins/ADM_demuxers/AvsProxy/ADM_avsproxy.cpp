@@ -27,7 +27,10 @@
 */
 avsHeader::avsHeader()
 {
-    
+    haveAudio=false;
+    memset(&wavHeader,0,sizeof(wavHeader));
+    audioStream=NULL;
+    audioAccess=NULL;
 }
 /**
     \fn avsHeader
@@ -36,9 +39,17 @@ avsHeader::avsHeader()
  avsHeader::~avsHeader(  )
 {
     close();   
+    
 }
+/**
+    \fn close
+*/
 uint8_t avsHeader::close()
 {
+    if(audioStream) delete audioStream;
+    if(audioAccess) delete audioAccess;
+    audioStream=NULL;
+    audioAccess=NULL;
     network.close();
     return 1;
 }
@@ -108,7 +119,28 @@ uint8_t avsHeader::open(const char *name)
     _video_bih.biWidth = _mainaviheader.dwWidth = info.width;
     _video_bih.biHeight = _mainaviheader.dwHeight = info.height;
     _video_bih.biCompression = _videostream.fccHandler =  fourCC::get((uint8_t *) "YV12");
-    
+   
+    //
+    if(info.frequency)
+    {
+        wavHeader.frequency=info.frequency;
+        wavHeader.channels=info.channels;
+        wavHeader.bitspersample=16;
+        wavHeader.blockalign=info.channels*2;
+        wavHeader.byterate=info.frequency*2*info.channels;
+        wavHeader.encoding=WAV_PCM;
+        audioAccess=new ADM_avsAccess(&network,&wavHeader,10000);
+        _isaudiopresent=1;
+        if(audioAccess)
+            audioStream=ADM_audioCreateStream(&wavHeader,audioAccess);
+        if(audioStream)
+        {
+            ADM_info("Created audio stream\n");
+            haveAudio=true;
+        }
+        else
+            ADM_warning("Error when creating audio stream\n");
+    }
     printf("Connection to avsproxy succeed\n");
     return 1;
 }
@@ -137,6 +169,7 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
         ADM_warning("Avisynth proxy out of bound %u / %u\n",framenum,_mainaviheader.dwTotalFrames);
         return 0;
     }
+    
     avsNetPacket out;
     out.buffer=img->data;
     out.sizeMax=page;
@@ -238,9 +271,6 @@ uint8_t                 avsHeader::getFrameSize(uint32_t frame,uint32_t *size)
     *size=(_mainaviheader.dwWidth*_mainaviheader.dwHeight*3)>>1;
     return true;
 }
-WAVHeader              *avsHeader::getAudioInfo(uint32_t i ) {return NULL;} ;
-uint8_t                 avsHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio){*audio=NULL;return 0;}
-uint8_t                 avsHeader::getNbAudioStreams(void) {return 0;};
 
 //EOF
 

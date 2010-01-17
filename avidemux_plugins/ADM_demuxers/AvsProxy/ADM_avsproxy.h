@@ -20,7 +20,38 @@
 #include "ADM_audioStream.h"
 #include "ADM_avsproxy_net.h"
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::" // warning this is duplicated in main app
-
+/**
+    \fn ADM_avsAccess
+*/
+class ADM_avsAccess : public ADM_audioAccess
+{
+protected:
+                      
+                avsNet           *network;
+                WAVHeader        *wavHeader;
+                uint64_t         duration;
+                uint64_t         nextSample;
+                uint8_t          *audioBuffer;
+                uint64_t         sampleToTime(uint64_t sample);
+                void             increment(uint64_t sample);
+public:
+                                  ADM_avsAccess(avsNet *net, WAVHeader *wav,uint64_t duration); 
+                virtual           ~ADM_avsAccess();
+                                    /// Hint, the stream is pure CBR (AC3,MP2,MP3)
+                virtual bool      isCBR(void) { return true;}
+                                    /// Return true if the demuxer can seek in time
+                virtual bool      canSeekTime(void) {return true;};
+                                    /// Return true if the demuxer can seek by offser
+                virtual bool      canSeekOffset(void) {return false;};
+                                    /// Return true if we can have the audio duration
+                virtual bool      canGetDuration(void) {return true;};
+                                    /// Returns audio duration in us
+                virtual uint64_t  getDurationInUs(void);
+                                    /// Go to a given time
+                virtual bool      goToTime(uint64_t timeUs);
+                virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+                bool              getExtraData(uint32_t *l, uint8_t **d){*l=0;*d=NULL;return true;};
+};
 /**
     \class avsHeader
 */
@@ -29,6 +60,10 @@ class avsHeader         :public vidHeader
     protected:
         uint64_t                    frameToTime(uint32_t frame);
         avsNet                      network;
+        WAVHeader                   wavHeader;
+        bool                        haveAudio;
+        ADM_audioStream             *audioStream;
+        ADM_avsAccess               *audioAccess;
     public:
 
 
@@ -47,9 +82,26 @@ class avsHeader         :public vidHeader
   //				 Audio
   //__________________________
 
-virtual 	WAVHeader              *getAudioInfo(uint32_t i )  ;
-virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio);
-virtual     uint8_t                 getNbAudioStreams(void);
+virtual 	WAVHeader              *getAudioInfo(uint32_t i )  
+                                    {
+                                        if(true==haveAudio) 
+                                            return &wavHeader;
+                                        return NULL;
+                                    };
+virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio)
+                                    {
+                                            *audio=NULL;
+                                            if(false==haveAudio) return 0;
+                                            if(i) return 0;
+                                            *audio= audioStream;
+                                            return true;
+                                    }
+virtual     uint8_t                 getNbAudioStreams(void) 
+                                    {
+                                        if(true==haveAudio) 
+                                                return 1;
+                                        return 0;
+                                    }
 
   //__________________________
   //				 video

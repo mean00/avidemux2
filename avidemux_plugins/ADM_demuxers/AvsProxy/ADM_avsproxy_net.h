@@ -14,7 +14,7 @@
  ***************************************************************************/
 #ifndef AVS_PROXY_NET_H
 #define AVS_PROXY_NET_H
-
+#include "ADM_threads.h"
 typedef struct
 {
     uint32_t size;
@@ -29,6 +29,7 @@ class avsNet
 {
     protected:
         int         mySocket;
+        admMutex    lock;
     public:
         bool     bindMe(uint32_t port);
         bool     sendData(uint32_t cmd,uint32_t frame, uint32_t payload_size,uint8_t *payload);
