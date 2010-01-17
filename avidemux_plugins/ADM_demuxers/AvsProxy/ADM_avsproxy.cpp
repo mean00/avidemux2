@@ -27,7 +27,7 @@
 */
 avsHeader::avsHeader()
 {
-    mySocket=0;
+    
 }
 /**
     \fn avsHeader
@@ -37,25 +37,52 @@ avsHeader::avsHeader()
 {
     close();   
 }
-
+uint8_t avsHeader::close()
+{
+    network.close();
+    return 1;
+}
 /**
     \fn open
 */
 uint8_t avsHeader::open(const char *name)
 {
-    mySocket=0;
-    if(!bindMe(9999))
+   
+    if(!network.bindMe(9999))
     {
         printf("[avsProxy]Open failed\n");
         return 0;
     }
     // now time to grab some info
     avsInfo info;
-    if(!askFor(AvsCmd_GetInfo,0,sizeof(info),(uint8_t*)&info))
+    avsNetPacket in,out;
+    out.buffer=(uint8_t *)&info;
+    out.sizeMax=sizeof(info);
+    out.size=0;
+    typedef struct 
+    {
+        uint32_t ver;
+        uint32_t api;
+    }version;
+    version v={AVSHEADER_API_VERSION,6};
+    in.buffer=(uint8_t *)&v;
+    in.size=sizeof(v);
+    in.sizeMax=sizeof(v);
+
+    if(!network.command(AvsCmd_GetInfo,0,&in,&out))
     {
         printf("Get info failed\n");
         return 0;   
     }
+    // Dump some info
+#define PINFO(x) printf(#x":%d\n",info.x);
+    PINFO( version);
+	PINFO( width);
+	PINFO( height);
+	PINFO( fps1000);
+	PINFO( nbFrames);
+	PINFO( frequency);
+	PINFO( channels);
     // Build header..
     _isaudiopresent = 0;	// Remove audio ATM
     _isvideopresent = 1;	// Remove audio ATM
@@ -86,12 +113,17 @@ uint8_t avsHeader::open(const char *name)
     return 1;
 }
 /**
-
+    \fn frameToTime 
+    \brief convert a give frame into time
 */
 uint64_t    avsHeader::frameToTime(uint32_t frame)
 {
-
-
+    float f=frame;
+    f*=1000000000; // Want us
+    f/=_videostream.dwRate;
+    uint64_t t=(uint64_t)f;
+    //printf("%"LU" -> %"LLU"\n",frame,t);
+    return t;
 }
 /**
     \fn getFrame
@@ -105,12 +137,21 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
         ADM_warning("Avisynth proxy out of bound %u / %u\n",framenum,_mainaviheader.dwTotalFrames);
         return 0;
     }
-    if(!askFor(AvsCmd_GetFrame,framenum,page,img->data))
+    avsNetPacket out;
+    out.buffer=img->data;
+    out.sizeMax=page;
+    out.size=0;
+    //printf("Asking for frame %d\n",framenum);
+    if(!network.command(AvsCmd_GetFrame,framenum,NULL,&out))
     {
-        printf("Get frame failed for frame %u\n",framenum);
+        ADM_error("Get frame failed for frame %u\n",framenum);
         return 0;   
     }
+    ADM_assert(out.size==page);
     img->dataLength=page;
+    img->demuxerDts=frameToTime(framenum);
+    img->demuxerPts=img->demuxerDts;
+    //printf("Frame :%"LU" Time=%"LLU"\n",framenum,img->demuxerPts);
     return 1;
 }
 /**
@@ -146,6 +187,7 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
         ADM_warning("Avisynth proxy out of bound %u / %u\n",frame,_mainaviheader.dwTotalFrames);
         return 0;
     }
+    return frameToTime(frame);
 }
 /**
     \fn getExtraHeaderData
@@ -163,7 +205,7 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 
   uint64_t avsHeader::getVideoDuration(void)
 {
-    return 1;
+    return frameToTime(_mainaviheader.dwTotalFrames);
 }
 /**
     \fn getPtsDts
@@ -171,8 +213,8 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 
 bool   avsHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
-    float f=frame;
-    
+    *pts=frameToTime(frame);
+    *dts=*pts;
     return true;
 }
 /**
@@ -196,5 +238,9 @@ uint8_t                 avsHeader::getFrameSize(uint32_t frame,uint32_t *size)
     *size=(_mainaviheader.dwWidth*_mainaviheader.dwHeight*3)>>1;
     return true;
 }
+WAVHeader              *avsHeader::getAudioInfo(uint32_t i ) {return NULL;} ;
+uint8_t                 avsHeader::getAudioStream(uint32_t i,ADM_audioStream  **audio){*audio=NULL;return 0;}
+uint8_t                 avsHeader::getNbAudioStreams(void) {return 0;};
+
 //EOF
 

@@ -1,4 +1,19 @@
 
+/***************************************************************************
+    \file ADM_avsproxy_net.cpp
+    \brief Handle the network part of avsproxy demuxer
+    \author (C) 2007-2010 by mean  fixounet@free.fr
+
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 
 #ifdef __MINGW32__
 #include <windows.h>
@@ -19,13 +34,16 @@
 #include <errno.h>
 #include "ADM_default.h"
 #include "ADM_avsproxy_internal.h"
-#include "ADM_avsproxy.h"
+#include "ADM_avsproxy_net.h"
 
 #define MAGGIC 0xDEADBEEF
 
 #define aprintf(...) {}
-
-uint8_t avsHeader::bindMe(uint32_t port)
+#define DEBUG_NET
+/**
+    \fn bindMe
+*/
+bool avsNet::bindMe(uint32_t port)
 {
  #ifdef __MINGW32__
  mySocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -40,7 +58,7 @@ uint8_t avsHeader::bindMe(uint32_t port)
     struct sockaddr_in  service;
     service.sin_family = AF_INET;
 #ifdef DEBUG_NET
-    service.sin_addr.s_addr = inet_addr("192.168.0.10");
+    service.sin_addr.s_addr = inet_addr("192.168.0.22");
 #else
     service.sin_addr.s_addr = inet_addr("127.0.0.1");
 #endif    
@@ -54,7 +72,10 @@ uint8_t avsHeader::bindMe(uint32_t port)
     printf("[avsproxy]Connected to avsproxy : port %d, socket %d\n",port,mySocket);
     return 1;
 }
-uint8_t avsHeader::close(void)
+/**
+    \fn close
+*/
+bool avsNet::close(void)
 {
     if(mySocket)
     {
@@ -69,32 +90,37 @@ uint8_t avsHeader::close(void)
     }
     return 1;
 }
-
-uint8_t avsHeader::askFor(uint32_t cmd,uint32_t frame, uint32_t payloadsize,uint8_t *payload)
+/**
+    \fn askFor
+*/
+bool avsNet::command(uint32_t cmd,uint32_t frame,avsNetPacket *in,avsNetPacket *out)
 {
-   
-    if(!sendData(cmd,frame,0,NULL))
+   avsNetPacket dummy={0,0,NULL};
+   avsNetPacket *in2=in;
+    if(!in2) in2=&dummy;
+    if(!sendData(cmd,frame,in2->size,in2->buffer))
     {
         printf("[avsProxy]Send Cmd %u failed for frame %u\n",cmd,frame);
         return 0;
     }
     // Wait reply
     uint32_t size,reply,outframe;
-    if(!receiveData(&reply,&outframe,&size,payload))
+    if(!receiveData(&reply,&outframe,&(out->size),out->buffer))
     {
         printf("[avsProxy]Rx Cmd %u failed for frame %u\n",cmd,frame);
         return 0;   
     }
   
     // Check!
-    ADM_assert(outframe==frame);
+    ADM_assert(out->size<=out->sizeMax);
     ADM_assert(reply==cmd+1);
-    ADM_assert(size==payloadsize);
     aprintf("[avsProxy]Cmd %u on frame %u succeed\n",cmd,frame);
-    return 1;
-    
+    return 1;   
 }
-uint8_t avsHeader::rxData(uint32_t howmuch, uint8_t *where)
+/**
+    \fn rxData
+*/
+bool avsNet::rxData(uint32_t howmuch, uint8_t *where)
 {
 uint32_t got=0;
 int rx;
@@ -111,7 +137,10 @@ int rx;
     }
   return 1;
 }
-uint8_t avsHeader::txData(uint32_t howmuch, uint8_t *where)
+/**
+    \fn txData
+*/
+bool avsNet::txData(uint32_t howmuch, uint8_t *where)
 {
 uint32_t got=0,tx;
     while(got<howmuch)
@@ -127,8 +156,10 @@ uint32_t got=0,tx;
     }
   return 1;
 }
-
-uint8_t avsHeader::receiveData(uint32_t *cmd, uint32_t *frame,uint32_t *payload_size,uint8_t *payload)
+/**
+    \fn receiveData
+*/
+bool avsNet::receiveData(uint32_t *cmd, uint32_t *frame,uint32_t *payload_size,uint8_t *payload)
 {
         SktHeader header;
         memset(&header,0,sizeof(header));
@@ -149,14 +180,14 @@ uint8_t avsHeader::receiveData(uint32_t *cmd, uint32_t *frame,uint32_t *payload_
         {
             int togo=header.payloadLen;
             return rxData(togo,payload);
-            
         }
-
         return 1;
 }
 
-
-uint8_t avsHeader::sendData(uint32_t cmd,uint32_t frame, uint32_t payload_size,uint8_t *payload)
+/**
+    \fn sendData
+*/
+bool avsNet::sendData(uint32_t cmd,uint32_t frame, uint32_t payload_size,uint8_t *payload)
 {
         SktHeader header;
         memset(&header,0,sizeof(header));
@@ -167,10 +198,19 @@ uint8_t avsHeader::sendData(uint32_t cmd,uint32_t frame, uint32_t payload_size,u
         header.magic=(uint32_t)MAGGIC;
         if(!txData(sizeof(header),(uint8_t *)&header))
         {
-            printf("Error in senddata: header %d\n",sizeof(header));
+            printf("Error in senddata: header %d\n",(int)sizeof(header));
             return 0;
         }
         int togo=payload_size;
         int chunk;
         return txData(togo,payload);
 }
+avsNet::avsNet()
+{
+    mySocket=0;
+}
+avsNet::~avsNet()
+{
+    close();
+}
+//EOF
