@@ -126,19 +126,21 @@ bool ADM_Composer::addFile (const char *name)
 
   uint8_t    ret =    0;
   aviInfo    info;
-
+  uint32_t   magic;
   _VIDEOS video;
     memset(&video,0,sizeof(video));
 
-	
-  
-    FILE *f=ADM_fopen(name,"r");
-    uint8_t buffer[4];
-    if(!f) return 0;
-    fread(buffer,4,1,f);
-    fclose(f);
-    uint32_t magic=(buffer[3]<<24)+(buffer[2]<<16)+(buffer[1]<<8)+(buffer[0]);
-
+	if(!strcmp(name, AVS_PROXY_DUMMY_FILE))
+        magic=0;
+    else
+    {
+        FILE *f=ADM_fopen(name,"r");
+        uint8_t buffer[4];
+        if(!f) return 0;
+        fread(buffer,4,1,f);
+        fclose(f);
+        magic=(buffer[3]<<24)+(buffer[2]<<16)+(buffer[1]<<8)+(buffer[0]);
+    }
 
   // First find the demuxer....
    	video._aviheader=ADM_demuxerSpawn(magic,name);

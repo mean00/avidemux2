@@ -39,7 +39,7 @@
  #include <vector>
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
-
+#define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::" 
 /**
     \enum _ENV_EDITOR_FLAGS
 */
