@@ -85,11 +85,12 @@ ADMImage	*EditorCache::getFreeImage(void)
     int r,w;
     r=readIndex%_nbImage;
     w=(writeIndex)%_nbImage;
-    if(r==w)
+    if(r==w && readIndex!=writeIndex) //full
     {
-        readIndex++;
-        found=writeIndex%_nbImage;
+        readIndex++; // free older
     }
+    found=writeIndex%_nbImage;
+    
     // Mark it as used
     if(found==-1) ADM_assert(0);
 	_elem[found].pts=ADM_NO_PTS;;
@@ -124,7 +125,7 @@ void        EditorCache::invalidate(ADMImage *image)
                 uint32_t prev=(writeIndex+_nbImage-1)%_nbImage;
                  ADM_assert(i==prev);
                  ADM_assert(_elem[i].pts==ADM_NO_PTS);
-                 writeIndex=prev;
+                 writeIndex--;
                  return;
             }
     }
@@ -204,7 +205,7 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
         if(_elem[index].pts==pts)
         {
-            index--;
+            index+=_nbImage-1;
             index%=_nbImage;
             return _elem[index].image;
         }
@@ -221,9 +222,10 @@ ADMImage *EditorCache::getByPts(uint64_t Pts)
 {
     for(int i=readIndex;i<writeIndex;i++)
 	{
-		if(_elem[i].image->Pts==Pts)
+        int index=i%_nbImage;
+		if(_elem[index].image->Pts==Pts)
         {
-            return _elem[i].image;
+            return _elem[index].image;
         }
     }
     return NULL;
