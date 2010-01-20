@@ -1,21 +1,22 @@
-
 /**
     \file edCache
     \brief Handle internal cache for decoded image
+    \author mean fixounet@free.fr (c) 2003-2010
 
-    Eviction is done using LRU method
-    Counter is "now" and farther frame are seleced for replacement
-
+   Simple fifo queue for dedcoded image with helper functions to search image in it.
 */
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "ADM_editor/ADM_edCache.h"
-
-
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_EDITOR
-#include "ADM_debug.h"
-#undef aprintf
+#define ADM_NO_PTS 0xffffffffffffffffLL
 #if 1
 #define aprintf(...) {}
 #else
@@ -32,10 +33,8 @@ EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 	for(uint32_t i=0;i<size;i++)
 	{
 		_elem[i].image=new ADMImage(w,h);
-		_elem[i].frameNum=ADM_INVALID_CACHE;
-		_elem[i].lastUse=ADM_INVALID_CACHE;
+		_elem[i].pts=ADM_NO_PTS;
 	}
-	_counter=0;
 	_nbImage=size;
 }
 /**
@@ -49,26 +48,26 @@ EditorCache::~EditorCache(void)
 		delete _elem[i].image;
 	}
 	delete[] _elem;
-
 }
 /**
-    \fn getImage
-    \brief find image by framenumber, returns null if not found (obsolete)
+
 */
-ADMImage 	*EditorCache::getImage(uint32_t no)
+void EditorCache::check()
 {
-	for(uint32_t i=0;i<_nbImage;i++)
-	{
-		if(_elem[i].frameNum==no)
-		{
-			aprintf("EdCache: %lu  in cache %lu\n",no,i);
-			_elem[i].lastUse=_counter;
-			_counter++;
-			 return _elem[i].image;
-		}
-	}
-// 	aprintf("EdCache: %lu not in cache\n",no);
-	return NULL;
+    if(readIndex==writeIndex) // empty
+    {
+        readIndex=writeIndex=0;
+    }
+    // Wrap
+    if(writeIndex &0x80000000)
+    {
+        int min=readIndex;
+        if(writeIndex<min) min=writeIndex;
+        int mul=min/_nbImage;
+        int start=mul*_nbImage;
+        readIndex-=start;
+        writeIndex-=start;
+    }
 }
 /**
     \fn getFreeImage
@@ -81,33 +80,20 @@ ADMImage	*EditorCache::getFreeImage(void)
 	uint32_t min=0;
 	uint64_t  delta=0;
     int found=-1;
-
-    // First search for a really free image
-    for(int i=0;i<_nbImage;i++)
+    check();
+    // next!
+    int r,w;
+    r=readIndex%_nbImage;
+    w=(writeIndex)%_nbImage;
+    if(r==w)
     {
-        if(_elem[i].frameNum==ADM_INVALID_CACHE)
-                found=i;
-        aprintf("[edCache] Buffer %d free\n",found);
+        readIndex++;
+        found=writeIndex%_nbImage;
     }
-    // Then the older one/LRU
-    if(found==-1)
-    {
-        aprintf("[edCache] looking for older cache entry\n");
-        for(int i=0;i<_nbImage;i++)
-        {
-            delta=abs((int)(_counter-_elem[i].lastUse));
-            if(delta>min)
-            {
-                min=delta;
-                found=i;
-                
-            }
-        }
-    }
+    // Mark it as used
     if(found==-1) ADM_assert(0);
-	_elem[found].lastUse=_counter+1;;
-	_elem[found].frameNum=ADM_IN_USE_CACHE;
-
+	_elem[found].pts=ADM_NO_PTS;;
+    writeIndex++;
 	return _elem[found].image;
 
 }
@@ -121,8 +107,9 @@ ADMImage	*EditorCache::getFreeImage(void)
     printf("[edCache] Flush\n");
     for(int i=0;i<_nbImage;i++)
     {
-        _elem[i].frameNum=ADM_INVALID_CACHE;
+        _elem[i].pts=ADM_NO_PTS;
     }
+    writeIndex=readIndex=0;
 }
 /**
     \fn invalidate
@@ -130,14 +117,15 @@ ADMImage	*EditorCache::getFreeImage(void)
 */
 void        EditorCache::invalidate(ADMImage *image)
 {
-   
     for(int i=0;i<_nbImage;i++)
     {
         if(_elem[i].image==image)
             {
-                   _elem[i].frameNum=ADM_INVALID_CACHE;
-                    aprintf("[edCache] Invalidating %d\n",i);
-                  return;
+                uint32_t prev=(writeIndex+_nbImage-1)%_nbImage;
+                 ADM_assert(i==prev);
+                 ADM_assert(_elem[i].pts==ADM_NO_PTS);
+                 writeIndex=prev;
+                 return;
             }
     }
     printf("[edCache]Image not in cache\n");
@@ -148,24 +136,20 @@ void        EditorCache::invalidate(ADMImage *image)
         \brief update the frameNo associated to a cache line (obsolete)
                Only used to mark it as valid
 */
-uint8_t		EditorCache::updateFrameNum(ADMImage *image,uint32_t frameno)
+bool		EditorCache::validate(ADMImage *image)
 {
 	for(uint32_t i=0;i<_nbImage;i++)
 	{
 		if(_elem[i].image==image)
 		{
-			ADM_assert(_elem[i].frameNum==ADM_IN_USE_CACHE);
-			_elem[i].frameNum=frameno;
-			_elem[i].lastUse=_counter;
-            aprintf("[edCache] Updatding %d with framenum %"LU"\n",i,frameno);
-			_counter++;
-			return 1;
-
+            ADM_assert(_elem[i].pts==ADM_NO_PTS);
+			_elem[i].pts=image->Pts;
+			return true;
 		}
 
 	}
 	ADM_assert(0);
-
+    return false;
 }
 /**
     \fn dump
@@ -173,15 +157,15 @@ uint8_t		EditorCache::updateFrameNum(ADMImage *image,uint32_t frameno)
 */
 void EditorCache::dump( void)
 {
+    printf("ReadIndex:%"LU", WriteIndex:%"LU"\n",readIndex,writeIndex);
 	for(int i=0;i<_nbImage;i++)
 	{
         cacheElem *e=&(_elem[i]);
-        switch(e->frameNum)
+        switch(e->pts)
         {
-            case ADM_IN_USE_CACHE:  printf("Edcache content[%d] In use\n",i);break;
-            case ADM_INVALID_CACHE: printf("Edcache content[%d] Free\n",i);break;
+            case ADM_NO_PTS:  printf("Not used\n",i);break;
             default:
-                printf("Edcache content[%d]: Num:%"LU" PTS : %"LLU" us%"LLU" ms\n",i,e->frameNum,
+                printf("Edcache content[%d]: PTS : %"LLU" us%"LLU" ms\n",i,
                                                                     e->image->Pts,e->image->Pts/1000);
         }
 	}
@@ -191,67 +175,58 @@ void EditorCache::dump( void)
     \brief Find the image with the closest PTS just above pts.
 
 */
-ADMImage    *EditorCache::findJustAfter(uint64_t pts)
+ADMImage    *EditorCache::getAfter(uint64_t pts)
 {
-int smallest=-1;
-uint64_t value=0xF000000000000000LL;
-
-    for(uint32_t i=0;i<_nbImage;i++)
+    for(uint32_t i=readIndex;i<writeIndex-1;i++)
 	{
-		if(_elem[i].frameNum==ADM_INVALID_CACHE) continue;
-		if(_elem[i].image->Pts>pts)
+        int index=i%_nbImage;
+        ADM_assert(_elem[index].pts!=ADM_NO_PTS);
+        if(_elem[index].pts==pts)
         {
-            //printf("[Editor::findJustAfer] Looking for %lu, got %lu\n",pts,_elem[i].image->Pts);
-            if(_elem[i].image->Pts < value)
-            {
-                value=_elem[i].image->Pts;
-                smallest=i;
-            }
+            index++;
+            index%=_nbImage;
+            return _elem[index].image;
         }
     }
-	if(smallest==-1) return NULL;
-    return _elem[smallest].image;
+    ADM_warning("Cannot find image after %"LLU" ms in cache\n",pts/1000);
+    return NULL;
 }
+/**
+    \fn findJustAfter
+    \brief Find the image with the closest PTS just above pts.
+
+*/
+ADMImage    *EditorCache::getBefore(uint64_t pts)
+{
+    for(uint32_t i=readIndex+1;i<writeIndex;i++)
+	{
+        int index=i%_nbImage;
+        ADM_assert(_elem[index].pts!=ADM_NO_PTS);
+        if(_elem[index].pts==pts)
+        {
+            index--;
+            index%=_nbImage;
+            return _elem[index].image;
+        }
+    }
+    ADM_warning("Cannot find image before %"LLU" ms in cache\n",pts/1000);
+    return NULL;
+}
+
 /**
     \fn getByPts
     \brief returns the image that has exactly that PTS
 */
 ADMImage *EditorCache::getByPts(uint64_t Pts)
 {
-    for(int i=0;i<_nbImage;i++)
+    for(int i=readIndex;i<writeIndex;i++)
 	{
-		if(_elem[i].frameNum==ADM_INVALID_CACHE) continue;
 		if(_elem[i].image->Pts==Pts)
         {
-            _elem[i].lastUse=_counter;
-			_counter++;
             return _elem[i].image;
         }
     }
     return NULL;
 }
-/**
-        \fn findLastBefore
-        \brief Search the cache for the image just before pts
-*/
-ADMImage    *EditorCache::findLastBefore(uint64_t pts)
-{
-  uint64_t delta=1<<31; // should be enough
-  int index=-1;
-  for(int i=0;i<_nbImage;i++)
-	{
-        cacheElem *elem=&(_elem[i]);
-		if(elem->frameNum==ADM_INVALID_CACHE) continue;
-		if(elem->image->Pts>=pts)  continue;
-        uint64_t d=abs(pts-elem->image->Pts);
-        if(d<delta)
-        {
-            delta=d;
-            index=i;
-        }
-    }
-    if(index==-1)
-        return NULL;
-    return _elem[index].image;
-}
+
 // EOF

@@ -16,29 +16,30 @@
 #define ADM_IN_USE_CACHE  0xfffe
 typedef struct cacheElem
 {
-	uint32_t lastUse;
-	uint32_t frameNum;
 	ADMImage *image;
-
+    uint64_t pts;       // If set to ADM_NO_PTS -> unused entry
 }cacheElem;
+/**
+    \class EditorCache
+    \brief internal source-attached image cache
+*/
 class EditorCache
 {
 	private :
-			uint32_t	_counter;
+			uint32_t     readIndex,writeIndex;
 			cacheElem	 *_elem;
 			uint32_t	_nbImage;
+            void        check(void);
 	public:
                         EditorCache(uint32_t size,uint32_t w, uint32_t h);
                         ~EditorCache(void);
 			ADMImage	*getFreeImage(void);	
-			ADMImage 	*getImage(uint32_t no);
-			uint8_t		updateFrameNum(ADMImage *image,uint32_t frame);
+			bool		validate(ADMImage *image);
 			void		dump(void);
             void        flush(void);
             void        invalidate(ADMImage *image);
-            ADMImage    *findJustAfter(uint64_t pts);
-            ADMImage    *findLastBefore(uint64_t pts);
-            ADMImage    *getByPts(uint64_t Pts);
-            
+            ADMImage    *getByPts(uint64_t Pts);            
+            ADMImage    *getAfter(uint64_t Pts);
+            ADMImage    *getBefore(uint64_t Pts);
 };
 #endif

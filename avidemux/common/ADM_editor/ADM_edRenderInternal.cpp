@@ -150,7 +150,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
             continue;
         }
         // Search the lowest PTS above our current PTS...
-        ADMImage *img=cache->findJustAfter(vid->lastReadPts);
+        ADMImage *img=cache->getAfter(vid->lastReadPts);
         if(img)
         {
             // Duplicate
@@ -231,7 +231,7 @@ uint8_t ret = 0;
          cache->invalidate(result);
          return true; // Not an error in itself
       }
-     cache->updateFrameNum(result,vid->lastSentFrame);
+     
      uint64_t pts=result->Pts;
      uint64_t old=vid->lastDecodedPts;
         if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
@@ -244,6 +244,8 @@ uint8_t ret = 0;
                 aprintf("[Editor] got PTS\n");
                 vid->lastDecodedPts=pts;
             }
+
+    cache->validate(result);
     aprintf(">>Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms, ptsdelta=%"LLD" ms \n",
     frame,
     vid->lastDecodedPts,
@@ -546,7 +548,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
              continue;
           }else
             {
-                cache->updateFrameNum(result,vid->lastSentFrame);
+                
                 uint64_t pts=result->Pts;
                 aprintf("[Decoder] Decoder Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,
                                                         result->Pts/1000,result->Pts);
@@ -572,6 +574,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
                     }
                     vid->lastDecodedPts=pts;
                 }
+                cache->validate(result);
             }
 
             // Found our image ?
