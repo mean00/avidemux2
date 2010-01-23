@@ -26,6 +26,7 @@
 #endif
 
 #include "ADM_pp.h"
+#define SET_CURRENT_PTS(x) {printf("Old PTS: %"LLU" ms, new PTS %"LLU" ms\n",_currentPts,x);_currentPts=x;}
 /**
     \fn recalibrate
     \brief Convert time given in time from absolute ref video to linear time
@@ -132,8 +133,9 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
         return false;
     }
     // Get the last decoded PTS and it is our current PTS
-    _currentPts=vid->lastDecodedPts+seg->_startTimeUs;
-    _currentPts-=seg->_refStartTimeUs;
+    uint64_t newPts=vid->lastDecodedPts+seg->_startTimeUs;
+    newPts-=seg->_refStartTimeUs;
+    SET_CURRENT_PTS(newPts);
 #if 0
     ADM_info("decodec DTS=%"LLU" ms\n",vid->lastDecodedPts/1000);
     ADM_info("startTime DTS=%"LLU" ms\n",seg->_startTimeUs/1000);
@@ -171,7 +173,7 @@ uint32_t seg;
             return false;
     }
     _currentSegment=seg;
-    _currentPts=v->lastDecodedPts;
+    SET_CURRENT_PTS(v->lastDecodedPts);
     return true;
 
 }
@@ -220,7 +222,9 @@ uint64_t tail;
                 _segments.dump();
                 goto np_nextSeg;
         }
-        _currentPts=pts;
+        
+        SET_CURRENT_PTS(pts);
+        ADM_info("Current PTS:%"LLU"\n",_currentPts);
         return true;
 
 // Try to get an image for the following segment....
@@ -236,7 +240,7 @@ np_nextSeg:
             seg=_segments.getSegment(_currentSegment);
             samePictureInternal(seg->_reference,image);
             updateImageTiming(seg,image);
-            _currentPts=pts;
+            SET_CURRENT_PTS(pts);
             return true;
         } 
         ADM_warning("Cannot get next picture. Last segment\n");
@@ -249,9 +253,7 @@ np_nextSeg:
 */
 bool        ADM_Composer::previousPicture(ADMImage *image)
 {
-uint64_t pts;
-uint64_t tail;
-    
+uint64_t targetPts=_currentPts;    
         // Decode image...
         _SEGMENT *seg=_segments.getSegment(_currentSegment);
         // Search it in the cache...
@@ -259,6 +261,7 @@ uint64_t tail;
         
         uint64_t refPts=_currentPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
         ADMImage *cached=vid->_videoCache->getBefore(refPts);
+       
         if(cached)
         {
             if(cached->Pts>=seg->_refStartTimeUs)
@@ -266,11 +269,78 @@ uint64_t tail;
                 // Got it
                 image->duplicate(cached);
                 updateImageTiming(seg,image);
-                _currentPts=pts;
+                SET_CURRENT_PTS(image->Pts);
                 return true;
             }
         }
+        ADM_info("Previous pic: %"LLU"\n",_currentPts);
+        ADM_info("while looking for frame %"LLU"\n",_currentPts);
+        vid->_videoCache->dump();
+        // The previous is not available
+        // either it is in the same segment but we have decoded later, or it is in the previous segment
+        // Let's check...
+        if(!_currentPts) return false;
+        uint64_t segTime;
+        uint32_t segNo;
+            if(false==_segments.convertLinearTimeToSeg(_currentPts-1,&segNo,&segTime))
+            {
+                  ADM_error("Cannot convert time in samePicture\n");         
+                  return false;
+            }
+        
+        seg=_segments.getSegment(segNo);
+        int ref=seg->_reference;
 
+        uint64_t refTime;
+        if(false==_segments.LinearToRefTime(segNo,_currentPts,&refTime))
+        {
+            ADM_warning("Cannot find ref time\n");
+            return false;
+        }
+        uint64_t previousKf;
+        if(false==searchPreviousKeyFrameInRef(ref,refTime,&previousKf))
+        {
+            ADM_warning("Cannot find previous keyframe in ref %d, time=%"LLU" \n",ref,refTime);
+            return false;
+        }
+        // Convert it to linear...
+        // We are in the right segment..
+        if(false==seektoTime(ref,previousKf,false))
+        {
+            ADM_warning("Cannot seek to time=%"LLU" \n",previousKf);
+            return false;            
+        }
+        // Update our _currentSegment
+        _currentSegment=segNo;
+        // Now forward till we reach out frame
+        while(1)
+        {
+            if(false==nextPicture(image))
+            {
+                    ADM_warning("Error in decoding forward");
+                    return false;
+            }
+            if(image->Pts==targetPts)
+            {
+                ADM_info("Decoding forward, we have our image, let's take its predecessor\n");
+                refPts=targetPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
+                cached=vid->_videoCache->getBefore(refPts);
+               
+                if(cached)
+                {
+                    if(cached->Pts>=seg->_refStartTimeUs)
+                    {
+                        // Got it
+                        image->duplicate(cached);
+                        updateImageTiming(seg,image);
+                        SET_CURRENT_PTS(image->Pts);
+                        return true;
+                    }
+                }
+                ADM_error("Find our frame and its predecessor, but it is out of range\n");
+                return false;
+            }
+        }
         return false;
 }
 /**
@@ -416,7 +486,7 @@ bool ADM_Composer::rewind(void)
         ADM_info("Rewinding\n");
         if(switchToSegment(0)==false) return false;
         _VIDEOS *vid=_segments.getRefVideo(_segments.getSegment(0)->_reference);
-        _currentPts=vid->lastDecodedPts;
+        SET_CURRENT_PTS(vid->lastDecodedPts);
         return true;
 }
 /**

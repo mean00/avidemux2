@@ -204,7 +204,7 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
 */
 ADMImage    *EditorCache::getBefore(uint64_t pts)
 {
-    for(uint32_t i=readIndex+1;i<writeIndex;i++)
+    for(int i=readIndex+1;i<writeIndex;i++)
 	{
         int index=i%_nbImage;
         ADM_assert(_elem[index].pts!=ADM_NO_PTS);
@@ -212,6 +212,7 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
         {
             index+=_nbImage-1;
             index%=_nbImage;
+            printf("GetBefore : Looking for %"LLU" ms get %"LLU" ms\n",pts/1000,_elem[index].image->Pts/1000);
             return _elem[index].image;
         }
     }

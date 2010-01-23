@@ -50,7 +50,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
   ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
-  ref->_videoCache   =   new EditorCache(32,info.width,info.height) ;
+  ref->_videoCache   =   new EditorCache(8,info.width,info.height) ;
 
   float frameD=info.fps1000;
   frameD=frameD/1000;
@@ -520,6 +520,32 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
         if(index==-1) break;
         segments.erase(segments.begin()+index);
     }
+    return true;
+}
+/**
+    \fn LinearToRefTime
+    \brief Convert linear time to the time in the ref video
+
+*/
+bool        ADM_EditorSegment::LinearToRefTime(int segNo,uint64_t linear,uint64_t *refTime)
+{
+    _SEGMENT *seg=getSegment(segNo);
+    ADM_assert(seg);
+    if(linear<seg->_startTimeUs)
+    {
+        ADM_error("This given time is not in the segment: Given time %"LLU", seg start at %"LLU"\n",
+                        linear, seg->_startTimeUs);
+        return false;
+    }
+    if(linear>=seg->_startTimeUs+seg->_durationUs)
+    {
+        ADM_error("This given time is not in the segment: Given time %"LLU", seg end at %"LLU"\n",
+                        linear, seg->_startTimeUs+seg->_durationUs);
+        return false;
+
+    }
+    *refTime=seg->_refStartTimeUs+linear;
+    *refTime-=seg->_startTimeUs;
     return true;
 }
 //EOF
