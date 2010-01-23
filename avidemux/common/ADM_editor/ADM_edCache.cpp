@@ -17,10 +17,13 @@
 #include "ADM_image.h"
 #include "ADM_editor/ADM_edCache.h"
 #define ADM_NO_PTS 0xffffffffffffffffLL
-#if 0
+
+#if 1
 #define aprintf(...) {}
+#define aADM_warning(...) {}
 #else
 #define aprintf printf
+#define aADM_warning(...) ADM_warning
 #endif
 /**
     \fn EditorCache
@@ -194,7 +197,7 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
             return _elem[index].image;
         }
     }
-    ADM_warning("Cannot find image after %"LLU" ms in cache\n",pts/1000);
+    aADM_warning("Cannot find image after %"LLU" ms in cache\n",pts/1000);
     return NULL;
 }
 /**
@@ -216,7 +219,7 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
             return _elem[index].image;
         }
     }
-    ADM_warning("Cannot find image before %"LLU" ms in cache\n",pts/1000);
+    aADM_warning("Cannot find image before %"LLU" ms in cache\n",pts/1000);
     return NULL;
 }
 

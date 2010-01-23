@@ -19,14 +19,16 @@
 #include "ADM_default.h"
 #include "ADM_editor/ADM_edit.hxx"
 
-#if defined(ADM_DEBUG) && 0
+#if 0
 #define aprintf printf
+#define SET_CURRENT_PTS(x) {printf("Old PTS: %"LLU" ms, new PTS %"LLU" ms\n",_currentPts,x);_currentPts=x;}
 #else
 #define aprintf(...) {}// printf
+#define SET_CURRENT_PTS(x) {_currentPts=x;}
 #endif
 
 #include "ADM_pp.h"
-#define SET_CURRENT_PTS(x) {printf("Old PTS: %"LLU" ms, new PTS %"LLU" ms\n",_currentPts,x);_currentPts=x;}
+
 /**
     \fn recalibrate
     \brief Convert time given in time from absolute ref video to linear time
@@ -192,7 +194,8 @@ uint64_t tail;
         // Search it in the cache...
         _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
         
-        uint64_t refPts=_currentPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
+        uint64_t refPts;
+        _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts);
         ADMImage *cached=vid->_videoCache->getAfter(refPts);
         if(cached)
         {
@@ -224,7 +227,7 @@ uint64_t tail;
         }
         
         SET_CURRENT_PTS(pts);
-        ADM_info("Current PTS:%"LLU"\n",_currentPts);
+        //ADM_info("Current PTS:%"LLU"\n",_currentPts);
         return true;
 
 // Try to get an image for the following segment....
@@ -306,12 +309,14 @@ uint64_t targetPts=_currentPts;
         // Search it in the cache...
         _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
         
-        uint64_t refPts=_currentPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
+        uint64_t refPts;
+
+        _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts);
         ADMImage *cached=vid->_videoCache->getBefore(refPts);
        
         if(cached)
         {
-            if(cached->Pts>=seg->_refStartTimeUs)
+            if(cached->Pts>=seg->_refStartTimeUs) // It might be in the cache but belonging to the previous seg
             {
                 // Got it
                 image->duplicate(cached);
@@ -366,6 +371,7 @@ uint64_t targetPts=_currentPts;
         }
         ADM_assert(segNo+1==_currentSegment);
         // it is basically the same as above except the exit condition is that the frame is out of reach
+        // Either because we reached end of segment or end of source for that segment
         ADM_error("Searching across segment is not implemented\n");
        
         return false;
