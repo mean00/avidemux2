@@ -541,6 +541,162 @@ uint8_t admPreview::nextPicture(void)
     }
     return true;
 }
+
+/**
+      \fn admPreview::update
+      \brief display data associated with framenum image
+      @param image : current main image (input)
+      @param framenum, framenumber
+*/
+
+uint8_t admPreview::previousPicture(void)
+{
+    uint32_t fl,len,flags;	
+
+    switch(previewMode)
+    {
+      case ADM_PREVIEW_NONE:
+       {
+#if 0
+        if( !video_body->getUncompressedFrame(framenum+playbackOffset,rdrImage,&flags))
+        {
+          return 0; 
+        }
+#else
+
+        if(!video_body->previousPicture(rdrImage)) return 0;
+#endif
+            UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
+
+            if(zoom==ZOOM_1_1 || renderHasAccelZoom() )
+            {
+               if(!defered_display) 
+               {
+                  renderUpdateImage(rdrImage->data,zoom);
+                  
+                }
+            }else
+            {
+                ADM_assert(resizer);
+                ADM_assert(resized);
+                resizer->resize(rdrImage,resized);
+                if(!defered_display) 
+                  renderUpdateImage(resized->data,ZOOM_1_1);
+            }
+           // printf("[admPreview] PTs: %llu\n",rdrImage->Pts);
+        }
+        break;
+#if 0
+      case ADM_PREVIEW_OUTPUT:
+            if(framenum<=preview->getInfo()->nb_frames-1)
+                  {
+                          if(!preview->getFrameNumberNoAlloc(framenum,&len,previewImage,&fl)) return 0;
+                          if(zoom==ZOOM_1_1 || renderHasAccelZoom() )
+                          {
+                            if(!defered_display) renderUpdateImage(previewImage->data,zoom);
+                          }
+                          else
+                          {
+                             resizer->resize(previewImage,resized);
+                             if(!defered_display) 
+                                  renderUpdateImage(resized->data,ZOOM_1_1);
+                          }
+                  }
+            break;
+      case ADM_PREVIEW_SEPARATE:
+            ADM_assert(preview);
+            ADM_assert(previewImage);
+
+              if( !video_body->getUncompressedFrame(framenum+playbackOffset,rdrImage,&flags))
+              {
+                  return 0; 
+              }
+              UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
+
+            if(zoom==ZOOM_1_1 || renderHasAccelZoom()  )
+            {
+              if(!defered_display) 
+				  renderUpdateImage(rdrImage->data,zoom);
+            }
+			else
+            {
+                ADM_assert(resizer);
+                ADM_assert(resized);
+                resizer->resize(rdrImage,resized);
+                if(!defered_display) 
+                  renderUpdateImage(resized->data,zoom);
+            }
+          if( DIA_previewStillAlive())
+          {
+                  aprintf("Preview: Ask for frame %lu\n",framenum);
+                  if(framenum<=preview->getInfo()->nb_frames-1)
+                  {
+                          preview->getFrameNumberNoAlloc(framenum,&len,previewImage,&fl);
+                          if(!defered_display) DIA_previewUpdate(previewImage->data);
+                  }
+          }
+          break;
+      case ADM_PREVIEW_SIDE:
+              ADM_assert(preview);
+              ADM_assert(previewImage);
+              ADM_assert(original);
+              
+              if( !video_body->getUncompressedFrame(framenum+playbackOffset,rdrImage,&flags))
+              {
+                  return 0; 
+              }
+              UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
+              previewBlit(rdrImage,original,0,0);
+              
+              if(preview->getFrameNumberNoAlloc(framenum,&len,previewImage,&fl))
+              {
+                previewBlit(previewImage,original,rdrPhysicalW,0);
+              }
+              else printf("Cannot get frame %u\n",framenum);
+              if(zoom==ZOOM_1_1  || renderHasAccelZoom() )
+              {
+                if(!defered_display)
+                  renderUpdateImage(original->data,zoom);
+              }else
+              {
+                resizer->resize(original,resized);
+                if(!defered_display) 
+                  renderUpdateImage(resized->data,ZOOM_1_1);
+              }
+              break;
+        
+      case ADM_PREVIEW_TOP:
+              ADM_assert(preview);
+              ADM_assert(previewImage);
+              ADM_assert(original);
+              
+              if( !video_body->getUncompressedFrame(framenum+playbackOffset,rdrImage,&flags))
+              {
+                  return 0; 
+              }
+              UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
+              previewBlit(rdrImage,original,0,0);
+              if(preview->getFrameNumberNoAlloc(framenum,&len,previewImage,&fl))
+              {
+                previewBlit(previewImage,original,0,rdrPhysicalH);
+              }
+              else printf("Cannot get frame %u\n",framenum);
+              if(zoom==ZOOM_1_1 || renderHasAccelZoom() )
+              {
+                if(!defered_display)
+                  renderUpdateImage(original->data,zoom);
+              }else
+              {
+                resizer->resize(original,resized);
+                if(!defered_display) 
+                  renderUpdateImage(resized->data,ZOOM_1_1);
+              }
+              break;
+#endif
+      default: ADM_assert(0);
+    }
+    return true;
+}
 /**
       \fn previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
       \brief Blit "from" to "to" at position startx,starty

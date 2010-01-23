@@ -100,7 +100,8 @@ protected:
                     uint32_t	_internalFlags;  // Flags :
                     ADM_PP      _pp;             // Postprocessing settings
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
-                    uint32_t    _currentSegment;   // Current video segment
+                    uint64_t    _currentPts;        // Current image PTS
+                    uint32_t    _currentSegment;    // Current video segment
                     uint64_t    _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
                                                     // Warning, it is actually the DTS of the NEXT frame to fetch
 //****************************** Audio **********************************
@@ -152,6 +153,7 @@ public:
                     bool        goToIntraTimeVideo(uint64_t time);
                     bool        nextPicture(ADMImage *image);
                     bool        samePicture(ADMImage *image);
+                    bool        previousPicture(ADMImage *image);
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);

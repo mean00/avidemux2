@@ -124,10 +124,22 @@ bool        ADM_Composer::goToIntraTimeVideo(uint64_t time)
         return false;
     }
     _SEGMENT *seg=_segments.getSegment(_currentSegment);
+    // Ok, we have switched to a new segment
+    // Flush the cache
+    _VIDEOS *vid= _segments.getRefVideo(seg->_reference);
     if(false== DecodePictureUpToIntra(seg->_reference,frame))
     {
         return false;
     }
+    // Get the last decoded PTS and it is our current PTS
+    _currentPts=vid->lastDecodedPts+seg->_startTimeUs;
+    _currentPts-=seg->_refStartTimeUs;
+#if 0
+    ADM_info("decodec DTS=%"LLU" ms\n",vid->lastDecodedPts/1000);
+    ADM_info("startTime DTS=%"LLU" ms\n",seg->_startTimeUs/1000);
+    ADM_info("refstart DTS=%"LLU" ms\n",seg->_refStartTimeUs/1000);
+    ADM_info("Current DTS=%"LLU" ms\n",_currentPts/1000);
+#endif
     return true;
 }
 /**
@@ -146,9 +158,9 @@ uint32_t seg;
     
     // Try to seek...
     _SEGMENT *s=_segments.getSegment(seg);
+    _VIDEOS *v=_segments.getRefVideo(s->_reference);
     if(!s->_reference && !segTime)
     {
-        _VIDEOS *v=_segments.getRefVideo(s->_reference);
         segTime=v->firstFramePts;
         ADM_warning("Fixating start time to %"LLU" ms\n",segTime/1000);
     }
@@ -159,9 +171,11 @@ uint32_t seg;
             return false;
     }
     _currentSegment=seg;
+    _currentPts=v->lastDecodedPts;
     return true;
 
 }
+
 /**
     \fn NextPicture
     \brief decode & returns the next picture
@@ -170,15 +184,31 @@ bool        ADM_Composer::nextPicture(ADMImage *image)
 {
 uint64_t pts;
 uint64_t tail;
-
-    // Decode image...
-    _SEGMENT *seg=_segments.getSegment(_currentSegment);
-    if(false== nextPictureInternal(seg->_reference,image))
-    {
-        goto np_nextSeg;
-    }
-        // Refresh in case we switched....
-        seg=_segments.getSegment(_currentSegment);
+    
+        // Decode image...
+        _SEGMENT *seg=_segments.getSegment(_currentSegment);
+        // Search it in the cache...
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        
+        uint64_t refPts=_currentPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
+        ADMImage *cached=vid->_videoCache->getAfter(refPts);
+        if(cached)
+        {
+            uint64_t delta=cached->Pts-seg->_refStartTimeUs;
+            if(delta<seg->_durationUs)
+            {
+                // Got it
+                image->duplicate(cached);
+            }else
+                goto np_nextSeg;
+        }else 
+        { // Not in cache, decode next one
+            if(false== nextPictureInternal(seg->_reference,image))
+            {
+                goto np_nextSeg;
+            }
+        }
+        // Got it, update timing
         updateImageTiming(seg,image);
         // no we have our image, let's check it is within this segment range..
         pts=image->Pts;
@@ -190,8 +220,7 @@ uint64_t tail;
                 _segments.dump();
                 goto np_nextSeg;
         }
-        
-
+        _currentPts=pts;
         return true;
 
 // Try to get an image for the following segment....
@@ -207,12 +236,41 @@ np_nextSeg:
             seg=_segments.getSegment(_currentSegment);
             samePictureInternal(seg->_reference,image);
             updateImageTiming(seg,image);
+            _currentPts=pts;
             return true;
-        } else  
+        } 
+        ADM_warning("Cannot get next picture. Last segment\n");
+        return false;
+}
+
+/**
+    \fn NextPicture
+    \brief decode & returns the next picture
+*/
+bool        ADM_Composer::previousPicture(ADMImage *image)
+{
+uint64_t pts;
+uint64_t tail;
+    
+        // Decode image...
+        _SEGMENT *seg=_segments.getSegment(_currentSegment);
+        // Search it in the cache...
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        
+        uint64_t refPts=_currentPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
+        ADMImage *cached=vid->_videoCache->getBefore(refPts);
+        if(cached)
         {
-                ADM_warning("Cannot get next picture. Last segment\n");
-                return false;
+            if(cached->Pts>=seg->_refStartTimeUs)
+            {
+                // Got it
+                image->duplicate(cached);
+                updateImageTiming(seg,image);
+                _currentPts=pts;
+                return true;
+            }
         }
+
         return false;
 }
 /**
@@ -222,13 +280,31 @@ np_nextSeg:
 bool        ADM_Composer::samePicture(ADMImage *image)
 {
       _SEGMENT *seg=_segments.getSegment(_currentSegment);
-        if(false== samePictureInternal(seg->_reference,image))
-        {
-            ADM_warning("SamePicture failed\n");
-            return false;
-        }
-         updateImageTiming(seg,image);
-        return true;
+      _VIDEOS  *ref=_segments.getRefVideo(seg->_reference);
+
+        // Do Pts->ref PTs
+uint64_t refPts;
+uint64_t segTime;
+uint32_t segNo;
+    if(false==_segments.convertLinearTimeToSeg(_currentPts,&segNo,&segTime))
+    {
+          ADM_error("Cannot convert time in samePicture\n");         
+          return false;
+    }
+      ADM_assert(_currentSegment==segNo);
+      refPts=segTime+seg->_refStartTimeUs;
+
+      ADMImage *last=ref->_videoCache->getByPts(refPts);
+      if(last)
+      {
+            image->duplicate(last);
+            updateImageTiming(seg,image);
+            return true;
+      }
+      ADM_error("Cannot find same image in cache\n"); 
+      ADM_info("Looking for PTS=%"LLU" ms\n",refPts/1000);
+      ref->_videoCache->dump();
+      return false;
 }
 
 
@@ -338,8 +414,10 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
 bool ADM_Composer::rewind(void)
 {
         ADM_info("Rewinding\n");
-        return switchToSegment(0);
-
+        if(switchToSegment(0)==false) return false;
+        _VIDEOS *vid=_segments.getRefVideo(_segments.getSegment(0)->_reference);
+        _currentPts=vid->lastDecodedPts;
+        return true;
 }
 /**
     \fn addSegment

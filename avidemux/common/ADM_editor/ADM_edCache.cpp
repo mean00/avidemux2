@@ -17,7 +17,7 @@
 #include "ADM_image.h"
 #include "ADM_editor/ADM_edCache.h"
 #define ADM_NO_PTS 0xffffffffffffffffLL
-#if 1
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf printf
@@ -85,9 +85,11 @@ ADMImage	*EditorCache::getFreeImage(void)
     int r,w;
     r=readIndex%_nbImage;
     w=(writeIndex)%_nbImage;
+    aprintf("Read: %"LU" write :%"LU"\n",readIndex,writeIndex);
     if(r==w && readIndex!=writeIndex) //full
     {
         readIndex++; // free older
+        aprintf("Erasing read\n");
     }
     found=writeIndex%_nbImage;
     
@@ -95,6 +97,7 @@ ADMImage	*EditorCache::getFreeImage(void)
     if(found==-1) ADM_assert(0);
 	_elem[found].pts=ADM_NO_PTS;;
     writeIndex++;
+    aprintf("Using free image at index %d\n",found);
 	return _elem[found].image;
 
 }
@@ -125,6 +128,7 @@ void        EditorCache::invalidate(ADMImage *image)
                 uint32_t prev=(writeIndex+_nbImage-1)%_nbImage;
                  ADM_assert(i==prev);
                  ADM_assert(_elem[i].pts==ADM_NO_PTS);
+                 aprintf("Invalidate writeIndex %"LU"\n",writeIndex);
                  writeIndex--;
                  return;
             }
@@ -145,6 +149,7 @@ bool		EditorCache::validate(ADMImage *image)
 		{
             ADM_assert(_elem[i].pts==ADM_NO_PTS);
 			_elem[i].pts=image->Pts;
+            aprintf("validate Index %"LU" with pts=%"LLU"ms\n",i,image->Pts);
 			return true;
 		}
 

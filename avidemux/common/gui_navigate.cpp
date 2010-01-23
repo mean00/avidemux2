@@ -329,7 +329,7 @@ void GUI_PrevFrame(uint32_t frameCount)
     if (!avifileinfo)	return;
 
 
-    if (!admPreview::previousFrame())
+    if (!admPreview::previousPicture())
       {
             GUI_Error_HIG(QT_TR_NOOP("Error"),	QT_TR_NOOP("Cannot go to previous frame"));
             return;

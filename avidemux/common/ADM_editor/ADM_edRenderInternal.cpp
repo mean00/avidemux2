@@ -133,9 +133,9 @@ bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
 bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
 {
   ADMImage	*result;
-  EditorCache   *cache=_segments.getRefVideo(ref)->_videoCache;
+  
   _VIDEOS *vid=_segments.getRefVideo(ref);
-
+  EditorCache   *cache=vid->_videoCache;
   ADM_assert(vid);
 
    uint32_t loop=20; // Try 20 frames ahead
