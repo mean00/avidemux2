@@ -246,7 +246,54 @@ np_nextSeg:
         ADM_warning("Cannot get next picture. Last segment\n");
         return false;
 }
+/**
+    \fn decodeTillPicture
+    \brief that one is a bit different compare to goToTime as we
+                dont want to decode the targetPts if it is a keyframe
+                but have the frame before
+*/
+bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
+{
+ // Go to the previous keyframe and decode forward...
+                _SEGMENT *seg=_segments.getSegment(_currentSegment);
+                int ref=seg->_reference;
 
+                uint64_t refTime;
+                if(false==_segments.LinearToRefTime(_currentSegment,targetPts-1,&refTime))
+                {
+                    ADM_warning("Cannot find ref time\n");
+                    return false;
+                }
+                uint64_t previousKf;
+                if(false==searchPreviousKeyFrameInRef(ref,refTime,&previousKf))
+                {
+                    ADM_warning("Cannot find previous keyframe in ref %d, time=%"LLU" \n",ref,refTime);
+                    return false;
+                }
+                // go to it...
+                if(false==seektoTime(ref,previousKf,false))
+                {
+                    ADM_warning("Cannot seek to time=%"LLU" \n",previousKf);
+                    return false;            
+                }
+                // Now forward till we reach out frame
+                while(1)
+                {
+                    if(false==nextPicture(image))
+                    {
+                            ADM_warning("Error in decoding forward");
+                            return false;
+                    }
+                    if(image->Pts==targetPts)
+                            break;
+                }
+                if(image->Pts!=targetPts)
+                {
+                    ADM_error("Could not retrieve our own frame at PTS=%"LLU" ms\n",targetPts/1000);
+                    return false;
+                }
+                return true;
+}
 /**
     \fn NextPicture
     \brief decode & returns the next picture
@@ -277,7 +324,8 @@ uint64_t targetPts=_currentPts;
         ADM_info("while looking for frame %"LLU"\n",_currentPts);
         vid->_videoCache->dump();
         // The previous is not available
-        // either it is in the same segment but we have decoded later, or it is in the previous segment
+        // either it is in the same segment but we have decoded later in that segment
+        // , or it is in the previous segment
         // Let's check...
         if(!_currentPts) return false;
         uint64_t segTime;
@@ -287,45 +335,19 @@ uint64_t targetPts=_currentPts;
                   ADM_error("Cannot convert time in samePicture\n");         
                   return false;
             }
-        
+        // Two possiblities
+        // 1- we are still in the same segment, in that case, we have to go back
+        // and decode forward 
+        // 2- We are at a jum, i.e. what we want is the last image from the previous segment
         seg=_segments.getSegment(segNo);
-        int ref=seg->_reference;
-
-        uint64_t refTime;
-        if(false==_segments.LinearToRefTime(segNo,_currentPts,&refTime))
+        if(segNo==_currentSegment) // Still in the same segment..
         {
-            ADM_warning("Cannot find ref time\n");
-            return false;
-        }
-        uint64_t previousKf;
-        if(false==searchPreviousKeyFrameInRef(ref,refTime,&previousKf))
-        {
-            ADM_warning("Cannot find previous keyframe in ref %d, time=%"LLU" \n",ref,refTime);
-            return false;
-        }
-        // Convert it to linear...
-        // We are in the right segment..
-        if(false==seektoTime(ref,previousKf,false))
-        {
-            ADM_warning("Cannot seek to time=%"LLU" \n",previousKf);
-            return false;            
-        }
-        // Update our _currentSegment
-        _currentSegment=segNo;
-        // Now forward till we reach out frame
-        while(1)
-        {
-            if(false==nextPicture(image))
-            {
-                    ADM_warning("Error in decoding forward");
+                if(false==decodeTillPictureAtPts(targetPts,image))
+                {
+                    ADM_error("Cannot decode till our current pts\n");
                     return false;
-            }
-            if(image->Pts==targetPts)
-            {
-                ADM_info("Decoding forward, we have our image, let's take its predecessor\n");
-                refPts=targetPts-seg->_startTimeUs+seg->_refStartTimeUs; // time in the ref video
+                }
                 cached=vid->_videoCache->getBefore(refPts);
-               
                 if(cached)
                 {
                     if(cached->Pts>=seg->_refStartTimeUs)
@@ -336,11 +358,16 @@ uint64_t targetPts=_currentPts;
                         SET_CURRENT_PTS(image->Pts);
                         return true;
                     }
+                    ADM_warning("The image found is before refStartTime ???\n");
                 }
-                ADM_error("Find our frame and its predecessor, but it is out of range\n");
+                ADM_error("Find our frame and its predecessor (%"LLU"), but it is out of range\n",refPts);
+                vid->_videoCache->dump();
                 return false;
-            }
         }
+        ADM_assert(segNo+1==_currentSegment);
+        // it is basically the same as above except the exit condition is that the frame is out of reach
+        ADM_error("Searching across segment is not implemented\n");
+       
         return false;
 }
 /**

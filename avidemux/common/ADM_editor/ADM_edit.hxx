@@ -75,6 +75,8 @@ class ADM_Composer : public ADM_audioStream
                     // Some useful functions...
                     void        recalibrate(uint64_t *time,_SEGMENT *seg);
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);
+                    // Need to get the image just before targetPts
+                    bool        decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
 
 protected:
                                 /// Decode frame and on until frame is popped out of decoders

@@ -566,9 +566,7 @@ bool  ADM_Composer::rebuildDuration(void)
 */
 uint64_t    ADM_Composer::getCurrentFramePts(void)
 {
-    _SEGMENT *seg=_segments.getSegment(_currentSegment);
-    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
-    return vid->lastDecodedPts;
+   return _currentPts;
 }
 /**
     \fn remove
