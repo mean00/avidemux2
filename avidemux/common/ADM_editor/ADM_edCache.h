@@ -41,5 +41,6 @@ class EditorCache
             ADMImage    *getByPts(uint64_t Pts);            
             ADMImage    *getAfter(uint64_t Pts);
             ADMImage    *getBefore(uint64_t Pts);
+            ADMImage    *getLast(void);
 };
 #endif

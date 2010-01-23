@@ -184,7 +184,7 @@ uint32_t seg;
     \fn NextPicture
     \brief decode & returns the next picture
 */
-bool        ADM_Composer::nextPicture(ADMImage *image)
+bool        ADM_Composer::nextPicture(ADMImage *image,bool dontcross)
 {
 uint64_t pts;
 uint64_t tail;
@@ -232,6 +232,11 @@ uint64_t tail;
 
 // Try to get an image for the following segment....
 np_nextSeg:
+        if(true==dontcross)
+        {
+            ADM_warning("Not allowed to cross segment\n");
+            return false;
+        }
         if(_currentSegment+1<_segments.getNbSegments())
         {
             if(switchToNextSegment()==false)
@@ -258,6 +263,7 @@ np_nextSeg:
 bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
 {
  // Go to the previous keyframe and decode forward...
+                uint32_t thisSeg=_currentSegment;
                 _SEGMENT *seg=_segments.getSegment(_currentSegment);
                 int ref=seg->_reference;
 
@@ -282,12 +288,14 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 // Now forward till we reach out frame
                 while(1)
                 {
-                    if(false==nextPicture(image))
+                    if(false==nextPicture(image,true))
                     {
                             ADM_warning("Error in decoding forward");
                             return false;
                     }
-                    if(image->Pts==targetPts)
+                    if(image->Pts>=targetPts)
+                            break;
+                    if(thisSeg!=_currentSegment)
                             break;
                 }
                 if(image->Pts!=targetPts)
@@ -325,7 +333,6 @@ uint64_t targetPts=_currentPts;
                 return true;
             }
         }
-        ADM_info("Previous pic: %"LLU"\n",_currentPts);
         ADM_info("while looking for frame %"LLU"\n",_currentPts);
         vid->_videoCache->dump();
         // The previous is not available
@@ -372,9 +379,45 @@ uint64_t targetPts=_currentPts;
         ADM_assert(segNo+1==_currentSegment);
         // it is basically the same as above except the exit condition is that the frame is out of reach
         // Either because we reached end of segment or end of source for that segment
-        ADM_error("Searching across segment is not implemented\n");
-       
-        return false;
+        ADM_info("Searching across segment....\n");
+        if(false==switchToSegment(segNo))
+        {
+            ADM_error("Cannot switch to previous segment to get previous frame\n");
+            return false;
+        }
+        
+        seg=_segments.getSegment(_currentSegment);
+        vid=_segments.getRefVideo(seg->_reference);
+        
+
+        decodeTillPictureAtPts(targetPts,image);
+        _currentSegment=segNo;
+        // We may have overshot...
+        uint64_t last=vid->lastDecodedPts;
+        _segments.LinearToRefTime(_currentSegment,targetPts,&refPts);
+        ADMImage *candidate=vid->_videoCache->getLast();
+        if(!candidate)
+        {
+            ADM_error("No frame in cache !\n");
+            return false;
+        }
+        while(1)
+        {
+            if(candidate->Pts<refPts) // got it!
+            {
+                break;
+            }
+            // Try to go before...
+            ADMImage *img=vid->_videoCache->getBefore(candidate->Pts);
+            if(!img) break;
+            candidate=img;
+        }
+        image->duplicate(candidate);
+        updateImageTiming(seg,image);
+        SET_CURRENT_PTS(image->Pts);
+        return true;
+        
+        
 }
 /**
     \fn samePicture

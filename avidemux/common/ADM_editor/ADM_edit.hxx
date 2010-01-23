@@ -153,7 +153,7 @@ public:
                     uint64_t    getCurrentFramePts(void);
                     bool        goToTimeVideo(uint64_t time);
                     bool        goToIntraTimeVideo(uint64_t time);
-                    bool        nextPicture(ADMImage *image);
+                    bool        nextPicture(ADMImage *image,bool dontcross=false);
                     bool        samePicture(ADMImage *image);
                     bool        previousPicture(ADMImage *image);
                     bool        rewind(void);

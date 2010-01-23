@@ -239,5 +239,14 @@ ADMImage *EditorCache::getByPts(uint64_t Pts)
     }
     return NULL;
 }
-
+/**
+    \fn getLast
+    \brief Return the most recent image from cache
+*/
+ADMImage *EditorCache::getLast(void)
+{
+    if(readIndex==writeIndex) return NULL;
+    int index=(writeIndex-1)%_nbImage;
+    return _elem[index].image;
+}
 // EOF

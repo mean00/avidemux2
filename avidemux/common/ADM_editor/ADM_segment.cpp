@@ -533,19 +533,19 @@ bool        ADM_EditorSegment::LinearToRefTime(int segNo,uint64_t linear,uint64_
     ADM_assert(seg);
     if(linear<seg->_startTimeUs)
     {
-        ADM_error("This given time is not in the segment: Given time %"LLU", seg start at %"LLU"\n",
+        ADM_warning("This given time is not in the segment: Given time %"LLU", seg start at %"LLU"\n",
                         linear, seg->_startTimeUs);
-        return false;
     }
     if(linear>=seg->_startTimeUs+seg->_durationUs)
     {
-        ADM_error("This given time is not in the segment: Given time %"LLU", seg end at %"LLU"\n",
+        ADM_warning("This given time is not in the segment: Given time %"LLU", seg end at %"LLU"\n",
                         linear, seg->_startTimeUs+seg->_durationUs);
-        return false;
 
     }
-    *refTime=seg->_refStartTimeUs+linear;
-    *refTime-=seg->_startTimeUs;
+    int64_t time=(int64_t)seg->_refStartTimeUs+(int64_t)linear;
+    time-=(int64_t)seg->_startTimeUs;
+    if(time<0) return false;
+    *refTime=(uint64_t )time;
     return true;
 }
 //EOF
