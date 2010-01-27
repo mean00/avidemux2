@@ -15,7 +15,7 @@
 #ifndef VIDEOENCODERINTERNAL_H
 #define VIDEOENCODERINTERNAL_H
 
-#define ADM_VIDEO_ENCODER_API_VERSION 2
+#define ADM_VIDEO_ENCODER_API_VERSION 3
 #include "ADM_coreVideoEncoder.h"
 #include "DIA_uiTypes.h"
 #include "ADM_paramList.h"

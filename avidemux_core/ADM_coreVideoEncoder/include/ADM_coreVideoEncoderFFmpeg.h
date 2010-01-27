@@ -117,7 +117,6 @@ protected:
 public:
                                             ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSetting *settings=NULL);
 virtual                                     ~ADM_coreVideoEncoderFFmpeg();
-virtual                   uint64_t          getDelayUs(void);
 
 };
 #endif

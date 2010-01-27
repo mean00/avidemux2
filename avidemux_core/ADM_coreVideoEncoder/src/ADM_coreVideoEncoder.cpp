@@ -25,7 +25,7 @@ ADM_coreVideoEncoder::ADM_coreVideoEncoder(ADM_coreVideoFilter *src)
 {
     source=src;
     image=NULL;
-
+    encoderDelay=0;
 }
 
 /**

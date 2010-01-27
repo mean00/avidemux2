@@ -39,6 +39,8 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     bitstream=new ADMBitstream(width*height*4);
     data=new uint8_t [width*height*4];
     bitstream->data=data;
+    videoDelay=encoder->getEncoderDelay();
+    printf("[StreamProcess] Video Encoder Delay=%"LLU"ms\n",videoDelay/1000);
 }
 /**
     \fn ADM_videoStreamProcess

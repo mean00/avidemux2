@@ -37,6 +37,7 @@ class ADM_coreVideoEncoder
 protected:
                             ADM_coreVideoFilter *source;
                             ADMImage            *image;
+                            uint64_t            encoderDelay;
 public:
                             ADM_coreVideoEncoder(ADM_coreVideoFilter *src);
 virtual                     ~ADM_coreVideoEncoder();
@@ -52,6 +53,7 @@ virtual const  char         *getFourcc(void) =0;
                uint32_t    getFrameIncrement(void) {return source->getInfo()->frameIncrement;}
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
+               uint64_t    getEncoderDelay(void){return encoderDelay;}
 };
 
 #endif

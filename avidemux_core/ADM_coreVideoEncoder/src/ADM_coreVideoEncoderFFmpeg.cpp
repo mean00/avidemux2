@@ -83,16 +83,6 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
     return true;
 }
 /**
-    \fn getDelayUs
-*/
-uint64_t          ADM_coreVideoEncoderFFmpeg::getDelayUs(void)
-{
-    ADM_assert(_context);
-    ADM_assert(source);
-uint64_t d=source->getInfo()->frameIncrement;
-        return d*_context->max_b_frames;
-}
-/**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor
 
@@ -121,7 +111,8 @@ uint32_t w,h;
     statFileName=NULL;
     statFile=NULL;
     _isMT=false;
-
+    encoderDelay=source->getInfo()->frameIncrement*Settings.max_b_frames;
+    ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
 }
 /**
     \fn ADM_coreVideoEncoderFFmpeg
@@ -371,7 +362,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     
     // Update PTS/Dts
 
-    out->pts=getDelayUs();
+    out->pts=getEncoderDelay();
     out->pts+= _context->coded_frame->pts * 1000000.*av_q2d(_context->time_base);
     out->dts=nextDts; // FIXME
     aprintf("Out pts=%"LLU" us\n",out->pts);    
