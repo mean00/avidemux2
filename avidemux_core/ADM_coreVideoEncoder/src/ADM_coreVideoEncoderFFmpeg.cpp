@@ -21,7 +21,11 @@
 #include "prefs.h"
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 //#define TIME_TENTH_MILLISEC
-#define aprintf(...) {}
+#if 1
+    #define aprintf(...) {}
+#else
+    #define aprintf printf
+#endif
 
 typedef struct
 {
@@ -34,8 +38,8 @@ TimeIncrementType fpsTable[]=
 {
     {  40000,40000,1 ,25},
     {  20000,20000,1 ,50},
-    {  33360,33369,30,1001},
-    {  41700,41710,24,1001},
+    {  33360,33369,1001,30000},
+    {  41700,41710,1001,24000},
 }; 
 
 /**
@@ -78,7 +82,16 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
     *d=base;
     return true;
 }
-
+/**
+    \fn getDelayUs
+*/
+uint64_t          ADM_coreVideoEncoderFFmpeg::getDelayUs(void)
+{
+    ADM_assert(_context);
+    ADM_assert(source);
+uint64_t d=source->getInfo()->frameIncrement;
+        return d*_context->max_b_frames;
+}
 /**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor
@@ -206,30 +219,10 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
         return false;
     }
     prolog();
-#if 1
-    _frame.pts=AV_NOPTS_VALUE;
-#else
-    // put a time stamp...
-    if(image->Pts==ADM_NO_PTS) 
-    {
-        ADM_assert(0);
-        _frame.pts=AV_NOPTS_VALUE;
-    }
-    else
-    {
-        float f=image->Pts,n=_context->time_base.num,d=_context->time_base.den;
-#ifdef TIME_TENTH_MILLISEC
-        f=f/100;
-#else
-        f=f/1000;
-        f=f/n;
-#endif
-        _frame.pts=f;
 
-        //printf("*** PTS:%d time_base :%d/%d\n",_frame.pts,_context->time_base.num,_context->time_base.den);
-    }
-#endif
-    //
+    double p=image->Pts;
+    nextDts=image->Pts;
+    _frame.pts= floor(p / (1000000.*av_q2d(_context->time_base) + 0.5));    //
     //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
@@ -375,11 +368,13 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
         out->flags=AVI_KEY_FRAME;
     else if(pict_type==FF_B_TYPE)
             out->flags=AVI_B_FRAME;
-    out->pts=out->dts=image->Pts;
-    // Update PTS/Dts
-    out->pts=_frame.reordered_opaque;
-    out->dts=-1; // FIXME
     
+    // Update PTS/Dts
+
+    out->pts=getDelayUs();
+    out->pts+= _context->coded_frame->pts * 1000000.*av_q2d(_context->time_base);
+    out->dts=nextDts; // FIXME
+    aprintf("Out pts=%"LLU" us\n",out->pts);    
 
     // Update quant
     if(!_context->coded_frame->quality)

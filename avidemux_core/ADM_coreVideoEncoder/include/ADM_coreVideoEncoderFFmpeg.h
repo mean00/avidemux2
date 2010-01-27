@@ -103,6 +103,7 @@ protected:
                FILE             *statFile;
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
                bool             _isMT; // True if multithreaded
+               uint64_t         nextDts;
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
@@ -114,8 +115,9 @@ protected:
                           bool             setupPass(void);  
                           bool             encoderMT (void);
 public:
-                            ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSetting *settings=NULL);
-virtual                     ~ADM_coreVideoEncoderFFmpeg();
+                                            ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSetting *settings=NULL);
+virtual                                     ~ADM_coreVideoEncoderFFmpeg();
+virtual                   uint64_t          getDelayUs(void);
 
 };
 #endif
