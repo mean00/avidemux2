@@ -244,6 +244,7 @@ uint8_t ADMImage::copyInfo(ADMImage *src)
 	flags=src->flags;
 	_aspect=src->_aspect;
     Pts=src->Pts;
+    return 1;
 }
 //
 //	By design the reallocation of quant should happen at startup
