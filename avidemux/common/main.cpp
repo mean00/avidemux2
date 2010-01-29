@@ -25,6 +25,7 @@
 #include "config.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
+#include "DIA_uiTypes.h"
 
 #define __DECLARE__
 #include "avi_vars.h"
@@ -289,10 +290,14 @@ int main(int argc, char *argv[])
 	__try1(exceptionHandler);
 #endif
 
-#if defined( USE_VDPAU) && (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+#if defined( USE_VDPAU) 
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     printf("Probing for VDPAU...\n");
     if(vdpauProbe()==true) printf("VDPAU available\n");
         else printf("VDPAU not available\n");
+  #else
+    printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
 #endif
 
     UI_RunApp();
