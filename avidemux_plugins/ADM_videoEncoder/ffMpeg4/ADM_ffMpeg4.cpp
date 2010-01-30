@@ -27,9 +27,8 @@
 #define aprintf printf
 #endif
 
-static FFcodecSetting Mp4Settings=
+FFcodecSettings Mp4Settings=
 {
-    true, // Multithreaded
     {
     COMPRESS_CQ, //COMPRESSION_MODE  mode;
     2,              // uint32_t          qz;           /// Quantizer
@@ -38,6 +37,9 @@ static FFcodecSetting Mp4Settings=
     1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
     ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
     },
+    {
+        ADM_AVCODEC_SETTING_VERSION,
+        true, // Multithreaded
           ME_EPZS,			// ME
           0,				// GMC     
           1,				// 4MV
@@ -75,6 +77,7 @@ static FFcodecSetting Mp4Settings=
           0.0,				// spatial masking
           0,				// NAQ
           0				    // DUMMY 
+    }
 };
 /**
         \fn ADM_ffMpeg4Encoder
@@ -239,10 +242,10 @@ diaMenuEntry rdE[]={
   {2,QT_TR_NOOP("Rate distortion")}
 };     
 
-        FFcodecSetting *conf=&Mp4Settings;
+        FFcodecSettings *conf=&Mp4Settings;
 
-uint32_t me=(uint32_t)conf->me_method;  
-#define PX(x) &(conf->x)
+uint32_t me=(uint32_t)conf->lavcSettings.me_method;  
+#define PX(x) &(conf->lavcSettings.x)
 
          diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
          diaElemMenu      meM(&me,QT_TR_NOOP("Matrices"),4,meE);
@@ -294,7 +297,7 @@ uint32_t me=(uint32_t)conf->me_method;
          diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),4,tabs))
         {
-          conf->me_method=(Motion_Est_ID)me;
+          conf->lavcSettings.me_method=(Motion_Est_ID)me;
           return true;
         }
          return false;

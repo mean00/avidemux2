@@ -27,6 +27,7 @@
     #define aprintf printf
 #endif
 
+#define LAVS(x) Settings.lavcSettings.x
 typedef struct
 {
     uint64_t mn,mx;
@@ -88,7 +89,7 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
 
 */
 
-ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSetting *set) 
+ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *set) 
                     : ADM_coreVideoEncoder(src)
 {
 uint32_t w,h;
@@ -111,7 +112,7 @@ uint32_t w,h;
     statFileName=NULL;
     statFile=NULL;
     _isMT=false;
-    encoderDelay=source->getInfo()->frameIncrement*Settings.max_b_frames;
+    encoderDelay=source->getInfo()->frameIncrement*LAVS(max_b_frames);
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
 }
 /**
@@ -269,7 +270,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
     }
    prolog();
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
-   if(Settings.MultiThreaded==true)
+   if(LAVS(MultiThreaded)==true)
         encoderMT();
    res=avcodec_open(_context, codec); 
    if(res<0) 
@@ -387,12 +388,12 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     \fn presetContext
     \brief put sensible values into context
 */
-bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSetting *set)
+bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 {
 	  _context->gop_size = 250;
 	
-#define SETX(x) _context->x=set->x; printf("[LAVCODEC]"#x" : %d\n",set->x);
-#define SETX_COND(x) if(set->is_##x) {_context->x=set->x; printf("[LAVCODEC]"#x" : %d\n",set->x);} else\
+#define SETX(x) _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);
+#define SETX_COND(x) if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);} else\
 		{ printf(#x" is not activated\n");}
       SETX (me_method);
       SETX (qmin);
@@ -406,8 +407,8 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSetting *set)
 #undef SETX
 #undef SETX_COND
 
-#define SETX(x)  _context->x=set->x; printf("[LAVCODEC]"#x" : %f\n",set->x);
-#define SETX_COND(x)  if(set->is_##x) {_context->x=set->x; printf("[LAVCODEC]"#x" : %f\n",set->x);} else  \
+#define SETX(x)  _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %f\n",set->lavcSettings.x);
+#define SETX_COND(x)  if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %f\n",set->lavcSettings.x);} else  \
 									{printf("[LAVCODEC]"#x" No activated\n");}
       SETX_COND (lumi_masking);
       SETX_COND (dark_masking);
@@ -419,11 +420,11 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSetting *set)
 #undef SETX
 #undef SETX_COND
 
-#define SETX(x) if(set->x){ _context->flags|=CODEC_FLAG##x;printf("[LAVCODEC]"#x" is set\n");}
+#define SETX(x) if(set->lavcSettings.x){ _context->flags|=CODEC_FLAG##x;printf("[LAVCODEC]"#x" is set\n");}
       SETX (_GMC);
 
 
-    switch (set->mb_eval)
+    switch (set->lavcSettings.mb_eval)
 	{
         case 0:
           _context->mb_decision = FF_MB_DECISION_SIMPLE;
@@ -440,11 +441,11 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSetting *set)
       
       SETX (_4MV);
       SETX (_QPEL);
-      if(set->_TRELLIS_QUANT) _context->trellis=1;
+      if(set->lavcSettings._TRELLIS_QUANT) _context->trellis=1;
       //SETX(_HQ);
       //SETX (_NORMALIZE_AQP);
 
-      if (set->widescreen)
+      if (set->lavcSettings.widescreen)
         {
           _context->sample_aspect_ratio.num = 16;
           _context->sample_aspect_ratio.den = 9;

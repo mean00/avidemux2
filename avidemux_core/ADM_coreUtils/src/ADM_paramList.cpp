@@ -15,6 +15,19 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_paramList.h"
+#include "ADM_coreVideoEncoderFFmpeg_param.h"
+
+static bool lavReadFromString(FFcodecContext *ctx,const char *str)
+{
+    printf("String:%s\n",str);
+    return true;
+}
+static bool lavWriteToString(FFcodecContext *ctx,char **str)
+{
+    *str=ADM_strdup("foobar");
+    return true;
+}
+
 /**
     \fn ADM_paramValidate
     \brief Check the confcouples match the param list
@@ -70,6 +83,24 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
            SWAL(ADM_param_bool,    bool ,   b,Bool)
+           case ADM_param_lavcodec_context:
+                        {
+                        char *lavString;
+                        if(false==couples->readAsString(name,&lavString))
+                        {
+                                ADM_error("Error reading lavcodec conf");
+                                return false;
+                        }
+                        bool r=lavReadFromString((FFcodecContext *)(address+params[i].offset),lavString);
+                        ADM_dezalloc(lavString);
+                        if(false==r)
+                            {
+                                    ADM_error("Error reading lavcodec string");
+                                    return false;
+                            }
+                       }
+                        break;
+                        
            case ADM_param_string: ADM_error("not implemented string for paramList\n");ADM_assert(0);
         }
     }
@@ -107,6 +138,23 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
            SWAL(ADM_param_bool,    bool ,   b,Bool)
+           case ADM_param_lavcodec_context:
+              {
+                        char *lavString;
+                        if(false==lavWriteToString((FFcodecContext *)(address+params[i].offset),&lavString))
+                        {
+                                ADM_error("Error writing lavcodec string");
+                                return false;
+                        }
+                        bool r=c->setInternalName(name,lavString);
+                        ADM_dezalloc(lavString);
+                        if(false==r)
+                        {
+                                ADM_error("Error writing lavcodec conf");
+                                return false;
+                        }
+              }
+                break;
            case ADM_param_string: ADM_error("not implemented string for paramList\n");ADM_assert(0);
         }
     }

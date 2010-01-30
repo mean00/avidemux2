@@ -13,6 +13,8 @@ $ctypes{"bool"}="bool";
 $ctypes{"string"}="char *";
 $ctypes{"bool"}="bool";
 $ctypes{"float"}="float";
+$ctypes{"video_encode"}="COMPRES_PARAMS";
+$ctypes{"lavcodec_context"}="FFcodecContext";
 
 $atypes{"uint32_t"}="ADM_param_uint32_t";
 $atypes{"int32_t"}="ADM_param_int32_t";
@@ -20,6 +22,8 @@ $atypes{"float"}="ADM_param_float";
 $atypes{"bool"}="ADM_param_bool";
 $atypes{"string"}="ADM_param_string";
 $atypes{"float"}="ADM_param_float";
+$atypes{"video_encode"}="ADM_param_video_encode";
+$atypes{"lavcodec_context"}="ADM_param_lavcodec_context";
 
 #
 sub processLine
@@ -101,6 +105,7 @@ while($a=<IN>)
         my $name;
         ($type,$name)=split ":",$a;
         #print "1: ".$a.",2:".$type.",3:".$name."\n" ;
+        $name=~s/;.*$//g;
         processLine($type,$name);
 }
 writeHeaderFoot();

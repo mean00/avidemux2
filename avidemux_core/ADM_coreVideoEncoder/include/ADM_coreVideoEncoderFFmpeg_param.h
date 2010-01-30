@@ -1,6 +1,6 @@
 /***************************************************************************
-                          \fn     jpegPlugin
-                          \brief  Plugin for jpeg dummy encoder
+                          \fn ADM_coreVideoEncoder
+                          \brief Base class for video encoder plugin
                              -------------------
     
     copyright            : (C) 2002/2009 by mean
@@ -15,19 +15,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_default.h"
-#include "ADM_ffMpeg4.h"
-#include "ADM_coreVideoEncoderInternal.h"
-#include "../src/FFcodecSettings_desc.cpp"
-extern bool         ffMpeg4Configure(void);
-extern FFcodecSettings Mp4Settings;
-ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffMpeg4Encoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg4",
-                               "Mpeg4 ASP (ff)",
-                               "Simple ffmpeg based mpeg4 Encoder (c) 2009 Mean",
-                                ffMpeg4Configure, // No configuration
-                                ADM_UI_ALL,
-                                1,0,0,
-                                FFcodecSettings_param, // conf template
-                                &Mp4Settings // conf var
-);
+#ifndef ADM_CORE_VIDEO_ENCODER_FF_PARAM_H
+#define ADM_CORE_VIDEO_ENCODER_FF_PARAM_H
+
+
+#define ADM_AVCODEC_SETTING_VERSION 2
+extern "C" 
+{
+#include "ADM_lavcodec.h"
+}
+#include "FFcodecContext.h"
+#endif
