@@ -1,8 +1,12 @@
 /** *************************************************************************
     \file ADM_paramList
     \brief Handle Param list 
-                      
-    copyright            : (C) 2009 by mean
+    \author  mean (C) 2009/2010   fixounet@free.fr                
+    Usually only basic types should be handled by this
+    We make 2 exceptions though :
+        * lavcodec settings as we use a lot of derivative class. It is to simplify derivative configuration
+        * same for COMPRESS_PARAMS, since is used by all video encoder, it is "smart" to make it a dedicated 
+                    configuration type.
     
  ***************************************************************************/
 
@@ -15,24 +19,178 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_paramList.h"
+#include <stddef.h>
+#include "ADM_encoderConf.h"
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
+#include "../src/FFcodecContext_desc.cpp"
+#define MAX_LAV_STRING 1024
+/**
+    \fn loadCoupleFromString
+*/
+static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void *data)
+{
+  // Split str to couples...
+    uint32_t nb=0;
+    const char *s=str;
+    char tmp[256];
+    while(*s)
+    {
+        if(*s==':') nb++;
+        s++;
+    }
 
+    int p=0;
+    const ADM_paramList *l=tmpl;
+    while(l->paramName)
+    {
+        p++;
+        l++;
+    };
+    if(nb!=p)
+    {
+        ADM_error("Mistmatch in the number of parameters (%d/%d)\n",(int)nb,(int)p);
+        return false;
+    }
+    CONFcouple *couples=new CONFcouple(nb);
+    s=str;
+    const char *n;
+    for(int i=0;i<nb;i++)
+    {
+        if(*s!=':')
+        {
+            ADM_error("Bad split :%s insteald of ':'\n",s);
+            delete [] couples;
+            return false;
+        }
+        n=s+1;
+        while(*n!=':') n++;
+        n--;
+        memcpy(tmp,s+1,n-s);
+        tmp[n-s]=0;       
+        s=n+1;
+       // printf("tmp:%s\n",tmp);
+        // Now we have aaa=bbb in tmp, split it
+        char *equal,*tail;
+        equal=tmp;
+        tail=tmp+strlen(tmp);
+        while(*equal!='=' && equal<tail)
+        {
+            equal++;
+        }
+        if(*equal!='=')
+        {
+            ADM_error("Malformed string :%s\n",tmp);
+            delete [] couples;
+            return false;
+        }
+        *equal=0;
+        couples->setInternalName(tmp,equal+1);
+       // printf("%s->%s\n",tmp,equal+1);
+    }
+    // Now build structure from couple
+    bool r=ADM_paramLoad(couples, tmpl,data);
+    delete  couples;
+    return r;
+}
+
+
+/**
+    \fn lavReadFromString
+*/
 static bool lavReadFromString(FFcodecContext *ctx,const char *str)
 {
-    printf("String:%s\n",str);
-    return true;
+   return  loadCoupleFromString(str,FFcodecContext_param,ctx);
 }
+/**
+    \fn lavWriteToString
+*/
 static bool lavWriteToString(FFcodecContext *ctx,char **str)
 {
-    *str=ADM_strdup("foobar");
+    CONFcouple *couples=NULL;
+    if(false==ADM_paramSave(&couples, FFcodecContext_param,ctx))
+    {
+        ADM_error("ADM_paramSave failed (lavContext)\n");
+        return false;
+    }
+    // Iterate through ctx and save..
+    char *s=(char *)ADM_alloc(MAX_LAV_STRING);
+    char tmp[256];
+    *s=0;
+    *str=s;
+    uint32_t nb=couples->getSize();
+    for(int i=0;i<nb;i++)
+    {
+        char *name,*value;
+        couples->getInternalName(i,&name,&value);
+        sprintf(tmp,":%s=%s",name,value);
+        ADM_assert(strlen(tmp)<255);
+        strcat(s,tmp);
+        ADM_assert(strlen(s)<MAX_LAV_STRING);
+    }
+    delete couples;
     return true;
 }
-
+/**
+    \fn compressReadFromString
+*/
+static bool compressReadFromString(COMPRES_PARAMS *params,const char *str)
+{
+    char tmp[256];
+    if(!strcasecmp(str,"SAME"))
+    {
+        params->mode=COMPRESS_SAME;
+        return true;
+    }
+    // all other are in the form a=b
+    strcpy(tmp,str);
+    char *s=tmp;
+    while(*s)
+    {
+        if(*s=='=') break;
+        s++;
+    }
+    if(!(*s))
+    {
+        ADM_error("Malformed compressVideo line (%s)\n",str);
+        return false;
+    }
+    *s=0;
+    uint32_t val=atoi(s+1);
+    if(!strcasecmp(tmp,"CQ"))    {params->mode=COMPRESS_CQ;params->qz=val;return true;}
+    if(!strcasecmp(tmp,"CBR"))   {params->mode=COMPRESS_CBR;params->bitrate=val;return true;}
+    if(!strcasecmp(tmp,"2PASS")) {params->mode=COMPRESS_2PASS;params->finalsize=val;return true;}
+    if(!strcasecmp(tmp,"2PASSBITRATE")) {params->mode=COMPRESS_2PASS_BITRATE;params->avg_bitrate=val;return true;}
+    if(!strcasecmp(tmp,"AQ")) {params->mode=COMPRESS_AQ;params->qz=val;return true;}
+    ADM_error("Unknown mode :%s\n",tmp);
+    return false;
+    
+}
+/**
+    \fn compressWriteToString
+*/
+static bool compressWriteToString(COMPRES_PARAMS *params,  char **str)
+{
+    char tmp[256];
+    switch(params->mode)
+    {
+        case COMPRESS_CQ:    sprintf(tmp,"CQ=%"LU,params->qz);break;
+        case COMPRESS_CBR:   sprintf(tmp,"CBR=%"LU,params->bitrate);break;
+        case COMPRESS_2PASS: sprintf(tmp,"2PASS=%"LU,params->finalsize);break;
+        case COMPRESS_SAME:  sprintf(tmp,"SAME");break;
+        case COMPRESS_2PASS_BITRATE: sprintf(tmp,"2PASSBITRATE=%"LU,params->avg_bitrate);break;
+        case COMPRESS_AQ:    sprintf(tmp,"AQ=%"LU,params->qz);break;
+        default:
+            ADM_error("Unknown compressin mode \n");
+            return false;
+    }
+    *str=ADM_strdup(tmp);
+    return true;
+}
 /**
     \fn ADM_paramValidate
     \brief Check the confcouples match the param list
 */
-bool ADM_paramValidate(CONFcouple *couples, const ADM_paramList *params)
+bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
 {
     int n=couples->getSize();
     int found=0;
@@ -83,6 +241,23 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
            SWAL(ADM_param_bool,    bool ,   b,Bool)
+           case ADM_param_video_encode:
+                        {
+                        char *lavString;
+                        if(false==couples->readAsString(name,&lavString))
+                        {
+                                ADM_error("Error reading video_encode conf");
+                                return false;
+                        }
+                        bool r=compressReadFromString((COMPRES_PARAMS *)(address+params[i].offset),lavString);
+                        ADM_dezalloc(lavString);
+                        if(false==r)
+                            {
+                                    ADM_error("Error reading codecParam string");
+                                    return false;
+                            }
+                        }
+                        break;
            case ADM_param_lavcodec_context:
                         {
                         char *lavString;
@@ -108,7 +283,7 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
 }
 /**
     \fn ADM_paramLoad
-    \brief Load a structure from a list of confCouple
+    \brief Save a structure to a list of confCouple
 */
 bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
 {
@@ -138,6 +313,23 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
            SWAL(ADM_param_bool,    bool ,   b,Bool)
+            case ADM_param_video_encode:
+              {
+                        char *lavString;
+                        if(false==compressWriteToString((COMPRES_PARAMS *)(address+params[i].offset),&lavString))
+                        {
+                                ADM_error("Error writing paramvideo string");
+                                return false;
+                        }
+                        bool r=c->setInternalName(name,lavString);
+                        ADM_dezalloc(lavString);
+                        if(false==r)
+                        {
+                                ADM_error("Error writing paramvideo conf");
+                                return false;
+                        }
+              }
+                break;
            case ADM_param_lavcodec_context:
               {
                         char *lavString;
