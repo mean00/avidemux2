@@ -18,7 +18,8 @@
 #include "ADM_default.h"
 #include "ADM_ffFlv1.h"
 #include "ADM_coreVideoEncoderInternal.h"
-
+#include "../src/FFcodecSettings_desc.cpp"
+extern FFcodecSettings Flv1Settings;
 extern bool         ffFlv1Configure(void);
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffFlv1Encoder);
@@ -28,6 +29,6 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("ffFlv1",
                                 ffFlv1Configure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
-                                NULL, // conf template
-                                NULL // conf var
+                                 FFcodecSettings_param, // conf template
+                                &Flv1Settings // conf var
 );

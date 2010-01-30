@@ -27,7 +27,7 @@
 #define aprintf printf
 #endif
 
-static FFcodecSettings Flv1Settings=
+FFcodecSettings Flv1Settings=
 {
     
     {

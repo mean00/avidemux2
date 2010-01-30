@@ -18,8 +18,9 @@
 #include "ADM_default.h"
 #include "ADM_ffMsMp4.h"
 #include "ADM_coreVideoEncoderInternal.h"
-
+#include "../src/FFcodecSettings_desc.cpp"
 extern bool         ffMsMp4Configure(void);
+extern FFcodecSettings MsMp4Settings;
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffMsMp4Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMsMp4",
@@ -28,6 +29,6 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMsMp4",
                                 ffMsMp4Configure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
-                                NULL, // conf template
-                                NULL // conf var
+                                 FFcodecSettings_param, // conf template
+                                &MsMp4Settings // conf var
 );

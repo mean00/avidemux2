@@ -27,7 +27,7 @@
 #define aprintf printf
 #endif
 
-static FFcodecSettings MsMp4Settings=
+FFcodecSettings MsMp4Settings=
 {
 
     {
