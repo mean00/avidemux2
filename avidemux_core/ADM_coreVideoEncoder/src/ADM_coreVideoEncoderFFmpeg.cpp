@@ -215,6 +215,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     double p=image->Pts;
     nextDts=image->Pts;
     _frame.pts= floor(p / (1000000.*av_q2d(_context->time_base) + 0.5));    //
+    if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
     //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
@@ -270,8 +271,10 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
     }
    prolog();
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
-   if(LAVS(MultiThreaded)==true)
+   if(LAVS(MultiThreaded))
+    {
         encoderMT();
+    }
    res=avcodec_open(_context, codec); 
    if(res<0) 
     {   printf("[ff] Cannot open codec\n");
@@ -558,16 +561,14 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
 */  
 bool ADM_coreVideoEncoderFFmpeg::encoderMT (void)
 {
-  uint32_t threads = 0;
-
-  prefs->get(FEATURE_THREADING_LAVC, &threads);
-
-  if (threads == 0)
-	  threads = ADM_cpu_num_processors();
-
-  if (threads == 1)
-	  threads = 0;
-
+ 
+  uint32_t threads =    LAVS(MultiThreaded);
+  switch(threads)
+  {
+    case 99:threads = ADM_cpu_num_processors();break;
+    case 1: threads=0;
+    break;
+  }
   if (threads)
   {
       printf ("[lavc] Enabling MT encoder with %u threads\n", threads);

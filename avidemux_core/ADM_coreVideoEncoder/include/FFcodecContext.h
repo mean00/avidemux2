@@ -3,7 +3,7 @@
 #define ADM_FFcodecContext_CONF_H
 typedef struct {
    uint32_t version;
-   bool MultiThreaded;
+   uint32_t MultiThreaded;
    uint32_t me_method;
    uint32_t _GMC;
    uint32_t _4MV;

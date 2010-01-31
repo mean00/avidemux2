@@ -1,7 +1,7 @@
 // Automatically generated, do not edit!
 const ADM_paramList FFcodecContext_param[]={
  {"version",offsetof( FFcodecContext,version),"uint32_t",ADM_param_uint32_t},
- {"MultiThreaded",offsetof( FFcodecContext,MultiThreaded),"bool",ADM_param_bool},
+ {"MultiThreaded",offsetof( FFcodecContext,MultiThreaded),"uint32_t",ADM_param_uint32_t},
  {"me_method",offsetof( FFcodecContext,me_method),"uint32_t",ADM_param_uint32_t},
  {"_GMC",offsetof( FFcodecContext,_GMC),"uint32_t",ADM_param_uint32_t},
  {"_4MV",offsetof( FFcodecContext,_4MV),"uint32_t",ADM_param_uint32_t},

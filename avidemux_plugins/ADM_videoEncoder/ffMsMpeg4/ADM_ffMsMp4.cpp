@@ -40,7 +40,7 @@ FFcodecSettings MsMp4Settings=
     },
     {
           ADM_AVCODEC_SETTING_VERSION,
-          false, // MT
+          0, // MT
           ME_EPZS,			// ME
           0,				// GMC     
           0,				// 4MV

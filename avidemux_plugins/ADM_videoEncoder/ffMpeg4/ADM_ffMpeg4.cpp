@@ -39,7 +39,7 @@ FFcodecSettings Mp4Settings=
     },
     {
         ADM_AVCODEC_SETTING_VERSION,
-        true, // Multithreaded
+        2, // Multithreaded
           ME_EPZS,			// ME
           0,				// GMC     
           1,				// 4MV
@@ -241,6 +241,13 @@ diaMenuEntry rdE[]={
   {1,QT_TR_NOOP("Fewest bits (vhq)")},
   {2,QT_TR_NOOP("Rate distortion")}
 };     
+diaMenuEntry threads[]={
+  {0,QT_TR_NOOP("One thread")},
+  {2,QT_TR_NOOP("Two threads)")},
+  {3,QT_TR_NOOP("Three threads")},
+  {99,QT_TR_NOOP("Auto (#cpu)")}
+};     
+
 
         FFcodecSettings *conf=&Mp4Settings;
 
@@ -249,6 +256,7 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 
          diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
          diaElemMenu      meM(&me,QT_TR_NOOP("Matrices"),4,meE);
+         diaElemMenu      threadM(PX(MultiThreaded),QT_TR_NOOP("Threading"),4,threads);
          diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
          diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
@@ -272,8 +280,8 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          
         diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,500); 
           /* First Tab : encoding mode */
-        diaElem *diamode[]={&GopSize,&bitrate};
-        diaElemTabs tabMode(QT_TR_NOOP("User Interface"),2,diamode);
+        diaElem *diamode[]={&GopSize,&threadM,&bitrate};
+        diaElemTabs tabMode(QT_TR_NOOP("User Interface"),3,diamode);
         
         /* 2nd Tab : ME */
         diaElemFrame frameMe(QT_TR_NOOP("Advanced Simple Profile"));
