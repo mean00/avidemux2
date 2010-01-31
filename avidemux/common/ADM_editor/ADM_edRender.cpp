@@ -175,7 +175,9 @@ uint32_t seg;
             return false;
     }
     _currentSegment=seg;
-    SET_CURRENT_PTS(v->lastDecodedPts);
+    int64_t newTime=(int64_t)v->lastDecodedPts+(int64_t)s->_startTimeUs-(int64_t)s->_refStartTimeUs;
+    ADM_info("Seek done, in reference, gone to %"LLU" with segment start at %"LLU"\n",v->lastDecodedPts,s->_refStartTimeUs);
+    SET_CURRENT_PTS(newTime);
     return true;
 
 }
@@ -439,7 +441,6 @@ uint32_t segNo;
     }
       ADM_assert(_currentSegment==segNo);
       refPts=segTime+seg->_refStartTimeUs;
-
       ADMImage *last=ref->_videoCache->getByPts(refPts);
       if(last)
       {
