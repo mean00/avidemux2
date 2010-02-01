@@ -214,9 +214,10 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 
     double p=image->Pts;
     nextDts=image->Pts;
+    p+=getEncoderDelay();
     _frame.pts= floor(p / (1000000.*av_q2d(_context->time_base) + 0.5));    //
     if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
-    //printf("[PTS] :%"LU" num:%"LU" den:%"LU"\n",_frame.pts,_context->time_base.num,_context->time_base.den);
+    //printf("--->>[PTS] :%"LLU", raw %"LLU" num:%"LU" den:%"LU"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
     {
@@ -366,8 +367,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     
     // Update PTS/Dts
 
-    out->pts=getEncoderDelay();
-    out->pts+= _context->coded_frame->pts * 1000000.*av_q2d(_context->time_base);
+    out->pts= _context->coded_frame->pts * 1000000.*av_q2d(_context->time_base);
     out->dts=nextDts; // FIXME
     aprintf("Out pts=%"LLU" us\n",out->pts);    
 
