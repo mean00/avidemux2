@@ -31,6 +31,8 @@ extern ADM_AUDIOFILTER_CONFIG audioEncodingConfig;
 //
  extern bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
  extern bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
+
+extern ADM_audioAccess *ADM_threadifyAudioAccess(ADM_audioAccess *son);
 /**
         \fn createPlaybackFilter
         \brief Create a float output filter for playback
@@ -99,12 +101,14 @@ ADM_audioStream *audioCreateEncodingStream(uint64_t startTime,int32_t shift)
         destroyEncodingFilter();
         return NULL;
     }
+    // 3b create threaded version
+    ADM_audioAccess *threaded=ADM_threadifyAudioAccess(access);
     // 4- Create Stream // MEMLEAK!!!!
-    ADM_audioStream *stream=ADM_audioCreateStream(encoder->getInfo(), access);
+    ADM_audioStream *stream=ADM_audioCreateStream(encoder->getInfo(), threaded);
     if(!stream)
     {
         printf("[Access] Cannot create stream\n");
-        delete access; // Access will destroy filter & encoder
+        delete threaded; // Access will destroy filter & encoder
         return NULL;
     }
     return stream;

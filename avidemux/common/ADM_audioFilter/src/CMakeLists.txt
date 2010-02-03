@@ -16,6 +16,7 @@ audiofilter_interface.cpp
 audiocopy.cpp
 ADM_audioResample.cpp
 audiofilter.cpp
+audiofilter_thread.cpp
 ADM_libsamplerate/samplerate.c  
 ADM_libsamplerate/src_linear.c  
 ADM_libsamplerate/src_sinc.c  
