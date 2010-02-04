@@ -61,26 +61,12 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
             return true;
         }
     }
-    // Else try to squish it to low value..
-    int base=1000000; // value is in us
-    while(!( useconds % 9)&& useconds)
-    {
-        base/=10;
-        useconds/=10;
-    }
-    // Then try 2 and 5
-    while(!( useconds &1)&& useconds)
-    {
-        base/=2;
-        useconds/=2;
-    }
-    while(!( useconds %5)&& useconds)
-    {
-        base/=5;
-        useconds/=5;
-    }
-    *n=useconds;
-    *d=base;
+    int nn,dd;
+    av_reduce(&nn,&dd, useconds, 1000000, 0xFFF0); // mpeg4 allows a maximum of 1<<16-1 as time base, should be enough for most case
+    ADM_info("%"LLU" us -> %d / %d (old)\n",useconds,nn,dd);
+    *n=nn;
+    *d=dd;
+
     return true;
 }
 /**
@@ -135,6 +121,7 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
           avcodec_thread_free (_context);
           _isMT = false;
         }
+        if(_context->codec)
         avcodec_close (_context);
         ADM_dealloc (_context);
         _context = NULL;
