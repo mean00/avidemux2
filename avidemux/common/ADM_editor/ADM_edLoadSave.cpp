@@ -205,7 +205,7 @@ uint32_t pptype, ppstrength,ppswap;
 
 
     uint32_t x=audioFilterGetResample();
-    if(x) qfprintf(fd,"app.audioResample=%u;\n",audioFilterGetResample());
+    if(x) qfprintf(fd,"adm.audioResample=%u;\n",audioFilterGetResample());
 
     
 //   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
@@ -213,7 +213,7 @@ uint32_t pptype, ppstrength,ppswap;
 //   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
 // if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
    if(CHANNEL_INVALID!=audioFilterGetMixer())
-        qfprintf(fd,"app.audioMixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
+        qfprintf(fd,"adm.audioMixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
 
    
 
@@ -221,8 +221,8 @@ uint32_t pptype, ppstrength,ppswap;
         switch(audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"app.audioPal2film=1;\n");break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"app.audioFilm2pal=1;\n");break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film=1;\n");break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1;\n");break;
                 default:ADM_assert(0);
         }
    
@@ -243,7 +243,7 @@ uint32_t pptype, ppstrength,ppswap;
   if(outputname)
   {
         char *o=ADM_cleanupPath(outputname);
-        qfprintf(fd,"setSuccess(app.save(\"%s\"));\n",o);
+        qfprintf(fd,"setSuccess(adm.save(\"%s\"));\n",o);
         ADM_dealloc(o);
   }
   else
@@ -251,7 +251,7 @@ uint32_t pptype, ppstrength,ppswap;
         qfprintf(fd,"setSuccess(%d);\n",1);
   }
 
-  qfprintf(fd,"//app.Exit();\n");
+  qfprintf(fd,"//adm.Exit();\n");
   qfprintf(fd,"\n//End of script\n");
   // All done
   qfclose (fd);
