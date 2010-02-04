@@ -191,14 +191,14 @@ void ADM_ve6_Changed(int newCodecIndex)
 /**
     \fn createVideoEncoder
 */
-ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index)
+ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index,bool globalHeader)
 {
     int nb=ListOfEncoders.size();
 	ADM_assert(index < nb);
     ADM_assert(index); // 0 is for copy, should not get it through here
     ADM_videoEncoder6 *plugin=ListOfEncoders[index];
 
-    ADM_coreVideoEncoder *enc=plugin->desc->create(chain);
+    ADM_coreVideoEncoder *enc=plugin->desc->create(chain,globalHeader);
     return enc;
 }
 /**

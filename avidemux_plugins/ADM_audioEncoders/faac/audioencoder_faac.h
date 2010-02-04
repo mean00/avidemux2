@@ -22,10 +22,11 @@ protected:
          void           *_handle;
          uint32_t        _chunk;
          uint8_t        refillBuffer(int minimum);
+         bool           _globalHeader;
 public:
                  bool   initialize(void);
     virtual             ~AUDMEncoder_Faac();
-                        AUDMEncoder_Faac(AUDMAudioFilter *instream);	
+                        AUDMEncoder_Faac(AUDMAudioFilter *instream,bool globalHeader);
     virtual bool	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 

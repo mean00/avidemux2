@@ -66,7 +66,7 @@ bool            destroyEncodingFilter(void)
 /**
     \fn createEncodingAccess
 */
-ADM_audioStream *audioCreateEncodingStream(uint64_t startTime,int32_t shift)
+ADM_audioStream *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift)
 {
     printf("[AccessFilter] Creating access filter\n");
     // 1-Create access filter
@@ -78,7 +78,7 @@ ADM_audioStream *audioCreateEncodingStream(uint64_t startTime,int32_t shift)
     }
 
     // 2- spawn encoder
-    ADM_AudioEncoder *encoder=audioEncoderCreate(filter);
+    ADM_AudioEncoder *encoder=audioEncoderCreate(filter,globalHeader);
     if(!encoder) 
     {
         printf("[Access] Cannot create audio encoder\n");

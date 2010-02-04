@@ -24,12 +24,13 @@ class AUDMEncoder_Aften : public ADM_AudioEncoder
 protected:
          void           *_handle;
          uint32_t       _chunk;
+         bool           _globalHeader;
 
 public:
                 bool    initialize(void);
     virtual     bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
     virtual             ~AUDMEncoder_Aften();
-                        AUDMEncoder_Aften(AUDMAudioFilter *instream);
+                        AUDMEncoder_Aften(AUDMAudioFilter *instream,bool globalHeader);
 };
 #endif
 

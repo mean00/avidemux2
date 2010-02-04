@@ -31,7 +31,7 @@ protected:
                int plane;
 public:
 
-                            ADM_pngEncoder(ADM_coreVideoFilter *src);
+                            ADM_pngEncoder(ADM_coreVideoFilter *src,bool globalHeader);
                             ~ADM_pngEncoder();
 virtual        bool         encode (ADMBitstream * out);
 virtual const  char         *getFourcc(void) {return "png ";}

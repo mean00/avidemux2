@@ -41,7 +41,7 @@
 
 */
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
-extern ADM_audioStream  *audioCreateEncodingStream(uint64_t startTime,int32_t shift);
+extern ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
 extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
 extern ADM_videoStream  *createVideoStream(ADM_coreVideoEncoder *encoder);
 extern int              ADM_MuxerIndexFromName(const char *name);
@@ -196,7 +196,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                 int sz=chain->size();
                 ADM_assert(sz);
                 last=(*chain)[sz-1]; // Grab last filter
-                ADM_coreVideoEncoder *pass2=createVideoEncoderFromIndex(last,videoEncoderIndex);
+                ADM_coreVideoEncoder *pass2=createVideoEncoderFromIndex(last,videoEncoderIndex,muxer->useGlobalHeader()); 
                 if(!pass2)
                 {
                     printf("[Save] Cannot create encoder for pass 2\n");
@@ -281,7 +281,7 @@ bool admSaver::save(void)
         ADM_assert(sz);
         ADM_coreVideoFilter  *last;
         last=(*chain)[sz-1]; // Grab last filter
-        ADM_coreVideoEncoder *encoder=createVideoEncoderFromIndex(last,videoEncoderIndex);
+        ADM_coreVideoEncoder *encoder=createVideoEncoderFromIndex(last,videoEncoderIndex,muxer->useGlobalHeader()); // FIXME GLOBAL HEADERS
         if(!encoder)
         {
            GUI_Error_HIG("Video","Cannot create encoder");
@@ -324,7 +324,7 @@ bool admSaver::save(void)
         if(audio)   // Process
         {
             // Access..
-            ADM_audioStream *access=audioCreateEncodingStream(startAudioTime,0); // FIXME LEAK
+            ADM_audioStream *access=audioCreateEncodingStream(startAudioTime,0,muxer->useGlobalHeader()); // FIXME LEAK FIXME 
             astreams[0]=access;
             if(!access)
             {

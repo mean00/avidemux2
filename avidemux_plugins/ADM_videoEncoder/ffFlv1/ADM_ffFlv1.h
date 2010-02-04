@@ -34,7 +34,7 @@ protected:
                
 public:
 
-                           ADM_ffFlv1Encoder(ADM_coreVideoFilter *src);
+                           ADM_ffFlv1Encoder(ADM_coreVideoFilter *src,bool globalHeader);
 virtual                    ~ADM_ffFlv1Encoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);

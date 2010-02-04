@@ -31,7 +31,7 @@ protected:
                int plane;
 public:
 
-                            ADM_yv12Encoder(ADM_coreVideoFilter *src);
+                            ADM_yv12Encoder(ADM_coreVideoFilter *src,bool globalHeader);
                             ~ADM_yv12Encoder();
 virtual        bool         encode (ADMBitstream * out);
 virtual const  char         *getFourcc(void) {return "YV12";}

@@ -31,7 +31,7 @@ protected:
                int              plane;
 public:
 
-                           ADM_jpegEncoder(ADM_coreVideoFilter *src);
+                           ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader);
                            ~ADM_jpegEncoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);

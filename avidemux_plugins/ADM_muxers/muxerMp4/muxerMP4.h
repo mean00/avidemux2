@@ -37,6 +37,7 @@ public:
         virtual bool open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a);
         virtual bool save(void) ;
         virtual bool close(void) ;
+        virtual     bool     useGlobalHeader(void) {return true;}
 
 };
 

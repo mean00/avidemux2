@@ -30,7 +30,7 @@ huff_encoder huffType={ADM_HUFF_YUV};
 /**
         \fn ADM_huffEncoder
 */
-ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src)
+ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[huffEncoder] Creating.\n");
     if(huffType.encoderType==ADM_HUFF_YUV)

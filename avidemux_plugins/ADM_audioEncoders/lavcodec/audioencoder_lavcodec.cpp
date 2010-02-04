@@ -67,10 +67,11 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,lavBitrate);
 /**
     \fn AUDMEncoder_Lavcodec
 */
-AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
   
   _context=NULL;
+  _globalHeader=globalHeader;
    printf("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
 
   wavheader.encoding=makeName(WAV);

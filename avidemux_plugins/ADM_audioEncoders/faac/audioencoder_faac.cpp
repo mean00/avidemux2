@@ -59,10 +59,11 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG( NULL,NULL,faacBitrate);
 
 /******************* / Declare plugin*******************************************************/
 
-AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
   uint32_t channels;
   channels=instream->getInfo()->channels;
+  _globalHeader=globalHeader;
   switch(channels)
   {
     case 1:outputChannelMapping[1] = ADM_CH_FRONT_LEFT;break;

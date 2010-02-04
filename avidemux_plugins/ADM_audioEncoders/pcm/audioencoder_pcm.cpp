@@ -61,7 +61,7 @@ extern "C" ADM_audioEncoder *getInfo (void)
 // Ctor: Duplicate
 //__________
 
-AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
   printf("[PCM] Creating PCM\n");
   wavheader.encoding=WAV_PCM;

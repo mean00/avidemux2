@@ -31,7 +31,7 @@ protected:
                int              plane;
 public:
 
-                           ADM_huffEncoder(ADM_coreVideoFilter *src);
+                           ADM_huffEncoder(ADM_coreVideoFilter *src,bool globalHeader);
                            ~ADM_huffEncoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);

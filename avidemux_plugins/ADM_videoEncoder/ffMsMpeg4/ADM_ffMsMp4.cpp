@@ -83,7 +83,7 @@ FFcodecSettings MsMp4Settings=
 /**
         \fn ADM_ffMsMp4Encoder
 */
-ADM_ffMsMp4Encoder::ADM_ffMsMp4Encoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src,&MsMp4Settings)
+ADM_ffMsMp4Encoder::ADM_ffMsMp4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,&MsMp4Settings)
 {
     printf("[ffMsMP4] Creating.\n");
    

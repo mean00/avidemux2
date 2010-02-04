@@ -70,6 +70,7 @@ public:
         virtual  bool     initUI(const char *title);
         virtual  bool     updateUI(uint64_t time);
         virtual  bool     closeUI(void);
+        virtual  bool     useGlobalHeader(void) {return false;}
 
 };
 #endif

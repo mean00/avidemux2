@@ -23,7 +23,7 @@ jpeg_encoder jpegConf= {ADM_COLOR_YV12,2};
 /**
         \fn ADM_jpegEncoder
 */
-ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src)
+ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src)
 {
     printf("[jpegEncoder] Creating.\n");
     targetColorSpace=(ADM_colorspace)jpegConf.colorSpace;

@@ -15,7 +15,7 @@
 #ifndef AUDIOENCODERINTERNAL_H
 #define AUDIOENCODERINTERNAL_H
 
-#define ADM_AUDIO_ENCODER_API_VERSION 3
+#define ADM_AUDIO_ENCODER_API_VERSION 4
 #include "stddef.h"
 #include "audioencoder.h"
 #include "ADM_paramList.h"
@@ -34,7 +34,7 @@ class ADM_AudioEncoder;
 typedef struct
 {
     uint32_t     apiVersion;            // const
-    ADM_AudioEncoder *(*create)(AUDMAudioFilter *head);  
+    ADM_AudioEncoder *(*create)(AUDMAudioFilter *head, bool globalHeader);
     void         (*destroy)(ADM_AudioEncoder *codec);
     bool         (*configure)(void);    
     const char   *codecName;        // Internal name (tag)
@@ -63,9 +63,9 @@ static bool setConfigurationData (CONFcouple *conf);\
 static uint32_t     getBitrate(void); \
 static void         setBitrate(uint32_t br); \
 \
-static ADM_AudioEncoder * create (AUDMAudioFilter * head) \
+static ADM_AudioEncoder * create (AUDMAudioFilter * head,bool globalHeader) \
 { \
-  return new Class (head); \
+  return new Class (head,globalHeader); \
 } \
 static void destroy (ADM_AudioEncoder * in) \
 {\

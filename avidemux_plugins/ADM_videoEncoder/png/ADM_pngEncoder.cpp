@@ -21,7 +21,7 @@
 /**
         \fn ADM_pngEncoder
 */
-ADM_pngEncoder::ADM_pngEncoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoder(src)
+ADM_pngEncoder::ADM_pngEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
 {
     printf("[YV12Encoder] Creating.\n");
     int w,h;

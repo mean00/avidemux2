@@ -76,7 +76,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,aftenBitrate);
 
 */
 
-AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
   uint32_t channels;
   ADM_info("[Aften] Creating aften\n");
@@ -86,6 +86,7 @@ AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream)  :ADM_AudioEnco
   aften_set_defaults(_HANDLE);
   wavheader.encoding=WAV_AC3;
   _HANDLE->system.n_threads=1;
+  _globalHeader= globalHeader;
 
 
   switch(channels)

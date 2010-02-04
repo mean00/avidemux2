@@ -67,7 +67,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(lame_encoder_param,&lameConf,lameBitrate);
     \fn AUDMEncoder_Lame Constructor
     \brief
 */
-AUDMEncoder_Lame::AUDMEncoder_Lame (AUDMAudioFilter * instream):ADM_AudioEncoder  (instream)
+AUDMEncoder_Lame::AUDMEncoder_Lame (AUDMAudioFilter * instream,bool globalHeader):ADM_AudioEncoder  (instream)
 {
   printf ("[Lame] Creating lame\n");
   lameFlags = NULL;

@@ -42,6 +42,7 @@ protected:
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
                bool             _isMT; // True if multithreaded
                uint64_t         nextDts;
+               bool             _globalHeader;
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
@@ -53,7 +54,7 @@ protected:
                           bool             setupPass(void);  
                           bool             encoderMT (void);
 public:
-                                            ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *settings=NULL);
+                                            ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *settings=NULL,bool globalHeader=false);
 virtual                                     ~ADM_coreVideoEncoderFFmpeg();
 
 };

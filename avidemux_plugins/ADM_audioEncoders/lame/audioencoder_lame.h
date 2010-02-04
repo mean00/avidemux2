@@ -29,7 +29,7 @@ class AUDMEncoder_Lame : public ADM_AudioEncoder
          
   public:
     virtual             ~AUDMEncoder_Lame();
-                        AUDMEncoder_Lame(AUDMAudioFilter *instream);	
+                        AUDMEncoder_Lame(AUDMAudioFilter *instream,bool globalHeader);	
             bool	    isVBR(void );
             
    virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);

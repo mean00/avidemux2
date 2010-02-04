@@ -62,7 +62,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,bitrateTwoLame);
 /**
 
 */
-AUDMEncoder_Twolame::AUDMEncoder_Twolame(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Twolame::AUDMEncoder_Twolame(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
   printf("[TwoLame] Creating Twolame\n");
   _twolameOptions=NULL;

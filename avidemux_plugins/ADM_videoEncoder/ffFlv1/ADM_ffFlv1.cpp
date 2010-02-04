@@ -83,7 +83,7 @@ FFcodecSettings Flv1Settings=
 /**
         \fn ADM_ffFlv1Encoder
 */
-ADM_ffFlv1Encoder::ADM_ffFlv1Encoder(ADM_coreVideoFilter *src) : ADM_coreVideoEncoderFFmpeg(src,&Flv1Settings)
+ADM_ffFlv1Encoder::ADM_ffFlv1Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,&Flv1Settings,false)
 {
     printf("[ffFlv1] Creating.\n");
    

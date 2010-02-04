@@ -92,7 +92,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(vorbis_encoder_param,&vorbisConf,vorbisBitrate)
 
 //__________
 
-AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
   printf("[Vorbis] Creating Vorbis\n");
   _handle=NULL;

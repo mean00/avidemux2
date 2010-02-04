@@ -25,7 +25,7 @@ class AUDMEncoder_Twolame : public ADM_AudioEncoder
   public:
             bool     initialize(void);
     virtual             ~AUDMEncoder_Twolame();
-                        AUDMEncoder_Twolame(AUDMAudioFilter *instream);	
+                        AUDMEncoder_Twolame(AUDMAudioFilter *instream,bool globalHeader);
     virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
     virtual bool    isVBR(void) {return false;}
 };

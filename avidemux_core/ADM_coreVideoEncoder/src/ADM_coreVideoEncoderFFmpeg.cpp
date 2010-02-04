@@ -89,7 +89,7 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
 
 */
 
-ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *set) 
+ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *set,bool globalHeader) 
                     : ADM_coreVideoEncoder(src)
 {
 uint32_t w,h;
@@ -111,6 +111,7 @@ uint32_t w,h;
     pass=0;
     statFileName=NULL;
     statFile=NULL;
+    _globalHeader=globalHeader;
     _isMT=false;
     encoderDelay=source->getInfo()->frameIncrement*LAVS(max_b_frames);
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));

@@ -21,7 +21,7 @@ class ADM_coreVideoEncoder;
 class ADM_coreVideoFilter;
 class CONFcouple;
 // Spawn a new encoder using the index from the menu = the index in the vector
-ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
+//ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
 
 bool                  videoEncoder6SelectByName(const char *name);
 bool                  videoEncoder6Configure(void);
@@ -35,6 +35,6 @@ const char            *videoEncoder6_GetCurrentEncoderName(void);
 bool                  videoEncoder6_SetConfiguration(CONFcouple *c);
 bool                  videoEncoder6_GetConfiguration(CONFcouple **c);
 
-ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index);
+ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index,bool globalHeader);
 
 #endif

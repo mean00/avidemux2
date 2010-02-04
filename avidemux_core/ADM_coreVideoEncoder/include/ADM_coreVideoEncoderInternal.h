@@ -15,7 +15,7 @@
 #ifndef VIDEOENCODERINTERNAL_H
 #define VIDEOENCODERINTERNAL_H
 
-#define ADM_VIDEO_ENCODER_API_VERSION 3
+#define ADM_VIDEO_ENCODER_API_VERSION 4
 #include "ADM_coreVideoEncoder.h"
 #include "DIA_uiTypes.h"
 #include "ADM_paramList.h"
@@ -34,7 +34,7 @@ typedef struct
     const char   *description;      // Short description
 
     uint32_t     apiVersion;            // const
-    ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head);  
+    ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head,bool globalHeader);  
     void         (*destroy)(ADM_coreVideoEncoder *codec);
     bool         (*configure)(void);                                // Call UI to set it up
     bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
@@ -52,9 +52,9 @@ typedef struct
 static bool getConfigurationData (CONFcouple **c); \
 static bool setConfigurationData (CONFcouple *c);\
 \
-static ADM_coreVideoEncoder * create (ADM_coreVideoFilter * head) \
+static ADM_coreVideoEncoder * create (ADM_coreVideoFilter * head,bool globalHeader) \
 { \
-  return new Class (head); \
+  return new Class (head,globalHeader); \
 } \
 static void destroy (ADM_coreVideoEncoder * in) \
 {\

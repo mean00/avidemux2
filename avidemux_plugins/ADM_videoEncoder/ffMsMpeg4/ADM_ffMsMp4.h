@@ -34,7 +34,7 @@ protected:
                
 public:
 
-                           ADM_ffMsMp4Encoder(ADM_coreVideoFilter *src);
+                           ADM_ffMsMp4Encoder(ADM_coreVideoFilter *src,bool globalHeader);
 virtual                    ~ADM_ffMsMp4Encoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);

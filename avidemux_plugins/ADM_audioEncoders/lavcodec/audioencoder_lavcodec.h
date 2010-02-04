@@ -21,12 +21,13 @@ class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
    
     void              *_context;
     uint32_t            _chunk;
+    bool               _globalHeader;
     
          
   public:
             bool        initialize(void);
    virtual             ~AUDMEncoder_Lavcodec();
-                        AUDMEncoder_Lavcodec(AUDMAudioFilter *instream);	
+                        AUDMEncoder_Lavcodec(AUDMAudioFilter *instream,bool globalHeader);
    virtual bool  	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 

@@ -31,7 +31,7 @@ class AUDMEncoder_Vorbis : public ADM_AudioEncoder
   public:
                     bool     initialize(void);
         virtual     ~AUDMEncoder_Vorbis();
-                    AUDMEncoder_Vorbis(AUDMAudioFilter *instream);	
+                    AUDMEncoder_Vorbis(AUDMAudioFilter *instream,bool globalHeader);
             
         virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
