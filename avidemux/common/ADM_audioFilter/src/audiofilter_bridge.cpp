@@ -130,16 +130,6 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
     {
       // don't ask too much front.
       asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
-      if(_hold)
-      {
-        int32_t sam;
-         
-        sam=_hold/_wavHeader.channels;
-        sam++;
-        sam*=_wavHeader.channels;
-        if(asked>sam) asked=sam;
-        
-      }
       asked/=_wavHeader.channels; // float->samples
       _incoming->getPCMPacket(&(_incomingBuffer[_tail]), asked, &got,&dts);
       got*=_wavHeader.channels; // sample->float
@@ -160,8 +150,9 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
         if(_hold<=0)
         {
           printf("[Bridge] Looping\n");
+          _hold=-_hold;
+          _tail-=_hold;
           rewind();
-          //_tail=_head=0;
           _hold=0;
         }
       }
