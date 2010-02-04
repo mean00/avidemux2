@@ -134,6 +134,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         c->width = stream->getWidth();
         c->height =stream->getHeight();
         uint32_t fcc=stream->getFCC();
+        
         if(isMpeg4Compatible(fcc))
         {
                 c->codec_id = CODEC_ID_MPEG4;
@@ -216,7 +217,17 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                         }
                 }
         }
-
+        if(useGlobalHeader()==true)
+        {
+            if(videoExtraDataSize)
+            {
+                ADM_info("Video has extradata and muxer requires globalHeader, assuming it is done so.\n");
+                c->flags|=CODEC_FLAG_GLOBAL_HEADER;
+            }else       
+            {
+                ADM_warning("Video has no extradata but muxer requires globalHeader.\n");
+            }
+        }
 
         printf("[FF] Video initialized\n");
 
@@ -287,7 +298,17 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           c->bit_rate = audioheader->byterate*8;
           c->rc_buffer_size=(c->bit_rate/(2*8)); // 500 ms worth
           c->channels = audioheader->channels;
-
+          if(useGlobalHeader()==true)
+          {
+            if(audioextraSize)
+            {
+                ADM_info("Audio has extradata and muxer requires globalHeader, assuming it is done so.\n");
+                c->flags|=CODEC_FLAG_GLOBAL_HEADER;
+            }else       
+            {
+                ADM_warning("Audio has no extradata but muxer requires globalHeader.\n");
+            }
+          }
         }
         printf("[FF] Audio initialized\n");
         return true;

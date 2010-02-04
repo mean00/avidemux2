@@ -73,6 +73,12 @@ AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globa
   _context=NULL;
   _globalHeader=globalHeader;
    printf("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
+#if defined(ADM_LAV_GLOBAL_HEADER) // Only AAC ?
+    if(globalHeader)
+        _globalHeader=true;
+    else
+#endif
+    _globalHeader=false;
 
   wavheader.encoding=makeName(WAV);
   
@@ -110,14 +116,20 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   }
   wavheader.byterate=(lavBitrate*1000)>>3;         
       
-    _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
+  _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
   printf("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
-         wavheader.frequency,wavheader.channels,lavBitrate);
+  wavheader.frequency,wavheader.channels,lavBitrate);
   
   
   CONTEXT->channels     =  wavheader.channels;
   CONTEXT->sample_rate  =  wavheader.frequency;
   CONTEXT->bit_rate     = (lavBitrate*1000); // bits -> kbits
+
+  if(true==_globalHeader)
+  {
+    ADM_info("Configuring audio codec to use global headers\n");
+    CONTEXT->flags|=CODEC_FLAG_GLOBAL_HEADER;
+  }
 
   AVCodec *codec;
   CodecID codecID;

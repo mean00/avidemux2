@@ -115,6 +115,11 @@ uint32_t w,h;
     _isMT=false;
     encoderDelay=source->getInfo()->frameIncrement*LAVS(max_b_frames);
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
+    if(_globalHeader)
+    {
+                ADM_info("Codec configured to use global header\n");
+                _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
+    }
 }
 /**
     \fn ADM_coreVideoEncoderFFmpeg
