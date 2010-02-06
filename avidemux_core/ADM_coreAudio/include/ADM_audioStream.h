@@ -87,6 +87,7 @@ class ADM_audioStream
         public:
 /// Default constructor
                        ADM_audioStream(WAVHeader *header,ADM_audioAccess *access);  
+              virtual  ~ADM_audioStream() {}
 /// Returns wavheader
 virtual                 WAVHeader                *getInfo(void) {return &wavHeader;}
 ///  Get a packet

@@ -31,7 +31,40 @@ extern ADM_AUDIOFILTER_CONFIG audioEncodingConfig;
 //
  extern bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
  extern bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
-
+/**
+    \class ADM_audioStream_autoDelete
+*/
+class ADM_audioStream_autoDelete: public ADM_audioStream
+{
+    protected:
+                        ADM_audioStream *son;
+                        ADM_audioAccess *access;
+        public:
+                        ADM_audioStream_autoDelete(ADM_audioStream *s,ADM_audioAccess *access)
+                        :    ADM_audioStream(s->getInfo(),access)
+                        {
+                                this->access=access;
+                                son=s;
+                        }
+                        ~ADM_audioStream_autoDelete()
+                        {
+                                ADM_info("Killing son audioStream\n");
+                                delete son;
+                                son=NULL;
+                                ADM_info("Killing son audioAccess\n");
+                                delete access;
+                                access=NULL;
+                        }
+virtual                 WAVHeader                *getInfo(void) {return son->getInfo();}
+virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
+                        {
+                                return son->getPacket(buffer,size,sizeMax,nbSample,dts);
+                        }
+virtual bool            goToTime(uint64_t nbUs) {return son->goToTime(nbUs);};
+virtual bool            getExtraData(uint32_t *l, uint8_t **d) {return son->getExtraData(l,d);};
+        uint64_t        getDurationInUs(void) {return son->getDurationInUs();}
+};
+//************************************************
 extern ADM_audioAccess *ADM_threadifyAudioAccess(ADM_audioAccess *son);
 /**
         \fn createPlaybackFilter
@@ -103,7 +136,7 @@ ADM_audioStream *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,
     }
     // 3b create threaded version
     ADM_audioAccess *threaded=ADM_threadifyAudioAccess(access);
-    // 4- Create Stream // MEMLEAK!!!!
+    // 4- Create Stream 
     ADM_audioStream *stream=ADM_audioCreateStream(encoder->getInfo(), threaded);
     if(!stream)
     {
@@ -111,6 +144,7 @@ ADM_audioStream *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,
         delete threaded; // Access will destroy filter & encoder
         return NULL;
     }
-    return stream;
+    ADM_audioStream_autoDelete *autoDelete=new ADM_audioStream_autoDelete(stream, threaded);
+    return autoDelete;
 }
 // EOF
