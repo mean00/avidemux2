@@ -340,7 +340,16 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     _context->reordered_opaque=in->demuxerPts;
   //_frame.opaque=(void *)out->Pts;
   //printf("Incoming Pts :%"LLD"\n",out->Pts);
-  ret = avcodec_decode_video (_context, &_frame, &got_picture, in->data, in->dataLength);
+  AVPacket pkt;
+  av_init_packet(&pkt);
+  pkt.data=in->data;
+  pkt.size=in->dataLength;
+  if(in->flags&AVI_KEY_FRAME)
+    pkt.flags=AV_PKT_FLAG_KEY;
+  else
+    pkt.flags=0;
+  
+  ret = avcodec_decode_video2 (_context, &_frame, &got_picture, &pkt);
   if(!bFramePossible())
   {
     // No delay, the value is sure, no need to hide it in opaque
@@ -458,8 +467,8 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   ADM_info ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", (int)extraDataLen);
   
   _refCopy = 1;			// YUV420 only
-  _context->extradata = (uint8_t *) extraDataLen;
-  _context->extradata_size = (int) extraDataLen;
+  _context->extradata = (uint8_t *) extraData;
+  _context->extradata_size = (int)extraDataLen  ;
   _context->codec_tag=fcc;
   _context->stream_codec_tag=fcc;
   decoderMultiThread ();
