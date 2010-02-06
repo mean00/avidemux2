@@ -341,6 +341,13 @@ bool admSaver::save(void)
         muxer->save();
         muxer->close();
     }
+    delete video;
+    video=NULL;
+    for(int i=0;i<nbAStream;i++)
+    {
+        delete astreams[i];
+        astreams[i]=NULL;
+    }
     return true;
 }
 //EOF
