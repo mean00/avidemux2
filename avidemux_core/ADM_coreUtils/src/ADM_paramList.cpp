@@ -58,12 +58,12 @@ static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void 
     {
         if(*s!=':')
         {
-            ADM_error("Bad split :%s insteald of ':'\n",s);
+            ADM_error("Bad split :%s instead of ':'\n",s);
             delete [] couples;
             return false;
         }
         n=s+1;
-        while(*n!=':') n++;
+        while(*n!=':' && *n) n++;
         n--;
         memcpy(tmp,s+1,n-s);
         tmp[n-s]=0;       
