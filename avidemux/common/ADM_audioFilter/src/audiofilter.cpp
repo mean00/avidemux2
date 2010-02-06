@@ -154,11 +154,13 @@ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *confi
 */
 bool ADM_emptyFilterChain(VectorOfAudioFilter *vec)
 {
-   while(vec->size())
+    int nb=vec->size();
+    for(int i=0;i<nb;i++) 
     {
-        delete (*vec)[0];
-        vec->erase(vec->begin());
+        delete (*vec)[i];
+        (*vec)[i]=NULL;
     }
+    vec->clear();
     return true;
 }
 /**
