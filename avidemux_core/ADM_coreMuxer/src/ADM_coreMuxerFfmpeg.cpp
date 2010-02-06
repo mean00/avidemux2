@@ -144,6 +144,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                     c->max_b_frames=2;
                 }else
                 {
+                    ADM_warning("Incoming stream does not provide PTS \n");
                     c->has_b_frames=0; // No PTS=cannot handle CTS...
                     c->max_b_frames=0;
                 }
