@@ -227,6 +227,12 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     p+=getEncoderDelay();
     _frame.pts= timingToLav(p);    //
     if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
+
+    ADM_timeMapping map; // Store real PTS <->lav value mapping
+    map.realTS=p;
+    map.lavTS=_frame.pts;
+    mapper.push_back(map);
+
     aprintf("Codec> incoming pts=%"LLU"\n",image->Pts);
     //printf("--->>[PTS] :%"LLU", raw %"LLU" num:%"LU" den:%"LU"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
@@ -356,6 +362,27 @@ bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
   return true;
 }
 /**
+    \fn getRealPtsFromLav
+    \brief Lookup in the stored value to get the exact pts from the truncated one from lav
+*/
+uint64_t ADM_coreVideoEncoderFFmpeg::getRealPtsFromLav(uint64_t val)
+{
+    int n=mapper.size();
+    for(int i=0;i<n;i++)
+    {
+        if(mapper[i].lavTS==val)
+        {
+            uint64_t r=mapper[i].realTS;
+            mapper.erase(mapper.begin()+i);
+            return r;
+        }
+    }
+    ADM_warning("Cannot find PTS : %"LLU"\n",val);  
+    for(int i=0;i<n;i++) ADM_warning("%d : %"LLU"\n",i,mapper[i].lavTS);
+    ADM_assert(0);
+
+}
+/**
         \fn postEncode
         \brief update bitstream info from output of lavcodec
 */
@@ -378,11 +405,10 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     
     // Update PTS/Dts
 
-    out->pts= lavToTiming(_context->coded_frame->pts);
+    out->pts= getRealPtsFromLav(_context->coded_frame->pts);
 // Since we will buffer frame, we have to minus that from dts
 // which is in fact the pts of the currently encoded frame
     uint64_t preDts;
-    uint64_t preDtsScaled;
     if(nextDts>=getEncoderDelay())
     {
         preDts=nextDts-getEncoderDelay(); 
@@ -392,13 +418,8 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
         preDts=0;
     }
 #warning simplify
-    float scale=1000000.*av_q2d(_context->time_base);
-    printf("PreDts=%"LLU"\n",preDts);
-    preDtsScaled=timingToLav(preDts);
-    preDts=lavToTiming(preDtsScaled);
-    printf("preDtsScaled=%"LLU"\n",(uint64_t)preDtsScaled);
-    out->dts=(uint64_t)preDts;
-    printf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
+    out->dts=preDts;
+    aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
 
     // Update quant
     if(!_context->coded_frame->quality)

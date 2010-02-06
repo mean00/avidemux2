@@ -23,6 +23,15 @@
 #include "ADM_encoderConf.h"
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
 #include "FFcodecSettings.h"
+
+#include <vector>
+using std::vector;
+typedef struct
+{
+    uint64_t lavTS;
+    uint64_t realTS;
+}ADM_timeMapping;
+
 /**
     \class ADM_coreVideoEncoderFFmpeg
     \brief base class for VideoEncoder based on libavcodec
@@ -44,6 +53,8 @@ protected:
                uint64_t         nextDts;
                bool             _globalHeader;
                float            timeScaler;
+               vector <ADM_timeMapping>mapper;
+               uint64_t         getRealPtsFromLav(uint64_t val);
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
