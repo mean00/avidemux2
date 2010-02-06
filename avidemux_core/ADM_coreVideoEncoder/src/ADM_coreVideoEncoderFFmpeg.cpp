@@ -187,9 +187,26 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
     _context->time_base.num=n;
     _context->time_base.den=d;
 #endif
-    
+    timeScaler=1000000.*av_q2d(_context->time_base); // Optimize, can be computed once
     return true;
 }
+/**
+    \fn ADM_coreVideoEncoderFFmpeg
+*/
+int64_t          ADM_coreVideoEncoderFFmpeg::timingToLav(uint64_t val)
+{
+  int64_t v= floor( ((float)val+timeScaler/2.) /timeScaler);    
+  return v;
+}
+/**
+    \fn lavToTiming
+*/
+uint64_t         ADM_coreVideoEncoderFFmpeg::lavToTiming(int64_t val)
+{
+    float v=(float)val;
+    return floor(v*timeScaler);
+}
+
 /**
     \fn pre-encoder
     
@@ -205,11 +222,12 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     }
     prolog();
 
-    double p=image->Pts;
+    uint64_t p=image->Pts;
     nextDts=image->Pts;
     p+=getEncoderDelay();
-    _frame.pts= floor(p / (1000000.*av_q2d(_context->time_base) + 0.5));    //
+    _frame.pts= timingToLav(p);    //
     if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
+    aprintf("Codec> incoming pts=%"LLU"\n",image->Pts);
     //printf("--->>[PTS] :%"LLU", raw %"LLU" num:%"LU" den:%"LU"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
@@ -360,9 +378,27 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     
     // Update PTS/Dts
 
-    out->pts= _context->coded_frame->pts * 1000000.*av_q2d(_context->time_base);
-    out->dts=nextDts; // FIXME
-    aprintf("Out pts=%"LLU" us\n",out->pts);    
+    out->pts= lavToTiming(_context->coded_frame->pts);
+// Since we will buffer frame, we have to minus that from dts
+// which is in fact the pts of the currently encoded frame
+    uint64_t preDts;
+    uint64_t preDtsScaled;
+    if(nextDts>=getEncoderDelay())
+    {
+        preDts=nextDts-getEncoderDelay(); 
+     }
+    else                                    
+    {
+        preDts=0;
+    }
+#warning simplify
+    float scale=1000000.*av_q2d(_context->time_base);
+    printf("PreDts=%"LLU"\n",preDts);
+    preDtsScaled=timingToLav(preDts);
+    preDts=lavToTiming(preDtsScaled);
+    printf("preDtsScaled=%"LLU"\n",(uint64_t)preDtsScaled);
+    out->dts=(uint64_t)preDts;
+    printf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
 
     // Update quant
     if(!_context->coded_frame->quality)

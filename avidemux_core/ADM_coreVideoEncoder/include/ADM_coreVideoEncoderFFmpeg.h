@@ -43,6 +43,7 @@ protected:
                bool             _isMT; // True if multithreaded
                uint64_t         nextDts;
                bool             _globalHeader;
+               float            timeScaler;
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
@@ -53,6 +54,8 @@ protected:
     virtual               bool             setPassAndLogFile(int pass,const char *name); // Call this before setup if needed !
                           bool             setupPass(void);  
                           bool             encoderMT (void);
+                          int64_t          timingToLav(uint64_t val);
+                          uint64_t         lavToTiming(int64_t val);
 public:
                                             ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *settings=NULL,bool globalHeader=false);
 virtual                                     ~ADM_coreVideoEncoderFFmpeg();
