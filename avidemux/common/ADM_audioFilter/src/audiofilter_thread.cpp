@@ -195,6 +195,7 @@ void ADM_audioAccess_thread::run(void)
             int n=list.size();
             if(n<MAX_CHUNK_IN_QUEUE) break;
             ADM_usleep(20*1000); // Fixme: replace by thread signals
+            if(threadState==RunStateStopOrder) goto theEnd;
         }
             
     }
