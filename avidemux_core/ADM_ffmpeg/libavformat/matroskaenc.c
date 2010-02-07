@@ -783,10 +783,11 @@ static int mkv_write_ass_blocks(AVFormatContext *s, AVPacket *pkt)
                      s->streams[pkt->stream_index]->nb_frames++, layer);
         size = FFMIN(i+size, sizeof(buffer));
         memcpy(buffer+i, start, size-i);
-
+#if 0 // MEANX
         av_log(s, AV_LOG_DEBUG, "Writing block at offset %" PRIu64 ", size %d, "
                "pts %" PRId64 ", duration %d\n",
                url_ftell(pb), size, pkt->pts, duration);
+#endif
         blockgroup = start_ebml_master(pb, MATROSKA_ID_BLOCKGROUP, mkv_blockgroup_size(size));
         put_ebml_id(pb, MATROSKA_ID_BLOCK);
         put_ebml_num(pb, size+4, 0);
@@ -811,10 +812,11 @@ static void mkv_write_block(AVFormatContext *s, unsigned int blockid, AVPacket *
     AVCodecContext *codec = s->streams[pkt->stream_index]->codec;
     uint8_t *data = NULL;
     int size = pkt->size;
-
-    av_log(s, AV_LOG_DEBUG, "Writing block at offset %" PRIu64 ", size %d, "
-           "pts %" PRId64 ", dts %" PRId64 ", duration %d, flags %d\n",
+#if 0 // MEANX
+    av_log(s, AV_LOG_DEBUG, "%u Writing block at offset %" PRIu64 ", size %d, "
+           "pts %" PRId64 ", dts %" PRId64 ", duration %d, flags %d\n",blockid,
            url_ftell(pb), pkt->size, pkt->pts, pkt->dts, pkt->duration, flags);
+#endif
     if (codec->codec_id == CODEC_ID_H264 && codec->extradata_size > 0 &&
         (AV_RB24(codec->extradata) == 1 || AV_RB32(codec->extradata) == 1))
         ff_avc_parse_nal_units_buf(pkt->data, &data, &size);
