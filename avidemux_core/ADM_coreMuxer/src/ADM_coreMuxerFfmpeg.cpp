@@ -36,6 +36,7 @@ muxerFFmpeg::muxerFFmpeg()
     oc=NULL;
     audio_st=NULL;
     video_st=NULL;
+    audioDelay=0;
 }
 /**
     \fn closeMuxer
@@ -103,6 +104,7 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
 */
 bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 {
+    audioDelay=stream->getVideoDelay();
     video_st = av_new_stream(oc, 0);
 	if (!video_st)
 	{
@@ -445,6 +447,8 @@ bool muxerFFmpeg::saveLoop(const char *title)
                         }
                        // printf("Track %d , new audio packet DTS=%"LLD" size=%"LU"\n",audioTrack->dts,audioTrack->size);
                         audioTrack->present=true;
+                        // Delay audio by the delay induce by encoder
+                        if(audioTrack->dts!=ADM_NO_PTS) audioTrack->dts+=audioDelay;
                     }
                     if(audioTrack->dts!=ADM_NO_PTS)
                     {

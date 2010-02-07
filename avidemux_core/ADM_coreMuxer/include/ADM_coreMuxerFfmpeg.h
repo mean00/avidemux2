@@ -54,6 +54,8 @@ protected:
         {
             return muxerRescaleVideoTime(time);
         }
+        uint64_t audioDelay; // since video decoder can cause a delay, we have to delay also all audio tracks
+                             // by this value. It will be 0 for copy or 0 bframe codec.
 protected:
         bool saveLoop(const char *title);
 protected:
