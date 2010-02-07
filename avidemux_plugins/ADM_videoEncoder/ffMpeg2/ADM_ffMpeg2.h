@@ -20,6 +20,15 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "mpeg2_encoder.h"
 
+typedef enum
+{
+        MPEG2_MATRIX_DEFAULT,
+        MPEG2_MATRIX_TMPGENC,
+        MPEG2_MATRIX_ANIME,
+        MPEG2_MATRIX_KVCD,
+        MPEG2_MATRIX_LAST
+} ;
+
 /**
         \class ADM_ffMpeg2Encoder
         \brief Dummy encoder that does nothing

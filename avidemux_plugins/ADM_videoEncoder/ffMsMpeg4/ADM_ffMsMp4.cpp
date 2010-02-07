@@ -63,10 +63,8 @@ FFcodecSettings MsMp4Settings=
           0.5,				// qblur;    amount of qscale smoothing over time (0.0-1.0) 
           0,				// min bitrate in kB/S
           0,				// max bitrate
-          0,				// default matrix
+          0,				// user matrix
           250,				// no gop size
-          NULL,             // intra_matrix
-          NULL,             // intra_matrix
           0,				// interlaced
           0,				// WLA: bottom-field-first
           0,				// wide screen
@@ -77,6 +75,9 @@ FFcodecSettings MsMp4Settings=
           0,				// is spatial
           0.0,				// spatial masking
           0,				// NAQ
+          0,                // xvid rc
+          0,                // buffersize
+          0,                // override ratecontrol
           0				    // DUMMY 
     }
 };

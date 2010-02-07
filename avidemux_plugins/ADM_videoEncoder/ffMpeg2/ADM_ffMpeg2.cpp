@@ -26,7 +26,7 @@
 #else
 #define aprintf printf
 #endif
-
+#include "mpegMatrix.h"
 mpeg2_encoder Mp2Settings=
 {
     {
@@ -62,10 +62,8 @@ mpeg2_encoder Mp2Settings=
           0.5,				// qblur;    amount of qscale smoothing over time (0.0-1.0) 
           0,   		        // min bitrate in kB/S
           10000,			// max bitrate
-          0,				// default matrix
-          18,				// no gop size
-          NULL,             // intra_matrix
-          NULL,             // intra_matrix
+          0,				// user matrix
+          18,				// gop size
           0,				// interlaced
           0,				// WLA: bottom-field-first
           0,				// wide screen
@@ -75,8 +73,11 @@ mpeg2_encoder Mp2Settings=
           0.0,				// temporal masking
           0,				// is spatial
           0.0,				// spatial masking
-          0,				// NAQ
-          0				    // DUMMY 
+          0,				// Normalize aqp 
+          0,                // Xvid rate control
+          112,              // Buffer size (kbits)
+          0,                // Override ratecontrol
+          0,    		    // DUMMY 
     },
     0   // Matrix
 };
@@ -120,9 +121,26 @@ bool ADM_ffMpeg2Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
+    // Override some parameters specific to this codec
+    // Set matrix if any...
+#define MX(a,b,c) case a: _context->intra_matrix=b,_context->inter_matrix=c;break;
+    switch(Mp2Settings.matrix)
+    {
+        MX(MPEG2_MATRIX_DEFAULT,NULL,NULL);
+        MX(MPEG2_MATRIX_TMPGENC,tmpgenc_intra,tmpgenc_inter);
+        MX(MPEG2_MATRIX_ANIME,anime_intra,anime_inter);
+        MX(MPEG2_MATRIX_KVCD,kvcd_intra,kvcd_inter);
+        default:
+                ADM_error("unknown matrix type : %d\n",(int)Mp2Settings.matrix);
+                ADM_assert(0);
+                break;
+    }
+    _context->rc_buffer_size=Mp2Settings.lavcSettings.bufferSize*1000;
+    _context->rc_buffer_size_header=Mp2Settings.lavcSettings.bufferSize=1000;
+    // /Override some parameters specific to this codec
+
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG2VIDEO))
         return false;
-
     printf("[ffMpeg] Setup ok\n");
     return true;
 }
@@ -224,17 +242,22 @@ bool         ADM_ffMpeg2Encoder::isDualPass(void)
 */
 
 bool         ffMpeg2Configure(void)
-{         
-diaMenuEntry meE[]={
-  {1,QT_TR_NOOP("None")},
-  {2,QT_TR_NOOP("Full")},
-  {3,QT_TR_NOOP("Log")},
-  {4,QT_TR_NOOP("Phods")},
-  {5,QT_TR_NOOP("EPZS")},
-  {6,QT_TR_NOOP("X1")}
-};       
+{   
 
-
+diaMenuEntry  arE[]=
+{
+    {0,QT_TR_NOOP("Normal (4:3)")},
+    {1,QT_TR_NOOP("Wide (16:9)")}
+};
+      
+diaMenuEntry  matrixE[]=
+{
+    {MPEG2_MATRIX_DEFAULT,QT_TR_NOOP("Default")},
+    {MPEG2_MATRIX_TMPGENC,QT_TR_NOOP("Tmpgenc")},
+    {MPEG2_MATRIX_ANIME,QT_TR_NOOP("Animes")},
+    {MPEG2_MATRIX_KVCD,QT_TR_NOOP("KVCD")},
+};
+      
 diaMenuEntry rdE[]={
   {0,QT_TR_NOOP("MB comparison")},
   {1,QT_TR_NOOP("Fewest bits (vhq)")},
@@ -259,13 +282,15 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
          diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
+         diaElemUInteger  bufferS(PX(bufferSize),QT_TR_NOOP("VBV Buffer Size:"),1,1024);
          
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
          
          diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
          
          diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
-         
+         diaElemMenu     arM(PX(widescreen),QT_TR_NOOP("Aspect ratio:"),2,arE);
+         diaElemMenu     matrixM(&(Mp2Settings.matrix),QT_TR_NOOP("Matrices:"),MPEG2_MATRIX_LAST,matrixE);
          diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
          
          diaElemFloat    qzComp(PX(qcompress),QT_TR_NOOP("_Quantizer compression:"),0,1);
@@ -273,10 +298,13 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          
         diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,30); 
           /* First Tab : encoding mode */
-        diaElem *diamode[]={&GopSize,&threadM,&max_b_frames,&bitrate};
-        diaElemTabs tabMode(QT_TR_NOOP("User Interface"),4,diamode);
+        diaElem *diamode[]={&arM,&threadM,&bitrate};
+        diaElemTabs tabMode(QT_TR_NOOP("Basic Settings"),3,diamode);
         
-        /* 2nd Tab : ME */
+        /* 2nd Tab : advanced*/
+        diaElem *diaAdv[]={&bufferS,&matrixM,&max_b_frames,&GopSize};
+        diaElemTabs tabAdv(QT_TR_NOOP("Adv. Settings"),4,diaAdv);
+
         /* 3nd Tab : Qz */
         
         diaElem *diaQze[]={&rdM,&qminM,&qmaxM,&qdiffM,&trellis};
@@ -287,8 +315,8 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
         diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
         
-         diaElemTabs *tabs[]={&tabMode,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-2 configuration"),3,tabs))
+         diaElemTabs *tabs[]={&tabMode,&tabAdv,&tabQz,&tabRC};
+        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-2 configuration"),4,tabs))
         {
           conf->lavcSettings.me_method=(Motion_Est_ID)me;
           return true;

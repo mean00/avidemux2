@@ -443,7 +443,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 */
 bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 {
-	  _context->gop_size = 250;
+	  //_context->gop_size = 250;
 	
 #define SETX(x) _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);
 #define SETX_COND(x) if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);} else\
@@ -454,6 +454,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
       SETX (max_b_frames);
       SETX (mpeg_quant);
       SETX (max_qdiff);
+      SETX (gop_size);
       SETX_COND (luma_elim_threshold);
       SETX_COND (chroma_elim_threshold);
 
