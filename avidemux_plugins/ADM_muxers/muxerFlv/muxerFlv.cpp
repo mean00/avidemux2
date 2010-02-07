@@ -130,8 +130,9 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         {
             printf("[Flv Muxer] Muxer rejected the parameters\n");
             r=false;
-            
+            goto finish;
         }
+        initialized=true;
 finish:
         vStream=s;
         aStreams=a;

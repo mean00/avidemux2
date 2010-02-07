@@ -123,6 +123,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
+        initialized=true;
         return true;
 }
 

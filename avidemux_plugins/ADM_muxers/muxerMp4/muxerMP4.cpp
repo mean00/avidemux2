@@ -119,6 +119,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
+        initialized=true;
         return true;
 }
 

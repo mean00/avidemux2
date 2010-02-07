@@ -37,6 +37,7 @@ muxerFFmpeg::muxerFFmpeg()
     audio_st=NULL;
     video_st=NULL;
     audioDelay=0;
+    initialized=false;
 }
 /**
     \fn closeMuxer
@@ -45,8 +46,11 @@ bool muxerFFmpeg::closeMuxer()
 {
     if(oc)
     {
-        av_write_trailer(oc);
-        url_fclose((oc->pb));
+        if(initialized==true)
+        {
+            av_write_trailer(oc);
+            url_fclose((oc->pb));
+        }
     }
     if(audio_st)
     {

@@ -131,6 +131,7 @@ const char *er;
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
+        initialized=true;
         return true;
 }
 

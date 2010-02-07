@@ -56,7 +56,7 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
     /* All seems fine, open stuff */
     if(false==setupMuxer("matroska",file))
     {
-        printf("[Mkv] Failed to open muxer\n");
+        printf("[Mkv] Failed to open muxer (setup)\n");
         return false;
     }
  
@@ -97,6 +97,7 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
+        initialized=true;
         return true;
 }
 

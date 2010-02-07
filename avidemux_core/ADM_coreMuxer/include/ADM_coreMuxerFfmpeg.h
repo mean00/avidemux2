@@ -69,6 +69,7 @@ protected:
         bool setupMuxer(const char *format,const char *filename);
         bool initVideo(ADM_videoStream *stream);
         bool initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio);
+        bool initialized;
 public:
                 muxerFFmpeg();
         virtual ~muxerFFmpeg();
