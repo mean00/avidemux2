@@ -71,7 +71,7 @@ muxerAvi::~muxerAvi()
 
 bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
-
+        audioDelay=s->getVideoDelay();
         if(!writter.saveBegin (
              file,
 		     s,
@@ -88,7 +88,7 @@ bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         clocks=new audioClock*[nbAStreams];
         for(int i=0;i<nbAStreams;i++)
             clocks[i]=new audioClock(a[i]->getInfo()->frequency);
-
+        
         return true;
 }
 /**
@@ -109,6 +109,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
 
                 while(a->getPacket(audioBuffer,&audioSize, AUDIO_BUFFER_SIZE,&nbSample,&audioDts))
                 {
+                    if(audioDts!=ADM_NO_DTS) audioDts+=audioDelay;
                     aprintf("[Audio] Packet size %"LU" sample:%"LU" dts:%"LLU" target :%"LLU"\n",audioSize,nbSample,audioDts,targetDts);
                     if(audioDts!=ADM_NO_PTS)
                         if( abs(audioDts-clk->getTimeUs())>32000)

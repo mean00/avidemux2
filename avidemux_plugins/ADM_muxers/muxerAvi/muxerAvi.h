@@ -38,6 +38,7 @@ protected:
         uint8_t   *audioBuffer;
         uint8_t   *videoBuffer;
         audioClock **clocks;
+        uint64_t   audioDelay;
 public:
                 muxerAvi();
         virtual ~muxerAvi();
