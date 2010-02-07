@@ -1,0 +1,15 @@
+INCLUDE(ve_plugin)
+
+SET(ffMpeg2_SRCS 
+        ffMpeg2Plugin.cpp
+        ADM_ffMpeg2.cpp
+)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+ADD_LIBRARY(ADM_ve_ffMpeg2 SHARED ${ffMpeg2_SRCS})
+
+INIT_VIDEO_ENCODER(ADM_ve_ffMpeg2)
+INSTALL_VIDEO_ENCODER(ADM_ve_ffMpeg2)
+TARGET_LINK_LIBRARIES(ADM_ve_ffMpeg2 ADM_libavcodec6 ADM_libavutil6)
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_libraries/ADM_ffmpeg")
