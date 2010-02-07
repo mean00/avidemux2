@@ -73,7 +73,7 @@ const  char        *ADM_huffEncoder::getFourcc(void)
 bool         ADM_huffEncoder::getExtraData(uint32_t *l,uint8_t **d)
 {
      *l=_context->extradata_size;
-     *d=_context-> extradata;
+     *d=_context->extradata;
      return true;
 };
 /**
