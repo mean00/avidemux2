@@ -94,30 +94,42 @@ uint8_t mkvHeader::open(const char *name)
 
   // Delay frames + recompute frame duration
 // now that we have a good frameduration and max pts dts difference, we can set a proper DTS for all video frame
-  uint64_t ptsdtsdelta=delayFrameIfBFrames();
+    uint32_t ptsdtsdelta, mindelta;
+    bool hasBframe;
+  ComputeDeltaAndCheckBFrames(&mindelta, &ptsdtsdelta,&hasBframe);
+  
   
   int last=_tracks[0].index.size();
   uint64_t increment=_tracks[0]._defaultFrameDuration;
   uint64_t lastDts=0;
   _tracks[0].index[0].Dts=0;
   mkvTrak                 *vid=_tracks;
-  for(int i=1;i<last;i++)
-  {
-        uint64_t pts,dts;
-        pts=vid->index[i].Pts;
-        lastDts+=increment; // This frame dts with no correction
-        if(pts==ADM_NO_PTS)
-        {
+  if(hasBframe==true) // Try to compute a sane DTS knowing the PTS and the DTS/PTS delay
+    {
+      for(int i=1;i<last;i++)
+      {
+            uint64_t pts,dts;
+            pts=vid->index[i].Pts;
+            lastDts+=increment; // This frame dts with no correction
+            if(pts==ADM_NO_PTS)
+            {
+                vid->index[i].Dts=lastDts;
+                continue;
+            }
+            uint64_t limitDts=vid->index[i].Pts-ptsdtsdelta;
+            if(  lastDts<limitDts)
+            {
+                lastDts=limitDts;
+            }
             vid->index[i].Dts=lastDts;
-            continue;
-        }
-        uint64_t limitDts=vid->index[i].Pts-ptsdtsdelta;
-        if(  lastDts<limitDts)
-        {
-            lastDts=limitDts;
-        }
-        vid->index[i].Dts=lastDts;
-  }
+      }
+    }else
+    {       // No bframe, DTS=PTS
+      for(int i=0;i<last;i++)
+      {
+            vid->index[i].Dts=vid->index[i].Pts;
+      }
+    }
 
 
   if(last)
@@ -169,13 +181,38 @@ bool mkvHeader::delayTrack(mkvTrak *track, uint64_t value)
     we dont want a negative dts.
     \return maxdelta in us
 */
-uint32_t mkvHeader::delayFrameIfBFrames(void)
+bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDeltaX, bool *bFramePresent)
 {
     mkvTrak *track=_tracks;
     int nb=track->index.size();
     int nbBFrame=0;
     int64_t delta,maxDelta=0;
     int64_t minDelta=100000000;
+    *bFramePresent=false;
+    if(nb>1)
+    {
+        bool monotone=true;
+        uint64_t pts=track->index[0].Pts;
+        for(int i=1;i<nb;i++)
+        {
+            if(track->index[i].Pts<pts) 
+            {
+                monotone=false;
+                break;
+            }
+            pts=track->index[i].Pts;
+        }
+        if(monotone==true)
+        {
+            ADM_info("PTS is monotonous, probably no bframe\n");        
+            *bFramePresent=false;
+        }else
+        {
+            ADM_info("PTS is monotonous, probably no bframe\n");
+            *bFramePresent=true;
+        }
+    }
+
     if(nb>1)
     {
         // Search minimum and maximum between 2 frames
@@ -191,6 +228,7 @@ uint32_t mkvHeader::delayFrameIfBFrames(void)
             //printf("\/=%"LLD" Min %"LLD" MAX %"LLD"\n",delta,minDelta,maxDelta);
         }
     }
+    if(nbBFrame) *bFramePresent=true;
     ADM_info("Minimum delta found %"LLD" us\n",minDelta);
     ADM_info("Maximum delta found %"LLD" us\n",maxDelta);
     if(minDelta)
@@ -227,7 +265,9 @@ uint32_t mkvHeader::delayFrameIfBFrames(void)
         for(int i=0;i<_nbAudioTrack+1;i++)
             delayTrack(&(_tracks[i]),adj);
     }
-    return (uint32_t)maxDelta;
+    *maxDeltaX=maxDelta;
+    *minDeltaX=minDelta;
+    return true;
 }
 /**
     \fn rescaleTrack
