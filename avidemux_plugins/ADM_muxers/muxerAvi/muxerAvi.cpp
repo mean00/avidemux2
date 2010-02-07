@@ -109,7 +109,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
 
                 while(a->getPacket(audioBuffer,&audioSize, AUDIO_BUFFER_SIZE,&nbSample,&audioDts))
                 {
-                    if(audioDts!=ADM_NO_DTS) audioDts+=audioDelay;
+                    if(audioDts!=ADM_NO_PTS) audioDts+=audioDelay;
                     aprintf("[Audio] Packet size %"LU" sample:%"LU" dts:%"LLU" target :%"LLU"\n",audioSize,nbSample,audioDts,targetDts);
                     if(audioDts!=ADM_NO_PTS)
                         if( abs(audioDts-clk->getTimeUs())>32000)
