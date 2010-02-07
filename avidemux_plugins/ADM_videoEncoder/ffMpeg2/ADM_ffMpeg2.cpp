@@ -61,8 +61,8 @@ mpeg2_encoder Mp2Settings=
           0.5,				// qcompress amount of qscale change between easy & hard scenes (0.0-1.0
           0.5,				// qblur;    amount of qscale smoothing over time (0.0-1.0) 
           0,   		        // min bitrate in kB/S
-          10000,			// max bitrate
-          0,				// user matrix
+          9500,  			// max bitrate
+          1,				// user matrix
           18,				// gop size
           0,				// interlaced
           0,				// WLA: bottom-field-first
@@ -75,7 +75,7 @@ mpeg2_encoder Mp2Settings=
           0.0,				// spatial masking
           0,				// Normalize aqp 
           0,                // Xvid rate control
-          112,              // Buffer size (kbits)
+          224,              // Buffer size (kbits)
           0,                // Override ratecontrol
           0,    		    // DUMMY 
     },
@@ -135,8 +135,11 @@ bool ADM_ffMpeg2Encoder::setup(void)
                 ADM_assert(0);
                 break;
     }
-    _context->rc_buffer_size=Mp2Settings.lavcSettings.bufferSize*1000;
-    _context->rc_buffer_size_header=Mp2Settings.lavcSettings.bufferSize=1000;
+    _context->rc_buffer_size=Mp2Settings.lavcSettings.bufferSize*8*1024;
+    _context->rc_buffer_size_header=Mp2Settings.lavcSettings.bufferSize*8*1024;
+    _context->rc_initial_buffer_occupancy=_context->rc_buffer_size;
+    _context->rc_max_rate=Mp2Settings.lavcSettings.maxBitrate*1000;
+    _context->rc_max_rate_header=Mp2Settings.lavcSettings.maxBitrate*1000;
     // /Override some parameters specific to this codec
 
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG2VIDEO))
@@ -269,7 +272,15 @@ diaMenuEntry threads[]={
   {3,QT_TR_NOOP("Three threads")},
   {99,QT_TR_NOOP("Auto (#cpu)")}
 };     
-
+   
+diaMenuEntry interE[]={
+  {0,QT_TR_NOOP("Progressive")},
+  {1,QT_TR_NOOP("Interlaced")},
+};     
+diaMenuEntry foE[]={
+  {0,QT_TR_NOOP("Top Field First")},
+  {1,QT_TR_NOOP("Bottom Field First")},
+};     
 
         mpeg2_encoder *conf=&Mp2Settings;
 
@@ -283,6 +294,7 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
          diaElemUInteger  bufferS(PX(bufferSize),QT_TR_NOOP("VBV Buffer Size:"),1,1024);
+         diaElemUInteger  maxBitrate(PX(maxBitrate),QT_TR_NOOP("Max bitrate (kb/s):"),1,50000);
          
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
          
@@ -297,13 +309,21 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemFloat    qzBlur(PX(qblur),QT_TR_NOOP("Quantizer _blur:"),0,1);
          
         diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,30); 
+
+        diaElemMenu     interlaced(PX(interlaced),QT_TR_NOOP("_Interlaced:"),2,interE);
+        diaElemMenu     fieldOrder(PX(bff),QT_TR_NOOP("Field Order:"),2,foE);
+
           /* First Tab : encoding mode */
         diaElem *diamode[]={&arM,&threadM,&bitrate};
         diaElemTabs tabMode(QT_TR_NOOP("Basic Settings"),3,diamode);
         
         /* 2nd Tab : advanced*/
-        diaElem *diaAdv[]={&bufferS,&matrixM,&max_b_frames,&GopSize};
-        diaElemTabs tabAdv(QT_TR_NOOP("Adv. Settings"),4,diaAdv);
+        diaElem *diaAdv[]={&bufferS,&matrixM,&max_b_frames,&GopSize,&maxBitrate};
+        diaElemTabs tabAdv(QT_TR_NOOP("Adv. Settings"),5,diaAdv);
+
+        /* 2ndb Tab : interlacing*/
+        diaElem *diaInter[]={&interlaced,&fieldOrder};
+        diaElemTabs tabInter(QT_TR_NOOP("Interlacing"),2,diaInter);
 
         /* 3nd Tab : Qz */
         
@@ -315,8 +335,8 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
         diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
         
-         diaElemTabs *tabs[]={&tabMode,&tabAdv,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-2 configuration"),4,tabs))
+         diaElemTabs *tabs[]={&tabMode,&tabAdv,&tabInter,&tabQz,&tabRC};
+        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-2 configuration"),5,tabs))
         {
           conf->lavcSettings.me_method=(Motion_Est_ID)me;
           return true;

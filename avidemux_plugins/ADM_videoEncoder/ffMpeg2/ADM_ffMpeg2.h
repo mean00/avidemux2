@@ -20,7 +20,7 @@
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "mpeg2_encoder.h"
 
-typedef enum
+enum
 {
         MPEG2_MATRIX_DEFAULT,
         MPEG2_MATRIX_TMPGENC,
