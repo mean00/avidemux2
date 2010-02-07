@@ -27,6 +27,31 @@
 #define aprintf printf
 #endif
 
+typedef struct
+{
+    CodecID id;
+    const char *fcc;
+}lavCodecMapper;
+
+static const lavCodecMapper mapper[]={
+    {CODEC_ID_FFVHUFF,"FFVH"},
+    {CODEC_ID_HUFFYUV,"HFYU"},
+    {CODEC_ID_NONE,   "XXXX"},
+};
+
+/**
+    \fn ADM_codecIdFindByFourcc
+*/
+static CodecID ADM_codecIdFindByFourcc(const char *fcc)
+{
+    int nb=sizeof(mapper)/sizeof(lavCodecMapper);
+    for(int i=0;i<nb;i++)
+    {
+        if(!strcmp(fcc,mapper[i].fcc)) return mapper[i].id;
+    }
+    return CODEC_ID_NONE;
+}
+
 /**
     \fn muxerFFmpeg
 */
@@ -217,8 +242,15 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                                 c->codec_id=CODEC_ID_MPEG2VIDEO;
                                             }else
                                             {
-                                                printf("[FF] Unknown video codec\n");
-                                                return false;
+                                                uint32_t id=stream->getFCC();
+            
+                                                CodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
+                                                if(cid==CODEC_ID_NONE)
+                                                {
+                                                    printf("[FF] Unknown video codec\n");
+                                                    return false;
+                                                }
+                                                c->codec_id=cid;
                                             }
                                         }
                         }
