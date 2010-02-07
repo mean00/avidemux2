@@ -18,7 +18,7 @@
 #ifndef ADM_ffMpeg2_ENCODER_H
 #define ADM_ffMpeg2_ENCODER_H
 #include "ADM_coreVideoEncoderFFmpeg.h"
-
+#include "mpeg2_encoder.h"
 
 /**
         \class ADM_ffMpeg2Encoder
@@ -28,10 +28,8 @@
 class ADM_ffMpeg2Encoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
-               
-           
                int             plane;
-               
+               mpeg2_encoder   settings;
 public:
 
                            ADM_ffMpeg2Encoder(ADM_coreVideoFilter *src,bool globalHeader);

@@ -18,9 +18,9 @@
 #include "ADM_default.h"
 #include "ADM_ffMpeg2.h"
 #include "ADM_coreVideoEncoderInternal.h"
-#include "../src/FFcodecSettings_desc.cpp"
+#include "mpeg2_encoder_desc.cpp"
+extern mpeg2_encoder Mp2Settings;
 extern bool         ffMpeg2Configure(void);
-extern FFcodecSettings Mp2Settings;
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffMpeg2Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg2",
                                "Mpeg2 (ff)",
@@ -28,6 +28,6 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg2",
                                 ffMpeg2Configure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
-                                FFcodecSettings_param, // conf template
+                                mpeg2_encoder_param, // conf template
                                 &Mp2Settings // conf var
 );

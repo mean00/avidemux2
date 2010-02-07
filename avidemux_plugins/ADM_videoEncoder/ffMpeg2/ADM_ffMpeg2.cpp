@@ -27,7 +27,7 @@
 #define aprintf printf
 #endif
 
-FFcodecSettings Mp2Settings=
+mpeg2_encoder Mp2Settings=
 {
     {
     COMPRESS_CQ, //COMPRESSION_MODE  mode;
@@ -77,12 +77,15 @@ FFcodecSettings Mp2Settings=
           0.0,				// spatial masking
           0,				// NAQ
           0				    // DUMMY 
-    }
+    },
+    0   // Matrix
 };
 /**
         \fn ADM_ffMpeg2Encoder
 */
-ADM_ffMpeg2Encoder::ADM_ffMpeg2Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,&Mp2Settings,globalHeader)
+// It works because mpeg2_encoder.h is the same as FFCodecSettings + additional fields!
+ADM_ffMpeg2Encoder::ADM_ffMpeg2Encoder(ADM_coreVideoFilter *src,bool globalHeader) : 
+        ADM_coreVideoEncoderFFmpeg(src,(FFcodecSettings *)&(Mp2Settings),false)
 {
     printf("[ffMpeg2Encoder] Creating.\n");
    
@@ -245,7 +248,7 @@ diaMenuEntry threads[]={
 };     
 
 
-        FFcodecSettings *conf=&Mp2Settings;
+        mpeg2_encoder *conf=&Mp2Settings;
 
 uint32_t me=(uint32_t)conf->lavcSettings.me_method;  
 #define PX(x) &(conf->lavcSettings.x)
