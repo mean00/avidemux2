@@ -126,11 +126,16 @@ uint8_t mkvAccess::goToBlock(uint32_t x)
 bool      mkvAccess::goToTime(uint64_t timeUs)
 {
 uint64_t targetUs=timeUs;
-
+int      clus=-1;
     uint32_t limit=_track->index.size();
+    if(!limit)
+    {
+        ADM_warning("No audio index, cannot seek\n");
+        return false;
+    }
     mkvListOfIndex *dex=&(_track->index);
       // First identify the cluster...
-      int clus=-1;
+
             if(timeUs<(*dex)[0].Dts)
             {
                 clus=0;
