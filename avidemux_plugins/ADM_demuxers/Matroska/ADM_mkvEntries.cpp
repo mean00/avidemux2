@@ -141,7 +141,7 @@ entryDesc entry;
                 mixDump(_tracks[0].extraData,l);
                 printf("\n");
           }
-          delete [] _tracks[0].extraData;
+          delete [] entry.extraData;
           entry.extraData=NULL;
           entry.extraDataLen=0;
 
