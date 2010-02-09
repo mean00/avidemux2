@@ -58,6 +58,7 @@ void entryDesc::dump(void)
           printf("==>Video\n");
           PRINT(extraDataLen);
           PRINT(fcc);
+          printf("%s\n",fourCC::tostring(fcc));
           PRINT(w);
           PRINT(h);
           PRINT(fps);
@@ -124,21 +125,33 @@ entryDesc entry;
         // if it is vfw...
         if(fourCC::check(entry.fcc,(uint8_t *)"VFWX") && entry.extraData && entry.extraDataLen>=sizeof(ADM_BITMAPINFOHEADER))
         {
+          ADM_info("VFW compatibility header, data=%d bytes\n",(int)entry.extraDataLen);
           memcpy(& _video_bih,entry.extraData,sizeof(ADM_BITMAPINFOHEADER));
-          delete [] _tracks[0].extraData;
-          entry.extraData=NULL;
-          entry.extraDataLen=0;
 
           _videostream.fccHandler=_video_bih.biCompression;
           _mainaviheader.dwWidth=  _video_bih.biWidth;
           _mainaviheader.dwHeight= _video_bih.biHeight;
+          if(entry.extraDataLen>sizeof(ADM_BITMAPINFOHEADER))
+          {
+                int l=entry.extraDataLen-sizeof(ADM_BITMAPINFOHEADER);
+                _tracks[0].extraData=new uint8_t[l];
+                _tracks[0].extraDataLen=l;
+                memcpy(_tracks[0].extraData,entry.extraData +sizeof(ADM_BITMAPINFOHEADER),l);
+                ADM_info("VFW Header+%d bytes of extradata\n",l);   
+                mixDump(_tracks[0].extraData,l);
+                printf("\n");
+          }
+          delete [] _tracks[0].extraData;
+          entry.extraData=NULL;
+          entry.extraDataLen=0;
 
-        } // FIXME there can be real extradata after bitmapinfoheader
-
-        _tracks[0].extraData=entry.extraData;
-        _tracks[0].extraDataLen=entry.extraDataLen;
+        } 
+        else
+        {
+            _tracks[0].extraData=entry.extraData;
+            _tracks[0].extraDataLen=entry.extraDataLen;
+        }
         _tracks[0].streamIndex=entry.trackNo;
-
         return 1;
       }
       if(entry.trackType==2 && _nbAudioTrack<ADM_MKV_MAX_TRACKS)
