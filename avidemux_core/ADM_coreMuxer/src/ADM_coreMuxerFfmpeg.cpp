@@ -20,37 +20,13 @@
 #include "fourcc.h"
 #include "ADM_coreMuxerFfmpeg.h"
 #include "ADM_muxerUtils.h"
-
+#include "ADM_coreCodecMapping.h"
 #if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
 #endif
 
-typedef struct
-{
-    CodecID id;
-    const char *fcc;
-}lavCodecMapper;
-
-static const lavCodecMapper mapper[]={
-    {CODEC_ID_FFVHUFF,"FFVH"},
-    {CODEC_ID_HUFFYUV,"HFYU"},
-    {CODEC_ID_NONE,   "XXXX"},
-};
-
-/**
-    \fn ADM_codecIdFindByFourcc
-*/
-static CodecID ADM_codecIdFindByFourcc(const char *fcc)
-{
-    int nb=sizeof(mapper)/sizeof(lavCodecMapper);
-    for(int i=0;i<nb;i++)
-    {
-        if(!strcmp(fcc,mapper[i].fcc)) return mapper[i].id;
-    }
-    return CODEC_ID_NONE;
-}
 
 /**
     \fn muxerFFmpeg
