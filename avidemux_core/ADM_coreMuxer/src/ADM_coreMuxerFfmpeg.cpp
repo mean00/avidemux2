@@ -26,7 +26,20 @@
 #else
 #define aprintf printf
 #endif
-
+/**
+    \fn writePacket
+*/
+bool muxerFFmpeg::writePacket(AVPacket *pkt)
+{
+#if 0
+        printf("Track :%d size :%d PTS:%"LLD" DTS:%"LLD"\n",
+                    pkt->stream_index,pkt->size,pkt->pts,pkt->dts);
+#endif
+    int ret =av_write_frame(oc, pkt);
+    if(ret)
+        return false;
+    return true;
+}
 
 /**
     \fn muxerFFmpeg
@@ -427,9 +440,9 @@ bool muxerFFmpeg::saveLoop(const char *title)
             pkt.size= len;
             if(flags & 0x10) // FIXME AVI_KEY_FRAME
                         pkt.flags |= PKT_FLAG_KEY;
-            ret =av_write_frame(oc, &pkt);
+            ret =writePacket( &pkt);
             aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,dts,pts);
-            if(ret)
+            if(false==ret)
             {
                 printf("[FF]Error writing video packet\n");
                 break;
@@ -464,6 +477,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     }
                     if(audioTrack->dts!=ADM_NO_PTS)
                     {
+                        //printf("Audio PTS:%"LLD", limit=%"LLD"\n",audioTrack->dts,lastVideoDts+videoIncrement);
                         if(audioTrack->dts>lastVideoDts+videoIncrement) break; // This packet is in the future
                     }
                     // Write...
@@ -481,9 +495,9 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     pkt.data= audioTrack->buffer;
                     pkt.size= audioTrack->size;
                     pkt.flags |= PKT_FLAG_KEY; // Assume all audio are keyframe, which is slightly wrong
-                    ret =av_write_frame(oc, &pkt);
+                    ret =writePacket( &pkt);
                     audioTrack->present=false; // consumed
-                    if(ret)
+                    if(false==ret)
                     {
                         ADM_warning("[FF]Error writing audio packet\n");
                         break;

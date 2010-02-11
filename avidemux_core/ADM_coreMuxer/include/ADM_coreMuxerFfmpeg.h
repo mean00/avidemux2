@@ -36,6 +36,7 @@ extern "C"
 class muxerFFmpeg : public ADM_muxer
 {
 protected:
+        bool    writePacket(AVPacket *pkt);
         virtual bool muxerRescaleVideoTime(uint64_t *time)
         {
              AVRational *scale=&(video_st->time_base);
