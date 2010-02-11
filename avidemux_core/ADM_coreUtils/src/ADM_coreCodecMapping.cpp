@@ -48,11 +48,14 @@ const ffVideoCodec ffCodec[]=
   {"H263", CODEC_ID_H263,       false, true},
   {"MP42", CODEC_ID_MSMPEG4V2,  true, true},
   {"SVQ3", CODEC_ID_SVQ3,       true, true},
+  {"FFVH", CODEC_ID_FFVHUFF,    true, true},
+  {"HFYU", CODEC_ID_HUFFYUV,    true, true},
 
-
+ //{CODEC_ID_FFVHUFF,"FFVH"},
+//    {CODEC_ID_HUFFYUV,"HFYU"},
   //{"MJPB", CODEC_ID_CYUV,       true},
  // {"MJPB", CODEC_ID_THEORA),    true}
-
+  {"xxxx", CODEC_ID_NONE, false,false}
 };
 
 /**
