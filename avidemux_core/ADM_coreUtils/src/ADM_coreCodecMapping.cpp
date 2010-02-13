@@ -18,6 +18,7 @@
 
 #include "ADM_default.h"
 #include "ADM_coreCodecMapping.h"
+#include "ADM_codecType.h"
 #include "fourcc.h"
 const ffVideoCodec ffCodec[]=
 {
@@ -60,6 +61,7 @@ const ffVideoCodec ffCodec[]=
 
 /**
     \fn getCodecIdFromFourcc
+    \brief get fourcc and encoder settings from fourcc (used by encoder)
 */
 const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc)
 {
@@ -75,9 +77,29 @@ const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc)
 
 /**
     \fn ADM_codecIdFindByFourcc
+    \brief get lav codec if from fourcc (used by muxer)
 */
 CodecID ADM_codecIdFindByFourcc(const char *fcc)
 {
+    uint32_t fid=fourCC::get((uint8_t *)fcc);
+    // Special cases
+ if (isMSMpeg4Compatible (fid) == 1)
+    {
+      return CODEC_ID_MSMPEG4V3;
+    }
+  if (isDVCompatible(fid))//"CDVC"))
+    {
+      return CODEC_ID_DVVIDEO;
+    }
+  if (isH264Compatible (fid))
+    {
+        return CODEC_ID_H264;
+    }
+  if (isMpeg4Compatible (fid) == 1)
+    {
+      return CODEC_ID_MPEG4;
+    }
+
     uint32_t nb=sizeof(ffCodec)/sizeof(ffVideoCodec);
     for(int i=0;i<nb;i++)
     {
