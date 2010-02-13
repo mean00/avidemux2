@@ -134,12 +134,14 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
         mutex->lock();
         if(list.size())
         {
+            //
             // Dequeue one item
             ADM_audioPacket *pkt=&(list[0]);
             ADM_assert(pkt->data);
             ADM_assert(pkt->dataLen<maxSize);
             memcpy(buffer,pkt->data,pkt->dataLen);
             *dts=pkt->dts;
+            //printf("popping Packet with DTS=%"LLD", size=%d\n",*dts,(int)pkt->dataLen);
             *size=pkt->dataLen;
             delete [] pkt->data;
             pkt->data=NULL;
@@ -184,6 +186,7 @@ void ADM_audioAccess_thread::run(void)
         p.dts=dts;
         mutex->lock();
         list.push_back(p);
+        //printf("Pushing Packet with DTS=%"LLD",size=%d\n",dts,(int)size);
         mutex->unlock();
         if(threadState==RunStateStopOrder)  
         {
