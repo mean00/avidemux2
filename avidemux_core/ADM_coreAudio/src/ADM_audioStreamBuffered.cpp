@@ -6,7 +6,7 @@
 #include "ADM_default.h"
 #include "ADM_audioStreamBuffered.h"
 
-#define ADM_MAX_SKEW 10000
+#define ADM_MAX_SKEW 40000
 
 /**
     \fn ADM_audioStreamBuffered
