@@ -34,6 +34,7 @@ class AUDMEncoder_Lame : public ADM_AudioEncoder
             
    virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
    virtual bool         initialize(void);
+           bool         provideAccurateSample(void) {return false;} 
 };
 
 #endif

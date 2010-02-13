@@ -98,7 +98,16 @@ static bool endMet=false;
 
     float d=(float)samplesSeen*1000.*1000.;
     d/=(float)(filter->getInfo()->frequency);
-    *dts=startTimeUs+(uint64_t)d;
+    if(false==encoder->provideAccurateSample())
+    {
+        if(!samplesSeen) 
+            *dts=startTimeUs;
+         else 
+            *dts=ADM_AUDIO_NO_DTS;  // rely on the parser to get exact DTS
+    }else   
+    {
+        *dts=startTimeUs+(uint64_t)d;
+    }
     //printf("EncoderAccess: dts=%"LLD"\n",*dts);
     samplesSeen+=samples;
     endMet=false;

@@ -67,5 +67,7 @@ class ADM_AudioEncoder
     virtual bool    isVBR(void) {return true;}
     virtual bool    initialize(void)=0; /// Returns true if init ok, false if encoding is impossible
     virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples)=0; /// returns false if eof met
+    virtual bool    provideAccurateSample(void) {return true;} /// Some encoder does not provide samples, in that case
+                                                                /// Return false, but the matching parser must exist!
 };
 #endif
