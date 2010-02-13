@@ -96,9 +96,10 @@ static bool endMet=false;
         return false;
     }
 
-    float d=(float)samplesSeen/(float)(filter->getInfo()->frequency);
-    d*=1000*1000;
+    float d=(float)samplesSeen*1000.*1000.;
+    d/=(float)(filter->getInfo()->frequency);
     *dts=startTimeUs+(uint64_t)d;
+    //printf("EncoderAccess: dts=%"LLD"\n",*dts);
     samplesSeen+=samples;
     endMet=false;
     return true;
