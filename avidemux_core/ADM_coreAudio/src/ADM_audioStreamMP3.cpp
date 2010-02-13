@@ -114,7 +114,9 @@ uint32_t offset;
                 *nbSample=info.samples;
                 //if(info.samples!=1152) ADM_assert(0);
                 *dts=lastDts;
+            //    printf("MP3 DTS =%"LLD" ->",*dts);
                 advanceDtsBySample(*nbSample);
+                //printf("%"LLD" , size=%d\n",*dts,*size);
                 return 1;
             }
             
