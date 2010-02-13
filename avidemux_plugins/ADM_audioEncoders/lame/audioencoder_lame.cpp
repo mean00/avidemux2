@@ -244,6 +244,8 @@ bool AUDMEncoder_Lame::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
   *len = nbout;
   if (!*len)
     *samples = 0;
+  else
+    *samples=BLOCK_SIZE;
   return true;
 }
 /**
