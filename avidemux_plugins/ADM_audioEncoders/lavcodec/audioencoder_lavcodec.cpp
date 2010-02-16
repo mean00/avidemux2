@@ -159,16 +159,51 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
   int channels=wavheader.channels;
   *samples = _chunk/channels; //FIXME
   *len = 0;
+  if(AudioEncoderStopped==_state)
+        return false;
 
-  if(!refillBuffer(_chunk ))
-  {
-    return 0; 
-  }
-        
-  if(tmptail-tmphead<_chunk)
-  {
-    return 0; 
-  }
+   refillBuffer (_chunk);
+   if(AudioEncoderNoInput==_state)
+    {
+        int left=tmptail-tmphead;
+        if (left < _chunk)
+        {
+            if(left) // Last block
+            {
+               dither16(&(tmpbuffer[tmphead]),left,channels);
+               ADM_assert(tmptail>=tmphead);
+#warning buffer overread
+               nbout = avcodec_encode_audio(CONTEXT, dest, 5000, (short *) &(tmpbuffer[tmphead]));
+               tmphead=tmptail;
+               *samples = left/channels; 
+               *len=nbout;
+               ADM_info("[Lav] Last audio block\n");
+               goto cnt;
+            }
+              // Flush
+               ADM_info("[Lav] Flush\n");
+              _state=AudioEncoderStopped;
+              if(CONTEXT->codec->capabilities & CODEC_CAP_DELAY)
+              {
+                  nbout=avcodec_encode_audio(CONTEXT, dest, 5000,NULL);
+                  if(nbout<0) 
+                  {
+                        ADM_warning("Error while flushing lame\n");
+                        return false;   
+                  }
+                        
+                  *len=nbout;
+                  *samples=_chunk/channels;  
+                  ADM_info("[Lav] Flushing, last block is %d bytes\n",nbout);
+                  return true;
+              }else
+              {
+              }
+              ADM_info("[Lav] No data to flush\n",nbout);
+              return true;
+        }
+    }
+
 
   dither16(&(tmpbuffer[tmphead]),_chunk,channels);
 
@@ -176,6 +211,7 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
   nbout = avcodec_encode_audio(CONTEXT, dest, 5000, (short *) &(tmpbuffer[tmphead]));
 
   tmphead+=_chunk;
+cnt:
   if (nbout < 0) 
   {
     printf("[Lavcodec] Error !!! : %"LD"\n", nbout);

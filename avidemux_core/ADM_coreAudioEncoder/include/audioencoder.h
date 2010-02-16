@@ -25,7 +25,12 @@
 
 
 typedef int AUDIOENCODER;
-
+typedef enum
+{
+    AudioEncoderRunning,
+    AudioEncoderNoInput,
+    AudioEncoderStopped
+}AudioEncoderState;
 /**
     \class AUDMEncoder
     \brief audio encoder base class. Combined with the audioaccess class it makes the exact opposite
@@ -37,7 +42,7 @@ class ADM_AudioEncoder
 {
   protected:
 
-    bool            eof_met;    // True if cannot encode anymore
+    AudioEncoderState _state;    // True if cannot encode anymore
     //
     uint8_t         *_extraData;
     uint32_t        _extraSize;

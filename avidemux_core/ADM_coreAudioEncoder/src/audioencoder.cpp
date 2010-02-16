@@ -30,7 +30,7 @@ ADM_AudioEncoder::ADM_AudioEncoder(AUDMAudioFilter *in)
     _extraData=NULL;
     _extraSize=0;
     ADM_assert(in);
-    eof_met=false;
+    _state=AudioEncoderRunning;
     _incoming=in;
     memset(&wavheader,0,sizeof(wavheader));
     tmphead=tmptail=0;
@@ -59,7 +59,7 @@ bool  ADM_AudioEncoder::refillBuffer(int minimum)
     uint32_t filler=wavheader.frequency*wavheader.channels;
   uint32_t nb;
   AUD_Status status;
-  if(eof_met) return 0;
+  if(AudioEncoderRunning!=_state) return false;
   while(1)
   {
     ADM_assert(tmptail>=tmphead); 
@@ -81,7 +81,7 @@ bool  ADM_AudioEncoder::refillBuffer(int minimum)
       {
         memset(&tmpbuffer[tmptail],0,sizeof(float)*(minimum-(tmptail-tmphead)));
         tmptail=tmphead+minimum;
-        eof_met=1;  
+        _state=AudioEncoderNoInput;  
         return true;
       }
       else continue;

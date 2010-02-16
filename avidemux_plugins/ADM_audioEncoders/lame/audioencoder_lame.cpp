@@ -193,6 +193,32 @@ bool AUDMEncoder_Lame::isVBR (void)
 
 }
 /**
+    \fn send
+    \brief Encode a block
+*/
+int AUDMEncoder_Lame::send(uint32_t nbSample, uint8_t *dest)
+{
+  int nbout;
+  dither16 (&(tmpbuffer[tmphead]), nbSample, wavheader.channels);
+  ADM_assert (tmptail >= tmphead);
+  int16_t *sample16=(int16_t *)& (tmpbuffer[tmphead]);
+  if (wavheader.channels == 1)
+    {
+      nbout =	lame_encode_buffer (MYFLAGS, 
+                sample16,
+			    sample16, nbSample, dest,
+			    16 * 1024);
+
+    }
+  else
+    {
+      nbout =	lame_encode_buffer_interleaved (MYFLAGS,
+					sample16,
+					nbSample / 2, dest, 16 * 1024);
+    }
+    return nbout;
+}
+/**
     \fn encode
     \brief Get an encoded mp3 packet
     @param dest [in] Where to write datas
@@ -208,34 +234,40 @@ bool AUDMEncoder_Lame::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 
   *samples = BLOCK_SIZE;	//FIXME
   *len = 0;
+  if(AudioEncoderStopped==_state)
+        return false;
 
-  if (!refillBuffer (_chunk))
+    refillBuffer (_chunk);
+    if(AudioEncoderNoInput==_state)
     {
-      return false;
+        int left=tmptail-tmphead;
+        if (left < _chunk)
+        {
+            if(left)
+            {
+                nbout=send(left,dest);
+                tmphead=tmptail;
+                ADM_info("[lame]Sending last packet\n");
+                goto cont;
+            }
+              // Flush
+              _state=AudioEncoderStopped;
+              nbout=lame_encode_flush(MYFLAGS,dest,16*1024);
+              if(nbout<0) 
+              {
+                    ADM_warning("Error while flushing lame\n");
+                    return false;   
+              }
+                    
+              *len=nbout;
+              *samples=BLOCK_SIZE;  
+              ADM_info("[Lame] Flushing, last block is %d bytes\n",nbout);
+              return true;
     }
-
-  if (tmptail - tmphead < _chunk)
-    {
-      return false;
-    }
-  dither16 (&(tmpbuffer[tmphead]), _chunk, wavheader.channels);
-  ADM_assert (tmptail >= tmphead);
-  int16_t *sample16=(int16_t *)& (tmpbuffer[tmphead]);
-  if (wavheader.channels == 1)
-    {
-      nbout =	lame_encode_buffer (MYFLAGS, 
-                sample16,
-			    sample16, _chunk, dest,
-			    16 * 1024);
-
-    }
-  else
-    {
-      nbout =	lame_encode_buffer_interleaved (MYFLAGS,
-					sample16,
-					_chunk / 2, dest, 16 * 1024);
-    }
+  }
+  nbout=send(_chunk,dest);
   tmphead += _chunk;
+cont:
   if (nbout < 0)
     {
       printf ("[Lame] Error !!! : %"LD"\n", nbout);

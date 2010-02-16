@@ -187,7 +187,7 @@ uint8_t AUDMEncoder_Faac::refillBuffer(int minimum)
   uint32_t filler=wavheader.frequency*wavheader.channels;
   uint32_t nb;
   AUD_Status status;
-  if(eof_met) return 0;
+  if(AudioEncoderRunning!=_state) return 0;
   while(1)
   {
     ADM_assert(tmptail>=tmphead);
@@ -209,7 +209,7 @@ uint8_t AUDMEncoder_Faac::refillBuffer(int minimum)
       {
         memset(&tmpbuffer[tmptail],0,sizeof(float)*(minimum-(tmptail-tmphead)));
         tmptail=tmphead+minimum;
-        eof_met=1;  
+        _state=AudioEncoderNoInput;  
         return minimum;
       }
       else continue;

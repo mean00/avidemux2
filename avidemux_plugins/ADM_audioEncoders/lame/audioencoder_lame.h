@@ -26,7 +26,7 @@ class AUDMEncoder_Lame : public ADM_AudioEncoder
    
     void              *lameFlags;
     uint32_t          _chunk; // Nb of float we encode each time
-         
+                      int send(uint32_t nbSample, uint8_t *dest);
   public:
     virtual             ~AUDMEncoder_Lame();
                         AUDMEncoder_Lame(AUDMAudioFilter *instream,bool globalHeader);	

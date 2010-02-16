@@ -15,7 +15,7 @@
 #ifndef AUDIOENCODERINTERNAL_H
 #define AUDIOENCODERINTERNAL_H
 
-#define ADM_AUDIO_ENCODER_API_VERSION 5
+#define ADM_AUDIO_ENCODER_API_VERSION 6
 #include "stddef.h"
 #include "audioencoder.h"
 #include "ADM_paramList.h"
