@@ -50,11 +50,11 @@ protected:
                FILE             *statFile;
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
                bool             _isMT; // True if multithreaded
-               uint64_t         nextDts;
                bool             _globalHeader;
                float            timeScaler;
                vector <ADM_timeMapping>mapper;
-               uint64_t         getRealPtsFromLav(uint64_t val);
+               bool             getRealPtsFromLav(uint64_t val,uint64_t *dts,uint64_t *pts);
+               vector <uint64_t>queueOfDts;
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 

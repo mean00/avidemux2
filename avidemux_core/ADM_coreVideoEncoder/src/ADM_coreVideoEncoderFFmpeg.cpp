@@ -99,13 +99,21 @@ uint32_t w,h;
     statFile=NULL;
     _globalHeader=globalHeader;
     _isMT=false;
-    encoderDelay=source->getInfo()->frameIncrement*LAVS(max_b_frames);
+
+    uint64_t inc=source->getInfo()->frameIncrement;
+    if(inc<30000) // Less than 30 ms , fps > 30 fps it is probably field
+     {
+            inc*=2;
+            ADM_warning("It is probably field encoded, doubling increment\n");
+     }
+    encoderDelay=inc*LAVS(max_b_frames);
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
     if(_globalHeader)
     {
                 ADM_info("Codec configured to use global header\n");
                 _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
     }
+    
 }
 /**
     \fn ADM_coreVideoEncoderFFmpeg
@@ -182,6 +190,7 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
 #else
 
     int n,d;
+    
     usSecondsToFrac(f,&n,&d);
  //   printf("[ff] Converted a time increment of %d ms to %d /%d seconds\n",f/1000,n,d);
     _context->time_base.num=n;
@@ -223,7 +232,8 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     prolog();
 
     uint64_t p=image->Pts;
-    nextDts=image->Pts;
+    queueOfDts.push_back(p);
+    aprintf("Incoming frame PTS=%"LLU", delay=%"LLU"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
     _frame.pts= timingToLav(p);    //
     if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
@@ -365,21 +375,26 @@ bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
     \fn getRealPtsFromLav
     \brief Lookup in the stored value to get the exact pts from the truncated one from lav
 */
-uint64_t ADM_coreVideoEncoderFFmpeg::getRealPtsFromLav(uint64_t val)
+bool ADM_coreVideoEncoderFFmpeg::getRealPtsFromLav(uint64_t val,uint64_t *dts,uint64_t *pts)
 {
     int n=mapper.size();
     for(int i=0;i<n;i++)
     {
         if(mapper[i].lavTS==val)
         {
-            uint64_t r=mapper[i].realTS;
+            *pts=mapper[i].realTS;
             mapper.erase(mapper.begin()+i);
-            return r;
+            // Now get DTS, it is min (lastDTS+inc, PTS-delay)
+            ADM_assert(queueOfDts.size());
+            *dts=queueOfDts[0];
+            queueOfDts.erase(queueOfDts.begin());
+            return true;
         }
     }
     ADM_warning("Cannot find PTS : %"LLU"\n",val);  
     for(int i=0;i<n;i++) ADM_warning("%d : %"LLU"\n",i,mapper[i].lavTS);
     ADM_assert(0);
+    return false;
 
 }
 /**
@@ -394,6 +409,11 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     {
         pict_type=_context->coded_frame->pict_type;
         keyframe=_context->coded_frame->key_frame;
+    }else
+    {
+        out->len=0;
+        ADM_warning("No picture...\n");
+        return false;
     }
     aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d\n",out->out_quantizer,pict_type,keyframe);
     out->len=size;
@@ -401,24 +421,12 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     if(keyframe) 
         out->flags=AVI_KEY_FRAME;
     else if(pict_type==FF_B_TYPE)
-            out->flags=AVI_B_FRAME;
+        out->flags=AVI_B_FRAME;
     
     // Update PTS/Dts
-
-    out->pts= getRealPtsFromLav(_context->coded_frame->pts);
-// Since we will buffer frame, we have to minus that from dts
-// which is in fact the pts of the currently encoded frame
-    uint64_t preDts;
-    if(nextDts>=getEncoderDelay())
-    {
-        preDts=nextDts-getEncoderDelay(); 
-     }
-    else                                    
-    {
-        preDts=0;
-    }
-#warning simplify
-    out->dts=preDts;
+    getRealPtsFromLav(_context->coded_frame->pts,&(out->dts),&(out->pts));
+    
+    
     aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
 
     // Update quant
@@ -426,6 +434,8 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
       out->out_quantizer=(int) floor (_frame.quality / (float) FF_QP2LAMBDA);
     else
       out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
+
+    
 
     // Update stats
     if(Settings.params.mode==COMPRESS_2PASS   || Settings.params.mode==COMPRESS_2PASS_BITRATE)
