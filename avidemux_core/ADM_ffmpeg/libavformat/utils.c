@@ -2602,7 +2602,7 @@ static int compute_pkt_fields2(AVStream *st, AVPacket *pkt){
         return -1;
     }
     if(pkt->dts != AV_NOPTS_VALUE && pkt->pts != AV_NOPTS_VALUE && pkt->pts < pkt->dts){
-        av_log(st->codec, AV_LOG_ERROR, "error, pts < dts\n");
+        av_log(st->codec, AV_LOG_ERROR, "error, pts < dts (%d/%d)\n",(int)pkt->pts,(int)pkt->dts);
         return -1;
     }
 
