@@ -562,8 +562,12 @@ bool ADM_Composer::rewind(void)
 {
         ADM_info("Rewinding\n");
         if(switchToSegment(0)==false) return false;
-        _VIDEOS *vid=_segments.getRefVideo(_segments.getSegment(0)->_reference);
-        SET_CURRENT_PTS(vid->lastDecodedPts);
+        _SEGMENT *seg=_segments.getSegment(0);
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        uint64_t pts=vid->lastDecodedPts;
+        pts=pts+seg->_startTimeUs;
+        pts-=seg->_refStartTimeUs;
+        SET_CURRENT_PTS(pts);
         return true;
 }
 /**
