@@ -37,4 +37,30 @@ int jsPrintTiming(int framenumber )
     }
     return 0;
 }
+
+/**
+    \fn    jsDumpSegments
+    \brief dump segment, video & all
+*/
+int jsDumpSegments (void)
+{// begin PostProcess
+        enterLock();
+        video_body->dumpEditing();
+        leaveLock(); 
+        return 0;
+}// end PostProcess
+/**
+    \fn dumpTiming
+    \brief dump segment, video & all
+*/
+JSBool dumpTiming(void)
+{// begin PostProcess
+        
+  
+        enterLock();
+        video_body->dumpTiming();
+        leaveLock(); 
+        
+        return 0;
+}// end PostProcess
 // EOF

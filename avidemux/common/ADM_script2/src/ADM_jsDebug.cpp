@@ -70,45 +70,6 @@ static void dumpFunc(JSFunctionSpec *f)
 }
 
 /**
-    \fn dumpEditing
-    \brief dump segment, video & all
-*/
-JSBool dumpEditing(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin PostProcess
-uint32_t info;
-uint32_t frame;
-uint32_t sz;
-        if(argc)
-        {
-            return JS_FALSE;
-        }
-        enterLock();
-        video_body->dumpEditing();
-        leaveLock(); 
-        
-        return JS_TRUE;
-}// end PostProcess
-/**
-    \fn dumpTiming
-    \brief dump segment, video & all
-*/
-JSBool dumpTiming(JSContext *cx, JSObject *obj, uintN argc, 
-                                       jsval *argv, jsval *rval)
-{// begin PostProcess
-uint32_t info;
-uint32_t frame;
-uint32_t sz;
-        if(argc != 0)
-          return JS_FALSE;
-  
-        enterLock();
-        video_body->dumpTiming();
-        leaveLock(); 
-        
-        return JS_TRUE;
-}// end PostProcess
-/**
     \fn printJSError
 */
 void  printJSError(JSContext *cx, const char *message, JSErrorReport *report)

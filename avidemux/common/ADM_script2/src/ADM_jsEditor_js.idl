@@ -11,6 +11,7 @@ class editor
 {
         /*            JSFUNC                 C FUNC           PARAM     */
         function int printTiming     : jsPrintTiming(int ) <static>;
+        function int dumpSegment     : jsDumpSegments()    <static>;
         /*            JSFUNC                 C FUNC           PARAM     */
         
         construct                          : jsEditor  ( ) <static>     ; 

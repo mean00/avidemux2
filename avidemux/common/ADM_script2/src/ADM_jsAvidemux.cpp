@@ -80,7 +80,15 @@ int jsClearSegments(void)
 */
 int  jsAddSegment(int ref, double start, double duration)
 {
-    if(true==video_body->addSegment(ref,(uint64_t)start,(uint64_t)duration)) return 1;
+    if(true==video_body->addSegment(ref,(uint64_t)start,(uint64_t)duration)) 
+    {
+        if(1==video_body->getNbSegment()) // We just added our first seg...
+        {
+                ADM_info("First segment, refreshing screen\n");
+                A_Rewind();
+        }
+        return 1;
+    }
     return 0;
 }
 

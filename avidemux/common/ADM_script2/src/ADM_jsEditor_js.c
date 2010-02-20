@@ -95,19 +95,46 @@ jjeditorprintTiming(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
     return var1;
 }
 static JSBool
-jjeditor__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjeditordumpSegment(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var13;
+    int var14;
     int var17;
+    jsval var18;
     JSBool var12;
     var13 = NULL;
+    var14 = 0;
     var17 = 0;
+    var18 = JSVAL_NULL;
     var12 = JS_FALSE;
     var13 = obj;
     var17 = argc;
-    jsEditor();
+    var14 = jsDumpSegments();
+    if (JS_NewNumberValue(cx, var14, &var18) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+0] = var18;
+    if (rval) {
+        *rval = var18;
+    }
     var12 = JS_TRUE;
+    do_return:
     return var12;
+}
+static JSBool
+jjeditor__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+    JSObject *var20;
+    int var24;
+    JSBool var19;
+    var20 = NULL;
+    var24 = 0;
+    var19 = JS_FALSE;
+    var20 = obj;
+    var24 = argc;
+    jsEditor();
+    var19 = JS_TRUE;
+    return var19;
 }
 static JSPropertySpec jjeditor_static_ps[] = {
     {NULL, 0, 0, NULL, NULL}
@@ -117,6 +144,7 @@ static JSPropertySpec jjeditor_ps[] = {
 };
 static JSFunctionSpec jjeditor_static_fs[] = {
     JS_FS("printTiming", jjeditorprintTiming, 1, 0, 1),
+    JS_FS("dumpSegment", jjeditordumpSegment, 0, 0, 1),
     JS_FS_END
 };
 static JSFunctionSpec jjeditor_fs[] = {
