@@ -20,6 +20,8 @@
 
 // use vdpau h264 hw decoding 
 #cmakedefine USE_VDPAU
+// use yasm
+#cmakedefine USE_YASM
 
 // 'gettimeofday' function is present
 #cmakedefine HAVE_GETTIMEOFDAY

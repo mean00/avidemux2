@@ -549,15 +549,21 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
 
 	printf("#ifdef ARCH_X86\n");
 	printf("#	define ENABLE_BSWAP 1\n");
-printf("#ifndef ADM_MINIMAL_INCLUDE\n");
+        printf("#ifndef ADM_MINIMAL_INCLUDE\n");
 	printf("#	define HAVE_MMX 1\n");
+	printf("#	define HAVE_SSE 1\n");
+	printf("#	define HAVE_AMD3DNOW 1\n");
+	printf("#	define HAVE_AMD3DNOWEXT 1\n");
 	printf("#	define ENABLE_MMX 1\n");
-printf("#endif //ADM_MINIMAL_INCLUDE\n");
+        printf("#endif //ADM_MINIMAL_INCLUDE\n");
 	printf("#	define HAVE_FAST_UNALIGNED 1\n");
 	printf("#	define HAVE_EBP_AVAILABLE 1\n");
 	printf("#	define HAVE_EBX_AVAILABLE 1\n");
 	printf("#else\n");
 	printf("#	define ENABLE_MMX 0\n");
+	printf("#	define HAVE_SSE 0\n");
+	printf("#	define HAVE_AMD3DNOW 0\n");
+	printf("#	define HAVE_AMD3DNOWEXT 0\n");
 	printf("#endif\n");
 
 	printf("#ifdef ARCH_X86_64\n");
@@ -568,7 +574,14 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
 	printf("#	define WORDS_BIGENDIAN 1\n");
 	printf("#endif\n");
 
+        printf("#ifdef USE_YASM\n");
+        printf("#define ENABLE_YASM      1\n");
+        printf("#define HAVE_YASM      1\n");
+        printf("#else // USE_YASM\n");
         printf("#define ENABLE_YASM      0\n");
+        printf("#undef HAVE_YASM      \n");
+        printf("#endif // USE_YASM\n");
+
         printf("#define ENABLE_ARM      0\n");
         printf("#define ENABLE_PPC      0\n");
 	printf("#define ENABLE_THREADS 1\n");

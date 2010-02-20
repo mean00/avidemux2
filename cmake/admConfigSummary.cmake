@@ -40,6 +40,7 @@ ADM_DISPLAY("gettext   " "${HAVE_GETTEXT}")
 ADM_DISPLAY("SDL       " "${USE_SDL}")
 ADM_DISPLAY("XVideo    " "${USE_XV}" "${XVIDEO_CAPABLE}")
 ADM_DISPLAY("VDPAU     " "${USE_VDPAU}" )
+ADM_DISPLAY("YASM      " "${USE_YASM}" )
 
 MESSAGE("*********************")
 

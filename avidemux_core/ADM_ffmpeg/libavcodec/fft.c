@@ -27,7 +27,7 @@
  */
 
 #include "dsputil.h"
-
+#include "config.h" // MEANX ????
 /* cos(2*pi*x/n) for 0<=x<=n/4, followed by its reverse */
 DECLARE_ALIGNED_16(FFTSample, ff_cos_16[8]);
 DECLARE_ALIGNED_16(FFTSample, ff_cos_32[16]);

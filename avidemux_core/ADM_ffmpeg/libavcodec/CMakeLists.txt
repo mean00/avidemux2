@@ -10,9 +10,7 @@ SET(${ADM_LIB}_SRCS
 	xan.c  rpza.c  msrle.c  msrledec.c msvideo1.c  cinepak.c  vqavideo.c  idcinvideo.c  smc.c
 	flicvideo.c  interplayvideo.c  dpcm.c  8bps.c  vmdav.c  truemotion1.c  flac.c
 	g726.c  qtrle.c  
-        #lcl.c  
         snow.c  rangecoder.c  bitstream.c  h264idct.c  h261.c
-	#amr.c  
         rdft.c
         vc1dec.c vc1data.c vc1dsp.c vc1_parser.c
         avpacket.c
@@ -52,6 +50,22 @@ IF(ADM_CPU_X86)
                 #x86/fft_3dn2.c
 		#x86/fft_3dn.c  
                 x86/dsputilenc_mmx.c  x86/vc1dsp_mmx.c  x86/idct_mmx.c)
+        IF(USE_YASM)
+                SET(YASM_SOURCE
+                                x86/dsputil_yasm.asm
+                                x86/fft_mmx.asm
+                                x86/h264_deblock_sse2.asm
+                                x86/h264_idct_sse2.asm)
+                SET(YASM_DEP x86/fft_3dn2.c  x86/fft_3dn.c   x86/fft_sse.c)
+                 FOREACH(yasm_files ${YASM_SOURCE})
+                        SET(tgt ${CMAKE_CURRENT_BINARY_DIR}/${yasm_files}.o)
+                        YASM_COMPILE(${CMAKE_CURRENT_SOURCE_DIR}/${yasm_files} ${tgt} ${CMAKE_CURRENT_SOURCE_DIR}/x86)
+                        SET(YASM_OBJ ${YASM_OBJ} ${tgt})
+                 ENDFOREACH(yasm_files)
+
+
+	        SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS} ${YASM_OBJ} ${YASM_DEP})
+        ENDIF(USE_YASM)
 ENDIF(ADM_CPU_X86)
 
 IF (ADM_CPU_ALTIVEC)
@@ -71,7 +85,7 @@ IF (ADM_DEBUG AND ADM_CPU_X86_32)
 	ADD_SOURCE_CFLAGS(x86/dsputil_mmx.c -O2)
 	ADD_SOURCE_CFLAGS(x86/snowdsp_mmx.c -O2)
 ENDIF (ADM_DEBUG AND ADM_CPU_X86_32)
-
+ADD_DEPENDENCIES(${ADM_LIB} ${YASM_OBJ})
 TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6 ADM_libavutil6 ${ZLIB_LIBRARY})
 
 ADM_INSTALL_LIB(${ADM_LIB} )

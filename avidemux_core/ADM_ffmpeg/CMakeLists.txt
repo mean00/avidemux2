@@ -1,8 +1,8 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
-# Compiler flags
 ADD_DEFINITIONS(-DHAVE_AV_CONFIG_H -fomit-frame-pointer -fno-math-errno)
-
+# Compiler flags
+###########################""
 IF (UNIX)
 	# CMake automatically adds -fPIC so remove it
 	STRING(REPLACE "-fPIC" "" CMAKE_SHARED_LIBRARY_C_FLAGS ${CMAKE_SHARED_LIBRARY_C_FLAGS})

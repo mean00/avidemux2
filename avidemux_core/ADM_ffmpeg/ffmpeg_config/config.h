@@ -479,6 +479,9 @@
 #	define ENABLE_BSWAP 1
 #ifndef ADM_MINIMAL_INCLUDE
 #	define HAVE_MMX 1
+#	define HAVE_SSE 1
+#	define HAVE_AMD3DNOW 1
+#	define HAVE_AMD3DNOWEXT 1
 #	define ENABLE_MMX 1
 #endif //ADM_MINIMAL_INCLUDE
 #	define HAVE_FAST_UNALIGNED 1
@@ -486,6 +489,9 @@
 #	define HAVE_EBX_AVAILABLE 1
 #else
 #	define ENABLE_MMX 0
+#	define HAVE_SSE 0
+#	define HAVE_AMD3DNOW 0
+#	define HAVE_AMD3DNOWEXT 0
 #endif
 #ifdef ARCH_X86_64
 #	define HAVE_FAST_64BIT 1
@@ -493,7 +499,13 @@
 #ifdef ADM_BIG_ENDIAN
 #	define WORDS_BIGENDIAN 1
 #endif
+#ifdef USE_YASM
+#define ENABLE_YASM      1
+#define HAVE_YASM      1
+#else // USE_YASM
 #define ENABLE_YASM      0
+#undef HAVE_YASM      
+#endif // USE_YASM
 #define ENABLE_ARM      0
 #define ENABLE_PPC      0
 #define ENABLE_THREADS 1
