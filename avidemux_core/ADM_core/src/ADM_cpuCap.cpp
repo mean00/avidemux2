@@ -131,6 +131,7 @@ int rval = 0;
 											if(!(myCpuMask&ADM_CPUCAP_##x)) printf("  but disabled");printf("\n");}
 	CHECK(MMX);
 	CHECK(3DNOW);
+    CHECK(3DNOWEXT);
 	CHECK(MMXEXT);
 	CHECK(SSE);
 	CHECK(SSE2);
@@ -138,7 +139,7 @@ int rval = 0;
 	CHECK(SSSE3);
 
 #endif // X86
-	printf("[cpuCaps]End of CPU capabilities check (cpuMask :%x)\n",myCpuMask);
+	printf("[cpuCaps]End of CPU capabilities check (cpuMask :%x, cpuCaps :%x)\n",myCpuMask,myCpuCaps);
 	return ;
 }
 
