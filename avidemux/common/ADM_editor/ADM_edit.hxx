@@ -212,6 +212,10 @@ public:
                     bool                remove(uint64_t start,uint64_t end);
                     bool                addSegment(uint32_t ref, uint64_t startRef, uint64_t duration);
                     bool                clearSegment(void);
+                    uint32_t            getNbSegment(void)
+                                        {
+                                            return _segments.getNbSegments();
+                                        }
 // For js
                     bool                dumpEditing(void);
                     bool                dumpTiming(void);
