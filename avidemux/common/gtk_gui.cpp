@@ -40,7 +40,7 @@
 
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
-#include "ADM_script/ADM_JSif.h"
+#include "ADM_script2/include/ADM_JSif.h"
 char * actual_workbench_file;
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
