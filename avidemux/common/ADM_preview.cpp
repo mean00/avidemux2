@@ -778,6 +778,15 @@ void admPreview::cleanUp(void)
 {
 	admPreview::stop();
 
+	destroy();
+}
+/**
+    \fn cleanUp
+    \brief do the cleanup, what else ?
+*/
+void admPreview::destroy(void)
+{
+    ADM_info("Destroying preview\n");
 	if(rdrImage)
 	{
 		delete rdrImage;

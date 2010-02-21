@@ -16,7 +16,7 @@
 #include <vector>
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
-
+bool ADM_dm_cleanup(void);
 void ADM_demuxersCleanup(void);
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
@@ -90,6 +90,14 @@ uint8_t ADM_dm_loadPlugins(const char *path)
 	printf("[ADM_av_plugin] Scanning done\n");
 
 	return 1;
+}
+/**
+    \fn ADM_dm_destroy
+*/
+bool ADM_dm_cleanup(void)
+{
+    ADM_demuxersCleanup();
+    return true;
 }
 /**
         \fn AVDM_cleanup

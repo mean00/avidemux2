@@ -17,8 +17,8 @@
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerProto.h"
+void ADM_MuxersCleanup(void);
 
-void ADM_muxersCleanup(void);
 ADM_muxer *ADM_muxerSpawn(uint32_t magic,const char *name);
 
 std::vector <ADM_dynMuxer *> ListOfMuxers;
@@ -118,6 +118,14 @@ uint8_t ADM_mx_loadPlugins(const char *path)
 	printf("[ADM_mx_plugin] Scanning done\n");
 
 	return 1;
+}
+/**
+    \fn ADM_mx_cleanup
+*/
+bool ADM_mx_cleanup(void) 
+{
+    ADM_MuxersCleanup();
+    return true;
 }
 /**
     \fn ADM_mx_getExtraConf

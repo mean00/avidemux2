@@ -39,5 +39,6 @@ class admPreview
       static bool nextKeyFrame(void);
       static bool previousKeyFrame(void);
       static bool previousFrame(void);
+      static void destroy(void);
 };
 #endif

@@ -209,6 +209,25 @@ uint8_t ADM_vf_loadPlugins(const char *path)
 	return 1;
 }
 /**
+    \fn ADM_vf_cleanup
+*/
+bool ADM_vf_cleanup(void)
+{
+    ADM_info("Destroying video filter list\n");
+    for(int cat=0;cat<VF_MAX;cat++)
+    {
+        int nb=ADM_videoFilterPluginsList[cat].size();
+        for(int i=0;i<nb;i++)
+        {
+            ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][i];
+            delete a;
+            ADM_videoFilterPluginsList[cat][i]=NULL;
+        }
+        ADM_videoFilterPluginsList[cat].clear();
+    }
+    return true;
+}
+/**
     \fn ADM_vf_getPluginFromTag
     \brief 
 */

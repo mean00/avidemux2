@@ -26,7 +26,7 @@
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "DIA_uiTypes.h"
-
+#include "ADM_preview.h"
 #define __DECLARE__
 #include "avi_vars.h"
 
@@ -81,6 +81,10 @@ extern uint8_t ADM_mx_loadPlugins(const char *path);
 extern uint8_t ADM_ve6_loadPlugins(const char *path);
 
 extern bool ADM_ad_cleanup(void);
+extern bool ADM_ae_cleanup(void);
+extern bool ADM_mx_cleanup(void);
+extern bool ADM_vf_cleanup(void);
+extern bool ADM_dm_cleanup(void);
 
 extern bool vdpauProbe(void);
 extern void loadPlugins(void);
@@ -103,6 +107,7 @@ extern uint8_t win32_netInit(void);
 
 extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
+extern void renderDestroy(void);
 
 // Spidermonkey/Scripting stuff  
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
@@ -332,9 +337,17 @@ void onexit( void )
 
 	destroyGUI();
     destroyPrefs();
+    
+    admPreview::destroy();
     renderDestroy();
+
     ADM_ad_cleanup();
-    printf("End of cleanup\n");
+    ADM_ae_cleanup();
+    ADM_mx_cleanup();
+    ADM_vf_cleanup();
+    ADM_dm_cleanup();
+
+    printf("--End of cleanup--\n");
     ADMImage_stat();
     ADM_memStat();
     ADM_memStatEnd();

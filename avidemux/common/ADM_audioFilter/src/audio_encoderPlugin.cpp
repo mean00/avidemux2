@@ -157,6 +157,20 @@ uint8_t ADM_ae_loadPlugins(const char *path)
 	return 1;
 }
 /**
+    \fn ADM_ae_cleanup
+*/
+bool ADM_ae_cleanup(void)
+{
+    for(uint32_t i=1;i<ListOfAudioEncoder.size();i++)
+	{
+		ADM_audioEncoder *a=ListOfAudioEncoder[i];
+        delete a;
+        ListOfAudioEncoder[i]=NULL;
+	}
+    ListOfAudioEncoder.clear();
+    return true;
+}
+/**
     \fn audioPrintCurrentCodec
     \brief updates the UI with the current selected audio encoder
 */
