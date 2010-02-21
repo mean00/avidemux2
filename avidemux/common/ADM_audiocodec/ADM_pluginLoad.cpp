@@ -183,5 +183,18 @@ ADM_Audiocodec *ADM_ad_searchCodec(uint32_t fourcc,	WAVHeader *info,uint32_t ext
     }
 	return NULL;
 }
-
+/**
+    \fn ADM_ad_cleanup
+*/
+bool ADM_ad_cleanup(void)
+{
+    ADM_info("Purging audio decoder\n");
+    for(int i=0;i<ADM_audioPlugins.size();i++)
+    {
+        ADM_ad_plugin *a=ADM_audioPlugins[i];
+        delete a;
+        ADM_audioPlugins[i]=NULL;
+    }
+    ADM_audioPlugins.clear();
+}   
 //EOF

@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "config.h"
-#include "ADM_assert.h"
+#include "ADM_default.h"
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
@@ -130,6 +130,7 @@ uint8_t renderInit( void )
 
 void renderDestroy(void)
 {
+    ADM_info("Cleaning up Render\n");
 	if(screenBuffer) 
 	{
 		delete[] screenBuffer;

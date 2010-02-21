@@ -79,6 +79,9 @@ extern uint8_t ADM_ae_loadPlugins(const char *path);
 extern uint8_t ADM_dm_loadPlugins(const char *path);
 extern uint8_t ADM_mx_loadPlugins(const char *path);
 extern uint8_t ADM_ve6_loadPlugins(const char *path);
+
+extern bool ADM_ad_cleanup(void);
+
 extern bool vdpauProbe(void);
 extern void loadPlugins(void);
 extern void InitFactory(void);
@@ -329,10 +332,13 @@ void onexit( void )
 
 	destroyGUI();
     destroyPrefs();
+    renderDestroy();
+    ADM_ad_cleanup();
     printf("End of cleanup\n");
     ADMImage_stat();
     ADM_memStat();
     ADM_memStatEnd();
+    
     ADM_info("\nGoodbye...\n\n");
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)

@@ -109,6 +109,8 @@ ADM_Composer::~ADM_Composer ()
 {
 	_segments.deleteAll();
 	deletePostProc(&_pp);
+    if(_imageBuffer) delete  _imageBuffer;
+    _imageBuffer=NULL;
 }
 
 

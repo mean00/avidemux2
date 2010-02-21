@@ -661,6 +661,7 @@ int UI_RunApp(void)
 	destroyTranslator();
     delete myApplication;
     myApplication=NULL;
+    
 }
 /**
     \fn searchTranslationTable(const char *name))
