@@ -40,16 +40,20 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         ptsStart=dtsStart=startTime;
     }else   
     {
-        // Now search the DTS associated with it...
-        dtsStart=ptsStart;
-        if(false==video_body->getDtsFromPts(&dtsStart))
+        uint64_t delta=ptsStart;
+        video_body->getPtsDtsDelta(&delta);
+        ADM_info("PTS/DTS delta=%"LLU" us\n",delta);
+        //videoDelay
+        if(delta>ptsStart)
         {
-                ADM_warning("Cannot get DTS for PTS=%"LLU" ms, expect problems\n",ptsStart/1000);
-                dtsStart=ptsStart;
+            videoDelay=delta-ptsStart;
+            dtsStart=0;
+            ADM_info("Dts is too early, delaying everything by %"LLU" ms\n",videoDelay/1000);
         }else
         {
-            ADM_info("Using %"LLU" ms as startTime\n",dtsStart/1000);
+            dtsStart=ptsStart-delta;
         }
+        // Now search the DTS associated with it...
     }
     eofMet=false;
 
@@ -103,7 +107,7 @@ bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxL
     if(true==eofMet) return false;
 again:
     image.data=data;
-    if(false==video_body->getCompressedPicture(&image))
+    if(false==video_body->getCompressedPicture(videoDelay,&image))
     {
             ADM_warning(" Get packet failed ");
             return false;

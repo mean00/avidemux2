@@ -74,6 +74,7 @@ class ADM_Composer : public ADM_audioStream
                     bool        seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode=false);
                     // Some useful functions...
                     void        recalibrate(uint64_t *time,_SEGMENT *seg);
+                    void        recalibrateSigned(int64_t *time,_SEGMENT *seg);
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);
                     // Need to get the image just before targetPts
                     bool        decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
@@ -92,8 +93,8 @@ protected:
 
                     bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
                     bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
-
-
+                                
+                    
 
 //******************************************************************************************
   private:
@@ -104,7 +105,7 @@ protected:
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
                     uint64_t    _currentPts;        // Current image PTS
                     uint32_t    _currentSegment;    // Current video segment
-                    uint64_t    _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
+                    int64_t     _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
                                                     // Warning, it is actually the DTS of the NEXT frame to fetch
 //****************************** Audio **********************************
                     // _audiooffset points to the offset / the total segment
@@ -159,7 +160,7 @@ public:
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
-                    bool        getCompressedPicture(ADMCompressedImage *img);     //COPYMODE                
+                    bool        getCompressedPicture(uint64_t delay,ADMCompressedImage *img);     //COPYMODE                
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
@@ -204,6 +205,8 @@ public:
                     bool                getNKFramePTS(uint64_t *frameTime);
                     bool                getPKFramePTS(uint64_t *frameTime);
                     bool                getDtsFromPts(uint64_t *time);
+                                        /// Returns pts-dts for given frame
+                    bool		        getPtsDtsDelta(uint64_t *frameTime);
 /******************************* Post Processing ************************************/
                     uint8_t             setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
                     uint8_t             getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);

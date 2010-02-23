@@ -36,14 +36,16 @@
 
 
 */
-bool        ADM_Composer::getCompressedPicture(ADMCompressedImage *img)
+bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressedImage *img)
 {
     uint64_t tail;
     //
+    int64_t signedPts;
+    int64_t signedDts;
+
 againGet:
     static uint32_t fn;
     fn++;
-
     _SEGMENT *seg=_segments.getSegment(_currentSegment);
     ADM_assert(seg);
     _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
@@ -78,28 +80,44 @@ againGet:
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
     // Guess DTS
-
+    //
    // ADM_info("Frame : Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
     if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
+    
+    // Since we rely on PTS for seeking, frame 0 might be at PTS 0, in that case the matching dts would be <0
+    // so the caller can delay everything but recalibrate will clamp the value
+    // so we use correctedDts so that the value is ok
+    if(img->demuxerDts==ADM_NO_PTS)
+            signedDts=ADM_NO_PTS;
+    else
     {
-        // Recalibrate PTS & DTS...
-        recalibrate(&(img->demuxerPts),seg);
-        recalibrate(&(img->demuxerDts),seg);
+            signedDts=(int64_t)img->demuxerDts;
+            recalibrateSigned(&(signedDts),seg);
     }
+
+    if(img->demuxerPts==ADM_NO_PTS)
+            signedPts=ADM_NO_PTS;
+    else
+    {
+            signedPts=(int64_t)img->demuxerPts;
+            recalibrateSigned(&(signedPts),seg);
+    }
+    
     // From here we are in linear time...
     if(img->demuxerDts==ADM_NO_PTS)
     {
         img->demuxerDts=_nextFrameDts;
+        signedDts=_nextFrameDts;
     }else
     {
 // It means that the incoming image is earlier than the expected time.
 // we add a bit of timeIncrement to compensate for rounding
         if(_nextFrameDts>img->demuxerDts+vid->timeIncrementInUs/10)
         {
-         ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLU" ms got : %"LLU" ms\n",fn,_nextFrameDts/1000,img->demuxerDts/1000);
+            ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLU" ms got : %"LLU" ms\n",fn,_nextFrameDts/1000,img->demuxerDts/1000);
         }
-        _nextFrameDts=img->demuxerDts;
+        _nextFrameDts=signedDts;
     }
     // Increase for next one
     _nextFrameDts+=vid->timeIncrementInUs;
@@ -124,6 +142,8 @@ againGet:
 
     }
    // ADM_info("Frame after RECAL: Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
+    img->demuxerDts=signedDts+videoDelay;
+    img->demuxerPts=signedPts+videoDelay;
     return true;
 
 nextSeg:
@@ -136,6 +156,6 @@ nextSeg:
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
     thisseg->_dropBframes=1;
     ADM_info("Retrying for next segment\n");
-    return getCompressedPicture(img);
+    return getCompressedPicture(videoDelay,img);
    
 }

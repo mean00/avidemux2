@@ -30,6 +30,19 @@
 #include "ADM_pp.h"
 
 /**
+    \fn recalibrateSigned
+    \brief Same as below, but can return negative number
+*/
+void ADM_Composer::recalibrateSigned(int64_t *time,_SEGMENT *seg)
+{
+int64_t t=(int64_t)*time;
+        if(*time==ADM_NO_PTS) return;
+
+        t-=seg->_refStartTimeUs;
+        t+=seg->_startTimeUs;
+        *time=(int64_t )t;
+}
+/**
     \fn recalibrate
     \brief Convert time given in time from absolute ref video to linear time
 */
