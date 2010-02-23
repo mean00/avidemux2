@@ -113,14 +113,19 @@ againGet:
     {
 // It means that the incoming image is earlier than the expected time.
 // we add a bit of timeIncrement to compensate for rounding
-        if(_nextFrameDts>img->demuxerDts+vid->timeIncrementInUs/10)
+        if(_nextFrameDts!=ADM_NO_PTS)
         {
-            ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLU" ms got : %"LLU" ms\n",fn,_nextFrameDts/1000,img->demuxerDts/1000);
+            if(_nextFrameDts>signedDts+vid->timeIncrementInUs/10)
+            {
+                ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLD" ms got : %"LLD" ms\n",
+                                                fn,_nextFrameDts/1000,signedDts/1000);
+            }
         }
         _nextFrameDts=signedDts;
     }
     // Increase for next one
-    _nextFrameDts+=vid->timeIncrementInUs;
+    if(ADM_NO_PTS!=_nextFrameDts)
+        _nextFrameDts+=vid->timeIncrementInUs;
     // Check the DTS is not too late compared to next seg beginning...
     if(_currentSegment+1<_segments.getNbSegments() && img->demuxerDts!=ADM_NO_PTS)
     {
@@ -132,7 +137,7 @@ againGet:
         }else       
         {
             nextDts-=nextSeg->_refStartTimeUs;
-            if(img->demuxerDts>=nextDts)
+            if(signedDts>=nextDts)
             {
                 ADM_warning("%"LU" have to switch segment, DTS limit reached %"LLU" %"LLU"\n",fn,img->demuxerDts/1000,nextDts/1000);
                 goto nextSeg;

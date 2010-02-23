@@ -40,6 +40,8 @@ int64_t t=(int64_t)*time;
 
         t-=seg->_refStartTimeUs;
         t+=seg->_startTimeUs;
+        if(t==ADM_NO_PTS)
+                t=ADM_NO_PTS-1;
         *time=(int64_t )t;
 }
 /**
