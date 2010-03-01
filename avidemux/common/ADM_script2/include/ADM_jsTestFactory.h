@@ -39,6 +39,7 @@ int jsTestFacMenu(void);
 int jsTestFacToggle(void);
 int jsTestFacFloat(void);
 int jsTestFacInt(void);
+int jsTestFacEncoding(void);
 };
 
 

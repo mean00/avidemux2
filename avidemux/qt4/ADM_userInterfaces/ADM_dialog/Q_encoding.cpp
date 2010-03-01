@@ -214,7 +214,7 @@ void DIA_encodingQt4::setVideoCodec(const char *n)
 void DIA_encodingQt4::setBitrate(uint32_t br,uint32_t globalbr)
 {
           ADM_assert(window);
-          snprintf(string,79,"%lu kB/s",br,globalbr);
+          snprintf(string,79,"%"LU" kB/s",br,globalbr);
           WRITE(labelVidBitrate);
 
 }
@@ -237,7 +237,7 @@ void DIA_encodingQt4::setContainer(const char *container)
 void DIA_encodingQt4::setQuantIn(int size)
 {
           ADM_assert(window);
-          sprintf(string,"%lu",size);
+          sprintf(string,"%"LU,size);
           WRITE(labelQz);
 
 }
@@ -250,7 +250,7 @@ void DIA_encodingQt4::setTotalSize(uint64_t size)
 {
           ADM_assert(window);
           uint64_t mb=size>>20;
-          sprintf(string,"%lu MB",(int)mb);
+          sprintf(string,"%"LU" MB",(int)mb);
           WRITE(labelTotalSize);
 
 }
@@ -264,7 +264,7 @@ void DIA_encodingQt4::setAudioSize(uint64_t size)
 {
           ADM_assert(window);
           uint64_t mb=size>>20;
-          sprintf(string,"%lu MB",(int)mb);
+          sprintf(string,"%"LU" MB",(int)mb);
           WRITE(labelAudioSize);
 
 }

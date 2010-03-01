@@ -60,5 +60,5 @@ public:
                 virtual void refresh(void);
 };
 //********************
-DIA_encodingBase *createEncoding(uint32_t fps1000);
+DIA_encodingBase *createEncoding(uint64_t duration);
 #endif

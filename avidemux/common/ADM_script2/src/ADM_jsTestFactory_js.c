@@ -517,34 +517,61 @@ jjadmTestFacSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
     return var120;
 }
 static JSBool
-jjadmTestCrash(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjadmTestEncoding(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject *var128;
+    int var129;
     int var132;
+    jsval var133;
     JSBool var127;
     var128 = NULL;
+    var129 = 0;
     var132 = 0;
+    var133 = JSVAL_NULL;
     var127 = JS_FALSE;
     var128 = obj;
     var132 = argc;
-    jsTestCrash();
+    var129 = jsTestFacEncoding();
+    if (JS_NewNumberValue(cx, var129, &var133) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+0] = var133;
+    if (rval) {
+        *rval = var133;
+    }
     var127 = JS_TRUE;
+    do_return:
     return var127;
+}
+static JSBool
+jjadmTestCrash(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+    JSObject *var135;
+    int var139;
+    JSBool var134;
+    var135 = NULL;
+    var139 = 0;
+    var134 = JS_FALSE;
+    var135 = obj;
+    var139 = argc;
+    jsTestCrash();
+    var134 = JS_TRUE;
+    return var134;
 }
 static JSBool
 jjadmTestAssert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var134;
-    int var138;
-    JSBool var133;
-    var134 = NULL;
-    var138 = 0;
-    var133 = JS_FALSE;
-    var134 = obj;
-    var138 = argc;
+    JSObject *var141;
+    int var145;
+    JSBool var140;
+    var141 = NULL;
+    var145 = 0;
+    var140 = JS_FALSE;
+    var141 = obj;
+    var145 = argc;
     jsTestAssert();
-    var133 = JS_TRUE;
-    return var133;
+    var140 = JS_TRUE;
+    return var140;
 }
 static JSPropertySpec jj_static_ps[] = {
     {NULL, 0, 0, NULL, NULL}
@@ -571,6 +598,7 @@ static JSFunctionSpec jj_static_fs[] = {
     JS_FS("admTestFacNotch", jjadmTestFacNotch, 0, 0, 1),
     JS_FS("admTestFacThreadCount", jjadmTestFacThreadCount, 0, 0, 1),
     JS_FS("admTestFacSlider", jjadmTestFacSlider, 0, 0, 1),
+    JS_FS("admTestEncoding", jjadmTestEncoding, 0, 0, 1),
     JS_FS("admTestCrash", jjadmTestCrash, 0, 0, 0),
     JS_FS("admTestAssert", jjadmTestAssert, 0, 0, 0),
     JS_FS_END
@@ -594,6 +622,7 @@ static JSFunctionSpec jj_fs[] = {
     JS_FS("admTestFacNotch", jjadmTestFacNotch, 0, 0, 1),
     JS_FS("admTestFacThreadCount", jjadmTestFacThreadCount, 0, 0, 1),
     JS_FS("admTestFacSlider", jjadmTestFacSlider, 0, 0, 1),
+    JS_FS("admTestEncoding", jjadmTestEncoding, 0, 0, 1),
     JS_FS("admTestCrash", jjadmTestCrash, 0, 0, 0),
     JS_FS("admTestAssert", jjadmTestAssert, 0, 0, 0),
     JS_FS_END

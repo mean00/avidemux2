@@ -18,7 +18,7 @@
 #include "DIA_fileSel.h"
 #include "DIA_factory.h"
 #include "ADM_jsTestFactory.h"
-
+#include "DIA_encoding.h"
 
 /**
     \fn crashTest
@@ -420,5 +420,25 @@ int jsTestFacNotch(void)
   return false;
       
 }
-
+/**
+    \fn jsTestFacEncoding
+*/
+int jsTestFacEncoding(void)
+{
+    DIA_encodingBase *base=createEncoding(1000*10000LL);
+    base->setContainer("the container");
+    base->setAudioCodec("the audio codec");
+    base->setVideoCodec("the video codec");
+    for(int i=0;i<20;i++)
+    {
+        base->refresh();
+        base->pushVideoFrame(10000,1,5*1000LL*i);
+        base->refresh();
+        
+        ADM_usleep(500*1000);
+    }
+    delete base;
+    base=NULL;
+    return true;
+}
 //EOF 

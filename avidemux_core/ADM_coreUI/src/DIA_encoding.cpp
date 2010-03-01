@@ -20,7 +20,7 @@
 #include <math.h>
 #define  ETA_SAMPLE_PERIOD 60000 //Use last n millis to calculate ETA
 #define  GUI_UPDATE_RATE 500    // Ms
-
+extern void UI_purge(void);
 DIA_encodingBase::DIA_encodingBase( uint64_t duration )
 {
         _originalPriority=getpriority(PRIO_PROCESS, 0);

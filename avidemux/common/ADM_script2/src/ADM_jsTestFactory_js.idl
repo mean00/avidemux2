@@ -21,6 +21,7 @@ function int admTestFacMatrix  :  jsTestFacMatrix  (void  ) <static>;
 function int admTestFacNotch   :  jsTestFacNotch   (void  ) <static>;
 function int admTestFacThreadCount:  jsTestFacThreadCount   (void  ) <static>;
 function int admTestFacSlider  :  jsTestFacSlider  (void  ) <static>;
+function int admTestEncoding   :  jsTestFacEncoding  (void  ) <static>;
 function void admTestCrash     :  jsTestCrash      (void  ) <static>;
 function void admTestAssert    :  jsTestAssert     (void  ) <static>;
 
