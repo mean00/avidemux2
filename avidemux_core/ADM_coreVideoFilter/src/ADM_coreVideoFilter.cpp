@@ -61,7 +61,7 @@ const char        *ADM_coreVideoFilter::getConfiguration(void)
 FilterInfo  *ADM_coreVideoFilter::getInfo(void)
 {
     ADM_assert(previousFilter);
-    return previousFilter->getInfo();
+    return &info; //previousFilter->getInfo();
 }
 /**
     \fn goToTime
