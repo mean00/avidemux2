@@ -142,6 +142,8 @@ FilterInfo  *prevInfo=previousFilter->getInfo();
                         src2+=x;
                         dest+=line;
                 }	
+            //printf("Cropt:Dts = %"LLU"\n",image->Pts);
+            image->copyInfo(original);     
             return 1;
 }
 /**
