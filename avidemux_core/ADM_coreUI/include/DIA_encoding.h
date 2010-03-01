@@ -34,7 +34,9 @@ protected:
                 float     _fps_average;
                 uint32_t  _average_bitrate;
                 uint64_t  _totalDurationUs;
-                uint64_t  _currentDurationUs;
+                uint64_t  _currentDts;
+                uint64_t  _lastDts;
+                uint64_t  _remainingTimeUs;    // ERA
                 uint64_t  _totalSize;
                 uint64_t  _audioSize;
                 uint64_t  _videoSize;
@@ -51,6 +53,9 @@ protected:
                 virtual void setAudioSize(uint64_t size)=0;
                 virtual void setTotalSize(uint64_t size)=0;
                 virtual void setFrameCount(uint32_t nb)=0;
+                virtual void setElapsedTimeMs(uint32_t nb)=0;
+                virtual void setRemainingTimeMS(uint32_t nb)=0;
+            
 
 public:
                 virtual void setPhasis(const char *n)=0;

@@ -16,6 +16,8 @@
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerUtils.h"
+#include "fourcc.h"
+extern const char *getStrFromAudioCodec( uint32_t codec);
 /**
     \fn rescaleFps
     \brief Rescale fps to be accurate (i.e. 23.976 become 24000/1001)
@@ -76,6 +78,10 @@ bool     ADM_muxer::initUI(const char *title)
         videoDuration=vStream->getVideoDuration();
 
         encoding=createEncoding(videoDuration);
+        // Set video stream etc...
+        encoding->setVideoCodec(fourCC::tostring(vStream->getFCC()));
+        if(!nbAStreams) encoding->setAudioCodec("None");
+                else    encoding->setAudioCodec(getStrFromAudioCodec(aStreams[0]->getInfo()->encoding));
         return true;
 }
 /**

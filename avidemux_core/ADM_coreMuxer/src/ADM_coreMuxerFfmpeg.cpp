@@ -383,7 +383,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     AVRational *scale=&(video_st->codec->time_base);
     uint64_t videoDuration=vStream->getVideoDuration();
 
-    encoding=createEncoding(videoDuration);
+    initUI("Saving");
     encoding->setContainer(getContainerName());
     MuxAudioPacket audioPackets[nbAStreams];
 

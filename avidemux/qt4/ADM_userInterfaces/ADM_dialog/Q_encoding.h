@@ -54,6 +54,8 @@ protected:
     void setPercent(uint32_t percent);
     void setFps(uint32_t fps);
     void setFrameCount(uint32_t nb);
+    void setElapsedTimeMs(uint32_t nb);
+    void setRemainingTimeMS(uint32_t nb);
 
 public:    
     void *WINDOW;

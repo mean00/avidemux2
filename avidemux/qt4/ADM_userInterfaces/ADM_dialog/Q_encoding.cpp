@@ -278,6 +278,33 @@ void DIA_encodingQt4::setAudioSize(uint64_t size)
           WRITE(labelAudioSize);
 
 }
+
+/**
+    \fn setAudioSizeIn(int size)
+    \brief display elapsed time since saving start
+*/
+void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
+{
+          ADM_assert(window);
+          uint64_t mb=nb;
+          mb*=1000;
+          strcpy(string,ADM_us2plain(mb));
+          WRITE(labelElapsed);
+}
+
+/**
+    \fn setRemainingTimeMS
+    \brief display remaining time (ETA)
+*/
+void DIA_encodingQt4::setRemainingTimeMS(uint32_t nb)
+{
+          ADM_assert(window);
+          uint64_t mb=nb;
+          mb*=1000;
+          strcpy(string,ADM_us2plain(mb));
+          WRITE(labelETA);
+}
+
 /**
     \fn isAlive( void )
     \brief return 0 if the window was killed or cancel button press, 1 otherwisearchForward
