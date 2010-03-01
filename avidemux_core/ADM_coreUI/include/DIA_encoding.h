@@ -16,52 +16,48 @@
 #ifndef ADM_ENCODING_H
 #define ADM_ENCODING_H
 
-
-#define MAX_BR_SLOT 200
-
-typedef struct 
-{
-  uint32_t size;
-  uint32_t quant;
-}encodingSlice;
+#include "ADM_clock.h"
+/**
+    \class DIA_encodingBase
+    \brief Base class for encoding dialog
+*/
 
 class DIA_encodingBase
 {
 protected:
-                Clock	clock;
-                uint32_t  _lastTime;            // Start time used to calc. ETA
-                uint32_t  _lastFrame;           // Start frame used to calc. ETA
-                uint32_t  _nextSampleStartTime; // Next start time to be used for ETA
-                uint32_t  _nextSampleStartFrame; // Next start frame for ETA
+                Clock	  clock;
+                
+                uint32_t  _lastFrameCount;       // Start frame used to calc. ETA
+                uint32_t  _currentFrameCount;    //
+                uint32_t  _lastClock;            // Start time used to calc. ETA
                 uint32_t  _nextUpdate;           // Next time to update the GUI
-                float _fps_average;
-                uint32_t _average_bitrate;
-                uint64_t _totalSize;
-                uint64_t _audioSize;
-                uint64_t _videoSize;
-                uint32_t _bitrate_sum;           // Sum of bitrate array
-                encodingSlice _bitrate[MAX_BR_SLOT];
-                uint32_t _roundup;
-                uint32_t _current;
-                uint32_t _total;
-                uint32_t _lastnb;
-                uint32_t _fps1000;
-                uint32_t _originalPriority;
+                float     _fps_average;
+                uint32_t  _average_bitrate;
+                uint64_t  _totalDurationUs;
+                uint64_t  _currentDurationUs;
+                uint64_t  _totalSize;
+                uint64_t  _audioSize;
+                uint64_t  _videoSize;
+                uint32_t  _originalPriority;
         
 public:
-                             DIA_encodingBase( uint32_t fps1000 );
+                             DIA_encodingBase( uint64_t duration );
                 virtual      ~DIA_encodingBase( );
                 
                 virtual void reset( void );
-                virtual void setPhasis(const char *n);
-                virtual void setCodec(const char *n);
-                virtual void setAudioCodec(const char *n);
-                virtual void setFps(uint32_t fps);
-                virtual void setFrame(uint32_t nb,uint32_t size, uint32_t quant,uint32_t total);
-                virtual void setPercent(uint32_t percent);
-                virtual void setContainer(const char *container);
-                virtual void setAudioSize(uint32_t size);
-                virtual uint8_t isAlive(void);
+                virtual void setPhasis(const char *n)=0;
+                virtual void setVideoCodec(const char *n)=0;
+                virtual void setAudioCodec(const char *n)=0;
+                virtual void setFps(uint32_t fps1000)=0;
+                virtual void setPercent(uint32_t percent)=0;
+                virtual void setContainer(const char *container)=0;
+                virtual void setAudioSize(uint64_t size)=0;
+                virtual void setTotalSize(uint64_t size)=0;
+                virtual bool isAlive(void)=0;
+
+                virtual void pushVideoFrame(uint32_t size, uint32_t quant,uint64_t timeUs);
+                virtual void pushAudioFrame(uint32_t size);
+                virtual void refresh(void);
 };
 //********************
 DIA_encodingBase *createEncoding(uint32_t fps1000);

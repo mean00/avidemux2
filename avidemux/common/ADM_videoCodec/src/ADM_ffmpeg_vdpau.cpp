@@ -244,6 +244,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
             ADM_assert(VDP_STATUS_OK==funcs.destroySurface((VDPAU->renders[i]->surface)));
             delete VDPAU->renders[i];
         }
+        printf("[VDPAU] Destroying decoder\n");
          ADM_assert(VDP_STATUS_OK==funcs.decoderDestroy(VDPAU->vdpDecoder));
          delete VDPAU;
          vdpau=NULL;

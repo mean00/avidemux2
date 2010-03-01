@@ -7,9 +7,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
 
-//#include "prefs.h"
+
+
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "avidemutils.h"
@@ -17,33 +17,20 @@
 #include "DIA_encoding.h"
 #include "ADM_vidMisc.h"
 
+#include <math.h>
+#define  ETA_SAMPLE_PERIOD 60000 //Use last n millis to calculate ETA
+#define  GUI_UPDATE_RATE 500    // Ms
 
-DIA_encodingBase::DIA_encodingBase( uint32_t fps1000 )
+DIA_encodingBase::DIA_encodingBase( uint64_t duration )
 {
-
-        _lastnb=0;
-        _totalSize=0;
-        _audioSize=0;
-        _videoSize=0;
-        _current=0;
-        setFps(fps1000);
         _originalPriority=getpriority(PRIO_PROCESS, 0);
-        _lastTime=0;
-        _lastFrame=0;
-        _fps_average=0;
-        _total=1000;
+        _totalDurationUs=duration;
+#ifdef __WIN32
+        _originalPriority=getpriority(PRIO_PROCESS, 0);
+#endif
+        reset();
 }
 
-void DIA_encodingBase::setFps(uint32_t fps)
-{
-        _roundup=(uint32_t )floor( (fps+999)/1000);
-        _fps1000=fps;
-        ADM_assert(_roundup<MAX_BR_SLOT);
-        memset(_bitrate,0,sizeof(_bitrate));
-        _bitrate_sum=0;
-        _average_bitrate=0;
-        
-}
 void DIA_stop( void)
 {
 	printf("Stop request\n");
@@ -53,69 +40,57 @@ void DIA_stop( void)
 
 DIA_encodingBase::~DIA_encodingBase( )
 {
-
+#ifdef __WIN32
 	setpriority(PRIO_PROCESS, 0, _originalPriority);
-
+#endif
 }
 
-void DIA_encodingBase::setPhasis(const char *n)
-{
-
-}
-void DIA_encodingBase::setAudioCodec(const char *n)
-{
-
-}
-
-void DIA_encodingBase::setCodec(const char *n)
-{
-
-}
 void DIA_encodingBase::reset(void)
 {
-          _totalSize=0;
-          _videoSize=0;
-          _current=0;
-}
-void DIA_encodingBase::setContainer(const char *container)
-{
-}
-#define  ETA_SAMPLE_PERIOD 60000 //Use last n millis to calculate ETA
-#define  GUI_UPDATE_RATE 500  
+        _lastFrameCount=0;
+        _currentFrameCount=0;
+        _totalSize=0;
+        _audioSize=0;
+        _videoSize=0;
+        _nextUpdate=GUI_UPDATE_RATE;
+        _lastClock=0;
+        _fps_average=0;
+        clock.reset();
 
-void DIA_encodingBase::setFrame(uint32_t nb,uint32_t size, uint32_t quant,uint32_t total)
+}
+
+void DIA_encodingBase::pushVideoFrame(uint32_t size, uint32_t quant,uint64_t timeUs)
 {
-          _total=total;
           _videoSize+=size;
-          if(nb < _lastnb || _lastnb == 0) // restart ?
-           {
-                _lastnb = nb;
-                clock.reset();
-                _lastTime=clock.getElapsedMS();
-                _lastFrame=0;
-                _fps_average=0;
-                _videoSize=size;
-    
-                _nextUpdate = _lastTime + GUI_UPDATE_RATE;
-                _nextSampleStartTime=_lastTime + ETA_SAMPLE_PERIOD;
-                _nextSampleStartFrame=0;
-          } 
-          _lastnb = nb;
-          _current=nb%_roundup;
-          _bitrate[_current].size=size;
-          _bitrate[_current].quant=quant;
+          _currentFrameCount++;
+          _currentDurationUs=timeUs;
 }
-void DIA_encodingBase::setAudioSize(uint32_t size)
+void DIA_encodingBase::pushAudioFrame(uint32_t size)
 {
-      _audioSize=size;
+          _audioSize+=size;
 }
-uint8_t DIA_encodingBase::isAlive( void )
+void DIA_encodingBase::refresh(void)
 {
-	return 0;
-}
-void DIA_encodingBase::setPercent(uint32_t percent)
-{
-
+          uint32_t time=clock.getElapsedMS();
+          if(time>_nextUpdate)
+          {
+                uint32_t deltaTime=time-_lastClock;
+                uint32_t deltaFrame=_currentFrameCount-_lastFrameCount;
+                if(deltaFrame)
+                {
+                    deltaFrame*=1000;
+                    deltaFrame/=deltaTime;
+                    _fps_average=((float)deltaFrame)/1000.;
+                    setFps(deltaFrame);
+                    float percent=_currentDurationUs/_totalDurationUs;
+                    if(percent>1.0) percent=1.0;
+                    percent*=100;
+                    setPercent((uint32_t)percent);
+                }
+                _nextUpdate=time+GUI_UPDATE_RATE;
+                setAudioSize(_audioSize);
+                UI_purge();
+          }
 }
 //EOF
 

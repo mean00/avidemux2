@@ -6,7 +6,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#if 0
 #include <math.h>
 
 #include "ADM_toolkitGtk.h"
@@ -1001,3 +1001,4 @@ create_dialog1 (void)
   gtk_widget_grab_default (closebutton1);
   return dialog1;
 }
+#endif

@@ -126,7 +126,7 @@ typedef void            CREATE_GUI_VERBOSE(void);
 typedef void            CREATE_GUI_QUIET(void);
 typedef uint8_t			CREATE_GUI_IS_GUIET(void);
 typedef DIA_workingBase  *CREATE_GUI_WORKING(const char *title);
-typedef DIA_encodingBase *CREATE_GUI_ENCODING(uint32_t fps1000);
+typedef DIA_encodingBase *CREATE_GUI_ENCODING(uint64_t duration);
 // GUI_Sleep is internal
 typedef struct
 {

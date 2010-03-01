@@ -208,7 +208,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             *bFramePresent=false;
         }else
         {
-            ADM_info("PTS is monotonous, probably no bframe\n");
+            ADM_info("PTS is not monotonous, there are bframe\n");
             *bFramePresent=true;
         }
     }

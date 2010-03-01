@@ -227,6 +227,7 @@ void            GUI_Quiet(void)
 }
 //****************************************************************************************************
 extern DIA_workingBase *createWorking(const char *title);
+extern DIA_encodingBase *createEncoding(uint64_t duration);
 }
 
 static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
@@ -240,8 +241,8 @@ static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
 		&ADM_Qt4CoreUIToolkit::GUI_Verbose,
 		&ADM_Qt4CoreUIToolkit::GUI_Quiet,
 		&ADM_Qt4CoreUIToolkit::GUI_isQuiet,
-        &ADM_Qt4CoreUIToolkit::createWorking,
-        //&ADM_Qt4CoreUIToolkit::createEncodingQt4
+                &ADM_Qt4CoreUIToolkit::createWorking,
+                &ADM_Qt4CoreUIToolkit::createEncoding
 };
 
 void InitCoreToolkit(void )

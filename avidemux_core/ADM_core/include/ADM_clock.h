@@ -18,7 +18,8 @@
 #define ADM_CLOCK_H
 class Clock
 {
-	private: uint32_t _startTime;
+	private: 
+            uint32_t _startTime;
 
 	public:
 			Clock(void );

@@ -4,7 +4,7 @@ SET(
         uiFiles
         about.ui  
         calculator.ui  
-#encoding.ui  
+        encoding.ui  
         license.ui
         jobs.ui  
         props.ui  vobsub.ui  
@@ -12,7 +12,7 @@ SET(
 
 SET(headers
 	Q_about.h  Q_calculator.h  
-#Q_encoding.h
+        Q_encoding.h
 	Q_license.h  Q_jobs.h  Q_props.h  Q_vobsub.h  Q_working.h  T_index_pg.h)
 
 QT4_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
@@ -32,7 +32,7 @@ SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
 #DIA_xvid4.cpp  OCR_none.cpp
 #Q_vobsub.cpp  
 #Q_calculator.cpp  
-#Q_encoding.cpp  
+        Q_encoding.cpp  
 
 )
 
