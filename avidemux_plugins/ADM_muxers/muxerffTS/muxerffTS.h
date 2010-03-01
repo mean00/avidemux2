@@ -31,7 +31,7 @@ class muxerffTS : public muxerFFmpeg
 protected:
         
         bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
-
+        const char *getContainerName(void) {return "Mpeg TS";};
 public:
                 muxerffTS();
         virtual ~muxerffTS();

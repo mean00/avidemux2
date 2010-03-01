@@ -102,12 +102,12 @@ void encodingWindow::shutdownChanged(int state)
 #define WRITE(x) WRITEM(x,string)
 /*************************************/
 static char string[80];
-static encodingWindow *window=NULL;
+#define window ((encodingWindow *)WINDOW)
 DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration)
 {
-        ADM_assert(window==NULL);
+        WINDOW=NULL;
         stopReq=0;
-        window=new encodingWindow();
+        WINDOW=(void *)new encodingWindow();
         window->setModal(TRUE);
         window->show();
 
@@ -119,24 +119,19 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration
 
 void DIA_encodingQt4::setFps(uint32_t fps)
 {
-    
-        
+      snprintf(string,79,"%"LU" fps",fps);
+      WRITE(labelFps);
 }
 
-void DIA_stop( void)
-{
-        printf("Stop request\n");
-        stopReq=1;
-}
 /**
     \fn dtpor
 */
 DIA_encodingQt4::~DIA_encodingQt4( )
 {
 	bool shutdownRequired = (window->ui.checkBoxShutdown->checkState() == Qt::Checked);
-
-	if(window) delete window;
-	window=NULL;
+    encodingWindow *w=window;
+	if(w) delete w;
+	WINDOW=NULL;
 #if 0
 	if (shutdownRequired && !stopReq)
 	{
@@ -178,6 +173,18 @@ void DIA_encodingQt4::setPhasis(const char *n)
 
 }
 /**
+    \fn    setFrameCount
+    \brief display the # of processed frames
+*/
+
+void DIA_encodingQt4::setFrameCount(uint32_t nb)
+{
+          ADM_assert(window);
+          snprintf(string,79,"%"LU,nb);
+          WRITE(labelFrame);
+
+}
+/**
     \fn    setPercent
     \brief display percent of saved file
 */
@@ -185,6 +192,9 @@ void DIA_encodingQt4::setPhasis(const char *n)
 void DIA_encodingQt4::setPercent(uint32_t p)
 {
           ADM_assert(window);
+          printf("Percent:%u\n",p);
+          WIDGET(progressBar)->setValue(p);
+          UI_purge();
 }
 /**
     \fn setAudioCodec(const char *n)

@@ -25,7 +25,7 @@ protected:
             uint64_t videoDelay;
 
 
-            DIA_workingBase *encoding;
+            
 public:
                       ADM_videoStream() {videoDelay=0;} ;
             virtual ~ADM_videoStream() {};
@@ -56,7 +56,7 @@ protected:
 
                 uint64_t videoIncrement; // Used/set by initUI
                 uint64_t videoDuration;
-                DIA_workingBase  *encoding;
+                DIA_encodingBase  *encoding;
                 
 public:
                           ADM_muxer() {vStream=NULL;aStreams=NULL;nbAStreams=0;encoding=NULL;};
@@ -68,7 +68,7 @@ public:
         virtual  bool     close(void)=0; 
         
         virtual  bool     initUI(const char *title);
-        virtual  bool     updateUI(uint64_t time);
+        virtual  bool     updateUI(void);
         virtual  bool     closeUI(void);
         virtual  bool     useGlobalHeader(void) {return false;}
 

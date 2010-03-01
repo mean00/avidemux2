@@ -24,6 +24,7 @@ class muxerMkv : public muxerFFmpeg
 {
 protected:
         bool muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts);
+        const char *getContainerName(void) {return "Matroska";};
 public:
                 muxerMkv();
         virtual ~muxerMkv();

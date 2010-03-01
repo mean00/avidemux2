@@ -31,6 +31,7 @@ extern mp4_muxer muxerConfig;
 class muxerMP4 : public muxerFFmpeg
 {
 protected:
+        const char *getContainerName(void) {return "Mp4";};
 public:
                 muxerMP4();
         virtual ~muxerMP4();

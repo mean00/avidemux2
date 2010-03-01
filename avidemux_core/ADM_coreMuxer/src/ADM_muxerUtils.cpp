@@ -69,13 +69,13 @@ uint64_t rescaleLavPts(uint64_t us, AVRational *scale)
 */
 bool     ADM_muxer::initUI(const char *title)
 {
- float f=(float)vStream->getAvgFps1000();
+        float f=(float)vStream->getAvgFps1000();
         f=1000./f;
         f*=1000000;
         videoIncrement=(uint64_t)f;  // Video increment in AVI-Tick
         videoDuration=vStream->getVideoDuration();
 
-        encoding=createWorking(title);
+        encoding=createEncoding(videoDuration);
         return true;
 }
 /**
@@ -84,12 +84,10 @@ bool     ADM_muxer::initUI(const char *title)
         @return false if abort request, true if keep going
 */
 
-bool     ADM_muxer::updateUI(uint64_t time)
+bool     ADM_muxer::updateUI(void)
 {
             ADM_assert(encoding);
-            uint32_t  percent=(100*time)/videoDuration;
-            if(percent>100) percent=100;
-            encoding->update(percent);
+            encoding->refresh();
             if(!encoding->isAlive()) 
             {
                 return false;

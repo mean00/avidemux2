@@ -118,6 +118,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                             clk->setTimeUs(audioDts);
                         }
                     nb=writter.saveAudioFrame(audioIndex,audioSize,audioBuffer) ;
+                    encoding->pushAudioFrame(audioSize);
                     clk->advanceBySample(nbSample);
                     //printf("%u vs %u\n",audioDts/1000,(lastVideoDts+videoIncrement)/1000);
                     if(audioDts!=ADM_NO_PTS)
@@ -155,13 +156,15 @@ bool muxerAvi::save(void)
     lastVideoDts=dts;
 
     initUI("Saving Avi");
-    
+    encoding->setContainer("AVI/OpenDML");
 
     while(1)
     {
+            
             if(dts>aviTime+videoIncrement)
             {
                 writter.saveVideoFrame( 0, 0,videoBuffer); // Insert dummy video frame
+                encoding->pushVideoFrame(0,0,dts);
             }else
             {
                 if(!writter.saveVideoFrame( len, flags,videoBuffer))  // Put our real video
@@ -170,6 +173,7 @@ bool muxerAvi::save(void)
                         result=false;
                         goto abt;
                 }
+                encoding->pushVideoFrame(len,0,dts);
                 if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
                 if(dts==ADM_NO_PTS)
                 {
@@ -180,7 +184,7 @@ bool muxerAvi::save(void)
 
             fillAudio(aviTime+videoIncrement);    // and matching audio
 
-            if(updateUI(aviTime)==false)
+            if(updateUI()==false)
             {  
                 result=false;
                 goto abt;

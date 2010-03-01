@@ -49,17 +49,22 @@ public:
     ~DIA_encodingQt4( );
     
 protected:
-    encodingWindow *window;
+    void setTotalSize(uint64_t size);
+    void setAudioSize(uint64_t size);
+    void setPercent(uint32_t percent);
     void setFps(uint32_t fps);
+    void setFrameCount(uint32_t nb);
+
+public:    
+    void *WINDOW;
+    
     void setPhasis(const char *n);
     void setAudioCodec(const char *n);
     void setVideoCodec(const char *n);
     void setBitrate(uint32_t br,uint32_t globalbr);
     void setContainer(const char *container);
     void setQuantIn(int size);
-    void setTotalSize(uint64_t size);
-    void setAudioSize(uint64_t size);
-    void setPercent(uint32_t percent);
     bool isAlive( void );
+    
 };
 #endif	// Q_encoding_h

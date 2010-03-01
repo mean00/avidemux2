@@ -425,16 +425,16 @@ int jsTestFacNotch(void)
 */
 int jsTestFacEncoding(void)
 {
-    DIA_encodingBase *base=createEncoding(1000*10000LL);
+    DIA_encodingBase *base=createEncoding(1000*1000LL);
     base->setContainer("the container");
     base->setAudioCodec("the audio codec");
     base->setVideoCodec("the video codec");
     for(int i=0;i<20;i++)
     {
         base->refresh();
-        base->pushVideoFrame(10000,1,5*1000LL*i);
+        base->pushVideoFrame(10000,1,50*1000LL*i);
         base->refresh();
-        
+        printf("%d / %d\n",i,20);
         ADM_usleep(500*1000);
     }
     delete base;

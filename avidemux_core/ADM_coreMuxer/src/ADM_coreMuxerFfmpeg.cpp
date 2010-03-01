@@ -377,29 +377,21 @@ bool muxerFFmpeg::saveLoop(const char *title)
     f*=1000000;
     videoIncrement=(uint64_t)f;
 
-
+    
 
     ADM_info("avg fps=%u\n",vStream->getAvgFps1000());
     AVRational *scale=&(video_st->codec->time_base);
     uint64_t videoDuration=vStream->getVideoDuration();
 
-    encoding=createWorking(title);
-
+    encoding=createEncoding(videoDuration);
+    encoding->setContainer(getContainerName());
     MuxAudioPacket audioPackets[nbAStreams];
 
     while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
     {
 	AVPacket pkt;
 
-            float p=1;
-            if(videoDuration)
-            {
-                    p=lastVideoDts;
-                    p/=videoDuration;
-                    p=p*100;
-            }
-
-            encoding->update((uint32_t)p);
+            encoding->refresh();
             if(!encoding->isAlive())
             {
                 result=false;
@@ -421,6 +413,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             {
                 lastVideoDts=dts;
             }
+            encoding->pushVideoFrame(len,0,lastVideoDts);
             muxerRescaleVideoTimeDts(&dts,lastVideoDts);
             muxerRescaleVideoTime(&pts);
             aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
@@ -484,6 +477,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     AVPacket pkt;
                     uint64_t rescaledDts;
                     rescaledDts=audioTrack->dts;
+                    encoding->pushAudioFrame(audioTrack->size);
                     muxerRescaleAudioTime(&rescaledDts,a->getInfo()->frequency);
                    //printf("[FF] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
                      //               written,audioTrack->dts,audioTrack->size,audioTrack->samples,rescaledDts);

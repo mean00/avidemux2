@@ -85,7 +85,7 @@ bool muxerRaw::save(void)
     {
         if(dts==ADM_NO_PTS)
             dts=lastVideoDts+videoIncrement;
-        if(updateUI(dts)==false)
+        if(updateUI()==false)
         {
             result=false;
             goto abt;

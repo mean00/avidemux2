@@ -19,8 +19,11 @@
 
 #include <math.h>
 #define  ETA_SAMPLE_PERIOD 60000 //Use last n millis to calculate ETA
-#define  GUI_UPDATE_RATE 500    // Ms
+#define  GUI_UPDATE_RATE 1000    // Ms
 extern void UI_purge(void);
+/**
+    \fn DIA_encodingBase
+*/
 DIA_encodingBase::DIA_encodingBase( uint64_t duration )
 {
         _originalPriority=getpriority(PRIO_PROCESS, 0);
@@ -30,13 +33,9 @@ DIA_encodingBase::DIA_encodingBase( uint64_t duration )
 #endif
         reset();
 }
-
-void DIA_stop( void)
-{
-	printf("Stop request\n");
-
-}
-
+/**
+    \fn DIA_encodingBase
+*/
 
 DIA_encodingBase::~DIA_encodingBase( )
 {
@@ -44,6 +43,9 @@ DIA_encodingBase::~DIA_encodingBase( )
 	setpriority(PRIO_PROCESS, 0, _originalPriority);
 #endif
 }
+/**
+    \fn reset
+*/
 
 void DIA_encodingBase::reset(void)
 {
@@ -56,8 +58,11 @@ void DIA_encodingBase::reset(void)
         _lastClock=0;
         _fps_average=0;
         clock.reset();
-
+        UI_purge();
 }
+/**
+    \fn pushVideoFrame
+*/
 
 void DIA_encodingBase::pushVideoFrame(uint32_t size, uint32_t quant,uint64_t timeUs)
 {
@@ -65,10 +70,18 @@ void DIA_encodingBase::pushVideoFrame(uint32_t size, uint32_t quant,uint64_t tim
           _currentFrameCount++;
           _currentDurationUs=timeUs;
 }
+/**
+    \fn pushAudioFrame
+*/
+
 void DIA_encodingBase::pushAudioFrame(uint32_t size)
 {
           _audioSize+=size;
 }
+/**
+    \fn refresh
+*/
+
 void DIA_encodingBase::refresh(void)
 {
           uint32_t time=clock.getElapsedMS();
@@ -78,17 +91,23 @@ void DIA_encodingBase::refresh(void)
                 uint32_t deltaFrame=_currentFrameCount-_lastFrameCount;
                 if(deltaFrame)
                 {
-                    deltaFrame*=1000;
-                    deltaFrame/=deltaTime;
-                    _fps_average=((float)deltaFrame)/1000.;
-                    setFps(deltaFrame);
-                    float percent=_currentDurationUs/_totalDurationUs;
+                    //printf("**********************************DFrame=%d, DTime=%d\n",(int)deltaFrame,(int)deltaTime);
+                    _fps_average=((float)deltaFrame);
+                    _fps_average/=deltaTime;
+                    _fps_average*=1000;
+                    //printf("************** Fps:%d\n",(int)_fps_average);
+                    setFps(_fps_average);
+                    float percent=(float)_currentDurationUs/(float)_totalDurationUs;
                     if(percent>1.0) percent=1.0;
                     percent*=100;
                     setPercent((uint32_t)percent);
+                    setFrameCount(_currentFrameCount);
                 }
                 _nextUpdate=time+GUI_UPDATE_RATE;
                 setAudioSize(_audioSize);
+                setTotalSize(_audioSize+_videoSize);
+                _lastFrameCount=_currentFrameCount;
+                _lastClock=time;
                 UI_purge();
           }
 }

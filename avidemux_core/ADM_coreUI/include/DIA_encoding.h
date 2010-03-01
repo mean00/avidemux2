@@ -45,14 +45,18 @@ public:
                 virtual      ~DIA_encodingBase( );
                 
                 virtual void reset( void );
+protected:
+                virtual void setFps(uint32_t fps1000)=0;
+                virtual void setPercent(uint32_t percent)=0;
+                virtual void setAudioSize(uint64_t size)=0;
+                virtual void setTotalSize(uint64_t size)=0;
+                virtual void setFrameCount(uint32_t nb)=0;
+
+public:
                 virtual void setPhasis(const char *n)=0;
                 virtual void setVideoCodec(const char *n)=0;
                 virtual void setAudioCodec(const char *n)=0;
-                virtual void setFps(uint32_t fps1000)=0;
-                virtual void setPercent(uint32_t percent)=0;
                 virtual void setContainer(const char *container)=0;
-                virtual void setAudioSize(uint64_t size)=0;
-                virtual void setTotalSize(uint64_t size)=0;
                 virtual bool isAlive(void)=0;
 
                 virtual void pushVideoFrame(uint32_t size, uint32_t quant,uint64_t timeUs);

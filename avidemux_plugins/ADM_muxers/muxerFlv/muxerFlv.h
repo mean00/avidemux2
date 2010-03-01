@@ -23,7 +23,7 @@
 class muxerFlv : public muxerFFmpeg
 {
 protected:
-
+        const char *getContainerName(void) {return "Flv";};
 public:
                 muxerFlv();
         virtual ~muxerFlv();
