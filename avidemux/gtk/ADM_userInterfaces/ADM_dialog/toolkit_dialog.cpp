@@ -351,10 +351,29 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
 extern int GUI_Alternate(const char *title,const char *choice1,const char *choice2);
 extern DIA_workingBase *createWorking(const char *title);
 extern DIA_encodingBase *createEncodingGtk(uint32_t fps1000);
+
+void getVersion(uint32_t *maj,uint32_t *minor)
+{
+    *maj=ADM_CORE_TOOLKIT_MAJOR;
+    *minor=ADM_CORE_TOOLKIT_MINOR;
+}
+/**
+    \fn UI_purge
+    \brief make sure Gtk process events & refresh the windows
+*/
+void UI_purge( void )
+{        
+        while (gtk_events_pending())
+                                {
+                                                  gtk_main_iteration();
+                              }
+	
+}
 } // End of namespace
 
 static CoreToolkitDescriptor GtkCoreToolkitDescriptor=
 {
+        &ADM_GtkCoreUIToolkit::getVersion,
 		&ADM_GtkCoreUIToolkit::GUI_Info_HIG,
 		&ADM_GtkCoreUIToolkit::GUI_Error_HIG,
 		&ADM_GtkCoreUIToolkit::GUI_Confirmation_HIG,
@@ -364,8 +383,9 @@ static CoreToolkitDescriptor GtkCoreToolkitDescriptor=
 		&ADM_GtkCoreUIToolkit::GUI_Verbose,
 		&ADM_GtkCoreUIToolkit::GUI_Quiet,
 		&ADM_GtkCoreUIToolkit::GUI_isQuiet,
-        &ADM_GtkCoreUIToolkit::createWorking
-        // &ADM_GtkCoreUIToolkit::createEncodingQt4
+        &ADM_GtkCoreUIToolkit::createWorking,
+        NULL, 
+        &ADM_GtkCoreUIToolkit::UI_purge
 };
 
 void InitCoreToolkit(void )

@@ -1400,7 +1400,6 @@ extern void initTranslator(void);
 static const UI_FUNCTIONS_T UI_Hooks=
     {
         ADM_RENDER_API_VERSION_NUMBER,
-        UI_purge,
         UI_getWindowInfo,
         UI_updateDrawWindowSize,
         UI_rgbDraw,

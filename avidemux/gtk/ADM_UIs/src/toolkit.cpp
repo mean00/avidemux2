@@ -134,15 +134,6 @@ void changeTextInMenu(GtkWidget *menu,int range,const char *text)
 
 }
 
-void UI_purge( void )
-{
-        
-        while (gtk_events_pending())
-                                {
-                                                  gtk_main_iteration();
-                              }
-
-}
 // read an entry as an integer
 
 int gtk_read_entry(GtkWidget *entry)
