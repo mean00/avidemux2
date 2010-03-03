@@ -25,10 +25,10 @@ class adm
         function int clearVideoFilters   : jsClearVideoFilters() <static>;
         
 /* Override as jsapigen cannot handle multiple args the way we need it to */
-        function int videoCodec_ignore     : jsVideoCodec(cstring,cstring[])   <static>;
-        function int addVideoFilter_ignore : jsVideoFilter(cstring,cstring[])   <static>;
-        function int audioCodec_ignore     : jsAudioCodec(cstring,cstring[])   <static>;
-        function int setContainer_ignore   : jsSetContainer(cstring,cstring[])   <static>;
+        function int videoCodec_ignore     : jsVideoCodec(cstring)     <static>;
+        function int addVideoFilter_ignore : jsVideoFilter(cstring)    <static>;
+        function int audioCodec_ignore     : jsAudioCodec(cstring)     <static>;
+        function int setContainer_ignore   : jsSetContainer(cstring)   <static>;
 /* Properties */
         property double markerA            : jsGetMarkerA,jsSetMarkerA <static>;
         property double markerB            : jsGetMarkerB,jsSetMarkerB <static>;

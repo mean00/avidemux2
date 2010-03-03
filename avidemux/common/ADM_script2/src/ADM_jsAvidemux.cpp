@@ -32,6 +32,7 @@ bool A_setContainer(const char *cont)
         ADM_error("Cannot find muxer for format=%s\n",cont);
         return false;
     }
+    ADM_info("setting container as index %d\n",idx);
     UI_SetCurrentFormat(idx);
     return true;
 }
@@ -100,15 +101,22 @@ int  jsAddSegment(int ref, double start, double duration)
 extern "C" int   jsSetContainer(const char *a,const char **b) {return 0;}
 JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {// begin Codec
-    
+        
         // default return value
         *rval = BOOLEAN_TO_JSVAL(false);
         if(argc < 1)
-                return JS_FALSE;
-        if(JSVAL_IS_STRING(argv[0]) == false)
-                return JS_FALSE;
-        char *str = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+        {
+            jsLog(JS_LOG_NORMAL,"setContainer needs at least one arg\n");
+            return JS_FALSE;
+        }
         
+        if(JSVAL_IS_STRING(argv[0]) == false)
+        {
+                jsLog(JS_LOG_NORMAL,"setContainer needs at string arg\n");
+                return JS_FALSE;
+        }
+        char *str = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
+         jsLog(JS_LOG_NORMAL,"[JS] Selecting container :%s\n",str);
         if(A_setContainer(str))
         {
             CONFcouple *c;
