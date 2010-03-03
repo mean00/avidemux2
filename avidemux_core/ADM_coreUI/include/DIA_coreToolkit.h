@@ -51,6 +51,7 @@ void            GUI_Quiet(void);
 // Is the UI in quiet mode ?
 uint8_t			GUI_isQuiet(void);
 //
+void            UI_purge(void);
 //
 
 #endif

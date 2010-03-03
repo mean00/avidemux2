@@ -27,8 +27,15 @@ static CoreToolkitDescriptor *Toolkit=NULL;
  */
 uint8_t  DIA_toolkitInit(CoreToolkitDescriptor *d)
 {
-	uint32_t major,minor,patch;
+	uint32_t major,minor;
 	Toolkit=d;
+    Toolkit->getVersion(&major,&minor);
+    printf("[UI Toolkit] Running version %02d:%02d\n",(int)major,(int)minor);
+    if(major!=ADM_CORE_TOOLKIT_MAJOR || minor!=ADM_CORE_TOOLKIT_MINOR)
+    {
+        ADM_error("UI Toolkit version mistmatch, expected %02d:%02d\n",ADM_CORE_TOOLKIT_MAJOR,ADM_CORE_TOOLKIT_MINOR);
+        ADM_assert(0);
+    }
 	return 1;
 }
 /**
@@ -237,4 +244,11 @@ DIA_encodingBase *createEncoding(uint64_t duration)
 //    return new DIA_encodingDummy(duration);
     return NULL;
 } 
+/**
+    \fn UI_Purge
+*/
+void UI_purge(void)
+{
+    if(Toolkit->uiPurge) Toolkit->uiPurge();
+}
 // EOF

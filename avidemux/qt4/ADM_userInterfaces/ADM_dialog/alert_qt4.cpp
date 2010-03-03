@@ -13,8 +13,10 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_inttype.h"
+#include <QtCore/QCoreApplication>
 #include <QtGui/QDialog>
 #include <QtGui/QMessageBox>
+#include <QtGui/QWidget>
 #include "DIA_coreToolkit.h"
 #include "DIA_coreUI_internal.h"
 #include "ADM_default.h"
@@ -228,10 +230,22 @@ void            GUI_Quiet(void)
 //****************************************************************************************************
 extern DIA_workingBase *createWorking(const char *title);
 extern DIA_encodingBase *createEncoding(uint64_t duration);
+
+void getVersion(uint32_t *maj,uint32_t *minor)
+{
+    *maj=ADM_CORE_TOOLKIT_MAJOR;
+    *minor=ADM_CORE_TOOLKIT_MINOR;
+}
+
+void UI_purge( void )
+{
+	QCoreApplication::processEvents ();
+}
 }
 
 static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
 {
+		&ADM_Qt4CoreUIToolkit::getVersion,
 		&ADM_Qt4CoreUIToolkit::GUI_Info_HIG,
 		&ADM_Qt4CoreUIToolkit::GUI_Error_HIG,
 		&ADM_Qt4CoreUIToolkit::GUI_Confirmation_HIG,
@@ -241,8 +255,9 @@ static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
 		&ADM_Qt4CoreUIToolkit::GUI_Verbose,
 		&ADM_Qt4CoreUIToolkit::GUI_Quiet,
 		&ADM_Qt4CoreUIToolkit::GUI_isQuiet,
-                &ADM_Qt4CoreUIToolkit::createWorking,
-                &ADM_Qt4CoreUIToolkit::createEncoding
+        &ADM_Qt4CoreUIToolkit::createWorking,
+        &ADM_Qt4CoreUIToolkit::createEncoding,
+        &ADM_Qt4CoreUIToolkit::UI_purge
 };
 
 void InitCoreToolkit(void )

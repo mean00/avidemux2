@@ -30,14 +30,14 @@
 //#include "Q_seekablePreview.h"
 #include "../ADM_render/GUI_render.h"
 #include "../ADM_render/GUI_accelRender.h"
+#include "DIA_coreToolkit.h"
     
 void UI_QT4VideoWidget(QFrame *host);
 static QFrame *hostFrame=NULL;
 static AccelRender *accelRender=NULL;
 static uint8_t *lastImage=NULL;
 extern QWidget *QuiMainWindows;
- 
-extern void UI_purge( void );
+
 
 void DIA_previewInit(uint32_t width, uint32_t height) {}
 uint8_t DIA_previewUpdate(uint8_t *data) {return 1;}

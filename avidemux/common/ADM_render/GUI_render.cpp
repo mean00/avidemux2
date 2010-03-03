@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include "ADM_default.h"
+#include "DIA_coreToolkit.h"
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
@@ -83,11 +84,6 @@ uint8_t ADM_renderLibInit(const UI_FUNCTIONS_T *funcs)
 //**************************************
 //**************************************
 #define RENDER_CHECK(x) {ADM_assert(HookFunc);ADM_assert(HookFunc->x);}
-static void MUI_purge(void) 
-{
-  RENDER_CHECK(UI_purge); 
-  HookFunc->UI_purge();
- }
 void MUI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
   RENDER_CHECK(UI_getWindowInfo);
@@ -170,7 +166,7 @@ uint8_t renderResize(uint32_t w, uint32_t h,uint32_t pw, uint32_t ph)
         phyH=ph;
   
         updateWindowSize( draw,w,h);
-        MUI_purge();
+        UI_purge();
         return 1;
 }
 /**

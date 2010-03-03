@@ -545,7 +545,6 @@ MainWindow::~MainWindow()
 static const UI_FUNCTIONS_T UI_Hooks=
     {
         ADM_RENDER_API_VERSION_NUMBER,
-        UI_purge,
         UI_getWindowInfo,
         UI_updateDrawWindowSize,
         UI_rgbDraw,
@@ -800,10 +799,6 @@ int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms)
 	return success;
 }
 
-void UI_purge( void )
-{
-	QCoreApplication::processEvents ();
-}
 
 
 //*******************************************

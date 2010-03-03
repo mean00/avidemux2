@@ -16,12 +16,11 @@
 #ifndef GUI_RENDER_INTERNAL_H
 #define GUI_RENDER_INTERNAL_H
 
-#define ADM_RENDER_API_VERSION_NUMBER 2
+#define ADM_RENDER_API_VERSION_NUMBER 3
 #include "GUI_render.h"
 typedef struct
 {
   int   apiVersion;
-  void (*UI_purge)(void);
   void (*UI_getWindowInfo)(void *draw, GUI_WindowInfo *xinfo);
   void (*UI_updateDrawWindowSize)(void *win,uint32_t w,uint32_t h);
   void (*UI_rgbDraw)(void *widg,uint32_t w, uint32_t h,uint8_t *ptr);

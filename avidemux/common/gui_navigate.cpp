@@ -30,7 +30,7 @@
 #include "ADM_commonUI/DIA_busy.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "DIA_enter.h"
-
+#include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
