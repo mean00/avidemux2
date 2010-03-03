@@ -80,8 +80,11 @@ protected:
     uint32_t                    _currentLace;
     uint32_t                    _maxLace;
     uint32_t                    _Laces[MKV_MAX_LACES];
+    uint64_t                    _laceIncrementUs;
+    uint64_t                    _lastDtsBase;
 
     uint8_t                     goToBlock(uint32_t x);
+    bool                        initLaces(uint32_t nbLaces,uint64_t time);
  
 public:
                                   mkvAccess(const char *name,mkvTrak *track);

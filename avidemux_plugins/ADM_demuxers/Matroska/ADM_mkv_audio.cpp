@@ -19,7 +19,11 @@
 #include "ADM_a52info.h"
 #include "ADM_dcainfo.h"
 
+#if 0
+#define vprintf printf
+#else
 #define vprintf(...) {}
+#endif
 
 /**
     \fn mkvAccess
@@ -182,6 +186,25 @@ int      clus=-1;
 
 }
 /**
+    \fn initLaces
+    \brief start a bunch of lace, compute the missing DTSs
+*/
+bool mkvAccess::initLaces(uint32_t nbLaces,uint64_t time)
+{
+                _maxLace=nbLaces;
+                _currentLace=1; 
+                _lastDtsBase=time;
+                _currentBlock++;
+                if(_currentBlock<_track->index.size()) // is it not the last block
+                {
+                    uint64_t deltaTime=_track->index[_currentBlock].Dts;
+                    deltaTime-=time;
+                    _laceIncrementUs=deltaTime/nbLaces;
+                    vprintf("***************DeltaTime : %"LLU" inc:%"LLU"\n",deltaTime,_laceIncrementUs);
+                } // else keep lastIncrement, which is as good as a random value
+                return true;
+}
+/**
     \fn getPacket
 */
 bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,uint64_t *timecode)
@@ -191,7 +214,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
   uint64_t id;
   ADM_MKV_TYPE type;
   const char *ss;
-  vprintf("Enter: Currently at :%llx\n",_clusterParser->tell());
+//  vprintf("Enter: Currently at :%llx\n",_clusterParser->tell());
 
     // Have we still lace to go ?
     if(_currentLace<_maxLace)
@@ -200,7 +223,8 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
       *packlen= _Laces[_currentLace];
       ADM_assert(*packlen<maxSize);
       vprintf("Continuing lacing : %u bytes, lacing %u/%u\n",*packlen,_currentLace,_maxLace);
-      *timecode=ADM_AUDIO_NO_DTS;
+      *timecode=_lastDtsBase+_laceIncrementUs*_currentLace;
+       vprintf(">>>>>>>>> %"LLU" \n",*timecode);
       _currentLace++;
       return true;
     }
@@ -218,14 +242,14 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
      uint8_t flags=_parser->readu8();
      int     lacing=((flags>>1)&3);
         vprintf("[MKV] Lacing : %u\n",lacing);
+     *timecode=time;
      switch(lacing)
             {
               case 0 : // no lacing
 
-                      vprintf("No lacing :%d bytes\n",remaining);
+                      vprintf("No lacing :%d bytes\n",(int)size);
                       _parser->readBin(dest,size);
-                      *packlen=size;
-                      *timecode=time;
+                      *packlen=size;                      
                       _currentLace=_maxLace=0;
                       _currentBlock++;
                       return 1;
@@ -248,14 +272,13 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                           size-=v;
                           _Laces[i]=lce;
                         }
-                        _currentLace=1;
+
                         // The first one has Dts
                          _parser->readBin(dest,_Laces[0]);
                         *packlen=_Laces[0];
-                        *timecode=time;
-                        _Laces[nbLaces-1]=size; // Last lace is remaining size
-                        _currentBlock++;
-                        _maxLace=nbLaces;
+                        _Laces[nbLaces-1]=size;
+
+                        initLaces(nbLaces,time);
                         return 1;
                       }
 
@@ -271,13 +294,11 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                         {
                           _Laces[i]=bsize;
                         }
-                        _currentLace=1;
-                        _maxLace=nbLaces;
-                        // The first one has Dts
-                         _parser->readBin(dest,bsize);
+                        _parser->readBin(dest,bsize);
                         *packlen=bsize;
-                        *timecode=time;
-                        _currentBlock++;
+                        // The first one has Dts
+                        initLaces(nbLaces,time);
+                       
                         return 1;
                       }
                       break;
@@ -310,18 +331,14 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                         uint64_t consumed=head+size-tail;
 
                         _Laces[nbLaces-1]=consumed-sum;
-                        _maxLace=nbLaces;
 
-
-                      // Take the 1st laces, it has timestamp
-                      _parser->readBin(dest,_Laces[0]);
-                      *packlen= _Laces[0];
-                      ADM_assert(*packlen<maxSize);
-                      vprintf("Continuing lacing : dts : %lu %u bytes, lacing %u/%u\n",time,*packlen,_currentLace,_maxLace);
-                      *timecode=time;
-                      _currentBlock++;
-                      _currentLace=1;
-                      return 1;
+                          // Take the 1st laces, it has timestamp
+                          _parser->readBin(dest,_Laces[0]);
+                          *packlen= _Laces[0];
+                          ADM_assert(*packlen<maxSize);
+                          vprintf("Continuing lacing : dts : %lu %u bytes, lacing %u/%u\n",time,*packlen,_currentLace,_maxLace);
+                          initLaces(nbLaces,time);
+                          return 1;
                 }
                       break;
               default:
