@@ -6,13 +6,46 @@
 bool muxerDummy::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
                 printf("[DummyMuxer] Opening %s\n",file);
+                vStream=s;
                 return true;
 }
 
 bool muxerDummy::save(void) 
 {
-        printf("[dummyMuxer] Save\n");
-        return true;
+    ADM_info("[dummy] Saving\n");
+    uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
+    uint8_t   *audioBuffer;
+    uint8_t   *videoBuffer;
+    uint32_t  len,flags;
+    uint64_t  pts,dts;
+    uint32_t  written=0;
+
+    audioBuffer=new uint8_t[10*4*8*1024];
+    videoBuffer=new uint8_t[bufSize];
+
+    ADM_info("[dummy]avg fps=%u\n",vStream->getAvgFps1000());
+
+    initUI("Saving dummy");
+    encoding->setContainer("dummy");
+
+    while(1)
+    {
+        if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
+        encoding->pushVideoFrame(len,0,dts);
+        if(updateUI()==false)
+        {  
+            goto abt;
+        }
+        written++;
+    }
+abt:
+    closeUI();
+    delete [] videoBuffer;
+    videoBuffer=NULL;
+    delete [] audioBuffer;
+    audioBuffer=NULL;
+    ADM_info("[dummy] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
+    return true;
 }
 bool muxerDummy::close(void) 
 {
