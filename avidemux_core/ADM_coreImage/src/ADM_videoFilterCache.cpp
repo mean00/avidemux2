@@ -1,18 +1,21 @@
-//
-// C++ Implementation: ADM_cache
-//
-// Description: 
-//
-//
-// Author: mean <fixounet@free.fr>, (C) 2004
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
-#include "ADM_default.h"
+/** *************************************************************************
+        \file                  ADM_videoFilterCache.cpp
+        \brief Cache/buffer for video filter
+		\author (c) 2008/2010 Mean, fixounet@free.fr
 
-//#include "ADM_editor/ADM_edit.hxx"
-#include "ADM_videoFilter.h"
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#include "ADM_default.h"
+#include "ADM_videoFilterCache.h"
 
 #if 1
 #define aprintf(...) {}
@@ -20,7 +23,7 @@
 #define aprintf printf
 #endif
 
-VideoCache::VideoCache(uint32_t nb,AVDMGenericVideoStream *in)
+VideoCache::VideoCache(uint32_t nb,ADM_coreVideoFilter *in)
 {
 uint32_t sz;
 	nbEntry=nb;
@@ -34,7 +37,6 @@ uint32_t sz;
 		entry[i].frameBuffer	=new ADMImage(info.width,info.height);	
 		entry[i].frameNum	=0xffff0000;
 		entry[i].frameLock	=0;
-		entry[i].lastUse	=0xffff0000;
 	}	
 	counter=0;
 }
@@ -96,7 +98,9 @@ uint8_t  VideoCache::purge(void)
 	return 1;
 
 }
-//_____________________________________________
+/**
+    \fn getImage
+*/
 ADMImage *VideoCache::getImage(uint32_t frame)
 {
 int32_t i;
@@ -138,7 +142,7 @@ ADMImage *ptr=NULL;
 	// Target is the new cache we will use
 
 	ptr=entry[target].frameBuffer;
-	if(!incoming->getFrameNumberNoAlloc(frame,&len,ptr,&flags)) return NULL;
+    if(!incoming->getNextFrame(entry[target].frameBuffer)) return NULL;
 	// Update LRU info
 	entry[target].frameLock++;
 	entry[target].frameNum=frame;
@@ -147,4 +151,4 @@ ADMImage *ptr=NULL;
 	return ptr;
 	
 }
-
+// EOF

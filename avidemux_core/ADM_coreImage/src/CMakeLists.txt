@@ -1,6 +1,6 @@
 SET(ADM_coreImage_SRCS 
 #        ADM_videoFilter.cpp  
-        #ADM_videoFilterCache.cpp
+        ADM_videoFilterCache.cpp
         ADM_image.cpp  
         ADM_imageUtils.cpp
         ADM_imageResizer.cpp

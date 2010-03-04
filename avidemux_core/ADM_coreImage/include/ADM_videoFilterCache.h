@@ -12,7 +12,10 @@
 
 #ifndef __ADM_CACHE__
 #define __ADM_CACHE__
-#include "ADM_videoFilter.h"
+#include "ADM_coreVideoFilter.h"
+/**
+    \struct videoCacheEntry
+*/
 typedef struct vidCacheEntry
 {
 		uint32_t 	frameNum;
@@ -21,23 +24,24 @@ typedef struct vidCacheEntry
 		uint32_t	lastUse;
 
 }vidCacheEntry;
-
+/**
+    \class VideoCache
+*/
 class VideoCache
 {
 	private:
-		vidCacheEntry	*entry;
-		ADV_Info 	info;
-		uint32_t	counter;
-		uint32_t 	nbEntry;
+		vidCacheEntry	    *entry;
+		uint32_t	        counter;
+		uint32_t 	        nbEntry;
+		FilterInfo           info;
+		ADM_coreVideoFilter *incoming;
 		
-		AVDMGenericVideoStream *incoming;
 		
-		
-		int32_t 	searchFrame( uint32_t frame);
-		int32_t 	searchPtr( ADMImage *ptr);
+		int32_t 	        searchFrame( uint32_t frame);
+		int32_t 	        searchPtr( ADMImage *ptr);
 		
 	public:
-		VideoCache(uint32_t nb,AVDMGenericVideoStream *in);
+		VideoCache(uint32_t nb,ADM_coreVideoFilter *in);
 		~VideoCache(void);
 		
 		ADMImage *getImage(uint32_t frame);
