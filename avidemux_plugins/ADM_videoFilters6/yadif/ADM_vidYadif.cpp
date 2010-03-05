@@ -62,10 +62,10 @@ public:
                     yadifFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~yadifFilter();
 
-       virtual const char   *getConfiguration(void);                 /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(ADMImage *image);           /// Return the next image
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-       virtual bool         configure(void) ;                        /// Start graphical user interface
+        virtual const char   *getConfiguration(void);                 /// Return  current configuration as a human readable string
+        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);           /// Return the next image
+        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+        virtual bool         configure(void) ;                        /// Start graphical user interface
 };
 
 // Add the hook to make it valid plugin
@@ -175,9 +175,9 @@ const char *yadifFilter::getConfiguration(void)
     \fn getConfiguration
     \brief Return current setting as a string
 */
-bool yadifFilter::getNextFrame(ADMImage *image)
+bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-#if 0
+
         int mode;
         int parity;
         int tff;
@@ -190,9 +190,9 @@ bool yadifFilter::getNextFrame(ADMImage *image)
         mode = configuration.mode;
 
         if (mode & 1) 
-                n = (frame>>1); // bob
+                n = (nextFrame>>1); // bob
         else
-                n = frame;
+                n = nextFrame;
 
         src = vidCache->getImage(n);
   // Request frame 'n' from the child (source) clip.
@@ -200,18 +200,16 @@ bool yadifFilter::getNextFrame(ADMImage *image)
         if (n>0)
                 prev =  vidCache->getImage( n-1); // get previous frame
         else
-                prev= vidCache->getImage(0); // get very first frame
+                prev= src; // get very first frame
 
-        if (n< _in->getInfo()->nb_frames-1)
-                next = vidCache->getImage( n+1); // get next frame
-        else
-                next = vidCache->getImage( _in->getInfo()->nb_frames-1); // get last frame
+        next=vidCache->getImage(n+1);
+        if(!next) next=src;
 
-        dst = data;
+        dst = image;
         
         if(!prev || !src || !next)
         {
-            printf("Failed to read frame for frame %u\n",frame);
+            printf("Failed to read frame for frame %u\n",nextFrame);
             vidCache->unlockAll();
             return 0;
         }
@@ -226,7 +224,7 @@ bool yadifFilter::getNextFrame(ADMImage *image)
 #endif
                 tff = configuration.order;	
         
-        parity = (mode & 1) ? (frame & 1) ^ (1^tff) : (tff ^ 1);  // 0 or 1
+        parity = (mode & 1) ? (nextFrame & 1) ^ (1^tff) : (tff ^ 1);  // 0 or 1
 
       //MEANX  cpu = avs_get_cpu_flags(p->env);
 
@@ -289,8 +287,8 @@ bool yadifFilter::getNextFrame(ADMImage *image)
                 if (next_pitch != src_pitch)
                         ADM_dealloc(nextp);
         }
-       vidCache->unlockAll();
-#endif
+      vidCache->unlockAll();
+      nextFrame++;
       return 1;
 }
 //****************
