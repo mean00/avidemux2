@@ -224,7 +224,8 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 {
 
     uint8_t *from;
-    if(source->getNextFrame(image)==false)
+    uint32_t nb;
+    if(source->getNextFrame(&nb,image)==false)
     {
         printf("[ff] Cannot get next image\n");
         return false;
