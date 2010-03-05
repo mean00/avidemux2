@@ -12,7 +12,7 @@
 #include "ADM_paramList.h"
 #include "ADM_coreUtils.h"
 
-#define VF_API_VERSION 2
+#define VF_API_VERSION 3
 /* These are the 6 functions exported by each plugin ...*/
 typedef ADM_coreVideoFilter  *(ADM_vf_CreateFunction)(ADM_coreVideoFilter *previous,CONFcouple *conf);
 typedef void              (ADM_vf_DeleteFunction)(ADM_coreVideoFilter *codec);
