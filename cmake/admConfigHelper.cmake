@@ -99,7 +99,7 @@ MACRO (ADM_CHECK_FUNCTION_EXISTS _function _lib _varToSet)
 		MESSAGE(STATUS "Could not find ${_function} in ${_lib}")
 		
 		IF (VERBOSE)
-			MESSAGE(${OUTPUT})
+			MESSAGE(STATUS ${OUTPUT})
 		ENDIF (VERBOSE)
 	ENDIF (${_varToSet})	
 ENDMACRO (ADM_CHECK_FUNCTION_EXISTS)
