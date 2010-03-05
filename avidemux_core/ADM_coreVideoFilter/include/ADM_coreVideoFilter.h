@@ -18,6 +18,7 @@
 
 #include "ADM_confCouple.h"
 #include "ADM_image.h"
+#include "ADM_videoFilterCache.h"
 /**
     \struct FilterInfo
     \brief Describes the video stream at this point in the filter chain
@@ -38,16 +39,17 @@ class ADM_coreVideoFilter
 {
 protected:
             FilterInfo           info;
-            uint32_t             nextFrame;
+            uint32_t             nextFrame; // next frame to fetch, it is reset to 0 after a seek!
+            VideoCache           *vidCache;
 public:
             ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
             ~ADM_coreVideoFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
        virtual bool         goToTime(uint64_t usSeek);              
-       virtual bool         getNextFrame(ADMImage *image)=0;              /// Dont mix getFrame & getNextFrame !
-	   virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
-	   virtual bool         getCoupledConf(CONFcouple **couples)=0 ;   /// Return the current filter configuration
+       virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image)=0;              /// Dont mix getFrame & getNextFrame !
+       virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
+       virtual bool         getCoupledConf(CONFcouple **couples)=0 ;   /// Return the current filter configuration
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
 protected:
             ADM_coreVideoFilter *previousFilter;

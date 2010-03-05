@@ -27,11 +27,11 @@ public:
                     dummyVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~dummyVideoFilter();
 
-       virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
+        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
+        virtual bool         getNextFrame(uint32_t *frameNumner,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-       virtual bool         configure(void) {return true;}             /// Start graphical user interface
+        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+        virtual bool         configure(void) {return true;}             /// Start graphical user interface
 };
 
 // Add the hook to make it valid plugin
@@ -68,10 +68,10 @@ dummyVideoFilter::~dummyVideoFilter()
     \fn getFrame
     \brief Get a processed frame
 */
-bool dummyVideoFilter::getNextFrame(ADMImage *image)
+bool dummyVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
-    return previousFilter->getNextFrame(image);
+    return previousFilter->getNextFrame(fn,image);
 }
 /**
     \fn getCoupledConf

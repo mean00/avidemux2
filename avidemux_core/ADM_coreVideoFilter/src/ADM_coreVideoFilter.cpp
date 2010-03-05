@@ -38,6 +38,7 @@ if needed.
 {
     previousFilter=previous;
     nextFrame=0;
+    vidCache=NULL;
     if(previous) memcpy(&info,previous->getInfo(),sizeof(info));
 }
 /**
@@ -45,7 +46,8 @@ if needed.
 */
  ADM_coreVideoFilter:: ~ADM_coreVideoFilter()
 {
-
+        if(vidCache) delete vidCache;
+        vidCache=NULL;
 }
 /**
     \fn getConfiguration
@@ -77,6 +79,8 @@ bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
     float newSeek=usSeek;
     newSeek/=thisIncrement;
     newSeek*=oldIncrement;
+    if(vidCache) vidCache->flush();
+    nextFrame=0;
     return  previousFilter->goToTime((uint64_t)newSeek);
 
 }

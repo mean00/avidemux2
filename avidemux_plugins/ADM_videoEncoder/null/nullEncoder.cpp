@@ -55,7 +55,8 @@ const  char        *ADM_nullEncoder::getFourcc(void)
 */
 bool         ADM_nullEncoder::encode (ADMBitstream * out)
 {
-    if(source->getNextFrame(image)==false)
+    uint32_t fn;
+    if(source->getNextFrame(&fn,image)==false)
     {
         printf("[null] Cannot get next image\n");
         return false;

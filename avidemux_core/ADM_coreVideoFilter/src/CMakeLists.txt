@@ -1,6 +1,7 @@
 SET(ADM_CoreVideoFilter_SRCS 
 	ADM_coreVideoFilter.cpp
         DIA_flyDialog.cpp
+        ADM_videoFilterCache.cpp
 )
 
 ADD_LIBRARY(ADM_coreVideoFilter6 SHARED ${ADM_CoreVideoFilter_SRCS})

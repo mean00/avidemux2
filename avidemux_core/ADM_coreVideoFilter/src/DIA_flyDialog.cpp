@@ -221,6 +221,7 @@ ADM_flyDialog::~ADM_flyDialog(void)
 uint8_t    ADM_flyDialog::sliderChanged(void)
 {
   uint32_t fn= sliderGet();
+  uint32_t frameNumber;
   uint32_t len,flags;
   
     ADM_assert(_yuvBuffer);
@@ -233,7 +234,7 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
     time/=ADM_FLY_SLIDER_MAX;
     time*=_in->getInfo()->totalDuration;
     _in->goToTime(time);
-    if(!_in->getNextFrame(_yuvBuffer))
+    if(!_in->getNextFrame(&frameNumber,_yuvBuffer))
     {
       ADM_warning("[FlyDialog] Cannot get frame %u\n",fn); 
       return 0;

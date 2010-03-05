@@ -45,7 +45,8 @@ ADM_pngEncoder::~ADM_pngEncoder()
 */
 bool         ADM_pngEncoder::encode (ADMBitstream * out)
 {
-    if(source->getNextFrame(image)==false)
+    uint32_t fn;
+    if(source->getNextFrame(&fn,image)==false)
     {
         printf("[YV12] Cannot get next image\n");
         return false;

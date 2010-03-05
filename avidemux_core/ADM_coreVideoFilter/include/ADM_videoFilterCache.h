@@ -12,7 +12,8 @@
 
 #ifndef __ADM_CACHE__
 #define __ADM_CACHE__
-#include "ADM_coreVideoFilter.h"
+class ADM_coreVideoFilter;
+#include "ADM_image.h"
 /**
     \struct videoCacheEntry
 */
@@ -30,11 +31,10 @@ typedef struct vidCacheEntry
 class VideoCache
 {
 	private:
-		vidCacheEntry	    *entry;
+		vidCacheEntry	        *entry;
 		uint32_t	        counter;
 		uint32_t 	        nbEntry;
-		FilterInfo           info;
-		ADM_coreVideoFilter *incoming;
+		ADM_coreVideoFilter     *incoming;
 		
 		
 		int32_t 	        searchFrame( uint32_t frame);
@@ -47,6 +47,6 @@ class VideoCache
 		ADMImage *getImage(uint32_t frame);
 		uint8_t unlockAll(void);
 		uint8_t unlock(ADMImage  *frame);
-		uint8_t purge(void);
+		uint8_t flush(void);
 };
 #endif

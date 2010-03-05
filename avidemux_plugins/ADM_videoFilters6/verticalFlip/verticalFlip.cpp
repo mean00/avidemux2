@@ -27,11 +27,11 @@ public:
                     verticalFlipFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~verticalFlipFilter();
 
-       virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
+        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
+        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-       virtual bool         configure(void) {return true;}             /// Start graphical user interface
+        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+        virtual bool         configure(void) {return true;}             /// Start graphical user interface
 };
 
 // Add the hook to make it valid plugin
@@ -82,10 +82,10 @@ static void flipMe(uint8_t *data, uint32_t w,uint32_t h)
     \fn getFrame
     \brief Get a processed frame
 */
-bool verticalFlipFilter::getNextFrame(ADMImage *image)
+bool verticalFlipFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
-    if(false==previousFilter->getNextFrame(image))
+    if(false==previousFilter->getNextFrame(fn,image))
     {
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;

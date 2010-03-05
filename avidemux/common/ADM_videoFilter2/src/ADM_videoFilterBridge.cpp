@@ -65,7 +65,7 @@ ADM_videoFilterBridge::~ADM_videoFilterBridge()
     \fn getNextFrame
     \brief
 */
-bool         ADM_videoFilterBridge::nextFrame(ADMImage *image)
+bool         ADM_videoFilterBridge::getNextFrame(uint32_t *frameNumber,ADMImage *image)
 {
 again:
     bool r=false;
@@ -74,9 +74,12 @@ again:
         firstImage=false;
         r=video_body->samePicture(image);
         lastSentImage=0;
+        *frameNumber=nextFrame=0;
     }else
     {
         r=   video_body->nextPicture(image);
+        nextFrame++;
+        *frameNumber=nextFrame;
         lastSentImage++;
     }
     if(r==false) return false;
@@ -95,16 +98,6 @@ again:
     // Rescale time
     image->Pts-=startTime;
     return true;
-}
-/**
-    \fn getFrame
-    \brief This one is special. the lower level can only do sequential access
-            so we in case of non-sequential access we rely on the cache of decoded image.
-            (TODO)
-*/
-bool         ADM_videoFilterBridge::getNextFrame(ADMImage *image)
-{  
-        return nextFrame(image);
 }
 /**
     \fn ADM_videoFilterBridge

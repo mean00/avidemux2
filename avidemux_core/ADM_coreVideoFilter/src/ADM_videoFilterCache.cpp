@@ -16,7 +16,7 @@
 
 #include "ADM_default.h"
 #include "ADM_videoFilterCache.h"
-
+#include "ADM_coreVideoFilter.h"
 #if 1
 #define aprintf(...) {}
 #else
@@ -28,13 +28,15 @@ VideoCache::VideoCache(uint32_t nb,ADM_coreVideoFilter *in)
 uint32_t sz;
 	nbEntry=nb;
 	incoming=in;
-	memcpy(&info,in->getInfo(),sizeof(info));
 	// Ready buffers
 	entry=new vidCacheEntry[nbEntry];
-	sz=(info.width*info.height*3)>>1;
+        uint32_t w=in->getInfo()->width;
+        uint32_t h=in->getInfo()->height;
+
+	sz=(w*h*3)>>1;
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		entry[i].frameBuffer	=new ADMImage(info.width,info.height);	
+		entry[i].frameBuffer	=new ADMImage(w,h);	
 		entry[i].frameNum	=0xffff0000;
 		entry[i].frameLock	=0;
 	}	
@@ -87,7 +89,7 @@ int32_t k;
 	return 1;	
 }
 //_____________________________________________
-uint8_t  VideoCache::purge(void)
+uint8_t  VideoCache::flush(void)
 {
 	for(uint32_t i=0;i<nbEntry;i++)
 	{		
@@ -142,10 +144,12 @@ ADMImage *ptr=NULL;
 	// Target is the new cache we will use
 
 	ptr=entry[target].frameBuffer;
-    if(!incoming->getNextFrame(entry[target].frameBuffer)) return NULL;
+        uint32_t nb;
+        if(!incoming->getNextFrame(&nb,entry[target].frameBuffer)) return NULL;
+        ADM_assert(nb==frame);
 	// Update LRU info
 	entry[target].frameLock++;
-	entry[target].frameNum=frame;
+	entry[target].frameNum=nb;
 	entry[target].lastUse=counter;
 	counter++;	
 	return ptr;
