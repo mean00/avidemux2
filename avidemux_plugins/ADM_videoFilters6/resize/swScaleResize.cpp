@@ -62,7 +62,7 @@ public:
                     ~swScaleResizeFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
+       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
        virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual bool         configure(void) ;             /// Start graphical user interface
@@ -117,10 +117,10 @@ swScaleResizeFilter::~swScaleResizeFilter()
     \fn getFrame
     \brief Get a processed frame
 */
-bool swScaleResizeFilter::getNextFrame(ADMImage *image)
+bool swScaleResizeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
-    if(false==previousFilter->getNextFrame(original))
+    if(false==previousFilter->getNextFrame(fn,original))
     {
         ADM_warning("swResize : Cannot get frame\n");
         return false;

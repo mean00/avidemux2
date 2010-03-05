@@ -185,28 +185,35 @@ bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         int cpu;
         int n;
         ADMImage *src, *dst, * prev, *next;
-
+        
     
         mode = configuration.mode;
 
         if (mode & 1) 
+        {
                 n = (nextFrame>>1); // bob
+        }
         else
                 n = nextFrame;
 
         src = vidCache->getImage(n);
-  // Request frame 'n' from the child (source) clip.
-
+        if(!src) return false;
+        
+  
+        // If possible get previous image...
         if (n>0)
                 prev =  vidCache->getImage( n-1); // get previous frame
         else
                 prev= src; // get very first frame
 
+        ADM_assert(prev);
         next=vidCache->getImage(n+1);
         if(!next) next=src;
-
-        dst = image;
+        ADM_assert(next);
         
+        dst = image;
+        dst->copyInfo(src);
+
         if(!prev || !src || !next)
         {
             printf("Failed to read frame for frame %u\n",nextFrame);
@@ -288,7 +295,15 @@ bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
                         ADM_dealloc(nextp);
         }
       vidCache->unlockAll();
+      
+      if (mode & 1) 
+      {
+            if(nextFrame&1)
+                image->Pts+= info.frameIncrement;
+      }
+      //printf("out PTs=%"LLU", nextFrame=%d,inc=%d\n",image->Pts,(int)nextFrame,(int)info.frameIncrement);
       nextFrame++;
+      
       return 1;
 }
 //****************

@@ -38,7 +38,7 @@ class  CropFilter:public ADM_coreVideoFilter
         virtual                 ~CropFilter();
 
        virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(ADMImage *image);    /// Return the next image
+       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
        //virtual FilterInfo  *getInfo(void);                    /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual bool         configure(void) ;                 /// Start graphical user interface
@@ -100,11 +100,11 @@ CropFilter::~CropFilter()
     \fn getNextFrame
 
 */
-bool         CropFilter::getNextFrame(ADMImage *image)
+bool         CropFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
 FilterInfo  *prevInfo=previousFilter->getInfo();
 			// read uncompressed frame
-       		if(!previousFilter->getNextFrame(original)) return false;
+       		if(!previousFilter->getNextFrame(fn,original)) return false;
        		
        		// Crop Y luma
        		uint32_t y,x,line;
