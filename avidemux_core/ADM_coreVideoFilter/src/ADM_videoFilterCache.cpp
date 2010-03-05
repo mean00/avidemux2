@@ -36,7 +36,7 @@ uint32_t sz;
 	sz=(w*h*3)>>1;
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		entry[i].frameBuffer	=new ADMImage(w,h);	
+		entry[i].image	=new ADMImage(w,h);	
 		entry[i].frameNum	=0xffff0000;
 		entry[i].frameLock	=0;
 	}	
@@ -47,7 +47,7 @@ VideoCache::~ VideoCache()
 {
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		delete  entry[i].frameBuffer;
+		delete  entry[i].image;
 	}
 	delete [] entry;
 	
@@ -66,7 +66,7 @@ int32_t 	 VideoCache::searchPtr( ADMImage *ptr)
 {
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		if(entry[i].frameBuffer==ptr) return i;
+		if(entry[i].image==ptr) return i;
 	}
 	return -1;
 }
@@ -108,16 +108,16 @@ ADMImage *VideoCache::getImage(uint32_t frame)
 int32_t i;
 uint32_t tryz=nbEntry;
 uint32_t len,flags;
-ADMImage *ptr=NULL;
 
 	// Already there ?
 	if((i=searchFrame(frame))>=0)
 	{
-		aprintf("Cache : Cache hit %d buffer %d\n",frame,i);
+        ADMImage *img=entry[i].image;
+		aprintf("[cache]  old image  frame %d with PTS=%"LLU"\n",(int)frame,img->Pts);
 		entry[i].frameLock++;
 		entry[i].lastUse=counter;
 		counter++;
-		return entry[i].frameBuffer;	
+		return img;	
 	}
 	// Else get it!
 	
@@ -143,16 +143,18 @@ ADMImage *ptr=NULL;
 	ADM_assert(target!=0xfff);
 	// Target is the new cache we will use
 
-	ptr=entry[target].frameBuffer;
+
         uint32_t nb;
-        if(!incoming->getNextFrame(&nb,entry[target].frameBuffer)) return NULL;
+        ADMImage *img=entry[target].image;
+        if(!incoming->getNextFrame(&nb,img)) return NULL;
         ADM_assert(nb==frame);
+        aprintf("[cache] New image Got frame %d with PTS=%"LLU"\n",(int)nb,img->Pts);
 	// Update LRU info
 	entry[target].frameLock++;
 	entry[target].frameNum=nb;
 	entry[target].lastUse=counter;
 	counter++;	
-	return ptr;
+	return img;
 	
 }
 // EOF

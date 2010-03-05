@@ -20,7 +20,7 @@ class ADM_coreVideoFilter;
 typedef struct vidCacheEntry
 {
 		uint32_t 	frameNum;
-		ADMImage 	*frameBuffer;
+		ADMImage 	*image;
 		uint8_t		frameLock;		
 		uint32_t	lastUse;
 
@@ -31,10 +31,10 @@ typedef struct vidCacheEntry
 class VideoCache
 {
 	private:
-		vidCacheEntry	        *entry;
+		vidCacheEntry	    *entry;
 		uint32_t	        counter;
 		uint32_t 	        nbEntry;
-		ADM_coreVideoFilter     *incoming;
+		ADM_coreVideoFilter *incoming;
 		
 		
 		int32_t 	        searchFrame( uint32_t frame);
