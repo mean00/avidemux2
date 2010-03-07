@@ -22,7 +22,9 @@
 #else
 #define aprintf printf
 #endif
-
+/**
+    \fn ctor
+*/
 VideoCache::VideoCache(uint32_t nb,ADM_coreVideoFilter *in)
 {
 uint32_t sz;
@@ -39,10 +41,13 @@ uint32_t sz;
 		entry[i].image	=new ADMImage(w,h);	
 		entry[i].frameNum	=0xffff0000;
 		entry[i].frameLock	=0;
+        entry[i].freeEntry=true;
 	}	
 	counter=0;
 }
-//_____________________________________________
+/**
+    \fn dtor
+*/
 VideoCache::~ VideoCache()
 {
 	for(uint32_t i=0;i<nbEntry;i++)
@@ -50,14 +55,18 @@ VideoCache::~ VideoCache()
 		delete  entry[i].image;
 	}
 	delete [] entry;
+    entry=NULL;
 	
 }
-//_____________________________________________
+/**
+    \fn searchFrame
+    \brief Search an entry by its frameNumber
+*/
 int32_t VideoCache::searchFrame( uint32_t frame)
 {
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		if(entry[i].frameNum==frame) return i;
+		if(entry[i].frameNum==frame&& entry[i].freeEntry==false) return i;
 	}
 	return -1;
 }
@@ -66,7 +75,7 @@ int32_t 	 VideoCache::searchPtr( ADMImage *ptr)
 {
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		if(entry[i].image==ptr) return i;
+		if(entry[i].image==ptr && entry[i].freeEntry==false) return i;
 	}
 	return -1;
 }
@@ -88,17 +97,52 @@ int32_t k;
 	entry[k].frameLock--;	
 	return 1;	
 }
-//_____________________________________________
+/**
+    \fn flush
+    \brief Empty cache
+*/
 uint8_t  VideoCache::flush(void)
 {
+    printf("Flushing video Cache\n");
 	for(uint32_t i=0;i<nbEntry;i++)
 	{		
 		entry[i].frameLock=0;
 		entry[i].frameNum=0xffff0000;	
 		entry[i].lastUse=0xffff0000;	
+        entry[i].freeEntry=true;
 	}
 	return 1;
 
+}
+/**
+     \fn searchFreeEntry
+
+*/
+int VideoCache::searchFreeEntry(void)
+{
+    // Search a free one
+    for(uint32_t i=0;i<nbEntry;i++)
+	{
+        if(entry[i].freeEntry==true) return i;
+    }
+    // Search the oldest one
+    uint32_t deltamax=0,delta;
+	uint32_t target=0xfff;
+	aprintf("Cache : Cache miss %d\n",frame);
+	//for(uint32_t i=0;i<nbEntry;i++) printf("%d(%d) ",frameNum[i],frameLock[i]);printf("\n");
+	for(uint32_t i=0;i<nbEntry;i++)
+	{
+		if(entry[i].frameLock) continue; 	// don"t consider locked frames
+
+		delta=abs((int)counter-(int)entry[i].lastUse);
+		if(delta>deltamax)
+		{
+			deltamax=delta;
+			target=i;
+		}
+	}
+    ADM_assert(target!=0xfff);
+    return target;
 }
 /**
     \fn getImage
@@ -119,42 +163,40 @@ uint32_t len,flags;
 		counter++;
 		return img;	
 	}
-	// Else get it!
-	
-	// First elect a new buffer, we do it by 
-	// using a RLU scheme
-	
-	uint32_t deltamax=0,delta;
-	uint32_t target=0xfff;
-	aprintf("Cache : Cache miss %d\n",frame);
-	//for(uint32_t i=0;i<nbEntry;i++) printf("%d(%d) ",frameNum[i],frameLock[i]);printf("\n");
+	int target=searchFreeEntry();
+    uint32_t nb;
+    ADMImage *img=entry[target].image;
+    if(!incoming->getNextFrame(&nb,img)) return NULL;
+    if(nb!=frame)
+    {
+        ADM_error("Expected frame %d, got frame %d\n",(int)frame,(int)nb);
+        dump();
+        ADM_assert(0);
+    }
+    ADM_assert(nb==frame);
+    aprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>[cache] New image Got frame %d with PTS=%"LLU"\n",(int)nb,img->Pts);
+    // Update LRU info
+    entry[target].frameLock++;
+    entry[target].frameNum=nb;
+    entry[target].lastUse=counter;
+    entry[target].freeEntry=false;
+    counter++;	
+    return img;
+}
+/**
+    \fn dump
+*/
+void VideoCache::dump(void)
+{
 	for(uint32_t i=0;i<nbEntry;i++)
-	{
-		if(entry[i].frameLock) continue; 	// don"t consider locked frames
-		
-		
-		delta=abs((int)counter-(int)entry[i].lastUse);
-		if(delta>deltamax)
-		{
-			deltamax=delta;
-			target=i;
-		}
+	{		
+        printf("Entry %d/%d, frameNum %d lock %d lastUse %d\n",
+                i,nbEntry,
+                
+                (int)entry[i].frameNum,
+                (int)entry[i].frameLock,
+                (int)entry[i].lastUse);
 	}
-	ADM_assert(target!=0xfff);
-	// Target is the new cache we will use
 
-
-        uint32_t nb;
-        ADMImage *img=entry[target].image;
-        if(!incoming->getNextFrame(&nb,img)) return NULL;
-        ADM_assert(nb==frame);
-        aprintf("[cache] New image Got frame %d with PTS=%"LLU"\n",(int)nb,img->Pts);
-	// Update LRU info
-	entry[target].frameLock++;
-	entry[target].frameNum=nb;
-	entry[target].lastUse=counter;
-	counter++;	
-	return img;
-	
 }
 // EOF

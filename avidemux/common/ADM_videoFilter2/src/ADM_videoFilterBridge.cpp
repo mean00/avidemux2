@@ -34,7 +34,7 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(uint64_t startTime, uint64_t endTim
         endTime=total-startTime+1;
     }
     this->endTime=endTime;
-    
+    myName="Bridge";
     aviInfo fo;
     video_body->getVideoInfo(&fo);
     bridgeInfo.width=fo.width;

@@ -57,7 +57,6 @@ protected:
                     ADMImage    *original;
                     yadif       configuration;
                     void        updateInfo(void);
-                    VideoCache  *vidCache;
 public:
                     yadifFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~yadifFilter();
@@ -96,6 +95,7 @@ yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVi
     }
     vidCache = new VideoCache (10, in);
     updateInfo();
+    myName="yadif";
 }
 /**
     \fn destructor

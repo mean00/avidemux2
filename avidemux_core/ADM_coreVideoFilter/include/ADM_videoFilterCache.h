@@ -23,6 +23,7 @@ typedef struct vidCacheEntry
 		ADMImage 	*image;
 		uint8_t		frameLock;		
 		uint32_t	lastUse;
+        bool        freeEntry;
 
 }vidCacheEntry;
 /**
@@ -39,6 +40,7 @@ class VideoCache
 		
 		int32_t 	        searchFrame( uint32_t frame);
 		int32_t 	        searchPtr( ADMImage *ptr);
+        int                 searchFreeEntry(void);
 		
 	public:
 		VideoCache(uint32_t nb,ADM_coreVideoFilter *in);
@@ -48,5 +50,6 @@ class VideoCache
 		uint8_t unlockAll(void);
 		uint8_t unlock(ADMImage  *frame);
 		uint8_t flush(void);
+        void    dump(void);
 };
 #endif

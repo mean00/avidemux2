@@ -41,6 +41,7 @@ protected:
             FilterInfo           info;
             uint32_t             nextFrame; // next frame to fetch, it is reset to 0 after a seek!
             VideoCache           *vidCache;
+            const char           *myName;
 public:
             ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
             ~ADM_coreVideoFilter();

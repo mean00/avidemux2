@@ -39,6 +39,7 @@ if needed.
     previousFilter=previous;
     nextFrame=0;
     vidCache=NULL;
+    myName="default";
     if(previous) memcpy(&info,previous->getInfo(),sizeof(info));
 }
 /**
@@ -71,16 +72,18 @@ FilterInfo  *ADM_coreVideoFilter::getInfo(void)
 */
 bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
 {
+    ADM_info("%s:Video filter seeking\n",myName);
     float thisIncrement=info.frameIncrement;
     float oldIncrement=previousFilter->getInfo()->frameIncrement;
     ADM_assert(thisIncrement);
     ADM_assert(oldIncrement);
+    if(vidCache) vidCache->flush();
+    nextFrame=0;
+
     if(thisIncrement==oldIncrement) return previousFilter->goToTime(usSeek);
     float newSeek=usSeek;
     newSeek/=thisIncrement;
     newSeek*=oldIncrement;
-    if(vidCache) vidCache->flush();
-    nextFrame=0;
     return  previousFilter->goToTime((uint64_t)newSeek);
 
 }
