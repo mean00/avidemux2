@@ -130,11 +130,12 @@ void filtermainWindow::preview(bool b)
 		previewDialog->resetVideoStream(filter);
 	else
 	{
-		previewDialog = new Ui_seekablePreviewWindow(this, filter, previewFrameIndex);
+		previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
 		connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
-
+#if 0
 		if (previewDialogX != INT_MIN)
 			previewDialog->move(previewDialogX, previewDialogY);
+#endif
 	}
 	previewDialog->show();
 }

@@ -41,7 +41,7 @@ public:
 	QListWidget *availableList;
 	QListWidget *activeList;
 protected:
-	uint32_t previewFrameIndex;
+	
 	int previewDialogX, previewDialogY;
 	Ui_seekablePreviewWindow *previewDialog;
 public slots:

@@ -234,9 +234,19 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
     time/=ADM_FLY_SLIDER_MAX;
     time*=_in->getInfo()->totalDuration;
     _in->goToTime(time);
+   
+
+   return nextImage();
+}
+/**
+    \fn nextImage
+*/
+bool ADM_flyDialog::nextImage(void)
+{
+    uint32_t frameNumber;
     if(!_in->getNextFrame(&frameNumber,_yuvBuffer))
     {
-      ADM_warning("[FlyDialog] Cannot get frame %u\n",fn); 
+      ADM_warning("[FlyDialog] Cannot get frame %u\n",frameNumber); 
       return 0;
     }
 
@@ -252,7 +262,6 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
 		copyYuvScratchToRgb();
         process();
     }
-
     return display();
 }
 /**

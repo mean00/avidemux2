@@ -29,6 +29,7 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+    connect(ui.next,SIGNAL(clicked()),this,SLOT(nextImage()));
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
@@ -36,7 +37,10 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 	delete seekablePreview;
 	delete canvas;
 }
-
+void Ui_seekablePreviewWindow::nextImage(void)
+{
+    seekablePreview->nextImage();
+}
 void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
 	if (seekablePreview)

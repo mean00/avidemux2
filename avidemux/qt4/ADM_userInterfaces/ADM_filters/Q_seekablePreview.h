@@ -37,4 +37,5 @@ public:
 
 public slots:
 	void sliderChanged(int value);
+    void nextImage(void);
 };

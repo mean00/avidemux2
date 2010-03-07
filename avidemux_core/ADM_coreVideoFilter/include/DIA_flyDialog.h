@@ -86,10 +86,11 @@ class ADM_flyDialog
           void copyYuvFinalToRgb(void);
           void copyYuvScratchToRgb(void);
           void copyRgbFinalToDisplay(void);
+
           
   public:
           void recomputeSize(void);
-         
+          virtual bool nextImage(void);
   public:
           void    *_cookie; // whatever
           void    *_slider; // widget
