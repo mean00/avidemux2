@@ -22,7 +22,7 @@ public:
 	uint8_t upload(void) {return 1;}
 	uint8_t cleanup(void) {return 1;}
 
-	flySeekablePreview(uint32_t width, uint32_t height, AVDMGenericVideoStream *videoStream, void *canvas, void *slider) : 
+	flySeekablePreview(uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, void *canvas, void *slider) : 
 	  ADM_flyDialogQt4(width, height, videoStream, canvas, slider, 0, RESIZE_AUTO) {delete[] _rgbBufferOut; _rgbBufferOut = NULL;};
 	virtual ~flySeekablePreview(void) {_rgbBufferOut = NULL;};
 };

@@ -107,9 +107,45 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 	else
 		label->setBackgroundRole(QPalette::Base);
 }
-
+/**
+    \fn preview
+*/
 void filtermainWindow::preview(bool b)
 {
+   QListWidgetItem *item=activeList->currentItem();
+   if(!item)
+   {
+      printf("No selection\n");
+      return;
+   }
+    
+     int itag=item->type();
+     ADM_assert(itag>=ACTIVE_FILTER_BASE);
+     itag-=ACTIVE_FILTER_BASE;
+     /* Filter 0 is the decoder ...*/
+     ADM_info("Rank : %d\n",itag); 
+     ADM_coreVideoFilter     *filter=ADM_vf_getInstance(itag);
+     ADM_assert(filter);
+	if (previewDialog)
+		previewDialog->resetVideoStream(filter);
+	else
+	{
+		previewDialog = new Ui_seekablePreviewWindow(this, filter, previewFrameIndex);
+		connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
+
+		if (previewDialogX != INT_MIN)
+			previewDialog->move(previewDialogX, previewDialogY);
+	}
+	previewDialog->show();
+}
+
+void filtermainWindow::closePreview()
+{
+	if (previewDialog)
+	{		
+		delete previewDialog;
+		previewDialog = NULL;
+	}
 
 }
 
@@ -219,7 +255,8 @@ void filtermainWindow::configure( bool b)
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-      ADM_info("Rank : %d\n",itag); 
+     ADM_info("Rank : %d\n",itag); 
+   
    //   ADM_assert(itag);
      /**/
         ADM_vf_configureFilterAtIndex(itag);
@@ -477,7 +514,22 @@ filtermainWindow::filtermainWindow()     : QDialog()
     displayFamily(0);
     buildActiveFilterList();
 	setSelected(nb_active_filter - 1);
+
+	previewDialog = NULL;
+	previewDialogX = INT_MIN;
+	previewDialogY = INT_MIN;
+	//previewFrameIndex = curframe;
+
  }
+/**
+    \fn dtor
+*/
+filtermainWindow::~filtermainWindow()
+{
+    if(previewDialog) delete previewDialog;
+    previewDialog=NULL;
+
+}
 /*******************************************************/
 
 int GUI_handleVFilter(void);

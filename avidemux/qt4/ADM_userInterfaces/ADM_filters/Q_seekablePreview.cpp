@@ -17,7 +17,7 @@
 
 #include "Q_seekablePreview.h"
 
-Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, AVDMGenericVideoStream *videoStream, uint32_t defaultFrame) : QDialog(parent)
+Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
 {
 	ui.setupUi(this);
 
@@ -37,7 +37,7 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 	delete canvas;
 }
 
-void Ui_seekablePreviewWindow::resetVideoStream(AVDMGenericVideoStream *videoStream)
+void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
 	if (seekablePreview)
 		delete seekablePreview;

@@ -30,9 +30,9 @@ public:
 	ADM_QCanvas *canvas;
 	flySeekablePreview *seekablePreview;
 	Ui_seekablePreviewDialog ui;
-	Ui_seekablePreviewWindow(QWidget *parent, AVDMGenericVideoStream *videoStream, uint32_t defaultFrame = 0);
+	Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame = 0);
 	~Ui_seekablePreviewWindow();
-	void resetVideoStream(AVDMGenericVideoStream *videoStream);
+	void resetVideoStream(ADM_coreVideoFilter *videoStream);
 	uint32_t frameIndex();
 
 public slots:

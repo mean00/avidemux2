@@ -4,6 +4,7 @@
 #include <QtGui/QItemDelegate>
 #include "ui_mainfilter.h"
 #include "ADM_inttype.h"
+#include "Q_seekablePreview.h"
 class FilterItemEventFilter : public QObject
 {
 	Q_OBJECT
@@ -33,12 +34,16 @@ class filtermainWindow : public QDialog
 
 public:
 	filtermainWindow();
+    ~filtermainWindow();
 	void buildActiveFilterList(void);
 
 	Ui_mainFilterDialog ui;
 	QListWidget *availableList;
 	QListWidget *activeList;
-
+protected:
+	uint32_t previewFrameIndex;
+	int previewDialogX, previewDialogY;
+	Ui_seekablePreviewWindow *previewDialog;
 public slots:
 	void VCD(bool b);
 	void DVD(bool b);
@@ -55,6 +60,7 @@ public slots:
 	void filterFamilyClick(QListWidgetItem *item);
 	void filterFamilyClick(int  item);
 	void preview(bool b);
+    void closePreview(void);
 
 private:
 	void setSelected(int sel);
