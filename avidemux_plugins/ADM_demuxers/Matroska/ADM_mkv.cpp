@@ -256,12 +256,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         
         adj=maxDelta-track->index[0].Pts;
         ADM_info("Delaying video by %"LLU" us\n",adj);
-        
-        for(int i=0;i<nb;i++)
-                track->index[i].Pts+=adj;
-    
-    
-        printf("[mkv] Delaying audio by %"LLU" us\n",adj);
+        ADM_info("[mkv] Delaying audio by %"LLU" us\n",adj);
         for(int i=0;i<_nbAudioTrack+1;i++)
             delayTrack(&(_tracks[i]),adj);
     }
