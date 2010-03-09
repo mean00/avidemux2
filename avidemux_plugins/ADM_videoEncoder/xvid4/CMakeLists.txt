@@ -1,0 +1,12 @@
+INCLUDE(ve_plugin)
+
+SET(xvid4_SRCS 
+        ADM_xvid4.cpp
+        xvid4Plugin.cpp
+)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+ADD_LIBRARY(ADM_ve_xvid4 SHARED ${xvid4_SRCS})
+
+INIT_VIDEO_ENCODER(ADM_ve_xvid4)
+INSTALL_VIDEO_ENCODER(ADM_ve_xvid4)
