@@ -7,7 +7,7 @@
 #include "proxytype.h"
 #ifndef SKET_H
 #define SKET_H
-#define DEBUG
+//#define DEBUG
 #define MAGGIC 0xDEADBEEF
 
 typedef struct SktHeader

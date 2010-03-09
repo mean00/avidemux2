@@ -17,7 +17,7 @@
 #define INT_MAX 0x7fffffff
 #endif
 
-#define MY_VERSION "Avs2YUV 0.24 ADM_1.1"
+#define MY_VERSION "Avs2YUV 0.24 ADM_1.2"
 #define MAX_FH 10
 #include "winsock2.h"
 #define Log printf
@@ -49,7 +49,7 @@ int __cdecl main(int argc, const char* argv[])
 	char *audioBuffer=new char[48000*6*2];
 	char *audioBufferData=audioBuffer+sizeof(avsAudioFrame);
 
-	printf("AvsSocket Proxy, derivated from avs2yuv by  Loren Merritt \n");
+	printf("AvsSocket Proxy, derivated from avs2yuv by  Loren Merritt "MY_VERSION" \n");
 	fflush(stdout);
 	
 	
@@ -333,12 +333,15 @@ try{
 		// audio part
 		info.frequency=inf.SamplesPerSecond(); // 0 means no audio
 		info.channels=inf.AudioChannels();
-		if(inf.SampleType()!=SAMPLE_INT16)
+		if(info.frequency)
 		{
-			printf("Only int16 for audio and not %d!\n",(int)inf.SampleType());
-			fflush(stdout);
-			handleError();
-			return false;	
+			if(inf.SampleType()!=SAMPLE_INT16)
+			{
+				printf("Only int16 for audio and not %d!\n",(int)inf.SampleType());
+				fflush(stdout);
+				handleError();
+				return false;	
+			}
 		}
 		if(!inf.IsYV12()) 
 		{
