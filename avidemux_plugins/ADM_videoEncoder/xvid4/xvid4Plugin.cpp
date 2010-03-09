@@ -24,7 +24,7 @@ extern xvid4_encoder xvid4Settings;
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(xvid4Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("xvid4",
                                "Mpeg4 ASP (xvid4)",
-                               "Xvid4 based mpeg4 Encoder (c) 2009 Mean",
+                               "Xvid4 based mpeg4 Encoder (c) 2010 Mean/Gruntster",
                                 xvid4Configure, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,
