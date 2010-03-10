@@ -1,9 +1,9 @@
 /***************************************************************************
-                          \fn ADM_VideoEncoders
+                          \fn xvid4Encoder
                           \brief Internal handling of video encoders
                              -------------------
     
-    copyright            : (C) 2002/2009 by mean
+    copyright            : (C) 2002/2010 by mean/gruntster
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -20,18 +20,29 @@
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
 #include "xvid4_encoder.h"
+#include "xvid.h"
 /**
-        \class ADM_ffMpeg4Encoder
-        \brief Dummy encoder that does nothing
+        \class xvid4Encoder
+        \brief Xvid4 mpeg4 encoder
 
 */
 class xvid4Encoder : public ADM_coreVideoEncoder
 {
 protected:
                
-           
+               void           *handle;
                int             plane;
-               
+               bool            globalHeader;
+               bool            preAmble (ADMImage * in);
+               bool            postAmble (ADMBitstream * out,int size);
+               bool            query(void);
+
+                xvid_plugin_single_t single;
+                xvid_plugin_2pass1_t pass1;
+                xvid_plugin_2pass2_t pass2;
+                xvid_enc_frame_t xvid_enc_frame;
+                xvid_enc_stats_t xvid_enc_stats;
+                xvid_enc_plugin_t plugins[7];
 public:
 
                            xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader);

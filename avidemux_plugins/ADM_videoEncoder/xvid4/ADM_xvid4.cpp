@@ -1,9 +1,9 @@
 /***************************************************************************
-                          \fn ADM_ffMpeg4
-                          \brief Front end for libavcodec Mpeg4 asp encoder
+                          \fn ADM_Xvid4
+                          \brief Front end for xvid4 Mpeg4 asp encoder
                              -------------------
     
-    copyright            : (C) 2002/2009 by mean
+    copyright            : (C) 2002/2009 by mean/gruntster
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -15,9 +15,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_lavcodec.h"
+
 #include "ADM_default.h"
-#if 0
 #include "ADM_xvid4.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
@@ -28,7 +27,9 @@
 #define aprintf printf
 #endif
 
-FFcodecSettings Mp4Settings=
+#define MMSET(x) memset(&(x),0,sizeof(x))
+
+xvid4_encoder xvid4Settings=
 {
     {
     COMPRESS_CQ, //COMPRESSION_MODE  mode;
@@ -38,91 +39,166 @@ FFcodecSettings Mp4Settings=
     1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
     ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
     },
-    {
-        ADM_AVCODEC_SETTING_VERSION,
-        2, // Multithreaded
-          ME_EPZS,			// ME
-          0,				// GMC     
-          1,				// 4MV
-          0,				// _QPEL;   
-          1,				// _TREILLIS_QUANT
-          2,				// qmin;
-          31,				// qmax;
-          3,				// max_qdiff;
-          2,				// max_b_frames;
-          0,				// mpeg_quant;
-          1,				// is_luma_elim_threshold
-          -2,				// luma_elim_threshold;
-          1,				// is_chroma_elim_threshold
-          -5,				// chroma_elim_threshold;
-          0.05,				//lumi_masking;
-          1,				// is lumi
-          0.01,				//dark_masking; 
-          1,				// is dark
-          0.5,				// qcompress amount of qscale change between easy & hard scenes (0.0-1.0
-          0.5,				// qblur;    amount of qscale smoothing over time (0.0-1.0) 
-          0,				// min bitrate in kB/S
-          0,				// max bitrate
-          0,				// user matrix
-          250,				// gop size
-          0,				// interlaced
-          0,				// WLA: bottom-field-first
-          0,				// wide screen
-          2,				// mb eval = distortion
-          8000,				// vratetol 8Meg
-          0,				// is temporal
-          0.0,				// temporal masking
-          0,				// is spatial
-          0.0,				// spatial masking
-          0,				// NAQ
-          0,                // xvid rc
-          0,                // buffersize
-          0,                // override ratecontrol
-          0				    // DUMMY 
-    }
+    
+            false, //mpegQuant
+            0, // rdMode
+            0, // MotionEstimation
+            0, // cqmMode
+            0, // arMode
+            0, // MaxBframe
+            0, // MaxKeyInterval
+            true // Trellis
+    
 };
-/**
-        \fn ADM_ffMpeg4Encoder
-*/
-ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,&Mp4Settings,globalHeader)
+
+typedef enum
 {
-    printf("[ffMpeg4Encoder] Creating.\n");
-   
+        ME_NONE = 0,
+        ME_LOW = XVID_ME_HALFPELREFINE16,
+        ME_MEDIUM = XVID_ME_HALFPELREFINE16 | XVID_ME_ADVANCEDDIAMOND16,
+        ME_HIGH = XVID_ME_HALFPELREFINE16 | XVID_ME_EXTSEARCH16 | XVID_ME_HALFPELREFINE8 | XVID_ME_USESQUARES16
+} MotionEstimationMode;
 
+uint32_t motionMode[4]=
+{
+    ME_NONE,ME_LOW,ME_MEDIUM,ME_HIGH
+};
+
+typedef enum
+{
+        INTERLACED_NONE,
+        INTERLACED_BFF,
+        INTERLACED_TFF
+} InterlacedMode;
+
+typedef enum
+{
+        RD_NONE = -1,
+        RD_DCT_ME = 0,
+        RD_HPEL_QPEL_16 = RD_DCT_ME | XVID_ME_HALFPELREFINE16_RD | XVID_ME_QUARTERPELREFINE16_RD,
+        RD_HPEL_QPEL_8 = RD_HPEL_QPEL_16 | XVID_ME_HALFPELREFINE8_RD | XVID_ME_QUARTERPELREFINE8_RD | XVID_ME_CHECKPREDICTION_RD,
+        RD_SQUARE = RD_HPEL_QPEL_8 | XVID_ME_EXTSEARCH_RD
+} RateDistortionMode;
+uint32_t rdMode[5]=
+{
+    RD_NONE,
+    RD_DCT_ME,
+    RD_HPEL_QPEL_16,
+    RD_HPEL_QPEL_8,
+    RD_SQUARE
+};
+
+/**
+        \fn xvid4Encoder
+*/
+xvid4Encoder::xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
+{
+    printf("[xvid4] Creating.\n");
+    this->globalHeader=globalHeader;
+    handle=NULL;
+    MMSET(xvid_enc_frame);
 }
+/**
+    \fn query
+    \brief query xvid about version and flags
+*/
+bool xvid4Encoder::query(void)
+{
 
+ xvid_gbl_init_t   xvid_gbl_init2;
+ xvid_gbl_info_t   xvid_gbl_info;
+ 
+  MMSET (xvid_gbl_init2);
+  MMSET (xvid_gbl_info);
+
+  printf ("[xvid] Initializing global Xvid 4\n");
+  xvid_gbl_init2.version = XVID_VERSION;
+  xvid_global (NULL, XVID_GBL_INIT, &xvid_gbl_init2, NULL);
+  xvid_gbl_info.version = XVID_VERSION;
+  xvid_global (NULL, XVID_GBL_INFO, &xvid_gbl_info, NULL);
+
+  if (xvid_gbl_info.build)
+      printf ("[xvid] Build: %s\n", xvid_gbl_info.build);
+
+  printf ("[xvid] SIMD supported: (%x)\n", xvid_gbl_info.cpu_flags);
+#define CPUF(x) if(xvid_gbl_info.cpu_flags  & XVID_CPU_##x) printf("\t\t"#x"\n");
+#if defined( ARCH_X86)  || defined(ARCH_X86_64)
+  CPUF (MMX);
+  CPUF (MMXEXT);
+  CPUF (SSE);
+  CPUF (SSE2);
+  CPUF (3DNOW);
+  CPUF (3DNOWEXT);
+#endif
+}
 /**
     \fn setup
 */
-bool ADM_ffMpeg4Encoder::setup(void)
+bool xvid4Encoder::setup(void)
 {
-    
-    switch(Settings.params.mode)
+  ADM_info("Xvid4, setting up");
+  query();
+  xvid_enc_create_t xvid_enc_create;
+  // Here we go...
+  MMSET (xvid_enc_create);
+  xvid_enc_create.version = XVID_VERSION;
+  xvid_enc_create.width = getWidth();
+  xvid_enc_create.height =getHeight();
+  
+  single.version = XVID_VERSION;
+
+    switch(xvid4Settings.params.mode)
     {
       case COMPRESS_2PASS:
       case COMPRESS_2PASS_BITRATE:
+#if 0
            if(false==setupPass())
             {
-                printf("[ffmpeg] Multipass setup failed\n");
+                ADM_warning("[xvid4] Multipass setup failed\n");
                 return false;
             }
+#endif
             break;
       case COMPRESS_SAME:
       case COMPRESS_CQ:
-            _context->flags |= CODEC_FLAG_QSCALE;
-            _context->bit_rate = 0;
-            break;
       case COMPRESS_CBR:
-              _context->bit_rate=Settings.params.bitrate*1000; // kb->b;
+                  MMSET (single);
+                  plugins[0].func = xvid_plugin_single;
+                  plugins[0].param = &single;
+
+                  single.version = XVID_VERSION;
+                  switch(xvid4Settings.params.mode)
+                  {
+                    case COMPRESS_CBR:
+                            single.bitrate = xvid4Settings.params.bitrate*1000;
+                            break;
+                    case COMPRESS_CQ:
+                    case COMPRESS_SAME:
+
+                            break;
+                   }
             break;
      default:
             return false;
     }
-    presetContext(&Settings);
-    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
-        return false;
+   
 
-    printf("[ffMpeg] Setup ok\n");
+  xvid_enc_create.plugins = plugins;
+  xvid_enc_create.num_plugins = 1;
+
+    //Framerate
+    xvid_enc_create.fincr = 1000;
+    xvid_enc_create.fbase = 25000;
+    int xerr = xvid_encore (NULL, XVID_ENC_CREATE, &xvid_enc_create, NULL);
+    if (xerr < 0)
+    {
+      ADM_error ("[xvid] init error: %d\n", xerr);
+      return false;
+    }
+
+    handle = xvid_enc_create.handle;
+    image=new ADMImage(getWidth(),getHeight());
+    ADM_info("Xvid4, setup ok\n");
     return true;
 }
 
@@ -130,79 +206,47 @@ bool ADM_ffMpeg4Encoder::setup(void)
 /** 
     \fn ~ADM_ffMpeg4Encoder
 */
-ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
+xvid4Encoder::~xvid4Encoder()
 {
-    printf("[ffMpeg4Encoder] Destroying.\n");
-   
-    
+    ADM_info("[xvid4] Destroying.\n");
+    if(handle)
+    {
+        xvid_encore(handle, XVID_ENC_DESTROY, NULL, NULL);
+        handle=NULL;
+    }
 }
 
 /**
     \fn encode
 */
-bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
+bool         xvid4Encoder::encode (ADMBitstream * out)
 {
-int sz,q;
-again:
-    sz=0;
-    if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
+    // 1 fetch a frame...
+    uint32_t nb;
+    if(source->getNextFrame(&nb,image)==false)
     {
-        if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, NULL)) <= 0)
-        {
-            printf("[ffmpeg4] Error %d encoding video\n",sz);
-            return false;
-        }
-        printf("[ffmpeg4] Popping delayed bframes (%d)\n",sz);
-        goto link;
+        ADM_warning("[xvid4] Cannot get next image\n");
         return false;
     }
-    q=image->_Qp;
-    
-    if(!q) q=2;
-    switch(Settings.params.mode)
+    // 2-premable
+    if(false==preAmble(image))
     {
-      case COMPRESS_SAME:
-                // Keep same frame type & same Qz as the incoming frame...
-            _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
-
-            if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
-            else if(image->flags & AVI_B_FRAME) _frame.pict_type=FF_B_TYPE;
-            else                                _frame.pict_type=FF_P_TYPE;
-
-            break;
-      case COMPRESS_2PASS:
-      case COMPRESS_2PASS_BITRATE:
-            switch(pass)
-            {
-                case 1: 
-                        break;
-                case 2: 
-                        break; // Get Qz for this frame...
-            }
-      case COMPRESS_CQ:
-            _frame.quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
-            break;
-      case COMPRESS_CBR:
-            break;
-     default:
-            printf("[ffMpeg4] Unsupported encoding mode\n");
-            return false;
+        ADM_warning("[Xvid4] preAmble failed\n");
+        return false;
     }
-    aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
-                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
-    
-    _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
+    int size = xvid_encore(handle, XVID_ENC_ENCODE, &xvid_enc_frame, &xvid_enc_stats);
+    if (size < 0)
     {
-        printf("[ffmpeg4] Error %d encoding video\n",sz);
+        ADM_error("[Xvid] Error performing encode %d\n", size);
         return false;
     }
     
-    if(sz==0) // no pic, probably pre filling, try again
-        goto again;
-link:
-    postEncode(out,sz);
-   
+    // 3-encode
+    if(false==postAmble(out,size))
+    {
+        ADM_warning("[Xvid4] postAmble failed\n");
+        return false;     
+    }
     return true;
 }
 
@@ -210,107 +254,121 @@ link:
     \fn isDualPass
 
 */
-bool         ADM_ffMpeg4Encoder::isDualPass(void) 
+bool         xvid4Encoder::isDualPass(void) 
 {
-    if(Settings.params.mode==COMPRESS_2PASS || Settings.params.mode==COMPRESS_2PASS_BITRATE ) return true;
+    if(xvid4Settings.params.mode==COMPRESS_2PASS || xvid4Settings.params.mode==COMPRESS_2PASS_BITRATE ) return true;
     return false;
 
 }
 
 /**
-    \fn jpegConfigure
-    \brief UI configuration for jpeg encoder
+        \fn preAmble
+        \fn prepare a frame to be encoded
 */
+bool  xvid4Encoder::preAmble (ADMImage * in)
+{
+  MMSET (xvid_enc_stats);
 
-bool         ffMpeg4Configure(void)
-{         
-diaMenuEntry meE[]={
-  {1,QT_TR_NOOP("None")},
-  {2,QT_TR_NOOP("Full")},
-  {3,QT_TR_NOOP("Log")},
-  {4,QT_TR_NOOP("Phods")},
-  {5,QT_TR_NOOP("EPZS")},
-  {6,QT_TR_NOOP("X1")}
-};       
+  xvid_enc_frame.version = XVID_VERSION;
+  xvid_enc_stats.version = XVID_VERSION;
 
-diaMenuEntry qzE[]={
-  {0,QT_TR_NOOP("H.263")},
-  {1,QT_TR_NOOP("MPEG")}
-};       
+  /* Bind output buffer */
 
-diaMenuEntry rdE[]={
-  {0,QT_TR_NOOP("MB comparison")},
-  {1,QT_TR_NOOP("Fewest bits (vhq)")},
-  {2,QT_TR_NOOP("Rate distortion")}
-};     
-diaMenuEntry threads[]={
-  {0,QT_TR_NOOP("One thread")},
-  {2,QT_TR_NOOP("Two threads)")},
-  {3,QT_TR_NOOP("Three threads")},
-  {99,QT_TR_NOOP("Auto (#cpu)")}
-};     
+  xvid_enc_frame.length = 0;
+  if (xvid4Settings.mpegQuant)
+    xvid_enc_frame.vol_flags |= XVID_VOL_MPEGQUANT;
+ 
+
+#define SVOP(x,y) if(xvid4Settings.x) xvid_enc_frame.vop_flags|=XVID_VOP_##y
+
+  xvid_enc_frame.motion = motionMode[xvid4Settings.motionEstimation];
+  xvid_enc_frame.vop_flags|=XVID_VOP_INTER4V;
+  xvid_enc_frame.vop_flags |= XVID_VOP_HALFPEL;
+  
+  SVOP (trellis, TRELLISQUANT);
+ // SVOP (hqac, HQACPRED);
+ // SVOP (bvhq, RD_BVOP);
+//  SVOP (chroma_opt, CHROMAOPT);
+  
+  // ME 
+  //if (_param.chroma_me)
+  //  {
+    //  xvid_enc_frame.motion |= XVID_ME_CHROMA_BVOP;
+      //xvid_enc_frame.motion |= XVID_ME_CHROMA_PVOP;
+    //}
+ 
+
+    xvid_enc_frame.motion|=rdMode[xvid4Settings.rdMode];
+ 
+#if 0
+
+  if (_param.turbo)
+    {
+      xvid_enc_frame.motion |= XVID_ME_FASTREFINE16;
+      xvid_enc_frame.motion |= XVID_ME_FASTREFINE8;
+      xvid_enc_frame.motion |= XVID_ME_SKIP_DELTASEARCH;
+      xvid_enc_frame.motion |= XVID_ME_FAST_MODEINTERPOLATE;
+      xvid_enc_frame.motion |= XVID_ME_BFRAME_EARLYSTOP;
+    }
+#endif
+  //xvid_enc_frame.bframe_threshold = _param.bframe_threshold;
+
+  xvid_enc_frame.input.csp = XVID_CSP_YV12;
+  xvid_enc_frame.input.stride[0] = getWidth();
+  xvid_enc_frame.input.stride[1] = getWidth()>>1;
+  xvid_enc_frame.input.stride[2] = getWidth()>> 1;
+  xvid_enc_frame.type = XVID_TYPE_AUTO;
 
 
-        FFcodecSettings *conf=&Mp4Settings;
+  /* Set up motion estimation flags */
+  xvid_enc_frame.input.plane[0] = YPLANE(in);
+  xvid_enc_frame.input.plane[1] = UPLANE(in);
+  xvid_enc_frame.input.plane[2] = VPLANE(in);
+#if 0
+  xvid_enc_frame.par_width = _param.par_width;
+  xvid_enc_frame.par_height = _param.par_height;
+  //printf("Using AR : %u x %u\n",xvid_enc_frame.par_width,xvid_enc_frame.par_height );
+  if (xvid_enc_frame.par_width != xvid_enc_frame.par_height)
+      xvid_enc_frame.par = XVID_PAR_EXT;
+  else
+      xvid_enc_frame.par = XVID_PAR_11_VGA;
 
-uint32_t me=(uint32_t)conf->lavcSettings.me_method;  
-#define PX(x) &(conf->lavcSettings.x)
+  /* Custome matrices */
+  if(_param.useCustomIntra) 
+  {
+  if(!xvid_enc_frame.quant_intra_matrix)  
+      printf("[xvid] Using custom intra matrix\n");
+      xvid_enc_frame.quant_intra_matrix=_param.intraMatrix;
+  }
+  if(_param.useCustomInter)
+  {
+    if(!xvid_enc_frame.quant_inter_matrix)
+      printf("[xvid] Using custom inter matrix\n");
+     xvid_enc_frame.quant_inter_matrix=_param.interMatrix;
+  }
+#endif
+  return 1;
+}
+/**
+    \fn postAmble
+    \brief update after a frame has been succesfully encoded
+*/
+bool xvid4Encoder::postAmble (ADMBitstream * out,int size)
+{
+  out->flags = 0;
+  if (xvid_enc_frame.out_flags & XVID_KEYFRAME)
+    {
+      out->flags = AVI_KEY_FRAME;
+    }
+  else if (xvid_enc_stats.type == XVID_TYPE_BVOP)
+    {
+      out->flags = AVI_B_FRAME;
 
-         diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
-         diaElemMenu      meM(&me,QT_TR_NOOP("Matrices"),4,meE);
-         diaElemMenu      threadM(PX(MultiThreaded),QT_TR_NOOP("Threading"),4,threads);
-         diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
-         diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
-         diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
-         
-         diaElemToggle    fourMv(PX(_4MV),QT_TR_NOOP("4_MV"));
-         diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
-         
-         diaElemToggle    qpel(PX(_QPEL),QT_TR_NOOP("_Quarter pixel"));
-         diaElemToggle    gmc(PX(_GMC),QT_TR_NOOP("_GMC"));
-
-         
-         diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
-         diaElemMenu     qzM(PX(mpeg_quant),QT_TR_NOOP("_Quantization type:"),2,qzE);
-         
-         diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
-         
-         diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
-         
-         diaElemFloat    qzComp(PX(qcompress),QT_TR_NOOP("_Quantizer compression:"),0,1);
-         diaElemFloat    qzBlur(PX(qblur),QT_TR_NOOP("Quantizer _blur:"),0,1);
-         
-        diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,500); 
-          /* First Tab : encoding mode */
-        diaElem *diamode[]={&GopSize,&threadM,&bitrate};
-        diaElemTabs tabMode(QT_TR_NOOP("User Interface"),3,diamode);
-        
-        /* 2nd Tab : ME */
-        diaElemFrame frameMe(QT_TR_NOOP("Advanced Simple Profile"));
-        
-        frameMe.swallow(&max_b_frames);
-        frameMe.swallow(&qpel);
-        frameMe.swallow(&gmc);
-        
-        diaElem *diaME[]={&fourMv,&frameMe};
-        diaElemTabs tabME(QT_TR_NOOP("Motion Estimation"),2,diaME);
-        /* 3nd Tab : Qz */
-        
-         diaElem *diaQze[]={&qzM,&rdM,&qminM,&qmaxM,&qdiffM,&trellis};
-        diaElemTabs tabQz(QT_TR_NOOP("Quantization"),6,diaQze);
-        
-        /* 4th Tab : RControl */
-        
-         diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
-        diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
-        
-         diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),4,tabs))
-        {
-          conf->lavcSettings.me_method=(Motion_Est_ID)me;
-          return true;
-        }
-         return false;
+    }
+  out->len=size;
+  //out->pts=ADM_NO_PTS;
+  //out->dts=ADM_NO_PTS;
+  return 1;
 }
 // EOF
-#endif
+

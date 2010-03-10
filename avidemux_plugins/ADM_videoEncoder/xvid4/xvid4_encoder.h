@@ -3,6 +3,7 @@
 #define ADM_xvid4_encoder_CONF_H
 typedef struct {
    COMPRES_PARAMS params;
+   bool     mpegQuant;
    uint32_t rdMode;
    uint32_t motionEstimation;
    uint32_t cqmMode;
