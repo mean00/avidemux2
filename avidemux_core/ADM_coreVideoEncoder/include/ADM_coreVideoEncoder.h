@@ -21,13 +21,26 @@
 #include "ADM_coreVideoFilter.h"
 #include "ADM_bitstream.h"
 #include "ADM_frameType.h"
+#include <vector>
+using std::vector;
 #include "stddef.h"
+/**
+
+*/
 typedef enum
 {
     ADM_ENCODER_OPTION_MOV_MODE=1
 
 }ADM_coreEncoderOption;
 
+/**
+
+*/
+typedef struct
+{
+    uint64_t internalTS;
+    uint64_t realTS;
+}ADM_timeMapping;
 /**
     \class ADM_coreVideoEncoder
     \brief base class for VideoEncoder
@@ -38,6 +51,9 @@ protected:
                             ADM_coreVideoFilter *source;
                             ADMImage            *image;
                             uint64_t            encoderDelay;
+                            vector <ADM_timeMapping>mapper;
+                            bool                getRealPtsFromInternal(uint64_t val,uint64_t *dts,uint64_t *pts);
+                            vector <uint64_t>queueOfDts;
 public:
                             ADM_coreVideoEncoder(ADM_coreVideoFilter *src);
 virtual                     ~ADM_coreVideoEncoder();
@@ -55,6 +71,6 @@ virtual const  char         *getFourcc(void) =0;
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
                uint64_t    getEncoderDelay(void){return encoderDelay;}
 };
-
+bool usSecondsToFrac(uint64_t useconds, int *n,int *d);
 #endif
 

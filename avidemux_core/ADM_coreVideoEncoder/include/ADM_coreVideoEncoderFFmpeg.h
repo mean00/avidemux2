@@ -24,13 +24,6 @@
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
 #include "FFcodecSettings.h"
 
-#include <vector>
-using std::vector;
-typedef struct
-{
-    uint64_t lavTS;
-    uint64_t realTS;
-}ADM_timeMapping;
 
 /**
     \class ADM_coreVideoEncoderFFmpeg
@@ -52,9 +45,7 @@ protected:
                bool             _isMT; // True if multithreaded
                bool             _globalHeader;
                float            timeScaler;
-               vector <ADM_timeMapping>mapper;
-               bool             getRealPtsFromLav(uint64_t val,uint64_t *dts,uint64_t *pts);
-               vector <uint64_t>queueOfDts;
+              
 protected:
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 

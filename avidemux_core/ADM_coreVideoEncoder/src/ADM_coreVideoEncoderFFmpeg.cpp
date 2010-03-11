@@ -28,47 +28,7 @@
 #endif
 
 #define LAVS(x) Settings.lavcSettings.x
-typedef struct
-{
-    uint64_t mn,mx;
-    int n,d;
 
-}TimeIncrementType;
-
-TimeIncrementType fpsTable[]=
-{
-    {  40000,40000,1 ,25},
-    {  20000,20000,1 ,50},
-    {  33360,33369,1001,30000},
-    {  41700,41710,1001,24000},
-}; 
-
-/**
-    \fn usSecondsToFrac
-    \brief Convert a duration in useconds into Rationnal
-*/
-bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
-{
-    // First search for known value...
-    int nb=sizeof(fpsTable)/sizeof(TimeIncrementType);
-    for(int i=0;i<nb;i++)
-    {
-        TimeIncrementType *t=fpsTable+i;
-        if( useconds>=t->mn && useconds<=t->mx)
-        {
-            *n=t->n;
-            *d=t->d;
-            return true;
-        }
-    }
-    int nn,dd;
-    av_reduce(&nn,&dd, useconds, 1000000, 0xFFF0); // mpeg4 allows a maximum of 1<<16-1 as time base, should be enough for most case
-    ADM_info("%"LLU" us -> %d / %d (old)\n",useconds,nn,dd);
-    *n=nn;
-    *d=dd;
-
-    return true;
-}
 /**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor
@@ -241,7 +201,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=p;
-    map.lavTS=_frame.pts;
+    map.internalTS=_frame.pts;
     mapper.push_back(map);
 
     aprintf("Codec> incoming pts=%"LLU"\n",image->Pts);
@@ -373,32 +333,6 @@ bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
   return true;
 }
 /**
-    \fn getRealPtsFromLav
-    \brief Lookup in the stored value to get the exact pts from the truncated one from lav
-*/
-bool ADM_coreVideoEncoderFFmpeg::getRealPtsFromLav(uint64_t val,uint64_t *dts,uint64_t *pts)
-{
-    int n=mapper.size();
-    for(int i=0;i<n;i++)
-    {
-        if(mapper[i].lavTS==val)
-        {
-            *pts=mapper[i].realTS;
-            mapper.erase(mapper.begin()+i);
-            // Now get DTS, it is min (lastDTS+inc, PTS-delay)
-            ADM_assert(queueOfDts.size());
-            *dts=queueOfDts[0];
-            queueOfDts.erase(queueOfDts.begin());
-            return true;
-        }
-    }
-    ADM_warning("Cannot find PTS : %"LLU"\n",val);  
-    for(int i=0;i<n;i++) ADM_warning("%d : %"LLU"\n",i,mapper[i].lavTS);
-    ADM_assert(0);
-    return false;
-
-}
-/**
         \fn postEncode
         \brief update bitstream info from output of lavcodec
 */
@@ -425,7 +359,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
         out->flags=AVI_B_FRAME;
     
     // Update PTS/Dts
-    getRealPtsFromLav(_context->coded_frame->pts,&(out->dts),&(out->pts));
+    getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts));
     
     
     aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
