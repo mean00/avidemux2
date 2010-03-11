@@ -82,6 +82,8 @@ uint32_t rdMode[5]=
     RD_SQUARE
 };
 
+static uint32_t outFrameStatic=0;
+
 /**
         \fn xvid4Encoder
 */
@@ -91,6 +93,7 @@ xvid4Encoder::xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_cor
     this->globalHeader=globalHeader;
     handle=NULL;
     MMSET(xvid_enc_frame);
+    frameNum=0;
 }
 /**
     \fn query
@@ -179,12 +182,17 @@ bool xvid4Encoder::setup(void)
     }
    
 
+  plugins[1].func = xvid4Encoder::hook;
+  plugins[1].param = &outFrameNum;
   xvid_enc_create.plugins = plugins;
-  xvid_enc_create.num_plugins = 1;
+  xvid_enc_create.num_plugins = 2;
 
     //Framerate
-    xvid_enc_create.fincr = 1000;
-    xvid_enc_create.fbase = 25000;
+    int n,d;    
+    uint64_t f=source->getInfo()->frameIncrement;
+    usSecondsToFrac(f,&n,&d);
+    xvid_enc_create.fincr = n;
+    xvid_enc_create.fbase = d;
     int xerr = xvid_encore (NULL, XVID_ENC_CREATE, &xvid_enc_create, NULL);
     if (xerr < 0)
     {
@@ -194,6 +202,13 @@ bool xvid4Encoder::setup(void)
 
     handle = xvid_enc_create.handle;
     image=new ADMImage(getWidth(),getHeight());
+    uint64_t inc=source->getInfo()->frameIncrement;
+    if(inc<30000) // Less than 30 ms , fps > 30 fps it is probably field
+     {
+            inc*=2;
+            ADM_warning("It is probably field encoded, doubling increment\n");
+     }
+    encoderDelay=inc*xvid4Settings.maxBFrame;
     ADM_info("Xvid4, setup ok\n");
     return true;
 }
@@ -219,12 +234,22 @@ bool         xvid4Encoder::encode (ADMBitstream * out)
 {
     // 1 fetch a frame...
     uint32_t nb;
+    // update
+    
     if(source->getNextFrame(&nb,image)==false)
     {
         ADM_warning("[xvid4] Cannot get next image\n");
         return false;
     }
-    // 2-premable
+    // Store Pts/DTS
+    ADM_timeMapping map; // Store real PTS <->lav value mapping
+    map.realTS=image->Pts+getEncoderDelay();
+ //   printf("Pushing fn=%d Time=%"LLU"\n",frameNum,map.realTS);
+    map.internalTS=frameNum++;
+    mapper.push_back(map);
+    queueOfDts.push_back(image->Pts);
+
+    // 2-preamble
     if(false==preAmble(image))
     {
         ADM_warning("[Xvid4] preAmble failed\n");
@@ -365,9 +390,26 @@ bool xvid4Encoder::postAmble (ADMBitstream * out,int size)
 
     }
   out->len=size;
-  //out->pts=ADM_NO_PTS;
-  //out->dts=ADM_NO_PTS;
+  // update Pts/DTS
+  outFrameNum=outFrameStatic;
+//  printf("Popping fn=%d at %"LLX"\n",(int)outFrameNum,&outFrameNum);
+  getRealPtsFromInternal(outFrameNum,&(out->dts),&(out->pts)); 
   return 1;
+}
+/**
+    \fn hook
+    \brief glue to retrieve frame number and get PTS/DTS later
+*/
+int xvid4Encoder::hook (void *handle, int opt, void *param1, void *param2)
+{
+  xvid_plg_data_t *data = (xvid_plg_data_t *) param1;
+ //printf("plugin called with %u (%"LLX" %"LLX")\n",opt,param1,param2);
+  // printf("Pass %d value %d\n",opt,data->frame_num);
+  if (opt == XVID_PLG_FRAME)
+    {
+     outFrameStatic = data->frame_num;
+    }
+  return 0;
 }
 // EOF
 
