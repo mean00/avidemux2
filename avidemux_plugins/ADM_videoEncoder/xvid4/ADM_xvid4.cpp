@@ -66,19 +66,13 @@ uint32_t motionMode[4]=
 
 typedef enum
 {
-        INTERLACED_NONE,
-        INTERLACED_BFF,
-        INTERLACED_TFF
-} InterlacedMode;
-
-typedef enum
-{
         RD_NONE = -1,
         RD_DCT_ME = 0,
         RD_HPEL_QPEL_16 = RD_DCT_ME | XVID_ME_HALFPELREFINE16_RD | XVID_ME_QUARTERPELREFINE16_RD,
         RD_HPEL_QPEL_8 = RD_HPEL_QPEL_16 | XVID_ME_HALFPELREFINE8_RD | XVID_ME_QUARTERPELREFINE8_RD | XVID_ME_CHECKPREDICTION_RD,
         RD_SQUARE = RD_HPEL_QPEL_8 | XVID_ME_EXTSEARCH_RD
 } RateDistortionMode;
+
 uint32_t rdMode[5]=
 {
     RD_NONE,
@@ -173,6 +167,8 @@ bool xvid4Encoder::setup(void)
                             single.bitrate = xvid4Settings.params.bitrate*1000;
                             break;
                     case COMPRESS_CQ:
+                            
+                            break;
                     case COMPRESS_SAME:
 
                             break;
@@ -234,6 +230,7 @@ bool         xvid4Encoder::encode (ADMBitstream * out)
         ADM_warning("[Xvid4] preAmble failed\n");
         return false;
     }
+    xvid_enc_frame.bitstream = out->data;
     int size = xvid_encore(handle, XVID_ENC_ENCODE, &xvid_enc_frame, &xvid_enc_stats);
     if (size < 0)
     {
@@ -347,6 +344,8 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
      xvid_enc_frame.quant_inter_matrix=_param.interMatrix;
   }
 #endif
+    if(xvid4Settings.params.mode==COMPRESS_CQ)
+            xvid_enc_frame.quant=xvid4Settings.params.qz;
   return 1;
 }
 /**
