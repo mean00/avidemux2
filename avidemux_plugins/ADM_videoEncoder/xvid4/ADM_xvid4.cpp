@@ -40,15 +40,19 @@ xvid4_encoder xvid4Settings=
     1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
     ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
     },
-    
-            false, //mpegQuant
+            XVID_PROFILE_AS_L4, // Profile
             3, // rdMode
             3, // MotionEstimation
             0, // cqmMode
             0, // arMode
             2, // MaxBframe
             200, // MaxKeyInterval
-            true // Trellis
+            
+            99, // nbThreads
+            true, // rdOnBframe
+            true, //bool:hqAcPred
+            true, //bool:optimizeChrome
+            true, // Trellis
     
 };
 
@@ -123,7 +127,7 @@ bool xvid4Encoder::query(void)
 
   printf ("[xvid] SIMD supported: (%x)\n", xvid_gbl_info.cpu_flags);
 #define CPUF(x) if(xvid_gbl_info.cpu_flags  & XVID_CPU_##x) printf("\t\t"#x" ON\n"); else  printf("\t\t"#x" Off\n");
-#if defined( ARCH_X86)  
+#if defined( ADM_CPU_X86)  
   CPUF (MMX);
   CPUF (MMXEXT);
   CPUF (SSE);
@@ -146,8 +150,21 @@ bool xvid4Encoder::setup(void)
   xvid_enc_create.version = XVID_VERSION;
   xvid_enc_create.width = getWidth();
   xvid_enc_create.height =getHeight();
-  
-  single.version = XVID_VERSION;
+  xvid_enc_create.profile=xvid4Settings.profile;
+
+  int thread;
+    switch(xvid4Settings.nbThreads)
+    {
+        default:
+        case 0:case 1: thread=1;break;
+        case 3: case 4:
+        case 2: thread=xvid4Settings.nbThreads;break;
+        
+        case 99: thread=ADM_cpu_num_processors();break;
+    }
+    ADM_info("[Xvid] Using %d threads\n",(int)thread);
+    xvid_enc_create.num_threads=thread;
+    single.version = XVID_VERSION;
 
     switch(xvid4Settings.params.mode)
     {
@@ -184,7 +201,7 @@ bool xvid4Encoder::setup(void)
             return false;
     }
    
-
+  
   plugins[1].func = xvid4Encoder::hook;
   plugins[1].param = NULL;
   xvid_enc_create.plugins = plugins;
@@ -307,7 +324,7 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
   /* Bind output buffer */
 
   xvid_enc_frame.length = 0;
-  if (xvid4Settings.mpegQuant)
+  if (xvid4Settings.cqmMode==1)
     xvid_enc_frame.vol_flags |= XVID_VOL_MPEGQUANT;
 
    switch(xvid4Settings.params.mode)
@@ -325,9 +342,9 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
   xvid_enc_frame.vop_flags |= XVID_VOP_HALFPEL;
   
   SVOP (trellis, TRELLISQUANT);
- // SVOP (hqac, HQACPRED);
- // SVOP (bvhq, RD_BVOP);
-//  SVOP (chroma_opt, CHROMAOPT);
+  SVOP (hqAcPred, HQACPRED);
+  SVOP (rdOnBFrame, RD_BVOP);
+  SVOP (optimizeChrome, CHROMAOPT);
   
   // ME 
   //if (_param.chroma_me)

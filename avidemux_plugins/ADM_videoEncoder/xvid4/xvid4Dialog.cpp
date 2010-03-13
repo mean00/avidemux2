@@ -42,7 +42,8 @@ diaMenuEntry meE[]={
 
 diaMenuEntry qzE[]={
   {0,QT_TR_NOOP("H.263")},
-  {1,QT_TR_NOOP("MPEG")}
+  {1,QT_TR_NOOP("MPEG")},
+  {2,QT_TR_NOOP("Custom")}
 };       
 /*
 diaMenuEntry rdE[]={
@@ -82,9 +83,9 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 */
          
          diaElemUInteger  max_b_frames(PX(maxBFrame),QT_TR_NOOP("_Number of B frames:"),0,32);
-/*
-         diaElemMenu     qzM(PX(mpeg_quant),QT_TR_NOOP("_Quantization type:"),2,qzE);
-         
+
+         diaElemMenu     qzM(PX(cqmMode),QT_TR_NOOP("_Quantization type:"),2,qzE);
+/*         
          diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
          
          diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
@@ -106,6 +107,7 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
         frameMe.swallow(&max_b_frames);
         frameMe.swallow(&GopSize);
         frameMe.swallow(&bitrate);
+        frameMe.swallow(&qzM);
         
         diaElem *diaME[]={&frameMe};
         diaElemTabs tabME(QT_TR_NOOP("Motion Estimation"),1,diaME);
