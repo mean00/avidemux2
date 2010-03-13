@@ -43,8 +43,12 @@ protected:
                 xvid_enc_frame_t xvid_enc_frame;
                 xvid_enc_stats_t xvid_enc_stats;
                 xvid_enc_plugin_t plugins[7];
+
                 uint32_t        frameNum;
-                uint32_t        outFrameNum;
+                uint32_t        currentRef;
+                uint32_t        backRef;
+                uint32_t        fwdRef;
+                uint32_t        refIndex;
 public:
 
                            xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader);

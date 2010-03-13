@@ -21,7 +21,7 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
@@ -85,6 +85,7 @@ uint32_t rdMode[5]=
 
 static uint32_t outFrameStatic=0;
 
+
 /**
         \fn xvid4Encoder
 */
@@ -95,6 +96,8 @@ xvid4Encoder::xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_cor
     handle=NULL;
     MMSET(xvid_enc_frame);
     frameNum=0;
+    backRef=fwdRef=refIndex=0;
+        
 }
 /**
     \fn query
@@ -119,8 +122,8 @@ bool xvid4Encoder::query(void)
       printf ("[xvid] Build: %s\n", xvid_gbl_info.build);
 
   printf ("[xvid] SIMD supported: (%x)\n", xvid_gbl_info.cpu_flags);
-#define CPUF(x) if(xvid_gbl_info.cpu_flags  & XVID_CPU_##x) printf("\t\t"#x"\n");
-#if defined( ARCH_X86)  || defined(ARCH_X86_64)
+#define CPUF(x) if(xvid_gbl_info.cpu_flags  & XVID_CPU_##x) printf("\t\t"#x" ON\n"); else  printf("\t\t"#x" Off\n");
+#if defined( ARCH_X86)  
   CPUF (MMX);
   CPUF (MMXEXT);
   CPUF (SSE);
@@ -139,6 +142,7 @@ bool xvid4Encoder::setup(void)
   xvid_enc_create_t xvid_enc_create;
   // Here we go...
   MMSET (xvid_enc_create);
+  MMSET(single);
   xvid_enc_create.version = XVID_VERSION;
   xvid_enc_create.width = getWidth();
   xvid_enc_create.height =getHeight();
@@ -160,15 +164,13 @@ bool xvid4Encoder::setup(void)
       case COMPRESS_SAME:
       case COMPRESS_CQ:
       case COMPRESS_CBR:
-                  MMSET (single);
+                  
                   plugins[0].func = xvid_plugin_single;
                   plugins[0].param = &single;
-
-                  single.version = XVID_VERSION;
                   switch(xvid4Settings.params.mode)
                   {
                     case COMPRESS_CBR:
-                            single.bitrate = xvid4Settings.params.bitrate*1000;
+                            single.bitrate = xvid4Settings.params.bitrate*1000; // b/s
                             break;
                     case COMPRESS_CQ:
                             
@@ -184,7 +186,7 @@ bool xvid4Encoder::setup(void)
    
 
   plugins[1].func = xvid4Encoder::hook;
-  plugins[1].param = &outFrameNum;
+  plugins[1].param = NULL;
   xvid_enc_create.plugins = plugins;
   xvid_enc_create.num_plugins = 2;
 
@@ -248,6 +250,7 @@ again:
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=image->Pts+getEncoderDelay();
     aprintf("Pushing fn=%d Time=%"LLU"\n",frameNum,map.realTS);
+   
     map.internalTS=frameNum++;
     mapper.push_back(map);
     queueOfDts.push_back(image->Pts);
@@ -360,6 +363,7 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
   xvid_enc_frame.input.plane[0] = YPLANE(in);
   xvid_enc_frame.input.plane[1] = UPLANE(in);
   xvid_enc_frame.input.plane[2] = VPLANE(in);
+  
 #if 0
   xvid_enc_frame.par_width = _param.par_width;
   xvid_enc_frame.par_height = _param.par_height;
@@ -405,12 +409,26 @@ bool xvid4Encoder::postAmble (ADMBitstream * out,int size)
     }
   out->len=size;
   // update Pts/DTS
-  outFrameNum=outFrameStatic;
-  aprintf("Popping fn=%d size=%d flags=0x%x\n",(int)outFrameNum,(int)size,(int)out->flags);
-    getRealPtsFromInternal(outFrameNum,&(out->dts),&(out->pts)); 
-    out->dts=frameNum*source->getInfo()->frameIncrement;
-    out->pts=out->dts+encoderDelay
-;
+  currentRef=outFrameStatic;
+  uint32_t myFrame;
+  if(out->flags==AVI_B_FRAME)
+    {
+        myFrame=backRef+refIndex;
+        refIndex++;
+    }else
+    {
+        backRef=fwdRef;
+        fwdRef=currentRef;
+        myFrame=fwdRef;
+        refIndex=1;
+    }
+  aprintf("Popping outframe=%d back=%d fwd=0%d index=%d => %d\n",
+                (int)outFrameStatic,
+                (int)backRef,
+                (int)fwdRef,
+                (int)refIndex,
+                (int)myFrame);
+  getRealPtsFromInternal(myFrame,&(out->dts),&(out->pts)); 
   return 1;
 }
 /**
@@ -422,10 +440,9 @@ int xvid4Encoder::hook (void *handle, int opt, void *param1, void *param2)
   xvid_plg_data_t *data = (xvid_plg_data_t *) param1;
  //printf("plugin called with %u (%"LLX" %"LLX")\n",opt,param1,param2);
   
-  if (opt == 0*XVID_PLG_AFTER+1*XVID_PLG_FRAME)
+  if (opt==XVID_PLG_FRAME )//|| opt==XVID_PLG_FRAME)
     {
-     printf("Pass %d value %d\n",opt,data->frame_num);
-     outFrameStatic = data->frame_num;
+        outFrameStatic=data->frame_num;
     }
   return 0;
 }
