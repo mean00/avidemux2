@@ -21,11 +21,12 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
-#if 1
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf printf
 #endif
+
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
@@ -41,12 +42,12 @@ xvid4_encoder xvid4Settings=
     },
     
             false, //mpegQuant
-            0, // rdMode
-            0, // MotionEstimation
+            3, // rdMode
+            3, // MotionEstimation
             0, // cqmMode
             0, // arMode
-            0, // MaxBframe
-            0, // MaxKeyInterval
+            2, // MaxBframe
+            200, // MaxKeyInterval
             true // Trellis
     
 };
@@ -187,6 +188,8 @@ bool xvid4Encoder::setup(void)
   xvid_enc_create.plugins = plugins;
   xvid_enc_create.num_plugins = 2;
 
+  xvid_enc_create.max_bframes = xvid4Settings.maxBFrame;
+  xvid_enc_create.max_key_interval = xvid4Settings.maxKeyFrameInterval;
     //Framerate
     int n,d;    
     uint64_t f=source->getInfo()->frameIncrement;
@@ -235,7 +238,7 @@ bool         xvid4Encoder::encode (ADMBitstream * out)
     // 1 fetch a frame...
     uint32_t nb;
     // update
-    
+again:    
     if(source->getNextFrame(&nb,image)==false)
     {
         ADM_warning("[xvid4] Cannot get next image\n");
@@ -244,7 +247,7 @@ bool         xvid4Encoder::encode (ADMBitstream * out)
     // Store Pts/DTS
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=image->Pts+getEncoderDelay();
- //   printf("Pushing fn=%d Time=%"LLU"\n",frameNum,map.realTS);
+    aprintf("Pushing fn=%d Time=%"LLU"\n",frameNum,map.realTS);
     map.internalTS=frameNum++;
     mapper.push_back(map);
     queueOfDts.push_back(image->Pts);
@@ -262,7 +265,11 @@ bool         xvid4Encoder::encode (ADMBitstream * out)
         ADM_error("[Xvid] Error performing encode %d\n", size);
         return false;
     }
-    
+    if(!size)
+    {
+        ADM_info("Dummy null frame\n");
+        goto again;
+    }
     // 3-encode
     if(false==postAmble(out,size))
     {
@@ -299,8 +306,15 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
   xvid_enc_frame.length = 0;
   if (xvid4Settings.mpegQuant)
     xvid_enc_frame.vol_flags |= XVID_VOL_MPEGQUANT;
- 
 
+   switch(xvid4Settings.params.mode)
+    {
+      case COMPRESS_SAME:
+      case COMPRESS_CQ:
+            xvid_enc_frame.quant = xvid4Settings.params.qz;
+            break;
+      default:break;
+    }
 #define SVOP(x,y) if(xvid4Settings.x) xvid_enc_frame.vop_flags|=XVID_VOP_##y
 
   xvid_enc_frame.motion = motionMode[xvid4Settings.motionEstimation];
@@ -392,8 +406,11 @@ bool xvid4Encoder::postAmble (ADMBitstream * out,int size)
   out->len=size;
   // update Pts/DTS
   outFrameNum=outFrameStatic;
-//  printf("Popping fn=%d at %"LLX"\n",(int)outFrameNum,&outFrameNum);
-  getRealPtsFromInternal(outFrameNum,&(out->dts),&(out->pts)); 
+  aprintf("Popping fn=%d size=%d flags=0x%x\n",(int)outFrameNum,(int)size,(int)out->flags);
+    getRealPtsFromInternal(outFrameNum,&(out->dts),&(out->pts)); 
+    out->dts=frameNum*source->getInfo()->frameIncrement;
+    out->pts=out->dts+encoderDelay
+;
   return 1;
 }
 /**
@@ -404,9 +421,10 @@ int xvid4Encoder::hook (void *handle, int opt, void *param1, void *param2)
 {
   xvid_plg_data_t *data = (xvid_plg_data_t *) param1;
  //printf("plugin called with %u (%"LLX" %"LLX")\n",opt,param1,param2);
-  // printf("Pass %d value %d\n",opt,data->frame_num);
-  if (opt == XVID_PLG_FRAME)
+  
+  if (opt == 0*XVID_PLG_AFTER+1*XVID_PLG_FRAME)
     {
+     printf("Pass %d value %d\n",opt,data->frame_num);
      outFrameStatic = data->frame_num;
     }
   return 0;
