@@ -345,7 +345,8 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
   SVOP (hqAcPred, HQACPRED);
   SVOP (rdOnBFrame, RD_BVOP);
   SVOP (optimizeChrome, CHROMAOPT);
-  
+  if(xvid4Settings.rdMode!=0)
+    xvid_enc_frame.vop_flags|=XVID_VOP_MODEDECISION_RD;
   // ME 
   //if (_param.chroma_me)
   //  {
