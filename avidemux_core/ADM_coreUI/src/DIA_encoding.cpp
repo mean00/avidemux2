@@ -21,6 +21,8 @@
 #define  ETA_SAMPLE_PERIOD 60000 //Use last n millis to calculate ETA
 #define  GUI_UPDATE_RATE 1000    // Ms
 extern void UI_purge(void);
+
+#define aprintf(...) {}
 /**
     \fn DIA_encodingBase
 */
@@ -60,6 +62,8 @@ void DIA_encodingBase::reset(void)
         _lastClock=0;
         _fps_average=0;
         _remainingTimeUs=0;
+        sampleIndex=0;
+        memset(samples,0,sizeof(samples));
         clock.reset();
         UI_purge();
 }
@@ -72,6 +76,11 @@ void DIA_encodingBase::pushVideoFrame(uint32_t size, uint32_t quant,uint64_t tim
           _videoSize+=size;
           _currentFrameCount++;
           _currentDts=timeUs;
+          encodingSample *cur=samples+(sampleIndex%ADM_ENCODING_SAMPLE);
+          cur->qz=quant;
+          cur->sampleTime=timeUs;
+          cur->size=_videoSize;
+          sampleIndex++;
 }
 /**
     \fn pushAudioFrame
@@ -93,6 +102,34 @@ void DIA_encodingBase::refresh(void)
                 uint32_t deltaTime=time-_lastClock;
                 uint32_t deltaFrame=_currentFrameCount-_lastFrameCount;
                 uint64_t deltaDts=_currentDts-_lastDts;
+                if(sampleIndex>ADM_ENCODING_SAMPLE)
+                {
+                    uint32_t qSum=0;
+                    for(int i=0;i<ADM_ENCODING_SAMPLE;i++)
+                            qSum+=samples[i].qz;
+                    qSum/=ADM_ENCODING_SAMPLE;
+                    aprintf("Q:%d\n",qSum);
+                    setAverageQz(qSum);
+                }
+
+                if(sampleIndex>ADM_ENCODING_SAMPLE)
+                {
+                    int start=sampleIndex%ADM_ENCODING_SAMPLE;
+                    int end=(sampleIndex+ADM_ENCODING_SAMPLE-1)%ADM_ENCODING_SAMPLE;
+                    uint64_t deltaTime=samples[end].sampleTime-samples[start].sampleTime;
+                    uint64_t deltaSize=samples[end].size-samples[start].size;
+                    printf("dTime:%d dSize:%d\n",deltaTime,deltaSize);
+                    if(deltaTime>1000)
+                    {
+                        float delta;
+                        delta=deltaSize;
+                        delta/=deltaTime;
+                        delta*=8; // byte -> bit
+                        delta*=1000; // b/us -> kb/s
+                        aprintf("br:%d\n",(int)delta);
+                        setAverageBitrateKbits((uint32_t)delta);
+                    }
+                }
                 if(deltaFrame)
                 {
                     float thisAverage;
@@ -135,8 +172,9 @@ void DIA_encodingBase::refresh(void)
                 _lastFrameCount=_currentFrameCount;
                 _lastDts=_currentDts;
                 _lastClock=time;
-                UI_purge();
+           
           }
+          UI_purge();
 }
 //EOF
 

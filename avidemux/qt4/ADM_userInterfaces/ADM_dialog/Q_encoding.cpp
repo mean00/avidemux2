@@ -291,6 +291,28 @@ void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
           strcpy(string,ADM_us2plain(mb));
           WRITE(labelElapsed);
 }
+/**
+    \fn setAverageQz(int size)
+    \brief display average quantizer used
+*/
+
+void DIA_encodingQt4::setAverageQz(uint32_t nb)
+{
+          ADM_assert(window);
+          snprintf(string,79,"%"LU,nb);
+          WRITE(labelQz);
+}
+/**
+    \fn setAverageBitrateKbits(int size)
+    \brief display average bitrate in kb/s
+*/
+
+void DIA_encodingQt4::setAverageBitrateKbits(uint32_t kb)
+{
+          ADM_assert(window);
+          snprintf(string,79,"%"LU" kbits/s",kb);
+          WRITE(labelVidBitrate);
+}
 
 /**
     \fn setRemainingTimeMS

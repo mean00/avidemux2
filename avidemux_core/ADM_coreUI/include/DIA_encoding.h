@@ -21,6 +21,13 @@
     \class DIA_encodingBase
     \brief Base class for encoding dialog
 */
+#define ADM_ENCODING_SAMPLE 32 // must be a power of 2
+typedef struct
+{
+    uint64_t sampleTime;
+    uint64_t size;
+    uint32_t qz;
+}encodingSample;
 
 class DIA_encodingBase
 {
@@ -41,6 +48,8 @@ protected:
                 uint64_t  _audioSize;
                 uint64_t  _videoSize;
                 uint32_t  _originalPriority;
+                encodingSample samples[ADM_ENCODING_SAMPLE];
+                uint32_t  sampleIndex;
         
 public:
                              DIA_encodingBase( uint64_t duration );
@@ -55,6 +64,8 @@ protected:
                 virtual void setFrameCount(uint32_t nb)=0;
                 virtual void setElapsedTimeMs(uint32_t nb)=0;
                 virtual void setRemainingTimeMS(uint32_t nb)=0;
+                virtual void setAverageQz(uint32_t nb)=0;
+                virtual void setAverageBitrateKbits(uint32_t kb)=0;
             
 
 public:

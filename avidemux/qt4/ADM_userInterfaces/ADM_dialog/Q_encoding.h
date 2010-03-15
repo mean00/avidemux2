@@ -56,6 +56,8 @@ protected:
     void setFrameCount(uint32_t nb);
     void setElapsedTimeMs(uint32_t nb);
     void setRemainingTimeMS(uint32_t nb);
+    void setAverageQz(uint32_t nb);
+    void setAverageBitrateKbits(uint32_t kb);
 
 public:    
     void *WINDOW;
