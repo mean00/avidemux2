@@ -118,7 +118,7 @@ void DIA_encodingBase::refresh(void)
                     int end=(sampleIndex+ADM_ENCODING_SAMPLE-1)%ADM_ENCODING_SAMPLE;
                     uint64_t deltaTime=samples[end].sampleTime-samples[start].sampleTime;
                     uint64_t deltaSize=samples[end].size-samples[start].size;
-                    printf("dTime:%d dSize:%d\n",deltaTime,deltaSize);
+                    aprintf("dTime:%d dSize:%d\n",deltaTime,deltaSize);
                     if(deltaTime>1000)
                     {
                         float delta;
