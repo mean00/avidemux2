@@ -95,10 +95,12 @@ void DIA_encodingBase::refresh(void)
                 uint64_t deltaDts=_currentDts-_lastDts;
                 if(deltaFrame)
                 {
+                    float thisAverage;
                     //printf("**********************************DFrame=%d, DTime=%d\n",(int)deltaFrame,(int)deltaTime);
-                    _fps_average=((float)deltaFrame);
-                    _fps_average/=deltaTime;
-                    _fps_average*=1000;
+                    thisAverage=((float)deltaFrame);
+                    thisAverage/=deltaTime;
+                    thisAverage*=1000;
+                    _fps_average=_fps_average*0.5+0.5*thisAverage;
                     //printf("************** Fps:%d\n",(int)_fps_average);
                     setFps(_fps_average);
                     float percent=(float)_currentDts/(float)_totalDurationUs;
@@ -119,7 +121,8 @@ void DIA_encodingBase::refresh(void)
                     if(dtsPerSec>0.01)
                     {
                         leftDts=leftDts/dtsPerSec;
-                        
+                        _remainingTimeUs=(_remainingTimeUs/2)+(leftDts/2);
+                        leftDts=_remainingTimeUs;
                         leftDts/=1000.; // us -> ms
                         //printf("***************%u s left\n",(int)(leftDts/1000));
                         setRemainingTimeMS((uint32_t)leftDts);
