@@ -188,6 +188,12 @@ bool xvid4Encoder::setup(void)
                   {
                     case COMPRESS_CBR:
                             single.bitrate = xvid4Settings.params.bitrate*1000; // b/s
+                            ADM_info("[xvid4] Bitrate = %d kb/s\n",int(single.bitrate /1000));
+/*
+                            single. reaction_delay_factor; 
+                            single. averaging_period;      
+                            single. buffer;                
+*/
                             break;
                     case COMPRESS_CQ:
                             
@@ -209,6 +215,13 @@ bool xvid4Encoder::setup(void)
 
   xvid_enc_create.max_bframes = xvid4Settings.maxBFrame;
   xvid_enc_create.max_key_interval = xvid4Settings.maxKeyFrameInterval;
+    // dummy
+    for(int i=0;i<3;i++)
+    {
+        xvid_enc_create.min_quant[i]=2;
+        xvid_enc_create.max_quant[i]=31;
+    }
+    
     //Framerate
     int n,d;    
     uint64_t f=source->getInfo()->frameIncrement;
@@ -291,7 +304,7 @@ again:
         goto again;
     }
     // 3-encode
-    if(false==postAmble(out,size))
+    if(false==postAmble(out,&xvid_enc_stats,size))
     {
         ADM_warning("[Xvid4] postAmble failed\n");
         return false;     
@@ -413,7 +426,7 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
     \fn postAmble
     \brief update after a frame has been succesfully encoded
 */
-bool xvid4Encoder::postAmble (ADMBitstream * out,int size)
+bool xvid4Encoder::postAmble (ADMBitstream * out,xvid_enc_stats_t *stat,int size)
 {
   out->flags = 0;
   if (xvid_enc_frame.out_flags & XVID_KEYFRAME)
@@ -440,6 +453,8 @@ bool xvid4Encoder::postAmble (ADMBitstream * out,int size)
         myFrame=fwdRef;
         refIndex=1;
     }
+  out->out_quantizer=stat->quant;
+  aprintf("XvidQ:%d\n",(int)out->out_quantizer);
   aprintf("Popping outframe=%d back=%d fwd=0%d index=%d => %d\n",
                 (int)outFrameStatic,
                 (int)backRef,
@@ -457,7 +472,7 @@ int xvid4Encoder::hook (void *handle, int opt, void *param1, void *param2)
 {
   xvid_plg_data_t *data = (xvid_plg_data_t *) param1;
  //printf("plugin called with %u (%"LLX" %"LLX")\n",opt,param1,param2);
-  
+ 
   if (opt==XVID_PLG_FRAME )//|| opt==XVID_PLG_FRAME)
     {
         outFrameStatic=data->frame_num;

@@ -34,7 +34,7 @@ protected:
                int             plane;
                bool            globalHeader;
                bool            preAmble (ADMImage * in);
-               bool            postAmble (ADMBitstream * out,int size);
+               bool            postAmble (ADMBitstream * out,xvid_enc_stats_t *stat,int size);
                bool            query(void);
 
                 xvid_plugin_single_t single;
