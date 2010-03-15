@@ -151,6 +151,10 @@ bool xvid4Encoder::setup(void)
   xvid_enc_create.width = getWidth();
   xvid_enc_create.height =getHeight();
   xvid_enc_create.profile=xvid4Settings.profile;
+ // Some sane defaults...
+  xvid_enc_create.bquant_ratio = 150;
+  xvid_enc_create.bquant_offset = 100;
+  xvid_enc_create.global |= XVID_GLOBAL_CLOSED_GOP ;
 
   int thread;
     switch(xvid4Settings.nbThreads)
@@ -455,13 +459,19 @@ bool xvid4Encoder::postAmble (ADMBitstream * out,xvid_enc_stats_t *stat,int size
     }
   out->out_quantizer=stat->quant;
   aprintf("XvidQ:%d\n",(int)out->out_quantizer);
-  aprintf("Popping outframe=%d back=%d fwd=0%d index=%d => %d\n",
+  aprintf("Popping flags=%x fnum=%d back=%d fwd=0%d index=%d => %d\n",
+                (int)out->flags,
                 (int)outFrameStatic,
                 (int)backRef,
                 (int)fwdRef,
                 (int)refIndex,
                 (int)myFrame);
+#if 1
   getRealPtsFromInternal(myFrame,&(out->dts),&(out->pts)); 
+#else
+    out->dts=frameNum*source->getInfo()->frameIncrement;
+    out->pts=out->dts+encoderDelay;
+#endif
   return 1;
 }
 /**
