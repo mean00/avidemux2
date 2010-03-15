@@ -140,6 +140,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
 			*(p_ch_type++) = ADM_CH_LFE;
 		}
 		switch (flags & A52_CHANNEL_MASK) {
+            case A52_CHANNEL:
 			case A52_MONO:
 				*(p_ch_type++) = ADM_CH_MONO;
 			break;
@@ -170,6 +171,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
 				*(p_ch_type++) = ADM_CH_REAR_LEFT;
 				*(p_ch_type++) = ADM_CH_REAR_RIGHT;
 			break;
+            
 			case A52_3F2R:
 				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
 				*(p_ch_type++) = ADM_CH_FRONT_CENTER;

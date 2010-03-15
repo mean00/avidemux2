@@ -123,6 +123,7 @@ uint32_t of=0;
 		*fq=(uint32_t)ifq;
 		*br=(uint32_t)ibr>>3;
 		switch (flags & A52_CHANNEL_MASK) {
+            case A52_CHANNEL:
 			case A52_MONO:
 				*chan = 1;
 			break;
