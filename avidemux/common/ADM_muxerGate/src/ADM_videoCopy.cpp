@@ -100,20 +100,18 @@ uint64_t  ADM_videoStreamCopy::getStartTime(void)
 /**
     \fn getPacket
 */
-bool  ADM_videoStreamCopy::getPacket(uint32_t *len, uint8_t *data, uint32_t maxLen,
-                    uint64_t *pts,uint64_t *dts,
-                    uint32_t *flags)
+bool  ADM_videoStreamCopy::getPacket(ADMBitstream *out)
 {
     if(true==eofMet) return false;
 again:
-    image.data=data;
+    image.data=out->data;
     if(false==video_body->getCompressedPicture(videoDelay,&image))
     {
             ADM_warning(" Get packet failed ");
             return false;
     }
-    *len=image.dataLength;
-    ADM_assert(*len<maxLen);
+    out->len=image.dataLength;
+    ADM_assert(out->len<out->bufferSize);
 #if 0
     if(image.demuxerPts!=ADM_NO_PTS)
         if(image.demuxerPts<startTimePts)   
@@ -125,8 +123,8 @@ again:
             }
         }
 #endif
-    *pts=rescaleTs(image.demuxerPts);
-    *dts=rescaleTs(image.demuxerDts);
+    out->pts=rescaleTs(image.demuxerPts);
+    out->dts=rescaleTs(image.demuxerDts);
     if(image.demuxerPts!=ADM_NO_PTS)
     {
           if(image.demuxerDts!=ADM_NO_PTS)
@@ -144,7 +142,7 @@ again:
             return false;
         }   
     }
-    *flags=image.flags;
+    out->flags=image.flags;
     currentFrame++;
     return true;
 }

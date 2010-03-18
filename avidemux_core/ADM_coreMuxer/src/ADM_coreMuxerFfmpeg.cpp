@@ -364,8 +364,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     printf("[FF] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
     uint8_t *buffer=new uint8_t[bufSize];
-    uint32_t len,flags;
-    uint64_t pts,dts,rawDts;
+    uint64_t rawDts;
     uint64_t lastVideoDts=0;
     uint64_t videoIncrement;
     int ret;
@@ -386,8 +385,10 @@ bool muxerFFmpeg::saveLoop(const char *title)
     initUI("Saving");
     encoding->setContainer(getContainerName());
     MuxAudioPacket audioPackets[nbAStreams];
+    ADMBitstream out(bufSize);
+    out.data=buffer;
 
-    while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
+    while(true==vStream->getPacket(&out))
     {
 	AVPacket pkt;
 
@@ -397,44 +398,44 @@ bool muxerFFmpeg::saveLoop(const char *title)
                 result=false;
                 break;
             }
-            int64_t xpts=(int64_t)pts;
-            int64_t xdts=(int64_t)dts;
-            if(pts==ADM_NO_PTS) xpts=-1;
-            if(dts==ADM_NO_PTS) xdts=-1;
+            int64_t xpts=(int64_t)out.pts;
+            int64_t xdts=(int64_t)out.dts;
+            if(out.pts==ADM_NO_PTS) xpts=-1;
+            if(out.dts==ADM_NO_PTS) xdts=-1;
             aprintf("[FF:V] Pts: %"LLD" DTS:%"LLD" ms\n",xpts/1000,xdts/1000);
 
             aprintf("[FF:V] LastDts:%08"LLU" Dts:%08"LLU" (%04"LLU") Delta : %"LLU"\n",
-                        lastVideoDts,dts,dts/1000000,dts-lastVideoDts);
-            rawDts=dts;
+                        lastVideoDts,out.dts,out.dts/1000000,out.dts-lastVideoDts);
+            rawDts=out.dts;
             if(rawDts==ADM_NO_PTS)
             {
                 lastVideoDts+=videoIncrement;
             }else
             {
-                lastVideoDts=dts;
+                lastVideoDts=out.dts;
             }
-            encoding->pushVideoFrame(len,0,lastVideoDts);
-            muxerRescaleVideoTimeDts(&dts,lastVideoDts);
-            muxerRescaleVideoTime(&pts);
-            aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,dts);
-            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%"LLU" Dts:%"LLU"\n",len,flags,pts,dts);
+            encoding->pushVideoFrame(out.len,out.in_quantizer,lastVideoDts);
+            muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
+            muxerRescaleVideoTime(&(out.pts));
+            aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
+            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%"LLU" Dts:%"LLU"\n",out.len,out.flags,out.pts,out.dts);
 
             av_init_packet(&pkt);
-            pkt.dts=dts;
+            pkt.dts=out.dts;
             if(vStream->providePts()==true)
             {
-                pkt.pts=pts;
+                pkt.pts=out.pts;
             }else
             {
                 pkt.pts=pkt.dts;
             }
             pkt.stream_index=0;
             pkt.data= buffer;
-            pkt.size= len;
-            if(flags & 0x10) // FIXME AVI_KEY_FRAME
+            pkt.size= out.len;
+            if(out.flags & 0x10) // FIXME AVI_KEY_FRAME
                         pkt.flags |= PKT_FLAG_KEY;
             ret =writePacket( &pkt);
-            aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,dts,pts);
+            aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,out.dts,out.pts);
             if(false==ret)
             {
                 printf("[FF]Error writing video packet\n");

@@ -11,6 +11,7 @@
 #include "DIA_working.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_encoding.h"
+#include "ADM_bitstream.h"
 
 /**
     \class ADM_videoStream
@@ -36,8 +37,7 @@ public:
             uint32_t getAvgFps1000(void) {return averageFps1000;}
             uint64_t getVideoDelay(void) {return videoDelay;}
 
-virtual     bool     getPacket(uint32_t *len, uint8_t *data, uint32_t maxLen,uint64_t *pts,uint64_t *dts,
-                                        uint32_t *flags)=0;
+virtual     bool     getPacket(ADMBitstream *out)=0;
 virtual     bool     getExtraData(uint32_t *extraLen, uint8_t **extraData) {*extraLen=0;*extraData=NULL;return true;};
 virtual     bool     providePts(void) {return false;}
 virtual     uint64_t getVideoDuration(void) {return 1;}

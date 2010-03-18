@@ -36,9 +36,6 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     averageFps1000=(uint32_t)f;
     printf("[StreamProcess] Average FPS1000=%"LU"\n",averageFps1000);
     isCFR=false;
-    bitstream=new ADMBitstream(width*height*4);
-    data=new uint8_t [width*height*4];
-    bitstream->data=data;
     videoDelay=encoder->getEncoderDelay();
     printf("[StreamProcess] Video Encoder Delay=%"LLU"ms\n",videoDelay/1000);
 }
@@ -47,9 +44,6 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
 */
 ADM_videoStreamProcess::~ADM_videoStreamProcess()
 {
-    if(bitstream)
-        delete bitstream;
-    bitstream=NULL;
     if(encoder) delete encoder;
     encoder=NULL;
     if(data) delete [] data;
@@ -67,17 +61,10 @@ bool     ADM_videoStreamProcess::getExtraData(uint32_t *extraLen, uint8_t **extr
 /**
     \fn getPacket
 */
-bool  ADM_videoStreamProcess::getPacket(uint32_t *len, uint8_t *data, uint32_t maxLen,
-                    uint64_t *pts,uint64_t *dts,
-                    uint32_t *flags)
+bool  ADM_videoStreamProcess::getPacket(ADMBitstream *out)
 {
-    if(false==encoder->encode(bitstream)) return false;
-    ADM_assert(bitstream->len<maxLen);
-    memcpy(data,bitstream->data,bitstream->len);
-    *len=bitstream->len;
-    *pts=bitstream->pts;
-    *dts=bitstream->dts;
-    *flags=bitstream->flags;
+    if(false==encoder->encode(out)) return false;
+    ADM_assert(out->len<out->bufferSize);
     return true;
 }
 /**
