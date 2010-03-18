@@ -138,8 +138,8 @@ bool muxerAvi::save(void)
     printf("[AviMuxer] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
     bool result=true;
-    uint32_t len,flags;
-    uint64_t pts,dts,rawDts;
+   
+    uint64_t rawDts;
     uint64_t lastVideoDts=0;
     int ret;
     int written=0;
@@ -149,11 +149,12 @@ bool muxerAvi::save(void)
     videoBuffer=new uint8_t[bufSize];
 
     ADM_info("[AviMuxer]avg fps=%u\n",vStream->getAvgFps1000());
-
+    ADMBitstream in(bufSize);
+    in.data=videoBuffer;
     uint64_t aviTime=0;
-    if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
-    if(dts==ADM_NO_PTS) dts=0;
-    lastVideoDts=dts;
+    if(false==vStream->getPacket(&in)) goto abt;
+    if(in.dts==ADM_NO_PTS) in.dts=0;
+    lastVideoDts=in.dts;
 
     initUI("Saving Avi");
     encoding->setContainer("AVI/OpenDML");
@@ -161,25 +162,25 @@ bool muxerAvi::save(void)
     while(1)
     {
             
-            if(dts>aviTime+videoIncrement)
+            if(in.dts>aviTime+videoIncrement)
             {
                 writter.saveVideoFrame( 0, 0,videoBuffer); // Insert dummy video frame
-                encoding->pushVideoFrame(0,0,dts);
+                encoding->pushVideoFrame(0,0,in.dts);
             }else
             {
-                if(!writter.saveVideoFrame( len, flags,videoBuffer))  // Put our real video
+                if(!writter.saveVideoFrame( in.len, in.flags,videoBuffer))  // Put our real video
                 {
                         ADM_warning("[AviMuxer] Error writting video frame\n");
                         result=false;
                         goto abt;
                 }
-                encoding->pushVideoFrame(len,0,dts);
-                if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
-                if(dts==ADM_NO_PTS)
+                encoding->pushVideoFrame(in.len,in.in_quantizer,in.dts);
+                if(false==vStream->getPacket(&in)) goto abt;
+                if(in.dts==ADM_NO_PTS)
                 {
-                    dts=lastVideoDts+videoIncrement;
+                    in.dts=lastVideoDts+videoIncrement;
                 }
-                lastVideoDts=dts;
+                lastVideoDts=in.dts;
             }
 
             fillAudio(aviTime+videoIncrement);    // and matching audio

@@ -74,23 +74,23 @@ bool muxerRaw::save(void)
     printf("[RAW] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
     uint8_t *buffer=new uint8_t[bufSize];
-    uint32_t len,flags;
-    uint64_t pts,dts,rawDts;
+    uint64_t rawDts;
     uint64_t lastVideoDts=0;
     int written=0;
     bool result=true;
-
+    ADMBitstream in(bufSize);
+    in.data=buffer;
     initUI("Saving raw video");
-    while(true==vStream->getPacket(&len, buffer, bufSize,&pts,&dts,&flags))
+    while(true==vStream->getPacket(&in))
     {
-        if(dts==ADM_NO_PTS)
-            dts=lastVideoDts+videoIncrement;
+        if(in.dts==ADM_NO_PTS)
+            in.dts=lastVideoDts+videoIncrement;
         if(updateUI()==false)
         {
             result=false;
             goto abt;
         }
-        fwrite(buffer,len,1,file);
+        fwrite(buffer,in.len,1,file);
         written++;
 
     }

@@ -19,10 +19,10 @@ bool muxerDummy::save(void)
     uint32_t  len,flags;
     uint64_t  pts,dts;
     uint32_t  written=0;
-
+    ADMBitstream in(bufSize);
     audioBuffer=new uint8_t[10*4*8*1024];
     videoBuffer=new uint8_t[bufSize];
-
+    in.data=videoBuffer;
     ADM_info("[dummy]avg fps=%u\n",vStream->getAvgFps1000());
 
     initUI("Saving dummy");
@@ -30,8 +30,8 @@ bool muxerDummy::save(void)
 
     while(1)
     {
-        if(false==vStream->getPacket(&len, videoBuffer, bufSize,&pts,&dts,&flags)) goto abt;
-        encoding->pushVideoFrame(len,0,dts);
+        if(false==vStream->getPacket(&in)) goto abt;
+        encoding->pushVideoFrame(in.len,in.in_quantizer,in.dts);
         if(updateUI()==false)
         {  
             goto abt;
