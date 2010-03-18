@@ -1,11 +1,9 @@
 /**
         \file  ADM_videoFilters.cpp
         \brief Handle current filter list
-
+        \author mean fixounet@free.fr 2010
 
 */
-
-
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,6 +16,7 @@
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterBridge.h"
 #include "ADM_filterChain.h"
+#include "ADM_filterThread.h"
 static ADM_coreVideoFilter *bridge=NULL;
 
 std::vector<ADM_VideoFilterElement> ADM_VideoFilters;
@@ -228,6 +227,13 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
             f=nw;
             chain->push_back(nw);
     }
+    // Last create the thread
+#if 1
+    int m=chain->size();
+    ADM_coreVideoFilter *last=(*chain)[m-1];
+    ADM_videoFilterQueue *thread=new ADM_videoFilterQueue(last);
+    chain->push_back(thread);
+#endif
     return chain;
 }
 /**

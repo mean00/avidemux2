@@ -23,6 +23,8 @@
 ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcouple *conf ):
                 ADM_coreVideoFilter(previous,conf)
 {
+    // 
+    myName="threadQueue";
     // Allocate buffer
     for(int i=0;i<ADM_THREAD_QUEUE_SIZE;i++)
     {
@@ -38,16 +40,16 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
 ADM_videoFilterQueue::~ADM_videoFilterQueue()
 {
         ADM_info("Destroying video threadQueue\n");
-        int i;
-        i=freeList.size();
-        for(int j=0;j<i;j++)
+        int fCount;
+        fCount=freeList.size();
+        for(int j=0;j<fCount;j++)
         {
             ADMImage *image=(ADMImage *)freeList[j].data;
             delete image;
         }
         freeList.clear();
-        i=list.size();
-        for(int j=0;j<i;j++)
+        int count=list.size();
+        for(int j=0;j<fCount;j++)
         {
             ADMImage *image=(ADMImage *)list[j].data;
             delete image;
@@ -81,13 +83,13 @@ bool         ADM_videoFilterQueue::getNextFrame(uint32_t *frameNumber,ADMImage *
             {
                 //
                 // Dequeue one item
-                ADM_queuePacket *pkt=&(list[0]);
-                ADM_assert(pkt->data);
-                ADMImage *source=(ADMImage *)pkt->data;
-                *frameNumber=pkt->pts;
+                ADM_queuePacket pkt=(list[0]);
+                ADM_assert(pkt.data);
+                ADMImage *source=(ADMImage *)pkt.data;
+                *frameNumber=pkt.pts;
                 image->duplicateFull(source);
                 list.erase(list.begin());
-                freeList.push_back(*pkt);
+                freeList.push_back(pkt);
                 mutex->unlock();
                 return true;
             }
@@ -132,21 +134,27 @@ bool         ADM_videoFilterQueue::runAction(void)
             continue;
         }
         uint32_t fn=0;
-        ADM_queuePacket pkt=(list[0]);
+        ADM_queuePacket pkt=(freeList[0]);
         ADM_assert(pkt.data);
         ADMImage *source=(ADMImage *)pkt.data;
-        list.erase(freeList.begin());
+        freeList.erase(freeList.begin());
         mutex->unlock();
 
         if(false==previousFilter->getNextFrame(&fn,source))
         {
-            pkt.pts=fn;
+           
             ADM_info("Video Thread, no more data\n");
             mutex->lock();
             freeList.push_back(pkt);
             mutex->unlock();
             goto theEnd;
         }
+        // Got it, push it
+        mutex->lock();
+        pkt.pts=fn;
+        list.push_back(pkt);
+        mutex->unlock();
+
     }
 theEnd:
         ADM_info("Exiting video thread loop\n");

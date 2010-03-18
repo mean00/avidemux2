@@ -16,7 +16,7 @@
 #define ADM_FILTER_THREAD_H
 #include "ADM_coreVideoFilter.h"
 #include "ADM_threadQueue.h"
-#define ADM_THREAD_QUEUE_SIZE 4
+#define ADM_THREAD_QUEUE_SIZE 8
 /**
  *  \class ADM_videoFilterQueue
  *  \brief 
