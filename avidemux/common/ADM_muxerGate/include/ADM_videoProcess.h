@@ -29,10 +29,7 @@
 class ADM_videoStreamProcess: public ADM_videoStream
 {
 protected:
-            
-   
             ADM_coreVideoEncoder *encoder;
-            uint8_t              *data;
 public:
              ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder);
     virtual ~ADM_videoStreamProcess();
