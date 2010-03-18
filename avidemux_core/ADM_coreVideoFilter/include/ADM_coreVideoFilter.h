@@ -43,8 +43,8 @@ protected:
             VideoCache           *vidCache;
             const char           *myName;
 public:
-            ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
-            ~ADM_coreVideoFilter();
+                            ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
+       virtual             ~ADM_coreVideoFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
        virtual bool         goToTime(uint64_t usSeek);              
