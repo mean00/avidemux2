@@ -31,14 +31,10 @@ static void *boomerang(void *x)
     \fn ADM_audioAccess_thread
     \brief
 */
-ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son)
+ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son) :ADM_threadQueue()
 {
     this->son=son;
     ADM_info("Swallowing audio access into a thread\n");
-    mutex=new admMutex("audioAccess");
-    cond=new admCond(mutex);
-    threadState=RunStateIdle;
-    started=false;
     
 }
 /**
@@ -49,29 +45,12 @@ ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son)
 ADM_audioAccess_thread::~ADM_audioAccess_thread()
 {
     ADM_info("Killing audio thread and son\n");
-    // ask the thread to stop
-    
-    if(started)
-    {
-        mutex->lock();
-        if(threadState==RunStateRunning)
-        {   
-            ADM_info("Asking the thread to stop\n");
-            threadState=RunStateStopOrder;
-            mutex->unlock();
-            int count=100;
-            while(count)
-            {
-                if(threadState==RunStateStopped) break;
-                ADM_usleep(1000*100); // Slep 100 ms
-            }
-        }else mutex->unlock();
-    }
+   
     // Empty the list...
     int nb=list.size();
     for(int i=0;i<nb;i++)
     {
-        ADM_audioPacket *pkt=&(list[i]);
+        ADM_queuePacket *pkt=&(list[i]);
         if(pkt->data) delete [] pkt->data;
         pkt->data=NULL;
     }
@@ -116,18 +95,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
 {
     if(false==started)
     {
-        ADM_info("Starting thread...\n");
-        if(pthread_create(&myThread,NULL, boomerang, this))
-        {
-            ADM_error("ERROR CREATING THREAD\n");
-            ADM_assert(0);
-        }
-        while(threadState==RunStateIdle)
-        {
-            ADM_usleep(10000);
-        }
-        ADM_info("Thread created and started\n");
-        started=true;
+        startThread();      
     }
     while(1)
     {
@@ -136,7 +104,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
         {
             //
             // Dequeue one item
-            ADM_audioPacket *pkt=&(list[0]);
+            ADM_queuePacket *pkt=&(list[0]);
             ADM_assert(pkt->data);
             ADM_assert(pkt->dataLen<maxSize);
             memcpy(buffer,pkt->data,pkt->dataLen);
@@ -162,13 +130,12 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
     return false;
 }
 /**
-    \fn run
+    \fn runAction
     \brief entry point for thread
 */
-void ADM_audioAccess_thread::run(void)
+bool ADM_audioAccess_thread::runAction(void)
 {
     #define CHUNK_SIZE (48000*sizeof(float)*6)
-    threadState=RunStateRunning;
     uint8_t *buffer=new uint8_t[CHUNK_SIZE];
     uint32_t size;
     uint64_t dts;
@@ -179,7 +146,7 @@ void ADM_audioAccess_thread::run(void)
             ADM_info("Audio Thread, no more data\n");
             goto theEnd;
         }
-        ADM_audioPacket p;
+        ADM_queuePacket p;
         p.data=new uint8_t[size];
         memcpy(p.data,buffer,size);
         p.dataLen=size;
@@ -205,7 +172,7 @@ void ADM_audioAccess_thread::run(void)
 
 theEnd:
     delete [] buffer;
-    threadState=RunStateStopped;
+    return true;
 }
 /**
     \fn ADM_threadifyAudioAccess

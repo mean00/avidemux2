@@ -16,46 +16,19 @@
 #define AUDM_ACCESS_THREAD_H
 
 #include "ADM_audioStream.h"
-#include "ADM_threads.h"
-using std::vector;
-#include <vector>
+#include "ADM_threadQueue.h"
 
-
-
-/**
-    \struct ADM_audioPacket
-*/
-typedef struct
-{
-    uint8_t *data;
-    uint32_t dataLen;
-    uint64_t dts;
-}ADM_audioPacket;
-typedef  vector <ADM_audioPacket> ListOfAudioPacket;
-
-typedef enum
-{
-    RunStateIdle,
-    RunStateRunning,
-    RunStateStopOrder,
-    RunStateStopped
-}RunState;
 
 /**
     \class ADM_audioAccess_thread
     \brief Wrap ADM_audioAccess inside a thread
 
 */
-class ADM_audioAccess_thread : public ADM_audioAccess
+class ADM_audioAccess_thread : public ADM_audioAccess,public ADM_threadQueue
 {
   protected:
                 ADM_audioAccess   *son;
-                ListOfAudioPacket list;
-                admMutex          *mutex;
-                admCond           *cond;
-                bool              started;
-volatile        RunState          threadState;
-                pthread_t         myThread;
+              
   public:
 
 
@@ -76,9 +49,9 @@ volatile        RunState          threadState;
                                     /// Grab extra data
                 virtual bool      getExtraData(uint32_t *l, uint8_t **d);
 
-                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
-                virtual bool    isCBR(void) {return son->isCBR();};
-                void            run(void);
+                virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+                virtual bool      isCBR(void) {return son->isCBR();};
+                virtual bool      runAction(void);
 };
 
 

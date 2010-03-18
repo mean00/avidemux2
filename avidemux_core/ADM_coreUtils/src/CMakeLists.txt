@@ -10,6 +10,7 @@ ADM_codecType.cpp
 ADM_file.cpp
 ADM_paramList.cpp
 ADM_coreCodecMapping.cpp
+ADM_threadQueue.cpp
 prefs.cpp)
 
 ADD_LIBRARY(ADM_coreUtils6 SHARED ${ADM_coreUtils_SRCS})
