@@ -46,8 +46,6 @@ ADM_videoStreamProcess::~ADM_videoStreamProcess()
 {
     if(encoder) delete encoder;
     encoder=NULL;
-    if(data) delete [] data;
-    data=NULL;
 }
 /**
     \fn getExtraData
