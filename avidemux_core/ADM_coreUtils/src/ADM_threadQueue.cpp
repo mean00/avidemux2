@@ -31,7 +31,8 @@ ADM_threadQueue::ADM_threadQueue(void)
     mutex=new admMutex("audioAccess");
     cond=new admCond(mutex);
     threadState=RunStateIdle;
-    started=false;    
+    started=false;   
+    cond=new admCond(mutex);
 }
 /**
     \fn ~ADM_threadQueue
@@ -50,6 +51,10 @@ ADM_threadQueue::~ADM_threadQueue()
         {   
             ADM_info("Asking the thread to stop\n");
             threadState=RunStateStopOrder;
+            if(cond->iswaiting())
+            {
+                cond->wakeup();
+            }
             mutex->unlock();
             int count=100;
             while(count)
@@ -59,7 +64,10 @@ ADM_threadQueue::~ADM_threadQueue()
             }
         }else mutex->unlock();
     }
-   
+    if(cond) delete cond;
+    if(mutex) delete mutex;
+    cond=NULL;
+    mutex=NULL;
 }
 
 /**

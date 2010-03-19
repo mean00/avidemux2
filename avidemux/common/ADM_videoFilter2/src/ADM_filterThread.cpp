@@ -90,6 +90,10 @@ bool         ADM_videoFilterQueue::getNextFrame(uint32_t *frameNumber,ADMImage *
                 image->duplicateFull(source);
                 list.erase(list.begin());
                 freeList.push_back(pkt);
+                if(cond->iswaiting())
+                {
+                    cond->wakeup();
+                }
                 mutex->unlock();
                 return true;
             }
@@ -129,9 +133,13 @@ bool         ADM_videoFilterQueue::runAction(void)
         mutex->lock();
         if(!freeList.size())
         {
-            mutex->unlock();
-            ADM_usleep(2000);
+            cond->wait(); // Will unlock mutex
             continue;
+        }
+        if(threadState==RunStateStopOrder)  
+        {
+            ADM_info("Audio Thread, received stop order\n");
+            goto theEnd;
         }
         uint32_t fn=0;
         ADM_queuePacket pkt=(freeList[0]);
