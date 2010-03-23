@@ -44,7 +44,7 @@ x264_encoder x264Settings=
 {
     {
     COMPRESS_AQ, //COMPRESSION_MODE  mode;
-    15,              // uint32_t          qz;           /// Quantizer
+    20,              // uint32_t          qz;           /// Quantizer
     1500,           //uint32_t          bitrate;      /// In kb/s 
     700,            //uint32_t          finalsize;    /// In ?
     1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
@@ -68,8 +68,8 @@ x264_encoder x264Settings=
    true, //bool _4x4I;
    2, //uint32_t MaxBFrame;
    30, //uint32_t profile;
-   false, //bool CABAC;
-   false, //bool Trellis;     
+   true, //bool CABAC;
+   true, //bool Trellis;     
     
 };
 /**
