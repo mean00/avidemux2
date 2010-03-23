@@ -40,6 +40,11 @@ protected:
                bool            preAmble (ADMImage * in);
                bool            postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,x264_picture_t *picout);
                bool            createHeader(void);
+               int             encodeNals(uint8_t *buf, int size, x264_nal_t *nals, int nalCount, bool skipSei);
+               uint32_t        extraDataLen;
+               uint8_t         *extraData;
+               uint32_t        seiUserDataLen;
+               uint8_t         *seiUserData ;
 
                
 public:
@@ -48,8 +53,8 @@ public:
 virtual                    ~x264Encoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "X264";}
-
+virtual const  char        *getFourcc(void) {return "H264";}
+virtual        bool         getExtraData(uint32_t *l,uint8_t **d) {*l=extraDataLen;*d=extraData;return true;}
 virtual        bool         isDualPass(void) ;
 
 };
