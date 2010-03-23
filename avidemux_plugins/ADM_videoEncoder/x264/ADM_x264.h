@@ -34,7 +34,7 @@ class x264Encoder : public ADM_coreVideoEncoder
 protected:
                x264_param_t     param;
                x264_t          *handle;
-               x264_picture_t  *pic;
+               x264_picture_t  pic;
                int             plane;
                bool            globalHeader;
                bool            preAmble (ADMImage * in);
@@ -45,6 +45,7 @@ protected:
                uint8_t         *extraData;
                uint32_t        seiUserDataLen;
                uint8_t         *seiUserData ;
+               bool            firstIdr;
 
                
 public:

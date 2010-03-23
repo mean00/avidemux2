@@ -5,6 +5,7 @@ SET(x264_SRCS
         ADM_x264.cpp
         ADM_x264Plugin.cpp
         ADM_x264Dialog.cpp
+        ADM_x264Setup.cpp
 )
 include(admCheckX264)
 checkX264()
