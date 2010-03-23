@@ -43,7 +43,7 @@ static void        logger( void *cooki, int i_level, const char *psz, va_list li
 x264_encoder x264Settings=
 {
     {
-    COMPRESS_CQ, //COMPRESSION_MODE  mode;
+    COMPRESS_AQ, //COMPRESSION_MODE  mode;
     15,              // uint32_t          qz;           /// Quantizer
     1500,           //uint32_t          bitrate;      /// In kb/s 
     700,            //uint32_t          finalsize;    /// In ?
@@ -51,15 +51,15 @@ x264_encoder x264Settings=
         ADM_ENC_CAP_CBR+
         ADM_ENC_CAP_CQ+
         ADM_ENC_CAP_AQ+
-        ADM_ENC_CAP_2PASS+
-        ADM_ENC_CAP_2PASS_BR+
+        0*ADM_ENC_CAP_2PASS+
+        0*ADM_ENC_CAP_2PASS_BR+
         ADM_ENC_CAP_GLOBAL+
-        ADM_ENC_CAP_SAME
+        0*ADM_ENC_CAP_SAME
     },
     2, // uint32_t MaxRefFrames;
-    20, //uint32_t MinIdr;
-    50, //uint32_t MaxIdr;
-    2,  // threads
+    10, //uint32_t MinIdr;
+    150, //uint32_t MaxIdr;
+    99,  // threads (auto)
    true, //bool _8x8;
    true, //bool _8x8P;
    true, //bool _8x8B;
@@ -68,8 +68,8 @@ x264_encoder x264Settings=
    true, //bool _4x4I;
    2, //uint32_t MaxBFrame;
    30, //uint32_t profile;
-   true, //bool CABAC;
-   true, //bool Trellis;     
+   false, //bool CABAC;
+   false, //bool Trellis;     
     
 };
 /**
@@ -99,6 +99,8 @@ int x264Encoder::encodeNals(uint8_t *buf, int size, x264_nal_t *nals, int nalCou
         memcpy(p, seiUserData, seiUserDataLen);
         p += seiUserDataLen;
         seiUserDataLen = 0;
+        delete [] seiUserData;
+        seiUserData=NULL;
     }
 
     for (i = 0; i < nalCount; i++)
@@ -261,6 +263,8 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
         out->pts =  picout->i_pts+getEncoderDelay();	
         out->dts=queueOfDts[0];
         queueOfDts.erase(queueOfDts.begin());
+        aprintf("pts = %"LLU", dts=%"LLU", pts+delay=%"LLU" delta=%"LLU"\n",picout->i_pts,out->dts,out->pts,
+                    out->pts-out->dts);
         switch (picout->i_type)
         {
         case X264_TYPE_IDR:

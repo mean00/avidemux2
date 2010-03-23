@@ -48,6 +48,7 @@ extern x264_encoder x264Settings;
 bool x264Encoder::setup(void)
 {
   ADM_info("x264, setting up");
+  
   firstIdr=true;
   image=new ADMImage(getWidth(),getHeight());
   MMSET(param);
@@ -69,7 +70,7 @@ bool x264Encoder::setup(void)
     usSecondsToFrac(f,&n,&d);
     param.i_fps_num = n;
     param.i_fps_den = d;
-
+    encoderDelay=f*x264Settings.MaxBFrame;
 
 #define MKPARAM(x,y) {param.x = x264Settings.y;printf("[x264] "#x" = %d\n",param.x);}
 #define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; printf("[x264] "#x" = %.2f\n",param.x);}
