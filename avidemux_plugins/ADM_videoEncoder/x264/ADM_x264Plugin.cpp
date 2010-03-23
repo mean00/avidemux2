@@ -1,9 +1,9 @@
 /***************************************************************************
-                          \fn     yv12Plugin
-                          \brief  Plugin for YV12 dummy encoder
+                          \fn     x264Plugin
+                          \brief  Plugin for x264 dummy encoder
                              -------------------
     
-    copyright            : (C) 2002/2009 by mean
+    copyright            : (C) 2002/2009 by mean/gruntster
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -16,16 +16,18 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_yv12Encoder.h"
+#include "ADM_x264.h"
 #include "ADM_coreVideoEncoderInternal.h"
-
-
-ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_yv12Encoder);
-ADM_DECLARE_VIDEO_ENCODER_NO_CONFIG();
-ADM_DECLARE_VIDEO_ENCODER_MAIN("YV12Encoder",
-                               "YV12 Encoder",
-                               "YV12",
-                               "Simple YV12 Encoder (c) 2009 Mean",
-                                NULL, // No configuration
+#include "x264_encoder_desc.cpp"
+extern bool         x264Configure(void);
+extern x264_encoder x264Settings;
+ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(x264Encoder);
+ADM_DECLARE_VIDEO_ENCODER_MAIN("x264",
+                               "Mpeg4 AVC (x264)",
+                               "x264 based mpeg4 AVC Encoder (c) 2010 Mean/Gruntster",
+                                x264Configure, // No configuration
                                 ADM_UI_ALL,
-                                1,0,0);
+                                1,0,0,
+                                x264_encoder_param, // conf template
+                                &x264Settings // conf var
+);
