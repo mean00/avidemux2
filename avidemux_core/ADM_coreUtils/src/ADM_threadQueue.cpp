@@ -112,6 +112,11 @@ bool ADM_threadQueue::stopThread(void)
         if(threadState==RunStateRunning)
         {
             threadState=RunStateStopOrder;
+            if(cond->iswaiting())
+            {
+                cond->wakeup();
+            }
+        
             mutex->unlock();
             while(threadState!=RunStateStopped && clockDown)
             {
