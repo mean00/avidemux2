@@ -414,7 +414,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             {
                 lastVideoDts=out.dts;
             }
-            encoding->pushVideoFrame(out.len,out.in_quantizer,lastVideoDts);
+            encoding->pushVideoFrame(out.len,out.out_quantizer,lastVideoDts);
             muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
             muxerRescaleVideoTime(&(out.pts));
             aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);

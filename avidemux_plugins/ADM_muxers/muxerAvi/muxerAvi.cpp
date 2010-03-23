@@ -174,7 +174,7 @@ bool muxerAvi::save(void)
                         result=false;
                         goto abt;
                 }
-                encoding->pushVideoFrame(in.len,in.in_quantizer,in.dts);
+                encoding->pushVideoFrame(in.len,in.out_quantizer,in.dts);
                 if(false==vStream->getPacket(&in)) goto abt;
                 if(in.dts==ADM_NO_PTS)
                 {
