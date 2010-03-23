@@ -994,10 +994,15 @@ foundit: // HACK FIXME
           if(info.Ctts)
           {
             updateCtts(&info);
+          }else 
+          {
+                // No ctts, dts=pts
+                for(int i=0;i<_videostream.dwLength;i++)
+                {
+                     _tracks[0].index[i].pts= _tracks[0].index[i].dts;
+                }
           }
-
-
-           VDEO.index[0].intra=AVI_KEY_FRAME;
+          VDEO.index[0].intra=AVI_KEY_FRAME;
         }
           break;
     case TRACK_AUDIO:
