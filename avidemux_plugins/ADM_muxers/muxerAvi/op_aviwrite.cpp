@@ -1162,7 +1162,7 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 static void mx_streamHeaderFromVideo(AVIStreamHeader *header,ADM_videoStream *video)
 {
 	header->fccType=fourCC::get((uint8_t *)"vids");  //uint32_t	fccType;
-	header->fccType=video->getFCC(); //uint32_t	fccHandler;
+	header->fccHandler=video->getFCC(); //uint32_t	fccHandler;
 	header->dwFlags=0; //int32_t	dwFlags;	/* Contains AVITF_* flags */
 	header->wPriority=0; //int16_t	wPriority;	/* dwPriority - splited for audio */
 	header->wLanguage=0; //int16_t	wLanguage;
