@@ -66,6 +66,7 @@ volatile        RunState          threadState;
 protected:
         virtual bool                runAction(void)=0; 
                 bool                startThread(void);
+                bool                stopThread(void);
 };
 
 

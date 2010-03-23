@@ -39,7 +39,7 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
 */
 ADM_videoFilterQueue::~ADM_videoFilterQueue()
 {
-        ADM_info("Destroying video threadQueue\n");
+        stopThread();
         int fCount;
         fCount=freeList.size();
         for(int j=0;j<fCount;j++)
@@ -49,7 +49,7 @@ ADM_videoFilterQueue::~ADM_videoFilterQueue()
         }
         freeList.clear();
         int count=list.size();
-        for(int j=0;j<fCount;j++)
+        for(int j=0;j<count;j++)
         {
             ADMImage *image=(ADMImage *)list[j].data;
             delete image;

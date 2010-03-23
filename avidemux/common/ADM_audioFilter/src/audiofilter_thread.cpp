@@ -51,8 +51,7 @@ ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son) :ADM_thread
 
 ADM_audioAccess_thread::~ADM_audioAccess_thread()
 {
-    ADM_info("Killing audio thread and son\n");
-   
+    stopThread();
     // Empty the list...
     int nb=list.size();
     for(int i=0;i<nb;i++)
