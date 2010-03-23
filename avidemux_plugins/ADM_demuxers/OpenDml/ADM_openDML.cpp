@@ -543,8 +543,9 @@ uint32_t rd;
                 printf("\nOpenDML file successfully read..\n");
                 if(ret==1) 
                 {
-                    computePtsDts();
                     removeEmptyFrames();
+                    computePtsDts();
+                    
                 }
                 return ret;
 }
@@ -596,13 +597,7 @@ uint8_t OpenDMLHeader::computePtsDts(void)
        idx->dts=frameToUs(i);
     }
     _idx[0].pts=0;
-    // If it is mpeg4-SP compatible ?
-    // We can only call it here because the frames are marked as b frame!
-    if(isMpeg4Compatible(_videostream.fccHandler))
-    {
-        mpegReorder();
-    }   
-    return 1;
+  
 }
 /**
     \fn mpegReorder
@@ -612,17 +607,38 @@ uint8_t OpenDMLHeader::computePtsDts(void)
 uint8_t OpenDMLHeader::mpegReorder(void)
 {
     int last=0;
+    int nbBframe=0;
+    int maxBframe=0;
+    for(int i=1;i<_videostream.dwLength;i++)
+    {
+        if(_idx[i].intra & AVI_B_FRAME) nbBframe++;
+        else        
+            {
+                if(nbBframe>maxBframe) maxBframe=nbBframe;
+                nbBframe=0;
+            }
+    }
+    ADM_info("Found max %d sequential bframes\n",maxBframe);
+    if(!maxBframe)
+    {
+        ADM_info("No b frame, pts=dts\n");
+        for(int i=1;i<_videostream.dwLength;i++)
+            _idx[i].pts=_idx[i].dts;
+        ptsAvailable=1;
+        return true;
+    }
+
     for(int i=1;i<_videostream.dwLength;i++)
     {
         if(_idx[i].intra & AVI_B_FRAME)
         {
-            _idx[i].pts=frameToUs(i-1);
-        }else
+            _idx[i].pts=_idx[i].dts;
+            nbBframe++;
+        }
+        else
         {
-            if(last)
-            {
-                _idx[last].pts=frameToUs(i-1);
-            }
+            _idx[last].pts=_idx[nbBframe+last+1].dts;
+            nbBframe=0;
             last=i;
         }
     }
