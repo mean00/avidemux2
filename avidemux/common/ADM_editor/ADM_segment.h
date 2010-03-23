@@ -109,6 +109,7 @@ public:
                         ~ADM_EditorSegment();
 
             bool        addReferenceVideo(_VIDEOS *ref);
+            bool        updateRefVideo(_VIDEOS *ref);
             bool        deleteAll(void);
 
             bool        resetSegment(void);

@@ -20,6 +20,7 @@
 #include "ADM_Video.h"
 
 bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs);
-bool setMpeg4PtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs);
+// Valid for mpeg1/2/4 SP type 
+bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 
 #endif

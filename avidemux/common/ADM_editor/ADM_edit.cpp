@@ -300,25 +300,23 @@ bool ADM_Composer::addFile (const char *name)
     {
         ADM_info("[Editor] no decoder to check for B- frame\n");
     }else
-    {
-       
-        if(video._aviheader->providePts()==false) // Else we rely on demuxer PTS
+    {       
+        ADM_info("[Editor] This container does not provide PTS \n");
+        if(video.decoder->bFramePossible())
         {
-            ADM_info("[Editor] This container does not provide PTS \n");
-            if(video.decoder->bFramePossible())
+            printf("[Editor] B- frame possible with that codec \n");
+            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc))
             {
-                printf("[Editor] B- frame possible with that codec \n");
-                if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc))
-                {
-                    ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");                        
-                    setMpeg4PtsFromDts(video._aviheader,video.timeIncrementInUs);
-                }
+                ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");             
+                uint64_t delay;
+                ADM_computeMP124MissingPtsDts(video._aviheader,video.timeIncrementInUs,&delay);
+                _segments.updateRefVideo(&video);
             }
-            else   
-            {
-                    printf("[Editor] No B frame with that codec, PTS=DTS\n");
-                    setPtsEqualDts(video._aviheader,video.timeIncrementInUs);
-            }
+        }
+        else   
+        {
+                printf("[Editor] No B frame with that codec, PTS=DTS\n");
+                setPtsEqualDts(video._aviheader,video.timeIncrementInUs);
         }
      }
   

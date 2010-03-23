@@ -35,6 +35,30 @@ ADM_EditorSegment::~ADM_EditorSegment()
     deleteAll();
 }
 /**
+    \fn updateRefVideo
+    \brief Update start time
+*/
+bool        ADM_EditorSegment::updateRefVideo(_VIDEOS *ref)
+{
+    int n=videos.size();
+    ADM_assert(n);
+    vidHeader *demuxer=	ref->_aviheader;
+    vidHeader *demuxer2=	videos[n-1]._aviheader;
+    ADM_assert(demuxer==demuxer2);
+    
+    
+    uint64_t pts,dts;
+    
+        demuxer->getPtsDts(0,&pts,&dts);
+        if(pts!=ADM_NO_PTS )
+        {
+            ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
+            ref->firstFramePts=pts;
+        }
+    updateStartTime();
+    return true;
+}
+/**
     \fn addReferenceVideo
     \brief Add a new source video, fill in the missing info + create automatically the matching seg
 */
