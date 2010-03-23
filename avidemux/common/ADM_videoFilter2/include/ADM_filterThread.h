@@ -24,7 +24,7 @@
 class ADM_videoFilterQueue : public ADM_coreVideoFilter,public ADM_threadQueue
 {
 protected:
-             ListOfQueuePacket freeList;
+           
 public:
                             ADM_videoFilterQueue(ADM_coreVideoFilter *son,CONFcouple *conf=NULL);
        virtual              ~ADM_videoFilterQueue();

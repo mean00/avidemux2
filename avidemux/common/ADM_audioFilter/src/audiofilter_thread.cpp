@@ -19,7 +19,8 @@
 #include "audiofilter_thread.h"
 #include <math.h>
 
-#define MAX_CHUNK_IN_QUEUE 50
+#define MAX_CHUNK_IN_QUEUE 10
+#define CHUNK_SIZE (20*1024) // should be more than enough
 
 static void *boomerang(void *x)
 {
@@ -35,6 +36,12 @@ ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son) :ADM_thread
 {
     this->son=son;
     ADM_info("Swallowing audio access into a thread\n");
+    for(int i=0;i<MAX_CHUNK_IN_QUEUE;i++)
+    {
+            ADM_queuePacket pkt;
+            pkt.data=new uint8_t[CHUNK_SIZE];
+            freeList.push_back(pkt);
+    }
     
 }
 /**
@@ -55,6 +62,16 @@ ADM_audioAccess_thread::~ADM_audioAccess_thread()
         pkt->data=NULL;
     }
     list.clear();
+
+    nb=freeList.size();
+    for(int i=0;i<nb;i++)
+    {
+        ADM_queuePacket *pkt=&(freeList[i]);
+        if(pkt->data) delete [] pkt->data;
+        pkt->data=NULL;
+    }
+    freeList.clear();
+
     // Thread stopped, we can kill the son
     delete son;
 }
@@ -104,16 +121,22 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
         {
             //
             // Dequeue one item
-            ADM_queuePacket *pkt=&(list[0]);
-            ADM_assert(pkt->data);
-            ADM_assert(pkt->dataLen<maxSize);
-            memcpy(buffer,pkt->data,pkt->dataLen);
-            *dts=pkt->dts;
-            //printf("popping Packet with DTS=%"LLD", size=%d\n",*dts,(int)pkt->dataLen);
-            *size=pkt->dataLen;
-            delete [] pkt->data;
-            pkt->data=NULL;
+            ADM_queuePacket pkt=list[0];
             list.erase(list.begin());
+            mutex->unlock();
+            ADM_assert(pkt.data);
+            ADM_assert(pkt.dataLen<maxSize);
+            ADM_assert(pkt.dataLen<CHUNK_SIZE);
+            memcpy(buffer,pkt.data,pkt.dataLen);
+            *dts=pkt.dts;
+            //printf("popping Packet with DTS=%"LLD", size=%d\n",*dts,(int)pkt->dataLen);
+            *size=pkt.dataLen;
+            mutex->lock();
+            freeList.push_back(pkt);
+            if(cond->iswaiting())
+            {
+                cond->wakeup();
+            }
             mutex->unlock();
             return true;
         }
@@ -125,7 +148,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
             return false;
         }
         mutex->unlock();
-        ADM_usleep(10*1000); // wait 10 ms
+        ADM_usleep(2*1000); // wait 10 ms
     }
     return false;
 }
@@ -135,43 +158,37 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
 */
 bool ADM_audioAccess_thread::runAction(void)
 {
-    #define CHUNK_SIZE (48000*sizeof(float)*6)
-    uint8_t *buffer=new uint8_t[CHUNK_SIZE];
-    uint32_t size;
-    uint64_t dts;
     while(1)
     {
-        if(false==son->getPacket(buffer,&size,CHUNK_SIZE,&dts))
-        {
-            ADM_info("Audio Thread, no more data\n");
-            goto theEnd;
-        }
-        ADM_queuePacket p;
-        p.data=new uint8_t[size];
-        memcpy(p.data,buffer,size);
-        p.dataLen=size;
-        p.dts=dts;
-        mutex->lock();
-        list.push_back(p);
-        //printf("Pushing Packet with DTS=%"LLD",size=%d\n",dts,(int)size);
-        mutex->unlock();
         if(threadState==RunStateStopOrder)  
         {
             ADM_info("Audio Thread, received stop order\n");
             goto theEnd;
         }
-        while(1)
+        mutex->lock();
+        if(!freeList.size())
         {
-            int n=list.size();
-            if(n<MAX_CHUNK_IN_QUEUE) break;
-            ADM_usleep(20*1000); // Fixme: replace by thread signals
-            if(threadState==RunStateStopOrder) goto theEnd;
+            cond->wait();
+            continue;
         }
-            
+        ADM_queuePacket pkt=(freeList[0]);
+        ADM_assert(pkt.data);
+        freeList.erase(freeList.begin());
+        mutex->unlock();
+
+        if(false==son->getPacket(pkt.data,&(pkt.dataLen),CHUNK_SIZE,&(pkt.dts)))
+        {
+            ADM_info("Audio Thread, no more data\n");
+            goto theEnd;
+        }
+      
+        mutex->lock();
+        list.push_back(pkt);
+        //printf("Pushing Packet with DTS=%"LLD",size=%d\n",dts,(int)size);
+        mutex->unlock();
     }
 
 theEnd:
-    delete [] buffer;
     return true;
 }
 /**

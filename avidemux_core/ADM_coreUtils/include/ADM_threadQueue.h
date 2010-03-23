@@ -51,6 +51,7 @@ class ADM_threadQueue
 {
   protected:
                 ListOfQueuePacket list;
+                ListOfQueuePacket freeList;
                 admMutex          *mutex;
                 admCond           *cond;
                 bool              started;
