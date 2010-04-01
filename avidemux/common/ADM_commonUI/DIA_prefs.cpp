@@ -46,9 +46,9 @@ uint32_t	autosplit=0;
 uint32_t render;
 uint32_t useTray=0;
 uint32_t useMaster=0;
-uint32_t useAutoIndex=0;
+
 uint32_t useSwap=0;
-uint32_t useNuv=0;
+
 uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
 uint32_t indexPriority=2;
@@ -56,13 +56,13 @@ uint32_t playbackPriority=0;
 uint32_t downmix;
 uint32_t mpeg_no_limit=0;
 uint32_t msglevel=2;
-uint32_t activeXfilter=0;
+
 uint32_t mixer=0;
 char     *filterPath=NULL;
 char     *alsaDevice=NULL;
-uint32_t autovbr=0;
-uint32_t autoindex=0;
-uint32_t autounpack=0;
+
+
+
 uint32_t alternate_mp3_tag=1;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
@@ -102,17 +102,13 @@ char     *globalGlyphName=NULL;
         if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &alsaDevice) != RC_OK )
                 alsaDevice = ADM_strdup("plughw:0,0");
 #endif
-        // autovbr
-        prefs->get(FEATURE_AUTO_BUILDMAP,&autovbr);
         // vdpau
         prefs->get(FEATURE_VDPAU,&vdpau);
-        // autoindex
-        prefs->get(FEATURE_AUTO_REBUILDINDEX,&autoindex);
         // Global glyph
         prefs->get(FEATURE_GLOBAL_GLYPH_ACTIVE,&useGlobalGlyph);
         prefs->get(FEATURE_GLOBAL_GLYPH_NAME,&globalGlyphName);
-         // autoindex
-        prefs->get(FEATURE_AUTO_UNPACK,&autounpack);
+
+        
         // Alternate mp3 tag (haali)
         prefs->get(FEATURE_ALTERNATE_MP3_TAG,&alternate_mp3_tag);
         
@@ -153,20 +149,12 @@ char     *globalGlyphName=NULL;
         if(!prefs->get(FEATURE_AUDIOBAR_USES_MASTER, &useMaster))
                 useMaster=0;
 #endif
-        // Autoindex files
-        if(!prefs->get(FEATURE_TRYAUTOIDX, &useAutoIndex))
-                useAutoIndex=0;
 
         // SWAP A&B if A>B
         if(!prefs->get(FEATURE_SWAP_IF_A_GREATER_THAN_B, &useSwap))
                 useSwap=0;
-        // No nuv sync
-        if(!prefs->get(FEATURE_DISABLE_NUV_RESYNC, &useNuv))
-                useNuv=0;
         // Get level of message verbosity
         prefs->get(MESSAGE_LEVEL,&msglevel);
-        // External filter
-         prefs->get(FILTERS_AUTOLOAD_ACTIVE,&activeXfilter);
         // Downmix default
         if(prefs->get(DOWNMIXING_PROLOGIC,&downmix)!=RC_OK)
         {       
@@ -179,13 +167,8 @@ char     *globalGlyphName=NULL;
         diaElemToggle useSysTray(&useTray,QT_TR_NOOP("_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TR_NOOP("_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TR_NOOP("Create _OpenDML files"));
-        diaElemToggle autoIndex(&useAutoIndex,QT_TR_NOOP("Automatically _index MPEG files"));
-        diaElemToggle autoSwap(&useSwap,QT_TR_NOOP("Automatically _swap A and B if A>B"));
-        diaElemToggle nuvAudio(&useNuv,QT_TR_NOOP("_Disable NUV audio sync"));        
+
         
-        diaElemToggle togAutoVbr(&autovbr,QT_TR_NOOP("Automatically _build VBR map"));
-        diaElemToggle togAutoIndex(&autoindex,QT_TR_NOOP("Automatically _rebuild index"));
-        diaElemToggle togAutoUnpack(&autounpack,QT_TR_NOOP("Automatically remove _packed bitstream"));
 
         diaElemFrame frameSimd(QT_TR_NOOP("SIMD"));
 
@@ -318,9 +301,6 @@ char     *globalGlyphName=NULL;
 #else
                filterPath = ADM_strdup("c:\\");
 #endif
-        diaElemDirSelect  entryFilterPath(&filterPath,QT_TR_NOOP("_Filter directory:"),QT_TR_NOOP("Select filter directory"));
-		diaElemToggle loadEx(&activeXfilter,QT_TR_NOOP("_Load external filters"));
-		loadEx.link(1, &entryFilterPath);
 
 		diaElemToggle togGlobalGlyph(&useGlobalGlyph, QT_TR_NOOP("Use _Global GlyphSet"));
 		diaElemFile  entryGLyphPath(0,&globalGlyphName,QT_TR_NOOP("Gl_yphSet:"), NULL, QT_TR_NOOP("Select GlyphSet file"));
@@ -331,12 +311,7 @@ char     *globalGlyphName=NULL;
         diaElemTabs tabUser(QT_TR_NOOP("User Interface"),2,diaUser);
         
          /* Automation */
-        diaElem *diaAuto[]={&autoSwap,&togAutoVbr,&togAutoIndex,&togAutoUnpack,&autoIndex,};
-        diaElemTabs tabAuto(QT_TR_NOOP("Automation"),5,diaAuto);
         
-        /* Input */
-        diaElem *diaInput[]={&nuvAudio};
-        diaElemTabs tabInput(QT_TR_NOOP("Input"),1,(diaElem **)diaInput);
         
         /* Output */
         diaElem *diaOutput[]={&autoSplit,&openDml,&allowAnyMpeg,&togTagMp3};
@@ -374,13 +349,10 @@ char     *globalGlyphName=NULL;
         diaElem *diaGlyph[]={&togGlobalGlyph,&entryGLyphPath};
         diaElemTabs tabGlyph(QT_TR_NOOP("Global GlyphSet"),2,(diaElem **)diaGlyph);
 
-        /* Xfilter tab */
-        diaElem *diaXFilter[]={&loadEx,&entryFilterPath};
-        diaElemTabs tabXfilter(QT_TR_NOOP("External Filters"),2,(diaElem **)diaXFilter);
                                     
 // SET
-        diaElemTabs *tabs[]={&tabUser,&tabAuto,&tabInput,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading,&tabGlyph,&tabXfilter};
-        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),10,tabs))
+        diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading,&tabGlyph};
+        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),7,tabs))
 	{
         	
         	// cpu caps
@@ -416,12 +388,7 @@ char     *globalGlyphName=NULL;
                 DOME(4,dring);
                 prefs->set(DEFAULT_POSTPROC_TYPE,pp_type);
                 prefs->set(DEFAULT_POSTPROC_VALUE,pp_value);
-                //
-                 prefs->set(FEATURE_AUTO_UNPACK,autounpack);
-                 // autovbr
-                prefs->set(FEATURE_AUTO_BUILDMAP,autovbr);
-                // autoindex
-                prefs->set(FEATURE_AUTO_REBUILDINDEX,autoindex);
+
                 // Alsa
 #ifdef ALSA_SUPPORT
                 if(alsaDevice)
@@ -464,17 +431,13 @@ char     *globalGlyphName=NULL;
 				// Playback priority
 				prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 
-                // Auto index mpeg
-                prefs->set(FEATURE_TRYAUTOIDX, useAutoIndex);
                 // Auto swap A/B
                 prefs->set(FEATURE_SWAP_IF_A_GREATER_THAN_B, useSwap);
-
-                // Disable nuv sync
-                prefs->set(FEATURE_DISABLE_NUV_RESYNC, useNuv);
+                //
+                prefs->set(MESSAGE_LEVEL,msglevel);
                 // Use tray while encoding
                 prefs->set(FEATURE_USE_SYSTRAY,useTray);
-                // Filter directory
-				prefs->set(FILTERS_AUTOLOAD_ACTIVE, activeXfilter);
+
                 // VDPAU
                 prefs->set(FEATURE_VDPAU,vdpau);
                 if(filterPath)
