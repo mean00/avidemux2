@@ -111,7 +111,7 @@ extern int check_leaks();
 int main(int argc, char *argv[])
 {
 #if defined(__WIN32) && defined(USE_SDL)
-	redirectStdoutToFile();
+//	redirectStdoutToFile();
 #endif
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
