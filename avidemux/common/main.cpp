@@ -203,10 +203,6 @@ int main(int argc, char *argv[])
     UI_Init(argc,argv);
     AUDMEncoder_initDither();
 
-#ifdef USE_XVID_4
-    xvid4_init();
-#endif
-
     // Hook our UI...
     InitFactory();
     InitCoreToolkit();
@@ -218,9 +214,6 @@ int main(int argc, char *argv[])
 
     video_body = new ADM_Composer;
 
-#ifdef HAVE_ENCODER
-//     registerVideoFilters();
-#endif
     ADM_lavFormatInit();
 	//***************Plugins *********************
 	// Load system wide audio decoder plugin
