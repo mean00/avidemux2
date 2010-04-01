@@ -73,9 +73,7 @@ QWidget *QuiMainWindows=NULL;
 QGraphicsView *drawWindow=NULL;
 uint8_t UI_updateRecentMenu( void );
 
-#ifdef HAVE_AUDIO
 extern uint8_t AVDM_setVolume(int volume);
-#endif
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -160,7 +158,6 @@ void MainWindow::sliderReleased(void)
 
 void MainWindow::volumeChange( int u )
 {
-#ifdef HAVE_AUDIO
 	if (_upd_in_progres || !ui.toolButtonAudioToggle->isChecked())
 		return;
 
@@ -170,17 +167,14 @@ void MainWindow::volumeChange( int u )
 
 	AVDM_setVolume(vol);
 	_upd_in_progres--;
-#endif
 }
 
 void MainWindow::audioToggled(bool checked)
 {
-#ifdef HAVE_AUDIO
 	if (checked)
 		AVDM_setVolume(ui.horizontalSlider_2->value());
 	else
 		AVDM_setVolume(0);
-#endif
 }
 
 void MainWindow::previewModeChanged(QAction *action)

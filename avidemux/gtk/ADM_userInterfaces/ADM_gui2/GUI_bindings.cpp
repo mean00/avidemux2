@@ -98,9 +98,7 @@ extern const char *ADM_mx_getDisplayName(uint32_t i);
 extern const char *ADM_ve6_getMenuName(uint32_t index);
 extern uint32_t    ADM_ve6_getNbEncoders(void);
 
-#ifdef HAVE_AUDIO
 extern uint8_t AVDM_setVolume(int volume);
-#endif
 extern void checkCrashFile(void);
 #define AUDIO_WIDGET   "comboboxAudio"
 #define VIDEO_WIDGET   "comboboxVideo"
@@ -1577,7 +1575,6 @@ gint jogChange(void)
 */
 void volumeChange( void )
 {
-#ifdef HAVE_AUDIO
 GtkWidget *wid;
 GtkAdjustment *adj;
 int vol;
@@ -1591,7 +1588,6 @@ if(_upd_in_progres) return;
         vol=(int)floor(adj->value+0.5);
         AVDM_setVolume( vol);
  _upd_in_progres--;
-#endif
 }
 /**
     \fn UI_setVUMeter
