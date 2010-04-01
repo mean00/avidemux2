@@ -30,15 +30,8 @@
 #define __DECLARE__
 #include "avi_vars.h"
 
-//#include "ADM_encoder/adm_encConfig.h"
 #include "prefs.h"
 #include "audio_out.h"
-
-#ifdef USE_XVID_4
-extern void xvid4_init(void);
-#endif
-
-
 
 extern void  ADM_lavInit();
 extern void  ADM_lavDestroy();
@@ -132,12 +125,10 @@ int main(int argc, char *argv[])
 
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
-#if 0
   	if(ADM_SUBVERSION)
 	{
 		printf(" (r%04u)", ADM_SUBVERSION);
 	}
-#endif
     printf("\n*************************\n");
     printf(" http://www.avidemux.org\n");
     printf(" Code      : Mean, JSC, Gruntster \n");
