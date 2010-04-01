@@ -51,6 +51,7 @@ public:
 protected:
     void setTotalSize(uint64_t size);
     void setAudioSize(uint64_t size);
+    void setVideoSize(uint64_t size);
     void setPercent(uint32_t percent);
     void setFps(uint32_t fps);
     void setFrameCount(uint32_t nb);

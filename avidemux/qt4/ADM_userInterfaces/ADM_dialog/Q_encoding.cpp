@@ -266,6 +266,19 @@ void DIA_encodingQt4::setTotalSize(uint64_t size)
 }
 
 /**
+    \fn setVideoSize(int size)
+    \brief display parameter as total size
+*/
+
+void DIA_encodingQt4::setVideoSize(uint64_t size)
+{
+          ADM_assert(window);
+          uint64_t mb=size>>20;
+          sprintf(string,"%"LU" MB",(int)mb);
+          WRITE(labelVideoSize);
+
+}
+/**
     \fn setAudioSizeIn(int size)
     \brief display parameter as audio size
 */

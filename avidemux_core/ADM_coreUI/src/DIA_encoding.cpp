@@ -168,6 +168,7 @@ void DIA_encodingBase::refresh(void)
                 }
                 _nextUpdate=time+GUI_UPDATE_RATE;
                 setAudioSize(_audioSize);
+                setVideoSize(_videoSize);
                 setTotalSize(_audioSize+_videoSize);
                 _lastFrameCount=_currentFrameCount;
                 _lastDts=_currentDts;

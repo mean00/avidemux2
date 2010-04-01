@@ -60,6 +60,7 @@ protected:
                 virtual void setFps(uint32_t fps1000)=0;
                 virtual void setPercent(uint32_t percent)=0;
                 virtual void setAudioSize(uint64_t size)=0;
+                virtual void setVideoSize(uint64_t size)=0;
                 virtual void setTotalSize(uint64_t size)=0;
                 virtual void setFrameCount(uint32_t nb)=0;
                 virtual void setElapsedTimeMs(uint32_t nb)=0;
