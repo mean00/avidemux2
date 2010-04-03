@@ -37,6 +37,7 @@
 #include "ADM_bitstream.h"
 #include "ADM_filterChain.h"
 #include "ADM_videoEncoderApi.h"
+#include "ADM_vidMisc.h"
 /*
 
 */
@@ -235,7 +236,8 @@ bool admSaver::save(void)
 {
     int ret=1;
     uint64_t startAudioTime=markerA; // Actual start time (for both audio & video actually)
-    printf("[A_Save] Saving..\n");
+    ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
+    ADM_info("[A_Save] Saving..\n");
 
     if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
@@ -324,7 +326,9 @@ bool admSaver::save(void)
         if(audio)   // Process
         {
             // Access..
-            ADM_audioStream *access=audioCreateEncodingStream(startAudioTime,0,muxer->useGlobalHeader()); // FIXME LEAK FIXME 
+            ADM_info("Crearting audio encoding stream, starttime %s\n",ADM_us2plain(startAudioTime));
+            //audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
+            ADM_audioStream *access=audioCreateEncodingStream(muxer->useGlobalHeader(),startAudioTime,0); // FIXME LEAK FIXME 
             astreams[0]=access;
             if(!access)
             {
