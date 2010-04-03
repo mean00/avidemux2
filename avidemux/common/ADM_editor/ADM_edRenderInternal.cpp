@@ -244,14 +244,22 @@ uint8_t ret = 0;
                 aprintf("[Editor] got PTS\n");
                 vid->lastDecodedPts=pts;
             }
-
-    cache->validate(result);
     aprintf(">>Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms, ptsdelta=%"LLD" ms \n",
-    frame,
-    vid->lastDecodedPts,
-    vid->lastDecodedPts/1000,
-    (vid->lastDecodedPts-old)/1000);
-    if(old>vid->lastDecodedPts) ADM_warning(">>>>> PTS going backward by %"LLD" ms\n",(old-vid->lastDecodedPts)/1000);
+        frame,
+        vid->lastDecodedPts,
+        vid->lastDecodedPts/1000,
+        (vid->lastDecodedPts-old)/1000);
+
+    if(old>vid->lastDecodedPts) 
+    {
+        ADM_warning(">>>>> PTS going backward by %"LLD" ms\n",(old-vid->lastDecodedPts)/1000);
+        ADM_warning("Dropping frame!\n");
+        cache->invalidate(result);
+        return false;
+    }else
+    {
+        cache->validate(result);
+    }
     return true;
 }
 
