@@ -23,6 +23,7 @@
 #include "audiofilter_conf.h"
 #include "audioencoder.h"
 #include "audioEncoderApi.h"
+#include "ADM_vidMisc.h"
 
 VectorOfAudioFilter EncodingVector;
 extern ADM_Composer *video_body;
@@ -75,6 +76,7 @@ extern ADM_audioAccess *ADM_threadifyAudioAccess(ADM_audioAccess *son);
 AUDMAudioFilter *createEncodingFilter(uint64_t startTime,int32_t shift)
 {
     //
+    ADM_info("Creating audio encoding filter with start time %s\n",ADM_us2plain(startTime));
     audioEncodingConfig.startTimeInUs=startTime;
     audioEncodingConfig.shiftInMs=shift;
     //
@@ -101,7 +103,7 @@ bool            destroyEncodingFilter(void)
 */
 ADM_audioStream *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift)
 {
-    printf("[AccessFilter] Creating access filter\n");
+    printf("[AccessFilter] Creating access filter, startime %s, globalHeader %d\n",ADM_us2plain(startTime),globalHeader);
     // 1-Create access filter
     AUDMAudioFilter *filter=createEncodingFilter(startTime,shift);
     if(!filter)

@@ -37,7 +37,7 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_Composer *incoming,
   _hold=0;
   rewind();
   
-  printf("[Bridge] Starting with time %u, shift %d\n",startInMs,-shiftMs);
+  ADM_info("[Bridge] Starting with time %"LU" ms, shift %"LD" ms\n",startInMs,-shiftMs);
   // If shiftMS is > 0, it means we have to go in the future, just increse _startTime
   if(shiftMs>0)
   {
@@ -81,9 +81,9 @@ uint8_t AUDMAudioFilter_Bridge::rewind(void)
 {
 uint64_t ttime=_startTime;
   ttime*=1000; // ms->us
-  printf("[Bridge] Going to time %d\n",_startTime);
+  ADM_info("[AudioBridge] Going to time %d\n",_startTime);
   uint8_t r= _incoming->goToTime(ttime);
-  if(!r) printf("[Bridge] Failed!\n");
+  if(!r) ADM_warning("[AudioBridge] Failed!\n");
   return r;
 }
 /**
