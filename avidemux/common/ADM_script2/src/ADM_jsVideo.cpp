@@ -121,6 +121,7 @@ int jsClearVideoFilters()
 */
 double jsGetMarkerA(void)
 {
+    return (double)video_body->getMarkerAPts();
 
 }
 /**
@@ -128,21 +129,21 @@ double jsGetMarkerA(void)
 */
 double jsGetMarkerB(void)
 {
-
+    return (double)video_body->getMarkerBPts();
 }
 /**
     \fn jsSetMarkerA
 */
 void   jsSetMarkerA(double a)
 {
-
+    video_body->setMarkerAPts( (uint64_t)a);
 }
 /**
     \fn jsGetMarkerB
 */
 void   jsSetMarkerB(double b)
 {
-
+    video_body->setMarkerBPts( (uint64_t)b);
 }
 
 //EOF
