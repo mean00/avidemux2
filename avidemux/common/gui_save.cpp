@@ -45,7 +45,6 @@ void A_saveAudioProcessed (char *name);
 int      A_Save(const char *name);
 uint8_t  GUI_getFrameContent(ADMImage *image, uint32_t frame);
 
-extern char * actual_workbench_file; // UGLY FIXME
 /**
     \fn HandleAction_Navigate
 
@@ -60,14 +59,17 @@ void HandleAction_Save(Action action)
 	  UI_refreshCustomMenu();
       break;
    case ACT_SaveCurrentWork:
-      if( actual_workbench_file ){
-        char *tmp = ADM_strdup(actual_workbench_file);
-         A_saveWorkbench( tmp ); // will write "actual_workbench_file" itself
-         ADM_dealloc(tmp);
-      }else{
-        GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveWorkbench);
-		UI_refreshCustomMenu();
-      }
+        {
+          const char *pj=video_body->getProjectName();
+          if( pj ){
+            char *tmp = ADM_strdup(pj);
+             A_saveWorkbench( tmp ); // will write "actual_workbench_file" itself
+             ADM_dealloc(tmp);
+          }else{
+            GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveWorkbench);
+            UI_refreshCustomMenu();
+          }
+        }
       break;
       
     case ACT_SaveRaw:
@@ -439,14 +441,8 @@ void A_saveImg (const char *name)
 */
 void A_saveWorkbench (const char *name)
 {
-#if 0
-  video_body->saveWorbench (name);
-#else
   video_body->saveAsScript(name,NULL);
-#endif
-  if( actual_workbench_file )
-     ADM_dealloc(actual_workbench_file);
-  actual_workbench_file = ADM_strdup(name);
+  video_body->setProjectName(name);
 }
 /**
     \fn A_SaveWrapper

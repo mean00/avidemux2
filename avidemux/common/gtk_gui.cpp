@@ -41,7 +41,6 @@
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
 #include "ADM_script2/include/ADM_JSif.h"
-char * actual_workbench_file;
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** A Function ***************
@@ -403,11 +402,7 @@ int nw;
       		ReSync ();
 
             // forget last project file
-            if( actual_workbench_file )
-            {
-                ADM_dealloc(actual_workbench_file);
-                actual_workbench_file = NULL;
-            }
+            video_body->setProjectName(NULL);
         }
 	break;
 
@@ -583,10 +578,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
 //  DIA_StopBusy ();
 
   // forget last project file
-  if( actual_workbench_file ){
-     ADM_dealloc(actual_workbench_file);
-     actual_workbench_file = NULL;
-  }
+    video_body->setProjectName(NULL);
 
   if (res!=ADM_OK)			// an error occured
     {
@@ -612,6 +604,8 @@ int A_openAvi2 (const char *name, uint8_t mode)
 	/* check myself it is a project file (transparent detected and read
         ** by video_body->addFile (name);
 	*/
+#warning FIXME
+#if 0
 	if( (fd = ADM_fopen(longname,"rb"))  ){
 		if( fread(magic,4,1,fd) == 4 ){
 			/* remember a workbench file */
@@ -621,7 +615,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
 		}
 		fclose(fd);
 	}
-
+#endif
 	/* remember any video or workbench file to "recent" */
         prefs->set_lastfile(longname);
         UI_updateRecentMenu();
@@ -842,11 +836,6 @@ void cleanUp (void)
 		secondAudioName = NULL;
 	}
 #endif
-	if (actual_workbench_file)
-	{
-		ADM_dealloc(actual_workbench_file);
-		actual_workbench_file = NULL;
-	}
 
 	if (video_body)
 	{
@@ -870,11 +859,9 @@ bool A_parseECMAScript(const char *name){
       GUI_PlayAvi();
    }
    ret = parseECMAScript(longname);
-   if( ret == 0 ){
-      if( actual_workbench_file )
-         ADM_dealloc(actual_workbench_file);
-      actual_workbench_file = ADM_strdup(longname);
-      
+   if( ret == true )
+   {
+      video_body->setProjectName(longname);
    }
    ADM_dealloc(longname);
    return ret;
@@ -1281,11 +1268,7 @@ void GUI_avsProxy(void)
   GUI_close();
   res = video_body->addFile (AVS_PROXY_DUMMY_FILE);
   // forget last project file
-  if( actual_workbench_file ){
-     ADM_dealloc(actual_workbench_file);
-     actual_workbench_file = NULL;
-  }
-
+  video_body->setProjectName(NULL);
   if (res!=ADM_OK)			// an error occured
     {
         currentaudiostream = NULL;

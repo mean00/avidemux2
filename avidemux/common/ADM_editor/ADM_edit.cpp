@@ -70,6 +70,7 @@ uint32_t type,value;
   _internalFlags=0;
   _currentSegment=0;
   _scratch=NULL;
+  projectName=NULL;
 }
 /**
 	Remap 1:1 video to segments
@@ -111,9 +112,30 @@ ADM_Composer::~ADM_Composer ()
 	deletePostProc(&_pp);
     if(_imageBuffer) delete  _imageBuffer;
     _imageBuffer=NULL;
+    if(projectName) ADM_dealloc(projectName);
+    projectName=NULL;
+}
+/**
+    \fn getProjectName
+*/
+const char *ADM_Composer::getProjectName(void)
+{
+    if(!projectName) return NULL;
+    if(!strlen(projectName)) return NULL;
+    return projectName;
 }
 
-
+/**
+    \fn setProjectName
+*/
+bool ADM_Composer::setProjectName(const char *pj)
+{
+    if(projectName) ADM_dealloc(projectName);
+    projectName=NULL;
+    if(pj)
+        projectName=ADM_strdup(pj);
+    return true;
+}
 /**
     \fn addFile
     \brief	Load or append a file.	The file type is determined automatically and the ad-hoc video decoder is spawned

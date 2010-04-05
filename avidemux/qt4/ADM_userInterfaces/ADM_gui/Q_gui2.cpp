@@ -51,7 +51,6 @@ extern void destroyTranslator(void);
 extern ADM_RENDER_TYPE UI_getPreferredRender(void);
 extern int A_openAvi(const char *name);
 extern int A_appendAvi(const char *name);
-extern char *actual_workbench_file;
 extern void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file);
 
 
@@ -450,7 +449,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 		{
 			fileName = urlList[fileIndex].toLocalFile();
 			info.setFile(fileName);
-
+#warning FIXME
+#if 0
 			if (info.isFile())
 			{
 				if (avifileinfo)
@@ -458,6 +458,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 				else
 					FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_openAvi), 0, fileName.toUtf8().data(), actual_workbench_file);
 			}
+#endif
 		}
 	}
 

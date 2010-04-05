@@ -35,7 +35,6 @@
 #define TH_READ 1
 #define TH_WRITE 2
 
-extern char *actual_workbench_file;
 extern void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file);
 
 namespace ADM_GTK_fileSel 

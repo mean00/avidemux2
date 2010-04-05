@@ -63,6 +63,8 @@ typedef enum
 class ADM_Composer : public ADM_audioStream
 {
   private:
+                    const  char *projectName;
+  private:
 //*********************************PRIVATE API *******************************************
                     //bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
                     bool        switchToNextSegment(bool dontdecode=false);
@@ -133,8 +135,6 @@ protected:
 virtual                         ~ADM_Composer();
                     void        clean( void );
                     uint8_t     saveAsScript (const char *name, const char *out);
-                    uint8_t 	saveWorbench(const char *name);
-                    uint8_t 	loadWorbench(const char *name);
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
                     uint8_t 	cleanup( void);
@@ -198,7 +198,10 @@ public:
                     uint64_t        getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
 
 /**************************************** /Video Info **************************/					
-					
+/***************************************** Project Handling ********************/
+public:
+                    const char          *getProjectName(void);
+                    bool                 setProjectName(const char *name);
 					
 /***************************************** Seeking *****************************/            
 public:

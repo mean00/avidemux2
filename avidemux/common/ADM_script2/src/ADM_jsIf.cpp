@@ -15,15 +15,14 @@
 #include "ADM_js.h"
 #include <stdarg.h>
 #include <vector>
-
+#include "ADM_editor/ADM_edit.hxx"
 void    A_Resync(void);
 
 /* our variables */
 static jsLoggerFunc *jsLogger=NULL;
 static void *jsLoggerCookie=NULL;
-extern char * actual_workbench_file;
 vector <ADM_JS_HOOK >jsHooks;
-
+extern ADM_Composer *video_body;
 
 #define JSVAR(a,b,c) a b=c
 
@@ -306,11 +305,9 @@ void *StartThreadSpidermonkey(void *pData)
         bool ret = false;
         const char *pScriptFile = static_cast<const char *>(pData);
         ret = parseECMAScript(pScriptFile);
-        if(ret == false)
+        if(ret == true)
         {
-                if( actual_workbench_file )
-                        ADM_dealloc(actual_workbench_file);
-                actual_workbench_file = ADM_strdup(pScriptFile);
+                video_body->setProjectName(pScriptFile);
         }
         // Notify Spidermonkey that our thread processing has finished
 #ifdef ADM_JS_THREADSAFE
