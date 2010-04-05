@@ -26,6 +26,8 @@
 #include "ADM_compressedImage.h"
 #include "ADM_audioStream.h"
 
+#include "ADM_colorspace.h"
+
 #ifndef ADM_NO_PTS
 #define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 #endif

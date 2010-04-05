@@ -35,7 +35,7 @@ protected:
                FFcodecSettings  Settings;
                AVCodecContext   *_context;      // Context 
                AVFrame          _frame;     
-               ADMColorspace    *colorSpace;    // Colorspace converter if needed
+               ADMColorSpaceSimple    *colorSpace;    // Colorspace converter if needed
                uint8_t          *rgbBuffer;     // Buffer for colorspace converter if needed
                ADM_colorspace   targetColorSpace; // Wanted colorspace
                bool             loadStatFile(const char *file);

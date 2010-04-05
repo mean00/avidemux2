@@ -22,11 +22,11 @@
 class decoderRGB16 : decoders
 {
 	protected:
-		uint8_t* planar;
-		ColRgbToYV12* color;
-		bool     isRgb; // Else BGR
-		uint32_t _bpp;
-		uint8_t* decoded;
+		uint8_t       *planar;
+		ADMColorSpaceSimple *converter;
+		bool          isRgb; // Else BGR
+		uint32_t      _bpp;
+		uint8_t       *decoded;
 
 	public:
 		bool dontcopy (void) { return 1; }

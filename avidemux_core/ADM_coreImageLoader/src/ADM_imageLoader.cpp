@@ -176,7 +176,10 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    {
 		    	ADM_info("[imageLoader] YUY2\n");
 		    	image=new ADMImage(w,h);
-		    	COL_422_YV12(tmpImage._planes, tmpImage._planeStride,  image->data,w,h);
+                ADMColorSpaceSimple convert(w,h,ADM_COLOR_YUV422,ADM_COLOR_YV12);
+                uint32_t dstStride[3]={w,w/2,w/2};
+                uint8_t  *dstData[3]={YPLANE(image),UPLANE(image),VPLANE(image)};
+		    	convert.convertPlanes( tmpImage._planeStride,dstStride, tmpImage._planes,dstData);
 		    	break;
 		    }
 		    default:
@@ -241,8 +244,9 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
 		    
 		  // Colorconversion
 		    
-		    	ADMImage *image=new ADMImage(w,h);
-		    	COL_RGB24_to_YV12( w, h,data,image->data);
+            ADMImage *image=new ADMImage(w,h);
+            ADM_ConvertRgb24ToYV12(false,w,h,data,image->data);
+            
 		    
 		    delete [] data;
 		    return image;		
@@ -291,7 +295,8 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
   // Colorconversion
     
     	ADMImage *image=new ADMImage(w,h);
-    	COL_RGB24_to_YV12_revert( w, h,data,image->data);
+        ADM_ConvertRgb24ToYV12(true,w,h,data,image->data);
+    	
     
     	delete [] data;
     	return image;		
@@ -338,7 +343,7 @@ ADMImage *createImageFromFile_png(const char *filename)
     	dec->uncompress (&bin, &tmpImage);
     	
     	ADMImage *image=new ADMImage(w,h);
-    	COL_RGB24_to_YV12( w, h,tmpImage._planes[0],image->data);
+        ADM_ConvertRgb24ToYV12(false,w,h,tmpImage._planes[0],image->data);
     
     	delete [] data;
         delete dec;
