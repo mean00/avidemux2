@@ -11,6 +11,27 @@ extern "C"
 {
 #include "ADM_lavcodec.h"
 }
+/**
+    \fn SwapMe
+*/
+static inline void SwapMe(uint8_t *tgt,uint8_t *src,int nb);
+void SwapMe(uint8_t *tgt,uint8_t *src,int nb)
+{
+    uint8_t r,g,b;
+   nb=nb;
+   while(nb--)
+   {
+       r=*src++;
+       g=*src++;
+       b=*src++;
+       *tgt++=r;
+       *tgt++=g;
+       *tgt++=b;
+       
+   }
+   return;
+    
+}
 
 /**
     \fn saveAsBmp
@@ -61,13 +82,24 @@ uint8_t  ADMImage::saveAsBmp(const char *filename)
 //            ADM_dealloc(out);
             return 0;
         }
+        ADMColorSpaceSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12,ADM_COLOR_BGR24);
 
-        if(!COL_yv12rgbBMP(bmph.biWidth, bmph.biHeight,data, out))
+        uint32_t ww=bmph.biWidth;
+        uint32_t hh=bmph.biHeight;
+        uint8_t swap[ww*3];
+        
+        uint8_t *up=out;
+        uint8_t *down=out+(hh-1)*ww*3;
+        
+        for(int y=0;y<hh>>1;y++)
         {
-              GUI_Error_HIG(QT_TR_NOOP("Error converting to BMP"), NULL);
-              ADM_dealloc(out);
-              return 0;
+            SwapMe(swap,up,ww); 
+            SwapMe(up,down,ww);
+            memcpy( down,swap,ww*3);
+            down-=3*ww;
+            up+=3*ww;
         }
+
         fd = ADM_fopen (filename, "wb");
         if (!fd)
         {

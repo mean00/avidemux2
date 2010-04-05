@@ -16,116 +16,53 @@
  #define ADM_COLORSPACE_H
 #include "ADM_rgb.h" // To have colors
 
-// Some handy simple colorspace code
-
-uint8_t  COL_yv12rgbBMP(uint32_t ww, uint32_t hh, uint8_t* in, uint8_t *out);
-uint8_t  COL_yv12rgb(uint32_t w, uint32_t h,uint8_t * ptr, uint8_t * out );
-
-uint8_t COL_422_YV12( uint8_t *in[3], uint32_t stride[3],  uint8_t *out,uint32_t w, uint32_t h);
-uint8_t COL_411_YV12( uint8_t *in[3], uint32_t stride[3],  uint8_t *out,uint32_t w, uint32_t h);
-
-uint8_t COL_RgbToYuv(uint8_t R,uint8_t G,uint8_t B, uint8_t *y,int8_t *u,int8_t  *v);
-uint8_t COL_YuvToRgb( uint8_t y,int8_t u,int8_t v,uint8_t *r,uint8_t *g,uint8_t *b);
-
-uint8_t COL_RawRGB32toYV12(uint8_t *data1,uint8_t *data2, uint8_t *oy,uint8_t *oy2, 
-				uint8_t *u, uint8_t *v,uint32_t lineSize,uint32_t height,uint32_t stride);
-
-uint8_t COL_RGB24_to_YV12(uint32_t w,uint32_t h,uint8_t *rgb, uint8_t *yuv);
-uint8_t COL_RGB24_to_YV12_revert(uint32_t w,uint32_t h,uint8_t *rgb, uint8_t *yuv);
-
-// Generic colorspace conversion class
-
-class ADMColorspace
+typedef enum 
+{
+    ADM_CS_BILINEAR,
+    ADM_CS_BICUBIC,
+    ADM_CS_LANZCOS
+}ADMColorSpace_algo;
+/**
+    \class ADMColorSpace
+*/
+class ADMColorSpaceFull
 {
   protected:
-    void  *context;
-    uint32_t width,height;
-    ADM_colorspace fromColor,toColor;
-    uint8_t getStrideAndPointers(uint8_t  *from,ADM_colorspace fromColor,uint8_t **srcData,int *srcStride);
+    void            *context;
+    uint32_t        srcWidth,srcHeight;
+    uint32_t        dstWidth,dstHeight;
+    ADM_colorspace  fromColor,toColor;
+    ADMColorSpace_algo algo;
+    uint8_t         getStrideAndPointers(bool dst,uint8_t  *from,ADM_colorspace fromColor,
+                                            uint8_t **srcData,int *srcStride);
   public :
     
-    ADMColorspace(uint32_t w, uint32_t h, ADM_colorspace from,ADM_colorspace to);
-    uint8_t convert(uint8_t  *from, uint8_t *to);
-    ~ADMColorspace();
-};
-/* Convert YV12 to RGB32, the reset must be called at least once before using scale */
- class ColBase
- {
-  protected:
-    void        *_context;
-    uint32_t    w,h;  
-    uint8_t     clean(void);
-     
-  public:
-                ColBase(uint32_t w, uint32_t h);
-                ~ColBase();
-     virtual   uint8_t reset(uint32_t neww, uint32_t newh) {return 0;};
-     virtual   uint8_t scale(uint8_t *src, uint8_t *target){return 0;};  
- };
- //************ YV12 to RB32********************************
- class ColYuvRgb : public ColBase
- {
-  protected:
-              uint32_t _inverted;
-  public:
-                ColYuvRgb(uint32_t w, uint32_t h,uint32_t inv=0): ColBase(w,h) {_inverted=inv;};
-                ~ColYuvRgb(){clean();};
-      virtual  uint8_t reset(uint32_t neww, uint32_t newh);
-      virtual  uint8_t scale(uint8_t *src, uint8_t *target);
-      virtual  uint8_t scale(uint8_t *src, uint8_t *target,uint32_t startx,uint32_t starty, uint32_t w,uint32_t h,uint32_t totalW,uint32_t totalH);    
- };
- //********************************************
+                    ADMColorSpaceFull(ADMColorSpace_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
+    bool            reset(ADMColorSpace_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
+    
 
-  /* Convert RGB24/32 to YV12, the reset must be called at least once before using scale */
-  class ColRgbToYV12  : public ColBase
-  {
-  protected:
-                int             _bmpMode;
-                ADM_colorspace  _colorspace;
-                uint32_t        _backward;
-  public:
-                ColRgbToYV12(uint32_t w, uint32_t h,ADM_colorspace col) : ColBase(w,h) 
-                    {
-                            _colorspace=col;
-                            _bmpMode=0;
-                    };
-                ~ColRgbToYV12(){clean();};
-      virtual  uint8_t reset(uint32_t neww, uint32_t newh);
-      virtual  uint8_t scale(uint8_t *src, uint8_t *target);  
-               uint8_t changeColorSpace(ADM_colorspace col);   
-               uint8_t setBmpMode(void);
-      
-  };
-//********************************************
-/* Convert RGB24 to YV12, the reset must be called at least once before using scale */
-  class ColYv12Rgb24  : public ColBase
-  {
-  protected:
-    
-  public:
-                ColYv12Rgb24(uint32_t w, uint32_t h) : ColBase(w,h) {};
-                ~ColYv12Rgb24(){clean();};
-      virtual  uint8_t reset(uint32_t neww, uint32_t newh);
-      virtual  uint8_t scale(uint8_t *src, uint8_t *target);     
-      
-  };
-//*************************************
-class COL_Generic2YV12 
+    bool            convert(uint8_t  *from, uint8_t *to);
+    bool            convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
+                                  uint8_t   *sourceData[3], uint8_t *destData[3]);
+                    ~ADMColorSpaceFull();
+};
+/**
+    \class ADMColorSpaceSimple
+    \brief Same as Full but target & source width/height are the same
+*/
+class ADMColorSpaceSimple :public ADMColorSpaceFull
 {
-protected:
-                void        *_context;
-                uint32_t    w,h;  
-                uint8_t     clean(void);
-                ADM_colorspace _colorspace;
-                uint32_t       _backward;
-    
 public:
-        
-                COL_Generic2YV12(uint32_t w, uint32_t h,ADM_colorspace) ;
-                ~COL_Generic2YV12(){clean();};
-                uint8_t transform(uint8_t **planes, uint32_t *strides,uint8_t *target);
-                
-}; 
+    bool            changeWidthHeight(uint32_t newWidth, uint32_t newHeight);
+                    ADMColorSpaceSimple( uint32_t width, uint32_t height, ADM_colorspace from,ADM_colorspace to,ADMColorSpace_algo algo=ADM_CS_BICUBIC):
+                        ADMColorSpaceFull(algo, width, height, width,height, from, to)
+                     {
+
+                     }
+};
+
+// Some misc functions
+bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *source, uint8_t *destination);
 #endif
 //EOF
 

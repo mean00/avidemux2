@@ -95,7 +95,7 @@ class ADM_flyDialog
           void    *_cookie; // whatever
           void    *_slider; // widget
           void    *_canvas; // Drawing zone
-          ColYuvRgb *_rgb;
+          ADMColorSpaceSimple *_rgb;
 
           /* Filter dependant */
   virtual uint8_t    process(void)=0;

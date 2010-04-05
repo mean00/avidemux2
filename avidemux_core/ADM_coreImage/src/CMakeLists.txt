@@ -3,10 +3,10 @@ SET(ADM_coreImage_SRCS
         ADM_image.cpp  
         ADM_imageUtils.cpp
         ADM_imageResizer.cpp
-        yuv.cpp
-        rgb2yuv.cpp
+#        yuv.cpp
+#        rgb2yuv.cpp
         ADM_colorspace.cpp
-        ADM_rgb.cpp
+#        ADM_rgb.cpp
         ADM_pp.cpp
         ADM_print.cpp
         #ADM_vidFieldUtil.cpp

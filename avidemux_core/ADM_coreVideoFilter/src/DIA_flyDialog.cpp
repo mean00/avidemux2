@@ -73,12 +73,10 @@ ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter 
  */
 void ADM_flyDialog::EndConstructor(void)
   {
-    if (isRgbInverted())
-                _rgb=new ColYuvRgb(_w,_h,1);
-        else
-                _rgb=new ColYuvRgb(_w,_h);
+#warning FIXME
 
-        _rgb->reset(_w,_h);
+//    if (isRgbInverted())
+            _rgb =new ADMColorSpaceSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_YV12);
         if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
                 {
                         _zoom = calcZoomFactor();
@@ -274,7 +272,7 @@ void ADM_flyDialog::copyYuvFinalToRgb(void)
 	if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
 		_resizer->resize(_yuvBufferOut->data, _rgbBufferOut);
 	else
-		_rgb->scale(_yuvBufferOut->data, _rgbBufferOut);
+		_rgb->convert(_yuvBufferOut->data, _rgbBufferOut);
 }
 /**
     \fn    copyYuvScratchToRgb
@@ -286,7 +284,7 @@ void ADM_flyDialog::copyYuvScratchToRgb(void)
 	if (_resizeMethod == RESIZE_AUTO)
 		_resizer->resize(_yuvBuffer->data,_rgbBuffer);
 	else
-		_rgb->scale(_yuvBuffer->data,_rgbBuffer);
+		_rgb->convert(_yuvBuffer->data,_rgbBuffer);
 }
 /**
     \fn    copyRgbFinalToDisplay
