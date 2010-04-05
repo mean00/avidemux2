@@ -34,6 +34,8 @@
 #        define FUNNY_MANGLE_ARRAY(x, y)  x[y] asm(#x)
 #    elif defined(__APPLE__)
 #        define MANGLE(a) "_" #a
+#        define FUNNY_MANGLE(x) x asm(MANGLE(x))
+#        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
 #    else
 #        define MANGLE(a) #a
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
