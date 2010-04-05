@@ -25,6 +25,7 @@
 #define ADM_IMAGE
 #include "ADM_assert.h"
 #include "ADM_rgb.h"
+#include "ADM_colorspace.h"
 
 typedef enum 
 {
@@ -154,22 +155,21 @@ void drawString(ADMImage *dst, int x, int y, const char *s) ;
 #define UPLANE(x) ((x)->data+((x)->_width*(x)->_height))
 #define VPLANE(x) ((x)->data+(5*((x)->_width*(x)->_height)>>2))
 
-//
-//  Simple image resizer
-//
+/**
+        \class ADMImageResizer
+        \brief Simple image resizer
+*/
 class ADMImageResizer
 {
 	private:
-		void    *_context;
-		uint32_t orgFormat, destFormat;
+		ADMColorSpaceFull   *resizer;
+        ADM_colorspace orgFormat, destFormat;
 		uint32_t orgWidth, orgHeight;
 		uint32_t destWidth, destHeight;
-
-		void init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, int srcFormat, int dstFormat);
-		void getYuvPlanes(uint8_t *source, uint32_t width, uint32_t height, uint8_t*& yPlane, uint8_t*& uPlane, uint8_t*& vPlane);
+        void        init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_colorspace srcFormat, ADM_colorspace dstFormat);
 	public:
 		ADMImageResizer(uint32_t ow,uint32_t oh, uint32_t dw, uint32_t dh);
-		ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, int srcFormat, int dstFormat);
+		ADMImageResizer(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, ADM_colorspace srcFormat, ADM_colorspace dstFormat);
 		~ADMImageResizer();
 		
 		uint8_t resize(ADMImage *src, ADMImage *dest);

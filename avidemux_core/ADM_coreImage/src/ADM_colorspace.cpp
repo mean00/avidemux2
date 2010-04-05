@@ -233,9 +233,21 @@ bool            ADMColorSpaceSimple::changeWidthHeight(uint32_t newWidth, uint32
 bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *source, uint8_t *destination) 
 {
     ADMColorSpaceSimple  converter( w,h,ADM_COLOR_RGB24,ADM_COLOR_YV12);
-    return converter.convert(source,destination);
     
-
-
+    if(true==inverted)
+    {
+        uint8_t a,b,c;
+        uint8_t *src=source;
+        uint32_t len=w*h;
+        while(len--)
+        {
+            a=src[0];b=src[1];c=src[2];
+            src[0]=c;src[2]=a;//src[1]=b;
+            src+=3;
+        }
+    }
+    if(false==converter.convert(source,destination)) return false;
+    return true;
 }
+
 //EOF

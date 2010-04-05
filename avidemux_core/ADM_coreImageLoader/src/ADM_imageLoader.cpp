@@ -343,7 +343,7 @@ ADMImage *createImageFromFile_png(const char *filename)
     	dec->uncompress (&bin, &tmpImage);
     	
     	ADMImage *image=new ADMImage(w,h);
-        ADM_ConvertRgb24ToYV12(false,w,h,tmpImage._planes[0],image->data);
+        ADM_ConvertRgb24ToYV12(true,w,h,tmpImage._planes[0],image->data);
     
     	delete [] data;
         delete dec;

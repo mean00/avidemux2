@@ -94,14 +94,14 @@ void ADM_flyDialog::EndConstructor(void)
 
                 if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
                 {
-                        PixelFormat sourceColour;
+                        ADM_colorspace sourceColour;
 
                         if (_resizeMethod == RESIZE_AUTO || _isYuvProcessing)
-                                sourceColour = PIX_FMT_YUV420P;
+                                sourceColour = ADM_COLOR_YV12;
                         else
-                                sourceColour = PIX_FMT_RGB32;
+                                sourceColour = ADM_COLOR_RGB32A;
 
-                        _resizer = new ADMImageResizer(_w, _h, _zoomW, _zoomH, sourceColour, PIX_FMT_RGB32);
+                        _resizer = new ADMImageResizer(_w, _h, _zoomW, _zoomH, sourceColour, ADM_COLOR_RGB32A);
                         _rgbBufferDisplay = new uint8_t[_w * _h * 4];
                 }
                 else
@@ -162,14 +162,14 @@ void ADM_flyDialog::recomputeSize(void)
     delete _resizer;
     if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
     {
-        PixelFormat sourceColour;
+        ADM_colorspace sourceColour;
 
         if (_resizeMethod == RESIZE_AUTO || _isYuvProcessing)
-            sourceColour = PIX_FMT_YUV420P;
+            sourceColour = ADM_COLOR_YV12;
         else
-            sourceColour = PIX_FMT_RGB32;
+            sourceColour = ADM_COLOR_RGB32A;
 
-        _resizer = new ADMImageResizer(_w, _h, _zoomW, _zoomH, sourceColour, PIX_FMT_RGB32);
+        _resizer = new ADMImageResizer(_w, _h, _zoomW, _zoomH, sourceColour, ADM_COLOR_RGB32A);
         if (!_rgbBufferDisplay)
             _rgbBufferDisplay = new uint8_t[_w * _h * 4];
     }

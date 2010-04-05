@@ -38,6 +38,7 @@
 #endif //ADM_FLY_INTERNAL 
 
 #include "ADM_default.h"
+#include "ADM_rgb.h"
 #include "ADM_colorspace.h"
 #include "ADM_coreVideoFilter.h"
 
