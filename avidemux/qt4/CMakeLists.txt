@@ -141,6 +141,18 @@ IF (WIN32)
         ADD_TARGET_LDFLAGS(avidemux3_qt4 "-mwindows")
 
 ENDIF (WIN32)
+
+IF (APPLE)
+        IF(USE_SDL)
+               TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_libsdl)
+        ENDIF(USE_SDL)
+        ADD_TARGET_LDFLAGS(avidemux3_qt4 "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
+
+        # for Leopard but it doesn't hurt Tiger
+        ADD_TARGET_LDFLAGS(avidemux3_qt4 "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+ENDIF (APPLE)
+
+
 #
 # xml
 #
