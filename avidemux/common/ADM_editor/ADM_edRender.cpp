@@ -481,11 +481,15 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
                         // Is there already one ?
                         if(!vid->color)
                         {
-                                vid->color=new COL_Generic2YV12(src->_width,src->_height,src->_colorspace);
+                              //  vid->color=new COL_Generic2YV12(src->_width,src->_height,src->_colorspace);
+                              vid->color=new ADMColorSpaceSimple(src->_width,src->_height,
+                                                                 src->_colorspace,ADM_COLOR_YV12);
                         }
                         // Since it is not YV12 it MUST be a ref
                         ADM_assert(src->_isRef);
-                        vid->color->transform(src->_planes,src->_planeStride,dst->data);
+                        uint32_t strides[3]={src->_width,src->_width/2,src->_width/2};
+                        uint8_t  *Planes[3]={YPLANE(dst),UPLANE(dst),VPLANE(dst)};
+                        vid->color->convertPlanes(src->_planeStride,strides,src->_planes,Planes);
                         return 1;
                 }
                 // nothing to do

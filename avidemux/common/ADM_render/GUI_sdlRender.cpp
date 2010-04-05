@@ -55,7 +55,7 @@ static SDL_Rect disp;
 #ifdef __WIN32
 HWND sdlWin32;
 #endif
-static ColBase *color=NULL;
+static ADMColorSpaceSimple *color=NULL;
 
 sdlAccelRender::sdlAccelRender( void)
 {
@@ -114,7 +114,7 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
     if(!useYV12)
     {
-		color=new ColBase(720,480);
+		color=new ADMColorSpaceSimple(720,480,ADM_COLOR_YV12,ADM_COLOR_YUV422);
 		decoded=new uint8_t[w*h*2];
     }
 
@@ -247,7 +247,7 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
         if(!sdl_overlay->hw_overlay)
             printf("[SDL] Hardware acceleration disabled\n");
 
-        if(!useYV12) color->reset(w,h);
+        if(!useYV12) color->changeWidthHeight(w,h);
 
 		printf("[SDL] Video subsystem initalised successfully\n");
 
@@ -311,14 +311,14 @@ int page=w*h;
 	            interleave(sdl_overlay->pixels[2],ptr+(page*5)/4,w>>1,pitch,h>>1);
         }else
         {
-	        color->reset(w,h);
+	        color->changeWidthHeight(w,h);
 	        if(pitch==2*w)
 	        {
-	            color->scale(ptr,sdl_overlay->pixels[0]);
+	            color->convert(ptr,sdl_overlay->pixels[0]);
 	        }
 	        else
 	        {
-	            color->scale(ptr,decoded);
+	            color->convert(ptr,decoded);
 	            interleave(sdl_overlay->pixels[0],decoded,2*w,pitch,h);
 	        }
         }

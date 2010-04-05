@@ -37,13 +37,13 @@
 #include "ADM_colorspace.h"
 
 #include "DIA_uiTypes.h"
-
-
-static ColYuvRgb rgbConverter(640,480
 #if ADM_UI_TYPE_BUILD == ADM_UI_QT4 
-    ,1
+    #define IVERT ADM_COLOR_BGR32A
+#else
+    #define IVERT ADM_COLOR_RGB32A
 #endif    
-);
+#warning FIXME
+static ADMColorSpaceSimple rgbConverter(640,480,ADM_COLOR_YV12,IVERT);
 
 
 static uint8_t	updateWindowSize(void * win, uint32_t w, uint32_t h);
@@ -292,7 +292,7 @@ uint8_t r=0;
 
         if(!accel_mode)
         {
-                rgbConverter.reset(renderW,renderH);
+                rgbConverter.changeWidthHeight(renderW,renderH);
                 printf("No accel used for rendering\n");
         }
         else
@@ -341,14 +341,14 @@ uint8_t	updateWindowSize(void * win, uint32_t w, uint32_t h)
     renderH = h;
 
     MUI_updateDrawWindowSize(win,w,h);
-    rgbConverter.reset(w,h);
+    rgbConverter.changeWidthHeight(w,h);
     return 1;
 }
 
 uint8_t GUI_ConvertRGB(uint8_t * in, uint8_t * out, uint32_t w, uint32_t h)
 {
-    rgbConverter.reset(w,h);
-    rgbConverter.scale(in,out);
+    rgbConverter.changeWidthHeight(w,h);
+    rgbConverter.convert(in,out);
     return 1;
 }
 void GUI_RGBDisplay(uint8_t * dis, uint32_t w, uint32_t h, void *widg)
