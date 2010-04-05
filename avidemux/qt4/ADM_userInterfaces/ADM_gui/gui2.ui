@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>756</width>
-    <height>588</height>
+    <width>800</width>
+    <height>664</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -392,22 +392,6 @@
              <size>
               <width>20</width>
               <height>5</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Expanding</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>10</height>
              </size>
             </property>
            </spacer>
@@ -1291,7 +1275,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>756</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
@@ -1411,12 +1395,23 @@
      <addaction name="actionPreviewTop"/>
      <addaction name="actionPreviewSeparate"/>
     </widget>
+    <widget class="QMenu" name="menuPlayback_Aspect_Ratio">
+     <property name="title">
+      <string>Playback Aspect Ratio</string>
+     </property>
+     <addaction name="actionAR_Auto"/>
+     <addaction name="actionAR_1_1"/>
+     <addaction name="actionAR_4_3"/>
+     <addaction name="actionAR_16_9"/>
+    </widget>
     <addaction name="actionZoom_1_4"/>
     <addaction name="actionZoom_1_2"/>
     <addaction name="actionZoom_1_1"/>
     <addaction name="actionZoom_2_1"/>
     <addaction name="separator"/>
     <addaction name="menu_Preview"/>
+    <addaction name="separator"/>
+    <addaction name="menuPlayback_Aspect_Ratio"/>
    </widget>
    <widget class="QMenu" name="menuCustom">
     <property name="title">
@@ -2365,6 +2360,46 @@
   <action name="actionJavaScript_shell">
    <property name="text">
     <string>JavaScript shell</string>
+   </property>
+  </action>
+  <action name="action1_1">
+   <property name="text">
+    <string>1:1</string>
+   </property>
+  </action>
+  <action name="actionAR_Auto">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto</string>
+   </property>
+  </action>
+  <action name="actionAR_1_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>1:1</string>
+   </property>
+  </action>
+  <action name="actionAR_4_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>4:3</string>
+   </property>
+  </action>
+  <action name="actionAR_16_9">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>16:9</string>
    </property>
   </action>
  </widget>
