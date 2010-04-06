@@ -237,6 +237,26 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
     return chain;
 }
 /**
+    \fn createEmptyVideoFilterChain
+    \brief Create an empty filter chain
+*/
+ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endAt)
+{
+    ADM_videoFilterChain *chain=new ADM_videoFilterChain;
+    // 1- Add bridge always # 1
+    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(startAt,endAt);
+    chain->push_back(bridge);
+    ADM_coreVideoFilter *f=bridge;
+    // Last create the thread
+#if 1
+    int m=chain->size();
+    ADM_coreVideoFilter *last=(*chain)[m-1];
+    ADM_videoFilterQueue *thread=new ADM_videoFilterQueue(last);
+    chain->push_back(thread);
+#endif
+    return chain;
+}
+/**
         \fn destroyVideoFilterChain
         \brief Destroy a filter chain
 */
