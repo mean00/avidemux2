@@ -59,9 +59,6 @@ namespace ADM_QT4_fileSel
 		QString fileName;
 		QFileDialog::Options options = 0;
 
-#if defined(__APPLE__)
-		options |= QFileDialog::DontUseNativeDialog;
-#endif
 
 		if (access)
 			fileName = QFileDialog::getSaveFileName(NULL, label, str, NULL, NULL, options);
@@ -129,9 +126,6 @@ namespace ADM_QT4_fileSel
 		QString fileName;
 		QFileDialog::Options options = 0;
 
-#if defined(__APPLE__)
-		options |= QFileDialog::DontUseNativeDialog;
-#endif
 
 		fileName=QFileDialog::getSaveFileName(NULL, title, source, NULL, NULL, options);
 
@@ -160,9 +154,6 @@ namespace ADM_QT4_fileSel
 		QString fileName;
 		QFileDialog::Options options = 0;
 
-#if defined(__APPLE__)
-		options |= QFileDialog::DontUseNativeDialog;
-#endif
 
 		fileName = QFileDialog::getOpenFileName(NULL, title, source, NULL, NULL, options);
 
@@ -191,9 +182,6 @@ namespace ADM_QT4_fileSel
 		QString fileName;
 		QFileDialog::Options options = QFileDialog::ShowDirsOnly;
 
-#if defined(__APPLE__)
-		options |= QFileDialog::DontUseNativeDialog;
-#endif
 
 		fileName = QFileDialog::getExistingDirectory(NULL, title, source, options);
 
