@@ -162,7 +162,7 @@ void drawString(ADMImage *dst, int x, int y, const char *s) ;
 class ADMImageResizer
 {
 	private:
-		ADMColorSpaceFull   *resizer;
+		ADMColorScalerFull   *resizer;
         ADM_colorspace orgFormat, destFormat;
 		uint32_t orgWidth, orgHeight;
 		uint32_t destWidth, destHeight;

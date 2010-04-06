@@ -43,7 +43,7 @@
     #define IVERT ADM_COLOR_RGB32A
 #endif    
 #warning FIXME
-static ADMColorSpaceSimple rgbConverter(640,480,ADM_COLOR_YV12,IVERT);
+static ADMColorScalerSimple rgbConverter(640,480,ADM_COLOR_YV12,IVERT);
 
 
 static uint8_t	updateWindowSize(void * win, uint32_t w, uint32_t h);

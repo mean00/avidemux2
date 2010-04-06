@@ -21,41 +21,41 @@ typedef enum
     ADM_CS_BILINEAR,
     ADM_CS_BICUBIC,
     ADM_CS_LANZCOS
-}ADMColorSpace_algo;
+}ADMColorScaler_algo;
 /**
-    \class ADMColorSpace
+    \class ADMColorScaler
 */
-class ADMColorSpaceFull
+class ADMColorScalerFull
 {
   protected:
     void            *context;
     uint32_t        srcWidth,srcHeight;
     uint32_t        dstWidth,dstHeight;
     ADM_colorspace  fromColor,toColor;
-    ADMColorSpace_algo algo;
+    ADMColorScaler_algo algo;
     uint8_t         getStrideAndPointers(bool dst,uint8_t  *from,ADM_colorspace fromColor,
                                             uint8_t **srcData,int *srcStride);
   public :
     
-                    ADMColorSpaceFull(ADMColorSpace_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
-    bool            reset(ADMColorSpace_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
+                    ADMColorScalerFull(ADMColorScaler_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
+    bool            reset(ADMColorScaler_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
     
 
     bool            convert(uint8_t  *from, uint8_t *to);
     bool            convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3]);
-                    ~ADMColorSpaceFull();
+                    ~ADMColorScalerFull();
 };
 /**
-    \class ADMColorSpaceSimple
+    \class ADMColorScalerSimple
     \brief Same as Full but target & source width/height are the same
 */
-class ADMColorSpaceSimple :public ADMColorSpaceFull
+class ADMColorScalerSimple :public ADMColorScalerFull
 {
 public:
     bool            changeWidthHeight(uint32_t newWidth, uint32_t newHeight);
-                    ADMColorSpaceSimple( uint32_t width, uint32_t height, ADM_colorspace from,ADM_colorspace to,ADMColorSpace_algo algo=ADM_CS_BICUBIC):
-                        ADMColorSpaceFull(algo, width, height, width,height, from, to)
+                    ADMColorScalerSimple( uint32_t width, uint32_t height, ADM_colorspace from,ADM_colorspace to,ADMColorScaler_algo algo=ADM_CS_BICUBIC):
+                        ADMColorScalerFull(algo, width, height, width,height, from, to)
                      {
 
                      }

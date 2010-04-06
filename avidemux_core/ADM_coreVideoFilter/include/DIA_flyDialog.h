@@ -96,7 +96,7 @@ class ADM_flyDialog
           void    *_cookie; // whatever
           void    *_slider; // widget
           void    *_canvas; // Drawing zone
-          ADMColorSpaceSimple *_rgb;
+          ADMColorScalerSimple *_rgb;
 
           /* Filter dependant */
   virtual uint8_t    process(void)=0;

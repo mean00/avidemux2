@@ -49,7 +49,7 @@ void ADMImageResizer::init(uint32_t ow, uint32_t oh, uint32_t dw, uint32_t dh, A
 
 	orgFormat = srcFormat;
 	destFormat = dstFormat;
-    resizer=new ADMColorSpaceFull(ADM_CS_BICUBIC,orgWidth,orgHeight,destWidth,destHeight,srcFormat,destFormat);
+    resizer=new ADMColorScalerFull(ADM_CS_BICUBIC,orgWidth,orgHeight,destWidth,destHeight,srcFormat,destFormat);
                         
 }
 

@@ -50,7 +50,7 @@ typedef struct
 {
       vidHeader *_aviheader; /// Demuxer
       decoders *decoder; /// Video codec
-      ADMColorSpaceSimple *color; /// Color conversion if needed
+      ADMColorScalerSimple *color; /// Color conversion if needed
 
       /* Audio part */
 

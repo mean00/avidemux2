@@ -176,7 +176,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    {
 		    	ADM_info("[imageLoader] YUY2\n");
 		    	image=new ADMImage(w,h);
-                ADMColorSpaceSimple convert(w,h,ADM_COLOR_YUV422,ADM_COLOR_YV12);
+                ADMColorScalerSimple convert(w,h,ADM_COLOR_YUV422,ADM_COLOR_YV12);
                 uint32_t dstStride[3]={w,w/2,w/2};
                 uint8_t  *dstData[3]={YPLANE(image),UPLANE(image),VPLANE(image)};
 		    	convert.convertPlanes( tmpImage._planeStride,dstStride, tmpImage._planes,dstData);

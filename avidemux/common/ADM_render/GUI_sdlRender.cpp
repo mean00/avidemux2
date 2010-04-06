@@ -55,7 +55,7 @@ static SDL_Rect disp;
 #ifdef __WIN32
 HWND sdlWin32;
 #endif
-static ADMColorSpaceSimple *color=NULL;
+static ADMColorScalerSimple *color=NULL;
 
 sdlAccelRender::sdlAccelRender( void)
 {
@@ -114,7 +114,7 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
     if(!useYV12)
     {
-		color=new ADMColorSpaceSimple(720,480,ADM_COLOR_YV12,ADM_COLOR_YUV422);
+		color=new ADMColorScalerSimple(720,480,ADM_COLOR_YV12,ADM_COLOR_YUV422);
 		decoded=new uint8_t[w*h*2];
     }
 

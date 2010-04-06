@@ -277,7 +277,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
     h=info->height;
     if(targetColorSpace!=ADM_COLOR_YV12)
     {
-        colorSpace=new ADMColorSpaceSimple(w,h,ADM_COLOR_YV12,targetColorSpace);
+        colorSpace=new ADMColorScalerSimple(w,h,ADM_COLOR_YV12,targetColorSpace);
         if(!colorSpace)
         {
             printf("[ADM_jpegEncoder] Cannot allocate colorspace\n");

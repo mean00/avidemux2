@@ -64,7 +64,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
       \param dst=1 -> destination, =0 source
       \brief Fill in strides etc.. needed by libswscale
 */
-uint8_t ADMColorSpaceFull::getStrideAndPointers(bool dst,
+uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
         uint8_t  *from,ADM_colorspace fromColor,
         uint8_t **srcData,int *srcStride)
 {
@@ -132,7 +132,7 @@ uint8_t ADMColorSpaceFull::getStrideAndPointers(bool dst,
   @param to Target image
 */
 
-bool ADMColorSpaceFull::convert(uint8_t  *from, uint8_t *to)
+bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
 {
   uint8_t *srcData[3];
   uint8_t *dstData[3];
@@ -149,7 +149,7 @@ bool ADMColorSpaceFull::convert(uint8_t  *from, uint8_t *to)
     \fn convertPlanes
     \brief Same as convert but the 3 planes are given separately
 */
-bool            ADMColorSpaceFull::convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
+bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3])
 {
     int xs[3]={sourceStride[0],sourceStride[1],sourceStride[2]};
@@ -158,7 +158,7 @@ bool            ADMColorSpaceFull::convertPlanes(uint32_t  sourceStride[3],uint3
      return true;
 }
 /**
-    \fn  ADMColorspace
+    \fn  ADMColorScaler
     \brief Constructor
   @param w width
   @param h height
@@ -166,7 +166,7 @@ bool            ADMColorSpaceFull::convertPlanes(uint32_t  sourceStride[3],uint3
   @param to colorspace to concert to
 */
 
-ADMColorSpaceFull::ADMColorSpaceFull(ADMColorSpace_algo algo,
+ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
             uint32_t sw, uint32_t sh,
             uint32_t dw, uint32_t dh,
             ADM_colorspace from,ADM_colorspace to)
@@ -176,10 +176,10 @@ ADMColorSpaceFull::ADMColorSpaceFull(ADMColorSpace_algo algo,
 
 }
 /**
-    \fn  ~ADMColorspace
+    \fn  ~ADMColorScaler
     \brief Destructor
 */
-ADMColorSpaceFull::~ADMColorSpaceFull()
+ADMColorScalerFull::~ADMColorScalerFull()
 {
   if(context)
   {
@@ -190,7 +190,7 @@ ADMColorSpaceFull::~ADMColorSpaceFull()
 /**
     \fn reset
 */
-bool  ADMColorSpaceFull::reset(ADMColorSpace_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to)
+bool  ADMColorScalerFull::reset(ADMColorScaler_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to)
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
@@ -218,7 +218,7 @@ bool  ADMColorSpaceFull::reset(ADMColorSpace_algo, uint32_t sw, uint32_t sh, uin
                       flags, NULL, NULL,NULL);
 }
 //------------------------------
-bool            ADMColorSpaceSimple::changeWidthHeight(uint32_t newWidth, uint32_t newHeight)
+bool            ADMColorScalerSimple::changeWidthHeight(uint32_t newWidth, uint32_t newHeight)
 {
     if(newWidth==srcWidth && newHeight==srcHeight) return true; // no change
     
@@ -232,7 +232,7 @@ bool            ADMColorSpaceSimple::changeWidthHeight(uint32_t newWidth, uint32
 */
 bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *source, uint8_t *destination) 
 {
-    ADMColorSpaceSimple  converter( w,h,ADM_COLOR_RGB24,ADM_COLOR_YV12);
+    ADMColorScalerSimple  converter( w,h,ADM_COLOR_RGB24,ADM_COLOR_YV12);
     
     if(true==inverted)
     {

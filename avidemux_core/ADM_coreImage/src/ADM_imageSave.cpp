@@ -82,7 +82,7 @@ uint8_t  ADMImage::saveAsBmp(const char *filename)
 //            ADM_dealloc(out);
             return 0;
         }
-        ADMColorSpaceSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12,ADM_COLOR_BGR24);
+        ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12,ADM_COLOR_BGR24);
 
         uint32_t ww=bmph.biWidth;
         uint32_t hh=bmph.biHeight;

@@ -76,7 +76,7 @@ void ADM_flyDialog::EndConstructor(void)
 #warning FIXME
 
 //    if (isRgbInverted())
-            _rgb =new ADMColorSpaceSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_YV12);
+            _rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_YV12);
         if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
                 {
                         _zoom = calcZoomFactor();
