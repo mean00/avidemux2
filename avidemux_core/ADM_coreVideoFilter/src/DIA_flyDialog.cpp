@@ -73,10 +73,10 @@ ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter 
  */
 void ADM_flyDialog::EndConstructor(void)
   {
-#warning FIXME
-
-//    if (isRgbInverted())
-            _rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_YV12);
+        if (isRgbInverted())
+            _rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_BGR32A);
+        else
+            _rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
         if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
                 {
                         _zoom = calcZoomFactor();

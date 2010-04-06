@@ -20,7 +20,11 @@ typedef enum
 {
     ADM_CS_BILINEAR,
     ADM_CS_BICUBIC,
-    ADM_CS_LANZCOS
+    ADM_CS_LANCZOS,
+    ADM_CS_BICUBLIN,
+    ADM_CS_GAUSS,
+    ADM_CS_SINC,
+    ADM_CS_SPLINE
 }ADMColorScaler_algo;
 /**
     \class ADMColorScaler

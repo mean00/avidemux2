@@ -190,13 +190,26 @@ ADMColorScalerFull::~ADMColorScalerFull()
 /**
     \fn reset
 */
-bool  ADMColorScalerFull::reset(ADMColorScaler_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to)
+bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to)
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
     this->algo=algo;
-    int flags=SWS_BICUBLIN;
-#warning SET algo!
+    int flags;
+    switch(algo)
+    {
+#define SETAL(x) case ADM_CS_##x: flags=SWS_##x;break;
+
+    SETAL(BILINEAR);
+    SETAL(BICUBIC);
+    SETAL(LANCZOS);
+    SETAL(BICUBLIN);
+    SETAL(GAUSS);
+    SETAL(SINC);
+    SETAL(SPLINE);
+    default: ADM_assert(0);
+    }
+
     FLAGS();
   
     srcWidth=sw;

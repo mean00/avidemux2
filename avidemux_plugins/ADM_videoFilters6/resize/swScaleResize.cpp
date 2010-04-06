@@ -51,7 +51,7 @@ class swScaleResizeFilter : public  ADM_coreVideoFilter
 {
 protected:
             
-				SwsContext	*_context;
+				ADMColorScalerFull	*resizer;
 				bool        reset(uint32_t nw, uint32_t old,uint32_t algo);
 				bool        clean( void );
                 ADMImage    *original;
@@ -70,7 +70,7 @@ public:
 
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   swScaleResizeFilter,   // Class
-                        1,0,0,              // Version
+                        1,0,1,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
                         "swscale",            // internal name (must be uniq!)
@@ -78,7 +78,6 @@ DECLARE_VIDEO_FILTER(   swScaleResizeFilter,   // Class
                         "swScale Resizer." // Description
                     );
 
-// Now implements the interesting parts
 /**
     \fn swScaleResizeFilter
     \brief constructor
@@ -97,9 +96,7 @@ UNUSED_ARG(setup);
         configuration.sourceAR=1;
         configuration.targetAR=1;
     }
-    info.width=configuration.width;
-    info.height=configuration.height;
-    _context=NULL;
+    resizer=NULL;
 	reset(configuration.width,configuration.height,configuration.algo);
 }
 /**
@@ -127,12 +124,9 @@ bool swScaleResizeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     uint8_t *src[3];
     uint8_t *dst[3];
-    int ssrc[3];
-    int ddst[3];
+    uint32_t ssrc[3];
+    uint32_t ddst[3];
 
-    uint32_t page;
-
-    page=original->_width*original->_height;
     src[0]=YPLANE(original);
     src[1]=UPLANE(original);
     src[2]=VPLANE(original);
@@ -140,14 +134,13 @@ bool swScaleResizeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     ssrc[0]=original->_width;
     ssrc[1]=ssrc[2]=original->_width>>1;
 
-    page=info.width*info.height;
     dst[0]=YPLANE(image);
     dst[1]=UPLANE(image);
     dst[2]=VPLANE(image);
     ddst[0]=info.width;
     ddst[1]=ddst[2]=info.width>>1;
 
-    sws_scale(_context,src,ssrc,0,original->_height,dst,ddst);
+    resizer->convertPlanes(ssrc,ddst,src,dst);
     image->copyInfo(original);
 // Fixme change A/R ?
 return true;
@@ -187,11 +180,11 @@ FilterInfo  *swScaleResizeFilter::getInfo(void)
 */
 bool swScaleResizeFilter::clean(void)
 {
-		if(_context)
+		if(resizer)
 		{
-			sws_freeContext(_context);
+			delete resizer;
 		}
-		_context=NULL;
+		resizer=NULL;
 		return true;
 }
 /**
@@ -199,46 +192,28 @@ bool swScaleResizeFilter::clean(void)
     \brief reset resizer
 */
 
-bool swScaleResizeFilter::reset(uint32_t nw, uint32_t old,uint32_t algo)
+bool swScaleResizeFilter::reset(uint32_t nw, uint32_t nh,uint32_t algo)
 {
- 				 SwsFilter 		    *srcFilter=NULL;
-				 SwsFilter		    *dstFilter=NULL;
-				 int 			   flags=0;
+    clean();
+    ADMColorScaler_algo scalerAlgo;
+    info.width=nw;
+    info.height=nh;
+    switch(algo)
+    {
+        case 0: //bilinear
+                scalerAlgo=ADM_CS_BILINEAR;break;
+        case 1: //bicubic
+                scalerAlgo=ADM_CS_BICUBIC;break;
+        case 2: //Lanczos
+                scalerAlgo=ADM_CS_LANCZOS;break;
+        default:ADM_assert(0);
 
-
-				clean();
-                flags=algo;
-                switch(flags)
-                {
-                    case 0: //bilinear
-                            flags=SWS_BILINEAR;break;
-                    case 1: //bicubic
-                            flags=SWS_BICUBIC;break;
-                    case 2: //Lanczos
-                            flags=SWS_LANCZOS;break;
-                    default:ADM_assert(0);
-
-                }
-#ifdef ADM_CPU_X86		
-		#define ADD(x,y) if( CpuCaps::has##x()) flags|=SWS_CPU_CAPS_##y;
-		ADD(MMX,MMX);		
-		ADD(3DNOW,3DNOW);
-		ADD(MMXEXT,MMX2);
-#endif	
-#ifdef ADM_CPU_ALTIVEC
-		flags|=SWS_CPU_CAPS_ALTIVEC;
-#endif
-                _context=sws_getContext(
-                        previousFilter->getInfo()->width,previousFilter->getInfo()->height,
-                    PIX_FMT_YUV420P,
-                    nw,old,
-                    PIX_FMT_YUV420P,
-                        flags, srcFilter, dstFilter,NULL);
-
-				if(!_context) return 0;
-				return 1;
-
-
+    }
+    resizer=new ADMColorScalerFull(scalerAlgo, 
+                        previousFilter->getInfo()->width, previousFilter->getInfo()->height, 
+                        nw,nh,
+                        ADM_COLOR_YV12,ADM_COLOR_YV12);
+    return 1;
 }
 
 extern bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t fps1000,swresize *resize);
@@ -249,8 +224,13 @@ extern bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,ui
 bool         swScaleResizeFilter::configure(void) 
 {
     uint32_t fps1000=ADM_Fps1000FromUs(info.frameIncrement);
-    return DIA_resize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,
-                        fps1000,&configuration);
-
+    if(true==DIA_resize(previousFilter->getInfo()->width,previousFilter->getInfo()->height,
+                        fps1000,&configuration))
+    {
+       
+        reset(configuration.width,configuration.height,configuration.algo);
+        return true;
+    }   
+    return false;
 }
 //EOF
