@@ -284,41 +284,6 @@ void admPreview::stop( void )
       renderUnlock();
 }
 /**
-      \fn admPreview::updateFilters
-      \brief Signal from filter that the filter chain has been updated
-      @param w : width
-      @param h : height
-*/
-
-void admPreview::updateFilters(AVDMGenericVideoStream *first,AVDMGenericVideoStream *last)
-{
-   switch(previewMode)
-            {
-              case  ADM_PREVIEW_SEPARATE:
-                  preview=last;
-                  break;
-              case  ADM_PREVIEW_NONE:
-                  break;
-              case  ADM_PREVIEW_OUTPUT:
-                preview=last;
-                break;
-              case  ADM_PREVIEW_SIDE:
-              {
-                  
-                  preview=last;
-                  break;
-              }
-              case  ADM_PREVIEW_TOP:
-              {
-                  
-                  preview=last;
-                  break;
-              }
-              default: ADM_assert(0);
-            }
-  
-}
-/**
     \fn getCurrentPts
     \brief returns the PTS in us of the last displayed frame
 */

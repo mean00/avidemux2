@@ -27,6 +27,7 @@
 #include "ADM_preview.h"
 #include "audiofilter.h"
 #include "GUI_ui.h"
+#include "ADM_filterChain.h"
 //___________________________________
 // In 10 ms chunks
 #define AUDIO_PRELOAD 100
@@ -55,6 +56,8 @@ private:
         uint64_t        firstPts,lastPts;
         uint64_t        vuMeterPts;
         uint64_t        audioLatency;
+        ADM_coreVideoFilter  *videoFilter;
+        ADM_videoFilterChain *videoChain;
 
 private :
         bool initialized;
@@ -77,6 +80,8 @@ GUIPlayback::GUIPlayback(void)
 {
     playbackAudio=NULL;
     wavbuf=NULL;
+    videoFilter=NULL;
+    videoChain=NULL;
 }
 /**
     \fn ~GUIPlayback
@@ -114,15 +119,6 @@ void GUI_PlayAvi(void)
 	prefs->get(PRIORITY_PLAYBACK,&priorityLevel);
 	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
 
-    if(getPreviewMode()==ADM_PREVIEW_OUTPUT)
-    {
-//            filter=getLastVideoFilter();
-    }
-    else
-    {
-  //          filter=getFirstVideoFilter( );
-    }
-
     stop_req = 0;
     playing = 1;
 
@@ -134,16 +130,18 @@ void GUI_PlayAvi(void)
     playLoop->run();
 
     delete playLoop;
-   playing = 0;
+    playing = 0;
 
 //   getFirstVideoFilter( );
 
    admPreview::deferDisplay(0,0);
-
-
+   // Resize the output window to original size...
+   ADM_info("Restoring display.\n");
+   aviInfo info;
+   video_body->getVideoInfo(&info);
+   admPreview::setMainDimension(info.width,info.height);
    UI_purge();
-#warning FIXME
-//   admPreview::seekToFrame(oldTimeFrame);
+   
    admPreview::samePicture();
    GUI_setCurrentFrameAndTime();
    UI_purge();
@@ -167,7 +165,6 @@ bool GUIPlayback::cleanupAudio(void)
             playbackAudio=NULL;
        }
        return true;
-
 }
 /**
     \fn cleanupAudio
@@ -175,10 +172,16 @@ bool GUIPlayback::cleanupAudio(void)
 bool GUIPlayback::cleanup(void)
 {
         cleanupAudio();
+        if(videoChain)
+        {
+            ADM_info("Destroying video playback chain\n");
+            destroyVideoFilterChain(videoChain);
+            videoChain=NULL;
+        }
+        videoFilter=NULL; // it has been destroyed by the chain
        // done.
 	   setpriority(PRIO_PROCESS, 0, originalPriority);
        return true;
-
 }
 
 /**
@@ -187,6 +190,23 @@ bool GUIPlayback::cleanup(void)
 bool GUIPlayback::initialize(void)
 {
     firstPts=admPreview::getCurrentPts();
+    if(getPreviewMode()==ADM_PREVIEW_NONE) // copy
+    {
+        videoChain=createEmptyVideoFilterChain(firstPts,1000*1000*1000*1000LL); 
+    }else
+    {
+        videoChain=createVideoFilterChain(firstPts,1000*1000*1000*1000LL); 
+    }
+    if(!videoChain)
+    {
+        ADM_warning("Cannot create video chain\n");
+        return false;
+    }
+    int nb=videoChain->size();
+    videoFilter=(*videoChain)[nb-1];
+    FilterInfo *info=videoFilter->getInfo();
+    admPreview::setMainDimension(info->width,info->height);
+
     initializeAudio();
     return true;
 }
@@ -199,15 +219,17 @@ bool GUIPlayback::run(void)
 
     uint32_t movieTime;
     uint32_t systemTime;
+    uint32_t fn;
     int refreshCounter=0;
     ticktock.reset();
     vuMeterPts=0;
+    ADMImage *previewBuffer=admPreview::getBuffer();
     do
     {
 
         admPreview::displayNow();;
         GUI_setCurrentFrameAndTime();
-        if(false==admPreview::nextPicture())
+        if(false==videoFilter->getNextFrame(&fn,previewBuffer))
         {
             printf("[Play] Cancelling playback, nextPicture failed\n");
             break;
@@ -215,7 +237,7 @@ bool GUIPlayback::run(void)
         audioPump(false);
         lastPts=admPreview::getCurrentPts();
         systemTime = ticktock.getElapsedMS();
-        movieTime=(uint32_t)((lastPts-firstPts)/1000);
+        movieTime=(uint32_t)((lastPts-firstPts*0)/1000);
         movieTime+=audioLatency;
        // printf("[Playback] systemTime: %lu movieTime : %lu  \r",systemTime,movieTime);
         if(systemTime>movieTime) // We are late, the current PTS is after current closk
