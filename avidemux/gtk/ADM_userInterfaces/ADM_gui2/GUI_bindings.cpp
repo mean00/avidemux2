@@ -1295,11 +1295,12 @@ void DNDDataReceived( GtkWidget *widget, GdkDragContext *dc,
       printf("DND : %d %s\n",i,names[i]);
 
       const char *filename = names[i];
-
+      const char *leak=NULL;
+#warning FIXME
 	  if (avifileinfo)
-		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_appendAvi), 0, filename, actual_workbench_file);
+		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_appendAvi), 0, filename, leak);
 	  else
-		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_openAvi), 0, filename, actual_workbench_file);
+		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_openAvi), 0, filename, leak);
 
       ADM_dealloc(names[i]);
     }

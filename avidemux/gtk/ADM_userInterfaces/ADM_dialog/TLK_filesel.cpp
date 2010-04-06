@@ -404,7 +404,9 @@ void GUI_FileSel(const char *label, SELFILE_CB cb, int rw,char **rname)
 	// CYB 2005.02.23
 	if (cb)
 	{
-		FileSel_ReadWrite(cb, rw, name, actual_workbench_file);
+#warning fixme
+        const char *leak=NULL;
+		FileSel_ReadWrite(cb, rw, name, leak);
 		ADM_dealloc(name);
 	}
 	else

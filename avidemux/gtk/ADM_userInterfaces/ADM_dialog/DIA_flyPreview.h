@@ -7,7 +7,7 @@ public:
 	uint8_t download(void) {return 1;}
 	uint8_t upload(void) {return 1;}
 	uint8_t cleanup(void) {return 1;}
-	uint8_t setData(uint8_t *buffer) {_rgb->scale(buffer, _rgbBufferOut); return 1;}
+	uint8_t setData(uint8_t *buffer) {_rgb->convert(buffer, _rgbBufferOut); return 1;}
 
 	flyPreview(uint32_t width, uint32_t height, void *canvas) : 
 	  ADM_flyDialogGtk(width, height, NULL, canvas, NULL, 0, RESIZE_NONE) {delete[] _rgbBuffer; _rgbBuffer = NULL;};
