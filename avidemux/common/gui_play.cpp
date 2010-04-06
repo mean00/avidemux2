@@ -278,13 +278,6 @@ bool GUIPlayback::run(void)
                     systemTime = ticktock.getElapsedMS();
                     delta=movieTime-systemTime;
                 }
-
-                if(getPreviewMode()==ADM_PREVIEW_SEPARATE )
-                {
-                  UI_purge();
-                  UI_purge();
-                  refreshCounter=0;
-                }
         }
       }
     while (!stop_req);

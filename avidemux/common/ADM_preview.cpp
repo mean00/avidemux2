@@ -49,13 +49,10 @@
 #include "ADM_preview.h"
 #define MAX(a,b) ( (a)>(b) ? (a) : (b) )
 #include "DIA_coreToolkit.h"
-extern void    UI_setCurrentTime(uint64_t curTime);
+extern void                 UI_setCurrentTime(uint64_t curTime);
 
-static void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
-
-static   AVDMGenericVideoStream *preview=NULL;
-
-static ADM_PREVIEW_MODE previewMode=ADM_PREVIEW_NONE;
+static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
+static ADM_PREVIEW_MODE     previewMode=ADM_PREVIEW_NONE;
 
 static uint32_t             defered_display=0;  /* When 1, it means we are in playback mode */
 static uint32_t             playbackOffset=0;   /* in playback mode, frame 0 = playbackOffset compared to real beginning of the file */
@@ -173,24 +170,12 @@ void 	admPreview::start( void )
 {
             aprintf("--killing\n");
             renderLock();
-#if 0
-            getFirstVideoFilter();
-            
-            preview=videofilters[  nb_active_filter-1].filter;
-            aprintf("--spawning\n");
-            ADM_assert(!previewImage)
-                
-            previewImage=new ADMImage(preview->getInfo()->width,preview->getInfo()->height);
-#endif            
             ADM_assert(!original);
             switch(previewMode)
             {
-#if 0
-              case  ADM_PREVIEW_SEPARATE:
-                  DIA_previewInit(preview->getInfo()->width,preview->getInfo()->height);
-#endif                  
                   /* no break here, not a mistake */
               case  ADM_PREVIEW_NONE:
+              case  ADM_PREVIEW_OUTPUT:
               
                   rdrWindowWUnzoomed=rdrPhysicalW;
                   rdrWindowHUnzoomed=rdrPhysicalH;
@@ -200,6 +185,7 @@ void 	admPreview::start( void )
                   rdrWindowWUnzoomed=preview->getInfo()->width;
                   rdrWindowHUnzoomed=preview->getInfo()->height;
                   break;
+
               case  ADM_PREVIEW_SIDE:
               {
                   rdrWindowWUnzoomed=rdrPhysicalW+preview->getInfo()->width;
@@ -703,7 +689,7 @@ void admPreview::displayNow(void)
     switch(previewMode)
     {
       case ADM_PREVIEW_NONE:
-           
+      case ADM_PREVIEW_OUTPUT:     
            if(zoom==ZOOM_1_1 || renderHasAccelZoom() )
             {
                 renderUpdateImage(rdrImage->data,zoom);
@@ -713,6 +699,7 @@ void admPreview::displayNow(void)
                 renderUpdateImage(resized->data,zoom);
             }
         break;
+#if 0
       case ADM_PREVIEW_OUTPUT:
             if(zoom==ZOOM_1_1 || renderHasAccelZoom() )
             {
@@ -723,7 +710,7 @@ void admPreview::displayNow(void)
                 renderUpdateImage(resized->data,zoom);
             }
             break;
-#if 0
+
       case ADM_PREVIEW_SEPARATE:
             if(zoom==ZOOM_1_1 || renderHasAccelZoom()  )
             {

@@ -1481,9 +1481,6 @@
    </attribute>
    <addaction name="actionPreviewInput"/>
    <addaction name="actionPreviewOutput"/>
-   <addaction name="actionPreviewSide"/>
-   <addaction name="actionPreviewTop"/>
-   <addaction name="actionPreviewSeparate"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
