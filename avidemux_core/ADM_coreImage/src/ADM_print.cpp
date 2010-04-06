@@ -82,17 +82,18 @@ static void drawDigitSmall(ADMImage *dst, int x, int y, int num)
 		}
 	}
 }
-
-
-void drawString(ADMImage *dst, int x, int y, const char *s) 
+/**
+    \fn printString
+*/
+bool     ADMImage::printString(uint32_t x,uint32_t y, const char *s)
 {
 	int len=strlen(s);
-	if( ((x+len)*20)<dst->_width)
+	if( ((x+len)*20)<_width)
 	{
 		for (int xx = 0; *s; ++s, ++xx) 
 			{
 				if(*s==0x0d || *s==0x0a) continue;
-				drawDigit(dst, x + xx, y, *s - ' ');
+				drawDigit(this, x + xx, y, *s - ' ');
 			}	
 	}
 	else
@@ -100,9 +101,8 @@ void drawString(ADMImage *dst, int x, int y, const char *s)
 		for (int xx = 0; *s; ++s, ++xx) 
 				{
 					if(*s==0x0d || *s==0x0a) continue;
-					drawDigitSmall(dst, x + xx, y, *s - ' ');
+					drawDigitSmall(this, x + xx, y, *s - ' ');
 				}	
 	}
-	
 }
 

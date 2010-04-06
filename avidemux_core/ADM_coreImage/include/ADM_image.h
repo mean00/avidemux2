@@ -147,6 +147,7 @@ public:
         /* Some utilitarian functions */
         uint8_t  saveAsBmp(const char *filename);
         uint8_t  saveAsJpg(const char *filename);
+        bool     printString(uint32_t x,uint32_t y, const char *strng);
         
 static uint32_t lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise);
 };
