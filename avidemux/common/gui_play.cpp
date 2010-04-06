@@ -19,6 +19,8 @@
 #include <math.h>
 #include "prefs.h"
 #include "avi_vars.h"
+#include "ADM_Video.h"
+#include "ADM_editor/ADM_edit.hxx"
 #include "audio_out.h"
 #include "DIA_coreToolkit.h"
 #include "gtkgui.h"
@@ -26,8 +28,9 @@
 #include "avidemutils.h"
 #include "ADM_preview.h"
 #include "audiofilter.h"
-#include "GUI_ui.h"
 #include "ADM_filterChain.h"
+#include "GUI_ui.h"
+
 //___________________________________
 // In 10 ms chunks
 #define AUDIO_PRELOAD 100
@@ -40,7 +43,7 @@ extern void UI_purge(void);
 uint8_t stop_req;
 
 extern renderZoom currentZoom;
-
+extern ADM_Composer *video_body;
 
 /**
     \class GUIPlayback
@@ -73,6 +76,9 @@ public:
         ~GUIPlayback();
 
 };
+
+
+
 /**
     \fn GUIPlayback
 */
@@ -102,11 +108,11 @@ void GUI_PlayAvi(void)
     uint32_t framelen,flags;
     uint32_t max,err;
     uint64_t oldTimeFrame;
+    aviInfo info;
+    video_body->getVideoInfo(&info);
 
     // check we got everything...
-    if (!avifileinfo)	return;
-    if (!avifileinfo->fps1000)        return;
-
+    if (!video_body->getNbSegment())	return;
     if (playing)
       {
         stop_req = 1;
@@ -122,7 +128,7 @@ void GUI_PlayAvi(void)
     stop_req = 0;
     playing = 1;
 
-    admPreview::deferDisplay(1,curframe);
+    admPreview::deferDisplay(1,0);
     admPreview::samePicture();
 
     GUIPlayback *playLoop=new GUIPlayback;
@@ -137,9 +143,9 @@ void GUI_PlayAvi(void)
    admPreview::deferDisplay(0,0);
    // Resize the output window to original size...
    ADM_info("Restoring display.\n");
-   aviInfo info;
-   video_body->getVideoInfo(&info);
+   
    admPreview::setMainDimension(info.width,info.height);
+   admPreview::seekToTime(oldTimeFrame);
    UI_purge();
    
    admPreview::samePicture();

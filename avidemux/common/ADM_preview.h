@@ -25,7 +25,7 @@ class admPreview
       static uint8_t nextPicture(void);
       static uint8_t previousPicture(void);
       static uint8_t samePicture(void);
-//      static uint8_t seekToIntra(uint32_t framenum);
+      static bool seekToTime(uint64_t timeFrame);
       static bool seekToIntraPts(uint64_t timeframe);
       static void start(void);
       static void stop(void);

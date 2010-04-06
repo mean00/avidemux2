@@ -311,6 +311,23 @@ uint8_t admPreview::seekToIntra(uint32_t frame)
 
 }
 #endif
+
+/**
+      \fn admPreview::seekToTime
+      \brief Seek to any given frame
+      
+      @param timeframe Time of the image 
+*/
+
+bool admPreview::seekToTime(uint64_t timeframe)
+{
+    if(!video_body->goToTimeVideo(timeframe)) 
+    {
+        ADM_warning(" seeking for frame at %"LLU" ms failed\n",timeframe/1000LL);
+        return false;
+    }
+    return samePicture();
+}
 /**
       \fn admPreview::seekToIntraPts
       \brief Seek to intra at PTS given as arg
