@@ -1,7 +1,7 @@
 
 /***************************************************************************
-    copyright            : (C) 2006 by mean
-    email                : fixounet@free.fr
+    \brief Class to handle native (QT/Gtk render)
+    \author (C) 2010 by mean  email                : fixounet@free.fr
  ***************************************************************************/
 
 /***************************************************************************
@@ -12,26 +12,30 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "GUI_render.h"
-#include "GUI_accelRender.h"
 
-#ifndef TSDLRENDER_H
-#define TSDLRENDER_H
+#ifndef T_SIMPLE_RENDER_H
+#define T_SIMPLE_RENDER_H
 /**
-    \class sdlRender
+    \fn class simpleRender
 */
-class sdlRender: public VideoRenderBase
+class simpleRender: public VideoRenderBase
 {
-  protected:
-              bool     useYV12;
-              uint8_t *decoded;
-  public:
-                             sdlRender( void ) ;
+      protected:
+                             GUI_WindowInfo info;
+                             uint8_t *videoBuffer;
+                             void    *handle;
+                             bool    cleanup(void);
+                             bool    allocateStuff(void);
+      public:
+                             simpleRender( void ) ;
+                             ~simpleRender();
               virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
+              virtual   bool changeZoom(renderZoom newZoom);
 };
-
-void initSdl(int videoDevice);
-void quitSdl(void);
 #endif
+
+
+
+

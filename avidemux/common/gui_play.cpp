@@ -128,8 +128,8 @@ void GUI_PlayAvi(void)
     stop_req = 0;
     playing = 1;
 
-    admPreview::deferDisplay(1,0);
-    admPreview::samePicture();
+    admPreview::deferDisplay(true);
+    //admPreview::samePicture();
 
     GUIPlayback *playLoop=new GUIPlayback;
     playLoop->initialize();
@@ -138,9 +138,7 @@ void GUI_PlayAvi(void)
     delete playLoop;
     playing = 0;
 
-//   getFirstVideoFilter( );
-
-   admPreview::deferDisplay(0,0);
+   admPreview::deferDisplay(false);
    // Resize the output window to original size...
    ADM_info("Restoring display.\n");
    

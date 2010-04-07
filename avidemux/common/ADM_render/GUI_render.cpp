@@ -24,6 +24,7 @@
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
+#include "GUI_simpleRender.h"
 
 #ifdef USE_XV
 #include "GUI_xvRender.h"
@@ -33,39 +34,19 @@
 #include "GUI_sdlRender.h"
 #endif
 
-
 #include "ADM_colorspace.h"
-
 #include "DIA_uiTypes.h"
-#if ADM_UI_TYPE_BUILD == ADM_UI_QT4 
-    #define IVERT ADM_COLOR_BGR32A
-#else
-    #define IVERT ADM_COLOR_RGB32A
-#endif    
-#warning FIXME
-static ADMColorScalerSimple rgbConverter(640,480,ADM_COLOR_YV12,IVERT);
-
-
-static uint8_t	updateWindowSize(void * win, uint32_t w, uint32_t h);
-static uint8_t  GUI_ConvertRGB(uint8_t * in, uint8_t * out, uint32_t w, uint32_t h);
-
-// Used by flyDialog
-void GUI_RGBDisplay(uint8_t * dis, uint32_t w, uint32_t h, void *widg);
 
 //_____________________________________
-
 //_____________________________________
-static AccelRender    *accel_mode=NULL;
-static uint8_t        *accelSurface=NULL;
+static VideoRenderBase *renderer=NULL;
+static uint8_t         *accelSurface=NULL;
 //_______________________________________
 
-static uint8_t 	*screenBuffer=NULL;
-static uint8_t		*lastImage=NULL;
-static void           *draw=NULL;
-static uint32_t 	 renderW=0,renderH=0; /* Zoomed/display size */
-static uint32_t         phyW=0,phyH=0; /* Unzoomed size, only used when accel can do hw resize */
-static renderZoom       lastZoom;
-static uint8_t          _lock=0;
+static void         *draw=NULL;
+static uint32_t     phyW=0,phyH=0; /* physical window size */
+static renderZoom   lastZoom=ZOOM_1_1;
+static uint8_t      _lock=0;
 
 static const UI_FUNCTIONS_T *HookFunc=NULL;
 //_______________________________________
@@ -94,13 +75,13 @@ static void MUI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
    RENDER_CHECK(UI_updateDrawWindowSize);
    HookFunc->UI_updateDrawWindowSize(win,w,h);
 }
-static  void MUI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
+void MUI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
 {
     RENDER_CHECK(UI_rgbDraw);
     HookFunc->UI_rgbDraw(widg, w,  h,ptr);
   
 }
-static  void *MUI_getDrawWidget(void)
+void *MUI_getDrawWidget(void)
 {
   RENDER_CHECK(UI_getDrawWidget);
   return HookFunc->UI_getDrawWidget();
@@ -127,11 +108,6 @@ uint8_t renderInit( void )
 void renderDestroy(void)
 {
     ADM_info("Cleaning up Render\n");
-	if(screenBuffer) 
-	{
-		delete[] screenBuffer;
-		screenBuffer = NULL;
-	}
 }
 
 /**
@@ -154,18 +130,43 @@ uint8_t renderUnlock(void)
 
 */
 //----------------------------------------
-uint8_t renderResize(uint32_t w, uint32_t h,uint32_t pw, uint32_t ph)
+uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 {
-	if(screenBuffer) 
+        bool create=false;
+        ADM_info("Render to %"LU"x%"LU" zoom=%d\n",w,h,zoom);
+        if(!renderer) create=true;
+        else
         {
-                delete  [] screenBuffer;
-                screenBuffer=NULL;
+            if(w!=phyW || h!=phyH) create=true;
         }
-        screenBuffer=new uint8_t[w*h*4];
-        phyW=pw;
-        phyH=ph;
-  
-        updateWindowSize( draw,w,h);
+        if(create)
+        {
+            if(renderer) delete renderer;
+            renderer=new simpleRender();
+            GUI_WindowInfo xinfo;
+            MUI_getWindowInfo(draw, &xinfo);
+
+            renderer->init(&xinfo,w,h,zoom);
+            lastZoom=zoom;
+            phyW=w;
+            phyH=h;
+        }else
+        {
+            if(lastZoom!=zoom) renderer->changeZoom(zoom);
+        }
+        lastZoom=zoom;
+         int mul;
+         switch(zoom)
+            {
+                    case ZOOM_1_4: mul=1;break;
+                    case ZOOM_1_2: mul=2;break;
+                    case ZOOM_1_1: mul=4;break;
+                    case ZOOM_2:   mul=8;break;
+                    case ZOOM_4:   mul=16;break;
+                    default : ADM_assert(0);
+    
+            }
+        MUI_updateDrawWindowSize(draw,(w*mul)/4,(h*mul)/4);
         UI_purge();
         return 1;
 }
@@ -175,30 +176,11 @@ uint8_t renderResize(uint32_t w, uint32_t h,uint32_t pw, uint32_t ph)
 
 */
 //----------------------------------------
-uint8_t renderUpdateImage(uint8_t *ptr,renderZoom zoom)
+uint8_t renderUpdateImage(ADMImage *image)
 {
-
-    ADM_assert(screenBuffer);
-    lastImage=ptr;
     ADM_assert(!_lock);
-    if(accel_mode)
-    {
-        lastZoom=zoom;
-        if(accel_mode ->hasHwZoom())
-        {
-           accel_mode->display(lastImage, phyW, phyH,zoom);
-        }else
-        {
-          accel_mode->display(lastImage, renderW, renderH,zoom);
-        }
-      
-    }else
-    {
-      GUI_ConvertRGB(ptr,screenBuffer, renderW,renderH);
-      renderRefresh();
-    }
-  return 1;
-
+    renderer->displayImage(image);
+    return 1;
 }
 /**
 	Refresh the image from internal buffer / last image
@@ -209,34 +191,22 @@ uint8_t renderUpdateImage(uint8_t *ptr,renderZoom zoom)
 uint8_t renderRefresh(void)
 {
       if(_lock) return 1;
-      if(!screenBuffer)
-      {
-              if(accel_mode) ADM_assert(0);
-              return 0;
-      }
-
-      if(accel_mode)
-      {
-          if(lastImage)
-               if(accel_mode ->hasHwZoom())
-                {
-                  accel_mode->display(lastImage, phyW, phyH,lastZoom);
-                }else
-                {
-                  accel_mode->display(lastImage, renderW, renderH,lastZoom);
-                }
-      }
-      else
-              GUI_RGBDisplay(screenBuffer, renderW, renderH,draw);
-  return 1;
+      renderer->refresh();
+      return 1;
 }
-
+/**
+    \fn renderExpose
+*/
 uint8_t renderExpose(void)
 {
     renderRefresh();
 }
+/**
+    \fn 
+*/
 uint8_t renderStartPlaying( void )
 {
+#if 0
 char *displ;
 unsigned int renderI;
 ADM_RENDER_TYPE render;
@@ -244,7 +214,7 @@ uint8_t r=0;
 	ADM_assert(!accel_mode);
         
 
-	render=MUI_getPreferredRender();
+        render=MUI_getPreferredRender();
         GUI_WindowInfo xinfo;
         MUI_getWindowInfo(draw, &xinfo);
         switch(render)
@@ -301,59 +271,49 @@ uint8_t r=0;
            accelSurface=new uint8_t[ (renderW*renderH*3)>>1];
           
         }
-	
+#endif	
 	return 1;
 }
+
 /**
-      \fn renderHasAccelZoom
-      \brief returns 1 if accel can do hw zoom
+    \fn renderStopPlaying
 */
-uint8_t renderHasAccelZoom(void)
-{
-    if(!accel_mode) return 0;
-    return accel_mode->hasHwZoom(); 
-}
-
 uint8_t renderStopPlaying( void )
-{
-      
-      if(accel_mode)
-      {
-              accel_mode->end();
-              delete accel_mode;
-              if(accelSurface) delete [] accelSurface;
-              accelSurface=NULL;
-                              
-      }
-      accel_mode=NULL;	
-      
-      return 1;
+{      
+      return true;
 }
-
-
-//___________________________________________________________________________
-//
-//
-uint8_t	updateWindowSize(void * win, uint32_t w, uint32_t h)
+//***************************************
+/**
+    \fn bool calcDisplayFromZoom(renderZoom zoom);
+*/
+bool VideoRenderBase::calcDisplayFromZoom(renderZoom zoom)
 {
-    ADM_assert(screenBuffer);
-    renderW = w;
-    renderH = h;
-
-    MUI_updateDrawWindowSize(win,w,h);
-    rgbConverter.changeWidthHeight(w,h);
-    return 1;
-}
-
-uint8_t GUI_ConvertRGB(uint8_t * in, uint8_t * out, uint32_t w, uint32_t h)
-{
-    rgbConverter.changeWidthHeight(w,h);
-    rgbConverter.convert(in,out);
-    return 1;
-}
-void GUI_RGBDisplay(uint8_t * dis, uint32_t w, uint32_t h, void *widg)
-{
+        int mul;
+         switch(zoom)
+            {
+                    case ZOOM_1_4: mul=1;break;
+                    case ZOOM_1_2: mul=2;break;
+                    case ZOOM_1_1: mul=4;break;
+                    case ZOOM_2:   mul=8;break;
+                    case ZOOM_4:   mul=16;break;
+                    default : ADM_assert(0);
     
-    MUI_rgbDraw(widg,w,h,dis);
+            }
+        displayWidth=(imageWidth*mul)/4;
+        displayHeight=(imageHeight*mul)/4;
+        return true;
 }
+
+/**
+    \fn baseInit
+*/
+bool VideoRenderBase::baseInit(uint32_t w,uint32_t h,renderZoom zoom)
+{
+        imageWidth=w;
+        imageHeight=h;
+        currentZoom=zoom;
+        calcDisplayFromZoom(zoom);
+        return true;
+}
+
 //EOF

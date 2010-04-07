@@ -18,9 +18,13 @@ typedef enum
 ADM_PREVIEW_MODE  getPreviewMode(void);
 void             setPreviewMode(ADM_PREVIEW_MODE preview);
 void             changePreviewZoom(renderZoom nzoom);
-
+/**
+    class admPreview
+*/
 class admPreview
 {
+  protected:
+      static ADMImage *rdrImage;
   public:
       static uint8_t nextPicture(void);
       static uint8_t previousPicture(void);
@@ -30,7 +34,7 @@ class admPreview
       static void start(void);
       static void stop(void);
       static void setMainDimension(uint32_t, uint32_t );
-      static void deferDisplay(uint32_t onoff,uint32_t startat);
+      static void deferDisplay(bool onoff);
       static void displayNow(void);
       static void cleanUp(void);  
       static ADMImage *getBuffer(void);
@@ -39,5 +43,6 @@ class admPreview
       static bool previousKeyFrame(void);
       static bool previousFrame(void);
       static void destroy(void);
+      static bool updateImage(void);
 };
 #endif

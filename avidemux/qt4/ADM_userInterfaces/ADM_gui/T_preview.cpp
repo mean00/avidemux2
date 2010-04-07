@@ -27,14 +27,12 @@
 #endif
 
 #include "T_preview.h"
-//#include "Q_seekablePreview.h"
 #include "../ADM_render/GUI_render.h"
 #include "../ADM_render/GUI_accelRender.h"
 #include "DIA_coreToolkit.h"
     
 void UI_QT4VideoWidget(QFrame *host);
 static QFrame *hostFrame=NULL;
-static AccelRender *accelRender=NULL;
 static uint8_t *lastImage=NULL;
 extern QWidget *QuiMainWindows;
 
@@ -44,17 +42,6 @@ uint8_t DIA_previewUpdate(uint8_t *data) {return 1;}
 void DIA_previewEnd(void) {}
 uint8_t DIA_previewStillAlive(void) {return 1;}
 
-uint8_t	DIA_filterPreview(const char *captionText, AVDMGenericVideoStream *videoStream, uint32_t frame)
-{
-#if 0
-	ADM_assert(frame <= videoStream->getInfo()->nb_frames);
-
-	printf("** DIA_filterPreview %i **\n", frame);
-	Ui_seekablePreviewWindow previewDialog(NULL,videoStream, frame);
-
-	previewDialog.exec();
-#endif
-}
 
 //****************************************************************************************************
 /*
@@ -78,16 +65,10 @@ ADM_Qvideo::~ADM_Qvideo() {}
 
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {
-	if(!displayW || !displayH || !rgbDataBuffer || accelRender)
+	if(!displayW || !displayH || !rgbDataBuffer )
 		return ;
 
-	if(accelRender) 
-	{
-		if(lastImage)
-		{
-			accelRender->display(lastImage,displayW,displayH);
-		}
-	}else
+	
 	{
 		QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
 		QPainter painter(this);

@@ -2,8 +2,9 @@ SET(ADM_LIB ADM_render6_${UI_SUFFIX})
 
 SET(${ADM_LIB}_SRCS
 GUI_render.cpp
-GUI_sdlRender.cpp
-GUI_xvRender.cpp
+GUI_simpleRender.cpp
+#GUI_sdlRender.cpp
+#GUI_xvRender.cpp
 )
 
 IF (APPLE)
@@ -17,8 +18,8 @@ IF (GETTEXT_FOUND)
         TARGET_LINK_LIBRARIES(${ADM_LIB}  ${GETTEXT_LIBRARY_DIR})
 ENDIF (GETTEXT_FOUND)
 
-IF (USE_SDL)
-        TARGET_LINK_LIBRARIES(${ADM_LIB}  ${SDL_LIBRARY})
-ENDIF (USE_SDL)
+#IF (USE_SDL)
+       # TARGET_LINK_LIBRARIES(${ADM_LIB}  ${SDL_LIBRARY})
+#ENDIF (USE_SDL)
 
 ADM_INSTALL_LIB(${ADM_LIB})
