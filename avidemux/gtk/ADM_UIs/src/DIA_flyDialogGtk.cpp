@@ -24,7 +24,6 @@
 extern PhysicalJogShuttle *physical_jog_shuttle;
 #endif
 
-extern void GUI_RGBDisplay(uint8_t * dis, uint32_t w, uint32_t h, void *widg);
 extern float UI_calcZoomToFitScreen(GtkWindow* window, GtkWidget* drawingArea, uint32_t imageWidth, uint32_t imageHeight);
 extern void UI_centreCanvasWindow(GtkWindow *window, GtkWidget *canvas, int newCanvasWidth, int newCanvasHeight);
 
@@ -116,8 +115,17 @@ uint8_t  ADM_flyDialogGtk::display(void)
 {
 	ADM_assert(_canvas);
 	ADM_assert(_rgbBufferOut);
+    GtkWidget *widget=(GtkWidget*)_canvas;
+    gdk_draw_rgb_32_image(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], 0,    // X
+                       0,       // y
+                       _zoomW,       //width
+                       _zoomH,       //h*2, // heigth
+                       GDK_RGB_DITHER_NONE,
+                       //GDK_RGB_DITHER_MAX,  // dithering
+                       (guchar *) _rgbBufferOut,  // buffer
+                       _zoomW * 4);
 
-	GUI_RGBDisplay(_rgbBufferOut, _zoomW, _zoomH, _canvas);
+	//GUI_RGBDisplay(_rgbBufferOut, _zoomW, _zoomH, _canvas);
 
 	return 1; 
 }
