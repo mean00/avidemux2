@@ -230,7 +230,7 @@ bool spawnRenderer(void)
                 break;
 #endif
 
-#if 0 &&  defined(USE_SDL)
+#if (defined(WIN32) || defined(APPLE) )&&  defined(USE_SDL)
 			case RENDER_SDL:
 #ifdef __WIN32
 			case RENDER_DIRECTX:
