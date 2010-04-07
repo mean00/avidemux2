@@ -53,7 +53,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
     case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
     case ADM_COLOR_YUV422P: return PIX_FMT_YUV422P;
     case ADM_COLOR_RGB32A: return PIX_FMT_RGB32;
-    case ADM_COLOR_BGR32A: return PIX_FMT_BGR32;
+    case ADM_COLOR_BGR32A: return PIX_FMT_RGB32; // Faster that way...PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
     default : ADM_assert(0); 
   }
@@ -105,13 +105,6 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcStride[2]=width>>1;
             break;
     case ADM_COLOR_RGB32A:
-            srcData[0]=from;
-            srcData[1]=NULL;
-            srcData[2]=NULL;
-            srcStride[0]=width*4;
-            srcStride[1]=0;
-            srcStride[2]=0;
-            break;
     case ADM_COLOR_BGR32A:
             srcData[0]=from;
             srcData[1]=NULL;
@@ -120,6 +113,7 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
             srcStride[1]=0;
             srcStride[2]=0;
             break;
+    
     default:
         ADM_assert(0);
   }
@@ -131,7 +125,7 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
   @param from Source image
   @param to Target image
 */
-
+#define swap16(x) x=((x>>8)&0xff)+(x<<8)
 bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
 {
   uint8_t *srcData[3];
@@ -142,6 +136,21 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
   getStrideAndPointers(false,from,fromColor,srcData,srcStride);
   getStrideAndPointers(true,to,toColor,dstData,dstStride);
   sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
+  if(toColor==ADM_COLOR_BGR32A)
+  {
+    // RGB32->BG32
+    uint32_t l=dstWidth*dstHeight;
+    uint8_t *d=(uint8_t *)to;
+    int r,b,g,a;
+    while(l--)
+    {
+        uint8_t s=d[0];
+        d[0]=d[2];
+        d[2]=s;
+        d+=4;
+        
+    }
+  }
   return true;
   
 }
