@@ -3,8 +3,8 @@ SET(ADM_LIB ADM_render6_${UI_SUFFIX})
 SET(${ADM_LIB}_SRCS
 GUI_render.cpp
 GUI_simpleRender.cpp
-#GUI_sdlRender.cpp
-#GUI_xvRender.cpp
+GUI_sdlRender.cpp
+GUI_xvRender.cpp
 )
 
 IF (APPLE)

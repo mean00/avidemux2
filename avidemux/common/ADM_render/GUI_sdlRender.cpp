@@ -11,10 +11,6 @@
 *   (at your option) any later version.                                   *
 *                                                                         *
 ***************************************************************************///
-//  The pitch stride has to be changed as there could be some padding depending on the OS
-//
-//
-
 #include "config.h"
 
 #if defined(USE_SDL)
@@ -32,12 +28,12 @@ extern "C" {
 #include "SDL.h"
 #include "SDL_syswm.h"
 }
-
+#include "ADM_default.h"
 #include "ADM_colorspace.h"
 #include "GUI_render.h"
 #include "GUI_accelRender.h"
 #include "GUI_sdlRender.h"
-#include "ADM_assert.h"
+
 
 #ifdef __APPLE__
 extern "C"
@@ -55,14 +51,17 @@ static SDL_Rect disp;
 #ifdef __WIN32
 HWND sdlWin32;
 #endif
-static ADMColorScalerSimple *color=NULL;
-
-sdlAccelRender::sdlAccelRender( void)
+/**
+    \fn sdlRender
+*/
+sdlRender::sdlRender( void)
 {
-        useYV12=1;
-        decoded=NULL;
+        useYV12=true;
 }
-uint8_t sdlAccelRender::end( void)
+/**
+    \fn stop
+*/
+bool sdlRender::stop( void)
 {
         if(sdl_overlay)
         {
@@ -81,42 +80,35 @@ uint8_t sdlAccelRender::end( void)
 				destroyCocoaView();
 #endif
         }
-        if(decoded)
-        {
-		        delete [] decoded;
-		        decoded=NULL;
-        }
         sdl_running=0;
         sdl_overlay=NULL;
         sdl_display=NULL;
-        printf("[SDL] Video subsystem closed and destroyed\n");
+        ADM_info("[SDL] Video subsystem closed and destroyed\n");
 }
-uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
+/**
+    \fn init
+*/
+bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-	printf("[SDL] Initialising video subsystem\n");
+	ADM_info("[SDL] Initialising video subsystem\n");
 
 #ifdef __APPLE__
 	if (window->width > w && window->height > h)
 	{
-		printf("[SDL] Disabling acceleration.  Zoom increase not supported on Mac\n");
+		ADM_info("[SDL] Disabling acceleration.  Zoom increase not supported on Mac\n");
 		return 0;
 	}
 #endif
 
 	int bpp;
 	int flags;
-
+    baseInit(w,h,zoom);
     // Ask for the position of the drawing window at start
     disp.w=w;
     disp.h=h;
     disp.x=0;
     disp.y=0;
 
-    if(!useYV12)
-    {
-		color=new ADMColorScalerSimple(720,480,ADM_COLOR_YV12,ADM_COLOR_YUV422);
-		decoded=new uint8_t[w*h*2];
-    }
 
     // Hack to get SDL to use GTK window, ugly but works
 #if !defined(__WIN32) && !defined(__APPLE__)
@@ -129,12 +121,12 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
-		printf("[SDL] FAILED initialising video subsystem\n");
-		printf("[SDL] ERROR: %s\n", SDL_GetError());
+		ADM_warning("[SDL] FAILED initialising video subsystem\n");
+		ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
 
         return 0;
     }
-
+    ADM_info("SDL subsystem init ok\n");
     // Do it twice as the 1st time does not work
     // Hack to get SDL to use GTK window, ugly but works
 #if !defined(__WIN32) && !defined(__APPLE__)
@@ -142,8 +134,8 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
-                printf("[SDL] FAILED initialising video subsystem\n");
-                printf("[SDL] ERROR: %s\n", SDL_GetError());
+                ADM_warning("[SDL] FAILED initialising video subsystem\n");
+                ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
                 return 0;
     }
 #endif
@@ -181,13 +173,14 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
 	// SDL will resize our window to width and height passed to SetVideoMode.
 	// This is fine until we use zoomed views so pass window dimensions instead.
-	sdl_display= SDL_SetVideoMode(window->width, window->height, bpp, flags);
+    ADM_info("SDL setting video mode %d,%d\n",(int)window->width,(int)window->height);
+	sdl_display= SDL_SetVideoMode(window->width,window->height, bpp, flags);
 
     if (!sdl_display)
     {
-        end();
-        printf("[SDL] Cannot create surface\n");
-		printf("[SDL] ERROR: %s\n", SDL_GetError());
+        stop();
+        ADM_warning("[SDL] Cannot create surface\n");
+		ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
         return 0;
     }
 
@@ -224,20 +217,21 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
         if(useYV12) cspace=SDL_YV12_OVERLAY;
             else    cspace=SDL_YUY2_OVERLAY;
         //_______________________________________________________
+        ADM_info("Creating overlay\n");
         sdl_overlay=SDL_CreateYUVOverlay((w),(h), cspace, sdl_display);
 
 		// DirectX may fail but overlay still created.
 		// Not a showstopper but log failure.
 		if (strlen(SDL_GetError()))
 		{
-			printf("[SDL] ERROR: %s\n", SDL_GetError());
+			ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
 		}
 
         if(!sdl_overlay)
         {
-			end();
-			printf("[SDL] Cannot create SDL overlay\n");
-			printf("[SDL] ERROR: %s\n", SDL_GetError());
+			stop();
+			ADM_warning("[SDL] Cannot create SDL overlay\n");
+			ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
 
 			return 0;
         }
@@ -247,9 +241,11 @@ uint8_t sdlAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
         if(!sdl_overlay->hw_overlay)
             printf("[SDL] Hardware acceleration disabled\n");
 
-        if(!useYV12) color->changeWidthHeight(w,h);
-
-		printf("[SDL] Video subsystem initalised successfully\n");
+        if(!useYV12)
+        {
+          // Create YV12->YUY2 here!
+        }
+		ADM_info("[SDL] Video subsystem initalised successfully\n");
 
         return 1;
 }
@@ -263,7 +259,10 @@ static void interleave(uint8_t *dst,uint8_t *src,int width, int stride, int line
         dst+=stride;
     }
 }
-uint8_t sdlAccelRender::display(uint8_t *ptr, uint32_t w, uint32_t h,renderZoom zoom)
+/**
+    \fn displayImage
+*/
+bool sdlRender::displayImage(ADMImage *pic)
 {
 #ifdef __WIN32
 	// DirectX playback doesn't refresh correctly if the parent window is moved.
@@ -286,7 +285,11 @@ uint8_t sdlAccelRender::display(uint8_t *ptr, uint32_t w, uint32_t h,renderZoom 
 #endif
 
 int pitch;
+int w=imageWidth;
+int h=imageHeight;
 int page=w*h;
+uint8_t *ptr=pic->data;
+
         ADM_assert(sdl_overlay);
         SDL_LockYUVOverlay(sdl_overlay);
         pitch=sdl_overlay->pitches[0];
@@ -311,6 +314,7 @@ int page=w*h;
 	            interleave(sdl_overlay->pixels[2],ptr+(page*5)/4,w>>1,pitch,h>>1);
         }else
         {
+#if 0
 	        color->changeWidthHeight(w,h);
 	        if(pitch==2*w)
 	        {
@@ -321,20 +325,11 @@ int page=w*h;
 	            color->convert(ptr,decoded);
 	            interleave(sdl_overlay->pixels[0],decoded,2*w,pitch,h);
 	        }
+#endif
         }
-        uint32_t factor=4;
-               switch(zoom)
-               {
-                   case ZOOM_1_4: factor=1;break;
-                   case ZOOM_1_2: factor=2;break;
-                   case ZOOM_1_1: factor=4;break;
-                   case ZOOM_2:   factor=8;break;
-                   case ZOOM_4:   factor=16;break;
-                   default : ADM_assert(0);
-
-               }
-        disp.w=(w*factor)/4;
-        disp.h=(h*factor)/4;
+       
+        disp.w=displayWidth;
+        disp.h=displayHeight;
         disp.x=0;
         disp.y=0;
 
@@ -344,6 +339,19 @@ int page=w*h;
         return 1;
 }
 
+/**
+    \fn changeZoom
+*/
+bool sdlRender::changeZoom(renderZoom newZoom)
+{
+        ADM_info("changing zoom, sdl render.\n");
+        calcDisplayFromZoom(newZoom);
+        currentZoom=newZoom;
+        return true;
+}
+/**
+    \fn initSdl
+*/
 void initSdl(int videoDevice)
 {
 	printf("\n");
@@ -394,7 +402,9 @@ void initSdl(int videoDevice)
 
 	printf("\n");
 }
-
+/**
+    \fn quitSdl
+*/
 void quitSdl(void)
 {
 	if (SDL_WasInit(SDL_INIT_EVERYTHING))

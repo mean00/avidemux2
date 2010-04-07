@@ -41,6 +41,7 @@
 //_____________________________________
 static VideoRenderBase *renderer=NULL;
 static uint8_t         *accelSurface=NULL;
+static bool             spawnRenderer(void);
 //_______________________________________
 
 static void         *draw=NULL;
@@ -142,14 +143,11 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
         if(create)
         {
             if(renderer) delete renderer;
-            renderer=new simpleRender();
-            GUI_WindowInfo xinfo;
-            MUI_getWindowInfo(draw, &xinfo);
-
-            renderer->init(&xinfo,w,h,zoom);
-            lastZoom=zoom;
+            renderer=NULL;
             phyW=w;
             phyH=h;
+            lastZoom=zoom;
+            spawnRenderer();
         }else
         {
             if(lastZoom!=zoom) renderer->changeZoom(zoom);
@@ -201,6 +199,69 @@ uint8_t renderExpose(void)
 {
     renderRefresh();
 }
+/**
+    \fn spawnRenderer
+    \brief Create renderer according to prefs
+*/
+bool spawnRenderer(void)
+{
+        
+        int prefRenderer=MUI_getPreferredRender();
+        bool r=false;
+
+        GUI_WindowInfo xinfo;
+        MUI_getWindowInfo(draw, &xinfo);
+        switch(prefRenderer)
+        {
+#if defined(USE_XV)
+       case RENDER_XV:
+                renderer=new XvRender();
+                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
+                if(!r)
+                {
+                    delete renderer;
+                    renderer=NULL;
+                    ADM_warning("Xv init failed\n");
+                }
+                else
+                {
+                    ADM_info("Xv init ok\n");
+                }
+                break;
+#endif
+
+#if 0 &&  defined(USE_SDL)
+			case RENDER_SDL:
+#ifdef __WIN32
+			case RENDER_DIRECTX:
+#endif
+				renderer=new sdlRender();
+                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
+                if(!r)
+                {
+                    delete renderer;
+                    renderer=NULL;
+                    ADM_warning("SDL init failed\n");
+                }
+                else
+                {
+                    ADM_info("SDL init ok\n");
+                }
+                break;
+#endif
+        }
+        if(!renderer)
+        {
+            ADM_info("Using simple renderer\n");
+            renderer=new simpleRender();
+            GUI_WindowInfo xinfo;
+            MUI_getWindowInfo(draw, &xinfo);
+
+            renderer->init(&xinfo,phyW,phyH,lastZoom);
+        }
+        return true;
+}
+
 /**
     \fn 
 */

@@ -46,30 +46,44 @@
 static uint8_t 	GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt);
 static uint8_t 	GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h);
 static void 	GUI_XvEnd( void );
-static uint8_t 	GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,renderZoom zoom);
+static uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
 static uint8_t 	GUI_XvSync(void);
 
 static uint8_t getAtom(const char *string);
 //________________Wrapper around Xv_______________
-XvAccelRender::XvAccelRender( void )
+XvRender::XvRender( void )
 {
 
 }
-uint8_t XvAccelRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h)
+bool XvRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-	printf("[Xvideo]Xv start\n");
+	ADM_info("[Xvideo]Xv start\n");
+    info=*window;
+    baseInit(w,h,zoom);
 	return  GUI_XvInit( window,  w,  h);
 }
-uint8_t XvAccelRender::end(void)
+bool XvRender::stop(void)
 {
 	 GUI_XvEnd( );
 	 printf("[Xvideo]Xv end\n");
 	 return 1;
 }
 
-uint8_t XvAccelRender::display(uint8_t *ptr, uint32_t w, uint32_t h,renderZoom zoom)
+bool XvRender::displayImage(ADMImage *pic)
 {
-	return GUI_XvDisplay(ptr, w, h,zoom);
+
+	return GUI_XvDisplay(pic->data, imageWidth, imageHeight,displayWidth,displayHeight);
+}
+
+/**
+    \fn changeZoom
+*/
+bool XvRender::changeZoom(renderZoom newZoom)
+{
+        ADM_info("changing zoom, xv render.\n");
+        calcDisplayFromZoom(newZoom);
+        currentZoom=newZoom;
+        return true;
 }
 //________________Wrapper around Xv_______________
 
@@ -107,9 +121,9 @@ void GUI_XvEnd( void )
 }
 
 //------------------------------------
-uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,renderZoom zoom)
+uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH)
 {
-    uint32_t destW,destH;
+    
     if (xvimage)
       {
 
@@ -117,21 +131,8 @@ uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,renderZoom zoom)
 
 	  // for YV12, 4 bits for Y 4 bits for u, 4 bits for v
 	  // total 1.5*
-         XLockDisplay (xv_display);
-	  memcpy(xvimage->data, src, (w*h*3)>>1);
-          uint32_t factor=4;
-        switch(zoom)
-        {
-            case ZOOM_1_4: factor=1;break;
-            case ZOOM_1_2: factor=2;break;
-            case ZOOM_1_1: factor=4;break;
-            case ZOOM_2:   factor=8;break;
-            case ZOOM_4:   factor=16;break;
-            default : ADM_assert(0);
-
-        }
-	destW=(w*factor)/4;
-        destH=(h*factor)/4;
+          XLockDisplay (xv_display);
+          memcpy(xvimage->data, src, (w*h*3)>>1);
         //printf("%u x %u => %u x %u\n",w,h,destW,destH);
         // And display it !
 #if 1
@@ -148,11 +149,8 @@ uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,renderZoom zoom)
 
 	  XSync(xv_display, False);
 	  XUnlockDisplay (xv_display);
-	  //GUI_XvExpose();
-
       }
     return 1;
-
 }
 uint8_t GUI_XvSync(void)
 {

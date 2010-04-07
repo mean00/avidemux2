@@ -24,12 +24,12 @@ class sdlRender: public VideoRenderBase
 {
   protected:
               bool     useYV12;
-              uint8_t *decoded;
   public:
                              sdlRender( void ) ;
               virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
+              virtual   bool changeZoom(renderZoom newZoom);
 };
 
 void initSdl(int videoDevice);

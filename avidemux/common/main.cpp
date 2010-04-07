@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 
 	prefs->get(DEVICE_VIDEODEVICE, &videoDevice);
 
-//	initSdl(videoDevice);
+	initSdl(videoDevice);
 #endif
 
 	atexit(onexit);
@@ -312,7 +312,7 @@ void onexit( void )
 	ADM_lavDestroy();
 
 #ifdef USE_SDL
-//	quitSdl();
+	quitSdl();
 #endif
 
 #ifdef HAVE_AUDIO

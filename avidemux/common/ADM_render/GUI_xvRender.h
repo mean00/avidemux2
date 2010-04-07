@@ -22,11 +22,15 @@
 */
 class XvRender: public VideoRenderBase
 {
+      protected:
+                            GUI_WindowInfo info;
       public:
                              XvRender( void ) ;
+                             ~XvRender();
               virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
+              virtual   bool changeZoom(renderZoom newzoom);
 };
 #endif
 
