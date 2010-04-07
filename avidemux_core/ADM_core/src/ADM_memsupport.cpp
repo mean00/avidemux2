@@ -189,6 +189,7 @@ void operator delete[] (void *c)
 //********************************
 // lavcodec wrapper
 //********************************
+#if defined(WRAP_LAV_ALLOC)
 extern "C"
 {
 	void *av_malloc(unsigned int size)
@@ -229,7 +230,7 @@ extern "C"
 		return ptr;
 	}
 }
-
+#endif
 /**
  * av_realloc semantics (same as glibc): if ptr is NULL and size > 0,
  * identical to malloc(size). If size is zero, it is identical to
@@ -288,6 +289,7 @@ void *ADM_realloc(void *ptr, size_t newsize)
 #endif
 }
 
+#if defined(WRAP_LAV_ALLOC)
 void *av_realloc(void *ptr, unsigned int newsize)
 {
 	return ADM_realloc(ptr,newsize);
@@ -299,7 +301,7 @@ void av_free(void *ptr)
 	if(ptr)
 		ADM_dealloc(ptr);
 }
-
+#endif
 char *ADM_strdup(const char *in)
 {
 	if(!in)
@@ -371,6 +373,7 @@ void *ADM_realloc(void *ptr, size_t newsize)
 
 	return nalloc;
 }
+#if defined(WRAP_LAV_ALLOC)
 
 extern "C"
 {
@@ -424,5 +427,6 @@ void av_free(void *ptr)
 	if(ptr)
 		operator delete(ptr, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
 }
+#endif
 #endif
 // EOF

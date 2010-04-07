@@ -23,6 +23,7 @@ sha1.c
 avstring.c
 tree.c
 lfg.c
+mem.c
 )
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
