@@ -33,6 +33,7 @@ class simpleRender: public VideoRenderBase
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newZoom);
+              virtual   bool refresh(void);
 };
 #endif
 

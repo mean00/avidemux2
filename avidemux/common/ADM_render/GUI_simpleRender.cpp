@@ -47,6 +47,14 @@ bool simpleRender::stop(void)
     return true;
 }
 /**
+    \fn refresh
+*/
+bool simpleRender::refresh(void)
+{
+     MUI_rgbDraw(MUI_getDrawWidget(),displayWidth,displayHeight,videoBuffer);
+     return true;
+}
+/**
     \fn displayImage
 */
 bool simpleRender::displayImage(ADMImage *pic)
