@@ -112,7 +112,7 @@ public:
   decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
   virtual bool bFramePossible (void)
   {
-      return _lowDelay;
+      return true;
   }
   bool   uncompress (ADMCompressedImage * in, ADMImage * out);
 };
