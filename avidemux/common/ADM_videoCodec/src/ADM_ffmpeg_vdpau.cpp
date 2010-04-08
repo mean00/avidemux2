@@ -217,7 +217,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
         WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
-        
+        ADM_info("[VDPAU] Decoder created \n");
         // Now instantiate our VDPAU surface & decoder
         ADM_assert(VDP_STATUS_OK==funcs.decoderCreate(vdpDevice,VDP_DECODER_PROFILE_H264_HIGH,w,h,15,&(VDPAU->vdpDecoder)));
         // Create our surfaces...
