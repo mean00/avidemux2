@@ -189,7 +189,8 @@ uint8_t renderUpdateImage(ADMImage *image)
 uint8_t renderRefresh(void)
 {
       if(_lock) return 1;
-      renderer->refresh();
+      if(renderer)
+        renderer->refresh();
       return 1;
 }
 /**
