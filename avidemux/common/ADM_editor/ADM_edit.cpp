@@ -323,7 +323,6 @@ bool ADM_Composer::addFile (const char *name)
         ADM_info("[Editor] no decoder to check for B- frame\n");
     }else
     {       
-        ADM_info("[Editor] This container does not provide PTS \n");
         if(video.decoder->bFramePossible())
         {
             printf("[Editor] B- frame possible with that codec \n");
