@@ -1597,4 +1597,11 @@ bool UI_setVUMeter(uint32_t volume[6])
 {
     return true;
 }
+/**
+        \fn UI_setDecoderName
+*/
+bool UI_setDecoderName(const char *name)
+{
+        return true;
+}
 // EOF
