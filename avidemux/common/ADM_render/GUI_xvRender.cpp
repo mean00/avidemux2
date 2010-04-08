@@ -48,7 +48,7 @@ static uint8_t 	GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h);
 static void 	GUI_XvEnd( void );
 static uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
 static uint8_t 	GUI_XvSync(void);
-
+static uint8_t GUI_XvRedraw( void );
 static uint8_t getAtom(const char *string);
 //________________Wrapper around Xv_______________
 XvRender::XvRender( void )
@@ -84,6 +84,14 @@ bool XvRender::changeZoom(renderZoom newZoom)
         calcDisplayFromZoom(newZoom);
         currentZoom=newZoom;
         return true;
+}
+/**
+    \fn refresh
+*/
+bool XvRender::refresh(void)
+{
+    GUI_XvRedraw();
+    return true;
 }
 //________________Wrapper around Xv_______________
 

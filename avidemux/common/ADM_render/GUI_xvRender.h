@@ -31,6 +31,7 @@ class XvRender: public VideoRenderBase
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newzoom);
+              virtual   bool refresh(void);
 };
 #endif
 
