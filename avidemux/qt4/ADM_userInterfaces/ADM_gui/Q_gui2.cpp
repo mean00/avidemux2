@@ -219,9 +219,6 @@ MainWindow::MainWindow() : QMainWindow()
 
 	groupPreviewModes->addAction(ui.actionPreviewInput);
 	groupPreviewModes->addAction(ui.actionPreviewOutput);
-	groupPreviewModes->addAction(ui.actionPreviewSide);
-	groupPreviewModes->addAction(ui.actionPreviewTop);
-	groupPreviewModes->addAction(ui.actionPreviewSeparate);
 	connect(groupPreviewModes, SIGNAL(triggered(QAction*)), this, SLOT(previewModeChanged(QAction*)));
 
 	// Zoom modes
@@ -275,9 +272,6 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(timeChanged(int)));
 	connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
 	connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-
-
-
 
 	QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
 	QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);

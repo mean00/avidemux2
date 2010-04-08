@@ -49,9 +49,10 @@ uint8_t renderRefresh(void);
 uint8_t renderExpose(void);
 uint8_t renderUpdateImage(ADMImage *img);
 uint8_t renderUpdateImageBlit(uint8_t *ptr,uint32_t startx, uint32_t starty, uint32_t w, uint32_t,uint32_t primary);
-
+bool    renderCompleteRedrawRequest(void); // will call admPreview 
 uint8_t renderStartPlaying( void );
 uint8_t renderStopPlaying( void );
+bool    renderExposeEventFromUI(void); // This is called by UI, return true if UI should redraw, false else
 
 uint8_t renderLock(void);
 uint8_t renderUnlock(void);

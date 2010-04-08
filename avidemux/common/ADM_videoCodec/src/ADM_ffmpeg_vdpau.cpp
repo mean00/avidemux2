@@ -119,7 +119,7 @@ bool vdpauProbe(void)
     uint32_t version=0xff;
         funcs.getInformationString(&versionString);
         funcs.getApiVersion(&version);
-        printf("[VDPAU] API : 0x%x, info : %s\n",version,versionString);
+        ADM_info("[VDPAU] API : 0x%x, info : %s\n",version,versionString);
 
     vdpauWorking=true;
     return true;
@@ -142,7 +142,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     vdpau_render_state * render;
     if(VDPAU->freeQueue.size()==0)
     {
-        printf("[VDPAU] No more available surface\n");
+        aprintf("[VDPAU] No more available surface\n");
         return -1;
     }
     // Get an image   
@@ -237,14 +237,14 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 */
 decoderFFVDPAU::~decoderFFVDPAU()
 {
-        printf("[VDPAU] Cleaning up\n");
+        ADM_info("[VDPAU] Cleaning up\n");
         destroying=true;
         for(int i=0;i<NB_SURFACE;i++)
         {
             ADM_assert(VDP_STATUS_OK==funcs.destroySurface((VDPAU->renders[i]->surface)));
             delete VDPAU->renders[i];
         }
-        printf("[VDPAU] Destroying decoder\n");
+        ADM_info("[VDPAU] Destroying decoder\n");
          ADM_assert(VDP_STATUS_OK==funcs.decoderDestroy(VDPAU->vdpDecoder));
          delete VDPAU;
          vdpau=NULL;
@@ -261,7 +261,7 @@ VdpStatus status;
     decode_status=false;
     if(!decoderFF::uncompress (in, scratch))
     {
-        printf("[VDPAU] No data from libavcodec\n");
+        aprintf("[VDPAU] No data from libavcodec\n");
         return 0;
     }
     if(decode_status!=true)

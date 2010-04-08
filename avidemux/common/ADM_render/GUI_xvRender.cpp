@@ -90,7 +90,9 @@ bool XvRender::changeZoom(renderZoom newZoom)
 */
 bool XvRender::refresh(void)
 {
-    GUI_XvRedraw();
+    // since we dont know how to redraw without help, ask above
+    ADM_info("XV:refresh\n");
+    renderCompleteRedrawRequest();
     return true;
 }
 //________________Wrapper around Xv_______________

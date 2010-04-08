@@ -395,8 +395,10 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 	  return 1;
 
 	}
+#if 0
       printf ("[lavc] Err: %d, size: %d\n", ret, in->dataLength);
       printf ("\n[lavc] error in FFMP43/mpeg4!: got picture\n");
+#endif
       //GUI_Alert("Please retry with misc->Turbo off");
       //return 1;
       return 0;

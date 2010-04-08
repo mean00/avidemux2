@@ -25,6 +25,7 @@
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
+#include "ADM_preview.h"
 
 #ifdef USE_XV
 #include "GUI_xvRender.h"
@@ -194,6 +195,15 @@ uint8_t renderRefresh(void)
       return 1;
 }
 /**
+    \fn renderCompleteRedrawRequest
+    \brief ask the *caller* to redraw, whereas expose/refresh asks the renderer to refresh
+*/
+bool renderCompleteRedrawRequest(void)
+{
+    ADM_info("RedrawRequest");
+    admPreview::samePicture();
+}
+/**
     \fn renderExpose
 */
 uint8_t renderExpose(void)
@@ -343,6 +353,18 @@ uint8_t r=0;
 uint8_t renderStopPlaying( void )
 {      
       return true;
+}
+/**
+    \fn renderExposeEventFromUI
+    \brief retrurn true if UI(gtk/qt) should handle redraw
+*/
+bool    renderExposeEventFromUI(void)
+{
+    if(!renderer) return true;
+    if(renderer->usingUIRedraw()==true) return true;
+    //renderer->refresh();
+    return false;
+
 }
 //***************************************
 /**

@@ -34,6 +34,7 @@ class simpleRender: public VideoRenderBase
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newZoom);
               virtual   bool refresh(void);
+              virtual   bool usingUIRedraw(void) {return true;};
 };
 #endif
 

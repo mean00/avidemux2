@@ -67,13 +67,14 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {
 	if(!displayW || !displayH || !rgbDataBuffer )
 		return ;
-
-	
 	{
-		QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-		QPainter painter(this);
-		painter.drawImage(QPoint(0,0),image);
-		painter.end();
+        if(true==renderExposeEventFromUI())
+        {
+            QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
+            QPainter painter(this);
+            painter.drawImage(QPoint(0,0),image);
+            painter.end();
+        }
 	}
 }
 
@@ -125,6 +126,9 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 
 	hostFrame->resize(displayW, displayH);
 	videoWindow->resize(displayW, displayH);
+
+	hostFrame->setMaximumSize(displayW, displayH);
+	videoWindow->setMaximumSize(displayW, displayH);	
 	UI_purge();
 
 	QuiMainWindows->adjustSize();
