@@ -728,8 +728,10 @@ void  updateLoaded ()
   }
 
 
-    A_Rewind();
+   A_Rewind();
    ADM_info(" conf updated \n");
+   UI_setDecoderName(video_body->getVideoDecoderName());
+
 }
 
 //___________________________________________

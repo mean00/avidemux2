@@ -58,6 +58,7 @@ public:
             {
                 return true;
             }
+    virtual const char *getDecoderName(void) {return "Png";}
 };
 
 #endif 

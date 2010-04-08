@@ -231,6 +231,7 @@ public:
                     uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);
                     uint8_t             getEnv(_ENV_EDITOR_FLAGS newflag);
 /******************************* /Misc ************************************/				
-
+/******************************** Info ************************************/
+                    const char          *getVideoDecoderName(void);
 };
 #endif

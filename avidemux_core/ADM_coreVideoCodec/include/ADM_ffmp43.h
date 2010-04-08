@@ -63,6 +63,7 @@ public:
   virtual uint8_t getPARWidth (void);
   virtual uint8_t getPARHeight (void);
   virtual bool    flush(void);
+  virtual const char *getDecoderName(void) {return "Lavcodec";}
 };
 
 class decoderFFDiv3:public decoderFF

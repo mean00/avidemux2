@@ -51,6 +51,6 @@ uint8_t UI_arrow_disabled(void);
 void UI_refreshCustomMenu(void);
 
 bool UI_setVUMeter( uint32_t volume[6]); // Volume between 0 and 255.
-
+bool UI_setDecoderName(const char *name);
 #endif
 // EOF

@@ -649,5 +649,16 @@ bool                ADM_Composer::getVideoPtsDts(uint32_t frame, uint32_t *flags
     v->_aviheader->getPtsDts(frame,pts,dts);
     return true;
 }
+/**
+    \fn getVideoDecoderName
+*/
+const char          *ADM_Composer::getVideoDecoderName(void)
+{
+    if(!_segments.getNbRefVideos()) return "????";
+     _VIDEOS *v=_segments.getRefVideo(0);
+    if(!v) return "????";
+    if(!v->decoder) return "????";
+    return v->decoder->getDecoderName();
+}
 //
 //

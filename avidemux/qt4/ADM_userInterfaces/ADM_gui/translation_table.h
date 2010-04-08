@@ -84,6 +84,7 @@ PROCESS(pushButtonVideoFilter, ACT_VideoParameter) \
 PROCESS(pushButtonAudioConf, ACT_AudioCodec) \
 PROCESS(pushButtonFormatConfigure, ACT_SetMuxParam) \
 PROCESS(pushButtonAudioFilter, ACT_AudioFilters) \
+PROCESS(pushButtonDecoderConf, ACT_DecoderOption) \
 PROCESS(toolButtonPlay, ACT_PlayAvi) \
 PROCESS(toolButtonStop, ACT_StopAvi) \
 PROCESS(toolButtonPreviousFrame, ACT_PreviousFrame) \

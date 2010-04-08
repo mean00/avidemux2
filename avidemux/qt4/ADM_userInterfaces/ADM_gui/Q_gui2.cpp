@@ -1056,5 +1056,13 @@ bool UI_setVUMeter( uint32_t volume[6])
     UI_vuUpdate( volume);
     return true;
 }
+/**
+    \fn setDecodeName
+*/
+bool UI_setDecoderName(const char *name)
+{
+    WIDGET(labelVideoDecoder)->setText(name);	
+    return true;
+}
 //********************************************
 //EOF

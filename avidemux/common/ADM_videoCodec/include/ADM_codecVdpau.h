@@ -30,5 +30,6 @@ public:
       {
         return 1;
       }
+    virtual const char *getDecoderName(void) {return "VDPAU";}
 };
 #endif

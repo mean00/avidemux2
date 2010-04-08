@@ -84,6 +84,7 @@ public:
     {
         return true;
     }
+  virtual const char *getDecoderName(void) {return "????";}
 };
 /* This function is to be implemented by the application, it is just here for reference */
 decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
