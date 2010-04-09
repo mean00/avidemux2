@@ -2,7 +2,7 @@
 # Bootstrapper to semi-automatically build avidemux deb/rpm from source
 # (c) Mean 2009
 #
-packages_ext=deb
+packages_ext=""
 do_core=1
 do_cli=0
 do_gtk=1
@@ -65,7 +65,9 @@ usage()
         echo "Bootstrap avidemux 2.6:"
         echo "***********************"
         echo "  --help            : Print usage"
-        echo "  --rpm             : Build rpm packages rather than deb"
+        echo "  --rpm             : Build rpm packages"
+        echo "  --deb             : Build deb packages"
+        echo "  --tgz             : Build tgz packages"
         echo "  --debug           : Switch debugging on"
         echo "  --with-core       : Build core"
         echo "  --without-core    : Dont build core"
@@ -90,9 +92,17 @@ while [ $# != 0 ] ;do
          --debug)
                 debug=1
                 ;;
+         --tgz)
+                packages_ext=tar.gz
+                PKG="$PKG -DAVIDEMUX_PACKAGER=tgz"
+                ;;
+         --deb)
+                packages_ext=deb
+                PKG="$PKG -DAVIDEMUX_PACKAGER=deb"
+                ;;
          --rpm)
                 packages_ext=rpm
-                PKG="$PKG -DRPM=1"
+                PKG="$PKG -DAVIDEMUX_PACKAGER=rpm"
                 ;;
          --without-qt4)
                 do_qt4=0
@@ -192,9 +202,14 @@ fi
 
 echo "** Preparing debs **"
 cd $TOP
-rm -Rf debs
-mkdir debs
-find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t debs
-echo "** debs directory ready **"
-ls -l debs
+if [ "x$packages_ext" = "x" ]; then 
+        echo "No packaging"
+else
+        echo "Preparing packages"
+        rm -Rf debs
+        mkdir debs
+        find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t debs
+        echo "** debs directory ready **"
+        ls -l debs
+fi
 echo "** ALL DONE **"

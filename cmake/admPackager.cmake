@@ -12,7 +12,7 @@ MACRO(admPackager _prog)
         
         if("${AVIDEMUX_PACKAGER}" STREQUAL "rpm")
                 include("./${_prog}Rpm.cmake")
-        elseif ("${AVIDEMUX_PACKAGER}" STREQUAL "deb")
+        elseif("${AVIDEMUX_PACKAGER}" STREQUAL "deb")
                 include("./${_prog}Debian.cmake")
         elseif("${AVIDEMUX_PACKAGER}" STREQUAL "tgz")
                 include("./${_prog}TarGz.cmake")

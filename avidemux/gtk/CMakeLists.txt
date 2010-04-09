@@ -130,4 +130,8 @@ TARGET_LINK_LIBRARIES(avidemux3_gtk ${LIBXML2_LIBRARIES})
 ADM_LINK_THREAD(avidemux3_gtk)
 ADM_INSTALL_BIN(avidemux3_gtk)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk") 
-include(./gtkPackageDebian.cmake)
+#
+# Packaging
+#
+include(admPackager)
+admPackager(gtkPackage)
