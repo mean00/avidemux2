@@ -124,4 +124,8 @@ TARGET_LINK_LIBRARIES(avidemux3_cli ${LIBXML2_LIBRARIES})
 ADM_LINK_THREAD(avidemux3_cli)
 ADM_INSTALL_BIN(avidemux3_cli)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/cli/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cli") 
-include(./cliPackageDebian.cmake)
+#
+# Packaging
+#
+include(admPackager)
+admPackager(cliPackage)

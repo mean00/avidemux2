@@ -1,0 +1,15 @@
+##############################
+# DEBIAN
+##############################
+SET(CPACK_SET_DESTDIR "ON")
+SET (CPACK_GENERATOR "TGZ")
+# Some more infos
+SET(CPACK_PACKAGE_VERSION_MAJOR "2")
+SET(CPACK_PACKAGE_VERSION_MINOR "6")
+SET(CPACK_PACKAGE_VERSION_PATCH "0")
+SET(CPACK_PACKAGE_VERSION_PATCH "0-${ADM_SUBVERSION}")
+#
+SET(CPACK_PACKAGE_NAME "avidemux3-gtk")
+#
+
+include(CPack)
