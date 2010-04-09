@@ -20,6 +20,7 @@
 
 
 #include "ADM_image.h"
+typedef uint8_t (*refreshSB)(void);
 
 typedef struct
 {
@@ -56,6 +57,7 @@ bool    renderExposeEventFromUI(void); // This is called by UI, return true if U
 
 uint8_t renderLock(void);
 uint8_t renderUnlock(void);
+bool renderHookRefreshRequest(refreshSB cb);
 
 /* These functions are trampolined through render as they are UI dependant */
 

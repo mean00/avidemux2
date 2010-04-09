@@ -77,11 +77,15 @@ ADMImage *admPreview::getBuffer(void)
 
 void admPreview::setMainDimension(uint32_t w, uint32_t h)
 {
+  
   if(rdrImage) delete rdrImage;
   rdrImage=new ADMImage(w,h);
   rdrPhysicalW=w;
   rdrPhysicalH=h;
   renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
+ // Install our hook, we will do it more than needed
+ // but it does not really harm
+  renderHookRefreshRequest(admPreview::samePicture);
 }
 
 

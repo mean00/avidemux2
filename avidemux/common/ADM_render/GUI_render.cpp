@@ -25,7 +25,6 @@
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
-#include "ADM_preview.h"
 
 #ifdef USE_XV
 #include "GUI_xvRender.h"
@@ -51,7 +50,17 @@ static renderZoom   lastZoom=ZOOM_1_1;
 static uint8_t      _lock=0;
 
 static const UI_FUNCTIONS_T *HookFunc=NULL;
-//_______________________________________
+
+refreshSB refreshCallback=NULL;
+/**
+    \fn renderHookRefreshRequest
+    \brief Hook the callback when a renderer requests a full redraw
+*/
+bool renderHookRefreshRequest(refreshSB cb)
+{
+    refreshCallback=cb;
+    return true;
+}
 /**
  *      \fn ADM_renderLibInit
  *      \brief Initialize the renderlib with the needed external functions
@@ -201,7 +210,9 @@ uint8_t renderRefresh(void)
 bool renderCompleteRedrawRequest(void)
 {
     ADM_info("RedrawRequest");
-    admPreview::samePicture();
+    if(refreshCallback)
+        refreshCallback();
+    return true;
 }
 /**
     \fn renderExpose
