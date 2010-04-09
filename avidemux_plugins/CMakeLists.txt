@@ -158,8 +158,8 @@ ADD_SUBDIRECTORY(ADM_videoFilters6)
 ########################################
 INCLUDE(admPluginConfigSummary)
 MESSAGE("")
-IF(RPM)
-        include(./pluginsPackageRpm.cmake)
-ELSE(RPM)
-        include(./pluginsPackageDebian.cmake)
-ENDIF(RPM)
+#
+# Packaging
+#
+include(admPackager)
+admPackager(pluginsPackage)
