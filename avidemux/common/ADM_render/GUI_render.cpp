@@ -175,6 +175,7 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
     
             }
         MUI_updateDrawWindowSize(draw,(w*mul)/4,(h*mul)/4);
+        renderCompleteRedrawRequest();
         UI_purge();
         return 1;
 }
@@ -209,7 +210,7 @@ uint8_t renderRefresh(void)
 */
 bool renderCompleteRedrawRequest(void)
 {
-    ADM_info("RedrawRequest");
+    ADM_info("RedrawRequest\n");
     if(refreshCallback)
         refreshCallback();
     return true;
@@ -373,7 +374,7 @@ bool    renderExposeEventFromUI(void)
 {
     if(!renderer) return true;
     if(renderer->usingUIRedraw()==true) return true;
-    //renderer->refresh();
+    renderer->refresh();
     return false;
 
 }

@@ -1,8 +1,6 @@
 /***************************************************************************
-                          gui_xv.cpp  -  description
-                             -------------------
-
-	This part is strongly derivated from xine/mplayer/mpeg2dec
+    \file GUI_xvRender.cpp
+    \author mean fixounet@free.fr, This file is strongly derivated from xine/mplayer/mpeg2dec
 
     begin                : Tue Jan 1 2002
     copyright            : (C) 2002 by mean
@@ -35,26 +33,28 @@
 #include <X11/extensions/XShm.h>
 
 #include "ADM_default.h"
-
-
 #include "GUI_render.h"
 
 #include "GUI_accelRender.h"
 #include "GUI_xvRender.h"
-#include "ADM_assert.h"
 
 static uint8_t 	GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt);
 static uint8_t 	GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h);
 static void 	GUI_XvEnd( void );
-static uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
-static uint8_t 	GUI_XvSync(void);
-static uint8_t GUI_XvRedraw( void );
-static uint8_t getAtom(const char *string);
+static uint8_t  GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
+static uint8_t  GUI_XvRedraw( void );
+static uint8_t  getAtom(const char *string);
 //________________Wrapper around Xv_______________
+/**
+    \fn XvRender
+*/
 XvRender::XvRender( void )
 {
 
 }
+/**
+    \fn init
+*/
 bool XvRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
 	ADM_info("[Xvideo]Xv start\n");
@@ -62,16 +62,20 @@ bool XvRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom 
     baseInit(w,h,zoom);
 	return  GUI_XvInit( window,  w,  h);
 }
+/**
+    \fn stop
+*/
 bool XvRender::stop(void)
 {
 	 GUI_XvEnd( );
 	 printf("[Xvideo]Xv end\n");
 	 return 1;
 }
-
+/**
+    \fn displayImage
+*/
 bool XvRender::displayImage(ADMImage *pic)
 {
-
 	return GUI_XvDisplay(pic->data, imageWidth, imageHeight,displayWidth,displayHeight);
 }
 
@@ -106,18 +110,18 @@ static XGCValues xv_xgc;
 static Window xv_win;
 static XShmSegmentInfo Shminfo;
 static uint8_t GUI_XvExpose( void );
-//
-//	Free all ressources allocated by xv
-//
 
-
+/**
+    \fn GUI_XvEnd
+    \brief Free all ressources allocated by xv
+*/
 void GUI_XvEnd( void )
 {
 	ADM_assert(xv_port);
  	ADM_assert(xv_display);
 
 
-  	printf("[Xvideo] Releasing Xv Port\n");
+  	ADM_info("[Xvideo] Releasing Xv Port\n");
   	XLockDisplay (xv_display);
 	if(XvUngrabPort(xv_display,xv_port,0)!=Success)
  				printf("[Xvideo] Trouble releasing port...\n");
@@ -129,8 +133,9 @@ void GUI_XvEnd( void )
      xv_port=0;
 
 }
-
-//------------------------------------
+/**
+    \fn GUI_XvList
+*/
 uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH)
 {
     
@@ -146,31 +151,24 @@ uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint3
         //printf("%u x %u => %u x %u\n",w,h,destW,destH);
         // And display it !
 #if 1
-	  XvShmPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
+        XvShmPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
 			0, 0, destW, destH,	// dst
 			False);
 #else
-	 XvPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
+        XvPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
 			0, 0, w, h	// dst
 			);
-
 #endif
-	  //XSetForeground (xv_display, xv_gc, 0);
-
-	  XSync(xv_display, False);
-	  XUnlockDisplay (xv_display);
+          XUnlockDisplay (xv_display);
+          XSync(xv_display, False);
+          
       }
     return 1;
 }
-uint8_t GUI_XvSync(void)
-{
-	if(xv_display)
-	  	XSync(xv_display, False);
-	return 1;
-}
-//------------------------------------
-//
-//------------------------------------
+/**
+    \fn GUI_XvList
+*/
+
 uint8_t GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
 {
 
@@ -337,9 +335,9 @@ unsigned long num_adaptors;
     return 0;
 }
 
-// _________________________________________________
-//
-// _________________________________________________
+/**
+    \fn GUI_XvList
+*/
 uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
 {
     XvImageFormatValues *formatValues;
@@ -369,6 +367,10 @@ uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
 	    XFree(formatValues);
     return f;
 }
+/**
+    \fn getAtom
+*/
+
 uint8_t getAtom(const char *string)
 {
   XvAttribute * attributes;
@@ -392,6 +394,10 @@ uint8_t getAtom(const char *string)
   return xv_atom;
 
 }
+/**
+    \fn GUI_XvBuildAtom
+*/
+
 void GUI_XvBuildAtom(Display * dis, Atom * atom, char *string)
 {
     UNUSED_ARG(dis);
@@ -399,7 +405,9 @@ void GUI_XvBuildAtom(Display * dis, Atom * atom, char *string)
     UNUSED_ARG(string);
 }
 
-
+/**
+    \fn GUI_XvRedraw
+*/
 uint8_t GUI_XvRedraw( void )
 {
 	printf("Xv need redraw !\n");

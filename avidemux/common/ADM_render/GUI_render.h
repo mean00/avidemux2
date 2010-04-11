@@ -20,7 +20,7 @@
 
 
 #include "ADM_image.h"
-typedef uint8_t (*refreshSB)(void);
+typedef bool (*refreshSB)(void);
 
 typedef struct
 {
