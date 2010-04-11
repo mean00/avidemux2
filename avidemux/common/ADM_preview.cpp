@@ -85,7 +85,7 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h)
   renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
  // Install our hook, we will do it more than needed
  // but it does not really harm
-  renderHookRefreshRequest(admPreview::samePicture);
+  renderHookRefreshRequest(admPreview::updateImage);
 }
 
 
@@ -223,9 +223,9 @@ void admPreview::destroy(void)
 */
 bool admPreview::updateImage(void)
 {
-            UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
-            if(!defered_display) 
-                renderUpdateImage(rdrImage);                  
-            return true;
+    UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
+    if(!defered_display) 
+        renderUpdateImage(rdrImage);                  
+    return true;
 }
 // EOF
