@@ -521,9 +521,6 @@
 #define HAVE_ROUND 1
 #define HAVE_ROUNDF 1
 #define HAVE_THREADS 1
-#ifndef HAVE_MALLOC_H 
-#define HAVE_MALLOC_H 1
-#endif 
 #define RUNTIME_CPUDETECT 1
 #define CONFIG_RUNTIME_CPUDETECT 1
 #if defined( __MINGW32__) || defined(__APPLE__)
