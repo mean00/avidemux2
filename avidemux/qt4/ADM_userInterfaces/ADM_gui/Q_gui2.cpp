@@ -574,8 +574,8 @@ int UI_Init(int nargc,char **nargv)
 
 	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
 	UI_updateRecentMenu();
-        // Init vumeter
-        UI_InitVUMeter(mw->ui.frameVU);
+    // Init vumeter
+    UI_InitVUMeter(mw->ui.frameVU);
 	return 0;
 }
 
