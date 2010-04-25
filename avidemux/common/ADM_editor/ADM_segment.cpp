@@ -23,7 +23,7 @@
 #include "ADM_colorspace.h"
 #include "ADM_vidMisc.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
-#include "ADM_script2/include/ADM_JSif.h"
+#include "ADM_script2/include/ADM_jsIf.h"
 #include "ADM_codec.h"
 
 ADM_EditorSegment::ADM_EditorSegment(void)
