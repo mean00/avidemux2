@@ -25,8 +25,11 @@ using std::vector;
 #include "ADM_jsUtils.h"
 #include "ADM_jsShell.h"
 #include "ADM_jsDebug.h"
+#include "ADM_jsDFactory.h"
 
 typedef JSBool JS_PROTOTYPE(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+
+
 /**
     \struct ADM_JS_HOOK
 */

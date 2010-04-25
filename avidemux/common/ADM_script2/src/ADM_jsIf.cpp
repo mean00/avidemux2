@@ -23,7 +23,7 @@ static jsLoggerFunc *jsLogger=NULL;
 static void *jsLoggerCookie=NULL;
 vector <ADM_JS_HOOK >jsHooks;
 extern ADM_Composer *video_body;
-
+extern bool ADM_JSDialogFactoryInit(JSContext *cx, JSObject *obj);
 #define JSVAR(a,b,c) a b=c
 
 #if defined( __MINGW32__) 
@@ -147,6 +147,7 @@ extern "C" JSFunctionSpec  *jsGetIfFunctions(void);
 extern "C" JSFunctionSpec  *jsGetTestFunctions(void);
 extern "C" JSFunctionSpec  *jsGetAdmFunctions(void);
 extern "C" JSFunctionSpec  *jsGetEditFunctions(void);
+extern "C" JSFunctionSpec  *jsGetDialogFactoryFunctions(void);
 extern "C" JSObject *jsEditorInit(JSContext *cx,JSObject *obj);
 extern "C" JSObject *jsAvidemuxInit(JSContext *cx,JSObject *obj);
 static bool registerOne(const char *name,const char *text,JSFunctionSpec *s,JSContext *cx,JSObject *obj)
@@ -222,9 +223,16 @@ ADM_JS_HOOK h;
             h.name="editor";
             h.text="Please prefix this with editor.";
             h.jsFunctions=jsGetEditFunctions();
-            jsHooks.push_back(h);
             jsEditorInit(cx,obj);
-            return true;
+            jsHooks.push_back(h);
+        // Register dialogFactory functions
+#if 0
+            h.name="dialog";
+            h.text=".";
+            h.jsFunctions=jsGetDialogFactoryFunctions();
+            jsHooks.push_back(h);
+#endif
+            return ADM_JSDialogFactoryInit(cx,obj);
 }
 /**
     \fn SpidermonkeyInit
