@@ -119,37 +119,49 @@ void flvHeader::setProperties(const char *name,float value)
 
 }
 /**
-    \fn parseMetaData
-    \brief
+    \fn parseOneMeta
 */
-uint8_t flvHeader::parseMetaData(uint32_t remaining)
+bool flvHeader::parseOneMeta(const char *s,uint64_t endPos)
 {
-    uint32_t endPos=ftello(_fd)+remaining;
-    {
-        // Check the first one is onMetaData...
-        uint8_t type=read8();
-
-        if(type!=AMF_DATA_TYPE_STRING) // String!
-            goto endit;
-        char *z=readFlvString();
-        printf("[FlashString] %s\n",z);
-        if(z && strncmp(z,"onMetaData",10)) goto endit;
-        // Normally the next one is mixed array
-        Skip(4);
-        Skip(1);
-        while(ftello(_fd)<endPos-4)
-        {
-
-            char *s=readFlvString();
-            printf("[FlvType] :%d String : %s",type,s);
-            type=read8();
+            int type=read8();
+            printf("type :%d : ",type);
             switch(type)
             {
+                case AMF_DATA_TYPE_OBJECT_END:break;
+                case AMF_DATA_TYPE_OBJECT: 
+                {
+                        printf("\n");
+                        while(ftello(_fd)<endPos-4)
+                        {
+                                char *o=readFlvString();
+                                printf("\t Object:%s",o);
+                                if(false==parseOneMeta(o,endPos)) return false;
+/*
+                                char objType=read8();
+                                printf("-->%d",objType);
+                                if(objType!=10) 
+                                {
+                                        ADM_warning("type is not strict array\n");
+                                        goto xxer;
+                                }
+                                int count=read32();
+                                printf(", count=%d\n",count);
+                                for(int i=0;i<count;i++)
+                                {
+                                        if(false==parseOneMeta(endPos)) return false;
+                                }
+                                break;
+*/
+                        }
+                        break;
+                        
+                }
                 case AMF_DATA_TYPE_ARRAY:
                                     {
                                             uint32_t len=read32();
-                                            printf("[FLV] Array :");
-                                            for(int i=0;i<len;i++) printf("%02x ",read8());
+                                            printf("\n\t[FLV] Array : %"LU" entries\n",len);
+                                            for(int i=0;i<len;i++) 
+                                                if(false==parseOneMeta("",endPos)) return false;
                                             printf("\n");
                                             break;
                                     }
@@ -167,14 +179,39 @@ uint8_t flvHeader::parseMetaData(uint32_t remaining)
                                         ;break;
                 case AMF_DATA_TYPE_STRING: {int r=read16();Skip(r);}break;
                 case AMF_DATA_TYPE_BOOL: read8();break;
-                case AMF_DATA_TYPE_OBJECT: goto endit; // unsupported for the moment
+                
                 default : printf("\n");ADM_assert(0);
             }
             printf("\n");
-
+            return true;
+xxer:
+    return false;
+}
+/**
+    \fn parseMetaData
+    \brief
+*/
+uint8_t flvHeader::parseMetaData(uint32_t remaining)
+{
+    uint32_t endPos=ftello(_fd)+remaining;
+    {
+        // Check the first one is onMetaData...
+        uint8_t type=read8();
+        if(type!=AMF_DATA_TYPE_STRING) // String!
+            goto endit;
+        char *z=readFlvString();
+        printf("[FlashString] %s\n",z);
+        if(z && strncmp(z,"onMetaData",10)) goto endit;
+        // Normally the next one is mixed array
+        Skip(4);
+        Skip(1);
+        while(ftello(_fd)<endPos-4)
+        {
+            char *s=readFlvString();
+            printf("[FlvType]  String : %s",s);
+            
+            if(false==parseOneMeta(s,endPos)) goto endit;
         }
-
-        // Process them...
     }
 endit:
     fseeko(_fd,endPos,SEEK_SET);
