@@ -19,6 +19,17 @@
 #include "ADM_audiodevice.h"
 #include "ADM_audioDeviceInternal.h"
 #include "math.h"
+
+const char *i2state(int a)
+{
+    if(a==AUDIO_DEVICE_STARTED) return "DeviceStarted";
+    if(a==AUDIO_DEVICE_STOPPED) return "DeviceStopped";
+    if(a==AUDIO_DEVICE_STOP_REQ) return "DeviceStop_Requested";
+    if(a==AUDIO_DEVICE_STOP_GR) return "DeviceStop_Granted";
+    return "?????";
+
+}
+#define CHANGE_STATE(x) { printf("%s -> %s\n",i2state(stopRequest),i2state(x));stopRequest=x;}
 /**
     \fn audioDeviceThreaded
     \brief constructor
@@ -58,7 +69,7 @@ void audioDeviceThreaded::Loop(void)
         sendData();
 
     }
-    stopRequest=AUDIO_DEVICE_STOP_GR;
+    CHANGE_STATE(AUDIO_DEVICE_STOP_GR);
     printf("[AudioDeviceThreaded] Exiting loop\n");
 }
 /**
@@ -77,11 +88,11 @@ uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *c
     memset(silence,0,sizeOf10ms);
     audioBuffer=new uint8_t[ADM_THREAD_BUFFER_SIZE];
     rdIndex=wrIndex=0;
-    stopRequest=AUDIO_DEVICE_STOPPED;
+    CHANGE_STATE(AUDIO_DEVICE_STOPPED);
     //
     if(!localInit()) return 0;
     // Spawn
-    stopRequest=AUDIO_DEVICE_STARTED;
+    CHANGE_STATE(AUDIO_DEVICE_STARTED);
     ADM_assert(!pthread_create(&myThread,NULL,bouncer,this));
 
 
@@ -106,17 +117,21 @@ uint32_t   audioDeviceThreaded:: getBufferFullness(void)
 */
 uint8_t audioDeviceThreaded::stop()
 {
-
-
+ uint32_t maxWait=3*1000; // Should be enough to drain
+    ADM_info("[audioDevice]Stopping device...");
     if(stopRequest==AUDIO_DEVICE_STARTED)
     {
-        stopRequest=AUDIO_DEVICE_STOP_REQ;
-        while(stopRequest==AUDIO_DEVICE_STOP_REQ)
+        CHANGE_STATE(AUDIO_DEVICE_STOP_REQ);
+        while(stopRequest==AUDIO_DEVICE_STOP_REQ && maxWait)
         {
             ADM_usleep(1000);
+            maxWait--;
         }
     }
-
+    if(!maxWait)
+    {
+        ADM_error("Audio device did not stop cleanly\n");
+    }
     localStop();
     if(audioBuffer)
     {
@@ -125,7 +140,7 @@ uint8_t audioDeviceThreaded::stop()
     }
     if(silence) delete [] silence;
     silence=NULL;
-    stopRequest=AUDIO_DEVICE_STOPPED;
+    CHANGE_STATE(AUDIO_DEVICE_STOPPED);
     return 1;
 }
 /**
