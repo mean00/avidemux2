@@ -27,7 +27,7 @@ extern "C"
 #include "avidemutils.h"
 #include "fourcc.h"
 #include "ADM_codecVdpau.h"
-
+#include "DIA_coreToolkit.h"
 extern bool vdpauUsable(void);
 
 /**
@@ -41,7 +41,16 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
     {
 #if defined(USE_VDPAU) 
         if(vdpauUsable()==true)
-            return (decoders *) (new decoderFFVDPAU (w,h,fcc,extraLen,extraData,bpp));
+        {
+            decoderFFVDPAU *dec=new decoderFFVDPAU (w,h,fcc,extraLen,extraData,bpp);
+            if(dec->initializedOk()==true)
+                return (decoders *) (dec);
+            else
+            {
+                GUI_Error_HIG("VDPAU","Cannot initialize VDPAU, make sure it is not already used by another application.\nSwitching to default decoder.");
+                delete dec;
+            }
+        }
         
 #endif
     }

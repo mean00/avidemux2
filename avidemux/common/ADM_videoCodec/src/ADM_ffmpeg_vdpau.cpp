@@ -206,6 +206,8 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
         destroying=false;
+        alive=true;
+        scratch=NULL;
         _context->opaque          = this;
         _context->get_buffer      = ADM_VDPAUgetBuffer;
         _context->release_buffer  = ADM_VDPAUreleaseBuffer;
@@ -219,13 +221,27 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
         ADM_info("[VDPAU] Decoder created \n");
         // Now instantiate our VDPAU surface & decoder
-        ADM_assert(VDP_STATUS_OK==funcs.decoderCreate(vdpDevice,VDP_DECODER_PROFILE_H264_HIGH,w,h,15,&(VDPAU->vdpDecoder)));
+        for(int i=0;i<NB_SURFACE;i++)
+            VDPAU->renders[i]=NULL;
+
+        if(VDP_STATUS_OK!=funcs.decoderCreate(vdpDevice,VDP_DECODER_PROFILE_H264_HIGH,
+                                w,h,15,&(VDPAU->vdpDecoder)))
+        {
+            ADM_error("Cannot create VDPAU decoder\n");
+            alive=false;
+            return;
+        }
         // Create our surfaces...
         for(int i=0;i<NB_SURFACE;i++)
         {
             VDPAU->renders[i]=new vdpau_render_state;
             memset(VDPAU->renders[i],0,sizeof( vdpau_render_state));
-            ADM_assert(VDP_STATUS_OK==funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,w,h,&(VDPAU->renders[i]->surface)));
+            if(VDP_STATUS_OK!=funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,w,h,&(VDPAU->renders[i]->surface)))
+            {
+                ADM_error("Cannot create surface %d/%d\n",i,NB_SURFACE);
+                alive=false;
+                return;
+            }
             VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
         scratch=new ADMImage(w,h,1);
@@ -241,11 +257,20 @@ decoderFFVDPAU::~decoderFFVDPAU()
         destroying=true;
         for(int i=0;i<NB_SURFACE;i++)
         {
-            ADM_assert(VDP_STATUS_OK==funcs.destroySurface((VDPAU->renders[i]->surface)));
-            delete VDPAU->renders[i];
+            if(VDPAU->renders[i])
+            {
+                if(VDPAU->renders[i]->surface)
+                {
+                    if(VDPAU->renders[i]->surface)
+                        if(VDP_STATUS_OK!=funcs.destroySurface((VDPAU->renders[i]->surface)))
+                                ADM_error("Error destroying surface %d\n",i);
+                }
+                delete VDPAU->renders[i];
+            }
         }
-        ADM_info("[VDPAU] Destroying decoder\n");
-         ADM_assert(VDP_STATUS_OK==funcs.decoderDestroy(VDPAU->vdpDecoder));
+         ADM_info("[VDPAU] Destroying decoder\n");
+         if(VDP_STATUS_OK!=funcs.decoderDestroy(VDPAU->vdpDecoder))
+                ADM_error("Error destroying VDPAU decoder\n");
          delete VDPAU;
          vdpau=NULL;
 }

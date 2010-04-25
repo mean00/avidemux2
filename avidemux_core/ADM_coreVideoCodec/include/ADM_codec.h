@@ -48,6 +48,7 @@ public:
   virtual ~ decoders ()
   {
   };
+  virtual bool   initializedOk(void) {return true;};
   virtual uint8_t getPARWidth (void)
   {
     return 1;

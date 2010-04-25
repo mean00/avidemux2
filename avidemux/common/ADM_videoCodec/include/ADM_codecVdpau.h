@@ -2,6 +2,7 @@
 class decoderFFVDPAU:public decoderFF
 {
 protected:
+                    bool alive;
                     int b_age;
                     int ip_age[2];
 
@@ -31,5 +32,6 @@ public:
         return 1;
       }
     virtual const char *getDecoderName(void) {return "VDPAU";}
+    virtual bool  initializedOk(void)  {return alive;};
 };
 #endif
