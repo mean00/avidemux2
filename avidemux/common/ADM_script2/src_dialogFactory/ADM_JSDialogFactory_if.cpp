@@ -22,6 +22,7 @@
 #include "DIA_factory.h"
 #include "ADM_JSDFMenu.h"
 #include "ADM_JSDFToggle.h"
+#include "ADM_JSDFInteger.h"
 #include "ADM_JSDialogFactory.h"
 
 /**
@@ -43,6 +44,11 @@ bool ADM_JSDialogFactoryInit(JSContext *cx, JSObject *obj)
     if(NULL==ADM_JSDFToggle::JSInit(cx,obj))
     {
         ADM_error("Cannot register toggle js class\n");
+        return false;
+    }
+    if(NULL==ADM_JSDFInteger::JSInit(cx,obj))
+    {
+        ADM_error("Cannot register integer js class\n");
         return false;
     }
     ADM_info("Registered DialogFactory classes\n");
