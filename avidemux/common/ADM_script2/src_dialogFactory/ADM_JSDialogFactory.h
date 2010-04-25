@@ -28,12 +28,12 @@ class ADM_JSDialogFactoryHelper
 {
 private:
 	char* _title;
-	std::vector <ADM_JSDFMenuHelper*> _controls;
+	std::vector <ADM_JSDFBaseHelper*> _controls;
 
 public:
 	ADM_JSDialogFactoryHelper(const char *title);
 	~ADM_JSDialogFactoryHelper(void);
-	void addControl(ADM_JSDFMenuHelper* control);
+	void addControl(ADM_JSDFBaseHelper* control);
 	diaElem** getControls(int *controlCount);
 	const char* title(void);
 };

@@ -60,7 +60,7 @@ bool parseECMAScript(const char *name)
 	ADM_info("Done.\n");
 	if(pJSScript != NULL)
 	{// begin execute external file
-		printf("Spidermonkey executing \"%s\"...",name);
+		printf("Spidermonkey executing \"%s\"...\n",name);
 		JSBool ok = JS_ExecuteScript(g_pCx, g_pObject, pJSScript, &rval);
 		JS_DestroyScript(g_pCx,pJSScript);
 		ADM_info("Done.\n");

@@ -1,7 +1,9 @@
 SET(ADM_scriptDF_SRCS
         ADM_JSDFMenu.cpp
+        ADM_JSDFToggle.cpp
         ADM_JSDialogFactory.cpp
         ADM_JSDialogFactory_if.cpp 
+        
 )
 
 ADD_DEFINITIONS("-DJS_THREADSAFE -DXP_UNIX")

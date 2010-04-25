@@ -28,7 +28,7 @@ ADM_JSDialogFactoryHelper::~ADM_JSDialogFactoryHelper(void)
 	_title = NULL;
 }
 
-void ADM_JSDialogFactoryHelper::addControl(ADM_JSDFMenuHelper* control)
+void ADM_JSDialogFactoryHelper::addControl(ADM_JSDFBaseHelper* control)
 {
 	_controls.push_back(control);
 }
@@ -37,7 +37,7 @@ diaElem** ADM_JSDialogFactoryHelper::getControls(int *controlCount)
 {
 	*controlCount = (int)_controls.size();
 
-	std::vector<ADM_JSDFMenuHelper*>::iterator it;
+	std::vector<ADM_JSDFBaseHelper*>::iterator it;
 	int i = 0;
 	diaElem **elems = new diaElem*[*controlCount];
 

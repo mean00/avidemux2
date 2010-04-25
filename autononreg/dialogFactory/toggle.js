@@ -1,4 +1,12 @@
-//AD  <- These first 4 characters need to be the first 4 characters to identify the ECMAScript file to Avidemux
-print("Testing factory Toggle");
-	admTestFacToggle();
-print("Testing factory Toggle");
+    var toggle = new DFToggle("Toggle:");
+    var dlgWizard = new DialogFactory("Dialog Factory toggle");
+
+    
+    toggle.value=0;
+    dlgWizard.addControl(toggle);
+
+    if (dlgWizard.show())
+    {
+                var out="toggle "+toggle.value;
+                print(out);
+    }

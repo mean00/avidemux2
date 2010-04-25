@@ -19,38 +19,43 @@
 
 #include "jsapi.h"
 #include "DIA_factory.h"
+#include "ADM_JSDF.h"
 #include <vector>
-
-class ADM_JSDFMenuHelper
+/**
+    \class ADM_JSDFMenuHelper
+*/
+class ADM_JSDFMenuHelper : public ADM_JSDFBaseHelper
 {
 private:
-	char* _title;
-	uint32_t _index;
-	diaMenuEntry *_menuEntries;
+	char                *_title;
+	uint32_t            _index;
+	diaMenuEntry        *_menuEntries;
 	std::vector <char*> _items;
 
 public:
-	ADM_JSDFMenuHelper(const char *title);
-	~ADM_JSDFMenuHelper(void);
-	void addItem(const char* item);
-	diaElem* getControl(void);
-	int index(void);
-	void setIndex(int index);
+                     ADM_JSDFMenuHelper(const char *title);
+                     ~ADM_JSDFMenuHelper(void);
+            void     addItem(const char* item);
+	virtual diaElem* getControl(void);
+            int      index(void);
+            void     setIndex(int index);
 };
-
+/**
+    \class ADM_JSDFMenu
+*/
 class ADM_JSDFMenu
 {
 public:
 	ADM_JSDFMenu(void) {}
 
-	static JSBool JSConstructor(JSContext *cx, JSObject *obj, uintN argc, 
+	static JSBool   JSConstructor(JSContext *cx, JSObject *obj, uintN argc, 
 								jsval *argv, jsval *rval);
-	static void JSDestructor(JSContext *cx, JSObject *obj);
+	static void     JSDestructor(JSContext *cx, JSObject *obj);
 	static JSObject *JSInit(JSContext *cx, JSObject *obj, JSObject *proto = NULL);
-	static JSBool JSGetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
-	static JSBool JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool   JSGetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool   JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
-	static JSBool addItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);	
+	static JSBool   addItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);	
 
 	static JSPropertySpec properties[];
 	static JSFunctionSpec methods[];
