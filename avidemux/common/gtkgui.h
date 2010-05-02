@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-void 			GUI_setCurrentFrameAndTime(void );
+void 			GUI_setCurrentFrameAndTime(uint64_t offset=0);
 void 			GUI_setAllFrameAndTime(void );
 
 

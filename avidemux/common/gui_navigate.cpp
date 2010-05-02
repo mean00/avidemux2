@@ -431,9 +431,9 @@ void GUI_setAllFrameAndTime(void)
     \fn GUI_setCurrentFrameAndTime
     \brief Update some informations : current frame # and current time
 */
-void GUI_setCurrentFrameAndTime(void)
+void GUI_setCurrentFrameAndTime(uint64_t offset)
 {
-    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t pts=admPreview::getCurrentPts()+offset;
     double len;
    
     UI_setCurrentTime(pts);

@@ -232,7 +232,7 @@ bool GUIPlayback::run(void)
     {
 
         admPreview::displayNow();;
-        GUI_setCurrentFrameAndTime();
+        GUI_setCurrentFrameAndTime(firstPts);
         if(false==videoFilter->getNextFrame(&fn,previewBuffer))
         {
             printf("[Play] Cancelling playback, nextPicture failed\n");
