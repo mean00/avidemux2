@@ -787,6 +787,41 @@ tsPacketLinearTracker::tsPacketLinearTracker(uint32_t pid,listOfTsAudioTracks *a
     }
 }
 /**
+    \fn findStartCode
+    \brief Must check stillOk after calling this
+*/
+int tsPacketLinearTracker::findStartCode(void)
+{
+#define likely(x) x
+#define unlikely(x) x
+        unsigned int last=0xfffff;
+        unsigned int cur=0xffff;
+        int startCode=0;
+        while(this->stillOk())
+        {
+            last=cur;
+            cur=this->readi16();
+            if(likely(last&0xff)) continue;
+            if(unlikely(!last)) // 00 00 , need 01 xx
+            {
+                if((cur>>8)==1) 
+                {
+                        startCode=cur&0xff;
+                        break;
+                }
+            }
+            if(unlikely(!(last&0xff))) // xx 00 need 00 01
+            {
+                if(cur==1)
+                {
+                        startCode=this->readi8();
+                        break;
+                }
+            }
+        }
+        return startCode;
+}
+/**
     \fn ~tsPacketLinearTracker
 */
 tsPacketLinearTracker::~tsPacketLinearTracker()

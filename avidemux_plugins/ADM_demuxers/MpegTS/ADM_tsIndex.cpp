@@ -101,7 +101,7 @@ typedef enum
     markNow
 }markType;
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -318,14 +318,8 @@ uint32_t recoveryCount=0xff;
 #define SPS_READ_AHEAD 32
       while(1)
       {
-        uint32_t code=0xffff+0xffff0000;
-        while(((code&0x00ffffff)!=1) && pkt->stillOk())
-        {
-            code=(code<<8)+pkt->readi8();
-        }
-        if(!pkt->stillOk()) break;
-        
-        uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
+        int startCode=pkt->findStartCode();
+
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
         if(startCode!=NAL_SPS) continue;
@@ -361,9 +355,11 @@ uint32_t recoveryCount=0xff;
         {
             code=(code<<8)+pkt->readi8();
         }
+        // Cannot use pkt->findStartCode here!
 resume:
         if(!pkt->stillOk()) break;
         uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
+
 //  1:0 2:Nal ref idc 5:Nal Type
         if(startCode&0x80) 
         {
@@ -537,30 +533,7 @@ dmxPacketInfo info;
 #define unlikely(x) x
       while(1)
       {
-        int last=0xffff,cur=0xffff;
-        
-        while(pkt->stillOk())
-        {
-            last=cur;
-            cur=pkt->readi16();
-            if(likely(last&0xff)) continue;
-            if(unlikely(!last)) // 00 00 , need 01 xx
-            {
-                if((cur>>8)==1) 
-                {
-                        startCode=cur&0xff;
-                        break;
-                }
-            }
-            if(unlikely(!(last&0xff))) // xx 00 need 00 01
-            {
-                if(cur==1)
-                {
-                        startCode=pkt->readi8();
-                        break;
-                }
-            }
-        }
+        startCode=pkt->findStartCode();
         if(!pkt->stillOk()) break;
 
           switch(startCode)

@@ -241,5 +241,6 @@ public:
                 ~tsPacketLinearTracker();
         bool    getStats(uint32_t *nb,packetTSStats **stats);
 virtual bool    updateStats(uint8_t *data);
+        int     findStartCode(void);
 };
 #endif
