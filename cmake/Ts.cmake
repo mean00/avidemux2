@@ -27,7 +27,20 @@ MACRO(FIND_LRELEASE)
 
 	ENDIF(NOT LRELEASE_EXECUTABLE AND NOT LRELEASE_NOT_FOUND)
 ENDMACRO(FIND_LRELEASE)
-
+#
+#
+#
+MACRO(INSTALL_I18N _files)
+        IF(WIN32)
+                SET(i18dir "${CMAKE_INSTALL_PREFIX}/${BIN_DIR}/i18n")
+        ELSE(WIN32)
+                SET(i18dir "${CMAKE_INSTALL_PREFIX}/share/avidemux/i18n")
+        ENDIF(WIN32)
+        INSTALL(FILES ${_files} DESTINATION "${i18dir}")
+ENDMACRO(INSTALL_I18N _files)
+#
+#
+#
 MACRO(COMPILE_AVIDEMUX_TS_FILES ts_subdir _sources)
     IF(XSLTPROC_EXECUTABLE AND LRELEASE_EXECUTABLE)
         FILE(GLOB ts_files ${ts_subdir}/avidemux_*.ts)
@@ -59,12 +72,11 @@ MACRO(COMPILE_AVIDEMUX_TS_FILES ts_subdir _sources)
                 COMMAND ${LRELEASE_EXECUTABLE}
                     ${_outXml}
                     -qm ${_out}
-                DEPENDS ${_in}
+                DEPENDS ${_in} ${_outXml}
             )
                 
             SET(qm_files ${qm_files} ${_outXml} ${_out})
-
-			INSTALL(FILES ${_out} DESTINATION "${CMAKE_INSTALL_PREFIX}/${BIN_DIR}/i18n")
+            INSTALL_I18N( ${_out})
         ENDFOREACH(ts_input ${ts_files})
 
         SET(${_sources} ${${_sources}} ${qm_files})
@@ -95,7 +107,7 @@ MACRO(COMPILE_QT_TS_FILES ts_subdir _sources)
                 
             SET(qm_files ${qm_files} ${_out})
 
-			INSTALL(FILES ${_out} DESTINATION "${CMAKE_INSTALL_PREFIX}/${BIN_DIR}/i18n")
+            INSTALL_I18N( ${_out})
         ENDFOREACH(ts_input ${ts_files})
 
         SET(${_sources} ${${_sources}} ${qm_files})
@@ -106,6 +118,6 @@ MACRO(COMPILE_TS_FILES ts_subdir _sources)
 	FIND_XSLTPROC()
 	FIND_LRELEASE()
 	
-	#COMPILE_AVIDEMUX_TS_FILES(${ts_subdir} ${_sources})
-	#COMPILE_QT_TS_FILES(${ts_subdir} ${_sources})
+	COMPILE_AVIDEMUX_TS_FILES(${ts_subdir} ${_sources})
+	COMPILE_QT_TS_FILES(${ts_subdir} ${_sources})
 ENDMACRO(COMPILE_TS_FILES)

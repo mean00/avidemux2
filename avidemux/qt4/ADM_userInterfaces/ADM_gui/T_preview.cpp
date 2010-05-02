@@ -18,6 +18,7 @@
 #include <QtGui/QFrame>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
+#include <QtGui/QPaintEngine>
 
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
@@ -35,6 +36,7 @@ void UI_QT4VideoWidget(QFrame *host);
 static QFrame *hostFrame=NULL;
 static uint8_t *lastImage=NULL;
 extern QWidget *QuiMainWindows;
+int paintEngineType = -1;
 
 
 void DIA_previewInit(uint32_t width, uint32_t height) {}
@@ -68,6 +70,17 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 	if(!displayW || !displayH || !rgbDataBuffer )
 		return ;
 	{
+
+       if (paintEngineType == -1)
+       {
+               QPainter painter(this);
+
+               if (painter.isActive())
+                       paintEngineType = painter.paintEngine()->type();
+
+               painter.end();
+       }
+
         if(true==renderExposeEventFromUI())
         {
             QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
