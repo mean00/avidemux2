@@ -532,16 +532,36 @@ dmxPacketInfo info;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
+    int startCode;
+#define likely(x) x
+#define unlikely(x) x
       while(1)
       {
-        uint32_t code=0xffff+0xffff0000;
-        while((code&0x00ffffff)!=1 && pkt->stillOk())
+        int last=0xffff,cur=0xffff;
+        
+        while(pkt->stillOk())
         {
-            code=(code<<8)+pkt->readi8();
+            last=cur;
+            cur=pkt->readi16();
+            if(likely(last&0xff)) continue;
+            if(unlikely(!last)) // 00 00 , need 01 xx
+            {
+                if((cur>>8)==1) 
+                {
+                        startCode=cur&0xff;
+                        break;
+                }
+            }
+            if(unlikely(!(last&0xff))) // xx 00 need 00 01
+            {
+                if(cur==1)
+                {
+                        startCode=pkt->readi8();
+                        break;
+                }
+            }
         }
         if(!pkt->stillOk()) break;
-        uint8_t startCode=pkt->readi8();
-
 
           switch(startCode)
                   {

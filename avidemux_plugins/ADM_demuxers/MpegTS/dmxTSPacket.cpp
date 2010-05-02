@@ -578,6 +578,7 @@ bool tsPacketLinear::refill(void)
         }
         return true;
 }
+#ifndef TS_PACKET_INLINE
 /**
     \fn readi8
 */
@@ -596,6 +597,7 @@ uint8_t tsPacketLinear::readi8(void)
     return pesPacket->payload[pesPacket->offset++];
     
 }
+
 /**
     \fn readi16
 */
@@ -612,6 +614,7 @@ uint16_t tsPacketLinear::readi16(void)
     }
     return (readi8()<<8)+readi8();
 }
+#endif
 /**
     \fn readi32
 */

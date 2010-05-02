@@ -139,7 +139,7 @@ public:
     \class tsPacketLinear
 */
 #define ADM_PACKET_LINEAR 10*1024
-
+#define TS_PACKET_INLINE
 class tsPacketLinear : public tsPacket
 {
 protected:
@@ -156,13 +156,54 @@ public:
                 tsPacketLinear(uint32_t pid);
                 ~tsPacketLinear();
         uint32_t getConsumed(void);
+        bool     stillOk(void) {return !eof;};
+#ifndef TS_PACKET_INLINE
         uint8_t  readi8();
         uint16_t readi16();
+
+#else
+/**
+    \fn readi8
+*/
+uint8_t readi8(void)
+{
+    consumed++;
+    if(pesPacket->offset<pesPacket->payloadSize)
+    {
+        return pesPacket->payload[pesPacket->offset++];
+    }
+    if(false==refill()) 
+    {
+        eof=1;
+        return 0;
+    }
+    return pesPacket->payload[pesPacket->offset++];
+    
+}
+
+/**
+    \fn readi16
+*/
+uint16_t readi16(void)
+{
+    if(pesPacket->offset+1<pesPacket->payloadSize)
+    {
+        uint8_t *r=pesPacket->payload+pesPacket->offset;
+        uint16_t v=(r[0]<<8)+r[1];;
+        
+        pesPacket->offset+=2;
+        consumed+=2;
+        return v;
+    }
+    return (readi8()<<8)+readi8();
+}
+#endif
+
         uint32_t readi32();
         bool     sync(uint8_t *pid);
         bool    read(uint32_t len, uint8_t *buffer);
         bool    forward(uint32_t v);
-        bool    stillOk(void) {return !eof;};
+        
         bool    getInfo(dmxPacketInfo *info);
         bool    seek(uint64_t packetStart, uint32_t offset);
         bool    changePid(uint32_t pid) ;
