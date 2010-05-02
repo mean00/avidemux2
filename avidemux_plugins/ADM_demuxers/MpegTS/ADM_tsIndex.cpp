@@ -28,7 +28,7 @@
 #include "ADM_tsPatPmt.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
-
+#include "ADM_clock.h"
 #include "ADM_getbits.h"
 #if 0
 extern "C"
@@ -116,13 +116,15 @@ protected:
         uint32_t        currentFrameType;
         uint32_t        beginConsuming;
         indexerState    currentIndexState;
+        uint64_t        fullSize;
+        Clock           ticktock;
 protected:
         FILE                    *index;
         tsPacketLinearTracker   *pkt;
         listOfTsAudioTracks     *audioTracks;
         DIA_workingBase         *ui;
-
-        bool    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
+        void                    updateUI(void);
+        bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
 
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
@@ -199,6 +201,7 @@ TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
     audioTracks=NULL;
     ui=createWorking ("Indexing");
     audioTracks=trk;
+    ticktock.reset();
 }
 
 /**
@@ -210,6 +213,20 @@ TsIndexer::~TsIndexer()
     if(pkt) delete pkt;
     if(ui) delete ui;
     ui=NULL;
+}
+/**
+    \fn updateUI
+*/
+void TsIndexer::updateUI(void)
+{
+        if(ticktock.getElapsedMS()<1000) return;
+        ticktock.reset();
+        uint64_t p;
+        p=pkt->getPos();
+        float pos=p;
+        pos=pos/(float)fullSize;
+        pos*=100;
+        ui->update( (uint32_t)pos);
 }
 /**
 
@@ -279,7 +296,6 @@ bool    seq_found=false;
 
 PSVideo video;
 indexerData  data;    
-uint64_t fullSize;
 dmxPacketInfo info;
 TS_PESpacket SEI_nal(0);
 bool result=false;
@@ -349,16 +365,9 @@ uint32_t recoveryCount=0xff;
     //******************
       while(1)
       {
-
-        uint32_t code=0xffff+0xffff0000;
-        while(((code&0x00ffffff)!=1) && pkt->stillOk())
-        {
-            code=(code<<8)+pkt->readi8();
-        }
-        // Cannot use pkt->findStartCode here!
+        int startCode=pkt->findStartCode();
 resume:
         if(!pkt->stillOk()) break;
-        uint8_t startCode=pkt->readi8(); // Read 5 bytes so far
 
 //  1:0 2:Nal ref idc 5:Nal Type
         if(startCode&0x80) 
@@ -379,14 +388,14 @@ resume:
            // aprintf("Still capturing, ignore\n");
             continue;
           }
-                     
+                
           switch(startCode)
                   {
                   case NAL_SEI:
                     {
                         // Load the whole NAL
                             SEI_nal.empty();
-                            code=0xffff+0xffff0000;
+                            uint32_t code=0xffff+0xffff0000;
                             while((code!=1) && pkt->stillOk())
                             {
                                 uint8_t r=pkt->readi8();
@@ -399,7 +408,7 @@ resume:
                                 decodeSEI(SEI_nal.payloadSize-4,SEI_nal.payload,&recoveryCount);
                             else printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                         
-
+                            startCode=pkt->readi8();
                             goto resume;
                     }
                             break;
@@ -458,6 +467,7 @@ resume:
                       if(data.state==idx_startAtGopOrSeq) 
                       {
                               currentFrameType=data.frameType;;
+                              updateUI();
                               
                       }else
                       {
@@ -494,7 +504,6 @@ the_end:
 bool TsIndexer::runMpeg2(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
-uint64_t fullSize;
 uint8_t buffer[50*1024];
 bool seq_found=false;
 
@@ -571,12 +580,7 @@ dmxPacketInfo info;
                   case 0xb8: // GOP
                           // Update ui
                             {
-                                uint64_t p;
-                                p=pkt->getPos();
-                                float pos=p;
-                                pos=pos/(float)fullSize;
-                                pos*=100;
-                                ui->update( (uint32_t)pos);
+                               updateUI();
 
                             }
 
