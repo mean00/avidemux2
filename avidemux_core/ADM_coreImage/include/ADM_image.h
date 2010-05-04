@@ -88,6 +88,7 @@ public:
                                                 case PLANAR_V:return _width>>1;break;
                                                 default: ADM_assert(0);
                                         }
+                                        return 0;
                                 };
         uint8_t         *GetWritePtr(ADM_PLANE plane)
                         {       
@@ -99,6 +100,7 @@ public:
                                                 case PLANAR_V:return data+((plan*5)>>2);break;
                                                 default: ADM_assert(0);
                                         }
+                                return NULL;
                         };
    
         uint32_t GetHeight(ADM_PLANE plane)
@@ -110,6 +112,7 @@ public:
                                                 case PLANAR_V:return _height>>1;break;
                                                 default: ADM_assert(0);
                                         }
+                                        return 0;
                                 };
         uint8_t duplicateMacro(ADMImage *src,uint32_t swap);       /// copy an image to ourself, including info
 public:

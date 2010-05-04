@@ -136,7 +136,7 @@ class diaElemSliderBase : public diaElem
 public:
 	                diaElemSliderBase() : diaElem(ELEM_SLIDER) {}
   virtual           ~diaElemSliderBase() {};
-  virtual uint8_t   setDigits(uint32_t digits) { this->digits = digits; }
+  virtual uint8_t   setDigits(uint32_t digits) { this->digits = digits; return 1;}
 };
 
 typedef diaElem *CREATE_USLIDER_T(uint32_t *value,const char *toggleTitle, uint32_t min,uint32_t max,uint32_t incr , const char *tip);
@@ -200,7 +200,7 @@ public:
 };
 /*********************************************/
 typedef diaElem *CREATE_TOGGLE_UINT(uint32_t *toggleValue,const char *toggleTitle, uint32_t *uintval, 
-								const char *name,uint32_t min,uint32_t max,const char *tip=NULL);
+								const char *name,uint32_t min,uint32_t max,const char *tip);
 class diaElemToggleUint : public diaElem
 {
   protected:
@@ -220,7 +220,7 @@ public:
   int getRequiredLayout(void);
 };
 typedef diaElem *CREATE_TOGGLE_INT(uint32_t *toggleValue,const char *toggleTitle, int32_t *intval, 
-									const char *name,int32_t min,int32_t max,const char *tip=NULL);
+									const char *name,int32_t min,int32_t max,const char *tip);
 class diaElemToggleInt : public diaElem
 {
   protected:
@@ -601,7 +601,7 @@ public:
   int getRequiredLayout(void);
 };
 /**********************************************/
-typedef diaElem *(CREATE_THREADCOUNT_T)(uint32_t *value, const char *title, const char *tip = NULL);
+typedef diaElem *(CREATE_THREADCOUNT_T)(uint32_t *value, const char *title, const char *tip );
 class diaElemThreadCount : public diaElem
 {
 
@@ -614,7 +614,7 @@ public:
   int getRequiredLayout(void);
 };
 /**********************************************/
-typedef diaElem *(CREATE_ASPECTRATIO_T)(uint32_t *value, const char *title, const char *tip = NULL);
+typedef diaElem *(CREATE_ASPECTRATIO_T)(uint32_t *value, const char *title, const char *tip );
 class diaElemAspectRatio : public diaElem
 {
 public:

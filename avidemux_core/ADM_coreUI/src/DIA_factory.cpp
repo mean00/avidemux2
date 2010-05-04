@@ -259,6 +259,7 @@ uint8_t   diaElemMenu::link(diaMenuEntry *entry,uint32_t onoff,diaElem *w)
 {
 	diaElemMenuBase *cast=(diaElemMenuBase *)internalPointer;
 	cast->link(entry,onoff,w);
+    return 1;
 }
 void      diaElemMenu::updateMe(void)
 {
@@ -293,6 +294,7 @@ uint8_t   diaElemMenuDynamic::link(diaMenuEntryDynamic *entry,uint32_t onoff,dia
 {
 	diaElemMenuDynamicBase *cast=(diaElemMenuDynamicBase *)internalPointer;
 	cast->link(entry,onoff,w);
+    return 1;
 }
 void   diaElemMenuDynamic::finalize(void)
 {
@@ -502,7 +504,8 @@ void      diaElemToggle::enable(uint32_t onoff)
 uint8_t   diaElemToggle::link(uint32_t onoff,diaElem *w)
 {
 	diaElemToggleBase *cast=(diaElemToggleBase *)internalPointer;
-			cast->link(onoff,w);	
+    cast->link(onoff,w);	
+    return 1;
 }
 DIA_MKSTUBS(diaElemToggle)
 //
@@ -528,7 +531,8 @@ void      diaElemUSlider::enable(uint32_t onoff)
 uint8_t   diaElemUSlider::setDigits(uint32_t digits)
 {
 	diaElemSliderBase *cast=(diaElemSliderBase *)internalPointer;
-			cast->setDigits(digits);	
+    cast->setDigits(digits);	
+    return 1;
 }
 DIA_MKSTUBS(diaElemUSlider)
 // ****************** diaElemSlider ********************
@@ -553,7 +557,8 @@ void      diaElemSlider::enable(uint32_t onoff)
 uint8_t   diaElemSlider::setDigits(uint32_t digits)
 {
 	diaElemSliderBase *cast=(diaElemSliderBase *)internalPointer;
-			cast->setDigits(digits);	
+    cast->setDigits(digits);	
+    return 1;
 }
 DIA_MKSTUBS(diaElemSlider)
 //

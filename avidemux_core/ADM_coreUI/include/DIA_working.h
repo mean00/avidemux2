@@ -36,9 +36,9 @@ class DIA_workingBase
                         DIA_workingBase( const char *title=NULL ) {};
             virtual		~DIA_workingBase(){};
             // If returns 1 -> Means aborted
-            virtual uint8_t  	update(uint32_t percent) {ADM_assert(0);}
-            virtual uint8_t 	update(uint32_t current,uint32_t total){ADM_assert(0);};
-            virtual uint8_t  	isAlive (void ){ADM_assert(0);};
+            virtual uint8_t  	update(uint32_t percent) {ADM_assert(0);return 1;}
+            virtual uint8_t 	update(uint32_t current,uint32_t total){ADM_assert(0);return 1;};
+            virtual uint8_t  	isAlive (void ){ADM_assert(0);return 1;};
             
 };
 /**
