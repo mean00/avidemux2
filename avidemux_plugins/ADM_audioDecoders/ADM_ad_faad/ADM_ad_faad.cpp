@@ -79,10 +79,10 @@ unsigned char chan;
 		{
 			_inited = 1;
 			faacDecInit2(_instance, d,l, &srate,&chan);
-			printf("[FAAD]Found :%"LU" rate %"LU" channels\n",srate,chan);
+			printf("[FAAD]Found :%"LU" rate %"LU" channels\n",(uint32_t)srate,(uint32_t)chan);
                         if(srate!=info->frequency)
                         {
-                            printf("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,srate);
+                            printf("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
                             info->frequency=srate;
                         }
                         if(chan!=info->channels) // Ask for stereo !
@@ -137,11 +137,13 @@ void ADM_faad::purge(void)
 uint8_t ADM_faad:: beginDecompress( void )
 {
 	_inbuffer=0;
+    return 1;
 }
 uint8_t ADM_faad::endDecompress( void )
 {
 	_inbuffer=0;
 	 faacDecPostSeekReset(_instance, 0);
+     return 1;
 }
 uint8_t ADM_faad::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
 {
@@ -165,7 +167,7 @@ uint8_t first=0;
 		{
 			// Try
 			printf("Trying with %d bytes\n",nbIn);
-			res=faacDecInit(_instance,inptr,nbIn,&srate,&chan);
+			res=(long int)faacDecInit(_instance,inptr,nbIn,&srate,&chan);
 			if(res>=0)
 			{
 				printf("Faad Inited : rate:%"LU" chan:%"LU" off:%ld\n",srate,chan,res);

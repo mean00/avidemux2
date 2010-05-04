@@ -32,7 +32,7 @@
 # endif
 
 # include "timer.h"
-
+#include <stdlib.h> // MEANX
 mad_timer_t const mad_timer_zero = { 0, 0 };
 
 /*

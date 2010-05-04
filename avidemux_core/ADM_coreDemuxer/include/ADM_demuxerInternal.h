@@ -66,7 +66,7 @@ public:
 extern "C" {\
 vidHeader   *create(void){ return new Class; } \
 void         destroy(vidHeader *h){ Class *z=(Class *)h;delete z;} \
-uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;} \
+uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
 uint32_t     getApiVersion(void) {return ADM_DEMUXER_API_VERSION;} \
 const char  *getName(void) {return name;} \
 const char  *getDescriptor(void) {return desc;} \

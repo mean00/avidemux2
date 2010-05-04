@@ -515,7 +515,7 @@ uint8_t flvHeader::setVideoHeader(uint8_t codec,uint32_t *remaining)
   
       uint32_t pos=ftello(_fd);
       uint32_t len=*remaining,width,height;
-      uint8_t buffer[len];
+      uint8_t *buffer=new uint8_t[len];
       read(len,buffer);
       fseeko(_fd,pos,SEEK_SET);
        /* Decode header, from h263dec.c / lavcodec*/
@@ -524,6 +524,7 @@ uint8_t flvHeader::setVideoHeader(uint8_t codec,uint32_t *remaining)
          _video_bih.biHeight=_mainaviheader.dwHeight=height;
          _video_bih.biWidth=_mainaviheader.dwWidth=width;
       }
+      delete [] buffer;
     }
    return 1;
 }

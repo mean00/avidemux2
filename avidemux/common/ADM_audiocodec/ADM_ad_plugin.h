@@ -44,6 +44,7 @@ typedef struct
 	{ \
 		Class *a=(Class *)codec;\
 		delete a;\
+        return NULL;\
 	}\
 	int supportedFormat(uint32_t audioFourcc) \
 	{ \

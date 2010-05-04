@@ -1,5 +1,4 @@
 /***************************************************************************
-/*
 
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
@@ -276,10 +275,11 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
                         son.read32();
                         son.read32();
                         s=son.read();
-                        char str[s+1];
+                        char *str=new char[s+1];
                         son.readPayload((uint8_t *)str,s);
                         str[s]=0;
                         printf("Url : <%s>\n",str);
+                        delete [] str;
                       }
                       break;
 

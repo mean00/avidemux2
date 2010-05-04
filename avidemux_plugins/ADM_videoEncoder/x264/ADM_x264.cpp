@@ -275,7 +275,7 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
               // Put our SEI front...
               // first a temp location...
               firstIdr=false;
-              uint8_t tmpBuffer[size];
+              uint8_t *tmpBuffer=new uint8_t[size];
               memcpy(tmpBuffer,out->data,size);
               uint8_t *dout=out->data;
               // Put back out SEI and add Size
@@ -287,6 +287,7 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
               memcpy(dout+4+seiUserDataLen,tmpBuffer,size);
               size+=4+seiUserDataLen;
               out->len = size; // update total size
+              delete [] tmpBuffer;
           }
           break;
         case X264_TYPE_I:
