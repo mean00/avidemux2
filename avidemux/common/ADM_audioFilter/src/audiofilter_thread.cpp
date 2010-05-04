@@ -26,6 +26,7 @@ static void *boomerang(void *x)
 {
     ADM_audioAccess_thread *a=(ADM_audioAccess_thread *)x;
     a->run();
+    return NULL;
 }
 
 /**

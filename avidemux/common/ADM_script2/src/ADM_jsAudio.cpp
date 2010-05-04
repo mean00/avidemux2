@@ -88,7 +88,7 @@ int jsAudioMixer(const char *s)
 */
 int32_t jsGetResample(void)
 {
-
+    return 0;
 }
 /**
     \fn jsSetResample

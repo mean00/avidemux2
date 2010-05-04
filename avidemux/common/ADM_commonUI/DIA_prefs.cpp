@@ -271,7 +271,7 @@ char     *globalGlyphName=NULL;
 		
 //***AV
         uint32_t nbAudioDevice=ADM_av_getNbDevices();
-        diaMenuEntryDynamic *audioDeviceItems[nbAudioDevice+1];
+        diaMenuEntryDynamic **audioDeviceItems=new diaMenuEntryDynamic *[nbAudioDevice+1];
         audioDeviceItems[0]=new diaMenuEntryDynamic(0,"Dummy","Dummy");
         for(int i=0;i<nbAudioDevice;i++)
         {
@@ -456,7 +456,7 @@ char     *globalGlyphName=NULL;
             
             delete audioDeviceItems[i];
         }
-
+        delete [] audioDeviceItems;
 	ADM_dealloc(filterPath);
 	ADM_dealloc(globalGlyphName);
 

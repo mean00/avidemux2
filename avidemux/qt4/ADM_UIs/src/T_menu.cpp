@@ -109,6 +109,7 @@ uint8_t   diaElemMenu::link(diaMenuEntry *entry,uint32_t onoff,diaElem *w)
             return dyna->link(menus[i],onoff,w);
     }
     ADM_assert(0);
+    return 1;
 }
 void   diaElemMenu::enable(uint32_t onoff)
 {

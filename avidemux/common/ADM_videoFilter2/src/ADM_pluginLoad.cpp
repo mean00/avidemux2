@@ -246,6 +246,7 @@ static ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag)
     }
     ADM_error("Cannot get video filter from tag %"LU"\n",tag);
     ADM_assert(0);
+    return NULL;
 }
 /**
     \fn ADM_vf_getPluginFromTag
@@ -266,6 +267,7 @@ static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
     }
     ADM_error("Cannot get video filter from name %s\n",name);
     ADM_assert(0);
+    return NULL;
 }
 /**
     \fn ADM_VideoFilters

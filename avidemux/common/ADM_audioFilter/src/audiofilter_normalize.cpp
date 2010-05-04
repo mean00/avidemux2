@@ -83,7 +83,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
 
     uint32_t percent=0;
     uint32_t current=0,llength=0;
-    float max[_wavHeader.channels];
+    float *max=new float[_wavHeader.channels];
     _previous->rewind();
     DolbySkip(1);
     printf("\n Seeking for maximum value, that can take a while\n");
@@ -154,6 +154,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
     _scanned = 1;
     DolbySkip(0);
     _previous->rewind();
+    delete [] max;
     return 1;
 }
 //

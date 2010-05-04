@@ -172,7 +172,7 @@ void EditorCache::dump( void)
         cacheElem *e=&(_elem[i]);
         switch(e->pts)
         {
-            case ADM_NO_PTS:  printf("Not used\n",i);break;
+            case ADM_NO_PTS:  printf("Not used %d\n",i);break;
             default:
                 printf("Edcache content[%d]: PTS : %"LLU" us%"LLU" ms\n",i,
                                                                     e->image->Pts,e->image->Pts/1000);

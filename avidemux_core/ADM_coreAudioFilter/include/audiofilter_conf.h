@@ -41,6 +41,7 @@ public    :
                         resamplerEnabled=false;
                         resamplerFrequency=44100;
                         film2pal    =FILMCONV_NONE;
+                        return true;
                 }
 
     uint64_t     startTimeInUs;

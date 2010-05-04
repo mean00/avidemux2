@@ -166,5 +166,6 @@ bool         ADM_videoFilterQueue::runAction(void)
     }
 theEnd:
         ADM_info("Exiting video thread loop\n");
+        return true;
 }
 //EOF

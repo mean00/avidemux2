@@ -55,6 +55,7 @@ extern ADM_Composer *video_body;
 uint64_t admPreview::getCurrentPts(void)
 {
         if(rdrImage) return rdrImage->Pts;
+        return 0LL;
 }
 /**
       \fn admPreview::seekToTime

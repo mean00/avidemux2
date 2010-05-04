@@ -224,7 +224,7 @@ void DIA_encodingQt4::setVideoCodec(const char *n)
 void DIA_encodingQt4::setBitrate(uint32_t br,uint32_t globalbr)
 {
           ADM_assert(window);
-          snprintf(string,79,"%"LU" kB/s",br,globalbr);
+          snprintf(string,79,"%"LU" kB/s",br);
           WRITE(labelVidBitrate);
 
 }

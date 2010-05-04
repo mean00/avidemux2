@@ -411,6 +411,6 @@ void GUI_XvBuildAtom(Display * dis, Atom * atom, char *string)
 uint8_t GUI_XvRedraw( void )
 {
 	printf("Xv need redraw !\n");
-
+    return true;
 }
 #endif

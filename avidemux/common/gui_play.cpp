@@ -424,6 +424,6 @@ bool GUIPlayback::updateVu(void)
         UI_setVUMeter(stat);
         vuMeterPts=time;
     }
-
+    return true;
 }
 // EOF

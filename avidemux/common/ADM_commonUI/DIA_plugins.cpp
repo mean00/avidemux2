@@ -52,7 +52,7 @@ uint8_t DIA_pluginsInfo(void)
     // Audio Plugins
 
     printf("[Audio Plugins] Found %u plugins\n",aNbPlugin);
-    diaElemReadOnlyText *aText[aNbPlugin];
+    diaElemReadOnlyText **aText=new diaElemReadOnlyText *[aNbPlugin];
     diaElemFrame frameAudio(QT_TR_NOOP("Audio Plugins"));
         
        
@@ -81,7 +81,7 @@ uint8_t DIA_pluginsInfo(void)
 
     // Encoder
     printf("[VideoEncoder6 Plugins] Found %u plugins\n",ve6NbPlugin);
-    diaElemReadOnlyText *veText[ve6NbPlugin];
+    diaElemReadOnlyText **veText=new diaElemReadOnlyText *[ve6NbPlugin];
     diaElemFrame frameVE(QT_TR_NOOP("Video Encoder Plugins"));
         
        
@@ -110,7 +110,7 @@ uint8_t DIA_pluginsInfo(void)
 
     // Audio Device
     printf("[AudioDevice Plugins] Found %u plugins\n",avNbPlugin);
-    diaElemReadOnlyText *avText[avNbPlugin];
+    diaElemReadOnlyText **avText=new diaElemReadOnlyText *[avNbPlugin];
     diaElemFrame frameAV(QT_TR_NOOP("Audio Device Plugins"));
     
  for(int i=0;i<avNbPlugin;i++)
@@ -139,7 +139,7 @@ uint8_t DIA_pluginsInfo(void)
 
   // Audio Encoder
     printf("[AudioEncoder Plugins] Found %u plugins\n",aeNbPlugin);
-    diaElemReadOnlyText *aeText[aeNbPlugin];
+    diaElemReadOnlyText **aeText=new diaElemReadOnlyText*[aeNbPlugin];
     diaElemFrame frameAE(QT_TR_NOOP("Audio Encoder Plugins"));
     
  for(int i=0;i<aeNbPlugin;i++)
@@ -168,7 +168,7 @@ uint8_t DIA_pluginsInfo(void)
 
  // Demuxer Encoder
     printf("[Demuxers Plugins] Found %u plugins\n",dmNbPlugin);
-    diaElemReadOnlyText *dmText[dmNbPlugin];
+    diaElemReadOnlyText **dmText=new diaElemReadOnlyText*[dmNbPlugin];
     diaElemFrame frameDM(QT_TR_NOOP("Demuxer Plugins"));
     
  for(int i=0;i<dmNbPlugin;i++)
@@ -198,7 +198,7 @@ uint8_t DIA_pluginsInfo(void)
 
  // muxer Encoder
     printf("[Muxers Plugins] Found %u plugins\n",mxNbPlugin);
-    diaElemReadOnlyText *mxText[mxNbPlugin];
+    diaElemReadOnlyText **mxText=new diaElemReadOnlyText*[mxNbPlugin];
     diaElemFrame frameMX(QT_TR_NOOP("Muxer Plugins"));
     
  for(int i=0;i<mxNbPlugin;i++)
@@ -241,5 +241,11 @@ uint8_t DIA_pluginsInfo(void)
     for(int i=0;i<mxNbPlugin;i++)
         delete mxText[i];
 
+    delete [] aText;
+    delete [] veText;
+    delete [] avText;
+    delete [] aeText;
+    delete [] dmText;
+    delete [] mxText;
     return 1;
 }

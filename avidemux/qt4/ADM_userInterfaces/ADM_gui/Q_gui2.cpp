@@ -413,6 +413,9 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 				if (!UI_readCurTime(hh, mm, ss, ms))
 					UI_updateTimeCount(currentFrame, currentFps);
 			}
+            break;
+        default:
+            break;
 	}
 
 	return QObject::eventFilter(watched, event);
@@ -649,7 +652,7 @@ int UI_RunApp(void)
 	destroyTranslator();
     delete myApplication;
     myApplication=NULL;
-    
+    return 1;
 }
 /**
     \fn searchTranslationTable(const char *name))
@@ -1013,6 +1016,7 @@ ADM_OUT_FORMAT 	UI_GetCurrentFormat( void )
 uint8_t 	UI_SetCurrentFormat( uint32_t fmt )
 {
 	WIDGET(comboBoxFormat)->setCurrentIndex((int)fmt);
+    return 1;
 }
 
 /**

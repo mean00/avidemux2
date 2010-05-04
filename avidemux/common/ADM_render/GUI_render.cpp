@@ -129,11 +129,13 @@ uint8_t renderLock(void)
 {
   ADM_assert(!_lock);
   _lock=1; 
+  return 1;
 }
 uint8_t renderUnlock(void)
 {
   ADM_assert(_lock);
   _lock=0; 
+  return 1;
 }
 
 /**
@@ -221,6 +223,7 @@ bool renderCompleteRedrawRequest(void)
 uint8_t renderExpose(void)
 {
     renderRefresh();
+    return 1;
 }
 /**
     \fn spawnRenderer

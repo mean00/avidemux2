@@ -84,6 +84,7 @@ bool sdlRender::stop( void)
         sdl_overlay=NULL;
         sdl_display=NULL;
         ADM_info("[SDL] Video subsystem closed and destroyed\n");
+        return true;
 }
 /**
     \fn init

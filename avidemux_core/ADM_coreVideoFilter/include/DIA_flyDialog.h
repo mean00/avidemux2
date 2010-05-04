@@ -110,7 +110,7 @@ class ADM_flyDialog
           
           
   
-  virtual uint8_t  update(void) {};
+  virtual uint8_t  update(void) {return 1;};
             uint8_t  cleanup(void);
   
 
