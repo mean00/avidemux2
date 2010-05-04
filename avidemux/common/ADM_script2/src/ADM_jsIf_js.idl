@@ -1,3 +1,9 @@
+%{
+#include "stdio.h"
+#include "ADM_jsAvidemux.h"
+#include "ADM_jsDebug.h"
+%}
+
 /*
 ###############################################################
        return JS function     CM Function  params

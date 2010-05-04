@@ -230,10 +230,11 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
                   break;
         case MKV_CODEC_ID:
             {
-            uint8_t codec[len+1];
+            uint8_t *codec=new uint8_t[len+1];
                   father.readBin(codec,len);
                   codec[len]=0;
                   entry->fcc=ADM_mkvCodecToFourcc((char *)codec);
+                  delete [] codec;
 
             }
                   break;

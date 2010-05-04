@@ -196,5 +196,6 @@ bool ADM_ad_cleanup(void)
         ADM_audioPlugins[i]=NULL;
     }
     ADM_audioPlugins.clear();
+    return true;
 }   
 //EOF

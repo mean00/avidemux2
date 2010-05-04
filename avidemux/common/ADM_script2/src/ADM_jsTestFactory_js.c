@@ -12,8 +12,20 @@ jsapigen's license. For licensing information regarding this file,
 please refer to the software package which it is part of.
 
 */
+
+#include "stdio.h"
+#include "ADM_jsAvidemux.h"
+#include "ADM_jsTestFactory.h"
+
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+static size_t jj_alloca_limit = 0;
+#endif
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#ifdef HAVE_ALLOCA_H
+#endif
 #include <jsapi.h>
 #ifndef JS_THREADSAFE
 #if JS_VERSION <= 170
@@ -30,10 +42,11 @@ please refer to the software package which it is part of.
 #ifndef JS_FS_END
 #define JS_FS_END {NULL, NULL, 0, 0, 0}
 #endif
+
 static JSBool
 jjadmTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var2;
+    JSObject * var2;
     int var3;
     int var6;
     jsval var7;
@@ -60,7 +73,7 @@ jjadmTestFacInt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 static JSBool
 jjadmTestFacFloat(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var9;
+    JSObject * var9;
     int var10;
     int var13;
     jsval var14;
@@ -87,7 +100,7 @@ jjadmTestFacFloat(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
 static JSBool
 jjadmTestFacToggle(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var16;
+    JSObject * var16;
     int var17;
     int var20;
     jsval var21;
@@ -114,7 +127,7 @@ jjadmTestFacToggle(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
 static JSBool
 jjadmTestFacMenu(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var23;
+    JSObject * var23;
     int var24;
     int var27;
     jsval var28;
@@ -141,7 +154,7 @@ jjadmTestFacMenu(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 static JSBool
 jjadmTestFacFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var30;
+    JSObject * var30;
     int var31;
     int var34;
     jsval var35;
@@ -168,7 +181,7 @@ jjadmTestFacFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 static JSBool
 jjadmTestFacBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var37;
+    JSObject * var37;
     int var38;
     int var41;
     jsval var42;
@@ -195,7 +208,7 @@ jjadmTestFacBitrate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
 static JSBool
 jjadmTestFacBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var44;
+    JSObject * var44;
     int var45;
     int var48;
     jsval var49;
@@ -222,7 +235,7 @@ jjadmTestFacBar(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 static JSBool
 jjadmTestFacRoText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var51;
+    JSObject * var51;
     int var52;
     int var55;
     jsval var56;
@@ -249,7 +262,7 @@ jjadmTestFacRoText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
 static JSBool
 jjadmTestFacText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var58;
+    JSObject * var58;
     int var59;
     int var62;
     jsval var63;
@@ -276,7 +289,7 @@ jjadmTestFacText(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 static JSBool
 jjadmTestFacTab(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var65;
+    JSObject * var65;
     int var66;
     int var69;
     jsval var70;
@@ -303,7 +316,7 @@ jjadmTestFacTab(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 static JSBool
 jjadmTestFacFrame(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var72;
+    JSObject * var72;
     int var73;
     int var76;
     jsval var77;
@@ -330,7 +343,7 @@ jjadmTestFacFrame(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
 static JSBool
 jjadmTestFacHex(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var79;
+    JSObject * var79;
     int var80;
     int var83;
     jsval var84;
@@ -357,7 +370,7 @@ jjadmTestFacHex(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 static JSBool
 jjadmTestFacDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var86;
+    JSObject * var86;
     int var87;
     int var90;
     jsval var91;
@@ -384,7 +397,7 @@ jjadmTestFacDirSel(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
 static JSBool
 jjadmTestFacButton(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var93;
+    JSObject * var93;
     int var94;
     int var97;
     jsval var98;
@@ -411,7 +424,7 @@ jjadmTestFacButton(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
 static JSBool
 jjadmTestFacMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var100;
+    JSObject * var100;
     int var101;
     int var104;
     jsval var105;
@@ -438,7 +451,7 @@ jjadmTestFacMatrix(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
 static JSBool
 jjadmTestFacNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var107;
+    JSObject * var107;
     int var108;
     int var111;
     jsval var112;
@@ -465,7 +478,7 @@ jjadmTestFacNotch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
 static JSBool
 jjadmTestFacThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var114;
+    JSObject * var114;
     int var115;
     int var118;
     jsval var119;
@@ -492,7 +505,7 @@ jjadmTestFacThreadCount(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 static JSBool
 jjadmTestFacSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var121;
+    JSObject * var121;
     int var122;
     int var125;
     jsval var126;
@@ -519,7 +532,7 @@ jjadmTestFacSlider(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
 static JSBool
 jjadmTestEncoding(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var128;
+    JSObject * var128;
     int var129;
     int var132;
     jsval var133;
@@ -546,7 +559,7 @@ jjadmTestEncoding(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *
 static JSBool
 jjadmTestCrash(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var135;
+    JSObject * var135;
     int var139;
     JSBool var134;
     var135 = NULL;
@@ -561,7 +574,7 @@ jjadmTestCrash(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
 static JSBool
 jjadmTestAssert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var141;
+    JSObject * var141;
     int var145;
     JSBool var140;
     var141 = NULL;

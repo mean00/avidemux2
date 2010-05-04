@@ -12,8 +12,20 @@ jsapigen's license. For licensing information regarding this file,
 please refer to the software package which it is part of.
 
 */
+
+#include "stdio.h"
+#include "ADM_jsAvidemux.h"
+#include "ADM_jsDebug.h"
+
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+static size_t jj_alloca_limit = 0;
+#endif
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#ifdef HAVE_ALLOCA_H
+#endif
 #include <jsapi.h>
 #ifndef JS_THREADSAFE
 #if JS_VERSION <= 170
@@ -30,34 +42,35 @@ please refer to the software package which it is part of.
 #ifndef JS_FS_END
 #define JS_FS_END {NULL, NULL, 0, 0, 0}
 #endif
+
 static JSBool
 jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var2;
-    char *var7;
+    JSObject * var2;
     int var6;
+    char * var7;
     int var8;
     jsval var9;
-    JSString *var10;
-    jsval var81;
+    JSString * var10;
+    jsval var86;
     size_t var11;
     size_t var12;
     int var14;
-    jschar *var13;
-    jsval var82;
+    jschar * var15;
+    jsval var87;
     JSBool var1;
     var2 = NULL;
-    var7 = NULL;
     var6 = 0;
+    var7 = NULL;
     var8 = 0;
     var9 = JSVAL_NULL;
     var10 = NULL;
-    var81 = JSVAL_NULL;
+    var86 = JSVAL_NULL;
     var11 = 0;
     var12 = 0;
     var14 = 0;
-    var13 = NULL;
-    var82 = JSVAL_NULL;
+    var15 = NULL;
+    var87 = JSVAL_NULL;
     var1 = JS_FALSE;
     var2 = obj;
     var6 = argc;
@@ -69,23 +82,32 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     if (!var10) {
         goto do_return;
     }
-    var81 = STRING_TO_JSVAL(var10);
-    argv[argc+0] = var81;
+    var86 = STRING_TO_JSVAL(var10);
+    argv[argc+0] = var86;
     var11 = JS_GetStringLength(var10);
     var12 = 1;
     var12 += var11;
-    var7 = JS_malloc(cx, var12);
-    if (!var7) {
-        goto do_return;
+#ifdef HAVE_ALLOCA
+    if (var12 < jj_alloca_limit) {
+        var7 = alloca(var12);
+    } else {
+#endif
+        var7 = malloc(var12);
+        if (!var7) {
+            goto do_return;
+        } else {
+            var14 = 1;
+        }
+#ifdef HAVE_ALLOCA
     }
-    var14 = 1;
-    var13 = JS_GetStringChars(var10);
-    var82 = STRING_TO_JSVAL(var10);
-    argv[argc+1] = var82;
+#endif
+    var15 = JS_GetStringChars(var10);
+    var87 = STRING_TO_JSVAL(var10);
+    argv[argc+1] = var87;
     {
         size_t i;
         for (i = 0; i < var11; ++i) {
-            var7[i] = wctob(var13[i]);
+            var7[i] = wctob(var15[i]);
         }
         var7[var11] = '\0';
     }
@@ -94,7 +116,7 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var1 = JS_TRUE;
     do_return:
     if (var14) {
-        JS_free(cx, var7);
+        free(var7);
         var7 = NULL;
         var14 = 0;
     }
@@ -103,315 +125,351 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 static JSBool
 jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var16;
-    char *var21;
-    int var20;
-    int var22;
-    jsval var23;
-    JSString *var24;
-    jsval var83;
-    size_t var25;
+    JSObject * var17;
+    int var21;
+    char * var22;
+    int var23;
+    jsval var24;
+    JSString * var25;
+    jsval var88;
     size_t var26;
-    int var28;
-    jschar *var27;
-    jsval var84;
-    JSBool var15;
-    var16 = NULL;
-    var21 = NULL;
-    var20 = 0;
-    var22 = 0;
-    var23 = JSVAL_NULL;
-    var24 = NULL;
-    var83 = JSVAL_NULL;
-    var25 = 0;
+    size_t var27;
+    int var29;
+    jschar * var30;
+    jsval var89;
+    JSBool var16;
+    var17 = NULL;
+    var21 = 0;
+    var22 = NULL;
+    var23 = 0;
+    var24 = JSVAL_NULL;
+    var25 = NULL;
+    var88 = JSVAL_NULL;
     var26 = 0;
-    var28 = 0;
-    var27 = NULL;
-    var84 = JSVAL_NULL;
-    var15 = JS_FALSE;
-    var16 = obj;
-    var20 = argc;
-    var22 = 0;
-    var22 = var22 < var20;
-    if (var22) {
-    var23 = argv[0];
-    var24 = JS_ValueToString(cx, var23);
-    if (!var24) {
+    var27 = 0;
+    var29 = 0;
+    var30 = NULL;
+    var89 = JSVAL_NULL;
+    var16 = JS_FALSE;
+    var17 = obj;
+    var21 = argc;
+    var23 = 0;
+    var23 = var23 < var21;
+    if (var23) {
+    var24 = argv[0];
+    var25 = JS_ValueToString(cx, var24);
+    if (!var25) {
         goto do_return;
     }
-    var83 = STRING_TO_JSVAL(var24);
-    argv[argc+0] = var83;
-    var25 = JS_GetStringLength(var24);
-    var26 = 1;
-    var26 += var25;
-    var21 = JS_malloc(cx, var26);
-    if (!var21) {
-        goto do_return;
+    var88 = STRING_TO_JSVAL(var25);
+    argv[argc+0] = var88;
+    var26 = JS_GetStringLength(var25);
+    var27 = 1;
+    var27 += var26;
+#ifdef HAVE_ALLOCA
+    if (var27 < jj_alloca_limit) {
+        var22 = alloca(var27);
+    } else {
+#endif
+        var22 = malloc(var27);
+        if (!var22) {
+            goto do_return;
+        } else {
+            var29 = 1;
+        }
+#ifdef HAVE_ALLOCA
     }
-    var28 = 1;
-    var27 = JS_GetStringChars(var24);
-    var84 = STRING_TO_JSVAL(var24);
-    argv[argc+1] = var84;
+#endif
+    var30 = JS_GetStringChars(var25);
+    var89 = STRING_TO_JSVAL(var25);
+    argv[argc+1] = var89;
     {
         size_t i;
-        for (i = 0; i < var25; ++i) {
-            var21[i] = wctob(var27[i]);
+        for (i = 0; i < var26; ++i) {
+            var22[i] = wctob(var30[i]);
         }
-        var21[var25] = '\0';
+        var22[var26] = '\0';
     }
     }
-    jsPopupInfo(var21);
-    var15 = JS_TRUE;
+    jsPopupInfo(var22);
+    var16 = JS_TRUE;
     do_return:
-    if (var28) {
-        JS_free(cx, var21);
-        var21 = NULL;
-        var28 = 0;
+    if (var29) {
+        free(var22);
+        var22 = NULL;
+        var29 = 0;
     }
-    return var15;
+    return var16;
 }
 static JSBool
 jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var30;
-    char *var35;
-    int var34;
+    JSObject * var32;
     int var36;
-    jsval var37;
-    JSString *var38;
-    jsval var85;
-    size_t var39;
-    size_t var40;
-    int var42;
-    jschar *var41;
-    jsval var86;
-    JSBool var29;
-    var30 = NULL;
-    var35 = NULL;
-    var34 = 0;
+    char * var37;
+    int var38;
+    jsval var39;
+    JSString * var40;
+    jsval var90;
+    size_t var41;
+    size_t var42;
+    int var44;
+    jschar * var45;
+    jsval var91;
+    JSBool var31;
+    var32 = NULL;
     var36 = 0;
-    var37 = JSVAL_NULL;
-    var38 = NULL;
-    var85 = JSVAL_NULL;
-    var39 = 0;
-    var40 = 0;
+    var37 = NULL;
+    var38 = 0;
+    var39 = JSVAL_NULL;
+    var40 = NULL;
+    var90 = JSVAL_NULL;
+    var41 = 0;
     var42 = 0;
-    var41 = NULL;
-    var86 = JSVAL_NULL;
-    var29 = JS_FALSE;
-    var30 = obj;
-    var34 = argc;
-    var36 = 0;
-    var36 = var36 < var34;
-    if (var36) {
-    var37 = argv[0];
-    var38 = JS_ValueToString(cx, var37);
-    if (!var38) {
+    var44 = 0;
+    var45 = NULL;
+    var91 = JSVAL_NULL;
+    var31 = JS_FALSE;
+    var32 = obj;
+    var36 = argc;
+    var38 = 0;
+    var38 = var38 < var36;
+    if (var38) {
+    var39 = argv[0];
+    var40 = JS_ValueToString(cx, var39);
+    if (!var40) {
         goto do_return;
     }
-    var85 = STRING_TO_JSVAL(var38);
-    argv[argc+0] = var85;
-    var39 = JS_GetStringLength(var38);
-    var40 = 1;
-    var40 += var39;
-    var35 = JS_malloc(cx, var40);
-    if (!var35) {
-        goto do_return;
-    }
+    var90 = STRING_TO_JSVAL(var40);
+    argv[argc+0] = var90;
+    var41 = JS_GetStringLength(var40);
     var42 = 1;
-    var41 = JS_GetStringChars(var38);
-    var86 = STRING_TO_JSVAL(var38);
-    argv[argc+1] = var86;
+    var42 += var41;
+#ifdef HAVE_ALLOCA
+    if (var42 < jj_alloca_limit) {
+        var37 = alloca(var42);
+    } else {
+#endif
+        var37 = malloc(var42);
+        if (!var37) {
+            goto do_return;
+        } else {
+            var44 = 1;
+        }
+#ifdef HAVE_ALLOCA
+    }
+#endif
+    var45 = JS_GetStringChars(var40);
+    var91 = STRING_TO_JSVAL(var40);
+    argv[argc+1] = var91;
     {
         size_t i;
-        for (i = 0; i < var39; ++i) {
-            var35[i] = wctob(var41[i]);
+        for (i = 0; i < var41; ++i) {
+            var37[i] = wctob(var45[i]);
         }
-        var35[var39] = '\0';
+        var37[var41] = '\0';
     }
     }
-    jsPrint(var35);
-    var29 = JS_TRUE;
+    jsPrint(var37);
+    var31 = JS_TRUE;
     do_return:
-    if (var42) {
-        JS_free(cx, var35);
-        var35 = NULL;
-        var42 = 0;
+    if (var44) {
+        free(var37);
+        var37 = NULL;
+        var44 = 0;
     }
-    return var29;
+    return var31;
 }
 static JSBool
 jjprint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var44;
-    char *var49;
-    int var48;
-    int var50;
-    jsval var51;
-    JSString *var52;
-    jsval var87;
-    size_t var53;
-    size_t var54;
-    int var56;
-    jschar *var55;
-    jsval var88;
-    JSBool var43;
-    var44 = NULL;
-    var49 = NULL;
-    var48 = 0;
-    var50 = 0;
-    var51 = JSVAL_NULL;
+    JSObject * var47;
+    int var51;
+    char * var52;
+    int var53;
+    jsval var54;
+    JSString * var55;
+    jsval var92;
+    size_t var56;
+    size_t var57;
+    int var59;
+    jschar * var60;
+    jsval var93;
+    JSBool var46;
+    var47 = NULL;
+    var51 = 0;
     var52 = NULL;
-    var87 = JSVAL_NULL;
     var53 = 0;
-    var54 = 0;
-    var56 = 0;
+    var54 = JSVAL_NULL;
     var55 = NULL;
-    var88 = JSVAL_NULL;
-    var43 = JS_FALSE;
-    var44 = obj;
-    var48 = argc;
-    var50 = 0;
-    var50 = var50 < var48;
-    if (var50) {
-    var51 = argv[0];
-    var52 = JS_ValueToString(cx, var51);
-    if (!var52) {
+    var92 = JSVAL_NULL;
+    var56 = 0;
+    var57 = 0;
+    var59 = 0;
+    var60 = NULL;
+    var93 = JSVAL_NULL;
+    var46 = JS_FALSE;
+    var47 = obj;
+    var51 = argc;
+    var53 = 0;
+    var53 = var53 < var51;
+    if (var53) {
+    var54 = argv[0];
+    var55 = JS_ValueToString(cx, var54);
+    if (!var55) {
         goto do_return;
     }
-    var87 = STRING_TO_JSVAL(var52);
-    argv[argc+0] = var87;
-    var53 = JS_GetStringLength(var52);
-    var54 = 1;
-    var54 += var53;
-    var49 = JS_malloc(cx, var54);
-    if (!var49) {
-        goto do_return;
+    var92 = STRING_TO_JSVAL(var55);
+    argv[argc+0] = var92;
+    var56 = JS_GetStringLength(var55);
+    var57 = 1;
+    var57 += var56;
+#ifdef HAVE_ALLOCA
+    if (var57 < jj_alloca_limit) {
+        var52 = alloca(var57);
+    } else {
+#endif
+        var52 = malloc(var57);
+        if (!var52) {
+            goto do_return;
+        } else {
+            var59 = 1;
+        }
+#ifdef HAVE_ALLOCA
     }
-    var56 = 1;
-    var55 = JS_GetStringChars(var52);
-    var88 = STRING_TO_JSVAL(var52);
-    argv[argc+1] = var88;
+#endif
+    var60 = JS_GetStringChars(var55);
+    var93 = STRING_TO_JSVAL(var55);
+    argv[argc+1] = var93;
     {
         size_t i;
-        for (i = 0; i < var53; ++i) {
-            var49[i] = wctob(var55[i]);
+        for (i = 0; i < var56; ++i) {
+            var52[i] = wctob(var60[i]);
         }
-        var49[var53] = '\0';
+        var52[var56] = '\0';
     }
     }
-    jsPrint2(var49);
-    var43 = JS_TRUE;
+    jsPrint2(var52);
+    var46 = JS_TRUE;
     do_return:
-    if (var56) {
-        JS_free(cx, var49);
-        var49 = NULL;
-        var56 = 0;
+    if (var59) {
+        free(var52);
+        var52 = NULL;
+        var59 = 0;
     }
-    return var43;
+    return var46;
 }
 static JSBool
 jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var58;
-    char *var63;
-    int var62;
-    int var64;
-    jsval var65;
-    JSString *var66;
-    jsval var89;
-    size_t var67;
-    size_t var68;
-    int var70;
-    jschar *var69;
-    jsval var90;
-    JSBool var57;
-    var58 = NULL;
-    var63 = NULL;
-    var62 = 0;
-    var64 = 0;
-    var65 = JSVAL_NULL;
-    var66 = NULL;
-    var89 = JSVAL_NULL;
-    var67 = 0;
+    JSObject * var62;
+    int var66;
+    char * var67;
+    int var68;
+    jsval var69;
+    JSString * var70;
+    jsval var94;
+    size_t var71;
+    size_t var72;
+    int var74;
+    jschar * var75;
+    jsval var95;
+    JSBool var61;
+    var62 = NULL;
+    var66 = 0;
+    var67 = NULL;
     var68 = 0;
-    var70 = 0;
-    var69 = NULL;
-    var90 = JSVAL_NULL;
-    var57 = JS_FALSE;
-    var58 = obj;
-    var62 = argc;
-    var64 = 0;
-    var64 = var64 < var62;
-    if (var64) {
-    var65 = argv[0];
-    var66 = JS_ValueToString(cx, var65);
-    if (!var66) {
+    var69 = JSVAL_NULL;
+    var70 = NULL;
+    var94 = JSVAL_NULL;
+    var71 = 0;
+    var72 = 0;
+    var74 = 0;
+    var75 = NULL;
+    var95 = JSVAL_NULL;
+    var61 = JS_FALSE;
+    var62 = obj;
+    var66 = argc;
+    var68 = 0;
+    var68 = var68 < var66;
+    if (var68) {
+    var69 = argv[0];
+    var70 = JS_ValueToString(cx, var69);
+    if (!var70) {
         goto do_return;
     }
-    var89 = STRING_TO_JSVAL(var66);
-    argv[argc+0] = var89;
-    var67 = JS_GetStringLength(var66);
-    var68 = 1;
-    var68 += var67;
-    var63 = JS_malloc(cx, var68);
-    if (!var63) {
-        goto do_return;
+    var94 = STRING_TO_JSVAL(var70);
+    argv[argc+0] = var94;
+    var71 = JS_GetStringLength(var70);
+    var72 = 1;
+    var72 += var71;
+#ifdef HAVE_ALLOCA
+    if (var72 < jj_alloca_limit) {
+        var67 = alloca(var72);
+    } else {
+#endif
+        var67 = malloc(var72);
+        if (!var67) {
+            goto do_return;
+        } else {
+            var74 = 1;
+        }
+#ifdef HAVE_ALLOCA
     }
-    var70 = 1;
-    var69 = JS_GetStringChars(var66);
-    var90 = STRING_TO_JSVAL(var66);
-    argv[argc+1] = var90;
+#endif
+    var75 = JS_GetStringChars(var70);
+    var95 = STRING_TO_JSVAL(var70);
+    argv[argc+1] = var95;
     {
         size_t i;
-        for (i = 0; i < var67; ++i) {
-            var63[i] = wctob(var69[i]);
+        for (i = 0; i < var71; ++i) {
+            var67[i] = wctob(var75[i]);
         }
-        var63[var67] = '\0';
+        var67[var71] = '\0';
     }
     }
-    jsHelp(var63);
-    var57 = JS_TRUE;
+    jsHelp(var67);
+    var61 = JS_TRUE;
     do_return:
-    if (var70) {
-        JS_free(cx, var63);
-        var63 = NULL;
-        var70 = 0;
+    if (var74) {
+        free(var67);
+        var67 = NULL;
+        var74 = 0;
     }
-    return var57;
+    return var61;
 }
 static JSBool
 jjsetSuccess(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var72;
-    int var77;
-    int var76;
-    int var78;
-    jsval var79;
-    int32 var80;
-    JSBool var71;
-    var72 = NULL;
-    var77 = 0;
-    var76 = 0;
-    var78 = 0;
-    var79 = JSVAL_NULL;
-    var80 = 0;
-    var71 = JS_FALSE;
-    var72 = obj;
-    var76 = argc;
-    var78 = 0;
-    var78 = var78 < var76;
-    if (var78) {
-    var79 = argv[0];
-    if (JS_ValueToInt32(cx, var79, &var80) != JS_TRUE) {
+    JSObject * var77;
+    int var81;
+    int var82;
+    int var83;
+    jsval var84;
+    int32 var85;
+    JSBool var76;
+    var77 = NULL;
+    var81 = 0;
+    var82 = 0;
+    var83 = 0;
+    var84 = JSVAL_NULL;
+    var85 = 0;
+    var76 = JS_FALSE;
+    var77 = obj;
+    var81 = argc;
+    var83 = 0;
+    var83 = var83 < var81;
+    if (var83) {
+    var84 = argv[0];
+    if (JS_ValueToInt32(cx, var84, &var85) != JS_TRUE) {
         goto do_return;
     }
-    var77 = (int)var80;
+    var82 = (int)var85;
     }
-    jsSetSuccess(var77);
-    var71 = JS_TRUE;
+    jsSetSuccess(var82);
+    var76 = JS_TRUE;
     do_return:
-    return var71;
+    return var76;
 }
 static JSPropertySpec jj_static_ps[] = {
     {NULL, 0, 0, NULL, NULL}

@@ -171,7 +171,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   {
     if( isMpeg4Compatible(_videostream.fccHandler))
     {
-        uint8_t buffer[size];
+        uint8_t *buffer=(uint8_t *)alloca(size*sizeof(uint8_t));
         
             parser->readBin(buffer,size-3);
             // Search the frame type...
@@ -185,7 +185,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
     }else
     if(isH264Compatible(_videostream.fccHandler))
     {
-            uint8_t buffer[size];
+                uint8_t *buffer=(uint8_t *)alloca(size);
                 uint32_t flags=AVI_KEY_FRAME;
                 parser->readBin(buffer,size-3);
                 extractH264FrameType(2,buffer,size-3,&flags); // Nal size is not used in that case

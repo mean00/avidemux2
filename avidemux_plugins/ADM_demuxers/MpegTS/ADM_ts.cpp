@@ -31,7 +31,7 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
 uint8_t tsHeader::open(const char *name)
 {
-    char idxName[strlen(name)+4];
+    char *idxName=(char *)alloca(strlen(name)+4);
     bool r=false;
     FP_TYPE appendType=FP_DONT_APPEND;
     uint32_t append;
@@ -62,7 +62,7 @@ uint8_t tsHeader::open(const char *name)
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))
     {
-        printf("[tsDemux] Cannot open root file\n",name);
+        printf("[tsDemux] Cannot open root file (%s)\n",name);
         goto abt;
     }
     if(!readVideo(&index)) 
@@ -166,6 +166,7 @@ bool tsHeader::updateIdr()
             }
         }
     }
+    return true;
 }
 /**
     \fn getAudioInfo
@@ -239,6 +240,7 @@ uint8_t tsHeader::close(void)
         delete tsPacket;
         tsPacket=NULL;
     }
+    return 1;
 }
 /**
     \fn tsHeader

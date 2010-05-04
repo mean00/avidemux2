@@ -93,6 +93,8 @@ AUDMAudioFilterMixer::AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CON
 			outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
 //			DolbyInit();
 		break;
+        default:
+                break;
 	}
 
     d*=_wavHeader.channels;
@@ -163,6 +165,8 @@ static int MStereo(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_
 				case ADM_CH_SIDE_RIGHT:
 					out[1]  += *in;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -208,6 +212,8 @@ static int M2F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 					out[1]  += *in * 0.707;
 					out[2]  += *in * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -244,6 +250,8 @@ static int M3F(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE
 					out[1]  += *in * 0.595;
 					out[2]  += *in * 0.595;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -289,6 +297,8 @@ static int M3F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 					out[1]  += *in * 0.707;
 					out[2]  += *in * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -340,6 +350,8 @@ static int M2F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 					out[1]  += *in * 0.707;
 					out[3]  += *in * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -391,6 +403,8 @@ static int M3F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 					out[1]  += *in * 0.707;
 					out[3]  += *in * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -438,6 +452,8 @@ static int M3F2RLFE(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL
 					out[1]  += *in * 0.707;
 					out[3]  += *in * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -482,6 +498,8 @@ static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,C
 					out[0]  += DolbyShiftLeft(*in) * 0.707 * 0.707;
 					out[1]  += DolbyShiftRight(*in) * 0.707 * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}
@@ -532,6 +550,8 @@ static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,
 					out[0]  += DolbyShiftLeft(*in) * 0.5774 * 0.707;
 					out[1]  += DolbyShiftRight(*in) * 0.8165 * 0.707;
 				break;
+                default:
+                    break;
 			}
 			in++;
 		}

@@ -155,7 +155,7 @@ indexerData  data;
 dmxPacketInfo info;
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
-    char indexName[strlen(file)+5];
+    char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
     if(!index)

@@ -120,7 +120,7 @@ bool psHeader::processVideoIndex(char *buffer)
                     printf("[psDemux]  instead of : (%c %x %x):\n",*cur,*(cur-1),*cur);
                     break;
                 }
-                *cur++;
+                cur++;
                 next=strstr(start," ");
                 ADM_assert(1==sscanf(cur,"%"LX,&len));
                 

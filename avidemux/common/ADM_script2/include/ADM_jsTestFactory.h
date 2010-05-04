@@ -16,8 +16,10 @@
 
 #ifndef ADMJS_FACTORY_H
 #define ADMJS_FACTORY_H
+#ifdef __cplusplus
 extern "C"
 {
+#endif
 int jsTestCrash(void);
 int jsTestAssert(void);
 int jsTestFacNotch(void);
@@ -40,7 +42,9 @@ int jsTestFacToggle(void);
 int jsTestFacFloat(void);
 int jsTestFacInt(void);
 int jsTestFacEncoding(void);
+#ifdef __cplusplus
 };
+#endif
 
 
 #endif

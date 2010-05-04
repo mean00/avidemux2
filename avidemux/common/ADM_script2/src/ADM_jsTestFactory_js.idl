@@ -1,3 +1,8 @@
+%{
+#include "stdio.h"
+#include "ADM_jsAvidemux.h"
+#include "ADM_jsTestFactory.h"
+%}
 /*
 ###############################################################
        return JS function     C Function  params

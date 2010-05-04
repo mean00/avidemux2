@@ -195,7 +195,7 @@ uint32_t 	i,j;
 
 
 
-	OPENDML_ENTRY superEntries[masterIndex.nbEntryInUse];
+	OPENDML_ENTRY *superEntries=(OPENDML_ENTRY *)alloca(masterIndex.nbEntryInUse*sizeof(OPENDML_ENTRY));
 	printf("[AVI]We have %"LU" indeces\n",masterIndex.nbEntryInUse);
         if(!readSuperEntries(superEntries,masterIndex.nbEntryInUse,_fd)) //if(1!=fread(superEntries,sizeof(OPENDML_ENTRY)*masterIndex.nbEntryInUse,1,_fd))
 	{

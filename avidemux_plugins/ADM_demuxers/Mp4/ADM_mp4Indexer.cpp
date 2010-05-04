@@ -71,7 +71,7 @@ uint32_t i,j,cur;
           printf("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
               //
               // Each chunk contains N samples=N bytes
-              int samplePerChunk[info->nbCo];
+              int *samplePerChunk=(int *)alloca(info->nbCo*sizeof(int));
               memset(samplePerChunk,0,info->nbCo*sizeof(int));
               int total=0;
               for( i=0;i<info->nbSc;i++)

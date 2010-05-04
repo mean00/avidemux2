@@ -16,14 +16,17 @@
 
 #ifndef ADMJS_DEBUG_H
 #define ADMJS_DEBUG_H
+#ifdef __cplusplus
 extern "C"
 {
+#endif
 void jsPopupError(const char *s);
 void jsPopupInfo(const char *s);
 void jsPrint(const char *s);
 void jsPrint2(const char *s);
 void jsHelp(const char *s);
+#ifdef __cplusplus
 };
-
+#endif
 
 #endif

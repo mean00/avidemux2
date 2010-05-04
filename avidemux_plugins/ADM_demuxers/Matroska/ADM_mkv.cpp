@@ -358,10 +358,11 @@ uint8_t mkvHeader::walk(void *seed)
                   break;
         case ADM_MKV_TYPE_STRING:
         {
-                  char string[len+1];
+                  char *string=new char[len+1];
                   string[0]=0;
                   father->readString(string,len);
                   printf("%s:<%s>\n",ss,string);
+                  delete [] string;
                   break;
         }
         default:

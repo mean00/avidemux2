@@ -35,6 +35,7 @@ uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h)
 
 	*w = (uint32_t)qrect.width();
 	*h = (uint32_t)qrect.height();
+    return 1;
 }
 
 // Calculate the zoom ratio required to fit the whole image on the screen.

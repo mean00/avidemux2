@@ -31,7 +31,7 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
 uint8_t psHeader::open(const char *name)
 {
-    char idxName[strlen(name)+4];
+    char *idxName=(char *)alloca(strlen(name)+4);
     bool r=false;
     FP_TYPE appendType=FP_DONT_APPEND;
     uint32_t append;

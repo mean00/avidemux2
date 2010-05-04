@@ -183,7 +183,6 @@ bool ADM_Composer::addFile (const char *name)
      snprintf(str,512,QT_TR_NOOP("Attempt to open %s failed!"), name);
       str[512] = '\0';
       GUI_Error_HIG(str,NULL);
-      video._aviheader;
       video._aviheader=NULL;
       return false;
    }
