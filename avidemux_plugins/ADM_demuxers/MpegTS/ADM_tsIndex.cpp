@@ -265,7 +265,7 @@ static uint32_t unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
 bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
     GetBitContext s;
-    uint8_t payload[nalSize+16];
+    uint8_t *payload=(uint8_t *)alloca(nalSize+16);
     nalSize=unescapeH264(nalSize,org,payload);
     init_get_bits(&s, payload, nalSize*8);
     while( get_bits_count(&s)<(nalSize-4)*8)
@@ -311,7 +311,7 @@ uint32_t recoveryCount=0xff;
     video.pid=videoTrac[0].trackPid;
 
     memset(&data,0,sizeof(data));
-    char indexName[strlen(file)+5];
+    char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
     if(!index)
@@ -522,7 +522,7 @@ dmxPacketInfo info;
     memset(&data,0,sizeof(data));
 
 
-    char indexName[strlen(file)+5];
+    char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
     if(!index)

@@ -32,6 +32,7 @@ typedef VF_CATEGORY       (ADM_vf_getCategory)(void);
 	{ \
 		Class *a=(Class *)codec;\
 		delete a;\
+        return NULL;\
 	}\
 	int supportedUI(void) \
 	{ \

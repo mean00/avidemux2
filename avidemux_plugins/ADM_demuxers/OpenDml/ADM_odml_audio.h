@@ -32,7 +32,7 @@ public:
                 virtual bool      canGetDuration(void) {return false;};
                 virtual uint64_t  getDurationInUs(void) {return 0;};
                 virtual uint32_t  getLength(void) {return length;}
-                virtual bool      goToTime(uint64_t timeUs) {ADM_assert(0);}
+                virtual bool      goToTime(uint64_t timeUs) {ADM_assert(0);return true;}
                 virtual bool      isCBR(void) ;
                 virtual uint64_t  getPos(void);
                 

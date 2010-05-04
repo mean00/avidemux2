@@ -148,6 +148,7 @@ bool    tsPacket::setPos(uint64_t pos)
         printf("[tsPacket] Cannot seek to %"LLX"\n", pos);
         return false;
     }
+    return true;
 }
 /**
     \fn getSinglePacket

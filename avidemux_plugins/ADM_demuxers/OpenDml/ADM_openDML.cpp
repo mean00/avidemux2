@@ -597,7 +597,7 @@ uint8_t OpenDMLHeader::computePtsDts(void)
        idx->dts=frameToUs(i);
     }
     _idx[0].pts=0;
-  
+    return 1;
 }
 /**
     \fn mpegReorder

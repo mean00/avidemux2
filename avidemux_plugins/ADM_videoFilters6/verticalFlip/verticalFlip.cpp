@@ -67,7 +67,7 @@ verticalFlipFilter::~verticalFlipFilter()
 
 static void flipMe(uint8_t *data, uint32_t w,uint32_t h)
 {
-    uint8_t scratch[w];
+    uint8_t *scratch=(uint8_t *)alloca(w);
     int count=h>>1;
     for(int i=0;i<count;i++)
     {

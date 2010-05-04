@@ -692,6 +692,7 @@ uint8_t flvHeader::close(void)
   audioTrack=NULL;
   _audioStream=NULL;
   access=NULL;
+  return 1;
 }
 /**
     \fn flvHeader

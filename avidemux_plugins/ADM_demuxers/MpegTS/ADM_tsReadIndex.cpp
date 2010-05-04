@@ -122,7 +122,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                 {
                     printf("[TsDemuxer]  instead of : (%c %x %x):\n",*cur,*(cur-1),*cur);
                 }
-                *cur++;
+                cur++;
                 next=strstr(start," ");
                 int64_t ppts,ddts;
                 ADM_assert(3==sscanf(cur,"%"LX":%"LLD":%"LLD,&len,&ppts,&ddts));

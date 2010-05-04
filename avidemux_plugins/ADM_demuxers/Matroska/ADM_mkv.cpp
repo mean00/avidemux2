@@ -423,7 +423,7 @@ uint8_t mkvHeader::close(void)
         delete [] _access;
         _access=NULL;
     }
-
+    return 1;
 }
 /**
     \fn mkvHeader
@@ -666,7 +666,7 @@ bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
     
     dx->Dts=dts; // FIXME
     dx->Pts=pts;
-    
+    return true;
 
 }
 

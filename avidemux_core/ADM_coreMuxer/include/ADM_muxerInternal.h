@@ -75,7 +75,7 @@ public:
 extern "C" {\
 ADM_muxer   *create(void){ return new Class; } \
 void         destroy(ADM_muxer *h){ Class *z=(Class *)h;delete z;} \
-uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;} \
+uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
 uint32_t     getApiVersion(void) {return ADM_MUXER_API_VERSION;} \
 const char  *getName(void) {return name;} \
 const char  *getDescriptor(void) {return desc;} \

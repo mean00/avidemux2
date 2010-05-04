@@ -209,6 +209,7 @@ float       ADM_ebml::readFloat(uint32_t n)
     default:
         ADM_assert(0);
   }
+  return 0;
 }
 
 ADM_ebml::ADM_ebml(void)

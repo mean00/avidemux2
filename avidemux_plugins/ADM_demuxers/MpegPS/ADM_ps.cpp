@@ -61,7 +61,7 @@ uint8_t psHeader::open(const char *name)
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))
     {
-        printf("[psDemux] Cannot open root file\n",name);
+        printf("[psDemux] Cannot open root file %s\n",name);
         goto abt;
     }
     if(!readVideo(&index)) 
@@ -187,6 +187,7 @@ uint8_t psHeader::close(void)
         delete psPacket;
         psPacket=NULL;
     }
+    return 1;
 }
 /**
     \fn psHeader

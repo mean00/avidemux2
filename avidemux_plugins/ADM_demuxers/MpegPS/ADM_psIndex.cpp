@@ -416,6 +416,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
         data->startAt=info->startAt;
         data->offset=info->offset;
     }
+    return true;
 }
 
 /**

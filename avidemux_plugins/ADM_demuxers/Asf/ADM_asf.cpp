@@ -110,6 +110,7 @@ uint8_t asfHeader::close(void)
     delete _audioStreams[i];
     _audioStreams[i]=NULL;    
   }
+  return 1;
 }
 /**
     \fn asfHeader
