@@ -21,6 +21,7 @@ extern "C" {
 
 int jsPrintTiming(int framenumber );
 int jsDumpSegments (void);
+int jsDumpRefVideos (void);
 #ifdef __cplusplus
 };
 #endif

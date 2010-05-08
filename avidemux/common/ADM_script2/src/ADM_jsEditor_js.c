@@ -118,19 +118,46 @@ jjeditordumpSegment(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
     return var12;
 }
 static JSBool
-jjeditor__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+jjeditordumpRefVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     JSObject * var20;
+    int var21;
     int var24;
+    jsval var25;
     JSBool var19;
     var20 = NULL;
+    var21 = 0;
     var24 = 0;
+    var25 = JSVAL_NULL;
     var19 = JS_FALSE;
     var20 = obj;
     var24 = argc;
-    jsEditor();
+    var21 = jsDumpRefVideos();
+    if (JS_NewNumberValue(cx, var21, &var25) != JS_TRUE) {
+        goto do_return;
+    }
+    argv[argc+0] = var25;
+    if (rval) {
+        *rval = var25;
+    }
     var19 = JS_TRUE;
+    do_return:
     return var19;
+}
+static JSBool
+jjeditor__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+    JSObject * var27;
+    int var31;
+    JSBool var26;
+    var27 = NULL;
+    var31 = 0;
+    var26 = JS_FALSE;
+    var27 = obj;
+    var31 = argc;
+    jsEditor();
+    var26 = JS_TRUE;
+    return var26;
 }
 static JSPropertySpec jj_static_ps[] = {
     {NULL, 0, 0, NULL, NULL}
@@ -153,6 +180,7 @@ static JSPropertySpec jjeditor_ps[] = {
 static JSFunctionSpec jjeditor_static_fs[] = {
     JS_FS("printTiming", jjeditorprintTiming, 1, 0, 1),
     JS_FS("dumpSegment", jjeditordumpSegment, 0, 0, 1),
+    JS_FS("dumpRefVideo", jjeditordumpRefVideo, 0, 0, 1),
     JS_FS_END
 };
 static JSFunctionSpec jjeditor_fs[] = {

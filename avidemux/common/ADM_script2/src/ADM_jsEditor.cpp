@@ -45,10 +45,21 @@ int jsPrintTiming(int framenumber )
 int jsDumpSegments (void)
 {// begin PostProcess
         enterLock();
-        video_body->dumpEditing();
+        video_body->dumpSegments();
         leaveLock(); 
         return 0;
 }// end PostProcess
+/**
+        \fn jsDumpRefVideos
+*/
+int jsDumpRefVideos (void)
+{
+        enterLock();
+        video_body->dumpRefVideos();
+        leaveLock(); 
+
+        return 0;
+}
 /**
     \fn dumpTiming
     \brief dump segment, video & all
