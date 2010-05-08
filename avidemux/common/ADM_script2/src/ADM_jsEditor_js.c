@@ -20,8 +20,15 @@ void jsEditor(void)
         printf("Constructor invoked\n");
 }
 
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+static size_t jj_alloca_limit = 0;
+#endif
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#ifdef HAVE_ALLOCA_H
+#endif
 #include <jsapi.h>
 #ifndef JS_THREADSAFE
 #if JS_VERSION <= 170
@@ -38,34 +45,23 @@ void jsEditor(void)
 #ifndef JS_FS_END
 #define JS_FS_END {NULL, NULL, 0, 0, 0}
 #endif
-static JSPropertySpec jj_static_ps[] = {
-    {NULL, 0, 0, NULL, NULL}
-};
-static JSPropertySpec jj_ps[] = {
-    {NULL, 0, 0, NULL, NULL}
-};
-static JSFunctionSpec jj_static_fs[] = {
-    JS_FS_END
-};
-static JSFunctionSpec jj_fs[] = {
-    JS_FS_END
-};
+
 static JSBool
 jjeditorprintTiming(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var2;
-    int var7;
+    JSObject * var2;
     int var3;
     int var6;
+    int var7;
     int var8;
     jsval var9;
     int32 var10;
     jsval var11;
     JSBool var1;
     var2 = NULL;
-    var7 = 0;
     var3 = 0;
     var6 = 0;
+    var7 = 0;
     var8 = 0;
     var9 = JSVAL_NULL;
     var10 = 0;
@@ -97,7 +93,7 @@ jjeditorprintTiming(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
 static JSBool
 jjeditordumpSegment(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var13;
+    JSObject * var13;
     int var14;
     int var17;
     jsval var18;
@@ -124,7 +120,7 @@ jjeditordumpSegment(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval
 static JSBool
 jjeditor__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *var20;
+    JSObject * var20;
     int var24;
     JSBool var19;
     var20 = NULL;
@@ -136,6 +132,18 @@ jjeditor__construct__(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsv
     var19 = JS_TRUE;
     return var19;
 }
+static JSPropertySpec jj_static_ps[] = {
+    {NULL, 0, 0, NULL, NULL}
+};
+static JSPropertySpec jj_ps[] = {
+    {NULL, 0, 0, NULL, NULL}
+};
+static JSFunctionSpec jj_static_fs[] = {
+    JS_FS_END
+};
+static JSFunctionSpec jj_fs[] = {
+    JS_FS_END
+};
 static JSPropertySpec jjeditor_static_ps[] = {
     {NULL, 0, 0, NULL, NULL}
 };

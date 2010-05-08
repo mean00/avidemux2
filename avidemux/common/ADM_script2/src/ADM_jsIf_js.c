@@ -107,7 +107,7 @@ jjadmPopupError(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     {
         size_t i;
         for (i = 0; i < var11; ++i) {
-            var7[i] = wctob(var15[i]);
+            var7[i] = var15[i];
         }
         var7[var11] = '\0';
     }
@@ -186,7 +186,7 @@ jjadmpPopupInfo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     {
         size_t i;
         for (i = 0; i < var26; ++i) {
-            var22[i] = wctob(var30[i]);
+            var22[i] = var30[i];
         }
         var22[var26] = '\0';
     }
@@ -265,7 +265,7 @@ jjadmPrint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     {
         size_t i;
         for (i = 0; i < var41; ++i) {
-            var37[i] = wctob(var45[i]);
+            var37[i] = var45[i];
         }
         var37[var41] = '\0';
     }
@@ -344,7 +344,7 @@ jjprint(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     {
         size_t i;
         for (i = 0; i < var56; ++i) {
-            var52[i] = wctob(var60[i]);
+            var52[i] = var60[i];
         }
         var52[var56] = '\0';
     }
@@ -423,7 +423,7 @@ jjhelp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     {
         size_t i;
         for (i = 0; i < var71; ++i) {
-            var67[i] = wctob(var75[i]);
+            var67[i] = var75[i];
         }
         var67[var71] = '\0';
     }
