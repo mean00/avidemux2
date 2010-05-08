@@ -330,7 +330,9 @@ bool ADM_Composer::addFile (const char *name)
                 ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");             
                 uint64_t delay;
                 ADM_computeMP124MissingPtsDts(video._aviheader,video.timeIncrementInUs,&delay);
-                _segments.updateRefVideo(&video);
+                _segments.updateRefVideo();
+                
+                
             }
         }
         else   
@@ -600,9 +602,17 @@ bool            ADM_Composer::remove(uint64_t start,uint64_t end)
     \fn dumpEditing
     \brief Dump segment, video & al
 */
-bool            ADM_Composer::dumpEditing(void)
+bool            ADM_Composer::dumpSegments(void)
 {
     _segments.dump();
+    return true;
+}
+/**
+
+*/
+bool ADM_Composer::dumpRefVideos(void)
+{
+    _segments.dumpRefVideos();
     return true;
 }
 /**
