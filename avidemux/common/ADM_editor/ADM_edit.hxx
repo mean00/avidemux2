@@ -223,7 +223,8 @@ public:
                                             return _segments.getNbSegments();
                                         }
 // For js
-                    bool                dumpEditing(void);
+                    bool                dumpRefVideos(void);
+                    bool                dumpSegments(void);
                     bool                dumpTiming(void);
                     bool                getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts);
 /******************************* /Editing **********************************/										
