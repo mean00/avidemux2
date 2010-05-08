@@ -38,19 +38,16 @@ ADM_EditorSegment::~ADM_EditorSegment()
     \fn updateRefVideo
     \brief Update start time
 */
-bool        ADM_EditorSegment::updateRefVideo(_VIDEOS *ref)
+bool        ADM_EditorSegment::updateRefVideo(void)
 {
     int n=videos.size();
     ADM_assert(n);
-    vidHeader *demuxer=	ref->_aviheader;
-    vidHeader *demuxer2=	videos[n-1]._aviheader;
-    ADM_assert(demuxer==demuxer2);
-    
-    
+    _VIDEOS *ref=getRefVideo(n-1);
+    vidHeader *demuxer=ref->_aviheader;
     uint64_t pts,dts;
     
         demuxer->getPtsDts(0,&pts,&dts);
-        if(pts!=ADM_NO_PTS )
+        if(pts!=ADM_NO_PTS && pts >0)
         {
             ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
             ref->firstFramePts=pts;
@@ -493,10 +490,32 @@ void ADM_EditorSegment::dump(void)
         jsLog(JS_LOG_NORMAL,"\trefStartDts  :%08"LLU" %s",s->_refStartDts,ADM_us2plain(s->_refStartDts));
     }
 }
+/**
+    \fn dumpRefVideos
+    \brief Dump the refVideo content
+*/
+void ADM_EditorSegment::dumpRefVideos(void)
+{
+
+    int n=videos.size();
+    printf("We have %d reference videos\n",n);
+    for(int i=0;i<n;i++)
+    {
+        _VIDEOS *s=getRefVideo(i);
+
+        jsLog(JS_LOG_NORMAL,"Videos :%d/%d",i,n);
+        jsLog(JS_LOG_NORMAL,"\tfirstFramePts      :%08"LLU" %s",s->firstFramePts,ADM_us2plain(s->firstFramePts));
+        jsLog(JS_LOG_NORMAL,"\ttimeIncrementInUs  :%08"LLU" %s",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
+        jsLog(JS_LOG_NORMAL,"\tnb frames    :%08"LLU,s->_nb_video_frames);
+    }
+
+}
+
 
 /**
     \fn dtsFromPts
-    \brief guestimate DTS from PTS
+    \brief guestimate DTS from PTS. For the wanted frame, we go back until we find a valid DTS
+                then the wanted DTS=~ valid DTS + timeIncrement * number of frames in between
 */
  bool        ADM_EditorSegment::dtsFromPts(uint32_t refVideo,uint64_t pts,uint64_t *dts)
 {
@@ -508,9 +527,24 @@ void ADM_EditorSegment::dump(void)
             ADM_warning("Cannot get frame with pts=%"LLU" ms\n",pts/1000);
             return false;
     }
-    // No get DTS..
-    int32_t deltaFrame=frame;
+    // Now get DTS..
     uint64_t p,d;
+    if(!frame) // The very first frame
+    {
+        demuxer->getPtsDts(0,&p,&d);
+        if(d==ADM_NO_PTS)
+        {
+            ADM_warning("No DTS available for first frame, putting pts, probably incorrect\n");
+            *dts=pts;
+        }else       
+        {
+            *dts=d;
+        }
+        return true;
+    }
+    int32_t deltaFrame=frame;
+    
+    
     while(deltaFrame>0)
     {
             demuxer->getPtsDts(deltaFrame,&p,&d);
@@ -520,6 +554,7 @@ void ADM_EditorSegment::dump(void)
     if(deltaFrame<0)    
     {
         ADM_warning("Cannot find a valid DTS for pts=%"LLU"ms\n",pts/1000);
+        *dts=pts;
         return false;
     }
     deltaFrame=frame-deltaFrame;

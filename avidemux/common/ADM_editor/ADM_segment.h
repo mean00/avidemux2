@@ -105,11 +105,12 @@ protected:
 
 public:
             void        dump(void);
+            void        dumpRefVideos(void);
                         ADM_EditorSegment(void);
                         ~ADM_EditorSegment();
 
             bool        addReferenceVideo(_VIDEOS *ref);
-            bool        updateRefVideo(_VIDEOS *ref);
+            bool        updateRefVideo(void);
             bool        deleteAll(void);
 
             bool        resetSegment(void);
