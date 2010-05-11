@@ -188,14 +188,9 @@ dmxPacketInfo info;
     fullSize=pkt->getSize();
       while(1)
       {
-        uint32_t code=0xffff+0xffff0000;
-        while((code&0x00ffffff)!=1 && pkt->stillOk())
-        {
-            code=(code<<8)+pkt->readi8();
-        }
+        
+        uint8_t startCode=pkt->findStartCode();
         if(!pkt->stillOk()) break;
-        uint8_t startCode=pkt->readi8();
-
         pkt->getInfo(&info);
         info.offset-=4;
 

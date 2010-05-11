@@ -413,6 +413,7 @@ bool psPacketLinear::refill(void)
         bufferIndex=0;
         return true;
 }
+#ifndef PS_PACKET_INLINE
 /**
     \fn readi8
 */
@@ -462,6 +463,7 @@ uint32_t psPacketLinear::readi32(void)
     }
     return (readi16()<<16)+readi16();
 }
+#endif
 /**
     \fn forward
 */
@@ -650,5 +652,40 @@ bool           psPacketLinearTracker::resetStats(void)
         packetStats *p=stats+i;
         p->startDts=ADM_NO_PTS;
     }
+}
+/**
+    \fn findStartCode
+    \brief Must check stillOk after calling this
+*/
+int psPacketLinearTracker::findStartCode(void)
+{
+#define likely(x) x
+#define unlikely(x) x
+        unsigned int last=0xfffff;
+        unsigned int cur=0xffff;
+        int startCode=0;
+        while(this->stillOk())
+        {
+            last=cur;
+            cur=this->readi16();
+            if(likely(last&0xff)) continue;
+            if(unlikely(!last)) // 00 00 , need 01 xx
+            {
+                if((cur>>8)==1) 
+                {
+                        startCode=cur&0xff;
+                        break;
+                }
+            }
+            if(unlikely(!(last&0xff))) // xx 00 need 00 01
+            {
+                if(cur==1)
+                {
+                        startCode=this->readi8();
+                        break;
+                }
+            }
+        }
+        return startCode;
 }
 //EOF

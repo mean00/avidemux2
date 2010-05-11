@@ -9,6 +9,7 @@
 #include "dmxPacket.h"
 #include "ADM_Video.h"
 
+#define PS_PACKET_INLINE
 
 
 /**
@@ -54,9 +55,6 @@ public:
                 psPacketLinear(uint8_t pid);
                 ~psPacketLinear();
         uint32_t getConsumed(void);
-        uint8_t  readi8();
-        uint16_t readi16();
-        uint32_t readi32();
         bool     sync(uint8_t *pid);
         bool    read(uint32_t len, uint8_t *buffer);
         bool    forward(uint32_t v);
@@ -64,6 +62,61 @@ public:
         bool    getInfo(dmxPacketInfo *info);
         bool    seek(uint64_t packetStart, uint32_t offset);
         bool    changePid(uint32_t pid) ;
+#ifndef PS_PACKET_INLINE
+        uint8_t  readi8();
+        uint16_t readi16();
+        uint32_t readi32();
+#else
+        /**
+            \fn readi8
+        */
+        uint8_t readi8(void)
+        {
+            consumed++;
+            if(bufferIndex<bufferLen)
+            {
+                return buffer[bufferIndex++];
+            }
+            if(false==refill()) 
+            {
+                eof=1;
+                return 0;
+            }
+            ADM_assert(bufferLen);
+            bufferIndex=1;
+            return buffer[0];
+            
+        }
+        /**
+            \fn readi16
+        */
+        uint16_t readi16(void)
+        {
+            if(bufferIndex+1<bufferLen)
+            {
+                uint16_t v=(buffer[bufferIndex]<<8)+buffer[bufferIndex+1];;
+                bufferIndex+=2;
+                consumed+=2;
+                return v;
+            }
+            return (readi8()<<8)+readi8();
+        }
+        /**
+            \fn readi32
+        */
+        uint32_t readi32(void)
+        {
+            if(bufferIndex+3<bufferLen)
+            {
+                uint8_t *p=buffer+bufferIndex;
+                uint32_t v=(p[0]<<24)+(p[1]<<16)+(p[2]<<8)+p[3];
+                bufferIndex+=4;
+                consumed+=4;
+                return v;
+            }
+            return (readi16()<<16)+readi16();
+        }
+#endif
 };
 /**
     \class psPacketLinearTracker
@@ -90,6 +143,7 @@ public:
          packetStats    *getStat(int intdex);
          bool           resetStats(void);
 virtual  bool           getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);
+         int            findStartCode(void);
 };
 
 
