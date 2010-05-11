@@ -247,7 +247,10 @@ bool xvid4Encoder::setup(void)
             inc*=2;
             ADM_warning("It is probably field encoded, doubling increment\n");
      }
-    encoderDelay=inc*xvid4Settings.maxBFrame;
+    if(xvid4Settings.maxBFrame)
+        encoderDelay=inc*2;
+    else
+        encoderDelay=0;
     ADM_info("Xvid4, setup ok\n");
     return true;
 }
