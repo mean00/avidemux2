@@ -26,36 +26,30 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
       printf ("in:%d expected%d\n", in->dataLength, _w * _h * 2);
       return 1;
     }
-  uint8_t *ptrY, *ptrU, *ptrV, *ptr;
-
+  uint8_t *ptrY, *ptrU, *ptrV, *ptr,*ptr2;
   ptr = in->data;
-  ptrY = out->data;
-  ptrU = out->data + _w * _h;
-  ptrV = ptrU + ((_w * _h) >> 2);
+  ptr2=ptr+2*_w;
+  ptrY = YPLANE(out);
+  ptrU = VPLANE(out);
+  ptrV = UPLANE(out);
 
   for (uint32_t y = 0; y < _h; y++)
-    for (uint32_t x = 0; x < (_w >> 2); x++)
+  {
+    for (uint32_t x = 0; x < (_w >> 1); x++)
       {
-	if (!(y & 1))
-	  {
-	    *ptrU++ = (*(ptr) + *(ptr + _w)) >> 1;
-	    ptr++;
-	    *ptrY++ = *ptr++;
-	    *ptrV++ = (*(ptr) + *(ptr + _w)) >> 1;
-	    ptr++;
-	    *ptrY++ = *ptr++;
-	  }
-	else
-	  {
-	    *ptrY++ = *(++ptr);
-	    *ptrY++ = *(ptr + 2);
-	    ptr++;
-	  }
+        if (!(y & 1))
+          {
+            *ptrU++ = ((unsigned int)(ptr[0])+(unsigned int)(ptr2[0]))>>1;
+            *ptrV++ = ((unsigned int)(ptr[2])+(unsigned int)(ptr2[2]))>>1;
+         }
+            *ptrY++ = ptr[1];
+            *ptrY++ = ptr[3];
+            ptr+=4;
+            ptr2+=4;
       }
-
-  
-  out->flags = AVI_KEY_FRAME;
-  return 1;
+    }
+    out->flags = AVI_KEY_FRAME;
+    return 1;
 
 }
 bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
