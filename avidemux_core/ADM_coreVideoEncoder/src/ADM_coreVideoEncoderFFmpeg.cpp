@@ -66,7 +66,10 @@ uint32_t w,h;
             inc*=2;
             ADM_warning("It is probably field encoded, doubling increment\n");
      }
-    encoderDelay=inc*LAVS(max_b_frames);
+     if(LAVS(max_b_frames))
+            encoderDelay=inc*2;
+     else
+            encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
     if(_globalHeader)
     {
