@@ -180,6 +180,7 @@ again:
         ADM_warning("[x264] Cannot get next image\n");
         return false;
     }
+    aprintf("x264 Incoming : %"LLU"us \n",image->Pts);
     queueOfDts.push_back(image->Pts);
     // 2-preamble
     if(false==preAmble(image))
@@ -265,6 +266,17 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
         queueOfDts.erase(queueOfDts.begin());
         aprintf("pts = %"LLU", dts=%"LLU", pts+delay=%"LLU" delta=%"LLU"\n",picout->i_pts,out->dts,out->pts,
                     out->pts-out->dts);
+        if(out->dts>out->pts)
+        {
+            ADM_warning("DTS > PTS, that can happen when there are holes in the source (%"LLU"/%"LLU")\n",
+                        out->dts,out->pts);
+            if(picout->i_type!=X264_TYPE_B && picout->i_type!=X264_TYPE_BREF)
+            {
+                ADM_warning("It is not a bframe, expect problems\n");
+                ADM_warning("It is not a bframe, expect problems\n");
+            }
+            out->dts=out->pts;
+        }
         switch (picout->i_type)
         {
         case X264_TYPE_IDR:

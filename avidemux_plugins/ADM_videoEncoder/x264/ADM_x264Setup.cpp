@@ -70,8 +70,13 @@ bool x264Encoder::setup(void)
     usSecondsToFrac(f,&n,&d);
     param.i_fps_num = n;
     param.i_fps_den = d;
-    encoderDelay=f*x264Settings.MaxBFrame;
-
+    if(!x264Settings.MaxBFrame)  encoderDelay=0;
+    else    
+    {
+        if(2>=x264Settings.MaxRefFrames) encoderDelay=f*2;
+        else
+                encoderDelay=f*(x264Settings.MaxRefFrames-1);
+    }
 #define MKPARAM(x,y) {param.x = x264Settings.y;printf("[x264] "#x" = %d\n",param.x);}
 #define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; printf("[x264] "#x" = %.2f\n",param.x);}
 
