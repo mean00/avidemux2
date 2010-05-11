@@ -98,6 +98,11 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
             ADM_assert(queueOfDts.size());
             *dts=queueOfDts[0];
             queueOfDts.erase(queueOfDts.begin());
+            if(*dts>*pts)
+            {
+                ADM_warning("Dts>Pts, that can happen if there are holes in the source, fixating..\n");
+                *dts=*pts;
+            }
             return true;
         }
     }
