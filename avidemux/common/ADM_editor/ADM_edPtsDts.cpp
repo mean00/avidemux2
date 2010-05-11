@@ -160,7 +160,6 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     int nbBframe=0;
     int maxBframe=0;
     uint32_t flags;
-    int nbB=0;
     uint64_t pts,dts;
 
     aviInfo info;
@@ -169,8 +168,6 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     for(int i=1;i<nbFrames;i++)
     {
         hdr->getFlags(i,&flags);
-        if(flags & AVI_B_FRAME)
-                nbB++;
         if(true!=hdr->getPtsDts(i,&pts,&dts))
         {
                     ADM_warning("Cannot get PTS/DTS\n");
@@ -183,7 +180,8 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
                 nbBframe=0;
             }
     }
-
+    nbBframe=0;
+    // We have now maxBframe = max number of Bframes in sequence
     for(int i=1;i<nbFrames;i++)
     {
         hdr->getFlags(i,&flags);
@@ -199,11 +197,10 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
             uint64_t oldPts,oldDts;
             uint64_t fwdPts,fwdDts;
               hdr->getPtsDts(last,&oldPts,&oldDts);
-              hdr->getPtsDts(nbBframe+last+1,&fwdPts,&fwdDts);
+              hdr->getPtsDts(i,&fwdPts,&fwdDts);
               oldPts=fwdDts;
               hdr->setPtsDts(last,oldPts,oldDts);
-            nbBframe=0;
-            last=i;
+              last=i;
         }
     }
     return 1;
