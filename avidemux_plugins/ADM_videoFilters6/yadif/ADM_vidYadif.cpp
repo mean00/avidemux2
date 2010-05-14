@@ -86,7 +86,7 @@ static void filter_plane(int mode, uint8_t *dst, int dst_stride, const uint8_t *
 */
 yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVideoFilter(in,setup)
 {
-    original=new ADMImage(in->getInfo()->width,in->getInfo()->height);
+    original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     if(!setup || !ADM_paramLoad(setup,yadif_param,&configuration))
     {
         // Default value

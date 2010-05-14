@@ -28,7 +28,7 @@ ADM_pngEncoder::ADM_pngEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM
     FilterInfo *info=src->getInfo();
     w=info->width;
     h=info->height;
-    image=new ADMImage(w,h);
+    image=new ADMImageDefault(w,h);
     plane=(w*h*3)/2;
 }
 /** 
@@ -52,7 +52,7 @@ bool         ADM_pngEncoder::encode (ADMBitstream * out)
         return false;
     }
     ADM_assert(out->bufferSize>plane);
-    memcpy(out->data,image->data,plane);
+    memcpy(out->data,image->GetReadPtr(PLANAR_Y),plane); // We KNOW it is ok
     out->len=plane;
     out->pts=out->dts=image->Pts;
     out->flags=AVI_KEY_FRAME;

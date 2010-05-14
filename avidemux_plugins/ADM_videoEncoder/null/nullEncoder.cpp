@@ -30,7 +30,7 @@ ADM_nullEncoder::ADM_nullEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
     FilterInfo *info=src->getInfo();
     w=info->width;
     h=info->height;
-    image=new ADMImage(w,h);
+    image=new ADMImageDefault(w,h);
    
 }
 /** 

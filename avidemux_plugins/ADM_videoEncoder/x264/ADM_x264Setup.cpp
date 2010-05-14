@@ -50,7 +50,7 @@ bool x264Encoder::setup(void)
   ADM_info("x264, setting up");
   
   firstIdr=true;
-  image=new ADMImage(getWidth(),getHeight());
+  image=new ADMImageDefault(getWidth(),getHeight());
   MMSET(param);
   x264_param_default( &param);
   param.pf_log=logger;

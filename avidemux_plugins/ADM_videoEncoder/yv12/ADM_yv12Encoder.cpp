@@ -28,7 +28,7 @@ ADM_yv12Encoder::ADM_yv12Encoder(ADM_coreVideoFilter *src,bool globalHeader) : A
     FilterInfo *info=src->getInfo();
     w=info->width;
     h=info->height;
-    image=new ADMImage(w,h);
+    image=new ADMImageDefault(w,h);
     plane=(w*h*3)/2;
 }
 /** 
@@ -52,7 +52,7 @@ bool         ADM_yv12Encoder::encode (ADMBitstream * out)
         return false;
     }
     ADM_assert(out->bufferSize>plane);
-    memcpy(out->data,image->data,plane);
+    memcpy(out->data,image->GetReadPtr(PLANAR_Y),plane); // We KNOW the y,u,v planes are contiguous and width=stride!
     out->len=plane;
     out->pts=out->dts=image->Pts;
     out->flags=AVI_KEY_FRAME;
