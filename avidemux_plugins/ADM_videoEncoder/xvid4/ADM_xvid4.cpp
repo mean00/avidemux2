@@ -240,7 +240,7 @@ bool xvid4Encoder::setup(void)
     }
 
     handle = xvid_enc_create.handle;
-    image=new ADMImage(getWidth(),getHeight());
+    image=new ADMImageDefault(getWidth(),getHeight());
     uint64_t inc=source->getInfo()->frameIncrement;
     if(inc<30000) // Less than 30 ms , fps > 30 fps it is probably field
      {
