@@ -64,7 +64,7 @@ DECLARE_VIDEO_FILTER(   CropFilter,   // Class
 CropFilter::CropFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVideoFilter(in,couples)
 {
 
-        original=new ADMImage(info.width,info.height);
+        original=new ADMImageDefault(info.width,info.height);
         if(!couples || !ADM_paramLoad(couples,crop_param,&configuration))
 		{
             // Default value

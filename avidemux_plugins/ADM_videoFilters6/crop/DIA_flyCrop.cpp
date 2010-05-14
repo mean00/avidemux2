@@ -105,7 +105,7 @@ uint32_t y,avg,eqt;
 #define THRESH_AVG   30
 #define THRESH_EQT   50
         
-        in=_yuvBuffer->data;
+        in=_yuvBuffer->GetReadPtr(PLANAR_Y);
         for(y=0;y<((_h>>1)-2);y++)	
         {
                 Metrics(in,_w,&avg,&eqt);
@@ -120,7 +120,7 @@ uint32_t y,avg,eqt;
         else 
                 top=0;
                 
-        in=_yuvBuffer->data+_w*(_h-1);
+        in=_yuvBuffer->GetReadPtr(PLANAR_Y)+_w*(_h-1);
         for(y=0;y<((_h>>1)-2);y++)	
         {
                 Metrics(in,_w,&avg,&eqt);
@@ -137,7 +137,7 @@ uint32_t y,avg,eqt;
 
                 
 // Left
-        in=_yuvBuffer->data;
+        in=_yuvBuffer->GetReadPtr(PLANAR_Y);
         for(y=0;y<((_w>>1)-2);y++)	
         {
                 MetricsV(in,_w,_h,&avg,&eqt);
@@ -152,7 +152,7 @@ uint32_t y,avg,eqt;
         else
                 left=0;		
 // Right
-        in=_yuvBuffer->data+_w-1;
+        in=_yuvBuffer->GetReadPtr(PLANAR_Y)+_w-1;
         for(y=0;y<((_w>>1)-2);y++)	
         {
                 MetricsV(in,_w,_h,&avg,&eqt);

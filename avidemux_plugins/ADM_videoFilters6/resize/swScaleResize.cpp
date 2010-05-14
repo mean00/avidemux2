@@ -86,7 +86,7 @@ swScaleResizeFilter::swScaleResizeFilter(  ADM_coreVideoFilter *in,CONFcouple *s
 {
 UNUSED_ARG(setup);
 
-    original=new ADMImage(in->getInfo()->width,in->getInfo()->height);
+    original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     if(!setup || !ADM_paramLoad(setup,swresize_param,&configuration))
     {
         // Default value
