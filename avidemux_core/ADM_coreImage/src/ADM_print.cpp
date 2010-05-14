@@ -26,7 +26,7 @@ void drawDigit(ADMImage *dst, int x, int y, int num)
 	x = x * 10;
 	y = y * 20;
 
-	int pitch = dst->_width;
+	int pitch = dst->GetPitch(PLANAR_Y);
 	for (int tx = 0; tx < 10; tx++) {
 		for (int ty = 0; ty < 20; ty++) {
 			unsigned char *dp = YPLANE(dst);
@@ -62,7 +62,7 @@ static void drawDigitSmall(ADMImage *dst, int x, int y, int num)
 	x = x * 6;
 	y = y * 20;
 
-	int pitch = dst->_width;
+	int pitch = dst->GetPitch(PLANAR_Y);
 	for (int tx = 0; tx < 10; tx++) {
 		for (int ty = 0; ty < 20; ty++) 
 		{

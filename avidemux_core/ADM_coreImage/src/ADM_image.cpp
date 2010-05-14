@@ -158,6 +158,7 @@ uint32_t       ADMImageRef::GetPitch(ADM_PLANE plane)
                     {
                           return _planeStride[plane];
                         }
+// Cannot write to a ref, the buffer does not belong to us...
 uint8_t        *ADMImageRef::GetWritePtr(ADM_PLANE plane) {return NULL;}
 uint8_t        *ADMImageRef::GetReadPtr(ADM_PLANE plane)
 {

@@ -64,15 +64,11 @@ uint8_t ADMImageResizer::resize(ADMImage *source, ADMImage *dest)
     uint32_t dstStride[3];
     uint8_t  *srcPtr[3];
     uint8_t  *dstPtr[3];
-    for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
-    {
-        srcStride[i]=source->GetPitch((ADM_PLANE)i);
-        dstStride[i]=dest->GetPitch((ADM_PLANE)i);
-        srcPtr[i]=source->GetReadPtr((ADM_PLANE)i);
-        dstPtr[i]=dest->GetWritePtr((ADM_PLANE)i);
-     }
-
-     return resizer->convertPlanes(srcStride,dstStride,srcPtr,dstPtr);
+    source->GetPitches(srcStride);
+    dest->GetPitches(dstStride);
+    source->GetReadPlanes(srcPtr);
+    dest->GetWritePlanes(dstPtr);
+    return resizer->convertPlanes(srcStride,dstStride,srcPtr,dstPtr);
 }
 
 uint8_t ADMImageResizer::resize(ADMImage *source, uint8_t *dest)
@@ -83,11 +79,8 @@ uint8_t ADMImageResizer::resize(ADMImage *source, uint8_t *dest)
     uint32_t dstStride[3];
     uint8_t  *srcPtr[3];
     uint8_t  *dstPtr[3];
-    for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
-    {
-        srcStride[i]=source->GetPitch((ADM_PLANE)i);
-        srcPtr[i]=source->GetReadPtr((ADM_PLANE)i);
-     }
+    source->GetPitches(srcStride);
+    source->GetReadPlanes(srcPtr);
         dstStride[0]=destWidth;
         dstStride[1]=destWidth>>1;
         dstStride[2]=destWidth>>1;
@@ -108,11 +101,8 @@ uint8_t ADMImageResizer::resize(uint8_t *source, ADMImage *dest)
     uint32_t dstStride[3];
     uint8_t  *srcPtr[3];
     uint8_t  *dstPtr[3];
-    for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
-    {
-        dstStride[i]=dest->GetPitch((ADM_PLANE)i);
-        dstPtr[i]=dest->GetWritePtr((ADM_PLANE)i);
-     }
+    dest->GetPitches(dstStride);
+    dest->GetWritePlanes(dstPtr);
         srcStride[0]=orgWidth;
         srcStride[1]=orgWidth>>1;
         srcStride[2]=orgWidth>>1;
