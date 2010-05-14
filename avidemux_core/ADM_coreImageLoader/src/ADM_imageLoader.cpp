@@ -148,7 +148,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    fclose(fd);
 		  //
 		    
-		    ADMImage tmpImage(w,h,ADM_IMAGE_REF); // It is a reference image
+		    ADMImageRef tmpImage(w,h); // It is a reference image
 		    // Now unpack it ...
             decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"MJPG"),   w,   h, 0 , NULL,0);
             if(!dec)
@@ -168,14 +168,14 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    case ADM_COLOR_YV12:
 		    {
 		    	ADM_info("[imageLoader] YV12\n");
-	    		image=new ADMImage(w,h);
+	    		image=new ADMImageDefault(w,h);
 	    		image->duplicate(&tmpImage);
 	    		break;
 		    }
 		    case ADM_COLOR_YUV422:
 		    {
 		    	ADM_info("[imageLoader] YUY2\n");
-		    	image=new ADMImage(w,h);
+		    	image=new ADMImageDefault(w,h);
                 ADMColorScalerSimple convert(w,h,ADM_COLOR_YUV422,ADM_COLOR_YV12);
                 uint32_t dstStride[3]={w,w/2,w/2};
                 uint8_t  *dstData[3]={YPLANE(image),UPLANE(image),VPLANE(image)};
@@ -244,8 +244,8 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
 		    
 		  // Colorconversion
 		    
-            ADMImage *image=new ADMImage(w,h);
-            ADM_ConvertRgb24ToYV12(false,w,h,data,image->data);
+            ADMImage *image=new ADMImageDefault(w,h);
+            ADM_ConvertRgb24ToYV12(false,w,h,data,YPLANE(image));
             
 		    
 		    delete [] data;
@@ -294,8 +294,8 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     
   // Colorconversion
     
-    	ADMImage *image=new ADMImage(w,h);
-        ADM_ConvertRgb24ToYV12(true,w,h,data,image->data);
+    	ADMImage *image=new ADMImageDefault(w,h);
+        ADM_ConvertRgb24ToYV12(true,w,h,data,YPLANE(image));
     	
     
     	delete [] data;
@@ -328,7 +328,7 @@ ADMImage *createImageFromFile_png(const char *filename)
  	   uint8_t *data=new uint8_t[size];
  	   fread(data,size,1,fd);
  	   fclose(fd);
- 	   ADMImage tmpImage(w,h,ADM_IMAGE_REF);
+ 	   ADMImageRef tmpImage(w,h);
     	// Decode PNG
         decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"PNG "),   w,   h, 0 , NULL,0);
     	if(!dec)
@@ -342,8 +342,8 @@ ADMImage *createImageFromFile_png(const char *filename)
     			    
     	dec->uncompress (&bin, &tmpImage);
     	
-    	ADMImage *image=new ADMImage(w,h);
-        ADM_ConvertRgb24ToYV12(true,w,h,tmpImage._planes[0],image->data);
+    	ADMImage *image=new ADMImageDefault(w,h);
+        ADM_ConvertRgb24ToYV12(true,w,h,tmpImage._planes[0],YPLANE(image));
     
     	delete [] data;
         delete dec;

@@ -38,7 +38,7 @@
 #include "ADM_render/GUI_render.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
-
+#include "ADM_imageResizer.h"
 #include "DIA_coreToolkit.h"
 
 
@@ -79,7 +79,7 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h)
 {
   
   if(rdrImage) delete rdrImage;
-  rdrImage=new ADMImage(w,h);
+  rdrImage=new ADMImageDefault(w,h);
   rdrPhysicalW=w;
   rdrPhysicalH=h;
   renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);

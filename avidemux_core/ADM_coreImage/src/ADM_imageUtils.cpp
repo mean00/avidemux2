@@ -112,7 +112,7 @@ int a1,a2;
 
 #endif
 
-uint8_t ADMImage::merge(ADMImage *src1,ADMImage *src2)
+bool ADMImage::merge(ADMImage *src1,ADMImage *src2)
 {
 #ifdef ADM_CPU_X86
         if(CpuCaps::hasMMX())
@@ -331,7 +331,7 @@ int ll,rr;
 }
 #endif
 
-uint8_t ADMImage::substract(ADMImage *src1,ADMImage *src2)
+bool ADMImage::substract(ADMImage *src1,ADMImage *src2)
 {
 
 #ifdef ADM_CPU_X86
@@ -344,39 +344,12 @@ uint32_t r1,r2;
         return tinySubstract(YPLANE(this),YPLANE(src1),YPLANE(src2),src1->_width*src1->_height);
 }
   
-/**
-      \fn LumaReduceBy2
-      \brief Very simple reduce by 2 both hz & vz for luma plane only.
-*/
- uint8_t   ADMImage::LumaReduceBy2(void)
-{
-  uint8_t *ptr1,*ptr2,*outptr;
-  for(int y=0;y<_height>>1;y++)
-  {
-    
-    ptr1=data+y*_width*2;
-    ptr2=ptr1+_width;
-    outptr=data+(_width>>1)*y;
-    for(int x=0;x<_width>>1;x++)
-    {
-      uint32_t a,b,c,d;  
-          a=ptr1[0]+ptr1[1];
-          b=ptr2[0]+ptr2[1];
-          ptr1+=2;
-          ptr2+=2;
-          a=(a+b)>>2;
-          *outptr++=a;
-    }
-  }
-  return 1;
-  
-}
  /**
   *		\fn  copyLeftSideTo
   * 	\brief Copy half the image (left part) to dest
   * 	@param dest : Image to copy to 
   */
- uint8_t ADMImage::copyLeftSideTo(ADMImage *dest)
+ bool ADMImage::copyLeftSideTo(ADMImage *dest)
  {
 		uint8_t *src,*dst;
 		uint32_t stride;

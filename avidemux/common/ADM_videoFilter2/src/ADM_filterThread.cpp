@@ -29,7 +29,7 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
     for(int i=0;i<ADM_THREAD_QUEUE_SIZE;i++)
     {
         ADM_queuePacket item;
-        item.data=(uint8_t *)new ADMImage(info.width,info.height);
+        item.data=(uint8_t *)new ADMImageDefault(info.width,info.height);
         freeList.push_back(item);
     }
 }

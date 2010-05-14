@@ -17,7 +17,9 @@
 #include "avifmt2.h"
 #include "fourcc.h"
 #include "ADM_uyvy.h"
-
+/**
+    \fn uncompress
+*/
 bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
 
@@ -52,6 +54,9 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
     return 1;
 
 }
+/**
+    \fn uncompress
+*/
 bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
 {
 
@@ -61,13 +66,13 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
       return 1;
     }
   uint8_t *ptrY, *ptrU, *ptrV, *ptr;
-
+  ADM_assert(out->_imageType=ADM_IMAGE_DEFAULT);
   ptr = in->data;
-  ptrY = out->data;
-  ptrV = out->data + _w * _h;
-  ptrU = out->data + ((_w * _h * 5) >> 2);
-
-
+  ptrY = YPLANE(out);
+  ptrV = VPLANE(out);
+  ptrU = UPLANE(out);
+  ADM_assert(_w==out->GetPitch(PLANAR_Y));
+  ADM_assert(_w/2==out->GetPitch(PLANAR_U));
   for (uint32_t y = 0; y < _h; y++)
     for (uint32_t x = 0; x < (_w >> 1); x++)
       {

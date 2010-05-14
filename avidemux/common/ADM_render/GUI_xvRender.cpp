@@ -41,7 +41,7 @@
 static uint8_t 	GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt);
 static uint8_t 	GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h);
 static void 	GUI_XvEnd( void );
-static uint8_t  GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
+static uint8_t  GUI_XvDisplay(ADMImage *src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
 static uint8_t  GUI_XvRedraw( void );
 static uint8_t  getAtom(const char *string);
 //________________Wrapper around Xv_______________
@@ -76,7 +76,7 @@ bool XvRender::stop(void)
 */
 bool XvRender::displayImage(ADMImage *pic)
 {
-	return GUI_XvDisplay(pic->data, imageWidth, imageHeight,displayWidth,displayHeight);
+	return GUI_XvDisplay(pic, imageWidth, imageHeight,displayWidth,displayHeight);
 }
 
 /**
@@ -136,7 +136,7 @@ void GUI_XvEnd( void )
 /**
     \fn GUI_XvList
 */
-uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH)
+uint8_t GUI_XvDisplay(ADMImage * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH)
 {
     
     if (xvimage)
@@ -147,7 +147,12 @@ uint8_t GUI_XvDisplay(uint8_t * src, uint32_t w, uint32_t h,uint32_t destW,uint3
 	  // for YV12, 4 bits for Y 4 bits for u, 4 bits for v
 	  // total 1.5*
           XLockDisplay (xv_display);
-          memcpy(xvimage->data, src, (w*h*3)>>1);
+          // Pack src into xvimage->data
+            int plane=w*h;
+          BitBlit((uint8_t *)xvimage->data, w,src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),w,h);
+          BitBlit((uint8_t *)xvimage->data+plane, w/2,src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),w/2,h/2);
+          BitBlit((uint8_t *)xvimage->data+(plane*5)/4, w/2,src->GetReadPtr(PLANAR_V),src->GetPitch(PLANAR_V),w/2,h/2);
+          
         //printf("%u x %u => %u x %u\n",w,h,destW,destH);
         // And display it !
 #if 1

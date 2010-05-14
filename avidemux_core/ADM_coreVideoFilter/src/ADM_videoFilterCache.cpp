@@ -38,7 +38,7 @@ uint32_t sz;
 	sz=(w*h*3)>>1;
 	for(uint32_t i=0;i<nbEntry;i++)
 	{
-		entry[i].image	=new ADMImage(w,h);	
+		entry[i].image	=new ADMImageDefault(w,h);	
 		entry[i].frameNum	=0xffff0000;
 		entry[i].frameLock	=0;
         entry[i].freeEntry=true;

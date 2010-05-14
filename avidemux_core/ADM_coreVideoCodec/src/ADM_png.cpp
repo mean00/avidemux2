@@ -146,17 +146,18 @@ gain2:
       goto gain2;
     }
   ADM_assert (out->isRef());
-  out->_planes[0] = decoded;
-  out->_planes[1] = NULL;
-  out->_planes[2] = NULL;
+  ADMImageRef *ref=out->castToRef();
+  ref->_planes[0] = decoded;
+  ref->_planes[1] = NULL;
+  ref->_planes[2] = NULL;
   if (colorspace == ADM_COLOR_RGB32A)
-    out->_planeStride[0] = _w * 4;
+    ref->_planeStride[0] = _w * 4;
 
   else
-    out->_planeStride[0] = _w * 3;
-  out->_planeStride[1] = 0;
-  out->_planeStride[2] = 0;
-  out->_colorspace = colorspace;
+    ref->_planeStride[0] = _w * 3;
+  ref->_planeStride[1] = 0;
+  ref->_planeStride[2] = 0;
+  ref->_colorspace = colorspace;
   Cleanup ();
   return true;
 }

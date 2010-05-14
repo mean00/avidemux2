@@ -487,16 +487,24 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
                         }
                         // Since it is not YV12 it MUST be a ref
                         ADM_assert(src->isRef());
-                        uint32_t strides[3]={src->_width,src->_width/2,src->_width/2};
-                        uint8_t  *Planes[3]={YPLANE(dst),UPLANE(dst),VPLANE(dst)};
-                        vid->color->convertPlanes(src->_planeStride,strides,src->_planes,Planes);
+                        
+                        uint32_t srcStrides[3];
+                        uint8_t  *srcPlanes[3];
+                        uint32_t dstStrides[3];
+                        uint8_t  *dstPlanes[3];
+
+                        src->GetPitches(srcStrides);
+                        src->GetReadPlanes(srcPlanes);
+                        dst->GetPitches(dstStrides);
+                        dst->GetWritePlanes(dstPlanes);
+
+                        vid->color->convertPlanes(srcStrides,dstStrides,srcPlanes,dstPlanes);
                         return 1;
                 }
                 // nothing to do
-                if(_pp.swapuv)
-                      dst->duplicateSwapUV(src);
-                else
-                        dst->duplicate(src);
+//                if(_pp.swapuv)
+#warning handle swap uv
+                dst->duplicate(src);
                 return 1;
 }
 /**

@@ -284,7 +284,8 @@ bool sdlRender::displayImage(ADMImage *pic)
 		}
 	}
 #endif
-
+#warning FIXME
+#if 0
 int pitch;
 int w=imageWidth;
 int h=imageHeight;
@@ -314,6 +315,7 @@ uint8_t *ptr=pic->data;
 	        else
 	            interleave(sdl_overlay->pixels[2],ptr+(page*5)/4,w>>1,pitch,h>>1);
         }else
+#endif
         {
 #if 0
 	        color->changeWidthHeight(w,h);

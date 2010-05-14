@@ -47,6 +47,7 @@ protected:
                float            timeScaler;
               
 protected:
+
     virtual               bool             prolog(void); 
     virtual               bool             preEncode(void); 
     virtual               bool             setup(CodecID codecId);

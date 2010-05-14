@@ -37,7 +37,7 @@ void SwapMe(uint8_t *tgt,uint8_t *src,int nb)
     \fn saveAsBmp
     \brief save current image into filename, into bmp format
 */
-uint8_t  ADMImage::saveAsBmp(const char *filename)
+bool  ADMImage::saveAsBmp(const char *filename)
 {
   ADM_BITMAPFILEHEADER bmfh;
   ADM_BITMAPINFOHEADER bmph;
@@ -68,7 +68,7 @@ uint8_t  ADMImage::saveAsBmp(const char *filename)
 	bmph.colorEncoding=0;
 */
 
-  ADMImage image(_width,_height);
+  ADMImageDefault image(_width,_height);
 
 
   printf ("\n %u x %u=%u\n", bmph.biWidth, bmph.biHeight, sz);
@@ -142,7 +142,7 @@ uint8_t  ADMImage::saveAsBmp(const char *filename)
     \fn saveAsJpg
     \brief save current image into filename, into jpg format
 */
-uint8_t  ADMImage::saveAsJpg(const char *filename)
+bool  ADMImage::saveAsJpg(const char *filename)
 {
 
 AVCodecContext   *context=NULL;   

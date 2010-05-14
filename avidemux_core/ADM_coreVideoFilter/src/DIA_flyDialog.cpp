@@ -48,11 +48,11 @@ ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter 
 
 	_rgb=NULL;
 
-	_yuvBuffer=new ADMImage(_w,_h);
+	_yuvBuffer=new ADMImageDefault(_w,_h);
 
 	if(_isYuvProcessing)
 	{
-		_yuvBufferOut=new ADMImage(_w,_h);
+		_yuvBufferOut=new ADMImageDefault(_w,_h);
 		_rgbBuffer=NULL;
 	}
 	else
@@ -270,9 +270,9 @@ bool ADM_flyDialog::nextImage(void)
 void ADM_flyDialog::copyYuvFinalToRgb(void)
 {
 	if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
-		_resizer->resize(_yuvBufferOut->data, _rgbBufferOut);
+		_resizer->resize(_yuvBufferOut, _rgbBufferOut);
 	else
-		_rgb->convert(_yuvBufferOut->data, _rgbBufferOut);
+		_rgb->convertImage(_yuvBufferOut, _rgbBufferOut);
 }
 /**
     \fn    copyYuvScratchToRgb
@@ -282,9 +282,9 @@ void ADM_flyDialog::copyYuvFinalToRgb(void)
 void ADM_flyDialog::copyYuvScratchToRgb(void)
 {
 	if (_resizeMethod == RESIZE_AUTO)
-		_resizer->resize(_yuvBuffer->data,_rgbBuffer);
+		_resizer->resize(_yuvBuffer,_rgbBuffer);
 	else
-		_rgb->convert(_yuvBuffer->data,_rgbBuffer);
+		_rgb->convertImage(_yuvBuffer,_rgbBuffer);
 }
 /**
     \fn    copyRgbFinalToDisplay

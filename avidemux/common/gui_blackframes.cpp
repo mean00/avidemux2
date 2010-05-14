@@ -96,7 +96,7 @@ static int sliceScanNotBlack(int darkness, int maxnonb, int sliceNum,ADMImage *i
 
     int cnt4=0;
 
-    start=img->data+ sz*sliceNum;
+    start=img->GetReadPtr(PLANAR_Y)+ sz*sliceNum;
     buff=start+sz;
 
     while(--buff>start)

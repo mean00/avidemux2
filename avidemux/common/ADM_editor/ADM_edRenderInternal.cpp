@@ -290,7 +290,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
                 }
                 if(!_scratch)
                 {
-                  _scratch=new ADMImage(_imageBuffer->_width,_imageBuffer->_height,ADM_IMAGE_REF);
+                  _scratch=new ADMImageRef(_imageBuffer->_width,_imageBuffer->_height);
                 }
                 tmpImage=_scratch;
                 ww=_imageBuffer->_width & 0xfffff0;
@@ -370,54 +370,35 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 	// we do postproc !
 	// keep
 	uint8_t *oBuff[3];
-	const uint8_t *iBuff[3];
-	int	strideTab[3];
-	int	strideTab2[3];
+    const uint8_t *xBuff[3];
+	uint8_t *iBuff[3];
+	uint32_t	strideTab[3];
+	uint32_t	strideTab2[3];
 	aviInfo _info;
 
         getVideoInfo(&_info);
-        if(refOnly)
-        {
-                iBuff[0]= tmpImage->_planes[0];
-                iBuff[1]= tmpImage->_planes[1];
-                iBuff[2]= tmpImage->_planes[2];
-
-                strideTab2[0]=_info.width;
-                strideTab2[1]=_info.width>>1;
-                strideTab2[2]=_info.width>>1;
-
-                strideTab[0]=tmpImage->_planeStride[0];
-                strideTab[1]=tmpImage->_planeStride[1];
-                strideTab[2]=tmpImage->_planeStride[2];
-
-        }
-        else
-        {
-                iBuff[0]= YPLANE((tmpImage));
-                iBuff[1]= UPLANE((tmpImage));
-                iBuff[2]= VPLANE((tmpImage));
-
-                strideTab[0]=strideTab2[0]=_info.width;
-                strideTab[1]=strideTab2[1]=_info.width>>1;
-                strideTab[2]=strideTab2[2]=_info.width>>1;
-        }
+        tmpImage->GetReadPlanes(iBuff);
+        tmpImage->GetPitches(strideTab);
+        out->GetPitches(strideTab2);
+        out->GetWritePlanes(oBuff);
         if(_pp.swapuv)
         {
-                oBuff[0]= YPLANE(out);
-                oBuff[1]= VPLANE(out);
-                oBuff[2]= UPLANE(out);
-        }else
+                uint8_t *s=oBuff[1];
+                oBuff[1]=oBuff[2];
+                oBuff[2]=s;
+        }
+        int iStrideTab2[3],iStrideTab[3];
+        for(int i=0;i<3;i++) 
         {
-
-                oBuff[0]= YPLANE(out);
-                oBuff[1]= UPLANE(out);
-                oBuff[2]= VPLANE(out);
+            iStrideTab[i]=strideTab[i];
+            iStrideTab2[i]=strideTab2[i];
+            xBuff[i]=iBuff[i];
         }
         pp_postprocess(
-            iBuff,
-            strideTab,
+            xBuff,
+            iStrideTab,
             oBuff,
-            strideTab2,
+            iStrideTab2,
             ww,
             _info.height,
             (int8_t *)(tmpImage->quant),
@@ -438,8 +419,8 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
                 right=_info.width-left;
                 // Luma
                 dst=YPLANE(out)+right;
-                src=tmpImage->_planes[0]+right;
-                stridein=tmpImage->_planeStride[0];
+                src=tmpImage->GetReadPtr(PLANAR_Y)+right;
+                stridein=tmpImage->GetPitch(PLANAR_Y);
                 strideout=_info.width;
                 for(uint32_t y=_info.height;y>0;y--)
                 {
@@ -452,8 +433,9 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
                 right>>=1;
                 //
                 dst=UPLANE(out)+right;
-                src=tmpImage->_planes[1]+right;
-                stridein=tmpImage->_planeStride[1];
+                src=tmpImage->GetReadPtr(PLANAR_U)+right;
+                stridein=tmpImage->GetPitch(PLANAR_U);
+
                 strideout=_info.width>>1;
                 for(uint32_t y=_info.height>>1;y>0;y--)
                 {
@@ -463,8 +445,8 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
                 }
                 //
                 dst=VPLANE(out)+right;
-                src=tmpImage->_planes[2]+right;
-                stridein=tmpImage->_planeStride[2];
+                src=tmpImage->GetReadPtr(PLANAR_V)+right;
+                stridein=tmpImage->GetPitch(PLANAR_V);
                 strideout=_info.width>>1;
                 for(uint32_t y=_info.height>>1;y>0;y--)
                 {

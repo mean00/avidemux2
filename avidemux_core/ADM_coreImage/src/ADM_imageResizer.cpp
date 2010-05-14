@@ -13,7 +13,7 @@
  ***************************************************************************/
 #include "ADM_default.h"
 
-#include "ADM_image.h"
+#include "ADM_imageResizer.h"
 
 extern "C" {
 #include "ADM_ffmpeg/libavcodec/avcodec.h"
@@ -59,24 +59,69 @@ uint8_t ADMImageResizer::resize(ADMImage *source, ADMImage *dest)
     ADM_assert(source->_height == orgHeight);
     ADM_assert(dest->_width == destWidth);
     ADM_assert(dest->_height == destHeight);
+    ADM_assert(dest->isWrittable()==true)
+    uint32_t srcStride[3];
+    uint32_t dstStride[3];
+    uint8_t  *srcPtr[3];
+    uint8_t  *dstPtr[3];
+    for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
+    {
+        srcStride[i]=source->GetPitch((ADM_PLANE)i);
+        dstStride[i]=dest->GetPitch((ADM_PLANE)i);
+        srcPtr[i]=source->GetReadPtr((ADM_PLANE)i);
+        dstPtr[i]=dest->GetWritePtr((ADM_PLANE)i);
+     }
 
-	return resizer->convert(source->data, dest->data);
+     return resizer->convertPlanes(srcStride,dstStride,srcPtr,dstPtr);
 }
 
 uint8_t ADMImageResizer::resize(ADMImage *source, uint8_t *dest)
 {
     ADM_assert(source->_width == orgWidth);
     ADM_assert(source->_height == orgHeight);
+    uint32_t srcStride[3];
+    uint32_t dstStride[3];
+    uint8_t  *srcPtr[3];
+    uint8_t  *dstPtr[3];
+    for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
+    {
+        srcStride[i]=source->GetPitch((ADM_PLANE)i);
+        srcPtr[i]=source->GetReadPtr((ADM_PLANE)i);
+     }
+        dstStride[0]=destWidth;
+        dstStride[1]=destWidth>>1;
+        dstStride[2]=destWidth>>1;
+        uint32_t plane=destWidth*destHeight;
+        dstPtr[0]=dest;
+        dstPtr[1]=dest+plane;
+        dstPtr[2]=dest+((5*plane)>>2);
 
-	return resizer->convert(source->data, dest);
+	return resizer->convertPlanes(srcStride,dstStride,srcPtr,dstPtr);
 }
 
 uint8_t ADMImageResizer::resize(uint8_t *source, ADMImage *dest)
 {
     ADM_assert(dest->_width == destWidth);
     ADM_assert(dest->_height == destHeight);
+    ADM_assert(dest->isWrittable()==true)
+    uint32_t srcStride[3];
+    uint32_t dstStride[3];
+    uint8_t  *srcPtr[3];
+    uint8_t  *dstPtr[3];
+    for(int i=PLANAR_Y;i<PLANAR_LAST;i++)
+    {
+        dstStride[i]=dest->GetPitch((ADM_PLANE)i);
+        dstPtr[i]=dest->GetWritePtr((ADM_PLANE)i);
+     }
+        srcStride[0]=orgWidth;
+        srcStride[1]=orgWidth>>1;
+        srcStride[2]=orgWidth>>1;
+        uint32_t plane=orgWidth*orgHeight;
+        srcPtr[0]=source;
+        srcPtr[1]=source+plane;
+        srcPtr[2]=source+((5*plane)>>2);
 
-	return resizer->convert(source, dest->data);
+	return resizer->convertPlanes(srcStride,dstStride,srcPtr,dstPtr);
 }
 
 

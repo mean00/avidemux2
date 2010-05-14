@@ -244,7 +244,7 @@ bool ADM_Composer::addFile (const char *name)
         updatePostProc(&_pp);
 
         if(_imageBuffer) delete _imageBuffer;
-        _imageBuffer=new ADMImage(info.width,info.height);
+        _imageBuffer=new ADMImageDefault(info.width,info.height);
         _imageBuffer->_qSize= ((info.width+15)>>4)*((info.height+15)>>4);
         _imageBuffer->quant=new uint8_t[_imageBuffer->_qSize];
         memset(_imageBuffer->quant,0,_imageBuffer->_qSize);

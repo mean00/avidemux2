@@ -389,7 +389,7 @@ void A_saveBunchJpg(const char *name)
         // Split name into base + extension
         ADM_PathSplit(name,&baseName,&ext);
 
-        src=new ADMImage(avifileinfo->width,avifileinfo->height);
+        src=new ADMImageDefault(avifileinfo->width,avifileinfo->height);
         ADM_assert(src);
 
         working=createWorking(QT_TR_NOOP("Saving as set of jpegs"));

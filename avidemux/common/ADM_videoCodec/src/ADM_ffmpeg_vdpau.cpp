@@ -244,7 +244,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             }
             VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
-        scratch=new ADMImage(w,h,ADM_IMAGE_REF);
+        scratch=new ADMImageRef(w,h);
         b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
 
 }
@@ -295,7 +295,7 @@ VdpStatus status;
         return 0;
     }
     // other part will be done in goOn
-  struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->_planes[0];
+  struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetWritePtr(PLANAR_Y);
    VdpVideoSurface  surface;
 
     surface=rndr->surface;

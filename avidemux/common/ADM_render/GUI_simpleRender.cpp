@@ -59,7 +59,7 @@ bool simpleRender::refresh(void)
 */
 bool simpleRender::displayImage(ADMImage *pic)
 {
-    scaler->convert(pic->data,videoBuffer);
+    scaler->convertImage(pic,videoBuffer);
     // Display RGB data
     MUI_rgbDraw(MUI_getDrawWidget(),displayWidth,displayHeight,videoBuffer);
     return true;

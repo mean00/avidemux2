@@ -44,7 +44,7 @@ uint32_t w,h;
     w=getWidth();
     h=getHeight();
 
-    image=new ADMImage(w,h);
+    image=new ADMImageDefault(w,h);
     _context = avcodec_alloc_context2 (CODEC_TYPE_VIDEO);
     ADM_assert (_context);
     memset (&_frame, 0, sizeof (_frame));
@@ -223,7 +223,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
               int w=getWidth();
               int h=getHeight();
 
-                if(!colorSpace->convert(image->data,rgbBuffer))
+                if(!colorSpace->convertImage(image,rgbBuffer))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
@@ -234,7 +234,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                 break;
         }
         case ADM_COLOR_RGB32A:
-                if(!colorSpace->convert(image->data,rgbBuffer))
+                if(!colorSpace->convertImage(image,rgbBuffer))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;

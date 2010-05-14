@@ -16,6 +16,7 @@ SET(ADM_coreImage_SRCS
 #        ADM_interlaceUtil.cpp
 #        DIA_flyDialog.cpp
         ADM_imageSave.cpp
+        ADM_imageOperation.cpp
 )
 
 ADD_LIBRARY(ADM_coreImage6 SHARED ${ADM_coreImage_SRCS})

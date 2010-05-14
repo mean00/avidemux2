@@ -35,7 +35,7 @@ EditorCache::EditorCache(uint32_t size,uint32_t w, uint32_t h)
 	_elem=new cacheElem[size];
 	for(uint32_t i=0;i<size;i++)
 	{
-		_elem[i].image=new ADMImage(w,h);
+		_elem[i].image=new ADMImageDefault(w,h);
 		_elem[i].pts=ADM_NO_PTS;
 	}
 	_nbImage=size;

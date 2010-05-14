@@ -12,10 +12,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- #ifndef ADM_COLORSPACE_H
- #define ADM_COLORSPACE_H
+#ifndef ADM_COLORSPACE_H
+#define ADM_COLORSPACE_H
 #include "ADM_rgb.h" // To have colors
-
+class ADMImage;
 typedef enum 
 {
     ADM_CS_BILINEAR,
@@ -46,6 +46,7 @@ class ADMColorScalerFull
     
 
     bool            convert(uint8_t  *from, uint8_t *to);
+    bool            convertImage(ADMImage *img, uint8_t *to);
     bool            convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3]);
                     ~ADMColorScalerFull();
@@ -63,6 +64,7 @@ public:
                      {
 
                      }
+                    
 };
 
 // Some misc functions

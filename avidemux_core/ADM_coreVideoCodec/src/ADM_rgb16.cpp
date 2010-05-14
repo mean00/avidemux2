@@ -103,17 +103,17 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 	}
 
 	ADM_assert(out->isRef());
-
+    ADMImageRef *ref=out->castToRef();
 	out->flags = AVI_KEY_FRAME;
 	out->_colorspace = (ADM_colorspace)(colorspace | ADM_COLOR_BACKWARD);
 
-	out->_planes[0] = decoded;
-	out->_planes[1] = NULL;
-	out->_planes[2] = NULL;
+	ref->_planes[0] = decoded;
+	ref->_planes[1] = NULL;
+	ref->_planes[2] = NULL;
 
-	out->_planeStride[0] = (_bpp / 8) * _w;
-	out->_planeStride[1] = 0;
-	out->_planeStride[2] = 0;
+	ref->_planeStride[0] = (_bpp / 8) * _w;
+	ref->_planeStride[1] = 0;
+	ref->_planeStride[2] = 0;
 
 	return 1;
 }

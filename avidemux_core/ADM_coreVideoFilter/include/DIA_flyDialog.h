@@ -41,7 +41,7 @@
 #include "ADM_rgb.h"
 #include "ADM_colorspace.h"
 #include "ADM_coreVideoFilter.h"
-
+#include "ADM_imageResizer.h"
 #define ADM_FLY_SLIDER_MAX 1000
 
 enum ResizeMethod {

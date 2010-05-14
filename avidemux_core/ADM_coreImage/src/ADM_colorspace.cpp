@@ -17,7 +17,7 @@
 
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
-
+#include "ADM_image.h"
 
 extern "C" {
 #include "ADM_ffmpeg/libavcodec/avcodec.h"
@@ -272,4 +272,26 @@ bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *sourc
     return true;
 }
 
+/**
+    \fn convertColorSpace
+*/
+bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
+{
+    uint8_t *srcPlanes[3];
+    uint8_t *dstPlanes[3];
+    uint32_t srcPitch[3];
+    uint32_t dstPitch[3];
+    img->GetPitches(srcPitch);
+    img->GetReadPlanes(srcPlanes);
+    int w=img->_width;
+    int h=img->_height;
+    int plane=w*h;
+    dstPitch[0]=w;
+    dstPitch[1]=w/2;
+    dstPitch[2]=w/2;
+    dstPlanes[0]=to;
+    dstPlanes[1]=to+plane;
+    dstPlanes[2]=to+(plane*5)/4;;
+    return  convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
+}
 //EOF

@@ -70,8 +70,9 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
 {
   uint32_t    u,v;
   ADM_assert(out->isRef());
-  out->_planes[0] = (uint8_t *) src->data[0];
-  out->_planeStride[0] = src->linesize[0];
+  ADMImageRef *ref=out->castToRef();
+  ref->_planes[0] = (uint8_t *) src->data[0];
+  ref->_planeStride[0] = src->linesize[0];
   if (_swapUV)
     {
       u = 1;
@@ -82,11 +83,11 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
       u = 2;
       v = 1;
     }
-  out->_planes[1] = (uint8_t *) src->data[u];
-  out->_planeStride[1] = src->linesize[u];
+  ref->_planes[1] = (uint8_t *) src->data[u];
+  ref->_planeStride[1] = src->linesize[u];
 
-  out->_planes[2] = (uint8_t *) src->data[v];
-  out->_planeStride[2] = src->linesize[v];
+  ref->_planes[2] = (uint8_t *) src->data[v];
+  ref->_planeStride[2] = src->linesize[v];
 
   _lastQ = 0;			//_context->quality;
   out->_Qp = (src->quality * 32) / FF_LAMBDA_MAX;
@@ -384,8 +385,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 	  out->flags = AVI_KEY_FRAME;
 	  if (!_refCopy)
 	    {
-	      memset (out->data, 0, _w * _h);
-	      memset (out->data + _w * _h, 128, (_w * _h) >> 1);
+            out->blacken();
 	    }
 	  else
 	    {
