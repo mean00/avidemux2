@@ -290,7 +290,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
                 }
                 if(!_scratch)
                 {
-                  _scratch=new ADMImage(_imageBuffer->_width,_imageBuffer->_height,1);
+                  _scratch=new ADMImage(_imageBuffer->_width,_imageBuffer->_height,ADM_IMAGE_REF);
                 }
                 tmpImage=_scratch;
                 ww=_imageBuffer->_width & 0xfffff0;

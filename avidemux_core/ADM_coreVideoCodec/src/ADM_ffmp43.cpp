@@ -69,7 +69,7 @@ extern "C"
 uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
 {
   uint32_t    u,v;
-  ADM_assert(out->_isRef);
+  ADM_assert(out->isRef());
   out->_planes[0] = (uint8_t *) src->data[0];
   out->_planeStride[0] = src->linesize[0];
   if (_swapUV)

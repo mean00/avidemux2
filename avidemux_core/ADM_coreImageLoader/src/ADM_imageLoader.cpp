@@ -59,18 +59,18 @@ static uint32_t read32(FILE *fd)
 ADMImage *createImageFromFile(const char *filename)
 {
 	uint32_t w,h;
-	switch(ADM_identidyImageFile(filename,&w,&h))
+	switch(ADM_identifyImageFile(filename,&w,&h))
 	{
-		case  ADM_IMAGE_UNKNOWN: 
+		case  ADM_PICTURE_UNKNOWN: 
 					ADM_warning("[imageLoader] Trouble identifying /loading %s\n",filename);
 					return NULL;
-		case ADM_IMAGE_JPG:
+		case ADM_PICTURE_JPG:
 					return createImageFromFile_jpeg(filename);
 					break;
-		case ADM_IMAGE_PNG:
+		case ADM_PICTURE_PNG:
 					return createImageFromFile_png(filename);
 					break;
-		case ADM_IMAGE_BMP2:
+		case ADM_PICTURE_BMP2:
 					return createImageFromFile_Bmp2(filename);
 					break;
 		default:
@@ -148,7 +148,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    fclose(fd);
 		  //
 		    
-		    ADMImage tmpImage(w,h,1); // It is a reference image
+		    ADMImage tmpImage(w,h,ADM_IMAGE_REF); // It is a reference image
 		    // Now unpack it ...
             decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"MJPG"),   w,   h, 0 , NULL,0);
             if(!dec)
@@ -328,7 +328,7 @@ ADMImage *createImageFromFile_png(const char *filename)
  	   uint8_t *data=new uint8_t[size];
  	   fread(data,size,1,fd);
  	   fclose(fd);
- 	   ADMImage tmpImage(w,h,1);
+ 	   ADMImage tmpImage(w,h,ADM_IMAGE_REF);
     	// Decode PNG
         decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"PNG "),   w,   h, 0 , NULL,0);
     	if(!dec)
@@ -354,7 +354,7 @@ ADMImage *createImageFromFile_png(const char *filename)
  * 		\fn ADM_identidyImageFile
  * 		\brief Identidy image type, returns type and width/height
  */
-ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *h)
+ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h)
 {
 			uint32_t *fcc;
 		    uint8_t fcc_tab[4];
@@ -368,7 +368,7 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		    if (!fd) 
 		    {
 		    	printf("[imageIdentify] Cannot open that file!\n");
-		    	return ADM_IMAGE_UNKNOWN;
+		    	return ADM_PICTURE_UNKNOWN;
 		    }
 		    fread(fcc_tab, 4, 1, fd);
 		    fcc = (uint32_t *) fcc_tab;
@@ -403,15 +403,15 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		    			    		{
 		    			    			ADM_warning("[imageIdentify]Offset too short!\n");
 		    			    		    fclose(fd);
-		    			    		    return ADM_IMAGE_UNKNOWN;
+		    			    		    return ADM_PICTURE_UNKNOWN;
 		    			    		}
 		    			    		fseek(fd, off - 2, SEEK_CUR);
 		    			    	}
 		    				count++;
 		    			    }
 		    			    fclose(fd);
-		    			    if(count>=10) return ADM_IMAGE_UNKNOWN;
-		    			    return ADM_IMAGE_JPG;
+		    			    if(count>=10) return ADM_PICTURE_UNKNOWN;
+		    			    return ADM_PICTURE_JPG;
 		    }
 		    // PNG ?
 		    if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G') 
@@ -424,7 +424,7 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		     	    *w=read32(fd);
 		     	    *h=read32(fd);	
 		     	    fclose(fd);
-		     	    return ADM_IMAGE_PNG;
+		     	    return ADM_PICTURE_PNG;
 			    }
 		    // BMP2?
 		    if (fcc_tab[0] == 'B' && fcc_tab[1] == 'M') 
@@ -442,15 +442,15 @@ ADM_IMAGE_TYPE ADM_identidyImageFile(const char *filename,uint32_t *w,uint32_t *
 		     	    {
 		     	    	ADM_warning("[imageIdentify] BMP2:Cannot handle compressed bmp\n");
 		     	    	fclose(fd);
-		     	    	return ADM_IMAGE_UNKNOWN;
+		     	    	return ADM_PICTURE_UNKNOWN;
 		     	    }
 		     	    *w = bmph.biWidth;
 		     	    *h = bmph.biHeight;
 	     	    	fclose(fd);
-	     	    	return ADM_IMAGE_BMP2;
+	     	    	return ADM_PICTURE_BMP2;
 		    }
 		    // Unknown filetype...
 		    fclose(fd);
-		    return ADM_IMAGE_UNKNOWN;
+		    return ADM_PICTURE_UNKNOWN;
 }
 //EOF

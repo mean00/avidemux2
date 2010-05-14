@@ -55,31 +55,41 @@ void    ADMImage::commonInit(uint32_t w,uint32_t h)
         Pts=0;
 
 }
-ADMImage::ADMImage(uint32_t width, uint32_t height)
+/**
+    \fn ADMImage
+    \brief ctor
+*/
+ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
 {
         commonInit(width,height);
-        _isRef=0;
-        data=new uint8_t [ ((width+15)&0xffffff0)*((height+15)&0xfffffff0)*2];
-        ADM_assert(data);
-        imgCurMem+=(width*height*3)>>1;
-        if(imgCurMem>imgMaxMem) imgMaxMem=imgCurMem;
-        if(imgCurNb>imgMaxNb) imgMaxNb=imgCurNb;
-
-};
-// Create a fake image with external datas
-ADMImage::ADMImage(uint32_t width, uint32_t height,uint32_t dummy)
-{
-        commonInit(width,height);
-        _isRef=1;
+        _imageType=type;
         data=NULL;
+        _cookie=NULL;
+        _planes[0]=_planes[1]=_planes[2]=NULL;
+        switch(_imageType)
+        {
+            case ADM_IMAGE_DEFAULT:
+                data=new uint8_t [ ((width+15)&0xffffff0)*((height+15)&0xfffffff0)*2];
+                ADM_assert(data);
+                imgCurMem+=(width*height*3)>>1;
+                if(imgCurMem>imgMaxMem) imgMaxMem=imgCurMem;
+                if(imgCurNb>imgMaxNb) imgMaxNb=imgCurNb;
+                break;
+            case ADM_IMAGE_REF:
+                break;
+            case ADM_IMAGE_VDPAU:
+                break;
+            default:
+                ADM_assert(0);
 
+        }
 };
 //
 //	Deallocate
 //
 ADMImage::~ADMImage()
 {
-    if(!_isRef)
+    if(_imageType==ADM_IMAGE_DEFAULT)
     {
        if(quant) delete [] quant;
        quant=NULL;
@@ -100,7 +110,7 @@ uint8_t ADMImage::duplicateMacro(ADMImage *src,uint32_t swap)
         ADM_assert(src->_width==_width);
         ADM_assert(src->_height==_height);
 
-        ADM_assert(!_isRef); // could not duplicate to a linked data image
+        ADM_assert(_imageType==ADM_IMAGE_DEFAULT); // could not duplicate to a linked data image
 
         // cleanup if needed
         if(quant) delete [] quant;
@@ -110,7 +120,7 @@ uint8_t ADMImage::duplicateMacro(ADMImage *src,uint32_t swap)
         _qSize=0;
 
         copyInfo(src);
-        if(!src->_isRef)
+        if(src->_imageType==ADM_IMAGE_DEFAULT)
         {
                memcpy(YPLANE(this),YPLANE(src),_width*_height);
                 if(swap)
@@ -126,6 +136,7 @@ uint8_t ADMImage::duplicateMacro(ADMImage *src,uint32_t swap)
         }
         else
         {
+                if(src->_imageType!=ADM_IMAGE_REF) ADM_assert(0);
                 if(src->_noPicture)
                 {
                         // no pic available, blacken it
@@ -225,7 +236,7 @@ uint8_t ADMImage::duplicateFull(ADMImage *src)
 
 
 	copyInfo(src);
-        ADM_assert(!_isRef);
+    ADM_assert(_imageType==ADM_IMAGE_DEFAULT);
 
 	memcpy(YPLANE(this),YPLANE(src),_width*_height);
 	memcpy(UPLANE(this),UPLANE(src),(_width*_height)>>2);

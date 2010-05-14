@@ -145,7 +145,7 @@ gain2:
       recalc ();
       goto gain2;
     }
-  ADM_assert (out->_isRef);
+  ADM_assert (out->isRef());
   out->_planes[0] = decoded;
   out->_planes[1] = NULL;
   out->_planes[2] = NULL;

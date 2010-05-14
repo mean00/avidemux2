@@ -486,7 +486,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
                                                                  src->_colorspace,ADM_COLOR_YV12);
                         }
                         // Since it is not YV12 it MUST be a ref
-                        ADM_assert(src->_isRef);
+                        ADM_assert(src->isRef());
                         uint32_t strides[3]={src->_width,src->_width/2,src->_width/2};
                         uint8_t  *Planes[3]={YPLANE(dst),UPLANE(dst),VPLANE(dst)};
                         vid->color->convertPlanes(src->_planeStride,strides,src->_planes,Planes);

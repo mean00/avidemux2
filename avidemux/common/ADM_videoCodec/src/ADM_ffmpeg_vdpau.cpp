@@ -244,7 +244,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             }
             VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
-        scratch=new ADMImage(w,h,1);
+        scratch=new ADMImage(w,h,ADM_IMAGE_REF);
         b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
 
 }

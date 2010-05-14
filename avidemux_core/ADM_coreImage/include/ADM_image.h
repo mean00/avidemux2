@@ -47,6 +47,14 @@ typedef enum
         PLANAR_V=3
         
 } ADM_PLANE;
+
+typedef enum
+{
+    ADM_IMAGE_DEFAULT,
+    ADM_IMAGE_REF,
+    ADM_IMAGE_VDPAU
+}ADM_IMAGE_TYPE;
+
 /**
     \class ADMImage
     \brief Stores image
@@ -68,10 +76,10 @@ public:
         ADM_ASPECT	_aspect;	/// Aspect ratio
         uint32_t	flags;		/// Flags for this image (AVI_KEY_FRAME/AVI_B_FRAME)
         uint64_t    Pts;        /// Presentation time in us
-
+        uint64_t    *_cookie;   /// Used whith vdpau & friends
 // This 3 fields are only used to convery container (reference to other datas)
 // Between codec & editor
-        uint8_t         _isRef;         /// If True means the datas are just a link to data we don't own!
+        ADM_IMAGE_TYPE  _imageType;     /// Plain image or reference or vdpau wrapper
         ADM_colorspace  _colorspace;    /// Colorspace we are moving, default is YV12
         uint8_t         _noPicture;     /// No picture to display
 
@@ -120,8 +128,8 @@ public:
         uint8_t         *_planes[3];     /// In case of linked data store y/u/v pointers
         uint32_t        _planeStride[3]; /// Same story
 
-                ADMImage(uint32_t width, uint32_t height);
-                ADMImage(uint32_t width, uint32_t height,uint32_t dummy); /// To create linked datas image        
+                ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type=ADM_IMAGE_DEFAULT);
+                
 
         uint8_t   LumaReduceBy2(void);
                 ~ADMImage();
@@ -136,7 +144,7 @@ public:
         uint8_t duplicateFull(ADMImage *src);	/// copy an image to ourself, including info
         uint8_t copyInfo(ADMImage *src);	/// copy all the flags, not the data themselves
         uint8_t copyQuantInfo(ADMImage *src);	/// copy quant table if any
-        uint8_t isRef(void) { return _isRef;};
+        bool    isRef(void) { if(_imageType==ADM_IMAGE_REF) return true;return false;};
         uint8_t setLinkInfos(uint8_t *y,        /// To fill in infos for linked image
                         uint8_t *u,uint8_t *v,uint32_t stridey,
                         uint32_t strideu, uint32_t stridev);

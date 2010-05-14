@@ -102,7 +102,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 		}
 	}
 
-	ADM_assert(out->_isRef);
+	ADM_assert(out->isRef());
 
 	out->flags = AVI_KEY_FRAME;
 	out->_colorspace = (ADM_colorspace)(colorspace | ADM_COLOR_BACKWARD);
