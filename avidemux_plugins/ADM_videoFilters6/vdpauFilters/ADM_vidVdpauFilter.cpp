@@ -34,7 +34,7 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   vdpauVideoFilter,   // Class
                         1,0,0,              // Version
-                        ADM_UI_ALL,         // UI
+                        ADM_UI_GTK+ADM_UI_QT4,         // We need a display for VDPAU; so no cli...
                         VF_INTERLACING,            // Category
                         "vdpau",            // internal name (must be uniq!)
                         "vdpau",            // Display name
