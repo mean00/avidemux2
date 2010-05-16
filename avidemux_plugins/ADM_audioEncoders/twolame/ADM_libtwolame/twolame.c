@@ -702,15 +702,14 @@ int twolame_encode_buffer(
 		int mp2buffer_size )
 {
 	int mp2_size=0;
-	bit_stream *mybs;
+    bit_stream mybs;
 	int i;
 
 	if (num_samples==0) return 0;
 
-
 	// now would be a great time to validate the size of the buffer.
 	// samples/1152 * sizeof(frame) < mp2buffer_size 
-	mybs = buffer_init( mp2buffer, mp2buffer_size );
+    buffer_init( mp2buffer, mp2buffer_size, &mybs );
 
 
 	// Use up all the samples in in_buffer
@@ -735,18 +734,14 @@ int twolame_encode_buffer(
 		
 		// is there enough to encode a whole frame ?
 		if (glopts->samples_in_buffer >= 1152) {
-			int bytes = encode_frame( glopts, mybs );
+			int bytes = encode_frame( glopts, &mybs );
 			if (bytes<=0) {
-				buffer_deinit( &mybs );
 				return bytes;
 			}
 			mp2_size += bytes;
 			glopts->samples_in_buffer -= 1152;
 		}
 	}
-
-	// free up the bit stream buffer structure
-	buffer_deinit( &mybs );
 
 	return(mp2_size);
 }
@@ -760,7 +755,7 @@ int twolame_encode_buffer_interleaved(
 		int mp2buffer_size )
 {
 	int mp2_size=0;
-	bit_stream *mybs;
+    bit_stream mybs;
 	int i;
 
 	if (num_samples==0) return 0;
@@ -768,7 +763,7 @@ int twolame_encode_buffer_interleaved(
 
 	// now would be a great time to validate the size of the buffer.
 	// samples/1152 * sizeof(frame) < mp2buffer_size 
-	mybs = buffer_init( mp2buffer, mp2buffer_size );
+    buffer_init( mp2buffer, mp2buffer_size, &mybs );
 
 	// Use up all the samples in in_buffer
 	while( num_samples ) {
@@ -792,26 +787,21 @@ int twolame_encode_buffer_interleaved(
 		
 		// is there enough to encode a whole frame ?
 		if (glopts->samples_in_buffer >= 1152) {
-			int bytes = encode_frame( glopts, mybs );
+			int bytes = encode_frame( glopts, &mybs );
 			if (bytes<=0) {
-				buffer_deinit( &mybs );
 				return bytes;
 			}
 			mp2_size += bytes;
 			glopts->samples_in_buffer -= 1152;
 		}
-	}
-
-	// free up the bit stream buffer structure
-	buffer_deinit( &mybs );
-	
+	}	
 	
 	return(mp2_size);
 }
 
 
 int twolame_encode_flush(twolame_options *glopts, unsigned char *mp2buffer, int mp2buffer_size) {
-	bit_stream *mybs = NULL;
+    bit_stream mybs;
 	int mp2_size = 0;
 	int i;
 
@@ -822,7 +812,7 @@ int twolame_encode_flush(twolame_options *glopts, unsigned char *mp2buffer, int 
 
 
 	// Create bit stream structure
-	mybs = buffer_init( mp2buffer, mp2buffer_size );
+    buffer_init( mp2buffer, mp2buffer_size, &mybs );
 
 	// Pad out the PCM buffers with 0 and encode the frame
 	for (i=glopts->samples_in_buffer; i< 1152; i++) {
@@ -830,11 +820,8 @@ int twolame_encode_flush(twolame_options *glopts, unsigned char *mp2buffer, int 
 	}
 
 	// Encode the frame 
-	mp2_size = encode_frame( glopts, mybs );
+	mp2_size = encode_frame( glopts, &mybs );
 	glopts->samples_in_buffer=0;
-
-	// free up the bit stream buffer structure
-	buffer_deinit( &mybs );
 
 	return mp2_size;
 }

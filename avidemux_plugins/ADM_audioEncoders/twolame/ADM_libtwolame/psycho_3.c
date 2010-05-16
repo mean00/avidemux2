@@ -397,6 +397,9 @@ static psycho_3_mem *psycho_3_init( twolame_options *glopts ) {
   int cbands=0;
   int *cbandindex;
 
+  memset(numlines,0,HBLKSIZE*sizeof(int));
+  memset(partition,0,HBLKSIZE*sizeof(int));
+
   mem = (psycho_3_mem *)twolame_malloc(sizeof(psycho_3_mem), "psycho_3_mem");
   mem->off[0]=mem->off[1]=256;
   freq_subset = mem->freq_subset;
@@ -544,10 +547,14 @@ void psycho_3 (twolame_options *glopts, short int buffer[2][1152], FLOAT scale[2
 
     psycho_3_fft(sample, energy);
     //MEANX prevent valgrind complains
+    memset(sample,0,HBLKSIZE*sizeof(FLOAT));
+    memset(energy,0,HBLKSIZE*sizeof(FLOAT));
     memset(power,0,HBLKSIZE*sizeof(FLOAT));
+    memset(tonelabel,0,HBLKSIZE*sizeof(int));
     memset(noiselabel,0,HBLKSIZE*sizeof(int));
     memset(Xtm,0,HBLKSIZE*sizeof(FLOAT));
     memset(Xnm,0,HBLKSIZE*sizeof(FLOAT));
+    memset(Lsb,0,(SBLIMIT+1)*sizeof(FLOAT));
     // /MEANX
     psycho_3_powerdensityspectrum(energy, power);    
     psycho_3_spl(Lsb, power, &scale[k][0]);

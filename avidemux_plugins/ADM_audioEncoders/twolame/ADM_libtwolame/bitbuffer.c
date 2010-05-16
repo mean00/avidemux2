@@ -31,10 +31,8 @@
 
 
 /*create bit buffer*/
-bit_stream* buffer_init( unsigned char *buffer, int buffer_size )
-{
-	bit_stream* bs = (bit_stream *)twolame_malloc(sizeof(bit_stream),"bit_stream");
-	
+void buffer_init( unsigned char *buffer, int buffer_size, bit_stream* bs )
+{	
 	bs->buf = buffer;
 	bs->buf_size = buffer_size;
 	bs->buf_byte_idx = 0;
@@ -42,15 +40,13 @@ bit_stream* buffer_init( unsigned char *buffer, int buffer_size )
 	bs->totbit = 0;
 	bs->eob = FALSE;
 	bs->eobs = FALSE;
-	
-	return bs;
 }
 
 /* Dellocate bit buffer */
-void buffer_deinit( bit_stream ** bs )
-{
-	twolame_free( (void**)bs );
-}
+//void buffer_deinit( bit_stream ** bs )
+//{
+//	twolame_free( (void**)bs );
+//}
 
 
 /*write 1 bit from the bit stream */
