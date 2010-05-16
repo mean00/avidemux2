@@ -42,6 +42,24 @@ extern "C" {
 #define CONTEXT (SwsContext *)context
 
 /**
+    \fn swapRGB
+*/
+static void swapRGB(uint32_t w,uint32_t h, uint8_t *to)
+{
+  uint32_t l=w*h;
+    uint8_t *d=(uint8_t *)to;
+    int r,b,g,a;
+    while(l--)
+    {
+        uint8_t s=d[0];
+        d[0]=d[2];
+        d[2]=s;
+        d+=4;
+        
+    }
+}
+
+/**
     \fn ADMColor2LAVColor
     \brief Convert ADM colorspace type swscale/lavcodec colorspace name
 
@@ -138,18 +156,7 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
   sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
   if(toColor==ADM_COLOR_BGR32A)
   {
-    // RGB32->BG32
-    uint32_t l=dstWidth*dstHeight;
-    uint8_t *d=(uint8_t *)to;
-    int r,b,g,a;
-    while(l--)
-    {
-        uint8_t s=d[0];
-        d[0]=d[2];
-        d[2]=s;
-        d+=4;
-        
-    }
+     swapRGB(dstWidth,dstHeight,to);
   }
   return true;
   
@@ -281,17 +288,18 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     uint8_t *dstPlanes[3];
     uint32_t srcPitch[3];
     uint32_t dstPitch[3];
+    int      idstPitch[3];
     img->GetPitches(srcPitch);
     img->GetReadPlanes(srcPlanes);
-    int w=img->_width;
-    int h=img->_height;
-    int plane=w*h;
-    dstPitch[0]=w;
-    dstPitch[1]=w/2;
-    dstPitch[2]=w/2;
-    dstPlanes[0]=to;
-    dstPlanes[1]=to+plane;
-    dstPlanes[2]=to+(plane*5)/4;;
-    return  convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
+    getStrideAndPointers(true,to,toColor, dstPlanes,idstPitch);
+    dstPitch[0]=idstPitch[0];
+    dstPitch[1]=idstPitch[1];
+    dstPitch[2]=idstPitch[2];
+    if(false==convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes)) return false;
+    if(toColor==ADM_COLOR_BGR32A)
+    {
+             swapRGB(dstWidth,dstHeight,to);
+    }
+    return true;
 }
 //EOF

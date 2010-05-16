@@ -42,9 +42,9 @@ ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter 
 	_canvas = canvas;
 	_cookie = NULL;
 	_resizeMethod = resizeMethod;
-        _zoomChangeCount = 0;
-        _resizer=NULL;
-        _rgbBufferDisplay=NULL;
+    _zoomChangeCount = 0;
+    _resizer=NULL;
+    _rgbBufferDisplay=NULL;
 
 	_rgb=NULL;
 
