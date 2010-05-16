@@ -87,7 +87,6 @@ bool  ADMImage::saveAsBmp(const char *filename)
         uint32_t ww=bmph.biWidth;
         uint32_t hh=bmph.biHeight;
         uint8_t swap[ww*3];
-        
         uint8_t *up=out;
         uint8_t *down=out+(hh-1)*ww*3;
         
@@ -180,9 +179,9 @@ int              sz=0,r=0;
     // Setup our image & stuff....
         
 
-        frame.linesize[0] = _width; 
-        frame.linesize[1] = _width>>1; 
-        frame.linesize[2] = _width>>1; 
+        frame.linesize[0] = GetPitch(PLANAR_Y); 
+        frame.linesize[1] = GetPitch(PLANAR_U); 
+        frame.linesize[2] = GetPitch(PLANAR_V); 
         
         frame.data[0] = GetWritePtr(PLANAR_Y);
         frame.data[2] = GetWritePtr(PLANAR_U);
