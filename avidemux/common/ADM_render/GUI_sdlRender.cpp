@@ -57,6 +57,7 @@ HWND sdlWin32;
 sdlRender::sdlRender( void)
 {
         useYV12=true;
+        ADM_info("[SDL] Init rendered\n");
 }
 /**
     \fn stop
@@ -251,15 +252,6 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
         return 1;
 }
 
-static void interleave(uint8_t *dst,uint8_t *src,int width, int stride, int lines)
-{
-    for(int y=0;y<lines;y++)
-    {
-        memcpy(dst,src,width);
-        src+=width;
-        dst+=stride;
-    }
-}
 /**
     \fn displayImage
 */
@@ -285,12 +277,10 @@ bool sdlRender::displayImage(ADMImage *pic)
 	}
 #endif
 #warning FIXME
-#if 0
 int pitch;
 int w=imageWidth;
 int h=imageHeight;
 int page=w*h;
-uint8_t *ptr=pic->data;
 
         ADM_assert(sdl_overlay);
         SDL_LockYUVOverlay(sdl_overlay);
@@ -298,36 +288,32 @@ uint8_t *ptr=pic->data;
 //	printf("SDL: new pitch :%d\n",pitch);
         if(useYV12)
         {
-	        if(pitch==w)
-	            memcpy(sdl_overlay->pixels[0],ptr,w*h);
-	        else
-	            interleave(sdl_overlay->pixels[0],ptr,w,pitch,h);
+            uint32_t imagePitch[3];
+            uint8_t  *imagePtr[3];
+            pic->GetPitches(imagePitch);
+            pic->GetWritePlanes(imagePtr);
+            //
+            BitBlit(sdl_overlay->pixels[0],sdl_overlay->pitches[0],imagePtr[0],imagePitch[0],w, h);
+            BitBlit(sdl_overlay->pixels[1],sdl_overlay->pitches[1],imagePtr[1],imagePitch[1],w/2, h/2);
+            BitBlit(sdl_overlay->pixels[2],sdl_overlay->pitches[2],imagePtr[2],imagePitch[2],w/2, h/2);
 
-	        pitch=sdl_overlay->pitches[1];
-	        if(pitch==(w>>1))
-	            memcpy(sdl_overlay->pixels[1],ptr+page,(w*h)>>2);
-	        else
-	            interleave(sdl_overlay->pixels[1],ptr+page,w>>1,pitch,h>>1);
-
-	        pitch=sdl_overlay->pitches[2];
-	        if(pitch==(w>>1))
-	            memcpy(sdl_overlay->pixels[2],ptr+(page*5)/4,(w*h)>>2);
-	        else
-	            interleave(sdl_overlay->pixels[2],ptr+(page*5)/4,w>>1,pitch,h>>1);
         }else
-#endif
-        {
+
+        { // YUYV
 #if 0
-	        color->changeWidthHeight(w,h);
+	        scaler->changeWidthHeight(w,h);
 	        if(pitch==2*w)
 	        {
-	            color->convert(ptr,sdl_overlay->pixels[0]);
+	            scaler->convert(pic,sdl_overlay->pixels[0]);
 	        }
 	        else
 	        {
-	            color->convert(ptr,decoded);
-	            interleave(sdl_overlay->pixels[0],decoded,2*w,pitch,h);
+	            scaler->convert(pic,decoded);
+                BitBlit(sdl_overlay->pixels[0],sdl_overlay->pitches[0],decoded,2*w,h);
 	        }
+#else
+            ADM_warning("[SDL] YUYV disabled\n");
+            return false;
 #endif
         }
        
