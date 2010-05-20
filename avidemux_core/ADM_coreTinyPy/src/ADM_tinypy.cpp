@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
+#include <stdarg.h>
 #include "ADM_tinypy.h"
 //extern "C"
 //{
@@ -22,6 +23,19 @@
 //}
 #define INSTANCE ((tp_vm *)instance)
 #define SCRIPT   ((tp_obj *)script)
+
+bool pyPrintf(const char *fmt,...)
+{
+        static char print_buffer[1024];
+  	
+		va_list 	list;
+		va_start(list,	fmt);
+		vsnprintf(print_buffer,1023,fmt,list);
+		va_end(list);
+		print_buffer[1023]=0; // ensure the string is terminated
+        printf("TP>%s",print_buffer);
+        return true;
+}
 
 /**
     \fn tinypy
@@ -59,8 +73,8 @@ bool tinyPy::init(void)
     return false;
 }
 /**
-    \fn tinypy
-    \brief execString
+    \fn execString
+    \brief eval a python string
 */
 bool tinyPy::execString(const char *s)
 {
@@ -73,8 +87,28 @@ bool tinyPy::execString(const char *s)
     tp_obj program = tp_string(s);
     if(!setjmp(INSTANCE->nextexpr))
     {
-        tp_obj c = tp_compile(INSTANCE, program, name);
-        tp_exec(INSTANCE, c,INSTANCE->builtins);
+        tp_obj c=tp_eval(INSTANCE,s,INSTANCE->builtins);
+    }
+    else     
+    {
+        return false;
+    }
+    return true;
+}
+/**
+    \fn execFile
+    \brief execute a python script
+*/
+bool tinyPy::execFile(const char *f)
+{
+    if(!instance)
+    {
+        ADM_warning("No instance\n");
+        return false;
+    }
+    if(!setjmp(INSTANCE->nextexpr))
+    {
+        tp_import(INSTANCE,f,"avidemux6",NULL,0);
     }
     else     
     {
@@ -90,5 +124,21 @@ bool tinyPy::dumpInternals(void)
   
     return true;
 
+}
+/**
+    \fn registerFuncs
+*/
+bool    tinyPy::registerFuncs(const char *group,pyFuncs *funcs)
+{
+    printf("Registering group %s\n",group);
+    while(funcs->funcName)
+    {
+        printf("Registering :%s\n",funcs->funcName);
+        tp_set(INSTANCE, INSTANCE->builtins, 
+                tp_string(funcs->funcName), 
+                tp_fnc(INSTANCE, funcs->funcCall));
+        funcs++;
+    }
+    return true;
 }
 // EOF

@@ -120,6 +120,9 @@ Agreement.
 #error "Unsuported compiler"
 #endif
 
+// MEANX
+bool pyPrintf(const char *fmt,...);
+
 /*  #define tp_malloc(x) calloc((x),1)
     #define tp_realloc(x,y) realloc(x,y)
     #define tp_free(x) free(x) */
@@ -462,7 +465,8 @@ tp_inline static tp_obj tp_number(tp_num v) {
 
 tp_inline static void tp_echo(TP,tp_obj e) {
     e = tp_str(tp,e);
-    fwrite(e.string.val,1,e.string.len,stdout);
+    //fwrite(e.string.val,1,e.string.len,stdout);
+    pyPrintf("%s",e.string.val);
 }
 
 /* Function: tp_string_n

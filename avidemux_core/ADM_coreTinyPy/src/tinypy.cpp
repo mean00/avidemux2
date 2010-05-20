@@ -119,15 +119,10 @@ Agreement.
 #ifndef tp_inline
 #error "Unsuported compiler"
 #endif
-
-typedef enum
-{
-    JS_LOG_NORMAL,
-    JS_LOG_ERROR
-}JS_LOG_TYPE;
-// MEANX
-bool jsLog(JS_LOG_TYPE type, const char *fmt,...);
-#define printf(a...) jsLog(JS_LOG_NORMAL,a)
+// MEANX : Redirect printf
+bool pyPrintf(const char *fmt,...);
+#define printf pyPrintf
+// ************************
 
 /*  #define tp_malloc(x) calloc((x),1)
     #define tp_realloc(x,y) realloc(x,y)
@@ -471,7 +466,8 @@ tp_inline static tp_obj tp_number(tp_num v) {
 
 tp_inline static void tp_echo(TP,tp_obj e) {
     e = tp_str(tp,e);
-    fwrite(e.string.val,1,e.string.len,stdout);
+    //fwrite(e.string.val,1,e.string.len,stdout); // MEANX
+    printf("%s",e.string.val);
 }
 
 /* Function: tp_string_n

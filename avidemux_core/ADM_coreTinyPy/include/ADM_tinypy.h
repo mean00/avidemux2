@@ -15,6 +15,15 @@
  ***************************************************************************/
 #ifndef ADM_TINYPY_H
 #define ADM_TINYPY_H
+#include "tinypy.h"
+/**
+    \struct tyFunc
+*/
+typedef struct
+{
+    const char *funcName;
+    tp_obj (*funcCall)(TP);
+}pyFuncs;
 /**
     \class tinyPy
 */
@@ -25,8 +34,10 @@ protected:
 public:
                 tinyPy(void);
         bool    init(void);
+        bool    registerFuncs(const char *group,pyFuncs *funcs);
                 ~tinyPy(void);
         bool    execString(const char *s);
+        bool    execFile(const char *f);
         bool    dumpInternals(void);
 };
 #endif
