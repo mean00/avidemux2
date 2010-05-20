@@ -5,7 +5,7 @@
 
 
 #include "ADM_default.h"
-#include "ADM_jsShell.h"
+#include "ADM_scriptShell.h"
 /**
     \fn gtkShellLogger
     \brief Redirect output to the shell
