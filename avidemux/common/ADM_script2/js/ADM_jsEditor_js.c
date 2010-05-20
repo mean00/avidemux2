@@ -14,7 +14,7 @@ please refer to the software package which it is part of.
 */
 
 #include "stdio.h"
-#include "ADM_jsEditor.h"
+#include "ADM_scriptEditor.h"
 void jsEditor(void)
 {
         printf("Constructor invoked\n");

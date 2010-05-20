@@ -1,2 +1,3 @@
+subdirs (js)
+subdirs (py)
 subdirs (src)
-subdirs (src_dialogFactory)

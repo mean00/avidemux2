@@ -18,7 +18,7 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_coreTinyPy/include/tinypy.h"
 #include "ADM_coreTinyPy/include/ADM_tinypy.h"
-#include "ADM_script2/include/ADM_jsShell.h"
+#include "ADM_script2/include/ADM_scriptShell.h"
 #include "A_functions.h"
 
 #include "adm_gen.h"

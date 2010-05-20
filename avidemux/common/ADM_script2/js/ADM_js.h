@@ -23,8 +23,8 @@ using std::vector;
 #include "DIA_coreToolkit.h"
 #include "jsapi.h"
 #include "ADM_jsUtils.h"
-#include "ADM_jsShell.h"
-#include "ADM_jsDebug.h"
+#include "ADM_scriptShell.h"
+#include "ADM_scriptDebug.h"
 #include "ADM_jsDFactory.h"
 
 typedef JSBool JS_PROTOTYPE(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);

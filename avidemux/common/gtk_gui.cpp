@@ -40,8 +40,7 @@
 
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
-#include "ADM_script2/include/ADM_jsIf.h"
-#include "ADM_pyScript/include/ADM_pyIf.h"
+#include "ADM_script2/include/ADM_scriptIf.h"
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** A Function ***************

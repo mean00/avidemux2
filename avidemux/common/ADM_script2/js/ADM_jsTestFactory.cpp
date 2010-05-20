@@ -17,7 +17,7 @@
 #include "ADM_editor/ADM_edit.hxx"
 #include "DIA_fileSel.h"
 #include "DIA_factory.h"
-#include "ADM_jsTestFactory.h"
+#include "ADM_scriptTestFactory.h"
 #include "DIA_encoding.h"
 
 /**

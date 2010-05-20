@@ -15,7 +15,7 @@
 #include "ADM_js.h"
 #include <stdarg.h>
 #include <vector>
-#include "ADM_jsEditor.h"
+#include "ADM_scriptEditor.h"
 #include "ADM_editor/ADM_edit.hxx"
 extern ADM_Composer *video_body;
 

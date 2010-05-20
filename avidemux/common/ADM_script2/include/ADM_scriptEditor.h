@@ -1,9 +1,8 @@
 /**
-    \file ADM_pyIf.h
-    \brief Interface for python script 
-    \author mean fixounet@free.fr 2010
-
+    \file ADM_jsAvidemux
+    \brief Standard includes and defines
 */
+
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -12,10 +11,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_PY_IF_H
-#define ADM_PY_IF_H
+#ifndef ADM_JS_EDITOR_H
+#define ADM_JS_EDITOR_H
+#include "ADM_inttype.h"
+//#include "jsapi.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-bool parseTinyPyScript(const char *name);
-bool interactiveTinyPy(void);
+int jsPrintTiming(int framenumber );
+int jsDumpSegments (void);
+int jsDumpRefVideos (void);
+#ifdef __cplusplus
+};
+#endif
 
 #endif

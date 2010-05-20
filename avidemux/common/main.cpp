@@ -49,7 +49,7 @@ extern "C" {
 #include "ADM_render/GUI_sdlRender.h"
 #endif
 
-#include "ADM_script2/include/ADM_jsIf.h"
+#include "ADM_script2/include/ADM_scriptIf.h"
 void onexit( void );
 //extern void automation(int argc, char **argv);
 

@@ -61,4 +61,15 @@ void SpidermonkeyDestroy(void);
     \fn SpidermonkeyExit
 */
 bool SpidermonkeyExit(void);
+
+/**
+    \fn parseTinyPyScript
+*/
+bool parseTinyPyScript(const char *name);
+/**
+    \fn interactiveTinyPy
+*/
+bool interactiveTinyPy(void);
+
+
 #endif

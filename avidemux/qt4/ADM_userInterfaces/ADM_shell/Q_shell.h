@@ -6,7 +6,7 @@
 #include "ADM_inttype.h"
 #include <QtGui/QItemDelegate>
 #include "ui_shell.h"
-#include "ADM_jsShell.h"
+#include "ADM_scriptShell.h"
 /**
     \class ADM_jsQt4Shell
 */

@@ -15,7 +15,7 @@ please refer to the software package which it is part of.
 
 #include "stdio.h"
 #include "ADM_jsAvidemux.h"
-#include "ADM_jsDebug.h"
+#include "ADM_scriptDebug.h"
 
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>

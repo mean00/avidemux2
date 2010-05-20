@@ -15,7 +15,7 @@
  ***************************************************************************/
 #include "ADM_js.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_jsDebug.h"
+#include "ADM_scriptDebug.h"
 #include <vector>
 /**/
 /**/

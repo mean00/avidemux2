@@ -1,6 +1,6 @@
 /**
-    \file ADM_jsShell.h
-    \brief Base class for js interactive shell
+    \file ADM_jsDialogFactory.h
+    \brief Base class for dialog factory mapping
     \author mean, fixounet@free.fr
 */
 
@@ -13,11 +13,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef ADM_JS_SHELL_H
-#define ADM_JS_SHELL_H
-#include "ADM_jsIf.h"
-typedef bool (jsShellEvaluate)(const char *str);
-bool ADM_startShell(jsShellEvaluate *eval);
-
+#ifndef ADM_JS_DIALOG_H
+#define ADM_JS_DIALOG_H
+#include "ADM_scriptIf.h"
+extern "C"  JSObject *jsDialogFactoryInit(JSContext *cx,JSObject *obj);
 
 #endif // ADM_JS_SHELL_H

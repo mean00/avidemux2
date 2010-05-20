@@ -21,7 +21,9 @@ SET(ADM_script_SRCS
         ADM_jsAudio.cpp
 )
 
-ADD_LIBRARY(ADM_script26 STATIC ${ADM_script_SRCS})
+ADD_LIBRARY(ADM_jsScript6 STATIC ${ADM_script_SRCS})
 ADD_DEFINITIONS("-DJS_THREADSAFE -DXP_UNIX")
-include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_script2/include)
+include_directories(../include)
+include_directories(.)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+SUBDIRS(src_dialogFactory)
