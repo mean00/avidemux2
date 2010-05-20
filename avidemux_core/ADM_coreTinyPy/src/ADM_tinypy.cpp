@@ -18,6 +18,7 @@
 //extern "C"
 //{
 #include "tinypy.h"
+#include "init_math.cpp"
 //}
 #define INSTANCE ((tp_vm *)instance)
 #define SCRIPT   ((tp_obj *)script)
@@ -53,6 +54,7 @@ bool tinyPy::init(void)
     ADM_assert(!instance);
     instance=(void *)tp_init(0,NULL);
     if(instance) return true;   
+    math_init(INSTANCE);
     ADM_error("Cannot initialize tinypy\n");
     return false;
 }
@@ -80,5 +82,13 @@ bool tinyPy::execString(const char *s)
     }
     return true;
 }
+/**
+    \fn dumpInternals
+*/
+bool tinyPy::dumpInternals(void)
+{
+  
+    return true;
 
+}
 // EOF

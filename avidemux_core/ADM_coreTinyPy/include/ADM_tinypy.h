@@ -27,5 +27,6 @@ public:
         bool    init(void);
                 ~tinyPy(void);
         bool    execString(const char *s);
+        bool    dumpInternals(void);
 };
 #endif

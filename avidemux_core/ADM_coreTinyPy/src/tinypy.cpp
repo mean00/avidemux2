@@ -127,7 +127,7 @@ typedef enum
 }JS_LOG_TYPE;
 // MEANX
 bool jsLog(JS_LOG_TYPE type, const char *fmt,...);
-//#define printf(a...) jsLog(JS_LOG_NORMAL,a)
+#define printf(a...) jsLog(JS_LOG_NORMAL,a)
 
 /*  #define tp_malloc(x) calloc((x),1)
     #define tp_realloc(x,y) realloc(x,y)
