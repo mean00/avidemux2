@@ -62,7 +62,7 @@ size_t ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream)
 	return fread(ptr,size,n,sstream);
 }
 
-size_t ADM_fwrite(void *ptr, size_t size, size_t n, FILE *sstream)
+size_t ADM_fwrite(const void *ptr, size_t size, size_t n, FILE *sstream)
 {
 	return fwrite(ptr,size,n,sstream);
 }

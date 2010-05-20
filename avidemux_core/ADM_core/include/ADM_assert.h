@@ -35,7 +35,7 @@ void            ADM_backTrack(const char *info,int lineno,const char *file);
 
 /* Replacement for fread & friends */
 size_t          ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream);
-size_t          ADM_fwrite (void *ptr, size_t size, size_t n, FILE *sstream);
+size_t          ADM_fwrite (const void *ptr, size_t size, size_t n, FILE *sstream);
 FILE            *ADM_fopen (const char *file, const char *mode);
 int             ADM_fclose (FILE *file);
 uint8_t         ADM_fileExist(const char *name);
