@@ -37,7 +37,7 @@ extern bool vdpauUsable(void);
 decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp)
 {
   ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if (isH264Compatible (fcc))
+  if (isH264Compatible (fcc) || isMpeg12Compatible(fcc))
     {
 #if defined(USE_VDPAU) 
         if(vdpauUsable()==true)

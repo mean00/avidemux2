@@ -52,6 +52,14 @@ static VdpGetProcAddress     *vdpProcAddress;
 
 #define aprintf(...) {}
 
+typedef enum 
+{
+    ADM_VDPAU_INVALID=0,
+    ADM_VDPAU_H264=1,
+    ADM_VDPAU_MPEG2=2,
+    ADM_VDPAU_VC1=3
+}ADM_VDPAU_TYPE;
+
 /**
     \fn vdpauUsable
     \brief Return true if  vdpau can be used...
@@ -218,13 +226,32 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
-        WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
+        ADM_VDPAU_TYPE vdpauType=ADM_VDPAU_INVALID;
+        if(isH264Compatible(fcc))
+        {
+            vdpauType=ADM_VDPAU_H264;
+        }else if(isMpeg12Compatible(fcc))
+        {
+            vdpauType=ADM_VDPAU_MPEG2;
+        }else ADM_assert(0);
+        int vdpDecoder;
+        switch(vdpauType)
+        {
+            case ADM_VDPAU_H264 : vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
+                                  WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
+                                  break;
+            case ADM_VDPAU_MPEG2: 
+                                  vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
+                                  WRAP_OpenByName(mpegvideo_vdpau,CODEC_ID_MPEG2VIDEO);
+                                  break;
+            default: ADM_assert(0);
+        }
         ADM_info("[VDPAU] Decoder created \n");
         // Now instantiate our VDPAU surface & decoder
         for(int i=0;i<NB_SURFACE;i++)
             VDPAU->renders[i]=NULL;
-
-        if(VDP_STATUS_OK!=funcs.decoderCreate(vdpDevice,VDP_DECODER_PROFILE_H264_HIGH,
+        
+        if(VDP_STATUS_OK!=funcs.decoderCreate(vdpDevice,vdpDecoder,
                                 w,h,15,&(VDPAU->vdpDecoder)))
         {
             ADM_error("Cannot create VDPAU decoder\n");
@@ -295,7 +322,7 @@ VdpStatus status;
         return 0;
     }
     // other part will be done in goOn
-  struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetWritePtr(PLANAR_Y);
+  struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
    VdpVideoSurface  surface;
 
     surface=rndr->surface;

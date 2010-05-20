@@ -439,6 +439,10 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case PIX_FMT_RGB555:
       out->_colorspace = ADM_COLOR_RGB555;
       break;
+    case PIX_FMT_VDPAU_MPEG1:
+    case PIX_FMT_VDPAU_MPEG2:
+    case PIX_FMT_VDPAU_WMV3:
+    case PIX_FMT_VDPAU_VC1:
     case PIX_FMT_VDPAU_H264:
         out->_colorspace=ADM_COLOR_VDPAU;
         break;
