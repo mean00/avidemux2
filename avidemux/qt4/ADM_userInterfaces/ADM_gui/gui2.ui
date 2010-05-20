@@ -1307,63 +1307,6 @@
     <addaction name="actionSave_2"/>
     <addaction name="actionFilters_2"/>
    </widget>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>&amp;File</string>
-    </property>
-    <widget class="QMenu" name="menuRecent_Files">
-     <property name="title">
-      <string>&amp;Recent Files</string>
-     </property>
-     <addaction name="actionRecent0"/>
-     <addaction name="actionRecent1"/>
-     <addaction name="actionRecent2"/>
-     <addaction name="actionRecent3"/>
-    </widget>
-    <widget class="QMenu" name="menuSave">
-     <property name="title">
-      <string>&amp;Save</string>
-     </property>
-     <addaction name="actionSave_video"/>
-     <addaction name="separator"/>
-     <addaction name="actionSave_BMP"/>
-     <addaction name="actionSave_jpeg"/>
-    </widget>
-    <addaction name="actionOpen"/>
-    <addaction name="menuRecent_Files"/>
-    <addaction name="actionAppend"/>
-    <addaction name="menuSave"/>
-    <addaction name="actionClose"/>
-    <addaction name="separator"/>
-    <addaction name="actionProperties"/>
-    <addaction name="separator"/>
-    <addaction name="actionLoad_run_project"/>
-    <addaction name="actionSave_project"/>
-    <addaction name="actionSave_project_as"/>
-    <addaction name="separator"/>
-    <addaction name="actionAdd_to_joblist"/>
-    <addaction name="actionShow_Joblist"/>
-    <addaction name="separator"/>
-    <addaction name="actionConnect_to_AvsProxy"/>
-    <addaction name="separator"/>
-    <addaction name="actionQuit"/>
-   </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>&amp;Tools</string>
-    </property>
-    <addaction name="actionCalculator"/>
-    <addaction name="separator"/>
-    <addaction name="actionRebuild_I_B_Frames"/>
-    <addaction name="actionBitrate_histogram"/>
-    <addaction name="actionScan_for_black_frames"/>
-    <addaction name="separator"/>
-    <addaction name="actionVob_to_vobsub"/>
-    <addaction name="actionOCR"/>
-    <addaction name="actionOCR_DVB_T_TS_files"/>
-    <addaction name="actionGlyphs_Edit"/>
-    <addaction name="actionJavaScript_shell"/>
-   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
@@ -1436,6 +1379,65 @@
     <addaction name="separator"/>
     <addaction name="actionJump_to_Frame"/>
     <addaction name="actionJump_to_Time"/>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menuRecent_Files">
+     <property name="title">
+      <string>&amp;Recent Files</string>
+     </property>
+     <addaction name="actionRecent0"/>
+     <addaction name="actionRecent1"/>
+     <addaction name="actionRecent2"/>
+     <addaction name="actionRecent3"/>
+    </widget>
+    <widget class="QMenu" name="menuSave">
+     <property name="title">
+      <string>&amp;Save</string>
+     </property>
+     <addaction name="actionSave_video"/>
+     <addaction name="separator"/>
+     <addaction name="actionSave_BMP"/>
+     <addaction name="actionSave_jpeg"/>
+    </widget>
+    <addaction name="actionOpen"/>
+    <addaction name="menuRecent_Files"/>
+    <addaction name="actionAppend"/>
+    <addaction name="menuSave"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionProperties"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_run_project"/>
+    <addaction name="actionSave_project"/>
+    <addaction name="actionSave_project_as"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_to_joblist"/>
+    <addaction name="actionShow_Joblist"/>
+    <addaction name="separator"/>
+    <addaction name="actionConnect_to_AvsProxy"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+    <addaction name="actionRun_pyScript"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="actionCalculator"/>
+    <addaction name="separator"/>
+    <addaction name="actionRebuild_I_B_Frames"/>
+    <addaction name="actionBitrate_histogram"/>
+    <addaction name="actionScan_for_black_frames"/>
+    <addaction name="separator"/>
+    <addaction name="actionVob_to_vobsub"/>
+    <addaction name="actionOCR"/>
+    <addaction name="actionOCR_DVB_T_TS_files"/>
+    <addaction name="actionGlyphs_Edit"/>
+    <addaction name="actionJavaScript_shell"/>
+    <addaction name="actionPython_Shell"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -2396,6 +2398,16 @@
    </property>
    <property name="text">
     <string>16:9</string>
+   </property>
+  </action>
+  <action name="actionRun_pyScript">
+   <property name="text">
+    <string>Run pyScript</string>
+   </property>
+  </action>
+  <action name="actionPython_Shell">
+   <property name="text">
+    <string>Python Shell</string>
    </property>
   </action>
  </widget>

@@ -1,0 +1,11 @@
+int  py_loadVideo (char * );
+int  py_clearSegments (void);
+int  py_appendVideo (char * );
+int  py_addSegment (int ,float , float );
+int  py_setPostProc (int ,int , int );
+int  py_getWidth (void);
+int  py_getHeight (void);
+int  py_getFps1000 (void);
+int  py_audioReset (void);
+int  py_audioMixer (char * );
+int  py_clearVideoFilters (void);

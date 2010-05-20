@@ -70,7 +70,9 @@ PROCESS(actionIPOD,ACT_AUTO_IPOD) \
 PROCESS(actionAdd_to_joblist,ACT_ADD_JOB) \
 PROCESS(actionShow_Joblist,ACT_HANDLE_JOB)  \
 PROCESS(actionPlugins,ACT_PLUGIN_INFO) \
-PROCESS(actionJavaScript_shell,ACT_JS_SHELL) 
+PROCESS(actionJavaScript_shell,ACT_JS_SHELL) \
+PROCESS(actionRun_pyScript,ACT_RunPyScript) \
+PROCESS(actionPython_Shell,ACT_PY_SHELL) \
 
 #if 0
 PROCESS(actionPrevious_intra_frame,ACT_PreviousKFrame) \

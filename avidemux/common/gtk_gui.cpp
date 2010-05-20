@@ -41,6 +41,7 @@
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
 #include "ADM_script2/include/ADM_jsIf.h"
+#include "ADM_pyScript/include/ADM_pyIf.h"
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** A Function ***************
@@ -119,6 +120,9 @@ int nw;
   }
   switch (action)
     {
+        case ACT_PY_SHELL:
+                                interactiveTinyPy();
+                                return;
         case ACT_JS_SHELL:
                                 interactiveECMAScript("dummy");
                                 return;
@@ -163,6 +167,9 @@ int nw;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
+    case ACT_RunPyScript:
+            GUI_FileSelRead (QT_TR_NOOP("Select python script to Run"),(SELFILE_CB *) A_parseTinyPyScript);
+    		return;
     case ACT_RunScript:
             GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
@@ -854,6 +861,26 @@ void cleanUp (void)
 
 
 
+/**
+    \fn A_parseTinyPyScript
+*/
+bool A_parseTinyPyScript(const char *name){
+  bool ret;
+  char *longname = ADM_PathCanonize(name);
+   if (playing){
+      GUI_PlayAvi();
+   }
+   ret = parseTinyPyScript(longname);
+   if( ret == true )
+   {
+      video_body->setProjectName(longname);
+   }
+   ADM_dealloc(longname);
+   return ret;
+}
+/**
+    \fn A_parseECMAScript
+*/
 bool A_parseECMAScript(const char *name){
   bool ret;
   char *longname = ADM_PathCanonize(name);

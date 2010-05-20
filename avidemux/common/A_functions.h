@@ -20,6 +20,8 @@ void    A_audioTrack(void);
 int     A_Save(const char *name);
 int     A_SaveWrapper( char *name);
 bool    A_parseECMAScript(const char *name);
+bool    A_parseTinyPyScript(const char *name);
+
 //uint8_t A_autoDrive(Action action);
 uint8_t A_TimeShift(void);
 void    A_ResetMarkers(void);

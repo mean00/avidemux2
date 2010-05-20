@@ -1,0 +1,13 @@
+/* FUNC */ int loadVideo      (char * ) 
+/* FUNC */ int clearSegments  (void) 
+/* FUNC */ int appendVideo    (char * ) 
+/* FUNC */ int addSegment     (int ,float , float ) 
+/* FUNC */ int setPostProc    (int ,int , int ) 
+/* FUNC */ int getWidth       (void) 
+/* FUNC */ int getHeight      (void) 
+/* FUNC */ int getFps1000     (void) 
+#/* FUNC */ char* getVideoCodec(void) 
+/* FUNC */ int audioReset     (void) 
+/* FUNC */ int audioMixer     (char * ) 
+/* FUNC */ int clearVideoFilters   (void) 
+
