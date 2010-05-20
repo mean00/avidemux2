@@ -322,18 +322,14 @@ VdpStatus status;
         return 0;
     }
     // other part will be done in goOn
-  struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
+   struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
    VdpVideoSurface  surface;
 
     surface=rndr->surface;
- void *planes[3];
-            planes[0]=vdpau_copy->GetWritePtr(PLANAR_Y);
-            planes[1]=vdpau_copy->GetWritePtr(PLANAR_U);
-            planes[2]=vdpau_copy->GetWritePtr(PLANAR_V);
+    uint8_t *planes[3];
     uint32_t stride[3];
-            stride[0]=vdpau_copy->GetPitch(PLANAR_Y);
-            stride[1]=vdpau_copy->GetPitch(PLANAR_U);
-            stride[2]=vdpau_copy->GetPitch(PLANAR_V);
+             vdpau_copy->GetWritePlanes(planes);
+             vdpau_copy->GetPitches(stride);
 
     
    // Copy back the decoded image to our output ADM_image
@@ -341,7 +337,7 @@ VdpStatus status;
     status=funcs.getDataSurface(
                 surface,
                 VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
-                planes, //void * const *   destination_data,
+                ( void * const *)planes, //void * const *   destination_data,
                 stride //destination_pitches
                 );
     if(VDP_STATUS_OK!=status)
@@ -351,9 +347,6 @@ VdpStatus status;
         decode_status=false;
         return 0 ;
     }
-    
-
-    //
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
     return (uint8_t)decode_status;
