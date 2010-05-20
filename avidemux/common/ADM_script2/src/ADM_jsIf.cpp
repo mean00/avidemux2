@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <vector>
 #include "ADM_editor/ADM_edit.hxx"
+#include "ADM_coreTinyPy/include/ADM_tinypy.h"
 void    A_Resync(void);
 
 /* our variables */
@@ -84,7 +85,14 @@ bool isJsLogRedirected(void)
 static bool jsEvaluate(const char *str)
 {
 jsval rval;
+#if 1
+        tinyPy py;
+        py.init();
+        py.execString(str);
+
+#else
    JS_EvaluateScript(g_pCx,g_pObject,str,strlen(str),"dummy",1,&rval);
+#endif
    return true; 
 }
 /**
@@ -120,6 +128,7 @@ bool jsLog(JS_LOG_TYPE type, const char *prf,...)
             else
                 ADM_warning("[JS]%s\n",print_buffer);
         }
+
         return true;
 }
 

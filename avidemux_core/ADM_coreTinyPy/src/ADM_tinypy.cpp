@@ -15,7 +15,10 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_tinypy.h"
+//extern "C"
+//{
 #include "tinypy.h"
+//}
 #define INSTANCE ((tp_vm *)instance)
 #define SCRIPT   ((tp_obj *)script)
 
@@ -26,7 +29,6 @@
 tinyPy::tinyPy(void)
 {
     instance=NULL;
-    script=NULL;
 }
 /**
     \fn tinypy
@@ -40,10 +42,6 @@ tinyPy::~tinyPy()
         tp_deinit(INSTANCE);
         instance=NULL;
     }
-    if(script) // dealloc tp_ob
-    {
-
-    }
 }
 /**
     \fn tinypy
@@ -51,6 +49,7 @@ tinyPy::~tinyPy()
 */
 bool tinyPy::init(void)
 {
+    ADM_warning("Init tinypy\n");
     ADM_assert(!instance);
     instance=(void *)tp_init(0,NULL);
     if(instance) return true;   
@@ -59,7 +58,7 @@ bool tinyPy::init(void)
 }
 /**
     \fn tinypy
-    \brief init
+    \brief execString
 */
 bool tinyPy::execString(const char *s)
 {
@@ -70,8 +69,15 @@ bool tinyPy::execString(const char *s)
     }
     tp_obj name = tp_string("avidemux6");
     tp_obj program = tp_string(s);
-    tp_obj c = tp_compile(INSTANCE, program, name);
-    tp_exec(INSTANCE, c,INSTANCE->builtins);
+    if(!setjmp(INSTANCE->nextexpr))
+    {
+        tp_obj c = tp_compile(INSTANCE, program, name);
+        tp_exec(INSTANCE, c,INSTANCE->builtins);
+    }
+    else     
+    {
+        return false;
+    }
     return true;
 }
 

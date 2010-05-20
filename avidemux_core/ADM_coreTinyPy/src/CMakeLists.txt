@@ -1,9 +1,10 @@
 SET(ADM_coreTinyPy_SRCS 
-        tinypy.c
+        tinypy.cpp
         ADM_tinypy.cpp
 )
 
 ADD_LIBRARY(ADM_coreTinyPy6 SHARED ${ADM_coreTinyPy_SRCS})
+ADD_DEFINITIONS(-DCPYTHON_MOD)
 IF (APPLE)
 	TARGET_LINK_LIBRARIES(ADM_coreTinyPy6 -Wl,-read_only_relocs,suppress)
 ENDIF (APPLE)

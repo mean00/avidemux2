@@ -78,6 +78,7 @@ ADM_libavutil6
 ADM_libswscale6
 ADM_libpostproc6
 ADM_smjs6
+ADM_coreTinyPy6
 )
 
 #############################################

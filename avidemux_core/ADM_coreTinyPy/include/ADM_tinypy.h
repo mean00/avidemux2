@@ -22,7 +22,6 @@ class tinyPy
 {
 protected:
         void *instance;
-        void *script;
 public:
                 tinyPy(void);
         bool    init(void);
