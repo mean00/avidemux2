@@ -20,17 +20,21 @@ int main(void)
 #define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 1\n");
         printf("#ifdef USE_VDPAU\n");
         printf("#define CONFIG_H264_VDPAU_DECODER 1\n");
+        printf("#define CONFIG_MPEG_VDPAU_DECODER 1\n");
+        printf("#define CONFIG_MPEG1_VDPAU_DECODER 1\n");
+        printf("#define CONFIG_VC1_VDPAU_DECODER 1\n");
+        printf("#define CONFIG_WMV3_VDPAU_DECODER 1\n");
         printf("#else // USE_VDPAU\n");
         printf("#define CONFIG_H264_VDPAU_DECODER 0\n");
+        printf("#define CONFIG_MPEG_VDPAU_DECODER 0\n");
+        printf("#define CONFIG_MPEG1_VDPAU_DECODER 0\n");
+        printf("#define CONFIG_VC1_VDPAU_DECODER 0\n");
+        printf("#define CONFIG_WMV3_VDPAU_DECODER 0\n");
         printf("#endif // \n");
         
 
 #undef DECLARE_VDPAU
 #define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 0\n");
-    DECLARE_VDPAU(MPEG,nellymoser);
-    DECLARE_VDPAU(MPEG1,nellymoser);
-    DECLARE_VDPAU(VC1,nellymoser);
-    DECLARE_VDPAU(WMV3,nellymoser);
 
 
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");
