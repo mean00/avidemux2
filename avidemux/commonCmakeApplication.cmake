@@ -99,7 +99,6 @@ ADM_osSupport6
 ADM_requant6 
 #ADM_script6 
 ADM_script26 
-ADM_pyScript6 
 ADM_scriptDF
 ADM_videoEncoder6 
 ADM_internalVideoFilter6
