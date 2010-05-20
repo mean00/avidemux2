@@ -20,7 +20,8 @@
 #include "ADM_coreTinyPy/include/ADM_tinypy.h"
 #include "ADM_script2/include/ADM_scriptShell.h"
 #include "A_functions.h"
-
+#include "ADM_scriptCommon.h"
+#include "ADM_scriptVideo.h"
 #include "adm_gen.h"
 
 #include "adm_gen.cpp"
@@ -63,68 +64,5 @@ bool interactiveTinyPy(void)
 	return true;
 }
 
-int  py_loadVideo (char *vid )
-{
-    printf("pyLoadVideo %s\n",vid);
-    return 0;
-}
-int  py_clearSegments (void)
-{
-    printf("py_clearSegments\n");
-    return 0;
-}
-
-int  py_appendVideo (char *vid )
-{
-    printf("py_appendVideo %s\n",vid);
-    return 0;
-}
-
-int  py_addSegment (int ,float , float )
-{
-    printf("py_addSegment\n");
-    return 0;
-}
-
-int  py_setPostProc (int a,int b, int c)
-{
-    printf("py_setPostProc\n");
-    return 0;
-}
-
-int  py_getWidth (void)
-{
-    printf("py_getWidth\n");
-    return 0;
-}
-
-int  py_getHeight (void)
-{
-    printf("py_getHeight\n");
-    return 0;
-}
-
-int  py_getFps1000 (void)
-{
-    printf("py_getFps1000\n");
-    return 0;
-}
-
-int  py_audioReset (void)
-{
-    printf("py_audioReset\n");
-    return 0;
-}
-
-int  py_audioMixer (char *mixer )
-{
-    printf("py_audioMixer\n");
-    return 0;
-}
-
-int  py_clearVideoFilters (void)
-{
-    printf("py_clearVideoFilters\n");
-    return 0;
-}
+// EOF
 

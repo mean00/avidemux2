@@ -1,76 +1,76 @@
-//int  loadVideo <char * >
+//int  jsLoadVideo <char * >
 tp_obj zzpy_loadVideo(TP)
 {
 char * p0=(char *)TP_STR().string.val;
-int r=py_loadVideo(p0); 
+int r=jsLoadVideo(p0); 
 return tp_number(r);
 }
-//int  clearSegments <void>
+//int  jsClearSegments <void>
 tp_obj zzpy_clearSegments(TP)
 {
-int r=py_clearSegments(); 
+int r=jsClearSegments(); 
 return tp_number(r);
 }
-//int  appendVideo <char * >
+//int  jsAppendVideo <char * >
 tp_obj zzpy_appendVideo(TP)
 {
 char * p0=(char *)TP_STR().string.val;
-int r=py_appendVideo(p0); 
+int r=jsAppendVideo(p0); 
 return tp_number(r);
 }
-//int  addSegment <int  float   float >
+//int  jsAddSegment <int  float   float >
 tp_obj zzpy_addSegment(TP)
 {
 int p0=TP_NUM();
 float p1=TP_NUM();
 float p2=TP_NUM();
-int r=py_addSegment(p0,p1,p2); 
+int r=jsAddSegment(p0,p1,p2); 
 return tp_number(r);
 }
-//int  setPostProc <int  int   int >
+//int  jsSetPostProc <int  int   int >
 tp_obj zzpy_setPostProc(TP)
 {
 int p0=TP_NUM();
 int p1=TP_NUM();
 int p2=TP_NUM();
-int r=py_setPostProc(p0,p1,p2); 
+int r=jsSetPostProc(p0,p1,p2); 
 return tp_number(r);
 }
-//int  getWidth <void>
+//int  jsGetWidth <void>
 tp_obj zzpy_getWidth(TP)
 {
-int r=py_getWidth(); 
+int r=jsGetWidth(); 
 return tp_number(r);
 }
-//int  getHeight <void>
+//int  jsGetHeight <void>
 tp_obj zzpy_getHeight(TP)
 {
-int r=py_getHeight(); 
+int r=jsGetHeight(); 
 return tp_number(r);
 }
-//int  getFps1000 <void>
+//int  jsGetFps1000 <void>
 tp_obj zzpy_getFps1000(TP)
 {
-int r=py_getFps1000(); 
+int r=jsGetFps1000(); 
 return tp_number(r);
 }
-//int  audioReset <void>
+//int  jsAudioReset <void>
 tp_obj zzpy_audioReset(TP)
 {
-int r=py_audioReset(); 
+int r=jsAudioReset(); 
 return tp_number(r);
 }
-//int  audioMixer <char * >
+//int  jsAudioMixer <char * >
 tp_obj zzpy_audioMixer(TP)
 {
 char * p0=(char *)TP_STR().string.val;
-int r=py_audioMixer(p0); 
+int r=jsAudioMixer(p0); 
 return tp_number(r);
 }
-//int  clearVideoFilters <void>
+//int  jsClearVideoFilters <void>
 tp_obj zzpy_clearVideoFilters(TP)
 {
-int r=py_clearVideoFilters(); 
+int r=jsClearVideoFilters(); 
 return tp_number(r);
 }
 pyFuncs adm_functions[]={

@@ -26,17 +26,9 @@
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
 #include "GUI_ui.h"
+#include "ADM_scriptCommon.h"
 extern ADM_Composer *video_body;
 bool A_setVideoCodec(const char *nm);
-/**
-    \fn jsSetPostProc
-*/
-int jsSetPostProc (int a,int b, int c)
-{
-    return video_body->setPostProc(a,b,c);
-}
-
-
 /**
     \fn A_setVideoCodec
 */
@@ -52,6 +44,16 @@ bool A_setVideoCodec(const char *nm)
     UI_setVideoCodec(idx);
     return true;
 }
+
+/**
+    \fn jsSetPostProc
+*/
+int jsSetPostProc (int a,int b, int c)
+{
+    return video_body->setPostProc(a,b,c);
+}
+
+
 /**
      \fn jsClearFilters
 */

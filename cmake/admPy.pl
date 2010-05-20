@@ -4,7 +4,7 @@ my $output;
 my $headerFile;
 my $line;
 my $glueprefix="zzpy_";
-my $functionPrefix="py_";
+my $functionPrefix="";
 my @allFuncs;
 #
 #
@@ -68,6 +68,7 @@ sub processFunc
         my @params;
         my $retType=$proto;;
         my $func=$proto;;
+        my $cfunc;
         $args=~s/^.*\(//g;
         $args=~s/\).*$//g;
         #print "args => $args\n";
@@ -79,7 +80,8 @@ sub processFunc
         # get functioName
         $func=~s/ *\(.*$//g;
         $func=~s/^.* //g;
-        print OUTPUT "//$retType  $func <@params>\n";
+        ($cfunc,$func)=split ":",$func;
+        print OUTPUT "//$retType  $cfunc <@params>\n";
         # Write glue code
         print OUTPUT "tp_obj ".$glueprefix.$func."(TP)\n";
         push(@allFuncs,$func);
@@ -109,7 +111,7 @@ sub processFunc
         {
                 print OUTPUT $retType." r=";
         }
-        print OUTPUT $functionPrefix.$func."(";
+        print OUTPUT $functionPrefix.$cfunc."(";
         for($i=0;$i<$nb;$i++)
         {
                 if($i)

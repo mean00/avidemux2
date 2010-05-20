@@ -1,7 +1,11 @@
 /**
-    \file ADM_jsLoad.cpp
-    \brief Load oriented functions
+    \file ADM_jsAudio.cpp
+    \brief Audio oriented functions
     \author mean (c) 2009 fixounet@free.fr
+
+
+    jsapigen does not like much variable number of arguments
+    In that case, we patch the generated file to go back to native spidermonkey api
 
 
 */
@@ -13,47 +17,42 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_js.h"
+#include "ADM_scriptIf.h"
 #include "ADM_editor/ADM_edit.hxx"
-#include "ADM_jsAvidemux.h"
-#include "fourcc.h"
+#include "A_functions.h"
+#include "GUI_ui.h"
+#include "ADM_audioFilterInterface.h"
+#include "audioEncoderApi.h"
+#include "ADM_scriptCommon.h"
 extern ADM_Composer *video_body;
 /**
-    \fn jsGetWidth
+    \fn int jsAudioReset(void);
 */
-int jsGetWidth ( void)
+int jsAudioReset (void)
 {
-aviInfo info;
-        video_body->getVideoInfo(&info);
-        return info.width;
+    audioFilterReset();
+    return 1;
 }
 /**
-    \fn jsGetHeight
+    \fn jsAudioMixer
 */
-int jsGetHeight ( void)
+int jsAudioMixer(const char *s)
 {
-aviInfo info;
-        video_body->getVideoInfo(&info);
-        return info.height;
+    CHANNEL_CONF c=AudioMuxerStringToId(s);
+    return audioFilterSetMixer(c);
 }
 /**
-    \fn jsGetFps1000
+    \fn jsGetResample
 */
-int jsGetFps1000 ( void)
+int32_t jsGetResample(void)
 {
-aviInfo info;
-        video_body->getVideoInfo(&info);
-        return info.fps1000;
+    return 0;
 }
 /**
-    \fn jsGetVideoCodec
+    \fn jsSetResample
 */
-char *jsGetVideoCodec ( void)
+void    jsSetResample(int32_t fq)
 {
-uint32_t fcc;
-aviInfo info;
-        video_body->getVideoInfo(&info);
-        fcc=info.fcc;
-        return fourCC::tostring(fcc);
+
 }
-// EOF
+//EOF

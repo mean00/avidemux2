@@ -25,14 +25,7 @@
 #include "ADM_audioFilterInterface.h"
 #include "audioEncoderApi.h"
 extern ADM_Composer *video_body;
-/**
-    \fn int jsAudioReset(void);
-*/
-int jsAudioReset (void)
-{
-    audioFilterReset();
-    return 1;
-}
+
 /**
     \fn 
 */  
@@ -74,27 +67,5 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         // end set bitrate
         
         return JS_TRUE;
-}
-/**
-    \fn jsAudioMixer
-*/
-int jsAudioMixer(const char *s)
-{
-    CHANNEL_CONF c=AudioMuxerStringToId(s);
-    return audioFilterSetMixer(c);
-}
-/**
-    \fn jsGetResample
-*/
-int32_t jsGetResample(void)
-{
-    return 0;
-}
-/**
-    \fn jsSetResample
-*/
-void    jsSetResample(int32_t fq)
-{
-
 }
 //EOF
