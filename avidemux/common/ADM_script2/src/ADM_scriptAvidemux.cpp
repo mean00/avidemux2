@@ -44,7 +44,7 @@ bool A_setContainer(const char *cont)
 int jsLoadVideo(const char *s)
 {
 int ret=0;
-        jsLog(JS_LOG_NORMAL,"[Js] Loading video %s",s);
+        jsLog("[Js] Loading video %s",s);
         if(A_openAvi(s)) 
         {
           ret=1;

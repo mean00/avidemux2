@@ -47,7 +47,7 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         if(!audioCodecSetByName(name))
         {
                 *rval = BOOLEAN_TO_JSVAL(false);
-                jsLog(JS_LOG_ERROR,"Cannot set audio codec %s\n",name);
+                jsLogError("Cannot set audio codec %s\n",name);
         }
         else
         {

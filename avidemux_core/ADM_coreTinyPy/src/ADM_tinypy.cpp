@@ -24,6 +24,25 @@
 #define INSTANCE ((tp_vm *)instance)
 #define SCRIPT   ((tp_obj *)script)
 
+pyLoggerFunc *pyLog=NULL;
+static tp_obj    tinyPy_dumpBuiltin(tp_vm *vm);
+static pyFuncs addons[]={{"help",tinyPy_dumpBuiltin},{NULL,NULL}};
+/**
+
+*/
+bool    tinyPy::registerLogger(pyLoggerFunc func)
+{
+    pyLog=func;
+    return true;
+}
+bool    tinyPy::unregisterLogger(void)
+{
+    pyLog=NULL;
+    return true;
+}
+/**
+    \fn pyPrintfd
+*/
 bool pyPrintf(const char *fmt,...)
 {
         static char print_buffer[1024];
@@ -33,7 +52,10 @@ bool pyPrintf(const char *fmt,...)
 		vsnprintf(print_buffer,1023,fmt,list);
 		va_end(list);
 		print_buffer[1023]=0; // ensure the string is terminated
-        printf("TP>%s",print_buffer);
+        //printf("%s",print_buffer);
+        //jsLog(JS_LOG_NORMAL,print_buffer);
+        if(!pyLog) printf("%s",print_buffer);
+            else pyLog(print_buffer);
         return true;
 }
 
@@ -67,10 +89,14 @@ bool tinyPy::init(void)
     ADM_warning("Init tinypy\n");
     ADM_assert(!instance);
     instance=(void *)tp_init(0,NULL);
-    if(instance) return true;   
+    if(!instance)
+    {
+        ADM_error("Cannot initialize tinypy\n");
+        return false;   
+    }
     math_init(INSTANCE);
-    ADM_error("Cannot initialize tinypy\n");
-    return false;
+    registerFuncs("addons",addons);
+    return true;
 }
 /**
     \fn execString
@@ -130,15 +156,35 @@ bool tinyPy::dumpInternals(void)
 */
 bool    tinyPy::registerFuncs(const char *group,pyFuncs *funcs)
 {
-    printf("Registering group %s\n",group);
+    ADM_info("Registering group %s\n",group);
     while(funcs->funcName)
     {
-        printf("Registering :%s\n",funcs->funcName);
+        ADM_info("Registering :%s\n",funcs->funcName);
         tp_set(INSTANCE, INSTANCE->builtins, 
                 tp_string(funcs->funcName), 
                 tp_fnc(INSTANCE, funcs->funcCall));
         funcs++;
     }
     return true;
+}
+
+/**
+    \fn dumpBuiltin
+*/
+tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
+{
+    ADM_info("Dumping builtins\n");
+    tp_obj builtins=vm->builtins;
+    // It is a dict..
+    _tp_dict *dict=builtins.dict.val;
+    ADM_info("%d elems\n",dict->len);
+    for( int i=0;i<dict->len;i++)
+    {
+        tp_item *item=&(dict->items[i]);
+        const char *str=item->key.string.val;
+        if(str)
+            pyPrintf("%s\n",str);
+    }
+    return tp_None;
 }
 // EOF

@@ -29,7 +29,8 @@ using std::vector;
 
 typedef JSBool JS_PROTOTYPE(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-
+bool jsLog( const char *fmt,...);
+bool jsLogError( const char *fmt,...);
 /**
     \struct ADM_JS_HOOK
 */

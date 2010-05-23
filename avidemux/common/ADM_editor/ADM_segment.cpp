@@ -482,12 +482,12 @@ void ADM_EditorSegment::dump(void)
     {
         _SEGMENT *s=getSegment(i);
         
-        jsLog(JS_LOG_NORMAL,"Segment :%d/%d",i,n);
-        jsLog(JS_LOG_NORMAL,"\tReference    :%"LU,s->_reference,ADM_us2plain(s->_reference));
-        jsLog(JS_LOG_NORMAL,"\tstartLinear  :%08"LLU" %s",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
-        jsLog(JS_LOG_NORMAL,"\tduration     :%08"LLU" %s",s->_durationUs,ADM_us2plain(s->_durationUs));
-        jsLog(JS_LOG_NORMAL,"\trefStartPts  :%08"LLU" %s",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
-        jsLog(JS_LOG_NORMAL,"\trefStartDts  :%08"LLU" %s",s->_refStartDts,ADM_us2plain(s->_refStartDts));
+        jsLog("Segment :%d/%d",i,n);
+        jsLog( "\tReference    :%"LU,s->_reference,ADM_us2plain(s->_reference));
+        jsLog( "\tstartLinear  :%08"LLU" %s",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
+        jsLog( "\tduration     :%08"LLU" %s",s->_durationUs,ADM_us2plain(s->_durationUs));
+        jsLog( "\trefStartPts  :%08"LLU" %s",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
+        jsLog( "\trefStartDts  :%08"LLU" %s",s->_refStartDts,ADM_us2plain(s->_refStartDts));
     }
 }
 /**
@@ -503,10 +503,10 @@ void ADM_EditorSegment::dumpRefVideos(void)
     {
         _VIDEOS *s=getRefVideo(i);
 
-        jsLog(JS_LOG_NORMAL,"Videos :%d/%d",i,n);
-        jsLog(JS_LOG_NORMAL,"\tfirstFramePts      :%08"LLU" %s",s->firstFramePts,ADM_us2plain(s->firstFramePts));
-        jsLog(JS_LOG_NORMAL,"\ttimeIncrementInUs  :%08"LLU" %s",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
-        jsLog(JS_LOG_NORMAL,"\tnb frames    :%08"LLU,s->_nb_video_frames);
+        jsLog("Videos :%d/%d",i,n);
+        jsLog("\tfirstFramePts      :%08"LLU" %s",s->firstFramePts,ADM_us2plain(s->firstFramePts));
+        jsLog("\ttimeIncrementInUs  :%08"LLU" %s",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
+        jsLog("\tnb frames    :%08"LLU,s->_nb_video_frames);
     }
 
 }

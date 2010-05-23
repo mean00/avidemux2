@@ -19,19 +19,23 @@
 */
 typedef enum
 {
-    JS_LOG_NORMAL,
-    JS_LOG_ERROR
-}JS_LOG_TYPE;
+    SCRIPT_LOG_NORMAL,
+    SCRIPT_LOG_ERROR
+}SCRIPT_LOG_TYPE;
 /**
     \typedef jsLoggerFunc
 */
-typedef bool (jsLoggerFunc)(void *cookie,JS_LOG_TYPE type,const char *);
+typedef bool (scriptLoggerFunc)(void *cookie,SCRIPT_LOG_TYPE type,const char *);
 /*
+    Interface used by shell
+*/
+bool ADM_scriptRegisterLogger(void *cookie,scriptLoggerFunc *fun);
+bool ADM_scriptUnregisterLogger(void);
+/**
 
 */
-bool ADM_jsRegisterLogger(void *cookie,jsLoggerFunc *fun);
-bool ADM_jsUnregisterLogger(void);
-
+bool jsLog(const char *fmt,...);
+bool jsLogError(const char *fmt,...);
 /**
     \fn parseECMAScript
     \brief Compile & execute ecma script
@@ -47,7 +51,7 @@ bool interactiveECMAScript(const char *name);
     \fn jsLog
 
 */
-bool jsLog(JS_LOG_TYPE type, const char *fmt,...);
+bool scriptLog(SCRIPT_LOG_TYPE type, const char *fmt,...);
 
 /**
     \fn SpidermonkeyInit

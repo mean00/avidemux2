@@ -24,6 +24,7 @@ typedef struct
     const char *funcName;
     tp_obj (*funcCall)(TP);
 }pyFuncs;
+typedef bool (pyLoggerFunc)(const char *);
 /**
     \class tinyPy
 */
@@ -39,5 +40,8 @@ public:
         bool    execString(const char *s);
         bool    execFile(const char *f);
         bool    dumpInternals(void);
+static  bool    registerLogger(pyLoggerFunc func);
+static  bool    unregisterLogger(void);
+        bool    dumpBuiltin(void);
 };
 #endif

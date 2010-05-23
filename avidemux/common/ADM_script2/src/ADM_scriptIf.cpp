@@ -20,20 +20,20 @@
 void    A_Resync(void);
 
 /* our variables */
-static jsLoggerFunc *jsLogger=NULL;
-static void *jsLoggerCookie=NULL;
+static scriptLoggerFunc *scriptLogger=NULL;
+static void             *scriptLoggerCookie=NULL;
 /**
     \fn jsLogger
 */
 bool isJsLogRedirected(void)
 {
-    if(jsLogger) return true;
+    if(scriptLogger) return true;
     return false;
 }
 /**
     \fn jsLog
 */
-bool jsLog(JS_LOG_TYPE type, const char *prf,...)
+bool jsLog( const char *prf,...)
 {
  static char print_buffer[1024];
   	
@@ -43,12 +43,9 @@ bool jsLog(JS_LOG_TYPE type, const char *prf,...)
 		va_end(list);
 		print_buffer[1023]=0; // ensure the string is terminated
         if(true==isJsLogRedirected())
-            jsLogger(jsLoggerCookie,type,print_buffer);
+            scriptLogger(scriptLoggerCookie,SCRIPT_LOG_NORMAL,print_buffer);
         else
         {
-            if(type==JS_LOG_ERROR)
-                GUI_Error_HIG("Script Error","%s",print_buffer);
-            else
                 ADM_warning("[JS]%s\n",print_buffer);
         }
 
@@ -56,20 +53,41 @@ bool jsLog(JS_LOG_TYPE type, const char *prf,...)
 }
 
 /**
-    \fn ADM_jsRegisterLogger
+    \fn jsLogError
 */
-bool ADM_jsRegisterLogger(void *cookie,jsLoggerFunc *fun)
+bool jsLogError(const char *prf,...)
 {
-    jsLoggerCookie=cookie;
-    jsLogger=fun;
+ static char print_buffer[1024];
+  	
+		va_list 	list;
+		va_start(list,	prf);
+		vsnprintf(print_buffer,1023,prf,list);
+		va_end(list);
+		print_buffer[1023]=0; // ensure the string is terminated
+        if(true==isJsLogRedirected())
+            scriptLogger(scriptLoggerCookie,SCRIPT_LOG_ERROR,print_buffer);
+        else
+        {
+                GUI_Error_HIG("Script Error","%s",print_buffer);
+        }
+
+        return true;
+}
+/**
+    \fn ADM_scriptRegisterLogger
+*/
+bool ADM_scriptRegisterLogger(void *cookie,scriptLoggerFunc *fun)
+{
+    scriptLoggerCookie=cookie;
+    scriptLogger=fun;
     return true;
 }
 /**
-    \fn ADM_jsUnregisterLogger
+    \fn ADM_scriptUnregisterLogger
 */
-bool ADM_jsUnregisterLogger(void)
+bool ADM_scriptUnregisterLogger(void)
 {
-    jsLogger=NULL;
+    scriptLogger=NULL;
     return true;
 }
 // EOF

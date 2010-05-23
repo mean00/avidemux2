@@ -52,11 +52,11 @@ void jsPopupInfo(const char *s)
 */
 void jsPrint(const char *s)
 {// begin print
-        jsLog(JS_LOG_NORMAL,"%s",s);
+        jsLog("%s",s);
 }// end print
 void jsPrint2(const char *s)
 {// begin print
-        jsLog(JS_LOG_NORMAL,"%s",s);
+        jsLog("%s",s);
 }// end print
 
 
@@ -64,7 +64,7 @@ static void dumpFunc(JSFunctionSpec *f)
 {
     while(f->name)
     {
-        jsLog(JS_LOG_NORMAL,"     %s(..)",f->name);
+        jsLog("     %s(..)",f->name);
         f++;
     }
 }
@@ -87,16 +87,16 @@ FILE *fd = ADM_fopen(report->filename,"rb");
 	if( strncmp(buf,"//AD",4) )
     {
             if (report->filename || report->lineno)
-                jsLog(JS_LOG_ERROR,"%s: line %d:\nMsg: %s\n",
+                jsLogError("%s: line %d:\nMsg: %s\n",
                               report->filename,
                               report->lineno,
                               message);
             else
-                jsLog(JS_LOG_ERROR,"Error");
+                jsLogError("Error");
     
 	}else
     {
-            jsLog(JS_LOG_ERROR,"%s: line %d:\nMsg: %s\n",report->filename,report->lineno,message);
+            jsLogError("%s: line %d:\nMsg: %s\n",report->filename,report->lineno,message);
 	}
        
     if(quiet)

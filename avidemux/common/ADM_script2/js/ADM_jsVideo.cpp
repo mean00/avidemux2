@@ -41,7 +41,7 @@ JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
                 return JS_FALSE;
         if(JSVAL_IS_STRING(argv[0]) == false )
         {
-                jsLog(JS_LOG_ERROR,"Cannot set codec, first parameter is not a string\n");
+                jsLog("Cannot set codec, first parameter is not a string\n");
                 return JS_FALSE;
         }
         char *codec=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
@@ -49,13 +49,13 @@ JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         
         if(A_setVideoCodec(codec)==false)
         {
-            jsLog(JS_LOG_ERROR,"Could not select codec %s\n",codec);
+            jsLog("Could not select codec %s\n",codec);
             return JS_FALSE;
         }
         CONFcouple *c;
         jsArgToConfCouple(argc-1,&c,argv+1);
         *rval = BOOLEAN_TO_JSVAL( videoEncoder6_SetConfiguration(c));
-        jsLog(JS_LOG_NORMAL,"Selected codec %s\n",codec);
+        jsLog("Selected codec %s\n",codec);
         if(c) delete c;
         return JS_TRUE;
 }// end Codec
@@ -75,7 +75,7 @@ JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
                 return JS_FALSE;
         char *filterName=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
         filterTag = ADM_vf_getTagFromInternalName(filterName);
-        jsLog(JS_LOG_NORMAL,"Adding Filter %s -> %"LU"... \n",filterName,filterTag);
+        jsLog("Adding Filter %s -> %"LU"... \n",filterName,filterTag);
 
         
         CONFcouple *c=NULL;

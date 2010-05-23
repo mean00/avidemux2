@@ -54,7 +54,7 @@ int jsTestFacInt(void)
     
   if(diaFactoryRun(QT_TR_NOOP("Test uinteger"),1,elems))
   {
-    jsLog(JS_LOG_NORMAL,"Value : %u\n",tog);
+    jsLog("Value : %u\n",tog);
     return true;
   }
   return false;
@@ -71,7 +71,7 @@ int jsTestFacFloat(void)
     
   if(diaFactoryRun("Test float",1,elems))
   {
-    jsLog(JS_LOG_NORMAL,"Value : %f\n",(float)tog);
+    jsLog("Value : %f\n",(float)tog);
     return true;
   }
   return false;
@@ -93,7 +93,7 @@ int jsTestFacToggle(void)
     
   if(diaFactoryRun("Test Toggle",3,elems))
    {
-    jsLog(JS_LOG_NORMAL,"Value : %u\n",tog);
+    jsLog("Value : %u\n",tog);
     return true;
   }
   return false;
@@ -122,7 +122,7 @@ int jsTestFacMenu(void)
 diaElem *elems[]={&blend,&toggle   };
   if(diaFactoryRun("Test Menu",2,elems))
    {
-    jsLog(JS_LOG_NORMAL,"Value : %"LU"\n",tog);
+    jsLog("Value : %"LU"\n",tog);
     return true;
   }
   return false;
@@ -140,7 +140,7 @@ int jsTestFacFile(void)
       diaElem *elems[]={&fread   };
   if(diaFactoryRun("Test FileRead",1,elems))
    {
-    jsLog(JS_LOG_NORMAL,"Value : %s\n",test);
+    jsLog("Value : %s\n",test);
     if(test) ADM_dealloc(test);
     return true;
   }
@@ -160,7 +160,7 @@ int jsTestFacDirSel(void)
   diaElem *elems[]={&fread   };
   if(diaFactoryRun("Test DirSel",1,elems))
   {
-    jsLog(JS_LOG_NORMAL,"Value : %s\n",test);
+    jsLog("Value : %s\n",test);
     if(test) ADM_dealloc(test);
     return true;
   }
@@ -240,7 +240,7 @@ int jsTestFacSlider(void)
       diaElem *elems[]={&slide   };
   if(diaFactoryRun("Test Slider",1,elems))
   {
-    jsLog(JS_LOG_NORMAL,"Value : %d\n",(int)val);
+    jsLog("Value : %d\n",(int)val);
     return true;
   }
   return false;
@@ -275,7 +275,7 @@ int jsTestFacText(void)
       diaElem *elems[]={&txt   };
   if(diaFactoryRun("Test FileRead",1,elems))
  {
-    jsLog(JS_LOG_NORMAL,"Out:%s",foo);
+    jsLog("Out:%s",foo);
     if(foo) ADM_dealloc(foo);
     return true;
   }
@@ -378,7 +378,7 @@ int jsTestFacMatrix(void)
       for(int x=0;x<4*4;x++)
       {
           if(x && !(x&3)) printf("\n");
-          jsLog(JS_LOG_NORMAL,"%02x ",data[x]);
+          jsLog("%02x ",data[x]);
           
       }
       return true;
@@ -398,7 +398,7 @@ int jsTestFacThreadCount(void)
     
   if(diaFactoryRun("Test ThreadCount",1,elems))
   {
-         jsLog(JS_LOG_NORMAL,"Thread: %u ",(unsigned int)val);
+         jsLog("Thread: %u ",(unsigned int)val);
         return true;
   }
   return false;

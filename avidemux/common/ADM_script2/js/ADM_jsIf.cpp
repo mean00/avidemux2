@@ -120,7 +120,7 @@ static void  dump(JSFunctionSpec *f)
 {
     while(f->name)
     {
-        jsLog(JS_LOG_NORMAL,"    %s",f->name);
+        jsLog("    %s",f->name);
         f++;
     }
 }
@@ -141,16 +141,16 @@ int n=jsHooks.size();
         {
             const char *t=jsHooks[i].text;
             if(t)
-                jsLog(JS_LOG_NORMAL,"%s",t);
+                jsLog("%s",t);
             return dump(jsHooks[i].jsFunctions);
         }
     }
 //    if(!strcasecmp(s,"load")) return dump(jsGetAvidemuxFunctions());
 none:
-        jsLog(JS_LOG_NORMAL,"please use help(\"xxx\") with xx among");
+        jsLog("please use help(\"xxx\") with xx among");
 
         for(int i=0;i<n;i++)
-            jsLog(JS_LOG_NORMAL,"    %s",jsHooks[i].name);
+            jsLog("    %s",jsHooks[i].name);
 
 }
 } // extern "C"
@@ -283,7 +283,7 @@ void *StartThreadSpidermonkey(void *pData)
 extern "C" void jsSetSuccess(int bSuccess)
 {// begin JS_setSuccess
 	g_bJSSuccess = bSuccess;
-	jsLog(JS_LOG_NORMAL,"[ECMA] success : %d\n", g_bJSSuccess);
+	jsLog("[ECMA] success : %d\n", g_bJSSuccess);
 }// end JS_setSuccess
 /**
     \fn SpidermonkeyExit

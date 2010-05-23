@@ -9,7 +9,7 @@
     \fn qt4ShellLogger
     \brief Redirect output to the shell
 */
-static bool qt4ShellLogger(void *cookie,JS_LOG_TYPE type,const char *v)
+static bool qt4ShellLogger(void *cookie,SCRIPT_LOG_TYPE type,const char *v)
 {
     qShell *s=(qShell *)cookie;
     s->print(type,v);
@@ -23,9 +23,9 @@ static bool qt4ShellLogger(void *cookie,JS_LOG_TYPE type,const char *v)
 bool ADM_startShell(jsShellEvaluate eval)
 {
         qShell *s= new qShell(eval);
-        ADM_jsRegisterLogger((void *)s,qt4ShellLogger);
+        ADM_scriptRegisterLogger((void *)s,qt4ShellLogger);
         s->run();
-        ADM_jsUnregisterLogger();
+        ADM_scriptUnregisterLogger();
         delete s;
         return true;
 }

@@ -38,8 +38,8 @@ qShell::qShell(jsShellEvaluate *s) : QDialog()
     ui.textBrowser_2->installEventFilter(this);
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
-    print(JS_LOG_NORMAL,"Enter your commands then press the evaluate button or CTRL+ENTER.\n");
-    print(JS_LOG_NORMAL,"You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
+    print(SCRIPT_LOG_NORMAL,"Enter your commands then press the evaluate button or CTRL+ENTER.\n");
+    print(SCRIPT_LOG_NORMAL,"You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
     indexRead=indexWrite=0;
 }
 /**
@@ -85,14 +85,14 @@ bool            qShell::evaluate(bool x)
 /**
     \fn print
 */
-bool qShell::print(JS_LOG_TYPE type,const char *s)
+bool qShell::print(SCRIPT_LOG_TYPE type,const char *s)
 {
     QString string(s);
     //printf("**%s",s);
     switch(type)
     {
-        case JS_LOG_NORMAL: ui.textBrowser->setTextColor(QColor(0,0,0));break;
-        case JS_LOG_ERROR : ui.textBrowser->setTextColor(QColor(255,0,0));break;
+        case SCRIPT_LOG_NORMAL: ui.textBrowser->setTextColor(QColor(0,0,0));break;
+        case SCRIPT_LOG_ERROR : ui.textBrowser->setTextColor(QColor(255,0,0));break;
     }
     ui.textBrowser->append(string.toAscii());
     ui.textBrowser->setTextColor(QColor(0,0,0));

@@ -26,15 +26,39 @@
 
 #include "adm_gen.cpp"
 /**
+
+*/
+static  bool pyLogger(const char *s)
+{
+    jsLog(s);
+    return true;
+}
+/**
+    \fn initPy
+*/  
+static bool initPy(tinyPy *py)
+{
+    py->init();
+    py->registerFuncs("adm",adm_functions);
+    tinyPy::registerLogger(pyLogger);
+    return true;
+}
+static bool deinitPy(tinyPy *py)
+{
+    tinyPy::unregisterLogger();
+    return true;
+}
+/**
     \fn    parseTinyPyScript
     \brief Execute a tinyPy script
 */
 bool parseTinyPyScript(const char *name)
 {
         tinyPy py;
-        py.init();
-        py.registerFuncs("adm",adm_functions);
-        return py.execFile(name);
+        initPy(&py);
+        bool r=py.execFile(name);
+        deinitPy(&py);
+        return r;
 }
 
 /**
@@ -53,10 +77,9 @@ static bool pyEvaluate(const char *str)
 bool interactiveTinyPy(void)
 {
     myPy=new tinyPy;
-    myPy->init();
-    myPy->registerFuncs("adm",adm_functions);
-
+    initPy(myPy);
     ADM_startShell(pyEvaluate);
+    deinitPy(myPy);
     delete myPy;
     myPy=NULL;
 	A_Resync();
