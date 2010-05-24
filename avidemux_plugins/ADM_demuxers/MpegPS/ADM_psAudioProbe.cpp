@@ -26,11 +26,11 @@
 // Number of video packet seen to be enough to sample the audio tracks
 #define PROBE_PACKET_VIDEO_COUNT 500
 // Max size of a packet. Usually it is a bit more than 2300, so 10000 should be safe
-#define PACKET_PROBE_SIZE 10000
+#define PACKET_PROBE_SIZE (100*1024)
 // Minimum of packet seen to declare it valid
 #define PROBE_MIN_PACKET 5
 #define PROBE_MIN_SIZE   5000
-
+#define PROBE_ANALYZE_SIZE (300*1024) // Should be enough in all cases (need ~ 2 blocks)
 #define MP2_AUDIO_VALUE 0xC0
 #define LPCM_AUDIO_VALUE 0xA0
 #define DTS_AC3_AUDIO_VALUE 0x00
@@ -100,7 +100,7 @@ end:
 */
 bool addAudioTrack(int pid, listOfPsAudioTracks *list, psPacketLinearTracker *p)
 {
-#define PROBE_ANALYZE_SIZE 6000 // Should be enough in all cases (need ~ 2 blocks)
+
 uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         uint64_t pts,dts,startAt;
         uint32_t packetSize;
