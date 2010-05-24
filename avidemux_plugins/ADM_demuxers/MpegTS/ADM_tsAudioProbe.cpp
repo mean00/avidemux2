@@ -27,7 +27,7 @@
 // Number of video packet seen to be enough to sample the audio tracks
 #define PROBE_PACKET_VIDEO_COUNT 500
 // Max size of a packet. Usually it is a bit more than 2300, so 10000 should be safe
-#define PACKET_PROBE_SIZE 10000
+#define PACKET_PROBE_SIZE (100*1024) // Damn tivo...
 // Minimum of packet seen to declare it valid
 #define PROBE_MIN_PACKET 5
 #define PROBE_MIN_SIZE   5000

@@ -110,16 +110,16 @@ bool detectTs(const char *file)
     // Do a simple check by checking we have 0x47....0x47 several time in a raw
     if(true==checkMarker(buffer,bufferSize,TS_PACKET_LEN))
     {
-        printf("[TS Demuxer] 188 bytes packet detected\n");
+        ADM_info("[TS Demuxer] 188 bytes packet detected\n");
         return true;
     }
     // Do a simple check by checking we have 0x47....0x47 several time in a raw
     if(true==checkMarker(buffer,bufferSize,TS_PACKET_LEN+4))
     {
-        printf("[TS Demuxer] 192 bytes packet detected\n");
+        ADM_info("[TS Demuxer] 192 bytes packet detected\n");
         return true;
     }
-    printf("[TS Demuxer] Not a TS file\n");
+    ADM_info("[TS Demuxer] Not a TS file\n");
     return false;
 }
 
@@ -151,7 +151,7 @@ bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
         }    
         buffer++;
     }
-    printf("[Ts Demuxer] Sync ok :%d Sync ko :%d\n",syncOk,syncKo);
+    ADM_info("[Ts Demuxer] Sync ok :%d Sync ko :%d\n",syncOk,syncKo);
 
     if(syncOk>5*syncKo) return true;
     return false;

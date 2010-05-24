@@ -65,15 +65,17 @@ static const uint32_t FPS[16]={
                 0                       // 15
         };
 
-typedef struct
+class TSVideo
 {
+public:
+    TSVideo(void) {w=h=fps=interlaced=ar=pid=0;}
     uint32_t w;
     uint32_t h;
     uint32_t fps;
     uint32_t interlaced;
     uint32_t ar;
     uint32_t pid;
-}PSVideo;
+};
 
 typedef enum
 {
@@ -131,7 +133,7 @@ public:
                 ~TsIndexer();
         bool    runMpeg2(const char *file,ADM_TS_TRACK *videoTrac);
         bool    runH264(const char *file,ADM_TS_TRACK *videoTrac);
-        bool    writeVideo(PSVideo *video,ADM_TS_TRACK_TYPE trkType);
+        bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
         bool    Mark(indexerData *data,dmxPacketInfo *s,uint32_t overRead);
@@ -294,7 +296,7 @@ bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
 bool    pic_started=false;
 bool    seq_found=false;
 
-PSVideo video;
+TSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
 TS_PESpacket SEI_nal(0);
@@ -507,7 +509,7 @@ uint32_t temporal_ref,val;
 uint8_t buffer[50*1024];
 bool seq_found=false;
 
-PSVideo video;
+TSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
 
@@ -708,7 +710,7 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
     \fn writeVideo
     \brief Write Video section of index file
 */
-bool TsIndexer::writeVideo(PSVideo *video,ADM_TS_TRACK_TYPE trkType)
+bool TsIndexer::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
 {
     qfprintf(index,"[Video]\n");
     qfprintf(index,"Width=%d\n",video->w);
