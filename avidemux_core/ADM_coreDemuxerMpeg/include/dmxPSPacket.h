@@ -31,7 +31,7 @@ public:
 /**
     \class psPacketLinear
 */
-#define ADM_PACKET_LINEAR 10*1024
+#define ADM_PACKET_LINEAR (300*1024) // TIVO
 
 class psPacketLinear : public psPacket
 {
