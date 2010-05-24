@@ -542,7 +542,6 @@ bool        tsPacket::getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packet
        
 }
 
-#define ADM_PACKET_LINEAR 10*1024
 /**
     \fn tsPacket
 */
