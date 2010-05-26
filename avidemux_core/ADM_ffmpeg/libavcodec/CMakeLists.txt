@@ -32,7 +32,12 @@ SET(${ADM_LIB}_SRCS
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c
 	intrax8dsp.c  dnxhddata.c  faanidct.c    aac_ac3_parser.c
         celp_math.c options.c aandcttab.c audioconvert.c mpeg4audio.c svq1dec.c celp_filters.c
-	aac_parser.c  mpegaudiodecheader.c)
+	aac_parser.c  mpegaudiodecheader.c
+        flvenc.c indeo5.c mpegaudiodec_float.c mpeg4video.c mpeg4videoenc.c dwt.c  h264_refs.c
+        ivi_common.c dcadsp.c h264_direct.c ivi_dsp.c ituh263dec.c dvdata.c ituh263enc.c aacsbr.c
+        synth_filter.c    mpeg4videodec.c h264_cabac.c h264_cavlc.c vp56dsp.c h264_loopfilter.c
+        h264_sei.c h264_ps.c svq3.c h264dsp.c flvdec.c
+        )
 
 if(USE_VDPAU)
 	SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS} vdpau.c)

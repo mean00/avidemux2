@@ -1,8 +1,6 @@
+#include "ADM_coreConfig.h"
+#include "ADM_lavcodec.h"
 #include "ADM_default.h"
-extern "C"
-{
-#include "avcodec.h"
-}
 /**
  * 		\fn lavcodec_mm_support
  * 		\brief Give lavcodec CPU supported ( FF_MM_MMX)

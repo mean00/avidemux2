@@ -643,10 +643,12 @@ int attribute_align_arg avcodec_decode_audio3(AVCodecContext *avctx, int16_t *sa
 
     if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size){
         //FIXME remove the check below _after_ ensuring that all audio check that the available space is enough
+#if 0 // MEANX : Silence
         if(*frame_size_ptr < AVCODEC_MAX_AUDIO_FRAME_SIZE){
             av_log(avctx, AV_LOG_ERROR, "buffer smaller than AVCODEC_MAX_AUDIO_FRAME_SIZE\n");
             return -1;
         }
+#endif
         if(*frame_size_ptr < FF_MIN_BUFFER_SIZE ||
         *frame_size_ptr < avctx->channels * avctx->frame_size * sizeof(int16_t)){
             av_log(avctx, AV_LOG_ERROR, "buffer %d too small\n", *frame_size_ptr);
@@ -921,13 +923,13 @@ unsigned avcodec_version( void )
 
 const char *avcodec_configuration(void)
 {
-    return FFMPEG_CONFIGURATION;
+    return "avidemux"; //FFMPEG_CONFIGURATION;
 }
 
 const char *avcodec_license(void)
 {
 #define LICENSE_PREFIX "libavcodec license: "
-    return LICENSE_PREFIX FFMPEG_LICENSE + sizeof(LICENSE_PREFIX) - 1;
+    return LICENSE_PREFIX /*FFMPEG_LICENSE*/ "GPL" + sizeof(LICENSE_PREFIX) - 1;
 }
 
 void avcodec_init(void)
@@ -1080,7 +1082,7 @@ int av_tempfile(char *prefix, char **filename) {
         return -1;
     }
 #if !HAVE_MKSTEMP
-    fd = open(*filename, O_RDWR | O_BINARY | O_CREAT, 0444);
+    fd = open(*filename, O_RDWR /* MEANX | O_BINARY*/ | O_CREAT, 0444);
 #else
     snprintf(*filename, len, "/tmp/%sXXXXXX", prefix);
     fd = mkstemp(*filename);
