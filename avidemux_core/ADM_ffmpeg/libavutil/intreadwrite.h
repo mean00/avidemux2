@@ -20,7 +20,12 @@
 #define AVUTIL_INTREADWRITE_H
 
 #include <stdint.h>
+// MEANX
+#ifndef ADM_NO_CONFIG_H
 #include "config.h"
+#endif
+// MEANX
+
 #include "bswap.h"
 #include "common.h"
 

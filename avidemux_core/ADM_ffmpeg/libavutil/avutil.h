@@ -26,6 +26,13 @@
  * external API header
  */
 
+/* MEANX
+ * - */
+#define ASMALIGN(ZEROBITS) ".p2align " #ZEROBITS "\n\t"
+/* /MEANX
+ */
+
+
 
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s

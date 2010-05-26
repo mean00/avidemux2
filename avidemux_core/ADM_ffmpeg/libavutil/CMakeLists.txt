@@ -24,6 +24,7 @@ avstring.c
 tree.c
 lfg.c
 mem.c
+pixdesc.c
 )
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
