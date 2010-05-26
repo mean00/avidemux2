@@ -1,19 +1,49 @@
-*** libavutil/internal.h.old	Sat Feb 21 16:11:15 2009
---- libavutil/internal.h	Sat Feb 21 16:11:15 2009
-***************
-*** 215,226 ****
---- 215,228 ----
-  #endif
-  
-  /* avoid usage of dangerous/inappropriate system functions */
-+ #if 0 //MEANX
-  #undef  malloc
-  #define malloc please_use_av_malloc
-  #undef  free
-  #define free please_use_av_free
-  #undef  realloc
-  #define realloc please_use_av_realloc
-+ #endif
-  #undef  time
-  #define time time_is_forbidden_due_to_security_issues
-  #undef  rand
+diff --git a/avidemux_core/ADM_ffmpeg/libavutil/internal.h b/avidemux_core/ADM_ffmpeg/libavutil/internal.h
+index 2faafc9..8516159 100644
+--- a/avidemux_core/ADM_ffmpeg/libavutil/internal.h
++++ b/avidemux_core/ADM_ffmpeg/libavutil/internal.h
+@@ -34,7 +34,11 @@
+ #include <stdint.h>
+ #include <stddef.h>
+ #include <assert.h>
++//MEANX
++#ifndef ADM_NO_CONFIG_H
+ #include "config.h"
++#endif
++// /MEANX
+ #include "attributes.h"
+ #include "timer.h"
+ 
+@@ -95,6 +99,8 @@
+ #endif
+ 
+ /* Use to export labels from asm. */
++#include "ADM_mangle.h"
++#if 0 // MEANX
+ #define LABEL_MANGLE(a) EXTERN_PREFIX #a
+ 
+ // Use rip-relative addressing if compiling PIC code on x86-64.
+@@ -105,7 +111,7 @@
+ #endif
+ 
+ #define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
+-
++#endif // MEANX
+ /* debug stuff */
+ 
+ /* dprintf macros */
+@@ -134,12 +140,14 @@
+ #endif
+ 
+ /* avoid usage of dangerous/inappropriate system functions */
++#if 0 //MEANX
+ #undef  malloc
+ #define malloc please_use_av_malloc
+ #undef  free
+ #define free please_use_av_free
+ #undef  realloc
+ #define realloc please_use_av_realloc
++#endif
+ #undef  time
+ #define time time_is_forbidden_due_to_security_issues
+ #undef  rand

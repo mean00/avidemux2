@@ -1,0 +1,17 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavutil/timer.h b/avidemux_core/ADM_ffmpeg/libavutil/timer.h
+index cd8fba8..66be371 100644
+--- a/avidemux_core/ADM_ffmpeg/libavutil/timer.h
++++ b/avidemux_core/ADM_ffmpeg/libavutil/timer.h
+@@ -26,7 +26,12 @@
+ 
+ #include <stdlib.h>
+ #include <stdint.h>
++// MEANX
++#ifndef ADM_NO_CONFIG_H
+ #include "config.h"
++#endif
++// MEANX
++
+ 
+ #if   ARCH_ARM
+ #   include "arm/timer.h"

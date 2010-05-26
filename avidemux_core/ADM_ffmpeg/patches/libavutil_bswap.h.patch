@@ -1,0 +1,16 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavutil/bswap.h b/avidemux_core/ADM_ffmpeg/libavutil/bswap.h
+index 6dd2a35..f7a422c 100644
+--- a/avidemux_core/ADM_ffmpeg/libavutil/bswap.h
++++ b/avidemux_core/ADM_ffmpeg/libavutil/bswap.h
+@@ -27,7 +27,11 @@
+ #define AVUTIL_BSWAP_H
+ 
+ #include <stdint.h>
++// MEANX
++#ifndef ADM_NO_CONFIG_H
+ #include "config.h"
++#endif
++// /MEANX
+ #include "attributes.h"
+ 
+ #if   ARCH_ARM
