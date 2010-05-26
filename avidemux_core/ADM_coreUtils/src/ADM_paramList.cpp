@@ -17,6 +17,7 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_paramList.h"
 #include <stddef.h>

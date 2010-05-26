@@ -20,9 +20,11 @@
     defined(__OS2__) || (defined (__OpenBSD__) && !defined(__ELF__))
 #    if defined(ADM_CPU_X86_64) && defined(PIC) && !defined(__MINGW32__)
 #        define MANGLE(a) "_" #a"(%%rip)"
+#        define LOCAL_MANGLE(a) #a"(%%rip)"
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
 #    else
+#        define LOCAL_MANGLE(a) #a
 #        define MANGLE(a) "_" #a
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
@@ -30,10 +32,12 @@
 #else
 #    if defined(ADM_CPU_X86_64) && defined(PIC)
 #        define MANGLE(a) #a"(%%rip)"
+#        define LOCAL_MANGLE(a) #a"(%%rip)"
 #        define FUNNY_MANGLE(x) x asm(#x)
 #        define FUNNY_MANGLE_ARRAY(x, y)  x[y] asm(#x)
 #    elif defined(__APPLE__)
 #        define MANGLE(a) "_" #a
+#        define LOCAL_MANGLE(a) #a"(%%rip)"
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
 #    else

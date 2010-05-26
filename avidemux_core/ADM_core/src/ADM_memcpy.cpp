@@ -33,12 +33,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "ADM_coreConfig.h"
+#include "ADM_lavcodec.h"
 #include "ADM_default.h"
-
-extern "C"
-{
-	#include "ADM_ffmpeg/libavcodec/avcodec.h"
 
 adm_fast_memcpy myAdmMemcpy=NULL;
 /* Original comments from mplayer (file: aclib.c)
@@ -436,7 +433,7 @@ uint8_t probe(adm_fast_memcpy func,char *name)
 	stop=rdtsc();
 	ADM_dealloc(src);
 	ADM_dealloc(dst);
-	printf("Method :%s \tTime:%"LLU"\n",name,stop-start);
+	printf("Method :%s \tTime:%lu\n",name,(unsigned long int)name,stop-start);
 	return 1;
 
 }
@@ -445,7 +442,7 @@ uint8_t probe(adm_fast_memcpy func,char *name)
 	It seems MMX gives the best result most of the times
 	Don't bother benchmarking
 */
-uint8_t ADM_InitMemcpy(void)
+extern "C" uint8_t ADM_InitMemcpy(void)
 {
   uint64_t          t;
   char             *buf1, *buf2;
@@ -467,5 +464,4 @@ uint8_t ADM_InitMemcpy(void)
 #endif
 #endif
 	return 1;
-}
 }

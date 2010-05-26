@@ -11,13 +11,10 @@
 //
 #ifndef ADMPP
 #define ADMPP
-extern "C" {
-#include "ADM_ffmpeg/libpostproc/postprocess.h"
-}
 typedef struct ADM_PP
 {
-	pp_context_t			*ppContext;
-	pp_mode_t			*ppMode;
+	void    			*ppContext; // pp_context_t
+	void    			*ppMode;    // pp_mode_t
  	uint32_t			postProcType;
 	uint32_t			postProcStrength;
         uint32_t                        swapuv;

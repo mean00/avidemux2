@@ -12,6 +12,7 @@
 *                                                                         *
 ***************************************************************************///
 
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 
 #include "ADM_coreVideoFilter.h"

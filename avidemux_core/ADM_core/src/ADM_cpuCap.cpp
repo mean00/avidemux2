@@ -9,6 +9,10 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
+#include "ADM_coreConfig.h"
+#ifdef ADM_CPU_X86
+#include "ADM_lavcodec.h"
+#endif
 #include "ADM_default.h"
 
 #if defined(__MINGW32__)
@@ -34,12 +38,6 @@ extern "C"{
 }
 
 
-#ifdef ADM_CPU_X86
-extern "C" 
-{
-#include "ADM_ffmpeg/libavcodec/avcodec.h"
-}
-#endif
 
 #define cpuid(index,eax,ebx,ecx,edx)\
     __asm __volatile\

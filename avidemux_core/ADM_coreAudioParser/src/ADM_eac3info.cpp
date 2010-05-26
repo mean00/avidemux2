@@ -7,6 +7,7 @@
 
 */
 
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 
 #include "ADM_eac3info.h"

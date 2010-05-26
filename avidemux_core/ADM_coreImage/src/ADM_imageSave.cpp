@@ -2,15 +2,13 @@
       \file A
       \brief 2nd part of ADMImage, put here to avoid weird dependancies
 */
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "ADM_bitmap.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_colorspace.h"
-extern "C" 
-{
 #include "ADM_lavcodec.h"
-}
 /**
     \fn SwapMe
 */

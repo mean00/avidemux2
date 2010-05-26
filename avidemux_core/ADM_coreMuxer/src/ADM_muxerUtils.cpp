@@ -13,6 +13,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#define __STDC_CONSTANT_MACROS  1 // Lavcodec crap
+#define __STDC_LIMIT_MACROS 1
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerUtils.h"
