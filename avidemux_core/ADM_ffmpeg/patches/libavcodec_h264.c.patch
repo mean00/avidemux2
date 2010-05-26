@@ -1,22 +1,22 @@
-diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/h264.c b/avidemux_core/ADM_ffmpeg/libavcodec/h264.c
-index e4654f0..cfab425 100644
---- a/avidemux_core/ADM_ffmpeg/libavcodec/h264.c
-+++ b/avidemux_core/ADM_ffmpeg/libavcodec/h264.c
-@@ -3358,6 +3358,17 @@ av_cold int ff_h264_decode_end(AVCodecContext *avctx)
-     return 0;
- }
- 
-+/* MEANX */
-+int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc)
-+{
-+      H264Context *h = avctx->priv_data;
-+      assert(h);
-+      *nalSize=h->nal_length_size;
-+      *isAvc=h->is_avc;
-+	return 1;
-+
-+  }
-+/* MeanX */
- 
- AVCodec h264_decoder = {
-     "h264",
+[1mdiff --git a/avidemux_core/ADM_ffmpeg/libavcodec/h264.c b/avidemux_core/ADM_ffmpeg/libavcodec/h264.c[m
+[1mindex e4654f0..cfab425 100644[m
+[1m--- a/avidemux_core/ADM_ffmpeg/libavcodec/h264.c[m
+[1m+++ b/avidemux_core/ADM_ffmpeg/libavcodec/h264.c[m
+[36m@@ -3358,6 +3358,17 @@[m [mav_cold int ff_h264_decode_end(AVCodecContext *avctx)[m
+     return 0;[m
+ }[m
+ [m
+[32m+[m[32m/* MEANX */[m
+[32m+[m[32mint av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc)[m
+[32m+[m[32m{[m
+[32m+[m[32m      H264Context *h = avctx->priv_data;[m
+[32m+[m[32m      assert(h);[m
+[32m+[m[32m      *nalSize=h->nal_length_size;[m
+[32m+[m[32m      *isAvc=h->is_avc;[m
+[32m+[m	[32mreturn 1;[m
+[32m+[m
+[32m+[m[32m  }[m
+[32m+[m[32m/* MeanX */[m
+ [m
+ AVCodec h264_decoder = {[m
+     "h264",[m
