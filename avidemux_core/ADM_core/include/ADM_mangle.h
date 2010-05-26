@@ -29,21 +29,22 @@
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
 #    endif
-#else
+#else /////////////////  64 BITS UNICES
 #    if defined(ADM_CPU_X86_64) && defined(PIC)
 #        define MANGLE(a) #a"(%%rip)"
 #        define LOCAL_MANGLE(a) #a"(%%rip)"
 #        define FUNNY_MANGLE(x) x asm(#x)
 #        define FUNNY_MANGLE_ARRAY(x, y)  x[y] asm(#x)
-#    elif defined(__APPLE__)
+#    elif defined(__APPLE__) /////////////// MACOSX
 #        define MANGLE(a) "_" #a
 #        define LOCAL_MANGLE(a) #a"(%%rip)"
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
-#    else
-#        define MANGLE(a) #a
-#        define FUNNY_MANGLE(x) x asm(MANGLE(x))
-#        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
+#                else /////////////// LINUX //////////////
+#                   define MANGLE(a) #a
+#                   define LOCAL_MANGLE(a) #a
+#                   define FUNNY_MANGLE(x) x asm(MANGLE(x))
+#                   define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
 #    endif
 #endif
 
