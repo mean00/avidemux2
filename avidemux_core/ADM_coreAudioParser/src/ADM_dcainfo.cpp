@@ -17,16 +17,7 @@
 #include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_dcainfo.h"
-#define ADM_NO_CONFIG_H
-extern "C"
-{
-#include "ADM_ffmpeg/ffmpeg_config/config.h"
-#include "ADM_ffmpeg/libavutil/internal.h"
-#include "ADM_ffmpeg/libavutil/common.h"
-#include "ADM_ffmpeg/libavutil/bswap.h"
-#include "ADM_ffmpeg/libavcodec/get_bits.h"
-
-}
+#include "ADM_getbits.h"
 #undef printf
 /*
         Borrowed from libdca
