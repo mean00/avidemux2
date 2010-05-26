@@ -557,6 +557,7 @@
 #define ENABLE_YASM      0
 #undef HAVE_YASM      
 #endif // USE_YASM
+#define CONFIG_H264DSP  1
 #define ENABLE_ARM      0
 #define ENABLE_PPC      0
 #define ENABLE_THREADS 1
