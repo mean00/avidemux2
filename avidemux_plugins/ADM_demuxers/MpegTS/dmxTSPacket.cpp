@@ -18,6 +18,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 
 #include "dmxTSPacket.h"

@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
@@ -30,17 +31,6 @@
 #include "ADM_h264_tag.h"
 #include "ADM_clock.h"
 #include "ADM_getbits.h"
-#if 0
-extern "C"
-{
-#define ADM_NO_CONFIG_H
-#include "libavutil/common.h"
-#include "libavutil/bswap.h"
-#define INT_MAX (0x7FFFFFFF)
-#include "ADM_lavcodec/bitstream.h"
-#include "ADM_lavcodec/golomb.h"
-}
-#endif
 
 #define zprintf(...) {}
 

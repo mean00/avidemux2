@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
