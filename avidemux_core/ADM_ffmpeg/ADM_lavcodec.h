@@ -18,7 +18,8 @@
   #define  __ADM_LAVC
   extern "C"
   {  
-  #define __STDC_CONSTANT_MACROS // Lavcodec crap
+  #define __STDC_CONSTANT_MACROS  1 // Lavcodec crap
+  #define __STDC_LIMIT_MACROS 1
   #include "ADM_ffmpeg/libavcodec/avcodec.h"
   };
 #endif

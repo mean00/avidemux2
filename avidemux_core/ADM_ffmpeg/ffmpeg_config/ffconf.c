@@ -16,6 +16,12 @@ int main(void)
     DECLARE_HW(MPEG4_VAAPI,nellymoser);
     DECLARE_HW(VC1_VAAPI,nellymoser);
     DECLARE_HW(WMV3_VAAPI,nellymoser);
+//
+    DECLARE_HW(H264_DXVA2,nellymoser);
+    DECLARE_HW(H264_VAAPI,nellymoser);
+    DECLARE_HW(VC1_DXVA2,nellymoser);
+    DECLARE_HW(VC1_DXVA2,nellymoser);
+    DECLARE_HW(WMV3_DXVA2,nellymoser);
 
 #define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 1\n");
         printf("#ifdef USE_VDPAU\n");
@@ -31,7 +37,14 @@ int main(void)
         printf("#define CONFIG_VC1_VDPAU_DECODER 0\n");
         printf("#define CONFIG_WMV3_VDPAU_DECODER 0\n");
         printf("#endif // \n");
+        printf("#define CONFIG_MPEG4_VDPAU_DECODER 0\n");
         
+        printf("#ifdef HAVE_MALLOC_H\n");
+        printf("#undef HAVE_MALLOC_H \n");
+        printf("#define HAVE_MALLOC_H 1\n");
+        printf("#else // HAVE_MALLOC_H\n");
+        printf("#define HAVE_MALLOC_H 0\n");
+        printf("#endif// HAVE_MALLOC_H\n");
 
 #undef DECLARE_VDPAU
 #define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 0\n");
@@ -92,9 +105,42 @@ int main(void)
     DECLARE_DECODER (FLV, flv);
     DECLARE_DECODER (SNOW, snow);
     DECLARE_DECODER (AMV, amv);
+    DECLARE_DECODER (INDEO5, indeo5);
+    DECLARE_DECODER (MP1FLOAT, indeo5);
+    DECLARE_DECODER (MP2FLOAT, indeo5);
+    DECLARE_DECODER (MP3FLOAT, indeo5);
+    DECLARE_DECODER (INDEO5, indeo5);
+    DECLARE_DECODER (INDEO5, indeo5);
 #undef DECLARE_DECODER
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 0\n"); 
 
+    DECLARE_DECODER (MP3ADUFLOAT, indeo5);
+    DECLARE_DECODER (MP3ON4FLOAT, indeo5);
+    DECLARE_DECODER(CDGRAPHICS, eatgq);
+    DECLARE_DECODER(ANM, eatgq);
+    DECLARE_DECODER(AURA, eatgq);
+    DECLARE_DECODER(AURA2, eatgq);
+    DECLARE_DECODER(BINK, eatgq);
+    DECLARE_DECODER(FRWU, eatgq);
+    DECLARE_DECODER(IFF_BYTERUN1, eatgq);
+    DECLARE_DECODER(IFF_ILBM, eatgq);
+    DECLARE_DECODER(KGV1, eatgq);
+    DECLARE_DECODER(R210, eatgq);
+    DECLARE_DECODER(YOP, eatgq);
+    DECLARE_DECODER(KGV1, eatgq);
+    DECLARE_DECODER(ALS, eatgq);
+    DECLARE_DECODER(AMRNB, eatgq);
+    DECLARE_DECODER(ATRAC1, eatgq);
+    DECLARE_DECODER(BINKAUDIO_DCT, eatgq);
+    DECLARE_DECODER(BINKAUDIO_RDFT, eatgq);
+    DECLARE_DECODER(ATRAC1, eatgq);
+    DECLARE_DECODER(SIPR, eatgq);
+    DECLARE_DECODER(TWINVQ, eatgq);
+    DECLARE_DECODER(WMAPRO, eatgq);
+    DECLARE_DECODER(WMAVOICE, eatgq);
+    DECLARE_DECODER(PCM_BLURAY, eatgq);
+    DECLARE_DECODER(PGSSUB, eatgq);
+//
     DECLARE_DECODER(DPX, eatgq);
     DECLARE_DECODER(EAMAD, eatgq);
     DECLARE_DECODER(TMV, eatgq);
@@ -438,6 +484,7 @@ int main(void)
 
 #define DECLARE_BSF(a,b); printf("#define CONFIG_"#a"_BSF 0\n");
 
+	DECLARE_BSF(CHOMP, mp3_header_compress);
 	DECLARE_BSF(AAC_ADTSTOASC, mp3_header_compress);
 	DECLARE_BSF(MP3_HEADER_COMPRESS, mp3_header_compress);
 	DECLARE_BSF(IMX_DUMP_HEADER, imx_dump_header);
@@ -519,9 +566,11 @@ int main(void)
 	printf("#	define ARCH_X86 1\n");
 	printf("#	define ARCH_X86_32 1\n");
 	printf("#	define ARCH_X86_64 0\n");
+	printf("#	define HAVE_ALTIVEC 0\n");
 	printf("#elif defined(ADM_CPU_X86_64)\n");
 	printf("#	define ARCH_X86 1\n");
 	printf("#	define ARCH_X86_64 1\n");
+	printf("#	define HAVE_ALTIVEC 0\n");
 	printf("#elif defined(ADM_CPU_PPC)\n");
 	printf("#	define ARCH_POWERPC 1\n");
 	printf("#ifdef ADM_CPU_ALTIVEC\n");
