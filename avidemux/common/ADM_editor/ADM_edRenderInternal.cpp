@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_includeFfmpeg.h"
 #include <math.h>
 #include "ADM_default.h"
 #include "ADM_editor/ADM_edit.hxx"
@@ -26,7 +27,9 @@
 #endif
 
 #include "ADM_pp.h"
-
+extern "C" {
+#include "ADM_ffmpeg/libpostproc/postprocess.h"
+}
 // FIXME BADLY !!!
 // This should be in a context somewhere
 static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
@@ -394,6 +397,11 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
             iStrideTab2[i]=strideTab2[i];
             xBuff[i]=iBuff[i];
         }
+#warning FIXME
+#warning FIXME
+#warning FIXME
+#warning FIXME
+#warning FIXME
         pp_postprocess(
             xBuff,
             iStrideTab,
