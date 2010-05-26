@@ -316,5 +316,7 @@ void ff_h264dsp_init(H264DSPContext *c)
 
     if (ARCH_ARM) ff_h264dsp_init_arm(c);
     if (HAVE_ALTIVEC) ff_h264dsp_init_ppc(c);
+#if CONFIG_H264DSP //MEANX
     if (HAVE_MMX) ff_h264dsp_init_x86(c);
+#endif
 }
