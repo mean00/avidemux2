@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 Baptiste Coudurier <baptiste.coudurier@gmail.com>
+ * Copyright (c) 2010 Mans Rullgard <mans@mansr.com>
  *
  * This file is part of FFmpeg.
  *
@@ -18,36 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <unistd.h>
-#include <fcntl.h>
-#include "timer.h"
-#include "random_seed.h"
-#include "avutil.h"
+#ifndef AVUTIL_X86_INTMATH_H
+#define AVUTIL_X86_INTMATH_H
 
-uint32_t av_get_random_seed(void)
-{
-    uint32_t seed;
-    int fd;
+#define FASTDIV(a,b) \
+    ({\
+        int ret, dmy;\
+        __asm__ volatile(\
+            "mull %3"\
+            :"=d"(ret), "=a"(dmy)\
+            :"1"(a), "g"(ff_inverse[b])\
+            );\
+        ret;\
+    })
 
-    if ((fd = open("/dev/random", O_RDONLY)) == -1)
-        fd = open("/dev/urandom", O_RDONLY);
-    if (fd != -1){
-        int err = read(fd, &seed, 4);
-        close(fd);
-        if (err == 4)
-            return seed;
-    }
-#ifdef AV_READ_TIME
-    seed = AV_READ_TIME();
-#endif
-    // XXX what to do ?
-    return seed;
-}
-
-#if LIBAVUTIL_VERSION_MAJOR < 51
-attribute_deprecated uint32_t ff_random_get_seed(void);
-uint32_t ff_random_get_seed(void)
-{
-    return av_get_random_seed();
-}
-#endif
+#endif /* AVUTIL_X86_INTMATH_H */

@@ -17,7 +17,7 @@
  */
 
 /**
- * @file libavutil/x86/bswap.h
+ * @file
  * byte swapping routines
  */
 
@@ -25,13 +25,8 @@
 #define AVUTIL_X86_BSWAP_H
 
 #include <stdint.h>
-// MEANX
-#ifndef ADM_NO_CONFIG_H
 #include "config.h"
-#endif
-// MEANX
-
-#include "libavutil/common.h"
+#include "libavutil/attributes.h"
 
 #define bswap_16 bswap_16
 static av_always_inline av_const uint16_t bswap_16(uint16_t x)
