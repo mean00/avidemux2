@@ -1,4 +1,7 @@
 OBJS=adm_gen.cpp editor_gen.cpp
-%_gen.cpp:%.idl
-        perl ../../../../cmake/admPyClass $%.idl
+%_gen.cpp:%.admPyClass
+	perl ../../../../cmake/admPyClass.pl  $<
 all: $(OBJS)
+
+clean:
+	rm -f $(OBJS)
