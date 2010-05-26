@@ -22,9 +22,9 @@
 #include "A_functions.h"
 #include "ADM_scriptCommon.h"
 #include "ADM_scriptVideo.h"
-#include "adm_gen.h"
 
 #include "adm_gen.cpp"
+extern pyRegisterClass initClasspyAdm;
 /**
 
 */
@@ -39,7 +39,8 @@ static  bool pyLogger(const char *s)
 static bool initPy(tinyPy *py)
 {
     py->init();
-    py->registerFuncs("adm",adm_functions);
+    //py->registerFuncs("adm",adm_functions);
+    py->registerClass("Avidemux",initClasspyAdm);
     tinyPy::registerLogger(pyLogger);
     return true;
 }

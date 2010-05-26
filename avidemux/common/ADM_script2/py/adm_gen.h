@@ -6,6 +6,7 @@ int  setPostProc (int ,int , int );
 int  getWidth (void);
 int  getHeight (void);
 int  getFps1000 (void);
+str  getVideoCodec (void);
 int  audioReset (void);
 int  audioMixer (char * );
 int  clearVideoFilters (void);

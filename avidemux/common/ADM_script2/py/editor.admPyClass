@@ -1,0 +1,6 @@
+#              cname:pyname
+/* CLASS */ pyEditor : void
+/* FUNC */ int jsPrintTiming:printTiming      (int ) 
+/* FUNC */ int jsDumpSegments:dumpSegment     (void) 
+/* FUNC */ int jsDumpRefVideos:dumpRefVideo   (void) 
+

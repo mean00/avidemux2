@@ -54,6 +54,12 @@ tp_obj zzpy_getFps1000(TP)
 int r=jsGetFps1000(); 
 return tp_number(r);
 }
+//str  jsGetVideoCodec <void>
+tp_obj zzpy_getVideoCodec(TP)
+{
+char *r=jsGetVideoCodec(); 
+return tp_string(r);
+}
 //int  jsAudioReset <void>
 tp_obj zzpy_audioReset(TP)
 {
@@ -73,17 +79,24 @@ tp_obj zzpy_clearVideoFilters(TP)
 int r=jsClearVideoFilters(); 
 return tp_number(r);
 }
-pyFuncs adm_functions[]={
-{"loadVideo",zzpy_loadVideo},
-{"clearSegments",zzpy_clearSegments},
-{"appendVideo",zzpy_appendVideo},
-{"addSegment",zzpy_addSegment},
-{"setPostProc",zzpy_setPostProc},
-{"getWidth",zzpy_getWidth},
-{"getHeight",zzpy_getHeight},
-{"getFps1000",zzpy_getFps1000},
-{"audioReset",zzpy_audioReset},
-{"audioMixer",zzpy_audioMixer},
-{"clearVideoFilters",zzpy_clearVideoFilters},
-{NULL,NULL}
-};
+static tp_obj myCtor(tp_vm *vm)
+{
+}
+tp_obj initClasspyAdm(tp_vm *vm)
+{
+ tp_obj myClass=tp_class(vm);
+ tp_set(vm,myClass,tp_string("__init__"),tp_fnc(vm,myCtor));
+ tp_set(vm,myClass,tp_string("loadVideo"),tp_fnc(vm,zzpy_loadVideo));
+ tp_set(vm,myClass,tp_string("clearSegments"),tp_fnc(vm,zzpy_clearSegments));
+ tp_set(vm,myClass,tp_string("appendVideo"),tp_fnc(vm,zzpy_appendVideo));
+ tp_set(vm,myClass,tp_string("addSegment"),tp_fnc(vm,zzpy_addSegment));
+ tp_set(vm,myClass,tp_string("setPostProc"),tp_fnc(vm,zzpy_setPostProc));
+ tp_set(vm,myClass,tp_string("getWidth"),tp_fnc(vm,zzpy_getWidth));
+ tp_set(vm,myClass,tp_string("getHeight"),tp_fnc(vm,zzpy_getHeight));
+ tp_set(vm,myClass,tp_string("getFps1000"),tp_fnc(vm,zzpy_getFps1000));
+ tp_set(vm,myClass,tp_string("getVideoCodec"),tp_fnc(vm,zzpy_getVideoCodec));
+ tp_set(vm,myClass,tp_string("audioReset"),tp_fnc(vm,zzpy_audioReset));
+ tp_set(vm,myClass,tp_string("audioMixer"),tp_fnc(vm,zzpy_audioMixer));
+ tp_set(vm,myClass,tp_string("clearVideoFilters"),tp_fnc(vm,zzpy_clearVideoFilters));
+ return myClass;
+}
