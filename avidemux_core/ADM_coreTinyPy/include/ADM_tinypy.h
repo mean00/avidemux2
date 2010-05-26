@@ -25,6 +25,8 @@ typedef struct
     tp_obj (*funcCall)(TP);
 }pyFuncs;
 typedef bool (pyLoggerFunc)(const char *);
+
+typedef tp_obj (pyRegisterClass)(tp_vm *vm);
 /**
     \class tinyPy
 */
@@ -36,6 +38,7 @@ public:
                 tinyPy(void);
         bool    init(void);
         bool    registerFuncs(const char *group,pyFuncs *funcs);
+        bool    registerClass(const char *className,pyRegisterClass *pyclass);
                 ~tinyPy(void);
         bool    execString(const char *s);
         bool    execFile(const char *f);

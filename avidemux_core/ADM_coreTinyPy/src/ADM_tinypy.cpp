@@ -167,7 +167,16 @@ bool    tinyPy::registerFuncs(const char *group,pyFuncs *funcs)
     }
     return true;
 }
+/**
+    \fn registerClass
+*/
+bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy)
+{
+    ADM_info("Registering class:%s\n",className);
+    tp_set(INSTANCE, INSTANCE->builtins, tp_string(className), classPy(INSTANCE));
+    return true;
 
+}
 /**
     \fn dumpBuiltin
 */
