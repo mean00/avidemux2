@@ -1,8 +1,8 @@
+#if 0
 #include "ADM_toolkitGtk.h"
 #include "ADM_lavcodec.h"
 
 
-#if 0
 //#include "ADM_encoder/ADM_vidEncode.hxx"
 //#include "ADM_gui/GUI_xvidparam.h"
 #include "prefs.h"

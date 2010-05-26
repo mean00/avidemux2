@@ -13,7 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_includeFfmpeg.h"
 #include "config.h"
 
 #include <string.h>
