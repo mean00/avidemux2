@@ -32,6 +32,7 @@
 
 #include "prefs.h"
 #include "audio_out.h"
+#include "ADM_assert.h"
 
 extern void  ADM_lavInit();
 extern void  ADM_lavDestroy();

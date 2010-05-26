@@ -34,6 +34,7 @@
 #include "GUI_ui.h"
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterApi.h"
+#include "errno.h"
 /**
     \fn dumpConf
     \brief dump configuration as name=value pairs
