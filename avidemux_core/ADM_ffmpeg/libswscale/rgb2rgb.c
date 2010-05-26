@@ -74,7 +74,7 @@ void (*rgb24toyv12)(const uint8_t *src, uint8_t *ydst, uint8_t *udst, uint8_t *v
                     long lumStride, long chromStride, long srcStride);
 void (*planar2x)(const uint8_t *src, uint8_t *dst, long width, long height,
                  long srcStride, long dstStride);
-void (*interleaveBytes)(uint8_t *src1, uint8_t *src2, uint8_t *dst,
+void (*interleaveBytes)(const uint8_t *src1, const uint8_t *src2, uint8_t *dst,
                         long width, long height, long src1Stride,
                         long src2Stride, long dstStride);
 void (*vu9_to_vu12)(const uint8_t *src1, const uint8_t *src2,
@@ -274,16 +274,16 @@ void rgb32to24(const uint8_t *src, uint8_t *dst, long src_size)
     long i;
     long num_pixels = src_size >> 2;
     for (i=0; i<num_pixels; i++) {
-        #if HAVE_BIGENDIAN
-            /* RGB32 (= A,B,G,R) -> BGR24 (= B,G,R) */
-            dst[3*i + 0] = src[4*i + 1];
-            dst[3*i + 1] = src[4*i + 2];
-            dst[3*i + 2] = src[4*i + 3];
-        #else
-            dst[3*i + 0] = src[4*i + 2];
-            dst[3*i + 1] = src[4*i + 1];
-            dst[3*i + 2] = src[4*i + 0];
-        #endif
+#if HAVE_BIGENDIAN
+        /* RGB32 (= A,B,G,R) -> BGR24 (= B,G,R) */
+        dst[3*i + 0] = src[4*i + 1];
+        dst[3*i + 1] = src[4*i + 2];
+        dst[3*i + 2] = src[4*i + 3];
+#else
+        dst[3*i + 0] = src[4*i + 2];
+        dst[3*i + 1] = src[4*i + 1];
+        dst[3*i + 2] = src[4*i + 0];
+#endif
     }
 }
 
@@ -291,18 +291,18 @@ void rgb24to32(const uint8_t *src, uint8_t *dst, long src_size)
 {
     long i;
     for (i=0; 3*i<src_size; i++) {
-        #if HAVE_BIGENDIAN
-            /* RGB24 (= R,G,B) -> BGR32 (= A,R,G,B) */
-            dst[4*i + 0] = 255;
-            dst[4*i + 1] = src[3*i + 0];
-            dst[4*i + 2] = src[3*i + 1];
-            dst[4*i + 3] = src[3*i + 2];
-        #else
-            dst[4*i + 0] = src[3*i + 2];
-            dst[4*i + 1] = src[3*i + 1];
-            dst[4*i + 2] = src[3*i + 0];
-            dst[4*i + 3] = 255;
-        #endif
+#if HAVE_BIGENDIAN
+        /* RGB24 (= R,G,B) -> BGR32 (= A,R,G,B) */
+        dst[4*i + 0] = 255;
+        dst[4*i + 1] = src[3*i + 0];
+        dst[4*i + 2] = src[3*i + 1];
+        dst[4*i + 3] = src[3*i + 2];
+#else
+        dst[4*i + 0] = src[3*i + 2];
+        dst[4*i + 1] = src[3*i + 1];
+        dst[4*i + 2] = src[3*i + 0];
+        dst[4*i + 3] = 255;
+#endif
     }
 }
 
@@ -315,17 +315,17 @@ void rgb16tobgr32(const uint8_t *src, uint8_t *dst, long src_size)
     while (s < end) {
         register uint16_t bgr;
         bgr = *s++;
-        #if HAVE_BIGENDIAN
-            *d++ = 255;
-            *d++ = (bgr&0x1F)<<3;
-            *d++ = (bgr&0x7E0)>>3;
-            *d++ = (bgr&0xF800)>>8;
-        #else
-            *d++ = (bgr&0xF800)>>8;
-            *d++ = (bgr&0x7E0)>>3;
-            *d++ = (bgr&0x1F)<<3;
-            *d++ = 255;
-        #endif
+#if HAVE_BIGENDIAN
+        *d++ = 255;
+        *d++ = (bgr&0x1F)<<3;
+        *d++ = (bgr&0x7E0)>>3;
+        *d++ = (bgr&0xF800)>>8;
+#else
+        *d++ = (bgr&0xF800)>>8;
+        *d++ = (bgr&0x7E0)>>3;
+        *d++ = (bgr&0x1F)<<3;
+        *d++ = 255;
+#endif
     }
 }
 
@@ -375,17 +375,17 @@ void rgb15tobgr32(const uint8_t *src, uint8_t *dst, long src_size)
     while (s < end) {
         register uint16_t bgr;
         bgr = *s++;
-        #if HAVE_BIGENDIAN
-            *d++ = 255;
-            *d++ = (bgr&0x1F)<<3;
-            *d++ = (bgr&0x3E0)>>2;
-            *d++ = (bgr&0x7C00)>>7;
-        #else
-            *d++ = (bgr&0x7C00)>>7;
-            *d++ = (bgr&0x3E0)>>2;
-            *d++ = (bgr&0x1F)<<3;
-            *d++ = 255;
-        #endif
+#if HAVE_BIGENDIAN
+        *d++ = 255;
+        *d++ = (bgr&0x1F)<<3;
+        *d++ = (bgr&0x3E0)>>2;
+        *d++ = (bgr&0x7C00)>>7;
+#else
+        *d++ = (bgr&0x7C00)>>7;
+        *d++ = (bgr&0x3E0)>>2;
+        *d++ = (bgr&0x1F)<<3;
+        *d++ = 255;
+#endif
     }
 }
 
@@ -442,3 +442,23 @@ void bgr8torgb8(const uint8_t *src, uint8_t *dst, long src_size)
         dst[i] = ((b<<1)&0x07) | ((g&0x07)<<3) | ((r&0x03)<<6);
     }
 }
+
+#define DEFINE_SHUFFLE_BYTES(a, b, c, d)                                \
+void shuffle_bytes_##a##b##c##d(const uint8_t *src, uint8_t *dst, long src_size) \
+{                                                                       \
+    long i;                                                             \
+                                                                        \
+    for (i = 0; i < src_size; i+=4) {                                   \
+        dst[i + 0] = src[i + a];                                        \
+        dst[i + 1] = src[i + b];                                        \
+        dst[i + 2] = src[i + c];                                        \
+        dst[i + 3] = src[i + d];                                        \
+    }                                                                   \
+}
+
+DEFINE_SHUFFLE_BYTES(0, 3, 2, 1);
+DEFINE_SHUFFLE_BYTES(1, 2, 3, 0);
+DEFINE_SHUFFLE_BYTES(2, 1, 0, 3);
+DEFINE_SHUFFLE_BYTES(3, 0, 1, 2);
+DEFINE_SHUFFLE_BYTES(3, 2, 1, 0);
+

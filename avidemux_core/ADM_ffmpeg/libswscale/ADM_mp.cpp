@@ -18,12 +18,12 @@
 #include <string.h>
 #include <math.h>
 
-#include "config.h"
+#include "ADM_lavcodec.h"
+#include "ADM_mangle.h"
 #include "fourcc.h"
 
 
 extern "C" {
-#include "ADM_ffmpeg/libavcodec/avcodec.h"
 #include "ADM_ffmpeg/libavutil/avutil.h"
 #include "ADM_ffmpeg/libswscale/swscale.h"
 }

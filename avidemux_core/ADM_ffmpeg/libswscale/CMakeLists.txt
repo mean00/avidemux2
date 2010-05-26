@@ -1,6 +1,6 @@
 SET(ADM_LIB ADM_libswscale6)
 SET(${ADM_LIB}_SRCS 
-        swscale.c yuv2rgb.c rgb2rgb.c ADM_mp.cpp swscale_avoption.c
+        swscale.c yuv2rgb.c rgb2rgb.c ADM_mp.cpp swscale_avoption.c utils.c
 )
 
 IF(ADM_CPU_X86)
