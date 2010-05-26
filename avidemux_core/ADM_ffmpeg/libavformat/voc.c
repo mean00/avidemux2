@@ -20,6 +20,7 @@
  */
 
 #include "voc.h"
+#include "internal.h"
 
 const unsigned char ff_voc_magic[21] = "Creative Voice File\x1A";
 
@@ -32,5 +33,5 @@ const AVCodecTag ff_voc_codec_tags[] = {
     {CODEC_ID_PCM_ALAW,      0x06},
     {CODEC_ID_PCM_MULAW,     0x07},
     {CODEC_ID_ADPCM_CT,    0x0200},
-    {0, 0},
+    {CODEC_ID_NONE,             0},
 };
