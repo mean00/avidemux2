@@ -71,8 +71,9 @@ PROCESS(actionAdd_to_joblist,ACT_ADD_JOB) \
 PROCESS(actionShow_Joblist,ACT_HANDLE_JOB)  \
 PROCESS(actionPlugins,ACT_PLUGIN_INFO) \
 PROCESS(actionJavaScript_shell,ACT_JS_SHELL) \
-PROCESS(actionRun_pyScript,ACT_RunPyScript) \
+PROCESS(actionLoad_run_pyProject,ACT_RunPyScript) \
 PROCESS(actionPython_Shell,ACT_PY_SHELL) \
+PROCESS(actionSave_pyScript,ACT_SavePyWork) \
 
 #if 0
 PROCESS(actionPrevious_intra_frame,ACT_PreviousKFrame) \

@@ -53,7 +53,9 @@ void HandleAction_Save(Action action)
 {
     switch(action)
     {
-
+    case ACT_SavePyWork:
+            GUI_Error_HIG("Py","Not implemented yet\n");
+            break;
     case ACT_SaveWork:
       GUI_FileSelWrite (QT_TR_NOOP("Select Project to Save"), A_saveWorkbench);
 	  UI_refreshCustomMenu();

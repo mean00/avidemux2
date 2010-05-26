@@ -19,6 +19,7 @@ ACT(SaveAvi)
 ACT(SaveWave)
 ACT(SaveRaw)
 ACT(SaveWork)
+ACT(SavePyWork)
 ACT(SaveCurrentWork)
 
 ACT(SAVE_END)
