@@ -21,10 +21,11 @@
  */
 
 /**
- * @file libavcodec/ratecontrol.c
+ * @file
  * Rate control for video encoders.
  */
 
+#include "libavutil/intmath.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "ratecontrol.h"
@@ -66,7 +67,6 @@ int ff_rate_control_init(MpegEncContext *s)
 {
     RateControlContext *rcc= &s->rc_context;
     int i;
-    const char *error = NULL;
     static const char * const const_names[]={
         "PI",
         "E",
@@ -106,9 +106,9 @@ int ff_rate_control_init(MpegEncContext *s)
     };
     emms_c();
 
-    rcc->rc_eq_eval = ff_parse(s->avctx->rc_eq ? s->avctx->rc_eq : "tex^qComp", const_names, func1, func1_names, NULL, NULL, &error);
+    rcc->rc_eq_eval = ff_parse_expr(s->avctx->rc_eq ? s->avctx->rc_eq : "tex^qComp", const_names, func1_names, func1, NULL, NULL, 0, s->avctx);
     if (!rcc->rc_eq_eval) {
-        av_log(s->avctx, AV_LOG_ERROR, "Error parsing rc_eq \"%s\": %s\n", s->avctx->rc_eq, error? error : "");
+        av_log(s->avctx, AV_LOG_ERROR, "Error parsing rc_eq \"%s\"\n", s->avctx->rc_eq);
         return -1;
     }
 
@@ -254,7 +254,7 @@ void ff_rate_control_uninit(MpegEncContext *s)
     RateControlContext *rcc= &s->rc_context;
     emms_c();
 
-    ff_eval_free(rcc->rc_eq_eval);
+    ff_free_expr(rcc->rc_eq_eval);
     av_freep(&rcc->entry);
 
 #if CONFIG_LIBXVID
@@ -338,7 +338,7 @@ static double get_qscale(MpegEncContext *s, RateControlEntry *rce, double rate_f
         0
     };
 
-    bits= ff_parse_eval(rcc->rc_eq_eval, const_values, rce);
+    bits= ff_eval_expr(rcc->rc_eq_eval, const_values, rce);
     if (isnan(bits)) {
         av_log(s->avctx, AV_LOG_ERROR, "Error evaluating rc_eq \"%s\"\n", s->avctx->rc_eq);
         return -1;

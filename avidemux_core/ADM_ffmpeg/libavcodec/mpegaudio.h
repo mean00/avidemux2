@@ -19,12 +19,16 @@
  */
 
 /**
- * @file libavcodec/mpegaudio.h
+ * @file
  * mpeg audio declarations for both encoder and decoder.
  */
 
 #ifndef AVCODEC_MPEGAUDIO_H
 #define AVCODEC_MPEGAUDIO_H
+
+#ifndef CONFIG_FLOAT
+#   define CONFIG_FLOAT 0
+#endif
 
 #include "avcodec.h"
 #include "get_bits.h"
@@ -65,7 +69,10 @@
 
 #define FIX(a)   ((int)((a) * FRAC_ONE))
 
-#if CONFIG_MPEGAUDIO_HP && CONFIG_AUDIO_NONSHORT
+#if CONFIG_FLOAT
+typedef float OUT_INT;
+#define OUT_FMT SAMPLE_FMT_FLT
+#elif CONFIG_MPEGAUDIO_HP && CONFIG_AUDIO_NONSHORT
 typedef int32_t OUT_INT;
 #define OUT_MAX INT32_MAX
 #define OUT_MIN INT32_MIN
@@ -79,16 +86,39 @@ typedef int16_t OUT_INT;
 #define OUT_FMT SAMPLE_FMT_S16
 #endif
 
-#if FRAC_BITS <= 15
+#if CONFIG_FLOAT
+#   define INTFLOAT float
+typedef float MPA_INT;
+#elif FRAC_BITS <= 15
+#   define INTFLOAT int
 typedef int16_t MPA_INT;
 #else
+#   define INTFLOAT int
 typedef int32_t MPA_INT;
 #endif
 
 #define BACKSTEP_SIZE 512
 #define EXTRABYTES 24
 
-struct GranuleDef;
+/* layer 3 "granule" */
+typedef struct GranuleDef {
+    uint8_t scfsi;
+    int part2_3_length;
+    int big_values;
+    int global_gain;
+    int scalefac_compress;
+    uint8_t block_type;
+    uint8_t switch_point;
+    int table_select[3];
+    int subblock_gain[3];
+    uint8_t scalefac_scale;
+    uint8_t count1table_select;
+    int region_size[3]; /* number of huffman codes in each region */
+    int preflag;
+    int short_start, long_end; /* long/short band indexes */
+    uint8_t scale_factors[40];
+    INTFLOAT sb_hybrid[SBLIMIT * 18]; /* 576 samples */
+} GranuleDef;
 
 #define MPA_DECODE_HEADER \
     int frame_size; \
@@ -108,20 +138,20 @@ typedef struct MPADecodeHeader {
 
 typedef struct MPADecodeContext {
     MPA_DECODE_HEADER
-    DECLARE_ALIGNED_8(uint8_t, last_buf[2*BACKSTEP_SIZE + EXTRABYTES]);
+    uint8_t last_buf[2*BACKSTEP_SIZE + EXTRABYTES];
     int last_buf_size;
     /* next header (used in free format parsing) */
     uint32_t free_format_next_header;
     GetBitContext gb;
     GetBitContext in_gb;
-    DECLARE_ALIGNED_16(MPA_INT, synth_buf[MPA_MAX_CHANNELS][512 * 2]);
+    DECLARE_ALIGNED(16, MPA_INT, synth_buf)[MPA_MAX_CHANNELS][512 * 2];
     int synth_buf_offset[MPA_MAX_CHANNELS];
-    DECLARE_ALIGNED_16(int32_t, sb_samples[MPA_MAX_CHANNELS][36][SBLIMIT]);
-    int32_t mdct_buf[MPA_MAX_CHANNELS][SBLIMIT * 18]; /* previous samples, for layer 3 MDCT */
+    DECLARE_ALIGNED(16, INTFLOAT, sb_samples)[MPA_MAX_CHANNELS][36][SBLIMIT];
+    INTFLOAT mdct_buf[MPA_MAX_CHANNELS][SBLIMIT * 18]; /* previous samples, for layer 3 MDCT */
+    GranuleDef granules[2][2]; /* Used in Layer 3 */
 #ifdef DEBUG
     int frame_count;
 #endif
-    void (*compute_antialias)(struct MPADecodeContext *s, struct GranuleDef *g);
     int adu_mode; ///< 0 for standard mp3, 1 for adu formatted mp3
     int dither_state;
     int error_recognition;
@@ -137,11 +167,18 @@ typedef struct HuffTable {
 
 int ff_mpa_l2_select_table(int bitrate, int nb_channels, int freq, int lsf);
 int ff_mpa_decode_header(AVCodecContext *avctx, uint32_t head, int *sample_rate, int *channels, int *frame_size, int *bitrate);
+extern MPA_INT ff_mpa_synth_window[];
 void ff_mpa_synth_init(MPA_INT *window);
 void ff_mpa_synth_filter(MPA_INT *synth_buf_ptr, int *synth_buf_offset,
                          MPA_INT *window, int *dither_state,
                          OUT_INT *samples, int incr,
-                         int32_t sb_samples[SBLIMIT]);
+                         INTFLOAT sb_samples[SBLIMIT]);
+
+void ff_mpa_synth_init_float(MPA_INT *window);
+void ff_mpa_synth_filter_float(MPA_INT *synth_buf_ptr, int *synth_buf_offset,
+                         MPA_INT *window, int *dither_state,
+                         OUT_INT *samples, int incr,
+                         INTFLOAT sb_samples[SBLIMIT]);
 
 /* fast header check for resync */
 static inline int ff_mpa_check_header(uint32_t header){
