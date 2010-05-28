@@ -555,7 +555,7 @@
 #define HAVE_YASM      1
 #else // USE_YASM
 #define ENABLE_YASM      0
-#undef HAVE_YASM      
+#undef HAVE_YASM         0
 #endif // USE_YASM
 #define CONFIG_H264DSP  1
 #define ENABLE_ARM      0

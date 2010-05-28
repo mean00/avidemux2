@@ -632,7 +632,7 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
         printf("#define HAVE_YASM      1\n");
         printf("#else // USE_YASM\n");
         printf("#define ENABLE_YASM      0\n");
-        printf("#undef HAVE_YASM      \n");
+        printf("#undef HAVE_YASM         0\n");
         printf("#endif // USE_YASM\n");
 
 	printf("#define CONFIG_H264DSP  1\n");
