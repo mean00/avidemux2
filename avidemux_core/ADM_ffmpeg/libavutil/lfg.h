@@ -21,7 +21,6 @@
 
 #ifndef AVUTIL_LFG_H
 #define AVUTIL_LFG_H
-#define index xindex // MEANX
 typedef struct {
     unsigned int state[64];
     int index;
