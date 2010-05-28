@@ -135,6 +135,7 @@ protected:
 virtual                         ~ADM_Composer();
                     void        clean( void );
                     uint8_t     saveAsScript (const char *name, const char *out);
+                    bool        saveAsPyScript(const char *name);
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
                     uint8_t 	cleanup( void);

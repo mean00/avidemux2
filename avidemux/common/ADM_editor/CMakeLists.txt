@@ -13,6 +13,7 @@ ADM_edStub.cpp
 ADM_edPtsDts.cpp
 ADM_edVideoCopy.cpp
 ADM_segment.cpp
+ADM_edPySave.cpp
 )
 
 ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})

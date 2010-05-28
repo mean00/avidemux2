@@ -38,6 +38,7 @@ void A_saveBunchJpg(const char *name);
 void A_saveImg (const char *name);
 uint8_t ADM_saveRaw (const char *name);
 void A_saveWorkbench (const char *name);
+void A_savePyProject (const char *name);
 int  A_audioSave(char *name);
 int  A_SaveWrapper(char *name);
 void A_saveAudioProcessed (char *name);
@@ -54,7 +55,8 @@ void HandleAction_Save(Action action)
     switch(action)
     {
     case ACT_SavePyWork:
-            GUI_Error_HIG("Py","Not implemented yet\n");
+            GUI_FileSelWrite (QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
+            UI_refreshCustomMenu();
             break;
     case ACT_SaveWork:
       GUI_FileSelWrite (QT_TR_NOOP("Select Project to Save"), A_saveWorkbench);
@@ -445,6 +447,15 @@ void A_saveWorkbench (const char *name)
 {
   video_body->saveAsScript(name,NULL);
   video_body->setProjectName(name);
+}
+
+/**
+    \fn A_savePyProject
+    \brief Save workbench as pyscript
+*/
+void A_savePyProject (const char *name)
+{
+  video_body->saveAsPyScript(name);
 }
 /**
     \fn A_SaveWrapper
