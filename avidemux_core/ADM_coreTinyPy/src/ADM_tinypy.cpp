@@ -196,4 +196,76 @@ tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
     }
     return tp_None;
 }
+//*********************************************
+#define preamble(xtype) tp_obj obj=TP_OBJ();\
+                       if(obj.type!=xtype) \
+                        { \
+                            raise("Expected %s, got %s\n",typeAsString(xtype),typeAsString(obj.type)); \
+                        }
+/**
+   \fn  asInt
+*/
+ int    tinyParams::asInt(void)
+{
+    preamble(TP_NUMBER);
+    return (int)obj.number.val;
+}
+/**
+   \fn  asInt
+*/
+float    tinyParams::asFloat(void)
+{
+    preamble(TP_NUMBER);
+    return (float)obj.number.val;
+}
+/**
+   \fn  asInt
+*/
+
+double tinyParams::asDouble(void)
+{
+    preamble(TP_NUMBER);
+    return (double)obj.number.val;
+}
+/**
+   \fn  asInt
+*/
+
+const char *tinyParams::asString(void)
+{
+    preamble(TP_STRING);
+    return obj.string.val;
+}
+/**
+   \fn  asInt
+*/
+
+const char *tinyParams::typeAsString(int type)
+{
+    switch(type)
+    {
+        case TP_NUMBER: return "Number";break;
+        case TP_STRING: return "String";break;
+        case TP_LIST:   return "List";break;
+        case TP_DICT:   return "Dict";break;
+        case TP_FNC:    return "Function";break;
+        case TP_DATA:   return "Data";break;
+    }
+    return "???";
+}
+/**
+
+*/
+void tinyParams::raise(const char *fmt,...)
+{
+char print_buffer[1024];
+    va_list         list;
+    va_start(list,  fmt);
+    vsnprintf(print_buffer,1023,fmt,list);
+    va_end(list);
+    print_buffer[1023]=0; // ensure the string is terminated
+    ADM_error("%s",print_buffer);
+    _tp_raise(tp,tp_None);
+}
+
 // EOF

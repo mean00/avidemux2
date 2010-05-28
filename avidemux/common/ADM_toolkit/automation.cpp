@@ -141,6 +141,7 @@ AUTOMATON reaction_table[]=
         {"nogui",               0,"Run in silent mode",		(one_arg_type)GUI_Quiet}   ,
 //        {"listfilters",		0,"list all filters by name",		(one_arg_type)filterListAll}   ,
         {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},
+        {"runpy",			1,"load and run a pyScript",		(one_arg_type)A_parseTinyPyScript},
         {"audio-normalize",	1,"activate normalization",		call_normalize},
         {"audio-resample",	1,"resample to x hz",			call_resample},
 //        {"filters",		1,"load a filter preset",		(one_arg_type)filterLoadXml}   ,

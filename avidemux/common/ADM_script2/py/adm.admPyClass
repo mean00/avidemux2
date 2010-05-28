@@ -1,8 +1,8 @@
 #              cname:pyname
 /* CLASS */ pyAdm : void
-/* FUNC */ int jsLoadVideo:loadVideo          (char * ) 
+/* FUNC */ int jsLoadVideo:loadVideo          (const char * ) 
 /* FUNC */ int jsClearSegments:clearSegments  (void) 
-/* FUNC */ int jsAppendVideo:appendVideo      (char * ) 
+/* FUNC */ int jsAppendVideo:appendVideo      (const char * ) 
 /* FUNC */ int jsAddSegment:addSegment        (int ,float , float ) 
 /* FUNC */ int jsSetPostProc:setPostProc      (int ,int , int ) 
 /* FUNC */ int jsGetWidth:getWidth            (void) 
@@ -10,6 +10,6 @@
 /* FUNC */ int jsGetFps1000:getFps1000        (void) 
 /* FUNC */ str jsGetVideoCodec:getVideoCodec(void) 
 /* FUNC */ int jsAudioReset:audioReset        (void) 
-/* FUNC */ int jsAudioMixer:audioMixer        (char * ) 
+/* FUNC */ int jsAudioMixer:audioMixer        (const char * ) 
 /* FUNC */ int jsClearVideoFilters:clearVideoFilters   (void) 
 

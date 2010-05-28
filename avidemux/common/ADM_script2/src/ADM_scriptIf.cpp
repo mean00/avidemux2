@@ -46,7 +46,7 @@ bool jsLog( const char *prf,...)
             scriptLogger(scriptLoggerCookie,SCRIPT_LOG_NORMAL,print_buffer);
         else
         {
-                ADM_warning("[JS]%s\n",print_buffer);
+                printf("%s",print_buffer);
         }
 
         return true;

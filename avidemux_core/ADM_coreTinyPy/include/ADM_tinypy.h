@@ -47,4 +47,22 @@ static  bool    registerLogger(pyLoggerFunc func);
 static  bool    unregisterLogger(void);
         bool    dumpBuiltin(void);
 };
+
+/**
+    \class tinyParams
+*/
+class tinyParams
+{
+protected:
+        tp_vm *tp;
+public:
+        tinyParams(tp_vm *i) {tp=i;}
+        int    asInt(void);
+        float  asFloat(void);
+        double asDouble(void);
+const   char  *asString(void);
+        int    nbParam(void);
+        void   raise(const char *fmt,...);
+        const char *typeAsString(int type);
+};
 #endif

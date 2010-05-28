@@ -84,7 +84,7 @@ bool ADM_Composer::saveAsPyScript (const char *name)
 
   qfprintf (fd,"#** Video **\n");
   qfprintf (fd,"# %02ld videos source \n", _segments.getNbRefVideos());
-  qfprintf (fd,"adm=Avidemux();\n");
+ 
 
   char *nm;
   
@@ -94,31 +94,31 @@ bool ADM_Composer::saveAsPyScript (const char *name)
         nm=ADM_cleanupPath(_segments.getRefVideo(i)->_aviheader->getMyName() );
         if(!i)
         {
-                qfprintf (fd, "adm.loadVideo(\"%s\");\n", nm);
+                qfprintf (fd, "adm.loadVideo(\"%s\")\n", nm);
         }
         else
         {
-                qfprintf (fd, "adm.appendVideo(\"%s\");\n", nm);
+                qfprintf (fd, "adm.appendVideo(\"%s\")\n", nm);
         }
         ADM_dealloc(nm);
     }
 
   qfprintf (fd,"#%02ld segments\n", _segments.getNbSegments());
-  qfprintf (fd,"adm.clearSegments();\n");
+  qfprintf (fd,"adm.clearSegments()\n");
   
  
 
     for (uint32_t i = 0; i < _segments.getNbSegments(); i++)
     {
         _SEGMENT *seg=_segments.getSegment(i);
-        qfprintf (fd, "adm.addSegment(%"LU",%"LLU",%"LLU");\n",seg->_reference,seg->_refStartTimeUs,seg->_durationUs);
+        qfprintf (fd, "adm.addSegment(%"LU",%"LLU",%"LLU")\n",seg->_reference,seg->_refStartTimeUs,seg->_durationUs);
     }
 
 // Markers
 //
 
-        qfprintf(fd,"adm.markerA=%"LLU";\n",getMarkerAPts());
-        qfprintf(fd,"adm.markerB=%"LLU";\n",getMarkerBPts());
+        qfprintf(fd,"adm.markerA=%"LLU"\n",getMarkerAPts());
+        qfprintf(fd,"adm.markerB=%"LLU"\n",getMarkerBPts());
 
 // postproc
 //___________________________
@@ -126,7 +126,7 @@ bool ADM_Composer::saveAsPyScript (const char *name)
 uint32_t pptype, ppstrength,ppswap;
         video_body->getPostProc( &pptype, &ppstrength, &ppswap);
         qfprintf(fd,"\n#** Postproc **\n");
-        qfprintf(fd,"adm.setPostProc(%d,%d,%d);\n",pptype,ppstrength,ppswap);
+        qfprintf(fd,"adm.setPostProc(%d,%d,%d)\n",pptype,ppstrength,ppswap);
 
 // Video codec
 //___________________________
@@ -137,7 +137,7 @@ uint32_t pptype, ppstrength,ppswap;
         qfprintf(fd, "adm.videoCodec(\"%s\"", videoEncoder6_GetCurrentEncoderName());
         videoEncoder6_GetConfiguration(&couples);
         dumpConf(fd,couples);
-        qfprintf(fd,");\n");
+        qfprintf(fd,")\n");
 
 // Video filters....
 //______________________________________________
@@ -152,7 +152,7 @@ uint32_t pptype, ppstrength,ppswap;
         CONFcouple *c=NULL;
         ADM_vf_getConfigurationFromIndex(i,&c);
         dumpConf(fd,c);
-        qfprintf(fd, ");\n");
+        qfprintf(fd, ")\n");
     }
 
 
@@ -165,7 +165,7 @@ uint32_t pptype, ppstrength,ppswap;
    uint32_t delay,bitrate;
    
    qfprintf(fd,"\n#** Audio **\n");
-   qfprintf(fd,"adm.audioReset();\n");
+   qfprintf(fd,"adm.audioReset()\n");
 #if 0
    // External audio ?
         char *audioName;
@@ -177,7 +177,7 @@ uint32_t pptype, ppstrength,ppswap;
         if(source!=AudioAvi)
         {
                 char *nm=ADM_cleanupPath(audioName);
-                qfprintf(fd,"app.audio.load(\"%s\",\"%s\");\n", audioSourceFromEnum(source),nm); 
+                qfprintf(fd,"app.audio.load(\"%s\",\"%s\")\n", audioSourceFromEnum(source),nm); 
                 ADM_dealloc(nm);
         }
         else 
@@ -185,7 +185,7 @@ uint32_t pptype, ppstrength,ppswap;
           int source;
                source=video_body->getCurrentAudioStreamNumber(0);
                if(source)
-                        qfprintf(fd,"app.audio.setTrack(%d);\n", source); 
+                        qfprintf(fd,"app.audio.setTrack(%d)\n", source); 
                         
         }
 #endif
@@ -193,11 +193,11 @@ uint32_t pptype, ppstrength,ppswap;
    getAudioExtraConf(&bitrate,&couples);
     qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(),bitrate); 
     dumpConf(fd,couples);
-    qfprintf(fd,");\n");
+    qfprintf(fd,")\n");
 
 
     uint32_t x=audioFilterGetResample();
-    if(x) qfprintf(fd,"adm.audioResample=%u;\n",audioFilterGetResample());
+    if(x) qfprintf(fd,"adm.audioResample=%u\n",audioFilterGetResample());
 
     
 //   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
@@ -205,7 +205,7 @@ uint32_t pptype, ppstrength,ppswap;
 //   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
 // if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
    if(CHANNEL_INVALID!=audioFilterGetMixer())
-        qfprintf(fd,"adm.audioMixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
+        qfprintf(fd,"adm.audioMixer(\"%s\")\n",AudioMixerIdToString(audioFilterGetMixer()));
 
    
 
@@ -213,8 +213,8 @@ uint32_t pptype, ppstrength,ppswap;
         switch(audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film=1;\n");break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1;\n");break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film=1\n");break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1\n");break;
                 default:ADM_assert(0);
         }
    
@@ -230,10 +230,8 @@ uint32_t pptype, ppstrength,ppswap;
         
         qfprintf(fd,"adm.setContainer(\"%s\"",containerName); 
         dumpConf(fd,containerConf);
-        qfprintf(fd,");\n");
+        qfprintf(fd,")\n");
   // -------- /Muxer -----------------------
-        qfprintf(fd,"setSuccess(%d);\n",1);
-        qfprintf(fd,"#adm.Exit();\n");
         qfprintf(fd,"\n#End of script\n");
         // All done
         qfclose (fd);

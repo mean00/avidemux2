@@ -43,7 +43,7 @@ static bool initPy(tinyPy *py)
 {
     py->init();
     //py->registerFuncs("adm",adm_functions);
-    py->registerClass("Avidemux",initClasspyAdm);
+    py->registerClass("adm",initClasspyAdm);
     py->registerClass("Editor",initClasspyEditor);
     tinyPy::registerLogger(pyLogger);
     return true;

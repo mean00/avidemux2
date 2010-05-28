@@ -1,6 +1,6 @@
-int  loadVideo (char * );
+int  loadVideo (const char * );
 int  clearSegments (void);
-int  appendVideo (char * );
+int  appendVideo (const char * );
 int  addSegment (int ,float , float );
 int  setPostProc (int ,int , int );
 int  getWidth (void);
@@ -8,5 +8,5 @@ int  getHeight (void);
 int  getFps1000 (void);
 str  getVideoCodec (void);
 int  audioReset (void);
-int  audioMixer (char * );
+int  audioMixer (const char * );
 int  clearVideoFilters (void);
