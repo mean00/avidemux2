@@ -4,6 +4,7 @@ SET(ADM_script_SRCS
         ADM_scriptAvidemux.cpp
         ADM_scriptAvidemuxInfo.cpp
         ADM_scriptAudio.cpp
+        ADM_scriptUtils.cpp
 )
 
 

@@ -12,4 +12,8 @@
 /* FUNC */ int jsAudioReset:audioReset        (void) 
 /* FUNC */ int jsAudioMixer:audioMixer        (const char * ) 
 /* FUNC */ int jsClearVideoFilters:clearVideoFilters   (void) 
-
+#
+#
+#              cname:pyname
+/* FUNC */ int scriptSetVideoCodec:videoCodec(const char *,couples) 
+/* FUNC */ int scriptSetAudioCodec:audioCodec(const char *,int,couples) 

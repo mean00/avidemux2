@@ -27,6 +27,7 @@
 #include "ADM_videoFilters.h"
 #include "GUI_ui.h"
 #include "ADM_scriptCommon.h"
+#include "ADM_scriptIf.h"
 extern ADM_Composer *video_body;
 bool A_setVideoCodec(const char *nm);
 /**
@@ -44,7 +45,27 @@ bool A_setVideoCodec(const char *nm)
     UI_setVideoCodec(idx);
     return true;
 }
-
+/**
+    \fn scriptSetVideoCodec
+*/
+int     scriptSetVideoCodec(const char *codec,CONFcouple *c)
+{       
+        bool r=true;
+        if(A_setVideoCodec(codec)==false)
+        {
+            jsLog("Could not select codec %s\n",codec);
+            r=false;
+        }else
+        {        
+            if(c)
+            {
+                r=videoEncoder6_SetConfiguration(c);
+            }
+        }
+        if(c)
+            delete c;
+        return r;
+}
 /**
     \fn jsSetPostProc
 */

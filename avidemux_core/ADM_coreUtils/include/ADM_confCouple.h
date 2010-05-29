@@ -54,4 +54,5 @@ class CONFcouple
 			void dump(void );
 
 };
+bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv);
 #endif

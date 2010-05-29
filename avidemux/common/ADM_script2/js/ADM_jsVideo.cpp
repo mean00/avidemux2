@@ -45,18 +45,9 @@ JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
                 return JS_FALSE;
         }
         char *codec=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-        // Set codec.
-        
-        if(A_setVideoCodec(codec)==false)
-        {
-            jsLog("Could not select codec %s\n",codec);
-            return JS_FALSE;
-        }
         CONFcouple *c;
         jsArgToConfCouple(argc-1,&c,argv+1);
-        *rval = BOOLEAN_TO_JSVAL( videoEncoder6_SetConfiguration(c));
-        jsLog("Selected codec %s\n",codec);
-        if(c) delete c;
+        *rval = BOOLEAN_TO_JSVAL( scriptSetVideoCodec(codec,c));
         return JS_TRUE;
 }// end Codec
 

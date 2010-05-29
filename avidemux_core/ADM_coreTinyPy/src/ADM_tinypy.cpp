@@ -211,7 +211,7 @@ tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
     return (int)obj.number.val;
 }
 /**
-   \fn  asInt
+   \fn  asFloat
 */
 float    tinyParams::asFloat(void)
 {
@@ -219,7 +219,7 @@ float    tinyParams::asFloat(void)
     return (float)obj.number.val;
 }
 /**
-   \fn  asInt
+   \fn  asDouble
 */
 
 double tinyParams::asDouble(void)
@@ -228,7 +228,7 @@ double tinyParams::asDouble(void)
     return (double)obj.number.val;
 }
 /**
-   \fn  asInt
+   \fn  asString
 */
 
 const char *tinyParams::asString(void)
@@ -237,7 +237,8 @@ const char *tinyParams::asString(void)
     return obj.string.val;
 }
 /**
-   \fn  asInt
+   \fn  typeAsString
+    \brief return the type given as a string
 */
 
 const char *tinyParams::typeAsString(int type)
@@ -254,7 +255,8 @@ const char *tinyParams::typeAsString(int type)
     return "???";
 }
 /**
-
+    \fn raise
+    \brief raise an exception
 */
 void tinyParams::raise(const char *fmt,...)
 {
@@ -267,5 +269,20 @@ char print_buffer[1024];
     ADM_error("%s",print_buffer);
     _tp_raise(tp,tp_None);
 }
-
+/**
+    \fn makeCouples
+    \brief convert couples into char *first and *couples c, c can be null
+*/
+bool    tinyParams::makeCouples(CONFcouple **c)
+{
+    int nb=nbParamsLeft();
+    if(!nb)
+    {
+        *c=NULL;
+        return true;
+    }
+    const char *s[nb];
+    for(int i=0;i<nb;i++) s[i]=asString();
+    return stringsToConfCouple(nb,c,s);
+}
 // EOF

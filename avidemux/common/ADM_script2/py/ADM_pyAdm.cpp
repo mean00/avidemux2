@@ -22,6 +22,7 @@
 #include "A_functions.h"
 #include "ADM_scriptCommon.h"
 #include "ADM_scriptVideo.h"
+#include "ADM_scriptAudio.h"
 #include "ADM_scriptEditor.h"
 
 #include "adm_gen.cpp"

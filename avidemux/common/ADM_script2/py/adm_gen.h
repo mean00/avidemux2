@@ -10,3 +10,5 @@ str  getVideoCodec (void);
 int  audioReset (void);
 int  audioMixer (const char * );
 int  clearVideoFilters (void);
+int  videoCodec (const char *,couples);
+int  audioCodec (const char *,int,couples);

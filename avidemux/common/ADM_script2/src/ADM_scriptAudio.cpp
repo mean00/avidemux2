@@ -24,7 +24,7 @@
 #include "ADM_audioFilterInterface.h"
 #include "audioEncoderApi.h"
 #include "ADM_scriptCommon.h"
-extern ADM_Composer *video_body;
+#include "ADM_scriptAudio.h"
 /**
     \fn int jsAudioReset(void);
 */
@@ -54,5 +54,28 @@ int32_t jsGetResample(void)
 void    jsSetResample(int32_t fq)
 {
 
+}
+/**
+
+*/
+/**
+    \fn scriptSetAudioCodec
+*/
+int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c)
+{ 
+        int r=true;        
+        // First search the codec by its name
+        if(!audioCodecSetByName(codec))
+        {
+                r=false;
+                jsLogError("Cannot set audio codec %s\n",codec);
+        }
+        else
+        {
+            r=setAudioExtraConf(bitrate,c);
+            
+        }
+        if(c) delete c;
+        return r;
 }
 //EOF

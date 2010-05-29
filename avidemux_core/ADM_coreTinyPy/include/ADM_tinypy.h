@@ -16,6 +16,7 @@
 #ifndef ADM_TINYPY_H
 #define ADM_TINYPY_H
 #include "tinypy.h"
+#include "ADM_confCouple.h"
 /**
     \struct tyFunc
 */
@@ -33,7 +34,8 @@ typedef tp_obj (pyRegisterClass)(tp_vm *vm);
 class tinyPy 
 {
 protected:
-        void *instance;
+        void    *instance;
+        
 public:
                 tinyPy(void);
         bool    init(void);
@@ -46,6 +48,8 @@ public:
 static  bool    registerLogger(pyLoggerFunc func);
 static  bool    unregisterLogger(void);
         bool    dumpBuiltin(void);
+       
+        
 };
 
 /**
@@ -55,6 +59,7 @@ class tinyParams
 {
 protected:
         tp_vm *tp;
+        int     nbParamsLeft(void) {return tp->params.list.val->len;}
 public:
         tinyParams(tp_vm *i) {tp=i;}
         int    asInt(void);
@@ -64,5 +69,6 @@ const   char  *asString(void);
         int    nbParam(void);
         void   raise(const char *fmt,...);
         const char *typeAsString(int type);
+        bool   makeCouples(CONFcouple **c);
 };
 #endif

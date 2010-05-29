@@ -1,6 +1,7 @@
+
 /**
-    \file ADM_jsVideo
-    \brief Video codec etc..
+    \file  ADM_scriptAudio
+    \brief Audio codec etc..
 */
 
 /***************************************************************************
@@ -11,17 +12,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_JS_VIDEO_H
-#define ADM_JS_VIDEO_H
+#ifndef ADM_SCRIPT_AUDIO_H
+#define ADM_SCRIPT_AUDIO_H
+
 #include "ADM_confCouple.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-int     jsSetPostProc (int a,int b, int c);
-int     scriptSetVideoCodec(const char *codec,CONFcouple *c);
-
+int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c);
 #ifdef __cplusplus
 };
 #endif

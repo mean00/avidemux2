@@ -1,0 +1,278 @@
+#
+# Generate glue to hook C functions to tinyPy static classes
+# returnvalue FUNC param
+#       param [int, float, void, str, couples]
+#                        str = const char *
+#                        couples =  confCouple *c
+#
+
+
+use strict;
+my $input;
+my $output;
+my $headerFile;
+my $line;
+my $glueprefix="zzpy_";
+my $functionPrefix="";
+my @allFuncs;
+my $className;
+my $cookieName;
+my $staticClass=0;
+my $nbCouples=0;
+#
+#
+#
+sub genReturn
+{
+        my $retType=shift;
+        if($retType=~m/int/)
+        {
+                return "return tp_number(r);";
+        }
+        if($retType=~m/float/)
+        {
+                return "return tp_number(r);";
+        }
+        if($retType=~m/void/)
+        {
+                return "";
+        }
+         if($retType=~m/str/)
+        {
+                return "return tp_string(r);";
+        }
+return "???? $retType";
+}
+#
+#
+#
+sub castFrom
+{
+        my $type=shift;
+        if($type=~m/^const char/)
+        {
+                return "pm.asString()";
+        }
+        if($type=~m/^int/)
+        {
+                return "pm.asDouble()";
+        }
+        if($type=~m/^float/)
+        {
+                return "pm.asFloat()";
+        }
+        print ">>>>>>>>>> <$type> unknown\n";
+        return "????";
+
+}
+#
+# Generate the locals / wrapping for the parameters
+#
+sub genParam
+{
+        my $num=shift;
+        my $type=shift;
+        my $r=1;
+        if($type=~m/couples/)
+        {
+                print OUTPUT "CONFcouple *p".$num."=NULL;\n";
+                print OUTPUT "pm.makeCouples(&p".$num.");\n";
+                $r=0;
+        }else
+        {
+                print OUTPUT "$type p".$num."=";
+                print OUTPUT castFrom($type);
+                print OUTPUT ";\n"; 
+        } 
+        return $r;
+}
+sub processClass
+{
+        my $proto=shift;
+        
+        $proto=~s%.*\*/%%g;
+        $proto=~s/ //g;
+        #print "**$proto**\n";
+        ($className,$cookieName)=split ":",$proto; 
+        print "Processing class $className (with cookie=$cookieName)\n"; 
+        if($cookieName=~m/void/)
+        {
+                $staticClass=1;
+        }
+        else
+        {
+                $staticClass=0;
+        }
+
+}
+#
+# Process a function declaration and write the glue code to do tinypy<->function call
+#
+sub processFunc
+{
+        my $proto=shift;
+        my $args=$proto;
+        my @params;
+        my $retType=$proto;;
+        my $func=$proto;;
+        my $cfunc;
+        $args=~s/^.*\(//g;
+        $args=~s/\).*$//g;
+        #print "args => $args\n";
+        @params=split ",",$args;
+        #print "params -> @params\n";
+        # Get return type...
+        $retType=~s/^ *//g;
+        $retType=~s/ .*$//g;
+        # get functioName
+        $func=~s/ *\(.*$//g;
+        $func=~s/^.* //g;
+        ($cfunc,$func)=split ":",$func;
+        print OUTPUT "//$retType  $cfunc <@params>\n";
+        # Write glue code
+        print OUTPUT "tp_obj ".$glueprefix.$func."(TP)\n";
+        push(@allFuncs,$func);
+        print OUTPUT "{\n";
+        my $nb=scalar(@params);
+        my $i;
+
+
+        for($i=0;$i<$nb;$i++)
+        {
+                $params[$i]=~s/^ *//g; # Remove " " at the beginning if any
+                $params[$i]=~s/ *$//g; # Remove " " at the end if any
+        }
+        if($params[0]=~m/^void$/)
+        {
+                $nb=0;
+        }
+        print " New function : $retType,$func,<@params>\n";
+        print HEADER "$retType  $functionPrefix".$func." ($args);\n";
+        #
+        if($nb)
+        {
+                print OUTPUT "tinyParams pm(tp);\n";
+                #print OUTPUT "if(pm.getNbParams()!=$nb) pm.raise(\"".$func."Bad number of parameters, wanted ".$nb." and got %d\",pm.getNbParams());\n";
+        }
+
+        for($i=0;$i<$nb;$i++)
+        {
+                if(!genParam($i,$params[$i]))  # all params consumed
+                {
+                        #$i=$nb;
+                }
+        }
+        # Call real function
+        if(!($retType=~m/^void$/))
+        {
+                if($retType=~m/str/)
+                {
+                print OUTPUT "char *r=";
+                }else
+                {
+                print OUTPUT $retType." r=";
+                }
+        }
+        print OUTPUT $functionPrefix.$cfunc."(";
+        for($i=0;$i<$nb;$i++)
+        {
+                if($i)
+                {
+                        print OUTPUT ",";
+                }
+                print OUTPUT "p".$i;
+        } 
+        print OUTPUT "); \n";
+        # Cast r to pyobj
+        print OUTPUT genReturn($retType);
+        print OUTPUT "\n}\n";
+
+
+}
+
+
+if(scalar(@ARGV)!=1)
+{
+        die("admPy inputfile\n");
+}
+$input=$ARGV[0];
+$output=$input;
+$output=~s/\..*$//g;
+my $thisfile=$output;
+$thisfile=~s/^.*\///g;
+$headerFile=$output."_gen.h";
+$output=$output."_gen.cpp";
+print "Processing $input=>$output\n";
+open(OUTPUT,">$output") or die("Cannot open $output");
+print OUTPUT "// Generated by admPyClass.pl do not edit !\n";
+##
+## Main Loop
+##
+# 1 grab all functions
+open(INPUT,$input) or die("Cannot open $input");
+close(INPUT);
+# Process them
+open(INPUT,$input) or die("Cannot open $input");
+open(HEADER,">$headerFile") or die("Cannot open $headerFile");
+while($line=<INPUT>)
+{
+        chomp($line);
+        if($line=~m/^#/)
+        {
+        }
+        else
+        {
+            if($line=~m/\* FUNC \*/)
+            {
+                my $proto=$line;
+                # Remove header...
+                # Remove tail
+                $line=~s/^.*\*\///g;
+                $line=~s/\/\/.*$//g;
+                processFunc($line);
+
+            } elsif($line =~m/\/* CLASS \*/)
+                {
+                        processClass($line);
+                }
+        }
+}
+# gen class array
+
+
+# gen class xctor
+        print OUTPUT "static tp_obj myCtor".$className."(tp_vm *vm)\n";
+        print OUTPUT "{\n";
+        if($staticClass==0)
+        {
+                #todo allocate cookie
+        }
+        print OUTPUT "}\n";
+  
+#
+my $nbFunc=scalar(@allFuncs);
+my $i;
+        print OUTPUT "tp_obj initClass".$className."(tp_vm *vm)\n";
+        print OUTPUT "{\n";
+        print OUTPUT " tp_obj myClass=tp_class(vm);\n";
+        print OUTPUT " tp_set(vm,myClass,tp_string(\"__init__\"),tp_fnc(vm,myCtor".$className."));\n";
+        for($i=0;$i<$nbFunc;$i++)
+        {
+                my $line=$allFuncs[$i];
+                #print "Function : $line\n";
+                my $funcName;
+                my $funcProto;
+                $funcName="\"".$line."\"";
+                $funcProto=$glueprefix.$line;
+
+                print OUTPUT " tp_set(vm,myClass,tp_string($funcName),tp_fnc(vm,$funcProto));\n";
+        }
+        print OUTPUT " return myClass;\n";
+        print OUTPUT "}\n";
+        #print OUTPUT "{$funcName,$funcProto},\n";
+
+
+close(INPUT);
+close(OUTPUT);
+close(HEADER);
+print "done\n.";

@@ -24,10 +24,10 @@
 #include "GUI_ui.h"
 #include "ADM_audioFilterInterface.h"
 #include "audioEncoderApi.h"
-extern ADM_Composer *video_body;
+#include "ADM_scriptAudio.h"
 
 /**
-    \fn 
+    \fn jsAudioCodec
 */  
 extern "C" int   jsAudioCodec(const char *a,const char **b) {return 0;}
 JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -40,32 +40,17 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         for(int i=2;i<argc;i++)  if(JSVAL_IS_STRING(argv[i]) == false) return JS_FALSE;
 
         // Get Codec...
-        char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-        ADM_LowerCase(name);
-        
-        // First search the codec by its name
-        if(!audioCodecSetByName(name))
-        {
-                *rval = BOOLEAN_TO_JSVAL(false);
-                jsLogError("Cannot set audio codec %s\n",name);
-        }
-        else
-        {
-            // begin set bitrate
-            uint32_t bitrate=JSVAL_TO_INT(argv[1]);
-            // Construct couples
-            CONFcouple *c=NULL;
-            if(argc>2)
+        char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));     
+        // begin set bitrate
+        uint32_t bitrate=JSVAL_TO_INT(argv[1]);
+        // Construct couples
+        CONFcouple *c=NULL;
+        if(argc>2)
             {
                 int nb=argc-2;
                 jsArgToConfCouple( nb,&c,  argv+2);
             }
-            *rval = BOOLEAN_TO_JSVAL(setAudioExtraConf(bitrate,c));
-            if(c) delete c;
-        }
-
-        // end set bitrate
-        
+        *rval = BOOLEAN_TO_JSVAL(scriptSetAudioCodec(name,bitrate,c));        
         return JS_TRUE;
 }
 //EOF
