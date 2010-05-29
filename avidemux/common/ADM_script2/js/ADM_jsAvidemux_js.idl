@@ -5,34 +5,38 @@ void jsAvidemux(void)
 {
         printf("Constructor invoked\n");
 }
+static int dummy_scriptVideoCodec(char *a) {return 0;}
+static int dummy_scriptVideoFilter(char *a) {return 0;}
+static int dummy_scriptAudioCodec(char *a) {return 0;}
+static int dummy_scriptSetContainer(char *a) {return 0;}
 %}
         /*            JSFUNC      C FUNC  PARAM     */
 class adm
 {
-        function int loadVideo      : jsLoadVideo (cstring ) <static>;
-        function int clearSegments  : jsClearSegments () <static>;
-        function int appendVideo    : jsAppendVideo (cstring ) <static>;
-        function int addSegment     : jsAddSegment (int ,double , double ) <static>;
-        function int setPostProc    : jsSetPostProc (int ,int , int ) <static>;
-        function int getWidth       : jsGetWidth ( ) <static>;
-        function int getHeight      : jsGetHeight ( ) <static>;
-        function int getFps1000     : jsGetFps1000 ( ) <static>;
-     function cstring getVideoCodec : jsGetVideoCodec ( ) <static>;
+        function int loadVideo      : scriptLoadVideo (cstring ) <static>;
+        function int clearSegments  : scriptClearSegments () <static>;
+        function int appendVideo    : scriptAppendVideo (cstring ) <static>;
+        function int addSegment     : scriptAddSegment (int ,double , double ) <static>;
+        function int setPostProc    : scriptSetPostProc (int ,int , int ) <static>;
+        function int getWidth       : scriptGetWidth ( ) <static>;
+        function int getHeight      : scriptGetHeight ( ) <static>;
+        function int getFps1000     : scriptGetFps1000 ( ) <static>;
+     function cstring getVideoCodec : scriptGetVideoCodec ( ) <static>;
         /*            JSFUNC                 C FUNC           PARAM     */
-        function int audioReset     : jsAudioReset () <static>;
-        function int audioMixer     : jsAudioMixer (cstring ) <static>;
+        function int audioReset     : scriptAudioReset () <static>;
+        function int audioMixer     : scriptAudioMixer (cstring ) <static>;
         /*            JSFUNC                 C FUNC           PARAM     */
-        function int clearVideoFilters   : jsClearVideoFilters() <static>;
+        function int clearVideoFilters   : scriptClearVideoFilters() <static>;
         
 /* Override as jsapigen cannot handle multiple args the way we need it to */
-        function int videoCodec_ignore     : jsVideoCodec(cstring)     <static>;
-        function int addVideoFilter_ignore : jsVideoFilter(cstring)    <static>;
-        function int audioCodec_ignore     : jsAudioCodec(cstring)     <static>;
-        function int setContainer_ignore   : jsSetContainer(cstring)   <static>;
+        function int videoCodec_ignore     : dummy_scriptVideoCodec(cstring)     <static>;
+        function int addVideoFilter_ignore : dummy_scriptVideoFilter(cstring)    <static>;
+        function int audioCodec_ignore     : dummy_scriptAudioCodec(cstring)     <static>;
+        function int setContainer_ignore   : dummy_scriptSetContainer(cstring)   <static>;
 /* Properties */
-        property double markerA            : jsGetMarkerA,jsSetMarkerA <static>;
-        property double markerB            : jsGetMarkerB,jsSetMarkerB <static>;
-        property int    audioResample      : jsGetResample,jsSetResample <static>;
+        property double markerA            : scriptGetMarkerA,scriptSetMarkerA <static>;
+        property double markerB            : scriptGetMarkerB,scriptSetMarkerB <static>;
+        property int    audioResample      : scriptGetResample,scriptSetResample <static>;
         construct                          : jsAvidemux  ( ) <static>     ; 
 };
 

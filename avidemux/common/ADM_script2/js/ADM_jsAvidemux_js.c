@@ -19,6 +19,10 @@ void jsAvidemux(void)
 {
         printf("Constructor invoked\n");
 }
+static int dummy_scriptVideoCodec(char *a) {return 0;}
+static int dummy_scriptVideoFilter(char *a) {return 0;}
+static int dummy_scriptAudioCodec(char *a) {return 0;}
+static int dummy_scriptSetContainer(char *a) {return 0;}
 
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>
@@ -58,7 +62,7 @@ jjadmmarkerA_get(JSContext *cx, JSObject *obj, jsval id, jsval *val)
     if (!JS_EnterLocalRootScope(cx)) {
         goto do_return;
     }
-    var2 = jsGetMarkerA();
+    var2 = scriptGetMarkerA();
     if (JS_NewNumberValue(cx, var2, &var5) != JS_TRUE) {
         goto do_return;
     }
@@ -89,7 +93,7 @@ jjadmmarkerA_set(JSContext *cx, JSObject *obj, jsval id, jsval *val)
         goto do_return;
     }
     var7 = (double)var11;
-    jsSetMarkerA(var7);
+    scriptSetMarkerA(var7);
     var6 = JS_TRUE;
     do_return:
     JS_LeaveLocalRootScope(cx);
@@ -107,7 +111,7 @@ jjadmmarkerB_get(JSContext *cx, JSObject *obj, jsval id, jsval *val)
     if (!JS_EnterLocalRootScope(cx)) {
         goto do_return;
     }
-    var13 = jsGetMarkerB();
+    var13 = scriptGetMarkerB();
     if (JS_NewNumberValue(cx, var13, &var16) != JS_TRUE) {
         goto do_return;
     }
@@ -138,7 +142,7 @@ jjadmmarkerB_set(JSContext *cx, JSObject *obj, jsval id, jsval *val)
         goto do_return;
     }
     var18 = (double)var22;
-    jsSetMarkerB(var18);
+    scriptSetMarkerB(var18);
     var17 = JS_TRUE;
     do_return:
     JS_LeaveLocalRootScope(cx);
@@ -156,7 +160,7 @@ jjadmaudioResample_get(JSContext *cx, JSObject *obj, jsval id, jsval *val)
     if (!JS_EnterLocalRootScope(cx)) {
         goto do_return;
     }
-    var24 = jsGetResample();
+    var24 = scriptGetResample();
     if (JS_NewNumberValue(cx, var24, &var27) != JS_TRUE) {
         goto do_return;
     }
@@ -187,7 +191,7 @@ jjadmaudioResample_set(JSContext *cx, JSObject *obj, jsval id, jsval *val)
         goto do_return;
     }
     var29 = (int)var33;
-    jsSetResample(var29);
+    scriptSetResample(var29);
     var28 = JS_TRUE;
     do_return:
     JS_LeaveLocalRootScope(cx);
@@ -266,7 +270,7 @@ jjadmloadVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
         var40[var44] = '\0';
     }
     }
-    var36 = jsLoadVideo(var40);
+    var36 = scriptLoadVideo(var40);
     if (JS_NewNumberValue(cx, var36, &var49) != JS_TRUE) {
         goto do_return;
     }
@@ -298,7 +302,7 @@ jjadmclearSegments(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
     var50 = JS_FALSE;
     var51 = obj;
     var55 = argc;
-    var52 = jsClearSegments();
+    var52 = scriptClearSegments();
     if (JS_NewNumberValue(cx, var52, &var56) != JS_TRUE) {
         goto do_return;
     }
@@ -383,7 +387,7 @@ jjadmappendVideo(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
         var63[var67] = '\0';
     }
     }
-    var59 = jsAppendVideo(var63);
+    var59 = scriptAppendVideo(var63);
     if (JS_NewNumberValue(cx, var59, &var72) != JS_TRUE) {
         goto do_return;
     }
@@ -466,7 +470,7 @@ jjadmaddSegment(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     }
     var81 = (double)var90;
     }
-    var75 = jsAddSegment(var79, var80, var81);
+    var75 = scriptAddSegment(var79, var80, var81);
     if (JS_NewNumberValue(cx, var75, &var91) != JS_TRUE) {
         goto do_return;
     }
@@ -544,7 +548,7 @@ jjadmsetPostProc(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *r
     }
     var100 = (int)var109;
     }
-    var94 = jsSetPostProc(var98, var99, var100);
+    var94 = scriptSetPostProc(var98, var99, var100);
     if (JS_NewNumberValue(cx, var94, &var110) != JS_TRUE) {
         goto do_return;
     }
@@ -571,7 +575,7 @@ jjadmgetWidth(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
     var111 = JS_FALSE;
     var112 = obj;
     var116 = argc;
-    var113 = jsGetWidth();
+    var113 = scriptGetWidth();
     if (JS_NewNumberValue(cx, var113, &var117) != JS_TRUE) {
         goto do_return;
     }
@@ -598,7 +602,7 @@ jjadmgetHeight(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var118 = JS_FALSE;
     var119 = obj;
     var123 = argc;
-    var120 = jsGetHeight();
+    var120 = scriptGetHeight();
     if (JS_NewNumberValue(cx, var120, &var124) != JS_TRUE) {
         goto do_return;
     }
@@ -625,7 +629,7 @@ jjadmgetFps1000(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var125 = JS_FALSE;
     var126 = obj;
     var130 = argc;
-    var127 = jsGetFps1000();
+    var127 = scriptGetFps1000();
     if (JS_NewNumberValue(cx, var127, &var131) != JS_TRUE) {
         goto do_return;
     }
@@ -660,7 +664,7 @@ jjadmgetVideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval 
     var132 = JS_FALSE;
     var133 = obj;
     var137 = argc;
-    var134 = jsGetVideoCodec();
+    var134 = scriptGetVideoCodec();
     if (var134) {
     var139 = JS_NewStringCopyZ(cx, var134);
     if (!var139) {
@@ -700,7 +704,7 @@ jjadmaudioReset(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var141 = JS_FALSE;
     var142 = obj;
     var146 = argc;
-    var143 = jsAudioReset();
+    var143 = scriptAudioReset();
     if (JS_NewNumberValue(cx, var143, &var147) != JS_TRUE) {
         goto do_return;
     }
@@ -785,7 +789,7 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
         var154[var158] = '\0';
     }
     }
-    var150 = jsAudioMixer(var154);
+    var150 = scriptAudioMixer(var154);
     if (JS_NewNumberValue(cx, var150, &var163) != JS_TRUE) {
         goto do_return;
     }
@@ -817,7 +821,7 @@ jjadmclearVideoFilters(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
     var164 = JS_FALSE;
     var165 = obj;
     var169 = argc;
-    var166 = jsClearVideoFilters();
+    var166 = scriptClearVideoFilters();
     if (JS_NewNumberValue(cx, var166, &var170) != JS_TRUE) {
         goto do_return;
     }
@@ -902,7 +906,7 @@ jjadmvideoCodec_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         var177[var181] = '\0';
     }
     }
-    var173 = jsVideoCodec(var177);
+    var173 = dummy_scriptVideoCodec(var177);
     if (JS_NewNumberValue(cx, var173, &var186) != JS_TRUE) {
         goto do_return;
     }
@@ -992,7 +996,7 @@ jjadmaddVideoFilter_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
         var193[var197] = '\0';
     }
     }
-    var189 = jsVideoFilter(var193);
+    var189 = dummy_scriptVideoFilter(var193);
     if (JS_NewNumberValue(cx, var189, &var202) != JS_TRUE) {
         goto do_return;
     }
@@ -1082,7 +1086,7 @@ jjadmaudioCodec_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
         var209[var213] = '\0';
     }
     }
-    var205 = jsAudioCodec(var209);
+    var205 = dummy_scriptAudioCodec(var209);
     if (JS_NewNumberValue(cx, var205, &var218) != JS_TRUE) {
         goto do_return;
     }
@@ -1172,7 +1176,7 @@ jjadmsetContainer_ignore(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
         var225[var229] = '\0';
     }
     }
-    var221 = jsSetContainer(var225);
+    var221 = dummy_scriptSetContainer(var225);
     if (JS_NewNumberValue(cx, var221, &var234) != JS_TRUE) {
         goto do_return;
     }

@@ -21,7 +21,7 @@ extern ADM_Composer *video_body;
 /**
     \fn jsGetWidth
 */
-int jsGetWidth ( void)
+int scriptGetWidth ( void)
 {
 aviInfo info;
         video_body->getVideoInfo(&info);
@@ -30,7 +30,7 @@ aviInfo info;
 /**
     \fn jsGetHeight
 */
-int jsGetHeight ( void)
+int scriptGetHeight ( void)
 {
 aviInfo info;
         video_body->getVideoInfo(&info);
@@ -39,7 +39,7 @@ aviInfo info;
 /**
     \fn jsGetFps1000
 */
-int jsGetFps1000 ( void)
+int scriptGetFps1000 ( void)
 {
 aviInfo info;
         video_body->getVideoInfo(&info);
@@ -48,7 +48,7 @@ aviInfo info;
 /**
     \fn jsGetVideoCodec
 */
-char *jsGetVideoCodec ( void)
+char *scriptGetVideoCodec ( void)
 {
 uint32_t fcc;
 aviInfo info;

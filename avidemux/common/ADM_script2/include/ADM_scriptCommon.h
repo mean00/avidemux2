@@ -11,32 +11,39 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifndef ADM_SCRIPT_COMMON
+#define ADM_SCRIPT_COMMON
+#include "ADM_inttype.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int jsLoadVideo(const char *c);
-int jsAppendVideo(const char *c);
-int jsClearSegments(void);
-int jsAddSegment(int ref, double start, double duration);
-int jsAudioReset(void);
-int jsAudioMixer(const char *s);
+int scriptLoadVideo(const char *c);
+int scriptAppendVideo(const char *c);
+int scriptClearSegments(void);
+int scriptAddSegment(int ref, double start, double duration);
+int scriptAudioReset(void);
+int scriptAudioMixer(const char *s);
 // Fq
-int32_t jsGetResample(void);
-void    jsSetResample(int32_t fq);
+int32_t scriptGetResample(void);
+void    scriptSetResample(int32_t fq);
 // Markers
-double jsGetMarkerA(void);
-double jsGetMarkerB(void);
-void   jsSetMarkerA(double a);
-void   jsSetMarkerB(double b);
+double scriptGetMarkerA(void);
+double scriptGetMarkerB(void);
+void   scriptSetMarkerA(double a);
+void   scriptSetMarkerB(double b);
 //
-int    jsClearVideoFilters();
+int    scriptClearVideoFilters();
 // Info
-int jsGetWidth ( void) ;
-int jsGetHeight ( void) ;
-int jsGetFps1000 ( void) ;
+int scriptGetWidth ( void) ;
+int scriptGetHeight ( void) ;
+int scriptGetFps1000 ( void) ;
 char *jsGetVideoCodec ( void) ;
+// Misc
+int scriptSetPostProc (int a,int b, int c);
+char *scriptGetVideoCodec ( void);
 
 #ifdef __cplusplus
 };
 #endif 
+#endif

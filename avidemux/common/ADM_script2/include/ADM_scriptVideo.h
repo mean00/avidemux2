@@ -13,16 +13,18 @@
  ***************************************************************************/
 #ifndef ADM_JS_VIDEO_H
 #define ADM_JS_VIDEO_H
-#include "ADM_confCouple.h"
 #ifdef __cplusplus
+#include "ADM_confCouple.h"
 extern "C" {
+#else
 #endif
 
 
-int     jsSetPostProc (int a,int b, int c);
+int     scriptSetPostProc (int a,int b, int c);
+#ifdef __cplusplus
 int     scriptSetVideoCodec(const char *codec,CONFcouple *c);
 int     scriptAddVideoFilter(const char *filter,CONFcouple *c);
-
+#endif
 #ifdef __cplusplus
 };
 #endif

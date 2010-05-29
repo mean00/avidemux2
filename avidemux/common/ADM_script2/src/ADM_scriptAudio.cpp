@@ -28,7 +28,7 @@
 /**
     \fn int jsAudioReset(void);
 */
-int jsAudioReset (void)
+int scriptAudioReset (void)
 {
     audioFilterReset();
     return 1;
@@ -36,7 +36,7 @@ int jsAudioReset (void)
 /**
     \fn jsAudioMixer
 */
-int jsAudioMixer(const char *s)
+int scriptAudioMixer(const char *s)
 {
     CHANNEL_CONF c=AudioMuxerStringToId(s);
     return audioFilterSetMixer(c);
@@ -44,14 +44,14 @@ int jsAudioMixer(const char *s)
 /**
     \fn jsGetResample
 */
-int32_t jsGetResample(void)
+int32_t scriptGetResample(void)
 {
     return 0;
 }
 /**
     \fn jsSetResample
 */
-void    jsSetResample(int32_t fq)
+void    scriptSetResample(int32_t fq)
 {
 
 }

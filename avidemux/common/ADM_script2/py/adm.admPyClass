@@ -1,17 +1,17 @@
 #              cname:pyname
 /* CLASS */ pyAdm : void
-/* FUNC */ int jsLoadVideo:loadVideo          (const char * ) 
-/* FUNC */ int jsClearSegments:clearSegments  (void) 
-/* FUNC */ int jsAppendVideo:appendVideo      (const char * ) 
-/* FUNC */ int jsAddSegment:addSegment        (int ,float , float ) 
-/* FUNC */ int jsSetPostProc:setPostProc      (int ,int , int ) 
-/* FUNC */ int jsGetWidth:getWidth            (void) 
-/* FUNC */ int jsGetHeight:getHeight          (void) 
-/* FUNC */ int jsGetFps1000:getFps1000        (void) 
-/* FUNC */ str jsGetVideoCodec:getVideoCodec(void) 
-/* FUNC */ int jsAudioReset:audioReset        (void) 
-/* FUNC */ int jsAudioMixer:audioMixer        (const char * ) 
-/* FUNC */ int jsClearVideoFilters:clearVideoFilters   (void) 
+/* FUNC */ int scriptLoadVideo:loadVideo          (const char * ) 
+/* FUNC */ int scriptClearSegments:clearSegments  (void) 
+/* FUNC */ int scriptAppendVideo:appendVideo      (const char * ) 
+/* FUNC */ int scriptAddSegment:addSegment        (int ,float , float ) 
+/* FUNC */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
+/* FUNC */ int scriptGetWidth:getWidth            (void) 
+/* FUNC */ int scriptGetHeight:getHeight          (void) 
+/* FUNC */ int scriptGetFps1000:getFps1000        (void) 
+/* FUNC */ str scriptGetVideoCodec:getVideoCodec(void) 
+/* FUNC */ int scriptAudioReset:audioReset        (void) 
+/* FUNC */ int scriptAudioMixer:audioMixer        (const char * ) 
+/* FUNC */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
 #
 #              cname:pyname

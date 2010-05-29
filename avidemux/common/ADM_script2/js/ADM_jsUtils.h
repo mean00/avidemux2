@@ -35,6 +35,5 @@ typedef struct
 
 // since long int will be coded by js as double, we need a centralized version to convert
 bool ADM_jsArg2Vars(const char *caller, int argc, jsval *argv, int paramNumber, ADM_PARAM_LIST *param);
-bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv);
 bool jsArgToConfCouple(int nb,CONFcouple **conf,  jsval *argv);
 #endif

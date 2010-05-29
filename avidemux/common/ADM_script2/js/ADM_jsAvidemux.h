@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 #include "ADM_scriptCommon.h"
-//char *jsGetVideoCodec ( void) ;
+#include "ADM_scriptVideo.h"
 
 // non jsapigen function, variables number of args
 JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);

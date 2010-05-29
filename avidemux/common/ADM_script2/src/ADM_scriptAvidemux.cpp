@@ -41,7 +41,7 @@ bool A_setContainer(const char *cont)
 /**
     \fn jsLoadFile
 */
-int jsLoadVideo(const char *s)
+int scriptLoadVideo(const char *s)
 {
 int ret=0;
         jsLog("[Js] Loading video %s",s);
@@ -56,7 +56,7 @@ int ret=0;
 /**
     \fn jsAppendFile
 */
-int jsAppendVideo(const char *s)
+int scriptAppendVideo(const char *s)
 {
 int ret=0;
         
@@ -71,7 +71,7 @@ int ret=0;
 /**
     \fn jsClearSegments
 */
-int jsClearSegments(void)
+int scriptClearSegments(void)
 {
     video_body->clearSegment();
     return 1;
@@ -80,7 +80,7 @@ int jsClearSegments(void)
     \fn jsAddSegment
 
 */
-int  jsAddSegment(int ref, double start, double duration)
+int  scriptAddSegment(int ref, double start, double duration)
 {
     if(true==video_body->addSegment(ref,(uint64_t)start,(uint64_t)duration)) 
     {

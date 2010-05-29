@@ -69,7 +69,7 @@ int     scriptSetVideoCodec(const char *codec,CONFcouple *c)
 /**
     \fn jsSetPostProc
 */
-int jsSetPostProc (int a,int b, int c)
+int scriptSetPostProc (int a,int b, int c)
 {
     return video_body->setPostProc(a,b,c);
 }
@@ -78,14 +78,14 @@ int jsSetPostProc (int a,int b, int c)
 /**
      \fn jsClearFilters
 */
-int jsClearVideoFilters()
+int scriptClearVideoFilters()
 {
     return ADM_vf_clearFilters();
 }
 /**
     \fn jsGetMarkerA
 */
-double jsGetMarkerA(void)
+double scriptGetMarkerA(void)
 {
     return (double)video_body->getMarkerAPts();
 
@@ -93,21 +93,21 @@ double jsGetMarkerA(void)
 /**
     \fn jsGetMarkerB
 */
-double jsGetMarkerB(void)
+double scriptGetMarkerB(void)
 {
     return (double)video_body->getMarkerBPts();
 }
 /**
     \fn jsSetMarkerA
 */
-void   jsSetMarkerA(double a)
+void   scriptSetMarkerA(double a)
 {
     video_body->setMarkerAPts( (uint64_t)a);
 }
 /**
     \fn jsGetMarkerB
 */
-void   jsSetMarkerB(double b)
+void   scriptSetMarkerB(double b)
 {
     video_body->setMarkerBPts( (uint64_t)b);
 }
