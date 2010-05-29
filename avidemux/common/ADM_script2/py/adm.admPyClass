@@ -17,3 +17,5 @@
 #              cname:pyname
 /* FUNC */ int scriptSetVideoCodec:videoCodec(const char *,couples) 
 /* FUNC */ int scriptSetAudioCodec:audioCodec(const char *,int,couples) 
+/* FUNC */ int scriptSetContainer:setContainer(const char *,couples) 
+/* FUNC */ int scriptAddVideoFilter:addVideoFilter(const char *,couples) 

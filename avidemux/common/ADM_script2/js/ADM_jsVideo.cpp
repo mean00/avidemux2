@@ -65,16 +65,12 @@ JSBool jsAdmaddVideoFilter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
         if(argc == 0)
                 return JS_FALSE;
         char *filterName=JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-        filterTag = ADM_vf_getTagFromInternalName(filterName);
-        jsLog("Adding Filter %s -> %"LU"... \n",filterName,filterTag);
-
-        
         CONFcouple *c=NULL;
         if(argc)
             jsArgToConfCouple(argc-1,&c,argv+1);
-        *rval=BOOLEAN_TO_JSVAL(  ADM_vf_addFilterFromTag(filterTag,c,false));
-        if(c) delete c;
-        
+        bool r=scriptAddVideoFilter(filterName,c);
+
+        *rval=BOOLEAN_TO_JSVAL( r);
         return JS_TRUE;
 }// end Codec
 //EOF

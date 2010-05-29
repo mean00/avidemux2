@@ -111,5 +111,21 @@ void   jsSetMarkerB(double b)
 {
     video_body->setMarkerBPts( (uint64_t)b);
 }
-
+/**
+     \fn scriptAddVideoFilter
+*/
+int     scriptAddVideoFilter(const char *filter,CONFcouple *c)
+{
+   uint32_t filterTag;     
+   bool r=true;
+        filterTag = ADM_vf_getTagFromInternalName(filter);
+        jsLog("Adding Filter %s -> %"LU"... \n",filter,filterTag);
+        if(c)
+        {
+            r=ADM_vf_addFilterFromTag(filterTag,c,false);
+        }
+        if(c) delete c;
+        
+        return r;
+}
 //EOF

@@ -21,6 +21,7 @@ extern "C" {
 
 int     jsSetPostProc (int a,int b, int c);
 int     scriptSetVideoCodec(const char *codec,CONFcouple *c);
+int     scriptAddVideoFilter(const char *filter,CONFcouple *c);
 
 #ifdef __cplusplus
 };

@@ -24,6 +24,7 @@
 #include "ADM_scriptVideo.h"
 #include "ADM_scriptAudio.h"
 #include "ADM_scriptEditor.h"
+#include "ADM_scriptUtils.h"
 
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"

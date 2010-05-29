@@ -26,8 +26,8 @@ tp_obj zzpy_addSegment(TP)
 {
 tinyParams pm(tp);
 int p0=pm.asDouble();
-float p1=pm.asDouble();
-float p2=pm.asDouble();
+float p1=pm.asFloat();
+float p2=pm.asFloat();
 int r=jsAddSegment(p0,p1,p2); 
 return tp_number(r);
 }
@@ -106,6 +106,26 @@ pm.makeCouples(&p2);
 int r=scriptSetAudioCodec(p0,p1,p2); 
 return tp_number(r);
 }
+//int  scriptSetContainer <const char * couples>
+tp_obj zzpy_setContainer(TP)
+{
+tinyParams pm(tp);
+const char * p0=pm.asString();
+CONFcouple *p1=NULL;
+pm.makeCouples(&p1);
+int r=scriptSetContainer(p0,p1); 
+return tp_number(r);
+}
+//int  scriptAddVideoFilter <const char * couples>
+tp_obj zzpy_addVideoFilter(TP)
+{
+tinyParams pm(tp);
+const char * p0=pm.asString();
+CONFcouple *p1=NULL;
+pm.makeCouples(&p1);
+int r=scriptAddVideoFilter(p0,p1); 
+return tp_number(r);
+}
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
 }
@@ -127,5 +147,7 @@ tp_obj initClasspyAdm(tp_vm *vm)
  tp_set(vm,myClass,tp_string("clearVideoFilters"),tp_fnc(vm,zzpy_clearVideoFilters));
  tp_set(vm,myClass,tp_string("videoCodec"),tp_fnc(vm,zzpy_videoCodec));
  tp_set(vm,myClass,tp_string("audioCodec"),tp_fnc(vm,zzpy_audioCodec));
+ tp_set(vm,myClass,tp_string("setContainer"),tp_fnc(vm,zzpy_setContainer));
+ tp_set(vm,myClass,tp_string("addVideoFilter"),tp_fnc(vm,zzpy_addVideoFilter));
  return myClass;
 }
