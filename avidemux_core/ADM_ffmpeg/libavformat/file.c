@@ -94,7 +94,7 @@ int ADM_open(const char *path, int oflag, ...)
 		return _open_osfhandle((intptr_t)hFile, oflag);
 }
 
-#define open ADM_open
+/* MEANX : ???? #define open ADM_open */
 #endif
 // GRUNTSTER end
 
