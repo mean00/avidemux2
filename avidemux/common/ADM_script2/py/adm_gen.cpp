@@ -129,6 +129,26 @@ return tp_number(r);
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
 }
+static tp_obj zzpy_pyAdm_help(tp_vm *vm)
+{
+jsLog("loadVideo");
+jsLog("clearSegments");
+jsLog("appendVideo");
+jsLog("addSegment");
+jsLog("setPostProc");
+jsLog("getWidth");
+jsLog("getHeight");
+jsLog("getFps1000");
+jsLog("getVideoCodec");
+jsLog("audioReset");
+jsLog("audioMixer");
+jsLog("clearVideoFilters");
+jsLog("videoCodec");
+jsLog("audioCodec");
+jsLog("setContainer");
+jsLog("addVideoFilter");
+return tp_None;
+}
 tp_obj initClasspyAdm(tp_vm *vm)
 {
  tp_obj myClass=tp_class(vm);
@@ -149,5 +169,6 @@ tp_obj initClasspyAdm(tp_vm *vm)
  tp_set(vm,myClass,tp_string("audioCodec"),tp_fnc(vm,zzpy_audioCodec));
  tp_set(vm,myClass,tp_string("setContainer"),tp_fnc(vm,zzpy_setContainer));
  tp_set(vm,myClass,tp_string("addVideoFilter"),tp_fnc(vm,zzpy_addVideoFilter));
+ tp_set(vm,myClass,tp_string("help"),tp_fnc(vm,zzpy_pyAdm_help));
  return myClass;
 }
