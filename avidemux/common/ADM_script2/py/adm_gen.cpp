@@ -2,8 +2,9 @@
 // audioCodec -> int scriptSetAudioCodec (str int couples ) 
 static tp_obj zzpy_audioCodec(TP)
  {
-jsLog("audioCodec invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   int p1= pm.asDouble();
   CONFcouple *p2=NULL;
@@ -14,8 +15,9 @@ jsLog("audioCodec invoked\n");
 // addVideoFilter -> int scriptAddVideoFilter (str couples ) 
 static tp_obj zzpy_addVideoFilter(TP)
  {
-jsLog("addVideoFilter invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
   pm.makeCouples(&p1);
@@ -25,8 +27,9 @@ jsLog("addVideoFilter invoked\n");
 // loadVideo -> int scriptLoadVideo (str  ) 
 static tp_obj zzpy_loadVideo(TP)
  {
-jsLog("loadVideo invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   int r=  scriptLoadVideo(p0); 
   return tp_number(r);
@@ -34,22 +37,21 @@ jsLog("loadVideo invoked\n");
 // clearSegments -> int scriptClearSegments (void ) 
 static tp_obj zzpy_clearSegments(TP)
  {
-jsLog("clearSegments invoked\n");
   int r=  scriptClearSegments(); 
   return tp_number(r);
 }
 // getHeight -> int scriptGetHeight (void ) 
 static tp_obj zzpy_getHeight(TP)
  {
-jsLog("getHeight invoked\n");
   int r=  scriptGetHeight(); 
   return tp_number(r);
 }
 // setPostProc -> int scriptSetPostProc (int  int   int  ) 
 static tp_obj zzpy_setPostProc(TP)
  {
-jsLog("setPostProc invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   int p0= pm.asDouble();
   int p1= pm.asDouble();
   int p2= pm.asDouble();
@@ -59,8 +61,9 @@ jsLog("setPostProc invoked\n");
 // appendVideo -> int scriptAppendVideo (str  ) 
 static tp_obj zzpy_appendVideo(TP)
  {
-jsLog("appendVideo invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   int r=  scriptAppendVideo(p0); 
   return tp_number(r);
@@ -68,8 +71,9 @@ jsLog("appendVideo invoked\n");
 // audioMixer -> int scriptAudioMixer (str  ) 
 static tp_obj zzpy_audioMixer(TP)
  {
-jsLog("audioMixer invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   int r=  scriptAudioMixer(p0); 
   return tp_number(r);
@@ -77,15 +81,15 @@ jsLog("audioMixer invoked\n");
 // getFps1000 -> int scriptGetFps1000 (void ) 
 static tp_obj zzpy_getFps1000(TP)
  {
-jsLog("getFps1000 invoked\n");
   int r=  scriptGetFps1000(); 
   return tp_number(r);
 }
 // videoCodec -> int scriptSetVideoCodec (str couples ) 
 static tp_obj zzpy_videoCodec(TP)
  {
-jsLog("videoCodec invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
   pm.makeCouples(&p1);
@@ -95,15 +99,15 @@ jsLog("videoCodec invoked\n");
 // getWidth -> int scriptGetWidth (void ) 
 static tp_obj zzpy_getWidth(TP)
  {
-jsLog("getWidth invoked\n");
   int r=  scriptGetWidth(); 
   return tp_number(r);
 }
 // addSegment -> int scriptAddSegment (int  float   float  ) 
 static tp_obj zzpy_addSegment(TP)
  {
-jsLog("addSegment invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   int p0= pm.asDouble();
   float p1= pm.asFloat();
   float p2= pm.asFloat();
@@ -113,15 +117,15 @@ jsLog("addSegment invoked\n");
 // clearVideoFilters -> int scriptClearVideoFilters (void ) 
 static tp_obj zzpy_clearVideoFilters(TP)
  {
-jsLog("clearVideoFilters invoked\n");
   int r=  scriptClearVideoFilters(); 
   return tp_number(r);
 }
 // setContainer -> int scriptSetContainer (str couples ) 
 static tp_obj zzpy_setContainer(TP)
  {
-jsLog("setContainer invoked\n");
+  tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
+  void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
   pm.makeCouples(&p1);
@@ -131,72 +135,100 @@ jsLog("setContainer invoked\n");
 // audioReset -> int scriptAudioReset (void ) 
 static tp_obj zzpy_audioReset(TP)
  {
-jsLog("audioReset invoked\n");
   int r=  scriptAudioReset(); 
   return tp_number(r);
 }
 // getVideoCodec -> str scriptGetVideoCodec (void ) 
 static tp_obj zzpy_getVideoCodec(TP)
  {
-jsLog("getVideoCodec invoked\n");
   char *r=  scriptGetVideoCodec(); 
   return tp_string(r);
 }
 tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
-jsLog("zzpy__pyAdm_get invoked\n");
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
   void *me=pm.asThis(&self,100);
   char const *key = pm.asString();
-  if (!strcmp(key, "audioResample"))
+  if (!strcmp(key, "audioCodec"))
   {
-     return tp_number(scriptGetResample());
+     return tp_method(vm,self,zzpy_audioCodec);
   }
-  if (!strcmp(key, "markerA"))
+  if (!strcmp(key, "addVideoFilter"))
   {
-     return tp_number(scriptGetMarkerA());
+     return tp_method(vm,self,zzpy_addVideoFilter);
   }
-  if (!strcmp(key, "markerB"))
+  if (!strcmp(key, "loadVideo"))
   {
-     return tp_number(scriptGetMarkerB());
+     return tp_method(vm,self,zzpy_loadVideo);
+  }
+  if (!strcmp(key, "clearSegments"))
+  {
+     return tp_method(vm,self,zzpy_clearSegments);
+  }
+  if (!strcmp(key, "getHeight"))
+  {
+     return tp_method(vm,self,zzpy_getHeight);
+  }
+  if (!strcmp(key, "setPostProc"))
+  {
+     return tp_method(vm,self,zzpy_setPostProc);
+  }
+  if (!strcmp(key, "appendVideo"))
+  {
+     return tp_method(vm,self,zzpy_appendVideo);
+  }
+  if (!strcmp(key, "audioMixer"))
+  {
+     return tp_method(vm,self,zzpy_audioMixer);
+  }
+  if (!strcmp(key, "getFps1000"))
+  {
+     return tp_method(vm,self,zzpy_getFps1000);
+  }
+  if (!strcmp(key, "videoCodec"))
+  {
+     return tp_method(vm,self,zzpy_videoCodec);
+  }
+  if (!strcmp(key, "getWidth"))
+  {
+     return tp_method(vm,self,zzpy_getWidth);
+  }
+  if (!strcmp(key, "addSegment"))
+  {
+     return tp_method(vm,self,zzpy_addSegment);
+  }
+  if (!strcmp(key, "clearVideoFilters"))
+  {
+     return tp_method(vm,self,zzpy_clearVideoFilters);
+  }
+  if (!strcmp(key, "setContainer"))
+  {
+     return tp_method(vm,self,zzpy_setContainer);
+  }
+  if (!strcmp(key, "audioReset"))
+  {
+     return tp_method(vm,self,zzpy_audioReset);
+  }
+  if (!strcmp(key, "getVideoCodec"))
+  {
+     return tp_method(vm,self,zzpy_getVideoCodec);
   }
   return tp_get(vm,self,tp_string(key));
 }
 tp_obj zzpy__pyAdm_set(tp_vm *vm)
 {
-jsLog("zzpy__pyAdm_set invoked\n");
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
   void *me=pm.asThis(&self,100);
   char const *key = pm.asString();
-  if (!strcmp(key, "audioResample"))
-  {
-     int val=pm.asDouble();
-     scriptSetResample(val);
-     return tp_None;
-  }
-  if (!strcmp(key, "markerA"))
-  {
-     double val=pm.asDouble();
-     scriptSetMarkerA(val);
-     return tp_None;
-  }
-  if (!strcmp(key, "markerB"))
-  {
-     double val=pm.asDouble();
-     scriptSetMarkerB(val);
-     return tp_None;
-  }
   return tp_None;
 }
 static void myDtorpyAdm(tp_vm *vm,tp_obj self)
 {
-jsLog("myDtorpyAdm invoked\n");
 }
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
-jsLog("ctor of pyAdm invoked\n");
   tp_obj self = tp_getraw(vm);
   void *me=NULL;
   tp_obj cdata = tp_data(vm, 100, me);
@@ -230,21 +262,5 @@ tp_obj initClasspyAdm(tp_vm *vm)
   tp_set(vm,myClass,tp_string("__set__"),tp_fnc(vm,zzpy__pyAdm_set));
   tp_set(vm,myClass,tp_string("__get__"),tp_fnc(vm,zzpy__pyAdm_get));
   tp_set(vm,myClass,tp_string("help"),tp_fnc(vm,zzpy__pyAdm_help));
-  tp_set(vm,myClass,tp_string("audioCodec"),tp_fnc(vm,zzpy_audioCodec));
-  tp_set(vm,myClass,tp_string("addVideoFilter"),tp_fnc(vm,zzpy_addVideoFilter));
-  tp_set(vm,myClass,tp_string("loadVideo"),tp_fnc(vm,zzpy_loadVideo));
-  tp_set(vm,myClass,tp_string("clearSegments"),tp_fnc(vm,zzpy_clearSegments));
-  tp_set(vm,myClass,tp_string("getHeight"),tp_fnc(vm,zzpy_getHeight));
-  tp_set(vm,myClass,tp_string("setPostProc"),tp_fnc(vm,zzpy_setPostProc));
-  tp_set(vm,myClass,tp_string("appendVideo"),tp_fnc(vm,zzpy_appendVideo));
-  tp_set(vm,myClass,tp_string("audioMixer"),tp_fnc(vm,zzpy_audioMixer));
-  tp_set(vm,myClass,tp_string("getFps1000"),tp_fnc(vm,zzpy_getFps1000));
-  tp_set(vm,myClass,tp_string("videoCodec"),tp_fnc(vm,zzpy_videoCodec));
-  tp_set(vm,myClass,tp_string("getWidth"),tp_fnc(vm,zzpy_getWidth));
-  tp_set(vm,myClass,tp_string("addSegment"),tp_fnc(vm,zzpy_addSegment));
-  tp_set(vm,myClass,tp_string("clearVideoFilters"),tp_fnc(vm,zzpy_clearVideoFilters));
-  tp_set(vm,myClass,tp_string("setContainer"),tp_fnc(vm,zzpy_setContainer));
-  tp_set(vm,myClass,tp_string("audioReset"),tp_fnc(vm,zzpy_audioReset));
-  tp_set(vm,myClass,tp_string("getVideoCodec"),tp_fnc(vm,zzpy_getVideoCodec));
   return myClass;
 }

@@ -5,11 +5,7 @@
 #                        str = const char *
 #                        couples =  confCouple *c
 #
-#  %funcss{funcName}
-#  %proto{funcName}
-#  %retType{funcName}
-#  %params{funcname}
-#
+# If we deal with instance, the method must be set through set/get as metadata
 #
 
 
@@ -38,7 +34,7 @@ sub debug
 {
         my $str=shift;
         chomp($str);
-        print OUTPUT "jsLog(\"$str\\n\");\n";
+#        print OUTPUT "jsLog(\"$str\\n\");\n";
 
 }
 #
@@ -66,7 +62,7 @@ sub processClass
 #
 # Process a function declaration and write the glue code to do tinypy<->function call
 #
-sub processStaticFunc
+sub processMETHOD
 {
         my $proto=shift;
         my $args=$proto;
@@ -138,14 +134,14 @@ while($line=<INPUT>)
         }
         else
         {
-            if($line=~m/\* STATICFUNC \*/)
+            if($line=~m/\* METHOD \*/)
             {
                 my $proto=$line;
                 # Remove header...
                 # Remove tail
                 $line=~s/^.*\*\///g;
                 $line=~s/\/\/.*$//g;
-                processStaticFunc($line);
+                processMETHOD($line);
 
             } elsif($line =~m/\/* CLASS \*/)
                 {
@@ -246,6 +242,9 @@ sub genGlue
 #
 #  Generate function call glue
 #
+#
+#
+#
         my $i; 
         my $f;
         foreach $f(  keys %cFuncs)
@@ -269,8 +268,9 @@ sub genGlue
                 # unmarshall params...
                 if($nb)
                 {
+                         print OUTPUT "  tp_obj self=tp_getraw( tp);\n";  # We need a this as we only deal with instance!
                          print OUTPUT "  tinyParams pm(tp);\n";
-                         #print OUTPUT "  void *me=pm.asThis(0);\n";
+                         print OUTPUT "  void *me=pm.asThis(&self,$cookieId);\n";
                          for($i=0;$i<$nb;$i++)
                          {
                                  genParam($i,$params[$i]);
@@ -324,7 +324,21 @@ sub genGlue
           print OUTPUT "     return tp_number(".$getVar{$v}."());\n";
           print OUTPUT "  }\n";
         }
-        #print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        #
+        # Functions are part of it...
+        #
+        my $cfunk;
+        foreach $f(  keys %cFuncs)
+        {
+                my $pyFunc=$f;
+                $cfunk=$glueprefix.$f;
+                print OUTPUT "  if (!strcmp(key, \"$pyFunc\"))\n";
+                print OUTPUT "  {\n";
+                print OUTPUT "     return tp_method(vm,self,".$cfunk.");\n";
+                print OUTPUT "  }\n";
+
+        }
+#print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
         print OUTPUT "  return tp_get(vm,self,tp_string(key));\n";
         print OUTPUT "}\n";
 
@@ -419,14 +433,6 @@ my $pyFunc;
         print OUTPUT "  tp_set(vm,myClass,tp_string(\"__set__\"),tp_fnc(vm,".$setName."));\n";
         print OUTPUT "  tp_set(vm,myClass,tp_string(\"__get__\"),tp_fnc(vm,".$getName."));\n";
         print OUTPUT "  tp_set(vm,myClass,tp_string(\"help\"),tp_fnc(vm,$helpName));\n";
-        #
-        foreach $f(  keys %cFuncs)
-        {
-                my $pyFunc=$f;
-                $cfunk=$glueprefix.$f;
-
-                print OUTPUT "  tp_set(vm,myClass,tp_string(\"$pyFunc\"),tp_fnc(vm,$cfunk));\n";
-        }
         print OUTPUT "  return myClass;\n";
         print OUTPUT "}\n";
 }

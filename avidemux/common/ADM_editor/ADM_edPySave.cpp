@@ -81,7 +81,7 @@ bool ADM_Composer::saveAsPyScript (const char *name)
   qfprintf (fd, "#\n");
   qfprintf (fd, "#--automatically built--\n");
   qfprintf (fd, "#--Project: %s\n\n",name);
-
+  qfprintf (fd,"adm=Avidemux()\n");
   qfprintf (fd,"#** Video **\n");
   qfprintf (fd,"# %02ld videos source \n", _segments.getNbRefVideos());
  

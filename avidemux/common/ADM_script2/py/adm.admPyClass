@@ -1,28 +1,28 @@
 #           name    cookie id
 /* CLASS */ pyAdm : void : 100
 #              cname:pyname
-/* STATICFUNC */ int scriptLoadVideo:loadVideo          (str ) 
-/* STATICFUNC */ int scriptClearSegments:clearSegments  (void) 
-/* STATICFUNC */ int scriptAppendVideo:appendVideo      (str ) 
-/* STATICFUNC */ int scriptAddSegment:addSegment        (int ,float , float ) 
-/* STATICFUNC */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
-/* STATICFUNC */ int scriptGetWidth:getWidth            (void) 
-/* STATICFUNC */ int scriptGetHeight:getHeight          (void) 
-/* STATICFUNC */ int scriptGetFps1000:getFps1000        (void) 
-/* STATICFUNC */ str scriptGetVideoCodec:getVideoCodec(void) 
-/* STATICFUNC */ int scriptAudioReset:audioReset        (void) 
-/* STATICFUNC */ int scriptAudioMixer:audioMixer        (str ) 
-/* STATICFUNC */ int scriptClearVideoFilters:clearVideoFilters   (void) 
+/* METHOD */ int scriptLoadVideo:loadVideo          (str ) 
+/* METHOD */ int scriptClearSegments:clearSegments  (void) 
+/* METHOD */ int scriptAppendVideo:appendVideo      (str ) 
+/* METHOD */ int scriptAddSegment:addSegment        (int ,float , float ) 
+/* METHOD */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
+/* METHOD */ int scriptGetWidth:getWidth            (void) 
+/* METHOD */ int scriptGetHeight:getHeight          (void) 
+/* METHOD */ int scriptGetFps1000:getFps1000        (void) 
+/* METHOD */ str scriptGetVideoCodec:getVideoCodec(void) 
+/* METHOD */ int scriptAudioReset:audioReset        (void) 
+/* METHOD */ int scriptAudioMixer:audioMixer        (str ) 
+/* METHOD */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
 #
 #              cname:pyname
-/* STATICFUNC */ int scriptSetVideoCodec:videoCodec(str,couples) 
-/* STATICFUNC */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
-/* STATICFUNC */ int scriptSetContainer:setContainer(str,couples) 
-/* STATICFUNC */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
+/* METHOD */ int scriptSetVideoCodec:videoCodec(str,couples) 
+/* METHOD */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
+/* METHOD */ int scriptSetContainer:setContainer(str,couples) 
+/* METHOD */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
 #
 #       Variables
 #
-/* STATICVAR */ double markerA:scriptSetMarkerA,scriptGetMarkerA
-/* STATICVAR */ double markerB:scriptSetMarkerB,scriptGetMarkerB
-/* STATICVAR */ int    audioResample:scriptSetResample,scriptGetResample
+/* ATTRIBUTES */ double markerA:scriptSetMarkerA,scriptGetMarkerA
+/* ATTRIBUTES */ double markerB:scriptSetMarkerB,scriptGetMarkerB
+/* ATTRIBUTES */ int    audioResample:scriptSetResample,scriptGetResample

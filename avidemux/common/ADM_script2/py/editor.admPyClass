@@ -1,6 +1,6 @@
 #              cname:pyname
-/* CLASS */ pyEditor : void
-/* FUNC */ int jsPrintTiming:printTiming      (int ) 
-/* FUNC */ int jsDumpSegments:dumpSegment     (void) 
-/* FUNC */ int jsDumpRefVideos:dumpRefVideo   (void) 
+/* CLASS */ pyEditor : void : 101
+/* METHOD */ int jsPrintTiming:printTiming      (int ) 
+/* METHOD */ int jsDumpSegments:dumpSegment     (void) 
+/* METHOD */ int jsDumpRefVideos:dumpRefVideo   (void) 
 
