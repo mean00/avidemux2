@@ -237,6 +237,21 @@ const char *tinyParams::asString(void)
     return obj.string.val;
 }
 /**
+   \fn  asThis
+*/
+
+void  *tinyParams::asThis(int id)
+{
+    tp_obj self = tp_getraw(tp);
+    tp_obj cdata = tp_get(tp, self, tp_string("cdata"));
+    if(cdata.data.magic!=id) 
+    { 
+        raise("Bad class : Expected %d, got %d\n",id,cdata.data.magic); \
+    }
+    return cdata.data.val;
+}
+
+/**
    \fn  typeAsString
     \brief return the type given as a string
 */

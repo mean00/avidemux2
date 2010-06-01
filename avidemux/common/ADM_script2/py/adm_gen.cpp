@@ -126,6 +126,52 @@ static tp_obj zzpy_getVideoCodec(TP)
   char *r=  scriptGetVideoCodec(); 
   return tp_string(r);
 }
+tp_obj zzpy__pyAdm_get(tp_vm *vm)
+{
+  tinyParams pm(vm);
+  void *me=pm.asThis(0);
+  char const *key = pm.asString();
+  if (!strcmp(key, "audioResample"))
+  {
+     return tp_number(scriptGetResample());
+  }
+  if (!strcmp(key, "markerA"))
+  {
+     return tp_number(scriptGetMarkerA());
+  }
+  if (!strcmp(key, "markerB"))
+  {
+     return tp_number(scriptGetMarkerB());
+  }
+  pm.raise("No such attribute %s",key);
+  return tp_None;
+}
+tp_obj zzpy__pyAdm_set(tp_vm *vm)
+{
+  tinyParams pm(vm);
+  void *me=pm.asThis(0);
+  char const *key = pm.asString();
+  if (!strcmp(key, "audioResample"))
+  {
+     int val=pm.asDouble();
+     scriptSetResample(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "markerA"))
+  {
+     double val=pm.asDouble();
+     scriptSetMarkerA(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "markerB"))
+  {
+     double val=pm.asDouble();
+     scriptSetMarkerB(val);
+     return tp_None;
+  }
+  pm.raise("No such attribute %s",key);
+  return tp_None;
+}
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
 }
@@ -152,6 +198,8 @@ tp_obj initClasspyAdm(tp_vm *vm)
 {
   tp_obj myClass=tp_class(vm);
   tp_set(vm,myClass,tp_string("__init__"),tp_fnc(vm,myCtorpyAdm));
+  tp_set(vm,myClass,tp_string("__set__"),tp_fnc(vm,zzpy__pyAdm_set));
+  tp_set(vm,myClass,tp_string("__get__"),tp_fnc(vm,zzpy__pyAdm_get));
   tp_set(vm,myClass,tp_string("help"),tp_fnc(vm,zzpy__pyAdm_help));
   tp_set(vm,myClass,tp_string("audioCodec"),tp_fnc(vm,zzpy_audioCodec));
   tp_set(vm,myClass,tp_string("addVideoFilter"),tp_fnc(vm,zzpy_addVideoFilter));

@@ -1,21 +1,27 @@
 #              cname:pyname
 /* CLASS */ pyAdm : void
-/* FUNC */ int scriptLoadVideo:loadVideo          (str ) 
-/* FUNC */ int scriptClearSegments:clearSegments  (void) 
-/* FUNC */ int scriptAppendVideo:appendVideo      (str ) 
-/* FUNC */ int scriptAddSegment:addSegment        (int ,float , float ) 
-/* FUNC */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
-/* FUNC */ int scriptGetWidth:getWidth            (void) 
-/* FUNC */ int scriptGetHeight:getHeight          (void) 
-/* FUNC */ int scriptGetFps1000:getFps1000        (void) 
-/* FUNC */ str scriptGetVideoCodec:getVideoCodec(void) 
-/* FUNC */ int scriptAudioReset:audioReset        (void) 
-/* FUNC */ int scriptAudioMixer:audioMixer        (str ) 
-/* FUNC */ int scriptClearVideoFilters:clearVideoFilters   (void) 
+/* STATICFUNC */ int scriptLoadVideo:loadVideo          (str ) 
+/* STATICFUNC */ int scriptClearSegments:clearSegments  (void) 
+/* STATICFUNC */ int scriptAppendVideo:appendVideo      (str ) 
+/* STATICFUNC */ int scriptAddSegment:addSegment        (int ,float , float ) 
+/* STATICFUNC */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
+/* STATICFUNC */ int scriptGetWidth:getWidth            (void) 
+/* STATICFUNC */ int scriptGetHeight:getHeight          (void) 
+/* STATICFUNC */ int scriptGetFps1000:getFps1000        (void) 
+/* STATICFUNC */ str scriptGetVideoCodec:getVideoCodec(void) 
+/* STATICFUNC */ int scriptAudioReset:audioReset        (void) 
+/* STATICFUNC */ int scriptAudioMixer:audioMixer        (str ) 
+/* STATICFUNC */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
 #
 #              cname:pyname
-/* FUNC */ int scriptSetVideoCodec:videoCodec(str,couples) 
-/* FUNC */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
-/* FUNC */ int scriptSetContainer:setContainer(str,couples) 
-/* FUNC */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
+/* STATICFUNC */ int scriptSetVideoCodec:videoCodec(str,couples) 
+/* STATICFUNC */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
+/* STATICFUNC */ int scriptSetContainer:setContainer(str,couples) 
+/* STATICFUNC */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
+#
+#       Variables
+#
+/* STATICVAR */ double markerA:scriptSetMarkerA,scriptGetMarkerA
+/* STATICVAR */ double markerB:scriptSetMarkerB,scriptGetMarkerB
+/* STATICVAR */ int    audioResample:scriptSetResample,scriptGetResample

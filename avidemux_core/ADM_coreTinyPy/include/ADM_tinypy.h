@@ -66,6 +66,7 @@ public:
         float  asFloat(void);
         double asDouble(void);
 const   char  *asString(void);
+        void  *asThis(int id);
         int    nbParam(void);
         void   raise(const char *fmt,...);
         const char *typeAsString(int type);

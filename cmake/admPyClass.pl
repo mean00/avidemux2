@@ -28,6 +28,12 @@ my %cFuncs;
 my %rType;
 my %funcParams;
 #
+# Variables
+my %getVar;
+my %setVar;
+my %typeVars;
+
+#
 # processClass
 #
 sub processClass
@@ -52,7 +58,7 @@ sub processClass
 #
 # Process a function declaration and write the glue code to do tinypy<->function call
 #
-sub processFunc
+sub processStaticFunc
 {
         my $proto=shift;
         my $args=$proto;
@@ -79,6 +85,37 @@ sub processFunc
 }
 
 #
+# Process a  STATICVAR :/* STATICVAR */ int    audioResample:scriptSetResample,scriptGetResample
+#
+sub processStaticVar
+{
+        my $proto=shift;
+        my $args=$proto;
+        my $type;
+        my $varname;
+        my @left;
+        my @funcs;
+
+        
+        $args=~s/^.*\*\///g; # Remove comment
+
+        @left=split(":",$args);
+        @funcs=split(",",$left[1]);
+        #print " >> ".$left[0]."<<\n";
+        ($type,$varname)=split(" ",$left[0]);
+
+        $type=~s/ //g;
+        $varname=~s/ //g;
+
+        #print "<$type> * <$varname> * <@funcs> *\n";
+        $typeVars{$varname}=$type;
+        $setVar{$varname}=$funcs[0];
+        $getVar{$varname}=$funcs[1];
+        print "Processing variable $varname of type $type\n";
+}
+
+
+#
 # parsefile
 #
 sub parseFile
@@ -93,20 +130,24 @@ while($line=<INPUT>)
         }
         else
         {
-            if($line=~m/\* FUNC \*/)
+            if($line=~m/\* STATICFUNC \*/)
             {
                 my $proto=$line;
                 # Remove header...
                 # Remove tail
                 $line=~s/^.*\*\///g;
                 $line=~s/\/\/.*$//g;
-                processFunc($line);
+                processStaticFunc($line);
 
             } elsif($line =~m/\/* CLASS \*/)
                 {
                         processClass($line);
                 }
-        }
+                elsif($line =~m/\/* STATICVAR \*/)
+                {
+                        processStaticVar($line);
+                }
+}
 }
 close(INPUT);
 }
@@ -152,6 +193,10 @@ sub castFrom
         {
                 return "pm.asFloat()";
         }
+        if($type=~m/^double/)
+        {
+                return "pm.asDouble()";
+        }
         print ">>>>>>>>>> <$type> unknown\n";
         return "????";
 
@@ -190,6 +235,9 @@ sub genParam
 #
 sub genGlue
 {
+#
+#  Generate function call glue
+#
         my $i; 
         my $f;
         foreach $f(  keys %cFuncs)
@@ -214,6 +262,7 @@ sub genGlue
                 if($nb)
                 {
                          print OUTPUT "  tinyParams pm(tp);\n";
+                         #print OUTPUT "  void *me=pm.asThis(0);\n";
                          for($i=0;$i<$nb;$i++)
                          {
                                  genParam($i,$params[$i]);
@@ -245,6 +294,51 @@ sub genGlue
                 print OUTPUT "\n}\n";
 
         }
+#
+# Generate get/set
+#
+        my $setName=$glueprefix."_".$className."_set";
+        my $getName=$glueprefix."_".$className."_get";
+# Get
+        print OUTPUT "tp_obj ".$getName."(tp_vm *vm)\n";
+        print OUTPUT "{\n";
+        print OUTPUT "  tinyParams pm(vm);\n";
+        print OUTPUT "  void *me=pm.asThis(0);\n";
+        print OUTPUT "  char const *key = pm.asString();\n";
+        my @k=keys %typeVars;
+        my $v;
+        foreach $v (@k)
+        {
+          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
+          print OUTPUT "  {\n";
+          print OUTPUT "     return tp_number(".$getVar{$v}."());\n";
+          print OUTPUT "  }\n";
+        }
+        print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        print OUTPUT "  return tp_None;\n";
+        print OUTPUT "}\n";
+
+# Set
+        print OUTPUT "tp_obj ".$setName."(tp_vm *vm)\n";
+        print OUTPUT "{\n";
+        print OUTPUT "  tinyParams pm(vm);\n";
+        print OUTPUT "  void *me=pm.asThis(0);\n";
+        print OUTPUT "  char const *key = pm.asString();\n";
+        my @k=keys %typeVars;
+        my $v;
+        foreach $v (@k)
+        {
+          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
+          print OUTPUT "  {\n";
+          print OUTPUT "     ".$typeVars{$v}." val=".castFrom($typeVars{$v}).";\n";
+          print OUTPUT "     ".$setVar{$v}."(val);\n"; 
+          print OUTPUT "     return tp_None;\n";
+          print OUTPUT "  }\n";
+        }
+    #if (!strcmp(key, "prize")) return tp_number(fruit->prize);
+        print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        print OUTPUT "  return tp_None;\n";
+        print OUTPUT "}\n";
 
 }
 #
@@ -278,10 +372,15 @@ my $pyFunc;
 #
 #  Create the init function that will register our class
 #
+        my $setName=$glueprefix."_".$className."_set";
+        my $getName=$glueprefix."_".$className."_get";
+
         print OUTPUT "tp_obj initClass".$className."(tp_vm *vm)\n";
         print OUTPUT "{\n";
         print OUTPUT "  tp_obj myClass=tp_class(vm);\n";
         print OUTPUT "  tp_set(vm,myClass,tp_string(\"__init__\"),tp_fnc(vm,myCtor".$className."));\n";
+        print OUTPUT "  tp_set(vm,myClass,tp_string(\"__set__\"),tp_fnc(vm,".$setName."));\n";
+        print OUTPUT "  tp_set(vm,myClass,tp_string(\"__get__\"),tp_fnc(vm,".$getName."));\n";
         print OUTPUT "  tp_set(vm,myClass,tp_string(\"help\"),tp_fnc(vm,$helpName));\n";
         #
         foreach $f(  keys %cFuncs)
@@ -294,7 +393,6 @@ my $pyFunc;
         print OUTPUT "  return myClass;\n";
         print OUTPUT "}\n";
 }
-
 ##################################
 #  Main
 ##################################
