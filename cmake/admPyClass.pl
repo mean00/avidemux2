@@ -271,7 +271,8 @@ my $pyFunc;
                 print OUTPUT "static tp_obj ".$helpName."(TP)\n {\n";
                 foreach $f(  keys %cFuncs)
                 {
-                        print OUTPUT "  jsLog(\"$f\");\n";
+                        my @params=@{$funcParams{$f}};
+                        print OUTPUT "  jsLog(\"$f(".join(",",@params) .")\");\n";
                 }
                 print OUTPUT "};\n";
 #

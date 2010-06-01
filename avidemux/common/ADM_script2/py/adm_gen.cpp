@@ -131,22 +131,22 @@ static tp_obj myCtorpyAdm(tp_vm *vm)
 }
 static tp_obj zzpy__pyAdm_help(TP)
  {
-  jsLog("audioCodec");
-  jsLog("addVideoFilter");
-  jsLog("loadVideo");
-  jsLog("clearSegments");
-  jsLog("getHeight");
-  jsLog("setPostProc");
-  jsLog("appendVideo");
-  jsLog("audioMixer");
-  jsLog("getFps1000");
-  jsLog("videoCodec");
-  jsLog("getWidth");
-  jsLog("addSegment");
-  jsLog("clearVideoFilters");
-  jsLog("setContainer");
-  jsLog("audioReset");
-  jsLog("getVideoCodec");
+  jsLog("audioCodec(str,int,couples)");
+  jsLog("addVideoFilter(str,couples)");
+  jsLog("loadVideo(str )");
+  jsLog("clearSegments(void)");
+  jsLog("getHeight(void)");
+  jsLog("setPostProc(int ,int , int )");
+  jsLog("appendVideo(str )");
+  jsLog("audioMixer(str )");
+  jsLog("getFps1000(void)");
+  jsLog("videoCodec(str,couples)");
+  jsLog("getWidth(void)");
+  jsLog("addSegment(int ,float , float )");
+  jsLog("clearVideoFilters(void)");
+  jsLog("setContainer(str,couples)");
+  jsLog("audioReset(void)");
+  jsLog("getVideoCodec(void)");
 };
 tp_obj initClasspyAdm(tp_vm *vm)
 {
