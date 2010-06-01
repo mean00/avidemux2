@@ -26,8 +26,11 @@
 #include "ADM_scriptEditor.h"
 #include "ADM_scriptUtils.h"
 
+#undef free
+
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"
+
 extern pyRegisterClass initClasspyAdm;
 extern pyRegisterClass initClasspyEditor;
 /**

@@ -22,6 +22,7 @@ my $glueprefix="zzpy_";
 my $functionPrefix="";
 my $className;
 my $cookieName;
+my $cookieId;
 my $staticClass=0;
 #
 my %cFuncs;
@@ -33,6 +34,13 @@ my %getVar;
 my %setVar;
 my %typeVars;
 
+sub debug
+{
+        my $str=shift;
+        chomp($str);
+        print OUTPUT "jsLog(\"$str\\n\");\n";
+
+}
 #
 # processClass
 #
@@ -43,8 +51,8 @@ sub processClass
         $proto=~s%.*\*/%%g;
         $proto=~s/ //g;
         #print "**$proto**\n";
-        ($className,$cookieName)=split ":",$proto; 
-        print "Processing class $className (with cookie=$cookieName)\n"; 
+        ($className,$cookieName,$cookieId)=split ":",$proto; 
+        print "Processing class $className (with cookie=$cookieName,id=$cookieId)\n"; 
         if($cookieName=~m/void/)
         {
                 $staticClass=1;
@@ -253,7 +261,7 @@ sub genGlue
                 # start our function
                 print OUTPUT "static tp_obj ".$glueprefix.$f."(TP)\n {\n";
 
-
+                debug("$f invoked\n");
                 if($params[0]=~m/^void$/)
                 {
                         $nb=0;
@@ -302,8 +310,10 @@ sub genGlue
 # Get
         print OUTPUT "tp_obj ".$getName."(tp_vm *vm)\n";
         print OUTPUT "{\n";
+        debug("$getName invoked\n");
+        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
         print OUTPUT "  tinyParams pm(vm);\n";
-        print OUTPUT "  void *me=pm.asThis(0);\n";
+        print OUTPUT "  void *me=pm.asThis(&self,$cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
         my @k=keys %typeVars;
         my $v;
@@ -314,15 +324,17 @@ sub genGlue
           print OUTPUT "     return tp_number(".$getVar{$v}."());\n";
           print OUTPUT "  }\n";
         }
-        print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
-        print OUTPUT "  return tp_None;\n";
+        #print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        print OUTPUT "  return tp_get(vm,self,tp_string(key));\n";
         print OUTPUT "}\n";
 
 # Set
         print OUTPUT "tp_obj ".$setName."(tp_vm *vm)\n";
         print OUTPUT "{\n";
+        debug("$setName invoked\n");
+        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
         print OUTPUT "  tinyParams pm(vm);\n";
-        print OUTPUT "  void *me=pm.asThis(0);\n";
+        print OUTPUT "  void *me=pm.asThis(&self,$cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
         my @k=keys %typeVars;
         my $v;
@@ -336,7 +348,7 @@ sub genGlue
           print OUTPUT "  }\n";
         }
     #if (!strcmp(key, "prize")) return tp_number(fruit->prize);
-        print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        #print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
         print OUTPUT "  return tp_None;\n";
         print OUTPUT "}\n";
 
@@ -346,13 +358,38 @@ sub genGlue
 #
 sub genTables
 {
+   my $dtor=  "myDtor".$className;
+# Dtor
+        print OUTPUT "static void ".$dtor."(tp_vm *vm,tp_obj self)\n";
+        print OUTPUT "{\n";
+        debug("$dtor invoked\n");
+        if($staticClass==1)
+        {
+        }else
+        {
+                #free(self.data.val);
+        }
+        print OUTPUT "}\n";
+        # end
+#
+# Ctor
+#
         # ctor
         print OUTPUT "static tp_obj myCtor".$className."(tp_vm *vm)\n";
         print OUTPUT "{\n";
-        if($staticClass==0)
+        debug("ctor of $className invoked\n");
+        print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
+        if($staticClass==1)
         {
-                #todo allocate cookie
+                print OUTPUT "  void *me=NULL;\n";
+        }else
+        {
+
         }
+        print OUTPUT "  tp_obj cdata = tp_data(vm, $cookieId, me);\n";
+        print OUTPUT "  cdata.data.info->xfree = $dtor;\n";
+        print OUTPUT "  tp_set(vm, self, tp_string(\"cdata\"), cdata);\n";
+        print OUTPUT "  return tp_None;\n";
         print OUTPUT "}\n";
         # end
 #

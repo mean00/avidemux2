@@ -1,5 +1,6 @@
+#           name    cookie id
+/* CLASS */ pyAdm : void : 100
 #              cname:pyname
-/* CLASS */ pyAdm : void
 /* STATICFUNC */ int scriptLoadVideo:loadVideo          (str ) 
 /* STATICFUNC */ int scriptClearSegments:clearSegments  (void) 
 /* STATICFUNC */ int scriptAppendVideo:appendVideo      (str ) 

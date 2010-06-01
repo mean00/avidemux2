@@ -2,6 +2,7 @@
 // audioCodec -> int scriptSetAudioCodec (str int couples ) 
 static tp_obj zzpy_audioCodec(TP)
  {
+jsLog("audioCodec invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   int p1= pm.asDouble();
@@ -13,6 +14,7 @@ static tp_obj zzpy_audioCodec(TP)
 // addVideoFilter -> int scriptAddVideoFilter (str couples ) 
 static tp_obj zzpy_addVideoFilter(TP)
  {
+jsLog("addVideoFilter invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
@@ -23,6 +25,7 @@ static tp_obj zzpy_addVideoFilter(TP)
 // loadVideo -> int scriptLoadVideo (str  ) 
 static tp_obj zzpy_loadVideo(TP)
  {
+jsLog("loadVideo invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   int r=  scriptLoadVideo(p0); 
@@ -31,18 +34,21 @@ static tp_obj zzpy_loadVideo(TP)
 // clearSegments -> int scriptClearSegments (void ) 
 static tp_obj zzpy_clearSegments(TP)
  {
+jsLog("clearSegments invoked\n");
   int r=  scriptClearSegments(); 
   return tp_number(r);
 }
 // getHeight -> int scriptGetHeight (void ) 
 static tp_obj zzpy_getHeight(TP)
  {
+jsLog("getHeight invoked\n");
   int r=  scriptGetHeight(); 
   return tp_number(r);
 }
 // setPostProc -> int scriptSetPostProc (int  int   int  ) 
 static tp_obj zzpy_setPostProc(TP)
  {
+jsLog("setPostProc invoked\n");
   tinyParams pm(tp);
   int p0= pm.asDouble();
   int p1= pm.asDouble();
@@ -53,6 +59,7 @@ static tp_obj zzpy_setPostProc(TP)
 // appendVideo -> int scriptAppendVideo (str  ) 
 static tp_obj zzpy_appendVideo(TP)
  {
+jsLog("appendVideo invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   int r=  scriptAppendVideo(p0); 
@@ -61,6 +68,7 @@ static tp_obj zzpy_appendVideo(TP)
 // audioMixer -> int scriptAudioMixer (str  ) 
 static tp_obj zzpy_audioMixer(TP)
  {
+jsLog("audioMixer invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   int r=  scriptAudioMixer(p0); 
@@ -69,12 +77,14 @@ static tp_obj zzpy_audioMixer(TP)
 // getFps1000 -> int scriptGetFps1000 (void ) 
 static tp_obj zzpy_getFps1000(TP)
  {
+jsLog("getFps1000 invoked\n");
   int r=  scriptGetFps1000(); 
   return tp_number(r);
 }
 // videoCodec -> int scriptSetVideoCodec (str couples ) 
 static tp_obj zzpy_videoCodec(TP)
  {
+jsLog("videoCodec invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
@@ -85,12 +95,14 @@ static tp_obj zzpy_videoCodec(TP)
 // getWidth -> int scriptGetWidth (void ) 
 static tp_obj zzpy_getWidth(TP)
  {
+jsLog("getWidth invoked\n");
   int r=  scriptGetWidth(); 
   return tp_number(r);
 }
 // addSegment -> int scriptAddSegment (int  float   float  ) 
 static tp_obj zzpy_addSegment(TP)
  {
+jsLog("addSegment invoked\n");
   tinyParams pm(tp);
   int p0= pm.asDouble();
   float p1= pm.asFloat();
@@ -101,12 +113,14 @@ static tp_obj zzpy_addSegment(TP)
 // clearVideoFilters -> int scriptClearVideoFilters (void ) 
 static tp_obj zzpy_clearVideoFilters(TP)
  {
+jsLog("clearVideoFilters invoked\n");
   int r=  scriptClearVideoFilters(); 
   return tp_number(r);
 }
 // setContainer -> int scriptSetContainer (str couples ) 
 static tp_obj zzpy_setContainer(TP)
  {
+jsLog("setContainer invoked\n");
   tinyParams pm(tp);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
@@ -117,19 +131,23 @@ static tp_obj zzpy_setContainer(TP)
 // audioReset -> int scriptAudioReset (void ) 
 static tp_obj zzpy_audioReset(TP)
  {
+jsLog("audioReset invoked\n");
   int r=  scriptAudioReset(); 
   return tp_number(r);
 }
 // getVideoCodec -> str scriptGetVideoCodec (void ) 
 static tp_obj zzpy_getVideoCodec(TP)
  {
+jsLog("getVideoCodec invoked\n");
   char *r=  scriptGetVideoCodec(); 
   return tp_string(r);
 }
 tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
+jsLog("zzpy__pyAdm_get invoked\n");
+  tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=pm.asThis(0);
+  void *me=pm.asThis(&self,100);
   char const *key = pm.asString();
   if (!strcmp(key, "audioResample"))
   {
@@ -143,13 +161,14 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_number(scriptGetMarkerB());
   }
-  pm.raise("No such attribute %s",key);
-  return tp_None;
+  return tp_get(vm,self,tp_string(key));
 }
 tp_obj zzpy__pyAdm_set(tp_vm *vm)
 {
+jsLog("zzpy__pyAdm_set invoked\n");
+  tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=pm.asThis(0);
+  void *me=pm.asThis(&self,100);
   char const *key = pm.asString();
   if (!strcmp(key, "audioResample"))
   {
@@ -169,11 +188,21 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
      scriptSetMarkerB(val);
      return tp_None;
   }
-  pm.raise("No such attribute %s",key);
   return tp_None;
+}
+static void myDtorpyAdm(tp_vm *vm,tp_obj self)
+{
+jsLog("myDtorpyAdm invoked\n");
 }
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
+jsLog("ctor of pyAdm invoked\n");
+  tp_obj self = tp_getraw(vm);
+  void *me=NULL;
+  tp_obj cdata = tp_data(vm, 100, me);
+  cdata.data.info->xfree = myDtorpyAdm;
+  tp_set(vm, self, tp_string("cdata"), cdata);
+  return tp_None;
 }
 static tp_obj zzpy__pyAdm_help(TP)
  {
