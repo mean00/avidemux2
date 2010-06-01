@@ -1,8 +1,8 @@
 #              cname:pyname
 /* CLASS */ pyAdm : void
-/* FUNC */ int scriptLoadVideo:loadVideo          (const char * ) 
+/* FUNC */ int scriptLoadVideo:loadVideo          (str ) 
 /* FUNC */ int scriptClearSegments:clearSegments  (void) 
-/* FUNC */ int scriptAppendVideo:appendVideo      (const char * ) 
+/* FUNC */ int scriptAppendVideo:appendVideo      (str ) 
 /* FUNC */ int scriptAddSegment:addSegment        (int ,float , float ) 
 /* FUNC */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
 /* FUNC */ int scriptGetWidth:getWidth            (void) 
@@ -10,12 +10,12 @@
 /* FUNC */ int scriptGetFps1000:getFps1000        (void) 
 /* FUNC */ str scriptGetVideoCodec:getVideoCodec(void) 
 /* FUNC */ int scriptAudioReset:audioReset        (void) 
-/* FUNC */ int scriptAudioMixer:audioMixer        (const char * ) 
+/* FUNC */ int scriptAudioMixer:audioMixer        (str ) 
 /* FUNC */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
 #
 #              cname:pyname
-/* FUNC */ int scriptSetVideoCodec:videoCodec(const char *,couples) 
-/* FUNC */ int scriptSetAudioCodec:audioCodec(const char *,int,couples) 
-/* FUNC */ int scriptSetContainer:setContainer(const char *,couples) 
-/* FUNC */ int scriptAddVideoFilter:addVideoFilter(const char *,couples) 
+/* FUNC */ int scriptSetVideoCodec:videoCodec(str,couples) 
+/* FUNC */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
+/* FUNC */ int scriptSetContainer:setContainer(str,couples) 
+/* FUNC */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
