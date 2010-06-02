@@ -5,6 +5,10 @@ SET(ADM_script_SRCS
         ADM_scriptAvidemuxInfo.cpp
         ADM_scriptAudio.cpp
         ADM_scriptUtils.cpp
+        scriptDialogFactory/ADM_scriptDFInteger.cpp
+        scriptDialogFactory/ADM_scriptDFMenu.cpp
+        scriptDialogFactory/ADM_scriptDFToggle.cpp
+        scriptDialogFactory/ADM_scriptDialogFactory.cpp
 )
 
 

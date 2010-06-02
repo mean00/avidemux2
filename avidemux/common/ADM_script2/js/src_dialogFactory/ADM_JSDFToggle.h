@@ -20,22 +20,8 @@
 #include "jsapi.h"
 #include "DIA_factory.h"
 #include "ADM_JSDF.h"
-/**
-    \class ADM_JSDFToggleHelper
-*/
-class ADM_JSDFToggleHelper : public ADM_JSDFBaseHelper
-{
-private:
-	char                *_title;
-	uint32_t            _value;
+#include "ADM_scriptDF.h"
 
-public:
-                     ADM_JSDFToggleHelper(const char *title);
-                     ~ADM_JSDFToggleHelper(void);
-	virtual diaElem* getControl(void);
-            uint32_t value(void);
-            void     setValue(uint32_t value);
-};
 /**
     \class ADM_JSDFToggle
 */

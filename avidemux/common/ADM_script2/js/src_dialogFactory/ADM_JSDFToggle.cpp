@@ -15,38 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_JSDFToggle.h"
+#include "ADM_scriptDFToggle.h"
 
-ADM_JSDFToggleHelper::ADM_JSDFToggleHelper(const char *title)
-{
-	_title = ADM_strdup(title);
-	_value = 0;
-}
-
-ADM_JSDFToggleHelper::~ADM_JSDFToggleHelper(void)
-{
-	if (_title)
-		delete _title;
-
-	_title = NULL;
-
-
-}
-
-
-diaElem* ADM_JSDFToggleHelper::getControl(void)
-{
-    return new   diaElemToggle(&_value,_title,NULL);
-}
-
-uint32_t ADM_JSDFToggleHelper::value(void)
-{
-	return _value;
-}
-
-void ADM_JSDFToggleHelper::setValue(uint32_t index)
-{
-	_value = index;
-}
 /*************************************************/
 JSPropertySpec ADM_JSDFToggle::properties[] = 
 { 
@@ -86,7 +56,7 @@ JSBool ADM_JSDFToggle::JSConstructor(JSContext *cx, JSObject *obj, uintN argc, j
 	if (!JSVAL_IS_STRING(argv[0]))
 		return JS_FALSE;
 
-	ADM_JSDFToggleHelper *pObject = new ADM_JSDFToggleHelper(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
+	ADM_scriptDFToggleHelper *pObject = new ADM_scriptDFToggleHelper(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
 
 	if (!JS_SetPrivate(cx, obj, pObject))
 		return JS_FALSE;
@@ -98,7 +68,7 @@ JSBool ADM_JSDFToggle::JSConstructor(JSContext *cx, JSObject *obj, uintN argc, j
 
 void ADM_JSDFToggle::JSDestructor(JSContext *cx, JSObject *obj)
 {
-	ADM_JSDFToggleHelper *pObject = (ADM_JSDFToggleHelper*)JS_GetInstancePrivate(cx, obj, &m_dfToggleHelper, NULL);
+	ADM_scriptDFToggleHelper *pObject = (ADM_scriptDFToggleHelper*)JS_GetInstancePrivate(cx, obj, &m_dfToggleHelper, NULL);
 
 	if (pObject)
 		delete pObject;
@@ -108,7 +78,7 @@ JSBool ADM_JSDFToggle::JSGetProperty(JSContext *cx, JSObject *obj, jsval id, jsv
 {
 	if (JSVAL_IS_INT(id)) 
 	{
-		ADM_JSDFToggleHelper *pObject = (ADM_JSDFToggleHelper*)JS_GetInstancePrivate(cx, obj, &m_dfToggleHelper, NULL);
+		ADM_scriptDFToggleHelper *pObject = (ADM_scriptDFToggleHelper*)JS_GetInstancePrivate(cx, obj, &m_dfToggleHelper, NULL);
 
 		switch(JSVAL_TO_INT(id))
 		{
@@ -127,7 +97,7 @@ JSBool ADM_JSDFToggle::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsv
 {
 	if (JSVAL_IS_INT(id)) 
 	{
-		ADM_JSDFToggleHelper *pObject = (ADM_JSDFToggleHelper*)JS_GetInstancePrivate(cx, obj, &m_dfToggleHelper, NULL);
+		ADM_scriptDFToggleHelper *pObject = (ADM_scriptDFToggleHelper*)JS_GetInstancePrivate(cx, obj, &m_dfToggleHelper, NULL);
 
 		switch(JSVAL_TO_INT(id))
 		{

@@ -15,40 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_JSDFInteger.h"
+#include "ADM_scriptDFInteger.h"
 
-ADM_JSDFIntegerHelper::ADM_JSDFIntegerHelper(const char *title,int32_t mn,int32_t mx)
-{
-	_title = ADM_strdup(title); 
-    _min=mn;
-    _max=mx;
-	_value = 0;
-}
-
-ADM_JSDFIntegerHelper::~ADM_JSDFIntegerHelper(void)
-{
-	if (_title)
-		delete _title;
-
-	_title = NULL;
-
-
-}
-
-
-diaElem* ADM_JSDFIntegerHelper::getControl(void)
-{
-    return new diaElemInteger(&_value,_title, _min,_max);
-}
-
-int32_t ADM_JSDFIntegerHelper::value(void)
-{
-	return _value;
-}
-
-void ADM_JSDFIntegerHelper::setValue(int32_t index)
-{
-	_value = index;
-}
 /*************************************************/
 JSPropertySpec ADM_JSDFInteger::properties[] = 
 { 
@@ -95,7 +63,7 @@ JSBool ADM_JSDFInteger::JSConstructor(JSContext *cx, JSObject *obj, uintN argc, 
 		return JS_FALSE;
 
 
-	ADM_JSDFIntegerHelper *pObject = new ADM_JSDFIntegerHelper(
+	ADM_scriptDFIntegerHelper *pObject = new ADM_scriptDFIntegerHelper(
                                                     JS_GetStringBytes(JSVAL_TO_STRING(argv[0])),
                                                     JSVAL_TO_INT(argv[1]),
                                                     JSVAL_TO_INT(argv[2])
@@ -111,7 +79,7 @@ JSBool ADM_JSDFInteger::JSConstructor(JSContext *cx, JSObject *obj, uintN argc, 
 
 void ADM_JSDFInteger::JSDestructor(JSContext *cx, JSObject *obj)
 {
-	ADM_JSDFIntegerHelper *pObject = (ADM_JSDFIntegerHelper*)JS_GetInstancePrivate(cx, obj, &m_dfIntegerHelper, NULL);
+	ADM_scriptDFIntegerHelper *pObject = (ADM_scriptDFIntegerHelper*)JS_GetInstancePrivate(cx, obj, &m_dfIntegerHelper, NULL);
 
 	if (pObject)
 		delete pObject;
@@ -121,7 +89,7 @@ JSBool ADM_JSDFInteger::JSGetProperty(JSContext *cx, JSObject *obj, jsval id, js
 {
 	if (JSVAL_IS_INT(id)) 
 	{
-		ADM_JSDFIntegerHelper *pObject = (ADM_JSDFIntegerHelper*)JS_GetInstancePrivate(cx, obj, &m_dfIntegerHelper, NULL);
+		ADM_scriptDFIntegerHelper *pObject = (ADM_scriptDFIntegerHelper*)JS_GetInstancePrivate(cx, obj, &m_dfIntegerHelper, NULL);
 
 		switch(JSVAL_TO_INT(id))
 		{
@@ -140,7 +108,7 @@ JSBool ADM_JSDFInteger::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, js
 {
 	if (JSVAL_IS_INT(id)) 
 	{
-		ADM_JSDFIntegerHelper *pObject = (ADM_JSDFIntegerHelper*)JS_GetInstancePrivate(cx, obj, &m_dfIntegerHelper, NULL);
+		ADM_scriptDFIntegerHelper *pObject = (ADM_scriptDFIntegerHelper*)JS_GetInstancePrivate(cx, obj, &m_dfIntegerHelper, NULL);
 
 		switch(JSVAL_TO_INT(id))
 		{

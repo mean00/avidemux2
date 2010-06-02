@@ -1,5 +1,5 @@
 /**
-    \file   ADM_JSDialogFactory.h
+    \file   ADM_scriptDialogFactory.h
     \brief  JS / DF binding
     \author gruntster 2010
 
@@ -14,33 +14,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _ADM_JSDialogFactory_H
-#define _ADM_JSDialogFactory_H
+#ifndef _ADM_scriptDialogFactory_H
+#define _ADM_scriptDialogFactory_H
 
-#include "jsapi.h"
 #include "DIA_factory.h"
-#include "ADM_JSDFMenu.h"
 #include "ADM_scriptDFMenu.h"
 #include <vector>
 /**
-    \class ADM_JSDialogFactory
+    \class ADM_scriptDialogFactoryHelper
 */
-
-class ADM_JSDialogFactory
+class ADM_scriptDialogFactoryHelper
 {
+private:
+	char* _title;
+	std::vector <ADM_scriptDFBaseHelper*> _controls;
+
 public:
-	ADM_JSDialogFactory(void) {}
-	virtual ~ADM_JSDialogFactory(void);
-
-	static JSBool JSConstructor(JSContext *cx, JSObject *obj, uintN argc, 
-								jsval *argv, jsval *rval);
-	static void JSDestructor(JSContext *cx, JSObject *obj);
-	static JSObject *JSInit(JSContext *cx, JSObject *obj, JSObject *proto = NULL);
-	static JSBool addControl(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	static JSBool show(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-
-	static JSFunctionSpec methods[];
-	static JSClass m_dialogFactoryHelper;
+	ADM_scriptDialogFactoryHelper(const char *title);
+	~ADM_scriptDialogFactoryHelper(void);
+	void addControl(ADM_scriptDFBaseHelper* control);
+	diaElem** getControls(int *controlCount);
+	const char* title(void);
 };
 
 #endif

@@ -15,70 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_JSDFMenu.h"
+#include "ADM_scriptDFMenu.h"
 
-ADM_JSDFMenuHelper::ADM_JSDFMenuHelper(const char *title)
-{
-	_title = ADM_strdup(title);
-	_menuEntries = NULL;
-	_index = 0;
-}
-
-ADM_JSDFMenuHelper::~ADM_JSDFMenuHelper(void)
-{
-	if (_title)
-		delete _title;
-
-	_title = NULL;
-
-	std::vector<char*>::iterator it;
-
-	for (it = _items.begin(); it != _items.end(); it++)
-		delete *it;
-
-	_items.clear();
-
-	if (_menuEntries)
-		delete _menuEntries;
-
-	_menuEntries = NULL;
-}
-
-void ADM_JSDFMenuHelper::addItem(const char* item)
-{
-	_items.push_back(ADM_strdup(item));
-}
-
-diaElem* ADM_JSDFMenuHelper::getControl(void)
-{
-	if (_menuEntries)
-		delete _menuEntries;
-
-	std::vector<char*>::iterator it;
-	int i = 0;
-
-	_menuEntries = new diaMenuEntry[_items.size()];	
-
-	for (it = _items.begin(); it != _items.end(); it++)
-	{
-		_menuEntries[i].val = i;
-		_menuEntries[i].text = *it;
-		_menuEntries[i].desc = NULL;
-
-		i++;
-	}
-
-	return new diaElemMenu(&_index, _title, _items.size(), _menuEntries);
-}
-
-int ADM_JSDFMenuHelper::index(void)
-{
-	return _index;
-}
-
-void ADM_JSDFMenuHelper::setIndex(int index)
-{
-	_index = index;
-}
 
 JSPropertySpec ADM_JSDFMenu::properties[] = 
 { 
@@ -117,7 +55,7 @@ JSBool ADM_JSDFMenu::JSConstructor(JSContext *cx, JSObject *obj, uintN argc, jsv
 	if (!JSVAL_IS_STRING(argv[0]))
 		return JS_FALSE;
 
-	ADM_JSDFMenuHelper *pObject = new ADM_JSDFMenuHelper(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
+	ADM_scriptDFMenuHelper *pObject = new ADM_scriptDFMenuHelper(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
 
 	if (!JS_SetPrivate(cx, obj, pObject))
 		return JS_FALSE;
@@ -129,7 +67,7 @@ JSBool ADM_JSDFMenu::JSConstructor(JSContext *cx, JSObject *obj, uintN argc, jsv
 
 void ADM_JSDFMenu::JSDestructor(JSContext *cx, JSObject *obj)
 {
-	ADM_JSDFMenuHelper *pObject = (ADM_JSDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
+	ADM_scriptDFMenuHelper *pObject = (ADM_scriptDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
 
 	if (pObject)
 		delete pObject;
@@ -137,7 +75,7 @@ void ADM_JSDFMenu::JSDestructor(JSContext *cx, JSObject *obj)
 
 JSBool ADM_JSDFMenu::addItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	ADM_JSDFMenuHelper *pObject = (ADM_JSDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
+	ADM_scriptDFMenuHelper *pObject = (ADM_scriptDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
 
 	if (argc != 1)
 		return JS_FALSE;
@@ -154,7 +92,7 @@ JSBool ADM_JSDFMenu::JSGetProperty(JSContext *cx, JSObject *obj, jsval id, jsval
 {
 	if (JSVAL_IS_INT(id)) 
 	{
-		ADM_JSDFMenuHelper *pObject = (ADM_JSDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
+		ADM_scriptDFMenuHelper *pObject = (ADM_scriptDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
 
 		switch(JSVAL_TO_INT(id))
 		{
@@ -173,7 +111,7 @@ JSBool ADM_JSDFMenu::JSSetProperty(JSContext *cx, JSObject *obj, jsval id, jsval
 {
 	if (JSVAL_IS_INT(id)) 
 	{
-		ADM_JSDFMenuHelper *pObject = (ADM_JSDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
+		ADM_scriptDFMenuHelper *pObject = (ADM_scriptDFMenuHelper*)JS_GetInstancePrivate(cx, obj, &m_dfMenuHelper, NULL);
 
 		switch(JSVAL_TO_INT(id))
 		{

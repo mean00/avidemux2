@@ -20,26 +20,9 @@
 #include "jsapi.h"
 #include "DIA_factory.h"
 #include "ADM_JSDF.h"
+#include "ADM_scriptDF.h"
 #include <vector>
-/**
-    \class ADM_JSDFMenuHelper
-*/
-class ADM_JSDFMenuHelper : public ADM_JSDFBaseHelper
-{
-private:
-	char                *_title;
-	uint32_t            _index;
-	diaMenuEntry        *_menuEntries;
-	std::vector <char*> _items;
 
-public:
-                     ADM_JSDFMenuHelper(const char *title);
-                     ~ADM_JSDFMenuHelper(void);
-            void     addItem(const char* item);
-	virtual diaElem* getControl(void);
-            int      index(void);
-            void     setIndex(int index);
-};
 /**
     \class ADM_JSDFMenu
 */

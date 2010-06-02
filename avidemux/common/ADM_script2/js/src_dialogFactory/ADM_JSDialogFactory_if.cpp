@@ -25,6 +25,11 @@
 #include "ADM_JSDFInteger.h"
 #include "ADM_JSDialogFactory.h"
 
+#include "ADM_scriptDFMenu.h"
+#include "ADM_scriptDFToggle.h"
+#include "ADM_scriptDFInteger.h"
+#include "ADM_scriptDialogFactory.h"
+
 /**
     \fn ADM_JSDialogFactoryInit()
     \brief Hook classes to spidermonkey

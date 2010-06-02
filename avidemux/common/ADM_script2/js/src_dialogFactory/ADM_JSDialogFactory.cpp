@@ -14,46 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_JSDialogFactory.h"
-
-ADM_JSDialogFactoryHelper::ADM_JSDialogFactoryHelper(const char *title)
-{
-	_title = ADM_strdup(title);
-}
-
-ADM_JSDialogFactoryHelper::~ADM_JSDialogFactoryHelper(void)
-{
-	if (_title)
-		delete _title;
-
-	_title = NULL;
-}
-
-void ADM_JSDialogFactoryHelper::addControl(ADM_JSDFBaseHelper* control)
-{
-	_controls.push_back(control);
-}
-
-diaElem** ADM_JSDialogFactoryHelper::getControls(int *controlCount)
-{
-	*controlCount = (int)_controls.size();
-
-	std::vector<ADM_JSDFBaseHelper*>::iterator it;
-	int i = 0;
-	diaElem **elems = new diaElem*[*controlCount];
-
-	for (it = _controls.begin(); it != _controls.end(); it++)
-	{
-		elems[i] = (*it)->getControl();
-		i++;
-	}
-
-	return elems;
-}
-
-const char* ADM_JSDialogFactoryHelper::title(void)
-{
-	return _title;
-}
+#include "ADM_scriptDialogFactory.h"
 
 JSFunctionSpec ADM_JSDialogFactory::methods[] =
 {
@@ -87,7 +48,7 @@ JSBool ADM_JSDialogFactory::JSConstructor(JSContext *cx, JSObject *obj, uintN ar
 	if (JSVAL_IS_STRING(argv[0]) == false)
 		return JS_FALSE;
 
-	ADM_JSDialogFactoryHelper *pObject = new ADM_JSDialogFactoryHelper(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
+	ADM_scriptDialogFactoryHelper *pObject = new ADM_scriptDialogFactoryHelper(JS_GetStringBytes(JSVAL_TO_STRING(argv[0])));
 
 	if (!JS_SetPrivate(cx, obj, pObject))
 		return JS_FALSE;
@@ -99,7 +60,7 @@ JSBool ADM_JSDialogFactory::JSConstructor(JSContext *cx, JSObject *obj, uintN ar
 
 void ADM_JSDialogFactory::JSDestructor(JSContext *cx, JSObject *obj)
 {
-	ADM_JSDialogFactoryHelper *pObject = (ADM_JSDialogFactoryHelper*)JS_GetInstancePrivate(cx, obj, &m_dialogFactoryHelper, NULL);
+	ADM_scriptDialogFactoryHelper *pObject = (ADM_scriptDialogFactoryHelper*)JS_GetInstancePrivate(cx, obj, &m_dialogFactoryHelper, NULL);
 
 	if (pObject != NULL)
 		delete pObject;
@@ -107,19 +68,19 @@ void ADM_JSDialogFactory::JSDestructor(JSContext *cx, JSObject *obj)
 
 JSBool ADM_JSDialogFactory::addControl(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	ADM_JSDialogFactoryHelper *p = (ADM_JSDialogFactoryHelper*)JS_GetInstancePrivate(cx, obj, &m_dialogFactoryHelper, NULL);
+	ADM_scriptDialogFactoryHelper *p = (ADM_scriptDialogFactoryHelper*)JS_GetInstancePrivate(cx, obj, &m_dialogFactoryHelper, NULL);
 
 	if (argc != 1)
 		return JS_FALSE;
 
-	p->addControl((ADM_JSDFMenuHelper*)JS_GetPrivate(cx, JSVAL_TO_OBJECT(argv[0])));
+	p->addControl((ADM_scriptDFMenuHelper*)JS_GetPrivate(cx, JSVAL_TO_OBJECT(argv[0])));
 
 	return JS_TRUE;
 }
 
 JSBool ADM_JSDialogFactory::show(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	ADM_JSDialogFactoryHelper *p = (ADM_JSDialogFactoryHelper*)JS_GetInstancePrivate(cx, obj, &m_dialogFactoryHelper, NULL);
+	ADM_scriptDialogFactoryHelper *p = (ADM_scriptDialogFactoryHelper*)JS_GetInstancePrivate(cx, obj, &m_dialogFactoryHelper, NULL);
 
 	if (argc != 0)
 		return JS_FALSE;

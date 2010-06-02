@@ -20,23 +20,7 @@
 #include "jsapi.h"
 #include "DIA_factory.h"
 #include "ADM_JSDF.h"
-/**
-    \class ADM_JSDFIntegerHelper
-*/
-class ADM_JSDFIntegerHelper : public ADM_JSDFBaseHelper
-{
-private:
-	char                *_title;
-	int32_t             _value;
-    int32_t             _min,_max;
-
-public:
-                     ADM_JSDFIntegerHelper(const char *title,int32_t mn, int32_t mx);
-                     ~ADM_JSDFIntegerHelper(void);
-	virtual diaElem* getControl(void);
-            int32_t value(void);
-            void     setValue(int32_t value);
-};
+#include "ADM_scriptDF.h"
 /**
     \class ADM_JSDFInteger
 */
