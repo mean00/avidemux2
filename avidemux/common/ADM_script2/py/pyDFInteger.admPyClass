@@ -1,0 +1,7 @@
+#           name    cookie id
+/* CLASS */ pyDFInteger : ADM_scriptDFIntegerHelper : 201
+#              cname:pyname
+/* CTOR */   (str,int,int) 
+#
+/* ATTRIBUTES */ int value:setValue,value
+#

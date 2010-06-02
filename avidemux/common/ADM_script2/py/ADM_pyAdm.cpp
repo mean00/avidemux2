@@ -26,10 +26,15 @@
 #include "ADM_scriptEditor.h"
 #include "ADM_scriptUtils.h"
 
-#undef free
+#include "scriptDialogFactory/ADM_scriptDFToggle.h"
+#include "scriptDialogFactory/ADM_scriptDFInteger.h"
+
+
 
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"
+#include "pyDFToggle_gen.cpp"
+#include "pyDFInteger_gen.cpp"
 
 extern pyRegisterClass initClasspyAdm;
 extern pyRegisterClass initClasspyEditor;
@@ -49,6 +54,8 @@ static bool initPy(tinyPy *py)
     py->init();
     py->registerClass("Avidemux",initClasspyAdm);
     py->registerClass("Editor",initClasspyEditor);
+    py->registerClass("DFToggle",initClasspyDFToggle);
+    py->registerClass("DFInteger",initClasspyDFInteger);
     tinyPy::registerLogger(pyLogger);
     return true;
 }

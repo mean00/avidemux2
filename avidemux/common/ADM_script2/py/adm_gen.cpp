@@ -6,7 +6,7 @@ static tp_obj zzpy_audioCodec(TP)
   tinyParams pm(tp);
   void *me=pm.asThis(&self,100);
   const char *p0= pm.asString();
-  int p1= pm.asDouble();
+  int p1= pm.asInt();
   CONFcouple *p2=NULL;
   pm.makeCouples(&p2);
   int r=  scriptSetAudioCodec(p0,p1,p2); 
@@ -52,9 +52,9 @@ static tp_obj zzpy_setPostProc(TP)
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
   void *me=pm.asThis(&self,100);
-  int p0= pm.asDouble();
-  int p1= pm.asDouble();
-  int p2= pm.asDouble();
+  int p0= pm.asInt();
+  int p1= pm.asInt();
+  int p2= pm.asInt();
   int r=  scriptSetPostProc(p0,p1,p2); 
   return tp_number(r);
 }
@@ -108,7 +108,7 @@ static tp_obj zzpy_addSegment(TP)
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
   void *me=pm.asThis(&self,100);
-  int p0= pm.asDouble();
+  int p0= pm.asInt();
   float p1= pm.asFloat();
   float p2= pm.asFloat();
   int r=  scriptAddSegment(p0,p1,p2); 
@@ -148,8 +148,20 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,100);
   char const *key = pm.asString();
+  if (!strcmp(key, "audioResample"))
+  {
+     return tp_number(scriptGetResample());
+  }
+  if (!strcmp(key, "markerA"))
+  {
+     return tp_number(scriptGetMarkerA());
+  }
+  if (!strcmp(key, "markerB"))
+  {
+     return tp_number(scriptGetMarkerB());
+  }
   if (!strcmp(key, "audioCodec"))
   {
      return tp_method(vm,self,zzpy_audioCodec);
@@ -222,11 +234,31 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   tinyParams pm(vm);
   void *me=pm.asThis(&self,100);
   char const *key = pm.asString();
+  if (!strcmp(key, "audioResample"))
+  {
+     int val=pm.asInt();
+     scriptSetResample(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "markerA"))
+  {
+     double val=pm.asDouble();
+     scriptSetMarkerA(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "markerB"))
+  {
+     double val=pm.asDouble();
+     scriptSetMarkerB(val);
+     return tp_None;
+  }
   return tp_None;
 }
+// Dctor
 static void myDtorpyAdm(tp_vm *vm,tp_obj self)
 {
 }
+// Ctor ()
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);

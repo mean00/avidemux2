@@ -1,0 +1,7 @@
+#           name    cookie id
+/* CLASS */ pyDFToggle : ADM_scriptDFToggleHelper : 200
+#              cname:pyname
+/* CTOR */   (str) 
+#
+/* ATTRIBUTES */ int value:setValue,value
+#

@@ -24,6 +24,7 @@ my $staticClass=0;
 my %cFuncs;
 my %rType;
 my %funcParams;
+my @ctorParams;
 #
 # Variables
 my %getVar;
@@ -58,6 +59,23 @@ sub processClass
                 $staticClass=0;
         }
 
+}
+#
+# Process the constructor list 
+#
+sub processCTOR
+{
+        my $proto=shift;
+        my $args=$proto;
+        my @params;
+        my $retType=$proto;;
+        my $pyfunc=$proto;;
+        my $cfunc;
+        $args=~s/^.*\(//g;
+        $args=~s/\).*$//g;
+        #print "args => $args\n";
+        @ctorParams=split ",",$args;
+        #print " $pyfunc -> @params \n";
 }
 #
 # Process a function declaration and write the glue code to do tinypy<->function call
@@ -147,9 +165,13 @@ while($line=<INPUT>)
                 {
                         processClass($line);
                 }
-                elsif($line =~m/\/* STATICVAR \*/)
+                elsif($line =~m/\/* ATTRIBUTES \*/)
                 {
                         processStaticVar($line);
+                }
+                elsif($line=~m/\/* CTOR \*/)
+                {
+                        processCTOR($line);
                 }
 }
 }
@@ -191,7 +213,7 @@ sub castFrom
         }
         if($type=~m/^int/)
         {
-                return "pm.asDouble()";
+                return "pm.asInt()";
         }
         if($type=~m/^float/)
         {
@@ -233,6 +255,97 @@ sub genParam
                 print OUTPUT ";\n"; 
         } 
         return $r;
+}
+#
+# Generate getter and setter glue
+#
+sub genGetSet
+{
+#
+# Generate get/set
+#
+        my $i;
+        my $f;
+        my $setName=$glueprefix."_".$className."_set";
+        my $getName=$glueprefix."_".$className."_get";
+# Get
+        print OUTPUT "tp_obj ".$getName."(tp_vm *vm)\n";
+        print OUTPUT "{\n";
+        debug("$getName invoked\n");
+        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
+        print OUTPUT "  tinyParams pm(vm);\n";
+        print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self,$cookieId);\n";
+        print OUTPUT "  char const *key = pm.asString();\n";
+        my @k=keys %typeVars;
+        my $v;
+        foreach $v (@k)
+        {
+          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
+          print OUTPUT "  {\n";
+          if($staticClass==1)
+          {
+                print OUTPUT "     return tp_number(".$getVar{$v}."());\n";
+           }else
+        {
+                print OUTPUT "     if(!me) pm.raise(\"$className:No this!\");\n";
+                print OUTPUT "     return tp_number(me->".$getVar{$v}."());\n";
+
+        }
+          print OUTPUT "  }\n";
+        }
+        #
+        # Functions are part of it...
+        #
+        my $cfunk;
+        foreach $f(  keys %cFuncs)
+        {
+                my $pyFunc=$f;
+                $cfunk=$glueprefix.$f;
+                print OUTPUT "  if (!strcmp(key, \"$pyFunc\"))\n";
+                print OUTPUT "  {\n";
+                print OUTPUT "     return tp_method(vm,self,".$cfunk.");\n";
+                print OUTPUT "  }\n";
+
+        }
+#print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        print OUTPUT "  return tp_get(vm,self,tp_string(key));\n";
+        print OUTPUT "}\n";
+
+# Set
+        print OUTPUT "tp_obj ".$setName."(tp_vm *vm)\n";
+        print OUTPUT "{\n";
+        debug("$setName invoked\n");
+        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
+        print OUTPUT "  tinyParams pm(vm);\n";
+        print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self,$cookieId);\n";
+        print OUTPUT "  char const *key = pm.asString();\n";
+        my @k=keys %typeVars;
+        my $v;
+        foreach $v (@k)
+        {
+          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
+          print OUTPUT "  {\n";
+        if($staticClass==1)
+          {
+                print OUTPUT "     ".$typeVars{$v}." val=".castFrom($typeVars{$v}).";\n";
+                print OUTPUT "     ".$setVar{$v}."(val);\n"; 
+                print OUTPUT "     return tp_None;\n";
+           }else
+          {
+                print OUTPUT "     if(!me) pm.raise(\"$className:No this!\");\n";
+                print OUTPUT "     ".$typeVars{$v}." val=".castFrom($typeVars{$v}).";\n";
+                print OUTPUT "     me->".$setVar{$v}."(val);\n"; 
+                print OUTPUT "     return tp_None;\n";
+
+         }
+          print OUTPUT "  }\n";
+        }
+    #if (!strcmp(key, "prize")) return tp_number(fruit->prize);
+        #print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
+        print OUTPUT "  return tp_None;\n";
+        print OUTPUT "}\n";
+
+
 }
 #
 # Gen glue
@@ -302,86 +415,28 @@ sub genGlue
                 print OUTPUT "\n}\n";
 
         }
-#
-# Generate get/set
-#
-        my $setName=$glueprefix."_".$className."_set";
-        my $getName=$glueprefix."_".$className."_get";
-# Get
-        print OUTPUT "tp_obj ".$getName."(tp_vm *vm)\n";
-        print OUTPUT "{\n";
-        debug("$getName invoked\n");
-        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
-        print OUTPUT "  tinyParams pm(vm);\n";
-        print OUTPUT "  void *me=pm.asThis(&self,$cookieId);\n";
-        print OUTPUT "  char const *key = pm.asString();\n";
-        my @k=keys %typeVars;
-        my $v;
-        foreach $v (@k)
-        {
-          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
-          print OUTPUT "  {\n";
-          print OUTPUT "     return tp_number(".$getVar{$v}."());\n";
-          print OUTPUT "  }\n";
-        }
-        #
-        # Functions are part of it...
-        #
-        my $cfunk;
-        foreach $f(  keys %cFuncs)
-        {
-                my $pyFunc=$f;
-                $cfunk=$glueprefix.$f;
-                print OUTPUT "  if (!strcmp(key, \"$pyFunc\"))\n";
-                print OUTPUT "  {\n";
-                print OUTPUT "     return tp_method(vm,self,".$cfunk.");\n";
-                print OUTPUT "  }\n";
-
-        }
-#print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
-        print OUTPUT "  return tp_get(vm,self,tp_string(key));\n";
-        print OUTPUT "}\n";
-
-# Set
-        print OUTPUT "tp_obj ".$setName."(tp_vm *vm)\n";
-        print OUTPUT "{\n";
-        debug("$setName invoked\n");
-        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
-        print OUTPUT "  tinyParams pm(vm);\n";
-        print OUTPUT "  void *me=pm.asThis(&self,$cookieId);\n";
-        print OUTPUT "  char const *key = pm.asString();\n";
-        my @k=keys %typeVars;
-        my $v;
-        foreach $v (@k)
-        {
-          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
-          print OUTPUT "  {\n";
-          print OUTPUT "     ".$typeVars{$v}." val=".castFrom($typeVars{$v}).";\n";
-          print OUTPUT "     ".$setVar{$v}."(val);\n"; 
-          print OUTPUT "     return tp_None;\n";
-          print OUTPUT "  }\n";
-        }
-    #if (!strcmp(key, "prize")) return tp_number(fruit->prize);
-        #print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
-        print OUTPUT "  return tp_None;\n";
-        print OUTPUT "}\n";
+        genGetSet();
 
 }
 #
 #
 #
-sub genTables
+sub genCtorDtor
 {
    my $dtor=  "myDtor".$className;
 # Dtor
+        print OUTPUT "// Dctor\n";
         print OUTPUT "static void ".$dtor."(tp_vm *vm,tp_obj self)\n";
         print OUTPUT "{\n";
         debug("$dtor invoked\n");
         if($staticClass==1)
         {
+                # no cookie, so no need to destroy
         }else
         {
-                #free(self.data.val);
+                print OUTPUT "  $cookieName *cookie=($cookieName *)self.data.val;\n";
+                print OUTPUT "  if(cookie) delete cookie;\n";
+                print OUTPUT "  self.data.val=NULL;\n";
         }
         print OUTPUT "}\n";
         # end
@@ -389,16 +444,34 @@ sub genTables
 # Ctor
 #
         # ctor
+        print OUTPUT "// Ctor (@ctorParams)\n";
         print OUTPUT "static tp_obj myCtor".$className."(tp_vm *vm)\n";
         print OUTPUT "{\n";
         debug("ctor of $className invoked\n");
         print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
+        print OUTPUT "  tinyParams pm(vm);\n";
         if($staticClass==1)
         {
                 print OUTPUT "  void *me=NULL;\n";
         }else
         {
-
+                
+                my $i;
+                my $nb=scalar(@ctorParams);
+                for($i=0;$i<$nb;$i++)
+                         {
+                                 genParam($i,$ctorParams[$i]);
+                         }
+                print OUTPUT "  $cookieName *me=new $cookieName(";
+                for($i=0;$i<$nb;$i++)
+                {
+                        if($i)
+                        {
+                                print OUTPUT ",";
+                        }
+                        print OUTPUT "p".$i;
+                }  
+                print OUTPUT ");\n";
         }
         print OUTPUT "  tp_obj cdata = tp_data(vm, $cookieId, me);\n";
         print OUTPUT "  cdata.data.info->xfree = $dtor;\n";
@@ -406,9 +479,12 @@ sub genTables
         print OUTPUT "  return tp_None;\n";
         print OUTPUT "}\n";
         # end
+}
 #
 #  Generate help table
 #
+sub genTables
+{
 my $helpName=$glueprefix."_".$className."_help";
 my $f;
 my $cfunk;
@@ -459,6 +535,10 @@ parseFile($input);
 open(OUTPUT,">$output") or die("Cannot open $output");
 print OUTPUT "// Generated by admPyClass.pl do not edit !\n";
 genGlue();
+#
+#
+#
+genCtorDtor();
 #
 # 3 gen tables (ctor, help, register)
 #
