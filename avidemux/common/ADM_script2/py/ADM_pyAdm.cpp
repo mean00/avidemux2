@@ -28,6 +28,7 @@
 
 #include "scriptDialogFactory/ADM_scriptDFToggle.h"
 #include "scriptDialogFactory/ADM_scriptDFInteger.h"
+#include "scriptDialogFactory/ADM_scriptDFMenu.h"
 #include "scriptDialogFactory/ADM_scriptDialogFactory.h"
 
 #define ADM_PYID_AVIDEMUX 100
@@ -35,12 +36,14 @@
 #define ADM_PYID_DIALOGF     200
 #define ADM_PYID_DF_TOGGLE   201
 #define ADM_PYID_DF_INTEGER  202
+#define ADM_PYID_DF_MENU     203
 
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"
 
 #include "pyDFToggle_gen.cpp"
 #include "pyDFInteger_gen.cpp"
+#include "pyDFMenu_gen.cpp"
 #include "pyDialogFactory_gen.cpp"
 
 extern pyRegisterClass initClasspyAdm;
@@ -63,6 +66,7 @@ static bool initPy(tinyPy *py)
     py->registerClass("Editor",initClasspyEditor);
     py->registerClass("DFToggle",initClasspyDFToggle);
     py->registerClass("DFInteger",initClasspyDFInteger);
+    py->registerClass("DFMenu",initClasspyDFMenu);
     py->registerClass("DialogFactory",initClasspyDialogFactory);
     tinyPy::registerLogger(pyLogger);
     return true;

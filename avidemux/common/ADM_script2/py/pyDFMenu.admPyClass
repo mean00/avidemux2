@@ -1,0 +1,8 @@
+#           name    cookie id
+/* CLASS */ pyDFMenu : ADM_scriptDFMenuHelper :  ADM_PYID_DF_INTEGER 
+#              cname:pyname
+/* CTOR */   (str) 
+#
+/* ATTRIBUTES */ int index:setIndex,index
+/* METHOD */ void addItem:addItem(str)
+#
