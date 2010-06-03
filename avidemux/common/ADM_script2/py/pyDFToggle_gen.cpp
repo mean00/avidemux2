@@ -3,7 +3,7 @@ tp_obj zzpy__pyDFToggle_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  ADM_scriptDFToggleHelper *me=(ADM_scriptDFToggleHelper *)pm.asThis(&self,200);
+  ADM_scriptDFToggleHelper *me=(ADM_scriptDFToggleHelper *)pm.asThis(&self,ADM_PYID_DF_TOGGLE);
   char const *key = pm.asString();
   if (!strcmp(key, "value"))
   {
@@ -16,7 +16,7 @@ tp_obj zzpy__pyDFToggle_set(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  ADM_scriptDFToggleHelper *me=(ADM_scriptDFToggleHelper *)pm.asThis(&self,200);
+  ADM_scriptDFToggleHelper *me=(ADM_scriptDFToggleHelper *)pm.asThis(&self,ADM_PYID_DF_TOGGLE);
   char const *key = pm.asString();
   if (!strcmp(key, "value"))
   {
@@ -41,7 +41,7 @@ static tp_obj myCtorpyDFToggle(tp_vm *vm)
   tinyParams pm(vm);
   const char *p0= pm.asString();
   ADM_scriptDFToggleHelper *me=new ADM_scriptDFToggleHelper(p0);
-  tp_obj cdata = tp_data(vm, 200, me);
+  tp_obj cdata = tp_data(vm, ADM_PYID_DF_TOGGLE, me);
   cdata.data.info->xfree = myDtorpyDFToggle;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;

@@ -3,7 +3,7 @@ tp_obj zzpy__pyDFInteger_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  ADM_scriptDFIntegerHelper *me=(ADM_scriptDFIntegerHelper *)pm.asThis(&self,201);
+  ADM_scriptDFIntegerHelper *me=(ADM_scriptDFIntegerHelper *)pm.asThis(&self,ADM_PYID_DF_INTEGER);
   char const *key = pm.asString();
   if (!strcmp(key, "value"))
   {
@@ -16,7 +16,7 @@ tp_obj zzpy__pyDFInteger_set(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  ADM_scriptDFIntegerHelper *me=(ADM_scriptDFIntegerHelper *)pm.asThis(&self,201);
+  ADM_scriptDFIntegerHelper *me=(ADM_scriptDFIntegerHelper *)pm.asThis(&self,ADM_PYID_DF_INTEGER);
   char const *key = pm.asString();
   if (!strcmp(key, "value"))
   {
@@ -43,7 +43,7 @@ static tp_obj myCtorpyDFInteger(tp_vm *vm)
   int p1= pm.asInt();
   int p2= pm.asInt();
   ADM_scriptDFIntegerHelper *me=new ADM_scriptDFIntegerHelper(p0,p1,p2);
-  tp_obj cdata = tp_data(vm, 201, me);
+  tp_obj cdata = tp_data(vm, ADM_PYID_DF_INTEGER, me);
   cdata.data.info->xfree = myDtorpyDFInteger;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;

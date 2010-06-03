@@ -1,5 +1,5 @@
 #              cname:pyname
-/* CLASS */ pyEditor : void : 101
+/* CLASS */ pyEditor : void : ADM_PYID_EDITOR
 /* METHOD */ int jsPrintTiming:printTiming      (int ) 
 /* METHOD */ int jsDumpSegments:dumpSegment     (void) 
 /* METHOD */ int jsDumpRefVideos:dumpRefVideo   (void) 

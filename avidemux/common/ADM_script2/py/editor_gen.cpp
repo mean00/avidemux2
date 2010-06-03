@@ -4,20 +4,26 @@ static tp_obj zzpy_printTiming(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,101);
-  int p0= pm.asDouble();
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
+  int p0= pm.asInt();
   int r=  jsPrintTiming(p0); 
   return tp_number(r);
 }
 // dumpSegment -> int jsDumpSegments (void ) 
 static tp_obj zzpy_dumpSegment(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
   int r=  jsDumpSegments(); 
   return tp_number(r);
 }
 // dumpRefVideo -> int jsDumpRefVideos (void ) 
 static tp_obj zzpy_dumpRefVideo(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
   int r=  jsDumpRefVideos(); 
   return tp_number(r);
 }
@@ -25,7 +31,7 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=pm.asThis(&self,101);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
   char const *key = pm.asString();
   if (!strcmp(key, "printTiming"))
   {
@@ -45,18 +51,21 @@ tp_obj zzpy__pyEditor_set(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=pm.asThis(&self,101);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
   char const *key = pm.asString();
   return tp_None;
 }
+// Dctor
 static void myDtorpyEditor(tp_vm *vm,tp_obj self)
 {
 }
+// Ctor ()
 static tp_obj myCtorpyEditor(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
+  tinyParams pm(vm);
   void *me=NULL;
-  tp_obj cdata = tp_data(vm, 101, me);
+  tp_obj cdata = tp_data(vm, ADM_PYID_EDITOR, me);
   cdata.data.info->xfree = myDtorpyEditor;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;

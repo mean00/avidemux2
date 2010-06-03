@@ -4,7 +4,7 @@ static tp_obj zzpy_audioCodec(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   int p1= pm.asInt();
   CONFcouple *p2=NULL;
@@ -17,7 +17,7 @@ static tp_obj zzpy_addVideoFilter(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
   pm.makeCouples(&p1);
@@ -29,7 +29,7 @@ static tp_obj zzpy_loadVideo(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   int r=  scriptLoadVideo(p0); 
   return tp_number(r);
@@ -37,12 +37,18 @@ static tp_obj zzpy_loadVideo(TP)
 // clearSegments -> int scriptClearSegments (void ) 
 static tp_obj zzpy_clearSegments(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int r=  scriptClearSegments(); 
   return tp_number(r);
 }
 // getHeight -> int scriptGetHeight (void ) 
 static tp_obj zzpy_getHeight(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int r=  scriptGetHeight(); 
   return tp_number(r);
 }
@@ -51,7 +57,7 @@ static tp_obj zzpy_setPostProc(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int p0= pm.asInt();
   int p1= pm.asInt();
   int p2= pm.asInt();
@@ -63,7 +69,7 @@ static tp_obj zzpy_appendVideo(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   int r=  scriptAppendVideo(p0); 
   return tp_number(r);
@@ -73,7 +79,7 @@ static tp_obj zzpy_audioMixer(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   int r=  scriptAudioMixer(p0); 
   return tp_number(r);
@@ -81,6 +87,9 @@ static tp_obj zzpy_audioMixer(TP)
 // getFps1000 -> int scriptGetFps1000 (void ) 
 static tp_obj zzpy_getFps1000(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int r=  scriptGetFps1000(); 
   return tp_number(r);
 }
@@ -89,7 +98,7 @@ static tp_obj zzpy_videoCodec(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
   pm.makeCouples(&p1);
@@ -99,6 +108,9 @@ static tp_obj zzpy_videoCodec(TP)
 // getWidth -> int scriptGetWidth (void ) 
 static tp_obj zzpy_getWidth(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int r=  scriptGetWidth(); 
   return tp_number(r);
 }
@@ -107,7 +119,7 @@ static tp_obj zzpy_addSegment(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int p0= pm.asInt();
   float p1= pm.asFloat();
   float p2= pm.asFloat();
@@ -117,6 +129,9 @@ static tp_obj zzpy_addSegment(TP)
 // clearVideoFilters -> int scriptClearVideoFilters (void ) 
 static tp_obj zzpy_clearVideoFilters(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int r=  scriptClearVideoFilters(); 
   return tp_number(r);
 }
@@ -125,7 +140,7 @@ static tp_obj zzpy_setContainer(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   const char *p0= pm.asString();
   CONFcouple *p1=NULL;
   pm.makeCouples(&p1);
@@ -135,12 +150,18 @@ static tp_obj zzpy_setContainer(TP)
 // audioReset -> int scriptAudioReset (void ) 
 static tp_obj zzpy_audioReset(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int r=  scriptAudioReset(); 
   return tp_number(r);
 }
 // getVideoCodec -> str scriptGetVideoCodec (void ) 
 static tp_obj zzpy_getVideoCodec(TP)
  {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char *r=  scriptGetVideoCodec(); 
   return tp_string(r);
 }
@@ -148,7 +169,7 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=(void *)pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
   if (!strcmp(key, "audioResample"))
   {
@@ -232,7 +253,7 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  void *me=pm.asThis(&self,100);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
   if (!strcmp(key, "audioResample"))
   {
@@ -262,8 +283,9 @@ static void myDtorpyAdm(tp_vm *vm,tp_obj self)
 static tp_obj myCtorpyAdm(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
+  tinyParams pm(vm);
   void *me=NULL;
-  tp_obj cdata = tp_data(vm, 100, me);
+  tp_obj cdata = tp_data(vm, ADM_PYID_AVIDEMUX, me);
   cdata.data.info->xfree = myDtorpyAdm;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;

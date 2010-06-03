@@ -1,5 +1,5 @@
 #           name    cookie id
-/* CLASS */ pyDialogFactory : ADM_scriptDialogFactoryHelper : 240
+/* CLASS */ pyDialogFactory : ADM_scriptDialogFactoryHelper : ADM_PYID_DIALOGF
 #              cname:pyname
 /* CTOR */   (str) 
 #

@@ -4,7 +4,7 @@ static tp_obj zzpy_show(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,240);
+  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,ADM_PYID_DIALOGF);
   int r=  me->run(); 
   return tp_number(r);
 }
@@ -13,7 +13,7 @@ static tp_obj zzpy_addControl(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
-  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,240);
+  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,ADM_PYID_DIALOGF);
   ADM_scriptDFBaseHelper *p0= ( ADM_scriptDFBaseHelper *)pm.asObjectPointer();
   me->addControl(p0); 
 
@@ -22,7 +22,7 @@ tp_obj zzpy__pyDialogFactory_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,240);
+  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,ADM_PYID_DIALOGF);
   char const *key = pm.asString();
   if (!strcmp(key, "show"))
   {
@@ -38,7 +38,7 @@ tp_obj zzpy__pyDialogFactory_set(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
   tinyParams pm(vm);
-  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,240);
+  ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,ADM_PYID_DIALOGF);
   char const *key = pm.asString();
   return tp_None;
 }
@@ -56,7 +56,7 @@ static tp_obj myCtorpyDialogFactory(tp_vm *vm)
   tinyParams pm(vm);
   const char *p0= pm.asString();
   ADM_scriptDialogFactoryHelper *me=new ADM_scriptDialogFactoryHelper(p0);
-  tp_obj cdata = tp_data(vm, 240, me);
+  tp_obj cdata = tp_data(vm, ADM_PYID_DIALOGF, me);
   cdata.data.info->xfree = myDtorpyDialogFactory;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;

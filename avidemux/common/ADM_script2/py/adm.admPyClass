@@ -1,5 +1,5 @@
 #           name    cookie id
-/* CLASS */ pyAdm : void : 100
+/* CLASS */ pyAdm : void : ADM_PYID_AVIDEMUX
 #              cname:pyname
 /* METHOD */ int scriptLoadVideo:loadVideo          (str ) 
 /* METHOD */ int scriptClearSegments:clearSegments  (void) 

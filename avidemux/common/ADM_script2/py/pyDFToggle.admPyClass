@@ -1,5 +1,5 @@
 #           name    cookie id
-/* CLASS */ pyDFToggle : ADM_scriptDFToggleHelper : 200
+/* CLASS */ pyDFToggle : ADM_scriptDFToggleHelper : ADM_PYID_DF_TOGGLE
 #              cname:pyname
 /* CTOR */   (str) 
 #

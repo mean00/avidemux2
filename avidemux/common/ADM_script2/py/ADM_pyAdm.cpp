@@ -30,7 +30,11 @@
 #include "scriptDialogFactory/ADM_scriptDFInteger.h"
 #include "scriptDialogFactory/ADM_scriptDialogFactory.h"
 
-
+#define ADM_PYID_AVIDEMUX 100
+#define ADM_PYID_EDITOR   101
+#define ADM_PYID_DIALOGF     200
+#define ADM_PYID_DF_TOGGLE   201
+#define ADM_PYID_DF_INTEGER  202
 
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"
