@@ -67,6 +67,7 @@ public:
         double asDouble(void);
 const   char  *asString(void);
         void  *asThis(tp_obj *self,int id);
+        void  *asObjectPointer(void);
         int    nbParam(void);
         void   raise(const char *fmt,...);
         const char *typeAsString(int type);

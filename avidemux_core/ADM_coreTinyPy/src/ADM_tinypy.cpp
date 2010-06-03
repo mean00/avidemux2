@@ -249,7 +249,16 @@ void  *tinyParams::asThis(tp_obj *self,int id)
     }
     return cdata.data.val;
 }
+/**
+   \fn  asObjectPointer
+*/
+void  *tinyParams::asObjectPointer(void)
+{
+    preamble(TP_DICT);
+    tp_obj cdata = tp_get(tp, obj, tp_string("cdata"));
+    return cdata.data.val;
 
+}
 /**
    \fn  typeAsString
     \brief return the type given as a string

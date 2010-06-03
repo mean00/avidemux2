@@ -26,14 +26,15 @@
 class ADM_scriptDialogFactoryHelper
 {
 private:
-	char* _title;
+	char        *_title;
 	std::vector <ADM_scriptDFBaseHelper*> _controls;
 
 public:
-	ADM_scriptDialogFactoryHelper(const char *title);
-	~ADM_scriptDialogFactoryHelper(void);
-	void addControl(ADM_scriptDFBaseHelper* control);
-	diaElem** getControls(int *controlCount);
+                ADM_scriptDialogFactoryHelper(const char *title);
+                ~ADM_scriptDialogFactoryHelper(void);
+	void        addControl(ADM_scriptDFBaseHelper* control);
+    int         run(void);
+	diaElem**   getControls(int *controlCount);
 	const char* title(void);
 };
 

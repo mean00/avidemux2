@@ -219,6 +219,13 @@ sub castFrom
         {
                 return "pm.asFloat()";
         }
+        if($type=~m/^ptr/)
+        {
+                my $ptr;
+                my $obj;
+                ($ptr,$obj)=split "@",$type;
+                return "( $obj *)pm.asObjectPointer()";
+        }
         if($type=~m/^double/)
         {
                 return "pm.asDouble()";
@@ -244,10 +251,23 @@ sub genParam
                 $r=0;
         }else
         {
-                if($type=~m/str/)
+                my $regular=1;
+                if($type=~m/^str/)
                 {
                         print OUTPUT "  const char *p".$num."=";
-                }else
+                        $regular=0;
+                }
+                if($type=~m/^ptr/)
+                {
+                        $regular=0;
+                        my $ptr;
+                        my $obj;
+                        ($ptr,$obj)=split "@",$type;
+                        
+                        print OUTPUT "  $obj *p".$num."=";
+
+                }
+                if($regular==1)
                 {
                         print OUTPUT "  $type p".$num."=";
                 }
@@ -374,6 +394,9 @@ sub genGlue
                 print OUTPUT "static tp_obj ".$glueprefix.$f."(TP)\n {\n";
 
                 debug("$f invoked\n");
+                 print OUTPUT "  tp_obj self=tp_getraw( tp);\n";  # We need a this as we only deal with instance!
+                 print OUTPUT "  tinyParams pm(tp);\n";
+                 print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self,$cookieId);\n";
                 if($params[0]=~m/^void$/)
                 {
                         $nb=0;
@@ -381,9 +404,6 @@ sub genGlue
                 # unmarshall params...
                 if($nb)
                 {
-                         print OUTPUT "  tp_obj self=tp_getraw( tp);\n";  # We need a this as we only deal with instance!
-                         print OUTPUT "  tinyParams pm(tp);\n";
-                         print OUTPUT "  void *me=pm.asThis(&self,$cookieId);\n";
                          for($i=0;$i<$nb;$i++)
                          {
                                  genParam($i,$params[$i]);
@@ -400,7 +420,13 @@ sub genGlue
                                 print OUTPUT "  ".$ret." r=";
                         }
                 }
-                print OUTPUT "  ".$functionPrefix.$cfunc."(";
+                if($staticClass==1)
+                {
+                        print OUTPUT "  ".$functionPrefix.$cfunc."(";
+                }else
+                {
+                        print OUTPUT "  me->".$functionPrefix.$cfunc."(";
+                }
                 for($i=0;$i<$nb;$i++)
                 {
                         if($i)
