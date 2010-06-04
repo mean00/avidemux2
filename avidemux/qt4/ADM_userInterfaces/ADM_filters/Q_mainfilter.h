@@ -61,6 +61,10 @@ public slots:
 	void filterFamilyClick(int  item);
 	void preview(bool b);
     void closePreview(void);
+    // context menu
+    void add(void);
+    void remove(void);
+    void configure(void);
 
 private:
 	void setSelected(int sel);
