@@ -336,9 +336,12 @@ void MainWindow::timeChanged(int)
 void MainWindow::buttonPressed(void)
 {
 	// Receveid a key press Event, look into table..
-	const char *source=qPrintable(sender()->objectName());
-
-	Action action=searchTranslationTable(source);
+    QObject *obj=sender();
+    if(!obj) return;
+    QString me(obj->objectName());
+    
+	Action action=searchTranslationTable(qPrintable(me));
+    
 
 	if(action!=ACT_DUMMY)
 		HandleAction (action);
