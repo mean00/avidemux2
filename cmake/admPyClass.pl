@@ -197,7 +197,7 @@ sub genReturn
         }
          if($retType=~m/str/)
         {
-                return "  return tp_string(r);";
+                return "  if(!r) pm.raise(\"$className : null pointer\");\n  return tp_string(r);\n";
         }
 return "???? $retType";
 }

@@ -12,9 +12,7 @@ dlgWizard.addControl(mnuSourceRatio);
 dlgWizard.addControl(mnuResolution);
 
 res=dlgWizard.show()
-print("res")
-print(res)
-print("source index:")
-print(mnuSourceRatio.index)
-print("dest index:")
-print(mnuResolution.index)
+if res==1:
+        print("res="+str(res)+" menuSource="+str(mnuSourceRatio.index)+" Resolution="+str(mnuResolution.index)+"\n")
+else:
+        print("cancelled\n");

@@ -1,0 +1,7 @@
+#           name    cookie id
+/* CLASS */ pyGui : void : ADM_PYID_GUI
+#              cname:pyname
+/* METHOD */ str scriptDirSelect:dirSelect(str) 
+/* METHOD */ str scriptFileSelRead:fileReadSelect(str) 
+/* METHOD */ str scriptFileSelWrite:fileWriteSelect(str) 
+

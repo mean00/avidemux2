@@ -25,6 +25,7 @@
 #include "ADM_scriptAudio.h"
 #include "ADM_scriptEditor.h"
 #include "ADM_scriptUtils.h"
+#include "ADM_scriptGui.h"
 
 #include "scriptDialogFactory/ADM_scriptDFToggle.h"
 #include "scriptDialogFactory/ADM_scriptDFInteger.h"
@@ -33,13 +34,16 @@
 
 #define ADM_PYID_AVIDEMUX 100
 #define ADM_PYID_EDITOR   101
+#define ADM_PYID_GUI      102
 #define ADM_PYID_DIALOGF     200
 #define ADM_PYID_DF_TOGGLE   201
 #define ADM_PYID_DF_INTEGER  202
 #define ADM_PYID_DF_MENU     203
 
+
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"
+#include "GUI_gen.cpp"
 
 #include "pyDFToggle_gen.cpp"
 #include "pyDFInteger_gen.cpp"
@@ -64,6 +68,7 @@ static bool initPy(tinyPy *py)
     py->init();
     py->registerClass("Avidemux",initClasspyAdm);
     py->registerClass("Editor",initClasspyEditor);
+    py->registerClass("Gui",initClasspyGui);
     py->registerClass("DFToggle",initClasspyDFToggle);
     py->registerClass("DFInteger",initClasspyDFInteger);
     py->registerClass("DFMenu",initClasspyDFMenu);
