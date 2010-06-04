@@ -1,5 +1,7 @@
 gui=Gui()
 red=gui.fileReadSelect("Select a file read")
-print(">>>>>>>>>>>>>>>>>>>>>>output"+red+".\n")
+mix=":::::::::: output = @"+red+"@\n"
+mix
+print(mix)
 red=gui.fileWriteSelect("Select a file write")
-print(">>>>>>>>>>>>>>>>>>>>>>output"+red+".\n")
+print(">>>>>>>>>>>>>>>>>>>>>>output<"+str(red)+"@.\n")

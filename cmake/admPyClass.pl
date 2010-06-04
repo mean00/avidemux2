@@ -197,7 +197,10 @@ sub genReturn
         }
          if($retType=~m/str/)
         {
-                return "  if(!r) pm.raise(\"$className : null pointer\");\n  return tp_string(r);\n";
+                return "  if(!r) pm.raise(\"$className : null pointer\");\n  
+  tp_obj o=tp_string_copy(tp,r,  strlen(r));
+  ADM_dealloc(r);
+  return o;";
         }
 return "???? $retType";
 }

@@ -8,8 +8,10 @@ static tp_obj zzpy_fileWriteSelect(TP)
   const char *p0= pm.asString();
   char *r=  scriptFileSelWrite(p0); 
   if(!r) pm.raise("pyGui : null pointer");
-  return tp_string(r);
-
+  
+  tp_obj o=tp_string_copy(tp,r,  strlen(r));
+  ADM_dealloc(r);
+  return o;
 }
 // dirSelect -> str scriptDirSelect (str ) 
 static tp_obj zzpy_dirSelect(TP)
@@ -20,8 +22,10 @@ static tp_obj zzpy_dirSelect(TP)
   const char *p0= pm.asString();
   char *r=  scriptDirSelect(p0); 
   if(!r) pm.raise("pyGui : null pointer");
-  return tp_string(r);
-
+  
+  tp_obj o=tp_string_copy(tp,r,  strlen(r));
+  ADM_dealloc(r);
+  return o;
 }
 // fileReadSelect -> str scriptFileSelRead (str ) 
 static tp_obj zzpy_fileReadSelect(TP)
@@ -32,8 +36,10 @@ static tp_obj zzpy_fileReadSelect(TP)
   const char *p0= pm.asString();
   char *r=  scriptFileSelRead(p0); 
   if(!r) pm.raise("pyGui : null pointer");
-  return tp_string(r);
-
+  
+  tp_obj o=tp_string_copy(tp,r,  strlen(r));
+  ADM_dealloc(r);
+  return o;
 }
 tp_obj zzpy__pyGui_get(tp_vm *vm)
 {

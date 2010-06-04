@@ -164,8 +164,10 @@ static tp_obj zzpy_getVideoCodec(TP)
   void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char *r=  scriptGetVideoCodec(); 
   if(!r) pm.raise("pyAdm : null pointer");
-  return tp_string(r);
-
+  
+  tp_obj o=tp_string_copy(tp,r,  strlen(r));
+  ADM_dealloc(r);
+  return o;
 }
 tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
