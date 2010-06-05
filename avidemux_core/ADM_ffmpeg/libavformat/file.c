@@ -81,7 +81,11 @@ int ADM_open(const char *path, int oflag, ...)
 		hFile = CreateFileW(wcFile, access, 0, NULL, creation, 0, NULL);
 
 		if (hFile == INVALID_HANDLE_VALUE)
+        {
+            wprintf("Error in ADM_open_1 for file <%s>\n",wcFile);
+            printf("was  <%s>\n",path);
 			return -1;
+        }
 		else
 			CloseHandle(hFile);
 	}
@@ -89,7 +93,11 @@ int ADM_open(const char *path, int oflag, ...)
 	hFile = CreateFileW(wcFile, access, FILE_SHARE_READ, NULL, creation, 0, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
-		return -1;
+    {
+            wprintf("Error in ADM_open_2 for file <%s>\n",wcFile);
+            printf("was  <%s>\n",path);
+            return -1;
+    }
 	else
 		return _open_osfhandle((intptr_t)hFile, oflag);
 }
