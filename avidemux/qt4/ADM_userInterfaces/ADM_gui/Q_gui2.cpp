@@ -291,6 +291,8 @@ MainWindow::MainWindow() : QMainWindow()
 	this->setFocus(Qt::OtherFocusReason);
 
 	setAcceptDrops(true);
+    setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
+    
 }
 /**
 \fn     custom
@@ -555,6 +557,7 @@ QApplication *myApplication=NULL;
 */
 int UI_Init(int nargc,char **nargv)
 {
+    ADM_info("Starting QT4 GUI...\n");
 	initTranslator();
 
 	global_argc=nargc;
