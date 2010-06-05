@@ -1,11 +1,7 @@
 /***************************************************************************
-                          automation.cpp  -  description
-                             -------------------
-    begin                : Thu Oct 10 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
-
-    This file reads the command line and do the corresponding command
+    \file    automation.cpp  
+    \author  (C) 2002 by mean fixounet@free.fr
+    \brief   This file reads the command line and do the corresponding command
 
  ***************************************************************************/
 
@@ -46,16 +42,8 @@
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
-//extern void filterListAll(void );
 
-//extern uint8_t loadVideoCodecConf( const char *name);
-extern int A_saveJpg (char *name);
-//extern void filterLoadXml(const char *n);
-extern int A_appendAvi (const char *name);
-extern void A_saveAudioCopy(char *name);
 extern int A_loadNone( void );
-extern void A_saveAudioProcessed(char *name);
-extern uint8_t A_SaveAudioNVideo(char *name);
 extern void GUI_Quiet( void);
 extern void GUI_Verbose( void);
 extern void audioFilter_SetBitrate( int i);
@@ -64,6 +52,17 @@ extern int videoCodecConfigure(char *p,uint32_t i, uint8_t  *c);
 extern void updateLoaded( void );
 extern void setPostProc(int v,int s);
 extern void HandleAction(Action action) ;
+extern void show_info(char *p);
+extern const char *getStrFromAudioCodec( uint32_t codec);
+extern void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm, uint16_t * ss, uint16_t * ms);
+extern uint8_t ADM_aviSetSplitSize(uint32_t size);
+extern void updateLoaded(void );
+extern uint8_t A_rebuildKeyFrame (void);
+extern uint8_t scriptAddVar(char *var,char *value);
+
+/*#
+#
+#*/
 static void call_buildtimemap( char *p);
 static void call_quit(char *p) ;
 static void setBegin(char *p)   ;
@@ -84,21 +83,10 @@ static int searchReactionTable(char *string);
 static void call_setPP(char *v,char *s);
 //static void call_v2v(char *a,char *b,char *c);
 static void call_probePat(char *p);
-extern void updateLoaded(void );
 static void save(char*name);
-extern void show_info(char *p);
-extern const char *getStrFromAudioCodec( uint32_t codec);
-extern void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm, uint16_t * ss, uint16_t * ms);
-extern uint8_t ADM_aviSetSplitSize(uint32_t size);
-extern uint8_t ogmSave(const char *fd);
 static void set_autoindex(char *p);
-extern int A_saveDVDPS(char *name);
-extern void A_saveWorkbench (const char *name);
-extern uint8_t A_rebuildKeyFrame (void);
 //extern uint8_t A_setContainer(const char *cont);
-uint8_t scriptAddVar(char *var,char *value);
-//extern void ADM_dumpJSHooks(void);
-extern uint8_t ADM_vob2vobsub(char *nameVob, char *nameVobSub, char *nameIfo);
+
 
 #ifdef __WIN32
 	extern int ansiStringToUtf8(const char *ansiString, int ansiStringLength, char *utf8String);
@@ -139,63 +127,45 @@ AUTOMATON reaction_table[]=
 {
         //{"js",                  0,"Dump the javascript functions",(one_arg_type)ADM_dumpJSHooks},
         {"nogui",               0,"Run in silent mode",		(one_arg_type)GUI_Quiet}   ,
-//        {"listfilters",		0,"list all filters by name",		(one_arg_type)filterListAll}   ,
         {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},
         {"runpy",			1,"load and run a pyScript",		(one_arg_type)A_parseTinyPyScript},
         {"audio-normalize",	1,"activate normalization",		call_normalize},
         {"audio-resample",	1,"resample to x hz",			call_resample},
-//        {"filters",		1,"load a filter preset",		(one_arg_type)filterLoadXml}   ,
-//        {"codec-conf",		1,"load a codec configuration",		(one_arg_type )loadVideoCodecConf}   ,
-//        {"vcd-res",		0,"set VCD resolution",			(one_arg_type)setVCD}              ,
-//        {"svcd-res",		0,"set SVCD resolution",		(one_arg_type)setSVCD}              ,
-//        {"dvd-res",		0,"set DVD resolution",			(one_arg_type)setDVD}  ,
-//        {"halfd1-res",		0,"set 1/2 DVD resolution",		(one_arg_type)setHalfD1} ,
         {"save-jpg",		1,"save a jpeg",			(one_arg_type)A_saveJpg}        ,
-        {"begin",		1,"set start frame",			setBegin},
-        {"end",			1,"set end frame",			setEnd},
-//        {"save-unpacked-vop",	1,"save avi, unpacking vop",(one_arg_type)A_SaveUnpackedVop},
-//        {"save-packed-vop",	1,"save avi, packing vop",(one_arg_type)A_SavePackedVop},
-//        {"save-ogm",		1,"save as ogm file ",			(one_arg_type)ogmSave},
-        {"save-raw-audio",	1,"save audio as-is ",			        A_saveAudioCopy},
-//        {"save-raw-video",	1,"save raw video stream (mpeg/... ) ",	(one_arg_type)ADM_saveRaw},
-        {"save-uncompressed-audio",1,"save uncompressed audio",A_saveAudioProcessed},
+        {"begin",		1,"set start frame",			(one_arg_type)setBegin},
+
+        {"end",			1,"set end frame",			(one_arg_type)setEnd},
+        {"save-raw-audio",	1,"save audio as-is ",			 (one_arg_type)       A_saveAudioCopy},
+        {"save-uncompressed-audio",1,"save uncompressed audio",(one_arg_type)A_saveAudioProcessed},
         {"load",		1,"load video or workbench", (one_arg_type)A_openAvi},
+
         {"load-workbench",	1,"load workbench file", (one_arg_type)A_openAvi},
         {"append",		1,"append video",			(one_arg_type)A_appendAvi},
-        {"save",		1,"save avi",				save},
+        {"save",		1,"save avi",				(one_arg_type)save},
         {"save-workbench",	1,"save workbench file",		(one_arg_type)A_saveWorkbench},
 
         {"force-b-frame",	0,"Force detection of bframe in next loaded file", (one_arg_type)call_bframe},
         {"force-alt-h264",	0,"Force use of alternate read mode for h264", (one_arg_type)call_x264},
-//        {"force-unpack",	0,"Force detection of packed vop in next loaded file"
-//                                                          ,(one_arg_type)call_packedvop},
-        {"force-smart",   	0,"Engage smart copy mode with CQ=3 at next save"
-                                                          ,(one_arg_type)call_forcesmart},
-        {"audio-delay",		1,"set audio time shift in ms (+ or -)",	call_setAudio},
-        {"audio-map",		0,"build audio map (MP3 VBR)",	call_buildtimemap},
-        {"audio-bitrate",	1,"set audio encoding bitrate",	call_audiobitrate},
-        {"fps",	                1,"set frames per second",	call_fps},
-        {"audio-codec",		1,"set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",call_audiocodec},
 
+
+        {"audio-delay",		1,"set audio time shift in ms (+ or -)",	(one_arg_type)call_setAudio},
+        {"audio-map",		0,"build audio map (MP3 VBR)",	(one_arg_type)call_buildtimemap},
+        {"audio-bitrate",	1,"set audio encoding bitrate",	(one_arg_type)call_audiobitrate},
+        {"audio-codec",		1,"set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",(one_arg_type)call_audiocodec},
         {"video-codec",		1,"set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",				call_videocodec},
+
         {"video-conf",		1	,"set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]",				call_videoconf},
-        {"reuse-2pass-log",	0	,"reuse 2pass logfile if it exists",	set_reuse_2pass_log},
-        {"set-pp",		2	,"set post processing default value, value(1=hdeblok|2=vdeblock|4=dering) and strength (0-5)",
-                                              (one_arg_type )	call_setPP},
-//        {"vobsub",              3       ,"Create vobsub file (vobfile vosubfile ifofile)",  (one_arg_type ) call_v2v},
+        {"reuse-2pass-log",	0	,"reuse 2pass logfile if it exists",	(one_arg_type)set_reuse_2pass_log},
+        {"autosplit",		1	,"split every N MBytes",(one_arg_type)call_autosplit},
+        {"info",		0	,"show information about loaded video and audio streams", (one_arg_type)show_info},
+        {"autoindex",		0	,"try to generate required index files", (one_arg_type)set_autoindex},
 
-        {"autosplit",		1	,"split every N MBytes",call_autosplit},
-        {"info",		0	,"show information about loaded video and audio streams", show_info},
-        {"autoindex",		0	,"try to generate required index files", set_autoindex},
         {"output-format",	1	,"set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)", (one_arg_type )set_output_format},
-
         {"rebuild-index",       0       ,"rebuild index with correct frame type", (one_arg_type)A_rebuildKeyFrame},
-
         {"var",                 1       ,"set var (--var myvar=3)", (one_arg_type)setVar},
-        {"help",		0,"print this",		call_help},
-        {"quit",		0,"exit avidemux",	call_quit},
+        {"help",		0,"print this",		(one_arg_type)call_help},
+        {"quit",		0,"exit avidemux",	(one_arg_type)call_quit},
         {"probePat",		1,"Probe for PAT//PMT..",	(one_arg_type)call_probePat}
-
 
 }  ;
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
@@ -688,10 +658,4 @@ char *script_getVar(char *in, int *r)
 void set_reuse_2pass_log(char *p){
    prefs->set(FEATURE_REUSE_2PASS_LOG,1);
 }
-#if BAZOOKA
-void call_v2v(char *a,char *b,char *c)
-{
-         ADM_vob2vobsub(a,b,c); //char *nameVob, char *nameVobSub, char *nameIfo);
-}
-#endif
 //EOF

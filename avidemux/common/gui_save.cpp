@@ -32,17 +32,7 @@
 #include "DIA_working.h"
 #include "ADM_preview.h"
 // Local prototypes
-void A_saveAudioCopy (char *name);
-int  A_saveJpg (char *name);
-void A_saveBunchJpg(const char *name);
-void A_saveImg (const char *name);
-uint8_t ADM_saveRaw (const char *name);
-void A_saveWorkbench (const char *name);
-void A_savePyProject (const char *name);
-int  A_audioSave(char *name);
-int  A_SaveWrapper(char *name);
-void A_saveAudioProcessed (char *name);
-
+#include "A_functions.h"
 int      A_Save(const char *name);
 uint8_t  GUI_getFrameContent(ADMImage *image, uint32_t frame);
 
@@ -112,7 +102,7 @@ void HandleAction_Save(Action action)
     \brief Save audio track
 */
 
-int A_audioSave(char *name)
+int A_audioSave(const char *name)
 {
     ADM_audioStream *stream;
     if(false==video_body->getAudioStream( &stream)) 
@@ -138,7 +128,7 @@ int A_audioSave(char *name)
     \brief Save current stream (generally avi...)
      in decoded mode (assuming MP3)
 */
-void A_saveAudioProcessed (char *name)
+void A_saveAudioProcessed (const char *name)
 {
 #if 0
 // debug audio seek
@@ -266,7 +256,7 @@ void A_saveAudioProcessed (char *name)
         \fn A_saveAudioCopy
         \brief Save current stream (generally avi...)     in raw mode
 */
-void A_saveAudioCopy (char *name)
+void A_saveAudioCopy (const char *name)
 { 
   uint32_t written, max;
   uint64_t dts;
@@ -332,8 +322,9 @@ void A_saveAudioCopy (char *name)
         }
         if(cur_sample>tgt_sample)
             break;
-        work->update(cur_sample>>10, tgt_sample>>10);
         if(!work->isAlive()) break;
+        work->update(cur_sample>>10, tgt_sample>>10);
+        
     };
   if(hold)
   {
@@ -352,7 +343,7 @@ void A_saveAudioCopy (char *name)
         \fn A_saveJpg
         \brief Save a Jpg image from current display buffer
 */
-int A_saveJpg (char *name)
+int A_saveJpg (const char *name)
 {
   uint8_t fl;
     ADMImage *image=admPreview::getBuffer();
@@ -461,7 +452,7 @@ void A_savePyProject (const char *name)
     \fn A_SaveWrapper
 
 */
-int A_SaveWrapper(char *name)
+int A_SaveWrapper(const char *name)
 {
 
         if(A_Save(name))
