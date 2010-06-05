@@ -45,7 +45,7 @@ extern "C" {
 /**
     \fn swapRGB
 */
-static void swapRGB(uint32_t w,uint32_t h, uint8_t *to)
+static void swapRGB32(uint32_t w,uint32_t h, uint8_t *to)
 {
   uint32_t l=w*h;
     uint8_t *d=(uint8_t *)to;
@@ -59,7 +59,23 @@ static void swapRGB(uint32_t w,uint32_t h, uint8_t *to)
         
     }
 }
-
+/**
+    \fn swapRGB
+*/
+static void swapRGB24(uint32_t w,uint32_t h, uint8_t *to)
+{
+    uint32_t l=w*h;
+    uint8_t *d=(uint8_t *)to;
+    return;
+    int r,b,g;
+    while(l--)
+    {
+        uint8_t s=d[0];
+        d[0]=d[2];
+        d[2]=s;
+        d+=3;
+    }
+}
 /**
     \fn ADMColor2LAVColor
     \brief Convert ADM colorspace type swscale/lavcodec colorspace name
@@ -74,6 +90,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
     case ADM_COLOR_RGB32A: return PIX_FMT_RGB32;
     case ADM_COLOR_BGR32A: return PIX_FMT_RGB32; // Faster that way...PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
+    case ADM_COLOR_BGR24: return PIX_FMT_RGB24;
     default : ADM_assert(0); 
   }
   return PIX_FMT_YUV420P;
@@ -100,6 +117,7 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
   switch(fromColor)
   {
     case ADM_COLOR_RGB24:
+    case ADM_COLOR_BGR24:
             srcData[0]=from;
             srcData[1]=NULL;
             srcData[2]=NULL;
@@ -157,8 +175,13 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
   sws_scale(CONTEXT,srcData,srcStride,0,srcHeight,dstData,dstStride);
   if(toColor==ADM_COLOR_BGR32A)
   {
-     swapRGB(dstWidth,dstHeight,to);
+     swapRGB32(dstWidth,dstHeight,to);
   }
+  if(toColor==ADM_COLOR_BGR24)
+  {
+     swapRGB24(dstWidth,dstHeight,to);
+  }
+  
   return true;
   
 }
@@ -299,8 +322,13 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     if(false==convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes)) return false;
     if(toColor==ADM_COLOR_BGR32A)
     {
-             swapRGB(dstWidth,dstHeight,to);
+             swapRGB32(dstWidth,dstHeight,to);
     }
+    if(toColor==ADM_COLOR_BGR24)
+    {
+             swapRGB24(dstWidth,dstHeight,to);
+    }
+
     return true;
 }
 //EOF

@@ -81,7 +81,7 @@ bool  ADMImage::saveAsBmp(const char *filename)
             return 0;
         }
         ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12,ADM_COLOR_BGR24);
-
+        converter.convertImage(this,out);
         uint32_t ww=bmph.biWidth;
         uint32_t hh=bmph.biHeight;
         uint8_t swap[ww*3];
