@@ -9,7 +9,9 @@ SET(${ADM_LIB}_SRCS
         mpegenc.c
         movenchint.c sdp.c adtsenc.c flacenc.c flacenc_header.c vorbiscomment.c
 )
-
+if(win32)
+  add_definitions(-DHAVE_DOS_PATHS)
+endif(win32)
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
 TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6 ADM_libavutil6 ADM_libavcodec6)
 
