@@ -18,6 +18,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
+#include "DIA_coreToolkit.h"
 #include "ADM_scriptCommon.h"
 #include "ADM_scriptIf.h"
 #include "ADM_scriptGui.h"
@@ -51,4 +52,19 @@ char *scriptDirSelect(const char *title)
         return NULL;
     return ADM_strdup(me);
 }
+/**
+
+*/
+void scriptDisplayError(const char *one, const char *two)
+{
+    GUI_Error_HIG(one,two);
+}
+/**
+
+*/
+void scriptDisplayInfo(const char *one, const char *two)
+{
+    GUI_Info_HIG(ADM_LOG_INFO,one,two);
+}
+
 //EOF

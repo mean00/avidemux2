@@ -4,4 +4,6 @@
 /* METHOD */ str scriptDirSelect:dirSelect(str) 
 /* METHOD */ str scriptFileSelRead:fileReadSelect(str) 
 /* METHOD */ str scriptFileSelWrite:fileWriteSelect(str) 
+/* METHOD */ void scriptDisplayError:displayError(str,str) 
+/* METHOD */ void scriptDisplayInfo:displayInfo(str,str) 
 

@@ -21,6 +21,8 @@ extern "C" {
 char *scriptFileSelRead(const char *title);
 char *scriptFileSelWrite(const char *title);
 char *scriptDirSelect(const char *title);
+void scriptDisplayError(const char *one, const char *two);
+void scriptDisplayInfo(const char *one, const char *two);
 
 
 #ifdef __cplusplus

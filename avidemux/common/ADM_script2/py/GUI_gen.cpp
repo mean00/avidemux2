@@ -13,6 +13,17 @@ static tp_obj zzpy_fileWriteSelect(TP)
   ADM_dealloc(r);
   return o;
 }
+// displayError -> void scriptDisplayError (str str ) 
+static tp_obj zzpy_displayError(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_GUI);
+  const char *p0= pm.asString();
+  const char *p1= pm.asString();
+  scriptDisplayError(p0,p1); 
+
+}
 // dirSelect -> str scriptDirSelect (str ) 
 static tp_obj zzpy_dirSelect(TP)
  {
@@ -26,6 +37,17 @@ static tp_obj zzpy_dirSelect(TP)
   tp_obj o=tp_string_copy(tp,r,  strlen(r));
   ADM_dealloc(r);
   return o;
+}
+// displayInfo -> void scriptDisplayInfo (str str ) 
+static tp_obj zzpy_displayInfo(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_GUI);
+  const char *p0= pm.asString();
+  const char *p1= pm.asString();
+  scriptDisplayInfo(p0,p1); 
+
 }
 // fileReadSelect -> str scriptFileSelRead (str ) 
 static tp_obj zzpy_fileReadSelect(TP)
@@ -51,9 +73,17 @@ tp_obj zzpy__pyGui_get(tp_vm *vm)
   {
      return tp_method(vm,self,zzpy_fileWriteSelect);
   }
+  if (!strcmp(key, "displayError"))
+  {
+     return tp_method(vm,self,zzpy_displayError);
+  }
   if (!strcmp(key, "dirSelect"))
   {
      return tp_method(vm,self,zzpy_dirSelect);
+  }
+  if (!strcmp(key, "displayInfo"))
+  {
+     return tp_method(vm,self,zzpy_displayInfo);
   }
   if (!strcmp(key, "fileReadSelect"))
   {
@@ -87,7 +117,9 @@ static tp_obj myCtorpyGui(tp_vm *vm)
 static tp_obj zzpy__pyGui_help(TP)
  {
   jsLog("fileWriteSelect(str)");
+  jsLog("displayError(str,str)");
   jsLog("dirSelect(str)");
+  jsLog("displayInfo(str,str)");
   jsLog("fileReadSelect(str)");
 };
 tp_obj initClasspyGui(tp_vm *vm)
