@@ -93,6 +93,16 @@ static tp_obj zzpy_getFps1000(TP)
   int r=  scriptGetFps1000(); 
   return tp_number(r);
 }
+// saveAudio -> int A_audioSave (str ) 
+static tp_obj zzpy_saveAudio(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  const char *p0= pm.asString();
+  int r=  A_audioSave(p0); 
+  return tp_number(r);
+}
 // videoCodec -> int scriptSetVideoCodec (str couples ) 
 static tp_obj zzpy_videoCodec(TP)
  {
@@ -223,6 +233,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm,self,zzpy_getFps1000);
   }
+  if (!strcmp(key, "saveAudio"))
+  {
+     return tp_method(vm,self,zzpy_saveAudio);
+  }
   if (!strcmp(key, "videoCodec"))
   {
      return tp_method(vm,self,zzpy_videoCodec);
@@ -305,6 +319,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   jsLog("appendVideo(str )");
   jsLog("audioMixer(str )");
   jsLog("getFps1000(void)");
+  jsLog("saveAudio(str)");
   jsLog("videoCodec(str,couples)");
   jsLog("getWidth(void)");
   jsLog("addSegment(int ,float , float )");

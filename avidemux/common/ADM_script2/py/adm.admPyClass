@@ -21,6 +21,10 @@
 /* METHOD */ int scriptSetContainer:setContainer(str,couples) 
 /* METHOD */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
 #
+#  Audio
+#
+/* METHOD */ int A_audioSave:saveAudio(str) 
+#
 #       Variables
 #
 /* ATTRIBUTES */ double markerA:scriptSetMarkerA,scriptGetMarkerA
