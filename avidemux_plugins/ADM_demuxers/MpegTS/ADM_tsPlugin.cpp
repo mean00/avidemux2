@@ -19,7 +19,7 @@
 #include "fourcc.h"
 #include "avidemutils.h"
 #include "ADM_tsPatPmt.h"
-ADM_DEMUXER_BEGIN( tsHeader,
+ADM_DEMUXER_BEGIN( tsHeader, 90,
                     1,0,0,
                     "ts",
                     "mpeg ts demuxer plugin (c) Mean 2007/2009"

@@ -19,7 +19,7 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-ADM_DEMUXER_BEGIN( OpenDMLHeader,
+ADM_DEMUXER_BEGIN( OpenDMLHeader, 50,
                     1,0,0,
                     "openDml",
                     "AVI/OpenDML demuxer plugin (c) Mean 2007/2007"

@@ -19,7 +19,7 @@
 #include "fourcc.h"
 #include "avidemutils.h"
 
-ADM_DEMUXER_BEGIN( psHeader,
+ADM_DEMUXER_BEGIN( psHeader, 10,
                     1,0,0,
                     "ps",
                     "mpeg ps demuxer plugin (c) Mean 2007/2008"

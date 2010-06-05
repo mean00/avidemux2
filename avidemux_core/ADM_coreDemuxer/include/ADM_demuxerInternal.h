@@ -33,14 +33,16 @@ public:
         const char    *name;
         const char    *descriptor;
         uint32_t      apiVersion;
+        uint32_t      priority;
 
         ADM_demuxer(const char *file) : ADM_LibWrapper()
         {
         const char   *(*getDescriptor)();
         uint32_t     (*getApiVersion)();
+        uint32_t     (*getPriority)();
         const char  *(*getDemuxerName)();
 
-			initialised = (loadLibrary(file) && getSymbols(7,
+			initialised = (loadLibrary(file) && getSymbols(8,
 				&createdemuxer, "create",
 				&deletedemuxer, "destroy",
 				&probe,         "probe",
@@ -48,10 +50,12 @@ public:
 				&getDemuxerName, "getName",
 				&getApiVersion,  "getApiVersion",
 				&getVersion,     "getVersion",
+                &getPriority,    "getPriority",
 				&getDescriptor,  "getDescriptor"));
                 if(initialised)
                 {
                     name=getDemuxerName();
+                    priority=getPriority();
                     apiVersion=getApiVersion();
                     descriptor=getDescriptor();
                     printf("[Demuxer]Name :%s ApiVersion :%d Description :%s\n",name,apiVersion,descriptor);
@@ -62,7 +66,7 @@ public:
         }
 };
 
-#define ADM_DEMUXER_BEGIN( Class,maj,mn,pat,name,desc) \
+#define ADM_DEMUXER_BEGIN( Class,prio,maj,mn,pat,name,desc) \
 extern "C" {\
 vidHeader   *create(void){ return new Class; } \
 void         destroy(vidHeader *h){ Class *z=(Class *)h;delete z;} \
@@ -70,6 +74,7 @@ uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major
 uint32_t     getApiVersion(void) {return ADM_DEMUXER_API_VERSION;} \
 const char  *getName(void) {return name;} \
 const char  *getDescriptor(void) {return desc;} \
+uint32_t     getPriority(void) {return prio;} \
 }
 
 #endif

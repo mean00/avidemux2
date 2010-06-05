@@ -18,7 +18,7 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-ADM_DEMUXER_BEGIN( picHeader,
+ADM_DEMUXER_BEGIN( picHeader, 50,
                     1,0,0,
                     "picture",
                     "Picture demuxer plugin (c) Mean 2007/2008"

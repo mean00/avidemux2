@@ -18,7 +18,7 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-ADM_DEMUXER_BEGIN( flvHeader,
+ADM_DEMUXER_BEGIN( flvHeader, 50,
                     1,0,0,
                     "flv",
                     "flash demuxer plugin (c) Mean 2007/2007"

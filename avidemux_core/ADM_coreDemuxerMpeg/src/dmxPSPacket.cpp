@@ -143,6 +143,7 @@ _again2:
         if(len>     maxSize)
         {
                 printf("[DmxPS] Packet too big %d vs %d\n",len,maxSize);
+                goto _again2;
         }
         if(!_file->read32(len,buffer)) return false;
         return true;

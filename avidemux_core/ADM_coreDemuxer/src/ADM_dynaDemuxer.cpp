@@ -86,9 +86,23 @@ uint8_t ADM_dm_loadPlugins(const char *path)
 
 	for(int i=0;i<nbFile;i++)
 		tryLoadingDemuxerPlugin(files[i]);
-
-	printf("[ADM_av_plugin] Scanning done\n");
-
+    int nb=ListOfDemuxers.size();
+	
+    // Now sort them according to priority
+    
+    for(int i=0;i<nb;i++)
+        for(int j=i+1;j<nb;j++) // sub optimal, but who cares
+        {
+            if(ListOfDemuxers[i]->priority<ListOfDemuxers[j]->priority)
+                {
+                        ADM_demuxer *a=ListOfDemuxers[i];
+                        ListOfDemuxers[i]=ListOfDemuxers[j];
+                        ListOfDemuxers[j]=a;
+                }
+        }
+    for(int i=0;i<nb;i++)
+        ADM_info("Demuxer plugin : %s, priority :%d\n",ListOfDemuxers[i]->name,(int)ListOfDemuxers[i]->priority);
+    printf("[ADM_dm_plugin] Scanning done, %d demuxers found\n",(int)nb);
 	return 1;
 }
 /**

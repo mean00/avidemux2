@@ -17,7 +17,7 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-ADM_DEMUXER_BEGIN( asfHeader,
+ADM_DEMUXER_BEGIN( asfHeader, 50,
                     1,0,0,
                     "asf",
                     "asf/wmv demuxer plugin (c) Mean 2007/2009"

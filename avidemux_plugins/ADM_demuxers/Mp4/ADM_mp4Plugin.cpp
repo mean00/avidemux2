@@ -19,7 +19,7 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-ADM_DEMUXER_BEGIN( MP4Header,
+ADM_DEMUXER_BEGIN( MP4Header, 50,
                     1,0,0,
                     "mp4",
                     "Mp4/Mov/3GP demuxer plugin (c) Mean 2007/2008"

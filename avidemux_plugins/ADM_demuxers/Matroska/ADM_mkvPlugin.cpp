@@ -18,7 +18,7 @@
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
 
-ADM_DEMUXER_BEGIN( mkvHeader,
+ADM_DEMUXER_BEGIN( mkvHeader, 50,
                     1,0,0,
                     "mkv",
                     "Matroska demuxer plugin (c) Mean 2007/2008"
