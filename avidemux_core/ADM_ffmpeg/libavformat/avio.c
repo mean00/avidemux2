@@ -144,11 +144,16 @@ int url_open(URLContext **puc, const char *filename, int flags)
 
     up = first_protocol;
     while (up != NULL) {
+// MEANX
+#undef printf
+        printf("While looking for proto %s, check %s\n",proto_str,up->name);
+// /MEANX
         if (!strcmp(proto_str, up->name))
             return url_open_protocol (puc, up, filename, flags);
         up = up->next;
     }
     *puc = NULL;
+    printf("proto %s not found\n",proto_str);
     return AVERROR(ENOENT);
 }
 
