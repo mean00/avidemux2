@@ -12,6 +12,16 @@ static tp_obj zzpy_audioCodec(TP)
   int r=  scriptSetAudioCodec(p0,p1,p2); 
   return tp_number(r);
 }
+// saveBmp -> int A_saveImg (str ) 
+static tp_obj zzpy_saveBmp(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  const char *p0= pm.asString();
+  int r=  A_saveImg(p0); 
+  return tp_number(r);
+}
 // addVideoFilter -> int scriptAddVideoFilter (str couples ) 
 static tp_obj zzpy_addVideoFilter(TP)
  {
@@ -62,6 +72,16 @@ static tp_obj zzpy_setPostProc(TP)
   int p1= pm.asInt();
   int p2= pm.asInt();
   int r=  scriptSetPostProc(p0,p1,p2); 
+  return tp_number(r);
+}
+// save -> int A_Save (str ) 
+static tp_obj zzpy_save(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  const char *p0= pm.asString();
+  int r=  A_Save(p0); 
   return tp_number(r);
 }
 // appendVideo -> int scriptAppendVideo (str  ) 
@@ -145,6 +165,16 @@ static tp_obj zzpy_clearVideoFilters(TP)
   int r=  scriptClearVideoFilters(); 
   return tp_number(r);
 }
+// saveJpeg -> int A_saveJpg (str ) 
+static tp_obj zzpy_saveJpeg(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  const char *p0= pm.asString();
+  int r=  A_saveJpg(p0); 
+  return tp_number(r);
+}
 // setContainer -> int scriptSetContainer (str couples ) 
 static tp_obj zzpy_setContainer(TP)
  {
@@ -201,6 +231,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm,self,zzpy_audioCodec);
   }
+  if (!strcmp(key, "saveBmp"))
+  {
+     return tp_method(vm,self,zzpy_saveBmp);
+  }
   if (!strcmp(key, "addVideoFilter"))
   {
      return tp_method(vm,self,zzpy_addVideoFilter);
@@ -220,6 +254,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "setPostProc"))
   {
      return tp_method(vm,self,zzpy_setPostProc);
+  }
+  if (!strcmp(key, "save"))
+  {
+     return tp_method(vm,self,zzpy_save);
   }
   if (!strcmp(key, "appendVideo"))
   {
@@ -252,6 +290,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "clearVideoFilters"))
   {
      return tp_method(vm,self,zzpy_clearVideoFilters);
+  }
+  if (!strcmp(key, "saveJpeg"))
+  {
+     return tp_method(vm,self,zzpy_saveJpeg);
   }
   if (!strcmp(key, "setContainer"))
   {
@@ -311,11 +353,13 @@ static tp_obj myCtorpyAdm(tp_vm *vm)
 static tp_obj zzpy__pyAdm_help(TP)
  {
   jsLog("audioCodec(str,int,couples)");
+  jsLog("saveBmp(str)");
   jsLog("addVideoFilter(str,couples)");
   jsLog("loadVideo(str )");
   jsLog("clearSegments(void)");
   jsLog("getHeight(void)");
   jsLog("setPostProc(int ,int , int )");
+  jsLog("save(str)");
   jsLog("appendVideo(str )");
   jsLog("audioMixer(str )");
   jsLog("getFps1000(void)");
@@ -324,6 +368,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   jsLog("getWidth(void)");
   jsLog("addSegment(int ,float , float )");
   jsLog("clearVideoFilters(void)");
+  jsLog("saveJpeg(str)");
   jsLog("setContainer(str,couples)");
   jsLog("audioReset(void)");
   jsLog("getVideoCodec(void)");

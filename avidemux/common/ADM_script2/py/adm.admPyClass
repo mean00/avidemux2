@@ -1,6 +1,7 @@
 #           name    cookie id
 /* CLASS */ pyAdm : void : ADM_PYID_AVIDEMUX
 #              cname:pyname
+# Basic action load, handle seg, getInfo
 /* METHOD */ int scriptLoadVideo:loadVideo          (str ) 
 /* METHOD */ int scriptClearSegments:clearSegments  (void) 
 /* METHOD */ int scriptAppendVideo:appendVideo      (str ) 
@@ -16,14 +17,22 @@
 #
 #
 #              cname:pyname
+#  Codec, container
 /* METHOD */ int scriptSetVideoCodec:videoCodec(str,couples) 
 /* METHOD */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
 /* METHOD */ int scriptSetContainer:setContainer(str,couples) 
 /* METHOD */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
 #
-#  Audio
+#  Save audio, video, images
 #
 /* METHOD */ int A_audioSave:saveAudio(str) 
+/* METHOD */ int A_Save:save(str) 
+/* METHOD */ int A_saveJpg:saveJpeg(str) 
+/* METHOD */ int A_saveImg:saveBmp(str) 
+#
+#
+# Seek
+#/* METHOD */ int A_saveImg:saveBmp(str) 
 #
 #       Variables
 #

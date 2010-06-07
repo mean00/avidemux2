@@ -76,10 +76,10 @@ void HandleAction_Save(Action action)
       break;
 
     case ACT_SaveBunchJPG:
-      GUI_FileSelWrite (QT_TR_NOOP("Select JPEG Sequence to Save"), A_saveBunchJpg);
+      GUI_FileSelWrite (QT_TR_NOOP("Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
     	break;
     case ACT_SaveImg:
-      GUI_FileSelWrite (QT_TR_NOOP("Select BMP to Save"), A_saveImg);
+      GUI_FileSelWrite (QT_TR_NOOP("Select BMP to Save"), (SELFILE_CB *)A_saveImg);
       //GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       break;
     case ACT_SaveJPG :
@@ -128,7 +128,7 @@ int A_audioSave(const char *name)
     \brief Save current stream (generally avi...)
      in decoded mode (assuming MP3)
 */
-void A_saveAudioProcessed (const char *name)
+int A_saveAudioProcessed (const char *name)
 {
 #if 0
 // debug audio seek
@@ -151,14 +151,14 @@ void A_saveAudioProcessed (const char *name)
   if (!(out = ADM_fopen (name, "wb")))
     {
       GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Cannot open \"%s\" for writing."), name);
-      return;
+      return false;
     }
 
   outbuffer = (uint8_t *) ADM_alloc (2 * OUTCHUNK);	// 1Meg cache;
   if (!outbuffer)
     {
       GUI_Error_HIG (QT_TR_NOOP("Memory Error"), NULL);
-      return;
+      return false;
     }
 
 
@@ -186,7 +186,7 @@ void A_saveAudioProcessed (const char *name)
 		{
 			fclose(out);
 			ADM_dealloc(outbuffer);
-			return;
+			return false;
 		}
 
     	DIA_working *work=new DIA_working(QT_TR_NOOP("Saving audio"));
@@ -249,14 +249,15 @@ void A_saveAudioProcessed (const char *name)
 //  currentaudiostream->endDecompress ();
   printf ("AudioSave: actually written %u\n", written);
   printf ("Audiosave: target sample:%llu, got :%llu\n",sampleTarget,sampleCurrent);
-
+#else
+  return 0;
 #endif
 }
 /**
         \fn A_saveAudioCopy
         \brief Save current stream (generally avi...)     in raw mode
 */
-void A_saveAudioCopy (const char *name)
+int A_saveAudioCopy (const char *name)
 { 
   uint32_t written, max;
   uint64_t dts;
@@ -269,12 +270,12 @@ void A_saveAudioCopy (const char *name)
   if(false==video_body->getAudioStream( &stream)) 
     {
         printf("[A_audioSave] No stream\n");
-        return ;
+        return false;
     }
 
 
   out = ADM_fopen (name, "wb");
-  if (!out) return;
+  if (!out) return false;
 
   work=createWorking(QT_TR_NOOP("Saving audio"));
 
@@ -334,8 +335,8 @@ void A_saveAudioCopy (const char *name)
   fclose (out);
   delete work;
   delete[] buffer;
-  printf ("\n wanted %"LLU" samples, goto %"LLU" samples, written %"LU" bytes\n", tgt_sample,cur_sample, written);
-
+  ADM_info ("\n wanted %"LLU" samples, goto %"LLU" samples, written %"LU" bytes\n", tgt_sample,cur_sample, written);
+  return true;
 }
 
 
@@ -367,7 +368,7 @@ int A_saveJpg (const char *name)
       \brief Save the selection  as a bunch of jpeg 95% qual
 
 */
-void A_saveBunchJpg(const char *name)
+int A_saveBunchJpg(const char *name)
 {
   ADMImage *src=NULL;
   uint32_t curImg;
@@ -379,7 +380,7 @@ void A_saveBunchJpg(const char *name)
         if(frameStart>frameEnd)
                 {
                   GUI_Error_HIG(QT_TR_NOOP("Mark A > B"), QT_TR_NOOP("Set your markers correctly."));
-                        return;
+                        return 0;
                 }
         // Split name into base + extension
         ADM_PathSplit(name,&baseName,&ext);
@@ -409,7 +410,7 @@ _bunch_abort:
             GUI_Error_HIG(QT_TR_NOOP("Error"),QT_TR_NOOP( "Could not save all images."));
         delete working	;
         delete src;
-        return ;
+        return success;
 
 
 }
@@ -417,17 +418,20 @@ _bunch_abort:
       \fn A_saveImg
       \brief Save current displayed image as a BMP file
 */
-void A_saveImg (const char *name)
+int A_saveImg (const char *name)
 {
   ADMImage *image=admPreview::getBuffer();
     if(!image)
     {
-        printf("[SaveJpeg] No image\n");
-        return ;
+        ADM_warning("[SaveJpeg] No image\n");
+        return 0;
 
     }
-  if(!image->saveAsBmp(name))
+    int r=image->saveAsBmp(name);
+    if(!r)
         GUI_Error_HIG (QT_TR_NOOP("BMP op failed"),QT_TR_NOOP( "Saving %s as a BMP file failed."), ADM_GetFileName(name));
+    return r;
+
 }
 
 /**

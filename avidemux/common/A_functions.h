@@ -33,16 +33,16 @@ void 			A_saveAudioDecoded	(char *name);
 void 			A_saveAVI		(char *name);
 void 			A_playAvi		(void);
 
-void A_saveAudioCopy (const char *name);
+int  A_saveAudioCopy (const char *name);
 int  A_saveJpg (const char *name);
-void A_saveBunchJpg(const char *name);
-void A_saveImg (const char *name);
-uint8_t ADM_saveRaw (const char *name);
+int  A_saveBunchJpg(const char *name);
+int  A_saveImg (const char *name);
+int  ADM_saveRaw (const char *name);
 void A_saveWorkbench (const char *name);
 void A_savePyProject (const char *name);
 int  A_audioSave(const char *name);
 int  A_SaveWrapper(const char *name);
-void A_saveAudioProcessed (const char *name);
-int     A_Save(const char *name);
+int  A_saveAudioProcessed (const char *name);
+int  A_Save(const char *name);
 
 #endif
