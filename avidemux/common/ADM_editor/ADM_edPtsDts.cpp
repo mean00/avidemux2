@@ -261,6 +261,7 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     aviInfo info;
     uint64_t offset,pts,dts;
     uint32_t nbFrames;
+    uint64_t myDelay=0;
     *delay=0;
 
     hdr->getVideoInfo(&info);
@@ -283,10 +284,10 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     }
     if(index*timeIncrementUs > dts)
     {
-        *delay=index*timeIncrementUs-dts;
+        myDelay=index*timeIncrementUs-dts;
     }
-    dts=dts+*delay-index*timeIncrementUs;
-    uint64_t curDts=dts;
+    dts=dts+myDelay-index*timeIncrementUs;
+    uint64_t curDts=dts; // First DTS...
 
     ADM_info("Computing missing DTS\n");
 
@@ -294,16 +295,19 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     for(int i=0;i<nbFrames;i++)
     {
         hdr->getPtsDts(i,&pts,&dts);
+        //printf("Frame %d dts=%"LLU,i,dts);
+        if(dts!=ADM_NO_PTS) dts+=myDelay;
         if(dts==ADM_NO_PTS) 
         {
             dts=curDts;
-            hdr->setPtsDts(i,pts,dts);
             updated++;
         }
+        hdr->setPtsDts(i,pts,dts);
+        //printf("new dts=%"LLU"\n",dts);
         curDts=dts+timeIncrementUs;
     }
     ADM_info("Updated %d Dts, now computing PTS\n",updated);
-    uint64_t myDelay=*delay;
+    
     bool r= setPtsFromDts(hdr,timeIncrementUs,delay);
     *delay+=myDelay;
     return r;
