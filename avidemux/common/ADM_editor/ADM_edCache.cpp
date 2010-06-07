@@ -198,9 +198,8 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
             if(candidate->Pts<=pts)
             {
                 ADM_error("The next frame has a PTS <= the one we started from, ignoring\n");
-                continue;
-            }
-            return candidate;
+            }else
+                return candidate;
         }
     }
     aADM_warning("Cannot find image after %"LLU" ms in cache\n",pts/1000);
