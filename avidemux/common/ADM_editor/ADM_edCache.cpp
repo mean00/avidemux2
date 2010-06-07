@@ -186,6 +186,7 @@ void EditorCache::dump( void)
 */
 ADMImage    *EditorCache::getAfter(uint64_t pts)
 {
+    if(!writeIndex) return NULL;
     for(uint32_t i=readIndex;i<writeIndex-1;i++)
 	{
         int index=i%_nbImage;
