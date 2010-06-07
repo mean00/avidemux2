@@ -258,8 +258,54 @@ bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
 */
 bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
 {
+    aviInfo info;
+    uint64_t offset,pts,dts;
+    uint32_t nbFrames;
     *delay=0;
-    ADM_error("SetPtsFromDts not implemented\n");
-    return true;
+
+    hdr->getVideoInfo(&info);
+    nbFrames=info.nb_frames;
+    // Search valid DTS
+    int index=-1;
+    for(int i=0;i<nbFrames;i++)
+    {
+        hdr->getPtsDts(i,&pts,&dts);
+        if(dts!=ADM_NO_PTS) 
+        {
+            index=i;
+            break;
+        }
+    }
+    if(index==-1)
+    {
+        ADM_info("No dts found, aborting\n");
+        return false;
+    }
+    if(index*timeIncrementUs > dts)
+    {
+        *delay=index*timeIncrementUs-dts;
+    }
+    dts=dts+*delay-index*timeIncrementUs;
+    uint64_t curDts=dts;
+
+    ADM_info("Computing missing DTS\n");
+
+    int updated=0;
+    for(int i=0;i<nbFrames;i++)
+    {
+        hdr->getPtsDts(i,&pts,&dts);
+        if(dts==ADM_NO_PTS) 
+        {
+            dts=curDts;
+            hdr->setPtsDts(i,pts,dts);
+            updated++;
+        }
+        curDts=dts+timeIncrementUs;
+    }
+    ADM_info("Updated %d Dts, now computing PTS\n",updated);
+    uint64_t myDelay=*delay;
+    bool r= setPtsFromDts(hdr,timeIncrementUs,delay);
+    *delay+=myDelay;
+    return r;
 }
 //EOF
