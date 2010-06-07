@@ -179,7 +179,21 @@ bool flvHeader::parseOneMeta(const char *s,uint64_t endPos)
                                         ;break;
                 case AMF_DATA_TYPE_STRING: {int r=read16();Skip(r);}break;
                 case AMF_DATA_TYPE_BOOL: read8();break;
-                
+                case AMF_DATA_TYPE_MIXEDARRAY:
+                                            {
+                                                read32();
+                                                 while(ftello(_fd)<endPos-4)
+                                                {
+                                                            char *o=readFlvString();
+                                                            if(!o) break;
+                                                            printf("\t MixedArray:%s",o);
+                                                            if(false==parseOneMeta(o,endPos)) return false;
+                                                            
+                                                }
+                                                if(read8()!=AMF_END_OF_OBJECT) return false;
+
+                                             }
+                                            break;
                 default : printf("\n");ADM_assert(0);
             }
             printf("\n");
