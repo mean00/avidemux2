@@ -54,6 +54,6 @@ uint32_t fcc;
 aviInfo info;
         video_body->getVideoInfo(&info);
         fcc=info.fcc;
-        return fourCC::tostring(fcc);
+        ADM_strdup(fourCC::tostring(fcc));
 }
 // EOF
