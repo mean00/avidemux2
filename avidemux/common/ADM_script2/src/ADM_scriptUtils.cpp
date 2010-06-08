@@ -35,4 +35,26 @@ int scriptSetContainer(const char *container, CONFcouple *conf)
     if(conf) delete conf;
     return r;
 }
+
+/**
+    \fn scriptTestCrash
+    \brief Force a crash
+*/
+int scriptTestCrash(void)
+{
+  
+  int *foobar=NULL;
+  *foobar=0; // CRASH!
+  return true;
+}
+/**
+    \fn scriptTestAssert
+    \brief Force a crash
+*/
+int scriptTestAssert(void)
+{
+  
+  ADM_assert(0);
+  return true;
+}
 //EOF

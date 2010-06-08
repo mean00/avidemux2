@@ -13,6 +13,14 @@
  ***************************************************************************/
 #ifndef ADM_SCRIPT_UTIL_H
 #define ADM_SCRIPT_UTIL_H
+#ifdef __cplusplus
 int scriptSetContainer(const char *container, CONFcouple *conf);
+extern "C" {
+#endif
+int scriptTestCrash(void);
+int scriptTestAssert(void);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

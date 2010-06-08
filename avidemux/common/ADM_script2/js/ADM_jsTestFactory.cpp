@@ -20,27 +20,6 @@
 #include "ADM_scriptTestFactory.h"
 #include "DIA_encoding.h"
 
-/**
-    \fn crashTest
-    \brief Force a crash
-*/
-int jsTestCrash(void)
-{
-  
-  int *foobar=NULL;
-  *foobar=0; // CRASH!
-  return true;
-}
-/**
-    \fn assertTest
-    \brief Force a crash
-*/
-int jsTestAssert(void)
-{
-  
-  ADM_assert(0);
-  return true;
-}
 
 
 /**

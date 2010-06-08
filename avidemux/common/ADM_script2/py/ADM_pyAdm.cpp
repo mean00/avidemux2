@@ -45,6 +45,8 @@
 #include "editor_gen.cpp"
 #include "GUI_gen.cpp"
 
+#include "pyHelpers_gen.cpp"
+
 #include "pyDFToggle_gen.cpp"
 #include "pyDFInteger_gen.cpp"
 #include "pyDFMenu_gen.cpp"
@@ -73,6 +75,9 @@ static bool initPy(tinyPy *py)
     py->registerClass("DFInteger",initClasspyDFInteger);
     py->registerClass("DFMenu",initClasspyDFMenu);
     py->registerClass("DialogFactory",initClasspyDialogFactory);
+
+    py->registerFuncs("test",pyHelpers_functions);
+
     tinyPy::registerLogger(pyLogger);
     return true;
 }

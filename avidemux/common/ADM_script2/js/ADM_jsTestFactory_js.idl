@@ -1,7 +1,8 @@
 %{
 #include "stdio.h"
 #include "ADM_jsAvidemux.h"
-#include "ADM_jsTestFactory.h"
+#include "ADM_scriptTestFactory.h"
+#include "ADM_scriptUtils.h"
 %}
 /*
 ###############################################################
@@ -27,8 +28,8 @@ function int admTestFacNotch   :  jsTestFacNotch   (void  ) <static>;
 function int admTestFacThreadCount:  jsTestFacThreadCount   (void  ) <static>;
 function int admTestFacSlider  :  jsTestFacSlider  (void  ) <static>;
 function int admTestEncoding   :  jsTestFacEncoding  (void  ) <static>;
-function void admTestCrash     :  jsTestCrash      (void  ) <static>;
-function void admTestAssert    :  jsTestAssert     (void  ) <static>;
+function void admTestCrash     :  scriptTestCrash      (void  ) <static>;
+function void admTestAssert    :  scriptTestAssert     (void  ) <static>;
 
 %<
 JSFunctionSpec  *jsGetTestFunctions(void)

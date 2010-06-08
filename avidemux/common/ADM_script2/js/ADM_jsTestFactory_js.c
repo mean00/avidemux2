@@ -16,6 +16,7 @@ please refer to the software package which it is part of.
 #include "stdio.h"
 #include "ADM_jsAvidemux.h"
 #include "ADM_scriptTestFactory.h"
+#include "ADM_scriptUtils.h"
 
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>
@@ -567,7 +568,7 @@ jjadmTestCrash(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
     var134 = JS_FALSE;
     var135 = obj;
     var139 = argc;
-    jsTestCrash();
+    scriptTestCrash();
     var134 = JS_TRUE;
     return var134;
 }
@@ -582,7 +583,7 @@ jjadmTestAssert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var140 = JS_FALSE;
     var141 = obj;
     var145 = argc;
-    jsTestAssert();
+    scriptTestAssert();
     var140 = JS_TRUE;
     return var140;
 }

@@ -1,0 +1,4 @@
+# Basic action load, handle seg, getInfo
+/* FUNC */ int scriptTestAssert:testAssert          (void ) 
+/* FUNC */ int scriptTestCrash:testCrash           (void ) 
+
