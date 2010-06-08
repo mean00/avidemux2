@@ -20,7 +20,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <math.h>
-
+#include <string>
 #ifdef __MINGW32__
 #include <windows.h>
 #include <excpt.h>
@@ -30,7 +30,7 @@
 #endif
 
 #include "ADM_default.h"
-
+using namespace std;
 // Our callback to give UI formatted informations....
 static ADM_saveFunction *mysaveFunction=NULL;
 static ADM_fatalFunction *myFatalFunction=NULL;
@@ -313,7 +313,7 @@ void sig_segfault_handler(int signo)
 void ADM_backTrack(const char *info,int lineno,const char *file)
 {
 	char wholeStuff[2048];
-    char buffer[2048];
+    char buffer[4096];
     char in[2048];
 	void *stack[20];
 	char **functions;
@@ -330,6 +330,7 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 	count = backtrace(stack, 20);
 	functions = backtrace_symbols(stack, count);
 	sprintf(wholeStuff,"%s\n at line %d, file %s",info,lineno,file);
+    string guiOut(wholeStuff); 
     int status;
     size_t size=2047;
     // it looks like that xxxx (functionName+0x***) XXXX
@@ -347,14 +348,13 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
         }else       
             strcpy(buffer,functions[i]);
         printf("%s:%d:<%s>:%d\n",functions[i],i,buffer,status);
-		strcat(wholeStuff,buffer);
-		strcat(wholeStuff,"\n");
+        guiOut+=string(buffer)+string("\n");
+		
 	}
-
 	printf("*********** BACKTRACK **************\n");
 
 	if(myFatalFunction)
-		myFatalFunction("Crash", wholeStuff); // FIXME
+		myFatalFunction("Crash", guiOut.c_str()); // FIXME
 #endif	//__CYGWIN__
 
 	exit(-1); // _exit(1) ???
