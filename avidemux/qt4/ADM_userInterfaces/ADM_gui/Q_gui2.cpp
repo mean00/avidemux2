@@ -33,6 +33,8 @@
 #include "ADM_coreVideoEncoderInternal.h"
 #include "ADM_muxerProto.h"
 #include "T_vumeter.h"
+#include "DIA_coreToolkit.h"
+
 extern int global_argc;
 extern char **global_argv;
 
@@ -71,7 +73,7 @@ void UI_refreshCustomMenu(void);
 QWidget *QuiMainWindows=NULL;
 QGraphicsView *drawWindow=NULL;
 uint8_t UI_updateRecentMenu( void );
-
+extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
@@ -639,6 +641,13 @@ void UI_setCurrentPreview(int ne)
 			WIDGET(actionPreviewInput)->setChecked(true);
 	}
 }
+/**
+        \fn FatalFunctionQt
+*/
+static void FatalFunctionQt(const char *title, const char *info)
+{
+	GUI_Info_HIG(ADM_LOG_IMPORTANT, title, info);
+}
 
 /**
     \fn UI_RunApp(void)
@@ -648,6 +657,7 @@ int UI_RunApp(void)
 {
 	
 	setupMenus();
+    ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	checkCrashFile();
 
 	if (global_argc >= 2)
