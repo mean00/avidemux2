@@ -65,9 +65,11 @@ void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, cons
          {
         	 snprintf(alertstring,1024,"<big><b>%s</b></big><br><br>%s",primary,secondary_format);
          }
+        QString info=QString::fromUtf8(alertstring);
+        QString info2=info.replace("\n","<br>");
         QMessageBox::StandardButton reply;
-          reply = QMessageBox::information(QuiMainWindows, QString::fromUtf8(QT_TR_NOOP("Info")),
-                                    QString::fromUtf8(alertstring),
+        reply = QMessageBox::information(QuiMainWindows, QString::fromUtf8(QT_TR_NOOP("Info")),
+                                    info,
                                     QMessageBox::Ok );
 
 }
@@ -95,8 +97,10 @@ void            GUI_Error_HIG(const char *primary, const char *secondary_format)
         	 snprintf(alertstring,1024,"<big><b>%s</b></big><br><br>%s",primary,secondary_format);
          }
           QMessageBox::StandardButton reply;
+          QString info=QString::fromUtf8(alertstring);
+          QString info2=info.replace("\n","<br>");
           reply = QMessageBox::critical(QuiMainWindows, QString::fromUtf8(QT_TR_NOOP("Info")),
-                                    QString::fromUtf8(alertstring),
+                                    info2,
                                     QMessageBox::Ok );
 }
 //****************************************************************************************************
