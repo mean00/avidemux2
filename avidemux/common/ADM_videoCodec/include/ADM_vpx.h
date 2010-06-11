@@ -36,18 +36,13 @@ public:
                     decoderVPX (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
                     ~decoderVPX();
     virtual bool    uncompress (ADMCompressedImage * in, ADMImage * out);
-
-    virtual bool dontcopy (void)
-                      {
-                        return 0; // We cannot use ffmpeg internal buffer, they dont exist!
-                      }
-
     virtual bool bFramePossible (void)
       {
         return 0;
       }
     virtual const char *getDecoderName(void) {return "LibVPX";}
     virtual bool  initializedOk(void)        {return alive;};
+    virtual bool dontcopy (void)             {return true;}
 };
 
 #endif
