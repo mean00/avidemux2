@@ -1,7 +1,6 @@
 use strict;
 my $input;
 my $output;
-my $headerFile;
 my $line;
 my $glueprefix="zzpy_";
 my $functionPrefix="";
@@ -99,7 +98,6 @@ sub processFunc
         }
         print " New function : $retType,$func,<@params>\n";
         
-        print HEADER "$retType  $functionPrefix".$func." ($args);\n";
 
 
         for($i=0;$i<$nb;$i++)
@@ -129,17 +127,12 @@ sub processFunc
 }
 
 
-if(scalar(@ARGV)!=1)
+if(scalar(@ARGV)!=2)
 {
-        die("admPy inputfile\n");
+        die("admPy inputfile outputfile\n");
 }
 $input=$ARGV[0];
-$output=$input;
-$output=~s/\..*$//g;
-my $thisfile=$output;
-$thisfile=~s/^.*\///g;
-$headerFile=$output."_gen.h";
-$output=$output."_gen.cpp";
+$output=$ARGV[1];
 print "Processing $input=>$output\n";
 open(OUTPUT,">$output") or die("Cannot open $output");
 ##
@@ -150,7 +143,6 @@ open(INPUT,$input) or die("Cannot open $input");
 close(INPUT);
 # Process them
 open(INPUT,$input) or die("Cannot open $input");
-open(HEADER,">$headerFile") or die("Cannot open $headerFile");
 while($line=<INPUT>)
 {
         chomp($line);
@@ -174,6 +166,10 @@ while($line=<INPUT>)
 # gen init array
 my $nbFunc=scalar(@allFuncs);
 my $i;
+my $thisfile=$input;
+$thisfile=~s/\.[a-zA-Z]*$//g;
+$thisfile=~s/^.*\///g;
+print "creating  $thisfile function table\n";
 print OUTPUT "pyFuncs ".$thisfile."_functions[]={\n";
 for($i=0;$i<$nbFunc;$i++)
 {
@@ -188,5 +184,4 @@ for($i=0;$i<$nbFunc;$i++)
 print OUTPUT "{NULL,NULL}\n};\n";
 close(INPUT);
 close(OUTPUT);
-close(HEADER);
 print "done\n.";

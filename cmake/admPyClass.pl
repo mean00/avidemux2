@@ -544,17 +544,12 @@ my $pyFunc;
 ##################################
 #  Main
 ##################################
-if(scalar(@ARGV)!=1)
+if(scalar(@ARGV)!=2)
 {
-        die("admPy inputfile\n");
+        die("admPy inputfile outputfile\n");
 }
 $input=$ARGV[0];
-$output=$input;
-$output=~s/\..*$//g;
-my $thisfile=$output;
-$thisfile=~s/^.*\///g;
-$headerFile=$output."_gen.h";
-$output=$output."_gen.cpp";
+$output=$ARGV[1];
 ##
 ## Main Loop
 ##
