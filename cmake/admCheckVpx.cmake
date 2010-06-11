@@ -1,0 +1,18 @@
+MACRO(checkVpxDec)
+		OPTION(VPXDEC "" ON)
+
+		MESSAGE(STATUS "Checking for Vpx")
+		MESSAGE(STATUS "*****************")
+
+		IF (VPXDEC)
+			FIND_HEADER_AND_LIB(VPX vpx/vpx_decoder.h vpx vpx_codec_dec_init_ver)
+			PRINT_LIBRARY_INFO("Vpx" VPX_FOUND "${VPX_INCLUDE_DIR}" "${VPX_LIBRARY_DIR}")
+                        IF(VPX_FOUND)
+                                SET(USE_VPX 1)
+		                MESSAGE(STATUS "Linking to vpx decoder library ")
+                        ENDIF(VPX_FOUND)
+		ELSE (VPXDEC)
+			MESSAGE("${MSG_DISABLE_OPTION}")
+		ENDIF (VPXDEC)
+		MESSAGE("")
+ENDMACRO(checkVpxDec)

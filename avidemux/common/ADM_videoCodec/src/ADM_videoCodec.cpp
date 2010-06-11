@@ -21,13 +21,19 @@ extern "C"
 #include "ADM_lavcodec.h"
 };
 #include "ADM_default.h"
-
+#include "config.h"
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 #include "avidemutils.h"
 #include "fourcc.h"
 #include "ADM_codecVdpau.h"
 #include "DIA_coreToolkit.h"
+
+#if defined(USE_VPX)
+#include "ADM_vpx.h"
+#endif
+
+
 extern bool vdpauUsable(void);
 
 /**
@@ -52,8 +58,19 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
             }
         }
         
-#endif
+#endif // VDPAU
     }
+// VPX
+#if defined(USE_VPX)
+    if(fourCC::check(fcc,(const uint8_t *)"VP8 "))
+    {
+        decoderVPX *dec=new decoderVPX(w,h,fcc,extraLen,extraData,bpp);
+        if(dec->initializedOk())
+            return (decoders *) (dec);
+        GUI_Error_HIG("VPX","Cannot initialize libvpx.");
+        delete dec;
+    }
+#endif // VPX
     return ADM_coreCodecGetDecoder(fcc,w,h,extraLen,extraData,bpp);
 }
 //EOF

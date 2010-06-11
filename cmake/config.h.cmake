@@ -37,6 +37,9 @@
 /* libpng is available */
 #cmakedefine USE_PNG
 
+/* libvpx is available */
+#cmakedefine USE_VPX
+
 /* use libsamplerate */
 #cmakedefine USE_SRC
 

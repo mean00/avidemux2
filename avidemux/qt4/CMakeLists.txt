@@ -17,10 +17,12 @@ checkQt4()
 IF (NOT QT4_FOUND)
         MESSAGE(FATAL_ERROR "Qt4 NOT FOUND")
 ENDIF (NOT QT4_FOUND)
-
+include(admCheckVpx)
 ##########################################
 # Config
 ##########################################
+# LibVPX
+checkVpxDec()
 
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
@@ -120,6 +122,12 @@ ENDIF (USE_XV)
 IF (USE_SDL)
         TARGET_LINK_LIBRARIES(avidemux3_qt4 ${SDL_LIBRARY})
 ENDIF (USE_SDL)
+
+# LibVPX
+IF (USE_VPX)
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${VPX_LIBRARY_DIR})
+ENDIF (USE_VPX)
+
 
 ###########################################
 # UI Specific
