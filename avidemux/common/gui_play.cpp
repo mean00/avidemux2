@@ -349,7 +349,11 @@ bool  GUIPlayback::initializeAudio(void)
     uint64_t startPts=firstPts;
 
     playbackAudio = createPlaybackFilter(startPts,0);
-    if(!playbackAudio) return false;
+    if(!playbackAudio) 
+    {
+        ADM_info("No audio\n");
+        return false;
+    }
 
     channels= playbackAudio->getInfo()->channels;
     frequency=playbackAudio->getInfo()->frequency;
@@ -416,7 +420,7 @@ bool GUIPlayback::updateVu(void)
 {
  uint64_t time=  ticktock.getElapsedMS();
     // Refresh vumeter every 50 ms
-
+    if(!playbackAudio)  return true;
     if(time>(vuMeterPts+50))
     {
         uint32_t stat[6];
