@@ -68,6 +68,7 @@ extern void ADM_memStatEnd( void );
 extern void getUIDescription(char*);
 extern uint8_t ADM_ad_loadPlugins(const char *path);
 extern uint8_t ADM_vf_loadPlugins(const char *path);
+extern uint8_t ADM_vd6_loadPlugins(const char *path);
 extern uint8_t ADM_av_loadPlugins(const char *path);
 extern uint8_t ADM_ae_loadPlugins(const char *path);
 extern uint8_t ADM_dm_loadPlugins(const char *path);
@@ -229,6 +230,7 @@ int main(int argc, char *argv[])
     char *dmPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","demuxers");    
     char *mxPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","muxers");    
     char *vePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoEncoders");    
+    char *vdPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoDecoders");    
     char *vfPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoFilters");
 
     ADM_mx_loadPlugins(mxPlugins);
@@ -251,6 +253,10 @@ int main(int argc, char *argv[])
 
     ADM_vf_loadPlugins(vfPlugins);
     delete [] vfPlugins;
+
+    ADM_vd6_loadPlugins(vdPlugins);
+    delete [] vdPlugins;
+
 
     // load local audio decoder plugins
 	adPlugins=ADM_getHomeRelativePath("plugins6","audioDecoder");

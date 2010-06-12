@@ -1,7 +1,7 @@
 SET(ADM_videoCodec_SRCS
         ADM_ffmpeg_vdpau.cpp
         ADM_videoCodec.cpp
-        ADM_vpx.cpp
+        ADM_dynVideoDecoder.cpp
 )
 
 ADD_LIBRARY(ADM_videocodec6 STATIC ${ADM_videoCodec_SRCS})

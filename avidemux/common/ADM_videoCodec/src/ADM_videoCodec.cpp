@@ -21,7 +21,6 @@ extern "C"
 #include "ADM_lavcodec.h"
 };
 #include "ADM_default.h"
-#include "config.h"
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 #include "avidemutils.h"
@@ -35,13 +34,18 @@ extern "C"
 
 
 extern bool vdpauUsable(void);
-
+decoders *tryCreatingVideoDecoder(uint32_t w, uint32_t h, uint32_t fcc,uint32_t extraDataLen,
+                    uint8_t *extra, uint32_t bpp);
 /**
     \fn getDecoder
     \brief returns the correct decoder for a stream w,h,fcc,extraLen,extraData,bpp
 */
-decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp)
+decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, 
+            uint8_t * extraData,uint32_t bpp)
 {
+  decoders *fromPlugin=tryCreatingVideoDecoder(w,h,fcc,extraLen,extraData,bpp);
+  if(fromPlugin) return fromPlugin;
+
   ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
   if (isH264Compatible (fcc) || isMpeg12Compatible(fcc))
     {

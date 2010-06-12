@@ -22,8 +22,6 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "config.h"
-#ifdef USE_VPX
 #include "ADM_vpx.h"
 #include "vpx/vpx_decoder.h"
 #include "vpx/vp8dx.h"
@@ -111,5 +109,4 @@ bool    decoderVPX::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     return false;
 }
-#endif
 // EOF
