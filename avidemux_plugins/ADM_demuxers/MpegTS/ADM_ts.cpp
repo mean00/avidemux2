@@ -118,12 +118,27 @@ abt:
 */
 uint64_t tsHeader::getVideoDuration(void)
 {
-    float f;
-        f=1000*1000*1000;
-        f/=_videostream.dwRate; // in uss
-        
-        f*=ListOfFrames.size();
-     return (uint64_t)f;
+    int index=ListOfFrames.size();
+    if(!index) return 0;
+    index--;
+    int offset=0;
+    do
+    {
+        if(ListOfFrames[index]->dts!=ADM_NO_PTS) break;
+        index--;
+        offset++;
+
+    }while(index);
+    if(!index)
+    {
+        ADM_error("Cannot find a valid DTS in the file\n");
+        return 0;
+    }
+    float f,g;
+    f=1000*1000*1000;
+    g=ListOfFrames[index]->dts;
+    g+=f*offset;
+    return (uint64_t)g;
 }
 /**
     \fn updateIdr
