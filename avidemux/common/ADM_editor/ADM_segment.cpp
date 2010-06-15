@@ -52,7 +52,17 @@ bool        ADM_EditorSegment::updateRefVideo(void)
             ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
             ref->firstFramePts=pts;
         }
+    
     updateStartTime();
+    //
+    n=segments.size();
+    if(n)
+    {
+    _SEGMENT *seg=getSegment(n-1);
+    uint64_t dur=ref->_aviheader->getVideoDuration();
+    printf("Current duration %"LLU" ms real one %"LLU" ms\n",dur/1000,seg->_durationUs/1000);
+    }
+
     return true;
 }
 /**
