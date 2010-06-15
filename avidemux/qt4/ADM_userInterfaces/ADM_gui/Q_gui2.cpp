@@ -541,6 +541,22 @@ MainWindow::~MainWindow()
 {
 	clearCustomMenu();
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+static bool first=true;
+    ADM_warning("Close event\n");
+    if(first)
+    {
+        first=false;
+        HandleAction(ACT_Exit);
+    }
+    event->accept();
+//         event->ignore();
+
+}
+
+
 static const UI_FUNCTIONS_T UI_Hooks=
     {
         ADM_RENDER_API_VERSION_NUMBER,
