@@ -136,6 +136,7 @@ uint64_t tsHeader::getVideoDuration(void)
     }
     float f,g;
     f=1000*1000*1000;
+    f/=_videostream.dwRate; 
     g=ListOfFrames[index]->dts;
     g+=f*offset;
     return (uint64_t)g;
