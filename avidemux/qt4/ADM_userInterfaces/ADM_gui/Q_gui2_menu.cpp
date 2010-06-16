@@ -1,6 +1,7 @@
 /***************************************************************************
-    copyright            : (C) 2001 by mean
-    email                : fixounet@free.fr
+    \file Q_gui2_menu.cpp
+    \brief Handle custom menus
+    \author mean/gruntster
  ***************************************************************************/
 
 /***************************************************************************
@@ -39,7 +40,7 @@ using std::string;
 #define JS_CUSTOM 0
 #define PY_CUSTOM 1
 static char     *customNames[2][ADM_MAC_CUSTOM_SCRIPT];
-static QAction  *customActions[1][ADM_MAC_CUSTOM_SCRIPT];
+static QAction  *customActions[2][ADM_MAC_CUSTOM_SCRIPT];
 static uint32_t ADM_nbCustom[2]={0,0};
 /**
     \fn clearCustomMenu
@@ -81,11 +82,20 @@ void MainWindow::buildCustomMenu(void)
     for(int pool=0;pool<2;pool++)
     {
         string myDir,subDir;
+        string ext;
         /* Collect the name */
-        if(JS_CUSTOM==pool) subDir=string("/js/");
-        else                subDir=string("/py/");
+        if(JS_CUSTOM==pool) 
+        {
+            subDir=string("/js/");
+            ext=string(".js");
+        }
+        else
+        {
+            subDir=string("/py/");
+            ext=string(".py");
+        }
         myDir=customFolder+subDir;
-        if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAC_CUSTOM_SCRIPT,".js"))
+        if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAC_CUSTOM_SCRIPT,ext.c_str()))
         {
             printf("Failed to build custom dir content");
             return;
@@ -97,16 +107,17 @@ void MainWindow::buildCustomMenu(void)
 
             for(int i=0; i < ADM_nbCustom[pool]; i++)
             {
-                customActions[pool][i] = new QAction(QString::fromUtf8(ADM_GetFileName(customNames[pool][i])), NULL);
+                QAction *action= new QAction(QString::fromUtf8(ADM_GetFileName(customNames[pool][i])), NULL);
+                customActions[pool][i] = action;
                 if(pool==JS_CUSTOM)
                 {
-                    jsMenu->addAction(customActions[pool][i]);
-                    connect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(customJs()));
+                    jsMenu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(customJs()));
                 }
                 else
                 {
-                    pyMenu->addAction(customActions[pool][i]);
-                    connect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(customPy()));
+                    pyMenu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(customPy()));
                 }
             }
         }
@@ -120,37 +131,34 @@ void MainWindow::buildCustomMenu(void)
 \fn     custom
 \brief  Invoked when one of the custom script has been called
 */
+void MainWindow::customScript(int pool,int base,QObject *ptr)
+{
+	
+	for(int i=0;i<ADM_nbCustom[pool];i++)
+	{
+		if(customActions[pool][i]==ptr)
+		{
+			printf("[Custom] %d/%d scripts\n",i,(int)ADM_nbCustom[pool]);
+			HandleAction( (Action)(base+i));
+			return; 
+		}
+	}
+	printf("[Custom] Not found\n");
+
+}
 void MainWindow::customJs(void)
 {
 	printf("[Custom] Js Invoked\n");
 	QObject *ptr=sender();
 	if(!ptr) return;
-	for(int i=0;i<ADM_nbCustom[JS_CUSTOM];i++)
-	{
-		if(customActions[JS_CUSTOM][i]==ptr)
-		{
-			printf("[Custom] %u/%u scripts\n",i,ADM_nbCustom[JS_CUSTOM]);
-			HandleAction( (Action)(ACT_CUSTOM_BASE_JS+i));
-			return; 
-		}
-	}
-	printf("[Custom] Not found\n");
+    customScript(JS_CUSTOM,ACT_CUSTOM_BASE_JS,ptr);
 }
 void MainWindow::customPy(void)
 {
 	printf("[Custom] Python Invoked\n");
 	QObject *ptr=sender();
 	if(!ptr) return;
-	for(int i=0;i<ADM_nbCustom[PY_CUSTOM];i++)
-	{
-		if(customActions[PY_CUSTOM][i]==ptr)
-		{
-			printf("[Custom] %u/%u scripts\n",i,ADM_nbCustom[PY_CUSTOM]);
-			HandleAction( (Action)(ACT_CUSTOM_BASE_PY+i));
-			return; 
-		}
-	}
-	printf("[Custom] Not found\n");
+    customScript(PY_CUSTOM,ACT_CUSTOM_BASE_PY,ptr);
 }
 /**
     Get the custom entry 

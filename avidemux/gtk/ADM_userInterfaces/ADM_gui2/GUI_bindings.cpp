@@ -381,11 +381,14 @@ void GUI_gtk_grow_off(int onoff)
     Get the custom entry
 
 */
-const char * GUI_getCustomScript(uint32_t nb)
+const char * GUI_getCustomJsScript(uint32_t nb)
 {
     ADM_assert(nb<ADM_nbCustom);
     return customNames[nb];
-
+}
+const char * GUI_getCustomPyScript(uint32_t nb)
+{
+   return NULL;
 }
 /**
      \fn bindGUI
@@ -647,7 +650,7 @@ void GUI_initCustom(void )
     go = gtk_menu_item_new_with_mnemonic (ADM_GetFileName(customNames[i]));
     gtk_widget_show (go);
     gtk_container_add (GTK_CONTAINER (menu), go);
-    rank=ACT_CUSTOM_BASE+i;
+    rank=ACT_CUSTOM_BASE_JS+i;
     CALLBACK( go                 ,rank);
   }
 

@@ -30,7 +30,7 @@ int jsPrintTiming(int framenumber )
     {
         int64_t delta=0;
         if(pts!=ADM_NO_PTS && dts!=ADM_NO_PTS) delta=(int64_t)pts-(int64_t)dts;
-        jsLog("Frame %"LU" : Flags 0x%"LX" pts=%"LLD" dts=%"LLD" delta=%"LLD" ms",framenumber,flags,pts,dts,delta/1000LL);
+        jsLog("Frame %"LU" : Flags 0x%"LX" pts=%"LLD" dts=%"LLD" delta=%"LLD" ms\n",framenumber,flags,pts,dts,delta/1000LL);
     }else
     {
         jsLog("Cannot get info for frame %"LU,framenumber);

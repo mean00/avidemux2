@@ -873,6 +873,7 @@ void cleanUp (void)
 */
 bool A_parseTinyPyScript(const char *name){
   bool ret;
+  ADM_info("Executing tinyPy script :%s\n",name);
   char *longname = ADM_PathCanonize(name);
    if (playing){
       GUI_PlayAvi();
