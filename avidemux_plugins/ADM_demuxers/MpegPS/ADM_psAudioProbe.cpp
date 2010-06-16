@@ -71,19 +71,18 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
         packetStats *stat=packet->getStat(i);
         if(stat->count)
         {
-            printf("[PsProbeAudo] Pid:%x count:%"LX" size:%"LD"\n",i,stat->count,stat->size);
-        }
-
-         if(stat->count>=PROBE_MIN_PACKET && stat->size>PROBE_MIN_SIZE)
-         {
+            ADM_info("[PsProbeAudo] Pid:%x count:%"LX" size:%"LD"\n",i,stat->count,stat->size);
+            if(stat->count>=PROBE_MIN_PACKET && stat->size>PROBE_MIN_SIZE)
+            {
                 packet->setPos(fileSize/2);
                 addAudioTrack(i,tracks,packet);
-         }
-
+            }else       
+                ADM_info("[PsProbeAudo] Not enough samples\n");
+        }
     }
 
 end:
-    printf("[PsDemux] Audio probe done, found %d tracks\n",(int)tracks->size());
+    ADM_info("[PsDemux] Audio probe done, found %d tracks\n",(int)tracks->size());
     delete packet;
 
     if(tracks->size()==0)
@@ -110,16 +109,24 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
         if(masked!=MP2_AUDIO_VALUE &&  // MP2
             masked!=LPCM_AUDIO_VALUE && // PCM
             masked!=DTS_AC3_AUDIO_VALUE  // AC3 & DTS
-            ) return false;
+            ) 
+        {
+            ADM_info("Not a type we know %x\n",(int)masked);
+            return false;
+        }
 
         // Go back where we were
         p->changePid(pid);
         p->getPacketOfType(pid,PROBE_ANALYZE_SIZE, &packetSize,&pts,&dts,audioBuffer,&startAt);
         //Realign
         p->seek(startAt,0);
-        int rd=PROBE_ANALYZE_SIZE;
-        if(!p->read(PROBE_ANALYZE_SIZE,audioBuffer))
+        int rd=packetSize*2;
+        if(rd>PROBE_ANALYZE_SIZE) rd=PROBE_ANALYZE_SIZE;
+        if(!p->read(rd,audioBuffer))
+        {
+            ADM_info("Cannot read %d bytes of type %x\n",packetSize*2,pid);
             return false;
+        }
         psAudioTrackInfo *info=new psAudioTrackInfo;
         info->esID=pid;
         uint32_t fq,br,chan,off;
