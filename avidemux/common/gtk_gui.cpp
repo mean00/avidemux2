@@ -52,7 +52,8 @@ renderZoom currentZoom=ZOOM_1_1;
 
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern uint8_t GUI_jobs(void);
-extern const char * GUI_getCustomScript(uint32_t nb);
+extern const char * GUI_getCustomJsScript(uint32_t nb);
+extern const char * GUI_getCustomPyScript(uint32_t nb);
 
 extern uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
 extern int     GUI_handleVFilter (void);
@@ -110,11 +111,18 @@ void HandleAction (Action action)
   // independant load not loaded
 //------------------------------------------------
 int nw;
-  if(action>=ACT_CUSTOM_BASE && action <ACT_CUSTOM_END)
+  if(action>=ACT_CUSTOM_BASE_JS && action <ACT_CUSTOM_END_JS)
   {
-      int i=action-ACT_CUSTOM_BASE;
-      const char *custom=GUI_getCustomScript(i);
+      int i=action-ACT_CUSTOM_BASE_JS;
+      const char *custom=GUI_getCustomJsScript(i);
       A_parseECMAScript(custom);
+      return ;
+  }
+  if(action>=ACT_CUSTOM_BASE_PY && action <ACT_CUSTOM_END_PY)
+  {
+      int i=action-ACT_CUSTOM_BASE_PY;
+      const char *custom=GUI_getCustomPyScript(i);
+      A_parseTinyPyScript(custom);
       return ;
   }
   switch (action)

@@ -6,6 +6,7 @@ QT4_ADD_RESOURCES(${ADM_LIB}_resource  avidemux.qrc)
 
 SET(${ADM_LIB}_SRCS
 	Q_gui2.cpp  
+	Q_gui2_menu.cpp  
         T_preview.cpp  
         T_vumeter.cpp  
         #stubs.cpp

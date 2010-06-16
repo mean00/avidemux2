@@ -61,9 +61,6 @@ static void setupMenus(void);
 static int shiftKeyHeld=0;
 static ADM_QSlider *slider=NULL;
 static int _upd_in_progres=0;
-static char     *customNames[ADM_MAC_CUSTOM_SCRIPT];
-static QAction  *customActions[ADM_MAC_CUSTOM_SCRIPT];
-static uint32_t ADM_nbCustom=0;
 static int currentFps = 0;
 static int frameCount = 0;
 static int currentFrame = 0;
@@ -283,6 +280,10 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
 	/* Build the custom menu */
+    jsMenu=new QMenu("javaScript");
+    pyMenu=new QMenu("tinyPython");
+    ui.menuCustom->addMenu(jsMenu);
+    ui.menuCustom->addMenu(pyMenu);
 	buildCustomMenu();
 
 	this->installEventFilter(this);
@@ -295,36 +296,6 @@ MainWindow::MainWindow() : QMainWindow()
 	setAcceptDrops(true);
     setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
     
-}
-/**
-\fn     custom
-\brief  Invoked when one of the custom script has been called
-*/
-void MainWindow::custom(void)
-{
-	printf("[Custom] Invoked\n");
-	QObject *ptr=sender();
-	if(!ptr) return;
-	for(int i=0;i<ADM_nbCustom;i++)
-	{
-		if(customActions[i]==ptr)
-		{
-			printf("[Custom] %u/%u scripts\n",i,ADM_nbCustom);
-			HandleAction( (Action)(ACT_CUSTOM_BASE+i));
-			return; 
-		}
-	}
-	printf("[Custom] Not found\n");
-}
-/**
-    Get the custom entry 
-
-*/
-const char * GUI_getCustomScript(uint32_t nb)
-{
-	ADM_assert(nb<ADM_nbCustom);
-	return customNames[nb];
-
 }
 /**
     \fn timeChanged
@@ -483,58 +454,6 @@ void MainWindow::nextIntraFrame(void)
 		ui.spinBox_TimeValue->stepUp();
 	else
 		HandleAction(ACT_NextKFrame);
-}
-
-void MainWindow::clearCustomMenu(void)
-{
-	if (ADM_nbCustom)
-	{
-		for(int i = 0; i < ADM_nbCustom; i++)
-		{
-			disconnect(customActions[i], SIGNAL(triggered()), this, SLOT(custom()));
-			delete customActions[i];
-			delete customNames[i];
-		}
-
-		ui.menuCustom->clear();
-		ADM_nbCustom = 0;
-	}
-}
-
-void MainWindow::buildCustomMenu(void)
-{
-	clearCustomMenu();
-
-	char *customdir = ADM_getCustomDir();
-
-	if (!customdir)
-	{
-		printf("No custom dir...\n");
-		return;
-	}
-
-	/* Collect the name */
-	if (! buildDirectoryContent(&ADM_nbCustom, customdir, customNames, ADM_MAC_CUSTOM_SCRIPT,".js"))
-	{
-		printf("Failed to build custom dir content");
-		return;
-	}
-
-	if(ADM_nbCustom)
-	{
-		printf("Found %u custom script(s), adding them\n", ADM_nbCustom);
-
-		for(int i=0; i < ADM_nbCustom; i++)
-		{
-			customActions[i] = new QAction(QString::fromUtf8(ADM_GetFileName(customNames[i])), NULL);
-			ui.menuCustom->addAction(customActions[i]);
-			connect(customActions[i], SIGNAL(triggered()), this, SLOT(custom()));
-		}
-	}
-	else
-		printf("No custom scripts\n");
-
-	printf("Custom menu built\n");
 }
 
 MainWindow::~MainWindow()

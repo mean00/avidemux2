@@ -17,11 +17,14 @@ public:
 	void buildCustomMenu(void);
 	
 	Ui_MainWindow ui;
-
+protected:
+    QMenu *jsMenu;
+    QMenu *pyMenu;
 public slots:
 	void timeChanged(int);
 	void buttonPressed(void);
-	void custom(void);
+	void customPy(void);
+    void customJs(void);
 	void toolButtonPressed(bool z);
 
 	void comboChanged(int z);
