@@ -58,13 +58,15 @@ static const uint32_t FPS[16]={
 class TSVideo
 {
 public:
-    TSVideo(void) {w=h=fps=interlaced=ar=pid=0;}
+    TSVideo(void) {w=h=fps=interlaced=ar=pid=frameCount=fieldCount=0;}
     uint32_t w;
     uint32_t h;
     uint32_t fps;
     uint32_t interlaced;
     uint32_t ar;
     uint32_t pid;
+    uint32_t frameCount;
+    uint32_t fieldCount;
 };
 
 typedef enum
@@ -569,6 +571,36 @@ dmxPacketInfo info;
                           continue;
 
                           break;
+                    case 0xB5: //  extension
+                                { 
+                                    uint8_t id=pkt->readi8()>>4;
+                                    uint8_t two;
+                                    switch(id)
+                                    {
+                                        case 1: // Sequence extension
+                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
+                                            break;
+                                        case 8: // picture coding extension (mpeg2)
+                                        {
+                                            // skip motion vector
+                                            uint8_t picture_structure;
+                                            pkt->forward(1); // 4*4 bits
+                                            two=pkt->readi8();
+                                            picture_structure=(two)&3;
+                                            
+                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
+                                            switch(picture_structure)
+                                            {
+                                            case 3: video.frameCount++;break;
+                                            case 1:
+                                            case 2:  video.fieldCount++;break;
+                                            default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            }
+                                        }
+                                        default:break;
+                                    }
+                                }
+                                break;
                   case 0xb8: // GOP
                           // Update ui
                             {
@@ -629,6 +661,9 @@ dmxPacketInfo info;
         printf("\n");
         Mark(&data,&info,2);
         qfprintf(index,"\n[End]\n");
+        qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
+        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
+        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
         qfclose(index);
         index=NULL;
         audioTracks=NULL;

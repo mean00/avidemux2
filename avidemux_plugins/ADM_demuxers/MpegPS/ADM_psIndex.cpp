@@ -53,8 +53,8 @@ typedef struct
     uint32_t h;
     uint32_t fps;
     uint32_t interlaced;
-    uint32_t frameNumber;
-    uint32_t fieldNumber;
+    uint32_t frameCount;
+    uint32_t fieldCount;
     uint32_t ar;
 }PSVideo;
 
@@ -239,9 +239,9 @@ dmxPacketInfo info;
                                             //printf("Picture type %02x struct:%x\n",two,picture_structure);
                                             switch(picture_structure)
                                             {
-                                            case 3: video.frameNumber++;break;
+                                            case 3: video.frameCount++;break;
                                             case 1:
-                                            case 2:  video.fieldNumber++;break;
+                                            case 2:  video.fieldCount++;break;
                                             default: ADM_warning("frame type 0 met, this is illegal\n");
                                             }
                                         }
@@ -336,8 +336,8 @@ theEnd:
         Mark(&data,&info,markStart);
         
         qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameNumber); // Size
-        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldNumber); // Size
+        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
+        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
         // Now write the header
         writeVideo(&video);
         writeAudio();
