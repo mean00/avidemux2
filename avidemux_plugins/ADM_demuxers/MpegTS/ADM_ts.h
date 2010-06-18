@@ -37,6 +37,7 @@ typedef struct
     uint64_t  startAt;
     uint32_t  index;
     uint8_t   type; // 1=I 2=P 3=B
+    uint32_t  pictureType; // 3=Frame, 1=Top, 2=Bottom
     uint64_t  pts;
     uint64_t  dts;
     uint32_t  len;

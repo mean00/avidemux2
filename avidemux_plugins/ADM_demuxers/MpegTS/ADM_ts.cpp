@@ -37,7 +37,7 @@ uint8_t tsHeader::open(const char *name)
     uint32_t append;
     char *type;
     uint64_t startDts;
-    
+    uint32_t version=0;
 
     sprintf(idxName,"%s.idx2",name);
     indexFile index;
@@ -55,6 +55,13 @@ uint8_t tsHeader::open(const char *name)
     if(!type || type[0]!='T')
     {
         printf("[tsDemux] Incorrect or not found type\n");
+        goto abt;
+    }
+
+    version=index.getAsUint32("Version");
+    if(version!=ADM_INDEX_FILE_VERSION)
+    {
+        GUI_Error_HIG("Error","This file's index has been created with an older version of avidemux.\nPlease delete the idx2 file and reopen.");
         goto abt;
     }
     append=index.getAsUint32("Append");

@@ -31,7 +31,7 @@
 #include "ADM_h264_tag.h"
 #include "ADM_clock.h"
 #include "ADM_getbits.h"
-
+#include "ADM_indexFile.h"
 #define zprintf(...) {}
 
 static const char Type[5]={'X','I','P','B','D'};
@@ -761,6 +761,7 @@ bool TsIndexer::writeSystem(const char *filename,bool append)
 {
     qfprintf(index,"PSD1\n");
     qfprintf(index,"[System]\n");
+    qfprintf(index,"Version=%d\n",ADM_INDEX_FILE_VERSION);
     qfprintf(index,"Type=T\n");
     qfprintf(index,"File=%s\n",filename);
     qfprintf(index,"Append=%d\n",append);
