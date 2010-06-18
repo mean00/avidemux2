@@ -25,8 +25,10 @@
 #include "ADM_quota.h"
 #include "ADM_psAudioProbe.h"
 #include "DIA_working.h"
+#include "ADM_indexFile.h"
 
-static const char Type[5]={'X','I','P','B','P'};
+static const char Type[5]={'X','I','P','B','P'};  // Frame type
+static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 
 static const uint32_t FPS[16]={
                 0,                      // 0
@@ -63,15 +65,24 @@ typedef enum
     idx_startAtImage,
     idx_startAtGopOrSeq
 }indexerState;
+
+typedef enum
+{
+    pictureFrame=3,
+    pictureTopField=1, 
+    pictureBottomField=2
+}pictureStructure;
+
 typedef struct
 {
-    uint64_t pts,dts,startAt;
-    uint32_t offset;
-    uint32_t frameType;
-    uint32_t nbPics;
-    indexerState state;
+    uint64_t        pts,dts,startAt;
+    uint32_t        offset;
+    uint32_t        frameType;
+    pictureStructure picStructure;
+    uint32_t        nbPics;
+    indexerState    state;
     psPacketLinear *pkt;
-    int32_t        nextOffset;
+    int32_t         nextOffset;
 }indexerData;
 
 typedef enum
@@ -153,8 +164,10 @@ bool seq_found=false;
 PSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
+    
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
+    data.picStructure=pictureFrame;
     char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
@@ -239,9 +252,15 @@ dmxPacketInfo info;
                                             //printf("Picture type %02x struct:%x\n",two,picture_structure);
                                             switch(picture_structure)
                                             {
-                                            case 3: video.frameCount++;break;
-                                            case 1:
-                                            case 2:  video.fieldCount++;break;
+                                            case 3: video.frameCount++;
+                                                    data.picStructure=pictureFrame;
+                                                    break;
+                                            case 1:  data.picStructure=pictureTopField;
+                                                     video.fieldCount++;
+                                                     break;
+                                            case 2:  data.picStructure=pictureBottomField;
+                                                     video.fieldCount++;
+                                                     break;
                                             default: ADM_warning("frame type 0 met, this is illegal\n");
                                             }
                                         }
@@ -399,7 +418,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
             data->nextOffset=-2;
         }
     
-        qfprintf(index,"%c",Type[data->frameType]);
+        qfprintf(index,"%c%c",Type[data->frameType],Structure[data->picStructure&3]);
     }
     if(update==markEnd || update==markNow)
     {
@@ -439,6 +458,7 @@ bool PsIndexer::writeSystem(const char *filename,bool append)
 {
     qfprintf(index,"PSD1\n");
     qfprintf(index,"[System]\n");
+    qfprintf(index,"Version=%d\n",ADM_INDEX_FILE_VERSION);
     qfprintf(index,"Type=P\n");
     qfprintf(index,"File=%s\n",filename);
     qfprintf(index,"Append=%d\n",append);

@@ -22,6 +22,7 @@
     \class indexFile
     \brief Read a index file easily
 */
+#define ADM_INDEX_FILE_VERSION 2
 #define ADM_INDEX_BUFFER (20*1024)
 /**
     \class dmxToken

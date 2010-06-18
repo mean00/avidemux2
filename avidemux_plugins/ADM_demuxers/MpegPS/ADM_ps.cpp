@@ -37,6 +37,7 @@ uint8_t psHeader::open(const char *name)
     uint32_t append;
     char *type;
     uint64_t startDts;
+    uint32_t version=0;
 
     sprintf(idxName,"%s.idx2",name);
     indexFile index;
@@ -48,6 +49,13 @@ uint8_t psHeader::open(const char *name)
     if(!index.readSection("System"))
     {
         printf("[psDemux] Cannot read system section\n");
+        goto abt;
+    }
+
+    version=index.getAsUint32("Version");
+    if(version!=ADM_INDEX_FILE_VERSION)
+    {
+        GUI_Error_HIG("Error","This file's index has been created with an older version of avidemux.\nPlease delete the idx2 file and reopen.");
         goto abt;
     }
     type=index.getAsString("Type");
