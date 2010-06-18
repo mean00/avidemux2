@@ -98,6 +98,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     _contextVoid=(void *)avcodec_alloc_context();
     ADM_assert(_contextVoid);
     // Fills in some values...
+    _context->codec_type=AVMEDIA_TYPE_AUDIO;
     _context->sample_rate = info->frequency;
     _context->channels = info->channels;
     _blockalign=_context->block_align = info->blockalign;
