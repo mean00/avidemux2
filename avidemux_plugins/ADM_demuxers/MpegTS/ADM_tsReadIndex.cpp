@@ -104,8 +104,8 @@ bool tsHeader::processVideoIndex(char *buffer)
                     return false;
             }
             
-            char *start=strstr(buffer," I:");
-            if(!start) start=strstr(buffer," D:");
+            char *start=strstr(buffer," I");
+            if(!start) start=strstr(buffer," D");
             if(!start) return true;
             start+=1;
             int count=0;
@@ -113,10 +113,13 @@ bool tsHeader::processVideoIndex(char *buffer)
             {
                 char *cur=start;
                 char type=1;
+                char picStruct='F';
                 char *next;
                 uint32_t len;
                 type=*cur;
                 if(type==0x0a || type==0x0d || !type) break;
+                cur++;
+                picStruct=*cur;
                 cur++;
                 if(*(cur)!=':')
                 {
@@ -158,6 +161,13 @@ bool tsHeader::processVideoIndex(char *buffer)
                     case 'B': frame->type=3;break;
                     case 'D': frame->type=4;break;
                     default: ADM_assert(0);
+                }
+                switch(picStruct)
+                {
+                        default: ADM_warning("Unknown picture structure %c\n",picStruct);
+                        case 'F': frame->pictureType=3;break;
+                        case 'T': frame->pictureType=1;break;
+                        case 'B': frame->pictureType=2;break;
                 }
                 frame->len=len;
                 ListOfFrames.push_back(frame);

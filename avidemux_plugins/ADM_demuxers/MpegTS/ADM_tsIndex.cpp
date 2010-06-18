@@ -33,7 +33,7 @@
 #include "ADM_getbits.h"
 #include "ADM_indexFile.h"
 #define zprintf(...) {}
-
+static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 static const char Type[5]={'X','I','P','B','D'};
 
 static const uint32_t FPS[16]={
@@ -75,11 +75,19 @@ typedef enum
     idx_startAtGopOrSeq
 }indexerState;
 
+typedef enum
+{
+    pictureFrame=3,
+    pictureTopField=1, 
+    pictureBottomField=2
+}pictureStructure;
+
 typedef struct
 {
     uint64_t pts,dts; //startAt;
     //uint32_t offset;
     uint32_t frameType;
+    pictureStructure picStructure;
     uint32_t nbPics;
     indexerState state;
     tsPacketLinear *pkt;
@@ -305,6 +313,8 @@ uint32_t recoveryCount=0xff;
     video.pid=videoTrac[0].trackPid;
 
     memset(&data,0,sizeof(data));
+    data.picStructure=pictureFrame;
+
     char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
     index=qfopen(indexName,"wt");
@@ -514,7 +524,7 @@ dmxPacketInfo info;
     video.pid=videoTrac[0].trackPid;
 
     memset(&data,0,sizeof(data));
-
+    data.picStructure=pictureFrame;
 
     char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
@@ -591,10 +601,16 @@ dmxPacketInfo info;
                                             //printf("Picture type %02x struct:%x\n",two,picture_structure);
                                             switch(picture_structure)
                                             {
-                                            case 3: video.frameCount++;break;
-                                            case 1:
-                                            case 2:  video.fieldCount++;break;
-                                            default: ADM_warning("frame type 0 met, this is illegal\n");
+                                                case 3: video.frameCount++;
+                                                        data.picStructure=pictureFrame;
+                                                        break;
+                                                case 1:  data.picStructure=pictureTopField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                case 2:  data.picStructure=pictureBottomField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                default: ADM_warning("frame type 0 met, this is illegal\n");
                                             }
                                         }
                                         default:break;
@@ -694,7 +710,10 @@ bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
             if(data->beginDts==-1 || data->prevDts==-1) deltaDts=-1;
                 else deltaDts=data->prevDts-data->beginDts;
 
-            qfprintf(index," %c:%06"LX":%"LLD":%"LLD,Type[currentFrameType],consumed-beginConsuming,
+            qfprintf(index," %c%c:%06"LX":%"LLD":%"LLD,
+                                    Type[currentFrameType],
+                                    Structure[data->picStructure&3],
+                                    consumed-beginConsuming,
                                     deltaPts,deltaDts);
             beginConsuming=consumed;
         }else
