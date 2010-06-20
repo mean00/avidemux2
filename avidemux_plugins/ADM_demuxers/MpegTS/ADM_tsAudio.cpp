@@ -55,7 +55,7 @@ ADM_tsAccess::~ADM_tsAccess()
 */
 bool      ADM_tsAccess::push(uint64_t at, uint64_t dts,uint32_t size)
 {
-ADM_tsAudioSeekPoint s;
+ADM_mpgAudioSeekPoint s;
             s.position=at;
             s.dts=dts;
             s.size=size;

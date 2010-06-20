@@ -34,16 +34,13 @@ typedef struct _avistdindex_chunk
         uint8_t 	bIndexType;			// must be AVI_INDEX_OF_CHUNKS
         uint32_t 	nEntriesInUse;		//
         uint32_t 	dwChunkId;			// �##dc� or �##db� or �##wb� etc..
-        uint32_t        qw1,qw2;			// MN.
+        uint32_t    qw1,qw2;			// MN.
         uint32_t 	dwReserved3;				// must be 0
 	
 } AVISTDINDEX, * PAVISTDINDEX;
 
 
-
-#define AVI_KEY_FRAME   0x10
-#define AVI_B_FRAME	0x4000	 // hopefully it is not used..
-
+#include "ADM_imageFlags.h"
 #include "ADM_coreAudio.h"
 
 void Endian_AviMainHeader(MainAVIHeader *m);

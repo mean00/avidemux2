@@ -26,32 +26,8 @@
 #include "ADM_indexFile.h"
 #include "dmxPSPacket.h"
 #include <vector>
+#include "ADM_coreDemuxerMpeg.h"
 using std::vector;
-/**
-    \struct dmxFrame
-*/
-typedef struct 
-{
-    uint64_t  startAt;
-    uint32_t  index;
-    uint8_t   type; // 1=I 2=P 3=B
-    uint32_t  pictureType; // 3=Frame, 1=Top, 2=Bottom
-    uint64_t  pts;
-    uint64_t  dts;
-    uint32_t  len;
-    
-}dmxFrame;
-/**
-    \struct ADM_psAudioSeekPoint
-    \brief The dts are stored in rescaled us. Warning the low level getpacket is getting absolute 90 khzTick
-*/
-typedef struct
-{            
-      uint64_t position;
-      uint64_t dts;
-      uint32_t size;
-
-}ADM_psAudioSeekPoint;
 
 /**
     \fn ADM_psAccess
@@ -66,7 +42,7 @@ protected:
                 
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
-                vector          <ADM_psAudioSeekPoint >seekPoints;
+                vector          <ADM_mpgAudioSeekPoint >seekPoints;
                                   ADM_psAccess(const char *name,uint8_t pid,bool append); 
                 virtual           ~ADM_psAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)

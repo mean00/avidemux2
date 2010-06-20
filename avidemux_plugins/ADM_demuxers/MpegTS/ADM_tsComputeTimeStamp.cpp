@@ -47,7 +47,7 @@ bool tsHeader::updatePtsDts(void)
         // at video
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
-            vector          <ADM_tsAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            vector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
             uint64_t secondDts=(*seekPoints)[0].dts;
             uint64_t secondSize=(*seekPoints)[0].size;
             if(secondSize && listOfAudioTracks[i]->header.byterate)
@@ -61,7 +61,7 @@ bool tsHeader::updatePtsDts(void)
                             else firstDts=secondDts-firstDts;
 
                 // Now add our seek point
-                ADM_tsAudioSeekPoint sk;
+                ADM_mpgAudioSeekPoint sk;
                 sk.dts=firstDts;
                 sk.size=0;
                 sk.position=ListOfFrames[0]->startAt;

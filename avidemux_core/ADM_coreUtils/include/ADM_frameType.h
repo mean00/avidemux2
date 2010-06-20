@@ -15,11 +15,7 @@
  ***************************************************************************/
 #ifndef ADM_frameType_h
 #define ADM_frameType_h
-
-#define AVI_KEY_FRAME	0x10
-#define AVI_B_FRAME	    0x4000	// hopefully it is not used..
-#define AVI_P_FRAME   	0x0
-#define AVI_ERR_FRAME   0x8888
+#include "ADM_imageFlags.h"
 
 typedef int (*frameIdentifier)(uint32_t len,uint8_t *data);
 

@@ -243,12 +243,15 @@ uint8_t psHeader::close(void)
   uint8_t  psHeader::setFlag(uint32_t frame,uint32_t flags)
 {
    
+      if(frame>=ListOfFrames.size()) return 0;
      uint32_t f=2;
-     if(flags & AVI_KEY_FRAME) f=1;
-     if(flags & AVI_B_FRAME) f=3;
-     if(frame>=ListOfFrames.size()) return 0;
+     uint32_t intra=flags & AVI_FRAME_TYPE_MASK;
+     if(intra & AVI_KEY_FRAME) f=1;
+     if(intra & AVI_B_FRAME) f=3;
+     
       ListOfFrames[frame]->type=f;
-    return 1;
+      ListOfFrames[frame]->pictureType=flags & AVI_STRUCTURE_TYPE_MASK;
+    return true;
 }
 /**
     \fn getFlags
@@ -265,6 +268,7 @@ uint32_t psHeader::getFlags(uint32_t frame,uint32_t *flags)
         case 2: *flags=0;break;
         case 3: *flags=AVI_B_FRAME;break;
     }
+    *flags=*flags+ListOfFrames[frame]->pictureType;
     return  1;
 }
 

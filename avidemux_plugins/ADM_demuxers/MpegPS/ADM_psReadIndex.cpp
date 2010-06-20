@@ -154,9 +154,9 @@ bool psHeader::processVideoIndex(char *buffer)
                 switch(picStruct)
                 {
                         default: ADM_warning("Unknown picture structure %c\n",picStruct);
-                        case 'F': frame->pictureType=3;break;
-                        case 'T': frame->pictureType=1;break;
-                        case 'B': frame->pictureType=2;break;
+                        case 'F': frame->pictureType=AVI_FRAME_STRUCTURE;break;
+                        case 'T': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_TOP_FIELD;break;
+                        case 'B': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD;break;
                 }
                 frame->len=len;
                 ListOfFrames.push_back(frame);
