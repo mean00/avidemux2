@@ -2071,8 +2071,8 @@ msgid "Avidemux"
 msgstr "Avidemux"
 
 #: avidemux/ADM_userInterfaces/ADM_GTK/ADM_dialog/DIA_about.cpp:67
-msgid "© 2001-2007 Mean"
-msgstr "© 2001-2007 Mean"
+msgid "© 2001 - 2010 Mean"
+msgstr "© 2001 - 2010 Mean"
 
 #: avidemux/ADM_userInterfaces/ADM_GTK/ADM_dialog/DIA_about.cpp:68
 msgid "Multiplatform video editor"

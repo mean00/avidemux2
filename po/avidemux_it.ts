@@ -8840,8 +8840,8 @@ p, li { white-space: pre-wrap; }
     </message>
     <message encoding="UTF-8">
         <location filename="../avidemux/ADM_userInterfaces/ADM_QT4/ADM_dialog/about.ui" line="123"/>
-        <source>© 2001 - 2008  Mean</source>
-        <translation>© 2001 - 2008  Mean</translation>
+        <source>© 2001 - 2010  Mean</source>
+        <translation>© 2001 - 2010  Mean</translation>
     </message>
     <message>
         <location filename="../avidemux/ADM_userInterfaces/ADM_QT4/ADM_dialog/about.ui" line="144"/>

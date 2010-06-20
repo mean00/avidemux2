@@ -2046,7 +2046,7 @@ msgid "Avidemux"
 msgstr ""
 
 #: avidemux/ADM_userInterfaces/ADM_GTK/ADM_dialog/DIA_about.cpp:67
-msgid "© 2001-2007 Mean"
+msgid "© 2001 - 2010 Mean"
 msgstr ""
 
 #: avidemux/ADM_userInterfaces/ADM_GTK/ADM_dialog/DIA_about.cpp:68
