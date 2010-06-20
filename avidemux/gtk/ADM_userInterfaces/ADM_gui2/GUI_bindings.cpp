@@ -740,7 +740,8 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 GtkLabel *wid=(GtkLabel *)glade.getWidget("labelFrameType");
 static char string[100];
 char	c='?';
-	switch(frametype)
+    uint32_t ftype=frametype &(AVI_KEY_FRAME + AVI_B_FRAME);
+	switch(ftype)
 	{
 		case AVI_KEY_FRAME: c='I';break;
 		case AVI_B_FRAME: c='B';break;

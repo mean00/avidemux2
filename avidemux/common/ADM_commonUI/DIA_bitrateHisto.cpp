@@ -89,17 +89,17 @@ uint32_t maxBFrame=0;
 		changed++;
 		changed%=round;
         video_body->getFlags (k, &flags);
-        if(!flags) 
+        if(!(flags&(AVI_KEY_FRAME+AVI_B_FRAME)) 
         {
           nbPFrame++;
           curBFrame=0;
         }
-        if(flags==AVI_KEY_FRAME) 
+        if(flags&AVI_KEY_FRAME) 
         {
           nbIFrame++;
           curBFrame=0;
         }
-        if(flags==AVI_B_FRAME)
+        if(flags&AVI_B_FRAME)
         {
           nbBFrame++;
           curBFrame++;

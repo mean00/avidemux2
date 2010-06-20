@@ -1344,8 +1344,8 @@ void GUI_showCurrentFrameHex(void)
 
  diaElemHex binhex("*****",fullLen,buffer);
 
- if(flags==AVI_KEY_FRAME) sprintf(sType,"I");
-  else if(flags==AVI_B_FRAME) sprintf(sType,"B");
+ if(flags&AVI_KEY_FRAME) sprintf(sType,"I");
+  else if(flags&AVI_B_FRAME) sprintf(sType,"B");
     else sprintf(sType,"P");
  sprintf(sSize,"%d bytes",fullLen);
 

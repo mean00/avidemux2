@@ -498,7 +498,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
 	ADM_assert(cache);
     // Make sure frame is an intra
     demuxer->getFlags(frame,&flags);
-    ADM_assert(flags==AVI_KEY_FRAME);
+    ADM_assert(flags&AVI_KEY_FRAME);
 
     bool found=false;
     vid->lastSentFrame=frame;
