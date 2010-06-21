@@ -109,6 +109,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
     //printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, (uint64_t)(src->reordered_opaque));
     //printf("[LAVC] pts: %"LLU"\n",src->pts);
     out->Pts= (uint64_t)(src->reordered_opaque);
+ 
     return 1;
 }
 /**
@@ -260,6 +261,15 @@ uint32_t decoderFF::frameType (void)
     default:
 //                              printf("\n OOops XXX frame ?\n");
       break;
+    }
+    flag&=~AVI_STRUCTURE_TYPE_MASK;
+    if(target->interlaced_frame)
+    {
+        flag|=AVI_FIELD_STRUCTURE;
+        if(target->top_field_first)
+            flag|=AVI_TOP_FIELD;
+        else
+            flag|=AVI_BOTTOM_FIELD;
     }
   return flag;
 }
