@@ -40,10 +40,15 @@ bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint6
     uint32_t nDts=0,nPts=0;
     uint32_t nbB=0;
     uint64_t pts,dts;
+    uint32_t nbFields=0,nbFrames=0;
     // Look how much bframes + how much valid PTS/DTS we have....
     for(int i=0;i<info.nb_frames;i++)
     {
         hdr->getFlags(i,&flags);
+        if(flags & AVI_FIELD_STRUCTURE) 
+                    nbFields++;
+            else 
+                    nbFrames++;
         if(flags & AVI_B_FRAME)
                 nbB++;
         if(true!=hdr->getPtsDts(i,&pts,&dts))
@@ -58,6 +63,12 @@ bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint6
 next:
         ADM_info("Out of %"LD" frames, we have %"LD" valid DTS and %"LD" valid PTS\n",info.nb_frames,nDts,nPts);
         ADM_info("We also have %"LD" bframes\n",nbB);
+        ADM_info("We have %"LU" fields and %"LU" frames\n",nbFields,nbFrames);
+        if(nbFields>2)
+        {
+            ADM_info("Cannot recompute PTS/DTS for field encoded picture.\n");
+            return true;
+        }
         // No b frames, PTS=DTS
         if(!nbB)
         {
