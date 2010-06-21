@@ -783,7 +783,8 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
 	char string[100];
 	char	c='?';
-	switch(frametype)
+    const char *f="???";
+	switch(frametype&AVI_FRAME_TYPE_MASK)
 	{
 	case AVI_KEY_FRAME: c='I';break;
 	case AVI_B_FRAME: c='B';break;
@@ -791,7 +792,16 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 	default:c='?';break;
 
 	}
-	sprintf(string,QT_TR_NOOP("%c (%02d)"),c,qp);
+    switch(frametype&AVI_STRUCTURE_TYPE_MASK)
+	{
+	case AVI_TOP_FIELD+AVI_FIELD_STRUCTURE: f="TFF";break;
+    case AVI_BOTTOM_FIELD+AVI_FIELD_STRUCTURE: f="BFF";break;
+    case AVI_FRAME_STRUCTURE: f="FRM";break;
+	default:f="???";
+
+                    break;
+	}
+	sprintf(string,QT_TR_NOOP("%c-%s (%02d)"),c,f,qp);
 	WIDGET(label_8)->setText(string);	
 
 }
