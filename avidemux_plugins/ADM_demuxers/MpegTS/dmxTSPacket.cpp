@@ -304,7 +304,9 @@ nextPack2:
     init_get_bits( &s,pkt.payload, (pkt.payloadSize)*8); // dont need checksum
 
     DUMMY(tableId,8);
-    skip_bits(&s,1);             // Section syntax indicator
+    int section_syntax_indicator=get_bits(&s,1);
+    if(section_syntax_indicator)
+        ADM_warning("Section Syntax is set to private\n");
     if(get_bits(&s,1))             // Marker
     {
           printf("[MpegTs] getNextPSI Missing 0 marker\n");

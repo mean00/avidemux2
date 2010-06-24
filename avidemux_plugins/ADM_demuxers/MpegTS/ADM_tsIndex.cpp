@@ -133,6 +133,7 @@ public:
                 ~TsIndexer();
         bool    runMpeg2(const char *file,ADM_TS_TRACK *videoTrac);
         bool    runH264(const char *file,ADM_TS_TRACK *videoTrac);
+        bool    runVC1(const char *file,ADM_TS_TRACK *videoTrac);
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
@@ -180,6 +181,9 @@ bool r;
     {
             case ADM_TS_MPEG2: 
                             r=dx->runMpeg2(file,&(tracks[0]));
+                            break;
+            case ADM_TS_VC1: 
+                            r=dx->runVC1(file,&(tracks[0]));
                             break;
             case ADM_TS_H264: 
                             r=dx->runH264(file,&(tracks[0]));
@@ -688,6 +692,192 @@ dmxPacketInfo info;
         return 1; 
 }
 /**
+    \fn runVC1
+    \brief Index VC1 stream
+*/  
+bool TsIndexer::runVC1(const char *file,ADM_TS_TRACK *videoTrac)
+{
+uint32_t temporal_ref,val;
+uint8_t buffer[50*1024];
+bool seq_found=false;
+
+TSVideo video;
+indexerData  data;    
+dmxPacketInfo info;
+
+    if(!videoTrac) return false;
+    if(videoTrac[0].trackType!=ADM_TS_VC1)
+    {
+        printf("[Ts Indexer] Only VC1 video supported\n");
+        return false;
+    }
+    video.pid=videoTrac[0].trackPid;
+
+    memset(&data,0,sizeof(data));
+    data.picStructure=pictureFrame;
+
+    char *indexName=(char *)alloca(strlen(file)+5);
+    sprintf(indexName,"%s.idx2",file);
+    index=qfopen(indexName,"wt");
+    if(!index)
+    {
+        printf("[PsIndex] Cannot create %s\n",indexName);
+        return false;
+    }
+    writeSystem(file,true);
+    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
+
+    FP_TYPE append=FP_APPEND;
+    pkt->open(file,append);
+    data.pkt=pkt;
+    fullSize=pkt->getSize();
+    int startCode;
+#define likely(x) x
+#define unlikely(x) x
+      while(1)
+      {
+        startCode=pkt->findStartCode();
+        if(!pkt->stillOk()) break;
+
+          switch(startCode)
+                  {
+                  case 0xB3: // sequence start
+                          if(seq_found)
+                          {
+                                  pkt->getInfo(&info);
+                                  data.frameType=1;
+                                  Mark(&data,&info,4);
+                                  data.state=idx_startAtGopOrSeq;
+                                  pkt->forward(8);  // Ignore
+                                  continue;
+                          }
+                          //
+                          seq_found=1;
+                          val=pkt->readi32();
+                          video.w=val>>20;
+                          video.w=((video.w+15)&~15);
+                          video.h= (((val>>8) & 0xfff)+15)& ~15;
+
+                          video.ar = (val >> 4) & 0xf;
+                          video.fps= FPS[val & 0xf];
+                          pkt->forward(4);
+                          writeVideo(&video,ADM_TS_MPEG2);
+                          writeAudio();
+                          qfprintf(index,"[Data]");
+                          pkt->getInfo(&info);
+                          data.frameType=1;
+                          Mark(&data,&info,4+8);
+                          data.state=idx_startAtGopOrSeq;
+                          continue;
+
+                          break;
+                    case 0xB5: //  extension
+                                { 
+                                    uint8_t id=pkt->readi8()>>4;
+                                    uint8_t two;
+                                    switch(id)
+                                    {
+                                        case 1: // Sequence extension
+                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
+                                            break;
+                                        case 8: // picture coding extension (mpeg2)
+                                        {
+                                            // skip motion vector
+                                            uint8_t picture_structure;
+                                            pkt->forward(1); // 4*4 bits
+                                            two=pkt->readi8();
+                                            picture_structure=(two)&3;
+                                            
+                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
+                                            switch(picture_structure)
+                                            {
+                                                case 3: video.frameCount++;
+                                                        data.picStructure=pictureFrame;
+                                                        break;
+                                                case 1:  data.picStructure=pictureTopField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                case 2:  data.picStructure=pictureBottomField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            }
+                                        }
+                                        default:break;
+                                    }
+                                }
+                                break;
+                  case 0xb8: // GOP
+                          // Update ui
+                            {
+                               updateUI();
+
+                            }
+
+                          if(!seq_found) continue;
+                          if(data.state==idx_startAtGopOrSeq) 
+                          {         
+                                  continue;;
+                          }
+                          pkt->getInfo(&info);
+                          Mark(&data,&info,4);
+                          data.state=idx_startAtGopOrSeq;
+                          break;
+                  case 0x00 : // picture
+                        {
+                          int type;
+                          markType update=markNow;
+                          if(!seq_found)
+                          { 
+                                  continue;
+                                  printf("[TsIndexer]No sequence start yet, skipping..\n");
+                          }
+                          
+                          val=pkt->readi16();
+                          temporal_ref=val>>6;
+                          type=7 & (val>>3);
+                          if( type<1 ||  type>3)
+                          {
+                                  printf("[Indexer]Met illegal pic at %"LLX" + %"LX"\n",
+                                                  info.startAt,info.offset);
+                                  continue;
+                          }
+                          
+                          
+                          if(data.state==idx_startAtGopOrSeq) 
+                          {
+                                  currentFrameType=type;
+                          }else
+                            {
+                                  data.frameType=type;
+                                  pkt->getInfo(&info);
+                                  Mark(&data,&info,4+2);
+
+
+                            }
+                            data.state=idx_startAtImage;
+                            data.nbPics++;
+                        }
+                          break;
+                  default:
+                    break;
+                  }
+      }
+    
+        printf("\n");
+        Mark(&data,&info,2);
+        qfprintf(index,"\n[End]\n");
+        qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
+        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
+        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
+        qfclose(index);
+        index=NULL;
+        audioTracks=NULL;
+        delete pkt;
+        pkt=NULL;
+        return 1; 
+}
+/**
     \fn   Mark
     \brief update the file
 
@@ -766,7 +956,8 @@ bool TsIndexer::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
  switch(trkType)
     {
         case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;;
-        case ADM_TS_H264: qfprintf(index,"VideoCodec=H264\n");break;
+        case ADM_TS_H264:  qfprintf(index,"VideoCodec=H264\n");break;
+        case ADM_TS_VC1:   qfprintf(index,"VideoCodec=VC1\n");break;
         default: printf("[TsIndexer] Unsupported video codec\n");return false;
 
     }

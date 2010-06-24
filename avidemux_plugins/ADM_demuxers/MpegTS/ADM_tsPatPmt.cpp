@@ -25,8 +25,9 @@ typedef vector <ADM_TS_TRACK> listOfTsTracks;
 /**
     \fn scanPmt
 */
-static bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list);
-static bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen);
+static bool  TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list);
+static bool  decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen);
+static bool  decodeRegistration(int size,uint8_t *data);
 static ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str);
 /**
     \class TrackTypeDescriptor
@@ -44,8 +45,10 @@ TrackTypeDescriptor TrackTypes[]=
     {0x002,ADM_TS_MPEG2,     "Mpeg2 Video"},
     {0x003,ADM_TS_MPEG_AUDIO,"Mpeg1 Audio"},
     {0x004,ADM_TS_MPEG_AUDIO,"Mpeg2 Audio"},
+    {0x005,ADM_TS_UNKNOWN,   "Registration"},
     {0x01b,ADM_TS_H264,      "H264 Video"},
     {0x081,ADM_TS_AC3,       "AC3 Audio"},
+    {0x0ea,ADM_TS_VC1,       "VC1 Video"},
     {0x006,ADM_TS_UNKNOWN,   "Private Stream"},
     {0xfff,ADM_TS_UNKNOWN,   "Unknown"}   // Last one must be "unknown!"
 };
@@ -125,7 +128,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     for(int i=0;i<list.size();i++)
     {
         ADM_TS_TRACK_TYPE type=list[i].trackType;
-        if(type==ADM_TS_MPEG2 || type==ADM_TS_H264)
+        if(type==ADM_TS_MPEG2 || type==ADM_TS_H264 || type==ADM_TS_VC1)
         {
             videoIndex=i;
             break;
@@ -192,18 +195,17 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
     printf("[TsDemuxer] Looking for PMT : 0x%x\n",pid);
     if(t->getNextPSI(pid,&psi)==true)
      {
-        
-        
         len=psi.payloadSize;
         // We should be protected by CRC here
         int packLen=len;
         printf("[TsDemuxer] PCR 0x%x, len=%d\n",(r[0]<<8)+r[1],packLen);
         r+=2;  
         int programInfoLength=(r[0]<<8)+r[1];
-        programInfoLength&=0xff;
+        programInfoLength&=0x3ff;
         r+=2;
         packLen-=4;
         // Program Descriptor
+        printf("[PMT]--Decoding Program info--\n");
         if(programInfoLength && programInfoLength<=packLen)
         {
             decodeProgrameDescriptor(r, programInfoLength);
@@ -211,6 +213,7 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
             r+=programInfoLength;
         }
         printf("[PMT]            Left : %d bytes\n",packLen);
+        printf("[PMT]--Decoding ES Descriptor--\n");
         // Es Type Descriptor
         while(packLen>4)
         {
@@ -244,6 +247,11 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                 }
 
             }
+            if(type==0xea)
+            {
+
+
+            }
             ADM_TS_TRACK_TYPE trackType=EsType(type,&str);;
             if(trackType!=ADM_TS_UNKNOWN) 
             {
@@ -252,7 +260,8 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                     trk2.trackType=trackType;
                     printf("[PMT]  Adding pid 0x%x (%d) , type %s\n",pid,pid,str);
                     list->push_back(trk2);
-            }
+            }else
+                printf("[PMT]              -> %s\n",str);
             
            
         }
@@ -279,6 +288,10 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
                 case 0x1B:  *str= "H264 Video";return ADM_TS_H264;break;
                 case 0x81:  *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
                 case 0x84:  *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
+                case 0xea:  *str= "VC1 (Not sure)";return ADM_TS_VC1;break;
+                case 0x90:  *str= "Presentation graphics (BluRay)";return ADM_TS_UNKNOWN;break;
+                case 0x83:  *str= "TrueHD AC3  (BluRay)";return ADM_TS_AC3;break;
+                
                 default : break;
     }
     return ADM_TS_UNKNOWN;
@@ -300,6 +313,22 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
         {
                 int streamType,streamPid,esInfoLength;
                 streamType=r[0];
+                if(streamType==5) // descriptor
+                {
+                    int descriptorLength=r[1];
+                    if(descriptorLength+1>packLen) 
+                    {
+                        printf("[PMT             Registration length bigger than section\n");
+                        return true;
+                    }
+                    printf("[PMT] Registration FCC %c%c%c%c \n",r[2],r[3],r[4],r[5]);
+                    uint8_t *tail=r+1+descriptorLength;
+                    packLen-=1+descriptorLength;
+                    decodeRegistration(descriptorLength,r);
+                    r=tail;
+                    continue;
+                }
+                
                 streamPid=(r[1]<<8)+r[2]&0x1fff;
                 esInfoLength=((r[3]<<8)+r[4])&0xfff;
                 r+=5;
@@ -347,9 +376,37 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
                 
         }
         return true;
+}
+/**
+    \fn decodeRegistration
+    \brief Decode registration descriptor subtag as used for VC1
+*/
+bool decodeRegistration(int size,uint8_t *data)
+{
+    uint8_t *end=data+size;
+    
+    while(data<end)
+    {
+        int tag=data[0];data++;
+        printf("[PMT] Registration, found tag %d\n",tag);
+        switch(tag)
+        {
+            case 0:    break; // sub desc
+            case 0xff: break;
+            case 1: // profile & level desc
+                            printf("[PMT] Profile/level :%d",*data++);
+                            break;
+            case 2: // Alignment
+                            printf("[PMT] Alignement    :%d",*data++);
+                            break;
+            case 3: // Buffer size
+                            printf("[PMT] Buffer size\n");
+                            data+=3;
+                            break;
+            default: return true;
+
+        }
+    }
 
 }
-
-
-
 //EOF

@@ -31,6 +31,7 @@ typedef enum
     ADM_TS_AC3,
     ADM_TS_AAC,
     ADM_TS_EAC3,
+    ADM_TS_VC1
 }ADM_TS_TRACK_TYPE;
 /**
     \typedef ADM_TS_TRACK
