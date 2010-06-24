@@ -26,7 +26,7 @@
 
 
 
-
+extern uint32_t TS_unescapeH264(uint32_t len,uint8_t *in, uint8_t *out);
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
 /**
@@ -218,6 +218,7 @@ uint8_t tsHeader::close(void)
     interlaced=false;
     lastFrame=0xffffffff;
     videoPid=0;
+    videoNeedEscaping=false;
     
 }
 /**
@@ -235,6 +236,14 @@ uint8_t tsHeader::close(void)
         \fn getFrame
 */
 
+#define UNESCAPE() if(r==true && videoNeedEscaping)  \
+                    {\
+                        uint32_t l=img->dataLength;\
+                        uint32_t l2=TS_unescapeH264(l,img->data, img->data);\
+                        if(l!=l2)\
+                            memset(img->data+l2,0,l-l2);\
+                    }
+
 uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
@@ -250,10 +259,11 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              img->demuxerPts=pk->pts;
              //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
              getFlags(frame,&(img->flags));
+             UNESCAPE();
              return r;
     }
     // Intra ?
-    if(pk->type==1)
+    if(pk->type==1 || pk->type==4)
     {
         if(!tsPacket->seek(pk->startAt,pk->index)) return false;
          bool r=tsPacket->read(pk->len,img->data);
@@ -264,6 +274,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              getFlags(frame,&(img->flags));
              //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
              lastFrame=frame;
+             UNESCAPE();
              return r;
 
     }
@@ -301,6 +312,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
          img->demuxerPts=pk->pts;
          //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
          getFlags(frame,&(img->flags));
+         UNESCAPE();
          return r;
 }
 

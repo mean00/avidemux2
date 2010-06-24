@@ -272,9 +272,10 @@ void TsIndexer::updateUI(void)
         ui->update( (uint32_t)pos);
 }
 /**
-
+    \fn Unescape stream
+    \brief H264 and VC1 in TS escape
 */
-static uint32_t unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
+uint32_t TS_unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
 {
   uint32_t outlen=0;
   uint8_t *tail=in+len;
@@ -288,6 +289,7 @@ static uint32_t unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
         out+=2;
         outlen+=2;
         in+=3; 
+        continue;
       }
       *out++=*in++;
       outlen++;
@@ -309,7 +311,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
 {
     GetBitContext s;
     uint8_t *payload=(uint8_t *)alloca(nalSize+16);
-    nalSize=unescapeH264(nalSize,org,payload);
+    nalSize=TS_unescapeH264(nalSize,org,payload);
     init_get_bits(&s, payload, nalSize*8);
     while( get_bits_count(&s)<(nalSize-4)*8)
     {
@@ -486,7 +488,7 @@ resume:
                    
                         pkt->read(NON_IDR_PRE_READ,bufr);
                         // unescape...
-                        unescapeH264(NON_IDR_PRE_READ,bufr,header);
+                        TS_unescapeH264(NON_IDR_PRE_READ,bufr,header);
                         //
                         init_get_bits(&s, header, NON_IDR_PRE_READ*8);
                         int first_mb_in_slice,slice_type;
@@ -775,17 +777,16 @@ dmxPacketInfo info;
                                   pkt->forward(4);  // Ignore
                                   continue;
                           }
-                          //
-                          
+                          // Verify it is high/advanced profile
                           h=pkt->readi8();
                           if(!h&0x80) // simple/main profile
                                 continue;
                           vc1Seq[0]=h;
-
                           pkt->read(VC1_SEQ_SIZE-1,vc1Seq+1);
                           if(!decodeVC1Seq(VC1_SEQ_SIZE,vc1Seq,video)) continue;
                           video.extraDataLength=VC1_SEQ_SIZE+8;
                           memcpy(video.extraData+4,vc1Seq,VC1_SEQ_SIZE);
+                            // Add info so that ffmpeg is happy
                           video.extraData[0]=0;
                           video.extraData[1]=0;
                           video.extraData[2]=1;
@@ -798,14 +799,12 @@ dmxPacketInfo info;
                           // Hi Profile
                           printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
                           printf("[VC1] FPS : %d\n",(int)video.fps);
-                          //video.ar = (val >> 4) & 0xf;
-                          //video.fps= FPS[val & 0xf];
                           writeVideo(&video,ADM_TS_VC1);
                           writeAudio();
                           qfprintf(index,"[Data]");
                           pkt->getInfo(&info);
-                          data.frameType=1;
-                          Mark(&data,&info,8);
+                          data.frameType=1; // Force first frame to be intra
+                          Mark(&data,&info,VC1_SEQ_SIZE);
                           data.state=idx_startAtGopOrSeq;
                           continue;
 
@@ -813,7 +812,6 @@ dmxPacketInfo info;
                     case 0x0D: //  Picture start
                         { 
                           int type;
-                          int consumed;
                           uint8_t buffer[4];
                           uint32_t fType,sType;
                           markType update=markNow;
@@ -832,7 +830,7 @@ dmxPacketInfo info;
                             {
                                   data.frameType=fType;
                                   pkt->getInfo(&info);
-                                  Mark(&data,&info,consumed);
+                                  Mark(&data,&info,2);
                             }
                             data.state=idx_startAtImage;
                             data.nbPics++;
