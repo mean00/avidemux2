@@ -64,18 +64,6 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
         }else ADM_info("Vdpau is not active\n");
     }        
 #endif // VDPAU
-
-// VPX
-#if defined(USE_VPX)
-    if(fourCC::check(fcc,(const uint8_t *)"VP8 "))
-    {
-        decoderVPX *dec=new decoderVPX(w,h,fcc,extraLen,extraData,bpp);
-        if(dec->initializedOk())
-            return (decoders *) (dec);
-        GUI_Error_HIG("VPX","Cannot initialize libvpx.");
-        delete dec;
-    }
-#endif // VPX
     ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
     return ADM_coreCodecGetDecoder(fcc,w,h,extraLen,extraData,bpp);
 }
