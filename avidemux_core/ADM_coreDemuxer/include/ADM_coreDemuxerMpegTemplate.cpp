@@ -145,15 +145,6 @@ uint64_t MY_CLASS::timeConvert(uint64_t x)
     return x;
 }
 
-/**
-        \fn getExtraHeaderData
-*/
-uint8_t  MY_CLASS::getExtraHeaderData(uint32_t *len, uint8_t **data)
-{
-                *len=0; //_tracks[0].extraDataLen;
-                *data=NULL; //_tracks[0].extraData;
-                return true;            
-}
 
 /**
       \fn getFrameSize
@@ -183,7 +174,7 @@ bool    MY_CLASS::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 */
 bool    MY_CLASS::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
-      if(frame>=ListOfFrames.size()) return false;
+    if(frame>=ListOfFrames.size()) return false;
     dmxFrame *pk=ListOfFrames[frame];
 
     pk->dts=dts;
