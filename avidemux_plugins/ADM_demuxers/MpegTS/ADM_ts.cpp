@@ -236,7 +236,7 @@ uint8_t tsHeader::close(void)
         \fn getFrame
 */
 
-#define UNESCAPE() if(r==true && videoNeedEscaping)  \
+#define UNESCAPE() if(r==true && 0 && videoNeedEscaping)  \
                     {\
                         uint32_t l=img->dataLength;\
                         uint32_t l2=TS_unescapeH264(l,img->data, img->data);\
