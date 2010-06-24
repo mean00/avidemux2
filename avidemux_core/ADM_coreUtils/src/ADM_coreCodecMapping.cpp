@@ -23,43 +23,43 @@
 #include "fourcc.h"
 const ffVideoCodec ffCodec[]=
 {
-
-  {"SNOW",  CODEC_ID_SNOW,      false, false},
-  {"cvid",  CODEC_ID_CINEPAK,   false, false},
-  {"CRAM",  CODEC_ID_MSVIDEO1,  false, false},
-  {"VP6F",  CODEC_ID_VP6F,      false, false},
-  {"VP6A",  CODEC_ID_VP6A,      false, false},
-  {"SVQ1",  CODEC_ID_SVQ1,      false, false},
-  {"FLV1",  CODEC_ID_FLV1,      false, false},
-  {"AMV",   CODEC_ID_AMV,       false, false},
-  {"MJPG",  CODEC_ID_MJPEG,     false, false},
-  {"mjpa",  CODEC_ID_MJPEG,     false, false},
-  {"MJPB",  CODEC_ID_MJPEGB,    false, false},
-  {"FPS1",  CODEC_ID_FRAPS,     false, false},
-  {"cvid",  CODEC_ID_CINEPAK,   false, false},
+                                // Refcopy // extrdata // Can have  B frame
+  {"SNOW",  CODEC_ID_SNOW,      false, false,    false},
+  {"cvid",  CODEC_ID_CINEPAK,   false, false,    false},
+  {"CRAM",  CODEC_ID_MSVIDEO1,  false, false,    false},
+  {"VP6F",  CODEC_ID_VP6F,      false, false,    false},
+  {"VP6A",  CODEC_ID_VP6A,      false, false,    false},
+  {"SVQ1",  CODEC_ID_SVQ1,      false, false,    false},
+  {"FLV1",  CODEC_ID_FLV1,      false, false,    false},
+  {"AMV",   CODEC_ID_AMV,       false, false,    false},
+  {"MJPG",  CODEC_ID_MJPEG,     false, false,    false},
+  {"mjpa",  CODEC_ID_MJPEG,     false, false,    false},
+  {"MJPB",  CODEC_ID_MJPEGB,    false, false,    false},
+  {"FPS1",  CODEC_ID_FRAPS,     false, false,    false},
+  {"cvid",  CODEC_ID_CINEPAK,   false, false,    false},
 // Need extradata
-  {"WMV2", CODEC_ID_WMV2,       true, false},
-  {"WMV1", CODEC_ID_WMV1,       true, false},
-  {"WMV3", CODEC_ID_WMV3,       true, false},
-  {"WVC1", CODEC_ID_VC1,        true, false},
-  {"WMVA", CODEC_ID_VC1,        true, false},
+  {"WMV2", CODEC_ID_WMV2,       true, false,    false},
+  {"WMV1", CODEC_ID_WMV1,       true, false,    false},
+  {"WMV3", CODEC_ID_WMV3,       true, false,    true},
+  {"WVC1", CODEC_ID_VC1,        true, false,    true},
+  {"WMVA", CODEC_ID_VC1,        true, false,    true},
 
-  {"WMVA", CODEC_ID_DVVIDEO,    true, false},
+  {"WMVA", CODEC_ID_DVVIDEO,    true, false,    false},
 // RefCopy
-  {"FFV1", CODEC_ID_FFV1,       true, true},
-  {"H263", CODEC_ID_H263,       false, true},
-  {"MP42", CODEC_ID_MSMPEG4V2,  true, true},
-  {"SVQ3", CODEC_ID_SVQ3,       true, true},
-  {"FFVH", CODEC_ID_FFVHUFF,    true, true},
-  {"HFYU", CODEC_ID_HUFFYUV,    true, true},
-  {"VC1 ", CODEC_ID_VC1,        true, true},
+  {"FFV1", CODEC_ID_FFV1,       true, true,    false},
+  {"H263", CODEC_ID_H263,       false, true,   false},
+  {"MP42", CODEC_ID_MSMPEG4V2,  true, true,    false},
+  {"SVQ3", CODEC_ID_SVQ3,       true, true,    false},
+  {"FFVH", CODEC_ID_FFVHUFF,    true, true,    false},
+  {"HFYU", CODEC_ID_HUFFYUV,    true, true,    false},
+  {"VC1 ", CODEC_ID_VC1,        true, true,    true},
 
 
  //{CODEC_ID_FFVHUFF,"FFVH"},
 //    {CODEC_ID_HUFFYUV,"HFYU"},
   //{"MJPB", CODEC_ID_CYUV,       true},
  // {"MJPB", CODEC_ID_THEORA),    true}
-  {"xxxx", CODEC_ID_NONE, false,false}
+  {"xxxx", CODEC_ID_NONE, false,false,    false}
 };
 
 /**

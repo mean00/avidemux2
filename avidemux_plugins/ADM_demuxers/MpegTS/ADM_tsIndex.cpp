@@ -33,6 +33,8 @@
 #include "ADM_clock.h"
 #include "ADM_getbits.h"
 #include "ADM_indexFile.h"
+#include "ADM_tsGetBits.h"
+
 #define zprintf(...) {}
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 static const char Type[5]={'X','I','P','B','D'};
@@ -60,7 +62,7 @@ static const uint32_t  VC1_ar[16][2] = {  // From VLC
                         {24,11}, {20,11}, {32,11}, {80,33}, {18,11}, {15,11},
                         {64,33}, {160,99},{ 0, 0}, { 0, 0}};
 
-#define VC1_SEQ_SIZE 29
+#define VC1_MAX_SEQ_SIZE 64
 class TSVideo
 {
 public:
@@ -74,7 +76,7 @@ public:
     uint32_t frameCount;
     uint32_t fieldCount;
     uint32_t extraDataLength;
-    uint8_t  extraData[VC1_SEQ_SIZE];
+    uint8_t  extraData[VC1_MAX_SEQ_SIZE];
 };
 
 typedef enum
@@ -147,8 +149,8 @@ protected:
         DIA_workingBase         *ui;
         void                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
-        bool                    decodeVC1Seq(int nb, uint8_t *data,TSVideo &video);
-        bool                    decodeVC1Pic(int nb, uint8_t *dataBuffer,uint32_t &frameType,uint32_t &frameStructure);
+        bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
+        bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
@@ -770,44 +772,46 @@ dmxPacketInfo info;
           switch(startCode)
                   {
                   case 0x0f: // sequence start
-                          uint8_t vc1Seq[VC1_SEQ_SIZE];
-                          uint8_t h;
+                          
                           if(seq_found)
                           {
                                   pkt->forward(4);  // Ignore
                                   continue;
                           }
                           // Verify it is high/advanced profile
-                          h=pkt->readi8();
-                          if(!h&0x80) // simple/main profile
-                                continue;
-                          vc1Seq[0]=h;
-                          pkt->read(VC1_SEQ_SIZE-1,vc1Seq+1);
-                          if(!decodeVC1Seq(VC1_SEQ_SIZE,vc1Seq,video)) continue;
-                          video.extraDataLength=VC1_SEQ_SIZE+8;
-                          memcpy(video.extraData+4,vc1Seq,VC1_SEQ_SIZE);
+                          {
+                          int seqSize=0;
+                          tsGetBits bits(pkt);
+                          if(!bits.peekBits(1)) continue; // simple/main profile
+
+                          if(!decodeVC1Seq(bits,video)) continue;
+
+                          seqSize=bits.getConsumed();
+                          video.extraDataLength=seqSize+8;
+                          memcpy(video.extraData+4,bits.data,seqSize);
                             // Add info so that ffmpeg is happy
                           video.extraData[0]=0;
                           video.extraData[1]=0;
                           video.extraData[2]=1;
                           video.extraData[3]=0xf;
-                          video.extraData[VC1_SEQ_SIZE+4+0]=0;
-                          video.extraData[VC1_SEQ_SIZE+4+1]=0;
-                          video.extraData[VC1_SEQ_SIZE+4+2]=1;
-                          video.extraData[VC1_SEQ_SIZE+4+3]=0xfE;
+                          video.extraData[seqSize+4+0]=0;
+                          video.extraData[seqSize+4+1]=0;
+                          video.extraData[seqSize+4+2]=1;
+                          video.extraData[seqSize+4+3]=0xfE;
                           seq_found=1;
                           // Hi Profile
                           printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
                           printf("[VC1] FPS : %d\n",(int)video.fps);
+                          printf("[VC1] sequence header is %d bytes\n",(int)seqSize);
                           writeVideo(&video,ADM_TS_VC1);
                           writeAudio();
                           qfprintf(index,"[Data]");
                           pkt->getInfo(&info);
                           data.frameType=1; // Force first frame to be intra
-                          Mark(&data,&info,VC1_SEQ_SIZE);
+                          Mark(&data,&info,seqSize);
                           data.state=idx_startAtGopOrSeq;
                           continue;
-
+                          }
                           break;
                     case 0x0D: //  Picture start
                         { 
@@ -820,8 +824,8 @@ dmxPacketInfo info;
                                   continue;
                                   printf("[TsIndexer]No sequence start yet, skipping..\n");
                           }      
-                          pkt->read(2,buffer);
-                          if(!decodeVC1Pic(2,buffer,fType,sType)) continue;
+                          tsGetBits bits(pkt);
+                          if(!decodeVC1Pic(bits,fType,sType)) continue;
                           updatePicStructure(video,data,sType);
                           if(data.state==idx_startAtGopOrSeq) 
                           {
@@ -830,7 +834,7 @@ dmxPacketInfo info;
                             {
                                   data.frameType=fType;
                                   pkt->getInfo(&info);
-                                  Mark(&data,&info,2);
+                                  Mark(&data,&info,bits.getConsumed());
                             }
                             data.state=idx_startAtImage;
                             data.nbPics++;
@@ -990,14 +994,14 @@ bool TsIndexer::writeAudio(void)
         Large part of this borrowed from VLC
         Advanced/High profile only
 */
-bool TsIndexer::decodeVC1Seq(int nb, uint8_t *data,TSVideo &video)
+bool TsIndexer::decodeVC1Seq(tsGetBits &bits,TSVideo &video)
 {
-GetBitContext s;
+
 int v;
 int consumed;
     vc1Context.advanced=true;
-    init_get_bits(&s, data, nb*8);
-#define VX(a,b) v=get_bits(&s,a);printf("[VC1] %d "#b"\n",v);consumed+=a;
+
+#define VX(a,b) v=bits.getBits(a);printf("[VC1] %d "#b"\n",v);consumed+=a;
     VX(2,profile);
     VX(3,level);
 
@@ -1036,7 +1040,7 @@ int consumed;
                 VX(4,aspect_ratio);
                 switch(v)
                 {
-                    case 15: video.ar=(get_bits(&s,8)<<16)+get_bits(&s,8);
+                    case 15: video.ar=(bits.getBits(8)<<16)+bits.getBits(8);
                              break;
                     default:
                              video.ar=(VC1_ar[v][0]<<16)+(VC1_ar[v][1]<<16);
@@ -1044,53 +1048,100 @@ int consumed;
                 }
                 printf("[VC1] Aspect ratio %d x %d\n",video.ar>>8,video.ar&0xff);
          }
-    }
-    VX(1,frame_rate);
-    if(v)
-    {
-            VX(1,frame_rate32_flag);
-            if(v)
-            {
-                VX(16,frame_rate32);
-                float f=v;
-                f=(f+1)/32;
-                f*=1000;
-                video.fps=(uint32_t)f;
+    
+        VX(1,frame_rate);
+        if(v)
+        {
+                VX(1,frame_rate32_flag);
+                if(v)
+                {
+                    VX(16,frame_rate32);
+                    float f=v;
+                    f=(f+1)/32;
+                    f*=1000;
+                    video.fps=(uint32_t)f;
+                }else
+                {
+                    float den,num;
+                    VX(8,frame_rate_num)
+                    switch( v )
+                        {
+                        case 1: num = 24000; break;
+                        case 2: num = 25000; break;
+                        case 3: num = 30000; break;
+                        case 4: num = 50000; break;
+                        case 5: num = 60000; break;
+                        case 6: num = 48000; break;
+                        case 7: num = 72000; break;
+                        }
+                    VX(4,frame_rate_den)
+                    switch( v )
+                        {
+                        default:
+                        case 1: den = 1000; break;
+                        case 2: den = 1001; break;
+                        }
+
+                    float f=num*1000;
+                    f/=den;
+                    video.fps=(uint32_t)f;
+                }
             }else
             {
-                float den,num;
-                VX(8,frame_rate_num)
-                switch( v )
-                    {
-                    case 1: num = 24000; break;
-                    case 2: num = 25000; break;
-                    case 3: num = 30000; break;
-                    case 4: num = 50000; break;
-                    case 5: num = 60000; break;
-                    case 6: num = 48000; break;
-                    case 7: num = 72000; break;
-                    }
-                VX(4,frame_rate_den)
-                switch( v )
-                    {
-                    default:
-                    case 1: den = 1000; break;
-                    case 2: den = 1001; break;
-                    }
-
-                float f=num*1000;
-                f/=den;
-                video.fps=(uint32_t)f;
+                video.fps=25000;
             }
-    }else
-    {
-        video.fps=25000;
+            //
+            VX(1,color_flag);
+            if(v){
+                    VX(8,color_prim);
+                    VX(8,transfer_char);
+                    VX(8,matrix_coef);
+                }
     }
-    if(consumed>nb*8) 
+    VX(1,hrd_param_flag);
+    int leaky=0;
+    if(v)
     {
-        ADM_error("Stored %d bits, consumed %d\n",nb*8,consumed);
-        ADM_assert(0);
+        VX(5,hrd_num_leaky_buckets);
+        leaky=v;
+        VX(4,bitrate_exponent);
+        VX(4,buffer_size_exponent);
+        for(int i = 0; i < leaky; i++) 
+        {
+                bits.getBits(16);
+                bits.getBits(16);
+        }
     }
+    // Now we need an entry point
+    bits.flush();
+    uint8_t a[4];
+    uint8_t entryPoint[4]={0,0,1,0x0E};
+    for(int i=0;i<4;i++) a[i]=bits.getBits(8);
+    for(int i=0;i<4;i++) printf("%02x ",a[i]);
+    printf(" as marker\n");
+    if(memcmp(a,entryPoint,4))
+    {
+        ADM_warning("Bad entry point");
+        return false;
+    }
+    VX(6,ep_flags);
+    VX(1,extended_mv);
+    int extended_mv=v;
+    VX(6,ep_flags2);
+
+    for(int i=0;i<leaky;i++)
+            bits.getBits(8);
+    VX(1,ep_coded_dimension);
+    if(v)
+    {
+         VX(12,ep_coded_width);
+         VX(12,ep_coded_height);
+    }
+    if(extended_mv) VX(1,dmv);
+    VX(1,range_mappy_flags);
+    if(v) VX(3,mappy_flags);
+    VX(1,range_mappuv_flags);
+    if(v) VX(3,mappuv_flags);
     return true;
 
 }
@@ -1100,23 +1151,21 @@ int consumed;
     Borrowed a lot from VLC also
 
 */
-bool TsIndexer::decodeVC1Pic(int nb, uint8_t *dataBuffer,uint32_t &frameType,uint32_t &frameStructure)
+bool TsIndexer::decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure)
 {
-    GetBitContext s;
-    init_get_bits(&s, dataBuffer, nb*8);
     frameStructure=3;
     bool field=false;
     if(vc1Context.interlaced)
     {
-        if(get_bits(&s,1))
+        if(bits.getBits(1))
         {
-            if(get_bits(&s,1))
+            if(bits.getBits(1))
                field=true;
         }
     }
     if(field)
     {
-            int fieldType=get_bits(&s,3);
+            int fieldType=bits.getBits(3);
             frameStructure=1; // Top
             switch(fieldType)
             {
@@ -1139,17 +1188,16 @@ bool TsIndexer::decodeVC1Pic(int nb, uint8_t *dataBuffer,uint32_t &frameType,uin
     }else
     {
                 frameStructure=3; // frame
-                if( !get_bits(&s,1))
+                if( !bits.getBits(1))
                     frameType=2;
-                else if( !get_bits(&s,1))
+                else if( !bits.getBits(1))
                     frameType=3;
-                else if( !get_bits(&s,1))
+                else if( !bits.getBits(1))
                     frameType=1;
-                else if( !get_bits(&s,1))
+                else if( !bits.getBits(1))
                     frameType=3;
                 else
                     frameType=2;
-
     }
 
     return true;

@@ -36,6 +36,7 @@ public:
     int      getConsumed(void) {return consumed;}
     uint32_t getBits(int n);
     uint32_t peekBits(int n);
+    bool     flush(void) {stored=0;accumulator=0;return true;}
 };
 
 #endif

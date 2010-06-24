@@ -25,6 +25,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         : decoderFF(w,h,fcc,extraDataLen,extraData,bpp)
 {
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
+    hasBFrame=false;
     ADM_assert(c);
     CodecID id=c->codecId;
     ADM_assert(id!=CODEC_ID_NONE);
@@ -35,7 +36,8 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     }
     if(true==c->refCopy)
         _refCopy=1;
-
+    if(true==c->hasBFrame)
+        hasBFrame=true;
     AVCodec *codec=avcodec_find_decoder(id);
     if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
     codecId=id; 

@@ -27,6 +27,7 @@ typedef struct
     CodecID    codecId;
     bool       extraData;
     bool       refCopy;
+    bool       hasBFrame;
 }ffVideoCodec;
 
 /**
