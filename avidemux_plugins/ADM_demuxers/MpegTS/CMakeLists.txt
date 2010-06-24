@@ -10,6 +10,7 @@ SET(ADM_ts_SRCS
         ADM_tsComputeTimeStamp.cpp
         dmxTSPacket.cpp
         ADM_tsPatPmt.cpp
+        ADM_tsGetBits.cpp
 )
 
 ADD_LIBRARY(ADM_dm_ts SHARED ${ADM_ts_SRCS})
