@@ -784,8 +784,16 @@ dmxPacketInfo info;
 
                           pkt->read(VC1_SEQ_SIZE-1,vc1Seq+1);
                           if(!decodeVC1Seq(VC1_SEQ_SIZE,vc1Seq,video)) continue;
-                          video.extraDataLength=VC1_SEQ_SIZE;
-                          memcpy(video.extraData,vc1Seq,VC1_SEQ_SIZE);
+                          video.extraDataLength=VC1_SEQ_SIZE+8;
+                          memcpy(video.extraData+4,vc1Seq,VC1_SEQ_SIZE);
+                          video.extraData[0]=0;
+                          video.extraData[1]=0;
+                          video.extraData[2]=1;
+                          video.extraData[3]=0xf;
+                          video.extraData[VC1_SEQ_SIZE+4+0]=0;
+                          video.extraData[VC1_SEQ_SIZE+4+1]=0;
+                          video.extraData[VC1_SEQ_SIZE+4+2]=1;
+                          video.extraData[VC1_SEQ_SIZE+4+3]=0xfE;
                           seq_found=1;
                           // Hi Profile
                           printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
