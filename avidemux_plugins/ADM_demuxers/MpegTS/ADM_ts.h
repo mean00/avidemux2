@@ -118,6 +118,7 @@ class tsHeader         :public vidHeader
     uint64_t        timeConvert(uint64_t x);
     bool            updatePtsDts(void);
     bool            updateIdr(void);
+    bool            videoNeedEscaping;
 protected:
     vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
     uint32_t        videoPid;             

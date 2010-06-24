@@ -210,6 +210,7 @@ bool    tsHeader::readVideo(indexFile *index)
         if(!strcmp(type,"VC1"))
         {
             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"VC1 ");
+            videoNeedEscaping=true;
         }else
         {
             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
