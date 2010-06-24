@@ -233,10 +233,17 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         }else if(isMpeg12Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_MPEG2;
+        }else if(isVC1Compatible(fcc))
+        {
+            vdpauType=ADM_VDPAU_VC1;
         }else ADM_assert(0);
         int vdpDecoder;
         switch(vdpauType)
         {
+            case ADM_VDPAU_VC1  : vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
+                                  WRAP_OpenByName(vc1_vdpau,CODEC_ID_VC1);
+                                  break;
+
             case ADM_VDPAU_H264 : vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
                                   WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
                                   break;

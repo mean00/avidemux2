@@ -124,6 +124,7 @@ bool isVC1Compatible    (uint32_t fourcc)
   uint8_t divx3 = 0;
 
   CHECK ("VC1 ");
+  CHECK ("WVC1");
   return divx3;
 
 #undef CHECK
