@@ -144,7 +144,7 @@ protected:
         void                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
         bool                    decodeVC1Seq(int nb, uint8_t *data,TSVideo &video);
-        
+        bool                    decodeVC1Pic(int nb, uint8_t *dataBuffer,uint32_t &frameType,uint32_t &frameStructure);
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
@@ -155,7 +155,23 @@ public:
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
         bool    Mark(indexerData *data,dmxPacketInfo *s,uint32_t overRead);
-
+        bool    updatePicStructure(TSVideo &video,indexerData &idata, const uint32_t t)
+                        {
+                                            switch(t)
+                                            {
+                                                case 3: video.frameCount++;
+                                                        idata.picStructure=pictureFrame;
+                                                        break;
+                                                case 1:  idata.picStructure=pictureTopField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                case 2:  idata.picStructure=pictureBottomField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            }
+                                            return true;
+                        }
 };
 /**
       \fn TsIndexer 
@@ -620,19 +636,7 @@ dmxPacketInfo info;
                                             picture_structure=(two)&3;
                                             
                                             //printf("Picture type %02x struct:%x\n",two,picture_structure);
-                                            switch(picture_structure)
-                                            {
-                                                case 3: video.frameCount++;
-                                                        data.picStructure=pictureFrame;
-                                                        break;
-                                                case 1:  data.picStructure=pictureTopField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                case 2:  data.picStructure=pictureBottomField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                default: ADM_warning("frame type 0 met, this is illegal\n");
-                                            }
+                                            updatePicStructure(video,data,picture_structure);
                                         }
                                         default:break;
                                     }
@@ -795,20 +799,26 @@ dmxPacketInfo info;
                     case 0x0D: //  Picture start
                         { 
                           int type;
+                          int consumed;
+                          uint8_t buffer[4];
+                          uint32_t fType,sType;
                           markType update=markNow;
                           if(!seq_found)
                           { 
                                   continue;
                                   printf("[TsIndexer]No sequence start yet, skipping..\n");
-                          }                          
+                          }      
+                          pkt->read(2,buffer);
+                          if(!decodeVC1Pic(2,buffer,fType,sType)) continue;
+                          updatePicStructure(video,data,sType);
                           if(data.state==idx_startAtGopOrSeq) 
                           {
-                                  currentFrameType=type;
+                                  currentFrameType=fType;
                           }else
                             {
-                                  data.frameType=type;
+                                  data.frameType=fType;
                                   pkt->getInfo(&info);
-                                  Mark(&data,&info,0);
+                                  Mark(&data,&info,consumed);
                             }
                             data.state=idx_startAtImage;
                             data.nbPics++;
@@ -959,12 +969,14 @@ bool TsIndexer::writeAudio(void)
     \brief http://wiki.multimedia.cx/index.php?title=VC-1#Setup_Data_.2F_Sequence_Layer
 #warning we should de-escape it!
         Large part of this borrowed from VLC
+        Advanced/High profile only
 */
 bool TsIndexer::decodeVC1Seq(int nb, uint8_t *data,TSVideo &video)
 {
 GetBitContext s;
 int v;
 int consumed;
+    vc1Context.advanced=true;
     init_get_bits(&s, data, nb*8);
 #define VX(a,b) v=get_bits(&s,a);printf("[VC1] %d "#b"\n",v);consumed+=a;
     VX(2,profile);
@@ -1062,6 +1074,66 @@ int consumed;
     }
     return true;
 
+}
+/**
+    \fn decodeVC1Pic
+    \brief Decode info from VC1 picture
+    Borrowed a lot from VLC also
+
+*/
+bool TsIndexer::decodeVC1Pic(int nb, uint8_t *dataBuffer,uint32_t &frameType,uint32_t &frameStructure)
+{
+    GetBitContext s;
+    init_get_bits(&s, dataBuffer, nb*8);
+    frameStructure=3;
+    bool field=false;
+    if(vc1Context.interlaced)
+    {
+        if(get_bits(&s,1))
+        {
+            if(get_bits(&s,1))
+               field=true;
+        }
+    }
+    if(field)
+    {
+            int fieldType=get_bits(&s,3);
+            frameStructure=1; // Top
+            switch(fieldType)
+            {
+                case 0: /* II */
+                case 1: /* IP */
+                case 2: /* PI */
+                    frameType=1;
+                    break;
+                case 3: /* PP */
+                    frameType=2;
+                    break;
+                case 4: /* BB */
+                case 5: /* BBi */
+                case 6: /* BiB */
+                case 7: /* BiBi */
+                    frameType=3;
+                    break;
+
+            }
+    }else
+    {
+                frameStructure=3; // frame
+                if( !get_bits(&s,1))
+                    frameType=2;
+                else if( !get_bits(&s,1))
+                    frameType=3;
+                else if( !get_bits(&s,1))
+                    frameType=1;
+                else if( !get_bits(&s,1))
+                    frameType=3;
+                else
+                    frameType=2;
+
+    }
+
+    return true;
 }
 /********************************************************************************************/
 /********************************************************************************************/
