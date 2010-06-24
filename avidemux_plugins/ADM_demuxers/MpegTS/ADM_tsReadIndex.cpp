@@ -20,9 +20,11 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
+#include "ADM_coreUtils.h"
 
 #include <math.h>
 #define TS_MAX_LINE 10000
+extern uint8_t  mk_hex(uint8_t a, uint8_t b);;
 /**
         \fn readIndex
         \brief Read the [video] section of the index file
@@ -216,6 +218,31 @@ bool    tsHeader::readVideo(indexFile *index)
     {
        _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"MPEG");
     }
+
+    char *extra=index->getAsString("ExtraData");
+    if(extra)
+    {
+            vector<string> result;
+            // From is int=nb, hex hex
+            ADM_splitString(string(" "), string(extra), result);
+            if(result.size())
+            {
+                int nb=atoi(result[0].c_str());
+                printf("[tsDemux] Found %d bytes of video extra data\n",nb);
+                if(nb)
+                {
+                    _videoExtraLen=nb;
+                    _videoExtraData=new uint8_t[nb];
+                    ADM_assert(nb+1==result.size());
+                    for(int i=0;i<nb;i++)
+                    {
+                        const char *m=result[i+1].c_str();
+                        _videoExtraData[i]=mk_hex(m[0],m[1]);
+                    }
+                }
+            }
+    }
+
     videoPid=index->getAsUint32("Pid");
     if(!videoPid)
     {

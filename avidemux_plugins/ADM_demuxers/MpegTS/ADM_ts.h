@@ -150,7 +150,7 @@ virtual     uint8_t                 getNbAudioStreams(void);
     virtual uint32_t getFlags(uint32_t frame,uint32_t *flags);
     virtual uint8_t  getFrame(uint32_t framenum,ADMCompressedImage *img);
     virtual uint64_t getTime(uint32_t frame);
-            uint8_t  getExtraHeaderData(uint32_t *len, uint8_t **data);
+//            uint8_t  getExtraHeaderData(uint32_t *len, uint8_t **data);
     virtual uint64_t getVideoDuration(void);
     virtual uint8_t  getFrameSize(uint32_t frame,uint32_t *size) ;
 virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);

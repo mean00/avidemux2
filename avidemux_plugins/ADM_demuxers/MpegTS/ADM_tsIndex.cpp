@@ -59,10 +59,12 @@ static const uint32_t  VC1_ar[16][2] = {  // From VLC
                         { 0, 0}, { 1, 1}, {12,11}, {10,11}, {16,11}, {40,33},
                         {24,11}, {20,11}, {32,11}, {80,33}, {18,11}, {15,11},
                         {64,33}, {160,99},{ 0, 0}, { 0, 0}};
+
+#define VC1_SEQ_SIZE 29
 class TSVideo
 {
 public:
-    TSVideo(void) {w=h=fps=interlaced=ar=pid=frameCount=fieldCount=0;}
+    TSVideo(void) {w=h=fps=interlaced=ar=pid=frameCount=fieldCount=0;extraDataLength=0;}
     uint32_t w;
     uint32_t h;
     uint32_t fps;
@@ -71,6 +73,8 @@ public:
     uint32_t pid;
     uint32_t frameCount;
     uint32_t fieldCount;
+    uint32_t extraDataLength;
+    uint8_t  extraData[VC1_SEQ_SIZE];
 };
 
 typedef enum
@@ -764,7 +768,7 @@ dmxPacketInfo info;
           switch(startCode)
                   {
                   case 0x0f: // sequence start
-                          uint8_t vc1Seq[8];
+                          uint8_t vc1Seq[VC1_SEQ_SIZE];
                           uint8_t h;
                           if(seq_found)
                           {
@@ -777,9 +781,11 @@ dmxPacketInfo info;
                           if(!h&0x80) // simple/main profile
                                 continue;
                           vc1Seq[0]=h;
-#define VC1_SEQ_SIZE 16
+
                           pkt->read(VC1_SEQ_SIZE-1,vc1Seq+1);
                           if(!decodeVC1Seq(VC1_SEQ_SIZE,vc1Seq,video)) continue;
+                          video.extraDataLength=VC1_SEQ_SIZE;
+                          memcpy(video.extraData,vc1Seq,VC1_SEQ_SIZE);
                           seq_found=1;
                           // Hi Profile
                           printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
@@ -918,6 +924,13 @@ bool TsIndexer::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
     qfprintf(index,"Interlaced=%d\n",video->interlaced);
     qfprintf(index,"AR=%d\n",video->ar);
     qfprintf(index,"Pid=%d\n",video->pid);
+    if(video->extraDataLength)
+    {
+        qfprintf(index,"ExtraData=%d ",video->extraDataLength);
+        for(int i=0;i<video->extraDataLength;i++)
+            qfprintf(index," %02x",video->extraData[i]);
+        qfprintf(index,"\n");
+    }
  switch(trkType)
     {
         case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;;

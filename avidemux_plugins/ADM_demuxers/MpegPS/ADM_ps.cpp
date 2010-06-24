@@ -211,4 +211,13 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     return false;
 }
 
+/**
+        \fn getExtraHeaderData
+*/
+uint8_t  psHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
+{
+                *len=0; //_tracks[0].extraDataLen;
+                *data=NULL; //_tracks[0].extraData;
+                return true;            
+}
 //EOF
