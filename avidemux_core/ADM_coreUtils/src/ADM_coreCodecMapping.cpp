@@ -52,6 +52,8 @@ const ffVideoCodec ffCodec[]=
   {"SVQ3", CODEC_ID_SVQ3,       true, true},
   {"FFVH", CODEC_ID_FFVHUFF,    true, true},
   {"HFYU", CODEC_ID_HUFFYUV,    true, true},
+  {"VC1 ", CODEC_ID_VC1,        true, true},
+
 
  //{CODEC_ID_FFVHUFF,"FFVH"},
 //    {CODEC_ID_HUFFYUV,"HFYU"},

@@ -22,6 +22,7 @@ bool isMSMpeg4Compatible(uint32_t fourcc);
 bool isDVCompatible     (uint32_t fourcc);
 bool isVP6Compatible    (uint32_t fourcc);
 bool isMpeg12Compatible (uint32_t fourcc);
+bool isVC1Compatible    (uint32_t fourcc);
 
 #endif
 //EOF

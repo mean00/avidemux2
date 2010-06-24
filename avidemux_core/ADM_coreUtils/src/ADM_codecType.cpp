@@ -113,6 +113,22 @@ bool isMSMpeg4Compatible (uint32_t fourcc)
 #undef CHECK
 }
 /**
+    \fn isVC1Compatible
+*/
+bool isVC1Compatible    (uint32_t fourcc)
+{
+
+#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
+						{divx3=1; }
+
+  uint8_t divx3 = 0;
+
+  CHECK ("VC1 ");
+  return divx3;
+
+#undef CHECK
+}
+/**
     \fn isVP6Compatible
 */
 
