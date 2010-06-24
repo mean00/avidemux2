@@ -24,7 +24,7 @@
 
 #include "ADM_bitmap.h"
 #include "avidemutils.h"
-
+#include "ADM_coreUtils.h"
 
 #define QT_TR_NOOP(x) x
 uint8_t  mk_hex(uint8_t a, uint8_t b);
@@ -407,6 +407,28 @@ uint8_t mk_hex(uint8_t a, uint8_t b)
 		b1 = b1 - '0';
 
 	return (a1 << 4) + b1;
+}
+/**
+        \fn ADM_splitString
+        \brief convert a string in a list using a separator
+*/
+bool        ADM_splitString(const string &separator, const string &source, vector<string>& result)
+{
+string splitted=source;
+result.clear();
+
+    string::size_type next = splitted.find(separator);
+    while(next != string::npos)
+    {
+        string chunk=splitted.substr(0, next);
+        if(chunk.length())
+                    result.push_back(chunk);
+        splitted = splitted.substr(next + 1);
+        next = splitted.find(separator);
+    }
+    if(splitted.length())
+            result.push_back(splitted);
+    return true;
 }
 
 //EOF
