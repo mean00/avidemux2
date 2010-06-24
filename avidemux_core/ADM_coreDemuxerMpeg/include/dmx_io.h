@@ -17,6 +17,8 @@
 #ifndef FPARSER_
 #define FPARSER_
 #define DMX_BUFFER 1024*100
+#include <vector>
+using std::vector;
 
 /*
         _off is the logical offset in the file
@@ -31,7 +33,22 @@ typedef enum
         FP_DONT_APPEND=2,
         FP_APPEND=3
 }FP_TYPE;
-
+/**
+    \class fdIo
+    \brief Describe one file
+*/
+class fdIo
+{
+public:
+        FILE        *file;
+        uint64_t    fileSize;
+        uint64_t    fileSizeCumul;// Cumulative side from beginning =offset for the 1st byte in the file
+        fdIo() {file=NULL;fileSize=0;fileSizeCumul=0;}
+};
+/**
+    \class fileParser
+    \brief helper class to read one logical file over several physical ones
+*/
  class fileParser
 {
         private:
@@ -40,10 +57,7 @@ typedef enum
             uint64_t _off;              // Absolute offset
             
             uint32_t _curFd;        
-            uint32_t _nbFd;
-            FILE      **_fd;
-            uint64_t *_sizeFd;          // Filesize for file X
-            uint64_t *_sizeFdCumul;     // Cumulative side from beginning =offset for the 1st byte in the file
+            vector <fdIo> listOfFd;
             uint64_t _head,_tail,_size;       
            
         public:

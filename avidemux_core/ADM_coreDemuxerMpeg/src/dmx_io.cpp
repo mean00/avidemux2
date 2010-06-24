@@ -1,9 +1,7 @@
-/***************************************************************************
-                          dmx_io.cpp  -  description
-                             -------------------
-
-    copyright            : (C) 2005 by mean
-    email                : fixounet@free.fr
+/** *************************************************************************
+    \file    dmx_io.cpp
+    \brief   handle several files as one
+    \author  mean (c) 2005/2010 fixounet@free.fr
 
     This just handles mpeg sync search and little endian/big endin integer reading
     It also handle multiple files seen as one logical file and buffering
@@ -28,10 +26,7 @@
 
 fileParser::fileParser( void )
 {
-                _fd=NULL;
-                _sizeFd=NULL;
                 _off=0;
-                _nbFd=0;
                 _curFd=0;
                 _buffer=new uint8_t[DMX_BUFFER];
                 _head=_tail=0;
@@ -40,22 +35,18 @@ fileParser::fileParser( void )
 
 fileParser::~fileParser()
 {
-        if(_nbFd)
+        int nb=listOfFd.size();
+        for(int i=0;i<nb;i++)
         {
-                 for(uint32_t i=0;i<_nbFd;i++)
-                 {
-                                if(_fd[i])
-                                        fclose(_fd[i]);
-                 }
-                delete [] _fd;
-                delete [] _sizeFd;
-                delete [] _sizeFdCumul;
-
-
+                if(listOfFd[i].file)
+                {
+                    fclose(listOfFd[i].file);
+                    listOfFd[i].file=NULL;
+                }
         }
+        listOfFd.clear();
         if(_buffer) delete [] _buffer;
         _buffer=NULL;
-        _nbFd=0;
 }
 
 /*
@@ -76,8 +67,6 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         uint8_t last_followup = 0;          // indicates last follow-up (by number: 99)
         uint8_t count = 0;                  // number of follow-ups
 
-        FILE **buffer_fd = NULL;            // _fd buffer
-        uint64_t *buffer_sizeFd = NULL;     // _sizeFd buffer
 
         int i = 0;                          // index (general use)
 
@@ -103,24 +92,22 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
         // no number sequence
         if( decimals == 0 )
         {
+                fdIo newFd;
                 aprintf( "\nSimple loading: \n" );
                 delete [] followup;
-                _nbFd = 1;
                 _curFd = 0;
-                _fd = new FILE * [_nbFd];
-                _sizeFd = new uint64_t [_nbFd];
-                _sizeFdCumul = new uint64_t [_nbFd];
-
+                FILE *f=NULL;
                 // open file
-                if(! (_fd[0] = ADM_fopen(filename, "rb")) )
+                if(! (f = ADM_fopen(filename, "rb")) )
                   { return 0; }
-
+                newFd.file=f;
                 // calculate file-size
-                fseeko( _fd[0], 0, SEEK_END );
-                _sizeFd[0] = ftello( _fd[0] );
-                fseeko( _fd[0], 0, SEEK_SET );
-                _sizeFdCumul[0]=0;
-                _size=_sizeFd[0];
+                fseeko( f, 0, SEEK_END );
+                 newFd.fileSize = ftello( f );
+                fseeko( f, 0, SEEK_SET );
+                 newFd.fileSizeCumul=0;
+                _size=newFd.fileSize;
+                listOfFd.push_back(newFd);
                 aprintf( " file: %s, size: %"LLU"\n", filename, _sizeFd[0] );
                 aprintf( " found 1 files \n" );
                 aprintf( "Done \n" );
@@ -151,11 +138,10 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 // -----
                 uint32_t tabSize;
 
-                tabSize=(uint32_t)pow(10,decimals);
-                buffer_fd = new FILE * [tabSize];
-                buffer_sizeFd = new uint64_t [tabSize];
-
+            
                 aprintf( "\nAuto adding: \n" );
+                _curFd = 0;
+                uint64_t total=0;
                 while( last_followup == 0 )
                 {
                         strcpy( followup, left );
@@ -163,8 +149,8 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                         strcat( followup, right );
 
                         // open file
-                        buffer_fd[count] = ADM_fopen(followup, "rb");
-                        if(! buffer_fd[count] )
+                        FILE *f= ADM_fopen(followup, "rb");
+                        if(!f)
                         {
                                 // we need at least one file!
                                 if( first_followup == 1 )
@@ -174,11 +160,16 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                         }
 
                         // calculate file-size
-                        fseeko( buffer_fd[count], 0, SEEK_END );
-                        buffer_sizeFd[count] = ftello( buffer_fd[count] );
-                        fseeko( buffer_fd[count], 0, SEEK_SET );
+                        fdIo myFd;
+                        myFd.file=f;
+                        fseeko(f, 0, SEEK_END );
+                        myFd.fileSize = ftello(f );
+                        myFd.fileSizeCumul = total;
+                        fseeko( f, 0, SEEK_SET );
+                        total+=  myFd.fileSize;
 
-                        aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), followup, buffer_sizeFd[count] );
+                        aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), followup,
+                                                    myFd.fileSize );
 
                         // increase number
                         number[decimals - 1] = number[decimals - 1] + 1;
@@ -194,31 +185,17 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                         }
 
                         first_followup = 0;
+                        listOfFd.push_back(myFd);
                         count++;
                 } // while( last_followup == 0 )
 
-                // copy from buffer
-                _nbFd = count;
-                _curFd = 0;
-                _fd = new FILE * [_nbFd];
-                _sizeFd = new uint64_t [_nbFd];
-                _sizeFdCumul = new uint64_t [_nbFd];
-                uint64_t total=0;
-                for( i = 0; i < count; i++ )
-                {
-                        _fd[i] = buffer_fd[i];
-                        _sizeFd[i] = buffer_sizeFd[i];
-                        _sizeFdCumul[i]=total;
-                        total+=buffer_sizeFd[i];
-                }
+              
                 _size=total;
                 // clean up
                 delete [] followup;
                 delete [] left;
                 delete [] number;
                 delete [] right;
-                delete [] buffer_fd;
-                delete [] buffer_sizeFd;
                 if(*multi==FP_PROBE)
                 {
                         if(count>1)
@@ -257,12 +234,14 @@ uint8_t fileParser::forward(uint64_t jmp)
                                return 0;
                         }
                 _off+=jmp;  // final location
-                for(uint32_t i=_curFd;i<_nbFd;i++)
+                int nb=listOfFd.size();
+                for(uint32_t i=_curFd;i<nb;i++)
                 {
-                        if(_off>=_sizeFdCumul[i] && _off<(_sizeFdCumul[i]+_sizeFd[i]))
+                        if(_off>=listOfFd[i].fileSizeCumul && _off<(listOfFd[i].fileSizeCumul
+                                                                    +listOfFd[i].fileSize))
                         {
                                 _curFd=i;
-                                fseeko(_fd[i],_off-_sizeFdCumul[i],SEEK_SET);
+                                fseeko(listOfFd[i].file,_off-listOfFd[i].fileSizeCumul,SEEK_SET);
                                 _head=_tail=_off;
                                 return 1;
                         }
@@ -280,13 +259,14 @@ uint8_t fileParser::setpos(uint64_t o)
                         _off=o;
                         return 1;
                 }
-                for(uint32_t i=0;i<_nbFd;i++)
+                int nb=listOfFd.size();
+                for(uint32_t i=0;i<nb;i++)
                         {
-                                if( (o>=_sizeFdCumul[i]) && o<(_sizeFdCumul[i]+_sizeFd[i]))
+                                if( (o>=listOfFd[i].fileSizeCumul) && o<(listOfFd[i].fileSizeCumul+listOfFd[i].fileSize))
                                         {
                                                         _curFd=i;
                                                         _off=o;
-                                                        fseeko(_fd[_curFd],_off-_sizeFdCumul[i],SEEK_SET);
+                                                        fseeko(listOfFd[_curFd].file,_off-listOfFd[i].fileSizeCumul,SEEK_SET);
                                                         _head=_tail=_off; // Flush
                                                   return 1;
                                         }
@@ -306,7 +286,7 @@ uint32_t val,hnt;
         // preload
         if((4+_off)>=_size)
         {
-                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%"LU")\n",_off,_size,_nbFd);
+                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%u)\n",_off,_size,(unsigned int)listOfFd.size());
                 return 0;
         }
         hnt=(read8i()<<16) + (read8i()<<8) +read8i();
@@ -318,7 +298,7 @@ uint32_t val,hnt;
                 val=read8i();
                 hnt+=val;
                 hnt&=0xffffff;
-                if(_curFd==_nbFd-1)
+                if(_curFd==listOfFd.size()-1)
                 {
                                 if((4+_off)>=_size) return 0;
                 }
@@ -339,7 +319,7 @@ uint32_t val,hnt;
         // preload
         if((5+_off)>=_size)
         {
-                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%"LU")\n",_off,_size,_nbFd);
+                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%u)\n",_off,_size,(unsigned int)listOfFd.size());
                 return 0;
         }
         hnt=(read8i()<<24)+(read8i()<<16) + (read8i()<<8) +read8i();
@@ -350,7 +330,7 @@ uint32_t val,hnt;
                 hnt<<=8;
                 val=read8i();
                 hnt+=val;
-                if(_curFd==_nbFd-1)
+                if(_curFd==listOfFd.size()-1)
                 {
                                 if((5+_off)>=_size) return 0;
                 }
@@ -418,27 +398,27 @@ uint64_t remain,begin,mx,last;
 
         // Reload ?
         // What is left in that file ?
-        mx=_sizeFd[_curFd]+_sizeFdCumul[_curFd]-_off;
+        mx=listOfFd[_curFd].fileSize+listOfFd[_curFd].fileSizeCumul-_off;
         // Do we need more, if so jump over it
         if(len>mx)
         {
-                fread(buffer,mx,1,_fd[_curFd]);
+                fread(buffer,mx,1,listOfFd[_curFd].file);
                 len-=mx;
                 _off+=mx;
                 buffer+=mx;
                 _head=_tail=_off;
                 _curFd++;
-                if(_curFd>=_nbFd) return 0;
-                fseeko(_fd[_curFd],0,SEEK_SET);
+                if(_curFd>=listOfFd.size()) return 0;
+                fseeko(listOfFd[_curFd].file,0,SEEK_SET);
                 return mx+read32(len,buffer);
         }
         // Read what is available in file, store leftover in the buffer
-        fread(buffer,len,1,_fd[_curFd]);
+        fread(buffer,len,1,listOfFd[_curFd].file);
         _off+=len;
         // available in that file
         mx-=len;
         if(mx>DMX_BUFFER) mx=DMX_BUFFER;
-        fread(_buffer,mx,1,_fd[_curFd]);
+        fread(_buffer,mx,1,listOfFd[_curFd].file);
         _head=_off;
         _tail=_head+mx;
 
