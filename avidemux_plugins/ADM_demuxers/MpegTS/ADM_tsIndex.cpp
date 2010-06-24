@@ -1,7 +1,8 @@
 /***************************************************************************
                         Mpeg2 in PS indexer                                            
                              
-    
+    VC1: /!\ Escaping not done (yet)
+
     copyright            : (C) 2005/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -54,7 +55,10 @@ static const uint32_t FPS[16]={
                 0,                      // 14
                 0                       // 15
         };
-
+static const uint32_t  VC1_ar[16][2] = {  // From VLC
+                        { 0, 0}, { 1, 1}, {12,11}, {10,11}, {16,11}, {40,33},
+                        {24,11}, {20,11}, {32,11}, {80,33}, {18,11}, {15,11},
+                        {64,33}, {160,99},{ 0, 0}, { 0, 0}};
 class TSVideo
 {
 public:
@@ -103,6 +107,17 @@ typedef enum
     markNow
 }markType;
 
+class VC1Context
+{
+public:
+        bool advanced;
+        bool interlaced;
+        bool interpolate;
+        VC1Context() {advanced=false;interlaced=false;interpolate=false;}
+
+};
+
+
 #if 0
 #define aprintf printf
 #else
@@ -120,6 +135,7 @@ protected:
         indexerState    currentIndexState;
         uint64_t        fullSize;
         Clock           ticktock;
+        VC1Context      vc1Context;
 protected:
         FILE                    *index;
         tsPacketLinearTracker   *pkt;
@@ -127,7 +143,8 @@ protected:
         DIA_workingBase         *ui;
         void                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
-
+        bool                    decodeVC1Seq(int nb, uint8_t *data,TSVideo &video);
+        
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
@@ -705,6 +722,7 @@ TSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
 
+
     if(!videoTrac) return false;
     if(videoTrac[0].trackType!=ADM_TS_VC1)
     {
@@ -741,109 +759,48 @@ dmxPacketInfo info;
 
           switch(startCode)
                   {
-                  case 0xB3: // sequence start
+                  case 0x0f: // sequence start
+                          uint8_t vc1Seq[8];
+                          uint8_t h;
                           if(seq_found)
                           {
-                                  pkt->getInfo(&info);
-                                  data.frameType=1;
-                                  Mark(&data,&info,4);
-                                  data.state=idx_startAtGopOrSeq;
-                                  pkt->forward(8);  // Ignore
+                                  pkt->forward(4);  // Ignore
                                   continue;
                           }
                           //
+                          
+                          h=pkt->readi8();
+                          if(!h&0x80) // simple/main profile
+                                continue;
+                          vc1Seq[0]=h;
+#define VC1_SEQ_SIZE 16
+                          pkt->read(VC1_SEQ_SIZE-1,vc1Seq+1);
+                          if(!decodeVC1Seq(VC1_SEQ_SIZE,vc1Seq,video)) continue;
                           seq_found=1;
-                          val=pkt->readi32();
-                          video.w=val>>20;
-                          video.w=((video.w+15)&~15);
-                          video.h= (((val>>8) & 0xfff)+15)& ~15;
-
-                          video.ar = (val >> 4) & 0xf;
-                          video.fps= FPS[val & 0xf];
-                          pkt->forward(4);
-                          writeVideo(&video,ADM_TS_MPEG2);
+                          // Hi Profile
+                          printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
+                          printf("[VC1] FPS : %d\n",(int)video.fps);
+                          //video.ar = (val >> 4) & 0xf;
+                          //video.fps= FPS[val & 0xf];
+                          writeVideo(&video,ADM_TS_VC1);
                           writeAudio();
                           qfprintf(index,"[Data]");
                           pkt->getInfo(&info);
                           data.frameType=1;
-                          Mark(&data,&info,4+8);
+                          Mark(&data,&info,8);
                           data.state=idx_startAtGopOrSeq;
                           continue;
 
                           break;
-                    case 0xB5: //  extension
-                                { 
-                                    uint8_t id=pkt->readi8()>>4;
-                                    uint8_t two;
-                                    switch(id)
-                                    {
-                                        case 1: // Sequence extension
-                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
-                                            break;
-                                        case 8: // picture coding extension (mpeg2)
-                                        {
-                                            // skip motion vector
-                                            uint8_t picture_structure;
-                                            pkt->forward(1); // 4*4 bits
-                                            two=pkt->readi8();
-                                            picture_structure=(two)&3;
-                                            
-                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
-                                            switch(picture_structure)
-                                            {
-                                                case 3: video.frameCount++;
-                                                        data.picStructure=pictureFrame;
-                                                        break;
-                                                case 1:  data.picStructure=pictureTopField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                case 2:  data.picStructure=pictureBottomField;
-                                                         video.fieldCount++;
-                                                         break;
-                                                default: ADM_warning("frame type 0 met, this is illegal\n");
-                                            }
-                                        }
-                                        default:break;
-                                    }
-                                }
-                                break;
-                  case 0xb8: // GOP
-                          // Update ui
-                            {
-                               updateUI();
-
-                            }
-
-                          if(!seq_found) continue;
-                          if(data.state==idx_startAtGopOrSeq) 
-                          {         
-                                  continue;;
-                          }
-                          pkt->getInfo(&info);
-                          Mark(&data,&info,4);
-                          data.state=idx_startAtGopOrSeq;
-                          break;
-                  case 0x00 : // picture
-                        {
+                    case 0x0D: //  Picture start
+                        { 
                           int type;
                           markType update=markNow;
                           if(!seq_found)
                           { 
                                   continue;
                                   printf("[TsIndexer]No sequence start yet, skipping..\n");
-                          }
-                          
-                          val=pkt->readi16();
-                          temporal_ref=val>>6;
-                          type=7 & (val>>3);
-                          if( type<1 ||  type>3)
-                          {
-                                  printf("[Indexer]Met illegal pic at %"LLX" + %"LX"\n",
-                                                  info.startAt,info.offset);
-                                  continue;
-                          }
-                          
-                          
+                          }                          
                           if(data.state==idx_startAtGopOrSeq) 
                           {
                                   currentFrameType=type;
@@ -851,9 +808,7 @@ dmxPacketInfo info;
                             {
                                   data.frameType=type;
                                   pkt->getInfo(&info);
-                                  Mark(&data,&info,4+2);
-
-
+                                  Mark(&data,&info,0);
                             }
                             data.state=idx_startAtImage;
                             data.nbPics++;
@@ -998,6 +953,115 @@ bool TsIndexer::writeAudio(void)
         qfprintf(index,"%s.br=%d\n",head,t->wav.byterate);
     }
     return true;
+}
+/**
+    \fn decodeVc1Seq
+    \brief http://wiki.multimedia.cx/index.php?title=VC-1#Setup_Data_.2F_Sequence_Layer
+#warning we should de-escape it!
+        Large part of this borrowed from VLC
+*/
+bool TsIndexer::decodeVC1Seq(int nb, uint8_t *data,TSVideo &video)
+{
+GetBitContext s;
+int v;
+int consumed;
+    init_get_bits(&s, data, nb*8);
+#define VX(a,b) v=get_bits(&s,a);printf("[VC1] %d "#b"\n",v);consumed+=a;
+    VX(2,profile);
+    VX(3,level);
+
+    VX(2,chroma_format);
+    VX(3,Q_frame_rate_unused);
+    VX(5,Q_bit_unused);
+
+    VX(1,postproc_flag);
+
+    VX(12,coded_width);
+    video.w=v*2+2;
+    VX(12,coded_height);
+    video.h=v*2+2;
+
+    VX(1,pulldown_flag);
+    VX(1,interlaced_flag);
+    vc1Context.interlaced=v;
+    VX(1,frame_counter_flag);
+
+    VX(1,interpolation_flag);
+    vc1Context.interpolate=v;
+
+    VX(1,reserved_bit);
+    VX(1,psf);
+
+    VX(1,display_extension);
+    if(v)
+    {
+         VX(14,display_extension_coded_width);
+         VX(14,display_extension_coded_height);
+         VX(1,aspect_ratio_flag);
+     
+
+         if(v)
+         {
+                VX(4,aspect_ratio);
+                switch(v)
+                {
+                    case 15: video.ar=(get_bits(&s,8)<<16)+get_bits(&s,8);
+                             break;
+                    default:
+                             video.ar=(VC1_ar[v][0]<<16)+(VC1_ar[v][1]<<16);
+                             break;
+                }
+                printf("[VC1] Aspect ratio %d x %d\n",video.ar>>8,video.ar&0xff);
+         }
+    }
+    VX(1,frame_rate);
+    if(v)
+    {
+            VX(1,frame_rate32_flag);
+            if(v)
+            {
+                VX(16,frame_rate32);
+                float f=v;
+                f=(f+1)/32;
+                f*=1000;
+                video.fps=(uint32_t)f;
+            }else
+            {
+                float den,num;
+                VX(8,frame_rate_num)
+                switch( v )
+                    {
+                    case 1: num = 24000; break;
+                    case 2: num = 25000; break;
+                    case 3: num = 30000; break;
+                    case 4: num = 50000; break;
+                    case 5: num = 60000; break;
+                    case 6: num = 48000; break;
+                    case 7: num = 72000; break;
+                    }
+                VX(4,frame_rate_den)
+                switch( v )
+                    {
+                    default:
+                    case 1: den = 1000; break;
+                    case 2: den = 1001; break;
+                    }
+
+                float f=num*1000;
+                f/=den;
+                video.fps=(uint32_t)f;
+            }
+    }else
+    {
+        video.fps=25000;
+    }
+    if(consumed>nb*8) 
+    {
+        ADM_error("Stored %d bits, consumed %d\n",nb*8,consumed);
+        ADM_assert(0);
+    }
+    return true;
+
 }
 /********************************************************************************************/
 /********************************************************************************************/
