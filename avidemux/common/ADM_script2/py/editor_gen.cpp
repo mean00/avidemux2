@@ -9,6 +9,16 @@ static tp_obj zzpy_printTiming(TP)
   int r=  jsPrintTiming(p0); 
   return tp_number(r);
 }
+// hexDumpFrame -> int jsHexDumpFrame (int ) 
+static tp_obj zzpy_hexDumpFrame(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
+  int p0= pm.asInt();
+  int r=  jsHexDumpFrame(p0); 
+  return tp_number(r);
+}
 // dumpSegment -> int jsDumpSegments (void ) 
 static tp_obj zzpy_dumpSegment(TP)
  {
@@ -36,6 +46,10 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
   if (!strcmp(key, "printTiming"))
   {
      return tp_method(vm,self,zzpy_printTiming);
+  }
+  if (!strcmp(key, "hexDumpFrame"))
+  {
+     return tp_method(vm,self,zzpy_hexDumpFrame);
   }
   if (!strcmp(key, "dumpSegment"))
   {
@@ -73,6 +87,7 @@ static tp_obj myCtorpyEditor(tp_vm *vm)
 static tp_obj zzpy__pyEditor_help(TP)
  {
   jsLog("printTiming(int )");
+  jsLog("hexDumpFrame(int)");
   jsLog("dumpSegment(void)");
   jsLog("dumpRefVideo(void)");
 };

@@ -164,3 +164,27 @@ nextSeg:
     return getCompressedPicture(videoDelay,img);
    
 }
+
+/**
+        \fn     getDirectImage
+        \brief  For DEBUG DO NOT USE!
+
+*/
+bool        ADM_Composer::getDirectImage(uint32_t frameNum,ADMCompressedImage *img)
+{
+  
+    _SEGMENT *seg=_segments.getSegment(0);
+    ADM_assert(seg);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    ADM_assert(vid);
+    vidHeader *demuxer=vid->_aviheader;
+    ADM_assert(demuxer);
+
+    // Get next pic?
+    if(false==demuxer->getFrame (frameNum,img))
+    {
+        ADM_info("Failed to get next frame for ref %"LU"\n",seg->_reference);
+        return false;
+    }
+   return true;
+}

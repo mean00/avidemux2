@@ -18,7 +18,7 @@
 #include "ADM_scriptEditor.h"
 #include "ADM_editor/ADM_edit.hxx"
 extern ADM_Composer *video_body;
-
+void mixDump(uint8_t *ptr, uint32_t len);;
 /**
     \fn jsPrintTiming
 */
@@ -37,7 +37,24 @@ int jsPrintTiming(int framenumber )
     }
     return 0;
 }
-
+/**
+    \fn jsHexDumpFrame
+*/
+int jsHexDumpFrame(int framenumber )
+{
+    ADMCompressedImage img;
+    img.data=new uint8_t[2000*2000*3];
+    img.dataLength=2000*2000*3;
+    if(!video_body->getDirectImage(framenumber,&img))
+    {
+            jsLog("Cannot get picture %d\n",framenumber);
+            delete [] img.data;
+            return false;
+    }
+    mixDump(img.data,img.dataLength);
+    delete [] img.data;
+    return true;
+}
 /**
     \fn    jsDumpSegments
     \brief dump segment, video & all

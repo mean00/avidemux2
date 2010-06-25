@@ -3,4 +3,5 @@
 /* METHOD */ int jsPrintTiming:printTiming      (int ) 
 /* METHOD */ int jsDumpSegments:dumpSegment     (void) 
 /* METHOD */ int jsDumpRefVideos:dumpRefVideo   (void) 
+/* METHOD */ int jsHexDumpFrame:hexDumpFrame    (int) 
 

@@ -20,6 +20,7 @@ extern "C" {
 #endif
 
 int jsPrintTiming(int framenumber );
+int jsHexDumpFrame(int framenumber );
 int jsDumpSegments (void);
 int jsDumpRefVideos (void);
 #ifdef __cplusplus
