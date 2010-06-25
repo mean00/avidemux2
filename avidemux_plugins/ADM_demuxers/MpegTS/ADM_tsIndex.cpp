@@ -775,8 +775,14 @@ dmxPacketInfo info;
                           
                           if(seq_found)
                           {
-                                  pkt->forward(4);  // Ignore
-                                  continue;
+                              if(data.state==idx_startAtGopOrSeq)       
+                                  continue;;
+                              pkt->getInfo(&info);
+                              data.frameType=1; // next frame is assumed to be intra
+                              Mark(&data,&info,4); // startcode
+                              data.state=idx_startAtGopOrSeq;
+                              updateUI();
+                              break;
                           }
                           // Verify it is high/advanced profile
                           {
@@ -787,7 +793,7 @@ dmxPacketInfo info;
                           if(!decodeVC1Seq(bits,video)) continue;
 
                           seqSize=bits.getConsumed();
-                          video.extraDataLength=seqSize+8;
+                          video.extraDataLength=seqSize+4+1;
                           memcpy(video.extraData+4,bits.data,seqSize);
                             // Add info so that ffmpeg is happy
                           video.extraData[0]=0;
@@ -795,9 +801,6 @@ dmxPacketInfo info;
                           video.extraData[2]=1;
                           video.extraData[3]=0xf;
                           video.extraData[seqSize+4+0]=0;
-                          video.extraData[seqSize+4+1]=0;
-                          video.extraData[seqSize+4+2]=1;
-                          video.extraData[seqSize+4+3]=0xfE;
                           seq_found=1;
                           // Hi Profile
                           printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
@@ -808,7 +811,7 @@ dmxPacketInfo info;
                           qfprintf(index,"[Data]");
                           pkt->getInfo(&info);
                           data.frameType=1; // Force first frame to be intra
-                          Mark(&data,&info,seqSize);
+                          Mark(&data,&info,seqSize+4);
                           data.state=idx_startAtGopOrSeq;
                           continue;
                           }
