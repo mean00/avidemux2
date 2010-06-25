@@ -14,13 +14,17 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <vector>
+#include <string>
+using std::vector;
+using std::string;
 
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
-#include "ADM_coreUtils.h"
+#include "ADM_string.h"
 
 #include <math.h>
 #define TS_MAX_LINE 10000
