@@ -10,6 +10,8 @@
 #include "DIA_coreToolkit.h"
 #undef free
 
+#include <string>
+using std::string;
 
 struct qfile_t {
         const char *filename;
@@ -62,7 +64,10 @@ uint8_t  quotaInit(void)
 /* why here?: don't use mean's malloc rewrites for all of the xml2 library */
 #include "ADM_assert.h"
 
-
+FILE *qfopen(const string &fileName, const char *mode)
+{
+    return qfopen(fileName.c_str(),mode);
+}
 /* store open filenames and it's current "ignore"-status */
 FILE *qfopen(const char *path, const char *mode){
     // Mean:Should be the first funtion to be called
