@@ -45,7 +45,7 @@ int jsHexDumpFrame(int framenumber )
     ADMCompressedImage img;
     img.data=new uint8_t[2000*2000*3];
     img.dataLength=2000*2000*3;
-    if(!video_body->getDirectImage(framenumber,&img))
+    if(!video_body->getDirectImageForDebug(framenumber,&img))
     {
             jsLog("Cannot get picture %d\n",framenumber);
             delete [] img.data;

@@ -163,7 +163,7 @@ public:
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
                     bool        getCompressedPicture(uint64_t delay,ADMCompressedImage *img);     //COPYMODE                
                     // Use only for debug purpose !!!
-                    bool        getDirectImage(uint32_t frameNum,ADMCompressedImage *img);             
+                    bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);             
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );

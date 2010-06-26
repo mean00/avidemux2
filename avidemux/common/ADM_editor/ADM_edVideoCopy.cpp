@@ -170,7 +170,7 @@ nextSeg:
         \brief  For DEBUG DO NOT USE!
 
 */
-bool        ADM_Composer::getDirectImage(uint32_t frameNum,ADMCompressedImage *img)
+bool        ADM_Composer::getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img)
 {
   
     _SEGMENT *seg=_segments.getSegment(0);
