@@ -37,6 +37,7 @@
 
 #include <string>
 using std::string;
+FILE *qfopen(const std::string &name, const char *);
 
 #define zprintf(...) {}
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
@@ -361,11 +362,11 @@ uint32_t recoveryCount=0xff;
 
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt");
+    index=qfopen(indexName,(const char*)"wt");
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName);
+        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
         return false;
     }
 
@@ -577,7 +578,7 @@ dmxPacketInfo info;
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName);
+        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
         return false;
     }
     writeSystem(file,true);

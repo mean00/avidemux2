@@ -20,11 +20,6 @@
 #include <unistd.h>
 #include "ADM_coreConfig.h"
 
-#ifdef __cplusplus
-#include <string>
-using std::string;
-FILE *qfopen(const string &name, const char *);
-#endif
 /* qfopen stands for quota-fopen() */
 
 FILE *qfopen(const char *, const char *);
