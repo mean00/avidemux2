@@ -35,6 +35,9 @@
 #include "ADM_indexFile.h"
 #include "ADM_tsGetBits.h"
 
+#include <string>
+using std::string;
+
 #define zprintf(...) {}
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 static const char Type[5]={'X','I','P','B','D'};
@@ -106,13 +109,9 @@ typedef struct
     uint64_t prevPts,prevDts;
 }indexerData;
 
-typedef enum
-{
-    markStart,
-    markEnd,
-    markNow
-}markType;
-
+/**
+    \class VC1Context
+*/
 class VC1Context
 {
 public:
@@ -360,9 +359,10 @@ uint32_t recoveryCount=0xff;
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
 
-    char *indexName=(char *)alloca(strlen(file)+5);
-    sprintf(indexName,"%s.idx2",file);
+    string indexName=string(file);
+    indexName=indexName+string(".idx2");
     index=qfopen(indexName,"wt");
+
     if(!index)
     {
         printf("[PsIndex] Cannot create %s\n",indexName);
@@ -571,9 +571,10 @@ dmxPacketInfo info;
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
 
-    char *indexName=(char *)alloca(strlen(file)+5);
-    sprintf(indexName,"%s.idx2",file);
+    string indexName=string(file);
+    indexName=indexName+string(".idx2");
     index=qfopen(indexName,"wt");
+
     if(!index)
     {
         printf("[PsIndex] Cannot create %s\n",indexName);
@@ -669,7 +670,6 @@ dmxPacketInfo info;
                   case 0x00 : // picture
                         {
                           int type;
-                          markType update=markNow;
                           if(!seq_found)
                           { 
                                   continue;
@@ -745,13 +745,14 @@ dmxPacketInfo info;
 
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-
-    char *indexName=(char *)alloca(strlen(file)+5);
-    sprintf(indexName,"%s.idx2",file);
+    
+    string indexName=string(file);
+    indexName=indexName+string(".idx2");
     index=qfopen(indexName,"wt");
+
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName);
+        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
         return false;
     }
     writeSystem(file,true);
@@ -821,7 +822,6 @@ dmxPacketInfo info;
                           int type;
                           uint8_t buffer[4];
                           uint32_t fType,sType;
-                          markType update=markNow;
                           if(!seq_found)
                           { 
                                   continue;
