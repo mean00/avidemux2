@@ -4,14 +4,14 @@
 */
 #define ADM_LEGACY_PROGGY
 #include <errno.h>
+#include <string>
+using std::string;
 
 #include "ADM_default.h"
 #include "ADM_quota.h"
 #include "DIA_coreToolkit.h"
 #undef free
 
-#include <string>
-using std::string;
 
 struct qfile_t {
         const char *filename;
