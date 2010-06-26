@@ -325,7 +325,7 @@ bool ADM_Composer::addFile (const char *name)
         if(video.decoder->bFramePossible())
         {
             printf("[Editor] B- frame possible with that codec \n");
-            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc))
+            if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || isVC1Compatible(info.fcc))
             {
                 ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");             
                 uint64_t delay;
