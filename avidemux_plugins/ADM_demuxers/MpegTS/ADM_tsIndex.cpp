@@ -15,7 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <string>
 #include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
@@ -35,7 +35,7 @@
 #include "ADM_indexFile.h"
 #include "ADM_tsGetBits.h"
 
-#include <string>
+
 using std::string;
 FILE *qfopen(const std::string &name, const char *);
 
