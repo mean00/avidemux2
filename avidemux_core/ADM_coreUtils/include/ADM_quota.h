@@ -23,7 +23,9 @@
 /* qfopen stands for quota-fopen() */
 
 FILE *qfopen(const char *, const char *);
-
+#ifdef __cplusplus
+FILE *qfopen(const std::string &name, const char *);
+#endif
 /* qfprintf stands for quota-fprintf() */
 void qfprintf(FILE *, const char *, ...);
 size_t qfwrite(const void *ptr, size_t size, size_t  nmemb, FILE *stream);

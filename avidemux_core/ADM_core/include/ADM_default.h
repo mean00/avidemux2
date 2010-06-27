@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __cplusplus
+#include <string>
+using std::string;
+#endif
 
 #include "ADM_coreConfig.h"
 #include "ADM_inttype.h"

@@ -99,9 +99,9 @@ void encodingWindow::shutdownChanged(int state)
 //*******************************************
 #define WIDGET(x) (window->ui.x)
 #define WRITEM(x,y) window->ui.x->setText(y)
-#define WRITE(x) WRITEM(x,string)
+#define WRITE(x) WRITEM(x,stringMe)
 /*************************************/
-static char string[80];
+static char stringMe[80];
 #define window ((encodingWindow *)WINDOW)
 DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration)
 {
@@ -119,7 +119,7 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration
 
 void DIA_encodingQt4::setFps(uint32_t fps)
 {
-      snprintf(string,79,"%"LU" fps",fps);
+      snprintf(stringMe,79,"%"LU" fps",fps);
       WRITE(labelFps);
 }
 
@@ -180,7 +180,7 @@ void DIA_encodingQt4::setPhasis(const char *n)
 void DIA_encodingQt4::setFrameCount(uint32_t nb)
 {
           ADM_assert(window);
-          snprintf(string,79,"%"LU,nb);
+          snprintf(stringMe,79,"%"LU,nb);
           WRITE(labelFrame);
 
 }
@@ -224,7 +224,7 @@ void DIA_encodingQt4::setVideoCodec(const char *n)
 void DIA_encodingQt4::setBitrate(uint32_t br,uint32_t globalbr)
 {
           ADM_assert(window);
-          snprintf(string,79,"%"LU" kB/s",br);
+          snprintf(stringMe,79,"%"LU" kB/s",br);
           WRITE(labelVidBitrate);
 
 }
@@ -247,7 +247,7 @@ void DIA_encodingQt4::setContainer(const char *container)
 void DIA_encodingQt4::setQuantIn(int size)
 {
           ADM_assert(window);
-          sprintf(string,"%"LU,size);
+          sprintf(stringMe,"%"LU,size);
           WRITE(labelQz);
 
 }
@@ -260,7 +260,7 @@ void DIA_encodingQt4::setTotalSize(uint64_t size)
 {
           ADM_assert(window);
           uint64_t mb=size>>20;
-          sprintf(string,"%"LU" MB",(int)mb);
+          sprintf(stringMe,"%"LU" MB",(int)mb);
           WRITE(labelTotalSize);
 
 }
@@ -274,7 +274,7 @@ void DIA_encodingQt4::setVideoSize(uint64_t size)
 {
           ADM_assert(window);
           uint64_t mb=size>>20;
-          sprintf(string,"%"LU" MB",(int)mb);
+          sprintf(stringMe,"%"LU" MB",(int)mb);
           WRITE(labelVideoSize);
 
 }
@@ -287,7 +287,7 @@ void DIA_encodingQt4::setAudioSize(uint64_t size)
 {
           ADM_assert(window);
           uint64_t mb=size>>20;
-          sprintf(string,"%"LU" MB",(int)mb);
+          sprintf(stringMe,"%"LU" MB",(int)mb);
           WRITE(labelAudioSize);
 
 }
@@ -301,7 +301,7 @@ void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
           ADM_assert(window);
           uint64_t mb=nb;
           mb*=1000;
-          strcpy(string,ADM_us2plain(mb));
+          strcpy(stringMe,ADM_us2plain(mb));
           WRITE(labelElapsed);
 }
 /**
@@ -312,7 +312,7 @@ void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
 void DIA_encodingQt4::setAverageQz(uint32_t nb)
 {
           ADM_assert(window);
-          snprintf(string,79,"%"LU,nb);
+          snprintf(stringMe,79,"%"LU,nb);
           WRITE(labelQz);
 }
 /**
@@ -323,7 +323,7 @@ void DIA_encodingQt4::setAverageQz(uint32_t nb)
 void DIA_encodingQt4::setAverageBitrateKbits(uint32_t kb)
 {
           ADM_assert(window);
-          snprintf(string,79,"%"LU" kbits/s",kb);
+          snprintf(stringMe,79,"%"LU" kbits/s",kb);
           WRITE(labelVidBitrate);
 }
 
@@ -336,7 +336,7 @@ void DIA_encodingQt4::setRemainingTimeMS(uint32_t nb)
           ADM_assert(window);
           uint64_t mb=nb;
           mb*=1000;
-          strcpy(string,ADM_us2plain(mb));
+          strcpy(stringMe,ADM_us2plain(mb));
           WRITE(labelETA);
 }
 
