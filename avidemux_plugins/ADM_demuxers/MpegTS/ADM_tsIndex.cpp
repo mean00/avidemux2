@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_includeFfmpeg.h"
+#include "ADM_getbits.h"
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
@@ -30,7 +31,6 @@
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 #include "ADM_clock.h"
-#include "ADM_getbits.h"
 #include "ADM_indexFile.h"
 #include "ADM_tsGetBits.h"
 
