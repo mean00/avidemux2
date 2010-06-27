@@ -13,6 +13,7 @@ ADM_paramList.cpp
 ADM_coreCodecMapping.cpp
 ADM_threadQueue.cpp
 ADM_string.cpp
+ADM_getbits.cpp
 prefs.cpp)
 
 ADD_LIBRARY(ADM_coreUtils6 SHARED ${ADM_coreUtils_SRCS})

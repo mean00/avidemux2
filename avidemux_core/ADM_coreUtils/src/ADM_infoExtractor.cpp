@@ -12,25 +12,36 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ADM_includeFfmpeg.h"
-
 #include "ADM_default.h"
 #include "ADM_Video.h"
-
 #include "fourcc.h"
-//#include "ADM_mp4.h"
-
-#define aprintf(...) {}
 #include "ADM_getbits.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 
+#define aprintf(...) {}
+
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
 			    uint8_t * outstartcode, uint32_t * offset);
+
+extern const uint8_t ff_log2_tab[256];
+static  int av_log2_c(unsigned int v)
+{
+    int n = 0;
+    if (v & 0xffff0000) {
+        v >>= 16;
+        n += 16;
+    }
+    if (v & 0xff00) {
+        v >>= 8;
+        n += 8;
+    }
+    n += ff_log2_tab[v];
+
+    return n;
+}
 /*
     Extract width & height from vol header passed as arg
-
-
 */
 uint8_t
 extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
@@ -77,49 +88,49 @@ extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
 		}
 #endif
 	      // Here we go !
-	      GetBitContext s;
-	      init_get_bits (&s, data + idx, dataSize * 8);
+          getBits bits(dataSize,data + idx);
+
 	      //
-	      skip_bits1 (&s);	// Random access
-	      skip_bits (&s, 8);	// Obj type indication
-	      if (get_bits (&s, 1))	// VO od 
+	      bits.skip(1);
+          bits.skip(8);	      // Obj type indication
+	      if (bits.get(1))	// VO od 
 		{
-		  skip_bits (&s, 4);	// Ver
-		  skip_bits (&s, 3);	// Priority
+		  bits.get( 4);	// Ver
+		  bits.get( 3);	// Priority
 		}
-	      if (get_bits (&s, 4) == 15)	// custom A/R
+	      if (bits.get( 4) == 15)	// custom A/R
 		{
-		  skip_bits (&s, 8);
-		  skip_bits (&s, 8);
+		  bits.get( 8);
+		  bits.get( 8);
 		}
-	      if (get_bits (&s, 1))	// Vol control param
+	      if (bits.get( 1))	// Vol control param
 		{
-		  skip_bits (&s, 2);	//Chroma
-		  skip_bits (&s, 1);	// Low delay
-		  if (get_bits (&s, 1))	// VBV Info
+		  bits.get( 2);	//Chroma
+		  bits.get( 1);	// Low delay
+		  if (bits.get( 1))	// VBV Info
 		    {
-		      skip_bits (&s, 16);
-		      skip_bits (&s, 16);
-		      skip_bits (&s, 16);
-		      skip_bits (&s, 15);
-		      skip_bits (&s, 16);
+		      bits.get( 16);
+		      bits.get( 16);
+		      bits.get( 16);
+		      bits.get( 15);
+		      bits.get( 16);
 		    }
 		}
-	      skip_bits (&s, 2);	//  Shape
-	      skip_bits (&s, 1);	//  Marker
-	      timeVal = get_bits (&s, 16);	// Time increment
-	      *time_inc = av_log2 (timeVal - 1) + 1;
+	      bits.get( 2);	//  Shape
+	      bits.get( 1);	//  Marker
+	      timeVal = bits.get( 16);	// Time increment
+	      *time_inc = av_log2_c (timeVal - 1) + 1;
 	      if (*time_inc < 1)
-		*time_inc = 1;
-	      skip_bits (&s, 1);	//  Marker
-	      if (get_bits (&s, 1))	// Fixed vop rate, compute how much bits needed
+		 *time_inc = 1;
+	      bits.get( 1);	//  Marker
+	      if (bits.get( 1))	// Fixed vop rate, compute how much bits needed
 		{
-		  get_bits (&s, *time_inc);
+		  bits.get( *time_inc);
 		}
-	      skip_bits (&s, 1);	//  Marker
-	      mw = get_bits (&s, 13);
-	      skip_bits (&s, 1);	//  Marker
-	      mh = get_bits (&s, 13);
+	      bits.get( 1);	//  Marker
+	      mw = bits.get( 13);
+	      bits.get( 1);	//  Marker
+	      mh = bits.get( 13);
 	      // /Here we go
 	      //printf("%d x %d \n",mw,mh);
 	      *h = mh;
@@ -153,11 +164,12 @@ extractVopInfo (uint8_t * data, uint32_t len, uint32_t timeincbits,
 		uint32_t * vopType, uint32_t * modulo, uint32_t * time_inc,
 		uint32_t * vopcoded)
 {
-  GetBitContext s;
+  
   int vop;
   uint32_t vp, tinc;
-  init_get_bits (&s, data, len * 8);
-  vop = get_bits (&s, 2);
+  getBits bits(len,data );
+  
+  vop = bits.get( 2);
   switch (vop)
     {
     case 0:
@@ -178,25 +190,25 @@ extractVopInfo (uint8_t * data, uint32_t len, uint32_t timeincbits,
     }
   /* Read modulo */
   int imodulo = 0;
-  while (get_bits1 (&s) != 0)
+  while (bits.get(1) != 0)
     imodulo++;
-  if (!get_bits1 (&s))
+  if (!bits.get(1))
     {
       printf ("Wrong marker1\n");
       return 0;
     }
 
   /* Read time */
-  tinc = get_bits (&s, timeincbits);
+  tinc = bits.get(timeincbits);
   /* Marker */
-  if (!get_bits1 (&s))
+  if (!bits.get(1))
     {
       printf ("Wrong marker2\n");
       return 0;
     }
   /* Vop coded */
   *modulo = imodulo;
-  *vopcoded = get_bits1 (&s);
+  *vopcoded = bits.get(1);
   *vopType = vp;
   *time_inc = tinc;
   return 1;
@@ -209,32 +221,33 @@ uint8_t
 extractH263FLVInfo (uint8_t * buffer, uint32_t len, uint32_t * w,
 		    uint32_t * h)
 {
-  GetBitContext gb;
+  
   int format;
-  init_get_bits (&gb, buffer, len * 8);
-  if (get_bits_long (&gb, 17) != 1)
+  getBits bits(len,buffer );
+  
+  if (bits.get( 17) != 1)
     {
       printf ("[FLV]Wrong FLV1 header\n");
       return 0;
     }
-  format = get_bits (&gb, 5);
+  format = bits.get( 5);
   if (format != 0 && format != 1)
     {
       printf ("[FLV]Wrong FLV1 header format\n");
       return 0;
     }
 
-  get_bits (&gb, 8);		/* picture timestamp */
-  format = get_bits (&gb, 3);
+  bits.get(8);		/* picture timestamp */
+  format = bits.get( 3);
   switch (format)
     {
     case 0:
-      *w = get_bits (&gb, 8);
-      *h = get_bits (&gb, 8);
+      *w = bits.get( 8);
+      *h = bits.get( 8);
       break;
     case 1:
-      *w = get_bits (&gb, 16);
-      *h = get_bits (&gb, 16);
+      *w = bits.get( 16);
+      *h = bits.get( 16);
       break;
     case 2:
       *w = 352;
@@ -272,30 +285,30 @@ extractH263Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
 		 uint32_t * h)
 {
   uint32_t val;
-  GetBitContext s;
-  init_get_bits (&s, data, dataSize * 8);
+  getBits bits(dataSize,data );
+  
 
   mixDump (data, 10);
-  val = get_bits (&s, 16);
+  val = bits.get( 16);
   if (val)
     {
       printf ("incorrect H263 header sync\n");
       return 0;
     }
-  val = get_bits (&s, 6);
+  val = bits.get( 6);
   if (val != 0x20)
     {
       printf ("incorrect H263 header sync (2)\n");
       return 0;
     }
   //
-  skip_bits (&s, 8);		// timestamps in 30 fps tick
-  skip_bits (&s, 1);		// Marker
-  skip_bits (&s, 1);		// Id
-  skip_bits (&s, 1);		// Split
-  skip_bits (&s, 1);		// Document Camera indicator
-  skip_bits (&s, 1);		// Full Picture Freeze Release
-  val = get_bits (&s, 3);
+  bits.get( 8);		// timestamps in 30 fps tick
+  bits.get( 1);		// Marker
+  bits.get( 1);		// Id
+  bits.get( 1);		// Split
+  bits.get( 1);		// Document Camera indicator
+  bits.get( 1);		// Full Picture Freeze Release
+  val = bits.get( 3);
   switch (val)
     {
 

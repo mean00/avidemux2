@@ -64,20 +64,19 @@ unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 /**
         \fn extractVUIInfo
 */
-static uint8_t
-extractVUIInfo (GetBitContext * s, uint32_t * fps1000, uint32_t * darNum,
+static uint8_t  extractVUIInfo (getBits &bits, uint32_t * fps1000, uint32_t * darNum,
 		uint32_t * darDen)
 {
   *fps1000 = *darNum = *darDen = 0;
 
-  if (get_bits1 (s))
+  if (bits.get(1))
     {
-      unsigned int aspect_ratio_information = get_bits (s, 8);
+      unsigned int aspect_ratio_information = bits.get( 8);
 
       if (aspect_ratio_information == 255)
 	{
-	  *darNum = get_bits_long (s, 16);
-	  *darDen = get_bits_long (s, 16);
+	  *darNum = bits.get( 16);
+	  *darDen = bits.get( 16);
 	}
       else if (aspect_ratio_information <
 	       sizeof (pixel_aspect) / sizeof (*pixel_aspect))
@@ -87,32 +86,32 @@ extractVUIInfo (GetBitContext * s, uint32_t * fps1000, uint32_t * darNum,
 	}
     }
 
-  if (get_bits1 (s))		// overscan
-    get_bits1 (s);
+  if (bits.get(1))		// overscan
+    bits.get(1);
 
-  if (get_bits1 (s))		// vsp_color
+  if (bits.get(1))		// vsp_color
     {
-      get_bits (s, 4);
+      bits.get( 4);
 
-      if (get_bits1 (s))
+      if (bits.get(1))
 	{
-	  get_bits (s, 8);
-	  get_bits (s, 8);
-	  get_bits (s, 8);
+        bits.get( 8);
+        bits.get( 8);
+        bits.get( 8);
 	}
     }
 
-  if (get_bits1 (s))		// chroma
+  if (bits.get(1))		// chroma
     {
-      get_ue_golomb (s);
-      get_ue_golomb (s);
+      bits.getUEG();
+      bits.getUEG();
     }
 
-  if (get_bits1 (s))		// timing
+  if (bits.get(1))		// timing
     {
-      uint32_t timeinc_unit = get_bits_long (s, 32);
-      uint32_t timeinc_resolution = get_bits_long (s, 32);
-      uint32_t fixed_fps = get_bits1 (s);
+      uint32_t timeinc_unit = bits.get( 32);
+      uint32_t timeinc_resolution = bits.get( 32);
+      uint32_t fixed_fps = bits.get(1);
       ADM_info("Time unit =%d/%d\n",(int)timeinc_unit,(int)timeinc_resolution);
       if (timeinc_unit > 0 && timeinc_resolution > 0)
 	*fps1000 =
@@ -130,9 +129,9 @@ extractVUIInfo (GetBitContext * s, uint32_t * fps1000, uint32_t * darNum,
         \fn decodeOnMatrix
         \brief borrowed from ffmpeg
 */
-bool decodeOneMatrix(int count,GetBitContext *s)
+bool decodeOneMatrix(int count,getBits &bits)
 {
-        if(!get_bits1(s)) 
+        if(!bits.get(1)) 
         {
                 return true;
         }
@@ -141,7 +140,7 @@ bool decodeOneMatrix(int count,GetBitContext *s)
         for(i=0;i<count;i++)
         {
          if(next)
-            next = (last + get_se_golomb(s)) & 0xff;
+            next = (last + bits.getUEG()) & 0xff;
          if(!i && !next)
          { /* matrix not written, we use the preset one */
             return true;
@@ -154,16 +153,16 @@ bool decodeOneMatrix(int count,GetBitContext *s)
 /**
         \fn decodeScalingMatrices
 */
-bool          decodeScalingMatrices(GetBitContext *s)
+bool          decodeScalingMatrices(getBits &bits)
 {
-        decodeOneMatrix(16,s);
-        decodeOneMatrix(16,s);
-        decodeOneMatrix(16,s);
-        decodeOneMatrix(16,s);
-        decodeOneMatrix(16,s);
-        decodeOneMatrix(16,s);
-        decodeOneMatrix(64,s);
-        decodeOneMatrix(64,s);
+        decodeOneMatrix(16,bits);
+        decodeOneMatrix(16,bits);
+        decodeOneMatrix(16,bits);
+        decodeOneMatrix(16,bits);
+        decodeOneMatrix(16,bits);
+        decodeOneMatrix(16,bits);
+        decodeOneMatrix(64,bits);
+        decodeOneMatrix(64,bits);
         return true;
 }
 
@@ -172,12 +171,10 @@ bool          decodeScalingMatrices(GetBitContext *s)
     \brief Extract info from H264 SPS
     See 7.3.2.1 of 14496-10
 */
-uint8_t
-extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
-		uint32_t * hheight, uint32_t * fps1000, uint32_t * darNum,
-		uint32_t * darDen)
+uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
+		uint32_t * hheight, uint32_t * fps1000, uint32_t * darNum, uint32_t * darDen)
 {
-  GetBitContext s;
+  
   *fps1000=0;
   uint32_t profile, constraint, level, pic_order_cnt_type, w, h, mbh,
     frame_mbs_only;
@@ -186,50 +183,51 @@ extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
   uint32_t id, dum;
 
   outlen = unescapeH264 (len, data, buf);
-  init_get_bits (&s, buf, outlen * 8);
+  getBits bits(outlen,buf);
+  
 
-  profile = get_bits (&s, 8);
-  constraint = get_bits (&s, 8) >> 5;
-  level = get_bits (&s, 8);
-  id = get_ue_golomb (&s);	// Seq parameter set id           
+  profile = bits.get(8);
+  constraint = bits.get( 8) >> 5;
+  level = bits.get( 8);
+  id = bits.getUEG();	// Seq parameter set id           
   printf ("[H264]Profile : %u, Level :%u, SPSid:%u\n", profile, level, id);
   if (profile >= 100)		// ?? Borrowed from H264.C/FFMPEG
     {
       printf ("[H264]Warning : High profile\n");
-      if (get_ue_golomb (&s) == 3)	//chroma_format_idc
-	get_bits1 (&s);		//residual_color_transform_flag
-      get_ue_golomb (&s);	//bit_depth_luma_minus8
-      get_ue_golomb (&s);	//bit_depth_chroma_minus8
-      get_bits1 (&s);		// Transform bypass
-      if (get_bits1 (&s))	// Scaling matrix
-	{
-	  printf ("[H264] Scaling matrix present\n");
-          decodeScalingMatrices(&s);
-	}
+      if (bits.getUEG() == 3)	//chroma_format_idc
+        bits.get(1);		//residual_color_transform_flag
+      bits.getUEG();	//bit_depth_luma_minus8
+      bits.getUEG();	//bit_depth_chroma_minus8
+      bits.get(1);		// Transform bypass
+      if (bits.get(1))	// Scaling matrix
+	  {
+	    printf ("[H264] Scaling matrix present\n");
+          decodeScalingMatrices(bits);
+	  }
     }
 
 
-  dum = get_ue_golomb (&s);	// log2_max_frame_num_minus4
+  dum = bits.getUEG();	// log2_max_frame_num_minus4
   printf ("[H264]Log2maxFrame-4:%u\n", dum);
-  pic_order_cnt_type = get_ue_golomb (&s);
+  pic_order_cnt_type = bits.getUEG();
   printf ("[H264]Pic Order Cnt Type:%u\n", pic_order_cnt_type);
   if (!pic_order_cnt_type)	// pic_order_cnt_type
     {
-      dum = get_ue_golomb (&s);	//log2_max_pic_order_cnt_lsb_minus4
+      dum = bits.getUEG();	//log2_max_pic_order_cnt_lsb_minus4
       printf ("[H264]Log2maxPix-4:%u\n", dum);
     }
   else
     {
       if (pic_order_cnt_type == 1)
 	{
-	  get_bits1 (&s);	//delta_pic_order_always_zero_flag
-	  get_se_golomb (&s);	//offset_for_non_ref_pic
-	  get_se_golomb (&s);	// offset_for_top_to_bottom_field
-	  int i = get_ue_golomb (&s);	//num_ref_frames_in_pic_order_cnt_cycle
+	  bits.get(1);	//delta_pic_order_always_zero_flag
+	  bits.getSEG();	//offset_for_non_ref_pic
+	  bits.getSEG();	// offset_for_top_to_bottom_field
+	  int i = bits.getUEG() ;	//num_ref_frames_in_pic_order_cnt_cycle
 
 	  for (int j = 0; j < i; j++)
 	    {
-	      get_se_golomb (&s);
+	      bits.getSEG();
 	    }
 	}
       else if (pic_order_cnt_type != 2)
@@ -238,13 +236,13 @@ extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
 	  return 0;
 	}
     }
-  dum = get_ue_golomb (&s);	//num_ref_frames
+  dum = bits.getUEG();	//num_ref_frames
   printf ("[H264] # of ref frames : %u\n", dum);
-  get_bits1 (&s);		// gaps_in_frame_num_value_allowed_flag
-  w = get_ue_golomb (&s) + 1;	//pic_width_in_mbs_minus1
+  bits.get(1);		// gaps_in_frame_num_value_allowed_flag
+  w = bits.getUEG() + 1;	//pic_width_in_mbs_minus1
 
-  mbh = get_ue_golomb (&s) + 1;
-  frame_mbs_only = get_bits1 (&s);
+  mbh = bits.getUEG() + 1;
+  frame_mbs_only = bits.get(1);
   h = (2 - frame_mbs_only) * mbh;	//pic_height_in_mbs_minus1
 
   printf ("[H264] Width in mb -1  :%d\n", w);
@@ -254,21 +252,21 @@ extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
   *hheight = h * 16;
 
   if (!frame_mbs_only)
-    get_bits1 (&s);
+    bits.get(1);
 
-  get_bits1 (&s);
+  bits.get(1);
 
-  if (get_bits1 (&s))
+  if (bits.get(1))
     {
-      get_ue_golomb (&s);
-      get_ue_golomb (&s);
-      get_ue_golomb (&s);
-      get_ue_golomb (&s);
+      bits.getUEG();
+      bits.getUEG();
+      bits.getUEG();
+      bits.getUEG();
     }
 
-  if (get_bits1 (&s))
+  if (bits.get(1))
     {
-      extractVUIInfo (&s, fps1000, darNum, darDen);
+      extractVUIInfo (bits, fps1000, darNum, darDen);
       printf ("[H264] Fps %" LU ", a.r. %" LU ",%" LU "\n", *fps1000, *darNum,
 	      *darDen);
     }
@@ -284,8 +282,7 @@ extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
       \brief return frametype in flags (KEY_FRAME or 0). To be used only with  mkv/mp4 nal type (i.e. no startcode)
       
 */
-uint8_t
-extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
+uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
 		      uint32_t * flags)
 {
   uint8_t *head = buffer, *tail = buffer + len;
@@ -337,9 +334,7 @@ extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
       \brief return frametype in flags (KEY_FRAME or 0). To be used only with  avi / mpeg TS nal type (i.e. with startcode)
       
 */
-uint8_t
-extractH264FrameType_startCode (uint32_t nalSize, uint8_t * buffer,
-				uint32_t len, uint32_t * flags)
+uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32_t len, uint32_t * flags)
 {
   uint8_t *head = buffer, *tail = buffer + len;
   uint8_t stream;
@@ -390,15 +385,14 @@ extractH264FrameType_startCode (uint32_t nalSize, uint8_t * buffer,
     \fn refineH264FrameType
     \brief Try to detect B slice, warning the stream is not escaped!
 */
-void
-refineH264FrameType (uint8_t * head, uint8_t * tail, uint32_t * flags)
+void refineH264FrameType (uint8_t * head, uint8_t * tail, uint32_t * flags)
 {
-  GetBitContext s;
+  getBits bits(tail-head,head);
   uint32_t sliceType;
   *flags = 0;
-  init_get_bits (&s, head, (tail - head) * 8);
-  get_ue_golomb (&s);
-  sliceType = get_ue_golomb_31 (&s);
+  
+  bits.getUEG();
+  sliceType = bits.getUEG31(); // get_ue_golomb_31??
   if (sliceType > 9)
     {
       printf ("Weird Slice %d\n", sliceType);

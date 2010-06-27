@@ -14,7 +14,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_dcainfo.h"
 #include "ADM_getbits.h"
@@ -71,25 +70,24 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
                 // Frame length  7
                 // Frame Size 14
                 // **** Inefficient ! ****
-                GetBitContext s;
-                init_get_bits( &s,cur, (end-cur)*8);
-                skip_bits(&s,32);
-                skip_bits(&s,1);
-                skip_bits(&s,5);
-                skip_bits(&s,1);
+                getBits bits((int)(end-cur),cur);
+                bits.skip(32);
+                bits.skip(1);
+                bits.skip(5);
+                bits.skip(1);
                 //Nb Samples
-                nbBlocks=(get_bits(&s,7)+1);
+                nbBlocks=1+bits.get(7);
                 // Frame size in bit
-                len2=get_bits(&s,14);
+                len2=bits.get(14);
                 framesize=len2+1;
                 //
                 //
                 //
-                flags=get_bits(&s,6);
+                flags=bits.get(6);
                 info->flags=flags;
-                index=get_bits(&s,4);
+                index=bits.get(4);
                 info->frequency=dts_sample_rates[index];
-                index=get_bits(&s,5);
+                index=bits.get(5);
                 info->bitrate=dts_bit_rates[index];
 #if 0
                 printf("[dts]Flags  :%u\n",flags);
@@ -100,8 +98,8 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
 #endif
                 *syncoff=cur-buf;
                 if(*syncoff) ADM_warning("[dts] Dropped %u bytes\n",*syncoff);
-                get_bits(&s,10);
-                int lfe=get_bits(&s,2);
+                bits.get(10);
+                int lfe=bits.get(2);
                 int c;
                 c=dts_channels[flags & 0xf];
                 if(c==5 && lfe) c++; // LFE

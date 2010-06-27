@@ -15,8 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
-#include "ADM_getbits.h"
+
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
@@ -32,6 +31,7 @@
 #include "ADM_h264_tag.h"
 #include "ADM_clock.h"
 #include "ADM_indexFile.h"
+#include "ADM_getbits.h"
 #include "ADM_tsGetBits.h"
 
 
@@ -310,23 +310,24 @@ uint32_t TS_unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
 */
 bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
-    GetBitContext s;
+    
     uint8_t *payload=(uint8_t *)alloca(nalSize+16);
     nalSize=TS_unescapeH264(nalSize,org,payload);
-    init_get_bits(&s, payload, nalSize*8);
-    while( get_bits_count(&s)<(nalSize-4)*8)
+    getBits bits(nalSize,payload);
+    
+    while( bits.getConsumedBits()<(nalSize-4)*8)
     {
-        uint32_t sei_type=get_bits(&s,8);
-        uint32_t sei_size=get_bits(&s,8);
-                if(sei_size==0xff) sei_size=0xff00+get_bits(&s,8);; // should be enough
+        uint32_t sei_type=bits.get(8);
+        uint32_t sei_size=bits.get(8);
+                if(sei_size==0xff) sei_size=0xff00+bits.get(8);; // should be enough
                 zprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
                 if(sei_type==6) // Recovery point
                 {
-                        *recoveryLength=get_ue_golomb(&s);
+                        *recoveryLength=bits.getUEG();
                         zprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
                         return true;
                 }
-                skip_bits(&s,sei_size*8);
+                bits.skip(sei_size*8);
     }
     return false;
 }
@@ -486,17 +487,17 @@ resume:
                         
                       uint8_t bufr[NON_IDR_PRE_READ+4];
                       uint8_t header[NON_IDR_PRE_READ+4];
-                      GetBitContext s;
+                      
                    
                         pkt->read(NON_IDR_PRE_READ,bufr);
                         // unescape...
                         TS_unescapeH264(NON_IDR_PRE_READ,bufr,header);
                         //
-                        init_get_bits(&s, header, NON_IDR_PRE_READ*8);
+                        getBits bits(NON_IDR_PRE_READ,header);
                         int first_mb_in_slice,slice_type;
 
-                        first_mb_in_slice= get_ue_golomb(&s);
-                        slice_type= get_ue_golomb_31(&s);
+                        first_mb_in_slice= bits.getUEG();
+                        slice_type= bits.getUEG31();
                         if(slice_type>9) 
                         {
                             printf("[TsIndexer] Bad slice type\n");

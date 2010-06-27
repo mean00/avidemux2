@@ -11,26 +11,24 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifndef ADM_GETBITS_H
+#define ADM_GETBITS_H
 
-
-#include "ADM_default.h"
-
-#ifndef ADM_getbits_H
-#define ADM_getbits_H
-extern "C"
+class getBits
 {
-#define ADM_NO_CONFIG_H
-#include "ADM_ffmpeg/libavutil/common.h"
-#include "ADM_ffmpeg/libavutil/bswap.h"
-#ifndef INT_MAX
-#define INT_MAX (0x7FFFFFFF)
-#endif
-#include "ADM_ffmpeg/ffmpeg_config/config.h"
-#include "ADM_ffmpeg/libavutil/internal.h"
-#include "ADM_ffmpeg/libavcodec/get_bits.h"
-#include "ADM_ffmpeg/libavcodec/golomb.h"
-}
-#undef printf
-#undef sprintf
+protected:
+         void *ctx;
+public:
+                getBits(int bufferSizeInBytes, uint8_t *buffer);
+                ~getBits();
+            int get(int nb);
+            int getUEG(void);
+            int getSEG(void);
+            int getUEG31(void);
+            int skip(int nb);
+            int getConsumedBits(void);
+};
+
+
 #endif
 

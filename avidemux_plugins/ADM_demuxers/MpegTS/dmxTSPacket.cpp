@@ -18,7 +18,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 
 #include "dmxTSPacket.h"
@@ -283,9 +282,9 @@ bool        tsPacket::updateStats(uint8_t *data)
     \brief Take a raw packet of type pid & remove the header (PSI)
 */
 #ifdef VERBOSE_PSI
-#define DUMMY(x,n) {dummy=get_bits(&s,n);printf("[TS]: "#x" =0x%x %d\n",dummy,dummy);}
+#define DUMMY(x,n) {dummy=bits.get(n);printf("[TS]: "#x" =0x%x %d\n",dummy,dummy);}
 #else
-#define DUMMY(x,n) {dummy=get_bits(&s,n);}
+#define DUMMY(x,n) {dummy=bits.get(n);}
 #endif
 bool tsPacket::getNextPSI(uint32_t pid,TS_PSIpacketInfo *psi)
 {
@@ -294,26 +293,25 @@ nextPack2:
 
     if(false==getNextPacket_NoHeader(pid,&pkt,true)) return false;    
 
-    GetBitContext s;
+    
     uint32_t tableId;
     uint32_t sectionLength=0;
     uint32_t transportStreamId=0;
     uint32_t dummy;
     
-
-    init_get_bits( &s,pkt.payload, (pkt.payloadSize)*8); // dont need checksum
+    getBits bits(pkt.payloadSize,pkt.payload);
 
     DUMMY(tableId,8);
-    int section_syntax_indicator=get_bits(&s,1);
+    int section_syntax_indicator=bits.get(1);
     if(section_syntax_indicator)
         ADM_warning("Section Syntax is set to private\n");
-    if(get_bits(&s,1))             // Marker
+    if(bits.get(1))             // Marker
     {
           printf("[MpegTs] getNextPSI Missing 0 marker\n");
           goto nextPack2;
     }
-    skip_bits(&s,2);
-    sectionLength=get_bits(&s,12);    // Section Length
+    bits.get(2);
+    sectionLength=bits.get(12);    // Section Length
 #if 1
     if(sectionLength+3>pkt.payloadSize) 
     {
@@ -321,16 +319,16 @@ nextPack2:
         goto nextPack2;
     }
 #endif
-    transportStreamId=get_bits(&s,16);// transportStreamId
+    transportStreamId=bits.get(16);// transportStreamId
 #ifdef VERBOSE_PSI
     printf("[MpegTs] Section length    =%d\n",sectionLength);
     printf("[MpegTs] transportStreamId =%d\n",transportStreamId);
 #endif
-    skip_bits(&s,2);                  // ignored
+    bits.skip(2);                  // ignored
     DUMMY(VersionNumber,5);         // Version number
     DUMMY(CurrentNext,1);           // Current Next indicator
-    psi->count=get_bits(&s,8);           // Section number
-    psi->countMax=get_bits(&s,8);        // Section last number
+    psi->count=bits.get(8);           // Section number
+    psi->countMax=bits.get(8);        // Section last number
 #ifdef VERBOSE_PSI
     printf("[MpegTs] Count=%d CountMax=%d\n",psi->count,psi->countMax);
 #endif
