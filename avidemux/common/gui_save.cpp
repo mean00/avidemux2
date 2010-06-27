@@ -49,18 +49,16 @@ void HandleAction_Save(Action action)
             UI_refreshCustomMenu();
             break;
     case ACT_SaveWork:
-      GUI_FileSelWrite (QT_TR_NOOP("Select Project to Save"), A_saveWorkbench);
+      GUI_FileSelWrite (QT_TR_NOOP("Select Project to Save"), A_saveJsProject);
 	  UI_refreshCustomMenu();
       break;
    case ACT_SaveCurrentWork:
         {
-          const char *pj=video_body->getProjectName();
-          if( pj ){
-            char *tmp = ADM_strdup(pj);
-             A_saveWorkbench( tmp ); // will write "actual_workbench_file" itself
-             ADM_dealloc(tmp);
+          const string pj=video_body->getProjectName();
+          if( pj.length() ){
+             A_saveJsProject( pj.c_str() ); // will write "actual_workbench_file" itself
           }else{
-            GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveWorkbench);
+            GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveJsProject);
             UI_refreshCustomMenu();
           }
         }
@@ -438,7 +436,7 @@ int A_saveImg (const char *name)
     \fn A_saveWorkbench
     \brief Save current workbench as ecmascript
 */
-void A_saveWorkbench (const char *name)
+void A_saveJsProject (const char *name)
 {
   video_body->saveAsScript(name,NULL);
   video_body->setProjectName(name);

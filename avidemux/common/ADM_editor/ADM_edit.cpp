@@ -70,7 +70,7 @@ uint32_t type,value;
   _internalFlags=0;
   _currentSegment=0;
   _scratch=NULL;
-  projectName=NULL;
+  currentProjectName=string("");
 }
 /**
 	Remap 1:1 video to segments
@@ -112,28 +112,22 @@ ADM_Composer::~ADM_Composer ()
 	deletePostProc(&_pp);
     if(_imageBuffer) delete  _imageBuffer;
     _imageBuffer=NULL;
-    if(projectName) ADM_dealloc(projectName);
-    projectName=NULL;
+
 }
 /**
     \fn getProjectName
 */
-const char *ADM_Composer::getProjectName(void)
+const string &ADM_Composer::getProjectName(void)
 {
-    if(!projectName) return NULL;
-    if(!strlen(projectName)) return NULL;
-    return projectName;
+    return currentProjectName;
 }
 
 /**
     \fn setProjectName
 */
-bool ADM_Composer::setProjectName(const char *pj)
+bool ADM_Composer::setProjectName(const string &pj)
 {
-    if(projectName) ADM_dealloc(projectName);
-    projectName=NULL;
-    if(pj)
-        projectName=ADM_strdup(pj);
+    currentProjectName=pj;
     return true;
 }
 /**

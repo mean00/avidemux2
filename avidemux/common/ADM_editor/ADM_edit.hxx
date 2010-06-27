@@ -63,7 +63,7 @@ typedef enum
 class ADM_Composer : public ADM_audioStream
 {
   private:
-                    const  char *projectName;
+                    string currentProjectName;
   private:
 //*********************************PRIVATE API *******************************************
                     //bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
@@ -203,8 +203,8 @@ public:
 /**************************************** /Video Info **************************/					
 /***************************************** Project Handling ********************/
 public:
-                    const char          *getProjectName(void);
-                    bool                 setProjectName(const char *name);
+                    const string         &getProjectName(void);
+                    bool                 setProjectName(const string &name);
 					
 /***************************************** Seeking *****************************/            
 public:
