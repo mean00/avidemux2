@@ -17,6 +17,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
+using std::string;
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "ADM_quota.h"

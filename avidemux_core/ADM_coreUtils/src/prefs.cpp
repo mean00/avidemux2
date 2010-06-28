@@ -12,7 +12,7 @@
  ***************************************************************************/
 
 
-
+#include "ADM_cpp.h"
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 

@@ -16,6 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_cpp.h"
+using std::string;
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"

@@ -13,6 +13,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
+using std::string;
 #include "ADM_default.h"
 #include "ADM_videoCopy.h"
 #include "ADM_editor/ADM_edit.hxx"

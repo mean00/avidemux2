@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 
+#include "ADM_cpp.h"
 #include <stdlib.h>
 #include <signal.h>
 #ifndef __WIN32

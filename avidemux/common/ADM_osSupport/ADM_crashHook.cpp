@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 
+#include <string>
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"

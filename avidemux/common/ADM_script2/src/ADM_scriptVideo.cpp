@@ -17,7 +17,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//#include "ADM_js.h"
+#include "ADM_cpp.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_scriptAvidemux.h"
 #include "ADM_scriptVideo.h"

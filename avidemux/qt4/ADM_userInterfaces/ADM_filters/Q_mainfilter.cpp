@@ -24,7 +24,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include <vector>
+using std::string;
 #include "Q_mainfilter.h"
 #include "ADM_default.h"
 #include "DIA_fileSel.h"

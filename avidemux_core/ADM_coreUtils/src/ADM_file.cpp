@@ -13,7 +13,7 @@
 /*
 * MODIFIED BY GMV 30.1.05: prepared for ODML
 */
-
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_fileio.h"
 #include "ADM_quota.h"

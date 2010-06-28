@@ -16,6 +16,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 
 #ifdef __MINGW32__
 #include <windows.h>

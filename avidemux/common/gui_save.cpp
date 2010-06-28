@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "avi_vars.h"
 
@@ -54,7 +55,7 @@ void HandleAction_Save(Action action)
       break;
    case ACT_SaveCurrentWork:
         {
-          const string pj=video_body->getProjectName();
+          const std::string pj=video_body->getProjectName();
           if( pj.length() ){
              A_saveJsProject( pj.c_str() ); // will write "actual_workbench_file" itself
           }else{

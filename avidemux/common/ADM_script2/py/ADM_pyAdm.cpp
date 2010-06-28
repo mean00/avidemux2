@@ -12,6 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include <stdarg.h>
 #include <vector>

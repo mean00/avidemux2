@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
 

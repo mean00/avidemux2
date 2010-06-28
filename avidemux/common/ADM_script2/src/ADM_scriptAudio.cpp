@@ -17,6 +17,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include "ADM_scriptIf.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "A_functions.h"

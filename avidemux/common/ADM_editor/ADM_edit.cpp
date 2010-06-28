@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "math.h"
 
@@ -70,7 +71,7 @@ uint32_t type,value;
   _internalFlags=0;
   _currentSegment=0;
   _scratch=NULL;
-  currentProjectName=string("");
+  currentProjectName=std::string("");
 }
 /**
 	Remap 1:1 video to segments
@@ -117,7 +118,7 @@ ADM_Composer::~ADM_Composer ()
 /**
     \fn getProjectName
 */
-const string &ADM_Composer::getProjectName(void)
+const std::string &ADM_Composer::getProjectName(void)
 {
     return currentProjectName;
 }
@@ -125,7 +126,7 @@ const string &ADM_Composer::getProjectName(void)
 /**
     \fn setProjectName
 */
-bool ADM_Composer::setProjectName(const string &pj)
+bool ADM_Composer::setProjectName(const std::string &pj)
 {
     currentProjectName=pj;
     return true;

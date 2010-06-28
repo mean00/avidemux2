@@ -13,6 +13,8 @@
  ***************************************************************************/
 
 
+#include "ADM_cpp.h"
+using std::string;
 #include "ADM_default.h"
 #include <math.h>
 
