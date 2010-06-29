@@ -15,8 +15,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
+
 #include "ADM_includeFfmpeg.h"
+#include "ADM_cpp.h"
 #include <math.h>
 #include "ADM_default.h"
 #include "ADM_editor/ADM_edit.hxx"

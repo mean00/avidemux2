@@ -14,7 +14,7 @@ email                : fixounet@free.fr
 ***************************************************************************/
 #ifndef ADM_TLK_GTK
 #define ADM_TLK_GTK
-
+#include "ADM_cpp.h"
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
