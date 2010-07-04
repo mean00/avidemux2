@@ -593,7 +593,7 @@ int A_openAvi2 (const char *name, uint8_t mode)
 //  DIA_StopBusy ();
 
   // forget last project file
-    video_body->setProjectName(NULL);
+    video_body->setProjectName("");
 
   if (res!=ADM_OK)			// an error occured
     {
