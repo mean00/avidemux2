@@ -48,7 +48,7 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
   if(fromPlugin) return fromPlugin;
 #if defined(USE_VDPAU) 
   ADM_info("Searching decoder in vdpau (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if (isH264Compatible (fcc) || isMpeg12Compatible(fcc) || 0*isVC1Compatible(fcc))
+  if (isH264Compatible (fcc) || isMpeg12Compatible(fcc) || 1*isVC1Compatible(fcc))
     {
         ADM_info("This is vdpau compatible\n");
         if(true==vdpauUsable())
