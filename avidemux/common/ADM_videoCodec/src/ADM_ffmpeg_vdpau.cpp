@@ -207,6 +207,35 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
     dec->releaseBuffer(avctx,pic);
 }
 /**
+    \fn vdpauGetFormat
+    \brief Borrowed from mplayer
+
+*/
+extern "C"
+{
+static enum PixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const enum PixelFormat *fmt)
+{
+    int i;
+
+    for(i=0;fmt[i]!=PIX_FMT_NONE;i++)
+    {
+        PixelFormat c=fmt[i];
+        switch(c)
+        {
+            case PIX_FMT_VDPAU_H264:
+            case PIX_FMT_VDPAU_MPEG1:
+            case PIX_FMT_VDPAU_MPEG2:
+            case PIX_FMT_VDPAU_WMV3:
+            case PIX_FMT_VDPAU_VC1:
+                        return c;
+            default:break;
+
+        }
+    }
+    return PIX_FMT_NONE;
+}
+}
+/**
     \fn decoderFFVDPAU
 */
 decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
@@ -222,8 +251,8 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         _context->draw_horiz_band = draw;
         _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
         _context->extradata = (uint8_t *) extraData;
-        _context->extradata_size = (int) extraDataLen;
-
+        _context->extradata_size  = (int) extraDataLen;
+        _context->get_format      = vdpauGetFormat;
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
         ADM_VDPAU_TYPE vdpauType=ADM_VDPAU_INVALID;
