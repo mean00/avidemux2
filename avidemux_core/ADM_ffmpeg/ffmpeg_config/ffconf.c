@@ -635,6 +635,7 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
         printf("#define HAVE_YASM        0\n");
         printf("#endif // USE_YASM\n");
 
+	printf("#define CONFIG_MDCT     1\n");
 	printf("#define CONFIG_H264DSP  1\n");
         printf("#define ENABLE_ARM      0\n");
         printf("#define ENABLE_PPC      0\n");
