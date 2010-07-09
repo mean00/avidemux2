@@ -228,6 +228,7 @@ public:
 // For js
                     bool                dumpRefVideos(void);
                     bool                dumpSegments(void);
+                    bool                dumpSegment(int i);
                     bool                dumpTiming(void);
                     bool                getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts);
 /******************************* /Editing **********************************/										

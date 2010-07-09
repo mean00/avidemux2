@@ -602,6 +602,11 @@ bool            ADM_Composer::dumpSegments(void)
     _segments.dump();
     return true;
 }
+bool                ADM_Composer::dumpSegment(int i)
+{
+    _segments.dumpSegment(i);
+    return true;
+}
 /**
 
 */

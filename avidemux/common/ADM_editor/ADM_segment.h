@@ -105,6 +105,8 @@ protected:
 
 public:
             void        dump(void);
+            void        dumpSegment(int i);
+
             void        dumpRefVideos(void);
                         ADM_EditorSegment(void);
                         ~ADM_EditorSegment();

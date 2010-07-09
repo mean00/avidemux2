@@ -144,15 +144,15 @@ static tp_obj zzpy_getWidth(TP)
   int r=  scriptGetWidth(); 
   return tp_number(r);
 }
-// addSegment -> int scriptAddSegment (int  float   float  ) 
+// addSegment -> int scriptAddSegment (int  double   double  ) 
 static tp_obj zzpy_addSegment(TP)
  {
   tp_obj self=tp_getraw( tp);
   tinyParams pm(tp);
   void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   int p0= pm.asInt();
-  float p1= pm.asFloat();
-  float p2= pm.asFloat();
+  double p1= pm.asDouble();
+  double p2= pm.asDouble();
   int r=  scriptAddSegment(p0,p1,p2); 
   return tp_number(r);
 }
@@ -366,7 +366,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   jsLog("saveAudio(str)");
   jsLog("videoCodec(str,couples)");
   jsLog("getWidth(void)");
-  jsLog("addSegment(int ,float , float )");
+  jsLog("addSegment(int ,double , double )");
   jsLog("clearVideoFilters(void)");
   jsLog("saveJpeg(str)");
   jsLog("setContainer(str,couples)");

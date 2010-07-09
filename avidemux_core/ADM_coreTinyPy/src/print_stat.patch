@@ -1,0 +1,49 @@
+Index: encode.py
+===================================================================
+--- encode.py	(revision 148)
++++ encode.py	(working copy)
+@@ -348,6 +348,10 @@
+             mod]))
+         mod.type = 'name'
+         do_set_ctx(mod,Token(t.pos,'reg',v))
++def do_print(t):
++    r = do_call(Token(t.pos,'call',None,[
++        Token(t.pos,'name','print')] + t.items))
++    free_tmp(r)
+ def do_from(t):
+     mod = t.items[0]
+     mod.type = 'string'
+@@ -628,7 +632,7 @@
+     'module':do_module,'statements':do_statements,'def':do_def,
+     'return':do_return,'while':do_while,'if':do_if,
+     'break':do_break,'pass':do_pass,'continue':do_continue,'for':do_for,
+-    'class':do_class,'raise':do_raise,'try':do_try,'import':do_import,
++    'class':do_class,'raise':do_raise,'try':do_try,'import':do_import,'print':do_print,
+     'globals':do_globals,'del':do_del,'from':do_from,
+ }
+ rmap = {
+Index: parse.py
+===================================================================
+--- parse.py	(revision 148)
++++ parse.py	(working copy)
+@@ -374,6 +374,7 @@
+     'raise':{'lbp':0,'nud':prefix_nud0,'type':'raise','bp':20,},
+     'return':{'lbp':0,'nud':prefix_nud0,'type':'return','bp':10,},
+     'import':{'lbp':0,'nud':prefix_nuds,'type':'import','bp':20,},
++    'print':{'lbp':0,'nud':prefix_nuds,'type':'print','bp':20,},
+     'from':{'lbp':0,'nud':from_nud,'type':'from','bp':20,},
+     'del':{'lbp':0,'nud':prefix_nuds,'type':'del','bp':10,},
+     'global':{'lbp':0,'nud':prefix_nuds,'type':'globals','bp':20,},
+Index: tokenize.py
+===================================================================
+--- tokenize.py	(revision 148)
++++ tokenize.py	(working copy)
+@@ -14,7 +14,7 @@
+ 
+ ISYMBOLS = '`-=[];,./~!@$%^&*()+{}:<>?|'
+ SYMBOLS = [
+-    'def','class','yield','return','pass','and','or','not','in','import',
++    'def','class','yield','return','pass','and','or','not','in','import','print',
+     'is','while','break','for','continue','if','else','elif','try',
+     'except','raise','True','False','None','global','del','from',
+     '-','+','*','**','/','%','<<','>>',

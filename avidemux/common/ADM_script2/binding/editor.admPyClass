@@ -1,7 +1,10 @@
 #              cname:pyname
 /* CLASS */ pyEditor : void : ADM_PYID_EDITOR
 /* METHOD */ int jsPrintTiming:printTiming      (int ) 
-/* METHOD */ int jsDumpSegments:dumpSegment     (void) 
+/* METHOD */ int scriptGetNbSegment:nbSegments  (void)
+/* METHOD */ int jsDumpSegments:dumpAllSegments    (void) 
+/* METHOD */ void scriptDumpSegment:dumpSegment     (int) 
+/* METHOD */ double scriptGetVideoDuration:getVideoDuration  (void) 
 /* METHOD */ int jsDumpRefVideos:dumpRefVideo   (void) 
 /* METHOD */ int jsHexDumpFrame:hexDumpFrame    (int) 
 

@@ -187,6 +187,10 @@ sub genReturn
         {
                 return "  return tp_number(r);";
         }
+        if($retType=~m/double/)
+        {
+                return "  return tp_number(r);";
+        }
         if($retType=~m/float/)
         {
                 return "  return tp_number(r);";

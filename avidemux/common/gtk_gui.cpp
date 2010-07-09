@@ -876,10 +876,12 @@ bool A_parseTinyPyScript(const char *name){
   bool ret;
   ADM_info("Executing tinyPy script :%s\n",name);
   char *longname = ADM_PathCanonize(name);
-   if (playing){
-      GUI_PlayAvi();
+   if (playing)
+   {
+        return false;
    }
    ret = parseTinyPyScript(longname);
+   A_Resync(); // total duration & stuff
    if( ret == true )
    {
       video_body->setProjectName(longname);
@@ -893,10 +895,12 @@ bool A_parseTinyPyScript(const char *name){
 bool A_parseECMAScript(const char *name){
   bool ret;
   char *longname = ADM_PathCanonize(name);
-   if (playing){
-      GUI_PlayAvi();
+   if (playing)
+    {
+      return false;
    }
    ret = parseECMAScript(longname);
+   A_Resync(); // total duration & stuff
    if( ret == true )
    {
       video_body->setProjectName(longname);

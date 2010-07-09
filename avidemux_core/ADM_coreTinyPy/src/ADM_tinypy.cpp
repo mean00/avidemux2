@@ -21,12 +21,14 @@
 #include "tinypy.h"
 #include "init_math.cpp"
 //}
+#include "ADM_cpp.h"
 #define INSTANCE ((tp_vm *)instance)
 #define SCRIPT   ((tp_obj *)script)
 
 pyLoggerFunc *pyLog=NULL;
 static tp_obj    tinyPy_dumpBuiltin(tp_vm *vm);
 static pyFuncs addons[]={{"help",tinyPy_dumpBuiltin},{NULL,NULL}};
+static vector <admPyClassDescriptor> listOfPyClass;;
 /**
 
 */
@@ -66,6 +68,7 @@ bool pyPrintf(const char *fmt,...)
 tinyPy::tinyPy(void)
 {
     instance=NULL;
+    listOfPyClass.clear();
 }
 /**
     \fn tinypy
@@ -79,6 +82,7 @@ tinyPy::~tinyPy()
         tp_deinit(INSTANCE);
         instance=NULL;
     }
+    listOfPyClass.clear();
 }
 /**
     \fn tinypy
@@ -170,9 +174,14 @@ bool    tinyPy::registerFuncs(const char *group,pyFuncs *funcs)
 /**
     \fn registerClass
 */
-bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy)
+bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy, const char *desc)
 {
     ADM_info("Registering class:%s\n",className);
+    admPyClassDescriptor  classDesc;
+    classDesc.className=string(className);
+    classDesc.desc=string(desc);
+    listOfPyClass.push_back(classDesc);
+    
     tp_set(INSTANCE, INSTANCE->builtins, tp_string(className), classPy(INSTANCE));
     return true;
 
@@ -182,6 +191,7 @@ bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy)
 */
 tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
 {
+#if 0
     ADM_info("Dumping builtins\n");
     tp_obj builtins=vm->builtins;
     // It is a dict..
@@ -193,6 +203,14 @@ tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
         const char *str=item->key.string.val;
         if(str)
             pyPrintf("%s\n",str);
+    }
+    return tp_None;
+#endif
+    int n=listOfPyClass.size();
+    pyPrintf("You can get more help using CLASSNAME.help()\n");
+    for(int i=0;i<n;i++)
+    {
+        pyPrintf("%s \t%s\n",listOfPyClass[i].className.c_str(),listOfPyClass[i].desc.c_str());
     }
     return tp_None;
 }
@@ -213,11 +231,13 @@ tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
 /**
    \fn  asFloat
 */
+#if 0
 float    tinyParams::asFloat(void)
 {
     preamble(TP_NUMBER);
     return (float)obj.number.val;
 }
+#endif
 /**
    \fn  asDouble
 */

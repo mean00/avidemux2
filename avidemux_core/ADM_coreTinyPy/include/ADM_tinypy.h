@@ -15,8 +15,19 @@
  ***************************************************************************/
 #ifndef ADM_TINYPY_H
 #define ADM_TINYPY_H
+#include "ADM_cpp.h"
 #include "tinypy.h"
 #include "ADM_confCouple.h"
+
+
+typedef struct
+{
+    string className;
+    string desc;
+}admPyClassDescriptor;
+
+
+
 /**
     \struct tyFunc
 */
@@ -40,7 +51,7 @@ public:
                 tinyPy(void);
         bool    init(void);
         bool    registerFuncs(const char *group,pyFuncs *funcs);
-        bool    registerClass(const char *className,pyRegisterClass *pyclass);
+        bool    registerClass(const char *className,pyRegisterClass *pyclass,const char *desc);
                 ~tinyPy(void);
         bool    execString(const char *s);
         bool    execFile(const char *f);
@@ -63,7 +74,7 @@ protected:
 public:
         tinyParams(tp_vm *i) {tp=i;}
         int    asInt(void);
-        float  asFloat(void);
+       // float  asFloat(void);
         double asDouble(void);
 const   char  *asString(void);
         void  *asThis(tp_obj *self,int id);

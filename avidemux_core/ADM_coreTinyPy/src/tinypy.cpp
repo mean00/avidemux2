@@ -122,7 +122,6 @@ Agreement.
 // MEANX : Redirect printf
 bool pyPrintf(const char *fmt,...);
 #define printf pyPrintf
-// ************************
 
 /*  #define tp_malloc(x) calloc((x),1)
     #define tp_realloc(x,y) realloc(x,y)
@@ -466,8 +465,8 @@ tp_inline static tp_obj tp_number(tp_num v) {
 
 tp_inline static void tp_echo(TP,tp_obj e) {
     e = tp_str(tp,e);
-    //fwrite(e.string.val,1,e.string.len,stdout); // MEANX
-    printf("%s",e.string.val);
+    //fwrite(e.string.val,1,e.string.len,stdout);
+    printf("%s",e.string.val); // MEANX
 }
 
 /* Function: tp_string_n
@@ -985,14 +984,14 @@ tp_obj tp_def(TP,tp_obj code, tp_obj g) {
  * This is how you can create a tinypy function object which, when called in
  * the script, calls the provided C function.
  */
-
-//tp_obj tp_fnc_new(TP,int t, void *v, tp_obj c,tp_obj s, tp_obj g) ;
 tp_obj tp_fnc(TP,tp_obj v(TP)) {
-    return tp_fnc_new(tp,0,(void *)v,tp_None,tp_None, tp_None);
+    // MEANX return tp_fnc_new(tp,0,v,tp_None,tp_None,tp_None);
+    return tp_fnc_new(tp,0,(void *)v,tp_None,tp_None,tp_None);
 }
 
 tp_obj tp_method(TP,tp_obj self,tp_obj v(TP)) {
-    return tp_fnc_new(tp,2,(void*)v,tp_None,self,tp_None);
+    // MEANX return tp_fnc_new(tp,2,v,tp_None,self,tp_None);
+    return tp_fnc_new(tp,2,(void *)v,tp_None,self,tp_None);
 }
 
 /* Function: tp_data
@@ -2205,7 +2204,9 @@ void _tp_raise(TP,tp_obj e) {
         exit(-1);
 #else
         tp->ex = e;
-        printf("\nException:\n"); tp_echo(tp,e); printf("\n");
+        // MEANX
+         printf("\nException:\n"); tp_echo(tp,e); printf("\n");
+        // /MEANX
         longjmp(tp->nextexpr,1);
 #endif
     }
@@ -2242,7 +2243,9 @@ void tp_handle(TP) {
     tp_print_stack(tp);
     exit(-1);
 #else
+        // MEANX
     tp_print_stack(tp);
+        // /MEANX
     longjmp(tp->nextexpr,1);
 #endif
 }
@@ -2456,13 +2459,13 @@ int tp_step(TP) {
             tp_bounds(tp,cur,VA);
             #endif
             ;
-            {
+             {
             int a = (*(cur+1)).string.val-f->code.string.val;
 /*            f->line = tp_string_n((*(cur+1)).string.val,VA*4-1);*/
             f->line = tp_string_sub(tp,f->code,a,a+VA*4-1);
 /*             fprintf(stderr,"%7d: %s\n",UVBC,f->line.string.val);*/
             cur += VA; f->lineno = UVBC;
-            }
+                }
             break;
         case TP_IFILE: f->fname = RA; break;
         case TP_INAME: f->name = RA; break;
@@ -2571,6 +2574,7 @@ tp_obj tp_import_(TP) {
 
 void tp_builtins(TP) {
     tp_obj o;
+    //MEANX struct {const char *s;void *f;} b[] = {
     struct {const char *s;tp_obj (*f)(TP);} b[] = {
     {"print",tp_print}, {"range",tp_range}, {"min",tp_min},
     {"max",tp_max}, {"bind",tp_bind}, {"copy",tp_copy},

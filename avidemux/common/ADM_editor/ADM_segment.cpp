@@ -376,7 +376,8 @@ bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t se
 */
 static bool TimeToFrame(_VIDEOS *v,uint64_t time,uint32_t *frame,uint32_t *oflags)
 {
-    vidHeader 							*demuxer=v->_aviheader;  
+    vidHeader *demuxer=v->_aviheader;  
+    bool warn=false;
     int nb=demuxer->getMainHeader()->dwTotalFrames;
     for(int i=0;i<nb;i++)
     {
@@ -389,6 +390,15 @@ static bool TimeToFrame(_VIDEOS *v,uint64_t time,uint32_t *frame,uint32_t *oflag
                 *frame=i;
                 *oflags=flags;
                 return true;
+            }
+            if(dts!=ADM_NO_PTS && warn==false)
+            {
+                if(dts>time)
+                {
+                    ADM_error("We reached frame %d with a PTS of %"LLU" when looking for PTS %"LLU"\n",
+                                            i,dts,time);
+                    warn=true;
+                }
             }
     }
     return false;
@@ -490,6 +500,17 @@ void ADM_EditorSegment::dump(void)
     printf("We have %d segments\n",n);
     for(int i=0;i<n;i++)
     {
+      dumpSegment(i);
+    }
+}
+void       ADM_EditorSegment::dumpSegment(int i)
+{
+    int n=segments.size();
+    if(i>=n)
+    {
+        ADM_error("Segment %d too big (%d)\n",i,(int)n);
+        return ;
+    }
         _SEGMENT *s=getSegment(i);
         
         jsLog("Segment :%d/%d",i,n);
@@ -498,7 +519,6 @@ void ADM_EditorSegment::dump(void)
         jsLog( "\tduration     :%08"LLU" %s",s->_durationUs,ADM_us2plain(s->_durationUs));
         jsLog( "\trefStartPts  :%08"LLU" %s",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
         jsLog( "\trefStartDts  :%08"LLU" %s",s->_refStartDts,ADM_us2plain(s->_refStartDts));
-    }
 }
 /**
     \fn dumpRefVideos

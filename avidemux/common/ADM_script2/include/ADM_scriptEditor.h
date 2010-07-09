@@ -23,6 +23,7 @@ int jsPrintTiming(int framenumber );
 int jsHexDumpFrame(int framenumber );
 int jsDumpSegments (void);
 int jsDumpRefVideos (void);
+float scriptGetVideoDuration(void);
 #ifdef __cplusplus
 };
 #endif

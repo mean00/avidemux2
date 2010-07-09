@@ -92,4 +92,12 @@ JSBool dumpTiming(void)
         
         return 0;
 }// end PostProcess
+/**
+    \fn scriptGetVideoDuration
+*/
+float scriptGetVideoDuration(void)
+{
+    uint64_t d=video_body->getVideoDuration();
+    return (float)d;
+}
 // EOF

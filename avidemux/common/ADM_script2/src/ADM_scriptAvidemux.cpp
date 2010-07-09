@@ -93,6 +93,17 @@ int  scriptAddSegment(int ref, double start, double duration)
     }
     return 0;
 }
+/**
+    \fn scriptGetNbSegment()
 
-
+*/
+int  scriptGetNbSegment(void)
+{
+   return video_body->getNbSegment() ;
+}
+void scriptDumpSegment(int i)
+{
+        video_body->dumpSegment(i);
+        return ;
+}
 // EOF

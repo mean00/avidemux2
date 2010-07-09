@@ -53,8 +53,7 @@
 #include "pyDFMenu_gen.cpp"
 #include "pyDialogFactory_gen.cpp"
 
-extern pyRegisterClass initClasspyAdm;
-extern pyRegisterClass initClasspyEditor;
+
 /**
 
 */
@@ -69,13 +68,13 @@ static  bool pyLogger(const char *s)
 static bool initPy(tinyPy *py)
 {
     py->init();
-    py->registerClass("Avidemux",initClasspyAdm);
-    py->registerClass("Editor",initClasspyEditor);
-    py->registerClass("Gui",initClasspyGui);
-    py->registerClass("DFToggle",initClasspyDFToggle);
-    py->registerClass("DFInteger",initClasspyDFInteger);
-    py->registerClass("DFMenu",initClasspyDFMenu);
-    py->registerClass("DialogFactory",initClasspyDialogFactory);
+    py->registerClass("Avidemux",initClasspyAdm,"avidemux class");
+    py->registerClass("Editor",initClasspyEditor,"add, remove videos");
+    py->registerClass("Gui",initClasspyGui,"widget, alert boxes,..");
+    py->registerClass("DFToggle",initClasspyDFToggle,"UI element : toggle");
+    py->registerClass("DFInteger",initClasspyDFInteger,"UI element : integer");
+    py->registerClass("DFMenu",initClasspyDFMenu,"UI element : drop down menu");
+    py->registerClass("DialogFactory",initClasspyDialogFactory, "UI manager, handle all UI elements");
 
     py->registerFuncs("test",pyHelpers_functions);
 

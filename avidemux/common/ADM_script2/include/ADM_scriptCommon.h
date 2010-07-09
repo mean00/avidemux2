@@ -43,6 +43,8 @@ char *jsGetVideoCodec ( void) ;
 int scriptSetPostProc (int a,int b, int c);
 char *scriptGetVideoCodec ( void);
 
+int  scriptGetNbSegment(void);
+void scriptDumpSegment(int i);
 #ifdef __cplusplus
 };
 #endif 

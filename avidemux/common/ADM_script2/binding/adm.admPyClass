@@ -5,7 +5,7 @@
 /* METHOD */ int scriptLoadVideo:loadVideo          (str ) 
 /* METHOD */ int scriptClearSegments:clearSegments  (void) 
 /* METHOD */ int scriptAppendVideo:appendVideo      (str ) 
-/* METHOD */ int scriptAddSegment:addSegment        (int ,float , float ) 
+/* METHOD */ int scriptAddSegment:addSegment        (int ,double , double ) 
 /* METHOD */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
 /* METHOD */ int scriptGetWidth:getWidth            (void) 
 /* METHOD */ int scriptGetHeight:getHeight          (void) 
