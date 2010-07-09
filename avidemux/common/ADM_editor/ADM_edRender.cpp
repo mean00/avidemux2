@@ -99,11 +99,14 @@ bool        ADM_Composer::GoToIntraTime_noDecoding(uint64_t time,uint32_t *tofra
 
     uint64_t refTime=seg->_refStartTimeUs+segTime;
 
-    uint32_t frame=_segments.intraTimeToFrame(seg->_reference,refTime);       
-    if(false==switchToSegment(s))
+    uint32_t frame=_segments.intraTimeToFrame(seg->_reference,refTime);    
+    if(s!=_currentSegment)
     {
-        ADM_warning("Cannot go to segment %"LU"\n",s);
-        return false;
+        if(false==switchToSegment(s))
+        {
+            ADM_warning("Cannot go to segment %"LU"\n",s);
+            return false;
+        }
     }
     if(toframe) *toframe=frame;
     ref->lastSentFrame=frame; // For copy
