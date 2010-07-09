@@ -126,13 +126,13 @@ static tp_obj myCtorpyEditor(tp_vm *vm)
 }
 static tp_obj zzpy__pyEditor_help(TP)
  {
-  jsLog("nbSegments(void)");
-  jsLog("dumpAllSegments(void)");
-  jsLog("printTiming(int )");
-  jsLog("hexDumpFrame(int)");
-  jsLog("getVideoDuration(void)");
-  jsLog("dumpSegment(int)");
-  jsLog("dumpRefVideo(void)");
+	jsLog("nbSegments(void)\n");
+	jsLog("dumpAllSegments(void)\n");
+	jsLog("printTiming(int )\n");
+	jsLog("hexDumpFrame(int)\n");
+	jsLog("getVideoDuration(void)\n");
+	jsLog("dumpSegment(int)\n");
+	jsLog("dumpRefVideo(void)\n");
 };
 tp_obj initClasspyEditor(tp_vm *vm)
 {

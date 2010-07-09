@@ -352,26 +352,26 @@ static tp_obj myCtorpyAdm(tp_vm *vm)
 }
 static tp_obj zzpy__pyAdm_help(TP)
  {
-  jsLog("audioCodec(str,int,couples)");
-  jsLog("saveBmp(str)");
-  jsLog("addVideoFilter(str,couples)");
-  jsLog("loadVideo(str )");
-  jsLog("clearSegments(void)");
-  jsLog("getHeight(void)");
-  jsLog("setPostProc(int ,int , int )");
-  jsLog("save(str)");
-  jsLog("appendVideo(str )");
-  jsLog("audioMixer(str )");
-  jsLog("getFps1000(void)");
-  jsLog("saveAudio(str)");
-  jsLog("videoCodec(str,couples)");
-  jsLog("getWidth(void)");
-  jsLog("addSegment(int ,double , double )");
-  jsLog("clearVideoFilters(void)");
-  jsLog("saveJpeg(str)");
-  jsLog("setContainer(str,couples)");
-  jsLog("audioReset(void)");
-  jsLog("getVideoCodec(void)");
+	jsLog("audioCodec(str,int,couples)\n");
+	jsLog("saveBmp(str)\n");
+	jsLog("addVideoFilter(str,couples)\n");
+	jsLog("loadVideo(str )\n");
+	jsLog("clearSegments(void)\n");
+	jsLog("getHeight(void)\n");
+	jsLog("setPostProc(int ,int , int )\n");
+	jsLog("save(str)\n");
+	jsLog("appendVideo(str )\n");
+	jsLog("audioMixer(str )\n");
+	jsLog("getFps1000(void)\n");
+	jsLog("saveAudio(str)\n");
+	jsLog("videoCodec(str,couples)\n");
+	jsLog("getWidth(void)\n");
+	jsLog("addSegment(int ,double , double )\n");
+	jsLog("clearVideoFilters(void)\n");
+	jsLog("saveJpeg(str)\n");
+	jsLog("setContainer(str,couples)\n");
+	jsLog("audioReset(void)\n");
+	jsLog("getVideoCodec(void)\n");
 };
 tp_obj initClasspyAdm(tp_vm *vm)
 {

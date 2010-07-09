@@ -116,11 +116,11 @@ static tp_obj myCtorpyGui(tp_vm *vm)
 }
 static tp_obj zzpy__pyGui_help(TP)
  {
-  jsLog("fileWriteSelect(str)");
-  jsLog("displayError(str,str)");
-  jsLog("dirSelect(str)");
-  jsLog("displayInfo(str,str)");
-  jsLog("fileReadSelect(str)");
+	jsLog("fileWriteSelect(str)\n");
+	jsLog("displayError(str,str)\n");
+	jsLog("dirSelect(str)\n");
+	jsLog("displayInfo(str,str)\n");
+	jsLog("fileReadSelect(str)\n");
 };
 tp_obj initClasspyGui(tp_vm *vm)
 {

@@ -94,7 +94,7 @@ bool qShell::print(SCRIPT_LOG_TYPE type,const char *s)
         case SCRIPT_LOG_NORMAL: ui.textBrowser->setTextColor(QColor(0,0,0));break;
         case SCRIPT_LOG_ERROR : ui.textBrowser->setTextColor(QColor(255,0,0));break;
     }
-    ui.textBrowser->append(string);
+    ui.textBrowser->insertPlainText(string);
     ui.textBrowser->setTextColor(QColor(0,0,0));
     return true;
 }

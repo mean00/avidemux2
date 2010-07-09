@@ -526,7 +526,7 @@ my $pyFunc;
                 foreach $f(  keys %cFuncs)
                 {
                         my @params=@{$funcParams{$f}};
-                        print OUTPUT "  jsLog(\"$f(".join(",",@params) .")\");\n";
+                        print OUTPUT "\tjsLog(\"$f(".join(",",@params) .")\\n\");\n";
                 }
                 print OUTPUT "};\n";
 #

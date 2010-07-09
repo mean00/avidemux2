@@ -62,7 +62,7 @@ static tp_obj myCtorpyDFMenu(tp_vm *vm)
 }
 static tp_obj zzpy__pyDFMenu_help(TP)
  {
-  jsLog("addItem(str)");
+	jsLog("addItem(str)\n");
 };
 tp_obj initClasspyDFMenu(tp_vm *vm)
 {

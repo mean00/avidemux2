@@ -63,8 +63,8 @@ static tp_obj myCtorpyDialogFactory(tp_vm *vm)
 }
 static tp_obj zzpy__pyDialogFactory_help(TP)
  {
-  jsLog("show(void)");
-  jsLog("addControl(ptr@ADM_scriptDFBaseHelper)");
+	jsLog("show(void)\n");
+	jsLog("addControl(ptr@ADM_scriptDFBaseHelper)\n");
 };
 tp_obj initClasspyDialogFactory(tp_vm *vm)
 {
