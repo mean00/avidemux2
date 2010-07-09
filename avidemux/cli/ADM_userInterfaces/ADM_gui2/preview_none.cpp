@@ -6,7 +6,7 @@
 
 #include <time.h>
 #include <sys/time.h>
-
+#include "ADM_cpp.h"
 #include "ADM_assert.h"
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
