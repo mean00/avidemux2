@@ -15,7 +15,6 @@
  ***************************************************************************/
 #ifndef ADM_TINYPY_H
 #define ADM_TINYPY_H
-#include "ADM_cpp.h"
 #include "tinypy.h"
 #include "ADM_confCouple.h"
 
