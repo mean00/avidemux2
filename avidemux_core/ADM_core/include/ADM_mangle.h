@@ -37,10 +37,10 @@
 #        define FUNNY_MANGLE_ARRAY(x, y)  x[y] asm(#x)
 #    elif defined(__APPLE__) /////////////// MACOSX
 #        define MANGLE(a) "_" #a
-#        define LOCAL_MANGLE(a) #a"(%%rip)"
+#        define LOCAL_MANGLE(a) #a
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
-#                else /////////////// LINUX //////////////
+#     else /////////////// LINUX //////////////
 #                   define MANGLE(a) #a
 #                   define LOCAL_MANGLE(a) #a
 #                   define FUNNY_MANGLE(x) x asm(MANGLE(x))
