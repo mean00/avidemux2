@@ -30,8 +30,6 @@ extern "C" {
  #include "ADM_ffmpeg/libavcodec/vdpau.h"
 }
 
-#include "vdpau/vdpau_x11.h"
-#include "vdpau/vdpau.h"
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
@@ -39,16 +37,13 @@ extern "C" {
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_vdpau_internal.h"
 #include "prefs.h"
+#include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 #include "ADM_codecVdpau.h"
 
-static VdpFunctions funcs;
+
 
 static bool vdpauWorking=false;
 
-static ADM_LibWrapper        vdpauDynaLoader;
-static VdpDeviceCreateX11    *ADM_createVdpX11;
-static VdpDevice             vdpDevice;
-static VdpGetProcAddress     *vdpProcAddress;
 
 #define aprintf(...) {}
 
@@ -72,63 +67,16 @@ bool vdpauUsable(void)
     return v;
 }
 /**
-    \fn getFunc
-    \brief vdpau function pointers from ID
-*/
-static void *getFunc(uint32_t id)
-{
-    void *f;
-    if(VDP_STATUS_OK!=vdpProcAddress(vdpDevice,id,&f)) return NULL;
-    return (void *)f;
-}
-/**
     \fn vdpauProbe
     \brief Try loading vdpau...
 */
 bool vdpauProbe(void)
 {
-    memset(&funcs,0,sizeof(funcs));
-    if(false==vdpauDynaLoader.loadLibrary("/usr/lib/libvdpau.so"))
-    {
-        return false;
-    }
-    ADM_createVdpX11=(VdpDeviceCreateX11*)vdpauDynaLoader.getSymbol("vdp_device_create_x11");
-    if(!ADM_createVdpX11) return false;
-
-    //
     GUI_WindowInfo xinfo;
     void *draw;
     draw=UI_getDrawWidget();
     UI_getWindowInfo(draw,&xinfo );
-    
-    // try to create....
-    if( VDP_STATUS_OK!=ADM_createVdpX11((Display*)xinfo.display,0,&vdpDevice,&vdpProcAddress))
-    {
-        return false;
-    }
-    // Now that we have the vdpProcAddress, time to get the functions....
-#define GetMe(fun,id)         funcs.fun= (typeof(funcs.fun))getFunc(id);ADM_assert(funcs.fun); 
-        
-    GetMe(getErrorString,VDP_FUNC_ID_GET_ERROR_STRING);
-    GetMe(getApiVersion,VDP_FUNC_ID_GET_API_VERSION);
-    GetMe(getInformationString,VDP_FUNC_ID_GET_INFORMATION_STRING);
-
-    GetMe(createSurface,VDP_FUNC_ID_VIDEO_SURFACE_CREATE);
-    GetMe(destroySurface,VDP_FUNC_ID_VIDEO_SURFACE_DESTROY);
-    GetMe(getDataSurface,VDP_FUNC_ID_VIDEO_SURFACE_GET_BITS_Y_CB_CR);
-
-    GetMe(decoderCreate,VDP_FUNC_ID_DECODER_CREATE);
-    GetMe(decoderDestroy,VDP_FUNC_ID_DECODER_DESTROY);
-    GetMe(decoderRender,VDP_FUNC_ID_DECODER_RENDER);
-
-
-
-    const char *versionString=NULL;
-    uint32_t version=0xff;
-        funcs.getInformationString(&versionString);
-        funcs.getApiVersion(&version);
-        ADM_info("[VDPAU] API : 0x%x, info : %s\n",version,versionString);
-
+    if(false==admVdpau::init(&xinfo)) return false;
     vdpauWorking=true;
     return true;
 }
@@ -287,8 +235,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         for(int i=0;i<NB_SURFACE;i++)
             VDPAU->renders[i]=NULL;
         
-        if(VDP_STATUS_OK!=funcs.decoderCreate(vdpDevice,vdpDecoder,
-                                w,h,15,&(VDPAU->vdpDecoder)))
+        if(VDP_STATUS_OK!=admVdpau::decoderCreate(vdpDecoder, w,h,15,&(VDPAU->vdpDecoder)))
         {
             ADM_error("Cannot create VDPAU decoder\n");
             alive=false;
@@ -299,7 +246,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         {
             VDPAU->renders[i]=new vdpau_render_state;
             memset(VDPAU->renders[i],0,sizeof( vdpau_render_state));
-            if(VDP_STATUS_OK!=funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,w,h,&(VDPAU->renders[i]->surface)))
+            if(VDP_STATUS_OK!=admVdpau::surfaceCreate(w,h,&(VDPAU->renders[i]->surface)))
             {
                 ADM_error("Cannot create surface %d/%d\n",i,NB_SURFACE);
                 alive=false;
@@ -325,14 +272,14 @@ decoderFFVDPAU::~decoderFFVDPAU()
                 if(VDPAU->renders[i]->surface)
                 {
                     if(VDPAU->renders[i]->surface)
-                        if(VDP_STATUS_OK!=funcs.destroySurface((VDPAU->renders[i]->surface)))
+                        if(VDP_STATUS_OK!=admVdpau::surfaceDestroy((VDPAU->renders[i]->surface)))
                                 ADM_error("Error destroying surface %d\n",i);
                 }
                 delete VDPAU->renders[i];
             }
         }
          ADM_info("[VDPAU] Destroying decoder\n");
-         if(VDP_STATUS_OK!=funcs.decoderDestroy(VDPAU->vdpDecoder))
+         if(VDP_STATUS_OK!=admVdpau::decoderDestroy(VDPAU->vdpDecoder))
                 ADM_error("Error destroying VDPAU decoder\n");
          delete VDPAU;
          vdpau=NULL;
@@ -370,16 +317,11 @@ VdpStatus status;
     
    // Copy back the decoded image to our output ADM_image
    aprintf("[VDPAU] Getting datas from surface %d\n",surface);
-    status=funcs.getDataSurface(
-                surface,
-                VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
-                ( void * const *)planes, //void * const *   destination_data,
-                stride //destination_pitches
-                );
+    status=admVdpau::getDataSurface(surface,planes, stride );
     if(VDP_STATUS_OK!=status)
     {
         
-        printf("[VDPAU] Cannot get data from surface <%s>\n",funcs.getErrorString(status));
+        printf("[VDPAU] Cannot get data from surface <%s>\n",admVdpau::getErrorString(status));
         decode_status=false;
         return 0 ;
     }
@@ -401,11 +343,11 @@ void decoderFFVDPAU::goOn( const AVFrame *d,int type)
     vdpau_pts=d->reordered_opaque; // Retrieve our PTS
 
      aprintf("[VDPAU] Decoding Using surface %d\n", surface);
-    status=funcs.decoderRender(VDPAU->vdpDecoder, surface,
-                            (void * const *)&rndr->info, rndr->bitstream_buffers_used, rndr->bitstream_buffers);
+    status=admVdpau::decoderRender(VDPAU->vdpDecoder, surface,
+                            &rndr->info, rndr->bitstream_buffers_used, rndr->bitstream_buffers);
     if(VDP_STATUS_OK!=status)
     {
-        printf("[VDPAU] No data after decoderRender <%s>\n",funcs.getErrorString(status));
+        printf("[VDPAU] No data after decoderRender <%s>\n",admVdpau::getErrorString(status));
         decode_status=false;
         return ;
     }

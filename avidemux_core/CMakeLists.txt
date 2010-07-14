@@ -70,6 +70,9 @@ ADD_SUBDIRECTORY(ADM_coreVideoFilter)
 ADD_SUBDIRECTORY(ADM_ffmpeg)
 ADD_SUBDIRECTORY(ADM_smjs)
 ADD_SUBDIRECTORY(ADM_coreImageLoader)
+
+ADD_SUBDIRECTORY(ADM_coreVdpau)
+
 ########################################
 # Config Summary
 ########################################

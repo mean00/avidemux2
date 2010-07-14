@@ -21,17 +21,7 @@
 
 #include "ADM_image.h"
 typedef bool (*refreshSB)(void);
-
-typedef struct
-{
-    void *display;
-    int  window;
-	int x;
-	int y;
-	int width;
-	int height;
-} GUI_WindowInfo;
-
+#include "ADM_windowInfo.h"
 
 typedef enum 
 {

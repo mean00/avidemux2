@@ -39,23 +39,6 @@ typedef struct
 
 #define VDPAU ((vdpauContext *)vdpau)
 
-// VDPAU internal linker
-
-typedef struct 
-{
-    VdpGetErrorString       *getErrorString;
-    VdpGetApiVersion        *getApiVersion;
-    VdpGetInformationString *getInformationString;
-
-    VdpVideoSurfaceCreate   *createSurface;
-    VdpVideoSurfaceDestroy  *destroySurface;
-    VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
-
-    VdpDecoderCreate        *decoderCreate;
-    VdpDecoderDestroy       *decoderDestroy;
-    VdpDecoderRender        *decoderRender;
-
-}VdpFunctions;
 
 #define WRAP_Open_Template(funcz,argz,display,codecid) \
 {\

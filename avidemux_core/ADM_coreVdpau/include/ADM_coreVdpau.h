@@ -1,0 +1,43 @@
+/***************************************************************************
+    \file             : ADM_coreVdpau.cpp
+    \brief            : Wrapper around vdpau functions
+    \author           : (C) 2010 by mean fixounet@free.fr
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+#ifndef ADM_CORE_VDPAU_H
+#define ADM_CORE_VDPAU_H
+#include "vdpau/vdpau_x11.h"
+#include "vdpau/vdpau.h"
+#include "ADM_windowInfo.h"
+/**
+    \class admVdpau
+*/
+class admVdpau
+{
+public:
+    static bool         init(GUI_WindowInfo *x);
+    static const char  *getErrorString(VdpStatus er);
+    static bool         isOperationnal(void);
+    static  VdpStatus   decoderCreate( VdpDecoderProfile profile,    uint32_t          width,    uint32_t          height,    uint32_t          max_references,       VdpDecoder *      decoder);
+    static  VdpStatus   decoderDestroy(VdpDecoder decoder);
+    static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
+    static  VdpStatus   surfaceDestroy(VdpVideoSurface surface);
+    static  VdpStatus   getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
+    static  VdpStatus   decoderRender(
+            VdpDecoder                 decoder,
+            VdpVideoSurface            target,
+            const void                 *info,
+            uint32_t                   bitstream_buffer_count,
+            VdpBitstreamBuffer const * bitstream_buffers);
+
+};
+#endif
