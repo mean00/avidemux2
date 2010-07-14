@@ -34,6 +34,7 @@ public:
     static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
     static  VdpStatus   surfaceDestroy(VdpVideoSurface surface);
     static  VdpStatus   getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
+    static  VdpStatus   surfacePutBits(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
     /* Decoder */
     static  VdpStatus   decoderCreate( VdpDecoderProfile profile,    uint32_t          width,    uint32_t          height,    uint32_t          max_references,       VdpDecoder *      decoder);
     static  VdpStatus   decoderDestroy(VdpDecoder decoder);
@@ -61,5 +62,9 @@ public:
     static VdpStatus presentationQueueCreate(VdpPresentationQueue *queue);
     static VdpStatus presentationQueueDestroy(VdpPresentationQueue queue);
     static VdpStatus presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface);
+    /* Mixer */
+    static VdpStatus mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer);
+    static VdpStatus mixerDestroy(VdpVideoMixer mixer);
+    static VdpStatus mixerRender(VdpVideoMixer mixer,VdpVideoSurface sourceSurface,VdpOutputSurface targetOutputSurface, uint32_t targetWidth, uint32_t targetHeight );
 };
 #endif

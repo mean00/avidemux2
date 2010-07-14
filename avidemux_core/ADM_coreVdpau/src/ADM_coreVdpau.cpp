@@ -36,7 +36,7 @@ typedef struct
     VdpVideoSurfaceCreate   *createSurface;
     VdpVideoSurfaceDestroy  *destroySurface;
     VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
-
+    VdpVideoSurfacePutBitsYCbCr *surfacePutBitsYCbCr;
 
  
 
@@ -55,6 +55,10 @@ typedef struct
     VdpPresentationQueueCreate        *presentationQueueCreate;
     VdpPresentationQueueGetTime       *presentationQueueGetTime;
     VdpPresentationQueueDisplay       *presentationQueueDisplay;
+
+    VdpVideoMixerCreate               *mixerCreate;
+    VdpVideoMixerDestroy              *mixerDestroy;
+    VdpVideoMixerRender               *mixerRender;
 
     VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;
 }VdpFunctions;
@@ -108,6 +112,8 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(createSurface,VDP_FUNC_ID_VIDEO_SURFACE_CREATE);
     GetMe(destroySurface,VDP_FUNC_ID_VIDEO_SURFACE_DESTROY);
     GetMe(getDataSurface,VDP_FUNC_ID_VIDEO_SURFACE_GET_BITS_Y_CB_CR);
+    GetMe(surfacePutBitsYCbCr,VDP_FUNC_ID_VIDEO_SURFACE_PUT_BITS_Y_CB_CR);
+
 
     GetMe(decoderCreate,VDP_FUNC_ID_DECODER_CREATE);
     GetMe(decoderDestroy,VDP_FUNC_ID_DECODER_DESTROY);
@@ -123,7 +129,13 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(presentationQueueDisplay,VDP_FUNC_ID_PRESENTATION_QUEUE_DISPLAY);
 
     GetMe(presentationQueueDisplayX11Create,VDP_FUNC_ID_PRESENTATION_QUEUE_TARGET_CREATE_X11);
+
+    GetMe(mixerCreate,VDP_FUNC_ID_VIDEO_MIXER_CREATE);
+    GetMe(mixerDestroy,VDP_FUNC_ID_VIDEO_MIXER_DESTROY);
+    GetMe(mixerRender,VDP_FUNC_ID_VIDEO_MIXER_RENDER);
   
+
+
     if(VDP_STATUS_OK!=funcs.presentationQueueDisplayX11Create(vdpDevice,x->window,&queueX11))
     {
         ADM_warning("Cannot create X11 Presentation Queue\n");
@@ -226,6 +238,18 @@ VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],u
                 ));
 }
 /**
+    \fn 
+    \brief
+*/
+VdpStatus   admVdpau::surfacePutBits(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3])
+{
+    CHECK(funcs.surfacePutBitsYCbCr(surface,  
+                VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
+                ( void * const *)planes, //void * const *   destination_data,
+                stride //destination_pitches
+                ));
+}
+/**
     \fn
     \brief
 */
@@ -315,6 +339,76 @@ VdpStatus admVdpau::presentationQueueDisplay(VdpPresentationQueue queue,VdpOutpu
     }
     CHECK(funcs.presentationQueueDisplay(queue,outputSurface,0,0,t));
 }
+/**
+    \fn mixerCreate
+*/
+VdpStatus admVdpau::mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer)
+{
+#define MIXER_NB_PARAM 3
+
+VdpVideoMixerParameter parameters[MIXER_NB_PARAM]=
+                                              {VDP_VIDEO_MIXER_PARAMETER_VIDEO_SURFACE_WIDTH,
+                                               VDP_VIDEO_MIXER_PARAMETER_VIDEO_SURFACE_HEIGHT,
+                                               VDP_VIDEO_MIXER_PARAMETER_CHROMA_TYPE};
+uint32_t color=VDP_CHROMA_TYPE_420;
+void    *values[MIXER_NB_PARAM]={&width,&height,&color};
+    
+    
+    VdpStatus e=funcs.mixerCreate(vdpDevice,
+                        0,NULL,
+                        MIXER_NB_PARAM,parameters,values,
+                        mixer);
+    if(VDP_STATUS_OK!=e)
+    {
+        
+        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
+        
+    }
+    return e;
+}
+/**
+    \fn mixerDestroy
+*/
+
+VdpStatus admVdpau::mixerDestroy(VdpVideoMixer mixer)
+{
+    CHECK(funcs.mixerDestroy(mixer));
+}
+/**
+    \fn mixerRender
+*/
+
+VdpStatus admVdpau::mixerRender(VdpVideoMixer mixer,
+                                VdpVideoSurface sourceSurface,
+                                VdpOutputSurface targetOutputSurface, 
+                                uint32_t targetWidth, 
+                                uint32_t targetHeight )
+{
+const VdpVideoSurface listOfSurface[1]={sourceSurface};
+const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
+      VdpStatus e=funcs.mixerRender(mixer,
+                VDP_INVALID_HANDLE,NULL,    // Background
+                VDP_VIDEO_MIXER_PICTURE_STRUCTURE_FRAME,
+                
+                0,            listOfInvalidSurface, // Past...
+                sourceSurface,                      // current
+                0,            listOfInvalidSurface, // Future
+                NULL,                               // source RECT
+                targetOutputSurface,
+                NULL,                               // dest Rec
+                NULL,                               // dest video Rec
+                0,NULL);                            // Layers
+                
+            
+  if(VDP_STATUS_OK!=e)
+    {
+        
+        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
+        
+    }
+    return e;
+}
+
 #else 
 //******************************************
 //******************************************

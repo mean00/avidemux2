@@ -22,8 +22,11 @@
 #include "GUI_accelRender.h"
 #include "GUI_vdpauRender.h"
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
+
 static VdpOutputSurface surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
-static int currentSurface=0;
+static VdpVideoSurface  input=VDP_INVALID_HANDLE;
+static VdpVideoMixer    mixer=VDP_INVALID_HANDLE;
+static int              currentSurface=0;
 static VdpPresentationQueue queue=VDP_INVALID_HANDLE;
 //________________Wrapper around Xv_______________
 /**
@@ -48,6 +51,11 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
     // Create couple of outputSurface
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     currentSurface=0;
+    if(VDP_STATUS_OK!=admVdpau::surfaceCreate(w,h,&input)) 
+    {
+        ADM_error("Cannot create input Surface\n");
+        goto badInit;
+    }
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,w,h,&surface[0])) 
     {
         ADM_error("Cannot create outputSurface0\n");
@@ -63,6 +71,11 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
         ADM_error("Cannot create queue\n");
         goto badInit;
     } 
+    if(VDP_STATUS_OK!=admVdpau::mixerCreate(w,h,&mixer)) 
+    {
+        ADM_error("Cannot create mixer\n");
+        goto badInit;
+    } 
 
     return true;
 badInit:
@@ -74,11 +87,16 @@ badInit:
 */
 bool vdpauRender::cleanup(void)
 {
+    if(input!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(input);
     if(surface[0]!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface[0]);
     if(surface[1]!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface[1]);
     if(queue!=VDP_INVALID_HANDLE)  admVdpau::presentationQueueDestroy(queue);
+    if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     queue=VDP_INVALID_HANDLE;
+    input=VDP_INVALID_HANDLE;
+    mixer=VDP_INVALID_HANDLE;
+    return true;
 }
 /**
     \fn stop
@@ -95,17 +113,28 @@ bool vdpauRender::stop(void)
 */
 bool vdpauRender::displayImage(ADMImage *pic)
 {
-    // Blit pic into our next image
+    // Blit pic into our video Surface
     int next=currentSurface^1;
     uint32_t pitches[3];
     uint8_t *planes[3];
     pic->GetPitches(pitches);
     pic->GetReadPlanes(planes);
-    if(VDP_STATUS_OK!=admVdpau::outPutSurfacePutBitsYV12( 
-            surface[next],
+
+    // Put out stuff in input...
+
+    if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
+            input,
             planes,pitches))
     {
-        ADM_warning("Cannot putbits\n");
+        ADM_warning("video surface : Cannot putbits\n");
+        return false;
+    }
+
+    // Call mixer...
+    if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,input,surface[next], pic->_width,pic->_height))
+
+    {
+        ADM_warning("Cannot mixerRender\n");
         return false;
     }
     // Display!
