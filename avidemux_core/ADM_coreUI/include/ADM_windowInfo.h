@@ -4,9 +4,9 @@ typedef struct
 {
     void *display;
     int  window;
-        int x;
-        int y;
-        int width;
-        int height;
+    int x;
+    int y;
+    int width;
+    int height;
 } GUI_WindowInfo;
 #endif

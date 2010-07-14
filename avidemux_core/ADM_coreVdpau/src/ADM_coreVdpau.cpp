@@ -17,6 +17,7 @@
 #include "ADM_dynamicLoading.h"
 
 #ifdef USE_VDPAU
+GUI_WindowInfo      admVdpau::myWindowInfo;
 /**
     \fn VdpFunctions
     
@@ -31,9 +32,21 @@ typedef struct
     VdpVideoSurfaceDestroy  *destroySurface;
     VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
 
+    VdpOutputSurfaceCreate  *createOutputSurface;
+    VdpOutputSurfaceDestroy *destroyOutputSurface;
+    VdpOutputSurfacePutBitsYCbCr *putBitsYV12OutputSurface;
+
     VdpDecoderCreate        *decoderCreate;
     VdpDecoderDestroy       *decoderDestroy;
     VdpDecoderRender        *decoderRender;
+
+
+    VdpPresentationQueueTargetDestroy *presentationQueueDestroy;
+    VdpPresentationQueueCreate        *presentationQueueCreate;
+    VdpPresentationQueueGetTime       *presentationQueueGetTime;
+    VdpPresentationQueueDisplay       *presentationQueueDisplay;
+
+    VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;
 }VdpFunctions;
 
 static VdpFunctions          funcs;
@@ -42,6 +55,7 @@ static VdpDeviceCreateX11    *ADM_createVdpX11;
 static VdpDevice             vdpDevice;
 static VdpGetProcAddress     *vdpProcAddress;
 static bool                  coreVdpWorking=false;
+static VdpPresentationQueueTarget  queueX11;
 /**
     \fn getFunc
     \brief vdpau function pointers from ID
@@ -88,8 +102,22 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(decoderCreate,VDP_FUNC_ID_DECODER_CREATE);
     GetMe(decoderDestroy,VDP_FUNC_ID_DECODER_DESTROY);
     GetMe(decoderRender,VDP_FUNC_ID_DECODER_RENDER);
+    GetMe(createOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_CREATE);
+    GetMe(destroyOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_DESTROY);
+    GetMe(putBitsYV12OutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_PUT_BITS_Y_CB_CR);
 
+    GetMe(presentationQueueDestroy,VDP_FUNC_ID_PRESENTATION_QUEUE_DESTROY);
+    GetMe(presentationQueueCreate,VDP_FUNC_ID_PRESENTATION_QUEUE_CREATE);
+    GetMe(presentationQueueGetTime,VDP_FUNC_ID_PRESENTATION_QUEUE_GET_TIME);
+    GetMe(presentationQueueDisplay,VDP_FUNC_ID_PRESENTATION_QUEUE_DISPLAY);
 
+    GetMe(presentationQueueDisplayX11Create,VDP_FUNC_ID_PRESENTATION_QUEUE_TARGET_CREATE_X11);
+  
+    if(VDP_STATUS_OK!=funcs.presentationQueueDisplayX11Create(vdpDevice,x->window,&queueX11))
+    {
+        ADM_warning("Cannot create X11 Presentation Queue\n");
+        return false;
+    }
 
     const char *versionString=NULL;
     uint32_t version=0xff;
@@ -98,6 +126,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
         ADM_info("[VDPAU] API : 0x%x, info : %s\n",version,versionString);
 
     coreVdpWorking=true;
+    myWindowInfo=*x;
     return true;
 }
 /**
@@ -107,24 +136,46 @@ bool admVdpau::isOperationnal(void)
 {
     return coreVdpWorking;
 }
-
+/**
+    \fn
+    \brief
+*/
 VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
             uint32_t  max_references,VdpDecoder *      decoder)
 {
     return funcs.decoderCreate(vdpDevice,profile,width,height,max_references,decoder);
 }
+/**
+    \fn
+    \brief
+*/
 VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 {
     return funcs.decoderDestroy(decoder);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface)
 {
 return funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 {
     return funcs.destroySurface(surface);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3])
 {
   return funcs.getDataSurface(
@@ -134,6 +185,11 @@ VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],u
                 stride //destination_pitches
                 );
 }
+/**
+    \fn
+    \brief
+*/
+
 const char *admVdpau::getErrorString(VdpStatus er)
 {
     return funcs.getErrorString(er);
@@ -147,8 +203,85 @@ VdpStatus admVdpau::decoderRender(
 {
     return funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers);
 }
-#else // Dummy when vdpau is not there...
+/**
+    \fn
+    \brief
+*/
 
+VdpStatus admVdpau::outputSurfaceCreate(
+    VdpRGBAFormat      rgba_format,
+    uint32_t           width,
+    uint32_t           height,
+    VdpOutputSurface * surface)
+{
+    return funcs.createOutputSurface(vdpDevice,rgba_format, width,height,surface);
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::outputSurfaceDestroy(    VdpOutputSurface surface)
+{
+    return funcs.destroyOutputSurface(surface);
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::outPutSurfacePutBitsYV12( VdpOutputSurface     surface,
+                        uint8_t *planes[3],
+                        uint32_t pitches[3])
+{
+    return funcs.putBitsYV12OutputSurface(surface,VDP_YCBCR_FORMAT_YV12,
+                                                       (void const * const *) planes,
+                                                        pitches,
+                                                        NULL,//VdpRect const *      destination_rect,
+                                                        NULL); //VdpCSCMatrix const * csc_matrix  );
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
+{
+    return funcs.presentationQueueCreate(vdpDevice,queueX11,queue);
+
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::presentationQueueDestroy(VdpPresentationQueue queue)
+{
+    return funcs.presentationQueueDestroy(queue);
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface)
+{
+    VdpTime t;
+    VdpStatus r=funcs.presentationQueueGetTime(queue,&t);
+    if(VDP_STATUS_OK!=r)
+    {
+        ADM_warning("GetTime failed\n");
+        return r;
+    }
+    return funcs.presentationQueueDisplay(queue,outputSurface,0,0,t);
+}
+#else 
+//******************************************
+//******************************************
+// Dummy when vdpau is not there...
+// Dummy when vdpau is not there...
+//******************************************
+//******************************************
 static bool                  coreVdpWorking=false;
 bool admVdpau::init(GUI_WindowInfo *x)
 {
@@ -163,38 +296,123 @@ bool admVdpau::isOperationnal(void)
     ADM_warning("This binary has no VPDAU support\n");
     return coreVdpWorking;
 }
+/**
+    \fn
+    \brief
+*/
 
 VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
             uint32_t  max_references,VdpDecoder *      decoder)
 {
     ADM_assert(0);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 {
     ADM_assert(0);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface)
 {
 ADM_assert(0);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 {
     ADM_assert(0);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3])
 {
   ADM_assert(0);
 }
+/**
+    \fn
+    \brief
+*/
+
 const char *admVdpau::getErrorString(VdpStatus er)
 {
 ADM_assert(0);
 }
+/**
+    \fn
+    \brief
+*/
+
 VdpStatus admVdpau::decoderRender(
     VdpDecoder                 decoder,
     VdpVideoSurface            target,
     const void                 *info,
     uint32_t                   bitstream_buffer_count,
     VdpBitstreamBuffer const * bitstream_buffers)
+{
+    ADM_assert(0);
+}
+
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::outputSurfaceCreate(
+    VdpRGBAFormat      rgba_format,
+    uint32_t           width,
+    uint32_t           height,
+    VdpOutputSurface * surface)
+{
+    ADM_assert(0);
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::outputSurfaceDestroy(    VdpOutputSurface surface)
+{
+    ADM_assert(0);
+}
+VdpStatus admVdpau::outPutSurfacePutBitsYV12( VdpOutputSurface     surface,
+                        uint8_t *planes[3],
+                        uint32_t pitches[3])
+{
+   ADM_assert(0);
+}
+VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
+{
+    ADM_assert(0);
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::presentationQueueDestroy(VdpPresentationQueue queue)
+{
+    ADM_assert(0);
+}
+/**
+    \fn
+    \brief
+*/
+
+VdpStatus admVdpau::presentationQueueDisplay(VdpOutputSurface outputSurface)
 {
     ADM_assert(0);
 }

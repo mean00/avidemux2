@@ -23,15 +23,20 @@
 */
 class admVdpau
 {
+protected:
+    static GUI_WindowInfo      myWindowInfo;
 public:
     static bool         init(GUI_WindowInfo *x);
     static const char  *getErrorString(VdpStatus er);
     static bool         isOperationnal(void);
-    static  VdpStatus   decoderCreate( VdpDecoderProfile profile,    uint32_t          width,    uint32_t          height,    uint32_t          max_references,       VdpDecoder *      decoder);
-    static  VdpStatus   decoderDestroy(VdpDecoder decoder);
+    /* Surface */
     static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
     static  VdpStatus   surfaceDestroy(VdpVideoSurface surface);
     static  VdpStatus   getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
+    /* Decoder */
+    static  VdpStatus   decoderCreate( VdpDecoderProfile profile,    uint32_t          width,    uint32_t          height,    uint32_t          max_references,       VdpDecoder *      decoder);
+    static  VdpStatus   decoderDestroy(VdpDecoder decoder);
+
     static  VdpStatus   decoderRender(
             VdpDecoder                 decoder,
             VdpVideoSurface            target,
@@ -39,5 +44,21 @@ public:
             uint32_t                   bitstream_buffer_count,
             VdpBitstreamBuffer const * bitstream_buffers);
 
+    /* Output surface */
+    static VdpStatus outputSurfaceCreate(
+            VdpRGBAFormat      rgba_format,
+            uint32_t           width,
+            uint32_t           height,
+            VdpOutputSurface * surface);
+
+    static VdpStatus outputSurfaceDestroy(VdpOutputSurface surface);
+    static VdpStatus outPutSurfacePutBitsYV12( 
+            VdpOutputSurface     surface,
+            uint8_t *planes[3],
+            uint32_t pitches[3]);
+    /* Presentation queue */
+    static VdpStatus presentationQueueCreate(VdpPresentationQueue *queue);
+    static VdpStatus presentationQueueDestroy(VdpPresentationQueue queue);
+    static VdpStatus presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface);
 };
 #endif
