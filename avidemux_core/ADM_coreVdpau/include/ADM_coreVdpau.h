@@ -15,8 +15,12 @@
 
 #ifndef ADM_CORE_VDPAU_H
 #define ADM_CORE_VDPAU_H
+
+#ifdef USE_VDPAU
 #include "vdpau/vdpau_x11.h"
 #include "vdpau/vdpau.h"
+#endif 
+
 #include "ADM_windowInfo.h"
 /**
     \class admVdpau
@@ -25,12 +29,15 @@ class admVdpau
 {
 protected:
     static GUI_WindowInfo      myWindowInfo;
+#ifdef USE_VDPAU
     static bool queryYUVPutBitSupport(VdpRGBAFormat rgb,VdpYCbCrFormat yuv);
+#endif
 public:
     static bool         init(GUI_WindowInfo *x);
-    static const char  *getErrorString(VdpStatus er);
     static bool         isOperationnal(void);
     /* Surface */
+#ifdef USE_VDPAU
+    static const char  *getErrorString(VdpStatus er);
     static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
     static  VdpStatus   surfaceDestroy(VdpVideoSurface surface);
     static  VdpStatus   getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
@@ -66,5 +73,6 @@ public:
     static VdpStatus mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer);
     static VdpStatus mixerDestroy(VdpVideoMixer mixer);
     static VdpStatus mixerRender(VdpVideoMixer mixer,VdpVideoSurface sourceSurface,VdpOutputSurface targetOutputSurface, uint32_t targetWidth, uint32_t targetHeight );
+#endif
 };
 #endif

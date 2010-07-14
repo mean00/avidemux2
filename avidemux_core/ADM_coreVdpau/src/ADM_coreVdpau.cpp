@@ -13,8 +13,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#ifdef USE_VDPAU
 #include "../include/ADM_coreVdpau.h"
+#ifdef USE_VDPAU
 #include "ADM_dynamicLoading.h"
 
 
