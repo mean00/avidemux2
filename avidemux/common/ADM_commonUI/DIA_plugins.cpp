@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 
-//#include "config.h"
+//#include "xonfig.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
 

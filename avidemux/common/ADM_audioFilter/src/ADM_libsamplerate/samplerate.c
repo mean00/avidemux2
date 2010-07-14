@@ -26,7 +26,7 @@
 #include	<stdlib.h>
 #include	<string.h>
 
-#include	"config.h"
+#include	"xonfig.h"
 #else
 #include "ADM_default.h"
 #endif

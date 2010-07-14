@@ -7,7 +7,6 @@ DIA_postproc.cpp
 DIA_bitrateHisto.cpp  
 DIA_prefs.cpp     
 DIA_builtin.cpp       
-DIA_requant.cpp   
 DIA_jobs_save.cpp
 DIA_plugins.cpp
 )

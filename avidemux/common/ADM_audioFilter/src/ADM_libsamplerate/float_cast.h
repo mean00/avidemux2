@@ -45,12 +45,12 @@
 **		long int lrint  (double x) ;
 */
 
-// MEANX #include "config.h"
+// MEANX #include "xonfig.h"
 
 /*
 **	The presence of the required functions are detected during the configure
 **	process and the values HAVE_LRINT and HAVE_LRINTF are set accordingly in
-**	the config.h file.
+**	the xonfig.h file.
 */
 
 #define		HAVE_LRINT_REPLACEMENT	0
