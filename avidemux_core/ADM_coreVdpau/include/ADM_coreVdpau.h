@@ -25,6 +25,7 @@ class admVdpau
 {
 protected:
     static GUI_WindowInfo      myWindowInfo;
+    static bool queryYUVPutBitSupport(VdpRGBAFormat rgb,VdpYCbCrFormat yuv);
 public:
     static bool         init(GUI_WindowInfo *x);
     static const char  *getErrorString(VdpStatus er);

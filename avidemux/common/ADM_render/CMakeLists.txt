@@ -5,6 +5,7 @@ GUI_render.cpp
 GUI_simpleRender.cpp
 GUI_sdlRender.cpp
 GUI_xvRender.cpp
+GUI_vdpauRender.cpp
 )
 
 IF (APPLE)
@@ -21,5 +22,9 @@ ENDIF (GETTEXT_FOUND)
 IF (USE_SDL)
        TARGET_LINK_LIBRARIES(${ADM_LIB}  ${SDL_LIBRARY})
 ENDIF (USE_SDL)
+
+IF (USE_VDPAU)
+       TARGET_LINK_LIBRARIES(${ADM_LIB}  ADM_coreVDPAU6)
+ENDIF (USE_VDPAU)
 
 ADM_INSTALL_LIB(${ADM_LIB})

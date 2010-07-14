@@ -18,6 +18,11 @@
 
 #ifdef USE_VDPAU
 GUI_WindowInfo      admVdpau::myWindowInfo;
+
+#define CHECK(x) if(!isOperationnal()) {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}\
+                 VdpStatus r=x;\
+                 if(VDP_STATUS_OK!=r) {ADM_warning(#x" call failed with error=%s\n",getErrorString(r));}return r;
+
 /**
     \fn VdpFunctions
     
@@ -32,9 +37,14 @@ typedef struct
     VdpVideoSurfaceDestroy  *destroySurface;
     VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
 
+
+ 
+
     VdpOutputSurfaceCreate  *createOutputSurface;
     VdpOutputSurfaceDestroy *destroyOutputSurface;
     VdpOutputSurfacePutBitsYCbCr *putBitsYV12OutputSurface;
+    VdpOutputSurfaceQueryPutBitsYCbCrCapabilities *putBitsCapsOutputSurface;
+
 
     VdpDecoderCreate        *decoderCreate;
     VdpDecoderDestroy       *decoderDestroy;
@@ -105,6 +115,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(createOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_CREATE);
     GetMe(destroyOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_DESTROY);
     GetMe(putBitsYV12OutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_PUT_BITS_Y_CB_CR);
+    GetMe(putBitsCapsOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_QUERY_PUT_BITS_Y_CB_CR_CAPABILITIES);
 
     GetMe(presentationQueueDestroy,VDP_FUNC_ID_PRESENTATION_QUEUE_DESTROY);
     GetMe(presentationQueueCreate,VDP_FUNC_ID_PRESENTATION_QUEUE_CREATE);
@@ -127,8 +138,37 @@ bool admVdpau::init(GUI_WindowInfo *x)
 
     coreVdpWorking=true;
     myWindowInfo=*x;
+#if 0
+    ADM_info("Checking supported format\n");
+// See http://us.download.nvidia.com/XFree86/Linux-x86/195.36.24/README/vdpausupport.html#vdpau-implementation-limits-output-surface
+    ADM_info("FORMAT_B8G8R8A8->VDP_YCBCR_FORMAT_NV12 : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_B8G8R8A8,VDP_YCBCR_FORMAT_NV12));
+    ADM_info("FORMAT_B8G8R8A8->VDP_YCBCR_FORMAT_YV12 : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_B8G8R8A8,VDP_YCBCR_FORMAT_YV12));
+    ADM_info("FORMAT_B8G8R8A8->VDP_YCBCR_FORMAT_UYVY : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_B8G8R8A8,VDP_YCBCR_FORMAT_UYVY));
+    ADM_info("FORMAT_B8G8R8A8->VDP_YCBCR_FORMAT_Y8U8V8A8 : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_B8G8R8A8,VDP_YCBCR_FORMAT_Y8U8V8A8));
+
+    ADM_info("FORMAT_R8G8B8A8->VDP_YCBCR_FORMAT_NV12 : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_R8G8B8A8,VDP_YCBCR_FORMAT_NV12));
+    ADM_info("FORMAT_R8G8B8A8->VDP_YCBCR_FORMAT_YV12 : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_R8G8B8A8,VDP_YCBCR_FORMAT_YV12));
+    ADM_info("FORMAT_R8G8B8A8->VDP_YCBCR_FORMAT_UYVY : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_R8G8B8A8,VDP_YCBCR_FORMAT_UYVY));
+#endif
+
+    ADM_info("VDPAU renderer init ok.\n");
     return true;
 }
+/**
+    \fn queryYUVPutBitSupport
+*/
+bool admVdpau::queryYUVPutBitSupport(VdpRGBAFormat rgb,VdpYCbCrFormat yuv)
+{
+    VdpBool c;
+    if(VDP_STATUS_OK!=funcs.putBitsCapsOutputSurface(vdpDevice,rgb,yuv,&c))
+    {
+        ADM_warning("Query YCBCR put bits failed\n");
+        return false;
+    }
+    if(c) return true;
+    return false;
+}
+
 /**
     \fn isOperationnal
 */
@@ -143,7 +183,7 @@ bool admVdpau::isOperationnal(void)
 VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
             uint32_t  max_references,VdpDecoder *      decoder)
 {
-    return funcs.decoderCreate(vdpDevice,profile,width,height,max_references,decoder);
+    CHECK(funcs.decoderCreate(vdpDevice,profile,width,height,max_references,decoder));
 }
 /**
     \fn
@@ -151,7 +191,7 @@ VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width
 */
 VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 {
-    return funcs.decoderDestroy(decoder);
+    CHECK(funcs.decoderDestroy(decoder));
 }
 /**
     \fn
@@ -160,7 +200,7 @@ VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 
 VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface)
 {
-return funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface);
+    CHECK(funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface));
 }
 /**
     \fn
@@ -169,7 +209,7 @@ return funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface);
 
 VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 {
-    return funcs.destroySurface(surface);
+    CHECK(funcs.destroySurface(surface));
 }
 /**
     \fn
@@ -178,12 +218,12 @@ VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 
 VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3])
 {
-  return funcs.getDataSurface(
+  CHECK(funcs.getDataSurface(
                 surface,
                 VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
                 ( void * const *)planes, //void * const *   destination_data,
                 stride //destination_pitches
-                );
+                ));
 }
 /**
     \fn
@@ -201,7 +241,7 @@ VdpStatus admVdpau::decoderRender(
     uint32_t                   bitstream_buffer_count,
     VdpBitstreamBuffer const * bitstream_buffers)
 {
-    return funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers);
+    CHECK(funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers));
 }
 /**
     \fn
@@ -214,7 +254,7 @@ VdpStatus admVdpau::outputSurfaceCreate(
     uint32_t           height,
     VdpOutputSurface * surface)
 {
-    return funcs.createOutputSurface(vdpDevice,rgba_format, width,height,surface);
+    CHECK(funcs.createOutputSurface(vdpDevice,rgba_format, width,height,surface));
 }
 /**
     \fn
@@ -223,7 +263,7 @@ VdpStatus admVdpau::outputSurfaceCreate(
 
 VdpStatus admVdpau::outputSurfaceDestroy(    VdpOutputSurface surface)
 {
-    return funcs.destroyOutputSurface(surface);
+    CHECK(funcs.destroyOutputSurface(surface));
 }
 /**
     \fn
@@ -234,11 +274,11 @@ VdpStatus admVdpau::outPutSurfacePutBitsYV12( VdpOutputSurface     surface,
                         uint8_t *planes[3],
                         uint32_t pitches[3])
 {
-    return funcs.putBitsYV12OutputSurface(surface,VDP_YCBCR_FORMAT_YV12,
+    CHECK(funcs.putBitsYV12OutputSurface(surface,VDP_YCBCR_FORMAT_YV12,
                                                        (void const * const *) planes,
                                                         pitches,
                                                         NULL,//VdpRect const *      destination_rect,
-                                                        NULL); //VdpCSCMatrix const * csc_matrix  );
+                                                        NULL)); //VdpCSCMatrix const * csc_matrix  );
 }
 /**
     \fn
@@ -247,7 +287,7 @@ VdpStatus admVdpau::outPutSurfacePutBitsYV12( VdpOutputSurface     surface,
 
 VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
 {
-    return funcs.presentationQueueCreate(vdpDevice,queueX11,queue);
+    CHECK(funcs.presentationQueueCreate(vdpDevice,queueX11,queue));
 
 }
 /**
@@ -257,7 +297,7 @@ VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
 
 VdpStatus admVdpau::presentationQueueDestroy(VdpPresentationQueue queue)
 {
-    return funcs.presentationQueueDestroy(queue);
+    CHECK(funcs.presentationQueueDestroy(queue));
 }
 /**
     \fn
@@ -267,13 +307,13 @@ VdpStatus admVdpau::presentationQueueDestroy(VdpPresentationQueue queue)
 VdpStatus admVdpau::presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface)
 {
     VdpTime t;
-    VdpStatus r=funcs.presentationQueueGetTime(queue,&t);
-    if(VDP_STATUS_OK!=r)
+    VdpStatus z=funcs.presentationQueueGetTime(queue,&t);
+    if(VDP_STATUS_OK!=z)
     {
         ADM_warning("GetTime failed\n");
-        return r;
+        return z;
     }
-    return funcs.presentationQueueDisplay(queue,outputSurface,0,0,t);
+    CHECK(funcs.presentationQueueDisplay(queue,outputSurface,0,0,t));
 }
 #else 
 //******************************************

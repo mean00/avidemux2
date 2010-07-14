@@ -231,6 +231,10 @@ char     *globalGlyphName=NULL;
 #ifdef USE_XV
                              ,{RENDER_XV,   QT_TR_NOOP("XVideo (best)"),NULL}
 #endif
+#ifdef USE_VDPAU
+                             ,{RENDER_VDPAU,   QT_TR_NOOP("VDPAU (best)"),NULL}
+#endif
+
 #ifdef USE_SDL
 #ifdef __WIN32
                              ,{RENDER_SDL,      QT_TR_NOOP("SDL (GDI)"),NULL}

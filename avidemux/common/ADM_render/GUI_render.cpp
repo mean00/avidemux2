@@ -34,6 +34,10 @@
 #include "GUI_sdlRender.h"
 #endif
 
+#ifdef USE_VDPAU
+#include "GUI_vdpauRender.h"
+#endif
+
 #include "ADM_colorspace.h"
 #include "DIA_uiTypes.h"
 
@@ -239,6 +243,23 @@ bool spawnRenderer(void)
         MUI_getWindowInfo(draw, &xinfo);
         switch(prefRenderer)
         {
+#if defined(USE_VDPAU)
+       case RENDER_VDPAU:
+                renderer=new vdpauRender();
+                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
+                if(!r)
+                {
+                    delete renderer;
+                    renderer=NULL;
+                    ADM_warning("vdpau init failed\n");
+                }
+                else
+                {
+                    ADM_info("vdpau init ok\n");
+                }
+                break;
+#endif
+
 #if defined(USE_XV)
        case RENDER_XV:
                 renderer=new XvRender();

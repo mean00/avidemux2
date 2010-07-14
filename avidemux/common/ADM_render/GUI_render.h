@@ -63,6 +63,7 @@ typedef enum
 #ifdef USE_XV
         RENDER_XV=1,
 #endif
+
 #ifdef USE_SDL
         RENDER_SDL=2,
 
@@ -70,6 +71,11 @@ typedef enum
 		RENDER_DIRECTX=3,
 #endif
 #endif
+#ifdef USE_VDPAU
+        RENDER_VDPAU=4,
+
+#endif
+
         RENDER_LAST       
 
 
