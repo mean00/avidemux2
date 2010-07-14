@@ -1,6 +1,7 @@
 /***************************************************************************
     \file GUI_vdpauRender.cpp
     \author mean fixounet@free.fr (C) 2010
+    \brief  Use vdpau as renderer with hw rescaling.
 
  ***************************************************************************/
 
@@ -15,18 +16,16 @@
 
 #include "ADM_default.h"
 #ifdef USE_VDPAU
-
-
 #include "GUI_render.h"
 
 #include "GUI_accelRender.h"
 #include "GUI_vdpauRender.h"
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 
-static VdpOutputSurface surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
-static VdpVideoSurface  input=VDP_INVALID_HANDLE;
-static VdpVideoMixer    mixer=VDP_INVALID_HANDLE;
-static int              currentSurface=0;
+static VdpOutputSurface     surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
+static VdpVideoSurface      input=VDP_INVALID_HANDLE;
+static VdpVideoMixer        mixer=VDP_INVALID_HANDLE;
+static int                  currentSurface=0;
 static VdpPresentationQueue queue=VDP_INVALID_HANDLE;
 //________________Wrapper around Xv_______________
 /**
@@ -51,19 +50,13 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
     // Create couple of outputSurface
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     currentSurface=0;
+    if(!reallocOutputSurface(displayWidth,displayHeight))
+    {
+        goto badInit;
+    }
     if(VDP_STATUS_OK!=admVdpau::surfaceCreate(w,h,&input)) 
     {
         ADM_error("Cannot create input Surface\n");
-        goto badInit;
-    }
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,w,h,&surface[0])) 
-    {
-        ADM_error("Cannot create outputSurface0\n");
-        goto badInit;
-    }
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,w,h,&surface[1])) 
-    {
-        ADM_error("Cannot create outputSurface1\n");
         goto badInit;
     }
     if(VDP_STATUS_OK!=admVdpau::presentationQueueCreate(&queue)) 
@@ -81,6 +74,26 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
 badInit:
     
     return false;
+}
+/**
+    \fn reallocOutputSurface
+*/
+bool vdpauRender::reallocOutputSurface(uint32_t tgtWidth, uint32_t tgtHeight)
+{
+    if(surface[0]!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface[0]);
+    if(surface[1]!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface[1]);
+    surface[0]=surface[1]=VDP_INVALID_HANDLE;
+    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,tgtWidth,tgtHeight,&surface[0])) 
+    {
+        ADM_error("Cannot create outputSurface0\n");
+        return false;
+    }
+    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,tgtWidth,tgtHeight,&surface[1])) 
+    {
+        ADM_error("Cannot create outputSurface1\n");
+        return false;
+    }
+    return true;
 }
 /**
     \fn cleanup
@@ -104,7 +117,7 @@ bool vdpauRender::cleanup(void)
 bool vdpauRender::stop(void)
 {
 	 
-	 printf("[Vdpau]Xv end\n");
+	 printf("[Vdpau]Vdpau render end\n");
      cleanup();
 	 return 1;
 }
@@ -126,7 +139,7 @@ bool vdpauRender::displayImage(ADMImage *pic)
             input,
             planes,pitches))
     {
-        ADM_warning("video surface : Cannot putbits\n");
+        ADM_warning("[Vdpau] video surface : Cannot putbits\n");
         return false;
     }
 
@@ -134,13 +147,13 @@ bool vdpauRender::displayImage(ADMImage *pic)
     if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,input,surface[next], pic->_width,pic->_height))
 
     {
-        ADM_warning("Cannot mixerRender\n");
+        ADM_warning("[Vdpau] Cannot mixerRender\n");
         return false;
     }
     // Display!
     if(VDP_STATUS_OK!=admVdpau::presentationQueueDisplay(queue,surface[next]))
     {
-        ADM_warning("Cannot display on presenation queue\n");
+        ADM_warning("[Vdpau] Cannot display on presenation queue\n");
         return false;
     }
     currentSurface=next;
@@ -152,9 +165,13 @@ bool vdpauRender::displayImage(ADMImage *pic)
 */
 bool vdpauRender::changeZoom(renderZoom newZoom)
 {
-        ADM_info("[Vdpau]changing zoom, xv render.\n");
+        ADM_info("[Vdpau]changing zoom.\n");
         calcDisplayFromZoom(newZoom);
         currentZoom=newZoom;
+        if(!reallocOutputSurface(displayWidth,displayHeight))
+        {
+            ADM_error("[VdpauRender] Change zoome failed\n");
+        }
         return true;
 }
 /**
@@ -163,10 +180,10 @@ bool vdpauRender::changeZoom(renderZoom newZoom)
 bool vdpauRender::refresh(void)
 {
     // since we dont know how to redraw without help, ask above
-    ADM_info("[Vdpau]refresh\n");
+    ADM_info("[Vdpau]Rrefresh\n");
     if(VDP_STATUS_OK!=admVdpau::presentationQueueDisplay(queue,surface[currentSurface]))
     {
-        ADM_warning("[refresh]Cannot display on presenation queue\n");
+        ADM_warning("[Vdpau] Refresh : Cannot display on presenation queue\n");
         return false;
     }
     renderCompleteRedrawRequest();

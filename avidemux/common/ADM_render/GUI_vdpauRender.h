@@ -25,6 +25,7 @@ class vdpauRender: public VideoRenderBase
       protected:
                             GUI_WindowInfo info;
                         bool cleanup(void);
+                        bool reallocOutputSurface(uint32_t tgtWidth, uint32_t tgtHeight);
       public:
                              vdpauRender( void ) ;
                              ~vdpauRender();
