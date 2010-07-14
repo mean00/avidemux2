@@ -13,10 +13,11 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
+#ifdef USE_VDPAU
 #include "../include/ADM_coreVdpau.h"
 #include "ADM_dynamicLoading.h"
 
-#ifdef USE_VDPAU
+
 GUI_WindowInfo      admVdpau::myWindowInfo;
 
 #define CHECK(x) if(!isOperationnal()) {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}\
