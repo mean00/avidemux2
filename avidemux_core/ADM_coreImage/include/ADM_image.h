@@ -147,6 +147,7 @@ public:
 };
 /**
     \class ADMImageRef
+    \brief That image is a shell for another image. You cannot write to it!
 */
 class ADMImageRef: public ADMImage
 {
@@ -162,6 +163,17 @@ public:
         virtual      uint8_t        *GetReadPtr(ADM_PLANE plane);
         virtual      bool           isWrittable(void);
         virtual      ADMImageRef    *castToRef(void) {return this;};
+};
+/**
+    \class ADMImageRefWrittable
+    \brief That image is a shell for another image. You can write to it!
+*/
+class ADMImageRefWrittable: public ADMImageRef
+{
+public:
+                 ADMImageRefWrittable(uint32_t w, uint32_t h) : ADMImageRef(w,h) {};
+    virtual      bool           isWrittable(void) {return true;}
+    virtual      uint8_t        *GetWritePtr(ADM_PLANE plane) {return GetReadPtr(plane);}
 };
 
 void drawString(ADMImage *dst, int x, int y, const char *s) ;
