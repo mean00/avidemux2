@@ -69,8 +69,39 @@ bool         addBorders::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, addBorder_param,&param);
 }
-/**
+#define Y_BLACK 16
+#define UV_BLACK 128
+static bool blackenHz(uint32_t w,uint32_t nbLine,uint8_t *ptr[3],uint32_t strides[3])
+{
+    // y
+    uint8_t *p=ptr[0];
+    uint32_t s=strides[0];
+    for(int y=0;y<nbLine;y++)
+    {
+        memset(p,Y_BLACK,w);
+        p+=s;
+    }
+    p=ptr[1];
+    s=strides[1];
+    nbLine/=2;
+    w/=2;
+    for(int y=0;y<nbLine;y++)
+    {
+        memset(p,UV_BLACK,w);
+        p+=s;
+    }
+    p=ptr[2];
+    s=strides[2];
+    for(int y=0;y<nbLine;y++)
+    {
+        memset(p,UV_BLACK,w);
+        p+=s;
+    }
+    return true;
+}
 
+/**
+    \fn getNextFrame
 */
 bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
 {
@@ -95,77 +126,32 @@ bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
         return false;
     }
     // Now do fill
+
+    // Top...
+    uint8_t *ptr[3];
+    uint32_t stride[3];
+    image->GetPitches(stride);
+    image->GetWritePlanes(ptr);
+    blackenHz(image->_width,param.top,ptr,stride);
+    // Left
+    blackenHz(param.left,image->_height,ptr,stride);
+    // Right
+    uint32_t pWidth=previousFilter->getInfo()->width;
+    ptr[0]+=param.left+pWidth;
+    ptr[1]+=(param.left+pWidth)/2;
+    ptr[2]+=(param.left+pWidth)/2;
+    blackenHz(param.right,image->_height,ptr,stride);
+    // Bottom
+    image->GetPitches(stride);
+    image->GetWritePlanes(ptr);
+    uint32_t offsetLine=previousFilter->getInfo()->height+param.top;
+    ptr[0]+=offsetLine*stride[0];
+    ptr[1]+=(offsetLine/2)*stride[1];
+    ptr[2]+=(offsetLine/2)*stride[2];
+    blackenHz(image->_width,param.bottom,ptr,stride);
     return true;
 }
 
-#if 0
-		if(frame>=_info.nb_frames) 
-		{
-			printf("Filter : out of bound!\n");
-			return 0;
-		}
-	
-		ADM_assert(_param);									
-								
-			// read uncompressed frame
-       		if(!_in->getFrameNumberNoAlloc(frame, len,_uncompressed,flags)) return 0;
-       		
-				// blacken screen
-				memset(YPLANE(data),16,_info.width*_info.height);
-				memset(UPLANE(data),128,(_info.width*_info.height)>>2);
-				memset(VPLANE(data),128,(_info.width*_info.height)>>2);
-
-				// do luma
-				uint8_t *src,*dest;
-       		uint32_t y,x,line,lineout;
-       		
-       		y=_in->getInfo()->height;
-       		x=_in->getInfo()->width;
-       		line=x;
-		lineout=_info.width;
-		
-		// copy Luma
-       		src=YPLANE(_uncompressed);
-       		dest=YPLANE(data)+_param->left+_info.width*_param->top;
-       		
-       		for(uint32_t k=y;k>0;k--)
-       		{
-       		 	    memcpy(dest,src,line);
-       		 	    src+=line;
-       		 	    dest+=lineout;
-       		}
-       		 
-		// U and V now
-		uint8_t *src_u,*src_v;
-		uint8_t *dst_u,*dst_v;
-
-       		src_u=UPLANE(_uncompressed);
-       		src_v=VPLANE(_uncompressed);
-       		line>>=1;
-       		lineout>>=1;       		       		 	
-		dst_u=UPLANE( data)+(_info.width*_param->top>>2)+
-						(_param->left>>1);;
-		dst_v= VPLANE( data)+(_info.width*_param->top>>2)+
-						(_param->left>>1);;
-
-       		 for(uint32_t k=y>>1;k>0;k--)
-       		 {
-       		 	memcpy(dst_u,src_u,line);
-       		 	memcpy(dst_v,src_v,line);
-
-       			src_u+=line;
-       			src_v+=line;
-
-       			dst_u+=lineout;
-       		    	dst_v+=lineout;
-
-       		 }
-       		  *len= _info.width*_info.height+(_info.width*_info.height>>1);
-		  data->copyInfo(_uncompressed);
-
-      return 1;
-}
-#endif
 /**
     \fn configure
 */
