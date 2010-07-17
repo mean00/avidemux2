@@ -65,6 +65,9 @@ public:
             VdpOutputSurface     surface,
             uint8_t *planes[3],
             uint32_t pitches[3]);
+    // Warning only RGBA32 supported!
+    static VdpStatus outputSurfaceGetBitsNative(VdpOutputSurface     surface,  
+                        uint8_t *buffer, uint32_t w,uint32_t h);
     /* Presentation queue */
     static VdpStatus presentationQueueCreate(VdpPresentationQueue *queue);
     static VdpStatus presentationQueueDestroy(VdpPresentationQueue queue);

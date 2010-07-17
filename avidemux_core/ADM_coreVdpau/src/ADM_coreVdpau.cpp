@@ -45,7 +45,7 @@ typedef struct
     VdpOutputSurfaceDestroy *destroyOutputSurface;
     VdpOutputSurfacePutBitsYCbCr *putBitsYV12OutputSurface;
     VdpOutputSurfaceQueryPutBitsYCbCrCapabilities *putBitsCapsOutputSurface;
-
+    VdpOutputSurfaceGetBitsNative                 *getBitsNativeOutputSurface;
 
     VdpDecoderCreate        *decoderCreate;
     VdpDecoderDestroy       *decoderDestroy;
@@ -123,6 +123,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(destroyOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_DESTROY);
     GetMe(putBitsYV12OutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_PUT_BITS_Y_CB_CR);
     GetMe(putBitsCapsOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_QUERY_PUT_BITS_Y_CB_CR_CAPABILITIES);
+    GetMe(getBitsNativeOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_GET_BITS_NATIVE);
 
     GetMe(presentationQueueDestroy,VDP_FUNC_ID_PRESENTATION_QUEUE_DESTROY);
     GetMe(presentationQueueCreate,VDP_FUNC_ID_PRESENTATION_QUEUE_CREATE);
@@ -135,7 +136,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(mixerDestroy,VDP_FUNC_ID_VIDEO_MIXER_DESTROY);
     GetMe(mixerRender,VDP_FUNC_ID_VIDEO_MIXER_RENDER);
   
-
+    
 
     if(VDP_STATUS_OK!=funcs.presentationQueueDisplayX11Create(vdpDevice,x->window,&queueX11))
     {
@@ -305,6 +306,20 @@ VdpStatus admVdpau::outPutSurfacePutBitsYV12( VdpOutputSurface     surface,
                                                         NULL,//VdpRect const *      destination_rect,
                                                         NULL)); //VdpCSCMatrix const * csc_matrix  );
 }
+/**
+    \fn outputSurfaceGetBitsNative
+*/
+VdpStatus admVdpau::outputSurfaceGetBitsNative(VdpOutputSurface     surface, uint8_t *buffer, uint32_t w,uint32_t h)
+{
+    // Only support RGBA 32
+    uint32_t pitches[3]={w*4,0,0};
+    uint8_t *ptr[4]={buffer,NULL,NULL};
+    CHECK(funcs.getBitsNativeOutputSurface( surface,
+    NULL, // Rect
+     ( void * const *)ptr,
+    pitches));
+}
+
 /**
     \fn
     \brief
