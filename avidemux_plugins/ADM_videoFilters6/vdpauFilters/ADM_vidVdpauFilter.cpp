@@ -66,6 +66,9 @@ bool vdpauVideoFilter::setupVdpau(void)
         ADM_warning("Vdpau not operationnal\n");
         return false;
     }
+    // check if we have something to do
+    if(!configuration.deinterlace && !configuration.resizeToggle)
+        return false;
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,
                         info.width,info.height,&surface)) 
     {
@@ -79,7 +82,7 @@ bool vdpauVideoFilter::setupVdpau(void)
         goto badInit;
     }
     if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            previousFilter->getInfo()->height,&mixer)) 
+                                            previousFilter->getInfo()->height,&mixer,configuration.deinterlace)) 
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
@@ -238,7 +241,8 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     }
 
     // Call mixer...
-    if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,input,surface, info.width,info.height))
+    VdpOutputSurface surfaces[3]={surface,surface,surface};
+    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture( mixer,input,surfaces, info.width,info.height))
 
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");

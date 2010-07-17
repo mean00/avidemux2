@@ -15,59 +15,20 @@
 #include "ADM_default.h"
 #include "../include/ADM_coreVdpau.h"
 #ifdef USE_VDPAU
+#include "../include/ADM_coreVdpauInternal.h"
 #include "ADM_dynamicLoading.h"
 
 
 GUI_WindowInfo      admVdpau::myWindowInfo;
 
-#define CHECK(x) if(!isOperationnal()) {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}\
-                 VdpStatus r=x;\
-                 if(VDP_STATUS_OK!=r) {ADM_warning(#x" call failed with error=%s\n",getErrorString(r));}return r;
-
-/**
-    \fn VdpFunctions
-    
-*/
-typedef struct 
+namespace ADM_coreVdpau
 {
-    VdpGetErrorString       *getErrorString;
-    VdpGetApiVersion        *getApiVersion;
-    VdpGetInformationString *getInformationString;
+ VdpFunctions          funcs;
+ VdpDevice             vdpDevice;
+}
 
-    VdpVideoSurfaceCreate   *createSurface;
-    VdpVideoSurfaceDestroy  *destroySurface;
-    VdpVideoSurfaceGetBitsYCbCr *getDataSurface;
-    VdpVideoSurfacePutBitsYCbCr *surfacePutBitsYCbCr;
-
- 
-
-    VdpOutputSurfaceCreate  *createOutputSurface;
-    VdpOutputSurfaceDestroy *destroyOutputSurface;
-    VdpOutputSurfacePutBitsYCbCr *putBitsYV12OutputSurface;
-    VdpOutputSurfaceQueryPutBitsYCbCrCapabilities *putBitsCapsOutputSurface;
-    VdpOutputSurfaceGetBitsNative                 *getBitsNativeOutputSurface;
-
-    VdpDecoderCreate        *decoderCreate;
-    VdpDecoderDestroy       *decoderDestroy;
-    VdpDecoderRender        *decoderRender;
-
-
-    VdpPresentationQueueTargetDestroy *presentationQueueDestroy;
-    VdpPresentationQueueCreate        *presentationQueueCreate;
-    VdpPresentationQueueGetTime       *presentationQueueGetTime;
-    VdpPresentationQueueDisplay       *presentationQueueDisplay;
-
-    VdpVideoMixerCreate               *mixerCreate;
-    VdpVideoMixerDestroy              *mixerDestroy;
-    VdpVideoMixerRender               *mixerRender;
-
-    VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;
-}VdpFunctions;
-
-static VdpFunctions          funcs;
 static ADM_LibWrapper        vdpauDynaLoader;
 static VdpDeviceCreateX11    *ADM_createVdpX11;
-static VdpDevice             vdpDevice;
 static VdpGetProcAddress     *vdpProcAddress;
 static bool                  coreVdpWorking=false;
 static VdpPresentationQueueTarget  queueX11;
@@ -78,7 +39,7 @@ static VdpPresentationQueueTarget  queueX11;
 static void *getFunc(uint32_t id)
 {
     void *f;
-    if(VDP_STATUS_OK!=vdpProcAddress(vdpDevice,id,&f)) return NULL;
+    if(VDP_STATUS_OK!=vdpProcAddress(ADM_coreVdpau::vdpDevice,id,&f)) return NULL;
     return (void *)f;
 }
 
@@ -88,7 +49,7 @@ static void *getFunc(uint32_t id)
 */
 bool admVdpau::init(GUI_WindowInfo *x)
 {
-    memset(&funcs,0,sizeof(funcs));
+    memset(&ADM_coreVdpau::funcs,0,sizeof(ADM_coreVdpau::funcs));
     if(false==vdpauDynaLoader.loadLibrary("/usr/lib/libvdpau.so"))
     {
         ADM_info("Cannot load libvdpau.so\n");
@@ -99,12 +60,12 @@ bool admVdpau::init(GUI_WindowInfo *x)
 
     //    
     // try to create....
-    if( VDP_STATUS_OK!=ADM_createVdpX11((Display*)x->display,0,&vdpDevice,&vdpProcAddress))
+    if( VDP_STATUS_OK!=ADM_createVdpX11((Display*)x->display,0,&ADM_coreVdpau::vdpDevice,&vdpProcAddress))
     {
         return false;
     }
     // Now that we have the vdpProcAddress, time to get the functions....
-#define GetMe(fun,id)         funcs.fun= (typeof(funcs.fun))getFunc(id);ADM_assert(funcs.fun); 
+#define GetMe(fun,id)         ADM_coreVdpau::funcs.fun= (typeof(ADM_coreVdpau::funcs.fun))getFunc(id);ADM_assert(ADM_coreVdpau::funcs.fun); 
         
     GetMe(getErrorString,VDP_FUNC_ID_GET_ERROR_STRING);
     GetMe(getApiVersion,VDP_FUNC_ID_GET_API_VERSION);
@@ -135,10 +96,10 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(mixerCreate,VDP_FUNC_ID_VIDEO_MIXER_CREATE);
     GetMe(mixerDestroy,VDP_FUNC_ID_VIDEO_MIXER_DESTROY);
     GetMe(mixerRender,VDP_FUNC_ID_VIDEO_MIXER_RENDER);
-  
-    
+    GetMe(mixerEnableFeatures,VDP_FUNC_ID_VIDEO_MIXER_SET_FEATURE_ENABLES);
+    GetMe(mixerQueryFeatureSupported,VDP_FUNC_ID_VIDEO_MIXER_QUERY_FEATURE_SUPPORT);
 
-    if(VDP_STATUS_OK!=funcs.presentationQueueDisplayX11Create(vdpDevice,x->window,&queueX11))
+    if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.presentationQueueDisplayX11Create(ADM_coreVdpau::vdpDevice,x->window,&queueX11))
     {
         ADM_warning("Cannot create X11 Presentation Queue\n");
         return false;
@@ -146,8 +107,8 @@ bool admVdpau::init(GUI_WindowInfo *x)
 
     const char *versionString=NULL;
     uint32_t version=0xff;
-        funcs.getInformationString(&versionString);
-        funcs.getApiVersion(&version);
+        ADM_coreVdpau::funcs.getInformationString(&versionString);
+        ADM_coreVdpau::funcs.getApiVersion(&version);
         ADM_info("[VDPAU] API : 0x%x, info : %s\n",version,versionString);
 
     coreVdpWorking=true;
@@ -164,6 +125,13 @@ bool admVdpau::init(GUI_WindowInfo *x)
     ADM_info("FORMAT_R8G8B8A8->VDP_YCBCR_FORMAT_YV12 : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_R8G8B8A8,VDP_YCBCR_FORMAT_YV12));
     ADM_info("FORMAT_R8G8B8A8->VDP_YCBCR_FORMAT_UYVY : %d\n",(int)queryYUVPutBitSupport(VDP_RGBA_FORMAT_R8G8B8A8,VDP_YCBCR_FORMAT_UYVY));
 #endif
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL_SPATIAL : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL_SPATIAL));
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL         : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL));
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L5      : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L5));
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L3      : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L3));
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L1      : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L1));
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_NOISE_REDUCTION              : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_NOISE_REDUCTION));
+    ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_INVERSE_TELECINE             : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_INVERSE_TELECINE));
 
     ADM_info("VDPAU renderer init ok.\n");
     return true;
@@ -174,7 +142,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
 bool admVdpau::queryYUVPutBitSupport(VdpRGBAFormat rgb,VdpYCbCrFormat yuv)
 {
     VdpBool c;
-    if(VDP_STATUS_OK!=funcs.putBitsCapsOutputSurface(vdpDevice,rgb,yuv,&c))
+    if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.putBitsCapsOutputSurface(ADM_coreVdpau::vdpDevice,rgb,yuv,&c))
     {
         ADM_warning("Query YCBCR put bits failed\n");
         return false;
@@ -197,7 +165,7 @@ bool admVdpau::isOperationnal(void)
 VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
             uint32_t  max_references,VdpDecoder *      decoder)
 {
-    CHECK(funcs.decoderCreate(vdpDevice,profile,width,height,max_references,decoder));
+    CHECK(ADM_coreVdpau::funcs.decoderCreate(ADM_coreVdpau::vdpDevice,profile,width,height,max_references,decoder));
 }
 /**
     \fn
@@ -205,7 +173,7 @@ VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width
 */
 VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 {
-    CHECK(funcs.decoderDestroy(decoder));
+    CHECK(ADM_coreVdpau::funcs.decoderDestroy(decoder));
 }
 /**
     \fn
@@ -214,7 +182,7 @@ VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 
 VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface)
 {
-    CHECK(funcs.createSurface(vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface));
+    CHECK(ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface));
 }
 /**
     \fn
@@ -223,7 +191,7 @@ VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurfac
 
 VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 {
-    CHECK(funcs.destroySurface(surface));
+    CHECK(ADM_coreVdpau::funcs.destroySurface(surface));
 }
 /**
     \fn
@@ -232,7 +200,7 @@ VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 
 VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3])
 {
-  CHECK(funcs.getDataSurface(
+  CHECK(ADM_coreVdpau::funcs.getDataSurface(
                 surface,
                 VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
                 ( void * const *)planes, //void * const *   destination_data,
@@ -245,7 +213,7 @@ VdpStatus  admVdpau::getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],u
 */
 VdpStatus   admVdpau::surfacePutBits(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3])
 {
-    CHECK(funcs.surfacePutBitsYCbCr(surface,  
+    CHECK(ADM_coreVdpau::funcs.surfacePutBitsYCbCr(surface,  
                 VDP_YCBCR_FORMAT_YV12, //VdpYCbCrFormat   destination_ycbcr_format,
                 ( void * const *)planes, //void * const *   destination_data,
                 stride //destination_pitches
@@ -258,7 +226,7 @@ VdpStatus   admVdpau::surfacePutBits(VdpVideoSurface surface,uint8_t *planes[3],
 
 const char *admVdpau::getErrorString(VdpStatus er)
 {
-    return funcs.getErrorString(er);
+    return ADM_coreVdpau::funcs.getErrorString(er);
 }
 VdpStatus admVdpau::decoderRender(
     VdpDecoder                 decoder,
@@ -267,7 +235,7 @@ VdpStatus admVdpau::decoderRender(
     uint32_t                   bitstream_buffer_count,
     VdpBitstreamBuffer const * bitstream_buffers)
 {
-    CHECK(funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers));
+    CHECK(ADM_coreVdpau::funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers));
 }
 /**
     \fn
@@ -280,7 +248,7 @@ VdpStatus admVdpau::outputSurfaceCreate(
     uint32_t           height,
     VdpOutputSurface * surface)
 {
-    CHECK(funcs.createOutputSurface(vdpDevice,rgba_format, width,height,surface));
+    CHECK(ADM_coreVdpau::funcs.createOutputSurface(ADM_coreVdpau::vdpDevice,rgba_format, width,height,surface));
 }
 /**
     \fn
@@ -289,7 +257,7 @@ VdpStatus admVdpau::outputSurfaceCreate(
 
 VdpStatus admVdpau::outputSurfaceDestroy(    VdpOutputSurface surface)
 {
-    CHECK(funcs.destroyOutputSurface(surface));
+    CHECK(ADM_coreVdpau::funcs.destroyOutputSurface(surface));
 }
 /**
     \fn
@@ -300,7 +268,7 @@ VdpStatus admVdpau::outPutSurfacePutBitsYV12( VdpOutputSurface     surface,
                         uint8_t *planes[3],
                         uint32_t pitches[3])
 {
-    CHECK(funcs.putBitsYV12OutputSurface(surface,VDP_YCBCR_FORMAT_YV12,
+    CHECK(ADM_coreVdpau::funcs.putBitsYV12OutputSurface(surface,VDP_YCBCR_FORMAT_YV12,
                                                        (void const * const *) planes,
                                                         pitches,
                                                         NULL,//VdpRect const *      destination_rect,
@@ -314,7 +282,7 @@ VdpStatus admVdpau::outputSurfaceGetBitsNative(VdpOutputSurface     surface, uin
     // Only support RGBA 32
     uint32_t pitches[3]={w*4,0,0};
     uint8_t *ptr[4]={buffer,NULL,NULL};
-    CHECK(funcs.getBitsNativeOutputSurface( surface,
+    CHECK(ADM_coreVdpau::funcs.getBitsNativeOutputSurface( surface,
     NULL, // Rect
      ( void * const *)ptr,
     pitches));
@@ -327,7 +295,7 @@ VdpStatus admVdpau::outputSurfaceGetBitsNative(VdpOutputSurface     surface, uin
 
 VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
 {
-    CHECK(funcs.presentationQueueCreate(vdpDevice,queueX11,queue));
+    CHECK(ADM_coreVdpau::funcs.presentationQueueCreate(ADM_coreVdpau::vdpDevice,queueX11,queue));
 
 }
 /**
@@ -337,92 +305,23 @@ VdpStatus admVdpau::presentationQueueCreate(VdpPresentationQueue *queue)
 
 VdpStatus admVdpau::presentationQueueDestroy(VdpPresentationQueue queue)
 {
-    CHECK(funcs.presentationQueueDestroy(queue));
+    CHECK(ADM_coreVdpau::funcs.presentationQueueDestroy(queue));
 }
 /**
-    \fn
-    \brief
+    \fn    presentationQueueDisplay
+    \brief display immediately the outputsurface
 */
 
 VdpStatus admVdpau::presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface)
 {
     VdpTime t;
-    VdpStatus z=funcs.presentationQueueGetTime(queue,&t);
+    VdpStatus z=ADM_coreVdpau::funcs.presentationQueueGetTime(queue,&t);
     if(VDP_STATUS_OK!=z)
     {
         ADM_warning("GetTime failed\n");
         return z;
     }
-    CHECK(funcs.presentationQueueDisplay(queue,outputSurface,0,0,t));
-}
-/**
-    \fn mixerCreate
-*/
-VdpStatus admVdpau::mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer)
-{
-#define MIXER_NB_PARAM 3
-
-VdpVideoMixerParameter parameters[MIXER_NB_PARAM]=
-                                              {VDP_VIDEO_MIXER_PARAMETER_VIDEO_SURFACE_WIDTH,
-                                               VDP_VIDEO_MIXER_PARAMETER_VIDEO_SURFACE_HEIGHT,
-                                               VDP_VIDEO_MIXER_PARAMETER_CHROMA_TYPE};
-uint32_t color=VDP_CHROMA_TYPE_420;
-void    *values[MIXER_NB_PARAM]={&width,&height,&color};
-    
-    
-    VdpStatus e=funcs.mixerCreate(vdpDevice,
-                        0,NULL,
-                        MIXER_NB_PARAM,parameters,values,
-                        mixer);
-    if(VDP_STATUS_OK!=e)
-    {
-        
-        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
-        
-    }
-    return e;
-}
-/**
-    \fn mixerDestroy
-*/
-
-VdpStatus admVdpau::mixerDestroy(VdpVideoMixer mixer)
-{
-    CHECK(funcs.mixerDestroy(mixer));
-}
-/**
-    \fn mixerRender
-*/
-
-VdpStatus admVdpau::mixerRender(VdpVideoMixer mixer,
-                                VdpVideoSurface sourceSurface,
-                                VdpOutputSurface targetOutputSurface, 
-                                uint32_t targetWidth, 
-                                uint32_t targetHeight )
-{
-const VdpVideoSurface listOfSurface[1]={sourceSurface};
-const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
-      VdpStatus e=funcs.mixerRender(mixer,
-                VDP_INVALID_HANDLE,NULL,    // Background
-                VDP_VIDEO_MIXER_PICTURE_STRUCTURE_FRAME,
-                
-                0,            listOfInvalidSurface, // Past...
-                sourceSurface,                      // current
-                0,            listOfInvalidSurface, // Future
-                NULL,                               // source RECT
-                targetOutputSurface,
-                NULL,                               // dest Rec
-                NULL,                               // dest video Rec
-                0,NULL);                            // Layers
-                
-            
-  if(VDP_STATUS_OK!=e)
-    {
-        
-        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
-        
-    }
-    return e;
+    CHECK(ADM_coreVdpau::funcs.presentationQueueDisplay(queue,outputSurface,0,0,t));
 }
 
 #else 

@@ -30,7 +30,9 @@ class admVdpau
 protected:
     static GUI_WindowInfo      myWindowInfo;
 #ifdef USE_VDPAU
-    static bool queryYUVPutBitSupport(VdpRGBAFormat rgb,VdpYCbCrFormat yuv);
+    static bool         queryYUVPutBitSupport(VdpRGBAFormat rgb,VdpYCbCrFormat yuv);
+    static VdpStatus    mixerEnableFeature( VdpVideoMixer mixer,uint32_t nbFeature,VdpVideoMixerFeature *feature,VdpBool *enabledFeature);
+    static bool         mixerFeatureSupported(VdpVideoMixerFeature attribute);
 #endif
 public:
     static bool         init(GUI_WindowInfo *x);
@@ -73,9 +75,13 @@ public:
     static VdpStatus presentationQueueDestroy(VdpPresentationQueue queue);
     static VdpStatus presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface);
     /* Mixer */
-    static VdpStatus mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer);
+    static VdpStatus mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer,bool deinterlace=false);
     static VdpStatus mixerDestroy(VdpVideoMixer mixer);
     static VdpStatus mixerRender(VdpVideoMixer mixer,VdpVideoSurface sourceSurface,VdpOutputSurface targetOutputSurface, uint32_t targetWidth, uint32_t targetHeight );
+    static VdpStatus mixerRenderWithPastAndFuture(VdpVideoMixer mixer,
+                                VdpVideoSurface sourceSurface[3], // Past present future
+                                VdpOutputSurface targetOutputSurface,uint32_t targetWidth, uint32_t targetHeight );
+
 #endif
 };
 #endif
