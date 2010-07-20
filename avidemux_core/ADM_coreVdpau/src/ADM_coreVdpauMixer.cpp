@@ -19,9 +19,24 @@
 #include "../include/ADM_coreVdpauInternal.h"
 #include "ADM_dynamicLoading.h"
 
-
+#if 1
+    #define aprintf ADM_info
+#else
+    #define aprintf(...) {}
+#endif
 //GUI_WindowInfo      admVdpau::myWindowInfo;
 
+/**
+    \fn    mixerIsFeatureEnabled
+    \brief 
+*/
+bool admVdpau::mixerIsFeatureEnabled( VdpVideoMixer mixer,VdpVideoMixerFeature feature)
+{
+    VdpBool enabledFeature=true;
+    CHECKBOOL(ADM_coreVdpau::funcs.mixerGetFeaturesEnabled(mixer,1,&feature,&enabledFeature));
+    if(enabledFeature) return true;
+    return false;
+}
 /**
     \fn    mixerEnableFeature
     \brief enable mixer feature
@@ -29,6 +44,7 @@
 
 VdpStatus admVdpau::mixerEnableFeature( VdpVideoMixer mixer,uint32_t nbFeature,VdpVideoMixerFeature *feature,VdpBool *enabledFeature)
 {
+    aprintf("Enabling %d features\n",nbFeature);
     CHECK(ADM_coreVdpau::funcs.mixerEnableFeatures(mixer,nbFeature,feature,enabledFeature));
 }
 /**
@@ -130,18 +146,61 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
     \fn mixerRenderWithPastAndFuture
 */
 
-VdpStatus admVdpau::mixerRenderWithPastAndFuture(VdpVideoMixer mixer,
+VdpStatus admVdpau::mixerRenderWithPastAndFuture(
+                                bool topField,
+                                VdpVideoMixer mixer,
                                 VdpVideoSurface sourceSurface[3], // Past present future
                                 VdpOutputSurface targetOutputSurface, 
                                 uint32_t targetWidth, 
                                 uint32_t targetHeight )
 {
+    int nbPrev=2,nbNext=2;
+    VdpVideoMixerPictureStructure fieldType=VDP_VIDEO_MIXER_PICTURE_STRUCTURE_TOP_FIELD;
+    if(!topField) fieldType=VDP_VIDEO_MIXER_PICTURE_STRUCTURE_BOTTOM_FIELD;
+
+
+    VdpVideoSurface past[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
+    VdpVideoSurface future[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
+    VdpVideoSurface present;
+
+    present=sourceSurface[1];
+    
+
+    if(VDP_INVALID_HANDLE==sourceSurface[0] ) nbPrev=0;
+    else
+    {
+            if(topField) 
+            {
+                past[0]=sourceSurface[0];
+                past[1]=sourceSurface[0];
+            }else
+            {
+                past[0]=sourceSurface[1];
+                past[1]=sourceSurface[0];
+            }
+    }
+    if(VDP_INVALID_HANDLE==sourceSurface[2] ) nbNext=0;
+    else
+    {
+            if(topField) 
+            {
+                future[0]=sourceSurface[1];
+                future[1]=sourceSurface[2];
+            }else
+            {
+                future[0]=sourceSurface[2];
+                future[1]=sourceSurface[2];
+            }
+    }
+    // 0 & 1 p
+    //ADM_info("Deint : %d\n",(int)mixerIsFeatureEnabled(mixer,VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL_SPATIAL));
+
       VdpStatus e=ADM_coreVdpau::funcs.mixerRender(mixer,
                 VDP_INVALID_HANDLE,NULL,    // Background
-                VDP_VIDEO_MIXER_PICTURE_STRUCTURE_FRAME,
-                1,            sourceSurface+0, // Past...
-                              sourceSurface[1], // current
-                1,            sourceSurface+2, // Future
+                fieldType,
+                nbPrev,       past, // Past...
+                              present, // current
+                nbNext,       future, // Future
                 NULL,                               // source RECT
                 targetOutputSurface,
                 NULL,                               // dest Rec
@@ -152,7 +211,7 @@ VdpStatus admVdpau::mixerRenderWithPastAndFuture(VdpVideoMixer mixer,
   if(VDP_STATUS_OK!=e)
     {
         
-        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
+        ADM_warning("mixerRenderWithPastAndFuture  failed :%s\n",getErrorString(e));
         
     }
     return e;

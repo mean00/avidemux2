@@ -50,6 +50,7 @@ typedef struct
     VdpVideoMixerDestroy              *mixerDestroy;
     VdpVideoMixerRender               *mixerRender;
     VdpVideoMixerSetFeatureEnables    *mixerEnableFeatures;
+    VdpVideoMixerGetFeatureEnables    *mixerGetFeaturesEnabled;
     VdpVideoMixerQueryFeatureSupport  *mixerQueryFeatureSupported;
 
     VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;

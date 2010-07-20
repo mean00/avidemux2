@@ -98,7 +98,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(mixerRender,VDP_FUNC_ID_VIDEO_MIXER_RENDER);
     GetMe(mixerEnableFeatures,VDP_FUNC_ID_VIDEO_MIXER_SET_FEATURE_ENABLES);
     GetMe(mixerQueryFeatureSupported,VDP_FUNC_ID_VIDEO_MIXER_QUERY_FEATURE_SUPPORT);
-
+    GetMe(mixerGetFeaturesEnabled,VDP_FUNC_ID_VIDEO_MIXER_GET_FEATURE_ENABLES)
     if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.presentationQueueDisplayX11Create(ADM_coreVdpau::vdpDevice,x->window,&queueX11))
     {
         ADM_warning("Cannot create X11 Presentation Queue\n");
@@ -287,7 +287,19 @@ VdpStatus admVdpau::outputSurfaceGetBitsNative(VdpOutputSurface     surface, uin
      ( void * const *)ptr,
     pitches));
 }
-
+/**
+    \fn outputSurfaceGetBitsNative_FieldWeave
+*/
+VdpStatus admVdpau::outputSurfaceGetBitsNative_FieldWeave(VdpOutputSurface     surface, uint8_t *buffer, uint32_t w,uint32_t h)
+{
+    // Only support RGBA 32
+    uint32_t pitches[3]={w*8,0,0};
+    uint8_t *ptr[4]={buffer,NULL,NULL,NULL};
+    CHECK(ADM_coreVdpau::funcs.getBitsNativeOutputSurface( surface,
+    NULL, // Rect
+     ( void * const *)ptr,
+    pitches));
+}
 /**
     \fn
     \brief
