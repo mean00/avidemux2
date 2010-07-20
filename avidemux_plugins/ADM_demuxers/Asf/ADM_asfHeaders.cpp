@@ -67,9 +67,14 @@ uint8_t asfHeader::getHeaders(void)
     s->dump();
     switch(id->id)
     {
-#if 0      
+   
       case ADM_CHUNK_HEADER_EXTENSION_CHUNK:
       {
+        printf("Got header extension chunk\n");
+        s->skipChunk();
+        break;
+        }
+#if 0   
         s->skip(16); // Clock type extension ????
         printf("?? %d\n",s->read16());
         printf("?? %d\n",s->read32());
@@ -288,11 +293,21 @@ uint8_t asfHeader::loadVideo(asfChunk *s)
               return 0; 
             }
             printBih(&_video_bih);
+#if 1
+            if(_video_bih.biSize>sizeof(ADM_BITMAPINFOHEADER))
+            {
+                    x=_video_bih.biSize;
+#else
             if(x>sizeof(ADM_BITMAPINFOHEADER))
             {
+#endif
               _videoExtraLen=x-sizeof(ADM_BITMAPINFOHEADER);
               _videoExtraData=new uint8_t[_videoExtraLen];
               s->read(_videoExtraData,_videoExtraLen);
+              ADM_info("We have %d bytes of extra data for video.\n",(int)_videoExtraLen);
+            }else
+            {
+                ADM_info("No extra data for video\n");
             }
             return 1;
 }
