@@ -9,13 +9,20 @@
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
-#include "vdpauFilter.h"
-#include "vdpauFilter_desc.cpp"
+#include "vdpauFilterDeint.h"
+#include "vdpauFilterDeint_desc.cpp"
 #ifdef USE_VDPAU
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
 #define ADM_NB_SURFACES 3
+
+enum
+{
+    ADM_KEEP_TOP=0,
+    ADM_KEEP_BOTTOM=1,
+    ADM_KEEP_BOTH=2
+};
 
 /**
     \class vdpauVideoFilterDeint
@@ -23,19 +30,23 @@
 class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
 {
 protected:
+                    uint64_t             refPts;
+                    uint32_t             outputFrameNumber;
                     ADMColorScalerSimple *scaler;
                     bool                 passThrough;
                     bool                 setupVdpau(void);
                     bool                 cleanupVdpau(void);
-
+                    bool                 updateConf(void);
                     uint8_t             *tempBuffer;
-                    vdpauFilter          configuration;
+                    vdpauFilterDeint     configuration;
                     VdpOutputSurface     surface;
                     VdpVideoSurface      input[ADM_NB_SURFACES];
                     uint32_t             frameDesc[ADM_NB_SURFACES];
                     uint32_t             currentIndex;
                     VdpVideoMixer        mixer;
                     bool                 uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) ;
+                    bool                 getResult(ADMImage *image);
+                    bool                 sendField(bool topField,ADMImage *next);
 
 public:
         virtual bool         goToTime(uint64_t usSeek); 
@@ -55,10 +66,37 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilterDeint,   // Class
                         VF_INTERLACING,            // Category
                         "vdpauDeint",            // internal name (must be uniq!)
                         "vdpauDeint",            // Display name
-                        "VDPAU deinterlacer." // Description
+                        "VDPAU deinterlacer (+resize)." // Description
                     );
 
 //
+
+/**
+    \fn updateConf
+*/
+bool vdpauVideoFilterDeint::updateConf(void)
+{
+    if(passThrough)
+    {
+        ADM_warning("PassThrough mode\n");
+        info=*(previousFilter->getInfo());
+        return true;
+    }
+    if(configuration.resizeToggle)
+    {
+        info.width=configuration.targetWidth;
+        info.height=configuration.targetHeight;
+    }else
+    {
+            info=*(previousFilter->getInfo());
+    }
+    uint64_t prev=previousFilter->getInfo()->frameIncrement;
+    if(configuration.deintMode==ADM_KEEP_BOTH)
+        info.frameIncrement=prev/2;
+    else
+        info.frameIncrement=prev;
+    return true;
+}
 /**
     \fn goToTime
     \brief called when seeking. Need to cleanup our stuff.
@@ -67,6 +105,7 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
 {
     for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
     currentIndex=0;
+    outputFrameNumber=0;
     return ADM_coreVideoFilter::goToTime(usSeek);
 }
 
@@ -78,6 +117,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     scaler=NULL;
     for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
     currentIndex=0;
+    outputFrameNumber=0;
     if(!admVdpau::isOperationnal())
     {
         ADM_warning("Vdpau not operationnal\n");
@@ -142,17 +182,20 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
         input[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
     surface=VDP_INVALID_HANDLE;
-    if(!setup || !ADM_paramLoad(setup,vdpauFilter_param,&configuration))
+    if(!setup || !ADM_paramLoad(setup,vdpauFilterDeint_param,&configuration))
     {
         // Default value
+        configuration.resizeToggle=false;
+        configuration.deintMode=ADM_KEEP_TOP;
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
     }
     vidCache = new VideoCache (5, in);
     myName="vdpauDeint";
     tempBuffer=NULL;
+    passThrough=false;
+    updateConf();    
     passThrough=!setupVdpau();
-    
     
 }
 /**
@@ -170,7 +213,34 @@ vdpauVideoFilterDeint::~vdpauVideoFilterDeint()
 */
 bool vdpauVideoFilterDeint::configure( void) 
 {
-    
+     
+     diaMenuEntry tMode[]={
+                             {ADM_KEEP_TOP,      QT_TR_NOOP("Keep Top Field"),NULL},
+                             {ADM_KEEP_BOTTOM,   QT_TR_NOOP("Keep Bottom Field"),NULL},
+                             {ADM_KEEP_BOTH,      QT_TR_NOOP("Double framerate"),NULL}
+                             
+          };
+     uint32_t doResize=(uint32_t)configuration.resizeToggle;
+     diaElemToggle    tResize(&(doResize),   QT_TR_NOOP("_Resize:"));
+     diaElemMenu      mMode(&(configuration.deintMode),   QT_TR_NOOP("_Deint Mode:"), 3,tMode);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TR_NOOP("Width :"),16,2048);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TR_NOOP("Height :"),16,2048);
+     
+     diaElem *elems[]={&mMode,&tResize,&tWidth,&tHeight};
+     
+     if(diaFactoryRun(QT_TR_NOOP("vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
+     {
+                configuration.resizeToggle=(bool)doResize;
+                info.width=configuration.targetWidth;
+                info.height=configuration.targetHeight;
+                ADM_info("New dimension : %d x %d\n",info.width,info.height);
+                updateConf();
+                cleanupVdpau();
+                passThrough=!setupVdpau();
+                
+                return 1;
+     }
+     return 0;
      
         cleanupVdpau();
         passThrough=!setupVdpau();
@@ -183,8 +253,7 @@ bool vdpauVideoFilterDeint::configure( void)
 */
 bool         vdpauVideoFilterDeint::getCoupledConf(CONFcouple **couples)
 {
-    *couples=NULL;
-    return true;
+   return ADM_paramSave(couples, vdpauFilterDeint_param,&configuration);
 }
 /**
     \fn getConfiguration
@@ -193,7 +262,7 @@ bool         vdpauVideoFilterDeint::getCoupledConf(CONFcouple **couples)
 const char *vdpauVideoFilterDeint::getConfiguration(void)
 {
     static char conf[80];
-    sprintf(conf,"Vdpau Deinterlace.");
+    sprintf(conf,"Vdpau Deinterlace mode=%d, %d x %d",configuration.deintMode,info.width,info.height);
     conf[79]=0;
     return conf;
 }
@@ -207,7 +276,7 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,uint32_t surfaceIndex,uin
     {
         frameDesc[surfaceIndex%ADM_NB_SURFACES]=ADM_INVALID_FRAME_NUM;
         ADM_warning("No image to upload\n");
-        return false;
+        return true;
     }
   // Blit our image to surface
     uint32_t pitches[3];
@@ -231,43 +300,14 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,uint32_t surfaceIndex,uin
     return true;
 }
 /**
-    \fn getConfiguration
-    \brief Return current setting as a string
-    The "input" arrays contains
-
-        T0 B0 T1 B1 T2 B2
-              ^ CurrentIndex
-    So in most case we have at least 2 fiels in the past and 2 in the future
-
-
+    \fn sendField
+    \brief Process a field (top or bottom). If null the next param means there is no successor (next image)
 */
-bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
+bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
 {
-    
-     if(passThrough) return previousFilter->getNextFrame(fn,image);
-    ADMImage *prev=NULL;
-    // our first frame, we need to send it + the next one
-    if(!nextFrame)
-    {
-            ADMImage *prev= vidCache->getImage( 0);
-            // Upload top field
-            if(false==uploadImage(prev,currentIndex,0)) 
-            {
-                vidCache->unlockAll();
-                return false;
-            }
-
-    }
-    // regular image, in fact we get the next image here
-    ADMImage *next= vidCache->getImage(nextFrame+1);
-    if(false==uploadImage(next,currentIndex+1,nextFrame+1)) 
-            {
-                vidCache->unlockAll();
-                return false;
-            }
-   
-    // Call mixer...
+ // Call mixer...
     VdpVideoSurface in[3];
+    bool r=true;
         // PREVIOUS
     if(!nextFrame) // First image, we dont have previous
     {
@@ -295,25 +335,30 @@ bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
     for(int i=0;i<3;i++) printf("Desc[%d]=%d\n",i, frameDesc[i]);
 #endif
     // ---------- Top field ------------
-    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture(true, 
+    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture(topField, 
                 mixer,
                 in,
                 surface, 
-                info.width,info.height))
+                previousFilter->getInfo()->width,previousFilter->getInfo()->height))
 
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");
-        vidCache->unlockAll();
-        return false;
+        r= false;
     }
-    // Now get our image back from surface...
-    // Top Field..
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(surface,
+    vidCache->unlockAll();
+    return r;
+}
+/**
+    \fn     getResult
+    \brief  Convert the output surface into an ADMImage
+*/
+bool vdpauVideoFilterDeint::getResult(ADMImage *image)
+{
+ if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(surface,
                                                             tempBuffer, 
                                                             info.width,info.height))
     {
         ADM_warning("[Vdpau] Cannot copy back data from output surface\n");
-        vidCache->unlockAll();
         return false;
     }
 
@@ -335,9 +380,61 @@ bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 
     scaler->convertPlanes(  sourceStride,destStride,     
                             sourceData,destData);
+    return true;
+}
+/**
+    \fn getNextFrame
+    \brief 
+
+*/
+bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
+{
+     if(passThrough) return previousFilter->getNextFrame(fn,image);
+    // top field has already been sent, grab bottom field
+    if((outputFrameNumber&1)&&(configuration.deintMode==ADM_KEEP_BOTH))
+        {
+            *fn=outputFrameNumber++;
+            if(false==getResult(image)) return false;
+            if(ADM_NO_PTS==refPts) image->Pts=refPts;
+                else image->Pts=refPts+info.frameIncrement;
+            return true;
+        }
+    
+    // our first frame, we need to send it + the next one
+    if(!nextFrame)
+    {
+            ADMImage *prev= vidCache->getImage( 0);
+            // Upload top field
+            if(false==uploadImage(prev,currentIndex,0)) 
+            {
+                vidCache->unlockAll();
+                return false;
+            }
+    }
+    // regular image, in fact we get the next image here
+    ADMImage *next= vidCache->getImage(nextFrame+1);
+    if(false==uploadImage(next,currentIndex+1,nextFrame+1)) 
+            {
+                vidCache->unlockAll();
+                return false;
+            }
+   
+   
+    // Now get our image back from surface...
+    sendField(true,next); // always send top field
+    if(configuration.deintMode==ADM_KEEP_TOP || configuration.deintMode==ADM_KEEP_BOTH)
+    {
+          if(false==getResult(image)) 
+                return false;
+    }
+    // Send 2nd field
+    sendField(false,next); 
+    // Top Field..
+   
     nextFrame++;
-    currentIndex+=2; // Two fields at a time...
-    vidCache->unlockAll();
+    currentIndex+=1; // Two fields at a time...
+    outputFrameNumber++;
+    refPts=image->Pts;
     return true;
 }
 #endif

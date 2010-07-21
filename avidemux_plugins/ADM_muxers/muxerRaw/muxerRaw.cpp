@@ -20,7 +20,6 @@
 #include "fourcc.h"
 #include "muxerRaw.h"
 #include "DIA_coreToolkit.h"
-#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 
 
 #if 1

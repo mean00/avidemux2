@@ -164,33 +164,21 @@ VdpStatus admVdpau::mixerRenderWithPastAndFuture(
     VdpVideoSurface present;
 
     present=sourceSurface[1];
-    
+    int index=0;
+    if(!topField) index=1;
 
     if(VDP_INVALID_HANDLE==sourceSurface[0] ) nbPrev=0;
     else
     {
-            if(topField) 
-            {
-                past[0]=sourceSurface[0];
-                past[1]=sourceSurface[0];
-            }else
-            {
-                past[0]=sourceSurface[1];
-                past[1]=sourceSurface[0];
-            }
+         
+            past[0]=sourceSurface[index];
+            past[1]=sourceSurface[0];
     }
     if(VDP_INVALID_HANDLE==sourceSurface[2] ) nbNext=0;
     else
     {
-            if(topField) 
-            {
-                future[0]=sourceSurface[1];
-                future[1]=sourceSurface[2];
-            }else
-            {
-                future[0]=sourceSurface[2];
-                future[1]=sourceSurface[2];
-            }
+            future[0]=sourceSurface[1+index];
+            future[1]=sourceSurface[2];
     }
     // 0 & 1 p
     //ADM_info("Deint : %d\n",(int)mixerIsFeatureEnabled(mixer,VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL_SPATIAL));

@@ -22,7 +22,6 @@
 #include "muxerAvi.h"
 
 
-#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 #define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
 
 #if 1

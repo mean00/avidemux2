@@ -18,7 +18,6 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_vidMisc.h"
-#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 /**
     \class printInfoFilter
 */
