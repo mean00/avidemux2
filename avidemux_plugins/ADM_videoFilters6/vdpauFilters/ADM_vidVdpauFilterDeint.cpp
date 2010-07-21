@@ -9,6 +9,7 @@
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
+#include "ADM_vidMisc.h"
 #include "vdpauFilterDeint.h"
 #include "vdpauFilterDeint_desc.cpp"
 #ifdef USE_VDPAU
@@ -16,6 +17,8 @@
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
 #define ADM_NB_SURFACES 3
+
+#define aprintf printf
 
 enum
 {
@@ -30,7 +33,7 @@ enum
 class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
 {
 protected:
-                    uint64_t             refPts;
+                    uint64_t             nextPts;
                     uint32_t             outputFrameNumber;
                     ADMColorScalerSimple *scaler;
                     bool                 passThrough;
@@ -389,14 +392,18 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 */
 bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+bool r=true;
+uint64_t currentPts=ADM_NO_PTS;
+#define FAIL {r=false;goto endit;}
      if(passThrough) return previousFilter->getNextFrame(fn,image);
     // top field has already been sent, grab bottom field
     if((outputFrameNumber&1)&&(configuration.deintMode==ADM_KEEP_BOTH))
         {
             *fn=outputFrameNumber++;
             if(false==getResult(image)) return false;
-            if(ADM_NO_PTS==refPts) image->Pts=refPts;
-                else image->Pts=refPts+info.frameIncrement;
+            if(ADM_NO_PTS==nextPts) image->Pts=nextPts;
+                else image->Pts=nextPts-info.frameIncrement;
+            aprintf("2ndField : Pts=%s\n",ADM_us2plain(image->Pts));
             return true;
         }
     
@@ -410,13 +417,15 @@ bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
                 vidCache->unlockAll();
                 return false;
             }
+            nextPts=prev->Pts;
     }
     // regular image, in fact we get the next image here
+    
     ADMImage *next= vidCache->getImage(nextFrame+1);
     if(false==uploadImage(next,currentIndex+1,nextFrame+1)) 
             {
                 vidCache->unlockAll();
-                return false;
+                FAIL
             }
    
    
@@ -425,17 +434,29 @@ bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
     if(configuration.deintMode==ADM_KEEP_TOP || configuration.deintMode==ADM_KEEP_BOTH)
     {
           if(false==getResult(image)) 
-                return false;
+          {
+               FAIL
+          }
+          aprintf("TOP/BOTH : Pts=%s\n",ADM_us2plain(image->Pts));
     }
     // Send 2nd field
     sendField(false,next); 
+    if(configuration.deintMode==ADM_KEEP_BOTTOM)
+    {
+          if(false==getResult(image)) 
+          {
+               FAIL
+          }
+          aprintf("BOTTOM : Pts=%s\n",ADM_us2plain(image->Pts));
+    }
     // Top Field..
-   
+endit:   
     nextFrame++;
     currentIndex+=1; // Two fields at a time...
     outputFrameNumber++;
-    refPts=image->Pts;
-    return true;
+    image->Pts=nextPts;
+    if(next) nextPts=next->Pts;
+    return r;
 }
 #endif
 
