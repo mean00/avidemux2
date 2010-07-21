@@ -36,8 +36,6 @@
 #include "ADM_vidMisc.h"
 #undef fopen
 #undef fclose
-#warning FIXME
-#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 //
 //    Sleep for n ms
 //

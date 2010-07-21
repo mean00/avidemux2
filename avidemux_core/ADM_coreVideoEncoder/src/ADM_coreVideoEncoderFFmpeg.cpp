@@ -19,7 +19,6 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
-#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 //#define TIME_TENTH_MILLISEC
 #if 1
     #define aprintf(...) {}

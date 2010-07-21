@@ -26,7 +26,7 @@
 #include "ADM_coreConfig.h"
 #include "ADM_inttype.h"
 #include "ADM_assert.h"
-
+#define ADM_NO_PTS 0xffffffffffffffffLL
 #ifdef __cplusplus
 #include "ADM_cpuCap.h"
 #include "ADM_clock.h"

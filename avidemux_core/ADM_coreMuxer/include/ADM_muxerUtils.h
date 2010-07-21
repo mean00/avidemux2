@@ -20,7 +20,6 @@ extern "C"
 #include "libavformat/avformat.h"
 };
 
-#define ADM_NO_PTS 0xFFFFFFFFFFFFFFFFLL // FIXME
 #include "ADM_codecType.h"
 
 /**
