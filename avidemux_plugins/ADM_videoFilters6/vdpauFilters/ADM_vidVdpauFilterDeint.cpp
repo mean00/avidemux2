@@ -18,7 +18,11 @@
 #define ADM_INVALID_FRAME_NUM 0x80000000
 #define ADM_NB_SURFACES 3
 
+#if 0
 #define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
 enum
 {
@@ -33,8 +37,8 @@ enum
 class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
 {
 protected:
+                    bool                 secondField;
                     uint64_t             nextPts;
-                    uint32_t             outputFrameNumber;
                     ADMColorScalerSimple *scaler;
                     bool                 passThrough;
                     bool                 setupVdpau(void);
@@ -45,7 +49,6 @@ protected:
                     VdpOutputSurface     surface;
                     VdpVideoSurface      input[ADM_NB_SURFACES];
                     uint32_t             frameDesc[ADM_NB_SURFACES];
-                    uint32_t             currentIndex;
                     VdpVideoMixer        mixer;
                     bool                 uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) ;
                     bool                 getResult(ADMImage *image);
@@ -106,9 +109,8 @@ bool vdpauVideoFilterDeint::updateConf(void)
 */
 bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
 {
+    secondField=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
-    currentIndex=0;
-    outputFrameNumber=0;
     return ADM_coreVideoFilter::goToTime(usSeek);
 }
 
@@ -118,9 +120,9 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
 bool vdpauVideoFilterDeint::setupVdpau(void)
 {
     scaler=NULL;
+    secondField=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
-    currentIndex=0;
-    outputFrameNumber=0;
+    nextFrame=0;
     if(!admVdpau::isOperationnal())
     {
         ADM_warning("Vdpau not operationnal\n");
@@ -317,14 +319,14 @@ bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
              in[0]=VDP_INVALID_HANDLE;
     }else
     {
-             in[0]=input[(currentIndex+ADM_NB_SURFACES-1)%ADM_NB_SURFACES];
+             in[0]=input[(nextFrame+ADM_NB_SURFACES-1)%ADM_NB_SURFACES];
     }
         // CURRENT
-     in[1]=input[currentIndex%ADM_NB_SURFACES];
+     in[1]=input[nextFrame%ADM_NB_SURFACES];
         // NEXT
     if(next)
     {
-     in[2]=input[(currentIndex+1)%ADM_NB_SURFACES];
+     in[2]=input[(nextFrame+1)%ADM_NB_SURFACES];
     }
     else
     {
@@ -333,7 +335,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
 
     //
 #if VDP_DEBUG
-    printf("Current index=%d\n",(int)currentIndex);
+    printf("Current index=%d\n",(int)nextFrame);
     for(int i=0;i<3;i++) printf("Calling with in[%d]=%d\n",i,in[i]);
     for(int i=0;i<3;i++) printf("Desc[%d]=%d\n",i, frameDesc[i]);
 #endif
@@ -393,13 +395,13 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 {
 bool r=true;
-uint64_t currentPts=ADM_NO_PTS;
 #define FAIL {r=false;goto endit;}
      if(passThrough) return previousFilter->getNextFrame(fn,image);
     // top field has already been sent, grab bottom field
-    if((outputFrameNumber&1)&&(configuration.deintMode==ADM_KEEP_BOTH))
+    if((secondField)&&(configuration.deintMode==ADM_KEEP_BOTH))
         {
-            *fn=outputFrameNumber++;
+            secondField=false;
+            *fn=nextFrame*2+1;
             if(false==getResult(image)) return false;
             if(ADM_NO_PTS==nextPts) image->Pts=nextPts;
                 else image->Pts=nextPts-info.frameIncrement;
@@ -407,12 +409,12 @@ uint64_t currentPts=ADM_NO_PTS;
             return true;
         }
     
-    // our first frame, we need to send it + the next one
+    // our first frame, we need to preload one frame
     if(!nextFrame)
     {
             ADMImage *prev= vidCache->getImage( 0);
             // Upload top field
-            if(false==uploadImage(prev,currentIndex,0)) 
+            if(false==uploadImage(prev,nextFrame,0)) 
             {
                 vidCache->unlockAll();
                 return false;
@@ -422,7 +424,7 @@ uint64_t currentPts=ADM_NO_PTS;
     // regular image, in fact we get the next image here
     
     ADMImage *next= vidCache->getImage(nextFrame+1);
-    if(false==uploadImage(next,currentIndex+1,nextFrame+1)) 
+    if(false==uploadImage(next,nextFrame+1,nextFrame+1)) 
             {
                 vidCache->unlockAll();
                 FAIL
@@ -450,10 +452,14 @@ uint64_t currentPts=ADM_NO_PTS;
           aprintf("BOTTOM : Pts=%s\n",ADM_us2plain(image->Pts));
     }
     // Top Field..
-endit:   
+endit:  
+    if(configuration.deintMode==ADM_KEEP_BOTH) 
+    {
+        *fn=nextFrame*2;
+        secondField=true;
+    }
+        else    *fn=nextFrame;
     nextFrame++;
-    currentIndex+=1; // Two fields at a time...
-    outputFrameNumber++;
     image->Pts=nextPts;
     if(next) nextPts=next->Pts;
     return r;
