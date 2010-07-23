@@ -38,8 +38,11 @@ public:
        virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);      
        virtual FilterInfo  *getInfo(void);                                      /// Return picture parameters after this filter
        virtual bool         getCoupledConf(CONFcouple **couples) {*couples=NULL;return true;} ; /// Return the current filter configuration
-
-        bool                rewind(void);
+       virtual uint64_t     getAbsoluteStartTime(void)  
+                            {
+                                    return startTime;
+                            }
+       bool                 rewind(void);
 
 };
 

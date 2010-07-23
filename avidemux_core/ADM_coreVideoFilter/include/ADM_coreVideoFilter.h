@@ -52,6 +52,9 @@ public:
        virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
        virtual bool         getCoupledConf(CONFcouple **couples)=0 ;   /// Return the current filter configuration
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
+       virtual uint64_t     getAbsoluteStartTime(void)                 /// Return the absolute offset of the current frame. Used to display time of for filter
+                {return previousFilter->getAbsoluteStartTime();}       /// Like subtitlers who need that 
+                                                                                        
 protected:
             ADM_coreVideoFilter *previousFilter;
 };
