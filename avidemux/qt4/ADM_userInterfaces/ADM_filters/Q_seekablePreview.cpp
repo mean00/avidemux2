@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "Q_seekablePreview.h"
-
+#include "ADM_vidMisc.h"
 Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
 {
 	ui.setupUi(this);
@@ -55,7 +55,7 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
 	canvas = new ADM_QCanvas(ui.frame, canvasWidth, canvasHeight);
 	canvas->show();
 	seekablePreview = new flySeekablePreview(canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
-
+    seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
 	seekablePreview->process();
 	seekablePreview->sliderChanged();
 }
@@ -69,3 +69,27 @@ uint32_t Ui_seekablePreviewWindow::frameIndex()
 {
 	return seekablePreview->sliderGet();
 }
+/**
+    \fn setCurrentPtsCallback
+    \brief callback so that the flyDialog can update its father widget
+*/
+bool Ui_seekablePreviewWindow::setCurrentPtsCallback(void *cookie,uint64_t pts)
+{
+    if(cookie)
+    {
+        return ((Ui_seekablePreviewWindow *)cookie)->setTime(pts);
+    }
+    printf("No cookie, New PTS :%"LLD" us\n",pts);
+    return true;
+}
+/**
+    \fn setTime
+    \brief Set timecode
+*/
+bool      Ui_seekablePreviewWindow::setTime(uint64_t timestamp)
+{
+    const char *s=ADM_us2plain(timestamp);
+    ui.label->setText(s);
+    return true;
+}
+// EOF

@@ -12,6 +12,7 @@ public:
 	flyPreview(uint32_t width, uint32_t height, void *canvas) : 
 	  ADM_flyDialogGtk(width, height, NULL, canvas, NULL, 0, RESIZE_NONE) {delete[] _rgbBuffer; _rgbBuffer = NULL;};
 	virtual ~flyPreview(void) {_rgbBuffer = NULL;};
+    bool setCurrentPts(uint64_t pts) {return 1;}
 };
 
 class flySeekablePreview : public ADM_flyDialogGtk
@@ -21,7 +22,7 @@ public:
 	uint8_t download(void) {return 1;}
 	uint8_t upload(void) {return 1;}
 	uint8_t cleanup(void) {return 1;}
-
+    bool setCurrentPts(uint64_t pts) {return 1;}
 	flySeekablePreview(uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, void *canvas, void *slider) : 
 	  ADM_flyDialogGtk(width, height, videoStream, canvas, slider, 0, RESIZE_AUTO) {delete[] _rgbBufferOut; _rgbBufferOut = NULL;};
 	virtual ~flySeekablePreview(void) {_rgbBufferOut = NULL;};

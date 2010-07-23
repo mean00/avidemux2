@@ -25,7 +25,8 @@
 class Ui_seekablePreviewWindow : public QDialog
 {
 	Q_OBJECT
-
+protected:
+    static bool setCurrentPtsCallback(void *cookie,uint64_t pts);
 public:
 	ADM_QCanvas *canvas;
 	flySeekablePreview *seekablePreview;
@@ -34,6 +35,7 @@ public:
 	~Ui_seekablePreviewWindow();
 	void resetVideoStream(ADM_coreVideoFilter *videoStream);
 	uint32_t frameIndex();
+    bool      setTime(uint64_t timestamp);
 
 public slots:
 	void sliderChanged(int value);

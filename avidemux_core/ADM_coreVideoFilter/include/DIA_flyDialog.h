@@ -68,6 +68,7 @@ typedef float gfloat;
 class ADM_flyDialog
 {
   protected:
+          uint64_t      _currentPts;
           uint32_t      _w, _h, _zoomW, _zoomH;
           float         _zoom;
           uint32_t      _zoomChangeCount;
@@ -102,6 +103,7 @@ class ADM_flyDialog
   virtual uint8_t    process(void)=0;
   virtual uint8_t    download(void)=0;
   virtual uint8_t    upload(void)=0;
+  virtual bool       setCurrentPts(uint64_t pts)=0;
           /* /filter dependant */
   
         /* This is GTK/QT/whatever dependant */

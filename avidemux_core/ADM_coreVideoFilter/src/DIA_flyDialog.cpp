@@ -64,7 +64,7 @@ ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter 
 
 	_rgbBufferOut =new uint8_t [_w*_h*4];
 
-	
+	_currentPts=0;
 
 	
 }
@@ -248,7 +248,7 @@ bool ADM_flyDialog::nextImage(void)
       ADM_warning("[FlyDialog] Cannot get frame %u\n",frameNumber); 
       return 0;
     }
-
+    setCurrentPts(_yuvBuffer->Pts);
     // Process...    
     if(_isYuvProcessing)
     {
