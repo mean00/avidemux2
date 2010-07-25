@@ -2298,3 +2298,15 @@ AVOutputFormat ipod_muxer = {
     .codec_tag = (const AVCodecTag* const []){codec_ipod_tags, 0},
 };
 #endif
+/* MEANX */
+int movenc_init(void)
+{
+    av_register_output_format(&mov_muxer);
+    av_register_output_format(&tgp_muxer);
+    av_register_output_format(&mp4_muxer);
+    av_register_output_format(&psp_muxer);
+    av_register_output_format(&tg2_muxer);
+    av_register_output_format(&ipod_muxer);
+    return 0;
+}
+/* MEANX */

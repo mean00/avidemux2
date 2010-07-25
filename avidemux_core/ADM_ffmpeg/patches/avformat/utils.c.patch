@@ -1,0 +1,21 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavformat/utils.c b/avidemux_core/ADM_ffmpeg/libavformat/utils.c
+index 6fa4dff..8646c6c 100644
+--- a/avidemux_core/ADM_ffmpeg/libavformat/utils.c
++++ b/avidemux_core/ADM_ffmpeg/libavformat/utils.c
+@@ -49,13 +49,14 @@ unsigned avformat_version(void)
+ 
+ const char *avformat_configuration(void)
+ {
+-    return FFMPEG_CONFIGURATION;
++    return "avidemux"; // MEANX FFMPEG_CONFIGURATION;
+ }
+ 
+ const char *avformat_license(void)
+ {
+ #define LICENSE_PREFIX "libavformat license: "
+-    return LICENSE_PREFIX FFMPEG_LICENSE + sizeof(LICENSE_PREFIX) - 1;
++        return LICENSE_PREFIX "GPL";
++//MEANX    return LICENSE_PREFIX FFMPEG_LICENSE + sizeof(LICENSE_PREFIX) - 1;
+ }
+ 
+ /* fraction handling */

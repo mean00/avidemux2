@@ -622,15 +622,18 @@ static const struct {
 } mov_pix_fmt_tags[] = {
     { PIX_FMT_YUYV422, MKTAG('y','u','v','s'),  0 },
     { PIX_FMT_UYVY422, MKTAG('2','v','u','y'),  0 },
-    { PIX_FMT_BGR555,  MKTAG('r','a','w',' '), 16 },
+    { PIX_FMT_RGB555BE,MKTAG('r','a','w',' '), 16 },
     { PIX_FMT_RGB555LE,MKTAG('L','5','5','5'), 16 },
     { PIX_FMT_RGB565LE,MKTAG('L','5','6','5'), 16 },
     { PIX_FMT_RGB565BE,MKTAG('B','5','6','5'), 16 },
+    { PIX_FMT_GRAY16BE,MKTAG('b','1','6','g'), 16 },
     { PIX_FMT_RGB24,   MKTAG('r','a','w',' '), 24 },
     { PIX_FMT_BGR24,   MKTAG('2','4','B','G'), 24 },
     { PIX_FMT_ARGB,    MKTAG('r','a','w',' '), 32 },
     { PIX_FMT_BGRA,    MKTAG('B','G','R','A'), 32 },
     { PIX_FMT_RGBA,    MKTAG('R','G','B','A'), 32 },
+    { PIX_FMT_ABGR,    MKTAG('A','B','G','R'), 32 },
+    { PIX_FMT_RGB48BE, MKTAG('b','4','8','r'), 48 },
 };
 
 static int mov_get_rawvideo_codec_tag(AVFormatContext *s, MOVTrack *track)
@@ -744,6 +747,19 @@ static int mov_write_subtitle_tag(ByteIOContext *pb, MOVTrack *track)
     return updateSize(pb, pos);
 }
 
+static int mov_write_pasp_tag(ByteIOContext *pb, MOVTrack *track)
+{
+    AVRational sar;
+    av_reduce(&sar.num, &sar.den, track->enc->sample_aspect_ratio.num,
+              track->enc->sample_aspect_ratio.den, INT_MAX);
+
+    put_be32(pb, 16);
+    put_tag(pb, "pasp");
+    put_be32(pb, track->enc->sample_aspect_ratio.num);
+    put_be32(pb, track->enc->sample_aspect_ratio.den);
+    return 16;
+}
+
 static int mov_write_video_tag(ByteIOContext *pb, MOVTrack *track)
 {
     int64_t pos = url_ftell(pb);
@@ -804,6 +820,12 @@ static int mov_write_video_tag(ByteIOContext *pb, MOVTrack *track)
             mov_write_uuid_tag_ipod(pb);
     } else if(track->vosLen > 0)
         mov_write_glbl_tag(pb, track);
+
+    if (track->mode == MODE_MOV &&
+        track->enc->sample_aspect_ratio.den && track->enc->sample_aspect_ratio.num &&
+        track->enc->sample_aspect_ratio.den != track->enc->sample_aspect_ratio.num) {
+        mov_write_pasp_tag(pb, track);
+    }
 
     return updateSize(pb, pos);
 }
@@ -1608,8 +1630,8 @@ static int mov_write_udta_tag(ByteIOContext *pb, MOVMuxContext *mov,
         put_be32(pb, size+8);
         put_tag(pb, "udta");
         put_buffer(pb, buf, size);
-        av_free(buf);
     }
+    av_free(buf);
 
     return 0;
 }
