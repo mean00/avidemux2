@@ -80,10 +80,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecImaAdpcm,						// Class
 #define QT_IMA_ADPCM_BLOCK_SIZE 0x22
 #define QT_IMA_ADPCM_SAMPLES_PER_BLOCK 64
 
-#define BE_16(x) (be2me_16(*(unsigned short *)(x)))
-#define BE_32(x) (be2me_32(*(unsigned int *)(x)))
-#define LE_16(x) (le2me_16(*(unsigned short *)(x)))
-#define LE_32(x) (le2me_32(*(unsigned int *)(x)))
+#define BE_16(x) (be2me16(*(unsigned short *)(x)))
+#define BE_32(x) (be2me32(*(unsigned int *)(x)))
+#define LE_16(x) (av_le2ne16(*(unsigned short *)(x)))
+#define LE_32(x) (av_le2ne32(*(unsigned int *)(x)))
 
 int ms_ima_adpcm_decode_block(unsigned short *output,
   unsigned char *input, int channels, int block_size);
