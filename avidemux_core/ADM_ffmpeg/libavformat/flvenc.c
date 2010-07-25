@@ -406,8 +406,7 @@ AVOutputFormat flv_muxer = {
     "video/x-flv",
     "flv",
     sizeof(FLVContext),
-//MEANX #if CONFIG_LIBMP3LAME
-#ifdef HAVE_LIBMP3LAME
+#if CONFIG_LIBMP3LAME
     CODEC_ID_MP3,
 #else // CONFIG_LIBMP3LAME
     CODEC_ID_ADPCM_SWF,
@@ -419,9 +418,3 @@ AVOutputFormat flv_muxer = {
     .codec_tag= (const AVCodecTag* const []){flv_video_codec_ids, flv_audio_codec_ids, 0},
     .flags= AVFMT_GLOBALHEADER | AVFMT_VARIABLE_FPS,
 };
-// MEANX
-int flvenc_init(void)
-{
-    av_register_output_format(&flv_muxer);
-    return 0;
-}

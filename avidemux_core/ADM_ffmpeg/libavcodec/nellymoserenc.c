@@ -270,7 +270,7 @@ static void get_exponent_dynamic(NellyMoserEncodeContext *s, float *cand, int *i
 }
 
 /**
- * Encodes NELLY_SAMPLES samples. It assumes, that samples contains 3 * NELLY_BUF_LEN values
+ * Encode NELLY_SAMPLES samples. It assumes, that samples contains 3 * NELLY_BUF_LEN values
  *  @param s               encoder context
  *  @param output          output buffer
  *  @param output_size     size of output buffer
@@ -351,7 +351,7 @@ static void encode_block(NellyMoserEncodeContext *s, unsigned char *output, int 
 static int encode_frame(AVCodecContext *avctx, uint8_t *frame, int buf_size, void *data)
 {
     NellyMoserEncodeContext *s = avctx->priv_data;
-    int16_t *samples = data;
+    const int16_t *samples = data;
     int i;
 
     if (s->last_frame)

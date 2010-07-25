@@ -20,6 +20,7 @@
  */
 
 #include "avformat.h"
+#include "internal.h"
 
 #define MAX_LINESIZE 2000
 
@@ -29,20 +30,6 @@ typedef struct ASSContext{
     unsigned int event_count;
     unsigned int event_index;
 }ASSContext;
-
-static void get_line(ByteIOContext *s, char *buf, int maxlen)
-{
-    int i = 0;
-    char c;
-
-    do{
-        c = get_byte(s);
-        if (i < maxlen-1)
-            buf[i++] = c;
-    }while(c != '\n' && c);
-
-    buf[i] = 0;
-}
 
 static int probe(AVProbeData *p)
 {
@@ -87,7 +74,7 @@ static int event_cmp(uint8_t **a, uint8_t **b)
 
 static int read_header(AVFormatContext *s, AVFormatParameters *ap)
 {
-    int i, header_remaining;
+    int i, len, header_remaining;
     ASSContext *ass = s->priv_data;
     ByteIOContext *pb = s->pb;
     AVStream *st;
@@ -108,7 +95,7 @@ static int read_header(AVFormatContext *s, AVFormatParameters *ap)
     while(!url_feof(pb)){
         uint8_t line[MAX_LINESIZE];
 
-        get_line(pb, line, sizeof(line));
+        len = ff_get_line(pb, line, sizeof(line));
 
         if(!memcmp(line, "[Events]", 8))
             header_remaining= 2;
@@ -124,8 +111,8 @@ static int read_header(AVFormatContext *s, AVFormatParameters *ap)
         if(!p)
             goto fail;
         *(dst[i])= p;
-        memcpy(p + pos[i], line, strlen(line)+1);
-        pos[i] += strlen(line);
+        memcpy(p + pos[i], line, len+1);
+        pos[i] += len;
         if(i) ass->event_count++;
         else  header_remaining--;
     }
@@ -177,7 +164,7 @@ static int read_packet(AVFormatContext *s, AVPacket *pkt)
 
 AVInputFormat ass_demuxer = {
     "ass",
-    NULL_IF_CONFIG_SMALL("SSA/ASS format"),
+    NULL_IF_CONFIG_SMALL("Advanced SubStation Alpha subtitle format"),
     sizeof(ASSContext),
     probe,
     read_header,

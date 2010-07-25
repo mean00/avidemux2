@@ -81,14 +81,14 @@ static int pcm_encode_frame(AVCodecContext *avctx,
                             unsigned char *frame, int buf_size, void *data)
 {
     int n, sample_size, v;
-    short *samples;
+    const short *samples;
     unsigned char *dst;
-    uint8_t *srcu8;
-    int16_t *samples_int16_t;
-    int32_t *samples_int32_t;
-    int64_t *samples_int64_t;
-    uint16_t *samples_uint16_t;
-    uint32_t *samples_uint32_t;
+    const uint8_t *srcu8;
+    const int16_t *samples_int16_t;
+    const int32_t *samples_int32_t;
+    const int64_t *samples_int64_t;
+    const uint16_t *samples_uint16_t;
+    const uint32_t *samples_uint32_t;
 
     sample_size = av_get_bits_per_sample(avctx->codec->id)/8;
     n = buf_size / sample_size;
@@ -227,6 +227,10 @@ static av_cold int pcm_decode_init(AVCodecContext * avctx)
     }
 
     avctx->sample_fmt = avctx->codec->sample_fmts[0];
+
+    if (avctx->sample_fmt == SAMPLE_FMT_S32)
+        avctx->bits_per_raw_sample = av_get_bits_per_sample(avctx->codec->id);
+
     return 0;
 }
 
@@ -440,16 +444,14 @@ static int pcm_decode_frame(AVCodecContext *avctx,
 }
 
 #if CONFIG_ENCODERS
-#define PCM_ENCODER(id,sample_fmt_,name,long_name_) \
-AVCodec name ## _encoder = {                    \
-    #name,                                      \
-    AVMEDIA_TYPE_AUDIO,                         \
-    id,                                         \
-    0,                                          \
-    pcm_encode_init,                            \
-    pcm_encode_frame,                           \
-    pcm_encode_close,                           \
-    NULL,                                       \
+#define PCM_ENCODER(id_,sample_fmt_,name_,long_name_) \
+AVCodec name_ ## _encoder = {                   \
+    .name        = #name_,                      \
+    .type        = AVMEDIA_TYPE_AUDIO,          \
+    .id          = id_,                         \
+    .init        = pcm_encode_init,             \
+    .encode      = pcm_encode_frame,            \
+    .close       = pcm_encode_close,            \
     .sample_fmts = (const enum SampleFormat[]){sample_fmt_,SAMPLE_FMT_NONE}, \
     .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
 };
@@ -458,16 +460,14 @@ AVCodec name ## _encoder = {                    \
 #endif
 
 #if CONFIG_DECODERS
-#define PCM_DECODER(id,sample_fmt_,name,long_name_)         \
-AVCodec name ## _decoder = {                    \
-    #name,                                      \
-    AVMEDIA_TYPE_AUDIO,                         \
-    id,                                         \
-    sizeof(PCMDecode),                          \
-    pcm_decode_init,                            \
-    NULL,                                       \
-    NULL,                                       \
-    pcm_decode_frame,                           \
+#define PCM_DECODER(id_,sample_fmt_,name_,long_name_)         \
+AVCodec name_ ## _decoder = {                   \
+    .name           = #name_,                   \
+    .type           = AVMEDIA_TYPE_AUDIO,       \
+    .id             = id_,                      \
+    .priv_data_size = sizeof(PCMDecode),        \
+    .init           = pcm_decode_init,          \
+    .decode         = pcm_decode_frame,         \
     .sample_fmts = (const enum SampleFormat[]){sample_fmt_,SAMPLE_FMT_NONE}, \
     .long_name = NULL_IF_CONFIG_SMALL(long_name_), \
 };

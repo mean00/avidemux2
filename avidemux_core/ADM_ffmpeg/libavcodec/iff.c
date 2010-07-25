@@ -34,25 +34,26 @@ typedef struct {
     AVFrame frame;
     int planesize;
     uint8_t * planebuf;
+    int init; // 1 if buffer and palette data already initialized, 0 otherwise
 } IffContext;
 
 #define LUT8_PART(plane, v)                             \
-    AV_LE2ME64C(UINT64_C(0x0000000)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1000000)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0010000)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1010000)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0000100)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1000100)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0010100)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1010100)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0000001)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1000001)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0010001)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1010001)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0000101)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1000101)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x0010101)<<32 | v) << plane,  \
-    AV_LE2ME64C(UINT64_C(0x1010101)<<32 | v) << plane
+    AV_LE2NE64C(UINT64_C(0x0000000)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1000000)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0010000)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1010000)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0000100)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1000100)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0010100)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1010100)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0000001)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1000001)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0010001)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1010001)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0000101)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1000101)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x0010101)<<32 | v) << plane,  \
+    AV_LE2NE64C(UINT64_C(0x1010101)<<32 | v) << plane
 
 #define LUT8(plane) {                           \
     LUT8_PART(plane, 0x0000000),                \
@@ -167,14 +168,8 @@ static av_cold int decode_init(AVCodecContext *avctx)
         return AVERROR(ENOMEM);
 
     s->frame.reference = 1;
-    if ((err = avctx->get_buffer(avctx, &s->frame) < 0)) {
-        av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
-        return err;
-    }
 
-    return (avctx->bits_per_coded_sample <= 8 &&
-            avctx->pix_fmt != PIX_FMT_GRAY8) ?
-       ff_cmap_read_palette(avctx, (uint32_t*)s->frame.data[1]) : 0;
+    return 0;
 }
 
 /**
@@ -220,7 +215,7 @@ static void decodeplane32(uint32_t *dst, const uint8_t *buf, int buf_size, int p
 }
 
 /**
- * Decodes one complete byterun1 encoded line.
+ * Decode one complete byterun1 encoded line.
  *
  * @param dst the destination buffer where to store decompressed bitstream
  * @param dst_size the destination plane size in bytes
@@ -258,12 +253,21 @@ static int decode_frame_ilbm(AVCodecContext *avctx,
     const uint8_t *buf = avpkt->data;
     int buf_size = avpkt->size;
     const uint8_t *buf_end = buf+buf_size;
-    int y, plane;
+    int y, plane, res;
 
-    if (avctx->reget_buffer(avctx, &s->frame) < 0){
+    if (s->init) {
+        if ((res = avctx->reget_buffer(avctx, &s->frame)) < 0) {
+            av_log(avctx, AV_LOG_ERROR, "reget_buffer() failed\n");
+            return res;
+        }
+    } else if ((res = avctx->get_buffer(avctx, &s->frame)) < 0) {
         av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
-        return -1;
+        return res;
+    } else if (avctx->bits_per_coded_sample <= 8 && avctx->pix_fmt != PIX_FMT_GRAY8) {
+        if ((res = ff_cmap_read_palette(avctx, (uint32_t*)s->frame.data[1])) < 0)
+            return res;
     }
+    s->init = 1;
 
     if (avctx->codec_tag == MKTAG('I','L','B','M')) { // interleaved
         if (avctx->pix_fmt == PIX_FMT_PAL8 || avctx->pix_fmt == PIX_FMT_GRAY8) {
@@ -289,7 +293,7 @@ static int decode_frame_ilbm(AVCodecContext *avctx,
         for(y = 0; y < avctx->height; y++ ) {
             uint8_t *row = &s->frame.data[0][y * s->frame.linesize[0]];
             memcpy(row, buf, FFMIN(avctx->width, buf_end - buf));
-            buf += avctx->width;
+            buf += avctx->width + (avctx->width % 2); // padding if odd
         }
     }
 
@@ -306,12 +310,21 @@ static int decode_frame_byterun1(AVCodecContext *avctx,
     const uint8_t *buf = avpkt->data;
     int buf_size = avpkt->size;
     const uint8_t *buf_end = buf+buf_size;
-    int y, plane;
+    int y, plane, res;
 
-    if (avctx->reget_buffer(avctx, &s->frame) < 0){
+    if (s->init) {
+        if ((res = avctx->reget_buffer(avctx, &s->frame)) < 0) {
+            av_log(avctx, AV_LOG_ERROR, "reget_buffer() failed\n");
+            return res;
+        }
+    } else if ((res = avctx->get_buffer(avctx, &s->frame)) < 0) {
         av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
-        return -1;
+        return res;
+    } else if (avctx->bits_per_coded_sample <= 8 && avctx->pix_fmt != PIX_FMT_GRAY8) {
+        if ((res = ff_cmap_read_palette(avctx, (uint32_t*)s->frame.data[1])) < 0)
+            return res;
     }
+    s->init = 1;
 
     if (avctx->codec_tag == MKTAG('I','L','B','M')) { //interleaved
         if (avctx->pix_fmt == PIX_FMT_PAL8 || avctx->pix_fmt == PIX_FMT_GRAY8) {

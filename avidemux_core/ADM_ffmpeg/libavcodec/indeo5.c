@@ -80,17 +80,18 @@ typedef struct {
 
 
 /**
- *  Decodes Indeo5 GOP (Group of pictures) header.
+ *  Decode Indeo5 GOP (Group of pictures) header.
  *  This header is present in key frames only.
  *  It defines parameters for all frames in a GOP.
  *
- *  @param ctx      [in,out] ptr to the decoder context
- *  @param avctx    [in] ptr to the AVCodecContext
+ *  @param[in,out] ctx    ptr to the decoder context
+ *  @param[in]     avctx  ptr to the AVCodecContext
  *  @return         result code: 0 = OK, -1 = error
  */
 static int decode_gop_header(IVI5DecContext *ctx, AVCodecContext *avctx)
 {
-    int             result, i, p, tile_size, pic_size_indx, mb_size, blk_size, blk_size_changed = 0;
+    int             result, i, p, tile_size, pic_size_indx, mb_size, blk_size;
+    int             quant_mat, blk_size_changed = 0;
     IVIBandDesc     *band, *band1, *band2;
     IVIPicConfig    pic_conf;
 
@@ -185,25 +186,25 @@ static int decode_gop_header(IVI5DecContext *ctx, AVCodecContext *avctx)
             case 1:
                 band->inv_transform = ff_ivi_row_slant8;
                 band->dc_transform  = ff_ivi_dc_row_slant;
-                band->scan          = ivi5_scans8x8[0];
+                band->scan          = ff_ivi_vertical_scan_8x8;
                 break;
 
             case 2:
                 band->inv_transform = ff_ivi_col_slant8;
                 band->dc_transform  = ff_ivi_dc_col_slant;
-                band->scan          = ivi5_scans8x8[1];
+                band->scan          = ff_ivi_horizontal_scan_8x8;
                 break;
 
             case 3:
                 band->inv_transform = ff_ivi_put_pixels_8x8;
                 band->dc_transform  = ff_ivi_put_dc_pixel_8x8;
-                band->scan          = ivi5_scans8x8[1];
+                band->scan          = ff_ivi_horizontal_scan_8x8;
                 break;
 
             case 4:
                 band->inv_transform = ff_ivi_inverse_slant_4x4;
                 band->dc_transform  = ff_ivi_dc_slant_2d;
-                band->scan          = ivi5_scan4x4;
+                band->scan          = ff_ivi_direct_scan_4x4;
                 break;
             }
 
@@ -212,9 +213,21 @@ static int decode_gop_header(IVI5DecContext *ctx, AVCodecContext *avctx)
 
             /* select dequant matrix according to plane and band number */
             if (!p) {
-                band->quant_mat = (pic_conf.luma_bands > 1) ? i+1 : 0;
+                quant_mat = (pic_conf.luma_bands > 1) ? i+1 : 0;
             } else {
-                band->quant_mat = 5;
+                quant_mat = 5;
+            }
+
+            if (band->blk_size == 8) {
+                band->intra_base  = &ivi5_base_quant_8x8_intra[quant_mat][0];
+                band->inter_base  = &ivi5_base_quant_8x8_inter[quant_mat][0];
+                band->intra_scale = &ivi5_scale_quant_8x8_intra[quant_mat][0];
+                band->inter_scale = &ivi5_scale_quant_8x8_inter[quant_mat][0];
+            } else {
+                band->intra_base  = ivi5_base_quant_4x4_intra;
+                band->inter_base  = ivi5_base_quant_4x4_inter;
+                band->intra_scale = ivi5_scale_quant_4x4_intra;
+                band->inter_scale = ivi5_scale_quant_4x4_inter;
             }
 
             if (get_bits(&ctx->gb, 2)) {
@@ -234,7 +247,10 @@ static int decode_gop_header(IVI5DecContext *ctx, AVCodecContext *avctx)
         band2->mb_size       = band1->mb_size;
         band2->blk_size      = band1->blk_size;
         band2->is_halfpel    = band1->is_halfpel;
-        band2->quant_mat     = band1->quant_mat;
+        band2->intra_base    = band1->intra_base;
+        band2->inter_base    = band1->inter_base;
+        band2->intra_scale   = band1->intra_scale;
+        band2->inter_scale   = band1->inter_scale;
         band2->scan          = band1->scan;
         band2->inv_transform = band1->inv_transform;
         band2->dc_transform  = band1->dc_transform;
@@ -280,9 +296,9 @@ static int decode_gop_header(IVI5DecContext *ctx, AVCodecContext *avctx)
 
 
 /**
- *  Skips a header extension.
+ *  Skip a header extension.
  *
- *  @param gb   [in,out] the GetBit context
+ *  @param[in,out]  gb  the GetBit context
  */
 static inline void skip_hdr_extension(GetBitContext *gb)
 {
@@ -296,10 +312,10 @@ static inline void skip_hdr_extension(GetBitContext *gb)
 
 
 /**
- *  Decodes Indeo5 picture header.
+ *  Decode Indeo5 picture header.
  *
- *  @param ctx      [in,out] ptr to the decoder context
- *  @param avctx    [in] ptr to the AVCodecContext
+ *  @param[in,out]  ctx    ptr to the decoder context
+ *  @param[in]      avctx  ptr to the AVCodecContext
  *  @return         result code: 0 = OK, -1 = error
  */
 static int decode_pic_hdr(IVI5DecContext *ctx, AVCodecContext *avctx)
@@ -348,11 +364,11 @@ static int decode_pic_hdr(IVI5DecContext *ctx, AVCodecContext *avctx)
 
 
 /**
- *  Decodes Indeo5 band header.
+ *  Decode Indeo5 band header.
  *
- *  @param ctx      [in,out] ptr to the decoder context
- *  @param band     [in,out] ptr to the band descriptor
- *  @param avctx    [in] ptr to the AVCodecContext
+ *  @param[in,out]  ctx    ptr to the decoder context
+ *  @param[in,out]  band   ptr to the band descriptor
+ *  @param[in]      avctx  ptr to the AVCodecContext
  *  @return         result code: 0 = OK, -1 = error
  */
 static int decode_band_hdr(IVI5DecContext *ctx, IVIBandDesc *band,
@@ -416,13 +432,13 @@ static int decode_band_hdr(IVI5DecContext *ctx, IVIBandDesc *band,
 
 
 /**
- *  Decodes info (block type, cbp, quant delta, motion vector)
+ *  Decode info (block type, cbp, quant delta, motion vector)
  *  for all macroblocks in the current tile.
  *
- *  @param ctx      [in,out] ptr to the decoder context
- *  @param band     [in,out] ptr to the band descriptor
- *  @param tile     [in,out] ptr to the tile descriptor
- *  @param avctx    [in] ptr to the AVCodecContext
+ *  @param[in,out]  ctx    ptr to the decoder context
+ *  @param[in,out]  band   ptr to the band descriptor
+ *  @param[in,out]  tile   ptr to the tile descriptor
+ *  @param[in]      avctx  ptr to the AVCodecContext
  *  @return         result code: 0 = OK, -1 = error
  */
 static int decode_mb_info(IVI5DecContext *ctx, IVIBandDesc *band,
@@ -541,11 +557,11 @@ static int decode_mb_info(IVI5DecContext *ctx, IVIBandDesc *band,
 
 
 /**
- *  Decodes an Indeo5 band.
+ *  Decode an Indeo5 band.
  *
- *  @param ctx      [in,out] ptr to the decoder context
- *  @param band     [in,out] ptr to the band descriptor
- *  @param avctx    [in] ptr to the AVCodecContext
+ *  @param[in,out]  ctx    ptr to the decoder context
+ *  @param[in,out]  band   ptr to the band descriptor
+ *  @param[in]      avctx  ptr to the AVCodecContext
  *  @return         result code: 0 = OK, -1 = error
  */
 static int decode_band(IVI5DecContext *ctx, int plane_num,
@@ -568,18 +584,6 @@ static int decode_band(IVI5DecContext *ctx, int plane_num,
     if (band->is_empty) {
         av_log(avctx, AV_LOG_ERROR, "Empty band encountered!\n");
         return -1;
-    }
-
-    if (band->blk_size == 8) {
-        band->intra_base  = &ivi5_base_quant_8x8_intra[band->quant_mat][0];
-        band->inter_base  = &ivi5_base_quant_8x8_inter[band->quant_mat][0];
-        band->intra_scale = &ivi5_scale_quant_8x8_intra[band->quant_mat][0];
-        band->inter_scale = &ivi5_scale_quant_8x8_inter[band->quant_mat][0];
-    } else {
-        band->intra_base  = ivi5_base_quant_4x4_intra;
-        band->inter_base  = ivi5_base_quant_4x4_inter;
-        band->intra_scale = ivi5_scale_quant_4x4_intra;
-        band->inter_scale = ivi5_scale_quant_4x4_inter;
     }
 
     band->rv_map = &ctx->rvmap_tabs[band->rvmap_sel];
@@ -643,12 +647,11 @@ static int decode_band(IVI5DecContext *ctx, int plane_num,
 
 
 /**
- *  Switches buffers.
+ *  Switch buffers.
  *
- *  @param ctx      [in,out] ptr to the decoder context
- *  @param avctx    [in] ptr to the AVCodecContext
+ *  @param[in,out] ctx  ptr to the decoder context
  */
-static void switch_buffers(IVI5DecContext *ctx, AVCodecContext *avctx)
+static void switch_buffers(IVI5DecContext *ctx)
 {
     switch (ctx->prev_frame_type) {
     case FRAMETYPE_INTRA:
@@ -687,7 +690,7 @@ static void switch_buffers(IVI5DecContext *ctx, AVCodecContext *avctx)
 
 
 /**
- *  Initializes Indeo5 decoder.
+ *  Initialize Indeo5 decoder.
  */
 static av_cold int decode_init(AVCodecContext *avctx)
 {
@@ -752,7 +755,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size,
         return -1;
     }
 
-    switch_buffers(ctx, avctx);
+    switch_buffers(ctx);
 
     //START_TIMER;
 
@@ -797,7 +800,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size,
 
 
 /**
- *  Closes Indeo5 decoder and cleans up its context.
+ *  Close Indeo5 decoder and clean up its context.
  */
 static av_cold int decode_close(AVCodecContext *avctx)
 {

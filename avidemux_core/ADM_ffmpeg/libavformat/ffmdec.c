@@ -252,6 +252,17 @@ static void adjust_write_index(AVFormatContext *s)
 }
 
 
+static int ffm_close(AVFormatContext *s)
+{
+    int i;
+
+    for (i = 0; i < s->nb_streams; i++)
+        av_freep(&s->streams[i]->codec->rc_eq);
+
+    return 0;
+}
+
+
 static int ffm_read_header(AVFormatContext *s, AVFormatParameters *ap)
 {
     FFMContext *ffm = s->priv_data;
@@ -381,12 +392,7 @@ static int ffm_read_header(AVFormatContext *s, AVFormatParameters *ap)
     ffm->first_packet = 1;
     return 0;
  fail:
-    for(i=0;i<s->nb_streams;i++) {
-        st = s->streams[i];
-        if (st) {
-            av_free(st);
-        }
-    }
+    ffm_close(s);
     return -1;
 }
 
@@ -509,16 +515,6 @@ static int ffm_probe(AVProbeData *p)
         p->buf[0] == 'F' && p->buf[1] == 'F' && p->buf[2] == 'M' &&
         p->buf[3] == '1')
         return AVPROBE_SCORE_MAX + 1;
-    return 0;
-}
-
-static int ffm_close(AVFormatContext *s)
-{
-    int i;
-
-    for (i = 0; i < s->nb_streams; i++)
-        av_freep(&s->streams[i]->codec->rc_eq);
-
     return 0;
 }
 

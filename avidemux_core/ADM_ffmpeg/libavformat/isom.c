@@ -67,6 +67,16 @@ const AVCodecTag codec_movvideo_tags[] = {
     { CODEC_ID_RAWVIDEO, MKTAG('2', 'v', 'u', 'y') }, /* UNCOMPRESSED 8BIT 4:2:2 */
     { CODEC_ID_RAWVIDEO, MKTAG('y', 'u', 'v', 's') }, /* same as 2vuy but byte swapped */
 
+    { CODEC_ID_RAWVIDEO, MKTAG('L', '5', '5', '5') },
+    { CODEC_ID_RAWVIDEO, MKTAG('L', '5', '6', '5') },
+    { CODEC_ID_RAWVIDEO, MKTAG('B', '5', '6', '5') },
+    { CODEC_ID_RAWVIDEO, MKTAG('2', '4', 'B', 'G') },
+    { CODEC_ID_RAWVIDEO, MKTAG('B', 'G', 'R', 'A') },
+    { CODEC_ID_RAWVIDEO, MKTAG('R', 'G', 'B', 'A') },
+    { CODEC_ID_RAWVIDEO, MKTAG('A', 'B', 'G', 'R') },
+    { CODEC_ID_RAWVIDEO, MKTAG('b', '1', '6', 'g') },
+    { CODEC_ID_RAWVIDEO, MKTAG('b', '4', '8', 'r') },
+
     { CODEC_ID_R210,   MKTAG('r', '2', '1', '0') }, /* UNCOMPRESSED 10BIT RGB */
     { CODEC_ID_V210,   MKTAG('v', '2', '1', '0') }, /* UNCOMPRESSED 10BIT 4:2:2 */
 
@@ -205,10 +215,7 @@ const AVCodecTag codec_movaudio_tags[] = {
     { CODEC_ID_MP1, MKTAG('.', 'm', 'p', '1') }, /* MPEG layer 1 */
     { CODEC_ID_MP2, MKTAG('.', 'm', 'p', '2') }, /* MPEG layer 2 */
 
-    //MEANX { CODEC_ID_MP3, MKTAG('.', 'm', 'p', '3') }, /* MPEG layer 3 */ /* sample files at http://www.3ivx.com/showcase.html use this tag */
-     { CODEC_ID_MP3, MKTAG( 'm', 'p', '4','a') },
-     { CODEC_ID_MP2, MKTAG( 'm', 'p', '4', 'a') },
-    // /MEANX
+    { CODEC_ID_MP3, MKTAG('.', 'm', 'p', '3') }, /* MPEG layer 3 */ /* sample files at http://www.3ivx.com/showcase.html use this tag */
     { CODEC_ID_MP3, 0x6D730055 }, /* MPEG layer 3 */
 
 /*  { CODEC_ID_OGG_VORBIS, MKTAG('O', 'g', 'g', 'S') }, *//* sample files at http://heroinewarrior.com/xmovie.php3 use this tag */

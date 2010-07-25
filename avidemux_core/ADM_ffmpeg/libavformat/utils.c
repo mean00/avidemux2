@@ -49,14 +49,13 @@ unsigned avformat_version(void)
 
 const char *avformat_configuration(void)
 {
-    return "avidemux"; //FFMPEG_CONFIGURATION;
+    return FFMPEG_CONFIGURATION;
 }
 
 const char *avformat_license(void)
 {
 #define LICENSE_PREFIX "libavformat license: "
-    //return LICENSE_PREFIX FFMPEG_LICENSE + sizeof(LICENSE_PREFIX) - 1;
-        return LICENSE_PREFIX "GPL";
+    return LICENSE_PREFIX FFMPEG_LICENSE + sizeof(LICENSE_PREFIX) - 1;
 }
 
 /* fraction handling */
@@ -284,8 +283,38 @@ AVInputFormat *av_find_input_format(const char *short_name)
     return NULL;
 }
 
-/* memory handling */
+#if LIBAVFORMAT_VERSION_MAJOR < 53 && CONFIG_SHARED && HAVE_SYMVER
+FF_SYMVER(void, av_destruct_packet_nofree, (AVPacket *pkt), "LIBAVFORMAT_52")
+{
+    av_destruct_packet_nofree(pkt);
+}
 
+FF_SYMVER(void, av_destruct_packet, (AVPacket *pkt), "LIBAVFORMAT_52")
+{
+    av_destruct_packet(pkt);
+}
+
+FF_SYMVER(int, av_new_packet, (AVPacket *pkt, int size), "LIBAVFORMAT_52")
+{
+    return av_new_packet(pkt, size);
+}
+
+FF_SYMVER(int, av_dup_packet, (AVPacket *pkt), "LIBAVFORMAT_52")
+{
+    return av_dup_packet(pkt);
+}
+
+FF_SYMVER(void, av_free_packet, (AVPacket *pkt), "LIBAVFORMAT_52")
+{
+    av_free_packet(pkt);
+}
+
+FF_SYMVER(void, av_init_packet, (AVPacket *pkt), "LIBAVFORMAT_52")
+{
+    av_log(NULL, AV_LOG_WARNING, "Diverting av_*_packet function calls to libavcodec. Recompile to improve performance\n");
+    av_init_packet(pkt);
+}
+#endif
 
 int av_get_packet(ByteIOContext *s, AVPacket *pkt, int size)
 {
@@ -879,7 +908,7 @@ static void compute_pkt_fields(AVFormatContext *s, AVStream *st,
     // we take the conservative approach and discard both
     // Note, if this is misbehaving for a H.264 file then possibly presentation_delayed is not set correctly.
     if(delay==1 && pkt->dts == pkt->pts && pkt->dts != AV_NOPTS_VALUE && presentation_delayed){
-        av_log(s, AV_LOG_WARNING, "invalid dts/pts combination\n");
+        av_log(s, AV_LOG_DEBUG, "invalid dts/pts combination\n");
         pkt->dts= pkt->pts= AV_NOPTS_VALUE;
     }
 
@@ -1045,7 +1074,15 @@ static int av_read_frame_internal(AVFormatContext *s, AVPacket *pkt)
                     pkt->pts = st->parser->pts;
                     pkt->dts = st->parser->dts;
                     pkt->pos = st->parser->pos;
+                    if(pkt->data == st->cur_pkt.data && pkt->size == st->cur_pkt.size){
+                        s->cur_st = NULL;
+                        pkt->destruct= st->cur_pkt.destruct;
+                        st->cur_pkt.destruct= NULL;
+                        st->cur_pkt.data    = NULL;
+                        assert(st->cur_len == 0);
+                    }else{
                     pkt->destruct = NULL;
+                    }
                     compute_pkt_fields(s, st, st->parser, pkt);
 
                     if((s->iformat->flags & AVFMT_GENERIC_INDEX) && pkt->flags & AV_PKT_FLAG_KEY){
@@ -1118,6 +1155,8 @@ static int av_read_frame_internal(AVFormatContext *s, AVPacket *pkt)
                     st->need_parsing = AVSTREAM_PARSE_NONE;
                 }else if(st->need_parsing == AVSTREAM_PARSE_HEADERS){
                     st->parser->flags |= PARSER_FLAG_COMPLETE_FRAMES;
+                }else if(st->need_parsing == AVSTREAM_PARSE_FULL_ONCE){
+                    st->parser->flags |= PARSER_FLAG_ONCE;
                 }
                 if(st->parser && (s->iformat->flags & AVFMT_GENERIC_INDEX)){
                     st->parser->next_frame_offset=
@@ -1150,11 +1189,11 @@ int av_read_frame(AVFormatContext *s, AVPacket *pkt)
             AVPacket *next_pkt= &pktl->pkt;
 
             if(genpts && next_pkt->dts != AV_NOPTS_VALUE){
+                int wrap_bits = s->streams[next_pkt->stream_index]->pts_wrap_bits;
                 while(pktl && next_pkt->pts == AV_NOPTS_VALUE){
                     if(   pktl->pkt.stream_index == next_pkt->stream_index
-                       && next_pkt->dts < pktl->pkt.dts
-                       && pktl->pkt.pts != pktl->pkt.dts //not b frame
-                       /*&& pktl->pkt.dts != AV_NOPTS_VALUE*/){
+                       && (0 > av_compare_mod(next_pkt->dts, pktl->pkt.dts, 2LL << (wrap_bits - 1)))
+                       && av_compare_mod(pktl->pkt.pts, pktl->pkt.dts, 2LL << (wrap_bits - 1))) { //not b frame
                         next_pkt->pts= pktl->pkt.dts;
                     }
                     pktl= pktl->next;
@@ -1706,7 +1745,7 @@ int avformat_seek_file(AVFormatContext *s, int stream_index, int64_t min_ts, int
 /*******************************************************/
 
 /**
- * Returns TRUE if the stream has accurate duration in any stream.
+ * Return TRUE if the stream has accurate duration in any stream.
  *
  * @return TRUE if the stream has accurate duration for at least one component.
  */
@@ -1980,6 +2019,12 @@ static int has_codec_parameters(AVCodecContext *enc)
     return enc->codec_id != CODEC_ID_NONE && val != 0;
 }
 
+static int has_decode_delay_been_guessed(AVStream *st)
+{
+    return st->codec->codec_id != CODEC_ID_H264 ||
+        st->codec_info_nb_frames >= 4 + st->codec->has_b_frames;
+}
+
 static int try_decode_frame(AVStream *st, AVPacket *avpkt)
 {
     int16_t *samples;
@@ -1996,7 +2041,7 @@ static int try_decode_frame(AVStream *st, AVPacket *avpkt)
             return ret;
     }
 
-    if(!has_codec_parameters(st->codec)){
+    if(!has_codec_parameters(st->codec) || !has_decode_delay_been_guessed(st)){
         switch(st->codec->codec_type) {
         case AVMEDIA_TYPE_VIDEO:
             avcodec_get_frame_defaults(&picture);
@@ -2195,7 +2240,7 @@ int av_find_stream_info(AVFormatContext *ic)
         /* we did not get all the codec info, but we read too much data */
         if (read_size >= ic->probesize) {
             ret = count;
-            av_log(ic, AV_LOG_DEBUG, "MAX_READ_SIZE:%d reached\n", ic->probesize);
+            av_log(ic, AV_LOG_DEBUG, "Probe buffer size limit %d reached\n", ic->probesize);
             break;
         }
 
@@ -2236,8 +2281,6 @@ int av_find_stream_info(AVFormatContext *ic)
             }
             codec_info_duration[st->index] += pkt->duration;
         }
-            st->codec_info_nb_frames++;
-
         {
             int index= pkt->stream_index;
             int64_t last= last_dts[index];
@@ -2278,9 +2321,10 @@ int av_find_stream_info(AVFormatContext *ic)
            decompress the frame. We try to avoid that in most cases as
            it takes longer and uses more memory. For MPEG-4, we need to
            decompress for QuickTime. */
-        if (!has_codec_parameters(st->codec))
+        if (!has_codec_parameters(st->codec) || !has_decode_delay_been_guessed(st))
             try_decode_frame(st, pkt);
 
+        st->codec_info_nb_frames++;
         count++;
     }
 
@@ -2458,8 +2502,10 @@ AVStream *av_new_stream(AVFormatContext *s, int id)
     AVStream *st;
     int i;
 
-    if (s->nb_streams >= MAX_STREAMS)
+    if (s->nb_streams >= MAX_STREAMS){
+        av_log(s, AV_LOG_ERROR, "Too many streams\n");
         return NULL;
+    }
 
     st = av_mallocz(sizeof(AVStream));
     if (!st)
@@ -2643,11 +2689,17 @@ int av_write_header(AVFormatContext *s)
         }
 
         if(s->oformat->codec_tag){
+            if(st->codec->codec_tag && st->codec->codec_id == CODEC_ID_RAWVIDEO && av_codec_get_tag(s->oformat->codec_tag, st->codec->codec_id) == 0 && !validate_codec_tag(s, st)){
+                //the current rawvideo encoding system ends up setting the wrong codec_tag for avi, we override it here
+                st->codec->codec_tag= 0;
+            }
             if(st->codec->codec_tag){
                 if (!validate_codec_tag(s, st)) {
+                    char tagbuf[32];
+                    av_get_codec_tag_string(tagbuf, sizeof(tagbuf), st->codec->codec_tag);
                     av_log(s, AV_LOG_ERROR,
-                           "Tag 0x%08x incompatible with output codec\n",
-                           st->codec->codec_tag);
+                           "Tag %s/0x%08x incompatible with output codec '%s'\n",
+                           tagbuf, st->codec->codec_tag, st->codec->codec->name);
                     return AVERROR_INVALIDDATA;
                 }
             }else
@@ -2877,7 +2929,7 @@ int av_interleave_packet_per_dts(AVFormatContext *s, AVPacket *out, AVPacket *pk
 }
 
 /**
- * Interleaves an AVPacket correctly so it can be muxed.
+ * Interleave an AVPacket correctly so it can be muxed.
  * @param out the interleaved packet will be output here
  * @param in the input packet
  * @param flush 1 if no further packets are available as input and all
@@ -3446,7 +3498,25 @@ void av_pkt_dump_log(void *avcl, int level, AVPacket *pkt, int dump_payload)
     pkt_dump_internal(avcl, NULL, level, pkt, dump_payload);
 }
 
+#if LIBAVFORMAT_VERSION_MAJOR < 53
+attribute_deprecated
 void ff_url_split(char *proto, int proto_size,
+                  char *authorization, int authorization_size,
+                  char *hostname, int hostname_size,
+                  int *port_ptr,
+                  char *path, int path_size,
+                  const char *url)
+{
+    av_url_split(proto, proto_size,
+                 authorization, authorization_size,
+                 hostname, hostname_size,
+                 port_ptr,
+                 path, path_size,
+                 url);
+}
+#endif
+
+void av_url_split(char *proto, int proto_size,
                   char *authorization, int authorization_size,
                   char *hostname, int hostname_size,
                   int *port_ptr,
@@ -3554,7 +3624,7 @@ int ff_url_join(char *str, int size, const char *proto,
     str[0] = '\0';
     if (proto)
         av_strlcatf(str, size, "%s://", proto);
-    if (authorization)
+    if (authorization && authorization[0])
         av_strlcatf(str, size, "%s@", authorization);
 #if CONFIG_NETWORK && defined(AF_INET6)
     /* Determine if hostname is a numerical IPv6 address,

@@ -114,24 +114,24 @@ static av_cold float ath(float f, float add)
 
 static av_cold int psy_3gpp_init(FFPsyContext *ctx) {
     Psy3gppContext *pctx;
-    float barks[1024];
+    float bark;
     int i, j, g, start;
     float prev, minscale, minath;
 
     ctx->model_priv_data = av_mallocz(sizeof(Psy3gppContext));
     pctx = (Psy3gppContext*) ctx->model_priv_data;
 
-    for (i = 0; i < 1024; i++)
-        barks[i] = calc_bark(i * ctx->avctx->sample_rate / 2048.0);
     minath = ath(3410, ATH_ADD);
     for (j = 0; j < 2; j++) {
         Psy3gppCoeffs *coeffs = &pctx->psy_coef[j];
+        float line_to_frequency = ctx->avctx->sample_rate / (j ? 256.f : 2048.0f);
         i = 0;
         prev = 0.0;
         for (g = 0; g < ctx->num_bands[j]; g++) {
             i += ctx->bands[j][g];
-            coeffs->barks[g] = (barks[i - 1] + prev) / 2.0;
-            prev = barks[i - 1];
+            bark = calc_bark((i-1) * line_to_frequency);
+            coeffs->barks[g] = (bark + prev) / 2.0;
+            prev = bark;
         }
         for (g = 0; g < ctx->num_bands[j] - 1; g++) {
             coeffs->spread_low[g] = pow(10.0, -(coeffs->barks[g+1] - coeffs->barks[g]) * PSY_3GPP_SPREAD_LOW);
@@ -139,9 +139,9 @@ static av_cold int psy_3gpp_init(FFPsyContext *ctx) {
         }
         start = 0;
         for (g = 0; g < ctx->num_bands[j]; g++) {
-            minscale = ath(ctx->avctx->sample_rate * start / 1024.0, ATH_ADD);
+            minscale = ath(start * line_to_frequency, ATH_ADD);
             for (i = 1; i < ctx->bands[j][g]; i++)
-                minscale = FFMIN(minscale, ath(ctx->avctx->sample_rate * (start + i) / 1024.0 / 2.0, ATH_ADD));
+                minscale = FFMIN(minscale, ath((start + i) * line_to_frequency, ATH_ADD));
             coeffs->ath[g] = minscale - minath;
             start += ctx->bands[j][g];
         }
@@ -185,6 +185,7 @@ static FFPsyWindowInfo psy_3gpp_window(FFPsyContext *ctx,
     Psy3gppContext *pctx = (Psy3gppContext*) ctx->model_priv_data;
     Psy3gppChannel *pch  = &pctx->ch[channel];
     uint8_t grouping     = 0;
+    int next_type        = pch->next_window_seq;
     FFPsyWindowInfo wi;
 
     memset(&wi, 0, sizeof(wi));
@@ -193,6 +194,7 @@ static FFPsyWindowInfo psy_3gpp_window(FFPsyContext *ctx,
         int switch_to_eight = 0;
         float sum = 0.0, sum2 = 0.0;
         int attack_n = 0;
+        int stay_short = 0;
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 128; j++) {
                 v = iir_filter(la[(i*128+j)*ctx->avctx->channels], pch->iir_state);
@@ -214,20 +216,27 @@ static FFPsyWindowInfo psy_3gpp_window(FFPsyContext *ctx,
         switch (prev_type) {
         case ONLY_LONG_SEQUENCE:
             wi.window_type[0] = switch_to_eight ? LONG_START_SEQUENCE : ONLY_LONG_SEQUENCE;
+            next_type = switch_to_eight ? EIGHT_SHORT_SEQUENCE : ONLY_LONG_SEQUENCE;
             break;
         case LONG_START_SEQUENCE:
             wi.window_type[0] = EIGHT_SHORT_SEQUENCE;
             grouping = pch->next_grouping;
+            next_type = switch_to_eight ? EIGHT_SHORT_SEQUENCE : LONG_STOP_SEQUENCE;
             break;
         case LONG_STOP_SEQUENCE:
-            wi.window_type[0] = ONLY_LONG_SEQUENCE;
+            wi.window_type[0] = switch_to_eight ? LONG_START_SEQUENCE : ONLY_LONG_SEQUENCE;
+            next_type = switch_to_eight ? EIGHT_SHORT_SEQUENCE : ONLY_LONG_SEQUENCE;
             break;
         case EIGHT_SHORT_SEQUENCE:
-            wi.window_type[0] = switch_to_eight ? EIGHT_SHORT_SEQUENCE : LONG_STOP_SEQUENCE;
-            grouping = switch_to_eight ? pch->next_grouping : 0;
+            stay_short = next_type == EIGHT_SHORT_SEQUENCE || switch_to_eight;
+            wi.window_type[0] = stay_short ? EIGHT_SHORT_SEQUENCE : LONG_STOP_SEQUENCE;
+            grouping = next_type == EIGHT_SHORT_SEQUENCE ? pch->next_grouping : 0;
+            next_type = switch_to_eight ? EIGHT_SHORT_SEQUENCE : LONG_STOP_SEQUENCE;
             break;
         }
+
         pch->next_grouping = window_grouping[attack_n];
+        pch->next_window_seq = next_type;
     } else {
         for (i = 0; i < 3; i++)
             wi.window_type[i] = prev_type;

@@ -127,6 +127,9 @@ static inline int parse_nal_units(AVCodecParserContext *s,
     h->sei_cpb_removal_delay        = -1;
     h->sei_buffering_period_present =  0;
 
+    if (!buf_size)
+        return 0;
+
     for(;;) {
         int src_length, dst_length, consumed;
         buf = ff_find_start_code(buf, buf_end, &state);
@@ -245,6 +248,14 @@ static int h264_parse(AVCodecParserContext *s,
     ParseContext *pc = &h->s.parse_context;
     int next;
 
+    if (!h->got_first) {
+        h->got_first = 1;
+        if (avctx->extradata_size) {
+            h->s.avctx = avctx;
+            ff_h264_decode_extradata(h);
+        }
+    }
+
     if(s->flags & PARSER_FLAG_COMPLETE_FRAMES){
         next= buf_size;
     }else{
@@ -271,6 +282,9 @@ static int h264_parse(AVCodecParserContext *s,
             s->dts_sync_point    = INT_MIN;
             s->dts_ref_dts_delta = INT_MIN;
             s->pts_dts_delta     = INT_MIN;
+        }
+        if (s->flags & PARSER_FLAG_ONCE) {
+            s->flags &= PARSER_FLAG_COMPLETE_FRAMES;
         }
     }
 

@@ -25,11 +25,7 @@
 #define AVUTIL_LIBM_H
 
 #include <math.h>
-//MEANX
-#ifndef ADM_NO_CONFIG_H
 #include "config.h"
-#endif
-///MEANX
 #include "attributes.h"
 
 #if !HAVE_EXP2

@@ -34,22 +34,24 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
-//MEANX
-#ifndef ADM_NO_CONFIG_H
 #include "config.h"
-#endif
-// /MEANX
 #include "attributes.h"
 #include "timer.h"
 
 #ifndef attribute_align_arg
-#if (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,2)
+#if ARCH_X86_32 && (!defined(__ICC) || __ICC > 1110) && AV_GCC_VERSION_AT_LEAST(4,2)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
 #else
 #    define attribute_align_arg
 #endif
 #endif
 
+
+/**
+ * Mark a variable as used and prevent the compiler from optimizing it away.
+ * This is useful for asm that accesses varibles in ways that the compiler does not
+ * understand
+ */
 #ifndef attribute_used
 #if AV_GCC_VERSION_AT_LEAST(3,1)
 #    define attribute_used __attribute__((used))
@@ -99,8 +101,6 @@
 #endif
 
 /* Use to export labels from asm. */
-#include "ADM_mangle.h"
-#if 0 // MEANX
 #define LABEL_MANGLE(a) EXTERN_PREFIX #a
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
@@ -111,7 +111,7 @@
 #endif
 
 #define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
-#endif // MEANX
+
 /* debug stuff */
 
 /* dprintf macros */
@@ -140,14 +140,12 @@
 #endif
 
 /* avoid usage of dangerous/inappropriate system functions */
-#if 0 //MEANX
 #undef  malloc
 #define malloc please_use_av_malloc
 #undef  free
 #define free please_use_av_free
 #undef  realloc
 #define realloc please_use_av_realloc
-#endif
 #undef  time
 #define time time_is_forbidden_due_to_security_issues
 #undef  rand
@@ -194,7 +192,7 @@
 #include "libm.h"
 
 /**
- * Returns NULL if CONFIG_SMALL is true, otherwise the argument
+ * Return NULL if CONFIG_SMALL is true, otherwise the argument
  * without modification. Used to disable the definition of strings
  * (for example AVCodec long_names).
  */
@@ -202,6 +200,35 @@
 #   define NULL_IF_CONFIG_SMALL(x) NULL
 #else
 #   define NULL_IF_CONFIG_SMALL(x) x
+#endif
+
+
+/**
+ * Define a function with only the non-default version specified.
+ *
+ * On systems with ELF shared libraries, all symbols exported from
+ * FFmpeg libraries are tagged with the name and major version of the
+ * library to which they belong.  If a function is moved from one
+ * library to another, a wrapper must be retained in the original
+ * location to preserve binary compatibility.
+ *
+ * Functions defined with this macro will never be used to resolve
+ * symbols by the build-time linker.
+ *
+ * @param type return type of function
+ * @param name name of function
+ * @param args argument list of function
+ * @param ver  version tag to assign function
+ */
+#if HAVE_SYMVER_ASM_LABEL
+#   define FF_SYMVER(type, name, args, ver)                     \
+    type ff_##name args __asm__ (EXTERN_PREFIX #name "@" ver);  \
+    type ff_##name args
+#elif HAVE_SYMVER_GNU_ASM
+#   define FF_SYMVER(type, name, args, ver)                             \
+    __asm__ (".symver ff_" #name "," EXTERN_PREFIX #name "@" ver);      \
+    type ff_##name args;                                                \
+    type ff_##name args
 #endif
 
 #endif /* AVUTIL_INTERNAL_H */

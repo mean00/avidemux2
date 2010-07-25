@@ -41,6 +41,8 @@
 
 #include "psymodel.h"
 
+#define AAC_MAX_CHANNELS 6
+
 static const uint8_t swb_size_1024_96[] = {
     4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8,
     12, 12, 12, 12, 12, 16, 16, 24, 28, 36, 44,
@@ -166,7 +168,7 @@ static av_cold int aac_encode_init(AVCodecContext *avctx)
         av_log(avctx, AV_LOG_ERROR, "Unsupported sample rate %d\n", avctx->sample_rate);
         return -1;
     }
-    if (avctx->channels > 6) {
+    if (avctx->channels > AAC_MAX_CHANNELS) {
         av_log(avctx, AV_LOG_ERROR, "Unsupported number of channels: %d\n", avctx->channels);
         return -1;
     }
@@ -191,7 +193,7 @@ static av_cold int aac_encode_init(AVCodecContext *avctx)
 
     s->samples            = av_malloc(2 * 1024 * avctx->channels * sizeof(s->samples[0]));
     s->cpe                = av_mallocz(sizeof(ChannelElement) * aac_chan_configs[avctx->channels-1][0]);
-    avctx->extradata      = av_malloc(2);
+    avctx->extradata      = av_mallocz(2 + FF_INPUT_BUFFER_PADDING_SIZE);
     avctx->extradata_size = 2;
     put_audio_specific_config(avctx);
 
@@ -204,22 +206,17 @@ static av_cold int aac_encode_init(AVCodecContext *avctx)
     s->coder = &ff_aac_coders[2];
 
     s->lambda = avctx->global_quality ? avctx->global_quality : 120;
-#if !CONFIG_HARDCODED_TABLES
-    for (i = 0; i < 428; i++)
-        ff_aac_pow2sf_tab[i] = pow(2, (i - 200)/4.);
-#endif /* CONFIG_HARDCODED_TABLES */
 
-    if (avctx->channels > 5)
-        av_log(avctx, AV_LOG_ERROR, "This encoder does not yet enforce the restrictions on LFEs. "
-               "The output will most likely be an illegal bitstream.\n");
+    ff_aac_tableinit();
 
     return 0;
 }
 
 static void apply_window_and_mdct(AVCodecContext *avctx, AACEncContext *s,
-                                  SingleChannelElement *sce, short *audio, int channel)
+                                  SingleChannelElement *sce, short *audio)
 {
-    int i, j, k;
+    int i, k;
+    const int chans = avctx->channels;
     const float * lwindow = sce->ics.use_kb_window[0] ? ff_aac_kbd_long_1024 : ff_sine_1024;
     const float * swindow = sce->ics.use_kb_window[0] ? ff_aac_kbd_short_128 : ff_sine_128;
     const float * pwindow = sce->ics.use_kb_window[1] ? ff_aac_kbd_short_128 : ff_sine_128;
@@ -234,37 +231,32 @@ static void apply_window_and_mdct(AVCodecContext *avctx, AACEncContext *s,
                 s->output[i] = sce->saved[i];
         }
         if (sce->ics.window_sequence[0] != LONG_START_SEQUENCE) {
-            j = channel;
-            for (i = 0; i < 1024; i++, j += avctx->channels) {
-                s->output[i+1024]         = audio[j] * lwindow[1024 - i - 1];
-                sce->saved[i] = audio[j] * lwindow[i];
+            for (i = 0; i < 1024; i++) {
+                s->output[i+1024]         = audio[i * chans] * lwindow[1024 - i - 1];
+                sce->saved[i] = audio[i * chans] * lwindow[i];
             }
         } else {
-            j = channel;
-            for (i = 0; i < 448; i++, j += avctx->channels)
-                s->output[i+1024]         = audio[j];
-            for (i = 448; i < 576; i++, j += avctx->channels)
-                s->output[i+1024]         = audio[j] * swindow[576 - i - 1];
+            for (i = 0; i < 448; i++)
+                s->output[i+1024]         = audio[i * chans];
+            for (; i < 576; i++)
+                s->output[i+1024]         = audio[i * chans] * swindow[576 - i - 1];
             memset(s->output+1024+576, 0, sizeof(s->output[0]) * 448);
-            j = channel;
-            for (i = 0; i < 1024; i++, j += avctx->channels)
-                sce->saved[i] = audio[j];
+            for (i = 0; i < 1024; i++)
+                sce->saved[i] = audio[i * chans];
         }
         ff_mdct_calc(&s->mdct1024, sce->coeffs, s->output);
     } else {
-        j = channel;
         for (k = 0; k < 1024; k += 128) {
             for (i = 448 + k; i < 448 + k + 256; i++)
                 s->output[i - 448 - k] = (i < 1024)
                                          ? sce->saved[i]
-                                         : audio[channel + (i-1024)*avctx->channels];
+                                         : audio[(i-1024)*chans];
             s->dsp.vector_fmul        (s->output,     k ?  swindow : pwindow, 128);
             s->dsp.vector_fmul_reverse(s->output+128, s->output+128, swindow, 128);
             ff_mdct_calc(&s->mdct128, sce->coeffs + k, s->output);
         }
-        j = channel;
-        for (i = 0; i < 1024; i++, j += avctx->channels)
-            sce->saved[i] = audio[j];
+        for (i = 0; i < 1024; i++)
+            sce->saved[i] = audio[i * chans];
     }
 }
 
@@ -493,7 +485,7 @@ static int aac_encode_frame(AVCodecContext *avctx,
     int i, j, chans, tag, start_ch;
     const uint8_t *chan_map = aac_chan_configs[avctx->channels-1];
     int chan_el_counter[4];
-    FFPsyWindowInfo windows[avctx->channels];
+    FFPsyWindowInfo windows[AAC_MAX_CHANNELS];
 
     if (s->last_frame)
         return 0;
@@ -525,26 +517,35 @@ static int aac_encode_frame(AVCodecContext *avctx,
         tag      = chan_map[i+1];
         chans    = tag == TYPE_CPE ? 2 : 1;
         cpe      = &s->cpe[i];
-        samples2 = samples + start_ch;
-        la       = samples2 + 1024 * avctx->channels + start_ch;
-        if (!data)
-            la = NULL;
         for (j = 0; j < chans; j++) {
             IndividualChannelStream *ics = &cpe->ch[j].ics;
             int k;
-            wi[j] = ff_psy_suggest_window(&s->psy, samples2, la, start_ch + j, ics->window_sequence[0]);
+            int cur_channel = start_ch + j;
+            samples2 = samples + cur_channel;
+            la       = samples2 + (448+64) * avctx->channels;
+            if (!data)
+                la = NULL;
+            if (tag == TYPE_LFE) {
+                wi[j].window_type[0] = ONLY_LONG_SEQUENCE;
+                wi[j].window_shape   = 0;
+                wi[j].num_windows    = 1;
+                wi[j].grouping[0]    = 1;
+            } else {
+                wi[j] = ff_psy_suggest_window(&s->psy, samples2, la, cur_channel,
+                                              ics->window_sequence[0]);
+            }
             ics->window_sequence[1] = ics->window_sequence[0];
             ics->window_sequence[0] = wi[j].window_type[0];
             ics->use_kb_window[1]   = ics->use_kb_window[0];
             ics->use_kb_window[0]   = wi[j].window_shape;
             ics->num_windows        = wi[j].num_windows;
             ics->swb_sizes          = s->psy.bands    [ics->num_windows == 8];
-            ics->num_swb            = s->psy.num_bands[ics->num_windows == 8];
+            ics->num_swb            = tag == TYPE_LFE ? 12 : s->psy.num_bands[ics->num_windows == 8];
             for (k = 0; k < ics->num_windows; k++)
                 ics->group_len[k] = wi[j].grouping[k];
 
-            s->cur_channel = start_ch + j;
-            apply_window_and_mdct(avctx, s, &cpe->ch[j], samples2, j);
+            s->cur_channel = cur_channel;
+            apply_window_and_mdct(avctx, s, &cpe->ch[j], samples2);
         }
         start_ch += chans;
     }
@@ -645,7 +646,7 @@ AVCodec aac_encoder = {
     aac_encode_init,
     aac_encode_frame,
     aac_encode_end,
-    .capabilities = CODEC_CAP_SMALL_LAST_FRAME | CODEC_CAP_DELAY,
+    .capabilities = CODEC_CAP_SMALL_LAST_FRAME | CODEC_CAP_DELAY | CODEC_CAP_EXPERIMENTAL,
     .sample_fmts = (const enum SampleFormat[]){SAMPLE_FMT_S16,SAMPLE_FMT_NONE},
     .long_name = NULL_IF_CONFIG_SMALL("Advanced Audio Coding"),
 };

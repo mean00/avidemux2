@@ -32,9 +32,9 @@
 
 #include "avcodec.h"
 #include "dsputil.h"
-#include "colorspace.h"
 #include "internal.h"
 #include "imgconvert.h"
+#include "libavutil/colorspace.h"
 #include "libavutil/pixdesc.h"
 
 #if HAVE_MMX
@@ -948,7 +948,8 @@ int ff_get_plane_bytewidth(enum PixelFormat pix_fmt, int width, int plane)
         return (width * bits + 7) >> 3;
         break;
     case FF_PIXEL_PLANAR:
-            if (plane == 1 || plane == 2)
+            if ((pix_fmt != PIX_FMT_NV12 && pix_fmt != PIX_FMT_NV21) &&
+                (plane == 1 || plane == 2))
                 width= -((-width)>>desc->log2_chroma_w);
 
             return (width * pf->depth + 7) >> 3;

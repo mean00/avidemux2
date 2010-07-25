@@ -45,7 +45,7 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
     char hostname[1024],proto[1024],path[1024];
     char portstr[10];
 
-    ff_url_split(proto, sizeof(proto), NULL, 0, hostname, sizeof(hostname),
+    av_url_split(proto, sizeof(proto), NULL, 0, hostname, sizeof(hostname),
         &port, path, sizeof(path), uri);
     if (strcmp(proto,"tcp") || port <= 0 || port >= 65536)
         return AVERROR(EINVAL);
@@ -154,7 +154,7 @@ static int tcp_read(URLContext *h, uint8_t *buf, int size)
     }
 }
 
-static int tcp_write(URLContext *h, uint8_t *buf, int size)
+static int tcp_write(URLContext *h, const uint8_t *buf, int size)
 {
     TCPContext *s = h->priv_data;
     int ret, size1, fd_max, len;

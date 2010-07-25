@@ -254,7 +254,7 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
     case CODEC_ID_LJPEG:
     case CODEC_ID_MJPEG:
         if(avctx->pix_fmt != PIX_FMT_YUVJ420P && avctx->pix_fmt != PIX_FMT_YUVJ422P && avctx->pix_fmt != PIX_FMT_RGB32 &&
-           ((avctx->pix_fmt != PIX_FMT_YUV420P && avctx->pix_fmt != PIX_FMT_YUV422P) || avctx->strict_std_compliance>FF_COMPLIANCE_INOFFICIAL)){
+           ((avctx->pix_fmt != PIX_FMT_YUV420P && avctx->pix_fmt != PIX_FMT_YUV422P) || avctx->strict_std_compliance>FF_COMPLIANCE_UNOFFICIAL)){
             av_log(avctx, AV_LOG_ERROR, "colorspace not supported in jpeg\n");
             return -1;
         }
@@ -367,14 +367,12 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
 
         av_log(avctx, AV_LOG_INFO, "Warning vbv_delay will be set to 0xFFFF (=VBR) as the specified vbv buffer is too large for the given bitrate!\n");
     }
-#if 0 //MEANX
 
     if((s->flags & CODEC_FLAG_4MV) && s->codec_id != CODEC_ID_MPEG4
        && s->codec_id != CODEC_ID_H263 && s->codec_id != CODEC_ID_H263P && s->codec_id != CODEC_ID_FLV1){
         av_log(avctx, AV_LOG_ERROR, "4MV not supported by codec\n");
         return -1;
     }
-#endif
 
     if(s->obmc && s->avctx->mb_decision != FF_MB_DECISION_SIMPLE){
         av_log(avctx, AV_LOG_ERROR, "OBMC is only supported with simple mb decision\n");
@@ -415,12 +413,10 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
         return -1;
     }
 
-#if 0 //MEANX
     if(s->mpeg_quant && s->codec_id != CODEC_ID_MPEG4){ //FIXME mpeg2 uses that too
         av_log(avctx, AV_LOG_ERROR, "mpeg2 style quantization not supported by codec\n");
         return -1;
     }
-#endif
 
     if((s->flags & CODEC_FLAG_CBP_RD) && !avctx->trellis){
         av_log(avctx, AV_LOG_ERROR, "CBP RD needs trellis quant\n");

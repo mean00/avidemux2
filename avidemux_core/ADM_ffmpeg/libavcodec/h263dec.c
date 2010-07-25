@@ -119,23 +119,6 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
 
     return 0;
 }
-/* MeanX : Ugly patch to detect vo ppacked stuff ... */
-int av_is_voppacked(AVCodecContext *avctx, int *vop_packed, int *gmc, int *qpel)
-{
-    MpegEncContext *s = avctx->priv_data;
-    // set sane default
-    *vop_packed=0;
-    *gmc=0;
-    *qpel=0;
-    if(avctx->codec->id!=CODEC_ID_MPEG4) return 0;
-    	
-  	*vop_packed=(s->divx_packed);
-	*qpel=s->quarter_sample;
-	*gmc=0;	// FIXME
-	return 1;
-
-  }
-  /* MeanX */
 
 av_cold int ff_h263_decode_end(AVCodecContext *avctx)
 {
@@ -431,12 +414,6 @@ retry:
     } else {
         ret = h263_decode_picture_header(s);
     }
-	//MEANX we need to do it here also for quicktime file / ctts atom 
-        // we need the correct frame type, and qt file may contain 
-        // vop not coded frame.
-        pict->pict_type=s->current_picture.pict_type= s->pict_type;
-        pict->key_frame=s->current_picture.key_frame= s->pict_type == FF_I_TYPE;
-        //MEANX
 
     if(ret==FRAME_SKIPPED) return get_consumed_bytes(s, buf_size);
 
@@ -451,7 +428,9 @@ retry:
     if(s->xvid_build==-1 && s->divx_version==-1 && s->lavc_build==-1){
         if(s->stream_codec_tag == AV_RL32("XVID") ||
            s->codec_tag == AV_RL32("XVID") || s->codec_tag == AV_RL32("XVIX") ||
-           s->codec_tag == AV_RL32("RMP4"))
+           s->codec_tag == AV_RL32("RMP4") ||
+           s->codec_tag == AV_RL32("SIPP")
+           )
             s->xvid_build= 0;
 #if 0
         if(s->codec_tag == AV_RL32("DIVX") && s->vo_type==0 && s->vol_control_parameters==1
@@ -730,14 +709,6 @@ intrax8_decoded:
 
 assert(s->current_picture.pict_type == s->current_picture_ptr->pict_type);
 assert(s->current_picture.pict_type == s->pict_type);
-/* MEANX */
-  if(s->current_picture_ptr)
-      s->current_picture_ptr->opaque=pict->opaque;
-/* MEANX */
-
-
-
-
     if (s->pict_type == FF_B_TYPE || s->low_delay) {
         *pict= *(AVFrame*)s->current_picture_ptr;
     } else if (s->last_picture_ptr != NULL) {
@@ -767,6 +738,7 @@ AVCodec h263_decoder = {
     ff_h263_decode_frame,
     CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
     .flush= ff_mpeg_flush,
+    .max_lowres= 3,
     .long_name= NULL_IF_CONFIG_SMALL("H.263 / H.263-1996, H.263+ / H.263-1998 / H.263 version 2"),
     .pix_fmts= ff_hwaccel_pixfmt_list_420,
 };

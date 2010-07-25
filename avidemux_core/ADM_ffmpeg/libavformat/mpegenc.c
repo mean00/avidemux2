@@ -1300,13 +1300,3 @@ AVOutputFormat mpeg2dvd_muxer = {
     mpeg_mux_end,
 };
 #endif
-// MEANX
-//
-int mpegenc_init(void)
-{
-    av_register_output_format(&mpeg2dvd_muxer);
-    av_register_output_format(&mpeg2svcd_muxer);
-    av_register_output_format(&mpeg2vob_muxer);
-    av_register_output_format(&mpeg1vcd_muxer);
-    return 0;
-}

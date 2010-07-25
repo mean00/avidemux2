@@ -31,7 +31,7 @@ typedef struct {
     URLContext *hd;
 } GopherContext;
 
-static int gopher_write(URLContext *h, uint8_t *buf, int size)
+static int gopher_write(URLContext *h, const uint8_t *buf, int size)
 {
     GopherContext *s = h->priv_data;
     return url_write(s->hd, buf, size);
@@ -90,7 +90,7 @@ static int gopher_open(URLContext *h, const char *uri, int flags)
     h->priv_data = s;
 
     /* needed in any case to build the host string */
-    ff_url_split(NULL, 0, auth, sizeof(auth), hostname, sizeof(hostname), &port,
+    av_url_split(NULL, 0, auth, sizeof(auth), hostname, sizeof(hostname), &port,
                  path, sizeof(path), uri);
 
     if (port < 0)

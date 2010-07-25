@@ -49,23 +49,6 @@ typedef struct {
     int audio_pkt_cnt; ///< Output packet counter
 } RMDemuxContext;
 
-static const AVCodecTag rm_codec_tags[] = {
-    { CODEC_ID_RV10,   MKTAG('R','V','1','0') },
-    { CODEC_ID_RV20,   MKTAG('R','V','2','0') },
-    { CODEC_ID_RV20,   MKTAG('R','V','T','R') },
-    { CODEC_ID_RV30,   MKTAG('R','V','3','0') },
-    { CODEC_ID_RV40,   MKTAG('R','V','4','0') },
-    { CODEC_ID_AC3,    MKTAG('d','n','e','t') },
-    { CODEC_ID_RA_144, MKTAG('l','p','c','J') },
-    { CODEC_ID_RA_288, MKTAG('2','8','_','8') },
-    { CODEC_ID_COOK,   MKTAG('c','o','o','k') },
-    { CODEC_ID_ATRAC3, MKTAG('a','t','r','c') },
-    { CODEC_ID_SIPR,   MKTAG('s','i','p','r') },
-    { CODEC_ID_AAC,    MKTAG('r','a','a','c') },
-    { CODEC_ID_AAC,    MKTAG('r','a','c','p') },
-    { CODEC_ID_NONE },
-};
-
 static const unsigned char sipr_swaps[38][2] = {
     {  0, 63 }, {  1, 22 }, {  2, 44 }, {  3, 90 },
     {  5, 81 }, {  7, 31 }, {  8, 86 }, {  9, 58 },
@@ -197,7 +180,8 @@ static int rm_read_audio_stream_info(AVFormatContext *s, ByteIOContext *pb,
         }
         st->codec->codec_type = AVMEDIA_TYPE_AUDIO;
         st->codec->codec_tag  = AV_RL32(buf);
-        st->codec->codec_id   = ff_codec_get_id(rm_codec_tags, st->codec->codec_tag);
+        st->codec->codec_id   = ff_codec_get_id(ff_rm_codec_tags,
+                                                st->codec->codec_tag);
         switch (st->codec->codec_id) {
         case CODEC_ID_AC3:
             st->need_parsing = AVSTREAM_PARSE_FULL;
@@ -225,10 +209,6 @@ static int rm_read_audio_stream_info(AVFormatContext *s, ByteIOContext *pb,
                 av_log(s, AV_LOG_ERROR, "codecdata_length too large\n");
                 return -1;
             }
-
-            if (!strcmp(buf, "cook")) st->codec->codec_id = CODEC_ID_COOK;
-            else if (!strcmp(buf, "sipr")) st->codec->codec_id = CODEC_ID_SIPR;
-            else st->codec->codec_id = CODEC_ID_ATRAC3;
 
             ast->audio_framesize = st->codec->block_align;
             if (st->codec->codec_id == CODEC_ID_SIPR) {
@@ -259,7 +239,6 @@ static int rm_read_audio_stream_info(AVFormatContext *s, ByteIOContext *pb,
             get_be16(pb); get_byte(pb);
             if (version == 5)
                 get_byte(pb);
-            st->codec->codec_id = CODEC_ID_AAC;
             codecdata_length = get_be32(pb);
             if(codecdata_length + FF_INPUT_BUFFER_PADDING_SIZE <= (unsigned)codecdata_length){
                 av_log(s, AV_LOG_ERROR, "codecdata_length too large\n");
@@ -308,7 +287,8 @@ ff_rm_read_mdpr_codecdata (AVFormatContext *s, ByteIOContext *pb,
             goto skip;
         }
         st->codec->codec_tag = get_le32(pb);
-        st->codec->codec_id  = ff_codec_get_id(rm_codec_tags, st->codec->codec_tag);
+        st->codec->codec_id  = ff_codec_get_id(ff_rm_codec_tags,
+                                               st->codec->codec_tag);
 //        av_log(s, AV_LOG_DEBUG, "%X %X\n", st->codec->codec_tag, MKTAG('R', 'V', '2', '0'));
         if (st->codec->codec_id == CODEC_ID_NONE)
             goto fail1;
@@ -501,7 +481,8 @@ static int rm_read_header(AVFormatContext *s, AVFormatParameters *ap)
 
     if (!data_off)
         data_off = url_ftell(pb) - 18;
-    if (indx_off && url_fseek(pb, indx_off, SEEK_SET) >= 0) {
+    if (indx_off && !url_is_streamed(pb) && !(s->flags & AVFMT_FLAG_IGNIDX) &&
+        url_fseek(pb, indx_off, SEEK_SET) >= 0) {
         rm_read_index(s);
         url_fseek(pb, data_off + 18, SEEK_SET);
     }

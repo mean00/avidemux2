@@ -178,24 +178,18 @@ static int xiph_handle_packet(AVFormatContext * ctx,
 
         if (fragmented == 3) {
             // end of xiph data packet
-            uint8_t* xiph_data;
-            int frame_size = url_close_dyn_buf(data->fragment, &xiph_data);
+            av_init_packet(pkt);
+            pkt->size = url_close_dyn_buf(data->fragment, &pkt->data);
 
-            if (frame_size < 0) {
+            if (pkt->size < 0) {
                 av_log(ctx, AV_LOG_ERROR,
                        "Error occurred when getting fragment buffer.");
-                return frame_size;
+                return pkt->size;
             }
 
-            if (av_new_packet(pkt, frame_size)) {
-                av_log(ctx, AV_LOG_ERROR, "Out of memory.\n");
-                return AVERROR(ENOMEM);
-            }
-
-            memcpy(pkt->data, xiph_data, frame_size);
             pkt->stream_index = st->index;
+            pkt->destruct = av_destruct_packet;
 
-            av_free(xiph_data);
             data->fragment = NULL;
 
             return 0;
@@ -236,7 +230,7 @@ parse_packed_headers(const uint8_t * packed_headers,
 
     if (packed_headers_end - packed_headers < 9) {
         av_log(codec, AV_LOG_ERROR,
-               "Invalid %d byte packed header.",
+               "Invalid %td byte packed header.",
                packed_headers_end - packed_headers);
         return AVERROR_INVALIDDATA;
     }
@@ -258,7 +252,7 @@ parse_packed_headers(const uint8_t * packed_headers,
     if (packed_headers_end - packed_headers != length ||
         length1 > length || length2 > length - length1) {
         av_log(codec, AV_LOG_ERROR,
-               "Bad packed header lengths (%d,%d,%d,%d)\n", length1,
+               "Bad packed header lengths (%d,%d,%td,%d)\n", length1,
                length2, packed_headers_end - packed_headers, length);
         return AVERROR_INVALIDDATA;
     }
@@ -286,10 +280,11 @@ parse_packed_headers(const uint8_t * packed_headers,
     return 0;
 }
 
-static int xiph_parse_fmtp_pair(AVCodecContext * codec,
+static int xiph_parse_fmtp_pair(AVStream* stream,
                                 PayloadContext *xiph_data,
                                 char *attr, char *value)
 {
+    AVCodecContext *codec = stream->codec;
     int result = 0;
 
     if (!strcmp(attr, "sampling")) {
@@ -346,34 +341,12 @@ static int xiph_parse_sdp_line(AVFormatContext *s, int st_index,
                                  PayloadContext *data, const char *line)
 {
     const char *p;
-    char *value;
-    char attr[25];
-    int value_size = strlen(line), attr_size = sizeof(attr), res = 0;
-    AVCodecContext* codec = s->streams[st_index]->codec;
-
-    assert(data);
-
-    if (!(value = av_malloc(value_size))) {
-        av_log(codec, AV_LOG_ERROR, "Out of memory\n");
-        return AVERROR(ENOMEM);
-    }
 
     if (av_strstart(line, "fmtp:", &p)) {
-        // remove protocol identifier
-        while (*p && *p == ' ') p++; // strip spaces
-        while (*p && *p != ' ') p++; // eat protocol identifier
-        while (*p && *p == ' ') p++; // strip trailing spaces
-
-        while (ff_rtsp_next_attr_and_value(&p,
-                                           attr, attr_size,
-                                           value, value_size)) {
-            res = xiph_parse_fmtp_pair(codec, data, attr, value);
-            if (res < 0 && res != AVERROR_PATCHWELCOME)
-                return res;
-        }
+        return ff_parse_fmtp(s->streams[st_index], data, p,
+                             xiph_parse_fmtp_pair);
     }
 
-    av_free(value);
     return 0;
 }
 

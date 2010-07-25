@@ -38,6 +38,7 @@ typedef struct RawVideoContext {
 static const PixelFormatTag pix_fmt_bps_avi[] = {
     { PIX_FMT_PAL8,    4 },
     { PIX_FMT_PAL8,    8 },
+    { PIX_FMT_RGB444, 12 },
     { PIX_FMT_RGB555, 15 },
     { PIX_FMT_RGB555, 16 },
     { PIX_FMT_BGR24,  24 },
@@ -76,7 +77,7 @@ static av_cold int raw_init_decoder(AVCodecContext *avctx)
         avctx->pix_fmt = find_pix_fmt(pix_fmt_bps_mov, avctx->bits_per_coded_sample);
     else if (avctx->codec_tag)
         avctx->pix_fmt = find_pix_fmt(ff_raw_pix_fmt_tags, avctx->codec_tag);
-    else if (avctx->bits_per_coded_sample)
+    else if (avctx->pix_fmt == PIX_FMT_NONE && avctx->bits_per_coded_sample)
         avctx->pix_fmt = find_pix_fmt(pix_fmt_bps_avi, avctx->bits_per_coded_sample);
 
     context->length = avpicture_get_size(avctx->pix_fmt, avctx->width, avctx->height);

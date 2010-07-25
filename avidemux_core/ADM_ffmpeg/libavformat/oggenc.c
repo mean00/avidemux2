@@ -20,6 +20,7 @@
  */
 
 #include "libavutil/crc.h"
+#include "libavutil/random_seed.h"
 #include "libavcodec/xiph.h"
 #include "libavcodec/bytestream.h"
 #include "libavcodec/flac.h"
@@ -50,6 +51,7 @@ typedef struct {
     int eos;
     unsigned page_count; ///< number of page buffered
     OGGPage page; ///< current page
+    unsigned serial_num; ///< serial number
 } OGGStreamContext;
 
 typedef struct OGGPageList {
@@ -61,36 +63,51 @@ typedef struct {
     OGGPageList *page_list;
 } OGGContext;
 
-static void ogg_update_checksum(AVFormatContext *s, int64_t crc_offset)
+static void ogg_update_checksum(AVFormatContext *s, ByteIOContext *pb, int64_t crc_offset)
 {
-    int64_t pos = url_ftell(s->pb);
-    uint32_t checksum = get_checksum(s->pb);
-    url_fseek(s->pb, crc_offset, SEEK_SET);
-    put_be32(s->pb, checksum);
-    url_fseek(s->pb, pos, SEEK_SET);
+    int64_t pos = url_ftell(pb);
+    uint32_t checksum = get_checksum(pb);
+    url_fseek(pb, crc_offset, SEEK_SET);
+    put_be32(pb, checksum);
+    url_fseek(pb, pos, SEEK_SET);
 }
 
-static void ogg_write_page(AVFormatContext *s, OGGPage *page, int extra_flags)
+static int ogg_write_page(AVFormatContext *s, OGGPage *page, int extra_flags)
 {
     OGGStreamContext *oggstream = s->streams[page->stream_index]->priv_data;
+    ByteIOContext *pb;
     int64_t crc_offset;
+    int ret, size;
+    uint8_t *buf;
 
-    init_checksum(s->pb, ff_crc04C11DB7_update, 0);
-    put_tag(s->pb, "OggS");
-    put_byte(s->pb, 0);
-    put_byte(s->pb, page->flags | extra_flags);
-    put_le64(s->pb, page->granule);
-    put_le32(s->pb, page->stream_index);
-    put_le32(s->pb, oggstream->page_counter++);
-    crc_offset = url_ftell(s->pb);
-    put_le32(s->pb, 0); // crc
-    put_byte(s->pb, page->segments_count);
-    put_buffer(s->pb, page->segments, page->segments_count);
-    put_buffer(s->pb, page->data, page->size);
+    ret = url_open_dyn_buf(&pb);
+    if (ret < 0)
+        return ret;
+    init_checksum(pb, ff_crc04C11DB7_update, 0);
+    put_tag(pb, "OggS");
+    put_byte(pb, 0);
+    put_byte(pb, page->flags | extra_flags);
+    put_le64(pb, page->granule);
+    put_le32(pb, oggstream->serial_num);
+    put_le32(pb, oggstream->page_counter++);
+    crc_offset = url_ftell(pb);
+    put_le32(pb, 0); // crc
+    put_byte(pb, page->segments_count);
+    put_buffer(pb, page->segments, page->segments_count);
+    put_buffer(pb, page->data, page->size);
 
-    ogg_update_checksum(s, crc_offset);
+    ogg_update_checksum(s, pb, crc_offset);
+    put_flush_packet(pb);
+
+    size = url_close_dyn_buf(pb, &buf);
+    if (size < 0)
+        return size;
+
+    put_buffer(s->pb, buf, size);
     put_flush_packet(s->pb);
+    av_free(buf);
     oggstream->page_count--;
+    return 0;
 }
 
 static int64_t ogg_granule_to_timestamp(OGGStreamContext *oggstream, OGGPage *page)
@@ -280,8 +297,11 @@ static int ogg_write_header(AVFormatContext *s)
 {
     OGGStreamContext *oggstream;
     int i, j;
+
     for (i = 0; i < s->nb_streams; i++) {
         AVStream *st = s->streams[i];
+        unsigned serial_num = i;
+
         if (st->codec->codec_type == AVMEDIA_TYPE_AUDIO)
             av_set_pts_info(st, 64, 1, st->codec->sample_rate);
         else if (st->codec->codec_type == AVMEDIA_TYPE_VIDEO)
@@ -300,6 +320,18 @@ static int ogg_write_header(AVFormatContext *s)
         }
         oggstream = av_mallocz(sizeof(*oggstream));
         oggstream->page.stream_index = i;
+
+        if (!(st->codec->flags & CODEC_FLAG_BITEXACT))
+            do {
+                serial_num = av_get_random_seed();
+                for (j = 0; j < i; j++) {
+                    OGGStreamContext *sc = s->streams[j]->priv_data;
+                    if (serial_num == sc->serial_num)
+                        break;
+                }
+            } while (j < i);
+        oggstream->serial_num = serial_num;
+
         st->priv_data = oggstream;
         if (st->codec->codec_id == CODEC_ID_FLAC) {
             int err = ogg_build_flac_headers(st->codec, oggstream,

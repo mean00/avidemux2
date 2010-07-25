@@ -239,7 +239,7 @@ static int discard_pid(MpegTSContext *ts, unsigned int pid)
 }
 
 /**
- *  Assembles PES packets out of TS packets, and then calls the "section_cb"
+ *  Assemble PES packets out of TS packets, and then call the "section_cb"
  *  function when they are complete.
  */
 static void write_section_data(AVFormatContext *s, MpegTSFilter *tss1,
@@ -860,7 +860,6 @@ static void pmt_cb(MpegTSFilter *filter, const uint8_t *section, int section_len
     const uint8_t *p, *p_end, *desc_list_end, *desc_end;
     int program_info_length, pcr_pid, pid, stream_type;
     int desc_list_len, desc_len, desc_tag;
-    int comp_page, anc_page;
     char language[4];
     uint32_t prog_reg_desc = 0; /* registration descriptor */
 
@@ -981,9 +980,17 @@ static void pmt_cb(MpegTSFilter *filter, const uint8_t *section, int section_len
                 language[2] = get8(&p, desc_end);
                 language[3] = 0;
                 get8(&p, desc_end);
-                comp_page = get16(&p, desc_end);
-                anc_page = get16(&p, desc_end);
-                st->codec->sub_id = (anc_page << 16) | comp_page;
+                if (st->codec->extradata) {
+                    if (st->codec->extradata_size == 4 && memcmp(st->codec->extradata, p, 4))
+                        av_log_ask_for_sample(ts->stream, "DVB sub with multiple IDs\n");
+                } else {
+                    st->codec->extradata = av_malloc(4 + FF_INPUT_BUFFER_PADDING_SIZE);
+                    if (st->codec->extradata) {
+                        st->codec->extradata_size = 4;
+                        memcpy(st->codec->extradata, p, 4);
+                    }
+                }
+                p += 4;
                 av_metadata_set2(&st->metadata, "language", language, 0);
                 break;
             case 0x0a: /* ISO 639 language descriptor */
@@ -1380,7 +1387,8 @@ static int mpegts_read_header(AVFormatContext *s,
         /* normal demux */
 
         /* first do a scaning to get all the services */
-        url_fseek(pb, pos, SEEK_SET);
+        if (url_fseek(pb, pos, SEEK_SET) < 0)
+            av_log(s, AV_LOG_ERROR, "Unable to seek back to the start\n");
 
         mpegts_open_section_filter(ts, SDT_PID, sdt_cb, ts, 1);
 
