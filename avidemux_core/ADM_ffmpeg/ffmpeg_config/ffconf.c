@@ -22,6 +22,7 @@ int main(void)
     DECLARE_HW(VC1_DXVA2,nellymoser);
     DECLARE_HW(VC1_DXVA2,nellymoser);
     DECLARE_HW(WMV3_DXVA2,nellymoser);
+    DECLARE_HW(MPEG2_DXVA2,nellymoser);
 
 #define DECLARE_VDPAU(a,b); printf("#define CONFIG_"#a"_VDPAU_DECODER 1\n");
         printf("#ifdef USE_VDPAU\n");
@@ -111,9 +112,15 @@ int main(void)
     DECLARE_DECODER (MP3FLOAT, indeo5);
     DECLARE_DECODER (INDEO5, indeo5);
     DECLARE_DECODER (INDEO5, indeo5);
+    DECLARE_DECODER (VP8, indeo5);
 #undef DECLARE_DECODER
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 0\n"); 
 
+    DECLARE_DECODER (LIBVPX, indeo5);
+    DECLARE_DECODER (GSM_MS, indeo5);
+    DECLARE_DECODER (GSM, indeo5);
+    DECLARE_DECODER (ANSI, indeo5);
+    DECLARE_DECODER (PICTOR, indeo5);
     DECLARE_DECODER (MP3ADUFLOAT, indeo5);
     DECLARE_DECODER (MP3ON4FLOAT, indeo5);
     DECLARE_DECODER(CDGRAPHICS, eatgq);
@@ -336,6 +343,7 @@ int main(void)
 	DECLARE_DECODER (LIBVORBIS, libvorbis);
 
 #define DECLARE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 1\n"); 
+    DECLARE_PARSER (VP8, aac);
     DECLARE_PARSER (AAC, aac);
     DECLARE_PARSER (H263, h263);
     DECLARE_PARSER (H264, h264);
@@ -381,6 +389,8 @@ int main(void)
 
 #undef DECLARE_ENCODER
 #define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 0\n"); 
+    DECLARE_ENCODER(LIBVPX, amv);
+    DECLARE_ENCODER(RA_144, amv);
     DECLARE_ENCODER(XSUB, amv);
     DECLARE_ENCODER(V210, amv);
     DECLARE_ENCODER(LIBOPENCORE_AMRNB, amv);
@@ -500,6 +510,8 @@ int main(void)
 #define DECLARE_MUXER(a,b); printf("#define CONFIG_"#a"_MUXER 1\n");
 
 	printf("#define CONFIG_MUXERS 1\n");
+	DECLARE_MUXER(MATROSKA, mov)
+	DECLARE_MUXER(WEBM, mov)
 	DECLARE_MUXER(MOV, mov)
 	DECLARE_MUXER(IPOD, mov)
 	DECLARE_MUXER(MP4, mp4)
@@ -635,7 +647,10 @@ printf("#endif //ADM_MINIMAL_INCLUDE\n");
         printf("#define HAVE_YASM        0\n");
         printf("#endif // USE_YASM\n");
 
+	printf("#define CONFIG_FILE_PROTOCOL  1\n");
 	printf("#define CONFIG_MDCT     1\n");
+	printf("#define CONFIG_DCT      1\n");
+	printf("#define CONFIG_LPC      1\n");
 	printf("#define CONFIG_H264DSP  1\n");
         printf("#define ENABLE_ARM      0\n");
         printf("#define ENABLE_PPC      0\n");
