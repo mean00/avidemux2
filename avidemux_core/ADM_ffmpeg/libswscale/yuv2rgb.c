@@ -33,7 +33,9 @@
 #include "swscale.h"
 #include "swscale_internal.h"
 #include "libavutil/x86_cpu.h"
+#include "libavutil/bswap.h"
 
+extern const uint8_t dither_4x4_16[4][8];
 extern const uint8_t dither_8x8_32[8][8];
 extern const uint8_t dither_8x8_73[8][8];
 extern const uint8_t dither_8x8_220[8][8];
@@ -49,7 +51,7 @@ const int32_t ff_yuv2rgb_coeffs[8][4] = {
     {117579, 136230, 16907, 35559}  /* SMPTE 240M (1987) */
 };
 
-const int * sws_getCoefficients(int colorspace)
+const int *sws_getCoefficients(int colorspace)
 {
     if (colorspace > 7 || colorspace < 0)
         colorspace = SWS_CS_DEFAULT;
@@ -351,6 +353,32 @@ CLOSEYUV2RGBFUNC(8)
 #endif
 
 // r, g, b, dst_1, dst_2
+YUV2RGBFUNC(yuv2rgb_c_12_ordered_dither, uint16_t, 0)
+    const uint8_t *d16 = dither_4x4_16[y&3];
+#define PUTRGB12(dst,src,i,o)                                   \
+    Y = src[2*i];                                               \
+    dst[2*i]   = r[Y+d16[0+o]] + g[Y+d16[0+o]] + b[Y+d16[0+o]]; \
+    Y = src[2*i+1];                                             \
+    dst[2*i+1] = r[Y+d16[1+o]] + g[Y+d16[1+o]] + b[Y+d16[1+o]];
+
+    LOADCHROMA(0);
+    PUTRGB12(dst_1,py_1,0,0);
+    PUTRGB12(dst_2,py_2,0,0+8);
+
+    LOADCHROMA(1);
+    PUTRGB12(dst_2,py_2,1,2+8);
+    PUTRGB12(dst_1,py_1,1,2);
+
+    LOADCHROMA(2);
+    PUTRGB12(dst_1,py_1,2,4);
+    PUTRGB12(dst_2,py_2,2,4+8);
+
+    LOADCHROMA(3);
+    PUTRGB12(dst_2,py_2,3,6+8);
+    PUTRGB12(dst_1,py_1,3,6);
+CLOSEYUV2RGBFUNC(8)
+
+// r, g, b, dst_1, dst_2
 YUV2RGBFUNC(yuv2rgb_c_8_ordered_dither, uint8_t, 0)
     const uint8_t *d32 = dither_8x8_32[y&7];
     const uint8_t *d64 = dither_8x8_73[y&7];
@@ -515,7 +543,7 @@ CLOSEYUV2RGBFUNC(1)
 SwsFunc ff_yuv2rgb_get_func_ptr(SwsContext *c)
 {
     SwsFunc t = NULL;
-#if (HAVE_MMX2 || HAVE_MMX) && CONFIG_GPL
+#if HAVE_MMX
      t = ff_yuv2rgb_init_mmx(c);
 #endif
 #if HAVE_VIS
@@ -552,6 +580,8 @@ SwsFunc ff_yuv2rgb_get_func_ptr(SwsContext *c)
     case PIX_FMT_BGR565:
     case PIX_FMT_RGB555:
     case PIX_FMT_BGR555:     return yuv2rgb_c_16;
+    case PIX_FMT_RGB444:
+    case PIX_FMT_BGR444:     return yuv2rgb_c_12_ordered_dither;
     case PIX_FMT_RGB8:
     case PIX_FMT_BGR8:       return yuv2rgb_c_8_ordered_dither;
     case PIX_FMT_RGB4:
@@ -590,18 +620,36 @@ static void fill_gv_table(int table[256], const int elemsize, const int inc)
     }
 }
 
+static uint16_t roundToInt16(int64_t f)
+{
+    int r= (f + (1<<15))>>16;
+         if (r<-0x7FFF) return 0x8000;
+    else if (r> 0x7FFF) return 0x7FFF;
+    else                return r;
+}
+
 av_cold int ff_yuv2rgb_c_init_tables(SwsContext *c, const int inv_table[4], int fullRange,
                                      int brightness, int contrast, int saturation)
 {
     const int isRgb =      c->dstFormat==PIX_FMT_RGB32
                         || c->dstFormat==PIX_FMT_RGB32_1
                         || c->dstFormat==PIX_FMT_BGR24
-                        || c->dstFormat==PIX_FMT_RGB565
-                        || c->dstFormat==PIX_FMT_RGB555
+                        || c->dstFormat==PIX_FMT_RGB565BE
+                        || c->dstFormat==PIX_FMT_RGB565LE
+                        || c->dstFormat==PIX_FMT_RGB555BE
+                        || c->dstFormat==PIX_FMT_RGB555LE
+                        || c->dstFormat==PIX_FMT_RGB444BE
+                        || c->dstFormat==PIX_FMT_RGB444LE
                         || c->dstFormat==PIX_FMT_RGB8
                         || c->dstFormat==PIX_FMT_RGB4
                         || c->dstFormat==PIX_FMT_RGB4_BYTE
                         || c->dstFormat==PIX_FMT_MONOBLACK;
+    const int isNotNe =    c->dstFormat==PIX_FMT_NE(RGB565LE,RGB565BE)
+                        || c->dstFormat==PIX_FMT_NE(RGB555LE,RGB555BE)
+                        || c->dstFormat==PIX_FMT_NE(RGB444LE,RGB444BE)
+                        || c->dstFormat==PIX_FMT_NE(BGR565LE,BGR565BE)
+                        || c->dstFormat==PIX_FMT_NE(BGR555LE,BGR555BE)
+                        || c->dstFormat==PIX_FMT_NE(BGR444LE,BGR444BE);
     const int bpp = c->dstFormatBpp;
     uint8_t *y_table;
     uint16_t *y_table16;
@@ -634,6 +682,22 @@ av_cold int ff_yuv2rgb_c_init_tables(SwsContext *c, const int inv_table[4], int 
     cgu = (cgu*contrast * saturation) >> 32;
     cgv = (cgv*contrast * saturation) >> 32;
     oy -= 256*brightness;
+
+    c->uOffset=   0x0400040004000400LL;
+    c->vOffset=   0x0400040004000400LL;
+    c->yCoeff=    roundToInt16(cy *8192) * 0x0001000100010001ULL;
+    c->vrCoeff=   roundToInt16(crv*8192) * 0x0001000100010001ULL;
+    c->ubCoeff=   roundToInt16(cbu*8192) * 0x0001000100010001ULL;
+    c->vgCoeff=   roundToInt16(cgv*8192) * 0x0001000100010001ULL;
+    c->ugCoeff=   roundToInt16(cgu*8192) * 0x0001000100010001ULL;
+    c->yOffset=   roundToInt16(oy *   8) * 0x0001000100010001ULL;
+
+    c->yuv2rgb_y_coeff  = (int16_t)roundToInt16(cy <<13);
+    c->yuv2rgb_y_offset = (int16_t)roundToInt16(oy << 9);
+    c->yuv2rgb_v2r_coeff= (int16_t)roundToInt16(crv<<13);
+    c->yuv2rgb_v2g_coeff= (int16_t)roundToInt16(cgv<<13);
+    c->yuv2rgb_u2g_coeff= (int16_t)roundToInt16(cgu<<13);
+    c->yuv2rgb_u2b_coeff= (int16_t)roundToInt16(cbu<<13);
 
     //scale coefficients by cy
     crv = ((crv << 16) + 0x8000) / cy;
@@ -694,6 +758,28 @@ av_cold int ff_yuv2rgb_c_init_tables(SwsContext *c, const int inv_table[4], int 
         fill_table(c->table_bU, 1, cbu, y_table + yoffs + 2048);
         fill_gv_table(c->table_gV, 1, cgv);
         break;
+    case 12:
+        rbase = isRgb ? 8 : 0;
+        gbase = 4;
+        bbase = isRgb ? 0 : 8;
+        c->yuvTable = av_malloc(1024*3*2);
+        y_table16 = c->yuvTable;
+        yb = -(384<<16) - oy;
+        for (i = 0; i < 1024; i++) {
+            uint8_t yval = av_clip_uint8((yb + 0x8000) >> 16);
+            y_table16[i     ] = (yval >> 4) << rbase;
+            y_table16[i+1024] = (yval >> 4) << gbase;
+            y_table16[i+2048] = (yval >> 4) << bbase;
+            yb += cy;
+        }
+        if (isNotNe)
+            for (i = 0; i < 1024*3; i++)
+                y_table16[i] = bswap_16(y_table16[i]);
+        fill_table(c->table_rV, 2, crv, y_table16 + yoffs);
+        fill_table(c->table_gU, 2, cgu, y_table16 + yoffs + 1024);
+        fill_table(c->table_bU, 2, cbu, y_table16 + yoffs + 2048);
+        fill_gv_table(c->table_gV, 2, cgv);
+        break;
     case 15:
     case 16:
         rbase = isRgb ? bpp - 5 : 0;
@@ -709,6 +795,9 @@ av_cold int ff_yuv2rgb_c_init_tables(SwsContext *c, const int inv_table[4], int 
             y_table16[i+2048] = (yval >> 3)          << bbase;
             yb += cy;
         }
+        if(isNotNe)
+            for (i = 0; i < 1024*3; i++)
+                y_table16[i] = bswap_16(y_table16[i]);
         fill_table(c->table_rV, 2, crv, y_table16 + yoffs);
         fill_table(c->table_gU, 2, cgu, y_table16 + yoffs + 1024);
         fill_table(c->table_bU, 2, cbu, y_table16 + yoffs + 2048);

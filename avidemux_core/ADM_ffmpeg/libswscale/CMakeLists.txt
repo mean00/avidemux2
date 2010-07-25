@@ -2,7 +2,7 @@ SET(ADM_LIB ADM_libswscale6)
 SET(${ADM_LIB}_SRCS 
         swscale.c yuv2rgb.c rgb2rgb.c ADM_mp.cpp swscale_avoption.c utils.c
 )
-
+ADD_DEFINITIONS("-Dbswap_16=av_bswap16")
 IF(ADM_CPU_X86)
 SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} x86/yuv2rgb_mmx.c)
 ENDIF(ADM_CPU_X86)
