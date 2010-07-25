@@ -1,0 +1,16 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavutil/libm.h b/avidemux_core/ADM_ffmpeg/libavutil/libm.h
+index c7c28ac..3f6ae07 100644
+--- a/avidemux_core/ADM_ffmpeg/libavutil/libm.h
++++ b/avidemux_core/ADM_ffmpeg/libavutil/libm.h
+@@ -25,7 +25,11 @@
+ #define AVUTIL_LIBM_H
+ 
+ #include <math.h>
++//MEANX
++#ifndef ADM_NO_CONFIG_H
+ #include "config.h"
++#endif
++///MEANX
+ #include "attributes.h"
+ 
+ #if !HAVE_EXP2

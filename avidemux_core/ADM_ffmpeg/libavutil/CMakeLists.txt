@@ -1,6 +1,7 @@
 SET(ADM_LIB ADM_libavutil6)
 
 SET(${ADM_LIB}_SRCS 
+eval.c
 adler32.c
 aes.c
 base64.c
@@ -18,13 +19,13 @@ md5.c
 random_seed.c
 rational.c
 rc4.c
-sha1.c
 #string.c
 avstring.c
 tree.c
 lfg.c
 mem.c
 pixdesc.c
+sha.c
 )
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
