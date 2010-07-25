@@ -1,0 +1,13 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/pngenc.c b/avidemux_core/ADM_ffmpeg/libavcodec/pngenc.c
+index d199b95..b63c84e 100644
+--- a/avidemux_core/ADM_ffmpeg/libavcodec/pngenc.c
++++ b/avidemux_core/ADM_ffmpeg/libavcodec/pngenc.c
+@@ -21,7 +21,7 @@
+ #include "avcodec.h"
+ #include "bytestream.h"
+ #include "dsputil.h"
+-#include "png.h"
++#include "ffpng.h"
+ 
+ /* TODO:
+  * - add 2, 4 and 16 bit depth support

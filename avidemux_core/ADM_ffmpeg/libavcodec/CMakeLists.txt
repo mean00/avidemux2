@@ -26,7 +26,7 @@ SET(${ADM_LIB}_SRCS
         dca.c
         ac3enc.c  ac3.c  ac3tab.c   ac3_parser.c
         eac3dec.c ac3dec.c ac3dec_data.c eac3dec_data.c
-        aacenc.c aaccoder.c aac.c aactab.c psymodel.c aacpsy.c iirfilter.c
+        aacenc.c aaccoder.c  aactab.c psymodel.c aacpsy.c iirfilter.c
 	dvbsub_parser.c  dvbsubdec.c  dvbsub.c  xiph.c  sp5xdec.c  
         nellymoserdec.c nellymoser.c
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c
@@ -37,6 +37,7 @@ SET(${ADM_LIB}_SRCS
         ivi_common.c dcadsp.c h264_direct.c ivi_dsp.c ituh263dec.c dvdata.c ituh263enc.c aacsbr.c
         synth_filter.c    mpeg4videodec.c h264_cabac.c h264_cavlc.c vp56dsp.c h264_loopfilter.c
         h264_sei.c h264_ps.c svq3.c h264dsp.c flvdec.c
+        aacps.c  aacpsy.c aacadtsdec.c lpc.c vp8_parser.c vp8.c vp8dsp.c inverse.c dct.c aacdec.c
         )
 
 if(USE_VDPAU)
@@ -51,12 +52,20 @@ IF(ADM_CPU_X86)
                 x86/idct_sse2_xvid.c 
                 x86/vp6dsp_mmx.c
                 x86/vp6dsp_sse2.c
+                x86/vp8dsp-init.c
+                x86/mpegaudiodec_mmx.c
+                x86/lpc_mmx.c
+                x86/fft.c
+                x86/dct32_sse.c
                 #x86/fft_sse.c
                 #x86/fft_3dn2.c
 		#x86/fft_3dn.c  
                 x86/dsputilenc_mmx.c  x86/vc1dsp_mmx.c  x86/idct_mmx.c)
         IF(USE_YASM)
-                SET(YASM_SOURCE
+                SET(YASM_SOURCE         
+                                x86/h264_intrapred.asm
+                                x86/vp8dsp.asm
+                                x86/vc1dsp_yasm.asm
                                 x86/dsputil_yasm.asm
                                 x86/fft_mmx.asm
                                 x86/h264_deblock_sse2.asm

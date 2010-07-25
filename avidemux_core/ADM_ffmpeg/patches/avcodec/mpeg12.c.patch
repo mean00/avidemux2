@@ -1,0 +1,16 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c b/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c
+index 0af24ad..3ffea4c 100644
+--- a/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c
++++ b/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c
+@@ -1948,6 +1948,11 @@ static int slice_end(AVCodecContext *avctx, AVFrame *pict)
+         ff_er_frame_end(s);
+ 
+         MPV_frame_end(s);
++/* MEANX */
++  if(s->current_picture_ptr)
++      s->current_picture_ptr->opaque=pict->opaque;
++/* MEANX */
++
+ 
+         if (s->pict_type == FF_B_TYPE || s->low_delay) {
+             *pict= *(AVFrame*)s->current_picture_ptr;

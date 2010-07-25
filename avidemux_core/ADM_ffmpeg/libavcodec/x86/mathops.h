@@ -21,8 +21,12 @@
 
 #ifndef AVCODEC_X86_MATHOPS_H
 #define AVCODEC_X86_MATHOPS_H
-
+// MEANX
+#ifndef ADM_NO_CONFIG_H
 #include "config.h"
+#endif
+// /MEANX
+
 #include "libavutil/common.h"
 
 #if ARCH_X86_32
