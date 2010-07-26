@@ -1296,17 +1296,6 @@
     <addaction name="actionFilters"/>
     <addaction name="actionFrame_rate"/>
    </widget>
-   <widget class="QMenu" name="menuAudio">
-    <property name="title">
-     <string>&amp;Audio</string>
-    </property>
-    <addaction name="actionMain_Track"/>
-    <addaction name="actionSecondary_Track"/>
-    <addaction name="actionBuild_VBR_time_map"/>
-    <addaction name="separator"/>
-    <addaction name="actionSave_2"/>
-    <addaction name="actionFilters_2"/>
-   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
@@ -1390,10 +1379,6 @@
     <addaction name="actionBitrate_histogram"/>
     <addaction name="actionScan_for_black_frames"/>
     <addaction name="separator"/>
-    <addaction name="actionVob_to_vobsub"/>
-    <addaction name="actionOCR"/>
-    <addaction name="actionOCR_DVB_T_TS_files"/>
-    <addaction name="actionGlyphs_Edit"/>
     <addaction name="actionJavaScript_shell"/>
     <addaction name="actionPython_Shell"/>
    </widget>
@@ -1439,6 +1424,17 @@
     <addaction name="actionConnect_to_AvsProxy"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuAudio">
+    <property name="title">
+     <string>&amp;Audio</string>
+    </property>
+    <addaction name="actionMain_Track"/>
+    <addaction name="actionSecondary_Track"/>
+    <addaction name="actionBuild_VBR_time_map"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_2"/>
+    <addaction name="actionFilters_2"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1880,28 +1876,6 @@
     <string>Scan for Black Frames</string>
    </property>
   </action>
-  <action name="actionVob_to_vobsub">
-   <property name="text">
-    <string>&amp;VOB -&gt; VobSub...</string>
-   </property>
-   <property name="iconText">
-    <string>VOB -&gt; VobSub</string>
-   </property>
-   <property name="toolTip">
-    <string>VOB -&gt; VobSub</string>
-   </property>
-  </action>
-  <action name="actionOCR">
-   <property name="text">
-    <string>&amp;OCR (VobSub -&gt; srt)...</string>
-   </property>
-   <property name="iconText">
-    <string>OCR (VobSub -&gt; srt)</string>
-   </property>
-   <property name="toolTip">
-    <string>OCR (VobSub -&gt; srt)</string>
-   </property>
-  </action>
   <action name="actionPlay_Stop">
    <property name="icon">
     <iconset resource="avidemux.qrc">
@@ -2221,28 +2195,6 @@
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
-   </property>
-  </action>
-  <action name="actionOCR_DVB_T_TS_files">
-   <property name="text">
-    <string>OCR (&amp;TS -&gt; srt)...</string>
-   </property>
-   <property name="iconText">
-    <string>OCR (TS -&gt; srt)</string>
-   </property>
-   <property name="toolTip">
-    <string>OCR (TS -&gt; srt)</string>
-   </property>
-  </action>
-  <action name="actionGlyphs_Edit">
-   <property name="text">
-    <string>Edit &amp;Glyphs...</string>
-   </property>
-   <property name="iconText">
-    <string>Edit Glyphs</string>
-   </property>
-   <property name="toolTip">
-    <string>Edit Glyphs</string>
    </property>
   </action>
   <action name="actionPreviewInput">

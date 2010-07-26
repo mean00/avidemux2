@@ -19,8 +19,6 @@ PROCESS(actionSave_project,ACT_SaveCurrentWork) \
 PROCESS(actionSave_project_as,ACT_SaveWork) \
 PROCESS(actionConnect_to_AvsProxy,ACT_AVS_PROXY) \
 PROCESS(actionReset_Edits,ACT_ResetSegments) \
-PROCESS(actionOCR_DVB_T_TS_files,ACT_DVB_Ocr) \
-PROCESS(actionGlyphs_Edit,ACT_GLYPHEDIT) \
 PROCESS(actionZoom_1_4,ACT_ZOOM_1_4) \
 PROCESS(actionZoom_1_2,ACT_ZOOM_1_2) \
 PROCESS(actionZoom_1_1,ACT_ZOOM_1_1) \
@@ -40,8 +38,6 @@ PROCESS(actionCalculator,ACT_Bitrate) \
 PROCESS(actionRebuild_I_B_Frames,ACT_RebuildKF) \
 PROCESS(actionBitrate_histogram,ACT_BitRate) \
 PROCESS(actionScan_for_black_frames,ACT_AllBlackFrames) \
-PROCESS(actionVob_to_vobsub,ACT_V2V) \
-PROCESS(actionOCR,ACT_Ocr) \
 PROCESS(actionPlay_Stop,ACT_StopAvi) \
 PROCESS(actionPrevious_Frame,ACT_PreviousFrame) \
 PROCESS(actionNext_Frame,ACT_NextFrame) \
@@ -102,3 +98,13 @@ PROCESS(toolButtonFirstFrame, ACT_Begin) \
 PROCESS(toolButtonLastFrame, ACT_End) \
 PROCESS(pushButtonJumpToMarkerA, ACT_GotoMarkA) \
 PROCESS(pushButtonJumpToMarkerB, ACT_GotoMarkB)
+
+
+/*
+PROCESS(actionVob_to_vobsub,ACT_V2V) \
+PROCESS(actionOCR,ACT_Ocr) \
+PROCESS(actionOCR_DVB_T_TS_files,ACT_DVB_Ocr) \
+PROCESS(actionGlyphs_Edit,ACT_GLYPHEDIT) \
+
+
+*/
