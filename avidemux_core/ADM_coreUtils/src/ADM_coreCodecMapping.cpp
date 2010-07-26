@@ -43,8 +43,9 @@ const ffVideoCodec ffCodec[]=
   {"WMV3", CODEC_ID_WMV3,       true, false,    true},
   {"WVC1", CODEC_ID_VC1,        true, false,    true},
   {"WMVA", CODEC_ID_VC1,        true, false,    true},
+  {"VP8 ", CODEC_ID_VP8,        true, false,    false},
 
-  {"WMVA", CODEC_ID_DVVIDEO,    true, false,    false},
+  
 // RefCopy
   {"FFV1", CODEC_ID_FFV1,       true, true,    false},
   {"H263", CODEC_ID_H263,       false, true,   false},
