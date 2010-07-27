@@ -154,7 +154,7 @@ int nw;
                 name=prefs->get_lastfiles();
                 rank=(int)action-ACT_RECENT0;
                 ADM_assert(name[rank]);
-                A_openAvi2 (name[rank], 0);
+                A_openAvi (name[rank]);
                 return;
         case ACT_ViewMain: UI_toogleMain();return;
         case ACT_ViewSide: UI_toogleSide();return;
@@ -186,7 +186,7 @@ int nw;
     	char *file;
 		if(		DIA_RecentFiles(&file))
 		{
-			A_openAvi2 (file, 0);
+			A_openAvi (file);
 		}
 		return;
     case ACT_About :
@@ -543,20 +543,12 @@ int nw;
 //    mode 1: Suspicious
 //_____________________________________________________________
 
-void
-A_openBrokenAvi (const char *name)
-{
-  A_openAvi2 (name, 1);
-}
-
-int
-A_openAvi (const char *name)
-{
-  return A_openAvi2 (name, 0);
-}
 extern void GUI_PreviewEnd (void);
-
-int A_openAvi2 (const char *name, uint8_t mode)
+/**
+        \fn A_openAvi
+        \brief Open (replace mode) a video
+*/
+int A_openAvi (const char *name)
 {
   uint8_t res;
   char *longname;
