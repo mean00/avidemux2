@@ -149,7 +149,7 @@ bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
 */
 bool ADM_EditorSegment::deleteAll (void)
 {
-  ADM_info("[Editor] Deleting all video\n");
+  ADM_info("[Editor] Deleting all videos\n");
   int n=videos.size();
   for (uint32_t vid = 0; vid < n; vid++)
     {
@@ -188,6 +188,7 @@ bool ADM_EditorSegment::deleteAll (void)
     }
 
     videos.clear();
+    segments.clear();
     return true;
 }
 
