@@ -141,6 +141,7 @@ uint32_t size;
             return new ADM_audioStreamEAC3(wavheader,access);    
         case WAV_AC3:
             return new ADM_audioStreamAC3(wavheader,access);
+        case WAV_MP2:
         case WAV_MP3:
             return new ADM_audioStreamMP3(wavheader,access);
         case WAV_DTS:
