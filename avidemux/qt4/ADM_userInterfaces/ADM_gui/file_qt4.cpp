@@ -67,8 +67,7 @@ namespace ADM_QT4_fileSel
 
 		if (!fileName.isNull() )
 		{
-			const char *s = fileName.toUtf8().constData();
-			*name = ADM_strdup(s);
+			*name = ADM_strdup(fileName.toUtf8().constData());
 			prefs->set(pref_entry, (ADM_filename*)*name);
 		}
 
