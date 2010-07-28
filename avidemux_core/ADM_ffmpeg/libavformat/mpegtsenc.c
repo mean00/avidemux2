@@ -884,7 +884,13 @@ static int mpegts_write_packet(AVFormatContext *s, AVPacket *pkt)
         av_free(data);
         return 0;
     }
-
+    // MEANX
+    if(size>DEFAULT_PES_PAYLOAD_SIZE)
+    {
+        av_log(s, AV_LOG_ERROR, "Audio size is greater than supported :%d,%d\n",(int)size,(int)DEFAULT_PES_PAYLOAD_SIZE);
+        return -1;
+    }
+    // MEANX
     if (ts_st->payload_index + size > DEFAULT_PES_PAYLOAD_SIZE) {
         mpegts_write_pes(s, st, ts_st->payload, ts_st->payload_index,
                          ts_st->payload_pts, ts_st->payload_dts);
