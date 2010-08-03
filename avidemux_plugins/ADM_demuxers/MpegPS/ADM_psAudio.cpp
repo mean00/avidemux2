@@ -101,6 +101,7 @@ bool      ADM_psAccess::goToTime(uint64_t timeUs)
             return true;
         }
     }
+    ADM_warning("[psAudio] Cannot find seek point\n");
     return false;
 }
 /**

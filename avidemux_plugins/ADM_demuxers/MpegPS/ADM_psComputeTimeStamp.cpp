@@ -32,6 +32,69 @@ bool psHeader::updatePtsDts(void)
         uint64_t lastDts=0,lastPts=0,dtsIncrement=0;
 
 
+        // Let's make sure the fist audio seek point is not ADM_NO_PTS
+        for(int i=0;i<listOfAudioTracks.size();i++)
+        {
+
+            vector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            uint64_t dts=(*seekPoints)[0].dts;
+            if(dts!=ADM_NO_PTS) continue;
+            ADM_warning("[PS] Audio track %d has no timestamp for first seek point, guessing...\n",i);
+            int offset=0;
+            int max=(*seekPoints).size();
+            while(offset<max)
+            {
+                    if(   (*seekPoints)[offset].dts!=ADM_NO_PTS) break;
+                    offset++;
+            }
+            if(offset>=max)
+            {
+                    ADM_error("No valid DTS in audio track\n");
+                    continue;
+            }
+#if 1
+            // Remove first seek point with no PTS...
+            if(offset) ADM_info("Deleting %d seekPoints with no timestamp\n",offset);
+            for(int rm=0;rm<offset;rm++)
+                    (*seekPoints).erase( (*seekPoints).begin());
+#else
+
+            // Compute the missing DTS using byterate and assuming CBR
+            uint64_t future=(*seekPoints)[offset].dts;
+            uint64_t bytes=(*seekPoints)[offset].size;
+            double   byteRate= listOfAudioTracks[i]->header.byterate;
+            if(!byteRate)
+            {
+                ADM_error("No bytereate, cannot fix seekpoints\n");
+                continue;
+            }
+            for(int point=offset-1;point>=0;point++)
+            {
+                double deltaBytes=(*seekPoints)[point].size;
+                double deltaTime=0;
+                printf("Computing DTS for seek point %d, bytes %"LLU", with reference bytes %"LLU" time %"LLU" us\n",
+                                    point,(uint64_t)deltaBytes,bytes,future);
+                if(deltaBytes>bytes)
+                {
+                        ADM_error("Size going back at seek point %d\n",i);
+                        goto next;
+                }
+                deltaBytes=(double)bytes-deltaBytes; // Bytes -> us
+                deltaBytes=deltaBytes*1000*1000.; 
+                deltaTime=deltaBytes/byteRate;
+                if(deltaTime>future)
+                {
+                        ADM_error("Computed time correction too big : %"LLU" max=%"LLU"\n",
+                                            (uint64_t)deltaTime, (uint64_t)future);
+                        (*seekPoints)[point].dts=0;
+                }else
+                (*seekPoints)[point].dts=(uint64_t)(future-deltaTime);
+            }
+#endif
+next:
+                ;
+        }
+
         // For audio, The first packet in the seekpoints happens a bit after the action
         // It means some audio may have been seen since we locked on video.
         // So we compute the DTS of the first real packet
