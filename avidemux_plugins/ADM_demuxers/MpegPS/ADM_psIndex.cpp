@@ -27,6 +27,7 @@
 #include "ADM_psAudioProbe.h"
 #include "DIA_working.h"
 #include "ADM_indexFile.h"
+#include "ADM_vidMisc.h"
 
 static const char Type[5]={'X','I','P','B','P'};  // Frame type
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
@@ -105,6 +106,7 @@ protected:
         DIA_workingBase  *ui;
         bool             headerDumped;
         uint64_t         lastValidVideoDts;
+       
 public:
                 PsIndexer(void);
                 ~PsIndexer();
@@ -113,7 +115,13 @@ public:
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
         bool    Mark(indexerData *data,dmxPacketInfo *s,markType update);
-
+        uint64_t timeConvert(uint64_t x) // 90 kHz tick -> us
+                    {
+                         if(x==ADM_NO_PTS) return ADM_NO_PTS;
+                            x=x*1000;
+                            x/=90;
+                            return x;
+                    }
 };
 /**
       \fn psIndexer 
@@ -139,6 +147,7 @@ PsIndexer::PsIndexer(void)
     ui=createWorking ("Indexing");
     headerDumped=false;
     lastValidVideoDts=ADM_NO_PTS;
+    
 }
 
 /**
@@ -210,6 +219,9 @@ dmxPacketInfo info;
 
           switch(startCode)
                   {
+                  
+
+                            ;
                   case 0xB3: // sequence start
                           Mark(&data,&info,markStart);
                           data.state=idx_startAtGopOrSeq;
@@ -327,6 +339,8 @@ dmxPacketInfo info;
                                     if(lastValidVideoDts>info.dts)
                                     {
                                             ADM_warning("DTS are going back, aborting, maybe several video appended ?");
+                                            ADM_warning("last Valid Dts %s\n",ADM_us2plain(timeConvert(lastValidVideoDts)));
+                                            ADM_warning("current    Dts %s\n",ADM_us2plain(timeConvert(info.dts)));
                                             goto theEnd;
                                      }
                             }
