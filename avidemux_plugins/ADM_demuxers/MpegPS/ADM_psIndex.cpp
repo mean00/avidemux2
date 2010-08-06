@@ -106,6 +106,7 @@ protected:
         DIA_workingBase  *ui;
         bool             headerDumped;
         uint64_t         lastValidVideoDts;
+        uint64_t         timeOffset; // In 90 khz Tick
        
 public:
                 PsIndexer(void);
@@ -147,7 +148,7 @@ PsIndexer::PsIndexer(void)
     ui=createWorking ("Indexing");
     headerDumped=false;
     lastValidVideoDts=ADM_NO_PTS;
-    
+    timeOffset=0;
 }
 
 /**
@@ -334,14 +335,37 @@ dmxPacketInfo info;
                                                   info.startAt,info.offset);
                                   continue;
                           }
+                          //
+                          if(info.dts!=ADM_NO_PTS) info.dts+=timeOffset;
+                          if(info.pts!=ADM_NO_PTS) info.pts+=timeOffset;
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
                           {
+                            // Handle SCR reset, that happens a lot on DVD
                                     if(lastValidVideoDts>info.dts)
                                     {
-                                            ADM_warning("DTS are going back, aborting, maybe several video appended ?");
-                                            ADM_warning("last Valid Dts %s\n",ADM_us2plain(timeConvert(lastValidVideoDts)));
-                                            ADM_warning("current    Dts %s\n",ADM_us2plain(timeConvert(info.dts)));
-                                            goto theEnd;
+                                            ADM_warning("DTS are going back, maybe several video appended ?\n");
+                                            uint64_t newOffset=pkt->getLastVobuEndTime();
+                                            uint64_t newPosition=pkt->getLastVobuPosition();
+                                            ADM_info("Trying to correct with VOBU offset :%s\n",
+                                                            ADM_us2plain(timeConvert(newOffset)));
+
+                                            uint64_t newDts=info.dts+newOffset;
+                                            if(newDts>lastValidVideoDts)
+                                            {
+                                                  ADM_info("SCR reset, using vobu to correct. New time offset %s, position 0x%"LLX"\n",
+                                                            ADM_us2plain(timeConvert(newOffset)),newPosition);
+                                                  ADM_warning("last Valid Dts %s\n",ADM_us2plain(timeConvert(lastValidVideoDts)));
+                                                  info.dts=newDts;
+                                                  if(info.pts!=ADM_NO_PTS)
+                                                        info.pts=info.pts+newOffset;
+                                                  timeOffset+=newOffset;
+                                                  ADM_info("TimeOffset is now %s\n",ADM_us2plain(timeConvert(timeOffset)));
+                                            }else
+                                            {
+                                                ADM_warning("last Valid Dts %s\n",ADM_us2plain(timeConvert(lastValidVideoDts)));
+                                                ADM_warning("current    Dts %s\n",ADM_us2plain(timeConvert(info.dts)));
+                                                goto theEnd;
+                                            }
                                      }
                             }
                             if(info.dts!=ADM_NO_PTS)

@@ -119,7 +119,7 @@ public:
 #endif
 };
 /**
-    \class psPacketLinearTracker
+    \class packetStats
 */
 typedef struct
 {
@@ -131,13 +131,25 @@ typedef struct
     uint32_t startSize;
     uint64_t startDts;
 }packetStats;
-
+/**
+    \class psPacketLinearTracker
+    \brief Same as psPacketLinear, but keep stats
+*/
 class psPacketLinearTracker : public psPacketLinear
 {
 protected:
-      packetStats stats[256];
+        packetStats stats[256];
+        uint64_t    lastVobuEnd;    // In 90 Khz tick
+        uint64_t    nextVobuEnd;    // In 90 Khz tick
+        uint64_t    lastVobuPosition; 
+        uint64_t    nextVobuPosition; 
+        bool        decodeVobuPCI(uint32_t size,uint8_t *data);
+        bool        decodeVobuDSI(uint32_t size);
+
 
 public:
+        uint64_t        getLastVobuEndTime(void) {return lastVobuEnd;}
+        uint64_t        getLastVobuPosition(void) {return lastVobuPosition;}
                         psPacketLinearTracker(uint8_t pid);
                         ~psPacketLinearTracker();
          packetStats    *getStat(int intdex);

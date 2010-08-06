@@ -5,7 +5,19 @@
     email                : fixounet@free.fr
         
  ***************************************************************************/
+/**
+    Stream remapping 
 
+            00--   : AC3 audio
+            20--   : Subtitles
+            40--   : DTS
+            60--   : VOBU
+            80--   : 
+            A0--   : PCM
+            C0/E0..: Mpeg2 audio/Mpeg2 video/
+
+
+*/
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -124,7 +136,8 @@ _again2:
         // subs 20-29
         // private data 1/2
 #define INSIDE(min,max) (stream>=min && stream<max)
-        if(!(  INSIDE(0xC0,0xC9) || INSIDE(0xE0,0xE9) || INSIDE(0x20,0x29) || stream==PRIVATE_STREAM_1 || stream==PRIVATE_STREAM_2
+        if(!(  INSIDE(0xC0,0xC9) || INSIDE(0xE0,0xE9) || INSIDE(0x20,0x29) || 
+                    stream==PRIVATE_STREAM_1 || stream==PRIVATE_STREAM_2
         			)) goto _again2;
         // Ok we got a candidate
         if(!getPacketInfo(stream,&substream,&len,&pts,&dts))   
@@ -133,10 +146,14 @@ _again2:
         }
         
         //printf("Main Stream :%x substream :%x\n",stream,substream);
-        if(stream==PRIVATE_STREAM_1) globstream=0xFF00+substream;
-                else                 globstream=stream;
-
-        *pid=globstream;
+        switch(stream)
+        {
+                case PRIVATE_STREAM_1: globstream=0xFF00+substream; break;
+                case PRIVATE_STREAM_2: globstream=0xF000+substream; break;
+                default:               globstream=stream;break;
+                        
+        }
+        *pid=globstream; // Keep only LSB 8 BITS
         *opts=pts;
         *odts=dts;
         *packetSize=len;
@@ -175,7 +192,13 @@ uint8_t align=0;
                         ||(stream==SYSTEM_START_CODE) //?
                         ) // special case, no header
                         {
+                                
                                 *olen=size;      
+                                if(PRIVATE_STREAM_2==stream)
+                                {
+                                    *substream=_file->read8i()+0x60;
+                                    (*olen)--;
+                                }
                                 return 1;
                         }
                                 
@@ -589,7 +612,11 @@ bool    psPacketLinear::changePid(uint32_t pid)
 */
  psPacketLinearTracker::psPacketLinearTracker(uint8_t pid)  : psPacketLinear(pid)
 {
-   resetStats();
+    resetStats();
+    lastVobuEnd=0;
+    nextVobuEnd=0;
+    nextVobuPosition=0;
+    lastVobuPosition=0;
 }
 /**
     \fn ~psPacketLinearTracker
@@ -606,6 +633,74 @@ packetStats    *psPacketLinearTracker::getStat(int index)
 {   
     if(index<0 || index>=256) ADM_assert(0);
     return stats+index;
+}
+/**
+    \fn decodeVobuPCI
+*/
+bool psPacketLinearTracker::decodeVobuPCI(uint32_t size,uint8_t *data)
+{
+/*
+	nv_pck_lbn 	: 32;  // block length
+	vobu_cat 	: 16;  // vobu category
+	reserved 	: 16;
+	vobu_uop_ctl 	: 32;  // user operation
+	vobu_s_ptm	: 32;  // vobu start time in 90KHz system clock unit
+	vobu_e_ptm	: 32;  // vobu end time
+	vobu_sl_e_ptm	: 32;  // sequence end termiation time
+	e_eltm		: 32;  // cell elapse time
+	vobu_isrc[32]	: 32 * 8;
+*/
+    if(size!=0x3D3)
+        {
+            ADM_warning("PCI Data not 0x3D4 but 0x%x\n",size+1);
+            return false;
+        }
+        uint8_t *ptr=data;
+        ptr+=4+2+2+4;
+#define MK32(x) {x=(ptr[0]<<24)+(ptr[1]<<16)+(ptr[2]<<8)+ptr[3];ptr+=4;}
+        uint32_t start;
+        uint32_t end;
+        uint32_t seqEnd;
+        MK32(start);
+        MK32(end);
+        MK32(seqEnd);
+//        ADM_info("Vobu start : %d end: %d seqEnd:%d\n",start,end,seqEnd);
+        lastVobuEnd=nextVobuEnd;
+        nextVobuEnd=end;
+        lastVobuPosition=nextVobuPosition;
+        _file->getpos(&nextVobuPosition);
+        _file->forward(size-5*4+2*2);
+        return true;
+}   
+/**
+    \fn decodeVobuDSI
+*/
+
+bool psPacketLinearTracker::decodeVobuDSI(uint32_t size)
+{
+
+        if(size!=0x3f9)
+        {
+            ADM_warning("DSI Data not 0x3fa but 0x%x\n",size+1);
+            return false;
+        }
+#define P32(x) printf(#x" :%d ",_file->read32i());
+#define P16(x) printf(#x" :%d ",_file->read16i());
+
+        P32(pck_scr);
+        P32(pck_lbn);
+        _file->read32i();//end add
+        _file->read32i();// ref1
+        _file->read32i();// ref2
+        _file->read32i();// ref3
+        P16(vobid);
+        _file->read8i();
+        P16(cellid);
+        _file->read8i();
+        P32(etm);
+        printf("\n");
+        return true;
+
 }
 /**
     \fn getPacketgetPacketOfType
@@ -625,6 +720,12 @@ bool           psPacketLinearTracker::getPacketOfType(uint8_t pid,uint32_t maxSi
                 // Update 
                 ADM_assert(tmppid<0x100);
                 packetStats *p=stats+tmppid;
+                if(tmppid==0x60) // VOBU PCI
+                {
+                    decodeVobuPCI(*packetSize,buffer);
+                    continue;
+                }
+                
                 uint64_t ts=*pts;
                 if(ts==ADM_NO_PTS) ts=*dts;
                 if(ts!=ADM_NO_PTS)
