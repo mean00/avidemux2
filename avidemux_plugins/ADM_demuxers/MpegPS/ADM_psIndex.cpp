@@ -347,6 +347,8 @@ dmxPacketInfo info;
                                   continue;
                           }
                           //
+                         //   printf("Found pic of type %d at 0x%"LLX" dts=%s\n",type,info.startAt,ADM_us2plain(info.dts));
+                          //
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
                           {
                             if(lastValidVideoDts>(info.dts+timeOffset))
@@ -546,7 +548,7 @@ bool PsIndexer::handleScrReset(uint64_t dts)
 #define PRETTY(x) ADM_us2plain(timeConvert(x))
         ADM_warning("DTS are going back, maybe several video appended ?\n");
         uint64_t newOffset=timeOffset+pkt->getLastVobuEndTime();
-        uint64_t newPosition=pkt->getLastVobuPosition();
+        uint64_t newPosition=pkt->getNextVobuPosition();
         ADM_info("Trying to correct with VOBU offset :%s\n", PRETTY(newOffset));
 
         uint64_t newDts=dts+newOffset;

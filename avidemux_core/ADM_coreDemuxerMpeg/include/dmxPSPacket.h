@@ -150,6 +150,7 @@ protected:
 public:
         uint64_t        getLastVobuEndTime(void) {return lastVobuEnd;}
         uint64_t        getLastVobuPosition(void) {return lastVobuPosition;}
+        uint64_t        getNextVobuPosition(void) {return nextVobuPosition;}
                         psPacketLinearTracker(uint8_t pid);
                         ~psPacketLinearTracker();
          packetStats    *getStat(int intdex);

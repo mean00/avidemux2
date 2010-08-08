@@ -664,11 +664,17 @@ bool psPacketLinearTracker::decodeVobuPCI(uint32_t size,uint8_t *data)
         MK32(start);
         MK32(end);
         MK32(seqEnd);
-//        ADM_info("Vobu start : %d end: %d seqEnd:%d\n",start,end,seqEnd);
-        lastVobuEnd=nextVobuEnd;
-        nextVobuEnd=end;
+        
         lastVobuPosition=nextVobuPosition;
+        lastVobuEnd=nextVobuEnd;
+
+        nextVobuEnd=end;
         _file->getpos(&nextVobuPosition);
+#if 0
+        ADM_info("At : 0x%"LLX", Vobu start : %d end: %d seqEnd:%d\n",nextVobuPosition,start,end,seqEnd);
+      
+#endif
+
         _file->forward(size-5*4+2*2);
         return true;
 }   
