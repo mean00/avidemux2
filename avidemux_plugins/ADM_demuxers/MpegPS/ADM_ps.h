@@ -91,6 +91,15 @@ public:
 
 
 };
+/**
+    \struct scrGap
+    \brief Map gap/reset in the scr flow to put everything back to linear / monotonic
+*/
+typedef struct
+{
+    uint64_t position;
+    uint64_t timeOffset;
+}scrGap;
 
 /**
     \Class psHeader
@@ -105,6 +114,7 @@ class psHeader         :public vidHeader
     bool    readVideo(indexFile *index);
     bool    readAudio(indexFile *index,const char *name);
     bool    readIndex(indexFile *index);
+    bool    readScrReset(indexFile *index);
 
     bool    processVideoIndex(char *buffer);
     bool    processAudioIndex(char *buffer);
@@ -116,6 +126,7 @@ class psHeader         :public vidHeader
     uint64_t        timeConvert(uint64_t x);
     bool            updatePtsDts(void);
 protected:
+    vector <scrGap> listOfScrGap;
     vector <ADM_psTrackDescriptor *>listOfAudioTracks;
   public:
 

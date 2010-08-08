@@ -59,6 +59,15 @@ uint32_t v;
     v=atoi(value);
     return v;
 }
+/**
+
+*/
+uint64_t dmxToken::getAsNumber64(void)
+{
+uint64_t v;
+    sscanf(value,"%"LLD,&v);
+    return v;
+}
 
 //****************************************************************************************
 
@@ -100,6 +109,8 @@ dmxToken        *indexFile::searchToken(const char *name)
         if(!strcasecmp(name,tk->getName())) return tk;
     }
     printf("[indexFile] Token %s not found\n",name);
+    for(int i=0;i<ListOfTokens.size();i++)
+        printf("  [%d]%s\n",i,ListOfTokens[i]->getName());
     return NULL;
 }
 /**
@@ -169,8 +180,14 @@ bool indexFile::readSection(const char *section)
         tail=strstr((char *)buffer,"=");
         if(!tail) 
         {
-            printf("[psIndexer]Weird line :%s\n",buffer);
-            break;
+            if(buffer[0]=='#') // Comment
+            {
+
+            }else   
+            {
+                printf("[psIndexer]Weird line :%s\n",buffer);
+                break;
+            }
         }else
         {
             *tail=0;
@@ -194,7 +211,17 @@ uint32_t indexFile::getAsUint32(const char *name)
     printf("[psIndex] token %s is not a digit : %s\n",name,token->getValue());
     return 0;
 }
+/**
 
+*/
+uint64_t indexFile::getAsUint64(const char *name)
+{
+    dmxToken *token=searchToken(name);
+    if(!token) return 0;
+    if(token->isNumeric()) return token->getAsNumber64();
+    printf("[psIndex] token %s is not a digit : %s\n",name,token->getValue());
+    return 0;
+}
 /** 
     \fn getAsHex
     \read entry as hex

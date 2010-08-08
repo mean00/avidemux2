@@ -88,6 +88,30 @@ uint8_t psHeader::open(const char *name)
         printf("[psDemux] Cannot read index for file %s\n",idxName);
         goto abt;
     }
+    if(readScrReset(&index))
+    {
+        ADM_info("Adjusting timestamps\n");
+        // Update PTS/DTS of video taking SCR Resets into account
+        int nbPoints=listOfScrGap.size();
+        int index=0;
+        uint64_t pivot=listOfScrGap[0].position;
+        uint64_t timeOffset=0;
+        uint32_t nbImage=ListOfFrames.size();
+        for(int i=0;i<nbImage;i++)
+        {
+            dmxFrame *frame=ListOfFrames[i];
+            if(frame->startAt>pivot) // next gap
+            {
+                    timeOffset=listOfScrGap[index].timeOffset;
+                    index++;
+                    if(index>=nbPoints) pivot=0xfffffffffffffffLL;
+                        else pivot=listOfScrGap[index].position;
+            }
+            if(frame->dts!=ADM_NO_PTS) frame->dts+=timeOffset;
+            if(frame->pts!=ADM_NO_PTS) frame->pts+=timeOffset;
+        }
+        ADM_info("Adjusted %d scr reset out of %d\n",(int)index,(int)nbPoints);
+    }
     updatePtsDts();
     _videostream.dwLength= _mainaviheader.dwTotalFrames=ListOfFrames.size();
     printf("[psDemux] Found %d video frames\n",_videostream.dwLength);

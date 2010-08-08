@@ -42,6 +42,7 @@ public:
     char *getValue(void);
     bool  isNumeric(void);
     uint32_t getAsNumber(void);
+    uint64_t getAsNumber64(void);
 };
 
 /**
@@ -65,6 +66,7 @@ public:
     bool close(void);
     bool goToSection(const char *section);
     bool readSection(const char *section);
+    uint64_t getAsUint64(const char *token);
     uint32_t getAsUint32(const char *token);
     uint32_t getAsHex(const char *token);
     char *getAsString(const char *token);

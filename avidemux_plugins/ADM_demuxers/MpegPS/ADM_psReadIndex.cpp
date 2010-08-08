@@ -245,4 +245,43 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
     }
     return true;
 }
+
+/**
+    \fn readScrReset
+*/
+bool    psHeader::readScrReset(indexFile *index)
+{
+    ADM_info("[psDemuxer] Reading ScrResets\n");
+    if(!index->readSection("ScrResets"))
+    {
+        ADM_info("No ScrResets\n");
+        return false;
+    }
+    uint32_t nbTracks=0;
+    
+    nbTracks=index->getAsUint32("NbResets");
+    if(!nbTracks)
+    {
+        printf("[PsDemux] No ScrResets\n");
+        return false;
+    }
+    ADM_info("Found %d scrResets\n",(int)nbTracks);
+    for(int i=0;i<nbTracks;i++)
+    {
+        char header[40];
+        char body[40];
+        sprintf(header,"Reset%d.",i);
+        uint64_t position,timeOffset;
+#define readInt64(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint64(body);printf("->%02d:"#y"=%"LLU"\n",i,x);}
+        
+        readInt64(position,position);
+        readInt64(timeOffset,timeOffset);
+        scrGap gap;
+        gap.position=position;
+        gap.timeOffset=timeOffset;
+        listOfScrGap.push_back(gap);
+    }
+  
+    return true;
+}
 //EOF
