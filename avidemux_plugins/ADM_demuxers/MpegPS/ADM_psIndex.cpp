@@ -93,6 +93,15 @@ typedef enum
     markEnd,
     markNow
 }markType;
+/**
+    \struct scrGap
+    \brief Map gap/reset in the scr flow to put everything back to linear / monotonic
+*/
+typedef struct
+{
+    uint64_t position;
+    uint64_t timeOffset;
+}scrGap;
 
 /**
     \class PsIndexer
@@ -107,7 +116,9 @@ protected:
         bool             headerDumped;
         uint64_t         lastValidVideoDts;
         uint64_t         timeOffset; // In 90 khz Tick
-       
+        bool             handleScrReset(uint64_t dts);
+        vector <scrGap>  listOfScrReset;
+        bool             writeScrReset(void);
 public:
                 PsIndexer(void);
                 ~PsIndexer();
@@ -336,39 +347,12 @@ dmxPacketInfo info;
                                   continue;
                           }
                           //
-                          if(info.dts!=ADM_NO_PTS) info.dts+=timeOffset;
-                          if(info.pts!=ADM_NO_PTS) info.pts+=timeOffset;
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
                           {
-                            // Handle SCR reset, that happens a lot on DVD
-                                    if(lastValidVideoDts>info.dts)
-                                    {
-                                            ADM_warning("DTS are going back, maybe several video appended ?\n");
-                                            uint64_t newOffset=pkt->getLastVobuEndTime();
-                                            uint64_t newPosition=pkt->getLastVobuPosition();
-                                            ADM_info("Trying to correct with VOBU offset :%s\n",
-                                                            ADM_us2plain(timeConvert(newOffset)));
-
-                                            uint64_t newDts=info.dts+newOffset;
-                                            if(newDts>lastValidVideoDts)
-                                            {
-                                                  ADM_info("SCR reset, using vobu to correct. New time offset %s, position 0x%"LLX"\n",
-                                                            ADM_us2plain(timeConvert(newOffset)),newPosition);
-                                                  ADM_warning("last Valid Dts %s\n",ADM_us2plain(timeConvert(lastValidVideoDts)));
-                                                  info.dts=newDts;
-                                                  if(info.pts!=ADM_NO_PTS)
-                                                        info.pts=info.pts+newOffset;
-                                                  timeOffset+=newOffset;
-                                                  ADM_info("TimeOffset is now %s\n",ADM_us2plain(timeConvert(timeOffset)));
-                                            }else
-                                            {
-                                                ADM_warning("last Valid Dts %s\n",ADM_us2plain(timeConvert(lastValidVideoDts)));
-                                                ADM_warning("current    Dts %s\n",ADM_us2plain(timeConvert(info.dts)));
-                                                goto theEnd;
-                                            }
-                                     }
-                            }
-                            if(info.dts!=ADM_NO_PTS)
+                            if(lastValidVideoDts>(info.dts+timeOffset))
+                                if(false==handleScrReset(info.dts)) goto theEnd;
+                          }
+                          if(info.dts!=ADM_NO_PTS)
                             {
                                     lastValidVideoDts=info.dts;
                             }
@@ -396,9 +380,12 @@ theEnd:
         qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
         qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
         qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
+
+       
         // Now write the header
         writeVideo(&video);
         writeAudio();
+        writeScrReset();
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
@@ -489,6 +476,32 @@ bool PsIndexer::writeVideo(PSVideo *video)
     qfprintf(index,"AR=%d\n",video->ar);
     return true;
 }
+
+/**
+    \fn writeScrReset
+    \brief 
+*/
+bool PsIndexer::writeScrReset(void)
+{
+ // Dump resets
+    int n=listOfScrReset.size();
+    if(!n)
+    {
+        ADM_info("No SCR reset detected\n");
+        return true;
+    }
+    qfprintf(index,"[ScrResets]\n");
+    qfprintf(index,"NbResets=%d\n",n);
+    for(int i=0;i<n;i++)
+    {
+        char head[30];
+        sprintf(head,"Reset%1d",i);
+        qfprintf(index,"#%s\n",ADM_us2plain(timeConvert(listOfScrReset[i].timeOffset)));
+        qfprintf(index,"%s.position=%"LLD"\n",head,listOfScrReset[i].position);
+        qfprintf(index,"%s.timeOffset=%"LLD"\n",head,listOfScrReset[i].timeOffset);
+    }
+    return true;
+}
 /**
     \fn writeSystem
     \brief Write system part of index file
@@ -524,6 +537,38 @@ bool PsIndexer::writeAudio(void)
         qfprintf(index,"%s.br=%d\n",head,t->header.byterate);
     }
     return true;
+}
+/**
+    \fn handleScrReset
+*/
+bool PsIndexer::handleScrReset(uint64_t dts)
+{
+#define PRETTY(x) ADM_us2plain(timeConvert(x))
+        ADM_warning("DTS are going back, maybe several video appended ?\n");
+        uint64_t newOffset=timeOffset+pkt->getLastVobuEndTime();
+        uint64_t newPosition=pkt->getLastVobuPosition();
+        ADM_info("Trying to correct with VOBU offset :%s\n", PRETTY(newOffset));
+
+        uint64_t newDts=dts+newOffset;
+        if(newDts>lastValidVideoDts)
+        {
+              ADM_info("SCR reset, using vobu to correct. New time offset %s, position 0x%"LLX"\n",
+                        PRETTY(newOffset),newPosition);
+              ADM_warning("last Valid Dts %s\n",PRETTY(lastValidVideoDts));
+              timeOffset=newOffset;
+              ADM_info("TimeOffset is now %s\n",PRETTY(timeOffset));
+
+              scrGap newGap;
+              newGap.position=newPosition;
+              newGap.timeOffset=newOffset;
+              listOfScrReset.push_back(newGap);
+              return true;
+        }else
+        {
+            ADM_warning("last Valid Dts %s\n",PRETTY(lastValidVideoDts));
+            ADM_warning("current    Dts %s\n",PRETTY(dts));
+            return false;
+        }
 }
 /********************************************************************************************/
 /********************************************************************************************/
