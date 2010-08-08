@@ -347,11 +347,11 @@ dmxPacketInfo info;
                                   continue;
                           }
                           //
-                         //   printf("Found pic of type %d at 0x%"LLX" dts=%s\n",type,info.startAt,ADM_us2plain(info.dts));
+                          //  printf("Found pic of type %d at 0x%"LLX" dts=%s\n",type,info.startAt,ADM_us2plain(timeConvert(info.dts)));
                           //
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
                           {
-                            if(lastValidVideoDts>(info.dts+timeOffset))
+                            if(lastValidVideoDts>(info.dts))
                                 if(false==handleScrReset(info.dts)) goto theEnd;
                           }
                           if(info.dts!=ADM_NO_PTS)
@@ -552,7 +552,7 @@ bool PsIndexer::handleScrReset(uint64_t dts)
         ADM_info("Trying to correct with VOBU offset :%s\n", PRETTY(newOffset));
 
         uint64_t newDts=dts+newOffset;
-        if(newDts>lastValidVideoDts)
+        if(newDts>lastValidVideoDts+timeOffset)
         {
               ADM_info("SCR reset, using vobu to correct. New time offset %s, position 0x%"LLX"\n",
                         PRETTY(newOffset),newPosition);
