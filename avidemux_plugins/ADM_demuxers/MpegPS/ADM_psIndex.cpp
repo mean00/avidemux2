@@ -85,6 +85,7 @@ typedef struct
     indexerState    state;
     psPacketLinear *pkt;
     int32_t         nextOffset;
+    uint64_t        gopStartDts;
 }indexerData;
 
 typedef enum
@@ -347,7 +348,9 @@ dmxPacketInfo info;
                                   continue;
                           }
                           //
-                          //  printf("Found pic of type %d at 0x%"LLX" dts=%s\n",type,info.startAt,ADM_us2plain(timeConvert(info.dts)));
+#if 0
+                            printf("Found pic of type %d at 0x%"LLX" dts=%s pts=%s\n",type,info.startAt,ADM_us2plain(timeConvert(info.dts)),ADM_us2plain(timeConvert(info.pts)));
+#endif
                           //
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
                           {
@@ -443,10 +446,19 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
             }
             // start a new line
             qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",data->startAt,data->offset,info->pts,info->dts);
+            data->gopStartDts=info->dts;
             data->nextOffset=-2;
         }
-    
-        qfprintf(index,"%c%c",Type[data->frameType],Structure[data->picStructure&3]);
+        int64_t deltaDts,deltaPts;
+#if 0
+        printf("Dts%"LLD",PTS:%"LLD"\n",info->dts, info->pts);
+#endif
+        if(info->dts==-1 || data->gopStartDts==-1) deltaDts=-1;
+                else deltaDts=(int64_t)info->dts-(int64_t)data->gopStartDts;
+        if(info->pts==-1 || data->gopStartDts==-1) deltaPts=-1;
+                else deltaPts=(int64_t)info->pts-(int64_t)data->gopStartDts;
+        qfprintf(index,"%c%c:%"LLD":%"LLD,Type[data->frameType],Structure[data->picStructure&3],
+                    deltaPts,deltaDts);
     }
     if(update==markEnd || update==markNow)
     {

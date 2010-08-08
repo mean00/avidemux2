@@ -19,7 +19,8 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
 #include "ADM_ps.h"
-
+#include "ADM_cpp.h"
+#include "ADM_string.h"
 #include <math.h>
 /**
         \fn readIndex
@@ -106,6 +107,7 @@ bool psHeader::processVideoIndex(char *buffer)
             if(!start) return true;
             start+=1;
             int count=0;
+            int64_t gopDts=-1;
             while(1)
             {
                 char *cur=start;
@@ -113,6 +115,7 @@ bool psHeader::processVideoIndex(char *buffer)
                 char picStruct='F';
                 char *next;
                 uint32_t len;
+                int64_t framePts,frameDts;
                 type=*cur;
                 if(type==0x0a || type==0x0d || !type) break;
                 cur++;
@@ -125,22 +128,32 @@ bool psHeader::processVideoIndex(char *buffer)
                 }
                 cur++;
                 next=strstr(start," ");
-                ADM_assert(1==sscanf(cur,"%"LX,&len));
-                
+                *next=0;
+                {
+                    string me=string(cur); // pts:dts:length (dec/dec/hex)
+                    vector <string> result;
+                    ADM_splitString(":",me,result);
+                    
+                    ADM_assert(1==sscanf(result[2].c_str(),"%"LX,&len));
+                    ADM_assert(1==sscanf(result[0].c_str(),"%"LLD,&framePts));
+                    ADM_assert(1==sscanf(result[1].c_str(),"%"LLD,&frameDts));
+                }
                 
                 dmxFrame *frame=new dmxFrame;
-                if(!count)
+                if(!count) // First item.. PTS & DTS are provided as header
                 {
                     frame->pts=pts;
                     frame->dts=dts;
-
+                    gopDts=frame->dts;
                     frame->startAt=startAt;
                     frame->index=offset;
 
                 }else       
                 {
-                    frame->pts=ADM_NO_PTS;
-                    frame->dts=ADM_NO_PTS;
+                    if(gopDts!=ADM_NO_PTS && frameDts!=ADM_NO_PTS) frame->dts=frameDts+gopDts;
+                            else frame->dts=ADM_NO_PTS;
+                    if(gopDts!=ADM_NO_PTS && framePts!=ADM_NO_PTS) frame->pts=framePts+gopDts;
+                            else frame->pts=ADM_NO_PTS;
                     frame->startAt=0;
                     frame->index=0;
                 }
