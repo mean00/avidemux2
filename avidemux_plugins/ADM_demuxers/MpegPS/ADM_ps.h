@@ -30,6 +30,17 @@
 using std::vector;
 
 /**
+    \struct scrGap
+    \brief Map gap/reset in the scr flow to put everything back to linear / monotonic
+*/
+typedef struct
+{
+    uint64_t position;
+    uint64_t timeOffset;
+}scrGap;
+typedef vector <scrGap> ListOfScr;
+
+/**
     \fn ADM_psAccess
 */
 class ADM_psAccess : public ADM_audioAccess
@@ -39,6 +50,7 @@ protected:
                 psPacket        demuxer;
                 uint8_t         pid;
                 uint64_t        dtsOffset;
+                const  ListOfScr *listOfScr;
                 
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
@@ -63,8 +75,12 @@ public:
                         bool      push(uint64_t at, uint64_t dts,uint32_t size);
                                     /// Convert raw timestamp to scaled timestamp in us
                 uint64_t          timeConvert(uint64_t x);
+                                    /// Convert raw timestamp to unscaled timestamp in us
+                uint64_t          timeConvertRaw(uint64_t x);
 
                 virtual uint32_t  getLength(void);
+
+                bool    setScrGapList(const ListOfScr *list) ;/// Give audio a list of scr reset
 
 };
 /**
@@ -92,17 +108,7 @@ public:
 
 };
 /**
-    \struct scrGap
-    \brief Map gap/reset in the scr flow to put everything back to linear / monotonic
-*/
-typedef struct
-{
-    uint64_t position;
-    uint64_t timeOffset;
-}scrGap;
-
-/**
-    \Class psHeader
+    \class psHeader
     \brief mpeg ps demuxer
 
 */
@@ -126,7 +132,7 @@ class psHeader         :public vidHeader
     uint64_t        timeConvert(uint64_t x);
     bool            updatePtsDts(void);
 protected:
-    vector <scrGap> listOfScrGap;
+    ListOfScr                       listOfScrGap;
     vector <ADM_psTrackDescriptor *>listOfAudioTracks;
   public:
 

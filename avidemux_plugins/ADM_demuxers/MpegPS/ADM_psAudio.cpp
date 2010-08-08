@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "ADM_ps.h"
-
+#include "ADM_vidMisc.h"
 #if 0
     #define aprintf printf
 #else
@@ -37,6 +37,7 @@ FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;
         this->pid=pid;
         if(!demuxer.open(name,fp)) ADM_assert(0);
+        listOfScr=NULL;
 }
 
 /**
@@ -118,6 +119,19 @@ uint64_t ADM_psAccess::timeConvert(uint64_t x)
 
 }
 /**
+    \fn timeConvertRaw
+    \brief Convert time in ticks raw from the stream (90 kHz tick) to avidemux time (us)
+*/
+uint64_t ADM_psAccess::timeConvertRaw(uint64_t x)
+{
+    if(x==ADM_NO_PTS) return ADM_NO_PTS;
+    x=x*1000;
+    x/=90;
+    return x;
+
+}
+
+/**
     \fn getPacket
 */
 bool      ADM_psAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
@@ -126,6 +140,24 @@ uint64_t p,d,start;
     if(false==demuxer.getPacketOfType(pid,maxSize,size,&p,&d,buffer,&start)) return false;
     if(d==ADM_NO_PTS) *dts=p;
             else *dts=d;
+
+    // Update dts if needed due to scr reset
+    if(listOfScr && *dts!=ADM_NO_PTS)
+    {
+        uint64_t timeOffset=0;
+        for(int i=0;i<listOfScr->size();i++)
+        {
+            if(start>(*listOfScr)[i].position) 
+            {
+                
+                timeOffset=(*listOfScr)[i].timeOffset;
+               // printf("New timeOffset :%d %d ms\n",i,(int)(timeOffset/1000));
+                
+            }
+        }
+        *dts+=timeOffset;
+    }
+
     *dts=timeConvert(*dts);
     if(*dts!=ADM_NO_PTS) 
     {
@@ -134,6 +166,41 @@ uint64_t p,d,start;
 
     return true;
 }
-
-
+/**
+    \fn setScrGapList
+*/
+bool    ADM_psAccess::setScrGapList(const ListOfScr *list) 
+{
+        ADM_assert(list);
+        listOfScr=list;
+        //Update seek points
+        int n=seekPoints.size();
+        uint64_t pivot=(*list)[0].position;
+        uint64_t timeOffset=0;
+        int index=0;
+        for(int i=0;i<n;i++)
+        {
+            ADM_mpgAudioSeekPoint *point=&(seekPoints[i]);
+           
+            if(point->dts!=ADM_NO_PTS) 
+            {
+                point->dts+=timeOffset;
+#if 0
+                printf("%d:%d Offset : %s ",i,n,ADM_us2plain(timeConvertRaw(timeOffset)));
+                printf(" dts : %s\n",ADM_us2plain(timeConvertRaw(point->dts)));
+#endif
+            }
+            // since audio seek point are done at the END, 
+            // we will increase timeOffset for the next
+#warning fixme  do something smarter
+            if(point->position>pivot)
+            {
+                timeOffset=((*list)[index].timeOffset);
+                index++;
+                if(index>(*list).size()) pivot=0x8000000000000LL;
+                        else pivot=(*list)[index].position;
+            }
+        }
+        return true;
+}
 //EOF

@@ -111,6 +111,9 @@ uint8_t psHeader::open(const char *name)
             if(frame->pts!=ADM_NO_PTS) frame->pts+=timeOffset;
         }
         ADM_info("Adjusted %d scr reset out of %d\n",(int)index,(int)nbPoints);
+        ADM_info("Updating audio with list of SCR\n");
+        for(int i=0;i<listOfAudioTracks.size();i++)
+                  listOfAudioTracks[i]->access->setScrGapList(&listOfScrGap) ;
     }
     updatePtsDts();
     _videostream.dwLength= _mainaviheader.dwTotalFrames=ListOfFrames.size();
