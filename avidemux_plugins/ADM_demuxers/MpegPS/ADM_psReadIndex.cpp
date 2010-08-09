@@ -13,13 +13,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
 #include "ADM_ps.h"
-#include "ADM_cpp.h"
 #include "ADM_string.h"
 #include <math.h>
 /**
