@@ -303,6 +303,45 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     ADM_info("Computing missing DTS\n");
 
     int updated=0;
+    // Special case, for 24/1001 video try to detect them
+    // And alter timeIncrement accordingly
+    int backIndex=-1;
+    uint64_t backDts=ADM_NO_PTS;
+    uint64_t increment24fps=41708;
+    int nbFixup=0;
+    if(timeIncrementUs>33300 && timeIncrementUs<33400) // 29.997 fps
+    {
+        for(int i=0;i<nbFrames;i++)
+        {
+            hdr->getPtsDts(i,&pts,&dts);
+            if(dts!=ADM_NO_PTS)
+            {
+                if(backIndex!=-1)
+                {
+                    double deltaFrame=i-backIndex;
+                    if(deltaFrame>1)
+                    {
+                        double deltaTime=dts-backDts;
+                        deltaTime=deltaTime/(deltaFrame);
+                        if(deltaTime>41700 & deltaTime<41800)
+                        {
+                            for(int j=backIndex+1;j<i;j++)
+                            {
+                                hdr->setPtsDts(j,ADM_NO_PTS,backDts+(j-backIndex)*increment24fps);
+                            }
+                            nbFixup+=i-backIndex; 
+                        }
+                    }
+                }
+                backIndex=i;
+                backDts=dts;
+            }
+        }
+        ADM_info("Fixed %d/%d frames as 24 fps\n",nbFixup,nbFrames);
+    }
+
+
+    // Fill-in the gaps
     for(int i=0;i<nbFrames;i++)
     {
         hdr->getPtsDts(i,&pts,&dts);

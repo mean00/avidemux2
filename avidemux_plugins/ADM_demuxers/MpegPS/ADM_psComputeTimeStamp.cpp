@@ -177,6 +177,14 @@ next:
         // for video
         // We are sure to have both PTS & DTS for 1st image
         // Guess missing DTS/PTS for video
+#if 1
+        for(int i=0;i<ListOfFrames.size();i++)
+        {
+            dmxFrame *frame=ListOfFrames[i];
+            if(frame->dts!=ADM_NO_PTS) frame->dts=timeConvert(frame->dts);
+            if(frame->pts!=ADM_NO_PTS) frame->pts=timeConvert(frame->pts);
+        }
+#else
         int noUpdate=0;
         for(int i=0;i<ListOfFrames.size();i++)
         {
@@ -215,6 +223,7 @@ next:
                 frame->pts=lastPts=timeConvert(frame->pts);
             }
         }
+#endif
         // convert to us for Audio tracks (seek points)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
