@@ -435,8 +435,8 @@
          <string>Noise</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../../../common/ADM_icons/videoFilter/5.png</normaloff>../../../common/ADM_icons/videoFilter/5.png</iconset>
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/5.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/5.png</iconset>
         </property>
        </item>
        <item>
