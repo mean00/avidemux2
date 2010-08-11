@@ -1,9 +1,10 @@
 /***************************************************************************
-                          Resample fps
-                             -------------------
-    begin                : Wed Nov 6 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
+    \file ADM_vidResampleFps
+    \author mean fixounet@free.fr
+    \brief Simple filter that enforces output constant frame per second
+    Can be used both to change fps of a movie or to enforce in case of drops
+    or pulldown. In that case, the input is a mix of 24 & 30 fps, the output
+    is fixed 24 fps.
  ***************************************************************************/
 
 /***************************************************************************
@@ -40,8 +41,8 @@ protected:
         bool                updateIncrement(void);
         uint64_t            baseTime;
         ADMImage            *frames[2];
-        bool                refill(void);
-        bool                prefill;
+        bool                refill(void);   // Fetch next frame
+        bool                prefill;        // If true we already have 2 frames fetched
 public:
                             resampleFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~resampleFps();
@@ -132,6 +133,9 @@ resampleFps::~resampleFps()
 }
 /**
      \fn refill
+     \brief fetch a new frame from source, shift the old one as "old"
+    frames[0]=old
+    frames[1]=new
 */
 bool resampleFps::refill(void)
 {
@@ -165,11 +169,12 @@ bool         resampleFps::getCoupledConf(CONFcouple **couples)
  bool         resampleFps::getNextFrame(uint32_t *fn,ADMImage *image)
 {
 
-    if(!prefill)
+    if(!prefill) // Empty, need 1/ to refill, 2/ to rebase
     {
           if(false==refill()) return false;
+          baseTime=frames[1]->Pts;
           if(false==refill()) return false;
-          prefill=1;
+          prefill=true;
     }
 
     uint64_t thisTime=baseTime+(nextFrame*info.frameIncrement);
