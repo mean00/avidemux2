@@ -28,6 +28,7 @@
 #include "ADM_coreUtils.h"
 
 #define QT_TR_NOOP(x) x
+
 uint8_t  mk_hex(uint8_t a, uint8_t b);
 char    *ADM_escape(const ADM_filename *incoming);
 bool     ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
@@ -274,7 +275,7 @@ uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInM
 }
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000)
 {
-float f;
+double f;
       if(fps1000>250000) fps1000=25000; // safe default;
       if(!fps1000) fps1000=25000; // safe default;
 
@@ -292,7 +293,7 @@ float f;
 uint32_t ADM_Fps1000FromUs(uint64_t us)
 {
     if(us<1000) return 1000;
-    float f;
+    double f;
     f=us;
     f=1000000./f;
     f*=1000;
