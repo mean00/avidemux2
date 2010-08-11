@@ -23,6 +23,12 @@
 
 #include "confResampleFps.h"
 #include "confResampleFps_desc.cpp"
+
+#if 1
+    #define aprintf(...) {}
+#else
+    #define aprintf ADM_info
+#endif
 /**
     \class resampleFps
 
@@ -32,10 +38,14 @@ class  resampleFps:public ADM_coreVideoFilter
 protected:
         confResampleFps     configuration;
         bool                updateIncrement(void);
+        uint64_t            baseTime;
+        ADMImage            *frames[2];
+        bool                refill(void);
+        bool                prefill;
 public:
                             resampleFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~resampleFps();
-
+        bool                goToTime(uint64_t usSeek);
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
@@ -68,6 +78,7 @@ bool resampleFps::configure(void)
     {
         f*=1000;
       configuration.newFps=(uint32_t)floor(f+0.4);
+      prefill=0;
       updateIncrement();
       return 1;
     }
@@ -79,7 +90,9 @@ bool resampleFps::configure(void)
 */
 bool resampleFps::updateIncrement(void)
 {
-
+    info.frameIncrement=ADM_UsecFromFps1000(configuration.newFps);
+  
+    return true;
 }
 /**
     \fn getConfiguration
@@ -95,12 +108,16 @@ static char buf[100];
 */
 resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : ADM_coreVideoFilter(previous,setup)
 {
+    baseTime=0;
+    prefill=false;
+    frames[0]=frames[1]=NULL;
     if(!setup || !ADM_paramLoad(setup,confResampleFps_param,&configuration))
     {
         // Default value
-#warning todo get fps from increment
-        configuration.newFps=25000;
+        configuration.newFps=ADM_Fps1000FromUs(previous->getInfo()->frameIncrement);
     }
+    if(!frames[0]) frames[0]=new ADMImageDefault(info.width,info.height);
+    if(!frames[1]) frames[1]=new ADMImageDefault(info.width,info.height);
     updateIncrement();
 }
 /**
@@ -109,8 +126,32 @@ resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : AD
 */
 resampleFps::~resampleFps()
 {
-  
+    if(frames[0]) delete frames[0];
+    if(frames[1]) delete frames[1];
+    frames[0]=frames[1]=NULL;
 }
+/**
+     \fn refill
+*/
+bool resampleFps::refill(void)
+{
+    ADMImage *nw=frames[0];
+    uint32_t img=0;
+    frames[0]=frames[1];
+    frames[1]=nw;
+    return previousFilter->getNextFrame(&img,nw);
+}
+/**
+    \fn goToTime
+    \brief called when seeking. Need to cleanup our stuff.
+*/
+bool         resampleFps::goToTime(uint64_t usSeek)
+{
+    if(false==ADM_coreVideoFilter::goToTime(usSeek)) return false;
+    prefill=false;
+    return true;
+}
+
 /**
     \fn getCoupledConf
 */ 
@@ -123,7 +164,47 @@ bool         resampleFps::getCoupledConf(CONFcouple **couples)
 */
  bool         resampleFps::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    return false;
+
+    if(!prefill)
+    {
+          if(false==refill()) return false;
+          if(false==refill()) return false;
+          prefill=1;
+    }
+
+    uint64_t thisTime=baseTime+(nextFrame*info.frameIncrement);
+
+again:
+    
+    uint64_t frame1Dts=frames[0]->Pts;
+    uint64_t frame2Dts=frames[1]->Pts;
+    aprintf("Frame : %d, timeIncrement %d ms, Wanted : %"LLU", available %"LLU" and %"LLU"\n",
+                    nextFrame,info.frameIncrement/1000,thisTime,frame1Dts,frame2Dts);
+    if(thisTime>frame1Dts && thisTime>frame2Dts)
+    {
+        if(false==refill()) return false;
+        goto again;
+    }
+    if(thisTime<frame1Dts && thisTime<frame2Dts)
+    {
+        image->duplicate(frames[0]);
+        image->Pts=thisTime;
+        *fn=nextFrame++;
+        return true;
+    }
+    // In between, take closer
+    double diff1=(double)thisTime-double(frame1Dts);
+    double diff2=(double)thisTime-double(frame2Dts);
+    if(diff1<0) diff1=-diff1;
+    if(diff2<0) diff2=-diff2;
+    int index=1;
+    if(diff1<diff2) index=0;
+
+    image->duplicate(frames[index]);
+    image->Pts=thisTime;
+    *fn=nextFrame++;
+    return true;
+}
 #if 0
   ADMImage *mysrc1=NULL;
   ADMImage *mysrc2=NULL;
@@ -235,7 +316,8 @@ bool         resampleFps::getCoupledConf(CONFcouple **couples)
       vidCache->unlockAll();
     }
   return 1;
-#endif 
 }
+#endif 
+
 
 //EOF
