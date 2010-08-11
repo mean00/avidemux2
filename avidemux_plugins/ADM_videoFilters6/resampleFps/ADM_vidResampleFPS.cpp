@@ -42,7 +42,7 @@ protected:
         uint64_t            baseTime;
         ADMImage            *frames[2];
         bool                refill(void);   // Fetch next frame
-        bool                prefill;        // If true we already have 2 frames fetched
+        bool                prefillDone;        // If true we already have 2 frames fetched
 public:
                             resampleFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~resampleFps();
@@ -67,8 +67,8 @@ DECLARE_VIDEO_FILTER(   resampleFps,   // Class
 */
 bool resampleFps::configure(void)
 {
-  float f=configuration.newFps; 
-  f/=1000;
+    float f=configuration.newFpsNum; 
+    f/=configuration.newFpsDen;
   
   
     diaElemFloat fps(&f,QT_TR_NOOP("_New frame rate:"),1,200.);
@@ -77,9 +77,10 @@ bool resampleFps::configure(void)
   
     if( diaFactoryRun(QT_TR_NOOP("Resample fps"),1,elems))
     {
-        f*=1000;
-      configuration.newFps=(uint32_t)floor(f+0.4);
-      prefill=0;
+      f*=1000;
+      configuration.newFpsNum=(uint32_t)floor(f+0.4);
+      configuration.newFpsDen=(uint32_t)1000;
+      prefillDone=false;
       updateIncrement();
       return 1;
     }
@@ -91,7 +92,9 @@ bool resampleFps::configure(void)
 */
 bool resampleFps::updateIncrement(void)
 {
-    info.frameIncrement=ADM_UsecFromFps1000(configuration.newFps);
+    float f=configuration.newFpsNum*1000;
+    f/=configuration.newFpsDen;
+    info.frameIncrement=ADM_UsecFromFps1000((uint32_t)f);
   
     return true;
 }
@@ -101,7 +104,7 @@ bool resampleFps::updateIncrement(void)
 const char *resampleFps::getConfiguration( void )
 {
 static char buf[100];
- snprintf(buf,99," Resample to %2.2f fps",(double)configuration.newFps/1000.);
+ snprintf(buf,99," Resample to %2.2f fps",(double)configuration.newFpsNum/configuration.newFpsDen);
  return buf;  
 }
 /**
@@ -110,12 +113,13 @@ static char buf[100];
 resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : ADM_coreVideoFilter(previous,setup)
 {
     baseTime=0;
-    prefill=false;
+    prefillDone=false;
     frames[0]=frames[1]=NULL;
     if(!setup || !ADM_paramLoad(setup,confResampleFps_param,&configuration))
     {
         // Default value
-        configuration.newFps=ADM_Fps1000FromUs(previous->getInfo()->frameIncrement);
+        configuration.newFpsNum=ADM_Fps1000FromUs(previous->getInfo()->frameIncrement);
+        configuration.newFpsDen=1000;
     }
     if(!frames[0]) frames[0]=new ADMImageDefault(info.width,info.height);
     if(!frames[1]) frames[1]=new ADMImageDefault(info.width,info.height);
@@ -152,7 +156,7 @@ bool resampleFps::refill(void)
 bool         resampleFps::goToTime(uint64_t usSeek)
 {
     if(false==ADM_coreVideoFilter::goToTime(usSeek)) return false;
-    prefill=false;
+    prefillDone=false;
     return true;
 }
 
@@ -169,15 +173,18 @@ bool         resampleFps::getCoupledConf(CONFcouple **couples)
  bool         resampleFps::getNextFrame(uint32_t *fn,ADMImage *image)
 {
 
-    if(!prefill) // Empty, need 1/ to refill, 2/ to rebase
+    if(!prefillDone) // Empty, need 1/ to refill, 2/ to rebase
     {
           if(false==refill()) return false;
-          baseTime=frames[1]->Pts;
+          baseTime=frames[1]->Pts;  // We start at the first frame
           if(false==refill()) return false;
-          prefill=true;
+          prefillDone=true;
     }
-
-    uint64_t thisTime=baseTime+(nextFrame*info.frameIncrement);
+    float offset=configuration.newFpsDen;
+    offset*=1000000LL;
+    offset*=nextFrame;
+    offset/=configuration.newFpsNum;
+    uint64_t thisTime=baseTime+(uint64_t)offset;
 
 again:
     
