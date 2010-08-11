@@ -62,30 +62,7 @@ DECLARE_VIDEO_FILTER(   resampleFps,   // Class
                         "Resample FPS",            // Display name
                         "Change and enforce FPS. Keep duration and sync." // Description
                     );
-/**
-    \fn configure
-*/
-bool resampleFps::configure(void)
-{
-    float f=configuration.newFpsNum; 
-    f/=configuration.newFpsDen;
-  
-  
-    diaElemFloat fps(&f,QT_TR_NOOP("_New frame rate:"),1,200.);
-    
-    diaElem *elems[1]={&fps};
-  
-    if( diaFactoryRun(QT_TR_NOOP("Resample fps"),1,elems))
-    {
-      f*=1000;
-      configuration.newFpsNum=(uint32_t)floor(f+0.4);
-      configuration.newFpsDen=(uint32_t)1000;
-      prefillDone=false;
-      updateIncrement();
-      return 1;
-    }
-    return 0;
-}
+
 /**
     \fn updateIncrement
     \brief FPS->TimeIncrement
@@ -330,6 +307,62 @@ again:
   return 1;
 }
 #endif 
+/**
+    \fn configure
+*/
+bool resampleFps::configure(void)
+{
+const uint32_t num[6]={1,24000,25000,30000,50000,60000};
+const uint32_t den[6]={1,1001,1000,1001,1000,1001};
+uint32_t nbPredefined=sizeof(num)/sizeof(uint32_t);
 
+    float f=configuration.newFpsNum; 
+    f/=configuration.newFpsDen;
+  
+   diaMenuEntry tFps[]={
+                             {0,      QT_TR_NOOP("Custom"),NULL},
+                             {1,   QT_TR_NOOP("23.976 (Film)"),NULL},
+                             {2,      QT_TR_NOOP("25  (PAL)"),NULL},
+                             {3,  QT_TR_NOOP("29.97 (NTSC)"),NULL},
+                             {4,   QT_TR_NOOP("50 (Pal)"),NULL},
+                             {5,      QT_TR_NOOP("59.93  (NTSC)"),NULL}
+
+          };
+    uint32_t sel=0;
+    
+    // See if a predefined value is ok
+    for(int i=0;i<nbPredefined;i++)
+    {
+        double fpsFloat=num[i];
+        fpsFloat/=den[i];
+        if(fabs(f-fpsFloat)<0.02) sel=i;
+    }
+
+
+    diaElemMenu mFps(&(sel),   QT_TR_NOOP("_Mode:"), 6,tFps);
+    diaElemFloat fps(&f,QT_TR_NOOP("_New frame rate:"),1,200.);
+
+    mFps.link(tFps+0,1,&fps);
+
+    diaElem *elems[2]={&mFps,&fps};
+  
+    if( diaFactoryRun(QT_TR_NOOP("Resample fps"),2,elems))
+    {
+      if(!sel)
+      {
+          f*=1000;
+          configuration.newFpsNum=(uint32_t)floor(f+0.4);
+          configuration.newFpsDen=(uint32_t)1000;
+      }else 
+        {
+            configuration.newFpsNum=num[sel];
+            configuration.newFpsDen=den[sel];
+        }
+      prefillDone=false;
+      updateIncrement();
+      return 1;
+    }
+    return 0;
+}
 
 //EOF
