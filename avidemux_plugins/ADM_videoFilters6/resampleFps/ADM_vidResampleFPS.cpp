@@ -30,6 +30,26 @@
 #else
     #define aprintf ADM_info
 #endif
+
+typedef struct 
+{
+    const char *desc;
+    uint32_t num;
+    uint32_t den;
+}PredefinedFps_t;
+
+const PredefinedFps_t predefinedFps[]=
+{
+ {QT_TR_NOOP("Custom"),         10000,1000},
+ {QT_TR_NOOP("25  (PAL)"),      25000,1000},
+ {QT_TR_NOOP("23.976 (Film)"),  24000,1001},
+ {QT_TR_NOOP("29.97 (NTSC)"),   30000,1001},
+ {QT_TR_NOOP("50 (Pal)"),       50000,1000},
+ {QT_TR_NOOP("59.93  (NTSC)"),  60000,1001}
+};
+
+#define nbPredefined (sizeof(predefinedFps)/sizeof(PredefinedFps_t))
+
 /**
     \class resampleFps
 
@@ -95,6 +115,7 @@ resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : AD
     if(!setup || !ADM_paramLoad(setup,confResampleFps_param,&configuration))
     {
         // Default value
+        configuration.mode=0;
         configuration.newFpsNum=ADM_Fps1000FromUs(previous->getInfo()->frameIncrement);
         configuration.newFpsDen=1000;
     }
@@ -312,51 +333,39 @@ again:
 */
 bool resampleFps::configure(void)
 {
-const uint32_t num[6]={1,24000,25000,30000,50000,60000};
-const uint32_t den[6]={1,1001,1000,1001,1000,1001};
-uint32_t nbPredefined=sizeof(num)/sizeof(uint32_t);
 
     float f=configuration.newFpsNum; 
     f/=configuration.newFpsDen;
+
+ADM_assert(nbPredefined == 6);
   
    diaMenuEntry tFps[]={
-                             {0,      QT_TR_NOOP("Custom"),NULL},
-                             {1,   QT_TR_NOOP("23.976 (Film)"),NULL},
-                             {2,      QT_TR_NOOP("25  (PAL)"),NULL},
-                             {3,  QT_TR_NOOP("29.97 (NTSC)"),NULL},
-                             {4,   QT_TR_NOOP("50 (Pal)"),NULL},
-                             {5,      QT_TR_NOOP("59.93  (NTSC)"),NULL}
+#define Z(x)                 {x,     predefinedFps[x].desc}
+                    Z(0),Z(1),Z(2),Z(3),Z(4),Z(5)
 
           };
-    uint32_t sel=0;
+    uint32_t sel=configuration.mode;
     
-    // See if a predefined value is ok
-    for(int i=0;i<nbPredefined;i++)
-    {
-        double fpsFloat=num[i];
-        fpsFloat/=den[i];
-        if(fabs(f-fpsFloat)<0.02) sel=i;
-    }
 
-
-    diaElemMenu mFps(&(sel),   QT_TR_NOOP("_Mode:"), 6,tFps);
+    diaElemMenu mFps(&(configuration.mode),   QT_TR_NOOP("_Mode:"), 6,tFps);
     diaElemFloat fps(&f,QT_TR_NOOP("_New frame rate:"),1,200.);
 
-    mFps.link(tFps+0,1,&fps);
+    mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
     diaElem *elems[2]={&mFps,&fps};
   
     if( diaFactoryRun(QT_TR_NOOP("Resample fps"),2,elems))
     {
-      if(!sel)
+      if(!configuration.mode) // Custom mode
       {
           f*=1000;
           configuration.newFpsNum=(uint32_t)floor(f+0.4);
           configuration.newFpsDen=(uint32_t)1000;
-      }else 
+      }else   // Preset
         {
-            configuration.newFpsNum=num[sel];
-            configuration.newFpsDen=den[sel];
+            const PredefinedFps_t *me=&(predefinedFps[configuration.mode]);
+            configuration.newFpsNum=me->num;
+            configuration.newFpsDen=me->den;
         }
       prefillDone=false;
       updateIncrement();
