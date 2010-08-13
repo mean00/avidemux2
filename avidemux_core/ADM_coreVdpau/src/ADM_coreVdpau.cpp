@@ -50,7 +50,7 @@ static void *getFunc(uint32_t id)
 bool admVdpau::init(GUI_WindowInfo *x)
 {
     memset(&ADM_coreVdpau::funcs,0,sizeof(ADM_coreVdpau::funcs));
-    if(false==vdpauDynaLoader.loadLibrary("/usr/lib/libvdpau.so"))
+    if(false==vdpauDynaLoader.loadLibrary("libvdpau.so"))
     {
         ADM_info("Cannot load libvdpau.so\n");
         return false;
