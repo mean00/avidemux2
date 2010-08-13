@@ -838,26 +838,7 @@ void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
 	WIDGET(currentTime)->setText(text);
 }
 
-/**
-    \fn     UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
-    \brief  Display the time corresponding to current frame according to fps (fps1000) and total duration
-*/
-void UI_setTimeCount(uint32_t curFrame,uint32_t total, uint32_t fps)
-{
-	char text[80];   
-	uint32_t mm,hh,ss,ms;
 
-	if(total) total--; // We display from 0 to X
-
-	UI_updateTimeCount(curFrame,fps);
-	frame2time(total,fps, &hh, &mm, &ss, &ms);
-	sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
-	WIDGET(totalTime)->setText(text);
-
-	slider->setFrameCount(total);
-
-	currentFps = fps;	
-}
 
 /**
     \fn UI_setCurrentTime
@@ -888,6 +869,7 @@ void UI_setTotalTime(uint64_t curTime)
     ms2time(shorty,&hh,&mm,&ss,&ms);
   	sprintf(text, "/%02d:%02d:%02d.%03d", hh, mm, ss, ms);
     WIDGET(totalTime)->setText(text);
+    slider->setTotalDuration(curTime);
 }
 /**
     \fn     UI_setMarkers(uint64_t Ptsa, uint32_t Ptsb )
@@ -896,6 +878,7 @@ void UI_setTotalTime(uint64_t curTime)
 void UI_setMarkers(uint64_t a, uint64_t b)
 {
 	char text[80];
+    uint64_t absoluteA=a,absoluteB=b;
     uint32_t hh,mm,ss,ms;
     uint32_t timems;
     a/=1000;
@@ -911,7 +894,7 @@ void UI_setMarkers(uint64_t a, uint64_t b)
 	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerB)->setText(text);
 
-	//slider->setMarkers(a, b);
+	slider->setMarkers(absoluteA, absoluteB);
 }
 
 /**

@@ -17,28 +17,35 @@ Custom slider
 #include <QtGui/QPainter>
 #include <QtGui/QSlider>
 #include "ADM_qslider.h"
+#include "ADM_assert.h"
+/**
+    \fn ADM_QSlider
+*/
 
 ADM_QSlider::ADM_QSlider(QWidget *parent) : QSlider(parent)
 {
-	frameCount = markerA = markerB = 0;
+   totalDuration= markerATime= markerBTime =0;
+	
 }
-
+/**
+    \fn paintEvent
+*/
 void ADM_QSlider::paintEvent(QPaintEvent *event)
 {
 	QSlider::paintEvent(event);	
 
-	int a = markerA, b = markerB;
+	uint64_t a = markerATime, b = markerBTime;
 
-	if (markerA > markerB)
+	if (markerATime > markerBTime)
 	{
-		b = markerA;
-		a = markerB; 
+		b = markerATime;
+		a = markerBTime; 
 	}
 
-	if (frameCount > 0 && (a != 0 || b != frameCount))
+	if (totalDuration > 0LL && (a != 0 || b != totalDuration))
 	{
-		int left = (a * width()) / frameCount;
-		int right = (b * width()) / frameCount;
+		int left  = (int)(((double)a * width()) / (double)totalDuration);
+		int right = (int)(((double)b * width()) / (double)totalDuration);
 
 		QPainter painter(this);
 
@@ -47,35 +54,44 @@ void ADM_QSlider::paintEvent(QPaintEvent *event)
 		painter.end();
 	}
 }
+/**
+    \fn setMarkerA
+*/
 
-void ADM_QSlider::setMarkerA(uint32_t frameIndex)
+void ADM_QSlider::setMarkerA(uint64_t frameIndex)
 {
-	setMarkers(frameIndex, markerB);
+	setMarkers(frameIndex, markerBTime);
 }
-
-void ADM_QSlider::setMarkerB(uint32_t frameIndex)
+/**
+    \fn setMarkerB
+*/
+void ADM_QSlider::setMarkerB(uint64_t frameIndex)
 {
-	setMarkers(markerA, frameIndex);
+	setMarkers(markerATime, frameIndex);
 }
-
-void ADM_QSlider::setMarkers(uint32_t frameIndexA, uint32_t frameIndexB)
+/**
+    \fn setMarkers
+*/
+void ADM_QSlider::setMarkers(uint64_t frameIndexA, uint64_t frameIndexB)
 {
-	if (frameIndexA > frameCount)
-		printf("[ADM_QSlider] Marker A is out of bounds (%u, %u)\n", markerA, frameCount);
-	else if (frameIndexB > frameCount)
-		printf("[ADM_QSlider] Marker B is out of bounds (%u, %u)\n", markerB, frameCount);
+	if (frameIndexA > totalDuration)
+		printf("[ADM_QSlider] Marker A is out of bounds (%"LLU", %"LLU")\n", markerATime, totalDuration);
+	else if (frameIndexB > totalDuration)
+		printf("[ADM_QSlider] Marker B is out of bounds (%"LLU", %"LLU")\n", markerBTime, totalDuration);
 	else
 	{
-		markerA = frameIndexA;
-		markerB = frameIndexB;
+		markerATime = frameIndexA;
+		markerBTime = frameIndexB;
 
 		repaint();
 	}
 }
-
-void ADM_QSlider::setFrameCount(uint32_t count)
+/**
+        \fn setTotalDuration
+*/
+void ADM_QSlider::setTotalDuration(uint64_t duration)
 {
-	frameCount = count;
+	totalDuration = duration;
 	repaint();
 }
 

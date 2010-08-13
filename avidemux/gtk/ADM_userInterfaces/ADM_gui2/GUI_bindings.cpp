@@ -778,23 +778,6 @@ void UI_updateFrameCount(uint32_t curFrame)
 
 }
 /**
-    \fn UI_setFrameCount
-	
-*/
-
-void UI_setFrameCount(uint32_t curFrame,uint32_t total)
-{
-    char text[80];
-    if(total) total--; // We display from 0 to X
-    // frames
-   // sprintf(text, "%"LU" ", curFrame);
-   // gtk_label_set_text((GtkLabel *) guiCurFrame, text);
-    gtk_write_entry(guiCurFrame,curFrame);
-      sprintf(text, "/ %"LU"", total);
-    gtk_label_set_text((GtkLabel *) guiTotalFrame, text);
-
-}
-/**
     \fn UI_setTotalTime
     \brief SEt the total duration of video
 */

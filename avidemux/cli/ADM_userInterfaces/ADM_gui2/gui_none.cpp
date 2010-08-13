@@ -76,8 +76,6 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 
 void UI_updateTimeCount(uint32_t curFrame, uint32_t fps)
 {}
-void UI_setTimeCount(uint32_t curFrame,uint32_t total, uint32_t fps)
-{}
 
 double 	UI_readScale( void )
 {
