@@ -264,7 +264,13 @@ bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain)
 {
     ADM_assert(chain->size());
     int nb=chain->size();
-    for(int i=0;i<nb;i++)
+    if(!nb)
+    {
+        ADM_info("Empty filter chain\n");
+        return true;
+    }
+    nb--;
+    for(int i=nb;i>=0;i--) // delete from the end
     {
         ADM_coreVideoFilter *filter=(*chain)[i];
         delete filter;

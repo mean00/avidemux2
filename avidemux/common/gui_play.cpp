@@ -176,6 +176,7 @@ bool GUIPlayback::cleanupAudio(void)
 */
 bool GUIPlayback::cleanup(void)
 {
+        ADM_info("Cleaning up..\n");
         cleanupAudio();
         if(videoChain)
         {
