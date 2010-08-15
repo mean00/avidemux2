@@ -37,6 +37,7 @@ enum
 class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
 {
 protected:
+                    bool                 eof;
                     bool                 secondField;
                     uint64_t             nextPts;
                     ADMColorScalerSimple *scaler;
@@ -110,6 +111,7 @@ bool vdpauVideoFilterDeint::updateConf(void)
 bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
 {
     secondField=false;
+    eof=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
     return ADM_coreVideoFilter::goToTime(usSeek);
 }
@@ -183,6 +185,7 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
 */
 vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVideoFilter(in,setup)
 {
+    eof=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)
         input[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
@@ -280,7 +283,7 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,uint32_t surfaceIndex,uin
     if(!next) // empty image
     {
         frameDesc[surfaceIndex%ADM_NB_SURFACES]=ADM_INVALID_FRAME_NUM;
-        ADM_warning("No image to upload\n");
+        ADM_warning("VdpauDeint:No image to upload\n");
         return true;
     }
   // Blit our image to surface
@@ -395,6 +398,11 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 bool vdpauVideoFilterDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 {
 bool r=true;
+    if(eof)
+    {
+        ADM_warning("[VdpauDeint] End of stream\n");
+        return false;
+    }
 #define FAIL {r=false;goto endit;}
      if(passThrough) return previousFilter->getNextFrame(fn,image);
     // top field has already been sent, grab bottom field
@@ -424,12 +432,17 @@ bool r=true;
     // regular image, in fact we get the next image here
     
     ADMImage *next= vidCache->getImage(nextFrame+1);
+    if(next)
+    {
+        //printf("VDPAU DEINT : incoming PTS=%"LLU"\n",next->Pts);
+    }
     if(false==uploadImage(next,nextFrame+1,nextFrame+1)) 
             {
                 vidCache->unlockAll();
+                
                 FAIL
             }
-   
+   if(!next) eof=true; // End of stream
    
     // Now get our image back from surface...
     sendField(true,next); // always send top field
@@ -462,6 +475,7 @@ endit:
     nextFrame++;
     image->Pts=nextPts;
     if(next) nextPts=next->Pts;
+   // printf("VDPAU OUT PTS= %"LLU"\n",image->Pts);
     return r;
 }
 #endif
