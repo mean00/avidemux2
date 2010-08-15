@@ -110,19 +110,6 @@
         <number>0</number>
        </property>
        <item>
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>22</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QToolButton" name="toolButtonConfigure">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -149,39 +136,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButtonLoad">
-         <property name="text">
-          <string>Load</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/fileopen.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/fileopen.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButtonSave">
-         <property name="text">
-          <string>Save</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filesave.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filesave.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButtonSaveScript">
-         <property name="text">
-          <string>Save Script</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filesaveas.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/filesaveas.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QToolButton" name="toolButtonDown">
          <property name="text">
           <string>Down</string>
@@ -202,6 +156,19 @@
            <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/up.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/up.png</iconset>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>22</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="QToolButton" name="pushButtonRemove">
@@ -441,9 +408,6 @@
   <tabstop>toolButtonAdd</tabstop>
   <tabstop>toolButtonConfigure</tabstop>
   <tabstop>toolButtonPartial</tabstop>
-  <tabstop>toolButtonLoad</tabstop>
-  <tabstop>toolButtonSave</tabstop>
-  <tabstop>toolButtonSaveScript</tabstop>
   <tabstop>toolButtonDown</tabstop>
   <tabstop>toolButtonUp</tabstop>
   <tabstop>pushButtonRemove</tabstop>
