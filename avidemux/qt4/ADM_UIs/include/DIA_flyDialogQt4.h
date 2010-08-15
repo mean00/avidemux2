@@ -38,13 +38,13 @@ public:
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod);
 
   
-  virtual uint8_t  isRgbInverted(void);
-  virtual uint8_t  display(void);
-  virtual float   calcZoomFactor(void);
+  virtual bool     isRgbInverted(void);
+  virtual uint8_t  display(uint8_t *rgbData);
+  virtual float    calcZoomFactor(void);
   virtual uint32_t sliderGet(void);
   virtual uint8_t  sliderSet(uint32_t value);
-  virtual void    postInit(uint8_t reInit);
-    bool          setCurrentPts(uint64_t pts) {return 1;}
+  virtual void     postInit(uint8_t reInit);
+    bool           setCurrentPts(uint64_t pts) {return 1;}
 };
 
 

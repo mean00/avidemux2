@@ -82,8 +82,7 @@ void Ui_cropWindow::valueChanged( int f )
   if(lock) return;
   lock++;
   myCrop->download();
-  myCrop->process();
-  myCrop->display();
+  myCrop->sameImage();
   lock--;
 }
 
@@ -101,8 +100,7 @@ void Ui_cropWindow::reset( bool f )
          myCrop->top=0;
          lock++;
          myCrop->upload();
-         myCrop->process();
-         myCrop->display();
+         myCrop->sameImage();
          lock--;
 }
 

@@ -124,15 +124,15 @@ void ui_update(void)
 {
   if(lock) return;
   myCrop->download();
-  myCrop->process();
-  myCrop->display();
+  myCrop->sameImage();
+  //myCrop->display();
 }
 /*---------------------------------------------------------------------------
 	Actually draw the working frame on screen
 */
 gboolean ui_draw( void )
 {
-        myCrop->display();
+        myCrop->sameImage();
 }
 void ui_read (void )
 {
@@ -154,9 +154,9 @@ void ui_reset( void )
         myCrop->bottom=0;
         myCrop->top=0;
         
-	myCrop->upload();
-        myCrop->process();
-        myCrop->display();
+        myCrop->upload();
+        myCrop->sameImage();
+        //myCrop->display();
 }
 
 /*---------------------------------------------------------------------------

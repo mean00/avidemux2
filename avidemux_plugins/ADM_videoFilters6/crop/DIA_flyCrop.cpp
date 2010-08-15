@@ -28,16 +28,15 @@ static uint8_t 		MetricsV( uint8_t *in, uint32_t width,uint32_t height,uint32_t 
     \fn process
 	\brief 
 */
-
-uint8_t    flyCrop::process(void)
+uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 {
         uint32_t x,y;
         uint8_t  *in;
         uint32_t w=_w,h=_h;
   
         
-        memcpy(_rgbBufferOut,_rgbBuffer,_w*_h*4);
-        in=_rgbBufferOut;
+        memcpy(imageOut,imageIn,_w*_h*4);
+        in=imageOut;
         for(y=0;y<top;y++)
         {
                 for(x=0;x<w;x++)
@@ -52,7 +51,7 @@ uint8_t    flyCrop::process(void)
                 }
         }
         // bottom
-        in=_rgbBufferOut+(w*4)*(h-bottom);
+        in=imageOut+(w*4)*(h-bottom);
         for(y=0;y<bottom;y++)
         {
                 for(x=0;x<w;x++)
@@ -66,7 +65,7 @@ uint8_t    flyCrop::process(void)
                 }
         }
         // left
-        in=_rgbBufferOut;
+        in=imageOut;
         uint32_t stride=4*w-4;
         for(y=0;y<h;y++)
         {
@@ -93,7 +92,6 @@ uint8_t    flyCrop::process(void)
   
         }
 
-		copyRgbFinalToDisplay();
 }
 
 /**
@@ -177,8 +175,7 @@ uint32_t y,avg,eqt;
         top=top & 0xfffe;
         bottom=bottom & 0xfffe;
         upload();
-        process();
-        display();
+        sameImage();
         return 1;
 }
 /**

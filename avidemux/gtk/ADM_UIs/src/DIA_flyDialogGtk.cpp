@@ -111,10 +111,10 @@ float ADM_flyDialogGtk::calcZoomFactor(void)
 	return UI_calcZoomToFitScreen(window, (GtkWidget*)_canvas, _w, _h);
 }
 
-uint8_t  ADM_flyDialogGtk::display(void)
+uint8_t  ADM_flyDialogGtk::display(uint8_t *rgbData)
 {
 	ADM_assert(_canvas);
-	ADM_assert(_rgbBufferOut);
+	ADM_assert(rgbData);
     GtkWidget *widget=(GtkWidget*)_canvas;
     gdk_draw_rgb_32_image(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], 0,    // X
                        0,       // y
@@ -122,7 +122,7 @@ uint8_t  ADM_flyDialogGtk::display(void)
                        _zoomH,       //h*2, // heigth
                        GDK_RGB_DITHER_NONE,
                        //GDK_RGB_DITHER_MAX,  // dithering
-                       (guchar *) _rgbBufferOut,  // buffer
+                       (guchar *) rgbData,  // buffer
                        _zoomW * 4);
 
 	//GUI_RGBDisplay(_rgbBufferOut, _zoomW, _zoomH, _canvas);
@@ -145,9 +145,9 @@ uint8_t ADM_flyDialogGtk::sliderSet(uint32_t value)
 	return 1; 
 }
 
-uint8_t ADM_flyDialogGtk::isRgbInverted(void)
+bool ADM_flyDialogGtk::isRgbInverted(void)
 {
-	return 0; 
+	return false; 
 }
 
 

@@ -105,12 +105,12 @@ float ADM_flyDialogQt4::calcZoomFactor(void)
     \brief
 */
 
-uint8_t  ADM_flyDialogQt4::display(void)
+uint8_t  ADM_flyDialogQt4::display(uint8_t *rgbData)
 {
    ADM_QCanvas *view=(ADM_QCanvas *)_canvas;
    ADM_assert(view);
-   view->dataBuffer=_rgbBufferOut;
-   if(!_rgbBufferOut)
+   view->dataBuffer=rgbData;
+   if(!rgbData)
    {
       ADM_info("flyDialog: No rgbuffer ??\n"); 
    } 
@@ -146,7 +146,7 @@ uint8_t     ADM_flyDialogQt4::sliderSet(uint32_t value)
     \fn    isRgbInverted
     \brief
 */
-uint8_t  ADM_flyDialogQt4::isRgbInverted(void)
+bool  ADM_flyDialogQt4::isRgbInverted(void)
 {
   return 1; 
 }

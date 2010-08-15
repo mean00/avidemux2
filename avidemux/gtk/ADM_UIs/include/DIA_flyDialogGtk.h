@@ -31,13 +31,13 @@ public:
   ADM_flyDialogGtk(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod);
   virtual           ~ADM_flyDialogGtk(void);
-  virtual uint8_t  isRgbInverted(void);
-  virtual uint8_t  display(void);
-  virtual float   calcZoomFactor(void);
+  virtual bool     isRgbInverted(void);
+  virtual uint8_t  display(uint8_t *rgbdata);
+  virtual float    calcZoomFactor(void);
   virtual uint32_t sliderGet(void);
   virtual uint8_t  sliderSet(uint32_t value);
-  virtual void    postInit(uint8_t reInit);
-  virtual bool    setCurrentPts(uint64_t  pts){return true;};
+  virtual void     postInit(uint8_t reInit);
+  virtual bool     setCurrentPts(uint64_t  pts){return true;};
 };
 
 #endif

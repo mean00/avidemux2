@@ -44,76 +44,59 @@ ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter 
 	_cookie = NULL;
 	_resizeMethod = resizeMethod;
     _zoomChangeCount = 0;
-    _resizer=NULL;
     _rgbBufferDisplay=NULL;
-
-	_rgb=NULL;
 
 	_yuvBuffer=new ADMImageDefault(_w,_h);
 
+	_currentPts=0;	
+}
+/**
+    \fn updateZoom
+*/
+void ADM_flyDialog::updateZoom(void)
+{   
+        if(_rgbBufferDisplay) delete _rgbBufferDisplay;
+        _rgbBufferDisplay = new uint8_t[_zoomW * _zoomH * 4];
+        action->resetScaler();
+}
+
+/**
+ *      \fn Endconstructor
+ *      \brief We need to call some virtual functions in the constructor; 
+        it does not work, so we do the 2nd part of the constructor here
+ */
+void ADM_flyDialog::EndConstructor(void)
+ {
 	if(_isYuvProcessing)
 	{
-		_yuvBufferOut=new ADMImageDefault(_w,_h);
-		_rgbBuffer=NULL;
+        action=new ADM_flyDialogActionYuv(this);
 	}
 	else
 	{
-		_rgbBuffer =new uint8_t [_w*_h*4];
-		_yuvBufferOut=NULL;
+		action=new ADM_flyDialogActionRgb(this);
 	}
 
-	_rgbBufferOut =new uint8_t [_w*_h*4];
-
-	_currentPts=0;
-
-	
-}
-/**
- *      \fn Endconstructor
- *      \brief We call some virtual functions in the constructor; it does not work, so we do the 2nd part of the constructor here
- */
-void ADM_flyDialog::EndConstructor(void)
-  {
-        if (isRgbInverted())
-            _rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_BGR32A);
+        if (_resizeMethod != RESIZE_NONE)
+        {
+                _zoom = calcZoomFactor();
+                if (_zoom == 1)
+                {
+                        _resizeMethod = RESIZE_NONE;
+                }
+        }
+        if(_resizeMethod==RESIZE_NONE)
+        {
+            _zoom=1;
+            _zoomW=_w;
+            _zoomH=_h;
+        }
         else
-            _rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,ADM_COLOR_RGB32A);
-        if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
-                {
-                        _zoom = calcZoomFactor();
-
-                        if (_zoom == 1)
-                                _resizeMethod = RESIZE_NONE;
-                        else
-                        {
-                                _zoomW = uint32_t (_w * _zoom);
-                                _zoomH = uint32_t (_h * _zoom);
-                        }
-                }
-                else
-                        _zoom = 1;
-
-                if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
-                {
-                        ADM_colorspace sourceColour;
-
-                        if (_resizeMethod == RESIZE_AUTO || _isYuvProcessing)
-                                sourceColour = ADM_COLOR_YV12;
-                        else
-                                sourceColour = ADM_COLOR_RGB32A;
-
-                        _resizer = new ADMImageResizer(_w, _h, _zoomW, _zoomH, sourceColour, ADM_COLOR_RGB32A);
-                        _rgbBufferDisplay = new uint8_t[_w * _h * 4];
-                }
-                else
-                {
-                        _zoomW = _w;
-                        _zoomH = _h;
-
-                        _resizer = NULL;
-                        _rgbBufferDisplay = NULL;
-                }
-                postInit (false);
+        {
+                _zoomW = uint32_t (_w * _zoom);
+                _zoomH = uint32_t (_h * _zoom);
+        }
+        updateZoom();
+        postInit (false);
   }
 /**
     \fn    recomputeSize
@@ -159,28 +142,7 @@ void ADM_flyDialog::recomputeSize(void)
     _zoom = new_zoom;
     _zoomW = new_zoomW;
     _zoomH = new_zoomH;
-
-    delete _resizer;
-    if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
-    {
-        ADM_colorspace sourceColour;
-
-        if (_resizeMethod == RESIZE_AUTO || _isYuvProcessing)
-            sourceColour = ADM_COLOR_YV12;
-        else
-            sourceColour = ADM_COLOR_RGB32A;
-
-        _resizer = new ADMImageResizer(_w, _h, _zoomW, _zoomH, sourceColour, ADM_COLOR_RGB32A);
-        if (!_rgbBufferDisplay)
-            _rgbBufferDisplay = new uint8_t[_w * _h * 4];
-    }
-    else
-    {
-        _resizer = NULL;
-        delete _rgbBufferDisplay;
-        _rgbBufferDisplay = NULL;
-    }
-
+    updateZoom();
     postInit (true);
     sliderChanged();
 }
@@ -193,14 +155,9 @@ uint8_t ADM_flyDialog::cleanup(void)
 {
 #define DEL1(x)    if(x) {delete [] x;x=NULL;}
 #define DEL2(x)    if(x) {delete  x;x=NULL;}
-  
-	DEL2(_yuvBufferOut);
 	DEL2(_yuvBuffer);
-	DEL1(_rgbBuffer);
-	DEL1(_rgbBufferOut);
 	DEL1(_rgbBufferDisplay);
-	DEL2(_rgb);
-	DEL2(_resizer);
+    DEL2(action);
 }
 /**
     \fn ~ADM_flyDialog
@@ -208,8 +165,6 @@ uint8_t ADM_flyDialog::cleanup(void)
 */
 ADM_flyDialog::~ADM_flyDialog(void)
 {
-  
-  // FIXME cleanup2();
   cleanup(); 
 }
 
@@ -224,7 +179,6 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
   uint32_t len,flags;
   
     ADM_assert(_yuvBuffer);
-    ADM_assert(_rgbBufferOut);
     ADM_assert(_in);
 
 
@@ -238,6 +192,22 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
    return nextImage();
 }
 /**
+    \fn toRgbColor
+*/
+ADM_colorspace ADM_flyDialog::toRgbColor(void)
+{
+    if(isRgbInverted()) return ADM_COLOR_BGR32A;
+    return ADM_COLOR_RGB32A;
+}
+/**
+    \fn sameImage
+*/
+bool ADM_flyDialog::sameImage(void)
+{
+    action->process();
+    return display(_rgbBufferDisplay);
+}
+/**
     \fn nextImage
 */
 bool ADM_flyDialog::nextImage(void)
@@ -249,61 +219,87 @@ bool ADM_flyDialog::nextImage(void)
       return 0;
     }
     setCurrentPts(_yuvBuffer->Pts);
-    // Process...    
-    if(_isYuvProcessing)
+    // Process...   
+    action->process();
+    return display(_rgbBufferDisplay);
+}
+//************************************
+// Implement the specific part
+// i.e. yuv processing or RGB processing
+//************************************
+ADM_flyDialogActionYuv::ADM_flyDialogActionYuv(ADM_flyDialog *p) : 
+                     ADM_flyDialogAction(p)
+{
+        _yuvBufferOut=new ADMImageDefault(parent->_w,parent->_h);
+        yuvToRgb=NULL;
+        
+}
+void ADM_flyDialogActionYuv::resetScaler(void)
+{
+    if(yuvToRgb) delete yuvToRgb;
+    yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
+                            parent->_w,
+                            parent->_h,
+                            parent->_zoomW,
+                            parent->_zoomH,
+                            ADM_COLOR_YV12,parent->toRgbColor());
+}
+ADM_flyDialogActionYuv::~ADM_flyDialogActionYuv()
+{
+    if(_yuvBufferOut) delete _yuvBufferOut;
+    _yuvBufferOut=NULL;
+}
+bool ADM_flyDialogActionYuv::process(void)
+{
+        parent-> processYuv(parent->_yuvBuffer,_yuvBufferOut);
+        yuvToRgb->convertImage(_yuvBufferOut,parent->_rgbBufferDisplay);
+        return true;
+}
+//*****************************************
+ADM_flyDialogActionRgb::ADM_flyDialogActionRgb(ADM_flyDialog *p) :  ADM_flyDialogAction(p)
+{
+    uint32_t size=parent->_w*parent->_h*4;
+    _rgbBuffer=new uint8_t [size];
+    _rgbBufferOut=new uint8_t [size];
+     yuv2rgb =new ADMColorScalerSimple(parent->_w,parent->_h,ADM_COLOR_YV12,
+                parent->toRgbColor());
+    rgb2rgb=NULL;
+}
+void ADM_flyDialogActionRgb::resetScaler(void)
+{
+    if(rgb2rgb) delete rgb2rgb;
+    rgb2rgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
+                            parent->_w,
+                            parent->_h,
+                            parent->_zoomW,
+                            parent->_zoomH,
+                            ADM_COLOR_RGB32A,ADM_COLOR_RGB32A);
+}
+ADM_flyDialogActionRgb::~ADM_flyDialogActionRgb()
+{
+    if(_rgbBuffer) delete [] _rgbBuffer;
+    if(_rgbBufferOut) delete [] _rgbBufferOut;
+    if(rgb2rgb) delete rgb2rgb;
+    if(yuv2rgb) delete yuv2rgb;
+    rgb2rgb=NULL;
+    yuv2rgb=NULL;
+    _rgbBuffer=NULL;
+    _rgbBufferOut=NULL;
+    
+}
+bool ADM_flyDialogActionRgb::process(void)
+{
+    yuv2rgb->convertImage(parent->_yuvBuffer,_rgbBuffer);
+    if (parent->_resizeMethod != RESIZE_NONE)
     {
-        process();
-		copyYuvFinalToRgb();
-    }
-	else // RGB Processing      
+        parent->processRgb(_rgbBuffer,_rgbBufferOut);
+        rgb2rgb->convert(_rgbBufferOut, parent->_rgbBufferDisplay);
+    }else
     {
-        ADM_assert(_rgbBuffer);
-		copyYuvScratchToRgb();
-        process();
+        parent->processRgb(_rgbBuffer,parent->_rgbBufferDisplay);
     }
-    return display();
+    return true;
 }
-/**
-    \fn    copyYuvFinalToRgb
-    \brief
-*/
-
-void ADM_flyDialog::copyYuvFinalToRgb(void)
-{
-	if (_resizeMethod == RESIZE_AUTO || _resizeMethod == RESIZE_LAST)
-		_resizer->resize(_yuvBufferOut, _rgbBufferOut);
-	else
-		_rgb->convertImage(_yuvBufferOut, _rgbBufferOut);
-}
-/**
-    \fn    copyYuvScratchToRgb
-    \brief
-*/
-
-void ADM_flyDialog::copyYuvScratchToRgb(void)
-{
-	if (_resizeMethod == RESIZE_AUTO)
-		_resizer->resize(_yuvBuffer,_rgbBuffer);
-	else
-		_rgb->convertImage(_yuvBuffer,_rgbBuffer);
-}
-/**
-    \fn    copyRgbFinalToDisplay
-    \brief
-*/
-
-void ADM_flyDialog::copyRgbFinalToDisplay(void)
-{
-	if (_resizeMethod == RESIZE_LAST)
-	{
-		_resizer->resize(_rgbBufferOut, _rgbBufferDisplay);
-
-		uint8_t* tempRgb = _rgbBufferDisplay;
-
-		_rgbBufferDisplay = _rgbBufferOut;
-		_rgbBufferOut = tempRgb;
-	}
-}
-
+//******************************
 //EOF
 

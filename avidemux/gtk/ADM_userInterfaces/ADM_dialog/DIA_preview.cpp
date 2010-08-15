@@ -77,7 +77,7 @@ uint8_t DIA_filterPreview(const char *captionText, ADM_coreVideoFilter *videoStr
 	gtk_widget_show(dialog);
 
 	seekablePreview = new flySeekablePreview(width, height, videoStream, WID(drawingarea1), WID(scale));
-	seekablePreview->process();
+//	seekablePreview->process();
 	seekablePreview->sliderSet(frame);
 	seekablePreview->sliderChanged();
 
@@ -97,7 +97,7 @@ uint8_t DIA_filterPreview(const char *captionText, ADM_coreVideoFilter *videoStr
 
 void seekablePreview_draw(void)
 {
-	seekablePreview->display();
+	seekablePreview->sameImage();
 }
 
 void seekablePreview_frame_changed(void)
@@ -131,9 +131,7 @@ uint8_t DIA_previewUpdate(uint8_t *buffer)
 {
 	if (dialog)
 	{
-		preview->setData(buffer);
-		preview->display();
-
+		preview->display(buffer);
 		return 1;
 	}
 
@@ -153,7 +151,7 @@ void DIA_previewEnd(void)
 
 void preview_draw(void)
 {
-	preview->display();
+	preview->sameImage();
 }
 
 

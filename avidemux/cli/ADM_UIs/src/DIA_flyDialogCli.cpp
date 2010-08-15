@@ -46,7 +46,7 @@ uint8_t ADM_flyDialogCli::sliderSet(uint32_t value)
         return 0;      
 }
 
-uint8_t ADM_flyDialogCli::isRgbInverted(void)
+bool ADM_flyDialogCli::isRgbInverted(void)
 {
         return 0; 
 }
