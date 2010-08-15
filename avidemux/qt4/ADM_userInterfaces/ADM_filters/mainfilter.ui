@@ -34,108 +34,6 @@
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="4" column="0" colspan="2">
-      <layout class="QGridLayout">
-       <property name="margin">
-        <number>0</number>
-       </property>
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="pushButtonSVCD">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>72</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>&amp;SVCD res</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="pushButtonVCD">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>72</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>&amp;VCD res</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButtonHalfDVD">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>72</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>&amp;Half D1 res</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButtonDVD">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>72</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>&amp;DVD res</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/cd.png</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
      <item row="1" column="2" rowspan="4" colspan="2">
       <widget class="QListWidget" name="listWidgetAvailable">
        <property name="sizePolicy">
@@ -371,7 +269,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0" rowspan="3" colspan="2">
+     <item row="1" column="0" rowspan="4" colspan="2">
       <widget class="QListWidget" name="listFilterCategory">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -540,10 +438,6 @@
   <tabstop>listFilterCategory</tabstop>
   <tabstop>listWidgetAvailable</tabstop>
   <tabstop>listWidgetActive</tabstop>
-  <tabstop>pushButtonDVD</tabstop>
-  <tabstop>pushButtonSVCD</tabstop>
-  <tabstop>pushButtonHalfDVD</tabstop>
-  <tabstop>pushButtonVCD</tabstop>
   <tabstop>toolButtonAdd</tabstop>
   <tabstop>toolButtonConfigure</tabstop>
   <tabstop>toolButtonPartial</tabstop>
