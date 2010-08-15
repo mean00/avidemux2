@@ -24,6 +24,10 @@
 
 static uint8_t 		Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt);
 static uint8_t 		MetricsV( uint8_t *in, uint32_t width,uint32_t height,uint32_t *avg, uint32_t *eqt);
+/**
+    \fn process
+	\brief 
+*/
 
 uint8_t    flyCrop::process(void)
 {
@@ -92,9 +96,10 @@ uint8_t    flyCrop::process(void)
 		copyRgbFinalToDisplay();
 }
 
-/*----------------------------------
-  autocrop
------------------------------------*/
+/**
+     \fn autocrop
+	\brief 
+*/
 
 uint8_t  flyCrop::autocrop(void)
 {
@@ -176,10 +181,11 @@ uint32_t y,avg,eqt;
         display();
         return 1;
 }
-/*---------------------------------------------
-	Compute the average value of pixels
-	and eqt is the "ecart type"
+/**
+     \fn Metrics
+	\brief Compute the average value of pixels	and eqt is the "ecart type"
 */
+
 uint8_t Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt)
 {
 
@@ -201,9 +207,9 @@ uint8_t v;
               *eqt=eq;
               return 1;
 }
-/*---------------------------------------------
-	Compute the average value of pixels
-	and eqt is the "ecart type"
+/**
+     \fn MetricsV
+	\brief Compute the average value of pixels	and eqt is the "ecart type"
 */
 uint8_t MetricsV( uint8_t *in,uint32_t width, uint32_t height,uint32_t *avg, uint32_t *eqt)
 {
