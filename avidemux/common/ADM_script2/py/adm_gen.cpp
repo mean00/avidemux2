@@ -44,6 +44,15 @@ static tp_obj zzpy_loadVideo(TP)
   int r=  scriptLoadVideo(p0); 
   return tp_number(r);
 }
+// getPARWidth -> int scriptGetPARWidth (void ) 
+static tp_obj zzpy_getPARWidth(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  int r=  scriptGetPARWidth(); 
+  return tp_number(r);
+}
 // clearSegments -> int scriptClearSegments (void ) 
 static tp_obj zzpy_clearSegments(TP)
  {
@@ -209,6 +218,15 @@ static tp_obj zzpy_getVideoCodec(TP)
   ADM_dealloc(r);
   return o;
 }
+// getPARHeight -> int scriptGetPARHeight (void ) 
+static tp_obj zzpy_getPARHeight(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  int r=  scriptGetPARHeight(); 
+  return tp_number(r);
+}
 tp_obj zzpy__pyAdm_get(tp_vm *vm)
 {
   tp_obj self=tp_getraw( vm);
@@ -242,6 +260,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "loadVideo"))
   {
      return tp_method(vm,self,zzpy_loadVideo);
+  }
+  if (!strcmp(key, "getPARWidth"))
+  {
+     return tp_method(vm,self,zzpy_getPARWidth);
   }
   if (!strcmp(key, "clearSegments"))
   {
@@ -307,6 +329,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm,self,zzpy_getVideoCodec);
   }
+  if (!strcmp(key, "getPARHeight"))
+  {
+     return tp_method(vm,self,zzpy_getPARHeight);
+  }
   return tp_get(vm,self,tp_string(key));
 }
 tp_obj zzpy__pyAdm_set(tp_vm *vm)
@@ -356,6 +382,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	jsLog("saveBmp(str)\n");
 	jsLog("addVideoFilter(str,couples)\n");
 	jsLog("loadVideo(str )\n");
+	jsLog("getPARWidth(void)\n");
 	jsLog("clearSegments(void)\n");
 	jsLog("getHeight(void)\n");
 	jsLog("setPostProc(int ,int , int )\n");
@@ -372,6 +399,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	jsLog("setContainer(str,couples)\n");
 	jsLog("audioReset(void)\n");
 	jsLog("getVideoCodec(void)\n");
+	jsLog("getPARHeight(void)\n");
 };
 tp_obj initClasspyAdm(tp_vm *vm)
 {

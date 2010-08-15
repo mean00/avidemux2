@@ -9,6 +9,8 @@
 /* METHOD */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
 /* METHOD */ int scriptGetWidth:getWidth            (void) 
 /* METHOD */ int scriptGetHeight:getHeight          (void) 
+/* METHOD */ int scriptGetPARWidth:getPARWidth      (void) 
+/* METHOD */ int scriptGetPARHeight:getPARHeight    (void) 
 /* METHOD */ int scriptGetFps1000:getFps1000        (void) 
 /* METHOD */ str scriptGetVideoCodec:getVideoCodec(void) 
 /* METHOD */ int scriptAudioReset:audioReset        (void) 

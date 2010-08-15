@@ -52,6 +52,20 @@ int ret=0;
         
     return ret;
 }
+/**
+    \fn scriptGetPARWidth
+*/
+int scriptGetPARWidth(void)
+{
+    return video_body->getPARWidth();
+}
+/**
+    \fn scriptGetPARHeigth
+*/
+int scriptGetPARHeight(void)
+{
+    return video_body->getPARHeight();
+}
 
 /**
     \fn jsAppendFile

@@ -37,6 +37,8 @@ int    scriptClearVideoFilters();
 // Info
 int scriptGetWidth ( void) ;
 int scriptGetHeight ( void) ;
+int scriptGetPARWidth(void);
+int scriptGetPARHeight(void);
 int scriptGetFps1000 ( void) ;
 char *jsGetVideoCodec ( void) ;
 // Misc
