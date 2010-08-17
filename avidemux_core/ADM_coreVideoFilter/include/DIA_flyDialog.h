@@ -143,14 +143,14 @@ class ADM_flyDialog
           void    *_canvas; // Drawing zone
           
   
-  //virtual bool       refresh();
-          /* Filter dependant */
+  
+  /* Filter dependant : you have to implement them*/
   virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) {ADM_assert(0);}
   virtual uint8_t    processRgb(uint8_t *in, uint8_t *out) {ADM_assert(0);}
   virtual uint8_t    download(void)=0;
   virtual uint8_t    upload(void)=0;
   virtual bool       setCurrentPts(uint64_t pts)=0;
-          /* /filter dependant */
+  /* /filter dependant */
   
   
   virtual uint8_t  update(void) {return 1;};
@@ -166,9 +166,7 @@ class ADM_flyDialog
                              void *canvas, void *slider, int yuv, 
                              ResizeMethod resizeMethod);
   virtual ~ADM_flyDialog(void);
-// UI dependant part
-// They are not defined as pure to avoid unresolved problem, especially on win32.
-// You should never use flyDialog as is, but using the macro to pull flyDialogGtk/flyDialogQt4/... 
+// UI dependant part : They are implemented in ADM_flyDialogGtk/Qt/...
 public:  
   virtual bool     isRgbInverted(void)=0;
   virtual uint8_t  display(uint8_t *rgbData)=0;

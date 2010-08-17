@@ -7,6 +7,7 @@ public:
 	uint8_t download(void) {return 1;}
 	uint8_t upload(void) {return 1;}
 	uint8_t cleanup(void) {return 1;}
+#if 0
 	uint8_t setData(uint8_t *buffer) 
         {
 #warning FIXME  NO DISPLAY   
@@ -14,7 +15,7 @@ public:
             //_rgb->convert(buffer, _rgbBufferOut); 
             return 1;
         }
-
+#endif
 	flyPreview(uint32_t width, uint32_t height, void *canvas) : 
 	  ADM_flyDialogQt4(width, height, NULL, canvas, NULL, true, RESIZE_NONE) 
             {
@@ -46,7 +47,7 @@ public:
 	uint8_t cleanup(void) {return 1;}
     bool    setCurrentPts(uint64_t pts)
             {
-                if(cookieFunc)
+                if(cookieFunc)              // Used as a callback to update timestamp
                     cookieFunc(cookie,pts);
                 return true;
             }
