@@ -502,7 +502,7 @@ uint64_t mkvHeader::getVideoDuration(void)
 uint8_t                 mkvHeader::getFrameSize(uint32_t frame,uint32_t *size)
 {
     if(frame>=_tracks[0].index.size()) return 0;
-    *size=_tracks[0].index[frame].size;
+    *size=_tracks[0].index[frame].size+_tracks[0].headerRepeatSize;
     return 1;
 }
 
@@ -521,10 +521,7 @@ uint8_t  mkvHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   _parser->seek(dx->pos);
   _parser->readSignedInt(2); // Timecode
   _parser->readu8();  // flags
-
-  _parser->readBin(img->data,dx->size-3);
-  img->dataLength=dx->size-3;
-
+  img->dataLength=readAndRepeat(0,img->data, dx->size-3);
   img->flags=dx->flags;
   img->demuxerDts=dx->Dts;
   img->demuxerPts=dx->Pts;

@@ -26,6 +26,7 @@
 #include "ADM_audioStream.h"
 #include "ADM_ebml.h"
 #include <vector>
+#define MKV_MAX_REPEAT_HEADER_SIZE 16
 /**
     \struct mkvIndex
     \brief defines a frame, audio or video
@@ -58,7 +59,9 @@ typedef struct
   /* Used for both */
   uint8_t    *extraData;
   uint32_t   extraDataLen;
-  
+  /* */
+  uint32_t   headerRepeatSize;
+  uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
   mkvListOfIndex  index;
 
   uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
@@ -85,7 +88,15 @@ protected:
 
     uint8_t                     goToBlock(uint32_t x);
     bool                        initLaces(uint32_t nbLaces,uint64_t time);
- 
+     int              readAndRepeat(uint8_t *buffer, uint32_t len)
+                        {
+                             uint32_t rpt=_track->headerRepeatSize;
+                              _parser->readBin(buffer+rpt,len);
+                              if(rpt)
+                                memcpy(buffer,_track->headerRepeat,rpt);
+                              return len+rpt;
+                        }
+
 public:
                                   mkvAccess(const char *name,mkvTrak *track);
                 virtual           ~mkvAccess();
@@ -162,6 +173,14 @@ class mkvHeader         :public vidHeader
 // AVI io
     virtual uint8_t  open(const char *name);
     virtual uint8_t  close(void) ;
+    int              readAndRepeat(int index,uint8_t *buffer, uint32_t len)
+                        {
+                             uint32_t rpt=_tracks[index].headerRepeatSize;
+                              _parser->readBin(buffer+rpt,len);
+                              if(rpt)
+                                memcpy(buffer,_tracks[index].headerRepeat,rpt);
+                              return len+rpt;
+                        }
   //__________________________
   //  Info
   //__________________________
