@@ -248,7 +248,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
               case 0 : // no lacing
 
                       vprintf("No lacing :%d bytes\n",(int)size);
-                      *packlen= readAndRepeat(dest, _Laces[size]);              
+                      *packlen= readAndRepeat(dest,size);              
                       _currentLace=_maxLace=0;
                       _currentBlock++;
                       return 1;
