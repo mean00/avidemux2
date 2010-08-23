@@ -401,7 +401,7 @@ static struct {
 #if defined(ADM_CPU_X86)
 static unsigned long long int rdtsc(void)
 {
-  unsigned long long int x;
+  unsigned long long int x=0;
 
   /* that should prevent us from trying cpuid with old cpus */
 

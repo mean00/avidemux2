@@ -131,7 +131,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 number[decimals] = '\0';
 
                 // <right> part
-                right = new char[ strlen(dot) ];
+                right = new char[ strlen(dot)+1 ];
                 strcpy( right, dot );
 
                 // add the file, and all existing follow-ups

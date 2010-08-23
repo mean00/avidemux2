@@ -361,25 +361,21 @@ char *ADM_getBaseDir(void)
 #endif
 
 	// Try to open the .avidemux directory
-	char *dirname = new char[strlen(home) + strlen(ADM_DIR_NAME) + 2];
-	strcpy(dirname, home);
-	strcat(dirname, ADM_DIR_NAME);
 
-	if (!ADM_mkdir(dirname))
+	strcpy(ADM_basedir, home);
+	strcat(ADM_basedir, ADM_DIR_NAME);
+    delete [] home;
+    home=NULL;
+
+	if (!ADM_mkdir(ADM_basedir))
 	{
 		printf("Oops: cannot create the .avidemux directory", NULL);
-		delete [] dirname;
 		return NULL;
 	}
 
-	delete [] dirname;
-
 	// Now built the filename
-	strncpy(ADM_basedir,home, 1023);
-	strncat(ADM_basedir, ADM_DIR_NAME, 1023 - strlen(ADM_basedir));
 	baseDirDone = 1;
 	printf("Using %s as base directory for prefs/jobs/...\n", ADM_basedir);
-
 	return ADM_basedir;
 }
 
