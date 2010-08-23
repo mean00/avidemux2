@@ -430,7 +430,11 @@ uint64_t pts;
         pts*=1000;
         pts+=ms;
         pts*=1000;
+        // Try to find a frame just before pts...
+#warning Fixme, be more accurate
+        if(false==video_body->getPKFramePTS(&pts)) return false;
 
+        //
         return GUI_GoToTime(pts);
 
 }
