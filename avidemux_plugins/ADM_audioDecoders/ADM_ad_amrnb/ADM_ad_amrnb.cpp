@@ -41,7 +41,8 @@ class ADM_AudiocodecAmrNb : public     ADM_Audiocodec
 };
 // Supported formats + declare our plugin
 //*******************************************************
-   static  uint32_t Formats[]={WAV_AMRNB};
+   
+   static ad_supportedFormat Formats[]={{WAV_AMRNB,AD_MEDIUM_QUAL}};
    DECLARE_AUDIO_DECODER(ADM_AudiocodecAmrNb,						// Class
 		   	0,0,1, 												// Major, minor,patch 
 		   	Formats, 											// Supported formats
