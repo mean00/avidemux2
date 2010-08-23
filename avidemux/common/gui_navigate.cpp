@@ -87,21 +87,6 @@ static int ignore_change=0;
                  
             }
             break;
-      case ACT_Goto:
-#if 0
-          uint32_t fn;
-          fn = video_body->getCurrentFrame();
-          if (DIA_GetIntegerValue
-              ((int *) &fn, 0, avifileinfo->nb_frames,
-               QT_TR_NOOP("Go to Frame"), QT_TR_NOOP("_Go to frame:")))
-            {
-            if (fn < avifileinfo->nb_frames)
-                GUI_GoToFrame(fn);
-            else
-                GUI_Error_HIG(QT_TR_NOOP("Out of bounds"), NULL);
-            }
-#endif
-          break;
       case ACT_Back25Frames:
 #if 0
           if (video_body->getCurrentFrame() >= 25)
@@ -168,15 +153,6 @@ static int ignore_change=0;
              GUI_setCurrentFrameAndTime();
             //GUI_GoToKFrameTime(0);
             break;
-      case ACT_JumpToFrame:
-        {
-              // read value
-              uint32_t nf = UI_readCurFrame();
-              if (nf < avifileinfo->nb_frames)
-                  GUI_GoToFrame(nf);
-              UI_JumpDone();
-        }
-	  break;
       case ACT_JumpToTime:
 	  {
 	      uint16_t hh, mm, ss, ms;

@@ -89,6 +89,7 @@ extern void videoCodecConfigureUI(int codecIndex = -1);
 extern void audioCodecChanged(int newcodec);
 extern void videoCodecChanged(int newcodec);
 extern bool ADM_mux_configure(int index);
+void brokenAct(void);
 //
 //  Sub gui files...
 //
@@ -128,6 +129,13 @@ int nw;
   }
   switch (action)
     {
+        case ACT_TimeShift:
+        case ACT_JumpToFrame:
+        case ACT_JumpToTime:
+        case ACT_Goto:
+        case ACT_AudioMap:
+                                brokenAct();
+                                return;
         case ACT_PY_SHELL:
                                 interactiveTinyPy();
                                 return;
@@ -1451,5 +1459,10 @@ void A_Rewind(void)
                admPreview::samePicture();
                GUI_setCurrentFrameAndTime();
 }
+void brokenAct(void)
+{
+    GUI_Error_HIG("Oops","This function is disabled or no longer valid");
+}
+
 //
 // EOF
