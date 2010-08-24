@@ -10,7 +10,6 @@ IF(USE_LIBVORBIS)
         ADD_LIBRARY(ADM_ad_vorbis SHARED ${ADM_ad_vorbis_SRCS})
 
         TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${VORBIS_LIBRARY_DIR})
-        TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${VORBISENC_LIBRARY_DIR})
 
         include_directories(${VORBIS_INCLUDE_DIR})
 
