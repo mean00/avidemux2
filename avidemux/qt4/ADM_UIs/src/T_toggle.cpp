@@ -115,7 +115,7 @@ diaElemToggle::diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, cons
 
 diaElemToggle::~diaElemToggle()
 {
-  ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
+//  ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
  // if(box) delete box;
   myWidget=NULL;
   if(paramTitle)

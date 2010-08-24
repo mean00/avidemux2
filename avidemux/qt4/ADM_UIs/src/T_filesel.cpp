@@ -143,7 +143,7 @@ diaElemFile::diaElemFile(uint32_t writemode,char **filename,const char *toggleTi
   param=(void *)filename;
   paramTitle=shortkey(toggleTitle);
 
-  if (!selectFileDesc || strlen(selectFileDesc) == 0)
+  if (!selectFileDesc || *(selectFileDesc) == 0)
 	  tip = toggleTitle;
   else
       tip = selectFileDesc;
@@ -199,7 +199,7 @@ diaElemDirSelect::diaElemDirSelect(char **filename,const char *toggleTitle,const
   param=(void *)filename;
   paramTitle=shortkey(toggleTitle);
 
-  if (!selectDirDesc || strlen(selectDirDesc) == 0)
+  if (!selectDirDesc || *(selectDirDesc) == 0)
 	  tip = toggleTitle;
   else
       tip = selectDirDesc;

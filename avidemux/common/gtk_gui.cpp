@@ -105,8 +105,6 @@ void HandleAction_Save(Action action);
 */
 void HandleAction (Action action)
 {
-  static int recursive = 0;
-
   uint32_t nf = 0;
   uint32_t old;
   // handle out of band actions
@@ -156,7 +154,6 @@ int nw;
         case ACT_RECENT2:
         case ACT_RECENT3:
                 const char **name;
-                char* fileName;
                 int rank;
 
                 name=prefs->get_lastfiles();

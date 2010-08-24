@@ -344,10 +344,6 @@ bool  GUIPlayback::initializeAudio(void)
     uint32_t channels,frequency;
 
     wavbuf = 0;
-
-//    if (!currentaudiostream)	  return;
-
-    double db;
     uint64_t startPts=firstPts;
 
     playbackAudio = createPlaybackFilter(startPts,0);

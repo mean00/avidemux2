@@ -246,7 +246,6 @@ ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endA
     // 1- Add bridge always # 1
     ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(startAt,endAt);
     chain->push_back(bridge);
-    ADM_coreVideoFilter *f=bridge;
     // Last create the thread
 #if 1
     int m=chain->size();

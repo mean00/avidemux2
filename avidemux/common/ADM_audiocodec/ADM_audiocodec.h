@@ -30,6 +30,7 @@ class ADM_Audiocodec
         {
             UNUSED_ARG(fourcc);
             _init=0;
+            _wavHeader=NULL;
         };
 
         virtual	~ADM_Audiocodec() {};

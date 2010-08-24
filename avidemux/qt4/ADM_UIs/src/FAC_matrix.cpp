@@ -112,7 +112,6 @@ void diaElemMatrix::enable(uint32_t onoff)
 	QSpinBox **arrayWidget=( QSpinBox **)myWidget;
 			 
 			 ADM_assert(arrayWidget);
-			 int index=0;
 			  for(int y=0;y<_matrixSize*_matrixSize;y++)
 			  {
 				  if(onoff) arrayWidget[y]->setEnabled(1);

@@ -63,7 +63,6 @@ uint8_t ADM_Composer::saveAsScript (const char *name, const char *outputname)
 {
     const char *truefalse[]={"false","true"};
     ADM_info(" **Saving script project %s**\n",name);
-    char *    tmp;
 
     if (!_segments.getNbSegments())
         return 1;

@@ -29,7 +29,6 @@ extern uint8_t DIA_job(uint32_t nb,char **name);
 uint8_t GUI_jobs(void)
 {
 uint32_t nb;
-char     *name;
         memset(jobName,0,sizeof(jobName));
 char *jobDir=ADM_getJobDir();
         if(!buildDirectoryContent(&nb,ADM_getJobDir(),jobName,MAX_JOBS,".js"))

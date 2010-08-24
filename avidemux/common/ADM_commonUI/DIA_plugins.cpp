@@ -69,7 +69,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_ad_getFilterInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if((*infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed
@@ -98,7 +98,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_ve6_getEncoderInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if((*infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed
@@ -127,7 +127,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_vd6_getEncoderInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if((*infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed
@@ -155,7 +155,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_av_getDeviceInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if((*infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed
@@ -184,7 +184,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_ae_getAPluginEncoderInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if(*(infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed
@@ -213,7 +213,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_dm_getDemuxerInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if(*(infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed
@@ -243,7 +243,7 @@ uint8_t DIA_pluginsInfo(void)
             ADM_mx_getMuxerInfo(i, &name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
             strncpy(infoString,name,255);
-            if(strlen(infoString))
+            if(*(infoString))
             {
                 end=strlen(infoString)+infoString-1;
                 // Remove trailing line feed

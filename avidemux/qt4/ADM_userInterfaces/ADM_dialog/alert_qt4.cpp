@@ -47,7 +47,6 @@ void            GUI_Info(const char *alertstring)
 void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format)
 {
   uint32_t msglvl=2;
-  char *string;
   char alertstring[1024];
 
         prefs->get(MESSAGE_LEVEL,&msglvl);
@@ -77,7 +76,6 @@ void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, cons
 void            GUI_Error_HIG(const char *primary, const char *secondary_format)
 {
   uint32_t msglvl=2;
-  char *string;
   char alertstring[1024];
   
   
@@ -135,7 +133,6 @@ int             GUI_YesNo(const char *primary, const char *secondary_format)
 {
 uint32_t msglvl=2;
 char alertstring[1024];
-char alertstring2[1024];
         if (beQuiet)
               {
                       printf("Info: %s\n", primary);

@@ -388,13 +388,6 @@ void A_jog(void)
 */
 void GUI_setAllFrameAndTime(void)
 {
-    char text[80];
-    double len;
-    // int val;
-
-    // if(!guiReady) return ;
-    text[0] = 0;
-
     //UI_updateFrameCount(video_body->getCurrentFrame());
     UI_setCurrentTime(admPreview::getCurrentPts());
     UI_setTotalTime(video_body->getVideoDuration());

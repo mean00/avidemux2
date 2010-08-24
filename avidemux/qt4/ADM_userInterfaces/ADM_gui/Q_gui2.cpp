@@ -755,7 +755,7 @@ void UI_setTitle(const char *name)
 	char *title;
 	const char* defaultTitle = "Avidemux";
 
-	if (name && strlen(name) > 0)
+	if (name && (*name) )
 	{
 		title = new char[strlen(defaultTitle) + strlen(name) + 3 + 1];
 

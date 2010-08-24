@@ -602,12 +602,12 @@ uint32_t nbVar=0;
 */
 uint8_t scriptAddVar(char *var,char *value)
 {
-        if(!var || !strlen(var))
+        if(!var || !(*var))
         {
                 printf("Script : Var name invalid\n");
                 return 0;
         }
-        if(!value || !strlen(value))
+        if(!value || !(*value))
         {
                 printf("Script : value invalid\n");
                 return 0;

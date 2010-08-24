@@ -76,7 +76,7 @@ AUDMAudioFilterNormalize::~AUDMAudioFilterNormalize()
 uint8_t AUDMAudioFilterNormalize::preprocess(void)
 {
 
-    int16_t *ptr;
+
     uint32_t scanned = 0, ch = 0;
     AUD_Status status;
     _ratio = 0;
@@ -171,7 +171,7 @@ uint32_t AUDMAudioFilterNormalize::fill( uint32_t max, float * buffer,AUD_Status
       if(*status==AUD_END_OF_STREAM) return 0;
       ADM_assert(0);
     }
-    float *in,*out,tmp;
+    float tmp;
     for (i = 0; i < rd; i++)
     {
       tmp=_incomingBuffer[i];
