@@ -23,7 +23,7 @@
 
 //#include "ADM_codecs/ADM_codec.h"
 #include "gui_action.hxx"
-#include "ADM_editor/ADM_outputfmt.h"
+//#include "ADM_editor/ADM_outputfmt.h"
 #include "DIA_fileSel.h"
 #include "ADM_vidMisc.h"
 #include "prefs.h"
@@ -277,7 +277,7 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.currentTime->setValidator(timeValidator);
 	ui.currentTime->setInputMask("99:99:99.999");
 
-	connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+	//connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
 	/* Build the custom menu */
     jsMenu=new QMenu("javaScript");
@@ -289,7 +289,7 @@ MainWindow::MainWindow() : QMainWindow()
 	this->installEventFilter(this);
 	slider->installEventFilter(this);
 	
-	ui.currentTime->installEventFilter(this);
+	//ui.currentTime->installEventFilter(this);
 
 	this->setFocus(Qt::OtherFocusReason);
 
@@ -947,11 +947,11 @@ WIDGET(pushButtonAudioFilter)->setEnabled(b);
     \brief  Returns the current selected output format
 */
 
-ADM_OUT_FORMAT 	UI_GetCurrentFormat( void )
+int 	UI_GetCurrentFormat( void )
 {
 	int i=WIDGET(comboBoxFormat)->currentIndex();
 	if(i<0) i=0;
-	return (ADM_OUT_FORMAT)i; 
+	return (int)i; 
 }
 /**
     \fn     UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )

@@ -990,15 +990,9 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_6">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QPushButton" name="pushButtonTime">
               <property name="text">
-               <string>Time:</string>
+               <string>Time</string>
               </property>
              </widget>
             </item>
@@ -1021,6 +1015,9 @@
               </property>
               <property name="maxLength">
                <number>12</number>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1366,7 +1363,6 @@
     <addaction name="actionGo_to_Marker_A"/>
     <addaction name="actionGo_to_Marker_B"/>
     <addaction name="separator"/>
-    <addaction name="actionJump_to_Frame"/>
     <addaction name="actionJump_to_Time"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -1381,6 +1377,17 @@
     <addaction name="separator"/>
     <addaction name="actionJavaScript_shell"/>
     <addaction name="actionPython_Shell"/>
+   </widget>
+   <widget class="QMenu" name="menuAudio">
+    <property name="title">
+     <string>&amp;Audio</string>
+    </property>
+    <addaction name="actionMain_Track"/>
+    <addaction name="actionSecondary_Track"/>
+    <addaction name="actionBuild_VBR_time_map"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_2"/>
+    <addaction name="actionFilters_2"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -1424,17 +1431,6 @@
     <addaction name="actionConnect_to_AvsProxy"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
-   </widget>
-   <widget class="QMenu" name="menuAudio">
-    <property name="title">
-     <string>&amp;Audio</string>
-    </property>
-    <addaction name="actionMain_Track"/>
-    <addaction name="actionSecondary_Track"/>
-    <addaction name="actionBuild_VBR_time_map"/>
-    <addaction name="separator"/>
-    <addaction name="actionSave_2"/>
-    <addaction name="actionFilters_2"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>

@@ -47,7 +47,6 @@ PROCESS(actionFirst_Frame,ACT_Begin) \
 PROCESS(actionLast_Frame,ACT_End) \
 PROCESS(actionGo_to_Marker_A,ACT_GotoMarkA) \
 PROCESS(actionGo_to_Marker_B,ACT_GotoMarkB) \
-PROCESS(actionJump_to_Frame,ACT_Goto) \
 PROCESS(actionJump_to_Time,ACT_GotoTime) \
 PROCESS(actionShow_built_in_support,ACT_BUILT_IN) \
 PROCESS(actionAbout_avidemux,ACT_About) \
@@ -97,7 +96,8 @@ PROCESS(toolButtonNextBlackFrame, ACT_NextBlackFrame) \
 PROCESS(toolButtonFirstFrame, ACT_Begin) \
 PROCESS(toolButtonLastFrame, ACT_End) \
 PROCESS(pushButtonJumpToMarkerA, ACT_GotoMarkA) \
-PROCESS(pushButtonJumpToMarkerB, ACT_GotoMarkB)
+PROCESS(pushButtonJumpToMarkerB, ACT_GotoMarkB) \
+PROCESS(pushButtonTime, ACT_GotoTime)
 
 
 /*

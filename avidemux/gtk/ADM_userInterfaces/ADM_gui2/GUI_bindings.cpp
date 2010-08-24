@@ -1191,7 +1191,7 @@ void UI_NormalCursor( void )
     \brief Returns index of the currently selected container
 
 */
-uint32_t UI_GetCurrentFormat( void )
+int UI_GetCurrentFormat( void )
 {
 
 	return (uint32_t)gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET)));
