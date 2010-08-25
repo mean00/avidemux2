@@ -9,7 +9,7 @@
 #include <Carbon/Carbon.h>
 #endif
 #include <QtGui/QPaintEngine>
-
+#include "ADM_default.h"
 #include "ADM_inttype.h"
 #include "ADM_files.h"
 #include "DIA_uiTypes.h"
@@ -21,17 +21,18 @@ static QTranslator avidemuxTranslator;
 static QMap<QString, char*> *map = NULL;
 static bool translatorLoaded = false;
 
-static void loadTranslation(QTranslator *qTranslator, QString translation)
+static int loadTranslation(QTranslator *qTranslator, QString translation)
 {
-	printf("[Locale] Loading language file %s ", translation.toUtf8().constData());	
+	ADM_info("[Locale] Loading language file %s ", translation.toUtf8().constData());	
 
 	if (qTranslator->load(translation))
 	{
 		QApplication::installTranslator(qTranslator);
-		printf("succeeded\n");
+		ADM_info("succeeded\n");
+        return 1;
 	}
-	else
-		printf("FAILED\n");
+    ADM_warning("FAILED\n");
+    return 0;
 }
 
 void initTranslator(void) {}
@@ -76,11 +77,13 @@ void loadTranslator(void)
 #else
 	QString appdir = ADM_getInstallRelativePath("share","avidemux","i18n");
 #endif
-
-	loadTranslation(&qtTranslator, appdir + "qt_" + QLocale::system().name());
-	loadTranslation(&avidemuxTranslator, appdir + "avidemux_" + QLocale::system().name());
+    int nbLoaded=0;
+	nbLoaded+=loadTranslation(&qtTranslator, appdir + "qt_" + QLocale::system().name());
+	nbLoaded+=loadTranslation(&avidemuxTranslator, appdir + "avidemux_" + QLocale::system().name());
 	translatorLoaded = true;
-
+    if(!nbLoaded) // Nothing to translate..
+        return;
+    ADM_info("Updating translations...\n");
 	// Re-translate existing map (to take care of global strings already allocated)
 	QMapIterator<QString, char*> mapIterator(*map);
 
@@ -101,7 +104,7 @@ void loadTranslator(void)
 		memcpy(buffer, translatedMessage.constData(), copyLength);
 	}
 
-	printf("[Locale] Test: &Edit -> %s\n\n", HIDE_STRING_FROM_QT("MainWindow", "&Edit").toUtf8().data());
+	ADM_info("[Locale] Test: &Edit -> %s\n\n", HIDE_STRING_FROM_QT("MainWindow", "&Edit").toUtf8().data());
 }
 
 void destroyTranslator(void)
