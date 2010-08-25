@@ -223,9 +223,9 @@ int main(int argc, char *argv[])
 #ifdef __APPLE__
     const char *startDir="../Resources/lib";
 #else
-    const char *startDir="lib";
+    const char *startDir=ADM_RELATIVE_LIB_DIR;
 #endif
-	char *adPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDecoder");
+    char *adPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDecoder");
     char *avPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDevices");    
     char *aePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioEncoders");    
     char *dmPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","demuxers");    

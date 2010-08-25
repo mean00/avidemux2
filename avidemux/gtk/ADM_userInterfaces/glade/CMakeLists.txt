@@ -3,5 +3,5 @@ ADD_SUBDIRECTORY(main)
 #set(ADM_glade
 #gtk2_build.glade
 #)
-#INSTALL(FILES ${ADM_glade} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_glade/")
+#INSTALL(FILES ${ADM_glade} DESTINATION "${AVIDEMUX_LIB_DIR}/ADM_glade/")
 

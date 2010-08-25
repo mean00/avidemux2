@@ -7,6 +7,6 @@ audio-volume-medium.png
 )
 
 FILE(GLOB ADM_icons ${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_icons/*.png)
-INSTALL(FILES ${ADM_glade} ${ADM_icons} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/ADM_glade/main")
+INSTALL(FILES ${ADM_glade} ${ADM_icons} DESTINATION "${AVIDEMUX_LIB_DIR}/ADM_glade/main")
 
 

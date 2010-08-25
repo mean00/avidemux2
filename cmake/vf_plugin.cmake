@@ -1,4 +1,4 @@
-SET(VF_PLUGIN_DIR "${CMAKE_INSTALL_PREFIX}/lib/ADM_plugins6/videoFilters/")
+SET(VF_PLUGIN_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/videoFilters/")
 ############## INIT_VIDEO_FILTER_INTERNAL ###################"
 MACRO(INIT_VIDEO_FILTER_INTERNAL _lib)
     INCLUDE_DIRECTORIES(.)
