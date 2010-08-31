@@ -162,7 +162,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   ix.flags=AVI_KEY_FRAME;
   ix.Dts=timecodeMS*1000LL;
   ix.Pts=timecodeMS*1000LL;
-  
+   uint32_t rpt=_tracks[0].headerRepeatSize;
   // since frame type is unreliable for mkv, we scan each frame
   // For the 2 most common cases : mp4 & h264.
   // Hackish, we already read the 3 bytes header
@@ -171,24 +171,28 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   {
     if( isMpeg4Compatible(_videostream.fccHandler))
     {
-        uint8_t *buffer=(uint8_t *)alloca(size*sizeof(uint8_t));
-        
-            parser->readBin(buffer,size-3);
+        uint8_t *buffer=(uint8_t *)alloca((rpt+size)*sizeof(uint8_t));
+            if(rpt)
+                memcpy(buffer,_tracks[0].headerRepeat,rpt);
+            parser->readBin(buffer+rpt,size-3);
             // Search the frame type...
 
              uint32_t nb,vopType,timeinc=16;
              ADM_vopS vops[10];
              vops[0].type=AVI_KEY_FRAME;
-             ADM_searchVop(buffer,buffer+size-3,&nb,vops, &timeinc);
+             ADM_searchVop(buffer,buffer+rpt+size-3,&nb,vops, &timeinc);
              ix.flags=vops[0].type;
         
     }else
     if(isH264Compatible(_videostream.fccHandler))
     {
-                uint8_t *buffer=(uint8_t *)alloca(size);
+                uint8_t *buffer=(uint8_t *)alloca(size+rpt);
                 uint32_t flags=AVI_KEY_FRAME;
-                parser->readBin(buffer,size-3);
-                extractH264FrameType(2,buffer,size-3,&flags); // Nal size is not used in that case
+                
+                if(rpt)
+                        memcpy(buffer,_tracks[0].headerRepeat,rpt);
+                parser->readBin(buffer+rpt,size-3);
+                extractH264FrameType(2,buffer,rpt+size-3,&flags); // Nal size is not used in that case
                 if(flags & AVI_KEY_FRAME)
                 {
                     printf("[MKV/H264] Frame %"LU" is a keyframe\n",(uint32_t)Track->index.size());
