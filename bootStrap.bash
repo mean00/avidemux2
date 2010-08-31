@@ -5,10 +5,10 @@
 packages_ext=""
 do_core=1
 do_cli=0
-do_gtk=1
-do_qt4=0
+do_gtk=0
+do_qt4=1
 do_plugins=1
-debug=0
+debug=1
 fail()
 {
         echo "** Failed at $1**"
@@ -33,8 +33,12 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make -j 2 > /tmp/log$BUILDDIR || fail make
-        fakeroot make package DESTDIR=debPack || fail package
+        make -j 2 >& /tmp/log$BUILDDIR || fail make
+	if  [ "x$PKG" = "x" ] ; then
+	  echo "No packaging..."
+        else
+          fakeroot make package DESTDIR=debPack || fail package
+	fi
 }
 printModule()
 {
