@@ -38,7 +38,7 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
             destStride=this->GetPitch((ADM_PLANE)plane);
             int opHeight=_height;
             int opWidth=_width;
-            if(plane!=PLANAR_Y) 
+            if(plane!=PLANAR_Y)
             {
                 opHeight>>=1;
                 opWidth>>=1;
@@ -97,7 +97,7 @@ bool ADMImage::blacken(void)
             int opHeight=_height;
             int opWidth=_width;
             uint8_t color=0;
-            if(plane!=PLANAR_Y) 
+            if(plane!=PLANAR_Y)
             {
                 opHeight>>=1;
                 opWidth>>=1;
@@ -118,9 +118,7 @@ bool ADMImage::blacken(void)
 */
 bool ADMImage::copyTo(ADMImage *dest, uint32_t x,uint32_t y)
 {
-    ADM_assert(0);
-#warning not implemented
-#if 0    
+
     uint32_t box_w=_width, box_h=_height;
     // Clip if needed
     if(y>dest->_height)
@@ -136,21 +134,27 @@ bool ADMImage::copyTo(ADMImage *dest, uint32_t x,uint32_t y)
 
     if(x+box_w>dest->_width) box_w=dest->_width-x;
     if(y+box_h>dest->_height) box_h=dest->_height-y;
+    // Get Source plane
+    uint8_t *srcPlanes[3];
+    uint8_t *dstPlanes[3];
+    dest->GetWritePlanes(dstPlanes);
+    GetReadPlanes(srcPlanes);
 
+    uint32_t srcPitches[3],dstPitches[3];
+    dest->GetPitches(dstPitches);
+    GetPitches(srcPitches);
     // do y
-    BitBlit(YPLANE(dest)+x+dest->_width*y,dest->_width,
-            data,_width,
-            box_w,box_h);
-    // Do u
-    BitBlit(UPLANE(dest)+x/2+(dest->_width*y)/4,dest->_width/2,
-            UPLANE(this),_width>>1,
-            box_w>>1,box_h>>1);
-
-    BitBlit(VPLANE(dest)+x/2+(dest->_width*y)/4,dest->_width/2,
-            VPLANE(this),_width>>1,
-            box_w>>1,box_h>>1);
-
-#endif
+    for(int i=0;i<3;i++)
+    {
+        int xx=x;
+        int yy=y;
+        int ww=box_w;
+        int hh=box_h;
+        if(i) {xx/=2;yy/=2;ww/=2;hh/=2;} /// u or v
+        BitBlit(dstPlanes[i]+xx+dstPitches[i]*yy, dstPitches[i],
+                     srcPlanes[i],srcPitches[i],
+                     ww,hh);
+    }
     return 1;
 
 }
@@ -162,9 +166,7 @@ bool ADMImage::copyTo(ADMImage *dest, uint32_t x,uint32_t y)
 */
 bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
 {
-#warning not implemented
-    ADM_assert(0);
-#if 0
+
     uint32_t box_w=_width, box_h=_height;
     // Clip if needed
     if(y>dest->_height)
@@ -180,15 +182,27 @@ bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
 
     if(x+box_w>dest->_width) box_w=dest->_width-x;
     if(y+box_h>dest->_height) box_h=dest->_height-y;
+    // Get Source plane
+    uint8_t *srcPlanes[3];
+    uint8_t *dstPlanes[3];
+    dest->GetWritePlanes(dstPlanes);
+    GetReadPlanes(srcPlanes);
 
+    uint32_t srcPitches[3],dstPitches[3];
+    dest->GetPitches(dstPitches);
+    GetPitches(srcPitches);
     // do y
-    BitBlitAlpha(YPLANE(dest)+x+dest->_width*y,dest->_width,         data,_width,            box_w,box_h,alpha);
-    // Do u
-    BitBlitAlpha(UPLANE(dest)+x/2+(dest->_width*y)/4,dest->_width/2,   UPLANE(this),_width>>1,  box_w>>1,box_h>>1,alpha);
-    // and V
-    BitBlitAlpha(VPLANE(dest)+x/2+(dest->_width*y)/4,dest->_width/2, VPLANE(this),_width>>1, box_w>>1,box_h>>1,alpha);
-
-#endif
+    for(int i=0;i<3;i++)
+    {
+        int xx=x;
+        int yy=y;
+        int ww=box_w;
+        int hh=box_h;
+        if(i) {xx/=2;yy/=2;ww/=2;hh/=2;} /// u or v
+        BitBlitAlpha(dstPlanes[i]+xx+dstPitches[i]*yy, dstPitches[i],
+                     srcPlanes[i],srcPitches[i],
+                     ww,hh,alpha);
+    }
     return 1;
 }
 
