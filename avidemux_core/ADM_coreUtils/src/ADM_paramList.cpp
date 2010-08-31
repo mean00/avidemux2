@@ -1,13 +1,13 @@
 /** *************************************************************************
     \file ADM_paramList
-    \brief Handle Param list 
-    \author  mean (C) 2009/2010   fixounet@free.fr                
+    \brief Handle Param list
+    \author  mean (C) 2009/2010   fixounet@free.fr
     Usually only basic types should be handled by this
     We make 2 exceptions though :
         * lavcodec settings as we use a lot of derivative class. It is to simplify derivative configuration
-        * same for COMPRESS_PARAMS, since is used by all video encoder, it is "smart" to make it a dedicated 
+        * same for COMPRESS_PARAMS, since is used by all video encoder, it is "smart" to make it a dedicated
                     configuration type.
-    
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -67,7 +67,7 @@ static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void 
         while(*n!=':' && *n) n++;
         n--;
         memcpy(tmp,s+1,n-s);
-        tmp[n-s]=0;       
+        tmp[n-s]=0;
         s=n+1;
        // printf("tmp:%s\n",tmp);
         // Now we have aaa=bbb in tmp, split it
@@ -164,7 +164,7 @@ static bool compressReadFromString(COMPRES_PARAMS *params,const char *str)
     if(!strcasecmp(tmp,"AQ")) {params->mode=COMPRESS_AQ;params->qz=val;return true;}
     ADM_error("Unknown mode :%s\n",tmp);
     return false;
-    
+
 }
 /**
     \fn compressWriteToString
@@ -276,8 +276,14 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
                             }
                        }
                         break;
-                        
-           case ADM_param_string: ADM_error("not implemented string for paramList\n");ADM_assert(0);
+
+           case ADM_param_string:
+                    {
+                        char   *var;
+                        couples->readAsString(name,&var);
+                        *(char  **)(address+params[i].offset)=var;
+                    }
+                    break;
         }
     }
     return true;
@@ -299,7 +305,7 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
     *couples=new CONFcouple(p);
     CONFcouple *c=*couples;
     uint8_t *address=(uint8_t *)s;
-   
+
     for(int i=0;i<p;i++)
     {
         const char *name=params[i].paramName;
@@ -348,7 +354,20 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
                         }
               }
                 break;
-           case ADM_param_string: ADM_error("not implemented string for paramList\n");ADM_assert(0);
+           case ADM_param_string:
+                {
+                        char *var;
+                        var=*(char  **)(address+params[i].offset);
+                        bool r=c->writeAsString(name,var);
+                        if(false==r)
+                        {
+                                ADM_error("Error writing string\n");
+                                return false;
+                        }
+                }
+                break;
+            default:
+                    ADM_assert(0);
         }
     }
     return true;
