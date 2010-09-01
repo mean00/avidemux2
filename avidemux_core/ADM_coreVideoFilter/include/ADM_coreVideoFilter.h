@@ -58,6 +58,8 @@ public:
 protected:
             ADM_coreVideoFilter *previousFilter;
 };
-
+// Avisynth compatibility functions
+int PutHintingData(uint8_t *video, unsigned int hint);
+int GetHintingData(uint8_t *video, unsigned int *hint);
 #endif
 // EOF
