@@ -111,9 +111,11 @@ MESSAGE("")
 ########################################
 SET(MSG_DISABLE_OPTION "Disabled per request")
 INCLUDE(admCheckRequiredLibs)
+IF(NOT PLUGINS)
 INCLUDE(admCheckMiscLibs)
 INCLUDE(FindThreads)
 INCLUDE(admCheckVDPAU)
+ENDIF(NOT PLUGINS)
 
 ########################################
 # Check functions and includes
