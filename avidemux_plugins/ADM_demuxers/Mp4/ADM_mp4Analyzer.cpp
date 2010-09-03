@@ -865,74 +865,84 @@ nextAtom:
                                                         audioCodec(AAC);
                                             if(left>10)
                                             {
-                                              adm_atom wave(&son);
-                                              printf("Reading wave, got %s\n",fourCC::tostringBE(wave.getFCC()));
-                                              if(MKFCCR('w','a','v','e')==wave.getFCC())
+                                            
+                                            
+                                              while(!son.isDone())
                                               {
-                                                 // mp4a
-                                                 //   wave
-                                                 //     frma
-                                                 //     mp4a
-                                                 //     esds
-                                                 while(!wave.isDone())
-                                                 {
-                                                     adm_atom item(&wave);
-                                                     printf("parsing wave, got %s,0x%x\n",fourCC::tostringBE(item.getFCC()),
-                                                                  item.getFCC());
-                                                     switch(item.getFCC())
+                                                adm_atom wave(&son);
+                                                printf("> got %s atom\n",fourCC::tostringBE(wave.getFCC()));
+                                                switch(wave.getFCC())
+                                                {
+                                                case MKFCCR('c','h','a','n'):
+                                                           printf("Found channel layout atom, skipping\n");
+                                                           break;
+                                                case MKFCCR('w','a','v','e'):
+                                                  {
+                                                     // mp4a
+                                                     //   wave
+                                                     //     frma
+                                                     //     mp4a
+                                                     //     esds
+                                                     while(!wave.isDone())
                                                      {
-                                                       case MKFCCR('f','r','m','a'):
-                                                          {
-                                                          uint32_t codecid=item.read32();
-                                                          printf("frma Codec Id :%s\n",fourCC::tostringBE(codecid));
-                                                          }
-                                                          break;
-                                                       case MKFCCR('m','s',0,0x55):
-                                                       case MKFCCR('m','s',0,0x11):
-                                                        {
-                                                          // We have a waveformat here
-                                                          printf("[STSD]Found MS audio header:\n");
-                                                          ADIO.encoding=ADM_swap16(item.read16());
-                                                          ADIO.channels=ADM_swap16(item.read16());
-                                                          ADIO.frequency=ADM_swap32(item.read32());
-                                                          ADIO.byterate=ADM_swap32(item.read32());
-                                                          ADIO.blockalign=ADM_swap16(item.read16());
-                                                          ADIO.bitspersample=ADM_swap16(item.read16());
-                                                          printWavHeader(&(ADIO));
+                                                         adm_atom item(&wave);
+                                                         printf("parsing wave, got %s,0x%x\n",fourCC::tostringBE(item.getFCC()),
+                                                                      item.getFCC());
+                                                         
+                                                         switch(item.getFCC())
+                                                         {
+                                                           case MKFCCR('f','r','m','a'):
+                                                              {
+                                                              uint32_t codecid=item.read32();
+                                                              printf("frma Codec Id :%s\n",fourCC::tostringBE(codecid));
+                                                              }
+                                                              break;
+                                                           case MKFCCR('m','s',0,0x55):
+                                                           case MKFCCR('m','s',0,0x11):
+                                                            {
+                                                              // We have a waveformat here
+                                                              printf("[STSD]Found MS audio header:\n");
+                                                              ADIO.encoding=ADM_swap16(item.read16());
+                                                              ADIO.channels=ADM_swap16(item.read16());
+                                                              ADIO.frequency=ADM_swap32(item.read32());
+                                                              ADIO.byterate=ADM_swap32(item.read32());
+                                                              ADIO.blockalign=ADM_swap16(item.read16());
+                                                              ADIO.bitspersample=ADM_swap16(item.read16());
+                                                              printWavHeader(&(ADIO));
 
-                                                        }
-                                                       break;
-                                                        case MKFCCR('m','p','4','a'):
-                                                          break;
-                                                        case MKFCCR('e','s','d','s'):
-                                                          {
-                                                               decodeEsds(&item,TRACK_AUDIO);
-                                                          goto foundit; // FIXME!!!
-                                                          }
-                                                          break;
-                                                       default:
-                                                         break;
-                                                     }
+                                                            }
+                                                           break;
+                                                            case MKFCCR('m','p','4','a'):
+                                                              break;
+                                                            case MKFCCR('e','s','d','s'):
+                                                              {
+                                                                   decodeEsds(&item,TRACK_AUDIO);
+                                                                   break;
+                                                              }
+                                                              break;
+                                                           default:
+                                                             break;
+                                                         }
 
-                                                     item.skipAtom();
+                                                         item.skipAtom();
 
-                                                 }  // Wave iddone
-                                                 left=0;
-                                              }  // if ==wave
-                                              else
-                                              {
-                                                if(wave.getFCC()==MKFCCR('e','s','d','s'))
+                                                     }  // Wave iddone
+                                                     left=0;
+                                                     
+                                                  }  // if ==wave
+                                                  break;
+                                              case MKFCCR('e','s','d','s'):
                                                           {
                                                                decodeEsds(&wave,TRACK_AUDIO);
-                                                               goto foundit; // FIXME!!!
+                                                               break;
                                                           }
-                                                else
-                                                {
+                                              default:
                                                   printf("UNHANDLED ATOM : %s\n",fourCC::tostringBE(wave.getFCC()));
-                                                }
+                                                  break;
                                               }
+                                              wave.skipAtom();
+                                             } // while
                                             } // if left > 10
-foundit: // HACK FIXME
                                             left=0;
                                     }
                                             break; // mp4a
@@ -1096,7 +1106,8 @@ int tag,l;
                                             _tracks[1+nbAudioTrack].extraDataSize=l;
                                             _tracks[1+nbAudioTrack].extraData=new uint8_t[l];
                                             fread(_tracks[1+nbAudioTrack].extraData,
-                                                _tracks[1+nbAudioTrack].extraDataSize,1,_fd);
+                                            _tracks[1+nbAudioTrack].extraDataSize,1,_fd);
+                                            printf("\t %d bytes of extraData\n",(int)l);
                                             break;
                                         default: printf("Unknown track type for esds %d\n",trackType);
                                     }

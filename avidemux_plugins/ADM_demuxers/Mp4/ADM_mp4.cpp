@@ -380,6 +380,18 @@ uint8_t    MP4Header::open(const char *name)
         if(nbAudioTrack) _isaudiopresent=1; // Still needed ?
         for(int audio=0;audio<nbAudioTrack;audio++)
         {
+            // Lookup if AAC is lying about # of channels
+            if(_tracks[1+audio]._rdWav.encoding==WAV_AAC)
+            {
+                if(_tracks[1+audio].extraDataSize==2)
+                {
+                    // Channels 
+                    uint32_t word=(_tracks[1+audio].extraData[0]<<8)+_tracks[1+audio].extraData[1];
+                    uint32_t chan=(word>>3)&0xf;
+                    uint32_t fqIndex=(word>>7)&0xf;
+                    printf("0x%x word, Channel : %d, fqIndex=%d\n",word,chan,fqIndex);
+                }
+            }
             audioAccess[audio]=new ADM_mp4AudioAccess(name,&(_tracks[1+audio]));
             audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
         }
