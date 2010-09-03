@@ -10,7 +10,7 @@
 // The big drawback if that in some case you can eat up a lot of the stream
 // before finding a packet start code to enable correct init of the codec
 //
-// Author: mean <fixounet@free.fr>, (C) 2004
+// Author: mean <fixounet@free.fr>, (C) 2004/2010
 //
 // Copyright: See COPYING file that comes with this distribution
 //
@@ -20,15 +20,16 @@
 #include "ADM_default.h"
 #include "ADM_ad_plugin.h"
 
-#define FAAD_BUFFER 2048
+#define FAAD_BUFFER (10*1024)
 
 class ADM_faad : public     ADM_Audiocodec
 {
 	protected:
 		uint8_t _inited;
 		void	*_instance;
-		uint8_t _buffer[FAAD_BUFFER];
-		uint32_t _inbuffer;
+		uint8_t  _buffer[FAAD_BUFFER*2];
+		uint32_t head, tail;
+        bool     monoFaadBug; // if true, the stream is mono, but faad outputs stereo
 
 	public:
 		ADM_faad(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -65,11 +66,12 @@ uint32_t srate;
 unsigned char chan;
 		_inited=0;
 		_instance=NULL;
-		_inbuffer=0;
+        head=tail=0;
+        monoFaadBug=false;
 		_instance = faacDecOpen();
 		conf=faacDecGetCurrentConfiguration(_instance);
 		// Update the field we know about
-		conf->outputFormat=FAAD_FMT_16BIT;
+		conf->outputFormat=FAAD_FMT_FLOAT;
 		conf->defSampleRate=info->frequency;
   	    conf->defObjectType =LC;
 		faacDecSetConfiguration(_instance, conf);
@@ -87,8 +89,13 @@ unsigned char chan;
                         }
                         if(chan!=info->channels) // Ask for stereo !
                         {
-                             printf("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
-                            info->channels=chan;
+                            printf("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
+                            if(info->channels==1 && chan==2) 
+                            {
+                                    ADM_warning("Workaround Faad mono stream handling... \n");
+                                    monoFaadBug=true;
+                            }
+                            
                         }
 		}
 		else // we will init it later on...
@@ -131,23 +138,26 @@ ADM_faad::~ADM_faad()
 
 void ADM_faad::purge(void)
 {
-	_inbuffer=0;
-	 faacDecPostSeekReset(_instance, 0);
+	head=tail=0;
+	faacDecPostSeekReset(_instance, 0);
 }
 uint8_t ADM_faad:: beginDecompress( void )
 {
-	_inbuffer=0;
+	head=tail=0;
     return 1;
 }
 uint8_t ADM_faad::endDecompress( void )
 {
-	_inbuffer=0;
+	 head=tail=0;
 	 faacDecPostSeekReset(_instance, 0);
      return 1;
 }
+/**
+    \fn run
+*/
 uint8_t ADM_faad::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
 {
-uint32_t xin;
+uint32_t consumed;
 long int res;
 void *outbuf;
 faacDecFrameInfo info;
@@ -173,10 +183,9 @@ uint8_t first=0;
 				printf("Faad Inited : rate:%"LU" chan:%"LU" off:%ld\n",srate,chan,res);
 				_inited=1;
 				first=1;
-				_inbuffer=0;
+				head=tail=0;
 				inptr+=res;
 				nbIn-=res;
-
 			}
 		}
 		if(!_inited)
@@ -187,27 +196,29 @@ uint8_t first=0;
 		// The codec is initialized, feed him
 		do
 		{
-			max=FAAD_BUFFER-_inbuffer;
+            // Shrink ? The buffer is 2*FAAD_BUFFER
+            if(tail>FAAD_BUFFER && head)
+            {
+                memmove(_buffer,_buffer+head,tail-head);
+                tail-=head;
+                head=0;
+            }
+            // Add incoming data to our own buffer
+			max=FAAD_BUFFER*2-tail;
 			if(nbIn<max) max=nbIn;
-			memcpy(_buffer+_inbuffer,inptr,max);
+			memcpy(_buffer+tail,inptr,max);
 			inptr+=max;
 			nbIn-=max;
-			_inbuffer+=max;
-			/*
-			if(_inbuffer<FAAD_MIN_STREAMSIZE*2)
-			{
-				return 1;
-			}*/
+			tail+=max;
 			memset(&info,0,sizeof(info));
 			//printf("%x %x\n",_buffer[0],_buffer[1]);
-		 	outbuf = faacDecDecode(_instance, &info, _buffer, _inbuffer);
+		 	outbuf = faacDecDecode(_instance, &info, _buffer+head, tail-head);
 			if(info.error)
 			{
-				printf("Faad: Error %d :%s\n",info.error,
-					faacDecGetErrorMessage(info.error));
-				printf("Bye consumed %"LLU", bytes dropped %"LU" \n",info.bytesconsumed,_inbuffer);
+				ADM_warning("Faad: Error %d :%s\n",info.error,faacDecGetErrorMessage(info.error));
+				ADM_warning("Bye consumed %"LLU", bytes dropped %"LU" \n",info.bytesconsumed,tail-head);
 
-                                _inbuffer=0; // Purge buffer
+                head=tail=0; // Purge buffer
 				return 1;
 			}
 			if(first)
@@ -215,24 +226,30 @@ uint8_t first=0;
 				printf("Channels : %d\n",info.channels);
 				printf("Frequency: %"LLU"\n",info.samplerate);
 				printf("SBR      : %d\n",info.sbr);
-
-
 			}
-			xin=info.bytesconsumed ;
-			if(xin>_inbuffer) xin=0;
-
-			memmove(_buffer,_buffer+xin,_inbuffer-xin);
-			_inbuffer-=xin;
+			consumed=info.bytesconsumed ;
+			if(consumed>(tail-head)) consumed=0;
+            head+=consumed;
 			if(info.samples)
 			{
-				*nbOut+= info.samples;
-				int16_t *in = (int16_t *) outbuf;
-				for (int i = 0; i < info.samples; i++) {
-					*(outptr++) = (float)*in / 32768;
-					in++;
-				}
+                if(monoFaadBug)
+                {
+                    uint32_t n=info.samples/2;
+                    float *f=(float *)outbuf;
+                    for(int i=0;i<n;i++)
+                    {
+                        *outptr++=*f; // drop one out of two samples
+                        f+=2;
+                    }
+                    *nbOut+=n;
+                }else   
+                {
+                    *nbOut+= info.samples;
+                    memcpy(outptr,outbuf,info.samples*sizeof(float));
+                    outptr+=info.samples;
+                }
 			}
-		}while(nbIn);
+		}while(nbIn || (tail-head));
 		return 1;
 }
 
