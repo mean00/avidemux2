@@ -67,7 +67,7 @@ DECLARE_VIDEO_FILTER(   subAss,   // Class
 #   define DEFAULT_FONT_DIR "c:"
 # else
 #   define DIR_SEP '/'
-#   define DEFAULT_FONT_DIR "/tmp/"
+#   define DEFAULT_FONT_DIR "/usr/share/fonts/truetype/"
 # endif
 #endif
 //*****************
@@ -320,9 +320,10 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
         int64_t now=previousFilter->getAbsoluteStartTime()+src->Pts;
         now/=1000; // Ass works in ms
         ass_image_t *img = ass_render_frame(_ass_rend, _ass_track, now,&changed);
-        
+        //printf("Time is now %d ms\n",now);
 
         while(img) {
+                  //  printf("Image is %d x %d \n",img->w, img->h);
                   y = rgba2y(img->color);
                   u = rgba2u(img->color);
                   v = rgba2v(img->color);
@@ -337,9 +338,12 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
                   image->GetPitches(pitches);
                   image->GetWritePlanes(planes);
 
-                  ydata = planes[0]+pitches[0]*img->dst_y;
-                  udata = planes[1]+pitches[1]*(img->dst_y/2);
-                  vdata = planes[2]+pitches[2]*(img->dst_y/2);
+                  uint32_t x=img->dst_x;
+                  ydata = planes[0]+pitches[0]*( param.topMargin+img->dst_y)+x;
+
+                  x>>=1;
+                  udata = planes[1]+pitches[1]*((param.topMargin+img->dst_y)/2)+x;
+                  vdata = planes[2]+pitches[2]*((param.topMargin+img->dst_y)/2)+x;
 
                   // do y
                   bitmap = img->bitmap;
