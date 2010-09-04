@@ -1,9 +1,0 @@
-INCLUDE(vf_plugin)
-
-
-SET(ADM_vf_logo_SRCS ADM_vidLogo.cpp)
-
-ADD_LIBRARY(ADM_vf_logo SHARED ${ADM_vf_logo_SRCS})
-
-INIT_VIDEOFILTER_PLUGIN(ADM_vf_logo)
-INSTALL_VIDEOFILTER(ADM_vf_logo)
