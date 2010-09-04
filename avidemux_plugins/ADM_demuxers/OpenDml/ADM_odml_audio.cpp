@@ -37,8 +37,9 @@ It is an fopen/fwrite lookalike interface to chunks
     \fn ADM_aviAudioAccess
 
 */
+#define ODML_MAX_AUDIO_CHUNK (10*1024)
 ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
-						uint32_t nbchunk,
+						uint32_t nbChunk,
 						const char *name,
 						uint32_t extraLen,
 						uint8_t  *extraData)
@@ -46,15 +47,50 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
     this->extraData=new uint8_t[extraLen];
     memcpy(this->extraData,extraData,extraLen);
     this->extraDataLen=extraLen;
-    index=idx;
-    nbIndex=nbchunk;
     length=0;
-    for(int i=0;i<nbIndex;i++) length+=idx[i].size;
+    uint32_t mx=0;
+    for(int i=0;i<nbChunk;i++) 
+    {
+        length+=idx[i].size;    
+        if(idx[i].size>mx) mx=idx[i].size;
+    }
+    if((hdr->encoding==WAV_PCM || hdr->encoding==WAV_LPCM)&& mx>ODML_MAX_AUDIO_CHUNK)
+    {
+        // Split the huge chunk into smaller ones
+        for(int i=0;i<nbChunk;i++)
+        {
+            uint64_t start=idx[i].offset;
+            uint32_t size=idx[i].size;      
+            uint32_t ONE_CHUNK=(ODML_MAX_AUDIO_CHUNK)/(2*hdr->channels);
+            ONE_CHUNK*=2*hdr->channels;
+            while(size>ONE_CHUNK)
+            {
+                odmlIndex current;
+                current.offset=start;
+                current.size=ONE_CHUNK;
+                current.dts=ADM_NO_PTS;
+                myIndex.push_back(current);
+                start+=ONE_CHUNK;
+                size-=ONE_CHUNK;
+            }
+                odmlIndex current;
+                current.offset=start;
+                current.size=size;
+                current.dts=ADM_NO_PTS;
+                myIndex.push_back(current);
+        }
+
+    }else
+    {       // Duplicate index as is
+        for(int i=0;i<nbChunk;i++)
+          myIndex.push_back(idx[i]);
+    }
     fd=ADM_fopen(name,"r");
     ADM_assert(fd);
     pos=0;
     currentIndex=0;
     wavHeader=hdr;
+    nbIndex=myIndex.size(); // will not change
 }
 /**
     \fn isCBR
@@ -77,7 +113,7 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
     if(currentIndex>=nbIndex) return length;
     for(int i=0;i<currentIndex;i++)
     {
-        total+=index[i].size;
+        total+=myIndex[i].size;
     }
     return total;
 }
@@ -91,6 +127,7 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
     fd=NULL;
     if(extraData) delete[] extraData;
     extraData=NULL;
+    myIndex.clear();
 }
 /**
     \fn setPos
@@ -101,13 +138,13 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
     uint64_t total=0;
     for(int i=0;i<nbIndex-1;i++)
     {
-        if(pos>=total && pos<=total+index[i].size)
+        if(pos>=total && pos<=total+myIndex[i].size)
         {
-            fseeko(fd,index[i].offset,SEEK_SET);
+            fseeko(fd,myIndex[i].offset,SEEK_SET);
             currentIndex=i;
             return 1;
         }
-        total+=index[i].size;
+        total+=myIndex[i].size;
     }
     printf("[aviAudioAccess] Seek to pos %"LLU" failed\n",pos);
     return 0;
@@ -123,19 +160,19 @@ bool   ADM_aviAudioAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t m
             printf("[OpenDmlDemuxer] Index Exceeded %d/%d\n",currentIndex,nbIndex);
             return 0;
         }
-        fseeko(fd,index[currentIndex].offset,SEEK_SET);
-        if(index[currentIndex].size>maxSize) 
+        fseeko(fd,myIndex[currentIndex].offset,SEEK_SET);
+        if(myIndex[currentIndex].size>maxSize) 
         {
-            ADM_error("Packet too large %d, maximum is %d\n",index[currentIndex].size,maxSize);
+            ADM_error("Packet too large %d, maximum is %d\n",myIndex[currentIndex].size,maxSize);
             *size=0;
             return false;
          }
-        fread(buffer,1,index[currentIndex].size,fd);
+        fread(buffer,1,myIndex[currentIndex].size,fd);
         if(!currentIndex) 
             *dts=0;
         else
             *dts=ADM_AUDIO_NO_DTS;
-        *size=index[currentIndex].size;
+        *size=myIndex[currentIndex].size;
         currentIndex++;
         return 1;
 }
