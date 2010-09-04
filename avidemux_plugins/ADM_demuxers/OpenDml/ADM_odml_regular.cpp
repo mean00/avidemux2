@@ -105,7 +105,12 @@ int64_t startOfData;
                          run++;
                 }
         }
-        ADM_assert(run==_nbAudioTracks);
+        if(!run) 
+        {
+            _nbAudioTracks=0;
+            ADM_warning("No audio chunk found in index..\n");
+        }else
+            ADM_assert(run==_nbAudioTracks);
 
         // Create index
         uint32_t nb;
