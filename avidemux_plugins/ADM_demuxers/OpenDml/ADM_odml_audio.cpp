@@ -124,7 +124,12 @@ bool   ADM_aviAudioAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t m
             return 0;
         }
         fseeko(fd,index[currentIndex].offset,SEEK_SET);
-        if(index[currentIndex].size>maxSize) ADM_assert(0);
+        if(index[currentIndex].size>maxSize) 
+        {
+            ADM_error("Packet too large %d, maximum is %d\n",index[currentIndex].size,maxSize);
+            *size=0;
+            return false;
+         }
         fread(buffer,1,index[currentIndex].size,fd);
         if(!currentIndex) 
             *dts=0;
