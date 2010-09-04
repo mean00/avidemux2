@@ -228,8 +228,8 @@ uint8_t first=0;
 				printf("SBR      : %d\n",info.sbr);
 			}
 			consumed=info.bytesconsumed ;
-			if(consumed>(tail-head)) consumed=0;
-            head+=consumed;
+			if(consumed>(tail-head)) {head=tail=0;}
+                else head+=consumed;
 			if(info.samples)
 			{
                 if(monoFaadBug)
