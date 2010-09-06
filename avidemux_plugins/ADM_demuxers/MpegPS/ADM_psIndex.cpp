@@ -260,12 +260,24 @@ dmxPacketInfo info;
                           break;
                   case 0xB5: //  extension
                                 { 
-                                    uint8_t id=pkt->readi8()>>4;
+                                    uint8_t firstByte=pkt->readi8();
+                                    uint8_t id=firstByte>>4;
                                     uint8_t two;
                                     switch(id)
                                     {
                                         case 1: // Sequence extension
-                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
+                                            break;
+                                        case 2: // Sequence display extension
+                                            if(firstByte&1)
+                                            {
+                                               for(int i=0;i<3;i++) pkt->readi8();
+                                            }
+                                            {
+                                                uint32_t extSize=pkt->readi32();
+                                                uint32_t eh=(extSize<<15)>>18;
+                                                uint32_t ew=(extSize)>>18;
+                                                printf("**** %x ->%d x %d\n",extSize,ew,eh);
+                                            }
                                             break;
                                         case 8: // picture coding extension (mpeg2)
                                         {
