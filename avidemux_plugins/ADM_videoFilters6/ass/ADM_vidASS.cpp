@@ -33,10 +33,11 @@ class subAss : public  ADM_coreVideoFilter
 {
 protected:
         ass_ssa         param;
-        ass_library_t   *_ass_lib;
-        ass_renderer_t  *_ass_rend;
-        ass_track_t     *_ass_track;
-        bool            init(void);
+        ASS_Library     *_ass_lib;
+        ASS_Renderer    *_ass_rend;
+        ASS_Track       *_ass_track;
+        bool            setup(void);
+        bool            cleanup(void);
         ADMImage        *src;
 public:
                     subAss(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -112,13 +113,13 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
         src=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
 
         /* ASS initialization */
-        _ass_lib = ass_library_init();
+        _ass_lib = NULL;
         _ass_track = NULL;
         _ass_rend = NULL;
-        ADM_assert(_ass_lib);
+        
         if(param.subtitleFile)
         {
-              if(!init())
+              if(!this->setup())
               {
                 GUI_Error_HIG("Format ?","Are you sure this is an ass file ?"); 
               }
@@ -136,27 +137,8 @@ subAss::~subAss()
         
         DELETE(param.subtitleFile);
         DELETE(param.fontDirectory);
-
-#if ASS_HAS_GLOBAL
-        if(_ass_rend) 
-        {
-              ass_renderer_done(_ass_rend);
-              _ass_rend = NULL;
-         }
-
-        if(_ass_track) 
-        {
-              ass_free_track(_ass_track);
-              _ass_track = NULL;
-        }
-        if(_ass_lib) 
-        {
-              ass_library_done(_ass_lib);
-              _ass_lib = NULL;
-        }
-#endif
+        cleanup();
 }
-
 /**
     \fn getCoupledConf
     \brief Return our current configuration as couple name=value
@@ -193,32 +175,54 @@ bool subAss::configure(void)
 #define MKME(x,y) param.y=(float)x
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
-
+     cleanup();
+     setup();
      return true;
    }
    return false;
 }
 
 /**
-    \fn init
+    \fn cleanup
 */
-bool subAss::init(void)
+bool subAss::cleanup(void)
 {
-bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
-
-        memcpy(&info,previousFilter->getInfo(),sizeof(info));
-        info.height += param.topMargin + param.bottomMargin;
-
-        ass_set_fonts_dir(_ass_lib, (const char*)param.fontDirectory);
-        ass_set_extract_fonts(_ass_lib, param.extractEmbeddedFonts);
-        ass_set_style_overrides(_ass_lib, NULL);
-#if ASS_HAS_GLOBAL
-         if(_ass_rend) 
+        if(_ass_rend) 
         {
               ass_renderer_done(_ass_rend);
               _ass_rend = NULL;
          }
-#endif
+
+        if(_ass_track) 
+        {
+              ass_free_track(_ass_track);
+              _ass_track = NULL;
+        }
+        if(_ass_lib) 
+        {
+              ass_library_done(_ass_lib);
+              _ass_lib = NULL;
+        }
+        return true;
+}
+/**
+    \fn setup
+*/
+bool subAss::setup(void)
+{
+bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
+
+        // update outpur image size
+        memcpy(&info,previousFilter->getInfo(),sizeof(info));
+        info.height += param.topMargin + param.bottomMargin;
+        
+        
+        _ass_lib=ass_library_init();
+        ADM_assert(_ass_lib);
+
+/*        ass_set_fonts_dir(_ass_lib, (const char*)param.fontDirectory);*/
+/*        ass_set_extract_fonts(_ass_lib, param.extractEmbeddedFonts);*/
+        ass_set_style_overrides(_ass_lib, NULL);
         _ass_rend = ass_renderer_init(_ass_lib);
 
         ADM_assert(_ass_rend);
@@ -227,18 +231,14 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         ass_set_margins(_ass_rend, param.topMargin, param.bottomMargin, 0, 0);
         ass_set_use_margins(_ass_rend, use_margins);
         ass_set_font_scale(_ass_rend, param.font_scale);
-        ass_set_fonts(_ass_rend, NULL, "Sans");
-        //~ ass_set_aspect_ratio(_ass_rend, ((double)_info.width) / ((double)_info.height));
-#if ASS_HAS_GLOBAL
-        if(_ass_track) 
-        {
-              ass_free_track(_ass_track);
-              _ass_track = NULL;
-        }
+//ASS_Renderer *priv, const char *default_font, const char *default_family, int fc, const char *config,                   int update);
+        int fc=0;
+#ifdef USE_FONTCONFIG
+        fc=1;
 #endif
+        ass_set_fonts(_ass_rend, NULL, "Sans",fc,NULL,true);
+        //~ ass_set_aspect_ratio(_ass_rend, ((double)_info.width) / ((double)_info.height));
        _ass_track = ass_read_file(_ass_lib, (char*)param.subtitleFile, NULL);
-
-//        ADM_assert(_ass_track);
         if(!_ass_track)
           GUI_Error_HIG("SSA Error","Cannot read_file for *%s*",(char*)param.subtitleFile);
         return 1;
@@ -310,7 +310,7 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
 
         image->copyInfo(src); // pts etc..
         // Do we have something to render ?
-        if(!_ass_rend || !_ass_track)
+        if(!_ass_rend || !_ass_track || !_ass_lib)
         {
           printf("[Ass] No sub to render\n");
           return true; 
@@ -319,7 +319,7 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
         int changed=0;
         int64_t now=previousFilter->getAbsoluteStartTime()+src->Pts;
         now/=1000; // Ass works in ms
-        ass_image_t *img = ass_render_frame(_ass_rend, _ass_track, now,&changed);
+        ASS_Image *img = ass_render_frame(_ass_rend, _ass_track, now,&changed);
         //printf("Time is now %d ms\n",now);
 
         while(img) {
