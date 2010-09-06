@@ -8,6 +8,8 @@
 #include "ui_gui2.h"
 #include "gui_action.hxx"
 
+#define MKICON(x) ":/new/prefix1/pics/"#x".png"
+#include "myOwnMenu.h"
 /**
     \class MainWindow
 */

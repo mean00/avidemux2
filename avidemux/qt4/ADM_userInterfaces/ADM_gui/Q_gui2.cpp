@@ -18,6 +18,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
 
+#define MENU_DECLARE
 #include "Q_gui2.h"
 #include "ADM_default.h"
 
@@ -78,8 +79,6 @@ extern uint8_t AVDM_setVolume(int volume);
 
 #include "translation_table.h"   
 
-#define MKICON(x) ":/new/prefix1/pics/"#x".png"
-#include "myOwnMenu.h"
 /*
     Declare the table converting widget name to our internal signal           
 */
@@ -377,7 +376,7 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                             a=insert->addAction(icon,m->text);
                         }else
                             a=insert->addAction(m->text);
-                        m->action=a;
+                        m->cookie=(void *)a;
                         break;
                 }
             default:
@@ -434,7 +433,7 @@ void MainWindow::searchMenu(QAction * action,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
-        if(m->action==action)
+        if(m->cookie==(void*)action)
         {
             HandleAction (m->event);
         }

@@ -25,6 +25,7 @@ typedef struct
     Action     event;
     const char *icon; 
 }MenuEntry;
+#ifdef MENU_DECLARE
 MenuEntry myMenuFile[]= {
             {MENU_ACTION,"Open",    NULL,ACT_OPEN_VIDEO,       MKICON(fileopen)},
             {MENU_ACTION,"Append",  NULL,ACT_APPEND_VIDEO     ,NULL},
@@ -106,4 +107,5 @@ MenuEntry myMenuView[]= {
             {MENU_ACTION,"Zoom 1:1",      NULL,ACT_ZOOM_1_1 ,NULL},
             {MENU_ACTION,"Zoom 2:1",      NULL,ACT_ZOOM_2_1 ,NULL},
         };
+#endif
 #endif
