@@ -22,6 +22,11 @@ include(admMainChecks)
 # Add include dirs
 ########################################
 include(admCoreIncludes)
+# Verify ADM_coreConfig is there
+if(NOT EXISTS "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
+        MESSAGE(FATAL_ERROR "CMAKE_INSTALL_PREFIX does not contain include/avidemux/2.6/ADM_coreConfig.h (${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h)")
+endif(NOT EXISTS "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
+
 LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
 #
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_muxerGate/include/")
