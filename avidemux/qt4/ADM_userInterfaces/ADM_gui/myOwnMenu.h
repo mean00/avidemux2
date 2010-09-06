@@ -1,24 +1,24 @@
 
 MenuEntry myMenuFile[]= {
-            {MENU_ACTION,"Open",    NULL,ACT_OpenAvi,       MKICON(fileopen)},
-            {MENU_ACTION,"Append",  NULL,ACT_AppendAvi      ,NULL},
-            {MENU_ACTION,"Save",    NULL,ACT_SaveVideo      ,MKICON(filesaveas)},
+            {MENU_ACTION,"Open",    NULL,ACT_OPEN_VIDEO,       MKICON(fileopen)},
+            {MENU_ACTION,"Append",  NULL,ACT_APPEND_VIDEO     ,NULL},
+            {MENU_ACTION,"Save",    NULL,ACT_SAVE_VIDEO       ,MKICON(filesaveas)},
             {MENU_ACTION,"Close",   NULL,ACT_CLOSE          ,NULL},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
             {MENU_SUBMENU,"Js Project",NULL,ACT_DUMMY       ,NULL},
 
-            {MENU_SUBACTION,"Run jsProject",       NULL,ACT_RunJSProject         ,NULL},
-            {MENU_SUBACTION,"Save as jsProject",   NULL,ACT_SaveJsProject         ,NULL},
+            {MENU_SUBACTION,"Run jsProject",       NULL,ACT_RUN_JS_PROJECT         ,NULL},
+            {MENU_SUBACTION,"Save as jsProject",   NULL,ACT_SAVE_JS_PROJECT         ,NULL},
 
             {MENU_SUBMENU,"tinyPy Project",NULL,ACT_DUMMY       ,NULL},
-            {MENU_SUBACTION,"Run pyProject",       NULL,ACT_RunPyProject         ,NULL},
-            {MENU_SUBACTION,"Save as pyProject",   NULL,ACT_SavePyProject         ,NULL},
+            {MENU_SUBACTION,"Run pyProject",       NULL,ACT_RUN_PY_PROJECT         ,NULL},
+            {MENU_SUBACTION,"Save as pyProject",   NULL,ACT_SAVE_PY_PROJECT         ,NULL},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
-            {MENU_ACTION,"Information",NULL,ACT_AviInfo     ,MKICON(info)},
+            {MENU_ACTION,"Information",NULL,ACT_VIDEO_PROPERTIES,MKICON(info)},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
             {MENU_ACTION,"Connect to avsproxy",NULL,ACT_AVS_PROXY,NULL},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
-            {MENU_ACTION,"Quit",    NULL,ACT_Exit           ,NULL}
+            {MENU_ACTION,"Quit",    NULL,ACT_EXIT           ,NULL}
         };
 
 MenuEntry myMenuEdit[]= {
@@ -31,25 +31,25 @@ MenuEntry myMenuEdit[]= {
             {MENU_ACTION,"Set Marker A",NULL,ACT_MarkA      ,NULL},
             {MENU_ACTION,"Set Marker B",NULL,ACT_MarkB      ,NULL},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
-            {MENU_ACTION,"Preferences", NULL,ACT_Pref       ,NULL},
+            {MENU_ACTION,"Preferences", NULL,ACT_PREFERENCES,NULL},
         };
 
 MenuEntry myMenuVideo[]= {
             {MENU_ACTION,"Decoder Option",  NULL,ACT_DecoderOption      ,NULL},
             {MENU_ACTION,"PostProcessing",  NULL,ACT_SetPostProcessing  ,NULL},
-            {MENU_ACTION,"Filters ",        NULL,ACT_VideoConfigure     ,NULL},
+            {MENU_ACTION,"Filters ",        NULL,ACT_VIDEO_FILTERS      ,NULL},
         };
 
 MenuEntry myMenuAudio[]= {
-            {MENU_ACTION,"Select Track",    NULL,ACT_SelectTrack1       ,NULL},
-            {MENU_ACTION,"Save audio",      NULL,ACT_SaveAudio          ,NULL},
-            {MENU_ACTION,"Filters ",        NULL,ACT_AudioFilters       ,NULL},
+            {MENU_ACTION,"Select Track",    NULL,ACT_AUDIO_SELECT_TRACK ,NULL},
+            {MENU_ACTION,"Save audio",      NULL,ACT_SAVE_AUDIO         ,NULL},
+            {MENU_ACTION,"Filters ",        NULL,ACT_AUDIO_FILTERS      ,NULL},
         };
 
 MenuEntry myMenuHelp[]= {
             {MENU_ACTION,"Build Option",    NULL,ACT_BUILT_IN           ,NULL},
             {MENU_ACTION,"Plugins",         NULL,ACT_PLUGIN_INFO        ,NULL},
-            {MENU_ACTION,"About ",          NULL,ACT_About              ,NULL},
+            {MENU_ACTION,"About ",          NULL,ACT_ABOUT              ,NULL},
         };
 
 MenuEntry myMenuTool[]= {

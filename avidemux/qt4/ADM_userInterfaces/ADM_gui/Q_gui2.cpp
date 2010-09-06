@@ -120,7 +120,7 @@ void MainWindow::comboChanged(int z)
 		}
 		ui.pushButtonVideoConf->setEnabled(b);
 		ui.pushButtonVideoFilter->setEnabled(b);
-		HandleAction (ACT_VideoCodecChanged) ;
+		HandleAction (ACT_VIDEO_CODEC_CHANGED) ;
 	}
 	else if(!strcmp(source,"comboBoxAudio"))  
 	{
@@ -131,7 +131,7 @@ void MainWindow::comboChanged(int z)
 		}
 		ui.pushButtonAudioConf->setEnabled(b);
 		ui.pushButtonAudioFilter->setEnabled(b);
-		HandleAction (ACT_AudioCodecChanged) ;
+		HandleAction (ACT_AUDIO_CODEC_CHANGED) ;
 	}
 	else
 		printf("From +: %s\n",source);
@@ -320,11 +320,11 @@ typedef struct
 
 toolBarTranslate toolbar[]=
 {
-{"actionOpen",              ACT_OpenAvi},
-{"actionSave_video",        ACT_SaveVideo},
-{"actionProperties",        ACT_AviInfo},
-{"actionLoad_run_project",  ACT_RunPyProject},
-{"actionSave_project",      ACT_SavePyProject},
+{"actionOpen",              ACT_OPEN_VIDEO},
+{"actionSave_video",        ACT_SAVE_VIDEO},
+{"actionProperties",        ACT_VIDEO_PROPERTIES},
+{"actionLoad_run_project",  ACT_RUN_PY_PROJECT},
+{"actionSave_project",      ACT_SAVE_PY_PROJECT},
 //{"actionPreviewInput",ACT_PreviewToggle},
 //{"actionPreviewOutput",ACT_PreviewToggle},
 
@@ -649,7 +649,7 @@ static bool first=true;
     if(first)
     {
         first=false;
-        HandleAction(ACT_Exit);
+        HandleAction(ACT_EXIT);
     }
     event->accept();
 //         event->ignore();

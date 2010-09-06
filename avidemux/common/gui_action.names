@@ -1,26 +1,28 @@
-// load/sabe
-ACT(OpenAvi)
-ACT(AppendAvi)
-ACT(AviInfo)
+// load/save
+ACT(OPEN_VIDEO)
+ACT(APPEND_VIDEO)
 ACT(CLOSE)
-ACT(Exit)
+ACT(EXIT)
+
+// Misc
 ACT(PlayAvi)
 ACT(StopAvi)
-ACT(RecentFiles)
 ACT(SetPostProcessing)
+
 //----- SAVE -----
 ACT(SAVE_BEGIN)
-ACT(SaveImg)
-ACT(SaveJPG)
-ACT(SaveBunchJPG)
-ACT(SaveVideo)
-ACT(SaveAudio)
-ACT(SaveJsProject)
-ACT(SavePyProject)
+ACT(SAVE_BMP)
+ACT(SAVE_JPG)
+ACT(SAVE_BUNCH_OF_JPG)
+ACT(SAVE_VIDEO)
+ACT(SAVE_AUDIO)
+ACT(SAVE_JS_PROJECT)
+ACT(SAVE_PY_PROJECT)
 ACT(SAVE_END)
-// /SAVE
-ACT(RunJSProject)
-ACT(RunPyProject)
+
+// Project
+ACT(RUN_JS_PROJECT)
+ACT(RUN_PY_PROJECT)
 
 //--- NAVIGATE----
 ACT(NAVIGATE_BEGIN)
@@ -44,44 +46,48 @@ ACT(GotoMarkA)
 ACT(GotoMarkB)
 ACT(Scale)
 ACT(NAVIGATE_END)
-//--- /NAVIGATE----
-ACT(SavePref)
+ACT(JumpToTime)
+
+// Info
+ACT(VIDEO_PROPERTIES)
+ACT(ABOUT)
+ACT(PREFERENCES)
+ACT(BUILT_IN)
+ACT(PLUGIN_INFO)
+// /info
+
+// Audio
+ACT(AUDIO_FILTERS)
+ACT(AUDIO_CODEC_CONFIGURE)
+ACT(AUDIO_CODEC_CHANGED)
+ACT(AUDIO_SELECT_TRACK)
+// /Audio
+
+// Video
+ACT(VIDEO_FILTERS)
+ACT(VIDEO_CODEC_CONFIGURE)
+ACT(VIDEO_CODEC_CHANGED)
+
+// Editor
 ACT(MarkA)
 ACT(MarkB)
-ACT(AudioFilters)
-ACT(VideoParameter)
-
 ACT(Copy)
 ACT(Cut)
 ACT(Paste)
 ACT(Delete)
-ACT(PreviewToggle)
-ACT(DecoderOption)
-
-ACT(SelectEncoder)
-ACT(Fast)
-ACT(AudioConfigure)
-
-ACT(OutputToggle)
-
-ACT(VideoConfigure)
-ACT(ContainerConfigure)
-
 ACT(ResetSegments)
 
-ACT(VideoCodec)
-ACT(AudioCodec)
-ACT(About)
+// Misc conf
+ACT(DecoderOption)
+ACT(SelectEncoder)
+ACT(ContainerConfigure)
 
-ACT(Pref)
-
-ACT(JumpToTime)
-ACT(AudioCodecChanged)
-ACT(VideoCodecChanged)
+ACT(RecentFiles)
+ACT(SavePref)
+ACT(PreviewToggle)
+ACT(OutputToggle)
 ACT(PreviewChanged)
-ACT(SelectTrack1)
-ACT(ViewMain)
-ACT(ViewSide)
+
 ACT(TimeShift)
 
 ACT(RECENT0)
@@ -89,18 +95,15 @@ ACT(RECENT1)
 ACT(RECENT2)
 ACT(RECENT3)
 
-
-
 ACT(ZOOM_1_4)
 ACT(ZOOM_1_2)
 ACT(ZOOM_1_1)
 ACT(ZOOM_2_1)
 ACT(ZOOM_4_1)
-ACT(BUILT_IN)
+
 ACT(HEX_DUMP)
 ACT(SIZE_DUMP)
 ACT(AVS_PROXY)
 ACT(JOG)
-ACT(PLUGIN_INFO)
 ACT(JS_SHELL)
 ACT(PY_SHELL)

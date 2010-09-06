@@ -156,12 +156,8 @@ int nw;
                 ADM_assert(name[rank]);
                 A_openAvi (name[rank]);
                 return;
-        case ACT_ViewMain: UI_toogleMain();return;
-        case ACT_ViewSide: UI_toogleSide();return;
-      case ACT_AudioConfigure:
-//    		audioCodecSelect();
 		return;
-	case ACT_VideoConfigure:
+	case ACT_VIDEO_CODEC_CONFIGURE:
     		videoEncoder6Configure();
             return;
     case ACT_ContainerConfigure:    
@@ -170,21 +166,21 @@ int nw;
             ADM_mux_configure(index);
             return;
             }
-    case ACT_VideoCodecChanged:
+    case ACT_VIDEO_CODEC_CHANGED:
     		nw=UI_getCurrentVCodec();
     		videoEncoder6_SetCurrentEncoder(nw);
             return;
-   case ACT_AudioCodecChanged:
+   case ACT_AUDIO_CODEC_CHANGED:
             nw=UI_getCurrentACodec();
             audioCodecSetByIndex(nw);
             return;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
-    case ACT_RunPyProject:
+    case ACT_RUN_PY_PROJECT:
             GUI_FileSelRead (QT_TR_NOOP("Select python script to Run"),(SELFILE_CB *) A_parseTinyPyScript);
     		return;
-    case ACT_RunJSProject:
+    case ACT_RUN_JS_PROJECT:
             GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
 
@@ -195,19 +191,16 @@ int nw;
 			A_openAvi (file);
 		}
 		return;
-    case ACT_About :
+    case ACT_ABOUT :
     		 DIA_about( );
 		 return;
-    case ACT_VideoCodec:
-      videoEncoder6Configure();
-      return;
-    case ACT_AudioCodec:
+    case ACT_AUDIO_CODEC_CONFIGURE:
       audioCodecConfigure();
       return;
-    case ACT_AudioFilters:
+    case ACT_AUDIO_FILTERS:
       audioFilterConfigure();
       return;
-    case ACT_Pref:
+    case ACT_PREFERENCES:
         if(playing) return;
     	if(DIA_Preferences())
         {
@@ -217,7 +210,7 @@ int nw;
     case ACT_SavePref:
         prefs->save ();
         return;
-    case ACT_Exit:
+    case ACT_EXIT:
       { uint32_t saveprefsonexit;
          prefs->get(FEATURE_SAVEPREFSONEXIT,&saveprefsonexit);
          if( saveprefsonexit )
@@ -256,7 +249,7 @@ int nw;
         {
           case ACT_JOG:
                 break;
-          case ACT_OpenAvi:
+          case ACT_OPEN_VIDEO:
                 GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), (SELFILE_CB *)A_openAvi);
                 break;
           default:
@@ -294,17 +287,17 @@ int nw;
                 changePreviewZoom(currentZoom);
                 admPreview::samePicture();
                 break;
-        case ACT_SelectTrack1:
+        case ACT_AUDIO_SELECT_TRACK:
                 A_audioTrack();
                 break;
 
-    case ACT_OpenAvi:
+    case ACT_OPEN_VIDEO:
         GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."),(SELFILE_CB *) A_openAvi);
         break;
-    case ACT_AppendAvi:
+    case ACT_APPEND_VIDEO:
         GUI_FileSelRead (QT_TR_NOOP("Select AVI File to Append..."),(SELFILE_CB *) A_appendAvi);
         break;
-    case ACT_AviInfo:
+    case ACT_VIDEO_PROPERTIES:
         DIA_properties ();
         break;
     case ACT_PlayAvi:
@@ -426,7 +419,7 @@ int nw;
       video_body->setDecodeParam ( admPreview::getCurrentPts());
 
       break;
-    case ACT_VideoParameter:
+    case ACT_VIDEO_FILTERS:
         GUI_handleVFilter();
         break;
 

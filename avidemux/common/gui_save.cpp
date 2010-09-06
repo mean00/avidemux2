@@ -45,11 +45,11 @@ void HandleAction_Save(Action action)
 {
     switch(action)
     {
-    case ACT_SavePyProject:
+    case ACT_SAVE_PY_PROJECT:
             GUI_FileSelWrite (QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
             UI_refreshCustomMenu();
             break;
-    case ACT_SaveJsProject:
+    case ACT_SAVE_JS_PROJECT:
       GUI_FileSelWrite (QT_TR_NOOP("Select jsProject to Save"), A_saveJsProject);
 	  UI_refreshCustomMenu();
       break;
@@ -66,25 +66,25 @@ void HandleAction_Save(Action action)
         }
       break;
 #endif      
-    case ACT_SaveAudio:
+    case ACT_SAVE_AUDIO:
       	{
           GUI_FileSelWrite (QT_TR_NOOP("Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
         }
       break;
 
-    case ACT_SaveBunchJPG:
+    case ACT_SAVE_BUNCH_OF_JPG:
       GUI_FileSelWrite (QT_TR_NOOP("Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
     	break;
-    case ACT_SaveImg:
+    case ACT_SAVE_BMP:
       GUI_FileSelWrite (QT_TR_NOOP("Select BMP to Save"), (SELFILE_CB *)A_saveImg);
       //GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       break;
-    case ACT_SaveJPG :
+    case ACT_SAVE_JPG :
       GUI_FileSelWrite (QT_TR_NOOP("Select JPEG to Save"), (SELFILE_CB *)A_saveJpg);
       	//GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       	break;
 //----------------------test-----------------------
-    case ACT_SaveVideo:
+    case ACT_SAVE_VIDEO:
       GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"),(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
       break;
 //---------------------------------------------------

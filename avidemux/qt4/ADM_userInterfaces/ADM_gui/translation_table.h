@@ -1,7 +1,7 @@
-#define LIST_OF_BUTTONS     PROCESS(pushButtonVideoConf, ACT_VideoCodec)  \
-PROCESS(pushButtonVideoFilter, ACT_VideoParameter) \
-PROCESS(pushButtonAudioConf, ACT_AudioCodec) \
-PROCESS(pushButtonAudioFilter, ACT_AudioFilters) \
+#define LIST_OF_BUTTONS     PROCESS(pushButtonVideoConf, ACT_VIDEO_CODEC_CONFIGURE)  \
+PROCESS(pushButtonVideoFilter, ACT_VIDEO_FILTERS) \
+PROCESS(pushButtonAudioConf, ACT_AUDIO_CODEC_CONFIGURE) \
+PROCESS(pushButtonAudioFilter, ACT_AUDIO_FILTERS) \
 PROCESS(pushButtonDecoderConf, ACT_DecoderOption) \
 PROCESS(pushButtonFormatConfigure, ACT_ContainerConfigure) \
 PROCESS(toolButtonPlay, ACT_PlayAvi) \
