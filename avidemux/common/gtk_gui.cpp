@@ -107,6 +107,9 @@ void HandleAction (Action action)
 {
   uint32_t nf = 0;
   uint32_t old;
+
+  ADM_warning("************ %s **************\n",getActionName(action));
+
   // handle out of band actions
   // independant load not loaded
 //------------------------------------------------
@@ -128,7 +131,6 @@ int nw;
   switch (action)
     {
         case ACT_TimeShift:
-        case ACT_JumpToTime:
         case ACT_Goto:
                                 brokenAct();
                                 return;

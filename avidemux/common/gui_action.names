@@ -46,7 +46,7 @@ ACT(GotoMarkA)
 ACT(GotoMarkB)
 ACT(Scale)
 ACT(NAVIGATE_END)
-ACT(JumpToTime)
+//ACT(JumpToTime)
 
 // Info
 ACT(VIDEO_PROPERTIES)

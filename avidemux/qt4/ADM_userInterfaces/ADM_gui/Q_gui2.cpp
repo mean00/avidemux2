@@ -192,7 +192,7 @@ void MainWindow::currentFrameChanged(void)
 
 void MainWindow::currentTimeChanged(void)
 {
-	HandleAction(ACT_JumpToTime);
+	HandleAction(ACT_GotoTime);
 
 	this->setFocus(Qt::OtherFocusReason);
 }
@@ -219,14 +219,6 @@ MainWindow::MainWindow() : QMainWindow()
 	groupPreviewModes->addAction(ui.actionPreviewInput);
 	groupPreviewModes->addAction(ui.actionPreviewOutput);
 	connect(groupPreviewModes, SIGNAL(triggered(QAction*)), this, SLOT(previewModeChanged(QAction*)));
-
-	// Zoom modes
-	QActionGroup *groupZoomModes = new QActionGroup(this);
-
-	groupZoomModes->addAction(ui.actionZoom_1_4);
-	groupZoomModes->addAction(ui.actionZoom_1_2);
-	groupZoomModes->addAction(ui.actionZoom_1_1);
-	groupZoomModes->addAction(ui.actionZoom_2_1);
 
 	/*
 	Connect our button to buttonPressed
@@ -377,6 +369,11 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                         }else
                             a=insert->addAction(m->text);
                         m->cookie=(void *)a;
+                        if(m->shortCut)
+                        {
+                            QKeySequence s(m->shortCut);
+                            a->setShortcut(s);
+                        }
                         break;
                 }
             default:
@@ -538,13 +535,6 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 			break;
 		case QEvent::FocusOut:
-			if (watched == ui.currentTime)
-			{
-				uint16_t hh, mm, ss, ms;
-
-				if (!UI_readCurTime(hh, mm, ss, ms))
-					UI_updateTimeCount(currentFrame, currentFps);
-			}
             break;
         default:
             break;
