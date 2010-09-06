@@ -87,19 +87,19 @@ MenuEntry myMenuTool[]= {
 
 MenuEntry myMenuGo[]= {
             {MENU_ACTION,"Play/Stop",           NULL,ACT_PlayAvi        ,MKICON(player_play),   "Space"},
-            {MENU_ACTION,"Previous Frame",      NULL,ACT_PreviousFrame  ,MKICON(previous),      NULL},
-            {MENU_ACTION,"Next Frame",          NULL,ACT_NextFrame      ,MKICON(next),          NULL},
-            {MENU_ACTION,"Previous Intra Frame",NULL,ACT_PreviousKFrame ,MKICON(player_rew),    NULL},
-            {MENU_ACTION,"Next Intra Frame",    NULL,ACT_NextKFrame     ,MKICON(player_fwd),    NULL},
+            {MENU_ACTION,"Previous Frame",      NULL,ACT_PreviousFrame  ,MKICON(previous),      "Left"},
+            {MENU_ACTION,"Next Frame",          NULL,ACT_NextFrame      ,MKICON(next),          "Right"},
+            {MENU_ACTION,"Previous Intra Frame",NULL,ACT_PreviousKFrame ,MKICON(player_rew),    "Down"},
+            {MENU_ACTION,"Next Intra Frame",    NULL,ACT_NextKFrame     ,MKICON(player_fwd),    "Up"},
             {MENU_ACTION,"Previous Black Frame",NULL,ACT_PrevBlackFrame ,MKICON(prev_black),    NULL},
             {MENU_ACTION,"Next Black Frame",    NULL,ACT_NextBlackFrame ,MKICON(next_black),    NULL},
-            {MENU_ACTION,"First Frame",         NULL,ACT_Begin          ,MKICON(player_start),  NULL},
-            {MENU_ACTION,"Last Frame",          NULL,ACT_End            ,MKICON(player_end),    NULL},
+            {MENU_ACTION,"First Frame",         NULL,ACT_Begin          ,MKICON(player_start),  "Home"},
+            {MENU_ACTION,"Last Frame",          NULL,ACT_End            ,MKICON(player_end),    "End"},
             {MENU_SEPARATOR,NULL,               NULL,ACT_DUMMY          ,NULL,NULL},
-            {MENU_ACTION,"Go To Marker A",      NULL,ACT_GotoMarkA      ,MKICON(markA)         ,NULL},
-            {MENU_ACTION,"Go To Marker B",      NULL,ACT_GotoMarkB      ,MKICON(markB)         ,NULL},
+            {MENU_ACTION,"Go To Marker A",      NULL,ACT_GotoMarkA      ,MKICON(markA)         ,"PgUp"},
+            {MENU_ACTION,"Go To Marker B",      NULL,ACT_GotoMarkB      ,MKICON(markB)         ,"PgDown"},
             {MENU_SEPARATOR,NULL,               NULL,ACT_DUMMY          ,NULL,NULL},
-            {MENU_ACTION,"Go To Time",          NULL,ACT_GotoTime       ,NULL,NULL},
+            {MENU_ACTION,"Go To Time",          NULL,ACT_GotoTime       ,NULL,                 "Ctrl+T" },
         };
 
 MenuEntry myMenuView[]= {
