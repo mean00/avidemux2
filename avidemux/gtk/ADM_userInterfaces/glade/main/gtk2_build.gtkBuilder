@@ -573,7 +573,9 @@
                         <child>
                           <object class="GtkImage" id="image591">
                             <property name="visible">True</property>
-                            <property name="pixbuf">play.xpm</property>
+                            <property name="xpad">1</property>
+                            <property name="ypad">2</property>
+                            <property name="pixbuf">player_play.png</property>
                           </object>
                         </child>
                       </object>
@@ -593,7 +595,7 @@
                         <child>
                           <object class="GtkImage" id="image5056">
                             <property name="visible">True</property>
-                            <property name="pixbuf">stop.xpm</property>
+                            <property name="pixbuf">player_stop.png</property>
                           </object>
                         </child>
                       </object>
@@ -614,7 +616,7 @@
                         <child>
                           <object class="GtkImage" id="image593">
                             <property name="visible">True</property>
-                            <property name="pixbuf">backward.xpm</property>
+                            <property name="pixbuf">previous.png</property>
                           </object>
                         </child>
                       </object>
@@ -635,7 +637,7 @@
                         <child>
                           <object class="GtkImage" id="image594">
                             <property name="visible">True</property>
-                            <property name="pixbuf">forward.xpm</property>
+                            <property name="pixbuf">next.png</property>
                           </object>
                         </child>
                       </object>
@@ -656,7 +658,7 @@
                         <child>
                           <object class="GtkImage" id="image595">
                             <property name="visible">True</property>
-                            <property name="pixbuf">Kbackward.xpm</property>
+                            <property name="pixbuf">player_rew.png</property>
                           </object>
                         </child>
                       </object>
@@ -677,7 +679,7 @@
                         <child>
                           <object class="GtkImage" id="image596">
                             <property name="visible">True</property>
-                            <property name="pixbuf">Kforward.xpm</property>
+                            <property name="pixbuf">player_fwd.png</property>
                           </object>
                         </child>
                       </object>
@@ -697,7 +699,7 @@
                         <child>
                           <object class="GtkImage" id="image2306">
                             <property name="visible">True</property>
-                            <property name="pixbuf">markA.xpm</property>
+                            <property name="pixbuf">markA.png</property>
                           </object>
                         </child>
                       </object>
@@ -717,7 +719,7 @@
                         <child>
                           <object class="GtkImage" id="image2307">
                             <property name="visible">True</property>
-                            <property name="pixbuf">markB.xpm</property>
+                            <property name="pixbuf">markB.png</property>
                           </object>
                         </child>
                       </object>
@@ -737,7 +739,7 @@
                         <child>
                           <object class="GtkImage" id="image2308">
                             <property name="visible">True</property>
-                            <property name="pixbuf">xpm_prevblack.xpm</property>
+                            <property name="pixbuf">prev_black.png</property>
                           </object>
                         </child>
                       </object>
@@ -757,7 +759,7 @@
                         <child>
                           <object class="GtkImage" id="image2309">
                             <property name="visible">True</property>
-                            <property name="pixbuf">xpm_nextblack.xpm</property>
+                            <property name="pixbuf">next_black.png</property>
                           </object>
                         </child>
                       </object>
@@ -777,7 +779,7 @@
                         <child>
                           <object class="GtkImage" id="image5057">
                             <property name="visible">True</property>
-                            <property name="pixbuf">begin.xpm</property>
+                            <property name="pixbuf">player_start.png</property>
                           </object>
                         </child>
                       </object>
@@ -797,7 +799,7 @@
                         <child>
                           <object class="GtkImage" id="image2245">
                             <property name="visible">True</property>
-                            <property name="pixbuf">end.xpm</property>
+                            <property name="pixbuf">player_end.png</property>
                           </object>
                         </child>
                       </object>
@@ -822,46 +824,7 @@
                 <child>
                   <object class="GtkHBox" id="hbox16">
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkLabel" id="label1">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Frame: </property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="boxCurFrame">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="max_length">8</property>
-                        <property name="width_chars">8</property>
-                        <property name="text" translatable="yes">0</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="labelTotalFrame">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="xpad">5</property>
-                        <property name="label" translatable="yes">/ 0000000</property>
-                        <property name="selectable">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
+                    <property name="spacing">7</property>
                     <child>
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
@@ -870,20 +833,21 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">3</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkEntry" id="boxCurTime">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="invisible_char">•</property>
                         <property name="width_chars">13</property>
                         <property name="text" translatable="yes">00:00:00.000</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">4</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -897,7 +861,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">5</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
@@ -910,7 +874,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">6</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>

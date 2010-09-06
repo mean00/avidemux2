@@ -3,7 +3,6 @@ SET(ADM_LIB ADM_toolkitGtk)
 SET(${ADM_LIB}_SRCS
 	ADM_tray_gtk.cpp  
         gtkmarkscale.c jogshuttle.c ADM_jogshuttle.cpp  mediactrl.c
-        ADM_icons.cpp
         GUI_glade.cpp
 
 )

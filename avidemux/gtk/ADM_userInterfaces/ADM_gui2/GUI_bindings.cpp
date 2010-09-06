@@ -42,6 +42,7 @@
 #include "A_functions.h"
 
 #define MKICON(x) NULL
+#define MENU_DECLARE
 #include "myOwnMenu.h"
 static void ui_setMenus(void);
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
@@ -60,8 +61,6 @@ GtkWidget        *guiRootWindow=NULL;
 static GtkWidget *guiDrawingArea=NULL;
 static GtkWidget *guiSlider=NULL;
 
-static GtkWidget *guiCurFrame=NULL;
-static GtkWidget *guiTotalFrame=NULL;
 static GtkWidget *guiCurTime=NULL;
 static GtkWidget *guiTotalTime=NULL;
 
@@ -408,9 +407,6 @@ uint8_t  bindGUI( void )
 
 	sliderAdjustment=gtk_range_get_adjustment (GTK_RANGE(guiSlider));
 
-	ADM_LOOKUP(guiCurFrame,boxCurFrame);
-	ADM_LOOKUP(guiTotalFrame,labelTotalFrame);
-
 	ADM_LOOKUP(guiCurTime,boxCurTime);
 	ADM_LOOKUP(guiTotalTime,labelTotalTime);
 
@@ -438,8 +434,6 @@ uint8_t  bindGUI( void )
 	gtk_signal_connect(GTK_OBJECT(guiSlider), "button_release_event", GTK_SIGNAL_FUNC(UI_SliderReleased), NULL);
 
 	// Current Frame
-	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "focus_in_event", GTK_SIGNAL_FUNC(UI_grabFocus), (void *) NULL);
-	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "focus_out_event", GTK_SIGNAL_FUNC(UI_loseFocus), (void *) NULL);
 //	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_JumpToFrame);
 
     // Volume
@@ -475,7 +469,7 @@ uint8_t  bindGUI( void )
 			GTK_WIDGET_UNSET_FLAGS (bt, GTK_CAN_FOCUS);
 		}
 #endif
-	GTK_WIDGET_SET_FLAGS (glade.getWidget("boxCurFrame"), GTK_CAN_FOCUS);
+	
 
 // set some tuning
     gtk_widget_set_usize(guiDrawingArea, 512, 288);
@@ -777,7 +771,7 @@ void UI_updateFrameCount(uint32_t curFrame)
     // frames
     //sprintf(text, "%"LU" ", curFrame);
 //    gtk_label_set_text((GtkLabel *) guiCurFrame, text);
-	gtk_write_entry(guiCurFrame,curFrame);
+//	gtk_write_entry(guiCurFrame,curFrame);
 
 }
 /**
@@ -812,17 +806,6 @@ void UI_setCurrentTime(uint64_t curTime)
 
 }
 
-void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
-{
-  char text[80];
- uint32_t mm,hh,ss,ms;
-
- 	frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
-  	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-//     gtk_label_set_text((GtkLabel *) guiCurTime, text);
-	gtk_write_entry_string(guiCurTime,text);
-
-}
 ///
 /// Called upon destroy event
 /// just cleanly exit the application
@@ -1103,19 +1086,6 @@ void UI_JumpDone(void )
 {
 
 
-}
-/**
-    \fn UI_readCurFrame
-*/
-
-int UI_readCurFrame( void )
-{
-	int i = gtk_read_entry(guiCurFrame);
-
-	if(i < 0)
-		i = 0;
-
-	return i;
 }
 /**
     \fn UI_readCurTime

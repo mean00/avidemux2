@@ -27,13 +27,6 @@ void        add_pixmap_directory       (const gchar     *directory);
  * Private Functions.
  */
 
-/* This is used to create the pixmaps used in the interface. */
-GtkWidget*  create_pixmap              (GtkWidget       *widget,
-                                        const gchar     *filename);
-
-/* This is used to create the pixbufs used in the interface. */
-GdkPixbuf*  create_pixbuf              (const gchar     *filename);
-
 /* This is used to set ATK action descriptions. */
 void        glade_set_atk_action_description (AtkAction       *action,
                                               const gchar     *action_name,

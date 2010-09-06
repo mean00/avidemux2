@@ -6,7 +6,7 @@ avidemux_icon_small.png
 audio-volume-medium.png
 )
 
-FILE(GLOB ADM_icons ${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_icons/*.png)
+FILE(GLOB ADM_icons ${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/qt4/ADM_userInterfaces/ADM_gui/pics/*.png)
 INSTALL(FILES ${ADM_glade} ${ADM_icons} DESTINATION "${AVIDEMUX_LIB_DIR}/ADM_glade/main")
 
 

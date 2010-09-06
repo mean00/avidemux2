@@ -52,40 +52,10 @@ void ADM_initUIGtk(GtkWidget *window)
 GtkWidget *GUI_PixmapButtonDefault(GdkWindow * window, const gchar ** xpm,
                                   const gchar * tooltip)
 {
-    return GUI_PixmapButton(window, xpm, tooltip, 2);
+    //return GUI_PixmapButton(window, xpm, tooltip, 2);
+#warning broken
+        return NULL;
 }
-
-//____________________________________________
-//  Used to pack an icon onto a button
-//  Adapted from GTK API tutorial
-//____________________________________________
-GtkWidget *GUI_PixmapButton(GdkWindow * window, const gchar ** xpmd,
-                            const gchar * tooltip, gint border)
-{
-
-    //
-    GtkWidget *button;
-    GtkWidget *pixmap;
-    GdkPixmap *xpm;
-    GdkBitmap *mask;
-
-    xpm = gdk_pixmap_create_from_xpm_d(window, &mask, NULL, (gchar **)xpmd);
-    pixmap = gtk_pixmap_new(xpm, mask);
-    button = gtk_button_new();
-
-    gtk_container_set_border_width(GTK_CONTAINER(button), border);
-    gtk_container_add(GTK_CONTAINER(button), pixmap);
-
-    if (tooltips == NULL)
-        tooltips = gtk_tooltips_new();
-    if (tooltip != NULL)
-        gtk_tooltips_set_tip(tooltips, button, tooltip, NULL);
-
-    gtk_widget_show_all(button);
-
-    return button;
-}
-
 
 void MenuAppend(GtkMenu * menu, const char *text)
 {

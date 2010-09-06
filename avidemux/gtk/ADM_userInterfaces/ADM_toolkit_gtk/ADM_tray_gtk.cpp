@@ -71,12 +71,13 @@ ADM_tray::ADM_tray(void* parent)
 
 		for (int i = 0; i < nb; i++)
 		{
-			pixbuf[i] = create_pixbuf(animated[i]);
+#warning broken
+		//	pixbuf[i] = create_pixbuf(animated[i]);
 
 			if (!pixbuf[i])
 			{
 				printf("Failed to create <%s>\n", animated[i]);
-				ADM_assert(0);
+			//	ADM_assert(0);
 			}
 		}
 	}
