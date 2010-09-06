@@ -456,7 +456,7 @@ uint8_t  bindGUI( void )
 		uint32_t nb=sizeof(buttonCallback)/sizeof(buttonCallBack_S);
 		GtkWidget *bt;
 
-#if 0
+
 		for(uint32_t i=0;i<nb;i++)
 		{
 			bt= glade.getWidget(buttonCallback[i].name);
@@ -464,11 +464,13 @@ uint8_t  bindGUI( void )
 			{
 				printf("Binding failed for %s\n",buttonCallback[i].name);
 				//ADM_assert(0);
-			}
-			ADD_SIGNAL(bt,buttonCallback[i].signal,buttonCallback[i].action);
-			GTK_WIDGET_UNSET_FLAGS (bt, GTK_CAN_FOCUS);
+			}else
+            {
+                ADD_SIGNAL(bt,buttonCallback[i].signal,buttonCallback[i].action);
+                GTK_WIDGET_UNSET_FLAGS (bt, GTK_CAN_FOCUS);
+            }
 		}
-#endif
+
 	
 
 // set some tuning
