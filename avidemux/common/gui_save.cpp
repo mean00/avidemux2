@@ -45,14 +45,15 @@ void HandleAction_Save(Action action)
 {
     switch(action)
     {
-    case ACT_SavePyWork:
+    case ACT_SavePyProject:
             GUI_FileSelWrite (QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
             UI_refreshCustomMenu();
             break;
-    case ACT_SaveWork:
-      GUI_FileSelWrite (QT_TR_NOOP("Select Project to Save"), A_saveJsProject);
+    case ACT_SaveJsProject:
+      GUI_FileSelWrite (QT_TR_NOOP("Select jsProject to Save"), A_saveJsProject);
 	  UI_refreshCustomMenu();
       break;
+#if 0
    case ACT_SaveCurrentWork:
         {
           const std::string pj=video_body->getProjectName();
@@ -64,11 +65,8 @@ void HandleAction_Save(Action action)
           }
         }
       break;
-      
-    case ACT_SaveRaw:
-        GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Deprecated function."));        
-      break;
-    case ACT_SaveWave:
+#endif      
+    case ACT_SaveAudio:
       	{
           GUI_FileSelWrite (QT_TR_NOOP("Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
         }

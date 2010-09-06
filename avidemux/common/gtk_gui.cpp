@@ -128,10 +128,8 @@ int nw;
   switch (action)
     {
         case ACT_TimeShift:
-        case ACT_JumpToFrame:
         case ACT_JumpToTime:
         case ACT_Goto:
-        case ACT_AudioMap:
                                 brokenAct();
                                 return;
         case ACT_PY_SHELL:
@@ -145,9 +143,6 @@ int nw;
                                 return;
         case ACT_BUILT_IN:
                                 DIA_builtin();
-                                return;
-        case ACT_HANDLE_JOB:
-                                GUI_jobs();
                                 return;
         case ACT_RECENT0:
         case ACT_RECENT1:
@@ -169,6 +164,12 @@ int nw;
 	case ACT_VideoConfigure:
     		videoEncoder6Configure();
             return;
+    case ACT_ContainerConfigure:    
+            {
+            int index=UI_GetCurrentFormat();
+            ADM_mux_configure(index);
+            return;
+            }
     case ACT_VideoCodecChanged:
     		nw=UI_getCurrentVCodec();
     		videoEncoder6_SetCurrentEncoder(nw);
@@ -216,13 +217,6 @@ int nw;
     case ACT_SavePref:
         prefs->save ();
         return;
-    case ACT_SetMuxParam:
-        {
-        int index=UI_GetCurrentFormat();
-        ADM_mux_configure(index);
-        return;
-        }
-      break;
     case ACT_Exit:
       { uint32_t saveprefsonexit;
          prefs->get(FEATURE_SAVEPREFSONEXIT,&saveprefsonexit);
@@ -304,17 +298,6 @@ int nw;
                 A_audioTrack();
                 break;
 
-        case ACT_Bitrate:
-    			{
-				uint32_t a,b;
-//				DIA_Calculator(&a,&b );
-			}
-    			break;
-
-        case ACT_ADD_JOB:
-            A_addJob();
-            break;
-
     case ACT_OpenAvi:
         GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."),(SELFILE_CB *) A_openAvi);
         break;
@@ -323,9 +306,6 @@ int nw;
         break;
     case ACT_AviInfo:
         DIA_properties ();
-        break;
-	case ACT_BitRate:
-		 GUI_displayBitrate(  );
         break;
     case ACT_PlayAvi:
       GUI_PlayAvi ();
@@ -354,9 +334,6 @@ int nw;
     case ACT_SetPostProcessing:
       A_setPostproc();
       break;
-    case ACT_AllBlackFrames:
-      GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"), (SELFILE_CB *)A_ListAllBlackFrames);
-        break;
     case ACT_MarkA:
     case ACT_MarkB:
     {
@@ -407,9 +384,6 @@ int nw;
 		break;
       break;
 
-    case ACT_VideoCheck:
-    		A_videoCheck();
-		break;
     case ACT_ResetSegments:
        if(avifileinfo)
          if(GUI_Question(QT_TR_NOOP("Are you sure?")))
@@ -447,52 +421,6 @@ int nw;
         }
         
       break;
-
-    case ACT_ChangeFPS:
-    	{
-         float  fps;
-         aviInfo info;
-         uint32_t useDefined=1;
-         uint32_t defaultFps[3]={25000,23976,29970};
-         uint32_t index=0;
-         video_body->getVideoInfo (&info);
-         fps=info.fps1000;
-         fps/=1000.;
-
-
-
-        diaElemToggle togUsePredefined(&useDefined,QT_TR_NOOP("Use custom value"));
-        diaElemFloat  fpsFloatValue(&fps,QT_TR_NOOP("Frame Rate"),1.,200.,QT_TR_NOOP("_Frames per second"));
-
-        diaMenuEntry menuFps[]={
-              {0,QT_TR_NOOP("PAL - 25 FPS")},
-              {1,QT_TR_NOOP("FILM- 24 FPS")},
-              {2,QT_TR_NOOP("NTSC- 30 FPS")}};
-
-         diaElemMenu      stdFps(&index,QT_TR_NOOP("Standard FrameRate:"),3,menuFps);
-
-        togUsePredefined.link(1,&fpsFloatValue);
-        togUsePredefined.link(0,&stdFps);
-
-        diaElem *elems[3]={&togUsePredefined,&fpsFloatValue,&stdFps};
-        if(diaFactoryRun(QT_TR_NOOP("Change FrameRate"),3,elems))
-        {
-          if(useDefined)
-          {
-            info.fps1000 = (uint32_t) (floor (fps * 1000.+0.49));
-          }else
-          {
-            info.fps1000=defaultFps[index];
-          }
-          video_body->updateVideoInfo (&info);
-          printf("[MainUI] New framerate :%u\n",info.fps1000);
-          // update display
-          video_body->getVideoInfo (avifileinfo);
-          GUI_setAllFrameAndTime();
-
-        }
-	}
-      break;
       // set decoder option (post processing ...)
     case ACT_DecoderOption:
       video_body->setDecodeParam ( admPreview::getCurrentPts());
@@ -501,31 +429,6 @@ int nw;
     case ACT_VideoParameter:
         GUI_handleVFilter();
         break;
-#if 0
-      // first remove current viewer
-      if (getPreviewMode()!=ADM_PREVIEW_NONE)
-        {
-	         admPreview::stop();
-        }
-      if( getLastVideoFilter()->getInfo()->width % 8 ){
-        GUI_Error_HIG(QT_TR_NOOP("Width is not a multiple of 8"),
-                      QT_TR_NOOP("This will make trouble for AVI files."));
-      }
-      if (getPreviewMode()!=ADM_PREVIEW_NONE)
-      {
-         admPreview::start();
-//         admPreview::update (curframe);
-      }
-#endif
-      break;
-
-    case ACT_RebuildKF:
-      if (GUI_Question (QT_TR_NOOP("Rebuild all Keyframes?")))
-	{
-	  A_rebuildKeyFrame ();
-	  //GUI_Info_HIG ("Done", "Save your file and restart Avidemux.");
-	}
-      break;
 
    case ACT_HEX_DUMP:
       GUI_showCurrentFrameHex();

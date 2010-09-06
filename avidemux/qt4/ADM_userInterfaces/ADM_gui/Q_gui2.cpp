@@ -21,9 +21,6 @@
 #include "Q_gui2.h"
 #include "ADM_default.h"
 
-//#include "ADM_codecs/ADM_codec.h"
-#include "gui_action.hxx"
-//#include "ADM_editor/ADM_outputfmt.h"
 #include "DIA_fileSel.h"
 #include "ADM_vidMisc.h"
 #include "prefs.h"
@@ -79,7 +76,10 @@ extern uint8_t AVDM_setVolume(int volume);
 #define CONNECT_TB(object,zzz) connect( (ui.object),SIGNAL(clicked(bool)),this,SLOT(toolButtonPressed(bool)));
 #define DECLARE_VAR(object,signal_name) {#object,signal_name},
 
-#include "translation_table.h"    
+#include "translation_table.h"   
+
+#define MKICON(x) ":/new/prefix1/pics/"#x".png"
+#include "myOwnMenu.h"
 /*
     Declare the table converting widget name to our internal signal           
 */
@@ -187,7 +187,7 @@ void MainWindow::timeChangeFinished(void)
 
 void MainWindow::currentFrameChanged(void)
 {
-	HandleAction(ACT_JumpToFrame);
+//	HandleAction(ACT_JumpToFrame);
 
 	this->setFocus(Qt::OtherFocusReason);
 }
@@ -279,6 +279,9 @@ MainWindow::MainWindow() : QMainWindow()
 
 	//connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
+    // Build file,... menu
+    buildMyMenu();
+
 	/* Build the custom menu */
     jsMenu=new QMenu("javaScript");
     pyMenu=new QMenu("tinyPython");
@@ -298,6 +301,67 @@ MainWindow::MainWindow() : QMainWindow()
     
 }
 /**
+    buildFileMenu
+*/
+bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
+{
+    for(int i=0;i<nb;i++)
+    {
+        MenuEntry *m=menu+i;
+        switch(m->type)
+        {
+            case MENU_SEPARATOR:
+                root->addSeparator();
+                break;
+            case MENU_ACTION:
+                {   
+                        
+                        QAction *a=NULL;
+                        if(m->icon) 
+                        {
+                            QIcon icon(m->icon);
+                            a=root->addAction(icon,m->text);
+                        }else
+                            a=root->addAction(m->text);
+                        m->action=a;
+                        break;
+                }
+            default:
+                break;
+        }
+    }
+    return true;
+}
+/**
+    buildFileMenu
+*/
+bool MainWindow::buildMyMenu(void)
+{
+    connect( ui.menuFile,SIGNAL(triggered(QAction*)),this,SLOT(searchFileMenu(QAction*)));
+    buildMenu(ui.menuFile,myMenuFile, sizeof(myMenuFile)/sizeof(MenuEntry));
+
+    connect( ui.menuEdit,SIGNAL(triggered(QAction*)),this,SLOT(searchEditMenu(QAction*)));
+    buildMenu(ui.menuEdit,myMenuEdit, sizeof(myMenuEdit)/sizeof(MenuEntry));
+
+    connect( ui.menuVideo,SIGNAL(triggered(QAction*)),this,SLOT(searchVideoMenu(QAction*)));
+    buildMenu(ui.menuVideo,myMenuVideo, sizeof(myMenuVideo)/sizeof(MenuEntry));
+
+    connect( ui.menuAudio,SIGNAL(triggered(QAction*)),this,SLOT(searchAudioMenu(QAction*)));
+    buildMenu(ui.menuAudio,myMenuAudio, sizeof(myMenuAudio)/sizeof(MenuEntry));
+
+    connect( ui.menuHelp,SIGNAL(triggered(QAction*)),this,SLOT(searchHelpMenu(QAction*)));
+    buildMenu(ui.menuHelp,myMenuHelp, sizeof(myMenuHelp)/sizeof(MenuEntry));
+
+    connect( ui.menuTools,SIGNAL(triggered(QAction*)),this,SLOT(searchToolMenu(QAction*)));
+    buildMenu(ui.menuTools,myMenuTool, sizeof(myMenuTool)/sizeof(MenuEntry));
+
+    connect( ui.menuGo,SIGNAL(triggered(QAction*)),this,SLOT(searchGoMenu(QAction*)));
+    buildMenu(ui.menuGo,myMenuGo, sizeof(myMenuGo)/sizeof(MenuEntry));
+
+    return true;
+}
+
+/**
     \fn timeChanged
     \brief Called whenever timeshift is on/off'ed or value changes
 */
@@ -305,6 +369,54 @@ void MainWindow::timeChanged(int)
 {
 	HandleAction (ACT_TimeShift) ;
 }
+/**
+    \fn searchMenu
+*/
+void MainWindow::searchMenu(QAction * action,MenuEntry *menu, int nb)
+{
+    for(int i=0;i<nb;i++)
+    {
+        MenuEntry *m=menu+i;
+        if(m->action==action)
+        {
+            HandleAction (m->event);
+        }
+    }
+}
+
+/**
+    \fn searchFileMenu
+*/
+void MainWindow::searchFileMenu(QAction * action)
+{
+    searchMenu(action,myMenuFile,sizeof(myMenuFile)/sizeof(MenuEntry));
+}
+void MainWindow::searchEditMenu(QAction * action)
+{
+    searchMenu(action,myMenuEdit,sizeof(myMenuEdit)/sizeof(MenuEntry));
+}
+void MainWindow::searchAudioMenu(QAction * action)
+{
+    searchMenu(action,myMenuAudio,sizeof(myMenuAudio)/sizeof(MenuEntry));
+}
+void MainWindow::searchVideoMenu(QAction * action)
+{
+    searchMenu(action,myMenuVideo,sizeof(myMenuVideo)/sizeof(MenuEntry));
+}
+void MainWindow::searchHelpMenu(QAction * action)
+{
+    searchMenu(action,myMenuHelp,sizeof(myMenuHelp)/sizeof(MenuEntry));
+}
+void MainWindow::searchToolMenu(QAction * action)
+{
+    searchMenu(action,myMenuTool,sizeof(myMenuTool)/sizeof(MenuEntry));
+}
+void MainWindow::searchGoMenu(QAction * action)
+{
+    searchMenu(action,myMenuGo,sizeof(myMenuGo)/sizeof(MenuEntry));
+}
+
+
 /*
       We receive a button press event
 */

@@ -341,7 +341,7 @@ char *equal;
 
 
 
-void call_buildtimemap(char *p) { UNUSED_ARG(p); aprintf("timemap\n");HandleAction(ACT_AudioMap);         }
+void call_buildtimemap(char *p) { UNUSED_ARG(p); aprintf("timemap\n");      }
 
 void call_setPP(char *v,char *s)
 {

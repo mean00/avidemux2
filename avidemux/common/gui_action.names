@@ -1,7 +1,7 @@
-// 
+// load/sabe
 ACT(OpenAvi)
 ACT(AppendAvi)
-ACT(BrokenAvi)
+ACT(SaveAvi)
 ACT(AviInfo)
 ACT(CLOSE)
 ACT(Exit)
@@ -15,13 +15,10 @@ ACT(SAVE_BEGIN)
 ACT(SaveImg)
 ACT(SaveJPG)
 ACT(SaveBunchJPG)
-ACT(SaveAvi)
-ACT(SaveWave)
-ACT(SaveRaw)
-ACT(SaveWork)
-ACT(SavePyWork)
-ACT(SaveCurrentWork)
-
+ACT(SaveVideo)
+ACT(SaveAudio)
+ACT(SaveJsProject)
+ACT(SavePyProject)
 ACT(SAVE_END)
 // /SAVE
 
@@ -48,60 +45,29 @@ ACT(GotoMarkB)
 ACT(Scale)
 ACT(NAVIGATE_END)
 //--- /NAVIGATE----
-ACT(AllBlackFrames)
-ACT(AudioSourceAvi)
-ACT(AudioSourceMP3)
-ACT(AudioSourceWAV)
-ACT(AudioSourceAC3)
-ACT(AudioSourceNone)
-
+ACT(SavePref)
 ACT(MarkA)
 ACT(MarkB)
-
-ACT(AudioModeProcess)
-ACT(AudioModeCopy)
-ACT(AudioModeToggle)
 ACT(AudioFilters)
-
-ACT(AudioMap)
-
-ACT(VideoModeCopy)
-ACT(VideoModeProcess)
 ACT(VideoParameter)
-ACT(VideoModeToggle)
 
 ACT(Copy)
 ACT(Cut)
 ACT(Paste)
 ACT(Delete)
 ACT(PreviewToggle)
-
-ACT(RebuildKF)
-ACT(BitRate)
-ACT(ChangeFPS)
-ACT(SetMuxParam)
 ACT(DecoderOption)
 
 ACT(SelectEncoder)
 ACT(Fast)
-
-ACT(SecondAudioTrack)
-
-ACT(CutWizard)
-
-ACT(MpegIndex)
-ACT(VideoCheck)
-
 ACT(AudioConfigure)
 
 ACT(OutputToggle)
 
 ACT(VideoConfigure)
+ACT(ContainerConfigure)
 
 ACT(ResetSegments)
-
-ACT(SetLogFile)
-ACT(SavePref)
 
 ACT(VideoCodec)
 ACT(AudioCodec)
@@ -109,37 +75,23 @@ ACT(About)
 
 ACT(Pref)
 
-ACT(Requant)
-ACT(JumpToFrame)
 ACT(JumpToTime)
 ACT(RunScript)
 ACT(RunPyScript)
 ACT(AudioCodecChanged)
 ACT(VideoCodecChanged)
 ACT(PreviewChanged)
-ACT(Bitrate)
-ACT(Ocr)
-ACT(DVB_Ocr)
 ACT(SelectTrack1)
 ACT(ViewMain)
 ACT(ViewSide)
 ACT(TimeShift)
+
 ACT(RECENT0)
 ACT(RECENT1)
 ACT(RECENT2)
 ACT(RECENT3)
 
-ACT(AUTO_VCD)
-ACT(AUTO_SVCD)
-ACT(AUTO_DVD)
-ACT(AUTO_PSP)
-ACT(AUTO_PSP_H264)
-ACT(AUTO_IPOD)
-ACT(AUTO_FLV)
 
-ACT(ADD_JOB)
-ACT(HANDLE_JOB)
-ACT(V2V)
 
 ACT(ZOOM_1_4)
 ACT(ZOOM_1_2)
@@ -151,7 +103,6 @@ ACT(HEX_DUMP)
 ACT(SIZE_DUMP)
 ACT(AVS_PROXY)
 ACT(JOG)
-ACT(GLYPHEDIT)
 ACT(PLUGIN_INFO)
 ACT(JS_SHELL)
 ACT(PY_SHELL)
