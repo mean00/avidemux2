@@ -1,747 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkAdjustment" id="adjustment1">
-    <property name="upper">100</property>
-    <property name="lower">0</property>
-    <property name="page_increment">1</property>
-    <property name="step_increment">1</property>
-    <property name="page_size">1</property>
-    <property name="value">99</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment2">
-    <property name="upper">99999</property>
-    <property name="lower">-99999</property>
-    <property name="page_increment">10</property>
-    <property name="step_increment">1</property>
-    <property name="page_size">10</property>
-    <property name="value">0</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment3">
-    <property name="upper">99.989997863799999</property>
-    <property name="lower">0</property>
-    <property name="page_increment">1</property>
-    <property name="step_increment">0.0099999997764800008</property>
-    <property name="page_size">0</property>
-    <property name="value">0</property>
-  </object>
-  <object class="GtkListStore" id="model1">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Copy</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="model2">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Copy</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="model3">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Copy</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkUIManager" id="uimanager1">
-    <child>
-      <object class="GtkActionGroup" id="actiongroup1">
-        <child>
-          <object class="GtkAction" id="menuitem1">
-            <property name="name">menuitem1</property>
-            <property name="label" translatable="yes">_File</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="open_video1">
-            <property name="stock_id">_Open...</property>
-            <property name="name">open_video1</property>
-          </object>
-          <accelerator key="O" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="append_video1">
-            <property name="stock_id">_Append...</property>
-            <property name="name">append_video1</property>
-          </object>
-          <accelerator key="A" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_stuff">
-            <property name="stock_id">_Save</property>
-            <property name="name">save_stuff</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_as_avi1">
-            <property name="name">save_as_avi1</property>
-            <property name="label" translatable="yes">Save _Video...</property>
-          </object>
-          <accelerator key="S" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_image1">
-            <property name="name">save_image1</property>
-            <property name="label" translatable="yes">Save _BMP Image...</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_jpg_image1">
-            <property name="name">save_jpg_image1</property>
-            <property name="label" translatable="yes">Save _JPEG Image...</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_selection_as_jpegs1">
-            <property name="name">save_selection_as_jpegs1</property>
-            <property name="label" translatable="yes">Save _Selection as JPEG Images...</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="close1">
-            <property name="stock_id">gtk-close</property>
-            <property name="name">close1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_project1">
-            <property name="stock_id">Save _Project</property>
-            <property name="name">save_project1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_project_as1">
-            <property name="stock_id">Save P_roject As...</property>
-            <property name="name">save_project_as1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="run_script1">
-            <property name="stock_id">_Load/Run Project...</property>
-            <property name="name">run_script1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="add_to_joblist1">
-            <property name="name">add_to_joblist1</property>
-            <property name="label" translatable="yes">A_dd to Joblist...</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="joblist1">
-            <property name="name">joblist1</property>
-            <property name="label" translatable="yes">Show _Joblist</property>
-          </object>
-          <accelerator key="J" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="connect_to_avsproxy1">
-            <property name="name">connect_to_avsproxy1</property>
-            <property name="label" translatable="yes">Co_nnect to avsproxy</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="video_informations1">
-            <property name="stock_id">Proper_ties</property>
-            <property name="name">video_informations1</property>
-          </object>
-          <accelerator key="Return" modifiers="GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="avi_muxer_options1">
-            <property name="name">avi_muxer_options1</property>
-            <property name="label" translatable="yes">AVI _Muxer Options</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="quit1">
-            <property name="stock_id">_Quit</property>
-            <property name="name">quit1</property>
-          </object>
-          <accelerator key="Q" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="menuitem2">
-            <property name="name">menuitem2</property>
-            <property name="label" translatable="yes">_Edit</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="reset_edits1">
-            <property name="stock_id">_Reset Edits</property>
-            <property name="name">reset_edits1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="cut1">
-            <property name="stock_id">Cu_t</property>
-            <property name="name">cut1</property>
-          </object>
-          <accelerator key="X" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="copy1">
-            <property name="stock_id">_Copy</property>
-            <property name="name">copy1</property>
-          </object>
-          <accelerator key="C" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="paste1">
-            <property name="stock_id">_Paste</property>
-            <property name="name">paste1</property>
-          </object>
-          <accelerator key="V" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="delete1">
-            <property name="stock_id">_Delete</property>
-            <property name="name">delete1</property>
-          </object>
-          <accelerator key="Delete"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="set_marker_a1">
-            <property name="name">set_marker_a1</property>
-            <property name="label" translatable="yes">Set Marker _A</property>
-          </object>
-          <accelerator key="bracketleft"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="set_marker_b1">
-            <property name="name">set_marker_b1</property>
-            <property name="label" translatable="yes">Set Marker _B</property>
-          </object>
-          <accelerator key="bracketright"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="preferences1">
-            <property name="stock_id">Pre_ferences</property>
-            <property name="name">preferences1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="view1">
-            <property name="name">view1</property>
-            <property name="label" translatable="yes">_View</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkToggleAction" id="toolbar1">
-            <property name="active">True</property>
-            <property name="name">toolbar1</property>
-            <property name="label" translatable="yes">_Main Toolbar</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkToggleAction" id="sidebar1">
-            <property name="active">True</property>
-            <property name="name">sidebar1</property>
-            <property name="label" translatable="yes">_A/V Sidebar</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="zoom_1_4">
-            <property name="name">zoom_1_4</property>
-            <property name="label" translatable="yes">_Zoom 1:4</property>
-          </object>
-          <accelerator key="4" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="zoom_1_2">
-            <property name="name">zoom_1_2</property>
-            <property name="label" translatable="yes">Z_oom 1:2</property>
-          </object>
-          <accelerator key="2" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="zoom_1_1">
-            <property name="name">zoom_1_1</property>
-            <property name="label" translatable="yes">Zoom _1:1</property>
-          </object>
-          <accelerator key="1" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="zoom_2_1">
-            <property name="name">zoom_2_1</property>
-            <property name="label" translatable="yes">Zoom _2:1</property>
-          </object>
-          <accelerator key="2" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="video_1">
-            <property name="name">video_1</property>
-            <property name="label" translatable="yes">Vi_deo</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="decoder_options1">
-            <property name="name">decoder_options1</property>
-            <property name="label" translatable="yes">_Decoder Options</property>
-          </object>
-          <accelerator key="F3"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="set_postprocessing1">
-            <property name="name">set_postprocessing1</property>
-            <property name="tooltip" translatable="yes">Select postprocessing level</property>
-            <property name="label" translatable="yes">_Postprocessing</property>
-          </object>
-          <accelerator key="F4"/>
-        </child>
-        <child>
-          <object class="GtkToggleAction" id="preview1">
-            <property name="name">preview1</property>
-            <property name="label" translatable="yes">P_review</property>
-          </object>
-          <accelerator key="F5"/>
-        </child>
-        <child>
-          <object class="GtkToggleAction" id="display_output1">
-            <property name="name">display_output1</property>
-            <property name="label" translatable="yes">Display _Output</property>
-          </object>
-          <accelerator key="F6"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="change_fps">
-            <property name="name">change_fps</property>
-            <property name="label" translatable="yes">_Frame Rate</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="videoencoder">
-            <property name="name">videoencoder</property>
-            <property name="label" translatable="yes">_Encoder</property>
-          </object>
-          <accelerator key="V" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="filters1">
-            <property name="name">filters1</property>
-            <property name="label" translatable="yes">Fil_ters</property>
-          </object>
-          <accelerator key="F" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="audio1">
-            <property name="name">audio1</property>
-            <property name="label" translatable="yes">_Audio</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="main_audio">
-            <property name="name">main_audio</property>
-            <property name="label" translatable="yes">_Main Track</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="second_audio_track1">
-            <property name="name">second_audio_track1</property>
-            <property name="label" translatable="yes">_Second Track</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="build_vbr_time_map1">
-            <property name="name">build_vbr_time_map1</property>
-            <property name="label" translatable="yes">_Build VBR Time Map</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="save_audio1">
-            <property name="stock_id">S_ave...</property>
-            <property name="name">save_audio1</property>
-          </object>
-          <accelerator key="S" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="audio_encoder1">
-            <property name="name">audio_encoder1</property>
-            <property name="label" translatable="yes">_Encoder</property>
-          </object>
-          <accelerator key="A" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="filters2">
-            <property name="name">filters2</property>
-            <property name="label" translatable="yes">_Filters</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="tools1">
-            <property name="name">tools1</property>
-            <property name="label" translatable="yes">_Tools</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="calculator1">
-            <property name="stock_id">_Calculator</property>
-            <property name="name">calculator1</property>
-          </object>
-          <accelerator key="F7"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="rebuild_frames">
-            <property name="name">rebuild_frames</property>
-            <property name="label" translatable="yes">_Rebuild Frames (I &amp; B)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="check_frames">
-            <property name="name">check_frames</property>
-            <property name="label" translatable="yes">C_heck Frames (slow)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="bitrate_histogram1">
-            <property name="name">bitrate_histogram1</property>
-            <property name="label" translatable="yes">_Bitrate Histogram</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="item1">
-            <property name="name">item1</property>
-            <property name="label" translatable="yes">_Scan for Black Frames...</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="v2v">
-            <property name="name">v2v</property>
-            <property name="label" translatable="yes">_VOB -&gt; VobSub</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="ocr_vobsub_2_srt">
-            <property name="name">ocr_vobsub_2_srt</property>
-            <property name="label" translatable="yes">_OCR (VobSub -&gt; srt)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="ocr_dvb">
-            <property name="name">ocr_dvb</property>
-            <property name="label" translatable="yes">OCR (TS-&gt;srt)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="edit_glyph1">
-            <property name="name">edit_glyph1</property>
-            <property name="label" translatable="yes">_Edit Glyph</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="see_hex1">
-            <property name="name">see_hex1</property>
-            <property name="label" translatable="yes">_Frame Hex Dump</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="see_size">
-            <property name="name">see_size</property>
-            <property name="label" translatable="yes">Frame Size Dump</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="help1">
-            <property name="name">help1</property>
-            <property name="label" translatable="yes">A_uto</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="vcd1">
-            <property name="name">vcd1</property>
-            <property name="label" translatable="yes">_VCD</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="svcd1">
-            <property name="name">svcd1</property>
-            <property name="label" translatable="yes">_SVCD</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="dvd1">
-            <property name="name">dvd1</property>
-            <property name="label" translatable="yes">_DVD</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="psp1">
-            <property name="name">psp1</property>
-            <property name="label" translatable="yes">_PSP</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="psp_(h264)1">
-            <property name="name">psp_(h264)1</property>
-            <property name="label" translatable="yes">PSP (_H.264)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="flv1">
-            <property name="name">flv1</property>
-            <property name="label" translatable="yes">F_LV</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="Ipod">
-            <property name="name">Ipod</property>
-            <property name="label" translatable="yes">IPOD (mpeg4)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="go1">
-            <property name="name">go1</property>
-            <property name="label" translatable="yes">_Go</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="play_video1">
-            <property name="stock_id">_Play/Stop</property>
-            <property name="name">play_video1</property>
-          </object>
-          <accelerator key="P"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="previous_frame1">
-            <property name="stock_id">P_revious Frame</property>
-            <property name="name">previous_frame1</property>
-          </object>
-          <accelerator key="KP_4"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="next_frame1">
-            <property name="stock_id">_Next Frame</property>
-            <property name="name">next_frame1</property>
-          </object>
-          <accelerator key="KP_6"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="previous_intra_frame1">
-            <property name="stock_id">Pr_evious Intra Frame</property>
-            <property name="name">previous_intra_frame1</property>
-          </object>
-          <accelerator key="KP_2"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="next_intra_frame1">
-            <property name="stock_id">Next _Intra Frame</property>
-            <property name="name">next_intra_frame1</property>
-          </object>
-          <accelerator key="KP_8"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="search_previous_black_frame1">
-            <property name="name">search_previous_black_frame1</property>
-            <property name="label" translatable="yes">Previou_s Black Frame</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="search_next_black_frame1">
-            <property name="name">search_next_black_frame1</property>
-            <property name="label" translatable="yes">Ne_xt Black Frame</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="first_frame1">
-            <property name="stock_id">_First Frame</property>
-            <property name="name">first_frame1</property>
-          </object>
-          <accelerator key="Home"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="last_frame1">
-            <property name="stock_id">_Last Frame</property>
-            <property name="name">last_frame1</property>
-          </object>
-          <accelerator key="End"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="go_to_marker_a1">
-            <property name="name">go_to_marker_a1</property>
-            <property name="label" translatable="yes">Go to Marker _A</property>
-          </object>
-          <accelerator key="bracketleft" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="go_to_marker_b1">
-            <property name="name">go_to_marker_b1</property>
-            <property name="label" translatable="yes">Go to Marker _B</property>
-          </object>
-          <accelerator key="bracketright" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="jum_to_frame1">
-            <property name="stock_id">Go to Fra_me...</property>
-            <property name="name">jum_to_frame1</property>
-          </object>
-          <accelerator key="F" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="jump_to_time1">
-            <property name="stock_id">Go to _Time...</property>
-            <property name="name">jump_to_time1</property>
-          </object>
-          <accelerator key="T" modifiers="GDK_CONTROL_MASK"/>
-        </child>
-        <child>
-          <object class="GtkAction" id="help2">
-            <property name="name">help2</property>
-            <property name="label" translatable="yes">_Help</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="plugins1">
-            <property name="name">plugins1</property>
-            <property name="label" translatable="yes">_Plugins</property>
-            <signal handler="on_plugins1_activate" name="activate"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="show_builtin_support1">
-            <property name="name">show_builtin_support1</property>
-            <property name="label" translatable="yes">_Built-in Support</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="about1">
-            <property name="stock_id">_About</property>
-            <property name="name">about1</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <ui>
-      <menubar name="menuBar">
-        <menu action="menuitem1">
-          <menuitem action="open_video1"/>
-          <menuitem action="append_video1"/>
-          <menu action="save_stuff">
-            <menuitem action="save_as_avi1"/>
-            <separator/>
-            <menuitem action="save_image1"/>
-            <menuitem action="save_jpg_image1"/>
-            <menuitem action="save_selection_as_jpegs1"/>
-          </menu>
-          <menuitem action="close1"/>
-          <separator/>
-          <menuitem action="save_project1"/>
-          <menuitem action="save_project_as1"/>
-          <menuitem action="run_script1"/>
-          <menuitem action="add_to_joblist1"/>
-          <menuitem action="joblist1"/>
-          <separator/>
-          <menuitem action="connect_to_avsproxy1"/>
-          <separator/>
-          <menuitem action="video_informations1"/>
-          <menuitem action="avi_muxer_options1"/>
-          <separator/>
-          <menuitem action="quit1"/>
-        </menu>
-        <menu action="menuitem2">
-          <menuitem action="reset_edits1"/>
-          <separator/>
-          <menuitem action="cut1"/>
-          <menuitem action="copy1"/>
-          <menuitem action="paste1"/>
-          <menuitem action="delete1"/>
-          <separator/>
-          <menuitem action="set_marker_a1"/>
-          <menuitem action="set_marker_b1"/>
-          <separator/>
-          <menuitem action="preferences1"/>
-        </menu>
-        <menu action="view1">
-          <menuitem action="toolbar1"/>
-          <menuitem action="sidebar1"/>
-          <separator/>
-          <menuitem action="zoom_1_4"/>
-          <menuitem action="zoom_1_2"/>
-          <menuitem action="zoom_1_1"/>
-          <menuitem action="zoom_2_1"/>
-        </menu>
-        <menu action="video_1">
-          <menuitem action="decoder_options1"/>
-          <menuitem action="set_postprocessing1"/>
-          <separator/>
-          <menuitem action="preview1"/>
-          <menuitem action="display_output1"/>
-          <separator/>
-          <menuitem action="change_fps"/>
-          <menuitem action="videoencoder"/>
-          <menuitem action="filters1"/>
-        </menu>
-        <menu action="audio1">
-          <menuitem action="main_audio"/>
-          <menuitem action="second_audio_track1"/>
-          <menuitem action="build_vbr_time_map1"/>
-          <separator/>
-          <menuitem action="save_audio1"/>
-          <menuitem action="audio_encoder1"/>
-          <menuitem action="filters2"/>
-        </menu>
-        <menu action="tools1">
-          <menuitem action="calculator1"/>
-          <separator/>
-          <menuitem action="rebuild_frames"/>
-          <menuitem action="check_frames"/>
-          <menuitem action="bitrate_histogram1"/>
-          <menuitem action="item1"/>
-          <separator/>
-          <menuitem action="v2v"/>
-          <menuitem action="ocr_vobsub_2_srt"/>
-          <menuitem action="ocr_dvb"/>
-          <menuitem action="edit_glyph1"/>
-          <separator/>
-          <menuitem action="see_hex1"/>
-          <menuitem action="see_size"/>
-        </menu>
-        <menu action="help1">
-          <menuitem action="vcd1"/>
-          <menuitem action="svcd1"/>
-          <menuitem action="dvd1"/>
-          <menuitem action="psp1"/>
-          <menuitem action="psp_(h264)1"/>
-          <menuitem action="flv1"/>
-          <menuitem action="Ipod"/>
-        </menu>
-        <menu action="go1">
-          <menuitem action="play_video1"/>
-          <menuitem action="previous_frame1"/>
-          <menuitem action="next_frame1"/>
-          <menuitem action="previous_intra_frame1"/>
-          <menuitem action="next_intra_frame1"/>
-          <menuitem action="search_previous_black_frame1"/>
-          <menuitem action="search_next_black_frame1"/>
-          <menuitem action="first_frame1"/>
-          <menuitem action="last_frame1"/>
-          <separator/>
-          <menuitem action="go_to_marker_a1"/>
-          <menuitem action="go_to_marker_b1"/>
-          <separator/>
-          <menuitem action="jum_to_frame1"/>
-          <menuitem action="jump_to_time1"/>
-        </menu>
-        <menuitem action="custom1"/>
-        <menu action="help2">
-          <menuitem action="plugins1"/>
-          <menuitem action="show_builtin_support1"/>
-          <menuitem action="about1"/>
-        </menu>
-      </menubar>
-    </ui>
-  </object>
-  <!-- interface-requires gtk+ 2.16 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="mainWindow">
     <property name="visible">True</property>
@@ -751,7 +10,7 @@
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <child>
-          <object class="GtkMenuBar" constructor="uimanager1" id="menuBar">
+          <object class="GtkMenuBar" id="menuBar">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
           </object>
@@ -768,7 +27,6 @@
             <child>
               <object class="GtkMenuToolButton" id="menutoolbuttonOpen">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Open a file</property>
                 <property name="is_important">True</property>
                 <property name="stock_id">gtk-open</property>
               </object>
@@ -787,7 +45,6 @@
             <child>
               <object class="GtkToolButton" id="toolbuttonSave">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Save the file</property>
                 <property name="is_important">True</property>
                 <property name="stock_id">gtk-save</property>
               </object>
@@ -799,7 +56,6 @@
             <child>
               <object class="GtkToolButton" id="toolbuttonInfo">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Audio/video file information</property>
                 <property name="stock_id">gtk-properties</property>
               </object>
               <packing>
@@ -818,11 +74,9 @@
             <child>
               <object class="GtkToolButton" id="toolbuttonCalc">
                 <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Bitrate/size calculator</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">Calculator</property>
                 <property name="use_underline">True</property>
-                <property name="icon">gnome-calculator.png</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -882,7 +136,6 @@
                     <property name="width_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="adjustment">adjustment1</property>
                     <property name="digits">0</property>
                     <property name="draw_value">False</property>
                   </object>
@@ -943,13 +196,6 @@
                                     <child>
                                       <object class="GtkComboBox" id="comboboxVideo">
                                         <property name="visible">True</property>
-                                        <property name="model">model1</property>
-                                        <child>
-                                          <object class="GtkCellRendererText" id="renderer1"/>
-                                          <attributes>
-                                            <attribute name="text">0</attribute>
-                                          </attributes>
-                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -963,7 +209,6 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip-text" translatable="yes">Configure video encoder</property>
                                         <property name="use_underline">True</property>
                                         <accelerator key="F3" signal="clicked"/>
                                       </object>
@@ -979,7 +224,6 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip-text" translatable="yes">Video filters</property>
                                         <property name="use_underline">True</property>
                                         <accelerator key="F1" signal="clicked"/>
                                       </object>
@@ -1031,13 +275,6 @@
                                     <child>
                                       <object class="GtkComboBox" id="comboboxAudio">
                                         <property name="visible">True</property>
-                                        <property name="model">model2</property>
-                                        <child>
-                                          <object class="GtkCellRendererText" id="renderer2"/>
-                                          <attributes>
-                                            <attribute name="text">0</attribute>
-                                          </attributes>
-                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1051,7 +288,6 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip-text" translatable="yes">Configure audio encoder</property>
                                         <property name="use_underline">True</property>
                                         <accelerator key="F4" signal="clicked"/>
                                       </object>
@@ -1066,7 +302,6 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
-                                        <property name="tooltip-text" translatable="yes">Audio filters</property>
                                         <accelerator key="F2" signal="clicked"/>
                                         <child>
                                           <object class="GtkAlignment" id="alignment16">
@@ -1110,7 +345,6 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
-                                            <property name="tooltip-text" translatable="yes">Enable time shift</property>
                                             <property name="use_underline">True</property>
                                             <property name="draw_indicator">True</property>
                                           </object>
@@ -1124,8 +358,6 @@
                                           <object class="GtkSpinButton" id="spinbuttonTimeShift">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip-text" translatable="yes">Audio/video time shift (ms)</property>
-                                            <property name="adjustment">adjustment2</property>
                                             <property name="climb_rate">1</property>
                                             <property name="numeric">True</property>
                                           </object>
@@ -1169,47 +401,13 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="alignment1">
+                              <object class="GtkAlignment" id="alignment14">
                                 <property name="visible">True</property>
                                 <property name="top_padding">3</property>
                                 <property name="left_padding">12</property>
                                 <child>
-                                  <object class="GtkVBox" id="vbox2">
+                                  <object class="GtkComboBox" id="comboboxFormat">
                                     <property name="visible">True</property>
-                                    <property name="spacing">3</property>
-                                    <child>
-                                      <object class="GtkComboBox" id="comboboxFormat">
-                                        <property name="visible">True</property>
-                                        <property name="model">model3</property>
-                                        <child>
-                                          <object class="GtkCellRendererText" id="renderer3"/>
-                                          <attributes>
-                                            <attribute name="text">0</attribute>
-                                          </attributes>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="buttonConfF">
-                                        <property name="label" translatable="yes">Configure</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip-text" translatable="yes">Configure video encoder</property>
-                                        <property name="use_underline">True</property>
-                                        <accelerator key="F3" signal="clicked"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -1294,8 +492,8 @@
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
-                                <property name="x_options"/>
-                                <property name="y_options"/>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -1310,8 +508,8 @@
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
-                                <property name="x_options"/>
-                                <property name="y_options"/>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -1321,12 +519,11 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="tooltip-text" translatable="yes">Go to marker A</property>
                                 <property name="use_underline">True</property>
                               </object>
                               <packing>
-                                <property name="x_options"/>
-                                <property name="y_options"/>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
@@ -1336,14 +533,13 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="receives_default">False</property>
-                                <property name="tooltip-text" translatable="yes">Go to marker B</property>
                                 <property name="use_underline">True</property>
                               </object>
                               <packing>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
-                                <property name="x_options"/>
-                                <property name="y_options"/>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                           </object>
@@ -1359,8 +555,8 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">3</property>
-                    <property name="x_options"/>
-                    <property name="y_options"/>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
                   </packing>
                 </child>
                 <child>
@@ -1371,14 +567,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Play</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <accelerator key="space" signal="clicked"/>
                         <child>
                           <object class="GtkImage" id="image591">
                             <property name="visible">True</property>
-                            <property name="pixbuf">play.png</property>
+                            <property name="pixbuf">play.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1393,13 +588,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Stop</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image5056">
                             <property name="visible">True</property>
-                            <property name="pixbuf">stop.png</property>
+                            <property name="pixbuf">stop.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1414,14 +608,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Previous frame</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <accelerator key="KP_4" signal="clicked"/>
                         <child>
                           <object class="GtkImage" id="image593">
                             <property name="visible">True</property>
-                            <property name="pixbuf">previous-frame.png</property>
+                            <property name="pixbuf">backward.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1436,14 +629,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Next frame</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <accelerator key="KP_6" signal="clicked"/>
                         <child>
                           <object class="GtkImage" id="image594">
                             <property name="visible">True</property>
-                            <property name="pixbuf">next-frame.png</property>
+                            <property name="pixbuf">forward.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1458,14 +650,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Previous keyframe</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <accelerator key="KP_2" signal="clicked"/>
                         <child>
                           <object class="GtkImage" id="image595">
                             <property name="visible">True</property>
-                            <property name="pixbuf">previous-key-frame.png</property>
+                            <property name="pixbuf">Kbackward.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1480,14 +671,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Next keyframe</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <accelerator key="KP_8" signal="clicked"/>
                         <child>
                           <object class="GtkImage" id="image596">
                             <property name="visible">True</property>
-                            <property name="pixbuf">next-key-frame.png</property>
+                            <property name="pixbuf">Kforward.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1502,13 +692,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Selection: start</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image2306">
                             <property name="visible">True</property>
-                            <property name="pixbuf">markA.png</property>
+                            <property name="pixbuf">markA.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1523,13 +712,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Selection: end</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image2307">
                             <property name="visible">True</property>
-                            <property name="pixbuf">markB.png</property>
+                            <property name="pixbuf">markB.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1544,13 +732,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Previous black frame</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image2308">
                             <property name="visible">True</property>
-                            <property name="pixbuf">previous-black-frame.png</property>
+                            <property name="pixbuf">xpm_prevblack.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1565,13 +752,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Next black frame</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image2309">
                             <property name="visible">True</property>
-                            <property name="pixbuf">next-black-frame.png</property>
+                            <property name="pixbuf">xpm_nextblack.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1586,13 +772,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">First frame</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image5057">
                             <property name="visible">True</property>
-                            <property name="pixbuf">first-frame.png</property>
+                            <property name="pixbuf">begin.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1607,13 +792,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip-text" translatable="yes">Last frame</property>
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <child>
                           <object class="GtkImage" id="image2245">
                             <property name="visible">True</property>
-                            <property name="pixbuf">last-frame.png</property>
+                            <property name="pixbuf">end.xpm</property>
                           </object>
                         </child>
                       </object>
@@ -1632,7 +816,6 @@
                 <child>
                   <object class="GtkHScale" id="sliderNavigate">
                     <property name="visible">True</property>
-                    <property name="adjustment">adjustment3</property>
                     <property name="value_pos">left</property>
                   </object>
                 </child>
@@ -1655,7 +838,6 @@
                       <object class="GtkEntry" id="boxCurFrame">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">Current frame</property>
                         <property name="max_length">8</property>
                         <property name="width_chars">8</property>
                         <property name="text" translatable="yes">0</property>
@@ -1695,7 +877,6 @@
                       <object class="GtkEntry" id="boxCurTime">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip-text" translatable="yes">Current time</property>
                         <property name="width_chars">13</property>
                         <property name="text" translatable="yes">00:00:00.000</property>
                       </object>
@@ -1736,8 +917,11 @@
                   <packing>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
               </object>
               <packing>

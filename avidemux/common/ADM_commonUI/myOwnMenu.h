@@ -1,4 +1,30 @@
-
+/**
+    \file myOwnMenus
+    
+*/
+#ifndef MY_OWN_MENUS
+#define MY_OWN_MENUS
+/**
+    \enum MenuType
+*/
+enum MenuType
+{
+    MENU_ACTION,
+    MENU_SEPARATOR,
+    MENU_SUBACTION,
+    MENU_SUBMENU
+};
+/**
+    \struct MenuEntry
+*/
+typedef struct
+{
+    MenuType   type;
+    const char *text;
+    void       *cookie;
+    Action     event;
+    const char *icon; 
+}MenuEntry;
 MenuEntry myMenuFile[]= {
             {MENU_ACTION,"Open",    NULL,ACT_OPEN_VIDEO,       MKICON(fileopen)},
             {MENU_ACTION,"Append",  NULL,ACT_APPEND_VIDEO     ,NULL},
@@ -80,3 +106,4 @@ MenuEntry myMenuView[]= {
             {MENU_ACTION,"Zoom 1:1",      NULL,ACT_ZOOM_1_1 ,NULL},
             {MENU_ACTION,"Zoom 2:1",      NULL,ACT_ZOOM_2_1 ,NULL},
         };
+#endif

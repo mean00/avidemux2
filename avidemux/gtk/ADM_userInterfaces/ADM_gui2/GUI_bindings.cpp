@@ -41,6 +41,9 @@
 #include "GUI_glade.h"
 #include "A_functions.h"
 
+#define MKICON(x) NULL
+#include "myOwnMenu.h"
+static void ui_setMenus(void);
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern void ADM_initUIGtk(GtkWidget *guiRootWindow);
 extern  ADM_RENDER_TYPE UI_getPreferredRender(void);;
@@ -347,7 +350,7 @@ uint32_t w,h;
                 physical_jog_shuttle->registerCBs (NULL, jogButton, jogDial, jogRing);
 #endif
 
-
+    ui_setMenus();
 
 	return ret;
 }
@@ -459,7 +462,7 @@ uint8_t  bindGUI( void )
 		uint32_t nb=sizeof(buttonCallback)/sizeof(buttonCallBack_S);
 		GtkWidget *bt;
 
-
+#if 0
 		for(uint32_t i=0;i<nb;i++)
 		{
 			bt= glade.getWidget(buttonCallback[i].name);
@@ -471,7 +474,7 @@ uint8_t  bindGUI( void )
 			ADD_SIGNAL(bt,buttonCallback[i].signal,buttonCallback[i].action);
 			GTK_WIDGET_UNSET_FLAGS (bt, GTK_CAN_FOCUS);
 		}
-
+#endif
 	GTK_WIDGET_SET_FLAGS (glade.getWidget("boxCurFrame"), GTK_CAN_FOCUS);
 
 // set some tuning
@@ -985,6 +988,92 @@ gint b;
 }
 
 /**
+    \fn ui_setMenus
+*/
+void ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
+{
+    GtkWidget *window;
+    GtkWidget *menu;
+    GtkWidget *menu_bar;
+    GtkWidget *root_menu;
+    GtkWidget *menu_items;
+    GtkWidget *submenu=NULL;
+
+    menu = gtk_menu_new ();
+
+    for(int i=0;i<nb;i++)
+    {
+        MenuEntry *m=desc+i;
+        switch(m->type)
+        {
+            case MENU_SUBMENU:
+                {
+                    menu_items=gtk_menu_item_new_with_label(m->text);
+                    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
+                    gtk_widget_show (menu_items);
+                    submenu= gtk_menu_new ();
+                    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_items),submenu);
+                }
+                break;
+            case MENU_SEPARATOR:
+                {
+                    menu_items=gtk_separator_menu_item_new();
+                    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
+                    gtk_widget_show (menu_items);
+                    break;
+                }
+            case MENU_SUBACTION:
+            case MENU_ACTION:
+                    {
+                     GtkWidget *target=menu;
+                     if(m->type==MENU_SUBACTION) target=submenu;
+                     menu_items = gtk_menu_item_new_with_label (m->text);
+                     gtk_menu_shell_append (GTK_MENU_SHELL (target), menu_items);
+                     gtk_widget_show (menu_items);
+                     gtk_signal_connect(GTK_OBJECT(menu_items), "activate", 
+                        GTK_SIGNAL_FUNC(guiCallback),                   (void *) m->event);
+                     break;
+                    }
+            default: break;
+        }
+    }
+
+    /* This is the root menu, and will be the label
+     * displayed on the menu bar.  There won't be a signal handler attached,
+     * as it only pops up the rest of the menu when pressed. */
+    root_menu = gtk_menu_item_new_with_label (menuName);
+
+    gtk_widget_show (root_menu);
+
+    /* Now we specify that we want our newly created "menu" to be the menu
+     * for the "root menu" */
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (root_menu), menu);
+    /* Create a menu-bar to hold the menus and add it to our main window */
+    menu_bar=(glade.getWidget("menuBar"));
+    /* Create a button to which to attach menu as a popup */
+    /* And finally we append the menu-item to the menu-bar -- this is the
+     * "root" menu-item I have been raving about =) */
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), root_menu);
+}
+/**
+    \fn ui_setMenus
+*/
+void ui_setMenus(void)
+{
+#define SZ(x) x,sizeof(x)/sizeof(MenuEntry)
+    ui_setOneMenu("File", SZ(myMenuFile));
+    ui_setOneMenu("Recent", NULL,0);
+    ui_setOneMenu("Edit", SZ(myMenuEdit));
+    ui_setOneMenu("View", SZ(myMenuView));
+    ui_setOneMenu("Video", SZ(myMenuVideo));
+    ui_setOneMenu("Audio", SZ(myMenuAudio));
+    ui_setOneMenu("Tools", SZ(myMenuTool));
+    ui_setOneMenu("Custom", NULL,0);
+    ui_setOneMenu("Go", SZ(myMenuGo));
+    ui_setOneMenu("Help", SZ(myMenuHelp));
+}
+
+/**
             \fn guiCallback
             \brief This is a relay function to do UI events -> gtk_gui.cpp
 */
@@ -1141,14 +1230,18 @@ void   UI_setCurrentPreview(int ne)
  int 	UI_getCurrentACodec(void)
  {
         //return getRangeInMenu(lookup_widget(guiRootWindow,AUDIO_WIDGET));
-        return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET)));
+#warning broken
+        //return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET)));
+        return 0;
 
  }
  int 	UI_getCurrentVCodec(void)
  {
 
  	//return getRangeInMenu(lookup_widget(guiRootWindow,VIDEO_WIDGET));
-        return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)));
+#warning broken
+        //return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)));
+    return 0;
 
  }
 /**
@@ -1592,3 +1685,4 @@ bool UI_setDecoderName(const char *name)
         return true;
 }
 // EOF
+

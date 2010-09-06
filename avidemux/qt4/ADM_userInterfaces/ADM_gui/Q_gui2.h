@@ -7,27 +7,7 @@
 #include "ADM_qslider.h"
 #include "ui_gui2.h"
 #include "gui_action.hxx"
-/**
-    \enum MenuType
-*/
-enum MenuType
-{
-    MENU_ACTION,
-    MENU_SEPARATOR,
-    MENU_SUBACTION,
-    MENU_SUBMENU
-};
-/**
-    \struct MenuEntry
-*/
-typedef struct
-{
-    MenuType   type;
-    const char *text;
-    QAction    *action;
-    Action     event;
-    const char *icon; 
-}MenuEntry;
+
 /**
     \class MainWindow
 */
