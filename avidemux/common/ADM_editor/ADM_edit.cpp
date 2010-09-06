@@ -509,6 +509,10 @@ uint32_t ref;
             return false;
         }
         v->currentAudioStream=newstream;
+        // Change our header also
+        wavHeader.frequency=trks[newstream]->wavheader.frequency;
+        wavHeader.channels=trks[newstream]->wavheader.channels;
+        //ADM_warning("New fq=%d\n",(int)wavHeader.frequency);
         return true;
 }
 
