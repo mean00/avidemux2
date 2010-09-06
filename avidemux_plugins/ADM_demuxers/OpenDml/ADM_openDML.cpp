@@ -211,7 +211,7 @@ OpenDMLHeader::OpenDMLHeader(void)
 WAVHeader              *OpenDMLHeader::getAudioInfo(uint32_t i ) 
 {
     if(_nbAudioTracks)
-		return _audioStreams[_currentAudioTrack]->getInfo();
+		return _audioStreams[i]->getInfo();
 	else
 		return NULL;
 }
