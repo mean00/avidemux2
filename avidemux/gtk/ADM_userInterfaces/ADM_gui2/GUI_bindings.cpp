@@ -179,21 +179,21 @@ buttonCallBack_S buttonCallback[]=
 	{"buttonMarkB"			,"clicked"		,ACT_MarkB},
 	{"buttonBegin"			,"clicked"		,ACT_Begin},
 	{"buttonEnd"			,"clicked"		,ACT_End},
-	{"menutoolbuttonOpen"	,"clicked"		,ACT_OpenAvi},
-	{"toolbuttonInfo"		,"clicked"		,ACT_AviInfo},
-	{"toolbuttonSave"		,"clicked"		,ACT_SaveAvi},
+	{"menutoolbuttonOpen"	,"clicked"		,ACT_OPEN_VIDEO},
+	{"toolbuttonInfo"		,"clicked"		,ACT_VIDEO_PROPERTIES},
+	{"toolbuttonSave"		,"clicked"		,ACT_SAVE_VIDEO},
 
-	{"buttonFilters"		,"clicked"		,ACT_VideoParameter},
-	{"buttonAudioFilter"	,"clicked"		,ACT_AudioFilters},
-	{"buttonConfV"			,"clicked"		,ACT_VideoConfigure},
-	{"buttonConfA"			,"clicked"		,ACT_AudioCodec},
-	{"buttonConfF"			,"clicked"		,ACT_SetMuxParam},
+	{"buttonFilters"		,"clicked"		,ACT_VIDEO_FILTERS},
+	{"buttonAudioFilter"	,"clicked"		,ACT_AUDIO_FILTERS},
+	{"buttonConfV"			,"clicked"		,ACT_VIDEO_CODEC_CONFIGURE},
+	{"buttonConfA"			,"clicked"		,ACT_AUDIO_CODEC_CONFIGURE},
+	{"buttonConfF"			,"clicked"		,ACT_ContainerConfigure},
 
 	{"buttonPrevBlack"		,"clicked"		,ACT_PrevBlackFrame},
 	{"buttonNextBlack"		,"clicked"		,ACT_NextBlackFrame},
 	{"buttonGotoA"			,"clicked"		,ACT_GotoMarkA},
 	{"buttonGotoB"			,"clicked"		,ACT_GotoMarkB},
-	{"toolbuttonCalc"		,"clicked"		,ACT_Bitrate},
+//	{"toolbuttonCalc"		,"clicked"		,ACT_Bitrate},
 
 	//{"boxCurFrame"			,"activate"		,ACT_JumpToFrame},
 	//{"boxCurTime"			,"editing_done"		,ACT_TimeChanged},
@@ -437,7 +437,7 @@ uint8_t  bindGUI( void )
 	// Current Frame
 	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "focus_in_event", GTK_SIGNAL_FUNC(UI_grabFocus), (void *) NULL);
 	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "focus_out_event", GTK_SIGNAL_FUNC(UI_loseFocus), (void *) NULL);
-	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_JumpToFrame);
+//	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_JumpToFrame);
 
     // Volume
     gtk_signal_connect(GTK_OBJECT(glade.getWidget("hscalVolume")), "value_changed", GTK_SIGNAL_FUNC(volumeChange), (void *) NULL);
@@ -832,7 +832,7 @@ gboolean destroyCallback(GtkWidget * widget,
     UNUSED_ARG(widget);
     UNUSED_ARG(event);
     UNUSED_ARG(user_data);
-    HandleAction(ACT_Exit);
+    HandleAction(ACT_EXIT);
     return 1;
 }
 /**
@@ -1083,7 +1083,7 @@ int enable;
         else enable=1;
         gtk_widget_set_sensitive(glade.getWidget("buttonConfV"),enable);
         gtk_widget_set_sensitive(glade.getWidget("buttonFilters"),enable);
-        HandleAction(ACT_VideoCodecChanged);
+        HandleAction(ACT_VIDEO_CODEC_CHANGED);
 }
 /**
     \fn on_audio_change
@@ -1100,7 +1100,7 @@ int enable;
         else enable=1;
         gtk_widget_set_sensitive(glade.getWidget("buttonConfA"),enable);
         gtk_widget_set_sensitive(glade.getWidget("buttonAudioFilter"),enable);
-        HandleAction(ACT_AudioCodecChanged);
+        HandleAction(ACT_AUDIO_CODEC_CHANGED);
 
 }
 /**
