@@ -92,7 +92,6 @@ typedef struct
 const adm_qt4_translation myTranslationTable[]=
 {
 #define PROCESS DECLARE_VAR
-	LIST_OF_OBJECTS
 	LIST_OF_BUTTONS
 #undef PROCESS
 };
@@ -199,7 +198,9 @@ void MainWindow::currentTimeChanged(void)
 	this->setFocus(Qt::OtherFocusReason);
 }
 
-
+/**
+    \fn ctor
+*/
 MainWindow::MainWindow() : QMainWindow()
 {
 	ui.setupUi(this);
@@ -231,9 +232,6 @@ MainWindow::MainWindow() : QMainWindow()
 	/*
 	Connect our button to buttonPressed
 	*/
-#define PROCESS CONNECT
-	LIST_OF_OBJECTS
-#undef PROCESS
 #define PROCESS CONNECT_TB
 	LIST_OF_BUTTONS
 #undef PROCESS
@@ -289,22 +287,71 @@ MainWindow::MainWindow() : QMainWindow()
     ui.menuCustom->addMenu(pyMenu);
 	buildCustomMenu();
 
+    recentFiles=new QMenu("Recent Files");
+    recentProjects=new QMenu("Recent Projects");
+    ui.menuRecent->addMenu(recentFiles);
+    ui.menuRecent->addMenu(recentProjects);
+    connect( ui.menuRecent,SIGNAL(triggered(QAction*)),this,SLOT(searchRecentFiles(QAction*)));
+
 	this->installEventFilter(this);
 	slider->installEventFilter(this);
-	
+    
 	//ui.currentTime->installEventFilter(this);
 
 	this->setFocus(Qt::OtherFocusReason);
 
 	setAcceptDrops(true);
     setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
+
+    // Hook also the toolbar
+    connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
+    connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
+
     
 }
 /**
-    buildFileMenu
+    \fn searchToolBar
+*/
+typedef struct 
+{
+    const char *name;
+    Action event;
+}toolBarTranslate;
+
+toolBarTranslate toolbar[]=
+{
+{"actionOpen",              ACT_OpenAvi},
+{"actionSave_video",        ACT_SaveVideo},
+{"actionProperties",        ACT_AviInfo},
+{"actionLoad_run_project",  ACT_RunPyProject},
+{"actionSave_project",      ACT_SavePyProject},
+//{"actionPreviewInput",ACT_PreviewToggle},
+//{"actionPreviewOutput",ACT_PreviewToggle},
+
+{NULL,ACT_DUMMY}
+};
+void MainWindow::searchToolBar(QAction *action)
+{
+        toolBarTranslate *t=toolbar;
+        QString me(action->objectName());
+        const char *name=me.toUtf8().constData();
+        while(t->name)
+        {
+            if(!strcmp(name,t->name))
+            {
+                HandleAction(t->event);
+                return;
+            }
+            t++;
+        }
+        ADM_warning("Toolbar:Cannot handle %s\n",name);
+}
+/**
+    \fn buildFileMenu
 */
 bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
 {
+    QMenu *subMenu=NULL;
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
@@ -313,16 +360,23 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
             case MENU_SEPARATOR:
                 root->addSeparator();
                 break;
+            case MENU_SUBMENU:
+                {
+                    subMenu=root->addMenu(m->text);
+                }
+                break;
+            case MENU_SUBACTION:
             case MENU_ACTION:
                 {   
-                        
+                        QMenu *insert=root;
+                        if(m->type==MENU_SUBACTION) insert=subMenu;
                         QAction *a=NULL;
                         if(m->icon) 
                         {
                             QIcon icon(m->icon);
-                            a=root->addAction(icon,m->text);
+                            a=insert->addAction(icon,m->text);
                         }else
-                            a=root->addAction(m->text);
+                            a=insert->addAction(m->text);
                         m->action=a;
                         break;
                 }
@@ -358,6 +412,9 @@ bool MainWindow::buildMyMenu(void)
     connect( ui.menuGo,SIGNAL(triggered(QAction*)),this,SLOT(searchGoMenu(QAction*)));
     buildMenu(ui.menuGo,myMenuGo, sizeof(myMenuGo)/sizeof(MenuEntry));
 
+    connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
+    buildMenu(ui.menuView,myMenuView, sizeof(myMenuView)/sizeof(MenuEntry));
+
     return true;
 }
 
@@ -387,34 +444,20 @@ void MainWindow::searchMenu(QAction * action,MenuEntry *menu, int nb)
 /**
     \fn searchFileMenu
 */
-void MainWindow::searchFileMenu(QAction * action)
-{
-    searchMenu(action,myMenuFile,sizeof(myMenuFile)/sizeof(MenuEntry));
-}
-void MainWindow::searchEditMenu(QAction * action)
-{
-    searchMenu(action,myMenuEdit,sizeof(myMenuEdit)/sizeof(MenuEntry));
-}
-void MainWindow::searchAudioMenu(QAction * action)
-{
-    searchMenu(action,myMenuAudio,sizeof(myMenuAudio)/sizeof(MenuEntry));
-}
-void MainWindow::searchVideoMenu(QAction * action)
-{
-    searchMenu(action,myMenuVideo,sizeof(myMenuVideo)/sizeof(MenuEntry));
-}
-void MainWindow::searchHelpMenu(QAction * action)
-{
-    searchMenu(action,myMenuHelp,sizeof(myMenuHelp)/sizeof(MenuEntry));
-}
-void MainWindow::searchToolMenu(QAction * action)
-{
-    searchMenu(action,myMenuTool,sizeof(myMenuTool)/sizeof(MenuEntry));
-}
-void MainWindow::searchGoMenu(QAction * action)
-{
-    searchMenu(action,myMenuGo,sizeof(myMenuGo)/sizeof(MenuEntry));
-}
+#define MKMENU(name) void MainWindow::search##name##Menu(QAction * action) \
+    {searchMenu(action,myMenu##name,sizeof(myMenu##name)/sizeof(MenuEntry));}
+
+MKMENU(File)
+MKMENU(Edit)
+//MKMENU(Recent)
+MKMENU(View)
+MKMENU(Tool)
+MKMENU(Go)
+//MKMENU(Custom)
+MKMENU(Audio)
+MKMENU(Video)
+MKMENU(Help)
+
 
 
 /*
@@ -510,7 +553,33 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 	return QObject::eventFilter(watched, event);
 }
-
+/**
+    \fn buildRecentMenu
+*/
+bool MainWindow::buildRecentMenu(void)
+{
+    const char **names;
+	names=prefs->get_lastfiles();
+    // Purge entries...
+    recentFiles->clear();
+    for(int i=0;i<4;i++)
+    {
+        if(names[i])
+        {
+            recentFileAction[i]=recentFiles->addAction(QString::fromUtf8(names[i]));
+        }else
+            recentFileAction[i]=NULL;
+    }
+	return true;
+}
+/**
+    \fn searchRecentFiles
+*/
+void MainWindow::searchRecentFiles(QAction * action)
+{
+    for(int i=0;i<4;i++)
+            if(recentFileAction[i]==action) HandleAction((Action)(ACT_RECENT0+i));
+}
 void MainWindow::mousePressEvent(QMouseEvent* event)
 {
 	this->setFocus(Qt::OtherFocusReason);
@@ -632,6 +701,7 @@ int UI_Init(int nargc,char **nargv)
 
 	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
 	UI_updateRecentMenu();
+
     // Init vumeter
     UI_InitVUMeter(mw->ui.frameVU);
 	return 0;
@@ -739,30 +809,7 @@ Action searchTranslationTable(const char *name)
 */
 uint8_t UI_updateRecentMenu( void )
 {
-	const char **names;
-	uint32_t nb_item=0;
-	QAction *actions[4]={WIDGET(actionRecent0),WIDGET(actionRecent1),WIDGET(actionRecent2),WIDGET(actionRecent3)};
-	names=prefs->get_lastfiles();
-
-	// hide them all
-	for(int i=0;i<4;i++) actions[i]->setVisible(0);
-	// Redraw..
-	for( nb_item=0;nb_item<4;nb_item++)
-	{
-		if(!names[nb_item]) 
-		{
-			return 1;
-		}
-		else
-		{
-			//actions[nb_item]->setVisible(1);
-			// Replace widget ?
-			actions[nb_item]->setText(QString::fromUtf8(names[nb_item]));
-			actions[nb_item]->setVisible(1);
-		}
-		// Update name
-	}
-	return 1;
+    return  ((MainWindow *)QuiMainWindows)->buildRecentMenu();
 }
 /** 
   \fn    setupMenus(void)

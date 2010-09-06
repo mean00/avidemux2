@@ -13,8 +13,9 @@
 enum MenuType
 {
     MENU_ACTION,
-    MENU_SEPARATOR
-
+    MENU_SEPARATOR,
+    MENU_SUBACTION,
+    MENU_SUBMENU
 };
 /**
     \struct MenuEntry
@@ -37,6 +38,7 @@ class MainWindow : public QMainWindow
 public:
 	MainWindow();
 	virtual ~MainWindow();	
+    bool buildRecentMenu(void);
 	void buildCustomMenu(void);
     bool buildMyMenu(void);
     bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
@@ -46,6 +48,9 @@ public:
 protected:
     QMenu *jsMenu;
     QMenu *pyMenu;
+    QMenu *recentFiles;
+    QMenu *recentProjects;
+    QAction *recentFileAction[4];
 public slots:
 	void timeChanged(int);
 	void buttonPressed(void);
@@ -71,8 +76,10 @@ public slots:
     void searchAudioMenu(QAction * action);
     void searchHelpMenu(QAction * action);
     void searchToolMenu(QAction * action);
+    void searchViewMenu(QAction * action);
     void searchGoMenu(QAction * action);
-
+    void searchRecentFiles(QAction * action);
+    void searchToolBar(QAction *);
 protected:
 	void clearCustomMenu(void);
 	bool eventFilter(QObject* watched, QEvent* event);

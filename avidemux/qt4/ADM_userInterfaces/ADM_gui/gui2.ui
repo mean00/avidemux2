@@ -1294,33 +1294,6 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <widget class="QMenu" name="menu_Preview">
-     <property name="title">
-      <string>&amp;Preview Mode</string>
-     </property>
-     <addaction name="actionPreviewInput"/>
-     <addaction name="actionPreviewOutput"/>
-     <addaction name="actionPreviewSide"/>
-     <addaction name="actionPreviewTop"/>
-     <addaction name="actionPreviewSeparate"/>
-    </widget>
-    <widget class="QMenu" name="menuPlayback_Aspect_Ratio">
-     <property name="title">
-      <string>Playback Aspect Ratio</string>
-     </property>
-     <addaction name="actionAR_Auto"/>
-     <addaction name="actionAR_1_1"/>
-     <addaction name="actionAR_4_3"/>
-     <addaction name="actionAR_16_9"/>
-    </widget>
-    <addaction name="actionZoom_1_4"/>
-    <addaction name="actionZoom_1_2"/>
-    <addaction name="actionZoom_1_1"/>
-    <addaction name="actionZoom_2_1"/>
-    <addaction name="separator"/>
-    <addaction name="menu_Preview"/>
-    <addaction name="separator"/>
-    <addaction name="menuPlayback_Aspect_Ratio"/>
    </widget>
    <widget class="QMenu" name="menuCustom">
     <property name="title">
@@ -1346,9 +1319,14 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuRecent">
+    <property name="title">
+     <string>&amp;Recent</string>
+    </property>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuRecent"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuVideo"/>

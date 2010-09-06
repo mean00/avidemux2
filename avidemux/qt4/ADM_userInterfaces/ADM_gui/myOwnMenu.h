@@ -2,8 +2,17 @@
 MenuEntry myMenuFile[]= {
             {MENU_ACTION,"Open",    NULL,ACT_OpenAvi,       MKICON(fileopen)},
             {MENU_ACTION,"Append",  NULL,ACT_AppendAvi      ,NULL},
-            {MENU_ACTION,"Save",    NULL,ACT_SaveAvi        ,MKICON(filesaveas)},
+            {MENU_ACTION,"Save",    NULL,ACT_SaveVideo      ,MKICON(filesaveas)},
             {MENU_ACTION,"Close",   NULL,ACT_CLOSE          ,NULL},
+            {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
+            {MENU_SUBMENU,"Js Project",NULL,ACT_DUMMY       ,NULL},
+
+            {MENU_SUBACTION,"Run jsProject",       NULL,ACT_RunJSProject         ,NULL},
+            {MENU_SUBACTION,"Save as jsProject",   NULL,ACT_SaveJsProject         ,NULL},
+
+            {MENU_SUBMENU,"tinyPy Project",NULL,ACT_DUMMY       ,NULL},
+            {MENU_SUBACTION,"Run pyProject",       NULL,ACT_RunPyProject         ,NULL},
+            {MENU_SUBACTION,"Save as pyProject",   NULL,ACT_SavePyProject         ,NULL},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
             {MENU_ACTION,"Information",NULL,ACT_AviInfo     ,MKICON(info)},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL},
@@ -47,6 +56,7 @@ MenuEntry myMenuTool[]= {
             {MENU_ACTION,"JavaScript Shell",NULL,ACT_JS_SHELL           ,NULL},
             {MENU_ACTION,"TinyPy Shell",    NULL,ACT_PY_SHELL           ,NULL},
         };
+
 MenuEntry myMenuGo[]= {
             {MENU_ACTION,"Play/Stop",           NULL,ACT_JS_SHELL,       MKICON(player_play)},
             {MENU_ACTION,"Previous Frame",      NULL,ACT_PY_SHELL       ,MKICON(previous)},
@@ -62,4 +72,11 @@ MenuEntry myMenuGo[]= {
             {MENU_ACTION,"Go To Marker B",      NULL,ACT_PY_SHELL       ,MKICON(markB)},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY,NULL},
             {MENU_ACTION,"Go To Time",          NULL,ACT_PY_SHELL       ,NULL},
+        };
+
+MenuEntry myMenuView[]= {
+            {MENU_ACTION,"Zoom 1:4",      NULL,ACT_ZOOM_1_4 ,NULL},
+            {MENU_ACTION,"Zoom 1:2",      NULL,ACT_ZOOM_1_2 ,NULL},
+            {MENU_ACTION,"Zoom 1:1",      NULL,ACT_ZOOM_1_1 ,NULL},
+            {MENU_ACTION,"Zoom 2:1",      NULL,ACT_ZOOM_2_1 ,NULL},
         };

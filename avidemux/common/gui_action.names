@@ -1,14 +1,12 @@
 // load/sabe
 ACT(OpenAvi)
 ACT(AppendAvi)
-ACT(SaveAvi)
 ACT(AviInfo)
 ACT(CLOSE)
 ACT(Exit)
 ACT(PlayAvi)
 ACT(StopAvi)
 ACT(RecentFiles)
-
 ACT(SetPostProcessing)
 //----- SAVE -----
 ACT(SAVE_BEGIN)
@@ -21,6 +19,8 @@ ACT(SaveJsProject)
 ACT(SavePyProject)
 ACT(SAVE_END)
 // /SAVE
+ACT(RunJSProject)
+ACT(RunPyProject)
 
 //--- NAVIGATE----
 ACT(NAVIGATE_BEGIN)
@@ -76,8 +76,6 @@ ACT(About)
 ACT(Pref)
 
 ACT(JumpToTime)
-ACT(RunScript)
-ACT(RunPyScript)
 ACT(AudioCodecChanged)
 ACT(VideoCodecChanged)
 ACT(PreviewChanged)

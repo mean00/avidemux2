@@ -181,10 +181,10 @@ int nw;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
-    case ACT_RunPyScript:
+    case ACT_RunPyProject:
             GUI_FileSelRead (QT_TR_NOOP("Select python script to Run"),(SELFILE_CB *) A_parseTinyPyScript);
     		return;
-    case ACT_RunScript:
+    case ACT_RunJSProject:
             GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
 

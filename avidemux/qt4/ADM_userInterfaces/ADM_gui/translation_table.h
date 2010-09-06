@@ -1,9 +1,3 @@
-#define LIST_OF_OBJECTS     \
-PROCESS(actionZoom_1_4,ACT_ZOOM_1_4) \
-PROCESS(actionZoom_1_2,ACT_ZOOM_1_2) \
-PROCESS(actionZoom_1_1,ACT_ZOOM_1_1) \
-PROCESS(actionZoom_2_1,ACT_ZOOM_2_1) \
-
 #define LIST_OF_BUTTONS     PROCESS(pushButtonVideoConf, ACT_VideoCodec)  \
 PROCESS(pushButtonVideoFilter, ACT_VideoParameter) \
 PROCESS(pushButtonAudioConf, ACT_AudioCodec) \

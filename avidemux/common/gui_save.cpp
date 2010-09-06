@@ -84,7 +84,7 @@ void HandleAction_Save(Action action)
       	//GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       	break;
 //----------------------test-----------------------
-    case ACT_SaveAvi:
+    case ACT_SaveVideo:
       GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"),(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
       break;
 //---------------------------------------------------
