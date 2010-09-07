@@ -398,17 +398,28 @@ static bool populateCombobox(int nb,const char *widgetName, listCallback *listEn
 {
         
         GtkComboBox     *combo_box;
-        combo_box=GTK_COMBO_BOX(glade.getWidget(widgetName));
         GtkListStore *list_store;
+        GtkCellRenderer *renderer;
+        GtkTreeIter iter;
+
+        combo_box=GTK_COMBO_BOX(glade.getWidget(widgetName));
         list_store = gtk_list_store_new (1, G_TYPE_STRING);
-        gtk_combo_box_set_model(combo_box,GTK_TREE_MODEL(list_store));
+        
         gtk_combo_box_remove_text(combo_box,0);
 
         for(uint32_t i=0;i<nb;i++)
         {
                 const char *name=listEntry(i);
-                gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
+            
+                gtk_list_store_append (list_store, &iter); 
+                gtk_list_store_set (list_store, &iter, 0, listEntry(i), -1);
+                
         }
+        gtk_combo_box_set_model(combo_box,GTK_TREE_MODEL(list_store));
+        renderer = gtk_cell_renderer_text_new();
+        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo_box), renderer, TRUE);
+        gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo_box), renderer,"text", 0, NULL);
+
         return true;
 }
 /**

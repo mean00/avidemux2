@@ -61,9 +61,11 @@ void DIA_properties( void )
         sprintf(text, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
         FILL_ENTRY(label_duration);
         // Fill in vop, gmc & qpel
+#if 0
         SET_YES(labelPacked,vop);
         SET_YES(labelGMC,gmc);
         SET_YES(labelQP,qpel);
+#endif
         // Aspect ratio
         const char *s;
         war=video_body->getPARWidth();
