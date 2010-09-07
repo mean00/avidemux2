@@ -102,8 +102,8 @@ extern uint32_t    ADM_ve6_getNbEncoders(void);
 
 extern uint8_t AVDM_setVolume(int volume);
 extern void checkCrashFile(void);
-#define AUDIO_WIDGET   "comboboxAudio"
-#define VIDEO_WIDGET   "comboboxVideo"
+#define AUDIO_WIDGET   "comboboxAudio1"
+#define VIDEO_WIDGET   "comboboxVideo1"
 #define FORMAT_WIDGET  "comboboxFormat"
 #define PREVIEW_WIDGET "comboboxPreview"
 //
@@ -185,22 +185,20 @@ buttonCallBack_S buttonCallback[]=
 	{"toolbuttonInfo"		,"clicked"		,ACT_VIDEO_PROPERTIES},
 	{"toolbuttonSave"		,"clicked"		,ACT_SAVE_VIDEO},
 
-	{"buttonFilters"		,"clicked"		,ACT_VIDEO_FILTERS},
-	{"buttonAudioFilter"	,"clicked"		,ACT_AUDIO_FILTERS},
-	{"buttonConfV"			,"clicked"		,ACT_VIDEO_CODEC_CONFIGURE},
-	{"buttonConfA"			,"clicked"		,ACT_AUDIO_CODEC_CONFIGURE},
-	{"buttonConfF"			,"clicked"		,ACT_ContainerConfigure},
+	{"buttonFilters1"		,"clicked"		,ACT_VIDEO_FILTERS},
+	{"buttonAudioFilter1"	,"clicked"		,ACT_AUDIO_FILTERS},
+	{"buttonConfV1"	        ,"clicked"		,ACT_VIDEO_CODEC_CONFIGURE},
+	{"buttonAudioFilter1"	,"clicked"		,ACT_AUDIO_CODEC_CONFIGURE},
+	{"buttonContainerConfigure","clicked"	,ACT_ContainerConfigure},
 
 	{"buttonPrevBlack"		,"clicked"		,ACT_PrevBlackFrame},
 	{"buttonNextBlack"		,"clicked"		,ACT_NextBlackFrame},
 	{"buttonGotoA"			,"clicked"		,ACT_GotoMarkA},
 	{"buttonGotoB"			,"clicked"		,ACT_GotoMarkB},
-//	{"toolbuttonCalc"		,"clicked"		,ACT_Bitrate},
+	{"buttonConfVideoDecoder"       ,"clicked"		,ACT_DecoderOption},
+    {"buttonContainerConfigure"     ,"clicked"		,ACT_ContainerConfigure},
+    {"CheckButtonTimeshift1"         ,"toggled"      ,ACT_TimeShift}
 
-	//{"boxCurFrame"			,"activate"		,ACT_JumpToFrame},
-	//{"boxCurTime"			,"editing_done"		,ACT_TimeChanged},
-    {"CheckButtonTimeshift"         ,"toggled"             ,ACT_TimeShift}
-    // {"spinbuttonTimeShift"          ,"editing_done"       ,ACT_TimeShift}
 
 };
 
@@ -393,6 +391,27 @@ const char * GUI_getCustomPyScript(uint32_t nb)
    return NULL;
 }
 /**
+    \fn populateCombobox
+*/
+typedef const char *listCallback(uint32_t rank);
+static bool populateCombobox(int nb,const char *widgetName, listCallback *listEntry)
+{
+        
+        GtkComboBox     *combo_box;
+        combo_box=GTK_COMBO_BOX(glade.getWidget(widgetName));
+        GtkListStore *list_store;
+        list_store = gtk_list_store_new (1, G_TYPE_STRING);
+        gtk_combo_box_set_model(combo_box,GTK_TREE_MODEL(list_store));
+        gtk_combo_box_remove_text(combo_box,0);
+
+        for(uint32_t i=0;i<nb;i++)
+        {
+                const char *name=listEntry(i);
+                gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
+        }
+        return true;
+}
+/**
      \fn bindGUI
      \brief Bind the GUI to our handling functions/callbacks
 */
@@ -411,12 +430,6 @@ uint8_t  bindGUI( void )
 	ADM_LOOKUP(guiTotalTime,labelTotalTime);
 
 #undef ADM_LOOKUP
-  // bind menu
- #define CALLBACK(x,y) gtk_signal_connect(GTK_OBJECT( glade.getWidget(#x)), "activate", \
-                      GTK_SIGNAL_FUNC(guiCallback),                   (void *) y)
-
- 	#include "GUI_menumap.h"
-  #undef CALLBACK
   /// /bind menu
 
 // destroy
@@ -443,14 +456,14 @@ uint8_t  bindGUI( void )
     gtk_signal_connect(GTK_OBJECT(glade.getWidget("jogg")), "value_changed", GTK_SIGNAL_FUNC(jogChange), (void *) NULL);
 
 	// Time Shift
-	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift")), "focus_in_event", GTK_SIGNAL_FUNC(UI_grabFocus), (void *) NULL);
-	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift")), "focus_out_event", GTK_SIGNAL_FUNC(UI_loseFocus), (void *) NULL);
-	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift")), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_TimeShift);
+	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift1")), "focus_in_event", GTK_SIGNAL_FUNC(UI_grabFocus), (void *) NULL);
+	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift1")), "focus_out_event", GTK_SIGNAL_FUNC(UI_loseFocus), (void *) NULL);
+	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift1")), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_TimeShift);
 
 #define ADD_SIGNAL(a,b,c)  gtk_signal_connect(GTK_OBJECT(a), b, GTK_SIGNAL_FUNC(guiCallback), (void *) c);
 
    	ADD_SIGNAL(guiSlider,"value_changed",ACT_Scale);
-	ADD_SIGNAL(glade.getWidget("spinbuttonTimeShift"),"value_changed",ACT_TimeShift);
+	ADD_SIGNAL(glade.getWidget("spinbuttonTimeShift1"),"value_changed",ACT_TimeShift);
 
 	// Callbacks for buttons
 		uint32_t nb=sizeof(buttonCallback)/sizeof(buttonCallBack_S);
@@ -497,74 +510,17 @@ uint8_t  bindGUI( void )
 
 
 	// Finally add video codec...
-	uint32_t nbVid;
-	const char *name;
-        GtkComboBox     *combo_box;
-
-                nbVid=ADM_ve6_getNbEncoders();
-                combo_box=GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET));
-                gtk_combo_box_remove_text(combo_box,0);
-                printf("Found %d video encoder\n",nbVid);
-                for(uint32_t i=0;i<nbVid;i++)
-                {
-                        name=ADM_ve6_getMenuName(i);
-                        gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
-                }
-
-        gtk_combo_box_set_active(combo_box,0);
+        populateCombobox(ADM_ve6_getNbEncoders(),VIDEO_WIDGET, ADM_ve6_getMenuName);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)),0);
         on_video_change();
-        // And A codec
-        // Finally add video codec...
-        uint32_t nbAud;
-                nbAud=audioEncoderGetNumberOfEncoders();
-                combo_box=GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET));
-                gtk_combo_box_remove_text(combo_box,0);
-                printf("Found %d audio encoder\n",nbAud);
-                for(uint32_t i=0;i<nbAud;i++)
-                {
-                        name=audioEncoderGetDisplayName(i); //audioFilterGetIndexedName(i);
-                        printf("Found %d %s audio encoder\n",i,name);
-                        gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
-                }
-        gtk_combo_box_set_active(combo_box,0);
+    // And A codec
+        populateCombobox(audioEncoderGetNumberOfEncoders(),AUDIO_WIDGET, audioEncoderGetDisplayName);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET)),0);
         on_audio_change();
-        /*   Fill in output format window */
-        uint32_t nbFormat;
-
-        nbFormat=ADM_mx_getNbMuxers();
-        combo_box=GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET));
-        ADM_assert(combo_box);
-        gtk_combo_box_remove_text(combo_box,0);
-        printf("Found %d Format \n",nbFormat);
-        for(uint32_t i=0;i<nbFormat;i++)
-        {
-                name=ADM_mx_getDisplayName(i);
-                gtk_combo_box_append_text      (combo_box,QT_TR_NOOP(name));
-        }
-        gtk_combo_box_set_active(combo_box,0);
-
-
-
-        /* File in preview mode combobox */
-            const char *previewText[]=
-                {
-                    QT_TR_NOOP("Input"),
-                    QT_TR_NOOP("Output"),
-                    QT_TR_NOOP("Side"),
-                    QT_TR_NOOP("Top"),
-                    QT_TR_NOOP("Separate")
-                };
-
-                combo_box=GTK_COMBO_BOX(glade.getWidget(PREVIEW_WIDGET));
-                gtk_combo_box_remove_text(combo_box,0);
-                for(uint32_t i=0;i<sizeof(previewText)/sizeof(char*);i++)
-                {
-                        name=previewText[i];
-                        gtk_combo_box_append_text      (combo_box,(name));
-                }
-        gtk_combo_box_set_active(combo_box,0);
-        // Format
-                 gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET)),0);
+    // and container
+        populateCombobox(ADM_mx_getNbMuxers(),FORMAT_WIDGET, ADM_mx_getDisplayName);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET)),0);
+        on_audio_change();
 
     //
         gtk_signal_connect(GTK_OBJECT(glade.getWidget(VIDEO_WIDGET)), "changed",
@@ -1142,8 +1098,8 @@ int enable;
                 enable=0;
         }
         else enable=1;
-        gtk_widget_set_sensitive(glade.getWidget("buttonConfV"),enable);
-        gtk_widget_set_sensitive(glade.getWidget("buttonFilters"),enable);
+        gtk_widget_set_sensitive(glade.getWidget("buttonConfV1"),enable);
+        gtk_widget_set_sensitive(glade.getWidget("buttonFilters1"),enable);
         HandleAction(ACT_VIDEO_CODEC_CHANGED);
 }
 /**
@@ -1159,8 +1115,8 @@ int enable;
                 enable=0;
         }
         else enable=1;
-        gtk_widget_set_sensitive(glade.getWidget("buttonConfA"),enable);
-        gtk_widget_set_sensitive(glade.getWidget("buttonAudioFilter"),enable);
+        gtk_widget_set_sensitive(glade.getWidget("buttonConfA1"),enable);
+        gtk_widget_set_sensitive(glade.getWidget("buttonAudioFilter1"),enable);
         HandleAction(ACT_AUDIO_CODEC_CHANGED);
 
 }
@@ -1199,23 +1155,41 @@ void   UI_setCurrentPreview(int ne)
 
  }
 
+
+static int wrapGetCurrent(const char *widget)
+{
+    int i=gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(widget)));
+    if(i<0)
+    {
+        ADM_warning("Out of range for widget %s\n",widget);
+        i=0;
+    }
+    return i;
+}
+/**
+    \fn UI_getCurrentACodec
+*/
  int 	UI_getCurrentACodec(void)
  {
-        //return getRangeInMenu(lookup_widget(guiRootWindow,AUDIO_WIDGET));
-#warning broken
-        //return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET)));
-        return 0;
-
+        return wrapGetCurrent(AUDIO_WIDGET);
  }
+/**
+    \fn UI_getCurrentVCodec
+*/
  int 	UI_getCurrentVCodec(void)
  {
-
- 	//return getRangeInMenu(lookup_widget(guiRootWindow,VIDEO_WIDGET));
-#warning broken
-        //return gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)));
-    return 0;
-
+    return wrapGetCurrent(VIDEO_WIDGET);
  }
+/**
+    \fn UI_GetCurrentFormat
+    \brief Returns index of the currently selected container
+
+*/
+int UI_GetCurrentFormat( void )
+{
+
+	return wrapGetCurrent(FORMAT_WIDGET);
+}
 /**
     \fn UI_setAudioCodec
 */
@@ -1224,8 +1198,8 @@ void UI_setAudioCodec( int i)
         //gtk_option_menu_set_history(GTK_OPTION_MENU(lookup_widget(guiRootWindow,AUDIO_WIDGET)), i);
         update_ui=1;
         gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET)),i);
-        gtk_widget_set_sensitive(glade.getWidget("buttonConfA"),i);
-        gtk_widget_set_sensitive(glade.getWidget("buttonAudioFilter"),i);
+        gtk_widget_set_sensitive(glade.getWidget("buttonConfA1"),i);
+        gtk_widget_set_sensitive(glade.getWidget("buttonAudioFilter1"),i);
         update_ui=0;
 }
 /**
@@ -1237,30 +1211,12 @@ void UI_setVideoCodec( int i)
         //gtk_option_menu_set_history(GTK_OPTION_MENU(lookup_widget(guiRootWindow,VIDEO_WIDGET)), i);
         update_ui=1;
         gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)),i);
-        gtk_widget_set_sensitive(glade.getWidget("buttonConfV"),i);
-        gtk_widget_set_sensitive(glade.getWidget("buttonFilters"),i);
+        gtk_widget_set_sensitive(glade.getWidget("buttonConfV1"),i);
+        gtk_widget_set_sensitive(glade.getWidget("buttonFilters1"),i);
         update_ui=0;
 
 }
 
-void UI_NormalCursor( void )
-{
-//	gtk_widget_set_events(guiRootWindow,guiCursorEvtMask);
-	gdk_window_set_cursor((guiRootWindow->window),
-                                          NULL); //guiCursorNormal);
-
-
-}
-/**
-    \fn UI_GetCurrentFormat
-    \brief Returns index of the currently selected container
-
-*/
-int UI_GetCurrentFormat( void )
-{
-
-	return (uint32_t)gtk_combo_box_get_active(GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET)));
-}
 /**
     \fn UI_GetCurrentFormat
     \brief Returns index of the currently selected container
@@ -1272,6 +1228,14 @@ bool UI_SetCurrentFormat( uint32_t  fmt )
 
 	 gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET)),fmt);
 	return true;
+}
+void UI_NormalCursor( void )
+{
+//	gtk_widget_set_events(guiRootWindow,guiCursorEvtMask);
+	gdk_window_set_cursor((guiRootWindow->window),
+                                          NULL); //guiCursorNormal);
+
+
 }
 /**
     \fn DNDmerge
@@ -1654,7 +1618,9 @@ bool UI_setVUMeter(uint32_t volume[6])
 */
 bool UI_setDecoderName(const char *name)
 {
-        return true;
+    GtkLabel *wid=(GtkLabel *)glade.getWidget("labelVideoDecoder");
+	gtk_label_set_text( wid,name);
+    return true;
 }
 // EOF
 
