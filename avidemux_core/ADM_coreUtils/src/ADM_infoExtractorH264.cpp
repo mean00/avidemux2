@@ -178,6 +178,10 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
   *fps1000=0;
   uint32_t profile, constraint, level, pic_order_cnt_type, w, h, mbh,
     frame_mbs_only;
+  uint32_t frame_cropping_flag;
+  uint32_t chroma_format_idc = 1; // this defaults to 1 when it's missing
+  uint32_t separate_colour_plane_flag = 0;
+  uint32_t chroma_array_type = 0;
   uint8_t buf[len];
   uint32_t outlen;
   uint32_t id, dum;
@@ -194,8 +198,9 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
   if (profile >= 100)		// ?? Borrowed from H264.C/FFMPEG
     {
       printf ("[H264]Warning : High profile\n");
-      if (bits.getUEG() == 3)	//chroma_format_idc
-        bits.get(1);		//residual_color_transform_flag
+      chroma_format_idc = bits.getUEG();
+      if (chroma_format_idc == 3)	//chroma_format_idc
+        separate_colour_plane_flag = bits.get(1);		//residual_color_transform_flag
       bits.getUEG();	//bit_depth_luma_minus8
       bits.getUEG();	//bit_depth_chroma_minus8
       bits.get(1);		// Transform bypass
@@ -206,6 +211,8 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
 	  }
     }
 
+	if ( separate_colour_plane_flag == 0 )
+		chroma_array_type = chroma_format_idc;
 
   dum = bits.getUEG();	// log2_max_frame_num_minus4
   printf ("[H264]Log2maxFrame-4:%u\n", dum);
@@ -256,12 +263,38 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
 
   bits.get(1);
 
-  if (bits.get(1))
-    {
-      bits.getUEG();
-      bits.getUEG();
-      bits.getUEG();
-      bits.getUEG();
+	frame_cropping_flag = bits.get(1);
+ 	if (frame_cropping_flag)
+	{
+		// The tests could probably be done more simply but the following is per the spec.
+		uint32_t cl, cr, ct, cb;
+		int cux = 1; // x units
+		int cuy = 2 - frame_mbs_only; // y units
+		if ( chroma_array_type > 0 ) {
+			switch( chroma_format_idc ) {
+			case 1:
+				cux = 2;
+				cuy = 2 * ( 2 - frame_mbs_only );
+				break;
+			case 2:
+				cux = 2;
+				cuy = 1 * ( 2 - frame_mbs_only );
+				break;
+			case 3:
+				cux = 1; 
+				cuy = 1 * ( 2 - frame_mbs_only );
+				break;
+			}
+		}
+		cl = bits.getUEG() * cux;
+		cr = bits.getUEG() * cux;
+		ct = bits.getUEG() * cuy;
+		cb = bits.getUEG() * cuy;
+		*wwidth -= cl; // reduce dims based on crop values
+		*wwidth -= cr;
+		*hheight -= ct;
+		*hheight -= cb;
+		printf ("[H264] Has cropping of l:%d  r:%d  t:%d  b:%d\n", cl, cr, ct, cb);
     }
 
   if (bits.get(1))
