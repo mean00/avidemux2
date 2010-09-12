@@ -13,6 +13,7 @@
 #include "prefs.h"
 
 #include "DIA_coreToolkit.h"
+#include "DIA_coreUI_internal.h"
 
 #include "ADM_assert.h" 
 
@@ -41,8 +42,12 @@ static void boxAdd(const char *str)
 }
 
 
+namespace ADM_CliCoreUIToolkit
+{
+extern DIA_workingBase *createWorking(const char *title);
+extern DIA_encodingBase *createEncoding(uint64_t duration);
 
-void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format, ...)
+void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format)
 {
   uint32_t msglvl=2;
 
@@ -58,20 +63,12 @@ void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, cons
                 return;
         }
 
-        va_list ap;
-        va_start(ap, secondary_format);
-        
-        
-        char alertstring[1024];
-        
-        vsnprintf(alertstring,1023,secondary_format, ap);
-        va_end(ap);
-        boxAdd(alertstring);
+        boxAdd(secondary_format);
         boxEnd();
         
 }
 
-void            GUI_Error_HIG(const char *primary, const char *secondary_format, ...)
+void            GUI_Error_HIG(const char *primary, const char *secondary_format)
 {
         boxStart();
         boxAdd("Error");
@@ -82,18 +79,11 @@ void            GUI_Error_HIG(const char *primary, const char *secondary_format,
                 return;
         }else
         {
-          va_list ap;
-          va_start(ap, secondary_format);
-
-          char alertstring[1024];
-          
-          vsnprintf(alertstring,1023,secondary_format, ap);
-          va_end(ap);
-          boxAdd(alertstring);
+          boxAdd(secondary_format);
           boxEnd();
         }
 }
-int             GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format, ...)
+int             GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format)
 {
    uint32_t msglvl=2;
 
@@ -110,15 +100,7 @@ int             GUI_Confirmation_HIG(const char *button_confirm, const char *pri
         }
         else
         {
-            va_list ap;
-            va_start(ap, secondary_format);
-            
-            
-            char alertstring[1024];
-            
-            vsnprintf(alertstring,1023,secondary_format, ap);
-            va_end(ap);
-            boxAdd(alertstring);
+            boxAdd(secondary_format);
             boxEnd();
         }
         if (beQuiet)
@@ -140,7 +122,7 @@ int             GUI_Confirmation_HIG(const char *button_confirm, const char *pri
         return 0; 
 }
 
-int             GUI_YesNo(const char *primary, const char *secondary_format, ...)
+int             GUI_YesNo(const char *primary, const char *secondary_format)
 {
    uint32_t msglvl=2;
 
@@ -157,15 +139,7 @@ int             GUI_YesNo(const char *primary, const char *secondary_format, ...
         }
         else
         {
-            va_list ap;
-            va_start(ap, secondary_format);
-            
-            
-            char alertstring[1024];
-            
-            vsnprintf(alertstring,1023,secondary_format, ap);
-            va_end(ap);
-            boxAdd(alertstring);
+            boxAdd(secondary_format);
             boxEnd();
         }
         if (beQuiet)
@@ -204,7 +178,7 @@ int             GUI_Question(const char *alertstring)
           }
 }
 
-int      GUI_Alternate(char *title,char *choice1,char *choice2)
+int      GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
   boxStart();
   boxAdd("Choice");
@@ -246,8 +220,37 @@ int32_t UI_readJog(void)
 {
  return 0; 
 }
+void getVersion(uint32_t *maj,uint32_t *minor)
+{
+    *maj=ADM_CORE_TOOLKIT_MAJOR;
+    *minor=ADM_CORE_TOOLKIT_MINOR;
+}
+
+void UI_purge( void )
+{
+}
+
+}; // namespace
+static CoreToolkitDescriptor CliCoreToolkitDescriptor=
+{
+		&ADM_CliCoreUIToolkit::getVersion,
+		&ADM_CliCoreUIToolkit::GUI_Info_HIG,
+		&ADM_CliCoreUIToolkit::GUI_Error_HIG,
+		&ADM_CliCoreUIToolkit::GUI_Confirmation_HIG,
+		&ADM_CliCoreUIToolkit::GUI_YesNo,
+		&ADM_CliCoreUIToolkit::GUI_Question,
+		&ADM_CliCoreUIToolkit::GUI_Alternate,
+		&ADM_CliCoreUIToolkit::GUI_Verbose,
+		&ADM_CliCoreUIToolkit::GUI_Quiet,
+		&ADM_CliCoreUIToolkit::GUI_isQuiet,
+                &ADM_CliCoreUIToolkit::createWorking,
+                &ADM_CliCoreUIToolkit::createEncoding,
+                &ADM_CliCoreUIToolkit::UI_purge
+};
+
+
 void InitCoreToolkit(void)
 {
-	
+	DIA_toolkitInit(&CliCoreToolkitDescriptor);
 }
 //EOF

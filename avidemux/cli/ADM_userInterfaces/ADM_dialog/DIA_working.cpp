@@ -139,4 +139,11 @@ DIA_workingNone::~DIA_workingNone()
 	
         
 }
+namespace ADM_CliCoreUIToolkit
+{
+DIA_workingBase *createWorking(const char *title)
+{
+        return new DIA_workingNone(title);
 
+}
+}
