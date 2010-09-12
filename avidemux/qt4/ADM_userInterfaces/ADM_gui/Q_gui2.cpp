@@ -152,6 +152,14 @@ void MainWindow::sliderReleased(void)
 	SliderIsShifted = 0;
 }
 
+void MainWindow::thumbSlider_valueEmitted(int value)
+{
+        if (value > 0)
+                nextIntraFrame();
+        else
+                previousIntraFrame();
+}
+
 void MainWindow::volumeChange( int u )
 {
 	if (_upd_in_progres || !ui.toolButtonAudioToggle->isChecked())
@@ -241,6 +249,11 @@ MainWindow::MainWindow() : QMainWindow()
 	connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
 	connect( slider,SIGNAL(sliderMoved(int)),this,SLOT(sliderMoved(int)));
 	connect( slider,SIGNAL(sliderReleased()),this,SLOT(sliderReleased()));
+
+   // Thumb slider
+    ui.sliderPlaceHolder->installEventFilter(this);
+    thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
+    connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
 
 	// Volume slider
 	QSlider *volSlider=ui.horizontalSlider_2;
@@ -527,6 +540,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 			}
 
 			break;
+        case QEvent::Resize:
+            if (watched == ui.sliderPlaceHolder)
+            {
+                    thumbSlider->resize(ui.sliderPlaceHolder->width(), 16);
+                    thumbSlider->move(0, (ui.sliderPlaceHolder->height() - thumbSlider->height()) / 2);
+            }
+            break;
+
 		case QEvent::KeyRelease:
 			keyEvent = (QKeyEvent*)event;
 
@@ -629,6 +650,8 @@ void MainWindow::nextIntraFrame(void)
 MainWindow::~MainWindow()
 {
 	clearCustomMenu();
+    delete thumbSlider;
+    thumbSlider=NULL;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

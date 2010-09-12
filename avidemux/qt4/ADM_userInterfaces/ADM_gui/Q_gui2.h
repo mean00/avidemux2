@@ -5,6 +5,7 @@
 #include <QtGui/QWidget>
 
 #include "ADM_qslider.h"
+#include "T_thumbSlider.h"
 #include "ui_gui2.h"
 #include "gui_action.hxx"
 
@@ -33,6 +34,8 @@ protected:
     QMenu *recentFiles;
     QMenu *recentProjects;
     QAction *recentFileAction[4];
+    ThumbSlider *thumbSlider;
+    
 public slots:
 	void timeChanged(int);
 	void buttonPressed(void);
@@ -52,6 +55,9 @@ public slots:
 	void timeChangeFinished(void);
 	void currentFrameChanged(void);
 	void currentTimeChanged(void);
+
+    void thumbSlider_valueEmitted(int value);
+
     void searchFileMenu(QAction * action);
     void searchEditMenu(QAction * action);
     void searchVideoMenu(QAction * action);

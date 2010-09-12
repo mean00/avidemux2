@@ -1180,6 +1180,9 @@
           </item>
          </layout>
         </item>
+        <item row="0" column="1">
+         <widget class="QWidget" name="sliderPlaceHolder" native="true"/>
+        </item>
        </layout>
       </item>
       <item>
