@@ -66,6 +66,7 @@ static GtkWidget *guiTotalTime=NULL;
 
 
 static GtkWidget *guiVideoToggle=NULL;
+static GtkWidget *guiRecentMenu=NULL;
 static GdkCursor *guiCursorBusy=NULL;
 static GdkCursor *guiCursorNormal=NULL;
 
@@ -348,6 +349,8 @@ uint32_t w,h;
 #endif
 
     ui_setMenus();
+    UI_updateRecentMenu(  );
+    GUI_initCustom();
 
 	return ret;
 }
@@ -547,8 +550,8 @@ uint8_t  bindGUI( void )
                        GTK_SIGNAL_FUNC(on_format_change),
                        NULL);
 
-        // Add initial recent files
-        UI_updateRecentMenu(  );
+        
+        
     //
     //CYB 2005.02.22: DND (START)
     // Set up avidemux as an available drag'n'drop target.
@@ -566,8 +569,6 @@ uint8_t  bindGUI( void )
 
    // By default enable arrow keys
    UI_arrow_enabled();
-  // Add custom menu
- GUI_initCustom();
     return 1;
 
 }
@@ -942,12 +943,12 @@ gint b;
 /**
     \fn ui_setMenus
 */
-void ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
+GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, MenuEntry *desc, int nb)
 {
+    
     GtkWidget *window;
     GtkWidget *menu;
     GtkWidget *menu_bar;
-    GtkWidget *root_menu;
     GtkWidget *menu_items;
     GtkWidget *submenu=NULL;
 
@@ -990,22 +991,31 @@ void ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
         }
     }
 
-    /* This is the root menu, and will be the label
-     * displayed on the menu bar.  There won't be a signal handler attached,
-     * as it only pops up the rest of the menu when pressed. */
-    root_menu = gtk_menu_item_new_with_label (menuName);
+    /* Now we specify that we want our newly created "menu" to be the menu
+     * for the "root menu" */
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (rootMenu), menu);
+    return rootMenu;
+}
+
+/**
+    \fn ui_setOneMenu
+*/
+GtkWidget *ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
+{
+    GtkWidget *root_menu = gtk_menu_item_new_with_label (menuName);
 
     gtk_widget_show (root_menu);
 
-    /* Now we specify that we want our newly created "menu" to be the menu
-     * for the "root menu" */
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM (root_menu), menu);
     /* Create a menu-bar to hold the menus and add it to our main window */
-    menu_bar=(glade.getWidget("menuBar"));
+    GtkWidget *menu_bar=(glade.getWidget("menuBar"));
     /* Create a button to which to attach menu as a popup */
     /* And finally we append the menu-item to the menu-bar -- this is the
      * "root" menu-item I have been raving about =) */
     gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), root_menu);
+    if(nb)
+        ui_fillOneMenu(root_menu, desc,  nb);
+    return root_menu;
+
 }
 /**
     \fn ui_setMenus
@@ -1014,7 +1024,7 @@ void ui_setMenus(void)
 {
 #define SZ(x) x,sizeof(x)/sizeof(MenuEntry)
     ui_setOneMenu("File", SZ(myMenuFile));
-    ui_setOneMenu("Recent", NULL,0);
+    guiRecentMenu=ui_setOneMenu("Recent", NULL,0);
     ui_setOneMenu("Edit", SZ(myMenuEdit));
     ui_setOneMenu("View", SZ(myMenuView));
     ui_setOneMenu("Video", SZ(myMenuVideo));
@@ -1389,7 +1399,27 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
                 gtk_widget_show (item[i]);
         }
         gtk_menu_tool_button_set_menu   (GTK_MENU_TOOL_BUTTON(button),menu);
-        return 1;
+/**/
+    {
+    GtkWidget *menu;
+    GtkWidget *menu_items;
+    menu = gtk_menu_new ();
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (guiRecentMenu), menu);
+    for(int i=0;i<4;i++)
+        {
+                     if(!names[i]) break;
+                     menu_items = gtk_menu_item_new_with_label (names[i]);
+                     gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
+                     gtk_widget_show (menu_items);
+                     gtk_signal_connect(GTK_OBJECT(menu_items), "activate", 
+                        GTK_SIGNAL_FUNC(guiCallback),                   (void *) recent[i]);
+                     gtk_widget_show (menu_items);
+        }
+      
+    gtk_widget_show(menu);
+    gtk_widget_show(guiRecentMenu);
+    }  
+    return 1;
 }
 
 // Override arrow keys to quickly navigate
