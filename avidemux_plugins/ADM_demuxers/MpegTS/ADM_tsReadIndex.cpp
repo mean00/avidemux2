@@ -255,7 +255,11 @@ bool    tsHeader::readVideo(indexFile *index)
         return false;
     }
     printf("[tsDemux] Video pid is 0x%x %d\n",videoPid,videoPid);
-    if(!w || !h || !fps) return false;
+    if(!w || !h || !fps) 
+    {
+        ADM_error("Width, height or fps1000 missing...\n");
+        return false;
+    }
 
     interlaced=index->getAsUint32("Interlaced");
     

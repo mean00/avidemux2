@@ -148,6 +148,7 @@ protected:
         tsPacketLinearTracker   *pkt;
         listOfTsAudioTracks     *audioTracks;
         DIA_workingBase         *ui;
+        ADM_SPSInfo             spsInfo;
         void                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
         bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
@@ -242,6 +243,7 @@ bool r;
 */
 TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
 {
+    memset(&spsInfo,0,sizeof(spsInfo));
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
@@ -398,11 +400,16 @@ uint32_t recoveryCount=0xff;
           // Get info
           pkt->getInfo(&info);
           pkt->read(SPS_READ_AHEAD,buffer);
-          if (extractSPSInfo(buffer, SPS_READ_AHEAD, &video.w,&video.h,&video.fps,&xA,&xR))
+          if (extractSPSInfo(buffer, SPS_READ_AHEAD,&spsInfo))
           {
               
               printf("[TsIndexer] Found video %"LU"x%"LU", fps=%"LU"\n",video.w,video.h,video.fps);
               seq_found=1;
+              video.w=spsInfo.width;
+              video.h=spsInfo.height;
+              video.fps=spsInfo.fps1000;
+              xA=spsInfo.darNum;
+              xR=spsInfo.darDen;
               writeVideo(&video,ADM_TS_H264);
               writeAudio();
               qfprintf(index,"[Data]");

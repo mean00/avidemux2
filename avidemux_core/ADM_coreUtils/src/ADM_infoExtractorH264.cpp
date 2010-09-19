@@ -64,10 +64,9 @@ unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 /**
         \fn extractVUIInfo
 */
-static uint8_t  extractVUIInfo (getBits &bits, uint32_t * fps1000, uint32_t * darNum,
-		uint32_t * darDen)
+static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
 {
-  *fps1000 = *darNum = *darDen = 0;
+  
 
   if (bits.get(1))
     {
@@ -75,14 +74,14 @@ static uint8_t  extractVUIInfo (getBits &bits, uint32_t * fps1000, uint32_t * da
 
       if (aspect_ratio_information == 255)
 	{
-	  *darNum = bits.get( 16);
-	  *darDen = bits.get( 16);
+	  spsinfo->darNum = bits.get( 16);
+	  spsinfo->darDen = bits.get( 16);
 	}
       else if (aspect_ratio_information <
 	       sizeof (pixel_aspect) / sizeof (*pixel_aspect))
 	{
-	  *darNum = pixel_aspect[aspect_ratio_information].num;
-	  *darDen = pixel_aspect[aspect_ratio_information].den;
+	  spsinfo->darNum = pixel_aspect[aspect_ratio_information].num;
+	  spsinfo->darDen = pixel_aspect[aspect_ratio_information].den;
 	}
     }
 
@@ -114,9 +113,7 @@ static uint8_t  extractVUIInfo (getBits &bits, uint32_t * fps1000, uint32_t * da
       uint32_t fixed_fps = bits.get(1);
       ADM_info("Time unit =%d/%d\n",(int)timeinc_unit,(int)timeinc_resolution);
       if (timeinc_unit > 0 && timeinc_resolution > 0)
-	*fps1000 =
-	  (uint32_t) (((float) timeinc_resolution / (float) timeinc_unit) *
-		      1000);
+        spsinfo->fps1000 =  (uint32_t) (((float) timeinc_resolution / (float) timeinc_unit) *    1000);
 /* No!
       if (fixed_fps)
 	*fps1000 /= 2;
@@ -171,11 +168,9 @@ bool          decodeScalingMatrices(getBits &bits)
     \brief Extract info from H264 SPS
     See 7.3.2.1 of 14496-10
 */
-uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
-		uint32_t * hheight, uint32_t * fps1000, uint32_t * darNum, uint32_t * darDen)
+uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
-  
-  *fps1000=0;
+   
   uint32_t profile, constraint, level, pic_order_cnt_type, w, h, mbh,
     frame_mbs_only;
   uint32_t frame_cropping_flag;
@@ -185,6 +180,10 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
   uint8_t buf[len];
   uint32_t outlen;
   uint32_t id, dum;
+
+    ADM_assert(spsinfo);
+    memset(spsinfo,0,sizeof(*spsinfo));
+
 
   outlen = unescapeH264 (len, data, buf);
   getBits bits(outlen,buf);
@@ -255,8 +254,8 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
   printf ("[H264] Width in mb -1  :%d\n", w);
   printf ("[H264] Height in mb -1 :%d\n", h);
 
-  *wwidth = w * 16;
-  *hheight = h * 16;
+  spsinfo->width = w * 16;
+  spsinfo->height = h * 16;
 
   if (!frame_mbs_only)
     bits.get(1);
@@ -290,23 +289,23 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, uint32_t * wwidth,
 		cr = bits.getUEG() * cux;
 		ct = bits.getUEG() * cuy;
 		cb = bits.getUEG() * cuy;
-		*wwidth -= cl; // reduce dims based on crop values
-		*wwidth -= cr;
-		*hheight -= ct;
-		*hheight -= cb;
+		spsinfo->width -= cl; // reduce dims based on crop values
+		spsinfo->width -= cr;
+		spsinfo->height -= ct;
+		spsinfo->height -= cb;
 		printf ("[H264] Has cropping of l:%d  r:%d  t:%d  b:%d\n", cl, cr, ct, cb);
     }
 
   if (bits.get(1))
     {
-      extractVUIInfo (bits, fps1000, darNum, darDen);
-      printf ("[H264] Fps %" LU ", a.r. %" LU ",%" LU "\n", *fps1000, *darNum,
-	      *darDen);
+      extractVUIInfo (bits, spsinfo);
+      printf ("[H264] Fps %" LU ", a.r. %" LU ",%" LU "\n", spsinfo->fps1000, spsinfo->darNum,
+	      spsinfo->darDen);
     }
   else
     {
       printf ("[H264] Unknown FPS, setting 25\n");
-      *fps1000 = 25000;
+      spsinfo->fps1000 = 25000;
     }
   return 1;
 }
