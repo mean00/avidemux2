@@ -24,7 +24,7 @@
 
 
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
