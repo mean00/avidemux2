@@ -150,7 +150,7 @@ protected:
         DIA_workingBase         *ui;
         ADM_SPSInfo             spsInfo;
         void                    updateUI(void);
-        bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength);
+        bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
         bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
 public:
@@ -312,28 +312,69 @@ uint32_t TS_unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
         @param recoveryLength # of recovery frame
         \return true if recovery found
 */
-bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
+bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
+                pictureStructure *picStruct)
 {
     
     uint8_t *payload=(uint8_t *)alloca(nalSize+16);
+    bool r=false;
     nalSize=TS_unescapeH264(nalSize,org,payload);
-    getBits bits(nalSize,payload);
-    
-    while( bits.getConsumedBits()<(nalSize-4)*8)
+    uint8_t *tail=payload+nalSize;
+    *picStruct=pictureFrame; // frame
+    while( payload<tail-2)
     {
-        uint32_t sei_type=bits.get(8);
-        uint32_t sei_size=bits.get(8);
-                if(sei_size==0xff) sei_size=0xff00+bits.get(8);; // should be enough
+                uint32_t sei_type=0,sei_size=0;
+                while(payload[0]==0xff) {sei_type+=0xff;payload++;};
+                sei_type+=payload[0];payload++;
+                while(payload[0]==0xff) {sei_size+=0xff;payload++;};
+                sei_size+=payload[0];payload++;
                 zprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
-                if(sei_type==6) // Recovery point
+                switch(sei_type) // Recovery point
                 {
-                        *recoveryLength=bits.getUEG();
-                        zprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
-                        return true;
+
+                       case 1:
+                            {
+                                if(spsInfo.hasStructInfo)
+                                {
+                                    getBits bits(sei_size,payload);
+                                    payload+=sei_size;
+                                    if(spsInfo.CpbDpbToSkip)
+                                    {
+                                            bits.get(spsInfo.CpbDpbToSkip);
+                                    }
+                                    //printf("Consumed: %d,\n",bits.getConsumedBits());
+                                    int pic=bits.get(4);
+                                    printf("Pic struct: %d,\n",pic);
+                                    switch(pic) 
+                                    {
+                                        case 0: *picStruct=pictureFrame; break;
+                                        case 3:
+                                        case 4: *picStruct=pictureFrame;
+                                        case 1: *picStruct=pictureTopField;break;
+                                        case 2: *picStruct=pictureBottomField;break;
+                                        default:*picStruct=pictureFrame;
+                                    }
+                                    
+                                }else
+                                        payload+=sei_size;
+                            }
+                            break;
+
+                       case 6:
+                        {
+                            getBits bits(sei_size,payload);
+                            payload+=sei_size;
+                            *recoveryLength=bits.getUEG();
+                            zprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
+                            r=true;
+                        }
+                        default:
+                            payload+=sei_size;
+                            break;
                 }
-                bits.skip(sei_size*8);
     }
-    return false;
+    if(payload!=tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
+    return r;
 }
 
 /**
@@ -363,7 +404,7 @@ uint32_t recoveryCount=0xff;
 
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-
+    pictureStructure nextPicStruct=pictureFrame;
     string indexName=string(file);
     indexName=indexName+string(".idx2");
     index=qfopen(indexName,(const char*)"wt");
@@ -418,10 +459,12 @@ uint32_t recoveryCount=0xff;
               break;              
           };
       }
+      
         if(!seq_found) goto the_end;
     //******************
     // 2 Index
     //******************
+
       while(1)
       {
         int startCode=pkt->findStartCode();
@@ -464,7 +507,7 @@ resume:
                             if(!pkt->stillOk()) goto resume;
                             zprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
                             if(SEI_nal.payloadSize>=7)
-                                decodeSEI(SEI_nal.payloadSize-4,SEI_nal.payload,&recoveryCount);
+                                decodeSEI(SEI_nal.payloadSize-4,SEI_nal.payload,&recoveryCount,&nextPicStruct);
                             else printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                         
                             startCode=pkt->readi8();
@@ -473,6 +516,8 @@ resume:
                             break;
                   case NAL_AU_DELIMITER:
                           pic_started = false;
+                          nextPicStruct=pictureFrame;  
+                          printf("AU DELIMITER\n");
                           break;
 
                   case NAL_SPS:
@@ -491,7 +536,7 @@ resume:
                   case NAL_NON_IDR:
                     {
 #define NON_IDR_PRE_READ 8
-                      zprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
+                      printf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
                       lastRefIdc=ref;
                         
                       uint8_t bufr[NON_IDR_PRE_READ+4];
@@ -523,6 +568,7 @@ resume:
                       if(startCode==NAL_IDR) data.frameType=4; // IDR
                       zprintf("[>>>>>>>>] Pic Type %"LU" Recovery %"LU"\n",data.frameType,recoveryCount);
                       if(data.frameType==1 && !recoveryCount) data.frameType=4; //I  + Recovery=0 = IDR!
+                      data.picStructure=nextPicStruct;
                       if(data.state==idx_startAtGopOrSeq) 
                       {
                               currentFrameType=data.frameType;;
