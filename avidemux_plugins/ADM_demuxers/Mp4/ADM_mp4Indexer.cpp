@@ -47,7 +47,7 @@ uint8_t	MP4Header::indexify(
 
 uint32_t i,j,cur;
 
-        printf("Build Track index\n");
+    ADM_info("Build Track index\n");
 	*outNbChunk=0;
 	aprintf("+_+_+_+_+_+\n");
 	aprintf("co : %lu sz: %lu sc: %lu co[0] %"LLU"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);

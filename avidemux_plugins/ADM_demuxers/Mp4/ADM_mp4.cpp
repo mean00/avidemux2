@@ -63,7 +63,7 @@ version 2 media descriptor :
 #include "fourcc.h"
 #include "ADM_mp4.h"
 
-//#include "ADM_codecs/ADM_codec.h"
+#include "ADM_vidMisc.h"
 
 #include "ADM_videoInfoExtractor.h"
 
@@ -396,7 +396,13 @@ uint8_t    MP4Header::open(const char *name)
             audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
         }
         fseeko(_fd,0,SEEK_SET);
-        printf("3gp/mov file successfully read..\n");
+        ADM_info("3gp/mov file successfully read..\n");
+        int nb=(int)_tracks[0].nbIndex;
+        ADM_info("Nb images      : %d\n",nb);
+        ADM_info("Movie duration : %s\n",ADM_us2plain(_movieDuration*1000LL));
+        ADM_info("Last video PTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].pts));
+        ADM_info("Last video DTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].dts));
+
         return 1;
 }
 

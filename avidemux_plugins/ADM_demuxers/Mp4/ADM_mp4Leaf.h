@@ -1,5 +1,5 @@
 /*
-http://developer.apple.com/documentation/QuickTime/QTFF/QTFFChap2/chapter_3_section_5.html#//apple_ref/doc/uid/DontLinkBookID_69-CH204-BBCJEIIA
+http://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-33299
 */
 
 #if !defined(ADM_MPEGLEAF_H) || defined(ADMMP4_TAB_LEAF)
@@ -39,8 +39,9 @@ MKMP4LEAF('stco',STCO,0),
 MKMP4LEAF('co64',STCO64,0),
 MKMP4LEAF('stsh',STSH,0),
 MKMP4LEAF('stss',STSS,0),
-
-
+/* Edit list */
+MKMP4LEAF('elst',ELST,0), // http://wiki.multimedia.cx/index.php?title=QuickTime_container#elst
+MKMP4LEAF('edts',EDTS,1),
 
 
 MKMP4LEAF('ctts',CTTS,0),

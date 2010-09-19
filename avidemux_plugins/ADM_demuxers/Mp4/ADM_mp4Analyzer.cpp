@@ -188,8 +188,14 @@ uint8_t MP4Header::parseTrack(void *ztom)
             parseMdia(&son,&trackType,w,h);
             break;
         }
+        case ADM_MP4_EDTS:
+        {
+            ADM_info("EDTS atom found\n");
+            parseEdts(&son);
+            break;
+        }
        default:
-          adm_printf(ADM_PRINT_DEBUG,"Unprocessed atom\n");
+          ADM_info("Unprocessed atom :%s\n",fourCC::tostringBE(son.getFCC()));
      }
      son.skipAtom();
   }
@@ -321,6 +327,54 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
   return r;
 }
 
+/**
+        \fn parseEdts
+        \brief parse sample table. this is the most important function.
+*/
+uint8_t       MP4Header::parseEdts(void *ztom)
+{
+  adm_atom *tom=(adm_atom *)ztom;
+  ADMAtoms id;
+  uint32_t container;
+
+  ADM_info("Parsing Edts>>\n");
+  while(!tom->isDone())
+  {
+     adm_atom son(tom);
+     if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
+     {
+       adm_printf(ADM_PRINT_DEBUG,"[EDTS]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+       son.skipAtom();
+       continue;
+     }
+    switch(id)
+    {
+       case ADM_MP4_ELST:
+       {
+              ADM_info("ELST atom found\n");
+              son.skipBytes(4);
+              uint32_t nb=son.read32();
+              ADM_info("Found %"LU" entries in list:\n",nb);
+              for(int i=0;i<nb;i++)
+                {
+                    uint32_t editDuration=son.read32();
+                    uint32_t mediaTime=son.read32();
+                    uint32_t playbackSpeed=son.read32();
+                    ADM_info("Duration : %"LU", mediaTime:%"LU" speed=%"LU"\n",editDuration,mediaTime,playbackSpeed);
+                }
+              son.skipAtom();
+              break;
+        
+       }
+       break;
+        default:
+            adm_printf(ADM_PRINT_DEBUG,"** atom  NOT HANDLED [%s] \n",fourCC::tostringBE(son.getFCC()));
+     }
+   }
+   
+   tom->skipAtom();
+   return true;
+}
 /**
         \fn parseStbl
         \brief parse sample table. this is the most important function.
@@ -576,7 +630,8 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                 //
 #define commonPart(x)             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)#x);
 
-
+                                 lw=(lw+7)&(~7);
+                                 lh=(lh+7)&(~7);
                                  _video_bih.biWidth=_mainaviheader.dwWidth=lw ;
                                   _video_bih.biHeight=_mainaviheader.dwHeight=lh;
                                   _video_bih.biCompression=_videostream.fccHandler;
