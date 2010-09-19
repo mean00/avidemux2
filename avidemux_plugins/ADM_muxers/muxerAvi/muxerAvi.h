@@ -22,9 +22,23 @@
 #include "ADM_audioClock.h"
 #include "avi_muxer.h"
 
-
+#define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
 extern avi_muxer muxerConfig;
 
+class aviAudioPacket
+{
+    public:
+            uint8_t     *buffer;
+            uint64_t    dts;
+            uint32_t    nbSamples;
+            uint32_t    sizeInBytes;
+            bool        present;
+            bool        eos;
+
+            aviAudioPacket() {buffer=new uint8_t[AUDIO_BUFFER_SIZE];eos=false;present=false;}
+            ~aviAudioPacket() {delete [] buffer;buffer=NULL;}
+
+};
 /**
     \class muxerAvi
 */
@@ -35,10 +49,10 @@ protected:
         bool    setupVideo(ADM_videoStream *video);
         bool    fillAudio(uint64_t targetDts);
         aviWrite  writter;
-        uint8_t   *audioBuffer;
-        uint8_t   *videoBuffer;
-        audioClock **clocks;
-        uint64_t   audioDelay;
+        aviAudioPacket  *audioPackets;
+        uint8_t         *videoBuffer;
+        audioClock      **clocks;
+        uint64_t        audioDelay;
 public:
                 muxerAvi();
         virtual ~muxerAvi();

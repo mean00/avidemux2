@@ -22,9 +22,9 @@
 #include "muxerAvi.h"
 
 
-#define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
 
-#if 1
+
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf printf
@@ -42,7 +42,7 @@ avi_muxer muxerConfig=
 */
 muxerAvi::muxerAvi()
 {
-    audioBuffer=NULL;
+    audioPackets=NULL;
     videoBuffer=NULL;
     clocks=NULL;
 };
@@ -99,34 +99,52 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
 // Now send audio until they all have DTS > lastVideoDts+increment
             for(int audioIndex=0;audioIndex<nbAStreams;audioIndex++)
             {
-                uint32_t audioSize,nbSample;
-                uint64_t audioDts;
                 ADM_audioStream*a=aStreams[audioIndex];
                 uint32_t fq=a->getInfo()->frequency;
                 int nb=0;
                 audioClock *clk=clocks[audioIndex];
-
-                while(a->getPacket(audioBuffer,&audioSize, AUDIO_BUFFER_SIZE,&nbSample,&audioDts))
+                aviAudioPacket *aPacket=audioPackets+audioIndex;
+                if(true==aPacket->eos) return true;
+                while(1)
                 {
-                    if(audioDts!=ADM_NO_PTS) audioDts+=audioDelay;
-                    aprintf("[Audio] Packet size %"LU" sample:%"LU" dts:%"LLU" target :%"LLU"\n",audioSize,nbSample,audioDts,targetDts);
-                    if(audioDts!=ADM_NO_PTS)
-                        if( abs(audioDts-clk->getTimeUs())>32000)
-                        {
-                            ADM_warning("[AviMuxer] Audio skew!\n");
-                            clk->setTimeUs(audioDts);
-                        }
-                    nb=writter.saveAudioFrame(audioIndex,audioSize,audioBuffer) ;
-                    encoding->pushAudioFrame(audioSize);
-                    clk->advanceBySample(nbSample);
-                    //printf("%u vs %u\n",audioDts/1000,(lastVideoDts+videoIncrement)/1000);
-                    if(audioDts!=ADM_NO_PTS)
+                    if(false==aPacket->present)
                     {
-                        if(audioDts>targetDts) break;
+                        if(!a->getPacket(aPacket->buffer,
+                                         &(aPacket->sizeInBytes),
+                                         AUDIO_BUFFER_SIZE,
+                                         &(aPacket->nbSamples),
+                                         &(aPacket->dts)))
+                        {
+                                ADM_warning("Cannot get audio packet for stream %d\n",audioIndex);
+                                aPacket->eos=true;
+                                break;
+                        }
+                            if(aPacket->dts!=ADM_NO_PTS) 
+                            {
+                                aPacket->dts+=audioDelay;
+                            }
+                            aprintf("[Audio] Packet size %"LU" sample:%"LU" dts:%"LLU" target :%"LLU"\n",
+                                            aPacket->sizeInBytes,aPacket->nbSamples,aPacket->dts,targetDts);
+                            if(aPacket->dts!=ADM_NO_PTS)
+                                if( abs(aPacket->dts-clk->getTimeUs())>32000)
+                                {
+                                    ADM_warning("[AviMuxer] Audio skew!\n");
+                                    clk->setTimeUs(aPacket->dts);
+#warning FIXME add padding
+                                }
+                            aPacket->present=true;
                     }
+                    // We now have a packet stored
+                    if(aPacket->dts!=ADM_NO_PTS)
+                        if(aPacket->dts>targetDts) break; // this one is in the future
+                    nb=writter.saveAudioFrame(audioIndex,aPacket->sizeInBytes,aPacket->buffer) ;
+                    encoding->pushAudioFrame(aPacket->sizeInBytes);
+                    clk->advanceBySample(aPacket->nbSamples);
+                    aPacket->present=false;
+                    //printf("%u vs %u\n",audioDts/1000,(lastVideoDts+videoIncrement)/1000);
                 }
-                if(!nb) aprintf("[AviMuxer] No audio for video frame %lu\n",targetDts);
             }
+
             return true;
 }
 /**
@@ -143,21 +161,24 @@ bool muxerAvi::save(void)
     int ret;
     int written=0;
    
-
-    audioBuffer=new uint8_t[AUDIO_BUFFER_SIZE];
+    audioPackets=new aviAudioPacket[nbAStreams];
     videoBuffer=new uint8_t[bufSize];
 
     ADM_info("[AviMuxer]avg fps=%u\n",vStream->getAvgFps1000());
     ADMBitstream in(bufSize);
     in.data=videoBuffer;
     uint64_t aviTime=0;
-    if(false==vStream->getPacket(&in)) goto abt;
+    
     if(in.dts==ADM_NO_PTS) in.dts=0;
     lastVideoDts=in.dts;
 
     initUI("Saving Avi");
     encoding->setContainer("AVI/OpenDML");
-
+    if(false==vStream->getPacket(&in)) 
+    {
+        ADM_error("Cannot get first video frame\n");
+        goto abt;
+    }
     while(1)
     {
             
@@ -198,8 +219,8 @@ abt:
     writter.setEnd();
     delete [] videoBuffer;
     videoBuffer=NULL;
-    delete [] audioBuffer;
-    audioBuffer=NULL;
+    delete [] audioPackets;
+    audioPackets=NULL;
     ADM_info("[AviMuxer] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
     return result;
 }
