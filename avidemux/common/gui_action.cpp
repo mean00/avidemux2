@@ -111,6 +111,10 @@ Action lookupActionByName (const char * name)
 
 const char * getActionName (Action act)
 {
+    if(act>=ACT_CUSTOM_BASE_PY) return "ACT_PY_SCRIPT";
+    if(act>=ACT_CUSTOM_BASE_JS) return "ACT_JS_SCRIPT";
+    if(act==ACT_DUMMY) return "ACT_DUMMY";
+
     uint32_t index = act - action_names [0].num;
     return (action_names [index].name);
 }
