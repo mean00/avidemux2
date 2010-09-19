@@ -30,6 +30,7 @@ typedef struct
     uint32_t darNum;
     uint32_t darDen;
     bool     hasStructInfo;
+    uint32_t CpbDpbToSkip;
 }ADM_SPSInfo;
 
 uint8_t extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);

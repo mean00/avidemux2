@@ -62,12 +62,33 @@ unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 
 }
 /**
+    \fn hrd
+    \brief decode hdr_parameters
+*/
+static int hrd(getBits &bits)
+{
+    //ADM_warning("hdr not implemented\n");
+    int count=bits.getUEG(); 
+    int bitRateScale=bits.get(4);
+    int scale=bits.get(4);
+    for(int i=0;i<=count;i++)
+    {
+        int bitrate=bits.getUEG(); 
+        int sizeMinus1=bits.getUEG(); 
+        int cbrFlag=bits.get(1);
+    }
+    int initialRemovalDelay=bits.get(5);
+    int removalDelay=bits.get(5);
+    int outputDelay=bits.get(5);
+    int timeOffset=bits.get(5);
+    return removalDelay+outputDelay+2 ;
+}
+/**
         \fn extractVUIInfo
 */
 static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
 {
-  
-
+ bool str=false;
   if (bits.get(1))
     {
       unsigned int aspect_ratio_information = bits.get( 8);
@@ -119,6 +140,22 @@ static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
 	*fps1000 /= 2;
 */
     }
+    uint32_t f=0;
+    if(bits.get(1)) // nal_hrd_param
+    {
+        f++;
+        spsinfo->CpbDpbToSkip=hrd(bits);
+    }
+    if(bits.get(1)) // vcl_hrd_param
+    {
+        f++;
+        spsinfo->CpbDpbToSkip=hrd(bits);
+    }
+    if(f) bits.get(1); // low delay flag
+    
+    
+    spsinfo->hasStructInfo=bits.get(1) | spsinfo->CpbDpbToSkip; 
+    // Has struct info in SEI, see D2.2
 
   return 1;
 }
