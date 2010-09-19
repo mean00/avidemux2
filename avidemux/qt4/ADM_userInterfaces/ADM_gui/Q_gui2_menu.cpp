@@ -39,8 +39,8 @@ using std::string;
 
 #define JS_CUSTOM 0
 #define PY_CUSTOM 1
-static char     *customNames[2][ADM_MAC_CUSTOM_SCRIPT];
-static QAction  *customActions[2][ADM_MAC_CUSTOM_SCRIPT];
+static char     *customNames[2][ADM_MAX_CUSTOM_SCRIPT];
+static QAction  *customActions[2][ADM_MAX_CUSTOM_SCRIPT];
 static uint32_t ADM_nbCustom[2]={0,0};
 /**
     \fn clearCustomMenu
@@ -95,19 +95,20 @@ void MainWindow::buildCustomMenu(void)
             ext=string(".py");
         }
         myDir=customFolder+subDir;
-        if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAC_CUSTOM_SCRIPT,ext.c_str()))
+        if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAX_CUSTOM_SCRIPT,ext.c_str()))
         {
-            printf("Failed to build custom dir content");
-            return;
+            ADM_warning("Failed to build custom dir content (%s)\n",myDir.c_str());
+            continue;
         }
 
         if(ADM_nbCustom[pool])
         {
-            printf("Found %u custom script(s), adding them (%s)\n", ADM_nbCustom[pool],subDir.c_str());
+            ADM_info("Found %u custom script(s), adding them (%s)\n", ADM_nbCustom[pool],subDir.c_str());
 
             for(int i=0; i < ADM_nbCustom[pool]; i++)
             {
                 QAction *action= new QAction(QString::fromUtf8(ADM_GetFileName(customNames[pool][i])), NULL);
+                //ADM_info("\t%s\n",ADM_GetFileName(customNames[pool][i]));
                 customActions[pool][i] = action;
                 if(pool==JS_CUSTOM)
                 {
@@ -122,9 +123,9 @@ void MainWindow::buildCustomMenu(void)
             }
         }
         else
-            printf("No custom scripts\n");
+            ADM_info("No custom scripts\n");
     }
-	printf("Custom menu built\n");
+	ADM_info("Custom menu built\n");
 }
 
 /**
