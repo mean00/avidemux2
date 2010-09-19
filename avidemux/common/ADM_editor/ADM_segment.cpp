@@ -51,6 +51,9 @@ bool        ADM_EditorSegment::updateRefVideo(void)
         {
             ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
             ref->firstFramePts=pts;
+        }else
+        {
+            ADM_info("First PTS is %s\n",ADM_us2plain(pts));
         }
     
     updateStartTime();
@@ -110,6 +113,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         demuxer->getFlags(0,&flags);
         demuxer->getPtsDts(0,&pts,&dts);
         ref->firstFramePts=0;
+        if(pts==ADM_NO_PTS) ADM_warning("First frame has unknown PTS\n");
         if(pts!=ADM_NO_PTS &&pts)
         {
             ADM_warning("The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);

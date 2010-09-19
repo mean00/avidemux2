@@ -334,6 +334,7 @@ bool ADM_Composer::addFile (const char *name)
         {
                 printf("[Editor] No B frame with that codec, PTS=DTS\n");
                 setPtsEqualDts(video._aviheader,video.timeIncrementInUs);
+                _segments.updateRefVideo();
         }
      }
   
