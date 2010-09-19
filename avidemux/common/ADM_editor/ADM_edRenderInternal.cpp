@@ -29,9 +29,6 @@
 #endif
 
 #include "ADM_pp.h"
-extern "C" {
-#include "ADM_ffmpeg/libpostproc/postprocess.h"
-}
 // FIXME BADLY !!!
 // This should be in a context somewhere
 static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
@@ -277,8 +274,7 @@ uint8_t ret = 0;
 bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t ref)
 {
  ADMImage *tmpImage=NULL;
- uint32_t ww,hh,left,right;
- _VIDEOS *v=_segments.getRefVideo(ref);
+ _VIDEOS  *v=_segments.getRefVideo(ref);
  uint32_t refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
 // This is only an empty Shell
     if(refOnly)
@@ -298,15 +294,10 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
                   _scratch=new ADMImageRef(_imageBuffer->_width,_imageBuffer->_height);
                 }
                 tmpImage=_scratch;
-                ww=_imageBuffer->_width & 0xfffff0;
-                left=_imageBuffer->_width & 0xf;
-
         }
         else
         {
                 tmpImage=_imageBuffer;
-                ww=_imageBuffer->_width;
-                left=0;
        }
     //
     tmpImage->_colorspace=ADM_COLOR_YV12;
@@ -341,7 +332,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     out->copyInfo(tmpImage);
 
 
-        // Do postprocessing if any
+    // Do postprocessing if any
 	for(uint32_t z=0;z<tmpImage->_qSize;z++)
 	{
             qz=(int)tmpImage->quant[z];
@@ -353,120 +344,18 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 	if(sum>31) sum=31;
 	if(sum<1) sum=1;
 
-        // update average Q
+    // update average Q
 	tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
 
 	// Pp deactivated ?
-	if(!_pp.postProcType || !_pp.postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
+	if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
     {
         dupe(tmpImage,out,v);
         aprintf("EdCache: Postproc disabled\n");
 		return 1;
 	}
-
-	int type;
-	#warning FIXME should be FF_I_TYPE/B/P
-	if(tmpImage->flags & AVI_KEY_FRAME) type=1;
-		else if(tmpImage->flags & AVI_B_FRAME) type=3;
-			else type=2;
-
-        ADM_assert(tmpImage->_colorspace==ADM_COLOR_YV12);
-
-	// we do postproc !
-	// keep
-	uint8_t *oBuff[3];
-    const uint8_t *xBuff[3];
-	uint8_t *iBuff[3];
-	uint32_t	strideTab[3];
-	uint32_t	strideTab2[3];
-	aviInfo _info;
-
-        getVideoInfo(&_info);
-        tmpImage->GetReadPlanes(iBuff);
-        tmpImage->GetPitches(strideTab);
-        out->GetPitches(strideTab2);
-        out->GetWritePlanes(oBuff);
-        if(_pp.swapuv)
-        {
-                uint8_t *s=oBuff[1];
-                oBuff[1]=oBuff[2];
-                oBuff[2]=s;
-        }
-        int iStrideTab2[3],iStrideTab[3];
-        for(int i=0;i<3;i++) 
-        {
-            iStrideTab[i]=strideTab[i];
-            iStrideTab2[i]=strideTab2[i];
-            xBuff[i]=iBuff[i];
-        }
-#warning FIXME
-#warning FIXME
-#warning FIXME
-#warning FIXME
-#warning FIXME
-        pp_postprocess(
-            xBuff,
-            iStrideTab,
-            oBuff,
-            iStrideTab2,
-            ww,
-            _info.height,
-            (int8_t *)(tmpImage->quant),
-            tmpImage->_qStride,
-            _pp.ppMode,
-            _pp.ppContext,
-            type);			// img type
-        /*
-                If there is a chroma block that needs padding
-                (width not multiple of 16) while postprocessing,
-                we process up to the nearest 16 multiple and
-                just copy luma & chroma info that was left over
-        */
-        if(refOnly && left)
-        {
-                uint8_t *src,*dst;
-                uint32_t stridein,strideout,right;
-                right=_info.width-left;
-                // Luma
-                dst=YPLANE(out)+right;
-                src=tmpImage->GetReadPtr(PLANAR_Y)+right;
-                stridein=tmpImage->GetPitch(PLANAR_Y);
-                strideout=_info.width;
-                for(uint32_t y=_info.height;y>0;y--)
-                {
-                        memcpy(dst,src,left);
-                        dst+=strideout;
-                        src+=stridein;
-                }
-                // Chroma
-                left>>=1;
-                right>>=1;
-                //
-                dst=UPLANE(out)+right;
-                src=tmpImage->GetReadPtr(PLANAR_U)+right;
-                stridein=tmpImage->GetPitch(PLANAR_U);
-
-                strideout=_info.width>>1;
-                for(uint32_t y=_info.height>>1;y>0;y--)
-                {
-                        memcpy(dst,src,left);
-                        dst+=strideout;
-                        src+=stridein;
-                }
-                //
-                dst=VPLANE(out)+right;
-                src=tmpImage->GetReadPtr(PLANAR_V)+right;
-                stridein=tmpImage->GetPitch(PLANAR_V);
-                strideout=_info.width>>1;
-                for(uint32_t y=_info.height>>1;y>0;y--)
-                {
-                        memcpy(dst,src,left);
-                        dst+=strideout;
-                        src+=stridein;
-                }
-
-
-        }
+    /* Do it!*/
+    _pp->process(tmpImage,out);
     return true;
 }
 

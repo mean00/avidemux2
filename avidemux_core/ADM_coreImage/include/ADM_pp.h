@@ -11,17 +11,31 @@
 //
 #ifndef ADMPP
 #define ADMPP
-typedef struct ADM_PP
+/**
+    \class ADM_PP
+    \brief wrapper around libavcodec postprocessing
+*/
+class ADM_PP
 {
-	void    			*ppContext; // pp_context_t
+protected:
+    void    			*ppContext; // pp_context_t
 	void    			*ppMode;    // pp_mode_t
+    bool                cleanup(void);
+public:
+	
  	uint32_t			postProcType;
 	uint32_t			postProcStrength;
-        uint32_t                        swapuv;
+    bool                swapuv;
 	uint32_t			forcedQuant;
-	uint32_t			w,h;
+	uint32_t			 w,h;
 
-}ADM_PP;
+public:
+                ADM_PP(uint32_t width, uint32_t h);
+                ~ADM_PP();
+    bool        update(void);
+    bool        process(class ADMImage *src, class ADMImage *dest);
+
+};
 #define FORCE_QUANT			0x200000
 //	PostProc : 1 Horiz deblock
 //             2 Verti deblock
@@ -29,7 +43,4 @@ typedef struct ADM_PP
 // strength between 0 and 5
  
 
-void updatePostProc(ADM_PP *pp );
-void deletePostProc(ADM_PP *pp );
-void initPostProc(ADM_PP *pp,uint32_t w, uint32_t h);
 #endif

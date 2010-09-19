@@ -57,16 +57,7 @@ uint32_t type,value;
   _audioSeg = 0;
   _audioSample=0;
 
-  // Initialize a default postprocessing (dummy)
-  initPostProc(&_pp,16,16);
-  if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
-  if(!prefs->get(DEFAULT_POSTPROC_VALUE,&value)) value=3;
-
-  _pp.postProcType=type;
-  _pp.postProcStrength=value;
-  _pp.swapuv=0;
-  _pp.forcedQuant=0;
-  updatePostProc(&_pp);
+  _pp=NULL;
   _imageBuffer=NULL;
   _internalFlags=0;
   _currentSegment=0;
@@ -110,7 +101,8 @@ bool ADM_Composer::getExtraHeaderData (uint32_t * len, uint8_t ** data)
 ADM_Composer::~ADM_Composer ()
 {
 	_segments.deleteAll();
-	deletePostProc(&_pp);
+    if(_pp) delete _pp;
+    _pp=NULL;
     if(_imageBuffer) delete  _imageBuffer;
     _imageBuffer=NULL;
 
@@ -230,13 +222,13 @@ bool ADM_Composer::addFile (const char *name)
 
         if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
         if(!prefs->get(DEFAULT_POSTPROC_VALUE,&value)) value=3;
-
-        deletePostProc(&_pp );
-        initPostProc(&_pp,info.width,info.height);
-        _pp.postProcType=type;
-        _pp.postProcStrength=value;
-        _pp.forcedQuant=0;
-        updatePostProc(&_pp);
+        
+        if(_pp) delete _pp;
+        _pp=new ADM_PP(info.width,info.height);
+        _pp->postProcType=type;
+        _pp->postProcStrength=value;
+        _pp->forcedQuant=0;
+        _pp->update();
 
         if(_imageBuffer) delete _imageBuffer;
         _imageBuffer=new ADMImageDefault(info.width,info.height);

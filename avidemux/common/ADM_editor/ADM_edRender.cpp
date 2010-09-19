@@ -517,10 +517,11 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t swapuv)
 {
 	if(!_segments.getNbRefVideos()) return 0;
-	_pp.postProcType=type;
-	_pp.postProcStrength=strength;
-        _pp.swapuv=swapuv;
-	updatePostProc(&_pp); // DeletePostproc/ini missing ?
+    if(!_pp) return false;
+	_pp->postProcType=type;
+	_pp->postProcStrength=strength;
+    _pp->swapuv=swapuv;
+	_pp->update(); // DeletePostproc/ini missing ?
 	return 1;
 }
 /**
@@ -530,9 +531,10 @@ uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t sw
 uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t *swapuv)
 {
 	if(!_segments.getNbRefVideos()) return 0;
-	*type=_pp.postProcType;
-	*strength=_pp.postProcStrength;
-	*swapuv=_pp.swapuv;
+    if(!_pp) return false;
+	*type=_pp->postProcType;
+	*strength=_pp->postProcStrength;
+	*swapuv=_pp->swapuv;
 	return 1;
 }
 /**

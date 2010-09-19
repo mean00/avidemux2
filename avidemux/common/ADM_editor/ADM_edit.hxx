@@ -103,7 +103,7 @@ protected:
                     ADM_EditorSegment _segments;
                     uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid); 
                     uint32_t	_internalFlags;  // Flags :
-                    ADM_PP      _pp;             // Postprocessing settings
+                    ADM_PP      *_pp;             // Postprocessing settings
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
                     uint64_t    _currentPts;        // Current image PTS
                     uint32_t    _currentSegment;    // Current video segment
