@@ -76,7 +76,7 @@ static int keyPressHandlerId=0;
 
 static gint       jogChange( void );
 static void volumeChange( void );
-static char     *customNames[ADM_MAC_CUSTOM_SCRIPT];
+static char     *customNames[ADM_MAX_CUSTOM_SCRIPT];
 static uint32_t ADM_nbCustom=0;
 // Needed for DND
 // extern int A_openAvi (char *name);
@@ -591,7 +591,7 @@ void GUI_initCustom(void )
       return;
   }
   /* Collect the name */
-   if(! buildDirectoryContent(&ADM_nbCustom,customdir,   customNames,ADM_MAC_CUSTOM_SCRIPT,".js"))
+   if(! buildDirectoryContent(&ADM_nbCustom,customdir,   customNames,ADM_MAX_CUSTOM_SCRIPT,".js"))
     {
       printf("Failed to build custom dir content");
       delete [] customdir;
@@ -1512,7 +1512,11 @@ int UI_RunApp(void)
     gdk_threads_leave();
 
 }
-
+bool UI_End(void)
+{
+    // cleanup here
+    return true;
+}
 
 void trampoline(void)
 {

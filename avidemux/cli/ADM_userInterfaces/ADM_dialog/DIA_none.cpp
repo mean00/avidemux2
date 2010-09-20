@@ -121,6 +121,10 @@ int UI_RunApp(void)
 	printf("*********************************\n");
 	printf("*********************************\n");
 }
+bool UI_End(void)
+{
+    return true;
+}
 bool UI_setDecoderName(const char *name) {return true;}
 int32_t UI_readJog(void) {return 0;};
 //EOF
