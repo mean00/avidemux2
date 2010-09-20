@@ -312,10 +312,11 @@ int main(int argc, char *argv[])
     printf("Normal exit\n");
     return 0;
 }
-
+extern uint8_t GUI_close(void);
 void onexit( void )
 {
 	printf("Cleaning up\n");
+    if(video_body) video_body->cleanup ();  
     delete video_body;	
     // wait for thread to finish executing
     SpidermonkeyExit();
