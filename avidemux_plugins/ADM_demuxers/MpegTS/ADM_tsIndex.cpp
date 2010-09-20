@@ -367,6 +367,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                             *recoveryLength=bits.getUEG();
                             zprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
                             r=true;
+                            break;
                         }
                         default:
                             payload+=sei_size;
