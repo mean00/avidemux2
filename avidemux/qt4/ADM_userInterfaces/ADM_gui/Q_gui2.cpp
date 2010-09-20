@@ -70,7 +70,7 @@ QGraphicsView *drawWindow=NULL;
 uint8_t UI_updateRecentMenu( void );
 extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
-
+extern bool ADM_QPreviewCleanup(void);
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -718,7 +718,14 @@ int UI_Init(int nargc,char **nargv)
     UI_InitVUMeter(mw->ui.frameVU);
 	return 0;
 }
+/**
 
+*/
+bool UI_End(void)
+{
+    ADM_QPreviewCleanup();
+    return true;
+}
 void UI_refreshCustomMenu(void)
 {
 	((MainWindow*)QuiMainWindows)->buildCustomMenu();

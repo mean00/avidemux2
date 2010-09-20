@@ -23,6 +23,8 @@ typedef struct
     VdpGetApiVersion        *getApiVersion;
     VdpGetInformationString *getInformationString;
 
+    VdpDeviceDestroy        *deviceDestroy;
+
     VdpVideoSurfaceCreate   *createSurface;
     VdpVideoSurfaceDestroy  *destroySurface;
     VdpVideoSurfaceGetBitsYCbCr *getDataSurface;

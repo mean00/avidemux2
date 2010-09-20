@@ -67,6 +67,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
     // Now that we have the vdpProcAddress, time to get the functions....
 #define GetMe(fun,id)         ADM_coreVdpau::funcs.fun= (typeof(ADM_coreVdpau::funcs.fun))getFunc(id);ADM_assert(ADM_coreVdpau::funcs.fun); 
         
+    GetMe(deviceDestroy,VDP_FUNC_ID_DEVICE_DESTROY);
     GetMe(getErrorString,VDP_FUNC_ID_GET_ERROR_STRING);
     GetMe(getApiVersion,VDP_FUNC_ID_GET_API_VERSION);
     GetMe(getInformationString,VDP_FUNC_ID_GET_INFORMATION_STRING);
@@ -134,6 +135,20 @@ bool admVdpau::init(GUI_WindowInfo *x)
     ADM_info("Vdpau supports VDP_VIDEO_MIXER_FEATURE_INVERSE_TELECINE             : %d\n",(int)mixerFeatureSupported(VDP_VIDEO_MIXER_FEATURE_INVERSE_TELECINE));
 
     ADM_info("VDPAU renderer init ok.\n");
+    return true;
+}
+/**
+    \fn cleanup
+*/
+bool admVdpau::cleanup(void)
+{
+    if(true==coreVdpWorking)
+    {
+            ADM_info("Destroying vdp device..\n");
+            ADM_coreVdpau::funcs.deviceDestroy(ADM_coreVdpau::vdpDevice);
+            ADM_coreVdpau::vdpDevice=VDP_INVALID_HANDLE;
+    }
+    coreVdpWorking=false;
     return true;
 }
 /**
@@ -356,6 +371,11 @@ bool admVdpau::isOperationnal(void)
 {
     ADM_warning("This binary has no VPDAU support\n");
     return coreVdpWorking;
+}
+bool admVdpau::cleanup(void)
+{
+    ADM_warning("This binary has no VPDAU support\n");
+    return true;
 }
 #endif
 // EOF

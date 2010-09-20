@@ -81,6 +81,13 @@ bool vdpauProbe(void)
     return true;
 }
 /**
+    \fn vdpauCleanup
+*/
+bool vdpauCleanup(void)
+{
+   return admVdpau::cleanup();
+}
+/**
     \fn ADM_VDPAUgetBuffer
     \brief trampoline to get a VDPAU surface
 */

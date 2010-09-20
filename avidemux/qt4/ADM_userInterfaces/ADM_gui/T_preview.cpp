@@ -61,7 +61,12 @@ static uint32_t displayW=0,displayH=0;
   It is a base QWidget where the image will be put by painter.
 
 */
-
+bool ADM_QPreviewCleanup(void)
+{
+    if(rgbDataBuffer) delete [] rgbDataBuffer;
+    rgbDataBuffer=NULL;
+    return true;
+}
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) {}
 ADM_Qvideo::~ADM_Qvideo() {}
 

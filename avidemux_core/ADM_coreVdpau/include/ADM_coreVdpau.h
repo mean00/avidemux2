@@ -37,6 +37,7 @@ protected:
 public:
     static bool         init(GUI_WindowInfo *x);
     static bool         isOperationnal(void);
+    static bool         cleanup(void);
     /* Surface */
 #ifdef USE_VDPAU
     static  const char  *getErrorString(VdpStatus er);

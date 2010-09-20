@@ -83,6 +83,8 @@ extern bool ADM_vf_cleanup(void);
 extern bool ADM_dm_cleanup(void);
 
 extern bool vdpauProbe(void);
+extern bool vdpauCleanup(void);
+
 extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
@@ -103,6 +105,7 @@ extern uint8_t win32_netInit(void);
 
 extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
+extern bool UI_End(void);
 extern void renderDestroy(void);
 
 // Spidermonkey/Scripting stuff  
@@ -331,6 +334,7 @@ void onexit( void )
     destroyPrefs();
     
     admPreview::destroy();
+    UI_End();
     renderDestroy();
 
     ADM_ad_cleanup();
@@ -338,6 +342,14 @@ void onexit( void )
     ADM_mx_cleanup();
     ADM_vf_cleanup();
     ADM_dm_cleanup();
+#if defined( USE_VDPAU) 
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    printf("cleaning VDPAU...\n");
+    vdpauCleanup();
+  #else
+    printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif
 
     printf("--End of cleanup--\n");
     ADMImage_stat();
