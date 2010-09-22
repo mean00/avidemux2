@@ -234,6 +234,9 @@ char     *globalGlyphName=NULL;
 #ifdef USE_VDPAU
                              ,{RENDER_VDPAU,   QT_TR_NOOP("VDPAU (best)"),NULL}
 #endif
+#ifdef USE_OPENGL
+                             ,{RENDER_QTOPENGL,   QT_TR_NOOP("Qt OpenGl (best)"),NULL}
+#endif
 
 #ifdef USE_SDL
 #ifdef __WIN32

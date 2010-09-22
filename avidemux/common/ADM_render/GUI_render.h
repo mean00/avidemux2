@@ -75,6 +75,9 @@ typedef enum
         RENDER_VDPAU=4,
 
 #endif
+#ifdef USE_OPENGL
+        RENDER_QTOPENGL=5,
+#endif
 
         RENDER_LAST       
 

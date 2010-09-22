@@ -17,6 +17,8 @@ checkQt4()
 IF (NOT QT4_FOUND)
         MESSAGE(FATAL_ERROR "Qt4 NOT FOUND")
 ENDIF (NOT QT4_FOUND)
+# Qt4 openGL
+include(admCheckOpenGl)
 ##########################################
 # Config
 ##########################################

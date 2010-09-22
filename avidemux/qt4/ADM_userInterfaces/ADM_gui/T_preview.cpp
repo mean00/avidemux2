@@ -172,6 +172,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
     ADM_assert(videoWindow);
 	QWidget* widget = videoWindow->parentWidget();
+    xinfo->widget = videoWindow;
 
 #if defined(__WIN32)
 	xinfo->display=videoWindow->winId();

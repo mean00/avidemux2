@@ -34,7 +34,7 @@ class vdpauRender: public VideoRenderBase
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newzoom);
               virtual   bool refresh(void);
-              virtual   bool usingUIRedraw(void) {return false;};
+              virtual   bool usingUIRedraw(void) {return false;}; // we can redraw by ourself
 };
 #endif
 

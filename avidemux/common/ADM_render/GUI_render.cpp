@@ -38,6 +38,9 @@
 #include "GUI_vdpauRender.h"
 #endif
 
+#if defined (USE_OPENGL)
+extern VideoRenderBase *RenderSpawnQtGl(void);
+#endif
 #include "ADM_colorspace.h"
 #include "DIA_uiTypes.h"
 
@@ -243,6 +246,23 @@ bool spawnRenderer(void)
         MUI_getWindowInfo(draw, &xinfo);
         switch(prefRenderer)
         {
+#if defined(USE_OPENGL)
+       case RENDER_QTOPENGL:
+                renderer=RenderSpawnQtGl();
+                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
+                if(!r)
+                {
+                    delete renderer;
+                    renderer=NULL;
+                    ADM_warning("QtGl init failed\n");
+                }
+                else
+                {
+                    ADM_info("QtGl init ok\n");
+                }
+                break;
+#endif
+
 #if defined(USE_VDPAU)
        case RENDER_VDPAU:
                 renderer=new vdpauRender();
@@ -314,72 +334,7 @@ bool spawnRenderer(void)
 */
 uint8_t renderStartPlaying( void )
 {
-#if 0
-char *displ;
-unsigned int renderI;
-ADM_RENDER_TYPE render;
-uint8_t r=0;
-	ADM_assert(!accel_mode);
-        
 
-        render=MUI_getPreferredRender();
-        GUI_WindowInfo xinfo;
-        MUI_getWindowInfo(draw, &xinfo);
-        switch(render)
-        {
-        
-#if defined(USE_XV)
-	       case RENDER_XV:
-		accel_mode=new XvAccelRender();
-                if(accel_mode->hasHwZoom()) r=accel_mode->init(&xinfo,phyW,phyH);
-                else r=accel_mode->init(&xinfo,renderW,renderH);
-                if(!r)
-		{
-			delete accel_mode;
-			accel_mode=NULL;
-			printf("Xv init failed\n");
-		}
-		else
-		{
-			printf("Xv init ok\n");
-		}
-                break;
-#endif
-
-#if defined(USE_SDL)
-			case RENDER_SDL:
-#ifdef __WIN32
-			case RENDER_DIRECTX:
-#endif
-				accel_mode=new sdlAccelRender();
-
-				if(accel_mode->hasHwZoom()) r=accel_mode->init(&xinfo,phyW,phyH);
-                else r=accel_mode->init(&xinfo,renderW,renderH);
-
-                if(!r)
-				{
-					delete accel_mode;
-					accel_mode=NULL;
-				}
-
-                break;
-#endif
-
-            default:break;
-        }
-
-        if(!accel_mode)
-        {
-                rgbConverter.changeWidthHeight(renderW,renderH);
-                printf("No accel used for rendering\n");
-        }
-        else
-        {
-           ADM_assert(!accelSurface);
-           accelSurface=new uint8_t[ (renderW*renderH*3)>>1];
-          
-        }
-#endif	
 	return 1;
 }
 

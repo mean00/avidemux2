@@ -7,6 +7,9 @@ GUI_sdlRender.cpp
 GUI_xvRender.cpp
 GUI_vdpauRender.cpp
 )
+        IF (USE_OPENGL)
+                SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_qtGlRender.cpp)
+        ENDIF (USE_OPENGL)
 
 IF (APPLE)
 	SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_sdlRenderHelper.m)
@@ -14,6 +17,15 @@ ENDIF (APPLE)
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
 TARGET_LINK_LIBRARIES( ${ADM_LIB} ADM_core6 ADM_coreUI6 ADM_coreImage6)
+
+ IF (USE_OPENGL)
+                ADD_SOURCE_CFLAGS(GUI_render.cpp " -I${QT_HEADERS_DIR}")
+                ADD_SOURCE_CFLAGS(GUI_qtGlRender.cpp " -I${QT_HEADERS_DIR} -I{OPENGL_INCLUDE_DIR}")
+                TARGET_LINK_LIBRARIES(${ADM_LIB} ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY})
+ ENDIF (USE_OPENGL)
+
+
+
 SDLify(GUI_sdlRender.cpp)
 IF (GETTEXT_FOUND)
         TARGET_LINK_LIBRARIES(${ADM_LIB}  ${GETTEXT_LIBRARY_DIR})
@@ -26,5 +38,4 @@ ENDIF (USE_SDL)
 IF (USE_VDPAU)
        TARGET_LINK_LIBRARIES(${ADM_LIB}  ADM_coreVDPAU6)
 ENDIF (USE_VDPAU)
-
 ADM_INSTALL_LIB(${ADM_LIB})

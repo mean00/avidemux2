@@ -30,7 +30,7 @@ class sdlRender: public VideoRenderBase
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newZoom);
-              virtual   bool    usingUIRedraw(void) {return false;};
+              virtual   bool    usingUIRedraw(void) {return true;};
 };
 
 void initSdl(int videoDevice);
