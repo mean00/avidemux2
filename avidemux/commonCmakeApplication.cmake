@@ -1,11 +1,3 @@
-#
-#
-cmake_minimum_required(VERSION 2.6)
-if (COMMAND cmake_policy)
-	cmake_policy(VERSION 2.4)
-	cmake_policy(SET CMP0003 NEW)
-	#cmake_policy(SET CMP0011 OLD)
-endif (COMMAND cmake_policy)
 ########################################
 # Definitions and Includes
 ########################################
@@ -109,19 +101,15 @@ if (USE_VDPAU)
 endif (USE_VDPAU)
 
 SET(commonLibs2
-#ADM_filter6 
-ADM_osSupport6 
-ADM_requant6 
-ADM_pyScript6 
-ADM_jsScript6 
+ADM_osSupport6
+ADM_requant6
+ADM_pyScript6
+ADM_jsScript6
 ADM_scriptDF
-ADM_script6 
-ADM_videoEncoder6 
+ADM_script6
+ADM_videoEncoder6
 ADM_internalVideoFilter6
 ADM_toolkit6
-
-#ADM_video6 
-#ADM_videoFilter6 
 )
 
 # END
