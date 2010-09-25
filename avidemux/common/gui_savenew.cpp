@@ -261,7 +261,21 @@ bool admSaver::save(void)
     // Video Stream
     if(!videoEncoderIndex) // Copy
     {
-        ADM_videoStreamCopy *copy=new ADM_videoStreamCopy(markerA,markerB);
+        aviInfo info;
+        video_body->getVideoInfo(&info);
+        uint8_t *extra;
+        uint32_t extraLen;
+        video_body->getExtraHeaderData(&extraLen,&extra);
+#warning do something better
+        ADM_videoStreamCopy *copy=NULL;
+        if(isH264Compatible(info.fcc) && !extraLen)
+        {
+            ADM_info("Probably AnnexB bitstream\n");
+            copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
+        }else   
+        {
+            copy=new ADM_videoStreamCopy(markerA,markerB);
+        }
         video=copy;
         // In that case, get the real time and update audio with it...
         // Because we might have go back in time to catch the first intra
