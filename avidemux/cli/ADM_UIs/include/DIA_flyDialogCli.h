@@ -23,8 +23,7 @@ public:
   ADM_flyDialogCli(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod) {};
-
-  virtual uint8_t  cleanup2(void);
+  virtual           ~ADM_flyDialogCli(void);
   virtual bool     isRgbInverted(void);
   virtual uint8_t  display(void);
   virtual float   calcZoomFactor(void);

@@ -1,18 +1,21 @@
+cmake_minimum_required(VERSION 2.6)
+
+SET(ADM_PROJECT AdmPlugins)
+
 MESSAGE("#####################################")
 MESSAGE("Plugins Configure Started")
 MESSAGE("#####################################")
 MESSAGE("")
 
-SET(ADM_PROJECT AdmPlugins)
 SET(PLUGINS TRUE)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
+
 ########################################
 # Where is the top dir ?
 ########################################
 IF (NOT AVIDEMUX_SOURCE_DIR)
 	MESSAGE(FATAL_ERROR "Please add -DAVIDEMUX_SOURCE_DIR=path_to_avidemux_source")
 ELSE (NOT AVIDEMUX_TOP_SOURCE_DIR)
-        # We need TOP_SOURCE_DIR 
+	# We need TOP_SOURCE_DIR 
 	SET(AVIDEMUX_TOP_SOURCE_DIR "${AVIDEMUX_SOURCE_DIR}" CACHE STRING "")
 ENDIF (NOT AVIDEMUX_SOURCE_DIR)
 
@@ -26,6 +29,7 @@ include(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/commonCmakeApplication.cmake)
 SET(AVIDEMUX_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 MARK_AS_ADVANCED(AVIDEMUX_INSTALL_DIR)
 include(admInstallDir)
+
 #########################################
 # Get regular stuff from main app
 #########################################
@@ -41,6 +45,7 @@ ENDIF (FRESH_BUILD)
 # Global options
 ########################################
 OPTION(VERBOSE "" OFF)
+
 ########################################
 # Select our UI
 ########################################
@@ -52,25 +57,32 @@ SET(DO_CLI    0)
 IF (NOT PLUGIN_UI)
 	MESSAGE(FATAL_ERROR "Please add -DPLUGIN_UI=[ALL|QT4|GTK|CLI|COMMON]")
 ENDIF (NOT PLUGIN_UI)
+
 if(PLUGIN_UI MATCHES "ALL")
     SET(DO_COMMON 1)
     SET(DO_GTK    1)
     SET(DO_QT4    1)
     SET(DO_CLI    1)
 endif(PLUGIN_UI MATCHES "ALL")
+
 if(PLUGIN_UI MATCHES "QT4")
     SET(DO_QT4    1)
 endif(PLUGIN_UI MATCHES "QT4")
+
 if(PLUGIN_UI MATCHES "GTK")
     SET(DO_GTK    1)
 endif(PLUGIN_UI MATCHES "GTK")
+
 if(PLUGIN_UI MATCHES "COMMON")
     SET(DO_COMMON    1)
 endif(PLUGIN_UI MATCHES "COMMON")
+
 if(PLUGIN_UI MATCHES "CLI")
     SET(DO_CLI    1)
 endif(PLUGIN_UI MATCHES "CLI")
+
 MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
+
 ########################################
 # Check for UI libraries
 ########################################
@@ -88,6 +100,7 @@ MACRO(CHECK_ADM_CONFIG_H flavor result)
         MESSAGE(STATUS "Include for ${flavor} found")
     ENDIF(${ADM_INC} MATCHES "NOTFOUND")
 ENDMACRO(CHECK_ADM_CONFIG_H flavor result)
+
 #*****
 # GTK
 #*****
@@ -112,6 +125,7 @@ if(DO_GTK)
         SET(DO_GTK 0)
     endif (GTK_FOUND AND GTHREAD_FOUND)
 endif(DO_GTK)
+
 #*****
 # QT4
 #*****
@@ -130,6 +144,7 @@ if(DO_QT4)
         ENDIF(NOT ADM_INC)
     ENDIF (NOT QT4_FOUND)
 endif(DO_QT4)
+
 #*****
 # CLI
 #*****
@@ -153,7 +168,9 @@ IF(DO_COMMON)
     ADD_SUBDIRECTORY(ADM_demuxers)
     ADD_SUBDIRECTORY(ADM_muxers)
 ENDIF(DO_COMMON)
+
 ADD_SUBDIRECTORY(ADM_videoFilters6)
+
 ########################################
 # Config Summary
 ########################################

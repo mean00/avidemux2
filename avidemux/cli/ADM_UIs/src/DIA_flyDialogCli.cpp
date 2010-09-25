@@ -21,6 +21,8 @@
 #include "DIA_flyDialogCli.h"
 #include "ADM_assert.h"
 
+ADM_flyDialogCli::~ADM_flyDialogCli(void) { }
+
 void ADM_flyDialogCli::postInit(uint8_t reInit)
 {
 }
