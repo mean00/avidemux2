@@ -18,8 +18,16 @@ using std::string;
 #include "ADM_default.h"
 #include "ADM_videoCopy.h"
 #include "ADM_editor/ADM_edit.hxx"
-
+#include "ADM_coreUtils.h"
 extern ADM_Composer *video_body; // Fixme!
+extern bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
+
+#if 1
+#define aprintf ADM_info
+#else
+#define aprintf(...) {}
+#endif
+
 /**
     \fn ADM_videoStreamCopy
 */
@@ -62,10 +70,18 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     this->startTimeDts=dtsStart;
     this->startTimePts=ptsStart;
     this->endTimePts=endTime;
-
-    video_body->GoToIntraTime_noDecoding(ptsStart);
+    rewindTime=ptsStart;
+    rewind();
+    
     ADM_info(" Fixating start time by %d\n",abs((int)(startTime-startTimeDts)));
     ADM_info(" Starting DTS=%"LLU", PTS=%"LLU" ms\n",startTimeDts/1000,startTimePts/1000);
+}
+/**
+
+*/
+bool      ADM_videoStreamCopy::rewind(void)
+{
+    return video_body->GoToIntraTime_noDecoding(rewindTime);
 }
 /**
     \fn ADM_videoStreamCopy
@@ -163,3 +179,5 @@ bool     ADM_videoStreamCopy::providePts(void)
 {
     return true;
 }
+
+// EOF
