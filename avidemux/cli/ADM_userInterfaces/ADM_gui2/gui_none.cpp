@@ -138,8 +138,7 @@ uint8_t UI_arrow_disabled(void)
 {
   return 1;
 }
-void UI_purge( void )
-{}
+
 int UI_GetCurrentFormat( void )
 {
 	return cliFormat;
