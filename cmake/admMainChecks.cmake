@@ -115,6 +115,7 @@ IF(NOT PLUGINS)
 INCLUDE(admCheckMiscLibs)
 INCLUDE(FindThreads)
 INCLUDE(admCheckVDPAU)
+checkVDPAU()
 ENDIF(NOT PLUGINS)
 
 ########################################
