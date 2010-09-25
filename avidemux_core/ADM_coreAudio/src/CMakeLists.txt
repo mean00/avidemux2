@@ -7,6 +7,7 @@ ADM_audioStreamMP3.cpp
 ADM_audioStreamAC3.cpp
 ADM_audioStreamEac3.cpp
 ADM_audioStreamDCA.cpp
+ADM_audioStreamPCM.cpp
 ADM_audioStreamConstantChunk.cpp
 )	
 #*************************************************
