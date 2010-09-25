@@ -1,13 +1,9 @@
+cmake_minimum_required(VERSION 2.6)
+
 MESSAGE("#########################################")
 MESSAGE("Configure for avidemux core libs Started")
 MESSAGE("#########################################")
 MESSAGE("")
-cmake_minimum_required(VERSION 2.6)
-if (COMMAND cmake_policy)
-	cmake_policy(VERSION 2.4)
-	cmake_policy(SET CMP0003 NEW)
-	#cmake_policy(SET CMP0011 OLD)
-endif (COMMAND cmake_policy)
 
 # need for shared cmake script between avidemux & plugins
 SET(AVIDEMUX_SOURCE_DIR ${CMAKE_SOURCE_DIR})
@@ -16,19 +12,23 @@ SET(AVIDEMUX_CORE_BUILD_DIR ${CMAKE_BINARY_DIR})
 
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 SET(ADM_PROJECT admCore)
+
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 include(admMainChecks)
+
 ########################################
 # VDPAU
 ########################################
 IF(NOT CROSS)
 	checkVDPAU()
 ENDIF(NOT CROSS)
+
 ########################################
 # YASM
 ########################################
 include(FindYasm)
 admFindYasm()
+
 #########################################
 # Debug Summary
 ########################################
@@ -37,7 +37,6 @@ IF (VERBOSE)
 	MESSAGE("")
 ENDIF (VERBOSE)
 
-
 ########################################
 # Generate config.h
 ########################################
@@ -45,10 +44,12 @@ CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAK
 include_directories( "${CMAKE_BINARY_DIR}/config")
 MESSAGE(STATUS "ADM_coreConfig.h generated")
 MESSAGE("")
+
 ########################################
 # Add include dirs
 ########################################
 include(admCoreIncludes)
+
 ########################################
 # Directories to build
 ########################################
