@@ -55,3 +55,20 @@ IF (UNIX AND NOT APPLE)
 ELSE (UNIX AND NOT APPLE)
 	SET(XVIDEO_CAPABLE FALSE)
 ENDIF (UNIX AND NOT APPLE)
+
+########################################
+# SpiderMonkey
+########################################
+OPTION(USE_SYSTEM_SPIDERMONKEY "" OFF)
+
+MESSAGE(STATUS "Checking for SpiderMonkey")
+MESSAGE(STATUS "*************************")
+
+IF (USE_SYSTEM_SPIDERMONKEY)
+	FIND_HEADER_AND_LIB(SPIDERMONKEY jsapi.h js JS_InitStandardClasses)
+	PRINT_LIBRARY_INFO("SpiderMonkey" SPIDERMONKEY_FOUND "${SPIDERMONKEY_INCLUDE_DIR}" "${SPIDERMONKEY_LIBRARY_DIR}" FATAL_ERROR)
+ELSE (USE_SYSTEM_SPIDERMONKEY)
+	MESSAGE("Skipping check and using bundled version.")
+ENDIF (USE_SYSTEM_SPIDERMONKEY)
+
+MESSAGE("")

@@ -21,8 +21,22 @@ SET(ADM_script_SRCS
 )
 
 ADD_LIBRARY(ADM_jsScript6 STATIC ${ADM_script_SRCS})
-ADD_DEFINITIONS("-DJS_THREADSAFE -DXP_UNIX")
+
+IF (WIN32)
+	ADD_DEFINITIONS(-DXP_WIN)
+ELSE (WIN32)
+	ADD_DEFINITIONS(-DXP_UNIX)
+ENDIF (WIN32)
+
+ADD_DEFINITIONS(-DJS_THREADSAFE)
+
 include_directories(../include)
 include_directories(.)
-include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+
+if (USE_SYSTEM_SPIDERMONKEY)
+	include_directories(${SPIDERMONKEY_INCLUDE_DIR})
+else (USE_SYSTEM_SPIDERMONKEY)
+	include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+endif (USE_SYSTEM_SPIDERMONKEY)
+
 SUBDIRS(src_dialogFactory)
