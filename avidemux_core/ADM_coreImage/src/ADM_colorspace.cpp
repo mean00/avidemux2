@@ -88,8 +88,8 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
     case ADM_COLOR_YUV422: return PIX_FMT_YUYV422;
     case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
     case ADM_COLOR_YUV422P: return PIX_FMT_YUV422P;
-    case ADM_COLOR_RGB32A: return PIX_FMT_RGB32;
-    case ADM_COLOR_BGR32A: return PIX_FMT_RGB32; // Faster that way...PIX_FMT_BGR32;
+    case ADM_COLOR_RGB32A: return PIX_FMT_RGBA;
+    case ADM_COLOR_BGR32A: return PIX_FMT_RGBA; // Faster that way...PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
     case ADM_COLOR_BGR24: return PIX_FMT_RGB24;
     default : ADM_assert(0); 
