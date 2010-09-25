@@ -32,29 +32,6 @@ ELSEIF (LIBXML2_FOUND)
 ENDIF (LIBXML2_FOUND)
 
 ########################################
-# libpng
-########################################
-MESSAGE(STATUS "Checking for libpng")
-MESSAGE(STATUS "*******************")
-
-FIND_PACKAGE(PNG)
-if(CROSS)
-                        MESSAGE(STATUS "Cross compile override")
-                          SET(ZLIB_LIBRARY "-lz -L${CROSS}/lib")
-                          SET(PNG_LIBRARIES " ${ZLIB_LIBRARY} -lpng12 -L${CROSS}/lib")
-endif(CROSS)
-
-PRINT_LIBRARY_INFO("libpng" PNG_FOUND "${PNG_INCLUDE_DIR} ${PNG_DEFINITIONS}" "${PNG_LIBRARIES}" FATAL_ERROR)
-
-FOREACH(_flag ${PNG_INCLUDE_DIR})
-	SET(PNG_CFLAGS ${PNG_CFLAGS} -I${_flag})
-ENDFOREACH(_flag)
-
-SET(PNG_CFLAGS ${PNG_CFLAGS} ${PNG_DEFINITIONS})
-SET(USE_PNG 1)
-MESSAGE("")
-
-########################################
 # pthreads
 ########################################
 MESSAGE(STATUS "Checking for pthreads")
@@ -67,5 +44,16 @@ if(CROSS)
 endif(CROSS)
 
 PRINT_LIBRARY_INFO("pthreads" PTHREAD_FOUND "${PTHREAD_INCLUDE_DIR}" "${PTHREAD_LIBRARIES}" FATAL_ERROR)
+
+MESSAGE("")
+
+########################################
+# zlib
+########################################
+MESSAGE(STATUS "Checking for zlib")
+MESSAGE(STATUS "*****************")
+
+FIND_PACKAGE(ZLIB)
+PRINT_LIBRARY_INFO("zlib" ZLIB_FOUND "${ZLIB_INCLUDE_DIR}" "${ZLIB_LIBRARY}" FATAL_ERROR)
 
 MESSAGE("")

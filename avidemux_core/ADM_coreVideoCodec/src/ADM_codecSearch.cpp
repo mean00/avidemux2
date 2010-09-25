@@ -32,7 +32,6 @@ extern "C"
 #include "ADM_codecNull.h"
 #include "ADM_rgb16.h"
 #include "ADM_uyvy.h"
-#include "ADM_png.h"
 #include "ADM_codecEmpty.h"
 #include "ADM_ffmp43.h"
 #include "ADM_codecFFsimple.h"
@@ -62,7 +61,7 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
     }
   if (fourCC::check (fcc, (uint8_t *) "PNG "))
     {
-      return (decoders *) (new decoderPng (w,h,fcc,extraLen,extraData,bpp));
+      return (decoders *) (new decoderFFPng (w,h,fcc,extraLen,extraData,bpp));
     }
   if (fourCC::check (fcc, (uint8_t *) "FFVH"))
     {

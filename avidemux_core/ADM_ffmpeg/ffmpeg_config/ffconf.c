@@ -113,6 +113,8 @@ int main(void)
     DECLARE_DECODER (INDEO5, indeo5);
     DECLARE_DECODER (INDEO5, indeo5);
     DECLARE_DECODER (VP8, indeo5);
+	DECLARE_DECODER (PNG, png);
+
 #undef DECLARE_DECODER
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 0\n"); 
 
@@ -286,7 +288,6 @@ int main(void)
     DECLARE_DECODER (H261, h261);
 	DECLARE_DECODER (H263I, h263i);
     DECLARE_DECODER (JPEGLS, jpegls);
-    DECLARE_DECODER (PNG, png);
     DECLARE_DECODER (QTRLE, qtrle);
     DECLARE_DECODER (RAWVIDEO, rawvideo);
     DECLARE_DECODER (ROQ, roq);

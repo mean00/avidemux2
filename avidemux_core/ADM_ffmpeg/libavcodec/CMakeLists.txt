@@ -36,7 +36,7 @@ SET(${ADM_LIB}_SRCS
         flvenc.c indeo5.c mpegaudiodec_float.c mpeg4video.c mpeg4videoenc.c dwt.c  h264_refs.c
         ivi_common.c dcadsp.c h264_direct.c ivi_dsp.c ituh263dec.c dvdata.c ituh263enc.c aacsbr.c
         synth_filter.c    mpeg4videodec.c h264_cabac.c h264_cavlc.c vp56dsp.c h264_loopfilter.c
-        h264_sei.c h264_ps.c svq3.c h264dsp.c flvdec.c
+        h264_sei.c h264_ps.c svq3.c h264dsp.c flvdec.c pngdec.c png.c
         aacps.c  aacpsy.c aacadtsdec.c lpc.c vp8_parser.c vp8.c vp8dsp.c inverse.c dct.c aacdec.c
         )
 

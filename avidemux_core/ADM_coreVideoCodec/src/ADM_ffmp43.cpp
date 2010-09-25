@@ -521,6 +521,11 @@ decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
   WRAP_Open (CODEC_ID_MPEG2VIDEO);
 }
 
+decoderFFPng::decoderFFPng(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp) : decoderFF(w, h, fcc, extraDataLen, extraData, bpp)
+{
+	WRAP_Open (CODEC_ID_PNG);
+}
+
 decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
 :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {

@@ -34,9 +34,6 @@
 /* Libxml2 is available */
 #cmakedefine USE_LIBXML2
 
-/* libpng is available */
-#cmakedefine USE_PNG
-
 /* libvpx is available */
 #cmakedefine USE_VPX
 
