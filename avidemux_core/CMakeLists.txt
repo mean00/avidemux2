@@ -22,7 +22,7 @@ include(admMainChecks)
 # VDPAU
 ########################################
 IF(NOT CROSS)
-checkVDPAU()
+	checkVDPAU()
 ENDIF(NOT CROSS)
 ########################################
 # YASM
@@ -76,7 +76,9 @@ endif (NOT USE_SYSTEM_SPIDERMONKEY)
 
 ADD_SUBDIRECTORY(ADM_coreImageLoader)
 
-ADD_SUBDIRECTORY(ADM_coreVdpau)
+if (USE_VDPAU)
+	ADD_SUBDIRECTORY(ADM_coreVdpau)
+endif (USE_VDPAU)
 
 ########################################
 # Config Summary

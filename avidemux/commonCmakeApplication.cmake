@@ -98,12 +98,16 @@ SET(commonLibs1
 ADM_muxerGate6
 ADM_audioFilter6
 ADM_editor6
-ADM_audiocodec6 
-ADM_videocodec6 
-ADM_coreVDPAU6 
-ADM_coreVideoCodec6 
+ADM_audiocodec6
+ADM_videocodec6
+ADM_coreVideoCodec6
 ADM_commonUI6
 )
+
+if (USE_VDPAU)
+	SET(commonLibs1 ${commonLibs1} ADM_coreVDPAU6)
+endif (USE_VDPAU)
+
 SET(commonLibs2
 #ADM_filter6 
 ADM_osSupport6 
