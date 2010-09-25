@@ -1,12 +1,13 @@
 SET(ADM_LIB ADM_toolkitGtk)
 
 SET(${ADM_LIB}_SRCS
-	ADM_tray_gtk.cpp  
-        gtkmarkscale.c jogshuttle.c ADM_jogshuttle.cpp  mediactrl.c
-        GUI_glade.cpp
-
+	ADM_tray_gtk.cpp
+	gtkmarkscale.c jogshuttle.c ADM_jogshuttle.cpp  mediactrl.c
+	GUI_glade.cpp
 )
 
-ADD_DEFINITIONS("-DTARGET_DIR='\"${AVIDEMUX_LIB_DIR}/ADM_glade/\"' -DSOURCE_DIR='\"${CMAKE_CURRENT_SOURCE_DIR}\"'")
+ADD_DEFINITIONS(-DTARGET_DIR="${AVIDEMUX_LIB_DIR}/ADM_glade/" -DSOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
+TARGET_LINK_LIBRARIES(${ADM_LIB} ${GTK_LDFLAGS} ADM_toolkitGtk)
+ADD_TARGET_CFLAGS(${ADM_LIB} ${GTK_CFLAGS})
 ADM_INSTALL_LIB(${ADM_LIB})

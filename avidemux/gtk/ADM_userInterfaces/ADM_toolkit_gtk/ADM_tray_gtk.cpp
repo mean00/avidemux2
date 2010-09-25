@@ -25,7 +25,7 @@
 #include "ADM_toolkitGtk.h"
 #include "ADM_tray.h"
 
-extern void UI_deiconify(void);
+//extern void UI_deiconify(void);
 
 static GdkPixbuf **pixbuf = NULL;
 static int lastIcon;
@@ -38,13 +38,13 @@ static const char *animated[] = {
 void tray_icon_on_click(GtkStatusIcon *status_icon, gpointer user_data)
 {
 	gtk_window_deiconify(GTK_WINDOW(user_data));
-	UI_deiconify();
+	//UI_deiconify();
 }
 
 static void tray_menu_open_avidemux(GtkStatusIcon *status_icon, gpointer user_data)
 {
 	gtk_window_deiconify(GTK_WINDOW(user_data));
-	UI_deiconify();
+	//UI_deiconify();
 }
 
 static void tray_icon_popup_menu(GtkStatusIcon *status_icon, guint button, guint activate_time, gpointer user_data)

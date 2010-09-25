@@ -12,20 +12,22 @@ MACRO(checkGtk)
 		IF (GTK)
 			PKG_CHECK_MODULES(PIXBUF gdk-pixbuf-2.0)
 			PRINT_LIBRARY_INFO("GdkPixBuf" PIXBUF_FOUND "${PIXBUF_CFLAGS}" "${PIXBUF_LDFLAGS}")
-                        if  (PIXBUF_FOUND)
-                        else(PIXBUF_FOUND)
-                                MESSAGE(STATUS "gdk-pixbuf not found")
-                                set(GTK_FOUND false)
-                        endif(PIXBUF_FOUND)
-        
+
+			if (NOT PIXBUF_FOUND)
+				MESSAGE(STATUS "gdk-pixbuf not found")
+				set(GTK_FOUND false)
+			endif (NOT PIXBUF_FOUND)
+
 			PKG_CHECK_MODULES(GTK gtk+-2.0)
 			PRINT_LIBRARY_INFO("GTK+" GTK_FOUND "${GTK_CFLAGS}" "${GTK_LDFLAGS}")
-                        checkGlade()
-                        if  (GLADE_FOUND)
-                        else(GLADE_FOUND)
-                                set(GTK_FOUND false)
-                        endif(GLADE_FOUND)
-                        
+			MESSAGE("")
+
+			checkGlade()
+
+			if (NOT GLADE_FOUND)
+				set(GTK_FOUND false)
+			endif (NOT GLADE_FOUND)
+
 			IF (GTK_FOUND)
 				ADM_COMPILE(gtk_x11_check.cpp "${GTK_CFLAGS}" "" "${GTK_LDFLAGS}" GTK_X11_SUPPORTED outputGtkX11Test)
 
@@ -40,16 +42,16 @@ MACRO(checkGtk)
 						MESSAGE("Error Message: ${outputGtkX11Test}")
 					ENDIF (VERBOSE)
 				ENDIF (GTK_X11_SUPPORTED)
-                               # Merge glade flags into gtk flags
-                                SET(  GTK_CFLAGS "${GTK_CFLAGS} ${GLADE_CFLAGS} ${PIXBUF_CFLAGS}")
-                                SET(  GTK_LDFLAGS "${GTK_LDFLAGS} ${GLADE_LDFLAGS} ${PIXBUF_LDFLAGS}")
-                               # /Merge glade flags into gtk flags
+
+				# Merge glade flags into gtk flags
+				SET(GTK_CFLAGS ${GTK_CFLAGS} ${GLADE_CFLAGS} ${PIXBUF_CFLAGS})
+				SET(GTK_LDFLAGS ${GTK_LDFLAGS} ${GLADE_LDFLAGS} ${PIXBUF_LDFLAGS})
+				MESSAGE("")
 			ENDIF (GTK_FOUND)
 		ELSE (GTK)
 			MESSAGE("${MSG_DISABLE_OPTION}")
+			MESSAGE("")
 		ENDIF (GTK)
-
-		MESSAGE("")
 
 		MESSAGE(STATUS "Checking for GThread")
 		MESSAGE(STATUS "********************")
