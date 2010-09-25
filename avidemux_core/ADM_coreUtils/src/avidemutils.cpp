@@ -222,6 +222,34 @@ bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,ui
 	}
 	return false; // startcode not found
 }
+/**
+    \file ADM_findH264StartCode
+    \brief    Find mpeg1/2/4 video startcode
+    00 00 00 01 xx yy
+    return xx + offset to yy
+
+*/
+
+bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset)
+{
+    uint32_t startcode=0xffffffff;
+    uint8_t  *ptr=start;
+    end--;
+
+    while(ptr<end)
+	{
+		startcode=(startcode<<8)+*ptr;
+		if(1==startcode)
+		{
+			*outstartcode=ptr[1];
+			*offset=ptr-start+2;
+			return true;
+		}
+		ptr++;
+	}
+	return false; // startcode not found
+}
+
 //**********************************************************
 // Convert \ to \\
 // Needed for win32 which uses \ to store filename+path
