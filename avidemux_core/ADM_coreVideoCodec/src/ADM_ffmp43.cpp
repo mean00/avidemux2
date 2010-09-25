@@ -611,7 +611,8 @@ void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list lis
     char buf[256];
   
     vsnprintf(buf, sizeof(buf), fmt, list);
-    printf("[lavc] %s",buf);
+    if(level<=AV_LOG_INFO)
+        ADM_info("[lavc] %s",buf);
 }
 
 void ADM_lavDestroy(void)
