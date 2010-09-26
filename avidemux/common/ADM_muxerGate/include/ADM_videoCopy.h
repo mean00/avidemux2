@@ -44,7 +44,6 @@ protected:
         ADMBitstream    *myBitstream;
         uint8_t         *myExtra;
         uint32_t        myExtraLen;
-        bool            findNalu(int nalu,uint8_t *start,uint8_t *end,uint8_t **outPtr,uint32_t *outLen);
         bool            compactNalus(ADMBitstream *out);
         int             convertFromAnnexB(uint8_t *inData,uint32_t inSize,
                                                       uint8_t *outData,uint32_t outMaxSize);
