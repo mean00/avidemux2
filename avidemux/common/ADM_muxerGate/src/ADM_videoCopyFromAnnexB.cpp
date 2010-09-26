@@ -20,6 +20,8 @@ using std::string;
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_coreUtils.h"
 #include "ADM_h264_tag.h"
+extern ADM_Composer *video_body; // Fixme!
+
 extern bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 extern void mixDump(uint8_t *ptr, uint32_t len);
 
@@ -139,9 +141,16 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
     myExtraLen=0;
     // Read First frame, it contains PPS & SPS
     // Built avc-like atom from it.
-    if(true==ADM_videoStreamCopy::getPacket(myBitstream))
+
+    // We need the absolute 1st frame to gety SPS PPS
+    // Hopefully it will be ok
+    ADMCompressedImage img;
+    img.data=buffer;
+    img.dataLength=0;
+
+    if(true==video_body->getDirectImageForDebug(0,&img))
     {
-        
+        myBitstream->len=img.dataLength;
         NALU_descriptor desc[MAX_NALU_PER_CHUNK];
         int nbNalu=splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
                                 MAX_NALU_PER_CHUNK,desc);
