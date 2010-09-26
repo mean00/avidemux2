@@ -37,11 +37,11 @@ using std::string;
 #include "ADM_tsGetBits.h"
 #include "ADM_coreUtils.h"
 
-
-
-
-
-#define zprintf(...) {}
+#if (1) || !defined(ADM_DEBUG)
+#define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 static const char Type[5]={'X','I','P','B','D'};
 
@@ -126,11 +126,6 @@ public:
 };
 
 
-#if 0
-#define aprintf printf
-#else
-#define aprintf(...) {}
-#endif
 
 /**
     \class TsIndexer
@@ -299,7 +294,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                 sei_type+=payload[0];payload++;
                 while(payload[0]==0xff) {sei_size+=0xff;payload++;};
                 sei_size+=payload[0];payload++;
-                zprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+                aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
                 switch(sei_type) // Recovery point
                 {
 
@@ -315,7 +310,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                                     }
                                     //printf("Consumed: %d,\n",bits.getConsumedBits());
                                     int pic=bits.get(4);
-                                    printf("Pic struct: %d,\n",pic);
+                                    aprintf("Pic struct: %d,\n",pic);
                                     switch(pic) 
                                     {
                                         case 0: *picStruct=pictureFrame; break;
@@ -336,7 +331,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                             getBits bits(sei_size,payload);
                             payload+=sei_size;
                             *recoveryLength=bits.getUEG();
-                            zprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
+                            aprintf("[SEI] Recovery :%"LU"\n",*recoveryLength);
                             r=true;
                             break;
                         }
@@ -345,7 +340,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                             break;
                 }
     }
-    if(payload!=tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
+    if(payload+1<tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
     return r;
 }
 
@@ -433,6 +428,7 @@ uint32_t recoveryCount=0xff;
       }
       
         if(!seq_found) goto the_end;
+        data.state=idx_startAtImage;
     //******************
     // 2 Index
     //******************
@@ -454,19 +450,28 @@ resume:
 
         startCode&=0x1f; // Ignore nal ref IDR
         
-        zprintf("[%02x] Nal :0x%x,ref=%d,lastRef=%d at : %d \n",fullStartCode,startCode,ref,lastRefIdc,pkt->getConsumed()-beginConsuming);
+        aprintf("[%02x] Nal :0x%x,ref=%d,lastRef=%d at : %d \n",fullStartCode,startCode,ref,lastRefIdc,pkt->getConsumed()-beginConsuming);
         
           // Ignore multiple chunk of the same pic
           if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started )  //&& ref==lastRefIdc) 
           {
-           // aprintf("Still capturing, ignore\n");
+            aprintf("Still capturing, ignore\n");
             continue;
           }
                 
           switch(startCode)
                   {
+                  case NAL_AU_DELIMITER:
+                        {
+                          aprintf("AU DELIMITER\n");
+                          pic_started = false;
+                        }
+                          break;
                   case NAL_SEI:
                     {
+#if 0
+                        printf(">>SEI\n");
+#else
                         // Load the whole NAL
                             SEI_nal.empty();
                             uint32_t code=0xffff+0xffff0000;
@@ -477,38 +482,43 @@ resume:
                                 SEI_nal.pushByte(r);
                             }
                             if(!pkt->stillOk()) goto resume;
-                            zprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
+                            aprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
                             if(SEI_nal.payloadSize>=7)
-                                decodeSEI(SEI_nal.payloadSize-4,SEI_nal.payload,&recoveryCount,&nextPicStruct);
+                                decodeSEI(SEI_nal.payloadSize-4,
+                                    SEI_nal.payload,&recoveryCount,&nextPicStruct);
                             else printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
-                        
                             startCode=pkt->readi8();
-                            goto resume;
-                    }
-                            break;
-                  case NAL_AU_DELIMITER:
-                          pic_started = false;
-                          nextPicStruct=pictureFrame;  
-                          printf("AU DELIMITER\n");
-                          break;
 
+                              if( data.state!=idx_startAtGopOrSeq)
+                              {
+                                  pic_started = false;
+                                  pkt->getInfo(&info);
+                                  data.frameType=2;
+                                  Mark(&data,&info,5+SEI_nal.payloadSize+1);
+                                  data.state=idx_startAtGopOrSeq;
+                                  recoveryCount=0xff;
+                               }
+                            goto resume;
+#endif
+                        }
+                            break;
+                  
                   case NAL_SPS:
-                            
-                          pic_started = false;
-                          aprintf("Sps \n");
-                          pkt->getInfo(&info);
-                          data.frameType=1;
-                          Mark(&data,&info,5);
-                          data.state=idx_startAtGopOrSeq;
-                          recoveryCount=0xff;
+                              pic_started = false;
+                              aprintf("Sps \n");
+                              pkt->getInfo(&info);
+                              data.frameType=1;
+                              Mark(&data,&info,5);
+                              data.state=idx_startAtGopOrSeq;
+                              recoveryCount=0xff;
                           break;
 
                   case NAL_IDR:
-                    zprintf("KOWABOUNGA\n");
+                    //zprintf("KOWABOUNGA\n");
                   case NAL_NON_IDR:
                     {
 #define NON_IDR_PRE_READ 8
-                      printf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
+                      aprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
                       lastRefIdc=ref;
                         
                       uint8_t bufr[NON_IDR_PRE_READ+4];
@@ -538,7 +548,7 @@ resume:
                             default : data.frameType=2;break; // SP/SI
                         }
                       if(startCode==NAL_IDR) data.frameType=4; // IDR
-                      zprintf("[>>>>>>>>] Pic Type %"LU" Recovery %"LU"\n",data.frameType,recoveryCount);
+                      aprintf("[>>>>>>>>] Pic Type %"LU" Recovery %"LU"\n",data.frameType,recoveryCount);
                       if(data.frameType==1 && !recoveryCount) data.frameType=4; //I  + Recovery=0 = IDR!
                       data.picStructure=nextPicStruct;
                       if(data.state==idx_startAtGopOrSeq) 
@@ -900,7 +910,7 @@ dmxPacketInfo info;
 */
 bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
 {
-      
+        aprintf("********************** MARK ******************\n");
         uint32_t consumed=pkt->getConsumed()-overRead;
         if(data->nbPics)
         {
