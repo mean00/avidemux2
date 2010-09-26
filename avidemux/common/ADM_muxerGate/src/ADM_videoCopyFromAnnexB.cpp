@@ -201,7 +201,12 @@ int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t in
         }
         uint32_t toEscape=offset-5; // ignore startcode
         uint32_t nalHeaderSize=4;
+#if ESCAPE
         uint32_t nalSize=ADM_unescapeH264(toEscape,head,tgt+nalHeaderSize+1);
+#else
+        uint32_t nalSize=toEscape;
+        memcpy(tgt+1+nalHeaderSize,head,nalSize);
+#endif
         head+=offset;
         writeBE32(tgt,1+nalSize);
         aprintf("%x , %d -> %d at offset 0x%x\n",oldStartCode,toEscape,nalSize,tgt-outData);
@@ -213,7 +218,12 @@ int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t in
     }
     uint32_t toEscape=tail-head;
     uint32_t nalHeaderSize=4;
+#if ESCAPE
     uint32_t nalSize=ADM_unescapeH264(toEscape,head,tgt+nalHeaderSize+1);
+#else
+    uint32_t nalSize=toEscape;
+    memcpy(tgt+nalHeaderSize+1,head,toEscape);
+#endif
     writeBE32(tgt,1+nalSize);
     aprintf("%x , %d -> %d at offset 0x%x\n",oldStartCode,toEscape,nalSize,tgt-outData);
     tgt[nalHeaderSize]=oldStartCode;
