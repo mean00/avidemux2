@@ -127,6 +127,14 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4 ${LIBXML2_LIBRARIES})
 ###########################################
 TARGET_LINK_LIBRARIES(avidemux3_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 
+# Needed for cross compiling
+if(CROSS)
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UI_QT46)
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_render6_${UI_SUFFIX})
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_coreUtils6)
+        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
+endif(CROSS)
+
 ###########################################
 # OS Specific
 ###########################################
