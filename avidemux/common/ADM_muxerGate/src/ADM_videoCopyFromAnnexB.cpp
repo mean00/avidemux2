@@ -180,10 +180,11 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
             myExtraLen=5+1+2+spsLen+1+2+ppsLen;
             myExtra=new uint8_t[myExtraLen];
             uint8_t *ptr=myExtra;
+            uint8_t *sps=desc[indexSps].start;
             *ptr++=1;           // AVC version
-            *ptr++=0x64;        // Profile
-            *ptr++=0x00;        // Profile
-            *ptr++=0x33;        // Level
+            *ptr++=sps[0];        // Profile
+            *ptr++=sps[1];        // Profile
+            *ptr++=sps[2];        // Level
             *ptr++=0xff;        // Nal size minus 1
 
             *ptr++=0xe1;        // SPS
