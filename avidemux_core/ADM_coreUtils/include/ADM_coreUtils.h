@@ -10,7 +10,7 @@ char        *ADM_escape(const ADM_filename *incoming);
 uint32_t    ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
 uint32_t    ADM_UsecFromFps1000(uint32_t fps1000);
 uint32_t    ADM_Fps1000FromUs(uint64_t us);
-
+uint32_t    ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
 
 
 

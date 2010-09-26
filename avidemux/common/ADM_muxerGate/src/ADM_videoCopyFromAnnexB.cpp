@@ -174,43 +174,6 @@ ADM_videoStreamCopyFromAnnexB::~ADM_videoStreamCopyFromAnnexB()
     myBitstream=NULL;
 }
 /**
-    \fn unescapeH264
-    \brief should be moved to coreUtils
-*/
-static uint32_t unescapeH264(uint8_t *in, uint32_t len,uint8_t *out)
-{
-  uint32_t outlen=0;
-  uint8_t *start=out;
-  uint8_t *tail=in+len;
-
-    if(len<3) 
-    {
-        memcpy(out,in,len);
-        return len;
-    }
-    while(in+3<tail)
-    {
-      if(!in[0]  && !in[1] && in[2]==3)
-      {
-        out[0]=0;
-        out[1]=0;
-        out+=2;
-        in+=3;
-        continue;
-      }
-      *out++=*in++;
-    }
-    // copy last bytes
-    uint32_t left=tail-in;
-    memcpy(out,in,left);
-    out+=left;
-    outlen=out-start;
-    ADM_assert(outlen<=len);
-    return outlen;
- ;
-
-}
-/**
     \fn convertFromAnnexB   
     \brief convert annexB startcode (00 00 00 0 xx) to NALU
 */
@@ -238,7 +201,7 @@ int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t in
         }
         uint32_t toEscape=offset-5; // ignore startcode
         uint32_t nalHeaderSize=4;
-        uint32_t nalSize=unescapeH264(head,toEscape,tgt+nalHeaderSize+1);
+        uint32_t nalSize=ADM_unescapeH264(toEscape,head,tgt+nalHeaderSize+1);
         head+=offset;
         writeBE32(tgt,1+nalSize);
         aprintf("%x , %d -> %d at offset 0x%x\n",oldStartCode,toEscape,nalSize,tgt-outData);
@@ -250,7 +213,7 @@ int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t in
     }
     uint32_t toEscape=tail-head;
     uint32_t nalHeaderSize=4;
-    uint32_t nalSize=unescapeH264(head,toEscape,tgt+nalHeaderSize+1);
+    uint32_t nalSize=ADM_unescapeH264(toEscape,head,tgt+nalHeaderSize+1);
     writeBE32(tgt,1+nalSize);
     aprintf("%x , %d -> %d at offset 0x%x\n",oldStartCode,toEscape,nalSize,tgt-outData);
     tgt[nalHeaderSize]=oldStartCode;

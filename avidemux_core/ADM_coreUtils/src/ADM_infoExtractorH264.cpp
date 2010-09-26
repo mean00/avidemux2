@@ -34,8 +34,7 @@ bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
     \brief Remove escape stuff
 
 */
-static uint32_t
-unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
+uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 {
   uint32_t outlen = 0;
   uint8_t *tail = in + len;
@@ -222,7 +221,7 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
     memset(spsinfo,0,sizeof(*spsinfo));
 
 
-  outlen = unescapeH264 (len, data, buf);
+  outlen = ADM_unescapeH264 (len, data, buf);
   getBits bits(outlen,buf);
   
 

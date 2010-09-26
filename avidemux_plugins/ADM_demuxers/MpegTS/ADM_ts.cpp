@@ -20,13 +20,13 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
+#include "ADM_coreUtils.h"
 
 #define MY_CLASS tsHeader
 #include "ADM_coreDemuxerMpegTemplate.cpp"
 
 
 
-extern uint32_t TS_unescapeH264(uint32_t len,uint8_t *in, uint8_t *out);
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
 /**
@@ -239,7 +239,7 @@ uint8_t tsHeader::close(void)
 #define UNESCAPE() if(r==true && 0 && videoNeedEscaping)  \
                     {\
                         uint32_t l=img->dataLength;\
-                        uint32_t l2=TS_unescapeH264(l,img->data, img->data);\
+                        uint32_t l2=ADM_unescapeH264(l,img->data, img->data);\
                         if(l!=l2)\
                             memset(img->data+l2,0,l-l2);\
                     }

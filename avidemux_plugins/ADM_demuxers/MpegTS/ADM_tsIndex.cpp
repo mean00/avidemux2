@@ -35,6 +35,7 @@ using std::string;
 #include "ADM_indexFile.h"
 #include "ADM_getbits.h"
 #include "ADM_tsGetBits.h"
+#include "ADM_coreUtils.h"
 
 
 
@@ -277,36 +278,6 @@ void TsIndexer::updateUI(void)
         ui->update( (uint32_t)pos);
 }
 /**
-    \fn Unescape stream
-    \brief H264 and VC1 in TS escape
-*/
-uint32_t TS_unescapeH264(uint32_t len,uint8_t *in, uint8_t *out)
-{
-  uint32_t outlen=0;
-  uint8_t *tail=in+len;
-    if(len<3) return 0;
-    while(in<tail-3)
-    {
-      if(!in[0]  && !in[1] && in[2]==3)
-      {
-        out[0]=0;
-        out[1]=0;
-        out+=2;
-        outlen+=2;
-        in+=3; 
-        continue;
-      }
-      *out++=*in++;
-      outlen++;
-    }
-    // copy last bytes
-    uint32_t left=tail-in;
-    memcpy(out,in,left);
-    outlen+=left;
-    return outlen;
-    
-}
-/**
         \fn decodeSEI
         \brief decode SEI to get short ref I
         @param recoveryLength # of recovery frame
@@ -318,7 +289,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
     
     uint8_t *payload=(uint8_t *)alloca(nalSize+16);
     bool r=false;
-    nalSize=TS_unescapeH264(nalSize,org,payload);
+    nalSize=ADM_unescapeH264(nalSize,org,payload);
     uint8_t *tail=payload+nalSize;
     *picStruct=pictureFrame; // frame
     while( payload<tail-2)
@@ -546,7 +517,7 @@ resume:
                    
                         pkt->read(NON_IDR_PRE_READ,bufr);
                         // unescape...
-                        TS_unescapeH264(NON_IDR_PRE_READ,bufr,header);
+                        ADM_unescapeH264(NON_IDR_PRE_READ,bufr,header);
                         //
                         getBits bits(NON_IDR_PRE_READ,header);
                         int first_mb_in_slice,slice_type;
