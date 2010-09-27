@@ -17,7 +17,7 @@
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "muxerMkv.h"
-
+#include "mkv_muxer_desc.cpp"
 #include "fourcc.h"
  bool mkvConfigure(void);
 
@@ -27,7 +27,7 @@ ADM_MUXER_BEGIN( muxerMkv,
                     "Matroska muxer plugin (c) Mean 2009",
                     "Mkv Muxer", // DIsplay name
                     mkvConfigure,
-                    NULL,
-                    NULL
+                    mkv_muxer_param, //template
+                    &mkvMuxerConfig //config
                 );
 

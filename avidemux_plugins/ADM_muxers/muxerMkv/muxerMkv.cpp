@@ -29,6 +29,11 @@
 #define aprintf printf
 #endif
 
+mkv_muxer mkvMuxerConfig=
+{
+    false,  // Force
+    1280    // Display width
+};
 
 
 /**
@@ -73,6 +78,18 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         c->gop_size=15;
         
+        if(true==mkvMuxerConfig.forceDisplayWidth && mkvMuxerConfig.displayWidth)
+        {
+            //sar=display/code  
+            int num=1,den=1;
+            av_reduce(&num, &den, mkvMuxerConfig.displayWidth, s->getWidth(),65535);
+            c->sample_aspect_ratio.num=num;
+            c->sample_aspect_ratio.den=den;
+            video_st->sample_aspect_ratio.num=num;
+            video_st->sample_aspect_ratio.den=den;
+            ADM_info("Forcing display width of %d\n",(int)mkvMuxerConfig.displayWidth);
+        }
+
         if(initAudio(nbAudioTrack,a)==false)
         {
             printf("[Mkv] Failed to init audio\n");

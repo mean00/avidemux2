@@ -19,6 +19,8 @@
 
 #include "ADM_muxer.h"
 #include "ADM_coreMuxerFfmpeg.h"
+#include "mkv_muxer.h"
+extern mkv_muxer mkvMuxerConfig;
 
 class muxerMkv : public muxerFFmpeg
 {

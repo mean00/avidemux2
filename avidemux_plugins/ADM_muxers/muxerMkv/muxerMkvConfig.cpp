@@ -18,10 +18,24 @@
 #include "muxerMkv.h"
 #define ADM_MINIMAL_UI_INTERFACE
 #include "DIA_factory.h"
-#include "fourcc.h"
+#include "fourcc.h" 
 bool mkvConfigure(void)
 {
-        return true;
+        uint32_t force=(uint32_t)mkvMuxerConfig.forceDisplayWidth;
+        uint32_t displayWidth=(uint32_t)mkvMuxerConfig.displayWidth;
+
+        diaElemToggle   alternate(&force,"Force display width");
+        diaElemUInteger dWidth(&displayWidth,"Display width",16,65535);
+
+        diaElem *tabs[]={&alternate,&dWidth};
+        if( diaFactoryRun(("MKV Muxer"),2,tabs))
+        {
+            mkvMuxerConfig.forceDisplayWidth=(bool)force;
+            mkvMuxerConfig.displayWidth=displayWidth;
+            return true;
+        }
+        return false;
+
 }
 
 
