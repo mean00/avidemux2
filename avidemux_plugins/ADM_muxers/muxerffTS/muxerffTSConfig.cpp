@@ -19,9 +19,20 @@
 #define ADM_MINIMAL_UI_INTERFACE
 #include "DIA_factory.h"
 #include "fourcc.h"
+extern ts_muxer tsMuxerConfig;
 bool ffTSConfigure(void)
 {
+        uint32_t muxRate=(uint32_t)tsMuxerConfig.muxRateInMBits;
+
+        diaElemUInteger mux(&muxRate,"Mux rate (MBits/s)",3,60);
+
+        diaElem *tabs[]={&mux};
+        if( diaFactoryRun(("TS Muxer"),1,tabs))
+        {            
+            tsMuxerConfig.muxRateInMBits=muxRate;
             return true;
+        }
+        return false;
 }
 // EOF
 
