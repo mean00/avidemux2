@@ -359,41 +359,45 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
   uint32_t val, hnt;
 
 // FIXME :  no startcode only !
-
+  //ADM_info("Searching H264 frame type..\n");
   while (head + 4 < tail)
     {
 
-      uint32_t length =
-	(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
+      uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
       //printf("Block size : %"LU", available : %"LU"\n",length,len);
-      if (length > len || length < 6)
-	{
-	  printf ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len,
-		  length, len);
-	  *flags = 0;
-	  return 0;
-	}
+      if (length > len)// || length < 2)
+      {
+          ADM_warning ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len, length, len);
+          *flags = 0;
+          return 0;
+        }
       head += 4;		// Skip nal lenth
       stream = *(head) & 0x1F;
       switch (stream)
-	{
-	case NAL_IDR:
-	  *flags = AVI_KEY_FRAME;
-
-	  return 1;
-	  break;
-	case NAL_NON_IDR:
-	  refineH264FrameType (head + 1, tail, flags);
-	  return 1;
-	  break;
-	default:
-	  printf ("??0x%x\n", stream);
-	case NAL_SEI:
-	  head += length;
-	  continue;
-	}
+        {
+            case NAL_SPS:
+            case NAL_PPS: 
+            case NAL_SEI:
+            case NAL_AU_DELIMITER:
+            case NAL_FILLER:
+                    break;
+            case NAL_IDR:
+              *flags = AVI_KEY_FRAME;
+              //ADM_info("Found IDR \n");
+              return 1;
+              break;
+            case NAL_NON_IDR:
+              refineH264FrameType (head + 1, tail, flags);
+              //ADM_info("Found Non IDR :%x\n",*flags);
+              return 1;
+              break;
+            default:
+              ADM_warning ("unknown nal ??0x%x\n", stream);
+              break;
+         }
+        head+=length;
     }
-  printf ("No stream\n");
+  ADM_warning ("No stream\n");
   return 0;
 }
 
