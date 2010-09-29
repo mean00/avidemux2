@@ -346,8 +346,86 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
   return 1;
 }
 /**
+    \fn getRecoveryFromSei
+    \brief We dont unescape here, very unlikely needed as we only decode recovery which is small
+*/
+static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
+{
+    
+    uint8_t *payload=(uint8_t *)alloca(nalSize+16);
+    bool r=false;
+    nalSize=ADM_unescapeH264(nalSize,org,payload);
+    uint8_t *tail=payload+nalSize;
+    *recoveryLength=16;
+    while( payload<tail)
+    {
+                uint32_t sei_type=0,sei_size=0;
+                while(payload[0]==0xff) {sei_type+=0xff;payload++;};
+                sei_type+=payload[0];payload++;
+                while(payload[0]==0xff) {sei_size+=0xff;payload++;};
+                sei_size+=payload[0];payload++;
+                aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+                if(payload+sei_size>tail) break;
+                switch(sei_type) // Recovery point
+                {
+                       case 6:
+                        {
+                            getBits bits(sei_size,payload);
+                            payload+=sei_size;
+                            *recoveryLength=bits.getUEG();
+                            r=true;
+                            break;
+                        }
+                        default:
+                            payload+=sei_size;
+                            break;
+                }
+    }
+    return r;
+}
+/**
+    \fn refineH264FrameType
+    \brief Try to detect B slice, warning the stream is not escaped!
+*/
+static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int recovery)
+{
+    uint8_t *out=(uint8_t *)alloca(tail-head);
+    int size=ADM_unescapeH264(tail-head,head,out);
+   
+    getBits bits(size,out);
+    uint32_t sliceType;
+    *flags = 0;
+  
+    bits.getUEG();               // first mb in slice
+    sliceType = bits.getUEG31(); // get_ue_golomb_31??
+    if (sliceType > 9)
+    {
+      ADM_warning ("Weird Slice %d\n", sliceType);
+      return false;
+    }
+    if (sliceType > 4)
+        sliceType -= 5;
+
+    switch(sliceType)
+    {
+        case 3:
+        case 0: *flags=  AVI_P_FRAME;break;
+        case 1: *flags = AVI_B_FRAME;break;
+        case 2: case 4:
+                if(!recovery) *flags=AVI_KEY_FRAME;
+                    else      *flags=AVI_P_FRAME;
+                break;
+        
+    }
+
+    return true;
+}
+
+/**
       \fn extractH264FrameType
-      \brief return frametype in flags (KEY_FRAME or 0). To be used only with  mkv/mp4 nal type (i.e. no startcode)
+      \brief return frametype in flags (KEY_FRAME or 0). 
+             To be used only with  mkv/mp4 nal type (i.e. no startcode)
+                    but 4 bytes NALU
       
 */
 uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
@@ -358,13 +436,11 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
 
   uint32_t val, hnt;
 
-// FIXME :  no startcode only !
-  //ADM_info("Searching H264 frame type..\n");
   while (head + 4 < tail)
     {
 
       uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
-      //printf("Block size : %"LU", available : %"LU"\n",length,len);
+      
       if (length > len)// || length < 2)
       {
           ADM_warning ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len, length, len);
@@ -373,22 +449,24 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
         }
       head += 4;		// Skip nal lenth
       stream = *(head) & 0x1F;
+      uint32_t recovery;
+      int sliceType;
       switch (stream)
         {
+            case NAL_SEI:
+                getRecoveryFromSei(length-1, head+1,&recovery);
+                break;
             case NAL_SPS:
             case NAL_PPS: 
-            case NAL_SEI:
             case NAL_AU_DELIMITER:
             case NAL_FILLER:
                     break;
             case NAL_IDR:
               *flags = AVI_KEY_FRAME;
-              //ADM_info("Found IDR \n");
               return 1;
               break;
             case NAL_NON_IDR:
-              refineH264FrameType (head + 1, tail, flags);
-              //ADM_info("Found Non IDR :%x\n",*flags);
+              getNalType(head+1,head+length,flags,recovery);
               return 1;
               break;
             default:
@@ -403,17 +481,13 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
 
 /**
       \fn extractH264FrameType_startCode
-      \brief return frametype in flags (KEY_FRAME or 0). To be used only with  avi / mpeg TS nal type (i.e. with startcode)
-      
+      \brief return frametype in flags (KEY_FRAME or 0). 
+      To be used only with  avi / mpeg TS nal type (i.e. with startcode 00 00 00 01     
 */
 uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32_t len, uint32_t * flags)
 {
   uint8_t *head = buffer, *tail = buffer + len;
   uint8_t stream;
-#define NAL_NON_IDR       1
-#define NAL_IDR           5
-#define NAL_SEI           6
-
   uint32_t val, hnt;
 
 // FIXME :  no startcode only !
@@ -455,25 +529,11 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
 }
 /**
     \fn refineH264FrameType
-    \brief Try to detect B slice, warning the stream is not escaped!
+    \brief Try to detect frame type from stream
 */
+
 void refineH264FrameType (uint8_t * head, uint8_t * tail, uint32_t * flags)
 {
-  getBits bits(tail-head,head);
-  uint32_t sliceType;
-  *flags = 0;
-  
-  bits.getUEG();
-  sliceType = bits.getUEG31(); // get_ue_golomb_31??
-  if (sliceType > 9)
-    {
-      printf ("Weird Slice %d\n", sliceType);
-      return;
-    }
-  if (sliceType > 4)
-    sliceType -= 5;
-  if (sliceType == 1)
-    *flags = AVI_B_FRAME;
-  //printf("[H264] Slice type : %"LU"\n",sliceType);
+   getNalType (head,tail, flags,16); // No recovery here
 }
 //EOF
