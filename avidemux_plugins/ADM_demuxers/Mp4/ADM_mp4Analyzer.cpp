@@ -26,8 +26,13 @@
 
 #include "ADM_mp4Tree.h"
 
+#if 1
 #define adm_printf(...) {}
 #define aprintf(...) {}
+#else
+#define adm_printf(a,b...) ADM_info(b)
+#define aprintf(...) ADM_info
+#endif
 
 #define QT_TR_NOOP(x) x
 #define TRACK_OTHER 0
