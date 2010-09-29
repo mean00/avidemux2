@@ -25,8 +25,6 @@
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 
-static void refineH264FrameType (uint8_t * head, uint8_t * tail,
-				 uint32_t * flags);
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
 			    uint8_t * outstartcode, uint32_t * offset);
 /**
@@ -384,8 +382,9 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
     return r;
 }
 /**
-    \fn refineH264FrameType
-    \brief Try to detect B slice, warning the stream is not escaped!
+    \fn getNalType
+    \brief Return the slice type. The stream is escaped by the function. If recovery==0 
+            I as considered IDR else as P.
 */
 static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int recovery)
 {
@@ -428,8 +427,7 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
                     but 4 bytes NALU
       
 */
-uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
-		      uint32_t * flags)
+uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,  uint32_t * flags)
 {
   uint8_t *head = buffer, *tail = buffer + len;
   uint8_t stream;
@@ -482,7 +480,8 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,
 /**
       \fn extractH264FrameType_startCode
       \brief return frametype in flags (KEY_FRAME or 0). 
-      To be used only with  avi / mpeg TS nal type (i.e. with startcode 00 00 00 01     
+      To be used only with  avi / mpeg TS nal type 
+        (i.e. with startcode 00 00 00 01)     
 */
 uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32_t len, uint32_t * flags)
 {
@@ -495,16 +494,15 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
   while (head + 4 < tail)
     {
       // Search startcode
-
       hnt = (head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
       head += 4;
       while ((hnt != 1) && head < tail)
-	{
+        {
 
-	  hnt <<= 8;
-	  val = *head++;
-	  hnt += val;
-	}
+          hnt <<= 8;
+          val = *head++;
+          hnt += val;
+        }
       if (head >= tail)
 	break;
       stream = *(head++) & 0x1f;
@@ -516,24 +514,16 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
 	  return 1;
 	  break;
 	case NAL_NON_IDR:
-	  refineH264FrameType (head, tail, flags);
+	   getNalType (head,tail, flags,16); // No recovery here
 	  return 1;
 	  break;
+    case NAL_SPS:case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
 	default:
-	  printf ("??0x%x\n", stream);
+	  ADM_warning ("??0x%x\n", stream);
 	  continue;
 	}
     }
   printf ("No stream\n");
   return 0;
-}
-/**
-    \fn refineH264FrameType
-    \brief Try to detect frame type from stream
-*/
-
-void refineH264FrameType (uint8_t * head, uint8_t * tail, uint32_t * flags)
-{
-   getNalType (head,tail, flags,16); // No recovery here
 }
 //EOF
