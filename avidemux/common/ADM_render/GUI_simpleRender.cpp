@@ -64,7 +64,7 @@ bool simpleRender::displayImage(ADMImage *pic)
     MUI_rgbDraw(MUI_getDrawWidget(),displayWidth,displayHeight,videoBuffer);
     return true;
 }
-#if ADM_UI_TYPE_BUILD == ADM_UI_QT4
+#if !(ADM_UI_TYPE_BUILD == ADM_UI_QT4)
     #define IVERT ADM_COLOR_BGR32A
 #else
     #define IVERT ADM_COLOR_RGB32A

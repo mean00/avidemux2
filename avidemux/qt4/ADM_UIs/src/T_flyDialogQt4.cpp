@@ -148,7 +148,7 @@ uint8_t     ADM_flyDialogQt4::sliderSet(uint32_t value)
 */
 bool  ADM_flyDialogQt4::isRgbInverted(void)
 {
-  return 1; 
+  return 0; 
 }
 
 
