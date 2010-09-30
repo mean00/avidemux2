@@ -91,7 +91,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
     case ADM_COLOR_RGB32A: return PIX_FMT_RGBA;
     case ADM_COLOR_BGR32A: return PIX_FMT_RGBA; // Faster that way...PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
-    case ADM_COLOR_BGR24: return PIX_FMT_RGB24;
+    case ADM_COLOR_BGR24: return PIX_FMT_BGR24;
     default : ADM_assert(0); 
   }
   return PIX_FMT_YUV420P;
@@ -333,11 +333,12 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     {
              swapRGB32(dstWidth,dstHeight,to);
     }
+/*
     if(toColor==ADM_COLOR_BGR24)
     {
              swapRGB24(dstWidth,dstHeight,to);
     }
-
+*/
     return true;
 }
 //EOF
