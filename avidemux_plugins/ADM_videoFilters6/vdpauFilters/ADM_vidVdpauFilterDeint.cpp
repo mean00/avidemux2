@@ -382,10 +382,10 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
     // Invert U&V
     uint32_t ts;
     uint8_t  *td;
-
+#if 0
     ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
-    td=destData[2];destData[2]=destData[1];destData[1]=td;
-
+    td=destData[1];destData[2]=destData[2];destData[1]=td;
+#endif
     scaler->convertPlanes(  sourceStride,destStride,     
                             sourceData,destData);
     return true;
