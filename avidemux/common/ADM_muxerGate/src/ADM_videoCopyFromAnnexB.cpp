@@ -20,11 +20,24 @@ using std::string;
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_coreUtils.h"
 #include "ADM_h264_tag.h"
+
+
+
 extern ADM_Composer *video_body; // Fixme!
 
 extern bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
+extern bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 extern void mixDump(uint8_t *ptr, uint32_t len);
 
+#define SHORT_START_CODE
+
+#ifdef SHORT_START_CODE
+    #define SearchStartCode ADM_findMpegStartCode
+    #define START_CODE_LEN 4
+#else
+    #define SearchStartCode ADM_findH264StartCode
+    #define START_CODE_LEN 5
+#endif
 
 //#define ANNEX_B_DEBUG
 
@@ -89,7 +102,7 @@ uint8_t *head=start;
 uint32_t offset;
 uint8_t startCode,oldStartCode=0xff;
 int index=0;
-      while(true==ADM_findH264StartCode(head,end,&startCode,&offset))
+      while(true==SearchStartCode(head,end,&startCode,&offset))
       {
             if(true==first)
             {
@@ -100,7 +113,7 @@ int index=0;
             }
         ADM_assert(index<maxNalu);
         desc[index].start=head;
-        desc[index].size=offset-5;
+        desc[index].size=offset-START_CODE_LEN;
         desc[index].nalu=oldStartCode;
         index++;
         head+=offset;
@@ -262,8 +275,8 @@ static void parseNalu(uint8_t *head, uint8_t *tail)
     while(head<tail)
     {
         int32_t size=readBE32(head);
-            printf("[%02x] size=%d\n",head[5],size);
-        head+=size+4;
+            printf("[%02x] size=%d\n",head[START_CODE_LEN],size);
+        head+=size+START_CODE_LEN-1;
     }
 }
 /**
