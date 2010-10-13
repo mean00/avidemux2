@@ -240,7 +240,7 @@ int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t in
     {
         NALU_descriptor *d=desc+i;
         aprintf("%d/%d : Nalu :0x%x size=%d\n",i,nbNalu,d->nalu,d->size);
-        switch(d->nalu)
+        switch(d->nalu&0x1f)
         {
             case NAL_FILLER: break;
             case NAL_AU_DELIMITER: break; 
