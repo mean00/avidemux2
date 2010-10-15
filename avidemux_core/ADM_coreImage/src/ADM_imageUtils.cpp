@@ -395,4 +395,25 @@ uint32_t r1,r2;
 		    }
 		    return 1;
  }
+
+
+/**
+    \fn copyPlane
+*/
+bool ADMImage::copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane)
+{
+        uint8_t *src=s->GetReadPtr(plane);
+        uint8_t *dst=d->GetWritePtr(plane);
+        uint32_t sPitch=s->GetPitch(plane);
+        uint32_t dPitch=d->GetPitch(plane);
+        uint32_t w=s->_width;  
+        uint32_t h=s->_height;
+        if(plane!=PLANAR_Y) 
+        {
+            w>>=1;
+            h>>=1;
+        }
+        BitBlit(dst,dPitch,src,sPitch,w,h);
+        return true;
+}
 //EOF

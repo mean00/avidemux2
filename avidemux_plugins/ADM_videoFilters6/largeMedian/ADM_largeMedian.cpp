@@ -91,24 +91,6 @@ bool         largeMedian::getCoupledConf(CONFcouple **couples)
 }
 
 /**
-    \fn copyPlane
-*/
-static void copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane)
-{
-        uint8_t *src=s->GetReadPtr(plane);
-        uint8_t *dst=d->GetWritePtr(plane);
-        uint32_t sPitch=s->GetPitch(plane);
-        uint32_t dPitch=d->GetPitch(plane);
-        uint32_t w=s->_width;  
-        uint32_t h=s->_height;
-        if(plane!=PLANAR_Y) 
-        {
-            w>>=1;
-            h>>=1;
-        }
-        BitBlit(dst,dPitch,src,sPitch,w,h);
-}
-/**
     \fn processPlane
 */
 bool largeMedian::processPlane(ADMImage *s,ADMImage *d,ADM_PLANE plane)
@@ -166,7 +148,7 @@ uint32_t stride,page;
  // Luma...
 	if(!param.luma)
 	{
-        copyPlane(image,data,PLANAR_Y);
+        ADMImage::copyPlane(image,data,PLANAR_Y);
 	}
 	else
 	{
@@ -175,8 +157,8 @@ uint32_t stride,page;
     // chroma u & v
 	if(!param.chroma)
 	{
-        copyPlane(image,data,PLANAR_U);
-        copyPlane(image,data,PLANAR_V);
+        ADMImage::copyPlane(image,data,PLANAR_U);
+        ADMImage::copyPlane(image,data,PLANAR_V);
 	}
 	else
 	{
