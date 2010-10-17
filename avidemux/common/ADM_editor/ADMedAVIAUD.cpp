@@ -37,6 +37,7 @@ Todo:
 #define MODULE_NAME MODULE_AUDIO_EDITOR
 #include "ADM_debug.h"
 
+#include "ADM_vidMisc.h"
 
 #define AUDIOSEG 	_segments[_audioseg]._reference
 #define SEG 		_segments[seg]._reference
@@ -68,7 +69,8 @@ bool ADM_Composer::switchToNextAudioSegment(void)
             ADM_warning("Fail to seek audio to %"LLU"ms\n",seg->_refStartTimeUs/1000);
             return false;
           }
-        ADM_info("Switched ok to audio segment %"LU"\n",_audioSeg);
+        ADM_info("Switched ok to audio segment %"LU", with a ref time=%s\n",
+            _audioSeg,ADM_us2plain(seg->_refStartTimeUs));
         return true;
 
 }
@@ -242,17 +244,25 @@ again:
 */
 uint8_t ADM_Composer::getPacket(uint8_t  *dest, uint32_t *len,uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
-        
+zgain:        
     _SEGMENT *seg=_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrack(seg->_reference);
     if(!trk) return 0;
    
     // Read a packet
-zgain:
-    bool r=trk->stream->getPacket(dest,len,sizeMax,samples,odts);
-    if(r==false) return false;
-    //
 
+    bool r=trk->stream->getPacket(dest,len,sizeMax,samples,odts);
+    if(r==false) 
+    {
+            ADM_warning("AudioGetPacket failed, audioSegment=%d\n",(int)_audioSeg);
+            // if it fails, we have to switch segment
+            if(false==switchToNextAudioSegment())
+            {
+                ADM_warning("..and this is the last segment\n");
+                return false;
+            }
+            goto zgain;
+    }
 
     // Rescale odts
     if(*odts!=ADM_NO_PTS)
@@ -271,10 +281,9 @@ zgain:
         {
             if(switchToNextAudioSegment()==false)
             {
-                
+                ADM_warning("Audio:Switching to next segment failed\n");
                 return false;
             }
-            seg=_segments.getSegment(_audioSeg);
             goto zgain;
         }
         *odts+=seg->_startTimeUs;
@@ -282,6 +291,7 @@ zgain:
     {
         *odts=ADM_NO_PTS;
     }
+    //ADM_info("Time : %s\n",ADM_us2plain(*odts));
     //advanceDtsBySample(*samples);
     return true;
 }
@@ -300,6 +310,7 @@ bool ADM_Composer::goToTime (uint64_t ustime)
         ADM_warning("Cannot convert %"LLU" to linear time\n",ustime/1000);
         return false;
       }
+    ADM_info("=> seg %d, rel time %02.2f secs\n",(int)seg,((float)segTime)/1000000.);
     _SEGMENT *s=_segments.getSegment(seg);
     ADM_audioStreamTrack *trk=getTrack(s->_reference);
     if(!trk)
