@@ -19,6 +19,7 @@
 #include "ADM_a52info.h"
 #include "ADM_dcainfo.h"
 
+#include "ADM_vidMisc.h"
 #if 0
 #define vprintf printf
 #else
@@ -144,20 +145,24 @@ int      clus=-1;
             {
                 clus=0;
             }else
-            for(int i=0;i<limit-1;i++)
             {
-              if(targetUs>=(*dex)[i].Dts && targetUs<(*dex)[i+1].Dts)
-              {
-                clus=i;
-                break;
-              }
+                for(int i=0;i<limit-1;i++)
+                {
+                  if(targetUs>=(*dex)[i].Dts && targetUs<(*dex)[i+1].Dts)
+                  {
+                    clus=i;
+                    break;
+                  }
+                }
             }
             if(clus==-1) clus=limit-1; // Hopefully in the last one
-
+            ADM_info("[MKVAUDIO] Asked for %s , go to block %d\n",ADM_us2plain(timeUs),clus);
+            ADM_info("[MKVAUDIO] This block starts at %s\n",ADM_us2plain((*dex)[clus].Dts));
             targetUs-=(*dex)[clus].Dts; // now the time is relative
+            ADM_info("[MKVAUDIO] Offset=%"LLU" us\n",targetUs);
             goToBlock(clus);
 
-            printf("[MKVAUDIO] Asked for %"LLU" us, go to block %d, which starts at %"LLU" ms\n",timeUs,clus,targetUs);
+            
             // Now seek more finely
             // will be off by one frame
 #if 0

@@ -123,6 +123,22 @@ uint8_t mkvHeader::open(const char *name)
             }
             vid->index[i].Dts=lastDts;
       }
+        // Check that we have PTS>=DTS also
+        uint64_t enforePtsGreaterThanDts=0;
+        for(int i=0;i<last;i++)
+        {
+                if(vid->index[i].Pts<vid->index[i].Dts)
+                {
+                    uint64_t delta=vid->index[i].Dts-vid->index[i].Pts;
+                    if(delta>enforePtsGreaterThanDts) enforePtsGreaterThanDts=delta;
+                }
+        }
+        if(enforePtsGreaterThanDts)
+        {
+                ADM_info("Have to delay by %"LU" ms so that PTS>DTS\n",enforePtsGreaterThanDts);
+                for(int i=0;i<_nbAudioTrack+1;i++)
+                delayTrack(i,&(_tracks[i]),enforePtsGreaterThanDts);
+        }
     }else
     {       // No bframe, DTS=PTS
       for(int i=0;i<last;i++)
@@ -166,12 +182,14 @@ uint8_t mkvHeader::open(const char *name)
     \brief delay audio and video by 2 * time increment if b frames present
                 else we may have PTS<DTS
 */
-bool mkvHeader::delayTrack(mkvTrak *track, uint64_t value)
+bool mkvHeader::delayTrack(int index,mkvTrak *track, uint64_t value)
 {
     int nb=track->index.size();
     for(int i=0;i<nb;i++)
     {
         if(track->index[i].Pts!=ADM_NO_PTS) track->index[i].Pts+=value;
+        if(index) // Must also delay DTS for audio as we use DTS not PTS
+            if(track->index[i].Dts!=ADM_NO_PTS) track->index[i].Dts+=value;
     }
     return true;
 }
@@ -250,15 +268,24 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     }
     ADM_info("First frame pts     %"LLD" us\n",track->index[0].Pts);
-    uint64_t adj;
-    if(maxDelta>track->index[0].Pts) // need to correct
+    uint64_t adj=0;
+    int limit=32;
+    if(limit>nb) limit=nb;
+    // Pts must be >= maxDelta for all frames, the first 32 will do
+    for(int i=0;i<limit;i++)
     {
-        
-        adj=maxDelta-track->index[0].Pts;
+        if(maxDelta>track->index[i].Pts) 
+        {
+            uint64_t newAdj=maxDelta-track->index[i].Pts;
+            if(newAdj>adj) adj=newAdj;
+        }
+    }
+    if(adj) // need to correct
+    {
         ADM_info("Delaying video by %"LLU" us\n",adj);
         ADM_info("[mkv] Delaying audio by %"LLU" us\n",adj);
         for(int i=0;i<_nbAudioTrack+1;i++)
-            delayTrack(&(_tracks[i]),adj);
+            delayTrack(i,&(_tracks[i]),adj);
     }
     *maxDeltaX=maxDelta;
     *minDeltaX=minDelta;
