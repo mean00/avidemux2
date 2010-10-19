@@ -44,6 +44,7 @@ static void 	GUI_XvEnd( void );
 static uint8_t  GUI_XvDisplay(ADMImage *src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
 static uint8_t  GUI_XvRedraw( void );
 static uint8_t  getAtom(const char *string);
+static bool     xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH);
 //________________Wrapper around Xv_______________
 /**
     \fn XvRender
@@ -96,7 +97,7 @@ bool XvRender::refresh(void)
 {
     // since we dont know how to redraw without help, ask above
     ADM_info("XV:refresh\n");
-    renderCompleteRedrawRequest();
+    xvDraw(imageWidth,imageHeight,displayWidth,displayHeight);
     return true;
 }
 //________________Wrapper around Xv_______________
@@ -134,27 +135,12 @@ void GUI_XvEnd( void )
 
 }
 /**
-    \fn GUI_XvList
+    \fn xvDraw
 */
-uint8_t GUI_XvDisplay(ADMImage * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH)
+bool xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH)
 {
-    
-    if (xvimage)
-      {
-
-	  // put image in shared segment
-
-	  // for YV12, 4 bits for Y 4 bits for u, 4 bits for v
-	  // total 1.5*
-          XLockDisplay (xv_display);
-          // Pack src into xvimage->data
-            int plane=w*h;
-          BitBlit((uint8_t *)xvimage->data, w,src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),w,h);
-          BitBlit((uint8_t *)xvimage->data+plane, w/2,src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),w/2,h/2);
-          BitBlit((uint8_t *)xvimage->data+(plane*5)/4, w/2,src->GetReadPtr(PLANAR_V),src->GetPitch(PLANAR_V),w/2,h/2);
-          
-        //printf("%u x %u => %u x %u\n",w,h,destW,destH);
-        // And display it !
+        if(!xvimage) return false;
+        XLockDisplay (xv_display);
 #if 1
         XvShmPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
 			0, 0, destW, destH,	// dst
@@ -166,7 +152,24 @@ uint8_t GUI_XvDisplay(ADMImage * src, uint32_t w, uint32_t h,uint32_t destW,uint
 #endif
           XUnlockDisplay (xv_display);
           XSync(xv_display, False);
-          
+        return true;
+}
+/**
+    \fn GUI_XvList
+*/
+uint8_t GUI_XvDisplay(ADMImage * src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH)
+{
+    
+    if (xvimage)
+      {
+          XLockDisplay (xv_display);
+          // Pack src into xvimage->data
+            int plane=w*h;
+          BitBlit((uint8_t *)xvimage->data, w,src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),w,h);
+          BitBlit((uint8_t *)xvimage->data+plane, w/2,src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),w/2,h/2);
+          BitBlit((uint8_t *)xvimage->data+(plane*5)/4, w/2,src->GetReadPtr(PLANAR_V),src->GetPitch(PLANAR_V),w/2,h/2);
+          XUnlockDisplay (xv_display);
+          xvDraw(w,h,destW,destH);
       }
     return 1;
 }

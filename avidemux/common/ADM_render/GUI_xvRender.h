@@ -32,7 +32,7 @@ class XvRender: public VideoRenderBase
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newzoom);
               virtual   bool refresh(void);
-              virtual   bool usingUIRedraw(void) {return true;};
+              virtual   bool usingUIRedraw(void) {return false;}; // we can redraw by ourselves
 };
 #endif
 
