@@ -67,7 +67,18 @@ bool ADM_QPreviewCleanup(void)
     rgbDataBuffer=NULL;
     return true;
 }
-ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) {}
+ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) 
+{    
+setAttribute( Qt::WA_PaintOnScreen, true );
+// Put a transparent background
+//setAutoFillBackground(true);
+QPalette p =  palette();
+QColor color(Qt::black);
+color.setAlpha(0);
+p.setColor( QPalette::Window, color );
+setPalette( p );
+
+} //{setAutoFillBackground(false);}
 ADM_Qvideo::~ADM_Qvideo() {}
 
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
@@ -104,6 +115,10 @@ void UI_QT4VideoWidget(QFrame *host)
    hostFrame=host;
    videoWindow->resize(hostFrame->size());
    videoWindow->show();
+#if 0
+   host->setAutoFillBackground(false);
+   host->setEnabled(false);
+#endif   
    
 }
 //*************************
