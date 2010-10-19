@@ -273,10 +273,19 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
 {
 	printf("[GL Render] Initialising renderer\n");
     baseInit(w,h,zoom);
+    glWidget=NULL;
+	bool status= QGLFormat::hasOpenGL() && QGLShaderProgram::hasOpenGLShaderPrograms();
+    if(false==status)
+    {
+        ADM_warning("[GL Render] Init failed : No QFl support or no GLShareProgram\n");
+        ADM_warning("[GL Render] hasOpenGl : %d, hasOpenGLShaderProgram %d\n",(int)QGLFormat::hasOpenGL(),(int)QGLShaderProgram::hasOpenGLShaderPrograms());
+        return false;
+    }
+
 	glWidget = new QtGlAccelWidget((QWidget*)window->widget, w, h);
     glWidget->setDisplaySize(displayWidth,displayHeight);
 	glWidget->show();
-	return QGLFormat::hasOpenGL() && QGLShaderProgram::hasOpenGLShaderPrograms();
+    return true;
 }
 /**
     \fn displayImage
