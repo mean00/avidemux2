@@ -169,9 +169,10 @@ again:
 */
 uint64_t        ADM_videoStreamCopy::getVideoDuration(void)
 {
-    return video_body->getVideoDuration();
-
+    //return video_body->getVideoDuration();
+    return endTimePts-startTimePts;
 }
+
 /**
 
 */
