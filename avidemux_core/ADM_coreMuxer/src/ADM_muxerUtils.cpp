@@ -19,6 +19,7 @@
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerUtils.h"
 #include "fourcc.h"
+#include "ADM_vidMisc.h"
 extern const char *getStrFromAudioCodec( uint32_t codec);
 /**
     \fn rescaleFps
@@ -78,7 +79,7 @@ bool     ADM_muxer::initUI(const char *title)
         f*=1000000;
         videoIncrement=(uint64_t)f;  // Video increment in AVI-Tick
         videoDuration=vStream->getVideoDuration();
-
+        ADM_info("Muxer, creating UI, video duration is %s\n",ADM_us2plain(videoDuration));
         encoding=createEncoding(videoDuration);
         // Set video stream etc...
         encoding->setVideoCodec(fourCC::tostring(vStream->getFCC()));
