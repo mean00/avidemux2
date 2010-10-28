@@ -86,34 +86,34 @@ bool         vidColorYuv::configure(void)
 
 // --- Tab 2 ----
 
-    diaElemFloat        yGain(PX(y_gain),QT_TR_NOOP("Y gain"),0,100,NULL,3);
-    diaElemFloat        yBright(PX(y_bright),QT_TR_NOOP("Y Brightness"),0,100,NULL,3);
-    diaElemFloat        yGamma(PX(y_gamma),QT_TR_NOOP("Y Gamma"),0,100,NULL,3);
-    diaElemFloat        yContrast(PX(y_contrast),QT_TR_NOOP("Y Contrast"),0,100,NULL,3);
+    diaElemFloat        yGain(PX(y_gain),QT_TR_NOOP("Y gain"),0,256*3,NULL,3);
+    diaElemFloat        yBright(PX(y_bright),QT_TR_NOOP("Y Brightness"),0,256*3,NULL,3);
+    diaElemFloat        yGamma(PX(y_gamma),QT_TR_NOOP("Y Gamma"),0,256*2,NULL,3);
+    diaElemFloat        yContrast(PX(y_contrast),QT_TR_NOOP("Y Contrast"),-256*3,256*3,NULL,3);
  
     diaElem *dia2[]={&yGain,&yBright,&yGamma,&yContrast};
 // --- Tab 3 ----
 
-    diaElemFloat        uGain(PX(u_gain),QT_TR_NOOP("U gain"),0,100,NULL,3);
-    diaElemFloat        uBright(PX(u_bright),QT_TR_NOOP("U Brightness"),0,100,NULL,3);
-    diaElemFloat        uGamma(PX(u_gamma),QT_TR_NOOP("U Gamma"),0,100,NULL,3);
-    diaElemFloat        uContrast(PX(u_contrast),QT_TR_NOOP("U Contrast"),0,100,NULL,3);
+    diaElemFloat        uGain(PX(u_gain),QT_TR_NOOP("U gain"),0,256*3,NULL,3);
+    diaElemFloat        uBright(PX(u_bright),QT_TR_NOOP("U Brightness"),0,256*3,NULL,3);
+    //diaElemFloat        uGamma(PX(u_gamma),QT_TR_NOOP("U Gamma"),0,100,NULL,3);
+    diaElemFloat        uContrast(PX(u_contrast),QT_TR_NOOP("U Contrast"),-256*3,256*3,NULL,3);
  
-    diaElem *dia3[]={&uGain,&uBright,&uGamma,&uContrast};
+    diaElem *dia3[]={&uGain,&uBright,&uContrast};
 
 // --- Tab 4 ----
 
-    diaElemFloat        vGain(PX(u_gain),QT_TR_NOOP("V gain"),0,100,NULL,3);
-    diaElemFloat        vBright(PX(u_bright),QT_TR_NOOP("V Brightness"),0,100,NULL,3);
-    diaElemFloat        vGamma(PX(u_gamma),QT_TR_NOOP("V Gamma"),0,100,NULL,3);
-    diaElemFloat        vContrast(PX(u_contrast),QT_TR_NOOP("V Contrast"),0,100,NULL,3);
+    diaElemFloat        vGain(PX(u_gain),QT_TR_NOOP("V gain"),0,256*3,NULL,3);
+    diaElemFloat        vBright(PX(u_bright),QT_TR_NOOP("V Brightness"),0,256*3,NULL,3);
+    //diaElemFloat        vGamma(PX(u_gamma),QT_TR_NOOP("V Gamma"),0,100,NULL,3);
+    diaElemFloat        vContrast(PX(u_contrast),QT_TR_NOOP("V Contrast"),-256*3,256*3,NULL,3);
  
-    diaElem *dia4[]={&vGain,&vBright,&vGamma,&vContrast};
+    diaElem *dia4[]={&vGain,&vBright,&vContrast};
 //
     diaElemTabs tab1(QT_TR_NOOP("Flags"),4,dia1);
     diaElemTabs tab2(QT_TR_NOOP("Y"),4,dia2);
-    diaElemTabs tab3(QT_TR_NOOP("U"),4,dia3);
-    diaElemTabs tab4(QT_TR_NOOP("V"),4,dia4);
+    diaElemTabs tab3(QT_TR_NOOP("U"),3,dia3);
+    diaElemTabs tab4(QT_TR_NOOP("V"),3,dia4);
     
     diaElemTabs *tabs[]={&tab1,&tab2,&tab3,&tab4};
     if( diaFactoryRunTabs(QT_TR_NOOP("colorYuv"),4,tabs))
