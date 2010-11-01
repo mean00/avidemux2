@@ -319,12 +319,24 @@ uint32_t extraLen=0;
             wav.blockalign=1024;
             wav.bitspersample = 0;
 
-            int SRI=4;	// Default 44.1 khz
-            for(int i=0;i<16;i++) if(wav.frequency==aacBitrate[i]) SRI=i;
+            uint32_t aLen;
+            uint8_t  *aData;
+            stream->getExtraData(&aLen,&aData);
+
             aacHeader[0]=0x2;
             aacHeader[1]=0x0;
-            aacHeader[2]=(2<<3)+(SRI>>1); // Profile LOW
-            aacHeader[3]=((SRI&1)<<7)+((wav.channels)<<3);
+            if(2==aLen)
+            {
+                aacHeader[2]=aData[0];
+                aacHeader[3]=aData[1];
+            }else
+            {
+                int SRI=4;	// Default 44.1 khz
+                for(int i=0;i<16;i++) if(wav.frequency==aacBitrate[i]) SRI=i;
+            
+                aacHeader[2]=(2<<3)+(SRI>>1); // Profile LOW
+                aacHeader[3]=((SRI&1)<<7)+((wav.channels)<<3);
+            }
 
 
             extra=&(aacHeader[0]);
