@@ -272,10 +272,11 @@ bool flvHeader::extraHeader(flvTrak *trk,uint32_t *remain,bool have_cts,int32_t 
         }
         else    
         {
-            printf("[FLV] found some extradata %"LU"\n",r);
+            ADM_info("[FLV] found some extradata %"LU"\n",r);
             trk->extraData=new uint8_t[r];
             trk->extraDataLen=r;
             read(r,trk->extraData);
+            mixDump(trk->extraData,r);
             r=0;            
         }
         *remain=r;
