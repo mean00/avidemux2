@@ -235,7 +235,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
 */
 bool admSaver::save(void)
 {
-    int ret=1;
+    int ret=false;
     uint64_t startAudioTime=markerA; // Actual start time (for both audio & video actually)
     ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
     ADM_info("[A_Save] Saving..\n");
@@ -357,7 +357,7 @@ bool admSaver::save(void)
         GUI_Error_HIG("Muxer","Cannot open ");
     }else
     {
-        muxer->save();
+        ret=muxer->save();
         muxer->close();
     }
     delete video;
@@ -367,6 +367,6 @@ bool admSaver::save(void)
         delete astreams[i];
         astreams[i]=NULL;
     }
-    return true;
+    return ret;
 }
 //EOF
