@@ -576,7 +576,7 @@ bool MainWindow::buildRecentMenu(void)
     {
         if(names[i])
         {
-            recentFileAction[i]=recentFiles->addAction(QString::fromUtf8(names[i]));
+            recentFileAction[i]=recentFiles->addAction(QString('0'+i)+QString(":")+QString::fromUtf8(names[i]));
         }else
             recentFileAction[i]=NULL;
     }
@@ -588,7 +588,16 @@ bool MainWindow::buildRecentMenu(void)
 void MainWindow::searchRecentFiles(QAction * action)
 {
     for(int i=0;i<4;i++)
-            if(recentFileAction[i]==action) HandleAction((Action)(ACT_RECENT0+i));
+    {
+            QAction *a= recentFileAction[i];
+            if(!a) continue;
+
+            if(a==action) 
+            {
+                HandleAction((Action)(ACT_RECENT0+i));
+                return;
+            }
+    }
 }
 void MainWindow::mousePressEvent(QMouseEvent* event)
 {
