@@ -1,0 +1,4 @@
+sqlite3 is coming from sqlite.org
+C++ wrapper etc are coming from http://www.alhem.net/
+see their respective authors and exact licenses
+

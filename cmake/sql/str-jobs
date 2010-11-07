@@ -1,0 +1,12 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE jobs(
+id integer primary key autoincrement not null,
+jscript varchar(100) default '' not null,
+jobname varchar(100) default '' not null,
+outputFile varchar(256) default '' not null,
+status integer,
+startTime date,
+endTime date
+);
+COMMIT;

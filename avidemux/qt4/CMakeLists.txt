@@ -32,6 +32,11 @@ MESSAGE(STATUS "QT4 config.h generated")
 
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/qt4/")
 
+
+###########################################
+# Add job control
+###########################################
+ADD_SUBDIRECTORY(ADM_jobs)
 ###########################################
 # Executable
 ###########################################

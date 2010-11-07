@@ -101,6 +101,7 @@ if (USE_VDPAU)
 endif (USE_VDPAU)
 
 SET(commonLibs2
+ADM_coreJobs
 ADM_osSupport6
 ADM_requant6
 ADM_pyScript6

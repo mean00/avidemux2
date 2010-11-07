@@ -107,7 +107,8 @@ extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern void renderDestroy(void);
-
+extern bool ADM_jobInit(void);
+extern bool ADM_jobShutDown(void);
 // Spidermonkey/Scripting stuff  
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
@@ -302,6 +303,9 @@ int main(int argc, char *argv[])
     printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
   #endif
 #endif
+
+    // Init jobs
+    ADM_jobInit();
 
     UI_RunApp();
 
