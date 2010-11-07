@@ -23,7 +23,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
-        make -j 2 > /tmp/log$BUILDDIR || fail make
+        make -j 2 VERBOSE=1 || fail make
         make install || fail make_install
 }
 
