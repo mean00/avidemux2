@@ -13,8 +13,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_default.h"
 #include "ADM_coreJobs.h"
+#include "ADM_default.h"
 #include "ADM_sqlite3.h"
 #include "libsqlitewrapped.h"
 #include "libjobdb.h"

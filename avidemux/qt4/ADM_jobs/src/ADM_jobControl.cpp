@@ -1,6 +1,51 @@
+/**
+    \file   ADM_jobControl
+    \author mean fixounet@free.Fr (c) 2010
+
+*/
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+#include "T_jobs.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 
+
+/**
+    \fn ctor
+*/
+jobWindow::jobWindow(void) : QDialog()
+{
+    ui.setupUi(this);
+}
+/**
+    \fn dtor
+*/
+jobWindow::~jobWindow()
+{
+
+}
+
+/**
+    \fn jobRun
+*/
+bool jobRun(void)
+{
+    QApplication *app=new QApplication(0,NULL);
+    jobWindow *jWindow=new jobWindow();
+    jWindow->exec();
+    delete jWindow;
+    delete app;
+    return true;
+}
+
+
+#if 0
 bool jobRun(void)
 {
 
@@ -56,3 +101,4 @@ bool jobRun(void)
         }
         return true;
 }
+#endif

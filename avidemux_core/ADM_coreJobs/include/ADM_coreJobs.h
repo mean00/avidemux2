@@ -15,10 +15,8 @@
  ***************************************************************************/
 #ifndef ADM_COREJOBS_H
 #define ADM_COREJOBS_H
-#include <string>
-#include <vector>
-using std::vector;
-using std::string;
+#include "ADM_cpp.h"
+#include "ADM_default.h"
 /**
     \enum ADM_JOB_STATUS
 */

@@ -4,14 +4,24 @@
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
-
+include_directories(../include ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 ###########################################
 # Executable
 ###########################################
+#
+SET(UI uiJobs.ui)
+SET(headers ../include/T_jobs.h)
+QT4_WRAP_UI(ADM_JOBS_headers ${UI})
+QT4_WRAP_CPP(ADM_JOBS_source ${headers}
+                ADM_jobControl.cpp)
 SET(ADM_JOB_SRCS 
                 ADM_jobs.cpp
-                ADM_jobControl.cpp
+                 ADM_jobControl.cpp
+                ${ADM_JOBS_headers}
+                ${ADM_JOBS_source}
+                
         )
+
 ###########################################
 # Executable
 ###########################################
