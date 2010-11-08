@@ -34,9 +34,9 @@ jobWindow::~jobWindow()
 /**
     \fn jobRun
 */
-bool jobRun(void)
+bool jobRun(int ac,char **av)
 {
-    QApplication *app=new QApplication(0,NULL,0);
+    QApplication *app=new QApplication(ac,av,0);
     jobWindow *jWindow=new jobWindow();
     jWindow->exec();
     delete jWindow;

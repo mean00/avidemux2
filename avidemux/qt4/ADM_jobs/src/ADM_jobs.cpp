@@ -49,7 +49,7 @@ extern void redirectStdoutToFile(void);
 
 extern uint8_t  quotaInit(void);
 extern uint8_t win32_netInit(void);
-extern bool jobRun(void);
+extern bool jobRun(int ac, char **av);
 
 
 int main(int argc, char *argv[])
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 
     // Init jobs
     ADM_jobInit();
-    jobRun();
+    jobRun(argc,argv);
 
 #ifdef __MINGW32__
 	__except1(exceptionHandler);
