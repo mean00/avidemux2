@@ -31,6 +31,7 @@ MenuEntry myMenuFile[]= {
             {MENU_ACTION,"Open",    NULL,ACT_OPEN_VIDEO,       MKICON(fileopen), "Ctrl+O"},
             {MENU_ACTION,"Append",  NULL,ACT_APPEND_VIDEO     ,NULL,             "Ctrl+A"},
             {MENU_ACTION,"Save",    NULL,ACT_SAVE_VIDEO       ,MKICON(filesaveas),"Ctrl+S"},
+            {MENU_ACTION,"Queue",   NULL,ACT_SAVE_QUEUE       ,NULL              ,"Ctrl+U"},
             {MENU_SUBMENU,"Save as Image",    NULL,ACT_DUMMY    ,NULL,NULL},
             {MENU_SUBACTION,"Save as BMP",    NULL,ACT_SAVE_BMP ,NULL,NULL},
             {MENU_SUBACTION,"Save as Jpeg",   NULL,ACT_SAVE_JPG ,NULL,NULL},
