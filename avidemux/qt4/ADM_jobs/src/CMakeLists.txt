@@ -36,7 +36,7 @@ TARGET_LINK_LIBRARIES(avidemux3_jobs ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 # OS Specific
 ###########################################
 IF (WIN32)
-	target_link_libraries(avidemux3_jobs ADM_osSupport)
+#	target_link_libraries(avidemux3_jobs ADM_osSupport)
 
 	IF (MINGW)
 		target_link_libraries(avidemux3_jobs -mno-cygwin)
