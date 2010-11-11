@@ -127,7 +127,9 @@ bool flvHeader::parseOneMeta(const char *s,uint64_t endPos)
             printf("type :%d : ",type);
             switch(type)
             {
-                case AMF_DATA_TYPE_OBJECT_END:break;
+                case AMF_DATA_TYPE_OBJECT_END:
+                                fseek(_fd,endPos,SEEK_SET);
+                                break;
                 case AMF_DATA_TYPE_OBJECT: 
                 {
                         printf("\n");
