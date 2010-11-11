@@ -32,6 +32,8 @@
 #include "DIA_fileSel.h"
 #include "DIA_working.h"
 #include "ADM_preview.h"
+#include "DIA_factory.h"
+#include "ADM_coreJobs.h"
 // Local prototypes
 #include "A_functions.h"
 int      A_Save(const char *name);
@@ -46,7 +48,18 @@ void HandleAction_Save(Action action)
     switch(action)
     {
     case ACT_SAVE_QUEUE:
-            GUI_Error_HIG("!","Not implemented yet.");
+            {
+                char *oFile=NULL;
+                char *oText=NULL;
+                diaElemFile wFile(1,&oFile,QT_TR_NOOP("Output file"),"");
+                diaElemText wText(&oText,QT_TR_NOOP("Job name"));
+                diaElem *elems[2]={&wText,&wFile};
+  
+                if(  diaFactoryRun(QT_TR_NOOP("Queue job to jobList"),2,elems))
+                {
+                    A_queueJob(oText,oFile);
+                }
+            }
             break;
     case ACT_SAVE_PY_PROJECT:
             GUI_FileSelWrite (QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
@@ -469,6 +482,27 @@ int A_SaveWrapper(const char *name)
         }
         return 1;
 }
-
+/**
+    \fn A_queueJob
+    \brief Save current stuff as py script and create the associated job
+*/
+void A_queueJob(const char *jobName,const char *outputFile)
+{
+    ADMJob job;
+            job.outputFileName=string(outputFile);
+            job.jobName=string(jobName);
+#warning make sure it is unique
+            job.scriptName=string(jobName);
+            if(false==ADM_jobAdd(job))
+            {
+                GUI_Error_HIG("Queue","Cannot add job %s",jobName);
+                return;
+            }
+            string completePath=string(ADM_getJobDir());
+            completePath=completePath+string("/")+job.scriptName;
+            // Save the script...
+            video_body->saveAsPyScript(completePath.c_str());
+            
+}
 //EOF
 

@@ -44,4 +44,6 @@ int  A_SaveWrapper(const char *name);
 int  A_saveAudioProcessed (const char *name);
 int  A_Save(const char *name);
 
+void A_queueJob(const char *jobName,const char *outputFile);
+
 #endif
