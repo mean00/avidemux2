@@ -3,7 +3,9 @@
 
 #include <QtGui/QWidget>
 #include "ui_uiJobs.h"
-
+#include <vector>
+using std::vector;
+class ADMJob;
 /**
     \class jobWindow
 */
@@ -17,6 +19,8 @@ public:
 	
 protected:
     Ui_jobs     ui;
+    void        refreshList(void);
+    vector      <ADMJob> listOfJob;
 //public slots:
 };
 #endif	// Q_gui2_h

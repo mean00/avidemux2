@@ -16,12 +16,66 @@
 #include "ADM_coreJobs.h"
 
 
+static QTableWidgetItem *fromText(const string &t)
+{
+    QString s(QString::fromUtf8(t.c_str()));
+    QTableWidgetItem *w=new QTableWidgetItem(s,0);
+    return w;
+}
+
+/**
+    \fn refreshList
+*/
+void jobWindow::refreshList(void)
+{
+      QTableWidget *list=ui.tableWidget;
+      list->clear();
+      listOfJob.clear();
+      if(false==ADM_jobGet(listOfJob)) return ;
+
+      int n=listOfJob.size();
+      ADM_info("Found %d jobs\n",(int)n);
+      if(!n) return;
+      list->setRowCount(n);
+      for(int i=0;i<n;i++)
+      {
+           QTableWidgetItem *nm=fromText(listOfJob[i].jobName);
+           QTableWidgetItem *out=fromText(listOfJob[i].outputFileName);
+           string s;
+            switch(listOfJob[i].status)
+            {
+                case ADM_JOB_IDLE:
+                            s=string("Ready");
+                            break;
+                case ADM_JOB_RUNNING:
+                            s=string("Running....");
+                            break;
+                case ADM_JOB_OK:
+                            s=string("Success");
+                            break;
+                case ADM_JOB_KO:
+                            s=string("Failed");
+                            break;
+                default:
+                            s=string("???");
+                            break;
+            }
+        QTableWidgetItem *status=fromText (s);
+        list->setItem(i,0,nm);
+        list->setItem(i,1,out);
+        list->setItem(i,2,status);
+      }
+}
+
+
 /**
     \fn ctor
 */
 jobWindow::jobWindow(void) : QDialog()
 {
     ui.setupUi(this);
+    ui.tableWidget->setColumnCount(3); // Job name, fileName, Status
+    refreshList();
 }
 /**
     \fn dtor
