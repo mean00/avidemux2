@@ -21,7 +21,7 @@
 static char *dbFile=NULL;
 Database    *mydb=NULL;
 
-#define ADM_DB_SCHEMA 2
+#define ADM_DB_SCHEMA 3
 
 static const char *createString1="\
 CREATE TABLE version(\
@@ -99,7 +99,24 @@ static bool dbCleanup(void)
 */
 static bool ADM_jobCheckVersion(void)
 {
-    return true;
+    if(!mydb) return false;
+    Query q(*mydb);
+	q.get_result("select * from version");
+	if(!q.fetch_row())
+    {
+        ADM_warning("Cannot get version\n");
+        return false;
+    }
+    int dbVersion=q.getval();
+    q.free_result();
+    ADM_info("Db version %d, our version %d\n",dbVersion,ADM_DB_SCHEMA);
+    if(dbVersion==ADM_DB_SCHEMA)
+    {
+        ADM_info("Same version, continuing..\n");
+        return true;
+    }
+    ADM_info("Version mismatch, recreating db..\n");
+    return false;
 }
 /**
     \fn ADM_jobInit
