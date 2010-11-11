@@ -367,6 +367,7 @@ uint8_t flvHeader::open(const char *name)
     size=read24();
     dts=read24();
     read32(); // ???
+    if(!size) continue;
     uint32_t remaining=size;
     //printf("[FLV] At %08x found type %x size %u pts%u\n",pos,type,size,dts);
     switch(type)
