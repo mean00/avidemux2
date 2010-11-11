@@ -149,7 +149,7 @@ uint32_t i,j,cur;
               // Normally they have all the same duration
               if(info->nbStts!=1) printf("WARNING: Same size, different duration\n");
 
-              float sampleDuration,totalDuration=0;
+              double sampleDuration,totalDuration=0;
               
                 sampleDuration=info->SttsC[0];
                 sampleDuration*=1000.*1000.;
@@ -166,6 +166,9 @@ uint32_t i,j,cur;
                       // rebuild a new index
                       printf("We have %u chunks but it should be split into \n",info->nbCo);
                       printf("around %u chunks. adjusting..(SzIdentical %u)\n",info->nbCo+max,info->SzIndentical);
+                      printf("info->SttsC[0]=%d\n",(int)info->SttsC[0]);
+                      printf("trackScale=%d\n",(int)trackScale);
+                      printf("Sample duration =%f\n",(float)sampleDuration);
                       uint32_t newNbCo=track->nbIndex+max*2; // *2 is enough, should be.
                       uint32_t w=0;
                       uint32_t one_go;
@@ -176,6 +179,7 @@ uint32_t i,j,cur;
                      MP4Index *newindex=new MP4Index[newNbCo];
 
                     int64_t time_increment=(int64_t)((one_go/info->SzIndentical)*sampleDuration);  // Nb sample*duration of one sample
+                    printf("Time increment = %d\n",(int)time_increment);
                     for(i=0;i<track->nbIndex;i++)
                     {
                       uint32_t sz;
@@ -202,7 +206,7 @@ uint32_t i,j,cur;
                           // The last one...
                                 newindex[w].offset=track->index[i].offset+part*one_go;
                                 newindex[w].size=sz;
-                                newindex[w].dts=track->index[i].dts+part*time_increment+((time_increment*sz)/one_go); 
+                                newindex[w].dts=track->index[i].dts+part*time_increment; 
                                 newindex[w].pts=ADM_COMPRESSED_NO_PTS;
                                 w++;
                     }
