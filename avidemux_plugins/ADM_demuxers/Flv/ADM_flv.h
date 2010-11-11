@@ -102,7 +102,7 @@ class flvHeader         :public vidHeader
     ADM_audioStream         *_audioStream;
     ADM_flvAccess           *access;
     /* */
-    uint32_t            metaWidth,metaHeight,metaFps1000;
+    uint32_t            metaWidth,metaHeight,metaFps1000,videoCodec;
 
     uint8_t     read(uint32_t len, uint8_t *where);
     uint8_t     read8(void);
@@ -122,6 +122,7 @@ class flvHeader         :public vidHeader
     void        setProperties(const char *name,float value);
     uint32_t    searchMinimum(void);
     bool        parseOneMeta(const char *key,uint64_t endPos);
+    bool        updateDimensionWithMeta(uint32_t codec);
   public:
 
 

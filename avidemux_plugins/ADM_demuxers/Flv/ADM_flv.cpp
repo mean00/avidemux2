@@ -224,13 +224,14 @@ uint8_t flvHeader::parseMetaData(uint32_t remaining)
         while(ftello(_fd)<endPos-4)
         {
             char *s=readFlvString();
-            printf("[FlvType]  String : %s",s);
+            printf("[FlvType]  String : %s ",s);
             
             if(false==parseOneMeta(s,endPos)) goto endit;
         }
     }
 endit:
     fseeko(_fd,endPos,SEEK_SET);
+    updateDimensionWithMeta(videoCodec);
     return 1;
 }
 /**
@@ -410,9 +411,9 @@ uint8_t flvHeader::open(const char *name)
             remaining--;
             int frameType=flags>>4;
 
-            int codec=(flags)&0xf;
+            videoCodec=(flags)&0xf;
 
-            if(codec==FLV_CODECID_VP6 || codec==FLV_CODECID_VP6A)
+            if(videoCodec==FLV_CODECID_VP6 || videoCodec==FLV_CODECID_VP6A)
             {
               read8(); // 1 byte of extraData
               remaining--;
@@ -421,10 +422,10 @@ uint8_t flvHeader::open(const char *name)
             
             if(firstVideo==true) // first frame..
             {
-                if(!setVideoHeader(codec,&remaining)) return 0;
+                if(!setVideoHeader(videoCodec,&remaining)) return 0;
                 firstVideo=false;
             }
-            if(codec==FLV_CODECID_H264)
+            if(videoCodec==FLV_CODECID_H264)
             {
                 if(true==extraHeader(videoTrack,&remaining,true,&cts)) continue;
                 int64_t sum=cts+dts;
@@ -506,6 +507,29 @@ uint64_t flvHeader::getVideoDuration(void)
       \fn setVideoHeader
       \brief Set codec and stuff
 */
+bool flvHeader::updateDimensionWithMeta(uint32_t codec)
+{
+    if(codec==0xFFFF) return false;
+    ADM_info("We got metadata : %d x %d\n",(int)metaWidth,(int)metaHeight,(int)codec);
+    if( metaWidth && metaHeight )
+    {
+        switch(codec)
+        {
+            case FLV_CODECID_VP6A:
+            case FLV_CODECID_H264:
+            case FLV_CODECID_VP6:
+
+                    _video_bih.biHeight=_mainaviheader.dwHeight=metaHeight ;
+                    _video_bih.biWidth=_mainaviheader.dwWidth=metaWidth;
+                    break;
+            default:break;
+        }
+    }
+    return true;
+}
+/**
+    \fn setVideoHeader
+*/
 uint8_t flvHeader::setVideoHeader(uint8_t codec,uint32_t *remaining)
 {
     printf("[FLV] Video Codec:%u\n",codec);
@@ -522,13 +546,9 @@ uint8_t flvHeader::setVideoHeader(uint8_t codec,uint32_t *remaining)
         MKFLV(VP6A,VP6A);
         default : _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"XXX");break;
     }
-    if( metaWidth && metaHeight )
-        if( codec==FLV_CODECID_VP6A  || codec==FLV_CODECID_H264 || codec==FLV_CODECID_VP6) 
-        {
-                _video_bih.biHeight=_mainaviheader.dwHeight=metaHeight ;
-                _video_bih.biWidth=_mainaviheader.dwWidth=metaWidth;
-        }
-    if(codec==FLV_CODECID_H263)
+    updateDimensionWithMeta(codec);
+
+    if(codec==FLV_CODECID_H263 && *remaining)
     {
   
       uint32_t pos=ftello(_fd);
@@ -719,7 +739,7 @@ uint8_t flvHeader::close(void)
 
  flvHeader::flvHeader( void ) : vidHeader()
 {
-
+    videoCodec=0xFFFF;
     _fd=NULL;
     _filename=NULL;
     videoTrack=NULL;
