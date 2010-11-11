@@ -20,6 +20,87 @@
 #include "libjobdb.h"
 static char *dbFile=NULL;
 Database    *mydb=NULL;
+
+#define ADM_DB_SCHEMA 2
+
+static const char *createString1="\
+CREATE TABLE version(\
+value integer not null\
+);";
+static const char *createString2="\
+CREATE TABLE jobs(\
+id integer primary key autoincrement not null,\
+jscript varchar(100) default '' not null,\
+jobname varchar(100) default '' not null,\
+outputFile varchar(256) default '' not null,\
+status integer,\
+startTime date,\
+endTime date\
+);\
+";
+
+/**
+    \fn ADM_jobInitializeDb
+*/
+static bool ADM_jobInitializeDb(void)
+{
+    bool r=true;
+    Database *m=new Database(dbFile);
+    if(!m->Connected())
+    {
+        ADM_warning("Cannot create database  %s \n",dbFile);
+        return false;
+    }
+    ADM_info("Creating database schema...\n");
+    Query q(*m);
+    r=q.execute(createString1);
+    r=q.execute(createString2);
+    q.execute("COMMIT;");
+    
+    if(r){
+        // update version
+        char s[256];
+        sprintf(s,"INSERT INTO version (value) VALUES (%d);",ADM_DB_SCHEMA);
+        r=q.execute(s);
+        delete m;
+    }
+    return r;
+}
+/**
+        \fn dbInit
+*/
+static bool dbInit(void)
+{
+    mydb=new Database(dbFile);
+    if(!mydb->Connected())
+    {
+        delete mydb;
+        mydb=NULL;
+        return false;
+    }
+    return true;
+}
+/**
+        \fn dbCleanup
+*/
+
+static bool dbCleanup(void)
+{
+    if(mydb)
+    {
+        delete mydb;
+        mydb=NULL;
+    }
+    return true;
+}
+/**
+    \fn ADM_jobCheckVersion
+    \brief returns true if the db has the right version
+*/
+static bool ADM_jobCheckVersion(void)
+{
+    return true;
+}
 /**
     \fn ADM_jobInit
     \brief init sql and friends
@@ -29,20 +110,38 @@ bool    ADM_jobInit(void)
     dbFile=new char[1024];
     strcpy(dbFile,ADM_getBaseDir());
     strcat(dbFile,"/jobs.sql");
-
+    
+    ADM_info("Initializing database (%s)\n",dbFile);
     if(!ADM_fileExist(dbFile))
     {
         ADM_warning("[Jobs] jobs.sql does not exist, creating from default...\n");
-        return false;
+        if(!ADM_jobInitializeDb())
+            return false;
+        ADM_info("Database created\n");
     }
-    mydb=new Database(dbFile);
-    if(!mydb->Connected())
+    if(false==dbInit())
     {
-        ADM_warning("Cannot use database...\n");
-        delete mydb;
-        mydb=NULL;
+        ADM_warning("Cannot initialize database \n");
+        dbCleanup();
         return false;
     }
+    // Check DB version...
+    if(false==ADM_jobCheckVersion())
+    {
+        ADM_info("Bad database version...\n");
+        dbCleanup();
+        unlink(dbFile);
+        if(true==ADM_jobInitializeDb())
+        {
+            if(false==dbInit())
+            {
+                dbCleanup();
+                ADM_warning("Cannot recreate database\n");
+                return false;
+            }
+        }
+    }
+    //
     ADM_info("Successfully connected to jobs database..\n");
     return true;
 }
@@ -51,11 +150,7 @@ bool    ADM_jobInit(void)
 */
 bool    ADM_jobShutDown(void)
 {
-    if(mydb)
-    {
-        delete mydb;
-        mydb=NULL;
-    }
+    dbCleanup();
     ADM_info("Shutting down jobs database\n");
     return true;
 }
