@@ -20,7 +20,7 @@
 
 ADM_AudiocodecWav::ADM_AudiocodecWav( uint32_t fourcc ) : ADM_Audiocodec(fourcc)
 {
-
+    ADM_info("Creating not swapped wav decoder (PCM)\n");
 }
 ADM_AudiocodecWav::~ADM_AudiocodecWav()
 {
