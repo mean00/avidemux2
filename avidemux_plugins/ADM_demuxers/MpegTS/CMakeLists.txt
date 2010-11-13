@@ -3,6 +3,7 @@ SET(ADM_ts_SRCS
 	ADM_ts.cpp
 	ADM_tsPlugin.cpp
 	ADM_tsIndex.cpp
+	ADM_tsIndexH264.cpp
 	ADM_tsReadIndex.cpp
 	ADM_tsAudio.cpp
 	ADM_tsAudioProbe.cpp
