@@ -121,7 +121,8 @@ enum
 {
     unitTypeSei=1,
     unitTypePic=2,
-    unitTypeSps=3
+    unitTypeSps=3,
+    unitTypePicInfo=4
 };
 
 /**
@@ -130,12 +131,13 @@ enum
 class TsIndexer
 {
 protected:
-        uint32_t        currentFrameType;
         uint32_t        beginConsuming;
-        indexerState    currentIndexState;
         uint64_t        fullSize;
         Clock           ticktock;
         VC1Context      vc1Context;
+        vector <H264Unit> listOfUnits;
+        H264Unit        thisUnit;
+        bool            decodingImage;
 protected:
         FILE                    *index;
         tsPacketLinearTracker   *pkt;
@@ -158,18 +160,17 @@ public:
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
-        bool    Mark(indexerData *data,dmxPacketInfo *s,uint32_t overRead);
-        bool    updatePicStructure(TSVideo &video,indexerData &idata, const uint32_t t)
+        bool    updatePicStructure(TSVideo &video,const uint32_t t)
                         {
                                             switch(t)
                                             {
                                                 case 3: video.frameCount++;
-                                                        idata.picStructure=pictureFrame;
+                                                        thisUnit.imageStructure=pictureFrame;
                                                         break;
-                                                case 1:  idata.picStructure=pictureTopField;
+                                                case 1:  thisUnit.imageStructure=pictureTopField;
                                                          video.fieldCount++;
                                                          break;
-                                                case 2:  idata.picStructure=pictureBottomField;
+                                                case 2:  thisUnit.imageStructure=pictureBottomField;
                                                          video.fieldCount++;
                                                          break;
                                                 default: ADM_warning("frame type 0 met, this is illegal\n");

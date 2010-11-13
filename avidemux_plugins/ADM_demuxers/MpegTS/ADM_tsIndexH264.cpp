@@ -17,100 +17,6 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 
-static vector <H264Unit> listOfUnits;
-/**
-    \fn dumpUnits
-*/
-bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket)
-{
-        // if it contain a SPS or a intra/idr, we start a new line
-        bool mustFlush=false;
-        int n=listOfUnits.size();
-        int picIndex=0;
-        H264Unit *unit=&(listOfUnits[0]);
-        pictureStructure pictStruct=pictureFrame;
-        
-        // if I, IDR or SPS we start a new line
-        for(int i=0;i<n;i++)
-        {
-            switch(listOfUnits[i].unitType)
-            {
-                case unitTypeSps: mustFlush=true;;break;
-                case unitTypePic: 
-                            picIndex=i;
-                            if(listOfUnits[i].imageType==1 || listOfUnits[i].imageType==4)
-                            mustFlush=true;
-                            break;
-                case unitTypeSei:
-                            pictStruct=listOfUnits[i].imageStructure;
-                            break;
-                default:
-                        ADM_assert(0);
-                        break;
-            }
-        }
-        dmxPacketInfo *pic=&(listOfUnits[picIndex].packetInfo);
-        dmxPacketInfo *p=&(unit->packetInfo);
-        H264Unit      *picUnit=&(listOfUnits[picIndex]);
-        if(mustFlush) 
-        {
-            if(audioTracks)
-            {
-                qfprintf(index,"\nAudio bf:%08"LLX" ",nextPacket->startAt);
-                packetTSStats *s;
-                uint32_t na;
-                pkt->getStats(&na,&s);      
-                ADM_assert(na==audioTracks->size());
-                for(int i=0;i<na;i++)
-                {   
-                    packetTSStats *current=s+i;
-                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",
-                                current->pid,current->startAt,current->startSize,current->startDts);
-                }                
-            }
-            data.beginPts=pic->pts;
-            data.beginDts=pic->dts;
-            // start a new line
-            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",
-                        p->startAt,p->offset-unit->overRead,pic->pts,pic->dts);
-        }
-       
-        
-            int64_t deltaPts,deltaDts;
-
-            if(data.beginPts==-1 || pic->pts==-1) deltaPts=-1;
-                else deltaPts=pic->pts-data.beginPts;
-
-            if(data.beginDts==-1 || pic->dts==-1) deltaDts=-1;
-                else deltaDts=pic->dts-data.beginDts;            
-
-
-            qfprintf(index," %c%c:%06"LX":%"LLD":%"LLD,
-                                    Type[picUnit->imageType],
-                                    Structure[pictStruct&3],
-                                    nextConsumed-beginConsuming,
-                                    deltaPts,deltaDts);
-        beginConsuming=nextConsumed;
-        listOfUnits.clear();
-        return true;
-}
-/**
-    \fn addUnit
-*/
-bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uint32_t overRead)
-{
-        H264Unit myUnit=unit;
-        myUnit.unitType=unitType2;
-        myUnit.overRead=overRead;
-        int n=listOfUnits.size();
-        if(n)
-            if(listOfUnits[n-1].unitType==unitTypePic)
-            {
-                dumpUnits(data,myUnit.consumedSoFar-overRead,&(unit.packetInfo));
-            }
-        listOfUnits.push_back(myUnit);
-        return true;
-}
 
 /**
         \fn decodeSEI
@@ -190,7 +96,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
 */  
 bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
 {
-bool    decodingImage=false;
+
 bool    seq_found=false;
 bool    firstSps=true;
 
@@ -199,7 +105,7 @@ indexerData  data;
 dmxPacketInfo tmpInfo;
 TS_PESpacket SEI_nal(0);
 bool result=false;
-H264Unit thisUnit;
+
 
     beginConsuming=0;
     listOfUnits.clear();

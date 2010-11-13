@@ -35,10 +35,6 @@ static const uint32_t FPS[16]={
                 0,                      // 14
                 0                       // 15
         };
-static const uint32_t  VC1_ar[16][2] = {  // From VLC
-                        { 0, 0}, { 1, 1}, {12,11}, {10,11}, {16,11}, {40,33},
-                        {24,11}, {20,11}, {32,11}, {80,33}, {18,11}, {15,11},
-                        {64,33}, {160,99},{ 0, 0}, { 0, 0}};
 
 
 /**
@@ -137,383 +133,6 @@ void TsIndexer::updateUI(void)
         ui->update( (uint32_t)pos);
 }
 /**
-    \fn runMpeg2
-*/  
-bool TsIndexer::runMpeg2(const char *file,ADM_TS_TRACK *videoTrac)
-{
-uint32_t temporal_ref,val;
-uint8_t buffer[50*1024];
-bool seq_found=false;
-
-TSVideo video;
-indexerData  data;    
-dmxPacketInfo info;
-
-    if(!videoTrac) return false;
-    if(videoTrac[0].trackType!=ADM_TS_MPEG2)
-    {
-        printf("[Ts Indexer] Only Mpeg2 video supported\n");
-        return false;
-    }
-    video.pid=videoTrac[0].trackPid;
-
-    memset(&data,0,sizeof(data));
-    data.picStructure=pictureFrame;
-
-    string indexName=string(file);
-    indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt");
-
-    if(!index)
-    {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
-        return false;
-    }
-    writeSystem(file,true);
-    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-
-    FP_TYPE append=FP_APPEND;
-    pkt->open(file,append);
-    data.pkt=pkt;
-    fullSize=pkt->getSize();
-    int startCode;
-#define likely(x) x
-#define unlikely(x) x
-      while(1)
-      {
-        startCode=pkt->findStartCode();
-        if(!pkt->stillOk()) break;
-
-          switch(startCode)
-                  {
-                  case 0xB3: // sequence start
-                          if(seq_found)
-                          {
-                                  pkt->getInfo(&info);
-                                  data.frameType=1;
-                                  Mark(&data,&info,4);
-                                  data.state=idx_startAtGopOrSeq;
-                                  pkt->forward(8);  // Ignore
-                                  continue;
-                          }
-                          //
-                          seq_found=1;
-                          val=pkt->readi32();
-                          video.w=val>>20;
-                          video.w=((video.w+15)&~15);
-                          video.h= (((val>>8) & 0xfff)+15)& ~15;
-
-                          video.ar = (val >> 4) & 0xf;
-                          video.fps= FPS[val & 0xf];
-                          pkt->forward(4);
-                          writeVideo(&video,ADM_TS_MPEG2);
-                          writeAudio();
-                          qfprintf(index,"[Data]");
-                          pkt->getInfo(&info);
-                          data.frameType=1;
-                          Mark(&data,&info,4+8);
-                          data.state=idx_startAtGopOrSeq;
-                          continue;
-
-                          break;
-                    case 0xB5: //  extension
-                                { 
-                                    uint8_t id=pkt->readi8()>>4;
-                                    uint8_t two;
-                                    switch(id)
-                                    {
-                                        case 1: // Sequence extension
-                                            val=(val>>3)&1; // gop type progressive, unreliable, not used
-                                            break;
-                                        case 8: // picture coding extension (mpeg2)
-                                        {
-                                            // skip motion vector
-                                            uint8_t picture_structure;
-                                            pkt->forward(1); // 4*4 bits
-                                            two=pkt->readi8();
-                                            picture_structure=(two)&3;
-                                            
-                                            //printf("Picture type %02x struct:%x\n",two,picture_structure);
-                                            updatePicStructure(video,data,picture_structure);
-                                        }
-                                        default:break;
-                                    }
-                                }
-                                break;
-                  case 0xb8: // GOP
-                          // Update ui
-                            {
-                               updateUI();
-
-                            }
-
-                          if(!seq_found) continue;
-                          if(data.state==idx_startAtGopOrSeq) 
-                          {         
-                                  continue;;
-                          }
-                          pkt->getInfo(&info);
-                          Mark(&data,&info,4);
-                          data.state=idx_startAtGopOrSeq;
-                          break;
-                  case 0x00 : // picture
-                        {
-                          int type;
-                          if(!seq_found)
-                          { 
-                                  continue;
-                                  printf("[TsIndexer]No sequence start yet, skipping..\n");
-                          }
-                          
-                          val=pkt->readi16();
-                          temporal_ref=val>>6;
-                          type=7 & (val>>3);
-                          if( type<1 ||  type>3)
-                          {
-                                  printf("[Indexer]Met illegal pic at %"LLX" + %"LX"\n",
-                                                  info.startAt,info.offset);
-                                  continue;
-                          }
-                          
-                          
-                          if(data.state==idx_startAtGopOrSeq) 
-                          {
-                                  currentFrameType=type;
-                          }else
-                            {
-                                  data.frameType=type;
-                                  pkt->getInfo(&info);
-                                  Mark(&data,&info,4+2);
-
-
-                            }
-                            data.state=idx_startAtImage;
-                            data.nbPics++;
-                        }
-                          break;
-                  default:
-                    break;
-                  }
-      }
-    
-        printf("\n");
-        Mark(&data,&info,2);
-        qfprintf(index,"\n[End]\n");
-        qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
-        qfclose(index);
-        index=NULL;
-        audioTracks=NULL;
-        delete pkt;
-        pkt=NULL;
-        return 1; 
-}
-/**
-    \fn runVC1
-    \brief Index VC1 stream
-*/  
-bool TsIndexer::runVC1(const char *file,ADM_TS_TRACK *videoTrac)
-{
-uint32_t temporal_ref,val;
-uint8_t buffer[50*1024];
-bool seq_found=false;
-
-TSVideo video;
-indexerData  data;    
-dmxPacketInfo info;
-
-
-    if(!videoTrac) return false;
-    if(videoTrac[0].trackType!=ADM_TS_VC1)
-    {
-        printf("[Ts Indexer] Only VC1 video supported\n");
-        return false;
-    }
-    video.pid=videoTrac[0].trackPid;
-
-    memset(&data,0,sizeof(data));
-    data.picStructure=pictureFrame;
-    
-    string indexName=string(file);
-    indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt");
-
-    if(!index)
-    {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
-        return false;
-    }
-    writeSystem(file,true);
-    pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-
-    FP_TYPE append=FP_APPEND;
-    pkt->open(file,append);
-    data.pkt=pkt;
-    fullSize=pkt->getSize();
-    int startCode;
-#define likely(x) x
-#define unlikely(x) x
-      while(1)
-      {
-        startCode=pkt->findStartCode();
-        if(!pkt->stillOk()) break;
-
-          switch(startCode)
-                  {
-                  case 0x0f: // sequence start
-                          
-                          if(seq_found)
-                          {
-                              if(data.state==idx_startAtGopOrSeq)       
-                                  continue;;
-                              pkt->getInfo(&info);
-                              data.frameType=1; // next frame is assumed to be intra
-                              Mark(&data,&info,4); // startcode
-                              data.state=idx_startAtGopOrSeq;
-                              updateUI();
-                              break;
-                          }
-                          // Verify it is high/advanced profile
-                          {
-                          int seqSize=0;
-                          tsGetBits bits(pkt);
-                          if(!bits.peekBits(1)) continue; // simple/main profile
-
-                          if(!decodeVC1Seq(bits,video)) continue;
-
-                          seqSize=bits.getConsumed();
-                          video.extraDataLength=seqSize+4+1;
-                          memcpy(video.extraData+4,bits.data,seqSize);
-                            // Add info so that ffmpeg is happy
-                          video.extraData[0]=0;
-                          video.extraData[1]=0;
-                          video.extraData[2]=1;
-                          video.extraData[3]=0xf;
-                          video.extraData[seqSize+4+0]=0;
-                          seq_found=1;
-                          // Hi Profile
-                          printf("[VC1] Found seq start with %d x %d video\n",(int)video.w,(int)video.h);
-                          printf("[VC1] FPS : %d\n",(int)video.fps);
-                          printf("[VC1] sequence header is %d bytes\n",(int)seqSize);
-                          writeVideo(&video,ADM_TS_VC1);
-                          writeAudio();
-                          qfprintf(index,"[Data]");
-                          pkt->getInfo(&info);
-                          data.frameType=1; // Force first frame to be intra
-                          Mark(&data,&info,seqSize+4);
-                          data.state=idx_startAtGopOrSeq;
-                          continue;
-                          }
-                          break;
-                    case 0x0D: //  Picture start
-                        { 
-                          int type;
-                          uint8_t buffer[4];
-                          uint32_t fType,sType;
-                          if(!seq_found)
-                          { 
-                                  continue;
-                                  printf("[TsIndexer]No sequence start yet, skipping..\n");
-                          }      
-                          tsGetBits bits(pkt);
-                          if(!decodeVC1Pic(bits,fType,sType)) continue;
-                          updatePicStructure(video,data,sType);
-                          if(data.state==idx_startAtGopOrSeq) 
-                          {
-                                  currentFrameType=fType;
-                          }else
-                            {
-                                  data.frameType=fType;
-                                  pkt->getInfo(&info);
-                                  Mark(&data,&info,bits.getConsumed());
-                            }
-                            data.state=idx_startAtImage;
-                            data.nbPics++;
-                        }
-                          break;
-                  default:
-                    break;
-                  }
-      }
-    
-        printf("\n");
-        Mark(&data,&info,2);
-        qfprintf(index,"\n[End]\n");
-        qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
-        qfclose(index);
-        index=NULL;
-        audioTracks=NULL;
-        delete pkt;
-        pkt=NULL;
-        return 1; 
-}
-/**
-    \fn   Mark
-    \brief update the file
-
-    The offset part is due to the fact that we read 2 bytes from the pic header to know the pic type.
-    So when going from a pic to a pic, it is self cancelling.
-    If the beginning is not a pic, but a gop start for example, we had to add/remove those.
-
-*/
-bool  TsIndexer::Mark(indexerData *data,dmxPacketInfo *info,uint32_t overRead)
-{
-        aprintf("********************** MARK ******************\n");
-        uint32_t consumed=pkt->getConsumed()-overRead;
-        if(data->nbPics)
-        {
-            int64_t deltaPts,deltaDts;
-
-            if(data->beginPts==-1 || data->prevPts==-1) deltaPts=-1;
-                else deltaPts=data->prevPts-data->beginPts;
-
-            if(data->beginDts==-1 || data->prevDts==-1) deltaDts=-1;
-                else deltaDts=data->prevDts-data->beginDts;
-
-            qfprintf(index," %c%c:%06"LX":%"LLD":%"LLD,
-                                    Type[currentFrameType],
-                                    Structure[data->picStructure&3],
-                                    consumed-beginConsuming,
-                                    deltaPts,deltaDts);
-            beginConsuming=consumed;
-        }else
-        {  // Our first Pic
-            beginConsuming=0;
-            pkt->setConsumed(overRead);
-        }
-            
-        // If audio, also dump audio
-        if(data->frameType==1 || data->frameType==4) // I or IDR
-        {
-            data->beginPts=info->pts;
-            data->beginDts=info->dts;
-            if(audioTracks)
-            {
-                qfprintf(index,"\nAudio bf:%08"LLX" ",info->startAt);
-                packetTSStats *s;
-                uint32_t na;
-                pkt->getStats(&na,&s);      
-                ADM_assert(na==audioTracks->size());
-                for(int i=0;i<na;i++)
-                {   
-                    packetTSStats *current=s+i;
-                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",
-                                current->pid,current->startAt,current->startSize,current->startDts);
-                }                
-            }
-            // start a new line
-            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",info->startAt,info->offset-overRead,info->pts,info->dts);
-        }
-        currentFrameType=data->frameType;
-        data->prevDts=info->dts;
-        data->prevPts=info->pts;
-    return true;
-}
-
-/**
     \fn writeVideo
     \brief Write Video section of index file
 */
@@ -579,220 +198,101 @@ bool TsIndexer::writeAudio(void)
     }
     return true;
 }
+
+
 /**
-    \fn decodeVc1Seq
-    \brief http://wiki.multimedia.cx/index.php?title=VC-1#Setup_Data_.2F_Sequence_Layer
-#warning we should de-escape it!
-        Large part of this borrowed from VLC
-        Advanced/High profile only
+    \fn dumpUnits
 */
-bool TsIndexer::decodeVC1Seq(tsGetBits &bits,TSVideo &video)
+bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket)
 {
-
-int v;
-int consumed;
-    vc1Context.advanced=true;
-
-#define VX(a,b) v=bits.getBits(a);printf("[VC1] %d "#b"\n",v);consumed+=a;
-    VX(2,profile);
-    VX(3,level);
-
-    VX(2,chroma_format);
-    VX(3,Q_frame_rate_unused);
-    VX(5,Q_bit_unused);
-
-    VX(1,postproc_flag);
-
-    VX(12,coded_width);
-    video.w=v*2+2;
-    VX(12,coded_height);
-    video.h=v*2+2;
-
-    VX(1,pulldown_flag);
-    VX(1,interlaced_flag);
-    vc1Context.interlaced=v;
-    VX(1,frame_counter_flag);
-
-    VX(1,interpolation_flag);
-    vc1Context.interpolate=v;
-
-    VX(1,reserved_bit);
-    VX(1,psf);
-
-    VX(1,display_extension);
-    if(v)
-    {
-         VX(14,display_extension_coded_width);
-         VX(14,display_extension_coded_height);
-         VX(1,aspect_ratio_flag);
-     
-
-         if(v)
-         {
-                VX(4,aspect_ratio);
-                switch(v)
-                {
-                    case 15: video.ar=(bits.getBits(8)<<16)+bits.getBits(8);
-                             break;
-                    default:
-                             video.ar=(VC1_ar[v][0]<<16)+(VC1_ar[v][1]<<16);
-                             break;
-                }
-                printf("[VC1] Aspect ratio %d x %d\n",video.ar>>8,video.ar&0xff);
-         }
-    
-        VX(1,frame_rate);
-        if(v)
+        // if it contain a SPS or a intra/idr, we start a new line
+        bool mustFlush=false;
+        int n=listOfUnits.size();
+        int picIndex=0;
+        H264Unit *unit=&(listOfUnits[0]);
+        pictureStructure pictStruct=pictureFrame;
+        
+        // if I, IDR or SPS we start a new line
+        for(int i=0;i<n;i++)
         {
-                VX(1,frame_rate32_flag);
-                if(v)
-                {
-                    VX(16,frame_rate32);
-                    float f=v;
-                    f=(f+1)/32;
-                    f*=1000;
-                    video.fps=(uint32_t)f;
-                }else
-                {
-                    float den,num;
-                    VX(8,frame_rate_num)
-                    switch( v )
-                        {
-                        case 1: num = 24000; break;
-                        case 2: num = 25000; break;
-                        case 3: num = 30000; break;
-                        case 4: num = 50000; break;
-                        case 5: num = 60000; break;
-                        case 6: num = 48000; break;
-                        case 7: num = 72000; break;
-                        }
-                    VX(4,frame_rate_den)
-                    switch( v )
-                        {
-                        default:
-                        case 1: den = 1000; break;
-                        case 2: den = 1001; break;
-                        }
-
-                    float f=num*1000;
-                    f/=den;
-                    video.fps=(uint32_t)f;
-                }
-            }else
+            switch(listOfUnits[i].unitType)
             {
-                video.fps=25000;
+                case unitTypeSps: mustFlush=true;;break;
+                case unitTypePic: 
+                            picIndex=i;
+                            if(listOfUnits[i].imageType==1 || listOfUnits[i].imageType==4)
+                            mustFlush=true;
+                            break;
+                case unitTypeSei:
+                            pictStruct=listOfUnits[i].imageStructure;
+                            break;
+                default:
+                        ADM_assert(0);
+                        break;
             }
-            //
-            VX(1,color_flag);
-            if(v){
-                    VX(8,color_prim);
-                    VX(8,transfer_char);
-                    VX(8,matrix_coef);
-                }
-    }
-    VX(1,hrd_param_flag);
-    int leaky=0;
-    if(v)
-    {
-        VX(5,hrd_num_leaky_buckets);
-        leaky=v;
-        VX(4,bitrate_exponent);
-        VX(4,buffer_size_exponent);
-        for(int i = 0; i < leaky; i++) 
-        {
-                bits.getBits(16);
-                bits.getBits(16);
         }
-    }
-    // Now we need an entry point
-    bits.flush();
-    uint8_t a[4];
-    uint8_t entryPoint[4]={0,0,1,0x0E};
-    for(int i=0;i<4;i++) a[i]=bits.getBits(8);
-    for(int i=0;i<4;i++) printf("%02x ",a[i]);
-    printf(" as marker\n");
-    if(memcmp(a,entryPoint,4))
-    {
-        ADM_warning("Bad entry point");
-        return false;
-    }
-    VX(6,ep_flags);
-    VX(1,extended_mv);
-    int extended_mv=v;
-    VX(6,ep_flags2);
+        dmxPacketInfo *pic=&(listOfUnits[picIndex].packetInfo);
+        dmxPacketInfo *p=&(unit->packetInfo);
+        H264Unit      *picUnit=&(listOfUnits[picIndex]);
+        if(mustFlush) 
+        {
+            if(audioTracks)
+            {
+                qfprintf(index,"\nAudio bf:%08"LLX" ",nextPacket->startAt);
+                packetTSStats *s;
+                uint32_t na;
+                pkt->getStats(&na,&s);      
+                ADM_assert(na==audioTracks->size());
+                for(int i=0;i<na;i++)
+                {   
+                    packetTSStats *current=s+i;
+                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",
+                                current->pid,current->startAt,current->startSize,current->startDts);
+                }                
+            }
+            data.beginPts=pic->pts;
+            data.beginDts=pic->dts;
+            // start a new line
+            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",
+                        p->startAt,p->offset-unit->overRead,pic->pts,pic->dts);
+        }
+       
+        
+            int64_t deltaPts,deltaDts;
 
-    for(int i=0;i<leaky;i++)
-            bits.getBits(8);
-    VX(1,ep_coded_dimension);
-    if(v)
-    {
-         VX(12,ep_coded_width);
-         VX(12,ep_coded_height);
-    }
-    if(extended_mv) VX(1,dmv);
-    VX(1,range_mappy_flags);
-    if(v) VX(3,mappy_flags);
-    VX(1,range_mappuv_flags);
-    if(v) VX(3,mappuv_flags);
-    return true;
+            if(data.beginPts==-1 || pic->pts==-1) deltaPts=-1;
+                else deltaPts=pic->pts-data.beginPts;
 
+            if(data.beginDts==-1 || pic->dts==-1) deltaDts=-1;
+                else deltaDts=pic->dts-data.beginDts;            
+
+
+            qfprintf(index," %c%c:%06"LX":%"LLD":%"LLD,
+                                    Type[picUnit->imageType],
+                                    Structure[pictStruct&3],
+                                    nextConsumed-beginConsuming,
+                                    deltaPts,deltaDts);
+        beginConsuming=nextConsumed;
+        listOfUnits.clear();
+        return true;
 }
 /**
-    \fn decodeVC1Pic
-    \brief Decode info from VC1 picture
-    Borrowed a lot from VLC also
-
+    \fn addUnit
 */
-bool TsIndexer::decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure)
+bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uint32_t overRead)
 {
-    frameStructure=3;
-    bool field=false;
-    if(vc1Context.interlaced)
-    {
-        if(bits.getBits(1))
-        {
-            if(bits.getBits(1))
-               field=true;
-        }
-    }
-    if(field)
-    {
-            int fieldType=bits.getBits(3);
-            frameStructure=1; // Top
-            switch(fieldType)
+        H264Unit myUnit=unit;
+        myUnit.unitType=unitType2;
+        myUnit.overRead=overRead;
+        int n=listOfUnits.size();
+        if(n)
+            if(listOfUnits[n-1].unitType==unitTypePic)
             {
-                case 0: /* II */
-                case 1: /* IP */
-                case 2: /* PI */
-                    frameType=1;
-                    break;
-                case 3: /* PP */
-                    frameType=2;
-                    break;
-                case 4: /* BB */
-                case 5: /* BBi */
-                case 6: /* BiB */
-                case 7: /* BiBi */
-                    frameType=3;
-                    break;
-
+                dumpUnits(data,myUnit.consumedSoFar-overRead,&(unit.packetInfo));
+                updateUI();
             }
-    }else
-    {
-                frameStructure=3; // frame
-                if( !bits.getBits(1))
-                    frameType=2;
-                else if( !bits.getBits(1))
-                    frameType=3;
-                else if( !bits.getBits(1))
-                    frameType=1;
-                else if( !bits.getBits(1))
-                    frameType=3;
-                else
-                    frameType=2;
-    }
-
-    return true;
+        listOfUnits.push_back(myUnit);
+        return true;
 }
 /********************************************************************************************/
 /********************************************************************************************/
