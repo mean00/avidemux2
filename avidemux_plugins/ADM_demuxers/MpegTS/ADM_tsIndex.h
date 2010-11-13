@@ -63,11 +63,6 @@ public:
     uint8_t  extraData[VC1_MAX_SEQ_SIZE];
 };
 
-typedef enum
-{
-    idx_startAtImage,
-    idx_startAtGopOrSeq
-}indexerState;
 
 typedef enum
 {
@@ -83,7 +78,6 @@ typedef struct
     uint32_t frameType;
     pictureStructure picStructure;
     uint32_t nbPics;
-    indexerState state;
     tsPacketLinear *pkt;
     int32_t        nextOffset;
     uint64_t beginPts,beginDts;

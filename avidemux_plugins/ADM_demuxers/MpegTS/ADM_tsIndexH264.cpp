@@ -1,10 +1,6 @@
 /***************************************************************************
-                        Mpeg2 in PS indexer                                            
-                             
-    VC1: /!\ Escaping not done (yet)
-
-    copyright            : (C) 2005/2009 by mean
-    email                : fixounet@free.fr
+    \brief TS indexer, H264 video
+    \author mean fixounet@free.fr
  ***************************************************************************/
 
 /***************************************************************************
@@ -315,7 +311,6 @@ resume:
       result=true;
 the_end:
         printf("\n");
-#warning TODO PURGE    
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
