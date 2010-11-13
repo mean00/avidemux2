@@ -21,7 +21,7 @@ static vector <H264Unit> listOfUnits;
 /**
     \fn dumpUnits
 */
-bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed)
+bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket)
 {
         // if it contain a SPS or a intra/idr, we start a new line
         bool mustFlush=false;
@@ -54,6 +54,20 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed)
         H264Unit      *picUnit=&(listOfUnits[picIndex]);
         if(mustFlush) 
         {
+            if(audioTracks)
+            {
+                qfprintf(index,"\nAudio bf:%08"LLX" ",nextPacket->startAt);
+                packetTSStats *s;
+                uint32_t na;
+                pkt->getStats(&na,&s);      
+                ADM_assert(na==audioTracks->size());
+                for(int i=0;i<na;i++)
+                {   
+                    packetTSStats *current=s+i;
+                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",
+                                current->pid,current->startAt,current->startSize,current->startDts);
+                }                
+            }
             data.beginPts=pic->pts;
             data.beginDts=pic->dts;
             // start a new line
@@ -92,7 +106,7 @@ bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uin
         if(n)
             if(listOfUnits[n-1].unitType==unitTypePic)
             {
-                dumpUnits(data,myUnit.consumedSoFar-overRead);
+                dumpUnits(data,myUnit.consumedSoFar-overRead,&(unit.packetInfo));
             }
         listOfUnits.push_back(myUnit);
         return true;

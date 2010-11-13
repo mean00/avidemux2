@@ -148,7 +148,7 @@ protected:
         bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
         // H264
         bool                    addUnit(indexerData &data,int unitType,const H264Unit &unit,uint32_t overRead);
-        bool                    dumpUnits(indexerData &data,uint64_t nextConsumed);
+        bool                    dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket);
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
