@@ -48,6 +48,7 @@ bool tsHeader::updatePtsDts(void)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
             vector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            if(!((*seekPoints).size())) continue;
             uint64_t secondDts=(*seekPoints)[0].dts;
             uint64_t secondSize=(*seekPoints)[0].size;
             if(secondSize && listOfAudioTracks[i]->header.byterate)
@@ -100,6 +101,7 @@ bool tsHeader::updatePtsDts(void)
         }
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
+            if(!listOfAudioTracks[i]->access->seekPoints.size()) continue;
             uint64_t a=listOfAudioTracks[i]->access->seekPoints[0].dts;
             if(a<startDts) startDts=a;
         }

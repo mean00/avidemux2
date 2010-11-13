@@ -17,6 +17,87 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 
+static vector <H264Unit> listOfUnits;
+/**
+    \fn dumpUnits
+*/
+bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed)
+{
+        // if it contain a SPS or a intra/idr, we start a new line
+        bool mustFlush=false;
+        int n=listOfUnits.size();
+        int picIndex=0;
+        H264Unit *unit=&(listOfUnits[0]);
+        pictureStructure pictStruct=pictureFrame;
+        
+        // if I, IDR or SPS we start a new line
+        for(int i=0;i<n;i++)
+        {
+            switch(listOfUnits[i].unitType)
+            {
+                case unitTypeSps: mustFlush=true;;break;
+                case unitTypePic: 
+                            picIndex=i;
+                            if(listOfUnits[i].imageType==1 || listOfUnits[i].imageType==4)
+                            mustFlush=true;
+                            break;
+                case unitTypeSei:
+                            pictStruct=listOfUnits[i].imageStructure;
+                            break;
+                default:
+                        ADM_assert(0);
+                        break;
+            }
+        }
+        dmxPacketInfo *pic=&(listOfUnits[picIndex].packetInfo);
+        dmxPacketInfo *p=&(unit->packetInfo);
+        H264Unit      *picUnit=&(listOfUnits[picIndex]);
+        if(mustFlush) 
+        {
+            data.beginPts=pic->pts;
+            data.beginDts=pic->dts;
+            // start a new line
+            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",
+                        p->startAt,p->offset-unit->overRead,pic->pts,pic->dts);
+        }
+       
+        
+            int64_t deltaPts,deltaDts;
+
+            if(data.beginPts==-1 || pic->pts==-1) deltaPts=-1;
+                else deltaPts=pic->pts-data.beginPts;
+
+            if(data.beginDts==-1 || pic->dts==-1) deltaDts=-1;
+                else deltaDts=pic->dts-data.beginDts;            
+
+
+            qfprintf(index," %c%c:%06"LX":%"LLD":%"LLD,
+                                    Type[picUnit->imageType],
+                                    Structure[pictStruct&3],
+                                    nextConsumed-beginConsuming,
+                                    deltaPts,deltaDts);
+        beginConsuming=nextConsumed;
+        listOfUnits.clear();
+        return true;
+}
+/**
+    \fn addUnit
+*/
+bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uint32_t overRead)
+{
+        H264Unit myUnit=unit;
+        myUnit.unitType=unitType2;
+        myUnit.overRead=overRead;
+        int n=listOfUnits.size();
+        if(n)
+            if(listOfUnits[n-1].unitType==unitTypePic)
+            {
+                dumpUnits(data,myUnit.consumedSoFar-overRead);
+            }
+        listOfUnits.push_back(myUnit);
+        return true;
+}
+
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
@@ -95,15 +176,19 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
 */  
 bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
 {
-bool    pic_started=false;
+bool    decodingImage=false;
 bool    seq_found=false;
+bool    firstSps=true;
 
 TSVideo video;
 indexerData  data;    
-dmxPacketInfo info;
+dmxPacketInfo tmpInfo;
 TS_PESpacket SEI_nal(0);
 bool result=false;
-uint32_t recoveryCount=0xff;
+H264Unit thisUnit;
+
+    beginConsuming=0;
+    listOfUnits.clear();
 
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
@@ -116,7 +201,6 @@ uint32_t recoveryCount=0xff;
 
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-    pictureStructure nextPicStruct=pictureFrame;
     string indexName=string(file);
     indexName=indexName+string(".idx2");
     index=qfopen(indexName,(const char*)"wt");
@@ -151,7 +235,7 @@ uint32_t recoveryCount=0xff;
           uint8_t buffer[60] ; // should be enough
           uint32_t xA,xR;
           // Get info
-          pkt->getInfo(&info);
+          pkt->getInfo(&tmpInfo);
           pkt->read(SPS_READ_AHEAD,buffer);
           if (extractSPSInfo(buffer, SPS_READ_AHEAD,&spsInfo))
           {
@@ -167,17 +251,17 @@ uint32_t recoveryCount=0xff;
               writeAudio();
               qfprintf(index,"[Data]");
               // Rewind
-              pkt->seek(info.startAt,info.offset-5);
+              pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
               break;              
           };
       }
       
         if(!seq_found) goto the_end;
-        data.state=idx_startAtImage;
+        
+        decodingImage=false;
     //******************
     // 2 Index
     //******************
-
       while(1)
       {
         int startCode=pkt->findStartCode();
@@ -198,7 +282,7 @@ resume:
         aprintf("[%02x] Nal :0x%x,ref=%d,lastRef=%d at : %d \n",fullStartCode,startCode,ref,lastRefIdc,pkt->getConsumed()-beginConsuming);
         
           // Ignore multiple chunk of the same pic
-          if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&pic_started )  //&& ref==lastRefIdc) 
+          if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&decodingImage )
           {
             aprintf("Still capturing, ignore\n");
             continue;
@@ -209,14 +293,11 @@ resume:
                   case NAL_AU_DELIMITER:
                         {
                           aprintf("AU DELIMITER\n");
-                          pic_started = false;
+                          decodingImage = false;
                         }
                           break;
                   case NAL_SEI:
-                    {
-#if 0
-                        printf(">>SEI\n");
-#else
+                        {
                         // Load the whole NAL
                             SEI_nal.empty();
                             uint32_t code=0xffff+0xffff0000;
@@ -230,36 +311,31 @@ resume:
                             aprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
                             if(SEI_nal.payloadSize>=7)
                                 decodeSEI(SEI_nal.payloadSize-4,
-                                    SEI_nal.payload,&recoveryCount,&nextPicStruct);
-                            else printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
+                                    SEI_nal.payload,&(thisUnit.recoveryCount),&(thisUnit.imageStructure));
+                            else 
+                                    printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                             startCode=pkt->readi8();
-
-                              if( data.state!=idx_startAtGopOrSeq)
-                              {
-                                  pic_started = false;
-                                  pkt->getInfo(&info);
-                                  data.frameType=2;
-                                  Mark(&data,&info,5+SEI_nal.payloadSize+1);
-                                  data.state=idx_startAtGopOrSeq;
-                                  recoveryCount=0xff;
-                               }
+                            decodingImage=false;
+                            pkt->getInfo(&thisUnit.packetInfo);
+                            thisUnit.consumedSoFar=pkt->getConsumed();
+                            addUnit(data,unitTypeSei,thisUnit,5+SEI_nal.payloadSize+1);                            
                             goto resume;
-#endif
-                        }
+                            }
                             break;
                   
                   case NAL_SPS:
-                              pic_started = false;
-                              aprintf("Sps \n");
-                              pkt->getInfo(&info);
-                              data.frameType=1;
-                              Mark(&data,&info,5);
-                              data.state=idx_startAtGopOrSeq;
-                              recoveryCount=0xff;
+                                decodingImage=false;
+                                pkt->getInfo(&thisUnit.packetInfo);
+                                if(firstSps)
+                                {
+                                    pkt->setConsumed(5); // reset consume counter
+                                    firstSps=false;
+                                }
+                                thisUnit.consumedSoFar=pkt->getConsumed();
+                                addUnit(data,unitTypeSps,thisUnit,5);
                           break;
 
                   case NAL_IDR:
-                    //zprintf("KOWABOUNGA\n");
                   case NAL_NON_IDR:
                     {
 #define NON_IDR_PRE_READ 8
@@ -287,29 +363,28 @@ resume:
                         switch(slice_type)
                         {
 
-                            case 0 : data.frameType=2;break; // P
-                            case 1 : data.frameType=3;break; // B
-                            case 2 : data.frameType=1;break; // I
-                            default : data.frameType=2;break; // SP/SI
+                            case 0 : thisUnit.imageType=2;break; // P
+                            case 1 : thisUnit.imageType=3;break; // B
+                            case 2 : thisUnit.imageType=1;break; // I
+                            default : thisUnit.imageType=2;break; // SP/SI
                         }
-                      if(startCode==NAL_IDR) data.frameType=4; // IDR
-                      aprintf("[>>>>>>>>] Pic Type %"LU" Recovery %"LU"\n",data.frameType,recoveryCount);
-                      if(data.frameType==1 && !recoveryCount) data.frameType=4; //I  + Recovery=0 = IDR!
-                      data.picStructure=nextPicStruct;
-                      if(data.state==idx_startAtGopOrSeq) 
-                      {
-                              currentFrameType=data.frameType;;
-                              updateUI();
-                              
-                      }else
-                      {
-                            pkt->getInfo(&info);
-                            Mark(&data,&info,5+NON_IDR_PRE_READ);
-                       }
-                      data.state=idx_startAtImage;
+                      if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
+                      aprintf("[>>>>>>>>] Pic Type %"LU" Recovery %"LU"\n",thisUnit.imageType,recoveryCount);
+                      if(thisUnit.imageType==1 && !thisUnit.recoveryCount) 
+                                thisUnit.imageType=4; //I  + Recovery=0 = IDR!
+
                       data.nbPics++;
-                      pic_started = true;
-                      recoveryCount=0xff;
+
+                      
+
+                      decodingImage=true;
+                      pkt->getInfo(&thisUnit.packetInfo);
+                      thisUnit.consumedSoFar=pkt->getConsumed();
+
+                      addUnit(data,unitTypePic,thisUnit,5+NON_IDR_PRE_READ);
+                        // reset to default
+                      thisUnit.imageStructure=pictureFrame;
+                      thisUnit.recoveryCount=0xff;
                     }
                   
                     break;
@@ -320,7 +395,7 @@ resume:
       result=true;
 the_end:
         printf("\n");
-        Mark(&data,&info,0);
+#warning TODO PURGE    
         qfprintf(index,"\n[End]\n");
         qfclose(index);
         index=NULL;
@@ -329,6 +404,7 @@ the_end:
         pkt=NULL;
         return result; 
 }
+
 
 /********************************************************************************************/
 /********************************************************************************************/

@@ -75,6 +75,7 @@ uint32_t  ADM_tsAccess::getLength(void)
 */
 uint64_t  ADM_tsAccess::getDurationInUs(void)
 {
+    if(!seekPoints.size()) return 0;
     // Take last seek point; should be accurate enough
     return timeConvert(seekPoints[seekPoints.size()-1].dts);
 }

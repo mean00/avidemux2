@@ -46,30 +46,6 @@ using std::string;
 #endif
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
 static const char Type[5]={'X','I','P','B','D'};
-
-static const uint32_t FPS[16]={
-                0,                      // 0
-                23976,          // 1 (23.976 fps) - FILM
-                24000,          // 2 (24.000 fps)
-                25000,          // 3 (25.000 fps) - PAL
-                29970,          // 4 (29.970 fps) - NTSC
-                30000,          // 5 (30.000 fps)
-                50000,          // 6 (50.000 fps) - PAL noninterlaced
-                59940,          // 7 (59.940 fps) - NTSC noninterlaced
-                60000,          // 8 (60.000 fps)
-                0,                      // 9
-                0,                      // 10
-                0,                      // 11
-                0,                      // 12
-                0,                      // 13
-                0,                      // 14
-                0                       // 15
-        };
-static const uint32_t  VC1_ar[16][2] = {  // From VLC
-                        { 0, 0}, { 1, 1}, {12,11}, {10,11}, {16,11}, {40,33},
-                        {24,11}, {20,11}, {32,11}, {80,33}, {18,11}, {15,11},
-                        {64,33}, {160,99},{ 0, 0}, { 0, 0}};
-
 #define VC1_MAX_SEQ_SIZE 64
 class TSVideo
 {
@@ -126,8 +102,27 @@ public:
         VC1Context() {advanced=false;interlaced=false;interpolate=false;}
 
 };
-
-
+/**
+    \class H264Unit
+*/
+class H264Unit
+{
+public:
+    int             unitType;
+    dmxPacketInfo   packetInfo;
+    uint64_t        consumedSoFar;
+    uint32_t        overRead;
+    int             imageType;
+    pictureStructure imageStructure;
+    uint32_t        recoveryCount;
+                    H264Unit() {memset(this,0,sizeof(*this));recoveryCount=0xff;imageStructure=pictureFrame;}
+};
+enum
+{
+    unitTypeSei=1,
+    unitTypePic=2,
+    unitTypeSps=3
+};
 
 /**
     \class TsIndexer
@@ -151,6 +146,9 @@ protected:
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
         bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
+        // H264
+        bool                    addUnit(indexerData &data,int unitType,const H264Unit &unit,uint32_t overRead);
+        bool                    dumpUnits(indexerData &data,uint64_t nextConsumed);
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();
