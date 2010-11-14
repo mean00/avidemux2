@@ -1,9 +1,10 @@
+#!/bin/bash
 
-
-INDIR=/work/samples/in
-OUTDIR=/work/samples/out
+INDIR=/capture/links
+OUTDIR=/capture/linksMkv
 SCRIPT=/tmp/script
-for i in $INDIR/*; do
+mkdir -p $OUTDIR
+for i in $INDIR/*.mpg; do
 echo "Processing $i"
 infile="$i"
 name=` echo $i | sed 's/^.*\///g'`
