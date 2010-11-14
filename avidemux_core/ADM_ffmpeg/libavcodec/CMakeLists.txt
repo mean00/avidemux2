@@ -26,7 +26,7 @@ SET(${ADM_LIB}_SRCS
         dca.c
         ac3enc.c  ac3.c  ac3tab.c   ac3_parser.c
         eac3dec.c ac3dec.c ac3dec_data.c eac3dec_data.c
-        aacenc.c aaccoder.c  aactab.c psymodel.c aacpsy.c iirfilter.c
+        aacenc.c aaccoder.c  aactab.c psymodel.c  iirfilter.c
 	dvbsub_parser.c  dvbsubdec.c  dvbsub.c  xiph.c  sp5xdec.c  
         nellymoserdec.c nellymoser.c
 	ADM_lavcodec.cpp  pthread.c  huffman.c  wmv2dec.c  wmv2.c  h264pred.c  intrax8.c
