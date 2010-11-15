@@ -16,13 +16,19 @@
 #include "ADM_coreJobs.h"
 
 
-static QTableWidgetItem *fromText(const string &t)
+static QTableWidgetItem *fromText(const string &t,int id)
 {
     QString s(QString::fromUtf8(t.c_str()));
-    QTableWidgetItem *w=new QTableWidgetItem(s,0);
+    QTableWidgetItem *w=new QTableWidgetItem(s,id);
+    Qt::ItemFlags flags=w->flags();
+    flags&=~Qt::ItemIsEditable;
+    w->setFlags(flags);
     return w;
 }
-
+string date2String(uint64_t date)
+{
+    return string("12/12/2010 10:20:10");
+}
 /**
     \fn refreshList
 */
@@ -31,6 +37,23 @@ void jobWindow::refreshList(void)
       QTableWidget *list=ui.tableWidget;
       list->clear();
       listOfJob.clear();
+      
+      
+      
+      
+// set titles
+     QTableWidgetItem *jb=fromText("Job",255);
+     QTableWidgetItem *outputFile=fromText("Output",255);
+     QTableWidgetItem *status=fromText("Status",255);
+     QTableWidgetItem *start=fromText("Start Time",255);
+     QTableWidgetItem *end=fromText("End Time",255);
+     ui.tableWidget->setHorizontalHeaderItem(0,jb);
+     ui.tableWidget->setHorizontalHeaderItem(1,outputFile);
+     ui.tableWidget->setHorizontalHeaderItem(2,start);
+     ui.tableWidget->setHorizontalHeaderItem(3,end);
+     ui.tableWidget->setHorizontalHeaderItem(4,status);
+
+
       if(false==ADM_jobGet(listOfJob)) return ;
 
       int n=listOfJob.size();
@@ -39,9 +62,11 @@ void jobWindow::refreshList(void)
       list->setRowCount(n);
       for(int i=0;i<n;i++)
       {
-           QTableWidgetItem *nm=fromText(listOfJob[i].jobName);
-           QTableWidgetItem *out=fromText(listOfJob[i].outputFileName);
+           QTableWidgetItem *nm=fromText(listOfJob[i].jobName,i);
+           QTableWidgetItem *out=fromText(listOfJob[i].outputFileName,i);
            string s;
+           string start="X";
+           string end="X";
             switch(listOfJob[i].status)
             {
                 case ADM_JOB_IDLE:
@@ -52,30 +77,61 @@ void jobWindow::refreshList(void)
                             break;
                 case ADM_JOB_OK:
                             s=string("Success");
+                            start=date2String(listOfJob[i].startTime);
+                            end=date2String(listOfJob[i].endTime);
                             break;
                 case ADM_JOB_KO:
                             s=string("Failed");
+                            start=date2String(listOfJob[i].startTime);
+                            end=date2String(listOfJob[i].endTime);
                             break;
                 default:
                             s=string("???");
                             break;
             }
-        QTableWidgetItem *status=fromText (s);
+        QTableWidgetItem *status=fromText (s,i);
+        QTableWidgetItem *startItem=fromText (start,i);
+        QTableWidgetItem *endItem=fromText (end,i);
         list->setItem(i,0,nm);
         list->setItem(i,1,out);
-        list->setItem(i,2,status);
+        list->setItem(i,2,startItem);
+        list->setItem(i,3,endItem);
+        list->setItem(i,4,status);
       }
+      list->resizeColumnsToContents();
 }
 
 
 /**
     \fn ctor
 */
+#define QT_NOOP(x) x
 jobWindow::jobWindow(void) : QDialog()
 {
     ui.setupUi(this);
-    ui.tableWidget->setColumnCount(3); // Job name, fileName, Status
-    refreshList();
+    ui.tableWidget->setColumnCount(5); // Job name, fileName, Status
+
+    // Add some right click menu...
+    ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+    // Add some right click menu...
+   QAction *del = new  QAction(QString("Delete"),this);
+   QAction *runNow = new  QAction(QString("Run Now"),this);
+   QAction *setOk = new  QAction(QString("Force Status to success"),this);
+   QAction *setReady = new  QAction(QString("Force Status to ready"),this);
+   ui.tableWidget->addAction(del);
+   ui.tableWidget->addAction(runNow);
+   ui.tableWidget->addAction(setOk);
+   ui.tableWidget->addAction(setReady);
+   connect(del,SIGNAL(activated()),this,    SLOT(del()));
+   connect(runNow,SIGNAL(activated()),this, SLOT(runNow()));
+   connect(setOk,SIGNAL(activated()),this,  SLOT(setOk()));
+   connect(setReady,SIGNAL(activated()),this,SLOT(setReady()));
+
+   connect(ui.pushButtonQuit,SIGNAL(pressed()),this,SLOT(quit()));
+   connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
+
+   refreshList();
+
 }
 /**
     \fn dtor
@@ -97,8 +153,116 @@ bool jobRun(int ac,char **av)
     delete app;
     return true;
 }
+/**
+    \fn del
+    \brief delete the currently selected jobs
+*/
+int jobWindow::getActiveIndex(void)
+{
+        QTableWidgetItem *item=ui.tableWidget->currentItem();
+        if(!item) return -1;
+        int index=item->type(); 
+        return index;
+}
+/**
+    \fn runAction
+*/
+void jobWindow::runAction(JobAction action)
+{
+        int index=getActiveIndex();
+        ADM_info("%d command for index %d\n",action,index);
+        if(index==-1) return;
+        // get the job
+        if(index>listOfJob.size())
+        {
+            ADM_error("index out of bound : %d/%d\n",index,listOfJob.size());
+            return ;
+        }
+        ADMJob *j=&(listOfJob[index]);
+        switch(action)
+        {
+            case   JobAction_setReady:          
+                        j->status=ADM_JOB_IDLE;
+                        ADM_jobUpdate(*j);
+                        refreshList();
+                        break;
+            case   JobAction_setOk:
+                        j->status=ADM_JOB_OK;
+                        ADM_jobUpdate(*j);
+                        refreshList();
+                        break;
+            case   JobAction_runNow:
+                        {
+                            runOneJob(*j);
+                        }
+                        break;
+                        
+            default:
+                        ADM_warning("Command %d no handled\n",action);
+                        break;
+        }
+}
 
+void jobWindow::del(void)
+{
+    runAction(JobAction_delete);
+}
+void jobWindow::setOk(void)
+{
+    runAction(JobAction_setOk);
+}
+void jobWindow::setReady(void)
+{
+    runAction(JobAction_setReady);
+}
+void jobWindow::runNow(void)
+{
+    runAction(JobAction_runNow);
+}
+ 
+/**
+    \fn runOneJob
+*/
+bool jobWindow::runOneJob( ADMJob &job)   
+{
+    bool r=false;
+    job.startTime=getTimeOfTheDay();
+    job.status=ADM_JOB_RUNNING;
+    ADM_jobUpdate(job);
+    
+    r=true; // << exec
 
+    if(r) job.status=ADM_JOB_OK;
+        else job.status=ADM_JOB_KO;
+    job.endTime=getTimeOfTheDay();
+    ADM_jobUpdate(job);
+    refreshList();
+    ADM_info("Running job id = %d\n",job.id);
+    return r;
+}
+/**
+    \fn quit
+    \brief run selected jobs whatever its status
+*/
+
+void jobWindow::quit(void)
+{
+    done(1);
+}
+/**
+    \fn runAllJob
+*/
+void jobWindow::runAllJob(void)
+{
+    int n=listOfJob.size();
+    for(int i=0;i<n;i++)
+    {
+            ADMJob *j=&(listOfJob[i]);
+            if(j->status==ADM_JOB_IDLE)
+                runOneJob(*j);
+    }
+    return ;
+}
 #if 0
 bool jobRun(void)
 {
