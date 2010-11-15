@@ -267,11 +267,10 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
                 else deltaDts=pic->dts-data.beginDts;            
 
 
-            qfprintf(index," %c%c:%06"LX":%"LLD":%"LLD,
-                                    Type[picUnit->imageType],
-                                    Structure[pictStruct&3],
-                                    nextConsumed-beginConsuming,
-                                    deltaPts,deltaDts);
+        qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct&3]);
+        qfprintf(index,":%06"LX,nextConsumed-beginConsuming);
+        qfprintf(index,":%"LLD":%"LLD,deltaPts,deltaDts);
+    
         beginConsuming=nextConsumed;
         listOfUnits.clear();
         return true;
