@@ -14,7 +14,7 @@
 #include "T_jobs.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
-
+#include "pthread.h"
 
 /**
     \fn spawnerBoomerang
