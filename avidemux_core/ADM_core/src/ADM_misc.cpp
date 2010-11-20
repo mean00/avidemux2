@@ -85,8 +85,8 @@ uint64_t ADM_getSecondsSinceEpoch(void)
 
     uint64_t tt;
 
-   
-    tt =  (timev.tv_sec);
+    gettimeofday(&timev, &timez);
+    tt =  (uint64_t)(timev.tv_sec);
     return tt;
 }
 /**
