@@ -95,7 +95,7 @@ uint64_t ADM_getSecondsSinceEpoch(void)
 */
 const char *ADM_epochToString(uint64_t epoch)
 {
-    time_t clock=(__TIME_T_TYPE)epoch;
+    time_t clock=(time_t)epoch;
     return ctime(&clock);
 }
 
