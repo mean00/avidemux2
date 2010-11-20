@@ -1,7 +1,7 @@
 SET(ADM_coreJobs_SRCS 
         ADM_coreJobs.cpp
         sqlite3.c
-        libjobdb.cpp
+        sqlJobs.cpp
         Database.cpp
         Query.cpp
         StderrLog.cpp
