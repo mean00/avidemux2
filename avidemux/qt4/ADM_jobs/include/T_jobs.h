@@ -4,8 +4,10 @@
 #include <QtGui/QWidget>
 #include "ui_uiJobs.h"
 #include <vector>
+#include <string>
+using std::string;
 using std::vector;
-
+class jobWindow;
 typedef enum
 {
     JobAction_setReady,
@@ -14,6 +16,13 @@ typedef enum
     JobAction_delete
 }JobAction;
 
+typedef struct
+{
+    jobWindow *me;
+    const char *exeName;
+    string script;
+    string outputFile;
+}spawnData;
 
 class ADMJob;
 /**
@@ -25,11 +34,12 @@ class jobWindow   : public QDialog
 
 public:
                 jobWindow(void);
-	virtual     ~jobWindow();	    
+	virtual     ~jobWindow();
+    bool        runProcess(spawnData *data);
 protected:
     int         getActiveIndex(void)	;
     bool        runOneJob(ADMJob &job)   ;
-
+    bool        spawnChild(const char *exeName, const string &script, const string &outputFile);
 protected:
     Ui_jobs     ui;
     void        refreshList(void);

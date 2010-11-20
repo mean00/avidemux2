@@ -16,7 +16,8 @@ QT4_WRAP_CPP(ADM_JOBS_source ${headers}
                 ADM_jobControl.cpp)
 SET(ADM_JOB_SRCS 
                 ADM_jobs.cpp
-                 ADM_jobControl.cpp
+                ADM_jobControl.cpp
+                ADM_runOneJob.cpp
                 ${ADM_JOBS_headers}
                 ${ADM_JOBS_source}
                 

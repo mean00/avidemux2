@@ -221,26 +221,6 @@ void jobWindow::runNow(void)
 }
  
 /**
-    \fn runOneJob
-*/
-bool jobWindow::runOneJob( ADMJob &job)   
-{
-    bool r=false;
-    job.startTime=getTimeOfTheDay();
-    job.status=ADM_JOB_RUNNING;
-    ADM_jobUpdate(job);
-    
-    r=true; // << exec
-
-    if(r) job.status=ADM_JOB_OK;
-        else job.status=ADM_JOB_KO;
-    job.endTime=getTimeOfTheDay();
-    ADM_jobUpdate(job);
-    refreshList();
-    ADM_info("Running job id = %d\n",job.id);
-    return r;
-}
-/**
     \fn quit
     \brief run selected jobs whatever its status
 */
