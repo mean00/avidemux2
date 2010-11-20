@@ -184,10 +184,11 @@ int main(int argc, char *argv[])
 #if defined(__USE_LARGEFILE) && defined(__USE_LARGEFILE64)
 	printf("\nLarge file available: %d offset\n", __USE_FILE_OFFSET64);
 #endif
-
+        // getTime
+        printf("Current time :%s\n",ADM_epochToString(ADM_getSecondsSinceEpoch()));
 	// Start counting memory
 	ADM_memStatInit();
-    ADM_InitMemcpy();
+        ADM_InitMemcpy();
 	printf("\nInitialising prefs\n");
 	initPrefs();
 	prefs->load();

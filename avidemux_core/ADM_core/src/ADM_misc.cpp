@@ -73,6 +73,32 @@ uint32_t getTime(int called)
     tt += 1000 * (timev.tv_sec - timev_s.tv_sec);
     return (tt);
 }
+
+/**
+    \fn    ADM_getSecondsSinceEpoch
+    \brief returns the number of seconds since epoch
+*/
+uint64_t ADM_getSecondsSinceEpoch(void)
+{
+    struct timeval timev;
+    TIMZ timez;
+
+    uint64_t tt;
+
+   
+    tt =  (timev.tv_sec);
+    return tt;
+}
+/**
+    \fn ADM_epochToString
+    \brief convert number of second to string
+*/
+const char *ADM_epochToString(uint64_t epoch)
+{
+    time_t clock=(__TIME_T_TYPE)epoch;
+    return ctime(&clock);
+}
+
 uint32_t getTimeOfTheDay(void)
 {
   
