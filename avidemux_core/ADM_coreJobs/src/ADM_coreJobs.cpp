@@ -17,7 +17,7 @@
 #include "ADM_default.h"
 #include "ADM_sqlite3.h"
 #include "libsqlitewrapped.h"
-#include "libjobdb.h"
+#include "sqlJobs.h"
 static char *dbFile=NULL;
 Database    *mydb=NULL;
 
@@ -211,8 +211,8 @@ bool    ADM_jobAdd(const ADMJob& job)
 #define OP(x,y) myJob.Set##x(y);
 
         OP(Status,ADM_JOB_IDLE)
-        OP(Starttime,"")
-        OP(Endtime,"")
+        OP(Starttime,0)
+        OP(Endtime,0)
         myJob.save();
         return true;
 }
@@ -235,8 +235,8 @@ bool    ADM_jobGet(vector <ADMJob> &jobs)
         newJob.jobName=oneJob.GetJobname();
         newJob.scriptName=oneJob.GetJscript();
         newJob.outputFileName=oneJob.GetOutputfile();
-        newJob.startTime=0;
-        newJob.endTime=0;
+        newJob.startTime=oneJob.GetStarttime();
+        newJob.endTime=oneJob.GetEndtime();
         newJob.status=(ADM_JOB_STATUS)oneJob.GetStatus();
         jobs.push_back(newJob);
 	}
@@ -254,8 +254,8 @@ bool    ADM_jobUpdate(const ADMJob & job)
     int id=job.id;
     db::Jobs myJob(*mydb,id);
 #warning detect invalid one ?
-//    myJob.SetStarttime(job.startTime);
-//    myJob.SetEndtime(job.endTime);
+    myJob.SetStarttime(job.startTime);
+    myJob.SetEndtime(job.endTime);
     myJob.SetStatus(job.status);
     myJob.save();
     return true;

@@ -27,7 +27,8 @@ static QTableWidgetItem *fromText(const string &t,int id)
 }
 string date2String(uint64_t date)
 {
-    return string("12/12/2010 10:20:10");
+    if(!date) return string("N/A");
+    return string(ADM_epochToString(date));
 }
 /**
     \fn refreshList
