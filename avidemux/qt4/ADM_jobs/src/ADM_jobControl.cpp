@@ -14,7 +14,7 @@
 #include "T_jobs.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
-
+#include "DIA_coreToolkit.h"
 
 static QTableWidgetItem *fromText(const string &t,int id)
 {
@@ -131,7 +131,14 @@ jobWindow::jobWindow(void) : QDialog()
    connect(ui.pushButtonQuit,SIGNAL(pressed()),this,SLOT(quit()));
    connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
 
-   refreshList();
+    // Start our socket
+   if(false==mySocket.createBindAndAccept(&localPort))
+    {
+        popup("Cannot bind socket");
+        exit(-1);
+    }
+    ADM_info("Socket bound to %d\n",(int)localPort);
+    refreshList();
 
 }
 /**
@@ -141,7 +148,13 @@ jobWindow::~jobWindow()
 {
 
 }
-
+/**
+*/
+bool        jobWindow::popup(const char *errorMessage)
+{
+    ADM_error("%s\n",errorMessage);
+    return true;
+}
 /**
     \fn jobRun
 */

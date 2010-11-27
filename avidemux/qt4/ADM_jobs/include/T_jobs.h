@@ -8,6 +8,9 @@
 using std::string;
 using std::vector;
 class jobWindow;
+#include "ADM_default.h"
+#include "ADM_coreSocket/include/ADM_coreSocket.h"
+
 typedef enum
 {
     JobAction_setReady,
@@ -37,9 +40,13 @@ public:
 	virtual     ~jobWindow();
     bool        runProcess(spawnData *data);
 protected:
+    ADM_Socket  mySocket;
+    uint32_t    localPort;
+protected:
     int         getActiveIndex(void)	;
     bool        runOneJob(ADMJob &job)   ;
     bool        spawnChild(const char *exeName, const string &script, const string &outputFile);
+    bool        popup(const char *errorMessage);
 protected:
     Ui_jobs     ui;
     void        refreshList(void);

@@ -31,6 +31,7 @@ ADD_EXECUTABLE(avidemux3_jobs ${ADM_JOB_SRCS})
 ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
 
 ###########################################
+TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreSocket6)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 
 ###########################################

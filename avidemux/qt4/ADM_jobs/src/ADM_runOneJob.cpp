@@ -50,11 +50,12 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
 bool jobWindow::runProcess(spawnData *data)
 {
     // 3 args in our case...
-    string argv[3];
-    argv[0]=string("--runpy \"")+data->script+string("\" ");
-    argv[1]=string("--save \"")+data->outputFile+string("\" ");
-    argv[2]=string("--quit");
-    return spawnProcess(data->exeName,3,argv);
+    string argv[4];
+    argv[0]=string("--nogui ");
+    argv[1]=string("--runpy \"")+data->script+string("\" ");
+    argv[2]=string("--save \"")+data->outputFile+string("\" ");
+    argv[3]=string("--quit");
+    return spawnProcess(data->exeName,4,argv);
 }
 /**
     \fn spawnChild
