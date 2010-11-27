@@ -12,8 +12,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef AVS_CORE_SOCKET_H
-#define AVS_CORE_SOCKET_H
+#ifndef ADM_CORE_SOCKET_H
+#define ADM_CORE_SOCKET_H
 #include "ADM_threads.h"
 
 /**
@@ -23,9 +23,10 @@ class ADM_Socket
 {
     protected:
         int         mySocket;
-        admMutex    lock;
+        admMutex    lock;       
+        bool        create(void);
     public:
-        bool     bindAndAccept(uint32_t *port);
+        bool     createBindAndAccept(uint32_t *port);
         bool     connectTo(uint32_t port);
         bool     rxData(uint32_t howmuch, uint8_t *where);
         bool     txData(uint32_t howmuch, uint8_t *where);

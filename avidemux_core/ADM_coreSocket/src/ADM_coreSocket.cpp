@@ -135,12 +135,78 @@ uint32_t got=0,tx;
   return 1;
 }
 /**
-    \fn bindAndAccept
+    \fn create
+    \brief create a TCP socket
+*/
+bool ADM_Socket::create(void)
+{
+      mySocket = socket(AF_INET, SOCK_STREAM, 0);
+      if(mySocket<0) return false;
+      return true;
+
+}
+/**
+    \fn createBindAndAccept
     \brief bind to any port and accept incoming packets
 */
-bool     ADM_Socket::bindAndAccept(uint32_t *port)
+bool     ADM_Socket::createBindAndAccept(uint32_t *port)
 {
 
+
+    if(!create())
+    {
+        ADM_error("Cannot create socket\n");
+        return false;
+    }
+
+  sockaddr_in service;
+  service.sin_family = AF_INET;
+#define BIND_ADR "127.0.0.1"
+    service.sin_addr.s_addr = inet_addr(BIND_ADR);
+	printf("Binding on %s\n",BIND_ADR);
+
+  *port=0;
+  service.sin_port = 0; // bind to any port
+
+#ifdef __MINGW32__
+        #define SADDR SOCKADDR
+        #define SADDR_IN SOCKADDR
+#else
+        #define SADDR struct sockaddr
+        #define SADDR_IN struct sockaddr_in    
+#endif
+
+  int one=true;
+  if (bind( mySocket,  (SADDR *)&service, sizeof(service))) 
+  {
+		ADM_error("bind() failed  \n");
+		fflush(stdout);
+		close();
+		return false;
+  }
+   // Get port 
+    socklen_t len=sizeof( service);
+    if ( getsockname ( mySocket, (SADDR *)& service, &len ) < 0 ) 
+    {
+        ADM_error("Getsockname failed\n");
+        fflush(stdout);
+        close();
+        return false;
+    }
+    *port= ntohs ( ((SADDR_IN *)&service)->sin_port ); 
+     
+   // Set high buffer + low delay
+    ADM_info("Socket bound to port %u\n",(unsigned int)*port);
+
+    int er=listen(mySocket,1);
+	if(er)
+	{
+		ADM_error("Error in listen\n");
+		fflush(stdout);
+        return false;
+	}
+
+    return true;
 }
 /**
     \fn ctor
