@@ -110,15 +110,16 @@ int rx;
     while(got<howmuch)
     {
         rx=recv(mySocket,(char *)where,howmuch-got,0);
-        if(rx<0)
+        if(rx<=0)
         {
           perror("RxData");
-          return 0;
+          close();
+          return false;
         }
         where+=rx;
         got+=rx;
     }
-  return 1;
+  return true;
 }
 /**
     \fn txData

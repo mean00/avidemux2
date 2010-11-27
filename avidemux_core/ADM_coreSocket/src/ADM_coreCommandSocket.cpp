@@ -28,7 +28,7 @@ static bool     uint32_to_char(uint32_t v,uint8_t *p)
 }
 static bool     char_to_uint32(uint32_t *v,uint8_t *p)
  {
-    uint32_t a=(p[0])+(p[1]<<8)+(p[2]<<16)+(p[4]<<24);
+    uint32_t a=(p[0])+(p[1]<<8)+(p[2]<<16)+(p[3]<<24);
     *v=a;
     return true;
 }
@@ -107,6 +107,48 @@ bool ADM_commandSocket::getMessage(ADM_socketMessage &msg)
     return true;
 }
 /**
+    \fn pollMessage
+*/
+bool ADM_commandSocket::pollMessage(ADM_socketMessage &msg)
+{
+//
+        if(!mySocket)
+        {
+            ADM_error("Wait for connect called with no socket opened\n");
+            return NULL;        
+        }
+    // Wait for connect...
+        fd_set set,er;
+        FD_ZERO(&set);
+        FD_ZERO(&er);
+        FD_SET(mySocket,&set);
+        FD_SET(mySocket,&er);
+        struct timeval timeout; 
+
+        timeout.tv_sec=0;
+        timeout.tv_usec=10*1000; // us
+        //ADM_info("Selecting\n");
+        int evt=select(1+mySocket,&set,NULL,&er,&timeout);
+        if(evt<0) 
+        {
+            ADM_error("Socket disconnected\n");
+            close();
+            return false;
+        }
+        
+        if(FD_ISSET(mySocket,&er))
+        {
+            ADM_error("OOPs socket is in error\n");
+        }
+        if(!evt)
+        {
+            printf(".");
+            return false;
+        }
+        return getMessage(msg);
+}
+
+/**
     \fn getPayloadAsUint32_t
 */
 bool     ADM_socketMessage::getPayloadAsUint32_t(uint32_t *v)
@@ -139,5 +181,40 @@ ADM_commandSocket *ADM_commandSocket::waitForConnect(uint32_t timeoutMs)
 {
 #warning fixme badly
     return (ADM_commandSocket *)ADM_socket::waitForConnect(timeoutMs);
+}
+/**
+    \fn handshake
+*/
+bool ADM_commandSocket::handshake(void)
+{
+    uint32_t version;
+    ADM_info("Waiting for hello message...\n");
+    ADM_socketMessage msg;
+    msg.setPayloadAsUint32_t(ADM_COMMAND_SOCKET_VERSION);
+    msg.command=ADM_socketCommand_Hello;
+    if(!sendMessage(msg))
+    {
+        ADM_error("Cannot send hello message");
+        goto done;
+    }
+    if(!getMessage(msg))
+    {
+        ADM_error("Cannot get hello message");
+        goto done;
+    }
+    if(msg.command!=ADM_socketCommand_Hello)
+    {
+        ADM_error("Replys is not a hello \n");
+        goto done;
+    }
+    if(!msg.getPayloadAsUint32_t(&version) || version!=ADM_COMMAND_SOCKET_VERSION)
+    {
+        ADM_error("Wrong command version\n");
+        goto done;
+    }
+    ADM_info("Got hello message, continuing...\n");
+    return true;
+done:
+    return false;
 }
 // EOF

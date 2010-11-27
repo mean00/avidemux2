@@ -55,6 +55,13 @@ class ADM_commandSocket : public ADM_socket
         virtual ADM_commandSocket *waitForConnect(uint32_t timeoutMs);
         bool sendMessage(const ADM_socketMessage &msg);
         bool getMessage(ADM_socketMessage &msg);
+        bool pollMessage(ADM_socketMessage &msg);
+        bool handshake(void);
+        bool isAlive(void)
+                {
+                    if(mySocket) return true;
+                    return false;
+                }
     public:
         ADM_commandSocket(int newSocket);
         ADM_commandSocket( void );
