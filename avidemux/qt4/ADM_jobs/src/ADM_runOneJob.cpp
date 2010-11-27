@@ -57,7 +57,7 @@ bool jobWindow::runProcess(spawnData *data)
     argv[1]=string(str);
     argv[2]=string("--runpy \"")+data->script+string("\" ");
     argv[3]=string("--save \"")+data->outputFile+string("\" ");
-    argv[4]=string("--quit");
+    argv[4]=string("--quit > /tmp/prout.log");
     return spawnProcess(data->exeName,5,argv);
 }
 /**
@@ -116,25 +116,9 @@ bool jobWindow::runOneJob( ADMJob &job)
         ADM_error("No connect\n");
         goto done;
     }
-    // 3b- handshake
-    ADM_info("Waiting for hello message...\n");
-    ADM_socketMessage msg;
-    msg.setPayloadAsUint32_t(ADM_COMMAND_SOCKET_VERSION);
-    msg.command=ADM_socketCommand_Hello;
-    if(!runSocket->sendMessage(msg))
+    if(!runSocket->handshake())
     {
-        popup("Cannot send hello message");
-        goto done;
-    }
-    if(!runSocket->getMessage(msg))
-    {
-        popup("Cannot get hello message");
-        goto done;
-    }
-    
-    if(!msg.getPayloadAsUint32_t(&version) || version!=ADM_COMMAND_SOCKET_VERSION)
-    {
-        popup("Wrong command version\n");
+        popup("Cannot handshake");
         goto done;
     }
     // 4- wait for complete and/or success message
