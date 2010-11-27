@@ -67,6 +67,18 @@ bool ADM_slaveReportProgress(uint32_t percent)
     ADM_info("Report : %d %%\n",percent);
     return true;
 }
+/**
+    \fn ADM_slaveReportProgress
+*/
+bool ADM_slaveSendResult(bool result)
+{
+    if(!mySocket)    return true;
+    ADM_socketMessage msg;
+    msg.setPayloadAsUint32_t(result);
+    msg.command=ADM_socketCommand_End;
+    mySocket->sendMessage(msg);
+    return true;
+}
 
 
 

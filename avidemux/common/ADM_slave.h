@@ -18,7 +18,7 @@
 bool ADM_slaveConnect(uint32_t port);
 bool ADM_slaveShutdown(void );
 bool ADM_slaveReportProgress(uint32_t percent);
-
+bool ADM_slaveSendResult(bool result);
 #endif
 
 //EOF

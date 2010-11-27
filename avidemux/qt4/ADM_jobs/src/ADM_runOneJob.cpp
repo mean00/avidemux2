@@ -96,6 +96,8 @@ bool jobWindow::runOneJob( ADMJob &job)
     job.status=ADM_JOB_RUNNING;
     ADM_commandSocket *runSocket=NULL;
     ADM_jobUpdate(job);
+    ADM_socketMessage msg;
+    uint32_t v;
     
     // 1- Start listening to socket
 
@@ -122,7 +124,7 @@ bool jobWindow::runOneJob( ADMJob &job)
         goto done;
     }
     // 4- wait for complete and/or success message
-    ADM_socketMessage msg;
+    
     while(1)
     {
         if(!runSocket->isAlive())
@@ -133,6 +135,31 @@ bool jobWindow::runOneJob( ADMJob &job)
         if(runSocket->pollMessage(msg))
         {
             ADM_info("Got a new message %d\n",msg.command);
+            switch(msg.command)
+            {
+                case ADM_socketCommand_End:
+                            if(msg.getPayloadAsUint32_t(&v))
+                            {
+                                    r=(bool)v;
+                                    ADM_info("Result is %d\n",r);
+                                    goto done;
+                            }else
+                            {
+                                    ADM_error("Can read End payload   \n");
+                            }
+                            break;
+                case ADM_socketCommand_Progress:
+                            if(msg.getPayloadAsUint32_t(&v))
+                            {
+                                    printf("Progress %d %%\n",(int)v);
+                            }else
+                            {
+                                    ADM_error("Can read End payload   \n");
+                            }
+                            break;
+                default:        ADM_error("Unknown command\n");
+                                break;
+            }
         }
         ADM_usleep(1000*1000); // Refresh once per sec
     }

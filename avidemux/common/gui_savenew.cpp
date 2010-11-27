@@ -39,6 +39,7 @@
 #include "ADM_filterChain.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_vidMisc.h"
+#include "ADM_slave.h"
 /*
 
 */
@@ -130,6 +131,7 @@ int A_Save(const char *name)
     admSaver *save=new admSaver(name);
     bool r=save->save();
     delete save;
+    ADM_slaveSendResult(r);
     return (int)r;
 }
 
