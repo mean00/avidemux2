@@ -40,23 +40,37 @@
 
 #define aprintf(...) {}
 //#define DEBUG_NET
+
+#ifdef __MINGW32__
+        #define SADDR    SOCKADDR
+        #define SADDR_IN SOCKADDR
+        #define SERROR   SOCKET_ERROR
+        #define SNET     AF_INET
+        #define SPROTO   IPPROTO_TCP
+        #define SCLOSE   SD_BOTH
+#else
+        #define SADDR struct    sockaddr
+        #define SADDR_IN struct sockaddr_in    
+        #define SERROR          -1
+        #define SNET            PF_INET
+        #define SPROTO          0
+        #define SCLOSE          SHUT_RDWR
+#endif
+
+
 /**
     \fn connectTo
 */
-bool ADM_Socket::connectTo(uint32_t port)
+bool ADM_socket::connectTo(uint32_t port)
 {
- #ifdef __MINGW32__
- mySocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
- #else
- mySocket = socket(PF_INET, SOCK_STREAM, 0);
- #endif
+ mySocket = socket(SNET, SOCK_STREAM, SPROTO);
     if(mySocket==-1)
     {
         ADM_error("Socket creation failed\n");
         return 0;
     }
     struct sockaddr_in  service;
-    service.sin_family = AF_INET;
+    service.sin_family = SNET;
 #ifdef DEBUG_NET
     service.sin_addr.s_addr = inet_addr("192.168.0.21");
 #else
@@ -80,16 +94,12 @@ bool ADM_Socket::connectTo(uint32_t port)
 /**
     \fn close
 */
-bool ADM_Socket::close(void)
+bool ADM_socket::close(void)
 {
     if(mySocket)
     {
         int er;
-#ifdef __MINGW32__
-		er=shutdown(mySocket,SD_BOTH);
-#else
-        er=shutdown(mySocket,SHUT_RDWR);
-#endif
+		er=shutdown(mySocket,SCLOSE);
         if(er) ADM_error("[ADMSocket]Error when socket shutdown  %d (socket %d)\n",er,mySocket);
         mySocket=0;
     }
@@ -98,7 +108,7 @@ bool ADM_Socket::close(void)
 /**
     \fn rxData
 */
-bool ADM_Socket::rxData(uint32_t howmuch, uint8_t *where)
+bool ADM_socket::rxData(uint32_t howmuch, uint8_t *where)
 {
 uint32_t got=0;
 int rx;
@@ -118,7 +128,7 @@ int rx;
 /**
     \fn txData
 */
-bool ADM_Socket::txData(uint32_t howmuch, uint8_t *where)
+bool ADM_socket::txData(uint32_t howmuch, uint8_t *where)
 {
 uint32_t got=0,tx;
     while(got<howmuch)
@@ -138,7 +148,7 @@ uint32_t got=0,tx;
     \fn create
     \brief create a TCP socket
 */
-bool ADM_Socket::create(void)
+bool ADM_socket::create(void)
 {
       mySocket = socket(AF_INET, SOCK_STREAM, 0);
       if(mySocket<0) return false;
@@ -149,7 +159,7 @@ bool ADM_Socket::create(void)
     \fn createBindAndAccept
     \brief bind to any port and accept incoming packets
 */
-bool     ADM_Socket::createBindAndAccept(uint32_t *port)
+bool     ADM_socket::createBindAndAccept(uint32_t *port)
 {
 
 
@@ -168,13 +178,6 @@ bool     ADM_Socket::createBindAndAccept(uint32_t *port)
   *port=0;
   service.sin_port = 0; // bind to any port
 
-#ifdef __MINGW32__
-        #define SADDR SOCKADDR
-        #define SADDR_IN SOCKADDR
-#else
-        #define SADDR struct sockaddr
-        #define SADDR_IN struct sockaddr_in    
-#endif
 
   int one=true;
   if (bind( mySocket,  (SADDR *)&service, sizeof(service))) 
@@ -209,16 +212,62 @@ bool     ADM_Socket::createBindAndAccept(uint32_t *port)
     return true;
 }
 /**
+    \fn waitForConnect
+    \brief wait for incoming TCP connection...
+    \return null if no connection
+*/
+ADM_socket *ADM_socket::waitForConnect(uint32_t timeoutMs)
+{
+    //
+        if(!mySocket)
+        {
+            ADM_error("Wait for connect called with no socket opened\n");
+            return NULL;        
+        }
+    // Wait for connect...
+        fd_set set;
+        FD_ZERO(&set);
+        FD_SET(mySocket,&set);
+        struct timeval timeout; 
+
+        timeout.tv_sec=timeoutMs/1000;
+        timeout.tv_usec=((timeoutMs)-(timeout.tv_sec*1000))*1000;
+        
+        int evt=select(1+mySocket,&set,NULL,NULL,&timeout);
+        if(evt<0) 
+        {
+            ADM_error("Select failed\n");
+            return NULL;
+        }
+
+        int workSocket = SERROR;
+        workSocket = accept( mySocket, NULL, NULL);
+        if(SERROR==workSocket) 
+        {
+            ADM_error("Accept failed\n");
+            return NULL;
+        }
+        return new ADM_socket(workSocket);
+}
+/**
     \fn ctor
 */
-ADM_Socket::ADM_Socket()
+ADM_socket::ADM_socket()
 {
     mySocket=0;
 }
 /**
+    \fn ctor
+*/
+ADM_socket::ADM_socket(int newSocket)
+{
+    mySocket=newSocket;
+}
+
+/**
     \fn dtor
 */
-ADM_Socket::~ADM_Socket()
+ADM_socket::~ADM_socket()
 {
     close();
 }

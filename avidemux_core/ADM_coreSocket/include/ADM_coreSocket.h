@@ -17,24 +17,26 @@
 #include "ADM_threads.h"
 
 /**
-    \class ADM_Socket
+    \class ADM_socket
+    \brief Wrapper around socket/tcp
 */
-class ADM_Socket       
+class ADM_socket       
 {
     protected:
         int         mySocket;
         admMutex    lock;       
         bool        create(void);
     public:
-        bool     createBindAndAccept(uint32_t *port);
-        bool     connectTo(uint32_t port);
-        bool     rxData(uint32_t howmuch, uint8_t *where);
-        bool     txData(uint32_t howmuch, uint8_t *where);
-        bool     close(void);
+        ADM_socket *waitForConnect(uint32_t timeoutMs);
+        bool        createBindAndAccept(uint32_t *port);
+        bool        connectTo(uint32_t port);
+        bool        rxData(uint32_t howmuch, uint8_t *where);
+        bool        txData(uint32_t howmuch, uint8_t *where);
+        bool        close(void);
     public:
-
-        ADM_Socket( void );
-        ~ADM_Socket(  );
+        ADM_socket(int newSocket);
+        ADM_socket( void );
+        ~ADM_socket(  );
 };
 #endif
 //EOF
