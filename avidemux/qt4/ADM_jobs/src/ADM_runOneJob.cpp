@@ -122,10 +122,19 @@ bool jobWindow::runOneJob( ADMJob &job)
         goto done;
     }
     // 4- wait for complete and/or success message
-    while(runSocket->isAlive()) 
+    ADM_socketMessage msg;
+    while(1)
     {
-        ADM_usleep(1000*1000*1000);
-        printf(".\n");
+        if(!runSocket->isAlive())
+        {
+            ADM_info("Exiting loop\n");
+            break;
+        }
+        if(runSocket->pollMessage(msg))
+        {
+            ADM_info("Got a new message %d\n",msg.command);
+        }
+        ADM_usleep(1000*1000); // Refresh once per sec
     }
     ADM_info("** End of slave process **\n");
     ADM_info("** End of slave process **\n");
