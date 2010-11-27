@@ -44,6 +44,8 @@
 #include "ADM_videoEncoderApi.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
+extern bool ADM_slaveConnect(uint32_t port);
+
 extern int A_loadNone( void );
 extern void GUI_Quiet( void);
 extern void GUI_Verbose( void);
@@ -82,6 +84,7 @@ static void call_videocodec(char *p) ;
 static void call_videoconf(char *p) ;
 static int searchReactionTable(char *string);
 static void call_setPP(char *v,char *s);
+static void call_slave(char *p);
 //static void call_v2v(char *a,char *b,char *c);
 static void call_probePat(char *p);
 static void save(char*name);
@@ -128,6 +131,7 @@ AUTOMATON reaction_table[]=
 {
         //{"js",                  0,"Dump the javascript functions",(one_arg_type)ADM_dumpJSHooks},
         {"nogui",               0,"Run in silent mode",		(one_arg_type)GUI_Quiet}   ,
+        {"slave",			1,"run as slave, master is on port arg",		(one_arg_type)call_slave},
         {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},
         {"runpy",			1,"load and run a pyScript",		(one_arg_type)A_parseTinyPyScript},
         {"audio-normalize",	1,"activate normalization",		call_normalize},
@@ -400,6 +404,17 @@ void call_audiobitrate(char *p)
 		sscanf(p,"%"LD,&i);
 		printf("\n Audio bitrate %"LD"\n",i);
 		audioFilter_SetBitrate(i);
+}
+void call_slave(char *p)
+{
+		uint32_t i;
+		sscanf(p,"%"LU,&i);
+		printf("Slace on port  %"LU"\n",i);
+		if(!ADM_slaveConnect(i))
+        {
+                ADM_error("Cannot connect to master\n");
+                exit(-1);
+        }
 }
 void call_fps(char *p)
 {
