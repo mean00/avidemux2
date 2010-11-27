@@ -16,6 +16,8 @@
 #define ADM_CORE_COMMAND_SOCKET_H
 #include "ADM_coreSocket.h"
 
+#define ADM_COMMAND_SOCKET_VERSION 2
+
 #define ADM_COMMAND_SOCKET_MAX_PAYLOAD 16
 
 /**
@@ -31,7 +33,7 @@ typedef enum
 /**
         \struct ADM_socketMessage
 */
-typedef struct
+class ADM_socketMessage
 {
 public:
     ADM_socketCommand command;
@@ -39,7 +41,7 @@ public:
     uint8_t  payload[ADM_COMMAND_SOCKET_MAX_PAYLOAD];
     bool     getPayloadAsUint32_t(uint32_t *v);
     bool     setPayloadAsUint32_t(uint32_t v);
-}ADM_socketMessage;
+};
 
 
 /**
@@ -50,6 +52,7 @@ class ADM_commandSocket : public ADM_socket
 {
     protected:
     public:
+        virtual ADM_commandSocket *waitForConnect(uint32_t timeoutMs);
         bool sendMessage(const ADM_socketMessage &msg);
         bool getMessage(ADM_socketMessage &msg);
     public:

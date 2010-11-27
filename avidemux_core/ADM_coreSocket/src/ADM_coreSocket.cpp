@@ -123,7 +123,7 @@ int rx;
 /**
     \fn txData
 */
-bool ADM_socket::txData(uint32_t howmuch, uint8_t *where)
+bool ADM_socket::txData(uint32_t howmuch, const uint8_t *where)
 {
 uint32_t got=0,tx;
     while(got<howmuch)

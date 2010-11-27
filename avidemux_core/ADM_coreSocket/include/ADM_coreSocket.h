@@ -27,11 +27,11 @@ class ADM_socket
         admMutex    lock;       
         bool        create(void);
     public:
-        ADM_socket *waitForConnect(uint32_t timeoutMs);
+virtual ADM_socket *waitForConnect(uint32_t timeoutMs);
         bool        createBindAndAccept(uint32_t *port);
         bool        connectTo(uint32_t port);
         bool        rxData(uint32_t howmuch, uint8_t *where);
-        bool        txData(uint32_t howmuch, uint8_t *where);
+        bool        txData(uint32_t howmuch, const uint8_t *where);
         bool        close(void);
         bool        isAlive(void);
     public:

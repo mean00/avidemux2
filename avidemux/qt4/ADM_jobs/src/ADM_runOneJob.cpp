@@ -91,9 +91,10 @@ bool jobWindow::spawnChild(const char *exeName, const string &script, const stri
 bool jobWindow::runOneJob( ADMJob &job)   
 {
     bool r=false;
+    uint32_t version;
     job.startTime=ADM_getSecondsSinceEpoch();
     job.status=ADM_JOB_RUNNING;
-    ADM_socket *runSocket=NULL;
+    ADM_commandSocket *runSocket=NULL;
     ADM_jobUpdate(job);
     
     // 1- Start listening to socket
@@ -113,6 +114,27 @@ bool jobWindow::runOneJob( ADMJob &job)
     if(!runSocket)
     {
         ADM_error("No connect\n");
+        goto done;
+    }
+    // 3b- handshake
+    ADM_info("Waiting for hello message...\n");
+    ADM_socketMessage msg;
+    msg.setPayloadAsUint32_t(ADM_COMMAND_SOCKET_VERSION);
+    msg.command=ADM_socketCommand_Hello;
+    if(!runSocket->sendMessage(msg))
+    {
+        popup("Cannot send hello message");
+        goto done;
+    }
+    if(!runSocket->getMessage(msg))
+    {
+        popup("Cannot get hello message");
+        goto done;
+    }
+    
+    if(!msg.getPayloadAsUint32_t(&version) || version!=ADM_COMMAND_SOCKET_VERSION)
+    {
+        popup("Wrong command version\n");
         goto done;
     }
     // 4- wait for complete and/or success message

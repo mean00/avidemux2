@@ -17,6 +17,22 @@
 #include "ADM_default.h"
 #include "ADM_coreCommandSocket.h"
 
+
+static bool     uint32_to_char(uint32_t v,uint8_t *p)
+ {
+    *p++=(v&0xff);v>>=8;
+    *p++=(v&0xff);v>>=8;
+    *p++=(v&0xff);v>>=8;
+    *p++=(v&0xff);v>>=8;
+    return true;
+}
+static bool     char_to_uint32(uint32_t *v,uint8_t *p)
+ {
+    uint32_t a=(p[0])+(p[1]<<8)+(p[2]<<16)+(p[4]<<24);
+    *v=a;
+    return true;
+}
+
 /**
     \fn ctor
 */
@@ -39,18 +55,56 @@ ADM_commandSocket::~ADM_commandSocket()
 {
 }
 /**
-    
+        \fn sendMessage
 */
 bool ADM_commandSocket::sendMessage(const ADM_socketMessage &msg)
 {
-    return false;
+
+#define TXX(u,v) if(!txData(u,tmp)) {ADM_error(v" error sending data\n");return false;}
+
+    uint8_t tmp[4];
+    if(!mySocket) return false;
+    // 1- Send command as uint8_t
+    tmp[0]=(uint8_t)msg.command;
+    TXX(1,"command");
+    
+    // 2- Send size as uint32_t
+    uint32_to_char(msg.payloadLength,tmp);
+    TXX(4,"payloadLength");
+    if(msg.payloadLength)
+    {
+        if(!txData(msg.payloadLength,msg.payload))
+        {
+            ADM_error("Cannot send payload for command %d\n",msg.command);
+            return false;
+        }
+    }
+    return true;
 }
 /**
-    \fn 
+    \fn getMessage
 */
 bool ADM_commandSocket::getMessage(ADM_socketMessage &msg)
 {
-    return false;
+#define RXX(u,v) if(!rxData(u,tmp)) {ADM_error(v" error rxing data\n");return false;}
+    uint8_t tmp[4];
+    if(!mySocket) return false;
+    // 1- Send command as uint8_t
+    RXX(1,"command");
+    msg.command=(ADM_socketCommand)tmp[0];
+    RXX(4,"payloadLength");
+    char_to_uint32(&(msg.payloadLength),tmp);
+    if(msg.payloadLength)
+    {
+        ADM_assert(msg.payloadLength<ADM_COMMAND_SOCKET_MAX_PAYLOAD);
+        if(!rxData(msg.payloadLength,msg.payload)) 
+        {
+                ADM_error(" error rxing payload\n");
+                return false;
+        }
+
+    }
+    return true;
 }
 /**
     \fn getPayloadAsUint32_t
@@ -62,8 +116,8 @@ bool     ADM_socketMessage::getPayloadAsUint32_t(uint32_t *v)
         ADM_error("payload is not uint32\n");
         return false;
     }
-    uint32_t a=(payload[0])+(payload[1]<<8)+(payload[2]<<16)+(payload[4]<<24);
-    *v=a;
+
+    char_to_uint32(v,payload);
     return true;
 }
 /**
@@ -71,12 +125,19 @@ bool     ADM_socketMessage::getPayloadAsUint32_t(uint32_t *v)
 */
 bool     ADM_socketMessage::setPayloadAsUint32_t(uint32_t v)
 {
-    uint8_t *p=payload;
-    *p++=(v&0xff);v>>=8;
-    *p++=(v&0xff);v>>=8;
-    *p++=(v&0xff);v>>=8;
-    *p++=(v&0xff);v>>=8;
+    uint32_to_char(v,payload);
     payloadLength=4;    
     return true;
+}
+
+/**
+    \fn waitForConnect
+    \brief wait for incoming TCP connection...
+    \return null if no connection
+*/
+ADM_commandSocket *ADM_commandSocket::waitForConnect(uint32_t timeoutMs)
+{
+#warning fixme badly
+    return (ADM_commandSocket *)ADM_socket::waitForConnect(timeoutMs);
 }
 // EOF

@@ -15,6 +15,7 @@
 #include "ADM_default.h"
 #include "ADM_coreSocket/include/ADM_coreCommandSocket.h"
 #include "ADM_slave.h"
+#include "DIA_coreToolkit.h"
 static ADM_commandSocket *mySocket=NULL;
 /**
     \fn ADM_slaveConnect
@@ -22,6 +23,7 @@ static ADM_commandSocket *mySocket=NULL;
 */
 bool ADM_slaveConnect(uint32_t port)
 {
+    uint32_t version;
     mySocket=new ADM_commandSocket();
     if(!mySocket->connectTo(port))
     {
@@ -30,7 +32,31 @@ bool ADM_slaveConnect(uint32_t port)
         mySocket=NULL;
     }
     ADM_info("Connected to port %d\n",(int)port);
+ // 3b- handshake
+    ADM_info("Waiting for hello message...\n");
+    ADM_socketMessage msg;
+    msg.setPayloadAsUint32_t(ADM_COMMAND_SOCKET_VERSION);
+    msg.command=ADM_socketCommand_Hello;
+    if(!mySocket->sendMessage(msg))
+    {
+        GUI_Error_HIG("","Cannot send hello message");
+        goto done;
+    }
+    if(!mySocket->getMessage(msg))
+    {
+        GUI_Error_HIG("","Cannot get hello message");
+        goto done;
+    }
+    
+    if(!msg.getPayloadAsUint32_t(&version) || version!=ADM_COMMAND_SOCKET_VERSION)
+    {
+        GUI_Error_HIG("","Wrong command version\n");
+        goto done;
+    }
     return true;
+done:
+    ADM_assert(0);
+    return false;
 }
 /**
     \fn ADM_slaveShutdown
