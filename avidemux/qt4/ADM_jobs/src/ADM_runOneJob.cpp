@@ -90,6 +90,7 @@ bool jobWindow::runOneJob( ADMJob &job)
     bool r=false;
     job.startTime=ADM_getSecondsSinceEpoch();
     job.status=ADM_JOB_RUNNING;
+    ADM_socket *runSocket=NULL;
     ADM_jobUpdate(job);
     
     // 1- Start listening to socket
@@ -105,7 +106,12 @@ bool jobWindow::runOneJob( ADMJob &job)
     }
 
     // 3- Wait for connect...
-
+    runSocket=mySocket.waitForConnect(6*1000);
+    if(!runSocket)
+    {
+        ADM_error("No connect\n");
+        goto done;
+    }
     // 4- wait for complete and/or success message
     
 

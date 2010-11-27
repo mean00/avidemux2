@@ -138,6 +138,7 @@ jobWindow::jobWindow(void) : QDialog()
         exit(-1);
     }
     ADM_info("Socket bound to %d\n",(int)localPort);
+    //ADM_socket *n=mySocket.waitForConnect(5000);
     refreshList();
 
 }

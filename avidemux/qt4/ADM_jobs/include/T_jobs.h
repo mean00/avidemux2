@@ -40,7 +40,7 @@ public:
 	virtual     ~jobWindow();
     bool        runProcess(spawnData *data);
 protected:
-    ADM_Socket  mySocket;
+    ADM_socket  mySocket;
     uint32_t    localPort;
 protected:
     int         getActiveIndex(void)	;

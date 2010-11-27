@@ -37,7 +37,7 @@
 #include "ADM_coreSocket.h"
 
 #define MAGGIC 0xDEADBEEF
-
+#define BIND_ADR "127.0.0.1"
 #define aprintf(...) {}
 //#define DEBUG_NET
 
@@ -63,19 +63,14 @@
 */
 bool ADM_socket::connectTo(uint32_t port)
 {
- mySocket = socket(SNET, SOCK_STREAM, SPROTO);
-    if(mySocket==-1)
+    if(false==create())
     {
-        ADM_error("Socket creation failed\n");
-        return 0;
+        ADM_error("Canno create socket\n");
+        return false;
     }
     struct sockaddr_in  service;
     service.sin_family = SNET;
-#ifdef DEBUG_NET
-    service.sin_addr.s_addr = inet_addr("192.168.0.21");
-#else
-    service.sin_addr.s_addr = inet_addr("127.0.0.1");
-#endif    
+    service.sin_addr.s_addr = inet_addr(BIND_ADR);
     service.sin_port = htons(port);
     
 // Set socket to lowdelay, else it will be choppy
@@ -161,8 +156,6 @@ bool ADM_socket::create(void)
 */
 bool     ADM_socket::createBindAndAccept(uint32_t *port)
 {
-
-
     if(!create())
     {
         ADM_error("Cannot create socket\n");
@@ -171,9 +164,9 @@ bool     ADM_socket::createBindAndAccept(uint32_t *port)
 
   sockaddr_in service;
   service.sin_family = AF_INET;
-#define BIND_ADR "127.0.0.1"
+
     service.sin_addr.s_addr = inet_addr(BIND_ADR);
-	printf("Binding on %s\n",BIND_ADR);
+	ADM_info("Binding on %s\n",BIND_ADR);
 
   *port=0;
   service.sin_port = 0; // bind to any port
@@ -230,17 +223,20 @@ ADM_socket *ADM_socket::waitForConnect(uint32_t timeoutMs)
         FD_SET(mySocket,&set);
         struct timeval timeout; 
 
-        timeout.tv_sec=timeoutMs/1000;
-        timeout.tv_usec=((timeoutMs)-(timeout.tv_sec*1000))*1000;
-        
+        uint32_t sec=timeoutMs/1000;
+
+        timeout.tv_sec=sec;
+        timeout.tv_usec=((timeoutMs-sec*1000))*1000; // us
+        //ADM_info("Selecting\n");
         int evt=select(1+mySocket,&set,NULL,NULL,&timeout);
-        if(evt<0) 
+        if(evt<=0) 
         {
             ADM_error("Select failed\n");
             return NULL;
         }
 
         int workSocket = SERROR;
+        ADM_info("Accepting...\n");
         workSocket = accept( mySocket, NULL, NULL);
         if(SERROR==workSocket) 
         {
