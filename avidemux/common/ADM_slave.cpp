@@ -13,16 +13,16 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_coreSocket/include/ADM_coreSocket.h"
+#include "ADM_coreSocket/include/ADM_coreCommandSocket.h"
 #include "ADM_slave.h"
-static ADM_socket *mySocket=NULL;
+static ADM_commandSocket *mySocket=NULL;
 /**
     \fn ADM_slaveConnect
     \brief connect to port given as arg
 */
 bool ADM_slaveConnect(uint32_t port)
 {
-    mySocket=new ADM_socket();
+    mySocket=new ADM_commandSocket();
     if(!mySocket->connectTo(port))
     {
         ADM_error("Failed to connect to port %d\n",(int)port);

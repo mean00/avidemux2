@@ -116,7 +116,14 @@ bool jobWindow::runOneJob( ADMJob &job)
         goto done;
     }
     // 4- wait for complete and/or success message
-    
+    while(runSocket->isAlive()) 
+    {
+        ADM_usleep(1000*1000*1000);
+        printf(".\n");
+    }
+    ADM_info("** End of slave process **\n");
+    ADM_info("** End of slave process **\n");
+    ADM_info("** End of slave process **\n");
 
     // 5-Done, do the cleanup
 done:
@@ -125,6 +132,7 @@ done:
         else job.status=ADM_JOB_KO;
     job.endTime=ADM_getSecondsSinceEpoch();
     ADM_jobUpdate(job);
+    if(runSocket) delete runSocket;
     refreshList();
     ADM_info("Running job id = %d\n",job.id);
     return r;

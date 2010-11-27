@@ -246,6 +246,29 @@ ADM_socket *ADM_socket::waitForConnect(uint32_t timeoutMs)
         return new ADM_socket(workSocket);
 }
 /**
+    \fn isAlive
+*/
+bool ADM_socket::isAlive(void)
+{
+    if(!mySocket) return false;
+        fd_set set;
+        FD_ZERO(&set);
+        FD_SET(mySocket,&set);
+        struct timeval timeout; 
+
+        timeout.tv_sec=0;
+        timeout.tv_usec=100000; // 100 us check
+        //ADM_info("Selecting\n");
+        int evt=select(1+mySocket,&set,&set,&set,&timeout);
+        if(evt<0) 
+        {
+            ADM_error("Select failed\n");
+            return false;
+        }
+
+    return true;
+}
+/**
     \fn ctor
 */
 ADM_socket::ADM_socket()

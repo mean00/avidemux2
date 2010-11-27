@@ -12,32 +12,50 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_CORE_SOCKET_H
-#define ADM_CORE_SOCKET_H
-#include "ADM_threads.h"
+#ifndef ADM_CORE_COMMAND_SOCKET_H
+#define ADM_CORE_COMMAND_SOCKET_H
+#include "ADM_coreSocket.h"
+
+#define ADM_COMMAND_SOCKET_MAX_PAYLOAD 16
 
 /**
-    \class ADM_socket
+    \enum ADM_socketCommand
+*/
+typedef enum
+{
+    ADM_socketCommand_Hello=1,
+    ADM_socketCommand_End=2,
+    ADM_socketCommand_Progress=3,
+}ADM_socketCommand;
+
+/**
+        \struct ADM_socketMessage
+*/
+typedef struct
+{
+public:
+    ADM_socketCommand command;
+    uint32_t payloadLength;
+    uint8_t  payload[ADM_COMMAND_SOCKET_MAX_PAYLOAD];
+    bool     getPayloadAsUint32_t(uint32_t *v);
+    bool     setPayloadAsUint32_t(uint32_t v);
+}ADM_socketMessage;
+
+
+/**
+    \class ADM_commandSocket
     \brief Wrapper around socket/tcp
 */
-class ADM_socket       
+class ADM_commandSocket : public ADM_socket       
 {
     protected:
-        int         mySocket;
-        admMutex    lock;       
-        bool        create(void);
     public:
-        ADM_socket *waitForConnect(uint32_t timeoutMs);
-        bool        createBindAndAccept(uint32_t *port);
-        bool        connectTo(uint32_t port);
-        bool        rxData(uint32_t howmuch, uint8_t *where);
-        bool        txData(uint32_t howmuch, uint8_t *where);
-        bool        close(void);
-        bool        isAlive(void);
+        bool sendMessage(const ADM_socketMessage &msg);
+        bool getMessage(ADM_socketMessage &msg);
     public:
-        ADM_socket(int newSocket);
-        ADM_socket( void );
-virtual ~ADM_socket(  );
+        ADM_commandSocket(int newSocket);
+        ADM_commandSocket( void );
+        ~ADM_commandSocket(  );
 };
 #endif
 //EOF

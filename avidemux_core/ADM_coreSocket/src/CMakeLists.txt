@@ -1,5 +1,6 @@
 SET(ADMcoreSocket_SRCS
         ADM_coreSocket.cpp
+        ADM_coreCommandSocket.cpp
 )	
 #*************************************************
 ADD_LIBRARY(ADM_coreSocket6 SHARED ${ADMcoreSocket_SRCS})

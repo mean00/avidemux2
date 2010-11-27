@@ -9,7 +9,7 @@ using std::string;
 using std::vector;
 class jobWindow;
 #include "ADM_default.h"
-#include "ADM_coreSocket/include/ADM_coreSocket.h"
+#include "ADM_coreSocket/include/ADM_coreCommandSocket.h"
 
 typedef enum
 {
@@ -40,7 +40,7 @@ public:
 	virtual     ~jobWindow();
     bool        runProcess(spawnData *data);
 protected:
-    ADM_socket  mySocket;
+    ADM_commandSocket  mySocket;
     uint32_t    localPort;
 protected:
     int         getActiveIndex(void)	;
