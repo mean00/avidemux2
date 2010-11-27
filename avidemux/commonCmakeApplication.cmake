@@ -48,6 +48,7 @@ SET(ADM_EXE_SRCS
 ../common/gui_action.cpp
 ../common/gui_blackframes.cpp
 ../common/ADM_gettext.cpp
+../common/ADM_slave.cpp
 )
 
 #############################################
@@ -66,6 +67,7 @@ ADM_coreImage6
 ADM_coreMuxer6
 ADM_coreUI6
 ADM_coreUtils6
+ADM_coreSocket6
 ADM_coreVideoEncoder6
 ADM_coreVideoFilter6
 ADM_coreImageLoader6
