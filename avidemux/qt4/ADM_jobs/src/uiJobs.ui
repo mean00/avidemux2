@@ -43,6 +43,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBoxUseQt4">
+       <property name="toolTip">
+        <string>If you use VDPAU you cannot use CLI version</string>
+       </property>
+       <property name="text">
+        <string>use QT4 version</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

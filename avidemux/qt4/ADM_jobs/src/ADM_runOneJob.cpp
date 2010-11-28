@@ -104,7 +104,17 @@ bool jobWindow::runOneJob( ADMJob &job)
     // 2- Spawn  child
     string ScriptFullPath;
     ScriptFullPath=string(ADM_getJobDir())+string("/")+string(job.scriptName);
-    if(false==spawnChild("avidemux3_qt4",ScriptFullPath,job.outputFileName))
+#ifdef _WIN32
+    #define MKEXE(x) "avidemux3_"#x".exe"
+#else
+    #define MKEXE(x) "avidemux3_"#x
+#endif
+    const char *avidemuxVersion=MKEXE(cli);
+    if(ui.checkBoxUseQt4->isChecked())
+    {
+        avidemuxVersion=MKEXE(qt4);
+    }
+    if(false==spawnChild(avidemuxVersion,ScriptFullPath,job.outputFileName))
     {
         ADM_error("Cannot spawn child\n");
         r=false;
