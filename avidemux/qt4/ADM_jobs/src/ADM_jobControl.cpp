@@ -30,6 +30,15 @@ string date2String(uint64_t date)
     if(!date) return string("N/A");
     return string(ADM_epochToString(date));
 }
+string duration2String(uint64_t date)
+{
+char tmp[100];
+    if(!date) return string("N/A");
+//    printf("Delta : %d\n",(int)date);
+    sprintf(tmp,"%d s",(int)date);
+    return string(tmp);
+}
+
 /**
     \fn refreshList
 */
@@ -39,20 +48,19 @@ void jobWindow::refreshList(void)
       list->clear();
       listOfJob.clear();
       
-      
-      
-      
 // set titles
      QTableWidgetItem *jb=fromText("Job",255);
      QTableWidgetItem *outputFile=fromText("Output",255);
      QTableWidgetItem *status=fromText("Status",255);
      QTableWidgetItem *start=fromText("Start Time",255);
      QTableWidgetItem *end=fromText("End Time",255);
+     QTableWidgetItem *duration=fromText("Duration",255);
      ui.tableWidget->setHorizontalHeaderItem(0,jb);
      ui.tableWidget->setHorizontalHeaderItem(1,outputFile);
      ui.tableWidget->setHorizontalHeaderItem(2,start);
      ui.tableWidget->setHorizontalHeaderItem(3,end);
-     ui.tableWidget->setHorizontalHeaderItem(4,status);
+     ui.tableWidget->setHorizontalHeaderItem(4,duration);
+     ui.tableWidget->setHorizontalHeaderItem(5,status);
 
 
       if(false==ADM_jobGet(listOfJob)) return ;
@@ -66,8 +74,10 @@ void jobWindow::refreshList(void)
            QTableWidgetItem *nm=fromText(listOfJob[i].jobName,i);
            QTableWidgetItem *out=fromText(listOfJob[i].outputFileName,i);
            string s;
+           string dur="N/A";
            string start="X";
            string end="X";
+           uint64_t timeTaken=0;
             switch(listOfJob[i].status)
             {
                 case ADM_JOB_IDLE:
@@ -80,11 +90,15 @@ void jobWindow::refreshList(void)
                             s=string("Success");
                             start=date2String(listOfJob[i].startTime);
                             end=date2String(listOfJob[i].endTime);
+                            timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
+                            dur=duration2String(timeTaken);
                             break;
                 case ADM_JOB_KO:
                             s=string("Failed");
                             start=date2String(listOfJob[i].startTime);
                             end=date2String(listOfJob[i].endTime);
+                            timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
+                            dur=duration2String(timeTaken);
                             break;
                 default:
                             s=string("???");
@@ -93,11 +107,13 @@ void jobWindow::refreshList(void)
         QTableWidgetItem *status=fromText (s,i);
         QTableWidgetItem *startItem=fromText (start,i);
         QTableWidgetItem *endItem=fromText (end,i);
+        QTableWidgetItem *durItem=fromText (dur,i);
         list->setItem(i,0,nm);
         list->setItem(i,1,out);
         list->setItem(i,2,startItem);
         list->setItem(i,3,endItem);
-        list->setItem(i,4,status);
+        list->setItem(i,4,durItem);
+        list->setItem(i,5,status);
       }
       list->resizeColumnsToContents();
 }
@@ -110,7 +126,7 @@ void jobWindow::refreshList(void)
 jobWindow::jobWindow(void) : QDialog()
 {
     ui.setupUi(this);
-    ui.tableWidget->setColumnCount(5); // Job name, fileName, Status
+    ui.tableWidget->setColumnCount(6); // Job name, fileName, Status
 
     // Add some right click menu...
     ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
