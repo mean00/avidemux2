@@ -391,7 +391,7 @@ int nw;
       		ReSync ();
 
             // forget last project file
-            video_body->setProjectName(NULL);
+            video_body->setProjectName("");
         }
 	break;
 
