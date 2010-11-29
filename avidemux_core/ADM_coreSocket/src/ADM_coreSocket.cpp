@@ -48,6 +48,7 @@
         #define SNET     AF_INET
         #define SPROTO   IPPROTO_TCP
         #define SCLOSE   SD_BOTH
+        #define SSOCKLEN int
 #else
         #define SADDR struct    sockaddr
         #define SADDR_IN struct sockaddr_in    
@@ -55,6 +56,7 @@
         #define SNET            PF_INET
         #define SPROTO          0
         #define SCLOSE          SHUT_RDWR
+        #define SSOCKLEN        socklen_t
 #endif
 
 
@@ -182,7 +184,7 @@ bool     ADM_socket::createBindAndAccept(uint32_t *port)
 		return false;
   }
    // Get port 
-    socklen_t len=sizeof( service);
+    SSOCKLEN len=sizeof( service);
     if ( getsockname ( mySocket, (SADDR *)& service, &len ) < 0 ) 
     {
         ADM_error("Getsockname failed\n");
