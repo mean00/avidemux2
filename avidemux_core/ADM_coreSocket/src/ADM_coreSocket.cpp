@@ -43,7 +43,7 @@
 
 #ifdef __MINGW32__
         #define SADDR    SOCKADDR
-        #define SADDR_IN SOCKADDR
+        #define SADDR_IN struct sockaddr_in
         #define SERROR   SOCKET_ERROR
         #define SNET     AF_INET
         #define SPROTO   IPPROTO_TCP
