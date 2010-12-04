@@ -54,7 +54,7 @@ int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
             printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
     }else
     {
-            ADM_warning("[H264] No timing information\n");
+            printf("[H264] No timing information\n");
             info->fps1000=25000;
     }
     // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
