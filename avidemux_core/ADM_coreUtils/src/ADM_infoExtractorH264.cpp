@@ -14,6 +14,13 @@
 
 
 #include "ADM_includeFfmpeg.h"
+extern "C"
+{
+#include "libavcodec/parser.h"
+#include "libavcodec/avcodec.h"
+#include "libavcodec/ff_spsinfo.h"
+extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
+}
 #include "ADM_default.h"
 #include "ADM_Video.h"
 
@@ -138,15 +145,16 @@ static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
 */
     }
     uint32_t f=0;
+    spsinfo->CpbDpbToSkip=0;
     if(bits.get(1)) // nal_hrd_param
     {
         f++;
-        spsinfo->CpbDpbToSkip=hrd(bits);
+        spsinfo->CpbDpbToSkip+=hrd(bits);
     }
     if(bits.get(1)) // vcl_hrd_param
     {
         f++;
-        spsinfo->CpbDpbToSkip=hrd(bits);
+        spsinfo->CpbDpbToSkip+=hrd(bits);
     }
     if(f) bits.get(1); // low delay flag
     
@@ -202,7 +210,7 @@ bool          decodeScalingMatrices(getBits &bits)
     \brief Extract info from H264 SPS
     See 7.3.2.1 of 14496-10
 */
-uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
    
   uint32_t profile, constraint, level, pic_order_cnt_type, w, h, mbh,
@@ -333,8 +341,7 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
   if (bits.get(1))
     {
       extractVUIInfo (bits, spsinfo);
-      printf ("[H264] Fps %" LU ", a.r. %" LU ",%" LU "\n", spsinfo->fps1000, spsinfo->darNum,
-	      spsinfo->darDen);
+//      printf ("[H264] Fps %" LU ", a.r. %" LU ",%" LU "\n", spsinfo->fps1000, spsinfo->darNum,  spsinfo->darDen);
     }
   else
     {
@@ -525,5 +532,121 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
     }
   printf ("No stream\n");
   return 0;
+}
+/**
+        \fn extractSPSInfo2
+        \brief Same as extractSPSInfo, but using libavcodec
+*/
+uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+{
+    static const uint8_t sig[5]={0,0,0,1,0};
+    uint32_t myLen=len+5+5+FF_INPUT_BUFFER_PADDING_SIZE;
+    uint8_t myData[myLen];
+    bool r=false;
+
+    memset(myData,myLen,1);
+    mixDump(data,len);
+    // put dummy SPS tag + dummy filler at the end
+    // so that lavcodec can split it
+    memcpy(myData,sig,5);
+    memcpy(myData+5,data,len);
+    memcpy(myData+5+len,sig,5);
+    myData[4]=NAL_SPS;
+    myData[5+len+4]=NAL_FILLER;
+    
+    
+    // 1-Create parser
+    AVCodecParserContext *parser=av_parser_init(CODEC_ID_H264);
+    AVCodecContext *ctx=NULL; 
+    AVCodec *codec=NULL;
+    uint8_t *d=NULL;
+  
+    if(!parser)
+    {
+        ADM_error("cannot create h264 parser\n");
+        goto theEnd;
+    }
+    ADM_info("Parser created\n");
+    codec=avcodec_find_decoder(CODEC_ID_H264);
+    if(!codec)
+    {
+        ADM_error("cannot create h264 codec\n");
+        goto theEnd;
+    }
+    ADM_info("Codec created\n");
+    ctx=avcodec_alloc_context();
+   if (avcodec_open(ctx, codec) < 0)  
+   {
+        ADM_error("cannot create h264 context\n");
+        goto theEnd;
+    }
+    ADM_info("Context created\n");
+    //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
+    ctx->extradata=myData;
+    ctx->extradata_size=myLen;
+     {
+         uint8_t *outptr=NULL;
+         int outsize=0;
+         int consumed = av_parser_parse2(parser, ctx, 
+                                      &outptr, &outsize,
+                                      d, 0,
+                                      0, 0,0);
+    }
+    ADM_info("Width  : %d\n",ctx->width);
+    ADM_info("Height : %d\n",ctx->height);
+    {
+        ffSpsInfo nfo;
+        if(!ff_h264_info(parser,&nfo))
+        {
+            ADM_error("Cannot get sps info from lavcodec\n");
+            r=false;
+            goto theEnd;
+        }
+        ADM_info("Width2 : %d\n",nfo.width);
+        ADM_info("Height2: %d\n",nfo.height);
+        #define CPY(x) spsinfo->x=nfo.x
+        CPY(width);
+        CPY(height);
+        CPY(fps1000);
+        CPY(hasStructInfo);
+        CPY(CpbDpbToSkip);
+        CPY(darNum);
+        CPY(darDen);
+        r=true;
+     }
+    // cleanup
+theEnd:
+    if(ctx)
+        avcodec_close(ctx);
+    if(parser)
+        av_parser_close(parser);
+    return r;
+}
+
+uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+{
+#define DPY(x) ADM_info(#x":%d\n",(int)spsinfo->x);
+#if 1        
+        
+        bool l=extractSPSInfo_lavcodec(data,len,spsinfo);
+        DPY(width);
+        DPY(height);
+        DPY(fps1000);
+        DPY(hasStructInfo);
+        DPY(CpbDpbToSkip);
+        DPY(darNum);
+        DPY(darDen);
+        return l;
+#else           
+        bool i=extractSPSInfo_internal(data,len,spsinfo);
+        DPY(width);
+        DPY(height);
+        DPY(fps1000);
+        DPY(hasStructInfo);
+        DPY(CpbDpbToSkip);
+        DPY(darNum);
+        DPY(darDen);
+        return i;
+#endif
 }
 //EOF
