@@ -29,10 +29,51 @@
 #include "h264_parser.h"
 #include "h264data.h"
 #include "golomb.h"
-
+#include "ff_spsinfo.h" // MEANX
 #include <assert.h>
+ // MEANX
+/**
+    \fn AVCodecParserContext
+*/
+int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
+{
+    H264Context *ctx = parser->priv_data;
+    memset(info,0,sizeof(*info));
+    if(!ctx->sps.mb_width || !ctx->sps.mb_height)
+    {
+        return 0;
+    }
+    info->width=ctx->sps.mb_width  * 16;
+    info->height=(2-ctx->sps.frame_mbs_only_flag)*ctx->sps.mb_height * 16;
+    if(ctx->sps.timing_info_present_flag)
+    {
+            float scale=ctx->sps.time_scale ;
+            float ticks=ctx->sps.num_units_in_tick;
+            info->fps1000 =  (uint32_t) ((scale/ticks) *    1000.);
+#undef printf
+            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
+    }else
+    {
+            ADM_warning("[H264] No timing information\n");
+            info->fps1000=25000;
+    }
+    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
+    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
+    int f=ctx->sps.nal_hrd_parameters_present_flag | ctx->sps.vcl_hrd_parameters_present_flag;
+    info->hasStructInfo=f | ctx->sps.pic_struct_present_flag;;
+    // While decoding SEI, if CpbDpbDelaysPresentFlags is there we skip cpb_removal_delay + dpb_output_delay
 
-
+    info->CpbDpbToSkip=0;
+    if(f)
+    {
+        info->CpbDpbToSkip=ctx->sps.cpb_removal_delay_length+ctx->sps.dpb_output_delay_length;
+    }
+#warning fixme sar vs dar
+    info->darNum=ctx->sps.sar.num;
+    info->darDen=ctx->sps.sar.den;
+    return 1;
+}
+// /MEANX
 int ff_h264_find_frame_end(H264Context *h, const uint8_t *buf, int buf_size)
 {
     int i;
