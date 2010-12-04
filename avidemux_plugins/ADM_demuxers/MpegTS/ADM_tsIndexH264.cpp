@@ -138,7 +138,6 @@ bool result=false;
     //******************
     // 1 search SPS
     //******************
-#define SPS_READ_AHEAD 32
       while(1)
       {
         int startCode=pkt->findStartCode();
@@ -148,14 +147,24 @@ bool result=false;
         if(startCode!=NAL_SPS) continue;
 
           // Got SPS!
-          uint8_t buffer[60] ; // should be enough
+          
           uint32_t xA,xR;
           // Get info
           pkt->getInfo(&tmpInfo);
-          pkt->read(SPS_READ_AHEAD,buffer);
-          if (extractSPSInfo(buffer, SPS_READ_AHEAD,&spsInfo))
+          // Read just enough...
           {
-              
+            SEI_nal.empty();
+            uint32_t code=0xffff+0xffff0000;
+            while((code!=1) && pkt->stillOk())
+            {
+                    uint8_t r=pkt->readi8();
+                    code=(code<<8)+r;
+                    SEI_nal.pushByte(r);
+            }
+            if(!pkt->stillOk()) break;;
+            pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
+            if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
+            {
               printf("[TsIndexer] Found video %"LU"x%"LU", fps=%"LU"\n",video.w,video.h,video.fps);
               seq_found=1;
               video.w=spsInfo.width;
@@ -167,9 +176,10 @@ bool result=false;
               writeAudio();
               qfprintf(index,"[Data]");
               // Rewind
-              pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
+              
               break;              
           };
+        }
       }
       
         if(!seq_found) goto the_end;
