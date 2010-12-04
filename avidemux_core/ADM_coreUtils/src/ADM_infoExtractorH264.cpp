@@ -626,7 +626,7 @@ theEnd:
 uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
 #define DPY(x) ADM_info(#x":%d\n",(int)spsinfo->x);
-#if 1        
+#if 0        
         
         bool l=extractSPSInfo_lavcodec(data,len,spsinfo);
         DPY(width);
