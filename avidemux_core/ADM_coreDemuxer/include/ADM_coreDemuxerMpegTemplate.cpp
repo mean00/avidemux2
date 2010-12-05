@@ -26,9 +26,21 @@ uint64_t MY_CLASS::getVideoDuration(void)
     int index=ListOfFrames.size();
     if(!index) return 0;
     index--;
+    int maxLookup=100;
+    if(maxLookup>index) maxLookup=index;
     int offset=0;
+    int maxPts=0;
     do
     {
+	if(maxLookup)
+	{
+        uint64_t p=ListOfFrames[index]->pts;
+	if(p!=ADM_NO_PTS) 
+		{
+			if(p>maxPts) maxPts=p;
+		}
+	maxLookup--;
+	}
         if(ListOfFrames[index]->dts!=ADM_NO_PTS) break;
         index--;
         offset++;
@@ -36,8 +48,9 @@ uint64_t MY_CLASS::getVideoDuration(void)
     }while(index);
     if(!index)
     {
-        ADM_error("Cannot find a valid DTS in the file\n");
-        return 0;
+        ADM_warning("Cannot find a valid DTS in the file\n");
+        ADM_warning("Using PTS instead\n");
+        return maxPts;
     }
     float f,g;
     f=1000*1000*1000;
