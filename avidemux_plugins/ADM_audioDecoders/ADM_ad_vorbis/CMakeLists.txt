@@ -9,9 +9,9 @@ IF(USE_LIBVORBIS)
 
         ADD_LIBRARY(ADM_ad_vorbis SHARED ${ADM_ad_vorbis_SRCS})
 
-        TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${VORBIS_LIBRARY_DIR})
+        TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${LIBVORBIS_LIBRARY_DIR})
 
-        include_directories(${VORBIS_INCLUDE_DIR})
+        include_directories(${LIBVORBIS_INCLUDE_DIR})
 
         INIT_AUDIO_PLUGIN(ADM_ad_vorbis)
         INSTALL_AUDIODECODER(ADM_ad_vorbis)
