@@ -40,8 +40,8 @@ set buildGtkFolder=%buildFolder%\gtk
 set buildQtFolder=%buildFolder%\qt
 set buildPluginFolder=%buildFolder%\plugins
 
-set buildDir=%devDir%\avidemux_2.6_build%BuildBits%
-set sdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
+set buildDir=%admBuildDir%
+set sdkBuildDir=%admSdkBuildDir%
 
 set curDir=%CD%
 cd ..\..\..
@@ -53,9 +53,7 @@ if not exist "%sourceDir%" (
 	goto error
 )
 
-if "%BuildBits%" == "32" (set jsFolder=js)
-if "%BuildBits%" == "64" (set jsFolder=js-64)
-
+set jsFolder=js-1.7.0-%BuildBits%
 set SpiderMonkeySourceDir=%devDir%\%jsFolder%\src
 set SpiderMonkeyLibDir=%devDir%\%jsFolder%\src\WINNT6.1_OPT.OBJ
 

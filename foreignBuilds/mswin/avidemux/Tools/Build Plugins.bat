@@ -1,17 +1,14 @@
 @echo off
 
-if "%1" == "" (
-	echo Usage: "Build Plugins.bat" [MinGW directory]
-	echo e.g. "Build Plugins.bat" C:\MinGW
-	goto :EOF
-)
+if "%1" == "" goto displayUsage
+if "%2" == "" goto displayUsage
 
 set curDir=%CD%
 set includeDir="%curDir%\..\include"
-set libDir="%curDir%\..\lib"
-set ar="%1\bin\ar"
-set gcc="%1\bin\gcc" -O3 -DNDEBUG
-set gxx="%1\bin\g++" -O3 -DNDEBUG -Wl,-enable-auto-import -Wl,-s
+set libDir="%curDir%\..\lib%1"
+set ar="%2\bin\ar"
+set gcc="%2\bin\gcc" -O3 -DNDEBUG
+set gxx="%2\bin\g++" -O3 -DNDEBUG -Wl,-enable-auto-import -Wl,-s
 
 echo ** AC-3 Audio Decoder **
 
@@ -53,3 +50,10 @@ echo ** Fade Video Filter **
 cd videoFilters\fade
 %gxx% -shared *.cpp -o libADM_vf_fade.dll -I%includeDir% -L%libDir% -lADM_coreImage.dll -lADM_core.dll -lADM_coreUI.dll
 cd %curDir%
+
+goto :EOF
+
+:displayUsage
+	echo Usage: "Build Plugins.bat" [Bitness] [MinGW directory]
+	echo e.g. "Build Plugins.bat" 32 C:\MinGW
+	goto :EOF

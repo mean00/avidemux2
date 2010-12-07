@@ -1,0 +1,11 @@
+--- amrnb/Makefile.in.orig	2009-09-18 18:45:43 +0100
++++ amrnb/Makefile.in	2010-11-27 20:52:08 +0000
+@@ -274,7 +274,7 @@
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = opencore-amrnb.pc
+ lib_LTLIBRARIES = libopencore-amrnb.la
+-libopencore_amrnb_la_LDFLAGS = -version-info @OPENCORE_AMRNB_VERSION@
++libopencore_amrnb_la_LDFLAGS = -version-info @OPENCORE_AMRNB_VERSION@ -no-undefined
+ 
+ # Our sources to include. There are certain sources we exclude and they are
+ # $(DEC_SRC_DIR)/decoder_gsm_amr.cpp

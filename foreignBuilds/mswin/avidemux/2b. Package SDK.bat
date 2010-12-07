@@ -1,6 +1,19 @@
-set baseFile=avidemux_sdk_2.5_r%revisionNo%_win%BuildBits%
-set zipFile=%baseFile%.zip
+set zipFile=avidemux_sdk_2.5_r%revisionNo%_win.zip
 
-cd "%sdkBuildDir%"
+if "%BuildBits%" == "32" (
+	set sdk32BuildDir=%sdkBuildDir%
+	set sdk64BuildDir=%sdkBuildDir:build32=build64%
+)
+
+if "%BuildBits%" == "64" (
+	set sdk32BuildDir=%sdkBuildDir:build64=build32%
+	set sdk64BuildDir=%sdkBuildDir%
+)
+
+cd "%sdk32BuildDir%"
 zip -r "%packageDir%\%zipFile%" *
+
+cd "%sdk64BuildDir%"
+zip -r "%packageDir%\%zipFile%" *
+
 advzip -z -4 "%packageDir%\%zipFile%"

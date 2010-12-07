@@ -1,0 +1,24 @@
+--- libtool.orig	2010-11-27 19:32:53 +0000
++++ libtool	2010-11-27 19:33:08 +0000
+@@ -6446,8 +6446,8 @@
+ 		esac
+ 		else
+ 		  eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+-		  test -z "$libdir" && \
+-		    func_fatal_error "\`$deplib' is not a valid libtool archive"
++		  #test -z "$libdir" && \
++		    #func_fatal_error "\`$deplib' is not a valid libtool archive"
+ 		  test "$absdir" != "$libdir" && \
+ 		    func_warning "\`$deplib' seems to be moved"
+ 
+@@ -8570,8 +8570,8 @@
+ 		func_basename "$deplib"
+ 		name="$func_basename_result"
+ 		eval libdir=`${SED} -n -e 's/^libdir=\(.*\)$/\1/p' $deplib`
+-		test -z "$libdir" && \
+-		  func_fatal_error "\`$deplib' is not a valid libtool archive"
++		#test -z "$libdir" && \
++		  #func_fatal_error "\`$deplib' is not a valid libtool archive"
+ 		newdependency_libs="$newdependency_libs $libdir/$name"
+ 		;;
+ 	      *) newdependency_libs="$newdependency_libs $deplib" ;;

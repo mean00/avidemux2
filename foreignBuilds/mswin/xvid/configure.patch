@@ -1,0 +1,11 @@
+--- build/generic/configure.orig	2009-05-28 18:13:31 +0100
++++ build/generic/configure	2010-11-27 10:25:35 +0000
+@@ -1319,7 +1319,7 @@
+ API_MAJOR="4"
+ API_MINOR="2"
+ 
+-minimum_yasm_minor_version=8
++minimum_yasm_minor_version=1
+ minimum_nasm_minor_version=0
+ minimum_nasm_major_version=2
+ nasm_prog="nasm"

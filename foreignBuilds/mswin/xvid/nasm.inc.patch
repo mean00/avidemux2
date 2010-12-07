@@ -1,0 +1,16 @@
+--- src/nasm.inc.orig	2009-05-28 16:04:35 +0100
++++ src/nasm.inc	2010-11-27 10:51:04 +0000
+@@ -157,9 +157,10 @@
+ %define XVID_MOVSXD movsx
+ %endif
+ 
+-
+-%ifdef WINDOWS
+-      %define PREFIX
++%ifndef ARCH_IS_X86_64
++      %ifdef WINDOWS
++            %define PREFIX
++      %endif
+ %endif
+ 
+ %ifdef NO_PREFIX

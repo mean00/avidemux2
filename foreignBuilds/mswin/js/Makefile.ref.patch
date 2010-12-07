@@ -1,0 +1,11 @@
+--- src/Makefile.ref.orig	2010-11-28 02:53:57 +0000
++++ src/Makefile.ref	2010-11-28 02:53:12 +0000
+@@ -94,7 +94,7 @@
+ ifeq ($(OS_ARCH),WINNT)
+ _MSC_VER = $(shell $(CC) 2>&1 | sed -n 's/.*Compiler Version \([0-9]*\)\.\([0-9]*\).*/\1\2/p')
+ ifeq (,$(filter-out 1200 1300 1310,$(_MSC_VER)))
+-CFLAGS += -Op
++#CFLAGS += -Op
+ else
+ CFLAGS += -fp:precise
+ endif

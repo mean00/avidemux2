@@ -1,0 +1,11 @@
+--- src/jsnum.c.orig	2007-04-06 21:53:22 +0100
++++ src/jsnum.c	2010-11-28 03:00:05 +0000
+@@ -528,7 +528,7 @@
+  * to 53 bit mantissa.
+  * On Alpha platform this is handled via Compiler option.
+  */
+-#define FIX_FPU() _control87(MCW_EM | PC_53, MCW_EM | MCW_PC)
++#define FIX_FPU() _control87(_MCW_EM | _PC_53, _MCW_EM | _MCW_PC)
+ 
+ #else
+ 

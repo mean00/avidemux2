@@ -29,8 +29,8 @@ cd "%curDir%\Tools"
 call "Get Revision Number"
 cd ..
 
-set packageDir=%CD%\%revisionNo%
-mkdir %packageDir%
+set packageDir=%CD%\%revisionNo% [%BuildBits%-bit]
+mkdir "%packageDir%"
 
 cd "%curDir%"
 call "2b. Package SDK.bat"

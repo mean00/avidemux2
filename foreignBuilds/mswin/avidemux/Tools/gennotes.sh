@@ -1,1 +1,1 @@
-xsltproc package_notes.xslt "../Package Notes.xml" > "Package Notes.html"
+xsltproc package_notes.xslt "../Package Notes.xml" > "Package Notes [$BUILDBITS].html"
