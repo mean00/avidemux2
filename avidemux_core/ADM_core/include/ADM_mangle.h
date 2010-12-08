@@ -18,9 +18,9 @@
 // Use rip-relative addressing if compiling PIC code on x86-64.
 #if defined(__MINGW32__) || defined(__CYGWIN__) || defined(__DJGPP__) || \
     defined(__OS2__) || (defined (__OpenBSD__) && !defined(__ELF__))
-#    if defined(ADM_CPU_X86_64) && defined(PIC) && !defined(__MINGW32__)
-#        define MANGLE(a) "_" #a"(%%rip)"
-#        define LOCAL_MANGLE(a) #a"(%%rip)"
+#    if defined(ADM_CPU_X86_64)
+#        define MANGLE(a)  #a
+#        define LOCAL_MANGLE(a) #a
 #        define FUNNY_MANGLE(x) x asm(MANGLE(x))
 #        define FUNNY_MANGLE_ARRAY(x, y) x[y] asm(MANGLE(x))
 #    else
@@ -101,3 +101,4 @@
 
 #define ASM_CONST attribute_used __attribute__ ((aligned(8)))
 #endif
+
