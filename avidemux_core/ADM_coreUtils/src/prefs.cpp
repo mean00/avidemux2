@@ -32,13 +32,13 @@ extern char *ADM_escape(const ADM_filename *incoming);
 class preferences *prefs;
 // <prefs_gen>
 typedef enum {
-	ADM_UADM_INT,
+	ADM_UINT,
 	ADM_INT,
-	ADM_UADM_LONG,
+	ADM_ULONG,
 	ADM_LONG,
 	ADM_FLOAT,
 	ADM_STRING,
-	FILENAME
+	ADM_FILENAME
 } types;
 
 typedef struct {
@@ -51,55 +51,55 @@ typedef struct {
 } opt_def;
 
 static opt_def opt_defs [] = {
-	{"codecs.svcd.enctype",		ADM_UADM_INT,	"0",	NULL,	"0",	"99999"},
-	{"codecs.svcd.bitrate",		ADM_UADM_INT,	"1500000",NULL,	"16000","2748000"},
-	{"codecs.svcd.quantizer",		ADM_UADM_INT,	"4",	NULL,	"2",	"31"	},
-	{"codecs.svcd.finalsize",	ADM_UADM_INT,	"700",	NULL,	"0",	"99999"},
-	{"codecs.svcd.interlaced",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"codecs.svcd.bff",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"codecs.svcd.widescreen",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"codecs.svcd.matrix",		ADM_UADM_INT,	"0",	NULL,	"0",	"99999"},
-	{"codecs.svcd.gopsize",		ADM_UADM_INT,	"12",	NULL,	"0",	"99999"},
-	{"codecs.svcd.maxbitrate",		ADM_UADM_INT,	"2500",	NULL,	"0",	"2748"	},
-	{"codecs.dvd.enctype",		ADM_UADM_INT,	"0",	NULL,	"0",	"99999"},
-	{"codecs.dvd.bitrate",		ADM_UADM_INT,	"1500000",NULL,	"16000","9900000"},
-	{"codecs.dvd.quantizer",		ADM_UADM_INT,	"4",	NULL,	"2",	"31"	},
-	{"codecs.dvd.finalsize",	ADM_UADM_INT,	"700",	NULL,	"0",	"99999"},
-	{"codecs.dvd.interlaced",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"codecs.dvd.bff",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"codecs.dvd.widescreen",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"codecs.dvd.matrix",		ADM_UADM_INT,	"0",	NULL,	"0",	"99999"},
-	{"codecs.dvd.gopsize",		ADM_UADM_INT,	"12",	NULL,	"0",	"99999"},
-	{"codecs.dvd.maxbitrate",		ADM_UADM_INT,	"9000",	NULL,	"0",	"9900"	},
-	{"codecs.xvid.enctype",		ADM_UADM_INT,	"0",	NULL,	"0",	"99999"},
-	{"codecs.xvid.quantizer",		ADM_UADM_INT,	"4",	NULL,	"2",	"32"	},
-	{"codecs.xvid.bitrate",		ADM_UADM_INT,	"1500000",NULL,	"17",	"5900000"},
-	{"codecs.xvid.finalsize",	ADM_UADM_INT,	"700",	NULL,	"0",	"3999"	},
+	{"codecs.svcd.enctype",		ADM_UINT,	"0",	NULL,	"0",	"99999"},
+	{"codecs.svcd.bitrate",		ADM_UINT,	"1500000",NULL,	"16000","2748000"},
+	{"codecs.svcd.quantizer",		ADM_UINT,	"4",	NULL,	"2",	"31"	},
+	{"codecs.svcd.finalsize",	ADM_UINT,	"700",	NULL,	"0",	"99999"},
+	{"codecs.svcd.interlaced",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"codecs.svcd.bff",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"codecs.svcd.widescreen",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"codecs.svcd.matrix",		ADM_UINT,	"0",	NULL,	"0",	"99999"},
+	{"codecs.svcd.gopsize",		ADM_UINT,	"12",	NULL,	"0",	"99999"},
+	{"codecs.svcd.maxbitrate",		ADM_UINT,	"2500",	NULL,	"0",	"2748"	},
+	{"codecs.dvd.enctype",		ADM_UINT,	"0",	NULL,	"0",	"99999"},
+	{"codecs.dvd.bitrate",		ADM_UINT,	"1500000",NULL,	"16000","9900000"},
+	{"codecs.dvd.quantizer",		ADM_UINT,	"4",	NULL,	"2",	"31"	},
+	{"codecs.dvd.finalsize",	ADM_UINT,	"700",	NULL,	"0",	"99999"},
+	{"codecs.dvd.interlaced",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"codecs.dvd.bff",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"codecs.dvd.widescreen",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"codecs.dvd.matrix",		ADM_UINT,	"0",	NULL,	"0",	"99999"},
+	{"codecs.dvd.gopsize",		ADM_UINT,	"12",	NULL,	"0",	"99999"},
+	{"codecs.dvd.maxbitrate",		ADM_UINT,	"9000",	NULL,	"0",	"9900"	},
+	{"codecs.xvid.enctype",		ADM_UINT,	"0",	NULL,	"0",	"99999"},
+	{"codecs.xvid.quantizer",		ADM_UINT,	"4",	NULL,	"2",	"32"	},
+	{"codecs.xvid.bitrate",		ADM_UINT,	"1500000",NULL,	"17",	"5900000"},
+	{"codecs.xvid.finalsize",	ADM_UINT,	"700",	NULL,	"0",	"3999"	},
 	{"codecs.preferredcodec",		ADM_STRING,"FFmpeg4",NULL, NULL, NULL },
-	{"filters.subtitle.fontname",		FILENAME,"/usr/share/fonts/truetype/DejaVuSans.ttf",NULL, NULL, NULL },
+	{"filters.subtitle.fontname",		ADM_FILENAME,"/usr/share/fonts/truetype/DejaVuSans.ttf",NULL, NULL, NULL },
 	{"filters.subtitle.charset",		ADM_STRING,"ISO-8859-1",NULL, NULL, NULL },
-	{"filters.subtitle.fontsize",		ADM_UADM_INT,	"24",	NULL,	"1",	"576"	},
+	{"filters.subtitle.fontsize",		ADM_UINT,	"24",	NULL,	"1",	"576"	},
 	{"filters.subtitle.ypercent",	ADM_INT,	"255",	NULL,	"0",	"255"	},
 	{"filters.subtitle.upercent",		ADM_INT,	"0",	NULL,	"0",	"255"	},
 	{"filters.subtitle.vpercent",		ADM_INT,	"0",	NULL,	"0",	"255"	},
-	{"filters.subtitle.selfadjustable",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"filters.subtitle.usebackgroundcolor",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"filters.avsfilter.avs_script",		FILENAME,"",	NULL, NULL, NULL },
-	{"filters.avsfilter.avs_loader",		FILENAME,"",	NULL, NULL, NULL },
-	{"filters.avsfilter.pipe_timeout",		ADM_UADM_INT,	"10",	NULL,	"1",	"30"	},
-	{"filters.avsfilter.debug_msg",		ADM_UADM_INT,	"1",	NULL,	"0",	"1"	},
-	{"settings.mpegsplit",	ADM_UADM_INT,	"790",	NULL,	"400",	"5000"	},
+	{"filters.subtitle.selfadjustable",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"filters.subtitle.usebackgroundcolor",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"filters.avsfilter.avs_script",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"filters.avsfilter.avs_loader",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"filters.avsfilter.pipe_timeout",		ADM_UINT,	"10",	NULL,	"1",	"30"	},
+	{"filters.avsfilter.debug_msg",		ADM_UINT,	"1",	NULL,	"0",	"1"	},
+	{"settings.mpegsplit",	ADM_UINT,	"790",	NULL,	"400",	"5000"	},
 	{"device.audiodevice",		ADM_STRING,"ALSA",	NULL, NULL, NULL },
 	{"device.audio.alsa_device",		ADM_STRING,"dmix",	NULL, NULL, NULL },
-	{"device.videodevice",		ADM_UADM_INT,	"0",	NULL,	"0",	"10"	},
-	{"default.postproc_type",		ADM_UADM_INT,	"3",	NULL,	"0",	"7"	},
-	{"default.postproc_value",		ADM_UADM_INT,	"3",	NULL,	"0",	"5"	},
-	{"lastfiles.file1",		FILENAME,"",	NULL, NULL, NULL },
-	{"lastfiles.file2",		FILENAME,"",	NULL, NULL, NULL },
-	{"lastfiles.file3",		FILENAME,"",	NULL, NULL, NULL },
-	{"lastfiles.file4",		FILENAME,"",	NULL, NULL, NULL },
-	{"lastdir_read",		FILENAME,"",	NULL, NULL, NULL },
-	{"lastdir_write",		FILENAME,"",	NULL, NULL, NULL },
+	{"device.videodevice",		ADM_UINT,	"0",	NULL,	"0",	"10"	},
+	{"default.postproc_type",		ADM_UINT,	"3",	NULL,	"0",	"7"	},
+	{"default.postproc_value",		ADM_UINT,	"3",	NULL,	"0",	"5"	},
+	{"lastfiles.file1",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"lastfiles.file2",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"lastfiles.file3",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"lastfiles.file4",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"lastdir_read",		ADM_FILENAME,"",	NULL, NULL, NULL },
+	{"lastdir_write",		ADM_FILENAME,"",	NULL, NULL, NULL },
 	{"lame_cli",		ADM_STRING,"",	NULL, NULL, NULL },
 	{"pipe_cmd",		ADM_STRING,"",	NULL, NULL, NULL },
 	{"pipe_param",		ADM_STRING,"",	NULL, NULL, NULL },
@@ -107,33 +107,33 @@ static opt_def opt_defs [] = {
 	{"toolame_path",		ADM_STRING,"",	NULL, NULL, NULL },
 	{"lvemux_path",		ADM_STRING,"",	NULL, NULL, NULL },
 	{"requant_path",		ADM_STRING,"",	NULL, NULL, NULL },
-	{"message_level",		ADM_UADM_INT,	"2",	NULL,	"0",	"2"	},
-	{"feature.swap_if_A_greater_than_B",		ADM_UADM_INT,	"1",	NULL,	"0",	"1"	},
+	{"message_level",		ADM_UINT,	"2",	NULL,	"0",	"2"	},
+	{"feature.swap_if_A_greater_than_B",		ADM_UINT,	"1",	NULL,	"0",	"1"	},
 	{"feature.svcdres.preferedsourceratio",		ADM_STRING,"1:1",	NULL, NULL, NULL },
-	{"feature.saveprefsonexit",		ADM_UADM_INT,	"1",	NULL,	"0",	"1"	},
-	{"feature.ignoresavedmarkers",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.disable_nuv_resync",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.tryautoidx",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.use_odml",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.use_systray",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.reuse_2pass_log",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.audiobar_uses_master",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.threading.lavc",		ADM_UADM_INT,	"0",	NULL,	"0",	"32"	},
-	{"feature.cpu_caps",		ADM_UADM_INT,	"4294967295",NULL,	"0",	"4294967295"},
-	{"feature.mpeg_no_limit",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.auto_buildmap",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.auto_rebuildindex",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.auto_unpack",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"downmixing.prologic",		ADM_UADM_INT,	"2",	NULL,	"0",	"2"	},
+	{"feature.saveprefsonexit",		ADM_UINT,	"1",	NULL,	"0",	"1"	},
+	{"feature.ignoresavedmarkers",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.disable_nuv_resync",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.tryautoidx",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.use_odml",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.use_systray",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.reuse_2pass_log",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.audiobar_uses_master",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.threading.lavc",		ADM_UINT,	"0",	NULL,	"0",	"32"	},
+	{"feature.cpu_caps",		ADM_UINT,	"4294967295",NULL,	"0",	"4294967295"},
+	{"feature.mpeg_no_limit",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.auto_buildmap",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.auto_rebuildindex",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.auto_unpack",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"downmixing.prologic",		ADM_UINT,	"2",	NULL,	"0",	"2"	},
 	{"filters.autoload.path",		ADM_STRING,"/tmp/",NULL, NULL, NULL },
-	{"filters.autoload.active",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.alternate_mp3_tag",		ADM_UADM_INT,	"1",	NULL,	"0",	"1"	},
-	{"feature.vdpau",		ADM_UADM_INT,	"0",	NULL,	"0",	"1"	},
-	{"feature.global_glyph.active",		ADM_UADM_INT,	"1",	NULL,	"0",	"1"	},
+	{"filters.autoload.active",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.alternate_mp3_tag",		ADM_UINT,	"1",	NULL,	"0",	"1"	},
+	{"feature.vdpau",		ADM_UINT,	"0",	NULL,	"0",	"1"	},
+	{"feature.global_glyph.active",		ADM_UINT,	"1",	NULL,	"0",	"1"	},
 	{"feature.global_glyph.name",		ADM_STRING,"",	NULL, NULL, NULL },
-	{"priority.encoding",		ADM_UADM_INT,	"3",	NULL,	"0",	"4"	},
-	{"priority.indexing",		ADM_UADM_INT,	"3",	NULL,	"0",	"4"	},
-	{"priority.playback",		ADM_UADM_INT,	"0",	NULL,	"0",	"4"	}
+	{"priority.encoding",		ADM_UINT,	"3",	NULL,	"0",	"4"	},
+	{"priority.indexing",		ADM_UINT,	"3",	NULL,	"0",	"4"	},
+	{"priority.playback",		ADM_UINT,	"0",	NULL,	"0",	"4"	}
 };
 
 int num_opts = 83;
@@ -478,7 +478,7 @@ int preferences::get(options option, unsigned int *val){
    const char *p = opt_defs[option].current_val;
 	if( !p )
 		p = opt_defs[option].default_val;
-	if( opt_defs[option].type != ADM_UADM_INT ){
+	if( opt_defs[option].type != ADM_UINT ){
 		fprintf(stderr,"preferences::get(%s,uint) called for type %d\n",
 			opt_defs[option].name,opt_defs[option].type);
 		ADM_assert(0);
@@ -506,7 +506,7 @@ int preferences::get(options option, unsigned long *val){
    const char *p = opt_defs[option].current_val;
 	if( !p )
 		p = opt_defs[option].default_val;
-	if( opt_defs[option].type != ADM_UADM_LONG ){
+	if( opt_defs[option].type != ADM_ULONG ){
 		fprintf(stderr,"preferences::get(%s,ulong) called for type %d\n",
 			opt_defs[option].name,opt_defs[option].type);
 		ADM_assert(0);
@@ -570,7 +570,7 @@ int preferences::set(options option, const unsigned int val){
    char buf[1024];
    unsigned int v = val;
 	// check type of option
-	if( opt_defs[option].type != ADM_UADM_INT ){
+	if( opt_defs[option].type != ADM_UINT ){
 		fprintf(stderr,"preferences::set(%s,uint) called for type %d\n",
 			opt_defs[option].name,opt_defs[option].type);
 		ADM_assert(0);
@@ -649,7 +649,7 @@ int preferences::set(options option, const unsigned long val){
    char buf[1024];
    unsigned long v = val;
 	// check type of option
-	if( opt_defs[option].type != ADM_UADM_LONG ){
+	if( opt_defs[option].type != ADM_ULONG ){
 		fprintf(stderr,"preferences::set(%s,ulong) called for type %d\n",
 			opt_defs[option].name,opt_defs[option].type);
 		ADM_assert(0);
@@ -785,7 +785,7 @@ int preferences::set(options option, const char * val){
 #warning incorrect!
 int preferences::set(options option, const ADM_filename * val){
 	// check type of option
-	if( opt_defs[option].type != FILENAME ){
+	if( opt_defs[option].type != ADM_FILENAME ){
 		fprintf(stderr,"preferences::set(%s,string) called for type %d\n",
 			opt_defs[option].name,opt_defs[option].type);
 		ADM_assert(0);

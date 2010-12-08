@@ -10,13 +10,13 @@ my $cpp = "$srcdir/prefs.cpp";
 #print "In:$in\n";
 my $h_str = "typedef enum {\n";
 my $cpp_str = "typedef enum {\n".
-              "\tUINT,\n".
-              "\tINT,\n".
-              "\tULONG,\n".
-              "\tLONG,\n".
-              "\tFLOAT,\n".
-              "\tSTRING,\n".
-              "\tFILENAME\n".
+              "\tADM_UINT,\n".
+              "\tADM_INT,\n".
+              "\tADM_ULONG,\n".
+              "\tADM_LONG,\n".
+              "\tADM_FLOAT,\n".
+              "\tADM_STRING,\n".
+              "\tADM_FILENAME\n".
               "} types;\n".
               "\n".
               "typedef struct {\n".
@@ -47,7 +47,7 @@ while(<$fd>){
 		$h_str   .= "\t$a,\n";
 		$cpp_str .= "\t{\"$N\",";
 		$cpp_str .= "\t" if( length($c)%8 != 3 );
-		$cpp_str .= "\t$b,";
+		$cpp_str .= "\tADM_".$b.",";
 		if(( $b eq "STRING" )||($b eq "FILENAME")){
 			$c =~ s/^"//;
 			$c =~ s/"$//;
