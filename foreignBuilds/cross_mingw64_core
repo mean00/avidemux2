@@ -1,0 +1,17 @@
+#!/bin/bash
+export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
+export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
+export CXXFLAGS="-I$MINGW/include"
+export CFLAGS="-I$MINGW/include"
+export CPPFLAGS="-I$MINGW/include"
+export LDFLAGS="-L$MINGW/lib"
+export PATH=$MINGW/bin:$PATH
+pkg-config --list-all
+#export DEBUG="-DVERBOSE=1 -DDEBUG=1  -DCMAKE_BUILD_TYPE=Debug    "
+echo "<<<<<<<<<<<<Cross compiling core ($MINGW)>>>>>>>>>>>>>>>>"
+cmake   -DCROSS=$MINGW \
+        -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
+	-DCMAKE_TOOLCHAIN_FILE=$TOP/foreignBuilds/cross_mingw64_cmake \
+        $DEBUG\
+        -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
+        $TOP/avidemux_core
