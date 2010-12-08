@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_cpp.h"
 #include "ui_seekablePreview.h"
 
 #include "ADM_assert.h"
