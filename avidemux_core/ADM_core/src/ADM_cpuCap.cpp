@@ -66,6 +66,7 @@ int rval = 0;
  int max_std_level, max_ext_level, std_caps=0, ext_caps=0;
  long a, c;
 
+#if !defined(ADM_CPU_64BIT) // 64 bits CPU have all cpuid
  __asm__ __volatile__ (
                        /* See if CPUID instruction is supported ... */
                        /* ... Get copies of EFLAGS into eax and ecx */
@@ -89,7 +90,7 @@ int rval = 0;
 
  if (a == c)
      return ; /* CPUID not supported */
-
+#endif
  cpuid(0, max_std_level, ebx, ecx, edx);
 
  if(max_std_level >= 1)
