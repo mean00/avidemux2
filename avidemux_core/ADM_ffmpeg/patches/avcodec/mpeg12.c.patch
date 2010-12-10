@@ -1,5 +1,5 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c b/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c
-index 0af24ad..3ffea4c 100644
+index 6a331eb..abbae83 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/mpeg12.c
 @@ -1948,6 +1948,11 @@ static int slice_end(AVCodecContext *avctx, AVFrame *pict)

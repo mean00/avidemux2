@@ -1,5 +1,5 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/h264_parser.c b/avidemux_core/ADM_ffmpeg/libavcodec/h264_parser.c
-index 70d08f4..437f9d0 100644
+index 70d08f4..f2bed6c 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/h264_parser.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/h264_parser.c
 @@ -29,10 +29,51 @@
@@ -32,7 +32,7 @@ index 70d08f4..437f9d0 100644
 +            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
 +    }else
 +    {
-+            ADM_warning("[H264] No timing information\n");
++            printf("[H264] No timing information\n");
 +            info->fps1000=25000;
 +    }
 +    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1

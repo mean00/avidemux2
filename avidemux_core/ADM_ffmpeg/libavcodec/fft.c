@@ -105,7 +105,7 @@ av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
 
     if (ARCH_ARM)     ff_fft_init_arm(s);
     if (HAVE_ALTIVEC) ff_fft_init_altivec(s);
-    if (HAVE_MMX)     ff_fft_init_mmx(s);
+    // MEANX if (HAVE_MMX)     ff_fft_init_mmx(s);
 
     for(j=4; j<=nbits; j++) {
         ff_init_ff_cos_tabs(j);

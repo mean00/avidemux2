@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/movenc.c b/avidemux_core/ADM_ffmpeg/libavformat/movenc.c
-index aed748b..ded5383 100644
+index b1ad714..daf70fd 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/movenc.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/movenc.c
-@@ -2298,3 +2298,15 @@ AVOutputFormat ipod_muxer = {
+@@ -2299,3 +2299,15 @@ AVOutputFormat ipod_muxer = {
      .codec_tag = (const AVCodecTag* const []){codec_ipod_tags, 0},
  };
  #endif

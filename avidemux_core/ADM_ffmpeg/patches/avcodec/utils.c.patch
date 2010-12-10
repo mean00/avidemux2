@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/utils.c b/avidemux_core/ADM_ffmpeg/libavcodec/utils.c
-index f21e9ed..acd1078 100644
+index 69d333e..782a2ed 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/utils.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/utils.c
-@@ -643,10 +643,12 @@ int attribute_align_arg avcodec_decode_audio3(AVCodecContext *avctx, int16_t *sa
+@@ -658,10 +658,12 @@ int attribute_align_arg avcodec_decode_audio3(AVCodecContext *avctx, int16_t *sa
  
      if((avctx->codec->capabilities & CODEC_CAP_DELAY) || avpkt->size){
          //FIXME remove the check below _after_ ensuring that all audio check that the available space is enough
@@ -15,7 +15,7 @@ index f21e9ed..acd1078 100644
          if(*frame_size_ptr < FF_MIN_BUFFER_SIZE ||
          *frame_size_ptr < avctx->channels * avctx->frame_size * sizeof(int16_t)){
              av_log(avctx, AV_LOG_ERROR, "buffer %d too small\n", *frame_size_ptr);
-@@ -952,13 +954,13 @@ unsigned avcodec_version( void )
+@@ -967,13 +969,13 @@ unsigned avcodec_version( void )
  
  const char *avcodec_configuration(void)
  {

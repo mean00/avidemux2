@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo.c b/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo.c
-index 684bdfe..2135c3d 100644
+index 9650066..e545931 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo.c
-@@ -652,7 +652,11 @@ av_cold int MPV_common_init(MpegEncContext *s)
+@@ -653,7 +653,11 @@ av_cold int MPV_common_init(MpegEncContext *s)
      FF_ALLOCZ_OR_GOTO(s->avctx, s->prev_pict_types, PREV_PICT_TYPES_BUFFER_SIZE, fail);
  
      s->parse_context.state= -1;

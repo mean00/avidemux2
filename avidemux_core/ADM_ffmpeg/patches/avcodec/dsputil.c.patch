@@ -1,0 +1,13 @@
+diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/dsputil.c b/avidemux_core/ADM_ffmpeg/libavcodec/dsputil.c
+index 29ddb4d..047bf5d 100644
+--- a/avidemux_core/ADM_ffmpeg/libavcodec/dsputil.c
++++ b/avidemux_core/ADM_ffmpeg/libavcodec/dsputil.c
+@@ -39,7 +39,7 @@
+ #include "lpc.h"
+ #include "ac3dec.h"
+ #include "vorbis.h"
+-#include "png.h"
++#include "ffpng.h"
+ #include "vp8dsp.h"
+ 
+ uint8_t ff_cropTbl[256 + 2 * MAX_NEG_CROP] = {0, };

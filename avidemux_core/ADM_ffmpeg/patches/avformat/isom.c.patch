@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/isom.c b/avidemux_core/ADM_ffmpeg/libavformat/isom.c
-index bf2d3b1..99c8069 100644
+index bf01401..1df1419 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/isom.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/isom.c
-@@ -215,7 +215,10 @@ const AVCodecTag codec_movaudio_tags[] = {
+@@ -222,7 +222,10 @@ const AVCodecTag codec_movaudio_tags[] = {
      { CODEC_ID_MP1, MKTAG('.', 'm', 'p', '1') }, /* MPEG layer 1 */
      { CODEC_ID_MP2, MKTAG('.', 'm', 'p', '2') }, /* MPEG layer 2 */
  

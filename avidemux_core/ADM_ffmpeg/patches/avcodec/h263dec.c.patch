@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/h263dec.c b/avidemux_core/ADM_ffmpeg/libavcodec/h263dec.c
-index d9d6f7e..218959d 100644
+index 04417c2..1bd8168 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/h263dec.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/h263dec.c
-@@ -119,6 +119,23 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
+@@ -120,6 +120,23 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
  
      return 0;
  }
@@ -26,7 +26,7 @@ index d9d6f7e..218959d 100644
  
  av_cold int ff_h263_decode_end(AVCodecContext *avctx)
  {
-@@ -414,6 +431,12 @@ retry:
+@@ -422,6 +439,12 @@ retry:
      } else {
          ret = h263_decode_picture_header(s);
      }
@@ -39,7 +39,7 @@ index d9d6f7e..218959d 100644
  
      if(ret==FRAME_SKIPPED) return get_consumed_bytes(s, buf_size);
  
-@@ -709,6 +732,14 @@ intrax8_decoded:
+@@ -717,6 +740,14 @@ intrax8_decoded:
  
  assert(s->current_picture.pict_type == s->current_picture_ptr->pict_type);
  assert(s->current_picture.pict_type == s->pict_type);

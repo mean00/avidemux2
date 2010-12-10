@@ -1,5 +1,5 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavutil/internal.h b/avidemux_core/ADM_ffmpeg/libavutil/internal.h
-index 53d2b94..6cfbc6a 100644
+index 9c4ba7e..73f7d65 100644
 --- a/avidemux_core/ADM_ffmpeg/libavutil/internal.h
 +++ b/avidemux_core/ADM_ffmpeg/libavutil/internal.h
 @@ -34,7 +34,11 @@

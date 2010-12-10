@@ -958,3 +958,8 @@ AVOutputFormat mpegts_muxer = {
     mpegts_write_packet,
     mpegts_write_end,
 };
+int mpegtsenc_init(void)
+{
+    av_register_output_format(&mpegts_muxer);
+    return 0;
+}

@@ -1,9 +1,9 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/pngdec.c b/avidemux_core/ADM_ffmpeg/libavcodec/pngdec.c
-index 037c5a0..6546567 100644
+index eb8989f..5ecdd56 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/pngdec.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/pngdec.c
-@@ -20,7 +20,7 @@
-  */
+@@ -21,7 +21,7 @@
+ #include "libavcore/imgutils.h"
  #include "avcodec.h"
  #include "bytestream.h"
 -#include "png.h"

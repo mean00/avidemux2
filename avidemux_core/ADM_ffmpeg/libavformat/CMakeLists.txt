@@ -7,6 +7,7 @@ SET(${ADM_LIB}_SRCS
 	avc.c   riff.c
         mpegenc.c
         movenchint.c sdp.c adtsenc.c flacenc.c flacenc_header.c vorbiscomment.c
+	id3v2.c id3v1.c avlanguage.c
 )
 IF(WIN32)
   ADD_DEFINITIONS(-DHAVE_DOS_PATHS=1)

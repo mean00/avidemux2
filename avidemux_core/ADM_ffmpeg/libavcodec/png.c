@@ -20,7 +20,7 @@
  */
 #include "avcodec.h"
 #include "bytestream.h"
-#include "png.h"
+#include "ffpng.h"
 
 const uint8_t ff_pngsig[8] = {137, 80, 78, 71, 13, 10, 26, 10};
 const uint8_t ff_mngsig[8] = {138, 77, 78, 71, 13, 10, 26, 10};

@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/mpegtsenc.c b/avidemux_core/ADM_ffmpeg/libavformat/mpegtsenc.c
-index ac09ab9..fe32325 100644
+index bfd21db..85a6363 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/mpegtsenc.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/mpegtsenc.c
-@@ -947,3 +947,8 @@ AVOutputFormat mpegts_muxer = {
+@@ -958,3 +958,8 @@ AVOutputFormat mpegts_muxer = {
      mpegts_write_packet,
      mpegts_write_end,
  };

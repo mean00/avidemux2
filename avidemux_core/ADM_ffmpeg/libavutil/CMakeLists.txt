@@ -1,6 +1,8 @@
 SET(ADM_LIB ADM_libavutil6)
 
 SET(${ADM_LIB}_SRCS 
+opt.c
+cpu.c
 eval.c
 adler32.c
 aes.c
@@ -27,6 +29,11 @@ mem.c
 pixdesc.c
 sha.c
 )
+IF(ADM_CPU_X86)
+	SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS}
+			x86/cpu.c
+				)
+ENDIF(ADM_CPU_X86)
 
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
 TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6)

@@ -1,5 +1,5 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo_enc.c b/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo_enc.c
-index 9f8682c..1f296a5 100644
+index 459ede7..97ffa0a 100644
 --- a/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo_enc.c
 +++ b/avidemux_core/ADM_ffmpeg/libavcodec/mpegvideo_enc.c
 @@ -367,12 +367,14 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)

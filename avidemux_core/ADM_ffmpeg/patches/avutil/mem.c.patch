@@ -1,10 +1,10 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavutil/mem.c b/avidemux_core/ADM_ffmpeg/libavutil/mem.c
-index 8cad089..8e95a78 100644
+index 18fe28b..ad225f2 100644
 --- a/avidemux_core/ADM_ffmpeg/libavutil/mem.c
 +++ b/avidemux_core/ADM_ffmpeg/libavutil/mem.c
-@@ -63,87 +63,110 @@ void  free(void *ptr);
+@@ -63,88 +63,112 @@ void  free(void *ptr);
  
- void *av_malloc(unsigned int size)
+ void *av_malloc(FF_INTERNAL_MEM_TYPE size)
  {
 -    void *ptr = NULL;
 -#if CONFIG_MEMALIGN_HACK
@@ -57,6 +57,8 @@ index 8cad089..8e95a78 100644
 +	return malloc(size);
  #else
 -    ptr = malloc(size);
+-#endif
+-    return ptr;
 +	char *c;
 +
 +	uint64_t l, lorg;
@@ -74,12 +76,12 @@ index 8cad089..8e95a78 100644
 +	backdoor[1] = size;
 +
 +	return c;
- #endif
--    return ptr;
++ #endif
++
  }
  
--void *av_realloc(void *ptr, unsigned int size)
-+void *av_realloc(void *ptr, unsigned int newsize)
+-void *av_realloc(void *ptr, FF_INTERNAL_MEM_TYPE size)
++void *av_realloc(void *ptr, FF_INTERNAL_MEM_TYPE newsize)
  {
 -#if CONFIG_MEMALIGN_HACK
 -    int diff;
@@ -87,24 +89,12 @@ index 8cad089..8e95a78 100644
 +#ifdef __APPLE__
 +	if (!ptr)
 +		return av_malloc(newsize);
- 
--    /* let's disallow possible ambiguous cases */
--    if(size > (INT_MAX-16) )
--        return NULL;
 +	if (!newsize)
 +	{
 +		av_free(ptr);
 +		return NULL;
 +	}
- 
--#if CONFIG_MEMALIGN_HACK
--    //FIXME this isn't aligned correctly, though it probably isn't needed
--    if(!ptr) return av_malloc(size);
--    diff= ((char*)ptr)[-1];
--    return (char*)realloc((char*)ptr - diff, size + diff) + diff;
-+	return realloc(ptr, newsize);
- #else
--    return realloc(ptr, size);
++#else
 +	void *nalloc;
 +
 +	if (!ptr)
@@ -141,7 +131,20 @@ index 8cad089..8e95a78 100644
 +	av_free(ptr);
 +
 +	return nalloc;
- #endif
++ #endif
+ 
+-    /* let's disallow possible ambiguous cases */
+-    if(size > (INT_MAX-16) )
+-        return NULL;
+ 
+-#if CONFIG_MEMALIGN_HACK
+-    //FIXME this isn't aligned correctly, though it probably isn't needed
+-    if(!ptr) return av_malloc(size);
+-    diff= ((char*)ptr)[-1];
+-    return (char*)realloc((char*)ptr - diff, size + diff) + diff;
+-#else
+-    return realloc(ptr, size);
+-#endif
  }
  
  void av_free(void *ptr)
@@ -150,13 +153,15 @@ index 8cad089..8e95a78 100644
 -    if (ptr)
 -#if CONFIG_MEMALIGN_HACK
 -        free((char*)ptr - ((char*)ptr)[-1]);
+-#else
+-        free(ptr);
+-#endif
 +#ifdef __APPLE__
 +	if (!ptr)
 +		return;
 +
 +	free(ptr);
- #else
--        free(ptr);
++ #else
 +	uint32_t *backdoor;
 +	uint32_t size, offset;
 +	char *c = (char*)ptr;
@@ -177,6 +182,8 @@ index 8cad089..8e95a78 100644
 +	*backdoor = 0xbeefbeef; // Scratch sig
 +
 +	free(c - offset);
- #endif
++ #endif
++	
  }
  
+ void av_freep(void *arg)

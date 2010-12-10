@@ -39,7 +39,7 @@
 #include "lpc.h"
 #include "ac3dec.h"
 #include "vorbis.h"
-#include "png.h"
+#include "ffpng.h"
 #include "vp8dsp.h"
 
 uint8_t ff_cropTbl[256 + 2 * MAX_NEG_CROP] = {0, };

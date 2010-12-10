@@ -27,7 +27,7 @@
 #define AVUTIL_BSWAP_H
 
 #include <stdint.h>
-#include "libavutil/avconfig.h"
+#include "ffmpeg_config/libavutil/avconfig.h" //MEANX
 #include "attributes.h"
 
 #ifdef HAVE_AV_CONFIG_H

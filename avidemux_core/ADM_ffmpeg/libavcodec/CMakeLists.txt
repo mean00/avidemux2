@@ -38,6 +38,7 @@ SET(${ADM_LIB}_SRCS
         synth_filter.c    mpeg4videodec.c h264_cabac.c h264_cavlc.c vp56dsp.c h264_loopfilter.c
         h264_sei.c h264_ps.c svq3.c h264dsp.c flvdec.c pngdec.c png.c
         aacps.c  aacpsy.c aacadtsdec.c lpc.c vp8_parser.c vp8.c vp8dsp.c inverse.c dct.c aacdec.c
+	vp56rac.c r210dec.c assdec.c g722.c ass.c
         )
 
 if(USE_VDPAU)
@@ -46,28 +47,18 @@ endif(USE_VDPAU)
 
 IF(ADM_CPU_X86)
 	SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS}
-		  x86/mpegvideo_mmx.c   x86/dsputil_mmx.c
-		x86/fdct_mmx.c  x86/motion_est_mmx.c  x86/simple_idct_mmx.c  
-		x86/idct_mmx_xvid.c    x86/snowdsp_mmx.c
-                x86/idct_sse2_xvid.c 
-                x86/vp8dsp-init.c
-                x86/mpegaudiodec_mmx.c
-                x86/lpc_mmx.c
-                x86/fft.c
-                x86/dct32_sse.c
-                #x86/fft_sse.c
-                #x86/fft_3dn2.c
-		#x86/fft_3dn.c  
-                x86/dsputilenc_mmx.c  x86/vc1dsp_mmx.c  x86/idct_mmx.c)
+		x86/cavsdsp_mmx.c               x86/dsputil_mmx.c                  x86/mlpdsp.c                  x86/simple_idct_mmx.c
+		x86/dct32_sse.c                 x86/fft.c                  x86/idct_mmx.c        x86/motion_est_mmx.c          x86/snowdsp_mmx.c
+		x86/dnxhd_mmx.c                 x86/idct_mmx_xvid.c   x86/mpegaudiodec_mmx.c        x86/vc1dsp_mmx.c
+		x86/dsputilenc_mmx.c            x86/fdct_mmx.c                  x86/h264dsp_mmx.c          x86/idct_sse2_xvid.c  x86/mpegvideo_mmx.c           x86/vp56dsp_init.c
+		x86/h264_intrapred_init.c  x86/lpc_mmx.c           x86/vp8dsp-init.c
+		)
         IF(USE_YASM)
                 SET(YASM_SOURCE         
-                                x86/h264_intrapred.asm
-                                x86/vp8dsp.asm
-                                x86/vc1dsp_yasm.asm
-                                x86/dsputil_yasm.asm
-                                x86/fft_mmx.asm
-                                x86/h264_deblock_sse2.asm
-                                x86/h264_idct_sse2.asm)
+				x86/deinterlace.asm      x86/dsputil_yasm.asm  x86/h264_chromamc.asm  x86/h264_idct.asm       
+				x86/h264_weight.asm  x86/vp3dsp.asm   x86/vp8dsp.asm  x86/x86util.asm
+				x86/dsputilenc_yasm.asm  x86/fft_mmx.asm       x86/h264_deblock.asm   x86/h264_intrapred.asm  
+				x86/vc1dsp_yasm.asm  x86/vp56dsp.asm  x86/x86inc.asm)
                 SET(YASM_DEP x86/fft_3dn2.c  x86/fft_3dn.c   x86/fft_sse.c)
                  FOREACH(yasm_files ${YASM_SOURCE})
                         SET(tgt1 ${CMAKE_CURRENT_BINARY_DIR}/${yasm_files}.o)
@@ -101,6 +92,6 @@ ENDIF (ADM_DEBUG AND ADM_CPU_X86_32)
 IF(USE_YASM)
   ADD_DEPENDENCIES(${ADM_LIB} ${YASM_OBJ})
 ENDIF(USE_YASM)
-TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6 ADM_libavutil6 ${ZLIB_LIBRARY})
+TARGET_LINK_LIBRARIES(${ADM_LIB} ADM_core6 ADM_libavcore6 ADM_libavutil6 ${ZLIB_LIBRARY})
 
 ADM_INSTALL_LIB(${ADM_LIB} )

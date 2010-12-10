@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/utils.c b/avidemux_core/ADM_ffmpeg/libavformat/utils.c
-index 6fa4dff..8646c6c 100644
+index c8e6d66..ac532d4 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/utils.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/utils.c
-@@ -49,13 +49,14 @@ unsigned avformat_version(void)
+@@ -50,13 +50,14 @@ unsigned avformat_version(void)
  
  const char *avformat_configuration(void)
  {

@@ -21,7 +21,7 @@
 #include "avcodec.h"
 #include "bytestream.h"
 #include "dsputil.h"
-#include "png.h"
+#include "ffpng.h"
 
 /* TODO:
  * - add 2, 4 and 16 bit depth support

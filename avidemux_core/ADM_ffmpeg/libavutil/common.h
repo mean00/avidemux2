@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "attributes.h"
-#include "libavutil/avconfig.h"
+#include "ffmpeg_config/libavutil/avconfig.h" //MEANX
 
 #if AV_HAVE_BIGENDIAN
 #   define AV_NE(be, le) (be)

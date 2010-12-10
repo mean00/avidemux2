@@ -20,7 +20,7 @@
 #define AVUTIL_INTREADWRITE_H
 
 #include <stdint.h>
-#include "libavutil/avconfig.h"
+#include "ffmpeg_config/libavutil/avconfig.h" //MEANX
 #include "attributes.h"
 #include "bswap.h"
 

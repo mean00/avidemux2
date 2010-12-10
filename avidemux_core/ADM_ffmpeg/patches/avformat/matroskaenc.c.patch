@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/matroskaenc.c b/avidemux_core/ADM_ffmpeg/libavformat/matroskaenc.c
-index f275d44..a7602a9 100644
+index dc08c18..c12bc45 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/matroskaenc.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/matroskaenc.c
-@@ -407,6 +407,7 @@ static int64_t mkv_write_cues(ByteIOContext *pb, mkv_cues *cues, int num_tracks)
+@@ -410,6 +410,7 @@ static int64_t mkv_write_cues(ByteIOContext *pb, mkv_cues *cues, int num_tracks)
  
  static int put_xiph_codecpriv(AVFormatContext *s, ByteIOContext *pb, AVCodecContext *codec)
  {
@@ -10,7 +10,7 @@ index f275d44..a7602a9 100644
      uint8_t *header_start[3];
      int header_len[3];
      int first_header_size;
-@@ -431,6 +432,28 @@ static int put_xiph_codecpriv(AVFormatContext *s, ByteIOContext *pb, AVCodecCont
+@@ -434,6 +435,28 @@ static int put_xiph_codecpriv(AVFormatContext *s, ByteIOContext *pb, AVCodecCont
          put_buffer(pb, header_start[j], header_len[j]);
  
      return 0;
@@ -39,7 +39,7 @@ index f275d44..a7602a9 100644
  }
  
  static void get_aac_sample_rates(AVFormatContext *s, AVCodecContext *codec, int *sample_rate, int *output_sample_rate)
-@@ -548,6 +571,23 @@ static int mkv_write_tracks(AVFormatContext *s)
+@@ -551,6 +574,23 @@ static int mkv_write_tracks(AVFormatContext *s)
          put_ebml_uint (pb, MATROSKA_ID_TRACKNUMBER     , i + 1);
          put_ebml_uint (pb, MATROSKA_ID_TRACKUID        , i + 1);
          put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)
@@ -63,7 +63,7 @@ index f275d44..a7602a9 100644
  
          if ((tag = av_metadata_get(st->metadata, "title", NULL, 0)))
              put_ebml_string(pb, MATROSKA_ID_TRACKNAME, tag->value);
-@@ -1087,3 +1127,17 @@ AVOutputFormat matroska_audio_muxer = {
+@@ -1226,3 +1266,17 @@ AVOutputFormat matroska_audio_muxer = {
      .codec_tag = (const AVCodecTag* const []){ff_codec_wav_tags, 0},
  };
  #endif

@@ -53,6 +53,12 @@ int main(void)
 
 #define DECLARE_DECODER(a,b); printf("#define CONFIG_"#a"_DECODER 1\n");
   
+    DECLARE_DECODER (R10K, svq1);
+    DECLARE_DECODER (AAC_LATM, svq1);
+    DECLARE_DECODER (PCM_LXF, svq1);
+    DECLARE_DECODER (ADPCM_G722, svq1);
+    DECLARE_DECODER (ASS, svq1);
+
     DECLARE_DECODER (SVQ1, svq1);
     DECLARE_DECODER(AAC, eatgq);
     DECLARE_DECODER(MPEG4AAC, mpeg4aac);
@@ -390,6 +396,12 @@ int main(void)
 
 #undef DECLARE_ENCODER
 #define DECLARE_ENCODER(a,b); printf("#define CONFIG_"#a"_ENCODER 0\n"); 
+    DECLARE_ENCODER(A64MULTI, amv);
+    DECLARE_ENCODER(A64MULTI5, amv);
+    DECLARE_ENCODER(ADPCM_G722, amv);
+    DECLARE_ENCODER(ASS, amv);
+    DECLARE_ENCODER(LIBXAVS, amv);
+
     DECLARE_ENCODER(LIBVPX, amv);
     DECLARE_ENCODER(RA_144, amv);
     DECLARE_ENCODER(XSUB, amv);
@@ -495,6 +507,7 @@ int main(void)
 
 #define DECLARE_BSF(a,b); printf("#define CONFIG_"#a"_BSF 0\n");
 
+	DECLARE_BSF(MJPEG2JPEG, mp3_header_compress);
 	DECLARE_BSF(CHOMP, mp3_header_compress);
 	DECLARE_BSF(AAC_ADTSTOASC, mp3_header_compress);
 	DECLARE_BSF(MP3_HEADER_COMPRESS, mp3_header_compress);
@@ -558,6 +571,8 @@ int main(void)
 	ENABLE(BFIN, bfin);
 	ENABLE(SMALL, small);
 #define DECLARE_ENABLE_PARSER(a,b); printf("#define CONFIG_"#a"_PARSER 0\n");
+	DECLARE_ENABLE_PARSER(FLAC, wmv3);
+	DECLARE_ENABLE_PARSER(AAC_LATM, wmv3);
 	DECLARE_ENABLE_PARSER(MLP, wmv3);
         printf("//****************** SYSTEM *******************\n");
 	printf("#	define ARCH_ARM 0\n");

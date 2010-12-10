@@ -39,7 +39,7 @@ void av_cold av_lfg_init(AVLFG *c, unsigned int seed){
         c->state[i+2]= AV_RL32(tmp+8);
         c->state[i+3]= AV_RL32(tmp+12);
     }
-    c->index=0;
+    c->xindex=0;
 }
 
 void av_bmg_get(AVLFG *lfg, double out[2])

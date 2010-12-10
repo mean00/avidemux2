@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/flvenc.c b/avidemux_core/ADM_ffmpeg/libavformat/flvenc.c
-index 709ef07..a573c63 100644
+index e138292..8c08178 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/flvenc.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/flvenc.c
-@@ -406,7 +406,8 @@ AVOutputFormat flv_muxer = {
+@@ -443,7 +443,8 @@ AVOutputFormat flv_muxer = {
      "video/x-flv",
      "flv",
      sizeof(FLVContext),
@@ -12,7 +12,7 @@ index 709ef07..a573c63 100644
      CODEC_ID_MP3,
  #else // CONFIG_LIBMP3LAME
      CODEC_ID_ADPCM_SWF,
-@@ -418,3 +419,9 @@ AVOutputFormat flv_muxer = {
+@@ -455,3 +456,9 @@ AVOutputFormat flv_muxer = {
      .codec_tag= (const AVCodecTag* const []){flv_video_codec_ids, flv_audio_codec_ids, 0},
      .flags= AVFMT_GLOBALHEADER | AVFMT_VARIABLE_FPS,
  };

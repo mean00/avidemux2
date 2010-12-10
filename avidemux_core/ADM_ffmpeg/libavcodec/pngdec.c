@@ -21,7 +21,7 @@
 #include "libavcore/imgutils.h"
 #include "avcodec.h"
 #include "bytestream.h"
-#include "png.h"
+#include "ffpng.h"
 #include "dsputil.h"
 
 /* TODO:

@@ -1,8 +1,8 @@
 diff --git a/avidemux_core/ADM_ffmpeg/libavformat/mpegenc.c b/avidemux_core/ADM_ffmpeg/libavformat/mpegenc.c
-index b37a774..32ce21b 100644
+index 5c090f6..bad9030 100644
 --- a/avidemux_core/ADM_ffmpeg/libavformat/mpegenc.c
 +++ b/avidemux_core/ADM_ffmpeg/libavformat/mpegenc.c
-@@ -1300,3 +1300,13 @@ AVOutputFormat mpeg2dvd_muxer = {
+@@ -1306,3 +1306,13 @@ AVOutputFormat mpeg2dvd_muxer = {
      mpeg_mux_end,
  };
  #endif
