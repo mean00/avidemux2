@@ -17,7 +17,7 @@ SET(${ADM_LIB}_SRCS
         flacdec.c
         flacdata.c
         vp6dsp.c
-        tscc.c  resample2.c    qdm2.c  bitstream_filter.c  eval.c  vc1.c
+        tscc.c  resample2.c    qdm2.c  bitstream_filter.c    vc1.c
 	vp56.c  vp6.c  vp5.c  indeo2.c  smacker.c  opt.c  fraps.c  dnxhddec.c
 	mpeg12data.c  mpegaudiodata.c  msmpeg4data.c   vp56data.c  mjpegbdec.c
 	h263_parser.c  h264_parser.c  mpeg4video_parser.c  mpegvideo_enc.c  mpeg12enc.c
@@ -46,12 +46,10 @@ endif(USE_VDPAU)
 
 IF(ADM_CPU_X86)
 	SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS}
-		x86/cpuid.c  x86/mpegvideo_mmx.c  x86/vp3dsp_mmx.c  x86/dsputil_mmx.c
+		  x86/mpegvideo_mmx.c   x86/dsputil_mmx.c
 		x86/fdct_mmx.c  x86/motion_est_mmx.c  x86/simple_idct_mmx.c  
-		x86/vp3dsp_sse2.c  x86/idct_mmx_xvid.c    x86/snowdsp_mmx.c
+		x86/idct_mmx_xvid.c    x86/snowdsp_mmx.c
                 x86/idct_sse2_xvid.c 
-                x86/vp6dsp_mmx.c
-                x86/vp6dsp_sse2.c
                 x86/vp8dsp-init.c
                 x86/mpegaudiodec_mmx.c
                 x86/lpc_mmx.c

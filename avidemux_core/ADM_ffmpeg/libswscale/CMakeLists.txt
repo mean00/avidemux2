@@ -1,6 +1,6 @@
 SET(ADM_LIB ADM_libswscale6)
 SET(${ADM_LIB}_SRCS 
-        swscale.c yuv2rgb.c rgb2rgb.c ADM_mp.cpp swscale_avoption.c utils.c
+        swscale.c yuv2rgb.c rgb2rgb.c ADM_mp.cpp  utils.c
 )
 ADD_DEFINITIONS("-Dbswap_16=av_bswap16")
 
