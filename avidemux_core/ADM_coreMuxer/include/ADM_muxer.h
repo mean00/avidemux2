@@ -71,6 +71,7 @@ public:
         virtual  bool     updateUI(void);
         virtual  bool     closeUI(void);
         virtual  bool     useGlobalHeader(void) {return false;}
+        virtual  bool     preferH264AnnexB(void) {return false;};
 
 };
 #endif
