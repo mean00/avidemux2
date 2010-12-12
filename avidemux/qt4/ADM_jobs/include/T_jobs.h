@@ -28,6 +28,7 @@ typedef struct
 }spawnData;
 
 class ADMJob;
+class jobProgress;
 /**
     \class jobWindow
 */
@@ -42,6 +43,7 @@ public:
 protected:
     ADM_commandSocket  mySocket;
     uint32_t    localPort;
+    jobProgress *dialog;
 protected:
     int         getActiveIndex(void)	;
     bool        runOneJob(ADMJob &job)   ;

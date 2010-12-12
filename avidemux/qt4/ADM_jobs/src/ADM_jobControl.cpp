@@ -12,6 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "T_jobs.h"
+#include "T_progress.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 #include "DIA_coreToolkit.h"
@@ -156,6 +157,7 @@ jobWindow::jobWindow(void) : QDialog()
     ADM_info("Socket bound to %d\n",(int)localPort);
     //ADM_socket *n=mySocket.waitForConnect(5000);
     refreshList();
+    dialog=NULL;
 
 }
 /**
@@ -163,7 +165,8 @@ jobWindow::jobWindow(void) : QDialog()
 */
 jobWindow::~jobWindow()
 {
-
+    if(dialog) delete dialog;
+    dialog=NULL;
 }
 /**
 */
@@ -224,7 +227,12 @@ void jobWindow::runAction(JobAction action)
                         break;
             case   JobAction_runNow:
                         {
+                            dialog=new jobProgress(1);
+                            dialog->setCurrentJob(1);
+                            dialog->setCurrentOutputName(j->outputFileName);
                             runOneJob(*j);
+                            delete dialog;
+                            dialog=NULL;
                         }
                         break;
                         
@@ -266,12 +274,21 @@ void jobWindow::quit(void)
 void jobWindow::runAllJob(void)
 {
     int n=listOfJob.size();
+    dialog=new jobProgress(n);
+
     for(int i=0;i<n;i++)
     {
             ADMJob *j=&(listOfJob[i]);
+
             if(j->status==ADM_JOB_IDLE)
+            {
+                dialog->setCurrentJob(i);
+                dialog->setCurrentOutputName(j->outputFileName);
                 runOneJob(*j);
+            }
     }
+    delete dialog;
+    dialog=NULL;
     return ;
 }
 #if 0
