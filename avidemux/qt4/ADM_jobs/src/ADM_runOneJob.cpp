@@ -12,6 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "T_jobs.h"
+#include "T_progress.h"
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 #include "pthread.h"
@@ -57,7 +58,11 @@ bool jobWindow::runProcess(spawnData *data)
     argv[1]=string(str);
     argv[2]=string("--runpy \"")+data->script+string("\" ");
     argv[3]=string("--save \"")+data->outputFile+string("\" ");
+#ifndef __WIN32
     argv[4]=string("--quit > /tmp/prout.log");
+#else
+    argv[4]=string("--quit ");
+#endif
     return spawnProcess(data->exeName,5,argv);
 }
 /**
@@ -81,6 +86,7 @@ bool jobWindow::spawnChild(const char *exeName, const string &script, const stri
             }
             // Everything is fine, give process 1 second to use the stack allocated data....
             ADM_usleep(1000*1000LL);
+            QApplication::processEvents();
             ADM_info("Spawning successfull\n");
             return true;
 }
@@ -162,6 +168,7 @@ bool jobWindow::runOneJob( ADMJob &job)
                             if(msg.getPayloadAsUint32_t(&v))
                             {
                                     printf("Progress %d %%\n",(int)v);
+                                    dialog->setPercent(v);
                             }else
                             {
                                     ADM_error("Can read End payload   \n");
@@ -171,6 +178,8 @@ bool jobWindow::runOneJob( ADMJob &job)
                                 break;
             }
         }
+        ADM_assert(dialog);
+        QApplication::processEvents();
         ADM_usleep(1000*1000); // Refresh once per sec
     }
     ADM_info("** End of slave process **\n");

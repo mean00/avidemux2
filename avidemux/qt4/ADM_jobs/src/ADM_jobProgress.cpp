@@ -28,14 +28,15 @@ jobProgress::jobProgress(uint32_t nbJobs)
     ui.progressBar->setMaximum(100);
     ui.progressBar->setValue(0);
     ADM_info("Starting progress dialog\n");
-    show();
+    open();
+    QApplication::processEvents();
 }
 /**
     \fn dtor
 */
 jobProgress::~jobProgress()
 {
-
+    ADM_info("Deleting progress..\n");
 }
 /**
 
@@ -67,6 +68,10 @@ void  jobProgress::setPercent(uint32_t percent)
 */
 void     jobProgress::updateUi(void)
 {
+    char buffer[128];
+    sprintf(buffer,"%d/%d",currentJob+1,numberOfJobs);
+    ui.labelJobCount->setText(buffer);
+    ui.labelOutputFile_2->setText(currentOutputFile.c_str());
     updatePercent();
 }
 /**
@@ -75,5 +80,6 @@ void     jobProgress::updateUi(void)
 void     jobProgress::updatePercent(void)
 {
     ui.progressBar->setValue(percent);
+    QApplication::processEvents();
 }
 // EOF

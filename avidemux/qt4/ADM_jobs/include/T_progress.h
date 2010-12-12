@@ -19,13 +19,14 @@ protected:
             uint32_t percent;
         
             void     updateUi(void);
-            void     updatePercent(void);
+
 public:
                 jobProgress(uint32_t nbJobs);
 	virtual     ~jobProgress();
             void  setCurrentJob(uint32_t job);
             void  setCurrentOutputName(const string &name);
             void  setPercent(uint32_t percent);
+            void  updatePercent(void);
 protected:
     Ui_DialogProgress ui;
 public slots:

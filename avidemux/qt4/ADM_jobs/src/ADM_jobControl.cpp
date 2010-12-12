@@ -228,7 +228,7 @@ void jobWindow::runAction(JobAction action)
             case   JobAction_runNow:
                         {
                             dialog=new jobProgress(1);
-                            dialog->setCurrentJob(1);
+                            dialog->setCurrentJob(0);
                             dialog->setCurrentOutputName(j->outputFileName);
                             runOneJob(*j);
                             delete dialog;
