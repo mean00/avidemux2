@@ -17,7 +17,7 @@
 #include "avidemutils.h"
 #include "ADM_vidMisc.h"
 #include "DIA_encoding_none.h"
-
+extern bool ADM_slaveReportProgress(uint32_t p);
 DIA_encodingCli::DIA_encodingCli( uint64_t fps1000 ) : DIA_encodingBase(fps1000)
 {
 
@@ -55,7 +55,7 @@ bool DIA_encodingCli::isAlive( void )
     void DIA_encodingCli::setTotalSize(uint64_t size){}
     void DIA_encodingCli::setAudioSize(uint64_t size){}
     void DIA_encodingCli::setVideoSize(uint64_t size){}
-    void DIA_encodingCli::setPercent(uint32_t percent){}
+    void DIA_encodingCli::setPercent(uint32_t percent){ADM_slaveReportProgress(percent);}
     void DIA_encodingCli::setFps(uint32_t fps){}
     void DIA_encodingCli::setFrameCount(uint32_t nb){}
     void DIA_encodingCli::setElapsedTimeMs(uint32_t nb){}

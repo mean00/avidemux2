@@ -24,7 +24,7 @@
 
 extern void UI_purge(void);
 static int stopReq=0;
-
+extern bool ADM_slaveReportProgress(uint32_t percent);
 encodingWindow::encodingWindow() : QDialog()
  {
 	ui.setupUi(this);
@@ -194,6 +194,7 @@ void DIA_encodingQt4::setPercent(uint32_t p)
           ADM_assert(window);
           printf("Percent:%u\n",p);
           WIDGET(progressBar)->setValue(p);
+          ADM_slaveReportProgress(p);
           UI_purge();
 }
 /**
