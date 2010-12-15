@@ -155,7 +155,7 @@ bool result=false;
           {
             SEI_nal.empty();
             uint32_t code=0xffff+0xffff0000;
-            while((code!=1) && pkt->stillOk())
+            while(((code&0xffffff)!=1) && pkt->stillOk())
             {
                     uint8_t r=pkt->readi8();
                     code=(code<<8)+r;
@@ -227,7 +227,7 @@ resume:
                         // Load the whole NAL
                             SEI_nal.empty();
                             uint32_t code=0xffff+0xffff0000;
-                            while((code!=1) && pkt->stillOk())
+                            while(((0xffffff&code)!=1) && pkt->stillOk())
                             {
                                 uint8_t r=pkt->readi8();
                                 code=(code<<8)+r;
