@@ -2891,6 +2891,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->scalarproduct_and_madd_int16 = ff_scalarproduct_and_madd_int16_mmx2;
 #endif
         }
+#ifndef __MINGW32__ // MEANX : Deactivate SSE crashes on windows
         if(mm_flags & AV_CPU_FLAG_SSE){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_sse;
             c->ac3_downmix = ac3_downmix_sse;
@@ -2906,6 +2907,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->scalarproduct_float = ff_scalarproduct_float_sse;
 #endif
         }
+#endif // MEANX
         if(mm_flags & AV_CPU_FLAG_3DNOW)
             c->vector_fmul_add = vector_fmul_add_3dnow; // faster than sse
         if(mm_flags & AV_CPU_FLAG_SSE2){
