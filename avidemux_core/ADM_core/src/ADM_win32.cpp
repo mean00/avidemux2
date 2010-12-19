@@ -369,6 +369,9 @@ bool getWindowsVersion(char* version)
 	index += sprintf(version + index, " (%d.%d.%d", osvi.dwMajorVersion, osvi.dwMinorVersion, osvi.dwBuildNumber & 0xFFFF);
 
 // 64-bit Windows
+#ifdef __WIN64
+	index += sprintf(version + index, "; 64-bit");
+#else
 	bool isWow64 = false;
 	HMODULE hKernel = GetModuleHandle("kernel32.dll");
 
@@ -388,7 +391,7 @@ bool getWindowsVersion(char* version)
 		index += sprintf(version + index, "; 64-bit");
 	else
 		index += sprintf(version + index, "; 32-bit");
-
+#endif
 	index += sprintf(version + index, ")");
 	
 	return true;

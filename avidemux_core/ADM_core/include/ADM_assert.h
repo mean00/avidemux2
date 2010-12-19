@@ -19,6 +19,19 @@
 #include <assert.h>
 #include "ADM_inttype.h"
 
+#if defined(__MINGW32__)
+	#include <_mingw.h>
+
+	#if defined(__MINGW64_VERSION_STR)
+		#if defined (__WIN64)
+			#include <intrin.h>
+		#endif
+
+		#include <wchar.h>
+	#endif
+#endif
+
+
 #define ADM_assert(x) { if(!(x)) {ADM_backTrack("Assert failed :"#x,__LINE__,__FILE__);  }}
 
 /* Functions we want to override to have better os support / debug / error control */
@@ -72,7 +85,7 @@ extern adm_fast_memcpy myAdmMemcpy;
 #define fopen   ADM_fopen
 #define fclose  ADM_fclose
 
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(__WIN64)
 #ifndef ADM_LEGACY_PROGGY
   #define malloc #error
   #define realloc #error
