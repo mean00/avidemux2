@@ -199,6 +199,15 @@ uint32_t pptype, ppstrength,ppswap;
                         
         }
 #endif
+        { // Maybe not the 1st track
+          int source;
+               source=video_body->getCurrentAudioStreamNumber(0);
+               ADM_info("Audio source %d\n",source);
+               if(source)
+                        qfprintf(fd,"adm.setAudioTrack(%d);\n", source); 
+                        
+        }
+
    couples=NULL;
    getAudioExtraConf(&bitrate,&couples);
     qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(),bitrate); 

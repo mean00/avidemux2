@@ -26,6 +26,10 @@
 #include "audioEncoderApi.h"
 #include "ADM_scriptCommon.h"
 #include "ADM_scriptAudio.h"
+
+extern ADM_Composer *video_body;
+
+int A_setAudioTrack(int track);
 /**
     \fn int jsAudioReset(void);
 */
@@ -57,8 +61,19 @@ void    scriptSetResample(int32_t fq)
 
 }
 /**
-
+    \fn  scriptAudioSetTrack
 */
+int scriptAudioSetTrack(int track)
+{
+        uint32_t nbAudioTracks,currentAudioTrack;
+        audioInfo *infos=NULL;
+
+        if(!video_body->getAudioStreamsInfo(0,&nbAudioTracks,&infos)) 
+            return false;
+        if(nbAudioTracks<=track) return false;
+        A_setAudioTrack(track);
+        return true;
+}
 /**
     \fn scriptSetAudioCodec
 */

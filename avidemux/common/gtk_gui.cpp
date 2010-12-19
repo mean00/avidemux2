@@ -905,6 +905,15 @@ uint32_t type,strength,swap;
 }
 extern const char *getStrFromAudioCodec( uint32_t codec);
 /**
+
+*/
+int A_setAudioTrack(int track)
+{
+        video_body->changeAudioStream(0,track);
+        video_body->getAudioStream(&aviaudiostream);
+        return true;
+}
+/**
       \fn A_audioTrack
       \brief Allow to select audio track
 */
@@ -938,8 +947,7 @@ void A_audioTrack( void )
          {
             if(newTrack!=currentAudioTrack)
             {
-                    video_body->changeAudioStream(0,newTrack);
-                    video_body->getAudioStream(&aviaudiostream);
+                    A_setAudioTrack(newTrack);
             }
         }
       

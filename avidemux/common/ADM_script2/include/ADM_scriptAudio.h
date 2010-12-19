@@ -20,6 +20,7 @@
 extern "C" {
 #endif
 int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c);
+int     scriptAudioSetTrack(int trackNo);
 #ifdef __cplusplus
 };
 #endif

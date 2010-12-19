@@ -15,6 +15,7 @@
 /* METHOD */ str scriptGetVideoCodec:getVideoCodec(void) 
 /* METHOD */ int scriptAudioReset:audioReset        (void) 
 /* METHOD */ int scriptAudioMixer:audioMixer        (str ) 
+/* METHOD */ int scriptAudioSetTrack:setAudioTrack  (int ) 
 /* METHOD */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
 #

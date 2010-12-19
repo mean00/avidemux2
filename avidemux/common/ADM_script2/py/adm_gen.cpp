@@ -184,6 +184,16 @@ static tp_obj zzpy_saveJpeg(TP)
   int r=  A_saveJpg(p0); 
   return tp_number(r);
 }
+// setAudioTrack -> int scriptAudioSetTrack (int  ) 
+static tp_obj zzpy_setAudioTrack(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
+  int p0= pm.asInt();
+  int r=  scriptAudioSetTrack(p0); 
+  return tp_number(r);
+}
 // setContainer -> int scriptSetContainer (str couples ) 
 static tp_obj zzpy_setContainer(TP)
  {
@@ -317,6 +327,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm,self,zzpy_saveJpeg);
   }
+  if (!strcmp(key, "setAudioTrack"))
+  {
+     return tp_method(vm,self,zzpy_setAudioTrack);
+  }
   if (!strcmp(key, "setContainer"))
   {
      return tp_method(vm,self,zzpy_setContainer);
@@ -396,6 +410,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	jsLog("addSegment(int ,double , double )\n");
 	jsLog("clearVideoFilters(void)\n");
 	jsLog("saveJpeg(str)\n");
+	jsLog("setAudioTrack(int )\n");
 	jsLog("setContainer(str,couples)\n");
 	jsLog("audioReset(void)\n");
 	jsLog("getVideoCodec(void)\n");
