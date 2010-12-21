@@ -243,6 +243,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   tinyParams pm(vm);
   void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
+  if (!strcmp(key, "audioPal2film"))
+  {
+     return tp_number(scriptGetPal2film());
+  }
   if (!strcmp(key, "audioResample"))
   {
      return tp_number(scriptGetResample());
@@ -254,6 +258,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "markerB"))
   {
      return tp_number(scriptGetMarkerB());
+  }
+  if (!strcmp(key, "audioFilm2pal"))
+  {
+     return tp_number(scriptGetFilm2pal());
   }
   if (!strcmp(key, "audioCodec"))
   {
@@ -355,6 +363,12 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   tinyParams pm(vm);
   void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
+  if (!strcmp(key, "audioPal2film"))
+  {
+     int val=pm.asInt();
+     scriptSetPal2film(val);
+     return tp_None;
+  }
   if (!strcmp(key, "audioResample"))
   {
      int val=pm.asInt();
@@ -371,6 +385,12 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   {
      double val=pm.asDouble();
      scriptSetMarkerB(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "audioFilm2pal"))
+  {
+     int val=pm.asInt();
+     scriptSetFilm2pal(val);
      return tp_None;
   }
   return tp_None;

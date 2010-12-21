@@ -27,6 +27,11 @@ int scriptAudioMixer(const char *s);
 // Fq
 int32_t scriptGetResample(void);
 void    scriptSetResample(int32_t fq);
+//  Frame rate converter
+int32_t scriptGetPal2film(void);
+void    scriptSetPal2film(int32_t rate);
+int32_t scriptGetFilm2pal(void);
+void    scriptSetFilm2pal(int32_t rate);
 // Markers
 double scriptGetMarkerA(void);
 double scriptGetMarkerB(void);

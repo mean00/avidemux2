@@ -61,6 +61,49 @@ void    scriptSetResample(int32_t fq)
     audioFilterSetResample(fq);
 }
 /**
+
+*/
+int32_t scriptGetPal2film(void)
+{
+    if(audioFilterGetFrameRate()==FILMCONV_PAL2FILM) return 1;
+    return 0;
+}
+/**
+
+*/
+int32_t scriptGetFilm2pal(void)
+{
+    if(audioFilterGetFrameRate()==FILMCONV_FILM2PAL) return 1;
+    return 0;
+}
+/**
+
+*/
+void    scriptSetPal2film(int32_t rate)
+{
+    if(rate)
+        audioFilterSetFrameRate(FILMCONV_PAL2FILM);
+    else
+    {
+        if(scriptGetPal2film())
+            audioFilterSetFrameRate(FILMCONV_NONE);
+    }
+}
+/**
+
+*/
+void    scriptSetFilm2pal(int32_t rate)
+{
+    if(rate)
+        audioFilterSetFrameRate(FILMCONV_FILM2PAL);
+    else
+    {
+        if(scriptGetFilm2pal())
+            audioFilterSetFrameRate(FILMCONV_NONE);
+    }
+}
+
+/**
     \fn  scriptAudioSetTrack
 */
 int scriptAudioSetTrack(int track)
