@@ -91,7 +91,7 @@ entryDesc entry;
       memset(&entry,0,sizeof(entry));
       /* Set some defaults value */
 
-      entry.chan=2;
+      entry.chan=1;
 
       entryWalk(  (ADM_ebml_file *)head,headlen,&entry);
       entry.dump();
