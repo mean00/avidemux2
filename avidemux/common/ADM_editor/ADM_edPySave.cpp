@@ -167,29 +167,6 @@ uint32_t pptype, ppstrength,ppswap;
    
    qfprintf(fd,"\n#** Audio **\n");
    qfprintf(fd,"adm.audioReset()\n");
-#if 0
-   // External audio ?
-        char *audioName;
-        AudioSource  source;
-
-        source=getCurrentAudioSource(&audioName);
-        if(!audioName) audioName="";
-
-        if(source!=AudioAvi)
-        {
-                char *nm=ADM_cleanupPath(audioName);
-                qfprintf(fd,"app.audio.load(\"%s\",\"%s\")\n", audioSourceFromEnum(source),nm); 
-                ADM_dealloc(nm);
-        }
-        else 
-        { // Maybe not the 1st track
-          int source;
-               source=video_body->getCurrentAudioStreamNumber(0);
-               if(source)
-                        qfprintf(fd,"app.audio.setTrack(%d)\n", source); 
-                        
-        }
-#endif
  { // Maybe not the 1st track
           int source;
                source=video_body->getCurrentAudioStreamNumber(0);

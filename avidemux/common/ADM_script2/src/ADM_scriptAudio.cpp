@@ -51,14 +51,14 @@ int scriptAudioMixer(const char *s)
 */
 int32_t scriptGetResample(void)
 {
-    return 0;
+    return audioFilterGetResample();;
 }
 /**
     \fn jsSetResample
 */
 void    scriptSetResample(int32_t fq)
 {
-
+    audioFilterSetResample(fq);
 }
 /**
     \fn  scriptAudioSetTrack
