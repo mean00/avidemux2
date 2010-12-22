@@ -113,6 +113,7 @@ entryDesc entry;
           printf("[MKV] No duration, assuming 25 fps\n");
           _videostream.dwScale=1000;
           _videostream.dwRate=25000;
+          _tracks[0]._defaultFrameDuration=25000;
 
         }
 
