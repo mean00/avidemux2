@@ -212,9 +212,6 @@ MainWindow::MainWindow() : QMainWindow()
 {
 	ui.setupUi(this);
 
-	this->setStatusBar(0);
-	this->adjustSize();
-
 #if defined(__APPLE__) && defined(USE_SDL)
 	ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
 	ui.actionPreferences->setMenuRole(QAction::NoRole);
@@ -234,9 +231,6 @@ MainWindow::MainWindow() : QMainWindow()
 #define PROCESS CONNECT_TB
 	LIST_OF_BUTTONS
 #undef PROCESS
-
-	connect(ui.actionPrevious_intra_frame, SIGNAL(triggered()), this, SLOT(previousIntraFrame()));
-	connect(ui.actionNext_intra_frame, SIGNAL(triggered()), this, SLOT(nextIntraFrame()));
 
 	//ACT_VideoCodecChanged
 	connect( ui.comboBoxVideo,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
@@ -311,7 +305,19 @@ MainWindow::MainWindow() : QMainWindow()
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
     connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
 
-    
+	QWidget* dummy0 = new QWidget();
+	QWidget* dummy1 = new QWidget();
+	QWidget* dummy2 = new QWidget();
+	QWidget* dummy3 = new QWidget();
+	QWidget* dummy4 = new QWidget();
+
+	ui.codecWidget->setTitleBarWidget(dummy0);
+	ui.navigationWidget->setTitleBarWidget(dummy1);
+	ui.selectionWidget->setTitleBarWidget(dummy2);
+	ui.volumeWidget->setTitleBarWidget(dummy3);
+	ui.audioMetreWidget->setTitleBarWidget(dummy4);
+
+	this->resize(1, 1);
 }
 /**
     \fn searchToolBar

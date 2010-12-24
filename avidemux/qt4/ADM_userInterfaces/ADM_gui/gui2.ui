@@ -7,21 +7,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>640</height>
+    <width>659</width>
+    <height>642</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>640</width>
-    <height>640</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Avidemux</string>
@@ -49,1221 +37,58 @@
      <height>200</height>
     </size>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="sizeConstraint">
-         <enum>QLayout::SetDefaultConstraint</enum>
-        </property>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>&lt;b&gt;Video Decoder&lt;b&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_7">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>6</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="videoLayout_2">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <item>
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>12</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="_6">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="labelVideoDecoder">
-              <property name="text">
-               <string>XXXX</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonDecoderConf">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Configure</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_11">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>12</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>180</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>&lt;b&gt;Video Output&lt;/b&gt;</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::AutoText</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_8">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>6</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="videoLayout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <item>
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>12</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="_7" stretch="0,0,0">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="sizeConstraint">
-             <enum>QLayout::SetDefaultConstraint</enum>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QComboBox" name="comboBoxVideo">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <item>
-               <property name="text">
-                <string>Copy</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonVideoConf">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Configure</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonVideoFilter">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Filters</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_12">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>12</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_5">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>180</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>&lt;b&gt;Audio Output&lt;/b&gt;</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::AutoText</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_9">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>6</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="AudioLayout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <item>
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>12</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="_8">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="sizeConstraint">
-             <enum>QLayout::SetDefaultConstraint</enum>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QComboBox" name="comboBoxAudio">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <item>
-               <property name="text">
-                <string>Copy</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonAudioConf">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Configure</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonAudioFilter">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Filters</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="_9">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="sizeConstraint">
-               <enum>QLayout::SetDefaultConstraint</enum>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QCheckBox" name="checkBox_TimeShift">
-                <property name="text">
-                 <string>&amp;Shift:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="spinBox_TimeValue">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimum">
-                 <number>-99999</number>
-                </property>
-                <property name="maximum">
-                 <number>99999</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_11">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>ms</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_13">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>12</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>&lt;b&gt;Output Format&lt;/b&gt;</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::AutoText</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_10">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>6</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <item>
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>12</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <item>
-             <widget class="QComboBox" name="comboBoxFormat">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonFormatConfigure">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Configure</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="_10">
-        <property name="spacing">
-         <number>6</number>
-        </property>
-        <property name="margin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QFrame" name="frame_video">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <property name="lineWidth">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>13</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+     <layout class="QHBoxLayout" name="_10">
+      <property name="spacing">
+       <number>6</number>
       </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Expanding</enum>
+      <property name="margin">
+       <number>0</number>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>619</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <property name="horizontalSpacing">
-         <number>12</number>
-        </property>
-        <property name="verticalSpacing">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="ADM_QSlider" name="horizontalSlider">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>12</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="_3">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QToolButton" name="toolButtonPlay">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonStop">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/player_stop.png</normaloff>:/new/prefix1/pics/player_stop.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonPreviousFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/back.png</normaloff>:/new/prefix1/pics/back.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonNextFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/forward.png</normaloff>:/new/prefix1/pics/forward.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonPreviousIntraFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>:/new/prefix1/pics/player_rew.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonNextIntraFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>:/new/prefix1/pics/player_fwd.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonSetMarkerA">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonSetMarkerB">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonPreviousBlackFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>:/new/prefix1/pics/prev_black.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonNextBlackFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/next_black.png</normaloff>:/new/prefix1/pics/next_black.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonFirstFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButtonLastFrame">
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="avidemux.qrc">
-                <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>24</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="autoRaise">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>12</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="_4">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QPushButton" name="pushButtonTime">
-              <property name="text">
-               <string>Time</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="currentTime">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>84</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>00:00:00.000</string>
-              </property>
-              <property name="maxLength">
-               <number>12</number>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="totalTime">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>/ 00:00:00.000</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>24</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_10">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Frame type:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_8">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>?</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="1">
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>&lt;b&gt;Selection&lt;/b&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <item row="1" column="0">
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>12</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="2" column="0">
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>12</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>A:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>B:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="pushButtonJumpToMarkerA">
-              <property name="text">
-               <string>000000</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2">
-             <widget class="QPushButton" name="pushButtonJumpToMarkerB">
-              <property name="text">
-               <string>000000</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="1">
-         <widget class="QWidget" name="sliderPlaceHolder" native="true"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QFrame" name="frameVU">
+       <widget class="QFrame" name="frame_video">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
-          <height>64</height>
+          <width>100</width>
+          <height>100</height>
          </size>
         </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <property name="spacing">
-         <number>5</number>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <item>
-         <widget class="QToolButton" name="toolButtonAudioToggle">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="avidemux.qrc">
-            <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="horizontalSlider_2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>64</height>
-           </size>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>100</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>13</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -1274,8 +99,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
-     <height>21</height>
+     <width>659</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -1297,6 +122,17 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <widget class="QMenu" name="menuToolbars">
+     <property name="title">
+      <string>&amp;Toolbars</string>
+     </property>
+     <addaction name="actionViewAudioMetre"/>
+     <addaction name="actionViewCodecOptions"/>
+     <addaction name="actionViewNavigation"/>
+     <addaction name="actionViewSelection"/>
+     <addaction name="actionViewVolume"/>
+    </widget>
+    <addaction name="menuToolbars"/>
    </widget>
    <widget class="QMenu" name="menuCustom">
     <property name="title">
@@ -1339,7 +175,6 @@
    <addaction name="menuCustom"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -1373,6 +208,1349 @@
    <addaction name="actionPreviewInput"/>
    <addaction name="actionPreviewOutput"/>
   </widget>
+  <widget class="QDockWidget" name="codecWidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Codec Options</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_9">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>9</number>
+     </property>
+     <property name="topMargin">
+      <number>9</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>9</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>&lt;b&gt;Video Decoder&lt;b&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>6</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="videoLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>12</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="_6">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="labelVideoDecoder">
+             <property name="text">
+              <string>XXXX</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonDecoderConf">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Configure</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_11">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>12</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>180</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>&lt;b&gt;Video Output&lt;/b&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>6</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="videoLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>12</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="_7" stretch="0,0,0">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QComboBox" name="comboBoxVideo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>Copy</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonVideoConf">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Configure</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonVideoFilter">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Filters</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>12</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>180</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>&lt;b&gt;Audio Output&lt;/b&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>6</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="AudioLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>12</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="_8">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QComboBox" name="comboBoxAudio">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>Copy</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonAudioConf">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Configure</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonAudioFilter">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Filters</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="_9">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="checkBox_TimeShift">
+               <property name="text">
+                <string>&amp;Shift:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_TimeValue">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimum">
+                <number>-99999</number>
+               </property>
+               <property name="maximum">
+                <number>99999</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>ms</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_13">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>12</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>&lt;b&gt;Output Format&lt;/b&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>6</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>12</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QComboBox" name="comboBoxFormat">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonFormatConfigure">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Configure</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="navigationWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Navigation</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>9</number>
+     </property>
+     <property name="topMargin">
+      <number>1</number>
+     </property>
+     <property name="rightMargin">
+      <number>9</number>
+     </property>
+     <property name="bottomMargin">
+      <number>9</number>
+     </property>
+     <item>
+      <widget class="ADM_QSlider" name="horizontalSlider">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>6</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="_3">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="toolButtonPlay">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonStop">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_stop.png</normaloff>:/new/prefix1/pics/player_stop.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonPreviousFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/back.png</normaloff>:/new/prefix1/pics/back.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonNextFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/forward.png</normaloff>:/new/prefix1/pics/forward.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonPreviousIntraFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>:/new/prefix1/pics/player_rew.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonNextIntraFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>:/new/prefix1/pics/player_fwd.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonSetMarkerA">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonSetMarkerB">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonPreviousBlackFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>:/new/prefix1/pics/prev_black.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonNextBlackFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/next_black.png</normaloff>:/new/prefix1/pics/next_black.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonFirstFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonLastFrame">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="_4">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pushButtonTime">
+           <property name="text">
+            <string>Time:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="currentTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>84</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>00:00:00.000</string>
+           </property>
+           <property name="maxLength">
+            <number>12</number>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="totalTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>/ 00:00:00.000</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>24</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Frame type:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>?</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="selectionWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>120</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Selection</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_7">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>9</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>9</number>
+     </property>
+     <property name="bottomMargin">
+      <number>9</number>
+     </property>
+     <item>
+      <widget class="QWidget" name="sliderPlaceHolder" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>6</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>&lt;b&gt;Selection&lt;/b&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="verticalSpacing">
+          <number>4</number>
+         </property>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>A:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>B:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="pushButtonJumpToMarkerA">
+           <property name="text">
+            <string>000000</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="pushButtonJumpToMarkerB">
+           <property name="text">
+            <string>000000</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="volumeWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Volume</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QToolButton" name="toolButtonAudioToggle">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="avidemux.qrc">
+         <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSlider_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="audioMetreWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Audio Metre</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="frameVU">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>64</width>
+         <height>64</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionOpen">
    <property name="icon">
     <iconset resource="avidemux.qrc">
@@ -1383,92 +1561,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="actionAppend">
-   <property name="text">
-    <string>&amp;Append...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+A</string>
-   </property>
-  </action>
-  <action name="actionQuit">
-   <property name="text">
-    <string>&amp;Quit</string>
-   </property>
-  </action>
-  <action name="actionCut">
-   <property name="text">
-    <string>Cu&amp;t</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+X</string>
-   </property>
-  </action>
-  <action name="actionCopy">
-   <property name="text">
-    <string>&amp;Copy</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+C</string>
-   </property>
-  </action>
-  <action name="actionPaste">
-   <property name="text">
-    <string>&amp;Paste</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+V</string>
-   </property>
-  </action>
-  <action name="actionDelete">
-   <property name="text">
-    <string>&amp;Delete</string>
-   </property>
-   <property name="shortcut">
-    <string>Del</string>
-   </property>
-  </action>
-  <action name="actionSet_marker_A">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
-   </property>
-   <property name="text">
-    <string>Set Marker A</string>
-   </property>
-   <property name="iconText">
-    <string>Set Marker A</string>
-   </property>
-   <property name="toolTip">
-    <string>Set Marker A</string>
-   </property>
-   <property name="shortcut">
-    <string>[</string>
-   </property>
-  </action>
-  <action name="actionSet_marker_B">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
-   </property>
-   <property name="text">
-    <string>Set Marker B</string>
-   </property>
-   <property name="iconText">
-    <string>Set Marker B</string>
-   </property>
-   <property name="toolTip">
-    <string>Set Marker B</string>
-   </property>
-   <property name="shortcut">
-    <string>]</string>
-   </property>
-  </action>
-  <action name="actionPreferences">
-   <property name="text">
-    <string>Pre&amp;ferences...</string>
    </property>
   </action>
   <action name="actionProperties">
@@ -1501,28 +1593,6 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSave_BMP">
-   <property name="text">
-    <string>Save &amp;BMP Image...</string>
-   </property>
-   <property name="iconText">
-    <string>Save BMP Image</string>
-   </property>
-   <property name="toolTip">
-    <string>Save BMP Image</string>
-   </property>
-  </action>
-  <action name="actionSave_jpeg">
-   <property name="text">
-    <string>Save &amp;JPEG Image...</string>
-   </property>
-   <property name="iconText">
-    <string>Save JPEG Image</string>
-   </property>
-   <property name="toolTip">
-    <string>Save JPEG Image</string>
-   </property>
-  </action>
   <action name="actionLoad_run_project">
    <property name="icon">
     <iconset resource="avidemux.qrc">
@@ -1553,177 +1623,6 @@
     <string>Save Project</string>
    </property>
   </action>
-  <action name="actionSave_project_as">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/filesaveas.png</normaloff>:/new/prefix1/pics/filesaveas.png</iconset>
-   </property>
-   <property name="text">
-    <string>Save P&amp;roject As...</string>
-   </property>
-   <property name="iconText">
-    <string>Save Project As</string>
-   </property>
-   <property name="toolTip">
-    <string>Save Project As</string>
-   </property>
-  </action>
-  <action name="actionMain_toolbar">
-   <property name="text">
-    <string>Main toolbar</string>
-   </property>
-  </action>
-  <action name="actionA_V_toolbar">
-   <property name="text">
-    <string>A/V toolbar</string>
-   </property>
-  </action>
-  <action name="actionZoom_1_4">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Zoom 1:4</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+4</string>
-   </property>
-  </action>
-  <action name="actionZoom_1_2">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Z&amp;oom 1:2</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+2</string>
-   </property>
-  </action>
-  <action name="actionZoom_1_1">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Zoom &amp;1:1</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+1</string>
-   </property>
-  </action>
-  <action name="actionZoom_2_1">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Zoom &amp;2:1</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+2</string>
-   </property>
-  </action>
-  <action name="actionZoom_4_1">
-   <property name="text">
-    <string>Zoom 4:1</string>
-   </property>
-  </action>
-  <action name="actionDecoder_options">
-   <property name="text">
-    <string>&amp;Decoder Options...</string>
-   </property>
-   <property name="iconText">
-    <string>Decoder Options</string>
-   </property>
-   <property name="toolTip">
-    <string>Decoder Options</string>
-   </property>
-   <property name="shortcut">
-    <string>F3</string>
-   </property>
-  </action>
-  <action name="actionPostprocessing">
-   <property name="text">
-    <string>&amp;Postprocessing...</string>
-   </property>
-   <property name="shortcut">
-    <string>F4</string>
-   </property>
-  </action>
-  <action name="actionFrame_rate">
-   <property name="text">
-    <string>&amp;Frame Rate...</string>
-   </property>
-   <property name="iconText">
-    <string>Frame Rate</string>
-   </property>
-   <property name="toolTip">
-    <string>Frame Rate</string>
-   </property>
-  </action>
-  <action name="actionEncoder">
-   <property name="text">
-    <string>Encoder</string>
-   </property>
-  </action>
-  <action name="actionFilters">
-   <property name="text">
-    <string>Fil&amp;ters...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+F</string>
-   </property>
-  </action>
-  <action name="actionMain_Track">
-   <property name="text">
-    <string>&amp;Main Track...</string>
-   </property>
-  </action>
-  <action name="actionSecondary_Track">
-   <property name="text">
-    <string>&amp;Secondary Track...</string>
-   </property>
-  </action>
-  <action name="actionBuild_VBR_time_map">
-   <property name="text">
-    <string>Build VBR Time Map</string>
-   </property>
-   <property name="iconText">
-    <string>Build VBR Time Map</string>
-   </property>
-   <property name="toolTip">
-    <string>Build VBR Time Map</string>
-   </property>
-  </action>
-  <action name="actionSave_2">
-   <property name="text">
-    <string>S&amp;ave...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+S</string>
-   </property>
-  </action>
-  <action name="actionEncoder_2">
-   <property name="text">
-    <string>Encoder</string>
-   </property>
-  </action>
-  <action name="actionFilters_2">
-   <property name="text">
-    <string>&amp;Filters</string>
-   </property>
-   <property name="iconText">
-    <string>Filters</string>
-   </property>
-   <property name="toolTip">
-    <string>Filters</string>
-   </property>
-   <property name="shortcut">
-    <string/>
-   </property>
-  </action>
   <action name="actionCalculator">
    <property name="icon">
     <iconset resource="avidemux.qrc">
@@ -1734,360 +1633,6 @@
    </property>
    <property name="shortcut">
     <string>F7</string>
-   </property>
-  </action>
-  <action name="actionRebuild_I_B_Frames">
-   <property name="text">
-    <string>&amp;Rebuild I &amp;&amp; B Frames</string>
-   </property>
-   <property name="iconText">
-    <string>Rebuild I &amp; B Frames</string>
-   </property>
-   <property name="toolTip">
-    <string>Rebuild I &amp; B Frames</string>
-   </property>
-  </action>
-  <action name="actionBitrate_histogram">
-   <property name="text">
-    <string>&amp;Bitrate Histogram...</string>
-   </property>
-   <property name="iconText">
-    <string>Bitrate Histogram</string>
-   </property>
-   <property name="toolTip">
-    <string>Bitrate Histogram</string>
-   </property>
-  </action>
-  <action name="actionScan_for_black_frames">
-   <property name="text">
-    <string>&amp;Scan for Black Frames...</string>
-   </property>
-   <property name="iconText">
-    <string>Scan for Black Frames</string>
-   </property>
-   <property name="toolTip">
-    <string>Scan for Black Frames</string>
-   </property>
-  </action>
-  <action name="actionPlay_Stop">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/player_stop.png</normaloff>:/new/prefix1/pics/player_stop.png</iconset>
-   </property>
-   <property name="text">
-    <string>Stop</string>
-   </property>
-   <property name="iconText">
-    <string>Stop</string>
-   </property>
-   <property name="toolTip">
-    <string>Stop</string>
-   </property>
-   <property name="shortcut">
-    <string>P</string>
-   </property>
-  </action>
-  <action name="actionPrevious_Frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/back.png</normaloff>:/new/prefix1/pics/back.png</iconset>
-   </property>
-   <property name="text">
-    <string>P&amp;revious Frame</string>
-   </property>
-   <property name="shortcut">
-    <string>Left</string>
-   </property>
-  </action>
-  <action name="actionNext_Frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/forward.png</normaloff>:/new/prefix1/pics/forward.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Next Frame</string>
-   </property>
-   <property name="shortcut">
-    <string>Right</string>
-   </property>
-  </action>
-  <action name="actionPrevious_intra_frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/player_rew.png</normaloff>:/new/prefix1/pics/player_rew.png</iconset>
-   </property>
-   <property name="text">
-    <string>Pr&amp;evious Intra Frame</string>
-   </property>
-   <property name="iconText">
-    <string>Previous Intra Frame</string>
-   </property>
-   <property name="toolTip">
-    <string>Previous Intra Frame</string>
-   </property>
-   <property name="shortcut">
-    <string>Down</string>
-   </property>
-  </action>
-  <action name="actionNext_intra_frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/player_fwd.png</normaloff>:/new/prefix1/pics/player_fwd.png</iconset>
-   </property>
-   <property name="text">
-    <string>Next &amp;Intra Frame</string>
-   </property>
-   <property name="iconText">
-    <string>Next Intra Frame</string>
-   </property>
-   <property name="toolTip">
-    <string>Next Intra Frame</string>
-   </property>
-   <property name="shortcut">
-    <string>Up</string>
-   </property>
-  </action>
-  <action name="actionPrevious_black_frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/prev_black.png</normaloff>:/new/prefix1/pics/prev_black.png</iconset>
-   </property>
-   <property name="text">
-    <string>Previou&amp;s Black Frame</string>
-   </property>
-   <property name="iconText">
-    <string>Previous Black Frame</string>
-   </property>
-   <property name="toolTip">
-    <string>Previous Black Frame</string>
-   </property>
-  </action>
-  <action name="actionNext_blak_frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/next_black.png</normaloff>:/new/prefix1/pics/next_black.png</iconset>
-   </property>
-   <property name="text">
-    <string>Ne&amp;xt Black Frame</string>
-   </property>
-   <property name="iconText">
-    <string>Next Black Frame</string>
-   </property>
-   <property name="toolTip">
-    <string>Next Black Frame</string>
-   </property>
-  </action>
-  <action name="actionFirst_Frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;First Frame</string>
-   </property>
-   <property name="shortcut">
-    <string>Home</string>
-   </property>
-  </action>
-  <action name="actionLast_Frame">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Last Frame</string>
-   </property>
-   <property name="shortcut">
-    <string>End</string>
-   </property>
-  </action>
-  <action name="actionGo_to_Marker_A">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/gotoA.png</normaloff>:/new/prefix1/pics/gotoA.png</iconset>
-   </property>
-   <property name="text">
-    <string>Jump to Marker &amp;A</string>
-   </property>
-   <property name="iconText">
-    <string>Jump to Marker A</string>
-   </property>
-   <property name="toolTip">
-    <string>Jump to Marker A</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+[</string>
-   </property>
-  </action>
-  <action name="actionGo_to_Marker_B">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/gotoB.png</normaloff>:/new/prefix1/pics/gotoB.png</iconset>
-   </property>
-   <property name="text">
-    <string>Jump to Marker &amp;B</string>
-   </property>
-   <property name="iconText">
-    <string>Jump to Marker B</string>
-   </property>
-   <property name="toolTip">
-    <string>Jump to Marker B</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+]</string>
-   </property>
-  </action>
-  <action name="actionJump_to_Frame">
-   <property name="text">
-    <string>Jump to Fra&amp;me...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F</string>
-   </property>
-  </action>
-  <action name="actionJump_to_Time">
-   <property name="text">
-    <string>Jump to &amp;Time...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+T</string>
-   </property>
-  </action>
-  <action name="actionShow_built_in_support">
-   <property name="text">
-    <string>&amp;Built-in Support...</string>
-   </property>
-   <property name="iconText">
-    <string>Built-in Support</string>
-   </property>
-   <property name="toolTip">
-    <string>Built-in Support</string>
-   </property>
-  </action>
-  <action name="actionAbout_avidemux">
-   <property name="text">
-    <string>&amp;About Avidemux...</string>
-   </property>
-   <property name="iconText">
-    <string>About Avidemux</string>
-   </property>
-   <property name="toolTip">
-    <string>About Avidemux</string>
-   </property>
-  </action>
-  <action name="actionPlay">
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Play/Stop</string>
-   </property>
-   <property name="iconText">
-    <string>Play/Stop</string>
-   </property>
-   <property name="toolTip">
-    <string>Play/Stop</string>
-   </property>
-   <property name="shortcut">
-    <string>P</string>
-   </property>
-  </action>
-  <action name="actionRecent0">
-   <property name="text">
-    <string>Recent0</string>
-   </property>
-  </action>
-  <action name="actionRecent1">
-   <property name="text">
-    <string>Recent1</string>
-   </property>
-  </action>
-  <action name="actionRecent2">
-   <property name="text">
-    <string>Recent2</string>
-   </property>
-  </action>
-  <action name="actionRecent3">
-   <property name="text">
-    <string>Recent3</string>
-   </property>
-  </action>
-  <action name="actionVCD">
-   <property name="text">
-    <string>&amp;VCD</string>
-   </property>
-  </action>
-  <action name="actionSVCD">
-   <property name="text">
-    <string>&amp;SVCD</string>
-   </property>
-  </action>
-  <action name="actionDVD">
-   <property name="text">
-    <string>&amp;DVD</string>
-   </property>
-  </action>
-  <action name="actionPSP">
-   <property name="text">
-    <string>&amp;PSP</string>
-   </property>
-  </action>
-  <action name="actionPSP_H264">
-   <property name="text">
-    <string>PSP (&amp;H.264)</string>
-   </property>
-   <property name="iconText">
-    <string>PSP (H.264)</string>
-   </property>
-   <property name="toolTip">
-    <string>PSP (H.264)</string>
-   </property>
-  </action>
-  <action name="actionAdd_to_joblist">
-   <property name="text">
-    <string>Add to &amp;Joblist...</string>
-   </property>
-   <property name="iconText">
-    <string>Add to Joblist</string>
-   </property>
-   <property name="toolTip">
-    <string>Add to Joblist</string>
-   </property>
-  </action>
-  <action name="actionShow_Joblist">
-   <property name="text">
-    <string>View &amp;Joblist...</string>
-   </property>
-   <property name="iconText">
-    <string>View Joblist</string>
-   </property>
-   <property name="toolTip">
-    <string>View Joblist</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+J</string>
-   </property>
-  </action>
-  <action name="actionConnect_to_AvsProxy">
-   <property name="text">
-    <string>Co&amp;nnect to avsproxy</string>
-   </property>
-   <property name="iconText">
-    <string>Connect to avsproxy</string>
-   </property>
-   <property name="toolTip">
-    <string>Connect to avsproxy</string>
-   </property>
-  </action>
-  <action name="actionReset_Edits">
-   <property name="text">
-    <string>&amp;Reset Edits</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
    </property>
   </action>
   <action name="actionPreviewInput">
@@ -2117,28 +1662,74 @@
     <string>&amp;Output</string>
    </property>
   </action>
-  <action name="actionPreviewSide">
+  <action name="actionViewCodecOptions">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/preview_side.png</normaloff>:/new/prefix1/pics/preview_side.png</iconset>
+   <property name="checked">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>Si&amp;de</string>
+    <string>&amp;Codec Options</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+C</string>
    </property>
   </action>
-  <action name="actionPreviewTop">
+  <action name="actionViewNavigation">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/preview_top.png</normaloff>:/new/prefix1/pics/preview_top.png</iconset>
+   <property name="checked">
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Top</string>
+    <string>&amp;Navigation</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+N</string>
+   </property>
+  </action>
+  <action name="actionViewSelection">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Selection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="actionViewVolume">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Volume</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+V</string>
+   </property>
+  </action>
+  <action name="actionViewAudioMetre">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Audio Metre</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+M</string>
    </property>
   </action>
   <action name="actionPreviewSeparate">
@@ -2153,117 +1744,28 @@
     <string>&amp;Separate</string>
    </property>
   </action>
-  <action name="action_Input">
-   <property name="text">
-    <string>&amp;Input</string>
+  <action name="actionPreviewTop">
+   <property name="checkable">
+    <bool>true</bool>
    </property>
-  </action>
-  <action name="action_Output">
-   <property name="text">
-    <string>&amp;Output</string>
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/preview_top.png</normaloff>:/new/prefix1/pics/preview_top.png</iconset>
    </property>
-  </action>
-  <action name="actionSi_de">
-   <property name="text">
-    <string>Si&amp;de</string>
-   </property>
-  </action>
-  <action name="action_Top">
    <property name="text">
     <string>&amp;Top</string>
    </property>
   </action>
-  <action name="action_Separate">
-   <property name="text">
-    <string>&amp;Separate</string>
-   </property>
-  </action>
-  <action name="actionFLV">
-   <property name="text">
-    <string>FLV</string>
-   </property>
-  </action>
-  <action name="actionIPOD">
-   <property name="text">
-    <string>IPOD (mpeg4)</string>
-   </property>
-  </action>
-  <action name="actionClose">
-   <property name="text">
-    <string>&amp;Close</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+W</string>
-   </property>
-  </action>
-  <action name="actionPlugins">
-   <property name="text">
-    <string>Plugins</string>
-   </property>
-  </action>
-  <action name="actionJavaScript_shell">
-   <property name="text">
-    <string>JavaScript shell</string>
-   </property>
-  </action>
-  <action name="action1_1">
-   <property name="text">
-    <string>1:1</string>
-   </property>
-  </action>
-  <action name="actionAR_Auto">
+  <action name="actionPreviewSide">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="text">
-    <string>Auto</string>
-   </property>
-  </action>
-  <action name="actionAR_1_1">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/preview_side.png</normaloff>:/new/prefix1/pics/preview_side.png</iconset>
    </property>
    <property name="text">
-    <string>1:1</string>
-   </property>
-  </action>
-  <action name="actionAR_4_3">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>4:3</string>
-   </property>
-  </action>
-  <action name="actionAR_16_9">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>16:9</string>
-   </property>
-  </action>
-  <action name="actionSave_pyScript">
-   <property name="text">
-    <string>Save Project as pyScript</string>
-   </property>
-  </action>
-  <action name="actionPython_Shell">
-   <property name="text">
-    <string>Python Shell</string>
-   </property>
-  </action>
-  <action name="actionSave_python_project_as">
-   <property name="text">
-    <string>Save python project as..</string>
-   </property>
-  </action>
-  <action name="actionLoad_run_pyProject">
-   <property name="text">
-    <string>Load/run pyProject</string>
+    <string>Si&amp;de</string>
    </property>
   </action>
  </widget>
@@ -2274,8 +1776,121 @@
    <header>ADM_qslider.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pushButtonDecoderConf</tabstop>
+  <tabstop>comboBoxVideo</tabstop>
+  <tabstop>pushButtonVideoConf</tabstop>
+  <tabstop>pushButtonVideoFilter</tabstop>
+  <tabstop>comboBoxAudio</tabstop>
+  <tabstop>pushButtonAudioConf</tabstop>
+  <tabstop>pushButtonAudioFilter</tabstop>
+  <tabstop>checkBox_TimeShift</tabstop>
+  <tabstop>spinBox_TimeValue</tabstop>
+  <tabstop>comboBoxFormat</tabstop>
+  <tabstop>pushButtonFormatConfigure</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>toolButtonPlay</tabstop>
+  <tabstop>toolButtonStop</tabstop>
+  <tabstop>toolButtonPreviousFrame</tabstop>
+  <tabstop>toolButtonNextFrame</tabstop>
+  <tabstop>toolButtonPreviousIntraFrame</tabstop>
+  <tabstop>toolButtonNextIntraFrame</tabstop>
+  <tabstop>toolButtonSetMarkerA</tabstop>
+  <tabstop>toolButtonSetMarkerB</tabstop>
+  <tabstop>toolButtonPreviousBlackFrame</tabstop>
+  <tabstop>toolButtonNextBlackFrame</tabstop>
+  <tabstop>toolButtonFirstFrame</tabstop>
+  <tabstop>toolButtonLastFrame</tabstop>
+  <tabstop>pushButtonTime</tabstop>
+  <tabstop>currentTime</tabstop>
+  <tabstop>pushButtonJumpToMarkerA</tabstop>
+  <tabstop>pushButtonJumpToMarkerB</tabstop>
+  <tabstop>toolButtonAudioToggle</tabstop>
+  <tabstop>horizontalSlider_2</tabstop>
+ </tabstops>
  <resources>
   <include location="avidemux.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionViewAudioMetre</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>audioMetreWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>672</x>
+     <y>569</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionViewCodecOptions</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>codecWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionViewNavigation</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>navigationWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>569</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionViewSelection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>selectionWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>509</x>
+     <y>569</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionViewVolume</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>volumeWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>601</x>
+     <y>569</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
