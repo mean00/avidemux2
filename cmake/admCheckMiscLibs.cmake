@@ -2,9 +2,10 @@
 # gettext
 ########################################
 INCLUDE(admCheckGettext)
-if(NOT CROSS)
-checkGettext()
-endif(NOT CROSS)
+
+if (NOT CROSS)
+	checkGettext()
+endif (NOT CROSS)
 
 SET(ADM_LOCALE "${CMAKE_INSTALL_PREFIX}/share/locale")
 
@@ -19,7 +20,7 @@ MESSAGE(STATUS "****************")
 IF (SDL)
 	FIND_PACKAGE(SDL)
 	PRINT_LIBRARY_INFO("SDL" SDL_FOUND "${SDL_INCLUDE_DIR}" "${SDL_LIBRARY}")
-	
+
 	MARK_AS_ADVANCED(SDLMAIN_LIBRARY)
 	MARK_AS_ADVANCED(SDL_INCLUDE_DIR)
 	MARK_AS_ADVANCED(SDL_LIBRARY)
@@ -72,6 +73,7 @@ ELSE (USE_SYSTEM_SPIDERMONKEY)
 ENDIF (USE_SYSTEM_SPIDERMONKEY)
 
 MESSAGE("")
+
 ########################################
 # Execinfo
 ########################################
@@ -81,32 +83,32 @@ MESSAGE(STATUS "*********************")
 FIND_PATH(LIBEXECINFO_H_DIR execinfo.h $ENV{CXXFLAGS})
 MESSAGE(STATUS "libexecinfo Header Path: ${LIBEXECINFO_H_DIR}")
 
-IF (NOT LIBEXECINFO_H_DIR STREQUAL "LIBEXECINFO_H-NOTFOUND")
-        FIND_LIBRARY(LIBEXECINFO_LIB_DIR execinfo $ENV{CXXFLAGS})
-        MESSAGE(STATUS "libexecinfo Library Path: ${LIBEXECINFO_LIB_DIR}")
+IF (LIBEXECINFO_H_DIR)
+	FIND_LIBRARY(LIBEXECINFO_LIB_DIR execinfo $ENV{CXXFLAGS})
+	MESSAGE(STATUS "libexecinfo Library Path: ${LIBEXECINFO_LIB_DIR}")
 
-        # Try linking without -lexecinfo
-        ADM_COMPILE(execinfo.cpp "" ${LIBEXECINFO_H_DIR} "" WITHOUT_LIBEXECINFO outputWithoutLibexecinfo)
+	# Try linking without -lexecinfo
+	ADM_COMPILE(execinfo.cpp "" ${LIBEXECINFO_H_DIR} "" WITHOUT_LIBEXECINFO outputWithoutLibexecinfo)
 
-        IF (WITHOUT_LIBEXECINFO)
-               SET(HAVE_EXECINFO 1)
-               MESSAGE(STATUS "OK, No lib needed (${ADM_EXECINFO_LIB})")
-        ELSE (WITHOUT_LIBEXECINFO)
-               ADM_COMPILE(execinfo.cpp "" ${LIBEXECINFO_H_DIR} ${LIBEXECINFO_LIB_DIR} WITH_LIBEXECINFO outputWithLibexecinfo)
+	IF (WITHOUT_LIBEXECINFO)
+		SET(HAVE_EXECINFO 1)
+		MESSAGE(STATUS "OK, No lib needed (${ADM_EXECINFO_LIB})")
+	ELSE (WITHOUT_LIBEXECINFO)
+		ADM_COMPILE(execinfo.cpp "" ${LIBEXECINFO_H_DIR} ${LIBEXECINFO_LIB_DIR} WITH_LIBEXECINFO outputWithLibexecinfo)
 
-               IF (WITH_LIBEXECINFO)
-                           SET(HAVE_EXECINFO 1)
-                            MESSAGE(STATUS "OK, libexecinfo needed")
-               ELSE (WITH_LIBEXECINFO)
-                            MESSAGE(STATUS "Does not work, without ${outputWithoutLibexecinfo}")
-                            MESSAGE(STATUS "Does not work, with ${outputWithLibexecinfo}")
-                        ENDIF (WITH_LIBEXECINFO)
-                ENDIF (WITHOUT_LIBEXECINFO)
-        ENDIF (NOT LIBEXECINFO_H_DIR STREQUAL "LIBEXECINFO_H-NOTFOUND")
+		IF (WITH_LIBEXECINFO)
+			SET(HAVE_EXECINFO 1)
+			MESSAGE(STATUS "OK, libexecinfo needed")
+		ELSE (WITH_LIBEXECINFO)
+			MESSAGE(STATUS "Does not work, without ${outputWithoutLibexecinfo}")
+			MESSAGE(STATUS "Does not work, with ${outputWithLibexecinfo}")
+		ENDIF (WITH_LIBEXECINFO)
+	ENDIF (WITHOUT_LIBEXECINFO)
+ENDIF (LIBEXECINFO_H_DIR)
 
-        IF (HAVE_EXECINFO)
-                SET(CMAKE_CLINK_FLAGS "${CFLAGS} -lexecinfo")
-                SET(CMAKE_CXX_LINK_FLAGS "${CXXFLAGS} -lexecinfo")
-        ENDIF(HAVE_EXECINFO)
+IF (HAVE_EXECINFO)
+	SET(CMAKE_CLINK_FLAGS "${CFLAGS} -lexecinfo")
+	SET(CMAKE_CXX_LINK_FLAGS "${CXXFLAGS} -lexecinfo")
+ENDIF(HAVE_EXECINFO)
 
 MESSAGE("")
