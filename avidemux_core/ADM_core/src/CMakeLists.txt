@@ -16,6 +16,11 @@ ELSEIF (APPLE)
 	ADD_TARGET_LDFLAGS(ADM_core6 "-framework Carbon")
 ENDIF (MINGW)
 
+if (HAVE_EXECINFO)
+	include_directories("${LIBEXECINFO_INCLUDE_DIR}")
+	target_link_libraries(ADM_core6 "${LIBEXECINFO_LIBRARY_DIR}")
+endif (HAVE_EXECINFO)
+
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 
 # pthreads
