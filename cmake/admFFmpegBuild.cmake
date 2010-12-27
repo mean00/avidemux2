@@ -13,7 +13,7 @@ set(FFMPEG_ENCODERS  ac3  dvvideo  ffv1  ffvhuff  flv  h263  huffyuv  mjpeg  mp2
 set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp)
 set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
-set(FFMPEG_FLAGS  --enable-shared --disable-static --disable-everything --enable-hwaccels --enable-postproc --enable-gpl 
+set(FFMPEG_FLAGS  --enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl 
 				  --enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe --prefix=${CMAKE_INSTALL_PREFIX})
 
 include(admFFmpegPrepareTar)
@@ -37,7 +37,7 @@ if (FFMPEG_PERFORM_PATCH)
 	endforeach(patchFile)
 
 	if (UNIX)
-		patch_file("${FFMPEG_SOURCE_DIR}" "${CMAKE_MODULE_PATH}/patches/common.mak.diff")
+		patch_file("${FFMPEG_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/../cmake/patches/common.mak.diff")
 	endif (UNIX)
 
 	message("")
@@ -149,11 +149,11 @@ if (FFMPEG_PERFORM_BUILD)
 					WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 
 	if (APPLE)
-		find_patch()
-		patch_file("${FFMPEG_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/cmake/patches/config_macosx.mak.diff")
+		find_package(Patch)
+		patch_file("${FFMPEG_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/../cmake/patches/config_macosx.mak.diff")
 	elseif (UNIX)
-		find_patch()
-		patch_file("${FFMPEG_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/cmake/patches/config.mak.diff")
+		find_package(Patch)
+		patch_file("${FFMPEG_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/../cmake/patches/config.mak.diff")
 	endif (APPLE)
 
 	message("")

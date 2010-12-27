@@ -7,7 +7,7 @@ Index: common.mak
  TESTPROGS += $(TESTPROGS-yes)
  
 -FFEXTRALIBS := $(addprefix -l,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
-+FFEXTRALIBS := $(addprefix -lADM5,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
++FFEXTRALIBS := $(addprefix -lADM6,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
  FFLDFLAGS   := $(addprefix -L$(BUILD_ROOT)/lib,$(ALLFFLIBS)) $(LDFLAGS)
  
  EXAMPLES  := $(addprefix $(SUBDIR),$(addsuffix -example$(EXESUF),$(EXAMPLES)))
