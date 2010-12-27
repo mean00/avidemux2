@@ -33,8 +33,7 @@ if (FFMPEG_PERFORM_PATCH)
 	file(GLOB patchFiles "${CMAKE_SOURCE_DIR}/../cmake/patches/*.patch")
 
 	foreach(patchFile ${patchFiles})
-		execute_process(COMMAND ${PATCH_EXECUTABLE} -p0 -i "${patchFile}"
-						WORKING_DIRECTORY "${FFMPEG_SOURCE_DIR}")
+		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
 
 	if (UNIX)
