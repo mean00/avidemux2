@@ -13,7 +13,7 @@ MACRO (getFfmpegLibNames sourceDir)
 	getFfmpegVersionFromHeader("libswscale" "${sourceDir}/libswscale/swscale.h" LIBSWSCALE_VERSION_MAJOR LIBSWSCALE_VERSION)
 
 	if (UNIX)
-		set(LIBAVCODEC_ADM ADM5)
+		set(LIBAVCODEC_ADM ADM6)
 	endif (UNIX)
 
 	if (APPLE)
