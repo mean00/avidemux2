@@ -23,7 +23,7 @@ SET(UI_SUFFIX gtk)
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/gtk/config.h")
 MESSAGE(STATUS "GTK config.h generated")
 
-INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/gtk/")
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/gtk/")
 
 ###########################################
 # Executable

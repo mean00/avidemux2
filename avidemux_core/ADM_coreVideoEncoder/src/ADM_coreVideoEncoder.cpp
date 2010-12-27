@@ -15,13 +15,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
+
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
+
 extern "C" 
 {
-#include "ADM_lavcodec.h"
+#include "libavcodec/avcodec.h"
 }
+
 /**
     \fn ADM_coreVideoEncoder
 */                          

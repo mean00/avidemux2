@@ -13,7 +13,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
 #include "config.h"
 
 #include <string.h>
@@ -21,33 +20,15 @@
 #include <stdlib.h>
 
 #include "ADM_default.h"
-
-#include "ADM_assert.h"
 #include "audioencoder.h"
-#include "ADM_lavcodec.h"
 #include "ADM_render/GUI_render.cpp"
-//#include "ADM_codecs/ADM_ffmpegConfig.h"
 
-//#include "ADM_userInterfaces/ADM_render/GUI_renderInternal.h"
 extern int global_argc;
 extern char **global_argv;
 extern void initTranslator(void);
 extern int automation(void);
 
 int SliderIsShifted = 0;
-
-
-
-
-#ifdef USE_XX_XVID 
-#include "xvid.h"
-int  DIA_getXvidCompressParams(COMPRESSION_MODE * mode, uint32_t * qz,
-		      uint32_t * br,uint32_t *fsize,xvidEncParam *param) {return 0;}
-#endif
-
-
-
-
 
 //uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous) {return 0;}
 uint8_t DIA_pipe(char **cmd,char **param) {return 0;}

@@ -20,7 +20,7 @@ SET(UI_SUFFIX cli)
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/cli/config.h")
 MESSAGE(STATUS "CLI config.h generated")
 
-INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/cli/")
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/cli/")
 
 ###########################################
 # Executable

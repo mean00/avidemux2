@@ -14,15 +14,17 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
+
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
+
 extern "C" {
-#include "ADM_ffmpeg/libavcodec/avcodec.h"
-#include "ADM_ffmpeg/libavutil/avutil.h"
-#include "ADM_ffmpeg/libswscale/swscale.h"
+#include "libavcodec/avcodec.h"
+#include "libavutil/avutil.h"
+#include "libswscale/swscale.h"
 }
+
 #include "swresize.h"
 #include "swresize_desc.cpp"
 

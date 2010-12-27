@@ -36,7 +36,6 @@ extern "C"
 #include "../ADM_render/GUI_accelRender.h"
 
 #include "ADM_colorspace.h"
-#include "ADM_ffmpeg/libswscale/ADM_mp.h"
 
 void GUI_gtk_grow_off(int onff);
 

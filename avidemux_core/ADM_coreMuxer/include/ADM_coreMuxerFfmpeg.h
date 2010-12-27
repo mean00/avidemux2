@@ -22,14 +22,12 @@
 #include "fourcc.h"
 #include "ADM_muxer.h"
 #include "ADM_muxerUtils.h"
-#include "ADM_lavcodec.h"
+
 extern "C"
 {
     #include "libavformat/avformat.h"
 };
-#ifndef INT64_C
-#define INT64_C(x) (uint64_t)(x##LL)
-#endif
+
 /**
     \class muxerFFmpeg
 */

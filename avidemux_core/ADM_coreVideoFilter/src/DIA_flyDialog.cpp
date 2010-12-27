@@ -12,16 +12,14 @@
 *                                                                         *
 ***************************************************************************///
 
-#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
-
 #include "ADM_coreVideoFilter.h"
 #define ADM_FLY_INTERNAL
 #include "DIA_flyDialog.h"
 #include "ADM_assert.h"
 
 extern "C" {
-#include "ADM_ffmpeg/libavcodec/avcodec.h"
+#include "libavcodec/avcodec.h"
 }
 /**
     \fn    ADM_flyDialog

@@ -30,7 +30,7 @@ SET(UI_SUFFIX qt4)
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/qt4/config.h")
 MESSAGE(STATUS "QT4 config.h generated")
 
-INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config/qt4/")
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/qt4/")
 
 
 ###########################################

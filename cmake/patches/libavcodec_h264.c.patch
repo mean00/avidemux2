@@ -1,0 +1,22 @@
+--- libavcodec/h264.c.old	2010-12-20 13:49:22 +0000
++++ libavcodec/h264.c	2010-12-20 13:49:22 +0000
+@@ -3395,6 +3395,19 @@
+     return 0;
+ }
+ 
++/* MEANX */
++int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc);
++
++int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc)
++{
++      H264Context *h = avctx->priv_data;
++      assert(h);
++      *nalSize=h->nal_length_size;
++      *isAvc=h->is_avc;
++	return 1;
++
++  }
++/* MeanX */
+ 
+ AVCodec h264_decoder = {
+     "h264",

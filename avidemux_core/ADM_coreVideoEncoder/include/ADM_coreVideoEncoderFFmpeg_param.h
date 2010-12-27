@@ -22,7 +22,8 @@
 #define ADM_AVCODEC_SETTING_VERSION 2
 extern "C" 
 {
-#include "ADM_lavcodec.h"
+#include "libavcodec/avcodec.h"
 }
+
 #include "FFcodecContext.h"
 #endif

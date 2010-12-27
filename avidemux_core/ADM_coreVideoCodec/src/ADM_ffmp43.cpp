@@ -13,15 +13,9 @@
  *                                                                         *
  ***************************************************************************/
 
-extern "C" {
-#include "ADM_lavcodec.h"
-}
 #include "ADM_default.h"
-
-#include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
-//#include "ADM_videoInfoExtractor.h"
 
 extern int ADM_cpu_num_processors(void);
 extern "C"
@@ -583,7 +577,6 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 }
 
 //***************
-extern uint8_t  lavformat_init(void);
 extern void     avcodec_init(void );
 extern  void    avcodec_register_all(void );
 extern "C"
@@ -598,8 +591,8 @@ void ADM_lavInit(void)
 {
     avcodec_init();
     avcodec_register_all();
-//BAZOOKA    lavformat_init();
     av_log_set_callback(adm_lavLogCallback);
+
 #ifdef ADM_DEBUG
   //  av_log_set_level(AV_LOG_DEBUG);
 #endif

@@ -18,12 +18,12 @@
 //             4 Dering
 // strength between 0 and 5
 
-#include "ADM_includeFfmpeg.h"
-#include "ADM_lavcodec.h"
-extern "C" {
-#include "ADM_ffmpeg/libpostproc/postprocess.h"
-}
 #include "ADM_default.h"
+
+extern "C" {
+#include "libpostproc/postprocess.h"
+}
+
 #include "ADM_image.h"
 #include "ADM_imageFlags.h"
 #include "ADM_pp.h"

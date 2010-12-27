@@ -16,10 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-extern "C"
-{
-#include "ADM_lavcodec.h"
-};
 #include "ADM_default.h"
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"

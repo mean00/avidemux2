@@ -13,7 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
+
 #include <vector>
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
@@ -221,32 +221,35 @@ ADM_muxer *ADM_MuxerSpawnFromIndex(int index)
 //___________________________________________
 extern "C"
 {
-    #include "ADM_ffmpeg/libavformat/avformat.h"
-    #include "ADM_ffmpeg/libavformat/avio.h" // to get regiter protocol
+    #include "libavformat/avformat.h"
 };
-extern "C"
-{
-extern void movenc_init(void);
-extern void flvenc_init(void);
-extern void matroskaenc_init(void);
-extern void mpegenc_init(void);
-extern void mpegtsenc_init(void);
-}
-extern struct URLProtocol file_protocol ;
-/**
 
-
-*/
 void ADM_lavFormatInit(void)
 {
-    // Init lavformat
+	av_register_all();
 
-        movenc_init();
-        flvenc_init();
-        matroskaenc_init();
-        mpegenc_init();
-        mpegtsenc_init();
-        av_register_protocol(&file_protocol);
+	// Make sure avformat is correctly configured
+	const char* formats[] = {"mpegts", "dvd", "vcd", "svcd", "mp4", "psp", "flv", "matroska"};
+	AVOutputFormat *avfmt;
+
+	for (int i = 0; i < 8; i++)
+	{
+		avfmt = av_guess_format(formats[i], NULL, NULL);
+
+		if (avfmt == NULL)
+		{
+			printf("Error: %s muxer isn't registered\n", formats[i]);
+			ADM_assert(0);
+		}
+	}
+
+	URLProtocol *up = av_protocol_next(NULL);
+
+	if (strcmp(up->name, "file") != 0)
+	{
+		printf("Error: file protocol isn't registered\n");
+		ADM_assert(0);
+	}
 }
 // EOF
 

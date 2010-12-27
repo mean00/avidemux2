@@ -12,8 +12,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_default.h"
 
-#include "ADM_includeFfmpeg.h"
 extern "C"
 {
 #include "libavcodec/parser.h"
@@ -21,7 +21,7 @@ extern "C"
 #include "libavcodec/ff_spsinfo.h"
 extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 }
-#include "ADM_default.h"
+
 #include "ADM_Video.h"
 
 #include "fourcc.h"

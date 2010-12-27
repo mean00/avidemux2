@@ -28,7 +28,7 @@
 #include "ADM_vidEqualizer.h"
 #include "ADM_colorspace.h"
 extern "C" {
-#include "../../../ADM_libraries/ADM_ffmpeg/ADM_lavcodec/avcodec.h"
+#include "libavcodec/avcodec.h"
 }
 
 static ColYuvRgb    *rgbConv=NULL;

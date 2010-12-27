@@ -1,5 +1,4 @@
 INCLUDE(vf_plugin)
-INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_libraries/ADM_ffmpeg/ADM_libpostproc")
 
 SET(ADM_vf_forcedPP_SRCS ADM_vidForcedPP.cpp)
 

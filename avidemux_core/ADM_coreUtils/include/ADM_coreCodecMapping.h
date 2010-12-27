@@ -18,7 +18,7 @@
 #ifndef ADM_CORE_CODEC_MAPPING_H
 #define ADM_CORE_CODEC_MAPPING_H
 extern "C" {
-#include "ADM_lavcodec.h"
+#include "libavcodec/avcodec.h"
 }
 
 typedef struct

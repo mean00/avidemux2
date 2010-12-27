@@ -34,8 +34,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ADM_coreConfig.h"
-#include "ADM_lavcodec.h"
 #include "ADM_default.h"
+
+extern "C" {
+#include "libavcodec/avcodec.h"
+}
 
 adm_fast_memcpy myAdmMemcpy=NULL;
 /* Original comments from mplayer (file: aclib.c)

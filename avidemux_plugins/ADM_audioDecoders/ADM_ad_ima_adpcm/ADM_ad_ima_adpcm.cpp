@@ -32,8 +32,8 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include <math.h>
-#define ADM_NO_CONFIG_H
-#include "ADM_ffmpeg/libavutil/bswap.h"
+
+#include "libavutil/bswap.h"
 #include "ADM_ad_plugin.h"
 
 /**

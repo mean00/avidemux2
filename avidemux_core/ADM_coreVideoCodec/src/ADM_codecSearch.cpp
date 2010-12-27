@@ -18,11 +18,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_default.h"
+
 extern "C"
 {
-#include "ADM_lavcodec.h"
+#include "libavcodec/avcodec.h"
 };
-#include "ADM_default.h"
 
 #ifdef BIG_ENDIAN
 #undef BIG_ENDIAN

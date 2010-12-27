@@ -15,13 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ADM_includeFfmpeg.h"
-#include "ADM_lavcodec.h"
+#include "ADM_default.h"
+
 extern "C" {
-#include "ADM_ffmpeg/libpostproc/postprocess.h"
+#include "libpostproc/postprocess.h"
 }
 
-#include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
 #include "lav.h"

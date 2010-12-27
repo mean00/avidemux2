@@ -10,9 +10,6 @@
 //
 //
 #include "ADM_coreConfig.h"
-#ifdef ADM_CPU_X86
-#include "ADM_lavcodec.h"
-#endif
 #include "ADM_default.h"
 
 #if defined(__MINGW32__)

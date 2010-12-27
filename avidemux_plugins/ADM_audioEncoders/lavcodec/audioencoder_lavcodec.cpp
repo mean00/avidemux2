@@ -16,16 +16,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
+
+extern "C" {
+#include "libavcodec/avcodec.h"
+}
+
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
-//
-
-
-#include "ADM_lavcodec.h"
 
 #include ADM_AE_SET
 

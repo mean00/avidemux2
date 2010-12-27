@@ -20,7 +20,11 @@
 #ifndef ADM_FFMP43_H
 #define ADM_FFMP43_H
 
-#include "ADM_lavcodec.h"
+extern "C" {
+#include "libavcodec/avcodec.h"
+}
+
+#include "ADM_codec.h"
 
 /**
     \class decoderFF

@@ -23,12 +23,6 @@ IF(NOT CROSS)
 	checkVDPAU()
 ENDIF(NOT CROSS)
 
-########################################
-# YASM
-########################################
-include(FindYasm)
-admFindYasm()
-
 #########################################
 # Debug Summary
 ########################################
@@ -51,6 +45,11 @@ MESSAGE("")
 include(admCoreIncludes)
 
 ########################################
+# Build FFmpeg
+########################################
+include(admFFmpegBuild)
+
+########################################
 # Directories to build
 ########################################
 ADD_SUBDIRECTORY(ADM_core)
@@ -69,7 +68,6 @@ ADD_SUBDIRECTORY(ADM_coreUI)
 ADD_SUBDIRECTORY(ADM_coreUtils)
 ADD_SUBDIRECTORY(ADM_coreVideoEncoder)
 ADD_SUBDIRECTORY(ADM_coreVideoFilter)
-ADD_SUBDIRECTORY(ADM_ffmpeg)
 ADD_SUBDIRECTORY(ADM_coreJobs)
 ADD_SUBDIRECTORY(ADM_coreSocket)
 

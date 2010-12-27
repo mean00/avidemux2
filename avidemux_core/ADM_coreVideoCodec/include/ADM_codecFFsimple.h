@@ -19,10 +19,12 @@
  ***************************************************************************/
 #ifndef ADM_CODEC_FF_SIMPLE
 #define ADM_CODEC_FF_SIMPLE
-extern "C" {
-#include "ADM_lavcodec.h"
-}
 #include "ADM_default.h"
+
+extern "C" {
+#include "libavcodec/avcodec.h"
+}
+
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 

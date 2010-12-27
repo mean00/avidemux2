@@ -15,7 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_lavcodec.h"
+
 #include "ADM_default.h"
 #include "ADM_huffEncoder.h"
 #include "DIA_factory.h"

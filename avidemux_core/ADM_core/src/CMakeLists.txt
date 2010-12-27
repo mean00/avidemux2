@@ -4,7 +4,7 @@ SET(ADM_core_SRCS
         ADM_debug.cpp 
         ADM_queue.cpp
 )
-include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_ffmpeg/)
+
 ADD_LIBRARY(ADM_core6 SHARED ${ADM_core_SRCS})
 ADD_TARGET_DEFINITIONS(ADM_core6 ADM_DEBUG FIND_LEAKS)
 

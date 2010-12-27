@@ -21,13 +21,12 @@
  *                                                                         *
  ***************************************************************************/
 
-extern "C" {
-#include "ADM_lavcodec.h"
-}
 #include "ADM_default.h"
+
 #ifdef USE_VDPAU
 extern "C" {
- #include "ADM_ffmpeg/libavcodec/vdpau.h"
+#include "libavcodec/avcodec.h"
+#include "libavcodec/vdpau.h"
 }
 
 #include "ADM_codec.h"

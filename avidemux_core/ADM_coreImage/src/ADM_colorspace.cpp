@@ -14,16 +14,14 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
 #include "ADM_image.h"
 
 extern "C" {
-#include "ADM_ffmpeg/libavcodec/avcodec.h"
-#include "ADM_ffmpeg/libavutil/avutil.h"
-#include "ADM_ffmpeg/libswscale/swscale.h"
+#include "libavcodec/avcodec.h"
+#include "libavutil/avutil.h"
+#include "libswscale/swscale.h"
 }
 
 #include "ADM_rgb.h" 

@@ -1,0 +1,15 @@
+--- libavcodec/mpegvideo.c.old	2010-12-20 13:49:25 +0000
++++ libavcodec/mpegvideo.c	2010-12-20 13:49:25 +0000
+@@ -653,7 +653,11 @@
+     FF_ALLOCZ_OR_GOTO(s->avctx, s->prev_pict_types, PREV_PICT_TYPES_BUFFER_SIZE, fail);
+ 
+     s->parse_context.state= -1;
+-    if((s->avctx->debug&(FF_DEBUG_VIS_QP|FF_DEBUG_VIS_MB_TYPE)) || (s->avctx->debug_mv)){
++ //MEANX: Allocate them always, as they may be free when we decode 1st image
++
++    // MEANXif((s->avctx->debug&(FF_DEBUG_VIS_QP|FF_DEBUG_VIS_MB_TYPE)) || (s->avctx->debug_mv)){
++if(1){ // MEANX
++
+        s->visualization_buffer[0] = av_malloc((s->mb_width*16 + 2*EDGE_WIDTH) * s->mb_height*16 + 2*EDGE_WIDTH);
+        s->visualization_buffer[1] = av_malloc((s->mb_width*16 + 2*EDGE_WIDTH) * s->mb_height*16 + 2*EDGE_WIDTH);
+        s->visualization_buffer[2] = av_malloc((s->mb_width*16 + 2*EDGE_WIDTH) * s->mb_height*16 + 2*EDGE_WIDTH);

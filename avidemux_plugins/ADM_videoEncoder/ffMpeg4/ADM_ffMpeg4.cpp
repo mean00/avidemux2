@@ -15,7 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_lavcodec.h"
+
 #include "ADM_default.h"
 #include "ADM_ffMpeg4.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI

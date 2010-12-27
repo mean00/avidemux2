@@ -24,6 +24,8 @@
 typedef unsigned char ADM_filename;
 
 #ifdef HAVE_STDINT_H
+#define __STDC_CONSTANT_MACROS
+#define __STDC_LIMIT_MACROS
 #include <stdint.h>
 #define GOT_TYPES
 #endif

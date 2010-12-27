@@ -13,8 +13,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_lavcodec.h"
+
 #include "ADM_default.h"
+
+extern "C" {
+#include "libavcodec/avcodec.h"
+}
+
 #include "ADM_ad_plugin.h"
 #include "fourcc.h"
 

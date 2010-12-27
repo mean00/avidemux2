@@ -1,15 +1,18 @@
 ########################################
 # Definitions and Includes
 ########################################
-if(NOT PLUGINS)
-        SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/../..)
-endif(NOT PLUGINS)
+if (NOT PLUGINS)
+	SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/../..)
+endif (NOT PLUGINS)
+
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
+
 ########################################
 # Shared cmake part
 ########################################
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 include(admMainChecks)
+
 ########################################
 # Add include dirs
 ########################################
@@ -26,6 +29,7 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_muxerGate/include/")
 IF (GETTEXT_FOUND)
 	INCLUDE_DIRECTORIES(${GETTEXT_INCLUDE_DIR})
 ENDIF (GETTEXT_FOUND)
+
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_audioFilter/include")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_commonUI")
@@ -51,6 +55,11 @@ SET(ADM_EXE_SRCS
 ../common/ADM_slave.cpp
 )
 
+########################################
+# FFmpeg
+########################################
+include_directories("${AVIDEMUX_TOP_SOURCE_DIR}/ffmpeg")
+
 #############################################
 # Add core libs
 #############################################
@@ -71,11 +80,6 @@ ADM_coreSocket6
 ADM_coreVideoEncoder6
 ADM_coreVideoFilter6
 ADM_coreImageLoader6
-ADM_libavcodec6
-ADM_libavformat6
-ADM_libavutil6
-ADM_libswscale6
-ADM_libpostproc6
 ADM_coreTinyPy6
 )
 

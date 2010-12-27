@@ -1,0 +1,14 @@
+--- libavcodec/mpeg12.c.old	2010-12-20 13:49:23 +0000
++++ libavcodec/mpeg12.c	2010-12-20 13:49:23 +0000
+@@ -1948,6 +1948,11 @@
+         ff_er_frame_end(s);
+ 
+         MPV_frame_end(s);
++/* MEANX */
++  if(s->current_picture_ptr)
++      s->current_picture_ptr->opaque=pict->opaque;
++/* MEANX */
++
+ 
+         if (s->pict_type == FF_B_TYPE || s->low_delay) {
+             *pict= *(AVFrame*)s->current_picture_ptr;

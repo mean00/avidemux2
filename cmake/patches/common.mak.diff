@@ -1,0 +1,13 @@
+Index: common.mak
+===================================================================
+--- common.mak	(revision 18300)
++++ common.mak	(working copy)
+@@ -62,7 +62,7 @@
+ FFLIBS    := $(FFLIBS-yes) $(FFLIBS)
+ TESTPROGS += $(TESTPROGS-yes)
+ 
+-FFEXTRALIBS := $(addprefix -l,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
++FFEXTRALIBS := $(addprefix -lADM5,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
+ FFLDFLAGS   := $(addprefix -L$(BUILD_ROOT)/lib,$(ALLFFLIBS)) $(LDFLAGS)
+ 
+ EXAMPLES  := $(addprefix $(SUBDIR),$(addsuffix -example$(EXESUF),$(EXAMPLES)))

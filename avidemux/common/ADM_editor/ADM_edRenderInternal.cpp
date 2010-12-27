@@ -16,7 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ADM_includeFfmpeg.h"
 #include "ADM_cpp.h"
 #include <math.h>
 #include "ADM_default.h"

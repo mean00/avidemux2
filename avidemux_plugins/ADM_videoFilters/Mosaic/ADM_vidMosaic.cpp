@@ -16,15 +16,12 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_videoFilterDynamic.h"
-
 #include "DIA_factory.h"
 
-
 extern "C" {
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/avcodec.h"
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavutil/avutil.h"
-#include "ADM_libraries/ADM_ffmpeg/ADM_libswscale/swscale.h"
-
+#include "libavcodec/avcodec.h"
+#include "libavutil/avutil.h"
+#include "libswscale/swscale.h"
 }
 
 

@@ -15,10 +15,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_lavcodec.h"
+
 #include "ADM_default.h"
 #include "ADM_jpegEncoder.h"
 #include "DIA_factory.h"
+
 jpeg_encoder jpegConf= {ADM_COLOR_YV12,2};
 /**
         \fn ADM_jpegEncoder

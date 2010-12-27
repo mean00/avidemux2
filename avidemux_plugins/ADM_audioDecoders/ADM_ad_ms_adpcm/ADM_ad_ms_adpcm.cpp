@@ -71,7 +71,6 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecMsAdpcm,						// Class
 
 
 #include "ADM_default.h"
-#define ADM_NO_CONFIG_H
 #include "ADM_coreAudio.h"
 #include "ADM_audiocodec.h"
 

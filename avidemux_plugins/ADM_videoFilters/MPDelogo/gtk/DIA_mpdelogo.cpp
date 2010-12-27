@@ -24,14 +24,13 @@
 
 #include "ADM_toolkitGtk.h"
 
-
 #include "ADM_image.h"
 #include "ADM_videoFilter.h"
 #include "ADM_colorspace.h"
 #include "ADM_vidMPdelogo.h"
 
 extern "C" {
-#include "ADM_libraries/ADM_ffmpeg/ADM_lavcodec/avcodec.h"
+#include "libavcodec/avcodec.h"
 }
 
 static GtkWidget	*create_dialog1 (void);

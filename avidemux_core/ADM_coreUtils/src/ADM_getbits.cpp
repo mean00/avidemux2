@@ -12,7 +12,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_includeFfmpeg.h"
 
 #include "ADM_default.h"
 
@@ -20,16 +19,14 @@
 #define ADM_getbits_H
 extern "C"
 {
-#define ADM_NO_CONFIG_H
-#include "ADM_ffmpeg/libavutil/common.h"
-#include "ADM_ffmpeg/libavutil/bswap.h"
+#include "libavutil/common.h"
+#include "libavutil/bswap.h"
 #ifndef INT_MAX
 #define INT_MAX (0x7FFFFFFF)
 #endif
-#include "ADM_ffmpeg/ffmpeg_config/config.h"
-#include "ADM_ffmpeg/libavutil/internal.h"
-#include "ADM_ffmpeg/libavcodec/get_bits.h"
-#include "ADM_ffmpeg/libavcodec/golomb.h"
+#include "libavutil/avconfig.h"
+#include "libavcodec/get_bits.h"
+#include "libavcodec/golomb.h"
 }
 #undef printf
 #undef sprintf

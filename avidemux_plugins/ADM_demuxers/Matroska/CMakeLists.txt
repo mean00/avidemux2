@@ -11,7 +11,7 @@ SET(ADM_matroska_SRCS
 )
 ADD_LIBRARY(ADM_dm_matroska SHARED ${ADM_matroska_SRCS})
 
-TARGET_LINK_LIBRARIES(ADM_dm_matroska ADM_libavutil6 ADM_audioParser6)
+TARGET_LINK_LIBRARIES(ADM_dm_matroska ADM_libavutil ADM_audioParser6)
 
 INIT_DEMUXER(ADM_dm_matroska)
 INSTALL_DEMUXER(ADM_dm_matroska)

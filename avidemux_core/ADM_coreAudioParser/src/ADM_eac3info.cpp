@@ -7,13 +7,11 @@
 
 */
 
-#include "ADM_includeFfmpeg.h"
 #include "ADM_default.h"
-
 #include "ADM_eac3info.h"
+
 extern "C"
 {
-#define ADM_NO_CONFIG_H
 #define sign_extend
 #include "libavcodec/internal.h"
 #include "libavcodec/ac3_parser.h"
