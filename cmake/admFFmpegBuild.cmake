@@ -160,12 +160,18 @@ if (FFMPEG_PERFORM_BUILD)
 endif (FFMPEG_PERFORM_BUILD)
 
 # Build FFmpeg
-add_custom_command(OUTPUT "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
+getFfmpegLibNames("${FFMPEG_SOURCE_DIR}")
+
+add_custom_command(OUTPUT
+						"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
+						"${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}"
+						"${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
+						"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
+						"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
+						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
+						"${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
 				   COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TOOL=${CMAKE_BUILD_TOOL} -P "${CMAKE_SOURCE_DIR}/../cmake/admFFmpegMake.cmake"
 				   WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
-
-add_custom_target(ffmpeg ALL
-				  DEPENDS "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
 
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
