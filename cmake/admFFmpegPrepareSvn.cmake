@@ -21,7 +21,8 @@ if (NOT IS_DIRECTORY "${FFMPEG_SOURCE_DIR}/.svn")
 endif (NOT IS_DIRECTORY "${FFMPEG_SOURCE_DIR}/.svn")
 
 # Check version
-Subversion_WC_INFO(${FFMPEG_SOURCE_DIR} ffmpeg)
+admGetRevision( ${FFMPEG_SOURCE_DIR} ffmpeg_WC_REVISION)
+#Subversion_WC_INFO(${FFMPEG_SOURCE_DIR} ffmpeg)
 message(STATUS "FFmpeg revision: ${ffmpeg_WC_REVISION}")
 
 if (NOT ${ffmpeg_WC_REVISION} EQUAL ${FFMPEG_VERSION})
@@ -38,8 +39,8 @@ if (NOT ${ffmpeg_WC_REVISION} EQUAL ${FFMPEG_VERSION})
 endif (NOT ${ffmpeg_WC_REVISION} EQUAL ${FFMPEG_VERSION})
 
 message("")
-
-Subversion_WC_INFO(${FFMPEG_SOURCE_DIR}/libswscale swscale)
+admGetRevision( ${FFMPEG_SOURCE_DIR}/libswscale swscale_WC_REVISION)
+#Subversion_WC_INFO(${FFMPEG_SOURCE_DIR}/libswscale swscale)
 message(STATUS "libswscale revision: ${swscale_WC_REVISION}")
 
 if (NOT ${swscale_WC_REVISION} EQUAL ${SWSCALE_VERSION})
