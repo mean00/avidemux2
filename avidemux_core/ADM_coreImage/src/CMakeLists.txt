@@ -27,4 +27,9 @@ ENDIF (APPLE)
 
 TARGET_LINK_LIBRARIES(ADM_coreImage6 ADM_core6 ADM_coreUI6 ADM_libswscale ADM_libpostproc ADM_coreUtils6)
 TARGET_LINK_LIBRARIES(ADM_coreImage6 ADM_libavcodec ADM_libavutil)
+
+if (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
+	add_dependencies(ADM_coreImage6 libavcodec libavutil libpostproc libswscale)
+endif (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
+
 ADM_INSTALL_LIB(ADM_coreImage6)

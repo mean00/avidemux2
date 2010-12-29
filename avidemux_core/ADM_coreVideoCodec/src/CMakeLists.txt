@@ -17,6 +17,11 @@ TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6
                                           ADM_libavcodec
                                           ADM_libavformat
                                           ADM_libavutil)
+
+if (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
+	add_dependencies(ADM_coreVideoCodec6 libavcodec libavformat libavutil)
+endif (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
+
 ADM_INSTALL_LIB(ADM_coreVideoCodec6)
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
