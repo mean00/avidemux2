@@ -26,7 +26,7 @@ set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES
 # Prepare FFmpeg source
 include(admFFmpegUtil)
 find_package(Tar)
-include(admFFmpegPrepareTar)
+#include(admFFmpegPrepareTar)
 
 if (NOT FFMPEG_PREPARED)
 	include(admFFmpegPrepareSvn)
