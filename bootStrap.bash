@@ -33,7 +33,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make -j 2 >& /tmp/log$BUILDDIR || fail make
+        make  >& /tmp/log$BUILDDIR || fail make
 	if  [ "x$PKG" = "x" ] ; then
 	  echo "No packaging..."
         else
