@@ -1,9 +1,17 @@
-include(admFFmpegUtil)
-
 set(FFMPEG_VERSION 26061)	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 set(SWSCALE_VERSION 32676)	# http://git.ffmpeg.org/?p=libswscale;a=snapshot;h=d1a43021d9198868fa7a023a30e5ee9e09a907d3;sf=tgz
 
-set(FFMPEG_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../ffmpeg")
+set(LIBRARY_SOURCE_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/cmake")
+set(FFMPEG_SOURCE_ARCHIVE "ffmpeg_r${FFMPEG_VERSION}.tar.gz")
+set(SWSCALE_SOURCE_ARCHIVE "libswscale_r${SWSCALE_VERSION}.tar.gz")
+
+
+include(admFFmpegUtil)
+find_package(Tar)
+
+
+set(FFMPEG_EXTRACT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}")
+set(FFMPEG_SOURCE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_BINARY_DIR "${CMAKE_BINARY_DIR}/ffmpeg")
 
 set(FFMPEG_DECODERS  adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  dvbsub  dvvideo  ffv1  ffvhuff  flv  fraps  h263  h264  huffyuv  mjpeg
