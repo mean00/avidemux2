@@ -207,7 +207,8 @@ ENDIF(WIN32)
 
 install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil") 
 
-install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec")
+install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
+	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec")
 install(FILES "${FFMPEG_SOURCE_DIR}/libavcore/audioconvert.h" "${FFMPEG_SOURCE_DIR}/libavcore/avcore.h" 
 	"${FFMPEG_SOURCE_DIR}/libavcore/samplefmt.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcore")
 install(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h" 
@@ -216,8 +217,8 @@ install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/bswap.h" "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/intfloat_readwrite.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/log.h" "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
-	"${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h" "${FFMPEG_SOURCE_DIR}/libavutil/rational.h"
-	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil")
+	"${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil")
 install(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc")
 install(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale")
 
