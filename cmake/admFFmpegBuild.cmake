@@ -183,6 +183,7 @@ add_custom_command(OUTPUT
 
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
+include_directories("${FFMPEG_SOURCE_DIR}")
 
 #############################################################
 # We should use ADM_INSTALL_LIB here but it does not work
