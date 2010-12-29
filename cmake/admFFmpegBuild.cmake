@@ -10,7 +10,7 @@ include(admFFmpegUtil)
 find_package(Tar)
 
 
-set(FFMPEG_EXTRACT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}")
+set(FFMPEG_EXTRACT_DIR "${CMAKE_BINARY_DIR}")
 set(FFMPEG_SOURCE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_BINARY_DIR "${CMAKE_BINARY_DIR}/ffmpeg")
 
@@ -38,14 +38,14 @@ message("")
 
 if (FFMPEG_PERFORM_PATCH)
 	find_package(Patch)
-	file(GLOB patchFiles "${CMAKE_SOURCE_DIR}/../cmake/patches/*.patch")
+	file(GLOB patchFiles "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/*.patch")
 
 	foreach(patchFile ${patchFiles})
 		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
 
 	if (UNIX)
-		patch_file("${FFMPEG_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/../cmake/patches/common.mak.diff")
+		patch_file("${FFMPEG_SOURCE_DIR}" "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/common.mak.diff")
 	endif (UNIX)
 
 	message("")
@@ -158,10 +158,10 @@ if (FFMPEG_PERFORM_BUILD)
 
 	if (APPLE)
 		find_package(Patch)
-		patch_file("${FFMPEG_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/../cmake/patches/config_macosx.mak.diff")
+		patch_file("${FFMPEG_BINARY_DIR}" "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/config_macosx.mak.diff")
 	elseif (UNIX)
 		find_package(Patch)
-		patch_file("${FFMPEG_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/../cmake/patches/config.mak.diff")
+		patch_file("${FFMPEG_BINARY_DIR}" "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/config.mak.diff")
 	endif (APPLE)
 
 	message("")
@@ -178,11 +178,12 @@ add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
 						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
 						"${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
-				   COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TOOL=${CMAKE_BUILD_TOOL} -P "${CMAKE_SOURCE_DIR}/../cmake/admFFmpegMake.cmake"
+				   COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TOOL=${CMAKE_BUILD_TOOL} -P "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admFFmpegMake.cmake"
 				   WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
+
 #############################################################
 # We should use ADM_INSTALL_LIB here but it does not work
 # Temporary workaround.... Does not handle lib64 & friends
@@ -202,10 +203,25 @@ ELSE(WIN32)
   install(FILES "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
   install(FILES "${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
 ENDIF(WIN32)
+
 install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil") 
+
+install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec")
+install(FILES "${FFMPEG_SOURCE_DIR}/libavcore/audioconvert.h" "${FFMPEG_SOURCE_DIR}/libavcore/avcore.h" 
+	"${FFMPEG_SOURCE_DIR}/libavcore/samplefmt.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcore")
+install(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h" 
+	"${FFMPEG_SOURCE_DIR}/libavformat/flv.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavformat")
+install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR}/libavutil/avutil.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/bswap.h" "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/intfloat_readwrite.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/log.h" "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h" "${FFMPEG_SOURCE_DIR}/libavutil/rational.h"
+	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil")
+install(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc")
+install(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale")
 
 # Clean FFmpeg
 add_custom_target(cleanffmpeg
-				  COMMAND ${CMAKE_COMMAND} -P "${CMAKE_SOURCE_DIR}/cmake/admFFmpegClean.cmake"
+				  COMMAND ${CMAKE_COMMAND} -P "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admFFmpegClean.cmake"
 				  WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
 				  COMMENT "Cleaning FFmpeg")

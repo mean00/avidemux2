@@ -25,6 +25,7 @@
 
 extern "C"
 {
+	#include "libavutil/avutil.h"
     #include "libavformat/avformat.h"
 };
 

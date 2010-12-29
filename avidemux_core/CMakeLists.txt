@@ -42,6 +42,7 @@ MESSAGE("")
 ########################################
 # Add include dirs
 ########################################
+set(EXCLUDE_ADM_INCLUDE TRUE)
 include(admCoreIncludes)
 
 ########################################
