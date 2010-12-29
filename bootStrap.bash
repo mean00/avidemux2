@@ -15,6 +15,36 @@ fail()
         exit 1
 }
 
+Process2()
+{
+        export BUILDDIR=$1
+        export SOURCEDIR=$2
+        export EXTRA=$3
+        export DEBUG=""
+        BUILDER="Unix Makefiles"
+        if [ "x$debug" = "x1" ] ; then 
+                DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
+                BUILDDIR="${BUILDDIR}_debug"
+                BUILDER="CodeBlocks - Unix Makefiles"
+        fi
+        
+        echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
+        rm -Rf ./$BUILDDIR
+        mkdir $BUILDDIR || fail mkdir
+        cd $BUILDDIR 
+        cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+	echo "Building ffmpeg"
+	cd ffmpeg && make >& /tmp/log$BUILDDIR || fail ffmpeg
+	cd ..
+	echo "Building core"
+        make   >> /tmp/log$BUILDDIR || fail make
+	if  [ "x$PKG" = "x" ] ; then
+	  echo "No packaging..."
+        else
+          fakeroot make package DESTDIR=debPack || fail package
+	fi
+}
+
 Process()
 {
         export BUILDDIR=$1
@@ -33,7 +63,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make  >& /tmp/log$BUILDDIR || fail make
+        make  -j 2 >& /tmp/log$BUILDDIR || fail make
 	if  [ "x$PKG" = "x" ] ; then
 	  echo "No packaging..."
         else
@@ -158,7 +188,7 @@ fi
 if [ "x$do_core" = "x1" ] ; then 
         echo "** CORE **"
         cd $TOP
-        Process buildCore ../avidemux_core
+        Process2 buildCore ../avidemux_core
         echo " Core needs to be installed, installing through sudo make install ...."
         cd $TOP/buildCore${POSTFIX} && sudo make install
 fi
