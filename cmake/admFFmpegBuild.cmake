@@ -5,14 +5,10 @@ set(LIBRARY_SOURCE_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/cmake")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg_r${FFMPEG_VERSION}.tar.gz")
 set(SWSCALE_SOURCE_ARCHIVE "libswscale_r${SWSCALE_VERSION}.tar.gz")
 
-
-include(admFFmpegUtil)
-find_package(Tar)
-
-
 set(FFMPEG_EXTRACT_DIR "${CMAKE_BINARY_DIR}")
-set(FFMPEG_SOURCE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
-set(FFMPEG_BINARY_DIR "${CMAKE_BINARY_DIR}/ffmpeg")
+set(FFMPEG_BASE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
+set(FFMPEG_SOURCE_DIR "${FFMPEG_BASE_DIR}/source")
+set(FFMPEG_BINARY_DIR "${FFMPEG_BASE_DIR}/build")
 
 set(FFMPEG_DECODERS  adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  dvbsub  dvvideo  ffv1  ffvhuff  flv  fraps  h263  h264  huffyuv  mjpeg
 					 mjpegb  mpeg2video  mpeg4  msmpeg4v2  msmpeg4v3  msvideo1  nellymoser  png  qdm2  rawvideo  snow  svq3  theora  tscc
@@ -24,6 +20,12 @@ set(FFMPEG_PROTOCOLS  file)
 set(FFMPEG_FLAGS  --enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl 
 				  --enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe --prefix=${CMAKE_INSTALL_PREFIX})
 
+# Clean FFmpeg
+set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES "${FFMPEG_BASE_DIR}")
+
+# Prepare FFmpeg source
+include(admFFmpegUtil)
+find_package(Tar)
 include(admFFmpegPrepareTar)
 
 if (NOT FFMPEG_PREPARED)
@@ -221,9 +223,3 @@ install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil")
 install(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc")
 install(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale")
-
-# Clean FFmpeg
-add_custom_target(cleanffmpeg
-				  COMMAND ${CMAKE_COMMAND} -P "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admFFmpegClean.cmake"
-				  WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
-				  COMMENT "Cleaning FFmpeg")
