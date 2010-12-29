@@ -187,25 +187,13 @@ add_custom_command(OUTPUT
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 include_directories("${FFMPEG_SOURCE_DIR}")
 
-#############################################################
-# We should use ADM_INSTALL_LIB here but it does not work
-# Temporary workaround.... Does not handle lib64 & friends
-#############################################################
-IF(WIN32)
-  install(FILES "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}")
-  install(FILES "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}")
-ELSE(WIN32)
-  install(FILES "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
-  install(FILES "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
-  install(FILES "${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}" DESTINATION "${AVIDEMUX_INSTALL_DIR}/lib")
-ENDIF(WIN32)
+ADM_INSTALL_LIB_FILES(
+	"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
+	"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
+	"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
+	"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
+	"${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
+	"${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}")
 
 install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil") 
 
