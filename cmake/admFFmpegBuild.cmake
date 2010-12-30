@@ -18,17 +18,26 @@ set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp
 set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 set(FFMPEG_FLAGS  --enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl 
-				  --enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe --prefix=${CMAKE_INSTALL_PREFIX})
+				  --enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe)
+MACRO(XADD opt)
+	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} ${opt})
+ENDMACRO(XADD opt)
+#
+#
+IF(NOT CROSS)
+ XADD(--prefix=${CMAKE_INSTALL_PREFIX})
+ENDIF(NOT CROSS)
 
 # Clean FFmpeg
 set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES "${FFMPEG_BASE_DIR}")
 
 # Prepare FFmpeg source
 include(admFFmpegUtil)
-IF(NOT WIN32)
+
+IF((NOT WIN32) OR CROSS)
   find_package(Tar)
   include(admFFmpegPrepareTar)
-ENDIF(NOT WIN32)
+ENDIF((NOT WIN32) OR CROSS)
 
 if (NOT FFMPEG_PREPARED)
 	include(admFFmpegPrepareSvn)
@@ -116,6 +125,30 @@ if (FF_FLAGS)
 	set(FF_FLAGS "${FF_FLAGS}" CACHE STRING "")
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} ${FF_FLAGS})
 endif (FF_FLAGS)
+#
+#   CROSS COMPILER OVERRIDE (win32 & win64)
+#
+	IF(CROSS)
+		XADD(--enable-cross-compile )
+		XADD(--prefix=/mingw)
+		XADD(--host-cc=gcc)
+		XADD(--cc=${CMAKE_CROSS_PREFIX}-gcc )
+		XADD(--ld=${CMAKE_CROSS_PREFIX}-gcc ) # Not an error !
+		XADD(--ar=${CMAKE_CROSS_PREFIX}-ar ) 
+		XADD(--nm=${CMAKE_CROSS_PREFIX}-nm ) 
+		XADD(--sysroot=/mingw/include)
+		XADD(--target-os=mingw32)
+		#--extra-cflags=-I${CROSS}/include --extra-ldflags=-L${CROSS}/lib")
+		IF(ADM_CPU_64BIT)	
+			XADD(--arch=X86_64)
+		ELSE(ADM_CPU_64BIT)	
+			XADD(--arch=i386)
+		ENDIF(ADM_CPU_64BIT)	
+		MESSAGE(STATUS "Using cross compilation flag : ${FFMPEG_FLAGS}")
+	ENDIF(CROSS)
+#
+#   /CROSS COMPILER OVERRIDE (win32 & win64)
+#
 
 if (NOT "${LAST_FFMPEG_FLAGS}" STREQUAL "${FFMPEG_FLAGS}")
 	set(FFMPEG_PERFORM_BUILD 1)
@@ -133,9 +166,11 @@ if (FFMPEG_PERFORM_BUILD)
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg_g${CMAKE_EXECUTABLE_SUFFIX}")
 
+	#MESSAGE(STATUS "-> sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}")
 	execute_process(COMMAND sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}
 					WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
 					${ffmpegBuildOutput})
+	MESSAGE(STATUS "Configuring done, processing")
 
 	if (ADM_CPU_X86)
 		file(READ ${FFMPEG_BINARY_DIR}/config.h FF_CONFIG_H)
@@ -144,7 +179,7 @@ if (FFMPEG_PERFORM_BUILD)
 		if (NOT FF_YASM)
 			message(FATAL_ERROR "Yasm was not found.")
 		endif (NOT FF_YASM)
-
+		IF(NOT CROSS)
 		if (WIN32)
 			string(REGEX MATCH "#define[ ]+CONFIG_DXVA2[ ]+1" FF_DXVA2 "${FF_CONFIG_H}")
 			
@@ -152,6 +187,7 @@ if (FFMPEG_PERFORM_BUILD)
 				message(FATAL_ERROR "DXVA2 not detected.  Ensure the dxva2api.h system header exists (available from Microsoft or http://downloads.videolan.org/pub/videolan/testing/contrib/dxva2api.h).")
 			endif (NOT FF_DXVA2)
 		endif (WIN32)
+		ENDIF(NOT CROSS)
 	endif (ADM_CPU_X86)
 
 	execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "libavutil"
