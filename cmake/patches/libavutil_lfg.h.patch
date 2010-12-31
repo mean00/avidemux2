@@ -1,0 +1,35 @@
+--- libavutil/lfg.h.old	2010-12-31 18:22:13 +0000
++++ libavutil/lfg.h	2010-12-31 18:22:13 +0000
+@@ -24,7 +24,7 @@
+ 
+ typedef struct {
+     unsigned int state[64];
+-    int index;
++    int xindex;
+ } AVLFG;
+ 
+ void av_lfg_init(AVLFG *c, unsigned int seed);
+@@ -36,8 +36,8 @@
+  * it may be good enough and faster for your specific use case.
+  */
+ static inline unsigned int av_lfg_get(AVLFG *c){
+-    c->state[c->index & 63] = c->state[(c->index-24) & 63] + c->state[(c->index-55) & 63];
+-    return c->state[c->index++ & 63];
++    c->state[c->xindex & 63] = c->state[(c->xindex-24) & 63] + c->state[(c->xindex-55) & 63];
++    return c->state[c->xindex++ & 63];
+ }
+ 
+ /**
+@@ -46,9 +46,9 @@
+  * Please also consider av_lfg_get() above, it is faster.
+  */
+ static inline unsigned int av_mlfg_get(AVLFG *c){
+-    unsigned int a= c->state[(c->index-55) & 63];
+-    unsigned int b= c->state[(c->index-24) & 63];
+-    return c->state[c->index++ & 63] = 2*a*b+a+b;
++    unsigned int a= c->state[(c->xindex-55) & 63];
++    unsigned int b= c->state[(c->xindex-24) & 63];
++    return c->state[c->xindex++ & 63] = 2*a*b+a+b;
+ }
+ 
+ /**

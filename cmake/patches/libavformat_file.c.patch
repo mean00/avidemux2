@@ -1,15 +1,12 @@
---- libavformat/file.c.old	2010-12-20 13:49:28 +0000
-+++ libavformat/file.c	2010-12-20 13:49:29 +0000
-@@ -30,6 +30,75 @@
+--- libavformat/file.c.old	2010-12-31 18:22:03 +0000
++++ libavformat/file.c	2010-12-31 18:22:03 +0000
+@@ -30,6 +30,72 @@
  #include <stdlib.h>
  #include "os_support.h"
  
 +// GRUNTSTER start
 +#ifdef __WIN32
 +#include <windows.h>
-+
-+int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
-+int ADM_open(const char *path, int oflag, ...);
 +
 +int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString)
 +{

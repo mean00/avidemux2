@@ -1,7 +1,9 @@
 #!/bin/bash
 
 export curDir=$PWD
-export ffmpegPath=../../avidemux/ADM_libraries/ffmpeg
+export ffmpegPath=$1/core/ffmpeg/source
+
+echo Updating patches in $ffmpegPath
 
 function updatePatch {
 	cd $ffmpegPath
@@ -18,18 +20,17 @@ function updatePatch {
 }
 
 updatePatch libavcodec avcodec.h
-updatePatch libavcodec ffv1.c
 updatePatch libavcodec h263dec.c
-updatePatch libavcodec h264.c
 updatePatch libavcodec h264_parser.c
 updatePatch libavcodec mpeg12.c
 updatePatch libavcodec mpeg12enc.c
 updatePatch libavcodec mpegvideo.c
 updatePatch libavcodec mpegvideo_enc.c
 updatePatch libavcodec utils.c
-updatePatch libavcodec vc1dec.c
 updatePatch libavformat file.c
 updatePatch libavformat isom.c
 updatePatch libavformat matroskaenc.c
 updatePatch libavutil avutil.h
-
+updatePatch libavutil lfg.c
+updatePatch libavutil lfg.h
+updatePatch libswscale swscale_template.c

@@ -1,0 +1,11 @@
+--- libswscale/swscale_template.c.old	2010-12-31 18:22:15 +0000
++++ libswscale/swscale_template.c	2010-12-31 18:22:15 +0000
+@@ -951,7 +951,7 @@
+ #if COMPILE_TEMPLATE_MMX
+     if(!(c->flags & SWS_BITEXACT)) {
+         long p= 4;
+-        const uint8_t *src[4]= {alpSrc + dstW, lumSrc + dstW, chrSrc + chrDstW, chrSrc + VOFW + chrDstW};
++        const uint8_t *src[4]= {alpSrc + dstW, (uint8_t *)lumSrc + dstW, (uint8_t *)chrSrc + chrDstW, (uint8_t *)chrSrc + VOFW + chrDstW}; // MEANX
+         uint8_t *dst[4]= {aDest, dest, uDest, vDest};
+         x86_reg counter[4]= {dstW, dstW, chrDstW, chrDstW};
+ 
