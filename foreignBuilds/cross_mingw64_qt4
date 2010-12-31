@@ -13,7 +13,12 @@ echo "<<<<<<<<<<<<Cross compiling core>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$MINGW \
         -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
         -DQT_HOME:STRING=$QT_HOME \
-	-DCMAKE_TOOLCHAIN_FILE=$TOP/foreignBuilds/cross_mingw64_cmake \
+	-DCMAKE_CROSS_PREFIX=$CROSS_PREFIX \
+        -DCMAKE_C_COMPILER:STRING=$CROSS_PREFIX-gcc \
+        -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
+        -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
+        -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
+        -DCMAKE_SYSTEM_NAME:STRING=Windows \
         $DEBUG \
         -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
         $TOP/avidemux/qt4
