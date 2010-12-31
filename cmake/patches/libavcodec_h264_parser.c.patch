@@ -1,12 +1,13 @@
---- libavcodec/h264_parser.c.old	2010-12-31 18:21:50 +0000
-+++ libavcodec/h264_parser.c	2010-12-31 18:21:50 +0000
-@@ -30,7 +30,51 @@
+--- libavcodec/h264_parser.c.old	2010-12-20 13:49:23 +0000
++++ libavcodec/h264_parser.c	2010-12-20 13:49:23 +0000
+@@ -30,7 +30,52 @@
  #include "h264data.h"
  #include "golomb.h"
  
 +#include "ff_spsinfo.h" // MEANX
  #include <assert.h>
 + // MEANX
++int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info);
 +/**
 +    \fn AVCodecParserContext
 +*/
