@@ -205,7 +205,12 @@ decoderFF::~decoderFF ()
     }
 
   avcodec_close (_context);
-  ADM_dealloc (_context);
+#if LIBAVCODEC_BUILD >= 4624
+	av_free(_context);
+#else
+  delete _context;
+#endif
+ _context=NULL;
   delete[]_internalBuffer;
   printf ("[lavc] Destroyed\n");
 }
