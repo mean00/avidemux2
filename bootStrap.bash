@@ -8,7 +8,7 @@ do_cli=0
 do_gtk=0
 do_qt4=1
 do_plugins=1
-debug=1
+debug=0
 fail()
 {
         echo "** Failed at $1**"
