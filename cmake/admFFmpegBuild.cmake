@@ -20,14 +20,14 @@ set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 set(FFMPEG_FLAGS  --enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl 
 				  --enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe)
-MACRO(XADD opt)
+
+MACRO (xadd opt)
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} ${opt})
-ENDMACRO(XADD opt)
-#
-#
-IF(NOT CROSS)
- XADD(--prefix=${CMAKE_INSTALL_PREFIX})
-ENDIF(NOT CROSS)
+ENDMACRO (xadd opt)
+
+if (NOT CROSS)
+	xadd(--prefix=${CMAKE_INSTALL_PREFIX})
+endif (NOT CROSS)
 
 # Clean FFmpeg
 set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES "${FFMPEG_BASE_DIR}")
@@ -35,10 +35,10 @@ set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES
 # Prepare FFmpeg source
 include(admFFmpegUtil)
 
-IF((NOT WIN32) OR CROSS)
-  find_package(Tar)
-  include(admFFmpegPrepareTar)
-ENDIF((NOT WIN32) OR CROSS)
+if ((NOT WIN32) OR CROSS)
+	find_package(Tar)
+	include(admFFmpegPrepareTar)
+endif ((NOT WIN32) OR CROSS)
 
 if (NOT FFMPEG_PREPARED)
 	include(admFFmpegPrepareSvn)
@@ -64,9 +64,11 @@ if (FFMPEG_PERFORM_PATCH)
 
 	message("")
 endif (FFMPEG_PERFORM_PATCH)
-IF(USE_VDPAU)
-	set(FFMPEG_DECODERS  ${FFMPEG_DECODERS} h264_vdpau vc1_vdpau mpeg1_vdpau mpeg2_vdpau wmv3_vdpau)
-ENDIF(USE_VDPAU)
+
+if (USE_VDPAU)
+	xadd(--enable-vdpau)
+	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg2_vdpau  wmv3_vdpau)
+endif (USE_VDPAU)
 
 # Configure FFmpeg, if required
 foreach (decoder ${FFMPEG_DECODERS})
@@ -99,10 +101,6 @@ else (WIN32)
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-pthreads)
 endif (WIN32)
 
-IF(USE_VDPAU)
-	XADD(--enable-vdpau)
-ENDIF(USE_VDPAU)
-
 if (NOT ADM_DEBUG)
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --disable-debug)
 endif (NOT ADM_DEBUG)
@@ -114,6 +112,27 @@ endif (CMAKE_C_FLAGS)
 if (CMAKE_SHARED_LINKER_FLAGS)
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --extra-ldflags=${CMAKE_SHARED_LINKER_FLAGS})
 endif (CMAKE_SHARED_LINKER_FLAGS)
+
+#  Cross compiler override (win32 & win64)
+if (CROSS)
+	xadd(--prefix=/mingw)
+	xadd(--host-cc=gcc)
+	xadd(--cc=${CMAKE_CROSS_PREFIX}-gcc)
+	xadd(--ld=${CMAKE_CROSS_PREFIX}-gcc) # Not an error !
+	xadd(--ar=${CMAKE_CROSS_PREFIX}-ar) 
+	xadd(--nm=${CMAKE_CROSS_PREFIX}-nm) 
+	xadd(--sysroot=/mingw/include)
+
+	set(CROSS_OS mingw32)	
+
+	if (ADM_CPU_64BIT)
+		set(CROSS_ARCH x86_64)
+	else (ADM_CPU_64BIT)
+		set(CROSS_ARCH i386)
+	endif (ADM_CPU_64BIT)
+
+	message(STATUS "Using cross compilation flag: ${FFMPEG_FLAGS}")
+endif (CROSS)
 
 if (CROSS_ARCH OR CROSS_OS)
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-cross-compile)
@@ -133,30 +152,6 @@ if (FF_FLAGS)
 	set(FF_FLAGS "${FF_FLAGS}" CACHE STRING "")
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} ${FF_FLAGS})
 endif (FF_FLAGS)
-#
-#   CROSS COMPILER OVERRIDE (win32 & win64)
-#
-	IF(CROSS)
-		XADD(--enable-cross-compile )
-		XADD(--prefix=/mingw)
-		XADD(--host-cc=gcc)
-		XADD(--cc=${CMAKE_CROSS_PREFIX}-gcc )
-		XADD(--ld=${CMAKE_CROSS_PREFIX}-gcc ) # Not an error !
-		XADD(--ar=${CMAKE_CROSS_PREFIX}-ar ) 
-		XADD(--nm=${CMAKE_CROSS_PREFIX}-nm ) 
-		XADD(--sysroot=/mingw/include)
-		XADD(--target-os=mingw32)
-		#--extra-cflags=-I${CROSS}/include --extra-ldflags=-L${CROSS}/lib")
-		IF(ADM_CPU_64BIT)	
-			XADD(--arch=x86_64)
-		ELSE(ADM_CPU_64BIT)	
-			XADD(--arch=i386)
-		ENDIF(ADM_CPU_64BIT)	
-		MESSAGE(STATUS "Using cross compilation flag : ${FFMPEG_FLAGS}")
-	ENDIF(CROSS)
-#
-#   /CROSS COMPILER OVERRIDE (win32 & win64)
-#
 
 if (NOT "${LAST_FFMPEG_FLAGS}" STREQUAL "${FFMPEG_FLAGS}")
 	set(FFMPEG_PERFORM_BUILD 1)
@@ -187,15 +182,14 @@ if (FFMPEG_PERFORM_BUILD)
 		if (NOT FF_YASM)
 			message(FATAL_ERROR "Yasm was not found.")
 		endif (NOT FF_YASM)
-		IF(NOT CROSS)
-		if (WIN32)
+
+		if (WIN32 AND (NOT CROSS))
 			string(REGEX MATCH "#define[ ]+CONFIG_DXVA2[ ]+1" FF_DXVA2 "${FF_CONFIG_H}")
 			
 			if (NOT FF_DXVA2)
 				message(FATAL_ERROR "DXVA2 not detected.  Ensure the dxva2api.h system header exists (available from Microsoft or http://downloads.videolan.org/pub/videolan/testing/contrib/dxva2api.h).")
 			endif (NOT FF_DXVA2)
-		endif (WIN32)
-		ENDIF(NOT CROSS)
+		endif (WIN32 AND (NOT CROSS))
 	endif (ADM_CPU_X86)
 
 	execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "libavutil"
@@ -233,12 +227,12 @@ add_custom_command(OUTPUT
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 include_directories("${FFMPEG_SOURCE_DIR}")
 
-ADM_INSTALL_LIB_FILES( "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}")
-ADM_INSTALL_LIB_FILES( "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")
-ADM_INSTALL_LIB_FILES( "${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}")
-ADM_INSTALL_LIB_FILES( "${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}")
-ADM_INSTALL_LIB_FILES( "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}")
-ADM_INSTALL_LIB_FILES( "${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcore/${LIBAVCORE_LIB}")
 
 install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil") 
 
