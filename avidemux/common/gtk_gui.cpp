@@ -731,11 +731,6 @@ void cleanUp (void)
 		aviaudiostream=NULL;
 	}
 #endif
-	if (secondaudiostream)
-	{
-		delete secondaudiostream;
-		secondaudiostream=NULL;
-	}
 #if 0
 	if (currentAudioName)
 	{
@@ -743,11 +738,6 @@ void cleanUp (void)
 		currentAudioName = NULL;
 	}
 
-	if (secondAudioName)
-	{
-		ADM_dealloc(secondAudioName);
-		secondAudioName = NULL;
-	}
 #endif
 
 	if (video_body)
@@ -965,133 +955,7 @@ roger_and_out:
 */
 void A_externalAudioTrack( void )
 {
-#if 0
-        uint32_t old,nw;
-        uint32_t oldtrack,newtrack;
-        char  *newtrackname=ADM_strdup(secondAudioName);
-
-   diaMenuEntry sourcesStream[]={
-            {AudioNone,QT_TR_NOOP("None"),QT_TR_NOOP("No audio")},
-            {AudioAC3,QT_TR_NOOP("External AC3"),QT_TR_NOOP("Take audio from external AC3 file")},
-            {AudioMP3,QT_TR_NOOP("External MP3"),QT_TR_NOOP("Take audio from external MP3 file")},
-            {AudioWav,QT_TR_NOOP("External WAV"),QT_TR_NOOP("Take audio from external WAV file")}
-        };
-
-        old=nw=secondAudioSource;
-
-        diaElemMenu     sourceMenu(&nw,QT_TR_NOOP("_Audio source:"),4,sourcesStream,NULL);
-        diaElemFile     sourceName(0,&newtrackname,QT_TR_NOOP("_External file:"), NULL, QT_TR_NOOP("Select file"));
-        diaElem *allWidgets[]={&sourceMenu,&sourceName};
-
-  /* Link..*/
-
-         sourceMenu.link(&(sourcesStream[2]),1,&sourceName);
-         sourceMenu.link(&(sourcesStream[3]),1,&sourceName);
-         sourceMenu.link(&(sourcesStream[1]),1,&sourceName);
-
-         if( !diaFactoryRun(QT_TR_NOOP("Second Audio Track"),2,allWidgets)) return;
-         if(!ADM_fileExist(newtrackname))
-         {
-           GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Cannot load"),QT_TR_NOOP("The selected audio file does not exist."));
-           return;
-         }
-        if(secondAudioSource!=AudioNone)
-        {
-                 delete secondaudiostream;
-                 secondAudioSource=AudioNone;
-                 secondaudiostream=NULL;
-                 if(secondAudioName) ADM_dealloc(secondAudioName);
-                 secondAudioName=NULL;
-        }
-       secondAudioSource=(AudioSource)nw;
-        A_setSecondAudioTrack(secondAudioSource,newtrackname);
-        if(newtrackname) ADM_dealloc(newtrackname);
-#endif
 }
-#if 0
-uint8_t A_setSecondAudioTrack(const AudioSource nw,char *name)
-{
-
-        switch(nw)
-        {
-                case AudioNone:break;
-                case AudioMP3:
-                        {
-                        AVDMMP3AudioStream *tmp;
-                        if(!name) break;
-                        tmp = new AVDMMP3AudioStream ();
-                        if (!tmp->open (name))
-                        {
-                                delete tmp;
-                                GUI_Error_HIG(QT_TR_NOOP("Error loading the MP3 file"), NULL);
-
-                        }
-                        else
-                        {
-/*                                secondaudiostream = tmp;
-                                secondAudioSource=AudioMP3;
-                                secondAudioName=ADM_strdup(name);
-                                printf ("\n MP3 loaded\n");
-                                GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Second track loaded"), NULL);
-*/
-                                return 1;
-                        }
-                        }
-                        break;
-                case AudioAC3:
-                          {
-                        AVDMAC3AudioStream *tmp;
-                        if(!name) break;
-
-                        tmp = new AVDMAC3AudioStream ();
-                        if (!tmp->open (name))
-                        {
-                                delete tmp;
-                                GUI_Error_HIG(QT_TR_NOOP("Error loading the AC3 file"), NULL);
-                        }
-                        else
-                        {
-/*
-                                secondaudiostream = tmp;
-                                secondAudioSource=AudioAC3;
-                                secondAudioName=ADM_strdup(name);
-                                printf ("\n AC3 loaded\n");
-                                GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Second track loaded"), NULL);
-*/
-                                return 1;
-                        }
-                        }
-                        break;
-                case AudioWav:
-                         {
-                        AVDMWavAudioStream *tmp;
-                        if(!name) break;
-
-                        tmp = new AVDMWavAudioStream ();
-                        if (!tmp->open (name))
-                        {
-                                delete tmp;
-                                GUI_Error_HIG(QT_TR_NOOP("Error loading the WAV file"), NULL);
-                        }
-                        else
-                        {
-/*
-                                secondaudiostream = tmp;
-                                secondAudioSource=AudioAC3;
-                                secondAudioName=ADM_strdup(name);
-                                printf ("\n AC3 loaded\n");
-                                GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Second track loaded"), NULL);
-*/
-                                return 1;
-                        }}
-                        break;
-                default:
-                ADM_assert(0);
-        }
-        return 0;
-
-}
-#endif
 /**
     \fn A_Resync
     \brief 
@@ -1192,7 +1056,7 @@ uint8_t GUI_close(void)
       // Audio streams are cleared by editor
 
 	  aviaudiostream=NULL;
-	  secondaudiostream=NULL;
+	  
 
 //      filterCleanUp ();
 	  UI_setTitle(NULL);

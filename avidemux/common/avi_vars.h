@@ -42,11 +42,6 @@ EXTERN ADM_audioStream *currentaudiostream
 =(ADM_audioStream *)NULL
 #endif
 ;
-EXTERN ADM_audioStream *secondaudiostream
-#ifdef __DECLARE__
-=(ADM_audioStream *)NULL
-#endif
-;
 
 ;
 EXTERN aviInfo   *avifileinfo
