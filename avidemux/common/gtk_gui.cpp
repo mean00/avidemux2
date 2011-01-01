@@ -356,27 +356,12 @@ int nw;
       break;
     }
     case ACT_Copy:
-      		if( frameEnd < frameStart ){
-                  GUI_Error_HIG(QT_TR_NOOP("Marker A > B"), QT_TR_NOOP("Cannot copy."));
-      		}else{
+            brokenAct();
 //    		   video_body->copyToClipBoard (frameStart,frameEnd);
-      		}
 		break;
     case ACT_Paste:
-#if 0
-      		video_body->pasteFromClipBoard(curframe);
-		 old=curframe;
-      		ReSync ();
-	  	if (!video_body->updateVideoInfo (avifileinfo))
-		{
-                  GUI_Error_HIG (QT_TR_NOOP("Something bad happened (II))"), NULL);
-		}
-     		 GUI_setAllFrameAndTime ();
-      		UI_setMarkers (frameStart, frameEnd);
- 		curframe=old;
-        	GUI_GoToFrame (curframe);
-#endif
-		break;
+            brokenAct();        		
+            break;
       break;
 
     case ACT_ResetSegments:
@@ -686,8 +671,6 @@ void ReSync (void)
 {
   uint8_t isaviaud;
 
-  frameStart = 0;
-  frameEnd = avifileinfo->nb_frames - 1;
   // update audio stream
   // If we were on avi , mark it...
   if (currentaudiostream == aviaudiostream)

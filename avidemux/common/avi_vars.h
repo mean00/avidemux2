@@ -1,3 +1,8 @@
+/**
+    \file avi_vars.h
+    \brief a couple of global variables
+
+*/
 #ifndef __AVI_VARS
 #define __AVI_VARS
 
@@ -21,16 +26,11 @@ EXTERN ADM_Composer *video_body
 #endif
 ;
 
-
-EXTERN uint32_t  curframe;
-EXTERN uint32_t verbose;
-EXTERN uint32_t originalPriority;
 EXTERN uint8_t 	playing
 #ifdef __DECLARE__
 =0
 #endif
 ;
-
 
 EXTERN ADM_audioStream *aviaudiostream
 #ifdef __DECLARE__
@@ -49,20 +49,5 @@ EXTERN aviInfo   *avifileinfo
 =(aviInfo *)NULL
 #endif
 ;
-/**
-	If set to 1, means video is in process mode_preview
-	If set to 0, copy mode
-*/
-EXTERN uint32_t audioProcessMode(void);
-/**
-	If set to 1, means video is in process mode_preview
-	If set to 0, copy mode
-*/
-EXTERN uint32_t videoProcessMode(void);
-
-EXTERN uint32_t frameStart,frameEnd;
-
-
-
 
 #endif

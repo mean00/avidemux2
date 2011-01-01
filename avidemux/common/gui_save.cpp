@@ -390,11 +390,10 @@ int A_saveBunchJpg(const char *name)
   DIA_workingBase *working;
   uint8_t success=0;
 
-        if(frameStart>frameEnd)
-                {
-                  GUI_Error_HIG(QT_TR_NOOP("Mark A > B"), QT_TR_NOOP("Set your markers correctly."));
-                        return 0;
-                }
+    ADM_error("Broken\n");
+    return 0;
+#if 0
+
         // Split name into base + extension
         ADM_PathSplit(name,&baseName,&ext);
 
@@ -424,7 +423,7 @@ _bunch_abort:
         delete working	;
         delete src;
         return success;
-
+#endif
 
 }
 /**

@@ -445,14 +445,10 @@ void call_autosplit(char *p)
 
 void setBegin(char *p)
 {
-    frameStart=atoi(p);
-    printf("\n Start %u\n",frameStart);
+
 }
 void setEnd(char *p)
 {
-    frameEnd=atoi(p);
-    printf("\n End %u\n",frameStart);
-
 }
 void call_help(char *p)
 {
