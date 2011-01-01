@@ -32,11 +32,6 @@ EXTERN uint8_t 	playing
 #endif
 ;
 
-EXTERN ADM_audioStream *aviaudiostream
-#ifdef __DECLARE__
-=(ADM_audioStream *)NULL
-#endif
-;
 EXTERN ADM_audioStream *currentaudiostream
 #ifdef __DECLARE__
 =(ADM_audioStream *)NULL

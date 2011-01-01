@@ -96,6 +96,8 @@ void brokenAct(void);
 void HandleAction (Action action);
 void HandleAction_Navigate(Action action);
 void HandleAction_Save(Action action);
+
+
 //
 //
 /**
@@ -580,19 +582,6 @@ void  updateLoaded ()
       printf ("\n *** NO AUDIO ***\n");
       wavinfo = (WAVHeader *) NULL;
     }
-  else
-    {
-	  video_body->getAudioStream (&aviaudiostream);
-//      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
-#if 0
-      if (aviaudiostream)
-	if (!aviaudiostream->isDecompressable ())
-	  {
-            GUI_Error_HIG (QT_TR_NOOP("No audio decoder found for this file"),
-                           QT_TR_NOOP( "Save (A+V) will generate bad AVI. Save audio will work."));
-	  }
-#endif
-    }
 
   // Init renderer
     admPreview::setMainDimension(avifileinfo->width, avifileinfo->height);
@@ -673,24 +662,7 @@ void ReSync (void)
 
   // update audio stream
   // If we were on avi , mark it...
-  if (currentaudiostream == aviaudiostream)
-    {
-      isaviaud = 1;
-//      A_changeAudioStream ((AVDMGenericAudioStream *) NULL, AudioNone,NULL);
-
-    }
-  else
-    isaviaud = 0;
   GUI_setAllFrameAndTime ();
-
-  // Since we modified avi stream, rebuild audio stream accordingly
-  video_body->getAudioStream (&aviaudiostream);
-  if (isaviaud)
-    {
-//      A_changeAudioStream (aviaudiostream, AudioAvi,NULL);
-    }
-  	//updateVideoFilters ();
-//	getFirstVideoFilter();
 
 }
 
@@ -707,22 +679,6 @@ void cleanUp (void)
 		delete avifileinfo;
 		avifileinfo=NULL;
 	}
-#if 0
-	if (aviaudiostream)
-	{
-		delete aviaudiostream;
-		aviaudiostream=NULL;
-	}
-#endif
-#if 0
-	if (currentAudioName)
-	{
-		ADM_dealloc(currentAudioName);
-		currentAudioName = NULL;
-	}
-
-#endif
-
 	if (video_body)
 	{
 		delete video_body;
@@ -884,7 +840,6 @@ extern const char *getStrFromAudioCodec( uint32_t codec);
 int A_setAudioTrack(int track)
 {
         video_body->changeAudioStream(0,track);
-        video_body->getAudioStream(&aviaudiostream);
         return true;
 }
 /**
@@ -1035,11 +990,7 @@ uint8_t GUI_close(void)
       //delete wavinfo;
       
       avifileinfo = NULL;
-      video_body->cleanup ();
-      // Audio streams are cleared by editor
-
-	  aviaudiostream=NULL;
-	  
+      video_body->cleanup ();	  
 
 //      filterCleanUp ();
 	  UI_setTitle(NULL);
