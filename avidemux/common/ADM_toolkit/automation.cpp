@@ -512,6 +512,7 @@ void show_info(char *p){
    printf("   Aspect Ratio: %s (%u:%u)\n", s,war,har);
 
    printf("Audio\n");
+   WAVHeader *wavinfo=video_body->getInfo();
    if( wavinfo )
     {
       printf("   Codec: %s\n",getStrFromAudioCodec(wavinfo->encoding));

@@ -54,11 +54,6 @@ EXTERN aviInfo   *avifileinfo
 =(aviInfo *)NULL
 #endif
 ;
-EXTERN WAVHeader *wavinfo
-#ifdef __DECLARE__
-=(WAVHeader *)NULL
-#endif
-;
 /**
 	If set to 1, means video is in process mode_preview
 	If set to 0, copy mode

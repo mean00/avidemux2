@@ -588,6 +588,7 @@ void  updateLoaded ()
 //  getFirstVideoFilter(); // reinit first filter
 
   // now get audio information if exists
+  WAVHeader *wavinfo;
   wavinfo = video_body->getInfo ();	//wavinfo); // will be null if no audio
   if (!wavinfo)
     {
@@ -1185,7 +1186,7 @@ uint8_t GUI_close(void)
       }
       delete avifileinfo;
       //delete wavinfo;
-      wavinfo = NULL;
+      
       avifileinfo = NULL;
       video_body->cleanup ();
       // Audio streams are cleared by editor

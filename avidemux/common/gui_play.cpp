@@ -355,7 +355,7 @@ bool  GUIPlayback::initializeAudio(void)
 
     channels= playbackAudio->getInfo()->channels;
     frequency=playbackAudio->getInfo()->frequency;
-    preload=  (wavinfo->frequency * channels)/5;	// 200 ms preload
+    preload=  (frequency * channels)/5;	// 200 ms preload
     // 4 sec buffer..
     wavbuf =  (float *)  ADM_alloc((20*sizeof(float)*preload)); // 4 secs buffers
     ADM_assert(wavbuf);
@@ -389,7 +389,7 @@ bool  GUIPlayback::initializeAudio(void)
     AVDM_AudioPlay(wavbuf, fill);
     // Let audio latency sets in...
     ticktock.reset();
-    uint32_t slice=(wavinfo->frequency * channels)/100; // 10 ms
+    uint32_t slice=(frequency * channels)/100; // 10 ms
     // pump data until latency is over
     updateVu();
     #if 0
