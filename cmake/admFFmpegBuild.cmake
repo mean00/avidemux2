@@ -44,9 +44,6 @@ if (NOT FFMPEG_PREPARED)
 	include(admFFmpegPrepareSvn)
 endif (NOT FFMPEG_PREPARED)
 
-if (NOT VERBOSE)
-	set(ffmpegBuildOutput OUTPUT_VARIABLE FFMPEG_CONFIGURE_OUTPUT)
-endif (NOT VERBOSE)
 
 message("")
 
@@ -160,6 +157,7 @@ endif (NOT "${LAST_FFMPEG_FLAGS}" STREQUAL "${FFMPEG_FLAGS}")
 if (NOT EXISTS "${FFMPEG_BINARY_DIR}/Makefile")
 	set(FFMPEG_PERFORM_BUILD 1)
 endif (NOT EXISTS "${FFMPEG_BINARY_DIR}/Makefile")
+	
 
 if (FFMPEG_PERFORM_BUILD)
 	message(STATUS "Configuring FFmpeg")
@@ -169,10 +167,16 @@ if (FFMPEG_PERFORM_BUILD)
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg_g${CMAKE_EXECUTABLE_SUFFIX}")
 
-	#MESSAGE(STATUS "-> sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}")
 	execute_process(COMMAND sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}
 					WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
-					${ffmpegBuildOutput})
+	                                OUTPUT_VARIABLE FFMPEG_CONFIGURE_OUTPUT
+	                                RESULT_VARIABLE FFMPEG_CONFIGURE_RESULT)
+        IF(NOT (FFMPEG_CONFIGURE_RESULT EQUAL 0))
+	        MESSAGE(ERROR "configure returned <${FFMPEG_CONFIGURE_RESULT}>")
+	        MESSAGE(ERROR "configure output is <${FFMPEG_CONFIGURE_OUTPUT}>")
+	        MESSAGE(ERROR "When configuing ffmpeg using < sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}>")
+                MESSAGE(FATAL_ERROR "An error occured ")
+        ENDIF(NOT (FFMPEG_CONFIGURE_RESULT EQUAL 0))
 	MESSAGE(STATUS "Configuring done, processing")
 
 	if (ADM_CPU_X86)
