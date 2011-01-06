@@ -96,7 +96,7 @@ AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
   if(_context)
   {
     avcodec_close(CONTEXT);
-    ADM_dealloc(_context);
+    av_free(_context);
   }
   _context=NULL;
 };
