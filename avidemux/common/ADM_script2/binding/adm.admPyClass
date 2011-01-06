@@ -43,6 +43,6 @@
 /* ATTRIBUTES */ double markerB:scriptSetMarkerB,scriptGetMarkerB
 /* ATTRIBUTES */ int    audioResample:scriptSetResample,scriptGetResample
 /* ATTRIBUTES */ int    audioNormalizeMode:scriptSetNormalizeMode,scriptGetNormalizeMode
-/* ATTRIBUTES */ int    audioNormalizeValue:scriptSetNormalizeValue,scriptGetNormalizeValue
+/* ATTRIBUTES */ int    audioNormalizeGain:scriptSetNormalizeValue,scriptGetNormalizeValue
 /* ATTRIBUTES */ int    audioPal2film:scriptSetPal2film,scriptGetPal2film
 /* ATTRIBUTES */ int    audioFilm2pal:scriptSetFilm2pal,scriptGetFilm2pal
