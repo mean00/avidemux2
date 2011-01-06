@@ -24,6 +24,7 @@
 #include "ADM_editor/ADM_edit.hxx"
 
 #include "audioEncoderApi.h"
+#include "audiofilter_normalize_param.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoEncoderApi.h"
@@ -203,7 +204,15 @@ uint32_t pptype, ppstrength,ppswap;
                 case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1\n");break;
                 default:ADM_assert(0);
         }
-   
+   // --------- Normalize ----------------
+        ADM_GAINMode mode;
+        uint32_t gain;
+        audioFilterGetNormalize(&mode,&gain);
+        if(mode && gain)
+        {
+            qfprintf(fd,"adm.audioNormalizeMode=%d\n",(int)mode); 
+            qfprintf(fd,"adm.audioNormalizeGain=%d\n",(int)gain); 
+        }
        
         
   

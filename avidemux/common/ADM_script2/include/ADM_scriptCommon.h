@@ -24,6 +24,12 @@ int scriptClearSegments(void);
 int scriptAddSegment(int ref, double start, double duration);
 int scriptAudioReset(void);
 int scriptAudioMixer(const char *s);
+// Normalize
+int scriptGetNormalizeMode(void);
+int scriptGetNormalizeValue(void);
+void scriptSetNormalizeMode(int v);
+void scriptSetNormalizeValue(int v);
+
 // Fq
 int32_t scriptGetResample(void);
 void    scriptSetResample(int32_t fq);

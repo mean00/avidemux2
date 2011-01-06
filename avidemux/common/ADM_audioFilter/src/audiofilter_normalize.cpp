@@ -20,18 +20,15 @@
  ***************************************************************************/
 
 
-#include <math.h>
 
 #include "ADM_default.h"
+#include <math.h>
 #include "ADM_audioFilter.h"
 #include "audiofilter_normalize_param.h"
 #include "audiofilter_normalize.h"
 #include "audiofilter_dolby.h"
 
 #include "ADM_coreAudio.h"
-//#include "ADM_dialog/DIA_busy.h" //CANNOT USE IT! We are in another thread!
-
-//extern AVDMGenericAudioStream *currentaudiostream;
 
 #ifdef __WIN32
 #define POW10(x)   pow(10,x)
@@ -44,8 +41,9 @@
 #define LINEAR_TO_DB(x) (20.*log10(x))
 #define DB_TO_LINEAR(x) (POW10((x/20.)))
 
-// Ctor
-//__________
+/**
+        \fn Ctor
+**/
 
 AUDMAudioFilterNormalize::AUDMAudioFilterNormalize(AUDMAudioFilter * instream,GAINparam *param):AUDMAudioFilter (instream)
 {
@@ -53,26 +51,33 @@ AUDMAudioFilterNormalize::AUDMAudioFilterNormalize(AUDMAudioFilter * instream,GA
     // nothing special here...
   switch(param->mode)
   {
-    case ADM_NO_GAIN: _ratio=1;_scanned=1;printf("[Gain] Gain of 1.0\n");break; 
-    case ADM_GAIN_AUTOMATIC: _ratio=1;_scanned=0;printf("[Gain] Automatic gain\n");break;
+    case ADM_NO_GAIN: _ratio=1;_scanned=1;ADM_info("[Gain] Gain of 1.0\n");break; 
+    case ADM_GAIN_AUTOMATIC: _ratio=1;_scanned=0;ADM_info("[Gain] Automatic gain\n");break;
     case ADM_GAIN_MANUAL: 
                 _scanned=1;
                 db_out =  param->gain10/10.0; // Dbout is in 10*DB (!)
                 _ratio = DB_TO_LINEAR(db_out);
-                printf("[Gain] %f db (p=%d)\n", (float)(param->gain10)/10.,param->gain10);
-                printf("[Gain] Linear ratio of : %03.3f\n", _ratio);
+                ADM_info("[Gain] %f db (p=%d)\n", (float)(param->gain10)/10.,param->gain10);
+                ADM_info("[Gain] Linear ratio of : %03.3f\n", _ratio);
+                break;
+    default:
+                ADM_error("Unknown normalize mode\n");
+                ADM_assert(0);
+                break;
   }
     _previous->rewind();
 };
-
+/**
+        \fn dtor
+*/
 AUDMAudioFilterNormalize::~AUDMAudioFilterNormalize()
 {
-
+        ADM_info("Destroying normalize audio filter\n");
 }
-//
-// For normalize, we scan the input stream
-// to check for maximum value
-//___________________________________________
+/**
+        \fn preprocess
+        \brief Search for max value to compute gain
+*/
 uint8_t AUDMAudioFilterNormalize::preprocess(void)
 {
 
@@ -86,7 +91,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
     float *max=new float[_wavHeader.channels];
     _previous->rewind();
     DolbySkip(1);
-    printf("\n Seeking for maximum value, that can take a while\n");
+    ADM_info("Seeking for maximum value, that can take a while\n");
 
     llength=_length ;
     
@@ -103,7 +108,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
             }
            else 
             {
-              printf("Unknown cause : %d\n",status);
+              ADM_error("Unknown cause : %d\n",status);
               ADM_assert(0); 
             }
           }
@@ -131,9 +136,9 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
     for(int chan=0;chan<_wavHeader.channels;chan++)
     {
         if(max[chan]>mx) mx=max[chan];
-        printf("[Normalize] maximum found for channel %d : %f\n", chan,max[chan]);
+        ADM_info("[Normalize] maximum found for channel %d : %f\n", chan,max[chan]);
     }
-    printf("[Normalize] Using : %0.4f as max value \n", mx);
+    ADM_info("[Normalize] Using : %0.4f as max value \n", mx);
     double db_in, db_out=-3;
 
     if (mx>0.001)
@@ -147,9 +152,9 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
     _ratio=1;
 
     float db_delta=db_out-db_in;
-    printf("[Normalize]Gain %f dB\n",db_delta);
+    ADM_info("[Normalize]Gain %f dB\n",db_delta);
     _ratio = DB_TO_LINEAR(db_delta);
-    printf("\n Using ratio of : %f\n", _ratio);
+    ADM_info("\n Using ratio of : %f\n", _ratio);
 
     _scanned = 1;
     DolbySkip(0);
@@ -157,8 +162,10 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
     delete [] max;
     return 1;
 }
-//
-//___________________________________________
+/**
+        \fn fill
+        \brief
+*/
 uint32_t AUDMAudioFilterNormalize::fill( uint32_t max, float * buffer,AUD_Status *status)
 {
     uint32_t rd, i, j,rd2;

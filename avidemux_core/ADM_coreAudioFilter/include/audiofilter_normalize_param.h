@@ -15,7 +15,8 @@ typedef enum
 {
   ADM_NO_GAIN,
   ADM_GAIN_AUTOMATIC,
-  ADM_GAIN_MANUAL
+  ADM_GAIN_MANUAL,
+  ADM_GAIN_MAX // dont use!
   
 }ADM_GAINMode;
 

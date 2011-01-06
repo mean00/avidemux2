@@ -87,6 +87,38 @@ FILMCONV        audioFilterGetFrameRate(void)
 {
     return audioEncodingConfig.film2pal;
 }
+/**
+    \fn audioFilterSetNormalize
+    \brief 
+*/
+bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain)
+{
+    if(mode>=ADM_GAIN_MAX)
+    {
+        ADM_error("incorrect mode value for normalize");
+        return false;
+    }
+    if(!gain)
+    {
+        ADM_error("gain cannot be null");
+        return false;
+    }
+
+    audioEncodingConfig.gainParam.mode=mode;
+    audioEncodingConfig.gainParam.gain10=gain;
+    return true;
+}
+/**
+    \fn audioFilterSetNormalize
+    \brief 
+*/
+bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain)
+{
+
+    *mode=audioEncodingConfig.gainParam.mode;
+    *gain=audioEncodingConfig.gainParam.gain10;
+    return true;
+}
 
 /**
     \fn audioFilterSetMixer

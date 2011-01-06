@@ -47,6 +47,50 @@ int scriptAudioMixer(const char *s)
     return audioFilterSetMixer(c);
 }
 /**
+    \fn scriptGetNormalizeMode
+*/
+int scriptGetNormalizeMode(void)
+{
+    ADM_GAINMode m;
+    uint32_t gain;
+    audioFilterGetNormalize( &m,&gain);
+    return m;
+}
+/**
+    \fn scriptGetNormalizeValue
+*/
+int scriptGetNormalizeValue(void)
+{
+    ADM_GAINMode m;
+    uint32_t gain;
+    audioFilterGetNormalize( &m,&gain);
+    return (int)gain;
+}
+
+/**
+    \fn scriptSetNormalizeMode
+*/
+void scriptSetNormalizeMode(int mode)
+{
+    ADM_GAINMode m;
+    uint32_t gain;
+    audioFilterGetNormalize( &m,&gain);
+    m=(ADM_GAINMode)mode;
+    audioFilterSetNormalize( m,gain);
+}
+/**
+    \fn scriptSetNormalizeValue
+*/
+void scriptSetNormalizeValue(int value)
+{
+    ADM_GAINMode m;
+    uint32_t gain;
+    audioFilterGetNormalize( &m,&gain);
+    gain=(uint32_t)value;
+    audioFilterSetNormalize( m,gain);
+
+}
+/**
     \fn jsGetResample
 */
 int32_t scriptGetResample(void)

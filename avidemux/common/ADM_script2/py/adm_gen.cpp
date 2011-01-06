@@ -251,6 +251,14 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_number(scriptGetResample());
   }
+  if (!strcmp(key, "audioNormalizeValue"))
+  {
+     return tp_number(scriptGetNormalizeValue());
+  }
+  if (!strcmp(key, "audioNormalizeMode"))
+  {
+     return tp_number(scriptGetNormalizeMode());
+  }
   if (!strcmp(key, "markerA"))
   {
      return tp_number(scriptGetMarkerA());
@@ -373,6 +381,18 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   {
      int val=pm.asInt();
      scriptSetResample(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "audioNormalizeValue"))
+  {
+     int val=pm.asInt();
+     scriptSetNormalizeValue(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "audioNormalizeMode"))
+  {
+     int val=pm.asInt();
+     scriptSetNormalizeMode(val);
      return tp_None;
   }
   if (!strcmp(key, "markerA"))
