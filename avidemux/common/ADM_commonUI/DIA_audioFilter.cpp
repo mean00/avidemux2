@@ -25,7 +25,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   uint32_t vChan=config->mixerConf;
   uint32_t vFilm=config->film2pal;
   uint32_t vGainMode=(uint32_t)config->gainParam.mode;
-  ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10;
+  ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10/10;
 
 #define PX(x) (&(config->x))
    diaElemToggleUint eResample(PX(resamplerEnabled),QT_TR_NOOP("R_esampling (Hz):"),PX(resamplerFrequency),QT_TR_NOOP("Resampling frequency (Hz)"),6000,64000);
@@ -57,11 +57,11 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   diaMenuEntry menuGain[]={
   {ADM_NO_GAIN,       QT_TR_NOOP("None")},
   {ADM_GAIN_AUTOMATIC,QT_TR_NOOP("Automatic (max -3 dB)")},
-  {ADM_GAIN_MANUAL,   QT_TR_NOOP("Manual")}};
+  {ADM_GAIN_MANUAL,   QT_TR_NOOP("Manual (dB)")}};
   
    diaElemMenu      eGain(&vGainMode,QT_TR_NOOP("_Gain mode:"),3,menuGain);
    
-    diaElemFloat  eGainValue(&vGainValue,QT_TR_NOOP("G_ain value:"),-10,10);
+    diaElemFloat  eGainValue(&vGainValue,QT_TR_NOOP("G_ain value:"),-10,40);
      eGain.link(&(menuGain[2]),1,&eGainValue);
   //****************************
  diaElemMenu      eMixer(&vChan,QT_TR_NOOP("_Mixer:"),11,menuMixer);
@@ -74,7 +74,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         config->mixerConf=(CHANNEL_CONF)vChan;
         config->film2pal=(FILMCONV)vFilm;
         config->gainParam.mode=(ADM_GAINMode)vGainMode;
-        config->gainParam.gain10=vGainValue;
+        config->gainParam.gain10=vGainValue*10;
       return true;
     }
     
