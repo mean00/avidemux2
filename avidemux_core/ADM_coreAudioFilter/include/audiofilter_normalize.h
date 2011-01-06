@@ -2,6 +2,7 @@
 #define AUDIO_F_NORMALIZE_H
 
 #include "ADM_audioFilter.h"
+#include "audiofilter_normalize_param.h"
 class AUDMAudioFilterNormalize : public AUDMAudioFilter
 {
   protected:

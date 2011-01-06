@@ -20,6 +20,7 @@
 #include "audiofilter.h"
 #include "audiofilter_mixer.h"
 #include "audiofilter_SRC.h"
+#include "audiofilter_normalize.h"
 
 /**
     \class ADM_AUDIOFILTER_CONFIG
@@ -41,6 +42,8 @@ public    :
                         resamplerEnabled=false;
                         resamplerFrequency=44100;
                         film2pal    =FILMCONV_NONE;
+                        gainParam.mode=ADM_NO_GAIN;
+                        gainParam.gain10=10;
                         return true;
                 }
 
@@ -55,7 +58,7 @@ public    :
     // film2pal & pal2film
     FILMCONV     film2pal;
     // Gain filter
-    //GAINparam    gainParam;
+    GAINparam    gainParam;
      
 
 };

@@ -147,7 +147,11 @@ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *confi
         ADD_FILTER(src);
     }
     // Normalize
-
+    if(config->gainParam.mode!=ADM_NO_GAIN)
+    {
+        AUDMAudioFilterNormalize *norm=new AUDMAudioFilterNormalize(last,&(config->gainParam));
+        ADD_FILTER(norm);
+    }
     return true;
 }
 /**
