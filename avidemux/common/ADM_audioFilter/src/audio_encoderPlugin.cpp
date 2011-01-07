@@ -371,7 +371,10 @@ bool getAudioExtraConf(uint32_t *bitrate,CONFcouple **couple)
     }
      ADM_assert(currentEncoder<ListOfAudioEncoder.size());
      ADM_audioEncoder *encoder= ListOfAudioEncoder[currentEncoder];
-     *bitrate=encoder->getBitrate();
+     if(encoder->getBitrate)
+        *bitrate=encoder->getBitrate();
+     else
+        *bitrate=128; // PCM does not have global conf bitrate
      if(encoder->getConfigurationData)
         return encoder->getConfigurationData(couple);
      else return 1;
