@@ -32,7 +32,7 @@ bool                  videoEncoder6_SetCurrentEncoder(uint32_t index);
 
 const char            *videoEncoder6_GetCurrentEncoderName(void);
 
-bool                  videoEncoder6_SetConfiguration(CONFcouple *c);
+bool                  videoEncoder6_SetConfiguration(CONFcouple *ci,bool full=true);
 bool                  videoEncoder6_GetConfiguration(CONFcouple **c);
 
 ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index,bool globalHeader);

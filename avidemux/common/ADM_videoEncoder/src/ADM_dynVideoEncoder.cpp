@@ -243,16 +243,16 @@ const char            *videoEncoder6_GetCurrentEncoderName(void)
     return e->desc->encoderName;
 }
 /**
-    \fn videoEncoder6_GetCurrentEncoderName
+    \fn videoEncoder6_SetPartialConfiguration
 */
-
-bool                  videoEncoder6_SetConfiguration(CONFcouple *c)
+bool                  videoEncoder6_SetConfiguration(CONFcouple *c,bool full)
 {
     if(!c) return true;
     ADM_assert(currentVideoCodec<ListOfEncoders.size());
     ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
-    return e->desc->setConfigurationData(c);
+    return e->desc->setConfigurationData(c,full);
 }
+
 /**
     \fn videoEncoder6_GetConfiguration
 */

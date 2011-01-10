@@ -188,13 +188,10 @@ static bool compressWriteToString(COMPRES_PARAMS *params,  char **str)
     return true;
 }
 /**
-    \fn ADM_paramValidate
-    \brief Check the confcouples match the param list
+    \fn getParamSize
 */
-bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
+static int XgetParamSize( const ADM_paramList *params)
 {
-    int n=couples->getSize();
-    int found=0;
     int p=0;
     const ADM_paramList *l=params;
     while(l->paramName)
@@ -202,6 +199,17 @@ bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
         p++;
         l++;
     };
+    return p;
+}
+/**
+    \fn ADM_paramValidate
+    \brief Check the confcouples match the param list
+*/
+bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
+{
+    int n=couples->getSize();
+    int found=0;
+    int p=XgetParamSize(params);
     if(n!=p)
     {
         ADM_warning("Number of parameter mistmatch :%d vs %d\n",n,p);
@@ -220,24 +228,60 @@ bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
     return true;
 }
 /**
-    \fn ADM_paramLoad
+    \fn ADM_paramValidatePartialList
+    \brief In that case couples is a sublist of params
+*/
+bool ADM_paramValidatePartialList(CONFcouple *couples, const    ADM_paramList *params)
+{
+    int n=couples->getSize();
+    int p=XgetParamSize(params);
+    if(n>p)
+    {
+        ADM_warning("Too many parameters in partial list");
+        return false;
+    }
+    int found=0;
+    for(int i=0;i<p;i++)
+    {
+        const char *name=params[i].paramName;
+        if(true==couples->exist(name))
+        {
+            found++;
+        }
+    }
+    if(found==n) return true;
+    ADM_warning("Some parameters are not in the parameter list, typo ?\n");
+    return false;;
+}
+
+/**
+    \fn ADM_paramLoadInternal
     \brief Load a structure from a list of confCouple
 */
-bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
+static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_paramList *params,void *s)
 {
     uint8_t *address=(uint8_t *)s;
-    if(false==ADM_paramValidate(couples,params)) return false;
+    
     int n=couples->getSize();
-    for(int i=0;i<n;i++)
+    int p=XgetParamSize(params);
+    for(int i=0;i<p;i++)
     {
         const char *name=params[i].paramName;
         int index=couples->lookupName(name);
-        ADM_assert(index!=-1);
+        if(index==-1) // not found ?
+            if(false==partial)
+            {
+                ADM_assert(index!=-1); // Should be replaced later by a return false
+            }else       
+            {
+               // ADM_info("%s not found\n",name);
+                continue; // this parameter is not in the param list and we are doing a partial update
+            }
         switch(params[i].type)
         {
 #define SWAL(entry,type,var,access) case  entry: {type   var;\
                         couples->readAs##access(name,&var); \
-                        *(type *)(address+params[i].offset)=var;}break;
+                        *(type *)(address+params[i].offset)=var;};break;
            SWAL(ADM_param_uint32_t,uint32_t,u32,Uint32)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
@@ -284,9 +328,32 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
                         *(char  **)(address+params[i].offset)=var;
                     }
                     break;
+            default:
+                    ADM_error("Type no handled %d\n",params[i].type);
+                    break;
         }
     }
     return true;
+}
+/**
+    \fn ADM_paramLoad
+    \brief Load a structure from a list of confCouple, validate that all fields are there
+*/
+bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
+{
+    if(false==ADM_paramValidate(couples,params)) return false;
+    return ADM_paramLoadInternal(false,couples,params,s);
+
+}
+/**
+    \fn ADM_paramLoad
+    \brief Load a structure from a list of confCouple, accept partial fields
+*/
+
+bool ADM_paramLoadPartial(CONFcouple *couples, const ADM_paramList *params,void *s)
+{
+   if(false==ADM_paramValidatePartialList(couples,params)) return false;
+   return ADM_paramLoadInternal(true,couples,params,s);
 }
 /**
     \fn ADM_paramLoad

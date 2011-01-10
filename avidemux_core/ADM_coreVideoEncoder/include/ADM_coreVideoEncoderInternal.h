@@ -15,7 +15,7 @@
 #ifndef VIDEOENCODERINTERNAL_H
 #define VIDEOENCODERINTERNAL_H
 
-#define ADM_VIDEO_ENCODER_API_VERSION 4
+#define ADM_VIDEO_ENCODER_API_VERSION 5
 #include "ADM_coreVideoEncoder.h"
 #include "DIA_uiTypes.h"
 #include "ADM_paramList.h"
@@ -38,7 +38,7 @@ typedef struct
     void         (*destroy)(ADM_coreVideoEncoder *codec);
     bool         (*configure)(void);                                // Call UI to set it up
     bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
-    bool         (*setConfigurationData)(CONFcouple *c);   // Set the encoder private conf
+    bool         (*setConfigurationData)(CONFcouple *c,bool full);   // Set the encoder private conf
 
     ADM_UI_TYPE  UIType;                // Type of UI
     uint32_t     major,minor,patch;     // Version of the plugin
@@ -50,7 +50,7 @@ typedef struct
 /**************************************************************************/
 #define ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(Class) \
 static bool getConfigurationData (CONFcouple **c); \
-static bool setConfigurationData (CONFcouple *c);\
+static bool setConfigurationData (CONFcouple *c,bool full=true);\
 \
 static ADM_coreVideoEncoder * create (ADM_coreVideoFilter * head,bool globalHeader) \
 { \
@@ -83,9 +83,10 @@ bool getConfigurationData (CONFcouple **c)\
          if(confTemplate==NULL) {*c=NULL;return true;} \
          return ADM_paramSave(c,confTemplate,confVar); \
 }\
-bool setConfigurationData (CONFcouple *c)\
+bool setConfigurationData (CONFcouple *c,bool full)\
 {\
-        return ADM_paramLoad(c,confTemplate,confVar); \
+	if(full) return ADM_paramLoad(c,confTemplate,confVar); \
+	return ADM_paramLoadPartial(c,confTemplate,confVar); \
 } \
 extern "C" ADM_videoEncoderDesc *getInfo (void) \
 { \

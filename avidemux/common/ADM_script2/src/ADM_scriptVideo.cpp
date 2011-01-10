@@ -46,6 +46,30 @@ bool A_setVideoCodec(const char *nm)
     return true;
 }
 /**
+    \fn scriptSetVideoCodecParam
+    \brief Same as scriptSetVideoCodec, but accept partial settings
+*/
+int     scriptSetVideoCodecParam(const char *codec,CONFcouple *c)
+{       
+        bool r=true;
+        if(A_setVideoCodec(codec)==false)
+        {
+            jsLog("Could not select codec %s\n",codec);
+            r=false;
+        }else
+        {        
+            if(c)
+            {
+                r=videoEncoder6_SetConfiguration(c,false);
+            }
+        }
+        if(c)
+            delete c;
+        return r;
+}
+
+
+/**
     \fn scriptSetVideoCodec
 */
 int     scriptSetVideoCodec(const char *codec,CONFcouple *c)
@@ -59,7 +83,7 @@ int     scriptSetVideoCodec(const char *codec,CONFcouple *c)
         {        
             if(c)
             {
-                r=videoEncoder6_SetConfiguration(c);
+                r=videoEncoder6_SetConfiguration(c,true);
             }
         }
         if(c)

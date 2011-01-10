@@ -22,6 +22,7 @@
 #              cname:pyname
 #  Codec, container
 /* METHOD */ int scriptSetVideoCodec:videoCodec(str,couples) 
+/* METHOD */ int scriptSetVideoCodecParam:videoCodecChangeParam(str,couples) 
 /* METHOD */ int scriptSetAudioCodec:audioCodec(str,int,couples) 
 /* METHOD */ int scriptSetContainer:setContainer(str,couples) 
 /* METHOD */ int scriptAddVideoFilter:addVideoFilter(str,couples) 

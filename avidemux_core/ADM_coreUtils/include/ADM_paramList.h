@@ -49,6 +49,8 @@ typedef struct
 
 /// Couple -> structure
 bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s);
+bool ADM_paramLoadPartial(CONFcouple *couples, const ADM_paramList *params,void *s);
+
 /// Structure -> couples
 bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s);
 

@@ -22,8 +22,10 @@ extern "C" {
 
 int     scriptSetPostProc (int a,int b, int c);
 #ifdef __cplusplus
-int     scriptSetVideoCodec(const char *codec,CONFcouple *c);
+int     scriptSetVideoCodec(const char *codec,CONFcouple *c); // Only take the full param list
 int     scriptAddVideoFilter(const char *filter,CONFcouple *c);
+int     scriptSetVideoCodecParam(const char *codec,CONFcouple *c); // same as setVideoCodec, but accepts partial list
+
 #endif
 #ifdef __cplusplus
 };
