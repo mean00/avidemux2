@@ -1,6 +1,7 @@
 include(mx_plugin)
 SET(ADM_mp4v2_SRCS
-	./muxerMp4v2Plugin.cpp
+	muxerMp4v2Plugin.cpp
+	muxerMp4v2.cpp
 )
 SUBDIRS(libmp4v2)
 

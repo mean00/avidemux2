@@ -16,16 +16,20 @@
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "fourcc.h"
-#if 0
-class muxermp4v2;
-ADM_MUXER_BEGIN( muxermp4v2,
+#include "muxerMp4v2.h"
+
+bool mp4v2Configure(void)
+{
+    return true;
+}
+ADM_MUXER_BEGIN( muxerMp4v2,
                     1,0,0,
                     "MP4V2",    // Internal name
                     "MP4V2 muxer plugin (c) Mean 2011",
                     "MP4 Muxer", // DIsplay name
-                    NULL,
+                    mp4v2Configure,
                     NULL, //template
                     NULL
                 );
-#endif
+
 
