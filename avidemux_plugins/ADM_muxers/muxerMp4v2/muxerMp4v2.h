@@ -19,6 +19,32 @@
 #include "ADM_audioClock.h"
 #include "mp4v2/mp4v2.h"
 /**
+    \class mp4v2AudioPacket
+*/
+#define AUDIO_BUFFER_SIZE 16*1024*2
+class mp4v2AudioPacket
+{
+    public:
+         class mp4v2AudioBlock
+         {
+            public:
+                    uint8_t     *buffer;
+                    uint64_t    dts;
+                    uint32_t    nbSamples;
+                    uint32_t    sizeInBytes;
+                    bool        present;
+            public:
+                  mp4v2AudioBlock() {buffer=new uint8_t[AUDIO_BUFFER_SIZE];present=false;}
+                  ~mp4v2AudioBlock() {delete [] buffer;buffer=NULL;}
+         };
+            bool                eos;
+            mp4v2AudioBlock     blocks[2];
+            int                 nextWrite;
+            mp4v2AudioPacket() {eos=false;nextWrite=0;}
+            ~mp4v2AudioPacket() {}
+
+};
+/**
     \class muxerMp4v2
 */
 class muxerMp4v2 : public ADM_muxer
@@ -27,6 +53,7 @@ protected:
         MP4FileHandle   handle;
         MP4TrackId      videoTrackId;
         MP4TrackId      *audioTrackIds;
+        mp4v2AudioPacket *audioPackets;
         uint32_t        videoBufferSize;
         uint8_t         *videoBuffer[2];
         ADMBitstream    in[2];
@@ -37,6 +64,8 @@ protected:
         bool            initAudio(void);
         bool            fillAudio(uint64_t targetDts);
 static  uint64_t        timeScale(uint64_t timeUs);
+        bool            loadAndToggleAudioSlot(int index);
+        bool            writeAudioBlock(int index,mp4v2AudioPacket::mp4v2AudioBlock *block,uint64_t duration90);
 
 public:
                 muxerMp4v2();

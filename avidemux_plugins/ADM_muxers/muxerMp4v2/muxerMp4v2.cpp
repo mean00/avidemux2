@@ -23,10 +23,13 @@
 #include "muxerMp4v2.h"
 #include "ADM_codecType.h"
 #include "ADM_imageFlags.h"
-#if 1
+
+#if 0
 #define aprintf(...) {}
+#define MP4_DEBUG 0
 #else
 #define aprintf printf
+#define MP4_DEBUG MP4_DETAILS_ALL
 #endif
 
 /**
@@ -35,7 +38,7 @@
 */
 uint64_t muxerMp4v2::timeScale(uint64_t timeUs)
 {
-    return (uint64_t)(timeUs/90000LL);
+    return (uint64_t)((timeUs*90LL)/1000LL);
 
 }
 /**
@@ -83,6 +86,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
         in[1].bufferSize=videoBufferSize;
         in[1].data=videoBuffer[1];
         audioTrackIds=new MP4TrackId[nbAStreams];
+        audioPackets=new mp4v2AudioPacket[nbAStreams];
 //------Verify everything is ok : Accept Mp4 & H264 for video, AAC for audio ----
         uint32_t fcc=vStream->getFCC();
         if(!isH264Compatible(fcc) && !isMpeg4Compatible(fcc))
@@ -108,6 +112,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
             ADM_error("[mp4v2]Cannot create output file %s\n",file);
             return false;
         }
+        MP4SetVerbosity(handle,MP4_DEBUG);
         if (!(MP4SetTimeScale( handle, 90*1000 ))) // 90 kHz tick
         {
             ADM_error("[mp4v2]Cannot set timescale to us\n");
@@ -194,6 +199,8 @@ bool muxerMp4v2::close(void)
     handle=NULL;
     if(audioTrackIds) delete [] audioTrackIds;
     audioTrackIds=NULL;
+    if(audioPackets) delete [] audioPackets;
+    audioPackets=NULL;
     for(int i=0;i<2;i++)
     {
         if(videoBuffer[i]) delete [] videoBuffer[i];
