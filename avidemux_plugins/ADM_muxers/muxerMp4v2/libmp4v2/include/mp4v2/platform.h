@@ -24,7 +24,7 @@
 #if defined( _WIN32 ) || defined( __MINGW32__ )
 #   if defined( _WINDLL ) || defined( DLL_EXPORT )
 #       define MP4V2_EXPORT __declspec(dllexport)
-#   elif defined( _DLL ) || defined( DLL_IMPORT ) 
+#   elif defined( DLL_IMPORT ) 
 #       define MP4V2_EXPORT __declspec(dllimport)
 #   else
 #       define MP4V2_EXPORT
