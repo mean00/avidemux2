@@ -93,7 +93,7 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
         }
         if(_context->codec)
         avcodec_close (_context);
-        ADM_dealloc (_context);
+        av_free (_context);
         _context = NULL;
     }
     if(colorSpace)
