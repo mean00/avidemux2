@@ -25,6 +25,19 @@ class muxerMp4v2 : public ADM_muxer
 {
 protected:
         MP4FileHandle   handle;
+        MP4TrackId      videoTrackId;
+        MP4TrackId      *audioTrackIds;
+        uint32_t        videoBufferSize;
+        uint8_t         *videoBuffer[2];
+        ADMBitstream    in[2];
+        int             nextWrite;
+protected:
+        bool            setMpeg4Esds(void);
+        bool            initVideo(void);
+        bool            initAudio(void);
+        bool            fillAudio(uint64_t targetDts);
+static  uint64_t        timeScale(uint64_t timeUs);
+
 public:
                 muxerMp4v2();
         virtual ~muxerMp4v2();
