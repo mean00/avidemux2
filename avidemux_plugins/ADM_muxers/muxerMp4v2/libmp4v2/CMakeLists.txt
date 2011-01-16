@@ -86,8 +86,37 @@ SET(${ADM_LIB}_SRCS
 	./src/qtff/PictureAspectRatioBox.cpp
 	./src/rtphint.cpp
 	./src/text.cpp	)
+# Platform files
+if(WIN32)
+	SET(PLATFORM
+		libplatform/io/File_win32.cpp
+		libplatform/io/FileSystem_win32.cpp
+		libplatform/number/random_win32.cpp
+		libplatform/process/process_win32.cpp
+		libplatform/time/time_win32.cpp
+	
+ 	)
+else(WIN32)
+		SET(PLATFORM
+			libplatform/io/File_posix.cpp
+			libplatform/io/FileSystem_posix.cpp
+			libplatform/number/random_posix.cpp
+			libplatform/process/process_posix.cpp
+			libplatform/time/time_posix.cpp
+	
+ 		)
+endif(WIN32)
 
-ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})
+SET(PLATFORM ${PLATFORM}
+	libplatform/io/File.cpp
+	libplatform/io/FileSystem.cpp
+	libplatform/prog/option.cpp
+	libplatform/sys/error.cpp
+	libplatform/time/time.cpp
+)
+
+
+ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS} ${PLATFORM})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
