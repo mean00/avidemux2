@@ -24,7 +24,7 @@
 #include "ADM_codecType.h"
 #include "ADM_imageFlags.h"
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #define MP4_DEBUG 0
 #else
@@ -74,7 +74,7 @@ muxerMp4v2::~muxerMp4v2()
 bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
 
-//        audioDelay=s->getVideoDelay();
+        audioDelay=s->getVideoDelay();
         vStream=s;
         nbAStreams=nbAudioTrack;
         aStreams=a;
@@ -85,8 +85,6 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
         in[0].data=videoBuffer[0];
         in[1].bufferSize=videoBufferSize;
         in[1].data=videoBuffer[1];
-        audioTrackIds=new MP4TrackId[nbAStreams];
-        audioPackets=new mp4v2AudioPacket[nbAStreams];
 //------Verify everything is ok : Accept Mp4 & H264 for video, AAC for audio ----
         uint32_t fcc=vStream->getFCC();
         if(!isH264Compatible(fcc) && !isMpeg4Compatible(fcc))

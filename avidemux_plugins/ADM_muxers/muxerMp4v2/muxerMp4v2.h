@@ -22,6 +22,7 @@
     \class mp4v2AudioPacket
 */
 #define AUDIO_BUFFER_SIZE 16*1024*2
+#define MP4V2_MAX_JITTER (40*1000) // 40 ms
 class mp4v2AudioPacket
 {
     public:
@@ -40,8 +41,9 @@ class mp4v2AudioPacket
             bool                eos;
             mp4v2AudioBlock     blocks[2];
             int                 nextWrite;
-            mp4v2AudioPacket() {eos=false;nextWrite=0;}
-            ~mp4v2AudioPacket() {}
+            audioClock          *clock;
+            mp4v2AudioPacket() {eos=false;nextWrite=0;clock=NULL;}
+            ~mp4v2AudioPacket() {if(clock) delete clock;clock=NULL;}
 
 };
 /**
@@ -58,6 +60,7 @@ protected:
         uint8_t         *videoBuffer[2];
         ADMBitstream    in[2];
         int             nextWrite;
+        uint64_t        audioDelay; // In fact videoDelay, but must be added to all audioTrack
 protected:
         bool            setMpeg4Esds(void);
         bool            initVideo(void);

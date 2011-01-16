@@ -23,7 +23,7 @@
 #include "muxerMp4v2.h"
 #include "ADM_codecType.h"
 #include "ADM_imageFlags.h"
-#if 0
+#if 1
 #define aprintf(...) {}
 #define MP4_DEBUG 0
 #else
@@ -31,26 +31,36 @@
 #define MP4_DEBUG MP4_DETAILS_ALL
 #endif
 
+#warning add audioDelay
+#warning fix audio not starting at 0
 
 /**
     \fn initAudio
 */
 bool muxerMp4v2::initAudio(void)
 {
+    audioTrackIds=new MP4TrackId[nbAStreams];
+    audioPackets=new mp4v2AudioPacket[nbAStreams];
     
     for(int i=0;i<nbAStreams;i++)
     {
         WAVHeader *header=aStreams[i]->getInfo();
         ADM_audioStream*a=aStreams[i];
+        audioPackets[i].clock=new audioClock(header->frequency);
+        // Preload this track...
+        if(false==loadAndToggleAudioSlot(i))
+        {
+            audioPackets[i].eos=true;
+            continue;
+        }
+        
         switch(header->encoding)
         {
             case WAV_MP2:
             case WAV_MP3:
-                    #warning fixme : Not always 1152 sample per packet
-                    
                     audioTrackIds[i]=MP4AddAudioTrack(handle,
                                                       header->frequency,
-                                                      1152,
+                                                      audioPackets[i].blocks[0].nbSamples,
                                                       MP4_MPEG2_AUDIO_TYPE);
                     if(MP4_INVALID_TRACK_ID==audioTrackIds[i])
                     {
@@ -66,8 +76,7 @@ bool muxerMp4v2::initAudio(void)
                     ADM_error("Cannot create audio track of type 0x%x\n",header->encoding);
                     return false;
         }
-        // Preload this track...
-        loadAndToggleAudioSlot(i); 
+       
     }
     if(nbAStreams)
          MP4SetTrackIntegerProperty(handle, audioTrackIds[0], "tkhd.flags", 3);
@@ -91,6 +100,8 @@ bool muxerMp4v2::loadAndToggleAudioSlot(int index)
                 pkt->eos=true;
                 return false;
         }
+        if(blk->dts!=ADM_NO_PTS)
+            blk->dts+=audioDelay;
         blk->present=true;
         pkt->nextWrite=!pkt->nextWrite;
         return true;
@@ -100,7 +111,7 @@ bool muxerMp4v2::loadAndToggleAudioSlot(int index)
 */
 bool muxerMp4v2::writeAudioBlock(int index,mp4v2AudioPacket::mp4v2AudioBlock *block,uint64_t nbSamples)
 {
-    ADM_info("Writting audio block : size=%d, samples=%d nbSamples=%d \n",block->sizeInBytes,block->nbSamples,(int)nbSamples);
+    aprintf("Writting audio block : size=%d, samples=%d nbSamples=%d \n",block->sizeInBytes,block->nbSamples,(int)nbSamples);
     bool r=MP4WriteSample(handle,audioTrackIds[index],
                             block->buffer,
                             block->sizeInBytes,
@@ -109,7 +120,7 @@ bool muxerMp4v2::writeAudioBlock(int index,mp4v2AudioPacket::mp4v2AudioBlock *bl
     if(false==r)
                         {
                             ADM_error("Cannot write audio sample for track %d\n",index);
-                            //return false;
+                            return false;
                         }
     return true;
 }
@@ -124,23 +135,52 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
                 ADM_audioStream         *a=aStreams[audioIndex];
                 uint32_t                fq=a->getInfo()->frequency;
                 mp4v2AudioPacket       *pkt=&(audioPackets[audioIndex]);
+                audioClock             *clock=pkt->clock;
                 if(pkt->eos)            continue;
-                
+                uint64_t                extraSamples=0;
                 while(1)
                 {
                         int current=!pkt->nextWrite;
                         int other=pkt->nextWrite;
                         mp4v2AudioPacket::mp4v2AudioBlock        *currentBlock=&(pkt->blocks[current]);
                         mp4v2AudioPacket::mp4v2AudioBlock        *otherBlock=&(pkt->blocks[other]);
-                        if(currentBlock->dts>targetDts) // In the future
+                        // Get our currentDts
+                        uint64_t currentDts=clock->getTimeUs();                        
+                        uint64_t blockDts=currentBlock->dts;
+                        extraSamples=0;
+                        // Take either block Dts or our own if no DTS is provided
+                        if(currentBlock->dts!=ADM_NO_PTS)
+                        {
+                            if( abs(currentBlock->dts-currentDts)>MP4V2_MAX_JITTER)
+                            {
+                                if(currentBlock->dts<currentDts)
+                                    {
+                                            ADM_warning("Audio going back in time audio track %d\n",audioIndex);
+                                            ADM_warning("expected %d ms, got %d ms",currentDts/1000,currentBlock->dts/1000);
+                                            ADM_warning("Dropping packet\n");
+                                            goto nextOne;
+                                    }
+                                // We have a hole, increase duration of current packet
+                                double holeDurationUs=currentBlock->dts-currentDts;
+                                ADM_warning("Hole detected in audio of %d ms, track %d\n",(int)(holeDurationUs/1000),audioIndex);
+                                holeDurationUs*=fq;
+                                holeDurationUs/=1000*1000;
+                                ADM_warning("Increasing hole duration by %d samples\n",(int)holeDurationUs);
+                                extraSamples=(uint64_t)holeDurationUs;
+                            }
+                        }else       
+                            blockDts=currentDts;
+                        if(blockDts>targetDts) // In the future
                             break;
-                        if(false==writeAudioBlock(audioIndex,currentBlock,currentBlock->nbSamples))
+                        if(false==writeAudioBlock(audioIndex,currentBlock,currentBlock->nbSamples+extraSamples))
                         {
                             ADM_error("Cannot write audio sample for track %d\n",audioIndex);
                             pkt->eos=true;
                             return false;
                         }
                         // load next
+nextOne:
+                        clock->advanceBySample(currentBlock->nbSamples+extraSamples);
                         if(false==loadAndToggleAudioSlot(audioIndex))
                         {
                             #warning Purge other slot
