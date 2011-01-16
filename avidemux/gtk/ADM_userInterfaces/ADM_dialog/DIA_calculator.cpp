@@ -26,6 +26,7 @@
 
 #include "ADM_vidMisc.h"
 #include "avi_vars.h"
+#include "prototype.h"
 
 void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );
 static GtkWidget	*create_Calculator (void);
