@@ -36,6 +36,7 @@
 */
 bool muxerMp4v2::setMpeg4Esds(void)
 {
+    bool removeVol=false;
     ADM_info("Setting mpeg4 (a)SP ESDS...\n");
     if(0) //false==vStream->getPacket(&in) )
      {
@@ -59,7 +60,8 @@ bool muxerMp4v2::setMpeg4Esds(void)
                 ADM_error("Cannot get ESDS, aborting\n");
                 return false;
             }
-           
+            // Remove VOL Header from Fist frame...
+            removeVol=true;
         }
         //
         if(!esdsLen)
@@ -86,6 +88,12 @@ bool muxerMp4v2::setMpeg4Esds(void)
             return false;
         }
         ADM_info("ESDS atom set\n");
+        if(removeVol)
+        {
+            uint32_t size=(uint32_t)((in[0].data+in[0].len)-(esdsData+esdsLen));
+            memmove(in[0].data,esdsData+esdsLen,size);
+            in[0].len=size;
+        }
         return true;
 }
 /**
