@@ -33,7 +33,72 @@
 
 #warning add audioDelay
 #warning fix audio not starting at 0
-
+/**
+    \fn addAC3
+    \brief Setup AC3 audio track
+*/
+bool muxerMp4v2::addAc3(int index, WAVHeader *header)
+{
+        int fscod=0;
+        switch(header->frequency)
+        {
+                case 48000: fscod=0;break;
+                case 44100: fscod=1;break;
+                case 32000: fscod=2;break;
+                default: 
+                    {
+                    GUI_Error_HIG("", "invalid frequency for AC3. Only 32, 44.1 & 48 kHz");
+                    return false;
+                    }
+        }
+        int bitrate;
+        static const uint16_t ac3_bitrate_tab[19] = { // From handbrake
+                     32, 40, 48, 56, 64, 80, 96, 112, 128,
+                     160, 192, 224, 256, 320, 384, 448, 512, 576, 640
+                 };
+        int Ceil=sizeof(ac3_bitrate_tab)/sizeof(const uint16_t);
+        bitrate=-1;
+        for(int ix=0;ix<Ceil;ix++)
+                if(header->byterate==(ac3_bitrate_tab[ix]*1000)/8)
+                {
+                    bitrate=ix;
+                    break;
+                }
+        if(-1==bitrate) 
+        {
+            GUI_Error_HIG("","Invalid bitrate for AC3");
+            return false;
+        }
+        int acmod,lfe=0;
+        switch(header->channels)
+        {
+                case 1: acmod=1;break;
+                case 2: acmod=2;break;
+                case 5: acmod=7;lfe=0;break; 
+#warning Check!
+                case 6: acmod=7;lfe=1;break;
+                default: 
+                        {
+                                  GUI_Error_HIG("","Invalid number of channel for AC3");
+                                  return false;
+                        }
+        }
+        audioTrackIds[index]=MP4AddAC3AudioTrack(handle,
+                                              header->frequency,// samplingRate,
+                                               fscod,           // fscod
+                                               8,               // bsid,
+                                               0,               // bsmod,
+                                               acmod,           // acmod
+                                               lfe,             // lfeon
+                                               bitrate);        // bit_rate_code 
+        if(MP4_INVALID_TRACK_ID==audioTrackIds[index])
+        {
+            ADM_error("Error adding audio track %i of type 0x%x\n",index,header->encoding);
+            return false;
+        }
+        aprintf("Add Track %d fq %d (AC3)\n",audioTrackIds[i],header->frequency);
+        return true;
+}
 /**
     \fn initAudio
 */
@@ -56,66 +121,35 @@ bool muxerMp4v2::initAudio(void)
         
         switch(header->encoding)
         {
-            case WAV_AC3:
-                {
-                    int fscod=0;
-                    switch(header->frequency)
+            case WAV_AAC:
                     {
-                            case 48000: fscod=0;break;
-                            case 44100: fscod=1;break;
-                            case 32000: fscod=2;break;
-                            default: 
-                                {
-                                GUI_Error_HIG("", "invalid frequency for AC3. Only 32, 44.1 & 48 kHz");
-                                return false;
-                                }
-                    }
-                    int bitrate;
-                    static const uint16_t ac3_bitrate_tab[19] = { // From handbrake
-                                 32, 40, 48, 56, 64, 80, 96, 112, 128,
-                                 160, 192, 224, 256, 320, 384, 448, 512, 576, 640
-                             };
-                    int Ceil=sizeof(ac3_bitrate_tab)/sizeof(const uint16_t);
-                    bitrate=-1;
-                    for(int ix=0;ix<Ceil;ix++)
-                            if(header->byterate==(ac3_bitrate_tab[ix]*1000)/8)
+                        uint8_t *extraData=NULL;
+                        uint32_t extraDataLen=0;
+                        if(!a->getExtraData(&extraDataLen,&extraData))
                             {
-                                bitrate=ix;
-                                break;
+                                 GUI_Error_HIG("AAC","Cannot get AAC Extra data\n");
+                                 return false;
                             }
-                    if(-1==bitrate) 
-                    {
-                        GUI_Error_HIG("","Invalid bitrate for AC3");
-                        return false;
+                        audioTrackIds[i]=MP4AddAudioTrack(handle,
+                                                      header->frequency,
+                                                      1024,
+                                                      MP4_MPEG4_AUDIO_TYPE);
+                        if(MP4_INVALID_TRACK_ID==audioTrackIds[i])
+                        {
+                            ADM_error("Error adding audio track %i of type 0x%x\n",i,header->encoding);
+                            return false;
+                        }
+                        aprintf("Add Track %d fq %d\n",audioTrackIds[i],header->frequency);
+                        MP4SetAudioProfileLevel(handle,0x0f);
+                        MP4SetTrackIntegerProperty(handle,audioTrackIds[i],"mdia.minf.stbl.stsd.mp4a.channels",
+                                    header->channels);
+                        MP4SetTrackESConfiguration(handle,audioTrackIds[i],extraData,extraDataLen);
+                    break;
                     }
-                    int acmod,lfe=0;
-                    switch(header->channels)
+            case WAV_AC3:
+                    if(false==addAc3(i, header))
                     {
-                            case 1: acmod=1;break;
-                            case 2: acmod=2;break;
-                            case 5: acmod=7;lfe=0;break; 
-#warning Check!
-                            case 6: acmod=7;lfe=1;break;
-                            default: 
-                                    {
-                                              GUI_Error_HIG("","Invalid number of channel for AC3");
-                                              return false;
-                                    }
-                    }
-                    audioTrackIds[i]=MP4AddAC3AudioTrack(handle,
-                                                          header->frequency,// samplingRate,
-                                                           fscod,           // fscod
-                                                           8,               // bsid,
-                                                           0,               // bsmod,
-                                                           acmod,           // acmod
-                                                           lfe,             // lfeon
-                                                           bitrate);        // bit_rate_code 
-                    if(MP4_INVALID_TRACK_ID==audioTrackIds[i])
-                    {
-                        ADM_error("Error adding audio track %i of type 0x%x\n",i,header->encoding);
-                        return false;
-                    }
-                    aprintf("Add Track %d fq %d (AC3)\n",audioTrackIds[i],header->frequency);
+                            return false;
                     }
                     break;
             case WAV_MP2:

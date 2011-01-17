@@ -69,7 +69,8 @@ protected:
 static  uint64_t        timeScale(uint64_t timeUs);
         bool            loadAndToggleAudioSlot(int index);
         bool            writeAudioBlock(int index,mp4v2AudioPacket::mp4v2AudioBlock *block,uint64_t duration90);
-
+protected:
+        bool            addAc3(int index, WAVHeader *header);
 public:
                 muxerMp4v2();
         virtual ~muxerMp4v2();
