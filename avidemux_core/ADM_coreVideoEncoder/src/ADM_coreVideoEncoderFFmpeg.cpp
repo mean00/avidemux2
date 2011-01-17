@@ -361,6 +361,12 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
         out->flags=AVI_B_FRAME;
     
     // Update PTS/Dts
+    if(!_context->max_b_frames)
+    {
+            out->dts=out->pts=queueOfDts[0];
+            mapper.erase(mapper.begin());
+            queueOfDts.erase(queueOfDts.begin());
+    } else
     getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts));
     
     
