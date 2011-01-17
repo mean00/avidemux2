@@ -138,12 +138,13 @@ er:
 bool muxerMp4v2::save(void)
 {
     bool result=true;
+    int nbFrame=0;
     printf("[Mp4v2Muxer] Saving\n");
    
 
     initUI("Saving MP4V2");
     encoding->setContainer("MP4");
-    uint32_t nbFrame=0;
+    
     
     while(vStream->getPacket(&(in[nextWrite]))) 
     {
@@ -153,8 +154,16 @@ bool muxerMp4v2::save(void)
         uint64_t newDts=in[nextWrite].dts-in[other].dts;
         uint64_t duration=timeScale(newDts);
         uint64_t delta=in[other].pts-in[other].dts;
-            delta=timeScale(delta);
-   
+
+        encoding->pushVideoFrame(in[other].len,in[other].out_quantizer,in[other].dts);
+        // Special case : First frame
+        if(!nbFrame)
+        {
+            delta+=in[other].dts;
+            ADM_info("Video does not start at 0, adding %d ms\n",(int)in[other].dts/1000);
+        }
+        delta=timeScale(delta);
+        nbFrame++;
         if(false==MP4WriteSample(handle,videoTrackId,in[other].data,in[other].len,
                         duration, // duration
                         delta, // pts/dts offset
@@ -171,6 +180,11 @@ bool muxerMp4v2::save(void)
         fillAudio(nextDts);
         // toggle
         nextWrite=other;
+        if(updateUI()==false)
+            {  
+                result=false;
+                break;
+            }
     }
     // Write last frame
     nextWrite=!nextWrite;
@@ -180,6 +194,7 @@ bool muxerMp4v2::save(void)
                         0 // Sync Sample
                         );
 theEnd:
+    closeUI();
     close();
     return result;
 }

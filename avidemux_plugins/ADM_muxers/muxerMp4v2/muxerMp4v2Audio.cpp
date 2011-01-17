@@ -172,7 +172,9 @@ bool muxerMp4v2::initAudio(void)
                     ADM_error("Cannot create audio track of type 0x%x\n",header->encoding);
                     return false;
         }
-       
+         MP4SetTrackBytesProperty(handle,audioTrackIds[i],"udta.name.value",
+                    (const uint8_t*)"Stereo", strlen("Stereo"));
+
     }
     if(nbAStreams)
          MP4SetTrackIntegerProperty(handle, audioTrackIds[0], "tkhd.flags", 3);
@@ -213,6 +215,7 @@ bool muxerMp4v2::writeAudioBlock(int index,mp4v2AudioPacket::mp4v2AudioBlock *bl
                             block->sizeInBytes,
                             nbSamples,
                             0,1);
+    encoding->pushAudioFrame(block->sizeInBytes);
     if(false==r)
                         {
                             ADM_error("Cannot write audio sample for track %d\n",index);
