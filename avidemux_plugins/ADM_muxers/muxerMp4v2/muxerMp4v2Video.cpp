@@ -23,6 +23,7 @@
 #include "muxerMp4v2.h"
 #include "ADM_codecType.h"
 #include "ADM_imageFlags.h"
+#include "ADM_videoInfoExtractor.h"
 #if 1
 #define aprintf(...) {}
 #else
@@ -45,16 +46,39 @@ bool muxerMp4v2::setMpeg4Esds(void)
      uint32_t esdsLen=0;
         if(false==vStream->getExtraData(&esdsLen,&esdsData))
         {
-            ADM_info("No extradata, geting ESDS from first frame...");
+            ADM_info("No extradata, geting ESDS from first frame...\n");
         }else
         {
             ADM_info("Got esds from extradata\n");
         }
+        if(!esdsLen) // We dont have extraData, look into the 1st frame
+        {
+            ADM_info("Trying to get VOL header from first frame...\n");
+            if(!extractVolHeader(in[0].data,in[0].len,&esdsData,&esdsLen))
+            {
+                ADM_error("Cannot get ESDS, aborting\n");
+                return false;
+            }
+           
+        }
+        //
         if(!esdsLen)
         {
             ADM_error("ESDS not found, aborting\n");
             return false;
         }
+        if(!esdsData[0] && !esdsData[1] && esdsData[2]==1)
+        {
+            // Remove startcode
+            if(esdsLen<4)
+            {
+                ADM_error("ESDS too short\n");
+                return false;
+            }
+            esdsData+=4;
+            esdsLen-=4;
+        }
+
         ADM_info("Esds:\n"); mixDump(esdsData,esdsLen);ADM_info("\n");            
         if(false==MP4SetTrackESConfiguration(handle,videoTrackId,esdsData,esdsLen))
         {
