@@ -37,11 +37,12 @@ static int rate[] = { 32,  40,  48,  56,  64,  80,  96, 112,
 			 128, 160, 192, 224, 256, 320, 384, 448,
 			 512, 576, 640};
 static uint8_t lfeon[8] = {0x10, 0x10, 0x04, 0x04, 0x04, 0x01, 0x04, 0x01};
-
-// Borrowed from a52dec
-// Return packed size on success, 0 on failure
-// Need at least 6 bytes incoming
-
+/**
+    \fn ADM_a52_syncinfo
+    \brief  Return packed size on success, 0 on failure
+            Need at least 6 bytes incoming
+            Borrowed from a52dec
+*/
 int ADM_a52_syncinfo (uint8_t * buf, int * flags, int * sample_rate, int * bit_rate)
 {
     int frmsizecod;
@@ -53,7 +54,7 @@ int ADM_a52_syncinfo (uint8_t * buf, int * flags, int * sample_rate, int * bit_r
 	return 0;
 
     if (buf[5] >= 0x60)		/* bsid >= 12 */
-	return 0;
+            return 0;
     half = halfrate[buf[5] >> 3];
 
     /* acmod, dsurmod and lfeon */
@@ -81,9 +82,10 @@ int ADM_a52_syncinfo (uint8_t * buf, int * flags, int * sample_rate, int * bit_r
 	return 0;
     }
 }
-//
-//	Exctract infos from AC3 stream (used when muxing with external AC3)
-//
+/**
+        \fn     ADM_AC3GetInfo
+        \brief Extract infos from AC3 stream (used when muxing with external AC3)
+*/
 uint8_t ADM_AC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *br, uint32_t *chan,uint32_t *syncoff)
 {
 uint32_t l;
