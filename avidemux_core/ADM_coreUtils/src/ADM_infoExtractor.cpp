@@ -21,6 +21,13 @@
 
 #define aprintf(...) {}
 
+#define MP4_VOL         0x20
+#define MP4_VO_SEQ      0xB0
+#define MP4_USER_DATA   0xB2
+#define MP4_GOP         0xB3
+#define MP4_VISUAL_OBJ  0xB5
+#define MP4_VOP         0xB6         
+
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
 			    uint8_t * outstartcode, uint32_t * offset);
 
@@ -69,7 +76,7 @@ extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
       if (dataSize > 2)
 	{
 	  //printf("Startcodec:%x\n",data[idx]);
-	  if ((data[idx] & 0xF0) == 0x20)	//VOL start
+	  if ((data[idx] & 0xF0) == MP4_VOL)	//VOL start
 	    {
 	      dataSize--;
 	      idx++;
@@ -276,8 +283,9 @@ extractH263FLVInfo (uint8_t * buffer, uint32_t len, uint32_t * w,
     }
   return 1;
 }
-/*
-        Extract H263 width & height from header
+/**
+    \fn extractH263Info
+    \brief  Extract H263 width & height from header
 
 */
 uint8_t
@@ -354,7 +362,7 @@ ADM_searchVop (uint8_t * begin, uint8_t * end, uint32_t * nb, ADM_vopS * vop,
     {
       if (ADM_findMpegStartCode (begin, end, &code, &off))
 	{
-	  if (code == 0xb6)
+	  if (code == MP4_VOP)
 	    {
 	      // Analyse a bit the vop header
 	      uint8_t coding_type = begin[off];
@@ -421,6 +429,109 @@ ADM_searchVop (uint8_t * begin, uint8_t * end, uint32_t * nb, ADM_vopS * vop,
     }
   return 1;
 }
+
+typedef struct
+{
+        uint32_t code;
+        uint8_t  *data;
+        uint32_t len;
+}mpeg4unit;
+#define MKVOL(x) {x,#x}
+typedef struct
+{
+    int unitId;
+    const char *unitName;
+}unitDesc;
+static const unitDesc descriptor[]={
+MKVOL(MP4_VOL         ),
+MKVOL(MP4_VO_SEQ      ),
+MKVOL(MP4_USER_DATA   ),
+MKVOL(MP4_GOP         ),
+MKVOL(MP4_VISUAL_OBJ  ),
+MKVOL(MP4_VOP         )};
+
+const char *findUnit(int c)
+{
+    int m=sizeof(descriptor)/sizeof(unitDesc);
+    for(int i=0;i<m;i++)
+        if(descriptor [i].unitId==c)
+            return descriptor[i].unitName;
+    return "unknown";
+}
+/**
+    \fn splitMpeg4
+    \brief split a bytestream block into mpeg4 sp/asp units
+*/
+int splitMpeg4(uint8_t *frame,uint32_t dataSize,mpeg4unit *unit,int maxUnits)
+{
+    uint8_t *start=frame;
+    uint8_t *end=start+dataSize;
+    int nbUnit=0;
+    while(start+3<end)
+    {
+        uint8_t c;
+        uint32_t offset;
+        if(false==ADM_findMpegStartCode(start,end,&c,&offset)) break;
+        ADM_assert(nbUnit<maxUnits);
+#if 0
+        printf("Unit : %x offset=%d absOffset=%d val=%x\n",c,offset,(int)(offset,start+offset-frame),
+                                                            *(start+offset));
+#endif
+        ADM_assert(offset>=4);
+        unit[nbUnit].code=c;
+        unit[nbUnit].data=start+offset-4;
+        unit[nbUnit].len=0;
+        start=start+offset;
+        nbUnit++;
+    }
+    //ADM_info("found %d units\n",nbUnit);
+    if(!nbUnit) return 0;
+    for(int j=0;j<nbUnit-1;j++)
+    {
+        unit[j].len=(uint32_t)(unit[j+1].data-unit[j].data);
+    }
+    unit[nbUnit-1].len=(uint32_t)(end-unit[nbUnit-1].data);
+    for(int j=0;j<nbUnit;j++)
+    {
+        mpeg4unit *u=unit+j;
+        //ADM_info("%x : %s, offset=%d size=%d\n",u->code,findUnit(u->code),(int)(u->data-frame),u->len);
+    }
+    return nbUnit;
+}
+/**
+    \fn extractVolHeader
+    \brief extract VOL header from a frame, it will be used later as esds atom for example
+*/
+bool extractVolHeader(uint8_t *data,uint32_t dataSize,uint8_t **volStart, uint32_t *volLen)
+{
+    // Search startcode
+    uint8_t b;
+    uint32_t idx=0;
+    uint32_t mw,mh;
+    uint32_t time_inc;
+    
+    mpeg4unit unit[10];
+    int nbUnit=splitMpeg4(data,dataSize,unit,10);
+    if(!nbUnit)
+    {
+        ADM_error("Cannot find VOL header(1)\n");
+        return false;
+    }
+    for(int i=0;i<nbUnit;i++)
+    {
+          mpeg4unit *u=unit+i;
+          if(u->code==MP4_VOL)
+          {
+                ADM_info("Vol Header found : %x : %s, offset=%d size=%d\n",u->code,findUnit(u->code),
+                                                        (int)(u->data-data),u->len);
+                *volStart=u->data;
+                *volLen=u->len;
+                return true;
+          }
+    }
+    ADM_error("Cannot find VOL header in the units\n");
+    return false;
+}    
 
 
 //EOF
