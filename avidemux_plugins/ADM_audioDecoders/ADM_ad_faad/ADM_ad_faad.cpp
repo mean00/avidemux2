@@ -74,6 +74,9 @@ unsigned char chan;
 		conf->outputFormat=FAAD_FMT_FLOAT;
 		conf->defSampleRate=info->frequency;
   	    conf->defObjectType =LC;
+        // Disable SBR...
+        conf->dontUpSampleImplicitSBR=1;
+        //
 		faacDecSetConfiguration(_instance, conf);
                 printf("[FAAD] using %u bytes of extradata\n",l);
 		// if we have some extra data, it means we can init it from it
