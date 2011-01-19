@@ -82,10 +82,27 @@ AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globa
     _globalHeader=false;
 
   wavheader.encoding=makeName(WAV);
-  
-  
 };
-
+/**
+    \fn extraData
+*/
+uint8_t AUDMEncoder_Lavcodec::extraData(uint32_t *l,uint8_t **d)
+{
+    ADM_assert(_context);
+    int size=0;
+    size=CONTEXT->extradata_size;
+    if(size)
+    {
+        *d=CONTEXT->extradata;
+        *l=(uint32_t)size;
+    }
+    else    
+    {
+        *d=NULL;
+        *l=0;
+    }
+    return true;
+}
 /**
     \fn ~AUDMEncoder_Lavcodec
 */
