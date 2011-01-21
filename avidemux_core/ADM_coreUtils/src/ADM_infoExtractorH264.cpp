@@ -706,6 +706,23 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
             if(!extra[0] && !extra[1] && extra[2]==1) // 00 00 01 type extradata
             {
                 ADM_info("Startcoded PPS/SPS\n");
+                #define NALU_COUNT 10
+                NALU_descriptor nalus[NALU_COUNT];      
+                int nbNalus=ADM_splitNalu(extra, extraLen+extra, NALU_COUNT,nalus);
+                //int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
+                if(nbNalus<2)
+                {
+                    ADM_error("Not enough nalus in extradata (%s)\n",nbNalus);
+                    return false;
+                }
+                int spsIndex=ADM_findNalu(NAL_SPS,nbNalus,nalus);
+                int ppsIndex=ADM_findNalu(NAL_PPS,nbNalus,nalus);
+                if(-1==spsIndex || -1 == ppsIndex)
+                {
+                    ADM_error("Cant find sps/pps in nalus\n");
+                    return false;
+                }
+
                 return false;
             }
             // Duplicate
