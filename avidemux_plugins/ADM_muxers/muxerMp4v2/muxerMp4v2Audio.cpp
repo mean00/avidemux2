@@ -25,9 +25,11 @@
 #include "ADM_imageFlags.h"
 #if 1
 #define aprintf(...) {}
+#define bprintf(...) {} // ADM_info
 #define MP4_DEBUG 0
 #else
 #define aprintf ADM_info
+#define bprintf ADM_info
 #define MP4_DEBUG MP4_DETAILS_ALL
 #endif
 
@@ -246,10 +248,14 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
                         // Get our currentDts
                         uint64_t currentDts=clock->getTimeUs();                        
                         uint64_t blockDts=currentBlock->dts;
+                        if(pkt->eos)            break;
                         extraSamples=0;
                         // Take either block Dts or our own if no DTS is provided
                         if(currentBlock->dts!=ADM_NO_PTS)
                         {
+                            bprintf("Current audio Dts=%"LLD"\n",currentDts);
+                            bprintf("Incoming block, dts=%"LLD"\n",currentBlock->dts);
+                            bprintf("Delta =%d ms\n",(int)(currentDts-currentBlock->dts));
                             if( abs(currentBlock->dts-currentDts)>MP4V2_MAX_JITTER)
                             {
                                 if(currentBlock->dts<currentDts)
@@ -278,10 +284,12 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
                             return false;
                         }
                         // load next
-nextOne:
+
                         clock->advanceBySample(currentBlock->nbSamples+extraSamples);
+nextOne:
                         if(false==loadAndToggleAudioSlot(audioIndex))
                         {
+                            ADM_warning("End of audio stream %d\n",audioIndex);
                             #warning Purge other slot
                             pkt->eos=true;
                         }

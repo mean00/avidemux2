@@ -143,7 +143,7 @@ bool muxerMp4v2::save(void)
    
 
     initUI("Saving MP4V2");
-    encoding->setContainer("MP4");
+    encoding->setContainer("MP4 (libmp4v2)");
     
     
     while(vStream->getPacket(&(in[nextWrite]))) 
@@ -151,18 +151,27 @@ bool muxerMp4v2::save(void)
         bool kf=false;
         int other=!nextWrite;
         if(in[other].flags & AVI_KEY_FRAME) kf=true;
-        uint64_t newDts=in[nextWrite].dts-in[other].dts;
-        uint64_t duration=timeScale(newDts);
-        uint64_t delta=in[other].pts-in[other].dts;
+
+        ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
+        ADM_assert(in[other].pts!=ADM_NO_PTS)
+        ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
+        ADM_assert(in[other].pts!=ADM_NO_PTS)
+
+        uint64_t newDts=in[nextWrite].dts-in[other].dts;   // Delta between dts=duration of the frame (sort of)     
+        uint64_t delta=in[other].pts-in[other].dts; // composition time...
+        uint64_t duration=(newDts);
 
         encoding->pushVideoFrame(in[other].len,in[other].out_quantizer,in[other].dts);
         // Special case : First frame
         if(!nbFrame)
         {
-            delta+=in[other].dts;
-            ADM_info("Video does not start at 0, adding %d ms\n",(int)in[other].dts/1000);
+            uint64_t tzero=in[other].dts;
+            delta+=tzero; // Still in us
+            duration+=tzero;
+            ADM_info("Video does not start at 0, adding %d ms\n",(int)tzero/1000);
         }
         delta=timeScale(delta);
+        duration=timeScale(duration);
         nbFrame++;
         if(false==MP4WriteSample(handle,videoTrackId,in[other].data,in[other].len,
                         duration, // duration

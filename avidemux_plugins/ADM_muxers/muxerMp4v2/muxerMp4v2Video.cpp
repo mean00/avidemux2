@@ -34,9 +34,16 @@
     \fn setEsdsAtom
     \brief extract esds atom from extradata or for first frame. In all cases read the first frame
 */
-bool muxerMp4v2::setMpeg4Esds(void)
+bool muxerMp4v2::initMpeg4(void)
 {
     bool removeVol=false;
+    videoTrackId=MP4AddVideoTrack(handle,90000,MP4_INVALID_DURATION,
+    vStream->getWidth(),vStream->getHeight(),MP4_MPEG4_VIDEO_TYPE);
+    if(MP4_INVALID_TRACK_ID==videoTrackId)
+        {
+            ADM_error("Cannot add mpeg4 video Track \n");
+            return false;
+        }
     ADM_info("Setting mpeg4 (a)SP ESDS...\n");
     if(0) //false==vStream->getPacket(&in) )
      {
@@ -97,6 +104,59 @@ bool muxerMp4v2::setMpeg4Esds(void)
         return true;
 }
 /**
+       \fn initH264
+       \brief format header for H264
+*/
+bool muxerMp4v2::initH264(void)
+{
+//
+            bool result=false;
+            uint32_t spsLen;
+            uint8_t  *spsData=NULL;
+            uint32_t ppsLen;
+            uint8_t  *ppsData=NULL;
+            // Extract sps & pps            
+            uint8_t *extra=NULL;
+            uint32_t extraLen=0;
+            if(false==vStream->getExtraData(&extraLen,&extra))
+            {
+                ADM_error("Cannot get extradata\n");
+                return false;
+            }
+            if(extraLen)
+                mixDump(extra,extraLen);
+            ADM_info("\n");
+            if(false==ADM_getH264SpsPpsFromExtraData(extraLen,extra,&spsLen,&spsData,&ppsLen,&ppsData))
+            {
+                ADM_error("Wrong extra data for h264\n");
+                return false;
+            }
+          
+            videoTrackId=MP4AddH264VideoTrack(handle,90000,MP4_INVALID_DURATION,
+                    vStream->getWidth(),vStream->getHeight(),spsData[1],spsData[2],spsData[3],3);
+            if(MP4_INVALID_TRACK_ID==videoTrackId)
+            {
+                ADM_error("Cannot add h264 video Track \n");
+                return false;
+            }
+            ADM_info("SPS (%d) :",spsLen);
+            mixDump(spsData,spsLen);
+            ADM_info("PPS (%d) :",ppsLen);
+            mixDump(ppsData,ppsLen);
+            ADM_info("\n");
+
+            MP4AddH264SequenceParameterSet(handle,videoTrackId, spsData,spsLen );
+            MP4AddH264PictureParameterSet( handle,videoTrackId, ppsData,ppsLen);
+            // MP4AddIPodUUID
+            result=true;
+clnup:
+            if(spsData) delete [] spsData;
+            if(ppsData) delete [] ppsData;
+            spsData=NULL;
+            ppsData=NULL;
+            return result;
+}
+/**
     \fn initVideo
 */
 bool muxerMp4v2::initVideo(void)
@@ -112,14 +172,8 @@ bool muxerMp4v2::initVideo(void)
         ADM_info("Setting video..\n");
         if(isMpeg4Compatible(fcc))
         {
-            videoTrackId=MP4AddVideoTrack(handle,90000,MP4_INVALID_DURATION,
-                    vStream->getWidth(),vStream->getHeight(),MP4_MPEG4_VIDEO_TYPE);
-            if(MP4_INVALID_TRACK_ID==videoTrackId)
-            {
-                ADM_error("Cannot add mpeg4 video Track \n");
-                return false;
-            }
-            if(false==setMpeg4Esds())
+           
+            if(false==initMpeg4())
             {
                 ADM_error("Cannot set ESDS atom\n");
                 return false;
@@ -127,24 +181,13 @@ bool muxerMp4v2::initVideo(void)
         }
         if(isH264Compatible(fcc))
         {
-#if 0
-            // Extract sps & pps
-            uint8_t *sps,*pps;
-            //
-            videoTrackId=MP4AddH264VideoTrack(handle,90000,MP4_INVALID_DURATION,
-                    vStream->getWidth(),vStream->getHeight(),sps[0],sps[1],sps[2],3);
-            if(MP4_INVALID_TRACK_ID==videoTrackId)
+            if(false==initH264())
             {
-                ADM_error("Cannot add h264 video Track \n");
-                goto er;
-            }
-            if(false==MP4SetTrackESConfiguration(handle,videoTrackId,esdsData,esdsLen))
-            {
-                ADM_error("SetTracEsConfiguration failed\n");
+                ADM_error("Cannot add h264 track\n");
                 return false;
             }
-#endif
         }
+        ADM_info("[MP4V2] Video correctly initalized\n");
         return true;
 }
 //EOF

@@ -62,7 +62,8 @@ protected:
         int             nextWrite;
         uint64_t        audioDelay; // In fact videoDelay, but must be added to all audioTrack
 protected:
-        bool            setMpeg4Esds(void);
+        bool            initMpeg4(void);
+        bool            initH264(void);
         bool            initVideo(void);
         bool            initAudio(void);
         bool            fillAudio(uint64_t targetDts);
