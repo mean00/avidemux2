@@ -20,6 +20,7 @@ using std::string;
 #include "ADM_editor/ADM_edit.hxx"
 #include "ADM_coreUtils.h"
 #include "ADM_h264_tag.h"
+#include "ADM_videoInfoExtractor.h"
 
 
 
@@ -29,15 +30,7 @@ extern bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstart
 extern bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 extern void mixDump(uint8_t *ptr, uint32_t len);
 
-#define SHORT_START_CODE
-
-#ifdef SHORT_START_CODE
-    #define SearchStartCode ADM_findMpegStartCode
-    #define START_CODE_LEN 4
-#else
-    #define SearchStartCode ADM_findH264StartCode
-    #define START_CODE_LEN 5
-#endif
+#warning fixme : double definition
 
 //#define ANNEX_B_DEBUG
 
@@ -51,12 +44,6 @@ extern void mixDump(uint8_t *ptr, uint32_t len);
 
 #define MAX_NALU_PER_CHUNK 20
 
-typedef struct
-{
-    uint8_t  *start;
-    uint32_t size;   // size of payload excluding nalu type
-    uint8_t  nalu;
-}NALU_descriptor;
 
 static uint32_t readBE32(uint8_t *p)
 {
@@ -91,54 +78,7 @@ static bool isNalValid(int nal)
     if(nal<=12) ADM_info("Nal : %s",nalType[nal]);
     return true;
 }
-/**
-    \fn splitNalu
-    \brief split a nalu annexb size into a list of nalu descriptor
-*/
-static int splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
-{
-bool first=true;
-uint8_t *head=start;
-uint32_t offset;
-uint8_t startCode,oldStartCode=0xff;
-int index=0;
-      while(true==SearchStartCode(head,end,&startCode,&offset))
-      {
-            if(true==first)
-            {
-                head+=offset;
-                first=false;
-                oldStartCode=startCode;
-                continue;
-            }
-        ADM_assert(index<maxNalu);
-        desc[index].start=head;
-        desc[index].size=offset-START_CODE_LEN;
-        desc[index].nalu=oldStartCode;
-        index++;
-        head+=offset;
-        oldStartCode=startCode;
-      }
-    // leftover
-    desc[index].start=head;
-    desc[index].size=(uint32_t)(end-head);
-    desc[index].nalu=oldStartCode;
-    index++;
-    return index;
-}
-/**
-    \fn findNalu
-    \brief lookup for a specific NALU in the given buffer
-*/
-static int findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
-{
-    for(int i=0;i<maxNalu;i++)
-    {
-            if((desc[i].nalu&0x1f) == (nalu&0x1f))
-                return i;
-    }
-    return -1;
-}
+
 
 /**
     \fn ctor
@@ -165,19 +105,19 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
     {
         myBitstream->len=img.dataLength;
         NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-        int nbNalu=splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
+        int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
                                 MAX_NALU_PER_CHUNK,desc);
         // search sps
         uint8_t *spsStart,*ppsStart;
         uint32_t spsLen=0, ppsLen=0;
         int indexSps,indexPps;
 
-        indexSps=findNalu(NAL_SPS,nbNalu,desc);
+        indexSps=ADM_findNalu(NAL_SPS,nbNalu,desc);
         if(-1==indexSps)
         {
             ADM_error("Cannot find SPS");
         }
-        indexPps=findNalu(NAL_PPS,nbNalu,desc);
+        indexPps=ADM_findNalu(NAL_PPS,nbNalu,desc);
         if(-1==indexPps)
         {
             ADM_error("Cannot find SPS");
@@ -243,7 +183,7 @@ int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t in
 {
     uint8_t *tgt=outData;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-    int nbNalu=splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
+    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
                         MAX_NALU_PER_CHUNK,desc);
     int nalHeaderSize=4;
     int outputSize=0;

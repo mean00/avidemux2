@@ -36,7 +36,28 @@ typedef struct
 uint8_t extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
+bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
+                                    uint32_t *spsLen,uint8_t **spsData,
+                                    uint32_t *ppsLen,uint8_t **ppsData); // return a copy of pps/sps extracted
 
+typedef struct
+{
+    uint8_t  *start;
+    uint32_t size;   // size of payload excluding nalu type
+    uint8_t  nalu;
+}NALU_descriptor;
+int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
+int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
+
+#define SHORT_START_CODE
+
+#ifdef SHORT_START_CODE
+    #define SearchStartCode ADM_findMpegStartCode
+    #define START_CODE_LEN 4
+#else
+    #define SearchStartCode ADM_findH264StartCode
+    #define START_CODE_LEN 5
+#endif
 /**
     \struct ADM_vopS
     \brief describe a vop inside a bitstream (mpeg4 SP/ASP)

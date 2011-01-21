@@ -32,6 +32,19 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 
+
+//#define ANNEX_B_DEBUG
+
+#if defined(ANNEX_B_DEBUG)
+#define aprintf ADM_info
+#define check isNalValid
+#else
+#define aprintf(...) {}
+#define check(...) {}
+#endif
+
+#define MAX_NALU_PER_CHUNK 20
+
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
 			    uint8_t * outstartcode, uint32_t * offset);
 /**
@@ -648,5 +661,108 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
         DPY(darDen);
         return i;
 #endif
+}
+/**
+    \fn ADM_getH264SpsPpsFromExtraData
+    \brief Returns a copy of PPS/SPS extracted from extrdata
+*/
+bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
+                                    uint32_t *spsLen,uint8_t **spsData,
+                                    uint32_t *ppsLen,uint8_t **ppsData)
+{
+  
+            if(extraLen<7) // not mov/mp4 formatted...
+            {
+                ADM_error("Wrong extra data for h264\n");
+                return false;
+            }
+            //
+            if(extra[1]==1) // MP4-type extradata
+            {
+                ADM_info("MP4 style PPS/SPS\n");
+                return false;
+
+                int nbSps=extra[5]&0x1f;
+                if(nbSps!=1)    
+                {
+                    ADM_error("More or less than 1 sps\n");
+                    return false;
+                    
+                }
+                uint8_t *c=extra+6;
+                *spsLen= (c[0]<<8)+(c[1]);
+                *spsData=c+2;
+                c+=2+*spsLen;
+                int nbPps=c[0]&0x1f;
+                if(nbPps!=1)
+                {
+                    ADM_error("More or less than 1 pps\n");
+                    return false;        
+                }
+                c++;
+                *ppsLen= (c[0]<<8)+(c[1]);
+                *ppsData=c+2;
+            }else
+            if(!extra[0] && !extra[1] && extra[2]==1) // 00 00 01 type extradata
+            {
+                ADM_info("Startcoded PPS/SPS\n");
+                return false;
+            }
+            // Duplicate
+            uint8_t *y=new uint8_t [*spsLen];
+            memcpy(y,*spsData,*spsLen);
+            *spsData=y;
+            y=new uint8_t [*ppsLen];
+            memcpy(y,*ppsData,*ppsLen);
+            *ppsData=y;
+            return true;
+}
+/**
+    \fn ADM_splitNalu
+    \brief split a nalu annexb size into a list of nalu descriptor
+*/
+int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
+{
+bool first=true;
+uint8_t *head=start;
+uint32_t offset;
+uint8_t startCode,oldStartCode=0xff;
+int index=0;
+      while(true==SearchStartCode(head,end,&startCode,&offset))
+      {
+            if(true==first)
+            {
+                head+=offset;
+                first=false;
+                oldStartCode=startCode;
+                continue;
+            }
+        ADM_assert(index<maxNalu);
+        desc[index].start=head;
+        desc[index].size=offset-START_CODE_LEN;
+        desc[index].nalu=oldStartCode;
+        index++;
+        head+=offset;
+        oldStartCode=startCode;
+      }
+    // leftover
+    desc[index].start=head;
+    desc[index].size=(uint32_t)(end-head);
+    desc[index].nalu=oldStartCode;
+    index++;
+    return index;
+}
+/**
+    \fn ADM_findNalu
+    \brief lookup for a specific NALU in the given buffer
+*/
+int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
+{
+    for(int i=0;i<maxNalu;i++)
+    {
+            if((desc[i].nalu&0x1f) == (nalu&0x1f))
+                return i;
+    }
+    return -1;
 }
 //EOF
