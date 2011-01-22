@@ -663,6 +663,19 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 #endif
 }
 /**
+    \fn    packNalu
+    \brief convert mpeg type NALU into mp4 header type nalu
+*/
+static void packNalu(int idx,NALU_descriptor *nalus,uint32_t *len,uint8_t **data)
+{
+    NALU_descriptor *n=nalus+idx;
+    uint32_t size=n->size;
+    uint8_t *p=new uint8_t[size+1];
+    *data=p;
+    p[0]=n->nalu;
+    *len=1+ADM_unescapeH264(n->size, n->start,p+1);
+}
+/**
     \fn ADM_getH264SpsPpsFromExtraData
     \brief Returns a copy of PPS/SPS extracted from extrdata
 */
@@ -677,10 +690,9 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                 return false;
             }
             //
-            if(extra[1]==1) // MP4-type extradata
+            if(extra[0]==1) // MP4-type extradata
             {
                 ADM_info("MP4 style PPS/SPS\n");
-                return false;
 
                 int nbSps=extra[5]&0x1f;
                 if(nbSps!=1)    
@@ -702,8 +714,19 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                 c++;
                 *ppsLen= (c[0]<<8)+(c[1]);
                 *ppsData=c+2;
+                // Duplicate
+                uint8_t *y=new uint8_t [*spsLen];
+                memcpy(y,*spsData,*spsLen);
+                *spsData=y;
+                y=new uint8_t [*ppsLen];
+                memcpy(y,*ppsData,*ppsLen);
+                *ppsData=y;
+                ADM_info("Got extradata, ppslen=%d, spslen=%d\n",(int)(*ppsLen),(int)*spsLen);
+                return true;
+
             }else
-            if(!extra[0] && !extra[1] && extra[2]==1) // 00 00 01 type extradata
+            if(!extra[0] && !extra[1])
+                if(extra[2]==1 || (!extra[2] && extra[3]==1)) // 00 00 01 type extradata
             {
                 ADM_info("Startcoded PPS/SPS\n");
                 #define NALU_COUNT 10
@@ -722,17 +745,11 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                     ADM_error("Cant find sps/pps in nalus\n");
                     return false;
                 }
-
-                return false;
+                packNalu(spsIndex,nalus,spsLen,spsData);
+                packNalu(ppsIndex,nalus,ppsLen,ppsData);
+                return true;
             }
-            // Duplicate
-            uint8_t *y=new uint8_t [*spsLen];
-            memcpy(y,*spsData,*spsLen);
-            *spsData=y;
-            y=new uint8_t [*ppsLen];
-            memcpy(y,*ppsData,*ppsLen);
-            *ppsData=y;
-            return true;
+    return false;
 }
 /**
     \fn ADM_splitNalu
@@ -781,5 +798,48 @@ int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
                 return i;
     }
     return -1;
+}
+
+static void writeBE32(uint8_t *p, uint32_t size)
+{
+    p[0]=size>>24;
+    p[1]=(size>>16)&0xff;
+    p[2]=(size>>8)&0xff;
+    p[3]=(size>>0)&0xff;
+}
+/**
+    \fn ADM_convertFromAnnexBToMP4   
+    \brief convert annexB startcode (00 00 00 0 xx) to NALU
+*/
+int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
+                                                      uint8_t *outData,uint32_t outMaxSize)
+{
+    uint8_t *tgt=outData;
+    NALU_descriptor desc[MAX_NALU_PER_CHUNK];
+    int nbNalu=ADM_splitNalu(inData,inData+inSize,
+                        MAX_NALU_PER_CHUNK,desc);
+    int nalHeaderSize=4;
+    int outputSize=0;
+
+
+    for(int i=0;i<nbNalu;i++)
+    {
+        NALU_descriptor *d=desc+i;
+        aprintf("%d/%d : Nalu :0x%x size=%d\n",i,nbNalu,d->nalu,d->size);
+        switch(d->nalu&0x1f)
+        {
+            case NAL_FILLER: break;
+            case NAL_AU_DELIMITER: break; 
+            default:
+                  writeBE32(tgt,1+d->size);
+                  tgt[nalHeaderSize]=d->nalu;
+                  memcpy(tgt+1+nalHeaderSize,d->start,d->size);
+                  tgt+=d->size+1+nalHeaderSize;
+                  break;
+        }
+        outputSize=tgt-outData;
+        ADM_assert(outputSize<outMaxSize);
+    }
+    return outputSize;
 }
 //EOF

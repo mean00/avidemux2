@@ -48,6 +48,7 @@ typedef struct
 }NALU_descriptor;
 int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
 int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
+int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize, uint8_t *outData,uint32_t outMaxSize);
 
 #define SHORT_START_CODE
 

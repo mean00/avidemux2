@@ -53,13 +53,6 @@ static uint32_t readBE32(uint8_t *p)
 }
 
 
-static void writeBE32(uint8_t *p, uint32_t size)
-{
-    p[0]=size>>24;
-    p[1]=(size>>16)&0xff;
-    p[2]=(size>>8)&0xff;
-    p[3]=(size>>0)&0xff;
-}
 static const char *nalType[13]=
 {
     "invalid","nonIdr","invalid","invalid","invalid",
@@ -174,41 +167,7 @@ ADM_videoStreamCopyFromAnnexB::~ADM_videoStreamCopyFromAnnexB()
     delete myBitstream;
     myBitstream=NULL;
 }
-/**
-    \fn convertFromAnnexB   
-    \brief convert annexB startcode (00 00 00 0 xx) to NALU
-*/
-int ADM_videoStreamCopyFromAnnexB::convertFromAnnexB(uint8_t *inData,uint32_t inSize,
-                                                      uint8_t *outData,uint32_t outMaxSize)
-{
-    uint8_t *tgt=outData;
-    NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
-                        MAX_NALU_PER_CHUNK,desc);
-    int nalHeaderSize=4;
-    int outputSize=0;
 
-
-    for(int i=0;i<nbNalu;i++)
-    {
-        NALU_descriptor *d=desc+i;
-        aprintf("%d/%d : Nalu :0x%x size=%d\n",i,nbNalu,d->nalu,d->size);
-        switch(d->nalu&0x1f)
-        {
-            case NAL_FILLER: break;
-            case NAL_AU_DELIMITER: break; 
-            default:
-                  writeBE32(tgt,1+d->size);
-                  tgt[nalHeaderSize]=d->nalu;
-                  memcpy(tgt+1+nalHeaderSize,d->start,d->size);
-                  tgt+=d->size+1+nalHeaderSize;
-                  break;
-        }
-        outputSize=tgt-outData;
-        ADM_assert(outputSize<outMaxSize);
-    }
-    return outputSize;
-}
 static void parseNalu(uint8_t *head, uint8_t *tail)
 {
     printf("**** Parsing NALU : %d****",(int)(tail-head));
@@ -228,7 +187,7 @@ bool    ADM_videoStreamCopyFromAnnexB::getPacket(ADMBitstream *out)
     aprintf("-------%d--------\n",(int)currentFrame);
     if(false==ADM_videoStreamCopy::getPacket(myBitstream)) return false;
     
-    int size=convertFromAnnexB(myBitstream->data,myBitstream->len,out->data,out->bufferSize);
+    int size=ADM_convertFromAnnexBToMP4(myBitstream->data,myBitstream->len,out->data,out->bufferSize);
     out->len=size;
     out->dts=myBitstream->dts;
     out->pts=myBitstream->pts;
