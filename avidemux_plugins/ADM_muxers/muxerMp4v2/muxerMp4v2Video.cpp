@@ -31,12 +31,47 @@
 #endif
 
 /**
+    \fn loadNextVideoFrame
+    \brief Load buffer, convert to annexB if needed
+*/
+bool muxerMp4v2::loadNextVideoFrame(ADMBitstream *bs)
+{
+    if(true==needToConvertFromAnnexB)
+        {
+            ADMBitstream tmp;
+            tmp.data=scratchBuffer;
+            tmp.bufferSize=videoBufferSize;
+            if(false==vStream->getPacket(&tmp))
+                return false;
+            bs->dts=tmp.dts;
+            bs->pts=tmp.pts;
+            bs->flags=tmp.flags;
+            bs->len=ADM_convertFromAnnexBToMP4(scratchBuffer,tmp.len, bs->data,videoBufferSize);
+            return true;
+        }
+    if(false==vStream->getPacket(bs))
+        {
+            return false;
+        }
+
+    
+    return true;
+}
+/**
     \fn setEsdsAtom
     \brief extract esds atom from extradata or for first frame. In all cases read the first frame
 */
 bool muxerMp4v2::initMpeg4(void)
 {
     bool removeVol=false;
+    // Preload first image
+    if(false==loadNextVideoFrame(&(in[0])))
+        {
+            ADM_error("Cannot read 1st video frame\n");
+            return false;
+        }
+        nextWrite=1;
+
     videoTrackId=MP4AddVideoTrack(handle,90000,MP4_INVALID_DURATION,
     vStream->getWidth(),vStream->getHeight(),MP4_MPEG4_VIDEO_TYPE);
     if(MP4_INVALID_TRACK_ID==videoTrackId)
@@ -131,7 +166,16 @@ bool muxerMp4v2::initH264(void)
                 ADM_error("Wrong extra data for h264\n");
                 return false;
             }
-          
+            needToConvertFromAnnexB=true;
+            if(extraLen)
+                if(extra[0]==1) needToConvertFromAnnexB=false;
+            if(false==loadNextVideoFrame(&(in[0])))
+            {
+                ADM_error("Cannot read 1st video frame\n");
+                return false;
+            }
+            nextWrite=1;
+            //
             videoTrackId=MP4AddH264VideoTrack(handle,90000,MP4_INVALID_DURATION,
                     vStream->getWidth(),vStream->getHeight(),spsData[1],spsData[2],spsData[3],3);
             if(MP4_INVALID_TRACK_ID==videoTrackId)
@@ -162,13 +206,7 @@ clnup:
 bool muxerMp4v2::initVideo(void)
 {
         uint32_t fcc=vStream->getFCC();
-
-        if(false==vStream->getPacket(&(in[0])))
-        {
-            ADM_error("Cannot read 1st video frame\n");
-            return false;
-        }
-        nextWrite=1;
+       
         ADM_info("Setting video..\n");
         if(isMpeg4Compatible(fcc))
         {

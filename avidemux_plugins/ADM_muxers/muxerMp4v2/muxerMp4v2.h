@@ -61,10 +61,14 @@ protected:
         ADMBitstream    in[2];
         int             nextWrite;
         uint64_t        audioDelay; // In fact videoDelay, but must be added to all audioTrack
-protected:
+        bool            needToConvertFromAnnexB;
+        uint8_t         *scratchBuffer;
+protected: // video
         bool            initMpeg4(void);
         bool            initH264(void);
         bool            initVideo(void);
+        bool            loadNextVideoFrame(ADMBitstream *bs);
+protected: // audio
         bool            initAudio(void);
         bool            fillAudio(uint64_t targetDts);
 static  uint64_t        timeScale(uint64_t timeUs);

@@ -52,7 +52,9 @@ muxerMp4v2::muxerMp4v2()
         audioTrackIds=NULL;
         videoBuffer[0]=NULL;
         videoBuffer[1]=NULL;
+        scratchBuffer=NULL;
         nextWrite=0;
+        needToConvertFromAnnexB=false;
 };
 /**
     \fn     muxerMp4v2
@@ -81,6 +83,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
         videoBufferSize=vStream->getWidth()*vStream->getHeight()*3;
         videoBuffer[0]=new uint8_t[videoBufferSize];
         videoBuffer[1]=new uint8_t[videoBufferSize];
+        scratchBuffer=new uint8_t[videoBufferSize];
         in[0].bufferSize=videoBufferSize;
         in[0].data=videoBuffer[0];
         in[1].bufferSize=videoBufferSize;
@@ -131,7 +134,6 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
 er:
         return false;
 }
-
 /**
     \fn save
 */
@@ -146,7 +148,7 @@ bool muxerMp4v2::save(void)
     encoding->setContainer("MP4 (libmp4v2)");
     
     
-    while(vStream->getPacket(&(in[nextWrite]))) 
+    while(loadNextVideoFrame((&(in[nextWrite])))) 
     {
         bool kf=false;
         int other=!nextWrite;
@@ -156,6 +158,8 @@ bool muxerMp4v2::save(void)
         ADM_assert(in[other].pts!=ADM_NO_PTS)
         ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
         ADM_assert(in[other].pts!=ADM_NO_PTS)
+
+        
 
         uint64_t newDts=in[nextWrite].dts-in[other].dts;   // Delta between dts=duration of the frame (sort of)     
         uint64_t delta=in[other].pts-in[other].dts; // composition time...
@@ -228,6 +232,11 @@ bool muxerMp4v2::close(void)
         if(videoBuffer[i]) delete [] videoBuffer[i];
         videoBuffer[i]=NULL;
     }
+    if(scratchBuffer)
+        {
+            delete [] scratchBuffer;
+            scratchBuffer=NULL;
+        }
     ADM_info("[Mp4v2Muxer] Closing\n");
     return true;
 }
