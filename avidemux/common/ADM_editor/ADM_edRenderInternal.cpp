@@ -83,6 +83,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
             ADM_warning("No PTS out of decoder\n");
             continue;
         }
+        vid->lastReadPts=pts;
         if(pts==timeToSeek)
         {
             ADM_info("Image found, pts=%"LLU" ms\n",pts/1000);
