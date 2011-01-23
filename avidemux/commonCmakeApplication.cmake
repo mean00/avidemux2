@@ -18,10 +18,8 @@ include(admMainChecks)
 ########################################
 include(admCoreIncludes)
 # Add ffmpeg to resolve ADM_libavcodec to the actual name, needed for vdpau
-if (NOT WIN32)
 include(admFFmpegUtil)
 registerFFmpeg("${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" "${AVIDEMUX_LIB_DIR}" 1)
-endif (NOT WIN32)
 # Verify ADM_coreConfig is there
 if(NOT EXISTS "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
         MESSAGE(FATAL_ERROR "CMAKE_INSTALL_PREFIX does not contain include/avidemux/2.6/ADM_coreConfig.h (${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h)")

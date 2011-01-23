@@ -37,8 +37,6 @@ include(admCoreIncludes)
 LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
 INCLUDE_DIRECTORIES("${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6")
 
-include(admFFmpegUtil)
-registerFFmpeg("${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" "${AVIDEMUX_LIB_DIR}" 1)
 
 IF (FRESH_BUILD)
 	MESSAGE("")
