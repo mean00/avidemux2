@@ -420,14 +420,9 @@ uint8_t ADM_mkdir(const char *dirname)
 		return 0;
 	}
 #else
-	char *sys = new char[strlen(dirname2) + strlen("mkdir ") + 2];
+	printf("Creating dir :%s\n", dirname2);
+	mkdir(dirname2,0755);
 
-	strcpy(sys, "mkdir ");
-	strcat(sys, dirname2);
-	printf("Creating dir :%s\n", sys);
-	system(sys);
-
-	delete [] sys;
 #endif
 
 	if ((dir = opendir(dirname2)) == NULL)
