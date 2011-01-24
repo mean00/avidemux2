@@ -199,12 +199,12 @@ bool    ADM_videoStreamCopyFromAnnexB::getPacket(ADMBitstream *out)
     return true;
 }
 /**
-
+    \fn getExtraData
 */
 bool    ADM_videoStreamCopyFromAnnexB::getExtraData(uint32_t *extraLen, uint8_t **extraData) 
 {
     *extraData=myExtra;
     *extraLen=myExtraLen;
-    return 0;
+    return true;
 }
 // EOF
