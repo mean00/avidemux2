@@ -644,11 +644,21 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                 //
                                 switch(entryName)
                                 {
+                                  case MKFCCR('h','d','v','5'): // hdv5
+                                  {
+                                        commonPart(MPEG);
+                                        adm_atom hdv5(&son);
+                                        printf("Reading hdv5, got %s\n",fourCC::tostringBE(hdv5.getFCC()));
+                                          
+                                        left=0;
+                                  }
+                                    break;
                                   case MKFCCR('m','j','p','b'):  //mjpegb
                                   {
                                         commonPart(MJPB);
                                         left=0;
                                   }
+                                  break;
                                   case MKFCCR('S','V','Q','1'):  //mjpegb
                                  {
                                        commonPart(SVQ1);
