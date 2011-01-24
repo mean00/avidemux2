@@ -18,6 +18,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_coreCodecMapping.h"
 
+
 /**
     \fn decoderFFSimple
 */
@@ -65,6 +66,19 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     if(id==CODEC_ID_NONE) return NULL;
     return new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
 }
-
+/**
+    \fn admCoreCodecSupports
+    \brief returns true if core has been compiled with feature
+*/
+bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat)
+{
+#ifdef USE_VDPAU
+    if(feat==ADM_CORE_CODEC_FEATURE_VDPAU)
+    {
+        return true;
+    }
+#endif
+    return false;
+}
 // EOF
 

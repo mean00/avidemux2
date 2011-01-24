@@ -91,6 +91,15 @@ public:
 decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
 /* This function is implemented in coreVideoCodec, it will return a codec if it can find a suitable one, NULL if not */
 decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
+/**
+
+*/
+typedef enum 
+{
+    ADM_CORE_CODEC_FEATURE_VDPAU=1
+}ADM_CORE_CODEC_FEATURE;
+
+bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat);
 
 
 #endif
