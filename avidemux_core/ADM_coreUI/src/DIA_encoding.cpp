@@ -28,7 +28,9 @@ extern void UI_purge(void);
 */
 DIA_encodingBase::DIA_encodingBase( uint64_t duration )
 {
+        #ifndef __HAIKU__
         _originalPriority=getpriority(PRIO_PROCESS, 0);
+        #endif
         _totalDurationUs=duration;
 #ifdef __WIN32
         _originalPriority=getpriority(PRIO_PROCESS, 0);

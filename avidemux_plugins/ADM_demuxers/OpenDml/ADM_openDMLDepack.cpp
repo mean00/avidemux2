@@ -84,7 +84,9 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 							// Assume MAX_VOP Bframes maximum
 	ADM_assert(newIndex);
 
+	#ifndef __HAIKU__
 	uint32_t originalPriority = getpriority(PRIO_PROCESS, 0);
+	#endif
 	uint32_t priorityLevel;
 #if 0
 	prefs->get(PRIORITY_INDEXING,&priorityLevel);
@@ -222,7 +224,9 @@ _abortUnpack:
 	printf("[Avi] Initial # of images : %"LU", now we have %"LU" \n",nbFrame,targetIndex);
 	nbFrame=targetIndex;
 
+	#ifndef __HAIKU__
 	setpriority(PRIO_PROCESS, 0, originalPriority);
+	#endif
 
 	return ret;
 }

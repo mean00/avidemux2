@@ -14,7 +14,7 @@
 
 #if defined(__MINGW32__)
 #include <pthread.h>
-#elif defined(__APPLE__) || defined(ADM_BSD_FAMILY)
+#elif defined(__APPLE__) || defined(ADM_BSD_FAMILY) && !defined(__HAIKU__)
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #else
@@ -148,7 +148,7 @@ int ADM_cpu_num_processors(void)
 {
 #if defined(__MINGW32__)
     return pthread_num_processors_np();
-#elif defined(__APPLE__) || defined(ADM_BSD_FAMILY)
+#elif defined(__APPLE__) || defined(ADM_BSD_FAMILY) && !defined(__HAIKU__)
     int np;
 
     size_t length = sizeof(np);

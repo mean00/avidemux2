@@ -45,7 +45,11 @@ extern "C" {
 
 #ifdef USE_SDL
 extern "C" {
+	#ifdef __HAIKU__
+	#include "SDL/SDL.h"
+	#else
 	#include "SDL.h"
+	#endif
 }
 
 #include "ADM_render/GUI_sdlRender.h"

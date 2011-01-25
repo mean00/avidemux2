@@ -79,7 +79,9 @@ void encodingWindow::priorityChanged(int priorityLevel)
 	}
 #endif
 
+	#ifndef __HAIKU__
 	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
+	#endif
 }
 
 void encodingWindow::shutdownChanged(int state)

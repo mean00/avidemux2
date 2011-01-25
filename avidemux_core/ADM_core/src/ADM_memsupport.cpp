@@ -90,7 +90,7 @@ void *ADM_calloc(size_t nbElm, size_t elSize)
 
 void *ADM_alloc(size_t size)
 {
-#if defined(__APPLE__) || defined(__WIN64)
+#if defined(__APPLE__) || defined(__WIN64) || defined(__HAIKU__)
 	return malloc(size);
 #else
 	char *c;
@@ -127,7 +127,7 @@ void *ADM_alloc(size_t size)
 
 void ADM_dezalloc(void *ptr)
 {
-#if defined(__APPLE__) || defined(__WIN64)
+#if defined(__APPLE__) || defined(__WIN64) || defined(__HAIKU__)
 	if (!ptr)
 		return;
 
@@ -238,7 +238,7 @@ extern "C"
  */
 void *ADM_realloc(void *ptr, size_t newsize)
 {
-#if defined(__APPLE__) || defined(__WIN64)
+#if defined(__APPLE__) || defined(__WIN64) || defined(__HAIKU__)
 	if(!ptr)
 		return ADM_alloc(newsize);
 
