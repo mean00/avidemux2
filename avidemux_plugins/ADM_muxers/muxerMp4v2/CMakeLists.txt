@@ -4,6 +4,7 @@ SET(ADM_mp4v2_SRCS
 	muxerMp4v2.cpp
 	muxerMp4v2Audio.cpp
 	muxerMp4v2Video.cpp
+	muxerMp4v2Config.cpp
 )
 SUBDIRS(libmp4v2)
 

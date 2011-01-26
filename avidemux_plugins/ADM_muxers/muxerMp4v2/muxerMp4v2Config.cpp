@@ -17,17 +17,27 @@
 #include "ADM_muxerInternal.h"
 #include "fourcc.h"
 #include "muxerMp4v2.h"
-#include "mp4v2_muxer_desc.cpp"
-extern bool mp4v2Configure(void);
+#include "mp4v2_muxer.h"
+#include "DIA_factory.h"
 extern mp4v2_muxer muxerConfig;
-ADM_MUXER_BEGIN( muxerMp4v2,
-                    1,0,0,
-                    "MP4V2",    // Internal name
-                    "MP4V2 muxer plugin (c) Mean 2011",
-                    "MP4 Muxer", // DIsplay name
-                    mp4v2Configure,
-                    mp4v2_muxer_param, //template
-                    &muxerConfig
-                );
+/**
+    \fn mp4v2Configure
+*/
+bool mp4v2Configure(void)
+{
+        uint32_t optimize=(uint32_t)muxerConfig.optimize;
+        uint32_t addItuneMetaData=(uint32_t)muxerConfig.add_itunes_metadata;
 
+        diaElemToggle   wOptimize(&optimize,"Optimize for streaming");
+        diaElemToggle   wItunes(&addItuneMetaData,"Add ipod metadata");
 
+        diaElem *tabs[]={&wOptimize,&wItunes};
+        if( diaFactoryRun(("MP4V2 Settings"),2,tabs))
+        {
+            muxerConfig.optimize=optimize;
+            muxerConfig.add_itunes_metadata=addItuneMetaData;
+            return true;
+        }
+        return false;
+}
+// EOF

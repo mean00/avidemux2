@@ -32,6 +32,12 @@
 #define MP4_DEBUG MP4_DETAILS_ALL
 #endif
 
+mp4v2_muxer muxerConfig=
+{
+   1, // uint32_t optimize;
+   0  //uint32_t add_itunes_metadata;
+};
+
 /**
     \fn timeScale
     \brief convert our unit (us) to mp4v2 unit (90khz tick)

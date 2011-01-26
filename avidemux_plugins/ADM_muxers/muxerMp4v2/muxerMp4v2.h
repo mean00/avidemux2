@@ -18,6 +18,8 @@
 #include "ADM_muxer.h"
 #include "ADM_audioClock.h"
 #include "mp4v2/mp4v2.h"
+#include "ADM_paramList.h"
+#include "mp4v2_muxer.h"
 /**
     \class mp4v2AudioPacket
 */
