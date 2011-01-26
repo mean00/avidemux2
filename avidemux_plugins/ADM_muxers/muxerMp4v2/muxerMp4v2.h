@@ -14,12 +14,13 @@
  ***************************************************************************/
 #ifndef ADM_MUXER_MP4V2
 #define ADM_MUXER_MP4V2
-
+#include "ADM_cpp.h"
 #include "ADM_muxer.h"
 #include "ADM_audioClock.h"
 #include "mp4v2/mp4v2.h"
 #include "ADM_paramList.h"
 #include "mp4v2_muxer.h"
+
 /**
     \class mp4v2AudioPacket
 */
@@ -46,6 +47,7 @@ class mp4v2AudioPacket
             audioClock          *clock;
             mp4v2AudioPacket() {eos=false;nextWrite=0;clock=NULL;}
             ~mp4v2AudioPacket() {if(clock) delete clock;clock=NULL;}
+            
 
 };
 /**
@@ -65,6 +67,7 @@ protected:
         uint64_t        audioDelay; // In fact videoDelay, but must be added to all audioTrack
         bool            needToConvertFromAnnexB;
         uint8_t         *scratchBuffer;
+        string          targetFileName;
 protected: // video
         bool            initMpeg4(void);
         bool            initH264(void);

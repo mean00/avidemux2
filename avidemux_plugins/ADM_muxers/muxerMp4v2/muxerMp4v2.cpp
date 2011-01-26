@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
+#include "ADM_cpp.h"
 #include "fourcc.h"
 #include "muxerMp4v2.h"
 #include "ADM_codecType.h"
@@ -94,6 +95,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
         in[0].data=videoBuffer[0];
         in[1].bufferSize=videoBufferSize;
         in[1].data=videoBuffer[1];
+        targetFileName=string(file);
 //------Verify everything is ok : Accept Mp4 & H264 for video, AAC for audio ----
         uint32_t fcc=vStream->getFCC();
         if(!isH264Compatible(fcc) && !isMpeg4Compatible(fcc))
@@ -215,6 +217,20 @@ bool muxerMp4v2::save(void)
 theEnd:
     closeUI();
     close();
+    if(muxerConfig.optimize && result==true)
+    {
+        string tmpTargetFileName=targetFileName+string(".tmp");
+        if(rename(targetFileName.c_str(),tmpTargetFileName.c_str()))
+        {
+            GUI_Error_HIG("","Cannot rename file (optimize)");
+            return false;
+        }
+        // Optimize
+        ADM_info("Optimizing...\n");
+        MP4Optimize( tmpTargetFileName.c_str(), targetFileName.c_str(), MP4_DETAILS_ERROR );
+        // delete
+        unlink(tmpTargetFileName.c_str());
+    }
     return result;
 }
 /**
