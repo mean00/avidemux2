@@ -281,7 +281,7 @@ EXCEPTION_DISPOSITION exceptionHandler(struct _EXCEPTION_RECORD* pExceptionRec, 
 #else
 #include <signal.h>
 
-#ifndef __CYGWIN__
+#if !defined( __CYGWIN__) && !defined(__HAIKU__)
 #include <execinfo.h>
 #endif
 
@@ -324,7 +324,7 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 	if(mysaveFunction)
 		mysaveFunction();
 
-#ifndef __CYGWIN__
+#if !defined( __CYGWIN__) && !defined(__HAIKU__)
 	printf("\n*********** BACKTRACK **************\n");
 
 	count = backtrace(stack, 20);

@@ -67,6 +67,9 @@ bool ADM_QPreviewCleanup(void)
     rgbDataBuffer=NULL;
     return true;
 }
+#ifdef __HAIKU__
+ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)  {}
+#else
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) 
 {    
 setAttribute( Qt::WA_PaintOnScreen, true );
@@ -79,6 +82,7 @@ p.setColor( QPalette::Window, color );
 setPalette( p );
 
 } //{setAutoFillBackground(false);}
+#endif // Haiku
 ADM_Qvideo::~ADM_Qvideo() {}
 
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)

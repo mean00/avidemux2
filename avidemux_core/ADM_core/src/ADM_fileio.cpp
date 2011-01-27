@@ -37,6 +37,10 @@
 #ifdef __WIN32
 static const char *separator="\\";
 const char *ADM_DIR_NAME="\\avidemux6";
+#elif defined __HAIKU__
+static const char *separator="/";
+const char *ADM_DIR_NAME="/config/settings/avidemux6";
+
 #else
 static const char *separator="/";
 const char *ADM_DIR_NAME="/.avidemux6";

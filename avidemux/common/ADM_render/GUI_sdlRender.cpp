@@ -25,8 +25,12 @@ extern "C" {
 #undef HAVE_MALLOC_H
 #undef HAVE_STDINT_H
 #undef HAVE_SYS_TYPES_H
+#ifdef __HAIKU__
+#include "SDL/SDL.h"
+#else
 #include "SDL.h"
 #include "SDL_syswm.h"
+#endif
 }
 #include "ADM_default.h"
 #include "ADM_colorspace.h"
