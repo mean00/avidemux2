@@ -38,7 +38,23 @@ mp4v2_muxer muxerConfig=
    1, // uint32_t optimize;
    0  //uint32_t add_itunes_metadata;
 };
-
+/**
+    \fn setMaxDurationPerChunk
+    \brief Max chunk duration is 1 sec par default; set it to ~ 4 frames
+*/
+bool muxerMp4v2::setMaxDurationPerChunk(MP4TrackId track, uint32_t samples)
+{
+    uint32_t trackScale=MP4GetTrackTimeScale(handle,track);
+    uint32_t   mx;
+    mx=4*samples;
+    ADM_info("Setting max chunk duration =%d; scale=%d for track %d\n",(int)mx,(int)trackScale,(int)track);
+    if(!MP4SetTrackDurationPerChunk(handle,track,mx))
+    {
+        ADM_error("Cannot set TrackDurationPerChunk\n");
+        return false;
+    }
+    return true;
+}
 /**
     \fn timeScale
     \brief convert our unit (us) to mp4v2 unit (90khz tick)

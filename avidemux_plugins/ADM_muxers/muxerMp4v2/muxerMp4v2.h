@@ -73,6 +73,7 @@ protected: // video
         bool            initH264(void);
         bool            initVideo(void);
         bool            loadNextVideoFrame(ADMBitstream *bs);
+        bool            setMaxDurationPerChunk(MP4TrackId track, uint32_t samples);
 protected: // audio
         bool            initAudio(void);
         bool            fillAudio(uint64_t targetDts);

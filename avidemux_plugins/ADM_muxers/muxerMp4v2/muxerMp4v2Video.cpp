@@ -166,6 +166,8 @@ bool muxerMp4v2::initH264(void)
                 ADM_error("Wrong extra data for h264\n");
                 return false;
             }
+            
+            // if we dont have extraData, it is annexB 100 % sire
             needToConvertFromAnnexB=true;
             if(extraLen)
                 if(extra[0]==1) needToConvertFromAnnexB=false;
@@ -225,6 +227,13 @@ bool muxerMp4v2::initVideo(void)
                 return false;
             }
         }
+        double inc=vStream->getAvgFps1000();
+        inc=inc/1000;
+        if(inc>0.005) inc=1/inc;
+                else inc=0.005;
+        ADM_info("Frame increment =%d ms\n",(int)(inc*1000));
+        inc*=90000;
+        setMaxDurationPerChunk(videoTrackId, inc);
         ADM_info("[MP4V2] Video correctly initalized\n");
         return true;
 }
