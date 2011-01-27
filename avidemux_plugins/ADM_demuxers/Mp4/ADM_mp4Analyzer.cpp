@@ -875,6 +875,11 @@ nextAtom:
 #define audioCodec(x) ADIO.encoding=WAV_##x;
                                 switch(entryName)
                                 {
+                                    case MKFCCR('a','c','-','3'):
+                                    case MKFCCR('s','a','c','3'):
+                                            audioCodec(AC3);
+                                            ADIO.byterate=128000>>3;
+                                            break;
 
                                     case MKFCCR('t','w','o','s'):
                                             audioCodec(LPCM);
