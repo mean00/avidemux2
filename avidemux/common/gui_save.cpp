@@ -38,6 +38,7 @@
 #include "A_functions.h"
 int      A_Save(const char *name);
 uint8_t  GUI_getFrameContent(ADMImage *image, uint32_t frame);
+extern   ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
 
 /**
     \fn HandleAction_Navigate
@@ -120,7 +121,7 @@ int A_audioSave(const char *name)
     ADM_audioStream *stream;
     if(false==video_body->getAudioStream( &stream)) 
     {
-        printf("[A_audioSave] No stream\n");
+        ADM_error("[A_audioSave] No stream\n");
         return 0;
     }
 	if (audioProcessMode())
@@ -137,140 +138,10 @@ int A_audioSave(const char *name)
 }
 
 /**
-    \fn A_saveAudioProcessed
-    \brief Save current stream (generally avi...)
-     in decoded mode (assuming MP3)
+        \fn A_saveAudioCommon
+        \brief Save giveb stream 
 */
-int A_saveAudioProcessed (const char *name)
-{
-#if 0
-// debug audio seek
-  uint32_t len, gauge = 0;
-  uint32_t written = 0;
-  FILE *out;
-  AVDMGenericAudioStream *saveFilter;
-
-  uint64_t sampleTarget,sampleCurrent;
-
-#undef BITT
-#define BITT 4*1152
-#define OUTCHUNK 1024*1024
-  uint8_t *outbuffer;
-
-  if (!currentaudiostream)
-    return;
-
-
-  if (!(out = ADM_fopen (name, "wb")))
-    {
-      GUI_Error_HIG (QT_TR_NOOP("File error"), QT_TR_NOOP("Cannot open \"%s\" for writing."), name);
-      return false;
-    }
-
-  outbuffer = (uint8_t *) ADM_alloc (2 * OUTCHUNK);	// 1Meg cache;
-  if (!outbuffer)
-    {
-      GUI_Error_HIG (QT_TR_NOOP("Memory Error"), NULL);
-      return false;
-    }
-
-
-
-// re-ignite first filter...
-
-
-
-
-  // Write Wav header
-
-  /* Sat Nov 09 06:11:52 CET 2002 Fixes from Maik Broemme <mbroemme@plusserver.de> */
-  /* If you set negative delay and save the audio stream, the saved stream was shorter than the video stream. */
-
-  /* Example: video stream is 10 minutes long, audio stream perhaps 20 minutes, you need the audio stream from */
-  /*          minute 1 until 11, so you setup an audio delay from -60 seconds, but this 60 seconds were removed */
-  /*          from begin and end of the audio stream. That was not good :) Now it runs correctly also if you use */
-  /*          audio stream with same length then video, therefore is premature ending :) */
-
-
-
-//        saveFilter =  buildAudioFilter (currentaudiostream,video_body->getTime (frameStart));
-
-		if (saveFilter == NULL)
-		{
-			fclose(out);
-			ADM_dealloc(outbuffer);
-			return false;
-		}
-
-    	DIA_working *work=new DIA_working(QT_TR_NOOP("Saving audio"));
-
-
-//
-//  Create First filter that is null filter
-//
-  saveFilter->writeHeader (out);
-  uint32_t tstart,tend,samples;
-  double duration;
-  tstart=video_body->getTime(frameStart);
-  tend=video_body->getTime(frameEnd+1);
-  duration=(tend-tstart);
-  duration*=saveFilter->getInfo()->frequency;
-  duration/=1000.;
-
-  sampleTarget=(uint64_t)floor(duration);
-  sampleCurrent=0;
-  gauge=0;
-
-  if( frameStart == frameEnd ){
-     /* JSC: we will write some bytes, but nobody should expect useful data */
-    GUI_Error_HIG(QT_TR_NOOP("No frames to encode"),QT_TR_NOOP("Please check markers. Is \"A>\" == \">B\"?"));
-  }
-
-  while ((sampleCurrent<sampleTarget))
-    {
-      if(!saveFilter->getPacket(outbuffer + gauge,&len,&samples))
-      {
-        printf("Audio save:Read error\n");
-      	break;
-      }
-      
-      gauge += len;
-      sampleCurrent+=samples;
-      // update GUI
-	// JSC: if "A>" == ">B" we will get >100% here => assert in work->update()
-	if (work->update ((sampleCurrent>>10 > sampleTarget>>10 ? sampleTarget>>10 : sampleCurrent>>10), sampleTarget>>10))	// abort request ?
-	    break;;
-      if (gauge > OUTCHUNK)	// either out buffer is full
-	{
-	  fwrite (outbuffer, 1, gauge, out);
-	  written += gauge;
-	  gauge = 0;
-	}
-    };
-// Clean up
-	if(gauge)
-	{
-		fwrite (outbuffer,  gauge,1, out);
-		written += gauge;
-		gauge = 0;
-	}
-  saveFilter->endWrite (out, written);
-  fclose (out);
-  ADM_dealloc (outbuffer);
-  delete work;
-//  deleteAudioFilter (saveFilter);
-//  currentaudiostream->endDecompress ();
-  printf ("AudioSave: actually written %u\n", written);
-  printf ("Audiosave: target sample:%llu, got :%llu\n",sampleTarget,sampleCurrent);
-#else
-  return 0;
-#endif
-}
-/**
-        \fn A_saveAudioCopy
-        \brief Save current stream (generally avi...)     in raw mode
-*/
-int A_saveAudioCopy (const char *name)
+static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double duration)
 { 
   uint32_t written, max;
   uint64_t dts;
@@ -279,43 +150,24 @@ int A_saveAudioCopy (const char *name)
 
 #define ONE_STRIKE (64*1024)
   uint8_t *buffer=NULL;
-  ADM_audioStream *stream;
-  if(false==video_body->getAudioStream( &stream)) 
-    {
-        printf("[A_audioSave] No stream\n");
-        return false;
-    }
 
 
   out = ADM_fopen (name, "wb");
-  if (!out) return false;
+  if (!out) 
+  {
+    ADM_error("Cannot open file for writing\n");
+    return false;
+  }
 
   work=createWorking(QT_TR_NOOP("Saving audio"));
 
   uint64_t timeEnd,timeStart;
   uint32_t hold,len,sample;
   uint64_t tgt_sample,cur_sample;
-  double   duration;
 
-  // compute start position and duration in samples
-
-   timeStart=video_body->getMarkerAPts ();
-   timeEnd=video_body->getMarkerBPts ();
-   
-   duration=timeEnd-timeStart;
-   if(duration<0) 
-    {
-            stream->goToTime (timeEnd);
-            duration=-duration;
-    }else
-    {
-            stream->goToTime (timeStart);
-    }
    duration*=stream->getInfo()->frequency;
    duration/=1000000; // in seconds to have samples
    tgt_sample=(uint64_t)floor(duration);
-   printf("[saveAudio] Start time :%"LLU" ms\n",timeStart/1000);
-   printf("[saveAudio] End time :%"LLU" ms\n",timeEnd/1000);
    printf("[saveAudio]Duration:%f ms\n",duration/1000);
    printf("[saveAudio]Samples:%"LLU" ms\n",tgt_sample);
 
@@ -323,6 +175,7 @@ int A_saveAudioCopy (const char *name)
    written = 0;
    hold=0;
    buffer=new uint8_t[ONE_STRIKE*2];
+
    while (1)
     {
     	if(!stream->getPacket(buffer+hold,&len,ONE_STRIKE,&sample,&dts)) break;
@@ -352,6 +205,87 @@ int A_saveAudioCopy (const char *name)
   return true;
 }
 
+/**
+        \fn A_saveAudioCopy
+        \brief Save current stream (generally avi...)     in raw mode
+*/
+int A_saveAudioCopy (const char *name)
+{ 
+  uint32_t written, max;
+  uint64_t dts;
+
+#define ONE_STRIKE (64*1024)
+  ADM_audioStream *stream;
+  if(false==video_body->getAudioStream( &stream)) 
+    {
+        ADM_error("[A_audioSave] No stream\n");
+        return false;
+    }
+
+  uint64_t timeEnd,timeStart;
+  double   duration;
+
+  // compute start position and duration in samples
+
+   timeStart=video_body->getMarkerAPts ();
+   timeEnd=video_body->getMarkerBPts ();
+   
+   duration=timeEnd-timeStart;
+   if(duration<0) 
+    {
+            stream->goToTime (timeEnd);
+            duration=-duration;
+    }else
+    {
+            stream->goToTime (timeStart);
+    }
+   ADM_info("Saving from %s \n",ADM_us2plain(timeStart));
+   ADM_info("Saving to %s \n",ADM_us2plain(timeEnd));
+   ADM_info("duration %s \n",ADM_us2plain((uint64_t)duration));
+   return A_saveAudioCommon (name,stream,duration);
+   
+}
+
+
+/**
+    \fn A_saveAudioProcessed
+    \brief Save current stream (generally avi...)
+     in decoded mode (assuming MP3)
+*/
+int A_saveAudioProcessed (const char *name)
+{
+#if 0
+    GUI_Error_HIG("Audio","Function not implemented\n");
+    return false;
+#else
+
+  uint64_t timeEnd,timeStart;
+  uint32_t hold,len,sample;
+  uint64_t tgt_sample,cur_sample;
+  double   duration;
+   timeStart=video_body->getMarkerAPts ();
+   timeEnd=video_body->getMarkerBPts ();
+   uint64_t start=timeStart;
+   duration=timeEnd-timeStart;
+   if(duration<0) 
+    {
+            start=timeEnd;
+            duration=-duration;
+    }
+  ADM_audioStream *access=audioCreateEncodingStream(false,start,0);
+  if(!access)
+    {
+        GUI_Error_HIG("Audio","Cannot create stream");
+        return false;
+    }
+  #warning Fixme,duration can change! e.g. pal2film /film2pal
+  bool r=A_saveAudioCommon (name,access,duration);
+  delete access;
+  if(false==r)
+        GUI_Error_HIG("Audio","Saving failed");
+  return r;
+#endif   
+}
 
 /**
         \fn A_saveJpg
