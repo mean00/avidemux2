@@ -105,7 +105,7 @@ virtual bool            getExtraData(uint32_t *l, uint8_t **d);
    \fn ADM_audioCreateStream
     \brief Create the appropriate audio stream. It will be a derivated class of audioStream if possible (MP3/AC3)
 */
-ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access);
+ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool createTimeMap=true);
 #endif
 // EOF
 

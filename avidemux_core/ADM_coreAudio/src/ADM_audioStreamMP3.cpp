@@ -13,7 +13,7 @@ GPL-v2
     \fn ADM_audioStreamMP3
     \brief constructor
 */
-ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access) : ADM_audioStreamBuffered(header,access)
+ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access,bool createMap) : ADM_audioStreamBuffered(header,access)
 {
     // If hinted..., compute the duration ourselves
     if(access->isCBR()==true && access->canSeekOffset()==true)
@@ -32,8 +32,11 @@ ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access
     if( access->canSeekTime()==false)
     {
         ADM_assert(access->canSeekOffset()==true);
-        buildTimeMap();
-        return;
+        if(true==createMap)
+        {
+            buildTimeMap();
+            return;
+        }
     }
     // Time based
     durationInUs=access->getDurationInUs();
@@ -75,7 +78,11 @@ bool         ADM_audioStreamMP3::goToTime(uint64_t nbUs)
     if(access->isCBR()==true)
         return ADM_audioStream::goToTime(nbUs);
     // if VBR use our time map
-    ADM_assert(seekPoints.size());
+    if(!seekPoints.size())
+    {
+        ADM_error("VBR MP2/MP3 stream with no time map, cannot seek");
+        return false;
+    }
     // Search the switching point..
     for(int i=0;i<seekPoints.size()-1;i++)
     {

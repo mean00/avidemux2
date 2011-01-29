@@ -132,7 +132,7 @@ bool    ADM_audioStream::advanceDtsBySample(uint32_t samples)
 /**
                 Create the appropriate audio stream
 */
-ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access)
+ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool makeTimeMap)
 {
 uint8_t *data;
 uint32_t size;
@@ -144,7 +144,7 @@ uint32_t size;
             return new ADM_audioStreamAC3(wavheader,access);
         case WAV_MP2:
         case WAV_MP3:
-            return new ADM_audioStreamMP3(wavheader,access);
+            return new ADM_audioStreamMP3(wavheader,access,makeTimeMap);
         case WAV_PCM:
         case WAV_LPCM:
             return new ADM_audioStreamPCM(wavheader,access);

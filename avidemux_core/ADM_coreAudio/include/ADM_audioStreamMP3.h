@@ -38,7 +38,7 @@ class ADM_audioStreamMP3 : public ADM_audioStreamBuffered
         bool            buildTimeMap(void);
         public:
 /// Default constructor
-                       ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access);  
+                       ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access, bool createMap=true);  
 /// Destructor
 virtual                 ~ADM_audioStreamMP3();
 ///  Get a packet

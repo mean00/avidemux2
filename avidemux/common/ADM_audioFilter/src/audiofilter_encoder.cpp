@@ -141,7 +141,7 @@ ADM_audioStream *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,
     // 3b create threaded version
     ADM_audioAccess *threaded=ADM_threadifyAudioAccess(access);
     // 4- Create Stream 
-    ADM_audioStream *stream=ADM_audioCreateStream(encoder->getInfo(), threaded);
+    ADM_audioStream *stream=ADM_audioCreateStream(encoder->getInfo(), threaded,false); // No map, it is not seekable
     if(!stream)
     {
         printf("[Access] Cannot create stream\n");
