@@ -129,13 +129,13 @@ bool AUDMEncoder_Lavcodec::initialize(void)
 
   if( _incoming->getInfo()->channels>ADM_LAV_MAX_CHANNEL)
   {
-    printf("[Lavcodec]Too many channels\n");
+    ADM_error("[Lavcodec]Too many channels\n");
     return 0; 
   }
   wavheader.byterate=(lavBitrate*1000)>>3;         
       
   _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
-  printf("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
+  ADM_info("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
   wavheader.frequency,wavheader.channels,lavBitrate);
   
   
@@ -160,12 +160,12 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   ret = avcodec_open(CONTEXT, codec);
   if (0> ret) 
   {
-    printf("[Lavcodec] init failed err : %d!\n",ret);
+    ADM_error("[Lavcodec] init failed err : %d!\n",ret);
     return 0;
   }
 
 
-  printf("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
+  ADM_info("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
   return 1;       
 }
 /**
@@ -232,7 +232,7 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
 cnt:
   if (nbout < 0) 
   {
-    printf("[Lavcodec] Error !!! : %"LD"\n", nbout);
+    ADM_error("[Lavcodec] Error !!! : %"LD"\n", nbout);
     return 0;
   }
   *len=nbout;
@@ -266,7 +266,7 @@ bool configure (void)
 
     diaElem *elems[]={&bitrate};
     
-    return ( diaFactoryRun(QT_TR_NOOP("Aften Configuration"),1,elems));
+    return ( diaFactoryRun(QT_TR_NOOP(ADM_LAV_MENU" (lav) Configuration"),1,elems));
     
 }	
 
