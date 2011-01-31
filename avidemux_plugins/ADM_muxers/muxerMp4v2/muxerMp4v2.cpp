@@ -78,6 +78,7 @@ muxerMp4v2::muxerMp4v2()
         scratchBuffer=NULL;
         nextWrite=0;
         needToConvertFromAnnexB=false;
+        lastVideoDts=0;
 };
 /**
     \fn     muxerMp4v2
@@ -121,12 +122,15 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
         }
         for(int i=0;i<nbAStreams;i++)
         {
-            if(0) //if(aStreams[i]->getInfo()->encoding!=WAV_AAC)
+            int encoding=aStreams[i]->getInfo()->encoding;
+            switch(encoding)
             {
-                ADM_error("[mp4v2] Only AAC audio!\n");
-                return false;
-            }
-            
+                case WAV_MP2:case WAV_MP3:case WAV_AAC:case WAV_AC3:
+                            continue;
+                default:
+                    GUI_Error_HIG("Audio","Audio format not supported, only AAC/MP3/AC3");
+                    return false;
+            }            
         }
 //------Verify everything is ok : Accept Mp4 & H264 for video, AAC for audio ----
         
@@ -179,9 +183,12 @@ bool muxerMp4v2::save(void)
         if(in[other].flags & AVI_KEY_FRAME) kf=true;
 
         ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
-        ADM_assert(in[other].pts!=ADM_NO_PTS)
         ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
-        ADM_assert(in[other].pts!=ADM_NO_PTS)
+        if(in[other].pts==ADM_NO_PTS || in[other].pts==ADM_NO_PTS)
+        {
+            GUI_Error_HIG("Video","Video does not have enough timing information. Are you copying from AVI ?");
+            goto theEnd;
+        }
 
         
 

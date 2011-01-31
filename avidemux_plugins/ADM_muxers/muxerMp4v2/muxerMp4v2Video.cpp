@@ -47,14 +47,18 @@ bool muxerMp4v2::loadNextVideoFrame(ADMBitstream *bs)
             bs->pts=tmp.pts;
             bs->flags=tmp.flags;
             bs->len=ADM_convertFromAnnexBToMP4(scratchBuffer,tmp.len, bs->data,videoBufferSize);
-            return true;
+            goto goOn;
         }
     if(false==vStream->getPacket(bs))
         {
             return false;
         }
-
-    
+goOn:
+    if(bs->dts==ADM_NO_PTS)
+    {
+        bs->dts=lastVideoDts+vStream->getFrameIncrement();
+    }
+    lastVideoDts=bs->dts;
     return true;
 }
 /**
