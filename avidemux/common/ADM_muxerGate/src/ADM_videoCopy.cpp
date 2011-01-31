@@ -42,6 +42,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     height=info.height;
     fourCC=info.fcc;
     averageFps1000=info.fps1000;
+    frameIncrement=video_body->getFrameIncrement();
     isCFR=false;
     // Estimate start frame
     if(false==video_body->getPKFramePTS(&ptsStart))

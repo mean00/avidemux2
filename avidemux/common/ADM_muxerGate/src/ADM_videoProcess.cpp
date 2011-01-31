@@ -30,6 +30,7 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     fcc=encoder->getFourcc();
     printf("[StreamProcess] Stream %"LU"x%"LU", codec : %s\n",width,height,fcc);
     fourCC=fourCC::get((uint8_t *)fcc);
+    frameIncrement=encoder->getFrameIncrement();
     float f=encoder->getFrameIncrement();
     if(f) f=1000000000./f;
         else f=25000;

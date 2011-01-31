@@ -24,7 +24,7 @@ protected:
             uint32_t fourCC;
             bool     isCFR;
             uint64_t videoDelay;
-
+            uint64_t frameIncrement;
 
             
 public:
@@ -36,7 +36,7 @@ public:
             bool     getIsCfr(void) {return isCFR;}
             uint32_t getAvgFps1000(void) {return averageFps1000;}
             uint64_t getVideoDelay(void) {return videoDelay;}
-
+            uint64_t getFrameIncrement(void) {return frameIncrement;}
 virtual     bool     getPacket(ADMBitstream *out)=0;
 virtual     bool     getExtraData(uint32_t *extraLen, uint8_t **extraData) {*extraLen=0;*extraData=NULL;return true;};
 virtual     bool     providePts(void) {return false;}
