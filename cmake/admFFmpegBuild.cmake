@@ -242,7 +242,8 @@ install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/
 	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec")
 install(FILES "${FFMPEG_SOURCE_DIR}/libavcore/audioconvert.h" "${FFMPEG_SOURCE_DIR}/libavcore/avcore.h" 
 	"${FFMPEG_SOURCE_DIR}/libavcore/samplefmt.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcore")
-install(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h" 
+install(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
+	"${FFMPEG_SOURCE_DIR}/libavformat/version.h" 
 	"${FFMPEG_SOURCE_DIR}/libavformat/flv.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavformat")
 install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR}/libavutil/avutil.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/bswap.h" "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
