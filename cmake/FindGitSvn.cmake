@@ -1,16 +1,25 @@
 # - Extract information from a subversion working copy
-MACRO(admIsGitSvn _dir _svn)
-	EXECUTE_PROCESS(COMMAND grep svn ${_dir}/.git/config  
+###################################################################
+#
+# Look for git-svn-id in the logs to detect if it is git-svn
+#
+###################################################################
+MACRO(admIsGitSvn _dir _isSvn)
+	#MESSAGE(STATUS "Git on folder ${_dir}")
+	EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} log -n 50 ${_dir}
+			COMMAND grep "git-svn-id"
 			COMMAND wc -l
-        	RESULT_VARIABLE result 
-        	OUTPUT_VARIABLE output
+        		RESULT_VARIABLE result 
+        		OUTPUT_VARIABLE output
         	)
-	#MESSAGE(STATUS "r:${result} o:${output}")
 	if(${output} EQUAL 0)
+		MESSAGE(STATUS "This is not git-svn")
+		SET(${_isSvn} 0)
 	else(${output} EQUAL 0)
-		SET(${_svn} 1)
+		MESSAGE(STATUS "This is git-svn")
+		SET(${_isSvn} 1)
 	endif(${output} EQUAL 0)
-	
+	#MESSAGE(STATUS "Dir : ${_dir} Output : ${output} result:${result} svn:${${_isSvn}}")	
 ENDMACRO(admIsGitSvn _dir _svn)
 #
 #
@@ -24,8 +33,9 @@ MARK_AS_ADVANCED(GIT_EXECUTABLE)
 IF(GIT_EXECUTABLE)
         
         #SET(EXE  "cd ${_dir}&& ${GIT_EXECUTABLE} svn log | head -2  | grep '^r' | sed 's/ .*$//g'" )
+	set(svn 0)
 	admIsGitSvn(${_dir} svn)
-	if(${svn})
+	if(${svn} EQUAL 1)
         	MESSAGE(STATUS "Getting git-svn version from ${_dir}")
       		EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} log -n 50 ${_dir}
         		COMMAND grep git-svn-id
@@ -39,9 +49,9 @@ IF(GIT_EXECUTABLE)
         		STRING(REGEX REPLACE " .*$" "" rev "${rev}")
         		MESSAGE(STATUS "Git Svn Revision : <${rev}>")
         		SET( ${_rev} ${rev})
-	else(${svn})
+	else(${svn} EQUAL 1)
         	MESSAGE(STATUS "Getting git version from ${_dir}")
-	endif(${svn})
+	endif(${svn} EQUAL 1)
 	
 ELSE(GIT_EXECUTABLE)
         SET(ADM_GIT_SVN_REVISION 0)
