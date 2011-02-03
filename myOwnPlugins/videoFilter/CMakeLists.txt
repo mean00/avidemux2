@@ -32,8 +32,8 @@ include(admInstallDir)
 # Get regular stuff from main app
 #########################################
 include(admCoreIncludes)
-LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
-INCLUDE_DIRECTORIES(${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/)
+LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
+INCLUDE_DIRECTORIES(${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/)
 
 IF (FRESH_BUILD)
 	MESSAGE("")

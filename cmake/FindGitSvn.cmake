@@ -9,6 +9,7 @@ MACRO(admIsGitSvn _dir _isSvn)
 	EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} log -n 50 ${_dir}
 			COMMAND grep "git-svn-id"
 			COMMAND wc -l
+			WORKING_DIRECTORY ${_dir}
         		RESULT_VARIABLE result 
         		OUTPUT_VARIABLE output
         	)

@@ -19,13 +19,13 @@ include(admMainChecks)
 include(admCoreIncludes)
 # Add ffmpeg to resolve ADM_libavcodec to the actual name, needed for vdpau
 include(admFFmpegUtil)
-registerFFmpeg("${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" "${AVIDEMUX_LIB_DIR}" 1)
+registerFFmpeg("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6" "${AVIDEMUX_SEARCH_LIB_DIR}" 1)
 # Verify ADM_coreConfig is there
-if(NOT EXISTS "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
-        MESSAGE(FATAL_ERROR "CMAKE_INSTALL_PREFIX does not contain include/avidemux/2.6/ADM_coreConfig.h (${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h)")
-endif(NOT EXISTS "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
+if(NOT EXISTS "${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
+        MESSAGE(FATAL_ERROR "CMAKE_INSTALL_PREFIX does not contain include/avidemux/2.6/ADM_coreConfig.h (${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h)")
+endif(NOT EXISTS "${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.h")
 
-LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
+LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
 #
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/ADM_muxerGate/include/")
 

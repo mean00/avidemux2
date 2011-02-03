@@ -34,8 +34,8 @@ include(admInstallDir)
 # Get regular stuff from main app
 #########################################
 include(admCoreIncludes)
-LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
-INCLUDE_DIRECTORIES("${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6")
+LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
+INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6")
 
 
 IF (FRESH_BUILD)
@@ -89,9 +89,9 @@ MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
 ########################################
 MACRO(CHECK_ADM_CONFIG_H flavor result)
     MESSAGE(STATUS "Checking for avidemux/${flavor} includes and lib...")
-    MESSAGE(STATUS "It should be ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${flavor}/config.h")
+    MESSAGE(STATUS "It should be ${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/${flavor}/config.h")
     set(ADM_INC "NOTFOUND")
-    FIND_PATH(ADM_INC config.h "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${flavor}")
+    FIND_PATH(ADM_INC config.h "${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/${flavor}")
     #MESSAGE(STATUS "result : ${ADM_INC_NOT_FOUND},${ADM_INC}")
     IF(${ADM_INC} MATCHES "NOTFOUND")
         SET(${result} 0)

@@ -15,7 +15,6 @@ fail()
         exit 1
 }
 
-
 Process()
 {
         export BUILDDIR=$1
@@ -28,18 +27,17 @@ Process()
                 BUILDDIR="${BUILDDIR}_debug"
                 BUILDER="CodeBlocks - Unix Makefiles"
         fi
-        
+	FAKEROOT=" -DFAKEROOT=$FAKEROOT_DIR "
         echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake $PKG -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $PKG $FAKEROOT -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  -j 2 >& /tmp/log$BUILDDIR || fail make
-	if  [ "x$PKG" = "x" ] ; then
-	  echo "No packaging..."
-        else
-          fakeroot make package DESTDIR=debPack || fail package
+	if  [ "x$PKG" != "x" ] ; then
+          fakeroot make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
 	fi
+    	make install DESTDIR=$FAKEROOT_DIR
 }
 printModule()
 {
@@ -84,6 +82,7 @@ usage()
         echo "  --without-qt4     : Dont build qt4"
         echo "  --with-plugins    : Build plugins"
         echo "  --without-plugins : Dont build plugins"
+	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
 }
@@ -149,40 +148,49 @@ while [ $# != 0 ] ;do
 done
 config
 echo "**BootStrapping avidemux **"
+
 export TOP=$PWD
 export POSTFIX=""
+export FAKEROOT_DIR=$PWD/install
 echo "Top dir : $TOP"
+echo "Fake installation directory=$FAKEROOT_DIR"
 if [ "x$debug" = "x1" ] ; then echo   
 POSTFIX="_debug"
+fi
+if [ "x$packages_ext" = "x" ]; then 
+	echo ""	
+else
+	rm -Rf $FAKEROOT_DIR
+	mkdir -p $FAKEROOT_DIR
 fi
 
 if [ "x$do_core" = "x1" ] ; then 
         echo "** CORE **"
         cd $TOP
         Process buildCore ../avidemux_core
-        echo " Core needs to be installed, installing through sudo make install ...."
-        cd $TOP/buildCore${POSTFIX} && sudo make install
+        echo " Installing core"
+        cd $TOP/buildCore${POSTFIX} 
 fi
 if [ "x$do_qt4" = "x1" ] ; then 
         echo "** QT4 **"
         cd $TOP
         Process buildQt4 ../avidemux/qt4
-        echo " Qt4 needs to be installed, installing through sudo make install ...."
-        cd $TOP/buildQt4${POSTFIX} && sudo make install
+        echo " Installing Qt4"
+        cd $TOP/buildQt4${POSTFIX} 
 fi
 if [ "x$do_cli" = "x1" ] ; then 
         echo "** CLI **"
         cd $TOP
-        Process buildCli ../avidemux/cli
-        echo " Cli needs to be installed, installing through sudo make install ...."
-        cd $TOP/buildCli${POSTFIX} && sudo make install
+        Process buildCli ../avidemux/cli 
+        echo " Installing cli"
+        cd $TOP/buildCli${POSTFIX}  
 fi
 if [ "x$do_gtk" = "x1" ] ; then 
         echo "** GTK **"
         cd $TOP
-        Process buildGtk ../avidemux/gtk
-        echo " Gtk needs to be installed, installing through sudo make install ...."
-        cd $TOP/buildGtk${POSTFIX} && sudo make install
+        Process buildGtk ../avidemux/gtk 
+        echo " Installing Gtk"
+        cd $TOP/buildGtk${POSTFIX} 
 fi
 if [ "x$do_plugins" = "x1" ] ; then 
         echo "** Plugins **"
@@ -218,3 +226,8 @@ else
         ls -l debs
 fi
 echo "** ALL DONE **"
+if [ "x$packages_ext" = "x" ]; then 
+    echo "** Copy the $FAKEROOT_DIR folder to your favorite location, i.e. sudo cp -R install/usr/* /usr/ **"
+else
+    echo "** The installable packages are in the debs folder **"
+fi
