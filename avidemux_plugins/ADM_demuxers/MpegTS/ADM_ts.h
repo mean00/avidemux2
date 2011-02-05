@@ -27,6 +27,7 @@
 #include "dmxTSPacket.h"
 #include <vector>
 #include "ADM_coreDemuxerMpeg.h"
+#include "ADM_aacadts.h"
 
 using std::vector;
 
@@ -41,11 +42,14 @@ protected:
                 uint32_t         pid;
                 uint64_t        dtsOffset;
                 uint32_t        videoCodec;
-                
+                bool            isAdtsAac;
+                ADM_adts2aac    adts;
+public:
+                vector          <ADM_mpgAudioSeekPoint >seekPoints;
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
-                vector          <ADM_mpgAudioSeekPoint >seekPoints;
-                                  ADM_tsAccess(const char *name,uint32_t pid,bool append); 
+                
+                                  ADM_tsAccess(const char *name,uint32_t pid,bool append,bool aacAdts,int extraLen,uint8_t *extraData); 
                 virtual           ~ADM_tsAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return true;}
