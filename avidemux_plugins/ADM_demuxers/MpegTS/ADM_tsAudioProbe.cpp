@@ -54,7 +54,7 @@ bool tsGetAudioInfo(tsPacketLinear *p,tsAudioTrackInfo *trackInfo)
 uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
 uint64_t pts,dts,startAt;
         
-        
+        trackInfo->extraDataLen=0;
         // dont even try if it is not audio
         switch(trackInfo->trackType)
         {
