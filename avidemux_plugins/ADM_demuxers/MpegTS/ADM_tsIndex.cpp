@@ -195,6 +195,14 @@ bool TsIndexer::writeAudio(void)
         qfprintf(index,"%s.fq=%d\n",head,t->wav.frequency);
         qfprintf(index,"%s.chan=%d\n",head,t->wav.channels);
         qfprintf(index,"%s.br=%d\n",head,t->wav.byterate);
+        if(t->extraDataLen)
+        {
+            qfprintf(index,"%s.extraData=%d",head,t->extraDataLen);
+            uint8_t *p=t->extraData;
+            for(int i=0;i<t->extraDataLen;i++)
+                qfprintf(index," %02x",p[i]);
+            qfprintf(index,"\n");
+        }
     }
     return true;
 }

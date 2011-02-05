@@ -16,7 +16,7 @@
 
 #include "ADM_default.h"
 #include "ADM_Video.h"
-
+#include "ADM_aacinfo.h"
 #include <string.h>
 #include <math.h>
 
@@ -27,17 +27,27 @@
 #else
     #define aprintf(...) {}
 #endif
-
+void        mixDump(uint8_t *ptr, uint32_t len);
 /**
     \fn ADM_tsAccess
 */
-ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append)
+ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append,bool aacAdts,int myLen,uint8_t  *myExtra)
 {
 FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;
         this->pid=pid;
         if(!demuxer.open(name,fp)) ADM_assert(0);
         packet=new TS_PESpacket(pid);
+        isAdtsAac=aacAdts;
+        if(myLen && myExtra)
+        {   
+            extraData=new uint8_t [myLen];
+            extraDataLen=myLen;
+            memcpy(extraData,myExtra,extraDataLen);
+            ADM_info("Creating ts audio access with %d bytes of extradata.",myLen);
+            mixDump(extraData,extraDataLen);
+            ADM_info("\n");
+        }
 }
 
 /**
@@ -48,6 +58,8 @@ ADM_tsAccess::~ADM_tsAccess()
     demuxer.close();
     if(packet) delete packet;
     packet=NULL;
+    if(extraData) delete [] extraData;
+    extraData=NULL;
 }
 /**
     \fn push
@@ -134,7 +146,18 @@ uint64_t p,d,start;
     int avail=packet->payloadSize-packet->offset;
     if(avail>maxSize) ADM_assert(0);
     *size=avail;
-    memcpy(buffer,packet->payload+packet->offset,avail);
+    if(true==isAdtsAac)
+    {
+        bool r=false;
+        int outsize=0;
+        *size=0;
+        r=adts.convert(avail,packet->payload+packet->offset,&outsize,buffer);
+        if(false==r) return false;
+        *size=outsize;
+    }else
+    {
+        memcpy(buffer,packet->payload+packet->offset,avail);
+    }
     *dts=timeConvert(packet->pts);
     if(*dts!=ADM_NO_PTS) 
     {

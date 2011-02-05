@@ -304,13 +304,45 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
             hdr.byterate=br;
             hdr.channels=chan;
             hdr.encoding=codec;
-
-        ADM_tsAccess *access=new ADM_tsAccess(name,pid,true);
-            ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;
-            desc->stream=NULL;
-            desc->access=access;
-            memcpy(&(desc->header),&hdr,sizeof(hdr));
-            listOfAudioTracks.push_back(desc);
+        bool aacAdts=false;
+        if(hdr.encoding==WAV_AAC) aacAdts=true;
+        sprintf(body,"Track%d.ExtraData",i);
+        int extraLen=0;
+        uint8_t *extraData=NULL;
+        char *extra=index->getAsString(body);
+        if(extra)
+        {
+            vector<string> result;
+            // From is int=nb, hex hex
+            ADM_splitString(string(" "), string(extra), result);
+            if(result.size())
+            {
+                int nb=atoi(result[0].c_str());
+                printf("[tsDemux] Found %d bytes of video extra data (%s)\n",nb,result[0].c_str());
+                if(nb)
+                {
+                    extraLen=nb;
+                    extraData=new uint8_t[nb];
+                    ADM_assert(nb+1==result.size());
+                    for(int i=0;i<nb;i++)
+                    {
+                        const char *m=result[i+1].c_str();
+                        extraData[i]=mk_hex(m[0],m[1]);
+                    }
+                }
+            }
+        }else
+        {
+            ADM_info("No extradata (%s)\n",body);
+        }
+        ADM_tsAccess *access=new ADM_tsAccess(name,pid,true,aacAdts,extraLen,extraData);
+        if(extraData) delete [] extraData;
+        extraData=NULL;
+        ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;
+        desc->stream=NULL;
+        desc->access=access;
+        memcpy(&(desc->header),&hdr,sizeof(hdr));
+        listOfAudioTracks.push_back(desc);
     }
     return true;
 }
