@@ -28,6 +28,17 @@
 //#include "aviaudio.hxx"
 #include "ADM_aacinfo.h"
 
+static const int aacChannels[8]=
+{
+0, //0: Defined in AOT Specifc Config
+1, //1: 1 channel: front-center
+2, //2: 2 channels: front-left, front-right
+3, //3: 3 channels: front-center, front-left, front-right
+4, //4: 4 channels: front-center, front-left, front-right, back-center
+5, // 5: 5 channels: front-center, front-left, front-right, back-left, back-right
+6, // 6: 6 channels: front-center, front-left, front-right, back-left, back-right, LFE-channel
+8 // 7: 8 channels: front-center, front-left, front-right, side-left, side-right, back-left, back-right, LFE-channel
+};
 
 static 	uint32_t aacBitrate[16]=
 {
@@ -78,61 +89,96 @@ static 	uint32_t aacBitrate[16]=
 	16		crc
 	
 */
+#define x_log ADM_info
+/**
+    \fn getAdtsAacInfo
+*/
 
-uint8_t	getAACFrameInfo(uint8_t *stream,uint32_t maxSearch, AacAudioInfo *mpegInfo,AacAudioInfo *templ,uint32_t *offset)
+bool getAdtsAacInfo(int size, uint8_t *ptr, AacAudioInfo *info)
 {
-uint32_t start=0,found=0,part;
-uint8_t  a[8];
-uint32_t nfq,fqindex,brindex,index,nbframe=0;
-			memset(mpegInfo,0,sizeof(*mpegInfo));
-			memcpy(a+1,stream,7);
-			do
-			{
-				
-				memmove(a,a+1,7);
-				a[7]=stream[start+7];
-				if(start>=maxSearch-7) break;
-				start++;
-				if(a[0]==0xff && ((a[1]&0xF6)==0xF0))
-				{
-					// Layer
-                                        part=a[1]&0xf;
-					mpegInfo->layer=(part>>3);	
-					if(part & 0x6) continue;
-					
-					mpegInfo->profile=a[2]>>6;
-					mpegInfo->samplerate=aacBitrate[(a[2]>>2) & 0xF];
-					mpegInfo->channels=((a[2]&1)<<2)+(a[3]>>6);
-					nbframe=(a[6]>>6)&3;
-					nbframe++;
-					mpegInfo->size=((a[3]&3)<<11)
-							+((a[4])<<3)
-							+((a[5]>>5));
-						
-					if(!mpegInfo->samplerate) continue;
-					
-					found=1;
-				}
-				
-			}while(!found && start<maxSearch-4);
-			if(!found)
-				{	
-					return 0;
-				}
-			*offset=start-1;
-			printf("AAC Frame found at offset :%u layer:%u profile:%u samperate:%u channels:%u size:%u nbBlock:%u\n",
-					*offset,
-					mpegInfo->layer,
-					mpegInfo->profile, 
-					mpegInfo->samplerate,
-					mpegInfo->channels,
-					mpegInfo->size,
-					nbframe);
-			return 1;
-			
+    uint8_t *org=ptr;
+    uint8_t *limit=ptr+size;
+    if(size<8) return false;
+    if(ptr[0]!=0xff || (ptr[1]>>4)!=0xf)
+    {
+            x_log("Wrong adts header %02x %02x\n",ptr[0],ptr[1]);
+            return false;
+    }
+    // [1] Mpeg2=0,Mpeg4=1
+    // [2] Layer =0
+    // [1] 1: no CRC, 0:CRC present
+    ptr++;
+    bool crc=!(ptr[0]&1);
+    if(crc)
+        x_log("CRC\n");
+    else
+        x_log("No CRC\n");
+    ptr++;
+    //----
+    // [2] Profile, objectType -1
+    // [4] Sample rate
+    // [1] 0
+    // [1] Channel mapping
+    //
+    //....
+    int samplerate=(ptr[0]>>2)&0xf;
+    int fq=aacBitrate[samplerate];
+    ADM_info("Frequency : %d\n",fq);
+    if(!fq)
+    {
+        ADM_warning("Invalid samplerate\n");
+        return false;
+    }
+    info->samplerate=fq;
+    int channelMapping=((ptr[0]&1)<<2)+(ptr[1]>>6);
+    if(channelMapping>=8)
+    {
+        ADM_warning("Bad channel\n");
+        return false;
+    }
+    ADM_info("Channels %d\n",aacChannels[channelMapping]);
+    info->channels=aacChannels[channelMapping];
+    ptr++;
+    //-------
+    
+   
+    // [2] Channel mapping continued
+    // [1] original =0
+    // [1] home =0
+    // [1] Copyright=0
+    // [1] Copyright start=0
+    // [2] Size (including header)
+    //
+    //....
+    
+    uint32_t frameSize=(ptr[0]>>6)&1;
+    frameSize=(frameSize<<8)+ptr[1];
+    frameSize=(frameSize<<3)+(ptr[2]>>5);
+    if(frameSize!=size)
+    {
+        x_log("Frame size mismatch : computed %d, got %d\n",frameSize,size);
+        return false;
+    }
+    ptr++;
+    // [8] Size (continued)
+    //
+    //....
+    
+    ptr++;
+    // [3] Size (continued)
+    // [5] ??
+    //
+    //....
 
-	
-
+    ptr++;
+    // [6] ??
+    // [2] Frame count
+    //
+    //....
+    ptr++;
+    // Data
+    return true;
 }
+
 //____________
 

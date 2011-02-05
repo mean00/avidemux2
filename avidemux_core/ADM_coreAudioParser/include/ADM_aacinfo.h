@@ -6,7 +6,7 @@
 #ifndef ADM__AAC__INFO
 #define ADM__AAC__INFO
 
-typedef struct AacAudioInfo
+typedef struct 
 {
 	
 	uint32_t layer;		// 0 mpeg4, 1 mpeg2 
@@ -20,8 +20,6 @@ typedef struct AacAudioInfo
 
 }AacAudioInfo;
 
-uint8_t	getAACFrameInfo(uint8_t *stream,uint32_t maxSearch, AacAudioInfo *mpegInfo,AacAudioInfo *templ,
-			uint32_t *offset);
 
-
+bool getAdtsAacInfo(int size, uint8_t *data, AacAudioInfo *info);
 #endif
