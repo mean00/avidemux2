@@ -65,6 +65,8 @@ if (USE_VDPAU)
 	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg2_vdpau  wmv3_vdpau)
 endif (USE_VDPAU)
 
+xadd(--enable-bsf=aac_adtstoasc)
+
 # Configure FFmpeg, if required
 foreach (decoder ${FFMPEG_DECODERS})
 	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-decoder=${decoder})
