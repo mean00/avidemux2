@@ -306,7 +306,7 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
             hdr.encoding=codec;
         bool aacAdts=false;
         if(hdr.encoding==WAV_AAC) aacAdts=true;
-        sprintf(body,"Track%d.ExtraData",i);
+        sprintf(body,"Track%d.extraData",i);
         int extraLen=0;
         uint8_t *extraData=NULL;
         char *extra=index->getAsString(body);
