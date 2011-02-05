@@ -16,10 +16,10 @@ typedef struct
 	uint32_t nbBlock;	// Packet size including header
 	uint32_t size;		// size of complete frame
 	uint32_t samples;	// # of sample in this packet
-	
+	uint8_t  extra[2];
 
 }AacAudioInfo;
 
 
-bool getAdtsAacInfo(int size, uint8_t *data, AacAudioInfo *info);
+bool getAdtsAacInfo(int size, uint8_t *data, AacAudioInfo *info,int *offset,bool createExtra);
 #endif

@@ -8,7 +8,7 @@
 // Author: mean <fixounet@free.fr>, (C) 2004
 //
 // Copyright: See COPYING file that comes with this distribution
-//	
+//	THIS FILE IS OBSOLETE, USE ADTS/AAC INSTEAD...
 //
 /***************************************************************************
  *                                                                         *
@@ -94,10 +94,11 @@ static 	uint32_t aacBitrate[16]=
     \fn getAdtsAacInfo
 */
 
-bool getAdtsAacInfo(int size, uint8_t *ptr, AacAudioInfo *info)
+bool getAdtsAacInfo(int size, uint8_t *ptr, AacAudioInfo *info,int *offset,bool createExtraData)
 {
     uint8_t *org=ptr;
     uint8_t *limit=ptr+size;
+    int objectType;
     if(size<8) return false;
     if(ptr[0]!=0xff || (ptr[1]>>4)!=0xf)
     {
@@ -121,6 +122,7 @@ bool getAdtsAacInfo(int size, uint8_t *ptr, AacAudioInfo *info)
     // [1] Channel mapping
     //
     //....
+    objectType=1+(ptr[0]>>6);
     int samplerate=(ptr[0]>>2)&0xf;
     int fq=aacBitrate[samplerate];
     ADM_info("Frequency : %d\n",fq);
@@ -177,6 +179,16 @@ bool getAdtsAacInfo(int size, uint8_t *ptr, AacAudioInfo *info)
     //....
     ptr++;
     // Data
+    int crcOffset=0;
+    if(crc) crcOffset=2;
+    *offset=7+crcOffset;
+    info->samples=1024;
+    info->size=frameSize-7-crcOffset;
+    if(true==createExtraData)
+    {
+        info->extra[0]=(objectType<<3)+(samplerate>>1);
+        info->extra[1]=(samplerate<<7)+(channelMapping<<3);
+    }
     return true;
 }
 
