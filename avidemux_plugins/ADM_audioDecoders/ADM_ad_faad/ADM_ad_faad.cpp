@@ -78,7 +78,12 @@ unsigned char chan;
         conf->dontUpSampleImplicitSBR=1;
         //
 		faacDecSetConfiguration(_instance, conf);
-                printf("[FAAD] using %u bytes of extradata\n",l);
+        printf("[FAAD] using %u bytes of extradata\n",l);
+        if(l)
+        {
+            for(int i=0;i<l;i++) printf("%02x ",d[i]);
+            printf("\n");
+        }
 		// if we have some extra data, it means we can init it from it
 		if(l)
 		{
