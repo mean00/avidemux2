@@ -72,6 +72,8 @@ uint64_t pts,dts,startAt;
         //Realign
         p->seek(0,0);
         // This is a special case...
+        // For ADTS, we read one packet and ask ffmpeg to extract
+        // Extra data, frequency etc...
         if(trackInfo->trackType==ADM_TS_AAC)
         {
             TS_PESpacket pes(trackInfo->esId);
@@ -88,7 +90,7 @@ uint64_t pts,dts,startAt;
                 uint8_t *ptr=pes.payload+pes.offset;
                 int size=pes.payloadSize-pes.offset;
                 int dummySize=0;
-                if(true==adts.convert(size,ptr,&dummySize,NULL))
+                if(true==adts.convert(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
                         break;;
                 retries--;
             }

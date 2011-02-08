@@ -30,6 +30,11 @@
 void        mixDump(uint8_t *ptr, uint32_t len);
 /**
     \fn ADM_tsAccess
+    \param name   [in] Name of the file to take audio from
+    \param pid    [in] Pid of the audio track
+    \param append [in] Flag to auto append files (ignored for now)
+    \param aacAdts[in] Set to true if the file is aac/adts
+    \param myLen/myExtra[in] ExtraData if any
 */
 ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append,bool aacAdts,int myLen,uint8_t  *myExtra)
 {
@@ -146,6 +151,7 @@ uint64_t p,d,start;
     int avail=packet->payloadSize-packet->offset;
     if(avail>maxSize) ADM_assert(0);
     *size=avail;
+    // If it is adts, ask ffmpeg to unwrap it...
     if(true==isAdtsAac)
     {
         bool r=false;

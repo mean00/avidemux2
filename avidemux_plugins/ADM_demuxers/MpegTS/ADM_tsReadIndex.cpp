@@ -306,11 +306,12 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
             hdr.encoding=codec;
         bool aacAdts=false;
         if(hdr.encoding==WAV_AAC) aacAdts=true;
+        // Look up Track0.extraData line....
         sprintf(body,"Track%d.extraData",i);
         int extraLen=0;
         uint8_t *extraData=NULL;
         char *extra=index->getAsString(body);
-        if(extra)
+        if(extra) // If present, the first part is the size in decimal..
         {
             vector<string> result;
             // From is int=nb, hex hex
