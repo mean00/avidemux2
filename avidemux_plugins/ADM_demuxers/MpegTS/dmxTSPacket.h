@@ -157,6 +157,7 @@ public:
                 ~tsPacketLinear();
         uint32_t getConsumed(void);
         bool     stillOk(void) {return !eof;};
+        bool     invalidatePtsDts(void);
 #ifndef TS_PACKET_INLINE
         uint8_t  readi8();
         uint16_t readi16();

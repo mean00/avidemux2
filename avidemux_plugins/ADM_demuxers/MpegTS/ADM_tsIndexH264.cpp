@@ -311,6 +311,7 @@ resume:
                         // reset to default
                       thisUnit.imageStructure=pictureFrame;
                       thisUnit.recoveryCount=0xff;
+                      pkt->invalidatePtsDts();
                     }
                   
                     break;

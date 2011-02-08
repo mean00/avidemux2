@@ -291,6 +291,12 @@ bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uin
         H264Unit myUnit=unit;
         myUnit.unitType=unitType2;
         myUnit.overRead=overRead;
+#if 0
+        printf("Adding new unit of type %x unitType2 PTS=%"LLD" DTS=%"LLD"\n",unitType2,
+                    unit.packetInfo.pts,
+                    unit.packetInfo.dts
+                    );
+#endif
         int n=listOfUnits.size();
         if(n)
             if(listOfUnits[n-1].unitType==unitTypePic)

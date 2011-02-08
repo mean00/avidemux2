@@ -183,6 +183,7 @@ dmxPacketInfo tmpInfo;
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           thisUnit.imageType=type;
                           addUnit(data,unitTypePic,thisUnit,4+2);
+                          pkt->invalidatePtsDts();
                           data.nbPics++;
                         }
                           break;

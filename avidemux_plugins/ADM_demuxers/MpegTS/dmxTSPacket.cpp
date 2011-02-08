@@ -714,6 +714,25 @@ bool    tsPacketLinear::getInfo(dmxPacketInfo *info)
 
 };
 /**
+    \fn invalidatePtsDts
+    \brief in some cases (HDRunner/HDCPro), a pes contains multiple video frames. This call consumes pts
+            and dts so that the multiple frames do not have the same pts/dts.
+*/
+bool     tsPacketLinear::invalidatePtsDts(void)
+{
+    if(pesPacket->offset<4)
+    {
+        oldBufferPts=ADM_NO_PTS;
+        oldBufferDts=ADM_NO_PTS;
+
+    }else
+    {
+        pesPacket->pts=ADM_NO_PTS;
+        pesPacket->dts=ADM_NO_PTS;
+    }
+    return true;
+}
+/**
     \fn seek
     \brief Async jump
 */
