@@ -86,7 +86,7 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
  uint32_t *ptr;
 
  	_init=0;
- 	printf("Trying to initialize vorbis codec with %"LU" bytes of header data\n",extra);
+ 	printf("Trying to initialize vorbis codec with %d bytes of header data\n",(int)extra);
 
 	vrbis=new oggVorbis;
  	_contextVoid=(void *)vrbis;
