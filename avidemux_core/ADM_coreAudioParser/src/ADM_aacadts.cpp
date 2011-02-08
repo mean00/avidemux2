@@ -44,6 +44,7 @@ static 	uint32_t aacSampleRate[16]=
 };
 /**
     \fn getExtraData
+    \brief extract extradata from adts/aac stream. You must have converted successfully at leat one frame.
 */
 bool ADM_adts2aac::getExtraData(uint32_t *len,uint8_t **data)
 {
@@ -52,7 +53,8 @@ bool ADM_adts2aac::getExtraData(uint32_t *len,uint8_t **data)
     return true;
 }
 /**
-
+    \fn getFrequency
+    \brief get stream frequency. Convert must have been called ok once.
 */
 int ADM_adts2aac::getFrequency(void)
 {
@@ -65,6 +67,10 @@ int ADM_adts2aac::getFrequency(void)
     int dex=((p[0]&7)<<1)+(p[1]>>7);
     return aacSampleRate[dex];
 }
+/**
+    \fn getChannels 
+    \brief returns # of channels. Convert must have been called ok once.
+*/
 int ADM_adts2aac::getChannels(void)
 {
     if(!(CONTEXT->extradata))
@@ -79,6 +85,7 @@ int ADM_adts2aac::getChannels(void)
 
 /**
     \fn convert
+    \brief strip adts header. Out can be null if you just want to get headers
 */
 
 bool ADM_adts2aac::convert(int incomingLen,uint8_t *inData,int *outLen,uint8_t *out)
@@ -91,6 +98,7 @@ bool ADM_adts2aac::convert(int incomingLen,uint8_t *inData,int *outLen,uint8_t *
         return false;
     if(out)
         memcpy(out,o,*outLen);
+    //printf("In : %d out %d\n",incomingLen,*outLen);
     return true;
 }
 /**
