@@ -9,6 +9,8 @@ ADM_audioStreamEac3.cpp
 ADM_audioStreamDCA.cpp
 ADM_audioStreamPCM.cpp
 ADM_audioStreamConstantChunk.cpp
+ADM_audioWrite.cpp
+ADM_audioWriteWav.cpp
 )	
 #*************************************************
 #*************************************************

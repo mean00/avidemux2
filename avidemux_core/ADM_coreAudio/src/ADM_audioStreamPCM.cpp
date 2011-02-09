@@ -66,8 +66,5 @@ uint64_t thisDts=0;
     *dts=lastDts;
     advanceDtsBySample(*nbSample);
     return 1;
-            
-    
 }
-
 // EOF

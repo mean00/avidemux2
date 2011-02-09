@@ -34,6 +34,7 @@
 #include "ADM_preview.h"
 #include "DIA_factory.h"
 #include "ADM_coreJobs.h"
+#include "ADM_audioWrite.h"
 // Local prototypes
 #include "A_functions.h"
 int      A_Save(const char *name);
@@ -147,14 +148,18 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
   uint64_t dts;
   DIA_workingBase *work;
   FILE *out;
-
 #define ONE_STRIKE (64*1024)
   uint8_t *buffer=NULL;
 
-
-  out = ADM_fopen (name, "wb");
-  if (!out) 
+  ADM_audioWrite *saver=admCreateAudioWriter(stream);
+  if(!saver)
   {
+    ADM_error("Dont know how to save this\n");
+    return false;
+  }
+  if(false==saver->init(stream,name))
+  {
+    delete saver;
     ADM_error("Cannot open file for writing\n");
     return false;
   }
@@ -184,7 +189,7 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
         cur_sample+=sample;
         if(hold>ONE_STRIKE) // flush
         {
-            fwrite(buffer,hold,1,out);
+            saver->write(hold,buffer);
             hold=0;
         }
         if(cur_sample>tgt_sample)
@@ -195,10 +200,11 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
     };
   if(hold)
   {
-  	fwrite(buffer,hold,1,out);
+  	saver->write(hold,buffer);
 	hold=0;
   }
-  fclose (out);
+  saver->close();
+  delete saver;
   delete work;
   delete[] buffer;
   ADM_info ("\n wanted %"LLU" samples, goto %"LLU" samples, written %"LU" bytes\n", tgt_sample,cur_sample, written);
