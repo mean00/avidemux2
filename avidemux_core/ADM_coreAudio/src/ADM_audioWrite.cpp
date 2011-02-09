@@ -27,7 +27,7 @@ ADM_audioWrite::ADM_audioWrite()
     _file=NULL;
 }
 /**
-
+    \fn dtor
 */
 ADM_audioWrite::~ADM_audioWrite()
 {
