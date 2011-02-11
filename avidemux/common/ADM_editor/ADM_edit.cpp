@@ -320,6 +320,15 @@ bool ADM_Composer::addFile (const char *name)
                 _segments.updateRefVideo();
                 
                 
+            }else
+            {
+                if(isH264Compatible(info.fcc))
+                {
+                    uint64_t delay;
+                    ADM_info("[Editor] This is H264, check if we can fill missing PTS\n");
+                    ADM_setH264MissingPts(video._aviheader,video.timeIncrementInUs,&delay);
+                }else
+                    ADM_info("[Editor] Not H264\n");
             }
         }
         else   

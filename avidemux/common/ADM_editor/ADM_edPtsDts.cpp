@@ -29,6 +29,72 @@ static bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *dela
 static bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 static bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 /**
+    \fn ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
+    \brief look for AVC case where 1 field has PTS, the 2nd one is Bottom without PTS
+            in such a case PTS (2nd field)=PTS (First field)+timeincrement
+*/
+bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
+{
+    aviInfo info;
+    hdr->getVideoInfo(&info);
+    uint32_t nbFrames=0;
+    nbFrames=info.nb_frames;
+    uint32_t flags,flagsNext;
+    uint64_t pts,dts;
+    uint64_t ptsNext,dtsNext;
+    uint32_t fail=0;
+    // Scan if it is the scheme we support
+    // i.t. interlaced with Top => PTS, Bottom => No Pts
+    // Check we have all PTS...
+    fail=0;
+    for(int i=0;i<nbFrames;i++)
+    {
+          hdr->getPtsDts(i,&pts,&dts);
+          if(pts==ADM_NO_PTS) fail++;
+    }
+    ADM_info("We have %d missing PTS\n",fail);
+    if(!fail) return true; // Have all PTS, ok...
+    ADM_info("Some PTS are missing, try to guess them...\n");
+    fail=0;
+    //
+    for(int i=0;i<nbFrames-1;i+=2)
+    {
+        hdr->getFlags(i,&flags);
+        hdr->getFlags(i+1,&flagsNext);
+        hdr->getPtsDts(i,&pts,&dts);
+        hdr->getPtsDts(i+1,&ptsNext,&dtsNext);
+        if(!(flagsNext & AVI_BOTTOM_FIELD)) 
+        {
+            fail++; 
+            continue;
+        }
+        if(pts==ADM_NO_PTS)
+        {
+            fail++;
+            continue;
+        }
+    }
+    ADM_info("H264 AVC scheme: %"LU"/%"LU" failures.\n",fail,nbFrames/2);
+    if(fail) return false;
+    ADM_info("Filling 2nd field PTS\n");
+    uint32_t fixed=0;
+    for(int i=0;i<nbFrames-1;i+=2)
+    {
+        hdr->getFlags(i,&flags);
+        hdr->getFlags(i+1,&flagsNext);
+        hdr->getPtsDts(i,&pts,&dts);
+        hdr->getPtsDts(i+1,&ptsNext,&dtsNext);
+        if(ptsNext==ADM_NO_PTS)
+        {
+            ptsNext=pts+timeIncrementUs;
+            hdr->setPtsDts(i+1,ptsNext,dtsNext);
+            fixed++;
+        }
+    }
+    ADM_info("Fixed %d PTS\n",fixed);
+    return true;
+}
+/**
     \fn ADM_computeMissingPtsDts
 
 */
