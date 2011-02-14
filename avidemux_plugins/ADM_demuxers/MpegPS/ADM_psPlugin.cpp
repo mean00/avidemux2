@@ -108,6 +108,12 @@ bool detectPs(const char *file)
     tail=buffer+bufferSize;
     uint8_t code;
     uint32_t offset;
+    // Is it a Seq Start ?
+    if(!buffer[0] && !buffer[1] && buffer[2]==1 && buffer[3]==0xba)
+    {
+        printf("Starts with SEQUENCE_START, probably MpegPS\n");
+        return true;
+    }
     while(ADM_findMpegStartCode(head,tail,&code,&offset))
     {
         head+=offset;
