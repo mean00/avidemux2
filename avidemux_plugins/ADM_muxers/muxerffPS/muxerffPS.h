@@ -24,7 +24,8 @@ typedef enum
 {
     MUXER_VCD=0,
     MUXER_SVCD=1,
-    MUXER_DVD=2
+    MUXER_DVD=2,
+    MUXER_FREE=3
 }psMuxingType;
 
 

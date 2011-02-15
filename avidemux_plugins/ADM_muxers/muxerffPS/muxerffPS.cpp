@@ -29,24 +29,10 @@
 #define aprintf printf
 #endif
 
-typedef struct
+ps_muxer psMuxerConfig=   // Default is standard DVD
 {
-    const char *fmt;
-    uint32_t   bufferSizekBytes;
-    uint32_t   muxRatekBits;
-    uint32_t   videoRatekBits;
-}mpegPsStruct;
-
-const mpegPsStruct psDescriptor[3]=
-{
-    { "vcd",  40,1400,1152},  // Verify, not sure!
-    { "svcd",112,2800,2400},
-    { "dvd", 224,11000,9800},
-};
-
-ps_muxer psMuxerConfig=
-{
-    MUXER_DVD,false
+    MUXER_DVD,false,
+    11000,9800,224
 };
 
 /**
@@ -79,8 +65,15 @@ const char *er;
         return false;
     }
 
-    mpegPsStruct myself=psDescriptor[psMuxerConfig.muxingType];
-    if(false==setupMuxer(myself.fmt,file))
+    const char *fmt;
+    switch(psMuxerConfig.muxingType)
+    {
+        default:
+        case MUXER_DVD: fmt="dvd";break;
+        case MUXER_VCD: fmt="vcd";break;
+        case MUXER_SVCD: fmt="svcd";break;
+    }
+    if(false==setupMuxer(fmt,file))
     {
         printf("[ffPS] Failed to open muxer\n");
         return false;
@@ -98,9 +91,9 @@ const char *er;
 
         // Override codec settings
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
-        c->bit_rate=myself.videoRatekBits*1000;
-        c->rc_buffer_size=myself.bufferSizekBytes*8*1024;
-        c->rc_buffer_size_header=myself.bufferSizekBytes*8*1024;
+        c->bit_rate=psMuxerConfig.videoRatekBits*1000;
+        c->rc_buffer_size=psMuxerConfig.bufferSizekBytes*8*1024;
+        c->rc_buffer_size_header=psMuxerConfig.bufferSizekBytes*8*1024;
         c->gop_size=15;
 
         // Audio
@@ -111,7 +104,7 @@ const char *er;
         }
         audio_st->codec->bit_rate=a[0]->getInfo()->byterate*8;        
         // /audio
-        oc->mux_rate=myself.muxRatekBits*1000;
+        oc->mux_rate=psMuxerConfig.muxRatekBits*1000;
         // Also copy audio & video bitrate
 
 
@@ -210,6 +203,7 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                             FAIL(" Bad width/height for DVD\n");
                     }
                     break;
+            case MUXER_FREE: break;
             default:
                     ADM_assert(0);
         }
@@ -230,19 +224,23 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                     {
                         FAIL(" VCD : only MP2 audio accepted\n");
                     }
-                    if(head->frequency!=44100) 
-                    {
-                        FAIL(" VCD : only 44.1 khz audio accepted\n");
-                    }
+                    if(!nonCompliantOk)
+                        if(head->frequency!=44100) 
+                        {
+                            FAIL(" VCD : only 44.1 khz audio accepted\n");
+                        }
                     break;
             case MUXER_DVD:
+                    if(!nonCompliantOk)
+                        if(head->frequency!=48000) 
+                        {
+                            FAIL(" DVD : only 48 khz audio accepted\n");
+                        }
+                    // no break
+            case MUXER_FREE:
                     if(head->encoding!=WAV_MP2 && head->encoding!=WAV_AC3 && head->encoding!=WAV_DTS) 
                     {
                         FAIL("[ffPS] DVD : only MP2/AC3/DTS audio accepted\n");
-                    }
-                    if(head->frequency!=48000) 
-                    {
-                        FAIL(" DVD : only 48 khz audio accepted\n");
                     }
                     break;
             default:
