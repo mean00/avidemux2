@@ -152,7 +152,7 @@ bool    tsPacket::setPos(uint64_t pos)
 }
 /**
     \fn getSinglePacket
-    \brief 
+    \brief Read s TS packet, make sure it starts & ends by TS marker (0x47)
 */
 bool tsPacket::getSinglePacket(uint8_t *buffer)
 {
