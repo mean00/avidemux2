@@ -156,7 +156,6 @@ bool    tsPacket::setPos(uint64_t pos)
 */
 bool tsPacket::getSinglePacket(uint8_t *buffer)
 {
-    uint8_t scratch[16];
 #define MAX_SKIPPED_PACKET 6000
 #define MAX_SEARCH 2048
     int count=0;
@@ -182,7 +181,7 @@ again:
         return false;
     }
     _file->read32(TS_PACKET_LEN-1,buffer); // 184-1
-    if(extraCrap)  _file->read32(extraCrap,scratch);
+    if(extraCrap)  _file->forward(extraCrap);
     uint8_t r=_file->peek8i();
     if(r!=TS_MARKER)
     {
