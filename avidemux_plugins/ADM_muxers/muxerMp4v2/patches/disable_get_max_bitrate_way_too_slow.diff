@@ -1,0 +1,20 @@
+diff --git a/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4track.cpp b/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4track.cpp
+index cc4fdfc..c2a3de6 100644
+--- a/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4track.cpp
++++ b/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4track.cpp
+@@ -534,13 +534,13 @@ void MP4Track::FinishWrite()
+     }
+ 
+     MP4Integer32Property* pBitrateProperty;
+-
++#if 0 // MEANX : Way too slow!
+     if (m_trakAtom.FindProperty(
+                 "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.maxBitrate",
+                 (MP4Property**)&pBitrateProperty)) {
+         pBitrateProperty->SetValue(GetMaxBitrate());
+     }
+-
++#endif
+     if (m_trakAtom.FindProperty(
+                 "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.avgBitrate",
+                 (MP4Property**)&pBitrateProperty)) {
