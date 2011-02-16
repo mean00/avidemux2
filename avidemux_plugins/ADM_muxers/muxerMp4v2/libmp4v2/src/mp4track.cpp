@@ -534,13 +534,13 @@ void MP4Track::FinishWrite()
     }
 
     MP4Integer32Property* pBitrateProperty;
-
+#if 0 // MEANX : Way too slow!
     if (m_trakAtom.FindProperty(
                 "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.maxBitrate",
                 (MP4Property**)&pBitrateProperty)) {
         pBitrateProperty->SetValue(GetMaxBitrate());
     }
-
+#endif
     if (m_trakAtom.FindProperty(
                 "trak.mdia.minf.stbl.stsd.*.esds.decConfigDescr.avgBitrate",
                 (MP4Property**)&pBitrateProperty)) {
