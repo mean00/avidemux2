@@ -1,0 +1,75 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4ReadRtpPacket\fR \- Read an RTP packet
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4ReadRtpPacket\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	u_int16_t \fIpacketIndex\fP,
+.br 
+	u_int8_t** \fIppBytes\fP,
+.br 
+	u_int32_t* \fIpNumBytes\fP,
+.br 	
+	u_int32_t \fIssrc\fP = 0,
+.br 
+	bool includeHeader = true,
+.br 
+	bool includePayload = true
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIpacketIndex\fP
+Specifies which packet is to be read. Valid values range from zero to the number of packets in this hint minus one.
+.TP 
+\fIpNumPackets\fP
+Pointer to variable that will be hold the number of packets in the hint.
+.TP 
+\fIppBytes\fP
+Pointer to the pointer to the packet data. See DESCRIPTION for details on this argument. 
+.TP 
+\fIpNumBytes\fP
+Pointer to variable that will be hold the size in bytes of the packet.
+.TP 
+\fIssrc\fP
+Specifies the RTP SSRC to be used when constructing the RTP packet header.
+.TP 
+\fIincludeHeader\fP
+Specifies whether the library should include the standard 12 byte RTP header to the returned packet. The header is constructed from the information in the hint sample and the specified ssrc.
+.TP 
+\fIincludePayload\fP
+Specifies whether the library should include the packet payload (RTP payload header and media data) in the returned packet.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4ReadRtpPacket\fR reads the specified packet from the current hint sample, as previously read by MP4ReadRtpHint().
+.LP 
+The argument, ppBytes, allows for two possible approaches for buffering:
+.LP 
+If the calling application wishes to handle its own buffering it can set *ppBytes to the buffer it wishes to use. The calling application is responsible for ensuring that the buffer is large enough to hold the packet. This can be done by using MP4GetRtpPayload() to retrieve the maximum packet payload size and hence how large the receiving buffer must be. Caveat: the value returned by MP4GetRtpPayload is the maxiumum payload size, if the RTP packet header is going to be included by the library this value should be incremented by 12.
+.LP 
+If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically malloc'ed for the sample data and *ppBytes set to this pointer. The calling application is responsible for free'ing this memory. 
+.LP 
+The application is expected to provide the value of the RTP SSRC identifier which uniquely identifies the originator of the media stream. For most applications, a single random value can be provided. The value should be the same for all packets for the duration of the RTP transmission. If the parameter "includeHeader" is false, then this value has no effect.
+.LP 
+By default the library constructs the standard 12 byte RTP header from the information in the hint sample, and the specified SSRC. It then concatenates the RTP header with the packet payload, that is the RTP payload specific header and the media data for the packet. The "includeHeader" and "includePayload" parameters allow control over these steps, so that either just the packet payloads or just the RTP headers can be returned. A potential use of this feature is if the calling application wishes to construct an extended RTP header with non\-standard options.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ReadRtpHint(3)

@@ -1,0 +1,39 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackEditDuration\fR \- Get the duration of a track edit segment
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Duration \fBMP4GetTrackEditDuration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4EditId \fIeditId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditId\fP
+Specifies the edit segment for which the duration is desired.
+.SH "RETURN VALUES"
+.LP 
+The duration of the edit segment in track time scale units of the track in the mp4 file.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackEditDuration\fR returns the duration of the specified track edit segment.
+.LP 
+Caveat: The value is in units of the track time scale.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4SetTrackEditDuration(3)

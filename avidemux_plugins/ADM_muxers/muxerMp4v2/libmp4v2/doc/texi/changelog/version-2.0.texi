@@ -1,0 +1,8 @@
+@enumerate
+@item
+Removed deprecated metadata/free-form API and replaced with iTMF Generic and Tags API.
+
+@item
+Added new public-API: MP4SetLogCallback().
+
+@end enumerate

@@ -1,0 +1,47 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddRtpSampleData\fR \- Add media sample data to an RTP packet
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4AddRtpSampleData\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP,
+.br 
+	MP4SampleId \fIsampleId\fP,
+.br 
+	u_int32_t \fIdataOffset\fP,
+.br 
+	u_int32_t \fIdataLength\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIhintTrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIsampleId\fP
+Specifies the reference media sample id from which the media data should be taken.
+.TP 
+\fIdataOffset\fP
+Specifies the byte offset in the specified media sample where data should be taken from for the current RTP packet.
+.TP 
+\fIdataLength\fP
+Specifies the length in bytes of the media data that should be included in the current RTP packet.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddRtpSampleData\fR adds a reference in the current pending RTP packet to the media data in the specified media sample of the reference media track. Note this is a reference, not a copy, of the media data.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4AddRtpPacket (3) MP4AddRtpImmediateData (3)

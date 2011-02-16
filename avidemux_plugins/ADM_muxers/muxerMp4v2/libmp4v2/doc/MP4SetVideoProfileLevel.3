@@ -1,0 +1,81 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetVideoProfileLevel\fR \- Sets the minimum MPEG\-4 video profile and level required to render the contents of the file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetVideoProfileLevel\fR(
+.br 
+        MP4FileHandle \fIhFile\fP,
+.br 
+        u_int8_t \fIprofileLevel\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetVideoProfileLevel\fR sets the minumum profile/level of MPEG\-4 video support necessary to render the contents of the file.
+.LP 
+ISO/IEC 14496\-1:2001 MPEG\-4 Systems defines the following values:
+.br 
+	0x00		Reserved
+.br 
+	0x01		Simple Profile @ Level 3
+.br 
+	0x02		Simple Profile @ Level 2
+.br 
+	0x03		Simple Profile @ Level 1
+.br 
+	0x04		Simple Scalable Profile @ Level 2
+.br 
+	0x05		Simple Scalable Profile @ Level 1
+.br 
+	0x06		Core Profile @ Level 2
+.br 
+	0x07		Core Profile @ Level 1
+.br 
+	0x08		Main Profile @ Level 4
+.br 
+	0x09		Main Profile @ Level 3
+.br 
+	0x0A		Main Profile @ Level 2
+.br 
+	0x0B		N\-Bit Profile @ Level 2
+.br 
+	0x0C		Hybrid Profile @ Level 2
+.br 
+	0x0D		Hybrid Profile @ Level 1
+.br 
+	0x0E		Basic Animated Texture @ Level 2
+.br 
+	0x0F		Basic Animated Texture @ Level 1
+.br 
+	0x10		Scalable Texture @ Level 3
+.br 
+	0x11		Scalable Texture @ Level 2
+.br 
+	0x12		Scalable Texture @ Level 1
+.br 
+	0x13		Simple Face Animation @ Level 2
+.br 
+	0x14		Simple Face Animation @ Level 1
+.br 
+	0x15\-0x7F	Reserved
+.br 
+	0x80\-0xFD	User private
+.br 
+	0xFE		No audio profile specified
+.br 
+	0xFF		No audio required
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetVideoProfileLevel(3)

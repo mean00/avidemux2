@@ -1,0 +1,29 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetDuration\fR \- Get the duration of the movie (file)
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Duration \fBMP4GetDuration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+The duration of the movie (file) in movie (file) time scale units. 
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetDuration\fR returns the maximum duration of all the tracks in the specified mp4 file. 
+.LP 
+Caveat: the duration is the movie (file) time scale units.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetTimeScale(3) MP4ConvertFromMovieDuration(3)

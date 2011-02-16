@@ -1,0 +1,62 @@
+@enumerate
+@item
+Renamed public API top-level header to @code{<mp4v2/mp4v2.h>} and added namespaces for implementation (private) symbols. Only public API symbols are exported for dynamic (shared) or DLL libraries. All other symbols are now private, notwithstanding static-library usage.
+
+@item
+Added initial AC3 support.
+
+@item
+Added native Windows port. The port targets @code{WINVER 0x0500} which is Windows 2000 or higher.
+
+@item
+Added QuickTime and Nero chapter support. See @command{mp4chaps} command-line utility.
+@* Contributed by Ullrich Pollähne <u.pollaehne@@gmail.com>.
+
+@item
+Enhanced @command{mp4art} to support multiple cover-art atoms.
+
+@item
+Dropped @command{mp4dump} and replaced with @command{mp4file} which supports general file operations.
+
+@item
+Added @command{mp4track} with colr-box and pasp-box support.
+
+@item
+Fixed corruption of @b{udta.name} atom during read-in.
+
+@item
+Enhanced @command{mp4file --dump} to show hexdump-style canonical hex+ASCII data.
+
+@item
+Enhanced @command{mp4file --dump} to show human-readble value for tag @b{typeCode} values.
+
+@item
+Enhanced @command{mp4file --dump} to show human-readble value for ISO-639-2/T language codes.
+
+@item
+Added new public-API: MP4GetTrackLanguage().
+
+@item
+Added new public-API: MP4SetTrackLanguage().
+
+@item
+Added support for GCC precompiled-headers on various *nix platforms to speed up builds as we are using quite a few C++ headers.
+
+@item
+Enhanced @command{mp4track} to facilitate modification of @{ enabled, inmovie, inpreview, altgroup, volume, width, height, language, hdlrname, udtaname @} properties.
+
+@item
+Added new public-API: MP4GetTrackDurationPerChunk().
+
+@item
+Added new public-API: MP4SetTrackDurationPerChunk() to override default per-track chunk duration.
+
+@item
+Added new public-API: MP4WriteSampleDependency().
+
+@item
+Replaced (undocumented) public-API: MP4CreateEx() with MP4CreateProvider().
+
+@item
+Added new public-API for iTMF Generic functionality.
+@end enumerate

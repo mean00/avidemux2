@@ -1,0 +1,32 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackFixedSampleDuration\fR \- Get the fixed duration of samples in a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Duration \fBMP4GetTrackFixedSampleDuration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the number of fixed duration of the samples in the track in track time scale units. Upon an error, MP4_INVALID_DURATION.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackFixedSampleDuration\fR returns the duration of samples in the specified track in the mp4 file, if this value is fixed for all samples. This is typically the case for audio tracks and video tracks. If the track samples have variable duration, then MP4_INVALID_DURATION is returned.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

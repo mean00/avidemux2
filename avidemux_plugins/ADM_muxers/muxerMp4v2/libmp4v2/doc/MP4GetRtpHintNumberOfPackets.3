@@ -1,0 +1,32 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetRtpHintNumberOfPackets\fR \- Get the number of packets in an RTP hint
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int16_t \fBMP4GetRtpHintNumberOfPackets\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIhintTrackId\fP
+Specifies the hint track to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the number of packets in the current RTP hint. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetRtpHintNumberOfPackets\fR returns the number of packets contained in the current RTP hint as established by a call to MP4ReadRtpHint().
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ReadRtpHint(3)

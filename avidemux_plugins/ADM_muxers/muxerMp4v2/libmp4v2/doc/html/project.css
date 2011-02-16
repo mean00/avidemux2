@@ -1,0 +1,198 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body,table {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
+body {
+    background-color: #3C464D;
+    min-width: 800px;
+    max-width:  1360px;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+}
+
+a {
+    color: #5382A1;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #9E005D;
+}
+
+h1 {
+    text-align: center;
+    font-size: 140%;
+}
+
+h2 {
+    font-size: 120%;
+}
+
+h3 {
+    font-size: 100%;
+}
+
+img {
+    border: none;
+    vertical-align: middle;
+}
+
+/* ----------------------------------*/
+
+dd,ul {
+    padding-left: 40px;
+}
+
+h1,h2,h3 {
+    margin-top: 1.5em;
+    margin-bottom: 1.0em;
+}
+
+h2 {
+    border-bottom: 2px solid;
+}
+
+p,ul {
+    margin-top: 1em;
+}
+
+dd,ol {
+    padding-left: 40px;
+}
+
+ul ul {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* ----------------------------------*/
+
+blockquote, dl, pre {
+    margin: 1em 4em;
+}
+
+pre {
+    background-color: #CCCCCC;
+    padding: 0.5em;
+    border: 1px solid #888888;
+}
+
+dl span.samp, dl span.command {
+    font-weight: bold;
+}
+
+/* ----------------------------------*/
+
+div#page {
+    margin-left: 40px;
+    margin-right: 40px;
+    position: relative;
+    background-color: #EDEFF2;
+    -webkit-border-radius: 1em;
+    -webkit-box-shadow: 5px 5px 5px black;
+    -moz-border-radius: 1em;
+}
+
+div#sitebanner, div#content, div#footer div {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+div#sitebanner {
+    position: relative;
+    background-color: gray;
+    background-image: url(banner.png);
+    background-repeat: no-repeat;
+    background-position: top left;
+    min-height: 128px;
+    max-height: 128px;
+    text-shadow: black 1px 1px 0px;
+    -webkit-border-top-left-radius: 1em;
+    -webkit-border-top-right-radius: 1em;
+    -moz-border-radius-topleft: 1em;
+    -moz-border-radius-topright: 1em;
+}
+
+/* enable to make banner logo clickable */
+/*
+div#sitebanner div#home a {
+    display: block;
+    background: none;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    height: 80px;
+    width: 220px;
+}
+*/
+
+div#sitebanner div#title {
+    display: none;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    text-align: lef;
+    color: white;
+    color: #C9F08D;
+    font-weight: bold;
+    font-size: 150%;
+}
+
+div#sitebanner div#menu {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: white;
+    text-align: right;
+}
+
+div#sitebanner div#menu li {
+    list-style-type: none;
+}
+
+div#sitebanner div#menu li a {
+    color: white;
+    font-weight: normal;
+}
+
+div#sitebanner div#menu li.active,
+div#sitebanner div#menu li a:hover {
+    color: #C9F08D;
+}
+
+div#contents {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+div#footer {
+    padding-top: 2em;
+    padding-bottom: 1em;
+    -webkit-border-bottom-left-radius: 1em;
+    -webkit-border-bottom-right-radius: 1em;
+    -moz-border-radius-bottomleft: 1em;
+    -moz-border-radius-bottomright: 1em;
+}
+
+div#footer div {
+    text-align: right;
+    font-size: x-small;
+    border-top: 2px solid #5382A1;
+}
+
+/* ----------------------------------*/
+
+div.contents ul {
+    list-style-type: none;
+    padding-left: 2em;
+}
+
+div.contents ul {
+}

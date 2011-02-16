@@ -1,0 +1,47 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4CloneTrack\fR \- Make a clone of a specified track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4CloneTrack\fR(
+.br 
+	MP4FileHandle \fIsrcFile\fP,
+.br 
+	MP4TrackId \fIsrcTrackId\fP,
+.br 
+	MP4FileHandle \fIdstFile\fP = MP4_INVALID_FILE_HANDLE,
+.br 
+	MP4TrackId \fIdstHintTrackReferenceTrack\fP = MP4_INVALID_TRACK_ID
+.br
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIsrcFile\fP
+Specifies the mp4 file of the source track of the operation.
+.TP 
+\fIsrcTrackId\fP
+Specifies the track id of the track to be cloned.
+.TP 
+\fIdstFile\fP
+Specifies the mp4 file of the new, cloned track. If the value is MP4_INVALID_FILE_HANDLE, the new track is created in the same file as the source track. 
+.TP
+\fIdstHintTrackReferenceTrack\fP
+When cloning a hint track, this parameter specifies the track id of the reference track in the destination file.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track id of the new track. Upon an error, MP4_INVALID_TRACK_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4CloneTrack\fR creates a new track to an mp4 file that is a copy of an existing track with respect to the track media type, and other control information. 
+.LP 
+Note this function does not copy the media samples of the source track to the new track. If you want to do that use MP4CopyTrack() instead.
+
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4CopyTrack(3)

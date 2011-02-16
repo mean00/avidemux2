@@ -1,0 +1,46 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetTrackEditDwell\fR \- Set the dwell value of a track edit segment
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetTrackEditDwell\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4EditId \fIeditId\fP,
+.br 
+	bool \fIdwell\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditId\fP
+Specifies the edit segment to which the operation applies. Caveat: the first edit has id 1 not 0.
+.TP 
+\fIdwell\fP
+Species the new dwell value.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetTrackEditDwell\fR sets the dwell value of the specified edit segment from the specified track.
+.LP 
+A value of true (1) indicates that during this edit segment the media will be paused; a value of false (0) indicates that during this edit segment the media will be played at its normal rate.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetTrackEditDwell(3)

@@ -1,0 +1,5 @@
+@quotation Warning
+This is a @b{developer} release which includes all the normal pieces of a stable release but is considered @b{unstable}.
+The purpose of a developer release is to make available to @value{PROJECT.name} developers features which require collaborative testing.
+@end quotation
+

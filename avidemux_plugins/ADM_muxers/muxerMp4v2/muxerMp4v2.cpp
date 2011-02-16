@@ -135,13 +135,13 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
 //------Verify everything is ok : Accept Mp4 & H264 for video, AAC for audio ----
         
         // Create file
-        handle=MP4Create( file, MP4_DETAILS_ERROR, 0 ); // FIXME MP4_CREATE_64BIT_DATA
+        handle=MP4Create( file,  0 ); // FIXME MP4_CREATE_64BIT_DATA
         if(MP4_INVALID_FILE_HANDLE==handle)
         {
             ADM_error("[mp4v2]Cannot create output file %s\n",file);
             return false;
         }
-        MP4SetVerbosity(handle,MP4_DEBUG);
+// FIXME        MP4SetVerbosity(handle,MP4_DEBUG);
         if (!(MP4SetTimeScale( handle, 90*1000 ))) // 90 kHz tick
         {
             ADM_error("[mp4v2]Cannot set timescale to us\n");
@@ -250,7 +250,7 @@ theEnd:
         }
         // Optimize
         ADM_info("Optimizing...\n");
-        MP4Optimize( tmpTargetFileName.c_str(), targetFileName.c_str(), MP4_DETAILS_ERROR );
+        MP4Optimize( tmpTargetFileName.c_str(), targetFileName.c_str() );
         // delete
         unlink(tmpTargetFileName.c_str());
     }

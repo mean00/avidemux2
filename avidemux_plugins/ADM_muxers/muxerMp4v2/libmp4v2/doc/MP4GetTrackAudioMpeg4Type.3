@@ -1,0 +1,83 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackAudioMpeg4Type\fR \- Get the encoding type of an MPEG\-4 audio track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int8_t \fBMP4GetTrackAudioMpeg4Type\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the MPEG\-4 audio type is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the MPEG\-4 audio type of the track. Upon error, MP4_MPEG4_INVALID_AUDIO_TYPE is returned.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackAudioMpeg4Type\fR returns the MPEG\-4 encoding type of the specified MPEG\-4 audio track in the mp4 file. If an mp4 audio track has type MP4_MPEG4_AUDIO_TYPE, this call can be used to determine which specific MPEG\-4 audio encoding is contained in the track. (Note: This information is retrieved from the audio track ES configuration.)
+.LP 
+Known audio encoding types are:
+.LP 
+MP4_MPEG4_AAC_MAIN_AUDIO_TYPE
+.br 
+	MPEG\-4 AAC Main profile
+.LP 
+MP4_MPEG4_AAC_LC_AUDIO_TYPE	
+.br 
+	MPEG\-4 AAC Low Complexity profile
+.LP 
+MP4_MPEG4_AAC_SSR_AUDIO_TYPE 
+.br 
+	MPEG\-4 AAC SSR profile
+.LP 
+MP4_MPEG4_AAC_LTP_AUDIO_TYPE 
+.br 
+	MPEG\-4 AAC Long Term Prediction profile
+.LP 
+MP4_MPEG4_AAC_SCALABLE_AUDIO_TYPE 
+.br 
+	MPEG\-4 AAC Scalable
+.LP 
+MP4_MPEG4_CELP_AUDIO_TYPE 
+.br 
+	MPEG\-4 CELP
+.LP 
+MP4_MPEG4_HVXC_AUDIO_TYPE 
+.br 
+	MPEG\-4 HVXC
+.LP 
+MP4_MPEG4_TTSI_AUDIO_TYPE 
+.br 
+	MPEG\-4 Text To Speech
+.LP 
+MP4_MPEG4_MAIN_SYNTHETIC_AUDIO_TYPE 
+.br 
+	MPEG\-4 Main Synthetic profile
+.LP 
+MP4_MPEG4_WAVETABLE_AUDIO_TYPE 
+.br 
+	MPEG\-4 Wavetable Synthesis profile
+.LP 
+MP4_MPEG4_MIDI_AUDIO_TYPE 
+.br 
+	MPEG\-4 MIDI profile
+.LP 
+MP4_MPEG4_ALGORITHMIC_FX_AUDIO_TYPE 
+.br 
+	MPEG\-4 Algorithmic Synthesis and Audio FX profile
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetTrackAudioType(3)

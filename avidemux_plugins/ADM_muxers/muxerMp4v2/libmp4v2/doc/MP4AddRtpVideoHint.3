@@ -1,0 +1,49 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddRtpVideoHint\fR \- Add an RTP video specific hint
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4AddRtpVideoHint\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	bool \fIisBFrame\fP = false,
+.br 
+	u_int32_t \fItimestampOffset\fP = 0
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIisBFrame\fP
+Specifies if this hint will contain packets for a video B frame
+.TP 
+\fItimestampOffset\fP
+Specifies a positive offset to add to the RTP timestamp for this hint. Caveat: the value is in the hint track timescale.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddRtpVideoHint\fR is an extended version of MP4AddRtpHint specifically to handle MPEG video frames. 
+.LP 
+The isBFrame parameter allows the packets in the RTP hint to be marked as belonging to a video B frame. This can be useful to a streaming server if packets must be dropped due to system load or network congestion. No other video frames are dependent on the contents of B frames, so they are least damaging type of frames to drop.
+.LP 
+The timestampOffset parameter allows an offset to be added to the RTP timestamp of the packets in the RTP hint. This is necessary for MPEG video that contains B frames since the video frames are transmitted out of order with respect to when they should be rendered. I.e I and P frames are transmitted before any B frames that depend on them. The RTP timestamp must represent the rendering time of the data in the packets hence an offset must be added.
+.LP 
+Note: The timestampOffset is equivalent to the sample rendering offset of a video media track. See MP4GetSampleRenderingOffset().
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4AddRtpHint(3) MP4AddRtpPacket(3) MP4WriteRtpHint (3)

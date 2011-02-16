@@ -1,0 +1,35 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4DeleteTrack\fR \- Delete a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4DeleteTrack\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4DeleteTrack\fR deletes the control information associated with the specified track. The trackId will become invalid if this call succeeds.
+.LP 
+Note that the samples associated with this track are not deleted with this call. This can be accomplished via MP4Optimize(). The reason for this is that multiple tracks can reference the same samples so a global view must be taken when deleting them.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

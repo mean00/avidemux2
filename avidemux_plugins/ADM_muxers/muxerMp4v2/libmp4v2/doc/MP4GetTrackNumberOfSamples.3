@@ -1,0 +1,32 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackNumberOfSamples\fR \- Get the number of samples in a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetTrackNumberOfSamples\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the number of samples is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the number of samples in the track. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackNumberOfSamples\fR returns the number of samples in the specified track in the mp4 file. Sample id's are the consecutive sequence of numbers from 1 to the total number of samples, i.e. 1\-based indexing, not 0\-based indexing.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

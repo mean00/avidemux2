@@ -1,0 +1,34 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackBitRate\fR \- Get the average bit rate in bits per second of the specified track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetTrackBitRate\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the bit rate is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the average bit rate in bits per second of the track. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackBitRate\fR returns the average bit rate in bits per second in the specified track in the mp4 file.
+.LP 
+Note: hint tracks will not return their bit rate via this mechanism.
+.SH "SEE ALSO"
+.LP 
+MP4(3) 

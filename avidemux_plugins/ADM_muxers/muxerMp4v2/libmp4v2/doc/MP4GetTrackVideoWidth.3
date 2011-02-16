@@ -1,0 +1,35 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackVideoWidth\fR \- Get the video width in pixels of the specified video track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int16_t \fBMP4GetTrackVideoWidth\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the video width is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the number of pixels of the video width in the track. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackVideoWidth\fR returns the width of the video in pixels in the specified track in the mp4 file. 
+.LP 
+Caveat: Not all mp4 implementations set this value accurately. The mp4 specification states that the authoritative values are contained in the track ES configuration which is video encoding specific, and hence not interpretable by the mp4 library.
+If the value of 320 is returned, care should be taken to verify the accuracy of this value since this is the default value in the mp4 specification.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetTrackVideoHeight(3) MP4GetTrackESConfiguration(3)

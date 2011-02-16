@@ -1,0 +1,64 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddTrackEdit\fR \- Add an edit segment to a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4AddTrackEdit\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4EditId \fIeditId\fP,
+.br 
+	MP4Timestamp \fIstartTime\fP = 0,
+.br 
+	MP4Duration \fIduration\fP = 0,
+.br 
+	bool \fIdwell\fP = false
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditId\fP
+Specifies the desired position in the edit list sequence for the new edit segment. If the value is MP4_INVALID_EDIT_ID, then the edit segment is added at the end of the existing edit list. Note editId's start with the value of 1, not 0.
+.TP 
+\fIstartTime\fP
+Specifies the starting time of the edit segment in the track time scale.
+.TP 
+\fIduration\fP
+Specifies the duration of the edit segment in the track time scale.
+.TP 
+\fIdwell\fP
+If false, the track media should be played at its normal rate. If true, the media should be paused for the duration of this edit segment. This is a mechanism by which one can delay the start of a media track.
+ 
+.SH "RETURN VALUES"
+.LP 
+Upon success, the edit id of the new edit segment. Upon an error, MP4_INVALID_EDIT_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddTrackEdit\fR adds an edit segment to the track edit list.
+.LP 
+The track edit list is a feature that allows creation of an alternate timeline for the track, typically cutting out segments of the full track to form an shorten, cleaned up version. The edit segments that form the edit list are a sequence of track start times and durations, they do not alter the track media in any way. I.e. no data can be lost via edit list operations.
+.LP 
+To read out the editted version of the track, use MP4ReadSampleFromEditTime() instead of MP4ReadSample().
+.LP 
+To export the editted version of the track to a new track, potentially in a new mp4 file, see MP4CopyTrack().
+.LP 
+Note with many media encodings such as MPEG\-4, AAC, and MP3, care must be taken when choosing the edit segment start times. E.g. for video tracks a reference or key frame should be selected as the starting sample of any edit segment. For audio tracks, an audio sample start time should be used.
+
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4DeleteTrackEdit(3) MP4ReadSampleFromEditTime(3) MP4CopyTrack(3)

@@ -1,0 +1,43 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetTrackESConfiguration\fR \- Set the elementary stream (ES) configuration of a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetTrackESConfiguration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+	const u_int8_t* \fIpConfig\fP,
+.br 
+	u_int32_t \fIconfigSize\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIpConfig\fP
+Specifies a pointer to the ES configuration information.
+.TP 
+\fIconfigSize\fP
+Specifies the size of the ES configuration information.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetTrackESConfiguration\fR sets the elementary stream (ES) configuration of the specified track in the mp4 file. This information is codec specific and contains the configuration necessary for the given codec to decode the samples in the track. 
+
+.SH "SEE ALSO"
+.LP 
+MP4(3)

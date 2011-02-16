@@ -1,0 +1,42 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4AddRtpPacket\fR \- Add an RTP packet
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4AddRtpPacket\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	bool setMBit = false,
+.br 
+	int32 transmitOffset = 0
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIsetMBit\fP
+Specifies the value of the RTP packet header marker bit for this packet. The value depends on the rules of the RTP payload used for this hint track.
+.TP 
+\fItransmitOffset\fP
+Specifies an offset to apply to the normal transmission time of this packet. The purpose of this offset is to allow smoothing of packet transmission over the duration of the hint.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4AddRtpPacket\fR creates a new RTP packet for the currently pending RTP hint sample for the specified hint track. It also enables subsequent calls to MP4AddRtpImmediateData() and MP4AddRtpSampleData to add data to the RTP packets. After all the RTP packets for the hint have been created, MP4WriteRtpHint() should be called to write the hint to the track.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4AddRtpHint(3) MP4AddRtpImmediateData (3) MP4AddRtpSampleData (3) MP4WriteRtpHint (3)

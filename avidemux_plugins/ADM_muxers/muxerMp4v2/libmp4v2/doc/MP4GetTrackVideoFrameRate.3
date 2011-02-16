@@ -1,0 +1,33 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackVideoFrameRate\fR \- Get the video frame rate of the specified video track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+float \fBMP4GetTrackVideoFrameRate\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the video frame rate is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the number of video frames per second of the track. Upon an error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackVideoFrameRate\fR returns the frame rate of the video in the specified track in the mp4 file. If the video is variable rate, the average frame rate is returned. 
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) 

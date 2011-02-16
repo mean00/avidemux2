@@ -1,0 +1,34 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetHintTrackSdp\fR \- Get the SDP media level description associated with a hint track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+const char* \fBMP4GetHintTrackSdp\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the hint track to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+The SDP media level description fragment associated with the hint track.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetHintTrackSdp\fR returns the SDP (IETF RFC 2327) media level fragment associated with the hint track. This is used by a streaming server to create a complete SDP description of the multimedia session represented by the file.
+.LP 
+The mp4broadcaster test program provided with the MP4 library gives an example of using this call to create the complete SDP description.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4SetHintTrackSdp(3) MP4AppendHintTrackSdp(3) MP4GetSessionSdp(3)

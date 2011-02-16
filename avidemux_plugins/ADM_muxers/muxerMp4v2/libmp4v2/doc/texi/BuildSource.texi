@@ -1,0 +1,36 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename BuildSource.info
+@include base/article.texi
+@include build/commands.texi
+@paragraphindent none
+@c %**end of header
+
+@majorheading @value{PROJECT.name.formal} Building the Source
+@contents
+
+@chapter Overview
+@include build/overview.texi
+
+@chapter Introduction
+This document describes the recommended process to build @value{PROJECT.name} from a @value{TERM.srcdist} bundle. This process is a @b{subset} of the process to build directly from the project's repository. If you are interested in building from the repository then this document is not for you.
+
+@chapter Quickstart
+This chapter is for the impatient or those just looking for a quick summary of all the commands used in a typical build. You may skip this summary and jump to @ref{Build Process}.
+
+@example
+@COMMAND.extract{}
+@COMMAND.configure{}
+@COMMAND.build{}
+@COMMAND.install{}
+@end example
+
+@anchor{Build Process}
+@chapter Build Process
+
+@include build/process.extract.texi
+@include build/process.configure.texi
+@include build/process.build.texi
+@include build/process.install.texi
+
+@include build/platforms.texi

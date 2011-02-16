@@ -1,0 +1,52 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetSampleIdFromEditTime\fR \- Get the sample id of a specified time in the edit list timeline
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4SampleId \fBMP4GetSampleIdFromEditTime\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4Timestamp \fIwhen\fP,
+.br 
+	MP4Timestamp* \fIpStartTime\fP = NULL,
+.br 
+	MP4Duration* \fIpDuration\fP = NULL
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIwhen\fP
+Specifies the time in the track time scale that is desired.
+.TP 
+\fIpStartTime\fP
+If non\-NULL, pointer to variable that will receive the starting timestamp for this sample. Caveat: The timestamp is in the track edit list timescale.
+.TP 
+\fIpDuration\fP
+If non\-NULL, pointer to variable that will receive the duration for this sample in the edit list timeline. Caveat: The duration is in the track timescale units.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the sample id that occurs at the specified time. Upon an error, MP4_INVALID_SAMPLE_ID.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetSampleIdFromEditTime\fR returns the sample id of the track sample in which the specified time occurs in the edit list timeline. 
+.LP 
+The specified time should be in the track time scale. See MP4ConvertToTrackTimestamp() for how to map a time value to this time scale.
+.LP 
+Since the edit list can cause the sample start time and duration to be different that it in the standard track timeline, it is strongly advised that the caller retrieve the new sample start time and duration via this function.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetSampleIdFromTime(3)

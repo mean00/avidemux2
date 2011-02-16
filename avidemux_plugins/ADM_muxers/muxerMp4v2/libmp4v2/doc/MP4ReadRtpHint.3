@@ -1,0 +1,44 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4ReadRtpHint\fR \- Read an RTP hint
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4ReadRtpHint\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4SampleId \fIsampleId\fP,
+.br 
+	u_int16_t* \fIpNumPackets\fP = NULL
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIsampleId\fP
+Specifies which hint sample is to be read. Caveat: the first sample has id 1 not 0.
+.TP 
+\fIpNumPackets\fP
+Pointer to variable that will be hold the number of packets in the hint.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4ReadRtpHint\fR reads the specified hint sample from the specified hint track and enables subsequent calls to MP4ReadRtpPacket() to read the individual RTP packets associated with this hint. If desired, the number of RTP packets associated with this hint is returned.
+.LP 
+Note that a hint track sample is just like any other track sample. I.e MP4ReadSample(), MP4GetSampleSize(), MP4GetSampleTime(), etc. are all valid. The RTP specific functions are provided to interpret the information contain in the hint track samples that give instructions on how to form the actual RTP packets.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ReadRtpPacket(3)

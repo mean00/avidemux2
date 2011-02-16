@@ -1,0 +1,45 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetTrackEditDuration\fR \- Set the duration of a track edit segment
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetTrackEditDuration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4EditId \fIeditId\fP,
+.br 
+	MP4Duration \fIduration\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditId\fP
+Specifies the edit segment to which the operation applies. Caveat: the first edit has id 1 not 0.
+.TP 
+\fIduration\fP
+Species the new value for the duration in track time scale units.
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetTrackEditDuration\fR sets the duration of the specified edit segment from the specified track in the track time scale units. See MP4ConvertToTrackDuration() for how to map this value from another time scale.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetTrackEditDuration(3)

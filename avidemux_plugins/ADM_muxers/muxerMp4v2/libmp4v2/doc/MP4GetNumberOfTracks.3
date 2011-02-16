@@ -1,0 +1,39 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetNumberOfTracks\fR \- Get the number of tracks
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int32_t \fBMP4GetNumberOfTracks\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	const char* \fItype\fP = NULL,
+.br 
+	u_int8_t subType = 0
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItype\fP
+Species the type of track for which a count is desired. A NULL value implies any type of track. See MP4GetTrackType() for predefined values.
+.TP 
+\fIsubType\fP
+Specifies the subtype of the tracks to be counted. Subtypes are only defined for audio and video tracks, see MP4GetAudioTrackType() and MP4GetVideoTrackType() for predefined values. A zero value implies any subtype.
+.SH "RETURN VALUES"
+.LP 
+The number of tracks of the specified type and subType in the mp4 file.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetNumberOfTracks\fR returns how many tracks of the specified type and subtype exist in the mp4 file. This can be used to determine if an mp4 file contains a track of a given type of media, for instance audio or video. It can also be used to determine if multiple options may be available. For instance multiple audio tracks in different languages.
+.LP 
+For audio and video tracks, a subtype can be specified to only count tracks of a particular encoding.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

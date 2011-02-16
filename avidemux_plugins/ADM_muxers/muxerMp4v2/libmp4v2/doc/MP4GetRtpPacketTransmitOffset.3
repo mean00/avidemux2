@@ -1,0 +1,38 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetRtpPacketTransmitOffset\fR \- Get the transmit offset of an RTP packet
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+int32_t \fBMP4GetRtpPacketTransmitOffset\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP,
+.br 
+	u_int16_t \fIpacketIndex\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIhintTrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIpacketIndex\fP
+Specifies the packet to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+The transmit offset for the specified packet in the hint track timescale.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetRtpPacketTransmitOffset\fR returns the transmit offset of an RTP packet. This offset may be set by some hinters to smooth out the packet transmission times and reduce network burstiness. A transmitter would need to apply this offset to the calculated transmission time based on the hint start time.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4AddRtpPacket(3) MP4ReadRtpPacket(3)

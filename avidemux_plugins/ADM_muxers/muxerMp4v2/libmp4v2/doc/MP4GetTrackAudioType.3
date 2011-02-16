@@ -1,0 +1,64 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackAudioType\fR \- Get the encoding type of an audio track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int8_t \fBMP4GetTrackAudioType\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the audio type is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the audio type of the track. Upon error, MP4_INVALID_AUDIO_TYPE is returned.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackAudioType\fR returns the encoding type of the specified audio track in the mp4 file.
+.LP 
+Known audio encoding types are:
+.LP 
+MP4_MPEG1_AUDIO_TYPE	
+.br 
+	MPEG\-1 Audio Layers I, II, & III
+.LP 
+MP4_MPEG2_AUDIO_TYPE	
+.br 
+	MPEG\-2 low bitrate extensions to MPEG\-1 Audio
+.br 
+	MP4_MP3_AUDIO_TYPE is an alias for this value
+.LP 
+MP4_MPEG2_AAC_MAIN_AUDIO_TYPE
+.br 
+	MPEG\-2 AAC Main profile
+.LP 
+MP4_MPEG2_AAC_LC_AUDIO_TYPE	
+.br 
+	MPEG\-2 AAC Low Complexity profile
+.LP 
+MP4_MPEG2_AAC_SSR_AUDIO_TYPE 
+.br 
+	MPEG\-2 AAC SSR profile
+.LP 
+MP4_MPEG4_AUDIO_TYPE	
+.br 
+	MPEG\-4 Audio, includes MPEG\-4 extensions to AAC
+.LP 
+MP4_PRIVATE_AUDIO_TYPE
+.br 
+	User private type
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4AddAudioTrack(3)

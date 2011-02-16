@@ -26,51 +26,51 @@ namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MP4SoundAtom::MP4SoundAtom(const char *atomid)
-        : MP4Atom(atomid)
+MP4SoundAtom::MP4SoundAtom(MP4File &file, const char *atomid)
+        : MP4Atom(file, atomid)
 {
-    AddReserved("reserved1", 6); /* 0 */
+    AddReserved(*this, "reserved1", 6); /* 0 */
 
     AddProperty( /* 1 */
-        new MP4Integer16Property("dataReferenceIndex"));
+        new MP4Integer16Property(*this, "dataReferenceIndex"));
     AddProperty( /* 2 */
-        new MP4Integer16Property("soundVersion"));
-    AddReserved( "reserved2", 6); /* 3 */
+        new MP4Integer16Property(*this, "soundVersion"));
+    AddReserved( *this, "reserved2", 6); /* 3 */
 
     AddProperty( /* 4 */
-        new MP4Integer16Property("channels"));
+        new MP4Integer16Property(*this, "channels"));
     AddProperty( /* 5 */
-        new MP4Integer16Property("sampleSize"));
+        new MP4Integer16Property(*this, "sampleSize"));
     AddProperty( /* 6 */
-        new MP4Integer16Property("packetSize"));
+        new MP4Integer16Property(*this, "compressionId"));
     AddProperty( /* 7 */
-        new MP4Integer32Property("timeScale"));
+        new MP4Integer16Property(*this, "packetSize"));
+    AddProperty( /* 8 */
+        new MP4Integer32Property(*this, "timeScale"));
 
     if (ATOMID(atomid) == ATOMID("mp4a")) {
-        AddReserved("reserved3", 2); /* 8 */
         ExpectChildAtom("esds", Required, OnlyOne);
         ExpectChildAtom("wave", Optional, OnlyOne);
     } else if (ATOMID(atomid) == ATOMID("alac")) {
-        AddReserved("reserved3", 2); /* 8 */
         ExpectChildAtom("alac", Optional, Optional);
-        //AddProperty( new MP4BytesProperty("alacInfo", 36));
+        //AddProperty( new MP4BytesProperty(*this, "alacInfo", 36));
     }
 }
 
 void MP4SoundAtom::AddProperties (uint8_t version)
 {
     if (version > 0) {
-        AddProperty( /* 8 */
-            new MP4Integer32Property("samplesPerPacket"));
         AddProperty( /* 9 */
-            new MP4Integer32Property("bytesPerPacket"));
+            new MP4Integer32Property(*this, "samplesPerPacket"));
         AddProperty( /* 10 */
-            new MP4Integer32Property("bytesPerFrame"));
+            new MP4Integer32Property(*this, "bytesPerPacket"));
         AddProperty( /* 11 */
-            new MP4Integer32Property("bytesPerSample"));
+            new MP4Integer32Property(*this, "bytesPerFrame"));
+        AddProperty( /* 12 */
+            new MP4Integer32Property(*this, "bytesPerSample"));
     }
     if (version == 2) {
-        AddReserved("reserved4", 20);
+        AddReserved(*this, "reserved4", 20);
     }
 }
 void MP4SoundAtom::Generate()
@@ -78,9 +78,9 @@ void MP4SoundAtom::Generate()
     MP4Atom::Generate();
 
     ((MP4Integer16Property*)m_pProperties[1])->SetValue(1);
+    ((MP4Integer16Property*)m_pProperties[2])->SetValue(0);
 
     // property reserved2 has non-zero fixed values
-    ((MP4Integer16Property*)m_pProperties[2])->SetValue(0);
     static const uint8_t reserved2[6] = {
         0x00, 0x00, 0x00, 0x00,
         0x00, 0x00,
@@ -112,7 +112,7 @@ void MP4SoundAtom::Read()
         m_pProperties.Delete(1);
         m_pProperties.Delete(0);
         if (ATOMID(GetType()) == ATOMID("alac")) {
-            AddProperty(new MP4BytesProperty("decoderConfig", m_size));
+            AddProperty(new MP4BytesProperty(*this, "decoderConfig", m_size));
             ReadProperties();
         }
         if (m_pChildAtomInfos.Size() > 0) {

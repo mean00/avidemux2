@@ -57,6 +57,10 @@ public:
     //! A new file object is constructed but not opened.
     //!
     //! @param name filename of file object, or empty-string.
+	//!  On Windows, this should be a UTF-8 encoded string.
+    //!  On other platforms, it should be an 8-bit encoding that is
+    //!  appropriate for the platform, locale, file system, etc.
+    //!  (prefer to use UTF-8 when possible).
     //! @param mode bitmask specifying mode flags.
     //!     See #Mode for bit constants.
     //! @param provider a fileprovider instance. If NULL a standard file
@@ -83,6 +87,12 @@ public:
     //! Open file.
     //!
     //! @param name filename of file object, or empty-string to use #name.
+	//!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
+    //!
+    //! @return true on failure, false on success.
     //!
     ///////////////////////////////////////////////////////////////////////////
 

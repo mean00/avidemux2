@@ -1,0 +1,63 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename ReleaseNotes.info
+@include base/article.texi
+@paragraphindent none
+@c %**end of header
+
+@titlepage
+@end titlepage
+
+@majorheading @value{PROJECT.name.formal} Release Notes
+@include releasenotes/intro.@value{PROJECT.repo.type}.texi
+@contents
+
+@chapter What's New?
+[TODO]
+
+@chapter Breaking Changes
+@section Removed deprecated metadata/free-form API.
+The following functions have been removed and replaced with iTMF Generic and Tags API. Detailed documentation can be found under API modules section.
+
+DeleteMetadataAtom(),
+DeleteMetadataFreeForm(),
+DeleteMetadataGenre(),
+GetMetadataByIndex(),
+GetMetadataCoverArt(),
+GetMetadataCoverArtCount(),
+GetMetadataDisk(),
+GetMetadataFreeForm(),
+GetMetadataGenre(),
+GetMetadataString(),
+GetMetadataTrack(),
+GetMetadataUint16(),
+GetMetadataUint8(),
+MetadataDelete(),
+SetMetadataCoverArt(),
+SetMetadataDisk(),
+SetMetadataFreeForm(),
+SetMetadataGenre(),
+SetMetadataString(),
+SetMetadataTrack(),
+SetMetadataUint16(),
+SetMetadataUint8().
+
+@appendix Changelog
+@appendixsection Version 2.0
+@include changelog/version-2.0.texi
+
+@appendixsection Version 1.9
+@include changelog/version-1.9.texi
+
+@appendixsection Version 1.6
+@include changelog/version-1.6.texi
+
+@appendix SCM repository details
+@example
+url:  @value{PROJECT.repo.url}
+root: @value{PROJECT.repo.root}
+uuid: @value{PROJECT.repo.uuid}
+rev:  @value{PROJECT.repo.rev}
+date: @value{PROJECT.repo.date}
+type: @value{PROJECT.repo.type}
+@end example

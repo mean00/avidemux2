@@ -1,0 +1,27 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename Authors.info
+@include base/article.texi
+@paragraphindent none
+@c %**end of header
+
+@majorheading @value{PROJECT.name.formal} Authors
+
+This document lists significant contributors to @value{PROJECT.name}. If any contributors are missing please contact one of the project members. More extensive contributor information may be found in sources, docs, and other files where appropriate.
+
+@example
+Edward Groenendaal          egroenen@@cisco.com
+Jonathon Rubin              jb.rubin@@gmail.com
+Kona Blend                  kona8lend@@gmail.com
+Rouven Wessling             mp4v2@@rouvenwessling.de
+@end example
+
+@heading Authors from original MPEG4IP/libmp4v2
+
+@example
+Dave Mackie                 dmackie@@cisco.com
+Alix Marchandise-Franquet   alix@@cisco.com
+Bill May                    wmay@@cisco.com
+Ximpo Group Ltd.            mp4v2@@ximpo.com
+Danijel Kopcinovic          danijel.kopcinovic@@adnecto.net
+@end example

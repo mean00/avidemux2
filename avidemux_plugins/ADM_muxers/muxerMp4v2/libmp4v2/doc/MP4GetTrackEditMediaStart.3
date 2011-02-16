@@ -1,0 +1,48 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackEditMediaStart\fR \- Get the media start time of a track edit segment
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Timestamp \fBMP4GetTrackEditMediaStart\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4EditId \fIeditId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditId\fP
+Specifies the edit segment for which the media start time is desired.
+.SH "RETURN VALUES"
+.LP 
+The media start time of the edit segment in track time scale units of the track in the mp4 file.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackEditMediaStart\fR returns the media start time of the  of the specified track edit segment. 
+.LP 
+Caveat: The value is in units of the track time scale.
+.LP 
+Note that this differs from the edit segment start time, MP4GetTrackEditStart(). For example:
+.LP 
+EditId	Start	MediaStart	Duration
+1		0		15			30
+.br 
+2		30		120			20
+.br 	
+3		50		3000			10
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4SetTrackEditMediaStart(3)

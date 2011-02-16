@@ -1,0 +1,44 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackESConfiguration\fR \- Get the elementary stream (ES) configuration of a track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+void \fBMP4GetTrackESConfiguration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+	u_int8_t** \fIppConfig\fP,
+.br 
+	u_int32_t* \fIpConfigSize\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the ES configuration is desired.
+.TP 
+\fIppConfig\fP
+Specifies a pointer to a pointer variable that will be given the address of the configuration information.
+.TP 
+\fIpConfigSize\fP
+Specifies a pointer to a variable to hold the size of the ES configuration information.
+.SH "RETURN VALUES"
+.LP 
+Upon success, *ppConfig will point to a malloc'd block of memory with the ES configuration, and *pConfigSize will indicated the number of bytes of the ES configuration. Upon error, *ppConfig will be NULL, and *pConfigSize will be 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackESConfiguration\fR returns the elementary stream (ES) configuration of the specified track in the mp4 file. This information is codec specific and contains the configuration necessary for the given codec to decode the samples in the track. 
+.LP 
+Caveat: the returned block of memory has been malloc'd. The caller may safely modify the value without effecting the library, but the caller takes responsiblity for free'ing the memory.
+.SH "SEE ALSO"
+.LP 
+MP4(3)

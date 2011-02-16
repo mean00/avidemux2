@@ -1,0 +1,55 @@
+@chapter mp4art
+This tool is used to manage iTunes Metadata Cover-art which is typically used to embed an image to a song file. For example, the songs in an album collection might all contain an image of the album cover art. This data is usually found in @samp{.m4a}, @samp{.m4v} and @samp{.mov} files.
+
+@table @samp
+@item --art-any
+act on all covr-boxes (default).
+Specifies the scope of the action to operate on all, if applicable, covr-boxes.
+
+@item --art-index IDX
+act on covr-box index IDX.
+Specifies the scope of the action to operate on single covr-box INDEX.
+@end table
+
+@table @samp
+@item --list
+list all covr-boxes.
+@example
+IDX     BYTES  CRC32     TYPE       FILE
+----------------------------------------------------------------------
+  0    173613  710a3ec9  JPEG       01 Life In Technicolor.m4a
+  0    173613  710a3ec9  JPEG       02 Cemeteries Of London.m4a
+  0    173613  710a3ec9  JPEG       03 Lost!.m4a
+  0    173613  710a3ec9  JPEG       04 42.m4a
+  0    173613  710a3ec9  JPEG       05 Lovers In Japan _ Reign Of Love.m4a
+  0    173613  710a3ec9  JPEG       06 Yes.m4a
+  0    173613  710a3ec9  JPEG       07 Viva La Vida.m4a
+  0    173613  710a3ec9  JPEG       08 Violet Hill.m4a
+  0    173613  710a3ec9  JPEG       09 Strawberry Swing.m4a
+  0    173613  710a3ec9  JPEG       10 Death And All His Friends.m4a
+@end example
+
+@item --add IMG
+add covr-box from IMG file.
+
+@item --replace IMG
+replace covr-box with IMG file.
+
+@item --remove
+remove covr-box.
+
+@item --extract
+extract covr-box.
+This will extract all covr-box data to image files in the format of @samp{BASENAME.art[INDEX].TYPE} .
+
+Example, add PNG image file:
+@example
+mp4art --add ACDC.png mysong.m4a
+@end example
+
+Example, extract image files from file:
+@example
+mp4art --extract mysong.m4a
+@end example
+
+@end table

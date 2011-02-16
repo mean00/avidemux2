@@ -1,0 +1,53 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetHintTrackRtpPayload\fR \- Get the RTP payload parameters of the hint track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4GetHintTrackRtpPayload\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP,
+.br 
+	char** \fIppPayloadName\fP = NULL,
+.br 
+	u_int8_t* \fIpPayloadNumber\fP = NULL,
+.br 
+	u_int16_t* \fIpMaxPayloadSize\fP = NULL
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIhintTrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIppPayloadName\fP
+Specifies a pointer to the variable to receive the string RTP payload name.
+.TP 
+\fIpPayloadNumber\fP
+Specifies a pointer to the variable to receive the RTP payload number.
+.TP 
+\fIpMaxPayloadSize\fP
+Specifies a pointer to the variable to receive the maximum RTP payload size in bytes.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetHintTrackRtpPayload\fR gets the RTP payload parameters for the hint track. The RTP payload is the set of rules by which media samples are packed into RTP packets. This call is typically used in constructing the SDP media level description for the hint track.
+.LP 
+The payloadName identifies which RTP payload is being used for the RTP packets created from the hint track. This value is sent to the receiver in the SDP description. For example, MP3 audio sent according to the rules in IETF RFC 2250 uses the name "MPA" for the RTP payload.
+.LP 
+The payloadNumber is a shorter form of the payloadName. This value is associated with the payload name in the SDP description and then sent in every RTP packet. Payload numbers 1 thru 95 are statically assigned in IETF RFC 1890, numbers 96 thru 127 are dynamically assigned within a session.
+.LP 
+The maxPayloadSize specifies the maximum number of bytes that should be placed in the RTP payload section of the RTP packets.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4SetHintTrackPayload(3)

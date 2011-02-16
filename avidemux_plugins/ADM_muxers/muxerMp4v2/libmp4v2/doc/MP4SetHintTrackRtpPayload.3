@@ -1,0 +1,67 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetHintTrackRtpPayload\fR \- Set the RTP payload parameters of the hint track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetHintTrackRtpPayload\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP,
+.br 
+	const char* \fIpPayloadName\fP,
+.br 
+	u_int8_t* \fIpPayloadNumber\fP,
+.br 
+	u_int16_t \fImaxPayloadSize\fP = 0
+.br 
+	bool \fIinclude_rtp_map\fP = true
+.br 
+	bool \fIinclude_mpeg4_esid\fP = true
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIhintTrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIpPayloadName\fP
+Specifies the RTP payload name.
+.TP 
+\fIpPayloadNumber\fP
+Specifies a pointer to the RTP payload number.
+.TP 
+\fImaxPayloadSize\fP
+Specifies the maximum RTP payload size in bytes.
+.TP 
+\fIinclude_rtp_map\fP
+Specifies if the a=rtpmap statement is included.
+.TP 
+\fIinclude_mpeg4_esid\fP
+Specifies if the a=mpeg4-esid statement is included.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetHintTrackRtpPayload\fR sets the RTP payload parameters for the hint track. The RTP payload is the set of rules by which media samples are packed into RTP packets.
+.LP 
+The payload name identifies which RTP payload is being used for the RTP packets created from the hint track. This value is sent to the receiver in the SDP description. For example, MP3 audio sent according to the rules in IETF RFC 2250 uses the name "MPA" for the RTP payload.
+.LP 
+The payload number is a shorter form of the payload name. This value is associated with the payload name in the SDP description and then sent in every RTP packet. Payload numbers 1 thru 95 are statically assigned in IETF RFC 1890, numbers 96 thru 127 are dynamically assigned within a session. If the RTP payload in use is one of the statically assigned ones, you should pass this value to the library. If you need a dynamic payload number assigned, pass the define value MP4_SET_DYNAMIC_PAYLOAD for this parameter and the library will choose an valid available number and return this value.
+.LP 
+The maxPayloadSize specifies the maximum number of bytes that should be placed in the RTP payload section of the RTP packets. It is desirable that RTP packets not exceed the maximum transmission unit (MTU) of the IP network they travel over since otherwise the packets must be fragmented at the IP level which consumes router resources and can lead to less robust behavior in the face of packet loss.
+.LP 
+The default value for maxPayloadSize is 1460, which is the MTU for an Ethernet or similar network minus the standard sizes of the IP, UDP, and RTP headers (1500 \- 20 \- 8 \- 12 = 1460).
+.LP 
+If you anticipate streaming over IP networks with smaller MTU sizes, or that extensions to the network headers might be used, a more conservative value should be chosen. The minimum MTU for an IP network is 576 bytes.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetHintTrackPayload(3)

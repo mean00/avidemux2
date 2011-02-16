@@ -1,0 +1,27 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetGraphicsProfileLevel\fR \- Gets the minimum MPEG\-4 graphics profile and level required to render the contents of the file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int8_t \fBMP4GetGraphicsProfileLevel\fR(
+.br 
+        MP4FileHandle \fIhFile\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+The current graphics profile/level for the file. See MP4SetGraphicsProfileLevel() for known values.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetGraphicsProfileLevel\fR returns the minumum profile/level of MPEG\-4 graphics support necessary to render the contents of the file. 
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4SetGraphicsProfileLevel(3)

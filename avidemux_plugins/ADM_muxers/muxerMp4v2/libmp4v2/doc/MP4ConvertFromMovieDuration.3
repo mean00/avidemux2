@@ -1,0 +1,37 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4ConvertFromMovieDuration\fR \- Convert a duration from the movie (file) time scale to a specified time scale.
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int64_t \fBMP4ConvertFromMovieDuration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4Duration \fIduration\fP,
+.br 
+	u_int32_t \fInewTimeScale\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fIduration\fP
+Specifies the duration that is to be converted.
+.TP 
+\fInewTimeScale\fP
+Specifies the new time scale in ticks per second to which the duration should be converted.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the duration in the new time scale units. Upon error, 0.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4ConvertFromMovieDuration\fR converts a duration such as the total movie (file) duration from the movie time scale to another specified time scale.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetDuration(3)

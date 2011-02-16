@@ -48,7 +48,26 @@ class MP4DescriptorProperty;
 class MP4File
 {
 public:
-    MP4File( uint32_t verbosity = 0 );
+    static void CopySample(
+        MP4File*    srcFile,
+        MP4TrackId  srcTrackId,
+        MP4SampleId srcSampleId,
+        MP4File*    dstFile,
+        MP4TrackId  dstTrackId,
+        MP4Duration dstSampleDuration );
+
+    static void EncAndCopySample(
+        MP4File*      srcFile,
+        MP4TrackId    srcTrackId,
+        MP4SampleId   srcSampleId,
+        encryptFunc_t encfcnp,
+        uint32_t      encfcnparam1,
+        MP4File*      dstFile,
+        MP4TrackId    dstTrackId,
+        MP4Duration   dstSampleDuration );
+
+public:
+    MP4File();
     ~MP4File();
 
     ///////////////////////////////////////////////////////////////////////////
@@ -64,21 +83,13 @@ public:
                  char**      supportedBrands = NULL,
                  uint32_t    supportedBrandsCount = 0 );
 
+    const std::string &GetFilename() const;
     void Read( const char* name, const MP4FileProvider* provider );
     bool Modify( const char* fileName );
     void Optimize( const char* srcFileName, const char* dstFileName = NULL );
     bool CopyClose( const string& copyFileName );
-    void Dump( FILE* fout = NULL, bool dumpImplicits = false );
+    void Dump( bool dumpImplicits = false );
     void Close();
-
-    /* library property per file */
-
-    uint32_t GetVerbosity() {
-        return m_verbosity;
-    }
-    void SetVerbosity(uint32_t verbosity) {
-        m_verbosity = verbosity;
-    }
 
     bool Use64Bits(const char *atomName);
     void Check64BitStatus(const char *atomName);
@@ -189,12 +200,14 @@ public:
         MP4TrackId trackId,
         MP4SampleId sampleId,
         // output parameters
-        uint8_t** ppBytes,
-        uint32_t* pNumBytes,
+        uint8_t**     ppBytes,
+        uint32_t*     pNumBytes,
         MP4Timestamp* pStartTime = NULL,
-        MP4Duration* pDuration = NULL,
-        MP4Duration* pRenderingOffset = NULL,
-        bool* pIsSyncSample = NULL);
+        MP4Duration*  pDuration = NULL,
+        MP4Duration*  pRenderingOffset = NULL,
+        bool*         pIsSyncSample = NULL,
+        bool*         hasDependencyFlags = NULL,
+        uint32_t*     dependencyFlags = NULL );
 
     void WriteSample(
         MP4TrackId     trackId,
@@ -214,16 +227,16 @@ public:
         uint32_t       dependencyFlags );
 
     void SetSampleRenderingOffset(
-        MP4TrackId trackId,
+        MP4TrackId  trackId,
         MP4SampleId sampleId,
-        MP4Duration renderingOffset);
+        MP4Duration renderingOffset );
 
     MP4Duration GetTrackDurationPerChunk( MP4TrackId );
     void        SetTrackDurationPerChunk( MP4TrackId, MP4Duration );
 
     /* track level convenience functions */
 
-    MP4TrackId AddSystemsTrack(const char* type);
+    MP4TrackId AddSystemsTrack(const char* type, uint32_t timeScale = 1000 );
 
     MP4TrackId AddODTrack();
 
@@ -364,6 +377,10 @@ public:
         uint32_t   timescale = 0 );
 
     MP4TrackId AddSubtitleTrack(uint32_t timescale,
+                                uint16_t width,
+                                uint16_t height);
+
+    MP4TrackId AddSubpicTrack(uint32_t timescale,
                                 uint16_t width,
                                 uint16_t height);
 
@@ -738,58 +755,6 @@ public:
         MP4Timestamp* pStartTime = NULL,
         MP4Duration* pDuration = NULL);
 
-    /* iTunes metadata handling */
-protected:
-    bool CreateMetadataAtom(const char* name, itmf::BasicType typeCode);
-public:
-    // these are public to remove a lot of unnecessary routines
-    bool DeleteMetadataAtom(const char* name, bool try_udta = false);
-    bool GetMetadataString(const char *atom, char **value, bool try_udta = false);
-    bool SetMetadataString(const char *atom, const char *value);
-    bool MetadataDelete(void);
-
-    bool SetMetadataUint8(const char *atom, uint8_t value);
-    bool GetMetadataUint8(const char *atom, uint8_t* retvalue);
-
-    bool SetMetadataUint16(const char *atom, uint16_t value);
-    bool GetMetadataUint16(const char *atom, uint16_t* retvalue);
-
-    bool SetMetadataUint32(const char *atom, uint32_t value);
-	bool GetMetadataUint32(const char *atom, uint32_t* retvalue);
-	
-    /* set metadata */
-    bool SetMetadataTrack(uint16_t track, uint16_t totalTracks);
-    bool SetMetadataDisk(uint16_t disk, uint16_t totalDisks);
-    bool SetMetadataGenre(const char *value);
-    bool SetMetadataCoverArt(uint8_t *coverArt, uint32_t size);
-    bool SetMetadataFreeForm(const char *name,
-                             const uint8_t* pValue,
-                             uint32_t valueSize,
-                             const char *owner = NULL);
-
-    /* get metadata */
-    bool GetMetadataByIndex(uint32_t index,
-                            char** ppName, // free memory when done
-                            uint8_t** ppValue,  // free memory when done
-                            uint32_t* pValueSize);
-    bool GetMetadataTrack(uint16_t* track, uint16_t* totalTracks);
-    bool GetMetadataDisk(uint16_t* disk, uint16_t* totalDisks);
-    bool GetMetadataGenre(char **value);
-    
-    bool GetMetadataCoverArt(uint8_t **coverArt, uint32_t* size,
-                             uint32_t index = 0);
-    uint32_t GetMetadataCoverArtCount(void);
-    bool GetMetadataFreeForm(const char *name,
-                             uint8_t** pValue,
-                             uint32_t* valueSize,
-                             const char *owner = NULL);
-
-    /* delete metadata */
-    bool DeleteMetadataGenre();
-    bool DeleteMetadataFreeForm(const char *name, const char *owner = NULL);
-
-    /* end of MP4 API */
-
     /* "protected" interface to be used only by friends in library */
 
     uint64_t GetPosition( File* file = NULL );
@@ -875,6 +840,7 @@ public:
         const char* childName);
 
 protected:
+    void Init();
     void Open( const char* name, File::Mode mode, const MP4FileProvider* provider );
     void ReadFromFile();
     void GenerateTracks();
@@ -886,7 +852,7 @@ protected:
 
     void Rename(const char* existingFileName, const char* newFileName);
 
-    void ProtectWriteOperation(const char* where);
+    void ProtectWriteOperation(const char* file, int line, const char *func);
 
     void FindIntegerProperty(const char* name,
                              MP4Property** ppProperty, uint32_t* pIndex = NULL);
@@ -980,7 +946,6 @@ protected:
 protected:
     File*    m_file;
     uint64_t m_fileOriginalSize;
-    uint32_t m_verbosity;
     uint32_t m_createFlags;
 
     MP4Atom*          m_pRootAtom;
@@ -1005,9 +970,12 @@ protected:
     uint8_t m_numWriteBits;
     uint8_t m_bufWriteBits;
 
-    char m_tempFileName[MP4V2_PATH_MAX];
     char m_trakName[1024];
     char *m_editName;
+
+ private:
+    MP4File ( const MP4File &src );
+    MP4File &operator= ( const MP4File &src );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

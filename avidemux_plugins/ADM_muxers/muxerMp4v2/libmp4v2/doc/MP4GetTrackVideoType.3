@@ -1,0 +1,74 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackVideoType\fR \- Get the encoding type of a video track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int8_t \fBMP4GetTrackVideoType\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the video type is desired.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the video type of the track. Upon error, MP4_INVALID_VIDEO_TYPE is returned.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackVideoType\fR returns the encoding type of the specified video track in the mp4 file.
+.LP 
+Known video encoding types are:
+.LP 
+MP4_MPEG1_VIDEO_TYPE	
+.br 
+	MPEG\-1 Video
+.LP 
+MP4_MPEG2_SIMPLE_VIDEO_TYPE	
+.br 
+	MPEG\-2 Simple Profile Video
+.LP 
+MP4_MPEG2_MAIN_VIDEO_TYPE
+.br 
+	MPEG\-2 Main Profile Video (Broadcast/DVD)
+.LP 
+MP4_MPEG2_SNR_VIDEO_TYPE	
+.br 
+	MPEG\-2 SNR Profile Video
+.LP 
+MP4_MPEG2_SPATIAL_VIDEO_TYPE 
+.br 
+	MPEG\-2 Spatial Scalability Profile Video
+.LP 
+MP4_MPEG2_HIGH_VIDEO_TYPE 
+.br 
+	MPEG\-2 High Profile Video (HDTV)
+.LP 
+MP4_MPEG2_442_VIDEO_TYPE 
+.br 
+	MPEG\-2 442 Profile Video (Studio)
+.LP 
+MP4_MPEG4_VIDEO_TYPE	
+.br 
+	MPEG\-4 Video
+.LP 
+MP4_JPEG_VIDEO_TYPE
+.br 
+	JPEG stills or motion JPEG
+.LP 
+MP4_PRIVATE_VIDEO_TYPE
+.br 
+	User private type
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4AddVideoTrack(3)

@@ -1,0 +1,39 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4GetTrackEditTotalDuration\fR \- Get the total duration of a sequence of track edit segments
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4Duration \fBMP4GetTrackEditTotalDuration\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4EditId \fIeditId\fP = MP4_INVALID_EDIT_ID
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditId\fP
+Specifies the edit segment for which the total duration is desired. A value of MP4_INVALID_EDIT_ID specifies that all edit segments should be included.
+.SH "RETURN VALUES"
+.LP 
+The total duration of the edit segment sequence in track time scale units of the track in the mp4 file.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4GetTrackEditTotalDuration\fR returns the total duration of the specified sequence of track edit segments from the first edit segment up to and including the specified edit segment. If the edit id value is MP4_INVALID_EDIT_ID, then the total duration of all of the edit segments is returned.
+.LP 
+Caveat: The value is in units of the track time scale.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetTrackEditDuration(3)

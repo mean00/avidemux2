@@ -1,0 +1,95 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename ToolGuide.info
+@include base/guide.texi
+@paragraphindent none
+@c %**end of header
+
+@majorheading @value{PROJECT.name.formal} Command-line Tools Guide
+@contents
+
+@chapter Overview
+@value{PROJECT.name} bundles several command-line tools which, in general, allow some basic manipulation of mp4 files which have been created by other means. They are not meant to be a complete solution to management of mp4 file structure.
+
+The following is a brief summary of the tools available and the functionality offered. Other tools may be packaged with the distribution but are not yet stable enough to even document. User beware.
+
+@table @samp
+@item mp4file
+Operates on the entire file with actions such as list (summary information), optimization and ASCII dumps.
+
+@item mp4track
+Operates on individual tracks with actions such as colr-box and pasp-box manipulation.
+
+@item mp4art
+Operates on iTunes Metadata Cover-art Boxes with actions such as list, add, replace, remove and extraction of Cover-art images.
+@end table
+
+@chapter Introduction
+The tools are invoked by their command-name, followed by one or more options, actions, parameters for actions, and finally one or more files on which the tool will operate. Options are specified in one of two ways; in @b{short} or @b{long} syntax. A short-syntax option is prefixed with exactly one @i{dash} while a long-syntax option is prefixed with exactly two @i{dashes}. Depending on the option, it may or may not expect an argument. Specifying an option which expects an argument usually follows either of the following patterns:
+
+@example
+toolname --something value ...
+toolname --something=value ...
+@end example
+
+The rest of this guide will use the @i{equals} sign method.
+
+@chapter Common Options
+Many of the tools share a common set of options which. These common options usually have identically behaving short or long syntax. In some cases short-syntax differs from long-syntax in that it may not require an argument. This style is used sparingly and only when truly convenient. Even though it is common practice in many unix-style tools to permit @i{optional} arguments, the tools used in this project will tend to avoid that because it can create a great deal of confusion.
+
+The following is a list of common options available:
+
+@table @samp
+@item -y, --dryrun
+do not actually create or modify any files.
+In situations where the command will create new or modify existing files, specifying this option will cause the tool to do as much as possible stopping short of performing any actual writes. This is useful to guard against user mistakes or unexpected behavior.
+
+@item -k, --keepgoing
+continue batch processing even after errors.
+When actions involve multiple files or operations, the default behavior is to stop and exit on the first error encountered. Specify this option if it is desirable to record the error but continue processing.
+
+@item -o, --overwrite
+overwrite existing files when creating.
+In situations where a new file will be created, the default behavior is to not overwrite a file if it already exists. Use this option to allow overwriting.
+
+@item -f, --force
+force overwrite even if file is read-only.
+If overwriting is enabled, file permissions may prevent writes. Specify this option to try and overwrite the file anyways. This usually involves deleting the file, then creating a new one.
+
+@item -q, --quiet
+equivalent to --verbose 0.
+Default behavior is to print a low amount of informative information, usually one line of text per action/file. Specify this option to omit normal messages. Errors will still be reported.
+
+@item -d, --debug NUM
+increase debug or long-option to set NUM.
+File I/O with mp4 file structures have special debug options available to users interested in all the fine details. Default is level 1 . The short-syntax is accumulative and takes no argument, while long-syntax takes an argument. For exmaple, the following are equivalent and would set level 3: @samp{-dd} or @samp{-d -d} or @samp{--debug=3}. The following levels are available:
+@enumerate 0
+@item  supressed
+@item  add warnings and errors (default)
+@item  add table details
+@item  add implicits
+@item  everything
+@end enumerate
+
+@item -v, --verbose NUM
+increase verbosity or long-option to set NUM.
+Tool activity by default will generally print one informative message per action/file. Specify this option to change the default behavior. The short-syntax is accumulative and takes no argument, while long-syntax takes an argument.
+@enumerate 0
+@item  warnings and errors
+@item  normal informative messages (default)
+@item  more informative messages
+@item  everything
+@end enumerate
+
+@item -h, --help
+print brief help or long-option for extended help.
+The short-syntax will produce brief help. Specify the long-option for more extensive help.
+
+@item --version
+print version information and exit.
+Extended version information used for SCM purposes is not listed in help, but is available by specifying @samp{--verionx}.
+@end table
+
+@include tool/mp4file.texi
+@include tool/mp4track.texi
+@include tool/mp4art.texi

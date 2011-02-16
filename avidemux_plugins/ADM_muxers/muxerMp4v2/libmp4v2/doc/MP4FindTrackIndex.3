@@ -1,0 +1,34 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4FindTrackIndex\fR \- Find a track index
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int16_t \fBMP4FindTrackIndex\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track for which the index is desired. 
+
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track index of the specified track. Upon an error, 0xFFFF.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4FindTrackIndex\fR gets the index of the track with the specified track id. 
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4FindTrackId(3)

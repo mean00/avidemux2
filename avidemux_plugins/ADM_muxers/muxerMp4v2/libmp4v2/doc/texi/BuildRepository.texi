@@ -1,0 +1,42 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename BuildRepository.info
+@include base/article.texi
+@include build/commands.texi
+@paragraphindent none
+@c %**end of header
+
+@majorheading @value{PROJECT.name.formal} Building the Repository
+@contents
+
+@chapter Overview
+@include build/overview.texi
+
+@chapter Introduction
+This document describes the recommended process to build @value{PROJECT.name} from the repository. This process is a @b{superset} of the process to build from a @value{TERM.srcdist} bundle.  If you are interested in building from a @value{TERM.srcdist} bundle then this document is not for you.
+
+@chapter Quickstart
+This chapter is for the impatient or those just looking for a quick summary of all the commands used in a typical build. You may skip this summary and jump to @ref{Build Process}.
+
+@example
+@COMMAND.checkout{}
+@COMMAND.bootstrap{}
+@COMMAND.configure{}
+@COMMAND.build{}
+@COMMAND.install{}
+@COMMAND.dist{}
+@end example
+
+@anchor{Build Process}
+@chapter Build Process
+
+@include build/process.checkout.texi
+@include build/process.bootstrap.texi
+@include build/process.configure.texi
+@include build/process.build.texi
+@include build/process.install.texi
+@include build/process.dist.texi
+@include build/process.doc.texi
+@include build/process.google.texi
+
+@include build/platforms.texi

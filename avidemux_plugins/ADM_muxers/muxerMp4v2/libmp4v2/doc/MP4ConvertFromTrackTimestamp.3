@@ -1,0 +1,43 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4ConvertFromTrackTimestamp\fR \- Convert a timestamp from the track time scale to a specified time scale.
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+u_int64_t \fBMP4ConvertFromTrackTimestamp\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4Timestamp \fItimestamp\fP,
+.br 
+	u_int32_t \fInewTimeScale\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track from which the timestamp originates.
+.TP 
+\fItimestamp\fP
+Specifies the timestamp that is to be converted.
+.TP 
+\fInewTimeScale\fP
+Specifies the new time scale in ticks per second to which the timestamp should be converted.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the timestamp in the new time scale units. Upon error, 0xFFFFFFFFFFFFFFFF.
+.SH "DESCRIPTION"
+.LP 
+\fBMP4ConvertFromTrackTimestamp\fR converts a timestamp such as a sample start time from the track time scale to another specified time scale. This can be used by a player application to map all track samples to a common time scale.
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ConvertToTrackTimestamp(3)

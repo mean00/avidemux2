@@ -1,0 +1,47 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename Documentation.info
+@include base/article.texi
+@paragraphindent none
+@c %**end of header
+
+@titlepage
+@end titlepage
+
+@majorheading @value{PROJECT.name.formal} Documentation
+@include releasenotes/intro.@value{PROJECT.repo.type}.texi
+
+@heading Introduction
+Project @value{PROJECT.name} consists of a C-library and various command-line utilities which permit creation and modification of MP4 files as defined by as defined by @cite{ISO base media file format}, document number @cite{ISO/IEC 14496-12:2005(E)}.
+
+@heading Official website
+The official @url{@value{PROJECT.url.website},website} makes various @url{@value{PROJECT.url.downloads},downloads} available and archives online browesable documentation for releases, including API Reference. Questions, bug-reports and general feedback may be submitted to the @url{@value{PROJECT.url.discussion},discussion} group.
+
+@ifnothtml
+@unnumbered Articles
+   See Release Notes (@file{doc/ReleaseNotes.txt})
+@* See Building the Source (@file{doc/BuildSource.txt})
+@* See Building the Repository (@file{doc/BuildRepository.txt})
+@* See Authors (@file{doc/Authors.txt})
+
+@unnumbered Guides
+   See Command-line Tools Guide (@file{doc/ToolGuide.txt})
+@end ifnothtml
+
+@ifhtml
+@unnumbered Articles
+@enumerate
+@item @url{ReleaseNotes.html,Release Notes}.
+@item @url{BuildSource.html,Building the Source}.
+@item @url{BuildRepository.html,Building the Repository}.
+@item @url{Authors.html,Authors}.
+@end enumerate
+@unnumbered Guides
+@enumerate
+@item @url{ToolGuide.html,Command-line Tools Guide}.
+@end enumerate
+@unnumbered Reference
+@enumerate
+@item @url{api/index.html,API Reference}.
+@end enumerate
+@end ifhtml

@@ -1,0 +1,81 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4ReadSampleFromEditTime\fR \- Read a track sample based on a specified edit list time
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4ReadSampleFromEditTime\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fItrackId\fP,
+.br 
+	MP4Timestamp \fIeditWhen\fP,
+.br 
+	u_int8_t** \fIppBytes\fP,
+.br 
+	u_int32_t* \fIpNumBytes\fP,
+.br 
+	MP4Timestamp* \fIpStartTime\fP = NULL,
+.br 
+	MP4Duration* \fIpDuration\fP = NULL,
+.br 
+	MP4Duration* \fIpRenderingOffset\fP = NULL,
+.br 
+	bool \fIpIsSyncSample\fP = NULL
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the track to which the operation applies.
+.TP 
+\fIeditWhen\fP
+Specifies which sample is to be read based on a time in the edit list timeline. See MP4GetSampleIdFromEditTime() for details.
+.TP 
+\fIppBytes\fP
+Pointer to the pointer to the sample data. See DESCRIPTION for details on this argument. 
+.TP 
+\fIpNumBytes\fP
+Pointer to variable that will be hold the size in bytes of the sample.
+.TP 
+\fIpStartTime\fP
+If non\-NULL, pointer to variable that will receive the starting timestamp for this sample. Caveat: The timestamp is in the track timescale.
+.TP 
+\fIpDuration\fP
+If non\-NULL, pointer to variable that will receive the duration for this sample. Caveat: The duration is in the track timescale units.
+.TP 
+\fIpRenderingOffset\fP
+If non\-NULL, pointer to variable that will receive the rendering offset for this sample. Currently the only media type that needs this feature is MPEG video. Caveat: The offset is in the track timescale units.
+.TP 
+\fIpIsSyncSample\fP
+If non\-NULL, pointer to variable that will receive the state of the sync/random access flag for this sample.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4ReadSampleFromEditTime\fR reads the sample corresponding to the time on the track edit list timeline from the specified track. Typically this sample is then decoded in a codec dependent fashion and rendered in an appropriate fashion.
+.LP 
+The argument, ppBytes, allows for two possible approaches for buffering:
+.LP 
+If the calling application wishes to handle its own buffering it can set *ppBytes to the buffer it wishes to use. The calling application is responsible for ensuring that the buffer is large enough to hold the sample. This can be done by using either MP4GetSampleSize() or MP4GetTrackMaxSampleSize() to determine before\-hand how large the receiving buffer must be.
+.LP 
+If the value of *ppBytes is NULL, then an appropriately sized buffer is automatically malloc'ed for the sample data and *ppBytes set to this pointer. The calling application is responsible for free'ing this memory. 
+
+The last four arguments are pointers to variables that can receive optional sample information. 
+.LP 
+Typically for audio none of these are needed. MPEG audio such as MP3 or AAC has a fixed sample duration and every sample can be accessed at random. 
+.LP 
+For video, all of these optional values could be needed. MPEG video can be encoded at a variable frame rate, with only occasional random access points, and with "B frames" which cause the rendering (display) order of the video frames to differ from the storage/decoding order.
+.LP 
+Other media types fall between these two extremes.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4ReadSample(3) MP4GetSampleIdFromEditTime(3) MP4ReadSampleFromTime(3)

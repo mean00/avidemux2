@@ -200,7 +200,7 @@ siteclean:
 ###############################################################################
 
 $(DOC.man.out): | $(dir $(DOC.man.out))
-$(DOC.man.out): $(DOC.out/)man/man1/%.1: $(BUILD/)%
+$(DOC.man.out): $(DOC.out/)man/man1/%.1: $(BUILD/)%$(EXEEXT)
 	$(call HELP2MAN.cmd,$<,$@)
 
 $(DOC.texi2html.out): $(DOC.texi.includes) | $(dir $(DOC.texi2html.out))
@@ -261,7 +261,7 @@ $(DOC.site.out.html): $(DOC.out.site/)%: $(DOC.out.articles/)html/%
 ###############################################################################
 
 GOOGLE.out/      = $(top_builddir)/google/
-GOOGLE.repo.doc  = $(if $(filter stable,$(PROJECT_repo_type)),$(PROJECT_version),trunk)
+GOOGLE.repo.doc  = $(PROJECT_repo_branch)
 
 google.clean:
 	rm -fr $(GOOGLE.out/)

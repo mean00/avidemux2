@@ -1,0 +1,40 @@
+@chapter mp4file
+
+@table @samp
+@item --list
+list (summary information).
+This will produce brief report when summarizing each mp4 file.
+@b{BRAND} shows the file's main brand identifier.
+@b{COMPAT} shows additional brands for which the file purports to be comaptible with.
+@b{SIZING} displays if the file has 64-bit extensions of any kind, otherwise 32-bit.
+Example output:
+@example
+BRAND  COMPAT              SIZING  FILE
+----------------------------------------------------------------------
+M4A    M4A,isom,mp42       32-bit  Song.m4a
+mp42   isom,mp42           32-bit  Movie1.m4v
+mp42   isom,mp42           32-bit  Movie2.m4v
+@end example
+
+@item --optimize
+optimize mp4 structure.
+This will rewrite the entire mp4 file which, if needed, will clean up
+any unused (free) sections, and re-order the atoms in a manner somewhat
+consistent with the best-practices described in the ISO base media file
+specification.
+
+@item --dump
+dump mp4 structure in human-readable format.
+An ASCII dump of mp4 atoms is printed to stdout. This action is heavily
+influenced by @samp{--debug} option.
+
+Example, list some files:
+@example
+mp4file --list *.mp4 *.m4a *.m4v
+@end example
+
+Example, dump a file with more than usual debugging information:
+@example
+mp4file -dd --dump movie.m4v
+@end example
+@end table

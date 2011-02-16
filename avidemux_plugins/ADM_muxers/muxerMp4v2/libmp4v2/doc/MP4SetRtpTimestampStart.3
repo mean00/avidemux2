@@ -1,0 +1,39 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetRtpTimestampStart\fR \- Set the RTP start time of a hint track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetRtpTimestampStart\fR(
+.br 
+	MP4FileHandle \fIhFile\fP,
+.br 
+	MP4TrackId \fIhintTrackId\fP,
+.br 
+	MP4Timestamp \fIstartTime\fP
+.br 
+);
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.TP 
+\fItrackId\fP
+Specifies the hint track to which the operation applies.
+.TP 
+\fIstartTime\fP
+Specifies the desired RTP start timestamp for the hint track.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetRtpTimestampStart\fR sets the RTP timestamp start of the specified hint track. Typically this is a random value that is chosen when the first RTP packet is constructed by the MP4 library. However the  value can be set explicitly for the hint track and stored. Typically this is used if it is desired that timestamps start at zero.
+.LP 
+See IETF RFC 1889 for details regarding RTP timestamps and RTCP.
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetRtpTimestampStart(3)

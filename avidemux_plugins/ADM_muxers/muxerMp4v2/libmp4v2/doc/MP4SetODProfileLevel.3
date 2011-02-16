@@ -1,0 +1,41 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4SetODProfileLevel\fR \- Sets the minimum MPEG\-4 object descriptor profile and level required to render the contents of the file
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+bool \fBMP4SetODProfileLevel\fR(
+.br 
+        MP4FileHandle \fIhFile\fP,
+.br 
+        u_int8_t \fIprofileLevel\fP
+.br 
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIhFile\fP
+Specifies the mp4 file to which the operation applies.
+.SH "RETURN VALUES"
+.LP 
+Upon success, true (1). Upon an error, false (0).
+.SH "DESCRIPTION"
+.LP 
+\fBMP4SetODProfileLevel\fR sets the minumum profile/level of MPEG\-4 object descriptor support necessary to render the contents of the file.
+.LP 
+ISO/IEC 14496\-1:2001 MPEG\-4 Systems defines the following values:
+.br 
+	0x00		Reserved
+.br 
+	0x01\-0x7F	Reserved
+.br 
+	0x80\-0xFD	User private
+.br 
+	0xFE		No object descriptor profile specified
+.br 
+	0xFF		No object descriptor required
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4GetODProfileLevel(3)

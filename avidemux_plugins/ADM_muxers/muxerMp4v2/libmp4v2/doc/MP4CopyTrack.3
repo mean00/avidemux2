@@ -1,0 +1,54 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "NAME"
+.LP 
+\fBMP4CopyTrack\fR \- Make a copy of a specified track
+.SH "SYNTAX"
+.LP 
+#include <mp4.h>
+.LP 
+MP4TrackId \fBMP4CopyTrack\fR(
+.br 
+	MP4FileHandle \fIsrcFile\fP,
+.br 
+	MP4TrackId \fIsrcTrackId\fP,
+.br 
+	MP4FileHandle \fIdstFile\fP = MP4_INVALID_FILE_HANDLE,
+.br 
+	bool \fIapplyEdits\fP = false,
+.br 
+	MP4TrackId \fIdstHintTrackReferenceTrack\fP = MP4_INVALID_TRACK_ID
+.br
+)
+.SH "ARGUMENTS"
+.LP 
+.TP 
+\fIsrcFile\fP
+Specifies the mp4 file of the source track of the operation.
+.TP 
+\fIsrcTrackId\fP
+Specifies the track id of the track to be copied.
+.TP 
+\fIdstFile\fP
+Specifies the mp4 file of the new, copied track. If the value  is MP4_INVALID_FILE_HANDLE, the new track is created in the same file as the source track. 
+.TP 
+\fIapplyEdits\fP
+Specifies if the track edit list is to be applied during the copying of media samples. If false, then all samples are copied, if true then only those samples included by the track edit list are copied.
+.TP
+\fIdstHintTrackReferenceTrack\fP
+When cloning a hint track, this parameter specifies the track id of the reference track in the destination file.
+.SH "RETURN VALUES"
+.LP 
+Upon success, the track id of the new track. Upon an error, MP4_INVALID_TRACK_ID.
+
+.SH "DESCRIPTION"
+.LP 
+\fBMP4CopyTrack\fR creates a new track to an mp4 file that is a copy of an existing track with respect to the track media type, other control information, and media samples.
+.LP 
+The applyEdits parameter of this function allows for easy creation of standalone clips from a larger mp4 file. To do this use MP4AddTrackEdit() to specify the start and duration of the clip, and then use MP4CopyTrack() to export that portion of the media to a new mp4 file.
+.LP 
+Note if you do not want to copy the media samples, but just want to create a track with the same type and control information of the source track use MP4CloneTrack().
+
+
+.SH "SEE ALSO"
+.LP 
+MP4(3) MP4CloneTrack(3) MP4AddTrackEdit(3)

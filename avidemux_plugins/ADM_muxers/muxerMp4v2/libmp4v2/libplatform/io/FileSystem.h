@@ -21,6 +21,10 @@ public:
     //! Query file presence.
     //! Check if <b>name</b> exists.
     //! @param name filename to query.
+	//!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
     //! @return true if present, false otherwise.
     //!
     ///////////////////////////////////////////////////////////////////////////
@@ -32,6 +36,10 @@ public:
     //! Query directory type.
     //! Check if <b>name</b> exists and is a directory.
     //! @param name pathname to query.
+	//!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
     //! @return true if directory, false otherwise.
     //!
     ///////////////////////////////////////////////////////////////////////////
@@ -42,6 +50,10 @@ public:
     //!
     //! Query file type.
     //! Check if <b>name</b> exists and is a file.
+    //!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
     //! @param name filename to query.
     //! @return true if file, false otherwise.
     //!
@@ -54,6 +66,10 @@ public:
     //! Query file size.
     //! Check if <b>name</b> exists and is a file.
     //! @param name filename to query.
+    //!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
     //! @param size output indicating file size in bytes.
     //! @return true on failure, false on success.
     //!
@@ -72,7 +88,15 @@ public:
     //! the same filesystem.
     //!
     //! @param oldname existing pathname to rename.
+    //!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
     //! @param newname new pathname.
+    //!     On Windows, this should be a UTF-8 encoded string.
+    //!     On other platforms, it should be an 8-bit encoding that is
+    //!     appropriate for the platform, locale, file system, etc.
+    //!     (prefer to use UTF-8 when possible).
     //!
     //! @return true on failure, false on success.
     //!

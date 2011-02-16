@@ -1,0 +1,47 @@
+.TH "MP4" "3" "Version 0.9" "Cisco Systems Inc." "MP4 File Format Library"
+.SH "DESCRIPTION"
+.LP 
+The MP4 library provides an API to create and modify mp4 files as defined by ISO\-IEC:14496\-1:2001 MPEG\-4 Systems. This file format is derived from Apple's QuickTime file format that has been used as a multimedia file format in a variety of platforms and applications. It is a very powerful and extensible format that can accomodate practically any type of media.
+.LP 
+The basic structure of an mp4 file is that the file is a container for one or more tracks. These tracks contain one type of media, such as audio or video. Each track has its own timeline, samples, and properties. An example of a sample is a frame of video. The file describes how to synchronize the timelines of the tracks and the aggregate properties of the tracks.
+.LP 
+The MP4 library is focussed on providing an easy to use API for the mp4 file format. It has been used with an encoder, a server, a player, and a number of mp4 utilities. However, it may not be adequate for multimedia editors that wish to work directly with mp4 files. It can be used by these type of tools to export an mp4 file. (The library is open source so contributions of extensions to the library are welcome.)
+.LP 
+In providing a easy to use API not all the information in the mp4 file is directly exposed via the API. To accomodate applications that need access to information not otherwise available via the API there are file and track level generic get and set property routines that use arbitary string property names. To use these routines you will need to be familar with the mp4 file specification or be willing to wade thru the output of MP4Dump() to determine what you want. See MP4GetIntegerProperty() for more details.
+.SH "INVOCATION"
+.LP 
+The libary API is defined in <mp4.h> which includes all the necessary dependent include files.
+.LP 
+The MP4 library can be used by either C or C++ programs. The calling convention is C, but if C++ is used then the default argument feature of that language can be used. 
+.LP 
+For example:
+.br 
+	MP4Create("foo.mp4", 0, 0, 0); /* OK in C++ and C */
+.br 
+	MP4Create("foo.mp4"); /* OK in C++, ERROR in C */
+.SH "EXAMPLES"
+See mpeg4ip/lib/mp4v2/util and mpeg4ip/lib/mp4v2/test for simple example programs that use the MP4 library.
+.LP 
+In particular:
+.br 
+	mp4nullcreate.cpp 
+.br 
+	Program that creates an empty mp4 file.
+.LP 
+	mp4dump.cpp	
+.br 
+	Simple program to print a text version of an mp4 file
+.LP 
+	mp4extract.cpp 
+.br 
+	Program to read each track and sample and place them in a separate file to ease inspection or recombination.
+.LP 
+	mp4broadcaster.cpp
+.br 
+	Program to broadcast the hinted tracks of an mp4 file using RTP.
+.LP 
+	mp4nullvplayer.cpp
+.br 
+	Program that reads the video track but doesn't actually render the video.
+.LP 
+For more complete applications that use the MP4 library see mpeg4ip/server/mp4creator, mpeg4ip/server/mp4live, and mpeg4ip/player/src.
