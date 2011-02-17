@@ -35,7 +35,6 @@ MACRO(ADD_VIDEO_FILTER name)
     IF(DO_COMMON)
         ADD_LIBRARY(${name} SHARED ${ARGN})
 	AS_NEEDED(${name})
-	TARGET_LINK_LIBRARIES( ${name} "-Wl,--as-needed")
     ENDIF(DO_COMMON)
 ENDMACRO(ADD_VIDEO_FILTER name)
 
