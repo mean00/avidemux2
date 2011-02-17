@@ -1,3 +1,4 @@
+include(admAsNeeded)
 SET(VF_PLUGIN_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/videoFilters/")
 ############## INIT_VIDEO_FILTER_INTERNAL ###################"
 MACRO(INIT_VIDEO_FILTER_INTERNAL _lib)
@@ -33,6 +34,8 @@ ENDMACRO(INSTALL_VIDEO_FILTER _lib)
 MACRO(ADD_VIDEO_FILTER name)
     IF(DO_COMMON)
         ADD_LIBRARY(${name} SHARED ${ARGN})
+	AS_NEEDED(${name})
+	TARGET_LINK_LIBRARIES( ${name} "-Wl,--as-needed")
     ENDIF(DO_COMMON)
 ENDMACRO(ADD_VIDEO_FILTER name)
 

@@ -1,3 +1,4 @@
+include(admAsNeeded)
 MACRO(INIT_AUDIO_DEVICE _lib)
 	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_coreAudioDevice/include")
 	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/ADM_core/include")

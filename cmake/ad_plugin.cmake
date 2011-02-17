@@ -1,3 +1,4 @@
+include(admAsNeeded)
 MACRO(INIT_AUDIO_PLUGIN _lib)
 	INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_audiocodec")
 ENDMACRO(INIT_AUDIO_PLUGIN)

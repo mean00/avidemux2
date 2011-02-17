@@ -1,3 +1,4 @@
+include(admAsNeeded)
 MACRO(INIT_VIDEO_FILTER_QT4  lib  _srcsQt _headersQt _srcQt_ui  )
 	IF (DO_QT4)
 		INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})
@@ -6,6 +7,7 @@ MACRO(INIT_VIDEO_FILTER_QT4  lib  _srcsQt _headersQt _srcQt_ui  )
 		QT4_WRAP_CPP(qt4_cpp ${_headersQt})
 
 		ADD_LIBRARY(${lib} SHARED ${ARGN} ${_srcsQt} ${qt4_cpp} ${qt4_ui})
+		AS_NEEDED(${lib})
 		ADD_TARGET_CFLAGS(${lib} "-DADM_UI_TYPE_BUILD=4")
 		TARGET_LINK_LIBRARIES( ${lib} ADM_UIQT46  ADM_render6_qt4)
 		TARGET_LINK_LIBRARIES(${lib} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
