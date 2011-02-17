@@ -6,6 +6,7 @@ SET(ADM_mp4v2_SRCS
 	muxerMp4v2Video.cpp
 	muxerMp4v2Config.cpp
 )
+ADD_DEFINITIONS(-DMP4V2_USE_STATIC_LIB)
 SUBDIRS(libmp4v2)
 
 ADD_LIBRARY(ADM_mx_mp4v2 SHARED ${ADM_mp4v2_SRCS})

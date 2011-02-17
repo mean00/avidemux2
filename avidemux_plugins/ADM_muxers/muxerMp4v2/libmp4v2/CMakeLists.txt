@@ -95,7 +95,7 @@ if(WIN32)
 		libplatform/number/random_win32.cpp
 		libplatform/process/process_win32.cpp
 		libplatform/time/time_win32.cpp
-	
+		libplatform/platform_win32.cpp
  	)
 else(WIN32)
 		SET(PLATFORM
@@ -118,7 +118,6 @@ SET(PLATFORM ${PLATFORM}
 
 
 ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS} ${PLATFORM})
-ADD_DEFINITIONS(-DMP4V2_USE_STATIC_LIB)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
