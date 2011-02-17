@@ -5,7 +5,7 @@ SET(ADM_flv_SRCS
         muxerFlvConfig.cpp
 )
 
-ADD_LIBRARY(ADM_mx_flv SHARED ${ADM_flv_SRCS})
+ADD_MUXER(ADM_mx_flv ${ADM_flv_SRCS})
 TARGET_LINK_LIBRARIES(ADM_mx_flv  ADM_libavutil ADM_libavformat ADM_libavcodec)
 
 INIT_MUXER(ADM_mx_flv)

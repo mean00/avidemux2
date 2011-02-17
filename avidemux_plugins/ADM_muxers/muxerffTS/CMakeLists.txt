@@ -5,7 +5,7 @@ SET(ADM_ffTS_SRCS
         muxerffTSConfig.cpp
 )
 
-ADD_LIBRARY(ADM_mx_ffTS SHARED ${ADM_ffTS_SRCS})
+ADD_MUXER(ADM_mx_ffTS ${ADM_ffTS_SRCS})
 
 TARGET_LINK_LIBRARIES(ADM_mx_ffTS  ADM_libavutil ADM_libavcodec ADM_libavformat)
 INIT_MUXER(ADM_mx_ffTS)

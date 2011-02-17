@@ -8,7 +8,7 @@ SET(ADM_mxf_SRCS
 	ADM_mxf.cpp
 )
 
-ADD_LIBRARY(ADM_dm_mxf SHARED ${ADM_mxf_SRCS})
+ADD_DEMUXER(ADM_dm_mxf ${ADM_mxf_SRCS})
 
 INIT_DEMUXER(ADM_dm_mxf)
 INSTALL_DEMUXER(ADM_dm_mxf)

@@ -9,7 +9,7 @@ SET(ADM_avi_SRCS
 )
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxer/include")
 
-ADD_LIBRARY(ADM_mx_avi SHARED ${ADM_avi_SRCS})
+ADD_MUXER(ADM_mx_avi ${ADM_avi_SRCS})
 
 INIT_MUXER(ADM_mx_avi)
 INSTALL_MUXER(ADM_mx_avi)

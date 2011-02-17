@@ -9,7 +9,7 @@ ADM_mp4Leaf.cpp
 ADM_mp4Plugin.cpp
 )
 	
-ADD_LIBRARY(ADM_dm_mp4 SHARED ${ADM_mp4_SRCS})
+ADD_DEMUXER(ADM_dm_mp4 ${ADM_mp4_SRCS})
 
 INIT_DEMUXER(ADM_dm_mp4)
 INSTALL_DEMUXER(ADM_dm_mp4)

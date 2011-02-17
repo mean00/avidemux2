@@ -8,7 +8,7 @@ SET(ADM_asf_SRCS
         ADM_asfHeaders.cpp
 )
 
-ADD_LIBRARY(ADM_dm_asf SHARED ${ADM_asf_SRCS})
+ADD_DEMUXER(ADM_dm_asf ${ADM_asf_SRCS})
 
 INIT_DEMUXER(ADM_dm_asf)
 INSTALL_DEMUXER(ADM_dm_asf)

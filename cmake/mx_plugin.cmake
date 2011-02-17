@@ -1,3 +1,4 @@
+include(admAsNeeded)
 MACRO(INIT_MUXER _lib)
 ENDMACRO(INIT_MUXER)
 
@@ -5,3 +6,9 @@ MACRO(INSTALL_MUXER _lib)
         TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUtils6 ADM_coreAudio6 ADM_coreImage6 ADM_coreUI6 ADM_core6 ADM_coreMuxer6)
 	INSTALL(TARGETS ${_lib} DESTINATION "${AVIDEMUX_LIB_DIR}/ADM_plugins6/muxers/")
 ENDMACRO(INSTALL_MUXER)
+
+MACRO(ADD_MUXER name)
+        ADD_LIBRARY(${name} SHARED ${ARGN})
+	AS_NEEDED(${name})
+ENDMACRO(ADD_MUXER name)
+

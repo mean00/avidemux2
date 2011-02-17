@@ -9,7 +9,7 @@ SET(ADM_matroska_SRCS
     ebml.cpp  
     mkv_tags.cpp
 )
-ADD_LIBRARY(ADM_dm_matroska SHARED ${ADM_matroska_SRCS})
+ADD_DEMUXER(ADM_dm_matroska ${ADM_matroska_SRCS})
 
 TARGET_LINK_LIBRARIES(ADM_dm_matroska ADM_libavutil ADM_audioParser6)
 

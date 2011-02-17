@@ -8,7 +8,7 @@ SET(ADM_pic_SRCS
 	ADM_pics.cpp
 )
 
-ADD_LIBRARY(ADM_dm_pic SHARED ${ADM_pic_SRCS})
+ADD_DEMUXER(ADM_dm_pic ${ADM_pic_SRCS})
 
 INIT_DEMUXER(ADM_dm_pic)
 INSTALL_DEMUXER(ADM_dm_pic)

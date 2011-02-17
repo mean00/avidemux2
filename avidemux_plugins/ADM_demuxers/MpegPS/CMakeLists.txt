@@ -10,7 +10,7 @@ SET(ADM_ps_SRCS
         ADM_psComputeTimeStamp.cpp
 )
 
-ADD_LIBRARY(ADM_dm_ps SHARED ${ADM_ps_SRCS})
+ADD_DEMUXER(ADM_dm_ps ${ADM_ps_SRCS})
 TARGET_LINK_LIBRARIES(ADM_dm_ps ADM_coreDemuxerMpeg6 ADM_audioParser6)
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxerMpeg/include")
 

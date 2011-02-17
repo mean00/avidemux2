@@ -16,7 +16,7 @@ SET(ADM_ts_SRCS
         ADM_tsGetBits.cpp
 )
 
-ADD_LIBRARY(ADM_dm_ts SHARED ${ADM_ts_SRCS})
+ADD_DEMUXER(ADM_dm_ts ${ADM_ts_SRCS})
 TARGET_LINK_LIBRARIES(ADM_dm_ts ADM_coreDemuxerMpeg6 ADM_audioParser6  ADM_libavutil ADM_libavcodec ADM_libavformat)
 
 # For ffmpeg includes

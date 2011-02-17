@@ -10,7 +10,7 @@ ADM_opendml_reindex.cpp
 ADM_riff.cpp
 ADM_openDMLPlugin.cpp
 )
-ADD_LIBRARY(ADM_dm_opendml SHARED ${ADM_openDML_SRCS})
+ADD_DEMUXER(ADM_dm_opendml ${ADM_openDML_SRCS})
 
 INIT_DEMUXER(ADM_dm_opendml)
 INSTALL_DEMUXER(ADM_dm_opendml)

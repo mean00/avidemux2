@@ -5,7 +5,7 @@ SET(ADM_flv_SRCS
 	ADM_flvIndex.cpp
 	ADM_flvAudio.cpp)
 
-ADD_LIBRARY(ADM_dm_flv SHARED ${ADM_flv_SRCS})
+ADD_DEMUXER(ADM_dm_flv ${ADM_flv_SRCS})
 
 TARGET_LINK_LIBRARIES(ADM_dm_flv ADM_libavutil)
 
