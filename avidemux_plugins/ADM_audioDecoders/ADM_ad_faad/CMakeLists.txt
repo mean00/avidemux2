@@ -6,7 +6,7 @@ IF (USE_FAAD)
 	
 	SET(ADM_ad_faad_SRCS ADM_ad_faad.cpp)
 
-	ADD_LIBRARY(ADM_ad_faad SHARED ${ADM_ad_faad_SRCS})
+	ADD_AUDIO_DECODER( ADM_ad_faad ${ADM_ad_faad_SRCS})
 	TARGET_LINK_LIBRARIES(ADM_ad_faad ${FAAD_LIBRARY_DIR})
 
 	ADD_TARGET_CFLAGS(ADM_ad_faad "-I${FAAD_INCLUDE_DIR}")

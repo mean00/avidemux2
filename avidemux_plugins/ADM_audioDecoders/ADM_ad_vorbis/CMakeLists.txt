@@ -7,7 +7,7 @@ IF(USE_LIBVORBIS)
 
         SET(ADM_ad_vorbis_SRCS ADM_ad_vorbis.cpp)
 
-        ADD_LIBRARY(ADM_ad_vorbis SHARED ${ADM_ad_vorbis_SRCS})
+	ADD_AUDIO_DECODER(ADM_ad_vorbis ${ADM_ad_vorbis_SRCS})
 
         TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${LIBVORBIS_LIBRARY_DIR})
 

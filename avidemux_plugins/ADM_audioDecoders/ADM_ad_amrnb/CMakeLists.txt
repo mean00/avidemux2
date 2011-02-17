@@ -6,8 +6,7 @@ IF (AMRNB_FOUND)
 	INCLUDE(ad_plugin)
 	
 	SET(ADM_ad_amrnb_SRCS ADM_ad_amrnb.cpp)
-
-	ADD_LIBRARY(ADM_ad_amrnb SHARED ${ADM_ad_amrnb_SRCS})
+	ADD_AUDIO_DECODER( ADM_ad_amrnb ${ADM_ad_amrnb_SRCS})
 	TARGET_LINK_LIBRARIES(ADM_ad_amrnb ${AMRNB_LIBRARY_DIR})
 
 	ADD_TARGET_CFLAGS(ADM_ad_amrnb "-I${AMRNB_INCLUDE_DIR}")
