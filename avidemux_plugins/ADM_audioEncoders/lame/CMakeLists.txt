@@ -2,7 +2,7 @@
 
 	SET(ADM_ae_lame_SRCS audioencoder_lame.cpp )
 
-	ADD_LIBRARY(ADM_ae_lame SHARED ${ADM_ae_lame_SRCS})
+	ADD_AUDIO_ENCODER(ADM_ae_lame ${ADM_ae_lame_SRCS})
 
 	TARGET_LINK_LIBRARIES(ADM_ae_lame ${LAME_LIBRARY_DIR})
 

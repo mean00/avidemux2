@@ -2,7 +2,7 @@
 
 	SET(ADM_ae_vorbis_SRCS audioencoder_vorbis.cpp)
 
-	ADD_LIBRARY(ADM_ae_vorbis SHARED ${ADM_ae_vorbis_SRCS})
+	ADD_AUDIO_ENCODER(ADM_ae_vorbis ${ADM_ae_vorbis_SRCS})
 
 	TARGET_LINK_LIBRARIES(ADM_ae_vorbis ${VORBIS_LIBRARY_DIR} ${VORBISENC_LIBRARY_DIR} )
 

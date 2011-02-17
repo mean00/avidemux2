@@ -2,7 +2,7 @@
 
 	SET(ADM_ae_faac_SRCS audioencoder_faac.cpp)
 
-	ADD_LIBRARY(ADM_ae_faac SHARED ${ADM_ae_faac_SRCS})
+	ADD_AUDIO_ENCODER(ADM_ae_faac ${ADM_ae_faac_SRCS})
 
         TARGET_LINK_LIBRARIES(ADM_ae_faac ${FAAC_LIBRARY_DIR})
 

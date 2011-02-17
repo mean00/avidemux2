@@ -3,7 +3,7 @@
 
 	SET(ADM_ae_twolame_SRCS audioencoder_twolame.cpp)
 
-	ADD_LIBRARY(ADM_ae_twolame SHARED ${ADM_ae_twolame_SRCS})
+	ADD_AUDIO_ENCODER(ADM_ae_twolame ${ADM_ae_twolame_SRCS})
 
 	TARGET_LINK_LIBRARIES(ADM_ae_twolame ADM_libtwolame )
         include_directories(ADM_libtwolame)

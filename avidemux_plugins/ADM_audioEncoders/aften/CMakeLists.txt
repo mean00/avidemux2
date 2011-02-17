@@ -2,7 +2,7 @@
 
 	SET(ADM_ae_aften_SRCS audioencoder_aften.cpp)
 
-	ADD_LIBRARY(ADM_ae_aften SHARED ${ADM_ae_aften_SRCS})
+	ADD_AUDIO_ENCODER(ADM_ae_aften ${ADM_ae_aften_SRCS})
 
 	TARGET_LINK_LIBRARIES(ADM_ae_aften ${AFTEN_LIBRARY_DIR})
 
