@@ -135,12 +135,7 @@ next:
             ADM_info("Cannot recompute PTS/DTS for field encoded picture.\n");
             return true;
         }
-        // No b frames, PTS=DTS
-        if(!nbB)
-        {
-            delay=0;
-            return setPtsEqualDts(hdr,timeIncrementUs);
-        }
+        
         // Case 1 : We have both, nothing to do
         if(nDts>=info.nb_frames-2 && nPts>=info.nb_frames-2)
          {
@@ -153,6 +148,13 @@ next:
         {
             ADM_info("Got PTS, compute dts\n");
             return setDtsFromPts(hdr,timeIncrementUs,delay);
+        }
+        // No b frames, PTS=DTS
+        if(!nbB)
+        {
+            ADM_info("No bframe, set pts=dts\n");
+            delay=0;
+            return setPtsEqualDts(hdr,timeIncrementUs);
         }
         // Case 3: We have DTS but not PTS
         if(nDts>=info.nb_frames-2 )
