@@ -8,7 +8,7 @@ ADM_codecSearch.cpp
 DIA_lavDecoder.cpp
 )
 
-ADD_LIBRARY(ADM_coreVideoCodec6 SHARED ${ADM_codecs_SRCS})
+ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6 ${ADM_codecs_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 
                                           ADM_core6
                                           ADM_coreImage6 

@@ -17,7 +17,7 @@ ADM_getbits.cpp
 ADM_writeRiff.cpp
 prefs.cpp)
 
-ADD_LIBRARY(ADM_coreUtils6 SHARED ${ADM_coreUtils_SRCS})
+ADM_ADD_SHARED_LIBRARY(ADM_coreUtils6 ${ADM_coreUtils_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreUtils6 ADM_core6 ADM_coreUI6 ADM_libavutil ADM_libavcodec ${LIBXML2_LIBRARIES})
 
 if (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)

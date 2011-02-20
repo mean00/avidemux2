@@ -2,3 +2,8 @@ MACRO(AS_NEEDED name)
         TARGET_LINK_LIBRARIES( ${name} "-Wl,--as-needed")
 ENDMACRO(AS_NEEDED name)
 
+MACRO(ADM_ADD_SHARED_LIBRARY name )
+        ADD_LIBRARY(${name} SHARED ${ARGN})
+	AS_NEEDED(${name})
+ENDMACRO(ADM_ADD_SHARED_LIBRARY name )
+

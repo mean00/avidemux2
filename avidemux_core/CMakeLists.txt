@@ -15,7 +15,7 @@ SET(ADM_PROJECT admCore)
 
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 include(admMainChecks)
-
+include(admAsNeeded)
 ########################################
 # VDPAU
 ########################################
