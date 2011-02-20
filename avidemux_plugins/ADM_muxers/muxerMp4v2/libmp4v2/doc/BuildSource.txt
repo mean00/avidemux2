@@ -1,0 +1,561 @@
+MP4v2 1.9.1 Building the Source
+*******************************
+
+Table of Contents
+*****************
+
+1 Overview
+2 Introduction
+3 Quickstart
+4 Build Process
+  4.1 Extract
+  4.2 Configure
+  4.3 Build
+  4.4 Install
+5 Platform Notes
+  5.1 Mac OS X
+    5.1.1 Default Binaries
+    5.1.2 Release Binaries
+    5.1.3 Developer Binaries
+    5.1.4 Universal Binaries - all architectures
+    5.1.5 Universal Binaries - selected architectures
+  5.2 Linux
+    5.2.1 Default Binaries
+    5.2.2 Release Binaries
+    5.2.3 Developer Binaries
+    5.2.4 Bi-arch compilation
+  5.3 FreeBSD
+    5.3.1 Default Binaries
+    5.3.2 Release Binaries
+    5.3.3 Developer Binaries
+    5.3.4 Bi-arch compilation
+  5.4 Solaris
+    5.4.1 Default Binaries
+    5.4.2 Release Binaries
+    5.4.3 Developer Binaries
+    5.4.4 Bi-arch compilation
+  5.5 Cygwin
+    5.5.1 Default Binaries
+    5.5.2 Release Binaries
+    5.5.3 Developer Binaries
+  5.6 Windows
+
+
+1 Overview
+**********
+
+The documented and supported method to build MP4v2 uses the GNU build
+system (also known as the Autotools). You must first obtain the sources
+by either downloading and extracting the source-distribution bundle or
+working directly MP4v2's Subversion repository. We have build documents
+for both methods, but unless you are a member of the MP4v2 project, you
+are strongly encouraged to use the source-distribution method.
+
+On other supported platforms which lack Autotools we provide an
+alternative method for building the software. Please see the
+appropriate platform section.
+
+2 Introduction
+**************
+
+This document describes the recommended process to build MP4v2 from a
+source-distribution bundle. This process is a subset of the process to
+build directly from the project's repository. If you are interested in
+building from the repository then this document is not for you.
+
+3 Quickstart
+************
+
+This chapter is for the impatient or those just looking for a quick
+summary of all the commands used in a typical build. You may skip this
+summary and jump to *note Build Process::.
+
+     tar xf mp4v2-1.9.1.tar.bz2
+     cd mp4v2-1.9.1/
+     rm -fr build/
+     mkdir build/
+     cd build/
+     ../configure
+     make
+     make install
+     make install-man
+
+4 Build Process
+***************
+
+4.1 Extract
+===========
+
+Extract sources from a source-distribution bundle. Releases are
+available from `http://code.google.com/p/mp4v2' in the downloads
+(http://code.google.com/p/mp4v2/downloads/list) section.
+
+     tar xf mp4v2-1.9.1.tar.bz2
+     cd mp4v2-1.9.1/
+
+Older versions of `tar' may not automatically uncompress the bundle, so
+you might have to either enter additional flags manually, or first
+decompress the bundle before extracting. Some possible command
+variations for uncompressing a `bz2' file:
+
+     tar xjf mp4v2-1.9.1.tar.bz2
+     bunzip2 -c mp4v2-1.9.1.tar.bz2 | tar xf -
+     bzcat mp4v2-1.9.1.tar.bz2 | tar xf -
+
+And for a `gz' file:
+
+     tar xzf mp4v2-1.9.1.tar.gz
+     gunzip -c mp4v2-1.9.1.tar.gz | tar xf -
+     gzcat mp4v2-1.9.1.tar.gz | tar xf -
+
+4.2 Configure
+=============
+
+The following command configures the project for a build.  It is highly
+recommended that you invoke configure from an empty directory.
+
+     rm -fr build/
+     mkdir build/
+     cd build/
+     ../configure
+
+Please see `INSTALL' for details on configure usage, and standard
+options. Additionally, the following custom options have been added to
+`configure':
+
+`--disable-debug'
+     Do not generate debug information.  Do not direct compiler to
+     generate debugging information. By default the compiler will
+     generate debug information if the platform supports it.
+
+`--disable-optimize'
+     Do not optimize. Do not direct compiler to optimize code. By
+     default compiler optimization is enabled if the platform supports
+     it.
+
+`--disable-fvisibility'
+     Do not set default ELF symbol visibility. By default configure
+     attempts to detect if the compiler supports this feature. However
+     on some platforms detecting incompatibilty of this feature might
+     not be accurate in which case this option should be given.
+
+`--disable-gch'
+     By default certain platforms are marked to use GCC precompiled
+     headers. Generally this greatly decrease build times but may
+     require more diligence for iterative development; that is to say
+     dependencies may not properly be tracked and more frequent `make
+     clean' may be required when headers are changed. Use this option
+     to disable GCC precompiled headers.
+
+`--disable-largefile'
+     On some 32-bit platforms or configurations it might be desirable
+     to build without largefile (LFS) support. By default configure
+     attempts to detect formal LFS support and enables it if found.
+
+`--disable-util'
+     Do not build/install utilities. This is convenience option for
+     users who desire to skip building the utilities (eg. command-line
+     executables) which are enabled by default.
+
+`--enable-bi=ARCH'
+     On bi-arch capable platforms it is possible to generate 32 or 64
+     bit code. This is supported by adding arguments `-m32' or `-m64',
+     respectively, when compiling or linking. Use this option to
+     override the platform-specific default.
+
+`--enable-ub[=ARCHS]'
+     On OSX systems it is possible to generate universal binaries. This
+     is supported by adding one or more argument patterns `-arch ARCH'
+     when compiling or linking. Use this option to either target an
+     architecture different from the platform default, or to produce
+     universal binaries.
+
+`--enable-dependency-tracking'
+     Enable automatic dependency tracking for include-files. By default
+     this feature is disabled.
+
+
+4.3 Build
+=========
+
+The following command will build MP4v2.
+
+     make
+
+On some platforms `make' refers to a BSD-flavor of make which is not
+compatible with this project. Check if `gmake' is installed, and if it
+is, substitute `gmake' wherever you may see `make' in this document.
+Otherwise you will need to install GNU make package version 3.81 or
+higher. Lower versions might work.
+
+4.4 Install
+===========
+
+The following command will install MP4v2.
+
+     make install
+     make install-man
+
+5 Platform Notes
+****************
+
+MP4v2 builds on many unix-style platforms, also commonly referred to as
+posix-style systems. Building on Mac OS X, Linux, FreeBSD, Solaris,
+Cygwin, Windows are known to work.
+
+Similar platforms should also work. Please see the following platform
+specific notes for instructions on commonly used options for various
+platforms.
+
+5.1 Mac OS X
+============
+
+Building on Mac OS X is well supported as it is used by maintainers of
+this project. The following are the recommended specifications for this
+platform; but is not necessarily the only configuration that is
+possible:
+
+   * Mac Intel hardware
+
+   * Mac OS X 10.5.7
+
+   * Xcode-3.1.2
+
+   * gcc 4.0.1 (Apple Inc. build 5493)
+
+   * gcc 4.2.1 (Apple Inc. build 5570)
+
+     Note: It is recommended to use the platform distribution's bundled
+     compiler for maximum C++ compatibility. If you build with a custom
+     compiler it will likely introduce non-standard runtime
+     requirements for your users. There are of course many valid
+     reasons to build with unbundled compilers, but be aware that is
+     generally unsupported and left as an exercise to the reader.
+
+5.1.1 Default Binaries
+----------------------
+
+The preferred method to produce default binaries is to run configure
+without any options which will compile with debug+optimize and produce
+static+shared libraries and dynamic executables.
+
+     ../configure
+
+5.1.2 Release Binaries
+----------------------
+
+The preferred method to produce binaries suitable for releases, (ie.
+which does not contain debug information) is to pass the following to
+configure:
+
+     ../configure --disable-debug
+
+5.1.3 Developer Binaries
+------------------------
+
+The preferred method to produce binaries suitable for development is to
+pass the following to configure.  Default Binaries will work, however
+for the best debugging experience we recommend no optimize and no
+static libraries.
+
+     ../configure --disable-optimize --disable-static
+
+5.1.4 Universal Binaries - all architectures
+--------------------------------------------
+
+The preferred method to produce universal binaries for all supported
+architectures is to pass the following option to configure. As of this
+writing, architectures { i386, x86_64, ppc, ppc64 } are built.
+
+     ../configure --enable-ub
+
+5.1.5 Universal Binaries - selected architectures
+-------------------------------------------------
+
+The preferred method to produce universal binaries for selected
+architectures is to specify a comma-delimited list specifying the
+desired architecture identifiers. Passing the following option will
+produce universal binaries for architectures { i386, x86_64 }.
+
+     ../configure --enable-ub=i386,x86_64
+
+5.2 Linux
+=========
+
+Building on Linux is well supported as it is used by maintainers of
+this project. The following are the recommended specifications for this
+platform; but is not necessarily the only configuration that is
+possible:
+
+   * Intel 32-bit or 64-bit hardware
+
+   * Fedora 10, gcc 4.3.2
+
+   * gcc 3.4.0 or higher is reported to work
+
+     Note: It is recommended to use the platform distribution's bundled
+     compiler for maximum C++ compatibility. If you build with a custom
+     compiler it will likely introduce non-standard runtime
+     requirements for your users. There are of course many valid
+     reasons to build with unbundled compilers, but be aware that is
+     generally unsupported and left as an exercise to the reader.
+
+5.2.1 Default Binaries
+----------------------
+
+The preferred method to produce default binaries is to run configure
+without any options which will compile with debug+optimize and produce
+static+shared libraries and dynamic executables.
+
+     ../configure
+
+5.2.2 Release Binaries
+----------------------
+
+The preferred method to produce binaries suitable for releases, (ie.
+which does not contain debug information) is to pass the following to
+configure:
+
+     ../configure --disable-debug
+
+5.2.3 Developer Binaries
+------------------------
+
+The preferred method to produce binaries suitable for development is to
+pass the following to configure.  Default Binaries will work, however
+for the best debugging experience we recommend no optimize and no
+static libraries.
+
+     ../configure --disable-optimize --disable-static
+
+5.2.4 Bi-arch compilation
+-------------------------
+
+The preferred method to produce a bi-arch binary is to specify the
+target (eg. 32-bit) with the following option to configure. This
+example will produce a 32-bit binary if compiling on a platform which
+defaults to producing 64-bit binaries. The inverse is also possible.
+
+     ../configure --enable-bi=32
+
+     Warning: Currently bi-arch cross-compilation is not supported due
+     to a bug with libtool which fails miserably during linking.
+
+5.3 FreeBSD
+===========
+
+Building on FreeBSD is supported. The following are the recommended
+specifications for this platform; but is not necessarily the only
+configuration that is possible:
+
+   * Intel 32-bit or 64-bit hardware
+
+   * FreeBSD 7.0 Release, gcc 4.2.1
+
+   * gcc 3.4.0 or higher is reported to work
+
+     Note: It is recommended to use the platform distribution's bundled
+     compiler for maximum C++ compatibility. If you build with a custom
+     compiler it will likely introduce non-standard runtime
+     requirements for your users. There are of course many valid
+     reasons to build with unbundled compilers, but be aware that is
+     generally unsupported and left as an exercise to the reader.
+
+5.3.1 Default Binaries
+----------------------
+
+The preferred method to produce default binaries is to run configure
+without any options which will compile with debug+optimize and produce
+static+shared libraries and dynamic executables.
+
+     ../configure
+
+5.3.2 Release Binaries
+----------------------
+
+The preferred method to produce binaries suitable for releases, (ie.
+which does not contain debug information) is to pass the following to
+configure:
+
+     ../configure --disable-debug
+
+5.3.3 Developer Binaries
+------------------------
+
+The preferred method to produce binaries suitable for development is to
+pass the following to configure.  Default Binaries will work, however
+for the best debugging experience we recommend no optimize and no
+static libraries.
+
+     ../configure --disable-optimize --disable-static
+
+5.3.4 Bi-arch compilation
+-------------------------
+
+The preferred method to produce a bi-arch binary is to specify the
+target (eg. 32-bit) with the following option to configure. This
+example will produce a 32-bit binary if compiling on a platform which
+defaults to producing 64-bit binaries. The inverse is also possible.
+
+     ../configure --enable-bi=32
+
+     Warning: Currently bi-arch cross-compilation is not supported due
+     to a bug with libtool which fails miserably during linking.
+
+5.4 Solaris
+===========
+
+Building on Solaris is supported. The following are the recommended
+specifications for this platform; but is not necessarily the only
+configuration that is possible:
+
+   * Intel 32-bit or 64-bit hardware
+
+   * Solaris 10u6, gcc 3.4.3
+
+   * gcc 3.4.0 or higher is reported to work
+
+     Note: It is recommended to use the platform distribution's bundled
+     compiler for maximum C++ compatibility. If you build with a custom
+     compiler it will likely introduce non-standard runtime
+     requirements for your users. There are of course many valid
+     reasons to build with unbundled compilers, but be aware that is
+     generally unsupported and left as an exercise to the reader.
+
+     Note: Solaris does not (yet) really bundle a compiler. The
+     recommendation is to use the companion-disk compiler for maximum
+     C++ runtime compatibility. It is usually found in `/usr/sfw/bin'.
+
+5.4.1 Default Binaries
+----------------------
+
+The preferred method to produce default binaries is to run configure
+without any options which will compile with debug+optimize and produce
+static+shared libraries and dynamic executables.
+
+     ../configure
+
+5.4.2 Release Binaries
+----------------------
+
+The preferred method to produce binaries suitable for releases, (ie.
+which does not contain debug information) is to pass the following to
+configure:
+
+     ../configure --disable-debug
+
+5.4.3 Developer Binaries
+------------------------
+
+The preferred method to produce binaries suitable for development is to
+pass the following to configure.  Default Binaries will work, however
+for the best debugging experience we recommend no optimize and no
+static libraries.
+
+     ../configure --disable-optimize --disable-static
+
+5.4.4 Bi-arch compilation
+-------------------------
+
+The preferred method to produce a bi-arch binary is to specify the
+target (eg. 32-bit) with the following option to configure. This
+example will produce a 32-bit binary if compiling on a platform which
+defaults to producing 64-bit binaries. The inverse is also possible.
+
+     ../configure --enable-bi=32
+
+     Warning: Currently bi-arch cross-compilation is not supported due
+     to a bug with libtool which fails miserably during linking.
+
+5.5 Cygwin
+==========
+
+Building on Cygwin is supported. The following are the recommended
+specifications for this platform; but is not necessarily the only
+configuration that is possible:
+
+   * Intel 32-bit or 64-bit hardware
+
+   * Cygwin, gcc 4.3.2
+
+   * gcc 3.4.0 or higher is reported to work
+
+     Note: As of this writing, Cygwin has available to it several
+     versions of gcc; only one of which may be found and used in the
+     path as `gcc' and `g++'. Configure will thus find what is probably
+     the older more stable version of gcc in a typical Cygwin
+     environment. If you desire to build with the newer gcc, it is
+     found in the path as `gcc-4' and `g++-4' respectively and you must
+     indicate to configure the desired versions. Defining the following
+     variables beforing running configure should do the trick:
+
+     setenv CC gcc-4
+     setenv CXX gcc-4
+     ../configure
+
+5.5.1 Default Binaries
+----------------------
+
+The preferred method to produce default binaries is to run configure
+without any options which will compile with debug+optimize and produce
+static+shared libraries and dynamic executables.
+
+     ../configure
+
+5.5.2 Release Binaries
+----------------------
+
+The preferred method to produce binaries suitable for releases, (ie.
+which does not contain debug information) is to pass the following to
+configure:
+
+     ../configure --disable-debug
+
+5.5.3 Developer Binaries
+------------------------
+
+The preferred method to produce binaries suitable for development is to
+pass the following to configure.  Default Binaries will work, however
+for the best debugging experience we recommend no optimize and no
+static libraries.
+
+     ../configure --disable-optimize --disable-static
+
+5.6 Windows
+===========
+
+Native builds on Windows is supported via Microsoft's Visual Studio
+package. Both the commercial version and free version (express) are
+known to work. The following are the recommended specifications for
+this platform; but is not necessarily the only configuration that is
+possible:
+
+   * Intel 32-bit or 64-bit hardware
+
+   * Windows 2000 or higher, Visual Studio 9.0 (aka. Visual Studio 2008)
+
+   * Visual Studio 9.0 Express is reported to work
+
+Only 32-bit binaries are targeted, and win32-API is set to Windows 2000
+or higher. Older versions of Windows, or win32-API are not supported.
+
+MP4v2 has directory `vstudio9.0/' which contains the necessary
+solution+project files to produce a basic build of libmp4v2's DLL and
+several command-line executables. Enabling things such as debugging,
+optimization, etc, are all left as an exercise to the user.
+
+     Warning: Project meta-data is stored in header `project.h'. A
+     proper source distribution is built using autotools and generates
+     `TOP/include/mp4v2/project.h' correctly, which is then bundled
+     with our source distribution. This is adequate for building on the
+     Windows platform.
+
+     However, if you are building from the repository, be warned that
+     there is no method to automatically generate `project.h' on
+     Windows. Instead, we periodically checkin a copy of this file
+     (generated using autotools) as
+     `vstudio9.0/include/mp4v2/project.h' which may from time to time
+     get out of date. If it is significantly out of date, you should
+     find the latest source distribution and copy the `project.h' from
+     there.
+
