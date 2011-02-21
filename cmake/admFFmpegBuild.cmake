@@ -62,7 +62,7 @@ endif (FFMPEG_PERFORM_PATCH)
 
 if (USE_VDPAU)
 	xadd(--enable-vdpau)
-	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg2_vdpau  wmv3_vdpau)
+	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg_vdpau  wmv3_vdpau)
 endif (USE_VDPAU)
 
 xadd(--enable-bsf=aac_adtstoasc)
