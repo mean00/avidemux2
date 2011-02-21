@@ -10,7 +10,7 @@ IF (DO_GTK)
         ADD_DEFINITIONS(${GTK_CFLAGS})
 
         ADD_LIBRARY(${lib} SHARED ${ARGN} ${_srcsGtk})
-	ADD_NEEDED(${lib})
+	AS_NEEDED(${lib})
         INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/gtk/ADM_UIs/include/)
         TARGET_LINK_LIBRARIES( ${lib} ADM_UIGtk6 ADM_render6_gtk)
         TARGET_LINK_LIBRARIES(${lib} ${GTK_LDFLAGS} ${GTHREAD_LDFLAGS})
