@@ -349,7 +349,12 @@ dmxPacketInfo info;
                                   continue;
                                   printf("[psIndexer]No sequence start yet, skipping..\n");
                           }
-                          
+                          if(headerDumped==false)
+                          {
+                               
+                                qfprintf(index,"[Data]");
+                                headerDumped=true;
+                          }
                           val=pkt->readi16();
                           temporal_ref=val>>6;
                           type=7 & (val>>3);
