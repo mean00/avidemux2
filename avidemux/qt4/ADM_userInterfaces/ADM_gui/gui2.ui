@@ -106,7 +106,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -139,6 +139,11 @@
      <addaction name="actionViewVolume"/>
     </widget>
     <addaction name="menuToolbars"/>
+   </widget>
+   <widget class="QMenu" name="menuAuto">
+    <property name="title">
+     <string>&amp;Auto</string>
+    </property>
    </widget>
    <widget class="QMenu" name="menuCustom">
     <property name="title">
@@ -176,6 +181,7 @@
    <addaction name="menuView"/>
    <addaction name="menuVideo"/>
    <addaction name="menuAudio"/>
+   <addaction name="menuAuto"/>
    <addaction name="menuTools"/>
    <addaction name="menuGo"/>
    <addaction name="menuCustom"/>
@@ -1273,7 +1279,7 @@
    <property name="minimumSize">
     <size>
      <width>136</width>
-     <height>137</height>
+     <height>143</height>
     </size>
    </property>
    <property name="features">

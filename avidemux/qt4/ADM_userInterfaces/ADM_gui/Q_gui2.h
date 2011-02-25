@@ -31,6 +31,7 @@ public:
 protected:
     QMenu *jsMenu;
     QMenu *pyMenu;
+    QMenu *autoMenu;
     QMenu *recentFiles;
     QMenu *recentProjects;
     QAction *recentFileAction[4];
@@ -39,6 +40,7 @@ protected:
 public slots:
 	void timeChanged(int);
 	void buttonPressed(void);
+	void autoPy(void);
 	void customPy(void);
     void customJs(void);
 	void toolButtonPressed(bool z);

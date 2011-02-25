@@ -39,23 +39,33 @@ using std::string;
 
 #define JS_CUSTOM 0
 #define PY_CUSTOM 1
-static char     *customNames[2][ADM_MAX_CUSTOM_SCRIPT];
-static QAction  *customActions[2][ADM_MAX_CUSTOM_SCRIPT];
-static uint32_t ADM_nbCustom[2]={0,0};
+#define PY_AUTO   2
+#define NB_POOL 3
+static char     *customNames[3][ADM_MAX_CUSTOM_SCRIPT];
+static QAction  *customActions[3][ADM_MAX_CUSTOM_SCRIPT];
+static uint32_t ADM_nbCustom[3]={0,0,0};
 /**
     \fn clearCustomMenu
 */
 void MainWindow::clearCustomMenu(void)
 {
-    for(int pool=0;pool<2;pool++)
+    for(int pool=0;pool<NB_POOL;pool++)
 	if (ADM_nbCustom[pool])
 	{
 		for(int i = 0; i < ADM_nbCustom[pool]; i++)
 		{
-            if(pool==PY_CUSTOM)
+            switch(pool)
+            {
+            case PY_CUSTOM:
                 disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(customPy()));
-            else
+                break;
+            case JS_CUSTOM:
                 disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(customJs()));
+                break;
+            case PY_AUTO:
+                disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(autoPy()));
+                break;
+            }
 			delete customActions[pool][i];
 			delete customNames[pool][i];
 		}
@@ -63,6 +73,7 @@ void MainWindow::clearCustomMenu(void)
 	}
     pyMenu->clear();
     jsMenu->clear();
+    autoMenu->clear();
 }
 /**
     \fn buildCustomMenu
@@ -79,20 +90,23 @@ void MainWindow::buildCustomMenu(void)
 		return;
 	}
     string customFolder(customdir);
-    for(int pool=0;pool<2;pool++)
+    for(int pool=0;pool<NB_POOL;pool++)
     {
         string myDir,subDir;
         string ext;
         /* Collect the name */
-        if(JS_CUSTOM==pool) 
+        switch(pool)
         {
-            subDir=string("/js/");
-            ext=string(".js");
-        }
-        else
-        {
-            subDir=string("/py/");
-            ext=string(".py");
+            case JS_CUSTOM:
+                subDir=string("/js/");
+                ext=string(".js");
+                break;
+            case PY_CUSTOM:
+                subDir=string("/py/");
+                ext=string(".py");
+                break;
+            case PY_AUTO:
+                continue;
         }
         myDir=customFolder+subDir;
         if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAX_CUSTOM_SCRIPT,ext.c_str()))
@@ -110,15 +124,22 @@ void MainWindow::buildCustomMenu(void)
                 QAction *action= new QAction(QString::fromUtf8(ADM_GetFileName(customNames[pool][i])), NULL);
                 //ADM_info("\t%s\n",ADM_GetFileName(customNames[pool][i]));
                 customActions[pool][i] = action;
-                if(pool==JS_CUSTOM)
+                switch(pool)
+                {
+                case JS_CUSTOM:
                 {
                     jsMenu->addAction(action);
                     connect(action, SIGNAL(triggered()), this, SLOT(customJs()));
+                    break;
                 }
-                else
+                case PY_CUSTOM:
                 {
                     pyMenu->addAction(action);
-                    connect(action, SIGNAL(triggered()), this, SLOT(customPy()));
+                    connect(action, SIGNAL(triggered()), this, SLOT(customPy()));   
+                    break;
+                }
+                case PY_AUTO:
+                    continue;
                 }
             }
         }
@@ -161,6 +182,14 @@ void MainWindow::customPy(void)
 	if(!ptr) return;
     customScript(PY_CUSTOM,ACT_CUSTOM_BASE_PY,ptr);
 }
+void MainWindow::autoPy(void)
+{
+	printf("[auto] Python Invoked\n");
+	QObject *ptr=sender();
+	if(!ptr) return;
+    customScript(PY_AUTO,ACT_AUTO_BASE_PY,ptr);
+}
+
 /**
     Get the custom entry 
 
@@ -176,6 +205,12 @@ const char * GUI_getCustomPyScript(uint32_t nb)
 {
 	ADM_assert(nb<ADM_nbCustom[PY_CUSTOM]);
 	return customNames[PY_CUSTOM][nb];
+
+}
+const char * GUI_getAutoPyScript(uint32_t nb)
+{
+	ADM_assert(nb<ADM_nbCustom[PY_AUTO]);
+	return customNames[PY_AUTO][nb];
 
 }
 

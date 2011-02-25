@@ -22,6 +22,9 @@ char *ADM_getBaseDir(void);
 char *ADM_getJobDir(void);
 // Returns dir to ~/.avidemux/custom, no need to free it
 char *ADM_getCustomDir(void);
+// Returns dir to ~/.avidemux/autoScript, no need to free it
+char *ADM_getAutoDir(void);
+
 #ifdef __cplusplus
 /* Returns the full path relative to install dir i.e. /usr +base1/base2, needs to be deleted [] by caller */
 char *ADM_getInstallRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
