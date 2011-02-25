@@ -55,6 +55,7 @@ extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern uint8_t GUI_jobs(void);
 extern const char * GUI_getCustomJsScript(uint32_t nb);
 extern const char * GUI_getCustomPyScript(uint32_t nb);
+extern const char * GUI_getAutoPyScript(uint32_t nb);
 
 extern uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
 extern int     GUI_handleVFilter (void);
@@ -127,6 +128,13 @@ int nw;
   {
       int i=action-ACT_CUSTOM_BASE_PY;
       const char *custom=GUI_getCustomPyScript(i);
+      A_parseTinyPyScript(custom);
+      return ;
+  }
+  if(action>=ACT_AUTO_BASE_PY && action <ACT_AUTO_END_PY)
+  {
+      int i=action-ACT_AUTO_BASE_PY;
+      const char *custom=GUI_getAutoPyScript(i);
       A_parseTinyPyScript(custom);
       return ;
   }

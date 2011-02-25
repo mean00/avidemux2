@@ -65,6 +65,9 @@ void MainWindow::clearCustomMenu(void)
             case PY_AUTO:
                 disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(autoPy()));
                 break;
+            default:
+                ADM_assert(0);
+                break;
             }
 			delete customActions[pool][i];
 			delete customNames[pool][i];
@@ -83,32 +86,44 @@ void MainWindow::buildCustomMenu(void)
 	clearCustomMenu();
 
 	char *customdir = ADM_getCustomDir();
-
+    char *autoDir =   ADM_getAutoDir();
+    ADM_info("Auto script folder %s\n",autoDir);
 	if (!customdir)
 	{
 		printf("No custom dir...\n");
 		return;
 	}
     string customFolder(customdir);
+    string autoFolder(autoDir);
+    string topDir;
     for(int pool=0;pool<NB_POOL;pool++)
     {
         string myDir,subDir;
-        string ext;
+        string ext,topDir;
         /* Collect the name */
         switch(pool)
         {
             case JS_CUSTOM:
                 subDir=string("/js/");
                 ext=string(".js");
+                topDir=customFolder;
                 break;
             case PY_CUSTOM:
                 subDir=string("/py/");
                 ext=string(".py");
+                topDir=customFolder;
                 break;
             case PY_AUTO:
-                continue;
+                subDir=string("/");
+                ext=string(".py");
+                topDir=autoFolder;
+                break;
+            default:
+                ADM_assert(0);
+                break;
         }
-        myDir=customFolder+subDir;
+        myDir=topDir+subDir;
+        ADM_info("Scanning %s\n",myDir.c_str());
         if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAX_CUSTOM_SCRIPT,ext.c_str()))
         {
             ADM_warning("Failed to build custom dir content (%s)\n",myDir.c_str());
@@ -121,7 +136,13 @@ void MainWindow::buildCustomMenu(void)
 
             for(int i=0; i < ADM_nbCustom[pool]; i++)
             {
-                QAction *action= new QAction(QString::fromUtf8(ADM_GetFileName(customNames[pool][i])), NULL);
+                const char *menuName=ADM_GetFileName(customNames[pool][i]);
+                if(pool==PY_AUTO)
+                {
+                    if(!strncmp(menuName,"ADM_",4)) // Dont display py script starting by ADM_
+                            continue;
+                }
+                QAction *action= new QAction(QString::fromUtf8(menuName), NULL);
                 //ADM_info("\t%s\n",ADM_GetFileName(customNames[pool][i]));
                 customActions[pool][i] = action;
                 switch(pool)
@@ -139,12 +160,18 @@ void MainWindow::buildCustomMenu(void)
                     break;
                 }
                 case PY_AUTO:
-                    continue;
+                    autoMenu->addAction(action);
+                    connect(action, SIGNAL(triggered()), this, SLOT(autoPy()));  
+                    break;
+                default:
+                    ADM_assert(0);
+                    break;
+
                 }
             }
         }
         else
-            ADM_info("No custom scripts\n");
+            ADM_info("No custom scripts in %s\n",myDir.c_str());
     }
 	ADM_info("Custom menu built\n");
 }
