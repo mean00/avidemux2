@@ -49,6 +49,7 @@ const char *ADM_DIR_NAME="/.avidemux6";
 static char ADM_basedir[1024] = {0};
 static char *ADM_jobdir = NULL;
 static char *ADM_customdir = NULL;
+static char *ADM_autodir = NULL;
 static int baseDirDone = 0;
 
 #undef fread
@@ -207,6 +208,17 @@ char *ADM_getCustomDir(void)
 
 	return ADM_customdir;
 }
+/**
+    \fn ADM_getAutoDir
+    \brief  Get the  directory where auto script are stored. No need to free the string.
+******************************************************/
+char *ADM_getAutoDir(void)
+{
+	if (ADM_autodir )
+		return ADM_autodir;
+    ADM_autodir = ADM_getInstallRelativePath("lib", "ADM_plugins6", "autoScripts");
+	return ADM_autodir;
+}
 
 /*
       Get the  directory where jobs are stored
@@ -217,6 +229,7 @@ char *ADM_getJobDir(void)
 		return ADM_jobdir;
 
 	ADM_jobdir = ADM_getHomeRelativePath("jobs");
+
 
 	if (!ADM_mkdir(ADM_jobdir))
 	{
