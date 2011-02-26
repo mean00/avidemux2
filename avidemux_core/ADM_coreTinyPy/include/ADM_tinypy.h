@@ -48,7 +48,7 @@ protected:
         
 public:
                 tinyPy(void);
-        bool    init(void);
+        bool    init(const char *sysLib);
         bool    registerFuncs(const char *group,pyFuncs *funcs);
         bool    registerClass(const char *className,pyRegisterClass *pyclass,const char *desc);
                 ~tinyPy(void);

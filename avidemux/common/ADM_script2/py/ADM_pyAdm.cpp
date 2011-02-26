@@ -67,7 +67,8 @@ static  bool pyLogger(const char *s)
 */  
 static bool initPy(tinyPy *py)
 {
-    py->init();
+    string path=string(ADM_getAutoDir())+string("/lib");
+    py->init(path.c_str());
     py->registerClass("Avidemux",initClasspyAdm,"avidemux class");
     py->registerClass("Editor",initClasspyEditor,"add, remove videos");
     py->registerClass("Gui",initClasspyGui,"widget, alert boxes,..");

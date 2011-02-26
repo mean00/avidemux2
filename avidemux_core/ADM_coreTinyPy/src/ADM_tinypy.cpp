@@ -31,6 +31,8 @@ pyLoggerFunc *pyLog=NULL;
 static tp_obj    tinyPy_dumpBuiltin(tp_vm *vm);
 static pyFuncs addons[]={{"help",tinyPy_dumpBuiltin},{NULL,NULL}};
 static vector <admPyClassDescriptor> listOfPyClass;;
+
+extern void tp_hook_set_syslib(const char *sysLib);
 /**
 
 */
@@ -90,7 +92,7 @@ tinyPy::~tinyPy()
     \fn tinypy
     \brief init
 */
-bool tinyPy::init(void)
+bool tinyPy::init(const char *sysLib)
 {
     ADM_warning("Init tinypy\n");
     ADM_assert(!instance);
@@ -101,6 +103,7 @@ bool tinyPy::init(void)
         return false;   
     }
     math_init(INSTANCE);
+    tp_hook_set_syslib(sysLib);
     registerFuncs("addons",addons);
     return true;
 }
