@@ -129,19 +129,10 @@ bool swScaleResizeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     uint32_t ssrc[3];
     uint32_t ddst[3];
 
-    src[0]=YPLANE(original);
-    src[1]=UPLANE(original);
-    src[2]=VPLANE(original);
-
-    ssrc[0]=original->_width;
-    ssrc[1]=ssrc[2]=original->_width>>1;
-
-    dst[0]=YPLANE(image);
-    dst[1]=UPLANE(image);
-    dst[2]=VPLANE(image);
-    ddst[0]=info.width;
-    ddst[1]=ddst[2]=info.width>>1;
-
+    original->GetReadPlanes(src);
+    image->GetWritePlanes(dst);
+    original->GetPitches(ssrc);
+    image->GetPitches(ddst);
     resizer->convertPlanes(ssrc,ddst,src,dst);
     image->copyInfo(original);
 // Fixme change A/R ?
