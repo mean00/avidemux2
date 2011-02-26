@@ -94,7 +94,10 @@ tinyPy::~tinyPy()
 */
 bool tinyPy::init(const char *sysLib)
 {
-    ADM_warning("Init tinypy\n");
+    ADM_info("Initializing tinypy\n");
+    ADM_info("Setting %s as python lib path\n",sysLib);
+    tp_hook_set_syslib(sysLib);
+    
     ADM_assert(!instance);
     instance=(void *)tp_init(0,NULL);
     if(!instance)
@@ -103,7 +106,6 @@ bool tinyPy::init(const char *sysLib)
         return false;   
     }
     math_init(INSTANCE);
-    tp_hook_set_syslib(sysLib);
     registerFuncs("addons",addons);
     return true;
 }
