@@ -1,0 +1,42 @@
+--- tinypy.c.org	2011-02-26 11:04:51.912547001 +0100
++++ tinypy.cpp	2011-02-26 11:04:00.592547002 +0100
+@@ -119,6 +119,9 @@
+ #ifndef tp_inline
+ #error "Unsuported compiler"
+ #endif
++// MEANX : Redirect printf
++bool pyPrintf(const char *fmt,...);
++#define printf pyPrintf
+ 
+ /*  #define tp_malloc(x) calloc((x),1)
+     #define tp_realloc(x,y) realloc(x,y)
+@@ -462,7 +465,8 @@
+ 
+ tp_inline static void tp_echo(TP,tp_obj e) {
+     e = tp_str(tp,e);
+-    fwrite(e.string.val,1,e.string.len,stdout);
++    //fwrite(e.string.val,1,e.string.len,stdout);
++    printf("%s",e.string.val); // MEANX
+ }
+ 
+ /* Function: tp_string_n
+@@ -2200,6 +2204,9 @@
+         exit(-1);
+ #else
+         tp->ex = e;
++        // MEANX
++         printf("\nException:\n"); tp_echo(tp,e); printf("\n");
++        // /MEANX
+         longjmp(tp->nextexpr,1);
+ #endif
+     }
+@@ -2236,6 +2243,9 @@
+     tp_print_stack(tp);
+     exit(-1);
+ #else
++        // MEANX
++    tp_print_stack(tp);
++        // /MEANX
+     longjmp(tp->nextexpr,1);
+ #endif
+ }
