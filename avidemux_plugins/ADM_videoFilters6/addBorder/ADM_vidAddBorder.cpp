@@ -105,21 +105,24 @@ static bool blackenHz(uint32_t w,uint32_t nbLine,uint8_t *ptr[3],uint32_t stride
 */
 bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    ADMImageRefWrittable ref(previousFilter->getInfo()->width,previousFilter->getInfo()->height);
- 
-    uint32_t offset=param.top*image->GetPitch(PLANAR_Y);
-    ref._planes[0]=image->GetWritePtr(PLANAR_Y)+param.left+offset;
+    uint32_t smallWidth=previousFilter->getInfo()->width;
+    uint32_t smallHeight=previousFilter->getInfo()->height;
 
+    ADMImageRefWrittable ref(smallWidth,smallHeight);
+ 
+    image->GetWritePlanes(ref._planes);
+    image->GetPitches(ref._planeStride);
+
+    uint32_t offset=param.top*image->GetPitch(PLANAR_Y);
+    ref._planes[0]+=param.left+offset;
 
     offset=(param.top>>1)*image->GetPitch(PLANAR_U);
-    ref._planes[1]=image->GetWritePtr(PLANAR_U)+(param.left>>1)+offset;
+    ref._planes[1]+=(param.left>>1)+offset;
 
     offset=(param.top>>1)*image->GetPitch(PLANAR_V);
-    ref._planes[2]=image->GetWritePtr(PLANAR_V)+(param.left>>1)+offset;
+    ref._planes[2]+=(param.left>>1)+offset;
 
-    ref._planeStride[0]=info.width;
-    ref._planeStride[1]=info.width>>1;
-    ref._planeStride[2]=info.width>>1;
+    
     if(false==previousFilter->getNextFrame(fn,&ref))
     {
         ADM_warning("FlipFilter : Cannot get frame\n");
