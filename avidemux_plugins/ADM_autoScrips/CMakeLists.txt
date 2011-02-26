@@ -1,5 +1,7 @@
 SET(AUTOSCRIPT_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/autoScripts/")
 
 FILE(GLOB py_files ${CMAKE_CURRENT_SOURCE_DIR}/*.py)
+FILE(GLOB py_libFiles ${CMAKE_CURRENT_SOURCE_DIR}/lib/*.py)
 install(FILES ${py_files} DESTINATION "${AUTOSCRIPT_DIR}")
+install(FILES ${py_libFiles} DESTINATION "${AUTOSCRIPT_DIR}/lib")
 
