@@ -41,7 +41,7 @@ def opticalDiscResize(title,finalSizeWidth,finalSizeHeight):
     mnuDestRatio.addItem("4:3")
     mnuDestRatio.addItem("16:9")
     
-    dlgWizard = DialogFactory("auto "+str(title)+" DVD "+desc);
+    dlgWizard = DialogFactory("auto "+str(title)+" "+desc);
     dlgWizard.addControl(mnuSourceRatio);
     dlgWizard.addControl(mnuDestRatio);
     res=dlgWizard.show()
@@ -63,4 +63,5 @@ def opticalDiscResize(title,finalSizeWidth,finalSizeHeight):
     # Force fps...
     adm.addVideoFilter("resampleFps","mode=0","newFpsDen=1000","newFpsNum="+str(fps_predef[true_fmt]))
     # Done
+    return dest.ar
      

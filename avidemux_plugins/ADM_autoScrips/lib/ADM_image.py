@@ -31,7 +31,7 @@ class image:
         dst_mul=aspectRatio[fmt][dar]
         #print("source mul="+str(sr_mul))
         #print("dest   mul="+str(dst_mul))
-        ar=source.width/(source.height/(sr_mul*dst_mul))
+        ar=source.width/((source.height*dst_mul)/(sr_mul))
         if(False==useHeightAsReference):
             dest.height=dest.width/ar
         else:
@@ -54,9 +54,11 @@ class image:
         print("x ="+str(dest.width)+", y="+str(dest.height))
         print("top=down="+str(topDown)+" left=right="+str(leftRight))
         # Add the filters 
-       	adm=Avidemux()  
-        adm.addVideoFilter("swscale","width="+str(dest.width),"height="+str(dest.height),"algo=1","sourceAR="+str(source.ar),"targetAR="+str(dest.ar))
-        adm.addVideoFilter("addBorder","left="+str(leftRight),"right="+str(leftRight),"top="+str(topDown),"bottom="+str(topDown))
+       	adm=Avidemux() 
+        if(source.width!=dest.width and source.height!=dest.height): 
+            adm.addVideoFilter("swscale","width="+str(dest.width),"height="+str(dest.height),"algo=1","sourceAR="+str(source.ar),"targetAR="+str(dest.ar))
+        if(leftRight!=0 or topDown!=0):
+            adm.addVideoFilter("addBorder","left="+str(leftRight),"right="+str(leftRight),"top="+str(topDown),"bottom="+str(topDown))
 
   
 
