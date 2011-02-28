@@ -18,6 +18,8 @@
 extern "C" {
 #endif
 
+
+//
 int scriptLoadVideo(const char *c);
 int scriptAppendVideo(const char *c);
 int scriptClearSegments(void);

@@ -18,6 +18,12 @@
 /* METHOD */ int scriptAudioSetTrack:setAudioTrack  (int ) 
 /* METHOD */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
+#  Audio encoding...
+#
+/* ATTRIBUTES */ int audioFrequency:scriptSetAudioFrequency,scriptGetAudioFrequency
+/* ATTRIBUTES */ int audioChannels:scriptSetAudioChannels,scriptGetAudioChannels
+/* ATTRIBUTES */ int audioEncoding:scriptSetAudioEncoding,scriptGetAudioEncoding
+#
 #
 #              cname:pyname
 #  Codec, container

@@ -255,6 +255,14 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   tinyParams pm(vm);
   void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
+  if (!strcmp(key, "audioFilm2pal"))
+  {
+     return tp_number(scriptGetFilm2pal());
+  }
+  if (!strcmp(key, "audioEncoding"))
+  {
+     return tp_number(scriptGetAudioEncoding());
+  }
   if (!strcmp(key, "audioPal2film"))
   {
      return tp_number(scriptGetPal2film());
@@ -263,25 +271,29 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_number(scriptGetResample());
   }
-  if (!strcmp(key, "audioNormalizeMode"))
-  {
-     return tp_number(scriptGetNormalizeMode());
-  }
   if (!strcmp(key, "markerA"))
   {
      return tp_number(scriptGetMarkerA());
   }
-  if (!strcmp(key, "audioNormalizeGain"))
+  if (!strcmp(key, "audioNormalizeMode"))
   {
-     return tp_number(scriptGetNormalizeValue());
+     return tp_number(scriptGetNormalizeMode());
+  }
+  if (!strcmp(key, "audioFrequency"))
+  {
+     return tp_number(scriptGetAudioFrequency());
+  }
+  if (!strcmp(key, "audioChannels"))
+  {
+     return tp_number(scriptGetAudioChannels());
   }
   if (!strcmp(key, "markerB"))
   {
      return tp_number(scriptGetMarkerB());
   }
-  if (!strcmp(key, "audioFilm2pal"))
+  if (!strcmp(key, "audioNormalizeGain"))
   {
-     return tp_number(scriptGetFilm2pal());
+     return tp_number(scriptGetNormalizeValue());
   }
   if (!strcmp(key, "audioCodec"))
   {
@@ -387,6 +399,18 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   tinyParams pm(vm);
   void *me=(void *)pm.asThis(&self,ADM_PYID_AVIDEMUX);
   char const *key = pm.asString();
+  if (!strcmp(key, "audioFilm2pal"))
+  {
+     int val=pm.asInt();
+     scriptSetFilm2pal(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "audioEncoding"))
+  {
+     int val=pm.asInt();
+     scriptSetAudioEncoding(val);
+     return tp_None;
+  }
   if (!strcmp(key, "audioPal2film"))
   {
      int val=pm.asInt();
@@ -399,22 +423,28 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
      scriptSetResample(val);
      return tp_None;
   }
-  if (!strcmp(key, "audioNormalizeMode"))
-  {
-     int val=pm.asInt();
-     scriptSetNormalizeMode(val);
-     return tp_None;
-  }
   if (!strcmp(key, "markerA"))
   {
      double val=pm.asDouble();
      scriptSetMarkerA(val);
      return tp_None;
   }
-  if (!strcmp(key, "audioNormalizeGain"))
+  if (!strcmp(key, "audioNormalizeMode"))
   {
      int val=pm.asInt();
-     scriptSetNormalizeValue(val);
+     scriptSetNormalizeMode(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "audioFrequency"))
+  {
+     int val=pm.asInt();
+     scriptSetAudioFrequency(val);
+     return tp_None;
+  }
+  if (!strcmp(key, "audioChannels"))
+  {
+     int val=pm.asInt();
+     scriptSetAudioChannels(val);
      return tp_None;
   }
   if (!strcmp(key, "markerB"))
@@ -423,10 +453,10 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
      scriptSetMarkerB(val);
      return tp_None;
   }
-  if (!strcmp(key, "audioFilm2pal"))
+  if (!strcmp(key, "audioNormalizeGain"))
   {
      int val=pm.asInt();
-     scriptSetFilm2pal(val);
+     scriptSetNormalizeValue(val);
      return tp_None;
   }
   return tp_None;

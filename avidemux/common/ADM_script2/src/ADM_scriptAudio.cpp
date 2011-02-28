@@ -181,4 +181,66 @@ int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c)
         if(c) delete c;
         return r;
 }
+
+/**
+    \fn script setAudioFrequency
+    \brief stubs, read only attributes
+*/
+void    scriptSetAudioFrequency(int fq)
+{
+    ADM_error("Cannot write audio frequency\n");
+}
+
+void    scriptSetAudioEncoding(int)
+{
+    ADM_error("Cannot write audio encoding\n");
+}
+
+void    scriptSetAudioChannels(int dq)
+{
+    ADM_error("Cannot write audio channel\n");
+}
+static bool audioProlog(audioInfo **info)
+{
+        uint32_t  nbAudioTracks;
+        audioInfo *infos=NULL;
+    
+        if(!video_body->getAudioStreamsInfo(0,&nbAudioTracks,&infos)) 
+        {
+            ADM_warning("There is no audio track\n");
+            return false;
+        }
+        int track=video_body->getCurrentAudioStreamNumber(0);
+        *info=infos+track;
+        return true;
+}
+/**
+    \fn scriptGetAudioChannels
+*/
+int     scriptGetAudioChannels(void)
+{
+        audioInfo *info=NULL;
+        if(false==audioProlog(&info)) return 0;
+        return info->channels;
+}
+/**
+    \fn scriptGetAudioFrequency
+*/
+int     scriptGetAudioFrequency(void)
+{
+        audioInfo *info=NULL;
+        if(false==audioProlog(&info)) return 0;
+        return info->frequency;
+
+}
+/**
+    \fn scriptGetAudioEncoding
+*/
+int     scriptGetAudioEncoding(void)
+{
+        audioInfo *info=NULL;
+        if(false==audioProlog(&info)) return 0;
+        return info->encoding;
+}
+
 //EOF

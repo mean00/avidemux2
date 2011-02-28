@@ -21,6 +21,18 @@ extern "C" {
 #endif
 int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c);
 int     scriptAudioSetTrack(int trackNo);
+
+
+void    scriptSetAudioFrequency(int fq);
+int     scriptGetAudioFrequency(void);
+
+void    scriptSetAudioChannels(int dq);
+int     scriptGetAudioChannels(void);
+
+int     scriptGetAudioEncoding(void);
+void    scriptSetAudioEncoding(int);
+
+
 #ifdef __cplusplus
 };
 #endif
