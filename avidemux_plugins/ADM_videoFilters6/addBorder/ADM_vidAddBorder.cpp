@@ -152,6 +152,8 @@ bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
     ptr[1]+=(offsetLine/2)*stride[1];
     ptr[2]+=(offsetLine/2)*stride[2];
     blackenHz(image->_width,param.bottom,ptr,stride);
+    // Copy info
+    image->copyInfo(&ref);
     return true;
 }
 
