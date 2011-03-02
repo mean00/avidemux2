@@ -96,6 +96,7 @@ int GUI_handleVFilter()
     g_signal_connect(G_OBJECT(treeActive), "row-activated", G_CALLBACK(activeDoubleClick), NULL);
     
     gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_unregister_dialog(dialog);
     gtk_widget_destroy(dialog);
     return 1;
 }
