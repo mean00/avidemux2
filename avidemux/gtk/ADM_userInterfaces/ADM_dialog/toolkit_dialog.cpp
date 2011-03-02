@@ -350,7 +350,7 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
 }
 extern int GUI_Alternate(const char *title,const char *choice1,const char *choice2);
 extern DIA_workingBase *createWorking(const char *title);
-extern DIA_encodingBase *createEncodingGtk(uint32_t fps1000);
+extern DIA_encodingBase *createEncoding(uint64_t duration);
 
 void getVersion(uint32_t *maj,uint32_t *minor)
 {
@@ -384,7 +384,7 @@ static CoreToolkitDescriptor GtkCoreToolkitDescriptor=
 		&ADM_GtkCoreUIToolkit::GUI_Quiet,
 		&ADM_GtkCoreUIToolkit::GUI_isQuiet,
         &ADM_GtkCoreUIToolkit::createWorking,
-        NULL, 
+        &ADM_GtkCoreUIToolkit::createEncoding,
         &ADM_GtkCoreUIToolkit::UI_purge
 };
 
