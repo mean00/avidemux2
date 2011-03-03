@@ -281,10 +281,10 @@ MainWindow::MainWindow() : QMainWindow()
 	/* Build the custom menu */
     jsMenu=new QMenu("javaScript");
     pyMenu=new QMenu("tinyPython");
-    autoMenu=new QMenu("autoPython");
+    autoMenu=ui.menuAuto ;//new QMenu("autoPython");
     ui.menuCustom->addMenu(jsMenu);
     ui.menuCustom->addMenu(pyMenu);
-    ui.menuAuto->addMenu(autoMenu);
+    //ui.menuAuto->addMenu(autoMenu);
 	buildCustomMenu();
 
     recentFiles=new QMenu("Recent Files");

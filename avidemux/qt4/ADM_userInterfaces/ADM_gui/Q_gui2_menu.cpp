@@ -137,11 +137,17 @@ void MainWindow::buildCustomMenu(void)
             for(int i=0; i < ADM_nbCustom[pool]; i++)
             {
                 const char *menuName=ADM_GetFileName(customNames[pool][i]);
+                char *dot=(char *)menuName; // Same as menuName but writtable
                 if(pool==PY_AUTO)
                 {
                     if(!strncmp(menuName,"ADM_",4)) // Dont display py script starting by ADM_
                             continue;
                 }
+                // Remove .py or .js
+                uint32_t strLen=strlen(menuName);
+                if(strLen>3 && menuName[strLen-3]=='.')
+                        dot[strLen-3]=0;
+                //
                 QAction *action= new QAction(QString::fromUtf8(menuName), NULL);
                 //ADM_info("\t%s\n",ADM_GetFileName(customNames[pool][i]));
                 customActions[pool][i] = action;
