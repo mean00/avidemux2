@@ -9,6 +9,20 @@ FMT_UNKNOWN=-3
 AR_1_1=0
 AR_4_3=1
 AR_16_9=2
+#
+#
+#
+class resizer(object):
+    def __init(self):
+        self.width=0
+        self.height=0
+        self.topbottom=0
+        self.leftright=0
+        self.ar=ADM_image.AR_1_1
+#
+#
+#
+#
 class image:
     def __init__(self):
         self.ar=0 	# See the AR_xxx above
@@ -23,6 +37,9 @@ class image:
         if(fps1000 >29700 and fps1000 < 30200):
                 return FMT_NTSC
         return FMT_UNKNOWN
+    #
+    #
+    #
     def internal_resize(self, source,dest,aspectRatio,useHeightAsReference):
         sar=source.ar
         dar=dest.ar
@@ -39,7 +56,10 @@ class image:
         # Round up to 16
         dest.width=(dest.width+7)&0xfffff0
         dest.height=(dest.height+7)&0xfffff0
-    def video_resize(self,source,dest,wantedWidth,wantedHeight,aspectRatio):
+    #
+    # Return a resizer
+    #
+    def compute_resize(self,source,dest,wantedWidth,wantedHeight,aspectRatio):
         dest.width=wantedWidth
         dest.height=16
         dest.fmt=source.fmt
@@ -51,15 +71,27 @@ class image:
         # Now add black borders
         leftRight=(wantedWidth-dest.width)/2
         topDown=(wantedHeight[source.fmt]-dest.height)/2
-        print("x ="+str(dest.width)+", y="+str(dest.height))
-        print("top=down="+str(topDown)+" left=right="+str(leftRight))
-        # Add the filters 
-       	adm=Avidemux() 
-        if(source.width!=dest.width and source.height!=dest.height): 
-            adm.addVideoFilter("swscale","width="+str(dest.width),"height="+str(dest.height),"algo=1","sourceAR="+str(source.ar),"targetAR="+str(dest.ar))
-        if(leftRight!=0 or topDown!=0):
-            adm.addVideoFilter("addBorder","left="+str(leftRight),"right="+str(leftRight),"top="+str(topDown),"bottom="+str(topDown))
-
+        rsize=resizer()
+        rsize.topbottom=topDown
+        rsize.leftright=leftRight
+        rsize.width=dest.width
+        rsize.height=dest.height
+        rsize.ar=dest.ar
+        return rsize
+     #
+     # Apply resize
+     # 
+    def apply_resize(self,resize):
+         adm=Avidemux()
+         if(self.width!=resize.width or self.height!=resize.height): 
+             adm.addVideoFilter("swscale","width="+str(resize.width),"height="+str(resize.height),"algo=1","sourceAR="+str(self.ar),"targetAR="+str(resize.ar))
+         if(resize.topbottom!=0 or resize.leftright!=0):
+             l=str(resize.leftright)
+             t=str(resize.topbottom)
+             adm.addVideoFilter("addBorder","left="+l,"right="+l,"top="+t,"bottom="+t)
+#
+#
+#
   
 
   
