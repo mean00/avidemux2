@@ -154,7 +154,19 @@ uint8_t ADM_ae_loadPlugins(const char *path)
 		tryLoadingFilterPlugin(files[i]);
 
 	printf("[ADM_ae_plugin] Scanning done\n");
-
+    int nb=ListOfAudioEncoder.size();
+    for(int i=0;i<nb;i++)
+        for(int j=i+1;j<nb;j++)
+        {
+             ADM_audioEncoder *a,*b;
+             a=ListOfAudioEncoder[i];
+             b=ListOfAudioEncoder[j];
+             if(strcmp(a->menuName,b->menuName)>0)
+             {
+                ListOfAudioEncoder[j]=a;
+                ListOfAudioEncoder[i]=b;
+             }
+        }
 	return 1;
 }
 /**

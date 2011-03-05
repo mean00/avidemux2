@@ -117,7 +117,20 @@ uint8_t ADM_mx_loadPlugins(const char *path)
 		tryLoadingMuxerPlugin(files[i]);
 
 	printf("[ADM_mx_plugin] Scanning done\n");
-
+    // Sort muxers by displayName, bubble sort
+    int nb=ListOfMuxers.size();
+    for(int i=0;i<nb;i++)
+        for(int j=i+1;j<nb;j++)
+        {
+             ADM_dynMuxer *a,*b;
+             a=ListOfMuxers[i];
+             b=ListOfMuxers[j];
+             if(strcmp(a->displayName,b->displayName)>0)
+             {
+                ListOfMuxers[j]=a;
+                ListOfMuxers[i]=b;
+             }
+        }
 	return 1;
 }
 /**

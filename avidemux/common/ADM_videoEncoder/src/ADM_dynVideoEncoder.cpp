@@ -147,6 +147,19 @@ uint8_t ADM_ve6_loadPlugins(const char *path)
 		tryLoadingEncoderPlugin(files[i]);
     
 	printf("[ADM_ve6_plugin] Scanning done\n");
+    int nb=ListOfEncoders.size();
+    for(int i=0;i<nb;i++)
+        for(int j=i+1;j<nb;j++)
+        {
+             ADM_videoEncoder6 *a,*b;
+             a=ListOfEncoders[i];
+             b=ListOfEncoders[j];
+             if(strcmp(a->desc->menuName,b->desc->menuName)>0)
+             {
+                ListOfEncoders[j]=a;
+                ListOfEncoders[i]=b;
+             }
+        }
 
 	return 1;
 }
