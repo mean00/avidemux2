@@ -106,6 +106,16 @@ void HandleAction_Save(Action action);
     \brief  serialization of user event through gui
 
 */
+typedef  const char * (*getName)(uint32_t nb);
+bool getScriptName(int action, int base,getName name,const char *ext,string &out )
+{
+    if(action<base) return false;
+    action=action-base;
+    const char *p=name(action);
+    if(!p) return false;
+    out=string(p)+string(".")+string(ext);
+    return true;
+}
 void HandleAction (Action action)
 {
   uint32_t nf = 0;
@@ -119,23 +129,29 @@ void HandleAction (Action action)
 int nw;
   if(action>=ACT_CUSTOM_BASE_JS && action <ACT_CUSTOM_END_JS)
   {
-      int i=action-ACT_CUSTOM_BASE_JS;
-      const char *custom=GUI_getCustomJsScript(i);
-      A_parseECMAScript(custom);
+      string script;
+      if(true==getScriptName( action, ACT_CUSTOM_BASE_JS,GUI_getCustomJsScript,"js",script))
+      {
+            A_parseECMAScript(script.c_str());
+      }
       return ;
   }
   if(action>=ACT_CUSTOM_BASE_PY && action <ACT_CUSTOM_END_PY)
   {
-      int i=action-ACT_CUSTOM_BASE_PY;
-      const char *custom=GUI_getCustomPyScript(i);
-      A_parseTinyPyScript(custom);
+      string script;
+      if(true==getScriptName( action, ACT_CUSTOM_BASE_PY,GUI_getCustomPyScript,"py",script))
+      {
+            A_parseTinyPyScript(script.c_str());      
+      }
       return ;
   }
   if(action>=ACT_AUTO_BASE_PY && action <ACT_AUTO_END_PY)
   {
-      int i=action-ACT_AUTO_BASE_PY;
-      const char *custom=GUI_getAutoPyScript(i);
-      A_parseTinyPyScript(custom);
+      string script;
+      if(true==getScriptName( action, ACT_AUTO_BASE_PY,GUI_getAutoPyScript,"py",script))
+      {
+            A_parseTinyPyScript(script.c_str());
+      }
       return ;
   }
   switch (action)
