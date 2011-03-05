@@ -148,7 +148,7 @@ uint8_t ADM_ve6_loadPlugins(const char *path)
     
 	printf("[ADM_ve6_plugin] Scanning done\n");
     int nb=ListOfEncoders.size();
-    for(int i=0;i<nb;i++)
+    for(int i=1;i<nb;i++)
         for(int j=i+1;j<nb;j++)
         {
              ADM_videoEncoder6 *a,*b;

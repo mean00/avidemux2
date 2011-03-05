@@ -155,7 +155,7 @@ uint8_t ADM_ae_loadPlugins(const char *path)
 
 	printf("[ADM_ae_plugin] Scanning done\n");
     int nb=ListOfAudioEncoder.size();
-    for(int i=0;i<nb;i++)
+    for(int i=1;i<nb;i++)
         for(int j=i+1;j<nb;j++)
         {
              ADM_audioEncoder *a,*b;
