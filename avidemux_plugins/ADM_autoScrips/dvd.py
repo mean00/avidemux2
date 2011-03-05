@@ -3,17 +3,12 @@
 #      Mean 2011
 ###############################################
 
-import ADM_resize
+import ADM_imageInfo
 import ADM_image
+
 finalSizeWidth=720
 finalSizeHeight=[ 480,576]
 #
-aspectRatio=[
-	(1.,0.888888,1.19), # NTSC 1:1 4:3 16:9
-        (1.,1.066667,1.43),  # PAL  1:1 4:3 16:9
-	(1.,0.888888,1.19), # FILM 1:1 4:3 16:9
-]
-fps_predef=[ 29970, 25000, 23976]
 #
 MP2=80
 AC3=0x2000
@@ -25,22 +20,15 @@ adm=Avidemux()
 ##########################
 source=ADM_image.image()
 dest=ADM_image.image()
-
-fps=adm.getFps1000()
-fmt=source.getFormat(fps)
-true_fmt=fmt
-print("Fps    : "+str(fps))
-print("Format : "+str(fmt))
-if(fmt==ADM_image.FMT_UNKNOWN):
-    exit()
+desc=""
+true_fmt=ADM_imageInfo.get_video_format(desc)
+if(true_fmt is None):
+    raise
+fmt=true_fmt
+if(true_fmt==ADM_image.FMT_FILM):
+    fmt=ADM_image.FMT_NTSC
 source.width=adm.getWidth()
 source.height=adm.getHeight()
-desc="NTSC"
-if(fmt==ADM_image.FMT_FILM):
-    fmt=ADM_image.FMT_NTSC
-    desc="FILM"
-if(fmt==ADM_image.FMT_PAL):
-    desc="PAL"
 source.fmt=fmt
 dest.fmt=fmt
 print("Format : "+str(fmt))
@@ -67,7 +55,7 @@ if res!=1:
     exit()
 source.ar=mnuSourceRatio.index
 dest.ar=mnuDestRatio.index+1
-resizer=source.compute_resize(source,dest,finalSizeWidth,finalSizeHeight,aspectRatio)
+resizer=source.compute_resize(source,dest,finalSizeWidth,finalSizeHeight,ADM_imageInfo.aspectRatio)
 if(resizer is None):
     exit()
 print("Resize to "+str(resizer.width)+"x"+str(resizer.height))

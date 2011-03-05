@@ -3,46 +3,32 @@
 #      Mean 2011
 ###############################################
 
-import ADM_resize
+import ADM_imageInfo
 import ADM_image
 adm=Avidemux()
 finalSizeWidth=1280
 finalSizeHeight=[ 720,720]
-aspectRatio=[
-	(1.,0.888888,1.19), # NTSC 1:1 4:3 16:9
-        (1.,1.066667,1.43),  # PAL  1:1 4:3 16:9
-	(1.,0.888888,1.19), # FILM 1:1 4:3 16:9
-]
-fps_predef=[ 29970, 25000, 23976]
 #
 source=ADM_image.image()
 dest=ADM_image.image()
+desc=""
+true_fmt=ADM_imageInfo.get_video_format(desc)
+if(true_fmt is None):
+    raise
+fmt=true_fmt
+source.width=adm.getWidth()
+source.height=adm.getHeight()
+source.fmt=fmt
+dest.fmt=fmt
+dest.width=16
+dest.height=16
 #
 MP2=80
 AC3=0x2000
 DTS=0x2001
 supported=[MP2,AC3,DTS]
 #
-fps=adm.getFps1000()
-fmt=source.getFormat(fps)
-true_fmt=fmt
-print("Fps    : "+str(fps))
 print("Format : "+str(fmt))
-if(fmt==ADM_image.FMT_UNKNOWN):
-    exit()
-source.width=adm.getWidth()
-source.height=adm.getHeight()
-desc="NTSC"
-if(fmt==ADM_image.FMT_FILM):
-    fmt=ADM_image.FMT_NTSC
-    desc="FILM"
-if(fmt==ADM_image.FMT_PAL):
-    desc="PAL"
-source.fmt=fmt
-dest.fmt=fmt
-print("Format : "+str(fmt))
-dest.width=16
-dest.height=16
 ############################
 # Interlaced/ AR 
 ############################
@@ -72,7 +58,7 @@ if(deint==2):
     adm.addVideoFilter("vdpauDeint","resizeToggle=False","deintMode=0","targetWidth=512","targetHeight=384")
     print("Vdpau")
 #  Resize
-resizer=source.compute_resize(source,dest,1280,[720,720,720],aspectRatio)
+resizer=source.compute_resize(source,dest,1280,[720,720,720],ADM_imageInfo.aspectRatio)
 if(resizer is None):
     exit()
 print("Resize to "+str(resizer.width)+"x"+str(resizer.height))
