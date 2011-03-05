@@ -337,7 +337,16 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
      ADM_warning("[MKV] cluster indexer, cannot find CLUSTER atom\n");
      return 0;
    }
+    // In case the segment is ridiculously small take file size....
+   pos=parser->tell();
+   ADM_info("FileSize = %"LLU", pos=%"LLU" size=%"LLU",pos+size=%"LLU"\n",fileSize,pos,vlen,pos+vlen);
+   if(pos+vlen<fileSize)
+    {
+        ADM_warning("Segment is way too small, trying to guess the right value\n");
+        vlen=fileSize-pos;
+    }
    ADM_ebml_file segment(parser,vlen);
+   
    DIA_workingBase *work=createWorking("Matroska clusters");
    while(segment.simplefind(MKV_CLUSTER,&alen,0))
    {
