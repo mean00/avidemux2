@@ -883,7 +883,7 @@ void setupMenus(void)
 	printf("Found %d format(s)\n",nbFormat);
 	for(uint32_t i=0;i<nbFormat;i++)
 	{
-        const char *name=ADM_mx_getName(i);
+        const char *name=ADM_mx_getDisplayName(i);
 		WIDGET(comboBoxFormat)->addItem(name);	
 	}
 

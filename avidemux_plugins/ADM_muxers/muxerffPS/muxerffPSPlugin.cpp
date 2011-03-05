@@ -25,7 +25,7 @@ ADM_MUXER_BEGIN( muxerffPS,
                     1,0,0,
                     "ffPS",    // Internal name
                     "ffMpeg PS muxer plugin (c) Mean 2009",
-                    "ffPS Muxer", // DIsplay name
+                    "Mpeg-PS Muxer( ff)", // DIsplay name
                     ffPSConfigure,
                     ps_muxer_param, //template
                     &psMuxerConfig //config

@@ -25,7 +25,7 @@ ADM_MUXER_BEGIN( muxerffTS,
                     1,0,0,
                     "ffTS",    // Internal name
                     "ffMpeg TS muxer plugin (c) Mean 2009",
-                    "ffTS Muxer", // DIsplay name
+                    "Mpeg TS Muxer (ff)", // DIsplay name
                     ffTSConfigure,
                     ts_muxer_param, //template
                     &tsMuxerConfig //config
