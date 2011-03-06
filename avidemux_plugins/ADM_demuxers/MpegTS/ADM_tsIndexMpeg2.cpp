@@ -70,7 +70,7 @@ dmxPacketInfo tmpInfo;
         printf("[PsIndex] Cannot create %s\n",indexName.c_str());
         return false;
     }
-    writeSystem(file,true);
+    writeSystem(file,false);
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
     FP_TYPE append=FP_APPEND;
