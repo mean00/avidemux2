@@ -1,5 +1,6 @@
 #              cname:pyname
 /* CLASS */ pyEditor : void : ADM_PYID_EDITOR
+/* METHOD */ double scriptGetPts:getPts            (int ) 
 /* METHOD */ int jsPrintTiming:printTiming      (int ) 
 /* METHOD */ int scriptGetNbSegment:nbSegments  (void)
 /* METHOD */ int jsDumpSegments:dumpAllSegments    (void) 

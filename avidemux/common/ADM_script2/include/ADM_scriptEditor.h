@@ -24,6 +24,7 @@ int jsHexDumpFrame(int framenumber );
 int jsDumpSegments (void);
 int jsDumpRefVideos (void);
 float scriptGetVideoDuration(void);
+double scriptGetPts(int frameNum);
 #ifdef __cplusplus
 };
 #endif
