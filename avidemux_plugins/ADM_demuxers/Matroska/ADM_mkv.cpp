@@ -32,7 +32,7 @@ uint8_t mkvHeader::open(const char *name)
   ADM_MKV_TYPE type;
   const char *ss;
 
-
+  _timeBase=1000; // default value is 1 ms timebase (unit is in us)
   _isvideopresent=0;
   if(!ebml.open(name))
   {
@@ -49,7 +49,17 @@ uint8_t mkvHeader::open(const char *name)
      printf("[MKV] Incorrect Header\n");
      return 0;
   }
-
+/* Read info to get the timeScale if it exists... */
+  if(ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_INFO,&alen))
+  {
+        ADM_ebml_file father( &ebml,alen);
+        uint64_t timeBase=walkAndFind(&father,MKV_TIMECODE_SCALE);
+        if(timeBase)
+        {
+            ADM_info("TimeBase found : %"LLU" ns\n",timeBase);
+            _timeBase=timeBase/1000; // We work in us
+        }
+  }
   /* Now find tracks */
   if(!ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_TRACKS,&alen))
   {
@@ -359,7 +369,6 @@ uint8_t mkvHeader::walk(void *seed)
   uint64_t id,len;
   ADM_MKV_TYPE type;
   const char *ss;
-
    ADM_ebml_file *father=(ADM_ebml_file *)seed;
     while(!father->finished())
    {
@@ -400,7 +409,61 @@ uint8_t mkvHeader::walk(void *seed)
    }
   return 1;
 }
-
+/**
+    \fn walk
+    \brief Walk a matroska atom and print out what is found.
+*/
+uint64_t mkvHeader::walkAndFind(void *seed,MKV_ELEM_ID searched)
+{
+  uint64_t id,len;
+  ADM_MKV_TYPE type;
+  const char *ss;
+   ADM_ebml_file *father=(ADM_ebml_file *)seed;
+  uint64_t value=0;
+    while(!father->finished())
+   {
+      father->readElemId(&id,&len);
+      if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
+      {
+        printf("[MKV] Tag 0x%"LLX" not found (len %"LLU")\n",id,len);
+        father->skip(len);
+        continue;
+      }
+      ADM_assert(ss);
+      switch(type)
+      {
+        case ADM_MKV_TYPE_CONTAINER:
+                  father->skip(len);
+                  printf("%s skipped\n",ss);
+                  break;
+        case ADM_MKV_TYPE_UINTEGER:
+                    {
+                  uint64_t v=father->readUnsignedInt(len);
+                  if(id==searched)
+                        value=v;
+                  printf("%s:%"LLU"\n",ss,v);
+                  }
+                  break;
+        case ADM_MKV_TYPE_INTEGER:
+                  printf("%s:%"LLD"\n",ss,father->readSignedInt(len));
+                  break;
+        case ADM_MKV_TYPE_STRING:
+        {
+                  char *string=new char[len+1];
+                  string[0]=0;
+                  father->readString(string,len);
+                  printf("%s:<%s>\n",ss,string);
+                  delete [] string;
+                  break;
+        }
+        default:
+                printf("%s skipped\n",ss);
+                father->skip(len);
+                break;
+      }
+   }
+  return value;
+}
 
 
 /**

@@ -127,6 +127,7 @@ public:
 class mkvHeader         :public vidHeader
 {
   protected:
+    uint64_t                 _timeBase;  // Time base in us, default is 1000=1 ms
     mkvAccess               **_access;
     ADM_audioStream         **_audioStreams;
     ADM_ebml_file           *_parser;
@@ -145,6 +146,7 @@ class mkvHeader         :public vidHeader
     uint8_t                 analyzeTracks(void *head,uint32_t headlen);
     uint8_t                 analyzeOneTrack(void *head,uint32_t headlen);
     uint8_t                 walk(void *seed);
+    uint64_t                walkAndFind(void *seed,MKV_ELEM_ID searched);
     int                     searchTrackFromTid(uint32_t tid);
     //
     uint8_t                 reformatVorbisHeader(mkvTrak *trk);

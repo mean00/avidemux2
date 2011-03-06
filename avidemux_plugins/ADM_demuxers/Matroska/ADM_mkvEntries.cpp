@@ -241,9 +241,10 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_DISPLAY_WIDTH: ADM_info("Display Width:%d\n",(int)father.readUnsignedInt(len));break;
 
         case  MKV_AUDIO_CHANNELS: entry->chan=father.readUnsignedInt(len);break;
+        case  MKV_TIMECODE_SCALE:
         case  MKV_TRACK_TIMECODESCALE:
                                 {
-                                    printf("[Mkv] TimeCodeScale=%"LLU"\n",father.readUnsignedInt(len));
+                                    ADM_warning("[Mkv] TimeCodeScale=%"LLU"\n",father.readUnsignedInt(len));
                                 };break; //FIXME
 
         case  MKV_FRAME_DEFAULT_DURATION: entry->defaultDuration=father.readUnsignedInt(len)/1000; break; // In us
