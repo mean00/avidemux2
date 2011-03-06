@@ -160,8 +160,8 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   ix.pos=where;
   ix.size=size;
   ix.flags=AVI_KEY_FRAME;
-  ix.Dts=timecodeMS*1000LL;
-  ix.Pts=timecodeMS*1000LL;
+  ix.Dts=timecodeMS*_timeBase;
+  ix.Pts=timecodeMS*_timeBase;
    uint32_t rpt=_tracks[0].headerRepeatSize;
   // since frame type is unreliable for mkv, we scan each frame
   // For the 2 most common cases : mp4 & h264.
