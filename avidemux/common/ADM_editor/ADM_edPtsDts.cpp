@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "math.h"
 
@@ -50,7 +51,11 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
     for(int i=0;i<nbFrames;i++)
     {
           hdr->getPtsDts(i,&pts,&dts);
-          if(pts==ADM_NO_PTS) fail++;
+          if(pts==ADM_NO_PTS) 
+            {
+                fail++;
+              //  ADM_info("Pts for frame %"LLU"/%"LLU"is missing\n",i,nbFrames);
+            }
     }
     ADM_info("We have %d missing PTS\n",fail);
     if(!fail) return true; // Have all PTS, ok...
@@ -75,7 +80,8 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
         }
     }
     ADM_info("H264 AVC scheme: %"LU"/%"LU" failures.\n",fail,nbFrames/2);
-    if(fail) return false;
+    if(fail) goto nextScheme;
+    {
     ADM_info("Filling 2nd field PTS\n");
     uint32_t fixed=0;
     for(int i=0;i<nbFrames-1;i+=2)
@@ -92,6 +98,25 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
         }
     }
     ADM_info("Fixed %d PTS\n",fixed);
+    }
+nextScheme:
+    fail=0;
+    vector <int> listOfMissingPts;
+    for(int i=0;i<nbFrames;i++)
+    {
+          hdr->getPtsDts(i,&pts,&dts);
+          if(pts==ADM_NO_PTS) 
+            {
+                fail++;
+                listOfMissingPts.push_back(i);
+            }
+    }
+    // 2nd part: Try to really guess the missing ones by spotting holes...
+    int n=listOfMissingPts.size();
+    if(n)
+    {
+        ADM_info("We still have %d missing PTS\n",n);
+    }
     return true;
 }
 /**
