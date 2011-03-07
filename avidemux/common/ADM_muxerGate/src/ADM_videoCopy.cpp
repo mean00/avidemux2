@@ -105,8 +105,10 @@ bool     ADM_videoStreamCopy::getExtraData(uint32_t *extraLen, uint8_t **extraDa
 uint64_t  ADM_videoStreamCopy::rescaleTs(uint64_t in)
 {
     if(in==ADM_NO_PTS) return in;
-    if(in>startTimeDts) return in-startTimeDts;
+    if(in>=startTimeDts) return in-startTimeDts;
     ADM_warning("Negative time!\n");
+    ADM_warning("Current time = %"LLU"\n",in);
+    ADM_warning("start time = %"LLU"\n",startTimeDts);
     return 0;
 }
 /**
