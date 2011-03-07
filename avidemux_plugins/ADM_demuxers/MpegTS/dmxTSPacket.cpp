@@ -156,7 +156,7 @@ bool    tsPacket::setPos(uint64_t pos)
 */
 bool tsPacket::getSinglePacket(uint8_t *buffer)
 {
-#define MAX_SKIPPED_PACKET 6000
+#define MAX_SKIPPED_PACKET 150*100 // 150*180*100=~ 2.2 MBytes
 #define MAX_SEARCH 2048
     int count=0;
 again:
