@@ -30,6 +30,122 @@ static bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *dela
 static bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 static bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 /**
+    \fn countMissingPts
+*/
+int countMissingPts(vidHeader *hdr)
+{
+        int nbMissing=0;
+        aviInfo info;
+        hdr->getVideoInfo(&info);
+        uint32_t nbFrames=0;
+        nbFrames=info.nb_frames;
+        for(int i=0;i<nbFrames;i++)
+        {
+            uint64_t pts,dts;
+            hdr->getPtsDts(i,&pts,&dts);
+            if(pts==ADM_NO_PTS)
+                {
+                    nbMissing++;
+                }
+        }
+        return nbMissing;
+}
+/**
+    \fn guessH264
+    \brief  Try to guess missing PTS at index missingIndex by searching for a hole.
+            It is really crude and seldom works.
+            The main objective is to avoid stoping when using copy/copy due to missing PTS
+            (corrupted stream...)
+*/
+bool guessH264(vidHeader *hdr,uint64_t timeIncrementUs,int missingIndex)
+{
+#define LOOKUP_RANGE 10
+        int start=0,end=0;
+        aviInfo info;
+        hdr->getVideoInfo(&info);
+        uint32_t nbFrames=0;
+        nbFrames=info.nb_frames;
+
+        if(missingIndex<LOOKUP_RANGE) start=0;
+                else start=missingIndex-LOOKUP_RANGE;
+        if(missingIndex+LOOKUP_RANGE>=nbFrames) end=nbFrames;
+                    else end=missingIndex+LOOKUP_RANGE;
+
+        if(end-start<4)
+        {
+            ADM_warning("Not enough samples to guess missing pts\n");
+            return false;
+        }
+
+        int nbMissing=0;
+        vector<uint64_t> neighbour;
+        for(int i=start;i<end;i++)
+        {
+            uint64_t pts,dts;
+            hdr->getPtsDts(i,&pts,&dts);
+            if(pts==ADM_NO_PTS)
+                {
+                    nbMissing++;
+                    continue;
+                }
+            neighbour.push_back(pts);
+        }
+        // We can use a hole in the PTS if there are several missing PTS...
+        if(nbMissing>1)
+        {
+            ADM_warning("Too much unknown PTS (%d), aborting\n",nbMissing);
+            return false;
+        }
+        // Sort the list
+        int n=neighbour.size();
+        for(int i=0;i<n;i++)
+            for(int j=i+1;j<n;j++)
+            {
+                uint64_t pts1=neighbour[i];
+                uint64_t pts2=neighbour[j];
+                if(pts1>pts2)
+                    {
+                        neighbour[i]=pts2;
+                        neighbour[j]=pts1;
+                    }
+            }
+        //for(int i=0;i<n;i++) ADM_info("%d: %"LLU"\n",i,neighbour[i]);
+        // Now look for the biggest hole in the sorted list
+        uint64_t maxDelta=0;
+        int maxIndex=-1;
+        for(int i=0;i<n-1;i++)
+        {
+            uint64_t d=neighbour[i+1]-neighbour[i];
+            if(d>maxDelta) 
+            {
+                maxDelta=d;
+                maxIndex=i;
+            }
+            //ADM_info("%d Delta=%"LLU"\n",i,d);
+        }
+        if(maxIndex==-1) 
+        {
+            ADM_error("Oops, no gap detected\n");
+            return false;
+        }
+        if(maxDelta>=2*timeIncrementUs)
+        {
+            ADM_info("Our best guess is at %"LLU"\n",neighbour[maxIndex]);
+            uint64_t pts,dts,pts2;
+            pts2=neighbour[maxIndex]+timeIncrementUs;
+            hdr->getPtsDts(missingIndex,&pts,&dts); 
+            if(pts2>dts)
+            {
+                ADM_error("Our guessed PTS is too early, aborting (%"LLU"/%"LLU")\n",pts2,dts);
+            }else
+                hdr->setPtsDts(missingIndex,pts2,dts);   
+        }else   
+            ADM_info("Gap found but too small\n");
+        //for(int i=0;i<n;i++) ADM_info("%d: %"LLU"\n",i,neighbour[i]);
+    return true;
+}
+
+/**
     \fn ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     \brief look for AVC case where 1 field has PTS, the 2nd one is Bottom without PTS
             in such a case PTS (2nd field)=PTS (First field)+timeincrement
@@ -47,16 +163,7 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
     // Scan if it is the scheme we support
     // i.t. interlaced with Top => PTS, Bottom => No Pts
     // Check we have all PTS...
-    fail=0;
-    for(int i=0;i<nbFrames;i++)
-    {
-          hdr->getPtsDts(i,&pts,&dts);
-          if(pts==ADM_NO_PTS) 
-            {
-                fail++;
-              //  ADM_info("Pts for frame %"LLU"/%"LLU"is missing\n",i,nbFrames);
-            }
-    }
+    fail=countMissingPts(hdr);
     ADM_info("We have %d missing PTS\n",fail);
     if(!fail) return true; // Have all PTS, ok...
     ADM_info("Some PTS are missing, try to guess them...\n");
@@ -100,6 +207,8 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
     ADM_info("Fixed %d PTS\n",fixed);
     }
 nextScheme:
+    // Try to guess random missing PTS
+    // Really guess job
     fail=0;
     vector <int> listOfMissingPts;
     for(int i=0;i<nbFrames;i++)
@@ -111,12 +220,24 @@ nextScheme:
                 listOfMissingPts.push_back(i);
             }
     }
-    // 2nd part: Try to really guess the missing ones by spotting holes...
+    // 2nd part: Try to really guess the missing ones by spotting gaps...
     int n=listOfMissingPts.size();
     if(n)
     {
-        ADM_info("We still have %d missing PTS\n",n);
+        if(n>nbFrames/100)
+        {
+            ADM_warning("There is more than 1% unavailable PTS, wont even try...\n");
+            goto theEnd;
+        }
+        for(int i=0;i<n;i++)
+        {
+              guessH264(hdr,timeIncrementUs,listOfMissingPts[i]);
+        }
+        
     }
+theEnd:
+    fail=countMissingPts(hdr);
+    ADM_info("End of game, we have %d missing PTS\n",fail);
     return true;
 }
 /**
