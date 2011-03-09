@@ -36,6 +36,7 @@ uint8_t DIA_pipe(char **cmd,char **param) {return 0;}
 uint8_t DIA_quota(char *) {return 0;}
 const char * GUI_getCustomJsScript(uint32_t nb) {return 0;}
 const char * GUI_getCustomPyScript(uint32_t nb) {return 0;}
+const char * GUI_getAutoPyScript(uint32_t nb) {return 0;}
 uint8_t DIA_RecentFiles( char **name ) {return 0;}
 uint8_t DIA_about( void ) {return 0;}
 void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate ) {}

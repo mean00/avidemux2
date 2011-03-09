@@ -393,6 +393,10 @@ const char * GUI_getCustomPyScript(uint32_t nb)
 {
    return NULL;
 }
+const char * GUI_getAutoPyScript(uint32_t nb)
+{
+   return NULL;
+}
 /**
     \fn populateCombobox
 */
