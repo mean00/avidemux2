@@ -30,6 +30,86 @@ static bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *dela
 static bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 static bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
 /**
+    \fn verifyDts
+    \brief detect & fix out of order DTS
+*/
+bool ADM_verifyDts(vidHeader *hdr,uint64_t timeIncrementUs)
+{
+        int nbMissing=0;
+        aviInfo info;
+        hdr->getVideoInfo(&info);
+        uint32_t nbFrames=0;
+        nbFrames=info.nb_frames;
+        //
+        ADM_info("Verifying DTS....\n");
+        uint64_t got_dts=0,startDts=0;
+        int start=0;
+        for(int i =0;i<nbFrames-1;i++)
+        {
+            uint64_t pts3,dts3;
+            hdr->getPtsDts(i,&pts3,&dts3);
+            if(dts3!=ADM_NO_PTS)
+            {
+                got_dts=dts3;
+                start=i+1;
+                break;
+            }
+        }
+        ADM_info("Checking from %d to %d\n",start,nbFrames);
+        startDts=got_dts;
+        // Pass 1 : detect too high DTS i.e. 0 1 2 <9> 4 5 6
+        for(int i=start;i<nbFrames-1;i++)
+        {
+            
+            uint64_t pts2,dts2;
+            uint64_t pts3,dts3;
+            hdr->getPtsDts(i,&pts2,&dts2);
+            hdr->getPtsDts(i+1,&pts3,&dts3);
+            if(dts2!=ADM_NO_PTS && dts3!=ADM_NO_PTS)
+            {
+                if(dts3>got_dts &&dts2>got_dts && dts2>dts3)
+                {
+                    ADM_warning("Out of order dts at frame %d %"LLU",%"LLU",%"LLU"\n",i,got_dts,dts2,dts3);
+                    dts2=got_dts+timeIncrementUs;
+                    ADM_info("Setting to %"LLU"\n",dts2);
+                    hdr->setPtsDts(i,pts2,dts2);
+                }
+            }
+            if(dts2==ADM_NO_PTS)
+                got_dts+=timeIncrementUs;
+            else        
+                got_dts=dts2;
+        }
+        // Pass 2 : detect too low DTS i.e. 0 1 2 4 <1> 6 7
+        got_dts=startDts;
+        ADM_info("Pass 2..\n");
+        for(int i=start;i<nbFrames-1;i++)
+        {
+            
+            uint64_t pts2,dts2;
+            uint64_t pts3,dts3;
+            hdr->getPtsDts(i,&pts2,&dts2);
+            hdr->getPtsDts(i+1,&pts3,&dts3);
+            if(dts2!=ADM_NO_PTS && dts3!=ADM_NO_PTS)
+            {
+                //ADM_info("%d %"LLU" %"LLU" %"LLU"\n",i,got_dts,dts2,dts3);
+                if(dts3>got_dts &&dts2<got_dts )
+                {
+                    ADM_warning("Low dts : Out of order dts at frame %d %"LLU",%"LLU",%"LLU"\n",i,got_dts,dts2,dts3);
+                    dts2=got_dts+timeIncrementUs;
+                    ADM_info("Setting to %"LLU"\n",dts2);
+                    hdr->setPtsDts(i,pts2,dts2);
+                }
+            }
+            if(dts2==ADM_NO_PTS)
+                got_dts+=timeIncrementUs;
+            else        
+                got_dts=dts2;
+        }
+        ADM_info("DTS verified\n");
+        return true;
+}
+/**
     \fn countMissingPts
 */
 int countMissingPts(vidHeader *hdr)
@@ -577,3 +657,4 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     return r;
 }
 //EOF
+

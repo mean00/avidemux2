@@ -18,7 +18,7 @@
 #ifndef ADM_EDPTSDTS_H
 #define ADM_EDPTSDTS_H
 #include "ADM_Video.h"
-
+bool ADM_verifyDts(vidHeader *hdr,uint64_t timeIncrementUs);
 bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs);
 // Valid for mpeg1/2/4 SP type 
 bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay);
