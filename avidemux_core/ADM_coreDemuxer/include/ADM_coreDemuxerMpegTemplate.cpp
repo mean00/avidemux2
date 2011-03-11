@@ -23,45 +23,68 @@
 */
 uint64_t MY_CLASS::getVideoDuration(void)
 {
-    int index=ListOfFrames.size();
-    if(!index) return 0;
-    index--;
+    int lastFrame=ListOfFrames.size();
+    if(!lastFrame) return 0;
+    lastFrame--;
     int maxLookup=100;
-    if(maxLookup>index) maxLookup=index;
-    int offset=0;
-    int maxPts=0;
-    do
-    {
-        if(maxLookup)
-        {
-            uint64_t p=ListOfFrames[index]->pts;
-            if(p!=ADM_NO_PTS) 
-            {
-                if(p>maxPts) maxPts=p;
-            }
-            maxLookup--;
-        }
-        if(ListOfFrames[index]->dts!=ADM_NO_PTS) break;
-        index--;
-        offset++;
-    }while(index);
+    if(maxLookup>lastFrame) maxLookup=lastFrame;
+    int start=lastFrame-maxLookup;
 
-    if(!index)
+    uint64_t maxPts=0,maxDts=0;
+    int      maxPtsIndex=-1,maxDtsIndex=-1;
+
+    // Search for higher PTS in the last N frames
+    // and note down its position..
+    for(int i=start;i<=lastFrame;i++)
     {
-        ADM_warning("Cannot find a valid DTS in the file\n");
-        ADM_warning("Using PTS instead\n");
-        return maxPts;
+            uint64_t p=ListOfFrames[i]->pts;
+            if(p==ADM_NO_PTS) 
+                continue;
+            if(p>maxPts) 
+            {
+                maxPts=p;
+                maxPtsIndex=i;
+            }
     }
-    ADM_info("Found max PTS=%s\n",ADM_us2plain(maxPts));
-    ADM_info("Found max DTS=%s\n",ADM_us2plain(ListOfFrames[index]->dts));
-    float f,g;
+    ADM_info("Found maxPts =%s, %d frames from the end\n",ADM_us2plain(maxPts),lastFrame-maxPtsIndex);
+    for(int i=lastFrame;i>=start;i--)
+    {
+            uint64_t p=ListOfFrames[i]->dts;
+            if(p==ADM_NO_PTS) 
+                continue;
+            maxDtsIndex=i;
+            maxDts=p;
+            break;
+    }
+    ADM_info("Found maxDts =%s, %d frames from the end\n",ADM_us2plain(maxDts),lastFrame-maxDtsIndex);
+    // Case 1: No Pts
+    bool usePts=true;
+    if(maxPtsIndex==-1)
+    {
+        usePts=false;
+    }
+    uint64_t refTime;
+    double refDistance;
+    if(usePts==true)
+    { 
+        ADM_info("Using PTS..\n");
+        refTime=maxPts;
+        refDistance=lastFrame-maxPtsIndex;
+    }else   
+    {
+        ADM_info("Using DTS..\n");
+        refTime=maxDts;
+        refDistance=lastFrame-maxDtsIndex;    
+    }
+    double f,g;
     f=1000*1000*1000;
     f/=_videostream.dwRate; 
-    g=ListOfFrames[index]->dts;
-    g+=f*offset;
-    ADM_info("Using duration of %s\n",ADM_us2plain(g));
-    //return (uint64_t)g;
-    return maxPts;
+    g=refTime;
+    f=f*refDistance;
+    g+=f;
+    uint64_t duration=(uint64_t)g;
+    ADM_info("Using duration of %s\n",ADM_us2plain(duration));
+    return duration;
 }
 
 /**
