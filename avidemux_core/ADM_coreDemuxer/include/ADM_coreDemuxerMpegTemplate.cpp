@@ -16,7 +16,7 @@
 #ifndef MY_CLASS
     #error  MY_CLASS not defined
 #endif
-
+#include "ADM_vidMisc.h"
 /**
         \fn getVideoDuration
         \brief Returns duration of video in us
@@ -32,32 +32,36 @@ uint64_t MY_CLASS::getVideoDuration(void)
     int maxPts=0;
     do
     {
-	if(maxLookup)
-	{
-        uint64_t p=ListOfFrames[index]->pts;
-	if(p!=ADM_NO_PTS) 
-		{
-			if(p>maxPts) maxPts=p;
-		}
-	maxLookup--;
-	}
+        if(maxLookup)
+        {
+            uint64_t p=ListOfFrames[index]->pts;
+            if(p!=ADM_NO_PTS) 
+            {
+                if(p>maxPts) maxPts=p;
+            }
+            maxLookup--;
+        }
         if(ListOfFrames[index]->dts!=ADM_NO_PTS) break;
         index--;
         offset++;
-
     }while(index);
+
     if(!index)
     {
         ADM_warning("Cannot find a valid DTS in the file\n");
         ADM_warning("Using PTS instead\n");
         return maxPts;
     }
+    ADM_info("Found max PTS=%s\n",ADM_us2plain(maxPts));
+    ADM_info("Found max DTS=%s\n",ADM_us2plain(ListOfFrames[index]->dts));
     float f,g;
     f=1000*1000*1000;
     f/=_videostream.dwRate; 
     g=ListOfFrames[index]->dts;
     g+=f*offset;
-    return (uint64_t)g;
+    ADM_info("Using duration of %s\n",ADM_us2plain(g));
+    //return (uint64_t)g;
+    return maxPts;
 }
 
 /**
