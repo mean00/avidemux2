@@ -304,6 +304,8 @@ bool ADM_Composer::addFile (const char *name)
     }
     _segments.addReferenceVideo(&video);
     // we only try if we got everything needed...
+    // Verify DTS is monotonous
+    ADM_verifyDts(video._aviheader,video.timeIncrementInUs);
     if(!video.decoder)
     {
         ADM_info("[Editor] no decoder to check for B- frame\n");
