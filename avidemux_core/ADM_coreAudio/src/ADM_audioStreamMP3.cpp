@@ -9,6 +9,7 @@ GPL-v2
 #include "ADM_audioStreamMP3.h"
 #include "ADM_mp3info.h"
 #include "DIA_working.h"
+#include "ADM_clock.h"
 /**
     \fn ADM_audioStreamMP3
     \brief constructor
@@ -140,6 +141,8 @@ uint32_t offset;
             We may have up to one packet error
   
   */
+#define TIME_BETWEEN_UPDATE 1500
+#define SAVE_EVERY_N_BLOCKS 3    // One seek point every ~ 60 ms
 bool ADM_audioStreamMP3::buildTimeMap(void)
 {
 uint32_t size;
@@ -150,20 +153,29 @@ DIA_workingBase *work=createWorking("Building time map");
     access->setPos(0);
     printf("[audioStreamMP3] Starting time map\n");
     rewind();
+    Clock *clk=new Clock();
+    clk->reset();
+    uint32_t nextUpdate=clk->getElapsedMS()+TIME_BETWEEN_UPDATE;
+    int markCounter=SAVE_EVERY_N_BLOCKS;
     while(1)
     {
-        // Push
-        MP3_seekPoint *seek=new MP3_seekPoint;
-        seek->offset=access->getPos();
-        seek->timeStamp=lastDts;
+        // Push where we are...
+        markCounter++;
+        if(markCounter>SAVE_EVERY_N_BLOCKS)
+        {
+            MP3_seekPoint *seek=new MP3_seekPoint;
+            seek->offset=access->getPos();
+            seek->timeStamp=lastDts;
+            // Mark this point
+            seekPoints.push_back(seek);
+            markCounter=0;
+        }
+
         if(false==access->getPacket(buffer+limit, &size, 2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit,&newDts))
         {
-            delete seek;
             break;
         }
         limit+=size;
-        // Mark this point
-        seekPoints.push_back(seek);
         // Shrink ?
         if(limit>ADM_AUDIOSTREAM_BUFFER_SIZE && start> 10*1024)
         {
@@ -173,13 +185,20 @@ DIA_workingBase *work=createWorking("Building time map");
         }
         // Start at...
         pos=access->getPos();
-        work->update(pos,access->getLength());
-        // consume all packets
+        uint32_t now=clk->getElapsedMS();
+        if(now>nextUpdate)
+        {
+            work->update(pos,access->getLength());
+            nextUpdate=now+TIME_BETWEEN_UPDATE;
+        }
+        
+        // consume all packets in the buffer we just got
+        MpegAudioInfo info;
+        uint32_t offset;
+
         while(1)
         {
             if(limit-start<ADM_LOOK_AHEAD) break;
-            MpegAudioInfo info;
-            uint32_t offset;
             if(!getMpegFrameInfo(buffer+start,ADM_LOOK_AHEAD, &info,NULL,&offset))
             {
                 start++;
@@ -198,6 +217,7 @@ DIA_workingBase *work=createWorking("Building time map");
     }
     rewind();
     delete work;
+    delete clk;
     access->setPos(0);
     printf("[audioStreamMP3] Ending time map\n");
     return true;
