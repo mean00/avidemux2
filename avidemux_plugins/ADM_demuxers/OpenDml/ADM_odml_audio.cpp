@@ -90,6 +90,7 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
     pos=0;
     currentIndex=0;
     wavHeader=hdr;
+    currentPosition=0;
     nbIndex=myIndex.size(); // will not change
 }
 /**
@@ -106,7 +107,7 @@ bool      ADM_aviAudioAccess::isCBR(void)
     \fn getPos
 
 */
-uint64_t  ADM_aviAudioAccess::getPos(void)
+bool  ADM_aviAudioAccess::updatePos(void)
 {
  uint64_t total=0;
     if(currentIndex==0) return 0;
@@ -115,7 +116,18 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
     {
         total+=myIndex[i].size;
     }
-    return total;
+    currentPosition=total;
+    return true;
+}
+bool ADM_aviAudioAccess::nextIndex(void)
+{
+        currentPosition+=myIndex[currentIndex].size;
+        currentIndex++;
+        return true;
+}
+uint64_t  ADM_aviAudioAccess::getPos(void)
+{
+    return currentPosition;
 }
 
 /**
@@ -142,6 +154,7 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
         {
             fseeko(fd,myIndex[i].offset,SEEK_SET);
             currentIndex=i;
+            updatePos();
             return 1;
         }
         total+=myIndex[i].size;
@@ -160,20 +173,21 @@ bool   ADM_aviAudioAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t m
             printf("[OpenDmlDemuxer] Index Exceeded %d/%d\n",currentIndex,nbIndex);
             return 0;
         }
-        fseeko(fd,myIndex[currentIndex].offset,SEEK_SET);
-        if(myIndex[currentIndex].size>maxSize) 
+        uint32_t blockSize=myIndex[currentIndex].size;
+        if(blockSize>maxSize) 
         {
-            ADM_error("Packet too large %d, maximum is %d\n",myIndex[currentIndex].size,maxSize);
+            ADM_error("Packet too large %d, maximum is %d\n",blockSize,maxSize);
             *size=0;
             return false;
          }
-        fread(buffer,1,myIndex[currentIndex].size,fd);
+        fseeko(fd,myIndex[currentIndex].offset,SEEK_SET);
+        fread(buffer,1,blockSize,fd);
         if(!currentIndex) 
             *dts=0;
         else
             *dts=ADM_AUDIO_NO_DTS;
-        *size=myIndex[currentIndex].size;
-        currentIndex++;
+        *size=blockSize;
+        nextIndex();
         return 1;
 }
 //EOF

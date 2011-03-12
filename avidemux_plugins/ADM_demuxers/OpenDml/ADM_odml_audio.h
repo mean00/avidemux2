@@ -19,6 +19,7 @@ protected:
                 vector <odmlIndex> myIndex;
                 uint32_t   nbIndex;
                 WAVHeader *wavHeader;
+                uint64_t  currentPosition;
 public: 
                 ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
 						uint32_t nbchunk,
@@ -37,6 +38,8 @@ public:
                 virtual bool      goToTime(uint64_t timeUs) {ADM_assert(0);return true;}
                 virtual bool      isCBR(void) ;
                 virtual uint64_t  getPos(void);
+                        bool      updatePos(void);
+                        bool      nextIndex(void);
                 
                 
 
