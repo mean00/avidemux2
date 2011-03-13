@@ -1,0 +1,61 @@
+diff --git a/libavcodec/dca.c b/libavcodec/dca.c
+index 14b0b2d..1d21cfe 100644
+--- libavcodec/dca.c
++++ libavcodec/dca.c
+@@ -1625,8 +1625,8 @@ static int dca_decode_frame(AVCodecContext * avctx,
+ 
+     int lfe_samples;
+     int num_core_channels = 0;
+-    int i;
+-    int16_t *samples = data;
++    int i, j, k;
++    float *samples = data;
+     DCAContext *s = avctx->priv_data;
+     int channels;
+     int core_ss_end;
+@@ -1812,9 +1812,9 @@ static int dca_decode_frame(AVCodecContext * avctx,
+         return -1;
+     }
+ 
+-    if (*data_size < (s->sample_blocks / 8) * 256 * sizeof(int16_t) * channels)
++    if (*data_size < (s->sample_blocks / 8) * 256 * sizeof(float) * channels)
+         return -1;
+-    *data_size = 256 / 8 * s->sample_blocks * sizeof(int16_t) * channels;
++    *data_size = 256 / 8 * s->sample_blocks * sizeof(float) * channels;
+ 
+     /* filter to get final output */
+     for (i = 0; i < (s->sample_blocks / 8); i++) {
+@@ -1826,15 +1826,16 @@ static int dca_decode_frame(AVCodecContext * avctx,
+             float* back_chan = s->samples + s->channel_order_tab[s->xch_base_channel] * 256;
+             float* lt_chan   = s->samples + s->channel_order_tab[s->xch_base_channel - 2] * 256;
+             float* rt_chan   = s->samples + s->channel_order_tab[s->xch_base_channel - 1] * 256;
+-            int j;
+             for(j = 0; j < 256; ++j) {
+                 lt_chan[j] -= back_chan[j] * M_SQRT1_2;
+                 rt_chan[j] -= back_chan[j] * M_SQRT1_2;
+             }
+         }
+-
+-        s->dsp.float_to_int16_interleave(samples, s->samples_chanptr, 256, channels);
+-        samples += 256 * channels;
++        for (j = 0; j < 256; j++) {
++            for (k = 0; k < channels; k++)
++                samples[k] = s->samples[j + k * 256];
++            samples += channels;
++        }
+     }
+ 
+     /* update lfe history */
+@@ -1870,9 +1871,9 @@ static av_cold int dca_decode_init(AVCodecContext * avctx)
+ 
+     for (i = 0; i < DCA_PRIM_CHANNELS_MAX+1; i++)
+         s->samples_chanptr[i] = s->samples + i * 256;
+-    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
+-
+-    s->scale_bias = 1.0;
++    avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
++  
++    s->scale_bias = 1.0 / 32768.0;
+ 
+     /* allow downmixing to stereo */
+     if (avctx->channels > 0 && avctx->request_channels < avctx->channels &&

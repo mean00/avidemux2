@@ -11,8 +11,8 @@ if (NOT IS_DIRECTORY "${FFMPEG_SOURCE_DIR}/.svn")
 	execute_process(COMMAND ${Subversion_SVN_EXECUTABLE} co svn://svn.ffmpeg.org/ffmpeg/trunk -r ${FFMPEG_VERSION} --ignore-externals "${FFMPEG_SOURCE_DIR}"
 					${ffmpegSvnOutput})
 	MESSAGE(STATUS "Archiving ffmpeg ${FFMPEG_VERSION}")
-	MESSAGE(STATUS "${TAR_EXECUTABLE} czf ${LIBRARY_SOURCE_DIR}/${FFMPEG_SOURCE_ARCHIVE} ffmpeg, DIR=${FFMPEG_SOURCE_DIR}/..")
-	execute_process(COMMAND ${TAR_EXECUTABLE} czf "${LIBRARY_SOURCE_DIR}/${FFMPEG_SOURCE_ARCHIVE}" source
+	MESSAGE(STATUS "${TAR_EXECUTABLE} czf ${FFMPEG_ROOT_DIR}/${FFMPEG_SOURCE_ARCHIVE} ffmpeg, DIR=${FFMPEG_SOURCE_DIR}/..")
+	execute_process(COMMAND ${TAR_EXECUTABLE} czf "${FFMPEG_ROOT_DIR}/${FFMPEG_SOURCE_ARCHIVE}" source
 				WORKING_DIRECTORY "${FFMPEG_BASE_DIR}"
 				)
 
@@ -20,8 +20,8 @@ if (NOT IS_DIRECTORY "${FFMPEG_SOURCE_DIR}/.svn")
 	execute_process(COMMAND ${Subversion_SVN_EXECUTABLE} co svn://svn.ffmpeg.org/mplayer/trunk/libswscale -r ${SWSCALE_VERSION} "${FFMPEG_SOURCE_DIR}/libswscale"
 					${swscaleSvnOutput})
 	MESSAGE(STATUS "Archiving libswscale ${SWSCALE_VERSION}")
-	MESSAGE(STATUS " ${TAR_EXECUTABLE} czf ${LIBRARY_SOURCE_DIR}/${SWSCALE_SOURCE_ARCHIVE} libswscale,  DIR=${FFMPEG_SOURCE_DIR}/" )
-	execute_process(COMMAND ${TAR_EXECUTABLE} czf "${LIBRARY_SOURCE_DIR}/${SWSCALE_SOURCE_ARCHIVE}" libswscale
+	MESSAGE(STATUS " ${TAR_EXECUTABLE} czf ${FFMPEG_ROOT_DIR}/${SWSCALE_SOURCE_ARCHIVE} libswscale,  DIR=${FFMPEG_SOURCE_DIR}/" )
+	execute_process(COMMAND ${TAR_EXECUTABLE} czf "${FFMPEG_ROOT_DIR}/${SWSCALE_SOURCE_ARCHIVE}" libswscale
 				WORKING_DIRECTORY "${FFMPEG_SOURCE_DIR}/"
 				)
 

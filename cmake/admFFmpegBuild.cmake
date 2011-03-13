@@ -1,6 +1,7 @@
 set(FFMPEG_VERSION "8cb3c557a9f3b24bc55325e3f64a2150b983305c")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 
-set(LIBRARY_SOURCE_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/cmake")
+set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
+set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg_r${FFMPEG_VERSION}.tar.gz")
 
 set(FFMPEG_EXTRACT_DIR "${CMAKE_BINARY_DIR}")
@@ -47,14 +48,14 @@ message("")
 
 if (FFMPEG_PERFORM_PATCH)
 	find_package(Patch)
-	file(GLOB patchFiles "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/*.patch")
+	file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
 
 	foreach(patchFile ${patchFiles})
 		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
 
 	if (UNIX)
-		patch_file("${FFMPEG_SOURCE_DIR}" "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/common.mak.diff")
+		patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/common.mak.diff")
 	endif (UNIX)
 
 	message("")
@@ -207,7 +208,7 @@ if (FFMPEG_PERFORM_BUILD)
 		patch_file("${FFMPEG_BINARY_DIR}" "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/config_macosx.mak.diff")
 	elseif (UNIX)
 		find_package(Patch)
-		patch_file("${FFMPEG_BINARY_DIR}" "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/patches/config.mak.diff")
+		patch_file("${FFMPEG_BINARY_DIR}" "${FFMPEG_PATCH_DIR}/config.mak.diff")
 	endif (APPLE)
 
 	message("")
