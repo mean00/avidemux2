@@ -45,7 +45,6 @@ bool ADM_audioWriteWav::writeHeader(ADM_audioStream *stream)
 
           writter->writeWavHeader("fmt ",&wh);
           writter->write32("data");
-          writter->write32((uint32_t)0);
           dataPosition=writter->tell();
           writter->write32( (uint32_t )0);
           return true;
