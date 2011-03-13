@@ -1,0 +1,49 @@
+diff --git a/libavcodec/ac3dec.c b/libavcodec/ac3dec.c
+index 5ebee19..882e1c5 100644
+--- libavcodec/ac3dec.c
++++ libavcodec/ac3dec.c
+@@ -196,8 +196,7 @@ static av_cold int ac3_decode_init(AVCodecContext *avctx)
+     ff_fmt_convert_init(&s->fmt_conv, avctx);
+     av_lfg_init(&s->dith_state, 0);
+ 
+-    /* set scale value for float to int16 conversion */
+-    s->mul_bias = 32767.0f;
++    s->mul_bias = 1.0f;
+ 
+     /* allow downmixing to stereo or mono */
+     if (avctx->channels > 0 && avctx->request_channels > 0 &&
+@@ -214,7 +213,7 @@ static av_cold int ac3_decode_init(AVCodecContext *avctx)
+             return AVERROR(ENOMEM);
+     }
+ 
+-    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
++    avctx->sample_fmt = AV_SAMPLE_FMT_FLT;
+     return 0;
+ }
+ 
+@@ -1308,8 +1307,8 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
+     const uint8_t *buf = avpkt->data;
+     int buf_size = avpkt->size;
+     AC3DecodeContext *s = avctx->priv_data;
+-    int16_t *out_samples = (int16_t *)data;
+-    int blk, ch, err;
++    float *out_samples = (float *)data;
++    int i, blk, ch, err;
+     const uint8_t *channel_map;
+     const float *output[AC3_MAX_CHANNELS];
+ 
+@@ -1408,10 +1407,11 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
+             av_log(avctx, AV_LOG_ERROR, "error decoding the audio block\n");
+             err = 1;
+         }
+-        s->dsp.float_to_int16_interleave(out_samples, output, 256, s->out_channels);
+-        out_samples += 256 * s->out_channels;
++        for (i = 0; i < 256; i++)
++            for (ch = 0; ch < s->out_channels; ch++)
++                *(out_samples++) = output[ch][i];
+     }
+-    *data_size = s->num_blocks * 256 * avctx->channels * sizeof (int16_t);
++    *data_size = s->num_blocks * 256 * avctx->channels * sizeof (float);
+     return FFMIN(buf_size, s->frame_size);
+ }
+ 

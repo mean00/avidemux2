@@ -24,7 +24,7 @@ extern "C" {
 #include "fourcc.h"
 
 #define ADMWA_BUF (4*1024*16) // 64 kB internal
-class ADM_AudiocodecWMA : public     ADM_Audiocodec
+class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 {
 	protected:
 		void *_contextVoid;
@@ -32,10 +32,11 @@ class ADM_AudiocodecWMA : public     ADM_Audiocodec
 		uint32_t _tail,_head;
 		uint32_t _blockalign;
         uint32_t channels;
-
+        bool        decodeToS16(float *outptr,uint32_t *nbOut);
+        bool        decodeToFloat(float *outptr,uint32_t *nbOut);
 	public:
-		ADM_AudiocodecWMA(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
-		virtual	~ADM_AudiocodecWMA() ;
+		ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
+		virtual	~ADM_AudiocoderLavcodec() ;
 		virtual	uint8_t beginDecompress(void);
 		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
@@ -57,13 +58,13 @@ static  ad_supportedFormat Formats[]={
         {WAV_MP3,AD_MEDIUM_QUAL},
         {WAV_MP2,AD_MEDIUM_QUAL},
         {WAV_AC3,AD_LOW_QUAL},   // liba52 preferred ???
-        {WAV_AAC,AD_LOW_QUAL},   // liba52 preferred ???
+        {WAV_AAC,AD_LOW_QUAL},   // libfaad preferred ???
         {0x706D,AD_LOW_QUAL}, 
         {WAV_EAC3,AD_MEDIUM_QUAL}
   
 };
 
-DECLARE_AUDIO_DECODER(ADM_AudiocodecWMA,						// Class
+DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 			0,0,1, 							       // Major, minor,patch
 			Formats, 							// Supported formats
 			"Lavcodec decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
@@ -75,7 +76,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
 /**
         \fn beginDecompress
 */
-   uint8_t ADM_AudiocodecWMA::beginDecompress( void )
+   uint8_t ADM_AudiocoderLavcodec::beginDecompress( void )
    {
             _tail=_head=0;
             return 1;
@@ -84,16 +85,16 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         \fn endDecompress
 */
 
-   uint8_t ADM_AudiocodecWMA::endDecompress( void )
+   uint8_t ADM_AudiocoderLavcodec::endDecompress( void )
    {
           _tail=_head=0;
           return 1;
    };
 /**
-        \fn ADM_AudiocodecWMA
+        \fn ADM_AudiocoderLavcodec
 */
 
- ADM_AudiocodecWMA::ADM_AudiocodecWMA(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
+ ADM_AudiocoderLavcodec::ADM_AudiocoderLavcodec(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
        :  ADM_Audiocodec(fourcc)
  {
     printf(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
@@ -108,6 +109,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     _context->channels = info->channels;
     _blockalign=_context->block_align = info->blockalign;
     _context->bit_rate = info->byterate*8;
+    _context->sample_fmt=AV_SAMPLE_FMT_S16;
     switch(fourcc)
     {
       case WAV_WMA:
@@ -138,10 +140,12 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         break;
       case WAV_AC3:
         _context->codec_id = CODEC_ID_AC3;
+        _context->sample_fmt=AV_SAMPLE_FMT_FLT;
         _blockalign = 1;
         break;
       case WAV_EAC3:
         _context->codec_id = CODEC_ID_EAC3;
+        _context->sample_fmt=AV_SAMPLE_FMT_FLT;
         _blockalign = 1;
         break;
       case WAV_AAC:
@@ -181,35 +185,22 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     printf("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
   
 }
- ADM_AudiocodecWMA::~ADM_AudiocodecWMA()
+ ADM_AudiocoderLavcodec::~ADM_AudiocoderLavcodec()
  {
         avcodec_close(_context);
         ADM_dealloc(_context);
         _contextVoid=NULL;
 }
 /**
-    \fn run
-
+    \fn decodeToS16
 */
-uint8_t ADM_AudiocodecWMA::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
+bool ADM_AudiocoderLavcodec::decodeToS16(float *outptr,uint32_t *nbOut)
 {
 int out=0;
-int max=0,pout=0;
+int pout=0;
 int16_t *run16;
 int nbChunk;
 
-        *nbOut=0;
-        // Shrink
-        if(_head && (_tail+nbIn)*3>ADMWA_BUF*2)
-        {
-            memmove(_buffer,_buffer+_head,_tail-_head);
-            _tail-=_head;
-            _head=0;
-        }
-        //
-        ADM_assert(nbIn+_tail<ADMWA_BUF);
-        memcpy(_buffer+_tail,inptr,nbIn);
-        _tail+=nbIn;
         while(_tail-_head>=_blockalign)
         {
           nbChunk=(_tail-_head)/_blockalign;
@@ -236,6 +227,7 @@ int nbChunk;
             out=nbChunk*_blockalign;
           }
           _head+=out; // consumed bytes
+          // convert s16 to float...
           pout>>=1;
           *nbOut+=pout;
           run16=(int16_t *)scratchPad;
@@ -244,6 +236,87 @@ int nbChunk;
             *outptr++=((float)run16[i])/32767.;
           }
         }
+    return true;
+}
+/**
+    \fn decodeToFloat
+*/
+
+bool ADM_AudiocoderLavcodec::decodeToFloat(float *outptr,uint32_t *nbOut)
+{
+int out=0;
+int pout=0;
+int nbChunk;
+
+        while(_tail-_head>=_blockalign)
+        {
+          nbChunk=(_tail-_head)/_blockalign;
+          pout=SCRATCH_PAD_SIZE;
+          out=avcodec_decode_audio2(_context,(int16_t *)outptr,
+                                   &pout,_buffer+_head,nbChunk*_blockalign);
+            //ADM_info("in %d out %d\n",out,pout);
+
+          if(out<0)
+          {
+            printf( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
+            _head+=1; // Try skipping some bytes
+            continue;
+          }
+          if(pout>=SCRATCH_PAD_SIZE)
+          {
+            printf("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
+            ADM_assert(0);
+          }
+
+          _head+=out; // consumed bytes
+          pout/=sizeof(float); // size in bytes -> nb float
+          // convert float[+-32767] to float[+-1]...
+#if 0
+          for(int i=0;i<pout;i++)
+          {
+            float f=*outptr;
+            f/=32767.;
+            *outptr=f;
+            outptr++;
+          }
+#else
+            outptr+=pout;
+#endif          
+          *nbOut+=pout;
+        }
+    return true;
+}
+/**
+    \fn run
+
+*/
+uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
+{
+
+        *nbOut=0;
+        // Shrink
+        if(_head && (_tail+nbIn)*3>ADMWA_BUF*2)
+        {
+            memmove(_buffer,_buffer+_head,_tail-_head);
+            _tail-=_head;
+            _head=0;
+        }
+        //
+        ADM_assert(nbIn+_tail<ADMWA_BUF);
+        memcpy(_buffer+_tail,inptr,nbIn);
+        _tail+=nbIn;
+        //---------------
+        switch(_context->codec_id)
+        {
+            case CODEC_ID_AC3:
+            case CODEC_ID_EAC3:
+                    decodeToFloat(outptr,nbOut);
+                    break;
+            default:
+                    decodeToS16(outptr,nbOut);
+                    break;
+         }
+        //------------------
           if(channels>=5 )
             {
             CHANNEL_TYPE *p_ch_type = channelMapping;
@@ -260,4 +333,5 @@ int nbChunk;
         return 1;
 }
 //---
+
 
