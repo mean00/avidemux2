@@ -310,6 +310,7 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         {
             case CODEC_ID_AC3:
             case CODEC_ID_EAC3:
+            case CODEC_ID_DTS:
                     decodeToFloat(outptr,nbOut);
                     break;
             default:
