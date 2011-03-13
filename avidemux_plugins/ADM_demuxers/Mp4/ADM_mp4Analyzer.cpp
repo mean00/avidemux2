@@ -22,7 +22,7 @@
 #include "fourcc.h"
 #include "ADM_mp4.h"
 #include "DIA_coreToolkit.h"
-//#include "ADM_codecs/ADM_codec.h"
+#include "ADM_getbits.h"
 
 #include "ADM_mp4Tree.h"
 
@@ -50,7 +50,40 @@ typedef enum
 }MP4_Tag;
 
 //extern char* ms2timedisplay(uint32_t ms);
+/**
+    \fn refineAudio
+    \brief update track descriptor with additional info. For example # of channels...
+*/
+bool MP4Header::refineAudio(WAVHeader *header,uint32_t extraLen,uint8_t *extraData)
+{
+const uint8_t aacChannels[8] = {0, 1, 2, 3, 4, 5, 6, 8};
 
+        if(header->encoding!=WAV_AAC) return true;
+        if(extraLen<2) return true;
+        ADM_info("Audio track is AAC, checking it...\n");
+        getBits bits(extraLen,extraData);
+        int objType=bits.get(5);
+        int fqIndex=bits.get(4);
+            if(fqIndex==15) 
+            {
+                    bits.get(12);
+                    bits.get(12);
+            }
+        int channels=bits.get(4);
+        if(channels>7)
+        {
+            ADM_warning("Channel index is too big..\n");
+            return false;
+        }
+        int nbChannels=aacChannels[channels];
+        if(header->channels!=nbChannels)
+        {
+            ADM_warning("Channel mismatch, mp4 says %d, AAC says %d, updating...\n",header->channels,nbChannels);
+            header->channels=nbChannels;
+        }
+        return true;
+        
+}
 /**
       \fn    LookupMainAtoms
       \brief Search main atoms to ease job for other part
@@ -940,8 +973,6 @@ nextAtom:
                                                         audioCodec(AAC);
                                             if(left>10)
                                             {
-                                            
-                                            
                                               while(!son.isDone())
                                               {
                                                 adm_atom wave(&son);
@@ -1023,6 +1054,8 @@ nextAtom:
                                             break; // mp4a
 
                                 }
+                    // all audio part read for current track, if it is AAC and we have extrdata, check the channels...
+                      refineAudio(&(ADIO),_tracks[1+nbAudioTrack].extraDataSize,_tracks[1+nbAudioTrack].extraData);
                      }
                           break;
                      default:
