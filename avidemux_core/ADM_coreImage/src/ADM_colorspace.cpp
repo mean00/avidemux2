@@ -199,9 +199,16 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
 bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3])
 {
-    int xs[3]={sourceStride[0],sourceStride[1],sourceStride[2]};
-    int xd[3]={destStride[0],destStride[1],destStride[2]};
-     sws_scale(CONTEXT,sourceData,xs,0,srcHeight,destData,xd);
+    int xs[4]={sourceStride[0],sourceStride[1],sourceStride[2],0};
+    int xd[4]={destStride[0],destStride[1],destStride[2],0};
+    uint8_t *src[4]={NULL,NULL,NULL,NULL};
+    uint8_t *dst[4]={NULL,NULL,NULL,NULL};
+     for(int i=0;i<3;i++)
+        {
+            src[i]=sourceData[i];
+            dst[i]=destData[i];
+        }
+     sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
      return true;
 }
 /**
@@ -257,7 +264,13 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
     default: ADM_assert(0);
     }
 
-    FLAGS();
+    if(dh!=sh)
+    {
+        FLAGS();
+    }else
+    {
+        ADM_warning("Same height for source and destination, disabling assembly\n");
+    }
   
     srcWidth=sw;
     srcHeight=sh;
