@@ -181,7 +181,7 @@ again:
         return false;
     }
     aprintf("x264 Incoming : %"LLU"us \n",image->Pts);
-    queueOfDts.push_back(image->Pts);
+    
     // 2-preamble
     if(false==preAmble(image))
     {
@@ -261,9 +261,9 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
                 return false;
         }
         out->len=size;
-        out->pts =  picout->i_pts+getEncoderDelay();	
-        out->dts=queueOfDts[0];
-        queueOfDts.erase(queueOfDts.begin());
+        out->pts =  picout->i_pts+getEncoderDelay();
+        out->dts =  picout->i_dts+getEncoderDelay();
+        aprintf("encoder delay=%d, pic out dts=%d picout pts=%d\n",getEncoderDelay(),picout->i_dts,picout->i_pts);
         aprintf("pts = %"LLU", dts=%"LLU", pts+delay=%"LLU" delta=%"LLU"\n",picout->i_pts,out->dts,out->pts,
                     out->pts-out->dts);
         if(out->dts>out->pts)
