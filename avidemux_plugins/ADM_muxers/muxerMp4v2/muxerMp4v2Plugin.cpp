@@ -24,7 +24,7 @@ ADM_MUXER_BEGIN( muxerMp4v2,
                     1,0,0,
                     "MP4V2",    // Internal name
                     "MP4V2 muxer plugin (c) Mean 2011",
-                    "MP4 Muxer", // DIsplay name
+                    "MP4v2 Muxer", // DIsplay name
                     mp4v2Configure,
                     mp4v2_muxer_param, //template
                     &muxerConfig
