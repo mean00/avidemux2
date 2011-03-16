@@ -28,6 +28,16 @@ static tp_obj zzpy_getVideoDuration(TP)
   double r=  scriptGetVideoDuration(); 
   return tp_number(r);
 }
+// getDts -> double scriptGetDts (int  ) 
+static tp_obj zzpy_getDts(TP)
+ {
+  tp_obj self=tp_getraw( tp);
+  tinyParams pm(tp);
+  void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
+  int p0= pm.asInt();
+  double r=  scriptGetDts(p0); 
+  return tp_number(r);
+}
 // dumpSegment -> void scriptDumpSegment (int ) 
 static tp_obj zzpy_dumpSegment(TP)
  {
@@ -93,6 +103,10 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
   {
      return tp_method(vm,self,zzpy_getVideoDuration);
   }
+  if (!strcmp(key, "getDts"))
+  {
+     return tp_method(vm,self,zzpy_getDts);
+  }
   if (!strcmp(key, "dumpSegment"))
   {
      return tp_method(vm,self,zzpy_dumpSegment);
@@ -143,6 +157,7 @@ static tp_obj zzpy__pyEditor_help(TP)
 	jsLog("printTiming(int )\n");
 	jsLog("hexDumpFrame(int)\n");
 	jsLog("getVideoDuration(void)\n");
+	jsLog("getDts(int )\n");
 	jsLog("dumpSegment(int)\n");
 	jsLog("dumpRefVideo(void)\n");
 	jsLog("nbSegments(void)\n");

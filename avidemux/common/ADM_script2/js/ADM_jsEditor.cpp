@@ -116,7 +116,23 @@ double  scriptGetPts(int frameNum)
         ADM_warning("Cannot get PTS for frame %"LU"\n",frameNum);
         return -1;
     }
+    if(pts==ADM_NO_PTS) return -1;
+    return (double)pts;
+}
+/**
+    \fn scriptGetDts
+*/
+double  scriptGetDts(int frameNum)
+{
+    uint32_t flags;
+    uint64_t pts,dts;
+    if(false==video_body->getVideoPtsDts(frameNum, &flags,&pts, &dts))
+    {
+        ADM_warning("Cannot get DTS for frame %"LU"\n",frameNum);
+        return -1;
+    }
     if(dts==ADM_NO_PTS) return -1;
     return (double)dts;
 }
+
 // EOF

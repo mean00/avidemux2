@@ -25,6 +25,7 @@ int jsDumpSegments (void);
 int jsDumpRefVideos (void);
 float scriptGetVideoDuration(void);
 double scriptGetPts(int frameNum);
+double scriptGetDts(int frameNum);
 #ifdef __cplusplus
 };
 #endif
