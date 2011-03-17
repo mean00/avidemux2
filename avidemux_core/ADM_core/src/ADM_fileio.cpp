@@ -33,10 +33,17 @@
 
 #include "ADM_default.h"
 
+#define WIN32_PORTABLE_MODE 1
 
 #ifdef __WIN32
 static const char *separator="\\";
-const char *ADM_DIR_NAME="\\avidemux6";
+#ifdef WIN32_PORTABLE_MODE
+    const char *ADM_DIR_NAME="\\settings";
+    bool portable=true;
+#else
+    const char *ADM_DIR_NAME="\\avidemux6";
+    bool portable=false;
+#endif
 #elif defined __HAIKU__
 static const char *separator="/";
 const char *ADM_DIR_NAME="/config/settings/avidemux6";
@@ -347,20 +354,27 @@ char *ADM_getBaseDir(void)
 
 	// Get the base directory
 #ifdef __WIN32
-	wchar_t wcHome[MAX_PATH];
+    if(portable==false)
+    {
+        wchar_t wcHome[MAX_PATH];
 
-	if (SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, wcHome) == S_OK)
-	{
-		int len = wideCharStringToUtf8(wcHome, -1, NULL);
-		home = new char[len];
+        if (SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, wcHome) == S_OK)
+        {
+            int len = wideCharStringToUtf8(wcHome, -1, NULL);
+            home = new char[len];
 
-		wideCharStringToUtf8(wcHome, -1, home);
-	}
-	else
-	{
-		printf("Oops: can't determine the Application Data folder.");
-		home = ADM_strdup("c:\\");
-	}
+            wideCharStringToUtf8(wcHome, -1, home);
+        }
+        else
+        {
+            printf("Oops: can't determine the Application Data folder.");
+            home = ADM_strdup("c:\\");
+        }
+    }else
+    {
+        // Portable mode...
+        home=ADM_strdup(ADM_getInstallRelativePath("","",""));
+    }
 #else
 	const char* homeEnv = getenv("HOME");
 
