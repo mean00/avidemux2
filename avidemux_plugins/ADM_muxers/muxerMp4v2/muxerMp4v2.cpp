@@ -27,10 +27,12 @@
 
 #if 1
 #define aprintf(...) {}
+#define cprintf(...) {}
 #define MP4_DEBUG 0
 #else
 #define aprintf printf
 #define MP4_DEBUG MP4_DETAILS_ALL
+
 #endif
 
 mp4v2_muxer muxerConfig=
@@ -64,6 +66,15 @@ uint64_t muxerMp4v2::timeScale(uint64_t timeUs)
     return (uint64_t)((timeUs*90LL)/1000LL);
 
 }
+/**
+    \fn inverseTimeScale
+    \brief convert tick unit (90kHz) to our unit (us)
+*/
+uint64_t muxerMp4v2::inverseTimeScale(uint64_t timeTick)
+{
+    return (uint64_t)((timeTick*1000LL)/90LL);
+}
+
 /**
     \fn     muxerMp4v2
     \brief  Constructor
@@ -174,7 +185,7 @@ bool muxerMp4v2::save(void)
 
     initUI("Saving MP4V2");
     encoding->setContainer("MP4 (libmp4v2)");
-    
+    uint64_t lastSentDts=0;
     
     while(loadNextVideoFrame((&(in[nextWrite])))) 
     {
@@ -192,24 +203,22 @@ bool muxerMp4v2::save(void)
 
         
 
-        uint64_t newDts=in[nextWrite].dts-in[other].dts;   // Delta between dts=duration of the frame (sort of)     
-        uint64_t delta=in[other].pts-in[other].dts; // composition time...
-        uint64_t duration=(newDts);
+        uint64_t nextDts=in[nextWrite].dts;   // Delta between dts=duration of the frame (sort of)     
+        uint64_t myDts=in[other].dts;
+        uint64_t myPts=in[other].pts;        
+        cprintf(">>next DTS=%"LLU", last DTS=%"LLU"delta=%"LLU"\n",nextDts,lastSentDts,nextDts-lastSentDts);
 
-        encoding->pushVideoFrame(in[other].len,in[other].out_quantizer,in[other].dts);
-        // Special case : First frame
-        if(!nbFrame)
-        {
-            uint64_t tzero=in[other].dts;
-            delta+=tzero; // Still in us
-            duration+=tzero;
-            ADM_info("Video does not start at 0, adding %d ms\n",(int)tzero/1000);
-        }
+        encoding->pushVideoFrame(in[other].len,in[other].out_quantizer,myDts);
+        uint64_t delta=myPts-lastSentDts; // composition time...
         delta=timeScale(delta);
-        duration=timeScale(duration);
+        uint64_t duration=nextDts-lastSentDts;
+
+        uint64_t scaled_duration=timeScale(duration);
+        duration=inverseTimeScale(scaled_duration); // handle rounding error
         nbFrame++;
+        cprintf("Sending frame duration=%"LLU", pts/dts=%"LLU"\n",lastSentDts,delta);
         if(false==MP4WriteSample(handle,videoTrackId,in[other].data,in[other].len,
-                        duration, // duration
+                        scaled_duration, // duration
                         delta, // pts/dts offset
                         kf // Sync Sample
                         ))
@@ -218,10 +227,13 @@ bool muxerMp4v2::save(void)
             result=false;
             goto theEnd;
         }
-        
+        // update lastSentDts
+        lastSentDts+=duration; // beginning of next frame...
         //
-        uint64_t nextDts=in[nextWrite].dts;
-        fillAudio(nextDts);
+        cprintf("lastSendDts=%"LLU", next Dts=%"LLU", skew=%"LLD"\n",lastSentDts,nextDts,
+                        (int64_t)nextDts-(int64_t)lastSentDts);
+        //
+        fillAudio(lastSentDts);
         // toggle
         nextWrite=other;
         if(updateUI()==false)

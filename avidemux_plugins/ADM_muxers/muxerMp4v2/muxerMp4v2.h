@@ -79,6 +79,7 @@ protected: // audio
         bool            initAudio(void);
         bool            fillAudio(uint64_t targetDts);
 static  uint64_t        timeScale(uint64_t timeUs);
+static  uint64_t        inverseTimeScale(uint64_t timeTick);
         bool            loadAndToggleAudioSlot(int index);
         bool            writeAudioBlock(int index,mp4v2AudioPacket::mp4v2AudioBlock *block,uint64_t duration90);
 protected:
