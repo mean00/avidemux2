@@ -70,6 +70,7 @@ virtual const  char         *getFourcc(void) =0;
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
                uint64_t    getEncoderDelay(void){return encoderDelay;}
+               uint64_t    lastDts; //
 };
 bool usSecondsToFrac(uint64_t useconds, int *n,int *d);
 #endif

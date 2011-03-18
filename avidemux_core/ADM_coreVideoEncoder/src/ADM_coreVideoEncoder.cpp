@@ -18,7 +18,7 @@
 
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
-
+#include "ADM_vidMisc.h"
 extern "C" 
 {
 #include "libavcodec/avcodec.h"
@@ -32,6 +32,7 @@ ADM_coreVideoEncoder::ADM_coreVideoEncoder(ADM_coreVideoFilter *src)
     source=src;
     image=NULL;
     encoderDelay=0;
+    lastDts=ADM_NO_PTS;
 }
 
 /**
@@ -104,6 +105,19 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
             if(*dts>*pts)
             {
                 ADM_warning("Dts>Pts, that can happen if there are holes in the source, fixating..\n");
+                ADM_warning("DTS=%s\n",ADM_us2plain(*dts));
+                ADM_warning("PTS=%s\n",ADM_us2plain(*pts));
+                if(lastDts!=ADM_NO_PTS)
+                {
+                    uint64_t newDts=lastDts+getFrameIncrement();
+                    if(newDts<=*pts)
+                    {
+                            ADM_warning("Using newDts=%"LLU"\n",newDts);
+                            *dts=newDts;
+                            return true;
+                    }
+                }
+                ADM_error("Cannot find a solution, expect problems\n");
                 *dts=*pts;
             }
             return true;

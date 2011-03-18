@@ -42,7 +42,7 @@ uint32_t w,h;
     targetColorSpace=ADM_COLOR_YV12;
     w=getWidth();
     h=getHeight();
-
+    
     image=new ADMImageDefault(w,h);
     _context = avcodec_alloc_context2 (CODEC_TYPE_VIDEO);
     ADM_assert (_context);
@@ -368,7 +368,8 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
             queueOfDts.erase(queueOfDts.begin());
     } else
     getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts));
-    
+    // update lastDts
+    lastDts=out->dts;
     
     aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
 
