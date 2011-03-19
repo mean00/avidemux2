@@ -116,15 +116,15 @@ DIA_encodingGtk::DIA_encodingGtk(uint64_t duration) : DIA_encodingBase(duration)
     glade.init();
     if (!glade.loadFile("encoding.gtkBuilder"))
     {
-        GUI_Error_HIG(QT_TR_NOOP("Cannot load dialog"), QT_TR_NOOP("File \"encoding.gtkBuilder\" could not be loaded."));
+        GUI_Error_HIG(QT_TR_NOOP("Cannot load dialog"), 
+                      QT_TR_NOOP("File \"encoding.gtkBuilder\" could not be loaded."));
         return;
     }
 
     GtkWidget* combo = GW(comboboxPriority);
 
 #ifndef __WIN32
-    //check for root privileges
-    if (getuid() == 0)
+    if (getuid() != 0)
     {
         // set priority to normal, regardless of preferences
         gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 2);
@@ -141,6 +141,7 @@ DIA_encodingGtk::DIA_encodingGtk(uint64_t duration) : DIA_encodingBase(duration)
     prefs->get(PRIORITY_ENCODING, &priority);
 
 #ifndef __WIN32
+    //check for root privileges
     if (getuid() == 0)
     {
         gtk_combo_box_set_active(GTK_COMBO_BOX(combo), priority);

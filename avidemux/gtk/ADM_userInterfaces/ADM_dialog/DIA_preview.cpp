@@ -26,6 +26,8 @@
 static GtkWidget *create_dialog1(void);
 
 static GtkWidget *dialog = NULL;
+static GtkWidget *vbox1;
+static GtkWidget *drawingarea1;
 
 static flySeekablePreview *seekablePreview;
 static void seekablePreview_draw(void);
@@ -36,29 +38,22 @@ static void seekablePreview_frame_changed(void);
    ================================= */
 uint8_t DIA_filterPreview(const char *captionText, ADM_coreVideoFilter *videoStream, uint32_t frame)
 {
-
-
 	GtkWidget *hbuttonbox1, *buttonOk, *scale;
 
 	dialog = create_dialog1();
 	
 	scale = gtk_hscale_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 110, 1, 10, 10)));
 	gtk_widget_show (scale);
-	gtk_box_pack_start (GTK_BOX(WID(vbox1)), scale, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX(vbox1), scale, FALSE, TRUE, 0);
 
 	hbuttonbox1 = gtk_hbutton_box_new ();
 	gtk_widget_show (hbuttonbox1);
-	gtk_box_pack_start (GTK_BOX(WID(vbox1)), hbuttonbox1, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX(vbox1), hbuttonbox1, FALSE, TRUE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX(hbuttonbox1), GTK_BUTTONBOX_END);
 
 	buttonOk = gtk_button_new_from_stock ("gtk-ok");
 	gtk_widget_show(buttonOk);
 	gtk_container_add (GTK_CONTAINER(hbuttonbox1), buttonOk);
-	GTK_WIDGET_SET_FLAGS (buttonOk, GTK_CAN_DEFAULT);
-
-	GLADE_HOOKUP_OBJECT (dialog, scale, "scale");
-	GLADE_HOOKUP_OBJECT(dialog, hbuttonbox1, "hbuttonbox1");
-	GLADE_HOOKUP_OBJECT(dialog, buttonOk, "buttonOk");	
 	
 	gtk_register_dialog(dialog);
 
@@ -70,13 +65,13 @@ uint8_t DIA_filterPreview(const char *captionText, ADM_coreVideoFilter *videoStr
 	width = videoStream->getInfo()->width;
 	height = videoStream->getInfo()->height;
 
-	gtk_signal_connect(GTK_OBJECT(WID(scale)), "value_changed", GTK_SIGNAL_FUNC(seekablePreview_frame_changed), NULL);
-	gtk_signal_connect(GTK_OBJECT(WID(drawingarea1)), "expose_event", GTK_SIGNAL_FUNC(seekablePreview_draw), NULL);
-	gtk_dialog_add_action_widget(GTK_DIALOG(dialog), WID(buttonOk), GTK_RESPONSE_OK);
+	g_signal_connect(scale, "value_changed", G_CALLBACK(seekablePreview_frame_changed), NULL);
+	g_signal_connect(drawingarea1, "expose_event", G_CALLBACK(seekablePreview_draw), NULL);
+	gtk_dialog_add_action_widget(GTK_DIALOG(dialog), buttonOk, GTK_RESPONSE_OK);
 
 	gtk_widget_show(dialog);
 
-	seekablePreview = new flySeekablePreview(width, height, videoStream, WID(drawingarea1), WID(scale));
+	seekablePreview = new flySeekablePreview(width, height, videoStream, drawingarea1, scale);
 //	seekablePreview->process();
 	seekablePreview->sliderSet(frame);
 	seekablePreview->sliderChanged();
@@ -114,12 +109,12 @@ static void preview_draw(void);
 void DIA_previewInit(uint32_t width, uint32_t height)
 {
 	dialog = create_dialog1();
-	gtk_widget_set_usize(WID(drawingarea1), width, height);
+	gtk_widget_set_size_request(drawingarea1, width, height);
 
-	gtk_signal_connect(GTK_OBJECT(WID(drawingarea1)), "expose_event", GTK_SIGNAL_FUNC(preview_draw), NULL);
+	g_signal_connect(drawingarea1, "expose_event", G_CALLBACK(preview_draw), NULL);
 	gtk_widget_show(dialog);
 
-	preview = new flyPreview(width, height, WID(drawingarea1));
+	preview = new flyPreview(width, height, drawingarea1);
 }
 
 uint8_t DIA_previewStillAlive(void)
@@ -163,13 +158,11 @@ create_dialog1 (void)
 {
 	GtkWidget *dialog1;
 	GtkWidget *dialog_vbox1;
-	GtkWidget *vbox1;
-	GtkWidget *drawingarea1;
 
 	dialog1 = gtk_dialog_new ();
 	gtk_window_set_title (GTK_WINDOW (dialog1), QT_TR_NOOP("Preview"));
 
-	dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+	dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
 	gtk_widget_show (dialog_vbox1);
 
 	vbox1 = gtk_vbox_new (FALSE, 0);
@@ -180,12 +173,6 @@ create_dialog1 (void)
 	gtk_widget_show (drawingarea1);
 	gtk_box_pack_start (GTK_BOX (vbox1), drawingarea1, FALSE, TRUE, 0);
 	gtk_widget_set_size_request (drawingarea1, 100, 100);
-
-	// Store pointers to all widgets, for use by lookup_widget().
-	GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-	GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-	GLADE_HOOKUP_OBJECT (dialog1, vbox1, "vbox1");
-	GLADE_HOOKUP_OBJECT (dialog1, drawingarea1, "drawingarea1");
 
 	return dialog1;
 }

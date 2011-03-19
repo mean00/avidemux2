@@ -1,5 +1,5 @@
 /***************************************************************************
-  FAC_integer.cpp
+  FAC_slider.cpp
   Handle dialog factory elements : Integer, Slider, and variations thereupon
   (C) 2006 Mean Fixounet@free.fr 
 ***************************************************************************/
@@ -115,9 +115,8 @@ void diaElemSlider::setMe(void *dialog, void *opaque,uint32_t line)
   }
   if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, spinner, tip, NULL);
-      gtk_tooltips_set_tip (tooltips, slider, tip, NULL);
+      gtk_widget_set_tooltip_text (spinner, tip);
+      gtk_widget_set_tooltip_text (slider, tip);
   }
 }
 
@@ -127,7 +126,7 @@ void diaElemSlider::getMe(void)
   uint32_t *val=(uint32_t *)param;
   ADM_assert(widget);
   GtkAdjustment *adj = gtk_range_get_adjustment (GTK_RANGE(widget));
-  *val = (uint32_t)GTK_ADJUSTMENT(adj)->value;
+  *val = (uint32_t)gtk_adjustment_get_value(adj);
   if(*val<min) *val=min;
   if(*val>max) *val=max;
 }
@@ -205,9 +204,8 @@ void diaElemUSlider::setMe(void *dialog, void *opaque,uint32_t line)
   }
   if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, spinner, tip, NULL);
-      gtk_tooltips_set_tip (tooltips, slider, tip, NULL);
+      gtk_widget_set_tooltip_text (spinner, tip);
+      gtk_widget_set_tooltip_text (slider, tip);
   }
 }
 
@@ -217,7 +215,7 @@ void diaElemUSlider::getMe(void)
   uint32_t *val=(uint32_t *)param;
   ADM_assert(widget);
   GtkAdjustment *adj = gtk_range_get_adjustment (GTK_RANGE(widget));
-  *val = (uint32_t)GTK_ADJUSTMENT(adj)->value;
+  *val = (uint32_t)gtk_adjustment_get_value(adj);
   if(*val<min) *val=min;
   if(*val>max) *val=max;
 }

@@ -31,10 +31,15 @@
 #include "ADM_vidMisc.h"
 
 static GtkWidget	*create_dialog1 (void);
-static void on_work_abort(GtkObject * object, gpointer user_data);
-static gint on_destroy_abort(GtkObject * object, gpointer user_data);
+static void on_work_abort(GtkWidget * object, gpointer user_data);
+static gint on_destroy_abort(GtkWidget * object, gpointer user_data);
 
-void on_work_abort(GtkObject * object, gpointer user_data)
+static GtkWidget *progressbar1;
+static GtkWidget *labelElapsed;
+static GtkWidget *labelRemaining;
+static GtkWidget *closebutton1;
+
+void on_work_abort(GtkWidget * object, gpointer user_data)
 {
 DIA_workingBase *dial;
 GtkWidget *dialog;
@@ -49,7 +54,7 @@ GtkWidget *dialog;
 
 };
 
-gint on_destroy_abort(GtkObject * object, gpointer user_data)
+gint on_destroy_abort(GtkWidget * object, gpointer user_data)
 {
 	UNUSED_ARG(object);
 	UNUSED_ARG(user_data);
@@ -92,12 +97,12 @@ void DIA_workingGtk :: postCtor( void )
 
 		dialog=(GtkWidget *)_priv;
 		//gtk_window_set_modal(GTK_WINDOW(dialog), 1);
-		gtk_signal_connect(GTK_OBJECT(lookup_widget(dialog,"closebutton1")), "clicked",
-		       GTK_SIGNAL_FUNC(on_work_abort), (void *) this);
+		g_signal_connect(closebutton1, "clicked",
+		       G_CALLBACK(on_work_abort), (void *) this);
 
 		       // somehow prevent the window from being erased..
-		gtk_signal_connect(GTK_OBJECT(dialog), "delete_event",
-		       GTK_SIGNAL_FUNC(on_destroy_abort), (void *) this);
+		g_signal_connect(dialog, "delete_event",
+		       G_CALLBACK(on_destroy_abort), (void *) this);
 
 		gtk_widget_show(dialog);
 		UI_purge();
@@ -137,13 +142,13 @@ uint8_t DIA_workingGtk::update(uint32_t percent)
 
 	ms2time(elapsed,&hh,&mm,&ss,&mms);
 	sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
-	gtk_label_set_text(GTK_LABEL(WID(labelElapsed)),string);
+	gtk_label_set_text(GTK_LABEL(labelElapsed),string);
 
-//	gtk_label_set_text(GTK_LABEL(lookup_widget(dialog,"labelRemaining")), ms2timedisplay((uint32_t) floor(((elapsed * 100.) / percent) - elapsed)));
-	gtk_progress_set_percentage(GTK_PROGRESS(lookup_widget(dialog,"progressbar1")),(gfloat)(percent / 100.));
+//	gtk_label_set_text(GTK_LABEL(labelRemaining), ms2timedisplay((uint32_t) floor(((elapsed * 100.) / percent) - elapsed)));
+	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar1),(gfloat)(percent / 100.));
 
 	sprintf(string, QT_TR_NOOP("%d%%"), percent);
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(lookup_widget(dialog, "progressbar1")), string);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar1), string);
 
 	UI_purge();
 	return 0;
@@ -166,7 +171,6 @@ uint8_t DIA_workingGtk::update(uint32_t cur, uint32_t total)
 
 		percent=(uint32_t )floor(n);
 		return update(percent);
-
 }
 
 uint8_t DIA_workingGtk::isAlive (void )
@@ -210,14 +214,10 @@ create_dialog1 (void)
   GtkWidget *alignment1;
   GtkWidget *table1;
   GtkWidget *label2;
-  GtkWidget *labelElapsed;
   GtkWidget *label4;
-  GtkWidget *labelRemaining;
-  GtkWidget *progressbar1;
   GtkWidget *alignment2;
   GtkWidget *hbox1;
   GtkWidget *label5;
-  GtkWidget *closebutton1;
 
   dialog1 = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_size_request (dialog1, 250, -1);
@@ -293,22 +293,6 @@ create_dialog1 (void)
   closebutton1 = gtk_button_new_from_stock ("gtk-cancel");
   gtk_widget_show (closebutton1);
   gtk_box_pack_start (GTK_BOX (hbox1), closebutton1, FALSE, FALSE, 0);
-  GTK_WIDGET_SET_FLAGS (closebutton1, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT (dialog1, vbox1, "vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, alignment1, "alignment1");
-  GLADE_HOOKUP_OBJECT (dialog1, table1, "table1");
-  GLADE_HOOKUP_OBJECT (dialog1, label2, "label2");
-  GLADE_HOOKUP_OBJECT (dialog1, labelElapsed, "labelElapsed");
-  GLADE_HOOKUP_OBJECT (dialog1, label4, "label4");
-  GLADE_HOOKUP_OBJECT (dialog1, labelRemaining, "labelRemaining");
-  GLADE_HOOKUP_OBJECT (dialog1, progressbar1, "progressbar1");
-  GLADE_HOOKUP_OBJECT (dialog1, alignment2, "alignment2");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, label5, "label5");
-  GLADE_HOOKUP_OBJECT (dialog1, closebutton1, "closebutton1");
-
+  
   return dialog1;
 }

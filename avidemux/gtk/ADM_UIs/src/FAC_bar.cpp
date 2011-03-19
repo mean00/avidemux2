@@ -1,6 +1,6 @@
 /***************************************************************************
   FAC_bar.cpp
-  Handle dialog factory element : Toggle
+  Handle dialog factory element: Progress bar
   (C) 2006 Mean Fixounet@free.fr 
 ***************************************************************************/
 
@@ -61,7 +61,7 @@ void diaElemBar::setMe(void *dialog, void *opaque,uint32_t line)
    gfloat p;
    p=per;
    p=p/100.;
-   gtk_progress_set_percentage(GTK_PROGRESS(bar),p);
+   gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR(bar), p);
 
   
   gtk_table_attach (GTK_TABLE (opaque), bar, 1, 2, line, line+1,

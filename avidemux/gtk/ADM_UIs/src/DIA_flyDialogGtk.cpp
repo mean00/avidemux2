@@ -115,18 +115,20 @@ uint8_t  ADM_flyDialogGtk::display(uint8_t *rgbData)
 {
 	ADM_assert(_canvas);
 	ADM_assert(rgbData);
-    GtkWidget *widget=(GtkWidget*)_canvas;
-    gdk_draw_rgb_32_image(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], 0,    // X
-                       0,       // y
-                       _zoomW,       //width
-                       _zoomH,       //h*2, // heigth
-                       GDK_RGB_DITHER_NONE,
-                       //GDK_RGB_DITHER_MAX,  // dithering
-                       (guchar *) rgbData,  // buffer
-                       _zoomW * 4);
+	GtkWidget *widget=(GtkWidget*)_canvas;
 
+	cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
+	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_RGB24, _zoomW);
+	cairo_surface_t *s = cairo_image_surface_create_for_data((unsigned char*)rgbData, 
+	                                                         CAIRO_FORMAT_RGB24, 
+	                                                         _zoomW, 
+	                                                         _zoomH, 
+	                                                         stride);
+	cairo_set_source_surface(cr, s, 0, 0);
+	cairo_paint(cr);
+	cairo_destroy(cr);
+	cairo_surface_destroy(s);
 	//GUI_RGBDisplay(_rgbBufferOut, _zoomW, _zoomH, _canvas);
-
 	return 1; 
 }
 

@@ -37,7 +37,7 @@
 //   to actions, and then save it to a config file.  I don't have time to
 //   implement that now.  The next best thing would be just the config file,
 //   and they have to edit it directly.  Maybe I can do that...
-
+#if 0
 #include "config.h"
 
 #ifdef USE_JOG
@@ -477,4 +477,5 @@ void PhysicalJogShuttle::inputCallback (gint source, GdkInputCondition condition
         return;
     }
 }
+#endif
 #endif

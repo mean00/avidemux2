@@ -100,8 +100,7 @@ void diaElemMatrix::setMe(void *dialog, void *opaque,uint32_t line)
     myWidget=(void *)arrayWidget;
     if(tip)
     {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, table, tip, NULL);
+      gtk_widget_set_tooltip_text (table, tip);
     }
 
 }

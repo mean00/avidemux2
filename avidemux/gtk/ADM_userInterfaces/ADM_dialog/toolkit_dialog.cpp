@@ -33,6 +33,7 @@ static GtkWidget	*create_dialogYN (void);
 static GtkWidget	*create_dialogConfirmation (const char *confirm_text);
 static GtkWidget	*create_dialogWarning (void);
 static GtkWidget       *create_dialogInfo (void);
+static GtkWidget *label1;
 static int beQuiet=0;
 
 
@@ -85,7 +86,7 @@ int ret=0;
         }
 
         dialog=create_dialogYN();
-        gtk_label_set_text(GTK_LABEL(WID(label1)),alertstring);
+        gtk_label_set_text(GTK_LABEL(label1),alertstring);
         gtk_register_dialog(dialog);
         if(gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_YES)
         {
@@ -114,7 +115,7 @@ void             GUI_Info(const char *alertstring)
                 return  ;
         }
         dialog=create_dialogInfo();
-        gtk_label_set_text(GTK_LABEL(WID(label1)),alertstring);
+        gtk_label_set_text(GTK_LABEL(label1),alertstring);
         gtk_register_dialog(dialog);
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_unregister_dialog(dialog);
@@ -169,9 +170,9 @@ void GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *sec
 	
 	
 	dialog=create_dialogInfo();
-	gtk_label_set_text(GTK_LABEL(WID(label1)), alertstring);
+	gtk_label_set_text(GTK_LABEL(label1), alertstring);
 	g_free(alertstring);
-	gtk_label_set_use_markup(GTK_LABEL(WID(label1)), TRUE);
+	gtk_label_set_use_markup(GTK_LABEL(label1), TRUE);
 	gtk_register_dialog(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_unregister_dialog(dialog);
@@ -225,9 +226,9 @@ void GUI_Error_HIG(const char *primary, const char *secondary_format)
 	
 	
 	dialog=create_dialogWarning();
-	gtk_label_set_text(GTK_LABEL(WID(label1)), alertstring);
+	gtk_label_set_text(GTK_LABEL(label1), alertstring);
 	g_free(alertstring);
-	gtk_label_set_use_markup(GTK_LABEL(WID(label1)), TRUE);
+	gtk_label_set_use_markup(GTK_LABEL(label1), TRUE);
 	gtk_register_dialog(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_unregister_dialog(dialog);
@@ -278,9 +279,9 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
 	
 
 	dialog=create_dialogConfirmation(button_confirm);
-	gtk_label_set_text(GTK_LABEL(WID(label1)), alertstring);
+	gtk_label_set_text(GTK_LABEL(label1), alertstring);
 	g_free(alertstring);
-	gtk_label_set_use_markup(GTK_LABEL(WID(label1)), TRUE);
+	gtk_label_set_use_markup(GTK_LABEL(label1), TRUE);
 	gtk_register_dialog(dialog);
 	if(gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_YES)
 	{
@@ -335,9 +336,9 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
 	
 
 	dialog=create_dialogYN();
-	gtk_label_set_text(GTK_LABEL(WID(label1)), alertstring);
+	gtk_label_set_text(GTK_LABEL(label1), alertstring);
 	g_free(alertstring);
-	gtk_label_set_use_markup(GTK_LABEL(WID(label1)), TRUE);
+	gtk_label_set_use_markup(GTK_LABEL(label1), TRUE);
 	gtk_register_dialog(dialog);
 	if(gtk_dialog_run(GTK_DIALOG(dialog))==GTK_RESPONSE_YES)
 	{
@@ -474,7 +475,6 @@ create_dialogYN (void)
   GtkWidget *dialog_vbox1;
   GtkWidget *hbox1;
   GtkWidget *image1;
-  GtkWidget *label1;
   GtkWidget *dialog_action_area1;
   GtkWidget *buttonYes;
   GtkWidget *buttonNo;
@@ -485,9 +485,8 @@ create_dialogYN (void)
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_container_set_border_width (GTK_CONTAINER (dialog1), 6);
   gtk_window_set_resizable (GTK_WINDOW (dialog1), FALSE);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog1), FALSE);  
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
   gtk_box_set_spacing (GTK_BOX (dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
 
@@ -510,29 +509,17 @@ create_dialogYN (void)
   gtk_box_pack_start (GTK_BOX (hbox1), label1, TRUE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_CENTER);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
   buttonYes = gtk_button_new_from_stock ("gtk-no");
   gtk_widget_show (buttonYes);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), buttonYes, GTK_RESPONSE_NO);
-  GTK_WIDGET_SET_FLAGS (buttonYes, GTK_CAN_DEFAULT);
 
   buttonNo = gtk_button_new_from_stock ("gtk-yes");
   gtk_widget_show (buttonNo);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), buttonNo, GTK_RESPONSE_YES);
-  GTK_WIDGET_SET_FLAGS (buttonNo, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, image1, "image1");
-  GLADE_HOOKUP_OBJECT (dialog1, label1, "label1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonYes, "buttonYes");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonNo, "buttonNo");
 
   gtk_widget_grab_default (buttonYes);
 
@@ -552,7 +539,6 @@ create_dialogConfirmation (const char *confirm_text)
   GtkWidget *dialog_vbox1;
   GtkWidget *hbox1;
   GtkWidget *image1;
-  GtkWidget *label1;
   GtkWidget *dialog_action_area1;
   GtkWidget *buttonCancel;
   GtkWidget *buttonYes;
@@ -563,9 +549,8 @@ create_dialogConfirmation (const char *confirm_text)
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_container_set_border_width (GTK_CONTAINER (dialog1), 6);
   gtk_window_set_resizable (GTK_WINDOW (dialog1), FALSE);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog1), FALSE);  
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
   gtk_box_set_spacing (GTK_BOX (dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
 
@@ -588,29 +573,17 @@ create_dialogConfirmation (const char *confirm_text)
   gtk_box_pack_start (GTK_BOX (hbox1), label1, TRUE, TRUE, 0);
   //gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_CENTER);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
   buttonCancel = gtk_button_new_from_stock ("gtk-cancel");
   gtk_widget_show (buttonCancel);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), buttonCancel, GTK_RESPONSE_NO);
-  GTK_WIDGET_SET_FLAGS (buttonCancel, GTK_CAN_DEFAULT);
 
   buttonYes = gtk_button_new_from_stock (confirm_text);
   gtk_widget_show (buttonYes);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), buttonYes, GTK_RESPONSE_YES);
-  GTK_WIDGET_SET_FLAGS (buttonYes, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, image1, "image1");
-  GLADE_HOOKUP_OBJECT (dialog1, label1, "label1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonCancel, "buttonCancel");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonYes, "buttonYes");
 
   gtk_widget_grab_default (buttonYes);
 
@@ -630,14 +603,13 @@ create_dialogOK (void)
   GtkWidget *dialog_vbox1;
   GtkWidget *hbox1;
   GtkWidget *image1;
-  GtkWidget *label1;
   GtkWidget *dialog_action_area1;
   GtkWidget *okbutton1;
 
   dialog1 = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (dialog1), QT_TR_NOOP("Alert"));
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_vbox1);
 
   hbox1 = gtk_hbox_new (FALSE, 0);
@@ -653,23 +625,14 @@ create_dialogOK (void)
   gtk_box_pack_start (GTK_BOX (hbox1), label1, TRUE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
   okbutton1 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (okbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, image1, "image1");
-  GLADE_HOOKUP_OBJECT (dialog1, label1, "label1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, okbutton1, "okbutton1");
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog1), GTK_RESPONSE_OK);
 
   return dialog1;
 }
@@ -681,7 +644,6 @@ GtkWidget       *create_dialogInfo (void)
   GtkWidget *dialog_vbox1;
   GtkWidget *hbox1;
   GtkWidget *image1;
-  GtkWidget *label1;
   GtkWidget *dialog_action_area1;
   GtkWidget *closebutton1;
 
@@ -691,9 +653,8 @@ GtkWidget       *create_dialogInfo (void)
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_container_set_border_width (GTK_CONTAINER (dialog1), 6);
   gtk_window_set_resizable (GTK_WINDOW (dialog1), FALSE);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog1), FALSE);
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
   gtk_box_set_spacing (GTK_BOX (dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
 
@@ -715,23 +676,14 @@ GtkWidget       *create_dialogInfo (void)
   gtk_widget_show (label1);
   gtk_box_pack_start (GTK_BOX (hbox1), label1, TRUE, TRUE, 0);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
   closebutton1 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (closebutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), closebutton1, GTK_RESPONSE_CLOSE);
-  GTK_WIDGET_SET_FLAGS (closebutton1, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, image1, "image1");
-  GLADE_HOOKUP_OBJECT (dialog1, label1, "label1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, closebutton1, "closebutton1");
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog1), GTK_RESPONSE_CLOSE);
 
   gtk_widget_grab_default (closebutton1);
   return dialog1;
@@ -744,7 +696,6 @@ create_dialogWarning (void)
   GtkWidget *dialog_vbox1;
   GtkWidget *hbox1;
   GtkWidget *image1;
-  GtkWidget *label1;
   GtkWidget *dialog_action_area1;
   GtkWidget *closebutton1;
 
@@ -754,9 +705,8 @@ create_dialogWarning (void)
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_container_set_border_width (GTK_CONTAINER (dialog1), 6);
   gtk_window_set_resizable (GTK_WINDOW (dialog1), FALSE);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog1), FALSE);
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
   gtk_box_set_spacing (GTK_BOX (dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
 
@@ -778,23 +728,14 @@ create_dialogWarning (void)
   gtk_widget_show (label1);
   gtk_box_pack_start (GTK_BOX (hbox1), label1, TRUE, TRUE, 0);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
   closebutton1 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (closebutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), closebutton1, GTK_RESPONSE_CLOSE);
-  GTK_WIDGET_SET_FLAGS (closebutton1, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, image1, "image1");
-  GLADE_HOOKUP_OBJECT (dialog1, label1, "label1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, closebutton1, "closebutton1");
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog1), GTK_RESPONSE_CLOSE);
 
   gtk_widget_grab_default (closebutton1);
   return dialog1;

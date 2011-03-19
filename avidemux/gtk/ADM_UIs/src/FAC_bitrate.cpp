@@ -97,7 +97,6 @@ diaElemBitrate::~diaElemBitrate()
 void diaElemBitrate::setMe(void *dialog, void *opaque,uint32_t line)
 {
   GtkWidget *widget;
-  GtkObject *adj;
   GtkWidget *label1;
   GtkWidget *label2;
   GtkWidget *combo;
@@ -127,23 +126,23 @@ void diaElemBitrate::setMe(void *dialog, void *opaque,uint32_t line)
   /* Add encoding menu combo */
   
   
-  combo = gtk_combo_box_new_text ();
+  combo = gtk_combo_box_text_new ();
   gtk_widget_show (combo);
   
   gtk_label_set_mnemonic_widget (GTK_LABEL(label1), combo);
   if((copy.capabilities & ADM_ENC_CAP_CBR)) 
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo),QT_TR_NOOP("Single pass - bitrate"));
+	  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),QT_TR_NOOP("Single pass - bitrate"));
   if((copy.capabilities & ADM_ENC_CAP_CQ))
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo),QT_TR_NOOP("Single pass - constant quality"));
+	  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),QT_TR_NOOP("Single pass - constant quality"));
   if((copy.capabilities & ADM_ENC_CAP_SAME))
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo),QT_TR_NOOP("Single pass - same qz as input"));
+	  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),QT_TR_NOOP("Single pass - same qz as input"));
   if((copy.capabilities & ADM_ENC_CAP_AQ))
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo),QT_TR_NOOP("Single pass - Average quantizer"));
+	  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),QT_TR_NOOP("Single pass - Average quantizer"));
 
   if((copy.capabilities & ADM_ENC_CAP_2PASS))
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo),QT_TR_NOOP("Two pass - video size"));
+	  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),QT_TR_NOOP("Two pass - video size"));
   if((copy.capabilities & ADM_ENC_CAP_2PASS_BR))
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (combo),QT_TR_NOOP("Two pass - average bitrate"));
+	  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),QT_TR_NOOP("Two pass - average bitrate"));
   
   /**/
   
@@ -164,9 +163,7 @@ void diaElemBitrate::setMe(void *dialog, void *opaque,uint32_t line)
    gtk_label_set_mnemonic_widget (GTK_LABEL(label1), combo);
    gtk_label_set_mnemonic_widget (GTK_LABEL(label2), spin); 
    
-  gtk_signal_connect(GTK_OBJECT(combo), "changed",
-                      GTK_SIGNAL_FUNC(cb_mod),
-                      (void *) this);
+  g_signal_connect(combo, "changed", G_CALLBACK(cb_mod), (void *) this);
   
   GtkWidget **w;
   w=new GtkWidget*[4];

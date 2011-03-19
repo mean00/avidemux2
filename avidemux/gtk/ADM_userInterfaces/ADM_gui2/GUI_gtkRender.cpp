@@ -37,8 +37,6 @@ extern "C"
 
 #include "ADM_colorspace.h"
 
-void GUI_gtk_grow_off(int onff);
-
 extern GtkWidget *guiRootWindow;
 extern GtkWidget *getDrawWidget(void);
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w, uint32_t *h);
@@ -71,24 +69,27 @@ void UI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
 //      printf("[GTK] Warning window bigger than display %u x %u vs %u x %u\n",w,h,lastW,lastH);
     }
 
-    gdk_draw_rgb_32_image(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], 0,    // X
-                       0,       // y
-                       w,       //width
-                       h,       //h*2, // heigth
-                       GDK_RGB_DITHER_NONE,
-                       //GDK_RGB_DITHER_MAX,  // dithering
-                       (guchar *) ptr,  // buffer
-                       w * 4);
+    cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
+    int stride = cairo_format_stride_for_width(CAIRO_FORMAT_RGB24, w);
+    cairo_surface_t *s = cairo_image_surface_create_for_data((unsigned char*)ptr, 
+                                                             CAIRO_FORMAT_RGB24, 
+                                                             w, 
+                                                             h, 
+                                                             stride);
+    cairo_set_source_surface(cr, s, 0, 0);
+    cairo_paint(cr);
+    cairo_destroy(cr);
+    cairo_surface_destroy(s);
 }
 /**
       \brief Resize the window
 */
 void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 {
-    GUI_gtk_grow_off(0);
-    gtk_widget_set_usize((GtkWidget *)win, w, h);
+    gtk_window_set_resizable(GTK_WINDOW(guiRootWindow), FALSE);
+    gtk_widget_set_size_request((GtkWidget *)win, w, h);
     UI_purge();
-    GUI_gtk_grow_off(1);
+    gtk_window_set_resizable(GTK_WINDOW(guiRootWindow), TRUE);
     lastW=w;
     lastH=h;
     printf("[GTK] Changing size to %u %u\n",w,h);
@@ -99,26 +100,28 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 */
 void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
-        GdkWindow *win;
-        GtkWidget *widget=(GtkWidget *)draw;
-          
-        win = gtk_widget_get_parent_window(widget);
+		GdkWindow *win, *parentWin;
+		GtkWidget *widget=(GtkWidget *)draw;
+
+		win = gtk_widget_get_window(widget);
+		parentWin = gtk_widget_get_parent_window(widget);
 
 #ifdef __WIN32
-		xinfo->display = (void*)GDK_WINDOW_HWND(widget->window);
+		xinfo->display = (void*)GDK_WINDOW_HWND(win);
 #elif defined(__APPLE__)
 		xinfo->display = 0;
 		xinfo->window = getMainNSWindow();
 #else
-		xinfo->window = GDK_WINDOW_XWINDOW(widget->window);
-		xinfo->display = GDK_WINDOW_XDISPLAY(win);
+		xinfo->window = GDK_WINDOW_XID(win);
+		xinfo->display = GDK_WINDOW_XDISPLAY(parentWin);
 #endif
 
 		int windowWidth, windowHeight;
 		int x, y;
 
-		gdk_drawable_get_size(win, &windowWidth, &windowHeight);
-		gdk_window_get_position(widget->window, &x, &y);
+		windowWidth = gdk_window_get_width(parentWin);
+		windowHeight = gdk_window_get_height(parentWin);
+		gdk_window_get_position(win, &x, &y);
 
 		xinfo->x = x;
 		xinfo->y = windowHeight - (y + lastH);

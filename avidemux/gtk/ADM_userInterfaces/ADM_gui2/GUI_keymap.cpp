@@ -72,15 +72,15 @@ gboolean UI_on_key_press(GtkWidget *widget, GdkEventKey* event, gpointer user_da
 
     switch (event->keyval)
 	{	
-	case GDK_Up:
+	case GDK_KEY_Up:
 		action=ACT_NextKFrame;
 		break;
-	case GDK_Down:
+	case GDK_KEY_Down:
 		action=ACT_PreviousKFrame;
 		break;
 			
 		// Position advance
-       	case GDK_Left: case GDK_KP_Left:
+       	case GDK_KEY_Left: case GDK_KEY_KP_Left:
 
 		// One frame
 		if((shift == FALSE) && (ctrl == FALSE))
@@ -105,7 +105,7 @@ gboolean UI_on_key_press(GtkWidget *widget, GdkEventKey* event, gpointer user_da
 		break;
 
 		// Position reverse
-	case GDK_Right: case GDK_KP_Right:
+	case GDK_KEY_Right: case GDK_KEY_KP_Right:
 		if((shift == FALSE) && (ctrl == FALSE))
 		{
 			action = ACT_NextFrame;

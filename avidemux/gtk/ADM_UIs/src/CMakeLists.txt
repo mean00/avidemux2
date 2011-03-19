@@ -18,7 +18,6 @@ SET(${ADM_LIB}_SRCS
 	FAC_threadCount.cpp
 	FAC_slider.cpp
 	FAC_matrix.cpp
-        ADM_gladeSupport.cpp  
         choice.cpp       
         toolkit_dialog.cpp
         toolkit.cpp

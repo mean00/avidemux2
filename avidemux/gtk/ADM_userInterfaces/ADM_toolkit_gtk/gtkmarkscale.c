@@ -29,6 +29,7 @@ uint32_t nbFrames;
 static void
 gtk_markscale_class_init (GtkMarkScaleClass *class)
 {
+#if 0
   GtkWidgetClass *widget_class;
   GtkRangeClass *range_class;
   GtkScaleClass *scale_class;
@@ -41,11 +42,13 @@ gtk_markscale_class_init (GtkMarkScaleClass *class)
   
   widget_class->expose_event = gtk_markscale_expose;
   widget_class->realize = gtk_markscale_realize;
+#endif
 }
 
 static void
 gtk_markscale_init (GtkMarkScale *markscale)
 {
+#if 0
   GtkRange *range;
 
   range = GTK_RANGE (markscale);
@@ -55,15 +58,19 @@ gtk_markscale_init (GtkMarkScale *markscale)
   markA = 0;
   markB = 0;
   nbFrames = 0;
+#endif
 }
 
 void gtk_markscale_setA(GtkWidget *widget, uint32_t a)
 {
+#if 0
 	markA = a;
+#endif
 }
 
 void gtk_markscale_setB(GtkWidget *widget, uint32_t b)
 {
+#if 0
 	markB = b;
 	GdkRectangle rect;
 	rect.x = widget->allocation.x;
@@ -71,11 +78,14 @@ void gtk_markscale_setB(GtkWidget *widget, uint32_t b)
 	rect.width = widget->allocation.width;
 	rect.height = widget->allocation.height;
 	gdk_window_invalidate_rect(widget->window, &rect, FALSE);
+#endif
 }
 
 void gtk_markscale_setNbFrames(GtkWidget *widget, uint32_t total)
 {
+#if 0
 	nbFrames = total;
+#endif
 }
 
 GtkWidget*
@@ -86,14 +96,17 @@ gtk_markscale_new (GtkAdjustment *adjustment)
 
 static void gtk_markscale_realize (GtkWidget *widget)
 {
+#if 0
 	parent_class->realize(widget);
 	gtk_widget_set_size_request(widget, widget->allocation.width, widget->allocation.height+10);
+#endif
 }
 
 static gboolean
 gtk_markscale_expose (GtkWidget      *widget,
                    GdkEventExpose *event)
 {
+#if 0
   GtkScale *scale;
   
   scale = GTK_SCALE (widget);
@@ -171,8 +184,8 @@ gtk_markscale_expose (GtkWidget      *widget,
 					   end,
 					   bottom);
 	}
+#endif
   return FALSE;
 }
-
 
 #define __GTK_MARKSCALE_C__

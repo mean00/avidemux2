@@ -34,7 +34,6 @@ GtkWidget *GUI_PixmapButton(GdkWindow * window, const gchar ** xpm,
 
 
 
-GtkTooltips *tooltips = NULL;
 /**
  *      \fn ADM_initUIGtk
  *      \brief Init the library with application windows id
@@ -57,16 +56,6 @@ GtkWidget *GUI_PixmapButtonDefault(GdkWindow * window, const gchar ** xpm,
         return NULL;
 }
 
-void MenuAppend(GtkMenu * menu, const char *text)
-{
-    GtkWidget *glade_menuitem;
-
-    glade_menuitem = gtk_menu_item_new_with_label(text);
-    gtk_widget_show(glade_menuitem);
-    gtk_menu_append(GTK_MENU(menu), glade_menuitem);
-
-}
-
 void runDialog(volatile int *lock)
 {
         
@@ -75,33 +64,6 @@ void runDialog(volatile int *lock)
                                 while (gtk_events_pending())    		  	gtk_main_iteration();         
                         ADM_usleep(  50000L);			// wait 50 ms
                 }
-}
-
-
-/// gtk add on to get the rank in a pull down menu
-uint8_t getRangeInMenu(GtkWidget * Menu)
-{
-    GtkWidget *br, *active;
-    int mode;
-
-    br = gtk_option_menu_get_menu(GTK_OPTION_MENU(Menu));
-    active = gtk_menu_get_active(GTK_MENU(br));
-    mode = g_list_index(GTK_MENU_SHELL(br)->children, active);
-    return (uint8_t) mode;
-}
-/*
-        Change the text of the nth entry in the menu
-
-*/
-void changeTextInMenu(GtkWidget *menu,int range,const char *text)
-{
-    GtkWidget *br, *active;
-    int mode;
-
-    br = gtk_option_menu_get_menu(GTK_OPTION_MENU(menu));
-        
-    //gtk_label_set_text(GTK_LABEL(br),text);
-
 }
 
 // read an entry as an integer
@@ -163,7 +125,7 @@ uint8_t UI_getPhysicalScreenSize(void *window, uint32_t *w, uint32_t *h)
 	if (!gtkWindow)
 		gtkWindow = (GtkWindow*)guiRootWindow;
 
-	int monitorNo = gdk_screen_get_monitor_at_window(screen, GTK_WIDGET(gtkWindow)->window);
+	int monitorNo = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(GTK_WIDGET(gtkWindow)));
 	GdkRectangle rect;
 
 	gdk_screen_get_monitor_geometry(screen, monitorNo, &rect);
@@ -277,12 +239,12 @@ void UI_centreCanvasWindow(GtkWindow *window, GtkWidget *canvas, int newCanvasWi
         GdkRectangle rect;
         GtkWidget *referenceWidget;
 
-        if (window->transient_parent == NULL)
+        if (gtk_window_get_transient_for(window) == NULL)
                 referenceWidget = guiRootWindow;
         else
-                referenceWidget = GTK_WIDGET(window->transient_parent);
+                referenceWidget = GTK_WIDGET(gtk_window_get_transient_for(window));
 
-        int monitorNo = gdk_screen_get_monitor_at_window(screen, referenceWidget->window);
+        int monitorNo = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(referenceWidget));
 
         gdk_screen_get_monitor_geometry(screen, monitorNo, &rect);
         gtk_widget_get_size_request((GtkWidget*)canvas, &widgetWidth, &widgetHeight);

@@ -7,7 +7,6 @@ static int              getSelection(GtkWidget *dialog);
 extern bool parseECMAScript(const char *name);
 static const char *StringStatus[]={QT_TR_NOOP("Ready"),QT_TR_NOOP("Succeeded"),QT_TR_NOOP("Failed"),QT_TR_NOOP("Deleted"),QT_TR_NOOP("Running")};
 
-
 typedef enum
 {
         STATUS_READY=0,
@@ -45,6 +44,12 @@ typedef struct
 
 static JobsDescriptor jobs;
 
+static GtkWidget *treeview1;
+static GtkWidget *buttonDeleteAll;
+static GtkWidget *buttonDelete;
+static GtkWidget *buttonRunAll;
+static GtkWidget *buttonRun;
+
 uint8_t  DIA_job(uint32_t nb, char **name)
 {
 GtkListStore *store;
@@ -78,8 +83,8 @@ GtkCellRenderer *renderer;
         jobs.store=store;
         memset(jobs.status,0,jobs.nb*sizeof(ADM_Job_Descriptor));
 
-        gtk_tree_view_set_model(GTK_TREE_VIEW(WID(treeview1)),GTK_TREE_MODEL (store));
-        gtk_tree_view_columns_autosize(GTK_TREE_VIEW(WID(treeview1)));
+        gtk_tree_view_set_model(GTK_TREE_VIEW(treeview1),GTK_TREE_MODEL (store));
+        gtk_tree_view_columns_autosize(GTK_TREE_VIEW(treeview1));
 
         // Add columns
 
@@ -87,19 +92,19 @@ GtkCellRenderer *renderer;
         column = gtk_tree_view_column_new_with_attributes (QT_TR_NOOP("  Job Name  "), renderer,
                                                       "markup", (GdkModifierType) 0,
                                                       NULL);
-        gtk_tree_view_append_column (GTK_TREE_VIEW (WID(treeview1)), column);
+        gtk_tree_view_append_column (GTK_TREE_VIEW (treeview1), column);
 
         column2 = gtk_tree_view_column_new_with_attributes (QT_TR_NOOP("Started at"), renderer,
                                                       "markup", (GdkModifierType) 1,
                                                       NULL);
-        gtk_tree_view_append_column (GTK_TREE_VIEW (WID(treeview1)), column2);
+        gtk_tree_view_append_column (GTK_TREE_VIEW (treeview1), column2);
         column3 = gtk_tree_view_column_new_with_attributes (QT_TR_NOOP("Finished at"), renderer,
             "markup", (GdkModifierType) 2,
             NULL);
-        gtk_tree_view_append_column (GTK_TREE_VIEW (WID(treeview1)), column3);
+        gtk_tree_view_append_column (GTK_TREE_VIEW (treeview1), column3);
 
         //
-        #define ASSOCIATE(x,y)   gtk_dialog_add_action_widget (GTK_DIALOG (dialog), WID(x),y)
+        #define ASSOCIATE(x,y)   gtk_dialog_add_action_widget (GTK_DIALOG (dialog), x, y)
             ASSOCIATE(buttonDelete,COMMAND_DELETE);
             ASSOCIATE(buttonDeleteAll,COMMAND_DELETE_ALL);
             ASSOCIATE(buttonRunAll,COMMAND_RUN_ALL);
@@ -107,7 +112,7 @@ GtkCellRenderer *renderer;
         //
 
         int running=1;
-        gtk_widget_set_usize(WID(treeview1), 180, 300);
+        gtk_widget_set_size_request(treeview1, 180, 300);
         while(running)
         {
                 int sel=0,event;
@@ -192,7 +197,7 @@ GtkCellRenderer *renderer;
 int              getSelection(GtkWidget *dialog)
 {
 uint32_t n=0xffff;
-        if(! getSelectionNumber(jobs.nb,WID(treeview1) , jobs.store,&n)) return 0xffff;
+        if(! getSelectionNumber(jobs.nb, treeview1, jobs.store,&n)) return 0xffff;
         return n;
 }
 //*************************************
@@ -237,12 +242,7 @@ create_dialog1 (void)
   GtkWidget *dialog_vbox1;
   GtkWidget *hbox1;
   GtkWidget *scrolledwindow1;
-  GtkWidget *treeview1;
   GtkWidget *vbuttonbox1;
-  GtkWidget *buttonDeleteAll;
-  GtkWidget *buttonDelete;
-  GtkWidget *buttonRunAll;
-  GtkWidget *buttonRun;
   GtkWidget *dialog_action_area1;
   GtkWidget *cancelbutton1;
   GtkWidget *okbutton1;
@@ -251,7 +251,7 @@ create_dialog1 (void)
   gtk_window_set_title (GTK_WINDOW (dialog1), QT_TR_NOOP("Jobs"));
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_vbox1);
 
   hbox1 = gtk_hbox_new (FALSE, 0);
@@ -277,51 +277,30 @@ create_dialog1 (void)
   buttonDeleteAll = gtk_button_new_with_mnemonic (QT_TR_NOOP("Delete All Jobs"));
   gtk_widget_show (buttonDeleteAll);
   gtk_container_add (GTK_CONTAINER (vbuttonbox1), buttonDeleteAll);
-  GTK_WIDGET_SET_FLAGS (buttonDeleteAll, GTK_CAN_DEFAULT);
 
   buttonDelete = gtk_button_new_with_mnemonic (QT_TR_NOOP("Delete Job"));
   gtk_widget_show (buttonDelete);
   gtk_container_add (GTK_CONTAINER (vbuttonbox1), buttonDelete);
-  GTK_WIDGET_SET_FLAGS (buttonDelete, GTK_CAN_DEFAULT);
 
   buttonRunAll = gtk_button_new_with_mnemonic (QT_TR_NOOP("Run all jobs"));
   gtk_widget_show (buttonRunAll);
   gtk_container_add (GTK_CONTAINER (vbuttonbox1), buttonRunAll);
-  GTK_WIDGET_SET_FLAGS (buttonRunAll, GTK_CAN_DEFAULT);
 
   buttonRun = gtk_button_new_with_mnemonic (QT_TR_NOOP("Run Job"));
   gtk_widget_show (buttonRun);
   gtk_container_add (GTK_CONTAINER (vbuttonbox1), buttonRun);
-  GTK_WIDGET_SET_FLAGS (buttonRun, GTK_CAN_DEFAULT);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_widget_show (dialog_action_area1);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
 
   cancelbutton1 = gtk_button_new_from_stock ("gtk-cancel");
   gtk_widget_show (cancelbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancelbutton1, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_CAN_DEFAULT);
 
   okbutton1 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (okbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, scrolledwindow1, "scrolledwindow1");
-  GLADE_HOOKUP_OBJECT (dialog1, treeview1, "treeview1");
-  GLADE_HOOKUP_OBJECT (dialog1, vbuttonbox1, "vbuttonbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonDeleteAll, "buttonDeleteAll");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonDelete, "buttonDelete");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonRunAll, "buttonRunAll");
-  GLADE_HOOKUP_OBJECT (dialog1, buttonRun, "buttonRun");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, cancelbutton1, "cancelbutton1");
-  GLADE_HOOKUP_OBJECT (dialog1, okbutton1, "okbutton1");
 
   return dialog1;
 }

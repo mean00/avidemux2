@@ -62,8 +62,7 @@ void diaElemButton::setMe(void *dialog, void *opaque,uint32_t line)
                     (GtkAttachOptions) (0), 0, 0);
   /* Add callback ...*/
   
-  g_signal_connect(GTK_OBJECT(button), "clicked",
-                    GTK_SIGNAL_FUNC(cb_button),  this);
+  g_signal_connect(button, "clicked", G_CALLBACK(cb_button), this);
   myWidget=button;
 }
 void diaElemButton::getMe(void)

@@ -54,10 +54,10 @@ void getMainWindowHandles(long int *handle,long int *nativeHandle)
 	*handle = (long int)guiRootWindow;
 
 #ifdef __WIN32
-	*nativeHandle = (long int)guiRootWindow->window;
+	*nativeHandle = (long int)gtk_widget_get_window(guiRootWindow);
 #elif defined(__APPLE__)
 	*nativeHandle = (long int)getMainNSWindow();
 #else
-	*nativeHandle = (long int)guiRootWindow->window;
+	*nativeHandle = (long int)gtk_widget_get_window(guiRootWindow);
 #endif
 }

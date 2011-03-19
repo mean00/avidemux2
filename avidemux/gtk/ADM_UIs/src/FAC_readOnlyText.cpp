@@ -60,7 +60,6 @@ diaElemReadOnlyText::~diaElemReadOnlyText()
 void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 {
   GtkWidget *widget;
-  GtkObject *adj;
   GtkWidget *label,*label2;
   
   label = gtk_label_new_with_mnemonic (paramTitle);
@@ -112,7 +111,6 @@ diaElemText::~diaElemText()
 void diaElemText::setMe(void *dialog, void *opaque,uint32_t line)
 {
   GtkWidget *widget;
-  GtkObject *adj;
   GtkWidget *label,*label2;
   char **input=(char **)param;
   label = gtk_label_new_with_mnemonic (paramTitle);

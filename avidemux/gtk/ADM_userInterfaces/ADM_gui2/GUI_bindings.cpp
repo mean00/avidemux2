@@ -31,7 +31,7 @@
 #include "ADM_Video.h"
 
 #include "prefs.h"
-#include "../ADM_toolkit_gtk/gtkmarkscale.h"
+//#include "../ADM_toolkit_gtk/gtkmarkscale.h"
 #include "../ADM_toolkit_gtk/jogshuttle.h"
 #include "../ADM_toolkit_gtk/ADM_jogshuttle.h"
 #include "gtkgui.h"
@@ -44,6 +44,7 @@
 #define MKICON(x) NULL
 #define MENU_DECLARE
 #include "myOwnMenu.h"
+
 static void ui_setMenus(void);
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern void ADM_initUIGtk(GtkWidget *guiRootWindow);
@@ -88,7 +89,6 @@ static void on_video_change(void);
 static void on_preview_change(void);
 static void on_format_change(void);
 static int update_ui=0;
-void GUI_gtk_grow_off(int onff);
 static void GUI_initCustom(void);
 const char * GUI_getCustomScript(uint32_t nb);
 
@@ -103,8 +103,8 @@ extern uint32_t    ADM_ve6_getNbEncoders(void);
 
 extern uint8_t AVDM_setVolume(int volume);
 extern void checkCrashFile(void);
-#define AUDIO_WIDGET   "comboboxAudio1"
-#define VIDEO_WIDGET   "comboboxVideo1"
+#define AUDIO_WIDGET   "comboboxAudio"
+#define VIDEO_WIDGET   "comboboxVideo"
 #define FORMAT_WIDGET  "comboboxFormat"
 #define PREVIEW_WIDGET "comboboxPreview"
 //
@@ -141,7 +141,7 @@ extern const char* encoderGetIndexedName(uint32_t i);
 //
 static uint8_t  bindGUI( void );
 static gboolean destroyCallback(GtkWidget * widget,	  GdkEvent * event, gpointer user_data);
-static gboolean  on_drawingarea1_expose_event(GtkWidget * widget,  GdkEventExpose * event, gpointer user_data);
+static gboolean  on_drawingarea1_draw_signal(GtkWidget * widget,  cairo_t * cr, gpointer user_data);
 // Currentframe taking/loosing focus
 static int  UI_grabFocus( void);
 static int  UI_loseFocus( void);
@@ -342,7 +342,6 @@ uint32_t w,h;
                 UI_getPhysicalScreenSize(guiRootWindow, &w, &h);
                 printf("The screen seems to be %u x %u px\n",w,h);
 
-                GUI_gtk_grow_off(1);
 #ifdef USE_JOG
                 physical_jog_shuttle = &(PhysicalJogShuttle::getInstance());
                 physical_jog_shuttle->registerCBs (NULL, jogButton, jogDial, jogRing);
@@ -370,17 +369,6 @@ void destroyGUI(void)
 }
 
 /**
-    \fn GUI_gtk_grow_off
-    \brief allow main window to grow or not
-*/
-void GUI_gtk_grow_off(int onoff)
-{
-  gtk_window_set_policy(GTK_WINDOW ( guiRootWindow ),
-                                             0, //gint allow_shrink,
-                                             onoff, //gint allow_grow,
-                                             1);//gint auto_shrink);
-}
-/**
     Get the custom entry
 
 */
@@ -403,29 +391,16 @@ const char * GUI_getAutoPyScript(uint32_t nb)
 typedef const char *listCallback(uint32_t rank);
 static bool populateCombobox(int nb,const char *widgetName, listCallback *listEntry)
 {
-        
-        GtkComboBox     *combo_box;
-        GtkListStore *list_store;
-        GtkCellRenderer *renderer;
-        GtkTreeIter iter;
+        GtkComboBoxText *combo_box;
 
-        combo_box=GTK_COMBO_BOX(glade.getWidget(widgetName));
-        list_store = gtk_list_store_new (1, G_TYPE_STRING);
-        
-        gtk_combo_box_remove_text(combo_box,0);
+        combo_box=GTK_COMBO_BOX_TEXT(glade.getWidget(widgetName));
+        gtk_combo_box_text_remove_all(combo_box);
 
         for(uint32_t i=0;i<nb;i++)
         {
                 const char *name=listEntry(i);
-            
-                gtk_list_store_append (list_store, &iter); 
-                gtk_list_store_set (list_store, &iter, 0, listEntry(i), -1);
-                
+                gtk_combo_box_text_append_text(combo_box, name);
         }
-        gtk_combo_box_set_model(combo_box,GTK_TREE_MODEL(list_store));
-        renderer = gtk_cell_renderer_text_new();
-        gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo_box), renderer, TRUE);
-        gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo_box), renderer,"text", 0, NULL);
 
         return true;
 }
@@ -437,7 +412,6 @@ uint8_t  bindGUI( void )
 {
 
 #define ADM_LOOKUP(a,b) a= glade.getWidget (#b);if(!a) return 0;
-
 
 	ADM_LOOKUP(guiDrawingArea,guiDrawing);
 	ADM_LOOKUP(guiSlider,sliderNavigate);
@@ -451,34 +425,34 @@ uint8_t  bindGUI( void )
   /// /bind menu
 
 // destroy
-	 gtk_object_set_data_full(GTK_OBJECT(guiRootWindow),
+	 g_object_set_data_full(G_OBJECT(guiRootWindow),
 			     "guiRootWindow",
 			     guiRootWindow,
-			     (GtkDestroyNotify) destroyCallback);
-    gtk_signal_connect(GTK_OBJECT(guiRootWindow), "delete-event", GTK_SIGNAL_FUNC(destroyCallback), (void *) NULL);
+			     (GDestroyNotify) destroyCallback);
+    g_signal_connect(guiRootWindow, "delete-event", G_CALLBACK(destroyCallback), NULL);
 
 //	now add callbacks
 	 gtk_widget_add_events(guiRootWindow, GDK_BUTTON_PRESS_MASK);
-	 gtk_signal_connect(GTK_OBJECT(guiRootWindow), "button_press_event", GTK_SIGNAL_FUNC(UI_returnFocus), NULL);
+    g_signal_connect(guiRootWindow, "button_press_event", G_CALLBACK(UI_returnFocus), NULL);
 
-	gtk_signal_connect(GTK_OBJECT(guiSlider), "button_press_event", GTK_SIGNAL_FUNC(UI_SliderPressed), NULL);
-	gtk_signal_connect(GTK_OBJECT(guiSlider), "button_release_event", GTK_SIGNAL_FUNC(UI_SliderReleased), NULL);
+    g_signal_connect(guiSlider, "button_press_event", G_CALLBACK(UI_SliderPressed), NULL);
+    g_signal_connect(guiSlider, "button_release_event", G_CALLBACK(UI_SliderReleased), NULL);
 
 	// Current Frame
 //	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_JumpToFrame);
 
     // Volume
-    gtk_signal_connect(GTK_OBJECT(glade.getWidget("hscalVolume")), "value_changed", GTK_SIGNAL_FUNC(volumeChange), (void *) NULL);
+    g_signal_connect(glade.getWidget("hscalVolume"), "value_changed", G_CALLBACK(volumeChange), NULL);
 
     // Jog
-    gtk_signal_connect(GTK_OBJECT(glade.getWidget("jogg")), "value_changed", GTK_SIGNAL_FUNC(jogChange), (void *) NULL);
+    g_signal_connect(glade.getWidget("jogg"), "value_changed", G_CALLBACK(jogChange), NULL);
 
 	// Time Shift
-	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift1")), "focus_in_event", GTK_SIGNAL_FUNC(UI_grabFocus), (void *) NULL);
-	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift1")), "focus_out_event", GTK_SIGNAL_FUNC(UI_loseFocus), (void *) NULL);
-	gtk_signal_connect(GTK_OBJECT(glade.getWidget("spinbuttonTimeShift1")), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_TimeShift);
+	g_signal_connect(glade.getWidget("spinbuttonTimeShift1"), "focus_in_event", G_CALLBACK(UI_grabFocus), NULL);
+	g_signal_connect(glade.getWidget("spinbuttonTimeShift1"), "focus_out_event", G_CALLBACK(UI_loseFocus), NULL);
+	g_signal_connect(glade.getWidget("spinbuttonTimeShift1"), "activate", G_CALLBACK(UI_focusAfterActivate), (void *) ACT_TimeShift);
 
-#define ADD_SIGNAL(a,b,c)  gtk_signal_connect(GTK_OBJECT(a), b, GTK_SIGNAL_FUNC(guiCallback), (void *) c);
+#define ADD_SIGNAL(a,b,c)  g_signal_connect(a, b, G_CALLBACK(guiCallback), (void *) c);
 
    	ADD_SIGNAL(guiSlider,"value_changed",ACT_Scale);
 	ADD_SIGNAL(glade.getWidget("spinbuttonTimeShift1"),"value_changed",ACT_TimeShift);
@@ -498,32 +472,31 @@ uint8_t  bindGUI( void )
 			}else
             {
                 ADD_SIGNAL(bt,buttonCallback[i].signal,buttonCallback[i].action);
-                GTK_WIDGET_UNSET_FLAGS (bt, GTK_CAN_FOCUS);
+                
+                gtk_widget_set_can_focus(bt, FALSE);
             }
 		}
 
 	
 
 // set some tuning
-    gtk_widget_set_usize(guiDrawingArea, 512, 288);
+    gtk_widget_set_size_request(guiDrawingArea, 512, 288);
 
 // hscale
-    GTK_WIDGET_UNSET_FLAGS (guiSlider, GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(guiSlider, FALSE);
     gtk_widget_show(guiSlider);
     // And, the size now scales to the width of the window.
-    gtk_widget_set_usize(guiSlider, 0, 0);
+    gtk_widget_set_size_request(guiSlider, 0, 0);
     // Plus, two-decimal precision.
     gtk_scale_set_digits(GTK_SCALE(guiSlider), 2);
-    // And continuous updates!
-    gtk_range_set_update_policy (GTK_RANGE (guiSlider), GTK_UPDATE_CONTINUOUS);
 
     gtk_range_set_range(GTK_RANGE(guiSlider),0,100.00);
 
     // keyboard events
 
 
- 	gtk_signal_connect(GTK_OBJECT(guiDrawingArea), "expose_event",
-		       GTK_SIGNAL_FUNC(on_drawingarea1_expose_event),
+ 	g_signal_connect(guiDrawingArea, "draw",
+		       G_CALLBACK(on_drawingarea1_draw_signal),
 		       NULL);
 
 
@@ -541,17 +514,17 @@ uint8_t  bindGUI( void )
         on_audio_change();
 
     //
-        gtk_signal_connect(GTK_OBJECT(glade.getWidget(VIDEO_WIDGET)), "changed",
-                       GTK_SIGNAL_FUNC(on_video_change),
+        g_signal_connect(glade.getWidget(VIDEO_WIDGET), "changed",
+                       G_CALLBACK(on_video_change),
                        NULL);
-        gtk_signal_connect(GTK_OBJECT(glade.getWidget(AUDIO_WIDGET)), "changed",
-                       GTK_SIGNAL_FUNC(on_audio_change),
+        g_signal_connect(glade.getWidget(AUDIO_WIDGET), "changed",
+                       G_CALLBACK(on_audio_change),
                        NULL);
-        gtk_signal_connect(GTK_OBJECT(glade.getWidget(PREVIEW_WIDGET)), "changed",
-                       GTK_SIGNAL_FUNC(on_preview_change),
+        g_signal_connect(glade.getWidget(PREVIEW_WIDGET), "changed",
+                       G_CALLBACK(on_preview_change),
                        NULL);
-        gtk_signal_connect(GTK_OBJECT(glade.getWidget(FORMAT_WIDGET)), "changed",
-                       GTK_SIGNAL_FUNC(on_format_change),
+        g_signal_connect(glade.getWidget(FORMAT_WIDGET), "changed",
+                       G_CALLBACK(on_format_change),
                        NULL);
 
         
@@ -563,8 +536,8 @@ uint8_t  bindGUI( void )
         GTK_DEST_DEFAULT_ALL,
         target_table,sizeof(target_table)/sizeof(GtkTargetEntry),
         (GdkDragAction)(GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_DEFAULT));
-    g_signal_connect(GTK_OBJECT(guiRootWindow), "drag_data_received",
-        GTK_SIGNAL_FUNC(DNDDataReceived),NULL);
+    g_signal_connect(guiRootWindow, "drag_data_received",
+        G_CALLBACK(DNDDataReceived),NULL);
     //CYB 2005.02.22: DND (END)
 
      // Allow shrink
@@ -613,8 +586,8 @@ void GUI_initCustom(void )
   menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuEntry), menu);
 
-#define CALLBACK(x,y) gtk_signal_connect(GTK_OBJECT(x), "activate", \
-                      GTK_SIGNAL_FUNC(guiCallback),                   (void *) y)
+#define CALLBACK(x,y) g_signal_connect(x, "activate", \
+                      G_CALLBACK(guiCallback),                   (void *) y)
 
   for(int i=0;i<ADM_nbCustom;i++)
   {
@@ -628,10 +601,10 @@ void GUI_initCustom(void )
   #undef CALLBACK
   printf("Menu built\n");
 }
-gboolean  on_drawingarea1_expose_event(GtkWidget * widget,  GdkEventExpose * event, gpointer user_data)
+gboolean  on_drawingarea1_draw_signal(GtkWidget *widget,  cairo_t *cr, gpointer user_data)
 {
 UNUSED_ARG(widget);
-UNUSED_ARG(event);
+UNUSED_ARG(cr);
 UNUSED_ARG(user_data);
         renderExpose();
         return true;
@@ -656,7 +629,7 @@ void UI_setScale( double val )
 if(_upd_in_progres) return;
  _upd_in_progres++;
    gtk_adjustment_set_value( GTK_ADJUSTMENT(sliderAdjustment),(  gdouble  ) val );
-   gtk_signal_emit_by_name (GTK_OBJECT (sliderAdjustment), "changed");
+   g_signal_emit_by_name(sliderAdjustment, "changed");
  _upd_in_progres--;
 
 }
@@ -731,7 +704,7 @@ char	c='?';
 double  UI_readScale( void )
 {
 
-	return (double)GTK_ADJUSTMENT(sliderAdjustment)->value;
+	return (double)gtk_adjustment_get_value(GTK_ADJUSTMENT(sliderAdjustment));
 
 }
 /**
@@ -805,23 +778,23 @@ int UI_grabFocus( void)
 #define RMCTRL(x,y)   gtk_widget_remove_accelerator (glade.getWidget(#x), accel_group, \
                               y, (GdkModifierType) GDK_CONTROL_MASK  );
 
-	RM(next_frame1, GDK_KP_6);
-	RM(previous_frame1, GDK_KP_4);
-	RM(next_intra_frame1, GDK_KP_8);
-	RM(previous_intra_frame1, GDK_KP_2);
+	RM(next_frame1, GDK_KEY_KP_6);
+	RM(previous_frame1, GDK_KEY_KP_4);
+	RM(next_intra_frame1, GDK_KEY_KP_8);
+	RM(previous_intra_frame1, GDK_KEY_KP_2);
 
-	RM(buttonNextFrame, GDK_KP_6);
-	RM(buttonPrevFrame, GDK_KP_4);
-	RM(buttonNextKFrame, GDK_KP_8);
-	RM(buttonPrevKFrame, GDK_KP_2);
+	RM(buttonNextFrame, GDK_KEY_KP_6);
+	RM(buttonPrevFrame, GDK_KEY_KP_4);
+	RM(buttonNextKFrame, GDK_KEY_KP_8);
+	RM(buttonPrevKFrame, GDK_KEY_KP_2);
 
-	RM(delete1, GDK_Delete);
-	RM(set_marker_a1,GDK_bracketleft);
-	RM(set_marker_b1,GDK_bracketright);
+	RM(delete1, GDK_KEY_Delete);
+	RM(set_marker_a1,GDK_KEY_bracketleft);
+	RM(set_marker_b1,GDK_KEY_bracketright);
 
-	RMCTRL(paste1,GDK_V);
-	RMCTRL(copy1,GDK_C);
-	RMCTRL(cut1,GDK_X);
+	RMCTRL(paste1,GDK_KEY_V);
+	RMCTRL(copy1,GDK_KEY_C);
+	RMCTRL(cut1,GDK_KEY_X);
 
 	UI_arrow_disabled();
 
@@ -840,23 +813,23 @@ int UI_loseFocus( void)
 #define ADDCTRL(x,y) gtk_widget_add_accelerator (glade.getWidget(#x), "activate", accel_group, \
                               y, (GdkModifierType) GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-	ADD_ACT(next_frame1, GDK_KP_6);
-	ADD_ACT(previous_frame1, GDK_KP_4);
-	ADD_ACT(next_intra_frame1, GDK_KP_8);
-	ADD_ACT(previous_intra_frame1, GDK_KP_2);
+	ADD_ACT(next_frame1, GDK_KEY_KP_6);
+	ADD_ACT(previous_frame1, GDK_KEY_KP_4);
+	ADD_ACT(next_intra_frame1, GDK_KEY_KP_8);
+	ADD_ACT(previous_intra_frame1, GDK_KEY_KP_2);
 
-	ADD(buttonNextFrame, GDK_KP_6);
-	ADD(buttonPrevFrame, GDK_KP_4);
-	ADD(buttonNextKFrame, GDK_KP_8);
-	ADD(buttonPrevKFrame, GDK_KP_2);
+	ADD(buttonNextFrame, GDK_KEY_KP_6);
+	ADD(buttonPrevFrame, GDK_KEY_KP_4);
+	ADD(buttonNextKFrame, GDK_KEY_KP_8);
+	ADD(buttonPrevKFrame, GDK_KEY_KP_2);
 
-	ADD_ACT(delete1, GDK_Delete);
-	ADD_ACT(set_marker_a1,GDK_bracketleft);
-	ADD_ACT(set_marker_b1,GDK_bracketright);
+	ADD_ACT(delete1, GDK_KEY_Delete);
+	ADD_ACT(set_marker_a1,GDK_KEY_bracketleft);
+	ADD_ACT(set_marker_b1,GDK_KEY_bracketright);
 
-	ADDCTRL(paste1,GDK_V);
-	ADDCTRL(copy1,GDK_C);
-	ADDCTRL(cut1,GDK_X);
+	ADDCTRL(paste1,GDK_KEY_V);
+	ADDCTRL(copy1,GDK_KEY_C);
+	ADDCTRL(cut1,GDK_KEY_X);
 
 	UI_arrow_enabled();
 
@@ -987,8 +960,8 @@ GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, MenuEntry *desc, int nb)
                      menu_items = gtk_menu_item_new_with_label (m->text);
                      gtk_menu_shell_append (GTK_MENU_SHELL (target), menu_items);
                      gtk_widget_show (menu_items);
-                     gtk_signal_connect(GTK_OBJECT(menu_items), "activate", 
-                        GTK_SIGNAL_FUNC(guiCallback),                   (void *) m->event);
+                     g_signal_connect(menu_items, "activate", 
+                        G_CALLBACK(guiCallback),                   (void *) m->event);
                      break;
                     }
             default: break;
@@ -1102,8 +1075,7 @@ void GUI_initCursor( void )
 // Change cursor and drop all events
 void UI_BusyCursor( void )
 {
-	 gdk_window_set_cursor((guiRootWindow->window),
-                                          guiCursorBusy);
+	 gdk_window_set_cursor(gtk_widget_get_window(guiRootWindow), guiCursorBusy);
 
 }
 /**
@@ -1257,8 +1229,7 @@ bool UI_SetCurrentFormat( uint32_t  fmt )
 void UI_NormalCursor( void )
 {
 //	gtk_widget_set_events(guiRootWindow,guiCursorEvtMask);
-	gdk_window_set_cursor((guiRootWindow->window),
-                                          NULL); //guiCursorNormal);
+	gdk_window_set_cursor(gtk_widget_get_window(guiRootWindow), NULL); //guiCursorNormal);
 
 
 }
@@ -1307,7 +1278,7 @@ void DNDDataReceived( GtkWidget *widget, GdkDragContext *dc,
     }
 
     int current=0;
-    start=(char*)selection_data->data;
+    start=(char*)gtk_selection_data_get_data(selection_data);
     old=start;
     while(current<MAX_DND_FILES)
     {
@@ -1398,7 +1369,7 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
         {
                 item[i]=gtk_menu_item_new_with_label(names[i]);
                 gtk_menu_attach(GTK_MENU(menu),item[i],0,1,i,i+1);
-                 gtk_signal_connect (GTK_OBJECT (item[i]), "activate", GTK_SIGNAL_FUNC (guiCallback),
+                g_signal_connect (item[i], "activate", G_CALLBACK (guiCallback),
                                 (gpointer) recent[i]);
                 gtk_widget_show (item[i]);
         }
@@ -1415,8 +1386,8 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
                      menu_items = gtk_menu_item_new_with_label (names[i]);
                      gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
                      gtk_widget_show (menu_items);
-                     gtk_signal_connect(GTK_OBJECT(menu_items), "activate", 
-                        GTK_SIGNAL_FUNC(guiCallback),                   (void *) recent[i]);
+                     g_signal_connect(menu_items, "activate", 
+                        G_CALLBACK(guiCallback),                   (void *) recent[i]);
                      gtk_widget_show (menu_items);
         }
       
@@ -1429,12 +1400,12 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
 // Override arrow keys to quickly navigate
 uint8_t UI_arrow_enabled(void)
 {
-	keyPressHandlerId = g_signal_connect(GTK_OBJECT(guiRootWindow), "key_press_event", GTK_SIGNAL_FUNC(UI_on_key_press), NULL);
+	keyPressHandlerId = g_signal_connect(guiRootWindow, "key_press_event", G_CALLBACK(UI_on_key_press), NULL);
 }
 
 uint8_t UI_arrow_disabled(void)
 {
-	g_signal_handler_disconnect(GTK_OBJECT(guiRootWindow), keyPressHandlerId);
+	g_signal_handler_disconnect(guiRootWindow, keyPressHandlerId);
 }
 
 gboolean UI_SliderPressed(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
@@ -1482,7 +1453,6 @@ int UI_Init(int argc, char **argv)
         g_thread_init(NULL);
     gdk_threads_init();
     gdk_threads_enter();
-    gtk_set_locale();
     global_argc=argc;
     global_argv=argv;
 
@@ -1492,7 +1462,6 @@ int UI_Init(int argc, char **argv)
 
     printf("[Gtk] Entering gtk_init\n");
     gtk_init(&global_argc, &global_argv);
-    gdk_rgb_init();
 
 
 }
@@ -1584,9 +1553,9 @@ static int jogTimer(void)
  //   printf("Arm Call\n");
     gdk_threads_enter();
     if(v>0)
-         g_signal_emit_by_name (GTK_OBJECT (glade.getWidget("next_intra_frame1")), "activate",G_TYPE_NONE );
+         g_signal_emit_by_name (glade.getWidget("next_intra_frame1"), "activate",G_TYPE_NONE );
       else
-        g_signal_emit_by_name (GTK_OBJECT (glade.getWidget("previous_intra_frame1")), "activate",G_TYPE_NONE );
+        g_signal_emit_by_name (glade.getWidget("previous_intra_frame1"), "activate",G_TYPE_NONE );
       gdk_threads_leave();
     jogLock--;
       return TRUE;
@@ -1622,10 +1591,10 @@ gint jogChange(void)
       {
         jogLock++;
         if(v>0)
-          gtk_signal_emit_by_name (GTK_OBJECT (glade.getWidget("next_intra_frame1")), "activate" );
+          g_signal_emit_by_name (glade.getWidget("next_intra_frame1"), "activate" );
 
         else
-          gtk_signal_emit_by_name (GTK_OBJECT (glade.getWidget("previous_intra_frame1")), "activate" );
+          g_signal_emit_by_name (glade.getWidget("previous_intra_frame1"), "activate" );
         jogLock--;
         nbTimer=1;
         count=0;//tickToTime(r);
@@ -1651,7 +1620,7 @@ if(_upd_in_progres) return;
 
         wid=glade.getWidget("hscalVolume");
         adj=gtk_range_get_adjustment (GTK_RANGE(wid));
-        vol=(int)floor(adj->value+0.5);
+        vol=(int)floor(gtk_adjustment_get_value(adj)+0.5);
         AVDM_setVolume( vol);
  _upd_in_progres--;
 }

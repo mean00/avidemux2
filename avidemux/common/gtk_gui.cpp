@@ -73,7 +73,6 @@ extern bool    GUI_GoToTime(uint64_t time);
 //******** DIA Function**************
 //***********************************
 extern uint8_t DIA_about( void );
-extern uint8_t DIA_RecentFiles( char **name );
 extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
 extern uint8_t DIA_gotoTime(uint16_t *hh, uint32_t *mm, uint32_t *ss);
@@ -212,13 +211,6 @@ int nw;
             GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
 
-    case ACT_RecentFiles:
-    	char *file;
-		if(		DIA_RecentFiles(&file))
-		{
-			A_openAvi (file);
-		}
-		return;
     case ACT_ABOUT :
     		 DIA_about( );
 		 return;

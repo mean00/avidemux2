@@ -47,7 +47,8 @@ int GUI_handleVFilter()
     glade.init();
     if (!glade.loadFile("videoFilter/videoFilter.gtkBuilder"))
     {
-        GUI_Error_HIG(QT_TR_NOOP("Cannot load Glade file"), NULL);
+        GUI_Error_HIG(QT_TR_NOOP("Cannot load dialog"), 
+                      QT_TR_NOOP("File \"videoFilter.gtkBuilder\" could not be loaded."));
         return 0;
     }
     // create top window

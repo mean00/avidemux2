@@ -111,12 +111,9 @@ void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t line)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), *(uint32_t *)param);
   if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, widget, tip, NULL);
+      gtk_widget_set_tooltip_text (widget, tip);
   }
-  gtk_signal_connect(GTK_OBJECT(widget), "toggled",
-                      GTK_SIGNAL_FUNC(cb_menu),
-                      (void *) this);
+  g_signal_connect(widget, "toggled", G_CALLBACK(cb_menu), (void *) this);
 }
 void diaElemToggle::getMe(void)
 {
@@ -199,12 +196,9 @@ void diaElemToggleUint::setMe(void *dialog, void *opaque,uint32_t line)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), *(uint32_t *)param);
   if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, widget, tip, NULL);
+      gtk_widget_set_tooltip_text (widget, tip);
   }
-  gtk_signal_connect(GTK_OBJECT(widget), "toggled",
-                      GTK_SIGNAL_FUNC(cb_menu2),
-                      (void *) this);
+  g_signal_connect(widget, "toggled", G_CALLBACK(cb_menu2), (void *) this);
   /* Now put uint */
   widuint = gtk_spin_button_new_with_range(_min,_max,1);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON(widuint),TRUE);
@@ -296,12 +290,9 @@ void diaElemToggleInt::setMe(void *dialog, void *opaque,uint32_t line)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), *(uint32_t *)param);
   if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, widget, tip, NULL);
+      gtk_widget_set_tooltip_text (widget, tip);
   }
-  gtk_signal_connect(GTK_OBJECT(widget), "toggled",
-                      GTK_SIGNAL_FUNC(cb_menu2),
-                      (void *) this);
+  g_signal_connect(widget, "toggled", G_CALLBACK(cb_menu2), (void *) this);
   /* Now put uint */
   widuint = gtk_spin_button_new_with_range(_min,_max,1);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON(widuint),TRUE);

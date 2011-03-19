@@ -154,7 +154,7 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   
-  combo = gtk_combo_box_new_text ();
+  combo = gtk_combo_box_text_new ();
   gtk_widget_show (combo);
   gtk_table_attach (GTK_TABLE (opaque), combo, 1, 2, line, line+1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
@@ -164,7 +164,7 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
   
   for(int i=0;i<nbMenu;i++)
   {
-    gtk_combo_box_append_text (GTK_COMBO_BOX (combo),menu[i]->text);
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), menu[i]->text);
   }
   
   for(int i=0;i<nbMenu;i++)
@@ -175,9 +175,7 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
     }
   }
   myWidget=(void *)combo;
-  gtk_signal_connect(GTK_OBJECT(combo), "changed",
-                      GTK_SIGNAL_FUNC(cb_menu),
-                      (void *) this);
+  g_signal_connect(combo, "changed", G_CALLBACK(cb_menu), (void *) this);
   
 }
 

@@ -82,7 +82,6 @@ GtkWidget **wid=(GtkWidget **)myWidget;
 }
 void diaElemFile::setMe(void *dialog, void *opaque,uint32_t line)
 {
-  GtkObject *adj;
   GtkWidget *label;
   GtkWidget *entry;
   GtkWidget *hbox1;
@@ -130,14 +129,12 @@ void diaElemFile::setMe(void *dialog, void *opaque,uint32_t line)
   /**/
   
   /* Add callback ...*/
-  g_signal_connect(GTK_OBJECT(button), "clicked",
-                    GTK_SIGNAL_FUNC(fileRead),  this);
+  g_signal_connect(button, "clicked", G_CALLBACK(fileRead), this);
 
   GtkWidget **w=new GtkWidget *[2];
   w[0]=entry;
   w[1]=button;
   myWidget=(void *)w;
-  
 }
 void diaElemFile::getMe(void)
 {
@@ -242,7 +239,6 @@ diaElemDirSelect::~diaElemDirSelect()
 }
 void diaElemDirSelect::setMe(void *dialog, void *opaque,uint32_t line)
 {
-  GtkObject *adj;
   GtkWidget *label;
   GtkWidget *entry;
   GtkWidget *hbox1;
@@ -290,15 +286,13 @@ void diaElemDirSelect::setMe(void *dialog, void *opaque,uint32_t line)
   /**/
   
   /* Add callback ...*/
-  g_signal_connect(GTK_OBJECT(button), "clicked",
-                    GTK_SIGNAL_FUNC(dirSel),  this);
+  g_signal_connect(button, "clicked", G_CALLBACK(dirSel), this);
 
   
    GtkWidget **w=new GtkWidget *[2];
   w[0]=entry;
   w[1]=button;
   myWidget=(void *)w;
-  
 }
 void diaElemDirSelect::getMe(void)
 {

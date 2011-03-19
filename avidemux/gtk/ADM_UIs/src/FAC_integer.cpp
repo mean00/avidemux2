@@ -94,8 +94,7 @@ void diaElemInteger::setMe(void *dialog, void *opaque,uint32_t line)
     gtk_widget_set_sensitive(widget,0);
    if(tip)
    {
-     GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, widget, tip, NULL);
+      gtk_widget_set_tooltip_text (widget, tip);
    }
  
 }
@@ -166,8 +165,7 @@ void diaElemUInteger::setMe(void *dialog, void *opaque,uint32_t line)
 
   if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, widget, tip, NULL);
+      gtk_widget_set_tooltip_text (widget, tip);
   }
   
   if(readOnly)

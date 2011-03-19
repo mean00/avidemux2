@@ -70,7 +70,7 @@ void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)
 	GtkWidget *radiobutton2;
 	GtkWidget *hbox2;
 	GtkWidget *radiobutton3;
-	GtkObject *spinbutton1_adj;
+	GtkAdjustment *spinbutton1_adj;
 	GtkWidget *spinbutton1;
 
 	label1 = gtk_label_new_with_mnemonic (paramTitle);
@@ -101,7 +101,7 @@ void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)
 	gtk_box_pack_start (GTK_BOX (hbox2), radiobutton3, TRUE, TRUE, 0);
 
 	spinbutton1_adj = gtk_adjustment_new (2, 2, 32, 1, 10, 0);
-	spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
+	spinbutton1 = gtk_spin_button_new (spinbutton1_adj, 1, 0);
 	gtk_widget_show (spinbutton1);
 	gtk_box_pack_start (GTK_BOX (hbox2), spinbutton1, TRUE, TRUE, 0);
 	gtk_entry_set_activates_default (GTK_ENTRY(spinbutton1), TRUE);
@@ -110,8 +110,7 @@ void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)
 					(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 					(GtkAttachOptions) (0), 0, 0);
 
-	g_signal_connect(GTK_OBJECT(radiobutton3), "toggled",
-					GTK_SIGNAL_FUNC(customToggled),  this);
+	g_signal_connect (radiobutton3, "toggled", G_CALLBACK(customToggled), this);
 
 	GtkWidget **w;
 	w = new GtkWidget*[4];

@@ -17,30 +17,35 @@
 #include "ADM_default.h"
 #define aprintf(...) {}
 #include "swresize.h"
-#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
-
-#include "ADM_gladeSupport.h"
-
 #define FILL_ENTRY(widget_name,string) 		{r=-1;   \
-gtk_editable_delete_text(GTK_EDITABLE(lookup_widget(dialog,#widget_name)), 0,-1);\
-gtk_editable_insert_text(GTK_EDITABLE(lookup_widget(dialog,#widget_name)), string, strlen(string), &r);}
-#define CHECKBOX(x,y) if(TRUE==gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(lookup_widget(dialog,#x))))  \
+gtk_editable_delete_text(GTK_EDITABLE(widget_name), 0,-1);\
+gtk_editable_insert_text(GTK_EDITABLE(widget_name), string, strlen(string), &r);}
+#define CHECKBOX(x,y) if(TRUE==gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(x)))  \
 			y=1; else y=0;
-#define READ_ENTRY(widget_name)   gtk_editable_get_chars(GTK_EDITABLE (lookup_widget(dialog,#widget_name)), 0, -1);
+#define READ_ENTRY(widget_name)   gtk_editable_get_chars(GTK_EDITABLE (widget_name), 0, -1);
 
-#define SPIN_GET(x,y) {y= gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(WID(x))) ;}
-#define SPIN_SET(x,y)  {gtk_spin_button_set_value(GTK_SPIN_BUTTON(WID(x)),(gfloat)y) ;}
+#define SPIN_GET(x,y) {y= gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(x)) ;}
+#define SPIN_SET(x,y)  {gtk_spin_button_set_value(GTK_SPIN_BUTTON(x),(gfloat)y) ;}
 
 
 /*----------------------------------------------*/
 static GtkWidget	*create_dialog1 (void);
-static void drag(GtkButton * button, gpointer user_data);
+static void drag(GtkWidget * scale, gpointer user_data);
 static void read (void );
 static void write (void );
 /*----------------------------------------------*/
 static GtkWidget *dialog;
+static GtkWidget *menu_algo;
+static GtkWidget *menu_source;
+static GtkWidget *menu_dest;
+static GtkWidget *hscale1;
+static GtkWidget *checkbutton1;
+static GtkWidget *label_errorx;
+static GtkWidget *label_errory;
+static GtkWidget *spinbutton_width;
+static GtkWidget *spinbutton_height;
 static uint32_t iw,ih,ow,oh;
 static GtkAdjustment *adj_angle;
 static gint  r;
@@ -88,24 +93,23 @@ bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t 
 	double val;
 	val=100.*iw;
 	if(ow) val=val/ow;
-	adj_angle=	gtk_range_get_adjustment (GTK_RANGE(WID(hscale1)));
+	adj_angle=gtk_range_get_adjustment (GTK_RANGE(hscale1));
 	gtk_adjustment_set_value( GTK_ADJUSTMENT(adj_angle),(  gdouble  ) val );
 
 	// remember algo
- 	gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu1)), resize->algo);
-    gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu_source)), resize->sourceAR);
-    gtk_option_menu_set_history (GTK_OPTION_MENU (WID(optionmenu_dest)), resize->targetAR);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (menu_algo), resize->algo);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (menu_source), resize->sourceAR);
+    gtk_combo_box_set_active (GTK_COMBO_BOX (menu_dest), resize->targetAR);
 
 
-	#define CONNECT(w,x) gtk_signal_connect(GTK_OBJECT(lookup_widget(dialog,#w)), #x, \
-		       GTK_SIGNAL_FUNC(drag), NULL)
+	#define CONNECT(w,x) g_signal_connect(w, #x, G_CALLBACK(drag), NULL)
 
-            CONNECT(hscale1,drag_data_received);
+			CONNECT(hscale1,drag_data_received);
 			CONNECT(hscale1,drag_motion);
 			CONNECT(hscale1,drag_data_get);
 			CONNECT(hscale1,drag_begin);
 
-			gtk_signal_connect(GTK_OBJECT(adj_angle),"value_changed",    GTK_SIGNAL_FUNC(drag), NULL);
+			g_signal_connect(adj_angle,"value_changed", G_CALLBACK(drag), NULL);
 
 	write();
 
@@ -120,9 +124,9 @@ bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t 
 
                 SPIN_GET(spinbutton_width,resize->width);
                 SPIN_GET(spinbutton_height,resize->height);
-                resize->algo= getRangeInMenu(lookup_widget(dialog,"optionmenu1"));
-                resize->sourceAR=getRangeInMenu(WID(optionmenu_source));
-                resize->targetAR=getRangeInMenu(WID(optionmenu_dest));
+                resize->algo= gtk_combo_box_get_active(GTK_COMBO_BOX(menu_algo));
+                resize->sourceAR=gtk_combo_box_get_active(GTK_COMBO_BOX(menu_source));
+                resize->targetAR=gtk_combo_box_get_active(GTK_COMBO_BOX(menu_dest));
 				ret=1;
 				stop=1;
 				break;
@@ -141,14 +145,13 @@ bool         DIA_resize(uint32_t originalWidth,uint32_t originalHeight,uint32_t 
 	gtk_widget_destroy(dialog);
 
 	return ret;
-
 }
 /*
 	Called when the hscale is changed
 */
-void drag(GtkButton * button, gpointer user_data)
+void drag(GtkWidget * scale, gpointer user_data)
 {
-  UNUSED_ARG(button);
+  UNUSED_ARG(scale);
   UNUSED_ARG(user_data);
 
   double percent;
@@ -159,7 +162,7 @@ void drag(GtkButton * button, gpointer user_data)
 
 
 
-  percent = GTK_ADJUSTMENT(adj_angle)->value;
+  percent = gtk_adjustment_get_value (adj_angle);
   if(percent<10.0) percent=10.;
   read();
 
@@ -222,7 +225,6 @@ dst_mul=1.;
 	iw=xx;
 	ih=yy;
 	write();
-
   }
 //---------------------------------------------
 // 	read all value from dialog
@@ -230,13 +232,12 @@ dst_mul=1.;
 void read (void )
 {
 	// Read source and dest aspect ratio
- 	sar=getRangeInMenu(WID(optionmenu_source));
-	dar=getRangeInMenu(WID(optionmenu_dest));
+ 	sar=gtk_combo_box_get_active(GTK_COMBO_BOX(menu_source));
+	dar=gtk_combo_box_get_active(GTK_COMBO_BOX(menu_dest));
 	// Read resizing method
-	resizeMethod=getRangeInMenu(WID(optionmenu1));
+	resizeMethod=gtk_combo_box_get_active(GTK_COMBO_BOX(menu_algo));
 	// Read round to neareast 16
-	CHECKBOX(checkbutton_16,roundBool);
-
+	CHECKBOX(checkbutton1,roundBool);
 }
 //---------------------------------------------
 // 	update dialog with new value
@@ -250,10 +251,10 @@ void write (void )
         SPIN_SET(spinbutton_height,ih);
 
 	sprintf(str,"%2.2f",erx*100.);
-	gtk_label_set_text(GTK_LABEL(WID(label_errorx)),str);
+	gtk_label_set_text(GTK_LABEL(label_errorx),str);
 
 	sprintf(str,"%2.2f",ery*100.);
-	gtk_label_set_text(GTK_LABEL(WID(label_errory)),str);
+	gtk_label_set_text(GTK_LABEL(label_errory),str);
 
 }
 
@@ -264,39 +265,17 @@ create_dialog1 (void)
   GtkWidget *dialog1;
   GtkWidget *dialog_vbox1;
   GtkWidget *vbox1;
+  GtkWidget *table1;
   GtkWidget *table2;
   GtkWidget *label1;
   GtkWidget *label2;
-  GtkObject *spinbutton_width_adj;
-  GtkWidget *spinbutton_width;
-  GtkObject *spinbutton_height_adj;
-  GtkWidget *spinbutton_height;
+  GtkWidget *label3;
+  GtkWidget *label4;
   GtkWidget *label5;
   GtkWidget *label6;
-  GtkWidget *optionmenu_source;
-  GtkWidget *menu1;
-  GtkWidget *item1_1;
-  GtkWidget *_4_1;
-  GtkWidget *_16_1;
-  GtkWidget *optionmenu_dest;
-  GtkWidget *menu2;
-  GtkWidget *menuitem1;
-  GtkWidget *menuitem2;
-  GtkWidget *menuitem3;
-  GtkWidget *label3;
-  GtkWidget *label_errorx;
   GtkWidget *label7;
-  GtkWidget *label_errory;
-  GtkWidget *checkbutton_16;
-  GtkWidget *optionmenu1;
-  GtkWidget *menu3;
-  GtkWidget *bilinear1;
-  GtkWidget *bicubic1;
-  GtkWidget *lanczos1;
-  GtkWidget *alignment1;
-  GtkWidget *fixed1;
-  GtkWidget *fixed2;
-  GtkWidget *hscale1;
+  GtkAdjustment *spinbutton_width_adj;
+  GtkAdjustment *spinbutton_height_adj;
   GtkWidget *dialog_action_area1;
   GtkWidget *cancelbutton1;
   GtkWidget *applybutton1;
@@ -305,262 +284,169 @@ create_dialog1 (void)
   dialog1 = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (dialog1), QT_TR_NOOP("Resize"));
   gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_resizable (GTK_WINDOW (dialog1), FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (dialog1), 6);
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog1));
+  gtk_box_set_spacing (GTK_BOX (dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
 
-  vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox1);
+  vbox1 = gtk_vbox_new (FALSE, 12);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox1), 6);
   gtk_box_pack_start (GTK_BOX (dialog_vbox1), vbox1, TRUE, TRUE, 0);
+  gtk_widget_show (vbox1);
 
-  table2 = gtk_table_new (4, 4, FALSE);
-  gtk_widget_show (table2);
-  gtk_box_pack_start (GTK_BOX (vbox1), table2, FALSE, FALSE, 0);
+  table1 = gtk_table_new (3, 4, FALSE);
+  gtk_table_set_row_spacings (GTK_TABLE (table1), 6);
+  gtk_table_set_col_spacings (GTK_TABLE (table1), 12);
+  gtk_box_pack_start (GTK_BOX (vbox1), table1, FALSE, FALSE, 0);
+  gtk_widget_show (table1);
 
-  label1 = gtk_label_new (QT_TR_NOOP(" Width "));
-  gtk_widget_show (label1);
-  gtk_table_attach (GTK_TABLE (table2), label1, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
+  label1 = gtk_label_new_with_mnemonic (QT_TR_NOOP("_Width:"));
+  gtk_table_attach (GTK_TABLE (table1), label1, 0, 1, 0, 1,
+                    (GtkAttachOptions) (0),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
-
-  label2 = gtk_label_new (QT_TR_NOOP(" Height "));
-  gtk_widget_show (label2);
-  gtk_table_attach (GTK_TABLE (table2), label2, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
-
+  gtk_widget_show (label1);
+   
   spinbutton_width_adj = gtk_adjustment_new (2, 0, 3000, 1, 10, 10);
   spinbutton_width = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton_width_adj), 1, 0);
-  gtk_widget_show (spinbutton_width);
-  gtk_table_attach (GTK_TABLE (table2), spinbutton_width, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label1), spinbutton_width);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinbutton_width), TRUE);
+  gtk_table_attach (GTK_TABLE (table1), spinbutton_width, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND|GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show (spinbutton_width);
+
+  label2 = gtk_label_new_with_mnemonic (QT_TR_NOOP("_Height:"));
+  gtk_table_attach (GTK_TABLE (table1), label2, 2, 3, 0, 1,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
+  gtk_widget_show (label2);
 
   spinbutton_height_adj = gtk_adjustment_new (1, 0, 3000, 1, 10, 10);
   spinbutton_height = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton_height_adj), 1, 0);
-  gtk_widget_show (spinbutton_height);
-  gtk_table_attach (GTK_TABLE (table2), spinbutton_height, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label2), spinbutton_height);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinbutton_height), TRUE);
-
-  label5 = gtk_label_new (QT_TR_NOOP("Source :"));
-  gtk_widget_show (label5);
-  gtk_table_attach (GTK_TABLE (table2), label5, 2, 3, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
+  gtk_table_attach (GTK_TABLE (table1), spinbutton_height, 3, 4, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND|GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show (spinbutton_height);
 
-  label6 = gtk_label_new (QT_TR_NOOP("Destination"));
-  gtk_widget_show (label6);
-  gtk_table_attach (GTK_TABLE (table2), label6, 2, 3, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
+  hscale1 = gtk_hscale_new (GTK_ADJUSTMENT (gtk_adjustment_new (100, 0, 100, 1, 1, 0)));
+  gtk_scale_set_draw_value (GTK_SCALE (hscale1), FALSE);
+  gtk_table_attach (GTK_TABLE (table1), hscale1, 0, 4, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND|GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show (hscale1);
 
-  optionmenu_source = gtk_option_menu_new ();
-  gtk_widget_show (optionmenu_source);
-  gtk_table_attach (GTK_TABLE (table2), optionmenu_source, 3, 4, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  menu1 = gtk_menu_new ();
-
-  item1_1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("1:1"));
-  gtk_widget_show (item1_1);
-  gtk_container_add (GTK_CONTAINER (menu1), item1_1);
-
-  _4_1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("4:3"));
-  gtk_widget_show (_4_1);
-  gtk_container_add (GTK_CONTAINER (menu1), _4_1);
-
-  _16_1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("16:9"));
-  gtk_widget_show (_16_1);
-  gtk_container_add (GTK_CONTAINER (menu1), _16_1);
-
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu_source), menu1);
-
-  optionmenu_dest = gtk_option_menu_new ();
-  gtk_widget_show (optionmenu_dest);
-  gtk_table_attach (GTK_TABLE (table2), optionmenu_dest, 3, 4, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  menu2 = gtk_menu_new ();
-
-  menuitem1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("1:1"));
-  gtk_widget_show (menuitem1);
-  gtk_container_add (GTK_CONTAINER (menu2), menuitem1);
-
-  menuitem2 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("4:3"));
-  gtk_widget_show (menuitem2);
-  gtk_container_add (GTK_CONTAINER (menu2), menuitem2);
-
-  menuitem3 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("16:9"));
-  gtk_widget_show (menuitem3);
-  gtk_container_add (GTK_CONTAINER (menu2), menuitem3);
-
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu_dest), menu2);
-
-  label3 = gtk_label_new (QT_TR_NOOP(" Error X:"));
-  gtk_widget_show (label3);
-  gtk_table_attach (GTK_TABLE (table2), label3, 0, 1, 2, 3,
+  label3 = gtk_label_new (QT_TR_NOOP("Error X:"));
+  gtk_table_attach (GTK_TABLE (table1), label3, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label3), 0, 0.5);
+  gtk_widget_show (label3);
 
   label_errorx = gtk_label_new (QT_TR_NOOP("0"));
-  gtk_widget_show (label_errorx);
-  gtk_table_attach (GTK_TABLE (table2), label_errorx, 1, 2, 2, 3,
+  gtk_table_attach (GTK_TABLE (table1), label_errorx, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label_errorx), 0, 0.5);
+  gtk_widget_show (label_errorx);
+  
+  label4 = gtk_label_new (QT_TR_NOOP("Error Y:"));
+  gtk_table_attach (GTK_TABLE (table1), label4, 2, 3, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label4), 0, 0.5);
+  gtk_widget_show (label4);
 
-  label7 = gtk_label_new (QT_TR_NOOP(" Error Y:"));
-  gtk_widget_show (label7);
+  label_errory = gtk_label_new (QT_TR_NOOP("0"));
+  gtk_table_attach (GTK_TABLE (table1), label_errory, 3, 4, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label_errory), 0, 0.5);
+  gtk_widget_show (label_errory);
+
+  table2 = gtk_table_new (4, 2, FALSE);
+  gtk_table_set_row_spacings (GTK_TABLE (table2), 6);
+  gtk_table_set_col_spacings (GTK_TABLE (table2), 12);
+  gtk_box_pack_start (GTK_BOX (vbox1), table2, FALSE, FALSE, 0);
+  gtk_widget_show (table2);
+
+  checkbutton1 = gtk_check_button_new_with_mnemonic (QT_TR_NOOP("16 _round up"));
+  gtk_table_attach (GTK_TABLE (table2), checkbutton1, 0, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show (checkbutton1);
+  
+  label5 = gtk_label_new_with_mnemonic (QT_TR_NOOP("_Source:"));
+  gtk_table_attach (GTK_TABLE (table2), label5, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label5), 0, 0.5);
+  gtk_widget_show (label5);
+
+  menu_source = gtk_combo_box_text_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label5), menu_source);
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_source), QT_TR_NOOP("1:1"));
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_source), QT_TR_NOOP("4:3"));
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_source), QT_TR_NOOP("16:9"));
+  gtk_table_attach (GTK_TABLE (table2), menu_source, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show (menu_source);
+
+  label6 = gtk_label_new_with_mnemonic (QT_TR_NOOP("_Destination:"));
+  gtk_table_attach (GTK_TABLE (table2), label6, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label6), 0, 0.5);
+  gtk_widget_show (label6);
+
+  menu_dest = gtk_combo_box_text_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label6), menu_dest);
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_dest), QT_TR_NOOP("1:1"));
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_dest), QT_TR_NOOP("4:3"));
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_dest), QT_TR_NOOP("16:9"));
+  gtk_table_attach (GTK_TABLE (table2), menu_dest, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show (menu_dest);
+
+  label7 = gtk_label_new_with_mnemonic (QT_TR_NOOP("_Method:"));
   gtk_table_attach (GTK_TABLE (table2), label7, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label7), 0, 0.5);
+  gtk_widget_show (label7);
 
-  label_errory = gtk_label_new (QT_TR_NOOP("0"));
-  gtk_widget_show (label_errory);
-  gtk_table_attach (GTK_TABLE (table2), label_errory, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
+  menu_algo = gtk_combo_box_text_new ();
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label7), menu_algo);
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_algo), QT_TR_NOOP("Bilinear"));
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_algo), QT_TR_NOOP("Bicubic"));
+  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (menu_algo), QT_TR_NOOP("Lanczos3"));
+  gtk_table_attach (GTK_TABLE (table2), menu_algo, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL|GTK_EXPAND),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label_errory), 0, 0.5);
+  gtk_widget_show (menu_algo);
 
-  checkbutton_16 = gtk_check_button_new_with_mnemonic (QT_TR_NOOP("16 round up"));
-  gtk_widget_show (checkbutton_16);
-  gtk_table_attach (GTK_TABLE (table2), checkbutton_16, 3, 4, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  optionmenu1 = gtk_option_menu_new ();
-  gtk_widget_show (optionmenu1);
-  gtk_table_attach (GTK_TABLE (table2), optionmenu1, 3, 4, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  menu3 = gtk_menu_new ();
-
-  bilinear1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("Bilinear"));
-  gtk_widget_show (bilinear1);
-  gtk_container_add (GTK_CONTAINER (menu3), bilinear1);
-
-  bicubic1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("Bicubic"));
-  gtk_widget_show (bicubic1);
-  gtk_container_add (GTK_CONTAINER (menu3), bicubic1);
-
-  lanczos1 = gtk_menu_item_new_with_mnemonic (QT_TR_NOOP("Lanczos3"));
-  gtk_widget_show (lanczos1);
-  gtk_container_add (GTK_CONTAINER (menu3), lanczos1);
-
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu1), menu3);
-
-  alignment1 = gtk_alignment_new (0.5, 0.5, 1, 1);
-  gtk_widget_show (alignment1);
-  gtk_table_attach (GTK_TABLE (table2), alignment1, 2, 3, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  fixed1 = gtk_fixed_new ();
-  gtk_widget_show (fixed1);
-  gtk_container_add (GTK_CONTAINER (alignment1), fixed1);
-
-  fixed2 = gtk_fixed_new ();
-  gtk_widget_show (fixed2);
-  gtk_table_attach (GTK_TABLE (table2), fixed2, 2, 3, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  hscale1 = gtk_hscale_new (GTK_ADJUSTMENT (gtk_adjustment_new (100, 0, 100, 1, 1, 0)));
-  gtk_widget_show (hscale1);
-  gtk_box_pack_start (GTK_BOX (vbox1), hscale1, FALSE, FALSE, 0);
-  gtk_scale_set_digits (GTK_SCALE (hscale1), 0);
-
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
-  gtk_widget_show (dialog_action_area1);
+  dialog_action_area1 = gtk_dialog_get_action_area (GTK_DIALOG (dialog1));
   gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
+  gtk_widget_show (dialog_action_area1);
 
   cancelbutton1 = gtk_button_new_from_stock ("gtk-cancel");
-  gtk_widget_show (cancelbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancelbutton1, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_CAN_DEFAULT);
+  gtk_widget_show (cancelbutton1);
 
   applybutton1 = gtk_button_new_from_stock ("gtk-apply");
-  gtk_widget_show (applybutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), applybutton1, GTK_RESPONSE_APPLY);
-  GTK_WIDGET_SET_FLAGS (applybutton1, GTK_CAN_DEFAULT);
+  gtk_widget_show (applybutton1);
 
   okbutton1 = gtk_button_new_from_stock ("gtk-ok");
-  gtk_widget_show (okbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-/*
-  g_signal_connect ((gpointer) _4_1, "activate",
-                    G_CALLBACK (on_4_1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) _16_1, "activate",
-                    G_CALLBACK (on_16_1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) menuitem2, "activate",
-                    G_CALLBACK (on_4_1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) menuitem3, "activate",
-                    G_CALLBACK (on_16_1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) bilinear1, "activate",
-                    G_CALLBACK (on_bilinear1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) bicubic1, "activate",
-                    G_CALLBACK (on_bicubic1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) lanczos1, "activate",
-                    G_CALLBACK (on_lanczos1_activate),
-                    NULL);
-*/
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, vbox1, "vbox1");
-  GLADE_HOOKUP_OBJECT (dialog1, table2, "table2");
-  GLADE_HOOKUP_OBJECT (dialog1, label1, "label1");
-  GLADE_HOOKUP_OBJECT (dialog1, label2, "label2");
-  GLADE_HOOKUP_OBJECT (dialog1, spinbutton_width, "spinbutton_width");
-  GLADE_HOOKUP_OBJECT (dialog1, spinbutton_height, "spinbutton_height");
-  GLADE_HOOKUP_OBJECT (dialog1, label5, "label5");
-  GLADE_HOOKUP_OBJECT (dialog1, label6, "label6");
-  GLADE_HOOKUP_OBJECT (dialog1, optionmenu_source, "optionmenu_source");
-  GLADE_HOOKUP_OBJECT (dialog1, menu1, "menu1");
-  GLADE_HOOKUP_OBJECT (dialog1, item1_1, "item1_1");
-  GLADE_HOOKUP_OBJECT (dialog1, _4_1, "_4_1");
-  GLADE_HOOKUP_OBJECT (dialog1, _16_1, "_16_1");
-  GLADE_HOOKUP_OBJECT (dialog1, optionmenu_dest, "optionmenu_dest");
-  GLADE_HOOKUP_OBJECT (dialog1, menu2, "menu2");
-  GLADE_HOOKUP_OBJECT (dialog1, menuitem1, "menuitem1");
-  GLADE_HOOKUP_OBJECT (dialog1, menuitem2, "menuitem2");
-  GLADE_HOOKUP_OBJECT (dialog1, menuitem3, "menuitem3");
-  GLADE_HOOKUP_OBJECT (dialog1, label3, "label3");
-  GLADE_HOOKUP_OBJECT (dialog1, label_errorx, "label_errorx");
-  GLADE_HOOKUP_OBJECT (dialog1, label7, "label7");
-  GLADE_HOOKUP_OBJECT (dialog1, label_errory, "label_errory");
-  GLADE_HOOKUP_OBJECT (dialog1, checkbutton_16, "checkbutton_16");
-  GLADE_HOOKUP_OBJECT (dialog1, optionmenu1, "optionmenu1");
-  GLADE_HOOKUP_OBJECT (dialog1, menu3, "menu3");
-  GLADE_HOOKUP_OBJECT (dialog1, bilinear1, "bilinear1");
-  GLADE_HOOKUP_OBJECT (dialog1, bicubic1, "bicubic1");
-  GLADE_HOOKUP_OBJECT (dialog1, lanczos1, "lanczos1");
-  GLADE_HOOKUP_OBJECT (dialog1, alignment1, "alignment1");
-  GLADE_HOOKUP_OBJECT (dialog1, fixed1, "fixed1");
-  GLADE_HOOKUP_OBJECT (dialog1, fixed2, "fixed2");
-  GLADE_HOOKUP_OBJECT (dialog1, hscale1, "hscale1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, cancelbutton1, "cancelbutton1");
-  GLADE_HOOKUP_OBJECT (dialog1, applybutton1, "applybutton1");
-  GLADE_HOOKUP_OBJECT (dialog1, okbutton1, "okbutton1");
+  gtk_widget_show (okbutton1);
 
   return dialog1;
 }
-

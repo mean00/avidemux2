@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkAboutDialog" id="aboutdialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">6</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">Avidemux</property>
+    <property name="copyright" translatable="yes">Copyright © 2001–2011 Mean</property>
+    <property name="comments" translatable="yes">Cross-platform video editor</property>
+    <property name="website">http://www.avidemux.org</property>
+    <property name="website_label" translatable="yes">http://www.avidemux.org</property>
+    <property name="license" translatable="yes">This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</property>
+    <property name="authors">Mean
+JSC
+Anish Mistry
+Jakub Misak
+Kuisathaverat
+Gruntster
+and all the others</property>
+    <property name="artists">Nestor Di
+Muddy</property>
+    <property name="logo">avidemux_icon.png</property>
+    <property name="license_type">custom</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+          </object>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

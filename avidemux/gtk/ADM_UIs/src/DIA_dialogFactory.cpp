@@ -69,8 +69,7 @@ uint8_t gtkDiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
   gtk_window_set_title (GTK_WINDOW (dialog),title );
   gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-  dialog_vbox1 = GTK_DIALOG (dialog)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   gtk_box_set_spacing (GTK_BOX(dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
   
@@ -120,7 +119,6 @@ uint8_t gtkDiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
   okbutton1 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (okbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
   
   gtk_dialog_set_alternative_button_order(GTK_DIALOG(dialog),
@@ -150,7 +148,6 @@ uint8_t gtkDiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
   gtk_unregister_dialog(dialog);
   gtk_widget_destroy(dialog);
   return ret;
-  
 }
 /**
     \fn   diaFactoryRun
@@ -172,8 +169,7 @@ uint8_t gtkDiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
   gtk_window_set_title (GTK_WINDOW (dialog),title );
   gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-  gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-  dialog_vbox1 = GTK_DIALOG (dialog)->vbox;
+  dialog_vbox1 = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   gtk_box_set_spacing (GTK_BOX(dialog_vbox1), 12);
   gtk_widget_show (dialog_vbox1);
    // Ok  create our tabs
@@ -208,7 +204,6 @@ uint8_t gtkDiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
   okbutton1 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (okbutton1);
   gtk_dialog_add_action_widget (GTK_DIALOG (dialog), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
   gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
   gtk_dialog_set_alternative_button_order(GTK_DIALOG(dialog),
@@ -231,7 +226,6 @@ uint8_t gtkDiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
   gtk_unregister_dialog(dialog);
   gtk_widget_destroy(dialog);
   return ret;
-  
 }
 /**
 

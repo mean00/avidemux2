@@ -15,15 +15,11 @@ email                : fixounet@free.fr
 #ifndef ADM_TLK_GTK
 #define ADM_TLK_GTK
 #include "ADM_cpp.h"
-#include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
 #include "ADM_default.h"
-#include "ADM_gladeSupport.h"
-#include "ADM_toolkitGtkInclude.h"
 
-uint8_t getRangeInMenu(GtkWidget *Menu);
-void changeTextInMenu(GtkWidget *menu, int range, const char *text);
 void UI_purge(void);
 uint8_t getSelectionNumber(uint32_t nb, GtkWidget *tree, GtkListStore *store, uint32_t *number);
 uint8_t setSelectionNumber(uint32_t nb, GtkWidget *tree, GtkListStore *store, uint32_t number);
@@ -41,12 +37,11 @@ void gtk_transient(GtkWidget *widget);
 float UI_calcZoomToFitScreen(GtkWindow* window, GtkWidget* drawingArea, uint32_t imageWidth, uint32_t imageHeight);
 void  UI_centreCanvasWindow(GtkWindow *window, GtkWidget *canvas, int newCanvasWidth, int newCanvasHeight);
 
-#define WID(x) lookup_widget(dialog,#x)
 #define RADIO_SET(widget_name,value) gtk_toggle_button_set_active \
-	(GTK_TOGGLE_BUTTON (WID(widget_name)), value)
+	(GTK_TOGGLE_BUTTON (widget_name), value)
 
 #define RADIO_GET(widget_name) gtk_toggle_button_get_active \
-	(GTK_TOGGLE_BUTTON (WID(widget_name)))
+	(GTK_TOGGLE_BUTTON (widget_name))
 
 #ifdef QT_TR_NOOP
 #undef QT_TR_NOOP

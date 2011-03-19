@@ -75,43 +75,26 @@ int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
     int ret;
 
     window1 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_object_set_data(GTK_OBJECT(window1), "window1", window1);
     gtk_window_set_title(GTK_WINDOW(window1), "Alert");
-    gtk_widget_set_usize(window1, 200, 70);
     gtk_window_set_modal(GTK_WINDOW(window1), 1);
 
     vbox1 = gtk_vbox_new(FALSE, 0);
-    gtk_widget_ref(vbox1);
-    gtk_object_set_data_full(GTK_OBJECT(window1), "vbox1", vbox1,
-			     (GtkDestroyNotify) gtk_widget_unref);
     gtk_widget_show(vbox1);
     gtk_container_add(GTK_CONTAINER(window1), vbox1);
 
     label2 = gtk_label_new(title);
-    gtk_widget_ref(label2);
-    gtk_object_set_data_full(GTK_OBJECT(window1), "label2", label2,
-			     (GtkDestroyNotify) gtk_widget_unref);
     gtk_widget_show(label2);
     gtk_box_pack_start(GTK_BOX(vbox1), label2, FALSE, FALSE, 0);
 
     button1 = gtk_button_new_with_label(choice1);
-    gtk_widget_ref(button1);
-    gtk_object_set_data_full(GTK_OBJECT(window1),
-			     "window1", window1,
-			     (GtkDestroyNotify) alert_cb_destroyed);
 
-    gtk_signal_connect(GTK_OBJECT(button1),
-		       "button_press_event", GTK_SIGNAL_FUNC(alert_cb_ok),
-		       0);
+    g_signal_connect(button1, "button_press_event", G_CALLBACK(alert_cb_ok), 0);
 
     gtk_widget_show(button1);
     gtk_box_pack_start(GTK_BOX(vbox1), button1, FALSE, FALSE, 0);
 //
     button2 = gtk_button_new_with_label(choice2);
-    gtk_widget_ref(button2);
-    gtk_signal_connect(GTK_OBJECT(button2),
-		       "button_press_event", GTK_SIGNAL_FUNC(alert_cb_ko),
-		       0);
+    g_signal_connect(button2, "button_press_event", G_CALLBACK(alert_cb_ko), 0);
 
     gtk_widget_show(button2);
     gtk_box_pack_start(GTK_BOX(vbox1), button2, FALSE, FALSE, 0);

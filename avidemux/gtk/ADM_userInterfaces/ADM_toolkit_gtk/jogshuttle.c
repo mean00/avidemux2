@@ -37,6 +37,7 @@ static guint jog_shuttle_signals[LAST_SIGNAL] = { 0 };
 static void
 jog_shuttle_class_init (JogShuttleClass *class)
 {
+#if 0
 	GObjectClass *obj_class;
 	GtkWidgetClass *widget_class;
 
@@ -58,11 +59,13 @@ jog_shuttle_class_init (JogShuttleClass *class)
 		G_TYPE_NONE, 0);
 
 	g_type_class_add_private (obj_class, sizeof (JogShuttlePrivate));
+#endif
 }
 
 static void
 jog_shuttle_init (JogShuttle *wheel)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	
@@ -71,10 +74,12 @@ jog_shuttle_init (JogShuttle *wheel)
 	priv->offset = 0;
 	priv->value = 0;
 	gtk_widget_add_events (GTK_WIDGET (wheel), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
+#endif
 }
 
 static void reset(GtkWidget *wheel)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	gfloat width = wheel->allocation.width;
@@ -84,22 +89,26 @@ static void reset(GtkWidget *wheel)
 	{
 		priv->pos[i] = width / 6 * i;
 	}
+#endif
 }
 
 static gboolean
 jog_shuttle_button_press (GtkWidget *wheel, GdkEventButton *event)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	
 	priv->start = event->x;
 	priv->pressed = TRUE;
+#endif
 	return FALSE;
 }
 
 static gboolean
 jog_shuttle_button_release (GtkWidget *wheel, GdkEventButton *event)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	
@@ -117,18 +126,22 @@ jog_shuttle_button_release (GtkWidget *wheel, GdkEventButton *event)
 	gdk_window_process_updates (widget->window, TRUE);
 
 	gdk_region_destroy (region);
+#endif
 
 	return FALSE;
 }
 
 static emit_value_changed_signal (JogShuttle *wheel)
 {
+#if 0
 	g_signal_emit (wheel, jog_shuttle_signals[VALUE_CHANGED], 0);
+#endif
 }
 
 static gboolean
 jog_shuttle_motion_notify (GtkWidget *wheel, GdkEventMotion *event)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	
@@ -153,11 +166,13 @@ jog_shuttle_motion_notify (GtkWidget *wheel, GdkEventMotion *event)
 	gdk_window_process_updates (widget->window, TRUE);
 
 	gdk_region_destroy (region);
+#endif
 }
 
 static void
 draw_borders (GtkWidget *wheel, cairo_t *cr)
 {
+#if 0
 	gfloat width = wheel->allocation.width;
 	gfloat height = wheel->allocation.height;
 	gfloat middle = width/2.0;
@@ -211,11 +226,13 @@ draw_borders (GtkWidget *wheel, cairo_t *cr)
 	cairo_pattern_destroy(cp2);
 	cairo_pattern_destroy(cp3);
 	cairo_pattern_destroy(cp4);
+#endif
 }
 
 static void
 draw_background (GtkWidget *wheel, cairo_t *cr)
 {
+#if 0
 	gfloat width = wheel->allocation.width;
 	gfloat height = wheel->allocation.height;
 	gfloat middle = width/2.0;
@@ -237,11 +254,13 @@ draw_background (GtkWidget *wheel, cairo_t *cr)
 	cairo_stroke (cr);
 	cairo_pattern_destroy(base1);
 	cairo_pattern_destroy(base2);
+#endif
 }
 
 static void
 draw_edges (GtkWidget *wheel, cairo_t *cr)
 {
+#if 0
 	gfloat width = wheel->allocation.width;
 	gfloat height = wheel->allocation.height;
 
@@ -263,11 +282,13 @@ draw_edges (GtkWidget *wheel, cairo_t *cr)
 	cairo_stroke (cr);
 	cairo_pattern_destroy(cp5);
 	cairo_pattern_destroy(cp6);
+#endif
 }	
 
 static void
 draw_lines (GtkWidget *wheel, cairo_t *cr)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	
@@ -315,11 +336,13 @@ draw_lines (GtkWidget *wheel, cairo_t *cr)
 	priv->value = (priv->pos[3]-middle) / middle;
         //printf ("pos[3] = %f\n", priv->pos[3]);
  	emit_value_changed_signal (JOG_SHUTTLE(wheel));
+#endif
 }
 
 static gboolean
 jog_shuttle_expose (GtkWidget *wheel, GdkEventExpose *event)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
 	
@@ -340,12 +363,14 @@ jog_shuttle_expose (GtkWidget *wheel, GdkEventExpose *event)
 	draw_edges (wheel, cr);
 
 	cairo_destroy (cr);
+#endif
 	return FALSE;
 }
 
 gfloat 
 jog_shuttle_get_value (GtkWidget *wheel)
 {
+#if 0
 	if (!wheel)
 	    return 0;
 	JogShuttlePrivate *priv;
@@ -353,11 +378,13 @@ jog_shuttle_get_value (GtkWidget *wheel)
         if (!priv->pressed && !priv->external_control)
             return 0;
 	return (priv->value);
+#endif
 }
 
 void
 jog_shuttle_set_value (GtkWidget *wheel, gfloat value)
 {
+#if 0
 	JogShuttlePrivate *priv;
 	priv = JOG_SHUTTLE_GET_PRIVATE (wheel);
         priv->external_control = (value < -0.001 || value > 0.001);
@@ -383,6 +410,7 @@ jog_shuttle_set_value (GtkWidget *wheel, gfloat value)
 	gdk_window_invalidate_region (widget->window, region, TRUE);
 	gdk_window_process_updates (widget->window, TRUE);
 	gdk_region_destroy (region);
+#endif
 }
 
 GtkWidget *

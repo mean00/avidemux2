@@ -1,6 +1,6 @@
 /***************************************************************************
   FAC_float.cpp
-  Handle dialog factory element : Toggle
+  Handle dialog factory element: Spin button with a float value
   (C) 2006 Mean Fixounet@free.fr 
 ***************************************************************************/
 
@@ -55,7 +55,6 @@ diaElemFloat::~diaElemFloat()
 void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
 {
   GtkWidget *widget;
-  GtkObject *adj;
   GtkWidget *label;
   
   label = gtk_label_new_with_mnemonic (paramTitle);
@@ -83,10 +82,8 @@ void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
   myWidget=(void *)widget;
     if(tip)
   {
-      GtkTooltips *tooltips= gtk_tooltips_new ();
-      gtk_tooltips_set_tip (tooltips, widget, tip, NULL);
+      gtk_widget_set_tooltip_text (widget, tip);
   }
-
 }
 void diaElemFloat::getMe(void)
 {
