@@ -1,0 +1,15 @@
+SET(ADM_coreSqlLight3_SRCS 
+        sqlite3.c
+        Database.cpp
+        Query.cpp
+        StderrLog.cpp
+        SysLog.cpp
+)
+
+ADM_ADD_SHARED_LIBRARY(ADM_coreSqlLight3 ${ADM_coreSqlLight3_SRCS})
+IF (APPLE)
+	TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 -Wl,-read_only_relocs,suppress)
+ENDIF (APPLE)
+INCLUDE_DIRECTORIES(../include)
+TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 ADM_core6 )
+ADM_INSTALL_LIB(ADM_coreSqlLight3)
