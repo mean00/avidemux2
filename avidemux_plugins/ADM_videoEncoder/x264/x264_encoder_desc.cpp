@@ -15,5 +15,9 @@ const ADM_paramList x264_encoder_param[]={
  {"profile",offsetof( x264_encoder,profile),"uint32_t",ADM_param_uint32_t},
  {"CABAC",offsetof( x264_encoder,CABAC),"bool",ADM_param_bool},
  {"Trellis",offsetof( x264_encoder,Trellis),"bool",ADM_param_bool},
+ {"usePreset",offsetof( x264_encoder,usePreset),"bool",ADM_param_bool},
+ {"useTune",offsetof( x264_encoder,useTune),"bool",ADM_param_bool},
+ {"preset",offsetof( x264_encoder,preset),"uint32_t",ADM_param_uint32_t},
+ {"tune",offsetof( x264_encoder,tune),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

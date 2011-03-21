@@ -47,13 +47,35 @@ extern x264_encoder x264Settings;
 */
 bool x264Encoder::setup(void)
 {
-  ADM_info("x264, setting up");
-  
-  firstIdr=true;
-  image=new ADMImageDefault(getWidth(),getHeight());
+  ADM_info("=============x264, setting up==============\n");
   MMSET(param);
   x264_param_default( &param);
   param.pf_log=logger;
+  // load preset/tune if any..
+  const char *preset=NULL;
+  const char *tune=NULL;
+  if(true==x264Settings.usePreset)
+  {
+       preset=x264_preset_names[x264Settings.preset];
+  }       
+  if(true==x264Settings.useTune)
+  {
+       tune=x264_tune_names[x264Settings.tune];
+  }       
+  if(tune || preset)
+  {
+      ADM_info("Loading preset %s\n",preset);
+      ADM_info("Loading tune %s\n",tune);
+      if(x264_param_default_preset( &param, preset, tune ))
+      {
+          ADM_error("Cannot set preset/tune\n");
+      }
+
+  }
+
+
+  firstIdr=true;
+  image=new ADMImageDefault(getWidth(),getHeight());
   switch(x264Settings.threads)
   {
     case 0: case 1: case 2:  param.i_threads = x264Settings.threads;break;
@@ -80,90 +102,26 @@ bool x264Encoder::setup(void)
 #define MKPARAM(x,y) {param.x = x264Settings.y;printf("[x264] "#x" = %d\n",param.x);}
 #define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; printf("[x264] "#x" = %.2f\n",param.x);}
 
-#if 0
-  if (zparam->AR_AsInput) {
-    param.vui.i_sar_width = video_body->getPARWidth();
-    param.vui.i_sar_height = video_body->getPARHeight();
-  } else {
-    MKPARAM(vui.i_sar_width , AR_Num);	// FIXME
-    MKPARAM(vui.i_sar_height, AR_Den);
-  }
-  if(zparam->idc)
-  {
-    MKPARAM(i_level_idc,idc);
-    printf("[x264] *** Forcing level = %d\n",param.i_level_idc);
-  }
-  // KeyframeBoost ?
-  // BframeReduction ?
-  // PartitionDecision ?
-  MKPARAMF(rc.f_qcompress,BitrateVariability);
-
-  // update for Sadarax dialog
-  MKPARAM(rc.i_vbv_max_bitrate,vbv_max_bitrate);
-  MKPARAM(rc.i_vbv_buffer_size,vbv_buffer_size);
-  MKPARAMF(rc.f_vbv_buffer_init,vbv_buffer_init);
-  
-  MKPARAM (analyse.b_fast_pskip,fastPSkip);
-  MKPARAM (analyse.b_dct_decimate,DCTDecimate);
-  MKPARAM (b_interlaced,interlaced);
-      
-  //
-  MKPARAM(analyse.i_direct_mv_pred,DirectMode+1);
-  MKPARAM(rc.i_qp_min,MinQp);
-  MKPARAM(rc.i_qp_max,MaxQp);
-  MKPARAM(rc.i_qp_step,QpStep);
-  MKPARAM(i_scenecut_threshold,SceneCut);
-  MKPARAM(i_bframe_bias,Bias);
-  MKPARAM( b_bframe_pyramid,BasReference );
-  MKPARAM(analyse. b_bidir_me,BidirME );
-  MKPARAM( b_bframe_adaptive, Adaptative);
-  MKPARAM( analyse.b_weighted_bipred, Weighted);
-  MKPARAM(analyse.i_subpel_refine,PartitionDecision+1);
-#endif
   MKPARAM(i_frame_reference,MaxRefFrames);
   
   MKPARAM(i_keyint_min,MinIdr);
   MKPARAM(i_keyint_max,MaxIdr);
   MKPARAM(i_bframe,MaxBFrame);
 
-  MKPARAM( b_cabac , CABAC);
-  MKPARAM( analyse.i_trellis, Trellis);
-
-#if 0  
-#define MIN_RDO 6
-  if(zparam->PartitionDecision+1>=MIN_RDO)
+  if(false==x264Settings.usePreset)
   {
-      int rank,parity;
-      rank=((zparam->PartitionDecision+1-MIN_RDO)>>1)+MIN_RDO;
-      parity=(zparam->PartitionDecision+1-MIN_RDO)&1;
-      
-      param.analyse.i_subpel_refine=rank;
-      param.analyse.b_bframe_rdo=parity;
+    MKPARAM( b_cabac , CABAC);
+    MKPARAM( analyse.i_trellis, Trellis);
+    MKPARAM(analyse.b_transform_8x8,_8x8);
+    #define MES(x,y) if(x264Settings.x) {param.analyse.inter |=X264_ANALYSE_##y;printf("[x264] "#x" is on\n");}
+    param.analyse.inter=0;
+    MES(  _8x8P,  PSUB16x16);
+    MES(  _8x8B,  BSUB16x16);
+    MES(  _4x4,   PSUB8x8);
+    MES(  _8x8I,  I8x8);
+    MES(  _4x4I,  I4x4);
   }
-  MKPARAM(analyse.b_chroma_me,ChromaME);
-  MKPARAM(b_deblocking_filter,DeblockingFilter);
-  MKPARAM(i_deblocking_filter_alphac0,Strength );
-  MKPARAM(i_deblocking_filter_beta, Threshold);
-  
-  MKPARAM(analyse.i_me_method,Method);
-  MKPARAM(analyse.i_me_range,Range);
-  MKPARAM(i_bframe_bias,Bias);
-  MKPARAM( b_bframe_pyramid,BasReference );
-  MKPARAM(analyse. b_bidir_me,BidirME );
-  MKPARAM( b_bframe_adaptive, Adaptative);
-  MKPARAM( analyse.b_weighted_bipred, Weighted);
-#endif
-//  MKPARAM(PartitionDecision,Method);
-  MKPARAM(analyse.b_transform_8x8,_8x8);
-  
-#define MES(x,y) if(x264Settings.x) {param.analyse.inter |=X264_ANALYSE_##y;printf("[x264] "#x" is on\n");}
-  param.analyse.inter=0;
-  MES(  _8x8P,  PSUB16x16);
-  MES(  _8x8B,  BSUB16x16);
-  MES(  _4x4,   PSUB8x8);
-  MES(  _8x8I,  I8x8);
-  MES(  _4x4I,  I4x4);
-
+    
 
   param.i_log_level=X264_LOG_INFO; //INFO;
   

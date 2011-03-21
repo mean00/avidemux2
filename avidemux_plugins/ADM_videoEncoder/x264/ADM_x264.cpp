@@ -69,7 +69,11 @@ x264_encoder x264Settings=
    2, //uint32_t MaxBFrame;
    30, //uint32_t profile;
    true, //bool CABAC;
-   true, //bool Trellis;     
+   true, //bool Trellis;  
+   true, // use preset
+   true, // use tune
+   5, // Preset   (medium)
+   0, // Film
     
 };
 /**

@@ -17,6 +17,10 @@ typedef struct {
    uint32_t profile;
    bool CABAC;
    bool Trellis;
+   bool usePreset;
+   bool useTune;
+   uint32_t preset;
+   uint32_t tune;
 }x264_encoder;
 #endif //x264_encoder
 //EOF
