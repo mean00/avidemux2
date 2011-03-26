@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Take a .conf file and generate :
 # 1- Couple header   (.h)
 # 2- Couple template (_desc.cpp)
