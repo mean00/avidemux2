@@ -61,6 +61,7 @@ x264Dialog::x264Dialog(QWidget *parent, void *param)
 #define MK_CHECKBOX(x,y) ui.x->setChecked(myCopy.y)
 #define MK_UINT(x,y)  ui.x->setValue(myCopy.y)
 #define DISABLE(x) ui.x->setEnabled(false);
+#define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
 bool x264Dialog::upload(void)
 {
           
@@ -83,7 +84,11 @@ bool x264Dialog::upload(void)
           MK_UINT(maxBFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
+          MK_UINT(meSpinBox,analyze.subpel_refine);
 
+          MK_MENU(meMethodComboBox,analyze.me_method);
+          MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
+          MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
 
         switch(ENCODING(mode))
         {
@@ -119,16 +124,33 @@ bool x264Dialog::upload(void)
           DISABLE(loopFilterCheckBox);
           DISABLE(openGopCheckBox);
           DISABLE(interlacedCheckBox);
-          DISABLE(BFrameBiasSpinBox);
           DISABLE(intraRefreshCheckBox);
           DISABLE(noiseReductionSpinBox);
           DISABLE(mbTreeCheckBox);
+          DISABLE(mvRangeSpinBox);
+          DISABLE(mvLengthSpinBox);
+          DISABLE(minThreadBufferSpinBox);
+          DISABLE(predictModeComboBox);
+          DISABLE(constrainedIntraCheckBox);
+          DISABLE(IFrameThresholdSpinBox);
+          DISABLE(intraLumaSpinBox);
+          DISABLE(interLumaSpinBox);
+          DISABLE(groupBox_14);
+          DISABLE(tab_7);
+          DISABLE(tab_6);
+          DISABLE(tab_9);
+          DISABLE(tab);
+          DISABLE(maxCrfCheckBox);
+          DISABLE(lookaheadSpinBox);
+          DISABLE(psychoRdoSpinBox);
           return true;
 }
 #undef MK_CHECKBOX
 #undef MK_UINT
-#define MK_CHECKBOX(x,y) myCopy.y=ui.x->isChecked()
-#define MK_UINT(x,y)  myCopy.y=ui.x->value()
+#undef MK_MENU
+#define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked()
+#define MK_UINT(x,y)        myCopy.y=ui.x->value()
+#define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
 bool x264Dialog::download(void)
 {
           MK_CHECKBOX(fastFirstPassCheckBox,analyze.fast_pskip);
@@ -150,6 +172,12 @@ bool x264Dialog::download(void)
           MK_UINT(maxBFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
+          MK_UINT(meSpinBox,analyze.subpel_refine);
+          MK_UINT(BFrameBiasSpinBox,i_bframe_bias);
+
+          MK_MENU(meMethodComboBox,analyze.me_method);
+          MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
+          MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
 
           switch(ui.encodingModeComboBox->currentIndex())
           {

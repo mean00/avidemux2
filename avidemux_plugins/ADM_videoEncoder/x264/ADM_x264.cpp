@@ -42,6 +42,7 @@ static void        logger( void *cooki, int i_level, const char *psz, va_list li
 
 x264_encoder x264Settings=
 {
+   { // General
     {
     COMPRESS_AQ, //COMPRESSION_MODE  mode;
     20,              // uint32_t          qz;           /// Quantizer
@@ -55,8 +56,43 @@ x264_encoder x264Settings=
         0*ADM_ENC_CAP_2PASS_BR+
         ADM_ENC_CAP_GLOBAL+
         0*ADM_ENC_CAP_SAME
-    }
-    
+    },
+    99, // Threads : auto
+    },
+    31, // Level
+    {1,1}, // Sar width/height
+    2, //uint32_t MaxRefFrames;
+    100, // uint32_t MinIdr;
+    500, // uint32_t MaxIdr;
+    2, //uint32_t MaxBFrame;
+    0, //uint32_t i_bframe_adaptative;
+    0, //uint32_t i_bframe_bias;
+    0, //uint32_t i_bframe_pyramid;
+    0, //bool b_deblocking_filter;
+    0, //int32_t i_deblocking_filter_alphac0;
+    0, //int32_t i_deblocking_filter_beta;
+    true, //bool cabac;
+    false, //bool interlaced;
+    true, //    bool b_8x8;
+    false, //    bool b_i4x4;
+    false, //    bool b_i8x8;
+    false, //    bool b_p8x8;
+    false, //    bool b_p16x16;
+    false, //    bool b_b16x16;
+    0, //    uint32_t weighted_pred;
+    0, //    bool weighted_bipred;
+    0, //    uint32_t direct_mv_pred;
+    0, //    uint32_t chroma_offset;
+    0, //    uint32_t me_method;
+    7, //    uint32_t subpel_refine;
+    false, //    bool chroma_me;
+    false, //    bool mixed_references;
+    1, //    uint32_t trellis;
+    true, //    bool fast_pskip;
+    false, //    bool dct_decimate;
+    0,//    uint32_t noise_reduction;
+    true,//    bool psy;
+//    
 };
 /**
         \fn x264Encoder

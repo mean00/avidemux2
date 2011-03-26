@@ -26,7 +26,7 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("x264",
                                "Mpeg4 AVC (x264)",
                                "x264 based mpeg4 AVC Encoder (c) 2010 Mean/Gruntster",
                                 x264Configure, // No configuration
-                                ADM_UI_ALL,
+                                ADM_UI_TYPE_BUILD,
                                 1,0,0,
                                 x264_encoder_param, // conf template
                                 &x264Settings // conf var
