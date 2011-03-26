@@ -115,14 +115,15 @@ while(1):
             writeHeaderHead()
             gotName=True
         else:  # else we have structure inside structure
-            outputHeader("struct "+structs+" {")
+            #outputHeader("struct "+structs+" {")
+            outputHeader("struct  {")
             nested.append(structs)
             fullPath=".".join(nested)
     elif(line.find(r'}')!=-1):
         if(len(nested)!=0):
             last=nested.pop()
-            #outputHeader("}"+str(last)+";")
-            outputHeader("};")
+            outputHeader("}"+str(last)+";")
+            #outputHeader("};")
         fullPath=".".join(nested)
     elif(line.find(':')!=-1):
         if(gotName==False):
