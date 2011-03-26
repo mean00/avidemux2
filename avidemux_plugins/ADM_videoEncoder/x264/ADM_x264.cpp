@@ -29,15 +29,6 @@
 #define avsnprintf vsnprintf
 #endif
 
-extern "C" 
-{
-static void        logger( void *cooki, int i_level, const char *psz, va_list list)
-{
-    static char buffer[2048];
-    avsnprintf(buffer,2048,psz,list);
-    aprintf(">>%s\n",buffer);
-}
-}
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 x264_encoder x264Settings=

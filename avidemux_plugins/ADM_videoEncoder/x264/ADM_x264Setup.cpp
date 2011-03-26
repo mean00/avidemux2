@@ -22,11 +22,11 @@
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #if 1
-#define aprintf(...) {}
-#define avsnprintf(...) {}
+    #define aprintf(...) {}
+    #define avsnprintf(...) {}
 #else
-#define aprintf printf
-#define avsnprintf vsnprintf
+    #define aprintf ADM_info
+    #define avsnprintf vsnprintf
 #endif
 static const char *TrueFalse[2]={"False","True"};
 static void dumpx264Setup(x264_param_t *param);
@@ -66,14 +66,14 @@ bool x264Encoder::setup(void)
   param.i_width = getWidth();
   param.i_height = getHeight();
   param.i_csp = X264_CSP_I420;
-  param.i_log_level=X264_LOG_INFO; //INFO;
+  param.i_log_level=X264_LOG_INFO; //DEBUG; //INFO;
  
     //Framerate
     int n,d;    
     uint64_t f=source->getInfo()->frameIncrement;
     usSecondsToFrac(f,&n,&d);
-    param.i_fps_num = n;
-    param.i_fps_den = d;
+    param.i_fps_num = d;
+    param.i_fps_den = n;
     if(!x264Settings.MaxBFrame)  encoderDelay=0;
     else    
     {
@@ -104,9 +104,9 @@ bool x264Encoder::setup(void)
 #undef MKPARAM
 #undef MKPARAMF
 #undef MKPARAMB
-#define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyze.x);}
-#define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y / 100; aprintf("[x264] analyse."#x" = %.2f\n",param.analyze.x);}
-#define MKPARAMB(x,y) {param.analyse.x = (float)x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyze.x&1]);}
+#define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyse.x);}
+#define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y / 100; aprintf("[x264] analyse."#x" = %.2f\n",param.analyse.x);}
+#define MKPARAMB(x,y) {param.analyse.x = (float)x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyse.x&1]);}
 #define MKFLAGS(fieldout,fieldin,mask) {if(x264Settings.analyze.fieldin) param.analyse.fieldout|=mask;}
    MKPARAMB(b_transform_8x8,b_8x8)
    MKPARAMB(b_weighted_bipred,weighted_bipred) 
@@ -145,7 +145,9 @@ bool x264Encoder::setup(void)
 
       case COMPRESS_CBR:
                         param.rc.i_rc_method = X264_RC_ABR;
-                        param.rc.i_bitrate =  x264Settings.general.params.bitrate*1000;
+                        param.rc.i_bitrate =  x264Settings.general.params.bitrate;
+                        param.rc.i_qp_constant = 0;
+                        param.rc.f_rf_constant = 0;
                         break;
         default:
                         GUI_Error_HIG("Not coded","this mode has notbeen implemented\n");
@@ -158,6 +160,10 @@ bool x264Encoder::setup(void)
       param.b_repeat_headers=0;
   else
       param.b_repeat_headers=1;
+
+  // We do pseudo cfr ...
+  param.b_vfr_input=0;
+
   dumpx264Setup(&param);
   handle = x264_encoder_open (&param);
   if (!handle)
@@ -204,6 +210,10 @@ void dumpx264Setup(x264_param_t *param)
 
     PI(i_fps_num);
     PI(i_fps_den);
+
+    PI(i_timebase_num);
+    PI(i_timebase_den);
+
         
     PI(i_frame_reference);
     PI(i_keyint_max);
@@ -258,6 +268,8 @@ void dumpx264Setup(x264_param_t *param)
     PI(b_aud);
     PI(b_repeat_headers);
     PI(b_annexb);
+    PI(b_vfr_input);
+    
 
     PI(i_sps_id);
 
