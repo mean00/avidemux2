@@ -161,7 +161,6 @@ endif(DO_CLI)
 IF(DO_COMMON)
     ADD_SUBDIRECTORY(ADM_audioDecoders)
     ADD_SUBDIRECTORY(ADM_audioDevices)
-    ADD_SUBDIRECTORY(ADM_videoEncoder)
     ADD_SUBDIRECTORY(ADM_videoDecoder)
     ADD_SUBDIRECTORY(ADM_audioEncoders)
     ADD_SUBDIRECTORY(ADM_demuxers)
@@ -169,6 +168,7 @@ IF(DO_COMMON)
     ADD_SUBDIRECTORY(ADM_autoScrips)
 ENDIF(DO_COMMON)
 
+ADD_SUBDIRECTORY(ADM_videoEncoder)
 ADD_SUBDIRECTORY(ADM_videoFilters6)
 
 ########################################
