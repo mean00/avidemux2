@@ -55,25 +55,7 @@ x264_encoder x264Settings=
         0*ADM_ENC_CAP_2PASS_BR+
         ADM_ENC_CAP_GLOBAL+
         0*ADM_ENC_CAP_SAME
-    },
-    2, // uint32_t MaxRefFrames;
-    10, //uint32_t MinIdr;
-    150, //uint32_t MaxIdr;
-    99,  // threads (auto)
-   true, //bool _8x8;
-   true, //bool _8x8P;
-   true, //bool _8x8B;
-   true, //bool _4x4;
-   true, //bool _8x8I;
-   true, //bool _4x4I;
-   2, //uint32_t MaxBFrame;
-   30, //uint32_t profile;
-   true, //bool CABAC;
-   true, //bool Trellis;  
-   true, // use preset
-   true, // use tune
-   5, // Preset   (medium)
-   0, // Film
+    }
     
 };
 /**
@@ -227,7 +209,7 @@ again:
 */
 bool         x264Encoder::isDualPass(void) 
 {
-    if(x264Settings.params.mode==COMPRESS_2PASS || x264Settings.params.mode==COMPRESS_2PASS_BITRATE ) return true;
+    if(x264Settings.general.params.mode==COMPRESS_2PASS || x264Settings.general.params.mode==COMPRESS_2PASS_BITRATE ) return true;
     return false;
 
 }
@@ -324,5 +306,10 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
         return true;
 }
 
+extern bool x264_ui(x264_encoder *settings);
+bool         x264Configure(void)
+{
+    return x264_ui(&x264Settings);
+}
 // EOF
 

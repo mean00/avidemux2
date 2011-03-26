@@ -3,8 +3,8 @@
                           \brief Front end for x264 Mpeg4 asp encoder
                              -------------------
     
-    copyright            : (C) 2002/2009 by mean/gruntster
-    email                : fixounet@free.fr
+    copyright            : (C) 2002/2011 by mean/gruntster
+    email                : fixounet@free.fr/gruntster@razorbyte.au
  ***************************************************************************/
 
 /***************************************************************************
@@ -28,6 +28,7 @@
 #define aprintf printf
 #define avsnprintf vsnprintf
 #endif
+static const char *TrueFalse[2]={"False","True"};
 static void dumpx264Setup(x264_param_t *param);
 extern "C" 
 {
@@ -51,40 +52,21 @@ bool x264Encoder::setup(void)
   MMSET(param);
   x264_param_default( &param);
   param.pf_log=logger;
-  // load preset/tune if any..
-  const char *preset=NULL;
-  const char *tune=NULL;
-  if(true==x264Settings.usePreset)
-  {
-       preset=x264_preset_names[x264Settings.preset];
-  }       
-  if(true==x264Settings.useTune)
-  {
-       tune=x264_tune_names[x264Settings.tune];
-  }       
-  if(tune || preset)
-  {
-      ADM_info("Loading preset %s\n",preset);
-      ADM_info("Loading tune %s\n",tune);
-      if(x264_param_default_preset( &param, preset, tune ))
-      {
-          ADM_error("Cannot set preset/tune\n");
-      }
-
-  }
-
-
   firstIdr=true;
   image=new ADMImageDefault(getWidth(),getHeight());
-  switch(x264Settings.threads)
+
+
+  // Threads..
+  switch(x264Settings.general.threads)
   {
-    case 0: case 1: case 2:  param.i_threads = x264Settings.threads;break;
+    case 0: case 1: case 2:  param.i_threads = x264Settings.general.threads;break;
     case 99:break; //auto
     default: ADM_error("UNKNOWN NB OF THREADS\n");break;
   }
   param.i_width = getWidth();
   param.i_height = getHeight();
   param.i_csp = X264_CSP_I420;
+  param.i_log_level=X264_LOG_INFO; //INFO;
  
     //Framerate
     int n,d;    
@@ -99,46 +81,71 @@ bool x264Encoder::setup(void)
         else
                 encoderDelay=2*f*(x264Settings.MaxRefFrames-1);
     }
-#define MKPARAM(x,y) {param.x = x264Settings.y;printf("[x264] "#x" = %d\n",param.x);}
-#define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; printf("[x264] "#x" = %.2f\n",param.x);}
-
+#define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
+#define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; aprintf("[x264] "#x" = %.2f\n",param.x);}
+#define MKPARAMB(x,y) {param.x = (float)x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
   MKPARAM(i_frame_reference,MaxRefFrames);
-  
   MKPARAM(i_keyint_min,MinIdr);
   MKPARAM(i_keyint_max,MaxIdr);
   MKPARAM(i_bframe,MaxBFrame);
 
-  if(false==x264Settings.usePreset)
+  MKPARAM(i_bframe_adaptive,i_bframe_adaptative);
+  MKPARAM(i_bframe_bias,i_bframe_bias);
+  MKPARAM(i_bframe_pyramid,i_bframe_pyramid);
+  MKPARAMB(b_deblocking_filter,b_deblocking_filter);
+  if(param.b_deblocking_filter)
   {
-    MKPARAM( b_cabac , CABAC);
-    MKPARAM( analyse.i_trellis, Trellis);
-    MKPARAM(analyse.b_transform_8x8,_8x8);
-    #define MES(x,y) if(x264Settings.x) {param.analyse.inter |=X264_ANALYSE_##y;printf("[x264] "#x" is on\n");}
-    param.analyse.inter=0;
-    MES(  _8x8P,  PSUB16x16);
-    MES(  _8x8B,  BSUB16x16);
-    MES(  _4x4,   PSUB8x8);
-    MES(  _8x8I,  I8x8);
-    MES(  _4x4I,  I4x4);
+    MKPARAM(i_deblocking_filter_alphac0,i_deblocking_filter_alphac0);
+    MKPARAM(i_deblocking_filter_beta,i_deblocking_filter_beta);
   }
-    
+  MKPARAMB(b_cabac,cabac);
+  MKPARAMB(b_interlaced,interlaced);
+  // -------------- analyze------------
+#undef MKPARAM
+#undef MKPARAMF
+#undef MKPARAMB
+#define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyze.x);}
+#define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y / 100; aprintf("[x264] analyse."#x" = %.2f\n",param.analyze.x);}
+#define MKPARAMB(x,y) {param.analyse.x = (float)x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyze.x&1]);}
+#define MKFLAGS(fieldout,fieldin,mask) {if(x264Settings.analyze.fieldin) param.analyse.fieldout|=mask;}
+   MKPARAMB(b_transform_8x8,b_8x8)
+   MKPARAMB(b_weighted_bipred,weighted_bipred) 
+   MKPARAM (i_weighted_pred,weighted_pred) 
+   MKPARAM (i_direct_mv_pred,direct_mv_pred) 
+   MKPARAM (i_me_method,me_method) 
+   MKPARAM (i_subpel_refine,subpel_refine) 
+   MKPARAMB(b_chroma_me,chroma_me) 
+   MKPARAMB(b_mixed_references,mixed_references) 
+   MKPARAM (i_trellis,trellis) 
+   MKPARAMB(b_fast_pskip,fast_pskip) 
+   MKPARAMB(b_dct_decimate,dct_decimate) 
+   MKPARAMB(b_psy,psy) 
+   
+   MKFLAGS(inter,b_i4x4,X264_ANALYSE_I4x4)
+   MKFLAGS(inter,b_i8x8,X264_ANALYSE_I8x8)
+   MKFLAGS(inter,b_p16x16,X264_ANALYSE_PSUB16x16)
+   MKFLAGS(inter,b_p8x8,X264_ANALYSE_PSUB8x8)
+   MKFLAGS(inter,b_b16x16,X264_ANALYSE_BSUB16x16)
 
-  param.i_log_level=X264_LOG_INFO; //INFO;
+   //---------------- ratecontrol -------------------
+    // TODO!
+
+  // -------------------------
   
-  
-  switch(x264Settings.params.mode)
+
+  switch(x264Settings.general.params.mode)
   {
       
       case COMPRESS_AQ: param.rc.i_rc_method = X264_RC_CRF;
-                        param.rc.f_rf_constant = x264Settings.params.qz;
+                        param.rc.f_rf_constant = x264Settings.general.params.qz;
                         break;
       case COMPRESS_CQ: param.rc.i_rc_method = X264_RC_CQP;
-                        param.rc.i_qp_constant = x264Settings.params.qz;
+                        param.rc.i_qp_constant = x264Settings.general.params.qz;
                         break;
 
       case COMPRESS_CBR:
                         param.rc.i_rc_method = X264_RC_ABR;
-                        param.rc.i_bitrate =  x264Settings.params.bitrate*1000;
+                        param.rc.i_bitrate =  x264Settings.general.params.bitrate*1000;
                         break;
         default:
                         GUI_Error_HIG("Not coded","this mode has notbeen implemented\n");
@@ -287,4 +294,5 @@ void dumpx264Setup(x264_param_t *param)
 
 }
 // EOF
+
 
