@@ -120,8 +120,9 @@ while(1):
             fullPath=".".join(nested)
     elif(line.find(r'}')!=-1):
         if(len(nested)!=0):
-            nested.pop()
-            outputHeader("}"+str(structName)+";")
+            last=nested.pop()
+            #outputHeader("}"+str(last)+";")
+            outputHeader("};")
         fullPath=".".join(nested)
     elif(line.find(':')!=-1):
         if(gotName==False):
