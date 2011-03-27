@@ -83,7 +83,7 @@ bool x264Encoder::setup(void)
     }
 #define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
 #define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; aprintf("[x264] "#x" = %.2f\n",param.x);}
-#define MKPARAMB(x,y) {param.x = (float)x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
+#define MKPARAMB(x,y) {param.x = x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
   MKPARAM(i_frame_reference,MaxRefFrames);
   MKPARAM(i_keyint_min,MinIdr);
   MKPARAM(i_keyint_max,MaxIdr);
@@ -106,7 +106,7 @@ bool x264Encoder::setup(void)
 #undef MKPARAMB
 #define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyse.x);}
 #define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y / 100; aprintf("[x264] analyse."#x" = %.2f\n",param.analyse.x);}
-#define MKPARAMB(x,y) {param.analyse.x = (float)x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyse.x&1]);}
+#define MKPARAMB(x,y) {param.analyse.x = x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyse.x&1]);}
 #define MKFLAGS(fieldout,fieldin,mask) {if(x264Settings.analyze.fieldin) param.analyse.fieldout|=mask;}
    MKPARAMB(b_transform_8x8,b_8x8)
    MKPARAMB(b_weighted_bipred,weighted_bipred) 
@@ -120,7 +120,7 @@ bool x264Encoder::setup(void)
    MKPARAMB(b_fast_pskip,fast_pskip) 
    MKPARAMB(b_dct_decimate,dct_decimate) 
    MKPARAMB(b_psy,psy) 
-   
+
    MKFLAGS(inter,b_i4x4,X264_ANALYSE_I4x4)
    MKFLAGS(inter,b_i8x8,X264_ANALYSE_I8x8)
    MKFLAGS(inter,b_p16x16,X264_ANALYSE_PSUB16x16)
@@ -128,8 +128,15 @@ bool x264Encoder::setup(void)
    MKFLAGS(inter,b_b16x16,X264_ANALYSE_BSUB16x16)
 
    //---------------- ratecontrol -------------------
-    // TODO!
+#undef MKPARAM
+#undef MKPARAMF
+#undef MKPARAMB
+#define MKPARAM(x,y)  {param.rc.x = x264Settings.ratecontrol.y;aprintf("[x264] rc."#x" = %d\n",param.rc.x);}
+#define MKPARAMF(x,y) {param.rc.x = (float)x264Settings.ratecontrol.y / 100; aprintf("[x264] rc."#x" = %.2f\n",param.rc.x);}
+#define MKPARAMB(x,y) {param.rc.x = x264Settings.ratecontrol.y ;aprintf("[x264] rc."#x" = %s\n",TrueFalse[param.rc.x&1]);}
 
+    MKPARAMB(b_mb_tree,mb_tree);
+    MKPARAM(i_lookahead,lookahead);
   // -------------------------
   
 
@@ -289,7 +296,7 @@ void dumpx264Setup(x264_param_t *param)
     RI(i_qp_max);
     RI(i_qp_step);
 
-
+   
     RI(i_bitrate);
     RI(i_qp_constant);
     RF(f_rate_tolerance);

@@ -50,6 +50,7 @@ x264Dialog::x264Dialog(QWidget *parent, void *param)
         lastBitrate =   ENCODING(bitrate);
         lastVideoSize = ENCODING(finalsize);
 
+        ui.tabWidget->setCurrentIndex(0);
         upload();
 
         
@@ -86,9 +87,15 @@ bool x264Dialog::upload(void)
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(meSpinBox,analyze.subpel_refine);
 
+          MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
+          MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
+          
+
           MK_MENU(meMethodComboBox,analyze.me_method);
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
+
+          MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
 
         switch(ENCODING(mode))
         {
@@ -126,11 +133,9 @@ bool x264Dialog::upload(void)
           DISABLE(interlacedCheckBox);
           DISABLE(intraRefreshCheckBox);
           DISABLE(noiseReductionSpinBox);
-          DISABLE(mbTreeCheckBox);
           DISABLE(mvRangeSpinBox);
           DISABLE(mvLengthSpinBox);
           DISABLE(minThreadBufferSpinBox);
-          DISABLE(predictModeComboBox);
           DISABLE(constrainedIntraCheckBox);
           DISABLE(IFrameThresholdSpinBox);
           DISABLE(intraLumaSpinBox);
@@ -141,7 +146,6 @@ bool x264Dialog::upload(void)
           DISABLE(tab_9);
           DISABLE(tab);
           DISABLE(maxCrfCheckBox);
-          DISABLE(lookaheadSpinBox);
           DISABLE(psychoRdoSpinBox);
           return true;
 }
@@ -178,6 +182,11 @@ bool x264Dialog::download(void)
           MK_MENU(meMethodComboBox,analyze.me_method);
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
+
+          MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
+          MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
+
+          MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
 
           switch(ui.encodingModeComboBox->currentIndex())
           {
