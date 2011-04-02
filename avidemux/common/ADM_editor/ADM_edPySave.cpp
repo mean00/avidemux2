@@ -44,13 +44,20 @@
 static void dumpConf(FILE *fd,CONFcouple *c)
 {
  if(!c) return;
-        
+    int count=0;    
     uint32_t n=c->getSize();
     for(int j=0;j<n;j++)
     {
         char *name,*value;
         c->getInternalName(j,&name,&value);
         qfprintf(fd,",\"%s=%s\"",name,value);
+        // tinyPy does not like line > 1024 chars
+        if(count>=20)
+        {
+            qfprintf(fd,"\\\n");
+            count=0;
+        }
+        count++;
     }
     delete c;
     c=NULL;
