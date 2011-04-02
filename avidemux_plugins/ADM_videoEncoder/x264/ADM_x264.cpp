@@ -31,6 +31,8 @@
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
+bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
+
 x264_encoder x264Settings=
 {
    { // General
@@ -336,7 +338,9 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
 extern bool x264_ui(x264_encoder *settings);
 bool         x264Configure(void)
 {
-    return x264_ui(&x264Settings);
+bool r;
+    r=x264_ui(&x264Settings);
+    return r;
 }
 // EOF
 

@@ -14,6 +14,7 @@
 #include "Q_x264.h"
 
 static x264_encoder myCopy; // ugly...
+extern bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
 
 /**
     \fn x264_ui
