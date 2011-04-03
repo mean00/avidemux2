@@ -11,9 +11,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include "ADM_default.h"
+
 #include "ADM_coreJson.h"
+extern "C"
+{
 #include "libjson.h"
+}
 #define COOKIE ((JSONNODE *)cookie)
 /**
 
@@ -125,10 +130,11 @@ bool admJson::dumpToFile(const char *file)
     fclose(f);
     return true;
 }
+//****************************************************************
 /**
 
 */
-bool admJson::scan( void *xnode,string name)
+bool admJsonToCouple::scan( void *xnode,string name)
 {
     JSONNODE *node=(JSONNODE *)xnode;
    if (!node){
@@ -174,7 +180,7 @@ bool admJson::scan( void *xnode,string name)
     \brief construct a list of key/value from a json file
 */
 
-CONFcouple *admJson::readFromFile(const char *file)
+CONFcouple *admJsonToCouple::readFromFile(const char *file)
 {
         FILE *f=fopen(file,"rt");
         if(!f)

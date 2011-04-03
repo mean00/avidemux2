@@ -24,17 +24,11 @@
 class admJson
 {
 protected:
-        typedef struct  
-            {
-                string key;
-                string value;
-            }keyVal;
-         vector <keyVal> readItems;
-
+       
          vector <void *>cookies;
          vector <string >nested;
          void *cookie;
-        bool scan(void *node,string name);
+        
 public:
             admJson();
             ~admJson();
@@ -52,9 +46,28 @@ public:
 
         bool dumpToFile(const char *file);
 
-        CONFcouple *readFromFile(const char *fileName);
+      
       
 };
+/**
+    \class admJsonToCouple
+    \brief create conf couple from a json file
+*/
+class admJsonToCouple
+{
+protected:
+        typedef struct  
+            {
+                string key;
+                string value;
+            }keyVal;
+         vector <keyVal> readItems;
+         bool scan(void *node,string name);
 
+public:
+        admJsonToCouple() {}
+        ~admJsonToCouple() {}
+        CONFcouple *readFromFile(const char *fileName);
 
+};
 #endif
