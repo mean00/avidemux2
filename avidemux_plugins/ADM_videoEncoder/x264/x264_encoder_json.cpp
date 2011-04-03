@@ -3,7 +3,6 @@
 #include "ADM_paramList.h"
 #include "ADM_coreJson/include/ADM_coreJson.h"
 #include "x264_encoder.h"
-extern const ADM_paramList x264_encoder_param[];
 bool  x264_encoder_jserialize(const char *file, const x264_encoder *key){
 admJson json;
 json.addNode("general");
@@ -67,8 +66,8 @@ json.addUint32("lookahead",key->ratecontrol.lookahead);
 json.endNode();
 return json.dumpToFile(file);
 };
-bool  x264_encoder_jdeserialize(const char *file, ADM_paramList *tmpl,x264_encoder *key){
-admJson json;
+bool  x264_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x264_encoder *key){
+admJsonToCouple json;
 CONFcouple *c=json.readFromFile(file);
 if(!c) {ADM_error("Cannot read json file");return false;}
 bool r= ADM_paramLoadPartial(c,tmpl,key);

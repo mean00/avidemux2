@@ -34,6 +34,12 @@ private slots:
         void quantiserSlider_valueChanged(int value);
         void quantiserSpinBox_valueChanged(int value);
         void targetRateControlSpinBox_valueChanged(int value);
+	
+        void configurationComboBox_currentIndexChanged(int index);
+        void saveAsButton_pressed(void);
+        void deleteButton_pressed(void);
+
+
 #if 0
         void maxCrfSlider_valueChanged(int value);
         void maxCrfSpinBox_valueChanged(int value);

@@ -12,10 +12,16 @@
 #include "ADM_encoderConf.h"
 #include "../x264_encoder.h"
 #include "Q_x264.h"
+#include "ADM_paramList.h"
+#include "DIA_coreToolkit.h"
 
 static x264_encoder myCopy; // ugly...
 extern bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
-
+extern bool  x264_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x264_encoder *key);
+extern "C" 
+{
+extern const ADM_paramList x264_encoder_param[];
+}
 /**
     \fn x264_ui
     \brief hook to enter UI specific dialog
@@ -52,6 +58,11 @@ x264Dialog::x264Dialog(QWidget *parent, void *param)
         lastVideoSize = ENCODING(finalsize);
 
         ui.tabWidget->setCurrentIndex(0);
+        connect(ui.deleteButton, SIGNAL(pressed()), this, SLOT(deleteButton_pressed()));
+        connect(ui.saveAsButton, SIGNAL(pressed()), this, SLOT(saveAsButton_pressed()));
+        connect(ui.configurationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(configurationComboBox_currentIndexChanged(int)));
+
+
         upload();
 
         
@@ -288,5 +299,104 @@ void x264Dialog::mbTreeCheckBox_toggled(bool checked)
 	}
 }
 #endif
+
+/**
+
+*/
+
+void x264Dialog::configurationComboBox_currentIndexChanged(int index)
+{
+#if 0
+	bool origDisableGenericSlots = disableGenericSlots;
+
+	disableGenericSlots = true;
+
+	if (index == 0)		// default
+	{
+		ui.deleteButton->setEnabled(false);
+
+		x264Options defaultOptions;
+		vidEncOptions *defaultEncodeOptions = defaultOptions.getEncodeOptions();
+
+		loadSettings(defaultEncodeOptions, &defaultOptions);
+
+		delete defaultEncodeOptions;
+	}
+	else if (index == 1)	// custom
+		ui.deleteButton->setEnabled(false);
+	else
+	{
+		PluginConfigType configType = (PluginConfigType)ui.configurationComboBox->itemData(index).toInt();
+
+		ui.deleteButton->setEnabled(configType == PLUGIN_CONFIG_USER);
+
+		x264Options options;
+		vidEncOptions *encodeOptions;
+
+		options.setPresetConfiguration(ui.configurationComboBox->itemText(index).toUtf8().constData(), configType);
+
+		if (options.loadPresetConfiguration())
+		{
+			encodeOptions = options.getEncodeOptions();
+
+			loadSettings(encodeOptions, &options);
+
+			delete encodeOptions;
+		}
+		else
+			ui.configurationComboBox->setCurrentIndex(0);
+	}
+
+	disableGenericSlots = origDisableGenericSlots;
+#else
+    GUI_Error_HIG("No","This function is not implemented");
+#endif
+
+}
+/**
+
+*/
+
+void x264Dialog::saveAsButton_pressed(void)
+{
+    const char *out="/tmp/foo.x264";
+    download();
+    if(false==x264_encoder_jserialize(out,&myCopy))
+    {
+        GUI_Error_HIG("Error","Cannot save preset");
+        ADM_error("Cannot write to %s\n",out);
+    }
+}
+/**
+
+*/
+void x264Dialog::deleteButton_pressed(void)
+{
+#if 0
+	x264Options options;
+	char *configDir = options.getUserConfigDirectory();
+	QString configFileName = QFileInfo(QString(configDir), ui.configurationComboBox->currentText() + ".xml").filePath();
+	QFile configFile(configFileName);
+
+	delete [] configDir;
+
+	if (GUI_Question(tr("Are you sure you wish to delete the selected configuration?").toUtf8().constData()) && configFile.exists())
+	{
+		disableGenericSlots = true;
+		configFile.remove();
+		ui.configurationComboBox->removeItem(ui.configurationComboBox->currentIndex());
+		disableGenericSlots = false;
+		ui.configurationComboBox->setCurrentIndex(0);	// default
+	}
+#else
+    const char *out="/tmp/foo.x264";
+     if(false==x264_encoder_jdeserialize(out,x264_encoder_param,&myCopy))
+    {
+        GUI_Error_HIG("Error","Cannot load preset");
+        ADM_error("Cannot read from %s\n",out);
+    }else       
+        upload();
+#endif
+}
 
 

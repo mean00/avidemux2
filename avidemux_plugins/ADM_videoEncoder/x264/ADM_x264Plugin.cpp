@@ -18,7 +18,10 @@
 #include "ADM_default.h"
 #include "ADM_x264.h"
 #include "ADM_coreVideoEncoderInternal.h"
+extern "C"
+{
 #include "x264_encoder_desc.cpp"
+}
 extern bool         x264Configure(void);
 extern x264_encoder x264Settings;
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(x264Encoder);
