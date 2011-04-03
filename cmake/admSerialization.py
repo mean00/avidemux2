@@ -86,7 +86,7 @@ def writeDescHead():
     #outputDesc("#include \"ADM_default.h\"")
     #outputDesc("#include \"ADM_paramList.h\"")
     #outputDesc("#include \""+str(headerFileName)+"\"")
-    outputDesc("const ADM_paramList "+str(structName)+"_param[]={")
+    outputDesc("extern const ADM_paramList "+str(structName)+"_param[]={")
 
 def writeDescFooter():
     outputDesc("{NULL,0,NULL}")
@@ -100,15 +100,15 @@ def writeJsonHead():
     #outputJson("#include \"ADM_encoderConf.h\"")
     outputJson("#include \"ADM_coreJson/include/ADM_coreJson.h\"")
     outputJson("#include \""+str(headerFileName)+"\"")
-    outputJson("extern const ADM_paramList "+str(structName)+"_param[];")
+    #outputJson("extern const ADM_paramList "+str(structName)+"_param[];")
     outputJson("bool  "+str(structName)+"_jserialize(const char *file, const "+str(structName)+" *key){")
     outputJson("admJson json;")
 
 def writeJsonFooter():
     outputJson("return json.dumpToFile(file);")
     outputJson("};")
-    outputJson("bool  "+str(structName)+"_jdeserialize(const char *file, ADM_paramList *tmpl,"+str(structName)+" *key){")
-    outputJson("admJson json;")
+    outputJson("bool  "+str(structName)+"_jdeserialize(const char *file, const ADM_paramList *tmpl,"+str(structName)+" *key){")
+    outputJson("admJsonToCouple json;")
     outputJson("CONFcouple *c=json.readFromFile(file);")
     outputJson("if(!c) {ADM_error(\"Cannot read json file\");return false;}")
     outputJson("bool r= ADM_paramLoadPartial(c,tmpl,key);")
