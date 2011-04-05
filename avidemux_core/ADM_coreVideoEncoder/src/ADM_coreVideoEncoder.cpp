@@ -19,6 +19,7 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_vidMisc.h"
+#include <sstream>
 extern "C" 
 {
 #include "libavcodec/avcodec.h"
@@ -129,4 +130,93 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
     return false;
 
 }
+/**
+
+*/
+static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
+{
+    char *sy=ADM_getInstallRelativePath("ADM_plugins6","","");
+    std::string path=std::string(sy);
+    delete [] sy;
+
+    std::string slash=std::string("/");
+    std::string version;
+    std::stringstream out;
+    out << pluginVersion;
+    version=out.str();
+
+    path=path+slash+std::string("pluginSettings");
+    ADM_mkdir(path.c_str());
+    path=path+slash+std::string(pluginName);
+    ADM_mkdir(path.c_str());
+    path=path+slash+version;
+    ADM_mkdir(path.c_str());
+    rootPath=path;
+    ADM_info("System Plugin preset path : %s\n",rootPath.c_str());
+    return true;
+}
+/**
+    \fn ADM_pluginGetPath
+    \brief returns the user plugin path, containing the presets for that plugin
+*/
+bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
+{
+    std::string path=std::string(ADM_getBaseDir());
+    std::string slash=std::string("/");
+    std::string version;
+    std::stringstream out;
+    out << pluginVersion;
+    version=out.str();
+    path=path+slash+std::string("pluginSettings");
+    ADM_mkdir(path.c_str());
+    path=path+slash+std::string(pluginName);
+    ADM_mkdir(path.c_str());
+    path=path+slash+version;
+    ADM_mkdir(path.c_str());
+    rootPath=path;
+    ADM_info("Plugin preset path : %s\n",rootPath.c_str());
+    return true;
+}
+/**
+    \fn ADM_pluginInstallSystem
+    \brief Copy if needed the system presets to the user presets list
+*/
+bool ADM_pluginInstallSystem(const std::string pluginName,int pluginVersion)
+{
+    std::string sysPath,userPath;
+    ADM_pluginSystemPath(pluginName,pluginVersion,sysPath);
+    ADM_pluginGetPath(pluginName,pluginVersion,userPath);
+    return true;
+}
+/**
+    \fn ADM_pluginGetPath
+    \brief returns the user plugin path, containing the presets for that plugin
+*/
+bool ADM_listFile(const std::string path,const std::string extension,vector <std::string > & listOut)
+{
+#define NB 20
+    char *list[NB];
+    uint32_t nb=0;
+
+    listOut.clear();
+    if(false==buildDirectoryContent(&nb,path.c_str(),list,NB,extension.c_str()))
+    {
+        ADM_info("No preset found\n");
+        return true;
+    }
+    for(int i=0;i<nb;i++)
+    {
+        std::string s=std::string(list[i]);
+        size_t lastSlash=s.find_last_of('/');
+        s.replace(0,lastSlash+1,std::string(""));
+        size_t lastDot=s.find_last_of('.');
+        s.replace(lastDot,s.size(),std::string(""));
+        // Remove extension
+        listOut.push_back(s);
+    }
+    for(int i=0;i<nb;i++)
+        ADM_dealloc(list[i]);
+    return true;
+}
+
 // EOF
