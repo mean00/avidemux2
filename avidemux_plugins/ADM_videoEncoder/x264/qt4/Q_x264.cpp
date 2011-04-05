@@ -7,6 +7,9 @@
  ***************************************************************************/
 #include <math.h>
 #include <QtGui/QFileDialog>
+#include <QtGui/QDialog>
+#include <QtGui/QTextEdit>
+using std::vector;
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
@@ -14,6 +17,8 @@
 #include "Q_x264.h"
 #include "ADM_paramList.h"
 #include "DIA_coreToolkit.h"
+
+static int pluginVersion=1;
 
 static x264_encoder myCopy; // ugly...
 extern bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
@@ -64,10 +69,28 @@ x264Dialog::x264Dialog(QWidget *parent, void *param)
 
 
         upload();
-
-        
-        
+        ADM_pluginInstallSystem( std::string("x264"),pluginVersion);
+        updatePresetList();
 }
+/**
+    \fn updatePresetList
+*/
+bool x264Dialog::updatePresetList(void)
+{
+    QComboBox *combo=ui.configurationComboBox;
+    std::string rootPath;
+    vector <std::string >  list;
+    ADM_pluginGetPath("x264",pluginVersion,rootPath);
+    ADM_listFile(rootPath,".json",list);
+    int l=list.size();
+    for( int i=0;i<l;i++)
+    {
+        combo->addItem(list[i].c_str());
+    }
+    combo->addItem(QString("Custom"));
+    return true;
+}
+
 /**
 
 */
@@ -356,16 +379,56 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
 /**
 
 */
+static char *getProfileName(void)
+{
+  QDialog dialog;
+  dialog.setWindowTitle(QString::fromUtf8("Save Profile"));
+  QDialogButtonBox *buttonBox = new QDialogButtonBox();  
+  QVBoxLayout *vboxLayout = new QVBoxLayout();
+  buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
+  QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+  QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+
+  QTextEdit *text=new QTextEdit;
+  text->setAcceptRichText(false);
+  
+  text->setMinimumHeight(32);
+  text->setMaximumHeight(32);
+
+  text->setText("my profile");
+  text->selectAll();
+
+  vboxLayout->addWidget(text);
+  vboxLayout->addWidget(buttonBox);
+
+  dialog.setLayout(vboxLayout);
+
+  if(dialog.exec()!=QDialog::Accepted)
+  {
+        ADM_info("Canceled");
+        return NULL;
+  }
+  QString fileName=text->toPlainText();
+  fileName=fileName+QString(".json");
+  const char *out=fileName.toUtf8().constData();
+  return ADM_strdup(out);
+}
 void x264Dialog::saveAsButton_pressed(void)
 {
-    const char *out="/tmp/foo.x264";
-    download();
-    if(false==x264_encoder_jserialize(out,&myCopy))
-    {
+  // 1-ask name
+  char *out=getProfileName();
+  if(!out) return;
+  ADM_info("Using %s\n",out);
+  download();
+  std::string fullpath=std::string("/tmp/")+out+std::string(".json");
+  ADM_dealloc(out);
+  if(false==x264_encoder_jserialize(fullpath.c_str(),&myCopy))
+  {
         GUI_Error_HIG("Error","Cannot save preset");
         ADM_error("Cannot write to %s\n",out);
-    }
+  }
+  
 }
 /**
 

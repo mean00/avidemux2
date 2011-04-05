@@ -39,6 +39,8 @@ private slots:
         void saveAsButton_pressed(void);
         void deleteButton_pressed(void);
 
+        bool updatePresetList(void);
+
 
 #if 0
         void maxCrfSlider_valueChanged(int value);
