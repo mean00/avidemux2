@@ -69,8 +69,10 @@ x264Dialog::x264Dialog(QWidget *parent, void *param)
 
 
         upload();
-        ADM_pluginInstallSystem( std::string("x264"),pluginVersion);
+        ADM_pluginInstallSystem( std::string("x264"),std::string(".json"),pluginVersion);
         updatePresetList();
+        int n=ui.configurationComboBox->count();
+        ui.configurationComboBox->setCurrentIndex(n-1);
 }
 /**
     \fn updatePresetList
@@ -83,6 +85,7 @@ bool x264Dialog::updatePresetList(void)
     ADM_pluginGetPath("x264",pluginVersion,rootPath);
     ADM_listFile(rootPath,".json",list);
     int l=list.size();
+    combo->clear();
     for( int i=0;i<l;i++)
     {
         combo->addItem(list[i].c_str());
@@ -324,11 +327,32 @@ void x264Dialog::mbTreeCheckBox_toggled(bool checked)
 #endif
 
 /**
-
+    \fn configurationComboBox_currentIndexChanged
 */
 
 void x264Dialog::configurationComboBox_currentIndexChanged(int index)
 {
+    int n=ui.configurationComboBox->currentIndex();
+    int m=ui.configurationComboBox->count();
+    if(n==m-1) // custom
+    {
+        return;
+    }
+    // get text
+    std::string rootPath;
+    ADM_pluginGetPath("x264",pluginVersion,rootPath);
+    QString text=QString("/")+ui.configurationComboBox->itemText(n);
+    text=QString(rootPath.c_str())+text+QString(".json");
+    const char *t=text.toUtf8().constData();
+    ADM_info("Loading preset %s\n",t);
+    if(false==x264_encoder_jdeserialize(t,x264_encoder_param,&myCopy))
+    {
+        GUI_Error_HIG("Error","Cannot load preset");
+        ADM_error("Cannot read from %s\n",t);
+    }else       
+    {
+        upload();
+    }
 #if 0
 	bool origDisableGenericSlots = disableGenericSlots;
 
@@ -371,10 +395,7 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
 	}
 
 	disableGenericSlots = origDisableGenericSlots;
-#else
-    GUI_Error_HIG("No","This function is not implemented");
 #endif
-
 }
 /**
 
@@ -410,10 +431,13 @@ static char *getProfileName(void)
         return NULL;
   }
   QString fileName=text->toPlainText();
-  fileName=fileName+QString(".json");
   const char *out=fileName.toUtf8().constData();
   return ADM_strdup(out);
 }
+/**
+        \fn saveAsButton_pressed
+        \brief Save the current settings as preset
+*/
 void x264Dialog::saveAsButton_pressed(void)
 {
   // 1-ask name
@@ -421,14 +445,16 @@ void x264Dialog::saveAsButton_pressed(void)
   if(!out) return;
   ADM_info("Using %s\n",out);
   download();
-  std::string fullpath=std::string("/tmp/")+out+std::string(".json");
+  std::string rootPath;
+  ADM_pluginGetPath("x264",pluginVersion,rootPath);
+  std::string fullpath=rootPath+std::string("/")+out+std::string(".json");
   ADM_dealloc(out);
   if(false==x264_encoder_jserialize(fullpath.c_str(),&myCopy))
   {
         GUI_Error_HIG("Error","Cannot save preset");
         ADM_error("Cannot write to %s\n",out);
   }
-  
+  updatePresetList();
 }
 /**
 
@@ -452,6 +478,7 @@ void x264Dialog::deleteButton_pressed(void)
 		ui.configurationComboBox->setCurrentIndex(0);	// default
 	}
 #else
+/*
     const char *out="/tmp/foo.x264";
      if(false==x264_encoder_jdeserialize(out,x264_encoder_param,&myCopy))
     {
@@ -459,6 +486,7 @@ void x264Dialog::deleteButton_pressed(void)
         ADM_error("Cannot read from %s\n",out);
     }else       
         upload();
+*/
 #endif
 }
 

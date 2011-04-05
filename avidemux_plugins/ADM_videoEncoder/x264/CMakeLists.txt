@@ -35,3 +35,11 @@ IF(X264_FOUND)
 ELSE(X264_FOUND)
   MESSAGE(STATUS "x264 disabled.")
 ENDIF(X264_FOUND)
+
+if(DO_GTK or DO_CLI or DO_QT4)
+SET(PRESET_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/pluginSettings/x264/1/")
+
+FILE(GLOB json_files ${CMAKE_CURRENT_SOURCE_DIR}/preset/*.json)
+install(FILES ${json_files} DESTINATION "${PRESET_DIR}")
+endif(DO_GTK or DO_CLI or DO_QT4)
+
