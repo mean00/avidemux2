@@ -131,13 +131,12 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
 
 }
 /**
-
+    \fn ADM_pluginSystemPath
 */
 static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
 {
-    char *sy=ADM_getInstallRelativePath("ADM_plugins6","","");
-    std::string path=std::string(sy);
-    delete [] sy;
+    
+    std::string path=std::string(ADM_getSystemPluginSettingsDir());
 
     std::string slash=std::string("/");
     std::string version;
@@ -145,7 +144,6 @@ static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,
     out << pluginVersion;
     version=out.str();
 
-    path=path+slash+std::string("pluginSettings");
     ADM_mkdir(path.c_str());
     path=path+slash+std::string(pluginName);
     ADM_mkdir(path.c_str());
@@ -161,13 +159,12 @@ static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,
 */
 bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
 {
-    std::string path=std::string(ADM_getBaseDir());
+    std::string path=std::string(ADM_getUserPluginSettingsDir());
     std::string slash=std::string("/");
     std::string version;
     std::stringstream out;
     out << pluginVersion;
     version=out.str();
-    path=path+slash+std::string("pluginSettings");
     ADM_mkdir(path.c_str());
     path=path+slash+std::string(pluginName);
     ADM_mkdir(path.c_str());
@@ -181,11 +178,35 @@ bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::strin
     \fn ADM_pluginInstallSystem
     \brief Copy if needed the system presets to the user presets list
 */
-bool ADM_pluginInstallSystem(const std::string pluginName,int pluginVersion)
+bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,int pluginVersion)
 {
     std::string sysPath,userPath;
     ADM_pluginSystemPath(pluginName,pluginVersion,sysPath);
     ADM_pluginGetPath(pluginName,pluginVersion,userPath);
+#define NB 20
+    char *list[NB];
+    uint32_t nb=0;
+    ADM_info("Looking for file %s in folder %s\n",ext.c_str(),sysPath.c_str());
+    if(false==buildDirectoryContent(&nb,sysPath.c_str(),list,NB,ext.c_str()))
+    {
+        ADM_info("No preset found\n");
+        return true;
+    }
+    for( int i=0;i<nb;i++)
+    {
+        std::string s=std::string(list[i]);
+        size_t lastSlash=s.find_last_of('/');
+        s.replace(0,lastSlash+1,std::string("")); // filename+ext
+        std::string file=s;
+        s=userPath+std::string("/")+s; // 
+        if(!ADM_fileExist(s.c_str()))
+        {
+            ADM_info("%s exists in system folder, but not in user folder, copying..\n",file.c_str());
+            ADM_copyFile(list[i],s.c_str());
+        }
+    }
+    for(int i=0;i<nb;i++)
+        ADM_dealloc(list[i]);
     return true;
 }
 /**

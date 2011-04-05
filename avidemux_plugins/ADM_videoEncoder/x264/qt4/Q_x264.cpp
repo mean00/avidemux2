@@ -353,52 +353,10 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
     {
         upload();
     }
-#if 0
-	bool origDisableGenericSlots = disableGenericSlots;
-
-	disableGenericSlots = true;
-
-	if (index == 0)		// default
-	{
-		ui.deleteButton->setEnabled(false);
-
-		x264Options defaultOptions;
-		vidEncOptions *defaultEncodeOptions = defaultOptions.getEncodeOptions();
-
-		loadSettings(defaultEncodeOptions, &defaultOptions);
-
-		delete defaultEncodeOptions;
-	}
-	else if (index == 1)	// custom
-		ui.deleteButton->setEnabled(false);
-	else
-	{
-		PluginConfigType configType = (PluginConfigType)ui.configurationComboBox->itemData(index).toInt();
-
-		ui.deleteButton->setEnabled(configType == PLUGIN_CONFIG_USER);
-
-		x264Options options;
-		vidEncOptions *encodeOptions;
-
-		options.setPresetConfiguration(ui.configurationComboBox->itemText(index).toUtf8().constData(), configType);
-
-		if (options.loadPresetConfiguration())
-		{
-			encodeOptions = options.getEncodeOptions();
-
-			loadSettings(encodeOptions, &options);
-
-			delete encodeOptions;
-		}
-		else
-			ui.configurationComboBox->setCurrentIndex(0);
-	}
-
-	disableGenericSlots = origDisableGenericSlots;
-#endif
 }
 /**
-
+    \fn getProfileName  
+    \brief Popup a dialog that asks the user the preset name
 */
 static char *getProfileName(void)
 {

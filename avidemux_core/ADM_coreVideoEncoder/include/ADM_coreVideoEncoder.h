@@ -75,7 +75,7 @@ virtual        bool        setPassAndLogFile(int pass,const char *name) {return 
 };
 bool usSecondsToFrac(uint64_t useconds, int *n,int *d);
 bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::string &rootPath);
-bool ADM_pluginInstallSystem(const std::string pluginName,int pluginVersion);
+bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,int pluginVersion);
 bool ADM_listFile(const std::string path,const std::string extension,vector <std::string > & list);
 #endif
 
