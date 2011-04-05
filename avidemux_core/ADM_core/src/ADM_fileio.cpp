@@ -57,6 +57,8 @@ static char ADM_basedir[1024] = {0};
 static char *ADM_jobdir = NULL;
 static char *ADM_customdir = NULL;
 static char *ADM_autodir = NULL;
+static char *ADM_systemPluginSettings=NULL;
+static char *ADM_userPluginSettings=NULL;
 static int baseDirDone = 0;
 
 #undef fread
@@ -226,6 +228,25 @@ char *ADM_getAutoDir(void)
     ADM_autodir = ADM_getInstallRelativePath("lib", "ADM_plugins6", "autoScripts");
 	return ADM_autodir;
 }
+/**
+    \fn ADM_getPluginSettingsDir
+    \brief Get the folder containing the plugin settings (presets etc..)
+*/
+const char *ADM_getSystemPluginSettingsDir(void)
+{
+    if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
+    ADM_systemPluginSettings=ADM_getInstallRelativePath("lib", "ADM_plugins6", "pluginSettings");
+    return ADM_systemPluginSettings;
+}
+/**
+
+*/
+const char *ADM_getUserPluginSettingsDir(void)
+{
+    if(ADM_userPluginSettings) return ADM_userPluginSettings;
+    ADM_userPluginSettings=ADM_getHomeRelativePath("pluginSettings");
+    return ADM_userPluginSettings;
+}
 
 /*
       Get the  directory where jobs are stored
@@ -336,11 +357,6 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2,const char
 #else
 	return ADM_getRelativePath(ADM_INSTALL_DIR, base1, base2, base3);
 #endif
-}
-
-char *ADM_getPluginPath(void)
-{
-	return ADM_getInstallRelativePath("lib", "ADM_plugins", "videoEncoder");
 }
 /*
       Get the root directory for .avidemux stuff
@@ -713,4 +729,34 @@ void ADM_PathSplit(const char *str, char **root, char **ext)
 	strcpy(*ext, full + l + 1);
 	*(full + l) = 0;
 	*root = full;
+}
+/**
+    \fn ADM_copyFile
+*/
+uint8_t ADM_copyFile(const char *source, const char *target)
+{
+    FILE *fin=fopen(source,"rb");
+    if(!fin)
+    {
+        ADM_error("Cannot open %s for reading\n",source);
+        return false;
+    }
+    FILE *fout=fopen(target,"wb");
+    if(!fout)
+    {
+        fclose(fin);
+        ADM_error("Cannot open %s for writting\n",target);
+        return false;
+    }
+    uint8_t buffer[1024];
+    while(1)
+    {
+        int r=fread(buffer,1024,1,fin);
+        fwrite(buffer,r,1,fout);
+        if(r!=1024) break;
+    }
+
+    fclose(fin);
+    fclose(fout);
+    return true;
 }
