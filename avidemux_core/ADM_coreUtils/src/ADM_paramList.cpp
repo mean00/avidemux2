@@ -167,9 +167,9 @@ static bool compressReadFromString(COMPRES_PARAMS *params,const char *str)
 
 }
 /**
-    \fn compressWriteToString
+    \fn ADM_compressWriteToString
 */
-static bool compressWriteToString(COMPRES_PARAMS *params,  char **str)
+bool ADM_compressWriteToString(COMPRES_PARAMS *params,  char **str)
 {
     char tmp[256];
     switch(params->mode)
@@ -390,7 +390,7 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
             case ADM_param_video_encode:
               {
                         char *lavString;
-                        if(false==compressWriteToString((COMPRES_PARAMS *)(address+params[i].offset),&lavString))
+                        if(false==ADM_compressWriteToString((COMPRES_PARAMS *)(address+params[i].offset),&lavString))
                         {
                                 ADM_error("Error writing paramvideo string");
                                 return false;

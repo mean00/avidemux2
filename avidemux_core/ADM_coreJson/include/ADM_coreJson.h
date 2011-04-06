@@ -37,7 +37,7 @@ public:
         bool addInt32(const char *key,const int32_t value);
         bool addFloat(const char *key,const float value);
         bool addBool(const char *key,const bool value);
-        bool addCompressParam(const char *key, const COMPRES_PARAMS param);
+        bool addCompressParam(const char *key, const COMPRES_PARAMS &param);
 
         bool addNode(const char *nodeName);
         bool endNode(void);
