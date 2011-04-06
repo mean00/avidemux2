@@ -9,6 +9,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QDialog>
 #include <QtGui/QTextEdit>
+#include <QtGui/QLineEdit>
 using std::vector;
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
@@ -388,8 +389,10 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
     int m=ui.configurationComboBox->count();
     if(n==m-1) // custom
     {
+        ui.deleteButton->setEnabled(false);
         return;
     }
+    ui.deleteButton->setEnabled(true);
     // get text
     std::string rootPath;
     ADM_pluginGetPath("x264",pluginVersion,rootPath);
@@ -421,12 +424,9 @@ static char *getProfileName(void)
   QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
   QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
 
-  QTextEdit *text=new QTextEdit;
-  text->setAcceptRichText(false);
+  QLineEdit *text=new QLineEdit;
+//  text->setAcceptRichText(false);
   
-  text->setMinimumHeight(32);
-  text->setMaximumHeight(32);
-
   text->setText("my profile");
   text->selectAll();
 
@@ -440,7 +440,7 @@ static char *getProfileName(void)
         ADM_info("Canceled");
         return NULL;
   }
-  QString fileName=text->toPlainText();
+  QString fileName=text->text();
   const char *out=fileName.toUtf8().constData();
   return ADM_strdup(out);
 }
@@ -470,34 +470,26 @@ void x264Dialog::saveAsButton_pressed(void)
 
 */
 void x264Dialog::deleteButton_pressed(void)
-{
-#if 0
-	x264Options options;
-	char *configDir = options.getUserConfigDirectory();
-	QString configFileName = QFileInfo(QString(configDir), ui.configurationComboBox->currentText() + ".xml").filePath();
-	QFile configFile(configFileName);
-
-	delete [] configDir;
-
-	if (GUI_Question(tr("Are you sure you wish to delete the selected configuration?").toUtf8().constData()) && configFile.exists())
-	{
-		disableGenericSlots = true;
-		configFile.remove();
-		ui.configurationComboBox->removeItem(ui.configurationComboBox->currentIndex());
-		disableGenericSlots = false;
-		ui.configurationComboBox->setCurrentIndex(0);	// default
-	}
-#else
-/*
-    const char *out="/tmp/foo.x264";
-     if(false==x264_encoder_jdeserialize(out,x264_encoder_param,&myCopy))
+{ 
+    int n=ui.configurationComboBox->currentIndex();
+    int m=ui.configurationComboBox->count();
+    if(n==m-1) // custom
     {
-        GUI_Error_HIG("Error","Cannot load preset");
-        ADM_error("Cannot read from %s\n",out);
-    }else       
-        upload();
-*/
-#endif
+        GUI_Error_HIG("Error","Cannot delete custom profile");
+        return;
+    }
+  QString preset=ui.configurationComboBox->itemText(n);
+  QString msg=QString("Do you really want to delete the ")+preset+
+            QString(" profile ?.\nIf it is a system profile it will be recreated next time.");
+  if(true==GUI_Confirmation_HIG("Delete preset","Delete",msg.toUtf8().constData()))
+  {
+    std::string rootPath;
+    ADM_pluginGetPath("x264",pluginVersion,rootPath);
+    QString text=QString("/")+ui.configurationComboBox->itemText(n);
+    text=QString(rootPath.c_str())+text+QString(".json");
+    unlink(text.toUtf8().constData());
+  }
+  updatePresetList();
 }
 
 
