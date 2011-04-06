@@ -79,8 +79,12 @@ static void swapRGB24(uint32_t w,uint32_t h, uint8_t *to)
     \brief Convert ADM colorspace type swscale/lavcodec colorspace name
 
 */
-static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor)
+static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
 {
+  ADM_colorspace fromColor=fromColor_;
+  int intColor=(int)fromColor;
+  intColor&=ADM_COLOR_MASK;
+  fromColor=(ADM_colorspace)intColor;
   switch(fromColor)
   {
     case ADM_COLOR_YUV422: return PIX_FMT_YUYV422;
@@ -280,8 +284,8 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
 
     fromColor=from;
     toColor=to;
-    PixelFormat lavFrom=ADMColor2LAVColor(fromColor);
-    PixelFormat lavTo=ADMColor2LAVColor(toColor);
+    PixelFormat lavFrom=ADMColor2LAVColor(fromColor );
+    PixelFormat lavTo=ADMColor2LAVColor(toColor );
     
     context=(void *)sws_getContext(
                       srcWidth,srcHeight,
@@ -340,16 +344,17 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     dstPitch[1]=idstPitch[1];
     dstPitch[2]=idstPitch[2];
     if(false==convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes)) return false;
+
     if(toColor==ADM_COLOR_BGR32A)
     {
              swapRGB32(dstWidth,dstHeight,to);
     }
-/*
-    if(toColor==ADM_COLOR_BGR24)
+#if 0
+    if(toColor==ADM_COLOR_BGR24 || (toColor==ADM_COLOR_RGB24 | ADM_COLOR_BACKWARD))
     {
              swapRGB24(dstWidth,dstHeight,to);
     }
-*/
+#endif
     return true;
 }
 //EOF
