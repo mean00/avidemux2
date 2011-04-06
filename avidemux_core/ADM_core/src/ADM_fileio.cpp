@@ -749,10 +749,10 @@ uint8_t ADM_copyFile(const char *source, const char *target)
         return false;
     }
     uint8_t buffer[1024];
-    while(1)
+    while(!feof(fin))
     {
-        int r=fread(buffer,1024,1,fin);
-        fwrite(buffer,r,1,fout);
+        int r=fread(buffer,1,1024,fin);
+        fwrite(buffer,1,r,fout);
         if(r!=1024) break;
     }
 
