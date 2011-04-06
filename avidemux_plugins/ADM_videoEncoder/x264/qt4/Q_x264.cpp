@@ -27,6 +27,33 @@ extern "C"
 {
 extern const ADM_paramList x264_encoder_param[];
 }
+
+typedef struct
+{
+    uint32_t idcValue;
+    const char *idcString;
+}idcToken;
+
+static const idcToken listOfIdc[]={
+        {0,"Auto"},
+        {10,"1"},
+        {11,"1.1"},
+        {12,"1.2"},
+        {13,"1.3"},
+        {20,"2"},
+        {21,"2.1"},
+        {22,"2.2"},
+        {30,"3"},
+        {31,"3.1"},
+        {32,"3.2"},
+        {40,"4"},
+        {41,"4.1"},
+        {42,"4.2"},
+        {50,"5"},
+        {51,"5.1"},
+
+};
+#define NB_IDC sizeof(listOfIdc)/sizeof(idcToken)
 /**
     \fn x264_ui
     \brief hook to enter UI specific dialog
@@ -67,6 +94,14 @@ x264Dialog::x264Dialog(QWidget *parent, void *param)
         connect(ui.saveAsButton, SIGNAL(pressed()), this, SLOT(saveAsButton_pressed()));
         connect(ui.configurationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(configurationComboBox_currentIndexChanged(int)));
 
+        // Rebuild idc level list
+        QComboBox *idc=ui.idcLevelComboBox;
+        idc->clear();
+        for(int i=0;i<NB_IDC;i++)
+        {
+            const idcToken *t=listOfIdc+i;
+            idc->addItem(QString(t->idcString));
+        }
 
         upload();
         ADM_pluginInstallSystem( std::string("x264"),std::string(".json"),pluginVersion);
@@ -134,6 +169,18 @@ bool x264Dialog::upload(void)
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
+
+          // udate idc
+          QComboBox *idc=ui.idcLevelComboBox;
+          for(int i=0;i<NB_IDC;i++)
+          {
+                const idcToken *t=listOfIdc+i;
+                if(myCopy.level==t->idcValue)
+                {
+                        idc->setCurrentIndex(i);
+                        break;
+                }
+          }
 
         switch(ENCODING(mode))
         {
@@ -225,6 +272,11 @@ bool x264Dialog::download(void)
           MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
+
+          QComboBox *idc=ui.idcLevelComboBox;
+          int dex=idc->currentIndex();
+          ADM_assert(dex<NB_IDC);
+          myCopy.level=listOfIdc[dex].idcValue;
 
           switch(ui.encodingModeComboBox->currentIndex())
           {

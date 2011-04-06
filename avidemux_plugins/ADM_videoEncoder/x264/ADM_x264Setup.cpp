@@ -67,7 +67,7 @@ bool x264Encoder::setup(void)
   param.i_height = getHeight();
   param.i_csp = X264_CSP_I420;
   param.i_log_level=X264_LOG_INFO; //DEBUG; //INFO;
- 
+  param.i_level_idc=x264Settings.level; 
     //Framerate
     int n,d;    
     uint64_t f=source->getInfo()->frameIncrement;
