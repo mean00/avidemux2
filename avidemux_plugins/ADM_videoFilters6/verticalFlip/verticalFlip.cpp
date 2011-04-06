@@ -65,14 +65,14 @@ verticalFlipFilter::~verticalFlipFilter()
 		
 }
 
-static void flipMe(uint8_t *data, uint32_t w,uint32_t h)
+static void flipMe(uint8_t *data, uint32_t w,uint32_t h,uint32_t stride)
 {
     uint8_t *scratch=(uint8_t *)alloca(w);
     int count=h>>1;
     for(int i=0;i<count;i++)
     {
-        uint8_t *top=data+w*i;
-        uint8_t *bottom=data+(h-i-1)*w;
+        uint8_t *top=data+stride*i;
+        uint8_t *bottom=data+(h-i-1)*stride;
         memcpy(scratch, top,w);
         memcpy(top, bottom,w);
         memcpy(bottom,scratch,w);
@@ -93,9 +93,12 @@ bool verticalFlipFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     // do in place flip
     int w=info.width;
     int h=info.height;
-    flipMe(YPLANE(image),w,h);
-    flipMe(UPLANE(image),w>>1,h>>1);
-    flipMe(VPLANE(image),w>>1,h>>1);
+    int stride=image->GetPitch(PLANAR_Y);
+    flipMe(YPLANE(image),w,h,stride);
+    stride=image->GetPitch(PLANAR_U);
+    flipMe(UPLANE(image),w>>1,h>>1,stride);
+    stride=image->GetPitch(PLANAR_V);
+    flipMe(VPLANE(image),w>>1,h>>1,stride);
     return true;
 }
 /**
