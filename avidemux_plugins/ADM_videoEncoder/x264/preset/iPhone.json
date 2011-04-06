@@ -1,0 +1,60 @@
+{
+	"general" : {
+		"threads" : 99
+	},
+	"level" : 31,
+	"vui" : {
+		"sar_height" : 1,
+		"sar_width" : 1
+	},
+	"MaxRefFrames" : 2,
+	"MinIdr" : 0,
+	"MaxIdr" : 250,
+	"MaxBFrame" : 2,
+	"i_bframe_adaptative" : 0,
+	"i_bframe_bias" : 0,
+	"i_bframe_pyramid" : 2,
+	"b_deblocking_filter" : false,
+	"i_deblocking_filter_alphac0" : 0,
+	"i_deblocking_filter_beta" : 0,
+	"cabac" : false,
+	"interlaced" : false,
+	"analyze" : {
+		"b_8x8" : true,
+		"b_i4x4" : true,
+		"b_i8x8" : false,
+		"b_p8x8" : false,
+		"b_p16x16" : true,
+		"b_b16x16" : true,
+		"weighted_pred" : 2,
+		"weighted_bipred" : true,
+		"direct_mv_pred" : 3,
+		"chroma_offset" : 0,
+		"me_method" : 0,
+		"subpel_refine" : 7,
+		"chroma_me" : true,
+		"mixed_references" : true,
+		"trellis" : 1,
+		"fast_pskip" : true,
+		"dct_decimate" : true,
+		"noise_reduction" : 0,
+		"psy" : true
+	},
+	"ratecontrol" : {
+		"rc_method" : 0,
+		"qp_constant" : 0,
+		"qp_min" : 0,
+		"qp_max" : 0,
+		"qp_step" : 0,
+		"bitrate" : 0,
+		"vbv_max_bitrate" : 0,
+		"vbv_buffer_size" : 0,
+		"vbv_buffer_init" : 0,
+		"ip_factor" : 0,
+		"pb_factor" : 0,
+		"aq_mode" : 0,
+		"aq_strength" : 0,
+		"mb_tree" : true,
+		"lookahead" : 40
+	}
+}
