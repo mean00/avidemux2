@@ -42,7 +42,7 @@ static void        logger( void *cooki, int i_level, const char *psz, va_list li
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 extern x264_encoder x264Settings;
-
+extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);;
 /**
     \fn setup
 */
@@ -142,7 +142,56 @@ bool x264Encoder::setup(void)
 
   switch(x264Settings.general.params.mode)
   {
-      
+      case COMPRESS_2PASS:
+      case COMPRESS_2PASS_BITRATE:
+                        uint32_t bitrate;
+                        if(passNumber!=1 && passNumber!=2)
+                        {
+                                ADM_error("No pass number specified! (%d)\n",(int)passNumber);
+                                return false;
+                         }
+                        ADM_info("Starting pass :%d\n",passNumber);
+                        if(x264Settings.general.params.mode==COMPRESS_2PASS)
+                        {
+                            uint64_t duration=source->getInfo()->totalDuration; // in us
+                            uint32_t avg;
+                            if(false==ADM_computeAverageBitrateFromDuration(duration, 
+                                            x264Settings.general.params.finalsize,
+                                            &avg))
+                            {
+                                ADM_error("[x264] No source duration!\n");
+                                return false;
+                            }
+                            bitrate=(uint32_t)avg;
+                        }
+                        else
+                                bitrate=x264Settings.general.params.avg_bitrate;
+                        ADM_info("Using average bitrate of %d kb/s\n",(int)bitrate);
+                        param.rc.i_rc_method = X264_RC_ABR;
+                        param.rc.i_bitrate =  bitrate;
+                        if(passNumber==1)
+                        {
+                             param.rc.b_stat_write=1;
+                             param.rc.b_stat_read=0;
+                             param.rc.psz_stat_out=logFile;
+#warning FIXME
+#if 0
+                             if(x264Settings.)
+                                   	x264_param_apply_fastfirstpass(&_param);
+#endif
+ 
+                        }else
+                        {
+                             param.rc.b_stat_write=0;
+                             param.rc.b_stat_read=1;
+                             param.rc.psz_stat_in=logFile;
+                             if(!ADM_fileExist(logFile))
+                             {
+                                   ADM_error("Logfile %s does not exist \n",logFile);
+                                   return false;
+                             }
+                        }
+                        break;
       case COMPRESS_AQ: param.rc.i_rc_method = X264_RC_CRF;
                         param.rc.f_rf_constant = x264Settings.general.params.qz;
                         break;
@@ -172,6 +221,7 @@ bool x264Encoder::setup(void)
   param.b_vfr_input=0;
 
   dumpx264Setup(&param);
+  ADM_info("Creating x264 encoder\n");
   handle = x264_encoder_open (&param);
   if (!handle)
   {

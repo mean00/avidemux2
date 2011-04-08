@@ -46,6 +46,8 @@ protected:
                uint32_t        seiUserDataLen;
                uint8_t         *seiUserData ;
                bool            firstIdr;
+               uint32_t        passNumber;
+               char            *logFile;
 
                
 public:
@@ -57,6 +59,9 @@ virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "H264";}
 virtual        bool         getExtraData(uint32_t *l,uint8_t **d) {*l=extraDataLen;*d=extraData;return true;}
 virtual        bool         isDualPass(void) ;
+
+virtual        bool         setPassAndLogFile(int pass,const char *name);
+
 
 };
 
