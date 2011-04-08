@@ -27,7 +27,7 @@
 #endif
 
 #define LAVS(x) Settings.lavcSettings.x
-
+extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);
 /**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor
@@ -515,17 +515,14 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
             else
             {
                 uint64_t duration=source->getInfo()->totalDuration; // in us
-                float f;
-                if(!duration) 
+                uint32_t avg;
+                if(false==ADM_computeAverageBitrateFromDuration(duration, Settings.params.finalsize,
+                                &avg))
                 {
                     printf("[ffMpeg4] No source duration!\n");
                     return false;
                 }
-                f=Settings.params.finalsize; 
-                f=f*1024*1024*8; // in bits
-                f*=1000*1000;
-                f/=duration;
-                averageBitrate=(uint32_t)f;
+                averageBitrate=(uint32_t)avg;
             }
 
         printf("[ffmpeg4] Average bitrate =%"LU" kb/s\n",averageBitrate/1000);
