@@ -34,6 +34,7 @@ char    *ADM_escape(const ADM_filename *incoming);
 bool     ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 void     memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);
 uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
+bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint32_t ADM_Fps1000FromUs(uint64_t us);
 //_________________________________________________
@@ -280,8 +281,9 @@ int l=0;
     *cur++=0;
     return out;
 }
-/*
-        Return average bitrate in bit/s
+/**
+    \fn ADM_computeBitrate
+    \brief         Return average bitrate in bit/s
 */
 uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB)
 {
@@ -301,6 +303,28 @@ uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInM
   vbr = (uint32_t) floor (db);
   return vbr;
 }
+/**
+    \fn ADM_computeBitrate
+    \brief         Return average bitrate in bit/s
+*/
+bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits)
+{
+    float f;
+    if(!duration) 
+    {
+        ADM_error("[ADM_computeBitrateFromDuration] No source duration!\n");
+        return false;
+    }
+    f=sizeInMB; 
+    f=f*1024*1024*8; // in bits
+    f*=1000*1000;
+    f/=duration;
+    *avgInKbits=(uint32_t)f;
+    return true;
+}
+/**
+        \fn ADM_UsecFromFps1000
+*/
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000)
 {
 double f;
