@@ -460,6 +460,15 @@ void x264Dialog::saveAsButton_pressed(void)
   std::string rootPath;
   ADM_pluginGetPath("x264",pluginVersion,rootPath);
   std::string fullpath=rootPath+std::string("/")+out+std::string(".json");
+
+  if(ADM_fileExist(fullpath.c_str()))
+  {
+        if(false==GUI_Confirmation_HIG("Overwrite","Replace the following preset ?:",out))
+        {
+            ADM_dealloc(out);
+            return;
+        }
+  }
   ADM_dealloc(out);
   if(false==x264_encoder_jserialize(fullpath.c_str(),&myCopy))
   {
