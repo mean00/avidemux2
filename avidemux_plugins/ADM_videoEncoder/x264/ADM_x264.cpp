@@ -51,6 +51,7 @@ x264_encoder x264Settings=
         0*ADM_ENC_CAP_SAME
     },
     99, // Threads : auto
+    true // Fast first pass
     },
     31, // Level
     {1,1}, // Sar width/height

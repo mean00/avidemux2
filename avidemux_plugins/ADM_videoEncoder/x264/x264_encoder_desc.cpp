@@ -2,6 +2,7 @@
 extern const ADM_paramList x264_encoder_param[]={
  {"general.params",offsetof(x264_encoder,general.params),"COMPRES_PARAMS",ADM_param_video_encode},
  {"general.threads",offsetof(x264_encoder,general.threads),"uint32_t",ADM_param_uint32_t},
+ {"general.fast_first_pass",offsetof(x264_encoder,general.fast_first_pass),"bool",ADM_param_bool},
  {"level",offsetof(x264_encoder,level),"uint32_t",ADM_param_uint32_t},
  {"vui.sar_height",offsetof(x264_encoder,vui.sar_height),"uint32_t",ADM_param_uint32_t},
  {"vui.sar_width",offsetof(x264_encoder,vui.sar_width),"uint32_t",ADM_param_uint32_t},

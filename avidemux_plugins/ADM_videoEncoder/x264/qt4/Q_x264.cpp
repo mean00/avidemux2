@@ -140,7 +140,8 @@ bool x264Dialog::updatePresetList(void)
 bool x264Dialog::upload(void)
 {
           
-          MK_CHECKBOX(fastFirstPassCheckBox,analyze.fast_pskip);
+          MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
+          MK_CHECKBOX(fastPSkipCheckBox,analyze.fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,analyze.weighted_bipred);
           MK_CHECKBOX(dct8x8CheckBox,analyze.b_8x8);
           MK_CHECKBOX(i4x4CheckBox,analyze.b_i4x4);
@@ -243,7 +244,8 @@ bool x264Dialog::upload(void)
 #define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
 bool x264Dialog::download(void)
 {
-          MK_CHECKBOX(fastFirstPassCheckBox,analyze.fast_pskip);
+          MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
+          MK_CHECKBOX(fastPSkipCheckBox,analyze.fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,analyze.weighted_bipred);
           MK_CHECKBOX(dct8x8CheckBox,analyze.b_8x8);
           MK_CHECKBOX(i4x4CheckBox,analyze.b_i4x4);

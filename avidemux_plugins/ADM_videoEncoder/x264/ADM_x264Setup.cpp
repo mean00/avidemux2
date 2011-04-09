@@ -219,7 +219,23 @@ bool x264Encoder::setup(void)
 
   // We do pseudo cfr ...
   param.b_vfr_input=0;
-
+ //
+  if(true==x264Settings.general.fast_first_pass)
+  {
+    if(passNumber==1)
+    {
+        switch(x264Settings.general.params.mode)
+        {
+            case COMPRESS_2PASS:
+            case COMPRESS_2PASS_BITRATE:
+                     ADM_info("Appling fast first pass settings\n");
+                     x264_param_apply_fastfirstpass(&param);
+                    break;
+            default:
+                    break;
+        }
+    }
+  }
   dumpx264Setup(&param);
   ADM_info("Creating x264 encoder\n");
   handle = x264_encoder_open (&param);

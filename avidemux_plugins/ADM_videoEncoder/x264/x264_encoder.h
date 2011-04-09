@@ -5,6 +5,7 @@ typedef struct {
 struct  {
 	COMPRES_PARAMS params;
 	uint32_t threads;
+	bool fast_first_pass;
 }general;
 uint32_t level;
 struct  {

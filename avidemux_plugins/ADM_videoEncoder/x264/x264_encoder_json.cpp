@@ -8,6 +8,7 @@ admJson json;
 json.addNode("general");
 json.addCompressParam("params",key->general.params);
 json.addUint32("threads",key->general.threads);
+json.addBool("fast_first_pass",key->general.fast_first_pass);
 json.endNode();
 json.addUint32("level",key->level);
 json.addNode("vui");
