@@ -1,6 +1,8 @@
 {
 	"general" : {
-		"threads" : 99
+		"params" : "CBR=1000",
+		"threads" : 99,
+		"fast_first_pass" : true
 	},
 	"level" : 31,
 	"vui" : {
