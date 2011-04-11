@@ -185,7 +185,7 @@ ADMVideoSubtitle::ADMVideoSubtitle(AVDMGenericVideoStream *in,CONFcouple *couple
 uint8_t	ADMVideoSubtitle::loadSubtitle( void )
 {
 unsigned char c,d;
-			_fd=fopen((char *)_conf->_subname,"rt");
+			_fd=ADM_fopen((char *)_conf->_subname,"rt");
 			if(!_fd)
 			{
                           GUI_Error_HIG(QT_TR_NOOP("Could not open subtitle file"), NULL);
