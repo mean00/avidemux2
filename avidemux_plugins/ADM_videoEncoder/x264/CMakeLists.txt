@@ -26,20 +26,21 @@ IF(X264_FOUND)
   endif(DO_QT4)
   #-----------------------/QT4 VERSION---------------------
   #-----------------------GTK or CLI VERSION---------------------
-  if(DO_GTK or DO_CLI)
+  if((DO_GTK) OR (DO_CLI))
     ADD_VIDEO_ENCODER_(ADM_ve_x264_other   ADM_x264_noui.cpp ${x264_SRCS})
     TARGET_LINK_LIBRARIES(ADM_ve_x264_other x264 )
     INIT_VIDEO_ENCODER(ADM_ve_x264_other)
     INSTALL_VIDEO_ENCODER(ADM_ve_x264_other)
-  endif(DO_GTK or DO_CLI)
+  endif((DO_GTK) OR (DO_CLI))
+  # ------------- PRESET -----------
+  if((DO_GTK) OR (DO_CLI) OR (DO_QT4))
+    SET(PRESET_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/pluginSettings/x264/1/")
+
+    FILE(GLOB json_files ${CMAKE_CURRENT_SOURCE_DIR}/preset/*.json)
+    message(STATUS "Presets found : ${json_files}")
+    install(FILES ${json_files} DESTINATION "${PRESET_DIR}")
+  endif((DO_GTK) OR (DO_CLI) OR (DO_QT4))
 ELSE(X264_FOUND)
   MESSAGE(STATUS "x264 disabled.")
 ENDIF(X264_FOUND)
-
-if(DO_GTK or DO_CLI or DO_QT4)
-SET(PRESET_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/pluginSettings/x264/1/")
-
-FILE(GLOB json_files ${CMAKE_CURRENT_SOURCE_DIR}/preset/*.json)
-install(FILES ${json_files} DESTINATION "${PRESET_DIR}")
-endif(DO_GTK or DO_CLI or DO_QT4)
 
