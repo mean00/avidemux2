@@ -25,6 +25,11 @@ extern "C"
 #include "libavcodec/avcodec.h"
 }
 
+#ifdef __WIN32
+const std::string slash=std::string("\\");
+#else
+const std::string slash=std::string("/");
+#endif
 /**
     \fn ADM_coreVideoEncoder
 */                          
@@ -137,8 +142,6 @@ static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,
 {
     
     std::string path=std::string(ADM_getSystemPluginSettingsDir());
-
-    std::string slash=std::string("/");
     std::string version;
     std::stringstream out;
     out << pluginVersion;
@@ -156,7 +159,6 @@ static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,
 bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
 {
     std::string path=std::string(ADM_getUserPluginSettingsDir());
-    std::string slash=std::string("/");
     std::string version;
     std::stringstream out;
     out << pluginVersion;
