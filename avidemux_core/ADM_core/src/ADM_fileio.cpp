@@ -735,13 +735,13 @@ void ADM_PathSplit(const char *str, char **root, char **ext)
 */
 uint8_t ADM_copyFile(const char *source, const char *target)
 {
-    FILE *fin=fopen(source,"rb");
+    FILE *fin=ADM_fopen(source,"rb");
     if(!fin)
     {
         ADM_error("Cannot open %s for reading\n",source);
         return false;
     }
-    FILE *fout=fopen(target,"wb");
+    FILE *fout=ADM_fopen(target,"wb");
     if(!fout)
     {
         fclose(fin);
