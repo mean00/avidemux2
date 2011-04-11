@@ -225,7 +225,7 @@ char *ADM_getAutoDir(void)
 {
 	if (ADM_autodir )
 		return ADM_autodir;
-    ADM_autodir = ADM_getInstallRelativePath("lib", "ADM_plugins6", "autoScripts");
+    ADM_autodir = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, "ADM_plugins6", "autoScripts");
 	return ADM_autodir;
 }
 /**
@@ -235,7 +235,7 @@ char *ADM_getAutoDir(void)
 const char *ADM_getSystemPluginSettingsDir(void)
 {
     if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
-    ADM_systemPluginSettings=ADM_getInstallRelativePath("lib", "ADM_plugins6", "pluginSettings");
+    ADM_systemPluginSettings=ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, "ADM_plugins6", "pluginSettings");
     return ADM_systemPluginSettings;
 }
 /**
