@@ -143,12 +143,8 @@ static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,
     std::stringstream out;
     out << pluginVersion;
     version=out.str();
-
-    ADM_mkdir(path.c_str());
     path=path+slash+std::string(pluginName);
-    ADM_mkdir(path.c_str());
     path=path+slash+version;
-    ADM_mkdir(path.c_str());
     rootPath=path;
     ADM_info("System Plugin preset path : %s\n",rootPath.c_str());
     return true;
@@ -192,6 +188,7 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
         ADM_info("No preset found\n");
         return true;
     }
+    ADM_info("Found %d files\n",(int)nb);
     for( int i=0;i<nb;i++)
     {
         std::string s=std::string(list[i]);
