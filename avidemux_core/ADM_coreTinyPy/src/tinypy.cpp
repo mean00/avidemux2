@@ -123,6 +123,12 @@ Agreement.
 // MEANX : Redirect printf
 bool pyPrintf(const char *fmt,...);
 #define printf pyPrintf
+// MEANX : Need to use ADM_fopen for WIN32 support
+extern "C"
+{
+        FILE *ADM_fopen(const char *filename,const char *access);
+}
+#define fopen ADM_fopen
 
 /*  #define tp_malloc(x) calloc((x),1)
     #define tp_realloc(x,y) realloc(x,y)
