@@ -1,6 +1,20 @@
+/***************************************************************************
+   
+    \file  prefs.cpp
+    \brief 
+    copyright            : (C) 2001 by mean
+    email                : fixounet@free.fr
+ ***************************************************************************/
 
 /***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
  ***************************************************************************/
+
 
 /***************************************************************************
  *                                                                         *
@@ -249,38 +263,54 @@ preferences::~preferences(){
 	
 }
 
+#define FILE_SIZE_MAX (20*1024)
+/**
+    \fn load
+    \brief load prefs from file..
+*/
 int preferences::load(){
    xmlNodePtr p;
-   char *rcfile;
    char *home;
    char *dir_adm;
+   std::string path;
    
    char buf[1024];
+   char fileInMemory[FILE_SIZE_MAX];
    DIR   *dir;
 
-        dir_adm=ADM_getBaseDir();
-        if(!dir_adm) return RC_FAILED;
+    
 
-        rcfile=new char[strlen(dir_adm)+4+strlen(CONFIG)];
-        strcpy(rcfile,dir_adm);
-        strcat(rcfile,"/");
-        strcat(rcfile,CONFIG);
+    dir_adm=ADM_getBaseDir();
+    if(!dir_adm) return RC_FAILED;
 
-        
-        // Now build the filename
-	if( access(rcfile,R_OK) == -1 ){
-		if( errno != ENOENT )
-			fprintf(stderr,"can't read(%s): %d (%s)\n",
-				rcfile, errno, strerror(errno) );
-                delete [] rcfile;
+    path=string(dir_adm);
+    path=path+std::string("/");
+    path=path+std::string(CONFIG);
+    ADM_info("Loading prefs from %s\n",path.c_str());
+    // exist ?
+    if(!ADM_fileExist(path.c_str()))
+    {
+		fprintf(stderr,"can't read(%s): %d (%s)\n",
+				path.c_str(), errno, strerror(errno) );
+		return RC_FAILED;
+    }
+    FILE *o=ADM_fopen(path.c_str(),"r");
+    if(!o)
+    {
+        ADM_error("Cannot open pref file\n");
+        return RC_FAILED;
+    }
+    int sz=fread(fileInMemory,1,FILE_SIZE_MAX,o);
+    // Read into memory...
+    fclose(o);
+    //ADM_info("prefs is %d bytes long\n",sz);
+    // Parse...
+    xdoc=xmlParseMemory(fileInMemory,sz);
+    if(!xdoc)
+    {
+		fprintf(stderr,"can't parse "CONFIG".\n");
 		return RC_FAILED;
 	}
-	if( !(xdoc = xmlParseFile(rcfile)) ){
-		fprintf(stderr,"can't parse \"rcfile\".\n");
-                delete [] rcfile;
-		return RC_FAILED;
-	}
-        delete [] rcfile;
 	erase_blank_nodes(xdoc->children);
 	p = xdoc->children; // ->avidemux
 	buf[0] = '\0';
@@ -341,7 +371,7 @@ int preferences::load(){
 	//    check ranges foreach val
 	//       set to min if  <min or to max if >max - generate warning
 	//    warn about unused options
-	printf("Preferences found and loaded\n");
+	ADM_info("Preferences found and loaded\n");
 	return RC_OK;
 }
 
