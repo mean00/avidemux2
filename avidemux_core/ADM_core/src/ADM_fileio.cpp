@@ -83,7 +83,7 @@ size_t ADM_fwrite(const void *ptr, size_t size, size_t n, FILE *sstream)
 /**
     \fn ADM_eraseFile
 */
-bool ADM_eraseFile(const char *file)
+uint8_t ADM_eraseFile(const char *file)
 {
     if(!unlink(file))
         return true;
