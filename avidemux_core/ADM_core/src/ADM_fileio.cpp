@@ -80,7 +80,19 @@ size_t ADM_fwrite(const void *ptr, size_t size, size_t n, FILE *sstream)
 {
 	return fwrite(ptr,size,n,sstream);
 }
-
+/**
+    \fn ADM_eraseFile
+*/
+bool ADM_eraseFile(const char *file)
+{
+    if(!unlink(file))
+        return true;
+    return false;
+}
+/**
+    \fn ADM_fopen
+    \brief utf8 aware fopen, so that we can use utf8 string even on win32
+*/
 FILE *ADM_fopen(const char *file, const char *mode)
 {
 #ifdef __MINGW32__

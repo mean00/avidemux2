@@ -168,6 +168,9 @@ static xmlDocPtr xdoc;
 int xmlSaveNoEmptyTags  = 1;      /* save empty tags as <empty></empty> */
 int xmlIndentTreeOutput = 1;      /* try to indent the tree dumps */
 #endif
+
+
+
 void erase_blank_nodes(xmlNodePtr cur){
   /* erase all blank-nodes recursive; they deny IndentTreeOutput !!! */
   xmlNodePtr run = cur;
@@ -241,27 +244,6 @@ void set_content(const char *option, xmlNodePtr x){
 
 
 #include "prefs.h"
-
-preferences::preferences(){
-	internal_lastfiles[0] = internal_lastfiles[1] = NULL;
-	internal_lastfiles[2] = internal_lastfiles[3] = NULL;
-	internal_lastfiles[4] = NULL;
-	
-	xdoc = NULL;
-	
-}
-
-preferences::~preferences(){
-  unsigned int idx;
-	for( idx=0; idx < 4; idx++ ){
-		if( internal_lastfiles[idx] )
-			ADM_dealloc(internal_lastfiles[idx]);
-	}
-	
-	if( xdoc )
-		xmlFreeDoc(xdoc);
-	
-}
 
 #define FILE_SIZE_MAX (20*1024)
 /**
@@ -375,7 +357,9 @@ int preferences::load(){
 	return RC_OK;
 }
 
-
+/**
+    \fn save
+*/
 int preferences::save(){
    xmlNodePtr n;
    char buf[1024];
@@ -416,24 +400,26 @@ int preferences::save(){
 	}
 	return save_xml_to_file();
 }
+/**
+    \fn save_xml_to_file
 
-int preferences::save_xml_to_file(){
+*/
+int preferences::save_xml_to_file()
+{
    char *dir_adm;
-   char *rcfile;
-   char *rcfilenew;
+   std::string path,path_new;
 
-        dir_adm=ADM_getBaseDir();
-        if(!dir_adm) return RC_FAILED;
+    dir_adm=ADM_getBaseDir();
+    if(!dir_adm) return RC_FAILED;
 
-        rcfile=new char[strlen(dir_adm)+4+strlen(CONFIG)];
-        strcpy(rcfile,dir_adm);
-        strcat(rcfile,"/");
-        strcat(rcfile,CONFIG);
+    path=std::string(dir_adm);
+    path=path+std::string("/");
+    path=path+std::string(CONFIG);
 
 
-#if defined(__MINGW32__)
+#if 0 // Why ? defined(__MINGW32__)
 	xmlSetDocCompressMode(xdoc,9);
-	if( xmlSaveFormatFile(rcfile,xdoc,1) == -1 ){
+	if( xmlSaveFormatFile(path.c_str(),xdoc,1) == -1 ){
            fprintf(stderr,"\ncan't save xml tree to file. Filesystem full?\n\n");
            delete [] rcfile;
 	   return RC_FAILED;
@@ -443,43 +429,46 @@ int preferences::save_xml_to_file(){
 
 #else
 	
-        
-         rcfilenew=new char[strlen(rcfile)+5];
-        strcpy(rcfilenew,rcfile);
-        strcat(rcfilenew,".new");
-        if( unlink(rcfilenew) == -1 && errno != ENOENT ){
-           fprintf(stderr,"can't unlink(%s): %d (%s)\n",
-                   rcfilenew, errno, strerror(errno));
-           delete [] rcfilenew;
-           return RC_FAILED;
-        }
-	xmlSetDocCompressMode(xdoc,9);
-	if( qxmlSaveFormatFile(rcfilenew,xdoc,1) == -1 ){
-           delete [] rcfilenew;
-           delete [] rcfile;
+    path_new=path+std::string(".new");
+    ADM_eraseFile(path_new.c_str());
+    xmlSetDocCompressMode(xdoc,9);
+	if( qxmlSaveFormatFile(path_new.c_str(),xdoc,1) == -1 )
+    {
 	   return RC_FAILED;
 	}
-
-        if( unlink(rcfile) == -1 && errno != ENOENT ){
-           fprintf(stderr,"can't unlink(%s): %d (%s)\n",
-                   rcfile, errno, strerror(errno));
-           delete [] rcfilenew;
-           delete [] rcfile;
-           return RC_FAILED;
-        }
-        if( link(rcfilenew,rcfile) == -1 ){
-           fprintf(stderr,"can't create \"%s\": %d (%s)\n",
-                   rcfile, errno, strerror(errno));
-           delete [] rcfilenew;
-           delete [] rcfile;
-           return RC_FAILED;
-        }
-        unlink(rcfilenew); // rc/errno handling is done on next call ;-)
-        delete [] rcfilenew;
-        delete [] rcfile;
+    ADM_eraseFile(path.c_str());
+    if(false==ADM_copyFile(path_new.c_str(),path.c_str()))
+    {
+        ADM_error("Cannot copy %s to %s\n",path_new.c_str(),path.c_str());
+    }
+    ADM_eraseFile(path_new.c_str());
 	return RC_OK;
 #endif
 }
+/**
+    \fn ctor
+*/
+preferences::preferences(){
+	internal_lastfiles[0] = internal_lastfiles[1] = NULL;
+	internal_lastfiles[2] = internal_lastfiles[3] = NULL;
+	internal_lastfiles[4] = NULL;
+	
+	xdoc = NULL;
+	
+}
+
+preferences::~preferences(){
+  unsigned int idx;
+	for( idx=0; idx < 4; idx++ ){
+		if( internal_lastfiles[idx] )
+			ADM_dealloc(internal_lastfiles[idx]);
+	}
+	
+	if( xdoc )
+		xmlFreeDoc(xdoc);
+	
+}
+
 
 /*
 int preferences::get(options option, uint8_t *val){
@@ -978,12 +967,17 @@ const char **preferences::get_lastfiles(void){
 #endif
 	return (const char**)internal_lastfiles;
 }
+/**
+    \fn initPrefs
+*/
 int initPrefs(  void )
 {
   prefs = new preferences();
   return 1;
 }
-
+/**
+    \fn destroyPrefs
+*/
 int destroyPrefs(void)
 {
 	for (int i = 0; i < num_opts; i++)
