@@ -1,16 +1,22 @@
---- tinypy.c.org	2011-02-26 11:04:51.912547001 +0100
-+++ tinypy.cpp	2011-02-26 11:04:00.592547002 +0100
-@@ -119,6 +119,9 @@
+--- tinypy.cpp.orig	2011-03-05 19:01:34.305179001 +0100
++++ tinypy.cpp	2011-04-12 07:57:36.557517002 +0200
+@@ -120,6 +120,15 @@
  #ifndef tp_inline
  #error "Unsuported compiler"
  #endif
 +// MEANX : Redirect printf
 +bool pyPrintf(const char *fmt,...);
 +#define printf pyPrintf
++// MEANX : Need to use ADM_fopen for WIN32 support
++extern "C"
++{
++        FILE *ADM_fopen(const char *filename,const char *access);
++}
++#define fopen ADM_fopen
  
  /*  #define tp_malloc(x) calloc((x),1)
      #define tp_realloc(x,y) realloc(x,y)
-@@ -462,7 +465,8 @@
+@@ -463,7 +472,8 @@
  
  tp_inline static void tp_echo(TP,tp_obj e) {
      e = tp_str(tp,e);
@@ -20,7 +26,7 @@
  }
  
  /* Function: tp_string_n
-@@ -2200,6 +2204,9 @@
+@@ -2219,6 +2229,9 @@
          exit(-1);
  #else
          tp->ex = e;
@@ -30,7 +36,7 @@
          longjmp(tp->nextexpr,1);
  #endif
      }
-@@ -2236,6 +2243,9 @@
+@@ -2255,6 +2268,9 @@
      tp_print_stack(tp);
      exit(-1);
  #else

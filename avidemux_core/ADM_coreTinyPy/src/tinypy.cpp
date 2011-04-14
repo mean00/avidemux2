@@ -124,9 +124,13 @@ Agreement.
 bool pyPrintf(const char *fmt,...);
 #define printf pyPrintf
 // MEANX : Need to use ADM_fopen for WIN32 support
+#define uint8_t unsigned char
+#define int64_t long long int
 extern "C"
 {
         FILE *ADM_fopen(const char *filename,const char *access);
+        uint8_t ADM_fileExist(const char *file);
+        int64_t ADM_fileSize(const char *file);
 }
 #define fopen ADM_fopen
 
@@ -1443,9 +1447,10 @@ tp_obj tp_load(TP) {
     tp_obj r;
     char *s;
     char fname[256]; tp_cstr(tp,TP_STR(),fname,256);
-    struct stat stbuf;
-    stat(fname, &stbuf);
-    l = stbuf.st_size;
+    int64_t size=ADM_fileSize(fname);
+    if(size==-1)
+        tp_raise(tp_None,tp_string("(tp_load) cant get filesize"));
+    l = (int)size;
     f = fopen(fname,"rb");
     if (!f) {
         tp_raise(tp_None,tp_string("(tp_load) IOError: ?"));
@@ -1483,11 +1488,14 @@ tp_obj tp_round(TP) {
 
 tp_obj tp_exists(TP) {
     char fname[TP_CSTR_LEN]; tp_cstr(tp,TP_STR(),fname,TP_CSTR_LEN);
-    struct stat stbuf;
-    return tp_number(!stat(fname,&stbuf));
+    uint8_t e=ADM_fileExist(fname);
+    //struct stat stbuf;
+    //return tp_number(!stat(fname,&stbuf));
+    return tp_number(e);
 }
 tp_obj tp_mtime(TP) {
     char fname[TP_CSTR_LEN]; tp_cstr(tp,TP_STR(),fname,TP_CSTR_LEN);
+    #warning fixme
     struct stat stbuf;
     if (!stat(fname,&stbuf)) { return tp_number(stbuf.st_mtime); }
     tp_raise(tp_None,tp_string("(tp_mtime) IOError: ?"));
