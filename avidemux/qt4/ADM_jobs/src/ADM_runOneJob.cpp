@@ -11,6 +11,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "T_jobs.h"
 #include "T_progress.h"
 #include "ADM_default.h"
@@ -39,7 +43,37 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
     }
     ADM_info("=>%s\n",command.c_str());
     ADM_info("==================== Start of spawner process job ================\n");
+
+#ifdef _WIN32
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+    cmd=ADM_stdup(command.c_str());
+    // Start the child process. 
+    if( !CreateProcess( 
+        NULL,   // No module name (use command line)
+        cmd,        // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi )           // Pointer to PROCESS_INFORMATION structure
+    )
+    {
+        ADM_error("Cannot spawn process! (%s)\n",cmd);
+        ADM_dealloc(cmd);
+        return false;
+    }
+    ADM_dealloc(cmd);
+#else
     system(command.c_str());
+#endif
     ADM_info("==================== End of spawner process job ================\n");
     return true;
 }
@@ -109,12 +143,15 @@ bool jobWindow::runOneJob( ADMJob &job)
 
     // 2- Spawn  child
     string ScriptFullPath;
-    ScriptFullPath=string(ADM_getJobDir())+string("/")+string(job.scriptName);
+    
 #ifdef _WIN32
     #define MKEXE(x) "avidemux3_"#x".exe"
+    string slash=string("\\");
 #else
     #define MKEXE(x) "avidemux3_"#x
+    string slash=string("/");
 #endif
+    ScriptFullPath=string(ADM_getJobDir())+slash+string(job.scriptName);
     const char *avidemuxVersion=MKEXE(cli);
     if(ui.checkBoxUseQt4->isChecked())
     {
