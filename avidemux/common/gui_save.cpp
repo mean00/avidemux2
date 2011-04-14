@@ -47,6 +47,11 @@ extern   ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t 
 */
 void HandleAction_Save(Action action)
 {
+    if(!video_body->getNbSegment())
+    {
+        GUI_Error_HIG("No","No file loaded");
+        return;
+    }
     switch(action)
     {
     case ACT_SAVE_QUEUE:
