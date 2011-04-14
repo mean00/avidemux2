@@ -90,6 +90,19 @@ uint8_t ADM_eraseFile(const char *file)
     return false;
 }
 /**
+    \fn ADM_fileSize
+    \brief return filesize, -1 on error
+*/
+int64_t ADM_fileSize(const char *file)
+{
+    FILE *f=ADM_fopen(file,"r");
+    if(!f) return -1;
+    fseeko(f,0,SEEK_END);
+    int64_t v=ftello(f);
+    fclose(f);
+    return v;
+}
+/**
     \fn ADM_fopen
     \brief utf8 aware fopen, so that we can use utf8 string even on win32
 */

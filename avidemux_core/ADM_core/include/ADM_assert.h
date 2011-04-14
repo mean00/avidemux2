@@ -55,7 +55,7 @@ int             ADM_fclose (FILE *file);
 uint8_t         ADM_fileExist(const char *name);
 uint8_t         ADM_mkdir(const char *name);
 uint8_t         ADM_eraseFile(const char *name);
-
+int64_t         ADM_fileSize(const char *file);
 /* Replacements for memory allocation functions */
 extern void     *ADM_alloc(size_t size);
 extern void     *ADM_calloc(size_t nbElm,size_t elSize);
