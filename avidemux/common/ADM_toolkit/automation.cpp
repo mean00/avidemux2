@@ -473,6 +473,7 @@ void call_help(char *p)
 
 void save(char*name)
 {
+    if(!video_body->getNbSegment()) return;
 	A_Save(name);
 }
 
