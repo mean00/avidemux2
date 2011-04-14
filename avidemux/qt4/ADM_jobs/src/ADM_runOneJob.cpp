@@ -51,7 +51,7 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
-    cmd=ADM_stdup(command.c_str());
+    char *cmd=ADM_strdup(command.c_str());
     // Start the child process. 
     if( !CreateProcess( 
         NULL,   // No module name (use command line)
