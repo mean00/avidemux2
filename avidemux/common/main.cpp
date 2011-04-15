@@ -19,6 +19,8 @@
 #include "ADM_cpp.h"
 
 #ifdef __MINGW32__
+#define UNICODE
+#include <winbase.h>
 #include <windows.h>
 #include <excpt.h>
 #endif
@@ -94,6 +96,7 @@ extern void InitFactory(void);
 extern void InitCoreToolkit(void);
 #ifdef __MINGW32__
 extern EXCEPTION_DISPOSITION exceptionHandler(struct _EXCEPTION_RECORD* pExceptionRec, void* pEstablisherFrame, struct _CONTEXT* pContextRecord, void* pDispatcherContext);
+extern int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength, char *utf8String);
 #else
 extern void installSigHandler(void);
 #endif
@@ -223,7 +226,7 @@ int main(int argc, char *argv[])
         for(int i=0;i<Aargc;i++)
         {
             char *utf8;
-            wchar   *w=wargv[i];
+            wchar_t   *w=wargv[i];
             int     lin=wcslen(w);
             int     lout= wideCharStringToUtf8(w, lin,NULL);
             utf8=new char[lout+1];
