@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
      wchar_t **wargv = CommandLineToArgvW (GetCommandLineW (), &Aargc);
      if (wargv && Aargc)
      {
-        Aargv=new *char[Aargc];
+        Aargv=new char *[Aargc];
         for(int i=0;i<Aargc;i++)
         {
             char *utf8;
