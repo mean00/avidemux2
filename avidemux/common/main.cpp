@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
     char    **Aargv=NULL;
     int     Aargc=0;
 #if _WIN32
-     wchar_t **wargv = CommandLineToArgvW (GetCommandLine (), &Aargc);
+     wchar_t **wargv = CommandLineToArgvW (GetCommandLineW (), &Aargc);
      if (wargv && Aargc)
      {
         Aargv=new *char[Aargc];
