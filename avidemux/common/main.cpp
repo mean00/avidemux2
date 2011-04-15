@@ -212,7 +212,36 @@ int main(int argc, char *argv[])
     win32_netInit();
 #endif
 
-    UI_Init(argc,argv);
+    // unicode command line...
+    char    **Aargv=NULL;
+    int     Aargc=0;
+#if _WIN32
+     wchar_t **wargv = CommandLineToArgvW (GetCommandLine (), &Aargc);
+     if (wargv && Aargc)
+     {
+        Aargv=new *char[Aargc];
+        for(int i=0;i<Aargc;i++)
+        {
+            char *utf8;
+            wchar   *w=wargv[i];
+            int     lin=wcslen(w);
+            int     lout= wideCharStringToUtf8(w, lin,NULL);
+            utf8=new char[lout+1];
+            wideCharStringToUtf8(w,lin,utf8);
+            Aargv[i]=utf8;
+        }
+        for(int i=0;i<Aargc;i++)
+            printf("%d : %s\n",i,Aargv[i]);
+        
+     }
+#else
+    Aargv=argv;
+    Aargc=argc;
+
+#endif
+
+
+    UI_Init(Aargc,Aargv);
     AUDMEncoder_initDither();
 
     // Hook our UI...
