@@ -12,7 +12,10 @@
  *                                                                         *
  ***************************************************************************/
 #ifdef _WIN32
+#define UNICODE
+#include <winbase.h>
 #include <windows.h>
+
 #endif
 
 #include "T_jobs.h"
@@ -20,6 +23,10 @@
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 #include "pthread.h"
+
+#ifdef _WIN32
+int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
+#endif
 
 /**
     \fn spawnerBoomerang
@@ -51,11 +58,16 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
-    char *cmd=ADM_strdup(command.c_str());
+    // utf8 -> utf16
+    const char *c=command.c_str();
+    int size=utf8StringToWideChar(c,strlen(c),NULL);
+    wchar_t w[size+1];
+
+    utf8StringToWideChar(c,strlen(c),w);
     // Start the child process. 
-    if( !CreateProcess( 
+    if( !CreateProcessW( 
         NULL,   // No module name (use command line)
-        cmd,        // Command line
+        w,        // Command line
         NULL,           // Process handle not inheritable
         NULL,           // Thread handle not inheritable
         FALSE,          // Set handle inheritance to FALSE
@@ -66,11 +78,10 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
         &pi )           // Pointer to PROCESS_INFORMATION structure
     )
     {
-        ADM_error("Cannot spawn process! (%s)\n",cmd);
-        ADM_dealloc(cmd);
+        ADM_error("Cannot spawn process! (%s)\n",c);
         return false;
     }
-    ADM_dealloc(cmd);
+    
 #else
     system(command.c_str());
 #endif
