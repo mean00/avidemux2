@@ -230,6 +230,7 @@ int main(int argc, char *argv[])
             int     lin=wcslen(w);
             int     lout= wideCharStringToUtf8(w, lin,NULL);
             utf8=new char[lout+1];
+            memset(utf8,0,lout+1);
             wideCharStringToUtf8(w,lin,utf8);
             Aargv[i]=utf8;
         }
