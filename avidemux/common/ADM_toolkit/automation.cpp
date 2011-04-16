@@ -91,11 +91,6 @@ static void save(char*name);
 static void set_autoindex(char *p);
 //extern uint8_t A_setContainer(const char *cont);
 
-
-#ifdef __WIN32
-	extern int ansiStringToUtf8(const char *ansiString, int ansiStringLength, char *utf8String);
-#endif
-
 static int call_bframe(void);
 static int call_x264(void);
 static int call_forcesmart(void);
@@ -195,22 +190,9 @@ static int myargc;
 static three_arg_type three;
 static two_arg_type two;
 static int index;
-          argc=global_argc;
-#ifdef __WIN32
-	int utf8StringLength;
-
-	argv = new char*[argc];
-
-	for (int arg = 0; arg < argc; arg++)
-	{
-		utf8StringLength = ansiStringToUtf8(global_argv[arg], -1, NULL);
-		argv[arg] = new char[utf8StringLength];
-
-		ansiStringToUtf8(global_argv[arg], -1, argv[arg]);
-	}
-#else
+    argc=global_argc;
 	argv = global_argv;
-#endif
+
           printf("\n *** Automated : %"LU" entries*************\n",(uint32_t)NB_AUTO);
           // we need to process
           argc-=1;
@@ -266,12 +248,6 @@ static int index;
           } // end while
           GUI_Verbose();
           printf("\n ********** Automation ended***********\n");
-#ifdef __WIN32
-	for (int arg = 0; arg < argc; arg++)
-		delete [] argv[arg];
-
-	delete argv;
-#endif
           return 0; // Do not call me anymore
 }
 //_________________________________________________________________________
