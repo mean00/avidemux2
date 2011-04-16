@@ -13,6 +13,9 @@
  ***************************************************************************/
 #ifdef _WIN32
 #define UNICODE
+#include "ADM_cpp.h"
+
+#define UNICODE
 #include <winbase.h>
 #include <windows.h>
 
