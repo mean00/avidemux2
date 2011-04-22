@@ -62,13 +62,13 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
     /* All seems fine, open stuff */
     if(false==setupMuxer("matroska",file))
     {
-        printf("[Mkv] Failed to open muxer (setup)\n");
+        ADM_warning("[Mkv] Failed to open muxer (setup)\n");
         return false;
     }
  
    if(initVideo(s)==false) 
     {
-        printf("[Mkv] Failed to init video\n");
+        ADM_warning("[Mkv] Failed to init video\n");
         return false;
     }
   
@@ -92,7 +92,7 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         if(initAudio(nbAudioTrack,a)==false)
         {
-            printf("[Mkv] Failed to init audio\n");
+            ADM_warning("[Mkv] Failed to init audio\n");
             return false;
         }
         
@@ -105,9 +105,10 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             printf("Lav: set param failed \n");
             return false;
         }
-        if (url_fopen(&(oc->pb), file, URL_WRONLY) < 0)
+        int er=avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+        if (er)
         {
-            printf("[Mkv]: Failed to open file :%s\n",file);
+            ADM_error("[Mkv]: Failed to open file :%s, er=%d\n",file,er);
             return false;
         }
 
@@ -144,7 +145,7 @@ bool muxerMkv::muxerRescaleVideoTimeDts(uint64_t *time,uint64_t computedDts)
 bool muxerMkv::close(void) 
 {
    
-    printf("[Mkv] Closing\n");
+    ADM_info("[Mkv] Closing\n");
     return closeMuxer();
 }
 

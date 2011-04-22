@@ -115,9 +115,10 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
             printf("[ffTS]Lav: set param failed \n");
             return false;
         }
-        if (url_fopen(&(oc->pb), file, URL_WRONLY) < 0)
+        int erx=avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+        if (erx)
         {
-            printf("[ffTS]: Failed to open file :%s\n",file);
+            ADM_error("[Mp4]: Failed to open file :%s, er=%d\n",file,erx);
             return false;
         }
 
