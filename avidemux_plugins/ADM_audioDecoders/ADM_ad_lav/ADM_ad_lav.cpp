@@ -178,11 +178,17 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
               ADM_warning("[audioCodec] int16 failed also. Crashing.. \n");
               ADM_assert(0);
           }
-          ADM_info("Decoder created using i..\n");
+          ADM_info("Decoder created using int16..\n");
     }else
     {
-        useFloat=true;
-        ADM_info("Decoder created using float..\n");
+        if(_context->sample_fmt==AV_SAMPLE_FMT_FLT)
+        {
+            useFloat=true;
+            ADM_info("Decoder created using float..\n");
+        } else
+        {
+            ADM_info("Decoder created using int16..\n");
+        }
     }
 
 
