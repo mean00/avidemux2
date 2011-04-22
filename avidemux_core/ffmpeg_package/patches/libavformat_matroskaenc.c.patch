@@ -42,7 +42,7 @@
          put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)
  
 + 		/**  MEANX : Add a default duration for video **/
-+ 		if(codec->codec_type==CODEC_TYPE_VIDEO)
++ 		if(codec->codec_type==AVMEDIA_TYPE_VIDEO)
 + 		{
 + 			if(codec->time_base.den && codec->time_base.num)
 + 			{

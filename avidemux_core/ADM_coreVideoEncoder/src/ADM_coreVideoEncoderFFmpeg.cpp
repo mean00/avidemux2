@@ -2,7 +2,7 @@
                           \fn ADM_coreVideoEncoder
                           \brief Base class for video encoder plugin
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -34,7 +34,7 @@ extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t si
 
 */
 
-ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *set,bool globalHeader) 
+ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,FFcodecSettings *set,bool globalHeader)
                     : ADM_coreVideoEncoder(src)
 {
 uint32_t w,h;
@@ -42,9 +42,9 @@ uint32_t w,h;
     targetColorSpace=ADM_COLOR_YV12;
     w=getWidth();
     h=getHeight();
-    
+
     image=new ADMImageDefault(w,h);
-    _context = avcodec_alloc_context2 (CODEC_TYPE_VIDEO);
+    _context = avcodec_alloc_context2 (AVMEDIA_TYPE_VIDEO);
     ADM_assert (_context);
     memset (&_frame, 0, sizeof (_frame));
     _frame.pts = AV_NOPTS_VALUE;
@@ -75,7 +75,7 @@ uint32_t w,h;
                 ADM_info("Codec configured to use global header\n");
                 _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
     }
-    
+
 }
 /**
     \fn ADM_coreVideoEncoderFFmpeg
@@ -88,7 +88,6 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
         if (_isMT )
         {
           printf ("[lavc] killing threads\n");
-          avcodec_thread_free (_context);
           _isMT = false;
         }
         if(_context->codec)
@@ -100,7 +99,7 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
     {
         delete colorSpace;
         colorSpace=NULL;
-    }   
+    }
     if(rgbBuffer)
     {
         delete [] rgbBuffer;
@@ -126,11 +125,11 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
 
   switch(targetColorSpace)
     {
-        case ADM_COLOR_YV12:    _frame.linesize[0] = w; 
-                                _frame.linesize[1] = w>>1; 
-                                _frame.linesize[2] = w>>1; 
+        case ADM_COLOR_YV12:    _frame.linesize[0] = w;
+                                _frame.linesize[1] = w>>1;
+                                _frame.linesize[2] = w>>1;
                                 _context->pix_fmt =PIX_FMT_YUV420P;break;
-        case ADM_COLOR_YUV422P: _frame.linesize[0] = w; 
+        case ADM_COLOR_YUV422P: _frame.linesize[0] = w;
                                 _frame.linesize[1] = w>>1;
                                 _frame.linesize[2] = w>>1;
                                 _context->pix_fmt =PIX_FMT_YUV422P;break;
@@ -141,18 +140,18 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
         default: ADM_assert(0);
 
     }
-    
+
     // Eval fps
     uint64_t f=source->getInfo()->frameIncrement;
     // Let's put 100 us as time  base
-    
+
 #ifdef TIME_TENTH_MILLISEC
     _context->time_base.num=1;
     _context->time_base.den=10000LL;
 #else
 
     int n,d;
-    
+
     usSecondsToFrac(f,&n,&d);
  //   printf("[ff] Converted a time increment of %d ms to %d /%d seconds\n",f/1000,n,d);
     _context->time_base.num=n;
@@ -166,7 +165,7 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
 */
 int64_t          ADM_coreVideoEncoderFFmpeg::timingToLav(uint64_t val)
 {
-  int64_t v= floor( ((float)val+timeScaler/2.) /timeScaler);    
+  int64_t v= floor( ((float)val+timeScaler/2.) /timeScaler);
   return v;
 }
 /**
@@ -180,7 +179,7 @@ uint64_t         ADM_coreVideoEncoderFFmpeg::lavToTiming(int64_t val)
 
 /**
     \fn pre-encoder
-    
+
 */
 bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 {
@@ -211,7 +210,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     //
     switch(targetColorSpace)
     {
-        case ADM_COLOR_YV12:      
+        case ADM_COLOR_YV12:
                 _frame.data[0] = image->GetWritePtr(PLANAR_Y);
                 _frame.data[2] = image->GetWritePtr(PLANAR_U);
                 _frame.data[1] = image->GetWritePtr(PLANAR_V);
@@ -255,7 +254,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
 {
     int res;
     AVCodec *codec=avcodec_find_encoder(codecId);
-    if(!codec) 
+    if(!codec)
     {
         printf("[ff] Cannot find codec\n");
         return false;
@@ -266,12 +265,12 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
     {
         encoderMT();
     }
-   res=avcodec_open(_context, codec); 
-   if(res<0) 
+   res=avcodec_open(_context, codec);
+   if(res<0)
     {   printf("[ff] Cannot open codec\n");
         return false;
     }
-   
+
     // Now allocate colorspace
     int w,h;
     FilterInfo *info=source->getInfo();
@@ -355,11 +354,11 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d\n",out->out_quantizer,pict_type,keyframe);
     out->len=size;
     out->flags=0;
-    if(keyframe) 
+    if(keyframe)
         out->flags=AVI_KEY_FRAME;
     else if(pict_type==FF_B_TYPE)
         out->flags=AVI_B_FRAME;
-    
+
     // Update PTS/Dts
     if(!_context->max_b_frames)
     {
@@ -370,8 +369,8 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts));
     // update lastDts
     lastDts=out->dts;
-    
-    aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);    
+
+    aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);
 
     // Update quant
     if(!_context->coded_frame->quality)
@@ -379,7 +378,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     else
       out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
 
-    
+
 
     // Update stats
     if(Settings.params.mode==COMPRESS_2PASS   || Settings.params.mode==COMPRESS_2PASS_BITRATE)
@@ -398,7 +397,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 {
 	  //_context->gop_size = 250;
-	
+
 #define SETX(x) _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);
 #define SETX_COND(x) if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);} else\
 		{ printf(#x" is not activated\n");}
@@ -446,7 +445,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
         default:
           ADM_assert (0);
 	}
-      
+
       SETX (_4MV);
       SETX (_QPEL);
       if(set->lavcSettings._TRELLIS_QUANT) _context->trellis=1;
@@ -461,7 +460,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 
         }
 #undef SETX
-    
+
   _context->bit_rate_tolerance = 8000000;
   _context->b_quant_factor = 1.25;
   _context->rc_strategy = 2;
@@ -508,7 +507,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
 {
     int averageBitrate; // Fixme
-   
+
     // Compute average bitrate
 
         if(Settings.params.mode==COMPRESS_2PASS_BITRATE) averageBitrate=Settings.params.avg_bitrate*1000;
@@ -560,10 +559,10 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
 /**
     \fn encoderMT
     \brief handle multithreaded encoding
-*/  
+*/
 bool ADM_coreVideoEncoderFFmpeg::encoderMT (void)
 {
- 
+
   uint32_t threads =    LAVS(MultiThreaded);
   switch(threads)
   {
@@ -574,11 +573,8 @@ bool ADM_coreVideoEncoderFFmpeg::encoderMT (void)
   if (threads)
   {
       printf ("[lavc] Enabling MT encoder with %u threads\n", threads);
-
-      if (avcodec_thread_init (_context, threads) == -1)
-	      printf ("[lavc] Failed!!\n");
-	  else
-          _isMT = 1;
+      _context->thread_count=threads;
+      _isMT = 1;
   }
   return true;
 }

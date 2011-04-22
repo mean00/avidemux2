@@ -95,7 +95,7 @@ muxerFFmpeg::~muxerFFmpeg()
 */
 bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
 {
-    fmt=guess_format(format, NULL, NULL);
+    fmt=av_guess_format(format, NULL, NULL);
     if(!fmt)
     {
             printf("[FF] guess format failed\n");
@@ -111,9 +111,11 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
 	snprintf(oc->filename,1000,"file://%s",filename);
     // probably a memeleak here
     char *foo=ADM_strdup(filename);
-
+#warning use AV METADATA
+#if 0
     strcpy(oc->title,ADM_GetFileName(foo));
     strcpy(oc->author,"Avidemux");
+#endif
     printf("[FF] Muxer opened\n");
     return true;
 }
@@ -150,12 +152,12 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         c->rc_max_rate=9500*1000;
         c->rc_min_rate=0;
         c->bit_rate=9000*1000;
-        c->codec_type = CODEC_TYPE_VIDEO;
+        c->codec_type = AVMEDIA_TYPE_VIDEO;
         c->flags=CODEC_FLAG_QSCALE;
         c->width = stream->getWidth();
         c->height =stream->getHeight();
         uint32_t fcc=stream->getFCC();
-        
+
         if(isMpeg4Compatible(fcc))
         {
                 c->codec_id = CODEC_ID_MPEG4;
@@ -233,7 +235,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                             }else
                                             {
                                                 uint32_t id=stream->getFCC();
-            
+
                                                 CodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
                                                 if(cid==CODEC_ID_NONE)
                                                 {
@@ -252,7 +254,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
             {
                 ADM_info("Video has extradata and muxer requires globalHeader, assuming it is done so.\n");
                 c->flags|=CODEC_FLAG_GLOBAL_HEADER;
-            }else       
+            }else
             {
                 ADM_warning("Video has no extradata but muxer requires globalHeader.\n");
             }
@@ -324,7 +326,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                  return false;
                           break;
           }
-          c->codec_type = CODEC_TYPE_AUDIO;
+          c->codec_type = AVMEDIA_TYPE_AUDIO;
           c->bit_rate = audioheader->byterate*8;
           c->rc_buffer_size=(c->bit_rate/(2*8)); // 500 ms worth
           c->channels = audioheader->channels;
@@ -334,7 +336,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
             {
                 ADM_info("Audio has extradata and muxer requires globalHeader, assuming it is done so.\n");
                 c->flags|=CODEC_FLAG_GLOBAL_HEADER;
-            }else       
+            }else
             {
                 ADM_warning("Audio has no extradata but muxer requires globalHeader.\n");
             }
@@ -378,7 +380,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     f*=1000000;
     videoIncrement=(uint64_t)f;
 
-    
+
 
     ADM_info("avg fps=%u\n",vStream->getAvgFps1000());
     AVRational *scale=&(video_st->codec->time_base);
@@ -435,7 +437,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             pkt.data= buffer;
             pkt.size= out.len;
             if(out.flags & 0x10) // FIXME AVI_KEY_FRAME
-                        pkt.flags |= PKT_FLAG_KEY;
+                        pkt.flags |= AV_PKT_FLAG_KEY;
             ret =writePacket( &pkt);
             aprintf("[FF]Frame:%u, DTS=%08lu PTS=%08lu\n",written,out.dts,out.pts);
             if(false==ret)
@@ -491,7 +493,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     pkt.stream_index=1+audio;
                     pkt.data= audioTrack->buffer;
                     pkt.size= audioTrack->size;
-                    pkt.flags |= PKT_FLAG_KEY; // Assume all audio are keyframe, which is slightly wrong
+                    pkt.flags |= AV_PKT_FLAG_KEY; // Assume all audio are keyframe, which is slightly wrong
                     ret =writePacket( &pkt);
                     audioTrack->present=false; // consumed
                     if(false==ret)

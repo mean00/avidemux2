@@ -103,7 +103,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
     //printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, (uint64_t)(src->reordered_opaque));
     //printf("[LAVC] pts: %"LLU"\n",src->pts);
     out->Pts= (uint64_t)(src->reordered_opaque);
- 
+
     return 1;
 }
 /**
@@ -126,11 +126,8 @@ void decoderFF::decoderMultiThread (void)
   if (threads)
   {
       printf ("[lavc] Enabling MT decoder with %u threads\n", threads);
-
-      if (avcodec_thread_init (_context, threads) == -1)
-	      printf ("[lavc] Failed!!\n");
-	  else
-          _usingMT = 1;
+      _context->thread_count=threads;
+      _usingMT = 1;
   }
 }
 uint8_t decoderFF::getPARWidth (void)
@@ -156,6 +153,7 @@ bool  decoderFF::setParam (void)
 decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
             :decoders (w, h,fcc,extraDataLen,extraData,bpp)
 {
+  hurryUp=false;
   codecId = 0;
 //                              memset(&_context,0,sizeof(_context));
   _allowNull = 0;
@@ -190,7 +188,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
   _context->debug_mv |= FF_SHOW;
   _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;
-  
+
 }
 
 //_____________________________________________________
@@ -200,7 +198,6 @@ decoderFF::~decoderFF ()
   if (_usingMT)
     {
       printf ("[lavc] Killing decoding threads\n");
-      avcodec_thread_free (_context);
       _usingMT = 0;
     }
 
@@ -274,16 +271,17 @@ uint32_t decoderFF::frameType (void)
 }
 bool decoderFF::decodeHeaderOnly (void)
 {
-  if (codecId == CODEC_ID_H264)
-    _context->hurry_up = 4;
-  else
-    _context->hurry_up = 5;
+  hurryUp=true;
+  _context->skip_frame=AVDISCARD_ALL;
+  _context->skip_idct=AVDISCARD_ALL;
   printf ("\n[lavc] Hurry up\n");
   return 1;
 }
 bool decoderFF::decodeFull (void)
 {
-  _context->hurry_up = 0;
+  _context->skip_frame=AVDISCARD_DEFAULT;
+  _context->skip_idct=AVDISCARD_DEFAULT;
+  hurryUp=false;
   printf ("\n[lavc] full decoding\n");
   return 1;
 }
@@ -321,14 +319,14 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       _context->debug &= ~(FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP);
     }
 
-   
-    
+
+
   if (in->dataLength == 0 && !_allowNull)	// Null frame, silently skipped
     {
-      
+
       printf ("[Codec] null frame\n");
         // search the last image
-        if (_context->coded_frame && 
+        if (_context->coded_frame &&
             _context->coded_frame->data &&
             _context->coded_frame->data[0]
             )
@@ -358,7 +356,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     pkt.flags=AV_PKT_FLAG_KEY;
   else
     pkt.flags=0;
-  
+
   ret = avcodec_decode_video2 (_context, &_frame, &got_picture, &pkt);
   if(!bFramePossible())
   {
@@ -366,15 +364,15 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     _context->reordered_opaque=(int64_t)in->demuxerPts;
   }
   out->_qStride = 0;		//Default = no quant
-  if (0 > ret && !_context->hurry_up)
+  if (0 > ret && !hurryUp)
     {
       printf ("\n[lavc] error in lavcodec decoder!\n");
       printf ("[lavc] Err: %d, size :%d\n", ret, in->dataLength);
       return 0;
     }
-  if (!got_picture && !_context->hurry_up)
+  if (!got_picture && !hurryUp)
     {
-      // Some encoder code a vop header with the 
+      // Some encoder code a vop header with the
       // vop flag set to 0
       // it is meant to mean frame skipped but very dubious
       if (in->dataLength <= 8 && codecId == CODEC_ID_MPEG4)
@@ -412,7 +410,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       //return 1;
       return 0;
     }
-  if (_context->hurry_up)
+  if (hurryUp)
     {
       out->flags = frameType ();
       return 1;
@@ -486,7 +484,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
 // force low delay as avidemux don't handle B-frames
   ADM_info ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", (int)extraDataLen);
-  
+
   _refCopy = 1;			// YUV420 only
   _context->extradata = (uint8_t *) extraData;
   _context->extradata_size = (int)extraDataLen  ;
@@ -557,9 +555,9 @@ extern "C" {int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, u
 */
 bool   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-  if(!_context->hurry_up) return decoderFF::uncompress (in, out);
+  if(!hurryUp) return decoderFF::uncompress (in, out);
     ADM_assert(0);
-#if 0  
+#if 0
   uint32_t nalSize, isAvc;
   av_getAVCStreamInfo(_context,&nalSize,&isAvc);
   if(isAvc)
@@ -607,7 +605,7 @@ void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list lis
 {
    // if(level>1) return;
     char buf[256];
-  
+
     vsnprintf(buf, sizeof(buf), fmt, list);
     if(level<=AV_LOG_INFO)
         ADM_info("[lavc] %s",buf);

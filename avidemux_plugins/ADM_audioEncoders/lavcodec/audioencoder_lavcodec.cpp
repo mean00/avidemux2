@@ -1,10 +1,10 @@
 /***************************************************************************
-                        
+
     copyright            : (C) 2002-2006 by mean
     email                : fixounet@free.fr
-    
+
     Interface to FFmpeg mpeg1/2 audio encoder
-    
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -20,6 +20,7 @@
 
 extern "C" {
 #include "libavcodec/avcodec.h"
+#include "libavutil/error.h"
 }
 
 #include "DIA_factory.h"
@@ -36,7 +37,7 @@ static uint32_t lavBitrate=128;
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lavcodec);
 
-static ADM_audioEncoder encoderDesc = { 
+static ADM_audioEncoder encoderDesc = {
   ADM_AUDIO_ENCODER_API_VERSION,
   create,			// Defined by macro automatically
   destroy,			// Defined by macro automatically
@@ -53,7 +54,7 @@ static ADM_audioEncoder encoderDesc = {
   setConfigurationData,  // Defined by macro automatically
 
   getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically 
+  setBitrate,            // Defined by macro automatically
 
   NULL,         //** put your own function here**
 
@@ -70,7 +71,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,lavBitrate);
 */
 AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
 {
-  
+
   _context=NULL;
   _globalHeader=globalHeader;
    printf("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
@@ -96,7 +97,7 @@ uint8_t AUDMEncoder_Lavcodec::extraData(uint32_t *l,uint8_t **d)
         *d=CONTEXT->extradata;
         *l=(uint32_t)size;
     }
-    else    
+    else
     {
         *d=NULL;
         *l=0;
@@ -125,24 +126,24 @@ bool AUDMEncoder_Lavcodec::initialize(void)
 {
   int ret;
   _context=( void *)avcodec_alloc_context();
-  
+  _useFloat=true;
 
   if( _incoming->getInfo()->channels>ADM_LAV_MAX_CHANNEL)
   {
     ADM_error("[Lavcodec]Too many channels\n");
-    return 0; 
+    return 0;
   }
-  wavheader.byterate=(lavBitrate*1000)>>3;         
-      
+  wavheader.byterate=(lavBitrate*1000)>>3;
+
   _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
   ADM_info("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
   wavheader.frequency,wavheader.channels,lavBitrate);
-  
-  
+
+
   CONTEXT->channels     =  wavheader.channels;
   CONTEXT->sample_rate  =  wavheader.frequency;
   CONTEXT->bit_rate     = (lavBitrate*1000); // bits -> kbits
-
+  CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_FLT;
   if(true==_globalHeader)
   {
     ADM_info("Configuring audio codec to use global headers\n");
@@ -152,21 +153,39 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   AVCodec *codec;
   CodecID codecID;
 
-  
+
   codecID=makeName(CODEC_ID);
   codec = avcodec_find_encoder(codecID);
   ADM_assert(codec);
-  
+  // Try float...
   ret = avcodec_open(CONTEXT, codec);
-  if (0> ret) 
+  if (0> ret)
   {
-    ADM_error("[Lavcodec] init failed err : %d!\n",ret);
-    return 0;
-  }
+    char er[256]={0};
+    av_strerror(ret, er, sizeof(er));
+    ADM_info("[Lavcodec] init failed err : %d %s!\n",ret,er);
+    ADM_info("Float failed, retrying with int16\n");
+    CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_S16;
+    ret = avcodec_open(CONTEXT, codec);
+    if (0> ret)
+    {
+        char er[256]={0};
+        av_strerror(ret, er, sizeof(er));
+        ADM_error("[Lavcodec] init failed err : %d %s!\n",ret,er);
+        ADM_info("s16 failed\n");
+        return 0;
+    }
+    _useFloat=false;
+    ADM_info("Using int16 samples\n");
+  }else
+     {
+         _useFloat=true;
+         ADM_info("Using float samples\n");
+     }
 
 
   ADM_info("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
-  return 1;       
+  return 1;
 }
 /**
     \fn encode
@@ -188,12 +207,13 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
         {
             if(left) // Last block
             {
-               dither16(&(tmpbuffer[tmphead]),left,channels);
+               if(_useFloat==false)
+                    dither16(&(tmpbuffer[tmphead]),left,channels);
                ADM_assert(tmptail>=tmphead);
 #warning buffer overread
                nbout = avcodec_encode_audio(CONTEXT, dest, 5000, (short *) &(tmpbuffer[tmphead]));
                tmphead=tmptail;
-               *samples = left/channels; 
+               *samples = left/channels;
                *len=nbout;
                ADM_info("[Lav] Last audio block\n");
                goto cnt;
@@ -204,14 +224,14 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
               if(CONTEXT->codec->capabilities & CODEC_CAP_DELAY)
               {
                   nbout=avcodec_encode_audio(CONTEXT, dest, 5000,NULL);
-                  if(nbout<0) 
+                  if(nbout<0)
                   {
                         ADM_warning("Error while flushing lame\n");
-                        return false;   
+                        return false;
                   }
-                        
+
                   *len=nbout;
-                  *samples=_chunk/channels;  
+                  *samples=_chunk/channels;
                   ADM_info("[Lav] Flushing, last block is %d bytes\n",nbout);
                   return true;
               }else
@@ -222,20 +242,21 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
         }
     }
 
-
-  dither16(&(tmpbuffer[tmphead]),_chunk,channels);
+  if(_useFloat==false)
+    dither16(&(tmpbuffer[tmphead]),_chunk,channels);
 
   ADM_assert(tmptail>=tmphead);
   nbout = avcodec_encode_audio(CONTEXT, dest, 5000, (short *) &(tmpbuffer[tmphead]));
 
   tmphead+=_chunk;
 cnt:
-  if (nbout < 0) 
+  if (nbout < 0)
   {
     ADM_error("[Lavcodec] Error !!! : %"LD"\n", nbout);
     return 0;
   }
   *len=nbout;
+  *samples=_chunk/channels;
   return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
@@ -261,13 +282,13 @@ bool configure (void)
                               BITRATE(384)
                           };
     diaElemMenu bitrate(&(lavBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
-  
-    
+
+
 
     diaElem *elems[]={&bitrate};
-    
+
     return ( diaFactoryRun(QT_TR_NOOP(ADM_LAV_MENU" (lav) Configuration"),1,elems));
-    
-}	
+
+}
 
 // EOF

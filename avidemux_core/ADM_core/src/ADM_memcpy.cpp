@@ -389,9 +389,9 @@ static struct {
 #if defined(ADM_CPU_X86)
   { "linux kernel memcpy()", linux_kernel_memcpy, 0, 0 },
 #if defined(ADM_CPU_X86)
-  { "MMX optimized memcpy()", mmx_memcpy, 0, FF_MM_MMX },
-  { "MMXEXT optimized memcpy()", mmx2_memcpy, 0, FF_MM_MMXEXT },
-  { "SSE optimized memcpy()", sse_memcpy, 0, FF_MM_MMXEXT|FF_MM_SSE },
+  { "MMX optimized memcpy()", mmx_memcpy, 0, 0 },
+  { "MMXEXT optimized memcpy()", mmx2_memcpy, 0, 0 },
+  { "SSE optimized memcpy()", sse_memcpy, 0, 0|0 },
 #endif
 #endif /* ARCH_X86 */
 #if 0 && defined(ADM_CPU_PPC) && !defined (__APPLE__)

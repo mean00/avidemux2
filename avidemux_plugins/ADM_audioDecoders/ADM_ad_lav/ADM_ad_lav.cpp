@@ -18,6 +18,7 @@
 
 extern "C" {
 #include "libavcodec/avcodec.h"
+#include "libavutil/audioconvert.h"
 }
 
 #include "ADM_ad_plugin.h"
@@ -27,11 +28,12 @@ extern "C" {
 class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 {
 	protected:
-		void *_contextVoid;
-		uint8_t _buffer[ ADMWA_BUF];
-		uint32_t _tail,_head;
-		uint32_t _blockalign;
-        uint32_t channels;
+	    bool        useFloat;
+		void      *_contextVoid;
+		uint8_t    _buffer[ ADMWA_BUF];
+		uint32_t   _tail,_head;
+		uint32_t   _blockalign;
+        uint32_t    channels;
         bool        decodeToS16(float *outptr,uint32_t *nbOut);
         bool        decodeToFloat(float *outptr,uint32_t *nbOut);
 	public:
@@ -59,9 +61,9 @@ static  ad_supportedFormat Formats[]={
         {WAV_MP2,AD_MEDIUM_QUAL},
         {WAV_AC3,AD_LOW_QUAL},   // liba52 preferred ???
         {WAV_AAC,AD_LOW_QUAL},   // libfaad preferred ???
-        {0x706D,AD_LOW_QUAL}, 
+        {0x706D,AD_LOW_QUAL},
         {WAV_EAC3,AD_MEDIUM_QUAL}
-  
+
 };
 
 DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
@@ -97,8 +99,8 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
  ADM_AudiocoderLavcodec::ADM_AudiocoderLavcodec(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
        :  ADM_Audiocodec(fourcc)
  {
-    printf(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
-    printf(" [ADM_AD_LAV] #of channels %d\n",info->channels);
+    ADM_info(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
+    ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
     channels=info->channels;
     _contextVoid=(void *)avcodec_alloc_context();
@@ -109,7 +111,6 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     _context->channels = info->channels;
     _blockalign=_context->block_align = info->blockalign;
     _context->bit_rate = info->byterate*8;
-    _context->sample_fmt=AV_SAMPLE_FMT_S16;
     switch(fourcc)
     {
       case WAV_WMA:
@@ -158,9 +159,6 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     }
 
 
-
-
-
     _context->extradata=(uint8_t *)d;
     _context->extradata_size=(int)l;
     printf("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
@@ -168,23 +166,41 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
 
    AVCodec *codec=avcodec_find_decoder(_context->codec_id);
    if(!codec) {ADM_assert(0);}
+
+    useFloat=false;
+    _context->sample_fmt=AV_SAMPLE_FMT_FLT;
     if (avcodec_open(_context, codec) < 0)
     {
-        printf("[audioCodec] Lavc audio decoder init failed !\n");
-        ADM_assert(0);
+         ADM_warning("[audioCodec] Cannot use float, retrying with int16 \n");
+         _context->sample_fmt=AV_SAMPLE_FMT_S16;
+         if (avcodec_open(_context, codec) < 0)
+          {
+              ADM_warning("[audioCodec] int16 failed also. Crashing.. \n");
+              ADM_assert(0);
+          }
+          ADM_info("Decoder created using i..\n");
+    }else
+    {
+        useFloat=true;
+        ADM_info("Decoder created using float..\n");
     }
+
+
     if(!_blockalign)
     {
       if(_context->block_align) _blockalign=_context->block_align;
       else
       {
-        printf("[ADM_ad_lav] : no blockalign taking 378\n");
+        ADM_info("[ADM_ad_lav] : no blockalign taking 378\n");
         _blockalign=378;
       }
     }
-    printf("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
-  
+    ADM_info("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
+
 }
+/**
+    \fn dtor
+*/
  ADM_AudiocoderLavcodec::~ADM_AudiocoderLavcodec()
  {
         avcodec_close(_context);
@@ -205,8 +221,12 @@ int nbChunk;
         {
           nbChunk=(_tail-_head)/_blockalign;
           pout=SCRATCH_PAD_SIZE;
-          out=avcodec_decode_audio2(_context,(int16_t *)scratchPad,
-                                   &pout,_buffer+_head,nbChunk*_blockalign);
+          AVPacket pkt;
+          av_init_packet(&pkt);
+          pkt.size=nbChunk*_blockalign;
+          pkt.data=_buffer+_head;
+          out=avcodec_decode_audio3(_context,(int16_t *)scratchPad,
+                                   &pout,&pkt);
 
           if(out<0)
           {
@@ -252,36 +272,31 @@ int nbChunk;
         {
           nbChunk=(_tail-_head)/_blockalign;
           pout=SCRATCH_PAD_SIZE;
-          out=avcodec_decode_audio2(_context,(int16_t *)outptr,
-                                   &pout,_buffer+_head,nbChunk*_blockalign);
+
+          AVPacket pkt;
+          av_init_packet(&pkt);
+          pkt.size=nbChunk*_blockalign;
+          pkt.data=_buffer+_head;
+
+          out=avcodec_decode_audio3(_context,(int16_t *)outptr,
+                                   &pout,&pkt);
             //ADM_info("in %d out %d\n",out,pout);
 
           if(out<0)
           {
-            printf( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
+            ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
             _head+=1; // Try skipping some bytes
             continue;
           }
           if(pout>=SCRATCH_PAD_SIZE)
           {
-            printf("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
+            ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
             ADM_assert(0);
           }
 
           _head+=out; // consumed bytes
           pout/=sizeof(float); // size in bytes -> nb float
-          // convert float[+-32767] to float[+-1]...
-#if 0
-          for(int i=0;i<pout;i++)
-          {
-            float f=*outptr;
-            f/=32767.;
-            *outptr=f;
-            outptr++;
-          }
-#else
-            outptr+=pout;
-#endif          
+          outptr+=pout;
           *nbOut+=pout;
         }
     return true;
@@ -305,34 +320,27 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         ADM_assert(nbIn+_tail<ADMWA_BUF);
         memcpy(_buffer+_tail,inptr,nbIn);
         _tail+=nbIn;
-        //---------------
-        switch(_context->codec_id)
-        {
-            case CODEC_ID_AC3:
-            case CODEC_ID_EAC3:
-            case CODEC_ID_DTS:
-                    decodeToFloat(outptr,nbOut);
-                    break;
-            default:
-                    decodeToS16(outptr,nbOut);
-                    break;
-         }
+        if(useFloat)
+         decodeToFloat(outptr,nbOut);
+        else
+         decodeToS16(outptr,nbOut);
+
         //------------------
           if(channels>=5 )
             {
             CHANNEL_TYPE *p_ch_type = channelMapping;
-#define DOIT(x,y) if(_context->channel_layout & CH_##x) *(p_ch_type++)=ADM_CH_##y;
-                    
+#define DOIT(x,y) if(_context->channel_layout & AV_CH_##x) *(p_ch_type++)=ADM_CH_##y;
+
                     DOIT(FRONT_LEFT,FRONT_LEFT);
                     DOIT(FRONT_RIGHT,FRONT_RIGHT);
-                    DOIT(FRONT_CENTER,FRONT_CENTER);                    
+                    DOIT(FRONT_CENTER,FRONT_CENTER);
                     DOIT(LOW_FREQUENCY,LFE);
                     DOIT(SIDE_LEFT,REAR_LEFT);
-                    DOIT(SIDE_RIGHT,REAR_RIGHT);
+                    DOIT(SIDE_RIGHT,REAR_RIGHT); // AV_CH_SIDE_LEFT
             }
-        
+
         return 1;
 }
-//---
+//--- EOF
 
 

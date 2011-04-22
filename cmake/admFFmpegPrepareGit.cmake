@@ -8,7 +8,7 @@ endif (NOT VERBOSE)
 # Checkout FFmpeg source and patch it
 if (NOT EXISTS  "${FFMPEG_SOURCE_DIR}/${FFMPEG_VERSION}")
 	message(STATUS "Checking out FFmpeg from git repository")
-	execute_process(COMMAND ${GIT_EXECUTABLE} clone --depth 20 git://git.ffmpeg.org/ffmpeg.git  "${FFMPEG_SOURCE_DIR}"
+	execute_process(COMMAND ${GIT_EXECUTABLE} clone --depth 20 git://git.videolan.org/ffmpeg.git  "${FFMPEG_SOURCE_DIR}"
 					${ffmpegGitOutput})
 	MESSAGE(STATUS "Going to revision ${FFMPEG_VERSION}")
 	execute_process(COMMAND ${GIT_EXECUTABLE} checkout   ${FFMPEG_VERSION}

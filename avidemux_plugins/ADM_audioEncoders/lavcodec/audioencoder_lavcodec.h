@@ -18,12 +18,12 @@
 class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
 {
   protected:
-   
+    bool               _useFloat;
     void              *_context;
     uint32_t            _chunk;
     bool               _globalHeader;
-    
-         
+
+
   public:
             bool        initialize(void);
    virtual             ~AUDMEncoder_Lavcodec();

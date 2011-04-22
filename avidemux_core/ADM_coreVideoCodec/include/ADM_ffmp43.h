@@ -1,9 +1,9 @@
 /***************************************************************************
                           ADM_ffmp43.h  -  description
                              -------------------
-                             
+
 	Mpeg4 ****decoder******** using ffmpeg
-	                              
+
     begin                : Wed Sep 25 2002
     copyright            : (C) 2002 by mean
     email                : fixounet@free.fr
@@ -33,7 +33,7 @@ extern "C" {
 class decoderFF:public decoders
 {
 protected:
-
+  bool  hurryUp;
   int codecId;
   uint8_t _refCopy;
   AVCodecContext *_context;
