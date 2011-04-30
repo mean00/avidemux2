@@ -71,11 +71,11 @@ def makeStructure(varType,params):
         if(varType!="string" and varType!="filename"):
             print ("Error "+str(varName)+" has not the good number of parameters,type="+str(varType))
             raise
-        min=r"NULL"
-        max=r'NULL'
+        min=r"0"
+        max=r'0'
     elif(nbParam==4):
-        min="\""+str(params[2])+str("\"")
-        max="\""+str(params[3])+str("\"")
+        min=str(params[2])
+        max=str(params[3])
     if(not varType in allATypes):
         print("json:Unknown var type <"+str(varType)+str(">"))
         exit(1)
@@ -88,13 +88,15 @@ def makeStructure(varType,params):
     else:
         fullName2=fullPath2+"."+varName
     out= "{ "+str(fullName.upper())+str(",\"")+str(fullName2)+str("\"")
-    if(len(out)<15):
-        out=out+"\t"
-    if(len(out)<23):
-        out=out+"\t"
-    out=out+",\t"+str(allATypes[varType])
+    l=len(out)
+    mx=70
+    if(l>mx):
+        pass
+    else:
+        out=out+(mx-l)*" "
+    out=out+","+str(allATypes[varType])
     out=out+"\t,"+str(default)+",\t"+str(min)+",\t"+str(max)
-    out=out+",\tNULL},"
+    out=out+"},"
     outputJson(out)
     outputList(fullName.upper()+", \t//"+str(varType))
 ###################################################################################################################################

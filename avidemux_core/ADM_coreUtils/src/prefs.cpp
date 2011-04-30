@@ -52,9 +52,8 @@ typedef struct
    const char *name2;
    ADM_paramType  type;
    const char *defaultValue;
-   const char *min;
-   const char *max;
-   char *Value;
+   float    min;
+   float    max;
 }optionDesc;
 
 #include "prefs2_pref.h"
@@ -233,7 +232,7 @@ bool preferences::save()
 
 
 
-static bool lookupOption(options option, const ADM_paramList **desc, const optionDesc **tpl)
+static bool lookupOption(options option, const ADM_paramList **desc, const optionDesc **tpl, float &Min,float &Max)
 {
     int d=searchOptionByEnum(option);
     ADM_assert(d!=-1);
@@ -245,6 +244,10 @@ static bool lookupOption(options option, const ADM_paramList **desc, const optio
 
     *tpl=o;
     *desc=dsc;
+
+    Min=o->min;
+    Max=o->max;
+    
     return true;
 }
 
@@ -255,8 +258,9 @@ bool preferences::get(options option, uint32_t *v)
 {
   const ADM_paramList *desc;
   const optionDesc *tpl;
+  float m,n;
 
-    lookupOption(option,&desc,&tpl);
+    lookupOption(option,&desc,&tpl,m,n);
 
     ADM_assert(desc->type==ADM_param_uint32_t);
     int offset=desc->offset;
@@ -270,10 +274,11 @@ bool preferences::get(options option, uint32_t *v)
 */
 bool preferences::get(options option, float *v)
 {
- const ADM_paramList *desc;
+  const ADM_paramList *desc;
   const optionDesc *tpl;
+  float m,n;
 
-    lookupOption(option,&desc,&tpl);
+    lookupOption(option,&desc,&tpl,m,n);
 
     ADM_assert(desc->type==ADM_param_float);
     int offset=desc->offset;
@@ -288,8 +293,9 @@ bool preferences::get(options option, bool *v)
 {
   const ADM_paramList *desc;
   const optionDesc *tpl;
+  float m,n;
 
-    lookupOption(option,&desc,&tpl);
+    lookupOption(option,&desc,&tpl,m,n);
 
     ADM_assert(desc->type==ADM_param_bool);
     int offset=desc->offset;
@@ -302,37 +308,110 @@ bool preferences::get(options option, bool *v)
 */
 bool preferences::get(options option, char **v)
 {
+  const ADM_paramList *desc;
+  const optionDesc *tpl;
+  float m,n;
+
+    lookupOption(option,&desc,&tpl,n,m);
+
+    ADM_assert(desc->type==ADM_param_string);
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    const char *st=*(char **)(dummy+offset);
+    *v=ADM_strdup(st);
+    return true;
 
 }
-
+//---------------------------------------
 
 /**
     \fn set
 */
 bool preferences::set(options option, const uint32_t v)
 {
+    const ADM_paramList *desc;
+    const optionDesc *tpl;
+    float m,n;
 
+    lookupOption(option,&desc,&tpl,n,m);
+
+    ADM_assert(desc->type==ADM_param_uint32_t);
+    
+    if(v<n || v>m)
+    {
+        ADM_error("Parameter  %s value %d not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
+        return false;
+    }
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    *(uint32_t *)(dummy+offset)=v;
+    return true;
 }
 /**
     \fn set
 */
 bool preferences::set(options option, const float v)
 {
+    const ADM_paramList *desc;
+    const optionDesc *tpl;
+    float m,n;
 
+    lookupOption(option,&desc,&tpl,n,m);
+
+    ADM_assert(desc->type==ADM_param_float);
+    
+    if(v<n || v>m)
+    {
+        ADM_error("Parameter  %s value %f not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
+        return false;
+    }
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    *(float *)(dummy+offset)=v;
+    return true;
 }
 /**
     \fn set
 */
 bool preferences::set(options option, const bool v)
 {
+    const ADM_paramList *desc;
+    const optionDesc *tpl;
+    float m,n;
 
+    lookupOption(option,&desc,&tpl,n,m);
+
+    ADM_assert(desc->type==ADM_param_bool);
+    
+    if(v<n || v>m)
+    {
+        ADM_error("Parameter  %d value %f not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
+        return false;
+    }
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    *(bool *)(dummy+offset)=v;
+    return true;
 }
 /**
     \fn set
 */
 bool preferences::set(options option, const char *v)
 {
+    const ADM_paramList *desc;
+    const optionDesc *tpl;
+    float m,n;
 
+    lookupOption(option,&desc,&tpl,n,m);
+
+    ADM_assert(desc->type==ADM_param_string);
+    
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    char **s=(char **)(dummy+offset);
+    if(*s) ADM_dealloc(*s);
+    *s=ADM_strdup(v);
+    return true;
 }
 
 
