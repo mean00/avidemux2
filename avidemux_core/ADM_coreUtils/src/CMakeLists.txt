@@ -15,7 +15,9 @@ ADM_threadQueue.cpp
 ADM_string.cpp
 ADM_getbits.cpp
 ADM_writeRiff.cpp
-prefs.cpp)
+prefs.cpp
+prefs2_json.cpp
+)
 
 ADM_ADD_SHARED_LIBRARY(ADM_coreUtils6 ${ADM_coreUtils_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreUtils6 ADM_core6 ADM_coreUI6 ADM_libavutil ADM_libavcodec ${LIBXML2_LIBRARIES})
