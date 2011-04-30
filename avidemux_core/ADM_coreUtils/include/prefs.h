@@ -5,6 +5,7 @@
 
 #define RC_OK     true
 #define RC_FAILED false
+#define NB_LAST_FILES 4
 
 // <prefs_gen>
 typedef enum {
@@ -15,9 +16,9 @@ LAST_PREF
 
 class preferences {
 	private:
-		char *internal_lastfiles[5];
-		const char * get_str_min(options option);
-		const char * get_str_max(options option);
+
+//		const char * get_str_min(options option);
+//		const char * get_str_max(options option);
 
 	public:
 		preferences();
@@ -38,7 +39,7 @@ class preferences {
 		bool set(options option, const bool     val);
 		
 
-		int set_lastfile(const char* file);
+		bool  set_lastfile(const char* file);
 		const char **get_lastfiles(void);
 };
 

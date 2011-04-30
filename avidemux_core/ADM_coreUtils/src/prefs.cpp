@@ -2,20 +2,9 @@
    
     \file  prefs.cpp
     \brief 
-    copyright            : (C) 2001 by mean
+    copyright            : (C) 2001/2011 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
-
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -106,9 +95,7 @@ static int searchOptionByEnum(int value)
 */
 preferences::preferences()
 {
-	internal_lastfiles[0] = internal_lastfiles[1] = NULL;
-	internal_lastfiles[2] = internal_lastfiles[3] = NULL;
-	internal_lastfiles[4] = NULL;
+
     // set default...
     int nb=sizeof( my_prefs_struct_param)/sizeof(ADM_paramList);
     for(int i=0;i<nb-1;i++) //
@@ -153,18 +140,12 @@ preferences::preferences()
     
     }
 }
-
-preferences::~preferences(){
-  unsigned int idx;
-	for( idx=0; idx < 4; idx++ ){
-		if( internal_lastfiles[idx] )
-			ADM_dealloc(internal_lastfiles[idx]);
-	}
-	
-	
+/**
+    \fn dtor
+*/  
+preferences::~preferences()
+{
 }
-
-
 
 /**
     \fn load
@@ -218,7 +199,7 @@ bool preferences::save()
     path=path+std::string(CONFIG);
     string tmp=path;
     tmp=tmp+string(".tmp");
-    ADM_error("Saving prefs to %s\n",tmp.c_str());
+    ADM_info("Saving prefs to %s\n",tmp.c_str());
 
    if(true==my_prefs_struct_jserialize(tmp.c_str(),&myPrefs))
     {
@@ -230,7 +211,9 @@ bool preferences::save()
     return RC_FAILED;
 }
 
+/**
 
+*/
 
 static bool lookupOption(options option, const ADM_paramList **desc, const optionDesc **tpl, float &Min,float &Max)
 {
@@ -414,11 +397,26 @@ bool preferences::set(options option, const char *v)
     return true;
 }
 
-
+//--------------------------------------------------
 #define PRT_LAFI(x,y,z) fprintf(stderr,"Prefs: %s%u %s\n",x,y,(z?z:"NULL"))
 
-int preferences::set_lastfile(const char* file)
+bool preferences::set_lastfile(const char* file)
 {
+    int idx=-1;
+    char *lastFiles[NB_LAST_FILES];
+    lastFiles[0]=myPrefs.lastfiles.file1;
+    lastFiles[1]=myPrefs.lastfiles.file2;
+    lastFiles[2]=myPrefs.lastfiles.file3;
+    lastFiles[3]=myPrefs.lastfiles.file4;
+    for(int i=0;i<NB_LAST_FILES;i++)
+        if(!strcmp(lastFiles[i],file))
+            return true;
+    // 3 goes out, everybody shifts...
+    ADM_dealloc(lastFiles[3]);
+    myPrefs.lastfiles.file1=ADM_strdup(file);
+    myPrefs.lastfiles.file2=lastFiles[0];
+    myPrefs.lastfiles.file3=lastFiles[1];;
+    myPrefs.lastfiles.file4=lastFiles[2];;
 
 	return RC_OK;
 }
@@ -428,8 +426,13 @@ int preferences::set_lastfile(const char* file)
 
 const char **preferences::get_lastfiles(void)
 {
-
-	return (const char**)internal_lastfiles;
+    static const char *lastFiles[NB_LAST_FILES];
+    
+    lastFiles[0]=myPrefs.lastfiles.file1;
+    lastFiles[1]=myPrefs.lastfiles.file2;
+    lastFiles[2]=myPrefs.lastfiles.file3;
+    lastFiles[3]=myPrefs.lastfiles.file4;
+	return lastFiles;
 }
 
 // EOF
