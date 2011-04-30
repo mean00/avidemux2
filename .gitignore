@@ -9,3 +9,5 @@ ffconf
 build*
 debs
 addons/*
+install/*
+avidemux/qt4/common

@@ -60,10 +60,10 @@ def outputJson(st):
 #
 def processLine(varType,varName):
     if(not varType in allCTypes):
-        print("Unknown var "+str(varType))
+        print("Unknown var type "+str(varType))
         exit(1)
     if(not varType in allATypes):
-        print("Unknown var "+str(varType))
+        print("Unknown var type "+str(varType))
         exit(1)
     if(not varType in allJTypes):
         print("json:Unknown var "+str(varType))
@@ -155,6 +155,11 @@ while(1):
     line=f.readline()
     if(len(line)==0):
         break # eof
+    line=re.sub(r'#.*$',r'',line)
+    line=re.sub(r'//.*$',r'',line)
+    line=line.strip()
+    if(len(line)==0):
+        continue # blank
     # Remove #....
     if(line.find(r'{')!=-1):
         #
@@ -185,8 +190,13 @@ while(1):
             exit(1)
         line=re.sub(r'#.*$',r'',line)
         line=re.sub(r'//.*$',r'',line)
+        if(len(line)==0):
+            continue
         # split by :
         (varType,varName)=line.split(r':')
+        #
+        # Remote extra ,.... used by prefs
+        varName=re.sub(r',.*$',r';',varName)
         #
         varName=re.sub(r';.*$',r'',varName)
         varName=varName.strip()
