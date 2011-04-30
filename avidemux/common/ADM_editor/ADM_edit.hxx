@@ -214,8 +214,8 @@ public:
                                         /// Returns pts-dts for given frame
                     bool		        getPtsDtsDelta(uint64_t *frameTime);
 /******************************* Post Processing ************************************/
-                    uint8_t             setPostProc( uint32_t type, uint32_t strength,	uint32_t swapuv);
-                    uint8_t             getPostProc( uint32_t *type, uint32_t *strength,uint32_t *swapuv);
+                    uint8_t             setPostProc( uint32_t type, uint32_t strength,	bool swapuv);
+                    uint8_t             getPostProc( uint32_t *type, uint32_t *strength,bool  *swapuv);
 /******************************* /Post Processing ************************************/	
 /******************************* Editing ************************************/	
                     bool                remove(uint64_t start,uint64_t end);

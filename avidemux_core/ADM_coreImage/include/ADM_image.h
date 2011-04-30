@@ -66,6 +66,9 @@ class ADMImageDefault;
 */
 class ADMImage
 {
+public: // half public/protected, only in  ADMImageRef case it is really public
+        uint8_t         *_planes[3];     /// In case of linked data store y/u/v pointers
+        uint32_t        _planeStride[3]; /// Same story
 public:
         uint32_t	    _width;		/// Width of image
         uint32_t	    _height;	/// Height of image
@@ -152,8 +155,6 @@ public:
 class ADMImageRef: public ADMImage
 {
 public:
-        uint8_t         *_planes[3];     /// In case of linked data store y/u/v pointers
-        uint32_t        _planeStride[3]; /// Same story
 
 public:
                         ADMImageRef(uint32_t w, uint32_t h);

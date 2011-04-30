@@ -134,7 +134,7 @@ void AVDM_audioSave( void )
 {
 const char *string;
 		string=ADM_audioById(currentDevice);
-		prefs->set(DEVICE_AUDIODEVICE, string);
+		prefs->set(AUDIO_DEVICE_AUDIODEVICE, string);
 }
 /**
     \fn ADM_audioByName
@@ -182,7 +182,7 @@ uint8_t init=0;
 char *name=NULL;
 AUDIO_DEVICE id=0;
 
-		if(prefs->get(DEVICE_AUDIODEVICE, &name))
+		if(prefs->get(AUDIO_DEVICE_AUDIODEVICE, &name))
 		{
 		id=ADM_audioByName(name);
 		ADM_dealloc(name);

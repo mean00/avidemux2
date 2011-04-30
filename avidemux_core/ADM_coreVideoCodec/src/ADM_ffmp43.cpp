@@ -50,7 +50,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"displ
 
 
 //****************************
-extern uint8_t DIA_lavDecoder (uint32_t * swapUv, uint32_t * showU);
+extern uint8_t DIA_lavDecoder (bool  * swapUv, bool * showU);
 extern "C"
 {
   int av_is_voppacked (AVCodecContext * avctx, int *vop_packed, int *gmc,
@@ -145,7 +145,12 @@ uint8_t decoderFF::getPARHeight (void)
 //________________________________________________
 bool  decoderFF::setParam (void)
 {
-  DIA_lavDecoder (&_swapUV, &_showMv);
+    bool buv=_swapUV;
+    bool bmv=_showMv;
+    DIA_lavDecoder (&buv, &bmv);
+    _swapUV=buv;
+    _showMv=bmv;
+    
   return true;			// no param for ffmpeg
 }
 

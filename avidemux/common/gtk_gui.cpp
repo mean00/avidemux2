@@ -231,8 +231,8 @@ int nw;
         prefs->save ();
         return;
     case ACT_EXIT:
-      { uint32_t saveprefsonexit;
-         prefs->get(FEATURE_SAVEPREFSONEXIT,&saveprefsonexit);
+      { bool saveprefsonexit;
+         prefs->get(FEATURES_SAVEPREFSONEXIT,&saveprefsonexit);
          if( saveprefsonexit )
             prefs->save ();
       }
@@ -353,7 +353,7 @@ int nw;
       uint32_t swapit=0;
       uint64_t markA,markB;
       uint64_t pts=admPreview::getCurrentPts();
-      if( prefs->get(FEATURE_SWAP_IF_A_GREATER_THAN_B, &swapit) != RC_OK )     swapit = 1;
+      if( prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &swapit) != RC_OK )     swapit = 1;
 
       markA=video_body->getMarkerAPts();
       markB=video_body->getMarkerBPts();
@@ -832,13 +832,14 @@ uint32_t count;
 
 
 }
-extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,uint32_t *swap);
+extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap);
 //
 
 //
 void	A_setPostproc( void )
 {
-uint32_t type,strength,swap;
+uint32_t type,strength;
+bool swap;
 	if(!avifileinfo) return;
 
 	video_body->getPostProc(&type,&strength,&swap);
@@ -1144,7 +1145,7 @@ ADM_RENDER_TYPE UI_getPreferredRender(void)
         }
 #endif
 
-        if(prefs->get(DEVICE_VIDEODEVICE,&renderI)!=RC_OK)
+        if(prefs->get(VIDEODEVICE,&renderI)!=RC_OK)
         {
                 render=RENDER_GTK;
         }else

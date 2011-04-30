@@ -48,7 +48,7 @@ bool  my_prefs_struct_jdeserialize(const char *file, const ADM_paramList *tmpl,m
 
 typedef struct
 {
-   const char *name;
+   int        enumerate;
    const char *name2;
    ADM_paramType  type;
    const char *defaultValue;
@@ -62,7 +62,7 @@ typedef struct
 /**
     \fn initPrefs
 */
-int initPrefs(  void )
+bool initPrefs(  void )
 {
   prefs = new preferences();
   return 1;
@@ -70,7 +70,7 @@ int initPrefs(  void )
 /**
     \fn destroyPrefs
 */
-int destroyPrefs(void)
+bool destroyPrefs(void)
 {
 	delete prefs;
 	prefs = NULL;
@@ -84,6 +84,24 @@ static int searchOptionByName2(const char *name)
         if(!strcmp(myOptions[i].name2,name)) return i;
     return -1;
 }
+static int searchDescByName(const char *name)
+{
+    int nb=sizeof( my_prefs_struct_param) /sizeof(ADM_paramList  );
+    for(int i=0;i<nb;i++)
+        if(!strcmp(my_prefs_struct_param[i].paramName,name)) return i;
+    return -1;
+}
+
+
+static int searchOptionByEnum(int value)
+{
+    int nb=sizeof( myOptions)/sizeof(optionDesc);
+    for(int i=0;i<nb;i++)
+        if(myOptions[i].enumerate==value) return i;
+    return -1;
+}
+
+
 /**
     \fn ctor
 */
@@ -153,7 +171,7 @@ preferences::~preferences(){
     \fn load
     \brief load prefs from file.. Should be called only once
 */
-int preferences::load()
+bool preferences::load()
 {
 
    char *home;
@@ -186,7 +204,7 @@ int preferences::load()
 /**
     \fn save
 */
-int preferences::save()
+bool preferences::save()
 {
    char *home;
    char *dir_adm;
@@ -213,79 +231,110 @@ int preferences::save()
     return RC_FAILED;
 }
 
-//--------
-int preferences::get(options option, uint8_t *val)
+
+
+static bool lookupOption(options option, const ADM_paramList **desc, const optionDesc **tpl)
 {
-	return RC_FAILED;
+    int d=searchOptionByEnum(option);
+    ADM_assert(d!=-1);
+    const optionDesc *o=myOptions+d;
+    // Get full name
+    d=searchDescByName(o->name2);
+    ADM_assert(d!=-1);
+    const ADM_paramList *dsc=my_prefs_struct_param+d;
+
+    *tpl=o;
+    *desc=dsc;
+    return true;
+}
+
+/**
+    \fn get
+*/
+bool preferences::get(options option, uint32_t *v)
+{
+  const ADM_paramList *desc;
+  const optionDesc *tpl;
+
+    lookupOption(option,&desc,&tpl);
+
+    ADM_assert(desc->type==ADM_param_uint32_t);
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    *v=*(uint32_t *)(dummy+offset);
+    return true;
+    
+}
+/**
+    \fn get
+*/
+bool preferences::get(options option, float *v)
+{
+ const ADM_paramList *desc;
+  const optionDesc *tpl;
+
+    lookupOption(option,&desc,&tpl);
+
+    ADM_assert(desc->type==ADM_param_float);
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    *v=*(float *)(dummy+offset);
+    return true;
+}
+/**
+    \fn get
+*/
+bool preferences::get(options option, bool *v)
+{
+  const ADM_paramList *desc;
+  const optionDesc *tpl;
+
+    lookupOption(option,&desc,&tpl);
+
+    ADM_assert(desc->type==ADM_param_bool);
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    *v=*(bool *)(dummy+offset);
+    return true;
+}
+/**
+    \fn get
+*/
+bool preferences::get(options option, char **v)
+{
+
 }
 
 
-int preferences::get(options option, uint16_t *val)
-{
-	return RC_FAILED;
-}
-
-int preferences::get(options option, unsigned int *val)
-{
-	return RC_FAILED; // wrong input for conversion or EOF
-}
-
-int preferences::get(options option,          int *val)
+/**
+    \fn set
+*/
+bool preferences::set(options option, const uint32_t v)
 {
 
-	return RC_FAILED; // wrong input for conversion or EOF
 }
-
-int preferences::get(options option, unsigned long *val)
+/**
+    \fn set
+*/
+bool preferences::set(options option, const float v)
 {
 
-	return RC_FAILED; // wrong input for conversion or EOF
+}
+/**
+    \fn set
+*/
+bool preferences::set(options option, const bool v)
+{
+
+}
+/**
+    \fn set
+*/
+bool preferences::set(options option, const char *v)
+{
+
 }
 
-int preferences::get(options option, long *val)
-{
-	return RC_FAILED; // wrong input for conversion or EOF
-}
-
-int preferences::get(options option, float *val)
-{
-	return RC_FAILED; // wrong input for conversion or EOF
-}
-
-int preferences::get(options option, char **val)
-{
-	return RC_FAILED; // strdup() out of memory
-}
-
-int preferences::set(options option, const unsigned int val)
-{
-	return RC_OK;
-}
-
-int preferences::set(options option, const int val)
-{
-	return RC_OK;
-}
-
-int preferences::set(options option, const unsigned long val)
-{
-	return RC_OK;
-}
-
-int preferences::set(options option, const long val)
-{
-	return RC_OK;
-}
-
-int preferences::set(options option, const float val)
-{
-	return RC_OK;
-}
-
-int preferences::set(options option, const char * val)
-{
-	return RC_OK;
-}
 
 #define PRT_LAFI(x,y,z) fprintf(stderr,"Prefs: %s%u %s\n",x,y,(z?z:"NULL"))
 

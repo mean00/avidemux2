@@ -41,37 +41,35 @@ uint8_t DIA_Preferences(void)
 {
 uint32_t olddevice,newdevice;
 
-uint32_t        use_odml=0;
-uint32_t	autosplit=0;
+bool     use_odml=0;
+uint32_t autosplit=0;
 uint32_t render;
-uint32_t useTray=0;
-uint32_t useMaster=0;
+bool     useTray=0;
 
-uint32_t useSwap=0;
+
+bool     useSwap=0;
 
 uint32_t lavcThreads=0;
 uint32_t encodePriority=2;
 uint32_t indexPriority=2;
 uint32_t playbackPriority=0;
 uint32_t downmix;
-uint32_t mpeg_no_limit=0;
+bool     mpeg_no_limit=0;
 uint32_t msglevel=2;
 
 uint32_t mixer=0;
-char     *filterPath=NULL;
+
 char     *alsaDevice=NULL;
 
+bool     balternate_mp3_tag=true;
 
-
-uint32_t alternate_mp3_tag=1;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
-uint32_t vdpau=0;
-uint32_t hzd,vzd,dring;
-uint32_t capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 
-uint32_t useGlobalGlyph=0;
-char     *globalGlyphName=NULL;
+bool     bvdpau=false;
+bool     hzd,vzd,dring;
+bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
+
 
 	olddevice=newdevice=AVDM_getCurrentDevice();
 
@@ -103,28 +101,24 @@ char     *globalGlyphName=NULL;
                 alsaDevice = ADM_strdup("plughw:0,0");
 #endif
         // vdpau
-        prefs->get(FEATURE_VDPAU,&vdpau);
-        // Global glyph
-        prefs->get(FEATURE_GLOBAL_GLYPH_ACTIVE,&useGlobalGlyph);
-        prefs->get(FEATURE_GLOBAL_GLYPH_NAME,&globalGlyphName);
-
+        prefs->get(FEATURES_VDPAU,&bvdpau);
         
         // Alternate mp3 tag (haali)
-        prefs->get(FEATURE_ALTERNATE_MP3_TAG,&alternate_mp3_tag);
+        prefs->get(FEATURES_ALTERNATE_MP3_TAG,&balternate_mp3_tag);
         
         // Video renderer
-        if(prefs->get(DEVICE_VIDEODEVICE,&render)!=RC_OK)
+        if(prefs->get(VIDEODEVICE,&render)!=RC_OK)
         {       
                 render=(uint32_t)RENDER_GTK;
         }
         // SysTray
-        if(!prefs->get(FEATURE_USE_SYSTRAY,&useTray)) 
+        if(!prefs->get(FEATURES_USE_SYSTRAY,&useTray)) 
                 useTray=0;
         // Accept mpeg for DVD when fq!=48 kHz
-        if(!prefs->get(FEATURE_MPEG_NO_LIMIT,&mpeg_no_limit)) mpeg_no_limit=0;
+        if(!prefs->get(FEATURES_MPEG_NO_LIMIT,&mpeg_no_limit)) mpeg_no_limit=0;
 
         // Multithreads
-        prefs->get(FEATURE_THREADING_LAVC, &lavcThreads);
+        prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
 
 		// Encoding priority
@@ -138,32 +132,32 @@ char     *globalGlyphName=NULL;
                 playbackPriority=0;
 
         // VCD/SVCD split point		
-        if(!prefs->get(SETTINGS_MPEGSPLIT, &autosplit))
+        if(!prefs->get(MPEGSPLIT_AUTOSPLIT, &autosplit))
                 autosplit=690;		
                         
         // Open DML (Gmv)
-        if(!prefs->get(FEATURE_USE_ODML, &use_odml))
+        if(!prefs->get(FEATURES_USE_ODML, &use_odml))
           use_odml=0;
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
 		// Master or PCM for audio
-        if(!prefs->get(FEATURE_AUDIOBAR_USES_MASTER, &useMaster))
+        if(!prefs->get(FEATURES_AUDIOBAR_USES_MASTER, &useMaster))
                 useMaster=0;
 #endif
 
         // SWAP A&B if A>B
-        if(!prefs->get(FEATURE_SWAP_IF_A_GREATER_THAN_B, &useSwap))
+        if(!prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &useSwap))
                 useSwap=0;
         // Get level of message verbosity
         prefs->get(MESSAGE_LEVEL,&msglevel);
         // Downmix default
-        if(prefs->get(DOWNMIXING_PROLOGIC,&downmix)!=RC_OK)
+        if(prefs->get(DEFAULT_DOWNMIXING,&downmix)!=RC_OK)
         {       
             downmix=0;
         }
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
-        diaElemToggle useVdpau(&vdpau,QT_TR_NOOP("_Use VDPAU for decoding H264"));
+        diaElemToggle useVdpau(&bvdpau,QT_TR_NOOP("_Use VDPAU for decoding H264"));
         diaElemToggle useSysTray(&useTray,QT_TR_NOOP("_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TR_NOOP("_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TR_NOOP("Create _OpenDML files"));
@@ -224,7 +218,7 @@ char     *globalGlyphName=NULL;
 
         diaElemUInteger autoSplit(&autosplit,QT_TR_NOOP("_Split MPEG files every (MB):"),10,4096);
         
-        diaElemToggle   togTagMp3(&alternate_mp3_tag,QT_TR_NOOP("_Use alternative tag for MP3 in .mp4"));
+        diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TR_NOOP("_Use alternative tag for MP3 in .mp4"));
         
         diaMenuEntry videoMode[]={
                              {RENDER_GTK,      QT_TR_NOOP("GTK+ (slow)"),NULL}
@@ -301,17 +295,6 @@ char     *globalGlyphName=NULL;
      framePP.swallow(&fdring);
      framePP.swallow(&postProcStrength);
      
-        // Filter path
-        if( prefs->get(FILTERS_AUTOLOAD_PATH, &filterPath) != RC_OK )
-#ifndef __WIN32
-               filterPath = ADM_strdup("/tmp");
-#else
-               filterPath = ADM_strdup("c:\\");
-#endif
-
-		diaElemToggle togGlobalGlyph(&useGlobalGlyph, QT_TR_NOOP("Use _Global GlyphSet"));
-		diaElemFile  entryGLyphPath(0,&globalGlyphName,QT_TR_NOOP("Gl_yphSet:"), NULL, QT_TR_NOOP("Select GlyphSet file"));
-		togGlobalGlyph.link(1, &entryGLyphPath);
 
         /* User Interface */
         diaElem *diaUser[]={&useSysTray,&menuMessage};
@@ -353,13 +336,11 @@ char     *globalGlyphName=NULL;
 		diaElemTabs tabThreading(QT_TR_NOOP("Threading"),2,(diaElem **)diaThreading);
 
         /* Global Glyph tab */
-        diaElem *diaGlyph[]={&togGlobalGlyph,&entryGLyphPath};
-        diaElemTabs tabGlyph(QT_TR_NOOP("Global GlyphSet"),2,(diaElem **)diaGlyph);
 
                                     
 // SET
-        diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading,&tabGlyph};
-        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),7,tabs))
+        diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading};
+        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),6,tabs))
 	{
         	
         	// cpu caps
@@ -380,11 +361,7 @@ char     *globalGlyphName=NULL;
         	    	CPU_CAPS(SSE3);
         	    	CPU_CAPS(SSSE3);
         		}
-        		prefs->set(FEATURE_CPU_CAPS,CpuCaps::myCpuMask);
-
-        		// Glyphs
-               prefs->set(FEATURE_GLOBAL_GLYPH_ACTIVE,useGlobalGlyph);
-               prefs->set(FEATURE_GLOBAL_GLYPH_NAME,globalGlyphName);
+        		prefs->set(FEATURES_CPU_CAPS,CpuCaps::myCpuMask);
 
                 // Postproc
                 #undef DOME
@@ -414,22 +391,22 @@ char     *globalGlyphName=NULL;
                       AVDM_audioInit();                     // Respawn
                 }
                 // Downmixing (default)
-                prefs->set(DOWNMIXING_PROLOGIC,downmix);
+                prefs->set(DEFAULT_DOWNMIXING,downmix);
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
                 // Master or PCM
-                prefs->set(FEATURE_AUDIOBAR_USES_MASTER, useMaster);
+                prefs->set(FEATURES_AUDIOBAR_USES_MASTER, useMaster);
 #endif
                 // allow non std audio fq for dvd
-                prefs->set(FEATURE_MPEG_NO_LIMIT, mpeg_no_limit);
+                prefs->set(FEATURES_MPEG_NO_LIMIT, mpeg_no_limit);
                 // Video render
-                prefs->set(DEVICE_VIDEODEVICE,render);
+                prefs->set(VIDEODEVICE,render);
                 // Odml
-                prefs->set(FEATURE_USE_ODML, use_odml);
+                prefs->set(FEATURES_USE_ODML, use_odml);
 				// Split
-                prefs->set(SETTINGS_MPEGSPLIT, autosplit);
+                prefs->set(MPEGSPLIT_AUTOSPLIT, autosplit);
                 
                 // number of threads
-                prefs->set(FEATURE_THREADING_LAVC, lavcThreads);
+                prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
 
 				// Encoding priority
 				prefs->set(PRIORITY_ENCODING, encodePriority);
@@ -439,18 +416,16 @@ char     *globalGlyphName=NULL;
 				prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 
                 // Auto swap A/B
-                prefs->set(FEATURE_SWAP_IF_A_GREATER_THAN_B, useSwap);
+                prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
                 //
                 prefs->set(MESSAGE_LEVEL,msglevel);
                 // Use tray while encoding
-                prefs->set(FEATURE_USE_SYSTRAY,useTray);
+                prefs->set(FEATURES_USE_SYSTRAY,useTray);
 
                 // VDPAU
-                prefs->set(FEATURE_VDPAU,vdpau);
-                if(filterPath)
-                  prefs->set(FILTERS_AUTOLOAD_PATH, filterPath);
+                prefs->set(FEATURES_VDPAU,bvdpau);
                 // Alternate mp3 tag (haali)
-                prefs->set(FEATURE_ALTERNATE_MP3_TAG,alternate_mp3_tag);
+                prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 
 			#if defined(__WIN32) && defined(USE_SDL)
 				// Initialise SDL again as driver may have changed
@@ -464,15 +439,16 @@ char     *globalGlyphName=NULL;
             delete audioDeviceItems[i];
         }
         delete [] audioDeviceItems;
-	ADM_dealloc(filterPath);
-	ADM_dealloc(globalGlyphName);
+
+
 
 	return 1;
 }
-extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,uint32_t *swap);
+extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap);
 void setpp(void)
 {
-        uint32_t type,strength,uv=0;
+        uint32_t type,strength;
+        bool uv=0;
 
         if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
         if(!prefs->get(DEFAULT_POSTPROC_VALUE,&strength)) strength=3;

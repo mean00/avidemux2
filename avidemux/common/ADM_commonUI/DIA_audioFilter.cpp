@@ -65,7 +65,8 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
      eGain.link(&(menuGain[2]),1,&eGainValue);
   //****************************
  diaElemMenu      eMixer(&vChan,QT_TR_NOOP("_Mixer:"),11,menuMixer);
- diaElemToggle    tMixer(PX(mixerEnabled),QT_TR_NOOP("Remix:"));
+ bool bMixer=config->mixerEnabled;
+ diaElemToggle    tMixer(&bMixer,QT_TR_NOOP("Remix:"));
  tMixer.link(1,&eMixer);
  /************************************/
  diaElem *elems[]={&eFPS, &tMixer,&eMixer, &eResample,&eGain,&eGainValue};
@@ -75,6 +76,7 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
         config->film2pal=(FILMCONV)vFilm;
         config->gainParam.mode=(ADM_GAINMode)vGainMode;
         config->gainParam.gain10=vGainValue*10;
+        config->mixerEnabled=bMixer;
       return true;
     }
     

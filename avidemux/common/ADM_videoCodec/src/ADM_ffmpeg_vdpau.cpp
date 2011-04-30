@@ -60,9 +60,9 @@ typedef enum
 */
 bool vdpauUsable(void)
 {
-    uint32_t v=false;
+    bool v=false;
     if(!vdpauWorking) return false;
-    if(!prefs->get(FEATURE_VDPAU,&v)) v=false;
+    if(!prefs->get(FEATURES_VDPAU,&v)) v=false;
     return v;
 }
 /**

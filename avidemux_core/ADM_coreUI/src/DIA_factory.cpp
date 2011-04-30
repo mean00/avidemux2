@@ -478,7 +478,7 @@ void      diaElemToggleInt::enable(uint32_t onoff)
 	}
 DIA_MKSTUBS(diaElemToggleInt)
 // ****************** diaElemToggle ********************
-diaElemToggle ::diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip):
+diaElemToggle ::diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip):
 	diaElemToggleBase()
 {
 	ADM_assert(Factory); 

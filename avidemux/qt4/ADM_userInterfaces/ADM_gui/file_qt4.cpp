@@ -33,14 +33,14 @@ namespace ADM_QT4_fileSel
 	{
 		char *tmpname = NULL;
 		char *str = NULL;
-		options pref_entry = LASTDIR_READ;
+		options pref_entry = LASTFILES_LASTDIR_READ;
 
 		*name = NULL;
 
 		if (access)
-			pref_entry = LASTDIR_WRITE;
+			pref_entry = LASTFILES_LASTDIR_WRITE;
 
-		if (prefs->get(pref_entry,(ADM_filename **)&tmpname))
+		if (prefs->get(pref_entry,&tmpname))
 		{
 			DIR *dir;
 			str = ADM_PathCanonize(tmpname);

@@ -62,7 +62,7 @@ int jsTestFacFloat(void)
 */
 int jsTestFacToggle(void)
 {
-  uint32_t tog=0;
+  bool tog=0;
   uint32_t test=0;
    diaElemToggle blend(&tog,QT_TR_NOOP("Toggle"));
     diaElemUInteger     bt(&test,"Entry",0,10);

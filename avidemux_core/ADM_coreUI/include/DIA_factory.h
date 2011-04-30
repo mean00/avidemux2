@@ -170,7 +170,7 @@ public:
   int getRequiredLayout(void);
 };
 /*********************************************/
-typedef diaElem *CREATE_TOGGLE(uint32_t *toggleValue,const char *toggleTitle, const char *tip);
+typedef diaElem *CREATE_TOGGLE(bool *toggleValue,const char *toggleTitle, const char *tip);
 class diaElemToggleBase : public diaElem
 {
   protected:
@@ -183,12 +183,12 @@ public:
   virtual   ~diaElemToggleBase() {};
   virtual uint8_t   link(uint32_t onoff,diaElem *w)=0;
 };
-typedef diaElem *CREATE_TOGGLE_T(uint32_t *toggleValue,const char *toggleTitle, const char *tip);
+typedef diaElem *CREATE_TOGGLE_T(bool *toggleValue,const char *toggleTitle, const char *tip);
 class diaElemToggle : public diaElemToggleBase
 {
   protected:
 public:
-            diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip=NULL);
+            diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip=NULL);
   virtual   ~diaElemToggle() ;
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);

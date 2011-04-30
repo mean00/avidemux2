@@ -107,7 +107,14 @@ bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint
 */
 ADMImageDefault::ADMImageDefault(uint32_t w, uint32_t h) : ADMImage(w,h,ADM_IMAGE_DEFAULT)
 {
-    data=new uint8_t [(w*h*3)/2];
+    uint32_t pitch=(w+31)&(~31);
+    data=new uint8_t [32+(pitch*h*3)/2];
+    _planes[0]=data;
+    _planes[1]=data+pitch*h;
+    _planes[2]=data+pitch*h +((pitch*h)>>2);
+    _planeStride[0]=pitch;
+    _planeStride[1]=pitch/2;
+    _planeStride[2]=pitch/2;
 }
 /**
     \fn ADMImageDefault
@@ -121,19 +128,12 @@ ADMImageDefault::~ADMImageDefault()
 bool           ADMImageDefault::isWrittable(void) {return true;}
 uint32_t       ADMImageDefault::GetPitch(ADM_PLANE plane)
                     {
-                            if(plane==PLANAR_Y) return _width;
-                            return _width/2;
+                            return _planeStride[plane];
                         }
 uint8_t        *ADMImageDefault::GetWritePtr(ADM_PLANE plane) {return GetReadPtr(plane);}
 uint8_t        *ADMImageDefault::GetReadPtr(ADM_PLANE plane)
 {
-    int xplane=_width*_height;
-    switch(plane)
-    {
-        case PLANAR_Y: return data;
-        case PLANAR_U: return data+xplane;
-        case PLANAR_V: return data+(5*xplane)/4;
-    }
+    return _planes[plane];
 }
 //****************************************
 /**

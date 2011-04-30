@@ -514,7 +514,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 /**
     \fn setPostProc
 */
-uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t swapuv)
+uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, bool swapuv)
 {
 	if(!_segments.getNbRefVideos()) return 0;
     if(!_pp) return false;
@@ -528,7 +528,7 @@ uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, uint32_t sw
     \fn getPostProc
 */
 
-uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, uint32_t *swapuv)
+uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, bool *swapuv)
 {
 	if(!_segments.getNbRefVideos()) return 0;
     if(!_pp) return false;

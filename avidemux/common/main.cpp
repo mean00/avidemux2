@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
 #ifdef USE_SDL
 	uint32_t videoDevice = RENDER_LAST;
 
-	prefs->get(DEVICE_VIDEODEVICE, &videoDevice);
+	prefs->get(VIDEODEVICE, &videoDevice);
 
 	initSdl(videoDevice);
 #endif

@@ -29,7 +29,7 @@ class diaElemToggle : public diaElemToggleBase
 {
   protected:
 public:
-            diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip=NULL);
+            diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip=NULL);
   virtual   ~diaElemToggle() ;
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
@@ -103,7 +103,7 @@ void ADM_QCheckBox::connectMe(void)
 	QObject::connect(this, SIGNAL(stateChanged(int)), this, SLOT(changed(int )));
 }
 
-diaElemToggle::diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip)
+diaElemToggle::diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip)
   : diaElemToggleBase()
 {
   param=(void *)toggleValue;
@@ -126,7 +126,7 @@ void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t l)
  ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE);
  QVBoxLayout *layout=(QVBoxLayout*) opaque;
  myWidget=(void *)box; 
- if( *(uint32_t *)param)
+ if( *(bool *)param)
  {
     box->setCheckState(Qt::Checked); 
  }
@@ -137,12 +137,12 @@ void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t l)
 void diaElemToggle::getMe(void)
 {
   ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
-  uint32_t *val=(uint32_t *)param;
+  bool *val=(bool *)param;
   if(Qt::Checked==box->checkState())
   {
-    *val=1; 
+    *val=true; 
   }else
-    *val=0;
+    *val=false;
 }
 void diaElemToggle::enable(uint32_t onoff) 
 {
@@ -437,7 +437,7 @@ void qt4DestroyToggleInt(diaElem *e)
 	ADM_qt4Factory::diaElemToggleInt *a=(ADM_qt4Factory::diaElemToggleInt *)e;
 	delete a;
 }
-diaElem  *qt4CreateToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip)
+diaElem  *qt4CreateToggle(bool *toggleValue,const char *toggleTitle, const char *tip)
 {
 	return new  ADM_qt4Factory::diaElemToggle(toggleValue,toggleTitle, tip);
 }

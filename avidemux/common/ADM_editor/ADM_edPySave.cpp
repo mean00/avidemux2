@@ -132,7 +132,8 @@ bool ADM_Composer::saveAsPyScript (const char *name)
 // postproc
 //___________________________
 
-uint32_t pptype, ppstrength,ppswap;
+uint32_t pptype, ppstrength;
+bool ppswap;
         video_body->getPostProc( &pptype, &ppstrength, &ppswap);
         qfprintf(fd,"\n#** Postproc **\n");
         qfprintf(fd,"adm.setPostProc(%d,%d,%d)\n",pptype,ppstrength,ppswap);

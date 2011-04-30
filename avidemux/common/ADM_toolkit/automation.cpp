@@ -88,7 +88,7 @@ static void call_slave(char *p);
 //static void call_v2v(char *a,char *b,char *c);
 static void call_probePat(char *p);
 static void save(char*name);
-static void set_autoindex(char *p);
+
 //extern uint8_t A_setContainer(const char *cont);
 
 static int call_bframe(void);
@@ -158,7 +158,7 @@ AUTOMATON reaction_table[]=
         {"reuse-2pass-log",	0	,"reuse 2pass logfile if it exists",	(one_arg_type)set_reuse_2pass_log},
         {"autosplit",		1	,"split every N MBytes",(one_arg_type)call_autosplit},
         {"info",		0	,"show information about loaded video and audio streams", (one_arg_type)show_info},
-        {"autoindex",		0	,"try to generate required index files", (one_arg_type)set_autoindex},
+        
 
         {"output-format",	1	,"set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)", (one_arg_type )set_output_format},
         {"rebuild-index",       0       ,"rebuild index with correct frame type", (one_arg_type)A_rebuildKeyFrame},
@@ -454,10 +454,6 @@ void save(char*name)
 }
 
 
-void set_autoindex(char *p){
-	UNUSED_ARG(p);
-	prefs->set(FEATURE_TRYAUTOIDX,(unsigned int)1);
-}
 
 void show_info(char *p){
    UNUSED_ARG(p);
@@ -646,6 +642,6 @@ char *script_getVar(char *in, int *r)
 }
 
 void set_reuse_2pass_log(char *p){
-   prefs->set(FEATURE_REUSE_2PASS_LOG,1);
+   prefs->set(FEATURES_REUSE_2PASS_LOG,true);
 }
 //EOF

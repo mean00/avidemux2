@@ -96,7 +96,7 @@ def makeStructure(varType,params):
     out=out+"\t,"+str(default)+",\t"+str(min)+",\t"+str(max)
     out=out+",\tNULL},"
     outputJson(out)
-    outputList(fullName.upper())
+    outputList(fullName.upper()+", \t//"+str(varType))
 ###################################################################################################################################
 
 def writeJsonHead():
@@ -129,7 +129,7 @@ if(not os.path.isfile(inputFile)):
     print "no such file "+str(inputFile)
     exit(1)
 jsonFileName=re.sub(r'.conf',r'_pref.h',inputFile)
-listFileName=str("../include/"+re.sub(r'.conf',r'_list.h',intputFile)
+listFileName=str("../include/")+re.sub(r'.conf',r'_list.h',inputFile)
 print("Generating "+jsonFileName)
 jsonFile=open(jsonFileName,'w')
 print("Generating "+listFileName)

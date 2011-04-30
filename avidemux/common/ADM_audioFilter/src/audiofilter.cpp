@@ -45,7 +45,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     playback.startTimeInUs=startTime;
     playback.shiftInMs=shift;
     playback.mixerEnabled=true;
-    if(prefs->get(DOWNMIXING_PROLOGIC,&downmix)!=RC_OK)
+    if(prefs->get(DEFAULT_DOWNMIXING,&downmix)!=RC_OK)
     {
       downmix=0;
     }

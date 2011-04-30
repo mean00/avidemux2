@@ -268,12 +268,8 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
     default: ADM_assert(0);
     }
 
-    if(dh!=sh)
     {
         FLAGS();
-    }else
-    {
-        ADM_warning("Same height for source and destination, disabling assembly\n");
     }
   
     srcWidth=sw;

@@ -18,7 +18,7 @@
 
 #include "DIA_factory.h"
 
-int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,uint32_t *swap)
+int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap)
 {
         
 
@@ -27,7 +27,7 @@ int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,uint32_t *swap)
     diaElemUInteger   postProcStrength(PX(ppstrength),QT_TR_NOOP("_Filter strength:"),0,5);
     diaElemToggle     swapuv(PX(swap),QT_TR_NOOP("_Swap U and V"));
     
-    uint32_t hzd,vzd,dring;
+    bool hzd,vzd,dring;
     
 #define DOME(x,y) if(*pplevel & x) y=1;else y=0;
     

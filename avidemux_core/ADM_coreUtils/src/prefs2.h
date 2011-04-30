@@ -6,13 +6,13 @@ struct  {
 	bool swap_if_A_greater_than_B;
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;
-	uint32_t use_odml;
-	uint32_t use_systray;
+	bool use_odml;
+	bool use_systray;
 	bool reuse_2pass_log;
 	bool audiobar_uses_master;
 	uint32_t threading_lavc;
 	uint32_t cpu_caps;
-	uint32_t mpeg_no_limit;
+	bool mpeg_no_limit;
 	bool alternate_mp3_tag;
 	bool vdpau;
 }features;

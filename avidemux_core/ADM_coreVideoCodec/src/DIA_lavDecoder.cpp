@@ -19,7 +19,7 @@
       \fn DIA_lavDecoder
       \brief Dialog for lavcodec *DECODER* option
 */
-uint8_t DIA_lavDecoder(uint32_t *swapUv, uint32_t *showU)
+uint8_t DIA_lavDecoder(bool  *swapUv, bool *showU)
 {
 int ret=0;	
          

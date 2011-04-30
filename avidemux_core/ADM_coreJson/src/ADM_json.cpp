@@ -214,7 +214,7 @@ CONFcouple *admJsonToCouple::readFromFile(const char *file)
         int l=readItems.size();
         for(int i=0;i<l;i++)
         {
-            printf(" %s => %s\n",readItems[i].key.c_str(),readItems[i].value.c_str());
+           // printf(" %s => %s\n",readItems[i].key.c_str(),readItems[i].value.c_str());
         }
         //
         CONFcouple *c=new CONFcouple(l);

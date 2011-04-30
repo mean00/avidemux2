@@ -26,7 +26,7 @@ class ADM_scriptDFToggleHelper : public ADM_scriptDFBaseHelper
 {
 private:
 	char                *_title;
-	uint32_t            _value;
+	bool                 _value;
 
 public:
                      ADM_scriptDFToggleHelper(const char *title);
