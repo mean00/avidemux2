@@ -43,7 +43,7 @@ const mpegPsStruct psDescriptor[4]=
 */
 bool ffPSConfigure(void)
 {
-        uint32_t tolerance=(uint32_t)psMuxerConfig.acceptNonCompliant;
+        bool tolerance=psMuxerConfig.acceptNonCompliant;
         #define TX(x) &(psMuxerConfig.x)
 
 

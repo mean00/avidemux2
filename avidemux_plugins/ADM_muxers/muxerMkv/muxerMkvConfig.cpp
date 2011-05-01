@@ -21,7 +21,7 @@
 #include "fourcc.h" 
 bool mkvConfigure(void)
 {
-        uint32_t force=(uint32_t)mkvMuxerConfig.forceDisplayWidth;
+        bool force=mkvMuxerConfig.forceDisplayWidth;
         uint32_t displayWidth=(uint32_t)mkvMuxerConfig.displayWidth;
 
         diaElemToggle   alternate(&force,"Force display width");

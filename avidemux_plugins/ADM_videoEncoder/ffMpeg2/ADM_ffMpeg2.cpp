@@ -299,9 +299,11 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
          
          diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
-         
+         uint32_t widescreen= conf->lavcSettings.widescreen;
+         uint32_t iinterlaced= conf->lavcSettings.interlaced;
+         uint32_t bff= conf->lavcSettings.bff;
          diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
-         diaElemMenu     arM(PX(widescreen),QT_TR_NOOP("Aspect ratio:"),2,arE);
+         diaElemMenu     arM(&(widescreen),QT_TR_NOOP("Aspect ratio:"),2,arE);
          diaElemMenu     matrixM(&(Mp2Settings.matrix),QT_TR_NOOP("Matrices:"),MPEG2_MATRIX_LAST,matrixE);
          diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
          
@@ -310,8 +312,8 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          
         diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,30); 
 
-        diaElemMenu     interlaced(PX(interlaced),QT_TR_NOOP("_Interlaced:"),2,interE);
-        diaElemMenu     fieldOrder(PX(bff),QT_TR_NOOP("Field Order:"),2,foE);
+        diaElemMenu     interlaced(&(iinterlaced),QT_TR_NOOP("_Interlaced:"),2,interE);
+        diaElemMenu     fieldOrder(&(bff),QT_TR_NOOP("Field Order:"),2,foE);
 
           /* First Tab : encoding mode */
         diaElem *diamode[]={&arM,&threadM,&bitrate};
@@ -339,6 +341,9 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
         if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-2 configuration"),5,tabs))
         {
           conf->lavcSettings.me_method=(Motion_Est_ID)me;
+          conf->lavcSettings.widescreen= widescreen;
+          conf->lavcSettings.interlaced= iinterlaced;
+          conf->lavcSettings.bff= bff;
           return true;
         }
          return false;

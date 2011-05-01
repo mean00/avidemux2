@@ -22,7 +22,7 @@
 bool mp4Configure(void)
 {
         uint32_t fmt=(uint32_t)muxerConfig.muxerType;
-        uint32_t alt=(uint32_t)muxerConfig.useAlternateMp3Tag;
+        bool alt=muxerConfig.useAlternateMp3Tag;
         diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
         diaElemMenu  menuFormat(&fmt,"Muxing Format",2,format,"");
         diaElemToggle alternate(&alt,"Use alternate MP3 tag");

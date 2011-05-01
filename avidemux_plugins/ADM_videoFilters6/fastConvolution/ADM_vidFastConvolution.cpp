@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#define convolution_param convolution_param_fast
 #include "ADM_vidConvolution.hxx"
 #include "convolution_desc.cpp"
 #include "DIA_factory.h"

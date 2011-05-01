@@ -228,7 +228,7 @@ bool vdpauVideoFilterDeint::configure( void)
                              {ADM_KEEP_BOTH,      QT_TR_NOOP("Double framerate"),NULL}
                              
           };
-     uint32_t doResize=(uint32_t)configuration.resizeToggle;
+     bool doResize=configuration.resizeToggle;
      diaElemToggle    tResize(&(doResize),   QT_TR_NOOP("_Resize:"));
      diaElemMenu      mMode(&(configuration.deintMode),   QT_TR_NOOP("_Deint Mode:"), 3,tMode);
      diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TR_NOOP("Width :"),16,2048);

@@ -84,8 +84,7 @@ diaMenuEntry threads[]={
          diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
 */
-         uint32_t trelBol=*PX(trellis);
-         diaElemToggle    trellis(&trelBol,QT_TR_NOOP("_Trellis quantization"));         
+         diaElemToggle    trellis(PX(trellis),QT_TR_NOOP("_Trellis quantization"));         
          diaElemUInteger  max_b_frames(PX(maxBFrame),QT_TR_NOOP("_Number of B frames:"),0,32);
 
          diaElemMenu     qzM(PX(cqmMode),QT_TR_NOOP("_Quantization type:"),2,qzE);
@@ -127,7 +126,6 @@ diaMenuEntry threads[]={
          diaElemTabs *tabs[]={&tabME,&tabQz,&tabThread};
         if( diaFactoryRunTabs(QT_TR_NOOP("Xvid4 MPEG-4 ASP configuration"),3,tabs))
         {
-            *PX(trellis)= trelBol;
             return true;
         }
          return false;

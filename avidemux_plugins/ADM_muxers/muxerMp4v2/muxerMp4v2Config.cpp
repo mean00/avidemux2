@@ -25,8 +25,8 @@ extern mp4v2_muxer muxerConfig;
 */
 bool mp4v2Configure(void)
 {
-        uint32_t optimize=(uint32_t)muxerConfig.optimize;
-        uint32_t addItuneMetaData=(uint32_t)muxerConfig.add_itunes_metadata;
+        bool optimize=muxerConfig.optimize;
+        bool addItuneMetaData=muxerConfig.add_itunes_metadata;
 
         diaElemToggle   wOptimize(&optimize,"Optimize for streaming");
         diaElemToggle   wItunes(&addItuneMetaData,"Add ipod metadata");

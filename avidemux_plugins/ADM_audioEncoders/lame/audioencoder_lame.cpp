@@ -322,7 +322,7 @@ bool configure (void)
   diaElemMenu bitrate (&lameBitrate, QT_TR_NOOP ("_Bitrate:"), SZT (bitrateM),
 		       bitrateM);
   diaElemUInteger quality (PX (quality), QT_TR_NOOP ("_Quality:"), 0, 9);
-  uint32_t reservoir32=lameConf.disableBitReservoir;
+  bool reservoir32=lameConf.disableBitReservoir;
   diaElemToggle reservoir (&reservoir32,
 			   QT_TR_NOOP ("_Disable reservoir:"));
 
