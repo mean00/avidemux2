@@ -374,7 +374,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     int ret;
     int written=0;
     bool result=true;
-
+    
     float f=(float)vStream->getAvgFps1000();
     f=1000./f;
     f*=1000000;
@@ -508,6 +508,11 @@ bool muxerFFmpeg::saveLoop(const char *title)
 
     }
     delete [] buffer;
+    if((videoDuration *4)/5 > lastVideoDts)
+    {
+        GUI_Error_HIG("Too short","The video has been saved but seems to be incomplete.");
+        result=false;
+    }
     ADM_info("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
     return result;
 }
