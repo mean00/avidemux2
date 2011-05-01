@@ -84,7 +84,6 @@ ADM_coreVideoEncoder6
 ADM_coreVideoFilter6
 ADM_coreImageLoader6
 ADM_coreTinyPy6
-ADM_coreJSON6
 )
 
 if (USE_SYSTEM_SPIDERMONKEY)

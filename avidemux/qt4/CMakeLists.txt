@@ -124,8 +124,6 @@ IF (USE_SDL)
 	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${SDL_LIBRARY})
 ENDIF (USE_SDL)
 
-# libxml2
-TARGET_LINK_LIBRARIES(avidemux3_qt4 ${LIBXML2_LIBRARIES})
 
 ###########################################
 # UI Specific

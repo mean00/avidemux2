@@ -98,7 +98,7 @@ def writeJsonHead():
     outputJson("#include \"ADM_paramList.h\"")
     #outputJson("#include \"ADM_coreVideoEncoder.h\"")
     #outputJson("#include \"ADM_encoderConf.h\"")
-    outputJson("#include \"ADM_coreJson/include/ADM_coreJson.h\"")
+    outputJson("#include \"ADM_coreJson.h\"")
     outputJson("#include \""+str(headerFileName)+"\"")
     #outputJson("extern const ADM_paramList "+str(structName)+"_param[];")
     outputJson("bool  "+str(structName)+"_jserialize(const char *file, const "+str(structName)+" *key){")

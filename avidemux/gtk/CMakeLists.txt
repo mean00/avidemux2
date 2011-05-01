@@ -96,8 +96,6 @@ IF (USE_SDL)
         TARGET_LINK_LIBRARIES(avidemux3_gtk ${SDL_LIBRARY})
 ENDIF (USE_SDL)
 
-# libxml2
-TARGET_LINK_LIBRARIES(avidemux3_gtk ${LIBXML2_LIBRARIES})
 
 ###########################################
 # UI Specific

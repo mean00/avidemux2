@@ -22,7 +22,7 @@ class diaElemToggle : public diaElemToggleBase
 {
   protected:
 public:
-            diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip=NULL);
+            diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip=NULL);
   virtual   ~diaElemToggle() ;
   void      setMe(void *dialog, void *opaque,uint32_t line);
   void      getMe(void);
@@ -75,7 +75,7 @@ static void cb_menu2(void *w,void *p);
 
 
 
-diaElemToggle::diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip)
+diaElemToggle::diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip)
   : diaElemToggleBase()
 {
   param=(void *)toggleValue;
@@ -118,9 +118,9 @@ void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t line)
 void diaElemToggle::getMe(void)
 {
   GtkWidget *widget=(GtkWidget *)myWidget;
-  uint32_t *val=(uint32_t *)param;
+  bool *val=(bool *)param;
   ADM_assert(widget);
-  *(uint32_t *)param=gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
+  *(bool *)param=gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 }
 void   diaElemToggle::finalize(void)
 {
@@ -379,7 +379,7 @@ void gtkDestroyToggleInt(diaElem *e)
 	ADM_GtkFactory::diaElemToggleInt *a=(ADM_GtkFactory::diaElemToggleInt *)e;
 	delete a;
 }
-diaElem  *gtkCreateToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip)
+diaElem  *gtkCreateToggle(bool *toggleValue,const char *toggleTitle, const char *tip)
 {
 	return new  ADM_GtkFactory::diaElemToggle(toggleValue,toggleTitle, tip);
 }

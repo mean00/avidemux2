@@ -350,7 +350,7 @@ int nw;
     case ACT_MarkA:
     case ACT_MarkB:
     {
-      uint32_t swapit=0;
+      bool swapit=0;
       uint64_t markA,markB;
       uint64_t pts=admPreview::getCurrentPts();
       if( prefs->get(FEATURES_SWAP_IF_A_GREATER_THAN_B, &swapit) != RC_OK )     swapit = 1;

@@ -89,9 +89,6 @@ IF (USE_SDL)
         TARGET_LINK_LIBRARIES(avidemux3_cli ${SDL_LIBRARY})
 ENDIF (USE_SDL)
 
-# libxml2
-TARGET_LINK_LIBRARIES(avidemux3_cli ${LIBXML2_LIBRARIES})
-
 ###########################################
 # OS Specific
 ###########################################

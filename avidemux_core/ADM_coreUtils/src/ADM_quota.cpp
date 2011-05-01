@@ -5,6 +5,7 @@
 #define ADM_LEGACY_PROGGY
 #include <errno.h>
 #include <string>
+#include <stdarg.h>
 using std::string;
 
 #include "ADM_default.h"
@@ -24,37 +25,7 @@ static qfile_t qfile[qfile_len];
 
 #include "DIA_coreToolkit.h"
 
-         
-#include <libxml/tree.h>
-int qxmlSaveFormatFile(const char *filename, xmlDocPtr cur, int format);
 
-int qxmlSaveFormatFile(const char *filename, xmlDocPtr cur, int format){
-	/*
-	 * xmlSaveFormatFile -> xmlDocDumpFormatMemory
-	 */
-  xmlChar *mem;
-  int numbytes;
-  FILE *FD;
-  int fd;
-  xmlChar *p;
- 	xmlDocDumpFormatMemory(cur,&mem,&numbytes,format);
-	FD = qfopen(filename,"wb"); /* includes error handling, :-) */
-	if( !FD ){
-		free(mem);
-		return -1;
-	}
-	if( (fd=fileno(FD)) == -1 ){
-		fprintf(stderr,"\nqxmlSaveFormatFile(): bad stream argument\n");
-		assert(0); /* can't use mean's ADM_assert() here */
-	}
-	if( qwrite(fd,mem,numbytes) == -1 ){ /* includes error handling, :-) */
-		free(mem);
-		return -1;
-	}
-	qfclose(FD);
-	free(mem);
-	return 0;
-}
 uint8_t  quotaInit(void)
 {
             memset(qfile,0,sizeof(qfile));  

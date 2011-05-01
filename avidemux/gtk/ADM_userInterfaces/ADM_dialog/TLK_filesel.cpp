@@ -78,7 +78,7 @@ uint8_t FileSel_SelectRead(const char *title, char *target, uint32_t max, const 
 	if (source && *source)
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), (gchar*)source);
 	else	//use pref
-		if (prefs->get(LASTDIR_READ, (ADM_filename**)&tmpname))
+		if (prefs->get(LASTFILES_LASTDIR_READ, (char**)&tmpname))
 			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), (gchar*)tmpname);
 
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT)
@@ -172,7 +172,7 @@ uint8_t FileSel_SelectWrite(const char *title, char *target, uint32_t max, const
 	}
 	else	//use pref
 	{
-		if (prefs->get(LASTDIR_WRITE,(ADM_filename **)&tmpname))
+		if (prefs->get(LASTFILES_LASTDIR_WRITE,(char **)&tmpname))
 		{
 			dupe = ADM_PathCanonize(tmpname);
 
@@ -258,7 +258,7 @@ uint8_t FileSel_SelectDir(const char *title, char *target, uint32_t max, const c
 	}
 	else	//use pref
 	{
-		if (prefs->get(LASTDIR_READ, (ADM_filename **)&tmpname))
+		if (prefs->get(LASTFILES_LASTDIR_READ, (char **)&tmpname))
 		{
 			dupe = ADM_PathCanonize(tmpname);
 			ADM_PathStripName(dupe);
@@ -347,9 +347,9 @@ void GUI_FileSel(const char *label, SELFILE_CB cb, int rw,char **rname)
 	gtk_register_dialog(dialog);
 
 	if (rw)
-		res = prefs->get(LASTDIR_WRITE,(ADM_filename **)&tmpname);
+		res = prefs->get(LASTFILES_LASTDIR_WRITE,(char **)&tmpname);
 	else
-		res = prefs->get(LASTDIR_READ,(ADM_filename **)&tmpname);
+		res = prefs->get(LASTFILES_LASTDIR_READ,(char **)&tmpname);
 
 	if (res)
 	{
@@ -390,9 +390,9 @@ void GUI_FileSel(const char *label, SELFILE_CB cb, int rw,char **rname)
 			ADM_PathStripName(str);
 
 			if (rw)
-				prefs->set(LASTDIR_WRITE, (ADM_filename*)str);
+				prefs->set(LASTFILES_LASTDIR_WRITE, (char*)str);
 			else
-				prefs->set(LASTDIR_READ, (ADM_filename*)str);
+				prefs->set(LASTFILES_LASTDIR_READ, (char*)str);
 
 			delete [] str;
 		}
