@@ -290,9 +290,9 @@ bool  x264Encoder::preAmble (ADMImage * in)
       pic.img.plane[0] = YPLANE(in);
       pic.img.plane[2] = UPLANE(in);
       pic.img.plane[1] = VPLANE(in);
-      pic.img.i_stride[0] = getWidth();
-      pic.img.i_stride[1] = getWidth()/2;
-      pic.img.i_stride[2] = getWidth()/2;
+      pic.img.i_stride[0] = in->GetPitch(PLANAR_Y);
+      pic.img.i_stride[1] = in->GetPitch(PLANAR_U);
+      pic.img.i_stride[2] = in->GetPitch(PLANAR_V);
       pic.i_type = X264_TYPE_AUTO;
       pic.i_pts = in->Pts;
   return true;

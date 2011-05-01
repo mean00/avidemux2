@@ -118,16 +118,16 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
     \fn prolog
 */
 
-bool             ADM_coreVideoEncoderFFmpeg::prolog(void)
+bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 {
     int w=getWidth();
     int h=getHeight();
 
   switch(targetColorSpace)
     {
-        case ADM_COLOR_YV12:    _frame.linesize[0] = w;
-                                _frame.linesize[1] = w>>1;
-                                _frame.linesize[2] = w>>1;
+        case ADM_COLOR_YV12:    _frame.linesize[0] = img->GetPitch(PLANAR_Y);
+                                _frame.linesize[1] = img->GetPitch(PLANAR_U);
+                                _frame.linesize[2] = img->GetPitch(PLANAR_V);
                                 _context->pix_fmt =PIX_FMT_YUV420P;break;
         case ADM_COLOR_YUV422P: _frame.linesize[0] = w;
                                 _frame.linesize[1] = w>>1;
@@ -191,7 +191,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
         printf("[ff] Cannot get next image\n");
         return false;
     }
-    prolog();
+    prolog(image);
 
     uint64_t p=image->Pts;
     queueOfDts.push_back(p);
@@ -259,7 +259,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
         printf("[ff] Cannot find codec\n");
         return false;
     }
-   prolog();
+   prolog(image);
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
    if(LAVS(MultiThreaded))
     {
@@ -484,7 +484,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
   _context->p_masking = 0.0;
 
   // Set frame rate den/num
-  prolog();
+  prolog(image);
   return true;
 }
 

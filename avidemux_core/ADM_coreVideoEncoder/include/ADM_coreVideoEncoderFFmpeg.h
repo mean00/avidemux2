@@ -48,7 +48,7 @@ protected:
               
 protected:
 
-    virtual               bool             prolog(void); 
+    virtual               bool             prolog(ADMImage *img); 
     virtual               bool             preEncode(void); 
     virtual               bool             setup(CodecID codecId);
     virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
