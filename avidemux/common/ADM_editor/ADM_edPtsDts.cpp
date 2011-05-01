@@ -373,7 +373,8 @@ next:
         if(nPts>=info.nb_frames-2 )
         {
             ADM_info("Got PTS, compute dts\n");
-            return setDtsFromPts(hdr,timeIncrementUs,delay);
+            if(false== setDtsFromPts(hdr,timeIncrementUs,delay)) return false;
+            return ADM_verifyDts(hdr,timeIncrementUs);
         }
         // No b frames, PTS=DTS
         if(!nbB)
@@ -386,7 +387,7 @@ next:
         if(nDts>=info.nb_frames-2 )
         {
             ADM_info("Got DTS, compute  PTS\n");
-            return setPtsFromDts(hdr,timeIncrementUs,delay);
+            return  setPtsFromDts(hdr,timeIncrementUs,delay);
         }
         // Case 4: We have a bit of both
         ADM_info("Get some dts and pts\n");
@@ -467,6 +468,7 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     uint32_t flags;
     uint64_t pts,dts;
 
+    ADM_info("computing pts...\n");
     aviInfo info;
     hdr->getVideoInfo(&info);
     nbFrames=info.nb_frames;
@@ -485,6 +487,7 @@ bool setPtsFromDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
                 nbBframe=0;
             }
     }
+    ADM_info("max bframe = %d\n",maxBframe);
     nbBframe=0;
     // We have now maxBframe = max number of Bframes in sequence
     for(int i=1;i<nbFrames;i++)
@@ -525,6 +528,8 @@ bool setDtsFromPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     uint32_t flags;
     int nbB=0;
     uint64_t pts,dts;
+
+    ADM_info("computing dts...\n");
 
     aviInfo info;
     hdr->getVideoInfo(&info);
