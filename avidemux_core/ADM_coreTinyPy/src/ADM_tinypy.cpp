@@ -227,7 +227,10 @@ tp_obj    tinyPy_getFolderContent(tp_vm *tp)
     }
     // add items to the list
     for(int i=0;i<nb;i++)
-        _tp_list_append(tp,list.list.val,tp_string(items[i]));
+    {
+        char *tem=items[i];
+        _tp_list_append(tp,list.list.val,tp_string_copy(tp,tem,strlen(tem)));
+    }
     // free the list
     for(int i=0;i<nb;i++)
     {
