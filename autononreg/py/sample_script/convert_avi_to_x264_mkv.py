@@ -11,7 +11,10 @@ ext="avi"
 def convert(filein):
     fileout=filein+".mkv"
     print(filein+"=>"+fileout)
-    adm.loadVideo(filein)
+    if(0 == adm.loadVideo(filein)):
+        ui.displayError("oops","cannot load "+filein)
+        raise
+        
     adm.save(fileout)
     print("Done")
     
@@ -31,7 +34,7 @@ adm.setContainer("MKV","forceDisplayWidth=False","displayWidth=1280")
 folder=ui.dirSelect("Select avi source folder")
 #folder="/work/samples/avi"
 if(folder is None):
-    displayError("oops","no folder selected")
+    ui.displayError("oops","no folder selected")
     raise
 list=get_folder_content(folder,ext)
 for i in list:
