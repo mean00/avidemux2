@@ -29,7 +29,12 @@
 
 pyLoggerFunc *pyLog=NULL;
 static tp_obj    tinyPy_dumpBuiltin(tp_vm *vm);
-static pyFuncs addons[]={{"help",tinyPy_dumpBuiltin},{NULL,NULL}};
+static tp_obj    tinyPy_getFolderContent(tp_vm *vm);
+static pyFuncs addons[]={
+                                {"help",tinyPy_dumpBuiltin},
+                                {"get_folder_content",tinyPy_getFolderContent},
+                                {NULL,NULL}
+                        };
 static vector <admPyClassDescriptor> listOfPyClass;;
 
 extern void tp_hook_set_syslib(const char *sysLib);
@@ -194,25 +199,49 @@ bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy, con
 
 }
 /**
+    \fn getFolderContent
+    \brief get_folder_content(root, ext) : Return a list of files in  root with extention ext
+*/
+tp_obj    tinyPy_getFolderContent(tp_vm *tp)
+{
+    tinyParams pm(tp);
+    const char *root= pm.asString();
+    const char *ext = pm.asString();
+    ADM_info("Scanning %s for file with ext : %s\n",root,ext);
+    
+    uint32_t nb;
+    #define MAX_ELEM 200
+    char *items[MAX_ELEM];
+    if(false==buildDirectoryContent(&nb,root, items,MAX_ELEM,ext))
+    {
+      
+        ADM_warning("Cannot get content\n");
+        return tp_None;
+    }
+    // create a list
+    tp_obj list=tp_list(tp);
+    if(!nb)
+    {
+        ADM_warning("Folder empty\n");
+        return tp_None;
+    }
+    // add items to the list
+    for(int i=0;i<nb;i++)
+        _tp_list_append(tp,list.list.val,tp_string(items[i]));
+    // free the list
+    for(int i=0;i<nb;i++)
+    {
+        ADM_dealloc(items[i]);
+        items[i]=NULL;
+    }
+    return list;
+
+}
+/**
     \fn dumpBuiltin
 */
-tp_obj    tinyPy_dumpBuiltin(tp_vm *vm)
+static tp_obj    tinyPy_dumpBuiltin(tp_vm *tp)
 {
-#if 0
-    ADM_info("Dumping builtins\n");
-    tp_obj builtins=vm->builtins;
-    // It is a dict..
-    _tp_dict *dict=builtins.dict.val;
-    ADM_info("%d elems\n",dict->len);
-    for( int i=0;i<dict->len;i++)
-    {
-        tp_item *item=&(dict->items[i]);
-        const char *str=item->key.string.val;
-        if(str)
-            pyPrintf("%s\n",str);
-    }
-    return tp_None;
-#endif
     int n=listOfPyClass.size();
     pyPrintf("You can get more help using CLASSNAME.help()\n");
     for(int i=0;i<n;i++)
