@@ -65,6 +65,7 @@ bool r;
         tsAudioTrackInfo trk;
         trk.esId=tracks[i].trackPid;
         trk.trackType=tracks[i].trackType;
+        trk.mux=ADM_TS_MUX_NONE;
         if(true==tsGetAudioInfo(p,&trk))
         {
               audioTrack.push_back(trk);  
@@ -195,6 +196,7 @@ bool TsIndexer::writeAudio(void)
         qfprintf(index,"%s.fq=%d\n",head,t->wav.frequency);
         qfprintf(index,"%s.chan=%d\n",head,t->wav.channels);
         qfprintf(index,"%s.br=%d\n",head,t->wav.byterate);
+        qfprintf(index,"%s.muxing=%d\n",head,t->mux);
         if(t->extraDataLen)
         {
             qfprintf(index,"%s.extraData=%d",head,t->extraDataLen);

@@ -61,7 +61,8 @@ uint64_t pts,dts,startAt;
             case ADM_TS_MPEG_AUDIO:
             case ADM_TS_AC3:
             case ADM_TS_EAC3:
-            case ADM_TS_AAC:
+            case ADM_TS_AAC_ADTS:
+            case ADM_TS_AAC_LATM:
                         break;
             default:
                 ADM_warning("Unsupported audio track\n");
@@ -74,51 +75,78 @@ uint64_t pts,dts,startAt;
         // This is a special case...
         // For ADTS, we read one packet and ask ffmpeg to extract
         // Extra data, frequency etc...
-        if(trackInfo->trackType==ADM_TS_AAC)
+        ADM_TS_TRACK_TYPE trackType=trackInfo->trackType;
+
+        //--------------------- AAC -------------------------
+        if(trackType==ADM_TS_AAC_ADTS || trackType==ADM_TS_AAC_LATM)
         {
+            // Step 1, try to get a packet...
             TS_PESpacket pes(trackInfo->esId);
             int retries=5;
             int offset;
-            ADM_adts2aac  adts;
-            while(retries)
+            uint32_t eLen=0;     
+            uint8_t *eData=NULL;
+
+            trackInfo->wav.encoding=WAV_AAC;  
+            
+         
+again:
+            if(!retries)
             {
-                if(false==p->getNextPES(&pes))
+                ADM_error("Cannot get info from audio\n");
+                return false;
+            }
+            if(false==p->getNextPES(&pes))
                 {
                     ADM_warning("Cannot get pes packet for AAC track\n");
                     return false;
                 }
-                uint8_t *ptr=pes.payload+pes.offset;
-                int size=pes.payloadSize-pes.offset;
-                int dummySize=0;
-                if(true==adts.convert(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
-                        break;;
-                retries--;
-            }
-            if(!retries)
-            {
-                ADM_error("Cannot get AAC/ADTS info\n");
-                return false;
-            }
-            trackInfo->wav.encoding=WAV_AAC;    
-            trackInfo->wav.frequency=adts.getFrequency();
-            trackInfo->wav.channels=adts.getChannels();
-            trackInfo->wav.byterate=128000>>3;
+            retries--;    
             
-            uint32_t eLen=0;     
-            uint8_t *eData=NULL;
-            adts.getExtraData(&eLen,&eData);
-            
-            if(2!=eLen) 
+            // try to decode header..
+            uint8_t *ptr=pes.payload+pes.offset;
+            int size=pes.payloadSize-pes.offset;
+            switch(trackType)
             {
-                ADM_error("%d bytes of extradata, expecting 2");
-                return false;
+                default:
+                case ADM_TS_AAC_LATM:
+                {
+                    ADM_error("Cannot handle LATM AAC\n");
+                    trackInfo->wav.frequency=48000;
+                    trackInfo->wav.channels=2;
+                    trackInfo->wav.byterate=128000>>3;
+                    return true;
+                    //
+                    break;
+                }
+                case ADM_TS_AAC_ADTS:
+                    {
+                    ADM_adts2aac  adts;
+                    trackInfo->mux=ADM_TS_MUX_ADTS;
+                    int dummySize=0;
+                    if(false==adts.convert(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
+                        goto again;
+                    adts.getExtraData(&eLen,&eData);
+                    if( eLen!=2) 
+                    {
+                        ADM_error("%d bytes of extradata, expecting 2");
+                        return false;
+                    }
+                    trackInfo->extraDataLen=eLen;
+                    trackInfo->extraData[0]=eData[0];
+                    trackInfo->extraData[1]=eData[1];
+                    ADM_info("AAC extra data : %02x %02x\n",eData[0],eData[1]);
+                    trackInfo->wav.frequency=adts.getFrequency();
+                    trackInfo->wav.channels=adts.getChannels();
+                    trackInfo->wav.byterate=128000>>3;
+                    return true;
+                    }
+                    break;
             }
-            trackInfo->extraDataLen=2;
-            trackInfo->extraData[0]=eData[0];
-            trackInfo->extraData[1]=eData[1];
-            ADM_info("AAC extra data : %02x %02x\n",eData[0],eData[1]);
-            return true;
+            
+            return false;
         }
+        // -------------- /AAC ------------------
         int rd=PROBE_ANALYZE_SIZE;
         if(!p->read(PROBE_ANALYZE_SIZE,audioBuffer))
         {

@@ -29,10 +29,19 @@ typedef enum
     ADM_TS_H264,
     ADM_TS_MPEG_AUDIO=10,
     ADM_TS_AC3,
-    ADM_TS_AAC,
+    ADM_TS_AAC_ADTS,
+    ADM_TS_AAC_LATM,
     ADM_TS_EAC3,
     ADM_TS_VC1
 }ADM_TS_TRACK_TYPE;
+
+typedef enum
+{
+    ADM_TS_MUX_NONE=0,
+    ADM_TS_MUX_ADTS=1,
+    ADM_TS_MUX_MAX
+}ADM_TS_MUX_TYPE;
+
 /**
     \typedef ADM_TS_TRACK
 */
@@ -52,6 +61,7 @@ typedef struct
     WAVHeader         wav;
     uint32_t          esId;
     ADM_TS_TRACK_TYPE trackType;
+    ADM_TS_MUX_TYPE   mux;
     uint32_t          extraDataLen;
     uint8_t           extraData[ADM_TS_MAX_EXTRADATA];
 }tsAudioTrackInfo;

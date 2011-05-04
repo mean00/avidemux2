@@ -154,7 +154,8 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
         for(int i=0;i<list.size();i++)
         {
             ADM_TS_TRACK_TYPE type=list[i].trackType;
-            if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC || type==ADM_TS_EAC3)
+            if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC_ADTS ||type==ADM_TS_AAC_LATM
+                        || type==ADM_TS_EAC3)
             {
                 TSpacketInfo pkt;
                 t->setPos(0);
@@ -281,17 +282,19 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
     *str="????";
     switch(type)
     {
-                case 1:case 2: *str= "Mpeg Video";return ADM_TS_MPEG2;break;
-                case 3:case 4: *str= "Mpeg Audio";return ADM_TS_MPEG_AUDIO;break;
-                case 0x11: case 0xF:     *str= "Mpeg AAC";return ADM_TS_AAC;break;
-             //   case 0x10:        *streamType=ADM_STREAM_MPEG4;return "MP4 Video";
-                case 0x1B:  *str= "H264 Video";return ADM_TS_H264;break;
-                case 0x81:  *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
-                case 0x84:  *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
-                case 0xea:  *str= "VC1 (Not sure)";return ADM_TS_VC1;break;
-                case 0x90:  *str= "Presentation graphics (BluRay)";return ADM_TS_UNKNOWN;break;
-                case 0x83:  *str= "TrueHD AC3  (BluRay)";return ADM_TS_AC3;break;
+                case 0x01:case 2: *str= "Mpeg Video";return ADM_TS_MPEG2;break;
+                case 0x03:case 4: *str= "Mpeg Audio";return ADM_TS_MPEG_AUDIO;break;
+                case 0xF:      *str= "Mpeg AAC ADTS";return ADM_TS_AAC_ADTS;break;
+                case 0x11:     *str= "Mpeg AAC LATM";return ADM_TS_AAC_LATM;break;
+                case 0x1B:     *str= "H264 Video";return ADM_TS_H264;break;
+                case 0x81:     *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
+                //case 0x82:     *str= "DTS (Not sure)";return ADM_TS_DTS;break;
+                case 0x83:     *str= "TrueHD AC3  (BluRay)";return ADM_TS_AC3;break;
+                case 0x84:     *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
+                case 0xea:     *str= "VC1 (Not sure)";return ADM_TS_VC1;break;
+                case 0x90:     *str= "Presentation graphics (BluRay)";return ADM_TS_UNKNOWN;break;
                 
+                //   case 0x10:        *streamType=ADM_STREAM_MPEG4;return "MP4 Video";
                 default : break;
     }
     return ADM_TS_UNKNOWN;
@@ -313,16 +316,17 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
         {
                 int streamType,streamPid,esInfoLength;
                 streamType=r[0];
+                printf("[PMT] StreamType=%d\n",streamType);
                 if(streamType==5) // descriptor
                 {
                     int descriptorLength=r[1];
                     if(descriptorLength+1>packLen) 
                     {
-                        printf("[PMT             Registration length bigger than section\n");
+                        ADM_warning("[PMT             Registration length bigger than section\n");
                         return true;
                     }
-                    printf("[PMT] Registration FCC %c%c%c%c \n",r[2],r[3],r[4],r[5]);
-                    uint8_t *tail=r+1+descriptorLength;
+                    printf("\t[PMT] Registration FCC %c%c%c%c \n",r[2],r[3],r[4],r[5]);
+                    uint8_t *tail=r+2+descriptorLength;
                     packLen-=1+descriptorLength;
                     decodeRegistration(descriptorLength,r);
                     r=tail;
@@ -335,12 +339,12 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
                 packLen-=5;
                 packLen-=esInfoLength;
                 TrackTypeDescriptor *td=TrackTypeDescriptor::find(streamType);
-                printf("[PMT]           StreamType: 0x%x,<<%s>>\n",streamType,td->desc);    
-                printf("[PMT]           Pid:        0x%x\n",streamPid);
-                printf("[PMT]           Es Info Length: %d (0x%x)\n",esInfoLength,esInfoLength);
+                printf("\t[PMT]           StreamType: 0x%x,<<%s>>\n",streamType,td->desc);    
+                printf("\t[PMT]           Pid:        0x%x\n",streamPid);
+                printf("\t[PMT]           Es Info Length: %d (0x%x)\n",esInfoLength,esInfoLength);
                 if(packLen<1) 
                 {
-                    printf("[PMT             ES Info length bigger than section\n");
+                    ADM_warning("[PMT             ES Info length bigger than section\n");
                     return true;
                 }
                 //trk.trackType=td->trackType;
@@ -352,7 +356,7 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
                     uint32_t tag,taglen;
                     tag=p[0];
                     taglen=p[1];
-                    printf("[PMT]           Tag :%x len:%d =",tag,taglen);
+                    printf("\t[PMT]           Tag :%x len:%d =",tag,taglen);
                     switch(tag) //http://www.coolstf.com/tsreader/descriptors.html
                     {
                         
@@ -403,10 +407,12 @@ bool decodeRegistration(int size,uint8_t *data)
                             printf("[PMT] Buffer size\n");
                             data+=3;
                             break;
-            default: return true;
+            default: 
+                        printf("Unknown registration tag :%d\n",tag);
+                        return true;
 
         }
     }
-
+    return true;
 }
 //EOF

@@ -290,7 +290,7 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
     {
         char header[40];
         char body[40];
-        uint32_t fq,chan,br,codec,pid;
+        uint32_t fq,chan,br,codec,pid,muxing=0;
         sprintf(header,"Track%d.",i);
 #define readInt(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint32(body);printf("%02d:"#y"=%"LU"\n",i,x);}
 #define readHex(x,y) {sprintf(body,"%s"#y,header);x=index->getAsHex(body);printf("%02x:"#y"=%"LU"\n",i,x);}
@@ -299,13 +299,12 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         readInt(chan,chan);
         readInt(codec,codec);
         readHex(pid,pid);
+        readInt(muxing,muxing);
         WAVHeader hdr;
             hdr.frequency=fq;
             hdr.byterate=br;
             hdr.channels=chan;
             hdr.encoding=codec;
-        bool aacAdts=false;
-        if(hdr.encoding==WAV_AAC) aacAdts=true;
         // Look up Track0.extraData line....
         sprintf(body,"Track%d.extraData",i);
         int extraLen=0;
@@ -336,7 +335,7 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         {
             ADM_info("No extradata (%s)\n",body);
         }
-        ADM_tsAccess *access=new ADM_tsAccess(name,pid,true,aacAdts,extraLen,extraData);
+        ADM_tsAccess *access=new ADM_tsAccess(name,pid,true,(ADM_TS_MUX_TYPE)muxing,extraLen,extraData);
         if(extraData) delete [] extraData;
         extraData=NULL;
         ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;

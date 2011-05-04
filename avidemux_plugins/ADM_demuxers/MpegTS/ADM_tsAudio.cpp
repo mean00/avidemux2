@@ -36,14 +36,15 @@ void        mixDump(uint8_t *ptr, uint32_t len);
     \param aacAdts[in] Set to true if the file is aac/adts
     \param myLen/myExtra[in] ExtraData if any
 */
-ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append,bool aacAdts,int myLen,uint8_t  *myExtra)
+ADM_tsAccess::ADM_tsAccess(const char *name,uint32_t pid,bool append,ADM_TS_MUX_TYPE muxing,int myLen,uint8_t  *myExtra)
 {
 FP_TYPE fp=FP_DONT_APPEND;
         if(append) fp=FP_APPEND;
         this->pid=pid;
         if(!demuxer.open(name,fp)) ADM_assert(0);
         packet=new TS_PESpacket(pid);
-        isAdtsAac=aacAdts;
+        this->muxing=muxing;
+        ADM_info("Creating audio track, pid=%x, muxing =%d\n",pid,muxing);
         if(myLen && myExtra)
         {   
             extraData=new uint8_t [myLen];
@@ -152,7 +153,7 @@ uint64_t p,d,start;
     if(avail>maxSize) ADM_assert(0);
     *size=avail;
     // If it is adts, ask ffmpeg to unwrap it...
-    if(true==isAdtsAac)
+    if(ADM_TS_MUX_ADTS==muxing)
     {
         bool r=false;
         int outsize=0;
