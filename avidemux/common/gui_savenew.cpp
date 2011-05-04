@@ -290,7 +290,7 @@ bool admSaver::save(void)
         // In that case, get the real time and update audio with it...
         // Because we might have go back in time to catch the first intra
         startAudioTime=copy->getStartTime();
-        audio->goToTime(startAudioTime);
+        if(audio) audio->goToTime(startAudioTime);
     }else
     {
         // 1- create filter chain
