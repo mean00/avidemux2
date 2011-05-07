@@ -23,7 +23,11 @@ extern "C" {
 #define COOKIE   ((AVBitStreamFilterContext *)cookie)
 #define CONTEXT  ((AVCodecContext *)codec)
 
+#if 0
 #define xdebug ADM_info
+#else
+#define xdebug(...) {}
+#endif
 
 static const int aacChannels[16]=
 {
@@ -115,7 +119,7 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
     int channelConfiguration=bits.get(4);
     channels=aacChannels[channelConfiguration];
     bool sbrPresent=false;
-    printf("ObjectType=%d\n",audioObjectType);
+    xdebug("ObjectType=%d\n",audioObjectType);
     
     
     switch(audioObjectType)
@@ -204,7 +208,7 @@ bool ADM_latm2aac::readPayload(getBits &bits, uint64_t dts,int size)
 {
     if(conf.allStreamsSameTimeFraming)
     {
-            ADM_info("Payload %d \n",size);
+            xdebug("Payload %d \n",size);
             if(size>LATM_MAX_BUFFER_SIZE)
             {
                     ADM_warning("Packet too big %d vs %d\n",size,LATM_MAX_BUFFER_SIZE);
@@ -412,7 +416,7 @@ bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t dts)
             ADM_warning("Not enough data, need %d, got %d\n",len,(int)(end-start));
             return true;
         }
-        ADM_info("Found LATM : size %d\n",len);
+        xdebug("Found LATM : size %d\n",len);
         demuxLatm(dts,start,len);
         dts=ADM_NO_PTS;
         // LATM demux
@@ -471,7 +475,7 @@ bool ADM_latm2aac::flush()
 bool ADM_latm2aac::getData(uint64_t *time,uint32_t *len, uint8_t *data, uint32_t maxSize)
 {
     if(empty()) return false;
-    printf("%d slogs in latm buffers\n",listOfUsedBuffers.size());
+    xdebug("%d slogs in latm buffers\n",listOfUsedBuffers.size());
     latmBuffer *b=listOfUsedBuffers.front();
     listOfUsedBuffers.pop_front();
     listOfFreeBuffers.push_back(b);
@@ -485,7 +489,7 @@ bool ADM_latm2aac::getData(uint64_t *time,uint32_t *len, uint8_t *data, uint32_t
     *len=b->bufferLen;
     b->bufferLen=0;
     *time=b->dts;
-    printf("   read %d bytes\n",*len);
+    xdebug("   read %d bytes\n",*len);
     return true;
 }
 //EOF

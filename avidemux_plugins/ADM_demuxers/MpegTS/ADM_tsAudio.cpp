@@ -147,13 +147,7 @@ uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 */
 bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
-int retries=10;
-again:
 uint64_t p,d,start;
-    if(false==demuxer.getNextPES(packet)) return false;
-    int avail=packet->payloadSize-packet->offset;
-    if(avail>maxSize) ADM_assert(0);
-    *size=avail;
     // If it is adts, ask ffmpeg to unwrap it...
     switch(muxing)
     {
@@ -162,6 +156,10 @@ uint64_t p,d,start;
                     bool r=false;
                     int outsize=0;
                     *size=0;
+                    if(false==demuxer.getNextPES(packet)) return false;
+                    int avail=packet->payloadSize-packet->offset;
+                    if(avail>maxSize) ADM_assert(0);
+                    *size=avail;
                     r=adts.convert(avail,packet->payload+packet->offset,&outsize,buffer);
                     if(false==r) return false;
                     *size=outsize;
@@ -170,6 +168,10 @@ uint64_t p,d,start;
             }
         case ADM_TS_MUX_NONE:
             {
+                if(false==demuxer.getNextPES(packet)) return false;
+                int avail=packet->payloadSize-packet->offset;
+                if(avail>maxSize) ADM_assert(0);
+                *size=avail;
                 memcpy(buffer,packet->payload+packet->offset,avail);
                 *dts=timeConvert(packet->pts);
                 break;
@@ -177,17 +179,23 @@ uint64_t p,d,start;
         case ADM_TS_MUX_LATM:
             {
                 // Try to get one...
-                
-                if(!retries)
+                int retries=10;
+                again:
+                if(latm.empty()==true) // fetch next LOAS frame, it will contain several frames
                 {
-                    ADM_warning("No packet out of latm\n");
-                    return false;   
-                }
-                if(latm.empty()==true)
-                {
-                        latm.pushData(avail,packet->payload+packet->offset,packet->pts);
-                        retries--;
-                        goto again;
+                    
+               
+                    if(!retries)
+                    {
+                        ADM_error("Cannot get AAC packet from LATM\n");
+                        return false;
+                    }
+                    if(false==demuxer.getNextPES(packet)) return false;
+                    int avail=packet->payloadSize-packet->offset;
+                    if(avail>maxSize) ADM_assert(0);
+                    latm.pushData(avail,packet->payload+packet->offset,packet->pts);
+                    retries--;
+                    goto again;
                  }
                  uint64_t myPts;
                  latm.getData(&myPts,size,buffer,maxSize);
