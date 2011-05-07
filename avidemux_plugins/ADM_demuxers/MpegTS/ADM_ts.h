@@ -28,7 +28,7 @@
 #include <vector>
 #include "ADM_coreDemuxerMpeg.h"
 #include "ADM_aacadts.h"
-
+#include "ADM_aacLatm.h"
 using std::vector;
 
 /**
@@ -44,6 +44,7 @@ protected:
                 uint32_t        videoCodec;
                 ADM_TS_MUX_TYPE muxing;
                 ADM_adts2aac    adts;
+                ADM_latm2aac    latm;
 public:
                 vector          <ADM_mpgAudioSeekPoint >seekPoints;
 public:

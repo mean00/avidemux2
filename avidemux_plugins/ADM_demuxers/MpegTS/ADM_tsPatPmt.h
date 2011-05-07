@@ -39,6 +39,7 @@ typedef enum
 {
     ADM_TS_MUX_NONE=0,
     ADM_TS_MUX_ADTS=1,
+    ADM_TS_MUX_LATM=2,
     ADM_TS_MUX_MAX
 }ADM_TS_MUX_TYPE;
 

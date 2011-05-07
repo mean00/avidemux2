@@ -19,6 +19,7 @@ class getBits
 protected:
          void *ctx;
 public:
+                getBits(const getBits &source);
                 getBits(int bufferSizeInBytes, uint8_t *buffer);
                 ~getBits();
             int get(int nb);
@@ -27,6 +28,7 @@ public:
             int getUEG31(void);
             int skip(int nb);
             int getConsumedBits(void);
+            void align(void);
 };
 
 

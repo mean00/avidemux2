@@ -104,7 +104,7 @@ uint64_t  ADM_tsAccess::getDurationInUs(void)
 bool      ADM_tsAccess::goToTime(uint64_t timeUs)
 {
     // Convert time in us to scaled 90 kHz tick
-    
+    latm.flush();
     if(timeUs<seekPoints[0].dts)
     {
             aprintf("[PsAudio] Requested %"LU" tick before 1st seek point at :%"LU"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
@@ -147,25 +147,56 @@ uint64_t ADM_tsAccess::timeConvert(uint64_t x)
 */
 bool      ADM_tsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
+int retries=10;
+again:
 uint64_t p,d,start;
     if(false==demuxer.getNextPES(packet)) return false;
     int avail=packet->payloadSize-packet->offset;
     if(avail>maxSize) ADM_assert(0);
     *size=avail;
     // If it is adts, ask ffmpeg to unwrap it...
-    if(ADM_TS_MUX_ADTS==muxing)
+    switch(muxing)
     {
-        bool r=false;
-        int outsize=0;
-        *size=0;
-        r=adts.convert(avail,packet->payload+packet->offset,&outsize,buffer);
-        if(false==r) return false;
-        *size=outsize;
-    }else
-    {
-        memcpy(buffer,packet->payload+packet->offset,avail);
-    }
-    *dts=timeConvert(packet->pts);
+        case ADM_TS_MUX_ADTS:
+            {
+                    bool r=false;
+                    int outsize=0;
+                    *size=0;
+                    r=adts.convert(avail,packet->payload+packet->offset,&outsize,buffer);
+                    if(false==r) return false;
+                    *size=outsize;
+                    *dts=timeConvert(packet->pts);
+                    break;
+            }
+        case ADM_TS_MUX_NONE:
+            {
+                memcpy(buffer,packet->payload+packet->offset,avail);
+                *dts=timeConvert(packet->pts);
+                break;
+            }
+        case ADM_TS_MUX_LATM:
+            {
+                // Try to get one...
+                
+                if(!retries)
+                {
+                    ADM_warning("No packet out of latm\n");
+                    return false;   
+                }
+                if(latm.empty()==true)
+                {
+                        latm.pushData(avail,packet->payload+packet->offset,packet->pts);
+                        retries--;
+                        goto again;
+                 }
+                 uint64_t myPts;
+                 latm.getData(&myPts,size,buffer,maxSize);
+                 *dts=timeConvert(myPts);
+                 break;
+            }
+        default:
+            ADM_assert(0);
+     }
     if(*dts!=ADM_NO_PTS) 
     {
         aprintf("[psAudio] getPacket dts = %"LU" ms\n",(uint32_t)*dts/1000);

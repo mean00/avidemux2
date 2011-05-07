@@ -37,6 +37,20 @@ extern "C"
 /**
     \fn ctor
 */
+getBits::getBits(const getBits &source)
+{
+    GetBitContext *c=new  GetBitContext;
+    ctx=(void *)c;
+    *c=*(GetBitContext *)source.ctx;
+
+}
+void getBits::align(void)
+{
+    align_get_bits((GetBitContext *)ctx);
+}
+/**
+    \fn ctor
+*/
 getBits::getBits(int bufferSize, uint8_t *buffer)
 {
     GetBitContext *c=new  GetBitContext;

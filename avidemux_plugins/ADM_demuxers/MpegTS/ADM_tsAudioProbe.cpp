@@ -25,6 +25,7 @@
 #include "ADM_mp3info.h"
 #include "ADM_dcainfo.h"
 #include "ADM_aacadts.h"
+#include "ADM_aacLatm.h"
 // Number of video packet seen to be enough to sample the audio tracks
 #define PROBE_PACKET_VIDEO_COUNT 500
 // Max size of a packet. Usually it is a bit more than 2300, so 10000 should be safe
@@ -111,11 +112,38 @@ again:
                 default:
                 case ADM_TS_AAC_LATM:
                 {
-                    ADM_error("Cannot handle LATM AAC\n");
-                    trackInfo->wav.frequency=48000;
-                    trackInfo->wav.channels=2;
-                    trackInfo->wav.byterate=128000>>3;
-                    return true;
+                    ADM_latm2aac latm;
+                    ADM_info("Looking up LATM info");
+                    retries=20;
+                    while(retries)
+                    {
+                        ptr=pes.payload+pes.offset;
+                        size=pes.payloadSize-pes.offset;
+                        latm.flush();
+                        latm.pushData(size,ptr,0);
+                        if(latm.getFrequency())
+                        {
+                            ADM_assert(latm.getExtraData(&eLen,&eData));
+                            trackInfo->wav.frequency=latm.getFrequency();
+                            trackInfo->wav.channels=latm.getChannels();
+                            trackInfo->wav.byterate=128000>>3;
+                            trackInfo->extraDataLen=eLen;
+                            trackInfo->extraData[0]=eData[0];
+                            trackInfo->extraData[1]=eData[1];
+                            trackInfo->mux=ADM_TS_MUX_LATM;
+                            ADM_info("AAC extra data : %02x %02x\n",eData[0],eData[1]);
+                            return true;
+                        }
+                        // next packet
+                        retries--;
+                        if(false==p->getNextPES(&pes))
+                        {
+                            ADM_error("Cannot get next PES packet for LATM extradata\n");
+                            return false;
+                        }
+                    }
+                    ADM_error("LATM : Cannot get codec extra data\n");
+                    return false;
                     //
                     break;
                 }

@@ -6,6 +6,7 @@ ADM_a52info.cpp
 ADM_dcainfo.cpp  
 ADM_eac3info.cpp
 ADM_aacadts.cpp
+ADM_aacLatm.cpp
 )	
 #*************************************************
 ADD_DEFINITIONS(-DADM_LEGACY_PROGGY)
