@@ -178,7 +178,7 @@ int ADM_latm2aac::readPayloadInfoLength(getBits &bits)
 {
     if(conf.allStreamsSameTimeFraming)
     {
-        // handle layer...
+        // handle layer..., only one accepted ATM
         if(conf.frameLengthType[0]==0)
         {
             int l=0;
@@ -198,28 +198,37 @@ int ADM_latm2aac::readPayloadInfoLength(getBits &bits)
     }
 }
 /**
-
+    \fn readPayload
 */
-bool ADM_latm2aac::readPayload(getBits &bits, int size, uint8_t *to, int max)
+bool ADM_latm2aac::readPayload(getBits &bits, uint64_t dts,int size)
 {
     if(conf.allStreamsSameTimeFraming)
     {
             ADM_info("Payload %d \n",size);
-            if(size>max)
+            if(size>LATM_MAX_BUFFER_SIZE)
             {
-                    ADM_warning("Packet too big %d vs %d\n",size,max);
+                    ADM_warning("Packet too big %d vs %d\n",size,LATM_MAX_BUFFER_SIZE);
                     return false;
             }
         
-            for(int i=0;i<size;i++)
+            // try to get a buffer...
+            if(!listOfFreeBuffers.size())
             {
-                if(conf.gotConfig)
-                    buffer[i++]=bits.get(8);
-                else
-                    bits.skip(8);
+                    ADM_error("No free buffer!\n");
+                    return false;
             }
-            if(conf.gotConfig)
-                bufferLen=size;
+            latmBuffer *b=listOfFreeBuffers.back();
+            listOfFreeBuffers.pop_back();
+            b->dts=dts;
+            for(int i=0;i<size;i++)
+            {                
+                    b->buffer[i]=bits.get(8);
+            }
+            b->bufferLen=size;
+            if(!conf.gotConfig)
+                listOfFreeBuffers.push_back(b);
+            else
+                listOfUsedBuffers.push_back(b);
             return true;
     }else
     {
@@ -342,7 +351,7 @@ bool ADM_latm2aac::readStreamMuxConfig(getBits &bits)
     \fn readStreamMux
     \brief from vlc
 */
-bool  ADM_latm2aac::readAudioMux( getBits &bits )
+bool  ADM_latm2aac::readAudioMux( uint64_t dts,getBits &bits )
 {
 
     if( !bits.get(1) ) // use SameStreamMux
@@ -357,8 +366,7 @@ bool  ADM_latm2aac::readAudioMux( getBits &bits )
             int len=readPayloadInfoLength(bits);
             if(!len) return false;
             
-            bool r=readPayload(bits,len,buffer,LATM_MAX_BUFFER);
-            bufferLen=len;
+            bool r=readPayload(bits,dts,len);
             bits.align();
             return r;
         }
@@ -376,14 +384,14 @@ bool  ADM_latm2aac::readAudioMux( getBits &bits )
 bool ADM_latm2aac::demuxLatm(uint64_t date,uint8_t *start,uint32_t size)
 {
     getBits  bits(size,start);
-    return readAudioMux(bits);
+    return readAudioMux(date,bits);
 }
 /**
     \fn pushData
     \brief Check for LOAS sync word, extract LATM frames
 */
 
-bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t time)
+bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t dts)
 {
     // Lookup sync
     uint8_t *end=inData+incomingLen;
@@ -405,7 +413,8 @@ bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t time)
             return true;
         }
         ADM_info("Found LATM : size %d\n",len);
-        demuxLatm(time,start,len);
+        demuxLatm(dts,start,len);
+        dts=ADM_NO_PTS;
         // LATM demux
         start+=len;
     }
@@ -423,7 +432,8 @@ ADM_latm2aac::ADM_latm2aac(void)
                 extraLen=0;
                 memset(&conf,0,sizeof(conf));
                 conf.gotConfig=false;
-                bufferLen=0;
+                for(int i=0;i<LATM_NB_BUFFERS;i++)
+                    listOfFreeBuffers.push_back(&(buffers[i]));
 }
 /**
     \fn dtor
@@ -439,7 +449,7 @@ ADM_latm2aac::~ADM_latm2aac()
 */
 bool ADM_latm2aac::empty()
 {
-    if(bufferLen==0) return true;
+    if(listOfUsedBuffers.size()==0) return true;
     return false;
 }
 /**
@@ -448,7 +458,10 @@ bool ADM_latm2aac::empty()
 */
 bool ADM_latm2aac::flush()
 {
-   bufferLen=0;
+   listOfFreeBuffers.clear();
+   listOfUsedBuffers.clear();
+   for(int i=0;i<LATM_NB_BUFFERS;i++)
+                    listOfFreeBuffers.push_back(&(buffers[i]));
    return true;
 }
 /**
@@ -457,17 +470,22 @@ bool ADM_latm2aac::flush()
 */
 bool ADM_latm2aac::getData(uint64_t *time,uint32_t *len, uint8_t *data, uint32_t maxSize)
 {
-    if(bufferLen==0) return false;
-    if(bufferLen>maxSize)
+    if(empty()) return false;
+    printf("%d slogs in latm buffers\n",listOfUsedBuffers.size());
+    latmBuffer *b=listOfUsedBuffers.front();
+    listOfUsedBuffers.pop_front();
+    listOfFreeBuffers.push_back(b);
+    if(b->bufferLen>maxSize)
     {
         ADM_warning("Buffer too small\n");
-        bufferLen=0;
         return false;
 
     }
-    memcpy(data,buffer,bufferLen);
-    *len=bufferLen;
-    bufferLen=0;
+    memcpy(data,b->buffer,b->bufferLen);
+    *len=b->bufferLen;
+    b->bufferLen=0;
+    *time=b->dts;
+    printf("   read %d bytes\n",*len);
     return true;
 }
 //EOF

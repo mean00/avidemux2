@@ -22,12 +22,15 @@
 #ifndef ADM_AAC_LATM
 #define ADM_AAC_LATM
 #include "ADM_getbits.h"
+#include <list>
 /**
     \class ADM_latm2aac
 */
-#define AAC_LATM_MAX_EXTRA 10
-#define LATM_MAX_LAYER     64
-#define LATM_MAX_BUFFER    8192
+#define AAC_LATM_MAX_EXTRA      10
+#define LATM_MAX_LAYER          64
+#define LATM_MAX_BUFFER_SIZE    8192
+#define LATM_NB_BUFFERS         16
+
 typedef struct
 {
     int      nbLayers;
@@ -40,21 +43,29 @@ typedef struct
 }latmConf_t;
 
 
+typedef struct
+{
+        uint8_t  buffer[LATM_MAX_BUFFER_SIZE];
+        uint32_t bufferLen;
+        uint64_t dts;
+}latmBuffer;
+
 class ADM_latm2aac
 {
 private:
-
+                latmBuffer buffers[LATM_NB_BUFFERS];
+                std::list <latmBuffer *> listOfFreeBuffers;
+                std::list <latmBuffer *> listOfUsedBuffers;
                 uint32_t extraLen;
                 uint8_t  extraData[AAC_LATM_MAX_EXTRA];
                 uint32_t fq,channels;
-                bool     readAudioMux( getBits &bits );
+                bool     readAudioMux(uint64_t dts, getBits &bits );
                 bool     demuxLatm(uint64_t date,uint8_t *start,uint32_t size);
                 bool     AudioSpecificConfig(getBits &bits,int &bitsConsumed);
                 bool     readStreamMuxConfig(getBits &bits);
                 int      readPayloadInfoLength(getBits &bits);
-                bool     readPayload(getBits &bits, int size, uint8_t *to, int max);
-                uint8_t  buffer[LATM_MAX_BUFFER];
-                uint32_t bufferLen;
+                bool     readPayload(getBits &bits, uint64_t dts,int size);
+
                 latmConf_t conf;
 public:
                 bool getExtraData(uint32_t *len,uint8_t **data);
