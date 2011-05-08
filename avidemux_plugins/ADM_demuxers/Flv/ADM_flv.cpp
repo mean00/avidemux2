@@ -803,7 +803,7 @@ uint64_t flvHeader::getTime(uint32_t frame)
 {
      if(frame>=videoTrack->_nbIndex) return 0;
      flvIndex *idx=&(videoTrack->_index[frame]);
-     return idx->dtsUs;
+     return idx->ptsUs;
 }
 /**
         \fn getFrame
