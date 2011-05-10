@@ -30,7 +30,7 @@ class ADM_faad : public     ADM_Audiocodec
 		uint8_t  _buffer[FAAD_BUFFER*2];
 		uint32_t head, tail;
         bool     monoFaadBug; // if true, the stream is mono, but faad outputs stereo
-
+        bool     sbr;
 	public:
 		ADM_faad(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_faad();
@@ -40,6 +40,7 @@ class ADM_faad : public     ADM_Audiocodec
 		virtual	uint8_t isDecompressable(void) {return 1;}
 		virtual	uint8_t beginDecompress(void);
 		virtual	uint8_t endDecompress(void);
+        virtual uint32_t getOutputFrequency(void);
 };
 // Supported formats + declare our plugin
 //*******************************************************
@@ -54,7 +55,16 @@ DECLARE_AUDIO_DECODER(ADM_faad,						// Class
 			Formats, 											// Supported formats
 			"Faad2 decoder plugin for avidemux (c) Mean\n"); 	// Desc
 //********************************************************
+/**
+    \fn getOutputFrequency
+*/
+uint32_t ADM_faad::getOutputFrequency(void)
+{
+    uint32_t fq=_wavHeader->frequency;
+    if(sbr) return fq*2;
+    else return fq;
 
+}
 ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   ADM_Audiocodec(fourcc)
 {
 faacDecConfigurationPtr conf;
@@ -64,6 +74,7 @@ unsigned long int srate;
 uint32_t srate;
 #endif
 unsigned char chan;
+        sbr=false;
 		_inited=0;
 		_instance=NULL;
         head=tail=0;
@@ -92,8 +103,14 @@ unsigned char chan;
 			printf("[FAAD]Found :%"LU" rate %"LU" channels\n",(uint32_t)srate,(uint32_t)chan);
                         if(srate!=info->frequency)
                         {
-                            printf("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
-                            info->frequency=srate;
+                            ADM_info("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
+                            if(srate==2*info->frequency)
+                            {
+                                ADM_info("Sbr detected\n");
+                                sbr=true;
+                            }
+                            
+                            //info->frequency=srate;
                         }
                         if(chan!=info->channels) // Ask for stereo !
                         {

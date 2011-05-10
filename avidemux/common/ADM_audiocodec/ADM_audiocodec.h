@@ -32,9 +32,9 @@ class ADM_Audiocodec
             _init=0;
             _wavHeader=NULL;
         };
-
-        virtual	~ADM_Audiocodec() {};
-        virtual	void purge(void) {}
+        virtual uint32_t getOutputFrequency(void)  {return _wavHeader->frequency;}
+        virtual	        ~ADM_Audiocodec() {};
+        virtual	        void purge(void) {}
         virtual	uint8_t beginDecompress(void)=0;
         virtual	uint8_t endDecompress(void)=0;
         virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)=0;
