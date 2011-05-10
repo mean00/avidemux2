@@ -36,6 +36,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
         uint32_t    channels;
         bool        decodeToS16(float *outptr,uint32_t *nbOut);
         bool        decodeToFloat(float *outptr,uint32_t *nbOut);
+        uint32_t    outputFrequency;
 	public:
 		ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_AudiocoderLavcodec() ;
@@ -43,6 +44,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
+        virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
 };
 
 
@@ -111,6 +113,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     _context->channels = info->channels;
     _blockalign=_context->block_align = info->blockalign;
     _context->bit_rate = info->byterate*8;
+    outputFrequency=info->frequency;
     switch(fourcc)
     {
       case WAV_WMA:
@@ -202,7 +205,12 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
       }
     }
     ADM_info("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
-
+    if(_context->sample_rate!=outputFrequency)
+    {
+        ADM_warning("Output frequency does not match input frequency (SBR ?) : %d / %d\n",
+            _context->sample_rate,outputFrequency);
+        outputFrequency=_context->sample_rate;
+    }
 }
 /**
     \fn dtor

@@ -63,11 +63,10 @@ uint8_t ADM_AudiocodecOpencoreAmrWb::endDecompress( void )
 };
 
 ADM_AudiocodecOpencoreAmrWb::ADM_AudiocodecOpencoreAmrWb(
-	uint32_t fourcc, WAVHeader *info, uint32_t extraLength, uint8_t *extraData) : ADM_Audiocodec(fourcc)
+	uint32_t fourcc, WAVHeader *info, uint32_t extraLength, uint8_t *extraData) : ADM_Audiocodec(fourcc,*info)
 {
 	state = D_IF_init();
-	_wavHeader = info;
-	ADM_assert(_wavHeader);
+	
 
 	info->channels = 1;
 }
