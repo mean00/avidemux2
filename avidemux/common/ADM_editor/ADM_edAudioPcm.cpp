@@ -49,8 +49,24 @@ Todo:
 #else
 #define vprintf printf
 #endif
+/**
+    \fn     getOutputFrequency
+    \brief  Get output fq, 2*wavheader->fq for sbr
 
+*/
 
+uint32_t        ADM_Composer::getOutputFrequency(void)
+{
+    ADM_audioStreamTrack *trk=getTrack(0);
+    if(!trk) 
+    {
+        ADM_warning("No audio track\n");
+        return 0;
+    }
+    if(!trk->codec)
+        return trk->wavheader.frequency;
+    return trk->codec->getOutputFrequency();
+}
 /**
     \fn     getPCMPacket
     \brief  Get audio packet
@@ -63,7 +79,7 @@ uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
 uint32_t inSize;
 bool drop=false;
 static bool fail=false;
-
+uint32_t outFrequency=getTrack(0)->codec->getOutputFrequency();
 again:
     *samples=0;
     ADM_audioStreamTrack *trk=getTrack(0);
@@ -99,7 +115,7 @@ again:
                 // Let's add some filler
                 // Compute filler size
                 float f=packetBufferDts-lastDts; // in us
-                f*=wavHeader.frequency;
+                f*=outFrequency;
                 f/=1000000.;
                 // in samples!
                 uint32_t fillerSample=(uint32_t )(f+0.49);
@@ -115,7 +131,7 @@ again:
                 uint32_t start=fillerSample*sizeof(float)*trk->wavheader.channels;
                 memset(dest,0,start);
 
-                advanceDtsBySample(fillerSample);
+                advanceDtsByCustomSample(fillerSample,outFrequency);
                 dest+=fillerSample*trk->wavheader.channels;
                 *samples=fillerSample;
                 vprintf("[Composer::getPCMPacket] Adding %u padding samples, dts is now %lu\n",fillerSample,lastDts);
@@ -157,7 +173,7 @@ again:
     // Update infos
     *samples=(decodedSample);
     *odts=lastDts;
-    advanceDtsBySample(decodedSample);
+    advanceDtsByCustomSample(decodedSample,outFrequency);
     vprintf("[Composer::getPCMPacket] Adding %u decodedSample, dts is not %lu\n",fillerSample,lastDts);
     ADM_assert(sizeMax>=(fillerSample+decodedSample)*trk->wavheader.channels);
     return true;

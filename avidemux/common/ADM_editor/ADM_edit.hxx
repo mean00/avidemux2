@@ -185,6 +185,7 @@ public:
                     uint64_t        getDurationInUs(void);
                     uint8_t			getAudioStream(ADM_audioStream **audio);
             virtual WAVHeader       *getInfo(void);
+                    uint32_t        getOutputFrequency(void); // sbr
             virtual CHANNEL_TYPE    *getChannelMapping(void );
 /************************************ /audioStream ******************************/
                     bool            getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audioInfo **infos);

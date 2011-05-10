@@ -33,6 +33,10 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_Composer *incoming,
 {
   _incoming=incoming;
   memcpy(&_wavHeader,_incoming->getInfo(),sizeof(_wavHeader));
+  // For SBR TEST
+  //_wavHeader.frequency*=2;
+  _wavHeader.frequency=_incoming->getOutputFrequency();
+  // /For SBR Test
   _startTime=startInMs;
   shiftMs=-shiftMs;
   _shift=shiftMs;
