@@ -57,7 +57,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecMP3,						// Class
 			"LibMad decoder plugin for avidemux (c) Mean\n"); 	// Desc
 //********************************************************
 
-ADM_AudiocodecMP3::ADM_AudiocodecMP3( uint32_t fourcc,WAVHeader *info,uint32_t extraLength,uint8_t *extraData) :   ADM_Audiocodec(fourcc)
+ADM_AudiocodecMP3::ADM_AudiocodecMP3( uint32_t fourcc,WAVHeader *info,uint32_t extraLength,uint8_t *extraData) 
+        :   ADM_Audiocodec(fourcc,*info)
 {
         if((fourcc!=WAV_MP3) && (fourcc!=WAV_MP2))
             ADM_assert(0); 

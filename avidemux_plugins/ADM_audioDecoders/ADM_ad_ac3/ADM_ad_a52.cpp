@@ -50,10 +50,10 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
    //********************************************************
 
 ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraData)
-		:   ADM_Audiocodec(fourcc)
+		:   ADM_Audiocodec(fourcc,*info)
 {
     int flags=0;
-    _wavHeader = new WAVHeader;
+    
     ADM_assert(fourcc==WAV_AC3);
     ac3_handle=NULL;
     ac3_sample=NULL;
@@ -76,8 +76,8 @@ ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t 
         ADM_warning("Cannot init a52 sample\n");
         ADM_assert(0);
     }
-      _wavHeader = new WAVHeader;
-      *_wavHeader=*info;
+
+      
 }
 
 ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
@@ -88,11 +88,7 @@ ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
         ac3_handle=NULL;
         ac3_sample=NULL;
     }
-    if( _wavHeader)
-    {
-        delete  _wavHeader;
-        _wavHeader=NULL;
-    }
+    
 }
 
 uint8_t ADM_AudiocodecAC3::beginDecompress( void )
@@ -110,7 +106,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
     uint32_t avail;
     uint32_t length;
     int flags = 0, samprate = 0, bitrate = 0;
-    uint8_t chan = _wavHeader->channels;
+    uint8_t chan = wavHeader.channels;
     *nbOut=0;
 
     //  Ready to decode

@@ -97,7 +97,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
 */
 
  ADM_AudiocoderLavcodec::ADM_AudiocoderLavcodec(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
-       :  ADM_Audiocodec(fourcc)
+       :  ADM_Audiocodec(fourcc,*info)
  {
     ADM_info(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
     ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);

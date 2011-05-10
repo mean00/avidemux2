@@ -76,7 +76,7 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
  }
 
  ADM_vorbis::ADM_vorbis(uint32_t fcc, WAVHeader *info, uint32_t extra, uint8_t *extraData)
- 	: ADM_Audiocodec(fcc)
+ 	: ADM_Audiocodec(fcc,*info)
  {
  ogg_packet packet;
  vorbis_comment comment;

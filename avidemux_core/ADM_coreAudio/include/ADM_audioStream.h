@@ -84,6 +84,8 @@ class ADM_audioStream
                         void                    setDts(uint64_t newDts);
     /// increment DTS by samples
                        bool                     advanceDtsBySample(uint32_t samples);
+    /// Same with provided frequency (SBR)
+                       bool                     advanceDtsByCustomSample(uint32_t samples,uint32_t fq);
         public:
 /// Default constructor
                        ADM_audioStream(WAVHeader *header,ADM_audioAccess *access);  

@@ -131,7 +131,7 @@ static int adpcm_index[16] =
 // };
 
 ADM_AudiocodecImaAdpcm::ADM_AudiocodecImaAdpcm( uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d)
-        : ADM_Audiocodec(fourcc)
+        : ADM_Audiocodec(fourcc,*info)
 {
         _me=info->encoding;
         _channels=info->channels;

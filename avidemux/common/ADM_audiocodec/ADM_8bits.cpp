@@ -30,7 +30,8 @@
 #include "ADM_audiocodec/ADM_audiocodec.h"
 
 
-ADM_Audiocodec8Bits::ADM_Audiocodec8Bits( uint32_t fourcc) :   ADM_Audiocodec(fourcc)
+ADM_Audiocodec8Bits::ADM_Audiocodec8Bits( uint32_t fourcc,const WAVHeader &info) :  
+            ADM_Audiocodec(fourcc,info)
 {
  	ADM_assert(fourcc==WAV_8BITS||fourcc==WAV_8BITS_UNSIGNED);
 	if(fourcc==WAV_8BITS_UNSIGNED)

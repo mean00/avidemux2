@@ -30,7 +30,7 @@ class ADM_faad : public     ADM_Audiocodec
 		uint8_t  _buffer[FAAD_BUFFER*2];
 		uint32_t head, tail;
         bool     monoFaadBug; // if true, the stream is mono, but faad outputs stereo
-        bool     sbr;
+        uint32_t fq;
 	public:
 		ADM_faad(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_faad();
@@ -60,12 +60,10 @@ DECLARE_AUDIO_DECODER(ADM_faad,						// Class
 */
 uint32_t ADM_faad::getOutputFrequency(void)
 {
-    uint32_t fq=_wavHeader->frequency;
-    if(sbr) return fq*2;
-    else return fq;
+    return fq;
 
 }
-ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   ADM_Audiocodec(fourcc)
+ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   ADM_Audiocodec(fourcc,*info)
 {
 faacDecConfigurationPtr conf;
 #ifdef FAAD_OLD_PROTOTYPE
@@ -74,7 +72,7 @@ unsigned long int srate;
 uint32_t srate;
 #endif
 unsigned char chan;
-        sbr=false;
+        
 		_inited=0;
 		_instance=NULL;
         head=tail=0;
@@ -86,7 +84,8 @@ unsigned char chan;
 		conf->defSampleRate=info->frequency;
   	    conf->defObjectType =LC;
         // Disable SBR...
-        conf->dontUpSampleImplicitSBR=1;
+        //conf->dontUpSampleImplicitSBR=1;
+        fq=info->frequency;
         //
 		faacDecSetConfiguration(_instance, conf);
         printf("[FAAD] using %u bytes of extradata\n",l);
@@ -107,7 +106,7 @@ unsigned char chan;
                             if(srate==2*info->frequency)
                             {
                                 ADM_info("Sbr detected\n");
-                                sbr=true;
+                                fq=srate;
                             }
                             
                             //info->frequency=srate;

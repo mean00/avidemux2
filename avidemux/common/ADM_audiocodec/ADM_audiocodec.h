@@ -24,15 +24,15 @@ class ADM_Audiocodec
 {
     protected:
         uint8_t	_init;
-        WAVHeader *_wavHeader;
+        WAVHeader wavHeader;
     public:
-        ADM_Audiocodec(uint32_t fourcc)
+        ADM_Audiocodec(uint32_t fourcc,const WAVHeader &info)
         {
             UNUSED_ARG(fourcc);
             _init=0;
-            _wavHeader=NULL;
+            wavHeader=info;
         };
-        virtual uint32_t getOutputFrequency(void)  {return _wavHeader->frequency;}
+        virtual uint32_t getOutputFrequency(void)  {return wavHeader.frequency;}
         virtual	        ~ADM_Audiocodec() {};
         virtual	        void purge(void) {}
         virtual	uint8_t beginDecompress(void)=0;
@@ -49,7 +49,7 @@ ADM_Audiocodec	*getAudioCodec(uint32_t fourcc, WAVHeader *info, uint32_t extra=0
 class ADM_AudiocodecWav : public     ADM_Audiocodec
 {
 	public:
-		ADM_AudiocodecWav(uint32_t fourcc);
+		ADM_AudiocodecWav(uint32_t fourcc,const WAVHeader &info);
 		virtual	~ADM_AudiocodecWav();
 		virtual	uint8_t beginDecompress(void);
 		virtual	uint8_t endDecompress(void);
@@ -60,7 +60,7 @@ class ADM_AudiocodecWav : public     ADM_Audiocodec
 class ADM_AudiocodecWavSwapped : public     ADM_Audiocodec
 {
 	public:
-		ADM_AudiocodecWavSwapped(uint32_t fourcc);
+		ADM_AudiocodecWavSwapped(uint32_t fourcc,const WAVHeader &info);
 		virtual	~ADM_AudiocodecWavSwapped();
 		virtual	uint8_t beginDecompress(void);
 		virtual	uint8_t endDecompress(void);
@@ -72,7 +72,7 @@ class ADM_AudiocodecWavSwapped : public     ADM_Audiocodec
 class ADM_AudiocodecUnknown : public     ADM_Audiocodec
 {
 	public:
-		ADM_AudiocodecUnknown(uint32_t fourcc) : ADM_Audiocodec(fourcc) {}
+		ADM_AudiocodecUnknown(uint32_t fourcc,const WAVHeader &info) : ADM_Audiocodec(fourcc,info) {}
 		~ADM_AudiocodecUnknown() {}
 		uint8_t beginDecompress(void) {return 0;}
 		uint8_t endDecompress(void) {return 0;}
@@ -89,7 +89,7 @@ class ADM_Audiocodec8Bits : public     ADM_Audiocodec
 		uint8_t _unsign;
 
 	public:
-		ADM_Audiocodec8Bits(uint32_t fourcc);
+		ADM_Audiocodec8Bits(uint32_t fourcc,const WAVHeader &info);
 		virtual	~ADM_Audiocodec8Bits();
 		virtual	uint8_t beginDecompress(void) {return 1;}
 		virtual	uint8_t endDecompress(void) {return 1;}

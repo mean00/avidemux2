@@ -130,6 +130,19 @@ bool    ADM_audioStream::advanceDtsBySample(uint32_t samples)
         return true;
 }
 /**
+        \fn advanceDtsByCustomSample
+*/
+bool    ADM_audioStream::advanceDtsByCustomSample(uint32_t samples,uint32_t fq)
+{
+        sampleElapsed+=samples;
+        float f=sampleElapsed*1000;
+            f/=fq;
+            f*=1000;
+            lastDts=lastDtsBase+(uint64_t)(f+0.5);
+        return true;
+}
+
+/**
                 Create the appropriate audio stream
 */
 ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool makeTimeMap)

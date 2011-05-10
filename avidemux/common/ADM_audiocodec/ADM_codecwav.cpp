@@ -18,7 +18,7 @@
 #include <math.h>
 #include "ADM_audiocodec/ADM_audiocodec.h"
 
-ADM_AudiocodecWav::ADM_AudiocodecWav( uint32_t fourcc ) : ADM_Audiocodec(fourcc)
+ADM_AudiocodecWav::ADM_AudiocodecWav( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {
     ADM_info("Creating not swapped wav decoder (PCM)\n");
 }

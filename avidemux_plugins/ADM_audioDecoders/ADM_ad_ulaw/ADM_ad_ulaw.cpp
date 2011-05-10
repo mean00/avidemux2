@@ -51,7 +51,8 @@ static int expon [8]= {0,132,396,924,1980,4092,8316,16764};
     \fn ADM_AudiocodecUlaw
     \brief
 */
-ADM_AudiocodecUlaw::ADM_AudiocodecUlaw(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d) : ADM_Audiocodec(fourcc)
+ADM_AudiocodecUlaw::ADM_AudiocodecUlaw(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d) 
+: ADM_Audiocodec(fourcc,*info)
 {
 		
 }

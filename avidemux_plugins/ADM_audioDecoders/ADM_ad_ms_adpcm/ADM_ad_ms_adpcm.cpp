@@ -219,7 +219,7 @@ static int ms_adpcm_decode_block(unsigned short *output, unsigned char *input,
     \brief
 */
 ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d)
-        : ADM_Audiocodec(fourcc)
+        : ADM_Audiocodec(fourcc,*info)
 {
         _me=info->encoding;
         _channels=info->channels;

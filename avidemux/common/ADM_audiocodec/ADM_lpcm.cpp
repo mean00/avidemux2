@@ -25,7 +25,7 @@
 #include "ADM_audiocodec/ADM_audiocodec.h"
 
 
-ADM_AudiocodecWavSwapped::ADM_AudiocodecWavSwapped( uint32_t fourcc ) : ADM_Audiocodec(fourcc)
+ADM_AudiocodecWavSwapped::ADM_AudiocodecWavSwapped( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {
 	channelMapping[0] = ADM_CH_FRONT_LEFT;
 	channelMapping[1] = ADM_CH_FRONT_RIGHT;
