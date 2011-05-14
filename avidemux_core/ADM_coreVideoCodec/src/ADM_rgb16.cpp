@@ -114,7 +114,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 	ref->_planeStride[0] = (_bpp / 8) * _w;
 	ref->_planeStride[1] = 0;
 	ref->_planeStride[2] = 0;
-
+    out->Pts=in->demuxerPts;
 	return 1;
 }
 //EOF
