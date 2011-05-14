@@ -114,6 +114,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     _blockalign=_context->block_align = info->blockalign;
     _context->bit_rate = info->byterate*8;
     outputFrequency=info->frequency;
+    bool wantFloat=true;
     switch(fourcc)
     {
       case WAV_WMA:
@@ -144,12 +145,10 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         break;
       case WAV_AC3:
         _context->codec_id = CODEC_ID_AC3;
-        _context->sample_fmt=AV_SAMPLE_FMT_FLT;
         _blockalign = 1;
         break;
       case WAV_EAC3:
         _context->codec_id = CODEC_ID_EAC3;
-        _context->sample_fmt=AV_SAMPLE_FMT_FLT;
         _blockalign = 1;
         break;
       case WAV_AAC:
@@ -160,12 +159,21 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
       default:
              ADM_assert(0);
     }
-
+    AVSampleFormat fmt=AV_SAMPLE_FMT_S16;
+    if(wantFloat)
+    {
+        fmt=AV_SAMPLE_FMT_FLT;
+    }
+    
+        _context->sample_fmt=fmt;
+        _context->request_sample_fmt=fmt;
+    
 
     _context->extradata=(uint8_t *)d;
     _context->extradata_size=(int)l;
     printf("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
+    printf("\n");
 
    AVCodec *codec=avcodec_find_decoder(_context->codec_id);
    if(!codec) {ADM_assert(0);}
