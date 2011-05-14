@@ -36,6 +36,8 @@ static uint16_t s16;
 static uint32_t s32;
 #define MAX_ACCEPTED_OPEN_FILE 99999
 
+#define US_PER_PIC (40*1000)
+
 picHeader::picHeader(void)
 {
 	_nb_file = 0;
@@ -48,10 +50,7 @@ picHeader::picHeader(void)
 
 uint64_t                   picHeader::getTime(uint32_t frameNum)
 {
-    float f=    _videostream.dwScale ;
-    f=f/ _videostream.dwRate ;
-    f*=1000000;
-
+    float f=    US_PER_PIC;
     f*=frameNum;
     return (uint64_t)f;
 
@@ -62,10 +61,7 @@ uint64_t                   picHeader::getTime(uint32_t frameNum)
 
 uint64_t                   picHeader::getVideoDuration(void)
 {
-    float f=    _videostream.dwScale ;
-    f=f/ _videostream.dwRate ;
-    f*=1000000;
-
+    float f= US_PER_PIC;
     f*=_videostream.dwLength;
     return (uint64_t)f;
 
@@ -98,7 +94,7 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
 	fread(img->data, _imgSize[framenum] - _offset, 1, fd);
 	img->dataLength = _imgSize[framenum] - _offset;
 
-    uint64_t timeP=40000;
+    uint64_t timeP=US_PER_PIC;
     timeP*=framenum;
     img->demuxerDts=timeP;
     img->demuxerPts=timeP;
@@ -419,7 +415,7 @@ char realstring[250];
 
     _videostream.dwScale = 1;
     _videostream.dwRate = 25;
-    _mainaviheader.dwMicroSecPerFrame = 40000;;	// 25 fps hard coded
+    _mainaviheader.dwMicroSecPerFrame = US_PER_PIC;;	// 25 fps hard coded
     _videostream.fccType = fourCC::get((uint8_t *) "vids");
 
 	if (bpp)
@@ -481,7 +477,7 @@ FILE* picHeader::openFrameFile(uint32_t frameNum)
 }
 bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
- uint64_t timeP=40000;
+ uint64_t timeP=US_PER_PIC;
     timeP*=frame;
     *pts=timeP;
     *dts=timeP;
