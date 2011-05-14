@@ -47,10 +47,10 @@ static 	uint32_t aacSampleRate[16]=
 
 #define xdebug(...) {}
 /**
-    \fn getAdtsAacInfo
+    \fn ADM_getAacInfoFromConfig
 */
 
-bool getAdtsAacInfo(int size, uint8_t *data, AacAudioInfo &info)
+bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
 {
     if(size<2)
     {
