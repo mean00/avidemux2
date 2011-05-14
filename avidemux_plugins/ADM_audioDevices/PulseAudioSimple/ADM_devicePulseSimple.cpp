@@ -73,7 +73,7 @@ int er;
 */
 bool pulseSimpleAudioDevice::localInit(void) 
 {
-
+ADM_info("Pulse, initiliazing channel=%d samplerate=%d\n",(int)_channels,(int)_frequency);
 pa_simple *s;
 pa_sample_spec ss;
 int er;
