@@ -197,7 +197,8 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
             ADMImage *candidate=_elem[index].image;
             if(candidate->Pts<=pts)
             {
-                ADM_error("The next frame has a PTS <= the one we started from, ignoring\n");
+                ADM_error("The next frame has a PTS <= the one we started from, ignoring %"LLU" %"LLU"\n",
+                                        candidate->Pts,pts);
             }else
                 return candidate;
         }
