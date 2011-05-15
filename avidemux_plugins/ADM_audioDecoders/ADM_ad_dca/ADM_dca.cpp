@@ -97,7 +97,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecDCA,						// Class
 			"libDca decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
 #endif
    //********************************************************
-ADM_AudiocodecDCA::ADM_AudiocodecDCA(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d) :   ADM_Audiocodec(fourcc)
+ADM_AudiocodecDCA::ADM_AudiocodecDCA(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d) : 
+  ADM_Audiocodec(fourcc,*info)
 {
     int flags=0;
     ADM_assert(fourcc==WAV_DTS);
@@ -116,7 +117,6 @@ ADM_AudiocodecDCA::ADM_AudiocodecDCA(uint32_t fourcc, WAVHeader *info, uint32_t 
         printf("Cannot init libdca\n");
         ADM_assert(0);   
     }
-	_wavHeader = info;
 }
 
 ADM_AudiocodecDCA::~ADM_AudiocodecDCA( )
@@ -143,7 +143,7 @@ uint8_t ADM_AudiocodecDCA::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uin
     uint32_t avail;
     uint32_t length,syncoff;
     int flags = 0, samprate = 0, bitrate = 0, frame_length;
-    uint8_t chan = _wavHeader->channels;
+    uint8_t chan = wavHeader.channels;
     *nbOut=0;
 
 
