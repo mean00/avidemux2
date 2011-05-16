@@ -1,0 +1,2 @@
+URL: http://www.tinypy.org
+License : MIT + PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2 

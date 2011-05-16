@@ -1,0 +1,2 @@
+URL    : http://resare.com/libmp4v2
+License: LGPL

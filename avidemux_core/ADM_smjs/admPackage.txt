@@ -1,0 +1,2 @@
+URL: https://developer.mozilla.org/en/SpiderMonkey
+License: GPLv2

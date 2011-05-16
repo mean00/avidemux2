@@ -1,0 +1,2 @@
+URL: http://www.sqlite.org
+License: Public Domain
