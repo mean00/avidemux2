@@ -4,7 +4,7 @@ export PATH=$PATH:/mingw/bin
 export CROSS_PREFIX=i686-w64-mingw32
 export SDLDIR=/mingw
 export MINGW=/mingw
-export QT_HOME=/mingw/Qt/4.5.3
+export QT_HOME=/mingw/Qt/current
 # ** Put your config here **
 
 fail()
