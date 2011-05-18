@@ -26,6 +26,7 @@ class decoderRGB16 : decoders
 		ADMColorScalerSimple *converter;
 		bool          isRgb; // Else BGR
 		uint32_t      _bpp;
+        uint32_t      bytePerPixel;
 		uint8_t       *decoded;
 
 	public:
