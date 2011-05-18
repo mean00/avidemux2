@@ -31,8 +31,9 @@
 
 ts_muxer tsMuxerConfig=
 {
-    false,
-    10
+    false,      // non compliant stream
+    true,       // vbr
+    10          // muxRate MBits/s
 };
 
 /**
@@ -105,7 +106,10 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         }
         
         // /audio
-        oc->mux_rate=tsMuxerConfig.muxRateInMBits*1000000LL;
+        if(tsMuxerConfig.vbr)
+            oc->mux_rate=1;
+        else
+            oc->mux_rate=tsMuxerConfig.muxRateInMBits*1000000LL;
         audio_st->codec->bit_rate=a[0]->getInfo()->byterate*8;        
        
         oc->preload=3000; // 30 ms preloading

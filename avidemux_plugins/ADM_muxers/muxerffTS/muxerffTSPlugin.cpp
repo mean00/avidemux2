@@ -22,7 +22,7 @@
  bool ffTSConfigure(void);
 
 ADM_MUXER_BEGIN( muxerffTS,
-                    1,0,0,
+                    1,0,1,
                     "ffTS",    // Internal name
                     "ffMpeg TS muxer plugin (c) Mean 2009",
                     "Mpeg TS Muxer (ff)", // DIsplay name
