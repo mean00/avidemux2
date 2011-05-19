@@ -120,7 +120,9 @@ bool ADM_Composer::saveAsPyScript (const char *name)
     for (uint32_t i = 0; i < _segments.getNbSegments(); i++)
     {
         _SEGMENT *seg=_segments.getSegment(i);
-        qfprintf (fd, "adm.addSegment(%"LU",%"LLU",%"LLU")\n",seg->_reference,seg->_refStartTimeUs,seg->_durationUs);
+        qfprintf (fd, "adm.addSegment(%"LU",",seg->_reference);
+        qfprintf (fd, "%"LLU",",seg->_refStartTimeUs);
+        qfprintf (fd, "%"LLU")\n",seg->_durationUs);
     }
 
 // Markers
