@@ -101,4 +101,5 @@ uint32_t getAbsTime( void )
 uint8_t Clock::reset(void)
 {
 	_startTime=getAbsTime();
+    return true;
 }
