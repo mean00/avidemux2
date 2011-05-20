@@ -573,6 +573,7 @@ bool   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
     return extractH264FrameType_startCode(nalSize, in->data,in->dataLength,&(out->flags));
   }
 #endif
+  return true;
 }
 //*********************
 decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
