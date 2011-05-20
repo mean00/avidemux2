@@ -289,6 +289,7 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
                       dstWidth,dstHeight,
                       lavTo,
                       flags, NULL, NULL,NULL);
+    return true;
 }
 //------------------------------
 bool            ADMColorScalerSimple::changeWidthHeight(uint32_t newWidth, uint32_t newHeight)
