@@ -145,8 +145,8 @@ class ADM_flyDialog
   
   
   /* Filter dependant : you have to implement them*/
-  virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) {ADM_assert(0);}
-  virtual uint8_t    processRgb(uint8_t *in, uint8_t *out) {ADM_assert(0);}
+  virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) {ADM_assert(0);return 1;}
+  virtual uint8_t    processRgb(uint8_t *in, uint8_t *out) {ADM_assert(0);return 1;}
   virtual uint8_t    download(void)=0;
   virtual uint8_t    upload(void)=0;
   virtual bool       setCurrentPts(uint64_t pts)=0;
