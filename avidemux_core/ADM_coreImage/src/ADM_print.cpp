@@ -104,5 +104,6 @@ bool     ADMImage::printString(uint32_t x,uint32_t y, const char *s)
 					drawDigitSmall(this, x + xx, y, *s - ' ');
 				}	
 	}
+    return true;
 }
 
