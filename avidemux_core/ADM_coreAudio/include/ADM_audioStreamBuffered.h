@@ -45,7 +45,7 @@ class ADM_audioStreamBuffered : public ADM_audioStream
 virtual                bool      goToTime(uint64_t nbUs);
                        bool      needBytes(uint32_t nbBytes);
                        bool      skipBytes(uint32_t nbBytes);
-                       bool      empty(void) {limit=start=0;}
+                       bool      empty(void) {limit=start=0;return true;}
 };
 #endif
 // EOF
