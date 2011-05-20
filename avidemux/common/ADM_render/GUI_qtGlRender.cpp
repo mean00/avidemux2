@@ -264,6 +264,7 @@ bool QtGlRender::stop(void)
 	if (glWidget)
 		delete glWidget;
     glWidget=NULL;
+    return true;
 }
 /**
     \fn init
