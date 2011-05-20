@@ -187,6 +187,6 @@ decoders *tryCreatingVideoDecoder(uint32_t w, uint32_t h, uint32_t fcc,uint32_t 
             }
      }
      ADM_info("No decoder found in plugin\n");
-     return false;
+     return NULL;
 }
 //EOF
