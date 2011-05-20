@@ -439,6 +439,7 @@ int32_t ADM_getNiceValue(uint32_t priorityLevel)
 			return 18;
 			break;
 	}
+    return 0;
 }
 uint8_t mk_hex(uint8_t a, uint8_t b)
 {
