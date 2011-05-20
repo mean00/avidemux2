@@ -441,7 +441,7 @@ char *ADM_getBaseDir(void)
 
 	if (!ADM_mkdir(ADM_basedir))
 	{
-		printf("Oops: cannot create the .avidemux directory", NULL);
+		printf("Oops: cannot create the .avidemux directory");
 		return NULL;
 	}
 
@@ -531,7 +531,7 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 	if (!dir)
 		return 0;
 
-	while (direntry = readdir(dir))
+	while ((direntry = readdir(dir)))
 	{
 #ifdef __WIN32
 		int dirLength = wideCharStringToUtf8(direntry->d_name, -1, NULL);
