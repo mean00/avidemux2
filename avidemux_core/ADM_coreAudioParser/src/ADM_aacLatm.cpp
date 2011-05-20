@@ -198,8 +198,9 @@ int ADM_latm2aac::readPayloadInfoLength(getBits &bits)
     }else
     {
         ADM_error("cannot handle allStreamSameTimeFraming==0\n");
-        return 0;
+        
     }
+    return 0;
 }
 /**
     \fn readPayload
