@@ -22,7 +22,7 @@ static tp_obj zzpy_displayError(TP)
   const char *p0= pm.asString();
   const char *p1= pm.asString();
   scriptDisplayError(p0,p1); 
-
+ return tp_None;
 }
 // dirSelect -> str scriptDirSelect (str ) 
 static tp_obj zzpy_dirSelect(TP)
@@ -47,7 +47,7 @@ static tp_obj zzpy_displayInfo(TP)
   const char *p0= pm.asString();
   const char *p1= pm.asString();
   scriptDisplayInfo(p0,p1); 
-
+ return tp_None;
 }
 // fileReadSelect -> str scriptFileSelRead (str ) 
 static tp_obj zzpy_fileReadSelect(TP)

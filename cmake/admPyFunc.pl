@@ -21,7 +21,7 @@ sub genReturn
         }
         if($retType=~m/void/)
         {
-                return "";
+                return "return tp_None;";
         }
         return "???? $retType";
 }

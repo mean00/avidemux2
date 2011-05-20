@@ -16,7 +16,7 @@ static tp_obj zzpy_addControl(TP)
   ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self,ADM_PYID_DIALOGF);
   ADM_scriptDFBaseHelper *p0= ( ADM_scriptDFBaseHelper *)pm.asObjectPointer();
   me->addControl(p0); 
-
+ return tp_None;
 }
 tp_obj zzpy__pyDialogFactory_get(tp_vm *vm)
 {

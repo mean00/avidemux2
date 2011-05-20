@@ -46,7 +46,7 @@ static tp_obj zzpy_dumpSegment(TP)
   void *me=(void *)pm.asThis(&self,ADM_PYID_EDITOR);
   int p0= pm.asInt();
   scriptDumpSegment(p0); 
-
+ return tp_None;
 }
 // dumpRefVideo -> int jsDumpRefVideos (void ) 
 static tp_obj zzpy_dumpRefVideo(TP)

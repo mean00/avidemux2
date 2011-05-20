@@ -7,7 +7,7 @@ static tp_obj zzpy_addItem(TP)
   ADM_scriptDFMenuHelper *me=(ADM_scriptDFMenuHelper *)pm.asThis(&self,ADM_PYID_DF_INTEGER);
   const char *p0= pm.asString();
   me->addItem(p0); 
-
+ return tp_None;
 }
 tp_obj zzpy__pyDFMenu_get(tp_vm *vm)
 {
