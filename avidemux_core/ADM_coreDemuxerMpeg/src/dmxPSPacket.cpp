@@ -95,6 +95,7 @@ bool    psPacket::setPos(uint64_t pos)
         printf("[psPacket] Cannot seek to %"LLX"\n", pos);
         return false;
     }
+    return true;
 }
 
 /**
@@ -112,7 +113,7 @@ _again2:
         {
                 uint64_t pos;
                 _file->getpos(&pos);
-                printf("[DmxPS] cannot sync  at "LLU"/"LLU"\n",pos,_size);
+                printf("[DmxPS] cannot sync  at %"LLU"/%"LLU"\n",pos,_size);
                 return false;
         }
 // Position of this packet just before startcode
@@ -759,6 +760,7 @@ bool           psPacketLinearTracker::resetStats(void)
         packetStats *p=stats+i;
         p->startDts=ADM_NO_PTS;
     }
+    return true;
 }
 /**
     \fn findStartCode
