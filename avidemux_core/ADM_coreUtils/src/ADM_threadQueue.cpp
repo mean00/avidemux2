@@ -20,6 +20,7 @@ static void *boomerang(void *x)
 {
     ADM_threadQueue *a=(ADM_threadQueue *)x;
     a->run();
+    return NULL;
 }
 
 /**
