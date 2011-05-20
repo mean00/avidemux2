@@ -47,7 +47,7 @@ namespace ADM_QT4_fileSel
 			ADM_PathStripName(str);
 
 			/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
-			if (dir = opendir(str))
+			if ((dir = opendir(str)))
 				closedir(dir);
 			else 
 			{
