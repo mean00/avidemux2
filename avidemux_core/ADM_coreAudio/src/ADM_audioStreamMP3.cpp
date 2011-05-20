@@ -96,6 +96,7 @@ bool         ADM_audioStreamMP3::goToTime(uint64_t nbUs)
             return true;
         }
     }
+    return false;
 }
 /**
         \fn getPacket
