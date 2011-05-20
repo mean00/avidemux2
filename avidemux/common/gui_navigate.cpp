@@ -358,7 +358,7 @@ void A_jog(void)
     if (jog)
 	return;
     jog++;
-    while (r = A_jogRead())
+    while ((r = A_jogRead()))
       {
 	  a = abs(r);
 	  printf("%d \n", r);
