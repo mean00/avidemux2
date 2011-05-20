@@ -136,7 +136,7 @@ bool indexFile::close(void)
         file=NULL;
     }
     purgeTokens();
-
+    return true;
 }
 
 /**
