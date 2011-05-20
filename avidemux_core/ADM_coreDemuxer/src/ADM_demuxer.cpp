@@ -123,5 +123,6 @@ uint64_t vidHeader::estimatePts(uint32_t frame)
     f/=_videostream.dwRate;
     f*=count;
     pts=getTime(frame)+count*(uint32_t)f;
+    return pts;
 }
 //
