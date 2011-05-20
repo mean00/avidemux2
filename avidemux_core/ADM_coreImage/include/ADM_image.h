@@ -86,13 +86,13 @@ public:
         int             GetHeight(ADM_PLANE plane) {if(plane==PLANAR_Y) return _height; return _height/2;}
         bool            GetPitches(uint32_t *pitches) {pitches[0]=GetPitch(PLANAR_Y);
                                                        pitches[1]=GetPitch(PLANAR_U);
-                                                       pitches[2]=GetPitch(PLANAR_V);}
+                                                       pitches[2]=GetPitch(PLANAR_V);return true;}
         bool            GetWritePlanes(uint8_t **planes) {planes[0]=GetWritePtr(PLANAR_Y);
                                                         planes[1]=GetWritePtr(PLANAR_U);
-                                                        planes[2]=GetWritePtr(PLANAR_V);}
+                                                        planes[2]=GetWritePtr(PLANAR_V);return true;}
         bool            GetReadPlanes(uint8_t **planes) {planes[0]=GetReadPtr(PLANAR_Y);
                                                          planes[1]=GetReadPtr(PLANAR_U);
-                                                         planes[2]=GetReadPtr(PLANAR_V);}
+                                                         planes[2]=GetReadPtr(PLANAR_V);return true;}
 
 virtual                 ~ADMImage();        
         
