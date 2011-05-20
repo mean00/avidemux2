@@ -228,7 +228,7 @@ static char buffer[256];
 uint32_t ms=(uint32_t)(ams/1000);
     uint32_t hh,mm,ss,mms;
     if(ams==ADM_NO_PTS)
-        sprintf(buffer," xx:xx:xx,xxx ",hh,mm,ss,mms);
+        sprintf(buffer," xx:xx:xx,xxx ");
     else    
     {
         ms2time(ms,&hh,&mm,&ss,&mms);
