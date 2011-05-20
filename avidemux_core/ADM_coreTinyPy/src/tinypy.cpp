@@ -1424,7 +1424,7 @@ tp_obj tp_float(TP) {
         char s[32]; memset(s,0,v.string.len+1);
         memcpy(s,v.string.val,v.string.len);
         if (strchr(s,'.')) { return tp_number(atof(s)); }
-        return(tp_number(strtol(s,0,ord)));
+        return(tp_number(strtoll(s,0,ord))); /* MEANX */
     }
     tp_raise(tp_None,tp_string("(tp_float) TypeError: ?"));
 }
