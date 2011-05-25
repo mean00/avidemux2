@@ -388,7 +388,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
 
     initUI("Saving");
     encoding->setContainer(getContainerName());
-    MuxAudioPacket audioPackets[nbAStreams];
+    MuxAudioPacket *audioPackets=new MuxAudioPacket[nbAStreams];
     ADMBitstream out(bufSize);
     out.data=buffer;
 
@@ -514,6 +514,8 @@ bool muxerFFmpeg::saveLoop(const char *title)
         result=false;
     }
     ADM_info("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
+    delete [] audioPackets;
+    audioPackets=NULL;
     return result;
 }
 // EOF
