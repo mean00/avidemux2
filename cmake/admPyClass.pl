@@ -528,6 +528,7 @@ my $pyFunc;
                         my @params=@{$funcParams{$f}};
                         print OUTPUT "\tjsLog(\"$f(".join(",",@params) .")\\n\");\n";
                 }
+                print OUTPUT "return tp_None;\n";
                 print OUTPUT "};\n";
 #
 #  Create the init function that will register our class

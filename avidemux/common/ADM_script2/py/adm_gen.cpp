@@ -502,6 +502,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	jsLog("audioReset(void)\n");
 	jsLog("getVideoCodec(void)\n");
 	jsLog("getPARHeight(void)\n");
+return tp_None;
 };
 tp_obj initClasspyAdm(tp_vm *vm)
 {

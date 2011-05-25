@@ -50,6 +50,7 @@ static tp_obj myCtorpyDFInteger(tp_vm *vm)
 }
 static tp_obj zzpy__pyDFInteger_help(TP)
  {
+return tp_None;
 };
 tp_obj initClasspyDFInteger(tp_vm *vm)
 {

@@ -163,6 +163,7 @@ static tp_obj zzpy__pyEditor_help(TP)
 	jsLog("nbSegments(void)\n");
 	jsLog("dumpAllSegments(void)\n");
 	jsLog("getPts(int )\n");
+return tp_None;
 };
 tp_obj initClasspyEditor(tp_vm *vm)
 {

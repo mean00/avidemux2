@@ -121,6 +121,7 @@ static tp_obj zzpy__pyGui_help(TP)
 	jsLog("dirSelect(str)\n");
 	jsLog("displayInfo(str,str)\n");
 	jsLog("fileReadSelect(str)\n");
+return tp_None;
 };
 tp_obj initClasspyGui(tp_vm *vm)
 {

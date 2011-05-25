@@ -48,6 +48,7 @@ static tp_obj myCtorpyDFToggle(tp_vm *vm)
 }
 static tp_obj zzpy__pyDFToggle_help(TP)
  {
+return tp_None;
 };
 tp_obj initClasspyDFToggle(tp_vm *vm)
 {

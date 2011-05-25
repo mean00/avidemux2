@@ -65,6 +65,7 @@ static tp_obj zzpy__pyDialogFactory_help(TP)
  {
 	jsLog("show(void)\n");
 	jsLog("addControl(ptr@ADM_scriptDFBaseHelper)\n");
+return tp_None;
 };
 tp_obj initClasspyDialogFactory(tp_vm *vm)
 {
