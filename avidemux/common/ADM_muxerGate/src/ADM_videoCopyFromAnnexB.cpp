@@ -98,6 +98,7 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
     {
         myBitstream->len=img.dataLength;
         NALU_descriptor desc[MAX_NALU_PER_CHUNK];
+        //mixDump(img.data,img.dataLength);
         int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
                                 MAX_NALU_PER_CHUNK,desc);
         // search sps
@@ -114,6 +115,18 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
         if(-1==indexPps)
         {
             ADM_error("Cannot find SPS");
+        }else
+        {
+            int count=desc[indexPps].size;
+            uint8_t *ptr=desc[indexPps].start+count-1;
+            while(count > 4)
+            {
+                if(*ptr) break;
+                ptr--;
+                count--;
+            }
+            ADM_info("PPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
+            desc[indexPps].size=count;
         }
        
         if(indexSps!=-1 && indexPps!=-1)
@@ -123,7 +136,7 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
             
             ADM_info("Copy from annexB: Found sps=%d, pps=%d.\n",(int)spsLen,(int)ppsLen);
             // Build extraData
-            myExtraLen=5+1+2+spsLen+1+2+ppsLen;
+            myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
             myExtra=new uint8_t[myExtraLen];
             uint8_t *ptr=myExtra;
             uint8_t *sps=desc[indexSps].start;
