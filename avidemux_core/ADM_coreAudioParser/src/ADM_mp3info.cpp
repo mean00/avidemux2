@@ -136,6 +136,7 @@ uint32_t nfq,fqindex,brindex,index;
 					return 0;
 				}
 /*	*/
+#if 0
 			// Sample in the packet
 			if(mpegInfo->level==1)
 			{
@@ -154,7 +155,20 @@ uint32_t nfq,fqindex,brindex,index;
 				*offset=start-1;
 
 			}
-
+#else
+            switch(mpegInfo->layer)
+            {
+                case 1: mpegInfo->samples=384;break;
+                case 2: mpegInfo->samples=1152;break;
+                default:
+                case 3: if(mpegInfo->level==1) 
+                                mpegInfo->samples=1152;
+                        else
+                                mpegInfo->samples=576;
+                        break;                    
+            }
+            *offset=start-1;
+#endif
 			// Packet size
 			//L1:FrameLengthInBytes = (12 * BitRate / SampleRate + Padding) * 4
 
