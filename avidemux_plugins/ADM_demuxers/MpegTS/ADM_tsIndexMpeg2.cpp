@@ -12,7 +12,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_tsIndex.h"
-
+#include "DIA_coreToolkit.h"
+bool ADM_probeSequencedFile(const char *fileName);
 static const uint32_t FPS[16]={
                 0,                      // 0
                 23976,          // 1 (23.976 fps) - FILM
@@ -49,6 +50,8 @@ TSVideo video;
 indexerData  data;    
 dmxPacketInfo tmpInfo;
 
+bool bAppend=false;
+
     listOfUnits.clear();
 
     if(!videoTrac) return false;
@@ -70,10 +73,17 @@ dmxPacketInfo tmpInfo;
         printf("[PsIndex] Cannot create %s\n",indexName.c_str());
         return false;
     }
-    writeSystem(file,false);
+    
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-
-    FP_TYPE append=FP_APPEND;
+    FP_TYPE append=FP_DONT_APPEND;
+    if(true==ADM_probeSequencedFile(file))
+    {
+        if(true==GUI_Question("There are several files with sequential file names. Should they be all loaded ?"))
+               bAppend=true;
+    }
+    if(true==bAppend)
+        append=FP_APPEND;
+    writeSystem(file,bAppend);
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();

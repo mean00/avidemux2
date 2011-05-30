@@ -17,12 +17,17 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include <math.h>
 
 #include "ADM_default.h"
 #include "dmx_io.h"
-
-#define aprintf(...) {}
+#if 0
+    #define aprintf(...) {}
+#else
+    #define aprintf printf
+#endif
+extern bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint32_t *nbDigit,uint32_t *base);
 
 fileParser::fileParser( void )
 {
@@ -58,43 +63,34 @@ fileParser::~fileParser()
 */
 uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
 {
-        const char *dot = NULL;                   // pointer to the last dot in filename
-        uint8_t decimals = 0;               // number of decimals
-        char *left = NULL, *number = NULL, *right = NULL; // parts of filename (after splitting)
 
-        char *followup = new char[ strlen(filename) + 1 ]; // possible follow-up filename
-        uint8_t first_followup = 1;         // indicates first follow-up
-        uint8_t last_followup = 0;          // indicates last follow-up (by number: 99)
+        uint32_t decimals = 0;               // number of decimals
+        char *left = NULL, *right = NULL; // parts of filename (after splitting)
+
         uint8_t count = 0;                  // number of follow-ups
-
-
-        int i = 0;                          // index (general use)
-
-
-        // find the last dot
-        dot = strrchr( filename, '.' );
-
-        // count the decimals before the dot
-        decimals = 1;
-        while( (dot != NULL) && ((dot - decimals) != filename) &&
-               (dot[0 - decimals] >= '0') && (dot[0 - decimals] <= '9') )
-                { decimals++; }
-        decimals--;
-
-        // Nuv files can have 20 decimals
-        // Keep it down to 10000
-        if(decimals>4) decimals=4;
-        if(*multi==FP_DONT_APPEND)
+        uint32_t base=0;
+        bool splitFile=false;
+//        int i = 0;      
+        // index (general use)
+        if(*multi!=FP_DONT_APPEND)
         {
-                if(decimals) printf("There was several files, but dont append was forced\n");
-                decimals=0;
+            aprintf("Checking if there are several files...\n");
+            splitFile=ADM_splitSequencedFile(filename, &left, &right,&decimals,&base);
+            if(splitFile)
+            {   
+                aprintf("left:<%s>, right=<%s>,base=%"LU",digit=%"LU"\n",left,right,base,decimals);
+            }else       
+            {
+                aprintf("No.\n");
+            }
         }
-        // no number sequence
-        if( decimals == 0 )
+        // ____________________
+        // Single loading
+        // ____________________
+        if( false ==splitFile )
         {
                 fdIo newFd;
                 aprintf( "\nSimple loading: \n" );
-                delete [] followup;
                 _curFd = 0;
                 FILE *f=NULL;
                 // open file
@@ -108,106 +104,86 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                  newFd.fileSizeCumul=0;
                 _size=newFd.fileSize;
                 listOfFd.push_back(newFd);
-                aprintf( " file: %s, size: %"LLU"\n", filename, _sizeFd[0] );
+                aprintf( " file: %s, size: %"LLU"\n", filename, newFd.fileSize );
                 aprintf( " found 1 files \n" );
                 aprintf( "Done \n" );
                 return 1;
         }
-
-        // possible number sequence
-        else
+        // ____________________
+        // Multi loading
+        // ____________________
+        uint32_t tabSize;
+        std::string leftPart(left);
+        std::string rightPart(right);
+        delete [] left;
+        delete [] right;
+        left=NULL;
+        right=NULL;
+    
+        aprintf( "\nAuto adding: \n" );
+        uint32_t current=base;
+        _curFd = 0;
+        uint64_t total=0;
+        
+        // build match string
+        char match[16];
+        match[0]='%';
+        match[1]='0';
+        sprintf(match+2,"%d",decimals); // snprintf instead ...
+        strcat(match,"d");
+        match[15]=0;
+        aprintf("Using %s as match string\n",match);
+        char number[16];
+        while(1)
         {
-                // split the filename in <left>, <number> and <right>
-                // -----
+                sprintf(number,match,current);
+                std::string middle(number);
+                std::string outName=leftPart+middle+rightPart;
+                aprintf("Checking %s\n",outName.c_str());
 
-                // <left> part
-                left = new char[(dot - filename - decimals) + 1];
-                strncpy( left, filename, (dot - filename - decimals) );
-                left[(dot - filename - decimals)] = '\0';
-
-                // <number> part
-                number = new char[decimals + 1];
-                strncpy( number, (dot - decimals), decimals );
-                number[decimals] = '\0';
-
-                // <right> part
-                right = new char[ strlen(dot)+1 ];
-                strcpy( right, dot );
-
-                // add the file, and all existing follow-ups
-                // -----
-                uint32_t tabSize;
-
-            
-                aprintf( "\nAuto adding: \n" );
-                _curFd = 0;
-                uint64_t total=0;
-                while( last_followup == 0 )
+                // open file
+                FILE *f= ADM_fopen(outName.c_str(), "rb");
+                if(!f)
                 {
-                        strcpy( followup, left );
-                        strcat( followup, number );
-                        strcat( followup, right );
-
-                        // open file
-                        FILE *f= ADM_fopen(followup, "rb");
-                        if(!f)
-                        {
-                                // we need at least one file!
-                                if( first_followup == 1 )
-                                  { return 0; }
-                                else
-                                  { printf( " file: %s not found. \n", followup ); break; }
-                        }
-
-                        // calculate file-size
-                        fdIo myFd;
-                        myFd.file=f;
-                        fseeko(f, 0, SEEK_END );
-                        myFd.fileSize = ftello(f );
-                        myFd.fileSizeCumul = total;
-                        fseeko( f, 0, SEEK_SET );
-                        total+=  myFd.fileSize;
-
-                        aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), followup,
-                                                    myFd.fileSize );
-
-                        // increase number
-                        number[decimals - 1] = number[decimals - 1] + 1;
-                        for( i = decimals - 1; i >= 0; i-- )
-                        {
-                                if( number[i] > '9' )
-                                {
-                                        if( i == 0 )
-                                          { last_followup = 1; break; }
-                                        number[i] = '0';
-                                        number[i - 1] = number[i - 1] + 1;
-                                }
-                        }
-
-                        first_followup = 0;
-                        listOfFd.push_back(myFd);
-                        count++;
-                } // while( last_followup == 0 )
-
-              
-                _size=total;
-                // clean up
-                delete [] followup;
-                delete [] left;
-                delete [] number;
-                delete [] right;
-                if(*multi==FP_PROBE)
-                {
-                        if(count>1)
-                                *multi=FP_APPEND;       //
+                        // we need at least one file!
+                        if( !count  )
+                          { return 0; }
                         else
-                                *multi=FP_DONT_APPEND;
+                          { 
+                                printf( " file: %s not found. \n", outName.c_str() ); 
+                                break; 
+                          }
                 }
 
-                aprintf( " found %d files \n", count );
-                aprintf( "Done \n" );
-        } // if( decimals == 0 )
-                return 1;
+                // calculate file-size
+                fdIo myFd;
+                myFd.file=f;
+                myFd.fileSize=ADM_fileSize(outName.c_str());
+                myFd.fileSizeCumul = total;
+                total+=  myFd.fileSize;
+
+                aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), outName.c_str(),
+                                            myFd.fileSize );
+
+                listOfFd.push_back(myFd);
+                count++;
+                current++;
+        } 
+
+      
+        _size=total;
+        // clean up
+        if(*multi==FP_PROBE)
+        {
+                if(count>1)
+                        *multi=FP_APPEND;       //
+                else
+                        *multi=FP_DONT_APPEND;
+        }
+
+        aprintf( " found %d files \n", count );
+        aprintf( "Done \n" );
+        return 1;
 } // fileParser::open()
 
 

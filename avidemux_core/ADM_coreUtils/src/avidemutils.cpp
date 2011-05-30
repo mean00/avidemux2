@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include <math.h>
 
@@ -463,6 +463,85 @@ uint8_t mk_hex(uint8_t a, uint8_t b)
 
 	return (a1 << 4) + b1;
 }
+/**
+    \fn ADM_splitSequencedFile
+    \brief split file foobar001.foo into foobar, 001 and 3
+*/
+bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint32_t *nbDigit,uint32_t *base)
+{
+        const char *dot = strrchr( filename, '.' );
+        *left=NULL;
+        *right=NULL;
 
+        // count the decimals before the dot
+        int decimals = 1;
+        while( (dot != NULL) && ((dot - decimals) != filename) &&
+               (dot[0 - decimals] >= '0') && (dot[0 - decimals] <= '9') )
+                { decimals++; }
+        decimals--;
 
+        // Nuv files can have 20 decimals
+        // Keep it down to 10000
+        if(decimals>4) decimals=4;
+        // split the filename in <left>, <number> and <right>
+        // -----
+        if(!decimals) return false;
+        // <left> part
+        
+        *left = new char[(dot - filename - decimals) + 1];
+        char *aleft=*left;
+        strncpy( aleft, filename, (dot - filename - decimals) );
+        aleft[(dot - filename - decimals)] = '\0';
+
+        // <number> part
+        char number[decimals + 1];
+        strncpy( number, (dot - decimals), decimals );
+        number[decimals] = '\0';
+        *base=atoi(number);
+        *nbDigit=decimals;
+
+        // <right> part
+        *right = new char[ strlen(dot)+1 ];
+        strcpy( *right, dot );
+        return true;
+}
+/**
+    \fn ADM_probeSequencedFile
+*/
+bool ADM_probeSequencedFile(const char *fileName)
+{
+    char *left=NULL;
+    char *right=NULL;
+    uint32_t nbDigit,base;
+     if(false==ADM_splitSequencedFile(fileName, &left, &right,&nbDigit,&base))
+            return false;
+
+    // check if at least one sequence exists...
+    std::string aLeft(left);
+    std::string aRight(right);
+    delete [] left;
+    delete [] right;
+
+    char match[16];
+    match[0]='%';
+    match[1]='0';
+    sprintf(match+2,"%d",nbDigit); // snprintf instead ...
+    strcat(match,"d");
+    match[15]=0;
+
+    
+    char names[16];
+    sprintf(names,match,base+1);
+    std::string middle(names);
+    std::string target=aLeft+middle+aRight;
+    bool r=false;
+    FILE *f=ADM_fopen(target.c_str(),"rb");
+    if(f)
+    {
+        fclose(f);
+        r=true;
+    }
+
+    return r;
+}
 //EOF

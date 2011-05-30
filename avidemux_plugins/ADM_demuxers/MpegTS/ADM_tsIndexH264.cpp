@@ -12,6 +12,10 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_tsIndex.h"
+#include "DIA_coreToolkit.h"
+bool ADM_probeSequencedFile(const char *fileName);
+
+#include "ADM_tsIndex.h"
 
 
 /**
@@ -101,7 +105,7 @@ indexerData  data;
 dmxPacketInfo tmpInfo;
 TS_PESpacket SEI_nal(0);
 bool result=false;
-
+bool bAppend=false;
 
     beginConsuming=0;
     listOfUnits.clear();
@@ -127,10 +131,18 @@ bool result=false;
         return false;
     }
 
-    writeSystem(file,false);
+    
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
-    FP_TYPE append=FP_APPEND;
+    FP_TYPE append=FP_DONT_APPEND;
+    if(true==ADM_probeSequencedFile(file))
+    {
+        if(true==GUI_Question("There are several files with sequential file names. Should they be all loaded ?"))
+                bAppend=true;
+    }
+    if(bAppend==true)
+        append=FP_APPEND;
+    writeSystem(file,bAppend);
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
