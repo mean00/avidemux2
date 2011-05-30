@@ -28,6 +28,8 @@
 #include "DIA_working.h"
 #include "ADM_indexFile.h"
 #include "ADM_vidMisc.h"
+#include "DIA_coreToolkit.h"
+bool ADM_probeSequencedFile(const char *fileName);
 
 static const char Type[5]={'X','I','P','B','P'};  // Frame type
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame
@@ -187,19 +189,30 @@ bool seq_found=false;
 PSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
+bool bAppend=false;
     
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
     char *indexName=(char *)alloca(strlen(file)+5);
     sprintf(indexName,"%s.idx2",file);
+
+    FP_TYPE append=FP_DONT_APPEND;
+    if(true==ADM_probeSequencedFile(file))
+    {
+        if(true==GUI_Question("There are several files with sequential file names. Should they be all loaded ?"))
+               bAppend=true;
+    }
+    if(true==bAppend)
+        append=FP_APPEND;
+
     index=qfopen(indexName,"wt");
     if(!index)
     {
         printf("[PsIndex] Cannot create %s\n",indexName);
         return false;
     }
-    writeSystem(file,true);
+    writeSystem(file,bAppend);
     pkt=new psPacketLinearTracker(0xE0);
 
     audioTracks=psProbeAudio(file);
@@ -218,7 +231,6 @@ dmxPacketInfo info;
 
     }
 
-    FP_TYPE append=FP_APPEND;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
