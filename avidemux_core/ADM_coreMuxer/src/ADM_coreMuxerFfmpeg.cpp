@@ -374,6 +374,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     int ret;
     int written=0;
     bool result=true;
+    int missingPts=0;
     
     float f=(float)vStream->getAvgFps1000();
     f=1000./f;
@@ -418,6 +419,14 @@ bool muxerFFmpeg::saveLoop(const char *title)
             {
                 lastVideoDts=out.dts;
             }
+            if(out.pts==ADM_NO_PTS)
+            {
+                ADM_warning("No PTS information for frame %"LU"\n",written);
+                missingPts++;
+                out.pts=lastVideoDts;
+            }
+
+
             encoding->pushVideoFrame(out.len,out.out_quantizer,lastVideoDts);
             muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
             muxerRescaleVideoTime(&(out.pts));
@@ -514,6 +523,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
         result=false;
     }
     ADM_info("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
+    ADM_info("[FF] Found %d missing PTS / %d total frames\n",missingPts,written);
     delete [] audioPackets;
     audioPackets=NULL;
     return result;
