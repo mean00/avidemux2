@@ -249,17 +249,21 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
     ADM_info("Some PTS are missing, try to guess them...\n");
     fail=0;
     //
-    for(int i=0;i<nbFrames-1;i+=2)
+    for(int i=0;i<nbFrames-1;i+=1)
     {
         hdr->getFlags(i,&flags);
         hdr->getFlags(i+1,&flagsNext);
         hdr->getPtsDts(i,&pts,&dts);
         hdr->getPtsDts(i+1,&ptsNext,&dtsNext);
-        if(!(flagsNext & AVI_BOTTOM_FIELD)) 
+        if(!(flags & AVI_TOP_FIELD))
         {
-            fail++; 
             continue;
         }
+        if(!(flagsNext & AVI_BOTTOM_FIELD)) 
+        {
+            continue;
+        }
+        // TOP / BOTTOM
         if(pts==ADM_NO_PTS)
         {
             fail++;
@@ -271,13 +275,21 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
     {
     ADM_info("Filling 2nd field PTS\n");
     uint32_t fixed=0;
-    for(int i=0;i<nbFrames-1;i+=2)
+    for(int i=0;i<nbFrames-1;i+=1)
     {
         hdr->getFlags(i,&flags);
         hdr->getFlags(i+1,&flagsNext);
         hdr->getPtsDts(i,&pts,&dts);
         hdr->getPtsDts(i+1,&ptsNext,&dtsNext);
-        if(ptsNext==ADM_NO_PTS)
+        if(!(flags & AVI_TOP_FIELD))
+        {
+            continue;
+        }
+        if(!(flagsNext & AVI_BOTTOM_FIELD)) 
+        {
+            continue;
+        }
+        if(pts!=ADM_NO_PTS && ptsNext==ADM_NO_PTS)
         {
             ptsNext=pts+timeIncrementUs;
             hdr->setPtsDts(i+1,ptsNext,dtsNext);
