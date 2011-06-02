@@ -55,6 +55,7 @@ class  changeFps:public ADM_coreVideoFilter
 {
 protected:
         confChangeFps       configuration;
+        bool                updateTimingInfo(void);
 public:
                             changeFps(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~changeFps();
@@ -102,6 +103,7 @@ changeFps::changeFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : ADM_co
         configuration.oldFpsDen=1000;
 
     }
+    updateTimingInfo();
 }
 /**
     \fn dtor
@@ -117,8 +119,12 @@ changeFps::~changeFps()
 */
 bool         changeFps::goToTime(uint64_t usSeek)
 {
-#warning TODO rescale time
-    if(false==ADM_coreVideoFilter::goToTime(usSeek)) return false;
+    double timing=(double)usSeek;
+    timing/=configuration.oldFpsNum;
+    timing/=configuration.newFpsDen;
+    timing*=configuration.newFpsNum;
+    timing*=configuration.oldFpsDen;
+    if(false==ADM_coreVideoFilter::goToTime((uint64_t)timing)) return false;
     return true;
 }
 
@@ -134,22 +140,53 @@ bool         changeFps::getCoupledConf(CONFcouple **couples)
 */
  bool         changeFps::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+    if(false==previousFilter->getNextFrame(fn,image))
+            return false;
+    if(image->Pts==ADM_NO_PTS)
+        return true;
+    double timing=image->Pts;
 
+    timing*=configuration.oldFpsNum;
+    timing*=configuration.newFpsDen;
+    timing/=configuration.newFpsNum;
+    timing/=configuration.oldFpsDen;
+
+    image->Pts=(uint64_t)timing;
 
     return true;
 }
+/**
+    \fn updateTimingInfo
+    \brief update the info part with new fps
+*/
+bool changeFps::updateTimingInfo(void)
+{
+    
+    double fps1000=configuration.newFpsNum*1000;
+    fps1000/=configuration.newFpsDen;
+    // 1 update frame increment...
+    info.frameIncrement=ADM_Fps1000FromUs( (uint64_t)fps1000);
 
+    // 2 update duration
+    double timing=previousFilter->getInfo()->totalDuration;
+    timing*=configuration.oldFpsNum;
+    timing*=configuration.newFpsDen;
+    timing/=configuration.newFpsNum;
+    timing/=configuration.oldFpsDen;
+    info.totalDuration=(uint64_t)timing;
+    return true;
+}
 /**
     \fn configure
 */
 bool changeFps::configure(void)
 {
+again:
+    float newFrac=configuration.newFpsNum; 
+    newFrac/=configuration.newFpsDen;
 
-    float f=configuration.newFpsNum; 
-    f/=configuration.newFpsDen;
-
-    float f2=configuration.oldFpsNum; 
-    f2/=configuration.oldFpsDen;
+    float oldFrac=configuration.oldFpsNum; 
+    oldFrac/=configuration.oldFpsDen;
 
 
 ADM_assert(nbPredefined == 6);
@@ -163,12 +200,12 @@ ADM_assert(nbPredefined == 6);
     
 
     diaElemMenu mFps(&(configuration.oldMode),   QT_TR_NOOP("Source Fps:"), 6,tFps);
-    diaElemFloat fps(&f2,QT_TR_NOOP("Source frame rate:"),1,200.);
+    diaElemFloat fps(&oldFrac,QT_TR_NOOP("Source frame rate:"),1,200.);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
     diaElemMenu targetmFps(&(configuration.newMode),   QT_TR_NOOP("Source Fps:"), 6,tFps);
-    diaElemFloat targetfps(&f,QT_TR_NOOP("Source frame rate:"),1,200.);
+    diaElemFloat targetfps(&newFrac,QT_TR_NOOP("Source frame rate:"),1,200.);
 
     targetmFps.link(tFps+0,1,&targetfps); // only activate entry in custom mode
 
@@ -179,11 +216,16 @@ ADM_assert(nbPredefined == 6);
     if( !diaFactoryRun(QT_TR_NOOP("Change fps"),4,elems))
         return false;
     
+    if(newFrac==0 || oldFrac==0)
+    {
+        GUI_Error_HIG("Error","Invalid fps");
+        goto again;
+    }
       // 
       if(!configuration.newMode) // Custom mode
       {
-          f*=1000;
-          configuration.newFpsNum=(uint32_t)floor(f+0.4);
+          newFrac*=1000;
+          configuration.newFpsNum=(uint32_t)floor(newFrac+0.4);
           configuration.newFpsDen=(uint32_t)1000;
       }else   // Preset
         {
@@ -194,8 +236,8 @@ ADM_assert(nbPredefined == 6);
 
     if(!configuration.oldMode) // Custom mode
       {
-          f2*=1000;
-          configuration.oldFpsNum=(uint32_t)floor(f2+0.4);
+          oldFrac*=1000;
+          configuration.oldFpsNum=(uint32_t)floor(oldFrac+0.4);
           configuration.oldFpsDen=(uint32_t)1000;
       }else   // Preset
         {
@@ -203,7 +245,7 @@ ADM_assert(nbPredefined == 6);
             configuration.oldFpsNum=me->num;
             configuration.oldFpsDen=me->den;
         }
-
+      updateTimingInfo();
       return true;
 }
 
