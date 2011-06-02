@@ -204,8 +204,8 @@ ADM_assert(nbPredefined == 6);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
-    diaElemMenu targetmFps(&(configuration.newMode),   QT_TR_NOOP("Source Fps:"), 6,tFps);
-    diaElemFloat targetfps(&newFrac,QT_TR_NOOP("Source frame rate:"),1,200.);
+    diaElemMenu targetmFps(&(configuration.newMode),   QT_TR_NOOP("Destination Fps:"), 6,tFps);
+    diaElemFloat targetfps(&newFrac,QT_TR_NOOP("Destination frame rate:"),1,200.);
 
     targetmFps.link(tFps+0,1,&targetfps); // only activate entry in custom mode
 
