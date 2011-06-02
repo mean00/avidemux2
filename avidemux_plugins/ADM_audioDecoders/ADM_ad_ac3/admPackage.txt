@@ -1,2 +1,4 @@
-URL : http://liba52.sf.net
+Name   : liba52
+URL    : http://liba52.sf.net
 License: GPL
+

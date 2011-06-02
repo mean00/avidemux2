@@ -1,2 +1,4 @@
+Name    : ffmpeg
 URL     : http://www.ffmpeg.org
 License : GPL >=2
+

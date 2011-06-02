@@ -1,2 +1,4 @@
-URL: https://developer.mozilla.org/en/SpiderMonkey
+Name   : Spidermonky
+URL    : https://developer.mozilla.org/en/SpiderMonkey
 License: GPLv2
+

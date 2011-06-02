@@ -1,0 +1,36 @@
+Avidemux is GPL V2.
+It contains other software included as source with the following licenses :
+Name    : Secret Rabit Code
+URL     : http://www.mega-nerd.com/SRC
+License : GPL 
+
+Name : Tinypy
+URL: http://www.tinypy.org
+License : MIT + PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2 
+
+Name    : ffmpeg
+URL     : http://www.ffmpeg.org
+License : GPL >=2
+
+Name   : SQLite3
+URL    : http://www.sqlite.org
+License: Public Domain
+
+Name   : Spidermonky
+URL    : https://developer.mozilla.org/en/SpiderMonkey
+License: GPLv2
+
+URL    : http://resare.com/libmp4v2
+License: LGPL
+Name   : liba52
+URL    : http://liba52.sf.net
+License: GPL
+
+Name    : Mad
+URL     : http://www.underbit.com/products/mad
+License : GPL
+
+Name   :  TwoLame
+URL    :  http://twolame.sf.net
+License:  LGPL
+

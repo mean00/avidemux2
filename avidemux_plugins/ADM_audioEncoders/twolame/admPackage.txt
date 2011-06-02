@@ -1,2 +1,4 @@
+Name   :  TwoLame
 URL    :  http://twolame.sf.net
 License:  LGPL
+
