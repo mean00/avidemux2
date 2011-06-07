@@ -116,32 +116,32 @@ FilterInfo  *prevInfo=previousFilter->getInfo();
        		src=YPLANE(original)+configuration.top*x+configuration.left;
        		dest=YPLANE(image);
        		
-       		for(uint32_t k=info.height;k>0;k--)
-       			{
-       			 	    memcpy(dest,src,line);
-       			 	    src+=x;
-       			 	    dest+=line;
-       			}
-         // Crop U  & V
-            src=UPLANE(original)+(x*configuration.top>>2)+(configuration.left>>1);
-            src2=VPLANE(original)+(x*configuration.top>>2)+(configuration.left>>1);
-            dest=UPLANE(image);
-            line>>=1;
-            x>>=1;       		       		 	
-            uint32_t loop=(info.height)>>1;
-            for(uint32_t k=loop;k>0;k--)
-                {
-                        memcpy(dest,src,line);
-                        src+=x;
-                        dest+=line;
-                }
-                dest=VPLANE(image);	
-                for(uint32_t k=((info.height)>>1);k>0;k--)
-                {
-                        memcpy(dest,src2,line);
-                        src2+=x;
-                        dest+=line;
-                }	
+            
+
+            for(int i=0;i<3;i++)
+            {
+                    uint32_t srcPitch=original->GetPitch((ADM_PLANE )i);
+                    uint32_t dstPitch=image->GetPitch((ADM_PLANE )i);
+                    uint8_t  *src=original->GetReadPtr((ADM_PLANE)i);
+                    uint8_t  *dst=image->GetWritePtr((ADM_PLANE)i);
+                    uint32_t w=image->_width;
+                    uint32_t h=image->_height;
+
+                    uint32_t wOffset=configuration.left;
+                    uint32_t hOffset=configuration.top;
+
+                    if(i)
+                    {
+                        w>>=1;
+                        h>>=1;
+                        wOffset>>=1;
+                        hOffset>>=1;
+                    }
+                    src+=wOffset+hOffset*srcPitch;
+                    BitBlit(dst, dstPitch,
+                        src,srcPitch,
+                        w,h);
+            }
             //printf("Cropt:Dts = %"LLU"\n",image->Pts);
             image->copyInfo(original);     
             return 1;
