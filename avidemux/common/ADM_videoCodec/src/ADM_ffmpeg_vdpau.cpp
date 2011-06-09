@@ -396,7 +396,7 @@ VdpStatus status;
         printf("[VDPAU] error in renderDecode\n");
         return false;
     }
-    ADM_info("Surface used %d\n",VDPAU->freeQueue.size());
+    //ADM_info("Surface used %d\n",VDPAU->freeQueue.size());
     if(decode_status)
     {
         struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
