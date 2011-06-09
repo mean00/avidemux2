@@ -51,9 +51,31 @@ typedef enum
 typedef enum
 {
     ADM_IMAGE_DEFAULT,
-    ADM_IMAGE_REF,
-    ADM_IMAGE_VDPAU
+    ADM_IMAGE_REF    
 }ADM_IMAGE_TYPE;
+
+typedef enum
+{
+        ADM_HW_NONE,
+        ADM_HW_VDPAU
+}ADM_HW_IMAGE;
+
+
+typedef bool refFunction(void *instance,void *cookie);
+typedef bool refDownloadFunction(ADMImage *image, void *instance, void *cookie);
+/**
+    \struct hwRefDescriptor
+    \brief  Used to deal with hw accelerated stuff
+*/
+typedef struct
+{
+        void            *refInstance;  ///
+        void            *refCookie;  /// Ref to a hw image
+        refFunction     *refMarkUsed;   ///
+        refFunction     *refMarkUnused; ///
+        refDownloadFunction     *refDownload;
+}hwRefDescriptor;
+
 #define YPLANE(x) ((x)->GetReadPtr(PLANAR_Y))
 #define UPLANE(x) ((x)->GetReadPtr(PLANAR_U))
 #define VPLANE(x) ((x)->GetReadPtr(PLANAR_V))
@@ -79,6 +101,9 @@ public:
         ADM_colorspace  _colorspace;    /// Colorspace we are moving, default is YV12
         uint8_t         _noPicture;     /// No picture to display
         ADM_ASPECT	    _aspect;	/// Aspect ratio
+        //
+        ADM_HW_IMAGE    refType;    /// if not none, it means the field below is a ref to a hw image
+        hwRefDescriptor refDescriptor;
         // Quant info
         uint8_t         *quant;
         int             _qStride;
@@ -99,6 +124,10 @@ virtual                 ~ADMImage();
 
 protected:
         ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type);
+public:
+                     bool            hwIncRefCount(void);
+                     bool            hwDecRefCount(void);
+                     bool            hwDownloadFromRef(void);
 public:
         virtual      uint32_t        GetPitch(ADM_PLANE plane)=0;
         virtual      uint8_t        *GetWritePtr(ADM_PLANE plane)=0;

@@ -317,7 +317,9 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         }
         aprintf("[::Decompress] in:%"LU" out:%"LU" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
 	// If not quant and it is already YV12, we can stop here
-	if((!tmpImage->quant || !tmpImage->_qStride) && tmpImage->_colorspace==ADM_COLOR_YV12)
+    // Also, if the image is decoded through hw, dont do post proc
+	if(tmpImage->refType!=ADM_HW_NONE || 
+                    (!tmpImage->quant || !tmpImage->_qStride) && tmpImage->_colorspace==ADM_COLOR_YV12)
 	{
 		out->_Qp=2;
 		out->duplicate(tmpImage);

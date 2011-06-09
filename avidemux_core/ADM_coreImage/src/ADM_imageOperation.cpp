@@ -30,6 +30,8 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
         uint32_t sourceStride,destStride;
         uint8_t  *source,*dest;
 
+        hwDecRefCount(); // free hw ref image if any..
+
         for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
         {
             source=src->GetReadPtr((ADM_PLANE)plane);
@@ -44,6 +46,16 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
                 opWidth>>=1;
             }
             BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
+        }
+        if(src->refType!=ADM_HW_NONE)
+        {
+            refType      =src->refType;
+            refDescriptor.refCookie    =src->refDescriptor.refCookie;
+            refDescriptor.refInstance  =src->refDescriptor.refInstance;
+            refDescriptor.refMarkUsed  =src->refDescriptor.refMarkUsed;
+            refDescriptor.refMarkUnused=src->refDescriptor.refMarkUnused;
+            refDescriptor.refDownload  =src->refDescriptor.refDownload;
+            hwIncRefCount();
         }
         return true;
 }

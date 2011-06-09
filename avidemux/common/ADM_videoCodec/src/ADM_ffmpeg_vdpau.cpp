@@ -53,6 +53,31 @@ typedef enum
     ADM_VDPAU_MPEG2=2,
     ADM_VDPAU_VC1=3
 }ADM_VDPAU_TYPE;
+/**
+    \fn markSurfaceUsed
+    \brief mark the surfave as used. Can be called multiple time.
+*/
+static bool vdpauMarkSurfaceUsed(void *v, void * cookie)
+{
+    vdpauContext *vd=(vdpauContext*)v;
+    vdpau_render_state *render=(vdpau_render_state *)cookie;
+    render->refCount++;
+    return true;
+}
+/**
+    \fn markSurfaceUnused
+    \brief mark the surfave as unused by the caller. Can be called multiple time.
+*/
+static bool vdpauMarkSurfaceUnused(void *v, void * cookie)
+{
+    vdpauContext *vd=(vdpauContext*)v;
+    vdpau_render_state *render=(vdpau_render_state *)cookie;
+    render->refCount--;
+    if(!render->refCount)
+        vd->freeQueue.push_back(render);
+    return true;
+}
+
 
 /**
     \fn vdpauUsable
@@ -116,7 +141,9 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     }
     // Get an image   
     render=VDPAU->freeQueue.front();
+    render->refCount=0;
     VDPAU->freeQueue.erase(VDPAU->freeQueue.begin());
+    vdpauMarkSurfaceUsed(VDPAU,(void *)render);
     render->state=0;
     pic->data[0]=(uint8_t *)render;
     pic->data[1]=(uint8_t *)render;
@@ -152,12 +179,12 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
   if(destroying==true) return; // They are already freed...
   render=(vdpau_render_state*)pic->data[0];
   ADM_assert(render);
-
+  ADM_assert(render->refCount);
   render->state &= ~FF_VDPAU_STATE_USED_FOR_REFERENCE;
   for(i=0; i<4; i++){
     pic->data[i]= NULL;
   }
-  VDPAU->freeQueue.push_back(render);
+  vdpauMarkSurfaceUnused(VDPAU,(void *)render);
 }
 /**
     \fn ADM_VDPAUreleaseBuffer
@@ -307,6 +334,13 @@ VdpStatus status;
     // First let ffmpeg prepare datas...
     vdpau_copy=out;
     decode_status=false;
+
+    if(out->refType==ADM_HW_VDPAU)
+    {
+            vdpauMarkSurfaceUnused(VDPAU,out->refDescriptor.refCookie);
+            out->refType=ADM_HW_NONE;
+    }
+
     if(!decoderFF::uncompress (in, scratch))
     {
         aprintf("[VDPAU] No data from libavcodec\n");
@@ -329,7 +363,8 @@ VdpStatus status;
 
     
    // Copy back the decoded image to our output ADM_image
-   aprintf("[VDPAU] Getting datas from surface %d\n",surface);
+    aprintf("[VDPAU] Getting datas from surface %d\n",surface);
+ 
     status=admVdpau::getDataSurface(surface,planes, stride );
     if(VDP_STATUS_OK!=status)
     {
@@ -337,6 +372,15 @@ VdpStatus status;
         printf("[VDPAU] Cannot get data from surface <%s>\n",admVdpau::getErrorString(status));
         decode_status=false;
         return 0 ;
+    }
+    if(decode_status)
+    {
+        out->refType=ADM_HW_VDPAU;
+        out->refDescriptor.refCookie=(void *)rndr;
+        out->refDescriptor.refInstance=VDPAU;
+        out->refDescriptor.refMarkUsed=vdpauMarkSurfaceUsed;
+        out->refDescriptor.refMarkUnused=vdpauMarkSurfaceUnused;
+        vdpauMarkSurfaceUsed(VDPAU,(void *)rndr);
     }
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;

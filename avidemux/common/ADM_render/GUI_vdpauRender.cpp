@@ -16,12 +16,18 @@
 
 #include "ADM_default.h"
 #ifdef USE_VDPAU
+extern "C" {
+#include "libavcodec/avcodec.h"
+#include "libavcodec/vdpau.h"
+}
+
+
 #include "GUI_render.h"
 
 #include "GUI_accelRender.h"
 #include "GUI_vdpauRender.h"
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
-
+#include "ADM_videoCodec/include/ADM_ffmpeg_vdpau_internal.h"
 static VdpOutputSurface     surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
 static VdpVideoSurface      input=VDP_INVALID_HANDLE;
 static VdpVideoMixer        mixer=VDP_INVALID_HANDLE;
@@ -127,6 +133,7 @@ bool vdpauRender::stop(void)
 bool vdpauRender::displayImage(ADMImage *pic)
 {
     // Blit pic into our video Surface
+    VdpVideoSurface myInput=input;
     int next=currentSurface^1;
     uint32_t pitches[3];
     uint8_t *planes[3];
@@ -134,17 +141,25 @@ bool vdpauRender::displayImage(ADMImage *pic)
     pic->GetReadPlanes(planes);
 
     // Put out stuff in input...
-
-    if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
-            input,
-            planes,pitches))
+    // if input is already a VDPAU surface, no need to reupload it...
+    if(pic->refType==ADM_HW_VDPAU)
     {
-        ADM_warning("[Vdpau] video surface : Cannot putbits\n");
-        return false;
+        // cookie is a render...
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)pic->refDescriptor.refCookie;
+        myInput=rndr->surface;
+        printf("Skipping blit surface=%d\n",(int)myInput);
+    }else
+    {
+        if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
+                input,
+                planes,pitches))
+        {
+            ADM_warning("[Vdpau] video surface : Cannot putbits\n");
+            return false;
+        }
     }
-
     // Call mixer...
-    if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,input,surface[next], pic->_width,pic->_height))
+    if(VDP_STATUS_OK!=admVdpau::mixerRender( mixer,myInput,surface[next], pic->_width,pic->_height))
 
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");

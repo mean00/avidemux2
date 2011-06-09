@@ -38,6 +38,9 @@ void ADMImage_stat( void )
 */
 ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
 {
+        refType=ADM_HW_NONE;
+        memset(&refDescriptor,0,sizeof(refDescriptor));
+
         _width=width;
         _height=height;
         _Qp=2;
@@ -60,9 +63,51 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
 ADMImage::~ADMImage()
 {
 	imgCurNb--;
+    hwDecRefCount();
+}
+/**
+    \fn hwIncRefCount
+    \brief hwIncRefCount
+
+*/
+
+ bool            ADMImage::hwIncRefCount(void)
+{
+        if(refType==ADM_HW_NONE) return true;
+        ADM_assert(refDescriptor.refMarkUsed);
+        return refDescriptor.refMarkUsed(refDescriptor.refInstance,refDescriptor.refCookie); 
+}
+/**
+    \fn hwDecRefCount
+    \brief hwDecRefCount
+
+*/
+
+ bool            ADMImage::hwDecRefCount(void)
+{
+        if(refType==ADM_HW_NONE) return true;
+        ADM_assert(refDescriptor.refMarkUnused);
+        bool r=refDescriptor.refMarkUnused(refDescriptor.refInstance,refDescriptor.refCookie); 
+        refType=ADM_HW_NONE;
+        return r;
+        
+}
+/**
+    \fn    hwDownloadFromRef
+    \brief Convert an HW ref image to a regular image
+
+*/
+ bool            ADMImage::hwDownloadFromRef(void)
+{
+bool r=false;
+        if(refType==ADM_HW_NONE) return true;
+        ADM_assert(refDescriptor.refDownload);
+        r=refDescriptor.refDownload(this,refDescriptor.refInstance,refDescriptor.refCookie);
+        hwDecRefCount();
+        refType=ADM_HW_NONE;
+        return r;
 
 }
-
 
 /**
  * 		\fn BitBlitAlpha
