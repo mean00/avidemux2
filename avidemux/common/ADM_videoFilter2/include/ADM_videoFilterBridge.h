@@ -31,11 +31,13 @@ protected:
         FilterInfo          bridgeInfo;
         bool                firstImage;
         uint32_t            lastSentImage;
+        bool                getNextFrameBase(uint32_t *frameNumber,ADMImage *image);      
 public:
                             ADM_videoFilterBridge(uint64_t startTime, uint64_t endTime);
                             ~ADM_videoFilterBridge();
        virtual bool         goToTime(uint64_t usSeek);  
        virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);      
+               bool         getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image);
        virtual FilterInfo  *getInfo(void);                                      /// Return picture parameters after this filter
        virtual bool         getCoupledConf(CONFcouple **couples) {*couples=NULL;return true;} ; /// Return the current filter configuration
        virtual uint64_t     getAbsoluteStartTime(void)  

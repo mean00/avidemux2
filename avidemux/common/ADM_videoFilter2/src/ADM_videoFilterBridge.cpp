@@ -46,6 +46,45 @@ ADM_videoFilterBridge::ADM_videoFilterBridge(uint64_t startTime, uint64_t endTim
     rewind();
 }
 /**
+    \fn     getNextFrameBase
+    \brief
+*/
+bool         ADM_videoFilterBridge::getNextFrameBase(uint32_t *frameNumber,ADMImage *image)
+{
+again:
+    bool r=false;
+    if(firstImage==true)
+    {
+        firstImage=false;
+        r=video_body->samePicture(image);
+        lastSentImage=0;
+        *frameNumber=nextFrame=0;
+    }else
+    {
+        r=   video_body->nextPicture(image);
+        nextFrame++;
+        *frameNumber=nextFrame;
+        lastSentImage++;
+    }
+    if(r==false) return false;
+    // Translate pts if any
+    int64_t pts=image->Pts;
+    if(pts>endTime)
+    {
+        ADM_warning("[VideoBridge] This frame is too late (%"LLD" vs %"LLU")\n",pts,endTime);
+        return false;
+    }
+    if(pts<startTime) 
+    {
+            ADM_warning("[VideoBridge] This frame is too early (%"LLD" vs %"LLU")\n",pts,startTime);
+            goto again;
+    }
+    // Rescale time
+    image->Pts-=startTime;
+    return true;
+}
+
+/**
     \fn rewind
     \brief go or return to the original position...
 */
@@ -68,38 +107,27 @@ ADM_videoFilterBridge::~ADM_videoFilterBridge()
 */
 bool         ADM_videoFilterBridge::getNextFrame(uint32_t *frameNumber,ADMImage *image)
 {
-again:
-    bool r=false;
-    if(firstImage==true)
+    return getNextFrameAs(ADM_HW_NONE,frameNumber,image);
+}
+/**
+    \fn getNextFrameAs
+    \brief
+*/
+bool         ADM_videoFilterBridge::getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image)
+{
+    if(false==getNextFrameBase(frameNumber,image)) 
     {
-        firstImage=false;
-        r=video_body->samePicture(image);
-        lastSentImage=0;
-        *frameNumber=nextFrame=0;
-    }else
-    {
-        r=   video_body->nextPicture(image);
-        nextFrame++;
-        *frameNumber=nextFrame;
-        lastSentImage++;
-    }
-    if(r==false) return false;
-    // Translate pts if any
-    int64_t pts=image->Pts;
-    if(pts>endTime)
-    {
-        printf("[VideoBridge] This frame is too late (%"LLD" vs %"LLU")\n",pts,endTime);
+        ADM_warning("[Bridge] Base did not get an image\n");
         return false;
     }
-    if(pts<startTime) 
-    {
-            printf("[VideoBridge] This frame is too early (%"LLD" vs %"LLU")\n",pts,startTime);
-            goto again;
+    // Check if image is 
+    if(type!=image->refType)
+    {        
+        return image->hwDownloadFromRef(); // nope, revert to base type
     }
-    // Rescale time
-    image->Pts-=startTime;
-    return true;
+    return true; 
 }
+
 /**
     \fn ADM_videoFilterBridge
 

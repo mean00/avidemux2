@@ -58,6 +58,14 @@ const char        *ADM_coreVideoFilter::getConfiguration(void)
     return "base";
 }  
 /**
+    \fn getNextFrameAs
+*/
+
+bool         ADM_coreVideoFilter::getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image)
+{
+    return getNextFrame(frameNumber,image);
+}
+/**
     \fn getInfo
     \brief default behaviour, we return the Info as is from the previous filter in the chain
 */

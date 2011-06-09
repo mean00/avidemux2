@@ -38,11 +38,11 @@ extern "C" {
 #include "prefs.h"
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 #include "ADM_codecVdpau.h"
+#include "ADM_threads.h"
 
 
-
-static bool vdpauWorking=false;
-
+static bool         vdpauWorking=false;
+static admMutex     surfaceMutex;
 
 #define aprintf(...) {}
 
@@ -74,10 +74,53 @@ static bool vdpauMarkSurfaceUnused(void *v, void * cookie)
     vdpau_render_state *render=(vdpau_render_state *)cookie;
     render->refCount--;
     if(!render->refCount)
+    {
+        surfaceMutex.lock();
         vd->freeQueue.push_back(render);
+        surfaceMutex.unlock();
+    }
     return true;
 }
+/**
+    \fn vdpauRefDownload
+    \brief Convert a VDPAU image to a regular image
+*/
 
+static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
+{
+    vdpauContext *vd=(vdpauContext*)instance;
+    vdpau_render_state *render=(vdpau_render_state *)cookie;
+    ADM_assert(render->refCount);
+    ADM_assert(image->refType==ADM_HW_VDPAU);
+    
+    // other part will be done in goOn
+    VdpVideoSurface  surface;
+
+    surface=render->surface;
+    uint8_t *planes[3];
+    uint32_t stride[3];
+
+     image->GetWritePlanes(planes);
+     image->GetPitches(stride);
+
+    //ADM_info("Getting surface %d\n",(int)surface);
+    // Copy back the decoded image to our output ADM_image
+    aprintf("[VDPAU] Getting datas from surface %d\n",surface);
+ 
+    VdpStatus status=admVdpau::getDataSurface(surface,planes, stride );
+    if(VDP_STATUS_OK!=status)
+    {
+        ADM_error("[VDPAU] Cannot get data from surface <%s>\n",admVdpau::getErrorString(status));
+    }
+    image->refType=ADM_HW_NONE;
+    bool r=vdpauMarkSurfaceUnused(instance,cookie);
+    if(r==false || status!=VDP_STATUS_OK) 
+    {
+        ADM_warning("Cannot get VDPAU content from surface %d\n",(int)surface);
+        return false;
+    }
+    return true;
+}
 
 /**
     \fn vdpauUsable
@@ -140,9 +183,11 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         return -1;
     }
     // Get an image   
+    surfaceMutex.lock();
     render=VDPAU->freeQueue.front();
     render->refCount=0;
     VDPAU->freeQueue.erase(VDPAU->freeQueue.begin());
+    surfaceMutex.unlock();
     vdpauMarkSurfaceUsed(VDPAU,(void *)render);
     render->state=0;
     pic->data[0]=(uint8_t *)render;
@@ -349,42 +394,23 @@ VdpStatus status;
     if(decode_status!=true)
     {
         printf("[VDPAU] error in renderDecode\n");
-        return 0;
+        return false;
     }
-    // other part will be done in goOn
-   struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
-   VdpVideoSurface  surface;
-
-    surface=rndr->surface;
-    uint8_t *planes[3];
-    uint32_t stride[3];
-             vdpau_copy->GetWritePlanes(planes);
-             vdpau_copy->GetPitches(stride);
-
-    
-   // Copy back the decoded image to our output ADM_image
-    aprintf("[VDPAU] Getting datas from surface %d\n",surface);
- 
-    status=admVdpau::getDataSurface(surface,planes, stride );
-    if(VDP_STATUS_OK!=status)
-    {
-        
-        printf("[VDPAU] Cannot get data from surface <%s>\n",admVdpau::getErrorString(status));
-        decode_status=false;
-        return 0 ;
-    }
+    ADM_info("Surface used %d\n",VDPAU->freeQueue.size());
     if(decode_status)
     {
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
         out->refType=ADM_HW_VDPAU;
         out->refDescriptor.refCookie=(void *)rndr;
         out->refDescriptor.refInstance=VDPAU;
         out->refDescriptor.refMarkUsed=vdpauMarkSurfaceUsed;
         out->refDescriptor.refMarkUnused=vdpauMarkSurfaceUnused;
+        out->refDescriptor.refDownload=vdpauRefDownload;
         vdpauMarkSurfaceUsed(VDPAU,(void *)rndr);
     }
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
-    return (uint8_t)decode_status;
+    return (bool)decode_status;
 }
 /**
     \fn goOn
