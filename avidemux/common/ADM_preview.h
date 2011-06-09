@@ -44,5 +44,6 @@ class admPreview
       static bool previousFrame(void);
       static void destroy(void);
       static bool updateImage(void);
+      static ADM_HW_IMAGE getPreferedHwImageFormat(void);
 };
 #endif

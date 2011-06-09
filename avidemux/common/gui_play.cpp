@@ -234,12 +234,14 @@ bool GUIPlayback::run(void)
     ticktock.reset();
     vuMeterPts=0;
     ADMImage *previewBuffer=admPreview::getBuffer();
+    ADM_HW_IMAGE hwImageFormat=admPreview::getPreferedHwImageFormat();
+
     do
     {
 
         admPreview::displayNow();;
         GUI_setCurrentFrameAndTime(firstPts);
-        if(false==videoFilter->getNextFrame(&fn,previewBuffer))
+        if(false==videoFilter->getNextFrameAs(hwImageFormat,&fn,previewBuffer))
         {
             printf("[Play] Cancelling playback, nextPicture failed\n");
             break;

@@ -70,6 +70,13 @@ ADMImage *admPreview::getBuffer(void)
     return rdrImage;
 }
 /**
+    \fn getPreferedHwImageFormat
+*/
+ADM_HW_IMAGE admPreview::getPreferedHwImageFormat(void)
+{
+    return renderGetPreferedImageFormat();
+}
+/**
       \fn admPreview::setMainDimension
       \brief Update width & height of input video
       @param w : width
