@@ -72,6 +72,11 @@ bool         ADM_videoFilterQueue::goToTime(uint64_t usSeek)
 */
 bool         ADM_videoFilterQueue::getNextFrame(uint32_t *frameNumber,ADMImage *image)
 {
+    return getNextFrameAs(ADM_HW_NONE,frameNumber,image);
+}
+bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image)
+{
+
      if(false==started)
         {
             startThread();      
@@ -148,7 +153,7 @@ bool         ADM_videoFilterQueue::runAction(void)
         freeList.erase(freeList.begin());
         mutex->unlock();
 
-        if(false==previousFilter->getNextFrame(&fn,source))
+        if(false==previousFilter->getNextFrameAs(ADM_HW_ANY,&fn,source))
         {
            
             ADM_info("Video Thread, no more data\n");

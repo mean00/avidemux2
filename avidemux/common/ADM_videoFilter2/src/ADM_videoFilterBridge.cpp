@@ -121,6 +121,7 @@ bool         ADM_videoFilterBridge::getNextFrameAs(ADM_HW_IMAGE type,uint32_t *f
         return false;
     }
     // Check if image is 
+    if(ADM_HW_ANY==type) return true;
     if(type!=image->refType)
     {        
         return image->hwDownloadFromRef(); // nope, revert to base type
