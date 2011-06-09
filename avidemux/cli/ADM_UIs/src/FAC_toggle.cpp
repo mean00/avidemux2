@@ -27,7 +27,7 @@
 
 
 
-diaElemToggle::diaElemToggle(uint32_t *toggleValue,const char *toggleTitle, const char *tip)
+diaElemToggle::diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip)
   : diaElemToggleBase()
 {
 }
