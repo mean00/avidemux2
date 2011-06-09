@@ -197,6 +197,8 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 uint8_t renderUpdateImage(ADMImage *image)
 {
     ADM_assert(!_lock);
+    if(renderer->getPreferedImage()!=image->refType)
+            image->hwDownloadFromRef();
     renderer->displayImage(image);
     return 1;
 }
@@ -357,6 +359,16 @@ bool    renderExposeEventFromUI(void)
     return false;
 
 }
+/**
+    \fn renderGetPreferedImageFormat
+    \brief get the prefered hw accelerated image format (NONE,VDPAU,...)
+*/  
+ADM_HW_IMAGE renderGetPreferedImageFormat(void)
+{
+    if(!renderer) return ADM_HW_NONE;
+    return renderer->getPreferedImage();
+}
+
 //***************************************
 /**
     \fn bool calcDisplayFromZoom(renderZoom zoom);

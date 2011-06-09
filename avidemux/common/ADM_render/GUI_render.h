@@ -44,7 +44,7 @@ bool    renderCompleteRedrawRequest(void); // will call admPreview
 uint8_t renderStartPlaying( void );
 uint8_t renderStopPlaying( void );
 bool    renderExposeEventFromUI(void); // This is called by UI, return true if UI should redraw, false else
-
+ADM_HW_IMAGE renderGetPreferedImageFormat(void);
 uint8_t renderLock(void);
 uint8_t renderUnlock(void);
 bool renderHookRefreshRequest(refreshSB cb);

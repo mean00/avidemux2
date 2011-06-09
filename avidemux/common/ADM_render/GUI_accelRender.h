@@ -36,5 +36,6 @@ class VideoRenderBase
               virtual   bool    refresh(void) {return true;}
               virtual   bool    changeZoom(renderZoom newzoom)=0;
               virtual   bool    usingUIRedraw(void)=0;
+              virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_NONE;}
 };
 #endif
