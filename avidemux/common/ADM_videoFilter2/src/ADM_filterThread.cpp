@@ -93,6 +93,8 @@ bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *f
                 ADMImage *source=(ADMImage *)pkt.data;
                 *frameNumber=pkt.pts;
                 image->duplicateFull(source);
+                if(type!=image->refType && type!=ADM_HW_ANY)
+                    image->hwDownloadFromRef();
                 list.erase(list.begin());
                 freeList.push_back(pkt);
                 if(cond->iswaiting())
