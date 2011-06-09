@@ -31,25 +31,27 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
         uint8_t  *source,*dest;
 
         hwDecRefCount(); // free hw ref image if any..
-
-        for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
+        if(src->refType==ADM_HW_NONE)
         {
-            source=src->GetReadPtr((ADM_PLANE)plane);
-            dest=this->GetWritePtr((ADM_PLANE)plane);
-            sourceStride=src->GetPitch((ADM_PLANE)plane);
-            destStride=this->GetPitch((ADM_PLANE)plane);
-            int opHeight=_height;
-            int opWidth=_width;
-            if(plane!=PLANAR_Y)
+            for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
             {
-                opHeight>>=1;
-                opWidth>>=1;
+                source=src->GetReadPtr((ADM_PLANE)plane);
+                dest=this->GetWritePtr((ADM_PLANE)plane);
+                sourceStride=src->GetPitch((ADM_PLANE)plane);
+                destStride=this->GetPitch((ADM_PLANE)plane);
+                int opHeight=_height;
+                int opWidth=_width;
+                if(plane!=PLANAR_Y)
+                {
+                    opHeight>>=1;
+                    opWidth>>=1;
+                }
+                BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
             }
-            BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
         }
-        if(src->refType!=ADM_HW_NONE)
+         else // it is a hw surface
         {
-            refType      =src->refType;
+            refType                    =src->refType;
             refDescriptor.refCookie    =src->refDescriptor.refCookie;
             refDescriptor.refInstance  =src->refDescriptor.refInstance;
             refDescriptor.refMarkUsed  =src->refDescriptor.refMarkUsed;

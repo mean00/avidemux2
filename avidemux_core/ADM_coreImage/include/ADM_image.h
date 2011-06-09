@@ -57,7 +57,8 @@ typedef enum
 typedef enum
 {
         ADM_HW_NONE,
-        ADM_HW_VDPAU
+        ADM_HW_VDPAU,
+        ADM_HW_ANY=0xff
 }ADM_HW_IMAGE;
 
 
