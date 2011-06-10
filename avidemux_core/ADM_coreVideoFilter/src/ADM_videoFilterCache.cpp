@@ -144,10 +144,11 @@ int VideoCache::searchFreeEntry(void)
     ADM_assert(target!=0xfff);
     return target;
 }
+
 /**
-    \fn getImage
+    \fn getImageBase
 */
-ADMImage *VideoCache::getImage(uint32_t frame)
+ADMImage *VideoCache::getImageBase(uint32_t frame)
 {
 int32_t i;
 uint32_t tryz=nbEntry;
@@ -166,7 +167,7 @@ uint32_t len,flags;
 	int target=searchFreeEntry();
     uint32_t nb;
     ADMImage *img=entry[target].image;
-    if(!incoming->getNextFrame(&nb,img)) return NULL;
+    if(!incoming->getNextFrameAs(ADM_HW_ANY,&nb,img)) return NULL;
     if(nb!=frame)
     {
         ADM_error("Expected frame %d, got frame %d\n",(int)frame,(int)nb);
@@ -183,6 +184,29 @@ uint32_t len,flags;
     counter++;	
     return img;
 }
+/**
+    \fn getImageAs
+*/
+ADMImage *VideoCache::getImage(uint32_t frame)
+{
+    return getImageAs(ADM_HW_NONE,frame);
+}
+
+/**
+    \fn getImageAs
+*/
+ADMImage *VideoCache::getImageAs(ADM_HW_IMAGE type,uint32_t frame)
+{
+    ADMImage *img=getImageBase(frame);
+    if(!img) return NULL;
+    if(type==ADM_HW_ANY) return img;
+    if(type!=img->refType)
+    {
+        img->hwDownloadFromRef();
+    }
+    return img;
+}   
+
 /**
     \fn dump
 */

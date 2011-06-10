@@ -7,12 +7,20 @@
 */
 
 #include "ADM_default.h"
+extern "C" {
+#include "libavcodec/avcodec.h"
+#include "libavcodec/vdpau.h"
+}
+
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
 #include "vdpauFilter.h"
 #include "vdpauFilter_desc.cpp"
 #ifdef USE_VDPAU
+
+
+
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
@@ -31,7 +39,7 @@ protected:
 
                     uint8_t             *tempBuffer;
                     vdpauFilter          configuration;
-                    VdpOutputSurface     surface;
+                    VdpOutputSurface     outputSurface;
                     VdpVideoSurface      input[ADM_NB_SURFACES];
                     uint32_t             frameDesc[ADM_NB_SURFACES];
                     uint32_t             currentIndex;
@@ -54,9 +62,9 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_GTK+ADM_UI_QT4,     // We need a display for VDPAU; so no cli...
                         VF_TRANSFORM,            // Category
-                        "vdpau",            // internal name (must be uniq!)
-                        "vdpau",            // Display name
-                        "vdpau, vdpau filters." // Description
+                        "vdpauResize",            // internal name (must be uniq!)
+                        "vdpau: Resize",            // Display name
+                        "vdpau: Resize image using vdpau." // Description
                     );
 
 //
@@ -89,7 +97,7 @@ bool vdpauVideoFilter::setupVdpau(void)
     if(info.width==previousFilter->getInfo()->width &&  info.height==previousFilter->getInfo()->height)
         return false;
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,
-                        info.width,info.height,&surface)) 
+                        info.width,info.height,&outputSurface)) 
     {
         ADM_error("Cannot create outputSurface0\n");
         return false;
@@ -110,7 +118,7 @@ bool vdpauVideoFilter::setupVdpau(void)
         goto badInit;
     } 
     tempBuffer=new uint8_t[info.width*info.height*4];
-    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_BGR32A,ADM_COLOR_YV12);
+    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_RGB32A,ADM_COLOR_YV12);
     ADM_info("VDPAU setup ok\n");
     return true;
 badInit:
@@ -125,9 +133,9 @@ bool vdpauVideoFilter::cleanupVdpau(void)
 {
     for(int i=0;i<ADM_NB_SURFACES;i++)
         if(input[i]!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(input[i]);
-    if(surface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface);
+    if(outputSurface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(outputSurface);
     if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
-    surface=VDP_INVALID_HANDLE;
+    outputSurface=VDP_INVALID_HANDLE;
     for(int i=0;i<ADM_NB_SURFACES;i++)
         input[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
@@ -145,7 +153,7 @@ vdpauVideoFilter::vdpauVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup): 
     for(int i=0;i<ADM_NB_SURFACES;i++)
         input[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
-    surface=VDP_INVALID_HANDLE;
+    outputSurface=VDP_INVALID_HANDLE;
     if(!setup || !ADM_paramLoad(setup,vdpauFilter_param,&configuration))
     {
         // Default value
@@ -261,19 +269,30 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     
      if(passThrough) return previousFilter->getNextFrame(fn,image);
     // regular image, in fact we get the next image here
-    ADMImage *next= vidCache->getImage(nextFrame);
-    if(false==uploadImage(next,0,nextFrame)) 
-            {
-                vidCache->unlockAll();
-                return false;
-            }
+    VdpVideoSurface tmpSurface=VDP_INVALID_HANDLE;
+    ADMImage *next= vidCache->getImageAs(ADM_HW_VDPAU,nextFrame);
+    if(next->refType==ADM_HW_VDPAU)
+    {
+        
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)next->refDescriptor.refCookie;
+        tmpSurface=rndr->surface;
+        printf("image is already vdpau %d\n",(int)tmpSurface);
+    }else
+    {
+        printf("Uploading image to vdpau\n");
+        if(false==uploadImage(next,0,nextFrame)) 
+                {
+                    vidCache->unlockAll();
+                    return false;
+                }
+        tmpSurface=input[0];
+    }
     
-   
     // Call mixer...
     if(VDP_STATUS_OK!=admVdpau::mixerRender( 
                 mixer,
-                input[0],
-                surface, 
+                tmpSurface,
+                outputSurface, 
                 info.width,info.height))
 
     {
@@ -282,7 +301,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         return false;
     }
     // Now get our image back from surface...
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(surface,tempBuffer, info.width,info.height))
+    if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,tempBuffer, info.width,info.height))
     {
         ADM_warning("[Vdpau] Cannot copy back data from output surface\n");
         vidCache->unlockAll();
@@ -300,10 +319,10 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     // Invert U&V
     uint32_t ts;
     uint8_t  *td;
-
+#if 0
     ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
     td=destData[2];destData[2]=destData[1];destData[1]=td;
-
+#endif
     scaler->convertPlanes(  sourceStride,destStride,     
                             sourceData,destData);
     nextFrame++;

@@ -41,12 +41,13 @@ class VideoCache
 		int32_t 	        searchFrame( uint32_t frame);
 		int32_t 	        searchPtr( ADMImage *ptr);
         int                 searchFreeEntry(void);
-		
+		ADMImage            *getImageBase(uint32_t frame);
 	public:
 		VideoCache(uint32_t nb,ADM_coreVideoFilter *in);
 		~VideoCache(void);
 		
 		ADMImage *getImage(uint32_t frame);
+        ADMImage *getImageAs(ADM_HW_IMAGE type,uint32_t frame);
 		uint8_t unlockAll(void);
 		uint8_t unlock(ADMImage  *frame);
 		uint8_t flush(void);
