@@ -6,13 +6,14 @@
 
 */
 #include "ADM_default.h"
+#ifdef USE_VDPAU
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
 #include "ADM_vidMisc.h"
 #include "vdpauFilterDeint.h"
 #include "vdpauFilterDeint_desc.cpp"
-#ifdef USE_VDPAU
+
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
@@ -47,7 +48,7 @@ protected:
                     bool                 updateConf(void);
                     uint8_t             *tempBuffer;
                     vdpauFilterDeint     configuration;
-                    VdpOutputSurface     surface;
+                    VdpOutputSurface     outputSurface;
                     VdpVideoSurface      input[ADM_NB_SURFACES];
                     uint32_t             frameDesc[ADM_NB_SURFACES];
                     VdpVideoMixer        mixer;
@@ -131,7 +132,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
         return false;
     }   
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,
-                        info.width,info.height,&surface)) 
+                        info.width,info.height,&outputSurface)) 
     {
         ADM_error("Cannot create outputSurface0\n");
         return false;
@@ -167,9 +168,9 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
 {
     for(int i=0;i<ADM_NB_SURFACES;i++)
         if(input[i]!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(input[i]);
-    if(surface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(surface);
+    if(outputSurface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(outputSurface);
     if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
-    surface=VDP_INVALID_HANDLE;
+    outputSurface=VDP_INVALID_HANDLE;
     for(int i=0;i<ADM_NB_SURFACES;i++)
         input[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
@@ -189,7 +190,7 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
     for(int i=0;i<ADM_NB_SURFACES;i++)
         input[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
-    surface=VDP_INVALID_HANDLE;
+    outputSurface=VDP_INVALID_HANDLE;
     if(!setup || !ADM_paramLoad(setup,vdpauFilterDeint_param,&configuration))
     {
         // Default value
@@ -346,7 +347,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
     if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture(topField, 
                 mixer,
                 in,
-                surface, 
+                outputSurface, 
                 previousFilter->getInfo()->width,previousFilter->getInfo()->height))
 
     {
@@ -362,7 +363,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
 */
 bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 {
- if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(surface,
+    if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,
                                                             tempBuffer, 
                                                             info.width,info.height))
     {
@@ -478,7 +479,12 @@ endit:
    // printf("VDPAU OUT PTS= %"LLU"\n",image->Pts);
     return r;
 }
-#endif
+#else // USE_VDPAU
+static void dummy_fun(void)
+{
+    return ;
+}
+#endif // use VDPAU
 
 //****************
 // EOF

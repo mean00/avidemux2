@@ -7,6 +7,7 @@
 */
 
 #include "ADM_default.h"
+#ifdef USE_VDPAU
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/vdpau.h"
@@ -17,7 +18,7 @@ extern "C" {
 #include "DIA_factory.h"
 #include "vdpauFilter.h"
 #include "vdpauFilter_desc.cpp"
-#ifdef USE_VDPAU
+
 
 
 
@@ -330,6 +331,11 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     vidCache->unlockAll();
     return true;
 }
-#endif
+#else // USE_VDPAU
+static void dumy_func2(voi)
+{
+    return;
+}
+#endif 
 //****************
 // EOF
