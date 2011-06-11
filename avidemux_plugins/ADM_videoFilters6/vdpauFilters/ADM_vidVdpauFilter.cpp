@@ -272,6 +272,12 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     // regular image, in fact we get the next image here
     VdpVideoSurface tmpSurface=VDP_INVALID_HANDLE;
     ADMImage *next= vidCache->getImageAs(ADM_HW_VDPAU,nextFrame);
+    if(!next)
+    {
+        ADM_warning("vdpauResize : cannot get image\n");
+        return false;
+    }
+    image->Pts=next->Pts;
     if(next->refType==ADM_HW_VDPAU)
     {
         
@@ -329,6 +335,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     nextFrame++;
     currentIndex++;
     vidCache->unlockAll();
+    
     return true;
 }
 #else // USE_VDPAU
