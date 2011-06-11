@@ -73,6 +73,7 @@ swapUv::~swapUv()
 */
 bool         swapUv::getCoupledConf(CONFcouple **couples)
 {
+    *couples=NULL;
     return true;
 }
 /**
@@ -102,7 +103,7 @@ bool swapUv::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("swapUV : Cannot get frame\n");
         return false;
     }
-   
+    image->Pts=ref.Pts;
     return true;
 }
 
