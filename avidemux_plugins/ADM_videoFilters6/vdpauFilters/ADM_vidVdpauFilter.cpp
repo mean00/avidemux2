@@ -332,7 +332,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     return true;
 }
 #else // USE_VDPAU
-static void dumy_func2(voi)
+static void dumy_func2(void)
 {
     return;
 }
