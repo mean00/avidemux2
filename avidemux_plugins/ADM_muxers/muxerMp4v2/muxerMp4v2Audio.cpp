@@ -23,6 +23,7 @@
 #include "muxerMp4v2.h"
 #include "ADM_codecType.h"
 #include "ADM_imageFlags.h"
+#include "ADM_vidMisc.h"
 #if 1
 #define aprintf(...) {}
 #define bprintf(...) {} // ADM_info
@@ -98,7 +99,7 @@ bool muxerMp4v2::addAc3(int index, WAVHeader *header)
             ADM_error("Error adding audio track %i of type 0x%x\n",index,header->encoding);
             return false;
         }
-        aprintf("Add Track %d fq %d (AC3)\n",audioTrackIds[i],header->frequency);
+        aprintf("Add Track %d fq %d (AC3)\n",audioTrackIds[index],header->frequency);
         return true;
 }
 /**
@@ -204,6 +205,7 @@ bool muxerMp4v2::loadAndToggleAudioSlot(int index)
             blk->dts+=audioDelay;
         blk->present=true;
         pkt->nextWrite=!pkt->nextWrite;
+        aprintf("Read audio block, size=%d bytes, dts=%s\n",blk->sizeInBytes,ADM_us2plain(blk->dts));
         return true;
 }
 /**
@@ -268,6 +270,8 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
                                 // We have a hole, increase duration of current packet
                                 double holeDurationUs=currentBlock->dts-currentDts;
                                 ADM_warning("Hole detected in audio of %d ms, track %d\n",(int)(holeDurationUs/1000),audioIndex);
+                                ADM_warning("we got a timing of %s",ADM_us2plain(currentBlock->dts));
+                                ADM_warning("and expected %s\n",ADM_us2plain(currentDts));
                                 holeDurationUs*=fq;
                                 holeDurationUs/=1000*1000;
                                 ADM_warning("Increasing hole duration by %d samples\n",(int)holeDurationUs);

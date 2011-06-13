@@ -171,7 +171,7 @@ bool muxerMp4v2::initH264(void)
                 return false;
             }
             
-            // if we dont have extraData, it is annexB 100 % sire
+            // if we dont have extraData, it is annexB 100 % sure
             needToConvertFromAnnexB=true;
             if(extraLen)
                 if(extra[0]==1) needToConvertFromAnnexB=false;
