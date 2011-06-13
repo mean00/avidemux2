@@ -87,14 +87,19 @@ bool r;
         return false;
     }   
     // Special case : The very first frame FIXME
-    if(*frameTime<=1)
+    // Only applies if the first segment as a 0 ref time, i.e. beginning of video..
+    if(*frameTime<=1 && seg==0)
       {
           _VIDEOS *vid=_segments.getRefVideo(0);
-          uint64_t pts=vid->firstFramePts;
-          //
-          *frameTime+=pts;
-          ADM_warning("This video does not start at 0 but at %"LLU" ms, compensating\n",pts/1000);
-          _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime);
+          _SEGMENT *s=_segments.getSegment(seg);
+          if(!s->_refStartTimeUs)
+          {
+              uint64_t pts=vid->firstFramePts;
+              //
+              *frameTime+=pts;
+              ADM_warning("This video does not start at 0 but at %"LLU" ms, compensating\n",pts/1000);
+              _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime);
+           }
       }
     // 
 again:
