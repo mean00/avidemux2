@@ -77,9 +77,14 @@ bool x264Encoder::setup(void)
     if(!x264Settings.MaxBFrame)  encoderDelay=0;
     else    
     {
-        if(2>=x264Settings.MaxRefFrames) encoderDelay=f*2*2;
+        if(2>=x264Settings.MaxRefFrames) 
+        {
+            encoderDelay=f*2*2;
+        }
         else
+        {
                 encoderDelay=2*f*(x264Settings.MaxRefFrames-1);
+        }
     }
 #define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
 #define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; aprintf("[x264] "#x" = %.2f\n",param.x);}
