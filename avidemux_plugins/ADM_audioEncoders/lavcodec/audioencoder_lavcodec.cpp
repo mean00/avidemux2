@@ -193,6 +193,8 @@ bool AUDMEncoder_Lavcodec::initialize(void)
 bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
   uint32_t nbout;
+  int retries=16;
+again:
   int channels=wavheader.channels;
   *samples = _chunk/channels; //FIXME
   *len = 0;
@@ -250,6 +252,12 @@ bool	AUDMEncoder_Lavcodec::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
 
   tmphead+=_chunk;
 cnt:
+  if(!nbout && retries)
+  {
+    retries--;
+    ADM_info("Audio encoder (lav): no packet, retrying\n");
+    goto again;
+  }
   if (nbout < 0)
   {
     ADM_error("[Lavcodec] Error !!! : %"LD"\n", nbout);
