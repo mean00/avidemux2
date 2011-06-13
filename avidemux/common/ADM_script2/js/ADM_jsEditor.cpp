@@ -18,6 +18,7 @@
 #include <vector>
 #include "ADM_scriptEditor.h"
 #include "ADM_editor/ADM_edit.hxx"
+#include "ADM_vidMisc.h"
 extern ADM_Composer *video_body;
 void mixDump(uint8_t *ptr, uint32_t len);;
 /**
@@ -34,8 +35,8 @@ int jsPrintTiming(int framenumber )
         if(flags & AVI_BOTTOM_FIELD) field='B';
         if(flags & AVI_TOP_FIELD) field='T';
         if(pts!=ADM_NO_PTS && dts!=ADM_NO_PTS) delta=(int64_t)pts-(int64_t)dts;
-        jsLog("Frame %"LU" PIC:%c : Flags 0x%"LX" pts=%"LLD" dts=%"LLD" delta=%"LLD" ms\n",
-                framenumber,field,flags,pts,dts,delta/1000LL);
+        jsLog("Frame %"LU" PIC:%c : Flags 0x%"LX" pts=%"LLD" pts=%s dts=%"LLD" delta=%"LLD" ms\n",
+                framenumber,field,flags,pts,ADM_us2plain(pts),dts,delta/1000LL);
     }else
     {
         jsLog("Cannot get info for frame %"LU,framenumber);
