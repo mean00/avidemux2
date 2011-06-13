@@ -164,6 +164,7 @@ public:
                     bool        getCompressedPicture(uint64_t delay,ADMCompressedImage *img);     //COPYMODE                
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);             
+                    bool        checkCutsAreOnIntra(void);
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );

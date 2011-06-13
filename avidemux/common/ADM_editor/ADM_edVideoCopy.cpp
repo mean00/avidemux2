@@ -19,12 +19,58 @@
 #include <math.h>
 #include "ADM_default.h"
 #include "ADM_editor/ADM_edit.hxx"
-
+#include "ADM_vidMisc.h"
 #if defined(ADM_DEBUG) && 0
 #define aprintf printf
 #else
 #define aprintf(...) {}// printf
 #endif
+
+/**
+    \fn checkCutsAreOnIntra
+    \brief In copy mode, if the cuts are not on intra we will run into trouble :
+            * We include skipped ref frames: we will have DTS going back error
+            * We skip them, we have borked video at cut points due to missing ref framesz
+    \return true if everything ok
+*/
+bool ADM_Composer::checkCutsAreOnIntra(void)
+{
+    bool fail=false;
+    int nbSeg=_segments.getNbSegments();
+
+    ADMCompressedImage img;
+    uint8_t buffer[1920*1080*3];
+    img.data=buffer;
+    ADM_info("Checking cuts start on keyframe..\n");
+    for(int i=0;i<nbSeg;i++)
+    {
+        _SEGMENT *seg=_segments.getSegment(i);
+        _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+        vidHeader *demuxer=vid->_aviheader;
+
+        if(false==switchToSegment(i,true))
+        {
+            fail=true;
+            break;
+        }
+        if(false==demuxer->getFrame (vid->lastSentFrame,&img))
+        {
+            fail=true;
+            break;
+        }
+        if(img.flags & AVI_KEY_FRAME)
+        {
+            ADM_info("Segment %d starts on a keyframe\n",i);
+        }else   
+        {
+            ADM_warning("Segment %d does not start on a keyframe (%s)\n",i,ADM_us2plain(img.demuxerPts));
+            fail=true;
+             break;
+        }
+    }   
+
+    return fail;
+}
 
 /**
         \fn getCompressedPicture
@@ -60,6 +106,7 @@ againGet:
         ADM_info("Failed to get next frame for ref %"LU"\n",seg->_reference);
         goto nextSeg;
     }
+
     vid->lastSentFrame++;
     //
     if(img->flags & AVI_B_FRAME)
@@ -78,6 +125,19 @@ againGet:
             default: break;
         }
     }
+    // after a segment switch, we may have some frames from "the past"
+    // if the cut point is not a keyframe, drop them
+#if 1
+    if(_currentSegment && img->demuxerDts!=ADM_NO_PTS)
+    {
+        if(img->demuxerDts<seg->_refStartDts)
+        {
+            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+            ADM_info("vs %s\n",ADM_us2plain(seg->_refStartDts));
+            goto againGet;
+        }
+    }
+#endif
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
     // Guess DTS

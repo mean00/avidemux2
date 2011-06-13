@@ -241,6 +241,19 @@ bool admSaver::save(void)
     uint64_t startAudioTime=markerA; // Actual start time (for both audio & video actually)
     ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
     ADM_info("[A_Save] Saving..\n");
+    ADM_audioStream *astreams[1]={NULL};
+    if(!videoEncoderIndex) 
+    {
+        if(false==video_body-> checkCutsAreOnIntra())
+        {
+            if(!GUI_Question("The video is in copy mode but the cut points are not on keyframes.\n"
+                            "The video will be saved but there will corruption at cut point(s).\n"
+                             "Do you want to continue anyway ?"))
+            {
+                return false;
+            }
+        }
+    }
 
     if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
@@ -265,6 +278,8 @@ bool admSaver::save(void)
     {
         aviInfo info;
         video_body->getVideoInfo(&info);
+       
+
         uint8_t *extra;
         uint32_t extraLen;
         video_body->getExtraHeaderData(&extraLen,&extra);
@@ -341,7 +356,7 @@ bool admSaver::save(void)
         }
     }
     //
-    ADM_audioStream *astreams[1]={NULL};
+
     if (!audioProcessMode())
     {
         if(audio)
@@ -370,7 +385,9 @@ bool admSaver::save(void)
         ret=muxer->save();
         muxer->close();
     }
-    delete video;
+abort123:
+    if(video)
+        delete video;
     video=NULL;
     for(int i=0;i<nbAStream;i++)
     {
