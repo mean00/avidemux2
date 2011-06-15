@@ -623,6 +623,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 	QList<QUrl> urlList;
 	QString fileName;
 	QFileInfo info;
+    const char *cFileName;
 
 	if (event->mimeData()->hasUrls())
 	{
@@ -632,16 +633,24 @@ void MainWindow::dropEvent(QDropEvent *event)
 		{
 			fileName = urlList[fileIndex].toLocalFile();
 			info.setFile(fileName);
-#warning FIXME
-#if 0
+            cFileName=fileName.toUtf8().constData();
+            ADM_info("Drop event %s\n",cFileName);
 			if (info.isFile())
 			{
 				if (avifileinfo)
-					FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_appendAvi), 0, fileName.toUtf8().data(), actual_workbench_file);
+                {
+                    ADM_info("Appending..\n");
+                    A_appendAvi(cFileName);
+                }
 				else
-					FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_openAvi), 0, fileName.toUtf8().data(), actual_workbench_file);
-			}
-#endif
+                {
+                    ADM_info("Opening..\n");
+                    A_openAvi(cFileName);
+                }
+			}else
+            {
+                ADM_warning("Dropped item is not a file\n");
+            }
 		}
 	}
 
