@@ -39,7 +39,7 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
     int nbSeg=_segments.getNbSegments();
 
     ADMCompressedImage img;
-    uint8_t buffer[1920*1080*3];
+    uint8_t *buffer=new uint8_t[1920*1080*3];
     img.data=buffer;
     ADM_info("Checking cuts start on keyframe..\n");
     for(int i=0;i<nbSeg;i++)
@@ -55,21 +55,40 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
         }
         if(false==demuxer->getFrame (vid->lastSentFrame,&img))
         {
+            ADM_info("Cannot get 1st frame of segment %d\n",i);
             fail=true;
             break;
         }
-        if(img.flags & AVI_KEY_FRAME)
-        {
-            ADM_info("Segment %d starts on a keyframe\n",i);
-        }else   
+        if(!img.flags & AVI_KEY_FRAME)
         {
             ADM_warning("Segment %d does not start on a keyframe (%s)\n",i,ADM_us2plain(img.demuxerPts));
             fail=true;
-             break;
+            break;
         }
+        // After a seg switch we are at the keyframe before or equal to where we want to go
+        // if the dts do not match, it means we went back too much
+        // When re-encoding, it's not a problem, it is when copying.
+        ADM_info("seg:%d refDTS=%"LLU"\n",seg->_reference,seg->_refStartDts);
+        ADM_info("seg:%d imgDTS=%"LLU"\n",seg->_reference,img.demuxerDts);
+        if(!seg->_refStartDts && !seg->_reference)
+        {
+            ADM_info("Ignoring first seg (unreliable DTS)\n");
+            
+        }else
+        if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && 
+            img.demuxerDts!=seg->_refStartDts)
+        {
+            ADM_warning("Segment %d does not start on a known DTS (%s)\n",i,ADM_us2plain(img.demuxerPts));
+            ADM_warning("expected (%s)\n",ADM_us2plain(seg->_refStartDts));
+            fail=true;
+            break;
+        }
+        ADM_info("Segment %d ok\n",i);
     }   
-
-    return fail;
+    delete [] buffer;
+    buffer=NULL;
+    if(fail) return false;
+    return true;
 }
 
 /**
