@@ -633,7 +633,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 		{
 			fileName = urlList[fileIndex].toLocalFile();
 			info.setFile(fileName);
-            cFileName=fileName.toUtf8().constData();
+            cFileName=ADM_strdup(fileName.toUtf8().constData());
             ADM_info("Drop event %s\n",cFileName);
 			if (info.isFile())
 			{
@@ -651,6 +651,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             {
                 ADM_warning("Dropped item is not a file\n");
             }
+            ADM_dealloc(cFileName);
 		}
 	}
 
