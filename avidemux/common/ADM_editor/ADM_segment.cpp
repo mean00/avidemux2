@@ -272,9 +272,24 @@ bool         ADM_EditorSegment::updateStartTime(void)
     {
         _VIDEOS *vid=getRefVideo(segments[i]._reference);
         _SEGMENT *seg=getSegment(i);
+        vidHeader *demuxer=vid->_aviheader;
+    
 
         uint64_t pts,dts;
         pts=seg->_refStartTimeUs;
+        // Special case : If pts=0 it might mean beginning of seg i, but the PTS might be not 0
+        // in such a case the DTS is wrong
+        if(!pts)
+        {
+            uint64_t pts2,dts2;
+            demuxer->getPtsDts(0,&pts2,&dts2);
+            if(pts2!=ADM_NO_PTS) 
+            {
+                ADM_info("Using pts2=%s to get dts, as this video does not start at zero\n",ADM_us2plain(pts2));
+                pts=pts2;
+            }
+            
+        }
         dtsFromPts(seg->_reference,pts,&dts);
         seg->_refStartDts=dts;
     }
