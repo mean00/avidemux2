@@ -5,6 +5,8 @@
     
 
 */
+#include "ADM_cpp.h"
+#include <list>
 #include "ADM_default.h"
 #ifdef USE_VDPAU
 #include "ADM_coreVideoFilterInternal.h"
@@ -17,7 +19,7 @@
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
-#define ADM_NB_SURFACES 3
+#define ADM_NB_SURFACES 5
 
 #if 0
 #define aprintf printf
@@ -31,6 +33,36 @@ enum
     ADM_KEEP_BOTTOM=1,
     ADM_KEEP_BOTH=2
 };
+/**
+    \class VDPSlot
+*/
+class VDPSlot
+{
+public:
+                              VDPSlot() ;
+                             ~VDPSlot();
+            VdpVideoSurface   surface;
+            bool              isExternal;
+            uint64_t          pts;
+            uint32_t          frameNumber;
+            ADMImage          *image;
+};
+
+VDPSlot::VDPSlot()
+{
+    surface=VDP_INVALID_HANDLE;
+    image=NULL;
+}
+VDPSlot::~VDPSlot()
+{
+    if(image) delete image;
+    image=NULL;
+    if(surface!=VDP_INVALID_HANDLE)
+    {
+        // will be freed by the pool..
+    }
+    surface=VDP_INVALID_HANDLE;
+}
 
 /**
     \class vdpauVideoFilterDeint
@@ -38,6 +70,7 @@ enum
 class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
 {
 protected:
+                    VDPSlot              slots[3];
                     bool                 eof;
                     bool                 secondField;
                     uint64_t             nextPts;
@@ -49,12 +82,16 @@ protected:
                     uint8_t             *tempBuffer;
                     vdpauFilterDeint     configuration;
                     VdpOutputSurface     outputSurface;
-                    VdpVideoSurface      input[ADM_NB_SURFACES];
-                    uint32_t             frameDesc[ADM_NB_SURFACES];
+                    std::list <VdpVideoSurface> freeSurface;
+                    VdpVideoSurface      surfacePool[ADM_NB_SURFACES];
                     VdpVideoMixer        mixer;
-                    bool                 uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) ;
+protected:
+                    bool                 rotateSlots(void);
+                    bool                 clearSlots(void);
+                    bool                 uploadImage(ADMImage *next,const VdpVideoSurface surface) ;
+                    bool                 fillSlot(int slot,ADMImage *image);
                     bool                 getResult(ADMImage *image);
-                    bool                 sendField(bool topField,ADMImage *next);
+                    bool                 sendField(bool topField);
 
 public:
         virtual bool         goToTime(uint64_t usSeek); 
@@ -113,7 +150,7 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
 {
     secondField=false;
     eof=false;
-    for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
+    clearSlots();
     return ADM_coreVideoFilter::goToTime(usSeek);
 }
 
@@ -124,7 +161,6 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
 {
     scaler=NULL;
     secondField=false;
-    for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
     nextFrame=0;
     if(!admVdpau::isOperationnal())
     {
@@ -137,15 +173,23 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
         ADM_error("Cannot create outputSurface0\n");
         return false;
     }
+    for(int i=0;i<ADM_NB_SURFACES;i++) surfacePool[i]=VDP_INVALID_HANDLE;
     for(int i=0;i<ADM_NB_SURFACES;i++)
     {
         if(VDP_STATUS_OK!=admVdpau::surfaceCreate(   previousFilter->getInfo()->width,
-                                                    previousFilter->getInfo()->height,input+i)) 
+                                                    previousFilter->getInfo()->height,
+                                                    &(surfacePool[i]))) 
         {
             ADM_error("Cannot create input Surface %d\n",i);
             goto badInit;
         }
+        aprintf("Created surface %d\n",(int)surfacePool[i]);
     }
+    // allocate our (dummy) images
+    for(int i=0;i<3;i++)
+        slots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
+                                            previousFilter->getInfo()->height);
+                                            
     if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
                                             previousFilter->getInfo()->height,&mixer,true)) 
     {
@@ -154,6 +198,11 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     } 
     tempBuffer=new uint8_t[info.width*info.height*4];
     scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_BGR32A,ADM_COLOR_YV12);
+
+    freeSurface.clear();
+    for(int i=0;i<ADM_NB_SURFACES;i++)  
+            freeSurface.push_back(surfacePool[i]);
+
     ADM_info("VDPAU setup ok\n");
     return true;
 badInit:
@@ -167,17 +216,24 @@ badInit:
 bool vdpauVideoFilterDeint::cleanupVdpau(void)
 {
     for(int i=0;i<ADM_NB_SURFACES;i++)
-        if(input[i]!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(input[i]);
+        if(surfacePool[i]!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(surfacePool[i]);
     if(outputSurface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(outputSurface);
     if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
     outputSurface=VDP_INVALID_HANDLE;
     for(int i=0;i<ADM_NB_SURFACES;i++)
-        input[i]=VDP_INVALID_HANDLE;
+        surfacePool[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
     if(tempBuffer) delete [] tempBuffer;
     tempBuffer=NULL;
     if(scaler) delete scaler;
     scaler=NULL;
+    for(int i=0;i<3;i++)
+       if(slots[i].image)
+        {
+            delete slots[i].image;
+            slots[i].image=NULL;
+        }
+
     return true;
 }
 
@@ -188,7 +244,7 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
 {
     eof=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)
-        input[i]=VDP_INVALID_HANDLE;
+        surfacePool[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
     outputSurface=VDP_INVALID_HANDLE;
     if(!setup || !ADM_paramLoad(setup,vdpauFilterDeint_param,&configuration))
@@ -251,10 +307,6 @@ bool vdpauVideoFilterDeint::configure( void)
      }
      return 0;
      
-        cleanupVdpau();
-        passThrough=!setupVdpau();
-        return 1;
-     
 }
 /**
     \fn getCoupledConf
@@ -279,13 +331,17 @@ const char *vdpauVideoFilterDeint::getConfiguration(void)
     \fn uploadImage
     \brief upload an image to a vdpau surface
 */
-bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) 
+bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,VdpVideoSurface surface) 
 {
     if(!next) // empty image
     {
-        frameDesc[surfaceIndex%ADM_NB_SURFACES]=ADM_INVALID_FRAME_NUM;
         ADM_warning("VdpauDeint:No image to upload\n");
         return true;
+    }
+    if(surface==VDP_INVALID_HANDLE)
+    {
+        ADM_error("Surface provided is invalid\n");
+        return false;
     }
   // Blit our image to surface
     uint32_t pitches[3];
@@ -293,56 +349,110 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,uint32_t surfaceIndex,uin
     next->GetPitches(pitches);
     next->GetReadPlanes(planes);
 
-  
+    aprintf("Putting image in surface %d\n",(int)surface);
     // Put out stuff in input...
 #if VDP_DEBUG
     printf("Uploading image to surface %d\n",surfaceIndex%ADM_NB_SURFACES);
 #endif
     if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
-            input[surfaceIndex%ADM_NB_SURFACES],
+            surface,
             planes,pitches))
     {
         ADM_warning("[Vdpau] video surface : Cannot putbits\n");
         return false;
     }
-    frameDesc[surfaceIndex%ADM_NB_SURFACES]=frameNumber;
+    return true;
+}
+/**
+    \fn setSlot
+*/
+bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
+{
+    VdpVideoSurface tgt;
+    bool external=false;
+    if(true)
+    {   // Need to allocate a surface
+        ADM_assert(freeSurface.size());
+        tgt=freeSurface.front();
+        freeSurface.pop_front();  
+        aprintf("FillSlot : Popped %d\n",tgt);
+        //
+        if(false==uploadImage(image,tgt)) 
+        {
+            return false;
+        }
+        external=false;
+    }else
+    {   // use the provided surface
+
+    }
+    nextPts=image->Pts;
+    slots[slot].pts=image->Pts;
+    slots[slot].surface=tgt;
+    slots[slot].isExternal=external;
+    return true;
+}
+
+/**
+    \fn rotateSlots
+*/
+bool vdpauVideoFilterDeint::rotateSlots(void)
+{
+    VDPSlot *s=&(slots[0]);
+    ADMImage *img=slots[0].image;
+    if(s->surface!=VDP_INVALID_HANDLE)
+        if(!s->isExternal)
+        {
+            freeSurface.push_back(s->surface);
+            s->surface=VDP_INVALID_HANDLE;
+        }else
+        {
+            // Ref couting dec..
+        }
+    slots[0]=slots[1];
+    slots[1]=slots[2];
+    slots[2].surface=VDP_INVALID_HANDLE;
+    slots[2].image=img;
+    return true;
+}
+/**
+    \fn clearSlots
+*/
+bool vdpauVideoFilterDeint::clearSlots(void)
+{
+    for(int i=0;i<3;i++)
+    {
+           VDPSlot *s=&(slots[i]);  
+           if(s->surface!=VDP_INVALID_HANDLE)
+            {
+                if(s->isExternal)
+                {
+                    // TODO decrease refCount
+                }else
+                {
+                    freeSurface.push_back(s->surface);
+                }
+            }
+            s->surface=VDP_INVALID_HANDLE;
+    }
     return true;
 }
 /**
     \fn sendField
     \brief Process a field (top or bottom). If null the next param means there is no successor (next image)
 */
-bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
+bool vdpauVideoFilterDeint::sendField(bool topField)
 {
  // Call mixer...
     VdpVideoSurface in[3];
     bool r=true;
-        // PREVIOUS
-    if(!nextFrame) // First image, we dont have previous
+    // PREVIOUS
+    for(int i=0;i<3;i++)
     {
-             in[0]=VDP_INVALID_HANDLE;
-    }else
-    {
-             in[0]=input[(nextFrame+ADM_NB_SURFACES-1)%ADM_NB_SURFACES];
+        in[i]=slots[i].surface;
+        aprintf("Mixing %d %d\n",i,(int)in[i]);
     }
-        // CURRENT
-     in[1]=input[nextFrame%ADM_NB_SURFACES];
-        // NEXT
-    if(next)
-    {
-     in[2]=input[(nextFrame+1)%ADM_NB_SURFACES];
-    }
-    else
-    {
-      in[2]=VDP_INVALID_HANDLE;
-    }
-
     //
-#if VDP_DEBUG
-    printf("Current index=%d\n",(int)nextFrame);
-    for(int i=0;i<3;i++) printf("Calling with in[%d]=%d\n",i,in[i]);
-    for(int i=0;i<3;i++) printf("Desc[%d]=%d\n",i, frameDesc[i]);
-#endif
     // ---------- Top field ------------
     if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture(topField, 
                 mixer,
@@ -353,8 +463,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField,ADMImage *next)
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");
         r= false;
-    }
-    vidCache->unlockAll();
+    }    
     return r;
 }
 /**
@@ -417,36 +526,37 @@ bool r=true;
             aprintf("2ndField : Pts=%s\n",ADM_us2plain(image->Pts));
             return true;
         }
-    
+     // shift frames;... free slot[0]
+    rotateSlots();
+
     // our first frame, we need to preload one frame
     if(!nextFrame)
     {
-            ADMImage *prev= vidCache->getImage( 0);
-            // Upload top field
-            if(false==uploadImage(prev,nextFrame,0)) 
+            aprintf("This is our first image, filling slot 1\n");
+            ADMImage *prev= vidCache->getImage(0);
+            if(false==fillSlot(1,prev))
             {
-                vidCache->unlockAll();
-                return false;
+                    vidCache->unlockAll();
+                    return false;
             }
-            nextPts=prev->Pts;
+            
     }
     // regular image, in fact we get the next image here
-    
     ADMImage *next= vidCache->getImage(nextFrame+1);
     if(next)
     {
-        //printf("VDPAU DEINT : incoming PTS=%"LLU"\n",next->Pts);
-    }
-    if(false==uploadImage(next,nextFrame+1,nextFrame+1)) 
+            if(false==fillSlot(2,next))
             {
                 vidCache->unlockAll();
-                
                 FAIL
             }
-   if(!next) eof=true; // End of stream
-   
+    }
+    if(!next) eof=true; // End of stream
+
+    // now we have slot 0 : prev Image, slot 1=current image, slot 2=next image
+
     // Now get our image back from surface...
-    sendField(true,next); // always send top field
+    sendField(true); // always send top field
     if(configuration.deintMode==ADM_KEEP_TOP || configuration.deintMode==ADM_KEEP_BOTH)
     {
           if(false==getResult(image)) 
@@ -456,7 +566,7 @@ bool r=true;
           aprintf("TOP/BOTH : Pts=%s\n",ADM_us2plain(image->Pts));
     }
     // Send 2nd field
-    sendField(false,next); 
+    sendField(false); 
     if(configuration.deintMode==ADM_KEEP_BOTTOM)
     {
           if(false==getResult(image)) 
@@ -467,6 +577,7 @@ bool r=true;
     }
     // Top Field..
 endit:  
+    vidCache->unlockAll();
     if(configuration.deintMode==ADM_KEEP_BOTH) 
     {
         *fn=nextFrame*2;
