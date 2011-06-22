@@ -9,6 +9,11 @@
 #include <list>
 #include "ADM_default.h"
 #ifdef USE_VDPAU
+extern "C" {
+#include "libavcodec/avcodec.h"
+#include "libavcodec/vdpau.h"
+}
+
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
@@ -364,13 +369,14 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,VdpVideoSurface surface)
     return true;
 }
 /**
-    \fn setSlot
+    \fn fillSlot
+    \brief upload the image to the slot. 
 */
 bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
 {
     VdpVideoSurface tgt;
     bool external=false;
-    if(true)
+    if(image->refType!=ADM_HW_VDPAU)
     {   // Need to allocate a surface
         ADM_assert(freeSurface.size());
         tgt=freeSurface.front();
@@ -384,7 +390,15 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
         external=false;
     }else
     {   // use the provided surface
-
+        aprintf("Deint Image is already vdpau, slot %d \n",slot);
+        ADMImage *img=slots[slot].image;
+        img->duplicateFull(image); // increment ref count
+        // get surface
+        img->hwDownloadFromRef();
+        vdpau_render_state *render=(vdpau_render_state *)img->refDescriptor.refCookie;
+        ADM_assert(render->refCount);
+        tgt=render->surface;
+        external=true;
     }
     nextPts=image->Pts;
     slots[slot].pts=image->Pts;
@@ -408,6 +422,8 @@ bool vdpauVideoFilterDeint::rotateSlots(void)
         }else
         {
             // Ref couting dec..
+            s->image->hwDecRefCount();
+            s->surface=VDP_INVALID_HANDLE;
         }
     slots[0]=slots[1];
     slots[1]=slots[2];
@@ -427,7 +443,7 @@ bool vdpauVideoFilterDeint::clearSlots(void)
             {
                 if(s->isExternal)
                 {
-                    // TODO decrease refCount
+                    s->image->hwDecRefCount();
                 }else
                 {
                     freeSurface.push_back(s->surface);
@@ -533,7 +549,7 @@ bool r=true;
     if(!nextFrame)
     {
             aprintf("This is our first image, filling slot 1\n");
-            ADMImage *prev= vidCache->getImage(0);
+            ADMImage *prev= vidCache->getImageAs(ADM_HW_VDPAU,0);
             if(false==fillSlot(1,prev))
             {
                     vidCache->unlockAll();
@@ -542,7 +558,7 @@ bool r=true;
             
     }
     // regular image, in fact we get the next image here
-    ADMImage *next= vidCache->getImage(nextFrame+1);
+    ADMImage *next= vidCache->getImageAs(ADM_HW_VDPAU,nextFrame+1);
     if(next)
     {
             if(false==fillSlot(2,next))
