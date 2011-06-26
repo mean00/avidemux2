@@ -3,6 +3,14 @@
     \author mean (C) 2010
     This is slow as we copy back and forth data to/from the video cards
     
+    On a Q6600
+
+    FullHD: 
+            Readback ~ 5 ms, RGB 2 YUV ~ 20 ms : 100% CPU
+    720
+            Readback ~ 2 ms, RGB2YUV ~ 10 ms  : 50% CPU
+            
+
 
 */
 #include "ADM_cpp.h"
@@ -25,6 +33,9 @@ extern "C" {
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
 #define ADM_NB_SURFACES 5
+
+//#define DO_BENCHMARK
+#define NB_BENCH 100
 
 #if 0
 #define aprintf printf
@@ -469,6 +480,15 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
         aprintf("Mixing %d %d\n",i,(int)in[i]);
     }
     //
+
+#ifdef DO_BENCHMARK
+    ADMBenchmark bmark;
+    for(int i=0;i<NB_BENCH;i++)
+    {
+        bmark.start();
+#endif
+    
+       
     // ---------- Top field ------------
     if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture(topField, 
                 mixer,
@@ -479,7 +499,14 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");
         r= false;
-    }    
+    }   
+                     
+#ifdef DO_BENCHMARK
+        bmark.end();
+    }
+    ADM_warning("Mixer Benchmark\n");
+    bmark.printResult();
+#endif 
     return r;
 }
 /**
@@ -488,6 +515,14 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
 */
 bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 {
+
+#ifdef DO_BENCHMARK
+    ADMBenchmark bmark;
+    for(int i=0;i<NB_BENCH;i++)
+    {
+        bmark.start();
+#endif
+  
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,
                                                             tempBuffer, 
                                                             info.width,info.height))
@@ -495,7 +530,14 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
         ADM_warning("[Vdpau] Cannot copy back data from output surface\n");
         return false;
     }
-
+  
+                     
+#ifdef DO_BENCHMARK
+        bmark.end();
+    }
+    ADM_warning("Read surface Benchmark\n");
+    bmark.printResult();
+#endif 
     // Convert from VDP_RGBA_FORMAT_B8G8R8A8 to YV12
     uint32_t sourceStride[3]={info.width*4,0,0};
     uint8_t  *sourceData[3]={tempBuffer,NULL,NULL};
@@ -512,8 +554,23 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
     ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
     td=destData[1];destData[2]=destData[2];destData[1]=td;
 #endif
+
+
+#ifdef DO_BENCHMARK
+    ADMBenchmark bmark2;
+    for(int i=0;i<NB_BENCH;i++)
+    {
+        bmark2.start();
+#endif
     scaler->convertPlanes(  sourceStride,destStride,     
                             sourceData,destData);
+#ifdef DO_BENCHMARK
+        bmark2.end();
+    }
+    ADM_warning("RGB->YUV Benchmark\n");
+    bmark2.printResult();
+#endif
+
     return true;
 }
 /**
