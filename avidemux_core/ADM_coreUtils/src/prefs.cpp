@@ -17,6 +17,7 @@
 
 #include "ADM_cpp.h"
 #include "ADM_default.h"
+#include "stddef.h"
 #include "ADM_quota.h"
 #include "ADM_paramList.h" 
 #include "prefs.h"
