@@ -259,6 +259,7 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
 #define SETAL(x) case ADM_CS_##x: flags=SWS_##x;break;
 
     SETAL(BILINEAR);
+    SETAL(FAST_BILINEAR);
     SETAL(BICUBIC);
     SETAL(LANCZOS);
     SETAL(BICUBLIN);

@@ -24,7 +24,8 @@ typedef enum
     ADM_CS_BICUBLIN,
     ADM_CS_GAUSS,
     ADM_CS_SINC,
-    ADM_CS_SPLINE
+    ADM_CS_SPLINE,
+    ADM_CS_FAST_BILINEAR
 }ADMColorScaler_algo;
 /**
     \class ADMColorScaler
