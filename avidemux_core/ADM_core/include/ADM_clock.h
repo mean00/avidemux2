@@ -29,4 +29,21 @@ class Clock
 
 
 };
+/**
+    \class ADMBenchmark
+*/
+class ADMBenchmark
+{
+protected:
+        uint32_t bMin,bMax,bCumul;
+        uint32_t nbRound;
+        Clock    clk;
+public:
+        ADMBenchmark();
+        void start(void);
+        void end(void);
+        void printResult(void);
+    
+
+};
 #endif

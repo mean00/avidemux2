@@ -3,6 +3,7 @@ SET(ADM_core_SRCS
 	ADM_memory.cpp  ADM_misc.cpp  TLK_clock.cpp  ADM_crashdump.cpp  ADM_fileio.cpp ADM_dynamicLoading.cpp
         ADM_debug.cpp 
         ADM_queue.cpp
+        ADM_benchmark.cpp
 )
 
 ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS})
