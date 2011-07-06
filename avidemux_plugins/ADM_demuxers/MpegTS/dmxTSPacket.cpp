@@ -314,7 +314,7 @@ nextPack2:
 #if 1
     if(sectionLength+3>pkt.payloadSize) 
     {
-        printf("[MpegTs] sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
+        ADM_warning("[MpegTs] Multi Packet PSI ? sectionLength=%d, len=%d\n",sectionLength,pkt.payloadSize);
         goto nextPack2;
     }
 #endif
