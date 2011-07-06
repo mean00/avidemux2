@@ -66,7 +66,7 @@ class ADM_AudiocodecAmrNb : public     ADM_Audiocodec
    */
    
 ADM_AudiocodecAmrNb::ADM_AudiocodecAmrNb( uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraData)
-		:   ADM_Audiocodec(fourcc)
+		:   ADM_Audiocodec(fourcc,*info)
 {
       state=Decoder_Interface_init();
       _wavHeader = info;
