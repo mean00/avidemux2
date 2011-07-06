@@ -44,7 +44,7 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_videoEncoder/incl
 SET(ADM_EXE_SRCS 
 ../common/ADM_preview.cpp  
 ../common/ADM_previewNavigate.cpp  
-../common/gtk_gui.cpp  
+../common/gui_main.cpp  
 ../common/gui_autodrive.cpp  
 ../common/GUI_jobs.cpp  
 ../common/gui_navigate.cpp  
