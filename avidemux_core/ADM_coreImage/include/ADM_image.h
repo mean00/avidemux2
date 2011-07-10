@@ -207,7 +207,8 @@ public:
     virtual      uint8_t        *GetWritePtr(ADM_PLANE plane) {return GetReadPtr(plane);}
 };
 
-void drawString(ADMImage *dst, int x, int y, const char *s) ;
+#define drawString(img,x,y,text) img->printString(x,y,text)
+//void drawString(ADMImage *dst, int x, int y, const char *s) ;
 
 // Misc utilities
 bool BitBlit(uint8_t *dst, uint32_t pitchDest,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height);

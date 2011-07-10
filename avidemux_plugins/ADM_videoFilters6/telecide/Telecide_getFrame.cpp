@@ -38,6 +38,37 @@
     #define aprintf(...) {}
 #endif
 
+#define GETFRAME(g, fp) { \
+        int no=g; fp=NULL;\
+        if (no < 0) no = 0; \
+        aprintf("Cache query : %d - %d\n",no,__LINE__);\
+        fp=vidCache->getImage(no); }
+
+#define guide _param->guide
+#define order _param->order
+#define back  _param->back
+
+#define back_saved  _param->back_saved
+#define guide       _param->guide
+#define gthresh     _param->gthresh
+#define post        _param->post
+#define chroma      _param->chroma
+#define vthresh     _param->vthresh
+
+#define vthresh_saved _param->vthresh_saved
+#define hints      _param->hints
+#define show       _param->show
+#define debug      _param->debug
+
+#define bthresh      _param->bthresh
+#define dthresh      _param->dthresh
+#define blend        _param->blend
+
+#define nt      _param->nt
+#define y0      _param->y0
+#define y1      _param->y1
+
+
 /**
     \fn getNextFrame
 */
@@ -74,29 +105,7 @@ uint8_t *finalp;
 uint8_t *finalpU,*finalpV;
 
 teleCide *_param=&configuration;
-#define guide _param->guide
-#define order _param->order
-#define back  _param->back
 
-#define back_saved  _param->back_saved
-#define guide       _param->guide
-#define gthresh     _param->gthresh
-#define post        _param->post
-#define chroma      _param->chroma
-#define vthresh     _param->vthresh
-
-#define vthresh_saved _param->vthresh_saved
-#define hints      _param->hints
-#define show       _param->show
-#define debug      _param->debug
-
-#define bthresh      _param->bthresh
-#define dthresh      _param->dthresh
-#define blend        _param->blend
-
-#define nt      _param->nt
-#define y0      _param->y0
-#define y1      _param->y1
 
         
         bool lastFrame=false;
@@ -104,10 +113,12 @@ teleCide *_param=&configuration;
         // Get the current frame.
         uint32_t frame=nextFrame;
         if (frame < 0) frame = 0;
+        
         GETFRAME(frame, fc);
         if(!fc)
         {
             ADM_info("Telecide:Cannot get frame\n");
+            vidCache->unlockAll();
             return false;
         }
         nextFrame++;
@@ -146,11 +157,13 @@ teleCide *_param=&configuration;
                 fnrpV = (unsigned char *) fn->GetReadPtr(PLANAR_V);
         }
 
-        pitch = fc->GetPitch(PLANAR_Y);
-        pitchover2 = pitch >> 1;
-        pitchtimes4 = pitch << 2;
-        w = fc->GetRowSize(PLANAR_Y);
-        h = fc->GetHeight(PLANAR_Y);
+        int pitch = fc->GetPitch(PLANAR_Y);
+        int pitchover2 = pitch >> 1;
+        int pitchtimes4 = pitch << 2;
+        int w = info.width;
+        int h = info.height; 
+        int hover2 = h >>1;
+        int wover2 = w >>1;
 /*
         if (vi.IsYUY2() && ((w/2) & 1))
                 env->ThrowError("Telecide: width must be a multiple of 2; use Crop");
@@ -159,19 +172,19 @@ teleCide *_param=&configuration;
         if (h & 1)
                 env->ThrowError("Telecide: height must be a multiple of 2; use Crop");
 */
-        wover2 = w/2;
-        hover2 = h/2;
-        hplus1over2 = (h+1)/2;
-        hminus2= h - 2;
+
+        int hplus1over2 = (h+1)/2;
+        int hminus2= h - 2;
         //dst = env->NewVideoFrame(vi);
         dst=output_image;
-        dpitch = dst->GetPitch(PLANAR_Y);
+        int dpitch = dst->GetPitch(PLANAR_Y);
 
         // Ensure that the metrics for the frames
         // after the current frame are in the cache. They will be used for
         // pattern guidance.
         if (guide != GUIDE_NONE)
         {
+                aprintf("Loop starting at %d +1, cycle=%d\n",frame,cycle);
                 for (y = frame + 1; y <= frame + cycle + 1; y++)
                 {
                         if (lastFrame==true ) break;
@@ -191,7 +204,7 @@ teleCide *_param=&configuration;
                                         prpU = (unsigned char *) lp->GetReadPtr(PLANAR_U);
                                         prpV = (unsigned char *) lp->GetReadPtr(PLANAR_V);
                                 }
-                                CalculateMetrics(y, crp, crpU, crpV, prp, prpU, prpV);
+                                CalculateMetrics(y, lc,lp); //crp, crpU, crpV, prp, prpU, prpV);
                         }
                 }
         }
@@ -204,65 +217,15 @@ teleCide *_param=&configuration;
         inpattern = false;
         vthresh = vthresh_saved;
         back = back_saved;
-#if 0
-        overrides_p = overrides;
-        override = false;
-        if (overrides_p != NULL)
-        {
-                while (*overrides_p < 0xffffffff)
-                {
-                        // If the frame is in range...
-                        if (((unsigned int) frame >= *overrides_p) && ((unsigned int) frame <= *(overrides_p+1)))
-                        {
-                                // and it's a single specifier. 
-                                if (*(overrides_p+3) == 'p' || *(overrides_p+3) == 'c' || *(overrides_p+3) == 'n')
-                                {
-                                        // Get the match specifier and stop parsing.
-                                        switch(*(overrides_p+3))
-                                        {
-                                        case 'p': chosen = P; lowest = cache[frame%CACHE_SIZE].metrics[P]; found = true; break;
-                                        case 'c': chosen = C; lowest = cache[frame%CACHE_SIZE].metrics[C]; found = true; break;
-                                        case 'n': chosen = N; lowest = cache[(frame+1)%CACHE_SIZE].metrics[P]; found = true; break;
-                                        }
-                                }
-                                else if (*(overrides_p+3) == 'b')
-                                {
-                                        back = *(overrides_p+2);
-                                }
-                                else if (*(overrides_p+3) == 'm')
-                                {
-                                        // It's a multiple match specifier.
-                                        found = true;
-                                        // Get the pointer to the specifier string.
-                                        unsigned int *x = (unsigned int *) *(overrides_p+2);
-                                        // Get the index into the specification string.
-                                        // Remember, the count is first followed by the specifiers.
-                                        int ndx = ((frame - *overrides_p) % *x);
-                                        // Point to the specifier string.
-                                        x++;
-                                        // Load the specifier for this frame and stop parsing.
-                                        switch(x[ndx])
-                                        {
-                                        case 'p': chosen = P; lowest = cache[frame%CACHE_SIZE].metrics[P]; break;
-                                        case 'c': chosen = C; lowest = cache[frame%CACHE_SIZE].metrics[C]; break;
-                                        case 'n': chosen = N; lowest = cache[(frame+1)%CACHE_SIZE].metrics[P]; break;
-                                        }
-                                }
-                        }
-                        // Next override line.
-                        overrides_p += 4;
-                }
-        }
-#endif
         // Get the metrics for the current-previous (p), current-current (c), and current-next (n) match candidates.
         if (CacheQuery(frame, &p, &pblock, &c, &cblock) == false)
         {
-                CalculateMetrics(frame, fcrp, fcrpU, fcrpV, fprp, fprpU, fprpV);
+                CalculateMetrics(frame, fc, fp); //fcrp, fcrpU, fcrpV, fprp, fprpU, fprpV);
                 CacheQuery(frame, &p, &pblock, &c, &cblock);
         }
         if (CacheQuery(nframe, &np, &npblock, &nc, &ncblock) == false)
         {
-                CalculateMetrics(nframe, fnrp, fnrpU, fnrpV, fcrp, fcrpU, fcrpV);
+                CalculateMetrics(nframe, fn,fc); //fnrp, fnrpU, fnrpV, fcrp, fcrpU, fcrpV);
                 CacheQuery(nframe, &np, &npblock, &nc, &ncblock);
         }
 
@@ -375,25 +338,6 @@ teleCide *_param=&configuration;
         }
 
         // Check for overrides of vthresh.
-#if 0
-        overrides_p = overrides;
-        if (overrides_p != NULL)
-        {
-                while (*overrides_p < 0xffffffff)
-                {
-                        // If the frame is in range...
-                        if (((unsigned int) frame >= *overrides_p) && ((unsigned int) frame <= *(overrides_p+1)))
-                        {
-                                if (*(overrides_p+3) == 'v')
-                                {
-                                        vthresh = *(overrides_p+2);
-                                }
-                        }
-                        // Next override line.
-                        overrides_p += 4;
-                }
-        }
-#endif
         // Check the match for progressive versus interlaced.
         if (post != POST_NONE)
         {
@@ -506,30 +450,6 @@ teleCide *_param=&configuration;
         if (guide != GUIDE_NONE) PutChosen(frame, chosen);
 
         /* Check for manual overrides of the deinterlacing. */
-#if 0
-        overrides_p = overrides;
-        force = 0;
-        if (overrides_p != NULL)
-        {
-                while (*overrides_p < 0xffffffff)
-                {
-                        // Is the frame in range...
-                        if (((unsigned int) frame >= *overrides_p) && ((unsigned int) frame <= *(overrides_p+1)) &&
-                                // and is it a single specifier...
-                                (*(overrides_p+2) == 0) &&
-                                // and is it a deinterlacing specifier?
-                                (*(overrides_p+3) == '+' || *(overrides_p+3) == '-'))
-                        {
-                                // Yes, load the specifier and stop parsing.
-                                overrides_p += 3;
-                                force = *overrides_p;
-                                break;
-                        }
-                        // Next specification record.
-                        overrides_p += 4;
-                }
-        }
-#endif
         // Do postprocessing if enabled and required for this frame.
         if (post == POST_NONE || post == POST_METRICS)
         {

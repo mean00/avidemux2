@@ -64,23 +64,9 @@ Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_core
 		int count;
 		char *d, *dsaved;
 		unsigned int *p, *x;
-		_lastFrame=0xfffffff0;
-        teleCide *_param=&configuration;
-		
-		vidCache=new VideoCache(12,in);
-#if 0
-		pitch = _info.width;
-		dpitch = _info.width;
-		pitchover2 = pitch >> 1;
-		pitchtimes4 = pitch << 2;
+        teleCide *_param=&configuration;		
+		vidCache=new VideoCache(16,in);
 
-		w = _info.width;
-		h = _info.height;
-		wover2 = w/2;
-		hover2 = h/2;
-		hplus1over2 = (h+1)/2;
-		hminus2= h - 2;
-#endif
 		if(!couples || !ADM_paramLoad(couples,teleCide_param,&configuration))
         {
                  
@@ -110,11 +96,7 @@ Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_core
 
 		// Set up pattern guidance.
 		cache = (struct CACHE_ENTRY *) ADM_alloc(CACHE_SIZE * sizeof(struct CACHE_ENTRY));
-		for (i = 0; i < CACHE_SIZE; i++)
-		{
-			cache[i].frame = 0xffffffff;
-			cache[i].chosen = 0xff;
-		}
+		CachePurge();
 
 		if (_param->guide == GUIDE_32)
 		{
@@ -177,8 +159,15 @@ bool         Telecide::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, teleCide_param,&configuration);
 }
+/**
+    \fn goToTime
+    \brief Need to reset internals in case of seek
+*/
 bool                Telecide::goToTime(uint64_t usSeek)
 {
-    return ADM_coreVideoFilter::goToTime(usSeek);
+    bool r=ADM_coreVideoFilter::goToTime(usSeek);
+    vidCache->flush();
+    CachePurge();
+    return r;
 }
 // EOF

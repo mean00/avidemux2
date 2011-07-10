@@ -77,9 +77,6 @@ struct PREDICTION
 	unsigned int predicted_metric;
 };
 
-#define GETFRAME(g, fp) { int GETFRAMEf; uint32_t len,flags;GETFRAMEf = (g); fp=NULL;\
-    if (GETFRAMEf < 0) GETFRAMEf = 0; 	 fp=vidCache->getImage(GETFRAMEf); }
-
 
 
 /**
@@ -92,11 +89,6 @@ protected:
         teleCide           configuration;
 protected:
         bool tff;	
-        uint32_t _lastFrame;	
-#if 1
-        int pitch, dpitch, pitchover2, pitchtimes4;
-        int w, h, wover2, hover2, hplus1over2, hminus2;
-#endif
         int xblocks, yblocks;
     #ifdef WINDOWED_MATCH
         unsigned int *matchc, *matchp, highest_matchc, highest_matchp;
@@ -127,7 +119,6 @@ protected:
         // For output message formatting.
         char buf[255];
         
-        VideoCache	*vidCache;
 public:
                             Telecide(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~Telecide();
@@ -138,16 +129,14 @@ public:
         virtual bool         configure(void) ;           /// Start graphical user interface
 
 protected:
-	
-	void CalculateMetrics(int n, unsigned char *crp, unsigned char *crpU, unsigned char *crpV, 
-				unsigned char *prp, unsigned char *prpU, unsigned char *prpV);
+	void CalculateMetrics(int frame, ADMImage *fcurrent, ADMImage *fprevious);
 	void Show(ADMImage *dst, int frame);
 	void Debug(int frame);
 
 
 	void PutChosen(int frame, unsigned int chosen);
 	
-
+    bool CachePurge(void);
 	void CacheInsert(int frame, unsigned int p, unsigned int pblock,
 				unsigned int c, unsigned int cblock);
 	

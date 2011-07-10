@@ -69,6 +69,17 @@ void Telecide::CacheInsert(int frame, unsigned int p, unsigned int pblock,
         cache[f].chosen = 0xff;
 }
 /**
+    \fn CachePurge
+*/
+bool Telecide::CachePurge(void)
+{
+        for (int i = 0; i < CACHE_SIZE; i++)
+		{
+			cache[i].frame = 0xffffffff;
+			cache[i].chosen = 0xff;
+		}
+}
+/**
     \fn CacheQuery
 */
 bool Telecide::CacheQuery(int frame, unsigned int *p, unsigned int *pblock,
@@ -465,12 +476,13 @@ struct PREDICTION *Telecide::PredictSoftYUY2(int frame)
 #define chroma  configuration.chroma
 #define post    configuration.post
 
+#define GetPlane GetReadPtr
 
-void Telecide::CalculateMetrics(int frame, 
-                                unsigned char *fcrp,  unsigned char *fcrpU, 
-                                unsigned char *fcrpV, unsigned char *fprp, 
-                                unsigned char *fprpU, unsigned char *fprpV)
+void Telecide::CalculateMetrics(int frame, ADMImage *fcurrent, ADMImage *fprevious)
 {
+//int frame, unsigned char *fcrp, unsigned char *fcrpU, unsigned char *fcrpV,
+//									unsigned char *fprp, unsigned char *fprpU, unsigned char *fprpV,
+
         int x, y, p, c, tmp1, tmp2, skip;
         bool vc;
         unsigned char *currbot0, *currbot2, *prevbot0, *prevbot2;
@@ -494,16 +506,44 @@ void Telecide::CalculateMetrics(int frame,
         }
 
         /* Find the best field match. Subsample the frames for speed. */
-        currbot0  = fcrp + pitch;
-        currbot2  = fcrp + 3 * pitch;
+        uint32_t cpitch=fcurrent->GetPitch(PLANAR_Y);        
+        uint32_t ppitch=fprevious->GetPitch(PLANAR_Y);
+        ADM_assert(cpitch==ppitch)
+
+        
+        uint32_t cpitchu=fcurrent->GetPitch(PLANAR_U);
+        uint32_t cpitchv=fcurrent->GetPitch(PLANAR_V);
+
+        ADM_assert(cpitchu==fprevious->GetPitch(PLANAR_U));
+        ADM_assert(cpitchv==fprevious->GetPitch(PLANAR_V));
+        
+        ADM_assert(cpitchu==cpitchv);
+            
+        uint32_t cpitchtimes4=cpitch<<2;
+        
+        
+        uint8_t  *fcrp=fcurrent->GetPlane(PLANAR_Y);
+        uint8_t  *fprp=fprevious->GetPlane(PLANAR_Y);
+
+        uint8_t *fcrpU=fcurrent->GetPlane(PLANAR_U);
+        uint8_t *fcrpV=fcurrent->GetPlane(PLANAR_V);
+
+        uint8_t *fprpU=fprevious->GetPlane(PLANAR_U);
+        uint8_t *fprpV=fprevious->GetPlane(PLANAR_V);
+
+        uint32_t w=info.width;
+        uint32_t h=info.height;
+
+        currbot0  = fcrp + cpitch;
+        currbot2  = fcrp + 3 * cpitch;
         currtop0 = fcrp;
-        currtop2 = fcrp + 2 * pitch;
-        currtop4 = fcrp + 4 * pitch;
-        prevbot0  = fprp + pitch;
-        prevbot2  = fprp + 3 * pitch;
+        currtop2 = fcrp + 2 * cpitch;
+        currtop4 = fcrp + 4 * cpitch;
+        prevbot0  = fprp + ppitch;
+        prevbot2  = fprp + 3 * ppitch;
         prevtop0 = fprp;
-        prevtop2 = fprp + 2 * pitch;
-        prevtop4 = fprp + 4 * pitch;
+        prevtop2 = fprp + 2 * ppitch;
+        prevtop4 = fprp + 4 * ppitch;
         if (tff == true)
         {
                 a0 = prevbot0;
@@ -583,16 +623,16 @@ void Telecide::CalculateMetrics(int frame,
                                 if (!(x&3)) x += 4;
                         }
                 }
-                currbot0 += pitchtimes4;
-                currbot2 += pitchtimes4;
-                currtop0 += pitchtimes4;
-                currtop2 += pitchtimes4;
-                currtop4 += pitchtimes4;
-                a0               += pitchtimes4;
-                a2               += pitchtimes4;
-                b0               += pitchtimes4;
-                b2               += pitchtimes4;
-                b4               += pitchtimes4;
+                currbot0 += cpitchtimes4;
+                currbot2 += cpitchtimes4;
+                currtop0 += cpitchtimes4;
+                currtop2 += cpitchtimes4;
+                currtop4 += cpitchtimes4;
+                a0               += cpitchtimes4;
+                a2               += cpitchtimes4;
+                b0               += cpitchtimes4;
+                b2               += cpitchtimes4;
+                b4               += cpitchtimes4;
         }
 
        // if (vi.IsYV12() && chroma == true)
@@ -605,29 +645,29 @@ void Telecide::CalculateMetrics(int frame,
                         // Do the same for the U plane.
                         if (z == 0)
                         {
-                                currbot0  = fcrpU + pitchover2;
-                                currbot2  = fcrpU + 3 * pitchover2;
+                                currbot0  = fcrpU + cpitchu;
+                                currbot2  = fcrpU + 3 * cpitchu;
                                 currtop0 = fcrpU;
-                                currtop2 = fcrpU + 2 * pitchover2;
-                                currtop4 = fcrpU + 4 * pitchover2;
-                                prevbot0  = fprpU + pitchover2;
-                                prevbot2  = fprpU + 3 * pitchover2;
+                                currtop2 = fcrpU + 2 * cpitchu;
+                                currtop4 = fcrpU + 4 * cpitchu;
+                                prevbot0  = fprpU + cpitchu;
+                                prevbot2  = fprpU + 3 * cpitchu;
                                 prevtop0 = fprpU;
-                                prevtop2 = fprpU + 2 * pitchover2;
-                                prevtop4 = fprpU + 4 * pitchover2;
+                                prevtop2 = fprpU + 2 * cpitchu;
+                                prevtop4 = fprpU + 4 * cpitchu;
                         }
                         else
                         {
-                                currbot0  = fcrpV + pitchover2;
-                                currbot2  = fcrpV + 3 * pitchover2;
+                                currbot0  = fcrpV + cpitchv;
+                                currbot2  = fcrpV + 3 * cpitchv;
                                 currtop0 = fcrpV;
-                                currtop2 = fcrpV + 2 * pitchover2;
-                                currtop4 = fcrpV + 4 * pitchover2;
-                                prevbot0  = fprpV + pitchover2;
-                                prevbot2  = fprpV + 3 * pitchover2;
+                                currtop2 = fcrpV + 2 * cpitchv;
+                                currtop4 = fcrpV + 4 * cpitchv;
+                                prevbot0  = fprpV + cpitchv;
+                                prevbot2  = fprpV + 3 * cpitchv;
                                 prevtop0 = fprpV;
-                                prevtop2 = fprpV + 2 * pitchover2;
-                                prevtop4 = fprpV + 4 * pitchover2;
+                                prevtop2 = fprpV + 2 * cpitchv;
+                                prevtop4 = fprpV + 4 * cpitchv;
                         }
                         if (tff == true)
                         {
@@ -646,12 +686,12 @@ void Telecide::CalculateMetrics(int frame,
                                 b4 = prevtop4;
                         }
 
-                        for (y = 0, index = 0; y < hover2 - 4; y+=4)
+                        for (y = 0, index = 0; y < h/2 - 4; y+=4)
                         {
                                 /* Exclusion band. Good for ignoring subtitles. */
                                 if (y0 == y1 || y < y0/2 || y > y1/2)
                                 {
-                                        for (x = 0; x < wover2;)
+                                        for (x = 0; x < w/2;)
                                         {
                                                 if (1) //vi.IsYV12())
                                                         index = (y/BLKSIZE)*xblocks + x/BLKSIZE;
@@ -702,16 +742,16 @@ void Telecide::CalculateMetrics(int frame,
                                                 if (!(x&3)) x += 4;
                                         }
                                 }
-                                currbot0 += 4*pitchover2;
-                                currbot2 += 4*pitchover2;
-                                currtop0 += 4*pitchover2;
-                                currtop2 += 4*pitchover2;
-                                currtop4 += 4*pitchover2;
-                                a0               += 4*pitchover2;
-                                a2               += 4*pitchover2;
-                                b0               += 4*pitchover2;
-                                b2               += 4*pitchover2;
-                                b4               += 4*pitchover2;
+                                currbot0 += 4*cpitchv;
+                                currbot2 += 4*cpitchv;
+                                currtop0 += 4*cpitchv;
+                                currtop2 += 4*cpitchv;
+                                currtop4 += 4*cpitchv;
+                                a0               += 4*cpitchv;
+                                a2               += 4*cpitchv;
+                                b0               += 4*cpitchv;
+                                b2               += 4*cpitchv;
+                                b4               += 4*cpitchv;
                         }
                 }
         }
