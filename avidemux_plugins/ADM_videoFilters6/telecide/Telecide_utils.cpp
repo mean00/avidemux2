@@ -1,10 +1,5 @@
 
 /***************************************************************************
-                          ADM_vidDecTelecide  -  description
-                             -------------------
-    
-    email                : fixounet@free.fr
-
     Port of Donal Graft Telecide which is (c) Donald Graft
     http://www.neuron2.net
     http://puschpull.org/avisynth/decomb_reference_manual.html
@@ -822,4 +817,123 @@ if (frame == 44 && matchc[y * xblocks + x] > 2500)
         CacheInsert(frame, p, highest_sump, c, highest_sumc);
 #endif
 }
+/**
+    \fn blendPlane
+    \brief We do it inplace
+*/
+bool Telecide::blendPlane(ADMImage *final,ADMImage *src, ADM_PLANE plane)
+{
+uint8_t *finalp=final->GetWritePtr(plane);
+uint8_t *dstp=src->GetReadPtr(plane);
+
+
+uint32_t fpitch=final->GetPitch(plane);
+uint32_t dpitch=src->GetPitch(plane);
+
+uint32_t h=final->GetHeight(plane);
+uint32_t w=final->GetWidth(plane);
+
+uint8_t *dstpn,*dstn,*dstpp;
+
+uint8_t CLAMP=235;
+
+    float dthresh=configuration.dthresh;
+    int v1,v2;
+
+    if(plane!=0) CLAMP=128;
+
+// Do first and last lines.
+
+    dstpn = dstp + dpitch;
+    for (x = 0; x < w; x++)
+    {
+            finalp[x] = (((int)dstp[x] + (int)dstpn[x]) >> 1);
+    }
+    finalp = final->GetWritePtr(plane) + (h-1)*fpitch;
+    dstp = src->GetWritePtr(plane) + (h-1)*dpitch;
+    
+    dstpp = dstp - dpitch;
+    for (x = 0; x < w; x++)
+    {
+            finalp[x] = (((int)dstp[x] + (int)dstpp[x]) >> 1);
+    }
+    // Now do the rest.
+    dstp = src->GetWritePtr(plane) + dpitch;
+    dstpp = dstp - dpitch;
+    dstpn = dstp + dpitch;
+    finalp = final->GetWritePtr(plane) + fpitch;
+    for (y = 1; y < h - 1; y++)
+    {
+            for (x = 0; x < w; x++)
+            {
+                    v1 = (int)(dstp[x] - dthresh);
+                    if (v1 < 0) v1 = 0; 
+                    v2 = (int) (dstp[x] + dthresh);
+                    if (v2 > 235) v2 = 235; 
+                    if ((v1 > dstpp[x] && v1 > dstpn[x]) || (v2 < dstpp[x] && v2 < dstpn[x]))
+                    {
+                            if (post == POST_FULL_MAP || post == POST_FULL_NOMATCH_MAP)
+                            {
+                                    finalp[x] = CLAMP;
+                            }
+                            else
+                                    finalp[x] = ((int)dstpp[x] + (int)dstpn[x] + (int)dstp[x] + (int)dstp[x]) >> 2;
+                    }
+                    else finalp[x] = dstp[x];
+            }
+            finalp += fpitch;
+            dstp += dpitch;
+            dstpp += dpitch;
+            dstpn += dpitch;
+    }
+    return true;
+}
+/**
+    \fn doInterpolate
+*/
+bool Telecide::doInterpolate(ADMImage *dst, ADM_PLANE plane)
+{
+
+    // Interpolate mode.
+    // Luma plane.
+    uint32_t dpitch=dst->GetPitch(plane);
+    uint8_t *dstp = dst->GetWritePtr(plane) + dpitch;
+    uint32_t w=dst->GetWidth(plane);
+    uint32_t h=dst->GetHeight(plane);
+
+    uint8_t *dstpp = dstp - dpitch;
+    uint8_t *dstpn = dstp + dpitch;
+
+    uint8_t CLAMP=235;
+    int v1,v2;
+    if(plane!=0) CLAMP=128;
+
+    float dthresh=configuration.dthresh;
+
+    for (y = 1; y < h - 1; y+=2)
+    {
+            for (x = 0; x < w; x++)
+            {
+                    v1 = (int) (dstp[x] - dthresh);
+                    if (v1 < 0) v1 = 0; 
+                    v2 = (int) dstp[x] + dthresh;
+                    if (v2 > 235) v2 = 235; 
+                    if ((v1 > dstpp[x] && v1 > dstpn[x]) || (v2 < dstpp[x] && v2 < dstpn[x]))
+                    {
+                            if (post == POST_FULL_MAP || post == POST_FULL_NOMATCH_MAP)
+                            {
+                                    dstp[x] = CLAMP;
+                            }
+                            else
+                                    dstp[x] = (dstpp[x] + dstpn[x]) >> 1;
+                    }
+            }
+            dstp += 2*dpitch;
+            dstpp += 2*dpitch;
+            dstpn += 2*dpitch;
+    }
+
+    return true;
+}
+
 // EOF

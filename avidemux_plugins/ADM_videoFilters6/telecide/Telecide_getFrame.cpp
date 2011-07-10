@@ -69,7 +69,7 @@
 #define y1      _param->y1
 
 /**
-
+    \fn copyField
 */
 static bool copyField(ADMImage *target, ADMImage *source, bool top)
 {
@@ -407,215 +407,21 @@ teleCide *_param=&configuration;
 
                 if (blend == true)
                 {
-                        // Blend mode.
-                        final = output_image; //env->NewVideoFrame(vi);
-                        // Do first and last lines.
-                        finalp = final->GetWritePtr(PLANAR_Y);
-                        dstp = dst->GetWritePtr(PLANAR_Y);
-                        dstpn = dstp + dpitch;
-                        for (x = 0; x < w; x++)
-                        {
-                                finalp[x] = (((int)dstp[x] + (int)dstpn[x]) >> 1);
-                        }
-                        finalp = final->GetWritePtr(PLANAR_Y) + (h-1)*dpitch;
-                        dstp = dst->GetWritePtr(PLANAR_Y) + (h-1)*dpitch;
-                        dstpp = dstp - dpitch;
-                        for (x = 0; x < w; x++)
-                        {
-                                finalp[x] = (((int)dstp[x] + (int)dstpp[x]) >> 1);
-                        }
-                        // Now do the rest.
-                        dstp = dst->GetWritePtr(PLANAR_Y) + dpitch;
-                        dstpp = dstp - dpitch;
-                        dstpn = dstp + dpitch;
-                        finalp = final->GetWritePtr(PLANAR_Y) + dpitch;
-                        for (y = 1; y < h - 1; y++)
-                        {
-                                for (x = 0; x < w; x++)
-                                {
-                                        v1 = (int)(dstp[x] - dthresh);
-                                        if (v1 < 0) v1 = 0; 
-                                        v2 = (int) (dstp[x] + dthresh);
-                                        if (v2 > 235) v2 = 235; 
-                                        if ((v1 > dstpp[x] && v1 > dstpn[x]) || (v2 < dstpp[x] && v2 < dstpn[x]))
-                                        {
-                                                if (post == POST_FULL_MAP || post == POST_FULL_NOMATCH_MAP)
-                                                {
-                                                        if (0) //(vi.IsYUY2())
-                                                        {
-                                                                if (x & 1) finalp[x] = 128;
-                                                                else finalp[x] = 235;
-                                                        }
-                                                        else
-                                                        {
-                                                                finalp[x] = 235;
-                                                        }
-                                                }
-                                                else
-                                                        finalp[x] = ((int)dstpp[x] + (int)dstpn[x] + (int)dstp[x] + (int)dstp[x]) >> 2;
-                                        }
-                                        else finalp[x] = dstp[x];
-                                }
-                                finalp += dpitch;
-                                dstp += dpitch;
-                                dstpp += dpitch;
-                                dstpn += dpitch;
-                        }
-
-                      //  if (vi.IsYV12())
-                        {
-                                // Chroma planes.
-                                for (z = 0; z < 2; z++)
-                                {
-                                        if (z == 0)
-                                        {
-                                                // Do first and last lines.
-                                                finalp = final->GetWritePtr(PLANAR_U);
-                                                dstp = dst->GetWritePtr(PLANAR_U);
-                                                dstpn = dstp + dpitch/2;
-                                                for (x = 0; x < wover2; x++)
-                                                {
-                                                        finalp[x] = (((int)dstp[x] + (int)dstpn[x]) >> 1);
-                                                }
-                                                finalp = final->GetWritePtr(PLANAR_U) + (hover2-1)*dpitch/2;
-                                                dstp = dst->GetWritePtr(PLANAR_U) + (hover2-1)*dpitch/2;
-                                                dstpp = dstp - dpitch/2;
-                                                for (x = 0; x < wover2; x++)
-                                                {
-                                                        finalp[x] = (((int)dstp[x] + (int)dstpp[x]) >> 1);
-                                                }
-                                                // Now do the rest.
-                                                finalp = final->GetWritePtr(PLANAR_U) + dpitch/2;
-                                                dstp = dst->GetWritePtr(PLANAR_U) + dpitch/2;
-                                        }
-                                        else
-                                        {
-                                                // Do first and last lines.
-                                                finalp = final->GetWritePtr(PLANAR_V);
-                                                dstp = dst->GetWritePtr(PLANAR_V);
-                                                dstpn = dstp + dpitch/2;
-                                                for (x = 0; x < wover2; x++)
-                                                {
-                                                        finalp[x] = (((int)dstp[x] + (int)dstpn[x]) >> 1);
-                                                }
-                                                finalp = final->GetWritePtr(PLANAR_V) + (hover2-1)*dpitch/2;
-                                                dstp = dst->GetWritePtr(PLANAR_V) + (hover2-1)*dpitch/2;
-                                                dstpp = dstp - dpitch/2;
-                                                for (x = 0; x < wover2; x++)
-                                                {
-                                                        finalp[x] = (((int)dstp[x] + (int)dstpp[x]) >> 1);
-                                                }
-                                                // Now do the rest.
-                                                finalp = final->GetWritePtr(PLANAR_V) + dpitch/2;
-                                                dstp = dst->GetWritePtr(PLANAR_V) + dpitch/2;
-                                        }
-                                        dstpp = dstp - dpitch/2;
-                                        dstpn = dstp + dpitch/2;
-                                        for (y = 1; y < hover2 - 1; y++)
-                                        {
-                                                for (x = 0; x < wover2; x++)
-                                                {
-                                                        v1 = (int)( dstp[x] - dthresh);
-                                                        if (v1 < 0) v1 = 0; 
-                                                        v2 = (int)( dstp[x] + dthresh);
-                                                        if (v2 > 235) v2 = 235; 
-                                                        if ((v1 > dstpp[x] && v1 > dstpn[x]) || (v2 < dstpp[x] && v2 < dstpn[x]))
-                                                        {
-                                                                if (post == POST_FULL_MAP || post == POST_FULL_NOMATCH_MAP)
-                                                                {
-                                                                        finalp[x] = 128;
-                                                                }
-                                                                else
-                                                                        finalp[x] = ((int)dstpp[x] + (int)dstpn[x] + (int)dstp[x] + (int)dstp[x]) >> 2;
-                                                        }
-                                                        else finalp[x] = dstp[x];
-                                                }
-                                                finalp += dpitch/2;
-                                                dstp += dpitch/2;
-                                                dstpp += dpitch/2;
-                                                dstpn += dpitch/2;
-                                        }
-                                }
-                        }
-                        if (show == true) Show(final, frame);
+                        blendPlane(final,dst,PLANAR_Y);
+                        blendPlane(final,dst,PLANAR_U);
+                        blendPlane(final,dst,PLANAR_V);
+                       
+                        if (show == true)  Show(final, frame);
                         if (debug == true) Debug(frame);
                         if (hints == true) WriteHints(final->GetWritePtr(PLANAR_Y), film, inpattern);
                        // return final;
                         vidCache->unlockAll();
                         return 1;
                 }
-
-                // Interpolate mode.
-                // Luma plane.
-                dstp = dst->GetWritePtr(PLANAR_Y) + dpitch;
-                dstpp = dstp - dpitch;
-                dstpn = dstp + dpitch;
-                for (y = 1; y < h - 1; y+=2)
-                {
-                        for (x = 0; x < w; x++)
-                        {
-                                v1 = (int) (dstp[x] - dthresh);
-                                if (v1 < 0) v1 = 0; 
-                                v2 = (int) dstp[x] + dthresh;
-                                if (v2 > 235) v2 = 235; 
-                                if ((v1 > dstpp[x] && v1 > dstpn[x]) || (v2 < dstpp[x] && v2 < dstpn[x]))
-                                {
-                                        if (post == POST_FULL_MAP || post == POST_FULL_NOMATCH_MAP)
-                                        {
-                                                if(0) // (vi.IsYUY2())
-                                                {
-                                                        if (x & 1) dstp[x] = 128;
-                                                        else dstp[x] = 235;
-                                                }
-                                                else
-                                                {
-                                                        dstp[x] = 235;
-                                                }
-                                        }
-                                        else
-                                                dstp[x] = (dstpp[x] + dstpn[x]) >> 1;
-                                }
-                        }
-                        dstp += 2*dpitch;
-                        dstpp += 2*dpitch;
-                        dstpn += 2*dpitch;
-                }
-
-               // if (vi.IsYV12())
-                {
-                        // Chroma planes.
-                        for (z = 0; z < 2; z++)
-                        {
-                                if (z == 0) dstp = dst->GetWritePtr(PLANAR_U) + dpitch/2;
-                                else dstp = dst->GetWritePtr(PLANAR_V) + dpitch/2;
-                                dstpp = dstp - dpitch/2;
-                                dstpn = dstp + dpitch/2;
-                                for (y = 1; y < hover2 - 1; y+=2)
-                                {
-                                        for (x = 0; x < wover2; x++)
-                                        {
-                                                v1 = (int) dstp[x] - dthresh;
-                                                if (v1 < 0) v1 = 0; 
-                                                v2 = (int) dstp[x] + dthresh;
-                                                if (v2 > 235) v2 = 235; 
-                                                if ((v1 > dstpp[x] && v1 > dstpn[x]) || (v2 < dstpp[x] && v2 < dstpn[x]))
-                                                {
-                                                        if (post == POST_FULL_MAP || post == POST_FULL_NOMATCH_MAP)
-                                                        {
-                                                                dstp[x] = 128;
-                                                        }
-                                                        else
-                                                                dstp[x] = (dstpp[x] + dstpn[x]) >> 1;
-                                                }
-                                        }
-                                        dstp += dpitch;
-                                        dstpp += dpitch;
-                                        dstpn += dpitch;
-                                }
-                        }
-                }
+                doInterpolate(final,PLANAR_Y);
+                doInterpolate(final,PLANAR_U);
+                doInterpolate(final,PLANAR_V);
         }
-
         if (show == true) Show(dst, frame);
         if (debug == true) Debug(frame);
         if (hints == true) WriteHints(dst->GetWritePtr(PLANAR_Y), film, inpattern);
