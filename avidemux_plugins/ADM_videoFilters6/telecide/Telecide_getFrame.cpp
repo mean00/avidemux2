@@ -163,9 +163,6 @@ teleCide *_param=&configuration;
         int hover2 = h >>1;
         int wover2 = w >>1;
 
-        int hplus1over2 = (h+1)/2;
-        int hminus2= h - 2;
-        //dst = env->NewVideoFrame(vi);
         dst=output_image;
         int dpitch = dst->GetPitch(PLANAR_Y);
 
@@ -404,7 +401,9 @@ teleCide *_param=&configuration;
         {
                 unsigned char *dstpp, *dstpn;
                 int v1, v2, z;
-
+                #warning blend in place is wrong!
+                // MeanX:We should copy here as we blend from source and destination
+                // for the moment we do it in place, it is wrong.
                 if (blend == true)
                 {
                         blendPlane(final,dst,PLANAR_Y);
@@ -418,9 +417,9 @@ teleCide *_param=&configuration;
                         vidCache->unlockAll();
                         return 1;
                 }
-                doInterpolate(final,PLANAR_Y);
-                doInterpolate(final,PLANAR_U);
-                doInterpolate(final,PLANAR_V);
+                interpolatePlane(final,PLANAR_Y);
+                interpolatePlane(final,PLANAR_U);
+                interpolatePlane(final,PLANAR_V);
         }
         if (show == true) Show(dst, frame);
         if (debug == true) Debug(frame);

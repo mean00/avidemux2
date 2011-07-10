@@ -79,7 +79,7 @@ Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_core
 				_param->vthresh = 50.0;
 				_param->bthresh = 50.0;
 				_param->dthresh = 7.0;
-				_param->blend = false;
+				_param->blend = false; // Interpolate is default
 				_param->nt = 10;	// Noise tolerance
 				_param->y0 = 0;		// Zone to try (avoid subs)
 				_param->y1 = 0;

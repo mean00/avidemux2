@@ -149,7 +149,7 @@ protected:
 
 	void WriteHints(unsigned char *dst, bool film, bool inpattern);
 
-    bool doInterpolate(ADMImage *dst, ADM_PLANE plane);
+    bool interpolatePlane(ADMImage *dst, ADM_PLANE plane);
     bool blendPlane(ADMImage *dst, ADMImage *src,ADM_PLANE plane);
 
 

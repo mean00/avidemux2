@@ -889,9 +889,9 @@ uint8_t CLAMP=235;
     return true;
 }
 /**
-    \fn doInterpolate
+    \fn interpolatePlane
 */
-bool Telecide::doInterpolate(ADMImage *dst, ADM_PLANE plane)
+bool Telecide::interpolatePlane(ADMImage *dst, ADM_PLANE plane)
 {
 
     // Interpolate mode.
