@@ -68,41 +68,57 @@
 #define y0      _param->y0
 #define y1      _param->y1
 
+/**
+
+*/
+static bool copyField(ADMImage *target, ADMImage *source, bool top)
+{
+    for(int i=0;i<3;i++)
+    {
+        ADM_PLANE plane=(ADM_PLANE )i;
+        uint8_t *dest=target->GetWritePtr(plane);
+        uint8_t *src=source->GetReadPtr(plane);
+
+        uint32_t sPitch=source->GetPitch(plane);
+        uint32_t dPitch=target->GetPitch(plane);
+        
+        if(false==top)
+        {
+            dest=dest+dPitch;
+            src=src+sPitch;
+        }
+
+
+        uint32_t h=target->GetHeight(plane);
+        uint32_t w=target->GetWidth(plane);
+
+        // copy one line out of two
+        h>>=1;
+        dPitch*=2;
+        sPitch*=2;
+
+        BitBlit(dest,dPitch,src,sPitch,w,h);
+
+    }
+    return true;
+}
 
 /**
     \fn getNextFrame
 */
 bool Telecide::getNextFrame(uint32_t *frameNumber,ADMImage *output_image)
 {
-ADMImage *fc;
-uint8_t *fcrp;
-uint8_t *fcrpU,*fcrpV;
-
 uint32_t pframe,nframe;
 
-ADMImage *fp;
-uint8_t *fprp;
-uint8_t *fprpU,*fprpV;
-
-ADMImage *fn;
-uint8_t *fnrp;
-uint8_t *fnrpU,*fnrpV;
-
-ADMImage *lc;
-uint8_t *crp;
-uint8_t *crpU,*crpV;
-
-ADMImage *lp;
-uint8_t *prp;
-uint8_t *prpU,*prpV;
-
-ADMImage *dst;
+ADMImage *fc=NULL;
+ADMImage *fp=NULL;
+ADMImage *fn=NULL;
+ADMImage *dst=NULL;
 uint8_t *dstp;
-uint8_t *dstpU,*dstpV;
 
-ADMImage *final;
+ADMImage *final=NULL;
 uint8_t *finalp;
-uint8_t *finalpU,*finalpV;
+
 
 teleCide *_param=&configuration;
 
@@ -122,23 +138,11 @@ teleCide *_param=&configuration;
             return false;
         }
         nextFrame++;
-        output_image->copyInfo(fc);
-        fcrp = (unsigned char *) fc->GetReadPtr(PLANAR_Y);
-        //if (vi.IsYV12())
-        {
-                fcrpU = (unsigned char *) fc->GetReadPtr(PLANAR_U);
-                fcrpV = (unsigned char *) fc->GetReadPtr(PLANAR_V);
-        }
+        output_image->copyInfo(fc); // copy timing information...
 
         // Get the previous frame.
         pframe = frame == 0 ? 0 : frame - 1;
         GETFRAME(pframe, fp);
-        fprp = (unsigned char *) fp->GetReadPtr(PLANAR_Y);
-        //if (vi.IsYV12())
-        {
-                fprpU = (unsigned char *) fp->GetReadPtr(PLANAR_U);
-                fprpV = (unsigned char *) fp->GetReadPtr(PLANAR_V);
-        }
 
         // Get the next frame metrics if we might need them.
         nframe = frame + 1;
@@ -150,28 +154,14 @@ teleCide *_param=&configuration;
             ADM_assert(fn);
             lastFrame=true;
         }
-        fnrp = (unsigned char *) fn->GetReadPtr(PLANAR_Y);
-        //if (vi.IsYV12())
-        {
-                fnrpU = (unsigned char *) fn->GetReadPtr(PLANAR_U);
-                fnrpV = (unsigned char *) fn->GetReadPtr(PLANAR_V);
-        }
 
         int pitch = fc->GetPitch(PLANAR_Y);
-        int pitchover2 = pitch >> 1;
-        int pitchtimes4 = pitch << 2;
+        
+        
         int w = info.width;
         int h = info.height; 
         int hover2 = h >>1;
         int wover2 = w >>1;
-/*
-        if (vi.IsYUY2() && ((w/2) & 1))
-                env->ThrowError("Telecide: width must be a multiple of 2; use Crop");
-        if (vi.IsYV12() && (w & 1))
-                env->ThrowError("Telecide: width must be a multiple of 2; use Crop");
-        if (h & 1)
-                env->ThrowError("Telecide: height must be a multiple of 2; use Crop");
-*/
 
         int hplus1over2 = (h+1)/2;
         int hminus2= h - 2;
@@ -190,20 +180,10 @@ teleCide *_param=&configuration;
                         if (lastFrame==true ) break;
                         if (CacheQuery(y, &p, &pblock, &c, &cblock) == false)
                         {
+                                ADMImage *lc,*lp;
+
                                 GETFRAME(y, lc);
-                                crp = (unsigned char *) lc->GetReadPtr(PLANAR_Y);
-                                //if (vi.IsYV12())
-                                {
-                                        crpU = (unsigned char *) lc->GetReadPtr(PLANAR_U);
-                                        crpV = (unsigned char *) lc->GetReadPtr(PLANAR_V);
-                                }
                                 GETFRAME(y == 0 ? 1 : y - 1, lp);
-                                prp = (unsigned char *) lp->GetReadPtr(PLANAR_Y);
-                                //if (vi.IsYV12())
-                                {
-                                        prpU = (unsigned char *) lp->GetReadPtr(PLANAR_U);
-                                        prpV = (unsigned char *) lp->GetReadPtr(PLANAR_V);
-                                }
                                 CalculateMetrics(y, lc,lp); //crp, crpU, crpV, prp, prpU, prpV);
                         }
                 }
@@ -375,77 +355,39 @@ teleCide *_param=&configuration;
 
         // Assemble and output the reconstructed frame according to the final match.
         dstp = dst->GetWritePtr(PLANAR_Y);
-//    if (vi.IsYV12())
-        {
-                dstpU = dst->GetWritePtr(PLANAR_U);
-                dstpV = dst->GetWritePtr(PLANAR_V);
-        }
         if (chosen == N)
         {
                 // The best match was with the next frame.
                 if (tff == true)
                 {
-                        BitBlt(dstp, 2 * dpitch, fnrp, 2 * pitch, w, hover2);
-                        BitBlt(dstp + dpitch, 2 * dpitch, fcrp + pitch, 2 * pitch, w, hover2);
-                        //if (vi.IsYV12())
-                        {
-                                BitBlt(dstpU, dpitch, fnrpU, pitch, w/2, h/4);
-                                BitBlt(dstpV, dpitch, fnrpV, pitch, w/2, h/4);
-                                BitBlt(dstpU + dpitch/2, dpitch, fcrpU + pitch/2, pitch, w/2, h/4);
-                                BitBlt(dstpV + dpitch/2, dpitch, fcrpV + pitch/2, pitch, w/2, h/4);
-                        }
+                        copyField(dst, fn,true);
+                        copyField(dst, fc,false);
                 }
                 else
                 {
-                        BitBlt(dstp, 2 * dpitch, fcrp, 2 * pitch, w, hplus1over2);
-                        BitBlt(dstp + dpitch, 2 * dpitch, fnrp + pitch, 2 * pitch, w, hover2);
-                        //if (vi.IsYV12())
-                        {
-                                BitBlt(dstpU, dpitch, fcrpU, pitch, w/2, h/4);
-                                BitBlt(dstpV, dpitch, fcrpV, pitch, w/2, h/4);
-                                BitBlt(dstpU + dpitch/2, dpitch, fnrpU + pitch/2, pitch, w/2, h/4);
-                                BitBlt(dstpV + dpitch/2, dpitch, fnrpV + pitch/2, pitch, w/2, h/4);
-                        }
+                        copyField(dst, fc,true);
+                        copyField(dst, fn,false);
                 }
         }
         else if (chosen == C)
         {
                 // The best match was with the current frame.
-                BitBlt(dstp, 2 * dpitch, fcrp, 2 * pitch, w, hplus1over2);
-                BitBlt(dstp + dpitch, 2 * dpitch, fcrp + pitch, 2 * pitch, w, hover2);
-                //if (vi.IsYV12())
-                {
-                        BitBlt(dstpU, dpitch, fcrpU, pitch, w/2, h/4);
-                        BitBlt(dstpV, dpitch, fcrpV, pitch, w/2, h/4);
-                        BitBlt(dstpU + dpitch/2, dpitch, fcrpU + pitch/2, pitch, w/2, h/4);
-                        BitBlt(dstpV + dpitch/2, dpitch, fcrpV + pitch/2, pitch, w/2, h/4);
-                }
+                copyField(dst, fc,true);
+                copyField(dst, fc,false);
+
         }
         else if (tff == false)
         {
                 // The best match was with the previous frame.
-                BitBlt(dstp, 2 * dpitch, fprp, 2 * pitch, w, hplus1over2);
-                BitBlt(dstp + dpitch, 2 * dpitch, fcrp + pitch, 2 * pitch, w, hover2);
-               // if (vi.IsYV12())
-                {
-                        BitBlt(dstpU, dpitch, fprpU, pitch, w/2, h/4);
-                        BitBlt(dstpV, dpitch, fprpV, pitch, w/2, h/4);
-                        BitBlt(dstpU + dpitch/2, dpitch, fcrpU + pitch/2, pitch, w/2, h/4);
-                        BitBlt(dstpV + dpitch/2, dpitch, fcrpV + pitch/2, pitch, w/2, h/4);
-                }
+                copyField(dst, fp,true);
+                copyField(dst, fc,false);
         }
         else
         {
                 // The best match was with the previous frame.
-                BitBlt(dstp, 2 * dpitch, fcrp, 2 * pitch, w, hplus1over2);
-                BitBlt(dstp + dpitch, 2 * dpitch, fprp + pitch, 2 * pitch, w, hover2);
-               // if (vi.IsYV12())
-                {
-                        BitBlt(dstpU, dpitch, fcrpU, pitch, w/2, h/4);
-                        BitBlt(dstpV, dpitch, fcrpV, pitch, w/2, h/4);
-                        BitBlt(dstpU + dpitch/2, dpitch, fprpU + pitch/2, pitch, w/2, h/4);
-                        BitBlt(dstpV + dpitch/2, dpitch, fprpV + pitch/2, pitch, w/2, h/4);
-                }
+                copyField(dst, fc,true);
+                copyField(dst, fp,false);
+
         }
         if (guide != GUIDE_NONE) PutChosen(frame, chosen);
 

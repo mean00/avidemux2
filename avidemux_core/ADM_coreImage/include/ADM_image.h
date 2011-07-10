@@ -110,6 +110,7 @@ public:
         int             _qStride;
         int             _qSize;
         int             GetHeight(ADM_PLANE plane) {if(plane==PLANAR_Y) return _height; return _height/2;}
+        int             GetWidth(ADM_PLANE plane) {if(plane==PLANAR_Y) return _width; return _width/2;}
         bool            GetPitches(uint32_t *pitches) {pitches[0]=GetPitch(PLANAR_Y);
                                                        pitches[1]=GetPitch(PLANAR_U);
                                                        pitches[2]=GetPitch(PLANAR_V);return true;}
