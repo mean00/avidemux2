@@ -32,7 +32,7 @@
 */
 #include "ADM_default.h"
 #include "Telecide.h"
-#if 1
+#if 0
     #define aprintf printf
 #else
     #define aprintf(...) {}
@@ -123,7 +123,7 @@ uint8_t *finalp;
 teleCide *_param=&configuration;
 
 
-        
+        *frameNumber=nextFrame;
         bool lastFrame=false;
         aprintf("telecide : frame %d\n",(int)nextFrame);
         // Get the current frame.
@@ -181,7 +181,8 @@ teleCide *_param=&configuration;
 
                                 GETFRAME(y, lc);
                                 GETFRAME(y == 0 ? 1 : y - 1, lp);
-                                CalculateMetrics(y, lc,lp); //crp, crpU, crpV, prp, prpU, prpV);
+                                if(lc && lp)
+                                    CalculateMetrics(y, lc,lp); //crp, crpU, crpV, prp, prpU, prpV);
                         }
                 }
         }
