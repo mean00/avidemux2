@@ -34,7 +34,7 @@
 #include "Telecide.h"
 #include "DIA_factory.h"
 #include "telec_desc.cpp"
-#if 1
+#if 0
     #define aprintf printf
 #else
     #define aprintf(...) {}
