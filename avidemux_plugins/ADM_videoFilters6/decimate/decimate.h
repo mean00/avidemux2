@@ -16,6 +16,18 @@
 
 #define DrawString drawString
 
+#define GETFRAME(g, fp) \
+{ \
+	int GETFRAMEf=g; \
+	if (GETFRAMEf < 0) GETFRAMEf = 0; \
+	(fp) = vidCache->getImage(GETFRAMEf); \
+}
+#if 1
+    #define aprintf(...) {}
+#else
+    #define aprintf ADM_info
+#endif
+#define OutputDebugString aprintf
 
 /**
     \class Telecide
@@ -26,7 +38,6 @@ class  Decimate:public ADM_coreVideoFilter
 protected:
         deciMate           configuration;
 protected:
-        int 			num_frames_hi;
         int last_request, last_result;
         bool last_forced;
         double last_metric;
@@ -40,18 +51,14 @@ protected:
         bool hints_invalid;
         bool all_video_cycle;
         bool firsttime;
-        int heightY, row_sizeY, pitchY;
-        int heightUV, row_sizeUV, pitchUV;
-        int pitch, row_size, height;
         int xblocks, yblocks;
         unsigned int *sum, div;
-        bool debug, show;
         
         VideoCache	*vidCache;
 public:
-                            Decimate(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                            ~Decimate();
-        bool                goToTime(uint64_t usSeek);
+                             Decimate(ADM_coreVideoFilter *previous,CONFcouple *conf);
+                             ~Decimate();
+        bool                 goToTime(uint64_t usSeek);
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
@@ -62,7 +69,11 @@ protected:
 		                              double metric, int inframe );
         void   		FindDuplicate(int frame, int *chosen, double *metric, bool *forced   );
     	void   		FindDuplicate2(int frame, int *chosen, bool *forced );
-    	void   		FindDuplicateYUY2(int frame, int *chosen, double *metric, bool *force);
-    	void   		FindDuplicate2YUY2(int frame, int *chosen, bool *forced );
-	
+        void        updateInfo(void);
+        uint32_t    computeDiff(ADMImage *current,ADMImage *previous);
+        void        reset(void);
+        bool        get0(uint32_t *fn,ADMImage *data);
+        bool        get1(uint32_t *fn,ADMImage *data);
+        bool        get2(uint32_t *fn,ADMImage *data);
+        bool        get3(uint32_t *fn,ADMImage *data);
 };

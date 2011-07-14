@@ -43,8 +43,87 @@
 
 #include "ADM_default.h"
 #include "decimate.h"
+/**
+    \fn computeDiff
+    \brief compute difference between image and its predecessor
+*/
+uint32_t Decimate::computeDiff(ADMImage *current,ADMImage *previous)
+{
+    uint8_t *prevY = previous->GetReadPtr(PLANAR_Y);
+    uint8_t *currY = current->GetReadPtr(PLANAR_Y);
+    uint32_t prevPitch=previous->GetPitch(PLANAR_Y);
+    uint32_t curPitch=current->GetPitch(PLANAR_Y);
+    deciMate *_param=&configuration;
+    // Zero
+    for (int y = 0; y < yblocks; y++)
+    {
+        for (int x = 0; x < xblocks; x++)
+        {
+            sum[y*xblocks+x] = 0;
+        }
+    }
+    // Raw diff
+    int height=info.height;
+    int width=info.width;
+    int inc=1;
+    
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width;)
+        {
+            sum[(y/BLKSIZE)*xblocks+x/BLKSIZE] += abs((int)currY[x] - (int)prevY[x]);
+            x++;
+            if(!(x&3))
+                if (_param->quality == 0 || _param->quality == 1)
+                {
+                    x+=12;
+                }
+        }
+        prevY += prevPitch;
+        currY += curPitch;
+    }
+    if (_param->quality == 1 || _param->quality == 3)
+    {
+#warning DO CHROMA SAMPLING
+#if 0
+        // also do u & v
+        prevU = storepU[f-1];
+        prevV = storepV[f-1];
+        currU = storepU[f];
+        currV = storepV[f];
+        for (y = 0; y < heightUV; y++)
+        {
+            for (x = 0; x < row_sizeUV;)
+            {
+                sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currU[x] - (int)prevU[x]);
+                sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currV[x] - (int)prevV[x]);
+                x++;
+                if (_param->quality == 1)
+                {
+                    if (!(x%4)) x += 12;
+                }
+            }
+            prevU += pitchUV;
+            currU += pitchUV;
+            prevV += pitchUV;
+            currV += pitchUV;
 
-
+        }
+#endif
+    }
+    uint32_t highest_sum = 0;
+    for (int y = 0; y < yblocks; y++)
+    {
+        for (int x = 0; x < xblocks; x++)
+        {
+            if (sum[y*xblocks+x] > highest_sum)
+            {
+                highest_sum = sum[y*xblocks+x];
+            }
+        }
+    }
+    return highest_sum;
+}
 /**
     \fn FindDuplicate
 */
@@ -52,13 +131,10 @@ void Decimate::FindDuplicate(int frame, int *chosen, double *metric, bool *force
 {
 	int f;
 	ADMImage  * store[MAX_CYCLE_SIZE+1];
-	const unsigned char *storepY[MAX_CYCLE_SIZE+1];
-	const unsigned char *storepU[MAX_CYCLE_SIZE+1];
-	const unsigned char *storepV[MAX_CYCLE_SIZE+1];
-	const unsigned char *prevY, *prevU, *prevV, *currY, *currU, *currV;
-	int x, y, lowest_index, div;
+    deciMate  *_param=&configuration;
+	int          lowest_index, div;
 	unsigned int count[MAX_CYCLE_SIZE], lowest;
-	bool found;
+	bool         found;
 	unsigned int highest_sum=0;
 
 	/* Only recalculate differences when a new set is needed. */
@@ -71,27 +147,24 @@ void Decimate::FindDuplicate(int frame, int *chosen, double *metric, bool *force
 	last_request = frame;
 
 	/* Get cycle+1 frames starting at the one before the asked-for one. */
+    ADMImage *lastImage=NULL;
 	for (f = 0; f <= _param->cycle; f++)
 	{
 		GETFRAME(frame + f - 1, store[f]);
-		storepY[f] = YPLANE(store[f]);//->GetReadPtr(PLANAR_Y);
-		hints_invalid = GetHintingData((unsigned char *) storepY[f], &hints[f]);
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			storepU[f] = UPLANE(store[f]);//->GetReadPtr(PLANAR_U);
-			storepV[f] = VPLANE(store[f]);//->GetReadPtr(PLANAR_V);
-		}
+        if(store[f]) lastImage=store[f];
+            else store[f]=lastImage;
+        hints_invalid=GetHintingData(lastImage->GetReadPtr(PLANAR_Y),&hints[f]);
 	}
 
-    pitchY = _info.width; //store[0]->GetPitch(PLANAR_Y);
-    row_sizeY = _info.width; //store[0]->GetRowSize(PLANAR_Y);
-    heightY = _info.height; //store[0]->GetHeight(PLANAR_Y);
-	if (_param->quality == 1 || _param->quality == 3)
-	{
-		pitchUV = _info.width>>1; //store[0]->GetPitch(PLANAR_V);
-		row_sizeUV = _info.width>>1;//store[0]->GetRowSize(PLANAR_V);
-		heightUV = _info.height>>1;//store[0]->GetHeight(PLANAR_V);
-	}
+    if(!lastImage) 
+    {
+        *chosen=-1;
+        ADM_info("Cannot get input image\n");
+        return;
+    }
+
+    int row_sizeY = info.width; //store[0]->GetRowSize(PLANAR_Y);
+    int heightY = info.height; //store[0]->GetHeight(PLANAR_Y);
 
 	int use_quality=_param->quality;
 
@@ -120,65 +193,7 @@ void Decimate::FindDuplicate(int frame, int *chosen, double *metric, bool *force
 	/* Compare each frame to its predecessor. */
 	for (f = 1; f <= _param->cycle; f++)
 	{
-		prevY = storepY[f-1];
-		currY = storepY[f];
-		for (y = 0; y < yblocks; y++)
-		{
-			for (x = 0; x < xblocks; x++)
-			{
-				sum[y*xblocks+x] = 0;
-			}
-		}
-		for (y = 0; y < heightY; y++)
-		{
-			for (x = 0; x < row_sizeY;)
-			{
-				sum[(y/BLKSIZE)*xblocks+x/BLKSIZE] += abs((int)currY[x] - (int)prevY[x]);
-				x++;
-				if (_param->quality == 0 || _param->quality == 1)
-				{
-					if (!(x%4)) x += 12;
-				}
-			}
-			prevY += pitchY;
-			currY += pitchY;
-		}
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			prevU = storepU[f-1];
-			prevV = storepV[f-1];
-			currU = storepU[f];
-			currV = storepV[f];
-			for (y = 0; y < heightUV; y++)
-			{
-				for (x = 0; x < row_sizeUV;)
-				{
-					sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currU[x] - (int)prevU[x]);
-					sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currV[x] - (int)prevV[x]);
-					x++;
-					if (_param->quality == 1)
-					{
-						if (!(x%4)) x += 12;
-					}
-				}
-				prevU += pitchUV;
-				currU += pitchUV;
-				prevV += pitchUV;
-				currV += pitchUV;
-			}
-		}
-		highest_sum = 0;
-		for (y = 0; y < yblocks; y++)
-		{
-			for (x = 0; x < xblocks; x++)
-			{
-				if (sum[y*xblocks+x] > highest_sum)
-				{
-					highest_sum = sum[y*xblocks+x];
-				}
-			}
-		}
-		count[f-1] = highest_sum;
+		count[f-1] = computeDiff(store[f],store[f-1]);
 		showmetrics[f-1] = (count[f-1] * 100.0) / div;
 	}
 
@@ -194,7 +209,7 @@ void Decimate::FindDuplicate(int frame, int *chosen, double *metric, bool *force
 		lowest = count[0];
 		lowest_index = 0;
 	}
-	for (x = 1; x < _param->cycle; x++)
+	for (int x = 1; x < _param->cycle; x++)
 	{
 		if (count[x] < lowest)
 		{
@@ -209,11 +224,10 @@ void Decimate::FindDuplicate(int frame, int *chosen, double *metric, bool *force
 		last_metric = (lowest * 100.0) / div;
 	*chosen = last_result;
 	*metric = last_metric;
-
 	
 	found = false;
 	last_forced = false;	
-
+    return;
 }
 /**
     \fn FindDuplicate2
@@ -222,9 +236,6 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 {
 	int f, g, fsum, bsum, highest, highest_index;
 	ADMImage * store[MAX_CYCLE_SIZE+1];
-	const unsigned char *storepY[MAX_CYCLE_SIZE+1];
-	const unsigned char *storepU[MAX_CYCLE_SIZE+1];
-	const unsigned char *storepV[MAX_CYCLE_SIZE+1];
 	const unsigned char *prevY, *prevU, *prevV, *currY, *currU, *currV;
 	int x, y;
 	double lowest;
@@ -233,7 +244,7 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 	unsigned int highest_sum;
 	bool found;
 #define BLKSIZE 32
-
+    deciMate *_param=&configuration;
 	/* Only recalculate differences when a new cycle is started. */
 	if (frame == last_request)
 	{
@@ -247,34 +258,14 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 	{
 		firsttime = false;
 		for (f = 0; f < MAX_CYCLE_SIZE; f++) Dprev[f] = -1;
-		GETFRAME(frame, store[0]);
-		storepY[0] = YPLANE(store[0]);//->GetReadPtr(PLANAR_Y);
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			storepU[0] = UPLANE(store[0]);//->GetReadPtr(PLANAR_U);
-			storepV[0] = VPLANE(store[0]);//->GetReadPtr(PLANAR_V);
-		}
-
 		for (f = 1; f <= _param->cycle; f++)
 		{
 			GETFRAME(frame + f - 1, store[f]);
-			storepY[f] =YPLANE( store[f]);//->GetReadPtr(PLANAR_Y);
-			if (_param->quality == 1 || _param->quality == 3)
-			{
-				storepU[f] = UPLANE(store[f]);//->GetReadPtr(PLANAR_U);
-				storepV[f] = VPLANE(store[f]);//->GetReadPtr(PLANAR_V);
-			}
 		}
 
-		pitchY = _info.width; //store[0]->GetPitch(PLANAR_Y);
-		row_sizeY = _info.width; //store[0]->GetRowSize(PLANAR_Y);
-		heightY = _info.height; //store[0]->GetHeight(PLANAR_Y);
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			pitchUV = _info.width>>1; //store[0]->GetPitch(PLANAR_V);
-			row_sizeUV = _info.width>>1; //store[0]->GetRowSize(PLANAR_V);
-			heightUV = _info.height>>1; //store[0]->GetHeight(PLANAR_V);
-		}
+		int row_sizeY = info.width; //store[0]->GetRowSize(PLANAR_Y);
+		int heightY = info.height; //store[0]->GetHeight(PLANAR_Y);
+
 		switch (_param->quality)
 		{
 		case 0: // subsample, luma only
@@ -298,64 +289,7 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 		/* Compare each frame to its predecessor. */
 		for (f = 1; f <= _param->cycle; f++)
 		{
-			for (y = 0; y < yblocks; y++)
-			{
-				for (x = 0; x < xblocks; x++)
-				{
-					sum[y*xblocks+x] = 0;
-				}
-			}
-			prevY = storepY[f-1];
-			currY = storepY[f];
-			for (y = 0; y < heightY; y++)
-			{
-				for (x = 0; x < row_sizeY;)
-				{
-					sum[(y/BLKSIZE)*xblocks+x/BLKSIZE] += abs((int)currY[x] - (int)prevY[x]);
-					x++;
-					if (_param->quality == 0 || _param->quality == 1)
-					{
-						if (!(x%4)) x += 12;
-					}
-				}
-				prevY += pitchY;
-				currY += pitchY;
-			}
-			if (_param->quality == 1 || _param->quality == 3)
-			{
-				prevU = storepU[f-1];
-				currU = storepU[f];
-				prevV = storepV[f-1];
-				currV = storepV[f];
-				for (y = 0; y < heightUV; y++)
-				{
-					for (x = 0; x < row_sizeUV;)
-					{
-						sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currU[x] - (int)prevU[x]);
-						sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currV[x] - (int)prevV[x]);
-						x++;
-						if (_param->quality == 0 || _param->quality == 1)
-						{
-							if (!(x%4)) x += 12;
-						}
-					}
-					prevU += pitchUV;
-					currU += pitchUV;
-					prevV += pitchUV;
-					currV += pitchUV;
-				}
-			}
-			highest_sum = 0;
-			for (y = 0; y < yblocks; y++)
-			{
-				for (x = 0; x < xblocks; x++)
-				{
-					if (sum[y*xblocks+x] > highest_sum)
-					{
-						highest_sum = sum[y*xblocks+x];
-					}
-				}
-			}
+			highest_sum = computeDiff(store[f],store[f-1]);
 			metrics[f-1] = (highest_sum * 100.0) / div;
 		}
 
@@ -366,34 +300,16 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 			else Dcurr[f] = 1;
 		}
 
-		if (debug)
+		if (configuration.debug)
 		{
-			sprintf(buf,"Decimate: %d: %3.2f %3.2f %3.2f %3.2f %3.2f\n",
+			OutputDebugString(buf,"Decimate: %d: %3.2f %3.2f %3.2f %3.2f %3.2f\n",
 					0, metrics[0], metrics[1], metrics[2], metrics[3], metrics[4]);
-			OutputDebugString(buf);
+			
 		}
-	}
- 	else if (frame >= num_frames_hi - 1)
-	{
-		GETFRAME(num_frames_hi - 1, store[0]);
-		storepY[0] = YPLANE(store[0]);//->GetReadPtr(PLANAR_Y);
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			storepU[0] = UPLANE(store[0]);//->GetReadPtr(PLANAR_U);
-			storepV[0] = VPLANE(store[0]);//->GetReadPtr(PLANAR_V);
-		}
-		for (f = 0; f < MAX_CYCLE_SIZE; f++) Dprev[f] = Dcurr[f];
-		for (f = 0; f < MAX_CYCLE_SIZE; f++) Dcurr[f] = Dnext[f];
-	}
+	} // / !frame || first time
 	else
 	{
 		GETFRAME(frame + _param->cycle - 1, store[0]);
-		storepY[0] = YPLANE(store[0]);//->GetReadPtr(PLANAR_Y);
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			storepU[0] = UPLANE(store[0]);//->GetReadPtr(PLANAR_U);
-			storepV[0] = VPLANE(store[0]);//->GetReadPtr(PLANAR_V);
-		}
 		for (f = 0; f < MAX_CYCLE_SIZE; f++) Dprev[f] = Dcurr[f];
 		for (f = 0; f < MAX_CYCLE_SIZE; f++) Dcurr[f] = Dnext[f];
 	}
@@ -403,75 +319,12 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 	for (f = 1; f <= _param->cycle; f++)
 	{
 		GETFRAME(frame + f + _param->cycle - 1, store[f]);
-		storepY[f] =YPLANE( store[f]);//->GetReadPtr(PLANAR_Y);
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			storepU[f] = UPLANE(store[f]);//->GetReadPtr(PLANAR_U);
-			storepV[f] = VPLANE(store[f]);//->GetReadPtr(PLANAR_V);
-		}
 	}
 
 	/* Compare each frame to its predecessor. */
 	for (f = 1; f <= _param->cycle; f++)
 	{
-		prevY = storepY[f-1];
-		currY = storepY[f];
-		for (y = 0; y < yblocks; y++)
-		{
-			for (x = 0; x < xblocks; x++)
-			{
-				sum[y*xblocks+x] = 0;
-			}
-		}
-		for (y = 0; y < heightY; y++)
-		{
-			for (x = 0; x < row_sizeY;)
-			{
-				sum[(y/BLKSIZE)*xblocks+x/BLKSIZE] += abs((int)currY[x] - (int)prevY[x]);
-				x++;
-				if (_param->quality == 0 || _param->quality == 1)
-				{
-					if (!(x%4)) x += 12;
-				}
-			}
-			prevY += pitchY;
-			currY += pitchY;
-		}
-		if (_param->quality == 1 || _param->quality == 3)
-		{
-			prevU = storepU[f-1];
-			currU = storepU[f];
-			prevV = storepV[f-1];
-			currV = storepV[f];
-			for (y = 0; y < heightUV; y++)
-			{
-				for (x = 0; x < row_sizeUV;)
-				{
-					sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currU[x] - (int)prevU[x]);
-					sum[((2*y)/BLKSIZE)*xblocks+(2*x)/BLKSIZE] += abs((int)currV[x] - (int)prevV[x]);
-					x++;
-					if (_param->quality == 0 || _param->quality == 1)
-					{
-						if (!(x%4)) x += 12;
-					}
-				}
-				prevU += pitchUV;
-				currU += pitchUV;
-				prevV += pitchUV;
-				currV += pitchUV;
-			}
-		}
-		highest_sum = 0;
-		for (y = 0; y < yblocks; y++)
-		{
-			for (x = 0; x < xblocks; x++)
-			{
-				if (sum[y*xblocks+x] > highest_sum)
-				{
-					highest_sum = sum[y*xblocks+x];
-				}
-			}
-		}
+        highest_sum=computeDiff(store[f],store[f-1]);
 		metrics[f-1] = (highest_sum * 100.0) / div;
 	}
 
@@ -502,22 +355,22 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 		else Dnext[f] = 1;
 	}
 
-	if (debug)
+	if (configuration.debug)
 	{
-		sprintf(buf,"Decimate: %d: %3.2f %3.2f %3.2f %3.2f %3.2f\n",
+		OutputDebugString("Decimate: %d: %3.2f %3.2f %3.2f %3.2f %3.2f\n",
 		        frame + 5, metrics[0], metrics[1], metrics[2], metrics[3], metrics[4]);
-		OutputDebugString(buf);
+		
 	}
 
-	if (debug)
+	if (configuration.debug)
 	{
-		sprintf(buf,"Decimate: %d: %d %d %d %d %d\n",
+		OutputDebugString("Decimate: %d: %d %d %d %d %d\n",
 		        frame, Dcurr[0], Dcurr[1], Dcurr[2], Dcurr[3], Dcurr[4]);
 //		sprintf(buf,"Decimate: %d: %d %d %d %d %d - %d %d %d %d %d - %d %d %d %d %d\n",
 //		        frame, Dprev[0], Dprev[1], Dprev[2], Dprev[3], Dprev[4],
 //					   Dcurr[0], Dcurr[1], Dcurr[2], Dcurr[3], Dcurr[4],
 //					   Dnext[0], Dnext[1], Dnext[2], Dnext[3], Dnext[4]);
-		OutputDebugString(buf);
+		
 	}
 
 	/* Find the longest strings of duplicates and decimate a frame from it. */
@@ -598,10 +451,10 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 		*chosen = last_result = frame + highest_index;
 	}
 	last_forced = false;
-	if (debug)
+	if (configuration.debug)
 	{
-		sprintf(buf,"Decimate: dropping frame %d\n", last_result);
-		OutputDebugString(buf);
+		OutputDebugString("Decimate: dropping frame %d\n", last_result);
+		
 	}
 
 	
@@ -611,10 +464,74 @@ void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 	{
 		*chosen = last_result ;
 		*forced = last_forced = true;
-		if (debug)
+		if (configuration.debug)
 		{
-			sprintf(buf,"Decimate: overridden drop frame -- drop %d\n", last_result);
-			OutputDebugString(buf);
+			OutputDebugString("Decimate: overridden drop frame -- drop %d\n", last_result);
+		}
+	}
+}
+/**
+    \fn DrawShow
+*/
+void Decimate::DrawShow(ADMImage  *src, int useframe, bool forced, int dropframe,
+						double metric, int inframe)
+{
+	char buf[80];
+    deciMate *_param=&configuration;
+	int start = (useframe / _param->cycle) * _param->cycle;
+
+	if (configuration.show == true)
+	{
+		sprintf(buf, "Decimate %d", 0); 	DrawString(src, 0, 0, buf);
+		sprintf(buf, "Copyright 2003 Donald Graft");	    DrawString(src, 0, 1, buf);
+		sprintf(buf,"%d: %3.2f", start, showmetrics[0]);	DrawString(src, 0, 3, buf);
+		sprintf(buf,"%d: %3.2f", start + 1, showmetrics[1]);DrawString(src, 0, 4, buf);
+		sprintf(buf,"%d: %3.2f", start + 2, showmetrics[2]);DrawString(src, 0, 5, buf);
+		sprintf(buf,"%d: %3.2f", start + 3, showmetrics[3]);DrawString(src, 0, 6, buf);
+		sprintf(buf,"%d: %3.2f", start + 4, showmetrics[4]);DrawString(src, 0, 7, buf);
+		if (all_video_cycle == false)
+		{
+			sprintf(buf,"in frm %d, use frm %d", inframe, useframe);
+			DrawString(src, 0, 8, buf);
+			if (forced == false)
+				sprintf(buf,"chose %d, dropping", dropframe);
+			else
+				sprintf(buf,"chose %d, dropping, forced!", dropframe);
+			DrawString(src, 0, 9, buf);
+		}
+		else
+		{
+			sprintf(buf,"in frm %d", inframe);			                    DrawString(src, 0, 8, buf);
+			sprintf(buf,"chose %d, decimating all-video cycle", dropframe);	DrawString(src, 0, 9, buf);
+		}
+	}
+	if (configuration.debug)
+	{
+		if (!(inframe%_param->cycle))
+		{
+			OutputDebugString(buf,"Decimate: %d: %3.2f\n", start, showmetrics[0]);
+			OutputDebugString(buf,"Decimate: %d: %3.2f\n", start + 1, showmetrics[1]);
+			OutputDebugString(buf,"Decimate: %d: %3.2f\n", start + 2, showmetrics[2]);
+			OutputDebugString(buf,"Decimate: %d: %3.2f\n", start + 3, showmetrics[3]);
+			OutputDebugString(buf,"Decimate: %d: %3.2f\n", start + 4, showmetrics[4]);
+			
+		}
+		if (all_video_cycle == false)
+		{
+			OutputDebugString(buf,"Decimate: in frm %d useframe %d\n", inframe, useframe);
+			if (forced == false)
+            {
+				OutputDebugString("Decimate: chose %d, dropping\n", dropframe);
+            }
+			else
+            {
+				OutputDebugString("Decimate: chose %d, dropping, forced!\n", dropframe);
+            }
+		}
+		else
+		{
+			OutputDebugString("Decimate: in frm %d\n", inframe);
+			OutputDebugString("Decimate: chose %d, decimating all-video cycle\n", dropframe);
 		}
 	}
 }
