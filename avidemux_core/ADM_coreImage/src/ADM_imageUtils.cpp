@@ -102,7 +102,9 @@ int a1,a2;
 
 
 #endif
+/**
 
+*/
 bool ADMImage::merge(ADMImage *src1,ADMImage *src2)
 {
 #ifdef ADM_CPU_X86
@@ -117,6 +119,123 @@ bool ADMImage::merge(ADMImage *src1,ADMImage *src2)
 
 
 }
+/**
+    \fn blendC
+    \brief Blend src1 and src2 into target (one plane)
+*/
+typedef bool blendFunction(int width, int height, uint8_t *target,uint32_t stride,    uint8_t *src1,uint32_t stride1,               uint8_t *src2,uint32_t stride2);
+
+static bool blendC(int width, int height,
+                    uint8_t *target,uint32_t stride,
+                    uint8_t *src1,  uint32_t stride1,
+                    uint8_t *src2,  uint32_t stride2)
+{
+          for(int y=0;y<height;y++)
+                {
+                    uint8_t *s1=src1,*s2=src2,*d=target;
+                    unsigned int a;
+                    for(int x=0;x<width;x++)
+                    {
+                        a=((unsigned int)*s1)+((unsigned int)*s2);
+                        a>>=1;
+                        *d=(uint8_t)a;
+                        s1++;
+                        s2++;
+                        d++;
+                    }
+                    src1+=stride1;src2+=stride2;target+=stride;
+                }
+        return true;
+}
+#ifdef ADM_CPU_X86
+static bool blendMMX(int width, int height,
+                    uint8_t *target,uint32_t stride,
+                    uint8_t *src1,  uint32_t stride1,
+                    uint8_t *src2,  uint32_t stride2)
+{
+uint32_t ww,rr;
+uint8_t *s1,*s2,*d1;
+        int a1,a2;
+      
+        ww=width>>2;
+        rr=width&3;
+
+
+         __asm__(
+                         "pxor %%mm7,%%mm7"
+                ::
+                 );
+
+          for(int y=0;y<height;y++)
+          {
+                s1=src1;
+                s2=src2;
+                d1=target;
+                if(rr)
+                {
+                    blendC(rr,height,d1+(ww<<2), stride,s1+(ww<<2),stride1,s2+(ww<<2),stride2);
+                }
+
+                for(int x=0;x<ww;x++)
+                {
+                    __asm__(
+                            "movd           (%0),%%mm0 \n"
+                            "movd           (%1),%%mm1 \n"
+                            "punpcklbw      %%mm7,%%mm0 \n"
+                            "punpcklbw      %%mm7,%%mm1 \n"
+                            "paddw           %%mm1,%%mm0 \n"
+                            "psrlw          $1,%%mm0 \n"
+                            "packuswb       %%mm0,  %%mm0\n"
+                            "movd           %%mm0,(%2) \n"
+
+                    : : "r" (s1),"r" (s2),"r"(d1)
+                    );
+                    s1+=4;
+                    s2+=4;
+                    d1+=4;
+                }
+                src1+=stride1;
+                src2+=stride2;
+                target+=stride;
+           }
+        __asm__(
+                        "emms\n"
+                ::
+                );
+
+        return true;
+}
+
+
+#endif
+/**
+    \fn blend
+    \brief Blend src1 and src2 into our image
+*/
+bool ADMImage::blend(ADMImage *src1,ADMImage *src2)
+{
+    blendFunction *myBlend=blendC;
+#ifdef ADM_CPU_X86
+    if(CpuCaps::hasMMX())
+            myBlend=blendMMX;
+#endif
+    ADM_assert(src1->_width==src2->_width);
+    ADM_assert(_width==src2->_width);
+    ADM_assert(src1->_height==src2->_height);
+    for(int x=0;x<3;x++)
+    {
+        ADM_PLANE plane=(ADM_PLANE)x;
+        myBlend(GetWidth(plane),GetHeight(plane),
+                                    GetWritePtr(plane),GetPitch(plane),
+                                    src1->GetReadPtr(plane),src1->GetPitch(plane),
+                                    src2->GetReadPtr(plane),src2->GetPitch(plane)
+                                );
+    }
+    return true;
+}
+/**
+
+*/
 /* 3000 * 3000 max size, using uint32_t is safe... */
 static uint32_t computeDiff(uint8_t  *s1,uint8_t *s2,uint32_t noise,uint32_t l)
 {

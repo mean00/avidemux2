@@ -150,7 +150,9 @@ public:
         bool    copyInfo(ADMImage *src);	/// copy all the flags, not the data themselves
         bool    copyQuantInfo(ADMImage *src);	/// copy quant table if any
         bool    isRef(void) { if(_imageType==ADM_IMAGE_REF) return true;return false;};
+        // 
         bool    merge(ADMImage *src1,ADMImage *src2);
+        bool    blend(ADMImage *src1,ADMImage *src2);
         bool    substract(ADMImage *src1,ADMImage *src2);
         bool    blacken(void);
         bool    copyTo(ADMImage *target, uint32_t x, uint32_t y);
