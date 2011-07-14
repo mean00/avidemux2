@@ -170,7 +170,8 @@ uint32_t len,flags;
     if(!incoming->getNextFrameAs(ADM_HW_ANY,&nb,img)) return NULL;
     if(nb!=frame)
     {
-        ADM_error("Expected frame %d, got frame %d\n",(int)frame,(int)nb);
+        ADM_error("Cache inconsistency :\n");
+        ADM_error("Expected to get frame %d from filter, got frame %d instead\n",(int)frame,(int)nb);
         dump();
         ADM_assert(0);
     }
