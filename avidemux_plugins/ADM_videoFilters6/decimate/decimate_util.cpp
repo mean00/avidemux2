@@ -43,6 +43,113 @@
 
 #include "ADM_default.h"
 #include "decimate.h"
+//#define BENCH 1
+typedef uint32_t decimateDeltaLine(uint8_t *ptr1,uint8_t *ptr2,int size,int inc,unsigned int *sums);
+/**
+    \fn decimateDeltaLineC
+    \brief C version
+*/
+static inline uint32_t decimateDeltaLineC(uint8_t *ptr1,uint8_t *ptr2,int size,int inc,unsigned int *sums)
+{
+        uint32_t total=0;
+        for (int x = 0; x < size;)
+        {
+            unsigned int quadsum=0;
+            quadsum += abs((int)ptr1[x+0] - (int)ptr2[x+0]);
+            quadsum += abs((int)ptr1[x+1] - (int)ptr2[x+1]);
+            quadsum += abs((int)ptr1[x+2] - (int)ptr2[x+2]);
+            quadsum += abs((int)ptr1[x+3] - (int)ptr2[x+3]);
+            sums[(x+0)/BLKSIZE]+=quadsum; // 4 increment , BLKSIZE=32 => they are all in the same block
+#ifdef BENCH
+            total+=quadsum;
+#endif
+            x+=inc;
+        }
+        return total;
+}
+#ifdef ADM_CPU_X86
+/**
+    \fn decimateDeltaLineSSE
+    \brief SSE/MMX version
+ Only works for inc=4, BLKSIZE=32
+*/
+static inline uint32_t decimateDeltaLineSSE(uint8_t *ptr1,uint8_t *ptr2,int size,int inc,unsigned int *sums)
+{
+        uint32_t total1=0,total2=0;
+#ifdef BENCH
+        total2=decimateDeltaLineC(ptr1,ptr2,size,inc,sums);
+#endif
+        int size32=size>>5;
+        int left=(size & 31);
+        ADM_assert(inc==4);
+        ADM_assert(BLKSIZE==32);
+        uint64_t out;
+        uint64_t sum;
+        for(int i=0;i<size32;i++)
+        {
+            
+            __asm__(
+                    "xor            %3,%3       \n"
+                    "xor            %0,%0       \n"
+                    "movq           (%1),%%mm0  \n"
+                    "movq           (%2),%%mm1  \n"
+                    "psadbw         %%mm1,%%mm0 \n"
+                    "movq           %%mm0,%3    \n"
+                    "add            %3,%0       \n"
+                    "add           $8,%1        \n"
+                    "add           $8,%2        \n"
+                    "movq           (%1),%%mm0  \n"
+                    "movq           (%2),%%mm1  \n"
+                    "psadbw         %%mm1,%%mm0 \n"
+                    "movq           %%mm0,%3    \n"
+                    "add            %3,%0       \n"
+                    "add           $8,%1        \n"
+                    "add           $8,%2        \n"
+                    "movq           (%1),%%mm0  \n"
+                    "movq           (%2),%%mm1  \n"
+                    "psadbw         %%mm1,%%mm0 \n"
+                    "movq           %%mm0,%3    \n"
+                    "add            %3,%0       \n"
+                    "add           $8,%1        \n"
+                    "add           $8,%2        \n"
+                    "movq           (%1),%%mm0  \n"
+                    "movq           (%2),%%mm1  \n"
+                    "psadbw         %%mm1,%%mm0 \n"
+                    "movq           %%mm0,%3    \n"
+                    "add            %3,%0       \n"
+            : "=r"(sum):  "r" (ptr1),"r" (ptr2),"r"(out));
+            sums[i]+=sum;
+            total1+=sum;
+          //  printf("Sum : %d\n",(int)sum);
+            ptr1+=32;
+            ptr2+=32;
+        }
+        // collect leftover
+        for(int x=0;x<left;)
+        {
+            unsigned int quadsum=0;
+            quadsum += abs((int)ptr1[x+0] - (int)ptr2[x+0]);
+            quadsum += abs((int)ptr1[x+1] - (int)ptr2[x+1]);
+            quadsum += abs((int)ptr1[x+2] - (int)ptr2[x+2]);
+            quadsum += abs((int)ptr1[x+3] - (int)ptr2[x+3]);
+            sums[size32+(x+0)/BLKSIZE]+=quadsum; // 4 increment , BLKSIZE=32 => they are all in the same block
+            x+=inc;
+            total1+=quadsum;
+        }
+
+        __asm__(
+                    "emms\n"
+                ::
+                );
+#ifdef BENCH
+        if(total1!=total2)
+        {
+            ADM_error("SSE version does not match %d(C) vs %d(SSE)\n",(int)total2,(int)total1);
+        }
+#endif
+        return total1;
+}
+#endif
 /**
     \fn computeDiff
     \brief compute difference between image and its predecessor
@@ -55,37 +162,41 @@ uint32_t Decimate::computeDiff(ADMImage *current,ADMImage *previous)
     uint32_t curPitch=current->GetPitch(PLANAR_Y);
     deciMate *_param=&configuration;
     // Zero
-    for (int y = 0; y < yblocks; y++)
-    {
-        for (int x = 0; x < xblocks; x++)
-        {
-            sum[y*xblocks+x] = 0;
-        }
-    }
+    memset(sum,0,sizeof(unsigned int)*xblocks*yblocks);
     // Raw diff
     int height=info.height;
     int width=info.width;
-    int inc=1;
     
-    for (int y = 0; y < height; y++)
+    if (_param->quality == 0 || _param->quality == 1) // subsampled
     {
-        for (int x = 0; x < width;)
+        for (int y = 0; y < height; y++)
         {
-            sum[(y/BLKSIZE)*xblocks+x/BLKSIZE] += abs((int)currY[x] - (int)prevY[x]);
-            x++;
-            if(!(x&3))
-                if (_param->quality == 0 || _param->quality == 1)
-                {
-                    x+=12;
-                }
+            unsigned int *xsum=sum+((y/BLKSIZE)*xblocks);
+            decimateDeltaLineC(currY,prevY,width,4+12,xsum);
+            prevY += prevPitch;
+            currY += curPitch;
         }
-        prevY += prevPitch;
-        currY += curPitch;
-    }
-    if (_param->quality == 1 || _param->quality == 3)
+    }else   
     {
+        int inc=4;
+        decimateDeltaLine *func=decimateDeltaLineC;
+#ifdef ADM_CPU_X86
+         if(CpuCaps::hasSSE())
+            func=decimateDeltaLineSSE;
+#endif
+
+        for (int y = 0; y < height; y++)
+        {
+            unsigned int *xsum=sum+((y/BLKSIZE)*xblocks);
+            func(currY,prevY,width,4,xsum);
+            prevY += prevPitch;
+            currY += curPitch;
+        }
+    }
 #warning DO CHROMA SAMPLING
 #if 0
+    if (_param->quality == 1 || _param->quality == 3)
+    {
         // also do u & v
         prevU = storepU[f-1];
         prevV = storepV[f-1];
@@ -109,8 +220,8 @@ uint32_t Decimate::computeDiff(ADMImage *current,ADMImage *previous)
             currV += pitchUV;
 
         }
-#endif
     }
+#endif
     uint32_t highest_sum = 0;
     for (int y = 0; y < yblocks; y++)
     {
@@ -231,6 +342,7 @@ void Decimate::FindDuplicate(int frame, int *chosen, double *metric, bool *force
 }
 /**
     \fn FindDuplicate2
+    \brief only used for anime mode (find longest dupe sequence)
 */
 void Decimate::FindDuplicate2(int frame, int *chosen, bool *forced)
 {
