@@ -78,14 +78,14 @@ bool Decimate::configure(void)
                           };
          diaMenuEntry tQuality[]={
                              {0, QT_TR_NOOP("Fastest (no chroma, partial luma)"),NULL},
-                             {1, QT_TR_NOOP("Fast (partial luma and chroma)"),NULL},
+//                             {1, QT_TR_NOOP("Fast (partial luma and chroma)"),NULL},
                              {2, QT_TR_NOOP("Medium (full luma, no chroma)"),NULL},
-                             {3, QT_TR_NOOP("Slow (full luma and chroma)"),NULL}
+//                             {3, QT_TR_NOOP("Slow (full luma and chroma)"),NULL}
                           };
   
     
     diaElemMenu menuMode(PX(mode),QT_TR_NOOP("_Mode:"), 4,tMode);
-    diaElemMenu menuQuality(PX(quality),QT_TR_NOOP("_Quality:"), 4,tQuality);
+    diaElemMenu menuQuality(PX(quality),QT_TR_NOOP("_Quality:"), sizeof(tQuality)/sizeof(diaMenuEntry),tQuality);
     diaElemFloat menuThresh1(&t1,QT_TR_NOOP("_Threshold 1:"),0,100.);
     diaElemFloat menuThresh2(&t2,QT_TR_NOOP("T_hreshold 2:"),0,100.);
     diaElemUInteger cycle(PX(cycle),QT_TR_NOOP("C_ycle:"),2,40);
