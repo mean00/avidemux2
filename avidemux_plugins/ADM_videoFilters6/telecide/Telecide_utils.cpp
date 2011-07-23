@@ -139,6 +139,11 @@ void Telecide::Show(ADMImage *dst, int frame)
 		_param->post != POST_NONE ? (film == true ? " [progressive]" : " [interlaced]") : "",
 		_param->guide != GUIDE_NONE ? status : "");
 	DrawString(dst, 0, 5 + (_param->post != POST_NONE) + (_param->guide != GUIDE_NONE), buf);
+    
+        sprintf(buf,"%s %s",	
+		(film == true ? " [progressive]" : " [interlaced]") ,
+		status);
+	DrawString(dst, 0, 6 + (_param->post != POST_NONE) + (_param->guide != GUIDE_NONE), buf);
 }
 /**
     \fn Debug
@@ -845,7 +850,7 @@ uint8_t CLAMP=235;
 // Do first and last lines.
 
     dstpn = dstp + dpitch;
-    for (x = 0; x < w; x++)
+    for (int x = 0; x < w; x++)
     {
             finalp[x] = (((int)dstp[x] + (int)dstpn[x]) >> 1);
     }
@@ -853,7 +858,7 @@ uint8_t CLAMP=235;
     dstp = src->GetWritePtr(plane) + (h-1)*dpitch;
     
     dstpp = dstp - dpitch;
-    for (x = 0; x < w; x++)
+    for (int x = 0; x < w; x++)
     {
             finalp[x] = (((int)dstp[x] + (int)dstpp[x]) >> 1);
     }
@@ -862,9 +867,9 @@ uint8_t CLAMP=235;
     dstpp = dstp - dpitch;
     dstpn = dstp + dpitch;
     finalp = final->GetWritePtr(plane) + fpitch;
-    for (y = 1; y < h - 1; y++)
+    for (int y = 1; y < h - 1; y++)
     {
-            for (x = 0; x < w; x++)
+            for (int x = 0; x < w; x++)
             {
                     v1 = (int)(dstp[x] - dthresh);
                     if (v1 < 0) v1 = 0; 
@@ -910,9 +915,9 @@ bool Telecide::interpolatePlane(ADMImage *dst, ADM_PLANE plane)
 
     float dthresh=configuration.dthresh;
 
-    for (y = 1; y < h - 1; y+=2)
+    for (int y = 1; y < h - 1; y+=2)
     {
-            for (x = 0; x < w; x++)
+            for (int x = 0; x < w; x++)
             {
                     v1 = (int) (dstp[x] - dthresh);
                     if (v1 < 0) v1 = 0; 

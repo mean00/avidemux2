@@ -97,18 +97,11 @@ protected:
         int vmetric;
         
         bool film, override, inpattern, found;
-        int force;
 
-        
         int chosen;
-        unsigned int p, c, pblock, cblock, lowest, predicted, predicted_metric;
-        unsigned int np, nc, npblock, ncblock;
+        unsigned int p,c,np,pblock,cblock,npblock,nc,ncblock;
         float mismatch;
-        int  x, y;
-        
-        bool hard;
         char status[80];
-
         // Metrics cache.
         struct CACHE_ENTRY *cache;
 

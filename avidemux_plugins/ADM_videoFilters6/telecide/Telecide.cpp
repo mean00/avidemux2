@@ -75,7 +75,7 @@ Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_core
 				_param->chroma = false;
 				_param->guide = GUIDE_32;// 0 / NONE - 1 GUIDE_32/ivtc-2 GUIDE 22/PAL-3 PAL/NTSC
 				_param->gthresh = 10.0;
-				_param->post = POST_NONE;
+				_param->post = POST_METRICS;
 				_param->vthresh = 50.0;
 				_param->bthresh = 50.0;
 				_param->dthresh = 7.0;

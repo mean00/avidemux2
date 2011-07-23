@@ -119,7 +119,9 @@ uint8_t *dstp;
 ADMImage *final=NULL;
 uint8_t *finalp;
 
-
+unsigned int lowest;
+unsigned int predicted;
+unsigned int predicted_metric;
 teleCide *_param=&configuration;
 
 
@@ -172,7 +174,7 @@ teleCide *_param=&configuration;
         if (guide != GUIDE_NONE)
         {
                 aprintf("Loop starting at %d +1, cycle=%d\n",frame,cycle);
-                for (y = frame + 1; y <= frame + cycle + 1; y++)
+                for (int y = frame + 1; y <= frame + cycle + 1; y++)
                 {
                         if (lastFrame==true ) break;
                         if (CacheQuery(y, &p, &pblock, &c, &cblock) == false)
@@ -233,7 +235,7 @@ teleCide *_param=&configuration;
         mismatch = 100.0;
         if (guide != GUIDE_NONE)
         {
-                hard = false;
+                bool hard = false;
                 if (frame >= cycle && PredictHardYUY2(frame, &predicted, &predicted_metric) == true)
                 {
                         inpattern = true;
@@ -264,8 +266,9 @@ teleCide *_param=&configuration;
                 if (hard == false && guide != GUIDE_22)
                 {
                         int i;
+                        
                         struct PREDICTION *pred = PredictSoftYUY2(frame);
-
+                        
                         if (/*(frame <= _info.nb_frames - 1 - cycle) &&  */   (pred[0].metric != 0xffffffff))
                         {
                                 // Apply pattern guidance.
@@ -391,18 +394,13 @@ teleCide *_param=&configuration;
 
         /* Check for manual overrides of the deinterlacing. */
         // Do postprocessing if enabled and required for this frame.
-        if (post == POST_NONE || post == POST_METRICS)
-        {
-                if (force == '+') film = false;
-                else if (force == '-') film = true;
-        }
-        else if ((force == '+') ||
-                ((post == POST_FULL || post == POST_FULL_MAP || post == POST_FULL_NOMATCH || post == POST_FULL_NOMATCH_MAP)
-                         && (film == false && force != '-')))
+         if ((post == POST_FULL || post == POST_FULL_MAP || post == POST_FULL_NOMATCH || post == POST_FULL_NOMATCH_MAP)
+                         && (film == false ))
         {
                 unsigned char *dstpp, *dstpn;
                 int v1, v2, z;
                 #warning blend in place is wrong!
+                final=dst;
                 // MeanX:We should copy here as we blend from source and destination
                 // for the moment we do it in place, it is wrong.
                 if (blend == true)
