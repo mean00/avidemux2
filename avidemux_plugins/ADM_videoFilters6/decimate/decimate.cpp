@@ -571,7 +571,7 @@ bool Decimate::get3(uint32_t *fn,ADMImage *data)
                 break;
             case 1: case 2:
                 /* It's a video cycle. Make blends for the remaining frames. */
-                if ((inframe % 4) == 1)  // MEANX dont undestand the difference ?
+                if ((inframe % 4) == 1)  // MEANX dont understand the difference ?
                 {
                     GETFRAME(sourceFrame, src);
                     GETFRAME(sourceFrame+1, next);

@@ -479,16 +479,16 @@ void Decimate::DrawShow(ADMImage  *src, int useframe, bool forced, int dropframe
 	char buf[80];
     deciMate *_param=&configuration;
 	int start = (useframe / _param->cycle) * _param->cycle;
-
+#define pg(i) (hints[i] & PROGRESSIVE) ? "p" : "i"
 	if (configuration.show == true)
 	{
 		sprintf(buf, "Decimate %d", 0); 	DrawString(src, 0, 0, buf);
 		sprintf(buf, "Copyright 2003 Donald Graft");	    DrawString(src, 0, 1, buf);
-		sprintf(buf,"%d: %3.2f", start, showmetrics[0]);	DrawString(src, 0, 3, buf);
-		sprintf(buf,"%d: %3.2f", start + 1, showmetrics[1]);DrawString(src, 0, 4, buf);
-		sprintf(buf,"%d: %3.2f", start + 2, showmetrics[2]);DrawString(src, 0, 5, buf);
-		sprintf(buf,"%d: %3.2f", start + 3, showmetrics[3]);DrawString(src, 0, 6, buf);
-		sprintf(buf,"%d: %3.2f", start + 4, showmetrics[4]);DrawString(src, 0, 7, buf);
+		sprintf(buf,"%d: [%s] %3.2f", start + 0,pg(0), showmetrics[0]);DrawString(src, 0, 3, buf);
+		sprintf(buf,"%d: [%s] %3.2f", start + 1,pg(1), showmetrics[1]);DrawString(src, 0, 4, buf);
+		sprintf(buf,"%d: [%s] %3.2f", start + 2,pg(2), showmetrics[2]);DrawString(src, 0, 5, buf);
+		sprintf(buf,"%d: [%s] %3.2f", start + 3,pg(3), showmetrics[3]);DrawString(src, 0, 6, buf);
+		sprintf(buf,"%d: [%s] %3.2f", start + 4,pg(4), showmetrics[4]);DrawString(src, 0, 7, buf);
 		if (all_video_cycle == false)
 		{
 			sprintf(buf,"in frm %d, use frm %d", inframe, useframe);
