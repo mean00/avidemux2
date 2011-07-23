@@ -205,7 +205,58 @@ uint8_t *s1,*s2,*d1;
 
         return true;
 }
+/**
+    \fn blendSSE
+*/
+static bool blendSSE(int width, int height,
+                    uint8_t *target,uint32_t stride,
+                    uint8_t *src1,  uint32_t stride1,
+                    uint8_t *src2,  uint32_t stride2)
+{
+uint32_t ww,rr;
+uint8_t *s1,*s2,*d1;
+        int a1,a2;
 
+        ww=width>>3;
+        rr=width&7;
+
+          for(int y=0;y<height;y++)
+          {
+                int count=ww;
+                s1=src1;
+                s2=src2;
+                d1=target;
+                if(rr)
+                {
+                    blendC(rr,height,d1+(ww<<3), stride,s1+(ww<<3),stride1,s2+(ww<<3),stride2);
+                }
+
+                    
+                __asm__(
+                        "1: \n"
+                        "movq           (%0),%%mm0  \n"
+                        "movq           (%1),%%mm1  \n"
+                        "pavgb          %%mm1,%%mm0 \n"
+                        "movq           %%mm0,(%2)  \n"
+                        "add           $8,%0      \n"
+                        "add           $8,%1      \n"
+                        "add           $8,%2      \n"
+                        "sub           $1,%3      \n"
+                        "jnz             1b        \n"
+
+                : : "r" (s1),"r" (s2),"r"(d1),"r"(count)
+                );
+                src1+=stride1;
+                src2+=stride2;
+                target+=stride;
+           }
+        __asm__(
+                        "emms\n"
+                ::
+                );
+
+        return true;
+}
 
 #endif
 /**
@@ -218,6 +269,8 @@ bool ADMImage::blend(ADMImage *src1,ADMImage *src2)
 #ifdef ADM_CPU_X86
     if(CpuCaps::hasMMX())
             myBlend=blendMMX;
+    if(CpuCaps::hasSSE())
+            myBlend=blendSSE;
 #endif
     ADM_assert(src1->_width==src2->_width);
     ADM_assert(_width==src2->_width);
