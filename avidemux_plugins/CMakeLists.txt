@@ -170,6 +170,9 @@ ENDIF(DO_COMMON)
 
 ADD_SUBDIRECTORY(ADM_videoEncoder)
 ADD_SUBDIRECTORY(ADM_videoFilters6)
+IF(DO_QT4)
+ADD_SUBDIRECTORY(ADM_videoFilters6_openGl)
+ENDIF(DO_QT4)
 
 ########################################
 # Config Summary
