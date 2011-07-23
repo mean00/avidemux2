@@ -12,6 +12,7 @@ SET(${ADM_LIB}_SRCS
         #stubs.cpp
         T_thumbSlider.cpp
         file_qt4.cpp  gui_none.cpp  ADM_qslider.cpp
+        Q_dummyWidget.cpp
 	${${ADM_LIB}_header}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})

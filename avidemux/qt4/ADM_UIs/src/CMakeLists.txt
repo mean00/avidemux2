@@ -9,6 +9,7 @@ SET(${ADM_LIB}_T
 	T_slider.cpp  T_threadCount.cpp  T_toggle.cpp  T_notch.cpp
         T_flyDialogQt4.cpp 
         T_QCanvas.cpp
+        T_openGL.cpp
 )
 
 SET(${ADM_LIB}_SRCS

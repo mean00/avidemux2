@@ -17,7 +17,7 @@
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
-
+#include <Qt/QtOpenGL>
 #define MENU_DECLARE
 #include "Q_gui2.h"
 #include "ADM_default.h"
@@ -66,11 +66,15 @@ bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,u
 uint32_t ADM_ve6_getNbEncoders(void);
 void UI_refreshCustomMenu(void);
 QWidget *QuiMainWindows=NULL;
+QWidget *VuMeter=NULL;
 QGraphicsView *drawWindow=NULL;
 uint8_t UI_updateRecentMenu( void );
 extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
 extern bool ADM_QPreviewCleanup(void);
+
+
+
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -79,6 +83,12 @@ extern bool ADM_QPreviewCleanup(void);
 
 #include "translation_table.h"   
 
+#ifdef USE_OPENGL
+#include "Q_dummyWidget.h"
+#include "T_openGL.h"
+dummyGLWidget *topGlWidget=NULL;
+dummyGLWidget *topGlWidgetRoot=NULL;
+#endif
 /*
     Declare the table converting widget name to our internal signal           
 */
@@ -742,6 +752,7 @@ int UI_Init(int nargc,char **nargv)
 	UI_updateRecentMenu();
 
     // Init vumeter
+    VuMeter=mw->ui.frameVU;
     UI_InitVUMeter(mw->ui.frameVU);
 	return 0;
 }
@@ -825,9 +836,17 @@ int UI_RunApp(void)
 
 	if (global_argc >= 2)
 		automation();
-
-	myApplication->exec();
-
+    // Create an openGL context
+#ifdef USE_OPENGL
+    ADM_info("Creating openGl dummy widget\n");
+    topGlWidgetRoot=new dummyGLWidget(VuMeter);
+    ADM_setGlWidget(topGlWidgetRoot);
+#endif
+    myApplication->exec();
+#ifdef USE_OPENGL
+    if(topGlWidgetRoot) delete topGlWidgetRoot;
+    topGlWidgetRoot=NULL;
+#endif
 	destroyTranslator();
     delete myApplication;
     myApplication=NULL;

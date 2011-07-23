@@ -82,6 +82,8 @@ if(PLUGIN_UI MATCHES "CLI")
     SET(DO_CLI    1)
 endif(PLUGIN_UI MATCHES "CLI")
 
+
+
 MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
 
 ########################################
@@ -137,6 +139,8 @@ if(DO_QT4)
     ELSE (NOT QT4_FOUND)
         MESSAGE(STATUS " QT4 libraries found, good")
         CHECK_ADM_CONFIG_H(qt4 ADM_INC)
+        MESSAGE(STATUS " Checking for Qt4 OpenGL support ")
+        INCLUDE(admCheckOpenGl)
         IF(NOT ADM_INC)
             MESSAGE(ERROR " QT4 UI requested, but cannot find header file for avidemux/qt4...disabling it")
             SET(DO_QT4 0)
@@ -171,7 +175,9 @@ ENDIF(DO_COMMON)
 ADD_SUBDIRECTORY(ADM_videoEncoder)
 ADD_SUBDIRECTORY(ADM_videoFilters6)
 IF(DO_QT4)
-ADD_SUBDIRECTORY(ADM_videoFilters6_openGl)
+        IF(USE_OPENGL)
+         ADD_SUBDIRECTORY(ADM_videoFilters6_openGl)
+        ENDIF(USE_OPENGL)
 ENDIF(DO_QT4)
 
 ########################################
