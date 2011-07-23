@@ -90,7 +90,14 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
     if(fail) return false;
     return true;
 }
-
+/**
+     \fn bFrameDroppable
+*/
+static bool bFrameDroppable(uint32_t fcc)
+{
+    if(isH264Compatible(fcc)) return false;
+    return true;
+}
 /**
         \fn getCompressedPicture
         \brief bypass decoder and directly get the source image
@@ -128,20 +135,26 @@ againGet:
 
     vid->lastSentFrame++;
     //
-    if(img->flags & AVI_B_FRAME)
+    aviInfo    info;
+    vid->_aviheader->getVideoInfo (&info);
+    //
+    if(bFrameDroppable(info.fcc))
     {
-        if(seg->_dropBframes==2) 
+        if(img->flags & AVI_B_FRAME)
         {
-            ADM_warning("%"LU" Dropping bframes\n",fn);
-            goto againGet;
-        }
-    }else
-    { // not a bframe
-        switch(seg->_dropBframes)
-        {
-            case 2: seg->_dropBframes=0;break;
-            case 1: seg->_dropBframes=2;break;
-            default: break;
+            if(seg->_dropBframes==2) 
+            {
+                ADM_warning("%"LU" Dropping bframes\n",fn);
+                goto againGet;
+            }
+        }else
+        { // not a bframe
+            switch(seg->_dropBframes)
+            {
+                case 2: seg->_dropBframes=0;break;
+                case 1: seg->_dropBframes=2;break;
+                default: break;
+            }
         }
     }
     // after a segment switch, we may have some frames from "the past"
