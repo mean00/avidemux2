@@ -4,6 +4,11 @@
 
     copyright            : (C) 2009 by mean
 
+bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
+            Download Texture
+                RGB2Y=5ms               (MMX it)
+                toQimage=14 ms  <<==    TOO SLOW
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -25,10 +30,15 @@
 #include "ADM_coreVideoFilterInternal.h"
 #include "T_openGL.h"
 #include "sampleGl.h"
+#include "ADM_clock.h"
 /**
 
 */
-extern QGLWidget *topGlWidget;
+
+//#define BENCH 1
+//#define BENCH_READTEXTURE
+
+
 
 /**
     \class openGlSample
@@ -58,8 +68,8 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   openGlSample,   // Class
                         1,0,0,              // Version
-                        ADM_UI_QT4,         // UI
-                        VF_MISC,            // Category
+                        ADM_UI_QT4+ADM_UI_GL,         // UI
+                        VF_OPENGL,            // Category
                         "glsample",            // internal name (must be uniq!)
                         "OpenGl Sample",            // Display name
                         "Run a fragment shader." // Description
@@ -137,10 +147,26 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
-    
-    render(image);
-    downloadTexture(image);
-    
+
+#ifdef BENCH
+    ADMBenchmark bench;
+    for(int i=0;i<100;i++)
+    {
+        bench.start();
+#endif
+
+        render(image);
+        
+        
+        downloadTexture(image);
+        
+#ifdef BENCH
+        bench.end();
+    }
+    ADM_info("GL result: ");
+    bench.printResult();
+#endif    
+
     return true;
 }
 /**
@@ -217,8 +243,31 @@ bool openGlSample::render(ADMImage *image)
 */
 bool openGlSample::downloadTexture(ADMImage *image)
 {
+#ifdef BENCH_READTEXTURE
+    {
+    ADMBenchmark bench;
+    for(int i=0;i<100;i++)
+    {
+        bench.start();
+        QImage qimg(fbo->toImage());
+        bench.end();
+     }
+    ADM_warning("convert to Qimage\n");
+    bench.printResult();
+    }
+#endif
+
     QImage qimg(fbo->toImage());
+
+
+
     // Assume RGB32, read R or A
+#ifdef BENCH_READTEXTURE
+    ADMBenchmark bench;
+    for(int i=0;i<100;i++)
+    {
+        bench.start();
+#endif
     int stride=image->GetPitch(PLANAR_Y);
     uint8_t *to=image->GetWritePtr(PLANAR_Y);
     for(int y=0;y<info.height;y++)
@@ -233,6 +282,13 @@ bool openGlSample::downloadTexture(ADMImage *image)
             to[x]=src[x*4];
         to+=stride;
     }
+#ifdef BENCH_READTEXTURE
+        bench.end();
+    }
+    bench.printResult();
+
+#endif
+
     return true;
 }
 //EOF
