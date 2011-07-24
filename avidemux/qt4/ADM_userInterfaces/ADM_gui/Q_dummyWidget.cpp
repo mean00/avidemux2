@@ -1,7 +1,7 @@
 
 #include "config.h"
 #ifdef USE_OPENGL
-#include <Qt/QtOpenGL>
+#include <QtOpenGL/QGLWidget>
 #include "Q_dummyWidget.h"
 #include "ADM_default.h"
 

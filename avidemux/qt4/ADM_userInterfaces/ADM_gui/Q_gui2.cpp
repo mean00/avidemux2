@@ -19,7 +19,7 @@
 #include <QtGui/QGraphicsView>
 
 #ifdef USE_OPENGL
-#include <Qt/QtOpenGL>
+#include <QtOpenGL/QGLWidget>
 #endif
 
 #define MENU_DECLARE
