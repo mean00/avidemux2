@@ -89,35 +89,30 @@ static inline uint32_t decimateDeltaLineSSE(uint8_t *ptr1,uint8_t *ptr2,int size
         {
             
             __asm__(
-                    "xor            %3,%3       \n"
-                    "xor            %0,%0       \n"
-                    "movq           (%1),%%mm0  \n"
-                    "movq           (%2),%%mm1  \n"
+                    "pxor           %%mm2,%%mm2 \n"
+                    "\n"
+                    "movq           0(%1),%%mm0  \n"
+                    "movq           0(%2),%%mm1  \n"
                     "psadbw         %%mm1,%%mm0 \n"
-                    "movq           %%mm0,%3    \n"
-                    "add            %3,%0       \n"
-                    "add           $8,%1        \n"
-                    "add           $8,%2        \n"
-                    "movq           (%1),%%mm0  \n"
-                    "movq           (%2),%%mm1  \n"
+                    "paddq          %%mm0,%%mm2 \n"
+                    "\n"
+                    "movq           8(%1),%%mm0  \n"
+                    "movq           8(%2),%%mm1  \n"
                     "psadbw         %%mm1,%%mm0 \n"
-                    "movq           %%mm0,%3    \n"
-                    "add            %3,%0       \n"
-                    "add           $8,%1        \n"
-                    "add           $8,%2        \n"
-                    "movq           (%1),%%mm0  \n"
-                    "movq           (%2),%%mm1  \n"
+                    "paddq          %%mm0,%%mm2 \n"
+                    "\n"
+                    "movq           16(%1),%%mm0  \n"
+                    "movq           16(%2),%%mm1  \n"
                     "psadbw         %%mm1,%%mm0 \n"
-                    "movq           %%mm0,%3    \n"
-                    "add            %3,%0       \n"
-                    "add           $8,%1        \n"
-                    "add           $8,%2        \n"
-                    "movq           (%1),%%mm0  \n"
-                    "movq           (%2),%%mm1  \n"
+                    "paddq          %%mm0,%%mm2 \n"
+                    "\n"
+                    "movq           24(%1),%%mm0  \n"
+                    "movq           24(%2),%%mm1  \n"
                     "psadbw         %%mm1,%%mm0 \n"
-                    "movq           %%mm0,%3    \n"
-                    "add            %3,%0       \n"
-            : "=r"(sum):  "r" (ptr1),"r" (ptr2),"r"(out));
+                    "paddq          %%mm0,%%mm2 \n"
+                    // move mm2 to sum
+                    "movq           %%mm2,%0\n"
+            : "=m"(sum):  "r" (ptr1),"r" (ptr2));
             sums[i]+=sum;
             total1+=sum;
           //  printf("Sum : %d\n",(int)sum);
@@ -145,6 +140,9 @@ static inline uint32_t decimateDeltaLineSSE(uint8_t *ptr1,uint8_t *ptr2,int size
         if(total1!=total2)
         {
             ADM_error("SSE version does not match %d(C) vs %d(SSE)\n",(int)total2,(int)total1);
+        }else
+        {
+            ADM_info("SSE matches C version\n");
         }
 #endif
         return total1;
