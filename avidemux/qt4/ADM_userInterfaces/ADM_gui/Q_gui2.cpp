@@ -17,7 +17,11 @@
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
+
+#ifdef USE_OPENGL
 #include <Qt/QtOpenGL>
+#endif
+
 #define MENU_DECLARE
 #include "Q_gui2.h"
 #include "ADM_default.h"

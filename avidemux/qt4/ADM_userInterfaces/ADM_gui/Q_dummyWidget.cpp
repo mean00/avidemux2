@@ -1,5 +1,6 @@
 
 #include "config.h"
+#ifdef USE_OPENGL
 #include <Qt/QtOpenGL>
 #include "Q_dummyWidget.h"
 #include "ADM_default.h"
@@ -37,3 +38,4 @@ void dummyGLWidget::initializeGL()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glPushMatrix(); // push to avoid stack underflow in the first paintGL() call
 };
+#endif
