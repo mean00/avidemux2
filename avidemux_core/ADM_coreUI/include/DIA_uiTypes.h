@@ -20,6 +20,9 @@
 #define ADM_UI_GTK 2
 #define ADM_UI_QT4 4
 #define ADM_UI_NONE 99
+
+#define ADM_UI_GL 8
+
 #define ADM_UI_ALL (ADM_UI_CLI+ADM_UI_GTK+ADM_UI_QT4)
 typedef  int  ADM_UI_TYPE;
 
