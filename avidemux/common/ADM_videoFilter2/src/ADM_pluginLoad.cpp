@@ -279,6 +279,14 @@ const char *ADM_vf_getDisplayNameFromTag(uint32_t tag)
     return plugin->info.displayName;
 }
 /**
+    \fn ADM_vf_getFilterCategoryFromTag
+*/
+VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
+{
+    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+    return plugin->info.category;
+}
+/**
     \fn ADM_vf_createFromTag
     \brief Create a new filter from its tag
 */

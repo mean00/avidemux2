@@ -214,6 +214,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
     ADM_coreVideoFilter *f=bridge;
     // Now create a clone of the videoFilterChain we have here
     int nb=ADM_VideoFilters.size();
+    bool openGl=false;
     for(int i=0;i<nb;i++)
     {
             // Get configuration
@@ -221,18 +222,29 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
             ADM_coreVideoFilter *old=ADM_VideoFilters[i].instance;
             uint32_t tag=ADM_VideoFilters[i].tag;
             old->getCoupledConf(&c);
-
             ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
             if(c) delete c;
             f=nw;
             chain->push_back(nw);
+
+            VF_CATEGORY type=ADM_vf_getFilterCategoryFromTag(tag);
+            if(type== VF_OPENGL) openGl=true;
+
     }
     // Last create the thread
 #if 1
-    int m=chain->size();
-    ADM_coreVideoFilter *last=(*chain)[m-1];
-    ADM_videoFilterQueue *thread=new ADM_videoFilterQueue(last);
-    chain->push_back(thread);
+    // Make sure there is no openGl filter in the queue, it is not thread safe...
+    
+    if(openGl==true)
+    {
+        ADM_warning("The filter chain contains an openGl filter, disabling threads \n");
+    }else
+    {
+        int m=chain->size();
+        ADM_coreVideoFilter *last=(*chain)[m-1];
+        ADM_videoFilterQueue *thread=new ADM_videoFilterQueue(last);
+        chain->push_back(thread);
+    }
 #endif
     return chain;
 }
