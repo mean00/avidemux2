@@ -19,11 +19,26 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#define GL_GLEXT_PROTOTYPES
 
+#include <QtGui/QPainter>
+
+#ifdef __APPLE__
+#       include <OpenGL/gl.h>
+#       include <OpenGL/glext.h>
+#       define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
+#else
+#       include <GL/gl.h>
+#       include <GL/glext.h>
+#endif
 
 #include <QtGui/QImage>
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGL/QGLShader>
+
+#ifdef __MINGW32__
+        #define glActiveTexture(...) {} // FIXME!
+#endif
 
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
@@ -37,7 +52,6 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 
 //#define BENCH 1
 //#define BENCH_READTEXTURE
-
 
 
 /**
@@ -107,6 +121,7 @@ UNUSED_ARG(setup);
                 ADM_error("[GL Render] Binding FAILED\n");
                 ADM_assert(0);
         }
+
         glProgram->setUniformValue("myTex", 0); 
         printf("Setuping texture\n");
         glProgram->setUniformValue("texY", 0);
