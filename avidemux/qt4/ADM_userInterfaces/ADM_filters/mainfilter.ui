@@ -324,6 +324,15 @@
        </item>
        <item>
         <property name="text">
+         <string>OpenGl</string>
+        </property>
+        <property name="icon">
+         <iconset resource="filter.qrc">
+          <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/gl.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/gl.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Miscellaneous</string>
         </property>
         <property name="icon">

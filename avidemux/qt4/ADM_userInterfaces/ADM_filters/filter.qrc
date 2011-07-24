@@ -1,5 +1,6 @@
 <RCC>
-  <qresource prefix="/new/prefix1" >
+  <qresource prefix="/new/prefix1">
+    <file>../../../common/ADM_icons/videoFilter/gl.png</file>
     <file>../../../common/ADM_icons/videoFilter/up.png</file>
     <file>../../../common/ADM_icons/videoFilter/add.png</file>
     <file>../../../common/ADM_icons/videoFilter/cd.png</file>
