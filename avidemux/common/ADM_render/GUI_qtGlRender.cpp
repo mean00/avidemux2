@@ -10,18 +10,10 @@
 *   (at your option) any later version.                                   *
 *                                                                         *
 ***************************************************************************///
-#define GL_GLEXT_PROTOTYPES
+
 #include "T_openGL.h"
 #include <QtGui/QPainter>
 
-#ifdef __APPLE__
-#	include <OpenGL/gl.h>
-#	include <OpenGL/glext.h>
-#	define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
-#else
-#	include <GL/gl.h>
-#	include <GL/glext.h>
-#endif
 #define ADM_LEGACY_PROGGY // Dont clash with free/malloc etc..
 #include "ADM_default.h"
 #include "GUI_render.h"

@@ -14,7 +14,7 @@
  ***************************************************************************/
 #ifndef T_OPENGL_H
 #define T_OPENGL_H
-
+#define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>
 #	include <OpenGL/glext.h>
