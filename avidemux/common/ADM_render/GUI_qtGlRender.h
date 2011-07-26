@@ -32,11 +32,7 @@ private:
     GLsizei textureStrides[3];
 	GLsizei textureHeights[3];
 	uint8_t *textureOffsets[3];
-
-#ifndef QT_OPENGL_ES
-	typedef void (*_glActiveTexture) (GLenum);
-	_glActiveTexture glActiveTexture;
-#endif
+    GlActiveTexture_Type *myActiveTexture;
 
 protected:
 	void initializeGL();

@@ -11,7 +11,7 @@
 *                                                                         *
 ***************************************************************************///
 #define GL_GLEXT_PROTOTYPES
-
+#include "T_openGL.h"
 #include <QtGui/QPainter>
 
 #ifdef __APPLE__
@@ -67,6 +67,7 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(pare
 	imageHeight = h;
 	firstRun = true;
 	glProgram = NULL;
+    myActiveTexture=NULL;
 }
 /**
 
@@ -123,16 +124,12 @@ bool QtGlAccelWidget::setImage(ADMImage *pic)
 void QtGlAccelWidget::initializeGL()
 {
 	int success = 1;
-
-#ifndef QT_OPENGL_ES
-	glActiveTexture = (_glActiveTexture)this->context()->getProcAddress(QLatin1String("glActiveTexture"));
-
-	if (!glActiveTexture)
-	{
-		success = 0;
-		printf("[GL Render] Active Texture function not found!\n");
-	}
-#endif
+    GlActiveTexture_Type *myActiveTexture= ADM_getActiveTexture();
+    if(!myActiveTexture)
+    {
+        success=0;
+        printf("[GL Render] Cannot get glActiveTexture\n");
+    }
 
 	printf("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
 	printf("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
@@ -184,7 +181,7 @@ void QtGlAccelWidget::updateTexture()
 	}
 
 	// U
-	glActiveTexture(GL_TEXTURE1);
+	myActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_RECTANGLE_NV, 1);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -198,7 +195,7 @@ void QtGlAccelWidget::updateTexture()
 		glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, textureStrides[1], textureHeights[1], GL_LUMINANCE, GL_UNSIGNED_BYTE, textureOffsets[1]);
 
 	// V
-	glActiveTexture(GL_TEXTURE2);
+	myActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_RECTANGLE_NV, 2);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -212,7 +209,7 @@ void QtGlAccelWidget::updateTexture()
 		glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, textureStrides[2], textureHeights[2], GL_LUMINANCE, GL_UNSIGNED_BYTE, textureOffsets[2]);
 
 	// Y
-	glActiveTexture(GL_TEXTURE0);
+	myActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_RECTANGLE_NV, 3);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -279,7 +276,9 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     if(false==status)
     {
         ADM_warning("[GL Render] Init failed : No QFl support or no GLShareProgram\n");
-        ADM_warning("[GL Render] hasOpenGl : %d, hasOpenGLShaderProgram %d\n",(int)QGLFormat::hasOpenGL(),(int)QGLShaderProgram::hasOpenGLShaderPrograms());
+        ADM_warning("[GL Render] hasOpenGl : %d, hasOpenGLShaderProgram %d\n",
+                            (int)QGLFormat::hasOpenGL(),
+                            (int)QGLShaderProgram::hasOpenGLShaderPrograms());
         return false;
     }
 

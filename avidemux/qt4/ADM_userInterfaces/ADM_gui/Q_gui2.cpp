@@ -11,7 +11,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 #include "config.h"
+
 #include "ADM_inttype.h"
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
@@ -20,6 +22,10 @@
 
 #ifdef USE_OPENGL
 #include <QtOpenGL/QGLWidget>
+#endif
+
+#ifdef USE_OPENGL
+#include "T_openGL.h"
 #endif
 
 #define MENU_DECLARE
@@ -88,8 +94,8 @@ extern bool ADM_QPreviewCleanup(void);
 #include "translation_table.h"   
 
 #ifdef USE_OPENGL
+#include "T_openGLFilter.h"
 #include "Q_dummyWidget.h"
-#include "T_openGL.h"
 dummyGLWidget *topGlWidget=NULL;
 dummyGLWidget *topGlWidgetRoot=NULL;
 #endif
@@ -845,6 +851,24 @@ int UI_RunApp(void)
     ADM_info("Creating openGl dummy widget\n");
     topGlWidgetRoot=new dummyGLWidget(VuMeter);
     ADM_setGlWidget(topGlWidgetRoot);
+
+#ifndef QT_OPENGL_ES
+    GlActiveTexture_Type *tex= (GlActiveTexture_Type *)topGlWidgetRoot->context()->getProcAddress(QLatin1String("glActiveTexture"));
+
+	if (!tex)
+	{
+		ADM_error("[GL Render] Active Texture function not found!\n");
+	}
+    ADM_setActiveTexture(tex);
+#else
+    ADM_setActiveTexture(glActiveTexture);
+#endif
+
+	printf("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
+	printf("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
+	printf("[GL Render] OpenGL Extensions: %s\n", glGetString(GL_EXTENSIONS));
+
 #endif
     myApplication->exec();
 #ifdef USE_OPENGL
