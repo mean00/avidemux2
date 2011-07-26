@@ -28,7 +28,7 @@
 
 
 // Get glActiveTexture
-typedef GLAPI void APIENTRY (GlActiveTexture_Type)(GLenum texture);
+typedef void APIENTRY (GlActiveTexture_Type)(GLenum texture);
 bool ADM_setActiveTexture(GlActiveTexture_Type *set);
 GlActiveTexture_Type *ADM_getActiveTexture(void);
 #endif
