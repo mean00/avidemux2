@@ -30,7 +30,8 @@ protected:
                     const   QGLContext           *context;
                             QGLFramebufferObject *fboY;
                             QGLFramebufferObject *fboUV;
-                            QGLShaderProgram     *glProgram;
+                            QGLShaderProgram     *glProgramY;
+                            QGLShaderProgram     *glProgramUV;
                             int                   firstRun;
                             GlActiveTexture_Type *myGlActiveTexture;
 protected:

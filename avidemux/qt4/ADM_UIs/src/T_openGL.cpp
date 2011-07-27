@@ -50,7 +50,8 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
 :ADM_coreVideoFilter(previous,conf)
 {
     context=NULL;
-    glProgram=NULL;
+    glProgramY=NULL;
+    glProgramUV=NULL;
     fboY=NULL;
     fboUV=NULL;
     firstRun=0;
@@ -77,8 +78,10 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
 ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
 {
     ADM_info("Gl filter : Destroying..\n");
-    if(glProgram) delete glProgram;
-    glProgram=NULL;
+    if(glProgramY) delete glProgramY;
+    glProgramY=NULL;
+    if(glProgramUV) delete glProgramUV;
+    glProgramUV=NULL;
     if(fboY) delete fboY;
     fboY=NULL;
     if(fboUV) delete fboUV;

@@ -59,8 +59,9 @@ class openGlSample : public  ADM_coreVideoFilterQtGl
 {
 protected:
 protected:
-                        bool uploadTexture(ADMImage *image, ADM_PLANE plane);
+                        //bool uploadTexture(ADMImage *image, ADM_PLANE plane);
                         bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                        void tinyUploadTex(ADMImage *img, ADM_PLANE plane, GLuint tex,int texNum );
 public:
                              openGlSample(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~openGlSample();
@@ -92,37 +93,48 @@ openGlSample::openGlSample(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
 UNUSED_ARG(setup);
         fboY->bind();
         printf("Compiling shader \n");
-        glProgram = new QGLShaderProgram(context);
-        ADM_assert(glProgram);
-        if ( !glProgram->addShaderFromSourceCode(QGLShader::Fragment, myShader))
+        glProgramY = new QGLShaderProgram(context);
+        ADM_assert(glProgramY);
+        if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
         {
-                ADM_error("[GL Render] Fragment log: %s\n", glProgram->log().toUtf8().constData());
+                ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
                 ADM_assert(0);
         }
-        if ( !glProgram->link())
+        if ( !glProgramY->link())
         {
-            ADM_error("[GL Render] Link log: %s\n", glProgram->log().toUtf8().constData());
+            ADM_error("[GL Render] Link log: %s\n", glProgramY->log().toUtf8().constData());
             ADM_assert(0);
         }
 
-        if ( !glProgram->bind())
+        if ( !glProgramY->bind())
         {
                 ADM_error("[GL Render] Binding FAILED\n");
                 ADM_assert(0);
         }
-
-        glProgram->setUniformValue("myTex", 0); 
-        printf("Setuping texture\n");
-        glProgram->setUniformValue("texY", 0);
-        myGlActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_RECTANGLE_NV, 0);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        //glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, WIDTH, HEIGHT, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, myTexture);
         fboY->release();
+//
+        fboUV->bind();
+        printf("Compiling shader \n");
+        glProgramUV = new QGLShaderProgram(context);
+        ADM_assert(glProgramUV);
+        if ( !glProgramUV->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
+        {
+                ADM_error("[GL Render] Fragment log: %s\n", glProgramUV->log().toUtf8().constData());
+                ADM_assert(0);
+        }
+        if ( !glProgramUV->link())
+        {
+            ADM_error("[GL Render] Link log: %s\n", glProgramUV->log().toUtf8().constData());
+            ADM_assert(0);
+        }
+
+        if ( !glProgramUV->bind())
+        {
+                ADM_error("[GL Render] Binding FAILED\n");
+                ADM_assert(0);
+        }
+        fboUV->release();
+
 }
 /**
     \fn openGlSample
@@ -145,8 +157,30 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
+    float angle=*fn;
+    angle=0.3+angle/40;
+    glProgramY->setUniformValue("teta", angle); 
+    glProgramUV->setUniformValue("teta", angle); 
+        // size is the last one...
+    fboY->bind();
+    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
+    glProgramY->setUniformValue("myTexture", 0); 
     render(image,PLANAR_Y,fboY);
     downloadTexture(image,PLANAR_Y,fboY);
+    fboY->release();
+
+    fboUV->bind();
+    tinyUploadTex(image,PLANAR_U,GL_TEXTURE1,1);
+    glProgramUV->setUniformValue("myTexture", 1); 
+    render(image,PLANAR_U,fboUV);
+    downloadTexture(image,PLANAR_U,fboUV);
+    
+    tinyUploadTex(image,PLANAR_V,GL_TEXTURE2,2);
+    glProgramUV->setUniformValue("myTexture", 2); 
+    render(image,PLANAR_V,fboUV);
+    downloadTexture(image,PLANAR_V,fboUV);
+    fboUV->release();
+    firstRun=false;
     return true;
 }
 /**
@@ -170,22 +204,32 @@ const char *openGlSample::getConfiguration(void)
 /**
     \fn uploadTexture
 */
-bool openGlSample::uploadTexture(ADMImage *image, ADM_PLANE plane)
+void openGlSample::tinyUploadTex(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
 {
-	if (firstRun<3)
-		glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                        image->GetPitch(plane),
-                        image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                        image->GetReadPtr(plane));
-	else
-		glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
+        myGlActiveTexture(tex);
+        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        if(!firstRun)
+        {
+            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
+                            image->GetPitch(plane),
+                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                            image->GetReadPtr(plane));
+        }else
+        {
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
                 image->GetPitch(plane),
                 image->GetHeight(plane),
                 GL_LUMINANCE, GL_UNSIGNED_BYTE, 
                 image->GetReadPtr(plane));
-    firstRun++;
-    return true;
+        }
 }
+
+
 /**
     \fn render
 */
@@ -194,15 +238,12 @@ bool openGlSample::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);
 
-    fbo->bind();
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, width, 0, height, -1, 1);
 
-    // load input texture in fbo
-    uploadTexture(image,plane);
     //
     glBegin(GL_QUADS);
 	glTexCoord2i(0, 0);
@@ -214,7 +255,6 @@ bool openGlSample::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *
 	glTexCoord2i(0, height);
 	glVertex2i(0, height);
 	glEnd();	// draw cube background
-    fbo->release();
     return true;
 }
 //EOF
