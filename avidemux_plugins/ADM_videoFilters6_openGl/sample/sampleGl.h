@@ -17,6 +17,7 @@ static const char *myShaderY =
 	"  gl_FragColor = vec4(t, t, t, 1.0);\n"
 	//"  gl_FragColor = vec4(t, 1.0-t, 2*t, 1.0);\n"
 	"}\n";
+// Not used
 static const char *myShaderUV =
 	"#extension GL_ARB_texture_rectangle: enable\n"
 	"uniform sampler2DRect myUVTex;\n"
