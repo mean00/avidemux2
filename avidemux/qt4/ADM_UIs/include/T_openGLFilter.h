@@ -31,7 +31,7 @@ protected:
                             QGLFramebufferObject *fboY;
                             QGLFramebufferObject *fboUV;
                             QGLShaderProgram     *glProgram;
-                            bool                 firstRun;
+                            int                   firstRun;
                             GlActiveTexture_Type *myGlActiveTexture;
 protected:
                             bool downloadTexture(ADMImage *target, ADM_PLANE plane,QGLFramebufferObject *fbo);

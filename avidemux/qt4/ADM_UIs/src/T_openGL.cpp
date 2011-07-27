@@ -53,7 +53,7 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     glProgram=NULL;
     fboY=NULL;
     fboUV=NULL;
-    firstRun=true;
+    firstRun=0;
     ADM_info("Gl : Allocating context and frameBufferObjects\n");
     context=QGLContext::currentContext();
     ADM_assert(context);

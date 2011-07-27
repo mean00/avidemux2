@@ -44,6 +44,7 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "T_openGL.h"
+#include "T_openGLFilter.h"
 #include "sampleGl.h"
 #include "ADM_clock.h"
 /**
@@ -57,17 +58,12 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 /**
     \class openGlSample
 */
-class openGlSample : public  ADM_coreVideoFilter
+class openGlSample : public  ADM_coreVideoFilterQtGl
 {
 protected:
-                            bool                 firstRun;
-                     const  QGLContext           *context;
-                            QGLFramebufferObject *fbo;
-                            QGLShaderProgram     *glProgram;
 protected:
-                        bool uploadTexture(ADMImage *image);
-                        bool render(ADMImage *image);
-                        bool downloadTexture(ADMImage *image);
+                        bool uploadTexture(ADMImage *image, ADM_PLANE plane);
+                        bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
 public:
                              openGlSample(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~openGlSample();
@@ -94,14 +90,10 @@ DECLARE_VIDEO_FILTER(   openGlSample,   // Class
     \fn openGlSample
     \brief constructor
 */
-openGlSample::openGlSample(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
+openGlSample::openGlSample(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
 {
 UNUSED_ARG(setup);
-        context=QGLContext::currentContext();
-        ADM_assert(context);
-        fbo = new QGLFramebufferObject(info.width,info.height);
-        ADM_assert(fbo);
-        fbo->bind();
+        fboY->bind();
         printf("Compiling shader \n");
         glProgram = new QGLShaderProgram(context);
         ADM_assert(glProgram);
@@ -133,9 +125,7 @@ UNUSED_ARG(setup);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         //glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, WIDTH, HEIGHT, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, myTexture);
-        fbo->release();
-        firstRun=true;
-
+        fboY->release();
 }
 /**
     \fn openGlSample
@@ -143,10 +133,6 @@ UNUSED_ARG(setup);
 */
 openGlSample::~openGlSample()
 {
-		if(glProgram) delete glProgram;
-        if(fbo) delete fbo;
-        fbo=NULL;
-        glProgram=NULL;
 
 }
 
@@ -162,26 +148,8 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
-
-#ifdef BENCH
-    ADMBenchmark bench;
-    for(int i=0;i<100;i++)
-    {
-        bench.start();
-#endif
-
-        render(image);
-        
-        
-        downloadTexture(image);
-        
-#ifdef BENCH
-        bench.end();
-    }
-    ADM_info("GL result: ");
-    bench.printResult();
-#endif    
-
+    render(image,PLANAR_Y,fboY);
+    downloadTexture(image,PLANAR_Y,fboY);
     return true;
 }
 /**
@@ -205,105 +173,51 @@ const char *openGlSample::getConfiguration(void)
 /**
     \fn uploadTexture
 */
-bool openGlSample::uploadTexture(ADMImage *image)
+bool openGlSample::uploadTexture(ADMImage *image, ADM_PLANE plane)
 {
-	if (true==firstRun)
+	if (firstRun<3)
 		glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                        image->GetPitch(PLANAR_Y),
-                        image->GetHeight(PLANAR_Y), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                        image->GetReadPtr(PLANAR_Y));
+                        image->GetPitch(plane),
+                        image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                        image->GetReadPtr(plane));
 	else
 		glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                image->GetPitch(PLANAR_Y),
-                image->GetHeight(PLANAR_Y),
+                image->GetPitch(plane),
+                image->GetHeight(plane),
                 GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                image->GetReadPtr(PLANAR_Y));
-    firstRun=false;
+                image->GetReadPtr(plane));
+    firstRun++;
     return true;
 }
 /**
     \fn render
 */
-bool openGlSample::render(ADMImage *image)
+bool openGlSample::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
 {
+    int width=image->GetWidth(plane);
+    int height=image->GetHeight(plane);
+
     fbo->bind();
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glViewport(0, 0, info.width, info.height);
+	glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, info.width, 0, info.height, -1, 1);
-
-    glProgram->setUniformValue("width", info.width);
-    glProgram->setUniformValue("height",info.height);
-
+    glOrtho(0, width, 0, height, -1, 1);
 
     // load input texture in fbo
-    uploadTexture(image);
+    uploadTexture(image,plane);
     //
     glBegin(GL_QUADS);
 	glTexCoord2i(0, 0);
 	glVertex2i(0, 0);
-	glTexCoord2i(info.width, 0);
-	glVertex2i(info.width, 0);
-	glTexCoord2i(info.width, info.height);
-	glVertex2i(info.width ,info.height);
-	glTexCoord2i(0, info.height);
-	glVertex2i(0, info.height);
+	glTexCoord2i(width, 0);
+	glVertex2i(width, 0);
+	glTexCoord2i(width, height);
+	glVertex2i(width ,height);
+	glTexCoord2i(0, height);
+	glVertex2i(0, height);
 	glEnd();	// draw cube background
     fbo->release();
-    return true;
-}
-/**
-    \fn downloadTexture
-*/
-bool openGlSample::downloadTexture(ADMImage *image)
-{
-#ifdef BENCH_READTEXTURE
-    {
-    ADMBenchmark bench;
-    for(int i=0;i<100;i++)
-    {
-        bench.start();
-        QImage qimg(fbo->toImage());
-        bench.end();
-     }
-    ADM_warning("convert to Qimage\n");
-    bench.printResult();
-    }
-#endif
-
-    QImage qimg(fbo->toImage());
-
-
-
-    // Assume RGB32, read R or A
-#ifdef BENCH_READTEXTURE
-    ADMBenchmark bench;
-    for(int i=0;i<100;i++)
-    {
-        bench.start();
-#endif
-    int stride=image->GetPitch(PLANAR_Y);
-    uint8_t *to=image->GetWritePtr(PLANAR_Y);
-    for(int y=0;y<info.height;y++)
-    {
-        const uchar *src=qimg.constScanLine(info.height-y);
-        if(!src)
-        {
-            ADM_error("Can t get pointer to openGl texture\n");
-            return false;
-        }
-        for(int x=0;x<info.width;x++)
-            to[x]=src[x*4];
-        to+=stride;
-    }
-#ifdef BENCH_READTEXTURE
-        bench.end();
-    }
-    bench.printResult();
-
-#endif
-
     return true;
 }
 //EOF
