@@ -36,9 +36,6 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGL/QGLShader>
 
-#ifdef __MINGW32__
-        #define glActiveTexture(...) {} // FIXME!
-#endif
 
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
@@ -117,7 +114,7 @@ UNUSED_ARG(setup);
         glProgram->setUniformValue("myTex", 0); 
         printf("Setuping texture\n");
         glProgram->setUniformValue("texY", 0);
-        glActiveTexture(GL_TEXTURE0);
+        myGlActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_RECTANGLE_NV, 0);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
