@@ -693,7 +693,7 @@ char	c='?';
 		default:c='?';break;
 
 	}
-	sprintf(string,QT_TR_NOOP("Frame:%c(%02d)"),c,qp);
+	sprintf(string,QT_TR_NOOP("Frame type: %c (%02d)"),c,qp);
 	gtk_label_set_text( wid,string);
 
 }
@@ -875,12 +875,12 @@ char text[500];
     ms2time(timems,&hh,&mm,&ss,&ms);
 	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
 	
-    gtk_label_set_text(GTK_LABEL(glade.getWidget("labelMarkA")),text);
+    gtk_button_set_label(GTK_BUTTON(WOD(buttonGotoA)), text);
 
 	timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
 	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
-	gtk_label_set_text(GTK_LABEL(glade.getWidget("labelMarkB")),text);
+	gtk_button_set_label(GTK_BUTTON(WOD(buttonGotoB)), text);
     //gtk_markscale_setA(guiSlider, a);
     //gtk_markscale_setB(guiSlider, b);
 }
