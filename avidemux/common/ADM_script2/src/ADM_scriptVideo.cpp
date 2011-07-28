@@ -144,7 +144,7 @@ int     scriptAddVideoFilter(const char *filter,CONFcouple *c)
    bool r=true;
         filterTag = ADM_vf_getTagFromInternalName(filter);
         jsLog("Adding Filter %s -> %"LU"... \n",filter,filterTag);
-        if(c)
+        //if(c)
         {
             r=ADM_vf_addFilterFromTag(filterTag,c,false);
         }
