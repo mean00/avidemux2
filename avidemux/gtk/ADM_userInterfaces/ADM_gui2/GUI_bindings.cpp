@@ -76,7 +76,7 @@ static  GtkAdjustment *sliderAdjustment;
 static int keyPressHandlerId=0;
 
 static gint       jogChange( void );
-static void volumeChange( void );
+static void volumeChange(GtkScaleButton *button, gdouble value, gpointer user_data);
 static char     *customNames[ADM_MAX_CUSTOM_SCRIPT];
 static uint32_t ADM_nbCustom=0;
 // Needed for DND
@@ -442,7 +442,7 @@ uint8_t  bindGUI( void )
 //	gtk_signal_connect(GTK_OBJECT(guiCurFrame), "activate", GTK_SIGNAL_FUNC(UI_focusAfterActivate), (void *) ACT_JumpToFrame);
 
     // Volume
-    g_signal_connect(glade.getWidget("hscalVolume"), "value_changed", G_CALLBACK(volumeChange), NULL);
+    g_signal_connect(glade.getWidget("volumebutton1"), "value_changed", G_CALLBACK(volumeChange), NULL);
 
     // Jog
     g_signal_connect(glade.getWidget("jogg"), "value_changed", G_CALLBACK(jogChange), NULL);
@@ -1608,19 +1608,14 @@ gint jogChange(void)
   \fn volumeChange
   \brief Called when the volume slider is moved
 */
-void volumeChange( void )
+void volumeChange(GtkScaleButton *button, gdouble value, gpointer user_data)
 {
-GtkWidget *wid;
-GtkAdjustment *adj;
 int vol;
-
 
 if(_upd_in_progres) return;
  _upd_in_progres++;
 
-        wid=glade.getWidget("hscalVolume");
-        adj=gtk_range_get_adjustment (GTK_RANGE(wid));
-        vol=(int)floor(gtk_adjustment_get_value(adj)+0.5);
+        vol=(int)floor(value*100);
         AVDM_setVolume( vol);
  _upd_in_progres--;
 }
