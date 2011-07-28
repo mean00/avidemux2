@@ -844,8 +844,6 @@ int UI_RunApp(void)
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	checkCrashFile();
 
-	if (global_argc >= 2)
-		automation();
     // Create an openGL context
 #ifdef USE_OPENGL
     ADM_info("Creating openGl dummy widget\n");
@@ -858,8 +856,10 @@ int UI_RunApp(void)
 	if (!tex)
 	{
 		ADM_error("[GL Render] Active Texture function not found!\n");
-	}
-    ADM_setActiveTexture(tex);
+	}else
+    {
+        ADM_setActiveTexture(tex);
+    }
 #else
     ADM_setActiveTexture(glActiveTexture);
 #endif
@@ -870,6 +870,9 @@ int UI_RunApp(void)
 	printf("[GL Render] OpenGL Extensions: %s\n", glGetString(GL_EXTENSIONS));
 
 #endif
+	if (global_argc >= 2)
+		automation();
+
     myApplication->exec();
 #ifdef USE_OPENGL
     if(topGlWidgetRoot) delete topGlWidgetRoot;
