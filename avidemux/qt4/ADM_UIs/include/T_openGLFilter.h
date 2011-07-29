@@ -26,7 +26,7 @@
 class ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter
 {
 protected:
-                            
+                            QGLWidget            *widget;
                     const   QGLContext           *context;
                             QGLFramebufferObject *fboY;
                             QGLFramebufferObject *fboUV;

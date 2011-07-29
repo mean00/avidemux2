@@ -54,6 +54,8 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     glProgramUV=NULL;
     fboY=NULL;
     fboUV=NULL;
+    widget=new QGLWidget(ADM_getGlWidget());
+    widget->makeCurrent();
     firstRun=0;
     ADM_info("Gl : Allocating context and frameBufferObjects\n");
     context=QGLContext::currentContext();
@@ -69,6 +71,7 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
         GUI_Error_HIG("","Cannot get glActiveTexture");
         ADM_assert(0);
     }
+    widget->doneCurrent();
     // glTexture TODO
 
 }
@@ -86,6 +89,8 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
     fboY=NULL;
     if(fboUV) delete fboUV;
     fboUV=NULL;
+    if(widget) delete widget;       
+    widget=NULL;
 
 }
 /**
