@@ -168,6 +168,7 @@ void QtGlAccelWidget::initializeGL()
 */
 void QtGlAccelWidget::updateTexture()
 {
+    makeCurrent();
 	if (!textureOffsets[0])
 	{
 		printf("[Render] Buffer not set\n");
@@ -227,12 +228,14 @@ void QtGlAccelWidget::updateTexture()
 	}
 	else
 		glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, textureStrides[0], textureHeights[0], GL_LUMINANCE, GL_UNSIGNED_BYTE, textureOffsets[0]);
+    doneCurrent();
 }
 /**
 
 */
 void QtGlAccelWidget::paintGL()
 {
+    makeCurrent();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBegin(GL_QUADS);
 	glTexCoord2i(0, 0);
@@ -244,6 +247,7 @@ void QtGlAccelWidget::paintGL()
 	glTexCoord2i(0, imageHeight);
 	glVertex2i(0, height());
 	glEnd();
+    doneCurrent();
 }
 /**
     \fn ctor
