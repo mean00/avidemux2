@@ -1,8 +1,11 @@
 /** *************************************************************************
-                    \fn       openGlSample.cpp  
-                    \brief simplest of all video filters, it does nothing
+                    \fn       openGlFragmentSample.cpp  
+                    \brief    simple fragment shader
 
-    copyright            : (C) 2009 by mean
+    That one is performing the same shader 3 times, one time per plane.
+
+
+    copyright            : (C) 2011 by mean
 
 bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
             Download Texture
@@ -162,10 +165,10 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     widget->makeCurrent();
     glPushMatrix();
     float angle=*fn;
-    angle=0.3+angle/40;
+    angle=angle/40;
     glProgramY->setUniformValue("teta", angle); 
     glProgramUV->setUniformValue("teta", angle); 
-        // size is the last one...
+    // size is the last one...
     fboY->bind();
     tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
     
