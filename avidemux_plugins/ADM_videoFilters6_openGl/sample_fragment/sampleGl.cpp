@@ -78,8 +78,8 @@ DECLARE_VIDEO_FILTER(   openGlSample,   // Class
                         1,0,0,              // Version
                         ADM_UI_QT4+ADM_UI_GL,         // UI
                         VF_OPENGL,            // Category
-                        "glsample",            // internal name (must be uniq!)
-                        "OpenGl Sample",            // Display name
+                        "glsampleFragment",            // internal name (must be uniq!)
+                        "OpenGl Fragment Shader Sample",            // Display name
                         "Run a fragment shader." // Description
                     );
 
@@ -91,6 +91,7 @@ DECLARE_VIDEO_FILTER(   openGlSample,   // Class
 openGlSample::openGlSample(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
 {
 UNUSED_ARG(setup);
+        widget->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
         glProgramY = new QGLShaderProgram(context);
@@ -134,6 +135,7 @@ UNUSED_ARG(setup);
                 ADM_assert(0);
         }
         fboUV->release();
+        widget->doneCurrent();
 
 }
 /**
@@ -157,6 +159,8 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
+    widget->makeCurrent();
+    glPushMatrix();
     float angle=*fn;
     angle=0.3+angle/40;
     glProgramY->setUniformValue("teta", angle); 
@@ -164,7 +168,7 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         // size is the last one...
     fboY->bind();
     tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
-    glProgramY->setUniformValue("myTexture", 0); 
+    
     render(image,PLANAR_Y,fboY);
     downloadTexture(image,PLANAR_Y,fboY);
     fboY->release();
@@ -181,6 +185,9 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     downloadTexture(image,PLANAR_V,fboUV);
     fboUV->release();
     firstRun=false;
+    glPopMatrix();
+    widget->doneCurrent();
+    
     return true;
 }
 /**
@@ -208,8 +215,12 @@ void openGlSample::tinyUploadTex(ADMImage *image, ADM_PLANE plane, GLuint tex,in
 {
         myGlActiveTexture(tex);
         glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glProgramY->setUniformValue("myTexture", texNum); 
+        glProgramY->setUniformValue("myWidth", image->GetWidth(plane)); 
+        glProgramY->setUniformValue("myHeight", image->GetHeight(plane)); 
+
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
