@@ -37,6 +37,8 @@
 #include "audio_out.h"
 #include "ADM_assert.h"
 
+
+static bool setPrefsDefault(void);
 extern void  ADM_lavInit();
 extern void  ADM_lavDestroy();
 extern void  ADM_lavFormatInit(void);
@@ -195,10 +197,13 @@ int main(int argc, char *argv[])
         printf("Current time :%s\n",ADM_epochToString(ADM_getSecondsSinceEpoch()));
 	// Start counting memory
 	ADM_memStatInit();
-        ADM_InitMemcpy();
+    ADM_InitMemcpy();
 	printf("\nInitialising prefs\n");
 	initPrefs();
-	prefs->load();
+	if(false==prefs->load()) // no prefs, set some sane default
+    {
+        setPrefsDefault();
+    }
     CpuCaps::init();
 
 #ifdef USE_SDL
@@ -403,6 +408,26 @@ void onexit( void )
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 	check_leaks();
+#endif
+}
+/**
+    \fn setPrefsDefault
+*/
+bool setPrefsDefault(void)
+{
+#ifdef __MINGW32__
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE,"Win32");        
+    #ifdef USE_OPENGL
+        prefs->set(VIDEODEVICE,(uint32_t)5); // QTGL
+    #endif
+#endif        
+#ifdef __linux__
+            prefs->set(AUDIO_DEVICE_AUDIODEVICE,"PulseAudioS");
+    #ifdef USE_VDPAU
+            prefs->set(VIDEODEVICE,(uint32_t)4); // VDPAU
+    #else
+            prefs->set(VIDEODEVICE,(uint32_t)1); // XV
+    #endif
 #endif
 }
 extern void checkCrashFile(void);
