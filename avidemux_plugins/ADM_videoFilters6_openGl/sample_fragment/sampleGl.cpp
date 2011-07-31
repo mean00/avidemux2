@@ -166,12 +166,15 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     glPushMatrix();
     float angle=*fn;
     angle=angle/40;
-    glProgramY->setUniformValue("teta", angle); 
-    glProgramUV->setUniformValue("teta", angle); 
+    
+    glProgramUV->setUniformValue("kernelSize", 1);  // Do a convolution kernelSize*2+1 pixels
+    glProgramUV->setUniformValue("normalization", 4); 
     // size is the last one...
     fboY->bind();
-    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
+    // upload kernel...
     
+    // here we go
+    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
     render(image,PLANAR_Y,fboY);
     downloadTexture(image,PLANAR_Y,fboY);
     fboY->release();
