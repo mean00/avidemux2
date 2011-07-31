@@ -1,2 +1,3 @@
 ADD_SUBDIRECTORY(sample_fragment)
+ADD_SUBDIRECTORY(sample_fragment2)
 ADD_SUBDIRECTORY(sample_vertex)
