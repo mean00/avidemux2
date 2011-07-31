@@ -858,6 +858,7 @@ int UI_RunApp(void)
 		ADM_error("[GL Render] Active Texture function not found!\n");
 	}else
     {
+        ADM_error("[GL Render] Active Texture function found (Not openGL_ES)\n");
         ADM_setActiveTexture(tex);
     }
 #else
