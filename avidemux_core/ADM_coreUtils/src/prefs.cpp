@@ -161,7 +161,7 @@ bool preferences::load()
 
 
     dir_adm=ADM_getBaseDir();
-    if(!dir_adm) return RC_FAILED;
+    if(!dir_adm) return false;
 
     path=string(dir_adm);
     path=path+std::string("/");
@@ -171,15 +171,15 @@ bool preferences::load()
     if(!ADM_fileExist(path.c_str()))
     {
 		ADM_error("can't read %s\n",			path.c_str());
-		return RC_FAILED;
+		return false;
     }
     if(true==my_prefs_struct_jdeserialize(path.c_str(),my_prefs_struct_param,&myPrefs))
     {
         ADM_info("Preferences found and loaded\n");
-        return RC_OK;
+        return true;
     }
     ADM_warning("An error happened while loading config\n");
-    return RC_FAILED;
+    return true;
 }
 
 /**
