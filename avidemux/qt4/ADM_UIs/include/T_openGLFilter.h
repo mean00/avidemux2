@@ -36,6 +36,7 @@ protected:
                             GlActiveTexture_Type *myGlActiveTexture;
 protected:
                             bool downloadTexture(ADMImage *target, ADM_PLANE plane,QGLFramebufferObject *fbo);
+                            bool downloadTextures(ADMImage *target, QGLFramebufferObject *fbo);
 
 public:
                             ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);

@@ -1,4 +1,4 @@
-/***************************************************************************
+    /***************************************************************************
   \file T_openGL.h
   \brief OpenGL related filters
   \author (C) 2011 Mean Fixounet@free.fr 
@@ -91,8 +91,18 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
     fboUV=NULL;
     if(widget) delete widget;       
     widget=NULL;
-
 }
+#if  1
+#define TEX_Y_OFFSET 2
+#define TEX_U_OFFSET 1
+#define TEX_V_OFFSET 0  
+#define TEX_A_OFFSET 3   
+#else
+#define TEX_Y_OFFSET 0
+#define TEX_U_OFFSET 1
+#define TEX_V_OFFSET 2   
+#define TEX_A_OFFSET 3   
+#endif
 /**
     \fn downloadTexture
 */
@@ -130,7 +140,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
     int height=image->GetHeight(plane);
     for(int y=0;y<height;y++)
     {
-        const uchar *src=qimg.constScanLine(height-y);
+        const uchar *src=qimg.constScanLine(height-y-1);
         if(!src)
         {
             ADM_error("Can t get pointer to openGl texture\n");
@@ -146,6 +156,72 @@ bool ADM_coreVideoFilterQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
     bench.printResult();
 
 #endif
+    return true;
+}
+
+/**
+    \fn downloadTexture
+    \brief Download YUVA texture into a YV12 image
+*/
+bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
+{
+
+    QImage qimg(fbo->toImage()); // this is slow ! ~ 15 ms for a 720 picture (Y only).
+    // Assume RGB32, read R or A
+    int strideY=image->GetPitch(PLANAR_Y);
+    uint8_t *toY=image->GetWritePtr(PLANAR_Y);
+    
+    int width=image->GetWidth(PLANAR_Y);
+    int height=image->GetHeight(PLANAR_Y);
+
+    // Do Y
+    for(int y=1;y<=height;y++)
+    {
+        const uchar *src=qimg.constScanLine(height-y);
+        if(!src)
+        {
+            ADM_error("Can t get pointer to openGl texture\n");
+            return false;
+        }
+#if 1
+    printf("RGB");
+    const uchar *src2=src;
+    for(int i=0;i<10;i++)
+    {
+        printf("%d %d %d %d:",src2[i*4],src2[i*4+1],src2[i*4+2],src2[i*4+3]);
+        src2+=4;
+    }
+    printf("\n");
+#endif
+        for(int x=0;x<width;x++)
+        {
+            toY[x]  = src[x*4+TEX_Y_OFFSET];
+            
+        }
+        toY+=strideY;
+    }
+    // do U & V
+    uint8_t *toU=image->GetWritePtr(PLANAR_U);
+    uint8_t *toV=image->GetWritePtr(PLANAR_V);
+    int      strideU=image->GetPitch(PLANAR_U);
+    int      strideV=image->GetPitch(PLANAR_V);
+
+    for(int y=1;y<=height;y+=2)
+    {
+        const uchar *src=qimg.constScanLine(height-y);
+        if(!src)
+        {
+            ADM_error("Can t get pointer to openGl texture\n");
+            return false;
+        }
+        for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
+        {
+            toU[x/2]  =  src[x*4+TEX_U_OFFSET];
+            toV[x/2]  =  src[x*4+TEX_V_OFFSET];
+        }
+        toU+=strideU;
+        toV+=strideV;
+    }
     return true;
 }
 // EOF
