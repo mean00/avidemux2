@@ -843,13 +843,12 @@ int UI_RunApp(void)
 	setupMenus();
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	checkCrashFile();
-
     // Create an openGL context
 #ifdef USE_OPENGL
     ADM_info("Creating openGl dummy widget\n");
     topGlWidgetRoot=new dummyGLWidget(VuMeter);
     ADM_setGlWidget(topGlWidgetRoot);
-
+    topGlWidgetRoot->show();
 #ifndef QT_OPENGL_ES
     GlActiveTexture_Type *tex= (GlActiveTexture_Type *)topGlWidgetRoot->context()->getProcAddress(QLatin1String("glActiveTexture"));
 
@@ -858,7 +857,7 @@ int UI_RunApp(void)
 		ADM_error("[GL Render] Active Texture function not found!\n");
 	}else
     {
-        ADM_error("[GL Render] Active Texture function found (Not openGL_ES)\n");
+        ADM_warning("[GL Render] Active Texture function found (Not openGL_ES)\n");
         ADM_setActiveTexture(tex);
     }
 #else
