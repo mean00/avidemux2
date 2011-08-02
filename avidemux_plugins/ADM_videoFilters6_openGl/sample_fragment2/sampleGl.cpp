@@ -232,7 +232,7 @@ void openGlSample::tinyUploadTex(ADMImage *image, ADM_PLANE plane, GLuint tex,in
 void openGlSample::multiUploadTex(ADMImage *image)
 {
           // Activate texture unit "tex"
-        for(int xplane=0;xplane<3;xplane++)
+        for(int xplane=2;xplane>=0;xplane--)
         {
             myGlActiveTexture(GL_TEXTURE0+xplane);
             ADM_PLANE plane=(ADM_PLANE)xplane;
