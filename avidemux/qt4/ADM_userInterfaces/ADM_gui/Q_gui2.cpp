@@ -20,14 +20,6 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
 
-#ifdef USE_OPENGL
-#include <QtOpenGL/QGLWidget>
-#endif
-
-#ifdef USE_OPENGL
-#include "T_openGL.h"
-#endif
-
 #define MENU_DECLARE
 #include "Q_gui2.h"
 #include "ADM_default.h"
@@ -42,6 +34,11 @@
 #include "ADM_muxerProto.h"
 #include "T_vumeter.h"
 #include "DIA_coreToolkit.h"
+
+#ifdef USE_OPENGL
+void UI_Qt4InitGl(void);
+void UI_Qt4CleanGl(void);
+#endif
 
 extern int global_argc;
 extern char **global_argv;
@@ -92,13 +89,6 @@ extern bool ADM_QPreviewCleanup(void);
 #define DECLARE_VAR(object,signal_name) {#object,signal_name},
 
 #include "translation_table.h"   
-
-#ifdef USE_OPENGL
-#include "T_openGLFilter.h"
-#include "Q_dummyWidget.h"
-dummyGLWidget *topGlWidget=NULL;
-dummyGLWidget *topGlWidgetRoot=NULL;
-#endif
 /*
     Declare the table converting widget name to our internal signal           
 */
@@ -845,38 +835,15 @@ int UI_RunApp(void)
 	checkCrashFile();
     // Create an openGL context
 #ifdef USE_OPENGL
-    ADM_info("Creating openGl dummy widget\n");
-    topGlWidgetRoot=new dummyGLWidget(VuMeter);
-    ADM_setGlWidget(topGlWidgetRoot);
-    topGlWidgetRoot->show();
-#ifndef QT_OPENGL_ES
-    GlActiveTexture_Type *tex= (GlActiveTexture_Type *)topGlWidgetRoot->context()->getProcAddress(QLatin1String("glActiveTexture"));
-
-	if (!tex)
-	{
-		ADM_error("[GL Render] Active Texture function not found!\n");
-	}else
-    {
-        ADM_warning("[GL Render] Active Texture function found (Not openGL_ES)\n");
-        ADM_setActiveTexture(tex);
-    }
-#else
-    ADM_setActiveTexture(glActiveTexture);
+    UI_Qt4InitGl();
 #endif
 
-	printf("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
-	printf("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
-	printf("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
-	printf("[GL Render] OpenGL Extensions: %s\n", glGetString(GL_EXTENSIONS));
-
-#endif
 	if (global_argc >= 2)
 		automation();
 
     myApplication->exec();
 #ifdef USE_OPENGL
-    if(topGlWidgetRoot) delete topGlWidgetRoot;
-    topGlWidgetRoot=NULL;
+   UI_Qt4CleanGl();
 #endif
 	destroyTranslator();
     delete myApplication;

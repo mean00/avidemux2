@@ -5,7 +5,7 @@ QT4_WRAP_CPP(${ADM_LIB}_source  Q_gui2.h  T_preview.h T_vumeter.h T_thumbSlider.
 QT4_ADD_RESOURCES(${ADM_LIB}_resource  avidemux.qrc)
 
 SET(${ADM_LIB}_SRCS
-	Q_gui2.cpp  
+	Q_gui2.cpp   Q_gui2GL.cpp
 	Q_gui2_menu.cpp  
         T_preview.cpp  
         T_vumeter.cpp  
