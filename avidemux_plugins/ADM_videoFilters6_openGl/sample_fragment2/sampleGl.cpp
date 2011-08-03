@@ -63,6 +63,7 @@ class openGlSample : public  ADM_coreVideoFilterQtGl
 protected:
                         uint8_t *uBuffer;
                         uint8_t *vBuffer;
+                        GLuint  texName[3];
 protected:
                         //bool uploadTexture(ADMImage *image, ADM_PLANE plane);
                         bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
@@ -120,6 +121,7 @@ UNUSED_ARG(setup);
         }
         uBuffer=new uint8_t[info.width*info.height];
         vBuffer=new uint8_t[info.width*info.height];
+        glGenTextures(3,texName);
         fboY->release();
         widget->doneCurrent();
 
@@ -132,6 +134,7 @@ openGlSample::~openGlSample()
 {
     delete [] uBuffer;
     delete [] vBuffer;
+    glDeleteTextures(3,texName);
     uBuffer=NULL;
     vBuffer=NULL;
 
@@ -151,23 +154,22 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     widget->makeCurrent();
     glPushMatrix();
+    // size is the last one...
+    fboY->bind();
+
     float angle=*fn;
     angle=angle/40;
-    glProgramY->setUniformValue("teta", angle); 
-    glProgramY->setUniformValue("teta", angle); 
-    
+    glProgramY->setUniformValue("teta", angle);     
     glProgramY->setUniformValue("myTextureU", 1); 
     glProgramY->setUniformValue("myTextureV", 2); 
     glProgramY->setUniformValue("myTextureY", 0); 
     glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
     glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
 
-    // size is the last one...
-    fboY->bind();
 #if 0
-    tinyUploadTex(image,PLANAR_V,GL_TEXTURE2,2);
-    tinyUploadTex(image,PLANAR_U,GL_TEXTURE1,1);
-    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
+    tinyUploadTex(image,PLANAR_V,GL_TEXTURE2,texName[2]);
+    tinyUploadTex(image,PLANAR_U,GL_TEXTURE1,texName[1]);
+    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,texName[0]);
 #else
     multiUploadTex(image);
 #endif
@@ -236,7 +238,7 @@ void openGlSample::multiUploadTex(ADMImage *image)
         {
             myGlActiveTexture(GL_TEXTURE0+xplane);
             ADM_PLANE plane=(ADM_PLANE)xplane;
-            glBindTexture(GL_TEXTURE_RECTANGLE_NV, xplane); // Use texture "texNum"
+            glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
             glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
