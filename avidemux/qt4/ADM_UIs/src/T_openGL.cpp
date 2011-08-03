@@ -183,7 +183,7 @@ bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferO
             ADM_error("Can t get pointer to openGl texture\n");
             return false;
         }
-#if 1
+#if 0
     printf("RGB");
     const uchar *src2=src;
     for(int i=0;i<10;i++)
