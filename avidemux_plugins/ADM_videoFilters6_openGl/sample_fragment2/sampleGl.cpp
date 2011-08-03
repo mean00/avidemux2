@@ -244,8 +244,7 @@ void openGlSample::multiUploadTex(ADMImage *image)
             glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            if(plane==PLANAR_Y) // take Y as it is..
-            {
+
                 if(!firstRun)
                 {
                     glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
@@ -260,46 +259,6 @@ void openGlSample::multiUploadTex(ADMImage *image)
                         GL_LUMINANCE, GL_UNSIGNED_BYTE, 
                         image->GetReadPtr(plane));
                 }
-            }else
-            {
-                    uint8_t *buffer,*src,*tmp,*tgt;
-                    int stride;
-                    // expand into U or V buffer... 
-                    if(plane==PLANAR_U) 
-                            buffer=uBuffer;
-                        else buffer=vBuffer;
-                    
-                    src=image->GetReadPtr(plane);
-                    stride=image->GetPitch(plane);
-
-                    tmp=src;
-                    tgt=buffer;
-                    for(int y=0;y<info.height;y+=2)
-                    {
-                        for(int x=0;x<info.width;x+=2)
-                        {
-                                tgt[x]=tgt[x+stride]=tmp[x/2];
-                                tgt[x+1]=tgt[x+1+stride]=tmp[x/2];
-                        }
-                        tmp+=stride;
-                        tgt+=2*info.width;
-                    }
-                    // upload
-                    if(!firstRun)
-                    {
-                        glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                                    info.width,
-                                    info.height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                                    buffer);
-                    }else
-                    {
-                        glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                        info.width,
-                        info.height,
-                        GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                        buffer);
-                    } 
-            }
         }
 }
 
