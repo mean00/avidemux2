@@ -67,6 +67,7 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(pare
 	imageHeight = h;
 	firstRun = true;
 	glProgram = NULL;
+    glGenTextures(3,textureName);
 }
 /**
 
@@ -83,6 +84,7 @@ bool QtGlAccelWidget::setDisplaySize(int width,int height)
 */
 QtGlAccelWidget::~QtGlAccelWidget()
 {
+    glDeleteTextures(3,textureName);
 }
 /**
 
@@ -139,6 +141,8 @@ void QtGlAccelWidget::initializeGL()
 	printf("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
 	printf("[GL Render] OpenGL Extensions: %s\n", glGetString(GL_EXTENSIONS));
 
+
+
 	glProgram = new QGLShaderProgram(this);
 
 	if (success && !glProgram->addShaderFromSourceCode(QGLShader::Fragment, yuvToRgb))
@@ -186,7 +190,7 @@ void QtGlAccelWidget::updateTexture()
 
 	// U
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_RECTANGLE_NV, 1);
+	glBindTexture(GL_TEXTURE_RECTANGLE_NV, textureName[1]);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -200,7 +204,7 @@ void QtGlAccelWidget::updateTexture()
 
 	// V
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_RECTANGLE_NV, 2);
+	glBindTexture(GL_TEXTURE_RECTANGLE_NV, textureName[2]);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -214,7 +218,7 @@ void QtGlAccelWidget::updateTexture()
 
 	// Y
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_RECTANGLE_NV, 3);
+	glBindTexture(GL_TEXTURE_RECTANGLE_NV, textureName[0]);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
