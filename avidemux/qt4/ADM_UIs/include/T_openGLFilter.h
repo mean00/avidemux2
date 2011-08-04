@@ -34,7 +34,11 @@ protected:
                             QGLShaderProgram     *glProgramUV;
                             int                   firstRun;
                             GlActiveTexture_Type *myGlActiveTexture;
+                            GLuint                texName[3];
 protected:
+                            // image <--> texture
+                            void uploadAllPlanes(ADMImage *image);
+                            void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
                             bool downloadTexture(ADMImage *target, ADM_PLANE plane,QGLFramebufferObject *fbo);
                             bool downloadTextures(ADMImage *target, QGLFramebufferObject *fbo);
 

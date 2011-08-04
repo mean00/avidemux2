@@ -71,6 +71,7 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
         GUI_Error_HIG("","Cannot get glActiveTexture");
         ADM_assert(0);
     }
+    glGenTextures(3,texName);
     widget->doneCurrent();
     // glTexture TODO
 
@@ -81,6 +82,7 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
 ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
 {
     ADM_info("Gl filter : Destroying..\n");
+    glDeleteTextures(3,texName);
     if(glProgramY) delete glProgramY;
     glProgramY=NULL;
     if(glProgramUV) delete glProgramUV;
@@ -224,4 +226,66 @@ bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferO
     }
     return true;
 }
+/**
+    \fn uploadTexture
+*/
+void ADM_coreVideoFilterQtGl::uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
+{
+        myGlActiveTexture(tex);  // Activate texture unit "tex"
+        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
+
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        if(!firstRun)
+        {
+            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
+                            image->GetPitch(plane),
+                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                            image->GetReadPtr(plane));
+        }else
+        {
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
+                image->GetPitch(plane),
+                image->GetHeight(plane),
+                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                image->GetReadPtr(plane));
+        }
+}
+/**
+    \fn uploadTexture
+*/
+void ADM_coreVideoFilterQtGl::uploadAllPlanes(ADMImage *image)
+{
+          // Activate texture unit "tex"
+        for(int xplane=2;xplane>=0;xplane--)
+        {
+            myGlActiveTexture(GL_TEXTURE0+xplane);
+            ADM_PLANE plane=(ADM_PLANE)xplane;
+            glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+                if(!firstRun)
+                {
+                    glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
+                                    image->GetPitch(plane),
+                                    image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                                    image->GetReadPtr(plane));
+                }else
+                {
+                    glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
+                        image->GetPitch(plane),
+                        image->GetHeight(plane),
+                        GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                        image->GetReadPtr(plane));
+                }
+        }
+}
+
 // EOF

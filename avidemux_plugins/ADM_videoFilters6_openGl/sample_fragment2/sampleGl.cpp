@@ -61,21 +61,15 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 class openGlSample : public  ADM_coreVideoFilterQtGl
 {
 protected:
-                        uint8_t *uBuffer;
-                        uint8_t *vBuffer;
-                        GLuint  texName[3];
+
 protected:
-                        //bool uploadTexture(ADMImage *image, ADM_PLANE plane);
                         bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
-                        void tinyUploadTex(ADMImage *img, ADM_PLANE plane, GLuint tex,int texNum );
-                        void multiUploadTex(ADMImage *image);
 public:
                              openGlSample(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~openGlSample();
 
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
         virtual bool         configure(void) {return true;}             /// Start graphical user interface
 };
@@ -119,9 +113,7 @@ UNUSED_ARG(setup);
                 ADM_error("[GL Render] Binding FAILED\n");
                 ADM_assert(0);
         }
-        uBuffer=new uint8_t[info.width*info.height];
-        vBuffer=new uint8_t[info.width*info.height];
-        glGenTextures(3,texName);
+
         fboY->release();
         widget->doneCurrent();
 
@@ -132,11 +124,6 @@ UNUSED_ARG(setup);
 */
 openGlSample::~openGlSample()
 {
-    delete [] uBuffer;
-    delete [] vBuffer;
-    glDeleteTextures(3,texName);
-    uBuffer=NULL;
-    vBuffer=NULL;
 
 }
 
@@ -166,15 +153,12 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
     glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
 
-#if 0
-    tinyUploadTex(image,PLANAR_V,GL_TEXTURE2,texName[2]);
-    tinyUploadTex(image,PLANAR_U,GL_TEXTURE1,texName[1]);
-    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,texName[0]);
-#else
-    multiUploadTex(image);
-#endif
+    uploadAllPlanes(image);
+
     render(image,PLANAR_Y,fboY);
+
     downloadTextures(image,fboY);
+
     fboY->release();
     firstRun=false;
     glPopMatrix();
@@ -199,67 +183,6 @@ const char *openGlSample::getConfiguration(void)
 {
     
     return "openGl Sample.";
-}
-/**
-    \fn uploadTexture
-*/
-void openGlSample::tinyUploadTex(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
-{
-        myGlActiveTexture(tex);  // Activate texture unit "tex"
-        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
-
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        if(!firstRun)
-        {
-            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                            image->GetPitch(plane),
-                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                            image->GetReadPtr(plane));
-        }else
-        {
-            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                image->GetPitch(plane),
-                image->GetHeight(plane),
-                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                image->GetReadPtr(plane));
-        }
-}
-/**
-    \fn uploadTexture
-*/
-void openGlSample::multiUploadTex(ADMImage *image)
-{
-          // Activate texture unit "tex"
-        for(int xplane=2;xplane>=0;xplane--)
-        {
-            myGlActiveTexture(GL_TEXTURE0+xplane);
-            ADM_PLANE plane=(ADM_PLANE)xplane;
-            glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-                if(!firstRun)
-                {
-                    glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                                    image->GetPitch(plane),
-                                    image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                                    image->GetReadPtr(plane));
-                }else
-                {
-                    glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                        image->GetPitch(plane),
-                        image->GetHeight(plane),
-                        GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                        image->GetReadPtr(plane));
-                }
-        }
 }
 
 
