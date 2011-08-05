@@ -28,6 +28,15 @@ GlActiveTexture_Type *ADM_getActiveTexture(void)
 }
 
 /**
+    \fn ADM_hasActiveTexture
+*/
+bool ADM_hasActiveTexture(void)
+{
+    if(!myActiveTexture) return false;
+    return true;
+}
+
+/**
 
 */
 bool ADM_setGlWidget(QGLWidget *w)

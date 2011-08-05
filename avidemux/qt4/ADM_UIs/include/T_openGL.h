@@ -31,5 +31,6 @@
 typedef void APIENTRY (GlActiveTexture_Type)(GLenum texture);
 bool ADM_setActiveTexture(GlActiveTexture_Type *set);
 GlActiveTexture_Type *ADM_getActiveTexture(void);
+bool ADM_hasActiveTexture(void);
 #endif
 

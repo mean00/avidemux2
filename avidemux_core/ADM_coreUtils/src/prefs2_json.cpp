@@ -18,6 +18,7 @@ json.addUint32("cpu_caps",key->features.cpu_caps);
 json.addBool("mpeg_no_limit",key->features.mpeg_no_limit);
 json.addBool("alternate_mp3_tag",key->features.alternate_mp3_tag);
 json.addBool("vdpau",key->features.vdpau);
+json.addBool("enable_opengl",key->features.enable_opengl);
 json.endNode();
 json.addNode("lastfiles");
 json.addString("lastdir_read",key->lastfiles.lastdir_read);

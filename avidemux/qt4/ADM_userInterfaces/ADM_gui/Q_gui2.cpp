@@ -36,6 +36,7 @@
 #include "DIA_coreToolkit.h"
 
 #ifdef USE_OPENGL
+extern bool ADM_hasActiveTexture(void);
 void UI_Qt4InitGl(void);
 void UI_Qt4CleanGl(void);
 #endif
@@ -835,7 +836,10 @@ int UI_RunApp(void)
 	checkCrashFile();
     // Create an openGL context
 #ifdef USE_OPENGL
-    UI_Qt4InitGl();
+    bool enabled;
+    prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
+    if(enabled)
+        UI_Qt4InitGl();
 #endif
 
 	if (global_argc >= 2)
@@ -843,7 +847,8 @@ int UI_RunApp(void)
 
     myApplication->exec();
 #ifdef USE_OPENGL
-   UI_Qt4CleanGl();
+    if(enabled)
+        UI_Qt4CleanGl();
 #endif
 	destroyTranslator();
     delete myApplication;
@@ -1227,6 +1232,20 @@ bool UI_setDecoderName(const char *name)
 {
     WIDGET(labelVideoDecoder)->setText(name);	
     return true;
+}
+/**
+    \fn UI_hasOpengl
+*/
+bool UI_hasOpenGl(void)
+{
+#ifndef USE_OPENGL
+    return false;
+#else
+    if(!ADM_hasActiveTexture()) return false; // ADM_setActiveTexure
+    bool enabled;
+    prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
+    return enabled;
+#endif
 }
 //********************************************
 //EOF
