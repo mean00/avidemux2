@@ -87,16 +87,16 @@ SET(${ADM_LIB}_SRCS
 	./src/rtphint.cpp
 	./src/text.cpp	)
 # Platform files
-if(WIN32)
-	SET(PLATFORM
-		libplatform/io/File_win32.cpp
-		libplatform/io/FileSystem_win32.cpp
-		libplatform/number/random_win32.cpp
-		libplatform/process/process_win32.cpp
-		libplatform/time/time_win32.cpp
-	
- 	)
-else(WIN32)
+#if(WIN32)
+#	SET(PLATFORM
+		#libplatform/io/File_win32.cpp
+		#libplatform/io/FileSystem_win32.cpp
+		#libplatform/number/random_win32.cpp
+		#libplatform/process/process_win32.cpp
+		#libplatform/time/time_win32.cpp
+#	
+ 	#)
+#else(WIN32)
 		SET(PLATFORM
 			libplatform/io/File_posix.cpp
 			libplatform/io/FileSystem_posix.cpp
@@ -105,7 +105,7 @@ else(WIN32)
 			libplatform/time/time_posix.cpp
 	
  		)
-endif(WIN32)
+#endif(WIN32)
 
 SET(PLATFORM ${PLATFORM}
 	libplatform/io/File.cpp

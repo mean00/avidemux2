@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#if defined( _WIN32 ) && !defined( __MINGW32__ )
+#if  0 // MEANX defined( _WIN32 ) && !defined( __MINGW32__ )
     typedef char      int8_t;
     typedef short     int16_t;
     typedef int       int32_t;
@@ -21,7 +21,9 @@
 #   include <stdint.h>
 #endif
 
-#if defined( _WIN32 ) || defined( __MINGW32__ )
+#include "ADM_cpp.h" // MEANX
+
+#if 0 // MEANX defined( _WIN32 ) || defined( __MINGW32__ )
 #   if defined( _WINDLL ) || defined( DLL_EXPORT )
 #       define MP4V2_EXPORT __declspec(dllexport)
 #   elif defined( DLL_IMPORT ) 
@@ -84,7 +86,8 @@ typedef unsigned char bool;
 #endif
 #endif
 #endif
-
+#define ADM_LEGACY_PROGGY
+#include "ADM_default.h"
 /*****************************************************************************/
 
 #endif /* MP4V2_PLATFORM_H */
