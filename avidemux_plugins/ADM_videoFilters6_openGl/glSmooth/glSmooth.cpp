@@ -1,17 +1,12 @@
 /** *************************************************************************
-                    \fn       openGlFragmentSample.cpp  
+                    \fn       glSmooth Filter.cpp  
                     \brief    simple fragment shader
 
-    This one is combining the 3 textures and apply the shader once
+    Smoothing filter
+    Do a 3x3 convolution on a image to get a mask
+    Depending on the mask we let through or do convolution
 
-
-    copyright            : (C) 2011 by mean
-
-bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
-            Download Texture
-                RGB2Y=5ms               (MMX it)
-                toQimage=14 ms  <<==    TOO SLOW
-
+    
  ***************************************************************************/
 
 /***************************************************************************
@@ -79,9 +74,9 @@ DECLARE_VIDEO_FILTER(   glSmooth,   // Class
                         1,0,0,              // Version
                         ADM_UI_QT4+ADM_UI_GL,         // UI
                         VF_OPENGL,            // Category
-                        "glsampleFragment2",            // internal name (must be uniq!)
-                        "OpenGl Fragment Shader Sample2",            // Display name
-                        "Run a fragment shader." // Description
+                        "glSmooth",            // internal name (must be uniq!)
+                        "OpenGl Smooth",            // Display name
+                        "Smooth image while preserving edge." // Description
                     );
 
 // Now implements the interesting parts
