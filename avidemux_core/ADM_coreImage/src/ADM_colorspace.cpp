@@ -90,6 +90,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_YUV422: return PIX_FMT_YUYV422;
     case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
     case ADM_COLOR_YUV422P: return PIX_FMT_YUV422P;
+    case ADM_COLOR_RGB555: return PIX_FMT_RGB555LE;
     case ADM_COLOR_RGB32A: return PIX_FMT_RGBA;
     case ADM_COLOR_BGR32A: return PIX_FMT_RGBA; // Faster that way...PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
@@ -119,6 +120,14 @@ uint8_t ADMColorScalerFull::getStrideAndPointers(bool dst,
     }
   switch(fromColor)
   {
+    case ADM_COLOR_RGB555: 
+            srcData[0]=from;
+            srcData[1]=NULL;
+            srcData[2]=NULL;
+            srcStride[0]=width*2;
+            srcStride[1]=0;
+            srcStride[2]=0;
+            break;
     case ADM_COLOR_RGB24:
     case ADM_COLOR_BGR24:
             srcData[0]=from;
