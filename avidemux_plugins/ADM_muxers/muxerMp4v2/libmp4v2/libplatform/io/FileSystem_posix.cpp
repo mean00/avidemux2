@@ -66,14 +66,9 @@ FileSystem::getFileSize( string path_, File::Size& size_ )
 bool
 FileSystem::rename( string from, string to )
 {
-    if(false==ADM_copyFile(from.c_str(),to.c_str()))
+    if(!ADM_renameFile(from.c_str(),to.c_str()))
     {
-        ADM_error("Cannot copy %s to %s\n",from.c_str(),to.c_str());
-        return true;
-    }
-    if(false==ADM_eraseFile(from.c_str()))
-    {
-        ADM_error("Cannot delete %s\n",from.c_str());
+        ADM_error("Cannot rename %s to %s\n",from.c_str(),to.c_str());
         return true;
     }
     return false;

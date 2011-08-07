@@ -255,7 +255,7 @@ theEnd:
     if(muxerConfig.optimize && result==true)
     {
         string tmpTargetFileName=targetFileName+string(".tmp");
-        if(rename(targetFileName.c_str(),tmpTargetFileName.c_str()))
+        if(!ADM_renameFile(targetFileName.c_str(),tmpTargetFileName.c_str()))
         {
             GUI_Error_HIG("","Cannot rename file (optimize)");
             return false;

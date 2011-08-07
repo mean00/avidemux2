@@ -29,6 +29,7 @@ const char *ADM_getUserPluginSettingsDir(void);
 const char *ADM_getSystemPluginSettingsDir(void);
 //
 uint8_t ADM_copyFile(const char *source, const char *target);
+uint8_t ADM_renameFile(const char *source, const char *target);
 #ifdef __cplusplus
 /* Returns the full path relative to install dir i.e. /usr +base1/base2, needs to be deleted [] by caller */
 char *ADM_getInstallRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);

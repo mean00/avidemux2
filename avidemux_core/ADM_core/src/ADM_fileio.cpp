@@ -785,3 +785,27 @@ uint8_t ADM_copyFile(const char *source, const char *target)
     fclose(fout);
     return true;
 }
+
+/**
+    \fn ADM_copyFile
+*/
+uint8_t ADM_renameFile(const char *source, const char *target)
+{
+#ifdef __MINGW32__
+	int sourceFileNameLength = utf8StringToWideChar(source, -1, NULL);
+    int targetFileNameLength = utf8StringToWideChar(target, -1, NULL);
+    wchar_t wcFileSource[sourceFileNameLength];
+    wchar_t wcFileTarget[targetFileNameLength];
+    
+    utf8StringToWideChar(source, -1, wcFileSource);
+    utf8StringToWideChar(target, -1, wcFileTarget);
+   
+    if(!_wrename(wcFileSource,wcFileTarget)) return true;
+    ADM_error("Failed to rename %s to %s\n",source,target);
+    return false;
+#else
+    if(!rename(source,target)) return true;
+    return false;
+#endif
+}
+// EOF
