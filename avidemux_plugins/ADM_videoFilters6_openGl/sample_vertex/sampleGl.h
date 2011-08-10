@@ -1,24 +1,19 @@
 // Invert x & y
 static const char *myShaderY =
 	"#extension GL_ARB_texture_rectangle: enable\n"
-	"uniform sampler2DRect myTexture;\n"
-    "uniform float teta;\n"
+	"uniform sampler2DRect myTextureY;\n" // tex unit 0
+    "uniform sampler2DRect myTextureU;\n" // tex unit 1
+    "uniform sampler2DRect myTextureV;\n" // tex unit 2
     "uniform float myWidth;\n"
     "uniform float myHeight;\n"
+    "uniform float teta;\n"
 
 	"void main(void) {\n"
-    "  float angle=teta;\n" //"0.2;"
-	"  float nx = gl_TexCoord[0].x;\n"
+    "  float nx = gl_TexCoord[0].x;\n"
 	"  float ny = gl_TexCoord[0].y;\n"
-    "  float s= sin(angle);\n"
-    "  float c= cos(angle);\n"
-    "  nx=nx-myWidth/2;\n"
-    "  ny=ny-myHeight/2;\n"
-    "  float my= nx*s+ny*c+myWidth/2;\n"
-    "  float mx= nx*c-ny*s+myHeight/2;\n"
-	"  float t =  texture2DRect(myTexture, vec2(mx, my)).r;\n"
-       // no op
-	"  gl_FragColor = vec4(t, t, t, 1.0);\n"
-	//"  gl_FragColor = vec4(t, 1.0-t, 2*t, 1.0);\n"
+    "  vec4 texvalV = texture2DRect(myTextureV, vec2(nx/2,ny/2));\n"
+    "  vec4 texvalU = texture2DRect(myTextureU, vec2(nx/2,ny/2));\n"
+	"  vec4 texvalY = texture2DRect(myTextureY, vec2(nx,ny));\n"
+	"  gl_FragColor = vec4(texvalY.r, texvalU.r, texvalV.r, 1.0);\n"
 	"}\n";
 

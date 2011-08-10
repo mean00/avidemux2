@@ -1,14 +1,8 @@
 /** *************************************************************************
-                    \fn       openGlSample.cpp  
-                    \brief simplest of all video filters, it does nothing
+                    \fn       openGlFragmentSample.cpp  
+                    \brief    simple fragment shader
 
-    copyright            : (C) 2009 by mean
-
-bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
-            Download Texture
-                RGB2Y=5ms               (MMX it)
-                toQimage=14 ms  <<==    TOO SLOW
-
+    Simple vertex shader
  ***************************************************************************/
 
 /***************************************************************************
@@ -43,6 +37,7 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 #include "T_openGL.h"
 #include "T_openGLFilter.h"
 #include "sampleGl.h"
+#include "sampleGlvertex.h"
 #include "ADM_clock.h"
 /**
 
@@ -53,48 +48,58 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 
 
 /**
-    \class openGlSample
+    \class openGlVertex
 */
-class openGlSample : public  ADM_coreVideoFilterQtGl
+class openGlVertex : public  ADM_coreVideoFilterQtGl
 {
 protected:
+
 protected:
-                        //bool uploadTexture(ADMImage *image, ADM_PLANE plane);
                         bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
-                        void tinyUploadTex(ADMImage *img, ADM_PLANE plane, GLuint tex,int texNum );
 public:
-                             openGlSample(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                            ~openGlSample();
+                             openGlVertex(ADM_coreVideoFilter *previous,CONFcouple *conf);
+                            ~openGlVertex();
 
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
         virtual bool         configure(void) {return true;}             /// Start graphical user interface
 };
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   openGlSample,   // Class
+DECLARE_VIDEO_FILTER(   openGlVertex,   // Class
                         1,0,0,              // Version
                         ADM_UI_QT4+ADM_UI_GL,         // UI
                         VF_OPENGL,            // Category
-                        "glsample",            // internal name (must be uniq!)
-                        "OpenGl Sample",            // Display name
-                        "Run a fragment shader." // Description
+                        "glSampleVertex",            // internal name (must be uniq!)
+                        "OpenGl Vertex Shader",            // Display name
+                        "Run a simple vertex shader." // Description
                     );
 
 // Now implements the interesting parts
 /**
-    \fn openGlSample
+    \fn openGlVertex
     \brief constructor
 */
-openGlSample::openGlSample(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
+openGlVertex::openGlVertex(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
 {
 UNUSED_ARG(setup);
+        widget->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
+        // vertex shader 
+       
+        // frag shader
         glProgramY = new QGLShaderProgram(context);
         ADM_assert(glProgramY);
+#if 1
+        if ( !glProgramY->addShaderFromSourceCode(QGLShader::Vertex, myVertex))
+        {
+                ADM_error("[GL Render] Vertex log: %s\n", glProgramY->log().toUtf8().constData());
+                ADM_assert(0);
+        }
+
+#endif
         if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
         {
                 ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
@@ -111,36 +116,16 @@ UNUSED_ARG(setup);
                 ADM_error("[GL Render] Binding FAILED\n");
                 ADM_assert(0);
         }
-        fboY->release();
-//
-        fboUV->bind();
-        printf("Compiling shader \n");
-        glProgramUV = new QGLShaderProgram(context);
-        ADM_assert(glProgramUV);
-        if ( !glProgramUV->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
-        {
-                ADM_error("[GL Render] Fragment log: %s\n", glProgramUV->log().toUtf8().constData());
-                ADM_assert(0);
-        }
-        if ( !glProgramUV->link())
-        {
-            ADM_error("[GL Render] Link log: %s\n", glProgramUV->log().toUtf8().constData());
-            ADM_assert(0);
-        }
 
-        if ( !glProgramUV->bind())
-        {
-                ADM_error("[GL Render] Binding FAILED\n");
-                ADM_assert(0);
-        }
-        fboUV->release();
+        fboY->release();
+        widget->doneCurrent();
 
 }
 /**
-    \fn openGlSample
+    \fn openGlVertex
     \brief destructor
 */
-openGlSample::~openGlSample()
+openGlVertex::~openGlVertex()
 {
 
 }
@@ -149,7 +134,7 @@ openGlSample::~openGlSample()
     \fn getFrame
     \brief Get a processed frame
 */
-bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
+bool openGlVertex::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     // since we do nothing, just get the output of previous filter
     if(false==previousFilter->getNextFrame(fn,image))
@@ -157,37 +142,39 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
-    float angle=*fn;
-    angle=0.3+angle/40;
-    glProgramY->setUniformValue("teta", angle); 
-    glProgramUV->setUniformValue("teta", angle); 
-        // size is the last one...
+    widget->makeCurrent();
+    glPushMatrix();
+    // size is the last one...
     fboY->bind();
-    tinyUploadTex(image,PLANAR_Y,GL_TEXTURE0,0);
-    
-    render(image,PLANAR_Y,fboY);
-    downloadTexture(image,PLANAR_Y,fboY);
-    fboY->release();
+    int pulse=*fn;
+    pulse&=63;
+    float angle=pulse;
+    angle=1+((angle-64)/64)/2;
+    glProgramY->setUniformValue("skew", angle);     
+    glProgramY->setUniformValue("myTextureU", 1); 
+    glProgramY->setUniformValue("myTextureV", 2); 
+    glProgramY->setUniformValue("myTextureY", 0); 
+    glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
+    glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
 
-    fboUV->bind();
-    tinyUploadTex(image,PLANAR_U,GL_TEXTURE1,1);
-    glProgramUV->setUniformValue("myTexture", 1); 
-    render(image,PLANAR_U,fboUV);
-    downloadTexture(image,PLANAR_U,fboUV);
-    
-    tinyUploadTex(image,PLANAR_V,GL_TEXTURE2,2);
-    glProgramUV->setUniformValue("myTexture", 2); 
-    render(image,PLANAR_V,fboUV);
-    downloadTexture(image,PLANAR_V,fboUV);
-    fboUV->release();
+    uploadAllPlanes(image);
+
+    render(image,PLANAR_Y,fboY);
+
+    downloadTextures(image,fboY);
+
+    fboY->release();
     firstRun=false;
+    glPopMatrix();
+    widget->doneCurrent();
+    
     return true;
 }
 /**
     \fn getCoupledConf
     \brief Return our current configuration as couple name=value
 */
-bool         openGlSample::getCoupledConf(CONFcouple **couples)
+bool         openGlVertex::getCoupledConf(CONFcouple **couples)
 {
     *couples=new CONFcouple(0); // Even if we dont have configuration we must allocate one 
     return true;
@@ -196,48 +183,17 @@ bool         openGlSample::getCoupledConf(CONFcouple **couples)
     \fn getConfiguration
     \brief Return current setting as a string
 */
-const char *openGlSample::getConfiguration(void)
+const char *openGlVertex::getConfiguration(void)
 {
     
     return "openGl Sample.";
-}
-/**
-    \fn uploadTexture
-*/
-void openGlSample::tinyUploadTex(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
-{
-        myGlActiveTexture(tex);
-        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum);
-        glProgramY->setUniformValue("myTexture", texNum); 
-        glProgramY->setUniformValue("myWidth", image->GetWidth(plane)); 
-        glProgramY->setUniformValue("myHeight", image->GetHeight(plane)); 
-
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        if(!firstRun)
-        {
-            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                            image->GetPitch(plane),
-                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                            image->GetReadPtr(plane));
-        }else
-        {
-            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                image->GetPitch(plane),
-                image->GetHeight(plane),
-                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                image->GetReadPtr(plane));
-        }
 }
 
 
 /**
     \fn render
 */
-bool openGlSample::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
+bool openGlVertex::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
 {
     int width=image->GetWidth(plane);
     int height=image->GetHeight(plane);
@@ -249,16 +205,23 @@ bool openGlSample::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *
     glOrtho(0, width, 0, height, -1, 1);
 
     //
-    glBegin(GL_QUADS);
-	glTexCoord2i(0, 0);
-	glVertex2i(0, 0);
-	glTexCoord2i(width, 0);
-	glVertex2i(width, 0);
-	glTexCoord2i(width, height);
-	glVertex2i(width ,height);
-	glTexCoord2i(0, height);
-	glVertex2i(0, height);
-	glEnd();	// draw cube background
+    // Split our image into 16 pixels quad
+    int roundW=width>>4;
+    int roundH=height>>4;
+    for(int y=0;y<roundH;y++)
+        for(int x=0;x<roundW;x++)
+        {
+            int startx=x*16;
+            int starty=y*16;
+            float z=0;//abs(x-roundW/2)+100;    
+            int offset=0;
+            glBegin(GL_QUADS);
+            glVertex3i(startx+offset, starty+offset,z);
+            glVertex3i(startx+offset+16, starty+offset,z);
+            glVertex3i(startx+offset+16 ,starty+16+offset,z);
+            glVertex3i(startx+offset, starty+16+offset,z);
+            glEnd();	
+        }
     return true;
 }
 //EOF
