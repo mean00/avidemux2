@@ -227,8 +227,17 @@ bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferO
         }
         for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
         {
-            toU[x/2]  =  src[x*4+TEX_U_OFFSET];
-            toV[x/2]  =  src[x*4+TEX_V_OFFSET];
+            const uchar *p=src+x*4;
+            uint32_t v=*(uint32_t *)p;
+            if(!v)
+            {
+                    toU[x/2]=128;
+                    toV[x/2]=128;
+            }else
+            {
+                toU[x/2]  =  p[TEX_U_OFFSET];
+                toV[x/2]  =  p[TEX_V_OFFSET];
+            }
         }
         toU+=strideU;
         toV+=strideV;
