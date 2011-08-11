@@ -214,7 +214,10 @@ bool openGlVertex::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *
         {
             int startx=x*16;
             int starty=y*16;
-            float z=0;//abs(x-roundW/2)+100;    
+            float z=x-roundW/2;    
+            z=z/roundW;
+            z/=5;
+            if(z<0) z=-z;
             int offset=0;
             glBegin(GL_QUADS);
             glVertex3i(startx+offset, starty+offset,z);

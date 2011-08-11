@@ -13,10 +13,11 @@ static const char *myVertex=
     "gl_TexCoord[0] = pos;\n"
     "float nx=(a.x-myWidth/2);\n"
     "float ny=(a.y-myHeight/2);\n"
-    "nx=nx*skew;\n"
-    "ny=ny*skew;\n"
+    //"nx=nx*skew;\n"
+    //"ny=ny*skew;\n"
     "a.x=nx+myWidth/2;\n"
     "a.y=ny+myHeight/2;\n"
+    "a.z=a.z*skew;"
     "gl_Position = gl_ModelViewProjectionMatrix * a;\n"
 "\n"
 "}   \n";
