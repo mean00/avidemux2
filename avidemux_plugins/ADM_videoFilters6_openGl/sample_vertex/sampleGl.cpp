@@ -146,16 +146,17 @@ bool openGlVertex::getNextFrame(uint32_t *fn,ADMImage *image)
     glPushMatrix();
     // size is the last one...
     fboY->bind();
-    int pulse=*fn;
+    int pulse=(*fn)*4;;
     pulse&=63;
+    if(pulse<32) pulse=64-pulse;
     float angle=pulse;
-    angle=1+((angle-64)/64)/2;
-    glProgramY->setUniformValue("skew", angle);     
+    angle=1+(angle-32)/160;
+    glProgramY->setUniformValue("skew", (GLfloat)angle);     
     glProgramY->setUniformValue("myTextureU", 1); 
     glProgramY->setUniformValue("myTextureV", 2); 
     glProgramY->setUniformValue("myTextureY", 0); 
-    glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
-    glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
+    glProgramY->setUniformValue("myWidth", (GLfloat)image->GetWidth(PLANAR_Y)); 
+    glProgramY->setUniformValue("myHeight",(GLfloat)image->GetHeight(PLANAR_Y)); 
 
     uploadAllPlanes(image);
 
