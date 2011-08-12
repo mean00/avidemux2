@@ -9,18 +9,23 @@ static const char *myVertex=
 "void main(void)\n"
 "{\n"
     "vec4 a = gl_Vertex;\n"
-    "vec4 pos=a;\n" //"vec4(a.x,a.y,0,0);"
-    "gl_TexCoord[0] = pos;\n"
-    "float nx=(a.x-myWidth/2);\n"
-    "float ny=(a.y-myHeight/2);\n"
-    //"nx=nx*skew;\n"
-    //"ny=ny*skew;\n"
-    "a.x=nx+myWidth/2;\n"
-    "a.y=ny+myHeight/2;\n"
-    "a.z=a.z*skew;"
-    "gl_Position = gl_ModelViewProjectionMatrix * a;\n"
+    "gl_TexCoord[0] = a;\n"
+
+    "vec4 shift=vec4(myWidth/2,myHeight/2,0,0);\n"
+
+
+    "a=a-shift;\n"
+    "mat3 rotation = mat3(\n"
+    "   vec3( cos(skew),  sin(skew),  0.0),\n"
+    "   vec3(-sin(skew),  cos(skew),  0.0),\n"
+    "   vec3(       0.0,        0.0,  1.0)\n"
+    ");\n"
+
+    "vec4 xout=vec4(rotation * a.xyz, 1.0);\n"
+    "xout=xout+shift;\n"
+
+    "gl_Position = gl_ModelViewProjectionMatrix * xout;\n"
 "\n"
 "}   \n";
 
 // EOF
-
