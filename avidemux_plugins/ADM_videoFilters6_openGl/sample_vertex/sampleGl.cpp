@@ -42,7 +42,7 @@
 /**
 
 */
-
+#define DEPTH 300
 //#define BENCH 1
 //#define BENCH_READTEXTURE
 
@@ -53,7 +53,8 @@
 class openGlVertex : public  ADM_coreVideoFilterQtGl
 {
 protected:
-
+                        GLuint  glList;
+                        bool    buildVertex(void);
 protected:
                         bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
 public:
@@ -116,7 +117,8 @@ UNUSED_ARG(setup);
                 ADM_error("[GL Render] Binding FAILED\n");
                 ADM_assert(0);
         }
-
+        glList=glGenLists(1);
+        buildVertex();
         fboY->release();
         widget->doneCurrent();
 
@@ -127,7 +129,7 @@ UNUSED_ARG(setup);
 */
 openGlVertex::~openGlVertex()
 {
-
+    glDeleteLists(glList,1);
 }
 
 /**
@@ -150,7 +152,8 @@ bool openGlVertex::getNextFrame(uint32_t *fn,ADMImage *image)
     pulse&=63;
     if(pulse<32) pulse=64-pulse;
     float angle=pulse;
-    angle=1+(angle-32)/160;
+    //angle=1+(angle-32)/160;
+    angle=angle/64;
     glProgramY->setUniformValue("skew", (GLfloat)angle);     
     glProgramY->setUniformValue("myTextureU", 1); 
     glProgramY->setUniformValue("myTextureV", 2); 
@@ -189,7 +192,34 @@ const char *openGlVertex::getConfiguration(void)
     
     return "openGl Sample.";
 }
+/**
+    \fn buildVertex
+    \brief Build a grid mapping of the image using 16x16 quads
+*/
+bool openGlVertex::buildVertex(void)
+{
+  int width=info.width;
+  int height=info.height;
+  glNewList(glList,GL_COMPILE);
+  glBegin(GL_QUADS);
+  int roundW=width>>4;
+    int roundH=height>>4;
+    for(int y=0;y<roundH;y++)
+        for(int x=0;x<roundW;x++)
+        {
+            int startx=x*16;
+            int starty=y*16;
+            int offset=0,z=0;
 
+            glVertex3i(startx+offset, starty+offset,0);
+            glVertex3i(startx+offset+16, starty+offset,z);
+            glVertex3i(startx+offset+16 ,starty+16+offset,z);
+            glVertex3i(startx+offset, starty+16+offset,0);
+            	
+        }
+    glEnd();
+    glEndList();
+}
 
 /**
     \fn render
@@ -203,29 +233,9 @@ bool openGlVertex::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *
 	glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, width, 0, height, -1, 1);
-
-    //
-    // Split our image into 16 pixels quad
-    int roundW=width>>4;
-    int roundH=height>>4;
-    for(int y=0;y<roundH;y++)
-        for(int x=0;x<roundW;x++)
-        {
-            int startx=x*16;
-            int starty=y*16;
-            float z=x-roundW/2;    
-            z=z/roundW;
-            z/=5;
-            if(z<0) z=-z;
-            int offset=0;
-            glBegin(GL_QUADS);
-            glVertex3i(startx+offset, starty+offset,z);
-            glVertex3i(startx+offset+16, starty+offset,z);
-            glVertex3i(startx+offset+16 ,starty+16+offset,z);
-            glVertex3i(startx+offset, starty+16+offset,z);
-            glEnd();	
-        }
+    int depth=1;
+    glOrtho(0, width, 0, height, -depth, depth);
+    glCallList(glList);
     return true;
 }
 //EOF
