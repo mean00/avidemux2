@@ -63,7 +63,12 @@ static const char *glShaderRgb =
     "  float nx = gl_TexCoord[0].x;\n"
 	"  float ny = gl_TexCoord[0].y;\n"
 	"  vec4 texvalY = texture2DRect(myTextureY, vec2(nx,ny));\n" 
-	"  gl_FragColor = vec4(texvalY.g, 128,128,1);\n" //texvalU.r, texvalV.r, 1.0);\n"
+    "  float yy=0.299*texvalY.r+0.587*texvalY.g+0.114*texvalY.b;\n"
+    "  float zz=-0.14713*texvalY.r-0.2886*texvalY.g+0.436*texvalY.b;\n"
+    "  float tt=0.615*texvalY.r-0.51499*texvalY.g-0.1001*texvalY.b;\n"
+    "  zz=zz+0.5;\n"
+    "  tt=tt+0.5;\n"
+	"  gl_FragColor = vec4(yy,zz,tt,1);\n" //texvalU.r, texvalV.r, 1.0);\n"
 	"}\n";
 
 //--------------------------------------------------------------------------------------
@@ -96,13 +101,15 @@ static bool vdpauGlInited=false;
 /**
     \fn processError
 */
-static void processError(const char *e)
+static bool processError(const char *e)
 {
     int x=glGetError();
     if(x!=GL_NO_ERROR)
     {
         ADM_error("%s: Error : %d %s\n",e,x,gluErrorString(x));
+        return false;
     }
+    return true;
 }
 /**
     \fn initGl
@@ -123,8 +130,11 @@ bool vdpauVideoFilterDeint::initOnceGl(void)
     GETFUNC(VDPAUUnmapSurfacesNV);  
     GETFUNC(VDPAUSurfaceAccessNV);  
     GETFUNC(VDPAUFiniNV);
-    VDPAUInitNV(admVdpau::getVdpDevice(),admVdpau::getProcAddress());
-    processError("InitNv");
+    const void *device=admVdpau::getVdpDevice();
+    const void *proc=admVdpau::getProcAddress();
+    ADM_info("VDPAU InitNv with device=%lx, proc=%lx\n",(long int)device,(long int)proc);
+    VDPAUInitNV(device,proc);
+    if(false==processError("InitNv")) return false;
     vdpauGlInited=true;
     return true;
 }
@@ -134,7 +144,9 @@ bool vdpauVideoFilterDeint::initOnceGl(void)
 bool vdpauVideoFilterDeint::initGl(void)
 {
    initOnceGl();
+   ADM_info("Creating VDPAU GL wrapper\n");
    rgb=new glRGB(this,NULL);
+   rgb->probe(outputSurface,NULL);
    return true;
 }
 
@@ -143,26 +155,16 @@ bool vdpauVideoFilterDeint::initGl(void)
 */
 bool vdpauVideoFilterDeint::deInitGl(void)
 {
-    ADM_info("De-Initializing VDPAU<->openGl\n");
+    ADM_info("Destroying VDPAU GL wrapper\n");
     delete rgb;
     rgb=NULL;
     return true;
 }
-
 /**
-    \fn     getResult
-    \brief  Convert the output surface into an ADMImage
+    \fn getResultSlow
 */
-bool vdpauVideoFilterDeint::getResult(ADMImage *image)
+bool vdpauVideoFilterDeint::getResultSlow(ADMImage *image)
 {
-    
-    return rgb->surfaceToImage(outputSurface,image);
-#ifdef DO_BENCHMARK
-    ADMBenchmark bmark;
-    for(int i=0;i<NB_BENCH;i++)
-    {
-        bmark.start();
-#endif
   
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,
                                                             tempBuffer, 
@@ -172,46 +174,18 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
         return false;
     }
   
-                     
-#ifdef DO_BENCHMARK
-        bmark.end();
-    }
-    ADM_warning("Read surface Benchmark\n");
-    bmark.printResult();
-#endif 
-    // Convert from VDP_RGBA_FORMAT_B8G8R8A8 to YV12
-    uint32_t sourceStride[3]={info.width*4,0,0};
-    uint8_t  *sourceData[3]={tempBuffer,NULL,NULL};
-    uint32_t destStride[3];
-    uint8_t  *destData[3];
-
-    image->GetPitches(destStride);
-    image->GetWritePlanes(destData);
-
-    // Invert U&V
-    uint32_t ts;
-    uint8_t  *td;
-#if 0
-    ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
-    td=destData[1];destData[2]=destData[2];destData[1]=td;
-#endif
-
-
-#ifdef DO_BENCHMARK
-    ADMBenchmark bmark2;
-    for(int i=0;i<NB_BENCH;i++)
-    {
-        bmark2.start();
-#endif
-    scaler->convertPlanes(  sourceStride,destStride,     
-                            sourceData,destData);
-#ifdef DO_BENCHMARK
-        bmark2.end();
-    }
-    ADM_warning("RGB->YUV Benchmark\n");
-    bmark2.printResult();
-#endif
-
+    // tempBuffer                
+    return rgb->imageToImage((const char *)tempBuffer,image);
+}
+/**
+    \fn     getResult
+    \brief  Convert the output surface into an ADMImage
+*/
+bool vdpauVideoFilterDeint::getResult(ADMImage *image)
+{
+    
+    if(false==rgb->surfaceToImage(outputSurface,image))
+            return getResultSlow(image);
     return true;
 }
 #else // USE_VDPAU
@@ -292,10 +266,29 @@ glRGB::~glRGB()
 bool         glRGB::getNextFrame(uint32_t *fn,ADMImage *image) {ADM_assert(0);return false;}
 bool         glRGB::getCoupledConf(CONFcouple **couples) {ADM_assert(0);return false;};   
 /**
+    \fn probe
+*/
+bool   glRGB::probe(VdpOutputSurface surf,ADMImage *image)
+{
+    widget->makeCurrent();
+    glPushMatrix();
+    // size is the last one...
+    fboY->bind();
+    processError("Bind");
+    GLvdpauSurfaceNV s=VDPAURegisterOutputSurfaceNV((GLvoid *)surf,GL_TEXTURE_2D,1,texName);
+    VDPAUUnregisterSurfaceNV(s);
+    processError("Unregister");
+    fboY->release();
+    firstRun=false;
+    glPopMatrix();
+    widget->doneCurrent();
+}
+/**
     \fn surfaceToImage
 */
 bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
 {
+    bool r=true;
     widget->makeCurrent();
     glPushMatrix();
     // size is the last one...
@@ -308,7 +301,11 @@ bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
     //
     GLvdpauSurfaceNV s=VDPAURegisterOutputSurfaceNV((GLvoid *)surf,GL_TEXTURE_2D,1,texName);
     printf("Surface =%d, GlSurface=%x, texName : %d\n",(int)surf,(int)s,(int)texName[0]);
-    processError("Register");
+    if(false==processError("Register"))
+    {
+            r=false;
+            goto skip;
+    }
     VDPAUSurfaceAccessNV(s,GL_READ_ONLY);
     VDPAUMapSurfacesNV(1,&s);
     processError("Map");
@@ -326,15 +323,69 @@ bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
     processError("Unmap");
     VDPAUUnregisterSurfaceNV(s);
     processError("Unregister");
+skip:
     fboY->release();
     firstRun=false;
     glPopMatrix();
     widget->doneCurrent();
   
 
-    return true;
+    return r;
 }
+/**
+    \fn image2image
+*/
+bool glRGB::imageToImage(const char *buffer,ADMImage *image)
+{
+    bool r=true;
+    int width=image->GetWidth(PLANAR_Y);
+    int height=image->GetHeight(PLANAR_Y);
+    widget->makeCurrent();
+    glPushMatrix();
+    // size is the last one...
+    fboY->bind();
+    processError("Bind");
+    glProgramY->setUniformValue("myTextureY", (GLfloat)0); 
+    glProgramY->setUniformValue("myWidth", (GLfloat)width); 
+    glProgramY->setUniformValue("myHeight", (GLfloat)height); 
 
+    myGlActiveTexture(GL_TEXTURE0);
+    processError("Active Texture");
+    glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[0]); 
+    processError("Bind Texture");
+
+    // upload image
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        if(!firstRun)
+        {
+            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_RGBA, 
+                            width,
+                            height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 
+                            buffer);
+        }else
+        {
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
+                width,
+                height,
+                GL_RGBA, GL_UNSIGNED_BYTE, 
+                buffer);
+        }
+    //-----------------
+    render(image,PLANAR_Y,fboY);
+    downloadTextures(image,fboY);
+
+    fboY->release();
+    firstRun=false;
+    glPopMatrix();
+    widget->doneCurrent();
+  
+
+    return r;
+}
 
 //****************
 // EOF

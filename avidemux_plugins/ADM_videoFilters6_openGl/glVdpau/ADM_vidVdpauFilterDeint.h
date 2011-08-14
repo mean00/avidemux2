@@ -51,7 +51,9 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
         virtual bool         configure(void) {return true;}             /// Start graphical user interface
 
-        bool                 surfaceToImage(VdpOutputSurface surf,ADMImage *image);
+        bool                 surfaceToImage(VdpOutputSurface surf,ADMImage *image); /// VDPAU->openGL
+        bool                 imageToImage(const char *buffer,ADMImage *image);      /// VDPAU->CPU->OpenGL (slow)
+        bool                 probe(VdpOutputSurface surf,ADMImage *image);
 };
 
 /**
@@ -86,6 +88,7 @@ protected:
                     bool                 uploadImage(ADMImage *next,const VdpVideoSurface surface) ;
                     bool                 fillSlot(int slot,ADMImage *image);
                     bool                 getResult(ADMImage *image);
+                    bool                 getResultSlow(ADMImage *image);
                     bool                 sendField(bool topField);
 
 public:
