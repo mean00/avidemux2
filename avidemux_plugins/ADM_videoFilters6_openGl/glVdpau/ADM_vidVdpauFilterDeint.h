@@ -45,7 +45,7 @@ protected:
 public:
                              glRGB(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~glRGB();
-
+                qreal        realMatrix[4*4];
         virtual const char   *getConfiguration(void) {return "none";};                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration

@@ -56,19 +56,18 @@ extern "C" {
 static const char *glShaderRgb =
 	"#extension GL_ARB_texture_rectangle: enable\n"
 	"uniform sampler2DRect myTextureY;\n" // tex unit 0
+    "uniform mat4 metrix;\n"
     "uniform float myWidth;\n"
     "uniform float myHeight;\n"
-    
+    "const vec4 offset=vec4(0,0.5,0.5,0);\n"
 	"void main(void) {\n"
     "  float nx = gl_TexCoord[0].x;\n"
 	"  float ny = gl_TexCoord[0].y;\n"
-	"  vec4 texvalY = texture2DRect(myTextureY, vec2(nx,ny));\n" 
-    "  float yy=0.299*texvalY.r+0.587*texvalY.g+0.114*texvalY.b;\n"
-    "  float zz=-0.14713*texvalY.r-0.2886*texvalY.g+0.436*texvalY.b;\n"
-    "  float tt=0.615*texvalY.r-0.51499*texvalY.g-0.1001*texvalY.b;\n"
-    "  zz=zz+0.5;\n"
-    "  tt=tt+0.5;\n"
-	"  gl_FragColor = vec4(yy,zz,tt,1);\n" //texvalU.r, texvalV.r, 1.0);\n"
+	"  vec4 texin = texture2DRect(myTextureY, vec2(nx,ny));\n" 
+    "  vec4 texout;\n"
+    "  texout=metrix*texin ;\n"
+    "  texout=texout+offset;\n"
+    "  gl_FragColor=texout;"
 	"}\n";
 
 //--------------------------------------------------------------------------------------
@@ -252,6 +251,20 @@ glRGB::glRGB(ADM_coreVideoFilter *previous,CONFcouple *conf)
 
         fboY->release();
         widget->doneCurrent();
+        //
+        memset(realMatrix,0,sizeof(realMatrix));
+        realMatrix[0]=0.299;
+        realMatrix[1]=0.587;
+        realMatrix[2]=0.114;
+
+        realMatrix[4]=-0.14713;
+        realMatrix[5]=-0.2886;
+        realMatrix[6]=+0.436;
+
+        realMatrix[8]=+0.615;
+        realMatrix[9]=-0.51499;
+        realMatrix[10]=-0.1001;
+
 }
 /**
     \fn dtor
@@ -297,7 +310,8 @@ bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
     glProgramY->setUniformValue("myTextureY", (GLfloat)0); 
     glProgramY->setUniformValue("myWidth", (GLfloat)image->GetWidth(PLANAR_Y)); 
     glProgramY->setUniformValue("myHeight", (GLfloat)image->GetHeight(PLANAR_Y)); 
-
+    QMatrix4x4 quadmat(realMatrix);
+    glProgramY->setUniformValue("metrix",quadmat);
     //
     GLvdpauSurfaceNV s=VDPAURegisterOutputSurfaceNV((GLvoid *)surf,GL_TEXTURE_2D,1,texName);
     printf("Surface =%d, GlSurface=%x, texName : %d\n",(int)surf,(int)s,(int)texName[0]);
@@ -348,6 +362,8 @@ bool glRGB::imageToImage(const char *buffer,ADMImage *image)
     glProgramY->setUniformValue("myTextureY", (GLfloat)0); 
     glProgramY->setUniformValue("myWidth", (GLfloat)width); 
     glProgramY->setUniformValue("myHeight", (GLfloat)height); 
+    QMatrix4x4 quadmat(realMatrix);
+    glProgramY->setUniformValue("metrix",quadmat);
 
     myGlActiveTexture(GL_TEXTURE0);
     processError("Active Texture");
