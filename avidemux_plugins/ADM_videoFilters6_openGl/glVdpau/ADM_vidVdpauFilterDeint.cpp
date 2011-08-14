@@ -112,7 +112,6 @@ bool vdpauVideoFilterDeint::updateConf(void)
         info.frameIncrement=prev/2;
     else
         info.frameIncrement=prev;
-    initGl();
     return true;
 }
 /**
