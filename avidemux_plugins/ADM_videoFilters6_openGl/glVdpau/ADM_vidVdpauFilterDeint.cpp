@@ -1,38 +1,47 @@
 /**
     \brief VDPAU filters Deinterlacer
     \author mean (C) 2010
-    This is slow as we copy back and forth data to/from the video cards
-    
-    On a Q6600
-
-    FullHD: 
-            Readback ~ 5 ms, RGB 2 YUV ~ 20 ms : 100% CPU
-    720
-            Readback ~ 2 ms, RGB2YUV ~ 10 ms  : 50% CPU
-            
+  
+    This version uses openGL to convert the output surface to YV12
 
 
 */
-#include "ADM_cpp.h"
+#define __STDC_CONSTANT_MACROS
+#define GL_GLEXT_PROTOTYPES
+
+#include <QtGui/QPainter>
+
+#include <GL/gl.h>
+#include <GL/glext.h>
+
+#include <QtGui/QImage>
+#include <QtOpenGL/QtOpenGL>
+#include <QtOpenGL/QGLShader>
 #include <list>
-#include "ADM_default.h"
+
+#include "ADM_coreConfig.h"
 #ifdef USE_VDPAU
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/vdpau.h"
 }
 
+#define ADM_LEGACY_PROGGY
+#include "ADM_default.h"
+
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
 #include "ADM_vidMisc.h"
+
+#include "T_openGL.h"
+#include "T_openGLFilter.h"
+
+
 #include "vdpauFilterDeint.h"
 #include "vdpauFilterDeint_desc.cpp"
 
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
-//
-#define ADM_INVALID_FRAME_NUM 0x80000000
-#define ADM_NB_SURFACES 5
 
 //#define DO_BENCHMARK
 #define NB_BENCH 100
@@ -43,32 +52,19 @@ extern "C" {
 #define aprintf(...) {}
 #endif
 
-enum
-{
-    ADM_KEEP_TOP=0,
-    ADM_KEEP_BOTTOM=1,
-    ADM_KEEP_BOTH=2
-};
-/**
-    \class VDPSlot
-*/
-class VDPSlot
-{
-public:
-                              VDPSlot() ;
-                             ~VDPSlot();
-            VdpVideoSurface   surface;
-            bool              isExternal;
-            uint64_t          pts;
-            uint32_t          frameNumber;
-            ADMImage          *image;
-};
+#include "ADM_vidVdpauFilterDeint.h"
 
+/**
+    \fn
+*/
 VDPSlot::VDPSlot()
 {
     surface=VDP_INVALID_HANDLE;
     image=NULL;
 }
+/**
+    \fn
+*/
 VDPSlot::~VDPSlot()
 {
     if(image) delete image;
@@ -80,54 +76,14 @@ VDPSlot::~VDPSlot()
     surface=VDP_INVALID_HANDLE;
 }
 
-/**
-    \class vdpauVideoFilterDeint
-*/
-class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
-{
-protected:
-                    VDPSlot              slots[3];
-                    bool                 eof;
-                    bool                 secondField;
-                    uint64_t             nextPts;
-                    ADMColorScalerSimple *scaler;
-                    bool                 passThrough;
-                    bool                 setupVdpau(void);
-                    bool                 cleanupVdpau(void);
-                    bool                 updateConf(void);
-                    uint8_t             *tempBuffer;
-                    vdpauFilterDeint     configuration;
-                    VdpOutputSurface     outputSurface;
-                    std::list <VdpVideoSurface> freeSurface;
-                    VdpVideoSurface      surfacePool[ADM_NB_SURFACES];
-                    VdpVideoMixer        mixer;
-protected:
-                    bool                 rotateSlots(void);
-                    bool                 clearSlots(void);
-                    bool                 uploadImage(ADMImage *next,const VdpVideoSurface surface) ;
-                    bool                 fillSlot(int slot,ADMImage *image);
-                    bool                 getResult(ADMImage *image);
-                    bool                 sendField(bool topField);
-
-public:
-        virtual bool         goToTime(uint64_t usSeek); 
-                             vdpauVideoFilterDeint(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                             ~vdpauVideoFilterDeint();
-
-        virtual const char   *getConfiguration(void);                 /// Return  current configuration as a human readable string
-        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);           /// Return the next image
-        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-        virtual bool         configure(void) ;                        /// Start graphical user interface
-};
-
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   vdpauVideoFilterDeint,   // Class
                         1,0,0,              // Version
-                        ADM_UI_GTK+ADM_UI_QT4,     // We need a display for VDPAU; so no cli...
-                        VF_INTERLACING,            // Category
-                        "vdpauDeint",            // internal name (must be uniq!)
-                        "vdpauDeint",            // Display name
-                        "VDPAU deinterlacer (+resize)." // Description
+                        ADM_UI_QT4+ADM_UI_GL,         // UI
+                        VF_OPENGL,            // Category Category
+                        "vdpauDeintGl",            // internal name (must be uniq!)
+                        "vdpauDeintGl",            // Display name
+                        "VDPAU deinterlacer+resize, openGl version (faster)." // Description
                     );
 
 //
@@ -203,7 +159,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     }
     // allocate our (dummy) images
     for(int i=0;i<3;i++)
-        slots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
+        xslots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
                                             previousFilter->getInfo()->height);
                                             
     if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
@@ -244,10 +200,10 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
     if(scaler) delete scaler;
     scaler=NULL;
     for(int i=0;i<3;i++)
-       if(slots[i].image)
+       if(xslots[i].image)
         {
-            delete slots[i].image;
-            slots[i].image=NULL;
+            delete xslots[i].image;
+            xslots[i].image=NULL;
         }
 
     return true;
@@ -402,7 +358,7 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
     }else
     {   // use the provided surface
         aprintf("Deint Image is already vdpau, slot %d \n",slot);
-        ADMImage *img=slots[slot].image;
+        ADMImage *img=xslots[slot].image;
         img->duplicateFull(image); // increment ref count
         // get surface
         img->hwDownloadFromRef();
@@ -412,9 +368,9 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
         external=true;
     }
     nextPts=image->Pts;
-    slots[slot].pts=image->Pts;
-    slots[slot].surface=tgt;
-    slots[slot].isExternal=external;
+    xslots[slot].pts=image->Pts;
+    xslots[slot].surface=tgt;
+    xslots[slot].isExternal=external;
     return true;
 }
 
@@ -423,8 +379,8 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
 */
 bool vdpauVideoFilterDeint::rotateSlots(void)
 {
-    VDPSlot *s=&(slots[0]);
-    ADMImage *img=slots[0].image;
+    VDPSlot *s=&(xslots[0]);
+    ADMImage *img=xslots[0].image;
     if(s->surface!=VDP_INVALID_HANDLE)
         if(!s->isExternal)
         {
@@ -436,10 +392,10 @@ bool vdpauVideoFilterDeint::rotateSlots(void)
             s->image->hwDecRefCount();
             s->surface=VDP_INVALID_HANDLE;
         }
-    slots[0]=slots[1];
-    slots[1]=slots[2];
-    slots[2].surface=VDP_INVALID_HANDLE;
-    slots[2].image=img;
+    xslots[0]=xslots[1];
+    xslots[1]=xslots[2];
+    xslots[2].surface=VDP_INVALID_HANDLE;
+    xslots[2].image=img;
     return true;
 }
 /**
@@ -449,7 +405,7 @@ bool vdpauVideoFilterDeint::clearSlots(void)
 {
     for(int i=0;i<3;i++)
     {
-           VDPSlot *s=&(slots[i]);  
+           VDPSlot *s=&(xslots[i]);  
            if(s->surface!=VDP_INVALID_HANDLE)
             {
                 if(s->isExternal)
@@ -476,7 +432,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
     // PREVIOUS
     for(int i=0;i<3;i++)
     {
-        in[i]=slots[i].surface;
+        in[i]=xslots[i].surface;
         aprintf("Mixing %d %d\n",i,(int)in[i]);
     }
     //
@@ -509,70 +465,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
 #endif 
     return r;
 }
-/**
-    \fn     getResult
-    \brief  Convert the output surface into an ADMImage
-*/
-bool vdpauVideoFilterDeint::getResult(ADMImage *image)
-{
 
-#ifdef DO_BENCHMARK
-    ADMBenchmark bmark;
-    for(int i=0;i<NB_BENCH;i++)
-    {
-        bmark.start();
-#endif
-  
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,
-                                                            tempBuffer, 
-                                                            info.width,info.height))
-    {
-        ADM_warning("[Vdpau] Cannot copy back data from output surface\n");
-        return false;
-    }
-  
-                     
-#ifdef DO_BENCHMARK
-        bmark.end();
-    }
-    ADM_warning("Read surface Benchmark\n");
-    bmark.printResult();
-#endif 
-    // Convert from VDP_RGBA_FORMAT_B8G8R8A8 to YV12
-    uint32_t sourceStride[3]={info.width*4,0,0};
-    uint8_t  *sourceData[3]={tempBuffer,NULL,NULL};
-    uint32_t destStride[3];
-    uint8_t  *destData[3];
-
-    image->GetPitches(destStride);
-    image->GetWritePlanes(destData);
-
-    // Invert U&V
-    uint32_t ts;
-    uint8_t  *td;
-#if 0
-    ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
-    td=destData[1];destData[2]=destData[2];destData[1]=td;
-#endif
-
-
-#ifdef DO_BENCHMARK
-    ADMBenchmark bmark2;
-    for(int i=0;i<NB_BENCH;i++)
-    {
-        bmark2.start();
-#endif
-    scaler->convertPlanes(  sourceStride,destStride,     
-                            sourceData,destData);
-#ifdef DO_BENCHMARK
-        bmark2.end();
-    }
-    ADM_warning("RGB->YUV Benchmark\n");
-    bmark2.printResult();
-#endif
-
-    return true;
-}
 /**
     \fn getNextFrame
     \brief 

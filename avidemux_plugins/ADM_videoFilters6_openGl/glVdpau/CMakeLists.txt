@@ -1,6 +1,6 @@
 INCLUDE(vf_plugin)
 INCLUDE(vf_plugin_qt4gl)
 IF(NOT WIN32 AND NOT APPLE)
-        SET(ADM_vf_vdpauFilterDeint_SRCS ADM_vidVdpauFilterDeint.cpp )
+        SET(ADM_vf_vdpauFilterDeint_SRCS ADM_vidVdpauFilterDeint.cpp ADM_vidVdpauFilterDeintGl.cpp)
         INIT_VIDEO_FILTER_GLQT4(ADM_vf_vdpauGl "${ADM_vf_vdpauFilterDeint_SRCS}" "ADM_vf_vdpauGl.h" "ADM_vf_vdpauGl" "${ADM_vf_vdpauFilterDeint_SRCS}")
 ENDIF(NOT WIN32 AND NOT APPLE)
