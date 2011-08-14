@@ -258,12 +258,12 @@ glRGB::glRGB(ADM_coreVideoFilter *previous,CONFcouple *conf)
         realMatrix[2]=0.114;
 
         realMatrix[4]=-0.14713;
-        realMatrix[5]=-0.2886;
+        realMatrix[5]=-0.28886;
         realMatrix[6]=+0.436;
 
         realMatrix[8]=+0.615;
         realMatrix[9]=-0.51499;
-        realMatrix[10]=-0.1001;
+        realMatrix[10]=-0.10001;
 
 }
 /**
