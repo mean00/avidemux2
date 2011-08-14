@@ -145,7 +145,7 @@ bool vdpauVideoFilterDeint::initGl(void)
    initOnceGl();
    ADM_info("Creating VDPAU GL wrapper\n");
    rgb=new glRGB(this,NULL);
-   rgb->probe(outputSurface,NULL);
+   //rgb->probe(outputSurface,NULL);
    return true;
 }
 
@@ -304,14 +304,17 @@ bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
     bool r=true;
     widget->makeCurrent();
     glPushMatrix();
-    // size is the last one...
     fboY->bind();
     processError("Bind");
-    glProgramY->setUniformValue("myTextureY", (GLfloat)0); 
-    glProgramY->setUniformValue("myWidth", (GLfloat)image->GetWidth(PLANAR_Y)); 
-    glProgramY->setUniformValue("myHeight", (GLfloat)image->GetHeight(PLANAR_Y)); 
+    glProgramY->setUniformValue("myTextureY", 0); 
+    processError("setUniform myTexture0");
     QMatrix4x4 quadmat(realMatrix);
     glProgramY->setUniformValue("metrix",quadmat);
+    processError("setUniform Matrix");
+    myGlActiveTexture(GL_TEXTURE0);
+    processError("Active Texture");
+    glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[0]); 
+    processError("Bind Texture");
     //
     GLvdpauSurfaceNV s=VDPAURegisterOutputSurfaceNV((GLvoid *)surf,GL_TEXTURE_2D,1,texName);
     printf("Surface =%d, GlSurface=%x, texName : %d\n",(int)surf,(int)s,(int)texName[0]);
@@ -326,7 +329,7 @@ bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
 
     myGlActiveTexture(GL_TEXTURE0);
     processError("Active Texture");
-    glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[0]); 
+    glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[0]);  
     processError("Bind Texture");
 
 
@@ -359,12 +362,11 @@ bool glRGB::imageToImage(const char *buffer,ADMImage *image)
     // size is the last one...
     fboY->bind();
     processError("Bind");
-    glProgramY->setUniformValue("myTextureY", (GLfloat)0); 
-    glProgramY->setUniformValue("myWidth", (GLfloat)width); 
-    glProgramY->setUniformValue("myHeight", (GLfloat)height); 
+    glProgramY->setUniformValue("myTextureY", 0); 
+    processError("setUniform myTexture0");
     QMatrix4x4 quadmat(realMatrix);
     glProgramY->setUniformValue("metrix",quadmat);
-
+    processError("setUniform Matrix");
     myGlActiveTexture(GL_TEXTURE0);
     processError("Active Texture");
     glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[0]); 
