@@ -32,6 +32,8 @@ static VdpDeviceCreateX11    *ADM_createVdpX11;
 static VdpGetProcAddress     *vdpProcAddress;
 static bool                  coreVdpWorking=false;
 static VdpPresentationQueueTarget  queueX11;
+
+
 /**
     \fn getFunc
     \brief vdpau function pointers from ID
@@ -41,6 +43,20 @@ static void *getFunc(uint32_t id)
     void *f;
     if(VDP_STATUS_OK!=vdpProcAddress(ADM_coreVdpau::vdpDevice,id,&f)) return NULL;
     return (void *)f;
+}
+/**
+
+*/
+void        *admVdpau::getVdpDevice(void)
+{
+        return (void *)ADM_coreVdpau::vdpDevice;
+}
+/**
+
+*/
+void        *admVdpau::getProcAddress(void)
+{
+    return (void *)vdpProcAddress;
 }
 
 /**

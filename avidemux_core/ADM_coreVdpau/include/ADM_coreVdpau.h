@@ -40,6 +40,8 @@ public:
     static bool         cleanup(void);
     /* Surface */
 #ifdef USE_VDPAU
+    static  void        *getVdpDevice(void);
+    static  void        *getProcAddress(void);
     static  const char  *getErrorString(VdpStatus er);
     static  bool        mixerIsFeatureEnabled( VdpVideoMixer mixer,VdpVideoMixerFeature feature);
     static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
