@@ -14,7 +14,7 @@
 #       include <GL/gl.h>
 #       include <GL/glext.h>
 
-#include <QtGui/QImage>
+#include <QtGui/QImage> 
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGL/QGLShader>
 #include <list>
@@ -42,9 +42,6 @@ extern "C" {
 #include "ADM_vidVdpauFilterDeint.h"
 #include "ADM_coreVdpau/include/ADM_coreVdpau.h"
 //
-#define ADM_INVALID_FRAME_NUM 0x80000000
-#define ADM_NB_SURFACES 5
-
 //#define DO_BENCHMARK
 #define NB_BENCH 100
 
@@ -54,7 +51,8 @@ extern "C" {
 #define aprintf(...) {}
 #endif
 
-static int nbNvInit=0;
+
+
 static const char *glShaderRgb =
 	"#extension GL_ARB_texture_rectangle: enable\n"
 	"uniform sampler2DRect myTextureY;\n" // tex unit 0
@@ -70,35 +68,31 @@ static const char *glShaderRgb =
 
 //--------------------------------------------------------------------------------------
 /***/
-typedef GLintptr GLvdpauSurfaceNV;
 
 
-
-typedef void            typeVDPAUInitNV(const void *vdpDevice,      const void *getProcAddress);
-typedef GLvdpauSurfaceNV typeVDPAURegisterOutputSurfaceNV (const void *vdpSurface,
-                                                 GLenum      target,
-                                                 GLsizei     numTextureNames,
-                                                 const GLuint *textureNames);
-typedef void   typeVDPAUUnregisterSurfaceNV (GLvdpauSurfaceNV surface);
-typedef void   typeVDPAUMapSurfacesNV (GLsizei numSurfaces,const GLvdpauSurfaceNV *surfaces);
-typedef void   typeVDPAUUnmapSurfacesNV (GLsizei numSurface, const GLvdpauSurfaceNV *surfaces);
-typedef void   typeVDPAUSurfaceAccessNV (GLvdpauSurfaceNV surface,   int           access);
-typedef void   typeVDPAUFiniNV(void);
 /***/
-typeVDPAUInitNV                     *VDPAUInitNV=NULL;
-typeVDPAURegisterOutputSurfaceNV    *VDPAURegisterOutputSurfaceNV=NULL;
-typeVDPAUUnregisterSurfaceNV        *VDPAUUnregisterSurfaceNV=NULL;
-typeVDPAUMapSurfacesNV              *VDPAUMapSurfacesNV=NULL;
-typeVDPAUUnmapSurfacesNV            *VDPAUUnmapSurfacesNV=NULL;
-typeVDPAUSurfaceAccessNV            *VDPAUSurfaceAccessNV=NULL;
-typeVDPAUFiniNV                     *VDPAUFiniNV=NULL;
+PFNGLVDPAUINITNVPROC                VDPAUInitNV=NULL;
+PFNGLVDPAUFININVPROC                VDPAUFiniNV=NULL;
+
+PFNGLVDPAUREGISTEROUTPUTSURFACENVPROC VDPAURegisterOutputSurfaceNV=NULL;
+PFNGLVDPAUREGISTERVIDEOSURFACENVPROC  VDPAURegisterVideoSurfaceNV=NULL;
+PFNGLVDPAUUNREGISTERSURFACENVPROC     VDPAUUnregisterSurfaceNV=NULL;
+
+PFNGLVDPAUMAPSURFACESNVPROC         VDPAUMapSurfacesNV=NULL;
+PFNGLVDPAUUNMAPSURFACESNVPROC       VDPAUUnmapSurfacesNV=NULL;
+PFNGLVDPAUSURFACEACCESSNVPROC       VDPAUSurfaceAccessNV=NULL;
+
+
 /***/
-#define GETFUNC(x)   x = (type##x *)ADM_getGlWidget()->context()->getProcAddress(QLatin1String("gl"#x));\
+#define GETFUNC(x)   x = (typeof(x) )ADM_getGlWidget()->context()->getProcAddress(QLatin1String("gl"#x));\
     if(!x) \
     {\
             ADM_error("Cannot get "#x"\n");\
             exit(-1);\
     }
+
+
+static bool vdpauGlInited=false;
 /**
     \fn processError
 */
@@ -116,14 +110,14 @@ static void processError(const char *e)
 bool vdpauVideoFilterDeint::initOnceGl(void)
 {
     ADM_info("Initializing VDPAU<->openGl\n");
-    if(nbNvInit)
+    if(vdpauGlInited)
     {
         ADM_info("Already done..\n");
-        nbNvInit++;
         return true;
     }
     GETFUNC(VDPAUInitNV);
     GETFUNC(VDPAURegisterOutputSurfaceNV);
+    GETFUNC(VDPAURegisterVideoSurfaceNV);
     GETFUNC(VDPAUUnregisterSurfaceNV);  
     GETFUNC(VDPAUMapSurfacesNV);  
     GETFUNC(VDPAUUnmapSurfacesNV);  
@@ -131,7 +125,7 @@ bool vdpauVideoFilterDeint::initOnceGl(void)
     GETFUNC(VDPAUFiniNV);
     VDPAUInitNV(admVdpau::getVdpDevice(),admVdpau::getProcAddress());
     processError("InitNv");
-    nbNvInit++;
+    vdpauGlInited=true;
     return true;
 }
 /**
@@ -152,14 +146,6 @@ bool vdpauVideoFilterDeint::deInitGl(void)
     ADM_info("De-Initializing VDPAU<->openGl\n");
     delete rgb;
     rgb=NULL;
-    if(nbNvInit!=1)
-    {
-        ADM_info("still used..\n");
-        if(nbNvInit) nbNvInit--;
-        return true;
-    }
-    VDPAUFiniNV();
-    nbNvInit--;
     return true;
 }
 
@@ -169,6 +155,7 @@ bool vdpauVideoFilterDeint::deInitGl(void)
 */
 bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 {
+    
     return rgb->surfaceToImage(outputSurface,image);
 #ifdef DO_BENCHMARK
     ADMBenchmark bmark;
@@ -269,7 +256,7 @@ glRGB::glRGB(ADM_coreVideoFilter *previous,CONFcouple *conf)
 {
         widget->makeCurrent();
         fboY->bind();
-        printf("Compiling shader \n");
+        ADM_info("Compiling shader \n");
         glProgramY = new QGLShaderProgram(context);
         ADM_assert(glShaderRgb);
         if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, glShaderRgb))
@@ -314,22 +301,23 @@ bool   glRGB::surfaceToImage(VdpOutputSurface surf,ADMImage *image)
     // size is the last one...
     fboY->bind();
     processError("Bind");
-    glProgramY->setUniformValue("myTextureY", 0); 
-    glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
-    glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
+    glProgramY->setUniformValue("myTextureY", (GLfloat)0); 
+    glProgramY->setUniformValue("myWidth", (GLfloat)image->GetWidth(PLANAR_Y)); 
+    glProgramY->setUniformValue("myHeight", (GLfloat)image->GetHeight(PLANAR_Y)); 
+
+    //
+    GLvdpauSurfaceNV s=VDPAURegisterOutputSurfaceNV((GLvoid *)surf,GL_TEXTURE_2D,1,texName);
+    printf("Surface =%d, GlSurface=%x, texName : %d\n",(int)surf,(int)s,(int)texName[0]);
+    processError("Register");
+    VDPAUSurfaceAccessNV(s,GL_READ_ONLY);
+    VDPAUMapSurfacesNV(1,&s);
+    processError("Map");
 
     myGlActiveTexture(GL_TEXTURE0);
     processError("Active Texture");
     glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[0]); 
     processError("Bind Texture");
-    //---
-    GLvdpauSurfaceNV s=VDPAURegisterOutputSurfaceNV((const void *)surf,
-                                                        GL_TEXTURE_2D,1,texName);
-    printf("S=%x\n",(int)s);
-    processError("Register");
-    VDPAUSurfaceAccessNV(s,GL_READ_ONLY);
-    VDPAUMapSurfacesNV(1,&s);
-    processError("Map");
+
 
     render(image,PLANAR_Y,fboY);
     downloadTextures(image,fboY);
