@@ -514,6 +514,11 @@ bool r=true;
                     vidCache->unlockAll();
                     return false;
             }
+            if(false==fillSlot(0,prev))
+            {
+                    vidCache->unlockAll();
+                    return false;
+            }
             
     }
     // regular image, in fact we get the next image here
