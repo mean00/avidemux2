@@ -112,6 +112,7 @@ bool vdpauVideoFilterDeint::updateConf(void)
         info.frameIncrement=prev/2;
     else
         info.frameIncrement=prev;
+    initGl();
     return true;
 }
 /**
@@ -175,6 +176,13 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     for(int i=0;i<ADM_NB_SURFACES;i++)  
             freeSurface.push_back(surfacePool[i]);
 
+    
+    ADM_info("VDPAU setup ok\n");
+    if(initGl()==false)
+    {
+        ADM_error("Cannot setup openGL\n");
+        goto badInit;
+    }
     ADM_info("VDPAU setup ok\n");
     return true;
 badInit:
@@ -205,7 +213,7 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
             delete xslots[i].image;
             xslots[i].image=NULL;
         }
-
+    deInitGl();
     return true;
 }
 
@@ -215,6 +223,7 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
 vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVideoFilter(in,setup)
 {
     eof=false;
+    rgb=NULL;
     for(int i=0;i<ADM_NB_SURFACES;i++)
         surfacePool[i]=VDP_INVALID_HANDLE;
     mixer=VDP_INVALID_HANDLE;
@@ -233,6 +242,7 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
     passThrough=false;
     updateConf();    
     passThrough=!setupVdpau();
+    
     
 }
 /**

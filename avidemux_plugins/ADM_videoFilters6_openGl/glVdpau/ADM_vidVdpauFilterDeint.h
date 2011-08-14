@@ -32,6 +32,27 @@ public:
             uint32_t          frameNumber;
             ADMImage          *image;
 };
+/**
+    \class glRGB
+*/
+class glRGB : public  ADM_coreVideoFilterQtGl
+{
+protected:
+
+protected:
+                            bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                    
+public:
+                             glRGB(ADM_coreVideoFilter *previous,CONFcouple *conf);
+                            ~glRGB();
+
+        virtual const char   *getConfiguration(void) {return "none";};                   /// Return  current configuration as a human readable string
+        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
+        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+        virtual bool         configure(void) {return true;}             /// Start graphical user interface
+
+        bool                 surfaceToImage(VdpOutputSurface surf,ADMImage *image);
+};
 
 /**
     \class vdpauVideoFilterDeint
@@ -54,6 +75,11 @@ protected:
                     std::list <VdpVideoSurface> freeSurface;
                     VdpVideoSurface      surfacePool[ADM_NB_SURFACES];
                     VdpVideoMixer        mixer;
+                    glRGB                *rgb;
+protected:
+                    bool                initGl(void);
+                    bool                initOnceGl(void);
+                    bool                deInitGl(void);
 protected:
                     bool                 rotateSlots(void);
                     bool                 clearSlots(void);
@@ -72,4 +98,7 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
         virtual bool         configure(void) ;                        /// Start graphical user interface
 };
+
+//EOF
+
 // EOF
