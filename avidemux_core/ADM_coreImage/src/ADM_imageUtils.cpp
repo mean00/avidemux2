@@ -654,8 +654,8 @@ static uint64_t FUNNY_MANGLE(mask2);
     mask2=0x000000FF000000FFLL;
     __asm__(" movq "Mangle(mask2)", %%mm7\n" ::);
     __asm__(" pxor %%mm6,%%mm6\n" ::);
-    int step=w/8;
-    int left=w-8*step;
+    int step=w/4;
+    int left=w-4*step;
     uint8_t *xsrc=src;
     uint8_t *xdst=dst;
 
@@ -676,15 +676,15 @@ static uint64_t FUNNY_MANGLE(mask2);
                         "pand           %%mm7,%%mm2\n"
                         "pand           %%mm7,%%mm3\n"
 
-                        "packuswb       %%mm0,%%mm1\n"
-                        "packuswb       %%mm2,%%mm3\n"
-                        "packuswb       %%mm1,%%mm3\n"
+                        "punpcklbw       %%mm1,%%mm0\n"
+                        "punpcklbw       %%mm3,%%mm2\n"
+                        "punpcklbw       %%mm2,%%mm0\n"
                         
-                        "movq           %%mm3,(%1) \n"                       
+                        "movd           %%mm0,(%1) \n"                       
                         :: "r"(xsrc),"r"(xdst)
                         );
-                        xsrc+=64;
-                        xdst+=8;
+                        xsrc+=32;
+                        xdst+=4;
             }
         for(int i=0;i<left;i++)
              xdst[i]=xsrc[4*i];
@@ -733,7 +733,7 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
     dst=this->GetWritePtr(PLANAR_U);
     src=from+0;
     #ifdef ADM_CPU_X86
-        if( 0 && CpuCaps::hasMMX())
+        if(  CpuCaps::hasMMX())
             YUV444_chroma_MMX(src,dst,width,height,stride);            
         else
     #endif
@@ -745,7 +745,7 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
     dst=this->GetWritePtr(PLANAR_V);
     src=from+1;
     #ifdef ADM_CPU_X86
-        if( 0 &&CpuCaps::hasMMX())
+        if( CpuCaps::hasMMX())
             YUV444_chroma_MMX(src,dst,width,height,stride);            
         else
     #endif
