@@ -40,7 +40,9 @@ void UI_Qt4InitGl(void)
     ADM_info("Creating openGl dummy widget\n");
     topGlWidgetRoot=new dummyGLWidget(VuMeter);
     ADM_setGlWidget(topGlWidgetRoot);
+    topGlWidgetRoot->resize(4,4);
     topGlWidgetRoot->show();
+    
 #ifndef QT_OPENGL_ES
     GlActiveTexture_Type *tex= (GlActiveTexture_Type *)topGlWidgetRoot->context()->getProcAddress(QLatin1String("glActiveTexture"));
 
