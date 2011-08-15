@@ -169,6 +169,54 @@ bool ADM_coreVideoFilterQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
 #endif
     return true;
 }
+typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
+#ifdef ADM_CPU_X86
+static inline void glYUV444_MMXInit(void)
+{
+   static uint64_t FUNNY_MANGLE(mask);
+    mask=0x00ff000000ff0000LL;
+  //mask=0x0000ff000000ff00LL;
+    __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
+}
+static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width)
+{
+ 
+    int count=width/8;
+                    __asm__(
+                        "1:\n"
+                        "movq           (%0),%%mm0 \n"
+                        "pand           %%mm7,%%mm0\n"
+                        "movq           8(%0),%%mm1 \n"
+                        "pand           %%mm7,%%mm1\n"
+
+                        "movq           16(%0),%%mm2 \n"
+                        "pand           %%mm7,%%mm2\n"
+                        "movq           24(%0),%%mm3 \n"
+                        "pand           %%mm7,%%mm3\n"
+
+                        "packuswb       %%mm1,%%mm0\n"
+                        "packuswb       %%mm3,%%mm2\n"
+                        "psrlw          $8,%%mm0\n"
+                        "psrlw          $8,%%mm2\n"
+                        "packuswb       %%mm2,%%mm0\n"
+
+                        "movq           %%mm0,(%1)  \n"  
+                        "add            $32,%0      \n"
+                        "add            $8,%1       \n"
+                        "sub            $1,%2        \n"
+                        "jnz             1b         \n"
+                        
+                        :: "r"(src),"r"(dst),"r"(count)
+                        );
+}
+#endif
+static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
+{
+       for(int x=0;x<width;x++)
+        {
+            dst[x]  = src[x*4+TEX_Y_OFFSET];
+        }
+}
 
 /**
     \fn downloadTexture
@@ -181,57 +229,57 @@ bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferO
     // Assume RGB32, read R or A
     int strideY=image->GetPitch(PLANAR_Y);
     uint8_t *toY=image->GetWritePtr(PLANAR_Y);
-    
-    int width=image->GetWidth(PLANAR_Y);
-    int height=image->GetHeight(PLANAR_Y);
-
-    // Do Y
-    for(int y=1;y<=height;y++)
-    {
-        const uchar *src=qimg.constScanLine(height-y);
-        if(!src)
-        {
-            ADM_error("Can t get pointer to openGl texture\n");
-            return false;
-        }
-        for(int x=0;x<width;x++)
-        {
-            toY[x]  = src[x*4+TEX_Y_OFFSET];
-            
-        }
-        toY+=strideY;
-    }
-    // do U & V
     uint8_t *toU=image->GetWritePtr(PLANAR_U);
     uint8_t *toV=image->GetWritePtr(PLANAR_V);
     int      strideU=image->GetPitch(PLANAR_U);
     int      strideV=image->GetPitch(PLANAR_V);
 
-    for(int y=1;y<=height;y+=2)
+    int width=image->GetWidth(PLANAR_Y);
+    int height=image->GetHeight(PLANAR_Y);
+    typeGlYv444 *luma=glYUV444_C;
+#ifdef ADM_CPU_X86
+      if(CpuCaps::hasMMX())
+      {
+            glYUV444_MMXInit();
+            luma=glYUV444_MMX;
+      }
+#endif
+    // Do Y
+    for(int y=1;y<=height;y++)
     {
         const uchar *src=qimg.constScanLine(height-y);
+        
+        
         if(!src)
         {
             ADM_error("Can t get pointer to openGl texture\n");
             return false;
         }
-        for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
-        {
-            const uchar *p=src+x*4;
-            uint32_t v=*(uint32_t *)p;
-            if(!v)
+       luma(src,toY,width);
+       toY+=strideY;
+       if(y&1)
+       {
+            for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
             {
-                    toU[x/2]=128;
-                    toV[x/2]=128;
-            }else
-            {
-                toU[x/2]  =  p[TEX_U_OFFSET];
-                toV[x/2]  =  p[TEX_V_OFFSET];
+                const uchar *p=src+x*4;
+                uint32_t v=*(uint32_t *)p;
+                if(!v)
+                {
+                        toU[x/2]=128;
+                        toV[x/2]=128;
+                }else
+                {
+                    toU[x/2]  =  p[TEX_U_OFFSET];
+                    toV[x/2]  =  p[TEX_V_OFFSET];
+                }
             }
-        }
-        toU+=strideU;
-        toV+=strideV;
+            toU+=strideU;
+            toV+=strideV;
+       }
     }
+#ifdef ADM_CPU_X86
+    __asm__( "emms\n"::  );
+#endif
     return true;
 }
 /**
