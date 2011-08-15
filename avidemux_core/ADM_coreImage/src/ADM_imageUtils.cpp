@@ -579,4 +579,48 @@ bool ADMImage::copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane)
         BitBlit(dst,dPitch,src,sPitch,w,h);
         return true;
 }
+/**
+    \fn convertFromYUV444
+*/
+bool ADMImage::convertFromYUV444(uint8_t *from)
+{
+    int stride=this->GetPitch(PLANAR_Y);
+    int width=this->GetWidth(PLANAR_Y);
+    int height=this->GetHeight(PLANAR_Y);
+    uint8_t *dst=this->GetWritePtr(PLANAR_Y);
+    uint8_t *src=from+2;
+    for(int y=0;y<height;y++)
+    {
+        for(int x=0;x<width;x++)
+                dst[x]=src[4*x];
+        dst+=stride;
+        src+=4*width;
+    }
+    //
+    stride=this->GetPitch(PLANAR_U);
+    width=this->GetWidth(PLANAR_U);
+    height=this->GetHeight(PLANAR_U);
+    dst=this->GetWritePtr(PLANAR_U);
+    src=from+0;
+    for(int y=0;y<height;y++)
+    {
+        for(int x=0;x<width;x++)
+                dst[x]=src[8*x];
+        dst+=stride;
+        src+=4*width*2*2;
+    }
+    stride=this->GetPitch(PLANAR_V);
+    width=this->GetWidth(PLANAR_V);
+    height=this->GetHeight(PLANAR_V);
+    dst=this->GetWritePtr(PLANAR_V);
+    src=from+1;
+    for(int y=0;y<height;y++)
+    {
+        for(int x=0;x<width;x++)
+                dst[x]=src[8*x];
+        dst+=stride;
+        src+=16*width;
+    }
+    return true;
+}
 //EOF

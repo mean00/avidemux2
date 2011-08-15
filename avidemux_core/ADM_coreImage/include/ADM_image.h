@@ -164,6 +164,7 @@ public:
         bool    printString(uint32_t x,uint32_t y, const char *strng);
 static  bool    copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane);
 static  uint32_t lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise);
+        bool    convertFromYUV444(uint8_t *from);
 };
 
 /**
