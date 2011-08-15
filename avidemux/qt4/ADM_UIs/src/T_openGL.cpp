@@ -208,6 +208,11 @@ static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int widt
                         
                         :: "r"(src),"r"(dst),"r"(count)
                         );
+    if(width&7)
+    {
+        for(int i=count*8;i<width;i++)
+            dst[i]  = src[i*4+TEX_Y_OFFSET];
+    }
 }
 #endif
 static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
