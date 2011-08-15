@@ -54,6 +54,8 @@ typedef struct
     VdpVideoMixerSetFeatureEnables    *mixerEnableFeatures;
     VdpVideoMixerGetFeatureEnables    *mixerGetFeaturesEnabled;
     VdpVideoMixerQueryFeatureSupport  *mixerQueryFeatureSupported;
+    VdpVideoMixerGetAttributeValues   *mixerGetAttributesValue;
+    VdpVideoMixerSetAttributeValues   *mixerSetAttributesValue;
 
     VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;
 }VdpFunctions;

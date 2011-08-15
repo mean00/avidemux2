@@ -90,6 +90,15 @@ public:
                                 VdpVideoSurface sourceSurface[3], // Past present future
                                 VdpOutputSurface targetOutputSurface,
                                 uint32_t targetWidth, uint32_t targetHeight );
+    static VdpStatus mixerGetAttributesValue(VdpVideoMixer mixer,
+                                uint32_t attrCount,
+                                const  VdpVideoMixerAttribute *xkeys,
+                                void * const* values);
+    static VdpStatus mixerSetAttributesValue(VdpVideoMixer mixer,
+                                uint32_t attrCount,
+                                const  VdpVideoMixerAttribute *xkeys,
+                                void * const* values);
+
 
 #endif
 };

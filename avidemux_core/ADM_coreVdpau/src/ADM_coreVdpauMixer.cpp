@@ -141,6 +141,42 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
     }
     return e;
 }
+/**
+    \fn mixerGetAttributesValue
+*/
+
+VdpStatus admVdpau::mixerGetAttributesValue(VdpVideoMixer mixer,
+                                uint32_t attrCount,
+                                const  VdpVideoMixerAttribute  *keys,
+                                  void * const *         values)
+{
+                
+    VdpStatus e=ADM_coreVdpau::funcs.mixerGetAttributesValue(mixer,attrCount,keys,values);
+    if(VDP_STATUS_OK!=e)
+    {
+        
+        ADM_warning("MixerGetAttributes  failed :%s\n",getErrorString(e));
+        
+    }
+    return e;
+}
+/**
+    \fn mixerSetAttributesValue
+*/
+VdpStatus admVdpau::mixerSetAttributesValue(VdpVideoMixer mixer,
+                                uint32_t attrCount,
+                                const  VdpVideoMixerAttribute *xkeys,
+                                void * const* values)
+{
+    VdpStatus e=ADM_coreVdpau::funcs.mixerSetAttributesValue(mixer,attrCount,xkeys,values);
+    if(VDP_STATUS_OK!=e)
+    {
+        
+        ADM_warning("MixerSetAttributes  failed :%s\n",getErrorString(e));
+        
+    }
+    return e;
+}
 
 /**
     \fn mixerRenderWithPastAndFuture

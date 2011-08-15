@@ -115,7 +115,11 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(mixerRender,VDP_FUNC_ID_VIDEO_MIXER_RENDER);
     GetMe(mixerEnableFeatures,VDP_FUNC_ID_VIDEO_MIXER_SET_FEATURE_ENABLES);
     GetMe(mixerQueryFeatureSupported,VDP_FUNC_ID_VIDEO_MIXER_QUERY_FEATURE_SUPPORT);
-    GetMe(mixerGetFeaturesEnabled,VDP_FUNC_ID_VIDEO_MIXER_GET_FEATURE_ENABLES)
+    GetMe(mixerGetFeaturesEnabled,VDP_FUNC_ID_VIDEO_MIXER_GET_FEATURE_ENABLES);
+
+    GetMe(mixerGetAttributesValue,VDP_FUNC_ID_VIDEO_MIXER_GET_ATTRIBUTE_VALUES);
+    GetMe(mixerSetAttributesValue,VDP_FUNC_ID_VIDEO_MIXER_SET_ATTRIBUTE_VALUES);
+
     if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.presentationQueueDisplayX11Create(ADM_coreVdpau::vdpDevice,x->window,&queueX11))
     {
         ADM_warning("Cannot create X11 Presentation Queue\n");
