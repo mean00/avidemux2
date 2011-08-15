@@ -582,45 +582,174 @@ bool ADMImage::copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane)
 /**
     \fn convertFromYUV444
 */
+static inline void yuv444_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
+{
+    src+=2;
+    for(int y=0;y<h;y++)
+    {
+        for(int x=0;x<w;x++)
+                dst[x]=src[4*x];
+        dst+=s;
+        src+=4*w;
+    }
+}
+#ifdef ADM_CPU_X86
+static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int s)
+{
+static uint64_t FUNNY_MANGLE(mask);
+    mask=0x00ff000000ff0000LL;
+  //mask=0x0000ff000000ff00LL;
+    __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
+    __asm__(" pxor %%mm6,%%mm6\n" ::);
+    
+    int step=w/8;
+    int left=w-8*step;
+    uint8_t *xsrc=src;
+    uint8_t *xdst=dst;
+
+    for(int y=0;y<h;y++)
+    {
+        xsrc=src;
+        xdst=dst;
+        for(int x=0;x<step;x++)
+        {
+                        __asm__(
+                        "movq           (%0),%%mm0 \n"
+                        "pand           %%mm7,%%mm0\n"
+                        "movq           8(%0),%%mm1 \n"
+                        "pand           %%mm7,%%mm1\n"
+
+                        "movq           16(%0),%%mm2 \n"
+                        "pand           %%mm7,%%mm2\n"
+                        "movq           24(%0),%%mm3 \n"
+                        "pand           %%mm7,%%mm3\n"
+
+                        "packuswb       %%mm1,%%mm0\n"
+                        "packuswb       %%mm3,%%mm2\n"
+                        "psrlw          $8,%%mm0\n"
+                        "psrlw          $8,%%mm2\n"
+                        "packuswb       %%mm2,%%mm0\n"
+
+                        "movq           %%mm0,(%1) \n"                       
+                        
+                        
+                        :: "r"(xsrc),"r"(xdst)
+                        );
+                        xsrc+=32;
+                        xdst+=8;
+            }
+        for(int i=0;i<left;i++)
+             xdst[i]=xsrc[4*i];
+        dst+=s;
+        src+=4*w;
+    }
+     __asm__( "emms\n"::  );
+
+}
+#endif
+#ifdef ADM_CPU_X86
+static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,int w,int h,int s)
+{
+static uint64_t FUNNY_MANGLE(mask2);
+    mask2=0x000000FF000000FFLL;
+    __asm__(" movq "Mangle(mask2)", %%mm7\n" ::);
+    __asm__(" pxor %%mm6,%%mm6\n" ::);
+    int step=w/8;
+    int left=w-8*step;
+    uint8_t *xsrc=src;
+    uint8_t *xdst=dst;
+
+    for(int y=0;y<h;y++)
+    {
+        xsrc=src;
+        xdst=dst;
+        for(int x=0;x<step;x++)
+        {
+                        __asm__(
+                        "movq           (%0),%%mm0 \n"
+                        "movq           8(%0),%%mm1 \n"
+                        "movq           16(%0),%%mm2 \n"
+                        "movq           24(%0),%%mm3 \n"
+
+                        "pand           %%mm7,%%mm0\n"
+                        "pand           %%mm7,%%mm1\n"
+                        "pand           %%mm7,%%mm2\n"
+                        "pand           %%mm7,%%mm3\n"
+
+                        "packuswb       %%mm0,%%mm1\n"
+                        "packuswb       %%mm2,%%mm3\n"
+                        "packuswb       %%mm1,%%mm3\n"
+                        
+                        "movq           %%mm3,(%1) \n"                       
+                        :: "r"(xsrc),"r"(xdst)
+                        );
+                        xsrc+=64;
+                        xdst+=8;
+            }
+        for(int i=0;i<left;i++)
+             xdst[i]=xsrc[4*i];
+        dst+=s;
+        src+=4*w*4;
+    }
+     __asm__( "emms\n"::  );
+
+}
+#endif
+/**
+    \fn YUV444_chroma_C
+*/
+static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
+{
+    for(int y=0;y<h;y++)
+    {
+        for(int x=0;x<w;x++)
+                dst[x]=src[8*x];
+        dst+=s;
+        src+=4*w*2*2;
+    }
+}
+
+
 bool ADMImage::convertFromYUV444(uint8_t *from)
 {
     int stride=this->GetPitch(PLANAR_Y);
     int width=this->GetWidth(PLANAR_Y);
     int height=this->GetHeight(PLANAR_Y);
     uint8_t *dst=this->GetWritePtr(PLANAR_Y);
-    uint8_t *src=from+2;
-    for(int y=0;y<height;y++)
-    {
-        for(int x=0;x<width;x++)
-                dst[x]=src[4*x];
-        dst+=stride;
-        src+=4*width;
-    }
+    uint8_t *src=from;
+
+    #ifdef ADM_CPU_X86
+        if(CpuCaps::hasMMX())
+            yuv444_MMX(src,dst,width,height,stride);            
+        else
+    #endif
+            yuv444_C(src,dst,width,height,stride);
+    
+
     //
     stride=this->GetPitch(PLANAR_U);
     width=this->GetWidth(PLANAR_U);
     height=this->GetHeight(PLANAR_U);
     dst=this->GetWritePtr(PLANAR_U);
     src=from+0;
-    for(int y=0;y<height;y++)
-    {
-        for(int x=0;x<width;x++)
-                dst[x]=src[8*x];
-        dst+=stride;
-        src+=4*width*2*2;
-    }
+    #ifdef ADM_CPU_X86
+        if( 0 && CpuCaps::hasMMX())
+            YUV444_chroma_MMX(src,dst,width,height,stride);            
+        else
+    #endif
+            YUV444_chroma_C(src,dst,width,height,stride);
+
     stride=this->GetPitch(PLANAR_V);
     width=this->GetWidth(PLANAR_V);
     height=this->GetHeight(PLANAR_V);
     dst=this->GetWritePtr(PLANAR_V);
     src=from+1;
-    for(int y=0;y<height;y++)
-    {
-        for(int x=0;x<width;x++)
-                dst[x]=src[8*x];
-        dst+=stride;
-        src+=16*width;
-    }
+    #ifdef ADM_CPU_X86
+        if( 0 &&CpuCaps::hasMMX())
+            YUV444_chroma_MMX(src,dst,width,height,stride);            
+        else
+    #endif
+            YUV444_chroma_C(src,dst,width,height,stride);
     return true;
 }
 //EOF
