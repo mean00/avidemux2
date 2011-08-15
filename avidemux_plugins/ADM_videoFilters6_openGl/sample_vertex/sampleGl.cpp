@@ -13,24 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define GL_GLEXT_PROTOTYPES
-
-#include <QtGui/QPainter>
-
-#ifdef __APPLE__
-#       include <OpenGL/gl.h>
-#       include <OpenGL/glext.h>
-#       define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
-#else
-#       include <GL/gl.h>
-#       include <GL/glext.h>
-#endif
-
-#include <QtGui/QImage>
-#include <QtOpenGL/QtOpenGL>
-#include <QtOpenGL/QGLShader>
-
-
+#include "ADM_openGL.h"
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
