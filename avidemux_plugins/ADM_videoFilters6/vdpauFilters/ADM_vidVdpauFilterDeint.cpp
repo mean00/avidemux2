@@ -108,6 +108,7 @@ protected:
                     bool                 fillSlot(int slot,ADMImage *image);
                     bool                 getResult(ADMImage *image);
                     bool                 sendField(bool topField);
+                    bool                 setIdentityCSC(void);
 
 public:
         virtual bool         goToTime(uint64_t usSeek); 
@@ -169,7 +170,23 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
     clearSlots();
     return ADM_coreVideoFilter::goToTime(usSeek);
 }
-
+/**
+    \fn setIdentityCSC
+    \brief set the RGB/YUV matrix to identity so that data are still YUV at the end
+            Should not work, but it does.
+*/
+bool vdpauVideoFilterDeint::setIdentityCSC(void)
+{
+    ADM_info("Setting custom CSC\n");
+    const VdpCSCMatrix   matrix={{1.,0,0,0},{0,1.,0,0},{0,0,1.,0}};    
+    VdpVideoMixerAttribute attributes_key[]={VDP_VIDEO_MIXER_ATTRIBUTE_CSC_MATRIX};
+    const void * attribute_values[] = {&matrix};
+    
+    VdpStatus st = admVdpau::mixerSetAttributesValue(mixer, 1,attributes_key, (void * const *)attribute_values);
+    if(st!=VDP_STATUS_OK)
+        ADM_error("Cannot set custom matrix (CSC)\n");
+    return true;
+}
 /**
     \fn resetVdpau
 */
@@ -218,7 +235,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     freeSurface.clear();
     for(int i=0;i<ADM_NB_SURFACES;i++)  
             freeSurface.push_back(surfacePool[i]);
-
+    setIdentityCSC();
     ADM_info("VDPAU setup ok\n");
     return true;
 badInit:
@@ -479,6 +496,8 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
         in[i]=slots[i].surface;
         aprintf("Mixing %d %d\n",i,(int)in[i]);
     }
+    if(in[0]==VDP_INVALID_HANDLE)
+            in[0]=in[1];
     //
 
 #ifdef DO_BENCHMARK
@@ -516,12 +535,6 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
 bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 {
 
-#ifdef DO_BENCHMARK
-    ADMBenchmark bmark;
-    for(int i=0;i<NB_BENCH;i++)
-    {
-        bmark.start();
-#endif
   
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,
                                                             tempBuffer, 
@@ -530,48 +543,7 @@ bool vdpauVideoFilterDeint::getResult(ADMImage *image)
         ADM_warning("[Vdpau] Cannot copy back data from output surface\n");
         return false;
     }
-  
-                     
-#ifdef DO_BENCHMARK
-        bmark.end();
-    }
-    ADM_warning("Read surface Benchmark\n");
-    bmark.printResult();
-#endif 
-    // Convert from VDP_RGBA_FORMAT_B8G8R8A8 to YV12
-    uint32_t sourceStride[3]={info.width*4,0,0};
-    uint8_t  *sourceData[3]={tempBuffer,NULL,NULL};
-    uint32_t destStride[3];
-    uint8_t  *destData[3];
-
-    image->GetPitches(destStride);
-    image->GetWritePlanes(destData);
-
-    // Invert U&V
-    uint32_t ts;
-    uint8_t  *td;
-#if 0
-    ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
-    td=destData[1];destData[2]=destData[2];destData[1]=td;
-#endif
-
-
-#ifdef DO_BENCHMARK
-    ADMBenchmark bmark2;
-    for(int i=0;i<NB_BENCH;i++)
-    {
-        bmark2.start();
-#endif
-    scaler->convertPlanes(  sourceStride,destStride,     
-                            sourceData,destData);
-#ifdef DO_BENCHMARK
-        bmark2.end();
-    }
-    ADM_warning("RGB->YUV Benchmark\n");
-    bmark2.printResult();
-#endif
-
-    return true;
+    return image->convertFromYUV444(tempBuffer);
 }
 /**
     \fn getNextFrame
