@@ -206,12 +206,15 @@ bool getWindowsVersion(char* version)
 
 	if (osvi.dwPlatformId != VER_PLATFORM_WIN32_NT)
 		return false;
-// Vista
-	if (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0)
+// Windows Vista / Windows 7
+	if (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion <= 1)
 	{
 		if (osvi.wProductType == VER_NT_WORKSTATION)
 		{
-			index += sprintf(version + index, "Microsoft Windows Vista");
+			if (osvi.dwMinorVersion == 1)
+				index += sprintf(version + index, "Microsoft Windows 7");
+			else
+				index += sprintf(version + index, "Microsoft Windows Vista");
 
 			uint32_t productType = 0;
 
@@ -274,7 +277,10 @@ bool getWindowsVersion(char* version)
 		}
 		else if (osvi.wProductType == VER_NT_SERVER)
 		{
-			index += sprintf(version + index, "Microsoft Windows Server 2008");
+			if (osvi.dwMinorVersion == 1)
+				index += sprintf(version + index, "Microsoft Windows Server 2008 R2");
+			else
+				index += sprintf(version + index, "Microsoft Windows Server 2008");
 
 			if (osvi.wSuiteMask & VER_SUITE_DATACENTER)
 				index += sprintf(version + index, " Datacenter Edition");
@@ -377,7 +383,7 @@ bool getWindowsVersion(char* version)
 
 	if (hKernel)
 	{
-		typedef bool (*funcIsWow64Process)(void*, bool*);  
+		typedef bool (__stdcall *funcIsWow64Process)(void*, bool*);  
 
 	    funcIsWow64Process pIsWow64Process = (funcIsWow64Process)GetProcAddress(hKernel, "IsWow64Process"); 
 
@@ -392,6 +398,7 @@ bool getWindowsVersion(char* version)
 	else
 		index += sprintf(version + index, "; 32-bit");
 #endif
+
 	index += sprintf(version + index, ")");
 	
 	return true;
