@@ -94,12 +94,7 @@ ENDIF (USE_SDL)
 ###########################################
 IF (WIN32)
 	target_link_libraries(ADM_osSupport)
-
-	IF (MINGW)
-		target_link_libraries(avidemux3_cli -mno-cygwin)
-	ENDIF (MINGW)
-
-	target_link_libraries(avidemux3_cli winmm -mwindows)
+	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console)
 ENDIF (WIN32)
 
 ###########################################
