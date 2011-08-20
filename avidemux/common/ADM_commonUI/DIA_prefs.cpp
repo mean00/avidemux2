@@ -164,7 +164,7 @@ bool     hasOpenGl=false;
         diaElemToggle useVdpau(&bvdpau,QT_TR_NOOP("Decode video using VDPAU"));
         diaElemToggle useOpenGl(&hasOpenGl,QT_TR_NOOP("Enable openGl support"));
 #ifndef USE_OPENGL
-        useOpenGl.disable();
+        useOpenGl.enable(0);
 #endif
         
         diaElemToggle useSysTray(&useTray,QT_TR_NOOP("_Use systray while encoding"));
