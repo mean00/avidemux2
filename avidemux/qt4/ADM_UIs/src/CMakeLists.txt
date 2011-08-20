@@ -9,8 +9,12 @@ SET(${ADM_LIB}_T
 	T_slider.cpp  T_threadCount.cpp  T_toggle.cpp  T_notch.cpp
         T_flyDialogQt4.cpp 
         T_QCanvas.cpp
-        T_openGL.cpp
 )
+if(USE_OPENGL)
+        SET(${ADM_LIB}_T
+                ${${ADM_LIB}_T}
+                T_openGL.cpp)
+endif(USE_OPENGL)
 
 SET(${ADM_LIB}_SRCS
 	FAC_bar.cpp    FAC_frame.cpp  FAC_integer.cpp  FAC_aspectRatio.cpp
