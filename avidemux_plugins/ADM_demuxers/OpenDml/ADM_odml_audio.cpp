@@ -110,7 +110,12 @@ bool      ADM_aviAudioAccess::isCBR(void)
 bool  ADM_aviAudioAccess::updatePos(void)
 {
  uint64_t total=0;
-    if(currentIndex==0) return 0;
+    if(currentIndex==0) 
+    {
+        currentPosition=0;
+        return true;
+    }
+    
     if(currentIndex>=nbIndex) return length;
     for(int i=0;i<currentIndex;i++)
     {
