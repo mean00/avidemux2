@@ -89,6 +89,7 @@ extern bool ADM_ae_cleanup(void);
 extern bool ADM_mx_cleanup(void);
 extern bool ADM_vf_cleanup(void);
 extern bool ADM_dm_cleanup(void);
+extern bool ADM_vf_clearFilters(void);
 
 extern bool vdpauProbe(void);
 extern bool vdpauCleanup(void);
@@ -388,6 +389,7 @@ void onexit( void )
     ADM_ad_cleanup();
     ADM_ae_cleanup();
     ADM_mx_cleanup();
+    ADM_vf_clearFilters();
     ADM_vf_cleanup();
     ADM_dm_cleanup();
 #if defined( USE_VDPAU) 
