@@ -329,8 +329,15 @@ bool vdpauVideoFilterDeint::configure( void)
      if(diaFactoryRun(QT_TR_NOOP("vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 configuration.resizeToggle=(bool)doResize;
-                info.width=configuration.targetWidth;
-                info.height=configuration.targetHeight;
+                if(doResize)
+                {
+                    info.width=configuration.targetWidth;
+                    info.height=configuration.targetHeight;
+                }else
+                {
+                    info.width=previousFilter->getInfo()->width;
+                    info.height=previousFilter->getInfo()->height;
+                }
                 ADM_info("New dimension : %d x %d\n",info.width,info.height);
                 updateConf();
                 cleanupVdpau();
@@ -535,7 +542,8 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
 bool vdpauVideoFilterDeint::getResult(ADMImage *image)
 {
 
-  
+    ADM_assert(image->GetWidth(PLANAR_Y)==info.width);
+    ADM_assert(image->GetHeight(PLANAR_Y)==info.height);
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,
                                                             tempBuffer, 
                                                             info.width,info.height))
