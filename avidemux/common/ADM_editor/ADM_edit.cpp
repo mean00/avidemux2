@@ -40,6 +40,8 @@
 //#include "ADM_outputfmt.h"
 #include "ADM_edPtsDts.h"
 #include "ADM_vidMisc.h"
+#include "ADM_confCouple.h"
+#include "ADM_videoFilters.h"
 
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
@@ -236,6 +238,10 @@ bool ADM_Composer::addFile (const char *name)
         _imageBuffer->quant=new uint8_t[_imageBuffer->_qSize];
         memset(_imageBuffer->quant,0,_imageBuffer->_qSize);
         _imageBuffer->_qStride=(info.width+15)>>4;
+
+        // We also clear the filter queue...
+        ADM_info("Clearing video filters\n");
+        ADM_vf_clearFilters();
     }
 
 
