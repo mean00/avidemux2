@@ -215,6 +215,7 @@ bool ADM_Composer::goToTime (uint64_t ustime)
         setDts(ustime);
         return true;
     }
+    ADM_warning("Go to time failed\n");
     return false;
 }
 
