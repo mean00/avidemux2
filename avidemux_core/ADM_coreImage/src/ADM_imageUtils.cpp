@@ -675,9 +675,9 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
                         "movq           %%mm2,%%mm6\n"
                         "movq           %%mm3,%%mm7\n"
 
-                        "punpcklbw       %%mm1,%%mm0\n"
-                        "punpcklbw       %%mm3,%%mm2\n"
                         "punpcklbw       %%mm2,%%mm0\n"
+                        "punpcklbw       %%mm3,%%mm1\n"
+                        "punpcklbw       %%mm1,%%mm0\n"
                         
                         "movd           %%mm0,(%1) \n"                       
 
@@ -686,9 +686,9 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
                         "psrlw          $8,%%mm6\n"
                         "psrlw          $8,%%mm7\n"
 
-                        "punpcklbw       %%mm5,%%mm4\n"
-                        "punpcklbw       %%mm7,%%mm6\n"
                         "punpcklbw       %%mm6,%%mm4\n"
+                        "punpcklbw       %%mm7,%%mm5\n"
+                        "punpcklbw       %%mm5,%%mm4\n"
 
 
                         "movd           %%mm4,(%2) \n"                       
