@@ -133,8 +133,8 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     glProgramY->setUniformValue("myTextureU", 1); 
     glProgramY->setUniformValue("myTextureV", 2); 
     glProgramY->setUniformValue("myTextureY", 0); 
-    glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
-    glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
+    glProgramY->setUniformValue("myWidth", (GLfloat)image->GetWidth(PLANAR_Y)); 
+    glProgramY->setUniformValue("myHeight", (GLfloat)image->GetHeight(PLANAR_Y)); 
 
     uploadAllPlanes(image);
 
