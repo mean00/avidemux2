@@ -74,7 +74,7 @@ SET(${ADM_LIB}_SRCS
 	./src/mp4file.cpp
 	./src/mp4file_io.cpp
 	./src/mp4info.cpp
-	./src/mp4meta.cpp
+	#./src/mp4meta.cpp
 	./src/mp4property.cpp
 	./src/mp4track.cpp
 	./src/mp4util.cpp
@@ -85,7 +85,9 @@ SET(${ADM_LIB}_SRCS
 	./src/qtff/ColorParameterBox.cpp
 	./src/qtff/PictureAspectRatioBox.cpp
 	./src/rtphint.cpp
-	./src/text.cpp	)
+	./src/text.cpp	
+        ./src/log.cpp
+)
 # Platform files
 if(WIN32)
 	SET(PLATFORM

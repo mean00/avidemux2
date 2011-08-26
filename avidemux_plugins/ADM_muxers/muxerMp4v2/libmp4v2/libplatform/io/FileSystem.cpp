@@ -80,11 +80,13 @@ void
 FileSystem::pathnameTemp( string& name, string dir, string prefix, string suffix )
 {
     ostringstream buf;
-    buf << dir;
 
-    // add dir separator if needed
     if( !dir.empty() ) {
         buf << dir;
+
+        // add dir separator if needed
+        // TODO there's a platform specific bug here, if someone passes in a pathname ending
+        // in '\', which would be legitimate on Windows.
         if( dir[dir.length()-1] != '/' )
             buf << '/';
     }

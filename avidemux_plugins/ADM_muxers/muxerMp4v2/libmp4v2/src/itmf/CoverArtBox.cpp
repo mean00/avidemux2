@@ -125,7 +125,7 @@ CoverArtBox::add( MP4FileHandle hFile, const Item& item )
 
     // no empty atom found, create one.
     if( !data ) {
-        data = MP4Atom::CreateAtom( covr, "data" );
+        data = MP4Atom::CreateAtom( file, covr, "data" );
         covr->AddChildAtom( data );
         data->Generate();
         index = covr->GetNumberOfChildAtoms() - 1;
@@ -173,9 +173,12 @@ CoverArtBox::list( MP4FileHandle hFile, ItemList& out )
     MP4File& file = *((MP4File*)hFile);
     MP4ItmfItemList* itemList = genericGetItemsByCode( file, "covr" ); // alloc
 
-    out.resize( itemList->size );
-    for( uint32_t i = 0; i < itemList->size; i++ )
-        get( hFile, out[i], i );
+    if( itemList->size ) {
+        MP4ItmfDataList& dataList = itemList->elements[0].dataList;
+        out.resize( dataList.size );
+        for( uint32_t i = 0; i < dataList.size; i++ )
+            get( hFile, out[i], i );
+    }
 
     genericItemListFree( itemList ); // free
     return false;

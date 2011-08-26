@@ -14,11 +14,13 @@
 // 
 //  The Initial Developer of the Original Code is Kona Blend.
 //  Portions created by Kona Blend are Copyright (C) 2008.
+//  Portions created by David Byron are Copyright (C) 2011.
 //  All Rights Reserved.
 //
 //  Contributors:
 //      Kona Blend, kona8lend@@gmail.com
 //      Rouven Wessling, mp4v2@rouvenwessling.de
+//      David Byron, dbyron@dbyron.com
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +31,7 @@ namespace mp4v2 { namespace impl { namespace itmf {
 ///////////////////////////////////////////////////////////////////////////////
 
 Tags::Tags()
+    : hasMetadata(false)
 {
 }
 
@@ -44,7 +47,7 @@ void
 Tags::c_addArtwork( MP4Tags*& tags, MP4TagArtwork& c_artwork )
 {
     artwork.resize( artwork.size() + 1 );
-    c_setArtwork( tags, artwork.size() - 1, c_artwork );
+    c_setArtwork( tags, (uint32_t)artwork.size() - 1, c_artwork );
     updateArtworkShadow( tags );
 }
 
@@ -67,6 +70,8 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     MP4File& file = *static_cast<MP4File*>(hFile);
 
     MP4ItmfItemList* itemList = genericGetItems( file ); // alloc
+
+    hasMetadata = (itemList->size > 0);
 
     /* create code -> item map.
      * map will only be used for items which do not repeat; we do not care if
@@ -130,10 +135,12 @@ Tags::c_fetch( MP4Tags*& tags, MP4FileHandle hFile )
     fetchInteger( cim, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
     fetchInteger( cim, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
 
-    fetchInteger( cim, CODE_CNID,              cnID,              c.cnID );
-    fetchInteger( cim, CODE_ATID,              atID,              c.atID );
-    fetchInteger( cim, CODE_PLID,              plID,              c.plID );
-    fetchInteger( cim, CODE_GEID,              geID,              c.geID );
+    fetchInteger( cim, CODE_CONTENTID,         contentID,         c.contentID );
+    fetchInteger( cim, CODE_ARTISTID,          artistID,          c.artistID );
+    fetchInteger( cim, CODE_PLAYLISTID,        playlistID,        c.playlistID );
+    fetchInteger( cim, CODE_GENREID,           genreID,           c.genreID );
+    fetchInteger( cim, CODE_COMPOSERID,        composerID,        c.composerID );
+    fetchString(  cim, CODE_XID,               xid,               c.xid );
 
     genericItemListFree( itemList ); // free
 
@@ -384,10 +391,12 @@ Tags::c_store( MP4Tags*& tags, MP4FileHandle hFile )
     storeInteger( file, CODE_ITUNESACCOUNTTYPE, iTunesAccountType, c.iTunesAccountType );
     storeInteger( file, CODE_ITUNESCOUNTRY,     iTunesCountry,     c.iTunesCountry );
 
-    storeInteger( file, CODE_CNID,              cnID,              c.cnID );
-    storeInteger( file, CODE_ATID,              atID,              c.atID );
-    storeInteger( file, CODE_PLID,              plID,              c.plID );
-    storeInteger( file, CODE_GEID,              geID,              c.geID );
+    storeInteger( file, CODE_CONTENTID,         contentID,         c.contentID );
+    storeInteger( file, CODE_ARTISTID,          artistID,          c.artistID );
+    storeInteger( file, CODE_PLAYLISTID,        playlistID,        c.playlistID );
+    storeInteger( file, CODE_GENREID,           genreID,           c.genreID );
+    storeInteger( file, CODE_COMPOSERID,        composerID,        c.composerID );
+    storeString(  file, CODE_XID,               xid,               c.xid );
 
     // destroy all cover-art then add each
     {
@@ -593,7 +602,7 @@ Tags::store( MP4File& file, const string& code, MP4ItmfBasicType basicType, cons
     MP4ItmfItem& item = *genericItemAlloc( code, 1 ); // alloc
     MP4ItmfData& data = item.dataList.elements[0];
 
-    data.typeCode = MP4_ITMF_BT_UTF8;
+    data.typeCode = basicType;
     data.valueSize = size;
     data.value = (uint8_t*)malloc( data.valueSize );
     memcpy( data.value, buffer, data.valueSize );
@@ -613,7 +622,10 @@ Tags::storeGenre( MP4File& file, uint16_t cpp, const uint16_t* c )
         buf[0] = uint8_t((cpp & 0xff00) >> 8);
         buf[1] = uint8_t((cpp & 0x00ff)     );
 
-        store( file, CODE_GENRETYPE, MP4_ITMF_BT_GENRES, buf, sizeof(buf) );
+        // it's not clear if you must use implicit in these situations and iirc iTunes and other software are not consistent in this regard.
+        // many other tags must be integer type yet no issues there. Silly that iTunes insists it must be implict, which is then hardcoded 
+        // to interpret as genres anyways.
+        store( file, CODE_GENRETYPE, MP4_ITMF_BT_IMPLICIT, buf, sizeof(buf) );
     }
     else {
         remove( file, CODE_GENRETYPE );
@@ -647,7 +659,7 @@ void
 Tags::storeTrack( MP4File& file, const MP4TagTrack& cpp, const MP4TagTrack* c )
 {
     if( c ) {
-        uint8_t buf[7];
+        uint8_t buf[8]; // iTMF spec says 7 but iTunes media is 8
         memset( buf, 0, sizeof(buf) );
 
         buf[2] = uint8_t((cpp.index & 0xff00) >> 8);
@@ -742,7 +754,7 @@ void
 Tags::storeString( MP4File& file, const string& code, const string& cpp, const char* c )
 {
     if( c )
-        store( file, code, MP4_ITMF_BT_UTF8, cpp.c_str(), cpp.size() );
+        store( file, code, MP4_ITMF_BT_UTF8, cpp.c_str(), (uint32_t)cpp.size() );
     else
         remove( file, code );
 }
@@ -762,7 +774,7 @@ Tags::updateArtworkShadow( MP4Tags*& tags )
         return;
 
     MP4TagArtwork* const cartwork = new MP4TagArtwork[ artwork.size() ];
-    uint32_t max = artwork.size();
+    uint32_t max = (uint32_t)artwork.size();
 
     for( uint32_t i = 0; i < max; i++ ) {
         MP4TagArtwork& a = cartwork[i];
@@ -849,10 +861,12 @@ const string Tags::CODE_GAPLESS           = "pgap";
 const string Tags::CODE_ITUNESACCOUNT     = "apID";
 const string Tags::CODE_ITUNESACCOUNTTYPE = "akID";
 const string Tags::CODE_ITUNESCOUNTRY     = "sfID";
-const string Tags::CODE_CNID              = "cnID";
-const string Tags::CODE_ATID              = "atID";
-const string Tags::CODE_PLID              = "plID";
-const string Tags::CODE_GEID              = "geID";
+const string Tags::CODE_CONTENTID         = "cnID";
+const string Tags::CODE_ARTISTID          = "atID";
+const string Tags::CODE_PLAYLISTID        = "plID";
+const string Tags::CODE_GENREID           = "geID";
+const string Tags::CODE_COMPOSERID        = "cmID";
+const string Tags::CODE_XID               = "xid ";
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -1,2 +1,3 @@
-URL    : http://resare.com/libmp4v2
+URL    : http://mp4v2.googlecode.com/svn
 License: LGPL
+Rev: 485

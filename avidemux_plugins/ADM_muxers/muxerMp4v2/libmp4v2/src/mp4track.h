@@ -49,7 +49,7 @@ class MP4StringProperty;
 class MP4Track
 {
 public:
-    MP4Track(MP4File* pFile, MP4Atom* pTrakAtom);
+    MP4Track(MP4File& file, MP4Atom& trakAtom);
 
     virtual ~MP4Track();
 
@@ -61,24 +61,26 @@ public:
 
     void SetType(const char* type);
 
-    MP4File* GetFile() {
-        return m_pFile;
+    MP4File& GetFile() {
+        return m_File;
     }
 
-    MP4Atom* GetTrakAtom() {
-        return m_pTrakAtom;
+    MP4Atom& GetTrakAtom() {
+        return m_trakAtom;
     }
 
     void ReadSample(
         // input parameters
         MP4SampleId sampleId,
         // output parameters
-        uint8_t** ppBytes,
-        uint32_t* pNumBytes,
+        uint8_t**     ppBytes,
+        uint32_t*     pNumBytes,
         MP4Timestamp* pStartTime = NULL,
-        MP4Duration* pDuration = NULL,
-        MP4Duration* pRenderingOffset = NULL,
-        bool* pIsSyncSample = NULL);
+        MP4Duration*  pDuration = NULL,
+        MP4Duration*  pRenderingOffset = NULL,
+        bool*         pIsSyncSample = NULL,
+        bool*         hasDependencyFlags = NULL,
+        uint32_t*     dependencyFlags = NULL );
 
     void WriteSample(
         const uint8_t* pBytes,
@@ -95,7 +97,7 @@ public:
         bool           isSyncSample,
         uint32_t       dependencyFlags );
 
-    virtual void FinishWrite();
+    virtual void FinishWrite(uint32_t options = 0);
 
     uint64_t    GetDuration();      // in track timeScale units
     uint32_t    GetTimeScale();
@@ -199,8 +201,8 @@ protected:
     void FinishSdtp();
 
 protected:
-    MP4File*    m_pFile;
-    MP4Atom*    m_pTrakAtom;        // moov.trak[]
+    MP4File&    m_File;
+    MP4Atom&    m_trakAtom;         // moov.trak[]
     MP4TrackId  m_trackId;          // moov.trak[].tkhd.trackId
     MP4StringProperty* m_pTypeProperty; // moov.trak[].mdia.hdlr.handlerType
 
@@ -216,7 +218,8 @@ protected:
     MP4SampleId m_writeSampleId;
     MP4Duration m_fixedSampleDuration;
     uint8_t*    m_pChunkBuffer;
-    uint32_t    m_chunkBufferSize;
+    uint32_t    m_chunkBufferSize;          // Actual size of our chunk buffer.
+    uint32_t    m_sizeOfDataInChunkBuffer;  // Size of the data in the chunk buffer.
     uint32_t    m_chunkSamples;
     MP4Duration m_chunkDuration;
 
@@ -262,6 +265,9 @@ protected:
     uint32_t    m_cachedSttsIndex;
     MP4SampleId m_cachedSttsSid;
     MP4Timestamp    m_cachedSttsElapsed;
+
+    uint32_t    m_cachedCttsIndex;
+    MP4SampleId m_cachedCttsSid;
 
     MP4Integer32Property* m_pCttsCountProperty;
     MP4Integer32Property* m_pCttsSampleCountProperty;

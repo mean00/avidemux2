@@ -18,11 +18,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// MEANX #if defined( _WIN32 )
-// MEANX #   include "libplatform/platform_win32.h"
-// MEANX #else
+#if defined( _WIN32 )
+#   include "libplatform/platform_win32.h"
+#else
 #   include "libplatform/platform_posix.h"
-// MEANX #endif
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 

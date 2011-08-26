@@ -83,10 +83,10 @@ __dataListResize( MP4ItmfDataList& list, uint32_t size )
 void
 __itemInit( MP4ItmfItem& item )
 {
-    item.index = -1;
-    item.code  = NULL;
-    item.mean  = NULL;
-    item.name  = NULL;
+    item.__handle = NULL;
+    item.code     = NULL;
+    item.mean     = NULL;
+    item.name     = NULL;
 
     __dataListInit( item.dataList );
 }
@@ -151,11 +151,11 @@ __itemListAlloc()
 ///////////////////////////////////////////////////////////////////////////////
 
 static bool
-__itemAtomToModel( uint32_t index, MP4ItemAtom& item_atom, MP4ItmfItem& model )
+__itemAtomToModel( MP4ItemAtom& item_atom, MP4ItmfItem& model )
 {
     __itemClear( model );
-    model.index = index;
-    model.code  = strdup( item_atom.GetType() );
+    model.__handle = &item_atom;
+    model.code     = strdup( item_atom.GetType() );
 
     // handle special meaning atom
     if( ATOMID( item_atom.GetType() ) == ATOMID( "----" )) {
@@ -163,14 +163,15 @@ __itemAtomToModel( uint32_t index, MP4ItemAtom& item_atom, MP4ItmfItem& model )
         MP4MeanAtom* mean = (MP4MeanAtom*)item_atom.FindAtom( "----.mean" );
         if( !mean )
             return true;
+
         // copy atom UTF-8 value (not NULL-terminated) to model (NULL-terminated)
-        model.mean = strdup( mean->value.GetValue() );
+        model.mean = mean->value.GetValueStringAlloc();
 
         // name is optional
         MP4NameAtom* name = (MP4NameAtom*)item_atom.FindAtom( "----.name" );
         if( name ) {
             // copy atom UTF-8 value (not NULL-terminated) to model (NULL-terminated)
-            model.name = strdup( name->value.GetValue() );
+            model.name = name->value.GetValueStringAlloc();
         }
     }
 
@@ -216,20 +217,20 @@ __itemModelToAtom( const MP4ItmfItem& model, MP4ItemAtom& atom )
 {
     if( ATOMID( atom.GetType() ) == ATOMID( "----" )) {
         ASSERT( model.mean ); // mandatory
-        MP4MeanAtom& meanAtom = *(MP4MeanAtom*)MP4Atom::CreateAtom( &atom, "mean" );
+        MP4MeanAtom& meanAtom = *(MP4MeanAtom*)MP4Atom::CreateAtom( atom.GetFile(), &atom, "mean" );
         atom.AddChildAtom( &meanAtom );
-        meanAtom.value.SetValue( model.mean );
+        meanAtom.value.SetValue( (const uint8_t*)model.mean, (uint32_t)strlen( model.mean ));
 
         if( model.name ) {
-            MP4NameAtom& nameAtom = *(MP4NameAtom*)MP4Atom::CreateAtom( &atom, "name" );
+            MP4NameAtom& nameAtom = *(MP4NameAtom*)MP4Atom::CreateAtom( atom.GetFile(), &atom, "name" );
             atom.AddChildAtom( &nameAtom );
-            nameAtom.value.SetValue( model.name );
+            nameAtom.value.SetValue( (const uint8_t*)model.name, (uint32_t)strlen( model.name ));
         }
     }
 
     for( uint32_t i = 0; i < model.dataList.size; i++ ) {
         MP4ItmfData& dataModel = model.dataList.elements[i];
-        MP4DataAtom& dataAtom = *(MP4DataAtom*)MP4Atom::CreateAtom( &atom, "data" );
+        MP4DataAtom& dataAtom = *(MP4DataAtom*)MP4Atom::CreateAtom( atom.GetFile(), &atom, "data" );
         atom.AddChildAtom( &dataAtom );
 
         dataAtom.typeSetIdentifier.SetValue( dataModel.typeSetIdentifier );
@@ -250,14 +251,17 @@ __itemModelToAtom( const MP4ItmfItem& model, MP4ItemAtom& atom )
 MP4ItmfItem*
 genericItemAlloc( const string& code, uint32_t numData )
 {
-    MP4ItmfItem& item = *(MP4ItmfItem*)malloc( sizeof( MP4ItmfItem ));
-    __itemInit( item );
-    item.code = strdup( code.c_str() );
+    MP4ItmfItem* item = (MP4ItmfItem*)malloc( sizeof( MP4ItmfItem ));
+    if( !item )
+        return NULL;
+
+    __itemInit( *item );
+    item->code = strdup( code.c_str() );
 
     // always create array size of 1
-    __dataListResize( item.dataList, numData );
+    __dataListResize( item->dataList, numData );
 
-    return &item;
+    return item;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -301,7 +305,7 @@ genericGetItems( MP4File& file )
     __itemListResize( list, itemCount );
 
     for( uint32_t i = 0; i < list.size; i++ )
-        __itemAtomToModel( i, *(MP4ItemAtom*)ilst->GetChildAtom( i ), list.elements[i] );
+        __itemAtomToModel( *(MP4ItemAtom*)ilst->GetChildAtom( i ), list.elements[i] );
 
     return &list;
 }
@@ -328,13 +332,13 @@ genericGetItemsByCode( MP4File& file, const string& code )
         return __itemListAlloc();
 
     MP4ItmfItemList& list = *__itemListAlloc();
-    __itemListResize( list, indexList.size() );
+    __itemListResize( list, (uint32_t)indexList.size() );
 
     // pass 2: process each atom
     const vector<uint32_t>::size_type max = indexList.size();
     for( vector<uint32_t>::size_type i = 0; i < max; i++ ) {
         uint32_t& aidx = indexList[i];
-        __itemAtomToModel( aidx, *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
+        __itemAtomToModel( *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
     }
 
     return &list;
@@ -361,7 +365,7 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
         MP4MeanAtom* meanAtom = (MP4MeanAtom*)atom.FindAtom( "----.mean" );
         if( !meanAtom )
             continue;
-        if( meaning != meanAtom->value.GetValue() )
+        if( meanAtom->value.CompareToString( meaning ))
             continue;
 
         if( !name.empty() ) {
@@ -369,7 +373,7 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
             MP4MeanAtom* nameAtom = (MP4MeanAtom*)atom.FindAtom( "----.name" );
             if( !nameAtom )
                 continue;
-            if( name != nameAtom->value.GetValue() )
+            if( nameAtom->value.CompareToString( name ))
                 continue;
         }
 
@@ -380,13 +384,13 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
         return __itemListAlloc();
 
     MP4ItmfItemList& list = *__itemListAlloc();
-    __itemListResize( list, indexList.size() );
+    __itemListResize( list, (uint32_t)indexList.size() );
 
     // pass 2: process each atom
     const vector<uint32_t>::size_type max = indexList.size();
     for( vector<uint32_t>::size_type i = 0; i < max; i++ ) {
         uint32_t& aidx = indexList[i];
-        __itemAtomToModel( aidx, *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
+        __itemAtomToModel( *(MP4ItemAtom*)ilst->GetChildAtom( aidx ), list.elements[i] );
     }
 
     return &list;
@@ -397,11 +401,17 @@ genericGetItemsByMeaning( MP4File& file, const string& meaning, const string& na
 bool
 genericAddItem( MP4File& file, const MP4ItmfItem* item )
 {
-    MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
-    if( !ilst )
+    if( !item )
         return false;
 
-    MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( ilst, item->code );
+    MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
+    if( !ilst ) {
+        file.AddDescendantAtoms( "moov", "udta.meta.ilst" );
+        ilst = file.FindAtom( "moov.udta.meta.ilst" );
+        ASSERT( ilst );
+    }
+
+    MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( file, ilst, item->code );
     ilst->AddChildAtom( &itemAtom );
 
     return __itemModelToAtom( *item, itemAtom );
@@ -412,19 +422,32 @@ genericAddItem( MP4File& file, const MP4ItmfItem* item )
 bool
 genericSetItem( MP4File& file, const MP4ItmfItem* item )
 {
-    if( item->index == -1 )
+    if( !item || !item->__handle )
         return false;
 
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
         return false;
 
-    if( (uint32_t)item->index >= ilst->GetNumberOfChildAtoms() )
-        return genericAddItem( file, item );
+    MP4ItemAtom* const old = static_cast<MP4ItemAtom*>(item->__handle);
+    const uint32_t childCount = ilst->GetNumberOfChildAtoms();
+    uint32_t fidx = numeric_limits<uint32_t>::max();
+    for( uint32_t i = 0; i < childCount; i++ ) {
+        MP4Atom* atom = ilst->GetChildAtom( i );
+        if( atom == old ) {
+            fidx = i;
+            break;
+        }
+    }
 
-    MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( ilst, item->code );
-    ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
-    ilst->InsertChildAtom( &itemAtom, item->index );
+    if( fidx == numeric_limits<uint32_t>::max() )
+        return false;
+
+    ilst->DeleteChildAtom( old );
+    delete old;
+
+    MP4ItemAtom& itemAtom = *(MP4ItemAtom*)MP4Atom::CreateAtom( file, ilst, item->code );
+    ilst->InsertChildAtom( &itemAtom, fidx );
 
     return __itemModelToAtom( *item, itemAtom );
 }
@@ -434,17 +457,17 @@ genericSetItem( MP4File& file, const MP4ItmfItem* item )
 bool
 genericRemoveItem( MP4File& file, const MP4ItmfItem* item )
 {
-    if( item->index == -1 )
+    if( !item || !item->__handle )
         return false;
 
     MP4Atom* ilst = file.FindAtom( "moov.udta.meta.ilst" );
     if( !ilst )
         return false;
 
-    if( (uint32_t)item->index >= ilst->GetNumberOfChildAtoms() )
-        return false;
+    MP4ItemAtom* const old = static_cast<MP4ItemAtom*>(item->__handle);
+    ilst->DeleteChildAtom( old );
+    delete old;
 
-    ilst->DeleteChildAtom( ilst->GetChildAtom( item->index ));
     return true;
 }
 
