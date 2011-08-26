@@ -35,6 +35,9 @@
 
 #endif
 
+#define ADM_MP4_OPTIONS_OPEN  (MP4_CREATE_64BIT_DATA)
+#define ADM_MP4_OPTIONS_CLOSE (MP4_CLOSE_DO_NOT_COMPUTE_BITRATE )
+
 mp4v2_muxer muxerConfig=
 {
    1, // uint32_t optimize;
@@ -146,7 +149,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
 //------Verify everything is ok : Accept Mp4 & H264 for video, AAC for audio ----
         
         // Create file
-        handle=MP4Create( file,  MP4_CREATE_64BIT_DATA);
+        handle=MP4Create( file,  ADM_MP4_OPTIONS_OPEN);
         if(MP4_INVALID_FILE_HANDLE==handle)
         {
             ADM_error("[mp4v2]Cannot create output file %s\n",file);
@@ -277,7 +280,7 @@ bool muxerMp4v2::close(void)
 {
     if(handle)
     {
-            MP4Close(handle);
+            MP4Close(handle,ADM_MP4_OPTIONS_CLOSE);
 #warning run MP4Optimize
     }
     handle=NULL;
