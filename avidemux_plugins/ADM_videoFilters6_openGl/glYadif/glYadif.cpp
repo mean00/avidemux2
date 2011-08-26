@@ -149,44 +149,77 @@ void glYadif::updateInfo(void)
     info.frameIncrement/=2;
   }
 }
-
 /**
     \fn getFrame
     \brief Get a processed frame
 */
 bool glYadif::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    // since we do nothing, just get the output of previous filter
-    if(false==previousFilter->getNextFrame(fn,image))
+    ADMImage *src, *dst, * prev, *next;
+    int mode = configuration.mode;
+    int n;
+    if (mode & 1) 
+                n = (nextFrame>>1); // bob
+    else
+                n = nextFrame;
+
+    src = vidCache->getImage(n);
+    *fn=n;
+    if(!src) return false;  
+    // If possible get previous image...
+    if (n>0)
+            prev =  vidCache->getImage( n-1); // get previous frame
+    else
+            prev= src; // get very first frame
+
+    ADM_assert(prev);
+    next=vidCache->getImage(n+1);
+    if(!next) next=src;
+    ADM_assert(next);
+    
+    dst = image;
+    dst->copyInfo(src);
+
+    if(!prev || !src || !next)
     {
-        ADM_warning("FlipFilter : Cannot get frame\n");
+        printf("Failed to read frame for frame %u\n",nextFrame);
+        vidCache->unlockAll();
         return false;
     }
+
+
     widget->makeCurrent();
     glPushMatrix();
     // size is the last one...
     fboY->bind();
 
-    float angle=*fn;
-    angle=angle/40;
-    glProgramY->setUniformValue("teta", angle);     
-    glProgramY->setUniformValue("myTextureU", 1); 
-    glProgramY->setUniformValue("myTextureV", 2); 
-    glProgramY->setUniformValue("myTextureY", 0); 
+    glProgramY->setUniformValue("myTexturePrev", 0); 
+    glProgramY->setUniformValue("myTextureCur",  1); 
+    glProgramY->setUniformValue("myTextureNext", 2); 
     glProgramY->setUniformValue("myWidth", image->GetWidth(PLANAR_Y)); 
     glProgramY->setUniformValue("myHeight", image->GetHeight(PLANAR_Y)); 
 
-    uploadAllPlanes(image);
+    int tff = configuration.order;	
+    int parity = (mode & 1) ? (nextFrame & 1) ^ (1^tff) : (tff ^ 1); 
+    glProgramY->setUniformValue("myParity", parity); 
+
+    // upload the 3 Y Plane ..
+    uploadOnePlane(prev,PLANAR_Y,GL_TEXTURE0+0,texName[0]);
+    uploadOnePlane(src, PLANAR_Y,GL_TEXTURE0+1,texName[1]);
+    uploadOnePlane(next,PLANAR_Y,GL_TEXTURE0+2,texName[2]);
 
     render(image,PLANAR_Y,fboY);
 
-    downloadTextures(image,fboY);
+    downloadTexture(image,PLANAR_Y,fboY);
 
     fboY->release();
     firstRun=false;
     glPopMatrix();
     widget->doneCurrent();
     
+    ADMImage::copyPlane(src,image,PLANAR_U);
+    ADMImage::copyPlane(src,image,PLANAR_V);
+
     return true;
 }
 
