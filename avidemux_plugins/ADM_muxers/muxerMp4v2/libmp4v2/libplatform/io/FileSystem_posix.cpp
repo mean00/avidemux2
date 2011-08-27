@@ -1,5 +1,12 @@
+#include "ADM_cpp.h"
+
 #include "libplatform/impl.h"
 #include <sys/stat.h>
+
+#define ADM_LEGACY_PROGGY
+#include "ADM_default.h"
+
+// MEANX : Switch to our own wrappers
 
 namespace mp4v2 { namespace platform { namespace io {
 
@@ -8,8 +15,11 @@ namespace mp4v2 { namespace platform { namespace io {
 bool
 FileSystem::exists( string path_ )
 {
+    return ADM_fileExist(path_.c_str());
+/*
     struct stat buf;
     return stat( path_.c_str(), &buf ) == 0;
+*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,11 +49,15 @@ FileSystem::isFile( string path_ )
 bool
 FileSystem::getFileSize( string path_, File::Size& size_ )
 {
+/*
     size_ = 0;
     struct stat buf;
     if( stat( path_.c_str(), &buf ))
         return true;
     size_ = buf.st_size;
+    return false;
+*/
+    size_=ADM_fileSize(path_.c_str());
     return false;
 }
 
@@ -52,7 +66,12 @@ FileSystem::getFileSize( string path_, File::Size& size_ )
 bool
 FileSystem::rename( string from, string to )
 {
-    return ::rename( from.c_str(), to.c_str() ) != 0;
+    if(!ADM_renameFile(from.c_str(),to.c_str()))
+    {
+        ADM_error("Cannot rename %s to %s\n",from.c_str(),to.c_str());
+        return true;
+    }
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
