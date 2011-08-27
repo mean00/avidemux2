@@ -30,9 +30,11 @@
 pyLoggerFunc *pyLog=NULL;
 static tp_obj    tinyPy_dumpBuiltin(tp_vm *vm);
 static tp_obj    tinyPy_getFolderContent(tp_vm *vm);
+static tp_obj    tinyPy_getFileSize(tp_vm *vm);
 static pyFuncs addons[]={
                                 {"help",tinyPy_dumpBuiltin},
                                 {"get_folder_content",tinyPy_getFolderContent},
+                                {"get_file_size",tinyPy_getFileSize},
                                 {NULL,NULL}
                         };
 static vector <admPyClassDescriptor> listOfPyClass;;
@@ -198,6 +200,20 @@ bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy, con
     return true;
 
 }
+/**
+    \fn tinyPy_getFileSize
+    \brief returns file size in bytes
+*/
+tp_obj tinyPy_getFileSize(tp_vm *tp)
+{
+    tinyParams pm(tp);
+    const char *file= pm.asString();
+    
+    uint32_t size=ADM_fileSize(file);
+    tp_obj v=tp_number(size);
+    return v;
+}
+
 /**
     \fn getFolderContent
     \brief get_folder_content(root, ext) : Return a list of files in  root with extention ext
