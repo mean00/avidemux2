@@ -25,7 +25,7 @@
         #include <stdint.h>
     #endif
 #endif
-
+#if 0 // MEANX
 #if defined( _WIN32 ) || defined( __MINGW32__ )
 #   if defined( MP4V2_EXPORTS )
 #       define MP4V2_EXPORT __declspec(dllexport)
@@ -36,6 +36,14 @@
 #   endif
 #else
 #   define MP4V2_EXPORT __attribute__((visibility("default")))
+#endif
+#else
+        #if defined( _WIN32 ) || defined( __MINGW32__ )
+                #       define MP4V2_EXPORT
+        #else
+                #   define MP4V2_EXPORT __attribute__((visibility("default")))
+        #endif
+
 #endif
 
 #if defined( __GNUC__ )
