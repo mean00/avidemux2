@@ -58,7 +58,7 @@ public:
                 virtual void reset( void );
 protected:
                 virtual void setFps(uint32_t fps1000)=0;
-                virtual void setPercent(uint32_t percent)=0;
+                
                 virtual void setAudioSize(uint64_t size)=0;
                 virtual void setVideoSize(uint64_t size)=0;
                 virtual void setTotalSize(uint64_t size)=0;
@@ -69,6 +69,8 @@ protected:
                 virtual void setAverageBitrateKbits(uint32_t kb)=0;
             
 
+public:
+                virtual void setPercent(uint32_t percent)=0;
 public:
                 virtual void setPhasis(const char *n)=0;
                 virtual void setVideoCodec(const char *n)=0;
