@@ -69,6 +69,7 @@ protected:
         uint8_t         *scratchBuffer;
         string          targetFileName;
         uint64_t        lastVideoDts;
+
 protected: // video
         bool            initMpeg4(void);
         bool            initH264(void);
@@ -91,6 +92,7 @@ public:
         virtual bool save(void) ;
         virtual bool close(void) ;
         virtual bool useGlobalHeader(void) {return true;}
+                void setPercent(int percent);
 
 };
 

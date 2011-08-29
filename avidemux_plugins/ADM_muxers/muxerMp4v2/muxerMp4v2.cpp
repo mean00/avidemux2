@@ -17,7 +17,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <stdarg.h>
 #include "ADM_default.h"
 #include "ADM_cpp.h"
 #include "fourcc.h"
@@ -38,11 +38,42 @@
 #define ADM_MP4_OPTIONS_OPEN  (MP4_CREATE_64BIT_DATA)
 #define ADM_MP4_OPTIONS_CLOSE (MP4_CLOSE_DO_NOT_COMPUTE_BITRATE )
 
+// We should only have one valid at at time...
+muxerMp4v2 *currentMuxer=NULL;
+
 mp4v2_muxer muxerConfig=
 {
    1, // uint32_t optimize;
    0  //uint32_t add_itunes_metadata;
 };
+extern "C"
+{
+static   void callback(MP4LogLevel level, const char *fmt, va_list ap)
+{
+        static char print_buffer[1024];
+		vsnprintf(print_buffer,1023,fmt,ap);
+		print_buffer[1023]=0; // ensure the string is terminated
+        ADM_info("<mp4v2>%s",print_buffer);
+}
+}
+/**
+    \fn ADM_MP4_progressCallback
+    \brief callback from MP4V2 to get the optimizing progress
+*/
+void ADM_MP4_progressCallback(int p)
+{
+    if(currentMuxer)
+        currentMuxer->setPercent(p);
+           
+}
+/**
+    \fn setPercent
+*/
+void muxerMp4v2::setPercent(int percent)
+{
+    if(encoding)
+        encoding->setPercent(percent);
+}
 /**
     \fn setMaxDurationPerChunk
     \brief Max chunk duration is 1 sec par default; set it to ~ 4 frames
@@ -93,6 +124,8 @@ muxerMp4v2::muxerMp4v2()
         nextWrite=0;
         needToConvertFromAnnexB=false;
         lastVideoDts=0;
+        MP4SetLogCallback(callback);
+        currentMuxer=this;
 };
 /**
     \fn     muxerMp4v2
@@ -105,6 +138,7 @@ muxerMp4v2::~muxerMp4v2()
     close();
     if(handle)
         ADM_error("MP4V2: File still opened\n");
+    currentMuxer=NULL;
 }
 /**
     \fn open
@@ -254,10 +288,12 @@ bool muxerMp4v2::save(void)
                         0 // Sync Sample
                         );
 theEnd:
-    closeUI();
     close();
+    
+    
     if(muxerConfig.optimize && result==true)
     {
+        encoding->setPhasis("Optimizing");
         string tmpTargetFileName=targetFileName+string(".tmp");
         if(!ADM_renameFile(targetFileName.c_str(),tmpTargetFileName.c_str()))
         {
@@ -270,6 +306,7 @@ theEnd:
         // delete
         unlink(tmpTargetFileName.c_str());
     }
+    closeUI();
     return result;
 }
 /**

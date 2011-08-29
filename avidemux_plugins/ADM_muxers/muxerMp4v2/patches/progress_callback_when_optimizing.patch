@@ -1,0 +1,40 @@
+diff --git a/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4file.cpp b/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4file.cpp
+index cdab917..d4e0162 100644
+--- a/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4file.cpp
++++ b/avidemux_plugins/ADM_muxers/muxerMp4v2/libmp4v2/src/mp4file.cpp
+@@ -30,6 +30,8 @@
+ 
+ #include "src/impl.h"
+ 
++extern void ADM_MP4_progressCallback(int p); // MEANX
++
+ namespace mp4v2 { namespace impl {
+ 
+ ///////////////////////////////////////////////////////////////////////////////
+@@ -330,6 +332,8 @@ void MP4File::RewriteMdat( File& src, File& dst )
+     MP4ChunkId* maxChunkIds = new MP4ChunkId[numTracks];
+     MP4Timestamp* nextChunkTimes = new MP4Timestamp[numTracks];
+ 
++    uint64_t sourceSize=src.size;
++
+     for( uint32_t i = 0; i < numTracks; i++ ) {
+         chunkIds[i] = 1;
+         maxChunkIds[i] = m_pTracks[i]->GetNumberOfChunks();
+@@ -374,6 +378,17 @@ void MP4File::RewriteMdat( File& src, File& dst )
+ 
+         // point back at the new mp4 file for write chunk
+         m_file = &dst;
++
++        {
++            uint64_t destSize=dst.position; //MEANX
++            if(sourceSize>10)
++            {
++                    double p=sourceSize;
++                    p=(destSize*100)/sourceSize;
++                    ADM_MP4_progressCallback((int)p);
++            }
++            
++        }
+         m_pTracks[nextTrackIndex]->RewriteChunk( chunkIds[nextTrackIndex], pChunk, chunkSize );
+ 
+         MP4Free( pChunk );
