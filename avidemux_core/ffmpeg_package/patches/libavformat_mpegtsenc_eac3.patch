@@ -1,0 +1,20 @@
+--- libavformat/mpegtsenc.c	2011-08-10 14:16:41.000000000 +0200
++++ /home/fx/workspace/avidemux_core/ffmpeg/source/libavformat/mpegtsenc.c	2011-09-03 16:26:10.605350454 +0200
+@@ -285,6 +285,17 @@
+         /* write optional descriptors here */
+         switch(st->codec->codec_type) {
+         case AVMEDIA_TYPE_AUDIO:
++// MEANX : For eac3 we put one tag with all flags set to zero
++// MEANX : This tag is enough to signal this stream is eac3
++// MEANX : Else it is a private stream without identification =>ignored
++            if(st->codec->codec_id==CODEC_ID_EAC3)
++            {
++                *q++=0x7a; // EAC3 descriptor see A038 DVB SI
++                *q++=1; // 1 byte, all flags sets to 0
++                *q++=0; // omit all fields...
++            }
++
++// /MEANX
+             if (lang) {
+                 char *p;
+                 char *next = lang->value;
