@@ -2,5 +2,6 @@
 ADD_SUBDIRECTORY(glYadif)
 #ADD_SUBDIRECTORY(sample_fragment)
 ADD_SUBDIRECTORY(sample_fragment2)
+ADD_SUBDIRECTORY(sample_distort)
 #ADD_SUBDIRECTORY(sample_vertex)
 #ADD_SUBDIRECTORY(glVdpau)
