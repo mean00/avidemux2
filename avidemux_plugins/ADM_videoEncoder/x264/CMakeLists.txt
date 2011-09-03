@@ -28,6 +28,7 @@ IF(X264_FOUND)
   #-----------------------GTK or CLI VERSION---------------------
   if((DO_GTK) OR (DO_CLI))
     ADD_VIDEO_ENCODER(ADM_ve_x264_other   ADM_x264_noui.cpp ${x264_SRCS})
+    ADD_TARGET_CFLAGS(ADM_ve_x264_other "-DADM_UI_TYPE_BUILD=1") # CLI!
     TARGET_LINK_LIBRARIES(ADM_ve_x264_other x264 )
     INIT_VIDEO_ENCODER(ADM_ve_x264_other)
     INSTALL_VIDEO_ENCODER(ADM_ve_x264_other)
