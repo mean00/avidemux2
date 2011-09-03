@@ -11,7 +11,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_cpp.h"
 #include <math.h>
 
 #include "ADM_default.h"
@@ -43,19 +43,21 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
     //************
    work->update(0);
 #if 0
-   for(int clusters=0;clusters<_nbClusters;clusters++)
+    int nbCluster=_clusters.size();
+   for(int clusters=0;clusters<nbCluster;clusters++)
     {
-        printf("[Cluster] %d/%d StartTimecode=%"LLU" ms\n",clusters,_nbClusters,_clusters[clusters].Dts);
+        printf("[Cluster] %d/%d StartTimecode=%"LLU" ms\n",clusters,nbCluster,_clusters[clusters].Dts);
     }
 #endif
-   for(int clusters=0;clusters<_nbClusters;clusters++)
+    int nbClusters=_clusters.size();
+   for(int clusters=0;clusters<nbClusters;clusters++)
    {
    parser->seek(_clusters[clusters].pos);
    ADM_ebml_file cluster(parser,_clusters[clusters].size);
    int thiscluster=0;
    while(!cluster.finished())
    {
-      work->update(clusters,_nbClusters);
+      work->update(clusters,nbClusters);
       cluster.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
@@ -324,11 +326,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
   uint64_t time;
   uint64_t pos;
 
-#define NB_DEFAULT_CLUSTERS 10
-  // Allocate some clusters
-  _clusters=new mkvIndex[NB_DEFAULT_CLUSTERS];
-  _clustersCeil=NB_DEFAULT_CLUSTERS;
-  _nbClusters=0;
+    mkvIndex tmpCluster;
 
   // Search segment
    fileSize=parser->getFileSize();
@@ -353,17 +351,9 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
 
      // UI update
      work->update(segment.tell()>>10,fileSize>>10);
-     // Grow clusters index if needed
-     if(_nbClusters==_clustersCeil-1)
-     {
-         mkvIndex *dx=new mkvIndex[_clustersCeil*2];
-         memcpy(dx,_clusters,sizeof(mkvIndex)*_nbClusters);
-         delete [] _clusters;
-         _clusters=dx;
-         _clustersCeil*=2;
-     }
-     _clusters[_nbClusters].pos=segment.tell();
-     _clusters[_nbClusters].size=alen;
+     tmpCluster.pos=segment.tell();
+     tmpCluster.size=alen;
+     _clusters.push_back(tmpCluster);
 
      // Normally the timecode is the 1st one following
 
@@ -378,7 +368,7 @@ tryAgain:
                 goto tryAgain;
             default:break;
         }
-       int seekme=_nbClusters;
+       int seekme=_clusters.size()-1; // last element...
        if(id!=MKV_TIMECODE)
        {
           ss=NULL;
@@ -386,17 +376,16 @@ tryAgain:
           ADM_warning("[MKV] Cluster : no time code Found %s(0x%"LLX"), expected MKV_TIMECODE  (0x%x)\n",
                   ss,id,MKV_TIMECODE);
        }
-       else
+       else // timecode
        {
            uint64_t timecode=segment.readUnsignedInt(len);
-           _clusters[_nbClusters].Dts=timecode;
-           _nbClusters++;
+           _clusters[seekme].Dts=timecode;
        }
        segment.seek( _clusters[seekme].pos+ _clusters[seekme].size);
        //printf("Position :%u %u MB\n", _clusters[seekme].pos+ _clusters[seekme].size,( _clusters[seekme].pos+ _clusters[seekme].size)>>20);
    }
    delete work;
-   ADM_info("[MKV] Found %u clusters\n",_nbClusters);
+   ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
    return 1;
 }
 //EOF

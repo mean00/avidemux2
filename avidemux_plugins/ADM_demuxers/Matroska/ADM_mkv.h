@@ -134,9 +134,7 @@ class mkvHeader         :public vidHeader
     char                    *_filename;
     mkvTrak                 _tracks[ADM_MKV_MAX_TRACKS+1];
 
-    mkvIndex                *_clusters;
-    uint32_t                _nbClusters;
-    uint32_t                _clustersCeil;
+    vector <mkvIndex    >   _clusters;
 
     uint32_t                _nbAudioTrack;
     uint32_t                _currentAudioTrack;

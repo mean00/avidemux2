@@ -13,6 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_mkv.h"
 #include "ADM_demuxerInternal.h"

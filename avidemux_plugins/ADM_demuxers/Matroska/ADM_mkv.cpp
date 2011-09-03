@@ -11,6 +11,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include <math.h>
 
 #include "ADM_default.h"
@@ -83,7 +84,7 @@ uint8_t mkvHeader::open(const char *name)
     printf("[MKV] Cluster indexing failed\n");
     return 0;
   }
-  printf("[MKV]Found %u clusters\n",_nbClusters);
+  printf("[MKV]Found %u clusters\n",_clusters.size());
   printf("[MKV] Indexing video\n");
     if(!videoIndexer(&ebml))
     {
@@ -481,14 +482,10 @@ void mkvHeader::Dump(void)
 
 uint8_t mkvHeader::close(void)
 {
-  if(_clusters)
-  {
-    delete [] _clusters;
-    _clusters=NULL;
-  }
+    _clusters.clear();
   // CLEANUP!!
-  if(_parser) delete _parser;
-  _parser=NULL;
+    if(_parser) delete _parser;
+    _parser=NULL;
 
 
 #define FREEIF(i) { if(_tracks[i].extraData) delete [] _tracks[i].extraData; _tracks[i].extraData=0;}
@@ -528,9 +525,6 @@ uint8_t mkvHeader::close(void)
   memset(_tracks,0,sizeof(_tracks));
   _reordered=0;
 
-  _clusters=NULL;
-  _clustersCeil=0;
-  _nbClusters=0;
   _currentAudioTrack=0;
   _access=NULL;
   _audioStreams=NULL;
