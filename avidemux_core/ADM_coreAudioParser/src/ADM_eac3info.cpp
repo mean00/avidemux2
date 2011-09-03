@@ -9,7 +9,7 @@
 
 #include "ADM_default.h"
 #include "ADM_eac3info.h"
-
+#define ADM_LAV_NO_CONFIG
 extern "C"
 {
 #define sign_extend

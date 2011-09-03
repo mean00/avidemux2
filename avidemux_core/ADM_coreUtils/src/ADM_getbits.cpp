@@ -17,6 +17,8 @@
 
 #ifndef ADM_getbits_H
 #define ADM_getbits_H
+
+#define ADM_LAV_NO_CONFIG
 extern "C"
 {
 #include "libavutil/common.h"
