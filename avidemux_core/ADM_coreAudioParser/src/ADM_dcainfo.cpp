@@ -110,7 +110,7 @@ uint32_t size,len1,len2,flags,sr,framesize=0,index,nbBlocks;
 
 
             }
-            ADM_warning("[DTS] Cannot find sync\n");
+            ADM_warning("[DTS] Cannot find sync %x %x %x %x\n",buf[0],buf[1],buf[2],buf[3]);
 	      return false;
 }
 
