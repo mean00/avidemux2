@@ -1,13 +1,11 @@
-Index: common.mak
-===================================================================
---- common.mak	(revision 18300)
-+++ common.mak	(working copy)
-@@ -62,7 +62,7 @@
+--- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/common.mak	2011-08-10 14:16:41.000000000 +0200
++++ ./common.mak	2011-09-03 09:03:14.265349252 +0200
+@@ -61,7 +61,7 @@
  FFLIBS    := $(FFLIBS-yes) $(FFLIBS)
  TESTPROGS += $(TESTPROGS-yes)
  
 -FFEXTRALIBS := $(addprefix -l,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
 +FFEXTRALIBS := $(addprefix -lADM6,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
- FFLDFLAGS   := $(addprefix -L$(BUILD_ROOT)/lib,$(ALLFFLIBS)) $(LDFLAGS)
+ FFLDFLAGS   := $(addprefix -Llib,$(ALLFFLIBS)) $(LDFLAGS)
  
  EXAMPLES  := $(addprefix $(SUBDIR),$(addsuffix -example$(EXESUF),$(EXAMPLES)))

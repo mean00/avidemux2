@@ -1,6 +1,6 @@
---- libavcodec/h263dec.c.old	2010-12-20 13:49:21 +0000
-+++ libavcodec/h263dec.c	2010-12-20 13:49:21 +0000
-@@ -120,6 +120,25 @@
+--- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavcodec/h263dec.c	2011-08-10 14:18:20.000000000 +0200
++++ libavcodec/h263dec.c	2011-09-03 09:00:01.025349244 +0200
+@@ -115,6 +115,25 @@
  
      return 0;
  }
@@ -26,7 +26,7 @@
  
  av_cold int ff_h263_decode_end(AVCodecContext *avctx)
  {
-@@ -422,6 +441,12 @@
+@@ -431,6 +450,12 @@
      } else {
          ret = h263_decode_picture_header(s);
      }
@@ -39,10 +39,11 @@
  
      if(ret==FRAME_SKIPPED) return get_consumed_bytes(s, buf_size);
  
-@@ -717,6 +742,14 @@
+@@ -715,6 +740,14 @@
  
  assert(s->current_picture.pict_type == s->current_picture_ptr->pict_type);
  assert(s->current_picture.pict_type == s->pict_type);
++
 +/* MEANX */
 +  if(s->current_picture_ptr)
 +      s->current_picture_ptr->opaque=pict->opaque;
@@ -50,7 +51,6 @@
 +
 +
 +
-+
-     if (s->pict_type == FF_B_TYPE || s->low_delay) {
+     if (s->pict_type == AV_PICTURE_TYPE_B || s->low_delay) {
          *pict= *(AVFrame*)s->current_picture_ptr;
      } else if (s->last_picture_ptr != NULL) {

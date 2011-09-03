@@ -1,5 +1,5 @@
---- libavutil/lfg.h.old	2010-12-31 18:22:13 +0000
-+++ libavutil/lfg.h	2010-12-31 18:22:13 +0000
+--- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavutil/lfg.h	2011-08-10 14:15:51.000000000 +0200
++++ libavutil/lfg.h	2011-09-03 08:35:49.715349178 +0200
 @@ -24,7 +24,7 @@
  
  typedef struct {

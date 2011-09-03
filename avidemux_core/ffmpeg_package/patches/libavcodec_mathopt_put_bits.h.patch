@@ -1,0 +1,24 @@
+--- libavcodec/mathops.h	2011-08-10 14:15:51.000000000 +0200
++++ /home/fx/workspace/avidemux_core/ffmpeg/source/libavcodec/mathops.h	2011-09-03 09:31:09.635349327 +0200
+@@ -23,7 +23,9 @@
+ #define AVCODEC_MATHOPS_H
+ 
+ #include "libavutil/common.h"
++#ifndef ADM_LAV_NO_CONFIG
+ #include "config.h"
++#endif// ADM_LAV_NO_CONFIG
+ 
+ #if   ARCH_ARM
+ #   include "arm/mathops.h"
+--- libavcodec/put_bits.h	2011-08-10 14:16:41.000000000 +0200
++++ /home/fx/workspace/avidemux_core/ffmpeg/source/libavcodec//put_bits.h	2011-09-03 09:32:37.685349331 +0200
+@@ -34,7 +34,9 @@
+ #include "libavutil/intreadwrite.h"
+ #include "libavutil/log.h"
+ #include "mathops.h"
++#ifndef ADM_LAV_NO_CONFIG
+ #include "config.h"
++#endif// ADM_LAV_NO_CONFIG
+ 
+ //#define ALT_BITSTREAM_WRITER
+ //#define ALIGNED_BITSTREAM_WRITER

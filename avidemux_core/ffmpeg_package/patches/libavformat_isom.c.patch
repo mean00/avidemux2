@@ -1,6 +1,6 @@
---- libavformat/isom.c.old	2010-12-20 13:49:29 +0000
-+++ libavformat/isom.c	2010-12-20 13:49:29 +0000
-@@ -222,7 +222,10 @@
+--- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavformat/isom.c	2011-08-10 14:15:51.000000000 +0200
++++ libavformat/isom.c	2011-09-03 08:35:49.695349178 +0200
+@@ -237,7 +237,10 @@
      { CODEC_ID_MP1, MKTAG('.', 'm', 'p', '1') }, /* MPEG layer 1 */
      { CODEC_ID_MP2, MKTAG('.', 'm', 'p', '2') }, /* MPEG layer 2 */
  

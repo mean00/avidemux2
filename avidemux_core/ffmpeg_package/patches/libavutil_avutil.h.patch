@@ -1,5 +1,5 @@
---- libavutil/avutil.h.old	2010-12-20 13:49:31 +0000
-+++ libavutil/avutil.h	2010-12-20 13:49:31 +0000
+--- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavutil/avutil.h	2011-08-10 14:18:20.000000000 +0200
++++ libavutil/avutil.h	2011-09-03 08:35:49.695349178 +0200
 @@ -26,6 +26,13 @@
   * external API header
   */
