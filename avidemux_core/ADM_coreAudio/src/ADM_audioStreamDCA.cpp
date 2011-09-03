@@ -66,7 +66,12 @@ ADM_DCA_INFO info;
     while(1)
     {
         // Do we have sync ?
-        if(needBytes(ADM_LOOK_AHEAD)==false) return 0;
+        if(needBytes(ADM_LOOK_AHEAD)==false) 
+        {
+            ADM_warning("DCA: Not sync found in buffer\n");
+            return false;
+        }
+            
         // Peek
         peek(ADM_LOOK_AHEAD,data);
         // Search start seq
@@ -75,14 +80,25 @@ ADM_DCA_INFO info;
             read8();
             continue;
         }
+        if(buffer[start+2]!=0x80 || buffer[start+3]!=0x1)
+        {
+            read8();
+            read8();
+            continue;
+        }
+
         if(false== ADM_DCAGetInfo(buffer+start, limit-start,&info,&offset))
         {
+            read8();
+            read8();
+            read8();
             read8();
             continue;
         }
         ADM_assert(info.frameSizeInBytes<=sizeMax);
         if(needBytes(info.frameSizeInBytes)==false)
         {
+            ADM_warning("DCA: Not enough data\n");
             return false;
         }
         *osize=info.frameSizeInBytes;
