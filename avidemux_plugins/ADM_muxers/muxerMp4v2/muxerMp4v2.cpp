@@ -43,7 +43,7 @@ muxerMp4v2 *currentMuxer=NULL;
 
 mp4v2_muxer muxerConfig=
 {
-   1, // uint32_t optimize;
+   0, // uint32_t optimize;
    0  //uint32_t add_itunes_metadata;
 };
 extern "C"
