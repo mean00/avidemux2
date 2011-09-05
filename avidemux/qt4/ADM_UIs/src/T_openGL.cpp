@@ -9,8 +9,17 @@
 #include "DIA_coreToolkit.h"
 static QGLWidget *thisWidget=NULL;
 static GlActiveTexture_Type *myActiveTexture=NULL;
-
-
+/**
+     \fn checkGlError
+     \brief pop an error if an operation failed
+*/
+bool ADM_coreVideoFilterQtGl::checkGlError(const char *op)
+{
+    GLenum er=glGetError();
+    if(!er) return true;
+    ADM_error("[GLERROR]%s: %d => %s\n",op,er,gluErrorString(er));
+    return false;
+}           
 /**
     \fn ADM_setActiveTexture
 */
@@ -58,6 +67,7 @@ QGLWidget *ADM_getGlWidget(void)
 ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf)
 :ADM_coreVideoFilter(previous,conf)
 {
+    bufferARB=0;
     context=NULL;
     glProgramY=NULL;
     glProgramUV=NULL;
@@ -81,9 +91,19 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
         ADM_assert(0);
     }
     glGenTextures(3,texName);
+    checkGlError("GenTex");
+    glGenBuffersARB(1,&bufferARB);
+    checkGlError("GenBuffer");
     widget->doneCurrent();
     // glTexture TODO
+}
+/**
+    \fn finishInit
 
+*/
+bool ADM_coreVideoFilterQtGl::finishInit(void)
+{
+        return true;
 }
 /**
     \fn dtor
@@ -102,6 +122,8 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
     fboUV=NULL;
     if(widget) delete widget;       
     widget=NULL;
+    glDeleteBuffersARB(1,&bufferARB);
+    bufferARB=0;
 }
 #if  1
 #define TEX_Y_OFFSET 2
@@ -114,6 +136,7 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
 #define TEX_V_OFFSET 2   
 #define TEX_A_OFFSET 3   
 #endif
+
 /**
     \fn downloadTexture
 */
@@ -222,12 +245,15 @@ static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
             dst[x]  = src[x*4+TEX_Y_OFFSET];
         }
 }
-
+bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
+{
+    return downloadTexturesQt(image,fbo);
+}
 /**
     \fn downloadTexture
     \brief Download YUVA texture into a YV12 image
 */
-bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
+bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fbo)
 {
 
     QImage qimg(fbo->toImage()); // this is slow ! ~ 15 ms for a 720 picture (Y only).
@@ -286,6 +312,102 @@ bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferO
     __asm__( "emms\n"::  );
 #endif
     return true;
+}
+/**
+    \fn downloadTexture
+    \brief Download YUVA texture into a YV12 image
+*/
+bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo)
+{
+    int width=image->GetWidth(PLANAR_Y);
+    int height=image->GetHeight(PLANAR_Y);
+    bool r=true;
+
+    glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
+    checkGlError("BindARB");
+    glBufferDataARB(GL_PIXEL_PACK_BUFFER_ARB,info.width*info.height*sizeof(uint32_t),
+                                NULL,GL_STREAM_READ_ARB);
+    checkGlError("BufferDataRB");
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0_EXT); 
+    checkGlError("ReadBuffer (fbo)");
+    glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
+    checkGlError("Bind Buffer (arb)");
+
+    glReadPixels(0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+    checkGlError("glReadPixel");
+
+    // DMA call done, we can do something else here
+    ADM_usleep(5*1000);
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
+    checkGlError("Bind Buffer (arb)");
+
+    GLubyte* ptr = (GLubyte*)glMapBufferARB(GL_PIXEL_PACK_BUFFER_ARB,
+                                        GL_READ_ONLY_ARB);
+    checkGlError("MapBuffer");
+    if(!ptr)
+    {
+        ADM_error("Cannot map output buffer!\n");
+        r=false;
+    }
+    else
+    {
+        // Assume RGB32, read R or A
+        int strideY=image->GetPitch(PLANAR_Y);
+        uint8_t *toY=image->GetWritePtr(PLANAR_Y);
+        uint8_t *toU=image->GetWritePtr(PLANAR_U);
+        uint8_t *toV=image->GetWritePtr(PLANAR_V);
+        int      strideU=image->GetPitch(PLANAR_U);
+        int      strideV=image->GetPitch(PLANAR_V);
+
+        int width=image->GetWidth(PLANAR_Y);
+        int height=image->GetHeight(PLANAR_Y);
+        typeGlYv444 *luma=glYUV444_C;
+    #ifdef ADM_CPU_X86
+          if(CpuCaps::hasMMX())
+          {
+                glYUV444_MMXInit();
+                luma=glYUV444_MMX;
+          }
+    #endif
+        // Do Y
+        for(int y=0;y<height;y++)
+        {
+            const uchar *src=4*width*(y)+ptr;
+            
+            if(!src)
+            {
+                ADM_error("Can t get pointer to openGl texture\n");
+                return false;
+            }
+           luma(src,toY,width);
+           toY+=strideY;
+           if(y&1)
+           {
+                for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
+                {
+                    const uchar *p=src+x*4;
+                    uint32_t v=*(uint32_t *)p;
+                    if(!v)
+                    {
+                            toU[x/2]=128;
+                            toV[x/2]=128;
+                    }else
+                    {
+                        toU[x/2]  =  p[TEX_U_OFFSET];
+                        toV[x/2]  =  p[TEX_V_OFFSET];
+                    }
+                }
+                toU+=strideU;
+                toV+=strideV;
+           }
+        }
+    #ifdef ADM_CPU_X86
+        __asm__( "emms\n"::  );
+    #endif
+    }
+    return r;
 }
 /**
     \fn uploadTexture

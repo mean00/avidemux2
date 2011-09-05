@@ -26,6 +26,7 @@
 class ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter
 {
 protected:
+                            GLuint                bufferARB   ;
                             QGLWidget            *widget;
                     const   QGLContext           *context;
                             QGLFramebufferObject *fboY;
@@ -41,12 +42,16 @@ protected:
                             void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
                             bool downloadTexture(ADMImage *target, ADM_PLANE plane,QGLFramebufferObject *fbo);
                             bool downloadTextures(ADMImage *target, QGLFramebufferObject *fbo);
+                            bool downloadTexturesDma(ADMImage *target, QGLFramebufferObject *fbo);
+                            bool downloadTexturesQt(ADMImage *target, QGLFramebufferObject *fbo);
+                            bool finishInit(void);
 
 public:
                             ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
        virtual             ~ADM_coreVideoFilterQtGl();
 
-                                                                                        
+        
+                            static bool checkGlError(const char *op);
 protected:
 };
 // Hooks
