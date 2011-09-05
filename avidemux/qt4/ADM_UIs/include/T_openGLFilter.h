@@ -44,7 +44,6 @@ protected:
                             bool downloadTextures(ADMImage *target, QGLFramebufferObject *fbo);
                             bool downloadTexturesDma(ADMImage *target, QGLFramebufferObject *fbo);
                             bool downloadTexturesQt(ADMImage *target, QGLFramebufferObject *fbo);
-                            bool finishInit(void);
 
 public:
                             ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);

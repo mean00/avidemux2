@@ -98,14 +98,6 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     // glTexture TODO
 }
 /**
-    \fn finishInit
-
-*/
-bool ADM_coreVideoFilterQtGl::finishInit(void)
-{
-        return true;
-}
-/**
     \fn dtor
 */
 ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
@@ -247,7 +239,7 @@ static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
 }
 bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
 {
-    return downloadTexturesQt(image,fbo);
+    return downloadTexturesDma(image,fbo);
 }
 /**
     \fn downloadTexture
@@ -323,6 +315,9 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
     int height=image->GetHeight(PLANAR_Y);
     bool r=true;
 
+    glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB,0);
+    // that one might fail : checkGlError("BindARB-00");
+
     glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
     checkGlError("BindARB");
     glBufferDataARB(GL_PIXEL_PACK_BUFFER_ARB,info.width*info.height*sizeof(uint32_t),
@@ -338,10 +333,8 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
     checkGlError("glReadPixel");
 
     // DMA call done, we can do something else here
-    ADM_usleep(5*1000);
+    ADM_usleep(1*1000);
 
-    glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
-    checkGlError("Bind Buffer (arb)");
 
     GLubyte* ptr = (GLubyte*)glMapBufferARB(GL_PIXEL_PACK_BUFFER_ARB,
                                         GL_READ_ONLY_ARB);
