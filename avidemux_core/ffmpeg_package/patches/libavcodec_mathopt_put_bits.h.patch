@@ -1,5 +1,5 @@
 --- libavcodec/mathops.h	2011-08-10 14:15:51.000000000 +0200
-+++ /home/fx/workspace/avidemux_core/ffmpeg/source/libavcodec/mathops.h	2011-09-03 09:31:09.635349327 +0200
++++ libavcodec/mathops.h	2011-09-03 09:31:09.635349327 +0200
 @@ -23,7 +23,9 @@
  #define AVCODEC_MATHOPS_H
  
