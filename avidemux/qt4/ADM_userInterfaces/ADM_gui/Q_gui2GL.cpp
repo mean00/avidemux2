@@ -43,20 +43,20 @@ void UI_Qt4InitGl(void)
     topGlWidgetRoot->resize(4,4);
     topGlWidgetRoot->show();
     
-#ifndef QT_OPENGL_ES
-    GlActiveTexture_Type *tex= (GlActiveTexture_Type *)topGlWidgetRoot->context()->getProcAddress(QLatin1String("glActiveTexture"));
+    void  *func;
 
-	if (!tex)
-	{
-		ADM_error("[GL Render] Active Texture function not found!\n");
-	}else
-    {
-        ADM_warning("[GL Render] Active Texture function found (Not openGL_ES)\n");
-        ADM_setActiveTexture(tex);
-    }
-#else
-    ADM_setActiveTexture(glActiveTexture);
-#endif
+    #define PROBE_GL_EXT(funcName, meth)     func=topGlWidgetRoot->context()->getProcAddress(QLatin1String(#funcName));   \
+                                         ADM_glExt::meth(func); \
+                                         if(!func) ADM_warning("Extension "#funcName" missing\n");
+
+    PROBE_GL_EXT(glActiveTexture,setActivateTexture)
+    PROBE_GL_EXT(glBindBufferARB,setBindBuffer)
+    PROBE_GL_EXT(glGenBuffers,setGenBuffers)
+    PROBE_GL_EXT(glDeleteBuffers,setDeleteBuffers)
+    PROBE_GL_EXT(glMapBufferARB,setMapBuffer)
+    PROBE_GL_EXT(glUnmapBufferARB,setUnmapBuffer)
+    PROBE_GL_EXT(glBufferDataARB,setBufferData)
+
 
 	printf("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
 	printf("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));

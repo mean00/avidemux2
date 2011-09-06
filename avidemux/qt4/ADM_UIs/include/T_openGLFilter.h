@@ -34,7 +34,6 @@ protected:
                             QGLShaderProgram     *glProgramY;
                             QGLShaderProgram     *glProgramUV;
                             int                   firstRun;
-                            GlActiveTexture_Type *myGlActiveTexture;
                             GLuint                texName[3];
 protected:
                             // image <--> texture

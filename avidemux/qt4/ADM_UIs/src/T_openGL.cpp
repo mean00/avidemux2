@@ -8,7 +8,48 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 static QGLWidget *thisWidget=NULL;
-static GlActiveTexture_Type *myActiveTexture=NULL;
+/**
+
+*/
+static PFNGLACTIVETEXTUREPROC myActiveTexture=NULL;
+static PFNGLBINDBUFFERPROC    myBindBuffer=NULL;
+static PFNGLDELETEBUFFERSPROC myDeleteBuffers=NULL;
+static PFNGLGENBUFFERSPROC    myGenBuffers=NULL;
+static PFNGLMAPBUFFERPROC     myMapBuffer=NULL;
+static PFNGLUNMAPBUFFERPROC   myUnmapBuffer=NULL;
+static PFNGLBUFFERDATAARBPROC myBufferData=NULL;
+
+ void ADM_glExt::setBufferData(void *func)
+{
+    myBufferData=(PFNGLBUFFERDATAARBPROC )func;
+}
+
+ void ADM_glExt::setActivateTexture(void *func)
+{
+    myActiveTexture=(PFNGLACTIVETEXTUREPROC )func;
+}
+ void ADM_glExt::setBindBuffer(void *func)
+{
+    myBindBuffer=(PFNGLBINDBUFFERPROC)func;
+}
+ void ADM_glExt::setGenBuffers(void *func)
+{
+    myGenBuffers=(PFNGLGENBUFFERSPROC)func;
+}
+ void ADM_glExt::setDeleteBuffers(void *func)
+{
+    myDeleteBuffers=(PFNGLDELETEBUFFERSPROC)func;
+}
+ void ADM_glExt::setMapBuffer(void *func)
+{
+    myMapBuffer=(PFNGLMAPBUFFERPROC)func;
+}
+ void ADM_glExt::setUnmapBuffer(void *func)
+{
+    myUnmapBuffer=(PFNGLUNMAPBUFFERPROC)func;
+}
+
+
 /**
      \fn checkGlError
      \brief pop an error if an operation failed
@@ -19,32 +60,76 @@ bool ADM_coreVideoFilterQtGl::checkGlError(const char *op)
     if(!er) return true;
     ADM_error("[GLERROR]%s: %d => %s\n",op,er,gluErrorString(er));
     return false;
-}           
+}          
+
+#define CHECK(x) if(!x) {GUI_Error_HIG("Missing extension "#x,#x" not defined");ADM_assert(0);}
 /**
-    \fn ADM_setActiveTexture
+    \class ADM_glExt
 */
-bool ADM_setActiveTexture(GlActiveTexture_Type *set)
+void ADM_glExt::activeTexture  (GLenum texture)
 {
-    myActiveTexture=set;
-    return true;
+    CHECK(myActiveTexture);
+      myActiveTexture(texture);
 }
-/**
-    \fn ADM_getActiveTexture
-*/
-GlActiveTexture_Type *ADM_getActiveTexture(void)
+void ADM_glExt::bindBuffer     (GLenum target, GLuint buffer)
 {
-    return myActiveTexture;
+    CHECK(myBindBuffer);
+      myBindBuffer(target,buffer);
+
+}
+void ADM_glExt::genBuffers     (GLsizei n, GLuint *buffers)
+{
+    CHECK(myGenBuffers);
+      myGenBuffers(n,buffers);
+
+}
+void ADM_glExt::deleteBuffers  (GLsizei n, const GLuint *buffers)
+{
+    CHECK(myDeleteBuffers);
+      myDeleteBuffers(n,buffers);
+
+}
+
+void *ADM_glExt::mapBuffer    (GLenum target, GLenum access)
+{
+    CHECK(myMapBuffer);
+    return myMapBuffer(target,access);
+
+}
+void ADM_glExt::unmapBuffer    (GLenum target)
+{
+    CHECK(myUnmapBuffer);
+      myUnmapBuffer(target);
+
+}
+void ADM_glExt::bufferData(GLenum target,GLsizeiptr size, const GLvoid *data,GLenum usage)
+{
+    CHECK(myBufferData);
+      myBufferData(target,size,data,usage);
+
 }
 
 /**
     \fn ADM_hasActiveTexture
 */
-bool ADM_hasActiveTexture(void)
+bool ADM_glHasActiveTexture(void)
 {
     if(!myActiveTexture) return false;
     return true;
 }
 
+/**
+    \fn ADM_glHasARB
+*/
+bool ADM_glHasARB(void)
+{
+    if(!myBindBuffer) return false;
+    if(!myDeleteBuffers) return false;
+    if(!myGenBuffers) return false;
+    if(!myMapBuffer) return false;
+    if(!myUnmapBuffer) return false;
+    return true;
+}
 /**
 
 */
@@ -83,13 +168,6 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     ADM_assert(fboY);
     fboUV = new QGLFramebufferObject(info.width/2,info.height/2);
     ADM_assert(fboUV);
-    myGlActiveTexture=ADM_getActiveTexture();
-    if(!myGlActiveTexture)
-    {
-        ADM_error("Cannot get glActiveTexture\n");
-        GUI_Error_HIG("","Cannot get glActiveTexture");
-        ADM_assert(0);
-    }
     glGenTextures(3,texName);
     checkGlError("GenTex");
     glGenBuffersARB(1,&bufferARB);
@@ -239,7 +317,9 @@ static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
 }
 bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
 {
-    return downloadTexturesDma(image,fbo);
+    if(ADM_glHasARB())
+        return downloadTexturesDma(image,fbo);
+    return downloadTexturesQt(image,fbo);
 }
 /**
     \fn downloadTexture
@@ -315,18 +395,18 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
     int height=image->GetHeight(PLANAR_Y);
     bool r=true;
 
-    glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB,0);
+    ADM_glExt::bindBuffer(GL_PIXEL_PACK_BUFFER_ARB,0);
     // that one might fail : checkGlError("BindARB-00");
 
-    glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
+    ADM_glExt::bindBuffer(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
     checkGlError("BindARB");
-    glBufferDataARB(GL_PIXEL_PACK_BUFFER_ARB,info.width*info.height*sizeof(uint32_t),
+    ADM_glExt::bufferData(GL_PIXEL_PACK_BUFFER_ARB,info.width*info.height*sizeof(uint32_t),
                                 NULL,GL_STREAM_READ_ARB);
     checkGlError("BufferDataRB");
 
     glReadBuffer(GL_COLOR_ATTACHMENT0_EXT); 
     checkGlError("ReadBuffer (fbo)");
-    glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
+    ADM_glExt::bindBuffer(GL_PIXEL_PACK_BUFFER_ARB,bufferARB);
     checkGlError("Bind Buffer (arb)");
 
     glReadPixels(0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, 0);
@@ -336,8 +416,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
     ADM_usleep(1*1000);
 
 
-    GLubyte* ptr = (GLubyte*)glMapBufferARB(GL_PIXEL_PACK_BUFFER_ARB,
-                                        GL_READ_ONLY_ARB);
+    GLubyte* ptr = (GLubyte*)ADM_glExt::mapBuffer(GL_PIXEL_PACK_BUFFER_ARB, GL_READ_ONLY_ARB);
     checkGlError("MapBuffer");
     if(!ptr)
     {
@@ -399,7 +478,9 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
     #ifdef ADM_CPU_X86
         __asm__( "emms\n"::  );
     #endif
+        ADM_glExt::unmapBuffer(GL_PIXEL_PACK_BUFFER_ARB);
     }
+    ADM_glExt::bindBuffer(GL_PIXEL_PACK_BUFFER_ARB,0);
     return r;
 }
 /**
@@ -407,7 +488,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
 */
 void ADM_coreVideoFilterQtGl::uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
 {
-        myGlActiveTexture(tex);  // Activate texture unit "tex"
+        ADM_glExt::activeTexture(tex);  // Activate texture unit "tex"
         glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
 
         glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -438,7 +519,7 @@ void ADM_coreVideoFilterQtGl::uploadAllPlanes(ADMImage *image)
           // Activate texture unit "tex"
         for(int xplane=2;xplane>=0;xplane--)
         {
-            myGlActiveTexture(GL_TEXTURE0+xplane);
+            ADM_glExt::activeTexture(GL_TEXTURE0+xplane);
             ADM_PLANE plane=(ADM_PLANE)xplane;
             glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
             glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

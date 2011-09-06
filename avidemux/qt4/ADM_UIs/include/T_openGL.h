@@ -25,12 +25,32 @@
 #endif
 
 #include <QtOpenGL/QtOpenGL>
+/**
+    \class ADM_glExt
+*/
+class ADM_glExt
+{
+public:
+ static       void setActivateTexture(void *func);
+ static       void setBindBuffer(void *func);
+ static       void setGenBuffers(void *func);
+ static       void setDeleteBuffers(void *func);
+ static       void setMapBuffer(void *func);
+ static       void setUnmapBuffer(void *func);
+ static       void setBufferData(void *func);
+public:
+ static       void activeTexture  (GLenum texture);
+ static       void bindBuffer     (GLenum target, GLuint buffer);
+ static       void genBuffers     (GLsizei n, GLuint *buffers);
+ static       void deleteBuffers  (GLsizei n, const GLuint *buffers);
+ static       void *mapBuffer     (GLenum target, GLenum access);
+ static       void unmapBuffer    (GLenum target);
+ static       void bufferData     (GLenum target,GLsizeiptr size, const GLvoid *data,GLenum usage);
+};
 
 
-// Get glActiveTexture
-typedef void APIENTRY (GlActiveTexture_Type)(GLenum texture);
-bool ADM_setActiveTexture(GlActiveTexture_Type *set);
-GlActiveTexture_Type *ADM_getActiveTexture(void);
-bool ADM_hasActiveTexture(void);
+bool ADM_GlHasActiveTexture(void);
+bool ADM_GlHasARB(void);
 #endif
+
 
