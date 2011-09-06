@@ -32,6 +32,7 @@
 dummyGLWidget *topGlWidget=NULL;
 dummyGLWidget *topGlWidgetRoot=NULL;
 extern QWidget *VuMeter;
+extern bool ADM_glHasARB(void);
 /**
     \fn UI_Qt4InitGl
 */
@@ -46,8 +47,9 @@ void UI_Qt4InitGl(void)
     void  *func;
 
     #define PROBE_GL_EXT(funcName, meth)     func=topGlWidgetRoot->context()->getProcAddress(QLatin1String(#funcName));   \
-                                         ADM_glExt::meth(func); \
-                                         if(!func) ADM_warning("Extension "#funcName" missing\n");
+             ADM_glExt::meth(func); \
+             if(!func) ADM_warning("Extension "#funcName" missing\n"); \
+             else ADM_info("Extension "#funcName" found\n");
 
     PROBE_GL_EXT(glActiveTexture,setActivateTexture)
     PROBE_GL_EXT(glBindBufferARB,setBindBuffer)
@@ -57,6 +59,12 @@ void UI_Qt4InitGl(void)
     PROBE_GL_EXT(glUnmapBufferARB,setUnmapBuffer)
     PROBE_GL_EXT(glBufferDataARB,setBufferData)
 
+
+    if(ADM_glHasARB())
+    {
+        ADM_info("openGL ARB activated\n");
+    }else
+        ADM_warning("OpenGL: Not enough ARB extension found\n");
 
 	printf("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
 	printf("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
