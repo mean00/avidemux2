@@ -20,7 +20,7 @@
 
 #define aprintf(...) {}
 
-#define NB_BUCKET 8
+#define NB_BUCKET 64
 
 static uint32_t bucketSize;
 static HWAVEOUT myDevice;
