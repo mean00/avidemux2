@@ -170,7 +170,8 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     ADM_assert(fboUV);
     glGenTextures(3,texName);
     checkGlError("GenTex");
-    glGenBuffersARB(1,&bufferARB);
+    if(ADM_glHasARB)
+        ADM_glExt::genBuffers(1,&bufferARB);
     checkGlError("GenBuffer");
     widget->doneCurrent();
     // glTexture TODO
@@ -192,7 +193,8 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
     fboUV=NULL;
     if(widget) delete widget;       
     widget=NULL;
-    glDeleteBuffersARB(1,&bufferARB);
+    if(ADM_glHasARB)
+        ADM_glExt::deleteBuffers(1,&bufferARB);
     bufferARB=0;
 }
 #if  1
