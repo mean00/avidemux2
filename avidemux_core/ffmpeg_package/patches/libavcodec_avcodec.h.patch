@@ -1,4 +1,4 @@
---- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavcodec/avcodec.h	2011-08-10 14:18:20.000000000 +0200
+--- libavcodec/avcodec.h	2011-08-10 14:18:20.000000000 +0200
 +++ libavcodec/avcodec.h	2011-09-03 08:35:49.485349178 +0200
 @@ -619,6 +619,8 @@
  #define CODEC_FLAG2_PSY           0x00080000 ///< Use psycho visual optimizations.

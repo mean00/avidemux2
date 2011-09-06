@@ -1,4 +1,4 @@
---- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavcodec/utils.c	2011-08-10 14:18:20.000000000 +0200
+--- libavcodec/utils.c	2011-08-10 14:18:20.000000000 +0200
 +++ libavcodec/utils.c	2011-09-03 08:35:49.575349178 +0200
 @@ -787,10 +787,12 @@
  

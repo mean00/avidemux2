@@ -1,5 +1,5 @@
 --- libavcodec/x86/fmtconvert_mmx.c	2011-08-10 14:15:51.000000000 +0200
-+++ /home/fx/workspace/avidemux_core/ffmpeg/source/libavcodec/x86/fmtconvert_mmx.c	2011-09-03 12:38:36.365349837 +0200
++++ libavcodec/x86/fmtconvert_mmx.c	2011-09-03 12:38:36.365349837 +0200
 @@ -285,6 +285,7 @@
                  c->float_to_int16_interleave = float_to_int16_interleave_3dn2;
              }

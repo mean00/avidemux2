@@ -1,4 +1,4 @@
---- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavutil/lfg.c	2011-08-10 14:15:51.000000000 +0200
+--- libavutil/lfg.c	2011-08-10 14:15:51.000000000 +0200
 +++ libavutil/lfg.c	2011-09-03 08:35:49.695349178 +0200
 @@ -39,7 +39,7 @@
          c->state[i+2]= AV_RL32(tmp+8);

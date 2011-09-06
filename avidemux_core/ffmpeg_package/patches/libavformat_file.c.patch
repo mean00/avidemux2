@@ -1,4 +1,4 @@
---- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavformat/file.c	2011-08-10 14:18:20.000000000 +0200
+--- libavformat/file.c	2011-08-10 14:18:20.000000000 +0200
 +++ libavformat/file.c	2011-09-03 08:35:49.575349178 +0200
 @@ -31,6 +31,75 @@
  #include "os_support.h"

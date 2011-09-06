@@ -1,4 +1,4 @@
---- /home/fx/workspace/gitted/avidemux_core/ffmpeg_package/source/libavcodec/h264_parser.c	2011-08-10 14:16:41.000000000 +0200
+--- libavcodec/h264_parser.c	2011-08-10 14:16:41.000000000 +0200
 +++ libavcodec/h264_parser.c	2011-09-03 08:35:49.545349178 +0200
 @@ -29,7 +29,52 @@
  #include "h264data.h"
