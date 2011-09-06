@@ -41,10 +41,19 @@ void UI_Qt4InitGl(void)
     ADM_info("Creating openGl dummy widget\n");
     topGlWidgetRoot=new dummyGLWidget(VuMeter);
     ADM_setGlWidget(topGlWidgetRoot);
+    ADM_info("Dummy Widget created\n");
+#ifndef __MINGW__
     topGlWidgetRoot->resize(4,4);
+#endif
     topGlWidgetRoot->show();
-    
+    ADM_info("Probing openGl extension\n");
+    if(!topGlWidgetRoot->context())
+    {
+        ADM_error("Cannot get context\n");
+        return;
+    }
     void  *func;
+    
 
     #define PROBE_GL_EXT(funcName, meth)     func=topGlWidgetRoot->context()->getProcAddress(QLatin1String(#funcName));   \
              ADM_glExt::meth(func); \
@@ -59,7 +68,7 @@ void UI_Qt4InitGl(void)
     PROBE_GL_EXT(glUnmapBufferARB,setUnmapBuffer)
     PROBE_GL_EXT(glBufferDataARB,setBufferData)
 
-
+    ADM_info("Probing dine\n");
     if(ADM_glHasARB())
     {
         ADM_info("openGL ARB activated\n");
