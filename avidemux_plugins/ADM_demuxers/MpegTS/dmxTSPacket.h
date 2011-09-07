@@ -121,6 +121,7 @@ public:
     virtual bool        open(const char *filenames,FP_TYPE append);
     virtual bool        close(void);
     virtual bool        getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt);
+            bool        getNextPid(int *pid);
     virtual uint64_t    getPos(void);
     virtual bool        setPos(uint64_t pos);
 protected:

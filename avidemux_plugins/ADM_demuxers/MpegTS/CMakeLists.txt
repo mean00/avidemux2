@@ -13,6 +13,7 @@ SET(ADM_ts_SRCS
         ADM_tsComputeTimeStamp.cpp
         dmxTSPacket.cpp
         ADM_tsPatPmt.cpp
+        ADM_tsBruteForce.cpp
         ADM_tsGetBits.cpp
 )
 

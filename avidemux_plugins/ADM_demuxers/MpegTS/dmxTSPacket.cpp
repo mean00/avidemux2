@@ -537,9 +537,47 @@ bool tsPacket::decodePesHeader(TS_PESpacket *pes)
 */      
 bool        tsPacket::getPacket(uint32_t maxSize, uint8_t *pid, uint32_t *packetSize,uint64_t *opts,uint64_t *odts,uint8_t *buffer,uint64_t *startAt)
 {
+    return true;
+}
+/** 
+    \fn getNextPid
+*/  
+bool        tsPacket::getNextPid(int *pid)
+{
+ uint8_t scratch[188+4];
+    int count=0;
+nextPackx:
 
-        return false;
-       
+    if(false==getSinglePacket(scratch)) return false;
+    uint32_t id=scratch[1]+((scratch[0]&0x1F)<<8);
+    count++;
+    if(count>MAX_SKIPPED_PACKET) return false;
+    *pid=id;
+    
+    int payloadUnitStart=scratch[0]&0x40;
+    int fieldControl=(scratch[2]>>4)&3;
+    int continuity=(scratch[2]&0xf);
+    int len=TS_PACKET_LEN-4; // useful datas
+
+    if(!(fieldControl & 1)) 
+    {
+        goto nextPackx;
+    }
+    uint8_t *start,*end;
+    start=scratch+3;
+    end=scratch+TS_PACKET_LEN-1;
+
+    if((fieldControl & 2)) // Adaptation layer
+    {
+        int payloadSize=*start++;
+        start+=payloadSize;
+    }
+    int size=(int)(end-start);
+    if(size<=0)  
+    {
+        goto nextPackx;
+    }
+    return true;
 }
 
 /**

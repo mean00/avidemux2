@@ -79,6 +79,15 @@ typedef vector <tsAudioTrackInfo > listOfTsAudioTracks;
 */
 
 bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **tracks);
+/**
+    \fn TS_guessContent
+    \brief Analyze a stream and returns tracks within, guess what tracks actually are..
+    @param in:file File to open
+    @param out:nbTracks Number of tracks found
+    @param out:tracks, to be freed by delete [] by the caller
+*/
+
+bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **tracks);
 
 #endif
 //EOF

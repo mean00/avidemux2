@@ -51,8 +51,12 @@ bool r;
 
     if(TS_scanForPrograms(file,&nbTracks,&tracks)==false) 
     {
-        printf("[Ts Indexer] Scan of pmt failed\n");
-        return false;
+            printf("[Ts Indexer] Scan of pmt failed\n");
+            if(TS_guessContent(file,&nbTracks,&tracks)==false) 
+            {
+                printf("[Ts Indexer] Brute force scan failed\n");
+                return false;
+            }
     }
     ADM_assert(tracks);
     ADM_assert(nbTracks);
