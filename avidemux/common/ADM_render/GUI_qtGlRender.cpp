@@ -109,7 +109,6 @@ bool QtGlAccelWidget::setImage(ADMImage *pic)
 
     }
     updateTexture();
-    repaint();
     return true;
 }
 /**
@@ -167,7 +166,7 @@ void QtGlAccelWidget::initializeGL()
 */
 void QtGlAccelWidget::updateTexture()
 {
-    makeCurrent();
+    
 	if (!textureOffsets[0])
 	{
 		printf("[Render] Buffer not set\n");
@@ -217,7 +216,7 @@ void QtGlAccelWidget::updateTexture()
 	{
 		firstRun = false;
 	}
-    doneCurrent();
+    
 }
 /**
     \fn paintGL
@@ -229,9 +228,7 @@ void QtGlAccelWidget::paintGL()
 	glProgram->setUniformValue("texV", 1);
     glProgram->setUniformValue("height", (float)imageHeight);
 
-    makeCurrent();
-    glPushMatrix();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBegin(GL_QUADS);
 	glTexCoord2i(0, 0);
 	glVertex2i(0, 0);
@@ -242,8 +239,7 @@ void QtGlAccelWidget::paintGL()
 	glTexCoord2i(0, imageHeight);
 	glVertex2i(0, height());
 	glEnd();
-    glPopMatrix();
-    doneCurrent();
+    
 }
 /**
     \fn ctor
@@ -300,8 +296,10 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
 */
 bool QtGlRender::displayImage(ADMImage *pic)
 {
+    glWidget->makeCurrent();
 	glWidget->setImage(pic);
 	glWidget->repaint();
+    glWidget->doneCurrent();
 	return true;
 }
 /**
