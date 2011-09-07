@@ -30,11 +30,18 @@ static void handleMM(MMRESULT err);
 
 WAVEHDR waveHdr[NB_BUCKET];	
 ADM_DECLARE_AUDIODEVICE(Win32,win32AudioDevice,1,0,0,"Win32 audio device (c) mean");
+/**
+    \fn ctor
+*/
+
 win32AudioDevice::win32AudioDevice(void) 
 {
 	printf("[Win32] Creating audio device\n");
 	_inUse=0;
 }
+/**
+    \fn localStop
+*/
 
 bool win32AudioDevice::localStop(void) 
 {
@@ -65,7 +72,9 @@ bool win32AudioDevice::localStop(void)
 
 	return true;
 }
-
+/**
+    \fn localInit
+*/
 bool win32AudioDevice::localInit(void) 
 {
 	printf("[Win32] Opening Audio, channels=%u freq=%u\n",_channels, _frequency);
@@ -78,7 +87,7 @@ bool win32AudioDevice::localInit(void)
 
 	_inUse = 1;
 	
-	bucketSize = _channels * _frequency;
+	bucketSize = (_channels * _frequency*2*4)/100; // 40 ms bucket * 64 => 3 sec buffer
 
 	WAVEFORMATEX wav;
 
@@ -116,7 +125,9 @@ bool win32AudioDevice::localInit(void)
 
 	return 1;
 }
-
+/**
+    \fn setVolume
+*/
 uint8_t  win32AudioDevice::setVolume(int volume) 
 {
 	uint32_t value;
@@ -128,6 +139,9 @@ uint8_t  win32AudioDevice::setVolume(int volume)
 
 	return 1;
 }
+/**
+    \fn sendData
+*/
 
 void win32AudioDevice::sendData(void)
 {
@@ -149,22 +163,19 @@ void win32AudioDevice::sendData(void)
 			rdIndex += waveHdr[i].dwBufferLength;
 			len -= waveHdr[i].dwBufferLength;
             mutex.unlock();
-			if (waveOutWrite(myDevice, &waveHdr[i], sizeof(WAVEHDR)) == MMSYSERR_NOERROR)
+            MMRESULT er=waveOutWrite(myDevice, &waveHdr[i], sizeof(WAVEHDR));
+			if (er) == MMSYSERR_NOERROR)
 				success = 1;
 			else
+            {
+                handleMM(er);
 				break;
+            }
 		}
 
 		if (len == 0)
 			break;
 	}
-
-	if (len != 0)
-	{
-		printf("[Win32] No audio buffer available, %u bytes discarded\n", len);
-		return ;
-	}
-
 	return ;
 }
 
@@ -175,6 +186,9 @@ const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
 const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
 const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
                                              ADM_CH_LFE,ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT};
+/**
+    \fn getWantedChannelMapping
+*/
 const CHANNEL_TYPE *win32AudioDevice::getWantedChannelMapping(uint32_t channels)
 {
     switch(channels)
@@ -187,6 +201,9 @@ const CHANNEL_TYPE *win32AudioDevice::getWantedChannelMapping(uint32_t channels)
     }
     return NULL;
 }
+/**
+    \fn handleMM
+*/
 void handleMM(MMRESULT err)
 {
 #define ERMM(x) if(err==x) printf("[Win32] "#x"\n");
@@ -196,4 +213,6 @@ void handleMM(MMRESULT err)
 	ERMM(MMSYSERR_NODRIVER);
 	ERMM(WAVERR_BADFORMAT);
 	ERMM(WAVERR_SYNC);
+    ERMM(WAVERR_STILLPLAYING);
 }
+// EOF
