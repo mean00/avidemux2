@@ -164,7 +164,7 @@ void win32AudioDevice::sendData(void)
 			len -= waveHdr[i].dwBufferLength;
             mutex.unlock();
             MMRESULT er=waveOutWrite(myDevice, &waveHdr[i], sizeof(WAVEHDR));
-			if (er) == MMSYSERR_NOERROR)
+			if (er == MMSYSERR_NOERROR)
 				success = 1;
 			else
             {
