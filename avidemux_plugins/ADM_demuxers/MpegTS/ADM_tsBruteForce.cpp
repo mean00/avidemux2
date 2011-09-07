@@ -23,12 +23,13 @@
 #include "ADM_a52info.h"
 #include "ADM_mp3info.h"
 
+#include "ADM_coreUtils.h"
 
 #define TS_MAX_PACKET_SCAN 500
 #define MAX_PID (1<<17)
 #define MAX_BUFFER_SIZE (10*1024)
 
-static bool idContent(int pid,tsPacket *ts);
+static bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType);
 
 /**
     \fn scanForPrograms
@@ -42,6 +43,7 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     *outTracks=NULL;
     *nbTracks=0;
     uint32_t nb=0;
+
 
     tsPacket *ts=new tsPacket();
     ts->open(file,FP_PROBE);
@@ -73,14 +75,32 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     }
     delete [] map;
     map=NULL;
-    
-    for(int i=0;i<listOfPid.size();i++)
+    if(listOfPid.size())
     {
-        printf("Found stuff in pid=%d\n",listOfPid[i]);
-        //  Read PES
-        idContent(listOfPid[i],ts);
-        // Try to id the packet...
-        
+        tracks=new ADM_TS_TRACK[listOfPid.size()];
+        memset(tracks,0,sizeof(ADM_TS_TRACK)*listOfPid.size());
+        int validTracks=0;
+        ADM_TS_TRACK_TYPE trackType;
+        for(int i=0;i<listOfPid.size();i++)
+        {
+            printf("Found stuff in pid=%d\n",listOfPid[i]);
+            //  Read PES
+            if(true==idContent(listOfPid[i],ts,trackType))
+            {
+                tracks[validTracks].trackPid=listOfPid[i];
+                tracks[validTracks].trackType=trackType;
+                validTracks++;
+            }        
+        }
+        if(!validTracks)
+        {
+            delete [] tracks;
+        }else
+        {
+            *outTracks=tracks;
+            *nbTracks=validTracks;
+            result=true;
+        }
     }
     ts->close();
     delete ts;
@@ -92,7 +112,7 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
 /**
     \fn idContent
 */
-bool idContent(int pid,tsPacket *ts)
+bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
 {
 TS_PESpacket pes(pid);
 TS_PESpacket pes2(pid);
@@ -106,7 +126,7 @@ TS_PESpacket pes2(pid);
             ADM_warning("\tCannot get PES2\n");
             return false;
         }
-
+        
         printf("\t Read %d bytes\n",(int)pes.payloadSize);
         // 
         uint32_t fq,br,chan,syncoff;
@@ -116,6 +136,27 @@ TS_PESpacket pes2(pid);
         uint8_t *ptr2=pes2.payload;
         uint32_t len2=pes2.payloadSize;
 
+        if(!ptr[0] && !ptr[1] && ptr[2]==1 && ptr[3]==0xe0) // probably video
+        {
+            // Only supports Mpeg2 video and H264
+            // For mpeg2 we scan for slice i.e. 00 00 01 00 etc...
+            // we need 2 consecutive slice
+            uint8_t scode,scode2;
+            if(ADM_findMpegStartCode(ptr+4,ptr+len,&scode,&syncoff))
+            {
+                ADM_warning("Found startcode1 =%x\n",scode);
+            }
+            if(ADM_findMpegStartCode(ptr2+4,ptr2+len2,&scode2,&syncoff))
+            {
+                ADM_warning("Found startcode1 =%x\n",scode2);
+            }
+            if(scode==9 && scode2==9) // AU delimiter
+            {
+                trackType=ADM_TS_H264;
+                return true;
+            }
+            return false;
+        }
         // Is it AC3 ??
         if( ADM_AC3GetInfo(ptr,len, &fq, &br, &chan,&syncoff))
         {
@@ -126,26 +167,29 @@ TS_PESpacket pes2(pid);
                     if((fq==fq2) && (br2==br) && (chan==chan2))
                     {
                         ADM_warning("\tProbably AC3 : Fq=%d br=%d chan=%d\n",(int)fq,(int)br,(int)chan);
+                        trackType=ADM_TS_AC3;
                         return true;
                     }
                 }
 
         }
+        // We easily have false positive with mp2...
         MpegAudioInfo minfo,minfo2;
         if( getMpegFrameInfo(ptr,len,&minfo,NULL,&syncoff))
         {
-                    ADM_info("Maybe MP2... \n");
-                    if( getMpegFrameInfo(ptr2,len2,&minfo2,&minfo,&syncoff))
+                    if(minfo.bitrate>=128)
                     {
-                        ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)minfo.samplerate,
-                                                                    (int)minfo.bitrate,
-                                                                    (int)minfo.mode);
-                        return true;
+                        ADM_info("Maybe MP2... \n");
+                        if( getMpegFrameInfo(ptr2,len2,&minfo2,&minfo,&syncoff))
+                        {
+                            ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)minfo.samplerate,
+                                                                        (int)minfo.bitrate,
+                                                                        (int)minfo.mode);
+                            trackType=ADM_TS_MPEG_AUDIO;
+                            return true;
+                        }
                     }
         }
-        
-        
-    ADM_info("\t Unrecognized.\n");
     return false;
 }
         
