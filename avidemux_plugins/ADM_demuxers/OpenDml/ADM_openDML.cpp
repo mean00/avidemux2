@@ -141,6 +141,9 @@ OpenDMLHeader::~OpenDMLHeader()
 	close();
 
 }
+/**
+    \fn close
+*/
 uint8_t    OpenDMLHeader::close( void )
 {
 	if(_fd)
