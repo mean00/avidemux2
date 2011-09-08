@@ -114,10 +114,6 @@ IF (GETTEXT_FOUND)
 	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${GETTEXT_LIBRARY_DIR})
 ENDIF (GETTEXT_FOUND)
 
-# XVideo
-IF (USE_XV)
-	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${XVIDEO_LIBRARY_DIR})
-ENDIF (USE_XV)
 
 # SDL
 IF (USE_SDL)
@@ -177,3 +173,4 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/config/qt4/config.h DESTINATION "${AVIDEMUX_IN
 #
 include(admPackager)
 admPackager(qt4Package)
+include(admConfigSummary)
