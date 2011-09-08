@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_segment.h"
 #include "ADM_codec.h"
@@ -176,19 +177,22 @@ bool ADM_EditorSegment::deleteAll (void)
       v->_aviheader=NULL;
      // Delete audio codec too
      // audioStream will be deleted by the demuxer
-      if(v->audioTracks)
-      {
-            for(int i=0;i<v->nbAudioStream;i++)
+      
+      
+            int nb=v->audioTracks.size();
+            for(int i=0;i<nb;i++)
             {
-#if 0 // Deleted elsewhere ?
-                if(v->audioTracks[i])
-                    delete v->audioTracks[i];
-#endif
+
+                ADM_audioStreamTrack *t=v->audioTracks[i];
                 v->audioTracks[i]=NULL;
+#if 1 // Deleted elsewhere ?
+                if(t)
+                    delete t;
+#endif
             }
-            delete [] v->audioTracks;
-            v->audioTracks=NULL;
-      }
+            v->audioTracks.clear();
+            
+      
     }
 
     videos.clear();

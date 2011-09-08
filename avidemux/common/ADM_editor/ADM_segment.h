@@ -39,8 +39,15 @@ public:
     uint64_t         size;
 
 public:
-    ADM_audioStreamTrack() {memset(this,0,sizeof(*this));}
-virtual    ~ADM_audioStreamTrack();
+    ADM_audioStreamTrack() {
+                stream=NULL;
+                info=NULL;
+                codec=NULL;
+                duration=size=0;
+                vbr=false;
+                memset(&wavheader,0,sizeof(wavheader));
+        }
+    ~ADM_audioStreamTrack();
 };
 /**
     \struct _VIDEOS
@@ -53,10 +60,9 @@ typedef struct
       ADMColorScalerSimple *color; /// Color conversion if needed
 
       /* Audio part */
-
-      uint32_t nbAudioStream;
       uint32_t currentAudioStream;
-      ADM_audioStreamTrack **audioTracks;
+      vector <ADM_audioStreamTrack *>  audioTracks;
+      
 
       uint32_t _nb_video_frames; /// Really needed ?
       EditorCache *_videoCache; /// Decoded video cache

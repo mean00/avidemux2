@@ -11,7 +11,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include "ADM_cpp.h"
 #include "config.h"
 
 #include "ADM_inttype.h"

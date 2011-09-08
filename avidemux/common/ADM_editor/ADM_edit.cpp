@@ -266,8 +266,6 @@ bool ADM_Composer::addFile (const char *name)
   if (!nbAStream)
     {
       printf ("[Editor] *** NO AUDIO ***\n");
-      video.audioTracks = NULL;
-      video.nbAudioStream=0;
       video.currentAudioStream=0;
     }
   else
@@ -281,8 +279,7 @@ bool ADM_Composer::addFile (const char *name)
 
       _VIDEOS *thisVid=&(video);
       // Create streams
-      thisVid->audioTracks=new ADM_audioStreamTrack*[nbAStream];
-      thisVid->nbAudioStream=nbAStream;
+      
       for(int i=0;i<nbAStream;i++)
       {
             ADM_audioStreamTrack *track=new ADM_audioStreamTrack;
@@ -307,7 +304,7 @@ bool ADM_Composer::addFile (const char *name)
             stream->getExtraData(&extraLen,&extraData);
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
 
-            thisVid->audioTracks[i]=track;
+            thisVid->audioTracks.push_back(track);
 
       }
     }
@@ -466,17 +463,17 @@ uint32_t ref;
 
     _VIDEOS *v=_segments.getRefVideo(ref);
     ADM_assert(v);
-
-    if(!v->nbAudioStream)
+    int nb=v->audioTracks.size();
+    if(!nb)
     {
         *nbStreams=0;
         *infos=NULL;
         return true;
     }
 
-    *nbStreams=v->nbAudioStream;
-    *infos=new audioInfo[*nbStreams];
-    for(int i=0;i<*nbStreams;i++)
+    *nbStreams=nb;
+    *infos=new audioInfo[nb];
+    for(int i=0;i<nb;i++)
     {
         WAVHeader *wav=&(v->audioTracks[i]->wavheader);
         audioInfo *t=(*infos)+i;
@@ -524,8 +521,7 @@ uint32_t ref;
         }
         _VIDEOS *v=_segments.getRefVideo(ref);
         ADM_assert(v);
-        ADM_audioStreamTrack **trks=v->audioTracks;
-        uint32_t nb=v->nbAudioStream;
+        uint32_t nb=v->audioTracks.size();
         if(newstream>=nb)
         {
             ADM_warning("[Editor::changeAudioStream] New stream exceeds # of stream (%d/%d)\n",(int)newstream,(int)nb);
@@ -533,8 +529,8 @@ uint32_t ref;
         }
         v->currentAudioStream=newstream;
         // Change our header also
-        wavHeader.frequency=trks[newstream]->wavheader.frequency;
-        wavHeader.channels=trks[newstream]->wavheader.channels;
+        wavHeader.frequency=v->audioTracks[newstream]->wavheader.frequency;
+        wavHeader.channels=v->audioTracks[newstream]->wavheader.channels;
         //ADM_warning("New fq=%d\n",(int)wavHeader.frequency);
         return true;
 }

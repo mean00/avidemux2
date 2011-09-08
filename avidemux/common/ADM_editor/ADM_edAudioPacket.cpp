@@ -281,7 +281,7 @@ bool            ADM_Composer::getExtraData(uint32_t *l, uint8_t **d)
 ADM_audioStreamTrack *ADM_Composer::getTrack(uint32_t refVideo)
 {
     _VIDEOS *v=_segments.getRefVideo(refVideo);
-    if(!v->audioTracks) return NULL;
+    if(!v->audioTracks.size()) return NULL;
 
     return v->audioTracks[v->currentAudioStream];
 }
