@@ -42,7 +42,7 @@
 #include "ADM_imageResizer.h"
 #include "DIA_coreToolkit.h"
 
-
+extern uint8_t              UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
 static ADM_PREVIEW_MODE     previewMode=ADM_PREVIEW_NONE;
 
@@ -83,13 +83,34 @@ ADM_HW_IMAGE admPreview::getPreferedHwImageFormat(void)
       @param h : height
 */
 
-void admPreview::setMainDimension(uint32_t w, uint32_t h)
+void admPreview::setMainDimension(uint32_t w, uint32_t h,renderZoom nzoom)
 {
   
   if(rdrImage) delete rdrImage;
   rdrImage=new ADMImageDefault(w,h);
   rdrPhysicalW=w;
   rdrPhysicalH=h;
+  if(nzoom==ZOOM_AUTO)
+  {
+      uint32_t phyW,phyH;
+      UI_getPhysicalScreenSize(NULL, &phyW,&phyH);
+      if(3*phyW<4*w || 3*phyH<4*h)
+      {
+          if(phyW<w/2 || phyH<h/2)
+          {
+                    nzoom=ZOOM_1_4;
+          }else
+          {
+                    nzoom=ZOOM_1_2;
+          }
+         
+      }
+      else
+      {
+          nzoom=ZOOM_1_1;
+      }
+  }
+  zoom=nzoom;
   renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
  // Install our hook, we will do it more than needed
  // but it does not really harm
@@ -159,7 +180,7 @@ void admPreview::deferDisplay(bool onoff)
 
 void 	admPreview::start( void )
 {
-            ADM_info("admPreview, killing\n");
+            ADM_info("admPreview,starting\n");
 }
 /**
       \fn admPreview::stop

@@ -145,7 +145,7 @@ void GUI_PlayAvi(void)
    // Resize the output window to original size...
    ADM_info("Restoring display.\n");
    
-   admPreview::setMainDimension(info.width,info.height);
+   admPreview::setMainDimension(info.width,info.height,ZOOM_AUTO);
    admPreview::seekToTime(oldTimeFrame);
    UI_purge();
    
@@ -215,7 +215,7 @@ bool GUIPlayback::initialize(void)
     int nb=videoChain->size();
     videoFilter=(*videoChain)[nb-1];
     FilterInfo *info=videoFilter->getInfo();
-    admPreview::setMainDimension(info->width,info->height);
+    admPreview::setMainDimension(info->width,info->height,ZOOM_AUTO);
 
     initializeAudio();
     return true;

@@ -51,7 +51,7 @@ renderZoom currentZoom=ZOOM_1_1;
 //******** GUI Function**************
 //***********************************
 
-extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
+
 extern uint8_t GUI_jobs(void);
 extern const char * GUI_getCustomJsScript(uint32_t nb);
 extern const char * GUI_getCustomPyScript(uint32_t nb);
@@ -600,38 +600,13 @@ void  updateLoaded ()
     }
 
   // Init renderer
-    admPreview::setMainDimension(avifileinfo->width, avifileinfo->height);
-
-
+    admPreview::setMainDimension(avifileinfo->width, avifileinfo->height,ZOOM_AUTO);
   // Draw first frame
-  GUI_setAllFrameAndTime();
-  A_ResetMarkers();
-//  getFirstVideoFilter(); // Rebuild filter if needed
-
-  /* Zoom out if needed */
-  uint32_t phyW,phyH;
-  UI_getPhysicalScreenSize(NULL, &phyW,&phyH);
-  if(3*phyW<4*avifileinfo->width || 3*phyH<4*avifileinfo->height)
-  {
-      if(phyW<avifileinfo->width/2 || phyH<avifileinfo->height/2)
-      {
-                currentZoom=ZOOM_1_4;
-      }else
-      {
-                currentZoom=ZOOM_1_2;
-      }
-     changePreviewZoom(currentZoom);
-  }
-  else
-  {
-      currentZoom=ZOOM_1_1;
-      changePreviewZoom(currentZoom);
-  }
-
-
-   A_Rewind();
-   ADM_info(" conf updated \n");
-   UI_setDecoderName(video_body->getVideoDecoderName());
+    GUI_setAllFrameAndTime();
+    A_ResetMarkers();
+    A_Rewind();
+    ADM_info(" conf updated \n");
+    UI_setDecoderName(video_body->getVideoDecoderName());
 
 }
 
@@ -997,7 +972,7 @@ uint8_t GUI_close(void)
   if (avifileinfo)		// already opened ?
     {				// delete everything
       // if preview is on
-      admPreview::setMainDimension(0, 0);
+      admPreview::setMainDimension(0, 0,ZOOM_1_1);
       if(getPreviewMode()!=ADM_PREVIEW_NONE)
       {
         admPreview::stop();
@@ -1174,7 +1149,10 @@ uint64_t duration=video_body->getVideoDuration();
 */
 void A_Rewind(void)
 {
+               admPreview::stop();
                video_body->rewind();
+               admPreview::start();
+               admPreview::samePicture();
                admPreview::samePicture();
                GUI_setCurrentFrameAndTime();
 }

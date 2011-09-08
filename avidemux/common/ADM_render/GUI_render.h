@@ -30,6 +30,7 @@ typedef enum
         ZOOM_1_1,
         ZOOM_2,
         ZOOM_4,
+        ZOOM_AUTO,
         ZOOM_INVALID
 }renderZoom;
 

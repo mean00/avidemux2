@@ -33,7 +33,7 @@ class admPreview
       static bool seekToIntraPts(uint64_t timeframe);
       static void start(void);
       static void stop(void);
-      static void setMainDimension(uint32_t, uint32_t );
+      static void setMainDimension(uint32_t, uint32_t ,renderZoom);
       static void deferDisplay(bool onoff);
       static void displayNow(void);
       static void cleanUp(void);  
