@@ -199,6 +199,10 @@ AUDIO_DEVICE id=0;
 */
 void AVDM_cleanup(void)
 {
+    int nb=ListOfAudioDevices.size();
+    for(int i=0;i<nb;i++)
+            delete ListOfAudioDevices[i];
+    ListOfAudioDevices.clear();
 	if(device)
 	{
 		delete device;

@@ -192,6 +192,7 @@ bool ADM_ad_cleanup(void)
     for(int i=0;i<ADM_audioPlugins.size();i++)
     {
         ADM_ad_plugin *a=ADM_audioPlugins[i];
+        ADM_dealloc(a->name );
         delete a;
         ADM_audioPlugins[i]=NULL;
     }

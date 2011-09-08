@@ -176,6 +176,7 @@ void ADM_ve6_cleanup(void)
                         if(ListOfEncoders[i]) delete ListOfEncoders[i];
                         ListOfEncoders[i]=NULL;
                 }
+        ListOfEncoders.clear();
 }
 
 /**

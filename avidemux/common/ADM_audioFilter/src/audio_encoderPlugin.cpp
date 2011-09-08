@@ -181,6 +181,7 @@ bool ADM_ae_cleanup(void)
         delete a;
         ListOfAudioEncoder[i]=NULL;
 	}
+    
     ListOfAudioEncoder.clear();
     return true;
 }

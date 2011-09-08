@@ -89,6 +89,7 @@ extern bool ADM_ae_cleanup(void);
 extern bool ADM_mx_cleanup(void);
 extern bool ADM_vf_cleanup(void);
 extern bool ADM_dm_cleanup(void);
+extern void ADM_ve6_cleanup(void);
 extern bool ADM_vf_clearFilters(void);
 
 extern bool vdpauProbe(void);
@@ -392,6 +393,7 @@ void onexit( void )
     ADM_vf_clearFilters();
     ADM_vf_cleanup();
     ADM_dm_cleanup();
+    ADM_ve6_cleanup();
 #if defined( USE_VDPAU) 
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     printf("cleaning VDPAU...\n");

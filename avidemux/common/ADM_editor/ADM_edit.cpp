@@ -113,6 +113,9 @@ ADM_Composer::~ADM_Composer ()
         delete  _imageBuffer;
         _imageBuffer=NULL;
     }
+    if(_scratch)
+        delete  _scratch;
+    _scratch=NULL;
 
 }
 /**
