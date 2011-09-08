@@ -105,8 +105,14 @@ ADM_Composer::~ADM_Composer ()
 	_segments.deleteAll();
     if(_pp) delete _pp;
     _pp=NULL;
-    if(_imageBuffer) delete  _imageBuffer;
-    _imageBuffer=NULL;
+    if(_imageBuffer) 
+    {
+        if(_imageBuffer->quant)
+            delete [] _imageBuffer->quant;
+        _imageBuffer->quant=NULL;
+        delete  _imageBuffer;
+        _imageBuffer=NULL;
+    }
 
 }
 /**
@@ -232,7 +238,14 @@ bool ADM_Composer::addFile (const char *name)
         _pp->forcedQuant=0;
         _pp->update();
 
-        if(_imageBuffer) delete _imageBuffer;
+        if(_imageBuffer) 
+        {
+            if(_imageBuffer->quant)
+                delete [] _imageBuffer->quant;
+            _imageBuffer->quant=NULL;
+            delete _imageBuffer;
+            _imageBuffer=NULL;
+        }
         _imageBuffer=new ADMImageDefault(info.width,info.height);
         _imageBuffer->_qSize= ((info.width+15)>>4)*((info.height+15)>>4);
         _imageBuffer->quant=new uint8_t[_imageBuffer->_qSize];

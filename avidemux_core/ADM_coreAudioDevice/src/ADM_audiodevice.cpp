@@ -121,6 +121,7 @@ uint8_t ADM_av_loadPlugins(const char *path)
 		tryLoadingFilterPlugin(files[i]);
 
 	printf("[ADM_av_plugin] Scanning done\n");
+        clearDirectoryContent(nbFile,files);
 
 	return 1;
 }

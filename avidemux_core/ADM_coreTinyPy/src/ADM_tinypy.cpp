@@ -248,11 +248,7 @@ tp_obj    tinyPy_getFolderContent(tp_vm *tp)
         _tp_list_append(tp,list.list.val,tp_string_copy(tp,tem,strlen(tem)));
     }
     // free the list
-    for(int i=0;i<nb;i++)
-    {
-        ADM_dealloc(items[i]);
-        items[i]=NULL;
-    }
+    clearDirectoryContent(nb,items);
     return list;
 
 }

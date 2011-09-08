@@ -205,7 +205,7 @@ uint8_t ADM_vf_loadPlugins(const char *path)
 		tryLoadingVideoFilterPlugin(files[i]);
 
 	printf("[ADM_vf_plugin] Scanning done, found %d video filer(s)\n", (int)ADM_vf_getNbFilters());
-
+    clearDirectoryContent(nbFile,files);
 	return 1;
 }
 /**
@@ -220,6 +220,11 @@ bool ADM_vf_cleanup(void)
         for(int i=0;i<nb;i++)
         {
             ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][i];
+            if(a->nameOfLibrary)
+            {
+                ADM_dealloc(a->nameOfLibrary);
+                a->nameOfLibrary=NULL;
+            }
             delete a;
             ADM_videoFilterPluginsList[cat][i]=NULL;
         }

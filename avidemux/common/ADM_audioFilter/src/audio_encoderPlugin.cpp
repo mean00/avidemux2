@@ -167,6 +167,7 @@ uint8_t ADM_ae_loadPlugins(const char *path)
                 ListOfAudioEncoder[i]=b;
              }
         }
+        clearDirectoryContent(nbFile,files);
 	return 1;
 }
 /**

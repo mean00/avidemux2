@@ -37,5 +37,5 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2=NULL,const
 char *ADM_getHomeRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
 #endif
 uint8_t buildDirectoryContent(uint32_t *outnb,const char *base, char *jobName[],int maxElems,const char *ext);
-
+uint8_t clearDirectoryContent(const uint32_t nb, char *jobName[]);
 #endif

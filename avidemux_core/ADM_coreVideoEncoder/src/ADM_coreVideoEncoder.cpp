@@ -204,8 +204,7 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
             ADM_copyFile(list[i],s.c_str());
         }
     }
-    for(int i=0;i<nb;i++)
-        ADM_dealloc(list[i]);
+    clearDirectoryContent(nb,list);
     return true;
 }
 /**
@@ -234,8 +233,7 @@ bool ADM_listFile(const std::string path,const std::string extension,vector <std
         // Remove extension
         listOut.push_back(s);
     }
-    for(int i=0;i<nb;i++)
-        ADM_dealloc(list[i]);
+    clearDirectoryContent(nb,list);
     return true;
 }
 

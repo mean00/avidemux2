@@ -103,6 +103,7 @@ uint8_t ADM_dm_loadPlugins(const char *path)
     for(int i=0;i<nb;i++)
         ADM_info("Demuxer plugin : %s, priority :%d\n",ListOfDemuxers[i]->name,(int)ListOfDemuxers[i]->priority);
     printf("[ADM_dm_plugin] Scanning done, %d demuxers found\n",(int)nb);
+        clearDirectoryContent(nbFile,files);
 	return 1;
 }
 /**

@@ -574,6 +574,19 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 
 	return 1;
 }
+/**
+    \fn clearDirectoryContent
+*/
+uint8_t    clearDirectoryContent(const uint32_t nb, char *jobName[])
+{
+    for(int i=0;i<nb;i++)
+        if(jobName[i])
+        {
+            ADM_dealloc(jobName[i]);
+            jobName[i]=NULL;
+        }
+    return true;
+}
 //------------------------------------------------------------------
 
 /*

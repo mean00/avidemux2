@@ -160,6 +160,7 @@ uint8_t ADM_ve6_loadPlugins(const char *path)
                 ListOfEncoders[i]=b;
              }
         }
+        clearDirectoryContent(nbFile,files);
 
 	return 1;
 }

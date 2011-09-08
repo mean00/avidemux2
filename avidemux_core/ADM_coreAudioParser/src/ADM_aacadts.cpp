@@ -137,6 +137,7 @@ ADM_adts2aac::~ADM_adts2aac()
     }
     if(codec)
     {
+        avcodec_close(CONTEXT);
         av_free(CONTEXT);
         codec=NULL;
     }

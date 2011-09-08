@@ -120,6 +120,7 @@ uint8_t ADM_vd6_loadPlugins(const char *path)
 		tryLoadingEncoderPlugin(files[i]);
     
 	printf("[ADM_vd6_plugin] Scanning done\n");
+        clearDirectoryContent(nbFile,files);
 
 	return 1;
 }

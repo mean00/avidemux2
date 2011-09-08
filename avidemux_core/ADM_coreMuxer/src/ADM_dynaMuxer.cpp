@@ -131,6 +131,7 @@ uint8_t ADM_mx_loadPlugins(const char *path)
                 ListOfMuxers[i]=b;
              }
         }
+        clearDirectoryContent(nbFile,files);
 	return 1;
 }
 /**
