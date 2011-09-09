@@ -110,6 +110,21 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     return result;
 }
 /**
+    \fn mpeg2StartCode
+    \brief returns true if the start code is potentially the 1st startcode of a PES packet inside DVB
+            We only accept pic 1st slice / Seq start/Gop start and extension
+*/
+static bool mpeg2StartCode(int code)
+{
+    if(code==0) return true;
+    if(code==0xB3) return true; // seq start
+    if(code==0xB8) return true; // GOP start
+    if(code==0xB5) return true; // GOP start
+    if(code==0xBA) return true; // GOP start
+    if(code==0xB2) return true; // GOP start
+    return false;
+}
+/**
     \fn idContent
 */
 bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
@@ -148,13 +163,21 @@ TS_PESpacket pes2(pid);
             }
             if(ADM_findMpegStartCode(ptr2+4,ptr2+len2,&scode2,&syncoff))
             {
-                ADM_warning("Found startcode1 =%x\n",scode2);
+                ADM_warning("Found startcode2 =%x\n",scode2);
             }
-            if(scode==9 && scode2==9) // AU delimiter
+            if(scode==9 && scode2==9) // AU delimiter => H264
             {
                 trackType=ADM_TS_H264;
+                ADM_warning("Probably H264\n");
                 return true;
             }
+            if(mpeg2StartCode(scode) && mpeg2StartCode(scode2)) // Maybe Mpeg2 ?
+            {
+                trackType=ADM_TS_MPEG2;
+                ADM_warning("Probably Mpeg2\n");
+                return true;
+            }
+            ADM_warning("dont know what it is...\n");
             return false;
         }
         // Is it AC3 ??
