@@ -39,8 +39,17 @@ static VdpPresentationQueue queue=VDP_INVALID_HANDLE;
 */
 vdpauRender::vdpauRender( void )
 {
-
+    
 }
+/**
+    \đn dtor
+*/
+vdpauRender::~vdpauRender()
+{
+
+    cleanup();
+}
+
 /**
     \fn init
 */
@@ -205,5 +214,4 @@ bool vdpauRender::refresh(void)
     renderCompleteRedrawRequest();
     return true;
 }
-
 #endif

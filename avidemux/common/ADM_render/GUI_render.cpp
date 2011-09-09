@@ -126,6 +126,12 @@ uint8_t renderInit( void )
 void renderDestroy(void)
 {
     ADM_info("Cleaning up Render\n");
+    if(renderer)
+    {
+        renderer->stop();
+        delete renderer;
+        renderer=NULL;
+    }
 }
 
 /**
@@ -402,5 +408,4 @@ bool VideoRenderBase::baseInit(uint32_t w,uint32_t h,renderZoom zoom)
         calcDisplayFromZoom(zoom);
         return true;
 }
-
 //EOF
