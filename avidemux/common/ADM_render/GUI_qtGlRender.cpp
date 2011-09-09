@@ -77,6 +77,7 @@ bool QtGlAccelWidget::setDisplaySize(int width,int height)
     displayWidth=width;
     displayHeight=height;
     resize(displayWidth,displayHeight);
+    firstRun = true;
     return true;
 }
 /**
@@ -84,6 +85,8 @@ bool QtGlAccelWidget::setDisplaySize(int width,int height)
 */
 QtGlAccelWidget::~QtGlAccelWidget()
 {
+    if(glProgram) delete glProgram;
+    glProgram=NULL;
     glDeleteTextures(3,textureName);
 }
 /**
@@ -241,6 +244,7 @@ void QtGlAccelWidget::paintGL()
 	glEnd();
     
 }
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /**
     \fn ctor
 */
@@ -249,6 +253,14 @@ QtGlRender::QtGlRender(void)
 	glWidget = NULL;
 
 }
+/**
+    \fn dtor
+*/
+QtGlRender::~QtGlRender(void)
+{
+	stop();
+}
+
 /**
     \fn stop
 */

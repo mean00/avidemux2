@@ -57,6 +57,7 @@ static renderZoom   lastZoom=ZOOM_1_1;
 static uint8_t      _lock=0;
 
 static const UI_FUNCTIONS_T *HookFunc=NULL;
+static bool  enableDraw=true;
 
 refreshSB refreshCallback=NULL;
 /**
@@ -120,6 +121,7 @@ static   ADM_RENDER_TYPE MUI_getPreferredRender(void)
 uint8_t renderInit( void )
 {
 	draw=MUI_getDrawWidget(  );
+    enableDraw=false;
 	return 1;
 }
 
@@ -132,6 +134,7 @@ void renderDestroy(void)
         delete renderer;
         renderer=NULL;
     }
+    enableDraw=false;
 }
 
 /**
@@ -159,6 +162,7 @@ uint8_t renderUnlock(void)
 uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 {
         bool create=false;
+        enableDraw=false;
         ADM_info("Render to %"LU"x%"LU" zoom=%d\n",w,h,zoom);
         if(!renderer) create=true;
         else
@@ -167,7 +171,11 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
         }
         if(create)
         {
-            if(renderer) delete renderer;
+            if(renderer) 
+            {
+                renderer->stop();
+                delete renderer;
+            }
             renderer=NULL;
             phyW=w;
             phyH=h;
@@ -202,9 +210,12 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 //----------------------------------------
 uint8_t renderUpdateImage(ADMImage *image)
 {
+    
     ADM_assert(!_lock);
+    enableDraw=true;
     if(renderer->getPreferedImage()!=image->refType)
             image->hwDownloadFromRef();
+    
     renderer->displayImage(image);
     return 1;
 }
@@ -217,6 +228,7 @@ uint8_t renderUpdateImage(ADMImage *image)
 uint8_t renderRefresh(void)
 {
       if(_lock) return 1;
+      if(enableDraw==false) return true;
       if(renderer)
         renderer->refresh();
       return 1;
@@ -228,6 +240,7 @@ uint8_t renderRefresh(void)
 bool renderCompleteRedrawRequest(void)
 {
     ADM_info("RedrawRequest\n");
+    if(enableDraw==false) return true;
     if(refreshCallback)
         refreshCallback();
     return true;
@@ -237,6 +250,7 @@ bool renderCompleteRedrawRequest(void)
 */
 uint8_t renderExpose(void)
 {
+    if(enableDraw==false) return true;
     renderRefresh();
     return 1;
 }
@@ -351,6 +365,7 @@ uint8_t renderStartPlaying( void )
 */
 uint8_t renderStopPlaying( void )
 {      
+      
       return true;
 }
 /**
