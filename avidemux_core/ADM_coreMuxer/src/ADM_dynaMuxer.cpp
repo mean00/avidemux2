@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <vector>
+#include <BVector.h>
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerProto.h"
@@ -22,7 +22,7 @@ void ADM_MuxersCleanup(void);
 
 ADM_muxer *ADM_muxerSpawn(uint32_t magic,const char *name);
 
-std::vector <ADM_dynMuxer *> ListOfMuxers;
+BVector <ADM_dynMuxer *> ListOfMuxers;
 /**
     \fn ADM_mux_configure
     \brief 
@@ -83,7 +83,7 @@ static bool tryLoadingMuxerPlugin(const char *file)
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->apiVersion!=ADM_MUXER_API_VERSION) Fail(WrongApiVersion);
 
-    ListOfMuxers.push_back(dll); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfMuxers.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[Muxers] Registered filter %s as  %s\n",file,dll->descriptor);
     return true;
 	// Fail!

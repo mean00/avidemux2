@@ -103,7 +103,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 fseeko( f, 0, SEEK_SET );
                  newFd.fileSizeCumul=0;
                 _size=newFd.fileSize;
-                listOfFd.push_back(newFd);
+                listOfFd.append(newFd);
                 aprintf( " file: %s, size: %"LLU"\n", filename, newFd.fileSize );
                 aprintf( " found 1 files \n" );
                 aprintf( "Done \n" );
@@ -165,7 +165,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), outName.c_str(),
                                             myFd.fileSize );
 
-                listOfFd.push_back(myFd);
+                listOfFd.append(myFd);
                 count++;
                 current++;
         } 

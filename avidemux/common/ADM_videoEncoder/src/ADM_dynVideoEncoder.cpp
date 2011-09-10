@@ -16,7 +16,7 @@
 
 
 #include "ADM_default.h"
-#include <vector>
+#include <BVector.h>
 
 #include "DIA_fileSel.h"
 
@@ -55,7 +55,7 @@ public:
         }
 };
 
-std::vector <ADM_videoEncoder6 *> ListOfEncoders;
+BVector <ADM_videoEncoder6 *> ListOfEncoders;
 // 
 ADM_videoEncoderDesc copyDesc={
         "Copy",
@@ -109,7 +109,7 @@ static bool tryLoadingEncoderPlugin(const char *file)
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->desc->apiVersion!=ADM_VIDEO_ENCODER_API_VERSION) Fail(WrongApiVersion);
 //fixme todo also check uiType    
-    ListOfEncoders.push_back(dll); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfEncoders.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[VideoEncoder6] Registered filter %s as  %s\n",file,dll->desc->description);
     return true;
 	// Fail!
@@ -141,7 +141,7 @@ uint8_t ADM_ve6_loadPlugins(const char *path)
     // Add our copy encoder....
     ADM_videoEncoder6 *dll=new ADM_videoEncoder6("copyADM");
     dll->desc=&copyDesc;
-    ListOfEncoders.push_back(dll);
+    ListOfEncoders.append(dll);
 
 	for(int i=0;i<nbFile;i++)
 		tryLoadingEncoderPlugin(files[i]);

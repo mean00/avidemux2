@@ -14,14 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <vector>
+#include <BVector.h>
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
 #include "audio_out.h"
 #include "ADM_audioDeviceInternal.h"
 #include "prefs.h"
 #include "ADM_dynamicLoading.h"
-std::vector <ADM_AudioDevices *> ListOfAudioDevices;
+BVector <ADM_AudioDevices *> ListOfAudioDevices;
 
 
 static audioDeviceThreaded *device=NULL;
@@ -80,7 +80,7 @@ static bool tryLoadingFilterPlugin(const char *file)
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->apiVersion!=ADM_AUDIO_DEVICE_API_VERSION) Fail(WrongApiVersion);
 
-    ListOfAudioDevices.push_back(dll); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfAudioDevices.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[Filters] Registered filter %s as  %s\n",file,dll->descriptor);
     return true;
 	// Fail!
@@ -107,7 +107,7 @@ uint8_t ADM_av_loadPlugins(const char *path)
                                 DummyCreateAudioDevice,
                                 DummyDeleteAudioDevice);
     
-    ListOfAudioDevices.push_back(dummyDevice); 
+    ListOfAudioDevices.append(dummyDevice); 
 	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
 	printf("[ADM_av_plugin] Scanning directory %s\n",path);
 

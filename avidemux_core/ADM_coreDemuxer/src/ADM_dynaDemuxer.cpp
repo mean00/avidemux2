@@ -13,14 +13,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <vector>
+#include <BVector.h>
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 bool ADM_dm_cleanup(void);
 void ADM_demuxersCleanup(void);
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
-std::vector <ADM_demuxer *> ListOfDemuxers;
+BVector <ADM_demuxer *> ListOfDemuxers;
 
 
 /**
@@ -54,7 +54,7 @@ static bool tryLoadingDemuxerPlugin(const char *file)
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->apiVersion!=ADM_DEMUXER_API_VERSION) Fail(WrongApiVersion);
 
-    ListOfDemuxers.push_back(dll); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfDemuxers.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[Demuxers] Registered filter %s as  %s\n",file,dll->descriptor);
     return true;
 	// Fail!

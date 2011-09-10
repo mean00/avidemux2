@@ -17,7 +17,7 @@
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_videoFilterApi.h"
-#include <vector>
+#include <BVector.h>
 
 #if 1
 #define aprintf printf
@@ -75,7 +75,7 @@ class ADM_vf_plugin : public ADM_LibWrapper
 		};
 };
 
-std::vector<ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
+BVector<ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 /**
  * 	\fn tryLoadingVideoFilterPlugin
  *  \brief try to load the plugin given as argument..
@@ -128,7 +128,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
     }else   
     {
         plugin->tag=ADM_videoFilterPluginsList[info->category].size()+info->category*100;
-        ADM_videoFilterPluginsList[info->category].push_back(plugin);
+        ADM_videoFilterPluginsList[info->category].append(plugin);
     }
 
 	return 1;

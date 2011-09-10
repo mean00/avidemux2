@@ -11,6 +11,7 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
+#include "BVector.h"
 #include "ADM_default.h"
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
@@ -19,7 +20,7 @@
 #include "ADM_filterThread.h"
 static ADM_coreVideoFilter *bridge=NULL;
 
-std::vector<ADM_VideoFilterElement> ADM_VideoFilters;
+BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 
 /**
     \fn ADM_vf_getSize
@@ -86,7 +87,7 @@ bool                    ADM_vf_addFilterFromTag(uint32_t tag,CONFcouple *c,bool 
     ADM_VideoFilterElement e;
     e.tag=tag;
     e.instance=nw;
-    ADM_VideoFilters.push_back(e);
+    ADM_VideoFilters.append(e);
     return true;
 }
 /**
@@ -98,7 +99,7 @@ static bool ADM_vf_recreateChain(void)
     ADM_assert(bridge);
     ADM_coreVideoFilter *f=bridge;
     
-    std::vector<ADM_coreVideoFilter *> bin;
+    BVector <ADM_coreVideoFilter *> bin;
     for(int i=0;i<ADM_VideoFilters.size();i++)
     {
             // Get configuration
@@ -108,7 +109,7 @@ static bool ADM_vf_recreateChain(void)
             old->getCoupledConf(&c);
             ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
             ADM_VideoFilters[i].instance=nw;
-            bin.push_back(old);
+            bin.append(old);
             if(c) delete c;
             f=nw;
     }
@@ -132,7 +133,7 @@ bool ADM_vf_removeFilterAtIndex(int index)
     // last filter, destroy..
     ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
     delete e->instance;
-    ADM_VideoFilters.erase(ADM_VideoFilters.begin() + index);        
+    ADM_VideoFilters.removeAt(index);        
     return ADM_vf_recreateChain();
 }
 /**

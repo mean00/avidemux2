@@ -15,7 +15,7 @@
  ***************************************************************************/
 #ifndef ADM_VIDEO_FILTERS_H
 #define ADM_VIDEO_FILTERS_H
-
+#include "BVector.h"
 class ADM_coreVideoFilter;
 /**
     \struct ADM_VideoFilterElment
@@ -26,7 +26,7 @@ typedef struct
     ADM_coreVideoFilter *instance;
 }ADM_VideoFilterElement;
 
-extern std::vector<ADM_VideoFilterElement> ADM_VideoFilters;
+extern BVector<ADM_VideoFilterElement> ADM_VideoFilters;
 
 // Get list
 uint32_t                ADM_vf_getSize(void);

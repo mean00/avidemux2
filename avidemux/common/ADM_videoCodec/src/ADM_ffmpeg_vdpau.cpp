@@ -21,6 +21,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_cpp.h"
+#include "BVector.h"
 #include "ADM_default.h"
 
 #ifdef USE_VDPAU
@@ -44,7 +45,7 @@ extern "C" {
 static bool         vdpauWorking=false;
 static admMutex     surfaceMutex;
 static bool         destroyingFlag=false;
-static vector   <void *> destroyedList;
+static BVector   <void *> destroyedList;
 #define aprintf(...) {}
 
 typedef enum 
@@ -373,7 +374,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
         ADM_info("[VDPAU] Cleaning up\n");
         destroying=true;
         destroyingFlag=true;
-        destroyedList.push_back(VDPAU);
+        destroyedList.append(VDPAU);
         for(int i=0;i<NB_SURFACE;i++)
         {
             if(VDPAU->renders[i])

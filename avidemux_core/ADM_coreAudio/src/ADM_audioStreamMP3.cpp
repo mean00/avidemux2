@@ -168,7 +168,7 @@ DIA_workingBase *work=createWorking("Building time map");
             seek->offset=access->getPos();
             seek->timeStamp=lastDts;
             // Mark this point
-            seekPoints.push_back(seek);
+            seekPoints.append(seek);
             markCounter=0;
         }
 

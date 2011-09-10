@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_cpp.h"
+#include "BVector.h"
 #include "ADM_default.h"
 
 #include <stdarg.h>
@@ -37,7 +38,7 @@ static pyFuncs addons[]={
                                 {"get_file_size",tinyPy_getFileSize},
                                 {NULL,NULL}
                         };
-static vector <admPyClassDescriptor> listOfPyClass;;
+static BVector <admPyClassDescriptor> listOfPyClass;;
 
 extern void tp_hook_set_syslib(const char *sysLib);
 /**
@@ -194,7 +195,7 @@ bool    tinyPy::registerClass(const char *className,pyRegisterClass classPy, con
     admPyClassDescriptor  classDesc;
     classDesc.className=string(className);
     classDesc.desc=string(desc);
-    listOfPyClass.push_back(classDesc);
+    listOfPyClass.append(classDesc);
     
     tp_set(INSTANCE, INSTANCE->builtins, tp_string(className), classPy(INSTANCE));
     return true;

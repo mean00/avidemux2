@@ -17,8 +17,7 @@
 #ifndef FPARSER_
 #define FPARSER_
 #define DMX_BUFFER 1024*100
-#include <vector>
-using std::vector;
+#include <BVector.h>
 
 /*
         _off is the logical offset in the file
@@ -57,7 +56,7 @@ public:
             uint64_t _off;              // Absolute offset
             
             uint32_t _curFd;        
-            vector <fdIo> listOfFd;
+            BVector <fdIo> listOfFd;
             uint64_t _head,_tail,_size;       
            
         public:

@@ -17,7 +17,7 @@
 
 #ifndef ADM_INDEXFILE_H
 #define ADM_INDEXFILE_H
-#include <vector>
+#include <BVector.h>
 /**
     \class indexFile
     \brief Read a index file easily
@@ -57,7 +57,7 @@ protected:
     void            purgeTokens(void);
 
     FILE            *file;
-    std::vector <dmxToken *> ListOfTokens;
+    BVector         <dmxToken *> ListOfTokens;
 public:
 
         indexFile();

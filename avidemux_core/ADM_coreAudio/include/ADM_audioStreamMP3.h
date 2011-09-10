@@ -17,8 +17,7 @@
 #define ADM_audioStreamMP3_H
 
 #include "ADM_audioStreamBuffered.h"
-#include <vector>
-using namespace std;
+#include <BVector.h>
 
 typedef struct
 {
@@ -34,7 +33,7 @@ typedef struct
 class ADM_audioStreamMP3 : public ADM_audioStreamBuffered
 {
         protected:
-                      vector <MP3_seekPoint *> seekPoints;
+                      BVector <MP3_seekPoint *> seekPoints;
         bool            buildTimeMap(void);
         public:
 /// Default constructor

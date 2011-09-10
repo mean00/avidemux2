@@ -92,11 +92,10 @@ indexFile::~indexFile()
 */
 void  indexFile::purgeTokens(void)
 {
-    while(ListOfTokens.size())
-    {
-        delete ListOfTokens[0];
-        ListOfTokens.erase(ListOfTokens.begin());
-    }
+    int nb=ListOfTokens.size();
+    for(int i=0;i<nb;i++)
+        delete ListOfTokens[i];
+    ListOfTokens.clear();
 }
 /**
 
@@ -193,7 +192,7 @@ bool indexFile::readSection(const char *section)
             *tail=0;
             tail++;
             dmxToken *tk=new dmxToken(head,tail);
-            ListOfTokens.push_back(tk);
+            ListOfTokens.append(tk);
         }
     }
     return true;

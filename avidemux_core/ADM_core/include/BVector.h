@@ -234,7 +234,9 @@ void BVector<T>::setCapacity(int in_capacity){
         {
                 return; // no shrink...
         }
-
+        // Grow by at least 50%
+        int targetCap=(this->capacity*3)/2;
+        if(targetCap>in_capacity) in_capacity=targetCap;
 
         T* nbuffer = new T[in_capacity]; 
 

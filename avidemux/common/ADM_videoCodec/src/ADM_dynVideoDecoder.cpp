@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include <vector>
+#include <BVector.h>
 
 #include "DIA_fileSel.h"
 #include "ADM_coreVideoDecoderInternal.h"
@@ -48,7 +48,7 @@ public:
         }
 };
 
-std::vector <ADM_videoDecoder6 *> ListOfDecoders;
+BVector <ADM_videoDecoder6 *> ListOfDecoders;
 // 
 
 /**
@@ -86,7 +86,7 @@ static bool tryLoadingEncoderPlugin(const char *file)
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->desc->apiVersion!=ADM_VIDEO_DECODER_API_VERSION) Fail(WrongApiVersion);
 //fixme todo also check uiType    
-    ListOfDecoders.push_back(dll); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfDecoders.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[VideoDecoder6] Registered filter %s as  %s\n",file,dll->desc->description);
     return true;
 	// Fail!
