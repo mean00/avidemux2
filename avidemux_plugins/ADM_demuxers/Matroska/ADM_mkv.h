@@ -25,7 +25,7 @@
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 #include "ADM_ebml.h"
-#include <vector>
+#include <BVector.h>
 #define MKV_MAX_REPEAT_HEADER_SIZE 16
 /**
     \struct mkvIndex
@@ -40,7 +40,7 @@ typedef struct
     uint64_t Pts;   // Pts in us
 }mkvIndex;
 
-typedef std::vector <mkvIndex > mkvListOfIndex;
+typedef BVector <mkvIndex > mkvListOfIndex;
 /**
     \struct mkvTrak
     \brief Hold information about a give track, the track #0  is always video.
@@ -134,7 +134,7 @@ class mkvHeader         :public vidHeader
     char                    *_filename;
     mkvTrak                 _tracks[ADM_MKV_MAX_TRACKS+1];
 
-    vector <mkvIndex    >   _clusters;
+    BVector <mkvIndex    >   _clusters;
 
     uint32_t                _nbAudioTrack;
     uint32_t                _currentAudioTrack;

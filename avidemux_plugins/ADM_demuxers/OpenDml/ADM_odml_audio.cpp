@@ -69,7 +69,7 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
                 current.offset=start;
                 current.size=ONE_CHUNK;
                 current.dts=ADM_NO_PTS;
-                myIndex.push_back(current);
+                myIndex.append(current);
                 start+=ONE_CHUNK;
                 size-=ONE_CHUNK;
             }
@@ -77,13 +77,13 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
                 current.offset=start;
                 current.size=size;
                 current.dts=ADM_NO_PTS;
-                myIndex.push_back(current);
+                myIndex.append(current);
         }
 
     }else
     {       // Duplicate index as is
         for(int i=0;i<nbChunk;i++)
-          myIndex.push_back(idx[i]);
+          myIndex.append(idx[i]);
     }
     fd=ADM_fopen(name,"r");
     ADM_assert(fd);

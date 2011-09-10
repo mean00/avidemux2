@@ -171,7 +171,7 @@ bool psHeader::processVideoIndex(char *buffer)
                         case 'B': frame->pictureType=AVI_FIELD_STRUCTURE+AVI_BOTTOM_FIELD;break;
                 }
                 frame->len=len;
-                ListOfFrames.push_back(frame);
+                ListOfFrames.append(frame);
                 count++;
                 if(!next) 
                 {
@@ -251,7 +251,7 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
             desc->stream=NULL;
             desc->access=access;
             memcpy(&(desc->header),&hdr,sizeof(hdr));
-            listOfAudioTracks.push_back(desc);
+            listOfAudioTracks.append(desc);
 
 
     }
@@ -291,7 +291,7 @@ bool    psHeader::readScrReset(indexFile *index)
         scrGap gap;
         gap.position=position;
         gap.timeOffset=timeOffset;
-        listOfScrGap.push_back(gap);
+        listOfScrGap.append(gap);
     }
   
     return true;

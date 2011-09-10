@@ -180,7 +180,7 @@ uint8_t audioBuffer[PROBE_ANALYZE_SIZE];
                         ADM_assert(0);
 
         }
-        list->push_back(info);
+        list->append(info);
         return true;
 er:
         delete info;
@@ -195,7 +195,7 @@ bool DestroyListOfPsAudioTracks(listOfPsAudioTracks *list)
     while( list->size())
     {
         delete (*list)[0];
-        list->erase(list->begin());
+        list->popFront();
     }
     delete list;
     return true;

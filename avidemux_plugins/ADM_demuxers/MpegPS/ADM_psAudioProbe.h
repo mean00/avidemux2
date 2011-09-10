@@ -16,15 +16,15 @@
  ***************************************************************************/
 #ifndef ADM_PS_AUDIO_PROBE_H
 #define ADM_PS_AUDIO_PROBE_H
-#include <vector>
-using std::vector;
+#include <BVector.h>
+
 typedef struct
 {
     WAVHeader header;
     uint8_t   esID;
 }psAudioTrackInfo;
 
-typedef vector <psAudioTrackInfo*> listOfPsAudioTracks;
+typedef BVector <psAudioTrackInfo*> listOfPsAudioTracks;
 
 /// Returns a list of audio tracks found in the file.
 listOfPsAudioTracks *psProbeAudio(const char *fileName);

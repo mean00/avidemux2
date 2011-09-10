@@ -120,7 +120,7 @@ protected:
         uint64_t         lastValidVideoDts;
         uint64_t         timeOffset; // In 90 khz Tick
         bool             handleScrReset(uint64_t dts);
-        vector <scrGap>  listOfScrReset;
+        BVector <scrGap> listOfScrReset;
         bool             writeScrReset(void);
 public:
                 PsIndexer(void);
@@ -604,7 +604,7 @@ bool PsIndexer::handleScrReset(uint64_t dts)
               scrGap newGap;
               newGap.position=newPosition;
               newGap.timeOffset=newOffset;
-              listOfScrReset.push_back(newGap);
+              listOfScrReset.append(newGap);
               return true;
         }else
         {

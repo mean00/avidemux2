@@ -36,7 +36,7 @@ bool psHeader::updatePtsDts(void)
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
 
-            vector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            BVector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
             uint64_t dts=(*seekPoints)[0].dts;
             if(dts!=ADM_NO_PTS) continue;
             ADM_warning("[PS] Audio track %d has no timestamp for first seek point, guessing...\n",i);
@@ -56,7 +56,7 @@ bool psHeader::updatePtsDts(void)
             // Remove first seek point with no PTS...
             if(offset) ADM_info("Deleting %d seekPoints with no timestamp\n",offset);
             for(int rm=0;rm<offset;rm++)
-                    (*seekPoints).erase( (*seekPoints).begin());
+                    (*seekPoints).popFront();
 #else
 
             // Compute the missing DTS using byterate and assuming CBR
@@ -102,7 +102,7 @@ next:
         // at video
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
-            vector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            BVector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
             uint64_t secondDts=(*seekPoints)[0].dts;
             uint64_t secondSize=(*seekPoints)[0].size;
             if(secondSize && listOfAudioTracks[i]->header.byterate)
@@ -120,7 +120,7 @@ next:
                 sk.dts=firstDts;
                 sk.size=0;
                 sk.position=ListOfFrames[0]->startAt;
-                (*seekPoints).insert( (*seekPoints).begin(),sk);
+                (*seekPoints).pushFront(sk);
 
             }
         }

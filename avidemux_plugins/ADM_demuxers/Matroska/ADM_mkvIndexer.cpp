@@ -205,7 +205,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
 
     }
   }
-  Track->index.push_back(ix);
+  Track->index.append(ix);
 
   return 1;
 }
@@ -353,7 +353,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
      work->update(segment.tell()>>10,fileSize>>10);
      tmpCluster.pos=segment.tell();
      tmpCluster.size=alen;
-     _clusters.push_back(tmpCluster);
+     _clusters.append(tmpCluster);
 
      // Normally the timecode is the 1st one following
 

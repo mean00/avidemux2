@@ -25,9 +25,9 @@
 #include "dmx_io.h"
 #include "ADM_indexFile.h"
 #include "dmxPSPacket.h"
-#include <vector>
+#include <BVector.h>
 #include "ADM_coreDemuxerMpeg.h"
-using std::vector;
+
 
 /**
     \struct scrGap
@@ -38,7 +38,7 @@ typedef struct
     uint64_t position;
     uint64_t timeOffset;
 }scrGap;
-typedef vector <scrGap> ListOfScr;
+typedef BVector <scrGap> ListOfScr;
 
 /**
     \fn ADM_psAccess
@@ -54,7 +54,7 @@ protected:
                 
 public:
                 bool            setTimeOffset(uint64_t of) {dtsOffset=of;return true;}
-                vector          <ADM_mpgAudioSeekPoint >seekPoints;
+                BVector        <ADM_mpgAudioSeekPoint >seekPoints;
                                   ADM_psAccess(const char *name,uint8_t pid,bool append); 
                 virtual           ~ADM_psAccess();
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
@@ -125,7 +125,7 @@ class psHeader         :public vidHeader
     bool    processVideoIndex(char *buffer);
     bool    processAudioIndex(char *buffer);
 
-    std::vector <dmxFrame *> ListOfFrames;      
+    BVector <dmxFrame *> ListOfFrames;      
     fileParser      parser;
     uint32_t       lastFrame;
     psPacketLinear *psPacket;
@@ -133,7 +133,7 @@ class psHeader         :public vidHeader
     bool            updatePtsDts(void);
 protected:
     ListOfScr                       listOfScrGap;
-    vector <ADM_psTrackDescriptor *>listOfAudioTracks;
+    BVector <ADM_psTrackDescriptor *>listOfAudioTracks;
   public:
 
 

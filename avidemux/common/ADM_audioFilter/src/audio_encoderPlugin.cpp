@@ -14,11 +14,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <vector>
+#include <BVector.h>
 #include "ADM_default.h"
 #include "audioencoderInternal.h"
 #include "ADM_dynamicLoading.h"
-std::vector <ADM_audioEncoder *> ListOfAudioEncoder;
+BVector <ADM_audioEncoder *> ListOfAudioEncoder;
 
 static AUDIOENCODER  currentEncoder=0; //0 is always dummy
 
@@ -117,7 +117,7 @@ static bool tryLoadingFilterPlugin(const char *file)
     if(!dll->initialised) Fail(CannotLoad);
     
 
-    ListOfAudioEncoder.push_back(dll->encoderBlock); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfAudioEncoder.append(dll->encoderBlock); // Needed for cleanup. FIXME TODO Delete it.
     printf("[AudioEncoder] Registered filter %s as  %s\n",file,dll->encoderBlock->description);
     return true;
 	// Fail!
@@ -139,7 +139,7 @@ uint8_t ADM_ae_loadPlugins(const char *path)
 	uint32_t nbFile;
     // Add the copy encoder
     ADM_AudioEncoderLoader *copy=new ADM_AudioEncoderLoader("copy","Copy");
-    ListOfAudioEncoder.push_back(copy->encoderBlock);
+    ListOfAudioEncoder.append(copy->encoderBlock);
     //
 	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
 	printf("[ADM_ae_plugin] Scanning directory %s\n",path);

@@ -57,7 +57,7 @@ ADM_mpgAudioSeekPoint s;
             s.position=at;
             s.dts=dts;
             s.size=size;
-            seekPoints.push_back(s);
+            seekPoints.append(s);
             return true;
 }
 /**

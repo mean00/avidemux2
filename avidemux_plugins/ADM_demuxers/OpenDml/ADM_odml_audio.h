@@ -1,7 +1,7 @@
 #ifndef ADM_ODML_AUDIO_H
 #define ADM_ODML_AUDIO_H
-#include <vector>
-using std::vector;
+#include <BVector.h>
+
 #include "ADM_audioStream.h"
 class odmlIndex;
 /**
@@ -16,7 +16,7 @@ protected:
                 uint32_t pos;
                 FILE     *fd;
                 uint32_t currentIndex;
-                vector <odmlIndex> myIndex;
+                BVector <odmlIndex> myIndex;
                 uint32_t   nbIndex;
                 WAVHeader *wavHeader;
                 uint64_t  currentPosition;
