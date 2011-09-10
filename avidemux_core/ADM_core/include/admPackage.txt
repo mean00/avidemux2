@@ -1,0 +1,4 @@
+Name   : BVecor
+URL    : http://berenger.eu/blog/
+License: LGPL
+

@@ -16,7 +16,7 @@
  ***************************************************************************/
 #ifndef ADM_SEGMENT_H
 #define ADM_SEGMENT_H
-#include <vector>
+#include <BVector.h>
 class ADM_audioStream;
 class ADM_Audiocodec;
 class decoders;
@@ -53,15 +53,16 @@ public:
     \struct _VIDEOS
     \brief The _VIDEOS struct is a video we have loaded.
 */
-typedef struct
+class _VIDEOS
 {
+public:
       vidHeader *_aviheader; /// Demuxer
       decoders *decoder; /// Video codec
       ADMColorScalerSimple *color; /// Color conversion if needed
 
       /* Audio part */
       uint32_t currentAudioStream;
-      vector <ADM_audioStreamTrack *>  audioTracks;
+      BVector <ADM_audioStreamTrack *>  audioTracks;
       
 
       uint32_t _nb_video_frames; /// Really needed ?
@@ -75,28 +76,54 @@ typedef struct
       uint64_t timeIncrementInUs; /// in case the video has no PTS, time increment (us)
 
       uint64_t firstFramePts; /// Pts of firstFrame
-}_VIDEOS;
+
+    _VIDEOS()
+    {
+        currentAudioStream=0;
+        _aviheader=NULL;
+        decoder=NULL;
+        color=NULL;
+        _nb_video_frames=0;
+        _videoCache=NULL;
+        lastSentFrame=0;
+        lastDecodedPts=0;
+        lastReadPts=0;
+        timeIncrementInUs=0;
+        firstFramePts=0;
+    }
+
+};
 
 /**
     \struct _SEGMENT
     \brief The video is a collection of segment.
             Each segment refers to its source (the reference) and the part of the source the segment is made of.
 */
-typedef struct
+class _SEGMENT
 {
+public:
         uint32_t _reference; /// Reference video
         uint64_t _refStartTimeUs; /// Starting time in reference
         uint64_t _startTimeUs; /// Start time in current (=sum(_duration of previous seg))
         uint64_t _durationUs; ///
         uint32_t _dropBframes;
         uint64_t _refStartDts;
-        
-} _SEGMENT;
+        void clear(void) 
+        {
+            _reference=0;
+            _refStartTimeUs=0;
+            _startTimeUs=0;
+            _durationUs=0;
+            _dropBframes=0;
+            _refStartDts=0;
+        }
+        _SEGMENT() {clear();}
+};
 /*
     Use vectors to store our videos & segments
 */
-typedef std::vector <_VIDEOS>  ListOfVideos;
-typedef std::vector <_SEGMENT> ListOfSegments;
+typedef BVector <_VIDEOS>  ListOfVideos;
+typedef BVector <_SEGMENT> ListOfSegments;
 
 /**
     \class ADM_EditorSegment

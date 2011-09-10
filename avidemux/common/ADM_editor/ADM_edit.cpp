@@ -150,7 +150,6 @@ bool ADM_Composer::addFile (const char *name)
   aviInfo    info;
   uint32_t   magic;
   _VIDEOS video;
-    memset(&video,0,sizeof(video));
 
 	if(!strcmp(name, AVS_PROXY_DUMMY_FILE))
         magic=0;
@@ -307,7 +306,7 @@ bool ADM_Composer::addFile (const char *name)
             stream->getExtraData(&extraLen,&extraData);
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
 
-            thisVid->audioTracks.push_back(track);
+            thisVid->audioTracks.pushBack(track);
 
       }
     }

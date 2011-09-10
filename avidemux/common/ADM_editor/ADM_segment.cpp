@@ -29,7 +29,8 @@
 
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
-
+    segments.setCapacity(5);
+    videos.setCapacity(5);
 }
 ADM_EditorSegment::~ADM_EditorSegment()
 {
@@ -80,7 +81,6 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   aviInfo       info;
   _SEGMENT      seg;
 
-  memset(&seg,0,sizeof(seg));
 
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
@@ -121,8 +121,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
             ref->firstFramePts=pts;
         }
 
-    segments.push_back(seg);
-    videos.push_back(*ref);
+    segments.pushBack(seg);
+    videos.pushBack(*ref);
     updateStartTime();
     return true;
 }
@@ -143,7 +143,7 @@ bool        ADM_EditorSegment::deleteSegments()
 bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
 {
     ADM_info("Adding a new segment\n");
-    segments.push_back(*seg);
+    segments.pushBack(*seg);
     updateStartTime();
     return true;
 }
@@ -215,11 +215,11 @@ bool        ADM_EditorSegment::resetSegment(void)
     {
         _SEGMENT seg;
         _VIDEOS  *vid=&(videos[i]);
-        memset(&seg,0,sizeof(seg));
+
         seg._durationUs=vid->_aviheader->getVideoDuration();
         seg._reference=i;
         vid->_aviheader->getVideoInfo(&info);
-        segments.push_back(seg);
+        segments.pushBack(seg);
     }
     updateStartTime();
     return true;
@@ -488,7 +488,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     if(startSeg==endSeg)
     {
         // Split the seg int two..
-        segments.insert(segments.begin()+startSeg+1,*getSegment(startSeg)); 
+        segments.insert(startSeg+1,*getSegment(startSeg)); 
         endSeg=startSeg+1;
 
     }
@@ -505,7 +505,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     // 2- Kill the segment in between
     for(int i=startSeg+1;i<endSeg;i++)
     {
-        segments.erase(segments.begin()+startSeg+1);
+        segments.removeAt(startSeg+1);
     }
     updateStartTime();
     removeEmptySegments();
@@ -631,7 +631,7 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
                 if(seg->_durationUs==0) index=i;
         }
         if(index==-1) break;
-        segments.erase(segments.begin()+index);
+        segments.removeAt(index);
     }
     return true;
 }

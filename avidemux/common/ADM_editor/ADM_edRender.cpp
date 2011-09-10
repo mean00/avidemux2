@@ -611,7 +611,7 @@ bool    ADM_Composer::addSegment(uint32_t ref, uint64_t startRef, uint64_t durat
 {
     ADM_assert(ref<_segments.getNbRefVideos());
     _SEGMENT seg;
-    memset(&seg,0,sizeof(seg));
+    
     seg._durationUs=duration;
     seg._reference=ref;
     seg._refStartTimeUs=startRef;

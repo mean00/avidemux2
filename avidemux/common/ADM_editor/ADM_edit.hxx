@@ -36,7 +36,7 @@
  #include "ADM_audioStream.h"
  #include "ADM_audiocodec/ADM_audiocodec.h"
  #include "ADM_segment.h"
- #include <vector>
+ #include <BVector.h>
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::" 
