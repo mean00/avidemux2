@@ -375,6 +375,9 @@ decoderFFVDPAU::~decoderFFVDPAU()
         destroying=true;
         destroyingFlag=true;
         destroyedList.append(VDPAU);
+        if(scratch)
+            delete scratch;
+        scratch=NULL;
         for(int i=0;i<NB_SURFACE;i++)
         {
             if(VDPAU->renders[i])
