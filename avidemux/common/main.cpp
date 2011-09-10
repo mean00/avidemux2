@@ -385,7 +385,7 @@ void onexit( void )
     
     admPreview::destroy();
     UI_End();
-    renderDestroy();
+    //renderDestroy();
 
     ADM_ad_cleanup();
     ADM_ae_cleanup();

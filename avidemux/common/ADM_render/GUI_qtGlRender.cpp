@@ -270,10 +270,8 @@ QtGlRender::~QtGlRender(void)
 bool QtGlRender::stop(void)
 {
 	printf("[GL Render] Renderer closed\n");
-#if 0 // deleted by qt
 	if (glWidget)
 		delete glWidget;
-#endif
     glWidget=NULL;
     return true;
 }
