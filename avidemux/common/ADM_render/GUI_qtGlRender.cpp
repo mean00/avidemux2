@@ -87,7 +87,9 @@ QtGlAccelWidget::~QtGlAccelWidget()
 {
     if(glProgram) delete glProgram;
     glProgram=NULL;
-    glDeleteTextures(3,textureName);
+    if(textureName[0])
+        glDeleteTextures(3,textureName);
+    textureName[0]=0;
 }
 /**
     \fn setImage
@@ -268,9 +270,10 @@ QtGlRender::~QtGlRender(void)
 bool QtGlRender::stop(void)
 {
 	printf("[GL Render] Renderer closed\n");
-
+#if 0 // deleted by qt
 	if (glWidget)
 		delete glWidget;
+#endif
     glWidget=NULL;
     return true;
 }
