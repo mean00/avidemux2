@@ -136,7 +136,12 @@ bool QtGlAccelWidget::setDisplaySize(int width,int height)
 QtGlAccelWidget::~QtGlAccelWidget()
 {
     ADM_info("\t Deleting glWidget\n");
-    if(glProgram) delete glProgram;
+    if(glProgram) 
+    {
+        
+        glProgram->release();
+        delete glProgram;
+    }
     glProgram=NULL;
     if(textureName[0])
         glDeleteTextures(3,textureName);
@@ -292,6 +297,7 @@ void QtGlAccelWidget::paintGL()
 	glTexCoord2i(0, imageHeight);
 	glVertex2i(0, height());
 	glEnd();
+    checkGlError("draw");
     
 }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
