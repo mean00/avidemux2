@@ -40,13 +40,16 @@ static const char *yuvToRgb =
                             
     "const vec4 offsetx=vec4(-0.07276875,-0.5,-0.5,0);\n"
     "const vec4 factorx=vec4(1.1643,1,1,1);\n"
+    "const vec2 factorTex=vec2(0.5,0.5);"
 
 	"void main(void) {\n"
 	"  float nx = gl_TexCoord[0].x;\n"
 	"  float ny = height - gl_TexCoord[0].y;\n"
-	"  float y = texture2DRect(texY, vec2(nx, ny)).r;\n"
-	"  float u = texture2DRect(texU, vec2(nx / 2.0, ny / 2.0)).r;\n"
-	"  float v = texture2DRect(texV, vec2(nx / 2.0, ny / 2.0)).r;\n"
+    "  vec2 coord=vec2(nx,ny);"
+    "  vec2 coord2=coord*factorTex;"
+	"  float y = texture2DRect(texY, coord).r;\n"
+	"  float u = texture2DRect(texU, coord2).r;\n"
+	"  float v = texture2DRect(texV, coord2).r;\n"
 
     "  vec4 inx=vec4(y,u,v,1.0);\n"
     "  vec4 inx2=(factorx*inx)+offsetx;\n"
