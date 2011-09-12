@@ -38,7 +38,7 @@ static pyFuncs addons[]={
                                 {"get_file_size",tinyPy_getFileSize},
                                 {NULL,NULL}
                         };
-static BVector <admPyClassDescriptor> listOfPyClass;;
+static BVector <admPyClassDescriptor> listOfPyClass(20);; // warning exceeding it will cause a crash!
 
 extern void tp_hook_set_syslib(const char *sysLib);
 /**
