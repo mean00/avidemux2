@@ -46,6 +46,7 @@ protected:
                     uint32_t             currentIndex;
                     VdpVideoMixer        mixer;
                     bool                 uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) ;
+                    bool                 setIdentityCSC(void);
 
 public:
         virtual bool         goToTime(uint64_t usSeek); 
@@ -68,6 +69,23 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilter,   // Class
                         "vdpau: Resize image using vdpau." // Description
                     );
 
+/**
+    \fn setIdentityCSC
+    \brief set the RGB/YUV matrix to identity so that data are still YUV at the end
+            Should not work, but it does.
+*/
+bool vdpauVideoFilter::setIdentityCSC(void)
+{
+    ADM_info("Setting custom CSC\n");
+    const VdpCSCMatrix   matrix={{1.,0,0,0},{0,1.,0,0},{0,0,1.,0}};    
+    VdpVideoMixerAttribute attributes_key[]={VDP_VIDEO_MIXER_ATTRIBUTE_CSC_MATRIX};
+    const void * attribute_values[] = {&matrix};
+    
+    VdpStatus st = admVdpau::mixerSetAttributesValue(mixer, 1,attributes_key, (void * const *)attribute_values);
+    if(st!=VDP_STATUS_OK)
+        ADM_error("Cannot set custom matrix (CSC)\n");
+    return true;
+}
 //
 /**
     \fn goToTime
@@ -118,6 +136,7 @@ bool vdpauVideoFilter::setupVdpau(void)
         ADM_error("Cannot create mixer\n");
         goto badInit;
     } 
+    setIdentityCSC();
     tempBuffer=new uint8_t[info.width*info.height*4];
     scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_RGB32A,ADM_COLOR_YV12);
     ADM_info("VDPAU setup ok\n");
@@ -249,7 +268,7 @@ bool vdpauVideoFilter::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t
     next->GetReadPlanes(planes);
 
     // Put out stuff in input...
-    printf("Uploading image to surface %d\n",surfaceIndex%ADM_NB_SURFACES);
+    //printf("Uploading image to surface %d\n",surfaceIndex%ADM_NB_SURFACES);
 
     if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
             input[surfaceIndex%ADM_NB_SURFACES],
@@ -267,7 +286,7 @@ bool vdpauVideoFilter::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t
 */
 bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    
+     bool r=false;
      if(passThrough) return previousFilter->getNextFrame(fn,image);
     // regular image, in fact we get the next image here
     VdpVideoSurface tmpSurface=VDP_INVALID_HANDLE;
@@ -286,7 +305,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         printf("image is already vdpau %d\n",(int)tmpSurface);
     }else
     {
-        printf("Uploading image to vdpau\n");
+        //printf("Uploading image to vdpau\n");
         if(false==uploadImage(next,0,nextFrame)) 
                 {
                     vidCache->unlockAll();
@@ -314,29 +333,13 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         vidCache->unlockAll();
         return false;
     }
-    // Convert from VDP_RGBA_FORMAT_B8G8R8A8 to YV12
-    uint32_t sourceStride[3]={info.width*4,0,0};
-    uint8_t  *sourceData[3]={tempBuffer,NULL,NULL};
-    uint32_t destStride[3];
-    uint8_t  *destData[3];
-
-    image->GetPitches(destStride);
-    image->GetWritePlanes(destData);
-
-    // Invert U&V
-    uint32_t ts;
-    uint8_t  *td;
-#if 0
-    ts=destStride[2];destStride[2]=destStride[1];destStride[1]=ts;
-    td=destData[2];destData[2]=destData[1];destData[1]=td;
-#endif
-    scaler->convertPlanes(  sourceStride,destStride,     
-                            sourceData,destData);
+    r=image->convertFromYUV444(tempBuffer);
+   
     nextFrame++;
     currentIndex++;
     vidCache->unlockAll();
     
-    return true;
+    return r;
 }
 #else // USE_VDPAU
 static void dumy_func2(void)
