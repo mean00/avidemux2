@@ -45,5 +45,6 @@ class admPreview
       static void destroy(void);
       static bool updateImage(void);
       static ADM_HW_IMAGE getPreferedHwImageFormat(void);
+      static renderZoom getCurrentZoom();
 };
 #endif

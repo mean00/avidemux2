@@ -111,6 +111,7 @@ void GUI_PlayAvi(void)
     uint32_t max,err;
     uint64_t oldTimeFrame;
     aviInfo info;
+    renderZoom oldZoom=admPreview::getCurrentZoom();
     video_body->getVideoInfo(&info);
 
     // check we got everything...
@@ -146,7 +147,7 @@ void GUI_PlayAvi(void)
    // Resize the output window to original size...
    ADM_info("Restoring display.\n");
    
-   admPreview::setMainDimension(info.width,info.height,ZOOM_AUTO);
+   admPreview::setMainDimension(info.width,info.height,oldZoom);
    admPreview::seekToTime(oldTimeFrame);
    UI_purge();
    

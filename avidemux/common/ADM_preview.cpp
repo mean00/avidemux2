@@ -116,7 +116,13 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h,renderZoom nzoom)
  // but it does not really harm
   renderHookRefreshRequest(admPreview::updateImage);
 }
-
+/**
+    \fn getCurrentZoom
+*/
+renderZoom admPreview::getCurrentZoom()
+{
+    return zoom;
+}
 
 /**
       \fn getPreviewMode
