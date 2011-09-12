@@ -89,6 +89,7 @@ GUIPlayback::GUIPlayback(void)
     wavbuf=NULL;
     videoFilter=NULL;
     videoChain=NULL;
+    initialized=false;
 }
 /**
     \fn ~GUIPlayback

@@ -152,7 +152,6 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
   uint32_t written, max;
   uint64_t dts;
   DIA_workingBase *work;
-  FILE *out;
 #define ONE_STRIKE (64*1024)
   uint8_t *buffer=NULL;
 
