@@ -177,6 +177,15 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     // glTexture TODO
 }
 /**
+    \fn resizeFBO
+*/
+bool ADM_coreVideoFilterQtGl::resizeFBO(uint32_t w,uint32_t h)
+{
+    if(fboY) delete fboY;
+    fboY=new QGLFramebufferObject(w,h);
+    return true;
+}
+/**
     \fn dtor
 */
 ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()

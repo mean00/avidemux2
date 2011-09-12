@@ -35,6 +35,9 @@ protected:
                             QGLShaderProgram     *glProgramUV;
                             int                   firstRun;
                             GLuint                texName[3];
+
+                            bool                  resizeFBO(uint32_t w,uint32_t h);
+
 protected:
                             // image <--> texture
                             void uploadAllPlanes(ADMImage *image);
