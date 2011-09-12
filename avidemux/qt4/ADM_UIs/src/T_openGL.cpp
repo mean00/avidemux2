@@ -200,7 +200,9 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
     fboY=NULL;
     if(fboUV) delete fboUV;
     fboUV=NULL;
-    if(widget) delete widget;       
+    // MEMLEAK : CAUSE A CRASH
+    // Will be deleted when top level widget is cleared out by Qt
+    //if(widget) delete widget;       
     widget=NULL;
     if(ADM_glHasARB)
         ADM_glExt::deleteBuffers(1,&bufferARB);
