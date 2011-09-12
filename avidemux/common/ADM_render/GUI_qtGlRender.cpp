@@ -33,6 +33,13 @@ static const char *yuvToRgb =
 	"#extension GL_ARB_texture_rectangle: enable\n"
 	"uniform sampler2DRect texY, texU, texV;\n"
 	"uniform float height;\n"
+    "const mat4 mytrix=mat4( 1,   0,         1.5958,   0,"
+                            "1,  -0.39173,  -0.81290,  0,"
+                            "1,   2.017,      0,       0,"
+                            "0,        0,     0,       1);\n"
+                            
+    "const vec4 offsetx=vec4(-0.07276875,-0.5,-0.5,0);\n"
+    "const vec4 factorx=vec4(1.1643,1,1,1);\n"
 
 	"void main(void) {\n"
 	"  float nx = gl_TexCoord[0].x;\n"
@@ -41,15 +48,10 @@ static const char *yuvToRgb =
 	"  float u = texture2DRect(texU, vec2(nx / 2.0, ny / 2.0)).r;\n"
 	"  float v = texture2DRect(texV, vec2(nx / 2.0, ny / 2.0)).r;\n"
 
-	"  y = 1.1643 * (y - 0.0625);\n"
-	"  u = u - 0.5;\n"
-	"  v = v - 0.5;\n"
-
-	"  float r = y + 1.5958 * v;\n"
-	"  float g = y - 0.39173 * u - 0.81290 * v;\n"
-	"  float b = y + 2.017 * u;\n"
-
-	"  gl_FragColor = vec4(r, g, b, 1.0);\n"
+    "  vec4 inx=vec4(y,u,v,1.0);\n"
+    "  vec4 inx2=(factorx*inx)+offsetx;\n"
+    "  vec4 outx=inx2*mytrix;\n"
+	"  gl_FragColor = outx;\n"
 	"}\n";
 
 /**
@@ -321,10 +323,12 @@ bool QtGlRender::displayImage(ADMImage *pic)
 bool QtGlRender::changeZoom(renderZoom newZoom)
 {
     ADM_info("changing zoom, qtGl render.\n");
+    glWidget->makeCurrent();
     calcDisplayFromZoom(newZoom);
     currentZoom=newZoom;
     glWidget->setDisplaySize(displayWidth,displayHeight);
     glWidget->repaint();
+    glWidget->doneCurrent();
     return true;
 }
 /**
