@@ -19,13 +19,16 @@
 #include "GUI_render.h"
 #include "GUI_accelRender.h"
 #include "ADM_colorspace.h"
-
+/**
+    \class QtGlAccelWidget
+*/
 class QtGlAccelWidget : public QGLWidget
 {
 private:
 	int             imageWidth, imageHeight;
     int             displayWidth,displayHeight;
 	bool            firstRun;
+    
 
 	QGLShaderProgram *glProgram;
 	GLsizei textureRealWidths[3];
@@ -33,10 +36,6 @@ private:
 	GLsizei textureHeights[3];
 	uint8_t *textureOffsets[3];
     GLuint  textureName[3];
-#ifndef QT_OPENGL_ES
-	typedef void (*_glActiveTexture) (GLenum);
-	_glActiveTexture glActiveTexture;
-#endif
 
 protected:
 	void initializeGL();
@@ -51,7 +50,7 @@ public:
 };
 
 /**
-    \fn class XvRender
+    \fn class QtGlRender
 */
 class QtGlRender: public VideoRenderBase
 {
