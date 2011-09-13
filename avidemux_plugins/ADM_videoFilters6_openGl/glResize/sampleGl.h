@@ -4,20 +4,13 @@ static const char *myShaderY =
 	"uniform sampler2DRect myTextureY;\n" // tex unit 0
     "uniform sampler2DRect myTextureU;\n" // tex unit 1
     "uniform sampler2DRect myTextureV;\n" // tex unit 2
-    "uniform float myWidth;\n"
-    "uniform float myHeight;\n"
-    "uniform float teta;\n"
-
+    "const vec2 half_vec=vec2(0.5,0.5);\n"
 	"void main(void) {\n"
-    "  float mx = gl_TexCoord[0].x-myWidth/2;\n"
-	"  float my = gl_TexCoord[0].y-myHeight/2;\n"
-    "  float c=cos(teta); \n"
-    "  float s=sin(teta); \n"
-    "  float nx=mx*c-my*s;\n"
-    "  float ny=mx*s+my*c;\n"
-    "  vec4 texvalV = texture2DRect(myTextureV, vec2(nx/2+myWidth/4,ny/2+myHeight/4));\n"
-    "  vec4 texvalU = texture2DRect(myTextureU, vec2(nx/2+myWidth/4,ny/2+myHeight/4));\n"
-	"  vec4 texvalY = texture2DRect(myTextureY, vec2(nx+myWidth/2,ny+myHeight/2));\n"
+    "  vec2 full_coord=gl_TexCoord[0];\n"
+    "  vec2 half_coord=full_coord*half_vec;"
+    "  vec4 texvalV = texture2DRect(myTextureV, half_coord);\n"
+    "  vec4 texvalU = texture2DRect(myTextureU, half_coord);\n"
+	"  vec4 texvalY = texture2DRect(myTextureY, full_coord);\n"
 	"  gl_FragColor = vec4(texvalY.r, texvalU.r, texvalV.r, 1.0);\n"
 	"}\n";
 

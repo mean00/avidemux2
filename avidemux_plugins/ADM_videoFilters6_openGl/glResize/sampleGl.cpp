@@ -85,6 +85,30 @@ UNUSED_ARG(setup);
         info.width=configuration.width;
         info.height=configuration.height;
         resizeFBO(info.width,info.height);
+        widget->makeCurrent();
+        fboY->bind();
+        printf("Compiling shader \n");
+        glProgramY = new QGLShaderProgram(context);
+        ADM_assert(glProgramY);
+        if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
+        {
+                ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
+                ADM_assert(0);
+        }
+        if ( !glProgramY->link())
+        {
+            ADM_error("[GL Render] Link log: %s\n", glProgramY->log().toUtf8().constData());
+            ADM_assert(0);
+        }
+
+        if ( !glProgramY->bind())
+        {
+                ADM_error("[GL Render] Binding FAILED\n");
+                ADM_assert(0);
+        }
+
+        fboY->release();
+        widget->doneCurrent();
 }
         
 /**
@@ -114,6 +138,9 @@ bool openGlResize::getNextFrame(uint32_t *fn,ADMImage *image)
     fboY->bind();
     checkGlError("bind");
     uploadAllPlanes(original);
+    glProgramY->setUniformValue("myTextureU", 1); 
+    glProgramY->setUniformValue("myTextureV", 2); 
+    glProgramY->setUniformValue("myTextureY", 0); 
     render(image,PLANAR_Y,fboY);
     downloadTextures(image,fboY);
     image->copyInfo(original);
