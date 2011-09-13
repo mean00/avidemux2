@@ -11,12 +11,6 @@
     <height>640</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>640</width>
-    <height>640</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>Avidemux</string>
   </property>
@@ -106,7 +100,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -1278,8 +1272,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>136</width>
-     <height>143</height>
+     <width>120</width>
+     <height>0</height>
     </size>
    </property>
    <property name="features">
