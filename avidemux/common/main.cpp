@@ -376,9 +376,9 @@ void onexit( void )
 	quitSdl();
 #endif
 
-#ifdef HAVE_AUDIO
+
 	AVDM_cleanup();
-#endif
+
 
 	destroyGUI();
     destroyPrefs();

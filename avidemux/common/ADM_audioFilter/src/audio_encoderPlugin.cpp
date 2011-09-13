@@ -18,7 +18,7 @@
 #include "ADM_default.h"
 #include "audioencoderInternal.h"
 #include "ADM_dynamicLoading.h"
-BVector <ADM_audioEncoder *> ListOfAudioEncoder;
+
 
 static AUDIOENCODER  currentEncoder=0; //0 is always dummy
 
@@ -82,6 +82,8 @@ public:
             
         }
 };
+static BVector <ADM_audioEncoder *> ListOfAudioEncoder;
+static BVector <ADM_AudioEncoderLoader *> ListOfAudioEncoderLoader;
 
 /**
         \fn ADM_ae_getPluginNbEncoders
@@ -116,8 +118,8 @@ static bool tryLoadingFilterPlugin(const char *file)
 	ADM_AudioEncoderLoader *dll=new ADM_AudioEncoderLoader(file);
     if(!dll->initialised) Fail(CannotLoad);
     
-
-    ListOfAudioEncoder.append(dll->encoderBlock); // Needed for cleanup. FIXME TODO Delete it.
+    ListOfAudioEncoderLoader.append(dll);
+    ListOfAudioEncoder.append(dll->encoderBlock);  // will be destroyed when Loader is destroyed
     printf("[AudioEncoder] Registered filter %s as  %s\n",file,dll->encoderBlock->description);
     return true;
 	// Fail!
@@ -175,14 +177,14 @@ uint8_t ADM_ae_loadPlugins(const char *path)
 */
 bool ADM_ae_cleanup(void)
 {
-    for(uint32_t i=1;i<ListOfAudioEncoder.size();i++)
+    for(uint32_t i=0;i<ListOfAudioEncoderLoader.size();i++)
 	{
-		ADM_audioEncoder *a=ListOfAudioEncoder[i];
+		ADM_AudioEncoderLoader *a=ListOfAudioEncoderLoader[i];
         delete a;
-        ListOfAudioEncoder[i]=NULL;
+        ListOfAudioEncoderLoader[i]=NULL;
 	}
     
-    ListOfAudioEncoder.clear();
+    ListOfAudioEncoderLoader.clear();
     return true;
 }
 /**
