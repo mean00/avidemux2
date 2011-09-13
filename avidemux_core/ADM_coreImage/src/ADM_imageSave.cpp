@@ -219,7 +219,7 @@ jpgCleanup:
     if(context)
     {
         avcodec_close (context);
-        ADM_dealloc (context);
+        av_free (context);
     }
     context=NULL;
     return result;

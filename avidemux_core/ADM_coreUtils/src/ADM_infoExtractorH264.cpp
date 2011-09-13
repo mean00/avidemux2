@@ -630,7 +630,10 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
     // cleanup
 theEnd:
     if(ctx)
+    {
         avcodec_close(ctx);
+        av_free(ctx);
+    }
     if(parser)
         av_parser_close(parser);
     return r;
