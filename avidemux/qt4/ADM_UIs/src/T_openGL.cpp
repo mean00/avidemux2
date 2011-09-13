@@ -181,8 +181,11 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
 */
 bool ADM_coreVideoFilterQtGl::resizeFBO(uint32_t w,uint32_t h)
 {
+    widget->makeCurrent();
     if(fboY) delete fboY;
     fboY=new QGLFramebufferObject(w,h);
+    widget->doneCurrent();
+    checkGlError("resizeFBO");
     return true;
 }
 /**
