@@ -86,8 +86,11 @@ void indirect_printf_long(int level,const char *modname,int entity,const char *p
 
 static void ADM_prettyPrint(const char *func,const char *color, const char *p)
 {
+#if _WIN32
+	printf("[%s] %s", func, p);
+#else
     printf("%s [%s]  %s %s",color,func,p,ADM_DEFAULT_COLOR);
-
+#endif
 }
 
 
