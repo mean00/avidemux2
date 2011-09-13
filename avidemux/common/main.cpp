@@ -128,34 +128,40 @@ extern int check_leaks();
 
 int main(int argc, char *argv[])
 {
-#if defined(__WIN32) && defined(USE_SDL)
-//	redirectStdoutToFile();
+	char uiDesc[15];
+	getUIDescription(uiDesc);
+
+#if defined(_WIN32)
+	if (strcmp(uiDesc, "CLI") != 0)
+		redirectStdoutToFile();
 #endif
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 	new_progname = argv[0];
 #endif
 
-#ifndef __MINGW32__
+#ifndef _WIN32
 	// thx smurf uk :)
     installSigHandler();
 #endif
 
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
+
   	if(ADM_SUBVERSION)
 	{
 		printf(" (r%04u)", ADM_SUBVERSION);
 	}
+
     printf("\n*************************\n");
     printf(" http://www.avidemux.org\n");
-    printf(" Code      : Mean, JSC, Gruntster \n");
-    printf(" GFX       : Nestor Di , nestordi@augcyl.org\n");
+    printf(" Code      : Mean, JSC, Grant Pedersen\n");
+    printf(" GFX       : Nestor Di, nestordi@augcyl.org\n");
     printf(" Design    : Jakub Misak\n");
     printf(" FreeBSD   : Anish Mistry, amistry@am-productions.biz\n");
     printf(" Audio     : Mihail Zenkov\n");
-    printf(" MacOsX    : Kuisathaverat\n");
-    printf(" Win32     : Gruntster\n\n");
+    printf(" Mac OS X  : Kuisathaverat, Harry van der Wolf\n");
+    printf(" Win32     : Grant Pedersen\n\n");
 
 #ifdef __GNUC__
 	printf("Compiler: GCC %s\n", __VERSION__);
@@ -163,7 +169,7 @@ int main(int argc, char *argv[])
 
 	printf("Build Target: ");
 
-#if defined(__WIN32)
+#if defined(_WIN32)
 	printf("Microsoft Windows");
 #elif defined(__APPLE__)
 	printf("Apple");
@@ -179,13 +185,9 @@ int main(int argc, char *argv[])
 	printf(" (PowerPC)");
 #endif
 
-	printf("\n");
+	printf("\nUser Interface: %s\n", uiDesc);
 
-	char uiDesc[15];
-	getUIDescription(uiDesc);
-	printf("User Interface: %s\n", uiDesc);
-
-#ifdef __WIN32
+#ifdef _WIN32
 	char version[250];
 
 	if (getWindowsVersion(version))
@@ -195,8 +197,9 @@ int main(int argc, char *argv[])
 #if defined(__USE_LARGEFILE) && defined(__USE_LARGEFILE64)
 	printf("\nLarge file available: %d offset\n", __USE_FILE_OFFSET64);
 #endif
-        // getTime
-        printf("Current time :%s\n",ADM_epochToString(ADM_getSecondsSinceEpoch()));
+
+    // getTime
+    printf("Time: %s\n", ADM_epochToString(ADM_getSecondsSinceEpoch()));
 	// Start counting memory
 	ADM_memStatInit();
     ADM_InitMemcpy();
@@ -218,7 +221,7 @@ int main(int argc, char *argv[])
 
 	atexit(onexit);
 
-#ifdef __MINGW32__
+#ifdef _WIN32
     win32_netInit();
 #endif
 
