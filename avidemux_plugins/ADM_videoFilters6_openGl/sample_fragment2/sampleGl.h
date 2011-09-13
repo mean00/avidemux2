@@ -11,7 +11,7 @@ static const char *myShaderY =
 
 	"void main(void) {\n"
     "  vec2 sizexy=vec2(myWidth/2,myHeight/2);\n"
-    "  vec2 full_coord=gl_TexCoord[0]-sizexy;\n"
+    "  vec2 full_coord=gl_TexCoord[0].xy-sizexy;\n"
     "  float c=cos(teta); \n"
     "  float s=sin(teta); \n"
     "  mat2 mymatrix=mat2(c,-s,s,c);"
