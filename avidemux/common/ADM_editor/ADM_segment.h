@@ -16,7 +16,7 @@
  ***************************************************************************/
 #ifndef ADM_SEGMENT_H
 #define ADM_SEGMENT_H
-#include <BVector.h>
+#include <vector>
 class ADM_audioStream;
 class ADM_Audiocodec;
 class decoders;
@@ -62,7 +62,7 @@ public:
 
       /* Audio part */
       uint32_t currentAudioStream;
-      BVector <ADM_audioStreamTrack *>  audioTracks;
+      std::vector <ADM_audioStreamTrack *>  audioTracks;
       
 
       uint32_t _nb_video_frames; /// Really needed ?
@@ -122,8 +122,8 @@ public:
 /*
     Use vectors to store our videos & segments
 */
-typedef BVector <_VIDEOS>  ListOfVideos;
-typedef BVector <_SEGMENT> ListOfSegments;
+typedef std::vector <_VIDEOS>  ListOfVideos;
+typedef std::vector <_SEGMENT> ListOfSegments;
 
 /**
     \class ADM_EditorSegment

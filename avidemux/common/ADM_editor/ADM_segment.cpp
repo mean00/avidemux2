@@ -29,8 +29,6 @@
 
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
-    segments.setCapacity(5);
-    videos.setCapacity(5);
 }
 ADM_EditorSegment::~ADM_EditorSegment()
 {
@@ -121,8 +119,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
             ref->firstFramePts=pts;
         }
 
-    segments.pushBack(seg);
-    videos.pushBack(*ref);
+    segments.push_back(seg);
+    videos.push_back(*ref);
     updateStartTime();
     return true;
 }
@@ -143,7 +141,7 @@ bool        ADM_EditorSegment::deleteSegments()
 bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
 {
     ADM_info("Adding a new segment\n");
-    segments.pushBack(*seg);
+    segments.push_back(*seg);
     updateStartTime();
     return true;
 }
@@ -219,7 +217,7 @@ bool        ADM_EditorSegment::resetSegment(void)
         seg._durationUs=vid->_aviheader->getVideoDuration();
         seg._reference=i;
         vid->_aviheader->getVideoInfo(&info);
-        segments.pushBack(seg);
+        segments.push_back(seg);
     }
     updateStartTime();
     return true;
@@ -488,7 +486,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     if(startSeg==endSeg)
     {
         // Split the seg int two..
-        segments.insert(startSeg+1,*getSegment(startSeg)); 
+        segments.insert(segments.begin()+startSeg+1,*getSegment(startSeg)); 
         endSeg=startSeg+1;
 
     }
@@ -505,7 +503,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     // 2- Kill the segment in between
     for(int i=startSeg+1;i<endSeg;i++)
     {
-        segments.removeAt(startSeg+1);
+        segments.erase(segments.begin()+startSeg+1);
     }
     updateStartTime();
     removeEmptySegments();
@@ -631,7 +629,7 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
                 if(seg->_durationUs==0) index=i;
         }
         if(index==-1) break;
-        segments.removeAt(index);
+        segments.erase(segments.begin()+index);
     }
     return true;
 }

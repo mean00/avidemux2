@@ -306,7 +306,7 @@ bool ADM_Composer::addFile (const char *name)
             stream->getExtraData(&extraLen,&extraData);
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
 
-            thisVid->audioTracks.pushBack(track);
+            thisVid->audioTracks.push_back(track);
 
       }
     }
