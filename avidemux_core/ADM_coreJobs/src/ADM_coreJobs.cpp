@@ -126,7 +126,7 @@ bool    ADM_jobInit(void)
 {
     dbFile=new char[1024];
     strcpy(dbFile,ADM_getBaseDir());
-    strcat(dbFile,"/jobs.sql");
+    strcat(dbFile,"jobs.sql");
     
     ADM_info("Initializing database (%s)\n",dbFile);
     if(!ADM_fileExist(dbFile))

@@ -105,17 +105,17 @@ void MainWindow::buildCustomMenu(void)
         switch(pool)
         {
             case JS_CUSTOM:
-                subDir=string("/js/");
+                subDir=string("js");
                 ext=string(".js");
                 topDir=customFolder;
                 break;
             case PY_CUSTOM:
-                subDir=string("/py/");
+                subDir=string("py");
                 ext=string(".py");
                 topDir=customFolder;
                 break;
             case PY_AUTO:
-                subDir=string("/");
+                subDir=string("");
                 ext=string(".py");
                 topDir=autoFolder;
                 break;

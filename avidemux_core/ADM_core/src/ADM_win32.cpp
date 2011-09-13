@@ -436,10 +436,9 @@ void redirectStdoutToFile(void)
 	// Redirect output to log file in the user's profile directory
 	const char* logFile = "admlog.txt";
 	char* baseDir = ADM_getBaseDir();
-	char *logPath = new char[strlen(baseDir) + 2 + strlen(logFile)];
+	char *logPath = new char[strlen(baseDir) + strlen(logFile) + 1];
 
 	strcpy(logPath, baseDir);
-	strcat(logPath, "/");
 	strcat(logPath, logFile);
 
 	FILE *stream = fopen(logPath, "w");

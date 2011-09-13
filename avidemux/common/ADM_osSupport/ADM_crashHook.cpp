@@ -41,7 +41,6 @@ void saveCrashProject(void)
   crashCount++;
   char *where=new char[strlen(baseDir)+strlen(name)+2];
   strcpy(where,baseDir);
-  strcat(where,"/");
   strcat(where,name);
   printf("Saving crash file to %s\n",where);
   video_body->saveAsPyScript (where);
@@ -59,7 +58,6 @@ void checkCrashFile(void)
   static int crashCount=0;
   char *where=new char[strlen(baseDir)+strlen(name)+2];
   strcpy(where,baseDir);
-  strcat(where,"/");
   strcat(where,name);
   if(ADM_fileExist(where))
   {

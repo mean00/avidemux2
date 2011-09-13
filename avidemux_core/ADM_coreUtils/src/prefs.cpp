@@ -159,14 +159,13 @@ bool preferences::load()
    char *dir_adm;
    std::string path;
 
-
     dir_adm=ADM_getBaseDir();
     if(!dir_adm) return false;
 
     path=string(dir_adm);
-    path=path+std::string("/");
     path=path+std::string(CONFIG);
     ADM_info("Loading prefs from %s\n",path.c_str());
+
     // exist ?
     if(!ADM_fileExist(path.c_str()))
     {
@@ -196,7 +195,6 @@ bool preferences::save()
     if(!dir_adm) return RC_FAILED;
 
     path=string(dir_adm);
-    path=path+std::string("/");
     path=path+std::string(CONFIG);
     string tmp=path;
     tmp=tmp+string(".tmp");

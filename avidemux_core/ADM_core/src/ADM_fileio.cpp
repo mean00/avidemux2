@@ -36,21 +36,22 @@
 #define WIN32_PORTABLE_MODE 1
 
 #ifdef __WIN32
-static const char *separator="\\";
+static const char *SEPARATOR="\\";
+
 #ifdef WIN32_PORTABLE_MODE
-    const char *ADM_DIR_NAME="\\settings";
+    const char *ADM_DIR_NAME="settings";
     bool portable=true;
 #else
-    const char *ADM_DIR_NAME="\\avidemux6";
+    const char *ADM_DIR_NAME="avidemux6";
     bool portable=false;
 #endif
 #elif defined __HAIKU__
-static const char *separator="/";
-const char *ADM_DIR_NAME="/config/settings/avidemux6";
+static const char *SEPARATOR="/";
+const char *ADM_DIR_NAME="config/settings/avidemux6";
 
 #else
-static const char *separator="/";
-const char *ADM_DIR_NAME="/.avidemux6";
+static const char *SEPARATOR="/";
+const char *ADM_DIR_NAME=".avidemux6";
 #endif
 
 static char ADM_basedir[1024] = {0};
@@ -293,38 +294,54 @@ char *ADM_getJobDir(void)
 	return ADM_jobdir;
 }
 
+static void AddSeparator(char *path)
+{
+	if (path && (strlen(path) < strlen(SEPARATOR) || strncmp(path + strlen(path) - strlen(SEPARATOR), SEPARATOR, strlen(SEPARATOR)) != 0))
+		strcat(path, SEPARATOR);
+}
+
 /**
  * 	\fn ADM_getRelativePath
  */
-static char *ADM_getRelativePath(const char *base0,const char *base1, const char *base2,const char *base3)
+static char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3)
 {
 	char *result;
-	int length = strlen(base1);
+	int length = strlen(base0) + 2;
+
+	if (base1)
+		length += strlen(base1) + 1;
 
 	if (base2)
-		length += strlen(base2);
+		length += strlen(base2) + 1;
 
 	if (base3)
-		length += strlen(base3);
+		length += strlen(base3) + 1;
 
-	length += strlen(base0);
-	length += 5; // Slashes + end 0
-	result = (char *)new char [length];
+	result = (char *)new char[length];
 	strcpy(result, base0);
-	strcat(result, separator);
+	AddSeparator(result);
 
-	strcat(result, base1);
-	strcat(result, separator);
-
-	if (base2)
+	if (base1)
 	{
-		strcat(result, base2);
-		strcat(result, separator);
-
-		if (base3)
+		if (strlen(base1))
 		{
-			strcat(result, base3);
-			strcat(result, separator);
+			strcat(result, base1);
+			strcat(result, SEPARATOR);
+		}
+
+		if (base2)
+		{
+			if (strlen(base2))
+			{
+				strcat(result, base2);
+				strcat(result, SEPARATOR);
+			}
+
+			if (base3 && strlen(base3))
+			{
+				strcat(result, base3);				
+				strcat(result, SEPARATOR);
+			}
 		}
 	}
 
@@ -335,15 +352,15 @@ static char *ADM_getRelativePath(const char *base0,const char *base1, const char
  * 	\fn char *ADM_getHomeRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
  *  \brief Returns home directory +base 1 + base 2... The return value is a copy, and must be deleted []
  */
-char *ADM_getHomeRelativePath(const char *base1, const char *base2,const char *base3)
+char *ADM_getHomeRelativePath(const char *base1, const char *base2, const char *base3)
 {
 	return ADM_getRelativePath(ADM_getBaseDir(), base1, base2, base3);
 }
 
-char *ADM_getInstallRelativePath(const char *base1, const char *base2,const char *base3)
+char *ADM_getInstallRelativePath(const char *base1, const char *base2, const char *base3)
 {
 #ifdef __WIN32
-       	wchar_t wcModuleName[MAX_PATH];
+	wchar_t wcModuleName[MAX_PATH];
 
 	GetModuleFileNameW(0, wcModuleName, sizeof(wcModuleName) / sizeof(wchar_t));
 
@@ -351,7 +368,6 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2,const char
 	char moduleName[len];
 
 	wideCharStringToUtf8(wcModuleName, -1, moduleName);
-
 
 	char *slash = strrchr(moduleName, '\\');
 		
@@ -395,7 +411,12 @@ char *ADM_getBaseDir(void)
 
 	// Get the base directory
 #ifdef __WIN32
-    if(portable==false)
+    if (portable)
+    {
+        // Portable mode...
+        home = ADM_getInstallRelativePath(NULL, NULL, NULL);
+    }
+	else
     {
         wchar_t wcHome[MAX_PATH];
 
@@ -411,18 +432,15 @@ char *ADM_getBaseDir(void)
             printf("Oops: can't determine the Application Data folder.");
             home = ADM_strdup("c:\\");
         }
-    }else
-    {
-        // Portable mode...
-        home=ADM_strdup(ADM_getInstallRelativePath("","",""));
     }
 #else
 	const char* homeEnv = getenv("HOME");
 
 	if (homeEnv)
 	{
-		home = new char[strlen(homeEnv) + 1];
+		home = new char[strlen(homeEnv) + 2];
 		strcpy(home, homeEnv);
+		strcpy(home, SEPARATOR);
 	}
 	else
 	{
@@ -436,6 +454,8 @@ char *ADM_getBaseDir(void)
 
 	strcpy(ADM_basedir, home);
 	strcat(ADM_basedir, ADM_DIR_NAME);
+	strcat(ADM_basedir, SEPARATOR);
+
     delete [] home;
     home=NULL;
 
@@ -550,7 +570,6 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 		int xbase = len - extlen;
 
 		if (memcmp(d_name + xbase, ext, extlen))
-			//if (direntry->d_name[len-1]!='s' || direntry->d_name[len-2]!='j' || direntry->d_name[len-3]!='.')
 		{
 			printf("ignored: %s\n", d_name);
 			continue;
@@ -558,7 +577,7 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 
 		jobName[dirmax] = (char *)ADM_alloc(strlen(base) + strlen(d_name) + 2);
 		strcpy(jobName[dirmax], base);
-		strcat(jobName[dirmax], "/");
+		AddSeparator(jobName[dirmax]);
 		strcat(jobName[dirmax], d_name);
 		dirmax++;
 
@@ -821,4 +840,5 @@ uint8_t ADM_renameFile(const char *source, const char *target)
     return false;
 #endif
 }
+
 // EOF
