@@ -7,6 +7,12 @@ endif (NOT PLUGINS)
 
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 
+IF (WIN32)
+	SET(ADM_PLUGIN_DIR "plugins")
+ELSE (WIN32)
+	SET(ADM_PLUGIN_DIR "ADM_plugins6")
+ENDIF (WIN32)
+
 ########################################
 # Shared cmake part
 ########################################

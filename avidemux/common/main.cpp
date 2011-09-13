@@ -274,14 +274,14 @@ int main(int argc, char *argv[])
 #else
     const char *startDir=ADM_RELATIVE_LIB_DIR;
 #endif
-    char *adPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDecoder");
-    char *avPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioDevices");    
-    char *aePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","audioEncoders");    
-    char *dmPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","demuxers");    
-    char *mxPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","muxers");    
-    char *vePlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoEncoders");    
-    char *vdPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoDecoders");    
-    char *vfPlugins = ADM_getInstallRelativePath(startDir,"ADM_plugins6","videoFilters");
+    char *adPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDecoder");
+    char *avPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDevices");    
+    char *aePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioEncoders");    
+    char *dmPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "demuxers");    
+    char *mxPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "muxers");    
+    char *vePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoEncoders");    
+    char *vdPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoDecoders");    
+    char *vfPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoFilters");
 
     ADM_mx_loadPlugins(mxPlugins);
     delete [] mxPlugins;

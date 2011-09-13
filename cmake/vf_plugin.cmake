@@ -1,5 +1,5 @@
 include(admAsNeeded)
-SET(VF_PLUGIN_DIR "${AVIDEMUX_LIB_DIR}/ADM_plugins6/videoFilters/")
+SET(VF_PLUGIN_DIR "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/videoFilters/")
 ############## INIT_VIDEO_FILTER_INTERNAL ###################"
 MACRO(INIT_VIDEO_FILTER_INTERNAL _lib)
     INCLUDE_DIRECTORIES(.)
