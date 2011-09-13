@@ -117,6 +117,7 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(pare
 	imageHeight = h;
 	firstRun = true;
 	glProgram = NULL;
+    textureName[0]=textureName[1]=textureName[2]=0;
     glGenTextures(3,textureName);
 }
 /**
