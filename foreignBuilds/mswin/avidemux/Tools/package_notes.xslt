@@ -54,10 +54,10 @@
           padding-bottom: 5px;
           }
         </style>
-        <title>Avidemux 2.5 Win32 Package Notes</title>
+        <title>Avidemux 2.6 Windows Package Notes</title>
       </head>
       <body>
-        <h1>Avidemux 2.5 Win32 Package Notes</h1>
+        <h1>Avidemux 2.6 Windows Package Notes</h1>
         <div>
           <xsl:apply-templates select="buildentry" />
         </div>

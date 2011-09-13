@@ -49,10 +49,15 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 
 copy ".\include\*.h" "%usrLocalDir%\include"
 cd libfaad
-gcc -s -O3 -DHAVE_MEMCPY=1 -DHAVE_STRING_H=1 -DHAVE_STDINT_H=1 -I../include -I"." *.c -shared -o "%usrLocalDir%/bin/libfaad2.dll" -Wl,--out-implib,"%usrLocalDir%/lib/libfaad.a"
+copy "%curDir%\makefile."
+
+make
 if errorlevel 1 goto end
 
+copy libfaad2.dll "%usrLocalDir%/bin"
+copy libfaad.a "%usrLocalDir%/lib"
 copy "%usrLocalDir%\bin\libfaad2.dll" "%admBuildDir%"
+
 goto end
 
 :error

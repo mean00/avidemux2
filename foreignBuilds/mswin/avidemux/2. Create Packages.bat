@@ -43,7 +43,5 @@ if errorlevel 1 goto error
 goto end
 
 :error
-exit /b 1
-
 :end
 pause

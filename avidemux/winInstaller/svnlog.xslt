@@ -53,10 +53,10 @@
           padding-bottom: 5px;
           }
         </style>
-        <title>Avidemux 2.4 Change Log</title>
+        <title>Avidemux 2.6 Change Log</title>
       </head>
       <body>
-        <h1>Avidemux 2.4 Change Log</h1>
+        <h1>Avidemux 2.6 Change Log</h1>
         <div align="center">
           <table class="build">
             <tr>

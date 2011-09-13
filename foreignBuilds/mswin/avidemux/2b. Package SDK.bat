@@ -1,4 +1,4 @@
-set zipFile=avidemux_sdk_2.5_r%revisionNo%_win.zip
+set zipFile=avidemux_sdk_2.6_r%revisionNo%_win.zip
 
 if "%BuildBits%" == "32" (
 	set sdk32BuildDir=%sdkBuildDir%

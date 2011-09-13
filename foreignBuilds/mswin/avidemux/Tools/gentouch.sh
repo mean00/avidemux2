@@ -1,1 +1,1 @@
-xsltproc touch_files.xslt "../Package Notes.xml" > "../Touch 2.5 Files [$BUILDBITS].html"
+xsltproc touch_files.xslt "../Package Notes.xml" > "../Touch 2.6 Files [$BUILDBITS].html"

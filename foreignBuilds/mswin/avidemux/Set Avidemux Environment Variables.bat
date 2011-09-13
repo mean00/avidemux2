@@ -26,8 +26,8 @@ if errorlevel 1 (
 	goto error
 )
 
-if exist "%ProgramFiles32%\7-zip" (
-	set SevenZipDir=%ProgramFiles32%\7-zip
+if exist "%ProgramFiles%\7-zip" (
+	set SevenZipDir=%ProgramFiles%\7-zip
 ) else (
 	echo 7-zip could not be found.  Please download from http://www.7-zip.org
 	goto error

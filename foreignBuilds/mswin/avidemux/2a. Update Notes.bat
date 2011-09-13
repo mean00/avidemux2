@@ -1,7 +1,7 @@
 set PATH=%msysDir%\bin;%PATH%
 
 echo -- Generating Change Log.html --
-cd "..\..\installer"
+cd "..\..\..\avidemux\wininstaller"
 sh genlog.sh
 
 echo -- Generating Package Notes.html --

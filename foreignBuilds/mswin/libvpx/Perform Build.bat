@@ -17,9 +17,9 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=libvpx-v0.9.5.tar.bz2
-set sourceFolder=libvpx-0.9.5-%BuildBits%
-set tarFolder=libvpx-v0.9.5
+set package=libvpx-v0.9.7-p1.tar.bz2
+set sourceFolder=libvpx-0.9.7-p1-%BuildBits%
+set tarFolder=libvpx-v0.9.7-p1
 set curDir=%CD%
 
 if not exist %package% (

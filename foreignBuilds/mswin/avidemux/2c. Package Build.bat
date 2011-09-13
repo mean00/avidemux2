@@ -1,17 +1,17 @@
-set baseFile=avidemux_2.5_r%revisionNo%_win%BuildBits%
+set baseFile=avidemux_2.6_r%revisionNo%_win%BuildBits%
 set zipFile=%baseFile%.zip
 
 copy "%buildDir%\Change Log.html" "%packageDir%"
 move "Tools\Package Notes [%BuildBits%].html" "%packageDir%\Package Notes.html"
 
 cd %buildDir%
-if "%BuildBits%" == "32" (
-	echo -- Generating GTK+ Installer --
-	"%nsisDir%\makensis" /V2 /NOCD /DINST_GTK /DBUILD_BITS=%BuildBits% /DNSIDIR="%curDir%\..\..\installer" /DEXEDIR="%packageDir%" "%curDir%\..\..\installer\avidemux.nsi"
-)
+rem if "%BuildBits%" == "32" (
+rem	echo -- Generating GTK+ Installer --
+rem	"%nsisDir%\makensis" /V2 /NOCD /DINST_GTK /DBUILD_BITS=%BuildBits% /DNSIDIR="%curDir%\..\..\..\avidemux\wininstaller" /DEXEDIR="%packageDir%" "%curDir%\..\..\..\avidemux\wininstaller\avidemux.nsi"
+rem )
 
 echo -- Generating Qt Installer --
-"%nsisDir%\makensis" /V2 /NOCD /DINST_QT /DBUILD_BITS=%BuildBits% /DNSIDIR="%curDir%\..\..\installer" /DEXEDIR="%packageDir%" "%curDir%\..\..\installer\avidemux.nsi"
+"%nsisDir%\makensis" /V2 /NOCD /DINST_QT /DBUILD_BITS=%BuildBits% /DNSIDIR="%curDir%\..\..\..\avidemux\wininstaller" /DEXEDIR="%packageDir%" "%curDir%\..\..\..\avidemux\wininstaller\avidemux.nsi"
 
 mkdir "%packageDir%\temp"
 cd "%packageDir%\temp"

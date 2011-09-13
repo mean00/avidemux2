@@ -1,11 +1,12 @@
---- build/generic/configure.orig	2009-05-28 18:13:31 +0100
-+++ build/generic/configure	2010-11-27 10:25:35 +0000
-@@ -1319,7 +1319,7 @@
- API_MAJOR="4"
- API_MINOR="2"
- 
--minimum_yasm_minor_version=8
-+minimum_yasm_minor_version=1
- minimum_nasm_minor_version=0
- minimum_nasm_major_version=2
- nasm_prog="nasm"
+--- build/generic/configure.orig	2011-03-17 14:31:52 +0000
++++ build/generic/configure	2011-05-21 16:22:55 +0100
+@@ -4325,8 +4325,7 @@
+ $as_echo "ok" >&6; }
+ 	STATIC_LIB="xvidcore.\$(STATIC_EXTENSION)"
+ 	SHARED_LIB="xvidcore.\$(SHARED_EXTENSION)"
+-	SPECIFIC_LDFLAGS="-mno-cygwin -shared -Wl,--dll,--out-implib,\$@.a libxvidcore.def"
+-	SPECIFIC_CFLAGS="-mno-cygwin"
++	SPECIFIC_LDFLAGS="-shared -Wl,--dll,--out-implib,\$@.a libxvidcore.def"
+ 	;;
+      darwin*|raphsody*)
+ 	STATIC_LIB="libxvidcore.\$(STATIC_EXTENSION)"

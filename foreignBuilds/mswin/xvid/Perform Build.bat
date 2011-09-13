@@ -17,8 +17,8 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=xvidcore-1.2.2.tar.gz
-set sourceFolder=xvidcore-1.2.2-%BuildBits%
+set package=xvidcore-1.3.2.tar.gz
+set sourceFolder=xvidcore-1.3.2-%BuildBits%
 set curDir=%CD%
 
 if not exist %package% (

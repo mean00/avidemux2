@@ -49,10 +49,15 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 
 copy ".\include\*.h" "%usrLocalDir%\include"
 cd libfaac
-gcc -s -O3 -shared -I../include *.c -o"%usrLocalDir%/bin/libfaac.dll" -Wl,--out-implib,"%usrLocalDir%/lib/libfaac.a"
+copy "%curDir%\makefile."
+
+make
 if errorlevel 1 goto end
 
+copy libfaac.dll "%usrLocalDir%/bin"
+copy libfaac.a "%usrLocalDir%/lib"
 copy "%usrLocalDir%\bin\libfaac.dll" "%admBuildDir%"
+
 goto end
 
 :error

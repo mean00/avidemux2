@@ -17,9 +17,9 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=libogg-1.2.1.tar.gz
-set sourceFolder=libogg-1.2.1-%BuildBits%
-set tarFolder=libogg-1.2.1
+set package=libogg-1.3.0.tar.gz
+set sourceFolder=libogg-1.3.0-%BuildBits%
+set tarFolder=libogg-1.3.0
 set curDir=%CD%
 
 if not exist %package% (
