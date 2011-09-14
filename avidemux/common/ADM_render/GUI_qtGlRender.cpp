@@ -328,7 +328,10 @@ bool QtGlRender::stop(void)
 {
 	ADM_info("[GL Render] Renderer closed\n");
 	if (glWidget)
+    {
+        glWidget->setParent(NULL);
 		delete glWidget;
+    }
     glWidget=NULL;
     return true;
 }
