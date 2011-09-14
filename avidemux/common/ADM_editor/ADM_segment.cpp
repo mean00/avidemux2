@@ -228,7 +228,12 @@ bool        ADM_EditorSegment::resetSegment(void)
 */
 _SEGMENT     *ADM_EditorSegment::getSegment(int i)
 {
-    ADM_assert(i<segments.size());
+    int sz=segments.size();
+    if(i>=sz)
+    {
+        ADM_info("Request for segment out of range : %d / %d\n",i,sz);
+        ADM_assert(0);
+    }
     return &(segments[i]);
 }
 /**
@@ -237,7 +242,12 @@ _SEGMENT     *ADM_EditorSegment::getSegment(int i)
 */
 _VIDEOS     *ADM_EditorSegment::getRefVideo(int i)
 {
-    ADM_assert(i<videos.size());
+    int sz=videos.size();
+    if(i>=sz)
+    {
+        ADM_info("Request for video out of range : %d / %d\n",i,sz);
+        ADM_assert(0);
+    }
     return &(videos[i]);
 }
 /**
