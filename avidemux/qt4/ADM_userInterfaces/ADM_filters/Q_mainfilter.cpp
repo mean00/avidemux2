@@ -39,6 +39,7 @@ using std::string;
 #include "ADM_filterCategory.h"
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
+#include "ADM_toolkitQt.h"
 
 #include "prefs.h"
 
@@ -480,7 +481,7 @@ void filtermainWindow::buildActiveFilterList(void)
 }
   /**
   */
-filtermainWindow::filtermainWindow()     : QDialog()
+filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
  {
         
     ui.setupUi(this);
@@ -561,10 +562,13 @@ static void updateFilterList (filtermainWindow *dialog);
 */
 int GUI_handleVFilter(void)
 {
-        filtermainWindow dialog;
-        if(QDialog::Accepted==dialog.exec())
-        {
-        }
+	filtermainWindow dialog(qtLastRegisteredDialog());
+	qtRegisterDialog(&dialog);
+
+	dialog.exec();
+
+	qtUnregisterDialog(&dialog);
+
 	return 0;
 }
 /** 

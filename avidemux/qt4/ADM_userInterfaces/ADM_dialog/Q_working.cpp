@@ -17,14 +17,15 @@
 #include "ADM_default.h"
 #include "ADM_vidMisc.h"
 #include "DIA_working.h"
+#include "ADM_toolkitQt.h"
 
 extern void UI_purge(void);
 
-workWindow::workWindow()     : QDialog()
+workWindow::workWindow(QWidget *parent) : QDialog(parent)
  {
      ui.setupUi(this);
      active=true;
-     setWindowModality (Qt::ApplicationModal);
+     setWindowModality(Qt::ApplicationModal);
      connect( ui.buttonCancel,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
  }
  void workWindow::stop(bool a) 
@@ -54,16 +55,15 @@ public:
 };
 //********************************************************
 
-DIA_workingQt4::DIA_workingQt4( const char *title ) : DIA_workingBase(title)
+DIA_workingQt4::DIA_workingQt4(const char *title) : DIA_workingBase(title)
 {
-  workWindow *wind;
-  wind=new workWindow();
-  _priv=(void *)wind;
-  wind->setWindowTitle(title);
-  postCtor();
-
-  
+	workWindow *wind = new workWindow(qtLastRegisteredDialog());
+	qtRegisterDialog(wind);
+    _priv=(void *)wind;
+	wind->setWindowTitle(title);
+	postCtor();  
 }
+
 void DIA_workingQt4 :: postCtor( void )
 {
   workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
@@ -140,14 +140,21 @@ DIA_workingQt4::~DIA_workingQt4()
     closeDialog();
 }
 
-void DIA_workingQt4::closeDialog( void )
+void DIA_workingQt4::closeDialog(void)
 {
-  workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
-    if(wind) delete wind;
-    wind=NULL;
-    _priv=NULL;
-   
+	workWindow *wind = (workWindow*)_priv;
+	ADM_assert(wind);
+
+	if (wind)
+	{
+		qtUnregisterDialog(wind);
+		delete wind;
+	}
+
+	wind = NULL;
+	_priv = NULL;
 }
+
 /**
     \fn createWorking
 */

@@ -19,7 +19,7 @@ protected :
 public:
 	flyContrast *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_contrastWindow(CONTRAST_PARAM *param,AVDMGenericVideoStream *in);
+	Ui_contrastWindow(QWidget* parent, CONTRAST_PARAM *param,AVDMGenericVideoStream *in);
 	~Ui_contrastWindow();
 	Ui_contrastDialog ui;
 

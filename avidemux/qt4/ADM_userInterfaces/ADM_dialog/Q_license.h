@@ -11,7 +11,7 @@ private:
 	Ui_licenseDialog ui;
 
 public:
-	Ui_licenseWindow();
+	Ui_licenseWindow(QWidget *parent);
 };
 
 #endif	// Q_license_h

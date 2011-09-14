@@ -5,6 +5,7 @@
 
 #include "Q_shell.h"
 #include "ADM_default.h"
+#include "ADM_toolkitQt.h"
 /**
     \fn qt4ShellLogger
     \brief Redirect output to the shell
@@ -22,10 +23,15 @@ static bool qt4ShellLogger(void *cookie,SCRIPT_LOG_TYPE type,const char *v)
 */
 bool ADM_startShell(jsShellEvaluate eval)
 {
-        qShell *s= new qShell(eval);
+        qShell *s= new qShell(qtLastRegisteredDialog(), eval);
+		qtRegisterDialog(s);
+
         ADM_scriptRegisterLogger((void *)s,qt4ShellLogger);
         s->run();
+
         ADM_scriptUnregisterLogger();
+		qtUnregisterDialog(s);
+
         delete s;
         return true;
 }

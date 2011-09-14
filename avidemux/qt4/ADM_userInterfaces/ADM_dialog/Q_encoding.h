@@ -30,7 +30,7 @@ class encodingWindow : public QDialog
      Q_OBJECT
 
  public:
-     encodingWindow();
+     encodingWindow(QWidget *parent);
      Ui_encodingDialog ui;
 
  public slots:

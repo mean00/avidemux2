@@ -34,7 +34,7 @@ protected:
 public:
 	int abted;
 	Ui_iDialog ui;
-	Ui_indexingDialog(const char *name);
+	Ui_indexingDialog(QWidget *parent, const char *name);
 	~Ui_indexingDialog();
 	void setTime(const char *f);
 	void setImage(const char *f);

@@ -23,6 +23,7 @@
 #define MENU_DECLARE
 #include "Q_gui2.h"
 #include "ADM_default.h"
+#include "ADM_toolkitQt.h"
 
 #include "DIA_fileSel.h"
 #include "ADM_vidMisc.h"
@@ -221,6 +222,7 @@ void MainWindow::currentTimeChanged(void)
 */
 MainWindow::MainWindow() : QMainWindow()
 {
+	qtRegisterDialog(this);
 	ui.setupUi(this);
 
 #if defined(__APPLE__) && defined(USE_SDL)

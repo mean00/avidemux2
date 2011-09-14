@@ -22,7 +22,7 @@ protected:
 public:
 	flySrtPos *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_srtWindow(SRT_POS_PARAM *param, AVDMGenericVideoStream *in);
+	Ui_srtWindow(QWidget *parent, SRT_POS_PARAM *param, AVDMGenericVideoStream *in);
 	~Ui_srtWindow();
 	Ui_srtDialog ui;
 

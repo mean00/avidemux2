@@ -18,11 +18,12 @@
 #include "avi_vars.h"
 #include "avidemutils.h"
 #include "ADM_vidMisc.h"
+#include "ADM_toolkitQt.h"
 
 static const char *yesno[2]={QT_TR_NOOP("No"),QT_TR_NOOP("Yes")};
 extern const char *getStrFromAudioCodec( uint32_t codec);
 
-propWindow::propWindow() : QDialog()
+propWindow::propWindow(QWidget *parent) : QDialog(parent)
  {
      ui.setupUi(this);
      uint8_t gmc, qpel,vop;
@@ -109,15 +110,16 @@ propWindow::propWindow() : QDialog()
 */
 void DIA_properties( void )
 {
+	if (playing)
+		return;
 
-      if (playing)
-        return;
-      if (!avifileinfo)
-        return;
-     // Fetch info
-     propWindow *propwindow=new propWindow ;
-     propwindow->exec();
-     delete propwindow;
+	if (!avifileinfo)
+		return;
+
+	propWindow propwindow(qtLastRegisteredDialog());
+	qtRegisterDialog(&propwindow);
+	propwindow.exec();
+	qtUnregisterDialog(&propwindow);
 }  
 //********************************************
 //EOF

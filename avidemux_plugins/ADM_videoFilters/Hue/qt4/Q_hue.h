@@ -19,7 +19,7 @@ protected:
 public:
 	flyHue *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_hueWindow(Hue_Param *param,AVDMGenericVideoStream *in);
+	Ui_hueWindow(QWidget *parent, Hue_Param *param,AVDMGenericVideoStream *in);
 	~Ui_hueWindow();
 	Ui_hueDialog ui;
 

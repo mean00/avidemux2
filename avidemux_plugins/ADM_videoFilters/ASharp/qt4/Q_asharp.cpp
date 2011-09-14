@@ -21,12 +21,13 @@
  ***************************************************************************/
 
 #include "Q_asharp.h"
+#include "ADM_toolkitQt.h"
 
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_asharpWindow::Ui_asharpWindow(ASHARP_PARAM *param,AVDMGenericVideoStream *in)
+  Ui_asharpWindow::Ui_asharpWindow(QWidget *parent, ASHARP_PARAM *param,AVDMGenericVideoStream *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -111,12 +112,16 @@ uint8_t DIA_getASharp(ASHARP_PARAM *param, AVDMGenericVideoStream *in)
 {
         uint8_t ret=0;
         
-        Ui_asharpWindow dialog(param,in);        
+        Ui_asharpWindow dialog(qtLastRegisteredDialog(), param,in);
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(param); 
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
         return ret;
 }
 //____________________________________

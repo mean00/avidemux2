@@ -33,7 +33,7 @@ class filtermainWindow : public QDialog
 	Q_OBJECT
 
 public:
-	filtermainWindow();
+	filtermainWindow(QWidget* parent);
     ~filtermainWindow();
 	void buildActiveFilterList(void);
 

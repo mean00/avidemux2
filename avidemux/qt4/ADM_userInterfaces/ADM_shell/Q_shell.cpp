@@ -24,10 +24,12 @@
 #include "Q_shell.h"
 #include "ADM_default.h"
 #include "ui_shell.h"
+#include "ADM_toolkitQt.h"
+
 /**
     \fn qShell
 */
-qShell::qShell(jsShellEvaluate *s) : QDialog()
+qShell::qShell(QWidget *parent, jsShellEvaluate *s) : QDialog(parent)
 {
     ADM_info("Setting up JS shell..\n");
     evaluator=s;

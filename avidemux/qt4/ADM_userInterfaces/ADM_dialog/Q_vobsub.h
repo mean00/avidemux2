@@ -16,7 +16,7 @@ protected:
 	void fillLanguage(const char *file);
 
 public:
-	Ui_vobsubWindow(vobSubParam *param);
+	Ui_vobsubWindow(QWidget *parent, vobSubParam *param);
 	~Ui_vobsubWindow();
 	Ui_vobSubDialog ui;
 

@@ -13,7 +13,7 @@ class Ui_ocrWindow : public QDialog
 	Q_OBJECT
 
 public:
-	Ui_ocrWindow(void);
+	Ui_ocrWindow(QWidget *parent);
 	~Ui_ocrWindow();
 	Ui_DialogOcr ui;
 

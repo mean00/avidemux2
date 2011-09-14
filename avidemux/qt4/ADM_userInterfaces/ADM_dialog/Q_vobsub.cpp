@@ -18,12 +18,13 @@
 
 #include "Q_vobsub.h"
 #include "DIA_fileSel.h"
+#include "ADM_toolkitQt.h"
 #if 0
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_vobsubWindow::Ui_vobsubWindow(vobSubParam *parm)
+  Ui_vobsubWindow::Ui_vobsubWindow(QWidget *parent, vobSubParam *parm) : QDialog(parent)
   {
     uint32_t width,height;
     	this->param=parm;
@@ -99,14 +100,20 @@ void Ui_vobsubWindow::idxSel(bool i)
 */
 uint8_t DIA_vobsub(vobSubParam *param)
 {
-        uint8_t ret=0;
-        Ui_vobsubWindow dialog(param);        
-        if(dialog.exec()==QDialog::Accepted)
-        {
-        	dialog.gather();
-            ret=1;
-        }
-        return ret;
+	uint8_t ret=0;
+	Ui_vobsubWindow dialog(param);
+
+	qtRegisterDialog(&dialog);
+
+	if(dialog.exec()==QDialog::Accepted)
+	{
+		dialog.gather();
+		ret=1;
+	}
+
+	qtUnregisterDialog(&dialog);
+
+	return ret;
 }
 //____________________________________
 // EOF

@@ -19,14 +19,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#if 1
 #include "Q_crop.h"
+#include "ADM_toolkitQt.h"
 
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_cropWindow::Ui_cropWindow(crop *param,ADM_coreVideoFilter *in)
+Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -155,15 +155,18 @@ int DIA_getCropParams(	const char *name,crop *param,ADM_coreVideoFilter *in)
 {
         uint8_t ret=0;
         
-        Ui_cropWindow dialog(param,in);        
+        Ui_cropWindow dialog(qtLastRegisteredDialog(), param,in);
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(param); 
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
+
         return ret;
 }
 //____________________________________
 // EOF
-
-#endif

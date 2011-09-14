@@ -16,8 +16,9 @@
  ***************************************************************************/
 #include "ADM_inttype.h"
 #include "Q_license.h"
+#include "ADM_toolkitQt.h"
 
-Ui_licenseWindow::Ui_licenseWindow()
+Ui_licenseWindow::Ui_licenseWindow(QWidget *parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 
@@ -697,9 +698,11 @@ Ui_licenseWindow::Ui_licenseWindow()
 
 uint8_t DIA_license(void)
 {
-	Ui_licenseWindow dialog;
+	Ui_licenseWindow dialog(qtLastRegisteredDialog());
 
+	qtRegisterDialog(&dialog);
 	dialog.exec();
+	qtUnregisterDialog(&dialog);
 
 	return 1;
 }

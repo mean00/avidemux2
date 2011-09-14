@@ -16,7 +16,7 @@ private:
 	unsigned int getPictureSize(void);
 
 public:
-	calculatorDialog();
+	calculatorDialog(QWidget* parent);
 	~calculatorDialog();
 
 	unsigned int videoSize(void);

@@ -21,11 +21,13 @@
 #include "DIA_coreToolkit.h"
 #include "avidemutils.h"
 #include "ADM_vidMisc.h"
+#include "ADM_toolkitQt.h"
 
 extern void UI_purge(void);
 static int stopReq=0;
 extern bool ADM_slaveReportProgress(uint32_t percent);
-encodingWindow::encodingWindow() : QDialog()
+
+encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint)
  {
 	ui.setupUi(this);
 
@@ -109,7 +111,8 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration
 {
         WINDOW=NULL;
         stopReq=0;
-        WINDOW=(void *)new encodingWindow();
+        WINDOW=(void *)new encodingWindow(qtLastRegisteredDialog());
+		qtRegisterDialog(window);
         window->setModal(TRUE);
         window->show();
 
@@ -132,6 +135,7 @@ DIA_encodingQt4::~DIA_encodingQt4( )
 {
 	bool shutdownRequired = (window->ui.checkBoxShutdown->checkState() == Qt::Checked);
     encodingWindow *w=window;
+	qtUnregisterDialog(w);
 	if(w) delete w;
 	WINDOW=NULL;
 #if 0

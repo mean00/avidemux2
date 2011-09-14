@@ -17,7 +17,7 @@ protected:
 public:
 	flyEq2 *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_eq2Window(Eq2_Param *param,AVDMGenericVideoStream *in);
+	Ui_eq2Window(QWidget *parent, Eq2_Param *param,AVDMGenericVideoStream *in);
 	~Ui_eq2Window();
 	Ui_eq2Dialog ui;
 

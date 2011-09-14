@@ -15,12 +15,13 @@
  ***************************************************************************/
 
 #include "Q_eq2.h"
+#include "ADM_toolkitQt.h"
 
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_eq2Window::Ui_eq2Window(Eq2_Param *param,AVDMGenericVideoStream *in)
+  Ui_eq2Window::Ui_eq2Window(QWidget *parent, Eq2_Param *param,AVDMGenericVideoStream *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -122,13 +123,18 @@ return 1;
 uint8_t DIA_getEQ2Param(Eq2_Param *param, AVDMGenericVideoStream *in)
 {
         uint8_t ret=0;
-        
-        Ui_eq2Window dialog(param,in);        
+        Ui_eq2Window dialog(qtLastRegisteredDialog(), param,in);
+
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(param); 
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
+
         return ret;
 }
 //____________________________________

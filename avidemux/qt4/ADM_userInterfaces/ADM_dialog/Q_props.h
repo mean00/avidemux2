@@ -8,7 +8,7 @@ class propWindow : public QDialog
 	Q_OBJECT
 
 public:
-	propWindow();
+	propWindow(QWidget *parent);
 	Ui_propsDialog ui;
 };
 #endif	// Q_props_h

@@ -21,12 +21,13 @@
  ***************************************************************************/
 
 #include "Q_contrast.h"
+#include "ADM_toolkitQt.h"
 
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_contrastWindow::Ui_contrastWindow(CONTRAST_PARAM *param,AVDMGenericVideoStream *in)
+  Ui_contrastWindow::Ui_contrastWindow(QWidget* parent, CONTRAST_PARAM *param,AVDMGenericVideoStream *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -115,13 +116,17 @@ return 1;
 uint8_t DIA_contrast(AVDMGenericVideoStream *in,CONTRAST_PARAM *param)
 {
         uint8_t ret=0;
-        
-        Ui_contrastWindow dialog(param,in);        
+        Ui_contrastWindow dialog(qtLastRegisteredDialog(), param,in);
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(param); 
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
+
         return ret;
 }
 //____________________________________

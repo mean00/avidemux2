@@ -14,7 +14,7 @@ class Ui_chromaShiftWindow : public QDialog
  public:
      flyChromaShift *myCrop;
      ADM_QCanvas *canvas;
-     Ui_chromaShiftWindow(CHROMASHIFT_PARAM *param,AVDMGenericVideoStream *in);
+     Ui_chromaShiftWindow(CQWidget* parent, CHROMASHIFT_PARAM *param,AVDMGenericVideoStream *in);
      ~Ui_chromaShiftWindow();
      Ui_chromashiftDialog ui;
  public slots:

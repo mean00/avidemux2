@@ -18,6 +18,7 @@ using std::vector;
 #include "Q_x264.h"
 #include "ADM_paramList.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_toolkitQt.h"
 
 static int pluginVersion=1;
 
@@ -61,19 +62,26 @@ static const idcToken listOfIdc[]={
 */
 bool x264_ui(x264_encoder *settings)
 {
-    x264Dialog dialog(NULL,settings);
+	bool success = false;
+    x264Dialog dialog(qtLastRegisteredDialog(), settings);
+
+	qtRegisterDialog(&dialog);
+
     if (dialog.exec() == QDialog::Accepted)
     {
             dialog.download();
             memcpy(settings,&myCopy,sizeof(myCopy));
-            return true;
+            success = true;
     }
-    return false;
+
+	qtUnregisterDialog(&dialog);
+
+    return success;
 }
 /**
 
 */  
-x264Dialog::x264Dialog(QWidget *parent, void *param)
+x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
 {
        ui.setupUi(this);
         connect(ui.encodingModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(encodingModeComboBox_currentIndexChanged(int)));

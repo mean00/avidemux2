@@ -21,11 +21,9 @@ Indexer progress dialog
 
 #include "T_index_pg.h"
 #include "ADM_default.h"
-//#include "ADM_videoFilter.h"
-//#include "ADM_encoderConf.h"
-//#include "ADM_encoder/adm_encoder.h"
 #include "DIA_idx_pg.h"
 #include "ADM_vidMisc.h"
+#include "ADM_toolkitQt.h"
 
 extern void UI_purge( void );
 
@@ -94,7 +92,8 @@ DIA_progressIndexing *pf;
 
 DIA_progressIndexing::DIA_progressIndexing(const char *name)
 {
-        dialog=new Ui_indexingDialog(name);
+        dialog=new Ui_indexingDialog(qtLastRegisteredDialog(), name);
+		qtRegisterDialog(dialog);
         clock.reset();
         aborted=0;
 	_nextUpdate=0;
@@ -105,6 +104,7 @@ DIA_progressIndexing::DIA_progressIndexing(const char *name)
 DIA_progressIndexing::~DIA_progressIndexing()
 {
         ADM_assert(dialog);
+		qtUnregisterDialog(dialog);
         delete dialog;
         dialog=NULL;
 }
@@ -162,7 +162,7 @@ uint8_t       DIA_progressIndexing::update(uint32_t done,uint32_t total, uint32_
         return 1;
 }
 //****************************** CLASS ***********************
-Ui_indexingDialog::Ui_indexingDialog(const char *name)
+Ui_indexingDialog::Ui_indexingDialog(QWidget *parent, const char *name) : QDialog(parent)
 {
       abted=0;
       ui.setupUi(this);

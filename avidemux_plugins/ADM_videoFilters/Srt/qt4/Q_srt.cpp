@@ -18,12 +18,13 @@
 
 //#include "config.h"
 #include "Q_srt.h"
+#include "ADM_toolkitQt.h"
 
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_srtWindow::Ui_srtWindow(SRT_POS_PARAM *param,AVDMGenericVideoStream *in)
+  Ui_srtWindow::Ui_srtWindow(QWidget *parent, SRT_POS_PARAM *param,AVDMGenericVideoStream *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -123,7 +124,10 @@ int DIA_srtPos(AVDMGenericVideoStream *in,uint32_t *size,uint32_t *position)
         SRT_POS_PARAM param;
         param.fontSize=*size;
         param.position=*position;
-        Ui_srtWindow dialog(&param,in);        
+        Ui_srtWindow dialog(qtLastRegisteredDialog(), &param,in);
+
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(&param);
@@ -131,6 +135,9 @@ int DIA_srtPos(AVDMGenericVideoStream *in,uint32_t *size,uint32_t *position)
             *position=param.position;
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
+
         return ret;
 }
 //____________________________________

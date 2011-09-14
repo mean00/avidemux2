@@ -24,8 +24,9 @@
 #include "audioeng_buildfilters.h"
 #include "ADM_video/ADM_vidMisc.h"
 #include "ADM_encoder/adm_encConfig.h"
+#include "ADM_toolkitQt.h"
 
-calculatorDialog::calculatorDialog()
+calculatorDialog::calculatorDialog(QWidget* parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 
@@ -249,10 +250,13 @@ void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate)
 	if (!avifileinfo)
 		return;
 
-	calculatorDialog dialog;
+	calculatorDialog dialog(qtLastRegisteredDialog());
+	qtRegisterDialog(&dialog);
 
 	if (dialog.exec() == QDialog::Accepted)
 		videoCodecSetFinalSize(dialog.videoSize());
+
+	qtUnregisterDialog(&dialog);
 
 	*sizeInMeg = dialog.videoSize();
 	*avgBitrate = dialog.videoBitrate();

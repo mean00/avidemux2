@@ -21,12 +21,13 @@
  ***************************************************************************/
 
 #include "Q_hue.h"
+#include "ADM_toolkitQt.h"
 
 //
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_hueWindow::Ui_hueWindow(Hue_Param *param,AVDMGenericVideoStream *in)
+  Ui_hueWindow::Ui_hueWindow(QWidget *parent, Hue_Param *param,AVDMGenericVideoStream *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -101,13 +102,18 @@ return 1;
 uint8_t DIA_getHue(Hue_Param *param,AVDMGenericVideoStream *in)
 {
         uint8_t ret=0;
-        
-        Ui_hueWindow dialog(param,in);        
+        Ui_hueWindow dialog(qtLastRegisteredDialog(), param,in);
+
+		qtRegisterDialog(&dialog);
+
         if(dialog.exec()==QDialog::Accepted)
         {
             dialog.gather(param); 
             ret=1;
         }
+
+		qtUnregisterDialog(&dialog);
+
         return ret;
 }
 //____________________________________

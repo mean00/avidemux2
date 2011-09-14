@@ -17,7 +17,7 @@ protected:
 public:
 	flyCrop *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_cropWindow(crop *param,ADM_coreVideoFilter *in);
+	Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *in);
 	~Ui_cropWindow();
 	Ui_cropDialog ui;
 

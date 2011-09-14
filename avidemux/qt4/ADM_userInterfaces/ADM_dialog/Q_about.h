@@ -10,7 +10,7 @@ private:
 	Ui_aboutDialog ui;
 
 public:
-	Ui_aboutWindow();
+	Ui_aboutWindow(QWidget* parent);
 
 private slots:
 	void licenseButton_clicked(bool);

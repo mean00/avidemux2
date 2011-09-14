@@ -19,7 +19,7 @@ protected:
 public:
 	flyASharp *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_asharpWindow(ASHARP_PARAM *param, AVDMGenericVideoStream *in);
+	Ui_asharpWindow(QWidget *parent, ASHARP_PARAM *param, AVDMGenericVideoStream *in);
 	~Ui_asharpWindow();
 	Ui_asharpDialog ui;
 

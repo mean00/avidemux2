@@ -24,7 +24,7 @@ protected:
     int                  indexWrite;
     int                  indexRead;
 public:
-                    qShell(jsShellEvaluate *s) ;
+                    qShell(QWidget *parent, jsShellEvaluate *s);
     virtual         ~qShell() ;
     bool            run(void);
     bool            print(SCRIPT_LOG_TYPE type, const char *s);
