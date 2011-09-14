@@ -140,7 +140,7 @@ int d0, d1, d2;
     "movsb\n"
     "2:"
     : "=&c" (d0), "=&D" (d1), "=&S" (d2)
-    :"0" (n/4), "q" (n),"1" ((long) to),"2" ((long) from)
+    :"0" (n/4), "q" (n),"1" ((intptr_t) to),"2" ((intptr_t) from)
     : "memory");
 
   return (to);
@@ -181,7 +181,7 @@ static void * sse_memcpy(void * to, const void * from, size_t len)
   {
     register unsigned long int delta;
     /* Align destinition to MMREG_SIZE -boundary */
-    delta = ((unsigned long int)uto)&(SSE_MMREG_SIZE-1);
+    delta = ((intptr_t)uto)&(SSE_MMREG_SIZE-1);
     if(delta)
     {
       delta=SSE_MMREG_SIZE-delta;
@@ -190,7 +190,7 @@ static void * sse_memcpy(void * to, const void * from, size_t len)
     }
     i = len >> 6; /* len/64 */
     len&=63;
-    if(((unsigned long)ufrom) & 15)
+    if(((intptr_t)ufrom) & 15)
       /* if SRC is misaligned */
       for(; i>0; i--)
       {
@@ -257,7 +257,7 @@ static void * mmx_memcpy(void * to, const void * from, size_t len)
   {
     register unsigned long int delta;
     /* Align destinition to MMREG_SIZE -boundary */
-    delta = ((unsigned long int)uto)&(MMX_MMREG_SIZE-1);
+    delta = ((intptr_t)uto)&(MMX_MMREG_SIZE-1);
     if(delta)
     {
       delta=MMX_MMREG_SIZE-delta;
@@ -324,7 +324,7 @@ static void * mmx2_memcpy(void * to, const void * from, size_t len)
   {
     register unsigned long int delta;
     /* Align destinition to MMREG_SIZE -boundary */
-    delta = ((unsigned long int)uto)&(MMX_MMREG_SIZE-1);
+    delta = ((intptr_t)uto)&(MMX_MMREG_SIZE-1);
     if(delta)
     {
       delta=MMX_MMREG_SIZE-delta;
@@ -375,32 +375,6 @@ static void *linux_kernel_memcpy(void *to, const void *from, size_t len) {
 }
 #endif /* ARCH_X86 */
 
-static struct {
-  const char *name;
-  void *(* function)(void *to, const void *from, size_t len);
-
-  uint64_t time; /* This type could be used for non-MSC build too! */
-
-  uint32_t cpu_require;
-} memcpy_method[] =
-{
-  { NULL, NULL, 0, 0 },
-  { "libc memcpy()", memcpy, 0, 0 },
-#if defined(ADM_CPU_X86)
-  { "linux kernel memcpy()", linux_kernel_memcpy, 0, 0 },
-#if defined(ADM_CPU_X86)
-  { "MMX optimized memcpy()", mmx_memcpy, 0, 0 },
-  { "MMXEXT optimized memcpy()", mmx2_memcpy, 0, 0 },
-  { "SSE optimized memcpy()", sse_memcpy, 0, 0|0 },
-#endif
-#endif /* ARCH_X86 */
-#if 0 && defined(ADM_CPU_PPC) && !defined (__APPLE__)
-  { "ppcasm_memcpy()", ppcasm_memcpy, 0, 0 },
-  { "ppcasm_cacheable_memcpy()", ppcasm_cacheable_memcpy, 0, FF_MM_ACCEL_PPC_CACHE32 },
-#endif /* ARCH_PPC && !HOST_OS_DARWIN */
-  { NULL, NULL, 0, 0 }
-};
-
 #if defined(ADM_CPU_X86)
 static unsigned long long int rdtsc(void)
 {
@@ -436,7 +410,7 @@ uint8_t probe(adm_fast_memcpy func,char *name)
 	stop=rdtsc();
 	ADM_dealloc(src);
 	ADM_dealloc(dst);
-	printf("Method :%s \tTime:%lu\n",name,(unsigned long int)stop-start);
+	printf("Method :%s \tTime:%lu\n",name,stop-start);
 	return 1;
 
 }
