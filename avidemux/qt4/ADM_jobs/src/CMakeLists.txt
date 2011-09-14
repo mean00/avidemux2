@@ -25,6 +25,30 @@ SET(ADM_JOB_SRCS
         )
 
 ###########################################
+# Version Info
+###########################################
+if (WIN32)
+	# add icon and version info
+	SET(FILEVERSION_STRING "${VERSION}.${ADM_SUBVERSION}")
+	SET(PRODUCTVERSION_STRING "${VERSION}")
+	STRING(REPLACE "." "," FILEVERSION ${FILEVERSION_STRING})
+	STRING(REPLACE "." "," PRODUCTVERSION ${PRODUCTVERSION_STRING})
+	SET(PRODUCTVERSION "${PRODUCTVERSION},0")
+
+	IF (ADM_CPU_X86_64)
+		SET(WIN_RES_TARGET "pe-x86-64")
+	ELSE (ADM_CPU_X86_64)
+		SET(WIN_RES_TARGET "pe-i386")
+	ENDIF (ADM_CPU_X86_64)
+
+	SET(AVIDEMUX_ICON "adm.ico")
+	SET(ADM_WIN_RES "adm.obj")
+	SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${ADM_WIN_RES})
+	CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admWin32.rc.in" ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
+	ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND windres.exe -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+endif (WIN32)
+
+###########################################
 # Executable
 ###########################################
 include(admCoreIncludes)
