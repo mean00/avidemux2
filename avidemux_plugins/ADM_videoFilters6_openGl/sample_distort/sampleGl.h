@@ -10,7 +10,7 @@ static const char *myShaderY =
     "uniform float teta;\n"
 
 	"void main(void) {\n"
-    "  vec2 full_coord=gl_TexCoord[0].xy\n"
+    "  vec2 full_coord=gl_TexCoord[0].xy;\n"
     "  vec2 half_coord=full_coord*half_vec;"
     "  vec4 texvalV = texture2DRect(myTextureV, half_coord);\n"
     "  vec4 texvalU = texture2DRect(myTextureU, half_coord);\n"
