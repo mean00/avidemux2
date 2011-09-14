@@ -941,12 +941,6 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_denoise3d.dll
 			${MementoSectionEnd}
-			${MementoSection} "MPlayer Denoise 3D HQ" SecVidFltMPlayerHqdn3d
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_denoise3dhq.dll
-			${MementoSectionEnd}
 		SectionGroupEnd
 		SectionGroup "Sharpness Filters" SecGrpVideoFilterSharpness
 			${MementoSection} "Sharpen" SecVidFltSharpen
