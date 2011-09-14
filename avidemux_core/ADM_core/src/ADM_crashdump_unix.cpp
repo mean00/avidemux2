@@ -38,6 +38,14 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
         mysaveFunction=save;
         myFatalFunction=fatal;
 }
+void sig_segfault_handler(int signo);
+/**
+    \fn installSigHandler
+*/
+void installSigHandler()
+{
+    signal(11, sig_segfault_handler); // show stacktrace on default
+}
 
 /**
       \fn sig_segfault_handler
@@ -69,7 +77,7 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 	if(mysaveFunction)
 		mysaveFunction();
 
-#ifndef(__HAIKU__)
+#if !defined(__HAIKU__)
 	printf("\n*********** BACKTRACK **************\n");
 
 	count = backtrace(stack, 20);
