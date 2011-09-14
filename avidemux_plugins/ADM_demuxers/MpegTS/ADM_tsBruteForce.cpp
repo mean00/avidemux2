@@ -130,62 +130,97 @@ static bool mpeg2StartCode(int code)
     return false;
 }
 /**
+    \fn idContentE0
+    \brief try to identify video content, with pes-id=0xe0
+    We read 5 startcode and if 4 or 5 looks like mpeg2/h264 ones we mark the stream as mpeg2/h264
+*/
+static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
+{
+    int nbTry=5;
+    int threshold=3;
+    int nbSuccessMpeg2=0;
+    int nbSuccessH264=0;
+    for(int i=0;i<nbTry;i++)
+    {
+        TS_PESpacket pes(pid);
+        if(false==ts->getNextPES( &pes)) 
+        {
+            ADM_warning("\tCannot get PES\n");
+            return false;
+        }
+        uint8_t *ptr=pes.payload;
+        uint32_t len=pes.payloadSize,syncoff;
+        uint8_t  scode;
+        if(ADM_findMpegStartCode(ptr+4,ptr+len,&scode,&syncoff))
+        {
+            ADM_warning("Found startcode1 =%x\n",scode);
+        }else continue;
+        if(scode==9) // AU delimiter => H264
+        {
+            nbSuccessH264++;
+            continue;
+        }
+        if(mpeg2StartCode(scode))
+        {
+            nbSuccessMpeg2++;
+            continue;
+        }
+    }
+    if(nbSuccessH264>threshold)
+    {
+        trackType=ADM_TS_H264;
+        ADM_warning("Probably H264\n");
+        return true;
+    }
+    if(nbSuccessMpeg2>threshold)
+    {
+        trackType=ADM_TS_MPEG2;
+        ADM_warning("Probably Mpeg2\n");
+        return true;
+    }
+    ADM_warning("dont know what it is...\n");
+    return false;
+}
+/**
     \fn idContent
 */
 bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
 {
 TS_PESpacket pes(pid);
 TS_PESpacket pes2(pid);
+
         ts->setPos(0);
         if(false==ts->getNextPES( &pes)) 
         {
             ADM_warning("\tCannot get PES\n");
             return false;
         }
+        uint8_t *ptr=pes.payload;
+        uint32_t len=pes.payloadSize;
+
+
+        // 
+       
+
+        if(!ptr[0] && !ptr[1] && ptr[2]==1 && ptr[3]==0xe0) // probably video
+        {
+          return idContentE0(pid,ts,trackType);
+        }
+
+        // Read a 2nd packet for confirmation
+
         if(false==ts->getNextPES( &pes2)) 
         {
             ADM_warning("\tCannot get PES2\n");
             return false;
         }
-        
-        printf("\t Read %d bytes\n",(int)pes.payloadSize);
-        // 
-        uint32_t fq,br,chan,syncoff;
-        uint32_t fq2,br2,chan2,syncoff2;
-        uint8_t *ptr=pes.payload;
-        uint32_t len=pes.payloadSize;
         uint8_t *ptr2=pes2.payload;
         uint32_t len2=pes2.payloadSize;
+        
+        printf("\t Read %d bytes\n",(int)pes.payloadSize);  
+        uint32_t fq,br,chan,syncoff;
+        uint32_t fq2,br2,chan2,syncoff2;
 
-        if(!ptr[0] && !ptr[1] && ptr[2]==1 && ptr[3]==0xe0) // probably video
-        {
-            // Only supports Mpeg2 video and H264
-            // For mpeg2 we scan for slice i.e. 00 00 01 00 etc...
-            // we need 2 consecutive slice
-            uint8_t scode,scode2;
-            if(ADM_findMpegStartCode(ptr+4,ptr+len,&scode,&syncoff))
-            {
-                ADM_warning("Found startcode1 =%x\n",scode);
-            }
-            if(ADM_findMpegStartCode(ptr2+4,ptr2+len2,&scode2,&syncoff))
-            {
-                ADM_warning("Found startcode2 =%x\n",scode2);
-            }
-            if(scode==9 && scode2==9) // AU delimiter => H264
-            {
-                trackType=ADM_TS_H264;
-                ADM_warning("Probably H264\n");
-                return true;
-            }
-            if(mpeg2StartCode(scode) && mpeg2StartCode(scode2)) // Maybe Mpeg2 ?
-            {
-                trackType=ADM_TS_MPEG2;
-                ADM_warning("Probably Mpeg2\n");
-                return true;
-            }
-            ADM_warning("dont know what it is...\n");
-            return false;
-        }
         // Is it AC3 ??
         if( ADM_AC3GetInfo(ptr,len, &fq, &br, &chan,&syncoff))
         {
