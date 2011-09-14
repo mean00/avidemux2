@@ -28,6 +28,7 @@
 #endif
 
 extern void 		AVDM_audioPref( void );
+extern const char* getNativeRendererDesc();
 
 
 
@@ -230,7 +231,7 @@ bool     hasOpenGl=false;
         diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TR_NOOP("_Use alternative tag for MP3 in .mp4"));
         
         diaMenuEntry videoMode[]={
-                             {RENDER_GTK,      QT_TR_NOOP("GTK+ (slow)"),NULL}
+                             {RENDER_GTK, getNativeRendererDesc(), NULL}
 #ifdef USE_XV
                              ,{RENDER_XV,   QT_TR_NOOP("XVideo (best)"),NULL}
 #endif
@@ -238,13 +239,13 @@ bool     hasOpenGl=false;
                              ,{RENDER_VDPAU,   QT_TR_NOOP("VDPAU (best)"),NULL}
 #endif
 #ifdef USE_OPENGL
-                             ,{RENDER_QTOPENGL,   QT_TR_NOOP("Qt OpenGl (best)"),NULL}
+                             ,{RENDER_QTOPENGL,   QT_TR_NOOP("OpenGL (best)"),NULL}
 #endif
 
 #ifdef USE_SDL
 #ifdef __WIN32
-                             ,{RENDER_SDL,      QT_TR_NOOP("SDL (GDI)"),NULL}
-							 ,{RENDER_DIRECTX,      QT_TR_NOOP("SDL (DirectX)"),NULL}
+                             ,{RENDER_SDL,      QT_TR_NOOP("MS Windows GDI (SDL)"),NULL}
+							 ,{RENDER_DIRECTX,      QT_TR_NOOP("MS Windows DirectX (SDL)"),NULL}
 #else
 							 ,{RENDER_SDL,      QT_TR_NOOP("SDL (good)"),NULL}
 #endif

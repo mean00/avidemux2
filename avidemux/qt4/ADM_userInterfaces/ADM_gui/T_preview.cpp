@@ -87,27 +87,25 @@ ADM_Qvideo::~ADM_Qvideo() {}
 
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {
-	if(!displayW || !displayH || !rgbDataBuffer )
-		return ;
+	if (paintEngineType == -1)
 	{
+		QPainter painter(this);
 
-       if (paintEngineType == -1)
-       {
-               QPainter painter(this);
+		if (painter.isActive())
+			paintEngineType = painter.paintEngine()->type();
 
-               if (painter.isActive())
-                       paintEngineType = painter.paintEngine()->type();
+		painter.end();
+	}
 
-               painter.end();
-       }
+	if (!displayW || !displayH || !rgbDataBuffer )
+		return;
 
-        if(true==renderExposeEventFromUI())
-        {
-            QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-            QPainter painter(this);
-            painter.drawImage(QPoint(0,0),image);
-            painter.end();
-        }
+	if (renderExposeEventFromUI())
+	{
+		QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
+		QPainter painter(this);
+		painter.drawImage(QPoint(0,0),image);
+		painter.end();
 	}
 }
 
