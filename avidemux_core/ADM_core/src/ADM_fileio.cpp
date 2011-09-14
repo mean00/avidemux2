@@ -452,7 +452,7 @@ char *ADM_getBaseDir(void)
 	// Try to open the .avidemux directory
 
 	strcpy(ADM_basedir, home);
-	strcat(ADM_basedir, SEPARATOR);
+	AddSeparator(ADM_basedir);
 	strcat(ADM_basedir, ADM_DIR_NAME);
 	strcat(ADM_basedir, SEPARATOR);
 
