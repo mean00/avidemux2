@@ -33,6 +33,11 @@ void getUIDescription(char* desc)
 	sprintf(desc, "CLI");
 }
 
+const char* getNativeRendererDesc(void)
+{
+	return "";
+}
+
 ADM_UI_TYPE UI_GetCurrentUI(void)
 {
   return ADM_UI_CLI;

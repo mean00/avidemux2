@@ -49,6 +49,11 @@ ADM_UI_TYPE UI_GetCurrentUI(void)
   return ADM_UI_GTK;
 }
 
+const char* getNativeRendererDesc(void)
+{
+	return QT_TR_NOOP("GTK+");
+}
+
 void getMainWindowHandles(long int *handle,long int *nativeHandle)
 {
 	*handle = (long int)guiRootWindow;
