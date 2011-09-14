@@ -440,7 +440,6 @@ char *ADM_getBaseDir(void)
 	{
 		home = new char[strlen(homeEnv) + 2];
 		strcpy(home, homeEnv);
-		strcpy(home, SEPARATOR);
 	}
 	else
 	{
@@ -453,6 +452,7 @@ char *ADM_getBaseDir(void)
 	// Try to open the .avidemux directory
 
 	strcpy(ADM_basedir, home);
+	strcat(ADM_basedir, SEPARATOR);
 	strcat(ADM_basedir, ADM_DIR_NAME);
 	strcat(ADM_basedir, SEPARATOR);
 
@@ -461,7 +461,7 @@ char *ADM_getBaseDir(void)
 
 	if (!ADM_mkdir(ADM_basedir))
 	{
-		printf("Oops: cannot create the .avidemux directory");
+		ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n",ADM_basedir);
 		return NULL;
 	}
 
