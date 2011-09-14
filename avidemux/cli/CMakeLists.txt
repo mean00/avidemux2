@@ -90,7 +90,7 @@ ENDIF (USE_SDL)
 ###########################################
 IF (WIN32)
 	target_link_libraries(ADM_osSupport)
-	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console)
+	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
 ###########################################

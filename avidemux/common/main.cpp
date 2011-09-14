@@ -20,9 +20,7 @@
 
 #ifdef __MINGW32__
 #define UNICODE
-#include <winbase.h>
 #include <windows.h>
-#include <excpt.h>
 #endif
 
 #include "config.h"
@@ -98,14 +96,20 @@ extern bool vdpauCleanup(void);
 extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
+
 #ifdef __MINGW32__
-extern EXCEPTION_DISPOSITION exceptionHandler(struct _EXCEPTION_RECORD* pExceptionRec, void* pEstablisherFrame, struct _CONTEXT* pContextRecord, void* pDispatcherContext);
 extern int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength, char *utf8String);
+#endif
+
+#if defined(_WIN64)
+extern LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
+#elif defined(_WIN32)
+extern EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord, void *establisherFrame, struct _CONTEXT *contextRecord, void *dispatcherContext);
 #else
 extern void installSigHandler(void);
 #endif
 
-#ifdef __WIN32
+#ifdef _WIN32
 extern bool getWindowsVersion(char* version);
 extern void redirectStdoutToFile(void);
 #endif
@@ -338,8 +342,10 @@ int main(int argc, char *argv[])
     else
 		ADM_assert(0); 
 
-#ifdef __MINGW32__
-	__try1(exceptionHandler);
+#if defined(_WIN64)
+	SetUnhandledExceptionFilter(ExceptionFilter);
+#elif defined(_WIN32)
+	__try1(ExceptionHandler);
 #endif
 
 #if defined( USE_VDPAU) 
@@ -357,8 +363,8 @@ int main(int argc, char *argv[])
 
     UI_RunApp();
 
-#ifdef __MINGW32__
-	__except1(exceptionHandler);
+#if defined(_WIN32) && defined(_X86_)
+	__except1;
 #endif
 
     printf("Normal exit\n");

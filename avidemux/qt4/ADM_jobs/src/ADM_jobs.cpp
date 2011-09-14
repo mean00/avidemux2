@@ -16,7 +16,6 @@
 
 #ifdef __MINGW32__
 #include <windows.h>
-#include <excpt.h>
 #endif
 
 #include "config.h"
@@ -36,8 +35,11 @@ extern void ADM_memStatInit( void );
 extern void ADM_memStatEnd( void );
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
-#ifdef __MINGW32__
-extern EXCEPTION_DISPOSITION exceptionHandler(struct _EXCEPTION_RECORD* pExceptionRec, void* pEstablisherFrame, struct _CONTEXT* pContextRecord, void* pDispatcherContext);
+
+#if defined(_WIN64)
+extern LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
+#elif defined(_WIN32)
+extern EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord, void *establisherFrame, struct _CONTEXT *contextRecord, void *dispatcherContext);
 #else
 extern void installSigHandler(void);
 #endif
@@ -54,8 +56,8 @@ extern bool jobRun(int ac, char **av);
 
 int main(int argc, char *argv[])
 {
-#if defined(__WIN32) && defined(USE_SDL)
-//	redirectStdoutToFile();
+#if defined(_WIN32)
+	redirectStdoutToFile();
 #endif
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
@@ -139,16 +141,18 @@ int main(int argc, char *argv[])
     quotaInit();
 
 
-#ifdef __MINGW32__
-	__try1(exceptionHandler);
+#if defined(_WIN64)
+	SetUnhandledExceptionFilter(ExceptionFilter);
+#elif defined(_WIN32)
+	__try1(ExceptionHandler);
 #endif
 
     // Init jobs
     ADM_jobInit();
     jobRun(argc,argv);
 
-#ifdef __MINGW32__
-	__except1(exceptionHandler);
+#if defined(_WIN32) && defined(_X86_)
+	__except1;
 #endif
 
     printf("Normal exit\n");

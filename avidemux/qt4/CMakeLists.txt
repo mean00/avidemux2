@@ -131,12 +131,7 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
 ###########################################
 IF (WIN32)
 	target_link_libraries(ADM_osSupport)
-
-	IF (MINGW)
-		target_link_libraries(avidemux3_qt4 -mno-cygwin)
-	ENDIF (MINGW)
-
-	target_link_libraries(avidemux3_qt4 winmm -mwindows)
+	target_link_libraries(avidemux3_qt4 winmm -mwindows -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
 IF (APPLE)

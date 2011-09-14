@@ -103,12 +103,7 @@ TARGET_LINK_LIBRARIES(avidemux3_gtk ${GTK_LDFLAGS} ${GTHREAD_LDFLAGS})
 ###########################################
 IF (WIN32)
 	target_link_libraries(ADM_osSupport)
-
-	IF (MINGW)
-		target_link_libraries(avidemux3_gtk -mno-cygwin)
-	ENDIF (MINGW)
-
-	target_link_libraries(avidemux3_gtk winmm -mwindows)
+	target_link_libraries(avidemux3_gtk winmm -mwindows -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
 ###########################################
