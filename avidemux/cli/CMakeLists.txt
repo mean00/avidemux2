@@ -88,6 +88,10 @@ ENDIF (USE_SDL)
 ###########################################
 # OS Specific
 ###########################################
+if (WIN32 OR APPLE)
+	set_property(TARGET avidemux3_cli PROPERTY OUTPUT_NAME avidemux_cli)
+endif (WIN32 OR APPLE)
+
 IF (WIN32)
 	target_link_libraries(ADM_osSupport)
 	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)

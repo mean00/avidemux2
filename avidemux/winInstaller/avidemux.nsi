@@ -326,7 +326,7 @@ SectionGroup /e "User interfaces" SecGrpUI
         SectionIn 2
         SetOutPath $INSTDIR
         SetOverwrite on
-        ${File} avidemux3_cli.exe
+        ${File} avidemux_cli.exe
         ${File} libADM_render6_cli.dll
         ${File} libADM_UI_Cli6.dll
     ${MementoSectionEnd}
@@ -349,7 +349,7 @@ SectionGroup /e "User interfaces" SecGrpUI
         SetOutPath $INSTDIR\share\themes
         ${Folder} share\themes
         SetOutPath $INSTDIR
-        ${File} avidemux3_gtk.exe
+        ${File} avidemux_gtk.exe
         ${File} gtk2_prefs.exe
 		${File} intl.dll
         ${File} libADM_render_gtk.dll
@@ -382,8 +382,8 @@ SectionGroup /e "User interfaces" SecGrpUI
 !endif
         SetOutPath $INSTDIR
         SetOverwrite on
-        ${File} avidemux3_qt4.exe
-		${File} avidemux3_jobs.exe
+        ${File} avidemux.exe
+		${File} avidemux_jobs.exe
         ${File} libADM_render6_qt4.dll
         ${File} libADM_UIQT46.dll
         ${File} QtCore4.dll
@@ -1416,7 +1416,7 @@ Function RunAvidemux
     IntOp $0 $0 & ${SF_SELECTED}
 
     StrCmp $0 ${SF_SELECTED} 0 GTK
-        Exec "$INSTDIR\avidemux3_qt4.exe"
+        Exec "$INSTDIR\avidemux_qt4.exe"
 
     Goto end
 GTK:
@@ -1427,7 +1427,7 @@ GTK:
     IntOp $0 $0 & ${SF_SELECTED}
 
     StrCmp $0 ${SF_SELECTED} 0 End
-        Exec "$INSTDIR\avidemux3_gtk.exe"
+        Exec "$INSTDIR\avidemux_gtk.exe"
 !endif
 
 end:

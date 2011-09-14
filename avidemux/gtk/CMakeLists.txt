@@ -101,6 +101,10 @@ TARGET_LINK_LIBRARIES(avidemux3_gtk ${GTK_LDFLAGS} ${GTHREAD_LDFLAGS})
 ###########################################
 # OS Specific
 ###########################################
+if (WIN32 OR APPLE)
+	set_property(TARGET avidemux3_gtk PROPERTY OUTPUT_NAME avidemux_gtk)
+endif (WIN32 OR APPLE)
+
 IF (WIN32)
 	target_link_libraries(ADM_osSupport)
 	target_link_libraries(avidemux3_gtk winmm -mwindows -Wl,--export-all-symbols)
