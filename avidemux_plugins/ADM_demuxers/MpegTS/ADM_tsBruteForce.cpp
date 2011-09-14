@@ -25,7 +25,8 @@
 
 #include "ADM_coreUtils.h"
 
-#define TS_MAX_PACKET_SCAN 500
+#define TS_MAX_PACKET_SCAN     2000
+#define TS_NB_PACKET_THRESHOLD 5
 #define MAX_PID (1<<17)
 #define MAX_BUFFER_SIZE (10*1024)
 
@@ -71,7 +72,7 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     std::vector <int>listOfPid;    
     for(int i=17;i<MAX_PID;i++)
     {
-        if(map[i]>5) listOfPid.push_back(i);
+        if(map[i]>TS_NB_PACKET_THRESHOLD) listOfPid.push_back(i);
     }
     delete [] map;
     map=NULL;
@@ -81,6 +82,10 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
         memset(tracks,0,sizeof(ADM_TS_TRACK)*listOfPid.size());
         int validTracks=0;
         ADM_TS_TRACK_TYPE trackType;
+        printf("List of found PID:\n");
+        for(int i=0;i<listOfPid.size();i++)
+            printf("\t Pid=%d\n",listOfPid[i]);
+        printf("List end.\n");
         for(int i=0;i<listOfPid.size();i++)
         {
             printf("Found stuff in pid=%d\n",listOfPid[i]);
@@ -131,6 +136,7 @@ bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
 {
 TS_PESpacket pes(pid);
 TS_PESpacket pes2(pid);
+        ts->setPos(0);
         if(false==ts->getNextPES( &pes)) 
         {
             ADM_warning("\tCannot get PES\n");
