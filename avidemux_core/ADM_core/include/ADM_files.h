@@ -16,6 +16,9 @@
  ***************************************************************************/
 #ifndef ADM_FILES_H
 #define ADM_FILES_H
+#ifdef __cplusplus
+void ADM_initBaseDir(bool portableMode);
+#endif
 // Returns dir to ~/.avidemux, no need to free it
 char *ADM_getBaseDir(void);
 // Returns dir to ~/.avidemux/jobs, no need to free it

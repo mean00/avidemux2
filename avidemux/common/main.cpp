@@ -104,11 +104,11 @@ extern int check_leaks();
 
 void onexit(void);
 int startAvidemux(int argc, char *argv[]);
+bool isPortableMode(int argc, char *argv[]);
 
 int main(int _argc, char *_argv[])
 {
-	char **argv;
-	int argc;
+	ADM_initBaseDir(isPortableMode(_argc, _argv));
 
 #if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4)
 	// redirect output before registering exception handler so error dumps are captured
@@ -116,6 +116,9 @@ int main(int _argc, char *_argv[])
 #endif
 
 	installSigHandler();
+
+	char **argv;
+	int argc;
 
 #ifdef _WIN32
 	getUtf8CommandLine(&argc, &argv);
@@ -401,9 +404,21 @@ bool setPrefsDefault(void)
     #endif
 #endif
 }
-extern void checkCrashFile(void);
-void dummyXref(void)
+
+bool isPortableMode(int argc, char *argv[])
 {
-    checkCrashFile();
+	bool portableMode = false;
+
+	for (int i = 0; i < argc; i++)
+	{
+		if (strcmp(argv[i], "--portable") == 0)
+		{
+			portableMode = true;
+			break;
+		}
+	}
+
+	return portableMode;
 }
+
 //EOF

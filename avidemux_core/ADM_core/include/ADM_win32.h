@@ -1,6 +1,8 @@
 #if defined(_WIN32) && !defined ADM_WIN32_H
 #define ADM_WIN32_H
 
+#include "ADM_inttype.h"
+
 uint8_t win32_netInit(void);
 int shutdown_win32(void);
 bool getWindowsVersion(char* version);

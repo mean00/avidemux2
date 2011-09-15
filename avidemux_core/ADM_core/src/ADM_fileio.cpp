@@ -19,7 +19,8 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
-#include <unistd.h>
+
+#include "ADM_win32.h"
 
 #if defined(__APPLE__)
  #include <Carbon/Carbon.h>
@@ -33,25 +34,10 @@
 
 #include "ADM_default.h"
 
-#define WIN32_PORTABLE_MODE 1
-
 #ifdef __WIN32
 static const char *SEPARATOR="\\";
-
-#ifdef WIN32_PORTABLE_MODE
-    const char *ADM_DIR_NAME="settings";
-    bool portable=true;
-#else
-    const char *ADM_DIR_NAME="avidemux6";
-    bool portable=false;
-#endif
-#elif defined __HAIKU__
-static const char *SEPARATOR="/";
-const char *ADM_DIR_NAME="config/settings/avidemux6";
-
 #else
 static const char *SEPARATOR="/";
-const char *ADM_DIR_NAME=".avidemux6";
 #endif
 
 static char ADM_basedir[1024] = {0};
@@ -60,17 +46,11 @@ static char *ADM_customdir = NULL;
 static char *ADM_autodir = NULL;
 static char *ADM_systemPluginSettings=NULL;
 static char *ADM_userPluginSettings=NULL;
-static int baseDirDone = 0;
 
 #undef fread
 #undef fwrite
 #undef fopen
 #undef fclose
-
-#ifdef __WIN32
-extern int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
-extern int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength, char *utf8String);
-#endif
 
 size_t ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream)
 {
@@ -399,19 +379,22 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 	return ADM_getRelativePath(ADM_INSTALL_DIR, base1, base2, base3);
 #endif
 }
+
 /*
       Get the root directory for .avidemux stuff
 ******************************************************/
 char *ADM_getBaseDir(void)
 {
-	char *home;
+	return ADM_basedir;
+}
 
-	if (baseDirDone)
-		return ADM_basedir;
+void ADM_initBaseDir(bool portableMode)
+{
+	char *home = NULL;
 
 	// Get the base directory
 #ifdef __WIN32
-    if (portable)
+    if (portableMode)
     {
         // Portable mode...
         home = ADM_getInstallRelativePath(NULL, NULL, NULL);
@@ -444,31 +427,43 @@ char *ADM_getBaseDir(void)
 	else
 	{
 		printf("Oops: can't determine $HOME.");
-
-		return NULL;
 	}
 #endif
 
 	// Try to open the .avidemux directory
 
-	strcpy(ADM_basedir, home);
-	AddSeparator(ADM_basedir);
-	strcat(ADM_basedir, ADM_DIR_NAME);
-	strcat(ADM_basedir, SEPARATOR);
-
-    delete [] home;
-    home=NULL;
-
-	if (!ADM_mkdir(ADM_basedir))
+	if (home)
 	{
-		ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n",ADM_basedir);
-		return NULL;
-	}
+		strcpy(ADM_basedir, home);
+		AddSeparator(ADM_basedir);
 
-	// Now built the filename
-	baseDirDone = 1;
-	printf("Using %s as base directory for prefs/jobs/...\n", ADM_basedir);
-	return ADM_basedir;
+#ifdef _WIN32
+		const char *ADM_DIR_NAME;
+
+		if (portableMode)
+			ADM_DIR_NAME = "settings";
+		else
+			ADM_DIR_NAME = "avidemux";
+#elif defined __HAIKU__
+		const char *ADM_DIR_NAME = "config/settings/avidemux6";
+#else
+		const char *ADM_DIR_NAME = ".avidemux6";
+#endif
+
+		strcat(ADM_basedir, ADM_DIR_NAME);
+		strcat(ADM_basedir, SEPARATOR);
+
+		delete [] home;
+
+		if (ADM_mkdir(ADM_basedir))
+		{
+			printf("Using %s as base directory for prefs, jobs, etc.\n", ADM_basedir);
+		}
+		else
+		{
+			ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
+		}
+	}
 }
 
 #ifdef __WIN32

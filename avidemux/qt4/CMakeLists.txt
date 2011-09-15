@@ -160,7 +160,7 @@ if (WIN32 OR APPLE)
 endif (WIN32 OR APPLE)
 
 IF (WIN32)
-	target_link_libraries(ADM_osSupport)
+	target_link_libraries(avidemux3_qt4 ADM_osSupport6)
 	target_link_libraries(avidemux3_qt4 winmm -mwindows -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
