@@ -210,7 +210,11 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 //----------------------------------------
 uint8_t renderUpdateImage(ADMImage *image)
 {
-    
+    if(!renderer)
+    {
+        ADM_warning("Render update image without renderer\n");
+        return 0;
+    }
     ADM_assert(!_lock);
     enableDraw=true;
     if(renderer->getPreferedImage()!=image->refType)
