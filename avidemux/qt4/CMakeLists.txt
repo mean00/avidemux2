@@ -130,6 +130,7 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4
 	ADM_shellQt4
 	ADM_toolkit6
 	ADM_coreAudioDevice6
+	ADM_osSupport6
 )
 
 ###########################################
@@ -160,7 +161,6 @@ if (WIN32 OR APPLE)
 endif (WIN32 OR APPLE)
 
 IF (WIN32)
-	target_link_libraries(avidemux3_qt4 ADM_osSupport6)
 	target_link_libraries(avidemux3_qt4 winmm -mwindows -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
