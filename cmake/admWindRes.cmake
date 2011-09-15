@@ -1,7 +1,5 @@
-IF(WIN32)
         IF(CROSS)
-                SET(WINDRES ${CMAKE_CROSS_PREFI}-windres)
+                SET(WINDRES ${CMAKE_WINDRES})
         ELSE(CROSS)
                 SET(WINDRES windres.exe)
         ENDIF(CROSS)
-ENDIF(WIN32)
