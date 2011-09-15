@@ -444,6 +444,7 @@ uint32_t ref;
 uint8_t ADM_Composer::cleanup (void)
 {
   _segments.deleteAll();
+  _audioSeg = 0;
   return 1;
 }
 
