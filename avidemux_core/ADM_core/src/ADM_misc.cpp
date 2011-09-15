@@ -23,15 +23,12 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-#ifndef __WIN32
-#include <unistd.h>
-#endif
-//#include <gtk/gtk.h>
 #include <ctype.h>
 #include <sys/time.h>
 
 #include "ADM_default.h"
 #include "ADM_assert.h"
+#include "ADM_win32.h"
 
 #include "ADM_vidMisc.h"
 #undef fopen

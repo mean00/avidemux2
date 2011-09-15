@@ -2,21 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-
-#ifdef __MINGW32__
 #include <winsock2.h>
-#endif
-
 #include "ADM_default.h" 
-
-extern char *ADM_getBaseDir(void);
 
 void ADM_usleep(unsigned long us)
 {
 	Sleep(us/1000);
 }
 
-#ifdef __MINGW32__
 uint8_t win32_netInit(void)
 {
 	WSADATA wsaData;
@@ -34,7 +27,6 @@ uint8_t win32_netInit(void)
 	printf("WinSock ok\n");
 	return 1;
 }
-#endif
 
 #ifndef HAVE_GETTIMEOFDAY
 extern "C"
@@ -507,4 +499,44 @@ int ansiStringToUtf8(const char *ansiString, int ansiStringLength, char *utf8Str
 
 	return multiByteStringLen;
 }
+
+void getUtf8CommandLine(int *argc, char **argv[])
+{
+	wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), argc);
+
+	if (wargv)
+	{
+		*argv = new char *[*argc];
+
+		for (int i = 0; i < *argc; i++)
+		{
+			wchar_t *warg = wargv[i];
+			int wargLength = wcslen(warg);
+			int utf8Length = wideCharStringToUtf8(warg, wargLength, NULL);
+			char *utf8 = new char[utf8Length + 1];
+
+			wideCharStringToUtf8(warg, wargLength, utf8);
+			utf8[utf8Length] = '\0';
+			(*argv)[i] = utf8;
+		}
+
+		LocalFree(wargv);
+	}
+	else
+	{
+		*argc = 0;
+		*argv = NULL;
+	}
+}
+
+void freeUtf8CommandLine(int argc, char *argv[])
+{
+	for (int i = 0; i < argc; i++)
+	{
+		delete [] argv[i];
+	}
+
+	delete [] argv;
+}
+
 #endif	// __WIN32

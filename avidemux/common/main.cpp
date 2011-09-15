@@ -17,33 +17,19 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_cpp.h"
-
-#ifdef __MINGW32__
-#define UNICODE
-#include <windows.h>
-#endif
-
 #include "config.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "DIA_uiTypes.h"
 #include "ADM_preview.h"
+#include "ADM_win32.h"
 #define __DECLARE__
 #include "avi_vars.h"
 
 #include "prefs.h"
 #include "audio_out.h"
 #include "ADM_assert.h"
-
-
-static bool setPrefsDefault(void);
-extern void  ADM_lavInit();
-extern void  ADM_lavDestroy();
-extern void  ADM_lavFormatInit(void);
-extern bool  vdpauProbe(void);
-extern "C" {
-     extern uint8_t     ADM_InitMemcpy(void);
-};
+#include "ADM_script2/include/ADM_scriptIf.h"
 
 #ifdef USE_SDL
 extern "C" {
@@ -57,9 +43,14 @@ extern "C" {
 #include "ADM_render/GUI_sdlRender.h"
 #endif
 
-#include "ADM_script2/include/ADM_scriptIf.h"
-void onexit( void );
-//extern void automation(int argc, char **argv);
+static bool setPrefsDefault(void);
+extern void  ADM_lavInit();
+extern void  ADM_lavDestroy();
+extern void  ADM_lavFormatInit(void);
+extern bool  vdpauProbe(void);
+extern "C" {
+     extern uint8_t     ADM_InitMemcpy(void);
+};
 
 extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
@@ -97,10 +88,6 @@ extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
 
-#ifdef __MINGW32__
-extern int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength, char *utf8String);
-#endif
-
 #if defined(_WIN64)
 extern LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
 #elif defined(_WIN32)
@@ -109,28 +96,45 @@ extern EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptio
 extern void installSigHandler(void);
 #endif
 
-#ifdef _WIN32
-extern bool getWindowsVersion(char* version);
-extern void redirectStdoutToFile(void);
-#endif
-
 extern uint8_t  quotaInit(void);
 extern void ADMImage_stat( void );
-extern uint8_t win32_netInit(void);
 
 extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
-extern void renderDestroy(void);
 extern bool ADM_jobInit(void);
-extern bool ADM_jobShutDown(void);
+
 // Spidermonkey/Scripting stuff  
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
 extern int check_leaks();
 #endif
 
-int main(int argc, char *argv[])
+void onexit(void);
+int startAvidemux(int argc, char *argv[]);
+
+int main(int _argc, char *_argv[])
+{
+	char **argv;
+	int argc;
+
+#ifdef _WIN32
+	getUtf8CommandLine(&argc, &argv);
+#else
+	argv = _argv;
+	argc = _argc;
+#endif
+
+	int exitVal = startAvidemux(argc, argv);
+
+#ifdef _WIN32
+	freeUtf8CommandLine(argc, argv);
+#endif
+
+	return exitVal;
+}
+
+int startAvidemux(int argc, char *argv[])
 {
 	char uiDesc[15];
 	getUIDescription(uiDesc);
@@ -204,6 +208,12 @@ int main(int argc, char *argv[])
 
     // getTime
     printf("Time: %s\n", ADM_epochToString(ADM_getSecondsSinceEpoch()));
+
+	for(int i = 0; i < argc; i++)
+	{
+		printf("%d: %s\n", i, argv[i]);
+	}
+
 	// Start counting memory
 	ADM_memStatInit();
     ADM_InitMemcpy();
@@ -229,37 +239,7 @@ int main(int argc, char *argv[])
     win32_netInit();
 #endif
 
-    // unicode command line...
-    char    **Aargv=NULL;
-    int     Aargc=0;
-#if _WIN32
-     wchar_t **wargv = CommandLineToArgvW (GetCommandLineW (), &Aargc);
-     if (wargv && Aargc)
-     {
-        Aargv=new char *[Aargc];
-        for(int i=0;i<Aargc;i++)
-        {
-            char *utf8;
-            wchar_t   *w=wargv[i];
-            int     lin=wcslen(w);
-            int     lout= wideCharStringToUtf8(w, lin,NULL);
-            utf8=new char[lout+1];
-            memset(utf8,0,lout+1);
-            wideCharStringToUtf8(w,lin,utf8);
-            Aargv[i]=utf8;
-        }
-        for(int i=0;i<Aargc;i++)
-            printf("%d : %s\n",i,Aargv[i]);
-        
-     }
-#else
-    Aargv=argv;
-    Aargc=argc;
-
-#endif
-
-
-    UI_Init(Aargc,Aargv);
+    UI_Init(argc, argv);
     AUDMEncoder_initDither();
 
     // Hook our UI...
@@ -394,7 +374,6 @@ void onexit( void )
     
     admPreview::destroy();
     UI_End();
-    //renderDestroy();
 
     ADM_ad_cleanup();
     ADM_ae_cleanup();
