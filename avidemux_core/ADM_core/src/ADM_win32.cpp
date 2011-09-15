@@ -510,13 +510,10 @@ void getUtf8CommandLine(int *argc, char **argv[])
 
 		for (int i = 0; i < *argc; i++)
 		{
-			wchar_t *warg = wargv[i];
-			int wargLength = wcslen(warg);
-			int utf8Length = wideCharStringToUtf8(warg, wargLength, NULL);
-			char *utf8 = new char[utf8Length + 1];
+			int utf8Length = wideCharStringToUtf8(wargv[i], -1, NULL);
+			char *utf8 = new char[utf8Length];
 
-			wideCharStringToUtf8(warg, wargLength, utf8);
-			utf8[utf8Length] = '\0';
+			wideCharStringToUtf8(wargv[i], -1, utf8);
 			(*argv)[i] = utf8;
 		}
 
