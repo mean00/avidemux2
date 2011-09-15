@@ -23,6 +23,7 @@
 #include "DIA_uiTypes.h"
 #include "ADM_preview.h"
 #include "ADM_win32.h"
+#include "ADM_crashdump.h"
 #define __DECLARE__
 #include "avi_vars.h"
 
@@ -87,15 +88,6 @@ extern bool vdpauCleanup(void);
 extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
-
-#if defined(_WIN64)
-extern LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
-#elif defined(_WIN32)
-extern EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord, void *establisherFrame, struct _CONTEXT *contextRecord, void *dispatcherContext);
-#else
-extern void installSigHandler(void);
-#endif
-
 extern uint8_t  quotaInit(void);
 extern void ADMImage_stat( void );
 
@@ -118,11 +110,22 @@ int main(int _argc, char *_argv[])
 	char **argv;
 	int argc;
 
+#if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4)
+	// redirect output before registering exception handler so error dumps are captured
+	redirectStdoutToFile();
+#endif
+
+	installSigHandler();
+
 #ifdef _WIN32
 	getUtf8CommandLine(&argc, &argv);
 #else
 	argv = _argv;
 	argc = _argc;
+#endif
+
+#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
+	new_progname = argv[0];
 #endif
 
 	int exitVal = startAvidemux(argc, argv);
@@ -131,28 +134,13 @@ int main(int _argc, char *_argv[])
 	freeUtf8CommandLine(argc, argv);
 #endif
 
+	uninstallSigHandler();
+
 	return exitVal;
 }
 
 int startAvidemux(int argc, char *argv[])
 {
-	char uiDesc[15];
-	getUIDescription(uiDesc);
-
-#if defined(_WIN32)
-	if (strcmp(uiDesc, "CLI") != 0)
-		redirectStdoutToFile();
-#endif
-
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
-	new_progname = argv[0];
-#endif
-
-#ifndef _WIN32
-	// thx smurf uk :)
-    installSigHandler();
-#endif
-
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
 
@@ -193,6 +181,8 @@ int startAvidemux(int argc, char *argv[])
 	printf(" (PowerPC)");
 #endif
 
+	char uiDesc[15];
+	getUIDescription(uiDesc);
 	printf("\nUser Interface: %s\n", uiDesc);
 
 #ifdef _WIN32
@@ -206,7 +196,6 @@ int startAvidemux(int argc, char *argv[])
 	printf("\nLarge file available: %d offset\n", __USE_FILE_OFFSET64);
 #endif
 
-    // getTime
     printf("Time: %s\n", ADM_epochToString(ADM_getSecondsSinceEpoch()));
 
 	for(int i = 0; i < argc; i++)
@@ -322,12 +311,6 @@ int startAvidemux(int argc, char *argv[])
     else
 		ADM_assert(0); 
 
-#if defined(_WIN64)
-	SetUnhandledExceptionFilter(ExceptionFilter);
-#elif defined(_WIN32)
-	__try1(ExceptionHandler);
-#endif
-
 #if defined( USE_VDPAU) 
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     printf("Probing for VDPAU...\n");
@@ -342,10 +325,6 @@ int startAvidemux(int argc, char *argv[])
     ADM_jobInit();
 
     UI_RunApp();
-
-#if defined(_WIN32) && defined(_X86_)
-	__except1;
-#endif
 
     printf("Normal exit\n");
     return 0;
