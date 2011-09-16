@@ -33,7 +33,7 @@ set packageDir=%CD%\%revisionNo% [%BuildBits%-bit]
 mkdir "%packageDir%"
 
 cd "%curDir%"
-call "2b. Package SDK.bat"
+rem call "2b. Package SDK.bat"
 if errorlevel 1 goto error
 
 cd "%curDir%"

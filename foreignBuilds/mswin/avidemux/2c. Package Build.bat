@@ -17,9 +17,6 @@ mkdir "%packageDir%\temp"
 cd "%packageDir%\temp"
 "%SevenZipDir%\7z" x "%packageDir%\%baseFile%.exe"
 rmdir /s/q $PLUGINSDIR
-mkdir scripts
-move $_OUTDIR\auto scripts
-move $_OUTDIR\video scripts
 mkdir etc\fonts\conf.d
 copy "%buildDir%\etc\fonts\conf.d" etc\fonts\conf.d\
 move $_OUTDIR\conf.avail etc\fonts

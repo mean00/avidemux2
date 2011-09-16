@@ -16,8 +16,9 @@ SetCompressorDictSize 96
 # Defines
 ##########################
 
-!define PRODUCT_VERSION "2.6.0.${REVISION}"
-!define PRODUCT_NAME "Avidemux 2.6"
+!define CORE_VERSION "2.6"
+!define PRODUCT_VERSION "${CORE_VERSION}.0.${REVISION}"
+!define PRODUCT_NAME "Avidemux ${CORE_VERSION}"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit beta)"
 
 !if ${BUILD_BITS} == 64
@@ -47,13 +48,13 @@ SetCompressorDictSize 96
 !endif
 
 !ifdef INST_BOTH
-OutFile "${EXEDIR}\avidemux_2.6_r${REVISION}_full_win${BUILD_BITS}.exe"
+OutFile "${EXEDIR}\avidemux_${CORE_VERSION}_r${REVISION}_full_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME} Full"
 !else ifdef INST_QT
-OutFile "${EXEDIR}\avidemux_2.6_r${REVISION}_win${BUILD_BITS}.exe"
+OutFile "${EXEDIR}\avidemux_${CORE_VERSION}_r${REVISION}_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME}"
 !else ifdef INST_GTK
-OutFile "${EXEDIR}\avidemux_2.6_r${REVISION}_gtk_win${BUILD_BITS}.exe"
+OutFile "${EXEDIR}\avidemux_${CORE_VERSION}_r${REVISION}_gtk_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME} GTK+"
 !endif
 
@@ -291,6 +292,7 @@ Section "Avidemux Core" SecCore
     ${File} libgcc_s_sjlj-1.dll
 	${File} nspr4.dll
     ${File} libjs.dll
+	${File} libADM_audioParser6.dll
     ${File} libADM_core6.dll
     ${File} libADM_coreAudio6.dll
 	${File} libADM_coreAudioDevice6.dll
@@ -319,6 +321,8 @@ Section "Avidemux Core" SecCore
     ${File} avutil-*.dll
     ${File} postproc-*.dll
     ${File} swscale-*.dll
+    SetOutPath $INSTDIR\plugins\autoScripts
+    ${Folder} plugins\autoScripts
 SectionEnd
 
 SectionGroup /e "User interfaces" SecGrpUI
@@ -725,6 +729,8 @@ InstallQt:
 			${File} plugins\videoEncoders\libADM_ve_x264_qt4.dll
 End:
 !endif
+			SetOutPath $INSTDIR\plugins\pluginSettings\x264
+			${Folder} plugins\pluginSettings\x264
 			SetOutPath $INSTDIR
 			${File} libx264-*.dll
 		${MementoSectionEnd}
@@ -987,20 +993,8 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_sampleGlVertex.dll
 			${MementoSectionEnd}
-			${MementoSection} "Yadif" SecVidFltOpenGlYadif
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_glYadif.dll
-			${MementoSectionEnd}
 		SectionGroupEnd
 		SectionGroup "Miscellaneous Filters" SecGrpVideoFilterMiscellaneous
-			${MementoUnselectedSection} "Dummy" SecVidFltDummy
-				SectionIn 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_dummy.dll
-			${MementoSectionEnd}
 			${MementoSection} "Print Information" SecVidFltPrintInfo
 				SectionIn 1 2
 				SetOverwrite on
@@ -1023,7 +1017,7 @@ ${MementoSection} "-Start menu Change Log" SecStartMenuChangeLog
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Change Log.lnk" "$INSTDIR\Change Log.html"
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk" "$INSTDIR\Change Log.html"
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 
@@ -1032,7 +1026,7 @@ ${MementoSection} "-Start menu GTK+" SecStartMenuGtk
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME} GTK+.lnk" $INSTDIR\avidemux2_gtk.exe
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME} GTK+.lnk" $INSTDIR\avidemux_gtk.exe
     !insertmacro MUI_STARTMENU_WRITE_END
 !endif
 ${MementoSectionEnd}
@@ -1042,7 +1036,7 @@ ${MementoSection} "-Start menu Qt" SecStartMenuQt
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux2.exe
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux.exe
     !insertmacro MUI_STARTMENU_WRITE_END
 !endif
 ${MementoSectionEnd}
@@ -1051,35 +1045,35 @@ ${MementoSection} "-Start menu AVS Proxy GUI" SecStartMenuAvsProxyGui
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI.lnk" "$INSTDIR\avsproxy_gui.exe"
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk" "$INSTDIR\avsproxy_gui.exe"
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 
 ${MementoSection} "-Quick Launch GTK+" SecQuickLaunchGtk
 !ifdef INST_GTK
     SetOutPath $INSTDIR
-    CreateShortcut "$QUICKLAUNCH\${SHORTCUT_NAME} GTK+.lnk" $INSTDIR\avidemux2_gtk.exe
+    CreateShortcut "$QUICKLAUNCH\${SHORTCUT_NAME} GTK+.lnk" $INSTDIR\avidemux_gtk.exe
 !endif
 ${MementoSectionEnd}
 
 ${MementoSection} "-Quick Launch Qt" SecQuickLaunchQt
 !ifdef INST_QT
     SetOutPath $INSTDIR
-    CreateShortcut "$QUICKLAUNCH\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux2.exe
+    CreateShortcut "$QUICKLAUNCH\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux.exe
 !endif
 ${MementoSectionEnd}
 
 ${MementoSection} "-Desktop GTK+" SecDesktopGtk
 !ifdef INST_GTK
     SetOutPath $INSTDIR
-    CreateShortcut "$DESKTOP\${SHORTCUT_NAME} GTK+.lnk" $INSTDIR\avidemux2_gtk.exe
+    CreateShortcut "$DESKTOP\${SHORTCUT_NAME} GTK+.lnk" $INSTDIR\avidemux_gtk.exe
 !endif
 ${MementoSectionEnd}
 
 ${MementoSection} "-Desktop Qt" SecDesktopQt
 !ifdef INST_QT
     SetOutPath $INSTDIR
-    CreateShortcut "$DESKTOP\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux2.exe
+    CreateShortcut "$DESKTOP\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux.exe
 !endif
 ${MementoSectionEnd}
 
@@ -1119,8 +1113,8 @@ Section Uninstall
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk"
 !endif
 
-	Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Change Log.lnk"
-    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI.lnk"
+	Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
     DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
     
@@ -1166,28 +1160,6 @@ FunctionEnd
 Function .onInstSuccess
 	${MementoSectionSave}
 FunctionEnd
-
-!ifdef INST_BOTH
-Function .onSelChange
-	!insertmacro SectionFlagIsSet ${SecUiGtk} ${SF_SELECTED} end checkCLI
-checkCLI:
-	!insertmacro SectionFlagIsSet ${SecUiCli} ${SF_SELECTED} end disable
-
-disable:  # GTK langs only
-	SectionSetFlags ${SecLangCatalan} SF_RO
-	SectionSetFlags ${SecLangCzech} SF_RO
-	SectionSetFlags ${SecLangFrench} SF_RO
-	SectionSetFlags ${SecLangGerman} SF_RO
-	SectionSetFlags ${SecLangGreek} SF_RO
-	SectionSetFlags ${SecLangJapanese} SF_RO
-	SectionSetFlags ${SecLangRussian} SF_RO
-	SectionSetFlags ${SecLangSerbianCyrillic} SF_RO
-	SectionSetFlags ${SecLangSerbianLatin} SF_RO
-	SectionSetFlags ${SecLangSpanish} SF_RO
-	SectionSetFlags ${SecLangTurkish} SF_RO
-end:
-FunctionEnd
-!endif
 
 Function LoadPreviousSettings
     ${MementoSectionRestore}
@@ -1416,7 +1388,7 @@ Function RunAvidemux
     IntOp $0 $0 & ${SF_SELECTED}
 
     StrCmp $0 ${SF_SELECTED} 0 GTK
-        Exec "$INSTDIR\avidemux_qt4.exe"
+        Exec "$INSTDIR\avidemux.exe"
 
     Goto end
 GTK:
