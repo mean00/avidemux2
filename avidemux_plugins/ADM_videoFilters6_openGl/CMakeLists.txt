@@ -1,5 +1,5 @@
 #ADD_SUBDIRECTORY(glSmooth)
-ADD_SUBDIRECTORY(glYadif)
+#ADD_SUBDIRECTORY(glYadif)
 #ADD_SUBDIRECTORY(sample_fragment)
 ADD_SUBDIRECTORY(sample_fragment2)
 ADD_SUBDIRECTORY(sample_distort)
