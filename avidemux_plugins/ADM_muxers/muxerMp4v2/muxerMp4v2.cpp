@@ -196,14 +196,14 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
             ADM_error("[mp4v2]Cannot set timescale to us\n");
             return false;
         }
-        if(false==initAudio())
-        {
-            ADM_error("Cannot init audio\n");
-            return false;
-        }
         if(false==initVideo())
         {
             ADM_error("Cannot init video\n");
+            return false;
+        }
+        if(false==initAudio())
+        {
+            ADM_error("Cannot init audio\n");
             return false;
         }
 
