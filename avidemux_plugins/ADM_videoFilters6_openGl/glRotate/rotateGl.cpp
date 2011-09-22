@@ -55,7 +55,7 @@ DECLARE_VIDEO_FILTER(   rotateGl,   // Class
                         VF_OPENGL,            // Category
                         "glRotate",            // internal name (must be uniq!)
                         "OpenGl Rotate",            // Display name
-                        "Rotate image." // Description
+                        "Rotate image by a small amount." // Description
                     );
 
 // Now implements the interesting parts
@@ -119,7 +119,7 @@ bool rotateGl::getNextFrame(uint32_t *fn,ADMImage *image)
     // since we do nothing, just get the output of previous filter
     if(false==previousFilter->getNextFrame(fn,original))
     {
-        ADM_warning("FlipFilter : Cannot get frame\n");
+        ADM_warning("glRotate : Cannot get frame\n");
         return false;
     }
     widget->makeCurrent();
@@ -141,7 +141,7 @@ bool rotateGl::getNextFrame(uint32_t *fn,ADMImage *image)
     firstRun=false;
     glPopMatrix();
     widget->doneCurrent();
-    
+    image->copyInfo(original);
     return true;
 }
 /**
@@ -170,7 +170,7 @@ bool rotateGl::configure( void)
 {
     
      
-     diaElemInteger  tAngle(&(params.angle),QT_TR_NOOP("Angle :"),-190,190);
+     diaElemInteger  tAngle(&(params.angle),QT_TR_NOOP("Angle (°):"),-190,190);
    
      
      diaElem *elems[]={&tAngle};
@@ -190,18 +190,19 @@ bool rotateGl::configure( void)
     \fn     translate
     \brief  compute the quad after rotation
 */
+
 static bool translate(int &x,int &y,float c,float s,int w2,int h2)
 {
-    float xx=x;
-    float yy=y;
+    float xx=x,xx2;
+    float yy=y,yy2;
     xx-=w2;
     yy-=h2;
     
-    xx=xx*c-yy*s;
-    yy=xx*s+yy*c;
+    xx2=xx*c-yy*s;
+    yy2=xx*s+yy*c;
 
-    x=xx+w2;
-    y=yy+h2;
+    x=xx2+w2;
+    y=yy2+h2;
     return true;
 }
 /**
@@ -215,8 +216,13 @@ bool rotateGl::genQuad(void)
   int height=info.height;
   int w2=width/2;
   int h2=height/2;
-  float c=cos(params.angle);
-  float s=sin(params.angle);
+
+#define PI 3.14159265
+  float angleRad=(float)params.angle;
+    angleRad=angleRad*PI/180.;
+
+  float c=cos(angleRad);
+  float s=sin(angleRad);
 
 
 #define POINT(a,b) x=a;y=b;translate(x,y,c,s,w2,h2); glTexCoord2i(a, b);glVertex2i(x, y);
