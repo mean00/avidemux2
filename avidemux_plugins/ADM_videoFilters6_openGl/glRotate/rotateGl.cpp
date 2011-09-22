@@ -25,6 +25,7 @@
 #include "ADM_clock.h"
 #include "rotate.h"
 #include "rotate_desc.cpp"
+#include "DIA_factory.h"
 /**
     \class rotateGl
 */
@@ -42,7 +43,7 @@ public:
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-        virtual bool         configure(void) {return true;}             /// Start graphical user interface
+        virtual bool         configure(void) ;             /// Start graphical user interface
 };
 
 // Add the hook to make it valid plugin
@@ -158,6 +159,26 @@ const char *rotateGl::getConfiguration(void)
     return st;
 }
 
+/**
+    \fn configure
+*/
+bool rotateGl::configure( void) 
+{
+    
+     
+     diaElemInteger  tAngle(&(params.angle),QT_TR_NOOP("Angle :"),-190,190);
+   
+     
+     diaElem *elems[]={&tAngle};
+     
+     if(diaFactoryRun(QT_TR_NOOP("glRotate"),sizeof(elems)/sizeof(diaElem *),elems))
+     {
+                ADM_info("New angle : %d \n",params.angle);
+                return 1;
+     }
+    
+     return 0;
+}
 
 /**
     \fn render

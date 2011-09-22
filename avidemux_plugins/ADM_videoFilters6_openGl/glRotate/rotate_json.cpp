@@ -5,7 +5,7 @@
 #include "rotate.h"
 bool  gl_rotate_jserialize(const char *file, const gl_rotate *key){
 admJson json;
-json.addUint32("angle",key->angle);
+json.addInt32("angle",key->angle);
 return json.dumpToFile(file);
 };
 bool  gl_rotate_jdeserialize(const char *file, const ADM_paramList *tmpl,gl_rotate *key){

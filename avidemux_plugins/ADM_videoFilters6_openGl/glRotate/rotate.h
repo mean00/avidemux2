@@ -2,6 +2,6 @@
 #ifndef ADM_gl_rotate_CONF_H
 #define ADM_gl_rotate_CONF_H
 typedef struct {
-uint32_t angle;
+int32_t angle;
 }gl_rotate;
 #endif
