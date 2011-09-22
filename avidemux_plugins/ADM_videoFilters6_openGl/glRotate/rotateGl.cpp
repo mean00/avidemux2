@@ -32,8 +32,10 @@
 class rotateGl : public  ADM_coreVideoFilterQtGl
 {
 protected:
-               gl_rotate     params;
+                gl_rotate    params;
                 ADMImage    *original;
+                GLuint       glList;
+                bool         genQuad(void);
 protected:
                         bool render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
 public:
@@ -91,7 +93,8 @@ UNUSED_ARG(setup);
                 ADM_error("[GL Render] Binding FAILED\n");
                 ADM_assert(0);
         }
-
+        glList=glGenLists(1);
+        genQuad();
         fboY->release();
         widget->doneCurrent();
 
@@ -104,6 +107,7 @@ rotateGl::~rotateGl()
 {
     if(original) delete original;
     original=NULL;
+    glDeleteLists(glList,1);
 }
 
 /**
@@ -174,12 +178,62 @@ bool rotateGl::configure( void)
      if(diaFactoryRun(QT_TR_NOOP("glRotate"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 ADM_info("New angle : %d \n",params.angle);
+                widget->makeCurrent();
+                genQuad();
+                widget->doneCurrent();
                 return 1;
      }
     
      return 0;
 }
+/**
+    \fn     translate
+    \brief  compute the quad after rotation
+*/
+static bool translate(int &x,int &y,float c,float s,int w2,int h2)
+{
+    float xx=x;
+    float yy=y;
+    xx-=w2;
+    yy-=h2;
+    
+    xx=xx*c-yy*s;
+    yy=xx*s+yy*c;
 
+    x=xx+w2;
+    y=yy+h2;
+    return true;
+}
+/**
+    \fn     genQuad
+    \brief  compute the quad
+*/
+
+bool rotateGl::genQuad(void)
+{
+  int width=info.width;
+  int height=info.height;
+  int w2=width/2;
+  int h2=height/2;
+  float c=cos(params.angle);
+  float s=sin(params.angle);
+
+
+#define POINT(a,b) x=a;y=b;translate(x,y,c,s,w2,h2); glTexCoord2i(a, b);glVertex2i(x, y);
+  
+  glDeleteLists(glList,1);
+  glNewList(glList,GL_COMPILE);
+  glBegin(GL_QUADS);
+        int x=0,y=0;
+
+        POINT(0,0);
+        POINT(width,0);
+        POINT(width,height);
+        POINT(0,height);
+
+  glEnd();
+  glEndList();
+}
 /**
     \fn render
 */
@@ -193,18 +247,8 @@ bool rotateGl::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, width, 0, height, -1, 1);
-
-    //
-    glBegin(GL_QUADS);
-	glTexCoord2i(0, 0);
-	glVertex2i(0, 0);
-	glTexCoord2i(width, 0);
-	glVertex2i(width, 0);
-	glTexCoord2i(width, height);
-	glVertex2i(width ,height);
-	glTexCoord2i(0, height);
-	glVertex2i(0, height);
-	glEnd();	// draw cube background
+    glCallList(glList);
+    
     return true;
 }
 //EOF
