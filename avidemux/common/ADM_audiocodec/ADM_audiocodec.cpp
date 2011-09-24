@@ -63,6 +63,7 @@ ADM_Audiocodec *out = NULL;
                   		break;
             default:
             	out= ADM_ad_searchCodec(fourcc,info,extra,extraData);
+            	break;
         	}
 
 	if (out == NULL)
