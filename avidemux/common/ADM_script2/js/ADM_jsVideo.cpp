@@ -28,7 +28,7 @@
 #include "ADM_videoFilters.h"
 #include "GUI_ui.h"
 extern ADM_Composer *video_body;
-bool A_setVideoCodec(const char *nm);
+
 
 /**
     \fn Codec

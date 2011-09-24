@@ -18,7 +18,7 @@
 #include <vector>
 #include "ADM_editor/ADM_edit.hxx"
 #include "DIA_coreToolkit.h"
-void    A_Resync(void);
+
 
 /* our variables */
 static scriptLoggerFunc *scriptLogger=NULL;

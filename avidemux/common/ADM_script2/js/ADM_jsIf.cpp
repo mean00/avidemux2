@@ -143,7 +143,7 @@ int n=jsHooks.size();
             const char *t=jsHooks[i].text;
             if(t)
                 jsLog("%s",t);
-            return dump(jsHooks[i].jsFunctions);
+            dump(jsHooks[i].jsFunctions);
         }
     }
 //    if(!strcasecmp(s,"load")) return dump(jsGetAvidemuxFunctions());
