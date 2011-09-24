@@ -66,7 +66,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
                     playback.mixerConf=CHANNEL_DOLBY_PROLOGIC2;
                     break;
             default:
-                    ADM_assert(0);
+                    ADM_assert(0);break;
       }
 
 

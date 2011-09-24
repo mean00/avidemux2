@@ -23,7 +23,7 @@
 static AUDIOENCODER  currentEncoder=0; //0 is always dummy
 
 static AUDIOENCODER ADM_encoderByName(const char *name);
-static const char *ADM_audioEncoderById(AUDIOENCODER id);
+
 
 /**
     \class ADM_AudioEncoderLoader

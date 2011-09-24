@@ -49,7 +49,7 @@ class ADM_audioStream_autoDelete: public ADM_audioStream
                                 this->access=access;
                                 son=s;
                         }
-                        ~ADM_audioStream_autoDelete()
+                        virtual ~ADM_audioStream_autoDelete()
                         {
                                 ADM_info("Killing son audioStream\n");
                                 delete son;
