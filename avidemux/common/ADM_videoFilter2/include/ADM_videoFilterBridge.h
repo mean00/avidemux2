@@ -34,7 +34,7 @@ protected:
         bool                getNextFrameBase(uint32_t *frameNumber,ADMImage *image);      
 public:
                             ADM_videoFilterBridge(uint64_t startTime, uint64_t endTime);
-                            ~ADM_videoFilterBridge();
+       virtual             ~ADM_videoFilterBridge();
        virtual bool         goToTime(uint64_t usSeek);  
        virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);      
                bool         getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image);
