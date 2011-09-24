@@ -46,20 +46,13 @@
 
 extern bool ADM_slaveConnect(uint32_t port);
 
-extern int A_loadNone( void );
+
 extern void GUI_Quiet( void);
 extern void GUI_Verbose( void);
 extern void audioFilter_SetBitrate( int i);
-extern void videoCodecSelectByName(const char *name);
-extern int videoCodecConfigure(char *p,uint32_t i, uint8_t  *c);
-extern void updateLoaded( void );
-extern void setPostProc(int v,int s);
-extern void HandleAction(Action action) ;
 extern void show_info(char *p);
 extern const char *getStrFromAudioCodec( uint32_t codec);
 extern void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm, uint16_t * ss, uint16_t * ms);
-extern uint8_t ADM_aviSetSplitSize(uint32_t size);
-extern void updateLoaded(void );
 extern uint8_t A_rebuildKeyFrame (void);
 extern uint8_t scriptAddVar(char *var,char *value);
 
@@ -99,7 +92,6 @@ static void set_reuse_2pass_log(char *p);
 static void setVar(char *in);
 //
 uint8_t trueFalse(char *p);
-extern uint8_t runProbe(const char *file);
 //_________________________________________________________________________
 
 
@@ -177,7 +169,6 @@ typedef enum {
 	MPEG2ENC_SVCD,   // pseudo codec with profile
 	MPEG2ENC_DVD     // pseudo codec with profile
 } codec_t;
-static codec_t codec = SOME_UNKNOWN;
 
 //void automation(int argc, char **argv)
 int automation(void )
@@ -270,9 +261,6 @@ int searchReactionTable(char *string)
 
 void call_quit        (char *p) { UNUSED_ARG(p); exit(0);                            }
 
-
-
-extern void audioSetResample(uint32_t fq);
 
 void call_normalize   (char *p)
 {
