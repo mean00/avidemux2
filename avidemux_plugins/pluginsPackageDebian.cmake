@@ -13,7 +13,7 @@ SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Simple video editor, plugins ")
 
 # Build our deps list
 # Build deps SET(DEPS "debhelper (>> 4), libfreetype6-dev, libxml2-dev,  libxv-dev, dpatch , cmake, desktop-file-utils")
-SET(DEPS "libc6 (>=2.4),libglib2.0-0 (>=2.14.0),libstdc++6 (>=4.2.1),libx11-6,  libxml2 (>=2.6.27), libxv1, zlib1g (>=1:1.1.4), avidemux3-core (>=2.6.0)")
+SET(DEPS "libc6 (>=2.4),libglib2.0-0 (>=2.14.0),libstdc++6 (>=4.2.1),libx11-6,  libxv1, zlib1g (>=1:1.1.4), avidemux3-core (>=2.6.0)")
 # Add optional DEPS here
 SET(CPACK_DEBIAN_PACKAGE_DEPENDS "${DEPS}")
 #

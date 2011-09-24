@@ -31,9 +31,6 @@
 /* FreeType2 detected */
 #cmakedefine USE_FREETYPE
 
-/* Libxml2 is available */
-#cmakedefine USE_LIBXML2
-
 /* libvpx is available */
 #cmakedefine USE_VPX
 

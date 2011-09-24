@@ -18,18 +18,6 @@ ENDIF (VERBOSE)
 
 MESSAGE("")
 
-########################################
-# Libxml2
-########################################
-INCLUDE(admCheckLibxml2)
-
-checkLibxml2()
-
-IF (LIBXML2_FOUND)
-	SET(USE_LIBXML2 1)
-ELSEIF (LIBXML2_FOUND)
-	MESSAGE(${ARGV4} "Could not find Libxml2")
-ENDIF (LIBXML2_FOUND)
 
 ########################################
 # pthreads
