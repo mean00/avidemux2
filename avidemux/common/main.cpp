@@ -403,6 +403,7 @@ bool setPrefsDefault(void)
             prefs->set(VIDEODEVICE,(uint32_t)1); // XV
     #endif
 #endif
+    return true;
 }
 
 bool isPortableMode(int argc, char *argv[])

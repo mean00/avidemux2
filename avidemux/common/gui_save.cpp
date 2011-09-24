@@ -38,7 +38,6 @@
 // Local prototypes
 #include "A_functions.h"
 int      A_Save(const char *name);
-uint8_t  GUI_getFrameContent(ADMImage *image, uint32_t frame);
 extern   ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
 
 /**

@@ -46,8 +46,7 @@
 ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 extern ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
 extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
-extern ADM_videoStream  *createVideoStream(ADM_coreVideoEncoder *encoder);
-extern int              ADM_MuxerIndexFromName(const char *name);
+
 /**
     \class admSaver
     \brief Wrapper for saving

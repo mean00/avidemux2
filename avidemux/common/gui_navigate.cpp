@@ -37,7 +37,6 @@
 
 extern void UI_purge(void);
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss);
-extern bool SliderIsShifted;
 bool   GUI_GoToTime(uint64_t time);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**

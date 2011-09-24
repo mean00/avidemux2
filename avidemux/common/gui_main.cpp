@@ -50,24 +50,17 @@ renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** GUI Function**************
 //***********************************
-
-
-extern uint8_t GUI_jobs(void);
 extern const char * GUI_getCustomJsScript(uint32_t nb);
 extern const char * GUI_getCustomPyScript(uint32_t nb);
 extern const char * GUI_getAutoPyScript(uint32_t nb);
 
-extern uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame);
 extern int     GUI_handleVFilter (void);
-extern void    GUI_setMarks (uint32_t a, uint32_t b);
-extern void    GUI_displayBitrate( void );
 // Debug functions
        void    GUI_showCurrentFrameHex(void);
        void    GUI_showSize(void);
 
        void    GUI_avsProxy(void);
        uint8_t GUI_close(void);
-extern int     GUI_GoToFrame(uint32_t frame);;
 extern bool    GUI_GoToTime(uint64_t time);
 //***********************************
 //******** DIA Function**************
@@ -75,19 +68,16 @@ extern bool    GUI_GoToTime(uint64_t time);
 extern uint8_t DIA_about( void );
 extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
-extern uint8_t DIA_gotoTime(uint16_t *hh, uint32_t *mm, uint32_t *ss);
 extern uint8_t DIA_builtin(void);
-extern void    DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate );
 extern uint8_t DIA_pluginsInfo(void);
 
-extern void filterCleanUp (void);
 static void ReSync (void);
 static void cleanUp (void);
 void        updateLoaded (void);
-extern void encoderSetLogFile (char *name);
-extern void videoCodecConfigureUI(int codecIndex = -1);
-extern void audioCodecChanged(int newcodec);
-extern void videoCodecChanged(int newcodec);
+
+
+
+
 extern bool ADM_mux_configure(int index);
 void brokenAct(void);
 //
@@ -449,7 +439,6 @@ int nw;
 //    mode 1: Suspicious
 //_____________________________________________________________
 
-extern void GUI_PreviewEnd (void);
 /**
         \fn A_openAvi
         \brief Open (replace mode) a video

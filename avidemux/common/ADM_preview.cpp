@@ -227,7 +227,7 @@ void admPreview::displayNow(void)
       case ADM_PREVIEW_OUTPUT:     
         renderUpdateImage(rdrImage);
         break;
-      default: ADM_assert(0);
+      default: ADM_assert(0);break;
     }
 }
 /**

@@ -43,7 +43,6 @@ extern void UI_purge(void);
 //___________________________________
 uint8_t stop_req;
 
-extern renderZoom currentZoom;
 extern ADM_Composer *video_body;
 static uint32_t originalPriority;
 /**
