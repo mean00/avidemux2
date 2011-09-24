@@ -194,7 +194,7 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
                     case ZOOM_1_1: mul=4;break;
                     case ZOOM_2:   mul=8;break;
                     case ZOOM_4:   mul=16;break;
-                    default : ADM_assert(0);
+                    default : ADM_assert(0);break;
     
             }
         MUI_updateDrawWindowSize(draw,(w*mul)/4,(h*mul)/4);
@@ -408,7 +408,7 @@ bool VideoRenderBase::calcDisplayFromZoom(renderZoom zoom)
                     case ZOOM_1_1: mul=4;break;
                     case ZOOM_2:   mul=8;break;
                     case ZOOM_4:   mul=16;break;
-                    default : ADM_assert(0);
+                    default : ADM_assert(0);break;
     
             }
         displayWidth=(imageWidth*mul)/4;

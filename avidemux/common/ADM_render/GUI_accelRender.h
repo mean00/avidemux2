@@ -29,7 +29,7 @@ class VideoRenderBase
                         bool baseInit(uint32_t w,uint32_t h,renderZoom zoom);
        public:
                                 VideoRenderBase( void) {scaler=NULL;currentZoom=ZOOM_1_1;};
-                                ~VideoRenderBase() {if(scaler) delete scaler;scaler=NULL;}
+              virtual          ~VideoRenderBase() {if(scaler) delete scaler;scaler=NULL;}
               virtual	bool    init(GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)=0;
               virtual	bool    stop(void)=0;
               virtual   bool    displayImage(ADMImage *pic)=0;

@@ -54,6 +54,13 @@ XvRender::XvRender( void )
 
 }
 /**
+ * \fn XvRender dtor
+ */
+XvRender::~XvRender()
+{
+
+}
+/**
     \fn init
 */
 bool XvRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)

@@ -60,7 +60,7 @@ class QtGlRender: public VideoRenderBase
                             QtGlAccelWidget *glWidget;
       public:
                              QtGlRender( void ) ;
-                             ~QtGlRender();
+              virtual        ~QtGlRender();
               virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
