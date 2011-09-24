@@ -101,7 +101,7 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 			r=FileSel_SelectDir(selectDesc,buffer,MAX_SEL,txt);
 			break;
 		default:
-			ADM_assert(0);
+			ADM_assert(0);break;
 	}
 	if(r)
 	{

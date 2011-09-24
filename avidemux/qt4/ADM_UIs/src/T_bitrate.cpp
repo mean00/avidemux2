@@ -132,6 +132,7 @@ void ADM_Qbitrate::readBack(void)
     case COMPRESS_AQ: Mx(COMPRESS_AQ);Vx(qz);break;
     default :
           ADM_assert(0);
+          break;
   }
 }
 void ADM_Qbitrate::comboChanged(int i)
@@ -172,7 +173,7 @@ void ADM_Qbitrate::comboChanged(int i)
           M(_minQ,maxQ);
           S(compress->qz);
           break;
-    default:ADM_assert(0);
+    default:ADM_assert(0);break;
   }
 }
 ADM_Qbitrate::~ADM_Qbitrate()

@@ -88,7 +88,7 @@ void ADM_QCheckBox::changed(int i)
 		case TT_TOGGLE_INT:
 			((diaElemToggleInt *)_toggle)->updateMe();break;
 		default:
-			ADM_assert(0);
+			ADM_assert(0);break;
 	}
 }
 

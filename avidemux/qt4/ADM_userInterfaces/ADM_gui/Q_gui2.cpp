@@ -816,6 +816,7 @@ void UI_setCurrentPreview(int ne)
 			break;
 		default:
 			WIDGET(actionPreviewInput)->setChecked(true);
+			break;
 	}
 }
 /**
