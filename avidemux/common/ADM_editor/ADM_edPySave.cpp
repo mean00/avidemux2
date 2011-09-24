@@ -212,7 +212,7 @@ bool ppswap;
                 case FILMCONV_NONE:      ;break;
                 case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film=1\n");break;
                 case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1\n");break;
-                default:ADM_assert(0);
+                default:ADM_assert(0);break;
         }
    // --------- Normalize ----------------
         ADM_GAINMode mode;

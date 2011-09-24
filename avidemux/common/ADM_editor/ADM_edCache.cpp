@@ -166,17 +166,18 @@ bool		EditorCache::validate(ADMImage *image)
 void EditorCache::dump( void)
 {
     printf("ReadIndex:%"LU", WriteIndex:%"LU"\n",readIndex,writeIndex);
-	for(int i=0;i<_nbImage;i++)
-	{
-        cacheElem *e=&(_elem[i]);
-        switch(e->pts)
+    for(int i=0;i<_nbImage;i++)
+    {
+      cacheElem *e=&(_elem[i]);
+      switch(e->pts)
         {
             case ADM_NO_PTS:  printf("Not used %d\n",i);break;
             default:
                 printf("Edcache content[%d]: PTS : %"LLU" us%"LLU" ms\n",i,
                                                                     e->image->Pts,e->image->Pts/1000);
+                break;
         }
-	}
+    }
 }
 /**
     \fn findJustAfter

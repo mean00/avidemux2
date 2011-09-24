@@ -25,8 +25,6 @@ using std::string;
 #include "ADM_coreDemuxerMpeg/include/dmx_identify.h"
 
 
-DMX_TYPE dmxIdentify(const char *name);
-
 /**
 	Read the magic of a file i.e. its 16 first bytes
 */
