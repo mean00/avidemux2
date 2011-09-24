@@ -66,7 +66,7 @@ static bool isNalValid(int nal)
         case 1:case 5:case 6: case 7: case 8: case 9:case 0xc:
                 break;
         default:
-            ADM_warning("Invalid NAL 0x%x\n",nal);
+            ADM_warning("Invalid NAL 0x%x\n",nal);break;
     }
     if(nal<=12) ADM_info("Nal : %s",nalType[nal]);
     return true;
