@@ -186,7 +186,7 @@ dst_mul=1.;
 	}
 	aprintf("source mul %02.2f , dst mul : %02.2f\n",sr_mul,dst_mul);
 	x=x*sr_mul*dst_mul;
-	y=y;
+	y=y*1;
 
 	// normalize it to recover 100% width
 	y=y/(x/ow);
