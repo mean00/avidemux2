@@ -83,7 +83,7 @@
 #  License text for the above reference.)
 
 INCLUDE(FindPackageMessage)
-INCLUDE(CMakeParseArguments)
+INCLUDE(CMakeParseArguments285)
 
 # internal helper macro
 MACRO(_FPHSA_FAILURE_MESSAGE _msg)
