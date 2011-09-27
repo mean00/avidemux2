@@ -358,18 +358,20 @@ toolBarTranslate toolbar[]=
 void MainWindow::searchToolBar(QAction *action)
 {
         toolBarTranslate *t=toolbar;
-        QString me(action->objectName());
-        const char *name=me.toUtf8().constData();
+
+        char *name=ADM_strdup(action->objectName().toUtf8().constData());
         while(t->name)
         {
             if(!strcmp(name,t->name))
             {
                 HandleAction(t->event);
+                ADM_dealloc( name);
                 return;
             }
             t++;
         }
         ADM_warning("Toolbar:Cannot handle %s\n",name);
+        ADM_dealloc( name);
 }
 /**
     \fn buildFileMenu
