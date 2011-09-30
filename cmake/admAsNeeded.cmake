@@ -1,5 +1,7 @@
 MACRO(AS_NEEDED name)
-        TARGET_LINK_LIBRARIES( ${name} "-Wl,--as-needed")
+	IF(NOT APPLE)
+        	TARGET_LINK_LIBRARIES( ${name} "-Wl,--as-needed")
+	ENDIF(NOT APPLE)
 ENDMACRO(AS_NEEDED name)
 
 MACRO(ADM_ADD_SHARED_LIBRARY name )
