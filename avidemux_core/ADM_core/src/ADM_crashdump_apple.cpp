@@ -37,6 +37,7 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
 }
 
 void installSigHandler() {}
+void uninstallSigHandler() {}
 
 void ADM_backTrack(const char *info,int lineno,const char *file)
 {

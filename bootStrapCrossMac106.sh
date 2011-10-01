@@ -4,7 +4,7 @@ export CROSS_PREFIX=i686-apple-darwin10
 export SDLDIR=/opt/mac
 export TOOLCHAIN_DIR=/opt/mac/bin
 export XSDK=/opt/mac/SDKs/MacOSX10.6.sdk/usr
-export QT_HOME=/opt/mac/Qt/4.5.2
+export QT_HOME=/opt/mac/SDKs/MacOSX10.6.sdk/Library/Frameworks/
 # ** Put your config here **
 
 fail()
@@ -22,7 +22,8 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         sh $TOP/foreignBuilds/$SCRIPT || fail cmake
-        make -j 2 > /tmp/log$BUILDDIR || fail make
+        make   || fail make
+        #make -j 2 > /tmp/log$BUILDDIR || fail make
         make install || fail make_install
 }
 
@@ -31,16 +32,17 @@ export TOP=$PWD
 echo "Top dir : $TOP"
 echo "** CORE **"
 cd $TOP
-Process buildMingwCore cross_mac104_core
+Process buildMacCore cross_mac104_core
 echo "** QT4 **"
 cd $TOP
-Process buildMingwQt4 cross_mac104_qt4 
+Process buildMacQt4 cross_mac104_qt4 
 #echo "** GTK **"
 #cd $TOP
-#Process buildGtk ../avidemux/gtk
+Process buildMacGtk ../avidemux/gtk
 echo "** Plugins **"
 cd $TOP
-Process buildMingwPlugins cross_mac104_plugins 
+#Process buildMacPluginsCommon cross_mingw_plugins -DPLUGIN_UI=COMMON
+#Process buildMacPluginsQt4 cross_mingw_plugins -DPLUGIN_UI=QT4
 echo "** All done **"
 cd $TOP
 echo "** ALL DONE **"
