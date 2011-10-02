@@ -1,5 +1,6 @@
 #!/bin/bash
-export PKG_CONFIG_PATH=$XSDK/lib/pkgconfig
+#
+export PKG_CONFIG_PATH=$wXSDK/lib/pkgconfig
 export PKG_CONFIG_LIBDIR=$XSDK/lib/pkgconfig
 export CXXFLAGS="-arch i386"
 export CFLAGS="$CXXFLAGS"
@@ -7,17 +8,20 @@ export CPPFLAGS="$CXXFLAGS"
 export LDFLAGS="-L$XSDK/lib"
 export PATH=$PATH:$XSDK/bin:$TOOLCHAIN_DIR
 pkg-config --list-all
-#export DEBUG="-DVERBOSE=1 -DDEBUG=1  -DCMAKE_BUILD_TYPE=Debug    "
-echo "<<<<<<<<<<<<Cross compiling core ($XSDK)>>>>>>>>>>>>>>>>"
+#export DEBUG="-DVERBOSE=1   -DCMAKE_BUILD_TYPE=Debug -G \"CodeBlocks - Unix Makefiles\"   "
+echo "<<<<<<<<<<<<Cross compiling core>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$XSDK \
+	-DCROSS_MAC=104 \
 	-DFAKEROOT=$DST/ \
 	-DCMAKE_SYSTEM_NAME=Darwin  \
         -DCMAKE_INSTALL_PREFIX=/Release \
+        -DQT_HOME:STRING=$QT_HOME \
 	-DCMAKE_CROSS_PREFIX=$CROSS_PREFIX \
+        -DCMAKE_WINDRES=$CROSS_PREFIX-windres \
         -DCMAKE_C_COMPILER:STRING=$CROSS_PREFIX-gcc \
         -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
         -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
-        $DEBUG\
+        $DEBUG \
         -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
-        $TOP/avidemux_core
+        $TOP/avidemux/qt4
