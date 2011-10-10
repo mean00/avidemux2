@@ -95,6 +95,8 @@ entryDesc entry;
 
       entryWalk(  (ADM_ebml_file *)head,headlen,&entry);
       entry.dump();
+
+      //***************** First video track *****************
       if(entry.trackType==1 &&  !_isvideopresent)
       {
         _isvideopresent=1;
@@ -167,10 +169,42 @@ entryDesc entry;
         
         return 1;
       }
+      //***************** Audio tracks *****************
       if(entry.trackType==2 && _nbAudioTrack<ADM_MKV_MAX_TRACKS)
       {
          uint32_t  streamIndex;
          mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
+
+        // MS/ACM : ACMX
+        if(0x100001==entry.fcc)
+        {
+            int l=entry.extraDataLen;
+            int wavSize=sizeof(WAVHeader);
+            ADM_info("Found ACM compatibility header (%d / %d)\n",l,wavSize);
+            if(l>=wavSize) // we need at least a wavheader
+            {
+                mixDump(entry.extraData,l); printf("\n");
+                memcpy(&(t->wavHeader),entry.extraData,wavSize);
+                ADM_info("Encoding : %d\n",t->wavHeader.encoding);
+                int x=l-wavSize;
+                
+                if(x>0) // If we have more than a wavheader, it is extradata
+                {
+                    t->extraData=new uint8_t[x];
+                    t->extraDataLen=x;
+                    memcpy(t->extraData,entry.extraData+wavSize,x);
+                }
+                delete [] entry.extraData;
+                t->streamIndex=entry.trackNo;
+                if(entry.defaultDuration)
+                    t->_defaultFrameDuration=entry.defaultDuration;
+                else
+                    t->_defaultFrameDuration=0;
+                // In ACM mode we should not have the stripped header stuff..
+                _nbAudioTrack++;
+                return 1;
+            }
+        }
 
          t->wavHeader.encoding=entry.fcc;
          t->wavHeader.channels=entry.chan;
@@ -194,6 +228,7 @@ entryDesc entry;
         _nbAudioTrack++;
         return 1;
       }
+      // Other tracks, ignored...
       if(entry.extraData) delete [] entry.extraData;
       return 1;
 
