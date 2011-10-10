@@ -213,6 +213,7 @@ bool ADM_Composer::goToTime (uint64_t ustime)
     {
         _audioSeg=seg;
         setDts(ustime);
+        packetBufferSize=0; // Flush PCM decoder
         return true;
     }
     ADM_warning("Go to time failed\n");
