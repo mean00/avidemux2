@@ -16,9 +16,7 @@
 #ifndef ADM_audioStreamConstantChunk_H
 #define ADM_audioStreamConstantChunk_H
 
-#include "ADM_audioStreamBuffered.h"
-#include <vector>
-using namespace std;
+#include "ADM_audioStream.h"
 
 
 /**
@@ -26,11 +24,11 @@ using namespace std;
         \brief Class to handle MP3/MP3 streams
 
 */
-class ADM_audioStreamConstantChunk : public ADM_audioStreamBuffered
+class ADM_audioStreamConstantChunk : public ADM_audioStream
 {
         protected:
                         uint32_t  chunkSize;
-                        uint32_t samplesPerChunk;
+                        uint32_t  samplesPerChunk;
         public:
 /// Default constructor
                        ADM_audioStreamConstantChunk(WAVHeader *header,ADM_audioAccess *access);  
