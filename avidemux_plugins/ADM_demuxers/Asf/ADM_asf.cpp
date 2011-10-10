@@ -168,6 +168,11 @@ uint8_t asfHeader::open(const char *name)
         _audioAccess[i]=new asfAudioAccess(this,i);
         _audioStreams[i]=ADM_audioCreateStream(&(_allAudioTracks[i].wavHeader), _audioAccess[i]);
   }
+  if(!nbImage)
+    {
+        ADM_error("No image found \n");
+        return 0;
+    }
   return 1;
 }
 /**
