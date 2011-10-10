@@ -26,7 +26,7 @@ extern const char *getStrFromAudioCodec( uint32_t codec);
 propWindow::propWindow(QWidget *parent) : QDialog(parent)
  {
      ui.setupUi(this);
-     uint8_t gmc, qpel,vop;
+     uint8_t gmc=0, qpel=0,vop=0;
  uint32_t info=0;
  uint32_t war,har;
  uint32_t hh, mm, ss, ms;
