@@ -8,29 +8,31 @@ GPL-v2
 #include "ADM_default.h"
 #include "ADM_audioStreamConstantChunk.h"
 #include "DIA_working.h"
+#include "ADM_vidMisc.h"
 /**
     \fn ADM_audioStreamConstantChunk
     \brief constructor
 */
-ADM_audioStreamConstantChunk::ADM_audioStreamConstantChunk(WAVHeader *header,ADM_audioAccess *access) : ADM_audioStreamBuffered(header,access)
+ADM_audioStreamConstantChunk::ADM_audioStreamConstantChunk(WAVHeader *header,ADM_audioAccess *access) 
+    : ADM_audioStream(header,access)
 {
     //
     chunkSize=header->blockalign;
     if(!chunkSize)
     {
-        printf("[ADM_audioStreamConstantChunk] Blockalign is null expect problems\n");
+        ADM_warning("[ADM_audioStreamConstantChunk] Blockalign is null expect problems\n");
         chunkSize=8192; // dummy value
     }
-    printf("[ADM_audioStreamConstantChunk] Chunk size %"LU"\n",chunkSize);
-    printf("[ADM_audioStreamConstantChunk] Byterate   %"LU"\n",header->byterate);
+    ADM_info("[ADM_audioStreamConstantChunk] Chunk size %"LU"\n",chunkSize);
+    ADM_info("[ADM_audioStreamConstantChunk] Byterate   %"LU"\n",header->byterate);
     // Compute sample per chunk from wavHeader...
     float f;
     f=chunkSize;
     f/=header->byterate; // F is in seconds
     f*=header->frequency; // in sample
     samplesPerChunk=(uint32_t)f;
-    printf("[ADM_audioStreamConstantChunk] About %"LU" samples per chunk\n",samplesPerChunk);
-
+    ADM_info("[ADM_audioStreamConstantChunk] About %"LU" samples per chunk\n",samplesPerChunk);
+    //samplesPerChunk=16;
     // If hinted..., compute the duration ourselves
     if(access->isCBR()==true && access->canSeekOffset()==true)
     {
@@ -40,6 +42,7 @@ ADM_audioStreamConstantChunk::ADM_audioStreamConstantChunk(WAVHeader *header,ADM
               size*=1000;
               size*=1000; // s->us
               durationInUs=(uint64_t)size;
+              ADM_info("Computed duration %s\n",ADM_us2plain(durationInUs));
               return;
     }
 // Time based
@@ -62,21 +65,32 @@ ADM_audioStreamConstantChunk::~ADM_audioStreamConstantChunk()
 */
 uint8_t ADM_audioStreamConstantChunk::getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
 {
-
-        // Do we have enough ? Refill if needed ?
-        if(needBytes(chunkSize)==false) return 0;
-        if(sizeMax<chunkSize)
+    *size=0;
+    *nbSample=0;
+    if(sizeMax>=chunkSize)
+    {
+        uint32_t mSize;
+        uint64_t mDts;
+        if(!access->getPacket(buffer,&mSize,sizeMax,&mDts)) 
         {
-            printf("[ADM_audioStreamConstantChunk] Buffer too small %"LU", need %"LU"\n",sizeMax,chunkSize);
-            return 0;
+                ADM_warning("Cant get packet\n");
+                return 0;
         }
-        *size=chunkSize;
-        read(chunkSize,buffer);
-        start+=chunkSize;
-        *nbSample=samplesPerChunk;
-        *dts=lastDts;
-        advanceDtsBySample(samplesPerChunk);
-        return 1;
-            
+        ADM_info("Got packet : chunk=%d size=%d dts=%s\n",chunkSize,mSize,ADM_us2plain(mDts));
+        if(!*size)
+            *dts=mDts;
+
+        *size+=mSize;
+        *nbSample+=samplesPerChunk;
+        if(mSize!=chunkSize)
+        {
+            ADM_warning("Expected chunk of size =%d, got %d\n",chunkSize,mSize);
+        }
+
+        buffer+=mSize;
+        sizeMax-=mSize;
+     }
+     if(!*size) return 0;
+     return 1;
 }
 
