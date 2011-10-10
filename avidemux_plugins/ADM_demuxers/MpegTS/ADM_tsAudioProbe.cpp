@@ -66,7 +66,7 @@ uint64_t pts,dts,startAt;
             case ADM_TS_AAC_LATM:
                         break;
             default:
-                ADM_warning("Unsupported audio track\n");
+                ADM_warning("Unsupported audio track (%d)\n",trackInfo->trackType);
                 return false;
         }
         // Go back where we were

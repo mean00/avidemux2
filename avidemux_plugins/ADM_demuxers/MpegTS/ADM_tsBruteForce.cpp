@@ -95,7 +95,7 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
                 tracks[validTracks].trackPid=listOfPid[i];
                 tracks[validTracks].trackType=trackType;
                 validTracks++;
-            }        
+            }  else ADM_info("Cannot identify type\n");
         }
         if(!validTracks)
         {
@@ -112,6 +112,35 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     ts=NULL;
     delete [] buffer;
     buffer=NULL;
+    // Swap tracks if needed, track [0] must be video...
+    int videoIndex=-1;
+    for(int i=0;i<*nbTracks;i++)
+    {
+        ADM_TS_TRACK_TYPE type=tracks[i].trackType;
+        switch(type)
+        {
+            case ADM_TS_MPEG2:
+            case ADM_TS_VC1:
+            case ADM_TS_H264:
+                    videoIndex=i;
+                    break;
+            default: break;
+        }
+    }
+    if(videoIndex>0)
+    {
+        // Swap!
+        ADM_TS_TRACK trk=tracks[0];
+        tracks[0]=tracks[videoIndex];
+        tracks[videoIndex]=trk;
+    }
+    ADM_info("Summary : found %d tracks\n",(int)*nbTracks);
+    for(int i=0;i<*nbTracks;i++)
+    {
+        ADM_info("  Track : %d, pid=%d, type =%d\n",
+                    i,tracks[i].trackPid,tracks[i].trackType);
+    }
+    ADM_info("End of summary.\n");
     return result;
 }
 /**
