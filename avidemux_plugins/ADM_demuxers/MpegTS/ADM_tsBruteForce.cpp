@@ -238,8 +238,8 @@ TS_PESpacket pes2(pid);
         uint8_t *ptr=pes.payload;
         uint32_t len=pes.payloadSize;
 
-
-        if(!ptr[0] && !ptr[1] && ptr[2]==1 && ptr[3]==0xe0) // probably video
+        ADM_info("PES start : %02x%02x%02x%02x\n",ptr[0],ptr[1],ptr[2],ptr[3]);
+        if(!ptr[0] && !ptr[1] && ptr[2]==1 && (ptr[3]&0xe0)==0xe0) // probably video
         {
           return idContentE0(pid,ts,trackType);
         }
