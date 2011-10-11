@@ -210,6 +210,17 @@ static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
     ADM_warning("dont know what it is...\n");
     return false;
 }
+
+static bool mp2Match(const MpegAudioInfo *array,int a, int b)
+{
+    const MpegAudioInfo *x=array+a;
+    const MpegAudioInfo *y=array+b;
+    if(x->bitrate<=32) return false;
+    if(x->bitrate!=y->bitrate) return false;
+    if(x->mode!=y->mode) return false;
+    if(x->samplerate!=y->samplerate) return false;
+    return true;
+}
 /**
     \fn idContent
 */
@@ -227,9 +238,6 @@ TS_PESpacket pes2(pid);
         uint8_t *ptr=pes.payload;
         uint32_t len=pes.payloadSize;
 
-
-        // 
-       
 
         if(!ptr[0] && !ptr[1] && ptr[2]==1 && ptr[3]==0xe0) // probably video
         {
@@ -250,7 +258,7 @@ TS_PESpacket pes2(pid);
         uint32_t fq,br,chan,syncoff;
         uint32_t fq2,br2,chan2,syncoff2;
 
-        // Is it AC3 ??
+        // Is it AC3 ?? No false positive with A52/AC3..
         if( ADM_AC3GetInfo(ptr,len, &fq, &br, &chan,&syncoff))
         {
                 ADM_info("Maybe AC3... \n");
@@ -267,23 +275,54 @@ TS_PESpacket pes2(pid);
 
         }
         // We easily have false positive with mp2...
-        MpegAudioInfo minfo,minfo2;
-        if( getMpegFrameInfo(ptr,len,&minfo,NULL,&syncoff))
+        // Let's get 10 samples, and say it's ok if we have MP2_THRESHOLD that match
+#define MP2_NB_TRY    10
+#define MP2_THRESHOLD 3
+        MpegAudioInfo mp2info[MP2_NB_TRY];
+        for(int i=0;i<MP2_NB_TRY;i++)
         {
-                    if(minfo.bitrate>=128)
-                    {
-                        ADM_info("Maybe MP2... \n");
-                        if( getMpegFrameInfo(ptr2,len2,&minfo2,&minfo,&syncoff))
-                        {
-                            ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)minfo.samplerate,
+              if(false==ts->getNextPES( &pes2)) 
+            {
+                ADM_warning("\tCannot get PES2\n");
+                return false;
+            }
+            ptr2=pes2.payload;
+            len2=pes2.payloadSize;
+            if( !getMpegFrameInfo(ptr2,len2,mp2info+i,NULL,&syncoff))
+            {
+                ADM_warning("Cannot find mp2 header (try %d)\n",i);
+                return false;
+            }
+            ADM_info("\t\t%d : fq=%d br=%d\n",i,mp2info[i].samplerate,mp2info[i].bitrate);
+        }
+        int match=0,maxMatch=0,mp2index=0;
+        for(int j=0;j<MP2_NB_TRY;j++)
+        {
+            match=0;
+            for(int i=0;i<MP2_NB_TRY;i++)
+            {
+                    if(mp2Match(mp2info,i,j)) match++;
+            }
+            if(match>maxMatch) 
+            {
+                maxMatch=match;
+                mp2index=j;
+            }
+        }
+        if(maxMatch>=MP2_THRESHOLD)
+        {
+                MpegAudioInfo minfo;
+                ADM_info("Found %d matches out of %d samples\n",maxMatch,MP2_NB_TRY);
+                minfo=mp2info[mp2index];
+                ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)minfo.samplerate,
                                                                         (int)minfo.bitrate,
                                                                         (int)minfo.mode);
-                            trackType=ADM_TS_MPEG_AUDIO;
-                            return true;
-                        }
-                    }
+                trackType=ADM_TS_MPEG_AUDIO;
+                return true;
+
         }
-    return false;
+        ADM_info("MP2:Only %d matches out of %d tries, dont know what that track is\n",maxMatch,MP2_NB_TRY);
+        return false;
 }
         
 
