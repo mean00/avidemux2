@@ -10,7 +10,7 @@ RANLIB = ranlib
 MKSHLIB = $(LD) -shared $(XMKSHLIBOPTS)
 
 ifdef BUILD_OPT
-OS_CFLAGS += -s
+OS_CFLAGS += -O2 -s
 endif
 
 #.c.o:

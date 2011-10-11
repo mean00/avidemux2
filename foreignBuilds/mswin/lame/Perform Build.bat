@@ -49,6 +49,7 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 
 echo.
 echo Configuring
+set CFLAGS=%CFLAGS% -O2
 
 if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-static --enable-nasm
 if "%BuildBits%" == "64" sh ./configure --prefix="%usrLocalDir%" --disable-static

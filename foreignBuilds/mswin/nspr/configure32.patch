@@ -1,0 +1,12 @@
+--- mozilla/nsprpub/configure.org	2011-07-28 14:08:33 +0100
++++ mozilla/nsprpub/configure	2011-10-10 21:27:45 +0100
+@@ -4412,8 +4412,8 @@
+         CXX="$CXX -mwindows"
+         DLL_SUFFIX=dll
+-        MKSHLIB='$(CC) -shared -Wl,--export-all-symbols -Wl,--out-implib -Wl,$(IMPORT_LIBRARY) $(DLLBASE) -o $(subst $(OBJDIR)/,,$(SHARED_LIBRARY))'
+-        RC=$WINDRES
++		 MKSHLIB='$(CC) $(CFLAGS) -shared -Wl,--export-all-symbols -Wl,--out-implib -Wl,$(IMPORT_LIBRARY) $(DLLBASE) -o $(subst $(OBJDIR)/,,$(SHARED_LIBRARY))'
++        RC=$WINDRES -F pe-i386
+         # Use temp file for windres (bug 213281)
+         RCFLAGS='-O coff --use-temp-file'
+     else

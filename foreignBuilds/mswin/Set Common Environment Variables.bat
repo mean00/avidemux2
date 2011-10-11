@@ -12,7 +12,7 @@ echo Error - BuildBits variable not set
 goto error
 
 :setVars
-set mingwDir=%devDir%\MinGW%BuildBits%
+set mingwDir=%devDir%\MinGW64
 set usrLocalDir=%msysDir%/local%BuildBits%
 set qtDir=%devDir%\Qt%BuildBits%
 set CMAKE_INCLUDE_PATH=%usrLocalDir%/include
@@ -21,9 +21,15 @@ set PKG_CONFIG_PATH=%usrLocalDir%\lib\pkgconfig
 set SDLDIR=%usrLocalDir%
 set CFLAGS=%CFLAGS% -I%CMAKE_INCLUDE_PATH% -L%CMAKE_LIBRARY_PATH%
 set CXXFLAGS=%CXXFLAGS% -I%CMAKE_INCLUDE_PATH% -L%CMAKE_LIBRARY_PATH%
-set LDFLAGS=%LDFLAGS% -shared-libgcc -lstdc++ -L%CMAKE_LIBRARY_PATH%
+set LDFLAGS=%LDFLAGS% -s -shared-libgcc -shared-libstdc++ -L%CMAKE_LIBRARY_PATH%
 set admBuildDir=%devDir%\avidemux_2.6_build%BuildBits%
 set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
+
+if "%BuildBits%" == "32" (
+	set CFLAGS=%CFLAGS% -m32
+	set CXXFLAGS=%CXXFLAGS% -m32
+	set LDFLAGS=%LDFLAGS% -m32
+)
 
 if exist "%qtDir%" (
 	for /f %%d in ('dir /b /ad /on %qtDir%') do set qtVer=%%d

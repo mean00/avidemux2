@@ -277,19 +277,21 @@ Section "Avidemux Core" SecCore
     ${File} "Build Info.txt"
     ${File} "Change Log.html"
     ${File} zlib1.dll
-    ${File} libstdc++*.dll
 
 !if ${BUILD_BITS} == 32
     ${File} freetype6.dll
 	${File} pthreadGC2-w32.dll
+	${File} libgcc_s_sjlj-1.dll
+	${File} libstdc++-6.dll
 !endif
 
 !if ${BUILD_BITS} == 64
     ${File} libfreetype-6.dll
 	${File} pthreadGC2-w64.dll
+	${File} libgcc_s_sjlj_64-1.dll
+	${File} libstdc++_64-6.dll
 !endif
 
-    ${File} libgcc_s_sjlj-1.dll
 	${File} nspr4.dll
     ${File} libjs.dll
 	${File} libADM_audioParser6.dll

@@ -51,6 +51,10 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 )
 
 echo.
+echo Patching
+patch -p0 -i "%curDir%\configure%BuildBits%.patch"
+
+echo.
 echo Configuring
 cd mozilla\nsprpub
 sh ./configure --prefix="%usrLocalDir%" --enable-strip --enable-win32-target=WIN95 --enable-optimize --disable-debug
@@ -69,7 +73,8 @@ move "%usrLocalDir%\lib\nspr4.dll" "%usrLocalDir%\bin"
 copy "%usrLocalDir%\bin\nspr4.dll" "%admBuildDir%"
 
 pexports "%usrLocalDir%/bin/nspr4.dll" > nspr4.def
-dlltool -d nspr4.def -l "%usrLocalDir%/lib/nspr4.dll.a"
+if "%BuildBits%" == "32" dlltool -d nspr4.def -l "%usrLocalDir%/lib/nspr4.dll.a" -m i386 --as-flags=--32
+if "%BuildBits%" == "64" dlltool -d nspr4.def -l "%usrLocalDir%/lib/nspr4.dll.a"
 
 goto end
 

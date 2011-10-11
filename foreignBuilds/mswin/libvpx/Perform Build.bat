@@ -55,7 +55,7 @@ patch -p0 -i "%curDir%\configure.sh.patch"
 echo.
 echo Configuring
 
-if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder
+if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86-win32-gcc
 if "%BuildBits%" == "64" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86_64-win64-gcc
 
 if errorlevel 1 goto end
