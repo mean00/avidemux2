@@ -6,6 +6,7 @@
     copyright            : (C) 2011 gruntster/mean
  ***************************************************************************/
 #include <math.h>
+#include <vector>
 #include <QtGui/QFileDialog>
 #include <QtGui/QDialog>
 #include <QtGui/QTextEdit>
