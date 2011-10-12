@@ -31,7 +31,7 @@
 #define MAX_BUFFER_SIZE (10*1024)
 
 static bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType);
-
+static bool idMP2(int pid,tsPacket *ts);
 /**
     \fn scanForPrograms
     \brief Lookup PAT & PMT to get tracks
@@ -274,54 +274,77 @@ TS_PESpacket pes2(pid);
                 }
 
         }
-        // We easily have false positive with mp2...
-        // Let's get 10 samples, and say it's ok if we have MP2_THRESHOLD that match
-#define MP2_NB_TRY    10
-#define MP2_THRESHOLD 3
-        MpegAudioInfo mp2info[MP2_NB_TRY];
-        for(int i=0;i<MP2_NB_TRY;i++)
+        if(idMP2(pid,ts))
         {
-              if(false==ts->getNextPES( &pes2)) 
-            {
-                ADM_warning("\tCannot get PES2\n");
-                return false;
-            }
-            ptr2=pes2.payload;
-            len2=pes2.payloadSize;
-            if( !getMpegFrameInfo(ptr2,len2,mp2info+i,NULL,&syncoff))
-            {
-                ADM_warning("Cannot find mp2 header (try %d)\n",i);
-                return false;
-            }
-            ADM_info("\t\t%d : fq=%d br=%d\n",i,mp2info[i].samplerate,mp2info[i].bitrate);
-        }
-        int match=0,maxMatch=0,mp2index=0;
-        for(int j=0;j<MP2_NB_TRY;j++)
-        {
-            match=0;
-            for(int i=0;i<MP2_NB_TRY;i++)
-            {
-                    if(mp2Match(mp2info,i,j)) match++;
-            }
-            if(match>maxMatch) 
-            {
-                maxMatch=match;
-                mp2index=j;
-            }
-        }
-        if(maxMatch>=MP2_THRESHOLD)
-        {
-                MpegAudioInfo minfo;
-                ADM_info("Found %d matches out of %d samples\n",maxMatch,MP2_NB_TRY);
-                minfo=mp2info[mp2index];
-                ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)minfo.samplerate,
-                                                                        (int)minfo.bitrate,
-                                                                        (int)minfo.mode);
+                ADM_info("\t probably MP2\n");
                 trackType=ADM_TS_MPEG_AUDIO;
                 return true;
-
         }
-        ADM_info("MP2:Only %d matches out of %d tries, dont know what that track is\n",maxMatch,MP2_NB_TRY);
+        ADM_info("Cannot identify track\n");
+        return false;
+}
+/**
+    \fn idMP2
+    \brief return true if the tracks is mp2
+*/
+bool idMP2(int pid,tsPacket *ts)
+{
+#define MP2_PROBE_SIZE (16*1024)
+uint8_t  mp2Buffer[MP2_PROBE_SIZE*2];
+
+        int limit=0;
+        TS_PESpacket pes(pid);
+        while(limit<MP2_PROBE_SIZE)
+        {
+            if(!ts->getNextPES(&pes))
+            {
+                ADM_warning("Cannot get PES for pid=%d\n",pid);
+                return false;
+            }
+            int left=pes.payloadSize-pes.offset;
+            memcpy(mp2Buffer+limit,pes.payload+pes.offset,left);
+            limit+=left;
+        }
+        ADM_info("\t read % bytes\n",limit);
+        // Now read buffer until we have 3 correctly decoded packet
+        int probeIndex=0;
+        while(probeIndex<limit)
+        {
+
+            uint8_t *ptr=mp2Buffer+probeIndex;
+            int     len=limit-probeIndex;
+            if(len<4)
+            {
+                    ADM_info("\t no sync(3)\n");
+                    return false;
+            }
+            uint32_t syncoff,syncoff2;
+            MpegAudioInfo mp2info,confirm;
+            if( !getMpegFrameInfo(ptr,len,&mp2info,NULL,&syncoff))
+            {
+                    ADM_info("\t no sync\n");
+                    return false;
+            }
+          // Skip this packet
+            int next=probeIndex+syncoff+mp2info.size;
+            len=limit-next;
+            if(len<4)
+            {
+                    ADM_info("\t no sync(2)\n");
+                    return false;
+            }
+            if(getMpegFrameInfo(mp2Buffer+next,len,&confirm,&mp2info,&syncoff2))
+            {
+                    if(!syncoff2)
+                    {
+                            ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)mp2info.samplerate,
+                                                                (int)mp2info.bitrate,
+                                                                (int)mp2info.mode);
+                            return true;
+                    }
+            }
+            probeIndex+=syncoff+1;
+        }
         return false;
 }
         
