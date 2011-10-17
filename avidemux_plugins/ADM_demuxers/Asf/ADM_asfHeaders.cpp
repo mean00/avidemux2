@@ -22,6 +22,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_asf.h"
 #include "ADM_asfPacket.h"
+#include "DIA_working.h"
 
 #if 0
 #define aprintf printf
@@ -406,12 +407,15 @@ uint8_t asfHeader::buildIndex(void)
   asfIndex indexEntry;
   memset(&indexEntry,0,sizeof(indexEntry));
   bool first=true;
+  DIA_workingBase *progressBar=createWorking("Indexing");
+  uint32_t fileSizeMB=(uint32_t)(fSize>>10);
   while(packet<_nbPackets)
   {
     while(!readQueue.isEmpty())
     {
       asfBit *bit=NULL;
-      
+      uint32_t curPos=(uint32_t)(ftello(_fd)>>10);
+      progressBar->update(curPos,fileSizeMB);
       ADM_assert(readQueue.pop((void**)&bit));
       uint64_t dts=bit->dts;
       if(bit->stream==_videoStreamId)
@@ -429,19 +433,6 @@ uint8_t asfHeader::buildIndex(void)
             if( ((sequence+1)&0xff)!=(bit->sequence&0xff))
             {
                 printf("!!!!!!!!!!!! non continuous sequence %u %u\n",sequence,bit->sequence); 
-    #if 0         
-                // Let's insert a couple of null frame
-                int32_t delta,start,end;
-                
-                start=256+bit->sequence-sequence-1;
-                start&=0xff;
-                printf("!!!!!!!!!!!! Delta %d\n",start);
-                
-                for(int filler=0;filler<start;filler++)
-                {
-                  tmpIndex[++nbImage].frameLen=0;
-                }
-    #endif            
             }
             
             
@@ -493,6 +484,7 @@ uint8_t asfHeader::buildIndex(void)
     aPacket->nextPacket(0xff); // All packets
     aPacket->skipPacket();
   }
+  delete progressBar;
   delete aPacket;
   //delete working;
   /* Compact index */
