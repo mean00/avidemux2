@@ -159,6 +159,10 @@ uint8_t asfHeader::open(const char *name)
   {
     return 0; 
   }
+  ADM_info("Stream Video: index=%d, sid=%d\n",(int)_videoIndex,(int)_videoStreamId);
+  for(int i=0;i<_nbAudioTrack;i++)
+    ADM_info("Stream Audio: index=%d, sid=%d\n",
+                (int)_allAudioTracks[i].streamIndex,(int)_allAudioTracks[i].streamIndex);
   buildIndex();
   fseeko(_fd,_dataStartOffset,SEEK_SET);
   _packet=new asfPacket(_fd,_nbPackets,_packetSize,&readQueue,_dataStartOffset);

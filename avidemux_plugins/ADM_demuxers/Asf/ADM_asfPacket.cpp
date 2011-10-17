@@ -29,6 +29,7 @@ see http://avifile.sourceforge.net/asf-1.0.htm
 
 #if 0
 #define aprintf printf
+#define ASF_VERBOSE
 #else
 #define aprintf(...) {}
 #endif
@@ -112,12 +113,11 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    }
 #endif
    _offset=0;
-   if(read8()!=0x82) 
+   int r82=read8();
+   if(r82!=0x82) 
    {
      printf("[ASF PACKET]At pos 0x%"LLX" \n",(uint64_t)ftello(_fd));
-     printf("[ASF PACKET]not a 82 packet\n");
-     printf("[ASF PACKET]not a 82 packet\n");
-     printf("[ASF PACKET]not a 82 packet\n");
+     printf("[ASF PACKET]not a 82 packet but 0x%x\n",r82);
      return 0;
    }
    
@@ -258,6 +258,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 #ifdef ASF_VERBOSE     
 //    if(streamId==1)
     {
+     printf("StreamId               %d\n",streamId);
      printf("This segment %d bytes, %d /%d\n",packetLen,seg,nbSeg);
      printf("Offset                 %d\n",offset);
      printf("sequence               %d\n",sequence);

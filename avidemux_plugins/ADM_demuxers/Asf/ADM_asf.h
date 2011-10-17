@@ -53,7 +53,10 @@ typedef enum
   ADM_CHUNK_CLOCK_TYPE_EX,
   ADM_CHUNK_LANGUAGE_LIST_EX,
   ADM_CHUNK_EXTENDED_STREAM_PROP,
-  ADM_CHUNK_UNKNOWN_CHUNK
+  ADM_CHUNK_CONTENT_DESC,
+  ADM_CHUNK_EXT_CONTENT_DESC,
+  ADM_CHUNK_UNKNOWN_CHUNK,
+  
 }ADM_KNOWN_CHUNK;
 
 typedef struct 
@@ -63,7 +66,9 @@ typedef struct
   uint8_t val[16];
   ADM_KNOWN_CHUNK id; 
 }chunky;
-
+/**
+    \class asfChunk
+*/
 class asfChunk
 {
   protected:
@@ -85,6 +90,7 @@ class asfChunk
   uint32_t  read32(void);
   uint32_t  read16(void);
   uint8_t   read8(void);
+  uint64_t  endPos(void) {return _chunkStart+chunkLen;}
   uint8_t   read(uint8_t *where, uint32_t how);
   const chunky    *chunkId(void);
   uint8_t   skip(uint32_t skip);
@@ -151,7 +157,8 @@ class asfHeader         :public vidHeader
     uint8_t                 buildIndex(void);
     uint8_t                 loadVideo(asfChunk *s);
     bool                    loadAudio(asfChunk *s,uint32_t sid);
-    
+    bool                    decodeExtHeader(asfChunk *s);
+    bool                    decodeStreamHeader(asfChunk *s);
     ADM_queue               readQueue;
     uint32_t                curSeq;
     asfPacket               *_packet;

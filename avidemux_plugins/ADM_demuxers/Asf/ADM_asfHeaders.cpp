@@ -32,6 +32,114 @@
 static const uint8_t asf_audio[16]={0x40,0x9e,0x69,0xf8,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 static const uint8_t asf_video[16]={0xc0,0xef,0x19,0xbc,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 
+/**
+    \fn decodeStreamHeader
+*/
+bool asfHeader::decodeStreamHeader(asfChunk *s)
+{
+uint8_t gid[16];
+    // Client GID
+        uint32_t audiovideo=0; // video=1, audio=2, 0=unknown
+        uint32_t sid;
+        s->read(gid,16);
+        printf("Type            :");
+        for(int z=0;z<16;z++) printf("0x%02x,",gid[z]);
+        if(!memcmp(gid,asf_video,16))
+        {
+          printf("(video)");
+          audiovideo=1;
+        } else
+        {
+          if(!memcmp(gid,asf_audio,16))
+          {
+            printf("(audio)"); 
+            audiovideo=2;
+          } else printf("(? ? ? ?)"); 
+        }
+        printf("\nConceal       :");
+        for(int z=0;z<16;z++) printf(":%02x",s->read8());
+        printf("\n");
+        printf("Reserved    : %08"LLX"\n",s->read64());
+        printf("Total Size  : %04"LX"\n",s->read32());
+        printf("Size        : %04"LX"\n",s->read32());
+        sid=s->read16();
+        printf("Stream nb   : %04d\n",sid);
+        printf("Reserved    : %04"LX"\n",s->read32());
+        switch(audiovideo)
+        {
+          case 1: // Video
+             {
+                if(_videoIndex==-1) // take the 1st video track
+                {
+                    _videoIndex=sid;
+                    _videoStreamId= sid;
+                    if(!loadVideo(s))
+                    {
+                      return 0; 
+                    }
+                }else printf("Already have a video track, skipping\n");
+              } 
+              break;
+          case 2: // audio
+            loadAudio(s,sid);
+            break;
+          default: 
+            break;
+        }
+        return true;
+}
+/**
+    \fn decodeExtHeader
+    \brief we must decode it as it may contain a video stream (e.g. france2 wmv files)
+*/ 
+bool asfHeader::decodeExtHeader(asfChunk *s)
+{
+            s->read32();s->read32(); // start time
+            s->read32();s->read32(); // end time
+            s->read32(); // bitrate
+            s->read32(); // buffer size
+            s->read32(); //Initial buffer fullness
+            s->read32(); // alt bitrate
+            s->read32(); // alt buffer size
+            s->read32(); // alt Initial buffer fullness
+            s->read32(); // max object size
+            s->read32(); // flags
+            s->read16(); // Stream #
+            s->read16(); // stream lang index
+            s->read32();;s->read32(); // avg time / frame
+            int streamNameCount=s->read16(); // stream name count
+            int payloadExtCount=s->read16(); // payload ext system count
+            printf("\tName       count : %d\n",streamNameCount);
+            printf("\tPayloadExt count : %d\n",payloadExtCount);
+            // stream names
+            for(int i=0;i<streamNameCount;i++)
+            {
+                    printf("\t lang %d\n",s->read16());
+                    int size=s->read16();
+                    s->skip(size);
+            }
+            // payload system count
+            for(int i=0;i<payloadExtCount;i++)
+            {
+                // GUID
+                s->read32();s->read32();s->read32();s->read32();
+                printf("\tExt data size %d\n",s->read16());
+                int sz=s->read32();
+                s->skip(sz);
+            }
+            // stream properties object
+            if(ftello(_fd)+16+4<s->endPos())
+            {       uint8_t gid[16];
+                    asfChunk *x=new asfChunk(_fd);
+                    x->nextChunk();
+                    x->dump();
+                    if(x->chunkId()->id==ADM_CHUNK_STREAM_HEADER_CHUNK)
+                        decodeStreamHeader(x);
+                    x->skipChunk();
+                    delete x;
+            }
+            return true;
+}
 /** *****************************************
     \fn getHeaders
     \brief Read Headers to collect information 
@@ -40,7 +148,6 @@ uint8_t asfHeader::getHeaders(void)
 {
   uint32_t i=0,nbSubChunk,hi,lo;
   const chunky *id;
-  uint8_t gid[16];
   uint32_t mn=0,mx=0;
   asfChunk chunk(_fd);
   // The first header is header chunk
@@ -67,70 +174,29 @@ uint8_t asfHeader::getHeaders(void)
     s->dump();
     switch(id->id)
     {
-   
       case ADM_CHUNK_HEADER_EXTENSION_CHUNK:
       {
         printf("Got header extension chunk\n");
-        s->skipChunk();
+        // 128+16 reserved=
+        s->read32();s->read32();s->read32();s->read32();s->read16();
+        int x=s->read32();
+        printf("Dumping object ext : %d data bytes\n",x);
+        asfChunk *son=new asfChunk(_fd);
+        do
+        {
+            son->nextChunk();
+            son->dump();
+            if(son->chunkId()->id==ADM_CHUNK_EXTENDED_STREAM_PROP)
+            {
+                decodeExtHeader(s);
+            }
+            son->skipChunk();
+            
+        }while(son->endPos()+24<s->endPos());
+        delete son;
         break;
         }
-#if 0   
-        s->skip(16); // Clock type extension ????
-        printf("?? %d\n",s->read16());
-        printf("?? %d\n",s->read32());
-          
-        uint32_t streamNameCount;
-        uint32_t payloadCount;
-          
-          asfChunk *u=new asfChunk(_fd);
-          for(int zzz=0;zzz<8;zzz++)
-          {
-              u->nextChunk();
-              u->dump();
-              id=u->chunkId();
-              if(id->id==ADM_CHUNK_EXTENDED_STREAM_PROP)
-              {
-                  s->skip(8); // start time 
-                  s->skip(8); // end time
-                  printf("Bitrate         %u :\n",u->read32());
-                  printf("Buffer Size     %u :\n",u->read32());
-                  printf("BFill           %u :\n",u->read32());
-                  printf("Alt Bitrate     %u :\n",u->read32());
-                  printf("Alt Bsize       %u :\n",u->read32());
-                  printf("Alt Bfullness   %u :\n",u->read32());
-                  printf("Max object Size %u :\n",u->read32());
-                  printf("Flags           0x%x :\n",u->read32());
-                  printf("Stream no       %u :\n",u->read16());
-                  printf("Stream lang     %u :\n",u->read16());
-                  printf("Stream time/fra %lu :\n",u->read64());
-                  streamNameCount=u->read16();
-                  payloadCount=u->read16();
-                  printf("Stream Nm Count %u :\n",streamNameCount);
-                  printf("Payload count   %u :\n",payloadCount);
-                  for(int stream=0;stream<streamNameCount;stream++)
-                  {
-                    u->read16();
-                    skip=u->read16();
-                    u->skip(skip);
-                  }
-                  uint32_t size;
-                  for(int payload=0;payload<payloadCount;payload++)
-                  {
-                    for(int pp=0;pp<16;pp++) printf("0x%02x,",u->read8());
-                    printf("\n");
-                    skip=u->read16();
-                    size=u->read32();
-                    u->skip(size);
-                    printf("Extra Data : %d, skipd %d\n",size,skip);
-                  }
-                  printf("We are at %x\n",ftello(_fd));
-                }
-                u->skipChunk();
-          }
-          delete u;
-      }
-      break;
-#endif      
+
       case ADM_CHUNK_FILE_HEADER_CHUNK:
         {
             // Client GID
@@ -162,59 +228,10 @@ uint8_t asfHeader::getHeaders(void)
           break;
       case ADM_CHUNK_STREAM_HEADER_CHUNK:
       {
-         // Client GID
-        uint32_t audiovideo=0; // video=1, audio=2, 0=unknown
-        uint32_t sid;
-        s->read(gid,16);
-        printf("Type            :");
-        for(int z=0;z<16;z++) printf("0x%02x,",gid[z]);
-        if(!memcmp(gid,asf_video,16))
-        {
-          printf("(video)");
-          audiovideo=1;
-        } else
-        {
-          if(!memcmp(gid,asf_audio,16))
-          {
-            printf("(audio)"); 
-            audiovideo=2;
-          } else printf("(? ? ? ?)"); 
-        }
-        printf("\nConceal       :");
-        for(int z=0;z<16;z++) printf(":%02x",s->read8());
-        printf("\n");
-        printf("Reserved    : %08"LLX"\n",s->read64());
-        printf("Total Size  : %04"LX"\n",s->read32());
-        printf("Size        : %04"LX"\n",s->read32());
-        sid=s->read16();
-        printf("Stream nb   : %04d\n",sid);
-        printf("Reserved    : %04"LX"\n",s->read32());
-        switch(audiovideo)
-        {
-          case 1: // Video
-          {
-                    _videoStreamId=sid;
-                    if(!loadVideo(s))
-                    {
-                      delete s;
-                      return 0; 
-                    }
-                    break;
-          }
-              break;
-          case 2: // audio
-          {
-            loadAudio(s,sid);
-          
-            
-          }
+          decodeStreamHeader(s);
           break;
-          default:break; 
-          
-        }
       }
-      break;
-       default:
+      default:
          break;
     }
     s->skipChunk();
@@ -259,6 +276,7 @@ bool asfHeader::loadAudio(asfChunk *s,uint32_t sid)
 uint8_t asfHeader::loadVideo(asfChunk *s)
 {
   uint32_t w,h,x;
+            printf("--\n");
             w=s->read32();
             h=s->read32();
             s->read8();
@@ -309,6 +327,8 @@ uint8_t asfHeader::loadVideo(asfChunk *s)
             {
                 ADM_info("No extra data for video\n");
             }
+            uint64_t l=ftello(_fd);
+            printf("Bytes left : %d\n",(int)(s->endPos()-l));
             return 1;
 }
 /**
@@ -485,7 +505,8 @@ uint8_t asfHeader::buildIndex(void)
 
   _videostream.dwLength=_mainaviheader.dwTotalFrames=nbImage;
   if(!nbImage) return 0;
-  
+  _index[0].flags=AVI_KEY_FRAME;
+  if(_index[0].pts==ADM_NO_PTS) _index[0].pts=_index[0].dts;
   // Update fps
   // In fact it is an average fps
   //
