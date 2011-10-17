@@ -17,12 +17,10 @@
  
 #ifndef ADM_ASF_H
 #define ADM_ASF_H
-#include <vector>
-using std::vector;
 #include "ADM_Video.h"
 #include "ADM_queue.h"
 #include "ADM_asfPacket.h"
-
+#include "BVector.h"
 #define ASF_MAX_AUDIO_TRACK 8
 
 
@@ -39,7 +37,7 @@ typedef struct
   uint64_t audioDts[ASF_MAX_AUDIO_TRACK];
 }asfIndex;
 
-typedef  vector <asfIndex> AsfVectorIndex;
+typedef  BVector <asfIndex> AsfVectorIndex;
 
 typedef enum 
 {

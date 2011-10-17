@@ -422,7 +422,7 @@ uint8_t asfHeader::buildIndex(void)
             if(first==false)
             {
                 indexEntry.frameLen=len;
-                _index.push_back(indexEntry);
+                _index.append(indexEntry);
             }
             first=false;
             aprintf("New sequence\n");
