@@ -525,11 +525,18 @@ uint8_t asfHeader::buildIndex(void)
             indexEntry.dts=dts;
             indexEntry.pts=pts;
             if(first==false)
+            {
+                sequence=bit->sequence;
                 readQueue.push_front(bit); // reuse it next time
-            first=false;
-            sequence=bit->sequence;
-            len=0;
-            continue;
+                len=0;
+                continue;
+
+            }else
+            {
+                sequence=bit->sequence;
+                first=false; // first packet
+            }
+            
           }
           len+=bit->len;
       } // End of video stream Id
