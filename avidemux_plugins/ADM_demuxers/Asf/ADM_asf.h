@@ -23,7 +23,13 @@
 #include "BVector.h"
 #define ASF_MAX_AUDIO_TRACK 8
 
+typedef struct
+{
+    uint64_t pts;
+    uint64_t packetNb;
+}asfAudioSeekPoint;
 
+typedef BVector <asfAudioSeekPoint> listOfAudioSeekPoint;
 
 typedef struct 
 {
@@ -33,8 +39,6 @@ typedef struct
   uint32_t flags;
   uint64_t dts;
   uint64_t pts;
-  uint32_t audioSeen[ASF_MAX_AUDIO_TRACK];
-  uint64_t audioDts[ASF_MAX_AUDIO_TRACK];
 }asfIndex;
 
 typedef  BVector <asfIndex> AsfVectorIndex;
@@ -122,12 +126,13 @@ class asfAudioAccess : public ADM_audioAccess
     uint32_t                _packetSize;
     class asfHeader         *_father;
     asfAudioTrak            *_track;
+    listOfAudioSeekPoint    *_seekPoints;
   public:
                                 asfAudioAccess(asfHeader *father,uint32_t rank);
     virtual                     ~asfAudioAccess();
 
     virtual bool      canSeekTime(void) {return true;};
-    virtual bool      canSeekOffset(void) {return true;};
+    virtual bool      canSeekOffset(void) {return false;};
     virtual bool      canGetDuration(void) {return true;};
     
     virtual uint32_t  getLength(void) {return _track->length;}
@@ -174,12 +179,12 @@ class asfHeader         :public vidHeader
     
   public: // Shared with audio track
     char                    *myName;
-    
     uint32_t                nbImage;
     AsfVectorIndex          _index;
     uint32_t                _packetSize;
     uint32_t                _dataStartOffset;
     uint32_t                _nbAudioTrack;
+    listOfAudioSeekPoint    audioSeekPoints[ASF_MAX_AUDIO_TRACK];
     asfAudioAccess          *_audioAccess[ASF_MAX_AUDIO_TRACK];
     asfAudioTrak             _allAudioTracks[ASF_MAX_AUDIO_TRACK];
     ADM_audioStream         *_audioStreams[ASF_MAX_AUDIO_TRACK];

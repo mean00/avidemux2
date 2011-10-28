@@ -23,6 +23,7 @@
 */
 uint64_t  asfAudioAccess::getDurationInUs(void)
 {
+    // could use that : father->getVideoDuration()...
     return 0;
 }
 /**
@@ -63,10 +64,12 @@ asfAudioAccess::asfAudioAccess(asfHeader *father,uint32_t myRank)
     _packetSize=_father->_packetSize;
     _packet=new asfPacket(_fd,_father->_nbPackets,_packetSize,
                           &readQueue,_dataStart);
-    
+    _seekPoints=&(_father->audioSeekPoints[myRank]);
     printf("[asfAudio] Length %u\n",getLength());
 }
-
+/**
+    \fn getPos
+*/
 uint64_t  asfAudioAccess::getPos(void)
 {
     return 0;
@@ -78,49 +81,27 @@ uint64_t  asfAudioAccess::getPos(void)
 
 bool   asfAudioAccess::setPos(uint64_t newoffset)
 {
-  // Look into the index until we find the audio
-  // just after the wanted value
-  for(int i=0;i<_father->nbImage;i++)
-  {
-    if(!_father->_index[i].audioSeen[_myRank]) continue;
-    if(_father->_index[i].audioSeen[_myRank]>=newoffset)
-    {
-      // Flush queue
-      _packet->purge();
-      // Seek
-      if(!_packet->goToPacket(_father->_index[i].packetNb))
-      {
-        printf("[asfAudio] Cannot seek to frame %u\n",i);
-        return 0; 
-      }
-      printf("[asfAudio]For audio %"LLU", seeking to packet %"LU"\n",newoffset,_father->_index[i].packetNb);
-      _packet->nextPacket(_streamId);
-      _packet->skipPacket();
-      return 1;
-    }
-  }
-  printf("[asfAudio] Seek failed for offset=%"LLU"\n",newoffset);
-  return 1; 
+  return false; 
 }
 
 /**
     \fn goToTime
 */
 
-bool   asfAudioAccess::goToTime(uint64_t dts_us)
+bool   asfAudioAccess::goToTime(uint64_t dts_us) // PTS!
 {
-    AsfVectorIndex     *idx=&(_father->_index);
     // Search
-    int size=idx->size();
-    if(dts_us<=(*idx)[0].audioDts[_myRank])
+    int size=_seekPoints->size();
+    if(dts_us<=(*_seekPoints)[0].pts || size<2)
     {
           return setPos( 0);
     }
-    for(int i=0;i<size-1;i++)
+
+    for(int i=size-2;i>=0;i--)
     {
-        if(dts_us>=(*idx)[i].audioDts[_myRank] && dts_us<(*idx)[i+1].audioDts[_myRank])
+        if(dts_us>=(*_seekPoints)[i].pts && dts_us<(*_seekPoints)[i+1].pts)
         {
-            return _packet->goToPacket( (*idx)[i].packetNb);
+            return _packet->goToPacket( (*_seekPoints)[i].packetNb);
         }
     }
     return false;
@@ -147,7 +128,7 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       // still same sequence ...add
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
-      *dts=bit->dts;
+      *dts=bit->pts; // for audio PTS=DTS...
       delete[] bit->data;
       delete bit;
       return 1;

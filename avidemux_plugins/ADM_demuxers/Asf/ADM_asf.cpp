@@ -225,7 +225,7 @@ uint64_t                   asfHeader::getTime(uint32_t frameNum)
 
 uint64_t                   asfHeader::getVideoDuration(void)
 {
-    return _index[nbImage-1].dts;
+    return _duration;
 }
 /**
     \fn getTime

@@ -201,18 +201,20 @@ uint8_t asfHeader::getHeaders(void)
 
       case ADM_CHUNK_FILE_HEADER_CHUNK:
         {
+            uint64_t playDuration,sendDuration;
             // Client GID
             printf("Client        :");
             for(int z=0;z<16;z++) printf(":%02x",s->read8());
             printf("\n");
-            printf("File size     : %08"LLX"\n",s->read64());
-            printf("Creation time : %08"LLX"\n",s->read64());
-            printf("Number of pack: %08"LLX"\n",s->read64());
-            printf("Timestamp 1   : %08"LLX"\n",s->read64());
-            _duration=s->read64();
-            printf("Timestamp 2   : %08"LLX"\n",_duration);
-            printf("Timestamp 3   : %04"LX"\n",s->read32());
-            printf("Preload       : %04"LX"\n",s->read32());
+            printf("File size     : %08"LLU"\n",s->read64());
+            printf("Creation time : %08"LLU"\n",s->read64());
+            printf("Number of pack: %08"LLU"\n",s->read64());
+            playDuration=s->read64()/10LL;
+            sendDuration=s->read64()/10LL;
+            _duration=playDuration;
+            printf("Play duration : %s\n",ADM_us2plain(playDuration));
+            printf("Send duration : %s\n",ADM_us2plain(sendDuration));
+            printf("Preroll   3   : %s\n",ADM_us2plain(s->read64()/10LL));
             printf("Flags         : %04"LX"\n",s->read32());
             mx=s->read32();
             mn=s->read32();
@@ -409,6 +411,14 @@ uint8_t asfHeader::buildIndex(void)
   bool first=true;
   DIA_workingBase *progressBar=createWorking("Indexing");
   uint32_t fileSizeMB=(uint32_t)(fSize>>10);
+
+  uint64_t lastDts[ASF_MAX_AUDIO_TRACK];
+  for(int i=0;i<ASF_MAX_AUDIO_TRACK;i++)
+  {
+        lastDts[i]=0;
+  }
+
+
   while(packet<_nbPackets)
   {
     while(!readQueue.isEmpty())
@@ -449,11 +459,6 @@ uint8_t asfHeader::buildIndex(void)
             indexEntry.dts=dts;
             indexEntry.pts=pts;
 
-            for(int z=0;z<_nbAudioTrack;z++)
-            {
-              indexEntry.audioSeen[z]=_allAudioTracks[z].length;
-              indexEntry.audioDts[z]=_allAudioTracks[z].lastDts;
-            }
             readQueue.pushBack(bit);
     
             sequence=bit->sequence;
@@ -469,8 +474,19 @@ uint8_t asfHeader::buildIndex(void)
         {
           if(bit->stream == _allAudioTracks[i].streamIndex)
           {
-            _allAudioTracks[i].length+=bit->len;
-            _allAudioTracks[i].lastDts=bit->dts;
+            if(bit->pts!=ADM_NO_PTS)
+            {
+                if(!lastDts[i] || (bit->pts>lastDts[i]+500000L)) // seek point every 500 ms
+                {
+                    asfAudioSeekPoint seek;
+                        seek.pts=bit->pts;
+                        seek.packetNb=bit->packet;
+                        (audioSeekPoints[i]).append(seek);
+                        lastDts[i]=bit->pts;
+                        printf("Adding seek point for track %d at %s (packet=%d)\n",
+                            i,ADM_us2plain(bit->pts),(int)seek.packetNb);
+                }
+            }
             found=1;
           }
         }
