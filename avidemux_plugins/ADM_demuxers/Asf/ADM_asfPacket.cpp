@@ -23,7 +23,7 @@ see http://avifile.sourceforge.net/asf-1.0.htm
 #include "ADM_Video.h"
 
 #include "fourcc.h"
-
+#include "ADM_vidMisc.h"
 
 #include "ADM_asfPacket.h"
 
@@ -69,8 +69,9 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
    purge();
    return 1;
  }
- /*
-      Read ASF packet & segments 
+ /**
+    \fn     nextPacket
+    \brief  Read ASF packet & segments 
  
     Flags are bitwise OR of:
    
@@ -92,25 +93,17 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
  */
 uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 {
-   uint64_t atime;
-   uint32_t aduration,nbSeg,segType=0x80;
+   uint64_t sendTime;
+   uint32_t aduration,nbSeg,payloadLengthType=0x80;
    uint32_t sequenceLen,len,streamId;
    int32_t   packetLen=0;
    uint32_t  paddingLen;
-   uint8_t   flags;
+   int   lengthTypeFlags,propertyFlags,multiplePayloadPresent;
+   int sequenceType,sequence,offsetLenType,replicaLenType,streamNumberLenType,mediaObjectNumberLenType;
+   
+
     
    packetStart=ftello(_fd);
-#ifdef ASF_VERBOSE
-   uint32_t round=packetStart-_startDataOffset;
-   if(round % pakSize)
-   {
-     printf("[ASF PACKET] we are starting a new packet at 0x%x\n",packetStart); 
-     printf("[ASF PACKET]but data starts at  0x%x\n",_startDataOffset);
-     printf("[ASF PACKET]and offset is not a multiple of length = %d\n",pakSize);
-     ADM_assert(0);
-     
-   }
-#endif
    _offset=0;
    int r82=read8();
    if(r82!=0x82) 
@@ -122,190 +115,139 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    
    aprintf("============== New packet ===============\n");
    read16();          // Always 0 ????
-   flags=read8();
-   segmentId=read8();
+
+    // / end of error correction
+    // Payload parsing information
    packetLen=0;
    paddingLen=0;
-   
-
+   sequenceType=0;
+   sequenceLen=0;
+   sequence=0;
+   offsetLenType=0;
+   replicaLenType=0;
+   streamNumberLenType=0;
+   mediaObjectNumberLenType=0;
+   lengthTypeFlags=read8();
+   propertyFlags=read8();
+   multiplePayloadPresent=lengthTypeFlags&1;
    // Read packetLen
-   packetLen=readVCL(flags>>5,pakSize);
+   packetLen=readVCL(lengthTypeFlags>>5,pakSize);
    // Sequence len
-   sequenceLen=readVCL(flags>>1,0);
+   sequenceLen=readVCL(lengthTypeFlags>>1,0);
    // Read padding size (padding):
-   paddingLen=readVCL(flags>>3,0);
+   paddingLen=readVCL(lengthTypeFlags>>3,0);
+   //
+   replicaLenType=(propertyFlags>>0)&3;
+   offsetLenType=(propertyFlags>>2)&3;
+   mediaObjectNumberLenType=(propertyFlags>>4)&3;
+   streamNumberLenType=(propertyFlags>>6)&3;
    
-   aprintf("paddingLen :         %d\n",paddingLen);
-   
-// Explicit (absolute) packet size	    
-   if(((flags>>5)&3))
-   {
-     //printf("## Explicit packet size %d\n",packetLen);
-     if(packetLen>pakSize) printf("**************Len > packet size!! (%d /%d)\n",packetLen,pakSize);
-   } 
+   // Send time
+   sendTime=1000*read32(); // Send time (ms)
+   aduration=read16(); // Duration (ms)
+   printf(":: Time 1 %s\n",ADM_us2plain(sendTime));
    if(!packetLen)
    {
      // Padding (relative) size
      packetLen=pakSize-_offset;
      packetLen=packetLen-paddingLen;
    }
-
-   
-  
-   atime=1000*read32(); // Send time (ms)
-   aduration=read16(); // Duration (ms)
-   
-   if(flags &1) // Multiseg
-   {
-     uint8_t r=read8();
-     nbSeg=r&0x3f;
-     segType=r>>6;
-   }
-   else
-   {
-     nbSeg=1; 
-   }
-#ifdef ASF_VERBOSE   
-   printf("-----------------------\n");
-   printf("Flags     :           0X%x",flags);
-   
-   if(flags & 0x40) printf(" Packet Len Specified  ");
-   if(flags & 0x10) printf(" Padding 16bits ");
-   if(flags & 0x8) printf(" Padding 8bits ");
-   if(flags & 0x1) printf(" Multiseg ");
-   printf("\n");
-   printf("SegmentId :           %d\n",segmentId);
-   printf("sequenceLen :         %d\n",sequenceLen);
-   
-   
-   printf("packetLen :           %d\n",packetLen);
-   printf("Send      :           %d\n",atime/1000);
-   printf("Duration  :           %d\n",aduration);
-   printf("# of seg  :           %d %x\n",nbSeg,segType);
-#endif
-   // Now read Segments....
-   //
-   uint32_t sequence, offset,replica,r;
+   int mediaObjectNumber, offset,replica,r;
    int32_t remaining;
    uint32_t payloadLen;
    uint32_t keyframe;
-   for(int seg=0;seg<nbSeg;seg++)
-   {
-     r=read8(); // Read stream Id
-     if(r&0x80) keyframe=AVI_KEY_FRAME;
-     else       keyframe=0;
-     streamId=r&0x7f;
-     //printf(">>>>>Stream Id : %x, duration %d ms, send time:%d ms <<<<<\n",streamId,aduration,atime);
-     if(r&0x80) 
-     {
-       aprintf("KeyFrame\n");
-     }
-     sequence=readVCL(segmentId>>4,0);
-     offset=readVCL(segmentId>>2,0);
-     replica=readVCL(segmentId,0);
-     aprintf("replica                %d\n",replica);
-     // Skip replica data_len
-     if(replica>=8) // Grab timestamp
-     {
-        uint32_t time1=read32();
-        
-        //printf("Time 1 : %"LU"\n",time1);
-         if(replica >= 8+38+4)
-         {
-            uint64_t time2;
-            uint32_t a,b;
-            skip(10);
-            a=read32();
-            b=read32();
-            time2=b;
-            time2=a+(time2<<32);
-            skip(8); 
-            skip(12);
-            skip(4);
-            skip(replica - 8 - 38 - 4);
-            printf("Time 2 : %"LLU"\n",time2);
-            }else
-            skip(replica-4);
-     }
-      else 
-        skip(replica);
-     
-     payloadLen=0;
-     if(flags &1)  // multi seg
-     {
-       payloadLen=readVCL(segType,0);
-       if(payloadLen)
-        aprintf("##len                    %d\n",payloadLen);
-       
-     }
-     remaining=pakSize-_offset;
-     remaining=remaining-paddingLen;
-     aprintf("Remaining %d asked %d\n",remaining,payloadLen);
-     if(remaining<=0) 
-     {
-       printf("** Err: No data left (%d)\n",remaining); 
-     }
-     if(!payloadLen)
-     {
-       payloadLen=remaining;
-     }
-     if(remaining<payloadLen)
-     {
-       printf("** WARNING too big %d %d\n", remaining,packetLen);
-       payloadLen=remaining;
-     }
-#ifdef ASF_VERBOSE     
-//    if(streamId==1)
+   // Multi payload
+   if(multiplePayloadPresent)
     {
-     printf("StreamId               %d\n",streamId);
-     printf("This segment %d bytes, %d /%d\n",packetLen,seg,nbSeg);
-     printf("Offset                 %d\n",offset);
-     printf("sequence               %d\n",sequence);
-     printf("Grouping               %d\n",replica==1);
-     printf("payloadLen             %d\n",payloadLen);
-    }
-#endif
-     // Frag
-     if(replica==1) // Grouping
-     {
-       // Each tiny packet starts with 
-       // 1 byte = packet Len
-       // Data and we read them until "payloadLen" is comsumed
-       while(payloadLen>0)
+        uint8_t r=read8();
+        nbSeg=r&0x3f;
+        payloadLengthType=r>>6;
+        printf("Multiple Payload :%d\n",(int)nbSeg);
+       // Now read Segments....
+       //
+       for(int seg=0;seg<nbSeg;seg++)
        {
-         uint8_t l=read8();
-         payloadLen--;
-         if(l>payloadLen)
+         r=read8(); // Read stream Id
+         if(r&0x80) 
          {
-           
-           printf("oops exceeding %d/%d\n",l,payloadLen);
-           if(streamId==streamWanted || streamWanted==0xff)
-           {
-             pushPacket(keyframe,currentPacket,offset,sequence,payloadLen,streamId,atime);
-             atime=ADM_NO_PTS;
-             
-           }else
-           {
-            skip(payloadLen);
-           }
-           break;
+            keyframe=AVI_KEY_FRAME;
+            aprintf("KeyFrame\n");
          }
-         skip(l);
-         payloadLen-=l;
-       }
-       
-     }else
-     { // else we read "payloadLen" bytes and put them at offset "offset"
-       if(streamId==streamWanted|| streamWanted==0xff)
-       {
-         pushPacket(keyframe,currentPacket,offset,sequence,payloadLen,streamId,atime);   
-         atime=ADM_NO_PTS;
-       }else
-        skip(payloadLen);
-       aprintf("Reading %d bytes\n",payloadLen);
-     }
-     
-   }
+         else       keyframe=0;
+         streamId=r&0x7f;
+         //printf(">>>>>Stream Id : %x, duration %d ms, send time:%d ms <<<<<\n",streamId,aduration,sendTime);
+         mediaObjectNumber=readVCL(mediaObjectNumberLenType,0); // Media object number
+         offset=readVCL(offsetLenType,0);
+         replica=readVCL(replicaLenType,0);
+         if(replica==1) ADM_error("Replica==1 : Compressed data!\n");
+         printf("replica                %d\n",replica);
+         skip(replica);
+         payloadLen=readVCL(payloadLengthType,0);
+         remaining=pakSize-_offset;
+         remaining=remaining-paddingLen;
+         if(remaining<=0) 
+         {
+           printf("** Err: No data left (%d)\n",remaining); 
+         }
+         if(!payloadLen)
+         {
+           payloadLen=remaining;
+         }
+         if(remaining<payloadLen)
+         {
+           printf("** WARNING too big %d %d\n", remaining,packetLen);
+           payloadLen=remaining;
+         }
+           // else we read "payloadLen" bytes and put them at offset "offset"
+           if(streamId==streamWanted|| streamWanted==0xff)
+           {
+             pushPacket(keyframe,currentPacket,offset,mediaObjectNumber,payloadLen,streamId,sendTime);   
+             sendTime=ADM_NO_PTS;
+           }else
+            skip(payloadLen);
+        }
+    }
+   else
+    {  // single payload
+         int r;
+         r=read8(); // Read stream Id
+         if(r&0x80) 
+         {
+            keyframe=AVI_KEY_FRAME;
+            aprintf("KeyFrame\n");
+         }
+         else       
+            keyframe=0;
+         streamId=r&0x7f;
+         //printf(">>>>>Stream Id : %x, duration %d ms, send time:%d ms <<<<<\n",streamId,aduration,sendTime);
+         mediaObjectNumber=readVCL(mediaObjectNumberLenType,0); // Media object number
+         offset=readVCL(offsetLenType,0);
+         replica=readVCL(replicaLenType,0);
+         printf("replica                %d\n",replica);
+         skip(replica);
+         remaining=pakSize-_offset;
+         remaining=remaining-paddingLen;
+         if(remaining<=0) 
+         {
+           printf("** Err: No data left (%d)\n",remaining); 
+         }
+         if(!payloadLen)
+         {
+           payloadLen=remaining;
+         }
+         if(remaining<payloadLen)
+         {
+           printf("** WARNING too big %d %d\n", remaining,packetLen);
+           payloadLen=remaining;
+         }
+           // else we read "payloadLen" bytes and put them at offset "offset"
+           if(streamId==streamWanted|| streamWanted==0xff)
+           {
+             pushPacket(keyframe,currentPacket,offset,mediaObjectNumber,payloadLen,streamId,sendTime);   
+             sendTime=ADM_NO_PTS;
+           }else
+            skip(payloadLen);
+    }
    // Do some sanity check
    if(_offset+paddingLen!=pakSize)
    {
@@ -319,8 +261,9 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    return 1;
   
  }
- /*
-    Push a packet down the queue
+ /**
+    \fn pushPacket
+    \brief     Push a packet down the queue
     The packet could be a complete one or a fragement
     To know that, either look at the offset field which will be != for fragements
     Or look if the sequence number is increasing
@@ -330,7 +273,8 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  uint8_t asfPacket::pushPacket(uint32_t keyframe,uint32_t packetnb,uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,uint64_t dts)
  {
    asfBit *bit=new asfBit;
-   printf("Pushing packet stream=%d len=%d seq=%d dts=%d ms\n",stream,payloadLen,sequence,dts/1000);
+   printf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
+                stream,payloadLen,offset,sequence,packetnb,ADM_us2plain(dts));
    bit->sequence=sequence;
    bit->offset=offset;
    bit->len=payloadLen;
@@ -363,7 +307,9 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    }
    return r;
  }
-
+/**
+   \fn skipPacket
+*/
  uint8_t   asfPacket::skipPacket(void)
  {
    uint32_t go;

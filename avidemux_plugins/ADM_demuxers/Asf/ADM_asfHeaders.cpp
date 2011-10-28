@@ -23,6 +23,7 @@
 #include "ADM_asf.h"
 #include "ADM_asfPacket.h"
 #include "DIA_working.h"
+#include "ADM_vidMisc.h"
 
 #if 0
 #define aprintf printf
@@ -393,7 +394,6 @@ uint8_t asfHeader::buildIndex(void)
   _dataStartOffset=ftello(_fd);
   
   // Here we go
-  //DIA_working *working=new DIA_working("indexing asf");
   asfPacket *aPacket=new asfPacket(_fd,_nbPackets,_packetSize,
                                    &readQueue,_dataStartOffset);
   uint32_t packet=1;
@@ -414,13 +414,18 @@ uint8_t asfHeader::buildIndex(void)
     while(!readQueue.isEmpty())
     {
       asfBit *bit=NULL;
+
+      // update UI
       uint32_t curPos=(uint32_t)(ftello(_fd)>>10);
       progressBar->update(curPos,fileSizeMB);
       ADM_assert(readQueue.pop((void**)&bit));
+      // --
       uint64_t dts=bit->dts;
       if(bit->stream==_videoStreamId)
       {
-          aprintf(">found packet of size %d seq %d, while curseq =%d\n",bit->len,bit->sequence,curSeq);
+          printf(">found packet of size=%d off=%d seq %d, while curseq =%d, dts=%s\n",
+                        bit->len,bit->offset,  bit->sequence,curSeq,
+                        ADM_us2plain(dts));
           if(bit->sequence!=sequence || first==true)
           {
             if(first==false)
