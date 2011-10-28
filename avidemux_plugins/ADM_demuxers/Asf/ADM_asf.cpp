@@ -134,6 +134,7 @@ uint8_t asfHeader::close(void)
   memset(&(_audioAccess[0]),0,sizeof(_audioAccess));
   memset(&(_audioStreams[0]),0,sizeof(_audioStreams));
   _nbAudioTrack=0;
+  _videostream.dwRate=0;
 
 }
 /**
@@ -258,6 +259,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
   img->dataLength=0;
   img->flags=AVI_KEY_FRAME;
+  uint32_t len=0;
   if(framenum>=nbImage)
   {
     printf("[ASF] Going out of bound %u %u\n",framenum, nbImage);
@@ -265,12 +267,12 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   }
   if(!_index[framenum].frameLen)
   {
-    return 1; // Empty frame 
+    goto gotcha;
   }
   // In case curSeq is stored as one byte..
   curSeq&=0xff;
   //
-  uint32_t len=0;
+  
   aprintf("Framenum %u len: %u curSeq %u frameSeq=%u packetnb=%u \n",
          framenum,_index[framenum].frameLen,curSeq,
          _index[framenum].segNb,_index[framenum].packetNb);

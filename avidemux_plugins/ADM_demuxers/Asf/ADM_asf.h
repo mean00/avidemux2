@@ -179,7 +179,7 @@ class asfHeader         :public vidHeader
     uint32_t                _videoStreamId;
 
     uint8_t                 close(void);
-
+    bool                    setFps(uint64_t usPerFrame);
     
   public: // Shared with audio track
     char                    *myName;

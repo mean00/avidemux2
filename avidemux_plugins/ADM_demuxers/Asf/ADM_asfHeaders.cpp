@@ -34,6 +34,20 @@
 static const uint8_t asf_audio[16]={0x40,0x9e,0x69,0xf8,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 static const uint8_t asf_video[16]={0xc0,0xef,0x19,0xbc,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 
+
+/**
+    \fn setFps
+*/
+bool asfHeader::setFps(uint64_t usPerFrame)
+{
+    if(!usPerFrame) return false;
+    double f=usPerFrame;
+    if(f<10) f=10;
+    f=1000000.*1000./f;
+    _videostream.dwRate=(uint32_t)f;
+    ADM_info("AverageFps=%d\n",(int)_videostream.dwRate);
+    return true;
+}
 /**
     \fn decodeStreamHeader
 */
@@ -79,7 +93,8 @@ uint8_t gid[16];
                     {
                       return 0; 
                     }
-                }else printf("Already have a video track, skipping\n");
+                    ADM_info("Average fps available from ext header\n");
+                }
               } 
               break;
           case 2: // audio
@@ -96,6 +111,10 @@ uint8_t gid[16];
 */ 
 bool asfHeader::decodeExtHeader(asfChunk *s)
 {
+            int streamNumber=0xff;
+            int streamLangIndex=0xff;
+            uint64_t avgTimePerFrameUs=0;
+
             s->read32();s->read32(); // start time
             s->read32();s->read32(); // end time
             s->read32(); // bitrate
@@ -106,9 +125,14 @@ bool asfHeader::decodeExtHeader(asfChunk *s)
             s->read32(); // alt Initial buffer fullness
             s->read32(); // max object size
             s->read32(); // flags
-            s->read16(); // Stream #
-            s->read16(); // stream lang index
-            s->read32();;s->read32(); // avg time / frame
+            streamNumber=s->read16(); // Stream #
+            streamLangIndex=s->read16(); // stream lang index
+            printf("\tstream number     :%d\n",streamNumber);
+            printf("\tstream langIndex  :%d\n",streamLangIndex);
+            uint64_t avg=s->read64();
+            avg/=10.;
+            printf("\t avg time/frame  : %"LLU" us\n",avg);
+            avgTimePerFrameUs=avg;
             int streamNameCount=s->read16(); // stream name count
             int payloadExtCount=s->read16(); // payload ext system count
             printf("\tName       count : %d\n",streamNameCount);
@@ -182,6 +206,7 @@ uint8_t asfHeader::getHeaders(void)
         // 128+16 reserved=
         s->read32();s->read32();s->read32();s->read32();s->read16();
         int x=s->read32();
+        uint64_t avgTimePerFrame;
         printf("Dumping object ext : %d data bytes\n",x);
         asfChunk *son=new asfChunk(_fd);
         do
@@ -301,8 +326,6 @@ uint8_t asfHeader::loadVideo(asfChunk *s)
 			Endian_BitMapInfo(&_video_bih);
 		#endif
 
-            _videostream.dwScale=1000;
-            _videostream.dwRate=30000;
 
             _videostream.fccHandler=_video_bih.biCompression;
             printf("Codec : <%s> (%04x)\n",
@@ -516,7 +539,20 @@ uint8_t asfHeader::buildIndex(void)
   printf("[ASF] ******** End of buildindex *******\n");
 
   nbImage=_index.size();;
-
+  if(nbImage)
+    {
+        ADM_info("First image pts: %s, dts: %s\n",ADM_us2plain(_index[0].pts),
+                ADM_us2plain(_index[0].dts));
+        for(int i=0;i<_nbAudioTrack;i++)
+        {
+            if(!audioSeekPoints[i].size())
+            {
+                ADM_info("audio track : %d, no seek\n",i);
+                continue;
+            }
+            ADM_info("audio track : %d, %s\n",i,ADM_us2plain(audioSeekPoints[i][0].pts));
+        }
+    }
   _videostream.dwLength=_mainaviheader.dwTotalFrames=nbImage;
   if(!nbImage) return 0;
   _index[0].flags=AVI_KEY_FRAME;
@@ -524,16 +560,25 @@ uint8_t asfHeader::buildIndex(void)
   // Update fps
   // In fact it is an average fps
   //
-  float f=_index[nbImage-1].dts;
-   f/=nbImage; // average duration of 1 image in us
-    if(f<10) f=10;
-   f=1000000.*1000./f;
-  uint32_t avgFps=(uint32_t) f;
-    printf("[Asf] Average fps=%d\n",avgFps);
-  
   _videostream.dwScale=1000;
-  _videostream.dwRate=(uint32_t)avgFps;;
-
+  if(!_videostream.dwRate)
+  {
+      ADM_info("Fps not provided, guessing it from nbFrame and duration\n");
+      uint32_t avgFps;
+      if(_index[nbImage-1].pts!=ADM_NO_PTS && _index[0].pts!=ADM_NO_PTS)
+      {
+          float f=(_index[nbImage-1].pts-_index[0].pts);
+            f/=nbImage; // average duration of 1 image in us
+            setFps((uint64_t) f);
+      }else
+        {
+            printf("[Asf] No pts, setting 30 fps hardcoded\n");
+            _videostream.dwRate=(uint32_t)30000;;
+        }
+  }else
+    {
+        ADM_info("Already got fps (%d/1000)\n",_videostream.dwRate);
+    }
   return 1;
   
 }
