@@ -397,7 +397,7 @@ uint8_t asfHeader::buildIndex(void)
   
   // Here we go
   asfPacket *aPacket=new asfPacket(_fd,_nbPackets,_packetSize,
-                                   &readQueue,_dataStartOffset);
+                                   &readQueue,&storageQueue,_dataStartOffset);
   uint32_t packet=1;
 #define MAXIMAGE (_nbPackets)
   uint32_t sequence=1;
@@ -421,14 +421,17 @@ uint8_t asfHeader::buildIndex(void)
 
   while(packet<_nbPackets)
   {
-    while(!readQueue.isEmpty())
+    while(readQueue.size())
     {
       asfBit *bit=NULL;
 
       // update UI
       uint32_t curPos=(uint32_t)(ftello(_fd)>>10);
       progressBar->update(curPos,fileSizeMB);
-      ADM_assert(readQueue.pop((void**)&bit));
+
+      bit=readQueue.front();
+      readQueue.pop_front();
+
       // --
       uint64_t dts=bit->dts;
       uint64_t pts=bit->pts;
@@ -459,7 +462,7 @@ uint8_t asfHeader::buildIndex(void)
             indexEntry.dts=dts;
             indexEntry.pts=pts;
 
-            readQueue.pushBack(bit);
+            readQueue.push_front(bit); // reuse it next time
     
             sequence=bit->sequence;
             len=0;
@@ -495,8 +498,7 @@ uint8_t asfHeader::buildIndex(void)
           printf("Unmapped stream %u\n",bit->stream); 
         }
       }
-     delete[] bit->data;
-     delete bit;
+      storageQueue.push_back(bit);
     }
     //working->update(packet,_nbPackets);
 

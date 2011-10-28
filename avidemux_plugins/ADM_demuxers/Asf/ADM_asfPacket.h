@@ -18,6 +18,7 @@
 #define ASF_PACKET_H
 
 #include "ADM_queue.h"
+#include <list>
 /**
     \struct asfBit
 */
@@ -34,6 +35,9 @@ typedef struct
   uint8_t  *data;
   
 }asfBit;
+
+typedef std::list <asfBit *>  queueOfAsfBits;
+
 /**
     \class asfPacket
 */
@@ -49,14 +53,15 @@ class asfPacket
     uint32_t        packetStart;
     uint8_t         segmentId;
     uint32_t        pakSize;
-    ADM_queue       *queue;
+    queueOfAsfBits  *queue;
+    queueOfAsfBits  *storage;
     uint32_t        _offset;
     uint32_t        currentPacket;
     uint32_t        _startDataOffset;
     uint32_t        _nbPackets;
   public:
     
-    asfPacket(FILE *f,uint32_t nbElem,uint32_t pSize,ADM_queue *q,uint32_t startDataOffset);
+    asfPacket(FILE *f,uint32_t nbElem,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint32_t startDataOffset);
     ~asfPacket();
     uint8_t   dump(void);
     

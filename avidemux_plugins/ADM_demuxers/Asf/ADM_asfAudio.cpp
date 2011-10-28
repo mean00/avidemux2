@@ -63,7 +63,7 @@ asfAudioAccess::asfAudioAccess(asfHeader *father,uint32_t myRank)
     fseeko(_fd,_dataStart,SEEK_SET);
     _packetSize=_father->_packetSize;
     _packet=new asfPacket(_fd,_father->_nbPackets,_packetSize,
-                          &readQueue,_dataStart);
+                          &readQueue,&storageQueue,_dataStart);
     _seekPoints=&(_father->audioSeekPoints[myRank]);
     printf("[asfAudio] Length %u\n",getLength());
 }
@@ -119,18 +119,17 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
   while(1)
   {
    
-    while(!readQueue.isEmpty())
+    while(readQueue.size())
     {
       asfBit *bit;
-      ADM_assert(readQueue.pop((void**)&bit));
-      //printf("[Asf] Audio found packet of size %d seq %d\n",bit->len,bit->sequence);
-      
+      bit=readQueue.front();
+      readQueue.pop_front();
       // still same sequence ...add
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
       *dts=bit->pts; // for audio PTS=DTS...
-      delete[] bit->data;
-      delete bit;
+      storageQueue.push_back(bit);
+      bit=NULL;
       return 1;
     }
     r=_packet->nextPacket(_streamId);

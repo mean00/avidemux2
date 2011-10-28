@@ -23,7 +23,7 @@
 #include "ADM_asf.h"
 #include "ADM_asfPacket.h"
 
-#if 0
+#if 1
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -165,7 +165,7 @@ uint8_t asfHeader::open(const char *name)
                 (int)_allAudioTracks[i].streamIndex,(int)_allAudioTracks[i].streamIndex);
   buildIndex();
   fseeko(_fd,_dataStartOffset,SEEK_SET);
-  _packet=new asfPacket(_fd,_nbPackets,_packetSize,&readQueue,_dataStartOffset);
+  _packet=new asfPacket(_fd,_nbPackets,_packetSize,&readQueue,&storageQueue,_dataStartOffset);
   curSeq=1;
   for(int i=0;i<_nbAudioTrack;i++)
   {
@@ -291,10 +291,11 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   uint32_t delta;
   while(1)
   {
-    while(!readQueue.isEmpty())
+    while(readQueue.size())
     {
       asfBit *bit;
-      ADM_assert(readQueue.pop((void**)&bit));
+      bit=readQueue.front();
+      readQueue.pop_front();
       aprintf(">found packet of size %d seq %d, while curseq =%d wanted seg=%u current offset=%u\n",bit->len,bit->sequence,curSeq,_index[framenum].segNb,len);
       // Here it is tricky
       // if len==0 we are reading the first part of our frame
@@ -309,8 +310,8 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
           {
             aprintf("Dropping seq=%u too old for %u delta %d\n",
                   bit->sequence,_index[framenum].segNb,delta);
-            delete[] bit->data;
-            delete bit;
+            storageQueue.push_back(bit);
+            bit=NULL;
             if(delta<230)
             {
               printf("[ASF] Very suspicious delta :%"LU"\n",delta);
@@ -331,15 +332,15 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
       {
         aprintf("New sequence %u->%u while loading %u frame\n",curSeq,bit->sequence,framenum);
         img->dataLength=len;
-        readQueue.pushBack(bit); // don't delete it, we will use it later...
+        readQueue.push_front(bit);
         curSeq=bit->sequence;
         goto gotcha;
       }
       // still same sequence ...add
       memcpy(img->data+len,bit->data,bit->len);
       len+=bit->len;
-	  delete[] bit->data;
-      delete bit;
+      storageQueue.push_back(bit);
+      bit=NULL;
     }
     if(!_packet->nextPacket(_videoStreamId))
     {

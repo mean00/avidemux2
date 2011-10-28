@@ -21,6 +21,7 @@
 #include "ADM_queue.h"
 #include "ADM_asfPacket.h"
 #include "BVector.h"
+#include <vector>
 #define ASF_MAX_AUDIO_TRACK 8
 
 typedef struct
@@ -122,7 +123,8 @@ class asfAudioAccess : public ADM_audioAccess
     uint32_t                _dataStart;
     asfPacket               *_packet;
     FILE                    *_fd;
-    ADM_queue               readQueue;
+    queueOfAsfBits          readQueue;
+    queueOfAsfBits          storageQueue;
     uint32_t                _packetSize;
     class asfHeader         *_father;
     asfAudioTrak            *_track;
@@ -162,7 +164,9 @@ class asfHeader         :public vidHeader
     bool                    loadAudio(asfChunk *s,uint32_t sid);
     bool                    decodeExtHeader(asfChunk *s);
     bool                    decodeStreamHeader(asfChunk *s);
-    ADM_queue               readQueue;
+    queueOfAsfBits          readQueue;
+    queueOfAsfBits          storageQueue;
+               
     uint32_t                curSeq;
     asfPacket               *_packet;
     //uint32_t                _currentAudioStream;

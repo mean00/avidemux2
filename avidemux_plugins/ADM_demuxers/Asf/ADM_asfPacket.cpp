@@ -37,7 +37,7 @@ see http://avifile.sourceforge.net/asf-1.0.htm
 /**
     \fn asfPacket ctor
 */ 
-asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t startDataOffset)
+asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint32_t startDataOffset)
  {
    _fd=f;
    pakSize=pSize;
@@ -46,6 +46,7 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
    aprintf("Packet created at %x\n",packetStart);
    ADM_assert(_fd);
    queue=q;
+   storage=s;
    ADM_assert(q);
    currentPacket=0;
    _nbPackets=nb;
@@ -56,7 +57,7 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
 */
  asfPacket::~asfPacket()
  {
-	 purge();
+	 
  }
  /**
     \fn goToPacket
@@ -292,7 +293,19 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
                 uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,
                 uint64_t dts,uint64_t pts)
  {
-   asfBit *bit=new asfBit;
+
+    // Get a packet...
+    asfBit *bit;
+
+    if(storage->empty())
+    {
+        bit=new asfBit();
+    }else
+    {
+        bit=storage->front();
+        storage->pop_front();
+    }
+
    aprintf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
                 stream,payloadLen,offset,sequence,packetnb,ADM_us2plain(dts));
    bit->sequence=sequence;
@@ -306,12 +319,12 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    bit->pts=pts;
    if(!read(bit->data,bit->len))
    {
-		delete[] bit->data;
-		delete bit;
+        storage->push_back(bit);
+        bit=NULL;
 		return 0; 
    }
 
-   queue->push((void *)bit);
+   queue->push_back(bit);
    return 1;
  }
  /**
@@ -379,19 +392,23 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    return 1;
   
  }
- //****************************
+ /**
+    \fn purge
+    \brief empty queue to storage
+*/
  uint8_t asfPacket::purge(void)
  {
     // Flush queue
-   while(!queue->isEmpty())
+   while(!queue->size())
    {
      asfBit *bit;
-     ADM_assert(queue->pop((void**)&bit));
-     delete[] bit->data;
-     delete bit;
+     bit=queue->front();
+     queue->pop_front();
+     storage->push_back(bit);
    }
    return 1; 
  }
+#if 0
  //****************************
  uint8_t   asfPacket::packTo(uint8_t *buffer,uint32_t *len)
  {
@@ -407,7 +424,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    }
    return 1;
  }
- 
+#endif 
  
 #ifndef ASF_INLINE
 #include "ADM_asfIo.h"
