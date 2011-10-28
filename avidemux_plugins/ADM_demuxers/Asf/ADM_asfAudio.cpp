@@ -92,6 +92,7 @@ bool   asfAudioAccess::setPos(uint64_t newoffset)
 
 bool   asfAudioAccess::goToTime(uint64_t dts_us) // PTS!
 {
+    dts_us+=_father->getShift();
     // Search
     int size=_seekPoints->size();
     if(dts_us<=(*_seekPoints)[0].pts || size<2)
@@ -118,6 +119,7 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
   *len=0;
   uint32_t delta;
   uint8_t r;
+  uint64_t shift=_father->getShift();
   while(1)
   {
    
@@ -130,6 +132,12 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
       *dts=bit->pts; // for audio PTS=DTS...
+      if(*dts>shift) *dts-=shift;
+        else
+        {
+            ADM_error("ASF audio : Cannot shift, DTS=%"LLU", shift=%"LLU"\n",*dts,shift);
+            *dts=ADM_NO_PTS;
+        }
       storageQueue.push_back(bit);
       bit=NULL;
       return 1;

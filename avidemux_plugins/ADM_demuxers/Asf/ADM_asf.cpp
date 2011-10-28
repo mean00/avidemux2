@@ -135,6 +135,7 @@ uint8_t asfHeader::close(void)
   memset(&(_audioStreams[0]),0,sizeof(_audioStreams));
   _nbAudioTrack=0;
   _videostream.dwRate=0;
+  _shiftUs=0;
 
 }
 /**

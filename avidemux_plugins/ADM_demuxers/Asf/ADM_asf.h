@@ -190,7 +190,7 @@ class asfHeader         :public vidHeader
 
     uint8_t                 close(void);
     bool                    setFps(uint64_t usPerFrame);
-    
+    bool                    shiftAudioVideoBy(uint64_t s);
   public: // Shared with audio track
     char                    *myName;
     uint32_t                nbImage;
@@ -203,7 +203,8 @@ class asfHeader         :public vidHeader
     asfAudioTrak             _allAudioTracks[ASF_MAX_AUDIO_TRACK];
     ADM_audioStream         *_audioStreams[ASF_MAX_AUDIO_TRACK];
     uint32_t                 _nbPackets;
-    
+    uint64_t                 _shiftUs;
+    uint64_t                 getShift(void) { return _shiftUs;}
     
     // / Shared
   public:

@@ -33,8 +33,40 @@
 
 static const uint8_t asf_audio[16]={0x40,0x9e,0x69,0xf8,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
 static const uint8_t asf_video[16]={0xc0,0xef,0x19,0xbc,0x4d,0x5b,0xcf,0x11,0xa8,0xfd,0x00,0x80,0x5f,0x5c,0x44,0x2b};
-
-
+/**
+    \fn shiftAudioVideoBy
+    \brief shift audio and video so that they start close to zero
+*/
+bool asfHeader::shiftAudioVideoBy(uint64_t s)
+{
+    int n=_index.size();
+    ADM_info("Shifting by %s\n",ADM_us2plain(s));
+    for(int i=0;i<n;i++)
+    {
+        if(_index[i].pts!=ADM_NO_PTS)
+        {
+            if(_index[i].pts<s)
+            {
+                ADM_error("Shifting too big for frame %d PTS: %s\n",i,ADM_us2plain(_index[i].pts));
+            }else
+                _index[i].pts-=s;
+        }
+        _index[i].dts=ADM_NO_PTS;
+/*
+        if(_index[i].dts!=ADM_NO_PTS)
+        {
+            if(_index[i].dts<s)
+            {
+                ADM_error("Shifting too big for frame %d DTS: %s\n",i,ADM_us2plain(_index[i].dts));
+                _index[i].dts=ADM_NO_PTS;
+            }else
+                _index[i].dts-=s;
+        }
+*/
+    }
+    _shiftUs=s;
+    return true;
+}
 /**
     \fn setFps
 */
@@ -426,7 +458,7 @@ uint8_t asfHeader::buildIndex(void)
                                    &readQueue,&storageQueue,_dataStartOffset);
   uint32_t packet=0;
 #define MAXIMAGE (_nbPackets)
-  uint32_t sequence=1;
+  uint32_t sequence=0;
   uint32_t ceilImage=MAXIMAGE;
 
   nbImage=0;
@@ -461,19 +493,24 @@ uint8_t asfHeader::buildIndex(void)
       // --
       uint64_t dts=bit->dts;
       uint64_t pts=bit->pts;
+        printf("** DTS=%s\n",ADM_us2plain(dts));
+        printf("** PDTS=%s\n",ADM_us2plain(pts));
       if(bit->stream==_videoStreamId)
       {
-          aprintf(">found packet of size=%d off=%d seq %d, while curseq =%d, dts=%s\n",
-                        bit->len,bit->offset,  bit->sequence,curSeq,
-                        ADM_us2plain(dts));
+          printf(">found video packet of size=%d off=%d seq %d, while curseq =%d, dts=%s",
+                        bit->len,bit->offset,  bit->sequence,curSeq, ADM_us2plain(dts));
+          printf(" pts=%s\n",ADM_us2plain(pts));
           if(bit->sequence!=sequence || first==true)
           {
             if(first==false)
             {
                 indexEntry.frameLen=len;
+                ADM_info("Pushing video frame seq=%d pts=%s \n",
+                        indexEntry.segNb,ADM_us2plain(indexEntry.pts));
+                ADM_info("dts=%s\n",ADM_us2plain(indexEntry.dts));
                 _index.append(indexEntry);
             }
-            first=false;
+            
             aprintf("New sequence\n");
             if( ((sequence+1)&0xff)!=(bit->sequence&0xff))
             {
@@ -487,9 +524,9 @@ uint8_t asfHeader::buildIndex(void)
             indexEntry.flags=bit->flags;
             indexEntry.dts=dts;
             indexEntry.pts=pts;
-
-            readQueue.push_front(bit); // reuse it next time
-    
+            if(first==false)
+                readQueue.push_front(bit); // reuse it next time
+            first=false;
             sequence=bit->sequence;
             len=0;
             continue;
@@ -511,8 +548,14 @@ uint8_t asfHeader::buildIndex(void)
                         seek.pts=bit->pts;
                         seek.packetNb=bit->packet;
                         (audioSeekPoints[i]).append(seek);
+      
+#if 1
+                        if(!lastDts[i])
+                            printf("Adding seek point for track %d at %s (packet=%d)\n",
+                            i,ADM_us2plain(bit->pts),(int)seek.packetNb);
+#endif
                         lastDts[i]=bit->pts;
-                        printf("Adding seek point for track %d at %s (packet=%d)\n",
+                        aprintf("Adding seek point for track %d at %s (packet=%d)\n",
                             i,ADM_us2plain(bit->pts),(int)seek.packetNb);
                 }
             }
@@ -542,22 +585,42 @@ uint8_t asfHeader::buildIndex(void)
   printf("[ASF] ******** End of buildindex *******\n");
 
   nbImage=_index.size();;
-  if(nbImage)
+  if(!nbImage) return 0;
+  
+  uint64_t shift=60*1000*1000;
+  bool canShift=false;
+  uint64_t tPts;
+  tPts=_index[0].pts;
+    ADM_info("First image pts: %s, dts: %s\n",ADM_us2plain(tPts), ADM_us2plain(_index[0].dts));
+   if(tPts != ADM_NO_PTS)
     {
-        ADM_info("First image pts: %s, dts: %s\n",ADM_us2plain(_index[0].pts),
-                ADM_us2plain(_index[0].dts));
-        for(int i=0;i<_nbAudioTrack;i++)
+        shift=tPts;
+        ADM_info("Video shift = %s\n",ADM_us2plain(tPts));
+        canShift=true;
+    }else
+        canShift=false;
+    for(int i=0;i<_nbAudioTrack;i++)
+    {
+        if(!audioSeekPoints[i].size())
         {
-            if(!audioSeekPoints[i].size())
-            {
-                ADM_info("audio track : %d, no seek\n",i);
-                continue;
-            }
-            ADM_info("audio track : %d, %s\n",i,ADM_us2plain(audioSeekPoints[i][0].pts));
+            ADM_info("audio track : %d, no seek\n",i);
+            canShift=false;
+            continue;
         }
+        tPts=audioSeekPoints[i][0].pts;
+        ADM_info("audio track : %d, %s\n",i,ADM_us2plain(tPts));
+        if(tPts<shift) shift=tPts;
+    }
+    if(canShift)
+    {
+            ADM_info("Shifting a/v raw=%s\n",ADM_us2plain(shift));
+    }else
+    {
+            ADM_info("Can t shift\n");
+            shift=0;
     }
   _videostream.dwLength=_mainaviheader.dwTotalFrames=nbImage;
-  if(!nbImage) return 0;
+  
   _index[0].flags=AVI_KEY_FRAME;
   if(_index[0].pts==ADM_NO_PTS) _index[0].pts=_index[0].dts;
   // Update fps
@@ -591,6 +654,18 @@ uint8_t asfHeader::buildIndex(void)
             printf("[Asf] No pts, setting 30 fps hardcoded\n");
             _videostream.dwRate=(uint32_t)30000;;
         }
+    }
+    if(shift)
+    {
+        double frames3=_videostream.dwScale;
+                frames3/=_videostream.dwRate;
+                frames3*=3*1000*1000; // 
+            ADM_info("3 frames time = %s\n",ADM_us2plain((uint64_t)frames3));
+        uint64_t frame64=(uint64_t)frames3;
+        if(frame64<shift) shift=shift-frame64;
+        else shift=0;
+
+        shiftAudioVideoBy(shift);
     }
     return 1;
   
