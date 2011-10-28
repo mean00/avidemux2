@@ -145,7 +145,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    // Send time
    sendTime=1000*read32(); // Send time (ms)
    aduration=read16(); // Duration (ms)
-   printf(":: Time 1 %s\n",ADM_us2plain(sendTime));
+   aprintf(":: Time 1 %s\n",ADM_us2plain(sendTime));
    if(!packetLen)
    {
      // Padding (relative) size
@@ -162,7 +162,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
         uint8_t r=read8();
         nbSeg=r&0x3f;
         payloadLengthType=r>>6;
-        printf("Multiple Payload :%d\n",(int)nbSeg);
+        aprintf("Multiple Payload :%d\n",(int)nbSeg);
        // Now read Segments....
        //
        for(int seg=0;seg<nbSeg;seg++)
@@ -194,7 +194,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          remaining=remaining-paddingLen;
          if(remaining<=0) 
          {
-           printf("** Err: No data left (%d)\n",remaining); 
+           ADM_warning("** Err: No data left (%d)\n",remaining); 
          }
          if(!payloadLen)
          {
@@ -202,7 +202,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          }
          if(remaining<payloadLen)
          {
-           printf("** WARNING too big %d %d\n", remaining,packetLen);
+           ADM_warning("** WARNING too big %d %d\n", remaining,packetLen);
            payloadLen=remaining;
          }
            // else we read "payloadLen" bytes and put them at offset "offset"
@@ -229,11 +229,14 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          mediaObjectNumber=readVCL(mediaObjectNumberLenType,0); // Media object number
          offset=readVCL(offsetLenType,0);
          replica=readVCL(replicaLenType,0);
-         printf("replica                %d\n",replica);
+         aprintf("replica                %d\n",replica);
          if(replica>8)
          {
-            printf("replica size:1=%d\n",read32());
-            printf("replica pts :2=%d\n",read32());
+            int ssize=read32();
+            int stime=read32();
+            aprintf("replica size:1=%d\n",ssize);
+            aprintf("replica pts :2=%d\n",stime);
+            sendTime=stime; // in fact PTS
             skip(replica-8);
          }
             else
@@ -242,7 +245,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          remaining=remaining-paddingLen;
          if(remaining<=0) 
          {
-           printf("** Err: No data left (%d)\n",remaining); 
+           ADM_warning("** Err: No data left (%d)\n",remaining); 
          }
          if(!payloadLen)
          {
@@ -250,7 +253,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          }
          if(remaining<payloadLen)
          {
-           printf("** WARNING too big %d %d\n", remaining,packetLen);
+           ADM_warning("** WARNING too big %d %d\n", remaining,packetLen);
            payloadLen=remaining;
          }
            // else we read "payloadLen" bytes and put them at offset "offset"
@@ -277,7 +280,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  /**
     \fn pushPacket
     \brief     Push a packet down the queue
-    The packet could be a complete one or a fragement
+    The packet could be a complete one or a fragment
     To know that, either look at the offset field which will be != for fragements
     Or look if the sequence number is increasing
  
@@ -287,7 +290,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
                 uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,uint64_t dts)
  {
    asfBit *bit=new asfBit;
-   printf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
+   aprintf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
                 stream,payloadLen,offset,sequence,packetnb,ADM_us2plain(dts));
    bit->sequence=sequence;
    bit->offset=offset;
@@ -338,7 +341,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  
    if(1!=fread(where,how,1,_fd))
    {
-     printf("[AsfPacket] Read error\n");
+     ADM_warning("[AsfPacket] Read error\n");
      return 0; 
    }
    _offset+=how;

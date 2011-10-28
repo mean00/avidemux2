@@ -423,7 +423,7 @@ uint8_t asfHeader::buildIndex(void)
       uint64_t dts=bit->dts;
       if(bit->stream==_videoStreamId)
       {
-          printf(">found packet of size=%d off=%d seq %d, while curseq =%d, dts=%s\n",
+          aprintf(">found packet of size=%d off=%d seq %d, while curseq =%d, dts=%s\n",
                         bit->len,bit->offset,  bit->sequence,curSeq,
                         ADM_us2plain(dts));
           if(bit->sequence!=sequence || first==true)
@@ -437,7 +437,7 @@ uint8_t asfHeader::buildIndex(void)
             aprintf("New sequence\n");
             if( ((sequence+1)&0xff)!=(bit->sequence&0xff))
             {
-                printf("!!!!!!!!!!!! non continuous sequence %u %u\n",sequence,bit->sequence); 
+                ADM_warning("!!!!!!!!!!!! non continuous sequence %u %u\n",sequence,bit->sequence); 
             }
             
             
