@@ -421,6 +421,7 @@ uint8_t asfHeader::buildIndex(void)
       ADM_assert(readQueue.pop((void**)&bit));
       // --
       uint64_t dts=bit->dts;
+      uint64_t pts=bit->pts;
       if(bit->stream==_videoStreamId)
       {
           aprintf(">found packet of size=%d off=%d seq %d, while curseq =%d, dts=%s\n",
@@ -446,7 +447,7 @@ uint8_t asfHeader::buildIndex(void)
             indexEntry.packetNb=bit->packet;
             indexEntry.flags=bit->flags;
             indexEntry.dts=dts;
-            indexEntry.pts=ADM_NO_PTS;
+            indexEntry.pts=pts;
 
             for(int z=0;z<_nbAudioTrack;z++)
             {
@@ -468,10 +469,8 @@ uint8_t asfHeader::buildIndex(void)
         {
           if(bit->stream == _allAudioTracks[i].streamIndex)
           {
-            
             _allAudioTracks[i].length+=bit->len;
             _allAudioTracks[i].lastDts=bit->dts;
-            
             found=1;
           }
         }

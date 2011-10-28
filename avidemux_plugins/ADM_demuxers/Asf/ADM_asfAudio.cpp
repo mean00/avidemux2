@@ -147,7 +147,7 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       // still same sequence ...add
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
-      *dts=ADM_NO_PTS;
+      *dts=bit->dts;
       delete[] bit->data;
       delete bit;
       return 1;

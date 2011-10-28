@@ -217,7 +217,7 @@ uint8_t     asfHeader::getFrameSize(uint32_t frame,uint32_t *size)
 uint64_t                   asfHeader::getTime(uint32_t frameNum)
 {
      if(frameNum>=nbImage) return 0;
-     return _index[frameNum].dts; // ??PTS??
+     return _index[frameNum].pts; // ??PTS??
 }
 /**
     \fn getTime
@@ -355,7 +355,7 @@ gotcha:
   img->demuxerPts=_index[framenum].pts;
   if(len!=_index[framenum].frameLen)
   {
-    printf("[ASF] Frame=%u :-> Mismatch found len : %u expected %u\n",framenum,len, _index[framenum].frameLen);
+    ADM_error("[ASF] Frame=%u :-> Mismatch found len : %u expected %u\n",framenum,len, _index[framenum].frameLen);
   }
   aprintf(">>Len %d seq %d\n",len,curSeq);
   return 1; 
