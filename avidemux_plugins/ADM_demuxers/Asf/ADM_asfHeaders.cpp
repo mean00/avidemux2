@@ -114,7 +114,7 @@ bool asfHeader::decodeExtHeader(asfChunk *s)
             int streamNumber=0xff;
             int streamLangIndex=0xff;
             uint64_t avgTimePerFrameUs=0;
-
+            ADM_usPerFrameMapping map;
             s->read32();s->read32(); // start time
             s->read32();s->read32(); // end time
             s->read32(); // bitrate
@@ -164,6 +164,9 @@ bool asfHeader::decodeExtHeader(asfChunk *s)
                     x->skipChunk();
                     delete x;
             }
+            map.streamNb=streamNumber;
+            map.usPerFrame=avg;
+            frameDurationMapping.push_back(map);
             return true;
 }
 /** *****************************************
@@ -560,9 +563,22 @@ uint8_t asfHeader::buildIndex(void)
   // Update fps
   // In fact it is an average fps
   //
-  _videostream.dwScale=1000;
-  if(!_videostream.dwRate)
-  {
+    _videostream.dwScale=1000;
+    // check if we have a duration per frame for video...
+    int n=frameDurationMapping.size();
+    int dex=-1;
+    for(int i=0;i<n;i++)
+    {
+        if(frameDurationMapping[i].streamNb==_videoStreamId)
+            dex=i;
+    }
+    if(dex!=-1)
+    {
+        ADM_info("Average fps provided\n");
+        setFps(frameDurationMapping[dex].usPerFrame);
+    }
+    else
+    {
       ADM_info("Fps not provided, guessing it from nbFrame and duration\n");
       uint32_t avgFps;
       if(_index[nbImage-1].pts!=ADM_NO_PTS && _index[0].pts!=ADM_NO_PTS)
@@ -575,10 +591,7 @@ uint8_t asfHeader::buildIndex(void)
             printf("[Asf] No pts, setting 30 fps hardcoded\n");
             _videostream.dwRate=(uint32_t)30000;;
         }
-  }else
-    {
-        ADM_info("Already got fps (%d/1000)\n",_videostream.dwRate);
     }
-  return 1;
+    return 1;
   
 }

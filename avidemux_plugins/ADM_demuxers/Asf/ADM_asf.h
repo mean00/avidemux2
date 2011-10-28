@@ -109,6 +109,15 @@ typedef struct
   uint64_t     lastDts;
   WAVHeader    wavHeader;
 }asfAudioTrak;
+/**
+    \class ADM_usPerFrameMapping
+*/
+class ADM_usPerFrameMapping
+{
+public:
+    int         streamNb;
+    uint64_t    usPerFrame;
+};
 
 /**
     \class asfAudioAccess
@@ -158,11 +167,12 @@ class asfAudioAccess : public ADM_audioAccess
 class asfHeader         :public vidHeader
 {
   protected:
+    std::vector             <ADM_usPerFrameMapping> frameDurationMapping;
     uint8_t                 getHeaders( void);
     uint8_t                 buildIndex(void);
     uint8_t                 loadVideo(asfChunk *s);
     bool                    loadAudio(asfChunk *s,uint32_t sid);
-    bool                    decodeExtHeader(asfChunk *s);
+    bool                    decodeExtHeader(asfChunk *a);
     bool                    decodeStreamHeader(asfChunk *s);
     queueOfAsfBits          readQueue;
     queueOfAsfBits          storageQueue;
