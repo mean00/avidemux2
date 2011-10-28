@@ -34,7 +34,9 @@ see http://avifile.sourceforge.net/asf-1.0.htm
 #define aprintf(...) {}
 #endif
 
- 
+/**
+    \fn asfPacket ctor
+*/ 
 asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t startDataOffset)
  {
    _fd=f;
@@ -49,20 +51,16 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
    _nbPackets=nb;
    _startDataOffset=startDataOffset;
  }
+/**
+    \fn asfPacket dtor
+*/
  asfPacket::~asfPacket()
  {
 	 purge();
  }
- uint8_t   asfPacket::readChunkPayload(uint8_t *data, uint32_t *dataLen)
- {
-   uint32_t remaining;
-   *dataLen=0;
-   ADM_assert(0);
-   purge();
-   return 1;
-  
- }
- 
+ /**
+    \fn goToPacket
+*/
  uint8_t asfPacket::goToPacket(uint32_t packet)
  {
    uint32_t offset=_startDataOffset+packet*pakSize;
@@ -94,7 +92,8 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,ADM_queue *q,uint32_t st
  */
 uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 {
-   uint32_t atime,aduration,nbSeg,segType=0x80;
+   uint64_t atime;
+   uint32_t aduration,nbSeg,segType=0x80;
    uint32_t sequenceLen,len,streamId;
    int32_t   packetLen=0;
    uint32_t  paddingLen;
@@ -153,7 +152,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 
    
   
-   atime=read32(); // Send time (ms)
+   atime=1000*read32(); // Send time (ms)
    aduration=read16(); // Duration (ms)
    
    if(flags &1) // Multiseg
@@ -180,7 +179,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    
    
    printf("packetLen :           %d\n",packetLen);
-   printf("Send      :           %d\n",atime);
+   printf("Send      :           %d\n",atime/1000);
    printf("Duration  :           %d\n",aduration);
    printf("# of seg  :           %d %x\n",nbSeg,segType);
 #endif
@@ -282,7 +281,8 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
            printf("oops exceeding %d/%d\n",l,payloadLen);
            if(streamId==streamWanted || streamWanted==0xff)
            {
-             pushPacket(keyframe,currentPacket,offset,sequence,payloadLen,streamId,atime*1000);
+             pushPacket(keyframe,currentPacket,offset,sequence,payloadLen,streamId,atime);
+             atime=ADM_NO_PTS;
              
            }else
            {
@@ -298,7 +298,8 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
      { // else we read "payloadLen" bytes and put them at offset "offset"
        if(streamId==streamWanted|| streamWanted==0xff)
        {
-         pushPacket(keyframe,currentPacket,offset,sequence,payloadLen,streamId,atime*1000);    
+         pushPacket(keyframe,currentPacket,offset,sequence,payloadLen,streamId,atime);   
+         atime=ADM_NO_PTS;
        }else
         skip(payloadLen);
        aprintf("Reading %d bytes\n",payloadLen);
@@ -329,7 +330,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  uint8_t asfPacket::pushPacket(uint32_t keyframe,uint32_t packetnb,uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,uint64_t dts)
  {
    asfBit *bit=new asfBit;
-   //printf("Pushing packet stream=%d len=%d seq=%d dts=%d ms\n",stream,payloadLen,sequence,dts/1000);
+   printf("Pushing packet stream=%d len=%d seq=%d dts=%d ms\n",stream,payloadLen,sequence,dts/1000);
    bit->sequence=sequence;
    bit->offset=offset;
    bit->len=payloadLen;

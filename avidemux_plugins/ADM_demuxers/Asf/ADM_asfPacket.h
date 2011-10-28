@@ -18,7 +18,9 @@
 #define ASF_PACKET_H
 
 #include "ADM_queue.h"
-
+/**
+    \struct asfBit
+*/
 typedef struct 
 {
   uint32_t sequence;
@@ -31,7 +33,9 @@ typedef struct
   uint8_t  *data;
   
 }asfBit;
-
+/**
+    \class asfPacket
+*/
 class asfPacket
 {
   protected:
@@ -57,7 +61,6 @@ class asfPacket
     
     uint8_t   goToPacket(uint32_t packet);
   
-    uint8_t   readChunkPayload(uint8_t *data, uint32_t *dataLen);
     uint8_t   nextPacket(uint8_t streamWanted);
     uint8_t   skipPacket(void);
     

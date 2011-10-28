@@ -291,9 +291,6 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   uint32_t delta;
   while(1)
   {
-   
-    
-    
     while(!readQueue.isEmpty())
     {
       asfBit *bit;
@@ -363,8 +360,4 @@ gotcha:
   aprintf(">>Len %d seq %d\n",len,curSeq);
   return 1; 
 }
-/*
-    __________________________________________________________
-*/
-
 //EOF
