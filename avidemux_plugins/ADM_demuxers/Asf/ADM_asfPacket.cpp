@@ -168,6 +168,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
        for(int seg=0;seg<nbSeg;seg++)
        {
          r=read8(); // Read stream Id
+         uint64_t pts=ADM_NO_PTS;
          if(r&0x80) 
          {
             keyframe=AVI_KEY_FRAME;
@@ -180,8 +181,14 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          offset=readVCL(offsetLenType,0);
          replica=readVCL(replicaLenType,0);
          if(replica==1) ADM_error("Replica==1 : Compressed data!\n");
-         printf("replica                %d\n",replica);
-         skip(replica);
+         if(replica>=8)
+         {
+            read32(); // size
+            pts=read32()*1000; // PTS
+            skip(replica-8);
+         }
+         else
+            skip(replica);
          payloadLen=readVCL(payloadLengthType,0);
          remaining=pakSize-_offset;
          remaining=remaining-paddingLen;
@@ -201,8 +208,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
            // else we read "payloadLen" bytes and put them at offset "offset"
            if(streamId==streamWanted|| streamWanted==0xff)
            {
-             pushPacket(keyframe,currentPacket,offset,mediaObjectNumber,payloadLen,streamId,sendTime);   
-             sendTime=ADM_NO_PTS;
+             pushPacket(keyframe,currentPacket,offset,mediaObjectNumber,payloadLen,streamId,pts);   
            }else
             skip(payloadLen);
         }
@@ -224,7 +230,14 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          offset=readVCL(offsetLenType,0);
          replica=readVCL(replicaLenType,0);
          printf("replica                %d\n",replica);
-         skip(replica);
+         if(replica>8)
+         {
+            printf("replica size:1=%d\n",read32());
+            printf("replica pts :2=%d\n",read32());
+            skip(replica-8);
+         }
+            else
+                skip(replica);
          remaining=pakSize-_offset;
          remaining=remaining-paddingLen;
          if(remaining<=0) 
@@ -270,7 +283,8 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  
  */
 
- uint8_t asfPacket::pushPacket(uint32_t keyframe,uint32_t packetnb,uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,uint64_t dts)
+ uint8_t asfPacket::pushPacket(uint32_t keyframe,uint32_t packetnb,
+                uint32_t offset,uint32_t sequence,uint32_t payloadLen,uint32_t stream,uint64_t dts)
  {
    asfBit *bit=new asfBit;
    printf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
@@ -283,7 +297,6 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    bit->packet=packetnb;
    bit->flags=keyframe;
    bit->dts=dts;
-
    if(!read(bit->data,bit->len))
    {
 		delete[] bit->data;
