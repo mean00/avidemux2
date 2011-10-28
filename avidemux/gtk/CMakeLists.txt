@@ -101,6 +101,7 @@ TARGET_LINK_LIBRARIES(avidemux3_gtk
 	ADM_shellGtk
 	ADM_UIGtk6
 	ADM_coreAudioDevice6
+        ADM_osSupport6
 )
 
 ###########################################
