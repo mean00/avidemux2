@@ -35,6 +35,19 @@ see http://avifile.sourceforge.net/asf-1.0.htm
 #endif
 
 /**
+    \fn freeQueue
+*/
+bool freeQueue(queueOfAsfBits *q)
+{
+    while(q->size())
+    {
+        asfBit *bit=q->front();
+        q->pop_front();
+        delete bit;
+    }
+    return true;
+}
+/**
     \fn asfPacket ctor
 */ 
 asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint32_t startDataOffset)
@@ -385,7 +398,9 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
 
    return 1;
  }
- //****************************
+ /**
+    \fn dump
+*/
  uint8_t   asfPacket::dump(void)
  {
   
@@ -399,7 +414,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  uint8_t asfPacket::purge(void)
  {
     // Flush queue
-   while(!queue->size())
+   while(queue->size())
    {
      asfBit *bit;
      bit=queue->front();
@@ -408,23 +423,6 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    }
    return 1; 
  }
-#if 0
- //****************************
- uint8_t   asfPacket::packTo(uint8_t *buffer,uint32_t *len)
- {
-   *len=0;
-   while(!queue->isEmpty())
-   {
-     asfBit *bit;
-     ADM_assert(queue->pop((void**)&bit));
-     memcpy(buffer,bit->data,bit->len);
-     *len+=bit->len;
-     delete[] bit->data;
-     delete bit;
-   }
-   return 1;
- }
-#endif 
  
 #ifndef ASF_INLINE
 #include "ADM_asfIo.h"

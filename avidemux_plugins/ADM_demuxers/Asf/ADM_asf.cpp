@@ -110,6 +110,8 @@ uint8_t asfHeader::close(void)
     delete _audioStreams[i];
     _audioStreams[i]=NULL;    
   }
+  freeQueue(&readQueue);
+  freeQueue(&storageQueue);
   return 1;
 }
 /**
@@ -275,7 +277,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
   // Seeking ?
   if(_index[framenum].segNb!=curSeq)
   {
-    printf("Seeking.. curseq:%u wanted seq:%u\n",curSeq,_index[framenum].segNb);
+    printf("Seeking.. curseq:%u wanted seq:%u packet=%d\n",curSeq,_index[framenum].segNb,_index[framenum].packetNb);
     if(!_packet->goToPacket(_index[framenum].packetNb))
     {
       printf("[ASF] Cannot seek to frame %u\n",framenum);
@@ -283,7 +285,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
     }
     _packet->purge();
     curSeq=_index[framenum].segNb;
-    printf("Seeking starting at seq=%u\n",curSeq);
+    printf("Seeking done, starting at seq=%u\n",curSeq);
   }
   
   
@@ -296,7 +298,8 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
       asfBit *bit;
       bit=readQueue.front();
       readQueue.pop_front();
-      aprintf(">found packet of size %d seq %d, while curseq =%d wanted seg=%u current offset=%u\n",bit->len,bit->sequence,curSeq,_index[framenum].segNb,len);
+      aprintf(">found packet of size %d seq %d, while curseq =%d wanted seg=%u current offset=%u, packet=%u\n",
+                    bit->len,bit->sequence,curSeq,_index[framenum].segNb,len,bit->packet);
       // Here it is tricky
       // if len==0 we are reading the first part of our frame
       // The packet may starts with segments from the previous frame

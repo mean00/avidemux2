@@ -398,7 +398,7 @@ uint8_t asfHeader::buildIndex(void)
   // Here we go
   asfPacket *aPacket=new asfPacket(_fd,_nbPackets,_packetSize,
                                    &readQueue,&storageQueue,_dataStartOffset);
-  uint32_t packet=1;
+  uint32_t packet=0;
 #define MAXIMAGE (_nbPackets)
   uint32_t sequence=1;
   uint32_t ceilImage=MAXIMAGE;

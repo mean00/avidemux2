@@ -85,5 +85,6 @@ class asfPacket
     uint8_t   packTo(uint8_t *buffer,uint32_t *len);
 };
 
+bool freeQueue(queueOfAsfBits *q);
 #endif
 

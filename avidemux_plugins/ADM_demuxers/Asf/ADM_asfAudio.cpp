@@ -40,6 +40,8 @@ asfAudioAccess::~asfAudioAccess()
 
 	delete _packet;
 
+  freeQueue(&readQueue);
+  freeQueue(&storageQueue);
 
 	_packet = NULL;
 }
