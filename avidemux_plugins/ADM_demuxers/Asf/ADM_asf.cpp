@@ -278,7 +278,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
          framenum,_index[framenum].frameLen,curSeq,
          _index[framenum].segNb,_index[framenum].packetNb);
   // Seeking ?
-  if(_index[framenum].segNb!=curSeq)
+  if(_index[framenum].segNb!=curSeq || _index[framenum].segNb==1)
   {
     printf("Seeking.. curseq:%u wanted seq:%u packet=%d\n",curSeq,_index[framenum].segNb,_index[framenum].packetNb);
     if(!_packet->goToPacket(_index[framenum].packetNb))
