@@ -83,6 +83,28 @@ asfPacket::asfPacket(FILE *f,uint32_t nb,uint32_t pSize,queueOfAsfBits *q,queueO
    purge();
    return 1;
  }
+/**
+    \fn readReplica
+    \brief read pts from replica if any
+*/
+uint64_t   asfPacket::readPtsFromReplica(int replica)
+{
+    uint64_t pts=ADM_NO_PTS;
+    if(replica==1) 
+    {
+        ADM_error("Replica==1 : Compressed data!\n");
+     }else
+     if(replica>=8)
+     {
+        read32(); // size
+        pts=read32()*1000; // PTS
+        skip(replica-8);
+     }
+     else
+        skip(replica);
+    return pts;
+}
+
  /**
     \fn     nextPacket
     \brief  Read ASF packet & segments 
@@ -194,15 +216,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          mediaObjectNumber=readVCL(mediaObjectNumberLenType,0); // Media object number
          offset=readVCL(offsetLenType,0);
          replica=readVCL(replicaLenType,0);
-         if(replica==1) ADM_error("Replica==1 : Compressed data!\n");
-         if(replica>=8)
-         {
-            read32(); // size
-            pts=read32()*1000; // PTS
-            skip(replica-8);
-         }
-         else
-            skip(replica);
+         pts=readPtsFromReplica(replica);
          payloadLen=readVCL(payloadLengthType,0);
          remaining=pakSize-_offset;
          remaining=remaining-paddingLen;
@@ -245,18 +259,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
          mediaObjectNumber=readVCL(mediaObjectNumberLenType,0); // Media object number
          offset=readVCL(offsetLenType,0);
          replica=readVCL(replicaLenType,0);
-         aprintf("replica                %d\n",replica);
-         if(replica>8)
-         {
-            int ssize=read32();
-            int stime=read32();
-            aprintf("replica size:1=%d\n",ssize);
-            aprintf("replica pts :2=%d\n",stime);
-            pts=stime; // in fact PTS
-            skip(replica-8);
-         }
-            else
-                skip(replica);
+         pts=readPtsFromReplica(replica);
          remaining=pakSize-_offset;
          remaining=remaining-paddingLen;
          if(remaining<=0) 

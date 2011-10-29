@@ -206,6 +206,7 @@ class asfHeader         :public vidHeader
     uint64_t                 _shiftUs;
     uint64_t                 getShift(void) { return _shiftUs;}
     
+    
     // / Shared
   public:
                                         asfHeader(void);

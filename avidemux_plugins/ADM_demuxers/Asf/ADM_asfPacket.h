@@ -59,6 +59,7 @@ class asfPacket
     uint32_t        currentPacket;
     uint32_t        _startDataOffset;
     uint32_t        _nbPackets;
+    uint64_t        readPtsFromReplica(int sz);
   public:
     
     asfPacket(FILE *f,uint32_t nbElem,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint32_t startDataOffset);

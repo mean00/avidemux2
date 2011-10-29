@@ -23,7 +23,7 @@
 #include "ADM_asf.h"
 #include "ADM_asfPacket.h"
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}

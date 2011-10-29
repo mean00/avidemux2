@@ -493,21 +493,22 @@ uint8_t asfHeader::buildIndex(void)
       // --
       uint64_t dts=bit->dts;
       uint64_t pts=bit->pts;
-        printf("** DTS=%s\n",ADM_us2plain(dts));
-        printf("** PDTS=%s\n",ADM_us2plain(pts));
+        aprintf("** DTS=%s\n",ADM_us2plain(dts));
+        aprintf("** PDTS=%s\n",ADM_us2plain(pts));
       if(bit->stream==_videoStreamId)
       {
-          printf(">found video packet of size=%d off=%d seq %d, while curseq =%d, dts=%s",
+          aprintf(">found video packet of size=%d off=%d seq %d, while curseq =%d, dts=%s",
                         bit->len,bit->offset,  bit->sequence,curSeq, ADM_us2plain(dts));
-          printf(" pts=%s\n",ADM_us2plain(pts));
+          aprintf(" pts=%s\n",ADM_us2plain(pts));
           if(bit->sequence!=sequence || first==true)
           {
             if(first==false)
             {
                 indexEntry.frameLen=len;
-                ADM_info("Pushing video frame seq=%d pts=%s \n",
+                aprintf("Pushing video frame index=%d seq=%d pts=%s \n",
+                        _index.size(),
                         indexEntry.segNb,ADM_us2plain(indexEntry.pts));
-                ADM_info("dts=%s\n",ADM_us2plain(indexEntry.dts));
+                aprintf("dts=%s\n",ADM_us2plain(indexEntry.dts));
                 _index.append(indexEntry);
             }
             
