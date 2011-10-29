@@ -55,6 +55,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 
 static  ad_supportedFormat Formats[]={
         {WAV_WMA,AD_MEDIUM_QUAL},
+        {WAV_WMAPRO,AD_MEDIUM_QUAL},
         {WAV_QDM2,AD_MEDIUM_QUAL},
         {WAV_AMV_ADPCM,AD_MEDIUM_QUAL},
         {WAV_NELLYMOSER,AD_MEDIUM_QUAL},
@@ -117,6 +118,9 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     bool wantFloat=true;
     switch(fourcc)
     {
+      case WAV_WMAPRO:
+        _context->codec_id = CODEC_ID_WMAPRO;
+        break;
       case WAV_WMA:
         _context->codec_id = CODEC_ID_WMAV2;
         break;
