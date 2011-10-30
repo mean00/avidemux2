@@ -993,7 +993,7 @@ void GUI_avsProxy(void)
   GUI_close();
   res = video_body->addFile (AVS_PROXY_DUMMY_FILE);
   // forget last project file
-  video_body->setProjectName(NULL);
+  video_body->setProjectName("avsproxy");
   if (res!=ADM_OK)			// an error occured
     {
         currentaudiostream = NULL;
