@@ -100,6 +100,17 @@ uint8_t avsHeader::open(const char *name)
 
 #define CLR(x)              memset(& x,0,sizeof(  x));
 
+    if(!info.width || !info.fps1000 || !info.height)
+    {
+        ADM_error("Wrong width/height/fps\n");
+        return false;
+    }
+    if(info.version!=AVSHEADER_API_VERSION)
+    {
+        GUI_Error_HIG("","Wrong API version, expected %d, got %d\n",AVSHEADER_API_VERSION,info.version);
+        return false;
+    }
+
     CLR(_videostream);
     CLR(_mainaviheader);
 
