@@ -29,7 +29,7 @@
 #define TS_NB_PACKET_THRESHOLD 5
 #define MAX_PID (1<<17)
 #define MAX_BUFFER_SIZE (10*1024)
-
+static bool idAAC_ADTS(int pid,tsPacket *ts);
 static bool idContent(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType);
 static bool idMP2(int pid,tsPacket *ts);
 /**
@@ -280,6 +280,14 @@ TS_PESpacket pes2(pid);
                 trackType=ADM_TS_MPEG_AUDIO;
                 return true;
         }
+
+        if(idAAC_ADTS(pid,ts))
+        {
+                ADM_info("\t probably AAC/ADTS\n");
+                trackType=ADM_TS_AAC_ADTS;
+                return true;
+        }
+
         ADM_info("Cannot identify track\n");
         return false;
 }
@@ -347,6 +355,41 @@ uint8_t  mp2Buffer[MP2_PROBE_SIZE*2];
         }
         return false;
 }
+        /**
+    \fn idMP2
+    \brief return true if the tracks is AAC/ADTS
+*/
+bool idAAC_ADTS(int pid,tsPacket *ts)
+{
+#define ADTS_NB_PACKET 10
+#define ADTS_MIN_MATCH 7
+        int match=0;
+        TS_PESpacket pes(pid);
+        for(int i=0;i<ADTS_NB_PACKET;i++)
+        {
+            if(!ts->getNextPES(&pes))
+            {
+                ADM_warning("ADTS:Cannot get PES for pid=%d\n",pid);
+                return false;
+            }
+            uint8_t *p=pes.payload+pes.offset;
+            printf("%02x %02x\n",p[0],p[1]);
+            if((*p)!=0xff)
+            {
+                continue;
+            }
+            if((p[1]&0xF0)!=0xF0)
+                continue;
+            match++;
+        }
+        ADM_info("\t Adts match : %d/%d\n",match,ADTS_NB_PACKET);
+        if(match>=ADTS_MIN_MATCH) 
+        {
+            
+            return true;
+        }
         
+        return false;
+}
 
 //EOF
