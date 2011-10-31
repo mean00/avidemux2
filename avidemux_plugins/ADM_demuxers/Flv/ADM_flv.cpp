@@ -24,7 +24,11 @@ Not sure if the timestamp is PTS or DTS (...)
 #include "ADM_flv.h"
 
 #include <math.h>
-
+#if 0
+    #define aprintf printf
+#else
+    #define aprintf(...) {}
+#endif
 // Borrowed from lavformt/flv.h
 #include "libavformat/flv.h"
 // Borrowed from lavformt/flv.h
@@ -85,13 +89,27 @@ uint32_t flvHeader::read32(void)
     \fn     readFlvString
     \brief  read pascal like string
 */
+#define FLV_MAX_STRING 255
 char *flvHeader::readFlvString(void)
 {
-static char stringz[255];
+static uint8_t stringz[FLV_MAX_STRING+1];
     int size=read16();
-    read(size,(uint8_t *)stringz);
+    if(size>FLV_MAX_STRING)
+    {
+        int pre=FLV_MAX_STRING;
+        read(pre,stringz);
+        ADM_warning("String way too large :%d\n",size);
+        mixDump(stringz,pre);
+        stringz[0]='X';
+        stringz[1]='X';
+        stringz[2]=0;
+        stringz[FLV_MAX_STRING]=0;
+        Skip(size-FLV_MAX_STRING);
+        return (char *)stringz;
+    }
+    read(size,stringz);
     stringz[size]=0;
-    return stringz;
+    return (char *)stringz;
 }
 extern "C" {
 double av_int2dbl(int64_t v);
@@ -121,7 +139,7 @@ void flvHeader::setProperties(const char *name,float value)
 /**
     \fn parseOneMeta
 */
-bool flvHeader::parseOneMeta(const char *s,uint64_t endPos)
+bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos)
 {
             int type=read8();
             printf("type :%d : ",type);
@@ -176,7 +194,7 @@ bool flvHeader::parseOneMeta(const char *s,uint64_t endPos)
                                             hi=(hi<<32)+lo;
                                             val=(float)av_int2dbl(hi);
                                             printf("->%f",val);
-                                            setProperties(s,val);
+                                            setProperties(stri,val);
                                         }
                                         ;break;
                 case AMF_DATA_TYPE_STRING: {int r=read16();Skip(r);}break;
@@ -210,25 +228,20 @@ xxer:
 uint8_t flvHeader::parseMetaData(uint32_t remaining)
 {
     uint32_t endPos=ftello(_fd)+remaining;
+    // Check the first one is onMetaData...
+    uint8_t type=read8();
+    char *z;
+    if(type!=AMF_DATA_TYPE_STRING) // String!
+        goto endit;
+    z=readFlvString();
+    printf("[FlashString] %s\n",z);
+    if(z && strncmp(z,"onMetaData",10)) goto endit;
+    // Normally the next one is mixed array
+    while(ftello(_fd)<endPos-4)
     {
-        // Check the first one is onMetaData...
-        uint8_t type=read8();
-        if(type!=AMF_DATA_TYPE_STRING) // String!
-            goto endit;
-        char *z=readFlvString();
-        printf("[FlashString] %s\n",z);
-        if(z && strncmp(z,"onMetaData",10)) goto endit;
-        // Normally the next one is mixed array
-        Skip(4);
-        Skip(1);
-        while(ftello(_fd)<endPos-4)
-        {
-            char *s=readFlvString();
-            printf("[FlvType]  String : %s ",s);
-            
-            if(false==parseOneMeta(s,endPos)) goto endit;
-        }
+        if(false==parseOneMeta("meta",endPos)) goto endit;
     }
+
 endit:
     fseeko(_fd,endPos,SEEK_SET);
     updateDimensionWithMeta(videoCodec);
@@ -346,8 +359,6 @@ uint8_t flvHeader::open(const char *name)
   uint32_t skip=read32();
   fseeko(_fd,skip,SEEK_SET);
   printf("[FLV] Skipping %u header bytes\n",skip);
-
-
   pos=ftello(_fd);;
   printf("pos:%u/%u\n",pos,fileSize);
   // Create our video index
@@ -368,6 +379,11 @@ uint8_t flvHeader::open(const char *name)
     size=read24();
     dts=read24();
     read32(); // ???
+    aprintf("--------\n");
+    aprintf("prevLen=%d\n",(int)prevLen);
+    aprintf("type  =%d\n",(int)type);
+    aprintf("size  =%d\n",(int)size);
+    aprintf("dts   =%d\n",(int)dts);
     if(!size) continue;
     uint32_t remaining=size;
     //printf("[FLV] At %08x found type %x size %u pts%u\n",pos,type,size,dts);
@@ -375,6 +391,7 @@ uint8_t flvHeader::open(const char *name)
     {
       case FLV_TAG_TYPE_AUDIO:
           {
+            aprintf("** Audio **\n");
             if(!_isaudiopresent)
             {
                 audioTrack=new flvTrak(50);
@@ -400,13 +417,14 @@ uint8_t flvHeader::open(const char *name)
           }
           break;
       case FLV_TAG_TYPE_META:
+                aprintf("** Meta **\n");
                 parseMetaData(remaining);
                 remaining=0;
                 break;
       case FLV_TAG_TYPE_VIDEO:
           {
             int of=1+4+3+3+1+4;
-            
+            aprintf("** Video **\n");
             uint8_t flags=read8();
             remaining--;
             int frameType=flags>>4;
