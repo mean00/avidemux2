@@ -515,26 +515,25 @@ double     duration;
 WAVHeader *wav;
 aviInfo    info;
 uint32_t ref;
-
-
-        if(false==_segments.getRefFromTime(xtime,&ref))  
+        int n=_segments.getNbRefVideos();
+        packetBufferSize=0; // Flush PCM decoder
+        for(int i=0;i<n;i++)
         {
-            ADM_warning("[Editor::changeAudioStream] Cannot get ref video for time %"LLD" ms\n",xtime/1000);
-            return 0;
+            _VIDEOS *v=_segments.getRefVideo(i);
+            uint32_t nb=v->audioTracks.size();
+            if(newstream>=nb)
+            {
+                ADM_warning("[Editor::changeAudioStream] New stream exceeds # of stream (%d/%d)\n",(int)newstream,(int)nb);
+                continue;
+            }
+            v->currentAudioStream=newstream;
+            if(!i) // update general info for track 0
+            {
+                wavHeader.frequency=v->audioTracks[newstream]->wavheader.frequency;
+                wavHeader.channels=v->audioTracks[newstream]->wavheader.channels;
+            }
+            ADM_info("Switched to track %d for video %d\n",newstream,i);
         }
-        _VIDEOS *v=_segments.getRefVideo(ref);
-        ADM_assert(v);
-        uint32_t nb=v->audioTracks.size();
-        if(newstream>=nb)
-        {
-            ADM_warning("[Editor::changeAudioStream] New stream exceeds # of stream (%d/%d)\n",(int)newstream,(int)nb);
-            return false;
-        }
-        v->currentAudioStream=newstream;
-        // Change our header also
-        wavHeader.frequency=v->audioTracks[newstream]->wavheader.frequency;
-        wavHeader.channels=v->audioTracks[newstream]->wavheader.channels;
-        //ADM_warning("New fq=%d\n",(int)wavHeader.frequency);
         return true;
 }
 
