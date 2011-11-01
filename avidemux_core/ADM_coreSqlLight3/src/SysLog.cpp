@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "Database.h"
 #include "Query.h"
 #include "IError.h"
-#include "SysLog.h"
+#include "SysLog2.h"
 
 
 #ifdef SQLITEW_NAMESPACE
