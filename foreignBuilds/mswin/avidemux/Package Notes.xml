@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <log>
+  <buildentry revision="7604" date="2011-10-11" />
   <buildentry revision="7590" date="2011-09-28" />
   <buildentry revision="7573" date="2011-09-22">
     <comment>Updated x264 to r2085.</comment>

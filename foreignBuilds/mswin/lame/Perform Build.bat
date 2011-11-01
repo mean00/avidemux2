@@ -17,15 +17,16 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=lame-3.98.4.tar.gz
-set sourceFolder=lame-3.98.4-%BuildBits%
-set tarFolder=lame-3.98.4
+set version=3.99
+set package=lame-%version%.tar.gz
+set sourceFolder=lame-%version%-%BuildBits%
+set tarFolder=lame-%version%
 set curDir=%CD%
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://sourceforge.net/projects/lame/files/lame/3.98.4/%package%/download/
+	wget http://sourceforge.net/projects/lame/files/lame/%version%/%package%/download/
 )
 
 if errorlevel 1 goto end
@@ -46,6 +47,10 @@ cd "%devDir%\%sourceFolder%"
 for /f "delims=" %%a in ('dir /b %tarFolder%') do (
   move "%CD%\%tarFolder%\%%a" "%CD%"
 )
+
+echo.
+echo Patching
+patch -p0 -i "%curDir%\vbrquantize.c.patch"
 
 echo.
 echo Configuring
