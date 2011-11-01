@@ -128,7 +128,7 @@ signed int Sample;
         {
             if (MAD_RECOVERABLE(Stream->error))
             {
-                    printf(" error :%x \n",(int)Stream->error);
+                    ADM_info("[Mad:Error] %x \n",(int)Stream->error);
             } else
             {
                 if (Stream->error == MAD_ERROR_BUFLEN)	// we consumed everything
