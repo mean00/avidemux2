@@ -223,12 +223,17 @@ bool ADM_listFile(const std::string path,const std::string extension,vector <std
         ADM_info("No preset found\n");
         return true;
     }
+    size_t lastSlash,lastBackSlash,lastDot;
     for(int i=0;i<nb;i++)
     {
         std::string s=std::string(list[i]);
-        size_t lastSlash=s.find_last_of('/');
+        lastSlash=s.find_last_of('/');
         s.replace(0,lastSlash+1,std::string(""));
-        size_t lastDot=s.find_last_of('.');
+#ifdef __WIN32 // also replace \ 
+        lastBackSlash=s.find_last_of('\\');
+        s.replace(0,lastBackSlash+1,std::string(""));
+#endif // 
+        lastDot=s.find_last_of('.');
         s.replace(lastDot,s.size(),std::string(""));
         // Remove extension
         listOut.push_back(s);
