@@ -30,6 +30,9 @@ const std::string slash=std::string("\\");
 #else
 const std::string slash=std::string("/");
 #endif
+
+#define MAX_NB_PRESET 30
+
 /**
     \fn ADM_coreVideoEncoder
 */                          
@@ -173,6 +176,28 @@ bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::strin
     return true;
 }
 /**
+    \fn getFileNameAndExt
+    \brief only keep filename and ext from input (i.e. remove folders)
+*/
+static bool getFileNameAndExt(const std::string &input, std::string &output)
+{
+    std::string s=input;
+    size_t lastSlash,lastBackSlash;
+    
+     lastSlash=s.find_last_of("/");
+     if(lastSlash!=-1)
+        s.replace(0,lastSlash+1,std::string(""));
+#ifdef __WIN32
+     lastBackSlash=s.find_last_of("\\");
+     if(lastBackSlash!=-1)
+        s.replace(0,lastBackSlash+1,std::string(""));
+#endif
+    ADM_info("Stripping : %s => %s\n",input.c_str(),s.c_str());
+    output=s;   
+    return true;
+}
+
+/**
     \fn ADM_pluginInstallSystem
     \brief Copy if needed the system presets to the user presets list
 */
@@ -181,11 +206,10 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
     std::string sysPath,userPath;
     ADM_pluginSystemPath(pluginName,pluginVersion,sysPath);
     ADM_pluginGetPath(pluginName,pluginVersion,userPath);
-#define NB 20
-    char *list[NB];
+    char *list[MAX_NB_PRESET];
     uint32_t nb=0;
     ADM_info("Looking for file %s in folder %s\n",ext.c_str(),sysPath.c_str());
-    if(false==buildDirectoryContent(&nb,sysPath.c_str(),list,NB,ext.c_str()))
+    if(false==buildDirectoryContent(&nb,sysPath.c_str(),list,MAX_NB_PRESET,ext.c_str()))
     {
         ADM_info("No preset found\n");
         return true;
@@ -194,10 +218,9 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
     for( int i=0;i<nb;i++)
     {
         std::string s=std::string(list[i]);
-        size_t lastSlash=s.find_last_of('/');
-        s.replace(0,lastSlash+1,std::string("")); // filename+ext
-        std::string file=s;
-        s=userPath+std::string("/")+s; // 
+        std::string file;
+        getFileNameAndExt(s,file);
+        s=userPath+slash+file; // 
         if(!ADM_fileExist(s.c_str()))
         {
             ADM_info("%s exists in system folder, but not in user folder, copying..\n",file.c_str());
@@ -213,7 +236,7 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
 */
 bool ADM_listFile(const std::string path,const std::string extension,vector <std::string > & listOut)
 {
-#define NB 20
+#define NB 30
     char *list[NB];
     uint32_t nb=0;
 
@@ -223,20 +246,17 @@ bool ADM_listFile(const std::string path,const std::string extension,vector <std
         ADM_info("No preset found\n");
         return true;
     }
-    size_t lastSlash,lastBackSlash,lastDot;
+    size_t lastDot;
     for(int i=0;i<nb;i++)
     {
         std::string s=std::string(list[i]);
-        lastSlash=s.find_last_of('/');
-        s.replace(0,lastSlash+1,std::string(""));
-#ifdef __WIN32 // also replace \ 
-        lastBackSlash=s.find_last_of('\\');
-        s.replace(0,lastBackSlash+1,std::string(""));
-#endif // 
-        lastDot=s.find_last_of('.');
-        s.replace(lastDot,s.size(),std::string(""));
+        std::string file;
+        getFileNameAndExt(s,file);
+        lastDot=file.find_last_of('.');
         // Remove extension
-        listOut.push_back(s);
+        if(lastDot!=-1)
+            file.replace(lastDot,file.size(),std::string(""));
+        listOut.push_back(file);
     }
     clearDirectoryContent(nb,list);
     return true;
