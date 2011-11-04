@@ -168,7 +168,7 @@ bool x264Dialog::upload(void)
           MK_CHECKBOX(dctDecimateCheckBox,analyze.dct_decimate);
 
           MK_UINT(maxBFramesSpinBox,MaxBFrame);
-          MK_UINT(maxBFramesSpinBox,MaxRefFrames);
+          MK_UINT(refFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(meSpinBox,analyze.subpel_refine);
@@ -272,7 +272,7 @@ bool x264Dialog::download(void)
           MK_CHECKBOX(dctDecimateCheckBox,analyze.dct_decimate);
 
           MK_UINT(maxBFramesSpinBox,MaxBFrame);
-          MK_UINT(maxBFramesSpinBox,MaxRefFrames);
+          MK_UINT(refFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(meSpinBox,analyze.subpel_refine);
