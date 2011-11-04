@@ -87,7 +87,9 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
        ui.setupUi(this);
         connect(ui.encodingModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(encodingModeComboBox_currentIndexChanged(int)));
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));
+        connect(ui.meSlider, SIGNAL(valueChanged(int)), this, SLOT(meSlider_valueChanged(int)));
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
+        connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
         connect(ui.targetRateControlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(targetRateControlSpinBox_valueChanged(int)));
 #if 0
         connect(ui.maxCrfSlider, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSlider_valueChanged(int)));
@@ -355,9 +357,17 @@ void x264Dialog::quantiserSlider_valueChanged(int value)
 	ui.quantiserSpinBox->setValue(value);
 }
 
+void x264Dialog::meSlider_valueChanged(int value)
+{
+	ui.meSpinBox->setValue(value);
+}
 void x264Dialog::quantiserSpinBox_valueChanged(int value)
 {
 	ui.quantiserSlider->setValue(value);
+}
+void x264Dialog::meSpinBox_valueChanged(int value)
+{
+	ui.meSlider->setValue(value);
 }
 
 void x264Dialog::targetRateControlSpinBox_valueChanged(int value)
