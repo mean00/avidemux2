@@ -1,4 +1,4 @@
- set(FFMPEG_VERSION "850")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
+ set(FFMPEG_VERSION "860")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 #set(FFMPEG_VERSION "efb5fa79f5ca34140db357a00c999286097ab53e")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 #set(FFMPEG_VERSION "8cb3c557a9f3b24bc55325e3f64a2150b983305c")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 
