@@ -310,6 +310,11 @@ uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInM
 bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits)
 {
     float f;
+    if(duration==ADM_NO_PTS)
+    {
+        ADM_error("[ADM_computeBitrateFromDuration] No source duration!\n");
+        return false;
+    }
     if(!duration) 
     {
         ADM_error("[ADM_computeBitrateFromDuration] No source duration!\n");
@@ -318,7 +323,8 @@ bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB,
     f=sizeInMB; 
     f=f*1024*1024*8; // in bits
     f*=1000*1000;
-    f/=duration;
+    f/=duration; // bit/s
+    f/=1000; // in kbps
     *avgInKbits=(uint32_t)f;
     return true;
 }

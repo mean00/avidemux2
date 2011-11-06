@@ -21,6 +21,7 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_vidMisc.h"
 #if 1
     #define aprintf(...) {}
     #define avsnprintf(...) {}
@@ -159,6 +160,8 @@ bool x264Encoder::setup(void)
                         if(x264Settings.general.params.mode==COMPRESS_2PASS)
                         {
                             uint64_t duration=source->getInfo()->totalDuration; // in us
+                            ADM_info("Source duration :%s\n",ADM_us2plain(duration));
+                            ADM_info("Target size     :%d\n",(int)x264Settings.general.params.finalsize);
                             uint32_t avg;
                             if(false==ADM_computeAverageBitrateFromDuration(duration, 
                                             x264Settings.general.params.finalsize,
