@@ -19,6 +19,11 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
+extern "C"
+{
+char *av_strdup(const char *s);
+void *av_malloc(size_t size) ;
+}
 //#define TIME_TENTH_MILLISEC
 #if 1
     #define aprintf(...) {}
@@ -319,7 +324,7 @@ bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
   fseek (_statfile, 0, SEEK_END);
   statSize = ftello (_statfile);
   fseek (_statfile, 0, SEEK_SET);
-  _context->stats_in = (char *) ADM_alloc (statSize + 1);
+  _context->stats_in = (char *) av_malloc(statSize+1);
   _context->stats_in[statSize] = 0;
   fread (_context->stats_in, statSize, 1, _statfile);
   fclose(_statfile);
@@ -460,7 +465,6 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 
         }
 #undef SETX
-
   _context->bit_rate_tolerance = 8000000;
   _context->b_quant_factor = 1.25;
   _context->rc_strategy = 2;
@@ -473,7 +477,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
   _context->rc_qsquish = 1.0;
   _context->rc_qmod_amp = 0;
   _context->rc_qmod_freq = 0;
-  _context->rc_eq = const_cast < char *>("tex^qComp");
+  _context->rc_eq = av_strdup("tex^qComp");
   _context->rc_max_rate = 000;
   _context->rc_min_rate = 000;
   _context->rc_buffer_size = 000;
@@ -521,7 +525,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
                     printf("[ffMpeg4] No source duration!\n");
                     return false;
                 }
-                averageBitrate=(uint32_t)avg;
+                averageBitrate=(uint32_t)avg*1000; // convert from kb/s to b/s
             }
 
         printf("[ffmpeg4] Average bitrate =%"LU" kb/s\n",averageBitrate/1000);
