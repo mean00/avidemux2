@@ -37,6 +37,8 @@ protected:
                bool            postAmble (ADMBitstream * out,xvid_enc_stats_t *stat,int size);
                bool            query(void);
 
+               bool            setupPass(void);
+
                 xvid_plugin_single_t single;
                 xvid_plugin_2pass1_t pass1;
                 xvid_plugin_2pass2_t pass2;
@@ -49,6 +51,9 @@ protected:
                 uint32_t        backRef;
                 uint32_t        fwdRef;
                 uint32_t        refIndex;
+
+                std::string     logFile;
+                int             pass;
 public:
 
                            xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader);
@@ -57,9 +62,9 @@ virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "DIVX";}
 
-virtual        bool         isDualPass(void) ;
-static         int          hook (void *handle, int opt, void *param1, void *param2);
-
+virtual        bool        isDualPass(void) ;
+static         int         hook (void *handle, int opt, void *param1, void *param2);
+               bool        setPassAndLogFile(int pass,const char *name);
 };
 
 #endif

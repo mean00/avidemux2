@@ -27,6 +27,7 @@
 #define aprintf printf
 #endif
 
+extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);;
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
@@ -40,19 +41,19 @@ xvid4_encoder xvid4Settings=
     1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
     ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
     },
-            XVID_PROFILE_AS_L4, // Profile
-            3, // rdMode
-            3, // MotionEstimation
-            0, // cqmMode
-            0, // arMode
-            2, // MaxBframe
-            200, // MaxKeyInterval
-            
-            99, // nbThreads
-            true, // rdOnBframe
-            true, //bool:hqAcPred
-            true, //bool:optimizeChrome
-            true, // Trellis
+    XVID_PROFILE_AS_L4, // Profile
+    3, // rdMode
+    3, // MotionEstimation
+    0, // cqmMode
+    0, // arMode
+    2, // MaxBframe
+    200, // MaxKeyInterval
+    
+    99, // nbThreads
+    true, // rdOnBframe
+    true, //bool:hqAcPred
+    true, //bool:optimizeChrome
+    true, // Trellis
     
 };
 
@@ -101,7 +102,20 @@ xvid4Encoder::xvid4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_cor
     MMSET(xvid_enc_frame);
     frameNum=0;
     backRef=fwdRef=refIndex=0;
+    pass=0;
+    memset(&pass1,0,sizeof(pass1));
+    memset(&pass2,0,sizeof(pass2));
         
+}
+/**
+    \fn  setPassAndLogFile
+*/
+bool        xvid4Encoder::setPassAndLogFile(int pass,const char *name)
+{
+        logFile=std::string(name);
+        this->pass=pass;
+        ADM_info("Checking pass %d, using stat file =%s\n",pass,logFile.c_str());
+        return true;
 }
 /**
     \fn query
@@ -135,6 +149,57 @@ bool xvid4Encoder::query(void)
   CPUF (3DNOW);
   CPUF (3DNOWEXT);
 #endif
+}
+/**
+    \fn setupPass
+*/
+bool xvid4Encoder::setupPass(void)
+{
+    uint32_t avgKbits=0;
+    switch(this->pass)
+    {
+        case 1:
+                plugins[0].func = xvid_plugin_2pass1;
+                plugins[0].param = &pass1;
+                memset(&pass1,0,sizeof(pass1));
+                pass1.version=XVID_VERSION;
+                pass1.filename=ADM_strdup(logFile.c_str()); // LEAK!
+                break;
+        case 2:
+                {
+                plugins[0].func = xvid_plugin_2pass2;
+                plugins[0].param = &pass2;
+                memset(&pass2,0,sizeof(pass2));
+                pass2.version=XVID_VERSION;
+                pass2.filename=ADM_strdup(logFile.c_str()); // LEAK!
+                uint64_t duration=source->getInfo()->totalDuration;
+                switch(xvid4Settings.params.mode)
+                {
+                  case COMPRESS_2PASS:
+                            if(false==ADM_computeAverageBitrateFromDuration(duration,
+                                        xvid4Settings.params.finalsize,&avgKbits))
+                            {
+                                ADM_error("Cannot compute average size\n");
+                                return false;
+                            }
+                            break;
+                  case COMPRESS_2PASS_BITRATE:
+                            avgKbits=xvid4Settings.params.avg_bitrate;
+                            break;
+                  default:
+                            ADM_assert(0);
+                            break;
+                }
+                ADM_info("Using average bitrate of %d kb/s\n",avgKbits);
+                pass2.bitrate=avgKbits*1000;  // kb -> bit/s
+                }
+                break;
+        default:
+                ADM_assert(0);
+                break;
+                
+    }
+    return true;
 }
 /**
     \fn setup
@@ -174,13 +239,11 @@ bool xvid4Encoder::setup(void)
     {
       case COMPRESS_2PASS:
       case COMPRESS_2PASS_BITRATE:
-#if 0
            if(false==setupPass())
             {
                 ADM_warning("[xvid4] Multipass setup failed\n");
                 return false;
             }
-#endif
             break;
       case COMPRESS_SAME:
       case COMPRESS_CQ:
