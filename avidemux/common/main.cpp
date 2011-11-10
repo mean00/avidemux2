@@ -405,10 +405,21 @@ bool setPrefsDefault(void)
 #endif
     return true;
 }
-
+/**
+    \fn isPortableMode
+    \brief returns true if we are in portable mode
+*/
 bool isPortableMode(int argc, char *argv[])
 {
 	bool portableMode = false;
+    std::string mySelf=argv[0];
+    // if the name ends by "_portable.exe" => portable
+    int match=mySelf.find("portable");
+    if(match!=-1)
+    {
+        ADM_info("Portable mode\n");
+        return true;
+    }
 
 	for (int i = 0; i < argc; i++)
 	{
