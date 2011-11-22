@@ -1,0 +1,14 @@
+--- Avidemux_qt4.cbp.orig	2011-11-22 14:56:59 +0000
++++ Avidemux_qt4.cbp	2011-11-22 14:57:21 +0000
+@@ -134,8 +134,9 @@
+          </MakeCommands>
+       </Target>
+       <Target title="install">
+-         <Option working_dir="E:/Dev/avidemux_2.6_dev/build64-cb/qt" />
+-         <Option type="4" />
++         <Option output="..\..\..\avidemux_2.6_build64\avidemux.exe" prefix_auto="0" extension_auto="0" />
++         <Option working_dir="..\..\..\avidemux_2.6_build64" />
++         <Option type="0" />
+          <MakeCommands>
+             <Build command="E:/Dev/MinGW64/bin/mingw32-make.exe -f &quot;E:/Dev/avidemux_2.6_dev/build64-cb/qt/Makefile&quot;  VERBOSE=1 install" />
+             <CompileFile command="E:/Dev/MinGW64/bin/mingw32-make.exe -f &quot;E:/Dev/avidemux_2.6_dev/build64-cb/qt/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />

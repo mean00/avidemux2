@@ -33,7 +33,12 @@ if exist "%ProgramFiles%\7-zip" (
 	goto error
 )
 
-set buildFolder=build%BuildBits%
+if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" (
+	set buildFolder=build%BuildBits%-cb
+) else (
+	set buildFolder=build%BuildBits%
+)
+
 set buildCoreFolder=%buildFolder%\core
 set buildCliFolder=%buildFolder%\cli
 set buildGtkFolder=%buildFolder%\gtk

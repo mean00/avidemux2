@@ -21,7 +21,7 @@ set PKG_CONFIG_PATH=%usrLocalDir%\lib\pkgconfig
 set SDLDIR=%usrLocalDir%
 set CFLAGS=%CFLAGS% -I%CMAKE_INCLUDE_PATH% -L%CMAKE_LIBRARY_PATH%
 set CXXFLAGS=%CXXFLAGS% -I%CMAKE_INCLUDE_PATH% -L%CMAKE_LIBRARY_PATH%
-set LDFLAGS=%LDFLAGS% -s -shared-libgcc -shared-libstdc++ -L%CMAKE_LIBRARY_PATH%
+set LDFLAGS=%LDFLAGS% -shared-libgcc -shared-libstdc++ -L%CMAKE_LIBRARY_PATH%
 set admBuildDir=%devDir%\avidemux_2.6_build%BuildBits%
 set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
 
@@ -30,6 +30,9 @@ if "%BuildBits%" == "32" (
 	set CXXFLAGS=%CXXFLAGS% -m32
 	set LDFLAGS=%LDFLAGS% -m32
 )
+
+if "%DebugFlags%" == "" set LDFLAGS=%LDFLAGS% -s
+
 
 if exist "%qtDir%" (
 	for /f %%d in ('dir /b /ad /on %qtDir%') do set qtVer=%%d
@@ -73,7 +76,7 @@ if not exist "%nsisDir%" (
 	goto error
 )
 
-set PATH=%cmakeDir%;%mingwDir%\bin;%usrLocalDir%\bin;%msysDir%\bin;%msysDir%\local-shared\bin;%qtDir%\bin;c:\strawberry\perl\bin;%PATH%
+set PATH=%cmakeDir%;%mingwDir%\bin;%usrLocalDir%\bin;%msysDir%\local-shared\bin;%qtDir%\bin;c:\strawberry\perl\bin;%PATH%
 
 goto end
 

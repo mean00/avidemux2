@@ -5,7 +5,7 @@ MACRO(DEFINE_LAV _ext)
 	SET(ADM_ae_lav_${_ext}_SRCS audioencoder_lavcodec.cpp)
 
 	ADD_AUDIO_ENCODER(ADM_ae_lav_${_ext} ${ADM_ae_lav_${_ext}_SRCS})
-	ADD_TARGET_CFLAGS(ADM_ae_lav_${_ext} "-DADM_AE_SET='\"ADM_lav_${_ext}.h\"'")
+	ADD_TARGET_CFLAGS(ADM_ae_lav_${_ext} "-DADM_AE_SET=${_ext}")
 	TARGET_LINK_LIBRARIES(ADM_ae_lav_${_ext}  ADM_libavcodec ADM_libavutil)
 
 	INIT_AUDIO_ENCODER(ADM_ae_lav_${_ext})

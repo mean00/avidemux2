@@ -1,3 +1,12 @@
+MACRO (xadd opt)
+	if ("${ARGV1}" STREQUAL "")
+		set(FFMPEG_FLAGS "${FFMPEG_FLAGS} ${opt}")
+	else ("${ARGV1}" STREQUAL "")
+		string(STRIP ${ARGV1} arg)
+		set(FFMPEG_FLAGS "${FFMPEG_FLAGS} ${opt}=\"${arg}\"")
+	endif ("${ARGV1}" STREQUAL "")
+ENDMACRO (xadd)
+
  set(FFMPEG_VERSION "860")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 #set(FFMPEG_VERSION "efb5fa79f5ca34140db357a00c999286097ab53e")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
 #set(FFMPEG_VERSION "8cb3c557a9f3b24bc55325e3f64a2150b983305c")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
@@ -20,18 +29,11 @@ set(FFMPEG_ENCODERS  ac3  ac3_float dvvideo  ffv1  ffvhuff  flv  h263  huffyuv  
 set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp)
 set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
-set(FFMPEG_FLAGS  --enable-shared --disable-static --disable-everything --disable-avfilter )
-set(FFMPEG_FLAGS  ${FFMPEG_FLAGS} --enable-hwaccels --enable-postproc --enable-gpl )
-set(FFMPEG_FLAGS  ${FFMPEG_FLAGS} --enable-runtime-cpudetect --disable-network )
-set(FFMPEG_FLAGS  ${FFMPEG_FLAGS} --disable-ffplay --disable-ffprobe)
-#set(FFMPEG_FLAGS  ${FFMPEG_FLAGS} --enable-audio-float)
-
-MACRO (xadd opt)
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} ${opt})
-ENDMACRO (xadd opt)
+xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
+xadd("--enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe")
 
 if (NOT CROSS)
-	xadd(--prefix=${CMAKE_INSTALL_PREFIX})
+	xadd(--prefix ${CMAKE_INSTALL_PREFIX})
 endif (NOT CROSS)
 
 # Clean FFmpeg
@@ -48,7 +50,6 @@ include(admFFmpegUtil)
 if (NOT FFMPEG_PREPARED)
 	include(admFFmpegPrepareGit)
 endif (NOT FFMPEG_PREPARED)
-
 
 message("")
 
@@ -73,104 +74,102 @@ if (USE_VDPAU)
 	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg_vdpau  wmv3_vdpau)
 endif (USE_VDPAU)
 
-xadd(--enable-bsf=aac_adtstoasc)
+xadd(--enable-bsf aac_adtstoasc)
 
 # Configure FFmpeg, if required
 foreach (decoder ${FFMPEG_DECODERS})
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-decoder=${decoder})
+	xadd(--enable-decoder ${decoder})
 endforeach (decoder)
 
 foreach (encoder ${FFMPEG_ENCODERS})
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-encoder=${encoder})
+	xadd(--enable-encoder ${encoder})
 endforeach (encoder)
 
 foreach (muxer ${FFMPEG_MUXERS})
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-muxer=${muxer})
+	xadd(--enable-muxer ${muxer})
 endforeach (muxer)
 
 foreach (parser ${FFMPEG_PARSERS})
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-parser=${parser})
+	xadd(--enable-parser ${parser})
 endforeach (parser)
 
 foreach (protocol ${FFMPEG_PROTOCOLS})
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-protocol=${protocol})
+	xadd(--enable-protocol ${protocol})
 endforeach (protocol)
 
 if (WIN32)
 	if (ADM_CPU_X86_32)
-		set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-memalign-hack)
+		xadd(--enable-memalign-hack)
 	endif (ADM_CPU_X86_32)
 
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-w32threads)
+	xadd(--enable-w32threads)
 else (WIN32)
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-pthreads)
+	xadd(--enable-pthreads)
 endif (WIN32)
 
 if (NOT ADM_DEBUG)
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --disable-debug)
+	xadd(--disable-debug)
 endif (NOT ADM_DEBUG)
 
 if (CMAKE_C_FLAGS)
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --extra-cflags=${CMAKE_C_FLAGS})
+	xadd(--extra-cflags ${CMAKE_C_FLAGS})
 endif (CMAKE_C_FLAGS)
 
 if (CMAKE_SHARED_LINKER_FLAGS)
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --extra-ldflags=${CMAKE_SHARED_LINKER_FLAGS})
+	xadd(--extra-ldflags ${CMAKE_SHARED_LINKER_FLAGS})
 endif (CMAKE_SHARED_LINKER_FLAGS)
 
 #  Cross compiler override (win32 & win64)
 if (CROSS)
-if(APPLE)
-	xadd(--prefix=/opt/mac)
-	xadd(--host-cc=gcc)
-	xadd(--cc=${CMAKE_CROSS_PREFIX}-gcc)
-	xadd(--ld=${CMAKE_CROSS_PREFIX}-gcc) # Not an error !
-	xadd(--ar=${CMAKE_CROSS_PREFIX}-ar) 
-	xadd(--nm=${CMAKE_CROSS_PREFIX}-nm) 
-	xadd(--strip=${CMAKE_CROSS_PREFIX}-strip) 
+	if(APPLE)
+		xadd(--prefix /opt/mac)
+		xadd(--host-cc gcc)
+		xadd(--cc ${CMAKE_CROSS_PREFIX}-gcc)
+		xadd(--ld ${CMAKE_CROSS_PREFIX}-gcc) # Not an error !
+		xadd(--ar ${CMAKE_CROSS_PREFIX}-ar) 
+		xadd(--nm ${CMAKE_CROSS_PREFIX}-nm) 
+		xadd(--strip ${CMAKE_CROSS_PREFIX}-strip) 
 
-	set(CROSS_OS darwin)	
-
-	set(CROSS_ARCH i386)
-
-else(APPLE)
-	xadd(--prefix=/mingw)
-	xadd(--host-cc=gcc)
-	xadd(--cc=${CMAKE_CROSS_PREFIX}-gcc)
-	xadd(--ld=${CMAKE_CROSS_PREFIX}-gcc) # Not an error !
-	xadd(--ar=${CMAKE_CROSS_PREFIX}-ar) 
-	xadd(--nm=${CMAKE_CROSS_PREFIX}-nm) 
-	xadd(--sysroot=/mingw/include)
-
-	set(CROSS_OS mingw32)	
-
-	if (ADM_CPU_64BIT)
-		set(CROSS_ARCH x86_64)
-	else (ADM_CPU_64BIT)
+		set(CROSS_OS darwin)
 		set(CROSS_ARCH i386)
-	endif (ADM_CPU_64BIT)
+	else(APPLE)
+		xadd(--prefix /mingw)
+		xadd(--host-cc gcc)
+		xadd(--cc ${CMAKE_CROSS_PREFIX}-gcc)
+		xadd(--ld ${CMAKE_CROSS_PREFIX}-gcc) # Not an error !
+		xadd(--ar ${CMAKE_CROSS_PREFIX}-ar) 
+		xadd(--nm ${CMAKE_CROSS_PREFIX}-nm) 
+		xadd(--sysroot /mingw/include)
 
-endif(APPLE)
+		set(CROSS_OS mingw32)	
+
+		if (ADM_CPU_64BIT)
+			set(CROSS_ARCH x86_64)
+		else (ADM_CPU_64BIT)
+			set(CROSS_ARCH i386)
+		endif (ADM_CPU_64BIT)
+	endif(APPLE)
+
 	message(STATUS "Using cross compilation flag: ${FFMPEG_FLAGS}")
 endif (CROSS)
 
 if (CROSS_ARCH OR CROSS_OS)
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --enable-cross-compile)
+	xadd(--enable-cross-compile)
 endif (CROSS_ARCH OR CROSS_OS)
 
 if (CROSS_ARCH)
 	set(CROSS_ARCH "${CROSS_ARCH}" CACHE STRING "")
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --arch=${CROSS_ARCH})
+	xadd(--arch ${CROSS_ARCH})
 endif (CROSS_ARCH)
 
 if (CROSS_OS)
 	set(CROSS_OS "${CROSS_OS}" CACHE STRING "")
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} --target-os=${CROSS_OS})
+	xadd(--target-os ${CROSS_OS})
 endif (CROSS_OS)
 
 if (FF_FLAGS)
 	set(FF_FLAGS "${FF_FLAGS}" CACHE STRING "")
-	set(FFMPEG_FLAGS ${FFMPEG_FLAGS} ${FF_FLAGS})
+	xadd(${FF_FLAGS})
 endif (FF_FLAGS)
 
 if (NOT "${LAST_FFMPEG_FLAGS}" STREQUAL "${FFMPEG_FLAGS}")
@@ -180,9 +179,10 @@ endif (NOT "${LAST_FFMPEG_FLAGS}" STREQUAL "${FFMPEG_FLAGS}")
 if (NOT EXISTS "${FFMPEG_BINARY_DIR}/Makefile")
 	set(FFMPEG_PERFORM_BUILD 1)
 endif (NOT EXISTS "${FFMPEG_BINARY_DIR}/Makefile")
-	
 
 if (FFMPEG_PERFORM_BUILD)
+	find_package(Bourne)
+
 	message(STATUS "Configuring FFmpeg")
 	set(LAST_FFMPEG_FLAGS "${FFMPEG_FLAGS}" CACHE STRING "" FORCE)
 
@@ -190,16 +190,27 @@ if (FFMPEG_PERFORM_BUILD)
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg_g${CMAKE_EXECUTABLE_SUFFIX}")
 
-	execute_process(COMMAND sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}
-					WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
-	                                OUTPUT_VARIABLE FFMPEG_CONFIGURE_OUTPUT
-	                                RESULT_VARIABLE FFMPEG_CONFIGURE_RESULT)
-        IF(NOT (FFMPEG_CONFIGURE_RESULT EQUAL 0))
-	        MESSAGE(ERROR "configure returned <${FFMPEG_CONFIGURE_RESULT}>")
-	        MESSAGE(ERROR "configure output is <${FFMPEG_CONFIGURE_OUTPUT}>")
-	        MESSAGE(ERROR "When configuing ffmpeg using < sh ${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}>")
-                MESSAGE(FATAL_ERROR "An error occured ")
-        ENDIF(NOT (FFMPEG_CONFIGURE_RESULT EQUAL 0))
+	get_filename_component(bash_directory ${BASH_EXECUTABLE} PATH)
+
+	if (WIN32)
+		# make path compatible with bash
+		set(ffmpeg_bash_directory "/${bash_directory}")
+		string(REPLACE ":" "" ffmpeg_bash_directory ${ffmpeg_bash_directory})
+	else (WIN32)
+		set(ffmpeg_bash_directory "${bash_directory}")
+	endif (WIN32)
+
+	configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_configure.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_configure.sh")
+
+	execute_process(COMMAND ${BASH_EXECUTABLE} ffmpeg_configure.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
+					OUTPUT_VARIABLE FFMPEG_CONFIGURE_OUTPUT RESULT_VARIABLE FFMPEG_CONFIGURE_RESULT)
+
+    if (NOT (FFMPEG_CONFIGURE_RESULT EQUAL 0))
+	    MESSAGE(ERROR "configure returned <${FFMPEG_CONFIGURE_RESULT}>")
+	    MESSAGE(ERROR "configure output is <${FFMPEG_CONFIGURE_OUTPUT}>")
+		MESSAGE(FATAL_ERROR "An error occured ")
+    endif (NOT (FFMPEG_CONFIGURE_RESULT EQUAL 0))
+
 	MESSAGE(STATUS "Configuring done, processing")
 
 	if (ADM_CPU_X86)
@@ -241,6 +252,7 @@ endif (FFMPEG_PERFORM_BUILD)
 
 # Build FFmpeg
 getFfmpegLibNames("${FFMPEG_SOURCE_DIR}")
+configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
 
 add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
@@ -249,8 +261,7 @@ add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
 						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
 						"${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
-				   COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TOOL=${CMAKE_BUILD_TOOL} -P "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admFFmpegMake.cmake"
-				   WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
