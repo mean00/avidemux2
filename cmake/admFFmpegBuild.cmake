@@ -254,7 +254,8 @@ endif (FFMPEG_PERFORM_BUILD)
 getFfmpegLibNames("${FFMPEG_SOURCE_DIR}")
 configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
 
-add_custom_command(OUTPUT
+if(WIN32 AND NOT CROSS)
+  add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
 						"${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
 						"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
@@ -262,6 +263,16 @@ add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
 						"${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
 				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+else(WIN32 AND NOT CROSS)
+  add_custom_command(OUTPUT
+						"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
+						"${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
+						"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
+						"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
+						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
+						"${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
+				   COMMAND ${CMAKE_BUILD_TOOL} WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+endif(WIN32 AND NOT CROSS)
 
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
