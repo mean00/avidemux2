@@ -71,14 +71,18 @@ uint16_t 	ADM_swap16(uint16_t in);
 /* */
 void            ADM_usleep(unsigned long us);
 
-
-typedef void *(* adm_fast_memcpy)(void *to, const void *from, size_t len);
-extern adm_fast_memcpy myAdmMemcpy;
+#ifndef __APPLE__
+  typedef void *(* adm_fast_memcpy)(void *to, const void *from, size_t len);
+  extern adm_fast_memcpy myAdmMemcpy;
+#endif
 
 #define ADM_memalign(x,y) ADM_alloc(y)
 
 #define ADM_dealloc(x) ADM_dezalloc( (void *)x)
-#define memcpy myAdmMemcpy
+
+#ifndef __APPLE__
+  #define memcpy myAdmMemcpy
+#endif
 
 // Override fread/fwrite ..
 #define fread   ADM_fread
