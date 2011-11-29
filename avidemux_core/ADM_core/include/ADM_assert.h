@@ -90,7 +90,7 @@ void            ADM_usleep(unsigned long us);
 #define fopen   ADM_fopen
 #define fclose  ADM_fclose
 
-#if !defined(__APPLE__) && !defined(__WIN64) && !defined(__MINGW32__)
+#if !defined(__APPLE__) && !defined(__WIN64) 
 #ifndef ADM_LEGACY_PROGGY
   #define malloc #error
   #define realloc #error
