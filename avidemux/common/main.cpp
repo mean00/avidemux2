@@ -208,7 +208,9 @@ int startAvidemux(int argc, char *argv[])
 
 	// Start counting memory
 	ADM_memStatInit();
+#ifndef __APPLE__
     ADM_InitMemcpy();
+#endif
 	printf("\nInitialising prefs\n");
 	initPrefs();
 	if(false==prefs->load()) // no prefs, set some sane default
