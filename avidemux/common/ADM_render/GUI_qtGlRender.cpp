@@ -20,6 +20,7 @@
 #	define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
 #else
 #	include <GL/gl.h>
+#	include <GL/glu.h>
 #	include <GL/glext.h>
 #endif
 #define ADM_LEGACY_PROGGY // Dont clash with free/malloc etc..

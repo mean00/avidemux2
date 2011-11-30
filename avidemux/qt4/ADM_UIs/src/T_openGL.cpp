@@ -7,6 +7,7 @@
 #include "T_openGLFilter.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
+#include <GL/glu.h>
 static QGLWidget *thisWidget=NULL;
 /**
 
