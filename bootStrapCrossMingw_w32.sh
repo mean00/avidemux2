@@ -5,6 +5,7 @@ export CROSS_PREFIX=i686-w64-mingw32
 export SDLDIR=/mingw
 export MINGW=/mingw
 export QT_HOME=/mingw/Qt/current
+export O_PARAL="-j 2"
 # ** Put your config here **
 
 fail()
@@ -23,7 +24,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
-        make -j 2 VERBOSE=1 || fail make
+        make $PARAL VERBOSE=1 || fail make
         make install || fail make_install
 }
 
@@ -35,7 +36,9 @@ cd $TOP
 Process buildMingwCore cross_mingw_core
 echo "** QT4 **"
 cd $TOP
+export PARAL=""
 Process buildMingwQt4 cross_mingw_qt4 
+export PARAL="$O_PARAL"
 #echo "** GTK **"
 #cd $TOP
 #Process buildGtk ../avidemux/gtk

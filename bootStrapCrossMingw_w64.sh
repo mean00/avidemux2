@@ -6,6 +6,7 @@ export SDLDIR=/mingw
 export MINGW=/mingw
 export QT_HOME=/mingw/Qt/qt471win64
 export CFLAGS="-fpermissive"
+export O_PARAL="-j 2"
 # ** Put your config here **
 
 fail()
@@ -24,7 +25,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
-        make  VERBOSE=1 || fail make
+        make  $PARAL VERBOSE=1 || fail make
         make install || fail make_install
 }
 
@@ -33,7 +34,9 @@ export TOP=$PWD
 echo "Top dir : $TOP"
 echo "** CORE **"
 cd $TOP
+export PARAL=""
 Process buildMingwCore cross_mingw64_core
+export PARAL="$O_PARAL"
 echo "** QT4 **"
 cd $TOP
 Process buildMingwQt4 cross_mingw64_qt4 

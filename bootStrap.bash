@@ -9,6 +9,7 @@ do_gtk=0
 do_qt4=1
 do_plugins=1
 debug=0
+export O_PARAL="-j 2"
 fail()
 {
         echo "** Failed at $1**"
@@ -33,7 +34,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG $FAKEROOT -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make  -j 2 >& /tmp/log$BUILDDIR || fail make
+        make  $PARAL >& /tmp/log$BUILDDIR || fail make
 	if  [ "x$PKG" != "x" ] ; then
           fakeroot make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
 	fi
@@ -167,10 +168,12 @@ fi
 if [ "x$do_core" = "x1" ] ; then 
         echo "** CORE **"
         cd $TOP
+        export PARAL=""
         Process buildCore ../avidemux_core
         echo " Installing core"
         cd $TOP/buildCore${POSTFIX} 
 fi
+export PARAL="$O_PARAL"
 if [ "x$do_qt4" = "x1" ] ; then 
         echo "** QT4 **"
         cd $TOP
