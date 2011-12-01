@@ -17,10 +17,12 @@
 #define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>
+#       include <OpenGL/glu.h>
 #	include <OpenGL/glext.h>
 #	define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
 #else
 #	include <GL/gl.h>
+#       include <GL/glu.h>
 #	include <GL/glext.h>
 #endif
 
