@@ -37,8 +37,6 @@
 #ifdef __MINGW32__
 #define rindex strrchr
 #define index strchr
-#define ftello ftello64
-#define fseeko fseeko64
 #endif
 
 #endif
