@@ -1,6 +1,6 @@
---- build/make/configure.sh.orig	2010-10-28 14:14:14 +0100
-+++ build/make/configure.sh	2010-11-27 11:45:42 +0000
-@@ -877,8 +877,12 @@
+--- build/make/configure.sh.old	2011-05-08 01:11:53 +0100
++++ build/make/configure.sh	2011-05-08 01:16:09 +0100
+@@ -900,8 +900,12 @@
          [ "${AS##*/}" = nasm ] && add_asflags -Ox
          AS_SFX=.asm
          case  ${tgt_os} in
@@ -8,10 +8,10 @@
 -                add_asflags -f win${bits}
 +            win32)
 +                add_asflags -f win32
-+                enabled debug && add_asflags -g dwarf2
++                enabled debug && add_asflags -g cv8
 +            ;;
-+			win64)
++            win64)
 +                add_asflags -f x64
-                 enabled debug && add_asflags -g dwarf2
+                 enabled debug && add_asflags -g cv8
              ;;
              linux*|solaris*)

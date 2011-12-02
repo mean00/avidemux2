@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <log>
+  <buildentry revision="7660" date="2011-11-17" />
+  <buildentry revision="7652" date="2011-11-06" />
+  <buildentry revision="7643" date="2011-11-01">
+    <comment>Updated LAME to version 3.99.</comment>
+    <comment>Updated x264 to r2106.</comment>
+  </buildentry>
   <buildentry revision="7604" date="2011-10-11" />
   <buildentry revision="7590" date="2011-09-28" />
   <buildentry revision="7573" date="2011-09-22">

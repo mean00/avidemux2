@@ -52,10 +52,6 @@ echo Configuring
 
 sh ./configure --prefix="%usrLocalDir%" --disable-static --disable-examples --disable-docs
 
-echo.
-echo Patching
-patch -p0 -i "%curDir%\libtool.patch"
-
 if errorlevel 1 goto end
 echo.
 pause

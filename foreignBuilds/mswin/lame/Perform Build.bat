@@ -54,7 +54,7 @@ patch -p0 -i "%curDir%\vbrquantize.c.patch"
 
 echo.
 echo Configuring
-set CFLAGS=%CFLAGS% -O2
+set CFLAGS=%CFLAGS% -O3
 
 if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-static --enable-nasm
 if "%BuildBits%" == "64" sh ./configure --prefix="%usrLocalDir%" --disable-static
