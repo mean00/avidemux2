@@ -37,6 +37,10 @@
 #ifdef __MINGW32__
 #define rindex strrchr
 #define index strchr
+#ifdef CROSS_COMPILE
+        #define ftello ftello64 // not defined on every mingw64_w32 version (e.g. set 2011-11-03 does not have it)
+        #define fseeko fseeko64
+#endif // CROSS_COMPILE
 #endif
 
 #endif
