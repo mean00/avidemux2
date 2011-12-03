@@ -43,7 +43,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-
+#undef CROSS_COMPILE // MEANX
 #ifdef CROSS_COMPILE
 #include <prtypes.h>
 #define INT64 PRInt64
