@@ -43,8 +43,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#undef CROSS_COMPILE // MEANX
-#ifdef CROSS_COMPILE
+#ifdef CROSS_COMPILE_x
 #include <prtypes.h>
 #define INT64 PRInt64
 #else
@@ -182,7 +181,7 @@ int main(int argc, char **argv)
 
     printf("/* AUTOMATICALLY GENERATED - DO NOT EDIT */\n\n");
 
-#ifdef CROSS_COMPILE
+#ifdef CROSS_COMPILE_x
 #if defined(IS_LITTLE_ENDIAN)
     printf("#define IS_LITTLE_ENDIAN 1\n");
     printf("#undef  IS_BIG_ENDIAN\n\n");
