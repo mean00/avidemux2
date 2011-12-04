@@ -39,7 +39,7 @@ private:
 
 protected:
 	void initializeGL();
-	void paintGL();
+	void paintGL() __attribute__((force_align_arg_pointer));
     void updateTexture(void);
 
 public:
