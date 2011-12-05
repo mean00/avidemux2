@@ -66,6 +66,7 @@ make -f Makefile.ref JS_DIST="%usrLocalDir%" BUILD_OPT=1 JS_HAS_FILE_OBJECT=1 XL
 if errorlevel 1 goto end
 echo.
 
+strip "WINNT6.1_OPT.OBJ\libjs.dll"
 copy "WINNT6.1_OPT.OBJ\libjs.dll" "%usrLocalDir%\bin"
 copy "%usrLocalDir%\bin\libjs.dll" "%admBuildDir%"
 

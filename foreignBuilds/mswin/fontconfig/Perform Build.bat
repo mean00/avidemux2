@@ -59,6 +59,7 @@ make install
 if errorlevel 1 goto end
 
 del "%usrLocalDir%\etc\fonts\fonts.conf.bak"
+strip "%usrLocalDir%\bin\libfontconfig-1.dll"
 copy "%usrLocalDir%\bin\libfontconfig-1.dll" "%admBuildDir%"
 xcopy /s/y "%usrLocalDir%\etc\fonts\*.*" "%admBuildDir%\etc\fonts\"
 

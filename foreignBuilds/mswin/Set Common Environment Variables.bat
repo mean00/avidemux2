@@ -31,9 +31,6 @@ if "%BuildBits%" == "32" (
 	set LDFLAGS=%LDFLAGS% -m32
 )
 
-if "%DebugFlags%" == "" set LDFLAGS=%LDFLAGS% -s
-
-
 if exist "%qtDir%" (
 	for /f %%d in ('dir /b /ad /on %qtDir%') do set qtVer=%%d
 ) else (
