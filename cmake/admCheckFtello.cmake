@@ -1,0 +1,21 @@
+MACRO(checkFtello)
+	IF (NOT FTELLO_CHECKED)
+		OPTION(FTELLO "" ON)
+
+		MESSAGE(STATUS "Checking for ftello ")
+		MESSAGE(STATUS "********************")
+
+		IF (FTELLO)
+                        ADM_COMPILE(ftello.cpp "" "" "" GOT_FTELLO outputWithoutLibintl)
+
+                        IF (GOT_FTELLO)
+                                SET(USE_FTELLO 1)
+                                MESSAGE(STATUS "ftello present")
+                        ENDIF (GOT_FTELLO)
+		ELSE (FTELLO)
+			MESSAGE("${MSG_DISABLE_OPTION}")
+		ENDIF (FTELLO)
+		SET(FTELLO_CHECKED 1)
+		MESSAGE("")
+	ENDIF (NOT FTELLO_CHECKED)
+ENDMACRO(checkFtello)

@@ -1,10 +1,6 @@
 #
 #
 #
-IF(CROSS)
-        ADD_DEFINITIONS("-DCROSS_COMPILE")
-ENDIF(CROSS)
-
 ########################################
 # pkg-config
 ########################################

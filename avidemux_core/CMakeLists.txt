@@ -21,6 +21,7 @@ ENDIF (WIN32)
 
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 include(admMainChecks)
+include(admCheckFtello)
 include(admAsNeeded)
 ########################################
 # VDPAU
@@ -36,7 +37,11 @@ IF (VERBOSE)
 	INCLUDE(adm_log)
 	MESSAGE("")
 ENDIF (VERBOSE)
-
+########################################
+# Checking if we should use ftello
+# or ftello64 (win32)
+########################################
+checkFtello()
 ########################################
 # Generate config.h
 ########################################
