@@ -49,7 +49,7 @@ class ADMAudioFilter_Access : public ADM_audioAccess
                                     /// Grab extra data
                 virtual bool      getExtraData(uint32_t *l, uint8_t **d);
 
-                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts) __attribute__((force_align_arg_pointer));
                 virtual bool    isCBR(void);
 };
 
