@@ -14,4 +14,6 @@ MACRO(checkXvid)
 			MESSAGE("${MSG_DISABLE_OPTION}")
 		ENDIF (XVID)
 		MESSAGE("")
+
+		APPEND_SUMMARY_LIST("Video Encoder" "Xvid" "${XVID_FOUND}")
 ENDMACRO(checkXvid)

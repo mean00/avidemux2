@@ -192,10 +192,10 @@ endif(CROSS)
 ###########################################
 ADM_LINK_THREAD(avidemux3_qt4)
 ADM_INSTALL_BIN(avidemux3_qt4)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/qt4/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/qt4") 
-#
-# Packaging
-#
+
+DISPLAY_SUMMARY_LIST()
+
 include(admPackager)
 admPackager(qt4Package)
-include(admConfigSummary)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/qt4/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/qt4") 
+MESSAGE("")

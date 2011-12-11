@@ -32,4 +32,6 @@ MACRO(checkvorbis)
 
 		MESSAGE("")
 	ENDIF (NOT LIBVORBIS_CHECKED)
+
+	APPEND_SUMMARY_LIST("Audio Decoder" "Vorbis" "${LIBVORBIS_FOUND}")
 ENDMACRO(checkvorbis)

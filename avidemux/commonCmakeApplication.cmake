@@ -13,6 +13,9 @@ ELSE (WIN32)
 	SET(ADM_PLUGIN_DIR "ADM_plugins6")
 ENDIF (WIN32)
 
+include(admConfigSummary)
+INITIALISE_SUMMARY_LISTS()
+
 ########################################
 # Shared cmake part
 ########################################

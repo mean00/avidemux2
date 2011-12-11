@@ -42,12 +42,12 @@ IF (AFTEN)
 			                SET(USE_AFTEN 0)
                         ENDIF( AFTEN_TEST_COMPILE_RESULT )
                 ENDIF(CROSS)
-
 	ENDIF (AFTEN_FOUND)
 ELSE (AFTEN)
 	MESSAGE("${MSG_DISABLE_OPTION}")
 ENDIF (AFTEN)
 
+APPEND_SUMMARY_LIST("Audio Encoder" "Aften" "${USE_AFTEN}")
 MESSAGE("")
 
 ########################################
@@ -73,6 +73,7 @@ ELSE (LAME)
 	MESSAGE("${MSG_DISABLE_OPTION}")
 ENDIF (LAME)
 
+APPEND_SUMMARY_LIST("Audio Encoder" "LAME" "${USE_LAME}")
 MESSAGE("")
 
 
@@ -95,6 +96,7 @@ ELSE (FAAC)
 	MESSAGE("${MSG_DISABLE_OPTION}")
 ENDIF (FAAC)
 
+APPEND_SUMMARY_LIST("Audio Encoder" "FAAC" "${USE_FAAC}")
 MESSAGE("")
 
 ########################################
@@ -120,4 +122,5 @@ ELSE (VORBIS)
 	MESSAGE("${MSG_DISABLE_OPTION}")
 ENDIF (VORBIS)
 
+APPEND_SUMMARY_LIST("Audio Encoder" "Vorbis" "${USE_VORBIS}")
 MESSAGE ("")

@@ -32,6 +32,8 @@ ELSE (SDL)
 	MESSAGE("${MSG_DISABLE_OPTION}")
 ENDIF (SDL)
 
+APPEND_SUMMARY_LIST("Miscellaneous" "SDL" "${USE_SDL}")
+
 MESSAGE("")
 
 ########################################
@@ -53,6 +55,8 @@ IF (UNIX AND NOT APPLE)
 
 		MESSAGE("")
 	ENDIF (XVIDEO)
+
+	APPEND_SUMMARY_LIST("Miscellaneous" "XVideo" "${XVIDEO_FOUND}")
 ELSE (UNIX AND NOT APPLE)
 	SET(XVIDEO_CAPABLE FALSE)
 ENDIF (UNIX AND NOT APPLE)

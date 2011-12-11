@@ -82,9 +82,8 @@ if(PLUGIN_UI MATCHES "CLI")
     SET(DO_CLI    1)
 endif(PLUGIN_UI MATCHES "CLI")
 
-
-
 MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
+MESSAGE("")
 
 ########################################
 # Check for UI libraries
@@ -104,11 +103,11 @@ MACRO(CHECK_ADM_CONFIG_H flavor result)
     ENDIF(${ADM_INC} MATCHES "NOTFOUND")
 ENDMACRO(CHECK_ADM_CONFIG_H flavor result)
 
+APPEND_SUMMARY_LIST("User Interface" "Common" "${DO_COMMON}")
+
 #*****
 # GTK
 #*****
-MESSAGE(STATUS "Checking flavors to build (gtk/qt4/...)")
-MESSAGE(STATUS "***************************************")
 if(DO_GTK)
     INCLUDE(admCheckGtk)
     INCLUDE(admCheckGettext)
@@ -118,14 +117,18 @@ if(DO_GTK)
         MESSAGE(STATUS "Gtk and gthread found, good")
         CHECK_ADM_CONFIG_H(gtk ADM_INC)
         IF(NOT ADM_INC)
-            MESSAGE(ERROR " GTK UI requested, but cannot find header file for avidemux/gtk...disabling it")
+            MESSAGE("ERROR GTK UI requested, but cannot find header file for avidemux/gtk...disabling it")
+			MESSAGE("")
             SET(DO_GTK 0)
         ENDIF(NOT ADM_INC)
     else (GTK_FOUND AND GTHREAD_FOUND)
-        MESSAGE(ERROR " GTK UI requested, but gtk/gthread libraries not found... disabling it")
+        MESSAGE("ERROR GTK UI requested, but gtk/gthread libraries not found... disabling it")
+		MESSAGE("")
         SET(DO_GTK 0)
     endif (GTK_FOUND AND GTHREAD_FOUND)
 endif(DO_GTK)
+
+APPEND_SUMMARY_LIST("User Interface" "GTK+" "${DO_GTK}")
 
 #*****
 # QT4
@@ -135,29 +138,42 @@ if(DO_QT4)
     checkQt4()
     IF (NOT QT4_FOUND)
         SET(DO_QT4 0)
-        MESSAGE(ERROR " QT4 UI requested, but qt4 libraries not found... disabling it")
+        MESSAGE("ERROR QT4 UI requested, but qt4 libraries not found... disabling it")
+		MESSAGE("")
     ELSE (NOT QT4_FOUND)
-        MESSAGE(STATUS " QT4 libraries found, good")
+        MESSAGE(STATUS "QT4 libraries found, good")
         CHECK_ADM_CONFIG_H(qt4 ADM_INC)
-        MESSAGE(STATUS " Checking for Qt4 OpenGL support ")
+		MESSAGE("")
+
         INCLUDE(admCheckOpenGl)
         IF(NOT ADM_INC)
-            MESSAGE(ERROR " QT4 UI requested, but cannot find header file for avidemux/qt4...disabling it")
+            MESSAGE("ERROR QT4 UI requested, but cannot find header file for avidemux/qt4...disabling it")
+			MESSAGE("")
             SET(DO_QT4 0)
         ENDIF(NOT ADM_INC)
     ENDIF (NOT QT4_FOUND)
 endif(DO_QT4)
 
+APPEND_SUMMARY_LIST("User Interface" "Qt 4" "${DO_QT4}")
+
 #*****
 # CLI
 #*****
 if(DO_CLI)
+		MESSAGE(STATUS "Checking for CLI")
+		MESSAGE(STATUS "****************")
+
         CHECK_ADM_CONFIG_H(cli ADM_INC)
+
         IF(NOT ADM_INC)
-            MESSAGE(ERROR " CLI UI requested, but cannot find header file for avidemux/cli...disabling it")
+            MESSAGE("ERROR CLI UI requested, but cannot find header file for avidemux/cli...disabling it")
             SET(DO_CLI 0)
         ENDIF(NOT ADM_INC)
+
+		MESSAGE("")
 endif(DO_CLI)
+
+APPEND_SUMMARY_LIST("User Interface" "CLI" "${DO_CLI}")
 
 ########################################
 # Actual work to do..
@@ -183,10 +199,8 @@ ENDIF(DO_QT4)
 ########################################
 # Config Summary
 ########################################
-INCLUDE(admPluginConfigSummary)
-MESSAGE("")
-#
-# Packaging
-#
+DISPLAY_SUMMARY_LIST()
+
 include(admPackager)
 admPackager(pluginsPackage)
+MESSAGE("")

@@ -15,4 +15,6 @@ MACRO(checkVpxDec)
 			MESSAGE("${MSG_DISABLE_OPTION}")
 		ENDIF (VPXDEC)
 		MESSAGE("")
+
+		APPEND_SUMMARY_LIST("Audio Decoder" "libvpx" "${VPX_FOUND}")
 ENDMACRO(checkVpxDec)

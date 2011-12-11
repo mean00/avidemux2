@@ -45,7 +45,8 @@ MACRO(checkGettext)
 		ENDIF (GETTEXT)
 
 		SET(GETTEXT_CHECKED 1)
-
 		MESSAGE("")
 	ENDIF (NOT GETTEXT_CHECKED)
+
+	APPEND_SUMMARY_LIST("Miscellaneous" "gettext" "${HAVE_GETTEXT}")
 ENDMACRO(checkGettext)

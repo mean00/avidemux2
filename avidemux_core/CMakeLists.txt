@@ -20,9 +20,14 @@ ELSE (WIN32)
 ENDIF (WIN32)
 
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
+
+include(admConfigSummary)
+INITIALISE_SUMMARY_LISTS()
+
 include(admMainChecks)
 include(admCheckFtello)
 include(admAsNeeded)
+
 ########################################
 # VDPAU
 ########################################
@@ -98,10 +103,8 @@ endif (USE_VDPAU)
 ########################################
 # Config Summary
 ########################################
-INCLUDE(admConfigSummary)
-#
-# Packaging
-#
+DISPLAY_SUMMARY_LIST()
+
 include(admPackager)
 admPackager(corePackage)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6") 

@@ -118,7 +118,6 @@ if (WIN32 OR APPLE)
 endif (WIN32 OR APPLE)
 
 IF (WIN32)
-	target_link_libraries(ADM_osSupport)
 	target_link_libraries(avidemux3_cli winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
@@ -127,9 +126,10 @@ ENDIF (WIN32)
 ###########################################
 ADM_LINK_THREAD(avidemux3_cli)
 ADM_INSTALL_BIN(avidemux3_cli)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/cli/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cli") 
-#
-# Packaging
-#
+
+DISPLAY_SUMMARY_LIST()
+
 include(admPackager)
 admPackager(cliPackage)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/cli/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cli") 
+MESSAGE("")

@@ -132,7 +132,6 @@ if (WIN32 OR APPLE)
 endif (WIN32 OR APPLE)
 
 IF (WIN32)
-	target_link_libraries(ADM_osSupport)
 	target_link_libraries(avidemux3_gtk winmm -mwindows -Wl,--export-all-symbols)
 ENDIF (WIN32)
 
@@ -141,9 +140,10 @@ ENDIF (WIN32)
 ###########################################
 ADM_LINK_THREAD(avidemux3_gtk)
 ADM_INSTALL_BIN(avidemux3_gtk)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk") 
-#
-# Packaging
-#
+
+DISPLAY_SUMMARY_LIST()
+
 include(admPackager)
 admPackager(gtkPackage)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk") 
+MESSAGE("")

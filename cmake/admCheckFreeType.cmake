@@ -18,6 +18,8 @@ ELSE (FREETYPE2)
 	MESSAGE("${MSG_DISABLE_OPTION}")
 ENDIF (FREETYPE2)
 
+APPEND_SUMMARY_LIST("Miscellaneous" "FreeType2" "${FREETYPE2_FOUND}")
+
 MESSAGE("")
 
 ########################################

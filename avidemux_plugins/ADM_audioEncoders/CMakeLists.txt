@@ -1,4 +1,3 @@
-#######################################
 include (admCheckAudioEncoderLibs)
 ADD_SUBDIRECTORY(twolame)
 ADD_SUBDIRECTORY(pcm)
@@ -19,12 +18,5 @@ endif(USE_VORBIS)
 if(USE_FAAC)
 ADD_SUBDIRECTORY(faac)
 endif(USE_FAAC)
-MESSAGE("***  Audio Encoder ***")
-ADM_DISPLAY("Aften     " "${USE_AFTEN}")
-ADM_DISPLAY("LAME      " "${USE_LAME}")
-ADM_DISPLAY("FAAC      " "${USE_FAAC}")
-ADM_DISPLAY("Vorbis    " "${USE_VORBIS}")
-MESSAGE("***  /Audio Encoder  ***")
-
 
 
