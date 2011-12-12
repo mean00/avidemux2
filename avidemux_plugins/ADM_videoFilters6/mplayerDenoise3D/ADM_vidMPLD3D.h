@@ -21,7 +21,17 @@ Daniel Moreno <comac@comac.darktech.org>
 #ifndef __D3DLOW__
 #define __D3DLOW__
 
-#include "denoise3d.h"
+#include "denoise3dHQ.h"
+typedef struct {
+    int Coefs[4][512*16];
+    unsigned int *Line;
+    unsigned short *Frame[3];
+    int hsub, vsub;
+} HQDN3DContext;
+
+#define PARAM1_DEFAULT 4.0
+#define PARAM2_DEFAULT 3.0
+#define PARAM3_DEFAULT 6.0
 
 /**
     \class ADMVideoMPD3Dlow
@@ -29,20 +39,12 @@ Daniel Moreno <comac@comac.darktech.org>
 class ADMVideoMPD3D : public  ADM_coreVideoFilter
 {
 protected:
-                ADMImage        *original;
-                denoise3d       param;
-                uint32_t        last;
-                uint32_t         *Line;
-                int				Coefs[4][512*16];
-                void 	    PrecalcCoefs(int *Ct, double Dist25);
-				uint8_t  	setup(void);
-				void 	    deNoise(unsigned char *Frame,        // mpi->planes[x]
-                    						unsigned char *FramePrev,    // pmpi->planes[x]
-                    						unsigned char *FrameDest,    // dmpi->planes[x]
-                    						uint32_t char *LineAnt,      // vf->priv->Line (width bytes)
-                    						int W, int H, int sStride, int pStride, int dStride,
-                    						int *Horizontal, int *Vertical, int *Temporal);
-
+                ADMImage                        *original;
+                denoise3dhq                     param;
+                HQDN3DContext                   context;
+                uint32_t                        last;
+                uint8_t  	                setup(void);
+			
                     
 public:
                     ADMVideoMPD3D(ADM_coreVideoFilter *previous,CONFcouple *conf);
@@ -52,6 +54,7 @@ public:
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);           /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
         virtual bool         configure(void) ;                        /// Start graphical user interface
+        virtual bool         goToTime(uint64_t usSeek);  
 };
 
 			
