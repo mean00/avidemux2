@@ -25,7 +25,7 @@ IF (MINGW)
 	TARGET_LINK_LIBRARIES(ADM_core6 "${PTHREAD_LIBRARIES}" imagehlp ws2_32)
 	ADD_TARGET_CFLAGS(ADM_core6 "-I${PTHREAD_INCLUDE_DIR}")
 ELSEIF (APPLE)
-	ADD_TARGET_LDFLAGS(ADM_core6 "-framework Carbon")
+	target_link_libraries(ADM_core6 "-framework Carbon")
 ENDIF (MINGW)
 
 if (HAVE_EXECINFO)

@@ -72,10 +72,10 @@ IF (WIN32)
 ENDIF (WIN32)
 
 IF (APPLE)
-	ADD_TARGET_LDFLAGS(avidemux3_jobs "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
+	target_link_libraries(avidemux3_jobs "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
 
 	# for Leopard but it doesn't hurt Tiger
-	ADD_TARGET_LDFLAGS(avidemux3_jobs "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+	target_link_libraries(avidemux3_jobs "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF (APPLE)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreJobs)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreUtils6)
