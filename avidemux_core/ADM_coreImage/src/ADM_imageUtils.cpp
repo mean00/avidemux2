@@ -309,7 +309,7 @@ uint32_t ww,hh;
         return df;
 }
 #ifdef ADM_CPU_X86
-static uint64_t FUNNY_MANGLE(noise64);
+static uint64_t __attribute__((used)) FUNNY_MANGLE(noise64);
 static uint32_t computeDiffMMX(uint8_t  *s1,uint8_t *s2,uint32_t noise,uint32_t l)
 {
 uint32_t df=0;
@@ -596,9 +596,8 @@ static inline void yuv444_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
 #ifdef ADM_CPU_X86
 static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int s)
 {
-static uint64_t FUNNY_MANGLE(mask);
-    mask=0x00ff000000ff0000LL;
-  //mask=0x0000ff000000ff00LL;
+static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
+
     __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
     __asm__(" pxor %%mm6,%%mm6\n" ::);
     
