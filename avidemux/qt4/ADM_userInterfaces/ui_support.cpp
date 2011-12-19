@@ -136,7 +136,7 @@ void getMainWindowHandles(intptr_t *handle, intptr_t *nativeHandle)
 {
 	*handle = (intptr_t)QuiMainWindows;
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && !defined(ADM_CPU_X86_64)
 	*nativeHandle = (intptr_t)HIViewGetWindow(HIViewRef(QuiMainWindows->winId()));
 #else
 	*nativeHandle = (intptr_t)QuiMainWindows->winId();

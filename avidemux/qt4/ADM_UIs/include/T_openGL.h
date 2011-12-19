@@ -17,9 +17,18 @@
 #define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>
-#       include <OpenGL/glu.h>
+#   include <OpenGL/glu.h>
 #	include <OpenGL/glext.h>
+
 #	define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
+
+typedef void (* PFNGLACTIVETEXTUREPROC) (GLenum texture);
+typedef void (* PFNGLBINDBUFFERPROC) (GLenum target, GLuint buffer);
+typedef void (* PFNGLDELETEBUFFERSPROC) (GLsizei n, const GLuint *buffers);
+typedef void (* PFNGLGENBUFFERSPROC) (GLsizei n, GLuint *buffers);
+typedef GLvoid* (* PFNGLMAPBUFFERPROC) (GLenum target, GLenum access);
+typedef GLboolean (* PFNGLUNMAPBUFFERPROC) (GLenum target);
+typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
 #else
 #	include <GL/gl.h>
 #       include <GL/glu.h>

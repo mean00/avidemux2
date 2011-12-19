@@ -122,8 +122,9 @@ int main(int argc, char *argv[])
 
 	// Start counting memory
 	ADM_memStatInit();
+#ifndef __APPLE__
     ADM_InitMemcpy();
-
+#endif
 	atexit(onexit);
 
 #ifdef __MINGW32__

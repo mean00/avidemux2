@@ -282,9 +282,8 @@ typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
 #ifdef ADM_CPU_X86
 static inline void glYUV444_MMXInit(void)
 {
-   static uint64_t FUNNY_MANGLE(mask);
-    mask=0x00ff000000ff0000LL;
-  //mask=0x0000ff000000ff00LL;
+   static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
+
     __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
 }
 static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width)
