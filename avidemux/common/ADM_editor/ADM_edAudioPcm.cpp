@@ -174,7 +174,8 @@ again:
     *samples=(decodedSample);
     *odts=lastDts;
     advanceDtsByCustomSample(decodedSample,outFrequency);
-    vprintf("[Composer::getPCMPacket] Adding %u decodedSample, dts is not %lu\n",fillerSample,lastDts);
+    vprintf("[Composer::getPCMPacket] Adding %u decoded, Adding %u filler sample, dts is now %lu\n",
+                                        decodedSample,fillerSample,lastDts);
     ADM_assert(sizeMax>=(fillerSample+decodedSample)*trk->wavheader.channels);
     return true;
 }
