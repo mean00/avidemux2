@@ -316,9 +316,10 @@ nextScheme:
     int n=listOfMissingPts.size();
     if(n)
     {
-        if(n>nbFrames/100)
+        if(n>nbFrames/20)
         {
-            ADM_warning("There is more than 1% unavailable PTS, wont even try...\n");
+            ADM_warning("There is more than 5%% unavailable PTS, wont even try (%d/%d)...\n",
+                            n,nbFrames);
             goto theEnd;
         }
         for(int i=0;i<n;i++)
