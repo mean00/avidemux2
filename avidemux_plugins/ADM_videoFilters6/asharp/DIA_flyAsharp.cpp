@@ -33,8 +33,8 @@
 */
 uint8_t  flyASharp::update(void)
 {
-    download();
-    process();
+//    download();
+//    process();
 //	copyYuvFinalToRgb();
 //    display();
     return 1;
@@ -42,17 +42,17 @@ uint8_t  flyASharp::update(void)
 /**
     \fn process
 */
-uint8_t flyASharp::process(void)
+uint8_t    flyASharp::processYuv(ADMImage* in, ADMImage *out)
 {
-#if 0
+
 uint8_t *src,*dst;
-uint32_t stride;
+uint32_t sstride,dstride;
 int32_t T,D,B,B2;
 uint32_t ww,hh;
 
 
-                ww=_w;
-                hh=_h;
+                ww=in->GetWidth(PLANAR_Y);
+                hh=in->GetHeight(PLANAR_Y);
                 // parameters floating point to fixed point convertion
                 T = (int)(param.t*(4<<7));
                 D = (int)(param.d*(4<<7));
@@ -71,12 +71,10 @@ uint32_t ww,hh;
                 if (B>256) B = 256;
                 if (B2>256) B2 = 256;
 
-
-                memcpy(YPLANE(_yuvBufferOut),YPLANE(_yuvBuffer),ww*hh);
-                memcpy(UPLANE(_yuvBufferOut),UPLANE(_yuvBuffer),ww*hh/4);
-                memcpy(VPLANE(_yuvBufferOut),VPLANE(_yuvBuffer),ww*hh/4);
-                asharp_run_c(     _yuvBufferOut->GetWritePtr(PLANAR_Y),
-                        _yuvBufferOut->GetPitch(PLANAR_Y), 
+                out->duplicateFull(in);
+                asharp_run_c(     
+                        out->GetWritePtr(PLANAR_Y),
+                        out->GetPitch(PLANAR_Y), 
                         hh,
                         ww,
                         T,
@@ -86,16 +84,26 @@ uint32_t ww,hh;
                         param.bf);
     
     // Copy back half source to display
-    dst=_yuvBufferOut->data;
-    src=_yuvBuffer->data;
-    stride=ww;
+    dst=out->GetWritePtr(PLANAR_Y);
+    src=in->GetReadPtr(PLANAR_Y);
+    sstride=in->GetPitch(PLANAR_Y);
+    dstride=out->GetPitch(PLANAR_Y);
     for(uint32_t y=0;y<hh;y++)   // We do both u & v!
     {
-        memcpy(dst,src,stride>>1);
-        dst+=stride;
-        src+=stride;
+        memcpy(dst,src,ww/2);
+        dst+=dstride;
+        src+=sstride;
     }
-#endif
+    // add separator
+    dst=out->GetWritePtr(PLANAR_Y)+ww/2;
+    for(int j=0;j<hh/2;j++)
+    {
+        dst[0]=0;
+        dst[dstride]=0xff;
+        dst+=dstride*2;
+    }
+    out->printString(1,1,"Original");
+    out->printString(ww/20+1,1,"Processed");
     return 1;
 }
 //EOF

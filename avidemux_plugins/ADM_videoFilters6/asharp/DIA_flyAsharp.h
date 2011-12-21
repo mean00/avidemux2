@@ -13,7 +13,8 @@ class flyASharp : public FLY_DIALOG_TYPE
   public:
    asharp     param;
   public:
-   uint8_t    process(void);
+    uint8_t    processYuv(ADMImage* in, ADMImage *out);
+
    uint8_t    download(void);
    uint8_t    upload(void);
    uint8_t    update(void);

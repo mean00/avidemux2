@@ -37,7 +37,7 @@ class ASharp : public ADM_coreVideoFilter
 {
 private:
         
-        ADMImage        *original;
+        
         asharp          _param;
         int32_t         T,D,B,B2;
         
@@ -82,7 +82,7 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
             _param.bf=false;
         }
         update();
-        original=new ADMImageDefault(info.width,info.height);
+        
 }
 /**
     \fn dtor 
@@ -91,8 +91,7 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
 
 ASharp::~ASharp(void)
 {
-        if(original) delete original;     
-        original=NULL;
+        
 }
 /**
     \fn update 
@@ -137,7 +136,7 @@ extern uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in);
 bool ASharp::configure(void)
 {
 uint8_t r=0;
-#if 0
+#if 1
         if( DIA_getASharp(&_param, previousFilter))
         {
                 r=1;
@@ -163,15 +162,13 @@ const char   *ASharp::getConfiguration(void)
 */
  bool         ASharp::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-ADMImage *src;
 ADMImage *dst;
+
         dst=image;
-        src=original;
+        
+        if(!previousFilter->getNextFrame(fn,dst)) return false;
 
-        if(!previousFilter->getNextFrame(fn,src)) return false;
-
-        dst->duplicate(src);
-        asharp_run_c(     dst->GetWritePtr(PLANAR_Y),
+        asharp_run_c(   dst->GetWritePtr(PLANAR_Y),
                         dst->GetPitch(PLANAR_Y), 
                         info.height,
                         info.width,
