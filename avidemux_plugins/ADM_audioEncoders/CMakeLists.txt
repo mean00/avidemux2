@@ -19,4 +19,7 @@ if(USE_FAAC)
 ADD_SUBDIRECTORY(faac)
 endif(USE_FAAC)
 
+if(USE_DCAENC)
+ADD_SUBDIRECTORY(dcaenc)
+endif(USE_DCAENC)
 

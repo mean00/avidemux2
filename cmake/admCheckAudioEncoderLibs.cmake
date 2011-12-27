@@ -76,6 +76,34 @@ ENDIF (LAME)
 APPEND_SUMMARY_LIST("Audio Encoder" "LAME" "${USE_LAME}")
 MESSAGE("")
 
+########################################
+# DCAENC
+########################################
+OPTION(DCAENC "" ON)
+
+MESSAGE(STATUS "Checking for DCAENC")
+MESSAGE(STATUS "*******************")
+
+IF (DCAENC)
+	IF (UNIX)
+		SET(DCAENC_REQUIRED_FLAGS "-lm")
+	ENDIF (UNIX)
+
+	FIND_HEADER_AND_LIB(DCAENC dcaenc.h  dcaenc dcaenc_create ${DCAENC_REQUIRED_FLAGS})
+	PRINT_LIBRARY_INFO("DCAENC" DCAENC_FOUND "${DCAENC_INCLUDE_DIR}" "${DCAENC_LIBRARY_DIR}")
+
+	IF (DCAENC_FOUND)
+		SET(USE_DCAENC 1)
+	ENDIF (DCAENC_FOUND)
+ELSE (DCAENC)
+	MESSAGE("${MSG_DISABLE_OPTION}")
+ENDIF (DCAENC)
+
+APPEND_SUMMARY_LIST("Audio Encoder" "DCAENC" "${USE_DCAENC}")
+MESSAGE("")
+
+
+
 
 ########################################
 # FAAC
