@@ -28,14 +28,6 @@ extern "C" {
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
 
-#if ADM_AE_SET == mp2
-#include "ADM_lav_mp2.h"
-#elif ADM_AE_SET == ac3
-#include "ADM_lav_ac3.h"
-#elif ADM_AE_SET == aac
-#include "ADM_lav_aac.h"
-#endif
-
 #include "audioencoder_lavcodec.h"
 
 static bool configure (void);
