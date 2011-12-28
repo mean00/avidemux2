@@ -18,20 +18,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-
-
 #include "ADM_toolkitGtk.h"
-
-
 #include "ADM_image.h"
-#include "ADM_videoFilter.h"
-#include "ADM_vidASharp_param.h"
+#include "ADM_coreVideoFilterInternal.h"
 #include "DIA_flyDialog.h"
 #include "DIA_flyAsharp.h"
 
 
-uint8_t DIA_getASharp(ASHARP_PARAM *param, AVDMGenericVideoStream *in);
+uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in);
 
 static GtkWidget        *create_dialog1 (void);
 static gboolean         draw (void );
@@ -48,7 +42,8 @@ static flyASharp *myCrop=NULL;
 //      Video is in YV12 Colorspace
 //
 //
-uint8_t DIA_getASharp(ASHARP_PARAM *param, AVDMGenericVideoStream *in)
+#if 0
+uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in)
 {
       uint32_t width,height;
       uint8_t ret=0;
@@ -292,4 +287,9 @@ create_dialog1 (void)
 
   return dialog1;
 }
-
+#endif
+uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in)
+{
+    return 1;
+}
+// EOF
