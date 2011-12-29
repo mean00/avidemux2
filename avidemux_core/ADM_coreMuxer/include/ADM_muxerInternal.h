@@ -16,7 +16,7 @@
 #ifndef  ADM_muxerInternal_H
 #define  ADM_muxerInternal_H
 
-#define ADM_MUXER_API_VERSION 6
+#define ADM_MUXER_API_VERSION 7
 #include <stddef.h>
 #include "ADM_dynamicLoading.h"
 #include "ADM_muxer.h"
@@ -31,6 +31,7 @@ public:
         const char    *name;
         const char    *displayName;
         const char    *descriptor;
+        const char    *defaultExtension;
         uint32_t      apiVersion;
         bool  (*configure)(void);
         bool  (*getConfiguration)(CONFcouple **conf);
@@ -42,10 +43,11 @@ public:
         uint32_t     (*getApiVersion)();
         const char  *(*getMuxerName)();
         const char  *(*getDisplayName)();
+        const char  *(*getDefaultExtension)();
         
 
 
-			initialised = (loadLibrary(file) && getSymbols(7+3,
+			initialised = (loadLibrary(file) && getSymbols(7+4,
 				&createmuxer, "create",
 				&deletemuxer, "destroy",
 				&getMuxerName, "getName",
@@ -55,7 +57,8 @@ public:
 				&getDescriptor,  "getDescriptor",
                 &configure,"configure",
                 &setConfiguration,"setConfiguration",
-                &getConfiguration,"getConfiguration"
+                &getConfiguration,"getConfiguration",
+                &getDefaultExtension,"getDefaultExtension"
                 ));
                 if(initialised)
                 {
@@ -63,6 +66,7 @@ public:
                     displayName=getDisplayName();
                     apiVersion=getApiVersion();
                     descriptor=getDescriptor();
+                    defaultExtension=getDefaultExtension();
                     printf("[Muxer]Name :%s ApiVersion :%d Description :%s\n",name,apiVersion,descriptor);
                 }else
                 {
@@ -71,7 +75,7 @@ public:
         }
 };
 
-#define ADM_MUXER_BEGIN( Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar) \
+#define ADM_MUXER_BEGIN( Ext,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar) \
 extern "C" {\
 ADM_muxer   *create(void){ return new Class; } \
 void         destroy(ADM_muxer *h){ Class *z=(Class *)h;delete z;} \
@@ -80,6 +84,7 @@ uint32_t     getApiVersion(void) {return ADM_MUXER_API_VERSION;} \
 const char  *getName(void) {return name;} \
 const char  *getDescriptor(void) {return desc;} \
 const char  *getDisplayName(void) { return displayName;} \
+const char  *getDefaultExtension(void) { return Ext;} \
 bool        getConfiguration(CONFcouple **conf) \
 {\
          if(confTemplate==NULL) {*conf=NULL;return true;} \

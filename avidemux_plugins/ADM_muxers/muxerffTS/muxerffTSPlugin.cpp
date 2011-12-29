@@ -21,7 +21,7 @@
 #include "fourcc.h"
  bool ffTSConfigure(void);
 
-ADM_MUXER_BEGIN( muxerffTS,
+ADM_MUXER_BEGIN( "ts",muxerffTS,
                     1,0,1,
                     "ffTS",    // Internal name
                     "ffMpeg TS muxer plugin (c) Mean 2009",

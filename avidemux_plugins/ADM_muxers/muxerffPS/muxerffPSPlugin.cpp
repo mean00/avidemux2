@@ -21,7 +21,7 @@
 #include "fourcc.h"
  bool ffPSConfigure(void);
 
-ADM_MUXER_BEGIN( muxerffPS,
+ADM_MUXER_BEGIN( "mpg",muxerffPS,
                     1,0,0,
                     "ffPS",    // Internal name
                     "ffMpeg PS muxer plugin (c) Mean 2009",

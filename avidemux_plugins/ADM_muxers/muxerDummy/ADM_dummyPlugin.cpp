@@ -21,7 +21,7 @@
 
 extern "C" bool confDummy(void ){return true;}
 
-ADM_MUXER_BEGIN( muxerDummy,
+ADM_MUXER_BEGIN( "dummy",muxerDummy,
                     1,0,0,
                     "dummy",    // Internal name
                     "dummy2 muxer plugin (c) Mean 2008",

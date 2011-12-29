@@ -21,7 +21,7 @@
 #include "fourcc.h"
  bool mkvConfigure(void);
 
-ADM_MUXER_BEGIN( muxerMkv,
+ADM_MUXER_BEGIN( "mkv",muxerMkv,
                     1,0,0,
                     "MKV",    // Internal name
                     "Matroska muxer plugin (c) Mean 2009",

@@ -43,7 +43,8 @@
 /*
 
 */
-ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
+//ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
+#include "ADM_muxerProto.h"
 extern ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
 extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
 
@@ -55,8 +56,8 @@ extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,
 class admSaver
 {
 protected:
-        const char           *fileName;
-        char                 *logFileName;
+        std::string          fileName;
+        std::string          logFileName;
         ADM_muxer            *muxer;
         ADM_videoFilterChain *chain;
         ADM_audioStream      *audio;
@@ -78,10 +79,9 @@ public:
 */
  admSaver::admSaver(const char *out)
 {
-        fileName=out;
-        logFileName=new char[strlen(out)+10];
-        strcpy(logFileName,out);
-        strcat(logFileName,".stats");
+        fileName=std::string(out);
+        logFileName=fileName;
+        logFileName+=std::string(".stats");
         muxer=NULL;
         chain=NULL;
         audio=NULL;
@@ -101,9 +101,7 @@ admSaver::~admSaver()
  if(muxer)
         delete muxer;
  muxer=NULL;
- if(logFileName)
-        delete [] logFileName;
- logFileName=NULL;
+ logFileName="";
  if ( astreams[0])
         delete astreams[0];
  astreams[0]=NULL;
@@ -151,8 +149,8 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
 
 
                 if(videoDuration<5000) videoDuration=5000;
-                printf("[Save] Performing Pass one,using %s as log file\n",logFileName);
-                pass1->setPassAndLogFile(1,logFileName);
+                printf("[Save] Performing Pass one,using %s as log file\n",logFileName.c_str());
+                pass1->setPassAndLogFile(1,logFileName.c_str());
                 if(false==pass1->setup())
                 {
                     printf("[Save] setup failed for pass1 encoder\n");
@@ -205,7 +203,7 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
                     printf("[Save] Cannot create encoder for pass 2\n");
                     return NULL;
                 }
-                pass2->setPassAndLogFile(2,logFileName);
+                pass2->setPassAndLogFile(2,logFileName.c_str());
 #if 0
                 buffer=new uint8_t[BUFFER_SIZE];
                 pass2->setup();
@@ -241,6 +239,8 @@ bool admSaver::save(void)
     ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
     ADM_info("[A_Save] Saving..\n");
     ADM_audioStream *astreams[1]={NULL};
+    const char *defaultExtension=ADM_MuxerGetDefaultExtension(muxerIndex);
+    ADM_info("Muxer default extension %s\n",defaultExtension);
     if(!videoEncoderIndex) 
     {
         if(false==video_body-> checkCutsAreOnIntra())
@@ -259,7 +259,7 @@ bool admSaver::save(void)
         GUI_Error_HIG("Muxer","Cannot instantiante muxer");
         return 0;
     }
-
+    
     // Audio Stream ?
     ADM_audioStream *audio=NULL;
     int nbAStream=1;
@@ -376,7 +376,18 @@ bool admSaver::save(void)
             }
         }
     }
-    if(!muxer->open(fileName,video,nbAStream,astreams))
+    // Check if we need to add an extension....
+    if(defaultExtension)
+    {
+        if(!strstr(fileName.c_str(),"."))
+        {
+            
+            fileName=fileName+std::string(".")+std::string(defaultExtension);
+            ADM_info("Adding extension, filename is now %s\n",fileName.c_str());
+        }
+
+    }
+    if(!muxer->open(fileName.c_str(),video,nbAStream,astreams))
     {
         GUI_Error_HIG("Muxer","Cannot open ");
     }else

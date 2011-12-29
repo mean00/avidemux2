@@ -22,7 +22,7 @@
 #include "mp4_muxer_desc.cpp"
  bool mp4Configure(void);
 
-ADM_MUXER_BEGIN( muxerMP4,
+ADM_MUXER_BEGIN( "mp4",muxerMP4,
                     1,0,0,
                     "MP4",    // Internal name
                     "MP4 muxer plugin (c) Mean 2009",

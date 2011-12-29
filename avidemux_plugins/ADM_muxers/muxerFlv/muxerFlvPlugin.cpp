@@ -21,7 +21,7 @@
 #include "fourcc.h"
  bool flvConfigure(void);
 
-ADM_MUXER_BEGIN( muxerFlv,
+ADM_MUXER_BEGIN( "flv",muxerFlv,
                     1,0,0,
                     "FLV",    // Internal name
                     "FLV muxer plugin (c) Mean 2008",

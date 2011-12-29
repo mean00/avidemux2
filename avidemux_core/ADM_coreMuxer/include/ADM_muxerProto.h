@@ -26,7 +26,7 @@ bool        ADM_mx_setExtraConf(int index,CONFcouple *c);
 int         ADM_MuxerIndexFromName(const char *name);
 ADM_muxer   *ADM_MuxerSpawn(const char *name);
 ADM_muxer   *ADM_MuxerSpawnFromIndex(int index);
-
+const char  *ADM_MuxerGetDefaultExtension(int i);
 
 
 #endif

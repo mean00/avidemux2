@@ -20,7 +20,7 @@
 #include "fourcc.h"
 static bool rawConfigure(void) {return true;};
 
-ADM_MUXER_BEGIN( muxerRaw,
+ADM_MUXER_BEGIN( "raw",muxerRaw,
                     1,0,0,
                     "RAW",    // Internal name
                     "RAW muxer plugin (c) Mean 2008",

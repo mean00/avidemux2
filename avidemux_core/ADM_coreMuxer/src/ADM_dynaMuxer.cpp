@@ -51,6 +51,15 @@ const char *ADM_mx_getDisplayName(uint32_t i)
     return ListOfMuxers[i]->displayName;
 }
 /**
+    \fn ADM_MuxerGetDefaultExtension
+    \brief returns the default extension (i.e. mkv, avi) from index
+*/
+const char *ADM_MuxerGetDefaultExtension(int i)
+{
+    ADM_assert(i<ListOfMuxers.size());
+    return ListOfMuxers[i]->defaultExtension;
+}
+/**
     \fn ADM_mx_getName
     \brief Returns internal name for muxer i
 */

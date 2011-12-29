@@ -20,7 +20,7 @@
 #include "mp4v2_muxer_desc.cpp"
 extern bool mp4v2Configure(void);
 extern mp4v2_muxer muxerConfig;
-ADM_MUXER_BEGIN( muxerMp4v2,
+ADM_MUXER_BEGIN( "mp4",muxerMp4v2,
                     1,0,0,
                     "MP4V2",    // Internal name
                     "MP4V2 muxer plugin (c) Mean 2011",

@@ -20,7 +20,7 @@
 #include "fourcc.h"
  extern "C" bool AviConfigure(void);
 
-ADM_MUXER_BEGIN( muxerAvi,
+ADM_MUXER_BEGIN( "avi",muxerAvi,
                     1,0,0,
                     "AVI",    // Internal name
                     "AVI muxer plugin (c) Mean 2008",
