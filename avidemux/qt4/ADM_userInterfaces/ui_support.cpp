@@ -2,7 +2,9 @@
 #include <QtCore/QMap>
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
+#include <QtCore/QUrl>
 #include <QtGui/QApplication>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QWidget>
 
 #ifdef __APPLE__
@@ -168,4 +170,14 @@ const char* getNativeRendererDesc(void)
 	}
 
 	return "Qt";
+}
+
+void GUI_OpenApplicationLog()
+{
+	QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getBaseDir()) + "admlog.txt"));
+}
+
+void GUI_OpenApplicationDataFolder()
+{
+	QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getBaseDir())));
 }

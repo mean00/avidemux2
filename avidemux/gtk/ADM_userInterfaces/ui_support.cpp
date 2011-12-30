@@ -66,3 +66,6 @@ void getMainWindowHandles(long int *handle,long int *nativeHandle)
 	*nativeHandle = (long int)gtk_widget_get_window(guiRootWindow);
 #endif
 }
+
+void GUI_OpenApplicationLog() { }
+void GUI_OpenApplicationDataFolder() { }

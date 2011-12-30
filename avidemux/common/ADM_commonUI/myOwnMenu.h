@@ -81,6 +81,13 @@ MenuEntry myMenuAudio[]= {
 MenuEntry myMenuHelp[]= {
             {MENU_ACTION,"Build Option",    NULL,ACT_BUILT_IN           ,NULL,NULL},
             {MENU_ACTION,"Plugins",         NULL,ACT_PLUGIN_INFO        ,NULL,NULL},
+#ifdef __WIN32
+			{MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
+			{MENU_SUBMENU, "&Advanced", NULL, ACT_DUMMY, NULL, NULL},
+			{MENU_SUBACTION, "Open Application &Log", NULL, ACT_OPEN_APP_LOG, NULL, NULL},
+			{MENU_SUBACTION, "Open Application Data &Folder", NULL, ACT_OPEN_APP_FOLDER, NULL, NULL},
+#endif
+			{MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
             {MENU_ACTION,"About ",          NULL,ACT_ABOUT              ,NULL,NULL},
         };
 

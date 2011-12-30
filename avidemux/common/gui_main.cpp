@@ -75,8 +75,8 @@ static void ReSync (void);
 static void cleanUp (void);
 void        updateLoaded (void);
 
-
-
+extern void GUI_OpenApplicationLog();
+extern void GUI_OpenApplicationDataFolder();
 
 extern bool ADM_mux_configure(int index);
 void brokenAct(void);
@@ -200,6 +200,13 @@ int nw;
     case ACT_RUN_JS_PROJECT:
             GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
+
+	case ACT_OPEN_APP_LOG:
+		GUI_OpenApplicationLog();
+		break;
+	case ACT_OPEN_APP_FOLDER:
+		GUI_OpenApplicationDataFolder();
+		break;
 
     case ACT_ABOUT :
     		 DIA_about( );

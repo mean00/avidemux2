@@ -48,3 +48,6 @@ void getMainWindowHandles(long int *handle, long int *nativeHandle)
 	*handle = 0;
 	*nativeHandle = 0;
 }
+
+void GUI_OpenApplicationLog() { }
+void GUI_OpenApplicationDataFolder() { }
