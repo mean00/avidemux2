@@ -1,4 +1,5 @@
 #ifdef __WIN32
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -445,8 +446,11 @@ void redirectStdoutToFile(void)
 	}
 
 	// Line buffering
-	setvbuf(stdout, NULL, _IONBF, BUFSIZ); 
+	setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 	setvbuf(stderr, NULL, _IONBF, BUFSIZ);
+
+	_setmode(_fileno(stdout), _O_TEXT);
+	_setmode(_fileno(stderr), _O_TEXT);
 
 	delete[] logPath;
 }
