@@ -17,11 +17,14 @@
 /**
     \class ADM_adts2aac
 */
+#define ADTS_BUFFER_SIZE 16000
 class ADM_adts2aac
 {
 private:
-		void * cookie;
-        void * codec;
+        bool    hasExtra;
+        uint8_t extra[2];
+        uint8_t buffer[ADTS_BUFFER_SIZE*2];
+        int     head,tail;
 		
 public:
 		bool getExtraData(uint32_t *len,uint8_t **data);
