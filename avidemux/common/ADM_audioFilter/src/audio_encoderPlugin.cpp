@@ -407,7 +407,8 @@ bool setAudioExtraConf(uint32_t bitrate,CONFcouple *c)
     }
      ADM_assert(currentEncoder<ListOfAudioEncoder.size());
      ADM_audioEncoder *encoder= ListOfAudioEncoder[currentEncoder];
-     encoder->setBitrate(bitrate);
+     if(encoder->setBitrate)
+        encoder->setBitrate(bitrate);
      if(encoder->setConfigurationData)
      {
         if(c)             return encoder->setConfigurationData(c);
