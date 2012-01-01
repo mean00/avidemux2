@@ -39,6 +39,7 @@ static uint32_t Bitrate[8][16]=
 	{ 0, 32, 48, 56,64, 80, 96, 112,     128, 160, 192, 224,   256, 320, 384, 0},
 	//Level 1 / Layer 3
 	{ 0, 32, 40, 48, 56, 64, 80, 96,         112, 128, 160, 192,  224, 256, 320, 0},
+    //-----------------------
 	// Level 2/Layer 0
 	{0,0,0,0,0,0,0,0   ,0,0,0,0,0,0,0,0},
 	// Level 2 Layer 1
@@ -163,7 +164,7 @@ uint32_t nfq,fqindex,brindex,index;
                 case 1: mpegInfo->samples=384;break;
                 case 2: mpegInfo->samples=1152;break;
                 default:
-                case 3: if(mpegInfo->level==1) 
+                case 3: if(mpegInfo->level==1)  // mpeg 2.5
                                 mpegInfo->samples=1152;
                         else
                                 mpegInfo->samples=576;
@@ -183,10 +184,10 @@ uint32_t nfq,fqindex,brindex,index;
 					break;
 				default:
 				//FrameLengthInBytes = 144 * BitRate / SampleRate + Padding
-                                  uint32_t slot_per_frame;
-                                        if(mpegInfo->layer==3 && mpegInfo->level==2)  slot_per_frame=72;
-                                                else slot_per_frame=144;
-                                        mpegInfo->size=(slot_per_frame*mpegInfo->bitrate*1000)/mpegInfo->samplerate;
+                  uint32_t slot_per_frame;
+                        if(mpegInfo->layer==3 && (mpegInfo->level&2)==2)  slot_per_frame=72;
+                                else slot_per_frame=144;
+                        mpegInfo->size=(slot_per_frame*mpegInfo->bitrate*1000)/mpegInfo->samplerate;
 					mpegInfo->size+=mpegInfo->padding;
 			}
 			if(*offset)
