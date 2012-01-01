@@ -58,18 +58,20 @@ uint32_t nfq,fqindex,brindex,index;
 			memcpy(a+1,stream,3);
 			do
 			{
-
 				memmove(a,a+1,3);
 				a[3]=stream[start+3];
 				if(start>=maxSearch-3) break;
 				start++;
-				if(a[0]==0xff && ((a[1]&0xF0)==0xF0))
+				if(a[0]==0xff && ((a[1]&0xE0)==0xE0))
 				{
 					// Layer
-					mpegInfo->layer=4-(a[1]>>1)&3;
-					mpegInfo->level=4-(a[1]>>3)&3;
+					mpegInfo->layer=4-((a[1]>>1)&3);
+					mpegInfo->level=4-((a[1]>>3)&3);
 					if(mpegInfo->level==3) continue;
-					if(mpegInfo->level==4) mpegInfo->level=3;
+					if(mpegInfo->level==4) 
+                    {
+                            mpegInfo->level=3; // mpeg 2.5
+                    }
 					mpegInfo->protect=(a[1]&1)^1;
 					mpegInfo->padding=(a[2]>>1)&1;
                                         mpegInfo->privatebit=(a[2]&1);
