@@ -251,7 +251,7 @@ int startAvidemux(int argc, char *argv[])
 	//***************Plugins *********************
 	// Load system wide audio decoder plugin
 #ifdef __APPLE__
-    const char *startDir="../Resources/lib";
+    const char *startDir="../lib";
 #else
     const char *startDir=ADM_RELATIVE_LIB_DIR;
 #endif
