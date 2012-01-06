@@ -125,12 +125,14 @@ ADMImage *dst;
         dst=data;
         
         if(!previousFilter->getNextFrame(fn,dst)) return false;
-
+        if(param.xoff>=info.width ) return true;
+        if(param.yoff>=info.height ) return true;
         for(int i=0;i<3;i++)
         {
             ADM_PLANE p=(ADM_PLANE)i;
             int x=param.xoff,y=param.yoff;
             int w=param.lw,h=param.lh;
+
             int width=data->GetWidth(p);
             int height=data->GetHeight(p);
             int stride=data->GetPitch(p);
@@ -138,6 +140,9 @@ ADMImage *dst;
             {
                     x>>=1;y>>=1;w>>=1;h>>=1;
             }
+            if(x+w>=width) w=width-x-1;
+            if(y+h>=height) h=height-y-1;
+
 //void xdelogo(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, int width, int height,
 //		   int logo_x, int logo_y, int logo_w, int logo_h, int band, int show, int direct)
             xdelogo(data->GetWritePtr(p), data->GetReadPtr(p),

@@ -23,13 +23,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QDoubleSpinBox" name="spinX">
-       <property name="decimals">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="2">
       <spacer>
        <property name="orientation">
@@ -53,13 +46,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="spinY">
-       <property name="decimals">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <spacer>
        <property name="orientation">
@@ -77,13 +63,6 @@
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Width</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QDoubleSpinBox" name="spinW">
-       <property name="decimals">
-        <number>0</number>
        </property>
       </widget>
      </item>
@@ -107,13 +86,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QDoubleSpinBox" name="spinH">
-       <property name="decimals">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="2">
       <spacer>
        <property name="orientation">
@@ -134,13 +106,6 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QDoubleSpinBox" name="spinBand">
-       <property name="decimals">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="2">
       <spacer name="spacer">
        <property name="orientation">
@@ -153,6 +118,21 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="spinX"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spinY"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="spinW"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="spinH"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QSpinBox" name="spinBand"/>
      </item>
     </layout>
    </item>

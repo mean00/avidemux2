@@ -23,12 +23,8 @@
 #include "Q_mpdelogo.h"
 #include "ADM_toolkitQt.h"
 
-//
-//	Video is in YV12 Colorspace
-//
-//
 /**
-
+    \fn ctor
 */
 
   Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent,  delogo *param, ADM_coreVideoFilter *in) 
@@ -44,22 +40,31 @@
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myCrop=new flyMpDelogo( width, height,in,canvas,ui.horizontalSlider);
-        memcpy(&(myCrop->param),param,sizeof(delogo));
+        myCrop->param=*param;
         myCrop->_cookie=&ui;
+#define SPINENTRY(x) ui.x
+        SPINENTRY(spinX)->setMaximum(width);
+        SPINENTRY(spinW)->setMaximum(width);
+        SPINENTRY(spinY)->setMaximum(height);
+        SPINENTRY(spinH)->setMaximum(height);
+
+        SPINENTRY(spinX)->setSingleStep(5);
+        SPINENTRY(spinY)->setSingleStep(5);
+        SPINENTRY(spinW)->setSingleStep(5);
+        SPINENTRY(spinH)->setSingleStep(5);
+        
         myCrop->upload();
         myCrop->sliderChanged();
-
-
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-//          SPINNER(Treshold);
-//          SPINNER(Strength);
-//          SPINNER(Block);
-//          connect( ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
-
+#define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+          SPINNER(spinX);
+          SPINNER(spinY);
+          SPINNER(spinW);
+          SPINNER(spinH);
+          SPINNER(spinBand);
   }
 /**
-
+    \fn sliderUpdate
 */
 
   void Ui_mpdelogoWindow::sliderUpdate(int foo)
@@ -67,7 +72,7 @@
     myCrop->sliderChanged();
   }
 /**
-
+    \fn gather
 */
 
   void Ui_mpdelogoWindow::gather(delogo *param)
@@ -77,7 +82,7 @@
         memcpy(param,&(myCrop->param),sizeof(delogo));
   }
 /**
-
+    \fn dtor
 */
 Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
 {
@@ -87,52 +92,53 @@ Ui_mpdelogoWindow::~Ui_mpdelogoWindow()
   canvas=NULL;
 }
 /**
-
+    \fn valueChanged
 */
 
 void Ui_mpdelogoWindow::valueChanged( int f )
 {
+    printf("Change (lock=%d)\n",lock);
   if(lock) return;
   lock++;
-  myCrop->update();
+  myCrop->download();
+  myCrop->sameImage();
   lock--;
 }
 
-#define MYSPIN(x) w->doubleSpinBox##x
+#define MYSPIN(x) w->x
 //************************
 /**
-
+    \fn upload
 */
 uint8_t flyMpDelogo::upload(void)
 {
-#if 0
-      Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
 
-        MYSPIN(Treshold)->setValue(param.t);
-        MYSPIN(Strength)->setValue(param.d);
-        MYSPIN(Block)->setValue(param.b);
+        Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+
+        MYSPIN(spinX)->setValue(param.xoff);
+        MYSPIN(spinY)->setValue(param.yoff);
+        MYSPIN(spinW)->setValue(param.lw);
+        MYSPIN(spinH)->setValue(param.lh);   
+        MYSPIN(spinBand)->setValue(param.band);   
         
-        //w->bf->w->checkBox->isChecked();
-        w->checkBox->setChecked(param.bf);
-#endif
         printf("Upload\n");
         return 1;
 }
 /**
-
+        \fn download
 */
 uint8_t flyMpDelogo::download(void)
 {
-#if 0
-       Ui_asharpDialog *w=(Ui_asharpDialog *)_cookie;
-       param.t= MYSPIN(Treshold)->value();
-       param.d= MYSPIN(Strength)->value();
-       param.b= MYSPIN(Block)->value();
+
+        Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+        param.xoff= MYSPIN(spinX)->value();
+        param.yoff= MYSPIN(spinY)->value();
+        param.lw= MYSPIN(spinW)->value();
+        param.lh= MYSPIN(spinH)->value();
+        param.band= MYSPIN(spinBand)->value();
        
-       //w->spinBoxBottom->setValue(bottom);
-       param.bf=w->checkBox->isChecked();
-#endif
         printf("Download\n");
+        return true;
 }
 
 /**
