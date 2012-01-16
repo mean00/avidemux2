@@ -151,6 +151,18 @@ if (CROSS)
 	endif(APPLE)
 
 	message(STATUS "Using cross compilation flag: ${FFMPEG_FLAGS}")
+else (CROSS)
+# for ffmpeg to use our compiler
+        MESSAGE(STATUS "Building ffmpeg with CC=${CMAKE_C_COMPILER}")
+        MESSAGE(STATUS "Building ffmpeg with LD=${CMAKE_C_COMPILER}")
+        MESSAGE(STATUS "Building ffmpeg with AR=${CMAKE_AR}")
+        MESSAGE(STATUS "Building ffmpeg with CMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
+        MESSAGE(STATUS "Building ffmpeg with CFLAGS=${FF_FLAGS}")
+        MESSAGE(STATUS "Building ffmpeg with CFLAGS2=${FFMPEG_FLAGS}")
+        xadd(--cc ${CMAKE_C_COMPILER})
+        xadd(--ld ${CMAKE_C_COMPILER})
+        xadd(--ar ${CMAKE_AR})
+        # nm should be ok if we do not cross compile
 endif (CROSS)
 
 if (CROSS_ARCH OR CROSS_OS)
