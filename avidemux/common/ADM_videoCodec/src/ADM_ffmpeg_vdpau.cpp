@@ -336,7 +336,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
                                   vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
                                   WRAP_OpenByName(mpegvideo_vdpau,CODEC_ID_MPEG2VIDEO);
                                   break;
-            default: ADM_assert(0);
+            default: ADM_assert(0);break;
         }
         ADM_info("[VDPAU] Decoder created \n");
         // Now instantiate our VDPAU surface & decoder
