@@ -10,7 +10,7 @@ extern const ADM_paramList x264_encoder_param[]={
  {"MinIdr",offsetof(x264_encoder,MinIdr),"uint32_t",ADM_param_uint32_t},
  {"MaxIdr",offsetof(x264_encoder,MaxIdr),"uint32_t",ADM_param_uint32_t},
  {"MaxBFrame",offsetof(x264_encoder,MaxBFrame),"uint32_t",ADM_param_uint32_t},
- {"i_bframe_adaptative",offsetof(x264_encoder,i_bframe_adaptative),"uint32_t",ADM_param_uint32_t},
+ {"i_bframe_adaptive",offsetof(x264_encoder,i_bframe_adaptive),"uint32_t",ADM_param_uint32_t},
  {"i_bframe_bias",offsetof(x264_encoder,i_bframe_bias),"uint32_t",ADM_param_uint32_t},
  {"i_bframe_pyramid",offsetof(x264_encoder,i_bframe_pyramid),"uint32_t",ADM_param_uint32_t},
  {"b_deblocking_filter",offsetof(x264_encoder,b_deblocking_filter),"bool",ADM_param_bool},

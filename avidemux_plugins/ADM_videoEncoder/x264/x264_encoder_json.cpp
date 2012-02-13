@@ -19,7 +19,7 @@ json.addUint32("MaxRefFrames",key->MaxRefFrames);
 json.addUint32("MinIdr",key->MinIdr);
 json.addUint32("MaxIdr",key->MaxIdr);
 json.addUint32("MaxBFrame",key->MaxBFrame);
-json.addUint32("i_bframe_adaptative",key->i_bframe_adaptative);
+json.addUint32("i_bframe_adaptive",key->i_bframe_adaptive);
 json.addUint32("i_bframe_bias",key->i_bframe_bias);
 json.addUint32("i_bframe_pyramid",key->i_bframe_pyramid);
 json.addBool("b_deblocking_filter",key->b_deblocking_filter);

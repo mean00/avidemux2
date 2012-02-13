@@ -95,7 +95,7 @@ bool x264Encoder::setup(void)
   MKPARAM(i_keyint_max,MaxIdr);
   MKPARAM(i_bframe,MaxBFrame);
 
-  MKPARAM(i_bframe_adaptive,i_bframe_adaptative);
+  MKPARAM(i_bframe_adaptive,i_bframe_adaptive);
   MKPARAM(i_bframe_bias,i_bframe_bias);
   MKPARAM(i_bframe_pyramid,i_bframe_pyramid);
   MKPARAMB(b_deblocking_filter,b_deblocking_filter);
