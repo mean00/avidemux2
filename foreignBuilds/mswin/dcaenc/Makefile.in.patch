@@ -1,0 +1,11 @@
+--- Makefile.in	2012-01-19 19:14:32 +0530
++++ Makefile.in	2012-01-19 19:14:52 +0530
+@@ -272,7 +272,7 @@
+     dcaenc_private.h int_data.h math_tables.h softfloat.h
+ 
+ nodist_libdcaenc_la_SOURCES = math_tables.c
+-libdcaenc_la_LDFLAGS = -version-info 0:0:0 \
++libdcaenc_la_LDFLAGS = -no-undefined -version-info 0:0:0 \
+     -export-symbols $(top_srcdir)/dcaenc.sym
+ 
+ @HAVE_ALSA_TRUE@plugin_LTLIBRARIES = libasound_module_pcm_dca.la

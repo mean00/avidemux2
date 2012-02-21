@@ -18,10 +18,11 @@ call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
 set version=3.99
-set package=lame-%version%.tar.gz
+set package=lame-%version%.4.tar.gz
 set sourceFolder=lame-%version%-%BuildBits%
-set tarFolder=lame-%version%
+set tarFolder=lame-%version%.4
 set curDir=%CD%
+set PATH=%PATH%;%~d0\Dev\MSYS\bin
 
 if not exist %package% (
 	echo.

@@ -20,15 +20,17 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=nspr-4.8.9.tar.gz
-set sourceFolder=nspr-4.8.9-%BuildBits%
-set tarFolder=nspr-4.8.9
+set version=4.9
+set package=nspr-%version%.tar.gz
+set sourceFolder=nspr-%version%-%BuildBits%
+set tarFolder=nspr-%version%
+set PATH=%PATH%;%~d0\Dev\MSYS\bin
 set curDir=%CD%
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.8.9/src/%package%
+	wget ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v%version%/src/%package%
 )
 
 if errorlevel 1 goto end

@@ -1,7 +1,7 @@
 @echo off
 
-echo MSYS build for libvpx
-echo =====================
+echo MSYS build for opencore-amr
+echo ===========================
 echo 1. 32-bit build
 echo 2. 64-bit build
 echo X. Exit
@@ -17,16 +17,16 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=libvpx-v1.0.0.tar.bz2
-set sourceFolder=libvpx-1.0.0-%BuildBits%
-set tarFolder=libvpx-v1.0.0
+set package=dcaenc-1.tar.gz
+set sourceFolder=dcaenc-1-%BuildBits%
+set tarFolder=dcaenc-1
 set curDir=%CD%
-set PATH=%PATH%;%~d0\Dev\MSYS\bin
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://webm.googlecode.com/files/%package%
+	wget http://aepatrakov.narod.ru/dcaenc/%package%
 )
 
 if errorlevel 1 goto end
@@ -39,9 +39,8 @@ if errorlevel 1 goto end
 mkdir "%devDir%\%sourceFolder%"
 if errorlevel 1 goto end
 
-tar xfj "%package%" -C "%devDir%\%sourceFolder%"
+tar xfz "%package%" -C "%devDir%\%sourceFolder%"
 if errorlevel 1 goto end
-
 cd "%devDir%\%sourceFolder%"
 
 for /f "delims=" %%a in ('dir /b %tarFolder%') do (
@@ -50,20 +49,21 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 
 echo.
 echo Patching
-patch -p0 -i "%curDir%\vp8_common.mk.patch"
+patch -p0 -i "%curDir%\Makefile.in.patch"
 
 echo.
 echo Configuring
 
-if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86-win32-gcc
-if "%BuildBits%" == "64" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86_64-win64-gcc
+sh ./configure --prefix="%usrLocalDir%" --disable-static CFLAGS=-O3
 
 if errorlevel 1 goto end
 echo.
 pause
 
-make install
+make install-strip
 if errorlevel 1 goto end
+
+copy "%usrLocalDir%\bin\libdcaenc-0.dll" "%admBuildDir%"
 
 goto end
 

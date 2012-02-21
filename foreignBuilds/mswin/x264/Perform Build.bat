@@ -18,7 +18,8 @@ call "../Set Common Environment Variables"
 
 if errorlevel 1 goto end
 
-set PATH=%PATH%;%devDir%\Git\bin
+set PATH=%PATH%;%~d0\Dev\MSYS\bin;%devDir%\Git\bin
+set curDir=%CD%
 
 del "%usrLocalDir%\bin\libx264-*.dll"
 del "%usrLocalDir%\include\x264.h"
@@ -34,6 +35,12 @@ if errorlevel 1 goto end
 
 cd "%devDir%/%sourceFolder%"
 
+echo.
+echo Patching
+if "%BuildBits%" == "32" patch -p0 -i "%curDir%\configure32.patch"
+
+echo.
+echo Configuring
 if "%BuildBits%" == "32" sh ./configure --prefix=%usrLocalDir% --enable-shared --enable-win32thread
 if "%BuildBits%" == "64" sh ./configure --prefix=%usrLocalDir% --enable-shared --enable-win32thread --host=x86_64-pc-mingw32
 
