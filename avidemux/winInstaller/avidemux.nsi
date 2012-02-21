@@ -508,6 +508,12 @@ SectionGroup Plugins SecGrpPlugin
 			SetOutPath $INSTDIR\plugins\audioEncoders
 			${File} plugins\audioEncoders\libADM_ae_lav_ac3.dll
 		${MementoSectionEnd}
+		${MementoSection} "DTS (dcaenc)" SecAudDecDcaEnc
+			SectionIn 1 2
+			SetOverwrite on
+			SetOutPath $INSTDIR\plugins\audioEncoders
+			${File} plugins\audioEncoders\libADM_ae_dcaenc.dll
+		${MementoSectionEnd}
 		${MementoSection} "MP2 (libavcodec)" SecAudEncLavMp2
 			SectionIn 1 2
 			SetOverwrite on
@@ -951,6 +957,18 @@ End:
 			${MementoSectionEnd}
 		SectionGroupEnd
 		SectionGroup "Sharpness Filters" SecGrpVideoFilterSharpness
+			${MementoSection} "asharp" SecVidFltAsharp
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_asharpQt4.dll
+			${MementoSectionEnd}
+			${MementoSection} "MPlayer Delogo" SecVidFltMPlayerDelogo
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_mpdelogoQt4.dll
+			${MementoSectionEnd}
 			${MementoSection} "Sharpen" SecVidFltSharpen
 				SectionIn 1 2
 				SetOverwrite on
@@ -988,6 +1006,12 @@ End:
 				SetOverwrite on
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_glResize.dll
+			${MementoSectionEnd}
+			${MementoSection} "Rotate" SecVidFltOpenGlRotate
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_rotateGlFrag2.dll
 			${MementoSectionEnd}
 			${MementoSection} "Wave" SecVidFltOpenGlWave
 				SectionIn 1 2
