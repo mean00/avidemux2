@@ -229,9 +229,14 @@ char *ADM_getCustomDir(void)
 ******************************************************/
 char *ADM_getAutoDir(void)
 {
-	if (ADM_autodir )
-		return ADM_autodir;
-    ADM_autodir = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, "autoScripts");
+    if (ADM_autodir )
+        return ADM_autodir;
+#ifdef __APPLE__
+    const char *startDir="../lib";
+#else
+    const char *startDir=ADM_RELATIVE_LIB_DIR;
+#endif
+    ADM_autodir = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
 	return ADM_autodir;
 }
 /**
@@ -241,7 +246,12 @@ char *ADM_getAutoDir(void)
 const char *ADM_getSystemPluginSettingsDir(void)
 {
     if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
-    ADM_systemPluginSettings=ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, "pluginSettings");
+#ifdef __APPLE__
+    const char *startDir="../lib";
+#else
+    const char *startDir=ADM_RELATIVE_LIB_DIR;
+#endif
+    ADM_systemPluginSettings=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
     return ADM_systemPluginSettings;
 }
 /**
