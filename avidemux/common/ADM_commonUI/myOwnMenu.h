@@ -60,8 +60,8 @@ MenuEntry myMenuEdit[]= {
             {MENU_ACTION,"Paste",       NULL,ACT_Paste      ,NULL,"Ctrl+V"},
             {MENU_ACTION,"Delete",      NULL,ACT_Delete     ,NULL,"Delete"},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
-            {MENU_ACTION,"Set Marker A",NULL,ACT_MarkA      ,NULL,NULL},
-            {MENU_ACTION,"Set Marker B",NULL,ACT_MarkB      ,NULL,NULL},
+            {MENU_ACTION,"Set Marker A",NULL,ACT_MarkA      ,NULL,"["},
+            {MENU_ACTION,"Set Marker B",NULL,ACT_MarkB      ,NULL,"]"},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
             {MENU_ACTION,"Preferences", NULL,ACT_PREFERENCES,NULL,NULL},
         };
