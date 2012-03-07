@@ -94,12 +94,6 @@ ADM_coreVideoFilter6
 ADM_coreImageLoader6
 )
 
-if (USE_SYSTEM_SPIDERMONKEY)
-	SET(coreLibs ${coreLibs} ${SPIDERMONKEY_LIBRARY_DIR})
-else (USE_SYSTEM_SPIDERMONKEY)
-	SET(coreLibs ${coreLibs} ADM_smjs6)
-endif (USE_SYSTEM_SPIDERMONKEY)
-
 #############################################
 # Add common libs
 #############################################

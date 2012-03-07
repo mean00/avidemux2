@@ -90,12 +90,6 @@ ADD_SUBDIRECTORY(ADM_coreSocket)
 add_subdirectory(ADM_coreScript)
 add_subdirectory(ADM_coreScriptSpiderMonkey)
 add_subdirectory(ADM_coreScriptPython)
-#ADD_SUBDIRECTORY(ADM_coreJson)
-
-if (NOT USE_SYSTEM_SPIDERMONKEY)
-	ADD_SUBDIRECTORY(ADM_smjs)
-endif (NOT USE_SYSTEM_SPIDERMONKEY)
-
 ADD_SUBDIRECTORY(ADM_coreImageLoader)
 
 if (USE_VDPAU)

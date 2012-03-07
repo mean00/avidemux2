@@ -20,7 +20,7 @@ include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScriptSpide
 if (USE_SYSTEM_SPIDERMONKEY)
 	include_directories(${SPIDERMONKEY_INCLUDE_DIR})
 else (USE_SYSTEM_SPIDERMONKEY)
-	include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+	include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScriptSpiderMonkey/src/smjs)
 endif (USE_SYSTEM_SPIDERMONKEY)
 
 target_link_libraries(ADM_script6 ADM_coreScriptPython ADM_coreScriptSpiderMonkey)

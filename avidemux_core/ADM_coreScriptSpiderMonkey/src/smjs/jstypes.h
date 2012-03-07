@@ -78,10 +78,16 @@
 ***********************************************************************/
 #ifdef WIN32
 /* These also work for __MWERKS__ */
-#define JS_EXTERN_API(__type) extern __declspec(dllexport) __type
-#define JS_EXPORT_API(__type) __declspec(dllexport) __type
-#define JS_EXTERN_DATA(__type) extern __declspec(dllexport) __type
-#define JS_EXPORT_DATA(__type) __declspec(dllexport) __type
+
+//#define JS_EXTERN_API(__type) extern __declspec(dllexport) __type
+//#define JS_EXPORT_API(__type) __declspec(dllexport) __type
+//#define JS_EXTERN_DATA(__type) extern __declspec(dllexport) __type
+//#define JS_EXPORT_DATA(__type) __declspec(dllexport) __type
+
+#define JS_EXTERN_API(__type) __type
+#define JS_EXPORT_API(__type) __type
+#define JS_EXTERN_DATA(__type) __type
+#define JS_EXPORT_DATA(__type) __type
 
 #define JS_DLL_CALLBACK
 #define JS_STATIC_DLL_CALLBACK(__x) static __x

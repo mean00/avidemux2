@@ -1,3 +1,7 @@
+if (NOT USE_SYSTEM_SPIDERMONKEY)
+	ADD_SUBDIRECTORY(smjs)
+endif (NOT USE_SYSTEM_SPIDERMONKEY)
+
 SET(admScriptSpiderMonkey_SRCS
 	ADM_jsAvidemux_js.c
 	ADM_jsAvidemux.cpp
@@ -32,7 +36,7 @@ if (USE_SYSTEM_SPIDERMONKEY)
 	include_directories(${SPIDERMONKEY_INCLUDE_DIR})
 	target_link_libraries(ADM_coreScriptSpiderMonkey ${SPIDERMONKEY_LIBRARY_DIR})
 else (USE_SYSTEM_SPIDERMONKEY)
-	include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+	include_directories(./smjs)
 	target_link_libraries(ADM_coreScriptSpiderMonkey ADM_smjs6)
 endif (USE_SYSTEM_SPIDERMONKEY)
 
