@@ -1,5 +1,5 @@
 /***************************************************************************
-     \file  ADM_edit.hxx  
+     \file  ADM_edit.hxx
      \brief Editor class
     This file is the composer
     It presents the processed underlying files as if it was a flat
@@ -26,6 +26,7 @@
  ***************************************************************************/
  #ifndef __ADM_composer__
  #define __ADM_composer__
+ #include "IEditor.h"
  #include "ADM_Video.h"
  #include "ADM_codec.h"
  #include "ADM_image.h"
@@ -39,7 +40,7 @@
  #include <BVector.h>
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
-#define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::" 
+#define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
 /**
     \enum _ENV_EDITOR_FLAGS
 */
@@ -60,7 +61,7 @@ typedef enum
             \brief Wrapper class that handles all the logic to seek/deal with multiple video files
                         with editing
 */
-class ADM_Composer : public ADM_audioStream
+class ADM_Composer : public IEditor, public ADM_audioStream
 {
   private:
                     std::string currentProjectName;
@@ -95,13 +96,13 @@ protected:
 
                     bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
                     bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
-                                
-                    
+
+
 
 //******************************************************************************************
   private:
                     ADM_EditorSegment _segments;
-                    uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid); 
+                    uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid);
                     uint32_t	_internalFlags;  // Flags :
                     ADM_PP      *_pp;             // Postprocessing settings
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
@@ -116,9 +117,14 @@ protected:
                     int64_t   _audioSample;
 
                     ADM_audioStreamTrack *getTrack(uint32_t i);
-                    ADMImage    *_scratch;																		;
+                    ADMImage    *_scratch;
                     uint8_t  	updateAudioTrack(uint32_t seg);
                     bool        switchToNextAudioSegment(void);
+                    int 		saveAudio(const char *name);
+                    bool        setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain);
+					bool 		getAudioFilterNormalise(ADM_GAINMode *mode, uint32_t *gain);
+					FILMCONV 	getAudioFilterFrameRate(void);
+					bool 		setAudioFilterFrameRate(FILMCONV conf);
 //****************************** Audio **********************************
                     void        deleteAllVideos(void );
                     uint8_t     getMagic(const char *name,uint32_t *magic);
@@ -138,10 +144,15 @@ virtual                         ~ADM_Composer();
                     bool        saveAsPyScript(const char *name);
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
+					int         appendFile(const char *name);
+					int			openFile(const char *name);
+					int 		saveFile(const char *name);
+					int 		saveImageBmp(const char *filename);
+					int 		saveImageJpg(const char *filename);
                     uint8_t 	cleanup( void);
                     bool        isMultiSeg( void);
 /************************************* Markers *****************************/
-private:        
+private:
                     uint64_t    markerAPts,markerBPts;
 public:
                     uint64_t    getMarkerAPts();
@@ -151,7 +162,16 @@ public:
 public:
 /************************************ Public API ***************************/
 public:
-
+					bool		setContainer(const char *cont, CONFcouple *c);
+					int         setVideoCodec(const char *codec, CONFcouple *c);
+					int         addVideoFilter(const char *filter, CONFcouple *c);
+					void		clearFilters();
+					bool		setAudioCodec(const char *codec, int bitrate, CONFcouple *c);
+					int			setAudioMixer(const char *s);
+					void		resetAudioFilter();
+					uint32_t    getAudioResample();
+					void        setAudioResample(uint32_t newfq);
+					char*		getVideoCodec(void);
                     uint64_t    getCurrentFramePts(void);
                     bool        goToTimeVideo(uint64_t time);
                     bool        goToIntraTimeVideo(uint64_t time);
@@ -161,9 +181,9 @@ public:
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
-                    bool        getCompressedPicture(uint64_t delay,ADMCompressedImage *img);     //COPYMODE                
+                    bool        getCompressedPicture(uint64_t delay,ADMCompressedImage *img);     //COPYMODE
                     // Use only for debug purpose !!!
-                    bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);             
+                    bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
                     bool        checkCutsAreOnIntra(void);
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
@@ -176,9 +196,9 @@ protected:
                     uint64_t packetBufferDts;
                     uint32_t packetBufferSamples;
                     bool     refillPacketBuffer(void);
-  
+
 public:
-                    
+
             virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
                     bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
             virtual bool            goToTime(uint64_t nbUs);
@@ -202,13 +222,13 @@ public:
                     uint64_t        getVideoDuration(void);
                     uint64_t        getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
 
-/**************************************** /Video Info **************************/					
+/**************************************** /Video Info **************************/
 /***************************************** Project Handling ********************/
 public:
                     const std::string   &getProjectName(void);
                     bool                 setProjectName(const std::string &name);
-					
-/***************************************** Seeking *****************************/            
+
+/***************************************** Seeking *****************************/
 public:
                     bool                getNKFramePTS(uint64_t *frameTime);
                     bool                getPKFramePTS(uint64_t *frameTime);
@@ -218,8 +238,8 @@ public:
 /******************************* Post Processing ************************************/
                     uint8_t             setPostProc( uint32_t type, uint32_t strength,	bool swapuv);
                     uint8_t             getPostProc( uint32_t *type, uint32_t *strength,bool  *swapuv);
-/******************************* /Post Processing ************************************/	
-/******************************* Editing ************************************/	
+/******************************* /Post Processing ************************************/
+/******************************* Editing ************************************/
                     bool                remove(uint64_t start,uint64_t end);
                     bool                addSegment(uint32_t ref, uint64_t startRef, uint64_t duration);
                     bool                clearSegment(void);
@@ -229,15 +249,15 @@ public:
                                         }
 // For js
                     bool                dumpRefVideos(void);
-                    bool                dumpSegments(void);
-                    bool                dumpSegment(int i);
+                    void                dumpSegments(void);
+                    void                dumpSegment(int i);
                     bool                dumpTiming(void);
                     bool                getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts);
-/******************************* /Editing **********************************/										
-/******************************* Misc ************************************/				
+/******************************* /Editing **********************************/
+/******************************* Misc ************************************/
                     uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);
                     uint8_t             getEnv(_ENV_EDITOR_FLAGS newflag);
-/******************************* /Misc ************************************/				
+/******************************* /Misc ************************************/
 /******************************** Info ************************************/
                     const char          *getVideoDecoderName(void);
 };

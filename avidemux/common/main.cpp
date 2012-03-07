@@ -24,13 +24,14 @@
 #include "ADM_preview.h"
 #include "ADM_win32.h"
 #include "ADM_crashdump.h"
+#include "ADM_script2/include/ADM_script.h"
+
 #define __DECLARE__
 #include "avi_vars.h"
 
 #include "prefs.h"
 #include "audio_out.h"
 #include "ADM_assert.h"
-#include "ADM_script2/include/ADM_scriptIf.h"
 
 #ifdef USE_SDL
 extern "C" {
@@ -96,7 +97,7 @@ extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern bool ADM_jobInit(void);
 
-// Spidermonkey/Scripting stuff  
+// Spidermonkey/Scripting stuff
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
 extern int check_leaks();
@@ -256,12 +257,12 @@ int startAvidemux(int argc, char *argv[])
     const char *startDir=ADM_RELATIVE_LIB_DIR;
 #endif
     char *adPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDecoder");
-    char *avPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDevices");    
-    char *aePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioEncoders");    
-    char *dmPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "demuxers");    
-    char *mxPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "muxers");    
-    char *vePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoEncoders");    
-    char *vdPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoDecoders");    
+    char *avPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDevices");
+    char *aePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioEncoders");
+    char *dmPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "demuxers");
+    char *mxPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "muxers");
+    char *vePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoEncoders");
+    char *vdPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoDecoders");
     char *vfPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoFilters");
 
     ADM_mx_loadPlugins(mxPlugins);
@@ -298,7 +299,7 @@ int startAvidemux(int argc, char *argv[])
 	vfPlugins=ADM_getHomeRelativePath("plugins6","videoFilter");
 	ADM_vf_loadPlugins(vfPlugins);
 	delete [] vfPlugins;
-	
+
 
 	//***************Plugins *********************
 
@@ -311,12 +312,9 @@ int startAvidemux(int argc, char *argv[])
     ADM_lavInit();
     AVDM_audioInit();
 
-    if(SpidermonkeyInit() == true)
-        printf("Spidermonkey initialized.\n");
-    else
-		ADM_assert(0); 
+	initialiseScriptEngines(video_body);
 
-#if defined( USE_VDPAU) 
+#if defined( USE_VDPAU)
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     printf("Probing for VDPAU...\n");
     if(vdpauProbe()==true) printf("VDPAU available\n");
@@ -338,10 +336,10 @@ extern uint8_t GUI_close(void);
 void onexit( void )
 {
 	printf("Cleaning up\n");
-    if(video_body) video_body->cleanup ();  
-    delete video_body;	
+    if(video_body) video_body->cleanup ();
+    delete video_body;
     // wait for thread to finish executing
-    SpidermonkeyExit();
+    destroyScriptEngines();
 //    filterCleanUp();
 	ADM_lavDestroy();
 
@@ -355,7 +353,7 @@ void onexit( void )
 
 	destroyGUI();
     destroyPrefs();
-    
+
     admPreview::destroy();
     UI_End();
 
@@ -366,7 +364,7 @@ void onexit( void )
     ADM_vf_cleanup();
     ADM_dm_cleanup();
     ADM_ve6_cleanup();
-#if defined( USE_VDPAU) 
+#if defined( USE_VDPAU)
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     printf("cleaning VDPAU...\n");
     vdpauCleanup();
@@ -379,7 +377,7 @@ void onexit( void )
     ADMImage_stat();
     ADM_memStat();
     ADM_memStatEnd();
-    
+
     ADM_info("\nGoodbye...\n\n");
 
 #if defined(ADM_DEBUG) && defined(FIND_LEAKS)
@@ -392,11 +390,11 @@ void onexit( void )
 bool setPrefsDefault(void)
 {
 #ifdef __MINGW32__
-        prefs->set(AUDIO_DEVICE_AUDIODEVICE,"Win32");        
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE,"Win32");
     #ifdef USE_OPENGL
         prefs->set(VIDEODEVICE,(uint32_t)5); // QTGL
     #endif
-#endif        
+#endif
 #ifdef __linux__
             prefs->set(AUDIO_DEVICE_AUDIODEVICE,"PulseAudioS");
     #ifdef USE_VDPAU

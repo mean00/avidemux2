@@ -3,8 +3,8 @@
     \file Q_shell.cpp
     \brief UI for qt4 shell interface
     \author mean, fixount@free.fr 2007/2009
-        
-    
+
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -29,10 +29,10 @@
 /**
     \fn qShell
 */
-qShell::qShell(QWidget *parent, jsShellEvaluate *s) : QDialog(parent)
+qShell::qShell(QWidget *parent, IScriptEngine *engine) : QDialog(parent)
 {
     ADM_info("Setting up JS shell..\n");
-    evaluator=s;
+    _engine = engine;
     for(int i=0;i<Q_SHELL_HISTORY;i++)
                     history[i]=NULL;
 
@@ -40,8 +40,8 @@ qShell::qShell(QWidget *parent, jsShellEvaluate *s) : QDialog(parent)
     ui.textBrowser_2->installEventFilter(this);
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
-    print(SCRIPT_LOG_NORMAL,"Enter your commands then press the evaluate button or CTRL+ENTER.\n");
-    print(SCRIPT_LOG_NORMAL,"You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
+    print(IScriptEngine::EVENT_TYPE_INFORMATION,"Enter your commands then press the evaluate button or CTRL+ENTER.\n");
+    print(IScriptEngine::EVENT_TYPE_INFORMATION,"You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
     indexRead=indexWrite=0;
 }
 /**
@@ -56,7 +56,7 @@ qShell::~qShell()
             history[i]=NULL;
     }
 
-} 
+}
 bool qShell::run(void)
 {
     this->exec();
@@ -81,20 +81,20 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
     ui.textBrowser_2->setPlainText("");
-    evaluator(text.toAscii());
+    _engine->runScript(text.toAscii().constData());
     return true;
 }
 /**
     \fn print
 */
-bool qShell::print(SCRIPT_LOG_TYPE type,const char *s)
+bool qShell::print(IScriptEngine::EVENT_TYPE type,const char *s)
 {
     QString string(s);
-    //printf("**%s",s);
+    
     switch(type)
     {
-        case SCRIPT_LOG_NORMAL: ui.textBrowser->setTextColor(QColor(0,0,0));break;
-        case SCRIPT_LOG_ERROR : ui.textBrowser->setTextColor(QColor(255,0,0));break;
+        case IScriptEngine::EVENT_TYPE_INFORMATION: ui.textBrowser->setTextColor(QColor(0,0,0));break;
+        case IScriptEngine::EVENT_TYPE_ERROR : ui.textBrowser->setTextColor(QColor(255,0,0));break;
     }
     ui.textBrowser->insertPlainText(string);
     ui.textBrowser->setTextColor(QColor(0,0,0));
@@ -110,7 +110,7 @@ bool qShell::clear(bool x)
 }
 /**
     \fn eventFilter
-    \brief 
+    \brief
 */
 bool qShell::eventFilter(QObject* watched, QEvent* event)
 {

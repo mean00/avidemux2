@@ -44,12 +44,12 @@ sub debug
 sub processClass
 {
         my $proto=shift;
-        
+
         $proto=~s%.*\*/%%g;
         $proto=~s/ //g;
         #print "**$proto**\n";
-        ($className,$cookieName,$cookieId)=split ":",$proto; 
-        print "Processing class $className (with cookie=$cookieName,id=$cookieId)\n"; 
+        ($className,$cookieName,$cookieId)=split ":",$proto;
+        print "Processing class $className (with cookie=$cookieName,id=$cookieId)\n";
         if($cookieName=~m/void/)
         {
                 $staticClass=1;
@@ -61,7 +61,7 @@ sub processClass
 
 }
 #
-# Process the constructor list 
+# Process the constructor list
 #
 sub processCTOR
 {
@@ -102,7 +102,18 @@ sub processMETHOD
         ($cfunc,$pyfunc)=split ":",$pyfunc;
         $cFuncs{$pyfunc}=$cfunc;
         $rType{$pyfunc}=$retType;
-        push @{$funcParams{$pyfunc}}, @params ; 
+
+        if ($staticClass == 1 && $cfunc !~ /editor->/)
+        {
+            if (@params[0] =~ m/^void$/)
+            {
+                @params = ();
+            }
+
+            unshift @params, "IEditor";
+        }
+
+        push @{$funcParams{$pyfunc}}, @params;
         #print " $pyfunc -> @params \n";
 }
 
@@ -118,7 +129,7 @@ sub processStaticVar
         my @left;
         my @funcs;
 
-        
+
         $args=~s/^.*\*\///g; # Remove comment
 
         @left=split(":",$args);
@@ -201,8 +212,8 @@ sub genReturn
         }
          if($retType=~m/str/)
         {
-                return "  if(!r) pm.raise(\"$className : null pointer\");\n  
-  tp_obj o=tp_string_copy(tp,r,  strlen(r));
+                return "  if(!r) pm.raise(\"$className : null pointer\");\n
+  tp_obj o = tp_string_copy(tp, r, strlen(r));
   ADM_dealloc(r);
   return o;";
         }
@@ -237,6 +248,10 @@ sub castFrom
         {
                 return "pm.asDouble()";
         }
+        if($type=~m/^IEditor/)
+        {
+            return "editor";
+        }
         print ">>>>>>>>>> <$type> unknown\n";
         return "????";
 
@@ -253,7 +268,7 @@ sub genParam
         $type=~s/^ *//g;
         if($type=~m/couples/)
         {
-                print OUTPUT "  CONFcouple *p".$num."=NULL;\n";
+                print OUTPUT "  CONFcouple *p".$num." = NULL;\n";
                 print OUTPUT "  pm.makeCouples(&p".$num.");\n";
                 $r=0;
         }else
@@ -261,7 +276,7 @@ sub genParam
                 my $regular=1;
                 if($type=~m/^str/)
                 {
-                        print OUTPUT "  const char *p".$num."=";
+                        print OUTPUT "  const char *p".$num." = ";
                         $regular=0;
                 }
                 if($type=~m/^ptr/)
@@ -270,17 +285,22 @@ sub genParam
                         my $ptr;
                         my $obj;
                         ($ptr,$obj)=split "@",$type;
-                        
-                        print OUTPUT "  $obj *p".$num."=";
 
+                        print OUTPUT "  $obj *p".$num." = ";
+
+                }
+                if($type =~ m/^IEditor/)
+                {
+                        print OUTPUT "  $type *p".$num." = ";
+                        $regular=0;
                 }
                 if($regular==1)
                 {
-                        print OUTPUT "  $type p".$num."=";
+                        print OUTPUT "  $type p".$num." = ";
                 }
-                print OUTPUT " ".castFrom($type);
-                print OUTPUT ";\n"; 
-        } 
+                print OUTPUT castFrom($type);
+                print OUTPUT ";\n";
+        }
         return $r;
 }
 #
@@ -299,26 +319,37 @@ sub genGetSet
         print OUTPUT "tp_obj ".$getName."(tp_vm *vm)\n";
         print OUTPUT "{\n";
         debug("$getName invoked\n");
-        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
-        print OUTPUT "  tinyParams pm(vm);\n";
-        print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self,$cookieId);\n";
+        print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
+        print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string(\"userdata\")).data.val;\n";
+        print OUTPUT "  IEditor *editor = engine->getEditor();\n";
+        print OUTPUT "  TinyParams pm(vm);\n";
+        print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
         my @k=keys %typeVars;
         my $v;
         foreach $v (@k)
         {
-          print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
-          print OUTPUT "  {\n";
-          if($staticClass==1)
-          {
-                print OUTPUT "     return tp_number(".$getVar{$v}."());\n";
-           }else
-        {
+			print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
+			print OUTPUT "  {\n";
+
+			if($staticClass==1)
+			{
+                print OUTPUT "     return tp_number(".$getVar{$v}."(";
+
+                if ($getVar{$v} !~ m/^editor/)
+				{
+					print OUTPUT "editor";
+				}
+
+                print OUTPUT "));\n";
+			}
+			else
+			{
                 print OUTPUT "     if(!me) pm.raise(\"$className:No this!\");\n";
                 print OUTPUT "     return tp_number(me->".$getVar{$v}."());\n";
+			}
 
-        }
-          print OUTPUT "  }\n";
+			print OUTPUT "  }\n";
         }
         #
         # Functions are part of it...
@@ -330,21 +361,23 @@ sub genGetSet
                 $cfunk=$glueprefix.$f;
                 print OUTPUT "  if (!strcmp(key, \"$pyFunc\"))\n";
                 print OUTPUT "  {\n";
-                print OUTPUT "     return tp_method(vm,self,".$cfunk.");\n";
+                print OUTPUT "     return tp_method(vm, self, ".$cfunk.");\n";
                 print OUTPUT "  }\n";
 
         }
 #print OUTPUT "  pm.raise(\"No such attribute %s\",key);\n";
-        print OUTPUT "  return tp_get(vm,self,tp_string(key));\n";
+        print OUTPUT "  return tp_get(vm, self, tp_string(key));\n";
         print OUTPUT "}\n";
 
 # Set
         print OUTPUT "tp_obj ".$setName."(tp_vm *vm)\n";
         print OUTPUT "{\n";
         debug("$setName invoked\n");
-        print OUTPUT "  tp_obj self=tp_getraw( vm);\n";
-        print OUTPUT "  tinyParams pm(vm);\n";
-        print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self,$cookieId);\n";
+        print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
+        print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string(\"userdata\")).data.val;\n";
+        print OUTPUT "  IEditor *editor = engine->getEditor();\n";
+        print OUTPUT "  TinyParams pm(vm);\n";
+        print OUTPUT "  $cookieName *me = ($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
         my @k=keys %typeVars;
         my $v;
@@ -354,14 +387,21 @@ sub genGetSet
           print OUTPUT "  {\n";
         if($staticClass==1)
           {
-                print OUTPUT "     ".$typeVars{$v}." val=".castFrom($typeVars{$v}).";\n";
-                print OUTPUT "     ".$setVar{$v}."(val);\n"; 
+                print OUTPUT "     ".$typeVars{$v}." val = ".castFrom($typeVars{$v}).";\n";
+                print OUTPUT "     ".$setVar{$v}."(";
+
+				if ($setVar{$v} !~ m/^editor/)
+				{
+					print OUTPUT "editor, ";
+				}
+
+                print OUTPUT "val);\n";
                 print OUTPUT "     return tp_None;\n";
            }else
           {
                 print OUTPUT "     if(!me) pm.raise(\"$className:No this!\");\n";
-                print OUTPUT "     ".$typeVars{$v}." val=".castFrom($typeVars{$v}).";\n";
-                print OUTPUT "     me->".$setVar{$v}."(val);\n"; 
+                print OUTPUT "     ".$typeVars{$v}." val = ".castFrom($typeVars{$v}).";\n";
+                print OUTPUT "     me->".$setVar{$v}."(val);\n";
                 print OUTPUT "     return tp_None;\n";
 
          }
@@ -385,7 +425,7 @@ sub genGlue
 #
 #
 #
-        my $i; 
+        my $i;
         my $f;
         foreach $f(  keys %cFuncs)
         {
@@ -394,16 +434,24 @@ sub genGlue
                 my $cfunc=$cFuncs{$f};
                 my $ret=$rType{$f};
                 my $nb=scalar(@params);
-                
+
                 print "Generating $pyFunc -> $ret $cfunc (@params ) \n";
                 print OUTPUT "// $pyFunc -> $ret $cfunc (@params ) \n";
                 # start our function
                 print OUTPUT "static tp_obj ".$glueprefix.$f."(TP)\n {\n";
 
                 debug("$f invoked\n");
-                 print OUTPUT "  tp_obj self=tp_getraw( tp);\n";  # We need a this as we only deal with instance!
-                 print OUTPUT "  tinyParams pm(tp);\n";
-                 print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self,$cookieId);\n";
+                 print OUTPUT "  tp_obj self = tp_getraw(tp);\n";  # We need a this as we only deal with instance!
+
+				if($staticClass == 1)
+				{
+					print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n";
+					print OUTPUT "  IEditor *editor = engine->getEditor();\n";
+                }
+
+                 print OUTPUT "  TinyParams pm(tp);\n";
+                 print OUTPUT "  $cookieName *me = ($cookieName *)pm.asThis(&self, $cookieId);\n\n";
+
                 if($params[0]=~m/^void$/)
                 {
                         $nb=0;
@@ -421,10 +469,10 @@ sub genGlue
                 {
                         if($ret=~m/str/)
                         {
-                                print OUTPUT "  char *r=";
+                                print OUTPUT "  char *r = ";
                         }else
                         {
-                                print OUTPUT "  ".$ret." r=";
+                                print OUTPUT "  ".$ret." r = ";
                         }
                 }
                 if($staticClass==1)
@@ -441,7 +489,7 @@ sub genGlue
                                 print OUTPUT ",";
                         }
                         print OUTPUT "p".$i;
-                } 
+                }
                 print OUTPUT "); \n";
                 # return value (if any)
                 print OUTPUT genReturn($ret);
@@ -467,9 +515,9 @@ sub genCtorDtor
                 # no cookie, so no need to destroy
         }else
         {
-                print OUTPUT "  $cookieName *cookie=($cookieName *)self.data.val;\n";
-                print OUTPUT "  if(cookie) delete cookie;\n";
-                print OUTPUT "  self.data.val=NULL;\n";
+                print OUTPUT "  $cookieName *cookie = ($cookieName *)self.data.val;\n";
+                print OUTPUT "  if (cookie) delete cookie;\n";
+                print OUTPUT "  self.data.val = NULL;\n";
         }
         print OUTPUT "}\n";
         # end
@@ -482,20 +530,21 @@ sub genCtorDtor
         print OUTPUT "{\n";
         debug("ctor of $className invoked\n");
         print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
-        print OUTPUT "  tinyParams pm(vm);\n";
+        print OUTPUT "  TinyParams pm(vm);\n";
+
         if($staticClass==1)
         {
-                print OUTPUT "  void *me=NULL;\n";
+                print OUTPUT "  void *me = NULL;\n";
         }else
         {
-                
+
                 my $i;
                 my $nb=scalar(@ctorParams);
                 for($i=0;$i<$nb;$i++)
                          {
                                  genParam($i,$ctorParams[$i]);
                          }
-                print OUTPUT "  $cookieName *me=new $cookieName(";
+                print OUTPUT "  $cookieName *me = new $cookieName(";
                 for($i=0;$i<$nb;$i++)
                 {
                         if($i)
@@ -503,7 +552,7 @@ sub genCtorDtor
                                 print OUTPUT ",";
                         }
                         print OUTPUT "p".$i;
-                }  
+                }
                 print OUTPUT ");\n";
         }
         print OUTPUT "  tp_obj cdata = tp_data(vm, $cookieId, me);\n";
@@ -522,13 +571,15 @@ my $helpName=$glueprefix."_".$className."_help";
 my $f;
 my $cfunk;
 my $pyFunc;
-                print OUTPUT "static tp_obj ".$helpName."(TP)\n {\n";
+                print OUTPUT "static tp_obj ".$helpName."(TP)\n{\n";
+                print OUTPUT "\tPythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
+
                 foreach $f(  keys %cFuncs)
                 {
                         my @params=@{$funcParams{$f}};
-                        print OUTPUT "\tjsLog(\"$f(".join(",",@params) .")\\n\");\n";
+                        print OUTPUT "\tengine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, \"$f(".join(",",@params) .")\");\n";
                 }
-                print OUTPUT "return tp_None;\n";
+                print OUTPUT "\n\treturn tp_None;\n";
                 print OUTPUT "};\n";
 #
 #  Create the init function that will register our class
@@ -538,11 +589,11 @@ my $pyFunc;
 
         print OUTPUT "tp_obj initClass".$className."(tp_vm *vm)\n";
         print OUTPUT "{\n";
-        print OUTPUT "  tp_obj myClass=tp_class(vm);\n";
-        print OUTPUT "  tp_set(vm,myClass,tp_string(\"__init__\"),tp_fnc(vm,myCtor".$className."));\n";
-        print OUTPUT "  tp_set(vm,myClass,tp_string(\"__set__\"),tp_fnc(vm,".$setName."));\n";
-        print OUTPUT "  tp_set(vm,myClass,tp_string(\"__get__\"),tp_fnc(vm,".$getName."));\n";
-        print OUTPUT "  tp_set(vm,myClass,tp_string(\"help\"),tp_fnc(vm,$helpName));\n";
+        print OUTPUT "  tp_obj myClass = tp_class(vm);\n";
+        print OUTPUT "  tp_set(vm,myClass, tp_string(\"__init__\"), tp_fnc(vm,myCtor".$className."));\n";
+        print OUTPUT "  tp_set(vm,myClass, tp_string(\"__set__\"), tp_fnc(vm,".$setName."));\n";
+        print OUTPUT "  tp_set(vm,myClass, tp_string(\"__get__\"), tp_fnc(vm,".$getName."));\n";
+        print OUTPUT "  tp_set(vm,myClass, tp_string(\"help\"), tp_fnc(vm,$helpName));\n";
         print OUTPUT "  return myClass;\n";
         print OUTPUT "}\n";
 }
@@ -574,6 +625,6 @@ genCtorDtor();
 genTables();
 close(OUTPUT);
 
-      
+
 #
 print "done\n.";

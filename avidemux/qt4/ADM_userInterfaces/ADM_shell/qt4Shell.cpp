@@ -6,30 +6,32 @@
 #include "Q_shell.h"
 #include "ADM_default.h"
 #include "ADM_toolkitQt.h"
+#include "IScriptEngine.h"
+
+static qShell *s;
+
 /**
     \fn qt4ShellLogger
     \brief Redirect output to the shell
 */
-static bool qt4ShellLogger(void *cookie,SCRIPT_LOG_TYPE type,const char *v)
+static void qt4ShellLogger(IScriptEngine::EngineEvent *event)
 {
-    qShell *s=(qShell *)cookie;
-    s->print(type,v);
-    return true;
+    s->print(event->eventType, event->message);
 }
 
 /**
         \fn ADM_createJsShell
         \brief create the input for a js shell
 */
-bool ADM_startShell(jsShellEvaluate eval)
+bool ADM_startShell(IScriptEngine *engine)
 {
-        qShell *s= new qShell(qtLastRegisteredDialog(), eval);
+        s = new qShell(qtLastRegisteredDialog(), engine);
 		qtRegisterDialog(s);
 
-        ADM_scriptRegisterLogger((void *)s,qt4ShellLogger);
+		engine->registerEventHandler(qt4ShellLogger);
         s->run();
+        engine->unregisterEventHandler(qt4ShellLogger);
 
-        ADM_scriptUnregisterLogger();
 		qtUnregisterDialog(s);
 
         delete s;

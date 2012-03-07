@@ -306,9 +306,11 @@ Section "Avidemux Core" SecCore
 	${File} libADM_coreImageLoader6.dll
 	${File} libADM_coreJobs.dll
 	${File} libADM_coreMuxer6.dll
+	${File} libADM_coreScript.dll
+	${File} libADM_coreScriptPython.dll
+	${File} libADM_coreScriptSpiderMonkey.dll
 	${File} libADM_coreSocket6.dll
 	${File} libADM_coreSqlLight3.dll
-	${File} libADM_coreTinyPy6.dll
     ${File} libADM_coreUI6.dll
 	${File} libADM_coreUtils6.dll
 	${File} libADM_coreVideoCodec6.dll

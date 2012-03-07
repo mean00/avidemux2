@@ -3,10 +3,13 @@
 */
 #ifndef Q_SHELL_H
 #define Q_SHELL_H
-#include "ADM_inttype.h"
+
 #include <QtGui/QItemDelegate>
 #include "ui_shell.h"
-#include "ADM_scriptShell.h"
+
+#include "ADM_inttype.h"
+#include "IScriptEngine.h"
+
 /**
     \class ADM_jsQt4Shell
 */
@@ -15,7 +18,7 @@ class qShell: public QDialog
 {
 	Q_OBJECT
 protected:
-    jsShellEvaluate      *evaluator;
+    IScriptEngine      *_engine;
     Ui_SpiderMonkeyShell ui;
     bool                 eventFilter(QObject* watched, QEvent* event);
     bool                 previousCommand(void);
@@ -24,10 +27,10 @@ protected:
     int                  indexWrite;
     int                  indexRead;
 public:
-                    qShell(QWidget *parent, jsShellEvaluate *s);
+                    qShell(QWidget *parent, IScriptEngine *engine);
     virtual         ~qShell() ;
     bool            run(void);
-    bool            print(SCRIPT_LOG_TYPE type, const char *s);
+    bool            print(IScriptEngine::EVENT_TYPE type, const char *s);
 public slots:
     bool            evaluate(bool x);
     bool            clear(bool x);

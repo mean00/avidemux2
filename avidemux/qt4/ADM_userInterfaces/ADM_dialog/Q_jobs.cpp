@@ -6,12 +6,13 @@
 #include <stdlib.h>
 #include "Q_jobs.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_script.h"
 
 static void updateStatus(void);
 extern bool parseECMAScript(const char *name);
 static const char *StringStatus[]={QT_TR_NOOP("Ready"),QT_TR_NOOP("Succeeded"),QT_TR_NOOP("Failed"),QT_TR_NOOP("Deleted"),QT_TR_NOOP("Running")};
 
-ADM_Job_Descriptor::ADM_Job_Descriptor(void) 
+ADM_Job_Descriptor::ADM_Job_Descriptor(void)
 {
 	status = STATUS_READY;
 	memset(&startDate, 0, sizeof(startDate));
@@ -33,11 +34,11 @@ jobsWindow::jobsWindow(uint32_t n,char **j)     : QDialog()
 
      // Set headers
       QStringList headers;
-     headers << QT_TR_NOOP("Job Name") << QT_TR_NOOP("Status") << QT_TR_NOOP("Start Time") << QT_TR_NOOP("End Time"); 
-     
+     headers << QT_TR_NOOP("Job Name") << QT_TR_NOOP("Status") << QT_TR_NOOP("Start Time") << QT_TR_NOOP("End Time");
+
      ui.tableWidget->setVerticalHeaderLabels(headers);
      updateRows();
-    
+
 #define CNX(x) connect( ui.pushButton##x,SIGNAL(clicked(bool)),this,SLOT(x(bool)))
            //connect( ui.pushButtonRunOne,SIGNAL(buttonPressed(const char *)),this,SLOT(runOne(const char *)));
       CNX(RunOne);
@@ -60,7 +61,7 @@ static void ADM_setText(const char *txt,uint32_t col, uint32_t row,QTableWidget 
         QString str(txt);
         QTableWidgetItem *newItem = new QTableWidgetItem(str);//GetFileName(_jobsName[i]));
         w->setItem(row, col, newItem);
-  
+
 }
  /**
       \fn updateRaw
@@ -76,17 +77,17 @@ void jobsWindow::updateRows(void)
       j=&(desc[i]);
       ADM_setText(ADM_GetFileName(_jobsName[i]),0,i,ui.tableWidget);
       ADM_setText(StringStatus[j->status],1,i,ui.tableWidget);
-      
+
       sprintf(str,"%02u:%02u:%02u",j->startDate.hours,j->startDate.minutes,j->startDate.seconds);
       ADM_setText(str,2,i,ui.tableWidget);
-      
+
       sprintf(str,"%02u:%02u:%02u",j->endDate.hours,j->endDate.minutes,j->endDate.seconds);
       ADM_setText(str,3,i,ui.tableWidget);
    }
 }
 
-                                                                 
-                                                                 
+
+
 /**
       \fn deleteOne
       \brief delete one job
@@ -122,7 +123,7 @@ void jobsWindow::DeleteAll(bool b)
 		updateRows();
 	}
 }
-                                                        
+
 /**
       \fn runOne
       \brief Run one job
@@ -143,7 +144,7 @@ void jobsWindow::RunOne(bool b)
 			GUI_Quiet();
 			TLK_getDate(&(desc[sel].startDate));
 
-			if(parseECMAScript(_jobsName[sel]))
+			if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
 				desc[sel].status=STATUS_SUCCEED;
 			else
 				desc[sel].status=STATUS_FAILED;
@@ -170,7 +171,7 @@ void jobsWindow::RunAll(bool b)
 		GUI_Quiet();
 		TLK_getDate(&(desc[sel].startDate));
 
-		if(parseECMAScript(_jobsName[sel]))
+		if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
 			desc[sel].status=STATUS_SUCCEED;
 		else
 			desc[sel].status=STATUS_FAILED;
@@ -183,13 +184,13 @@ void jobsWindow::RunAll(bool b)
 
 /**
     \fn     DIA_job
-    \brief  
+    \brief
 */
 uint8_t  DIA_job(uint32_t nb, char **name)
 {
   uint8_t r=0;
   jobsWindow jobswindow(nb,name) ;
-     
+
      if(jobswindow.exec()==QDialog::Accepted)
      {
        r=1;

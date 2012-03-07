@@ -16,7 +16,11 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include "ADM_default.h"
-#include "math.h"
+#include "A_functions.h"
+#include "ADM_audioFilterInterface.h"
+#include "audioEncoderApi.h"
+#include "ADM_muxerProto.h"
+#include "GUI_ui.h"
 
 #include <fcntl.h>
 #include <errno.h>
@@ -29,8 +33,6 @@
 #include "ADM_editor/ADM_edit.hxx"
 
 #include "DIA_coreToolkit.h"
-#include "ADM_editor/ADM_edit.hxx"
-//#include "ADM_videoFilter.h"
 #include "prefs.h"
 
 #include "ADM_debugID.h"
@@ -42,6 +44,8 @@
 #include "ADM_vidMisc.h"
 #include "ADM_confCouple.h"
 #include "ADM_videoFilters.h"
+#include "ADM_videoEncoderApi.h"
+#include "ADM_videoFilterApi.h"
 
 vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
@@ -105,7 +109,7 @@ ADM_Composer::~ADM_Composer ()
 	_segments.deleteAll();
     if(_pp) delete _pp;
     _pp=NULL;
-    if(_imageBuffer) 
+    if(_imageBuffer)
     {
         if(_imageBuffer->quant)
             delete [] _imageBuffer->quant;
@@ -214,7 +218,7 @@ bool ADM_Composer::addFile (const char *name)
   video._aviheader->setMyName (name);
 
   // Printf some info about extradata
-  
+
     uint32_t l=0;
     uint8_t *d=NULL;
     video._aviheader->getExtraHeaderData(&l,&d);
@@ -224,7 +228,7 @@ bool ADM_Composer::addFile (const char *name)
         mixDump(d,l);
         printf("\n");
     }
-  
+
   // 1st if it is our first video we update postproc
     if(!_segments.getNbRefVideos())
     {
@@ -232,7 +236,7 @@ bool ADM_Composer::addFile (const char *name)
 
         if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
         if(!prefs->get(DEFAULT_POSTPROC_VALUE,&value)) value=3;
-        
+
         if(_pp) delete _pp;
         _pp=new ADM_PP(info.width,info.height);
         _pp->postProcType=type;
@@ -240,7 +244,7 @@ bool ADM_Composer::addFile (const char *name)
         _pp->forcedQuant=0;
         _pp->update();
 
-        if(_imageBuffer) 
+        if(_imageBuffer)
         {
             if(_imageBuffer->quant)
                 delete [] _imageBuffer->quant;
@@ -281,7 +285,7 @@ bool ADM_Composer::addFile (const char *name)
 
       _VIDEOS *thisVid=&(video);
       // Create streams
-      
+
       for(int i=0;i<nbAStream;i++)
       {
             ADM_audioStreamTrack *track=new ADM_audioStreamTrack;
@@ -328,18 +332,18 @@ bool ADM_Composer::addFile (const char *name)
     {
         ADM_info("[Editor] no decoder to check for B- frame\n");
     }else
-    {       
+    {
         if(video.decoder->bFramePossible())
         {
             printf("[Editor] B- frame possible with that codec \n");
             if(isMpeg4Compatible(info.fcc) || isMpeg12Compatible(info.fcc) || isVC1Compatible(info.fcc))
             {
-                ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");             
+                ADM_info("[Editor] It is mpeg4-SP/ASP, try to guess all PTS\n");
                 uint64_t delay;
                 ADM_computeMP124MissingPtsDts(video._aviheader,video.timeIncrementInUs,&delay);
                 _segments.updateRefVideo();
-                
-                
+
+
             }else
             {
                 if(isH264Compatible(info.fcc))
@@ -351,14 +355,14 @@ bool ADM_Composer::addFile (const char *name)
                     ADM_info("[Editor] Not H264\n");
             }
         }
-        else   
+        else
         {
                 printf("[Editor] No B frame with that codec, PTS=DTS\n");
                 setPtsEqualDts(video._aviheader,video.timeIncrementInUs);
                 _segments.updateRefVideo();
         }
      }
-  
+
   return 1;
 }
 
@@ -457,7 +461,7 @@ bool ADM_Composer::getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audio
 {
 
 uint32_t ref;
-  
+
     if(false==_segments.getRefFromTime(xtime,&ref))
     {
         ADM_warning("[Editor] getAudioStreamsInfo failed for time %"LLD" ms\n",xtime);
@@ -497,7 +501,7 @@ uint32_t ADM_Composer::getCurrentAudioStreamNumber(uint64_t  xtime)
 {
 uint32_t ref;
 
-        if(false==_segments.getRefFromTime(xtime,&ref))  
+        if(false==_segments.getRefFromTime(xtime,&ref))
         {
             ADM_warning("[Editor::getCurrentAudioStreamNumber] Cannot get ref video for time %"LLD" ms\n",xtime/1000);
             return 0;
@@ -622,15 +626,13 @@ bool            ADM_Composer::remove(uint64_t start,uint64_t end)
     \fn dumpEditing
     \brief Dump segment, video & al
 */
-bool            ADM_Composer::dumpSegments(void)
+void            ADM_Composer::dumpSegments(void)
 {
     _segments.dump();
-    return true;
 }
-bool                ADM_Composer::dumpSegment(int i)
+void                ADM_Composer::dumpSegment(int i)
 {
     _segments.dumpSegment(i);
-    return true;
 }
 /**
 
@@ -647,7 +649,7 @@ bool               ADM_Composer::dumpTiming(void)
 {
     if(!_segments.getNbRefVideos()) return true;
     _VIDEOS *v=_segments.getRefVideo(0);
-   
+
     aviInfo info;
     v->_aviheader->getVideoInfo(&info);
     int nb=info.nb_frames;
@@ -671,11 +673,11 @@ bool                ADM_Composer::getVideoPtsDts(uint32_t frame, uint32_t *flags
 {
     if(!_segments.getNbRefVideos()) return true;
     _VIDEOS *v=_segments.getRefVideo(0);
-   
+
     aviInfo info;
     v->_aviheader->getVideoInfo(&info);
     int nb=info.nb_frames;
-    if(frame>=nb) 
+    if(frame>=nb)
     {
         return false;
     }
@@ -694,5 +696,179 @@ const char          *ADM_Composer::getVideoDecoderName(void)
     if(!v->decoder) return "????";
     return v->decoder->getDecoderName();
 }
-//
-//
+
+int ADM_Composer::setVideoCodec(const char *codec, CONFcouple *c)
+{
+	int idx = videoEncoder6_GetIndexFromName(codec);
+
+	if (idx == -1)
+	{
+		ADM_error("No such encoder :%s\n", codec);
+		return false;
+	}
+
+	// Select by index
+	videoEncoder6_SetCurrentEncoder(idx);
+	UI_setVideoCodec(idx);
+
+	if (c)
+	{
+		bool r = videoEncoder6_SetConfiguration(c, true);
+		delete c;
+
+		return r;
+	}
+
+	return true;
+}
+
+int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
+{
+	uint32_t filterTag = ADM_vf_getTagFromInternalName(filter);
+
+	printf("Adding Filter %s -> %"LU"... \n", filter, filterTag);
+
+	bool r = ADM_vf_addFilterFromTag(filterTag, c, false);
+
+	if (c)
+	{
+		delete c;
+	}
+
+	return r;
+}
+
+void ADM_Composer::clearFilters()
+{
+	ADM_vf_clearFilters();
+}
+
+int ADM_Composer::setAudioMixer(const char *s)
+{
+    CHANNEL_CONF c = AudioMuxerStringToId(s);
+
+    return audioFilterSetMixer(c);
+}
+
+void ADM_Composer::resetAudioFilter()
+{
+	audioFilterReset();
+}
+
+int ADM_Composer::saveAudio(const char *name)
+{
+	return A_audioSave(name);
+}
+
+char *ADM_Composer::getVideoCodec(void)
+{
+	uint32_t fcc;
+	aviInfo info;
+
+	this->getVideoInfo(&info);
+	fcc = info.fcc;
+
+	return ADM_strdup(fourCC::tostring(fcc));
+}
+
+int ADM_Composer::appendFile(const char *name)
+{
+	return A_appendAvi(name);
+}
+
+uint32_t ADM_Composer::getAudioResample()
+{
+	return audioFilterGetResample();
+}
+
+void ADM_Composer::setAudioResample(uint32_t newfq)
+{
+	audioFilterSetResample(newfq);
+}
+
+int	ADM_Composer::openFile(const char *name)
+{
+	return A_openAvi(name);
+}
+
+int ADM_Composer::saveFile(const char *name)
+{
+	return A_Save(name);
+}
+
+bool ADM_Composer::setAudioCodec(const char *codec, int bitrate, CONFcouple *c)
+{
+	bool r = true;
+
+	// First search the codec by its name
+	if (!audioCodecSetByName(codec))
+	{
+		r = false;
+	}
+	else
+	{
+		r = setAudioExtraConf(bitrate, c);
+	}
+
+	if (c)
+		delete c;
+
+	return r;
+}
+
+bool ADM_Composer::setContainer(const char *cont, CONFcouple *c)
+{
+	int idx = ADM_MuxerIndexFromName(cont);
+
+	if (idx == -1)
+	{
+		ADM_error("Cannot find muxer for format=%s\n",cont);
+		return false;
+	}
+
+	ADM_info("setting container as index %d\n",idx);
+	UI_SetCurrentFormat(idx);
+	idx = ADM_MuxerIndexFromName(cont);
+
+	bool r = false;
+
+	if(idx != -1)
+	{
+		r = ADM_mx_setExtraConf(idx, c);
+	}
+
+	if (c)
+		delete c;
+
+	return r;
+}
+
+bool ADM_Composer::setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain)
+{
+	return audioFilterSetNormalize(mode, gain);
+}
+
+bool ADM_Composer::getAudioFilterNormalise(ADM_GAINMode *mode, uint32_t *gain)
+{
+	return audioFilterGetNormalize(mode, gain);
+}
+
+FILMCONV ADM_Composer::getAudioFilterFrameRate(void)
+{
+	return audioFilterGetFrameRate();
+}
+
+bool ADM_Composer::setAudioFilterFrameRate(FILMCONV conf)
+{
+	return audioFilterSetFrameRate(conf);
+}
+
+int ADM_Composer::saveImageBmp(const char *filename)
+{
+	return A_saveImg(filename);
+}
+
+int ADM_Composer::saveImageJpg(const char *filename)
+{
+	return A_saveJpg(filename);
+}

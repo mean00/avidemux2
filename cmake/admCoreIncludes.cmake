@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreDemuxer/inc
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreDemuxerMpeg/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreImage/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreMuxer/include)
+INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScript/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreUI/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreUtils/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreVideoEncoder/include)

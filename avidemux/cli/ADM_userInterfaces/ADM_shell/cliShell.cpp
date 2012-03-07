@@ -5,7 +5,8 @@
 
 
 #include "ADM_default.h"
-#include "ADM_scriptShell.h"
+#include "IScriptEngine.h"
+
 /**
     \fn cliShellLogger
     \brief Redirect output to the shell
@@ -22,7 +23,7 @@ static bool cliShellLogger(void *cookie,const char *v)
         \fn ADM_createJsShell
         \brief create the input for a js shell
 */
-bool ADM_startShell(jsShellEvaluate *eval)
+bool ADM_startShell(IScriptEngine *engine)
 {
       /*  qShell *s= new qShell(eval);
         ADM_jsRegisterLogger((void *)s,cliShellLogger);

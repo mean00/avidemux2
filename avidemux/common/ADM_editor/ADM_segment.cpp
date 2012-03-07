@@ -24,7 +24,6 @@
 #include "ADM_colorspace.h"
 #include "ADM_vidMisc.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
-#include "ADM_script2/include/ADM_scriptIf.h"
 #include "ADM_codec.h"
 
 ADM_EditorSegment::ADM_EditorSegment(void)
@@ -45,7 +44,7 @@ bool        ADM_EditorSegment::updateRefVideo(void)
     _VIDEOS *ref=getRefVideo(n-1);
     vidHeader *demuxer=ref->_aviheader;
     uint64_t pts,dts;
-    
+
         demuxer->getPtsDts(0,&pts,&dts);
         if(pts!=ADM_NO_PTS && pts >0)
         {
@@ -55,7 +54,7 @@ bool        ADM_EditorSegment::updateRefVideo(void)
         {
             ADM_info("First PTS is %s\n",ADM_us2plain(pts));
         }
-    
+
     updateStartTime();
     //
     n=segments.size();
@@ -175,8 +174,8 @@ bool ADM_EditorSegment::deleteAll (void)
       v->_aviheader=NULL;
      // Delete audio codec too
      // audioStream will be deleted by the demuxer
-      
-      
+
+
             int nb=v->audioTracks.size();
             for(int i=0;i<nb;i++)
             {
@@ -189,8 +188,8 @@ bool ADM_EditorSegment::deleteAll (void)
 #endif
             }
             v->audioTracks.clear();
-            
-      
+
+
     }
 
     videos.clear();
@@ -263,15 +262,15 @@ int         ADM_EditorSegment::getNbRefVideos(void)
     \brief  getNbSegment
 */
 int         ADM_EditorSegment::getNbSegments(void)
-{   
+{
     return segments.size();
 }
 /**
     \fn updateStartTime
-    \brief Recompute the start time of the video 
+    \brief Recompute the start time of the video
 */
 bool         ADM_EditorSegment::updateStartTime(void)
-{   
+{
     int n=segments.size();
     uint64_t t=0;
     for(int i=0;i<n;i++)
@@ -285,7 +284,7 @@ bool         ADM_EditorSegment::updateStartTime(void)
         _VIDEOS *vid=getRefVideo(segments[i]._reference);
         _SEGMENT *seg=getSegment(i);
         vidHeader *demuxer=vid->_aviheader;
-    
+
 
         uint64_t pts,dts;
         pts=seg->_refStartTimeUs;
@@ -295,12 +294,12 @@ bool         ADM_EditorSegment::updateStartTime(void)
         {
             uint64_t pts2,dts2;
             demuxer->getPtsDts(0,&pts2,&dts2);
-            if(pts2!=ADM_NO_PTS) 
+            if(pts2!=ADM_NO_PTS)
             {
                 ADM_info("Using pts2=%s to get dts, as this video does not start at zero\n",ADM_us2plain(pts2));
                 pts=pts2;
             }
-            
+
         }
         dtsFromPts(seg->_reference,pts,&dts);
         seg->_refStartDts=dts;
@@ -310,7 +309,7 @@ bool         ADM_EditorSegment::updateStartTime(void)
 }
 /**
     \fn getTotalDuration
-    \brief 
+    \brief
 */
 uint64_t ADM_EditorSegment::getTotalDuration(void)
 {
@@ -335,7 +334,7 @@ uint32_t ADM_EditorSegment::getNbFrames(void)
 /***********************************************************************/
 /**
     \fn getRefFromTime
-    \brief Return the ref video where xtime is 
+    \brief Return the ref video where xtime is
 */
 bool        ADM_EditorSegment::getRefFromTime(uint64_t xtime,uint32_t *refVideo)
 {
@@ -359,7 +358,7 @@ bool        ADM_EditorSegment::getRefFromTime(uint64_t xtime,uint32_t *refVideo)
     {
         stream=NULL;
         info=NULL;   // These 2 are destroyed by the demuxer itself
-        if(codec) 
+        if(codec)
         {
             delete codec;
             codec=NULL;
@@ -408,7 +407,7 @@ bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t se
 */
 static bool TimeToFrame(_VIDEOS *v,uint64_t time,uint32_t *frame,uint32_t *oflags)
 {
-    vidHeader *demuxer=v->_aviheader;  
+    vidHeader *demuxer=v->_aviheader;
     bool warn=false;
     int nb=demuxer->getMainHeader()->dwTotalFrames;
     for(int i=0;i<nb;i++)
@@ -469,13 +468,13 @@ bool        ADM_EditorSegment::isKeyFrameByTime(uint32_t refVideo,uint64_t seekT
 }
 /**
     \fn removeChunk
-    \brief 
+    \brief
 */
 bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
 {
     uint32_t startSeg,endSeg;
     uint64_t startOffset,endOffset;
-    
+
     ADM_info("Cutting from %"LLU" to %"LLU" ms\n",from/1000,to/1000);
     dump();
     if(false==convertLinearTimeToSeg( from,&startSeg,&startOffset))
@@ -492,20 +491,20 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     ADM_info("Start, seg %"LU" Offset :%"LLU" ms\n",startSeg,startOffset);
     ADM_info("End  , seg %"LU" Offset :%"LLU" ms\n",endSeg,endOffset);
 
-    
+
     if(startSeg==endSeg)
     {
         // Split the seg int two..
-        segments.insert(segments.begin()+startSeg+1,*getSegment(startSeg)); 
+        segments.insert(segments.begin()+startSeg+1,*getSegment(startSeg));
         endSeg=startSeg+1;
 
     }
     _SEGMENT *first=getSegment(startSeg);
       // Span over several seg...
     // 1- shorten the start segment..
-  
+
     first->_durationUs=startOffset;
-   
+
     // 3- Shorten last segment
     _SEGMENT *last=getSegment(endSeg);
     last->_refStartTimeUs+=endOffset;
@@ -544,13 +543,13 @@ void       ADM_EditorSegment::dumpSegment(int i)
         return ;
     }
         _SEGMENT *s=getSegment(i);
-        
-        jsLog("Segment :%d/%d\n",i,n);
-        jsLog( "\tReference    :%"LU"\n",s->_reference,ADM_us2plain(s->_reference));
-        jsLog( "\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
-        jsLog( "\tduration     :%08"LLU" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
-        jsLog( "\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
-        jsLog( "\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,ADM_us2plain(s->_refStartDts));
+
+        printf("Segment :%d/%d\n",i,n);
+        printf("\tReference    :%"LU"\n",s->_reference,ADM_us2plain(s->_reference));
+        printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
+        printf("\tduration     :%08"LLU" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
+        printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
+        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,ADM_us2plain(s->_refStartDts));
 }
 /**
     \fn dumpRefVideos
@@ -565,10 +564,10 @@ void ADM_EditorSegment::dumpRefVideos(void)
     {
         _VIDEOS *s=getRefVideo(i);
 
-        jsLog("Videos :%d/%d\n",i,n);
-        jsLog("\tfirstFramePts      :%08"LLU" %s\n",s->firstFramePts,ADM_us2plain(s->firstFramePts));
-        jsLog("\ttimeIncrementInUs  :%08"LLU" %s\n",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
-        jsLog("\tnb frames    :%08"LLU"\n",s->_nb_video_frames);
+        printf("Videos :%d/%d\n",i,n);
+        printf("\tfirstFramePts      :%08"LLU" %s\n",s->firstFramePts,ADM_us2plain(s->firstFramePts));
+        printf("\ttimeIncrementInUs  :%08"LLU" %s\n",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
+        printf("\tnb frames    :%08"LLU"\n",s->_nb_video_frames);
     }
 
 }
@@ -598,22 +597,22 @@ void ADM_EditorSegment::dumpRefVideos(void)
         {
             ADM_warning("No DTS available for first frame, putting pts, probably incorrect\n");
             *dts=pts;
-        }else       
+        }else
         {
             *dts=d;
         }
         return true;
     }
     int32_t deltaFrame=frame;
-    
-    
+
+
     while(deltaFrame>0)
     {
             demuxer->getPtsDts(deltaFrame,&p,&d);
             if(d!=ADM_NO_PTS) break;
             deltaFrame--;
     }
-    if(deltaFrame<0)    
+    if(deltaFrame<0)
     {
         ADM_warning("Cannot find a valid DTS for pts=%"LLU"ms\n",pts/1000);
         *dts=pts;

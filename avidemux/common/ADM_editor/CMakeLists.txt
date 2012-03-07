@@ -18,3 +18,4 @@ ADM_edAudioPcm.cpp
 )
 
 ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})
+include_directories(../ADM_script2/include)

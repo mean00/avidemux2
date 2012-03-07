@@ -1,7 +1,7 @@
 /***************************************************************************
-                          \file gtk_gui.cpp  
+                          \file gtk_gui.cpp
                           \brief Main UI even loop
-                             
+
     copyright            : (C) 2001-2009 by mean, fixounet@free.fr
  ***************************************************************************/
 
@@ -41,7 +41,8 @@
 
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
-#include "ADM_script2/include/ADM_scriptIf.h"
+#include "ADM_script2/include/ADM_script.h"
+
 renderZoom currentZoom=ZOOM_1_1;
 //***********************************
 //******** A Function ***************
@@ -130,7 +131,7 @@ int nw;
       string script;
       if(true==getScriptName( action, ACT_CUSTOM_BASE_PY,GUI_getCustomPyScript,"py",script))
       {
-            A_parseTinyPyScript(script.c_str());      
+            A_parseTinyPyScript(script.c_str());
       }
       return ;
   }
@@ -150,10 +151,10 @@ int nw;
                                 brokenAct();
                                 return;
         case ACT_PY_SHELL:
-                                interactiveTinyPy();
+                                interactiveScript(getPythonEngine());
                                 return;
         case ACT_JS_SHELL:
-                                interactiveECMAScript("dummy");
+                                interactiveScript(getSpiderMonkeyEngine());
                                 return;
         case ACT_AVS_PROXY:
                                 GUI_avsProxy();
@@ -177,7 +178,7 @@ int nw;
 	case ACT_VIDEO_CODEC_CONFIGURE:
     		videoEncoder6Configure();
             return;
-    case ACT_ContainerConfigure:    
+    case ACT_ContainerConfigure:
             {
             int index=UI_GetCurrentFormat();
             ADM_mux_configure(index);
@@ -320,7 +321,7 @@ int nw;
     case ACT_PlayAvi:
       GUI_PlayAvi ();
       break;
-  
+
 #define TOGGLE_PREVIEW ADM_PREVIEW_OUTPUT
     case ACT_PreviewChanged:
     {
@@ -375,7 +376,7 @@ int nw;
 //    		   video_body->copyToClipBoard (frameStart,frameEnd);
 		break;
     case ACT_Paste:
-            brokenAct();        		
+            brokenAct();
             break;
       break;
 
@@ -385,7 +386,7 @@ int nw;
         {
             video_body->resetSeg();
             video_body->getVideoInfo (avifileinfo);
-		
+
       		GUI_setAllFrameAndTime ();
             A_ResetMarkers();
       		ReSync ();
@@ -404,17 +405,17 @@ int nw;
             {
                 GUI_Error_HIG("Cutting","Error while cutting out.");
             }
-            else    
+            else
             {
-              A_ResetMarkers();              
+              A_ResetMarkers();
               A_Resync(); // total duration & stuff
               // Rewind to first frame...
               //A_Rewind();
               GUI_GoToTime(a);
-                
+
             }
         }
-        
+
       break;
       // set decoder option (post processing ...)
     case ACT_DecoderOption:
@@ -635,7 +636,7 @@ A_appendAvi (const char *name)
 
   ReSync ();
   A_ResetMarkers();
-  
+
   return 1;
 }
 
@@ -686,13 +687,13 @@ void cleanUp (void)
 */
 bool A_parseTinyPyScript(const char *name){
   bool ret;
-  ADM_info("Executing tinyPy script :%s\n",name);
+
   char *longname = ADM_PathCanonize(name);
    if (playing)
    {
         return false;
    }
-   ret = parseTinyPyScript(longname);
+   ret = getPythonEngine()->runScriptFile(std::string(longname));
    A_Resync(); // total duration & stuff
    if( ret == true )
    {
@@ -711,7 +712,7 @@ bool A_parseECMAScript(const char *name){
     {
       return false;
    }
-   ret = parseECMAScript(longname);
+   ret = getSpiderMonkeyEngine()->runScriptFile(longname);
    A_Resync(); // total duration & stuff
    if( ret == true )
    {
@@ -835,7 +836,7 @@ int A_setAudioTrack(int track)
       \brief Allow to select audio track
 */
 void A_audioTrack( void )
-{        
+{
         audioInfo *infos=NULL;
         uint32_t nbAudioTracks,currentAudioTrack;
         uint32_t newTrack;
@@ -867,7 +868,7 @@ void A_audioTrack( void )
                     A_setAudioTrack(newTrack);
             }
         }
-      
+
 roger_and_out:
          /* Clean up */
          for(int i=0;i<nbAudioTracks;i++)
@@ -884,7 +885,7 @@ void A_externalAudioTrack( void )
 }
 /**
     \fn A_Resync
-    \brief 
+    \brief
 */
 void A_Resync(void)
 {
@@ -976,9 +977,9 @@ uint8_t GUI_close(void)
       }
       delete avifileinfo;
       //delete wavinfo;
-      
+
       avifileinfo = NULL;
-      video_body->cleanup ();	  
+      video_body->cleanup ();
 
 //      filterCleanUp ();
 	  UI_setTitle(NULL);
@@ -1065,7 +1066,7 @@ uint8_t *buffer;
  ADMCompressedImage image;
  uint8_t seq;
  char                text[DUMP_SIZE][100];
- 
+
  if (!avifileinfo) return;
 #if 0
  buffer=new uint8_t [avifileinfo->width*avifileinfo->height*3];
@@ -1079,10 +1080,10 @@ uint8_t *buffer;
         sprintf(text[i],"Frame %d:%d",target,fullLen);
         printf("%s\n",text[i]);
     }
- 
 
 
- 
+
+
  delete [] buffer;
  #endif
 }
@@ -1137,7 +1138,7 @@ uint64_t duration=video_body->getVideoDuration();
         video_body->setMarkerAPts(0);
         video_body->setMarkerBPts(duration);
         UI_setMarkers(0,duration);
-        
+
 }
 /**
     \fn A_Rewind

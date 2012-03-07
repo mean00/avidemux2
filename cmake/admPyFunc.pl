@@ -170,7 +170,7 @@ my $thisfile=$input;
 $thisfile=~s/\.[a-zA-Z]*$//g;
 $thisfile=~s/^.*\///g;
 print "creating  $thisfile function table\n";
-print OUTPUT "pyFuncs ".$thisfile."_functions[]={\n";
+print OUTPUT "pyFunc ".$thisfile."_functions[]={\n";
 for($i=0;$i<$nbFunc;$i++)
 {
                 my $line=$allFuncs[$i];

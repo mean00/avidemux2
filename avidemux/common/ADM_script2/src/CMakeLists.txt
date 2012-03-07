@@ -1,19 +1,26 @@
 SET(ADM_script_SRCS
-        ADM_scriptIf.cpp
-        ADM_scriptVideo.cpp
-        ADM_scriptAvidemux.cpp
-        ADM_scriptAvidemuxInfo.cpp
-        ADM_scriptAudio.cpp
-        ADM_scriptUtils.cpp
-        ADM_scriptGui.cpp
-        scriptDialogFactory/ADM_scriptDFInteger.cpp
-        scriptDialogFactory/ADM_scriptDFMenu.cpp
-        scriptDialogFactory/ADM_scriptDFToggle.cpp
-        scriptDialogFactory/ADM_scriptDialogFactory.cpp
+	ADM_script.cpp
 )
 
+IF (WIN32)
+	ADD_DEFINITIONS(-DXP_WIN)
+ELSE (WIN32)
+	ADD_DEFINITIONS(-DXP_UNIX)
+ENDIF (WIN32)
+
+ADD_DEFINITIONS(-DJS_THREADSAFE)
 
 ADD_LIBRARY(ADM_script6 STATIC ${ADM_script_SRCS})
 include_directories(../include)
-include_directories(.)
-include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+include_directories(../../ADM_editor)
+include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScript/include)
+include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScriptPython/include)
+include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScriptSpiderMonkey/include)
+
+if (USE_SYSTEM_SPIDERMONKEY)
+	include_directories(${SPIDERMONKEY_INCLUDE_DIR})
+else (USE_SYSTEM_SPIDERMONKEY)
+	include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_smjs)
+endif (USE_SYSTEM_SPIDERMONKEY)
+
+target_link_libraries(ADM_script6 ADM_coreScriptPython ADM_coreScriptSpiderMonkey)

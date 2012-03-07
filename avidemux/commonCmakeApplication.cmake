@@ -50,17 +50,17 @@ INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_videoEncoder/incl
 #
 # Add main source
 #
-SET(ADM_EXE_SRCS 
-../common/ADM_preview.cpp  
-../common/ADM_previewNavigate.cpp  
-../common/gui_main.cpp  
-../common/gui_autodrive.cpp  
-../common/GUI_jobs.cpp  
-../common/gui_navigate.cpp  
-../common/gui_play.cpp  
-../common/gui_save.cpp  
-../common/gui_savenew.cpp  
-../common/main.cpp  
+SET(ADM_EXE_SRCS
+../common/ADM_preview.cpp
+../common/ADM_previewNavigate.cpp
+../common/gui_main.cpp
+../common/gui_autodrive.cpp
+../common/GUI_jobs.cpp
+../common/gui_navigate.cpp
+../common/gui_play.cpp
+../common/gui_save.cpp
+../common/gui_savenew.cpp
+../common/main.cpp
 ../common/gui_action.cpp
 ../common/gui_blackframes.cpp
 ../common/ADM_gettext.cpp
@@ -92,7 +92,6 @@ ADM_coreSocket6
 ADM_coreVideoEncoder6
 ADM_coreVideoFilter6
 ADM_coreImageLoader6
-ADM_coreTinyPy6
 )
 
 if (USE_SYSTEM_SPIDERMONKEY)
@@ -123,9 +122,8 @@ SET(commonLibs2
 ADM_coreJobs
 ADM_osSupport6
 ADM_requant6
-ADM_pyScript6
-ADM_jsScript6
-ADM_scriptDF
+ADM_coreScriptPython
+ADM_coreScriptSpiderMonkey
 ADM_script6
 ADM_videoEncoder6
 ADM_internalVideoFilter6

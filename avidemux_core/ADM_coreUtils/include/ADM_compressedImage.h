@@ -8,6 +8,9 @@
 //
 #ifndef ADM_COMPRESSED_IMAGE_H
 #define ADM_COMPRESSED_IMAGE_H
+
+#include "ADM_default.h"
+
 #define ADM_COMPRESSED_NO_PTS ADM_NO_PTS
 class ADMCompressedImage
 {
