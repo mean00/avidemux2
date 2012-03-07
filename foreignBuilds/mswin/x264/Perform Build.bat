@@ -18,7 +18,7 @@ call "../Set Common Environment Variables"
 
 if errorlevel 1 goto end
 
-set PATH=%PATH%;%~d0\Dev\MSYS\bin;%devDir%\Git\bin
+set PATH=%PATH%;%msysdir%\bin;%devDir%\Git\bin
 set curDir=%CD%
 
 del "%usrLocalDir%\bin\libx264-*.dll"

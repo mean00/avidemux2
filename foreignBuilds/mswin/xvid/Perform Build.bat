@@ -20,6 +20,7 @@ if errorlevel 1 goto end
 set package=xvidcore-1.3.2.tar.gz
 set sourceFolder=xvidcore-1.3.2-%BuildBits%
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

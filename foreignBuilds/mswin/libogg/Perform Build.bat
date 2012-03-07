@@ -21,6 +21,7 @@ set package=libogg-1.3.0.tar.gz
 set sourceFolder=libogg-1.3.0-%BuildBits%
 set tarFolder=libogg-1.3.0
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

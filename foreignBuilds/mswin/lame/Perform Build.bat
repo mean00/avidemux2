@@ -18,9 +18,9 @@ call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
 set version=3.99
-set package=lame-%version%.4.tar.gz
+set package=lame-%version%.5.tar.gz
 set sourceFolder=lame-%version%-%BuildBits%
-set tarFolder=lame-%version%.4
+set tarFolder=lame-%version%.5
 set curDir=%CD%
 set PATH=%PATH%;%~d0\Dev\MSYS\bin
 
@@ -48,10 +48,6 @@ cd "%devDir%\%sourceFolder%"
 for /f "delims=" %%a in ('dir /b %tarFolder%') do (
   move "%CD%\%tarFolder%\%%a" "%CD%"
 )
-
-echo.
-echo Patching
-patch -p0 -i "%curDir%\vbrquantize.c.patch"
 
 echo.
 echo Configuring

@@ -21,6 +21,7 @@ set package=faad2-2.7.tar.gz
 set sourceFolder=faac-2.7-%BuildBits%
 set tarFolder=faad2-2.7
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

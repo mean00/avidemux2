@@ -1,5 +1,20 @@
 <?xml version="1.0"?>
 <log>
+  <buildentry revision="7740" date="2012-02-21">
+    <comment>Updated LAME to version 3.99.4.</comment>
+    <comment>Updated libvpx to version 1.0.0.</comment>
+    <comment>Updated NSPR to version 4.9.</comment>
+    <comment>Updated x264 to r2164.</comment>
+  </buildentry>
+  <buildentry revision="7704" date="2011-12-19">
+    <comment>Updated Qt to version 4.8.0.</comment>
+    <comment>Updated x264 to r2120.</comment>
+  </buildentry>
+  <buildentry revision="7693" date="2011-12-05" />
+  <buildentry revision="7688" date="2011-12-03">
+    <comment>Compiled with GCC 4.6.2.</comment>
+    <comment>Windows XP 32-bit stability issues should now be fixed.</comment>
+  </buildentry>
   <buildentry revision="7660" date="2011-11-17" />
   <buildentry revision="7652" date="2011-11-06" />
   <buildentry revision="7643" date="2011-11-01">

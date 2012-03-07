@@ -24,6 +24,7 @@ set package=js-1.7.0.tar.gz
 set sourceFolder=js-1.7.0-%BuildBits%
 set tarFolder=js
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

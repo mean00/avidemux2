@@ -17,15 +17,16 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=opencore-amr-0.1.2.tar.gz
-set sourceFolder=opencore-amr-0.1.2-%BuildBits%
-set tarFolder=opencore-amr-0.1.2
+set package=opencore-amr-0.1.3.tar.gz
+set sourceFolder=opencore-amr-0.1.3-%BuildBits%
+set tarFolder=opencore-amr-0.1.3
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://sourceforge.net/projects/opencore-amr/files/opencore-amr/0.1.2/%package%/download
+	wget http://sourceforge.net/projects/opencore-amr/files/opencore-amr/%package%/download
 )
 
 if errorlevel 1 goto end
@@ -45,11 +46,6 @@ cd "%devDir%\%sourceFolder%"
 for /f "delims=" %%a in ('dir /b %tarFolder%') do (
   move "%CD%\%tarFolder%\%%a" "%CD%"
 )
-
-echo.
-echo Patching
-patch -p0 -i "%curDir%\amrnb_Makefile.in"
-patch -p0 -i "%curDir%\amrwb_Makefile.in"
 
 echo.
 echo Configuring

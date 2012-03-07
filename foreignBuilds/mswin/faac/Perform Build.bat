@@ -21,6 +21,7 @@ set package=faac-1.28.tar.gz
 set sourceFolder=faac-1.28-%BuildBits%
 set tarFolder=faac-1.28
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

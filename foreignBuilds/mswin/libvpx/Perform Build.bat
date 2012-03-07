@@ -21,7 +21,7 @@ set package=libvpx-v1.0.0.tar.bz2
 set sourceFolder=libvpx-1.0.0-%BuildBits%
 set tarFolder=libvpx-v1.0.0
 set curDir=%CD%
-set PATH=%PATH%;%~d0\Dev\MSYS\bin
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

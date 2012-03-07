@@ -21,6 +21,7 @@ set package=fontconfig-2.8.0.tar.gz
 set sourceFolder=fontconfig-2.8.0-%BuildBits%
 set tarFolder=fontconfig-2.8.0
 set curDir=%CD%
+set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.

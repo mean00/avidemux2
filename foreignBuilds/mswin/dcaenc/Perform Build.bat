@@ -1,7 +1,7 @@
 @echo off
 
-echo MSYS build for opencore-amr
-echo ===========================
+echo MSYS build for dcaenc
+echo =====================
 echo 1. 32-bit build
 echo 2. 64-bit build
 echo X. Exit
@@ -17,9 +17,10 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=dcaenc-1.tar.gz
-set sourceFolder=dcaenc-1-%BuildBits%
-set tarFolder=dcaenc-1
+set version=2
+set package=dcaenc-%version%.tar.gz
+set sourceFolder=dcaenc-%version%-%BuildBits%
+set tarFolder=dcaenc-%version%
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
@@ -54,7 +55,7 @@ patch -p0 -i "%curDir%\Makefile.in.patch"
 echo.
 echo Configuring
 
-sh ./configure --prefix="%usrLocalDir%" --disable-static CFLAGS=-O3
+sh ./configure --prefix="%usrLocalDir%" --disable-static CFLAGS="%CFLAGS% -O3"
 
 if errorlevel 1 goto end
 echo.
