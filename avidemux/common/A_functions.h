@@ -5,6 +5,8 @@
 #ifndef A_FUNCTION_H
 #define A_FUNCTION_H
 
+#include "ADM_default.h"
+
 int     A_delete(uint32_t start, uint32_t end);
 void    A_externalAudioTrack( void );
 uint8_t A_rebuildKeyFrame (void);
@@ -17,8 +19,13 @@ void    A_Resync(void);
 void    A_addJob(void);
 void    A_audioTrack(void);
 
+#ifdef USE_SPIDERMONKEY
 bool    A_parseECMAScript(const char *name);
+#endif
+
+#ifdef USE_TINYPY
 bool    A_parseTinyPyScript(const char *name);
+#endif
 
 //uint8_t A_autoDrive(Action action);
 uint8_t A_TimeShift(void);

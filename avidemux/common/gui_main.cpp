@@ -117,6 +117,7 @@ void HandleAction (Action action)
   // independant load not loaded
 //------------------------------------------------
 int nw;
+#ifdef USE_SPIDERMONKEY
   if(action>=ACT_CUSTOM_BASE_JS && action <ACT_CUSTOM_END_JS)
   {
       string script;
@@ -126,6 +127,9 @@ int nw;
       }
       return ;
   }
+#endif
+
+#ifdef USE_TINYPY
   if(action>=ACT_CUSTOM_BASE_PY && action <ACT_CUSTOM_END_PY)
   {
       string script;
@@ -144,18 +148,24 @@ int nw;
       }
       return ;
   }
+#endif
+
   switch (action)
     {
         case ACT_TimeShift:
         case ACT_Goto:
                                 brokenAct();
                                 return;
+#ifdef USE_TINYPY
         case ACT_PY_SHELL:
                                 interactiveScript(getPythonEngine());
                                 return;
+#endif
+#ifdef USE_SPIDERMONKEY
         case ACT_JS_SHELL:
                                 interactiveScript(getSpiderMonkeyEngine());
                                 return;
+#endif
         case ACT_AVS_PROXY:
                                 GUI_avsProxy();
                                 return;
@@ -195,12 +205,18 @@ int nw;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
+
+#ifdef USE_TINYPY
     case ACT_RUN_PY_PROJECT:
             GUI_FileSelRead (QT_TR_NOOP("Select python script to Run"),(SELFILE_CB *) A_parseTinyPyScript);
     		return;
+#endif
+
+#ifdef USE_SPIDERMONKEY
     case ACT_RUN_JS_PROJECT:
             GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
     		return;
+#endif
 
 	case ACT_OPEN_APP_LOG:
 		GUI_OpenApplicationLog();
@@ -681,7 +697,7 @@ void cleanUp (void)
 #warning fixme
 
 
-
+#ifdef USE_TINYPY
 /**
     \fn A_parseTinyPyScript
 */
@@ -702,6 +718,9 @@ bool A_parseTinyPyScript(const char *name){
    ADM_dealloc(longname);
    return ret;
 }
+#endif
+
+#ifdef USE_SPIDERMONKEY
 /**
     \fn A_parseECMAScript
 */
@@ -721,6 +740,7 @@ bool A_parseECMAScript(const char *name){
    ADM_dealloc(longname);
    return ret;
 }
+#endif
 
 /*
 	Unpack all frames without displaying them to check for error

@@ -1,36 +1,10 @@
-#include <string.h>
 #include <sstream>
 
 using namespace std;
 
-#include "ADM_inttype.h"
+#include "ADM_jsIf.h"
 #include "SpiderMonkeyEngine.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_jsIf.h"
-
-extern void A_Resync(void);
-
-/**
-\fn jsEvaluate
-*/
-/*static bool jsEvaluate(const char *str)
-{
-jsval rval;
-JS_EvaluateScript(g_pCx,g_pObject,str,strlen(str),"dummy",1,&rval);
-return true; 
-}*/
-/**
-\fn    interactiveECMAScript
-\brief interprete & execute ecma script (interactive)
-*/
-/*bool interactiveECMAScript(const char *name)
-{
-ADM_startShell(jsEvaluate);
-JS_GC(g_pCx);
-A_Resync();
-ADM_info("Ending JS shell...\n");
-return true;
-}*/
 
 static void dump(SpiderMonkeyEngine *engine, JSFunctionSpec *f)
 {

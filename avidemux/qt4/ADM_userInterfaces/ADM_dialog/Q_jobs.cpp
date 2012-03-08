@@ -7,9 +7,9 @@
 #include "Q_jobs.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_script.h"
+#include "A_functions.h"
 
 static void updateStatus(void);
-extern bool parseECMAScript(const char *name);
 static const char *StringStatus[]={QT_TR_NOOP("Ready"),QT_TR_NOOP("Succeeded"),QT_TR_NOOP("Failed"),QT_TR_NOOP("Deleted"),QT_TR_NOOP("Running")};
 
 ADM_Job_Descriptor::ADM_Job_Descriptor(void)
@@ -144,9 +144,11 @@ void jobsWindow::RunOne(bool b)
 			GUI_Quiet();
 			TLK_getDate(&(desc[sel].startDate));
 
+#ifdef USE_SPIDERMONKEY
 			if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
 				desc[sel].status=STATUS_SUCCEED;
 			else
+#endif
 				desc[sel].status=STATUS_FAILED;
 
 			TLK_getDate(&(desc[sel].endDate));
@@ -171,9 +173,11 @@ void jobsWindow::RunAll(bool b)
 		GUI_Quiet();
 		TLK_getDate(&(desc[sel].startDate));
 
+#ifdef USE_SPIDERMONKEY
 		if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
 			desc[sel].status=STATUS_SUCCEED;
 		else
+#endif
 			desc[sel].status=STATUS_FAILED;
 
 		TLK_getDate(&(desc[sel].endDate));

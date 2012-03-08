@@ -10,6 +10,10 @@ SET(ADM_scriptDF_SRCS
 ADD_LIBRARY(ADM_scriptDF STATIC ${ADM_scriptDF_SRCS})
 include_directories(../../../ADM_coreScript/include)
 
+if (UNIX)
+	add_definitions("-fPIC")
+endif (UNIX)
+
 if (USE_SYSTEM_SPIDERMONKEY)
 	include_directories(${SPIDERMONKEY_INCLUDE_DIR})
 	target_link_libraries(ADM_scriptDF ${SPIDERMONKEY_LIBRARY_DIR})

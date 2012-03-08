@@ -1,7 +1,15 @@
 #define __DECLARE__
+#include "ADM_default.h"
 #include "ADM_script.h"
+
+#ifdef USE_TINYPY
 #include "PythonEngine.h"
+#endif
+
+#ifdef USE_SPIDERMONKEY
 #include "SpiderMonkeyEngine.h"
+#endif
+
 #include "ScriptShell.h"
 #include "A_functions.h"
 
@@ -32,8 +40,13 @@ list<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
 {
     ADM_assert(engines.size() == 0);
 
+#ifdef USE_TINYPY
 	engines.push_back(new PythonEngine());
+#endif
+
+#ifdef USE_SPIDERMONKEY
 	engines.push_back(new SpiderMonkeyEngine());
+#endif
 
 	for (list<IScriptEngine*>::iterator it = engines.begin(); it != engines.end(); it++)
 	{
@@ -68,15 +81,19 @@ static IScriptEngine* getEngine(list<IScriptEngine*> engines, string engineName)
 	return engine;
 }
 
+#ifdef USE_SPIDERMONKEY
 IScriptEngine* getSpiderMonkeyEngine()
 {
     return getEngine(engines, "SpiderMonkey");
 }
+#endif
 
+#ifdef USE_TINYPY
 IScriptEngine* getPythonEngine()
 {
     return getEngine(engines, "Python");
 }
+#endif
 
 void interactiveScript(IScriptEngine *engine)
 {

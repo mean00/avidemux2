@@ -146,13 +146,18 @@ if (CROSS)
 
 	message(STATUS "Using cross compilation flag: ${FFMPEG_FLAGS}")
 endif (CROSS)
-# for ffmpeg to use the same  compiler as others
-MESSAGE(STATUS "Building ffmpeg with CC=${CMAKE_C_COMPILER}")
-MESSAGE(STATUS "Building ffmpeg with LD=${CMAKE_C_COMPILER}")
-MESSAGE(STATUS "Building ffmpeg with AR=${CMAKE_AR}")
-MESSAGE(STATUS "Building ffmpeg with CMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
-MESSAGE(STATUS "Building ffmpeg with CFLAGS=${FF_FLAGS}")
-MESSAGE(STATUS "Building ffmpeg with CFLAGS2=${FFMPEG_FLAGS}")
+
+if (VERBOSE)
+	# for ffmpeg to use the same  compiler as others
+	MESSAGE(STATUS "Building ffmpeg with CC=${CMAKE_C_COMPILER}")
+	MESSAGE(STATUS "Building ffmpeg with LD=${CMAKE_C_COMPILER}")
+	MESSAGE(STATUS "Building ffmpeg with AR=${CMAKE_AR}")
+	MESSAGE(STATUS "Building ffmpeg with CMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
+	MESSAGE(STATUS "Building ffmpeg with CFLAGS=${FF_FLAGS}")
+	MESSAGE(STATUS "Building ffmpeg with CFLAGS2=${FFMPEG_FLAGS}")
+	message("")
+endif (VERBOSE)
+
 xadd(--cc "${CMAKE_C_COMPILER}")
 xadd(--ld "${CMAKE_C_COMPILER}")
 xadd(--ar "${CMAKE_AR}")

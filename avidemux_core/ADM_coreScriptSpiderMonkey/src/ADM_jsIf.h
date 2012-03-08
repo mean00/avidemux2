@@ -1,3 +1,8 @@
+#ifndef ADM_JSIF_H
+#define ADM_JSIF_H
+
+#include "jsapi.h"
+
 extern "C"
 {
 	void jsHelp(JSContext *cx, const char *s);
@@ -5,3 +10,5 @@ extern "C"
 	void jsPopupError(const char *s);
 	void jsPopupInfo(const char *s);
 }
+
+#endif

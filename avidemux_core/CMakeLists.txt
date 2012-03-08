@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
+MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for avidemux core libs Started")
 MESSAGE("#########################################")
@@ -28,13 +29,6 @@ include(admMainChecks)
 include(admCheckFtello)
 include(admAsNeeded)
 
-########################################
-# VDPAU
-########################################
-IF(NOT CROSS)
-	checkVDPAU()
-ENDIF(NOT CROSS)
-
 #########################################
 # Debug Summary
 ########################################
@@ -42,11 +36,32 @@ IF (VERBOSE)
 	INCLUDE(adm_log)
 	MESSAGE("")
 ENDIF (VERBOSE)
+
+########################################
+# Scripting Engine Options (before generating config header)
+########################################
+OPTION(SPIDERMONKEY "" ON)
+
+if (SPIDERMONKEY)
+	set(USE_SPIDERMONKEY 1)
+endif (SPIDERMONKEY)
+
+APPEND_SUMMARY_LIST("Scripting" "SpiderMonkey" "${USE_SPIDERMONKEY}")
+
+OPTION(TINYPY "" ON)
+
+if (TINYPY)
+	set(USE_TINYPY 1)
+endif (TINYPY)
+
+APPEND_SUMMARY_LIST("Scripting" "TinyPy" "${USE_TINYPY}")
+
 ########################################
 # Checking if we should use ftello
 # or ftello64 (win32)
 ########################################
 checkFtello()
+
 ########################################
 # Generate config.h
 ########################################
@@ -87,10 +102,16 @@ ADD_SUBDIRECTORY(ADM_coreVideoFilter)
 ADD_SUBDIRECTORY(ADM_coreSqlLight3)
 ADD_SUBDIRECTORY(ADM_coreJobs)
 ADD_SUBDIRECTORY(ADM_coreSocket)
+add_subdirectory(ADM_coreImageLoader)
 add_subdirectory(ADM_coreScript)
-add_subdirectory(ADM_coreScriptSpiderMonkey)
-add_subdirectory(ADM_coreScriptPython)
-ADD_SUBDIRECTORY(ADM_coreImageLoader)
+
+if (SPIDERMONKEY)
+	add_subdirectory(ADM_coreScriptSpiderMonkey)
+endif (SPIDERMONKEY)
+
+if (TINYPY)
+	add_subdirectory(ADM_coreScriptPython)
+endif (TINYPY)
 
 if (USE_VDPAU)
 	ADD_SUBDIRECTORY(ADM_coreVdpau)

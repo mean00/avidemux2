@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 SET(ADM_PROJECT AdmPlugins)
 
+MESSAGE("")
 MESSAGE("#####################################")
 MESSAGE("Plugins Configure Started")
 MESSAGE("#####################################")

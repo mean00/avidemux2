@@ -43,4 +43,7 @@
 #endif // FTELLO
 #endif
 
+#cmakedefine USE_SPIDERMONKEY
+#cmakedefine USE_TINYPY
+
 #endif

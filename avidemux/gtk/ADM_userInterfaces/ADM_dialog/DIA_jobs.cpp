@@ -1,10 +1,10 @@
 #include "ADM_toolkitGtk.h"
 #include "DIA_coreToolkit.h"
+#include "A_functions.h"
 
 static GtkWidget       *create_dialog1 (void);
 static void             updateStatus(void);
 static int              getSelection(GtkWidget *dialog);
-extern bool parseECMAScript(const char *name);
 static const char *StringStatus[]={QT_TR_NOOP("Ready"),QT_TR_NOOP("Succeeded"),QT_TR_NOOP("Failed"),QT_TR_NOOP("Deleted"),QT_TR_NOOP("Running")};
 
 typedef enum
@@ -137,8 +137,11 @@ GtkCellRenderer *renderer;
                                         updateStatus();
                                         GUI_Quiet();
                                         TLK_getDate(&(jobs.status[sel].startDate));
-                                        if(parseECMAScript(jobs.name[sel])) jobs.status[sel].status=STATUS_SUCCEED;
-                                        else jobs.status[sel].status=STATUS_FAILED;
+#ifdef USE_SPIDERMONKEY
+                                        if(A_parseECMAScript(jobs.name[sel])) jobs.status[sel].status=STATUS_SUCCEED;
+                                        else
+#endif
+											jobs.status[sel].status=STATUS_FAILED;
                                         TLK_getDate(&(jobs.status[sel].endDate));
                                         updateStatus();
                                         GUI_Verbose();
@@ -152,8 +155,11 @@ GtkCellRenderer *renderer;
                                           jobs.status[i].status=STATUS_RUNNING;
                                           TLK_getDate(&(jobs.status[i].startDate));
                                           updateStatus();
-                                          if(parseECMAScript(jobs.name[i])) jobs.status[i].status=STATUS_SUCCEED;
-                                                        else jobs.status[i].status=STATUS_FAILED;
+#ifdef USE_SPIDERMONKEY
+                                          if(A_parseECMAScript(jobs.name[i])) jobs.status[i].status=STATUS_SUCCEED;
+                                                        else
+#endif
+															jobs.status[i].status=STATUS_FAILED;
                                         TLK_getDate(&(jobs.status[i].endDate));
 
                                         }

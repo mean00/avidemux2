@@ -37,15 +37,24 @@ MenuEntry myMenuFile[]= {
             {MENU_SUBACTION,"Save as JPEG",   NULL,ACT_SAVE_JPG ,NULL,"Ctrl+E"},
             {MENU_ACTION,"Close",   NULL,ACT_CLOSE          ,NULL,                "Ctrl+W"},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
+
+#ifdef USE_SPIDERMONKEY
             {MENU_SUBMENU,"Js Project",NULL,ACT_DUMMY       ,NULL,NULL},
 
             {MENU_SUBACTION,"Run jsProject",       NULL,ACT_RUN_JS_PROJECT       ,NULL,NULL},
             {MENU_SUBACTION,"Save as jsProject",   NULL,ACT_SAVE_JS_PROJECT      ,NULL,NULL},
+#endif
 
+#ifdef USE_TINYPY
             {MENU_SUBMENU,"tinyPy Project",NULL,ACT_DUMMY       ,NULL},
             {MENU_SUBACTION,"Run pyProject",       NULL,ACT_RUN_PY_PROJECT       ,NULL,NULL},
             {MENU_SUBACTION,"Save as pyProject",   NULL,ACT_SAVE_PY_PROJECT      ,NULL,NULL},
+#endif
+
+#if defined(USE_SPIDERMONKEY) || defined(USE_TINYPY)
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
+#endif
+
             {MENU_ACTION,"Information",NULL,ACT_VIDEO_PROPERTIES,                 MKICON(info),NULL},
             {MENU_SEPARATOR,NULL,NULL,ACT_DUMMY             ,NULL,NULL},
             {MENU_ACTION,"Connect to avsproxy",NULL,ACT_AVS_PROXY,NULL},
@@ -92,8 +101,12 @@ MenuEntry myMenuHelp[]= {
         };
 
 MenuEntry myMenuTool[]= {
+#ifdef USE_SPIDERMONKEY
             {MENU_ACTION,"JavaScript Shell",NULL,ACT_JS_SHELL           ,NULL,NULL},
+#endif
+#ifdef USE_TINYPY
             {MENU_ACTION,"TinyPy Shell",    NULL,ACT_PY_SHELL           ,NULL,NULL},
+#endif
         };
 
 MenuEntry myMenuGo[]= {

@@ -1,3 +1,5 @@
+#include "jsapi.h"
+
 #include "ADM_assert.h"
 #include "SpiderMonkeyEngine.h"
 

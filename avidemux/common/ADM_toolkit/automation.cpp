@@ -1,5 +1,5 @@
 /***************************************************************************
-    \file    automation.cpp  
+    \file    automation.cpp
     \author  (C) 2002 by mean fixounet@free.fr
     \brief   This file reads the command line and do the corresponding command
 
@@ -119,8 +119,15 @@ AUTOMATON reaction_table[]=
         //{"js",                  0,"Dump the javascript functions",(one_arg_type)ADM_dumpJSHooks},
         {"nogui",               0,"Run in silent mode",		(one_arg_type)GUI_Quiet}   ,
         {"slave",			1,"run as slave, master is on port arg",		(one_arg_type)call_slave},
+
+#ifdef USE_SPIDERMONKEY
         {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},
+#endif
+
+#ifdef USE_TINYPY
         {"runpy",			1,"load and run a pyScript",		(one_arg_type)A_parseTinyPyScript},
+#endif
+
         {"audio-normalize",	1,"activate normalization",		call_normalize},
         {"audio-resample",	1,"resample to x hz",			call_resample},
         {"save-jpg",		1,"save a jpeg",			(one_arg_type)A_saveJpg}        ,
@@ -150,7 +157,7 @@ AUTOMATON reaction_table[]=
         {"reuse-2pass-log",	0	,"reuse 2pass logfile if it exists",	(one_arg_type)set_reuse_2pass_log},
         {"autosplit",		1	,"split every N MBytes",(one_arg_type)call_autosplit},
         {"info",		0	,"show information about loaded video and audio streams", (one_arg_type)show_info},
-        
+
 
         {"output-format",	1	,"set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)", (one_arg_type )set_output_format},
         {"rebuild-index",       0       ,"rebuild index with correct frame type", (one_arg_type)A_rebuildKeyFrame},

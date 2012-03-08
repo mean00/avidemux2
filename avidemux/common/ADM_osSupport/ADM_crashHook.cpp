@@ -20,13 +20,14 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_editor/ADM_edit.hxx"
+#include "A_functions.h"
+
 extern ADM_Composer *video_body;
 
 #define CRASH_FILE "crash.py"
 
 void saveCrashProject(void);
 extern char *ADM_getBaseDir(void);
-bool A_parseTinyPyScript(const char *name);
 
 /**
     \fn saveCrashProject
@@ -53,6 +54,7 @@ void saveCrashProject(void)
 
 void checkCrashFile(void)
 {
+#ifdef USE_TINYPY
   char *baseDir=ADM_getBaseDir();
   const char *name=CRASH_FILE;
   static int crashCount=0;
@@ -72,5 +74,6 @@ void checkCrashFile(void)
     printf("No crash file (%s)\n",where); 
   }
   delete [] where;
+#endif
 }
 //EOF

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 SET(VERSION 2.6.0)
 SET(ADM_PROJECT Avidemux_gtk)
 
+MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for avidemux Gtk Started")
 MESSAGE("#########################################")

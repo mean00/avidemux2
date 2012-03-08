@@ -1,3 +1,5 @@
+include(admCheckSpiderMonkey)
+
 if (NOT USE_SYSTEM_SPIDERMONKEY)
 	ADD_SUBDIRECTORY(smjs)
 endif (NOT USE_SYSTEM_SPIDERMONKEY)

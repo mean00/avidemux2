@@ -4,7 +4,13 @@
 #include <set>
 #include <vector>
 #include "IScriptEngine.h"
-#include "jsapi.h"
+
+struct JSClass;
+struct JSContext;
+struct JSErrorReport;
+struct JSFunctionSpec;
+struct JSObject;
+struct JSRuntime;
 
 class SpiderMonkeyEngine : public IScriptEngine
 {
