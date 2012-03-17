@@ -45,7 +45,7 @@
 */
 //ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 #include "ADM_muxerProto.h"
-extern ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
+extern ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime,int32_t shift);
 extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
 
 /**
@@ -56,6 +56,7 @@ extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,
 class admSaver
 {
 protected:
+        uint64_t             startAudioTime; // Actual start time (for both audio & video) can differ from markerA
         std::string          fileName;
         std::string          logFileName;
         ADM_muxer            *muxer;
@@ -67,6 +68,7 @@ protected:
         int                  muxerIndex;
         int                  videoEncoderIndex;
         ADM_coreVideoEncoder *handleFirstPass(ADM_coreVideoEncoder *pass1);
+        ADM_videoStream      *setupVideo(void);
 
 public:
                 admSaver(const char *out);
@@ -79,6 +81,7 @@ public:
 */
  admSaver::admSaver(const char *out)
 {
+
         fileName=std::string(out);
         logFileName=fileName;
         logFileName+=std::string(".stats");
@@ -89,6 +92,7 @@ public:
         astreams[0]=NULL;
         markerA=video_body->getMarkerAPts();
         markerB=video_body->getMarkerBPts();
+        startAudioTime=markerA; // Actual start time (for both audio & video ), 
         muxerIndex=UI_GetCurrentFormat();
         videoEncoderIndex=UI_getCurrentVCodec();
         printf("[Save] Encoder index=%d\n",videoEncoderIndex);
@@ -230,54 +234,17 @@ uint64_t videoDuration=last->getInfo()->totalDuration;
     return pass2;
 }
 /**
-    \fn save
+    \fn setupVideo
+    \brief prepare video (copy or process)
 */
-bool admSaver::save(void)
+ADM_videoStream *admSaver::setupVideo(void)
 {
-    int ret=false;
-    uint64_t startAudioTime=markerA; // Actual start time (for both audio & video actually)
-    ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
-    ADM_info("[A_Save] Saving..\n");
-    ADM_audioStream *astreams[1]={NULL};
-    const char *defaultExtension=ADM_MuxerGetDefaultExtension(muxerIndex);
-    ADM_info("Muxer default extension %s\n",defaultExtension);
-    if(!videoEncoderIndex) 
-    {
-        if(false==video_body-> checkCutsAreOnIntra())
-        {
-            if(!GUI_Question("The video is in copy mode but the cut points are not on keyframes.\n"
-                            "The video will be saved but there will corruption at cut point(s).\n"
-                             "Do you want to continue anyway ?"))
-            {
-                return false;
-            }
-        }
-    }
-
-    if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
-    {
-        GUI_Error_HIG("Muxer","Cannot instantiante muxer");
-        return 0;
-    }
-    
-    // Audio Stream ?
-    ADM_audioStream *audio=NULL;
-    int nbAStream=1;
-    if(!video_body->getDefaultAudioTrack(&audio))
-    {
-        audio=NULL;
-        nbAStream=0; // FIXME
-    }else
-    {
-        audio->goToTime(startAudioTime); // Rewind audio
-    }
     ADM_videoStream *video=NULL;
     // Video Stream
     if(!videoEncoderIndex) // Copy
     {
         aviInfo info;
         video_body->getVideoInfo(&info);
-       
 
         uint8_t *extra;
         uint32_t extraLen;
@@ -304,7 +271,8 @@ bool admSaver::save(void)
         // In that case, get the real time and update audio with it...
         // Because we might have go back in time to catch the first intra
         startAudioTime=copy->getStartTime();
-        if(audio) audio->goToTime(startAudioTime);
+      
+        
     }else
     {
         // 1- create filter chain
@@ -314,7 +282,7 @@ bool admSaver::save(void)
         if(!chain)
         {
                 GUI_Error_HIG("Video","Cannot instantiante video Chain");
-                return false;
+                return NULL;
         }
         // 2- Create Encoder
         //********************
@@ -326,7 +294,7 @@ bool admSaver::save(void)
         if(!encoder)
         {
            GUI_Error_HIG("Video","Cannot create encoder");
-           return false;
+           return NULL;
         }
         // 3 dual Pass ?
         //*****************
@@ -336,7 +304,7 @@ bool admSaver::save(void)
             if(!encoder)
             {
                 printf("[Save] cannot create encoder for pass 2\n");
-                return false;
+                return NULL;
             }
         }
         if(encoder->setup()==false)
@@ -344,37 +312,102 @@ bool admSaver::save(void)
             GUI_Error_HIG("Video","Cannot setup codec. Bitrate too low ?");
             delete encoder;
             encoder=NULL;
-            return false;
+            return NULL;
         }
         video= new ADM_videoStreamProcess(encoder);
         if(!video)
         {
                 GUI_Error_HIG("Video","Cannot create encoder");
                 delete encoder;
-                return 0;
+                return NULL;
         }
-    }
-    //
+    }  
+    return video;
+}
+/**
+    \fn save
+    \brief Prepare the audio and video tracks and feed them to the muxer
+*/
+#define ADM_MAX_AUDIO_STREAM 10
+bool admSaver::save(void)
+{
+    BVector <EditableAudioTrack *>audioEditable;
+    BVector <ADM_audioStream *>audioStreams;
+    ADM_audioStream *audioAccess[ADM_MAX_AUDIO_STREAM];
 
-    if (!audioProcessMode())
+    int ret=false;
+    int nbAudioTracks=video_body->getNumberOfActiveAudioTracks();
+    if(nbAudioTracks>=ADM_MAX_AUDIO_STREAM) nbAudioTracks=ADM_MAX_AUDIO_STREAM;
+    
+    ADM_info("Audio starting time %s\n",ADM_us2plain(startAudioTime));
+    ADM_info("[A_Save] Saving..\n");
+    
+    const char *defaultExtension=ADM_MuxerGetDefaultExtension(muxerIndex);
+    EditableAudioTrack *ed=NULL;
+    ADM_info("Muxer default extension %s\n",defaultExtension);
+    if(!videoEncoderIndex) 
     {
-        if(audio)
-            astreams[0]=audioCreateCopyStream(startAudioTime,0,audio); //copy
-    }else
-    {
-        if(audio)   // Process
+        if(false==video_body-> checkCutsAreOnIntra())
         {
-            // Access..
-            ADM_info("Crearting audio encoding stream, starttime %s\n",ADM_us2plain(startAudioTime));
-            //audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
-            ADM_audioStream *access=audioCreateEncodingStream(muxer->useGlobalHeader(),startAudioTime,0); // FIXME LEAK FIXME 
-            astreams[0]=access;
-            if(!access)
+            if(!GUI_Question("The video is in copy mode but the cut points are not on keyframes.\n"
+                            "The video will be saved but there will corruption at cut point(s).\n"
+                             "Do you want to continue anyway ?"))
             {
-                    GUI_Error_HIG("Audio","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)");
-                    return false;
+                return false;
             }
         }
+    }
+
+    if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
+    {
+        GUI_Error_HIG("Muxer","Cannot instantiante muxer");
+        return 0;
+    }
+    // Audio Stream ?
+    for(int i=0;i<nbAudioTracks;i++)
+    {
+        EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(i);
+        ADM_assert(ed);
+        ADM_audioStream  *stream=video_body->getAudioStreamAt(i);
+        ADM_assert(stream);
+        stream->goToTime(startAudioTime); // Rewind audio
+        audioEditable.append(ed);
+        audioStreams.append(stream);
+    }
+     
+    ADM_videoStream *video=setupVideo();
+    if(!video)
+    {
+        return false;
+    }
+    // adjust audio
+     for(int i=0;i<nbAudioTracks;i++)
+        {
+            audioStreams[i]->goToTime(startAudioTime);
+        }
+    //
+    // 
+    // Create the audio streams we will use (copy/process)
+    //
+    for(int i=0;i<nbAudioTracks;i++)
+    {
+            if(1) // Fixme !
+            {
+                // Access..
+                ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s\n",i,ADM_us2plain(startAudioTime));
+                //audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
+                ADM_audioStream *access=audioCreateEncodingStream(audioEditable[i],muxer->useGlobalHeader(),startAudioTime,0); // FIXME LEAK FIXME 
+                
+                if(!access)
+                {
+                        GUI_Error_HIG("Audio","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)");
+                        return false;
+                }
+                audioAccess[i]=access;
+            }else // copy mode...
+            {
+
+            }
     }
     // Check if we need to add an extension....
     if(defaultExtension)
@@ -387,7 +420,7 @@ bool admSaver::save(void)
         }
 
     }
-    if(!muxer->open(fileName.c_str(),video,nbAStream,astreams))
+    if(!muxer->open(fileName.c_str(),video,nbAudioTracks,astreams))
     {
         GUI_Error_HIG("Muxer","Cannot open ");
     }else
@@ -399,7 +432,7 @@ abort123:
     if(video)
         delete video;
     video=NULL;
-    for(int i=0;i<nbAStream;i++)
+    for(int i=0;i<nbAudioTracks;i++)
     {
         delete astreams[i];
         astreams[i]=NULL;

@@ -214,10 +214,15 @@ protected:
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
-                    bool        getDefaultAudioTrack(ADM_audioStream **stream);
-                    ADM_edAudioTrack *getDefaultEdAudioTrack(void);
+                    int                 getNumberOfActiveAudioTracks(void)
+                                        {
+                                            return activeAudioTracks.size();
+                                        }
+                    bool                getDefaultAudioTrack(ADM_audioStream **stream);
+                    ADM_edAudioTrack   *getDefaultEdAudioTrack(void);
                     EditableAudioTrack *getDefaultEditableAudioTrack(void);
                     EditableAudioTrack *getEditableAudioTrackAt(int i);
+                    ADM_audioStream    *getAudioStreamAt(int i);
   public:
 
                     bool     	getExtraHeaderData(uint32_t *len, uint8_t **data);

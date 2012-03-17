@@ -371,7 +371,7 @@ ADM_AudioEncoder *audioEncoderCreate(AUDMAudioFilter *filter,bool globalHeader)
 {
       ADM_assert(currentEncoder<ListOfAudioEncoder.size());
       ADM_audioEncoder *enc=ListOfAudioEncoder[currentEncoder];
-     return enc->create(filter,globalHeader);
+      return enc->create(filter,globalHeader);
 }
 /**
         \fn getAudioExtraConf

@@ -21,7 +21,6 @@
 #include "audiofilter_access.h"
 #include "audioencoder.h"
 
-extern bool            destroyEncodingFilter(void);
 
 /**
     \fn ADMAudioFilter_Access
@@ -43,7 +42,8 @@ ADMAudioFilter_Access::~ADMAudioFilter_Access()
     printf("[FilterAccess] Destroyed\n");
     if(filter)
     {
-        destroyEncodingFilter();
+#warning memleak
+        //destroyEncodingFilter();
         filter=NULL;
     }
     if(encoder)

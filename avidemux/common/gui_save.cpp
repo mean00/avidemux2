@@ -38,7 +38,7 @@
 // Local prototypes
 #include "A_functions.h"
 int      A_Save(const char *name);
-extern   ADM_audioStream  *audioCreateEncodingStream(bool globalHeader,uint64_t startTime,int32_t shift);
+extern   ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime,int32_t shift);
 
 /**
     \fn HandleAction_Navigate
@@ -281,7 +281,8 @@ int A_saveAudioProcessed (const char *name)
             start=timeEnd;
             duration=-duration;
     }
-  ADM_audioStream *access=audioCreateEncodingStream(false,start,0);
+  EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+  ADM_audioStream *access=audioCreateEncodingStream(ed,false,start,0);
   if(!access)
     {
         GUI_Error_HIG("Audio","Cannot create stream");

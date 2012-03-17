@@ -56,4 +56,14 @@ EditableAudioTrack *ADM_Composer::getEditableAudioTrackAt(int i)
     if(i>=activeAudioTracks.size()) return NULL;
     return activeAudioTracks.atEditable(i);
 }
+/**
+    \fn getAudioStreamAt
+*/
+ADM_audioStream  *ADM_Composer::getAudioStreamAt(int i)
+{
+    ADM_audioStream *stream=NULL;
+    if(i>=activeAudioTracks.size()) return NULL;
+    stream=activeAudioTracks.atEdAudio(i);
+    return stream;
+}
 // EOF
