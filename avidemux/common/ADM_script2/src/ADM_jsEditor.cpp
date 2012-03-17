@@ -15,12 +15,13 @@
 #include "ADM_cpp.h"
 #include <stdarg.h>
 #include <vector>
-#include "ADM_scriptEditor.h"
+//#include "ADM_scriptEditor.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
-#include "ADM_scriptIf.h"
+//#include "ADM_scriptIf.h"
 extern ADM_Composer *video_body;
 void mixDump(uint8_t *ptr, uint32_t len);;
+#define jsLog printf
 #define enterLock() {}
 #define leaveLock() {}
 /**

@@ -340,6 +340,7 @@ void onexit( void )
     if(video_body) video_body->cleanup ();
     delete video_body;
     // wait for thread to finish executing
+#ifdef USE_SPIDERMONKEY
     destroyScriptEngines();
 #endif
 //    filterCleanUp();

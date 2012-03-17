@@ -8,6 +8,7 @@
 #include "ADM_confCouple.h"
 class AUDMAudioFilter;
 class ADM_AudioEncoder;
+class EditableAudioTrack;
 /// Select the best encoder using the audio fourcc : WAV_MP3 etc...
 uint8_t audio_selectCodecByTag(int dex,uint32_t tag);
 /// Set an option for example "DISABLERESERVOIR",1

@@ -169,7 +169,7 @@ class ActiveAudioTracks
             \brief Wrapper class that handles all the logic to seek/deal with multiple video files
                         with editing
 */
-class ADM_Composer : public IEditor, public ADM_audioStream
+class ADM_Composer : public IEditor
 {
   friend class ADM_edAudioTrackFromVideo;
   private:
@@ -287,16 +287,6 @@ public:
 public:
 /************************************ Public API ***************************/
 public:
-					bool		setContainer(const char *cont, CONFcouple *c);
-					int         setVideoCodec(const char *codec, CONFcouple *c);
-					int         addVideoFilter(const char *filter, CONFcouple *c);
-					void		clearFilters();
-					bool		setAudioCodec(const char *codec, int bitrate, CONFcouple *c);
-					int			setAudioMixer(const char *s);
-					void		resetAudioFilter();
-					uint32_t    getAudioResample();
-					void        setAudioResample(uint32_t newfq);
-					char*		getVideoCodec(void);
                     uint64_t    getCurrentFramePts(void);
                     bool        goToTimeVideo(uint64_t time);
                     bool        goToIntraTimeVideo(uint64_t time);
@@ -365,5 +355,20 @@ public:
 /******************************* /Misc ************************************/
 /******************************** Info ************************************/
                     const char          *getVideoDecoderName(void);
+/********************************* IEditor **********************************/
+       bool         setContainer(const char *cont, CONFcouple *c);
+        int         setVideoCodec(const char *codec, CONFcouple *c);
+        int         addVideoFilter(const char *filter, CONFcouple *c);
+        void        clearFilters();
+        bool        setAudioCodec(const char *codec, int bitrate, CONFcouple *c);
+        int         setAudioMixer(const char *s);
+        void        resetAudioFilter();
+        bool        setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain);
+        uint32_t    getAudioResample();
+        void        setAudioResample(uint32_t newfq);
+        char*       getVideoCodec(void);
+        int         saveAudio(const char *name);
+        
+/********************************* /IEditor **********************************/                    
 };
 #endif

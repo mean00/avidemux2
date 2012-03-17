@@ -30,7 +30,7 @@
 #endif
 
 #include "fourcc.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
 #include "DIA_coreToolkit.h"
 #include "prefs.h"
@@ -732,6 +732,13 @@ int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 	return r;
 }
 
+
+int ADM_Composer::saveAudio(const char *name)
+{
+	return A_audioSave(name); 
+}
+
+#if 0
 void ADM_Composer::clearFilters()
 {
 	ADM_vf_clearFilters();
@@ -740,18 +747,12 @@ void ADM_Composer::clearFilters()
 int ADM_Composer::setAudioMixer(const char *s)
 {
     CHANNEL_CONF c = AudioMuxerStringToId(s);
-
     return audioFilterSetMixer(c);
 }
 
 void ADM_Composer::resetAudioFilter()
 {
-	audioFilterReset();
-}
-
-int ADM_Composer::saveAudio(const char *name)
-{
-	return A_audioSave(name);
+    audioFilterReset();
 }
 
 char *ADM_Composer::getVideoCodec(void)
@@ -866,3 +867,4 @@ int ADM_Composer::saveImageJpg(const char *filename)
 {
 	return A_saveJpg(filename);
 }
+#endif
