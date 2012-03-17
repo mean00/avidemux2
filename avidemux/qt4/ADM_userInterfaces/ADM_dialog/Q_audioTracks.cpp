@@ -31,6 +31,7 @@ class audioTrackQt4: public DIA_audioTrackBase
 {
 protected:
             audioTrackWindow *window;
+          
 public:
        
                     audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *active ) : DIA_audioTrackBase( pool, active )
@@ -38,6 +39,8 @@ public:
                             window=new audioTrackWindow();
                             qtRegisterDialog(window);
                             window->setModal(TRUE);
+                            // Fill in the menu
+
                             window->show();
                     };
             virtual		~audioTrackQt4(){};

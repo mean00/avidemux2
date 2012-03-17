@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>419</width>
-    <height>155</height>
+    <width>500</width>
+    <height>153</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,150 +15,158 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label1">
-         <property name="text">
-          <string>Track 1</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBoxEnabled1">
-         <property name="text">
-          <string>Enabled</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBoxCodec1"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonCodecConf1">
-         <property name="text">
-          <string>Configure</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonFilter1">
-         <property name="text">
-          <string>Audio Filters</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QLabel" name="label1">
+       <property name="text">
+        <string>Track 1</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label1_2">
-         <property name="text">
-          <string>Track 2</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBoxEnabled2">
-         <property name="text">
-          <string>Enabled</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBoxCodec2"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonCodecConf2">
-         <property name="text">
-          <string>Configure</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonFilter2">
-         <property name="text">
-          <string>Audio Filters</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QCheckBox" name="checkBoxEnabled1">
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="label1_3">
-         <property name="text">
-          <string>Track 3</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBoxEnabled3">
-         <property name="text">
-          <string>Enabled</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBoxCodec3"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonCodecConf3">
-         <property name="text">
-          <string>Configure</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonFilter3">
-         <property name="text">
-          <string>Audio Filters</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QComboBox" name="comboBoxInput1"/>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="label1_4">
-         <property name="text">
-          <string>Track 4</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBoxEnabled4">
-         <property name="text">
-          <string>Enabled</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox4"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonCodecConf4">
-         <property name="text">
-          <string>Configure</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonFilter4">
-         <property name="text">
-          <string>Audio Filters</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QComboBox" name="comboBoxCodec1"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCodecConf1">
+       <property name="text">
+        <string>Configure</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonFilter1">
+       <property name="text">
+        <string>Audio Filters</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label1_2">
+       <property name="text">
+        <string>Track 2</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxEnabled2">
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxInput2"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxCodec2"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCodecConf2">
+       <property name="text">
+        <string>Configure</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonFilter2">
+       <property name="text">
+        <string>Audio Filters</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label1_3">
+       <property name="text">
+        <string>Track 3</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxEnabled3">
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxInput3"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxCodec3"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCodecConf3">
+       <property name="text">
+        <string>Configure</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonFilter3">
+       <property name="text">
+        <string>Audio Filters</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label1_4">
+       <property name="text">
+        <string>Track 4</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxEnabled4">
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxInput4"/>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxCodec4"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCodecConf4">
+       <property name="text">
+        <string>Configure</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonFilter4">
+       <property name="text">
+        <string>Audio Filters</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
