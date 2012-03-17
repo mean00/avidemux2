@@ -2,7 +2,7 @@
 #define IScriptEngine_h
 
 #include <string>
-#include "ADM_editor/IEditor.h"
+#include "ADM_editor/include/IEditor.h"
 
 class IScriptEngine
 {

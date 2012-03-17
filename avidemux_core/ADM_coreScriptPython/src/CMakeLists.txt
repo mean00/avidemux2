@@ -14,7 +14,7 @@ include_directories(.)
 include_directories(../include)
 include_directories(../../ADM_coreScript/include)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common)
-include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_editor)
+include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_editor/include)
 
 if (APPLE)
 	target_link_libraries(ADM_coreScriptPython -Wl,-read_only_relocs,suppress)
