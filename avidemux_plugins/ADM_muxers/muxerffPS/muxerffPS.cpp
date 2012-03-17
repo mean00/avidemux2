@@ -102,7 +102,10 @@ const char *er;
             printf("[ffPS] Failed to init audio\n");
             return false;
         }
-        audio_st->codec->bit_rate=a[0]->getInfo()->byterate*8;        
+        for(int i=0;i<nbAudioTrack;i++)
+        {
+            audio_st[i]->codec->bit_rate=a[i]->getInfo()->byterate*8;        
+        }
         // /audio
         oc->mux_rate=psMuxerConfig.muxRatekBits*1000;
         // Also copy audio & video bitrate
