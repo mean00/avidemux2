@@ -33,8 +33,7 @@ ENDMACRO(INSTALL_VIDEO_FILTER _lib)
 ############## ADD_VIDEO_FILTER ###################"
 MACRO(ADD_VIDEO_FILTER name)
     IF(DO_COMMON)
-        ADD_LIBRARY(${name} SHARED ${ARGN})
-	AS_NEEDED(${name})
+        ADM_ADD_SHARED_LIBRARY(${name} ${ARGN})
     ENDIF(DO_COMMON)
 ENDMACRO(ADD_VIDEO_FILTER name)
 
