@@ -51,15 +51,10 @@ typedef enum
 }ADM_VORBIS_MODE;
 
 //
-static uint32_t vorbisBitrate=128;
-//___________
-vorbis_encoder vorbisConf=
-{
-ADM_VORBIS_VBR,9.
-};
+static vorbis_encoder defaultConfig={128,ADM_VORBIS_VBR,9. };
 
 
-static bool configure(void);
+static bool configure(CONFcouple **setup);
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Vorbis);
 
@@ -75,24 +70,20 @@ static ADM_audioEncoder encoderDesc = {
   1,0,0,                // Version
   WAV_OGG_VORBIS,
   200,                  // Priority
-  getConfigurationData,  // Defined by macro automatically
-  setConfigurationData,  // Defined by macro automatically
-
-  getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically
 
   NULL,         //** put your own function here**
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(vorbis_encoder_param,&vorbisConf,vorbisBitrate);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 
 /******************* / Declare plugin*******************************************************/
 
 
 //__________
 
-AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream,bool globalHeader,CONFcouple *setup)  
+:ADM_AudioEncoder    (instream,setup)
 {
   printf("[Vorbis] Creating Vorbis\n");
   _handle=NULL;
@@ -105,6 +96,9 @@ AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream,bool globalHea
   outputChannelMapping[3] = ADM_CH_REAR_RIGHT;
   outputChannelMapping[4] = ADM_CH_FRONT_CENTER;
   outputChannelMapping[5] = ADM_CH_LFE;
+  _config=defaultConfig;
+  if(setup) // load config if possible
+    ADM_paramLoad(setup,vorbis_encoder_param,&_config);
 };
 
 /**
@@ -141,7 +135,7 @@ bool AUDMEncoder_Vorbis::initialize(void)
 
   vorbis_info_init(&VI) ;
 
-  switch(vorbisConf.mode)
+  switch(_config.mode)
   {
 
     case ADM_VORBIS_VBR:
@@ -149,7 +143,7 @@ bool AUDMEncoder_Vorbis::initialize(void)
                               wavheader.channels,
                               wavheader.frequency,
                               -1, // Max bitrate
-                              vorbisBitrate*1000, //long nominal_bitrate,
+                              _config.bitrate*1000, //long nominal_bitrate,
                               -1 //long min_bitrate))
                             );
                       break;
@@ -157,7 +151,7 @@ bool AUDMEncoder_Vorbis::initialize(void)
                     err=vorbis_encode_init_vbr(&VI,
                                 wavheader.channels,
                                 wavheader.frequency,
-                                vorbisConf.quality/10
+                                _config.quality/10
                               );
                     break;
 
@@ -202,13 +196,13 @@ bool AUDMEncoder_Vorbis::initialize(void)
   vorbis_comment_clear(&VC);
 
   printf("\n[Vorbis]Vorbis encoder initialized\n");
-  switch(vorbisConf.mode)
+  switch(_config.mode)
   {
     case ADM_VORBIS_VBR:
-      printf("[Vorbis]CBR Bitrate:%"LU"\n",vorbisBitrate);
+      printf("[Vorbis]CBR Bitrate:%"LU"\n",_config.bitrate);
       break;
     case ADM_VORBIS_QUALITY: //FIXME FIXME FIXME
-      printf("[Vorbis]VBR Quality:%.1f\n",vorbisConf.quality);
+      printf("[Vorbis]VBR Quality:%.1f\n",_config.quality);
     break;
     default:
       ADM_assert(0);
@@ -287,7 +281,7 @@ bool	AUDMEncoder_Vorbis::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define PX(x) &(lameParam->x)
+#define PX(x) &(config->x)
 #define BITRATE(x) {x,QT_TR_NOOP(#x)}
 /**
       \fn configure
@@ -296,17 +290,21 @@ bool	AUDMEncoder_Vorbis::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 
 */
 
-bool configure(void)
+bool configure(CONFcouple **setup)
 {
 
     uint32_t mmode,ppreset;
     ELEM_TYPE_FLOAT qqual;
 
+    vorbis_encoder config=defaultConfig;
+    if(*setup)
+    {
+        ADM_paramLoad(*setup,vorbis_encoder_param,&config);
+    }
 
 
-
-    mmode=vorbisConf.mode;
-    qqual=(ELEM_TYPE_FLOAT)vorbisConf.quality;
+    mmode=config.mode;
+    qqual=(ELEM_TYPE_FLOAT)config.quality;
 
     diaMenuEntry channelMode[]={
                              {ADM_VORBIS_VBR,      QT_TR_NOOP("VBR"),NULL},
@@ -326,7 +324,7 @@ bool configure(void)
                               BITRATE(192),
                               BITRATE(224)
                           };
-    diaElemMenu bitrate(&(vorbisBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
 
     diaElemFloat quality(&qqual,QT_TR_NOOP("_Quality:"),-1.,10.);
 
@@ -337,8 +335,12 @@ bool configure(void)
 
   if( diaFactoryRun(QT_TR_NOOP("Vorbis Configuration"),3,elems))
   {
-    vorbisConf.mode=(ADM_VORBIS_MODE)mmode;
-    vorbisConf.quality=(float)qqual;
+    config.mode=(ADM_VORBIS_MODE)mmode;
+    config.quality=(float)qqual;
+    if(*setup) delete *setup;
+    *setup=NULL;
+    ADM_paramSave(setup,vorbis_encoder_param,&config);
+    defaultConfig=config;
     return 1;
   }
   return 0;

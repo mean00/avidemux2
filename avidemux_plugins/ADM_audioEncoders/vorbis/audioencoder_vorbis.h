@@ -14,7 +14,7 @@
  ***************************************************************************/
 #ifndef AUDMaudioVorbis_H
 #define AUDMaudioVorbis_H
-
+#include "vorbis_encoder.h"
 /**
     \fn AUDMEncoder_Vorbis
     \brief Vorbis encoder
@@ -26,12 +26,12 @@ class AUDMEncoder_Vorbis : public ADM_AudioEncoder
     void              *_handle;
     uint64_t          _oldpos;
     uint32_t          _chunk;
-
+    vorbis_encoder    _config;
          
   public:
                     bool     initialize(void);
         virtual     ~AUDMEncoder_Vorbis();
-                    AUDMEncoder_Vorbis(AUDMAudioFilter *instream,bool globalHeader);
+                    AUDMEncoder_Vorbis(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *setup);
             
         virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
