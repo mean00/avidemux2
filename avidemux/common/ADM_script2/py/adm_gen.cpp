@@ -9,7 +9,8 @@ static tp_obj zzpy_audioCodec(TP)
   int p1= pm.asInt();
   CONFcouple *p2=NULL;
   pm.makeCouples(&p2);
-  int r=  scriptSetAudioCodec(p0,p1,p2); 
+//  int r=  scriptSetAudioCodec(p0,p1,p2); 
+  int r=0;
   return tp_number(r);
 }
 // saveBmp -> int A_saveImg (str ) 

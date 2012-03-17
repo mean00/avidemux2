@@ -22,7 +22,7 @@
 #include "audiofilter_normalize_param.h"
 
 /* Encoder part */
-uint8_t         audioCodecSetByIndex(int i);
-void            audioCodecConfigure( void );
+uint8_t         audioCodecSetByIndex(int dex,int i);
+void            audioCodecConfigure( int dex );
 
 #endif

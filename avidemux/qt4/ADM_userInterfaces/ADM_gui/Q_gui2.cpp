@@ -51,7 +51,7 @@ extern void HandleAction(Action a);
 extern int encoderGetEncoderCount (void);
 extern const char *encoderGetIndexedName (uint32_t i);
 uint32_t audioEncoderGetNumberOfEncoders(void);
-const char  *audioEncoderGetDisplayName(uint32_t i);
+const char  *audioEncoderGetDisplayName(int i);
 extern void checkCrashFile(void);
 extern void UI_QT4VideoWidget(QFrame *frame);
 extern void loadTranslator(void);

@@ -42,6 +42,7 @@
 
  #include "audiofilter_internal.h"
  #include "audiofilter_conf.h"
+ #include "audioencoderInternal.h"
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
@@ -92,9 +93,30 @@ class PoolOfAudioTracks
 class EditableAudioTrack
 {
 public:
+// source
+        ADM_edAudioTrack            *edTrack;
+// filter
         VectorOfAudioFilter         EncodingVector;
         ADM_AUDIOFILTER_CONFIG      audioEncodingConfig;
-        ADM_edAudioTrack            *edTrack;
+        
+// encoder
+        int                         encoderIndex;
+        CONFcouple                  *encoderConf;
+        int                         bitrate;
+        ADM_audioEncoder            *audioEncoder;
+        EditableAudioTrack()
+        {
+            memset(this,0,sizeof(this)); // dangerous !
+        }
+        ~EditableAudioTrack()
+        {
+            edTrack=NULL;
+            if(audioEncoder) delete audioEncoder;
+            audioEncoder=NULL;
+            EncodingVector.clear(); // memleak ?
+            if(encoderConf) delete encoderConf;
+            encoderConf=NULL;
+        }
 };
 
 /**

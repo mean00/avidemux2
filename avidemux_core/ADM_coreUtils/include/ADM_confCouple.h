@@ -26,6 +26,7 @@ class CONFcouple
             
 
 	public:
+static      CONFcouple *duplicate(CONFcouple *source);
 			int32_t lookupName(const char *myname);
 
 			CONFcouple(uint32_t nb);

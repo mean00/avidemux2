@@ -15,13 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 #include <BVector.h>
+#include <string>
 #include "ADM_default.h"
 #include "audioencoderInternal.h"
 #include "ADM_dynamicLoading.h"
-
-
-static AUDIOENCODER  currentEncoder=0; //0 is always dummy
-
+#include "ADM_edit.hxx"
+extern ADM_Composer *video_body;
 static AUDIOENCODER ADM_encoderByName(const char *name);
 
 
@@ -187,15 +186,6 @@ bool ADM_ae_cleanup(void)
     ListOfAudioEncoderLoader.clear();
     return true;
 }
-/**
-    \fn audioPrintCurrentCodec
-    \brief updates the UI with the current selected audio encoder
-*/
-void UI_setAudioCodec( int i);
-void audioPrintCurrentCodec(void)
-{
-			UI_setAudioCodec(currentEncoder);
-}
 
 /**
     \fn ADM_encoderByName
@@ -228,12 +218,56 @@ static const char *ADM_audioEncoderById(AUDIOENCODER id)
     return ListOfAudioEncoder[id]->codecName;
 }
 /**
+    \fn audioEncoderGetNumberOfEncoders
+*/
+uint32_t audioEncoderGetNumberOfEncoders(void)
+{
+    return ListOfAudioEncoder.size();
+}
+
+// ********************************************************************
+// ********************************************************************
+// ********************************************************************
+// ********************************************************************
+/**
+    \fn audioEncoderGetDisplayName
+*/
+const char  *audioEncoderGetDisplayName(int dex)
+{
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot set codec for track %d\n",dex);
+        return "None";
+    }
+     int t=ed->encoderIndex;
+     ADM_assert(t<ListOfAudioEncoder.size());
+     return ListOfAudioEncoder[t]->menuName;
+}
+
+/**
+    \fn audioPrintCurrentCodec
+    \brief updates the UI with the current selected audio encoder
+*/
+void UI_setAudioCodec( int i);
+void audioPrintCurrentCodec(int dex)
+{
+        EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+        if(ed)
+			UI_setAudioCodec(ed->encoderIndex);
+}
+
+/**
     \fn AVDM_getCurrentAudioEncoder
     \brief
 */
-AUDIOENCODER AVDM_getCurrentAudioEncoder( void)
+AUDIOENCODER AVDM_getCurrentAudioEncoder( int dex)
 {
-	return currentEncoder;
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(ed)
+        return ed->encoderIndex;
+    ADM_warning("Cant get current audio encoder for track %d\n",dex);
+    return (AUDIOENCODER)0;
 }
 /**
     \fn audioCodecSelect
@@ -246,37 +280,55 @@ void audioCodecSelect( void )
 #warning FIXME 
 #warning FIXME 
 	//DIA_audioCodec( &currentEncoder );
-	audioPrintCurrentCodec();
+	audioPrintCurrentCodec(0);
 }
 /**
     \fn     audioCodecSetByName
     \brief  only called by JS, we have to update UI as well
 */
-uint8_t audioCodecSetByName( const char *name)
+uint8_t audioCodecSetByName( int dex,const char *name)
 {
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot set codec for track %d\n",dex);
+        return 0;
+    }
+    
+
 		for(uint32_t i=0;i<ListOfAudioEncoder.size();i++)
 		{
 			if(!strcasecmp(name,ListOfAudioEncoder[i]->codecName))
 			{
 
-				currentEncoder=i;
-                audioPrintCurrentCodec(); // Update UI
+				ed->encoderIndex=i;
+                if(!dex)
+                    audioPrintCurrentCodec(dex); // Update UI
 				return 1;
 			}
 
 		}
-		printf("\n Mmmm Select audio codec by name failed...(%s).\n",name);
+		printf("\n Mmmm Select audio codec by name failed...(%s) for track %d\n",name,dex);
 		return 0;
 }
 /**
     \fn audioCodecSetByIndex
     \brief To be used by UI code only!
 */
-uint8_t audioCodecSetByIndex(int i)
+uint8_t audioCodecSetByIndex(int dex,int i)
 {
     ADM_assert(i<ListOfAudioEncoder.size());
-    currentEncoder=i;
-    printf("[AudioEncoder] Selected %s for index %d, tag 0x%x \n",ListOfAudioEncoder[currentEncoder]->codecName,i,ListOfAudioEncoder[currentEncoder]->wavTag);
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot set codec for track %d\n",dex);
+        return 0;
+    }
+    ed->encoderIndex=i;
+    if(ed->encoderConf) delete ed->encoderConf;
+    ed->encoderConf=NULL;
+    printf("[AudioEncoder] Selected %s for index %d, tag 0x%x \n",
+        ListOfAudioEncoder[i]->codecName,i,ListOfAudioEncoder[i]->wavTag);
     return 1;
 
 }
@@ -284,10 +336,17 @@ uint8_t audioCodecSetByIndex(int i)
     \fn audioCodecGetName
     \brief Returns the current codec tagname
 */
-const char *audioCodecGetName( void )
+const char *audioCodecGetName( int dex )
 {
-	  ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-      return ListOfAudioEncoder[currentEncoder]->codecName;
+    
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get codec name for track %d\n",dex);
+        return 0;
+    }
+    ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
+    return ListOfAudioEncoder[ed->encoderIndex]->codecName;
 
 }
 
@@ -296,132 +355,185 @@ const char *audioCodecGetName( void )
     \brief
     @return 1 in process mode, 0 in copy mode
 */
-uint32_t audioProcessMode(void)
+uint32_t audioProcessMode(int dex)
 {
-        if(!currentEncoder) return 0;
-        return 1;
+
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio codec mode for track %d\n",dex);
+        return 0;
+    }
+    ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
+
+    if(!ed->encoderIndex) return 0;
+    return 1;
 }
 /**
  * 	\fn getAudioOuputTag
  *  \brief Return the encoding of the currently selected codec
  *  Must be called only in process mode, else it is meaningless.
  */
-uint32_t audioFilter_getOuputCodec(void)
+uint32_t audioFilter_getOuputCodec(int dex)
 {
-	ADM_assert(!currentEncoder);
-    return ListOfAudioEncoder[currentEncoder]->wavTag;
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio output codec for track %d\n",dex);
+        return 0;
+    }
+    return ListOfAudioEncoder[ed->encoderIndex]->wavTag;
 }
 
 /**
  * 	\fn audioFilter_getMaxChannels
  *  \brief Return the max # of channels a codec supports
  */
-uint32_t audioFilter_getMaxChannels(void)
+uint32_t audioFilter_getMaxChannels(int dex)
 {
-    ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-	if(!currentEncoder) return 99999;
-	return ListOfAudioEncoder[currentEncoder]->maxChannels;
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio maxc channel for track %d\n",dex);
+        return 9999;
+    }
+    ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
+	if(!ed->encoderIndex) return 99999;
+	return ListOfAudioEncoder[ed->encoderIndex]->maxChannels;
 }
 /**
     \fn audioCodecConfigure
     \brief
 */
-void audioCodecConfigure( void )
+void audioCodecConfigure( int dex )
 {
-    if(ListOfAudioEncoder[currentEncoder]->configure)
-    ListOfAudioEncoder[currentEncoder]->configure();
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio configure for track %d\n",dex);
+        return;
+    }
+    int i=ed->encoderIndex;
+    if(ListOfAudioEncoder[i]->configure)
+    {
+        CONFcouple *c=(ed->encoderConf);
+        ListOfAudioEncoder[i]->configure(&c);
+    }
+    return;
 }
 /**
     \fn audioGetBitrate
 */
-uint32_t audioGetBitrate(void)
+uint32_t audioGetBitrate(int dex)
 {
-    ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-    if(ListOfAudioEncoder[currentEncoder]->getBitrate)
-        return ListOfAudioEncoder[currentEncoder]->getBitrate();
-    return 0;
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio bitrate for track %d\n",dex);
+        return 128;
+    }
+    return ed->bitrate;
 } 
-void audioFilter_SetBitrate( int i)
+void audioFilter_SetBitrate( int dex,int i)
 {
-    ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-    if(ListOfAudioEncoder[currentEncoder]->setBitrate)
-        ListOfAudioEncoder[currentEncoder]->setBitrate(i);
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio bitrate for track %d\n",dex);
+        return ;
+    }
+    ed->bitrate=i;
     
-}
-/**
-    \fn audioEncoderGetNumberOfEncoders
-*/
-uint32_t audioEncoderGetNumberOfEncoders(void)
-{
-    return ListOfAudioEncoder.size();
-}
-/**
-    \fn audioEncoderGetDisplayName
-*/
-const char  *audioEncoderGetDisplayName(uint32_t i)
-{
-     ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-     return ListOfAudioEncoder[i]->menuName;
 }
 /**
         \fn audioEncoderCreate
         \brief Spawn an audio encoder
 */
-ADM_AudioEncoder *audioEncoderCreate(AUDMAudioFilter *filter,bool globalHeader)
+ADM_AudioEncoder *audioEncoderCreate(EditableAudioTrack *ed,AUDMAudioFilter *filter,bool globalHeader)
 {
-      ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-      ADM_audioEncoder *enc=ListOfAudioEncoder[currentEncoder];
-      return enc->create(filter,globalHeader);
+    if(!ed)
+    {
+        ADM_warning("audioEncoderCreate : NULL track %d\n");
+        return NULL;
+    }
+      ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
+      ADM_audioEncoder *enc=ListOfAudioEncoder[ed->encoderIndex];
+      ADM_AudioEncoder *a= enc->create(filter,globalHeader,(ed->encoderConf));
+      a->setBitrate(ed->bitrate);
+      return a;
+}
+/**
+        \fn audioEncoderCreate
+        \brief Spawn an audio encoder
+*/
+ADM_AudioEncoder *audioEncoderCreate(int dex,AUDMAudioFilter *filter,bool globalHeader)
+{
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot create encoder for track %d\n",dex);
+        return NULL;
+    }
+    return audioEncoderCreate(ed,filter,globalHeader);
 }
 /**
         \fn getAudioExtraConf
         \brief 
 */
 
-bool getAudioExtraConf(uint32_t *bitrate,CONFcouple **couple)
+bool getAudioExtraConf(int dex,uint32_t *bitrate,CONFcouple **couple)
 {
-    if(!currentEncoder)
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot get audio bitrate for track %d\n",dex);
+        return false;
+    }
+    int i=ed->encoderIndex;
+    if(!i)
     {
         printf("[AudioEncoder] Cannot get conf on copy!\n");
-        return 0;
+        return false;
     }
-     ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-     ADM_audioEncoder *encoder= ListOfAudioEncoder[currentEncoder];
-     if(encoder->getBitrate)
-        *bitrate=encoder->getBitrate();
-     else
-        *bitrate=128; // PCM does not have global conf bitrate
-     if(encoder->getConfigurationData)
-        return encoder->getConfigurationData(couple);
-     else return 1;
+     ADM_assert(i<ListOfAudioEncoder.size());
+     *bitrate=ed->bitrate;
+     *couple=CONFcouple::duplicate(ed->encoderConf); // duplicate ?
+      return true;
 }
 /**
     \fn setAudioExtraConf
 */
-bool setAudioExtraConf(uint32_t bitrate,CONFcouple *c)
+bool setAudioExtraConf(int dex,uint32_t bitrate,CONFcouple *c)
 {
-    if(!currentEncoder)
+
+   EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
     {
-        printf("[AudioEncoder] Cannot set conf on copy!\n");
+        ADM_warning("Cannot get audio bitrate for track %d\n",dex);
         return false;
     }
-     ADM_assert(currentEncoder<ListOfAudioEncoder.size());
-     ADM_audioEncoder *encoder= ListOfAudioEncoder[currentEncoder];
-     if(encoder->setBitrate)
-        encoder->setBitrate(bitrate);
-     if(encoder->setConfigurationData)
-     {
-        if(c)             return encoder->setConfigurationData(c);
-        ADM_warning("Null extra configuration given to audio codec!\n");
-     }
-     return true;
+    if(!ed->encoderIndex)
+    {
+        printf("[AudioEncoder] Cannot set conf on copy! (track %d)\n",dex);
+        return false;
+    }
+     ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
+    ed->encoderConf=CONFcouple::duplicate(c);
+    ed->bitrate=bitrate;
+    return true;
 }     
 /**
         \fn audio_selectCodecByTag
         \brief Select the "best" encoder outputing tag codec
 */
-uint8_t audio_selectCodecByTag(uint32_t tag)
+uint8_t audio_selectCodecByTag(int dex,uint32_t tag)
 {
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot set audio from tag for track %d\n",dex);
+        return 0;
+    }
     int selected=-1,priority=-1;
     for(int i=1;i<ListOfAudioEncoder.size();i++)
     {
@@ -437,9 +549,15 @@ uint8_t audio_selectCodecByTag(uint32_t tag)
     }
     if(selected!=-1)
     {
-        currentEncoder=selected;
-        UI_setAudioCodec( (int)currentEncoder);
-        printf("[AudioEncoder] Selected %s for tag %d (%s)\n",ListOfAudioEncoder[currentEncoder]->codecName,tag,"");
+        if(ed->encoderIndex!=selected)
+        {
+            ed->encoderIndex=selected;
+            if(ed->encoderConf) delete ed->encoderConf;
+            ed->encoderConf=NULL;
+        }
+        if(!dex)
+            UI_setAudioCodec( (int)ed->encoderIndex);
+        printf("[AudioEncoder] Selected %s for tag %d (%s)\n",ListOfAudioEncoder[ed->encoderIndex]->codecName,tag,"");
         return 1;
     }
     return 0;
@@ -448,20 +566,31 @@ uint8_t audio_selectCodecByTag(uint32_t tag)
          \fn audioSetOption
          \brief Allow per codec switch
 */
-uint8_t audioSetOption(const char *option, uint32_t value)
+uint8_t audioSetOption(int dex,const char *option, uint32_t value)
 {
-    ADM_audioEncoder *c=ListOfAudioEncoder[currentEncoder];
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot set audio from tag for track %d\n",dex);
+        return 0;
+    }
+    ADM_audioEncoder *c=ListOfAudioEncoder[ed->encoderIndex];
     if(!c->setOption) return 0;
-    return c->setOption(option,value);
-
+    return c->setOption(&ed->encoderConf,option,value);
 }
 /**
          \fn audio_setCopyCodec
          \brief Set audio codec to copy
 */
-uint8_t audio_setCopyCodec(void)
+uint8_t audio_setCopyCodec(int dex)
 {
-    currentEncoder=0;
+    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    if(!ed)
+    {
+        ADM_warning("Cannot set audio from tag for track %d\n",dex);
+        return 0;
+    }
+    ed->encoderIndex=0;
     return 1;
 
 }

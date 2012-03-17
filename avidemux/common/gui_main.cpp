@@ -200,7 +200,7 @@ int nw;
             return;
    case ACT_AUDIO_CODEC_CHANGED:
             nw=UI_getCurrentACodec();
-            audioCodecSetByIndex(nw);
+            audioCodecSetByIndex(0,nw);
             return;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
@@ -229,7 +229,7 @@ int nw;
     		 DIA_about( );
 		 return;
     case ACT_AUDIO_CODEC_CONFIGURE:
-      audioCodecConfigure();
+      audioCodecConfigure(0);
       return;
     case ACT_AUDIO_FILTERS:
         {

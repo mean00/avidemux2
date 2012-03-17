@@ -129,7 +129,7 @@ int A_audioSave(const char *name)
         ADM_error("[A_audioSave] No stream\n");
         return 0;
     }
-	if (audioProcessMode())
+	if (audioProcessMode(0))
 	{
 		// if we get here, either not compressed
 		// or decompressable

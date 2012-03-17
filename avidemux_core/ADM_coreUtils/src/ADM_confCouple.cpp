@@ -171,6 +171,26 @@ int32_t CONFcouple::lookupName(const char *myname)
 	return -1;
 
 }
+/**
+    \fn duplicate
+    \brief clone a conf couple
+*/
+CONFcouple *CONFcouple::duplicate(CONFcouple *source)
+{
+    int nb=source->nb;
+    CONFcouple *nw=new CONFcouple(nb);
+    for(int i=0;i<nb;i++)
+    {
+            char  *n,*v;
+        	source->getInternalName(i,&n,&v);
+            nw->setInternalName(n,v);
+    }
+    return nw;
+}
+/**
+    \fn dump
+    \brief dump
+*/
 void CONFcouple::dump(void )
 {
 	for(uint32_t i=0;i<nb;i++)

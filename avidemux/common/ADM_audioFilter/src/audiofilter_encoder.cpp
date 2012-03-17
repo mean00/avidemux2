@@ -116,7 +116,7 @@ ADM_audioStream *audioCreateEncodingStream(EditableAudioTrack *ed, bool globalHe
     }
 
     // 2- spawn encoder
-    ADM_AudioEncoder *encoder=audioEncoderCreate(filter,globalHeader);
+    ADM_AudioEncoder *encoder=audioEncoderCreate(ed,filter,globalHeader);
     if(!encoder) 
     {
         printf("[Access] Cannot create audio encoder\n");

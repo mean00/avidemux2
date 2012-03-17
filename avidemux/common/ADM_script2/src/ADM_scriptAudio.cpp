@@ -201,18 +201,18 @@ int scriptAudioSetTrack(int track)
 /**
     \fn scriptSetAudioCodec
 */
-int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c)
+int     scriptSetAudioCodec(int dex,const char *codec,int bitrate,CONFcouple *c)
 { 
         int r=true;        
         // First search the codec by its name
-        if(!audioCodecSetByName(codec))
+        if(!audioCodecSetByName(dex,codec))
         {
                 r=false;
                 jsLogError("Cannot set audio codec %s\n",codec);
         }
         else
         {
-            r=setAudioExtraConf(bitrate,c);
+            r=setAudioExtraConf(dex,bitrate,c);
             
         }
         if(c) delete c;

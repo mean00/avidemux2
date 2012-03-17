@@ -186,8 +186,8 @@ bool ppswap;
                         
         }
    couples=NULL;
-   getAudioExtraConf(&bitrate,&couples);
-    qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(),bitrate); 
+   getAudioExtraConf(0,&bitrate,&couples);
+    qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(0),bitrate); 
     dumpConf(fd,couples);
     qfprintf(fd,")\n");
 

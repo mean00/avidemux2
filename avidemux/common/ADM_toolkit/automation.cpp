@@ -49,7 +49,7 @@ extern bool ADM_slaveConnect(uint32_t port);
 
 extern void GUI_Quiet( void);
 extern void GUI_Verbose( void);
-extern void audioFilter_SetBitrate( int i);
+extern void audioFilter_SetBitrate( int dex,int bitrate);
 extern void show_info(char *p);
 extern const char *getStrFromAudioCodec( uint32_t codec);
 extern void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm, uint16_t * ss, uint16_t * ms);
@@ -70,7 +70,7 @@ static void call_help(char *p) 	;
 static void call_setAudio(char *p) 	;
 //static void call_load(char *p) 	;
 static void call_autosplit(char *p) 	;
-static void call_audiobitrate(char *p) 	;
+static void call_audiobitrate(char *p,char *v) 	;
 static void call_fps(char *p) 	;
 static void call_audiocodec(char *p) 	;
 static void call_videocodec(char *p) ;
@@ -147,7 +147,7 @@ AUTOMATON reaction_table[]=
 
         {"audio-delay",		1,"set audio time shift in ms (+ or -)",	(one_arg_type)call_setAudio},
         {"audio-map",		0,"build audio map (MP3 VBR)",	(one_arg_type)call_buildtimemap},
-        {"audio-bitrate",	1,"set audio encoding bitrate",	(one_arg_type)call_audiobitrate},
+        {"audio-bitrate",	1,"set audio encoding bitrate(track,bitrate)",	(one_arg_type)call_audiobitrate},
         {"audio-codec",		1,"set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",(one_arg_type)call_audiocodec},
         {"video-codec",		1,"set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",				call_videocodec},
 
@@ -343,13 +343,14 @@ static void call_videoconf(char *p)
     //videoEncoder6Configure
 
 }
-void call_audiobitrate(char *p)
+void call_audiobitrate(char *dex,char *v)
 {
 
-		int32_t i;
-		sscanf(p,"%"LD,&i);
-		printf("\n Audio bitrate %"LD"\n",i);
-		audioFilter_SetBitrate(i);
+        int i,j;
+		sscanf(dex,"%"LD,&i);
+        sscanf(v,"%"LD,&j);
+		printf("\n Audio bitrate Track %"LD" value %"LD"\n",i,j);
+		audioFilter_SetBitrate(i,j);
 }
 void call_slave(char *p)
 {

@@ -20,6 +20,7 @@
 #include "ADM_coreAudio.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioFilter.h" 
+#include "ADM_confCouple.h"
 
 #define AUDIOENC_COPY 0
 
@@ -62,13 +63,14 @@ class ADM_AudioEncoder
     WAVHeader       wavheader;  /// To be filled by the encoder, especially byterate and codec Id.
   public:
     //
+                    ADM_AudioEncoder(AUDMAudioFilter *in,const CONFcouple &setup);	
+    virtual bool    getConf(CONFcouple &setup)=0;
+                    virtual ~ADM_AudioEncoder();
 
     virtual uint8_t extraData(uint32_t *l,uint8_t **d) {*l=_extraSize;*d=_extraData;return 1;}
     WAVHeader       *getInfo(void) {return &wavheader;}
 
-                    ADM_AudioEncoder(AUDMAudioFilter *in);	
-                    virtual ~ADM_AudioEncoder();
-
+    virtual bool    setBitrate(int bitrateKBps)=0;
     virtual bool    isVBR(void) {return true;}
     virtual bool    initialize(void)=0; /// Returns true if init ok, false if encoding is impossible
     virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples)=0; /// returns false if eof met

@@ -15,10 +15,11 @@
 #ifndef AUDIOENCODERINTERNAL_H
 #define AUDIOENCODERINTERNAL_H
 
-#define ADM_AUDIO_ENCODER_API_VERSION 6
+#define ADM_AUDIO_ENCODER_API_VERSION 7
 #include "stddef.h"
 #include "audioencoder.h"
 #include "ADM_paramList.h"
+#include "ADM_confCouple.h"
 class AUDMEncoder;
 class ADM_AudioEncoder;
 
@@ -34,24 +35,17 @@ class ADM_AudioEncoder;
 typedef struct
 {
     uint32_t     apiVersion;            // const
-    ADM_AudioEncoder *(*create)(AUDMAudioFilter *head, bool globalHeader);
+    ADM_AudioEncoder *(*create)(AUDMAudioFilter *head, bool globalHeader,CONFcouple *conf);
     void         (*destroy)(ADM_AudioEncoder *codec);
-    bool         (*configure)(void);    
+    bool         (*configure)(CONFcouple **setup);    
     const char   *codecName;        // Internal name (tag)
     const char   *menuName;         // Displayed name (in menu)
     const char   *description;
     uint32_t     maxChannels;       // Const
     uint32_t     major,minor,patch;     // Const
     uint32_t     wavTag;                // const Avi fourcc
-    uint32_t     priority;              // const Higher means the codec is prefered and should appear first in the list
-    bool         (*getConfigurationData)(CONFcouple **conf); // Get the encoder private conf
-    bool         (*setConfigurationData)(CONFcouple *conf); // Get the encoder private conf
-
-    uint32_t     (*getBitrate)(void);
-    void         (*setBitrate)(uint32_t br);
- 
-    bool         (*setOption)(const char *paramName, uint32_t value);
-
+    uint32_t     priority;              // const Higher means the codec is prefered and should appear first in the list    
+    bool         (*setOption)(CONFcouple **c,const char *paramName, uint32_t value);
     void         *opaque;               // Hide stuff in here
 }ADM_audioEncoder;
 
@@ -79,11 +73,6 @@ bool         getConfigurationData(CONFcouple **conf) \
     if(configData==NULL) {*conf=NULL;return true;} \
     return ADM_paramSave(conf,templ,configData); \
 } \
-bool setConfigurationData (CONFcouple *conf)\
-{\
- return ADM_paramLoad(conf,templ,configData); \
-}\
-\
 \
 extern "C" ADM_audioEncoder *getInfo (void) \
 { \
