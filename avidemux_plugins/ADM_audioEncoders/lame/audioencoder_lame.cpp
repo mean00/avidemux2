@@ -145,12 +145,6 @@ bool AUDMEncoder_Lame::initialize (void)
   ret = lame_set_quality (MYFLAGS, lameConf.quality);	// 0 stereo 1 jstero
   ret = lame_set_disable_reservoir (MYFLAGS, lameConf.disableBitReservoir);
   printf ("[Lame]Using quality of %d\n", lame_get_quality (MYFLAGS));
-  ret = lame_init_params (MYFLAGS);
-  if (ret == -1)
-    {
-        printf("[Lame] Init params failes %d\n",ret);
-        return false;
-    }
   // update bitrate in header
   wavheader.byterate = (lameBitrate >> 3) * 1000;
 #define BLOCK_SIZE 1152
@@ -160,18 +154,27 @@ bool AUDMEncoder_Lame::initialize (void)
     {
     default:
     case ADM_LAME_PRESET_CBR:
+        ADM_info("Lame : CBR Mode\n");
       break;
     case ADM_LAME_PRESET_ABR:
+        ADM_info("Lame : ABR Mode\n");
 
       lame_set_preset (MYFLAGS, lameBitrate);
       wavheader.blockalign = BLOCK_SIZE;
       break;
     case ADM_LAME_PRESET_EXTREME:
+        ADM_info("Lame : Extreme Mode\n");
       wavheader.blockalign = BLOCK_SIZE;
       lame_set_preset (MYFLAGS, EXTREME);
       break;
 
 
+    }
+  ret = lame_init_params (MYFLAGS);
+  if (ret == -1)
+    {
+        printf("[Lame] Init params failes %d\n",ret);
+        return false;
     }
 
   lame_print_config (MYFLAGS);
