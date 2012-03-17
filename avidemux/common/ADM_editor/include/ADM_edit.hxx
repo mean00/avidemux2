@@ -38,7 +38,7 @@
  #include "ADM_audiocodec/ADM_audiocodec.h"
  #include "ADM_segment.h"
  #include <BVector.h>
-
+ #include "ADM_edAudioTrack.h"
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
 /**
@@ -55,10 +55,11 @@ typedef enum
 }_ENV_EDITOR_FLAGS;
 
 class ADM_edAudioTrackFromVideo;
+class ADM_edAudioTrack;
 
 /**
     \fn PoolOfAudioTracks
-    \brief All audio tracks
+    \brief All audio tracks coming from video
 */
 class PoolOfAudioTracks
 {
@@ -81,7 +82,40 @@ class PoolOfAudioTracks
                 bool clear() {tracks.clear();return true;}
                 
 };
-
+/**
+    \fn     ActiveAudioTracks
+    \brief  Tracks we are actually using 
+*/
+class ActiveAudioTracks
+{
+ protected:
+                BVector <ADM_edAudioTrack *>tracks;
+        public:
+                    ActiveAudioTracks()  {};
+                    ~ActiveAudioTracks() {};
+                int size() {return tracks.size();}
+                ADM_edAudioTrack *at(int ix)
+                {
+                    if(ix>=size()) ADM_assert(0);
+                    return tracks[ix];
+                }
+                bool addTrack(ADM_edAudioTrack *x)
+                        {
+                                tracks.append(x) ;
+                                return true;
+                        };
+                bool clear() 
+                {
+                    int n=size();
+                    for(int i=0;i<n;i++)
+                    {
+                        ADM_edAudioTrack *t=at(i);
+                        if(t->destroyable()) delete t;
+                    }
+                    tracks.clear();
+                    return true;
+                }
+};
 /**
             \class ADM_Composer
             \brief Wrapper class that handles all the logic to seek/deal with multiple video files
@@ -146,7 +180,7 @@ protected:
                     uint8_t  	updateAudioTrack(uint32_t seg);
                     bool        switchToNextAudioSegment(void);
                     PoolOfAudioTracks   audioTrackPool;
-                    bool        setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain);
+                    ActiveAudioTracks   activeAudioTracks;
 					bool 		getAudioFilterNormalise(ADM_GAINMode *mode, uint32_t *gain);
 					FILMCONV 	getAudioFilterFrameRate(void);
 					bool 		setAudioFilterFrameRate(FILMCONV conf);
@@ -157,7 +191,7 @@ protected:
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
-                    ADM_edAudioTrackFromVideo     *getDefaultAudioTrackFromVideo();
+                    ADM_edAudioTrack *getDefaultEdAudioTrack(void);
                     bool        getDefaultAudioTrack(ADM_audioStream **stream);
   public:
 

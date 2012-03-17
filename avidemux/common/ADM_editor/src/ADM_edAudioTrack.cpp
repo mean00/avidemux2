@@ -23,28 +23,24 @@
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
 /**
-    \fn ctor
+    \fn getDefaultAudioTrack
+    \brief return the main audio track
 */
-ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(int trackNumber, ADM_Composer *parent)
-:  ADM_edAudioTrack(ADM_EDAUDIO_FROM_VIDEO,parent)
+bool        ADM_Composer::getDefaultAudioTrack(ADM_audioStream **stream)
 {
-    
-    myTrackNumber=trackNumber;
-    _audioSeg=0;
+    *stream=NULL;
+    if(!activeAudioTracks.size()) return true;
+    *stream=activeAudioTracks.at(0);
+    return true;
 }
 /**
-    \fn dtor
+    \fn getDefaultAudioTrack
+    \brief same as above but returns as ADM_edAudioTrack
 */
-ADM_edAudioTrackFromVideo::~ADM_edAudioTrackFromVideo()
+ADM_edAudioTrack *ADM_Composer::getDefaultEdAudioTrack(void)
 {
-    // No need to destroy, we are just a wrapper
-}
-/**
-    \fn getDurationInUs
-*/
-uint64_t ADM_edAudioTrackFromVideo::getDurationInUs()
-{
-    // get duration...
- #warning fixme
+
+    if(!activeAudioTracks.size()) return NULL;
+    return activeAudioTracks.at(0);
 }
 // EOF

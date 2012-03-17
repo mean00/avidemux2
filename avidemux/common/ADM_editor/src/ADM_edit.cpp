@@ -306,6 +306,8 @@ bool ADM_Composer::addFile (const char *name)
                 audioTrackPool.addInternalTrack(trackFromVideo);
             }
       }
+        activeAudioTracks.clear();
+        activeAudioTracks.addTrack(audioTrackPool.at(0)); // default add 1st track of video pool
     }
 
   printf ("[Editor] Decoder FCC: ");

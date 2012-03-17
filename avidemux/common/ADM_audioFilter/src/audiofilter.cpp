@@ -107,7 +107,7 @@ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *confi
     // make sure the chain is empty...
     AUDMAudioFilter *last=NULL;
     ADM_emptyFilterChain(vec);
-    ADM_edAudioTrackFromVideo *s=video_body->getDefaultAudioTrackFromVideo();
+    ADM_edAudioTrack *s=video_body->getDefaultEdAudioTrack();
     // Bridge
     AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(s,(uint32_t)( config->startTimeInUs/1000),
                                                                                 config->shiftInMs);
