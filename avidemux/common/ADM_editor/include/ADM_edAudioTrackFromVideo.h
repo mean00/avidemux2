@@ -32,7 +32,7 @@ protected:
                     bool     switchToNextAudioSegment(void);
                     bool     refillPacketBuffer(void);
 public:
-                    ADM_edAudioTrackFromVideo(int trackNumber, ADM_Composer *parent);
+                    ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
             virtual ~ADM_edAudioTrackFromVideo();
                     bool            destroyable() {return false;};
 

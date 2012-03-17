@@ -302,7 +302,7 @@ bool ADM_Composer::addFile (const char *name)
             thisVid->audioTracks.push_back(track);
             if(!_segments.getNbRefVideos()) // 1st video..
             {
-                ADM_edAudioTrackFromVideo *trackFromVideo=new ADM_edAudioTrackFromVideo(i,this);
+                ADM_edAudioTrackFromVideo *trackFromVideo=new ADM_edAudioTrackFromVideo(track,i,this);
                 audioTrackPool.addInternalTrack(trackFromVideo);
             }
       }

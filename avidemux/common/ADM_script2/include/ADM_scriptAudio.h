@@ -19,7 +19,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-int     scriptSetAudioCodec(const char *codec,int bitrate,CONFcouple *c);
+int     scriptSetAudioCodec(int dex,const char *codec,int bitrate,CONFcouple *c);
 int     scriptAudioSetTrack(int i,int trackNo);
 
 

@@ -65,7 +65,6 @@ protected:
         ADM_videoFilterChain *chain;
         ADM_audioStream      *audio;
         ADM_videoStream      *video;
-        ADM_audioStream      *astreams[ADM_MAX_AUDIO_STREAM+1];
         uint64_t             markerA,markerB;
         int                  muxerIndex;
         int                  videoEncoderIndex;
@@ -76,17 +75,32 @@ protected:
         int                   nbAudioTracks;
         
 public:
-                admSaver(const char *out);
-                ~admSaver();
-        bool    save(void);
+                              admSaver(const char *out);
+                              ~admSaver();
+        bool                  save(void);
 
 };
+
+
+/**
+    \fn A_Save
+    \brief Instantiate & initiate streams to feed muxer
+*/
+int A_Save(const char *name)
+{
+    admSaver *save=new admSaver(name);
+    bool r=save->save();
+    delete save;
+    ADM_slaveSendResult(r);
+    return (int)r;
+}
+
 /**
     \fn admSaver
 */
  admSaver::admSaver(const char *out)
 {
-        int nbAudioTracks=video_body->getNumberOfActiveAudioTracks();
+        nbAudioTracks=video_body->getNumberOfActiveAudioTracks();
         if(nbAudioTracks>=ADM_MAX_AUDIO_STREAM) 
         {
             ADM_warning("Too much audio tracks, limiting to %d\n",ADM_MAX_AUDIO_STREAM);
@@ -99,7 +113,7 @@ public:
         chain=NULL;
         audio=NULL;
         video=NULL;
-        astreams[0]=NULL;
+        audioAccess[0]=NULL;
         markerA=video_body->getMarkerAPts();
         markerB=video_body->getMarkerBPts();
         startAudioTime=markerA; // Actual start time (for both audio & video ), 
@@ -116,9 +130,12 @@ admSaver::~admSaver()
         delete muxer;
  muxer=NULL;
  logFileName="";
- if ( astreams[0])
-        delete astreams[0];
- astreams[0]=NULL;
+ for(int i=0;i<nbAudioTracks;i++)
+    if ( audioAccess[i])
+    {
+        delete audioAccess[i];
+        audioAccess[i]=NULL;
+    }
  if(video)
         delete video;
  video=NULL;
@@ -131,20 +148,6 @@ admSaver::~admSaver()
     // encoder must not be destroyed, it will be destroyed with video
 }
 
-
-
-/**
-    \fn A_Save
-    \brief Instantiate & initiate streams to feed muxer
-*/
-int A_Save(const char *name)
-{
-    admSaver *save=new admSaver(name);
-    bool r=save->save();
-    delete save;
-    ADM_slaveSendResult(r);
-    return (int)r;
-}
 
 /**
     \fn handleFirstPass
@@ -341,26 +344,28 @@ ADM_videoStream *admSaver::setupVideo(void)
 bool admSaver::setupAudio()
 {
     bool r=true;
+    ADM_info("Setting up %d audio track(s)\n",nbAudioTracks);
     for(int i=0;i<nbAudioTracks;i++)
     {
             EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(i);
-            if(1) // Fixme !
+            ADM_audioStream *access=NULL;
+            if(ed->encoderIndex) // encode
             {
                 // Access..
-                ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s\n",i,ADM_us2plain(startAudioTime));
-                
-                ADM_audioStream *access=audioCreateEncodingStream(ed,muxer->useGlobalHeader(),startAudioTime,0); // FIXME LEAK FIXME 
-                
-                if(!access)
-                {
-                        GUI_Error_HIG("Audio","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)");
-                        return false;
-                }
-                audioAccess[i]=access;
+                ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s(encoding with encoder=%d)\n",i,ADM_us2plain(startAudioTime),ed->encoderIndex);
+                access=audioCreateEncodingStream(ed,muxer->useGlobalHeader(),startAudioTime,0); // FIXME LEAK FIXME 
             }else // copy mode...
             {
-
+                ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s(copy)\n",i,ADM_us2plain(startAudioTime));
+                access=audioCreateCopyStream(startAudioTime,0,ed->edTrack);
             }
+            if(!access)
+            {
+                    GUI_Error_HIG("Audio","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)");
+                    return false;
+            }
+            audioAccess[i]=access;
+
     }
     return r;
 }
@@ -416,6 +421,7 @@ bool admSaver::save(void)
     {
         if(video) delete video;
         if(muxer) delete muxer;
+        muxer=NULL;
         return false;
     }
    
@@ -430,7 +436,7 @@ bool admSaver::save(void)
         }
 
     }
-    if(!muxer->open(fileName.c_str(),video,nbAudioTracks,astreams))
+    if(!muxer->open(fileName.c_str(),video,nbAudioTracks,audioAccess))
     {
         GUI_Error_HIG("Muxer","Cannot open ");
     }else
@@ -444,8 +450,8 @@ abort123:
     video=NULL;
     for(int i=0;i<nbAudioTracks;i++)
     {
-        delete astreams[i];
-        astreams[i]=NULL;
+        delete audioAccess[i];
+        audioAccess[i]=NULL;
     }
     return ret;
 }

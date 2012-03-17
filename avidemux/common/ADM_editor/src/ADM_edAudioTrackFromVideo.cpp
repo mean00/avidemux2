@@ -25,12 +25,15 @@
 /**
     \fn ctor
 */
-ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(int trackNumber, ADM_Composer *parent)
+ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent)
 :  ADM_edAudioTrack(ADM_EDAUDIO_FROM_VIDEO,parent)
 {
     
     myTrackNumber=trackNumber;
     _audioSeg=0;
+    // Fill in wavHeader and access
+    ADM_assert(track);
+    wavHeader=track->wavheader;
 }
 /**
     \fn dtor

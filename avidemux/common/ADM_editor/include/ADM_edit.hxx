@@ -106,7 +106,10 @@ public:
         ADM_audioEncoder            *audioEncoder;
         EditableAudioTrack()
         {
-            memset(this,0,sizeof(this)); // dangerous !
+            encoderIndex=0;
+            encoderConf=NULL;
+            bitrate=128;
+            audioEncoder=NULL;
         }
         ~EditableAudioTrack()
         {
