@@ -33,6 +33,7 @@ SET(OBSOLETE_SRCS
 DIA_eq2.cpp       
 DIA_asharp.cpp   
  DIA_contrast.cpp    
+ DIA_audioTracks.cpp
 
 
 )

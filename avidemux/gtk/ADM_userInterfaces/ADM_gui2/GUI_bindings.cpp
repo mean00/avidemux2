@@ -505,7 +505,10 @@ uint8_t  bindGUI( void )
         gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(VIDEO_WIDGET)),0);
         on_video_change();
     // And A codec
+#warning FIXME
+#if 0
         populateCombobox(audioEncoderGetNumberOfEncoders(),AUDIO_WIDGET, audioEncoderGetDisplayName);
+#endif
         gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(AUDIO_WIDGET)),0);
         on_audio_change();
     // and container

@@ -77,13 +77,10 @@ void DIA_properties( void )
         FILL_ENTRY(labelAspectRatio);
         // Now audio
         WAVHeader *wavinfo=NULL;
-        if(video_body->getInfo())
-        {
-         wavinfo=video_body->getInfo();
-        }else   
-        {
-            printf("[Props] No audio\n");
-        }
+        ADM_edAudioTrack   *trk=video_body->getDefaultEdAudioTrack();
+        if(trk)
+            wavinfo=trk->getInfo();
+
           if(wavinfo)
           {
 
@@ -110,7 +107,7 @@ void DIA_properties( void )
                 // Duration in seconds too
                 if( wavinfo->byterate>1)
                 {
-                        uint64_t l=video_body->getDurationInUs();
+                        uint64_t l=trk->getDurationInUs();//video_body->getDurationInUs();
                         double du;
                         du=l;
                         du/=1000.; // us->ms

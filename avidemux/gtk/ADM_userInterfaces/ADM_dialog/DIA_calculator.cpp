@@ -21,8 +21,7 @@
 #include "DIA_coreToolkit.h"
 #include "DIA_fileSel.h"
 
-#include "ADM_editor/ADM_edit.hxx"
-//#include "ADM_videoFilter_internal.h"
+#include "ADM_edit.hxx"
 
 #include "ADM_vidMisc.h"
 #include "avi_vars.h"

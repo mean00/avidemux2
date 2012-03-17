@@ -239,6 +239,14 @@ protected:
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
+                    ActiveAudioTracks   *getPoolOfActiveAudioTrack(void)
+                                        {
+                                            return &activeAudioTracks;
+                                        }
+                    PoolOfAudioTracks   *getPoolOfAudioTrack(void)
+                                        {
+                                            return &audioTrackPool;
+                                        }
                     int                 getNumberOfActiveAudioTracks(void)
                                         {
                                             return activeAudioTracks.size();

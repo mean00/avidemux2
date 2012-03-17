@@ -44,6 +44,7 @@
 #include "ADM_script2/include/ADM_script.h"
 
 renderZoom currentZoom=ZOOM_1_1;
+#include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
 //***********************************
@@ -868,8 +869,16 @@ int A_setAudioTrack(int track)
       \fn A_audioTrack
       \brief Allow to select audio track
 */
+
 void A_audioTrack( void )
 {
+        PoolOfAudioTracks *pool=video_body->getPoolOfAudioTrack();
+        ActiveAudioTracks *active=video_body->getPoolOfActiveAudioTrack();
+        DIA_audioTrackBase *base=createAudioTrack(pool,active);
+        base->run();
+        delete base;
+}
+#if 0        
         audioInfo *infos=NULL;
         uint32_t nbAudioTracks,currentAudioTrack;
         uint32_t newTrack;
@@ -909,6 +918,7 @@ roger_and_out:
         return;
 
 }
+#endif
 /**
         \fn A_externalAudioTrack
         \brief Select external audio track (for 2nd track)
