@@ -14,7 +14,7 @@
  ***************************************************************************/
 #ifndef AUDMaudioAAC
 #define AUDMaudioAAC
-
+#include "faac_encoder.h"
  //_____________________________________________
 class AUDMEncoder_Faac : public ADM_AudioEncoder
 {
@@ -23,10 +23,11 @@ protected:
          uint32_t        _chunk;
          uint8_t        refillBuffer(int minimum);
          bool           _globalHeader;
+         faac_encoder   _config;
 public:
                  bool   initialize(void);
     virtual             ~AUDMEncoder_Faac();
-                        AUDMEncoder_Faac(AUDMAudioFilter *instream,bool globalHeader);
+                        AUDMEncoder_Faac(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *setup);
     virtual bool	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 

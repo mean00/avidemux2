@@ -27,9 +27,9 @@
 #include "faac.h"
 #include "audioencoder_faac.h"
 
-
-static bool configure(void);
-static uint32_t faacBitrate;
+#include "faac_encoder_desc.cpp"
+static bool configure(CONFcouple **setup);
+static faac_encoder defaultConfig={128};
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Faac);
 
@@ -45,21 +45,17 @@ static ADM_audioEncoder encoderDesc = {
   1,0,0,                // Version
   WAV_AAC,
   200,                  // Priority
-  getConfigurationData,  // Defined by macro automatically
-  setConfigurationData,  // Defined by macro automatically
-
-  getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically 
-
+ 
   NULL,         //** put your own function here**
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG( NULL,NULL,faacBitrate);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG( );
 
 /******************* / Declare plugin*******************************************************/
 
-AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader,
+    CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
 {
   uint32_t channels;
   channels=instream->getInfo()->channels;
@@ -85,6 +81,9 @@ AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader)
 
   }
   wavheader.encoding=WAV_AAC;
+  _config=defaultConfig;
+  if(setup) // load config if possible
+    ADM_paramLoad(setup,faac_encoder_param,&_config);
 };
 
 /**
@@ -120,7 +119,7 @@ int channels=wavheader.channels;
     if(!_handle)
     {
           printf("[FAAC]Cannot open faac with fq=%"LU" chan=%"LU" br=%"LU"\n",
-          wavheader.frequency,channels,faacBitrate);
+          wavheader.frequency,channels,_config.bitrate);
           return 0;
     }
     printf(" [FAAC] : Sample input:%"LU", max byte output%"LU" \n",(uint32_t)samples_input,(uint32_t)max_bytes_output);
@@ -132,14 +131,14 @@ int channels=wavheader.channels;
     cfg->bandWidth= (wavheader.frequency*3)/4; // Should be relevant
     cfg->useTns = 0;
     cfg->allowMidside = 0;
-    cfg->bitRate = (faacBitrate*1000)/channels; // It is per channel
+    cfg->bitRate = (_config.bitrate*1000)/channels; // It is per channel
     cfg->outputFormat = 0; // 0 Raw 1 ADTS
     cfg->inputFormat = FAAC_INPUT_FLOAT;
     cfg->useLfe=0;	
     if (!(ret=faacEncSetConfiguration(_handle, cfg))) 
     {
         printf("[FAAC] Cannot set conf for faac with fq=%"LU" chan=%"LU" br=%"LU" (err:%d)\n",
-				wavheader.frequency,channels,faacBitrate,ret);
+				wavheader.frequency,channels,_config.bitrate,ret);
 	return 0;
     }
      unsigned char *data=NULL;
@@ -154,7 +153,7 @@ int channels=wavheader.channels;
      memcpy(_extraData,data,size);
 
     // update
-     wavheader.byterate=(faacBitrate*1000)/8;
+     wavheader.byterate=(_config.bitrate*1000)/8;
 //    _wavheader->dwScale=1024;
 //    _wavheader->dwSampleSize=0;
     wavheader.blockalign=4096;
@@ -261,10 +260,14 @@ _again:
 /**
     \fn configure
 */
-bool configure (void)
+bool configure (CONFcouple **setup)
 {
  int ret=0;
-
+    faac_encoder config=defaultConfig;
+    if(*setup)
+    {
+        ADM_paramLoad(*setup,faac_encoder_param,&config);
+    }
     diaMenuEntry bitrateM[]={
                               BITRATE(56),
                               BITRATE(64),
@@ -277,13 +280,20 @@ bool configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(faacBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
   
     
 
     diaElem *elems[]={&bitrate};
     
-    return ( diaFactoryRun(QT_TR_NOOP("Aften Configuration"),1,elems));
-    
+    if ( diaFactoryRun(QT_TR_NOOP("Aften Configuration"),1,elems))
+    {
+        if(*setup) delete *setup;
+        *setup=NULL;
+        ADM_paramSave(setup,faac_encoder_param,&config);
+        defaultConfig=config;
+        return true;
+    }
+    return false;
 }	
 // EOF
