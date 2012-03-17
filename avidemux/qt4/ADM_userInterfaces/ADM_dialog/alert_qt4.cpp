@@ -220,7 +220,7 @@ int      GUI_Alternate(const char *title,const char *choice1,const char *choice2
 
 	extern DIA_workingBase *createWorking(const char *title);
 	extern DIA_encodingBase *createEncoding(uint64_t duration);
-
+    extern DIA_audioTrackBase *createAudioTrack( PoolOfAudioTracks *pool, ActiveAudioTracks *active );
 	void getVersion(uint32_t *maj,uint32_t *minor)
 	{
 		*maj=ADM_CORE_TOOLKIT_MAJOR;
@@ -247,6 +247,7 @@ static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
 		&ADM_Qt4CoreUIToolkit::GUI_isQuiet,
         &ADM_Qt4CoreUIToolkit::createWorking,
         &ADM_Qt4CoreUIToolkit::createEncoding,
+        &ADM_Qt4CoreUIToolkit::createAudioTrack,
         &ADM_Qt4CoreUIToolkit::UI_purge
 };
 

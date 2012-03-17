@@ -33,7 +33,7 @@ SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
 #Q_vobsub.cpp
 #Q_calculator.cpp
         Q_encoding.cpp
-
+        Q_audioTracks.cpp
 )
 
 ADD_DEFINITIONS(-DADM_SUBVERSION=${ADM_SUBVERSION})
