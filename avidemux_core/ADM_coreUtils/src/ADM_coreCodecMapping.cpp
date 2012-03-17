@@ -28,6 +28,7 @@ const ffVideoCodec ffCodec[]=
   {"CRAM",  CODEC_ID_MSVIDEO1,  false, false,    false},
   {"VP6F",  CODEC_ID_VP6F,      false, false,    false},
   {"VP6A",  CODEC_ID_VP6A,      false, false,    false},
+  {"VP8 ",  CODEC_ID_VP8,       false, false,    false},
   {"SVQ1",  CODEC_ID_SVQ1,      false, false,    false},
   {"FLV1",  CODEC_ID_FLV1,      false, false,    false},
   {"AMV",   CODEC_ID_AMV,       false, false,    false},
