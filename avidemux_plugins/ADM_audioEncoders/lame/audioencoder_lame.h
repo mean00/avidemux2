@@ -25,11 +25,12 @@ class AUDMEncoder_Lame : public ADM_AudioEncoder
   protected:
    
     void              *lameFlags;
+    lame_encoder      _config;
     uint32_t          _chunk; // Nb of float we encode each time
                       int send(uint32_t nbSample, uint8_t *dest);
   public:
     virtual             ~AUDMEncoder_Lame();
-                        AUDMEncoder_Lame(AUDMAudioFilter *instream,bool globalHeader);	
+                        AUDMEncoder_Lame(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *setup);	
             bool	    isVBR(void );
             
    virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);

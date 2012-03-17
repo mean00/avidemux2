@@ -25,14 +25,13 @@
 #include "lame_encoder.h"
 #include "lame_encoder_desc.cpp"
 
-static uint32_t lameBitrate=128;
-static lame_encoder lameConf={ADM_LAME_PRESET_CBR,2,0};
+static lame_encoder defaultConfig={128,ADM_LAME_PRESET_CBR,2,0};
 
 
 extern "C"
 {
-static bool configure (void);
-static bool setOption(const char *paramName, uint32_t value);
+static bool configure (CONFcouple **setup);
+static bool setOption(CONFcouple **c, const char *paramName, uint32_t value);
 };
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lame);
@@ -49,17 +48,12 @@ static ADM_audioEncoder encoderDesc = {
   1,0,0,                // Version
   WAV_MP3,              // WavTag
   200,                  // Priority
-  getConfigurationData,  // Defined by macro automatically
-  setConfigurationData,  // Defined by macro automatically
-
-  getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically
 
   setOption,         //** put your own function here**
 
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(lame_encoder_param,&lameConf,lameBitrate);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 
 /******************* / Declare plugin*******************************************************/
 #define MYFLAGS (lame_global_flags *)lameFlags
@@ -67,11 +61,15 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(lame_encoder_param,&lameConf,lameBitrate);
     \fn AUDMEncoder_Lame Constructor
     \brief
 */
-AUDMEncoder_Lame::AUDMEncoder_Lame (AUDMAudioFilter * instream,bool globalHeader):ADM_AudioEncoder  (instream)
+AUDMEncoder_Lame::AUDMEncoder_Lame (AUDMAudioFilter * instream,bool globalHeader, 
+    CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
 {
   printf ("[Lame] Creating lame\n");
   lameFlags = NULL;
   wavheader.encoding = WAV_MP3;
+  _config=defaultConfig;
+  if(setup) // load config if possible
+    ADM_paramLoad(setup,lame_encoder_param,&_config);
 };
 
 /**
@@ -140,17 +138,17 @@ bool AUDMEncoder_Lame::initialize (void)
       printf ("[Lame] mono audio mp3");
     }
 
-  ret = lame_set_brate (MYFLAGS, lameBitrate);
+  ret = lame_set_brate (MYFLAGS, _config.bitrate);
   ret = lame_set_mode (MYFLAGS, mmode);	// 0 stereo 1 jstero
-  ret = lame_set_quality (MYFLAGS, lameConf.quality);	// 0 stereo 1 jstero
-  ret = lame_set_disable_reservoir (MYFLAGS, lameConf.disableBitReservoir);
+  ret = lame_set_quality (MYFLAGS, _config.quality);	// 0 stereo 1 jstero
+  ret = lame_set_disable_reservoir (MYFLAGS, _config.disableBitReservoir);
   printf ("[Lame]Using quality of %d\n", lame_get_quality (MYFLAGS));
   // update bitrate in header
-  wavheader.byterate = (lameBitrate >> 3) * 1000;
+  wavheader.byterate = (_config.bitrate >> 3) * 1000;
 #define BLOCK_SIZE 1152
   // configure CBR/ABR/...
 
-  switch (lameConf.preset)
+  switch (_config.preset)
     {
     default:
     case ADM_LAME_PRESET_CBR:
@@ -159,7 +157,7 @@ bool AUDMEncoder_Lame::initialize (void)
     case ADM_LAME_PRESET_ABR:
         ADM_info("Lame : ABR Mode\n");
 
-      lame_set_preset (MYFLAGS, lameBitrate);
+      lame_set_preset (MYFLAGS, _config.bitrate);
       wavheader.blockalign = BLOCK_SIZE;
       break;
     case ADM_LAME_PRESET_EXTREME:
@@ -190,7 +188,7 @@ bool AUDMEncoder_Lame::initialize (void)
 */
 bool AUDMEncoder_Lame::isVBR (void)
 {
-  if (lameConf.preset == ADM_LAME_PRESET_CBR)
+  if (_config.preset == ADM_LAME_PRESET_CBR)
     return false;
   return true;
 
@@ -291,16 +289,21 @@ cont:
 */
 #define QT_TR_NOOP(x) x
 
-bool configure (void)
+bool configure (CONFcouple **setup)
 {
   int ret = 0;
   char string[400];
   uint32_t mmode, ppreset;
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define PX(x) &(lameConf.x)
+#define PX(x) &(config.x)
 
+    lame_encoder config=defaultConfig;
+    if(*setup)
+    {
+        ADM_paramLoad(*setup,lame_encoder_param,&config);
+    }
 
-  ppreset = lameConf.preset;
+  ppreset = config.preset;
 
   diaMenuEntry encodingMode[] = {
     {ADM_LAME_PRESET_CBR, QT_TR_NOOP ("CBR"), NULL},
@@ -322,10 +325,10 @@ bool configure (void)
   };
 
 //***
-  diaElemMenu bitrate (&lameBitrate, QT_TR_NOOP ("_Bitrate:"), SZT (bitrateM),
+  diaElemMenu bitrate (&(config.bitrate), QT_TR_NOOP ("_Bitrate:"), SZT (bitrateM),
 		       bitrateM);
   diaElemUInteger quality (PX (quality), QT_TR_NOOP ("_Quality:"), 0, 9);
-  bool reservoir32=lameConf.disableBitReservoir;
+  bool reservoir32=config.disableBitReservoir;
   diaElemToggle reservoir (&reservoir32,
 			   QT_TR_NOOP ("_Disable reservoir:"));
 
@@ -333,8 +336,12 @@ bool configure (void)
 
   if (diaFactoryRun (QT_TR_NOOP ("LAME Configuration"), 4, elems))
     {
-      lameConf.preset=(ADM_LAME_PRESET)ppreset;
-      lameConf.disableBitReservoir=reservoir32;
+      config.preset=(ADM_LAME_PRESET)ppreset;
+      config.disableBitReservoir=reservoir32;
+      if(*setup) delete *setup;
+      *setup=NULL;
+      ADM_paramSave(setup,lame_encoder_param,&config);
+      defaultConfig=config;
       return 1;
     }
   return 0;
@@ -343,13 +350,23 @@ bool configure (void)
      \fn setOption
      \brief Allow giving codec specific options as string+value
 */
-bool setOption(const char *paramName, uint32_t value)
+bool setOption(CONFcouple **c, const char *paramName, uint32_t value)
 {
+   lame_encoder config=defaultConfig;
+    if(*c)
+    {
+        ADM_paramLoad(*c,lame_encoder_param,&config);
+    }else
+    {
+        config=defaultConfig;
+    }
     if(!strcasecmp(paramName,"MP3DisableReservoir"))
     {
-        lameConf.disableBitReservoir=value;
+        config.disableBitReservoir=value;
+        ADM_paramSave(c,lame_encoder_param,&config);
         return 1;
     }
+    ADM_error("Not supported\n");
     return 0;
 }
 // EOF
