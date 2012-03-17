@@ -29,9 +29,10 @@ extern "C" {
 #include "audioencoderInternal.h"
 
 #include "audioencoder_lavcodec.h"
+#include "lavcodec_encoder_desc.cpp"
 
-static bool configure (void);
-static uint32_t lavBitrate=128;
+static bool         configure (CONFcouple **setup);
+static lav_encoder  defaultConfig={128};
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lavcodec);
 
@@ -48,17 +49,10 @@ static ADM_audioEncoder encoderDesc = {
   makeName(WAV),
 
   100,                  // Priority
-  getConfigurationData,  // Defined by macro automatically
-  setConfigurationData,  // Defined by macro automatically
-
-  getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically
-
   NULL,         //** put your own function here**
-
   NULL
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,lavBitrate);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 
 /******************* / Declare plugin*******************************************************/
 #define CONTEXT ((AVCodecContext  	*)_context)
@@ -67,7 +61,8 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,lavBitrate);
 /**
     \fn AUDMEncoder_Lavcodec
 */
-AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globalHeader,
+        CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
 {
 
   _context=NULL;
@@ -81,6 +76,10 @@ AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globa
     _globalHeader=false;
 
   wavheader.encoding=makeName(WAV);
+ // Default config
+  _config=defaultConfig;
+  if(setup) // load config if possible
+    ADM_paramLoad(setup,lav_encoder_param,&_config);
 };
 /**
     \fn extraData
@@ -131,16 +130,16 @@ bool AUDMEncoder_Lavcodec::initialize(void)
     ADM_error("[Lavcodec]Too many channels\n");
     return 0;
   }
-  wavheader.byterate=(lavBitrate*1000)>>3;
+  wavheader.byterate=(_config.bitrate*1000)>>3;
 
   _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
   ADM_info("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
-  wavheader.frequency,wavheader.channels,lavBitrate);
+  wavheader.frequency,wavheader.channels,_config.bitrate);
 
 
   CONTEXT->channels     =  wavheader.channels;
   CONTEXT->sample_rate  =  wavheader.frequency;
-  CONTEXT->bit_rate     = (lavBitrate*1000); // bits -> kbits
+  CONTEXT->bit_rate     = (_config.bitrate*1000); // bits -> kbits
   CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_FLT;
   if(true==_globalHeader)
   {
@@ -271,9 +270,14 @@ cnt:
 /**
     \fn configure
 */
-bool configure (void)
+bool configure (CONFcouple **setup)
 {
  int ret=0;
+    lav_encoder config=defaultConfig;
+    if(*setup)
+    {
+        ADM_paramLoad(*setup,lav_encoder_param,&config);
+    }
 
     diaMenuEntry bitrateM[]={
                               BITRATE(56),
@@ -287,14 +291,21 @@ bool configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(lavBitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
 
     diaElem *elems[]={&bitrate};
 
-    return ( diaFactoryRun(QT_TR_NOOP(ADM_LAV_MENU" (lav) Configuration"),1,elems));
-
+    if ( diaFactoryRun(QT_TR_NOOP(ADM_LAV_MENU" (lav) Configuration"),1,elems))
+    {
+        if(*setup) delete *setup;
+        *setup=NULL;
+        ADM_paramSave(setup,lav_encoder_param,&config);
+        defaultConfig=config;
+        return true;
+    }
+    return false;
 }
 
 // EOF

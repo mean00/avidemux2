@@ -39,14 +39,8 @@ static ADM_audioEncoder encoderDesc = {
   WAV_PCM,
   200,                  // Priority
   NULL,  // Defined by macro automatically
-  NULL,  // Defined by macro automatically
+  NULL   // Defined by macro automatically
 
-  NULL,           // Defined by macro automatically
-  NULL,            // Defined by macro automatically
-
-  NULL,         //** put your own function here**
-
-  NULL
 };
 //ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL);
 extern "C" ADM_audioEncoder *getInfo (void)
@@ -61,7 +55,8 @@ extern "C" ADM_audioEncoder *getInfo (void)
 // Ctor: Duplicate
 //__________
 
-AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader, CONFcouple *setup)
+  :ADM_AudioEncoder    (instream,setup)
 {
   printf("[PCM] Creating PCM\n");
   wavheader.encoding=WAV_PCM;

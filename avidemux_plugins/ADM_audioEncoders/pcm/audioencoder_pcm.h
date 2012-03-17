@@ -29,7 +29,7 @@ class AUDMEncoder_PCM : public ADM_AudioEncoder
                         /*! \param reverted : Should the endianness be reverted compared to system  
                             \param fourCC   : FourCC to use (WAV_PCM/WAV_LPCM)
                         */
-                         AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader);
+                         AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader,CONFcouple *setup);
    virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
    virtual bool         initialize(void);
 };

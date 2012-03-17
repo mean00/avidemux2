@@ -14,6 +14,7 @@
  ***************************************************************************/
 #ifndef AUDMaudioLavcodec
 #define AUDMaudioLavcodec
+#include "lavcodec_encoder.h"
  //_____________________________________________
 class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
 {
@@ -25,9 +26,10 @@ class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
 
 
   public:
+            lav_encoder _config;
             bool        initialize(void);
    virtual             ~AUDMEncoder_Lavcodec();
-                        AUDMEncoder_Lavcodec(AUDMAudioFilter *instream,bool globalHeader);
+                        AUDMEncoder_Lavcodec(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *c);
    virtual bool  	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
    uint8_t              extraData(uint32_t *l,uint8_t **d);
 };
