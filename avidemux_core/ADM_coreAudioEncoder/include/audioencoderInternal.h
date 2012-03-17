@@ -35,7 +35,7 @@ class ADM_AudioEncoder;
 typedef struct
 {
     uint32_t     apiVersion;            // const
-    ADM_AudioEncoder *(*create)(AUDMAudioFilter *head, bool globalHeader,CONFcouple *conf);
+    ADM_AudioEncoder *(*create)(AUDMAudioFilter *head, bool globalHeader, CONFcouple *setup);
     void         (*destroy)(ADM_AudioEncoder *codec);
     bool         (*configure)(CONFcouple **setup);    
     const char   *codecName;        // Internal name (tag)
@@ -57,9 +57,9 @@ static bool setConfigurationData (CONFcouple *conf);\
 static uint32_t     getBitrate(void); \
 static void         setBitrate(uint32_t br); \
 \
-static ADM_AudioEncoder * create (AUDMAudioFilter * head,bool globalHeader) \
+static ADM_AudioEncoder * create (AUDMAudioFilter * head,bool globalHeader, CONFcouple *setup) \
 { \
-  return new Class (head,globalHeader); \
+  return new Class (head,globalHeader,setup); \
 } \
 static void destroy (ADM_AudioEncoder * in) \
 {\
@@ -67,19 +67,12 @@ static void destroy (ADM_AudioEncoder * in) \
   delete z; \
 } 
 //******************************************************
-#define ADM_DECLARE_AUDIO_ENCODER_CONFIG(templ,configData,bitrateVar) \
-bool         getConfigurationData(CONFcouple **conf) \
-{\
-    if(configData==NULL) {*conf=NULL;return true;} \
-    return ADM_paramSave(conf,templ,configData); \
-} \
+#define ADM_DECLARE_AUDIO_ENCODER_CONFIG() \
 \
 extern "C" ADM_audioEncoder *getInfo (void) \
 { \
   return &encoderDesc; \
-}  \
-uint32_t     getBitrate(void) {return bitrateVar;};\
-void         setBitrate(uint32_t br) {bitrateVar=br;}
+}  
 
 #ifndef QT_TR_NOOP
 #define QT_TR_NOOP(x) x

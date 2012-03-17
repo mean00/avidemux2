@@ -22,15 +22,17 @@
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
 #include "audioencoder_twolame.h"
-
+#include "twolame_encoder_desc.cpp"
 extern "C"
 {
 #include "twolame.h"
 }
 
 #define OPTIONS (twolame_options_struct *)_twolameOptions
-uint32_t bitrateTwoLame=128;
-static bool configure (void);
+
+static bool configure (CONFcouple **setup);
+static lame_encoder defaultConfig={128};
+
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Twolame);
 
@@ -46,27 +48,26 @@ static ADM_audioEncoder encoderDesc = {
   1,0,0,                // Version
   WAV_MP2,
   200,                  // Priority
-  getConfigurationData,  // Defined by macro automatically
-  setConfigurationData,  // Defined by macro automatically
-
-  getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically
-
-  NULL,         //** put your own function here**
-
-  NULL
+  NULL,                 //** setOption
+  NULL                  // opaque
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,bitrateTwoLame);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 
 /******************* / Declare plugin*******************************************************/
 /**
 
 */
-AUDMEncoder_Twolame::AUDMEncoder_Twolame(AUDMAudioFilter * instream,bool globalHeader)  :ADM_AudioEncoder    (instream)
+AUDMEncoder_Twolame::AUDMEncoder_Twolame(AUDMAudioFilter * instream,
+                                         bool globalHeader, CONFcouple *setup)  
+:ADM_AudioEncoder    (instream,setup)
 {
   printf("[TwoLame] Creating Twolame\n");
   _twolameOptions=NULL;
   wavheader.encoding=WAV_MP2;
+  // Default config
+  _config=defaultConfig;
+  if(setup) // load config if possible
+    ADM_paramLoad(setup,lame_encoder_param,&_config);
 };
 
 /**
@@ -102,14 +103,14 @@ bool AUDMEncoder_Twolame::initialize(void)
     printf("[TwoLame]Too many channels\n");
     return 0;
   }
-  wavheader.byterate=(bitrateTwoLame*1000)>>3;
+  wavheader.byterate=(_config.bitrate*1000)>>3;
 
 
   _chunk = 1152*channels;
 
 
   printf("[TwoLame]Incoming :fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
-        wavheader.frequency,channels,bitrateTwoLame);
+        wavheader.frequency,channels,_config.bitrate);
 
 
   twolame_set_in_samplerate(OPTIONS, wavheader.frequency);
@@ -121,7 +122,7 @@ bool AUDMEncoder_Twolame::initialize(void)
   twolame_set_mode(OPTIONS,mmode);
   twolame_set_error_protection(OPTIONS,TRUE);
     	//toolame_setPadding (options,TRUE);
-  twolame_set_bitrate (OPTIONS,bitrateTwoLame);
+  twolame_set_bitrate (OPTIONS,_config.bitrate);
   twolame_set_verbosity(OPTIONS, 2);
   if(twolame_init_params(OPTIONS))
   {
@@ -177,9 +178,14 @@ bool 	AUDMEncoder_Twolame::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
 /**
     \fn configure
 */
-bool configure (void)
+bool configure (CONFcouple **setup)
 {
  int ret=0;
+lame_encoder config=defaultConfig;
+    if(*setup)
+    {
+        ADM_paramLoad(*setup,lame_encoder_param,&config);
+    }
 
     diaMenuEntry bitrateM[]={
                               BITRATE(56),
@@ -193,14 +199,17 @@ bool configure (void)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(bitrateTwoLame),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
     diaElem *elems[]={&bitrate};
 
     if( diaFactoryRun(QT_TR_NOOP("TwoLame Configuration"),1,elems))
     {
-        
+        if(*setup) delete *setup;
+        *setup=NULL;
+        ADM_paramSave(setup,lame_encoder_param,&config);
+        defaultConfig=config;
         return true;
     }
 

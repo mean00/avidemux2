@@ -14,18 +14,20 @@
  ***************************************************************************/
 #ifndef AUDMaudioTwoLame
 #define AUDMaudioTwoLame
-
- //_____________________________________________
+#include "twolame_encoder.h"
+/**
+    \class AUDMEncoder_Twolame
+*/
 class AUDMEncoder_Twolame : public ADM_AudioEncoder
 {
   protected:
     void           *_twolameOptions;
     uint32_t        _chunk;
-         
+    lame_encoder    _config;     
   public:
             bool     initialize(void);
     virtual             ~AUDMEncoder_Twolame();
-                        AUDMEncoder_Twolame(AUDMAudioFilter *instream,bool globalHeader);
+                        AUDMEncoder_Twolame(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *setup);
     virtual bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
     virtual bool    isVBR(void) {return false;}
 };

@@ -225,15 +225,12 @@ uint32_t audioEncoderGetNumberOfEncoders(void)
     return ListOfAudioEncoder.size();
 }
 
-// ********************************************************************
-// ********************************************************************
-// ********************************************************************
-// ********************************************************************
 /**
     \fn audioEncoderGetDisplayName
 */
 const char  *audioEncoderGetDisplayName(int dex)
 {
+#if 0
     EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
     if(!ed)
     {
@@ -243,7 +240,17 @@ const char  *audioEncoderGetDisplayName(int dex)
      int t=ed->encoderIndex;
      ADM_assert(t<ListOfAudioEncoder.size());
      return ListOfAudioEncoder[t]->menuName;
+#endif
+    if(dex>=ListOfAudioEncoder.size())
+    {
+        return "None";
+    }
+    return ListOfAudioEncoder[dex]->menuName;
 }
+// ********************************************************************
+// ********************************************************************
+// ********************************************************************
+// ********************************************************************
 
 /**
     \fn audioPrintCurrentCodec
@@ -414,6 +421,7 @@ void audioCodecConfigure( int dex )
         return;
     }
     int i=ed->encoderIndex;
+    ADM_info("Track %d has %d audio encoder index\n",dex,i);
     if(ListOfAudioEncoder[i]->configure)
     {
         CONFcouple *c=(ed->encoderConf);
@@ -459,7 +467,6 @@ ADM_AudioEncoder *audioEncoderCreate(EditableAudioTrack *ed,AUDMAudioFilter *fil
       ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
       ADM_audioEncoder *enc=ListOfAudioEncoder[ed->encoderIndex];
       ADM_AudioEncoder *a= enc->create(filter,globalHeader,(ed->encoderConf));
-      a->setBitrate(ed->bitrate);
       return a;
 }
 /**

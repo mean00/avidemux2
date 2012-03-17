@@ -25,7 +25,7 @@ extern bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t n
 /**
 
 */
-ADM_AudioEncoder::ADM_AudioEncoder(AUDMAudioFilter *in,const CONFcouple &setup)
+ADM_AudioEncoder::ADM_AudioEncoder(AUDMAudioFilter *in, CONFcouple *setup)
 {
     _extraData=NULL;
     _extraSize=0;
