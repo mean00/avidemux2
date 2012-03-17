@@ -32,6 +32,7 @@ Todo:
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
+#include "ADM_edAudioTrackFromVideo.h"
 
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_AUDIO_EDITOR
@@ -54,14 +55,14 @@ Todo:
  *      \fn switchToNextAudioSegment
  *
  */
-bool ADM_Composer::switchToNextAudioSegment(void)
+bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
 {
         // Try to switch segment
-        if(_audioSeg+1>=_segments.getNbSegments()) return false;
+        if(_audioSeg+1>=parent->_segments.getNbSegments()) return false;
 
         ADM_warning("Switching to segment %"LU"\n",_audioSeg+1);
         _audioSeg++;
-        _SEGMENT *seg=_segments.getSegment(_audioSeg);
+        _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
         ADM_audioStreamTrack *trk=getTrack(seg->_reference);
         // Go to beginning of the stream
         if(false==trk->stream->goToTime(seg->_refStartTimeUs))
@@ -78,11 +79,11 @@ bool ADM_Composer::switchToNextAudioSegment(void)
     \fn refillPacketBuffer
     \brief Fetch a new packet
 */
-bool ADM_Composer::refillPacketBuffer(void)
+bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
 {
    packetBufferSize=0; 
    uint64_t dts;
-   _SEGMENT *seg=_segments.getSegment(_audioSeg);
+   _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
    static bool endOfAudio=false;
    if(!seg) return false;
 
@@ -90,7 +91,7 @@ bool ADM_Composer::refillPacketBuffer(void)
      {
        ADM_info("Consumed all data from this audio segment\n");
        switchToNextAudioSegment();
-       seg=_segments.getSegment(_audioSeg);
+       seg=parent->_segments.getSegment(_audioSeg);
      }
 
 
@@ -131,10 +132,10 @@ bool ADM_Composer::refillPacketBuffer(void)
         \fn getPacket
         \brief
 */
-uint8_t ADM_Composer::getPacket(uint8_t  *dest, uint32_t *len,uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
+uint8_t ADM_edAudioTrackFromVideo::getPacket(uint8_t  *dest, uint32_t *len,uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
 zgain:        
-    _SEGMENT *seg=_segments.getSegment(_audioSeg);
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrack(seg->_reference);
     if(!trk) return 0;
    
@@ -189,18 +190,18 @@ zgain:
     \brief Audio Seek in ms
 
 */
-bool ADM_Composer::goToTime (uint64_t ustime)
+bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
 {
   uint32_t seg;
   uint64_t segTime;
     ADM_info(" go to time %02.2f secs\n",((float)ustime)/1000000.);
-    if(false==_segments.convertLinearTimeToSeg(ustime,&seg,&segTime))
+    if(false==parent->_segments.convertLinearTimeToSeg(ustime,&seg,&segTime))
       {
         ADM_warning("Cannot convert %"LLU" to linear time\n",ustime/1000);
         return false;
       }
     ADM_info("=> seg %d, rel time %02.2f secs\n",(int)seg,((float)segTime)/1000000.);
-    _SEGMENT *s=_segments.getSegment(seg);
+    _SEGMENT *s=parent->_segments.getSegment(seg);
     ADM_audioStreamTrack *trk=getTrack(s->_reference);
     if(!trk)
       {
@@ -224,7 +225,7 @@ bool ADM_Composer::goToTime (uint64_t ustime)
     \fn getAudioStream
 
 */
-uint8_t ADM_Composer::getAudioStream (ADM_audioStream ** audio)
+uint8_t ADM_edAudioTrackFromVideo::getAudioStream (ADM_audioStream ** audio)
 {
    ADM_audioStreamTrack *trk=getTrack(0);
     if(!trk)
@@ -241,10 +242,10 @@ uint8_t ADM_Composer::getAudioStream (ADM_audioStream ** audio)
     \fn getInfo
     \brief returns synthetic audio info
 */
-WAVHeader       *ADM_Composer::getInfo(void)
+WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 {
 
-  _SEGMENT *seg=_segments.getSegment(_audioSeg);
+  _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrack(seg->_reference);
     if(!trk) return NULL;
     return trk->stream->getInfo();
@@ -253,9 +254,9 @@ WAVHeader       *ADM_Composer::getInfo(void)
     \fn getChannelMapping
     \brief returns channel mapping
 */
- CHANNEL_TYPE    *ADM_Composer::getChannelMapping(void )
+ CHANNEL_TYPE    *ADM_edAudioTrackFromVideo::getChannelMapping(void )
 {
-  _SEGMENT *seg=_segments.getSegment(_audioSeg);
+  _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
   ADM_audioStreamTrack *trk=getTrack(seg->_reference);
     if(!trk) return NULL;
     return trk->codec->channelMapping;
@@ -263,9 +264,9 @@ WAVHeader       *ADM_Composer::getInfo(void)
 /**
     \fn getExtraData
 */
-bool            ADM_Composer::getExtraData(uint32_t *l, uint8_t **d)
+bool            ADM_edAudioTrackFromVideo::getExtraData(uint32_t *l, uint8_t **d)
 {
-  _SEGMENT *seg=_segments.getSegment(_audioSeg);
+  _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
   ADM_audioStreamTrack *trk=getTrack(seg->_reference);
 
     *l=0;
@@ -279,12 +280,12 @@ bool            ADM_Composer::getExtraData(uint32_t *l, uint8_t **d)
     \brief Returns Track for ref video given as parameter
     @param : Reference video
 */
-ADM_audioStreamTrack *ADM_Composer::getTrack(uint32_t refVideo)
+ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getTrack(uint32_t refVideo)
 {
-    _VIDEOS *v=_segments.getRefVideo(refVideo);
+    _VIDEOS *v=parent->_segments.getRefVideo(refVideo);
     if(!v->audioTracks.size()) return NULL;
 
-    return v->audioTracks[v->currentAudioStream];
+    return v->audioTracks[myTrackNumber];
 }
 
 //EOF

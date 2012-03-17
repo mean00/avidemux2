@@ -124,7 +124,7 @@ void HandleAction_Save(Action action)
 int A_audioSave(const char *name)
 {
     ADM_audioStream *stream;
-    if(false==video_body->getAudioStream( &stream)) 
+    if(false==video_body->getDefaultAudioTrack( &stream)) 
     {
         ADM_error("[A_audioSave] No stream\n");
         return 0;
@@ -225,7 +225,7 @@ int A_saveAudioCopy (const char *name)
 
 #define ONE_STRIKE (64*1024)
   ADM_audioStream *stream;
-  if(false==video_body->getAudioStream( &stream)) 
+  if(false==video_body->getDefaultAudioTrack( &stream)) 
     {
         ADM_error("[A_audioSave] No stream\n");
         return false;

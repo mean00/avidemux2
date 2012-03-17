@@ -604,8 +604,12 @@ void  updateLoaded ()
 //  getFirstVideoFilter(); // reinit first filter
 
   // now get audio information if exists
-  WAVHeader *wavinfo;
-  wavinfo = video_body->getInfo ();	//wavinfo); // will be null if no audio
+  WAVHeader *wavinfo=NULL;
+  ADM_audioStream *stream=NULL;
+  video_body->getDefaultAudioTrack(&stream);
+  if(stream)
+        wavinfo=stream->getInfo();
+  
   if (!wavinfo)
     {
       printf ("\n *** NO AUDIO ***\n");

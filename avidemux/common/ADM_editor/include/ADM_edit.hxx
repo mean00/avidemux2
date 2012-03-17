@@ -30,7 +30,7 @@
  #include "ADM_Video.h"
  #include "ADM_codec.h"
  #include "ADM_image.h"
- #include "../ADM_editor/ADM_edCache.h"
+ #include "ADM_edCache.h"
  #include "ADM_pp.h"
  #include "ADM_colorspace.h"
 
@@ -54,7 +54,33 @@ typedef enum
         ENV_EDITOR_LAST=   0x8000
 }_ENV_EDITOR_FLAGS;
 
+class ADM_edAudioTrackFromVideo;
 
+/**
+    \fn PoolOfAudioTracks
+    \brief All audio tracks
+*/
+class PoolOfAudioTracks
+{
+        protected:
+                BVector <ADM_edAudioTrackFromVideo *>tracks;
+        public:
+                    PoolOfAudioTracks()  {};
+                    ~PoolOfAudioTracks() {};
+                int size() {return tracks.size();}
+                ADM_edAudioTrackFromVideo *at(int ix)
+                {
+                    if(ix>=size()) ADM_assert(0);
+                    return tracks[ix];
+                }
+                bool addInternalTrack(ADM_edAudioTrackFromVideo *x)
+                        {
+                                tracks.append(x) ;
+                                return true;
+                        };
+                bool clear() {tracks.clear();return true;}
+                
+};
 
 /**
             \class ADM_Composer
@@ -63,6 +89,7 @@ typedef enum
 */
 class ADM_Composer : public IEditor, public ADM_audioStream
 {
+  friend class ADM_edAudioTrackFromVideo;
   private:
                     std::string currentProjectName;
   private:
@@ -113,14 +140,12 @@ protected:
 //****************************** Audio **********************************
                     // _audiooffset points to the offset / the total segment
                     // not the used part !
-                    uint32_t  _audioSeg;
-                    int64_t   _audioSample;
 
                     ADM_audioStreamTrack *getTrack(uint32_t i);
                     ADMImage    *_scratch;
                     uint8_t  	updateAudioTrack(uint32_t seg);
                     bool        switchToNextAudioSegment(void);
-                    int 		saveAudio(const char *name);
+                    PoolOfAudioTracks   audioTrackPool;
                     bool        setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain);
 					bool 		getAudioFilterNormalise(ADM_GAINMode *mode, uint32_t *gain);
 					FILMCONV 	getAudioFilterFrameRate(void);
@@ -132,7 +157,10 @@ protected:
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
-                    bool        hasVBRAudio(void);
+                    ADM_edAudioTrackFromVideo     *getDefaultAudioTrackFromVideo();
+                    bool        getDefaultAudioTrack(ADM_audioStream **stream);
+  public:
+
                     bool     	getExtraHeaderData(uint32_t *len, uint8_t **data);
                     uint32_t    getPARWidth(void);
                     uint32_t    getPARHeight(void);
@@ -188,26 +216,6 @@ public:
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
-/************************************ audioStream ******************************/
-protected:
-#define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)
-                    uint8_t  packetBuffer[ADM_EDITOR_PACKET_BUFFER_SIZE];
-                    uint32_t packetBufferSize;
-                    uint64_t packetBufferDts;
-                    uint32_t packetBufferSamples;
-                    bool     refillPacketBuffer(void);
-
-public:
-
-            virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
-                    bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
-            virtual bool            goToTime(uint64_t nbUs);
-                    bool            getExtraData(uint32_t *l, uint8_t **d);
-                    uint64_t        getDurationInUs(void);
-                    uint8_t			getAudioStream(ADM_audioStream **audio);
-            virtual WAVHeader       *getInfo(void);
-                    uint32_t        getOutputFrequency(void); // sbr
-            virtual CHANNEL_TYPE    *getChannelMapping(void );
 /************************************ /audioStream ******************************/
                     bool            getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audioInfo **infos);
                     bool            changeAudioStream(uint64_t xtime,uint32_t newstream);

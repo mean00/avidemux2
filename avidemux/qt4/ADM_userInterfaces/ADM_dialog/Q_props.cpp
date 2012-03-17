@@ -66,7 +66,10 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         SET_YES(LabelGMC,gmc);
         
          WAVHeader *wavinfo=NULL;
-         wavinfo=video_body->getInfo();
+         ADM_audioStream *st;
+         video_body->getDefaultAudioTrack(&st);
+         if(st)
+            wavinfo=st->getInfo();
           if(wavinfo)
           {
               
@@ -90,14 +93,11 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
                 FILLQT_TR_NOOP(labelACodec);
                 //
-                duration=video_body->getDurationInUs();
+                duration=st->getDurationInUs();
                 ms2time(duration/1000,&hh,&mm,&ss,&ms);
 
                 sprintf(text, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
                 FILLQT_TR_NOOP(labelAudioDuration);
-
-
-
 //                SET_YES(labelVBR,currentaudiostream->isVBR());
         } else
           {

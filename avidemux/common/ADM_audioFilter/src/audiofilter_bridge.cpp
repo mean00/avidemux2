@@ -28,7 +28,7 @@ using std::string;
 /**
     \fn AUDMAudioFilter_Bridge
 */
-AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_Composer *incoming,
+AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrackFromVideo *incoming,
                           uint32_t startInMs,int32_t shiftMs) : AUDMAudioFilter(NULL)
 {
   _incoming=incoming;

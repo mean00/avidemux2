@@ -263,7 +263,7 @@ bool admSaver::save(void)
     // Audio Stream ?
     ADM_audioStream *audio=NULL;
     int nbAStream=1;
-    if(!video_body->getAudioStream(&audio))
+    if(!video_body->getDefaultAudioTrack(&audio))
     {
         audio=NULL;
         nbAStream=0; // FIXME

@@ -244,14 +244,6 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
 }
 
 /**
-    \fn getDurationInUs
-    \brief Return total duration of video in us
-*/
- uint64_t        ADM_Composer::getDurationInUs(void) 
-{
-    return _segments.getTotalDuration();
-}
-/**
     \fn getDtsFromPts
     \brief Estimate DTS from PTS
 

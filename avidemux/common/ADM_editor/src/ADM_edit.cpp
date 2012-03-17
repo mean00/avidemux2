@@ -31,7 +31,7 @@
 
 #include "fourcc.h"
 #include "ADM_editor/ADM_edit.hxx"
-
+#include "ADM_edAudioTrackFromVideo.h"
 #include "DIA_coreToolkit.h"
 #include "prefs.h"
 
@@ -54,14 +54,10 @@ vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
     \fn ADM_Composer
 
 */
-ADM_Composer::ADM_Composer (void) : ADM_audioStream(NULL,NULL)
+ADM_Composer::ADM_Composer (void) 
 {
 uint32_t type,value;
 
-   packetBufferSize=0;
-   packetBufferDts=ADM_NO_PTS;
-  _audioSeg = 0;
-  _audioSample=0;
 
   _pp=NULL;
   _imageBuffer=NULL;
@@ -293,13 +289,6 @@ bool ADM_Composer::addFile (const char *name)
             header=thisVid->_aviheader->getAudioInfo(i );
             memcpy(&(track->wavheader),header,sizeof(*header));
 
-            // We need at last fq so that advanceDts will work
-            if(!i && !_segments.getNbRefVideos())
-            {
-                wavHeader.frequency=header->frequency;
-                wavHeader.channels=header->channels;
-            }
-
             thisVid->_aviheader->getAudioStream(i,&stream);
             ADM_assert(stream);
             track->stream=stream;
@@ -311,7 +300,11 @@ bool ADM_Composer::addFile (const char *name)
             track->codec=getAudioCodec(header->encoding,header,extraLen,extraData);
 
             thisVid->audioTracks.push_back(track);
-
+            if(!_segments.getNbRefVideos()) // 1st video..
+            {
+                ADM_edAudioTrackFromVideo *trackFromVideo=new ADM_edAudioTrackFromVideo(i,this);
+                audioTrackPool.addInternalTrack(trackFromVideo);
+            }
       }
     }
 
@@ -365,7 +358,7 @@ bool ADM_Composer::addFile (const char *name)
 
   return 1;
 }
-
+#if 0
 /**
     \fn hasVBRAudio
         If one of the videos has VBR audio we handle the whole editor audio has VBR
@@ -383,7 +376,7 @@ bool ADM_Composer::hasVBRAudio(void)
         }
         return 0;
 }
-
+#endif
 /**
     \fn getPARWidth
 
@@ -448,7 +441,6 @@ uint32_t ref;
 uint8_t ADM_Composer::cleanup (void)
 {
   _segments.deleteAll();
-  _audioSeg = 0;
   return 1;
 }
 
@@ -520,7 +512,6 @@ WAVHeader *wav;
 aviInfo    info;
 uint32_t ref;
         int n=_segments.getNbRefVideos();
-        packetBufferSize=0; // Flush PCM decoder
         for(int i=0;i<n;i++)
         {
             _VIDEOS *v=_segments.getRefVideo(i);
@@ -533,8 +524,8 @@ uint32_t ref;
             v->currentAudioStream=newstream;
             if(!i) // update general info for track 0
             {
-                wavHeader.frequency=v->audioTracks[newstream]->wavheader.frequency;
-                wavHeader.channels=v->audioTracks[newstream]->wavheader.channels;
+//                wavHeader.frequency=v->audioTracks[newstream]->wavheader.frequency;
+//                wavHeader.channels=v->audioTracks[newstream]->wavheader.channels;
             }
             ADM_info("Switched to track %d for video %d\n",newstream,i);
         }

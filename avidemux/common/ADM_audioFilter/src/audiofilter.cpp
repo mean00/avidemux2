@@ -73,7 +73,8 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     // Fetch mixer from prefs...
 
     // If we have no audio, dont even try...
-    if(!video_body->getInfo()) return NULL;
+    ADM_audioStream *s=NULL;
+    if(!video_body->getDefaultAudioTrack(&s)) return NULL;
     //
     ADM_buildFilterChain(&PlaybackVector,&playback);
     //
@@ -106,9 +107,9 @@ bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *confi
     // make sure the chain is empty...
     AUDMAudioFilter *last=NULL;
     ADM_emptyFilterChain(vec);
-    
+    ADM_edAudioTrackFromVideo *s=video_body->getDefaultAudioTrackFromVideo();
     // Bridge
-    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(video_body,(uint32_t)( config->startTimeInUs/1000),
+    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(s,(uint32_t)( config->startTimeInUs/1000),
                                                                                 config->shiftInMs);
     ADD_FILTER(nw);
 

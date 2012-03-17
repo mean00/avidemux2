@@ -32,7 +32,7 @@ Todo:
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
-
+#include "ADM_edAudioTrackFromVideo.h"
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_AUDIO_EDITOR
 #include "ADM_debug.h"
@@ -55,7 +55,7 @@ Todo:
 
 */
 
-uint32_t        ADM_Composer::getOutputFrequency(void)
+uint32_t        ADM_edAudioTrackFromVideo::getOutputFrequency(void)
 {
     ADM_audioStreamTrack *trk=getTrack(0);
     if(!trk) 
@@ -73,7 +73,7 @@ uint32_t        ADM_Composer::getOutputFrequency(void)
 
 */
 
-bool ADM_Composer::getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
+bool ADM_edAudioTrackFromVideo::getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)
 {
 uint32_t fillerSample=0;   // FIXME : Store & fix the DTS error correctly!!!!
 uint32_t inSize;

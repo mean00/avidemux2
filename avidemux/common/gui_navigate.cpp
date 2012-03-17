@@ -56,10 +56,10 @@ static int ignore_change=0;
           nf = GUI_GetScale ();
           ADM_info("Scale :%"LU"\n",nf);
           double tme=nf;
-          tme*=video_body->getDurationInUs();
+          tme*=video_body->getVideoDuration();
           tme/=ADM_SCALE_SIZE;
           uint64_t pts=(uint64_t)tme;
-          ADM_info("Scale Time:%"LLU" ms (total=%"LLU" ms)\n",pts/1000,video_body->getDurationInUs()/1000);
+          ADM_info("Scale Time:%"LLU" ms (total=%"LLU" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
           ADM_info("Scale Time:%s ms \n",ADM_us2plain(pts));
            if(false==video_body->getPKFramePTS(&pts))
             {
