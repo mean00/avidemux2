@@ -13,6 +13,8 @@
  ***************************************************************************/
 
 #include "ADM_inttype.h"
+#include "Q_audioTracks.h"
+
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
 #include "ADM_toolkitQt.h"
@@ -22,13 +24,21 @@ extern void UI_purge(void);
 /**
     \fn audioTrackQt4
 */
+
+
+
 class audioTrackQt4: public DIA_audioTrackBase
 {
+protected:
+            audioTrackWindow *window;
 public:
        
                     audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *active ) : DIA_audioTrackBase( pool, active )
                     {
-
+                            window=new audioTrackWindow();
+                            qtRegisterDialog(window);
+                            window->setModal(TRUE);
+                            window->show();
                     };
             virtual		~audioTrackQt4(){};
             virtual   bool      run(void)
