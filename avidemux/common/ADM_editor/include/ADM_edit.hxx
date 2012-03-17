@@ -26,6 +26,8 @@
  ***************************************************************************/
  #ifndef __ADM_composer__
  #define __ADM_composer__
+ #include <string>
+
  #include "IEditor.h"
  #include "ADM_Video.h"
  #include "ADM_codec.h"
