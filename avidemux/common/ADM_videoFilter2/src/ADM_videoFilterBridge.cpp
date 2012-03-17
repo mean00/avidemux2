@@ -19,7 +19,7 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_videoFilterBridge.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 extern ADM_Composer *video_body;
 /**
     \fn ADM_videoFilterBridge

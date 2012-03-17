@@ -34,7 +34,7 @@ using std::string;
 #include "ADM_render/GUI_render.h"
 
 #include "DIA_coreToolkit.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_filterCategory.h"
 #include "ADM_videoFilterApi.h"

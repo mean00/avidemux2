@@ -20,7 +20,7 @@
 
 
 #include "fourcc.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 
 #define STUBB _segments.getRefVideo(0)->_aviheader
 #define ADM_TRANSLATE(func,frame) \

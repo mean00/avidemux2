@@ -18,7 +18,7 @@
 #include <math.h>
 #include "ADM_cpp.h"
 #include "ADM_default.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 
 #if 0
 #define aprintf printf

@@ -17,7 +17,7 @@
 using std::string;
 #include "ADM_default.h"
 #include "ADM_videoCopy.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "ADM_coreUtils.h"
 #include "ADM_h264_tag.h"
 #include "ADM_videoInfoExtractor.h"

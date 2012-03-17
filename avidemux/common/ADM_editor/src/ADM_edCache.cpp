@@ -15,7 +15,7 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_image.h"
-#include "ADM_editor/ADM_edCache.h"
+#include "ADM_edCache.h"
 
 #if 1
 #define aprintf(...) {}

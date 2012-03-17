@@ -35,7 +35,7 @@
 #include "ADM_cpp.h"
 
 #include "ADM_default.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "ADM_render/GUI_render.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"

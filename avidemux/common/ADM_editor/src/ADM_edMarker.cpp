@@ -17,7 +17,7 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "fourcc.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 
 /**
         \fn getMarkerAPts

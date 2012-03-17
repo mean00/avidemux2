@@ -17,7 +17,7 @@
 #include "ADM_cpp.h"
 using std::string;
 #include "ADM_default.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include <math.h>
 
 extern ADM_Composer *video_body;

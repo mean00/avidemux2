@@ -21,12 +21,11 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "ADM_quota.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 
 #include "audioEncoderApi.h"
 #include "audiofilter_normalize_param.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_editor/ADM_edit.hxx"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_paramList.h"
 #include "prefs.h"

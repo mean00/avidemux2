@@ -18,7 +18,7 @@
 using std::string;
 #include "ADM_default.h"
 #include "fourcc.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
 /**
     \fn getNKFramePTS

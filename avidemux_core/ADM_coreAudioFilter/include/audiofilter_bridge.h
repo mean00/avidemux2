@@ -18,7 +18,7 @@
 #include "audioencoder.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioStream.h"
-#include "../ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 class AUDMAudioFilter_Bridge : public AUDMAudioFilter
 {
   protected:

@@ -7,7 +7,7 @@
 #define __AVI_VARS
 
 #include "fourcc.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 //----------------------
 
 #ifdef __DECLARE__

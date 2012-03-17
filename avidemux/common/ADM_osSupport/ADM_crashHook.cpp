@@ -19,7 +19,7 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "A_functions.h"
 
 extern ADM_Composer *video_body;

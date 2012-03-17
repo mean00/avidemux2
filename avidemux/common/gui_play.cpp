@@ -21,7 +21,7 @@
 #include "prefs.h"
 #include "avi_vars.h"
 #include "ADM_Video.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "audio_out.h"
 #include "DIA_coreToolkit.h"
 #include "gtkgui.h"

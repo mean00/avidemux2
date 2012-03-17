@@ -20,7 +20,7 @@ using std::string;
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_factory.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 /**
       \fn GUI_displayBitrate
       \brief display a bargraph with bitrates

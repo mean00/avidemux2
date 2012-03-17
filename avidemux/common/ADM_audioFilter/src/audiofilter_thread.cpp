@@ -16,7 +16,7 @@
 #include "ADM_cpp.h"
 using std::string;
 #include "ADM_default.h"
-#include "ADM_editor/ADM_edit.hxx"
+#include "ADM_edit.hxx"
 #include "audiofilter_thread.h"
 #include <math.h>
 
