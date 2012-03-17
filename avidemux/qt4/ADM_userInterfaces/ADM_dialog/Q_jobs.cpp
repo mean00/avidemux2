@@ -143,7 +143,7 @@ void jobsWindow::RunOne(bool b)
 			updateRows();
 			GUI_Quiet();
 			TLK_getDate(&(desc[sel].startDate));
-
+#if ADM_ENABLE_JS
 #ifdef USE_SPIDERMONKEY
 			if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
 				desc[sel].status=STATUS_SUCCEED;
@@ -172,7 +172,7 @@ void jobsWindow::RunAll(bool b)
 		updateRows();
 		GUI_Quiet();
 		TLK_getDate(&(desc[sel].startDate));
-
+#if ADM_ENABLE_JS
 #ifdef USE_SPIDERMONKEY
 		if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
 			desc[sel].status=STATUS_SUCCEED;

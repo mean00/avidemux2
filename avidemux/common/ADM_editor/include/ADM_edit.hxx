@@ -39,6 +39,10 @@
  #include "ADM_segment.h"
  #include <BVector.h>
  #include "ADM_edAudioTrack.h"
+
+ #include "audiofilter_internal.h"
+ #include "audiofilter_conf.h"
+
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
 /**
@@ -83,25 +87,43 @@ class PoolOfAudioTracks
                 
 };
 /**
+    \class EditableAudioTrack
+*/
+class EditableAudioTrack
+{
+public:
+        VectorOfAudioFilter         EncodingVector;
+        ADM_AUDIOFILTER_CONFIG      audioEncodingConfig;
+        ADM_edAudioTrack            *edTrack;
+};
+
+/**
     \fn     ActiveAudioTracks
     \brief  Tracks we are actually using 
 */
 class ActiveAudioTracks
 {
  protected:
-                BVector <ADM_edAudioTrack *>tracks;
+                BVector <EditableAudioTrack *>tracks;
         public:
                     ActiveAudioTracks()  {};
                     ~ActiveAudioTracks() {};
                 int size() {return tracks.size();}
-                ADM_edAudioTrack *at(int ix)
+                EditableAudioTrack *atEditable(int ix)
                 {
                     if(ix>=size()) ADM_assert(0);
                     return tracks[ix];
                 }
+                ADM_edAudioTrack *atEdAudio(int ix)
+                {
+                    EditableAudioTrack *e=atEditable(ix);
+                    return e->edTrack;
+                }
                 bool addTrack(ADM_edAudioTrack *x)
                         {
-                                tracks.append(x) ;
+                                EditableAudioTrack *e=new EditableAudioTrack;
+                                e->edTrack=x;
+                                tracks.append(e) ;
                                 return true;
                         };
                 bool clear() 
@@ -109,8 +131,9 @@ class ActiveAudioTracks
                     int n=size();
                     for(int i=0;i<n;i++)
                     {
-                        ADM_edAudioTrack *t=at(i);
-                        if(t->destroyable()) delete t;
+                        EditableAudioTrack *t=atEditable(i);
+                        if(t->edTrack->destroyable()) delete t->edTrack;
+                        delete t;
                     }
                     tracks.clear();
                     return true;
@@ -191,8 +214,10 @@ protected:
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
-                    ADM_edAudioTrack *getDefaultEdAudioTrack(void);
                     bool        getDefaultAudioTrack(ADM_audioStream **stream);
+                    ADM_edAudioTrack *getDefaultEdAudioTrack(void);
+                    EditableAudioTrack *getDefaultEditableAudioTrack(void);
+                    EditableAudioTrack *getEditableAudioTrackAt(int i);
   public:
 
                     bool     	getExtraHeaderData(uint32_t *len, uint8_t **data);

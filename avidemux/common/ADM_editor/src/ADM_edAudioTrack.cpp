@@ -30,7 +30,7 @@ bool        ADM_Composer::getDefaultAudioTrack(ADM_audioStream **stream)
 {
     *stream=NULL;
     if(!activeAudioTracks.size()) return true;
-    *stream=activeAudioTracks.at(0);
+    *stream=activeAudioTracks.atEdAudio(0);
     return true;
 }
 /**
@@ -41,6 +41,19 @@ ADM_edAudioTrack *ADM_Composer::getDefaultEdAudioTrack(void)
 {
 
     if(!activeAudioTracks.size()) return NULL;
-    return activeAudioTracks.at(0);
+    return activeAudioTracks.atEdAudio(0);
+}
+/**
+    \fn getDefaultEditableAudioTrack
+*/
+EditableAudioTrack *ADM_Composer::getDefaultEditableAudioTrack(void)
+{
+    if(!activeAudioTracks.size()) return NULL;
+    return activeAudioTracks.atEditable(0);
+}
+EditableAudioTrack *ADM_Composer::getEditableAudioTrackAt(int i)
+{
+    if(i>=activeAudioTracks.size()) return NULL;
+    return activeAudioTracks.atEditable(i);
 }
 // EOF

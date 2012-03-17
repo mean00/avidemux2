@@ -59,7 +59,17 @@ public    :
     FILMCONV     film2pal;
     // Gain filter
     GAINparam    gainParam;
-     
+
+public: // accessor
+    bool            audioFilterConfigure(void);
+    bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency
+    uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency
+    bool            audioFilterSetFrameRate(FILMCONV conf);
+    FILMCONV        audioFilterGetFrameRate(void);
+    bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain);
+    bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain);
+    bool            audioFilterSetMixer(CHANNEL_CONF conf); // Invalid to disable
+    CHANNEL_CONF    audioFilterGetMixer(void); // Invalid to disable
 
 };
 

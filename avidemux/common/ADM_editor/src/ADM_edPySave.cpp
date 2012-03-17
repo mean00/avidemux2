@@ -191,39 +191,45 @@ bool ppswap;
     dumpConf(fd,couples);
     qfprintf(fd,")\n");
 
+    int n=video_body->activeAudioTracks.size();
+    for(int i=0;i<n;i++)
+    {
+        EditableAudioTrack *ed=video_body->activeAudioTracks.atEditable(i);
+        ADM_assert(ed);
 
-    uint32_t x=audioFilterGetResample();
-    if(x) qfprintf(fd,"adm.audioResample=%u\n",audioFilterGetResample());
+        uint32_t x=ed->audioEncodingConfig.audioFilterGetResample();
+        if(x) qfprintf(fd,"adm.audioResample[%d]=%u\n",i,ed->audioEncodingConfig.audioFilterGetResample());
 
     
 //   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
 //   qfprintf(fd,"app.audio.normalizeValue=%d;\n",audioGetNormalizeValue());
 //   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
 // if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
-   if(CHANNEL_INVALID!=audioFilterGetMixer())
-        qfprintf(fd,"adm.audioMixer(\"%s\")\n",AudioMixerIdToString(audioFilterGetMixer()));
+        
+        if(CHANNEL_INVALID!=ed->audioEncodingConfig.audioFilterGetMixer())
+            qfprintf(fd,"adm.audioMixer(%d,\"%s\")\n",i,AudioMixerIdToString(ed->audioEncodingConfig.audioFilterGetMixer()));
 
    
 
    // Change fps ?
-        switch(audioFilterGetFrameRate())
+        switch(ed->audioEncodingConfig.audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film=1\n");break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1\n");break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film[%d]=1\n",i);break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal[%d]=1\n",i);break;
                 default:ADM_assert(0);break;
         }
    // --------- Normalize ----------------
         ADM_GAINMode mode;
         uint32_t gain;
-        audioFilterGetNormalize(&mode,&gain);
+        ed->audioEncodingConfig.audioFilterGetNormalize(&mode,&gain);
         if(mode && gain)
         {
-            qfprintf(fd,"adm.audioNormalizeMode=%d\n",(int)mode); 
-            qfprintf(fd,"adm.audioNormalizeGain=%d\n",(int)gain); 
+            qfprintf(fd,"adm.audioNormalizeMode[%d]=%d\n",i,(int)mode); 
+            qfprintf(fd,"adm.audioNormalizeGain[%d]=%d\n",i,(int)gain); 
         }
        
-        
+    }
   
   // -------- Muxer -----------------------
         qfprintf(fd,"\n#** Muxer **\n");

@@ -232,7 +232,10 @@ int nw;
       audioCodecConfigure();
       return;
     case ACT_AUDIO_FILTERS:
-      audioFilterConfigure();
+        {
+            EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+            if(ed) ed->audioEncodingConfig.audioFilterConfigure();
+        }
       return;
     case ACT_PREFERENCES:
         if(playing) return;
@@ -561,7 +564,9 @@ int A_openAvi (const char *name)
             if(infos) delete [] infos;
             // Revert mixer to copy
             //setCurrentMixerFromString("NONE");
-            audioFilterSetMixer(CHANNEL_INVALID);
+            EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+            if(ed) ed->audioEncodingConfig.audioFilterSetMixer(CHANNEL_INVALID);
+
         }
 	for(i=strlen(longname);i>=0;i--)
     {
@@ -729,6 +734,7 @@ bool A_parseTinyPyScript(const char *name){
     \fn A_parseECMAScript
 */
 bool A_parseECMAScript(const char *name){
+#if ADM_ENABLE_JS
   bool ret;
   char *longname = ADM_PathCanonize(name);
    if (playing)
@@ -743,6 +749,9 @@ bool A_parseECMAScript(const char *name){
    }
    ADM_dealloc(longname);
    return ret;
+#else
+    return true;
+#endif
 }
 #endif
 

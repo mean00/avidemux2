@@ -128,8 +128,6 @@ AUTOMATON reaction_table[]=
         {"runpy",			1,"load and run a pyScript",		(one_arg_type)A_parseTinyPyScript},
 #endif
 
-        {"audio-normalize",	1,"activate normalization",		call_normalize},
-        {"audio-resample",	1,"resample to x hz",			call_resample},
         {"save-jpg",		1,"save a jpeg",			(one_arg_type)A_saveJpg}        ,
         {"begin",		1,"set start frame",			(one_arg_type)setBegin},
 
@@ -267,29 +265,6 @@ int searchReactionTable(char *string)
 //_________________________________________________________________________
 
 void call_quit        (char *p) { UNUSED_ARG(p); exit(0);                            }
-
-
-void call_normalize   (char *p)
-{
-  int32_t i;
-  sscanf(p,"%d",&i);
-  //audioFilterNormalizeMode(i);
-}
-void call_resample    (char *p)
-{
-int fq;
-        fq=atoi(p);
-        if(fq>1000)
-        {
-                audioFilterSetResample(fq);
-                printf("resample to %d\n",fq);
-        }
-        else
-        {
-                printf("*** INVALID FREQUENCY***\n");
-        }
-
-}
 // The form is name=value
 // split it in two
 void setVar(char *in)

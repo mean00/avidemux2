@@ -311,8 +311,9 @@ int startAvidemux(int argc, char *argv[])
 
     ADM_lavInit();
     AVDM_audioInit();
-
+#if ADM_ENABLE_JS
 	initialiseScriptEngines(video_body);
+#endif
 
 #if defined( USE_VDPAU)
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
@@ -340,6 +341,7 @@ void onexit( void )
     delete video_body;
     // wait for thread to finish executing
     destroyScriptEngines();
+#endif
 //    filterCleanUp();
 	ADM_lavDestroy();
 

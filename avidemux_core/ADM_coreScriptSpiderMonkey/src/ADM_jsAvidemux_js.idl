@@ -23,8 +23,9 @@ class adm
         function int getFps1000     : scriptGetFps1000 ( ) <static>;
      function cstring getVideoCodec : scriptGetVideoCodec ( ) <static>;
         /*            JSFUNC                 C FUNC           PARAM     */
-        function int audioReset     : scriptAudioReset () <static>;
-        function int audioMixer     : scriptAudioMixer (cstring ) <static>;
+        /*function int audioReset     : scriptAudioReset () <static>;*/
+        /*function int audioMixer     : scriptAudioMixer (cstring ) <static>;*/
+
         /*            JSFUNC                 C FUNC           PARAM     */
         function int clearVideoFilters   : scriptClearVideoFilters() <static>;
         
@@ -36,7 +37,7 @@ class adm
 /* Properties */
         property double markerA            : scriptGetMarkerA,scriptSetMarkerA <static>;
         property double markerB            : scriptGetMarkerB,scriptSetMarkerB <static>;
-        property int    audioResample      : scriptGetResample,scriptSetResample <static>;
+        /* property int    audioResample      : scriptGetResample,scriptSetResample <static>; */
         construct                          : jsAvidemux  ( ) <static>     ; 
 };
 

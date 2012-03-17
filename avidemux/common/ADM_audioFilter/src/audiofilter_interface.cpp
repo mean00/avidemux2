@@ -18,41 +18,29 @@
 #include <math.h>
 #include "audiofilter_conf.h"
 
-// This structure defines the current filter chain used for **ENCODING**
-// Warning, we have another one for playback
 
-ADM_AUDIOFILTER_CONFIG audioEncodingConfig;
 extern int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config);
 
 /**
     \fn audioFilterconfigure
     \brief
 */
-bool audioFilterConfigure(void)
+bool ADM_AUDIOFILTER_CONFIG::audioFilterConfigure(void)
 {
-    return DIA_getAudioFilter(&audioEncodingConfig);
-}
-/**
-    \fn audioFilterReset
-    \brief Put back default value on audio filter chain
-
-*/
-bool audioFilterReset(void)
-{
-       return audioEncodingConfig.reset();
+    return DIA_getAudioFilter(this);
 }
 
 /**
     \fn audioFilterSetResample
     \brief
 */
-bool    audioFilterSetResample(uint32_t newfq)  // Set 0 to disable frequency
+bool    ADM_AUDIOFILTER_CONFIG::audioFilterSetResample(uint32_t newfq)  // Set 0 to disable frequency
 {
-    if(!newfq) audioEncodingConfig.resamplerEnabled=false;
+    if(!newfq) resamplerEnabled=false;
         else        
             {
-                    audioEncodingConfig.resamplerEnabled=true;
-                    audioEncodingConfig.resamplerFrequency=newfq;
+                    resamplerEnabled=true;
+                    resamplerFrequency=newfq;
             }
     return true;
 }
@@ -61,10 +49,10 @@ bool    audioFilterSetResample(uint32_t newfq)  // Set 0 to disable frequency
     \brief
 */
 
-uint32_t        audioFilterGetResample(void)  // Set 0 to disable frequency
+uint32_t        ADM_AUDIOFILTER_CONFIG::audioFilterGetResample(void)  // Set 0 to disable frequency
 {
-    if(audioEncodingConfig.resamplerEnabled==false) return 0;
-    return audioEncodingConfig.resamplerFrequency;
+    if(resamplerEnabled==false) return 0;
+    return resamplerFrequency;
 }
 
 /**
@@ -72,9 +60,9 @@ uint32_t        audioFilterGetResample(void)  // Set 0 to disable frequency
     \brief
 */
 
-bool    audioFilterSetFrameRate(FILMCONV conf)
+bool    ADM_AUDIOFILTER_CONFIG::audioFilterSetFrameRate(FILMCONV conf)
 {
-    audioEncodingConfig.film2pal=conf;
+    film2pal=conf;
     return true;
 }
 
@@ -83,15 +71,15 @@ bool    audioFilterSetFrameRate(FILMCONV conf)
     \brief
 */
 
-FILMCONV        audioFilterGetFrameRate(void)
+FILMCONV        ADM_AUDIOFILTER_CONFIG::audioFilterGetFrameRate(void)
 {
-    return audioEncodingConfig.film2pal;
+    return film2pal;
 }
 /**
     \fn audioFilterSetNormalize
     \brief 
 */
-bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain)
+bool            ADM_AUDIOFILTER_CONFIG::audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain)
 {
     if(mode>=ADM_GAIN_MAX)
     {
@@ -104,19 +92,19 @@ bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain)
         return false;
     }
 
-    audioEncodingConfig.gainParam.mode=mode;
-    audioEncodingConfig.gainParam.gain10=gain;
+    gainParam.mode=mode;
+    gainParam.gain10=gain;
     return true;
 }
 /**
     \fn audioFilterSetNormalize
     \brief 
 */
-bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain)
+bool            ADM_AUDIOFILTER_CONFIG::audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain)
 {
 
-    *mode=audioEncodingConfig.gainParam.mode;
-    *gain=audioEncodingConfig.gainParam.gain10;
+    *mode=gainParam.mode;
+    *gain=gainParam.gain10;
     return true;
 }
 
@@ -125,15 +113,15 @@ bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain)
     \brief
 */
 
-bool    audioFilterSetMixer(CHANNEL_CONF conf) // Invalid to disable
+bool    ADM_AUDIOFILTER_CONFIG::audioFilterSetMixer(CHANNEL_CONF conf) // Invalid to disable
 {
     if(conf==CHANNEL_INVALID)
     {
-        audioEncodingConfig.mixerEnabled=false;
+        mixerEnabled=false;
     }else   
     {
-        audioEncodingConfig.mixerEnabled=true;
-        audioEncodingConfig.mixerConf=conf;
+        mixerEnabled=true;
+        mixerConf=conf;
     }
     return true;
 }
@@ -143,10 +131,10 @@ bool    audioFilterSetMixer(CHANNEL_CONF conf) // Invalid to disable
     \brief
 */
 
-CHANNEL_CONF    audioFilterGetMixer(void) // Invalid to disable
+CHANNEL_CONF    ADM_AUDIOFILTER_CONFIG::audioFilterGetMixer(void) // Invalid to disable
 {
-    if( audioEncodingConfig.mixerEnabled==false) return CHANNEL_INVALID;
-    return audioEncodingConfig.mixerConf;
+    if( mixerEnabled==false) return CHANNEL_INVALID;
+    return mixerConf;
 }
 
 // EOF

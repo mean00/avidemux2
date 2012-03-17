@@ -78,11 +78,13 @@ extern ADM_audioAccess *ADM_threadifyAudioAccess(ADM_audioAccess *son);
 AUDMAudioFilter *createEncodingFilter(uint64_t startTime,int32_t shift)
 {
     //
+    EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+    if(!ed) return NULL;
     ADM_info("Creating audio encoding filter with start time %s\n",ADM_us2plain(startTime));
-    audioEncodingConfig.startTimeInUs=startTime;
-    audioEncodingConfig.shiftInMs=shift;
+    ed->audioEncodingConfig.startTimeInUs=startTime;
+    ed->audioEncodingConfig.shiftInMs=shift;
     //
-    ADM_buildFilterChain(&EncodingVector,&audioEncodingConfig);
+    ADM_buildFilterChain(&EncodingVector,&( ed->audioEncodingConfig));
     //
     int last=EncodingVector.size();
     ADM_assert(last);

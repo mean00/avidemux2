@@ -13,9 +13,9 @@
 /* METHOD */ int scriptGetPARHeight:getPARHeight    (void) 
 /* METHOD */ int scriptGetFps1000:getFps1000        (void) 
 /* METHOD */ str scriptGetVideoCodec:getVideoCodec(void) 
-/* METHOD */ int scriptAudioReset:audioReset        (void) 
-/* METHOD */ int scriptAudioMixer:audioMixer        (str ) 
-/* METHOD */ int scriptAudioSetTrack:setAudioTrack  (int ) 
+/* METHOD */ int scriptAudioReset:audioReset        (int) 
+/* METHOD */ int scriptAudioMixer:audioMixer        (int,str ) 
+#/* METHOD */ int scriptAudioSetTrack:setAudioTrack  (int,int ) 
 /* METHOD */ int scriptClearVideoFilters:clearVideoFilters   (void) 
 #
 #  Audio encoding...
@@ -48,8 +48,12 @@
 #
 /* ATTRIBUTES */ double markerA:scriptSetMarkerA,scriptGetMarkerA
 /* ATTRIBUTES */ double markerB:scriptSetMarkerB,scriptGetMarkerB
-/* ATTRIBUTES */ int    audioResample:scriptSetResample,scriptGetResample
-/* ATTRIBUTES */ int    audioNormalizeMode:scriptSetNormalizeMode,scriptGetNormalizeMode
-/* ATTRIBUTES */ int    audioNormalizeGain:scriptSetNormalizeValue,scriptGetNormalizeValue
-/* ATTRIBUTES */ int    audioPal2film:scriptSetPal2film,scriptGetPal2film
-/* ATTRIBUTES */ int    audioFilm2pal:scriptSetFilm2pal,scriptGetFilm2pal
+#
+# Audio filters
+#
+/* METHOD */ int    scriptSetResample:audioResample (int,int) 
+/* METHOD */ int    scriptSetNormalizeMode:audioNormalizeMode (int,int) 
+/* METHOD */ int    scriptSetNormalizeValue:audioNormalizeGain (int,int) 
+/* METHOD */ int    scriptSetPal2film:audioPal2film (int,int) 
+/* METHOD */ int    scriptSetFilm2pal:audioFilm2pal (int,int) 
+#

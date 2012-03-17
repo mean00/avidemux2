@@ -214,31 +214,6 @@ bool ppswap;
     dumpConf(fd,couples);
     qfprintf(fd,");\n");
 
-
-    uint32_t x=audioFilterGetResample();
-    if(x) qfprintf(fd,"adm.audioResample=%u;\n",audioFilterGetResample());
-
-    
-//   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
-//   qfprintf(fd,"app.audio.normalizeValue=%d;\n",audioGetNormalizeValue());
-//   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
-// if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
-   if(CHANNEL_INVALID!=audioFilterGetMixer())
-        qfprintf(fd,"adm.audioMixer(\"%s\");\n",AudioMixerIdToString(audioFilterGetMixer()));
-
-   
-
-   // Change fps ?
-        switch(audioFilterGetFrameRate())
-        {
-                case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film=1;\n");break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal=1;\n");break;
-                default:ADM_assert(0);break;
-        }
-   
-       
-        
   
   // -------- Muxer -----------------------
         qfprintf(fd,"\n//** Muxer **\n");
