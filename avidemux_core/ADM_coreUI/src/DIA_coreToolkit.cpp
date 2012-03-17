@@ -236,6 +236,15 @@ DIA_workingBase *createWorking(const char *title)
     return NULL;
 }
 /**
+    \fn createWorking
+    \brief
+*/
+DIA_audioTrackBase *createAudioTrack(PoolOfAudioTracks *pool, ActiveAudioTracks *active )
+{
+    if(Toolkit->createAudioTrack) return Toolkit->createAudioTrack(pool,active);
+    return NULL;
+}
+/**
     \fn createEncoding
 */
 DIA_encodingBase *createEncoding(uint64_t duration)
