@@ -5,9 +5,10 @@ IF(NOT WIN32 AND NOT APPLE)
 
         ADD_VIDEO_FILTER(ADM_vf_vdpauFilter ${ADM_vf_vdpauFilter_SRCS})
         ADD_VIDEO_FILTER(ADM_vf_vdpauFilterDeint ${ADM_vf_vdpauFilterDeint_SRCS})
-        
+        IF(DO_COMMON)        
         TARGET_LINK_LIBRARIES( ADM_vf_vdpauFilter ADM_coreVDPAU6)
         TARGET_LINK_LIBRARIES( ADM_vf_vdpauFilterDeint ADM_coreVDPAU6)
+        ENDIF(DO_COMMON)        
 
         INIT_VIDEO_FILTER(ADM_vf_vdpauFilter)
         INIT_VIDEO_FILTER(ADM_vf_vdpauFilterDeint)
