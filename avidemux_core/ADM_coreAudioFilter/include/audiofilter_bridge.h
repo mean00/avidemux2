@@ -19,17 +19,17 @@
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioStream.h"
 #include "ADM_edit.hxx"
-#include "ADM_edAudioTrackFromVideo.h"
+#include "ADM_edAudioTrack.h"
 class AUDMAudioFilter_Bridge : public AUDMAudioFilter
 {
   protected:
-    ADM_edAudioTrackFromVideo  *_incoming;
+    ADM_edAudioTrack  *_incoming;
     uint32_t _startTime; /*< Starting time in ms */
     int32_t  _shift;  /*< Shift in Ms */
     int32_t  _hold;   /*< Nb Sample to repeat */
     virtual uint8_t fillIncomingBuffer(AUD_Status *status);
   public:
-                            AUDMAudioFilter_Bridge(ADM_edAudioTrackFromVideo *incoming, 
+                            AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming, 
                                                 uint32_t startInMs,int32_t shiftMS);
     virtual                ~AUDMAudioFilter_Bridge();
     virtual    uint32_t   fill(uint32_t max,float *output,AUD_Status *status);      // Fill buffer: incoming -> us
