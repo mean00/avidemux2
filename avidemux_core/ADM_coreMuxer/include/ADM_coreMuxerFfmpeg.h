@@ -28,7 +28,7 @@ extern "C"
 	#include "libavutil/avutil.h"
     #include "libavformat/avformat.h"
 };
-
+#define ADM_MAX_AUDIO_STREAM 10
 /**
     \class muxerFFmpeg
 */
@@ -42,9 +42,9 @@ protected:
             *time=rescaleLavPts(*time,scale);
             return true;
         }
-        virtual bool muxerRescaleAudioTime(uint64_t *time,uint32_t fq)
+        virtual bool muxerRescaleAudioTime(int trk,uint64_t *time,uint32_t fq)
         {       
-             AVRational *scale=&(audio_st->time_base);
+             AVRational *scale=&(audio_st[trk]->time_base);
             *time=rescaleLavPts(*time,scale);
             return true;
         }
@@ -61,7 +61,7 @@ protected:
 protected:
         AVOutputFormat *fmt;
         AVFormatContext *oc;
-        AVStream *audio_st;
+        AVStream *audio_st[ADM_MAX_AUDIO_STREAM];
         AVStream *video_st;
         double audio_pts, video_pts;
 

@@ -49,7 +49,8 @@ muxerFFmpeg::muxerFFmpeg()
 {
     fmt=NULL;
     oc=NULL;
-    audio_st=NULL;
+    for(int i=0;i<ADM_MAX_AUDIO_STREAM;i++)
+        audio_st[i]=NULL;
     video_st=NULL;
     audioDelay=0;
     initialized=false;
@@ -67,16 +68,17 @@ bool muxerFFmpeg::closeMuxer()
             url_fclose((oc->pb));
         }
     }
-    if(audio_st)
+    for(int i=0;i<ADM_MAX_AUDIO_STREAM;i++)
     {
-         av_free(audio_st);
+        if(audio_st[i])
+            av_free(audio_st[i]);
+        audio_st[i]=NULL;
     }
     if(video_st)
     {
          av_free(video_st);
     }
     video_st=NULL;
-    audio_st=NULL;
     if(oc)
         av_free(oc);
     oc=NULL;
@@ -275,23 +277,23 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
         printf("[FF] No audio\n");
         return true;
     }
-#warning : only handle one audio track!
-    for(int i=0;i<1;i++)
+    
+    for(int i=0;i<nbAudioTrack;i++)
     {
           uint32_t audioextraSize;
           uint8_t  *audioextraData;
 
           audio[i]->getExtraData(&audioextraSize,&audioextraData);
 
-          audio_st = av_new_stream(oc, 1);
-          if (!audio_st)
+          audio_st[i] = av_new_stream(oc, 1);
+          if (!audio_st[i])
           {
                   printf("[FF]: new stream failed (audio)\n");
                   return false;
           }
           WAVHeader *audioheader=audio[i]->getInfo();;
           AVCodecContext *c;
-          c = audio_st->codec;
+          c = audio_st[i]->codec;
           c->frame_size=1024; //For AAC mainly, sample per frame
           printf("[FF] Bitrate %u\n",(audioheader->byterate*8)/1000);
           c->sample_rate = audioheader->frequency;
@@ -359,7 +361,7 @@ public:
 };
 
 /**
-
+    \fn saveLoop
 */
 bool muxerFFmpeg::saveLoop(const char *title)
 {
@@ -492,7 +494,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     uint64_t rescaledDts;
                     rescaledDts=audioTrack->dts;
                     encoding->pushAudioFrame(audioTrack->size);
-                    muxerRescaleAudioTime(&rescaledDts,a->getInfo()->frequency);
+                    muxerRescaleAudioTime(audio,&rescaledDts,a->getInfo()->frequency);
                    //printf("[FF] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
                      //               written,audioTrack->dts,audioTrack->size,audioTrack->samples,rescaledDts);
                     av_init_packet(&pkt);
