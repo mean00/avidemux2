@@ -1,9 +1,9 @@
 #           name    cookie id
 /* CLASS */ pyGui : void : ADM_PYID_GUI
 #              cname:pyname
-/* METHOD */ str scriptDirSelect:dirSelect(str) 
-/* METHOD */ str scriptFileSelRead:fileReadSelect(str) 
-/* METHOD */ str scriptFileSelWrite:fileWriteSelect(str) 
-/* METHOD */ void scriptDisplayError:displayError(str,str) 
-/* METHOD */ void scriptDisplayInfo:displayInfo(str,str) 
+/* METHOD */ str pyDirSelect:dirSelect(str) 
+/* METHOD */ str pyFileSelRead:fileReadSelect(str) 
+/* METHOD */ str pyFileSelWrite:fileWriteSelect(str) 
+/* METHOD */ void pyDisplayError:displayError(str,str) 
+/* METHOD */ void pyDisplayInfo:displayInfo(str,str) 
 

@@ -1,12 +1,12 @@
 #              cname:pyname
 /* CLASS */ pyEditor : void : ADM_PYID_EDITOR
-/* METHOD */ double scriptGetPts:getPts            (int ) 
-/* METHOD */ double scriptGetDts:getDts            (int ) 
-/* METHOD */ int jsPrintTiming:printTiming      (int ) 
-/* METHOD */ int scriptGetNbSegment:nbSegments  (void)
-/* METHOD */ int jsDumpSegments:dumpAllSegments    (void) 
-/* METHOD */ void scriptDumpSegment:dumpSegment     (int) 
-/* METHOD */ double scriptGetVideoDuration:getVideoDuration  (void) 
-/* METHOD */ int jsDumpRefVideos:dumpRefVideo   (void) 
-/* METHOD */ int jsHexDumpFrame:hexDumpFrame    (int) 
+/* METHOD */ double pyGetPts:getPts            (int) 
+/* METHOD */ double pyGetDts:getDts            (int) 
+/* METHOD */ int pyPrintTiming:printTiming      (int) 
+/* METHOD */ int editor->getNbSegment:nbSegments  (void)
+/* METHOD */ void editor->dumpSegments:dumpAllSegments    (void) 
+/* METHOD */ void editor->dumpSegment:dumpSegment     (int) 
+/* METHOD */ double editor->getVideoDuration:getVideoDuration  (void) 
+/* METHOD */ int editor->dumpRefVideos:dumpRefVideo   (void) 
+/* METHOD */ int pyHexDumpFrame:hexDumpFrame    (int) 
 

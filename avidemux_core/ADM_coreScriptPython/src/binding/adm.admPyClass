@@ -2,43 +2,43 @@
 /* CLASS */ pyAdm : void : ADM_PYID_AVIDEMUX
 #              cname:pyname
 # Basic action load, handle seg, getInfo
-/* METHOD */ int scriptLoadVideo:loadVideo          (str ) 
-/* METHOD */ int scriptClearSegments:clearSegments  (void) 
-/* METHOD */ int scriptAppendVideo:appendVideo      (str ) 
-/* METHOD */ int scriptAddSegment:addSegment        (int ,double , double ) 
-/* METHOD */ int scriptSetPostProc:setPostProc      (int ,int , int ) 
-/* METHOD */ int scriptGetWidth:getWidth            (void) 
-/* METHOD */ int scriptGetHeight:getHeight          (void) 
-/* METHOD */ int scriptGetPARWidth:getPARWidth      (void) 
-/* METHOD */ int scriptGetPARHeight:getPARHeight    (void) 
-/* METHOD */ int scriptGetFps1000:getFps1000        (void) 
-/* METHOD */ str scriptGetVideoCodec:getVideoCodec(void) 
-/* METHOD */ int scriptAudioReset:audioReset        (int) 
-/* METHOD */ int scriptAudioMixer:audioMixer        (int,str ) 
-#/* METHOD */ int scriptAudioSetTrack:setAudioTrack  (int,int ) 
-/* METHOD */ int scriptClearVideoFilters:clearVideoFilters   (void) 
+/* METHOD */ int editor->openFile:loadVideo          (str)
+/* METHOD */ int editor->clearSegment:clearSegments  (void)
+/* METHOD */ int editor->appendFile:appendVideo      (str)
+/* METHOD */ int editor->addSegment:addSegment        (int, double, double)
+/* METHOD */ int editor->setPostProc:setPostProc      (int, int, int)
+/* METHOD */ int pyGetWidth:getWidth            (void)
+/* METHOD */ int pyGetHeight:getHeight          (void)
+/* METHOD */ int editor->getPARWidth:getPARWidth      (void)
+/* METHOD */ int editor->getPARHeight:getPARHeight    (void)
+/* METHOD */ int pyGetFps1000:getFps1000        (void)
+/* METHOD */ str editor->getVideoCodec:getVideoCodec(void)
+/* METHOD */ void editor->resetAudioFilter:audioReset        (void)
+/* METHOD */ int editor->setAudioMixer:audioMixer        (str)
+/* METHOD */ int pyChangeAudioStream:setAudioTrack  (int)
+/* METHOD */ void editor->clearFilters:clearVideoFilters   (void) 
 #
 #  Audio encoding...
 #
-/* ATTRIBUTES */ int audioFrequency:scriptSetAudioFrequency,scriptGetAudioFrequency
-/* ATTRIBUTES */ int audioChannels:scriptSetAudioChannels,scriptGetAudioChannels
-/* ATTRIBUTES */ int audioEncoding:scriptSetAudioEncoding,scriptGetAudioEncoding
+/* ATTRIBUTES */ int audioFrequency:pySetAudioFrequency,pyGetAudioFrequency
+/* ATTRIBUTES */ int audioChannels:pySetAudioChannels,pyGetAudioChannels
+/* ATTRIBUTES */ int audioEncoding:pySetAudioEncoding,pyGetAudioEncoding
 #
 #
 #              cname:pyname
 #  Codec, container
-/* METHOD */ int scriptSetVideoCodec:videoCodec(str,couples) 
-/* METHOD */ int scriptSetVideoCodecParam:videoCodecChangeParam(str,couples) 
-/* METHOD */ int scriptSetAudioCodec:audioCodec(int,str,int,couples) 
-/* METHOD */ int scriptSetContainer:setContainer(str,couples) 
-/* METHOD */ int scriptAddVideoFilter:addVideoFilter(str,couples) 
+/* METHOD */ int editor->setVideoCodec:videoCodec(str, couples) 
+/* METHOD */ int editor->setVideoCodec:videoCodecChangeParam(str, couples) 
+/* METHOD */ int editor->setAudioCodec:audioCodec(str, int, couples) 
+/* METHOD */ int editor->setContainer:setContainer(str, couples) 
+/* METHOD */ int editor->addVideoFilter:addVideoFilter(str, couples) 
 #
 #  Save audio, video, images
 #
-/* METHOD */ int A_audioSave:saveAudio(str) 
-/* METHOD */ int A_Save:save(str) 
-/* METHOD */ int A_saveJpg:saveJpeg(str) 
-/* METHOD */ int A_saveImg:saveBmp(str) 
+/* METHOD */ int editor->saveAudio:saveAudio(str) 
+/* METHOD */ int editor->saveFile:save(str) 
+/* METHOD */ int editor->saveImageJpg:saveJpeg(str) 
+/* METHOD */ int editor->saveImageBmp:saveBmp(str) 
 #
 #
 # Seek
@@ -46,14 +46,10 @@
 #
 #       Variables
 #
-/* ATTRIBUTES */ double markerA:scriptSetMarkerA,scriptGetMarkerA
-/* ATTRIBUTES */ double markerB:scriptSetMarkerB,scriptGetMarkerB
-#
-# Audio filters
-#
-/* METHOD */ int    scriptSetResample:audioResample (int,int) 
-/* METHOD */ int    scriptSetNormalizeMode:audioNormalizeMode (int,int) 
-/* METHOD */ int    scriptSetNormalizeValue:audioNormalizeGain (int,int) 
-/* METHOD */ int    scriptSetPal2film:audioPal2film (int,int) 
-/* METHOD */ int    scriptSetFilm2pal:audioFilm2pal (int,int) 
-#
+/* ATTRIBUTES */ double markerA:editor->setMarkerAPts,editor->getMarkerAPts
+/* ATTRIBUTES */ double markerB:editor->setMarkerBPts,editor->getMarkerBPts
+/* ATTRIBUTES */ int    audioResample:editor->setAudioResample,editor->getAudioResample
+/* ATTRIBUTES */ int    audioNormalizeMode:pySetNormalizeMode,pyGetNormalizeMode
+/* ATTRIBUTES */ int    audioNormalizeGain:pySetNormalizeValue,pyGetNormalizeValue
+/* ATTRIBUTES */ int    audioPal2film:pySetPal2Film,pyGetPal2Film
+/* ATTRIBUTES */ int    audioFilm2pal:pySetFilm2Pal,pyGetFilm2Pal
