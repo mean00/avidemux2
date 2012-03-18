@@ -7,9 +7,9 @@ ENDMACRO(AS_NEEDED name)
 MACRO(ADM_ADD_SHARED_LIBRARY name )
         ADD_LIBRARY(${name} SHARED ${ARGN})
 	AS_NEEDED(${name})
-        if(UNIX)
+        if(UNIX AND NOT APPLE)
         	TARGET_LINK_LIBRARIES( ${name} "-Wl,-z,defs")
-        endif(UNIX)
+        endif(UNIX AND NOT APPLE)
 
 ENDMACRO(ADM_ADD_SHARED_LIBRARY name )
 

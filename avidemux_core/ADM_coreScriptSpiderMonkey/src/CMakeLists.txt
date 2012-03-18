@@ -42,4 +42,8 @@ else (USE_SYSTEM_SPIDERMONKEY)
 	target_link_libraries(ADM_coreScriptSpiderMonkey ADM_smjs6)
 endif (USE_SYSTEM_SPIDERMONKEY)
 
-target_link_libraries(ADM_coreScriptSpiderMonkey ADM_coreUI6 ADM_coreUtils6 ADM_scriptDF ADM_coreScript -Wl,--version-script,"${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreScriptSpiderMonkey.v")
+target_link_libraries(ADM_coreScriptSpiderMonkey ADM_coreUI6 ADM_coreUtils6 ADM_scriptDF ADM_coreScript)
+
+if (NOT APPLE)
+    target_link_libraries(ADM_coreScriptSpiderMonkey -Wl,--version-script,"${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreScriptSpiderMonkey.v")
+endif (NOT APPLE)
