@@ -91,6 +91,7 @@ TARGET_LINK_LIBRARIES(avidemux3_cli
 	ADM_UI_Cli6
 	ADM_dialogCli6
 	ADM_toolkit6
+	ADM_coreAudio6
 	ADM_coreUtils6
 	ADM_gui2Cli6
 	ADM_toolkitCli6

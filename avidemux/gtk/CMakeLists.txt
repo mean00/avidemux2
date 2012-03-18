@@ -96,6 +96,7 @@ TARGET_LINK_LIBRARIES(avidemux3_gtk
 	#ADM_filtersGtk
 	ADM_gui2Gtk
 	ADM_toolkit6
+	ADM_coreAudio6
 	ADM_coreUtils6
 	#ADM_ocrGtk
 	ADM_toolkitGtk

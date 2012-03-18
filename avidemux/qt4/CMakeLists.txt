@@ -130,6 +130,7 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4
 	ADM_UI_QT46
 	ADM_shellQt4
 	ADM_toolkit6
+	ADM_coreAudio6
 	ADM_coreAudioDevice6
 	ADM_osSupport6
 )
