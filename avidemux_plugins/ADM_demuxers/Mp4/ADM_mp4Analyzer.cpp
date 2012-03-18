@@ -668,8 +668,6 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                 //
 #define commonPart(x)             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)#x);
 
-                                 lw=(lw+7)&(~7);
-                                 lh=(lh+7)&(~7);
                                  _video_bih.biWidth=_mainaviheader.dwWidth=lw ;
                                   _video_bih.biHeight=_mainaviheader.dwHeight=lh;
                                   _video_bih.biCompression=_videostream.fccHandler;
