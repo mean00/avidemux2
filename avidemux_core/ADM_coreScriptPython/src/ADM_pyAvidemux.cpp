@@ -103,9 +103,9 @@ void pySetAudioChannels(IEditor *editor, int dq)
 	ADM_error("Cannot write audio channel\n");
 }
 
-int32_t pyGetPal2Film(IEditor *editor)
+int32_t pyGetPal2Film(IEditor *editor,int dex)
 {
-	if (editor->getAudioFilterFrameRate() == FILMCONV_PAL2FILM)
+	if (editor->getAudioFilterFrameRate(dex) == FILMCONV_PAL2FILM)
 	{
 		return 1;
 	}
@@ -113,9 +113,9 @@ int32_t pyGetPal2Film(IEditor *editor)
 	return 0;
 }
 
-int32_t pyGetFilm2Pal(IEditor *editor)
+int32_t pyGetFilm2Pal(IEditor *editor,int dex)
 {
-	if (editor->getAudioFilterFrameRate() == FILMCONV_FILM2PAL)
+	if (editor->getAudioFilterFrameRate(dex) == FILMCONV_FILM2PAL)
 	{
 		return 1;
 	}
@@ -123,68 +123,68 @@ int32_t pyGetFilm2Pal(IEditor *editor)
 	return 0;
 }
 
-void pySetPal2Film(IEditor *editor, int32_t rate)
+void pySetPal2Film(IEditor *editor, int dex,int32_t rate)
 {
 	if (rate)
 	{
-		editor->setAudioFilterFrameRate(FILMCONV_PAL2FILM);
+		editor->setAudioFilterFrameRate(dex,FILMCONV_PAL2FILM);
 	}
-	else if (pyGetPal2Film(editor))
+	else if (pyGetPal2Film(editor,dex))
 	{
-		editor->setAudioFilterFrameRate(FILMCONV_NONE);
+		editor->setAudioFilterFrameRate(dex,FILMCONV_NONE);
 	}
 }
 
-void pySetFilm2Pal(IEditor *editor, int32_t rate)
+void pySetFilm2Pal(IEditor *editor, int dex,int32_t rate)
 {
 	if (rate)
 	{
-		editor->setAudioFilterFrameRate(FILMCONV_FILM2PAL);
+		editor->setAudioFilterFrameRate(dex,FILMCONV_FILM2PAL);
 	}
-	else if (pyGetFilm2Pal(editor))
+	else if (pyGetFilm2Pal(editor,dex))
 	{
-		editor->setAudioFilterFrameRate(FILMCONV_NONE);
+		editor->setAudioFilterFrameRate(dex,FILMCONV_NONE);
 	}
 }
 
-int pyGetNormalizeMode(IEditor *editor)
+int pyGetNormalizeMode(IEditor *editor,int dex)
 {
 	ADM_GAINMode m;
 	uint32_t gain;
 
-	editor->getAudioFilterNormalise(&m, &gain);
+	editor->getAudioFilterNormalise(dex,&m, &gain);
 
 	return m;
 }
 
-int pyGetNormalizeValue(IEditor *editor)
+int pyGetNormalizeValue(IEditor *editor,int dex)
 {
 	ADM_GAINMode m;
 	uint32_t gain;
 
-	editor->getAudioFilterNormalise(&m, &gain);
+	editor->getAudioFilterNormalise(dex,&m, &gain);
 
 	return (int)gain;
 }
 
-void pySetNormalizeMode(IEditor *editor, int mode)
+void pySetNormalizeMode(IEditor *editor, int dex,int mode)
 {
 	ADM_GAINMode m;
 	uint32_t gain;
 
-	editor->getAudioFilterNormalise(&m, &gain);
+	editor->getAudioFilterNormalise(dex,&m, &gain);
 	m = (ADM_GAINMode)mode;
-	editor->setAudioFilterNormalise(m, gain);
+	editor->setAudioFilterNormalise(dex,m, gain);
 }
 
-void pySetNormalizeValue(IEditor *editor, int value)
+void pySetNormalizeValue(IEditor *editor, int dex,int value)
 {
 	ADM_GAINMode m;
 	uint32_t gain;
 
-	editor->getAudioFilterNormalise(&m, &gain);
+	editor->getAudioFilterNormalise(dex,&m, &gain);
 	gain = (uint32_t)value;
-	editor->setAudioFilterNormalise(m, gain);
+	editor->setAudioFilterNormalise(dex,m, gain);
 }
 
 bool pyHexDumpFrame(IEditor *editor, int framenumber)
