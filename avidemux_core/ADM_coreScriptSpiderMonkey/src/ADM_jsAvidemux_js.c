@@ -161,7 +161,7 @@ jjadmaudioResample_get(JSContext *cx, JSObject *obj, jsval id, jsval *val)
     if (!JS_EnterLocalRootScope(cx)) {
         goto do_return;
     }
-    var24 = jsGetResample(cx);
+    var24 = jsGetResample(cx,0);
     if (JS_NewNumberValue(cx, var24, &var27) != JS_TRUE) {
         goto do_return;
     }
@@ -192,7 +192,7 @@ jjadmaudioResample_set(JSContext *cx, JSObject *obj, jsval id, jsval *val)
         goto do_return;
     }
     var29 = (int)var33;
-    jsSetResample(cx, var29);
+    jsSetResample(cx, 0,var29);
     var28 = JS_TRUE;
     do_return:
     JS_LeaveLocalRootScope(cx);
@@ -698,7 +698,7 @@ jjadmaudioReset(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
     var141 = JS_FALSE;
     var142 = obj;
     var146 = argc;
-    jsAudioReset(cx);
+    jsAudioReset(cx,0);
     argv[argc+0] = JS_TRUE;
     if (rval) {
         *rval = JS_TRUE;
@@ -780,7 +780,7 @@ jjadmaudioMixer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
         var154[var158] = '\0';
     }
     }
-    var150 = jsAudioMixer(cx, var154);
+    var150 = jsAudioMixer(cx, 0,var154);
     if (JS_NewNumberValue(cx, var150, &var163) != JS_TRUE) {
         goto do_return;
     }

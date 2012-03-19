@@ -35,8 +35,8 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 int   jsSetContainer(const char *a,const char **b);
 JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 void jsClearVideoFilters(JSContext *cx);
-int jsAudioMixer(JSContext *cx, const char *s);
-void jsAudioReset(JSContext *cx);
+int jsAudioMixer(JSContext *cx, int dex,const char *s);
+void jsAudioReset(JSContext *cx,int dex);
 char *jsGetVideoCodec(JSContext *cx);
 int jsGetFps1000(JSContext *cx);
 int jsGetWidth(JSContext *cx);
@@ -49,8 +49,8 @@ double jsGetMarkerA(JSContext *cx);
 double jsGetMarkerB(JSContext *cx);
 void jsSetMarkerA(JSContext *cx, double a);
 void jsSetMarkerB(JSContext *cx, double b);
-uint32_t jsGetResample(JSContext *cx);
-void jsSetResample(JSContext *cx, uint32_t fq);
+uint32_t jsGetResample(JSContext *cx,int dex);
+void jsSetResample(JSContext *cx, int dex,uint32_t fq);
 int jsLoadVideo(JSContext *cx, const char *s);
 
 #ifdef __cplusplus

@@ -68,7 +68,7 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 	if (argc < 2)
 		return JS_FALSE;
 
-	if (JSVAL_IS_STRING(argv[0]) == false || JSVAL_IS_INT(argv[1]) == false)
+	if (JSVAL_IS_STRING(argv[1]) == false || JSVAL_IS_INT(argv[0]))
 		return JS_FALSE;
 
 	for (int i = 2; i < argc; i++)
@@ -76,9 +76,10 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 			return JS_FALSE;
 
 	// Get Codec...
-	char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));     
+    int dex=JSVAL_TO_INT(argv[0]);
+	char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));     
 	// begin set bitrate
-	uint32_t bitrate = JSVAL_TO_INT(argv[1]);
+	uint32_t bitrate = JSVAL_TO_INT(argv[2]);
 	// Construct couples
 	CONFcouple *c = NULL;
 
@@ -88,7 +89,7 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 		jsArgToConfCouple(nb, &c, argv + 2);
 	}
 
-	*rval = BOOLEAN_TO_JSVAL(EDITOR(cx)->setAudioCodec(name, bitrate, c));
+	*rval = BOOLEAN_TO_JSVAL(EDITOR(cx)->setAudioCodec(dex,name, c));
 
 	return JS_TRUE;
 }
@@ -134,14 +135,14 @@ void jsClearVideoFilters(JSContext *cx)
 	EDITOR(cx)->clearFilters();
 }
 
-int jsAudioMixer(JSContext *cx, const char *s)
+int jsAudioMixer(JSContext *cx, int dex,const char *s)
 {
-	return EDITOR(cx)->setAudioMixer(s);
+	return EDITOR(cx)->setAudioMixer(dex,s);
 }
 
-void jsAudioReset(JSContext *cx)
+void jsAudioReset(JSContext *cx,int dex)
 {
-	EDITOR(cx)->resetAudioFilter();
+	EDITOR(cx)->resetAudioFilter(dex);
 }
 
 char *jsGetVideoCodec(JSContext *cx)
@@ -229,14 +230,14 @@ void jsSetMarkerB(JSContext *cx, double b)
 	EDITOR(cx)->setMarkerBPts((uint64_t)b);
 }
 
-uint32_t jsGetResample(JSContext *cx)
+uint32_t jsGetResample(JSContext *cx,int dex)
 {
-	return EDITOR(cx)->getAudioResample();
+	return EDITOR(cx)->getAudioResample(dex);
 }
 
-void jsSetResample(JSContext *cx, uint32_t fq)
+void jsSetResample(JSContext *cx, int dex,uint32_t fq)
 {
-	return EDITOR(cx)->setAudioResample(fq);
+	return EDITOR(cx)->setAudioResample(dex,fq);
 }
 
 int jsLoadVideo(JSContext *cx, const char *s)
