@@ -101,30 +101,6 @@ int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 	return r;
 }
 
-
-int ADM_Composer::saveAudio(const char *name)
-{
-	return A_audioSave(name); 
-}
-
-
-void ADM_Composer::clearFilters()
-{
-	ADM_vf_clearFilters();
-}
-
-int ADM_Composer::setAudioMixer(const char *s)
-{
-//    CHANNEL_CONF c = AudioMuxerStringToId(s);
-//    return audioFilterSetMixer(c);
-    return 0;
-}
-
-void ADM_Composer::resetAudioFilter()
-{
-//    audioFilterReset();
-}
-
 char *ADM_Composer::getVideoCodec(void)
 {
 	uint32_t fcc;
@@ -140,15 +116,18 @@ int ADM_Composer::appendFile(const char *name)
 {
 	return A_appendAvi(name);
 }
-
-uint32_t ADM_Composer::getAudioResample()
+/**
+    \fn saveAudio
+*/
+int ADM_Composer::saveAudio(int dex,const char *name)
 {
-//	return audioFilterGetResample();
+	return A_audioSave(name); 
 }
 
-void ADM_Composer::setAudioResample(uint32_t newfq)
+
+void ADM_Composer::clearFilters()
 {
-//	audioFilterSetResample(newfq);
+	ADM_vf_clearFilters();
 }
 
 int	ADM_Composer::openFile(const char *name)
@@ -159,28 +138,6 @@ int	ADM_Composer::openFile(const char *name)
 int ADM_Composer::saveFile(const char *name)
 {
 	return A_Save(name);
-}
-
-bool ADM_Composer::setAudioCodec(const char *codec, int bitrate, CONFcouple *c)
-{
-#if 0
-	bool r = true;
-
-	// First search the codec by its name
-	if (!audioCodecSetByName(codec))
-	{
-		r = false;
-	}
-	else
-	{
-		r = setAudioExtraConf(bitrate, c);
-	}
-
-	if (c)
-		delete c;
-
-	return r;
-#endif
 }
 
 bool ADM_Composer::setContainer(const char *cont, CONFcouple *c)
@@ -210,30 +167,6 @@ bool ADM_Composer::setContainer(const char *cont, CONFcouple *c)
 	return r;
 }
 
-bool ADM_Composer::setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain)
-{
-//	return audioFilterSetNormalize(mode, gain);
-    return false;
-}
-
-bool ADM_Composer::getAudioFilterNormalise(ADM_GAINMode *mode, uint32_t *gain)
-{
-//	return audioFilterGetNormalize(mode, gain);
-    return false;
-}
-
-FILMCONV ADM_Composer::getAudioFilterFrameRate(void)
-{
-	//return audioFilterGetFrameRate();
-    return FILMCONV_NONE;
-}
-
-bool ADM_Composer::setAudioFilterFrameRate(FILMCONV conf)
-{
-	//return audioFilterSetFrameRate(conf);
-    return false;
-}
-
 int ADM_Composer::saveImageBmp(const char *filename)
 {
 	return A_saveImg(filename);
@@ -243,5 +176,109 @@ int ADM_Composer::saveImageJpg(const char *filename)
 {
 	return A_saveJpg(filename);
 }
+//----------------------------------AUDIO-------------------------
+/**
+    \fn setAudioMixer
+*/
+int ADM_Composer::setAudioMixer(int dex,const char *s)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    CHANNEL_CONF c = AudioMuxerStringToId(s);
+    return ed->audioEncodingConfig.audioFilterSetMixer(c);
+}
+/**
+    \fn resetAudioFilter
+*/
+
+void ADM_Composer::resetAudioFilter(int dex)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return ;
+    ed->audioEncodingConfig.reset();
+
+}
+/**
+    \fn getAudioResample
+*/
+uint32_t ADM_Composer::getAudioResample(int dex)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetResample();
+}
+/**
+    \fn setAudioResample
+*/
+void ADM_Composer::setAudioResample(int dex, uint32_t newfq)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return ;
+    ed->audioEncodingConfig.audioFilterSetResample(newfq);
+}
+/**
+    \fn setAudioCodec
+*/
+bool ADM_Composer::setAudioCodec(int dex,const char *codec, CONFcouple *c)
+{
+
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+	bool r = true;
+#if 0
+	// First search the codec by its name
+	if (!ed->audioCodecSetByName(codec))
+	{
+		r = false;
+	}
+	else
+	{
+		r = setAudioExtraConf(bitrate, c);
+	}
+
+	if (c)
+		delete c;
+#endif
+	return r;
+}
+
+/**
+    \fn setAudioFilterNormalise
+*/
+bool ADM_Composer::setAudioFilterNormalise(int dex,ADM_GAINMode mode, uint32_t gain)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetNormalize(mode,gain);
+}
+/**
+    \fn getAudioFilterNormalise
+*/
+bool ADM_Composer::getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetNormalize(mode,gain);
+}
+/**
+    \fn getAudioFilterFrameRate
+*/
+FILMCONV ADM_Composer::getAudioFilterFrameRate(int dex)
+{
+	EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return FILMCONV_NONE;
+    return ed->audioEncodingConfig.audioFilterGetFrameRate();
+}
+/**
+    \fn setAudioFilterFrameRate
+*/
+
+bool ADM_Composer::setAudioFilterFrameRate(int dex,FILMCONV conf)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetFrameRate(conf);
+}
+
 #if 0
 #endif

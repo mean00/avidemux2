@@ -231,9 +231,7 @@ protected:
                     bool        switchToNextAudioSegment(void);
                     PoolOfAudioTracks   audioTrackPool;
                     ActiveAudioTracks   activeAudioTracks;
-					bool 		getAudioFilterNormalise(ADM_GAINMode *mode, uint32_t *gain);
-					FILMCONV 	getAudioFilterFrameRate(void);
-					bool 		setAudioFilterFrameRate(FILMCONV conf);
+
 //****************************** Audio **********************************
                     void        deleteAllVideos(void );
                     uint8_t     getMagic(const char *name,uint32_t *magic);
@@ -362,14 +360,18 @@ public:
         int         setVideoCodec(const char *codec, CONFcouple *c);
         int         addVideoFilter(const char *filter, CONFcouple *c);
         void        clearFilters();
-        bool        setAudioCodec(const char *codec, int bitrate, CONFcouple *c);
-        int         setAudioMixer(const char *s);
-        void        resetAudioFilter();
-        bool        setAudioFilterNormalise(ADM_GAINMode mode, uint32_t gain);
-        uint32_t    getAudioResample();
-        void        setAudioResample(uint32_t newfq);
         char*       getVideoCodec(void);
-        int         saveAudio(const char *name);
+        // audio
+        bool        setAudioCodec(int dex,const char *codec, CONFcouple *c);
+        int         setAudioMixer(int dex,const char *s);
+        void        resetAudioFilter(int dex);
+        bool        setAudioFilterNormalise(int dex,ADM_GAINMode mode, uint32_t gain);
+        uint32_t    getAudioResample(int dex);
+        void        setAudioResample(int dex,uint32_t newfq);
+        int         saveAudio(int dex,const char *name);
+        bool 		getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain);
+        FILMCONV 	getAudioFilterFrameRate(int dex);
+        bool 		setAudioFilterFrameRate(int dex,FILMCONV conf);
         
 /********************************* /IEditor **********************************/                    
 };
