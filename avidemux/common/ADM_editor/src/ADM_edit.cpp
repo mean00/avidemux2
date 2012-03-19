@@ -65,6 +65,10 @@ uint32_t type,value;
   _currentSegment=0;
   _scratch=NULL;
   currentProjectName=std::string("");
+
+  _currentPts = 0;
+  markerAPts = 0;
+  markerBPts = 0;
 }
 /**
 	Remap 1:1 video to segments
