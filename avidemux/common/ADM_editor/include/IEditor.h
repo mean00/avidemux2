@@ -8,6 +8,11 @@
     \class IEditor
     \brief i/f to editor
 */
+class EditableAudioTrack;
+class ADM_audioStream;
+/**
+    \class IEditor
+*/
 class IEditor
 {
 public:
@@ -56,5 +61,9 @@ public:
     virtual bool    changeAudioStream(uint64_t xtime, uint32_t newstream) = 0;
     virtual bool    getAudioStreamsInfo(uint64_t xtime, uint32_t *nbStreams, audioInfo **infos) = 0;
 	virtual uint32_t getCurrentAudioStreamNumber(uint64_t xtime) = 0;
+    virtual EditableAudioTrack *getEditableAudioTrackAt(int i)=0;
+    virtual ADM_audioStream    *getAudioStreamAt(int i)=0;
+
+
 };
 #endif

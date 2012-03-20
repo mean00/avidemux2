@@ -1,3 +1,18 @@
+/***************************************************************************
+   \file ADM_pyAvidemux.cpp
+    \brief binding between tinyPy and avidemux
+    \author mean/gruntster 2011/2012
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 #include "ADM_pyAvidemux.h"
 #include "ADM_audiodef.h"
 #include "ADM_vidMisc.h"
@@ -5,10 +20,12 @@
 #include "DIA_fileSel.h"
 #include "DIA_coreToolkit.h"
 
+#if 0
 int pyChangeAudioStream(IEditor *editor, int track)
 {
 	editor->changeAudioStream(0, track);
 }
+#endif
 
 int pyGetFps1000(IEditor *editor)
 {
@@ -32,159 +49,6 @@ int pyGetHeight(IEditor *editor)
 	editor->getVideoInfo(&info);
 
 	return info.height;
-}
-
-static bool audioProlog(IEditor *editor, audioInfo **info)
-{
-	uint32_t  nbAudioTracks;
-	audioInfo *infos = NULL;
-
-	if (!editor->getAudioStreamsInfo(0, &nbAudioTracks, &infos))
-	{
-		ADM_warning("There is no audio track\n");
-		return false;
-	}
-
-	int track = editor->getCurrentAudioStreamNumber(0);
-	*info = infos + track;
-
-	return true;
-}
-
-int pyGetAudioChannels(IEditor *editor)
-{
-	audioInfo *info = NULL;
-
-	if (!audioProlog(editor, &info))
-	{
-		return 0;
-	}
-
-	return info->channels;
-}
-
-int pyGetAudioFrequency(IEditor *editor)
-{
-	audioInfo *info = NULL;
-
-	if (!audioProlog(editor, &info))
-	{
-		return 0;
-	}
-
-	return info->frequency;
-
-}
-
-int pyGetAudioEncoding(IEditor *editor)
-{
-	audioInfo *info = NULL;
-
-	if (!audioProlog(editor, &info))
-	{
-		return 0;
-	}
-
-	return info->encoding;
-}
-
-void pySetAudioFrequency(IEditor *editor, int fq)
-{
-	ADM_error("Cannot write audio frequency\n");
-}
-
-void pySetAudioEncoding(IEditor *editor, int enc)
-{
-	ADM_error("Cannot write audio encoding\n");
-}
-
-void pySetAudioChannels(IEditor *editor, int dq)
-{
-	ADM_error("Cannot write audio channel\n");
-}
-
-int32_t pyGetPal2Film(IEditor *editor,int dex)
-{
-	if (editor->getAudioFilterFrameRate(dex) == FILMCONV_PAL2FILM)
-	{
-		return 1;
-	}
-
-	return 0;
-}
-
-int32_t pyGetFilm2Pal(IEditor *editor,int dex)
-{
-	if (editor->getAudioFilterFrameRate(dex) == FILMCONV_FILM2PAL)
-	{
-		return 1;
-	}
-
-	return 0;
-}
-
-void pySetPal2Film(IEditor *editor, int dex,int32_t rate)
-{
-	if (rate)
-	{
-		editor->setAudioFilterFrameRate(dex,FILMCONV_PAL2FILM);
-	}
-	else if (pyGetPal2Film(editor,dex))
-	{
-		editor->setAudioFilterFrameRate(dex,FILMCONV_NONE);
-	}
-}
-
-void pySetFilm2Pal(IEditor *editor, int dex,int32_t rate)
-{
-	if (rate)
-	{
-		editor->setAudioFilterFrameRate(dex,FILMCONV_FILM2PAL);
-	}
-	else if (pyGetFilm2Pal(editor,dex))
-	{
-		editor->setAudioFilterFrameRate(dex,FILMCONV_NONE);
-	}
-}
-
-int pyGetNormalizeMode(IEditor *editor,int dex)
-{
-	ADM_GAINMode m;
-	uint32_t gain;
-
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-
-	return m;
-}
-
-int pyGetNormalizeValue(IEditor *editor,int dex)
-{
-	ADM_GAINMode m;
-	uint32_t gain;
-
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-
-	return (int)gain;
-}
-
-void pySetNormalizeMode(IEditor *editor, int dex,int mode)
-{
-	ADM_GAINMode m;
-	uint32_t gain;
-
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-	m = (ADM_GAINMode)mode;
-	editor->setAudioFilterNormalise(dex,m, gain);
-}
-
-void pySetNormalizeValue(IEditor *editor, int dex,int value)
-{
-	ADM_GAINMode m;
-	uint32_t gain;
-
-	editor->getAudioFilterNormalise(dex,&m, &gain);
-	gain = (uint32_t)value;
-	editor->setAudioFilterNormalise(dex,m, gain);
 }
 
 bool pyHexDumpFrame(IEditor *editor, int framenumber)

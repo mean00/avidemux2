@@ -254,8 +254,6 @@ protected:
                     bool                getDefaultAudioTrack(ADM_audioStream **stream);
                     ADM_edAudioTrack   *getDefaultEdAudioTrack(void);
                     EditableAudioTrack *getDefaultEditableAudioTrack(void);
-                    EditableAudioTrack *getEditableAudioTrackAt(int i);
-                    ADM_audioStream    *getAudioStreamAt(int i);
   public:
 
                     bool     	getExtraHeaderData(uint32_t *len, uint8_t **data);
@@ -356,7 +354,7 @@ public:
 /******************************** Info ************************************/
                     const char          *getVideoDecoderName(void);
 /********************************* IEditor **********************************/
-       bool         setContainer(const char *cont, CONFcouple *c);
+        bool        setContainer(const char *cont, CONFcouple *c);
         int         setVideoCodec(const char *codec, CONFcouple *c);
         int         addVideoFilter(const char *filter, CONFcouple *c);
         void        clearFilters();
@@ -372,6 +370,8 @@ public:
         bool 		getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain);
         FILMCONV 	getAudioFilterFrameRate(int dex);
         bool 		setAudioFilterFrameRate(int dex,FILMCONV conf);
+        EditableAudioTrack *getEditableAudioTrackAt(int i);
+        ADM_audioStream    *getAudioStreamAt(int i);
         
 /********************************* /IEditor **********************************/                    
 };

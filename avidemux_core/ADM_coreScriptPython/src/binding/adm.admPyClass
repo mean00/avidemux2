@@ -20,6 +20,9 @@
 #
 #  Audio encoding...
 #
+/* METHOD */ int pyGetAudioFrequency:audioFrequency( int) 
+/* METHOD */ int pyGetAudioChannels:audioChannels( int) 
+/* METHOD */ int pyGetAudioEncoding:audioEncoding( int) 
 # TODO /* METHOD */ int audioFrequency:pySetAudioFrequency,pyGetAudioFrequency
 # TODO /* METHOD */ int audioChannels:pySetAudioChannels,pyGetAudioChannels
 # TODO /* METHOD */ int audioEncoding:pySetAudioEncoding,pyGetAudioEncoding

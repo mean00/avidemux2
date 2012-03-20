@@ -1,6 +1,7 @@
 SET(admScriptPython_SRCS
 	tinypy/tinypy.cpp
 	ADM_pyAvidemux.cpp
+	ADM_pyAvidemuxAudio.cpp
 	PythonEngine.cpp
 	TinyParams.cpp
 )

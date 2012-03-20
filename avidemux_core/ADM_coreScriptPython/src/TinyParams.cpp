@@ -1,3 +1,18 @@
+/***************************************************************************
+   \file ADM_pyAvidemux.cpp
+    \brief binding between tinyPy and avidemux
+    \author mean/gruntster 2011/2012
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 #include "TinyParams.h"
 
 #define preamble(xtype) tp_obj obj = TP_OBJ();\
