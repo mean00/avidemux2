@@ -65,8 +65,6 @@ FFcodecSettings Flv1Settings=
           0,				// max bitrate
           0,				// default matrix
           250,				// no gop size
-          NULL,             // intra_matrix
-          NULL,             // intra_matrix
           0,				// interlaced
           0,				// WLA: bottom-field-first
           0,				// wide screen
@@ -77,7 +75,10 @@ FFcodecSettings Flv1Settings=
           0,				// is spatial
           0.0,				// spatial masking
           0,				// NAQ
-          0				    // DUMMY 
+          0,                // xvid rc
+          0,                // buffersize
+          0,                // override ratecontrol
+          0				    // DUMMY
     }
 };
 /**
