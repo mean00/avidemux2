@@ -19,11 +19,11 @@
 #include "IEditor.h"
 
 /* Audio */
-int pyChangeAudioStream(IEditor *editor, int track);
 int pyGetAudioChannels(IEditor *editor,int dex);
 int pyGetAudioFrequency(IEditor *editor,int dex);
 int pyGetAudioEncoding(IEditor *editor,int dex);
-
+int pyAddAudioTrack(IEditor *editor, int poolindex);
+int pyClearAudioTracks(IEditor *editor);
 /* Audio filters */
 
 int32_t pyGetPal2Film(IEditor *editor);

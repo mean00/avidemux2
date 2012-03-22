@@ -148,6 +148,11 @@ class ActiveAudioTracks
                 }
                 bool addTrack(ADM_edAudioTrack *x)
                         {
+                                if(!x) 
+                                {
+                                    ADM_warning("Cannot add track to active track! \n");
+                                    return false;
+                                }
                                 EditableAudioTrack *e=new EditableAudioTrack;
                                 e->edTrack=x;
                                 tracks.append(e) ;
@@ -372,6 +377,9 @@ public:
         bool 		setAudioFilterFrameRate(int dex,FILMCONV conf);
         EditableAudioTrack *getEditableAudioTrackAt(int i);
         ADM_audioStream    *getAudioStreamAt(int i);
+        bool        clearAudioTracks(void); /// remove all audio tracks
+        bool        addAudioTrack(int poolIndex); /// Add an audio track in the active tracks
+
         
 /********************************* /IEditor **********************************/                    
 };

@@ -175,46 +175,27 @@ bool ppswap;
    uint32_t delay,bitrate;
    
    qfprintf(fd,"\n//** Audio **\n");
-   qfprintf(fd,"adm.audioReset();\n");
-#if 0
-   // External audio ?
-        char *audioName;
-        AudioSource  source;
+   // FIXME TODO qfprintf(fd,"adm.audioReset();\n");
 
-        source=getCurrentAudioSource(&audioName);
-        if(!audioName) audioName="";
+    // Codec
+    for(int i=0;i<video_body->getNumberOfActiveAudioTracks();i++)
+    {
+         EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
+         ADM_assert(track);
+         qfprintf(fd,"adm.audioCodec(%d,\"%s\"",i,audioCodecGetName(i)); 
+         dumpConf(fd,track->encoderConf);
+         qfprintf(fd,");\n");
 
-        if(source!=AudioAvi)
-        {
-                char *nm=ADM_cleanupPath(audioName);
-                qfprintf(fd,"app.audio.load(\"%s\",\"%s\");\n", audioSourceFromEnum(source),nm); 
-                ADM_dealloc(nm);
-        }
-        else 
-        { // Maybe not the 1st track
-          int source;
-               source=video_body->getCurrentAudioStreamNumber(0);
-               if(source)
-                        qfprintf(fd,"app.audio.setTrack(%d);\n", source); 
-                        
-        }
-#endif
-        { // Maybe not the 1st track
-          int source;
-               source=video_body->getCurrentAudioStreamNumber(0);
-               ADM_info("Audio source %d\n",source);
-               if(source)
-                        qfprintf(fd,"adm.setAudioTrack(%d);\n", source); 
-                        
-        }
+         //qfprintf(fd,"app.audio.addTrack(%d);\n", source); 
 
-   couples=NULL;
-   getAudioExtraConf(0,&bitrate,&couples);
-    qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(0),bitrate); 
-    dumpConf(fd,couples);
-    qfprintf(fd,");\n");
-
-  
+    // Filters
+    // Mixer
+         CHANNEL_CONF channel=track->audioEncodingConfig.audioFilterGetMixer();
+         if(channel!=CHANNEL_INVALID)
+         {
+                qfprintf(fd,"adm.audioMuxer(%d,\"%s\");\n",i,track->audioEncodingConfig.audioMixerAsString()); // setCurrentMixerFromString
+         }
+    }  
   // -------- Muxer -----------------------
         qfprintf(fd,"\n//** Muxer **\n");
         CONFcouple *containerConf=NULL;

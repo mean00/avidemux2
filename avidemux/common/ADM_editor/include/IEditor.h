@@ -47,6 +47,8 @@ public:
 	virtual uint8_t setPostProc(uint32_t type, uint32_t strength, bool swapuv) = 0;
 	virtual int setVideoCodec(const char *codec, CONFcouple *c) = 0;
     /* Audio related */
+    virtual bool    clearAudioTracks(void)=0; /// remove all audio tracks
+    virtual bool    addAudioTrack(int poolIndex)=0; /// Add an audio track in the active tracks
 	virtual bool    setAudioCodec(int dex,const char *codec, CONFcouple *c) = 0;
 	virtual bool    setAudioFilterFrameRate(int dex,FILMCONV conf) = 0;
 	virtual bool    setAudioFilterNormalise(int dex,ADM_GAINMode mode, uint32_t gain) = 0;

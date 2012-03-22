@@ -172,65 +172,50 @@ bool ppswap;
 
 // Audio
 //______________________________________________
-
-   uint32_t delay,bitrate;
-   
-   qfprintf(fd,"\n#** Audio **\n");
-   qfprintf(fd,"adm.audioReset()\n");
- { // Maybe not the 1st track
-          int source;
-               source=video_body->getCurrentAudioStreamNumber(0);
-               ADM_info("Audio source %d\n",source);
-               if(source)
-                        qfprintf(fd,"adm.setAudioTrack(%d);\n", source); 
-                        
-        }
-   couples=NULL;
-   getAudioExtraConf(0,&bitrate,&couples);
-    qfprintf(fd,"adm.audioCodec(\"%s\",%d",audioCodecGetName(0),bitrate); 
-    dumpConf(fd,couples);
-    qfprintf(fd,")\n");
-
-    int n=video_body->activeAudioTracks.size();
-    for(int i=0;i<n;i++)
+    qfprintf(fd,"\n#** Audio **\n");
+   // Codec
+    for(int i=0;i<video_body->getNumberOfActiveAudioTracks();i++)
     {
-        EditableAudioTrack *ed=video_body->activeAudioTracks.atEditable(i);
-        ADM_assert(ed);
+         qfprintf(fd,"\n#** Track %d **\n",i);
+         EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
+         ADM_assert(track);
+         qfprintf(fd,"adm.audioCodec(%d,\"%s\"",i,audioCodecGetName(i)); 
+         dumpConf(fd,track->encoderConf);
+         qfprintf(fd,");\n");
 
-        uint32_t x=ed->audioEncodingConfig.audioFilterGetResample();
-        if(x) qfprintf(fd,"adm.audioResample[%d]=%u\n",i,ed->audioEncodingConfig.audioFilterGetResample());
+         //qfprintf(fd,"app.audio.addTrack(%d);\n", source); 
 
-    
-//   qfprintf(fd,"app.audio.normalizeMode=%d;\n",audioGetNormalizeMode());
-//   qfprintf(fd,"app.audio.normalizeValue=%d;\n",audioGetNormalizeValue());
-//   qfprintf(fd,"app.audio.delay=%d;\n",audioGetDelay());
-// if (audioGetDrc()) qfprintf(fd,"app.audio.drc=true;\n");
-        
-        if(CHANNEL_INVALID!=ed->audioEncodingConfig.audioFilterGetMixer())
-            qfprintf(fd,"adm.audioMixer(%d,\"%s\")\n",i,AudioMixerIdToString(ed->audioEncodingConfig.audioFilterGetMixer()));
-
+    // Filters
+    // Mixer
+         CHANNEL_CONF channel=track->audioEncodingConfig.audioFilterGetMixer();
+         if(channel!=CHANNEL_INVALID)
+         {
+                qfprintf(fd,"adm.setAudioMixer(%d,\"%s\");\n",i,track->audioEncodingConfig.audioMixerAsString()); // setCurrentMixerFromString
+         }
+    // Resample
+        uint32_t x=track->audioEncodingConfig.audioFilterGetResample();
+        if(x) qfprintf(fd,"adm.setAudioResample(%d)=%u\n",i,track->audioEncodingConfig.audioFilterGetResample());
    
 
    // Change fps ?
-        switch(ed->audioEncodingConfig.audioFilterGetFrameRate())
+        switch(track->audioEncodingConfig.audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2film[%d]=1\n",i);break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2pal[%d]=1\n",i);break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.setAudioPal2film(%d,1)\n",i);break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.setAudioFilm2pal(%d,1)\n",i);break;
                 default:ADM_assert(0);break;
         }
    // --------- Normalize ----------------
         ADM_GAINMode mode;
         uint32_t gain;
-        ed->audioEncodingConfig.audioFilterGetNormalize(&mode,&gain);
+        track->audioEncodingConfig.audioFilterGetNormalize(&mode,&gain);
         if(mode && gain)
         {
-            qfprintf(fd,"adm.audioNormalizeMode[%d]=%d\n",i,(int)mode); 
-            qfprintf(fd,"adm.audioNormalizeGain[%d]=%d\n",i,(int)gain); 
+            qfprintf(fd,"adm.setAudioNormalizeMode(%d,%d)\n",i,(int)mode); 
+            qfprintf(fd,"adm.setAudioNormalizeGain(%d,%d)\n",i,(int)gain); 
         }
        
     }
-  
   // -------- Muxer -----------------------
         qfprintf(fd,"\n#** Muxer **\n");
         CONFcouple *containerConf=NULL;

@@ -201,5 +201,22 @@ void pySetNormalizeValue(IEditor *editor, int dex,int value)
 	gain = (uint32_t)value;
 	editor->setAudioFilterNormalise(dex,m, gain);
 }
+/**
+    \fn
+    \brief
+*/
+int pyClearAudioTracks(IEditor *editor)
+{
+    editor->clearAudioTracks();
+    return true;
+}
+/**
+    \fn
+    \brief
+*/
+int pyAddAudioTrack(IEditor *editor,int poolIndex)
+{
+    return editor->addAudioTrack(poolIndex);
+}
 
 // EOF

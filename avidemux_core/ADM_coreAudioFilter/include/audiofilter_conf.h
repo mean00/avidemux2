@@ -68,8 +68,15 @@ public: // accessor
     FILMCONV        audioFilterGetFrameRate(void);
     bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain);
     bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain);
+
     bool            audioFilterSetMixer(CHANNEL_CONF conf); // Invalid to disable
     CHANNEL_CONF    audioFilterGetMixer(void); // Invalid to disable
+    const char      *audioMixerAsString(void)
+                    {
+                        
+                        if(!mixerEnabled) return "CHANNEL_INVALID";
+                        return AudioMixerIdToString(mixerConf);
+                    }
 
 };
 

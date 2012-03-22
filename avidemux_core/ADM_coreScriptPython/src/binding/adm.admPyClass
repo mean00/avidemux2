@@ -13,19 +13,20 @@
 /* METHOD */ int editor->getPARHeight:getPARHeight    (void)
 /* METHOD */ int pyGetFps1000:getFps1000        (void)
 /* METHOD */ str editor->getVideoCodec:getVideoCodec(void)
-/* METHOD */ void editor->resetAudioFilter:audioReset        (int)
-/* METHOD */ int editor->setAudioMixer:audioMixer        (int,str)
-/* METHOD */ int pyChangeAudioStream:setAudioTrack  (int)
-/* METHOD */ void editor->clearFilters:clearVideoFilters   (void) 
 #
-#  Audio encoding...
+# Audio filter and encoding
+#
+/* METHOD */ void editor->resetAudioFilter:audioResetFilter        (int)
+/* METHOD */ int  editor->setAudioMixer:audioSetMixer        (int,str)
+/* METHOD */ int  pyAddAudioTrack:addAudioTrack  (int)
+/* METHOD */ void editor->clearFilters:clearVideoFilters(void) 
+/* METHOD */ int  pyClearAudioTracks:clearAudioTracks(void) 
+#
+#  Audio info...
 #
 /* METHOD */ int pyGetAudioFrequency:audioFrequency( int) 
 /* METHOD */ int pyGetAudioChannels:audioChannels( int) 
 /* METHOD */ int pyGetAudioEncoding:audioEncoding( int) 
-# TODO /* METHOD */ int audioFrequency:pySetAudioFrequency,pyGetAudioFrequency
-# TODO /* METHOD */ int audioChannels:pySetAudioChannels,pyGetAudioChannels
-# TODO /* METHOD */ int audioEncoding:pySetAudioEncoding,pyGetAudioEncoding
 #
 #
 #              cname:pyname

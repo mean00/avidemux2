@@ -279,6 +279,26 @@ bool ADM_Composer::setAudioFilterFrameRate(int dex,FILMCONV conf)
     if(!ed) return false;
     return ed->audioEncodingConfig.audioFilterSetFrameRate(conf);
 }
+/**
+    \fn clearAudioTracks
+*/
+
+bool        ADM_Composer::clearAudioTracks(void)
+{
+    // Remove all audio tracks
+    activeAudioTracks.clear();
+    return true;
+}
+/**
+    \fn setAudioFilterFrameRate
+*/
+
+bool        ADM_Composer::addAudioTrack(int poolIndex)
+{
+    activeAudioTracks.addTrack(audioTrackPool.at(poolIndex));
+    return true;
+}
+
 
 #if 0
 #endif
