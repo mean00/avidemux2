@@ -311,7 +311,7 @@ int startAvidemux(int argc, char *argv[])
 
     ADM_lavInit();
     AVDM_audioInit();
-#if ADM_ENABLE_JS
+#if defined(USE_SPIDERMONKEY) || defined(USE_TINYPY)
 	initialiseScriptEngines(video_body);
 #endif
 

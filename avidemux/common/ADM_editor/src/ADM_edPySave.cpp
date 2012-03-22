@@ -173,12 +173,15 @@ bool ppswap;
 // Audio
 //______________________________________________
     qfprintf(fd,"\n#** Audio **\n");
+    qfprintf(fd,"adm.clearAudioTrack()\n");
    // Codec
     for(int i=0;i<video_body->getNumberOfActiveAudioTracks();i++)
     {
-         qfprintf(fd,"\n#** Track %d **\n",i);
+         qfprintf(fd,"\n#** Track %d **\n",i);        
          EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
          ADM_assert(track);
+         qfprintf(fd,"\n# This is wrong\n");        
+         qfprintf(fd,"adm.addAudioTrack(%d)\n",i);
          qfprintf(fd,"adm.audioCodec(%d,\"%s\"",i,audioCodecGetName(i)); 
          dumpConf(fd,track->encoderConf);
          qfprintf(fd,");\n");

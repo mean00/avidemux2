@@ -719,6 +719,11 @@ bool A_parseTinyPyScript(const char *name){
    {
         return false;
    }
+   if(!getPythonEngine())
+    {
+        ADM_warning("Cannot get python engine!\n");
+        return false;
+    }
    ret = getPythonEngine()->runScriptFile(std::string(longname));
    A_Resync(); // total duration & stuff
    if( ret == true )
@@ -735,7 +740,6 @@ bool A_parseTinyPyScript(const char *name){
     \fn A_parseECMAScript
 */
 bool A_parseECMAScript(const char *name){
-#if ADM_ENABLE_JS
   bool ret;
   char *longname = ADM_PathCanonize(name);
    if (playing)
@@ -750,9 +754,6 @@ bool A_parseECMAScript(const char *name){
    }
    ADM_dealloc(longname);
    return ret;
-#else
-    return true;
-#endif
 }
 #endif
 
