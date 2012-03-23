@@ -13,14 +13,16 @@
 /* METHOD */ int editor->getPARHeight:getPARHeight    (void)
 /* METHOD */ int pyGetFps1000:getFps1000        (void)
 /* METHOD */ str editor->getVideoCodec:getVideoCodec(void)
+/* METHOD */ void editor->clearFilters:clearVideoFilters(void) 
 #
 # Audio filter and encoding
 #
 /* METHOD */ void editor->resetAudioFilter:audioResetFilter        (int)
 /* METHOD */ int  editor->setAudioMixer:audioSetMixer        (int,str)
-/* METHOD */ int  pyAddAudioTrack:addAudioTrack  (int)
-/* METHOD */ void editor->clearFilters:clearVideoFilters(void) 
-/* METHOD */ int  pyClearAudioTracks:clearAudioTracks(void) 
+/* METHOD */ int  pySetResample:audioSetResample             (int,int)
+/* METHOD */ int  pyGetResample:audioGetResample             (int)
+/* METHOD */ int  pyAddAudioTrack:audioAddTrack  (int)
+/* METHOD */ int  pyClearAudioTracks:audioClearTracks(void) 
 #
 #  Audio info...
 #

@@ -430,30 +430,6 @@ void audioCodecConfigure( int dex )
     return;
 }
 /**
-    \fn audioGetBitrate
-*/
-uint32_t audioGetBitrate(int dex)
-{
-    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
-    if(!ed)
-    {
-        ADM_warning("Cannot get audio bitrate for track %d\n",dex);
-        return 128;
-    }
-    return ed->bitrate;
-} 
-void audioFilter_SetBitrate( int dex,int i)
-{
-    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
-    if(!ed)
-    {
-        ADM_warning("Cannot get audio bitrate for track %d\n",dex);
-        return ;
-    }
-    ed->bitrate=i;
-    
-}
-/**
         \fn audioEncoderCreate
         \brief Spawn an audio encoder
 */
@@ -488,7 +464,7 @@ ADM_AudioEncoder *audioEncoderCreate(int dex,AUDMAudioFilter *filter,bool global
         \brief 
 */
 
-bool getAudioExtraConf(int dex,uint32_t *bitrate,CONFcouple **couple)
+bool getAudioExtraConf(int dex,CONFcouple **couple)
 {
     EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
     if(!ed)
@@ -503,14 +479,13 @@ bool getAudioExtraConf(int dex,uint32_t *bitrate,CONFcouple **couple)
         return false;
     }
      ADM_assert(i<ListOfAudioEncoder.size());
-     *bitrate=ed->bitrate;
      *couple=CONFcouple::duplicate(ed->encoderConf); // duplicate ?
       return true;
 }
 /**
     \fn setAudioExtraConf
 */
-bool setAudioExtraConf(int dex,uint32_t bitrate,CONFcouple *c)
+bool setAudioExtraConf(int dex,CONFcouple *c)
 {
 
    EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
@@ -524,9 +499,11 @@ bool setAudioExtraConf(int dex,uint32_t bitrate,CONFcouple *c)
         printf("[AudioEncoder] Cannot set conf on copy! (track %d)\n",dex);
         return false;
     }
-     ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
-    ed->encoderConf=CONFcouple::duplicate(c);
-    ed->bitrate=bitrate;
+    ADM_assert(ed->encoderIndex<ListOfAudioEncoder.size());
+    if(ed->encoderConf) delete ed->encoderConf;
+    ed->encoderConf=NULL;
+    if(c)
+        ed->encoderConf=CONFcouple::duplicate(c);
     return true;
 }     
 /**

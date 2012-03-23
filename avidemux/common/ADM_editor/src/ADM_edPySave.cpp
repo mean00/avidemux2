@@ -173,7 +173,7 @@ bool ppswap;
 // Audio
 //______________________________________________
     qfprintf(fd,"\n#** Audio **\n");
-    qfprintf(fd,"adm.clearAudioTrack()\n");
+    qfprintf(fd,"adm.audioClearTracks()\n");
    // Codec
     for(int i=0;i<video_body->getNumberOfActiveAudioTracks();i++)
     {
@@ -181,7 +181,7 @@ bool ppswap;
          EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
          ADM_assert(track);
          qfprintf(fd,"\n# This is wrong\n");        
-         qfprintf(fd,"adm.addAudioTrack(%d)\n",i);
+         qfprintf(fd,"adm.audioAddTrack(%d)\n",i);
          qfprintf(fd,"adm.audioCodec(%d,\"%s\"",i,audioCodecGetName(i)); 
          dumpConf(fd,track->encoderConf);
          qfprintf(fd,");\n");
@@ -193,11 +193,11 @@ bool ppswap;
          CHANNEL_CONF channel=track->audioEncodingConfig.audioFilterGetMixer();
          if(channel!=CHANNEL_INVALID)
          {
-                qfprintf(fd,"adm.setAudioMixer(%d,\"%s\");\n",i,track->audioEncodingConfig.audioMixerAsString()); // setCurrentMixerFromString
+                qfprintf(fd,"adm.audioSetMixer(%d,\"%s\");\n",i,track->audioEncodingConfig.audioMixerAsString()); // setCurrentMixerFromString
          }
     // Resample
         uint32_t x=track->audioEncodingConfig.audioFilterGetResample();
-        if(x) qfprintf(fd,"adm.setAudioResample(%d)=%u\n",i,track->audioEncodingConfig.audioFilterGetResample());
+        if(x) qfprintf(fd,"adm.audioSetResample(%d,%u)\n",i,track->audioEncodingConfig.audioFilterGetResample());
    
 
    // Change fps ?

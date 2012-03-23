@@ -104,13 +104,12 @@ public:
 // encoder
         int                         encoderIndex;
         CONFcouple                  *encoderConf;
-        int                         bitrate;
         ADM_audioEncoder            *audioEncoder;
+        bool                        setEncoderByName(const char *name);
         EditableAudioTrack()
         {
             encoderIndex=0;
             encoderConf=NULL;
-            bitrate=128;
             audioEncoder=NULL;
         }
         ~EditableAudioTrack()
@@ -122,6 +121,7 @@ public:
             if(encoderConf) delete encoderConf;
             encoderConf=NULL;
         }
+      
 };
 
 /**

@@ -24,8 +24,10 @@ int pyGetAudioFrequency(IEditor *editor,int dex);
 int pyGetAudioEncoding(IEditor *editor,int dex);
 int pyAddAudioTrack(IEditor *editor, int poolindex);
 int pyClearAudioTracks(IEditor *editor);
-/* Audio filters */
 
+/* Audio filters */
+int pyGetResample(IEditor *editor,int track);
+int pySetResample(IEditor *editor,int track,int fq);
 int32_t pyGetPal2Film(IEditor *editor);
 int32_t pyGetFilm2Pal(IEditor *editor);
 void pySetPal2Film(IEditor *editor, int32_t rate);

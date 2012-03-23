@@ -178,7 +178,7 @@ int pyGetNormalizeValue(IEditor *editor,int dex)
     \brief
 */
 
-void pySetNormalizeMode(IEditor *editor, int dex,int mode)
+int pySetNormalizeMode(IEditor *editor, int dex,int mode)
 {
 	ADM_GAINMode m;
 	uint32_t gain;
@@ -192,7 +192,7 @@ void pySetNormalizeMode(IEditor *editor, int dex,int mode)
     \brief
 */
 
-void pySetNormalizeValue(IEditor *editor, int dex,int value)
+int pySetNormalizeValue(IEditor *editor, int dex,int value)
 {
 	ADM_GAINMode m;
 	uint32_t gain;
@@ -217,6 +217,23 @@ int pyClearAudioTracks(IEditor *editor)
 int pyAddAudioTrack(IEditor *editor,int poolIndex)
 {
     return editor->addAudioTrack(poolIndex);
+}
+/**
+    \fn
+    \brief
+*/
+int pyGetResample(IEditor *editor,int track)
+{
+    return editor->getAudioResample(track);
+}
+/**
+    \fn
+    \brief
+*/
+int pySetResample(IEditor *editor,int track,int fq)
+{
+    editor->setAudioResample(track,fq);
+    return true;
 }
 
 // EOF

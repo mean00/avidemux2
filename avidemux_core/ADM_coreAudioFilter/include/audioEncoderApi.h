@@ -31,7 +31,7 @@ uint32_t audioProcessMode(int dex);
 /// Retrieve current audio encoder configuration
 bool getAudioExtraConf(int dex,uint32_t *bitrate,CONFcouple **c);
 /// Set current audio encoder configuration
-bool setAudioExtraConf(int dex,uint32_t bitrate,CONFcouple *c);
+bool setAudioExtraConf(int dex,CONFcouple *c);
 
 
 

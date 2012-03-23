@@ -121,6 +121,20 @@ static tp_obj zzpy_setPostProc(TP)
   int r =   editor->setPostProc(p0,p1,p2); 
   return tp_number(r);
 }
+// audioGetResample -> int pyGetResample (IEditor int ) 
+static tp_obj zzpy_audioGetResample(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->getEditor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int r =   pyGetResample(p0,p1); 
+  return tp_number(r);
+}
 // save -> int editor->saveFile (str ) 
 static tp_obj zzpy_save(TP)
  {
@@ -176,8 +190,8 @@ static tp_obj zzpy_appendVideo(TP)
   int r =   editor->appendFile(p0); 
   return tp_number(r);
 }
-// addAudioTrack -> int pyAddAudioTrack (IEditor int ) 
-static tp_obj zzpy_addAudioTrack(TP)
+// audioClearTracks -> int pyClearAudioTracks (IEditor ) 
+static tp_obj zzpy_audioClearTracks(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
@@ -186,8 +200,7 @@ static tp_obj zzpy_addAudioTrack(TP)
   void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
 
   IEditor *p0 = editor;
-  int p1 = pm.asInt();
-  int r =   pyAddAudioTrack(p0,p1); 
+  int r =   pyClearAudioTracks(p0); 
   return tp_number(r);
 }
 // getFps1000 -> int pyGetFps1000 (IEditor ) 
@@ -246,19 +259,6 @@ static tp_obj zzpy_audioSetMixer(TP)
   int r =   editor->setAudioMixer(p0,p1); 
   return tp_number(r);
 }
-// clearAudioTracks -> int pyClearAudioTracks (IEditor ) 
-static tp_obj zzpy_clearAudioTracks(TP)
- {
-  tp_obj self = tp_getraw(tp);
-  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
-  TinyParams pm(tp);
-  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
-
-  IEditor *p0 = editor;
-  int r =   pyClearAudioTracks(p0); 
-  return tp_number(r);
-}
 // getWidth -> int pyGetWidth (IEditor ) 
 static tp_obj zzpy_getWidth(TP)
  {
@@ -270,6 +270,21 @@ static tp_obj zzpy_getWidth(TP)
 
   IEditor *p0 = editor;
   int r =   pyGetWidth(p0); 
+  return tp_number(r);
+}
+// audioSetResample -> int pySetResample (IEditor int int ) 
+static tp_obj zzpy_audioSetResample(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->getEditor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int r =   pySetResample(p0,p1,p2); 
   return tp_number(r);
 }
 // addSegment -> int editor->addSegment (int  double  double ) 
@@ -325,6 +340,20 @@ static tp_obj zzpy_setContainer(TP)
   CONFcouple *p1 = NULL;
   pm.makeCouples(&p1);
   int r =   editor->setContainer(p0,p1); 
+  return tp_number(r);
+}
+// audioAddTrack -> int pyAddAudioTrack (IEditor int ) 
+static tp_obj zzpy_audioAddTrack(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->getEditor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int r =   pyAddAudioTrack(p0,p1); 
   return tp_number(r);
 }
 // audioChannels -> int pyGetAudioChannels (IEditor  int ) 
@@ -435,6 +464,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_setPostProc);
   }
+  if (!strcmp(key, "audioGetResample"))
+  {
+     return tp_method(vm, self, zzpy_audioGetResample);
+  }
   if (!strcmp(key, "save"))
   {
      return tp_method(vm, self, zzpy_save);
@@ -451,9 +484,9 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_appendVideo);
   }
-  if (!strcmp(key, "addAudioTrack"))
+  if (!strcmp(key, "audioClearTracks"))
   {
-     return tp_method(vm, self, zzpy_addAudioTrack);
+     return tp_method(vm, self, zzpy_audioClearTracks);
   }
   if (!strcmp(key, "getFps1000"))
   {
@@ -471,13 +504,13 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_audioSetMixer);
   }
-  if (!strcmp(key, "clearAudioTracks"))
-  {
-     return tp_method(vm, self, zzpy_clearAudioTracks);
-  }
   if (!strcmp(key, "getWidth"))
   {
      return tp_method(vm, self, zzpy_getWidth);
+  }
+  if (!strcmp(key, "audioSetResample"))
+  {
+     return tp_method(vm, self, zzpy_audioSetResample);
   }
   if (!strcmp(key, "addSegment"))
   {
@@ -494,6 +527,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "setContainer"))
   {
      return tp_method(vm, self, zzpy_setContainer);
+  }
+  if (!strcmp(key, "audioAddTrack"))
+  {
+     return tp_method(vm, self, zzpy_audioAddTrack);
   }
   if (!strcmp(key, "audioChannels"))
   {
@@ -563,21 +600,23 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioResetFilter(int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getHeight(IEditor)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "setPostProc(int, int, int)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioGetResample(IEditor,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "save(str)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "videoCodecChangeParam(str, couples)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioEncoding(IEditor, int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "appendVideo(str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "addAudioTrack(IEditor,int)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioClearTracks(IEditor)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getFps1000(IEditor)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "saveAudio(int,str)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "videoCodec(str, couples)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioSetMixer(int,str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "clearAudioTracks(IEditor)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getWidth(IEditor)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioSetResample(IEditor,int,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "addSegment(int, double, double)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "clearVideoFilters(void)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "saveJpeg(str)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "setContainer(str, couples)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioAddTrack(IEditor,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioChannels(IEditor, int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioFrequency(IEditor, int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getVideoCodec(void)");

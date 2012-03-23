@@ -221,25 +221,18 @@ void ADM_Composer::setAudioResample(int dex, uint32_t newfq)
 */
 bool ADM_Composer::setAudioCodec(int dex,const char *codec, CONFcouple *c)
 {
-
-    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
-    if(!ed) return false;
-	bool r = true;
-#if 0
-	// First search the codec by its name
-	if (!ed->audioCodecSetByName(codec))
-	{
-		r = false;
-	}
-	else
-	{
-		r = setAudioExtraConf(bitrate, c);
-	}
-
-	if (c)
-		delete c;
-#endif
-	return r;
+    if(!audioCodecSetByName(dex,codec))
+    {
+        ADM_warning("Cannot set codec %s, track %d\n",codec,dex);
+        return false;
+    }
+    if(!setAudioExtraConf(dex,c))
+    {
+        ADM_warning("Cannot set configuration for codec %s, track %d\n",codec,dex);
+        return false;
+    }
+#warning memleak on *c ?    
+    return true;
 }
 
 /**
