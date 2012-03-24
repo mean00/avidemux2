@@ -180,6 +180,23 @@ int pyGetNormalizeValue(IEditor *editor,int dex)
     \brief
 */
 
+int pySetNormalize(IEditor *editor, int dex,int mode,int value)
+{
+	ADM_GAINMode m;
+	uint32_t gain;
+    // 1 - set mode
+	editor->getAudioFilterNormalise(dex,&m, &gain);
+	m = (ADM_GAINMode)mode;
+    // 2- set value
+    gain = (uint32_t)value;
+	return editor->setAudioFilterNormalise(dex,m, gain);
+}
+
+/**
+    \fn
+    \brief
+*/
+
 int pySetNormalizeMode(IEditor *editor, int dex,int mode)
 {
 	ADM_GAINMode m;

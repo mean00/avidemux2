@@ -203,9 +203,12 @@ bool ppswap;
    // Change fps ?
         switch(track->audioEncodingConfig.audioFilterGetFrameRate())
         {
-                case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2Film(%d,1)\n",i);break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2Pal(%d,1)\n",i);break;
+                case FILMCONV_NONE:      ;
+                                         qfprintf(fd,"adm.audioSetPal2Film(%d,0)\n",i);
+                                         qfprintf(fd,"adm.audioSetFilm2Pal(%d,0)\n",i);
+                                         break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioSetPal2Film(%d,1)\n",i);break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioSetFilm2Pal(%d,1)\n",i);break;
                 default:ADM_assert(0);break;
         }
    // --------- Normalize ----------------
@@ -214,9 +217,9 @@ bool ppswap;
         track->audioEncodingConfig.audioFilterGetNormalize(&mode,&gain);
         if(mode && gain)
         {
-            qfprintf(fd,"adm.setAudioNormalizeMode(%d,%d)\n",i,(int)mode); 
-            qfprintf(fd,"adm.setAudioNormalizeGain(%d,%d)\n",i,(int)gain); 
-        }
+            qfprintf(fd,"adm.audioSetNormalize(%d,%d,%d)\n",i,(int)mode,(int)gain); 
+        }else
+            qfprintf(fd,"adm.audioSetNormalize(%d,%d,%d)\n",i,0,0); 
        
     }
   // -------- Muxer -----------------------

@@ -244,21 +244,6 @@ static tp_obj zzpy_audioCodec(TP)
   int r =   editor->setAudioCodec(p0,p1,p2); 
   return tp_number(r);
 }
-// audioPal2Film -> int pySetPal2Film (IEditor int int ) 
-static tp_obj zzpy_audioPal2Film(TP)
- {
-  tp_obj self = tp_getraw(tp);
-  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
-  TinyParams pm(tp);
-  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
-
-  IEditor *p0 = editor;
-  int p1 = pm.asInt();
-  int p2 = pm.asInt();
-  int r =   pySetPal2Film(p0,p1,p2); 
-  return tp_number(r);
-}
 // addVideoFilter -> int editor->addVideoFilter (str  couples ) 
 static tp_obj zzpy_addVideoFilter(TP)
  {
@@ -272,6 +257,21 @@ static tp_obj zzpy_addVideoFilter(TP)
   CONFcouple *p1 = NULL;
   pm.makeCouples(&p1);
   int r =   editor->addVideoFilter(p0,p1); 
+  return tp_number(r);
+}
+// audioSetFilm2Pal -> int pySetFilm2Pal (IEditor int int ) 
+static tp_obj zzpy_audioSetFilm2Pal(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->getEditor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int r =   pySetFilm2Pal(p0,p1,p2); 
   return tp_number(r);
 }
 // setPostProc -> int editor->setPostProc (int  int  int ) 
@@ -343,8 +343,8 @@ static tp_obj zzpy_appendVideo(TP)
   int r =   editor->appendFile(p0); 
   return tp_number(r);
 }
-// audioFilm2Pal -> int pySetFilm2Pal (IEditor int int ) 
-static tp_obj zzpy_audioFilm2Pal(TP)
+// audioSetNormalize -> int pySetNormalize (IEditor int int int ) 
+static tp_obj zzpy_audioSetNormalize(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
@@ -355,7 +355,8 @@ static tp_obj zzpy_audioFilm2Pal(TP)
   IEditor *p0 = editor;
   int p1 = pm.asInt();
   int p2 = pm.asInt();
-  int r =   pySetFilm2Pal(p0,p1,p2); 
+  int p3 = pm.asInt();
+  int r =   pySetNormalize(p0,p1,p2,p3); 
   return tp_number(r);
 }
 // videoCodec -> int editor->setVideoCodec (str  couples ) 
@@ -426,6 +427,21 @@ static tp_obj zzpy_setContainer(TP)
   CONFcouple *p1 = NULL;
   pm.makeCouples(&p1);
   int r =   editor->setContainer(p0,p1); 
+  return tp_number(r);
+}
+// audioSetPal2Film -> int pySetPal2Film (IEditor int int ) 
+static tp_obj zzpy_audioSetPal2Film(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->getEditor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int r =   pySetPal2Film(p0,p1,p2); 
   return tp_number(r);
 }
 // audioChannels -> int pyGetAudioChannels (IEditor  int ) 
@@ -530,13 +546,13 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_audioCodec);
   }
-  if (!strcmp(key, "audioPal2Film"))
-  {
-     return tp_method(vm, self, zzpy_audioPal2Film);
-  }
   if (!strcmp(key, "addVideoFilter"))
   {
      return tp_method(vm, self, zzpy_addVideoFilter);
+  }
+  if (!strcmp(key, "audioSetFilm2Pal"))
+  {
+     return tp_method(vm, self, zzpy_audioSetFilm2Pal);
   }
   if (!strcmp(key, "setPostProc"))
   {
@@ -558,9 +574,9 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_appendVideo);
   }
-  if (!strcmp(key, "audioFilm2Pal"))
+  if (!strcmp(key, "audioSetNormalize"))
   {
-     return tp_method(vm, self, zzpy_audioFilm2Pal);
+     return tp_method(vm, self, zzpy_audioSetNormalize);
   }
   if (!strcmp(key, "videoCodec"))
   {
@@ -581,6 +597,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "setContainer"))
   {
      return tp_method(vm, self, zzpy_setContainer);
+  }
+  if (!strcmp(key, "audioSetPal2Film"))
+  {
+     return tp_method(vm, self, zzpy_audioSetPal2Film);
   }
   if (!strcmp(key, "audioChannels"))
   {
@@ -647,19 +667,20 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getVideoCodec(void)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getPARHeight(void)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioCodec(int,str,  couples)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioPal2Film(IEditor,int,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "addVideoFilter(str, couples)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioSetFilm2Pal(IEditor,int,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "setPostProc(int, int, int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getHeight(IEditor)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioGetResample(IEditor,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioEncoding(IEditor, int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "appendVideo(str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioFilm2Pal(IEditor,int,int)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioSetNormalize(IEditor,int,int,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "videoCodec(str, couples)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioSetMixer(int,str)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getWidth(IEditor)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "saveJpeg(str)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "setContainer(str, couples)");
+	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioSetPal2Film(IEditor,int,int)");
 	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "audioChannels(IEditor, int)");
 
 	return tp_None;
