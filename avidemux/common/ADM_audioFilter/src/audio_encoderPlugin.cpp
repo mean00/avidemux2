@@ -424,8 +424,7 @@ void audioCodecConfigure( int dex )
     ADM_info("Track %d has %d audio encoder index\n",dex,i);
     if(ListOfAudioEncoder[i]->configure)
     {
-        CONFcouple *c=(ed->encoderConf);
-        ListOfAudioEncoder[i]->configure(&c);
+        ListOfAudioEncoder[i]->configure(&(ed->encoderConf));
     }
     return;
 }
