@@ -118,9 +118,9 @@ int32_t pyGetFilm2Pal(IEditor *editor,int dex)
     \brief
 */
 
-void pySetPal2Film(IEditor *editor, int dex,int32_t rate)
+int pySetPal2Film(IEditor *editor, int dex,int onoff)
 {
-	if (rate)
+	if (onoff)
 	{
 		editor->setAudioFilterFrameRate(dex,FILMCONV_PAL2FILM);
 	}
@@ -128,15 +128,16 @@ void pySetPal2Film(IEditor *editor, int dex,int32_t rate)
 	{
 		editor->setAudioFilterFrameRate(dex,FILMCONV_NONE);
 	}
+    return true;
 }
 /**
     \fn
     \brief
 */
 
-void pySetFilm2Pal(IEditor *editor, int dex,int32_t rate)
+int pySetFilm2Pal(IEditor *editor, int dex,int onoff)
 {
-	if (rate)
+	if (onoff)
 	{
 		editor->setAudioFilterFrameRate(dex,FILMCONV_FILM2PAL);
 	}
@@ -144,6 +145,7 @@ void pySetFilm2Pal(IEditor *editor, int dex,int32_t rate)
 	{
 		editor->setAudioFilterFrameRate(dex,FILMCONV_NONE);
 	}
+    return true;
 }
 /**
     \fn

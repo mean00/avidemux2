@@ -15,7 +15,7 @@
 /* METHOD */ str editor->getVideoCodec:getVideoCodec(void)
 /* METHOD */ void editor->clearFilters:clearVideoFilters(void) 
 #
-# Audio filter and encoding
+# Audio filter and encoding 
 #
 /* METHOD */ void editor->resetAudioFilter:audioResetFilter        (int)
 /* METHOD */ int  editor->setAudioMixer:audioSetMixer        (int,str)
@@ -23,6 +23,8 @@
 /* METHOD */ int  pyGetResample:audioGetResample             (int)
 /* METHOD */ int  pyAddAudioTrack:audioAddTrack  (int)
 /* METHOD */ int  pyClearAudioTracks:audioClearTracks(void) 
+/* METHOD */ int  pySetPal2Film:audioPal2Film(int,int)
+/* METHOD */ int  pySetFilm2Pal:audioFilm2Pal(int,int)
 #
 #  Audio info...
 #
@@ -54,8 +56,5 @@
 #
 /* ATTRIBUTES */ double markerA:editor->setMarkerAPts,editor->getMarkerAPts
 /* ATTRIBUTES */ double markerB:editor->setMarkerBPts,editor->getMarkerBPts
-# TODO /* ATTRIBUTES */ int    audioResample:editor->setAudioResample,editor->getAudioResample(int)
 # TODO /* ATTRIBUTES */ int    audioNormalizeMode:pySetNormalizeMode,pyGetNormalizeMode(int)
 # TODO /* ATTRIBUTES */ int    audioNormalizeGain:pySetNormalizeValue,pyGetNormalizeValue(int)
-# TODO /* ATTRIBUTES */ int    audioPal2film:pySetPal2Film,pyGetPal2Film(int)
-# TODO /* ATTRIBUTES */ int    audioFilm2pal:pySetFilm2Pal,pyGetFilm2Pal(int)

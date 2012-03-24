@@ -204,8 +204,8 @@ bool ppswap;
         switch(track->audioEncodingConfig.audioFilterGetFrameRate())
         {
                 case FILMCONV_NONE:      ;break;
-                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.setAudioPal2film(%d,1)\n",i);break;
-                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.setAudioFilm2pal(%d,1)\n",i);break;
+                case FILMCONV_PAL2FILM:  qfprintf(fd,"adm.audioPal2Film(%d,1)\n",i);break;
+                case FILMCONV_FILM2PAL:  qfprintf(fd,"adm.audioFilm2Pal(%d,1)\n",i);break;
                 default:ADM_assert(0);break;
         }
    // --------- Normalize ----------------
