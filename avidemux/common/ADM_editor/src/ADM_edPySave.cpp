@@ -35,6 +35,7 @@
 #include "GUI_ui.h"
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterApi.h"
+#include "ADM_edAudioTrackFromVideo.h"
 #include "errno.h"
 /**
     \fn dumpConf
@@ -180,8 +181,19 @@ bool ppswap;
          qfprintf(fd,"\n#** Track %d **\n",i);        
          EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
          ADM_assert(track);
-         qfprintf(fd,"\n# This is wrong\n");        
-         qfprintf(fd,"adm.audioAddTrack(%d)\n",i);
+         switch(track->edTrack->getTrackType())
+        {
+         case ADM_EDAUDIO_FROM_VIDEO:
+                {
+                ADM_edAudioTrackFromVideo *vidTrack=(ADM_edAudioTrackFromVideo *)track->edTrack;
+                qfprintf(fd,"adm.audioAddTrack(%d)\n",vidTrack->getMyTrackIndex());
+                }
+                break;
+         default:
+                ADM_warning("Unknown track type at index %d\n",i);
+                break;
+         }
+         
          qfprintf(fd,"adm.audioCodec(%d,\"%s\"",i,audioCodecGetName(i)); 
          dumpConf(fd,track->encoderConf);
          qfprintf(fd,");\n");
