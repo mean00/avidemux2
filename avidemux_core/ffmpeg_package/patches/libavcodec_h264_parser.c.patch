@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c	2011-08-10 14:16:41.000000000 +0200
-+++ libavcodec/h264_parser.c	2011-09-03 08:35:49.545349178 +0200
-@@ -29,7 +29,52 @@
+--- libavcodec/h264_parser.c	2011-10-02 22:06:31.000000000 +0200
++++ libavcodec/h264/h264_parser.c	2012-03-25 09:33:01.979321163 +0200
+@@ -29,7 +29,67 @@
  #include "h264data.h"
  #include "golomb.h"
  
@@ -14,6 +14,7 @@
 +int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
 +{
 +    H264Context *ctx = parser->priv_data;
++    int f;
 +    memset(info,0,sizeof(*info));
 +    if(!ctx->sps.mb_width || !ctx->sps.mb_height)
 +    {
@@ -35,7 +36,7 @@
 +    }
 +    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
 +    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
-+    int f=ctx->sps.nal_hrd_parameters_present_flag | ctx->sps.vcl_hrd_parameters_present_flag;
++    f=ctx->sps.nal_hrd_parameters_present_flag | ctx->sps.vcl_hrd_parameters_present_flag;
 +    info->hasStructInfo=f | ctx->sps.pic_struct_present_flag;;
 +    // While decoding SEI, if CpbDpbDelaysPresentFlags is there we skip cpb_removal_delay + dpb_output_delay
 +
@@ -47,6 +48,20 @@
 +#warning fixme sar vs dar
 +    info->darNum=ctx->sps.sar.num;
 +    info->darDen=ctx->sps.sar.den;
++/* */
++    printf("Crop L: %d\n",(int)ctx->sps.crop_left);
++    printf("Crop R: %d\n",(int)ctx->sps.crop_right);
++    printf("Crop T: %d\n",(int)ctx->sps.crop_top);
++    printf("Crop B: %d\n",(int)ctx->sps.crop_bottom);
++    if(ctx->sps.crop_bottom)
++    {
++         int mul=4;
++         printf("Taking crop bottom into account\n");
++         if(ctx->sps.frame_mbs_only_flag)
++              mul=2;
++         info->height-=ctx->sps.crop_bottom*mul;
++
++    }
 +    return 1;
 +}
 +// /MEANX
