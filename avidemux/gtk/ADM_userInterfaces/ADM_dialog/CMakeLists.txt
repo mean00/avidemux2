@@ -18,6 +18,7 @@ DIA_about.cpp
  DIA_busy.cpp     
  toolkit_dialog.cpp
  TLK_filesel.cpp
+ DIA_audioTracks.cpp
 )
 SET(OBSOLETE_SRCS
  DIA_exLame.cpp
@@ -33,7 +34,6 @@ SET(OBSOLETE_SRCS
 DIA_eq2.cpp       
 DIA_asharp.cpp   
  DIA_contrast.cpp    
- DIA_audioTracks.cpp
 
 
 )
