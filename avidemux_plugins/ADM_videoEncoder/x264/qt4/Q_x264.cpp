@@ -180,6 +180,7 @@ bool x264Dialog::upload(void)
           MK_MENU(meMethodComboBox,analyze.me_method);
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
+          MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
 
@@ -281,6 +282,7 @@ bool x264Dialog::download(void)
           MK_MENU(meMethodComboBox,analyze.me_method);
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
+          MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
 
           MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
           MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
