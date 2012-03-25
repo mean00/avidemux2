@@ -35,6 +35,8 @@ public:
                     ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
             virtual ~ADM_edAudioTrackFromVideo();
                     bool            destroyable() {return false;};
+                    int             getMyTrackIndex() {return myTrackNumber; }
+
 
             virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
             virtual bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);

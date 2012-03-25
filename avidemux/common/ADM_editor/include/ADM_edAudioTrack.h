@@ -54,6 +54,7 @@ public:
                             packetBufferSize=0;
                             packetBufferDts=ADM_NO_PTS;
                     }
+            ADM_EDAUDIO_TRACK_TYPE getTrackType() {return trackType;}
             virtual ~ADM_edAudioTrack()
                     {
 
