@@ -545,7 +545,7 @@ void       ADM_EditorSegment::dumpSegment(int i)
         _SEGMENT *s=getSegment(i);
 
         printf("Segment :%d/%d\n",i,n);
-        printf("\tReference    :%"LU"\n",s->_reference,ADM_us2plain(s->_reference));
+        printf("\tReference    :%"LU"    %s\n",s->_reference,ADM_us2plain(s->_reference));
         printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
         printf("\tduration     :%08"LLU" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
         printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
