@@ -160,6 +160,11 @@ bool x264Dialog::upload(void)
           MK_CHECKBOX(p4x4CheckBox,analyze.b_p8x8);
           MK_CHECKBOX(p8x8CheckBox,analyze.b_p16x16);
           MK_CHECKBOX(b8x8CheckBox,analyze.b_b16x16);
+          MK_CHECKBOX(trellisCheckBox,analyze.trellis);
+          if(myCopy.analyze.trellis)
+          {
+                ui.trellisComboBox->setCurrentIndex(myCopy.analyze.trellis-1);
+          }
 
           MK_CHECKBOX(cabacCheckBox,cabac);
     
@@ -302,6 +307,14 @@ bool x264Dialog::download(void)
             case 3: ENCODING(mode)=COMPRESS_2PASS;ENCODING(finalsize)=ui.targetRateControlSpinBox->value();;break;
             case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
           }
+
+          int t=ui.trellisComboBox->currentIndex();
+          if(!ui.trellisCheckBox->isChecked())
+          {
+                myCopy.analyze.trellis=0;
+          }else
+                myCopy.analyze.trellis=t+1;
+
           return true;
 }
 
