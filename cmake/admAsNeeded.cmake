@@ -9,6 +9,7 @@ MACRO(ADM_ADD_SHARED_LIBRARY name )
 	AS_NEEDED(${name})
         if(UNIX AND NOT APPLE)
         	TARGET_LINK_LIBRARIES( ${name} "-Wl,-z,defs")
+        	TARGET_LINK_LIBRARIES( ${name} "stdc++") # for clang
         endif(UNIX AND NOT APPLE)
 
 ENDMACRO(ADM_ADD_SHARED_LIBRARY name )
