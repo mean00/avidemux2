@@ -38,6 +38,7 @@ IF(UNIX)
 ENDIF(UNIX)
  
 
+target_link_libraries(ADM_core6 m)
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 
