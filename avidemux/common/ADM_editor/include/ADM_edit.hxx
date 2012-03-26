@@ -75,7 +75,10 @@ class PoolOfAudioTracks
         public:
                     PoolOfAudioTracks()  {};
                     ~PoolOfAudioTracks() {};
-                int size() {return tracks.size();}
+                int size() const
+                {
+                        return tracks.size();
+                }
                 ADM_edAudioTrackFromVideo *at(int ix)
                 {
                     if(ix>=size()) ADM_assert(0);
@@ -135,7 +138,8 @@ class ActiveAudioTracks
         public:
                     ActiveAudioTracks()  {};
                     ~ActiveAudioTracks() {};
-                int size() {return tracks.size();}
+                int size() const 
+                        {return tracks.size();}
                 EditableAudioTrack *atEditable(int ix)
                 {
                     if(ix>=size()) ADM_assert(0);
