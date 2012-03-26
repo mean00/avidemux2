@@ -49,5 +49,6 @@ uint64_t ADM_edAudioTrackFromVideo::getDurationInUs()
 {
     // get duration...
  #warning fixme
+    return 1;
 }
 // EOF
