@@ -28,7 +28,7 @@ public:
 	virtual ~MainWindow();
 
 	void buildCustomMenu(void);
-	bool buildRecentMenu(void);
+	void buildRecentMenu(void);
 
 protected:
     QMenu *jsMenu;

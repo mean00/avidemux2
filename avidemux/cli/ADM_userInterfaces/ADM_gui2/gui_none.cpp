@@ -125,10 +125,7 @@ uint8_t UI_setTimeShift(int onoff,int value)
   return 1;
 }
 
-uint8_t UI_updateRecentMenu( void )
-{
-  return 1;
-}
+void UI_updateRecentMenu( void ) {}
 
 uint8_t UI_arrow_enabled(void)
 {
@@ -143,7 +140,7 @@ int UI_GetCurrentFormat( void )
 {
 	return cliFormat;
 }
-bool UI_SetCurrentFormat( uint32_t f )
+void UI_SetCurrentFormat( uint32_t f )
 {
 	cliFormat=f;
 }

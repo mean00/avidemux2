@@ -310,7 +310,7 @@ void jogRing (void *, gfloat angle) // angle is -1.0 to 0 to +1.0
         \fn initGUI
         \brief Create main window and bind to it
 */
-uint8_t initGUI( void )
+uint8_t initGUI(vector<IScriptEngine*> scriptEngines)
 {
 uint8_t ret=0;
 uint32_t w,h;
@@ -1452,7 +1452,7 @@ static const UI_FUNCTIONS_T UI_Hooks=
  *      \brief Entry point. Initialize renderLib.
  *
  */
-int UI_Init(vector<IScriptEngine*> scriptEngines,int argc, char **argv)
+int UI_Init(int argc, char **argv)
 {
 	initTranslator();
 

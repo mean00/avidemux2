@@ -37,13 +37,13 @@ void UI_setVideoCodec( int i);
 
 /* We deal index wise here...*/
 int      UI_GetCurrentFormat( void );
-bool 	 UI_SetCurrentFormat( uint32_t fmt );
+void 	 UI_SetCurrentFormat( uint32_t fmt );
 
 void UI_toogleSide(void);
 void UI_toogleMain(void);
 
 
-uint8_t UI_updateRecentMenu( void );
+void UI_updateRecentMenu( void );
 
 uint8_t UI_arrow_enabled(void);
 uint8_t UI_arrow_disabled(void);

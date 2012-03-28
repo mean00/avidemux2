@@ -594,7 +594,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 /**
     \fn buildRecentMenu
 */
-bool MainWindow::buildRecentMenu(void)
+void MainWindow::buildRecentMenu(void)
 {
     const char **names;
 	names=prefs->get_lastfiles();
@@ -608,7 +608,6 @@ bool MainWindow::buildRecentMenu(void)
         }else
             recentFileAction[i]=NULL;
     }
-	return true;
 }
 /**
     \fn searchRecentFiles
@@ -732,7 +731,7 @@ QApplication *myApplication=NULL;
     \brief First part of UI initialization
 
 */
-int UI_Init(vector<IScriptEngine*> scriptEngines, int nargc, char **nargv)
+int UI_Init(int nargc, char **nargv)
 {
     ADM_info("Starting QT4 GUI...\n");
 	initTranslator();
@@ -748,6 +747,11 @@ int UI_Init(vector<IScriptEngine*> scriptEngines, int nargc, char **nargv)
 
 	loadTranslator();
 
+	return 1;
+}
+
+uint8_t initGUI(vector<IScriptEngine*> scriptEngines)
+{
 	MainWindow *mw = new MainWindow(scriptEngines);
 	mw->show();
 
@@ -887,9 +891,9 @@ Action searchTranslationTable(const char *name)
     \fn     UI_updateRecentMenu( void )
     \brief  Update the recent submenu with the latest files loaded
 */
-uint8_t UI_updateRecentMenu( void )
+void UI_updateRecentMenu( void )
 {
-    return  ((MainWindow *)QuiMainWindows)->buildRecentMenu();
+    ((MainWindow *)QuiMainWindows)->buildRecentMenu();
 }
 /**
   \fn    setupMenus(void)
@@ -1196,10 +1200,9 @@ int 	UI_GetCurrentFormat( void )
     \fn     UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )
     \brief  Select  output format
 */
-bool 	UI_SetCurrentFormat( uint32_t fmt )
+void 	UI_SetCurrentFormat( uint32_t fmt )
 {
 	WIDGET(comboBoxFormat)->setCurrentIndex((int)fmt);
-    return true;
 }
 
 /**

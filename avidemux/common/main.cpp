@@ -58,7 +58,7 @@ extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
 extern void register_Encoders( void )  ;
 
-extern uint8_t initGUI( void );
+extern uint8_t initGUI( vector<IScriptEngine*> engines );
 extern void destroyGUI(void);
 extern uint8_t initFileSelector(void);
 extern void AUDMEncoder_initDither(void);
@@ -92,7 +92,7 @@ extern void InitCoreToolkit(void);
 extern uint8_t  quotaInit(void);
 extern void ADMImage_stat( void );
 
-extern int UI_Init(vector<IScriptEngine*> scriptEngines,int nargc,char **nargv);
+extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern bool ADM_jobInit(void);
@@ -236,7 +236,7 @@ int startAvidemux(int argc, char *argv[])
 
 	video_body = new ADM_Composer;
 
-    UI_Init(initialiseScriptEngines(video_body), argc, argv);
+	UI_Init(argc, argv);
     AUDMEncoder_initDither();
 
     // Hook our UI...
@@ -302,7 +302,7 @@ int startAvidemux(int argc, char *argv[])
 
 	//***************Plugins *********************
 
-	if(!initGUI())
+	if(!initGUI(initialiseScriptEngines(video_body)))
 	{
 		printf("\n Fatal : could not init GUI\n");
 		exit(-1);

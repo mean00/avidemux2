@@ -46,7 +46,7 @@ uint8_t DIA_about( void ) {return 0;}
 void DIA_Calculator(uint32_t *sizeInMeg, uint32_t *avgBitrate ) {}
 void DIA_properties(void) {}
 int GUI_handleVFilter (void) {return 0;}
-uint8_t initGUI(void) {return 1;}
+uint8_t initGUI(vector<IScriptEngine*> scriptEngines) {return 1;}
 void destroyGUI(void) {}
 uint8_t DIA_job(uint32_t nb,char **name) {return 0;}
 uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *algo,uint32_t originalw,
@@ -86,7 +86,7 @@ static const UI_FUNCTIONS_T UI_Hooks=
         UI_getPreferredRender
 
     };
-int UI_Init(vector<IScriptEngine*> scriptEngines,int nargc, char **nargv)
+int UI_Init(int nargc, char **nargv)
 {
 	initTranslator();
 

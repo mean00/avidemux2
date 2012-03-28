@@ -21,7 +21,6 @@
 #include "ADM_dialogFactoryQt4.h"
 
 extern const char *shortkey(const char *);
-void GUI_FileSelRead(const char *label, char * * name);
 #define MAX_SEL 2040
 
 namespace ADM_Qt4Factory
