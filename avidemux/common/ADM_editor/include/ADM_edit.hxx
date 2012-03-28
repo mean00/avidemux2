@@ -115,6 +115,18 @@ public:
             encoderConf=NULL;
             audioEncoder=NULL;
         }
+        EditableAudioTrack(const EditableAudioTrack &src)
+        {
+            encoderIndex=src.encoderIndex;
+            edTrack=NULL;
+            if(src.encoderConf)
+                encoderConf=CONFcouple::duplicate(src.encoderConf);
+            else
+                encoderConf=NULL;
+            audioEncoder=NULL;
+            EncodingVector=src.EncodingVector;
+            audioEncodingConfig=src.audioEncodingConfig;
+        }
         ~EditableAudioTrack()
         {
             edTrack=NULL;
@@ -150,6 +162,17 @@ class ActiveAudioTracks
                     EditableAudioTrack *e=atEditable(ix);
                     return e->edTrack;
                 }
+                bool addTrack(EditableAudioTrack *x)
+                {
+                        if(!x) 
+                        {
+                            ADM_warning("Cannot add editable track to active track! \n");
+                            return false;
+                        }
+                        tracks.append(x) ;
+                        return true;
+                };
+
                 bool addTrack(ADM_edAudioTrack *x)
                         {
                                 if(!x) 

@@ -28,13 +28,13 @@ class DIA_audioTrackBase
 {
     protected :
             PoolOfAudioTracks       *_pool;
-            ActiveAudioTracks       *_active;  
+            ActiveAudioTracks       *_srcActive;  
     public:
             void 		*_priv;
                                 DIA_audioTrackBase( PoolOfAudioTracks *pool, ActiveAudioTracks *active )
                                 {
                                         _pool=pool;
-                                        _active=active;
+                                        _srcActive=active;
                                 };
             virtual		~DIA_audioTrackBase(){};
             virtual   bool      run(void)=0;

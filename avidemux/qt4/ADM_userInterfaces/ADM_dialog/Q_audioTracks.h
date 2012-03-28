@@ -10,7 +10,8 @@ class audioTrackWindow : public QDialog
 {
 	Q_OBJECT
 
-protected:
+public:
+            
             QCheckBox        *enabled[NB_MENU];
             QComboBox        *codec[NB_MENU];
             QComboBox        *inputs[NB_MENU];
