@@ -35,13 +35,13 @@ JSClass SpiderMonkeyEngine::_globalClass = {
 
 SpiderMonkeyEngine::~SpiderMonkeyEngine()
 {
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Closing Spidermonkey");
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Closing Spidermonkey");
 
 	JS_DestroyContext(_jsContext);
 	JS_DestroyRuntime(_jsRuntime);
 }
 
-string SpiderMonkeyEngine::getName()
+string SpiderMonkeyEngine::name()
 {
     return string("SpiderMonkey");
 }
@@ -69,7 +69,7 @@ void SpiderMonkeyEngine::initialise(IEditor *editor)
 
 	this->registerFunctions(_jsContext, _jsObject);
 	this->registerDialogFunctions(_jsContext, _jsObject);
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Spidermonkey initialised");
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Spidermonkey initialised");
 }
 
 void SpiderMonkeyEngine::registerFunctions(JSContext *cx, JSObject *obj)
@@ -101,14 +101,14 @@ void SpiderMonkeyEngine::registerDialogFunctions(JSContext *cx, JSObject *obj)
     ADM_assert(ADM_JSDFToggle::JSInit(cx, obj) != NULL);
 	ADM_assert(ADM_JSDFInteger::JSInit(cx, obj) != NULL);
 
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Registered DialogFactory classes");
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Registered DialogFactory classes");
 }
 
 void SpiderMonkeyEngine::registerFunctionGroup(const char *name, const char *text, JSFunctionSpec *s, JSContext *cx, JSObject *obj)
 {
 	assert(JS_DefineFunctions(cx, obj, s) == JS_TRUE);
 
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 		(string("Registered ") + string(name) + string(" functions")).c_str());
 
 	JsHook h;
@@ -124,7 +124,7 @@ void SpiderMonkeyEngine::printError(JSContext *cx, const char *message, JSErrorR
 {
 	SpiderMonkeyEngine *engine = (SpiderMonkeyEngine*)JS_GetContextPrivate(cx);
 
-	engine->callEventHandlers(EVENT_TYPE_ERROR, report->filename, report->lineno, message);
+	engine->callEventHandlers(IScriptEngine::Error, report->filename, report->lineno, message);
 }
 
 void SpiderMonkeyEngine::registerEventHandler(eventHandlerFunc *func)
@@ -137,7 +137,7 @@ void SpiderMonkeyEngine::unregisterEventHandler(eventHandlerFunc *func)
 	_eventHandlerSet.erase(func);
 }
 
-void SpiderMonkeyEngine::callEventHandlers(EVENT_TYPE eventType, const char *fileName, int lineNo, const char *message)
+void SpiderMonkeyEngine::callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message)
 {
 	EngineEvent event = { this, eventType, fileName, lineNo, message };
 	set<eventHandlerFunc*>::iterator it;
@@ -148,33 +148,33 @@ void SpiderMonkeyEngine::callEventHandlers(EVENT_TYPE eventType, const char *fil
 	}
 }
 
-bool SpiderMonkeyEngine::runScript(string script)
+bool SpiderMonkeyEngine::runScript(string script, RunMode mode)
 {
 	jsval rval;
 
 	return JS_EvaluateScript(_jsContext, _jsObject, script.c_str(), script.length(), "dummy", 1, &rval) == JSVAL_TRUE;
 }
 
-bool SpiderMonkeyEngine::runScriptFile(string name)
+bool SpiderMonkeyEngine::runScriptFile(string name, RunMode mode)
 {
 	jsval rval;
 	uintN lineno = 0;
 	bool success = false;
 
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 		(string("Compiling \"" + string(name) + string("\"...")).c_str()));
 	JSScript *pJSScript = JS_CompileFile(_jsContext, _jsObject, name.c_str());
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Done.");
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Done.");
 
 	if (pJSScript != NULL)
 	{
-		this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+		this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 			(string("Executing ") + string(name) + string("...")).c_str());
 
 		JSBool ok = JS_ExecuteScript(_jsContext, _jsObject, pJSScript, &rval);
 		JS_DestroyScript(_jsContext, pJSScript);
 
-		this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Done");
+		this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Done");
 	}
 
 	JS_GC(_jsContext);
@@ -182,7 +182,12 @@ bool SpiderMonkeyEngine::runScriptFile(string name)
 	return success;
 }
 
-IEditor* SpiderMonkeyEngine::getEditor()
+IEditor* SpiderMonkeyEngine::editor()
 {
 	return _editor;
+}
+
+IScriptEngine::Capabilities SpiderMonkeyEngine::capabilities()
+{
+	return IScriptEngine::None;
 }

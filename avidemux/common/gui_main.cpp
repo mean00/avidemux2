@@ -615,7 +615,7 @@ void  updateLoaded ()
   video_body->getDefaultAudioTrack(&stream);
   if(stream)
         wavinfo=stream->getInfo();
-  
+
   if (!wavinfo)
     {
       printf ("\n *** NO AUDIO ***\n");
@@ -724,7 +724,7 @@ bool A_parseTinyPyScript(const char *name){
         ADM_warning("Cannot get python engine!\n");
         return false;
     }
-   ret = getPythonEngine()->runScriptFile(std::string(longname));
+   ret = getPythonEngine()->runScriptFile(std::string(longname), IScriptEngine::Normal);
    A_Resync(); // total duration & stuff
    if( ret == true )
    {
@@ -746,7 +746,7 @@ bool A_parseECMAScript(const char *name){
     {
       return false;
    }
-   ret = getSpiderMonkeyEngine()->runScriptFile(longname);
+   ret = getSpiderMonkeyEngine()->runScriptFile(longname, IScriptEngine::Normal);
    A_Resync(); // total duration & stuff
    if( ret == true )
    {
@@ -879,7 +879,7 @@ void A_audioTrack( void )
         base->run();
         delete base;
 }
-#if 0        
+#if 0
         audioInfo *infos=NULL;
         uint32_t nbAudioTracks,currentAudioTrack;
         uint32_t newTrack;

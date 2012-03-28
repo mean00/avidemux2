@@ -14,7 +14,7 @@ tp_obj zzpy__pyDFMenu_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDFMenuHelper *me=(ADM_scriptDFMenuHelper *)pm.asThis(&self, ADM_PYID_DF_INTEGER);
   char const *key = pm.asString();
@@ -33,7 +33,7 @@ tp_obj zzpy__pyDFMenu_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDFMenuHelper *me = (ADM_scriptDFMenuHelper *)pm.asThis(&self, ADM_PYID_DF_INTEGER);
   char const *key = pm.asString();
@@ -69,7 +69,7 @@ static tp_obj zzpy__pyDFMenu_help(TP)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "addItem(str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addItem(str)");
 
 	return tp_None;
 };

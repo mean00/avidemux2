@@ -17,15 +17,19 @@ using namespace std;
 
 static void consoleEventHandler(IScriptEngine::EngineEvent *event)
 {
-	printf("[Script] %s ", event->engine->getName().c_str());
+	printf("[Script] %s ", event->engine->name().c_str());
 
 	switch (event->eventType)
 	{
-		case IScriptEngine::EVENT_TYPE_INFORMATION:
+		case IScriptEngine::Information:
 			printf("INFO - ");
 			break;
 
-		case IScriptEngine::EVENT_TYPE_ERROR:
+		case IScriptEngine::Warning:
+			printf("WARNING - ");
+			break;
+
+		case IScriptEngine::Error:
 			printf("ERROR - ");
 			break;
 
@@ -36,7 +40,7 @@ static void consoleEventHandler(IScriptEngine::EngineEvent *event)
 	printf("%s\n", event->message);
 }
 
-list<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
+vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
 {
     ADM_assert(engines.size() == 0);
 
@@ -48,10 +52,10 @@ list<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
 	engines.push_back(new SpiderMonkeyEngine());
 #endif
 
-	for (list<IScriptEngine*>::iterator it = engines.begin(); it != engines.end(); it++)
+	for (int i = 0; i < engines.size(); i++)
 	{
-		(*it)->registerEventHandler(consoleEventHandler);
-		(*it)->initialise(editor);
+		engines[i]->registerEventHandler(consoleEventHandler);
+		engines[i]->initialise(editor);
 	}
 
 	return engines;
@@ -59,21 +63,21 @@ list<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
 
 void destroyScriptEngines()
 {
-	for (list<IScriptEngine*>::iterator it = engines.begin(); it != engines.end(); it++)
+	for (int i = 0; i < engines.size(); i++)
 	{
-		delete (*it);
+		delete engines[i];
 	}
 }
 
-static IScriptEngine* getEngine(list<IScriptEngine*> engines, string engineName)
+static IScriptEngine* getEngine(vector<IScriptEngine*> engines, string engineName)
 {
     IScriptEngine *engine = NULL;
 
-    for (list<IScriptEngine*>::iterator it = engines.begin(); it != engines.end(); it++)
+    for (int i = 0; i < engines.size(); i++)
 	{
-		if ((*it)->getName().compare(engineName) == 0)
+		if (engines[i]->name().compare(engineName) == 0)
 		{
-		    engine = (*it);
+		    engine = engines[i];
 		    break;
 		}
 	}
@@ -94,6 +98,12 @@ IScriptEngine* getPythonEngine()
     return getEngine(engines, "Python");
 }
 #endif
+
+// This shouldn't really be used but since the UI isn't very OOP it's kinda necessary at the moment
+vector<IScriptEngine*> getScriptEngines()
+{
+	return engines;
+}
 
 void interactiveScript(IScriptEngine *engine)
 {

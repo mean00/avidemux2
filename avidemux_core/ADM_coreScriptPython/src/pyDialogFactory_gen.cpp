@@ -24,7 +24,7 @@ tp_obj zzpy__pyDialogFactory_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDialogFactoryHelper *me=(ADM_scriptDialogFactoryHelper *)pm.asThis(&self, ADM_PYID_DIALOGF);
   char const *key = pm.asString();
@@ -42,7 +42,7 @@ tp_obj zzpy__pyDialogFactory_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDialogFactoryHelper *me = (ADM_scriptDialogFactoryHelper *)pm.asThis(&self, ADM_PYID_DIALOGF);
   char const *key = pm.asString();
@@ -71,8 +71,8 @@ static tp_obj zzpy__pyDialogFactory_help(TP)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "show(void)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "addControl(ptr@ADM_scriptDFBaseHelper)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "show(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addControl(ptr@ADM_scriptDFBaseHelper)");
 
 	return tp_None;
 };

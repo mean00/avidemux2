@@ -321,7 +321,7 @@ sub genGetSet
         debug("$getName invoked\n");
         print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
         print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string(\"userdata\")).data.val;\n";
-        print OUTPUT "  IEditor *editor = engine->getEditor();\n";
+        print OUTPUT "  IEditor *editor = engine->editor();\n";
         print OUTPUT "  TinyParams pm(vm);\n";
         print OUTPUT "  $cookieName *me=($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
@@ -375,7 +375,7 @@ sub genGetSet
         debug("$setName invoked\n");
         print OUTPUT "  tp_obj self = tp_getraw(vm);\n";
         print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string(\"userdata\")).data.val;\n";
-        print OUTPUT "  IEditor *editor = engine->getEditor();\n";
+        print OUTPUT "  IEditor *editor = engine->editor();\n";
         print OUTPUT "  TinyParams pm(vm);\n";
         print OUTPUT "  $cookieName *me = ($cookieName *)pm.asThis(&self, $cookieId);\n";
         print OUTPUT "  char const *key = pm.asString();\n";
@@ -446,7 +446,7 @@ sub genGlue
 				if($staticClass == 1)
 				{
 					print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n";
-					print OUTPUT "  IEditor *editor = engine->getEditor();\n";
+					print OUTPUT "  IEditor *editor = engine->editor();\n";
                 }
 
                  print OUTPUT "  TinyParams pm(tp);\n";
@@ -577,7 +577,7 @@ my $pyFunc;
                 foreach $f(  keys %cFuncs)
                 {
                         my @params=@{$funcParams{$f}};
-                        print OUTPUT "\tengine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, \"$f(".join(",",@params) .")\");\n";
+                        print OUTPUT "\tengine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$f(".join(",",@params) .")\");\n";
                 }
                 print OUTPUT "\n\treturn tp_None;\n";
                 print OUTPUT "};\n";

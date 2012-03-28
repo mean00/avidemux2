@@ -40,8 +40,8 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine) : QDialog(parent)
     ui.textBrowser_2->installEventFilter(this);
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
-    print(IScriptEngine::EVENT_TYPE_INFORMATION,"Enter your commands then press the evaluate button or CTRL+ENTER.\n");
-    print(IScriptEngine::EVENT_TYPE_INFORMATION,"You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
+    print(IScriptEngine::Information, "Enter your commands then press the evaluate button or CTRL+ENTER.\n");
+    print(IScriptEngine::Information, "You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
     indexRead=indexWrite=0;
 }
 /**
@@ -81,20 +81,20 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
     ui.textBrowser_2->setPlainText("");
-    _engine->runScript(text.toAscii().constData());
+    _engine->runScript(text.toAscii().constData(), IScriptEngine::Normal);
     return true;
 }
 /**
     \fn print
 */
-bool qShell::print(IScriptEngine::EVENT_TYPE type,const char *s)
+bool qShell::print(IScriptEngine::EventType type,const char *s)
 {
     QString string(s);
-    
+
     switch(type)
     {
-        case IScriptEngine::EVENT_TYPE_INFORMATION: ui.textBrowser->setTextColor(QColor(0,0,0));break;
-        case IScriptEngine::EVENT_TYPE_ERROR : ui.textBrowser->setTextColor(QColor(255,0,0));break;
+        case IScriptEngine::Information: ui.textBrowser->setTextColor(QColor(0,0,0));break;
+        case IScriptEngine::Error: ui.textBrowser->setTextColor(QColor(255,0,0));break;
     }
     ui.textBrowser->insertPlainText(string);
     ui.textBrowser->setTextColor(QColor(0,0,0));

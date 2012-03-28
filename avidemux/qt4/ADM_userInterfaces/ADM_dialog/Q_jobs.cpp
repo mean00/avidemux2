@@ -144,7 +144,7 @@ void jobsWindow::RunOne(bool b)
 			GUI_Quiet();
 			TLK_getDate(&(desc[sel].startDate));
 #ifdef USE_SPIDERMONKEY
-			if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
+			if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel], IScriptEngine::Normal))
 				desc[sel].status=STATUS_SUCCEED;
 			else
 #endif
@@ -172,7 +172,7 @@ void jobsWindow::RunAll(bool b)
 		GUI_Quiet();
 		TLK_getDate(&(desc[sel].startDate));
 #ifdef USE_SPIDERMONKEY
-		if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel]))
+		if (getSpiderMonkeyEngine()->runScriptFile(_jobsName[sel], IScriptEngine::Normal))
 			desc[sel].status=STATUS_SUCCEED;
 		else
 #endif

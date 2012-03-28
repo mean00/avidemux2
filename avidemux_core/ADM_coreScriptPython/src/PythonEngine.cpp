@@ -45,7 +45,7 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 	va_end(list);
 	print_buffer[1023] = 0; // ensure the string is terminated
 
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, print_buffer);
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, print_buffer);
 }
 
 #include "adm_gen.cpp"
@@ -64,11 +64,11 @@ using namespace std;
 
 PythonEngine::~PythonEngine()
 {
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Closing Python");
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Closing Python");
 	tp_deinit(_vm);
 }
 
-string PythonEngine::getName()
+string PythonEngine::name()
 {
     return string("Python");
 }
@@ -86,7 +86,7 @@ void PythonEngine::initialise(IEditor *editor)
 	math_init(_vm);
 
 	this->registerFunctions();
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Python initialised");
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Python initialised");
 }
 
 void PythonEngine::registerFunctions()
@@ -112,7 +112,7 @@ void PythonEngine::registerFunctions()
 
 void PythonEngine::registerClass(const char *className, pyRegisterClass classPy, const char *desc)
 {
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 		(string("Registering class: ") + string(className)).c_str());
 
 	pyClassDescriptor classDesc;
@@ -125,12 +125,12 @@ void PythonEngine::registerClass(const char *className, pyRegisterClass classPy,
 
 void PythonEngine::registerFunction(const char *group, pyFunc *funcs)
 {
-	this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 		(string("Registering group ") + string(group)).c_str());
 
 	while (funcs->funcName)
 	{
-		this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+		this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 			(string("Registering: ") + string(funcs->funcName)).c_str());
 
 		tp_set(_vm, _vm->builtins, tp_string(funcs->funcName), tp_fnc(_vm, funcs->funcCall));
@@ -149,7 +149,7 @@ void PythonEngine::unregisterEventHandler(eventHandlerFunc *func)
 	_eventHandlerSet.erase(func);
 }
 
-void PythonEngine::callEventHandlers(EVENT_TYPE eventType, const char *fileName, int lineNo, const char *message)
+void PythonEngine::callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message)
 {
 	EngineEvent event = { this, eventType, fileName, lineNo, message };
 	set<eventHandlerFunc*>::iterator it;
@@ -160,7 +160,7 @@ void PythonEngine::callEventHandlers(EVENT_TYPE eventType, const char *fileName,
 	}
 }
 
-bool PythonEngine::runScript(string script)
+bool PythonEngine::runScript(string script, RunMode mode)
 {
     if (setjmp(_vm->nextexpr))
     {
@@ -174,7 +174,7 @@ bool PythonEngine::runScript(string script)
     }
 }
 
-bool PythonEngine::runScriptFile(string name)
+bool PythonEngine::runScriptFile(string name, RunMode mode)
 {
 	if (setjmp(_vm->nextexpr))
 	{
@@ -182,18 +182,18 @@ bool PythonEngine::runScriptFile(string name)
 	}
 	else
 	{
-		this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1,
+		this->callEventHandlers(IScriptEngine::Information, NULL, -1,
 			(string("Executing ") + string(name) + string("...")).c_str());
 
 		tp_import(_vm, name.c_str(), "avidemux6", NULL, 0);
 
-		this->callEventHandlers(EVENT_TYPE_INFORMATION, NULL, -1, "Done");
+		this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Done");
 
 		return true;
 	}
 }
 
-IEditor* PythonEngine::getEditor()
+IEditor* PythonEngine::editor()
 {
 	return _editor;
 }
@@ -269,4 +269,9 @@ tp_obj PythonEngine::dumpBuiltin(tp_vm *tp)
 	}
 
 	return tp_None;
+}
+
+IScriptEngine::Capabilities PythonEngine::capabilities()
+{
+	return IScriptEngine::None;
 }

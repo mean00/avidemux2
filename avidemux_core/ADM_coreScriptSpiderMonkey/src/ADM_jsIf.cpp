@@ -14,7 +14,7 @@ static void dump(SpiderMonkeyEngine *engine, JSFunctionSpec *f)
 
 		stream << "    " << f->name;
 
-		engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, stream.str().c_str());
+		engine->callEventHandlers(IScriptEngine::Information, NULL, -1, stream.str().c_str());
 		f++;
 	}
 }
@@ -37,7 +37,7 @@ void jsHelp(JSContext *cx, const char *s)
 
 			if(t)
 			{
-				engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, t);
+				engine->callEventHandlers(IScriptEngine::Information, NULL, -1, t);
 			}
 
 			dump(engine, engine->jsHooks[i].jsFunctions);
@@ -45,7 +45,7 @@ void jsHelp(JSContext *cx, const char *s)
 	}
 
 none:
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "please use help(\"xxx\") with xx among");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "please use help(\"xxx\") with xx among");
 
 	for (int i = 0; i < n; i++)
 	{
@@ -53,7 +53,7 @@ none:
 
 		stream << "    " << engine->jsHooks[i].name;
 
-		engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, stream.str().c_str());
+		engine->callEventHandlers(IScriptEngine::Information, NULL, -1, stream.str().c_str());
 	}
 }
 
@@ -61,7 +61,7 @@ void jsPrint(JSContext *cx, const char *s)
 {
 	SpiderMonkeyEngine *engine = (SpiderMonkeyEngine*)JS_GetContextPrivate(cx);
 
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, s);
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, s);
 }
 
 void jsPopupError(const char *s)

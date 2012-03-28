@@ -7,7 +7,7 @@
 using namespace std;
 
 #define ENGINE(cx) ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))
-#define EDITOR(cx) ENGINE(cx)->getEditor()
+#define EDITOR(cx) ENGINE(cx)->editor()
 
 int   jsVideoCodec(const char *a,const char **b) {return 0;}
 
@@ -21,7 +21,7 @@ JSBool jsAdmvideoCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 	if(!JSVAL_IS_STRING(argv[0]))
 	{
 		ENGINE(cx)->callEventHandlers(
-			SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, "Cannot set codec, first parameter is not a string");
+			IScriptEngine::Information, NULL, -1, "Cannot set codec, first parameter is not a string");
 
 		return JS_FALSE;
 	}
@@ -77,7 +77,7 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 
 	// Get Codec...
     int dex=JSVAL_TO_INT(argv[0]);
-	char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));     
+	char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));
 	// begin set bitrate
 	uint32_t bitrate = JSVAL_TO_INT(argv[2]);
 	// Construct couples
@@ -104,7 +104,7 @@ JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
 	if (argc < 1)
 	{
 		ENGINE(cx)->callEventHandlers(
-			SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, "setContainer needs at least one arg");
+			IScriptEngine::Information, NULL, -1, "setContainer needs at least one arg");
 
 		return JS_FALSE;
 	}
@@ -112,7 +112,7 @@ JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
 	if (JSVAL_IS_STRING(argv[0]) == false)
 	{
 		ENGINE(cx)->callEventHandlers(
-			SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, "setContainer needs at string arg");
+			IScriptEngine::Information, NULL, -1, "setContainer needs at string arg");
 
 		return JS_FALSE;
 	}
@@ -120,7 +120,7 @@ JSBool jsAdmsetContainer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
 	char *str = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
 
 	ENGINE(cx)->callEventHandlers(
-		SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, (string("Selecting container: ") + string(str)).c_str());
+		IScriptEngine::Information, NULL, -1, (string("Selecting container: ") + string(str)).c_str());
 
 	CONFcouple *c;
 	jsArgToConfCouple(argc - 1, &c, argv + 1);
@@ -177,14 +177,14 @@ int jsGetHeight(JSContext *cx)
 int jsAddSegment(JSContext *cx, int ref, double start, double duration)
 {
 	printf("1\n");
-	if (EDITOR(cx)->addSegment(ref, (uint64_t)start, (uint64_t)duration)) 
+	if (EDITOR(cx)->addSegment(ref, (uint64_t)start, (uint64_t)duration))
 	{
 		printf("2\n");
 		if (EDITOR(cx)->getNbSegment() == 1) // We just added our first seg...
 		{
 			printf("3\n");
 			ENGINE(cx)->callEventHandlers(
-				SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, "First segment, refreshing screen");
+				IScriptEngine::Information, NULL, -1, "First segment, refreshing screen");
 			EDITOR(cx)->rewind();
 			printf("4\n");
 		}

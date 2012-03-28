@@ -4,7 +4,7 @@ static tp_obj zzpy_printTiming(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -18,7 +18,7 @@ static tp_obj zzpy_hexDumpFrame(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -32,7 +32,7 @@ static tp_obj zzpy_getVideoDuration(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -44,7 +44,7 @@ static tp_obj zzpy_getDts(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -58,7 +58,7 @@ static tp_obj zzpy_dumpSegment(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -71,7 +71,7 @@ static tp_obj zzpy_dumpRefVideo(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -83,7 +83,7 @@ static tp_obj zzpy_nbSegments(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -95,7 +95,7 @@ static tp_obj zzpy_dumpAllSegments(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -107,7 +107,7 @@ static tp_obj zzpy_getPts(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
 
@@ -120,7 +120,7 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   void *me=(void *)pm.asThis(&self, ADM_PYID_EDITOR);
   char const *key = pm.asString();
@@ -166,7 +166,7 @@ tp_obj zzpy__pyEditor_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
   char const *key = pm.asString();
@@ -191,15 +191,15 @@ static tp_obj zzpy__pyEditor_help(TP)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "printTiming(IEditor,int)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "hexDumpFrame(IEditor,int)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getVideoDuration(void)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getDts(IEditor,int)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "dumpSegment(int)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "dumpRefVideo(void)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "nbSegments(void)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "dumpAllSegments(void)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "getPts(IEditor,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "printTiming(IEditor,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "hexDumpFrame(IEditor,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoDuration(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getDts(IEditor,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpSegment(int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpRefVideo(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nbSegments(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpAllSegments(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPts(IEditor,int)");
 
 	return tp_None;
 };

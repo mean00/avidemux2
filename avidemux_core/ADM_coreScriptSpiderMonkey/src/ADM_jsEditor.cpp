@@ -17,7 +17,7 @@ int jsPrintTiming(JSContext *cx, int framenumber)
 	uint64_t pts, dts;
 
 	SpiderMonkeyEngine *engine = (SpiderMonkeyEngine*)JS_GetContextPrivate(cx);
-	IEditor *videoBody = engine->getEditor();
+	IEditor *videoBody = engine->editor();
 
 	if (videoBody->getVideoPtsDts(framenumber, &flags, &pts, &dts))
 	{
@@ -30,10 +30,10 @@ int jsPrintTiming(JSContext *cx, int framenumber)
 
 		stringstream stream;
 
-		stream << "Frame " << framenumber << " PIC: " << field << " Flags " << flags << " pts=" << pts << 
+		stream << "Frame " << framenumber << " PIC: " << field << " Flags " << flags << " pts=" << pts <<
 			" pts=" << ADM_us2plain(pts) << " dts=" << dts << " delta=" << delta / 1000LL << " ms";
 
-		engine->callEventHandlers(SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, stream.str().c_str());
+		engine->callEventHandlers(IScriptEngine::Information, NULL, -1, stream.str().c_str());
 	}
 	else
 	{
@@ -41,7 +41,7 @@ int jsPrintTiming(JSContext *cx, int framenumber)
 
 		stream << "Cannot get info for frame " << framenumber;
 
-		engine->callEventHandlers(SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, stream.str().c_str());
+		engine->callEventHandlers(IScriptEngine::Information, NULL, -1, stream.str().c_str());
 	}
 
 	return 0;
@@ -54,7 +54,7 @@ int jsHexDumpFrame(JSContext *cx, int framenumber)
 {
 	ADMCompressedImage img;
 	SpiderMonkeyEngine *engine = (SpiderMonkeyEngine*)JS_GetContextPrivate(cx);
-	IEditor *videoBody = engine->getEditor();
+	IEditor *videoBody = engine->editor();
 
 	img.data = new uint8_t[2000 * 2000 * 3];
 	img.dataLength = 2000 * 2000 * 3;
@@ -64,7 +64,7 @@ int jsHexDumpFrame(JSContext *cx, int framenumber)
 		stringstream stream;
 
 		stream << "Cannot get picture " << framenumber;
-		engine->callEventHandlers(SpiderMonkeyEngine::EVENT_TYPE_INFORMATION, NULL, -1, stream.str().c_str());
+		engine->callEventHandlers(IScriptEngine::Information, NULL, -1, stream.str().c_str());
 		delete [] img.data;
 
 		return false;
@@ -82,7 +82,7 @@ int jsHexDumpFrame(JSContext *cx, int framenumber)
 */
 int jsDumpSegments (JSContext *cx)
 {// begin PostProcess
-	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->getEditor();
+	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->editor();
 
 	videoBody->dumpSegments();
 
@@ -94,7 +94,7 @@ int jsDumpSegments (JSContext *cx)
 */
 int jsDumpRefVideos (JSContext *cx)
 {
-	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->getEditor();
+	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->editor();
 
 	videoBody->dumpRefVideos();
 
@@ -107,7 +107,7 @@ int jsDumpRefVideos (JSContext *cx)
 */
 JSBool dumpTiming(JSContext *cx)
 {// begin PostProcess
-	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->getEditor();
+	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->editor();
 
 	videoBody->dumpTiming();
 
@@ -119,7 +119,7 @@ JSBool dumpTiming(JSContext *cx)
 */
 float scriptGetVideoDuration(JSContext *cx)
 {
-	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->getEditor();
+	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->editor();
 	uint64_t d = videoBody->getVideoDuration();
 
 	return (float)d;
@@ -132,7 +132,7 @@ double  scriptGetPts(JSContext *cx, int frameNum)
 {
 	uint32_t flags;
 	uint64_t pts, dts;
-	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->getEditor();
+	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->editor();
 
 	if(!videoBody->getVideoPtsDts(frameNum, &flags, &pts, &dts))
 	{
@@ -152,7 +152,7 @@ double  scriptGetDts(JSContext *cx, int frameNum)
 {
 	uint32_t flags;
 	uint64_t pts,dts;
-	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->getEditor();
+	IEditor *videoBody = ((SpiderMonkeyEngine*)JS_GetContextPrivate(cx))->editor();
 
 	if(!videoBody->getVideoPtsDts(frameNum, &flags, &pts, &dts))
 	{

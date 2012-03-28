@@ -30,7 +30,7 @@ public:
                     qShell(QWidget *parent, IScriptEngine *engine);
     virtual         ~qShell() ;
     bool            run(void);
-    bool            print(IScriptEngine::EVENT_TYPE type, const char *s);
+    bool            print(IScriptEngine::EventType type, const char *s);
 public slots:
     bool            evaluate(bool x);
     bool            clear(bool x);

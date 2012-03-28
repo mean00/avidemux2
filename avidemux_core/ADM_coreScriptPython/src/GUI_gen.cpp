@@ -4,7 +4,7 @@ static tp_obj zzpy_fileWriteSelect(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
 
@@ -22,7 +22,7 @@ static tp_obj zzpy_displayError(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
 
@@ -37,7 +37,7 @@ static tp_obj zzpy_dirSelect(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
 
@@ -55,7 +55,7 @@ static tp_obj zzpy_displayInfo(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
 
@@ -70,7 +70,7 @@ static tp_obj zzpy_fileReadSelect(TP)
  {
   tp_obj self = tp_getraw(tp);
   IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(tp);
   void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
 
@@ -87,7 +87,7 @@ tp_obj zzpy__pyGui_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   void *me=(void *)pm.asThis(&self, ADM_PYID_GUI);
   char const *key = pm.asString();
@@ -117,7 +117,7 @@ tp_obj zzpy__pyGui_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
   char const *key = pm.asString();
@@ -142,11 +142,11 @@ static tp_obj zzpy__pyGui_help(TP)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "fileWriteSelect(IEditor,str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "displayError(IEditor,str,str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "dirSelect(IEditor,str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "displayInfo(IEditor,str,str)");
-	engine->callEventHandlers(IScriptEngine::EVENT_TYPE_INFORMATION, NULL, -1, "fileReadSelect(IEditor,str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileWriteSelect(IEditor,str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayError(IEditor,str,str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dirSelect(IEditor,str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayInfo(IEditor,str,str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileReadSelect(IEditor,str)");
 
 	return tp_None;
 };

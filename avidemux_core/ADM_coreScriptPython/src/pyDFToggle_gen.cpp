@@ -3,7 +3,7 @@ tp_obj zzpy__pyDFToggle_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDFToggleHelper *me=(ADM_scriptDFToggleHelper *)pm.asThis(&self, ADM_PYID_DF_TOGGLE);
   char const *key = pm.asString();
@@ -18,7 +18,7 @@ tp_obj zzpy__pyDFToggle_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDFToggleHelper *me = (ADM_scriptDFToggleHelper *)pm.asThis(&self, ADM_PYID_DF_TOGGLE);
   char const *key = pm.asString();

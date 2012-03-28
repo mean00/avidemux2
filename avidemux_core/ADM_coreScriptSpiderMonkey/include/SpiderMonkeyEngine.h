@@ -40,13 +40,14 @@ public:
 	std::vector<JsHook> jsHooks;
 
 	~SpiderMonkeyEngine();
-	void callEventHandlers(EVENT_TYPE eventType, const char *fileName, int lineNo, const char *message);
-	IEditor* getEditor();
-	std::string getName();
+	void callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message);
+	Capabilities capabilities();
+	IEditor* editor();
+	std::string name();
 	void initialise(IEditor *videoBody);
 	void registerEventHandler(eventHandlerFunc *func);
-	bool runScript(std::string script);
-	bool runScriptFile(std::string name);
+	bool runScript(std::string script, RunMode mode);
+	bool runScriptFile(std::string name, RunMode mode);
 	void unregisterEventHandler(eventHandlerFunc *func);
 };
 

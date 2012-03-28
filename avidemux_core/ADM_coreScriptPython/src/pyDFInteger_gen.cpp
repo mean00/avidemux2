@@ -3,7 +3,7 @@ tp_obj zzpy__pyDFInteger_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDFIntegerHelper *me=(ADM_scriptDFIntegerHelper *)pm.asThis(&self, ADM_PYID_DF_INTEGER);
   char const *key = pm.asString();
@@ -18,7 +18,7 @@ tp_obj zzpy__pyDFInteger_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->getEditor();
+  IEditor *editor = engine->editor();
   TinyParams pm(vm);
   ADM_scriptDFIntegerHelper *me = (ADM_scriptDFIntegerHelper *)pm.asThis(&self, ADM_PYID_DF_INTEGER);
   char const *key = pm.asString();

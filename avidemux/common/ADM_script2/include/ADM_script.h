@@ -1,18 +1,19 @@
 #ifndef ADM_SCRIPT_H
 #define ADM_SCRIPT_H
 
-#include <list>
+#include <vector>
 #include "IScriptEngine.h"
 
 #ifndef __DECLARE__
 extern
 #endif
-std::list<IScriptEngine*> engines;
+std::vector<IScriptEngine*> engines;
 
-std::list<IScriptEngine*> initialiseScriptEngines(IEditor *editor);
+std::vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor);
 void destroyScriptEngines();
-IScriptEngine* getSpiderMonkeyEngine();
 IScriptEngine* getPythonEngine();
+IScriptEngine* getSpiderMonkeyEngine();
+std::vector<IScriptEngine*> getScriptEngines();
 void interactiveScript(IScriptEngine *engine);
 
 #endif
