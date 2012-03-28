@@ -75,6 +75,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     // If we have no audio, dont even try...
     ADM_audioStream *s=NULL;
     if(!video_body->getDefaultAudioTrack(&s)) return NULL;
+    if(!s) return NULL;
     //
     ADM_buildFilterChain(&PlaybackVector,&playback);
     //
