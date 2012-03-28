@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -29,6 +29,7 @@ ADM_MUXER_BEGIN( "mp4",muxerMP4,
                     "MP4 Muxer", // DIsplay name
                     mp4Configure, // configure function
                     mp4_muxer_param, // Template
-                    &muxerConfig  // conf
+                    &muxerConfig,  // conf
+                    sizeof(mp4_muxer)
                 );
 

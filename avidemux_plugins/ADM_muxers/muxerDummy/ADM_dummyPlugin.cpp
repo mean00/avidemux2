@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ ADM_MUXER_BEGIN( "dummy",muxerDummy,
                     "Dummy Muxer", // Display name
                     confDummy, //conf func
                     NULL, // template
-                    NULL  // conf data
+                    NULL,  // conf data
+                    0
                 );
 

@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ ADM_MUXER_BEGIN( "mkv",muxerMkv,
                     "Mkv Muxer", // DIsplay name
                     mkvConfigure,
                     mkv_muxer_param, //template
-                    &mkvMuxerConfig //config
+                    &mkvMuxerConfig, //config
+                    sizeof(mkv_muxer)
                 );
 

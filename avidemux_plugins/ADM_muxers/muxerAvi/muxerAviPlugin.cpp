@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -27,6 +27,7 @@ ADM_MUXER_BEGIN( "avi",muxerAvi,
                     "AVI Muxer", // DIsplay name
                     AviConfigure,
                     avi_muxer_param, //template
-                    &muxerConfig
+                    &muxerConfig,
+                    sizeof(avi_muxer)
                 );
 

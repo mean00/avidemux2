@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ ADM_MUXER_BEGIN( "ts",muxerffTS,
                     "Mpeg TS Muxer (ff)", // DIsplay name
                     ffTSConfigure,
                     ts_muxer_param, //template
-                    &tsMuxerConfig //config
+                    &tsMuxerConfig, //config
+                    sizeof(ts_muxer)
                 );
 

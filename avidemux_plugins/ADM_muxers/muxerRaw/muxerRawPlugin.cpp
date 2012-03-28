@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -26,7 +26,7 @@ ADM_MUXER_BEGIN( "raw",muxerRaw,
                     "RAW muxer plugin (c) Mean 2008",
                     "Video Only", // DIsplay name
                     rawConfigure,
-                    NULL,0
-                    
+                    NULL,0,
+                    0
                 );
 

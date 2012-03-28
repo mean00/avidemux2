@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ ADM_MUXER_BEGIN( "flv",muxerFlv,
                     "FLV Muxer", // DIsplay name
                     flvConfigure,
                     NULL,
-                    NULL
+                    NULL,
+                    0
                 );
 

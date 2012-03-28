@@ -1,7 +1,7 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
+
       See lavformat/flv[dec/env].c for detail
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ ADM_MUXER_BEGIN( "mpg",muxerffPS,
                     "Mpeg-PS Muxer( ff)", // DIsplay name
                     ffPSConfigure,
                     ps_muxer_param, //template
-                    &psMuxerConfig //config
+                    &psMuxerConfig, //config
+                    sizeof(ps_muxer)
                 );
 

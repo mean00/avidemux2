@@ -1,8 +1,8 @@
 /***************************************************************************
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
-    
-      
+
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -27,7 +27,8 @@ ADM_MUXER_BEGIN( "mp4",muxerMp4v2,
                     "MP4v2 Muxer", // DIsplay name
                     mp4v2Configure,
                     mp4v2_muxer_param, //template
-                    &muxerConfig
+                    &muxerConfig,
+                    sizeof(mp4v2_muxer)
                 );
 
 

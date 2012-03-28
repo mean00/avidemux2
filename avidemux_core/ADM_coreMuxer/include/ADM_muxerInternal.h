@@ -16,7 +16,7 @@
 #ifndef  ADM_muxerInternal_H
 #define  ADM_muxerInternal_H
 
-#define ADM_MUXER_API_VERSION 7
+#define ADM_MUXER_API_VERSION 8
 #include <stddef.h>
 #include "ADM_dynamicLoading.h"
 #include "ADM_muxer.h"
@@ -35,6 +35,7 @@ public:
         uint32_t      apiVersion;
         bool  (*configure)(void);
         bool  (*getConfiguration)(CONFcouple **conf);
+        bool  (*resetConfiguration)();
         bool  (*setConfiguration)(CONFcouple *conf);
 
         ADM_dynMuxer(const char *file) : ADM_LibWrapper()
@@ -44,10 +45,10 @@ public:
         const char  *(*getMuxerName)();
         const char  *(*getDisplayName)();
         const char  *(*getDefaultExtension)();
-        
 
 
-			initialised = (loadLibrary(file) && getSymbols(7+4,
+
+			initialised = (loadLibrary(file) && getSymbols(8+4,
 				&createmuxer, "create",
 				&deletemuxer, "destroy",
 				&getMuxerName, "getName",
@@ -58,6 +59,7 @@ public:
                 &configure,"configure",
                 &setConfiguration,"setConfiguration",
                 &getConfiguration,"getConfiguration",
+				&resetConfiguration,"resetConfiguration",
                 &getDefaultExtension,"getDefaultExtension"
                 ));
                 if(initialised)
@@ -75,8 +77,19 @@ public:
         }
 };
 
-#define ADM_MUXER_BEGIN( Ext,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar) \
+#define ADM_MUXER_BEGIN( Ext,Class,maj,mn,pat,name,desc,displayName,configureFunc,confTemplate,confVar,confSize) \
 extern "C" {\
+	static void *defaultConfig = NULL; \
+\
+	static void snapshotDefaultConfiguration() \
+	{ \
+		if (confVar != NULL && defaultConfig == NULL) \
+		{ \
+			defaultConfig = ADM_alloc(confSize); \
+			memcpy(defaultConfig, confVar, confSize); \
+		} \
+	} \
+\
 ADM_muxer   *create(void){ return new Class; } \
 void         destroy(ADM_muxer *h){ Class *z=(Class *)h;delete z;} \
 uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
@@ -92,10 +105,18 @@ bool        getConfiguration(CONFcouple **conf) \
 }\
 bool        setConfiguration(CONFcouple *conf)\
 {\
+	snapshotDefaultConfiguration(); \
                   return ADM_paramLoad(conf,confTemplate,confVar); \
+} \
+bool        resetConfiguration() \
+{ \
+	snapshotDefaultConfiguration(); \
+	if (defaultConfig != NULL) memcpy(confVar, defaultConfig, confSize); \
+	return true; \
 } \
  bool  configure(void) \
 { \
+	snapshotDefaultConfiguration(); \
  if(configureFunc==NULL) return true;\
  return configureFunc();}\
 }
