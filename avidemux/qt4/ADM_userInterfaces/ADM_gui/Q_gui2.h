@@ -1,6 +1,9 @@
 #ifndef Q_gui2_h
 #define Q_gui2_h
 
+#define MKICON(x) ":/new/prefix1/pics/"#x".png"
+
+#include <vector>
 #include <QtGui/QSlider>
 #include <QtGui/QWidget>
 
@@ -8,9 +11,9 @@
 #include "T_thumbSlider.h"
 #include "ui_gui2.h"
 #include "gui_action.hxx"
-
-#define MKICON(x) ":/new/prefix1/pics/"#x".png"
 #include "myOwnMenu.h"
+#include "IScriptEngine.h"
+
 /**
     \class MainWindow
 */
@@ -19,15 +22,14 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	MainWindow();
-	virtual ~MainWindow();	
-    bool buildRecentMenu(void);
-	void buildCustomMenu(void);
-    bool buildMyMenu(void);
-    bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
-    void searchMenu(QAction * action,MenuEntry *menu, int nb);
-    
 	Ui_MainWindow ui;
+
+	MainWindow(std::vector<IScriptEngine*> scriptEngines);
+	virtual ~MainWindow();
+
+	void buildCustomMenu(void);
+	bool buildRecentMenu(void);
+
 protected:
     QMenu *jsMenu;
     QMenu *pyMenu;
@@ -36,7 +38,7 @@ protected:
     QMenu *recentProjects;
     QAction *recentFileAction[4];
     ThumbSlider *thumbSlider;
-    
+
 public slots:
 	void timeChanged(int);
 	void buttonPressed(void);
@@ -70,7 +72,14 @@ public slots:
     void searchGoMenu(QAction * action);
     void searchRecentFiles(QAction * action);
     void searchToolBar(QAction *);
+
 protected:
+	std::vector<IScriptEngine*> _scriptEngines;
+
+	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
+    bool buildMyMenu(void);
+    bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
+    void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void clearCustomMenu(void);
 	bool eventFilter(QObject* watched, QEvent* event);
 	void mousePressEvent(QMouseEvent* event);

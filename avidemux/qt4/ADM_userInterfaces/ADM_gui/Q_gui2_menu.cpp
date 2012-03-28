@@ -45,6 +45,43 @@ using std::string;
 static char     *customNames[3][ADM_MAX_CUSTOM_SCRIPT];
 static QAction  *customActions[3][ADM_MAX_CUSTOM_SCRIPT];
 static uint32_t ADM_nbCustom[3]={0,0,0};
+
+void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
+{
+	for (int i = 0; i < fileMenu.size(); i++)
+	{
+		if (fileMenu[i].type == MENU_SEPARATOR)
+		{
+			if (this->_scriptEngines.size() > 0)
+			{
+				fileMenu.insert(
+					fileMenu.begin() + i, MenuEntry {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL});
+
+				i++;
+			}
+
+			for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+			{
+				vector<MenuEntry>::iterator it = fileMenu.begin() + i;
+				Action firstMenuId = (Action)(ACT_SCRIPT_ENGINE_FIRST + (engineIndex * 3));
+				string itemName = "Project";
+
+				if (engineIndex > 0)
+				{
+					itemName = string(_scriptEngines[engineIndex]->name()) + " " + itemName;
+				}
+
+				it = fileMenu.insert(it, MenuEntry {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL});
+				it = fileMenu.insert(it + 1, MenuEntry {MENU_SUBACTION, "Run Project...", NULL, firstMenuId, NULL, NULL});
+				it = fileMenu.insert(it + 1, MenuEntry {MENU_SUBACTION, "Save as Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL});
+				i += 3;
+			}
+
+			break;
+		}
+	}
+}
+
 /**
     \fn clearCustomMenu
 */
@@ -163,12 +200,12 @@ void MainWindow::buildCustomMenu(void)
                 case PY_CUSTOM:
                 {
                     pyMenu->addAction(action);
-                    connect(action, SIGNAL(triggered()), this, SLOT(customPy()));   
+                    connect(action, SIGNAL(triggered()), this, SLOT(customPy()));
                     break;
                 }
                 case PY_AUTO:
                     autoMenu->addAction(action);
-                    connect(action, SIGNAL(triggered()), this, SLOT(autoPy()));  
+                    connect(action, SIGNAL(triggered()), this, SLOT(autoPy()));
                     break;
                 default:
                     ADM_assert(0);
@@ -189,14 +226,14 @@ void MainWindow::buildCustomMenu(void)
 */
 void MainWindow::customScript(int pool,int base,QObject *ptr)
 {
-	
+
 	for(int i=0;i<ADM_nbCustom[pool];i++)
 	{
 		if(customActions[pool][i]==ptr)
 		{
 			printf("[Custom] %d/%d scripts\n",i,(int)ADM_nbCustom[pool]);
 			HandleAction( (Action)(base+i));
-			return; 
+			return;
 		}
 	}
 	printf("[Custom] Not found\n");
@@ -225,7 +262,7 @@ void MainWindow::autoPy(void)
 }
 
 /**
-    Get the custom entry 
+    Get the custom entry
 
 */
 

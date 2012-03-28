@@ -18,10 +18,14 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 #include "ADM_default.h"
 #include "audioencoder.h"
 #include "ADM_render/GUI_render.cpp"
+#include "IScriptEngine.h"
+
+using std::vector;
 
 extern int global_argc;
 extern char **global_argv;
@@ -45,10 +49,10 @@ int GUI_handleVFilter (void) {return 0;}
 uint8_t initGUI(void) {return 1;}
 void destroyGUI(void) {}
 uint8_t DIA_job(uint32_t nb,char **name) {return 0;}
-uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *algo,uint32_t originalw, 
+uint8_t DIA_resize(uint32_t *width,uint32_t *height,uint32_t *algo,uint32_t originalw,
                         uint32_t originalh,uint32_t fps) {return 0;}
 uint8_t DIA_d3d(double *luma,double *chroma,double *temporal) {return 0;}
-uint8_t DIA_kerneldeint(uint32_t *order, uint32_t *threshold, uint32_t *sharp, 
+uint8_t DIA_kerneldeint(uint32_t *order, uint32_t *threshold, uint32_t *sharp,
                           uint32_t *twoway, uint32_t *map) {return 0;}
 uint8_t DIA_4entries(char *title,uint32_t *left,uint32_t *right,uint32_t *top,uint32_t *bottom) {return 0;}
 uint8_t DIA_videoCodec(int *codecIndex) {return 0;}
@@ -80,9 +84,9 @@ static const UI_FUNCTIONS_T UI_Hooks=
         UI_rgbDraw,
         UI_getDrawWidget,
         UI_getPreferredRender
-        
+
     };
-int UI_Init(int nargc, char **nargv)
+int UI_Init(vector<IScriptEngine*> scriptEngines,int nargc, char **nargv)
 {
 	initTranslator();
 

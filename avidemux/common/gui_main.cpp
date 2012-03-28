@@ -89,6 +89,14 @@ void HandleAction (Action action);
 void HandleAction_Navigate(Action action);
 void HandleAction_Save(Action action);
 
+// Hacky functions because we currently don't have versatile
+// file dialogs
+static IScriptEngine *tempEngine;
+
+static void RunScript(const char *name)
+{
+	tempEngine->runScriptFile(name, IScriptEngine::Normal);
+}
 
 //
 //
@@ -151,6 +159,36 @@ int nw;
   }
 #endif
 
+	if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
+	{
+		int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
+		int actionId = (action - ACT_SCRIPT_ENGINE_FIRST) % 3;
+
+		tempEngine = getScriptEngines()[engineIndex];
+
+		switch (actionId)
+		{
+			case 0:
+				GUI_FileSelRead("Select script to run", RunScript);
+				break;
+
+			case 2:
+				// Hack until save routines are moved to IScriptEngine
+				if (tempEngine->name().compare("SpiderMonkey") == 0)
+				{
+					GUI_FileSelWrite(QT_TR_NOOP("Select jsProject to Save"), A_saveJsProject);
+				}
+				else if (tempEngine->name().compare("Python") == 0)
+				{
+					GUI_FileSelWrite(QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
+				}
+
+				break;
+		}
+
+		return;
+	}
+
   switch (action)
     {
         case ACT_TimeShift:
@@ -206,19 +244,6 @@ int nw;
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
-
-#ifdef USE_TINYPY
-    case ACT_RUN_PY_PROJECT:
-            GUI_FileSelRead (QT_TR_NOOP("Select python script to Run"),(SELFILE_CB *) A_parseTinyPyScript);
-    		return;
-#endif
-
-#ifdef USE_SPIDERMONKEY
-    case ACT_RUN_JS_PROJECT:
-            GUI_FileSelRead (QT_TR_NOOP("Select ECMAScript to Run"),(SELFILE_CB *) A_parseECMAScript);
-    		return;
-#endif
-
 	case ACT_OPEN_APP_LOG:
 		GUI_OpenApplicationLog();
 		break;
@@ -706,32 +731,35 @@ void cleanUp (void)
 
 #warning fixme
 
+static bool parseScript(IScriptEngine *engine, const char *name)
+{
+	bool ret;
+	char *longname = ADM_PathCanonize(name);
+
+	if (playing)
+	{
+		return false;
+	}
+
+	ret = engine->runScriptFile(std::string(longname), IScriptEngine::Normal);
+	A_Resync(); // total duration & stuff
+
+	if (ret)
+	{
+		video_body->setProjectName(longname);
+	}
+
+	ADM_dealloc(longname);
+	return ret;
+}
 
 #ifdef USE_TINYPY
 /**
     \fn A_parseTinyPyScript
 */
-bool A_parseTinyPyScript(const char *name){
-  bool ret;
-
-  char *longname = ADM_PathCanonize(name);
-   if (playing)
-   {
-        return false;
-   }
-   if(!getPythonEngine())
-    {
-        ADM_warning("Cannot get python engine!\n");
-        return false;
-    }
-   ret = getPythonEngine()->runScriptFile(std::string(longname), IScriptEngine::Normal);
-   A_Resync(); // total duration & stuff
-   if( ret == true )
-   {
-      video_body->setProjectName(longname);
-   }
-   ADM_dealloc(longname);
-   return ret;
+bool A_parseTinyPyScript(const char *name)
+{
+	return parseScript(getPythonEngine(), name);
 }
 #endif
 
@@ -739,21 +767,9 @@ bool A_parseTinyPyScript(const char *name){
 /**
     \fn A_parseECMAScript
 */
-bool A_parseECMAScript(const char *name){
-  bool ret;
-  char *longname = ADM_PathCanonize(name);
-   if (playing)
-    {
-      return false;
-   }
-   ret = getSpiderMonkeyEngine()->runScriptFile(longname, IScriptEngine::Normal);
-   A_Resync(); // total duration & stuff
-   if( ret == true )
-   {
-      video_body->setProjectName(longname);
-   }
-   ADM_dealloc(longname);
-   return ret;
+bool A_parseECMAScript(const char *name)
+{
+	return parseScript(getSpiderMonkeyEngine(), name);
 }
 #endif
 

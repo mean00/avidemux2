@@ -11,15 +11,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
-#include "config.h"
 
-#include "ADM_inttype.h"
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
 
+#include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
 #include "ADM_default.h"
@@ -35,6 +33,9 @@
 #include "ADM_muxerProto.h"
 #include "T_vumeter.h"
 #include "DIA_coreToolkit.h"
+#include "GUI_ui.h"
+
+using namespace std;
 
 #ifdef USE_OPENGL
 extern bool ADM_glHasActiveTexture(void);
@@ -77,7 +78,7 @@ void UI_refreshCustomMenu(void);
 QWidget *QuiMainWindows=NULL;
 QWidget *VuMeter=NULL;
 QGraphicsView *drawWindow=NULL;
-uint8_t UI_updateRecentMenu( void );
+
 extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
 extern bool ADM_QPreviewCleanup(void);
@@ -90,14 +91,14 @@ extern bool ADM_QPreviewCleanup(void);
 #define CONNECT_TB(object,zzz) connect( (ui.object),SIGNAL(clicked(bool)),this,SLOT(toolButtonPressed(bool)));
 #define DECLARE_VAR(object,signal_name) {#object,signal_name},
 
-#include "translation_table.h"   
+#include "translation_table.h"
 /*
-    Declare the table converting widget name to our internal signal           
+    Declare the table converting widget name to our internal signal
 */
-typedef struct 
+typedef struct
 {
 	const char *name;
-	Action     action; 
+	Action     action;
 }adm_qt4_translation;
 
 const adm_qt4_translation myTranslationTable[]=
@@ -122,7 +123,7 @@ void MainWindow::comboChanged(int z)
 {
 	const char *source=qPrintable(sender()->objectName());
 
-	if(!strcmp(source,"comboBoxVideo"))  
+	if(!strcmp(source,"comboBoxVideo"))
 	{
 		bool b=FALSE;
 		if(ui.comboBoxVideo->currentIndex())
@@ -133,7 +134,7 @@ void MainWindow::comboChanged(int z)
 		ui.pushButtonVideoFilter->setEnabled(b);
 		HandleAction (ACT_VIDEO_CODEC_CHANGED) ;
 	}
-	else if(!strcmp(source,"comboBoxAudio"))  
+	else if(!strcmp(source,"comboBoxAudio"))
 	{
 		bool b=FALSE;
 		if(ui.comboBoxAudio->currentIndex())
@@ -148,7 +149,7 @@ void MainWindow::comboChanged(int z)
 		printf("From +: %s\n",source);
 }
 
-void MainWindow::sliderValueChanged(int u) 
+void MainWindow::sliderValueChanged(int u)
 {
 	if(!_upd_in_progres)
 		HandleAction(ACT_Scale);
@@ -220,8 +221,10 @@ void MainWindow::currentTimeChanged(void)
 /**
     \fn ctor
 */
-MainWindow::MainWindow() : QMainWindow()
+MainWindow::MainWindow(vector<IScriptEngine*> scriptEngines) : QMainWindow()
 {
+	this->_scriptEngines = scriptEngines;
+
 	qtRegisterDialog(this);
 	ui.setupUi(this);
 
@@ -289,6 +292,7 @@ MainWindow::MainWindow() : QMainWindow()
 	//connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
+    addScriptEnginesToFileMenu(myMenuFile);
     buildMyMenu();
 
 	/* Build the custom menu */
@@ -308,7 +312,7 @@ MainWindow::MainWindow() : QMainWindow()
 
 	this->installEventFilter(this);
 	slider->installEventFilter(this);
-    
+
 	//ui.currentTime->installEventFilter(this);
 
 	this->setFocus(Qt::OtherFocusReason);
@@ -337,7 +341,7 @@ MainWindow::MainWindow() : QMainWindow()
 /**
     \fn searchToolBar
 */
-typedef struct 
+typedef struct
 {
     const char *name;
     Action event;
@@ -348,8 +352,8 @@ toolBarTranslate toolbar[]=
 {"actionOpen",              ACT_OPEN_VIDEO},
 {"actionSave_video",        ACT_SAVE_VIDEO},
 {"actionProperties",        ACT_VIDEO_PROPERTIES},
-{"actionLoad_run_project",  ACT_RUN_PY_PROJECT},
-{"actionSave_project",      ACT_SAVE_PY_PROJECT},
+//{"actionLoad_run_project",  ACT_RUN_PY_PROJECT},
+//{"actionSave_project",      ACT_SAVE_PY_PROJECT},
 //{"actionPreviewInput",ACT_PreviewToggle},
 //{"actionPreviewOutput",ACT_PreviewToggle},
 
@@ -389,21 +393,21 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                 break;
             case MENU_SUBMENU:
                 {
-                    subMenu=root->addMenu(m->text);
+                    subMenu=root->addMenu(m->text.c_str());
                 }
                 break;
             case MENU_SUBACTION:
             case MENU_ACTION:
-                {   
+                {
                         QMenu *insert=root;
                         if(m->type==MENU_SUBACTION) insert=subMenu;
                         QAction *a=NULL;
-                        if(m->icon) 
+                        if(m->icon)
                         {
                             QIcon icon(m->icon);
-                            a=insert->addAction(icon,m->text);
+                            a=insert->addAction(icon,m->text.c_str());
                         }else
-                            a=insert->addAction(m->text);
+                            a=insert->addAction(m->text.c_str());
                         m->cookie=(void *)a;
                         if(m->shortCut)
                         {
@@ -418,34 +422,35 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     }
     return true;
 }
+
 /**
     buildFileMenu
 */
 bool MainWindow::buildMyMenu(void)
 {
     connect( ui.menuFile,SIGNAL(triggered(QAction*)),this,SLOT(searchFileMenu(QAction*)));
-    buildMenu(ui.menuFile,myMenuFile, sizeof(myMenuFile)/sizeof(MenuEntry));
+    buildMenu(ui.menuFile, &myMenuFile[0], myMenuFile.size());
 
     connect( ui.menuEdit,SIGNAL(triggered(QAction*)),this,SLOT(searchEditMenu(QAction*)));
-    buildMenu(ui.menuEdit,myMenuEdit, sizeof(myMenuEdit)/sizeof(MenuEntry));
+    buildMenu(ui.menuEdit, &myMenuEdit[0], myMenuEdit.size());
 
     connect( ui.menuVideo,SIGNAL(triggered(QAction*)),this,SLOT(searchVideoMenu(QAction*)));
-    buildMenu(ui.menuVideo,myMenuVideo, sizeof(myMenuVideo)/sizeof(MenuEntry));
+    buildMenu(ui.menuVideo, &myMenuVideo[0], myMenuVideo.size());
 
     connect( ui.menuAudio,SIGNAL(triggered(QAction*)),this,SLOT(searchAudioMenu(QAction*)));
-    buildMenu(ui.menuAudio,myMenuAudio, sizeof(myMenuAudio)/sizeof(MenuEntry));
+    buildMenu(ui.menuAudio, &myMenuAudio[0], myMenuAudio.size());
 
     connect( ui.menuHelp,SIGNAL(triggered(QAction*)),this,SLOT(searchHelpMenu(QAction*)));
-    buildMenu(ui.menuHelp,myMenuHelp, sizeof(myMenuHelp)/sizeof(MenuEntry));
+    buildMenu(ui.menuHelp, &myMenuHelp[0], myMenuHelp.size());
 
     connect( ui.menuTools,SIGNAL(triggered(QAction*)),this,SLOT(searchToolMenu(QAction*)));
-    buildMenu(ui.menuTools,myMenuTool, sizeof(myMenuTool)/sizeof(MenuEntry));
+    buildMenu(ui.menuTools, &myMenuTool[0], myMenuTool.size());
 
     connect( ui.menuGo,SIGNAL(triggered(QAction*)),this,SLOT(searchGoMenu(QAction*)));
-    buildMenu(ui.menuGo,myMenuGo, sizeof(myMenuGo)/sizeof(MenuEntry));
+    buildMenu(ui.menuGo, &myMenuGo[0], myMenuGo.size());
 
     connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
-    buildMenu(ui.menuView,myMenuView, sizeof(myMenuView)/sizeof(MenuEntry));
+    buildMenu(ui.menuView, &myMenuView[0], myMenuView.size());
 
     return true;
 }
@@ -477,7 +482,7 @@ void MainWindow::searchMenu(QAction * action,MenuEntry *menu, int nb)
     \fn searchFileMenu
 */
 #define MKMENU(name) void MainWindow::search##name##Menu(QAction * action) \
-    {searchMenu(action,myMenu##name,sizeof(myMenu##name)/sizeof(MenuEntry));}
+    {searchMenu(action, &myMenu##name[0], myMenu##name.size());}
 
 MKMENU(File)
 MKMENU(Edit)
@@ -501,9 +506,9 @@ void MainWindow::buttonPressed(void)
     QObject *obj=sender();
     if(!obj) return;
     QString me(obj->objectName());
-    
+
 	Action action=searchTranslationTable(qPrintable(me));
-    
+
 
 	if(action!=ACT_DUMMY)
 		HandleAction (action);
@@ -615,7 +620,7 @@ void MainWindow::searchRecentFiles(QAction * action)
             QAction *a= recentFileAction[i];
             if(!a) continue;
 
-            if(a==action) 
+            if(a==action)
             {
                 HandleAction((Action)(ACT_RECENT0+i));
                 return;
@@ -719,7 +724,7 @@ static const UI_FUNCTIONS_T UI_Hooks=
         UI_rgbDraw,
         UI_getDrawWidget,
         UI_getPreferredRender
-        
+
     };
 QApplication *myApplication=NULL;
 /**
@@ -727,7 +732,7 @@ QApplication *myApplication=NULL;
     \brief First part of UI initialization
 
 */
-int UI_Init(int nargc,char **nargv)
+int UI_Init(vector<IScriptEngine*> scriptEngines, int nargc, char **nargv)
 {
     ADM_info("Starting QT4 GUI...\n");
 	initTranslator();
@@ -743,7 +748,7 @@ int UI_Init(int nargc,char **nargv)
 
 	loadTranslator();
 
-	MainWindow *mw = new MainWindow();
+	MainWindow *mw = new MainWindow(scriptEngines);
 	mw->show();
 
 	QuiMainWindows = (QWidget*)mw;
@@ -759,8 +764,10 @@ int UI_Init(int nargc,char **nargv)
     // Init vumeter
     VuMeter=mw->ui.frameVU;
     UI_InitVUMeter(mw->ui.frameVU);
-	return 0;
+
+	return 1;
 }
+
 /**
 
 */
@@ -776,7 +783,7 @@ void UI_refreshCustomMenu(void)
 
 /**
     \fn UI_getCurrentPreview(void)
-    \brief Read previewmode from comboxbox 
+    \brief Read previewmode from comboxbox
 */
 int UI_getCurrentPreview(void)
 {
@@ -835,7 +842,7 @@ static void FatalFunctionQt(const char *title, const char *info)
 */
 int UI_RunApp(void)
 {
-	
+
 	setupMenus();
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	checkCrashFile();
@@ -884,7 +891,7 @@ uint8_t UI_updateRecentMenu( void )
 {
     return  ((MainWindow *)QuiMainWindows)->buildRecentMenu();
 }
-/** 
+/**
   \fn    setupMenus(void)
   \brief Fill in video & audio co
 */
@@ -907,7 +914,7 @@ void setupMenus(void)
 	uint32_t nbAud;
 
     nbAud=audioEncoderGetNumberOfEncoders();
-	printf("Found %d audio encoder(s)\n",nbAud);		       
+	printf("Found %d audio encoder(s)\n",nbAud);
 	for(uint32_t i=1;i<nbAud;i++)
 	{
 		name=audioEncoderGetDisplayName(i);
@@ -921,7 +928,7 @@ void setupMenus(void)
 	for(uint32_t i=0;i<nbFormat;i++)
 	{
         const char *name=ADM_mx_getDisplayName(i);
-		WIDGET(comboBoxFormat)->addItem(name);	
+		WIDGET(comboBoxFormat)->addItem(name);
 	}
 
 }
@@ -1034,7 +1041,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
                     break;
 	}
 	sprintf(string,QT_TR_NOOP("%c-%s (%02d)"),c,f,qp);
-	WIDGET(label_8)->setText(string);	
+	WIDGET(label_8)->setText(string);
 
 }
 
@@ -1044,7 +1051,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 */
 void UI_updateFrameCount(uint32_t curFrame)
 {
-	
+
 }
 
 /**
@@ -1053,7 +1060,7 @@ void UI_updateFrameCount(uint32_t curFrame)
 */
 void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 {
-	
+
 }
 
 /**
@@ -1062,7 +1069,7 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 */
 void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
 {
-	char text[80];   
+	char text[80];
 	uint32_t mm,hh,ss,ms;
 
 	frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
@@ -1137,7 +1144,7 @@ int 	UI_getCurrentVCodec(void)
 {
 	int i=WIDGET(comboBoxVideo)->currentIndex();
 	if(i<0) i=0;
-	return i; 
+	return i;
 }
 /**
     \fn     UI_setVideoCodec( int i)
@@ -1161,7 +1168,7 @@ int 	UI_getCurrentACodec(void)
 {
 	int i=WIDGET(comboBoxAudio)->currentIndex();
 	if(i<0) i=0;
-	return i; 
+	return i;
 }
 /**
     \fn     UI_setAudioCodec( int i)
@@ -1183,16 +1190,16 @@ int 	UI_GetCurrentFormat( void )
 {
 	int i=WIDGET(comboBoxFormat)->currentIndex();
 	if(i<0) i=0;
-	return (int)i; 
+	return (int)i;
 }
 /**
     \fn     UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )
     \brief  Select  output format
 */
-uint8_t 	UI_SetCurrentFormat( uint32_t fmt )
+bool 	UI_SetCurrentFormat( uint32_t fmt )
 {
 	WIDGET(comboBoxFormat)->setCurrentIndex((int)fmt);
-    return 1;
+    return true;
 }
 
 /**
@@ -1235,7 +1242,7 @@ bool UI_setVUMeter( uint32_t volume[6])
 */
 bool UI_setDecoderName(const char *name)
 {
-    WIDGET(labelVideoDecoder)->setText(name);	
+    WIDGET(labelVideoDecoder)->setText(name);
     return true;
 }
 /**

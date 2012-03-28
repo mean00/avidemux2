@@ -15,6 +15,8 @@
  ***************************************************************************/
 
 #include <math.h>
+#include <vector>
+
 #include "ADM_toolkitGtk.h"
 
 #include "../ADM_render/GUI_render.h"
@@ -40,10 +42,13 @@
 #include "ADM_vidMisc.h"
 #include "GUI_glade.h"
 #include "A_functions.h"
+#include "IScriptEngine.h"
 
 #define MKICON(x) NULL
 #define MENU_DECLARE
 #include "myOwnMenu.h"
+
+using std::vector;
 
 static void ui_setMenus(void);
 extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
@@ -1447,7 +1452,7 @@ static const UI_FUNCTIONS_T UI_Hooks=
  *      \brief Entry point. Initialize renderLib.
  *
  */
-int UI_Init(int argc, char **argv)
+int UI_Init(vector<IScriptEngine*> scriptEngines,int argc, char **argv)
 {
 	initTranslator();
 

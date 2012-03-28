@@ -92,7 +92,7 @@ extern void InitCoreToolkit(void);
 extern uint8_t  quotaInit(void);
 extern void ADMImage_stat( void );
 
-extern int UI_Init(int nargc,char **nargv);
+extern int UI_Init(vector<IScriptEngine*> scriptEngines,int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern bool ADM_jobInit(void);
@@ -234,7 +234,9 @@ int startAvidemux(int argc, char *argv[])
     win32_netInit();
 #endif
 
-    UI_Init(argc, argv);
+	video_body = new ADM_Composer;
+
+    UI_Init(initialiseScriptEngines(video_body), argc, argv);
     AUDMEncoder_initDither();
 
     // Hook our UI...
@@ -242,11 +244,8 @@ int startAvidemux(int argc, char *argv[])
     InitCoreToolkit();
     initFileSelector();
 
-
 	// Load .avidemuxrc
     quotaInit();
-
-    video_body = new ADM_Composer;
 
     ADM_lavFormatInit();
 	//***************Plugins *********************
@@ -311,9 +310,6 @@ int startAvidemux(int argc, char *argv[])
 
     ADM_lavInit();
     AVDM_audioInit();
-#if defined(USE_SPIDERMONKEY) || defined(USE_TINYPY)
-	initialiseScriptEngines(video_body);
-#endif
 
 #if defined( USE_VDPAU)
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
