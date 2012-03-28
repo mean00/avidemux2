@@ -1228,11 +1228,10 @@ void UI_setVideoCodec( int i)
 
 */
 
-bool UI_SetCurrentFormat( uint32_t  fmt )
+void UI_SetCurrentFormat( uint32_t  fmt )
 {
 
 	 gtk_combo_box_set_active(GTK_COMBO_BOX(glade.getWidget(FORMAT_WIDGET)),fmt);
-	return true;
 }
 void UI_NormalCursor( void )
 {
@@ -1353,7 +1352,7 @@ static int show=1;
 /**
     \fn UI_updateRecentMenu
 */
-uint8_t UI_updateRecentMenu( void )
+void UI_updateRecentMenu( void )
 {
 const char **names;
 uint32_t nb_item=0;
@@ -1370,7 +1369,7 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
         if(!nb_item)
         {
                 gtk_menu_tool_button_set_menu   (GTK_MENU_TOOL_BUTTON(button),NULL);
-                return 1;
+                return;
         }
         menu=gtk_menu_new();
         for(int i=0;i<nb_item;i++)
@@ -1402,7 +1401,7 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
     gtk_widget_show(menu);
     gtk_widget_show(guiRecentMenu);
     }  
-    return 1;
+    return;
 }
 
 // Override arrow keys to quickly navigate

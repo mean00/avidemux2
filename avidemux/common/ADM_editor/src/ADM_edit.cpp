@@ -25,10 +25,6 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#if defined(__MINGW32__) || defined(ADM_BSD_FAMILY)
-#include <sys/stat.h>
-#endif
-
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
@@ -54,7 +50,7 @@ vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
     \fn ADM_Composer
 
 */
-ADM_Composer::ADM_Composer (void) 
+ADM_Composer::ADM_Composer (void)
 {
 uint32_t type,value;
 
@@ -448,6 +444,10 @@ uint32_t ref;
 uint8_t ADM_Composer::cleanup (void)
 {
   _segments.deleteAll();
+  _currentPts = 0;
+  markerAPts = 0;
+  markerBPts = 0;
+
   return 1;
 }
 
@@ -694,5 +694,5 @@ const char          *ADM_Composer::getVideoDecoderName(void)
     if(!v->decoder) return "????";
     return v->decoder->getDecoderName();
 }
- 
+
 // EOF

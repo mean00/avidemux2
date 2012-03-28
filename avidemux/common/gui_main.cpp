@@ -432,7 +432,6 @@ int nw;
             video_body->resetSeg();
             video_body->getVideoInfo (avifileinfo);
 
-      		GUI_setAllFrameAndTime ();
             A_ResetMarkers();
       		ReSync ();
 
@@ -1043,6 +1042,9 @@ uint8_t GUI_close(void)
 
 //      filterCleanUp ();
 	  UI_setTitle(NULL);
+
+	A_ResetMarkers();
+	ReSync();
 
       return 1;
     }
