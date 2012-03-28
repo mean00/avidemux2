@@ -928,7 +928,7 @@ gint b;
 /**
     \fn ui_setMenus
 */
-GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, MenuEntry *desc, int nb)
+GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, vector<MenuEntry> *desc)
 {
     
     GtkWidget *window;
@@ -939,14 +939,14 @@ GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, MenuEntry *desc, int nb)
 
     menu = gtk_menu_new ();
 
-    for(int i=0;i<nb;i++)
+    for(int i=0;i<desc->size();i++)
     {
-        MenuEntry *m=desc+i;
-        switch(m->type)
+        MenuEntry m = desc->at(i);
+        switch(m.type)
         {
             case MENU_SUBMENU:
                 {
-                    menu_items=gtk_menu_item_new_with_label(m->text);
+                    menu_items=gtk_menu_item_new_with_label(m.text.c_str());
                     gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
                     gtk_widget_show (menu_items);
                     submenu= gtk_menu_new ();
@@ -964,12 +964,12 @@ GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, MenuEntry *desc, int nb)
             case MENU_ACTION:
                     {
                      GtkWidget *target=menu;
-                     if(m->type==MENU_SUBACTION) target=submenu;
-                     menu_items = gtk_menu_item_new_with_label (m->text);
+                     if(m.type==MENU_SUBACTION) target=submenu;
+                     menu_items = gtk_menu_item_new_with_label (m.text.c_str());
                      gtk_menu_shell_append (GTK_MENU_SHELL (target), menu_items);
                      gtk_widget_show (menu_items);
                      g_signal_connect(menu_items, "activate", 
-                        G_CALLBACK(guiCallback),                   (void *) m->event);
+                        G_CALLBACK(guiCallback),                   (void *) m.event);
                      break;
                     }
             default: break;
@@ -985,7 +985,7 @@ GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, MenuEntry *desc, int nb)
 /**
     \fn ui_setOneMenu
 */
-GtkWidget *ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
+GtkWidget *ui_setOneMenu(const char *menuName, vector<MenuEntry> *desc)
 {
     GtkWidget *root_menu = gtk_menu_item_new_with_label (menuName);
 
@@ -997,8 +997,9 @@ GtkWidget *ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
     /* And finally we append the menu-item to the menu-bar -- this is the
      * "root" menu-item I have been raving about =) */
     gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), root_menu);
-    if(nb)
-        ui_fillOneMenu(root_menu, desc,  nb);
+
+    if(desc != NULL && desc->size())
+        ui_fillOneMenu(root_menu, desc);
     return root_menu;
 
 }
@@ -1007,17 +1008,16 @@ GtkWidget *ui_setOneMenu(const char *menuName, MenuEntry *desc, int nb)
 */
 void ui_setMenus(void)
 {
-#define SZ(x) x,sizeof(x)/sizeof(MenuEntry)
-    ui_setOneMenu("File", SZ(myMenuFile));
-    guiRecentMenu=ui_setOneMenu("Recent", NULL,0);
-    ui_setOneMenu("Edit", SZ(myMenuEdit));
-    ui_setOneMenu("View", SZ(myMenuView));
-    ui_setOneMenu("Video", SZ(myMenuVideo));
-    ui_setOneMenu("Audio", SZ(myMenuAudio));
-    ui_setOneMenu("Tools", SZ(myMenuTool));
-    ui_setOneMenu("Custom", NULL,0);
-    ui_setOneMenu("Go", SZ(myMenuGo));
-    ui_setOneMenu("Help", SZ(myMenuHelp));
+    ui_setOneMenu("File", &myMenuFile);
+    guiRecentMenu=ui_setOneMenu("Recent", NULL);
+    ui_setOneMenu("Edit", &myMenuEdit);
+    ui_setOneMenu("View", &myMenuView);
+    ui_setOneMenu("Video", &myMenuVideo);
+    ui_setOneMenu("Audio", &myMenuAudio);
+    ui_setOneMenu("Tools", &myMenuTool);
+    ui_setOneMenu("Custom", NULL);
+    ui_setOneMenu("Go", &myMenuGo);
+    ui_setOneMenu("Help", &myMenuHelp);
 }
 
 /**
