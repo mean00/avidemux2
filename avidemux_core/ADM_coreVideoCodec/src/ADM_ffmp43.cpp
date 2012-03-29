@@ -13,6 +13,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stddef.h>
+
 #include "ADM_default.h"
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
