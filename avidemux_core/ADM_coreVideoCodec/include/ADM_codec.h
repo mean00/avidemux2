@@ -2,7 +2,7 @@
          \fn ADM_codec.h
          \brief Base class for all decoders
          \author mean, fixounet@free.fr (C) 2002-2010
-    
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -19,15 +19,15 @@
 #include "ADM_image.h"
 #include "ADM_frameType.h"
 #include "ADM_codecType.h"
-
+#include "ADM_bitstream.h"
+#include "ADM_compressedImage.h"
+#include "ADM_confCouple.h"
 
 /*
         Bitrate in configuration will always be in **kBITS**
 
 */
 
-#include "ADM_bitstream.h"
-#include "ADM_compressedImage.h"
 /**
     \class decoders
     \brief base class for video decoders
@@ -45,23 +45,17 @@ public:
     _h = h;
     _lastQ = 0;
   }
-  virtual ~ decoders ()
-  {
-  };
-  virtual bool   initializedOk(void) {return true;};
-  virtual uint8_t getPARWidth (void)
-  {
-    return 1;
-  };
-  virtual uint8_t getPARHeight (void)
-  {
-    return 1;
-  };
-  virtual bool setParam (void)
-  {
-        return false;
-  };
-  virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
+
+  virtual ~decoders() { }
+  virtual bool initializedOk(void) { return true; }
+  virtual uint8_t getPARWidth (void) { return 1; }
+  virtual uint8_t getPARHeight (void) { return 1; }
+  virtual bool setParam (void) { return false; }
+  virtual bool uncompress (ADMCompressedImage * in, ADMImage * out) = 0;
+
+  virtual bool getConfiguration(CONFcouple **conf) { *conf = NULL; return true; }
+  virtual bool resetConfiguration() { return true; }
+  virtual bool setConfiguration(CONFcouple * conf) { return true; }
 
   // does this codec *possibly* can have b-frame ?
   virtual bool dontcopy (void)
@@ -94,7 +88,7 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
 /**
 
 */
-typedef enum 
+typedef enum
 {
     ADM_CORE_CODEC_FEATURE_VDPAU=1
 }ADM_CORE_CODEC_FEATURE;

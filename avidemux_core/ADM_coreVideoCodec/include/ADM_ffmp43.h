@@ -25,6 +25,7 @@ extern "C" {
 }
 
 #include "ADM_codec.h"
+#include "ADM_paramList.h"
 
 /**
     \class decoderFF
@@ -40,13 +41,21 @@ protected:
   AVFrame _frame;
   uint8_t *_internalBuffer;
   uint8_t _allowNull;
-  uint32_t _swapUV;
   uint32_t frameType (void);
   uint8_t clonePic (AVFrame * src, ADMImage * out);
   void decoderMultiThread ();
-  uint32_t _showMv;
   uint32_t _gmc;
   uint32_t _usingMT;
+
+	typedef struct {
+		bool swapUv;
+		bool showMv;
+	} decoderFF_param_t;
+
+	decoderFF_param_t decoderFF_params;
+	static const decoderFF_param_t defaultConfig;
+	static const ADM_paramList decoderFF_param_template[];
+
 public:
 
     decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
@@ -56,6 +65,9 @@ public:
     return true;
   }
   virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+  virtual bool getConfiguration(CONFcouple **conf);
+  virtual bool resetConfiguration();
+  virtual bool setConfiguration(CONFcouple * conf);
   virtual bool setParam (void);
   virtual bool bFramePossible (void)
   {

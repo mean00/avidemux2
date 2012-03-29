@@ -67,7 +67,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
   ADMImageRef *ref=out->castToRef();
   ref->_planes[0] = (uint8_t *) src->data[0];
   ref->_planeStride[0] = src->linesize[0];
-  if (_swapUV)
+  if (decoderFF_params.swapUv)
     {
       u = 1;
       v = 2;
@@ -144,21 +144,45 @@ uint8_t decoderFF::getPARHeight (void)
 }
 
 //________________________________________________
-bool  decoderFF::setParam (void)
+bool  decoderFF::setParam(void)
 {
-    bool buv=_swapUV;
-    bool bmv=_showMv;
-    DIA_lavDecoder (&buv, &bmv);
-    _swapUV=buv;
-    _showMv=bmv;
-    
-  return true;			// no param for ffmpeg
+	DIA_lavDecoder(&decoderFF_params.swapUv, &decoderFF_params.showMv);
+
+	return true;			// no param for ffmpeg
+}
+
+const decoderFF::decoderFF_param_t decoderFF::defaultConfig = {false, false};
+
+const ADM_paramList decoderFF::decoderFF_param_template[] =
+{
+	{"swapUv", offsetof(decoderFF_param_t, swapUv), "bool", ADM_param_bool},
+	{"showMv", offsetof(decoderFF_param_t, showMv), "bool", ADM_param_bool},
+	{NULL, 0, NULL}
+};
+
+bool decoderFF::getConfiguration(CONFcouple **conf)
+{
+	return ADM_paramSave(conf, decoderFF_param_template, &decoderFF_params);
+}
+
+bool decoderFF::resetConfiguration()
+{
+	memcpy(&decoderFF_params, &defaultConfig, sizeof(decoderFF_param_t));
+
+	return true;
+}
+
+bool decoderFF::setConfiguration(CONFcouple * conf)
+{
+	return ADM_paramLoad(conf, decoderFF_param_template, &decoderFF_params);
 }
 
 //-------------------------------
 decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
             :decoders (w, h,fcc,extraDataLen,extraData,bpp)
 {
+	resetConfiguration();
+
   hurryUp=false;
   codecId = 0;
 //                              memset(&_context,0,sizeof(_context));
@@ -185,10 +209,6 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
 
   _internalBuffer = new uint8_t[w * h * 3];
 
-  _swapUV = 0;
-  //_context->strict_std_compliance=-1;
-
-  _showMv = 0;
 #define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
 //#define FF_SHOW               (FF_DEBUG_VIS_MV_P_FOR)
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
@@ -314,7 +334,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   int strideTab2[3];
   int ret = 0;
   out->_noPicture = 0;
-  if (_showMv)
+  if (decoderFF_params.showMv)
     {
       _context->debug_mv |= FF_SHOW;
       _context->debug |= 0;	//FF_DEBUG_VIS_MB_TYPE;
