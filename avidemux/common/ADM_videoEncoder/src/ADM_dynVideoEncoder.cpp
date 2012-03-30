@@ -16,54 +16,23 @@
 
 
 #include "ADM_default.h"
-#include <BVector.h>
-
 #include "DIA_fileSel.h"
-
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_coreVideoEncoderInternal.h"
 #include "DIA_uiTypes.h"
-#include "ADM_dynamicLoading.h"
 #include "ADM_videoEncoderApi.h"
+#include "BVector.h"
+
 static int currentVideoCodec=0;
-/**
-    \class ADM_videoEncoder6
-    \brief Plugin Wrapper Class
+extern BVector <ADM_videoEncoder6 *> ListOfEncoders;
 
-*/
-class ADM_videoEncoder6 :public ADM_LibWrapper
-{
-public:
-        int                  initialised;
-        ADM_videoEncoderDesc *desc;
-        ADM_videoEncoderDesc  *(*getInfo)();
-        ADM_videoEncoder6(const char *file) : ADM_LibWrapper()
-        {
-			initialised = (loadLibrary(file) && getSymbols(1,
-				&getInfo, "getInfo"));
-                if(initialised)
-                {
-                    desc=getInfo();
-                    printf("[videoEncoder6]Name :%s ApiVersion :%d Description :%s\n",
-                                                        desc->encoderName,
-                                                        desc->apiVersion,
-                                                        desc->description);
-                }else
-                {
-                    printf("[videoEncoder6]Symbol loading failed for %s\n",file);
-                }
-        }
-};
-
-BVector <ADM_videoEncoder6 *> ListOfEncoders;
-// 
 ADM_videoEncoderDesc copyDesc={
         "Copy",
         "Copy",
         "Copy encoder",
         ADM_VIDEO_ENCODER_API_VERSION, //uint32_t     apiVersion;            // const
 
-        NULL, //ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head);  
+        NULL, //ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head);
         NULL, //void         (*destroy)(ADM_coreVideoEncoder *codec);
         NULL, //bool         (*configure)(void);                                // Call UI to set it up
         NULL, //bool         (*getConfigurationData)(uint32_t *l, uint8_t **d); // Get the encoder private conf
@@ -108,7 +77,7 @@ static bool tryLoadingEncoderPlugin(const char *file)
 	ADM_videoEncoder6 *dll=new ADM_videoEncoder6(file);
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->desc->apiVersion!=ADM_VIDEO_ENCODER_API_VERSION) Fail(WrongApiVersion);
-//fixme todo also check uiType    
+//fixme todo also check uiType
     ListOfEncoders.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[VideoEncoder6] Registered filter %s as  %s\n",file,dll->desc->description);
     return true;
@@ -145,7 +114,7 @@ uint8_t ADM_ve6_loadPlugins(const char *path)
 
 	for(int i=0;i<nbFile;i++)
 		tryLoadingEncoderPlugin(files[i]);
-    
+
 	printf("[ADM_ve6_plugin] Scanning done\n");
     int nb=ListOfEncoders.size();
     for(int i=1;i<nb;i++)
@@ -223,7 +192,7 @@ bool videoEncoder6SelectByName(const char *name)
 {
     int i=videoEncoder6_GetIndexFromName(name);
     if(i==-1) return false;
-    
+
     currentVideoCodec=i;
     return true;
 }
@@ -295,7 +264,7 @@ int                   videoEncoder6_GetIndexFromName(const char *name)
         ADM_videoEncoderDesc *desc=ListOfEncoders[i]->desc;
         if(!strcasecmp(name,desc->encoderName))
         {
-           
+
             return i;
         }
     }

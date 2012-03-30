@@ -17,6 +17,7 @@
 
 #define ADM_VIDEO_ENCODER_API_VERSION 5
 #include "ADM_coreVideoEncoder.h"
+#include "ADM_dynamicLoading.h"
 #include "DIA_uiTypes.h"
 #include "ADM_paramList.h"
 
@@ -34,7 +35,7 @@ typedef struct
     const char   *description;      // Short description
 
     uint32_t     apiVersion;            // const
-    ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head,bool globalHeader);  
+    ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head,bool globalHeader);
     void         (*destroy)(ADM_coreVideoEncoder *codec);
     bool         (*configure)(void);                                // Call UI to set it up
     bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
@@ -45,6 +46,35 @@ typedef struct
 
     void         *opaque;               // Hide stuff in here
 }ADM_videoEncoderDesc;
+
+/**
+    \class ADM_videoEncoder6
+    \brief Plugin Wrapper Class
+
+*/
+class ADM_videoEncoder6 :public ADM_LibWrapper
+{
+public:
+        int                  initialised;
+        ADM_videoEncoderDesc *desc;
+        ADM_videoEncoderDesc  *(*getInfo)();
+        ADM_videoEncoder6(const char *file) : ADM_LibWrapper()
+        {
+			initialised = (loadLibrary(file) && getSymbols(1,
+				&getInfo, "getInfo"));
+                if(initialised)
+                {
+                    desc=getInfo();
+                    printf("[videoEncoder6]Name :%s ApiVersion :%d Description :%s\n",
+                                                        desc->encoderName,
+                                                        desc->apiVersion,
+                                                        desc->description);
+                }else
+                {
+                    printf("[videoEncoder6]Symbol loading failed for %s\n",file);
+                }
+        }
+};
 
 // Macros to declare audio encoder
 /**************************************************************************/
@@ -60,7 +90,7 @@ static void destroy (ADM_coreVideoEncoder * in) \
 {\
   Class *z = (Class *) in; \
   delete z; \
-} 
+}
 //******************************************************
 
 #define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar) \

@@ -2,7 +2,7 @@
                           \fn ADM_coreVideoEncoder
                           \brief Base class for video encoder plugin
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -16,11 +16,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <sstream>
+
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
+#include "ADM_coreVideoEncoderInternal.h"
 #include "ADM_vidMisc.h"
-#include <sstream>
-extern "C" 
+#include "BVector.h"
+
+extern "C"
 {
 #include "libavcodec/avcodec.h"
 }
@@ -33,9 +37,11 @@ const std::string slash=std::string("/");
 
 #define MAX_NB_PRESET 30
 
+BVector <ADM_videoEncoder6 *> ListOfEncoders;
+
 /**
     \fn ADM_coreVideoEncoder
-*/                          
+*/
 ADM_coreVideoEncoder::ADM_coreVideoEncoder(ADM_coreVideoFilter *src)
 {
     source=src;
@@ -46,7 +52,7 @@ ADM_coreVideoEncoder::ADM_coreVideoEncoder(ADM_coreVideoFilter *src)
 
 /**
     \fn ADM_coreVideoEncoder
-*/                          
+*/
 ADM_coreVideoEncoder::~ADM_coreVideoEncoder()
 {
     if(image) delete image;
@@ -65,7 +71,7 @@ TimeIncrementType fpsTable[]=
     {  20000,20000,1 ,50},
     {  33360,33371,1001,30000},
     {  41700,41710,1001,24000},
-}; 
+};
 
 /**
     \fn usSecondsToFrac
@@ -96,7 +102,7 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
 
 /**
     \fn getRealPtsFromInternal
-    \brief Lookup in the stored value to get the exact pts from the truncated one 
+    \brief Lookup in the stored value to get the exact pts from the truncated one
 */
 bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uint64_t *pts)
 {
@@ -132,7 +138,7 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
             return true;
         }
     }
-    ADM_warning("Cannot find PTS : %"LLU"\n",val);  
+    ADM_warning("Cannot find PTS : %"LLU"\n",val);
     for(int i=0;i<n;i++) ADM_warning("%d : %"LLU"\n",i,mapper[i].internalTS);
     ADM_assert(0);
     return false;
@@ -143,7 +149,7 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
 */
 static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
 {
-    
+
     std::string path=std::string(ADM_getSystemPluginSettingsDir());
     std::string version;
     std::stringstream out;
@@ -183,7 +189,7 @@ static bool getFileNameAndExt(const std::string &input, std::string &output)
 {
     std::string s=input;
     size_t lastSlash,lastBackSlash;
-    
+
      lastSlash=s.find_last_of("/");
      if(lastSlash!=-1)
         s.replace(0,lastSlash+1,std::string(""));
@@ -193,7 +199,7 @@ static bool getFileNameAndExt(const std::string &input, std::string &output)
         s.replace(0,lastBackSlash+1,std::string(""));
 #endif
     ADM_info("Stripping : %s => %s\n",input.c_str(),s.c_str());
-    output=s;   
+    output=s;
     return true;
 }
 
@@ -220,7 +226,7 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
         std::string s=std::string(list[i]);
         std::string file;
         getFileNameAndExt(s,file);
-        s=userPath+slash+file; // 
+        s=userPath+slash+file; //
         if(!ADM_fileExist(s.c_str()))
         {
             ADM_info("%s exists in system folder, but not in user folder, copying..\n",file.c_str());
