@@ -26,9 +26,9 @@
 #include "../src/FFcodecContext_desc.cpp"
 #define MAX_LAV_STRING 1024
 /**
-    \fn loadCoupleFromString
+    \fn getCoupleFromString
 */
-static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void *data)
+void getCoupleFromString(CONFcouple **couples, const char *str,const ADM_paramList *tmpl)
 {
   // Split str to couples...
     uint32_t nb=0;
@@ -50,9 +50,10 @@ static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void 
     if(nb!=p)
     {
         ADM_error("Mistmatch in the number of parameters (%d/%d)\n",(int)nb,(int)p);
-        return false;
+        *couples = NULL;
+        return;
     }
-    CONFcouple *couples=new CONFcouple(nb);
+    *couples=new CONFcouple(nb);
     s=str;
     const char *n;
     for(int i=0;i<nb;i++)
@@ -61,7 +62,8 @@ static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void 
         {
             ADM_error("Bad split :%s instead of ':'\n",s);
             delete [] couples;
-            return false;
+            *couples = NULL;
+            return;
         }
         n=s+1;
         while(*n!=':' && *n) n++;
@@ -82,54 +84,70 @@ static bool loadCoupleFromString(const char *str,const ADM_paramList *tmpl,void 
         {
             ADM_error("Malformed string :%s\n",tmp);
             delete [] couples;
-            return false;
+            *couples = NULL;
+            return;
         }
         *equal=0;
-        couples->setInternalName(tmp,equal+1);
+        (*couples)->setInternalName(tmp,equal+1);
        // printf("%s->%s\n",tmp,equal+1);
     }
-    // Now build structure from couple
-    bool r=ADM_paramLoad(couples, tmpl,data);
-    delete  couples;
-    return r;
 }
 
+void lavCoupleToString(CONFcouple *couples, char **str)
+{
+	char *s = (char *)ADM_alloc(MAX_LAV_STRING);
+	char tmp[256];
+	*s = 0;
+	*str = s;
+	uint32_t nb = couples->getSize();
+
+	for (int i = 0; i < nb; i++)
+	{
+		char *name, *value;
+		couples->getInternalName(i, &name, &value);
+		sprintf(tmp, ":%s=%s", name, value);
+		ADM_assert(strlen(tmp) < 255);
+		strcat(s, tmp);
+		ADM_assert(strlen(s) < MAX_LAV_STRING);
+	}
+}
 
 /**
     \fn lavReadFromString
 */
-static bool lavReadFromString(FFcodecContext *ctx,const char *str)
+static bool lavReadFromString(FFcodecContext *ctx, const char *str)
 {
-   return  loadCoupleFromString(str,FFcodecContext_param,ctx);
+	CONFcouple* couples;
+	bool success = false;
+
+	getCoupleFromString(&couples, str, FFcodecContext_param);
+
+	if (couples != NULL)
+	{
+		success = ADM_paramLoad(couples, FFcodecContext_param, ctx);
+	}
+
+	delete couples;
+
+	return success;
 }
 /**
     \fn lavWriteToString
 */
-static bool lavWriteToString(FFcodecContext *ctx,char **str)
+static bool lavWriteToString(FFcodecContext *ctx, char **str)
 {
-    CONFcouple *couples=NULL;
-    if(false==ADM_paramSave(&couples, FFcodecContext_param,ctx))
-    {
-        ADM_error("ADM_paramSave failed (lavContext)\n");
-        return false;
-    }
-    // Iterate through ctx and save..
-    char *s=(char *)ADM_alloc(MAX_LAV_STRING);
-    char tmp[256];
-    *s=0;
-    *str=s;
-    uint32_t nb=couples->getSize();
-    for(int i=0;i<nb;i++)
-    {
-        char *name,*value;
-        couples->getInternalName(i,&name,&value);
-        sprintf(tmp,":%s=%s",name,value);
-        ADM_assert(strlen(tmp)<255);
-        strcat(s,tmp);
-        ADM_assert(strlen(s)<MAX_LAV_STRING);
-    }
-    delete couples;
-    return true;
+	CONFcouple *couples = NULL;
+
+	if (false == ADM_paramSave(&couples, FFcodecContext_param, ctx))
+	{
+		ADM_error("ADM_paramSave failed (lavContext)\n");
+		return false;
+	}
+
+	lavCoupleToString(couples, str);
+
+	delete couples;
+	return true;
 }
 /**
     \fn compressReadFromString
@@ -261,7 +279,7 @@ bool ADM_paramValidatePartialList(CONFcouple *couples, const    ADM_paramList *p
 static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_paramList *params,void *s)
 {
     uint8_t *address=(uint8_t *)s;
-    
+
     int n=couples->getSize();
     int p=XgetParamSize(params);
     for(int i=0;i<p;i++)
@@ -272,7 +290,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
             if(false==partial)
             {
                 ADM_assert(index!=-1); // Should be replaced later by a return false
-            }else       
+            }else
             {
                // ADM_info("%s not found\n",name);
                 continue; // this parameter is not in the param list and we are doing a partial update
