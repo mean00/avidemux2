@@ -13,7 +13,7 @@ SET(
 SET(headers
 	Q_about.h  Q_calculator.h
         Q_encoding.h
-        Q_audioTracks.h
+        Q_audioTracks.h Q_audioTrackClass.h
 	Q_license.h  Q_jobs.h  Q_props.h  Q_vobsub.h  Q_working.h  T_index_pg.h)
 
 QT4_WRAP_UI(${ADM_LIB}_headers ${uiFiles})

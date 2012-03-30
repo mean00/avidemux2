@@ -429,6 +429,24 @@ void audioCodecConfigure( int dex )
     return;
 }
 /**
+    \fn audioCodecConfigureCodecIndex
+    \brief
+*/
+void audioCodecConfigureCodecIndex( int dex,CONFcouple **conf  )
+{
+    if(dex>=ListOfAudioEncoder.size())
+    {
+            ADM_warning("Audio codec out of bound %d/%d\n",dex,ListOfAudioEncoder.size());
+            return;
+    }
+    if(ListOfAudioEncoder[dex]->configure)
+    {
+        ListOfAudioEncoder[dex]->configure(conf);
+    }
+    return;
+}
+
+/**
         \fn audioEncoderCreate
         \brief Spawn an audio encoder
 */

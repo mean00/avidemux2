@@ -118,7 +118,7 @@ public:
         EditableAudioTrack(const EditableAudioTrack &src)
         {
             encoderIndex=src.encoderIndex;
-            edTrack=NULL;
+            edTrack=src.edTrack;
             if(src.encoderConf)
                 encoderConf=CONFcouple::duplicate(src.encoderConf);
             else
@@ -154,7 +154,11 @@ class ActiveAudioTracks
                         {return tracks.size();}
                 EditableAudioTrack *atEditable(int ix)
                 {
-                    if(ix>=size()) ADM_assert(0);
+                    if(ix>=size())  
+                    {
+                        ADM_warning("Request to get track at %d, only %d tracks available\n",ix,size());
+                        return NULL;
+                    }
                     return tracks[ix];
                 }
                 ADM_edAudioTrack *atEdAudio(int ix)

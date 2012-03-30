@@ -177,6 +177,7 @@ int32_t CONFcouple::lookupName(const char *myname)
 */
 CONFcouple *CONFcouple::duplicate(CONFcouple *source)
 {
+    if(!source) return NULL;
     int nb=source->nb;
     CONFcouple *nw=new CONFcouple(nb);
     for(int i=0;i<nb;i++)
