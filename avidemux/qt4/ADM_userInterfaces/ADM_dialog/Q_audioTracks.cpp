@@ -167,7 +167,24 @@ bool      audioTrackQt4::run(void)
 */
 bool  audioTrackQt4::updateActive(void)
 {
-    // 1 - check for duplicates : TODO WARNING
+    // 1 - check for duplicates 
+    int map[NB_MENU];
+    memset(map,0,sizeof(map));
+    for(int i=0;i<NB_MENU;i++)
+    {
+        if(window->enabled[i]->checkState()==Qt::Checked)
+        {
+            int trackIndex=window->inputs[i]->currentIndex();
+            if(map[trackIndex])
+            {
+                GUI_Error_HIG("Error","Some tracks are used multiple times");
+                return false;
+            }
+            map[trackIndex]++;
+        }
+    }
+
+    // 2 - recreate audio tracks from menu
     _srcActive->clear();
     int done=0;
     for(int i=0;i<NB_MENU;i++)
