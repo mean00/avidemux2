@@ -114,6 +114,7 @@ public:
             encoderIndex=0;
             encoderConf=NULL;
             audioEncoder=NULL;
+            edTrack=NULL;
         }
         EditableAudioTrack(const EditableAudioTrack &src)
         {

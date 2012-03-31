@@ -893,6 +893,12 @@ void A_audioTrack( void )
         DIA_audioTrackBase *base=createAudioTrack(pool,active);
         base->run();
         delete base;
+        EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+        if(ed)
+        {
+            UI_setAudioCodec(ed->encoderIndex);
+        }
+
 }
 #if 0
         audioInfo *infos=NULL;

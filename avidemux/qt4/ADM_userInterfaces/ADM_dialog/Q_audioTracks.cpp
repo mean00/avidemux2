@@ -27,6 +27,11 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                     new EditableAudioTrack(*(_srcActive->atEditable(i)));
             active.addTrack(copy);
         }
+        for(int i=_srcActive->size() ;i<NB_MENU;i++)
+        {
+            EditableAudioTrack *copy=new EditableAudioTrack();
+            active.addTrack(copy);
+        }
         // create windows
         window=new audioTrackWindow();
         qtRegisterDialog(window);
@@ -42,6 +47,8 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(filtersClicked(bool)));
             QObject::connect( window->codecConf[i],SIGNAL(clicked(bool)),
                             this,SLOT(codecConfClicked(bool)));
+            QObject::connect( window->enabled[i],SIGNAL(stateChanged(int)),
+                            this,SLOT(enabledStateChanged(int)));
 
         }
 
@@ -49,6 +56,32 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
         window->show();
                                     
 };
+
+/**
+     \fn enabledStateChanged
+*/
+bool  audioTrackQt4::enabledStateChanged(int state)
+{
+        int dex=-1;
+        QObject *ptr=sender();
+
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->enabled[i]) dex=i;
+        if(dex==-1)
+        {
+            ADM_warning("No track found matching that enabling\n");
+            return true;
+        }
+        if(Qt::Checked==state)
+        {
+            enable(dex);
+        }
+        else        
+        {
+            disable(dex);
+        }
+        return true;
+
+}
 /**
     \fn codecConfClicked
 */
@@ -149,10 +182,12 @@ bool  audioTrackQt4::updateActive(void)
             // set codec
             dest->encoderIndex=window->codec[i]->currentIndex();
             // conf
-            dest->encoderConf=CONFcouple::duplicate(src->encoderConf);
-            // filters
-            dest->audioEncodingConfig=src->audioEncodingConfig;
-
+            if(src)
+            {
+                dest->encoderConf=CONFcouple::duplicate(src->encoderConf);
+                // filters
+                dest->audioEncodingConfig=src->audioEncodingConfig;
+            }
             // next
             done++;
         }
@@ -206,8 +241,7 @@ void audioTrackQt4::setupMenu(int dex)
     // set current track if it exists
     if(ed)
     {
-        ADM_assert(ed->edTrack);
-        if(ed)
+        if(ed->edTrack)
         {
             switch(ed->edTrack->getTrackType())
            {
@@ -225,7 +259,6 @@ void audioTrackQt4::setupMenu(int dex)
              
         }
      }
-
     // now add codecs
     int nbAud=audioEncoderGetNumberOfEncoders();
     window->codec[dex]->addItem(QString("copy"));
@@ -234,7 +267,7 @@ void audioTrackQt4::setupMenu(int dex)
 		QString name=QString(audioEncoderGetDisplayName(i));
 		window->codec[dex]->addItem(name);
 	}
-    if(dex<active.size())
+    if(active.atEditable(dex)->edTrack)
     {
         int selected=active.atEditable(dex)->encoderIndex;
         enable(dex);

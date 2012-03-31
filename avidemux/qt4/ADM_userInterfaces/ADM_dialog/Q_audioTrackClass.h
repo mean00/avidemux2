@@ -33,4 +33,5 @@ public:
 public slots:
                        bool  filtersClicked(bool a);
                        bool  codecConfClicked(bool a);
+                       bool  enabledStateChanged(int state);
 };
