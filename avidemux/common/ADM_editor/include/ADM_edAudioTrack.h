@@ -70,7 +70,7 @@ public:
             virtual uint32_t        getOutputFrequency(void)=0; // sbr
             virtual CHANNEL_TYPE    *getChannelMapping(void )=0;
             virtual bool            hasVBRAudio(void)=0;
-            virtual ADM_audioStreamTrack *getTrack(uint32_t refVideo)=0;
+//            virtual ADM_audioStreamTrack *getTrack(uint32_t refVideo)=0;
 
 
 };
