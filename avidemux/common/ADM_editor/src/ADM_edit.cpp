@@ -447,7 +447,8 @@ uint8_t ADM_Composer::cleanup (void)
   _currentPts = 0;
   markerAPts = 0;
   markerBPts = 0;
-
+  audioTrackPool.clear();
+  activeAudioTracks.clear();
   return 1;
 }
 
