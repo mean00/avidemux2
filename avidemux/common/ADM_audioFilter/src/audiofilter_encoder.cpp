@@ -28,7 +28,7 @@ using std::string;
 #include "ADM_vidMisc.h"
 extern ADM_Composer *video_body;
 //
- extern bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
+ extern bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
  extern bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
 /**
     \class ADM_audioStream_autoDelete
@@ -79,7 +79,7 @@ AUDMAudioFilter *createEncodingFilter(EditableAudioTrack *ed, uint64_t startTime
     ed->audioEncodingConfig.startTimeInUs=startTime;
     ed->audioEncodingConfig.shiftInMs=shift;
     //
-    ADM_buildFilterChain(&(ed->EncodingVector),&( ed->audioEncodingConfig));
+    ADM_buildFilterChain(ed->edTrack,&(ed->EncodingVector),&( ed->audioEncodingConfig));
     //
     int last=ed->EncodingVector.size();
     ADM_assert(last);

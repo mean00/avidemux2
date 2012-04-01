@@ -29,7 +29,7 @@ VectorOfAudioFilter PlaybackVector;
 extern ADM_Composer *video_body;
 
 //
- bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
+ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config);
  bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
 /**
         \fn createPlaybackFilter
@@ -39,6 +39,9 @@ extern ADM_Composer *video_body;
 */
 AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
 {
+    //
+    ADM_edAudioTrack *trk=video_body->getDefaultEdAudioTrack();
+    if(!trk) return NULL;
     //
     uint32_t downmix;
     ADM_AUDIOFILTER_CONFIG playback;
@@ -77,7 +80,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     if(!video_body->getDefaultAudioTrack(&s)) return NULL;
     if(!s) return NULL;
     //
-    ADM_buildFilterChain(&PlaybackVector,&playback);
+    ADM_buildFilterChain(trk,&PlaybackVector,&playback);
     //
     int last=PlaybackVector.size();
     ADM_assert(last);
@@ -103,14 +106,14 @@ bool            destroyPlaybackFilter(void)
     @param vec : VectorFilter to build filters into
     @param config: Filters configuration
 */
-bool ADM_buildFilterChain(VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config)
+bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_AUDIOFILTER_CONFIG *config)
 {
+    ADM_assert(source);
     // make sure the chain is empty...
     AUDMAudioFilter *last=NULL;
     ADM_emptyFilterChain(vec);
-    ADM_edAudioTrack *s=video_body->getDefaultEdAudioTrack();
     // Bridge
-    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(s,(uint32_t)( config->startTimeInUs/1000),
+    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(source,(uint32_t)( config->startTimeInUs/1000),
                                                                                 config->shiftInMs);
     ADD_FILTER(nw);
 
