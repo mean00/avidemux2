@@ -228,11 +228,11 @@ bool ADM_Composer::addFile (const char *name)
   // 1st if it is our first video we update postproc
     if(!_segments.getNbRefVideos())
     {
-        uint32_t type,value;
-
+        uint32_t type=0,value=0;
+#if 0
         if(!prefs->get(DEFAULT_POSTPROC_TYPE,&type)) type=3;
         if(!prefs->get(DEFAULT_POSTPROC_VALUE,&value)) value=3;
-
+#endif
         if(_pp) delete _pp;
         _pp=new ADM_PP(info.width,info.height);
         _pp->postProcType=type;
