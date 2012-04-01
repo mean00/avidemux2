@@ -28,7 +28,7 @@
 ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent)
 :  ADM_edAudioTrack(ADM_EDAUDIO_FROM_VIDEO,parent)
 {
-    
+    ADM_info("Creating edAudio from video track %d at %"LX"\n",trackNumber,this);
     myTrackNumber=trackNumber;
     _audioSeg=0;
     // Fill in wavHeader and access
@@ -40,6 +40,7 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
 */
 ADM_edAudioTrackFromVideo::~ADM_edAudioTrackFromVideo()
 {
+    ADM_info("Destroying edAudio from video track %d at %"LX"\n",myTrackNumber,this);
     // No need to destroy, we are just a wrapper
 }
 /**
