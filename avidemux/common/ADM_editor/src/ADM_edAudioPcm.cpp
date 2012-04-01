@@ -104,7 +104,7 @@ again:
         if(abs(lastDts-packetBufferDts)>ADM_ALLOWED_DRIFT_US)
         {
             printf("[Composer::getPCMPacket] Track %d,%x : drift %d, computed :%"LLU" got %"LLU"\n",
-                        myTrackNumber,(long int)trk,(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
+                        myTrackNumber,trk,(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
             if(packetBufferDts<lastDts)
             {
                 printf("[Composer::getPCMPacket] Track %d:%x : Dropping packet %"LU" last =%"LU"\n",myTrackNumber,trk,(uint32_t)(lastDts/1000),(uint32_t)(packetBufferDts/1000));
@@ -151,7 +151,7 @@ again:
     {
             packetBufferSize=0; // consume
             ADM_warning(ADM_PRINT_ERROR,"[Composer::getPCMPacket] Track %d:%x : codec failed failed\n",
-                            myTrackNumber,(long int)trk);
+                            myTrackNumber,trk);
             return false;
     }
     packetBufferSize=0; // consume
@@ -164,7 +164,7 @@ again:
     if(abs(decodedSample-packetBufferSamples)>ADM_MAX_JITTER)
     {
         ADM_warning("[Composer::getPCMPacket] Track %d:%x Demuxer was wrong %d vs %d samples!\n",
-                    myTrackNumber,(long int)trk,packetBufferSamples,decodedSample);
+                    myTrackNumber,trk,packetBufferSamples,decodedSample);
     }
     
     // This packet has been dropped (too early packt), try the next one
