@@ -285,7 +285,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
 
           audio[i]->getExtraData(&audioextraSize,&audioextraData);
 
-          audio_st[i] = av_new_stream(oc, 1);
+          audio_st[i] = av_new_stream(oc, 1+i);
           if (!audio_st[i])
           {
                   printf("[FF]: new stream failed (audio)\n");
