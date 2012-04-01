@@ -40,8 +40,8 @@ Todo:
 
 #include "ADM_vidMisc.h"
 
-#define AUDIOSEG 	_segments[_audioseg]._reference
-#define SEG 		_segments[seg]._reference
+//#define AUDIOSEG 	_segments[_audioseg]._reference
+//#define SEG 		_segments[seg]._reference
 
 #define ADM_ALLOWED_DRIFT_US 40000 // Allow 4b0 ms jitter on audio
 
@@ -63,7 +63,7 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
         ADM_warning("Switching to segment %"LU"\n",_audioSeg+1);
         _audioSeg++;
         _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-        ADM_audioStreamTrack *trk=getTrack(seg->_reference);
+        ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
         // Go to beginning of the stream
         if(false==trk->stream->goToTime(seg->_refStartTimeUs))
           {
@@ -96,7 +96,7 @@ bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
 
 
 
-   ADM_audioStreamTrack *trk=getTrack(seg->_reference);
+   ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return false;    
 
     if(!trk->stream->getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
@@ -136,7 +136,7 @@ uint8_t ADM_edAudioTrackFromVideo::getPacket(uint8_t  *dest, uint32_t *len,uint3
 {
 zgain:        
     _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-    ADM_audioStreamTrack *trk=getTrack(seg->_reference);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return 0;
    
     // Read a packet
@@ -202,7 +202,7 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
       }
     ADM_info("=> seg %d, rel time %02.2f secs\n",(int)seg,((float)segTime)/1000000.);
     _SEGMENT *s=parent->_segments.getSegment(seg);
-    ADM_audioStreamTrack *trk=getTrack(s->_reference);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(s->_reference);
     if(!trk)
       {
         ADM_warning("No audio for segment %"LU"\n",seg);
@@ -227,7 +227,7 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
 */
 uint8_t ADM_edAudioTrackFromVideo::getAudioStream (ADM_audioStream ** audio)
 {
-   ADM_audioStreamTrack *trk=getTrack(0);
+   ADM_audioStreamTrack *trk=getTrackAtVideoNumber(0);
     if(!trk)
     {
       *audio = NULL;
@@ -246,7 +246,7 @@ WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 {
 
   _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-    ADM_audioStreamTrack *trk=getTrack(seg->_reference);
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return NULL;
     return trk->stream->getInfo();
 }
@@ -257,7 +257,7 @@ WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
  CHANNEL_TYPE    *ADM_edAudioTrackFromVideo::getChannelMapping(void )
 {
   _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-  ADM_audioStreamTrack *trk=getTrack(seg->_reference);
+  ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return NULL;
     return trk->codec->channelMapping;
 }
@@ -267,7 +267,7 @@ WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 bool            ADM_edAudioTrackFromVideo::getExtraData(uint32_t *l, uint8_t **d)
 {
   _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-  ADM_audioStreamTrack *trk=getTrack(seg->_reference);
+  ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
 
     *l=0;
     *d=NULL;
@@ -276,13 +276,27 @@ bool            ADM_edAudioTrackFromVideo::getExtraData(uint32_t *l, uint8_t **d
 
 }
 /**
-    \fn getTrack
+    \fn getTrackAtVideoNumber
     \brief Returns Track for ref video given as parameter
     @param : Reference video
 */
-ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getTrack(uint32_t refVideo)
+ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getTrackAtVideoNumber(uint32_t refVideo)
 {
     _VIDEOS *v=parent->_segments.getRefVideo(refVideo);
+    if(!v->audioTracks.size()) return NULL;
+
+    return v->audioTracks[myTrackNumber];
+}
+/**
+    \fn getCurrentTrack
+    \brief Returns Track for ref video given as parameter
+    @param : Reference video
+*/
+ADM_audioStreamTrack *ADM_edAudioTrackFromVideo::getCurrentTrack()
+{
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    if(!seg) return NULL;
+    _VIDEOS *v=parent->_segments.getRefVideo(seg->_reference);
     if(!v->audioTracks.size()) return NULL;
 
     return v->audioTracks[myTrackNumber];
