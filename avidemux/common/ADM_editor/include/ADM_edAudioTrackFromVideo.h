@@ -27,28 +27,30 @@
 class ADM_edAudioTrackFromVideo : public ADM_edAudioTrack
 {
 protected:
-                    uint32_t  _audioSeg;        // current segment we are in
-                    int      myTrackNumber; // Track number in video
-                    bool     switchToNextAudioSegment(void);
-                    bool     refillPacketBuffer(void);
+                    uint32_t   _audioSeg;        // current segment we are in
+                    int         myTrackNumber; // Track number in video
+                    bool        switchToNextAudioSegment(void);
+                    bool        refillPacketBuffer(void);
 public:
-                    ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
-            virtual ~ADM_edAudioTrackFromVideo();
-                    bool            destroyable() {return false;};
-                    int             getMyTrackIndex() {return myTrackNumber; }
+                                 ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
+            virtual            ~ADM_edAudioTrackFromVideo();
+                    bool         destroyable() {return false;};
+                    int          getMyTrackIndex() {return myTrackNumber; }
 
 
-            virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
-            virtual bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
-            virtual bool            goToTime(uint64_t nbUs);
-                    bool            getExtraData(uint32_t *l, uint8_t **d);
-                    uint64_t        getDurationInUs(void);
-                    uint8_t			getAudioStream(ADM_audioStream **audio);
-            virtual WAVHeader       *getInfo(void);
-                    uint32_t        getOutputFrequency(void); // sbr
-            virtual CHANNEL_TYPE    *getChannelMapping(void );
-                    bool            hasVBRAudio(void) {return true;};
-              ADM_audioStreamTrack *getTrack(uint32_t refVideo);
+            virtual uint8_t     getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
+            virtual bool         getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
+            virtual bool         goToTime(uint64_t nbUs);
+                    bool          getExtraData(uint32_t *l, uint8_t **d);
+                    uint64_t      getDurationInUs(void);
+                    uint8_t	   getAudioStream(ADM_audioStream **audio);
+            virtual WAVHeader    *getInfo(void);
+                    uint32_t      getOutputFrequency(void); // sbr
+            virtual CHANNEL_TYPE * getChannelMapping(void );
+                    bool           hasVBRAudio(void) {return true;};
+
+              ADM_audioStreamTrack *getTrackAtVideoNumber(uint32_t refVideo);
+              ADM_audioStreamTrack *getCurrentTrack(void);
 
 
 };
