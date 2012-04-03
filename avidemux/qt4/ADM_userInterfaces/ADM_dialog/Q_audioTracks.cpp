@@ -13,6 +13,7 @@
  ***************************************************************************/
 #include "Q_audioTrackClass.h"
 #include "ADM_audioFilterInterface.h"
+extern const char *getStrFromAudioCodec( uint32_t codec);
 /**
     \fn audioTrackQt4
     \brief ctor
@@ -250,7 +251,28 @@ void audioTrackQt4::setupMenu(int dex)
         QString num;
         num.setNum(i);
         QString str=QString("Track ")+num;
-        window->inputs[dex]->addItem(str);       
+        
+        // Get info about that track
+        WAVHeader *hdr=_pool->at(i)->getInfo();
+        if(hdr)
+        {
+            int bitrate=hdr->byterate;
+            QString sBitrate;
+            QString sChan;
+            switch(hdr->channels)
+            {
+                case 1: sChan=QString("Mono");break;
+                case 2: sChan=QString("Stereo");break;
+                default: sChan.setNum(hdr->channels);sChan+=QString(" chan");break;
+            }
+            bitrate*=8;
+            bitrate/=1000;
+            sBitrate.setNum(bitrate);
+            str+=QString(" (")+QString(getStrFromAudioCodec(hdr->encoding))+QString(",");
+            str+=sChan+QString(",");
+            str+=sBitrate+QString("kbps)");
+        }
+        window->inputs[dex]->addItem(str); 
     }
     // set index if possible
      EditableAudioTrack *ed=active.atEditable(dex);
