@@ -54,9 +54,9 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 		{
 			if (this->_scriptEngines.size() > 0)
 			{
-				fileMenu.insert(
-					fileMenu.begin() + i, MenuEntry {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL});
+				MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
 
+				fileMenu.insert(fileMenu.begin() + i, separatorEntry);
 				i++;
 			}
 
@@ -71,9 +71,14 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 					itemName = string(_scriptEngines[engineIndex]->name()) + " " + itemName;
 				}
 
-				it = fileMenu.insert(it, MenuEntry {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL});
-				it = fileMenu.insert(it + 1, MenuEntry {MENU_SUBACTION, "Run Project...", NULL, firstMenuId, NULL, NULL});
-				it = fileMenu.insert(it + 1, MenuEntry {MENU_SUBACTION, "Save as Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL});
+				MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
+				it = fileMenu.insert(it, dummyEntry);
+
+				MenuEntry runProjectEntry = {MENU_SUBACTION, "Run Project...", NULL, firstMenuId, NULL, NULL};
+				it = fileMenu.insert(it + 1, runProjectEntry);
+
+				MenuEntry saveAsProjectEntry = {MENU_SUBACTION, "Save as Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL};
+				it = fileMenu.insert(it + 1, saveAsProjectEntry);
 				i += 3;
 			}
 
