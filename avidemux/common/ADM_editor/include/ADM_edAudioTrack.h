@@ -27,6 +27,7 @@ typedef enum
     ADM_EDAUDIO_LAST
 }ADM_EDAUDIO_TRACK_TYPE;
 class ADM_Composer;
+class ADM_edAudioTrackFromVideo;
 /**
     \class ADM_edAudioTrack
 */
@@ -70,7 +71,12 @@ public:
             virtual uint32_t        getOutputFrequency(void)=0; // sbr
             virtual CHANNEL_TYPE    *getChannelMapping(void )=0;
             virtual bool            hasVBRAudio(void)=0;
-//            virtual ADM_audioStreamTrack *getTrack(uint32_t refVideo)=0;
+
+            virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) 
+                            {
+                                    return NULL;
+                            }
+
 
 
 };

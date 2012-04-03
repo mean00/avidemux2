@@ -264,7 +264,8 @@ void audioTrackQt4::setupMenu(int dex)
            {
              case ADM_EDAUDIO_FROM_VIDEO:
                     {
-                    ADM_edAudioTrackFromVideo *vidTrack=(ADM_edAudioTrackFromVideo *)ed->edTrack;
+                    ADM_edAudioTrackFromVideo *vidTrack=ed->edTrack->castToTrackFromVideo();
+                    ADM_assert(vidTrack);
                     int trackIndex=vidTrack->getMyTrackIndex();
                     window->inputs[dex]->setCurrentIndex(trackIndex);
                     }

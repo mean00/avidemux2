@@ -52,6 +52,8 @@ public:
               ADM_audioStreamTrack *getTrackAtVideoNumber(uint32_t refVideo);
               ADM_audioStreamTrack *getCurrentTrack(void);
 
+            virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) {return this;}
+
 
 };
 #endif

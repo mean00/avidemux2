@@ -181,11 +181,13 @@ bool ppswap;
          qfprintf(fd,"\n#** Track %d **\n",i);        
          EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
          ADM_assert(track);
+         
          switch(track->edTrack->getTrackType())
         {
          case ADM_EDAUDIO_FROM_VIDEO:
                 {
-                ADM_edAudioTrackFromVideo *vidTrack=(ADM_edAudioTrackFromVideo *)track->edTrack;
+                ADM_edAudioTrackFromVideo *vidTrack=track->edTrack->castToTrackFromVideo();
+                ADM_assert(vidTrack);
                 qfprintf(fd,"adm.audioAddTrack(%d)\n",vidTrack->getMyTrackIndex());
                 }
                 break;
