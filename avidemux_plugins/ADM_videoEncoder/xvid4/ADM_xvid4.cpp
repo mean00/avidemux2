@@ -31,31 +31,7 @@ extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t si
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
-xvid4_encoder xvid4Settings=
-{
-    {
-    COMPRESS_CQ, //COMPRESSION_MODE  mode;
-    2,              // uint32_t          qz;           /// Quantizer
-    1500,           //uint32_t          bitrate;      /// In kb/s 
-    700,            //uint32_t          finalsize;    /// In ?
-    1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
-    ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
-    },
-    XVID_PROFILE_AS_L4, // Profile
-    3, // rdMode
-    3, // MotionEstimation
-    0, // cqmMode
-    0, // arMode
-    2, // MaxBframe
-    200, // MaxKeyInterval
-    
-    99, // nbThreads
-    true, // rdOnBframe
-    true, //bool:hqAcPred
-    true, //bool:optimizeChrome
-    true, // Trellis
-    
-};
+xvid4_encoder xvid4Settings = XVID_DEFAULT_CONF;
 
 typedef enum
 {

@@ -20,12 +20,7 @@
 #include "ADM_huffEncoder.h"
 #include "DIA_factory.h"
 
-enum
-{
-    ADM_HUFF_YUV,
-    ADM_FF_HUFF_YUV
-};
-huff_encoder huffType={ADM_HUFF_YUV};
+huff_encoder huffType=HUFF_CONF_DEFAULT;
 //
 /**
         \fn ADM_huffEncoder

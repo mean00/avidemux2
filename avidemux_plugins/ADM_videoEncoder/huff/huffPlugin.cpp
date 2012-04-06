@@ -2,7 +2,7 @@
                           \fn     jpegPlugin
                           \brief  Plugin for jpeg dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -22,6 +22,13 @@
 #include "huff_encoder_desc.cpp"
 
 extern bool         huffConfigure(void);
+
+void resetConfigurationData()
+{
+	huff_encoder defaultConf = HUFF_CONF_DEFAULT;
+
+	memcpy(&huffType, &defaultConf, sizeof(huff_encoder));
+}
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_huffEncoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("HUFFYUV",

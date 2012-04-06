@@ -37,7 +37,7 @@ ADM_videoEncoderDesc copyDesc={
         NULL, //bool         (*configure)(void);                                // Call UI to set it up
         NULL, //bool         (*getConfigurationData)(uint32_t *l, uint8_t **d); // Get the encoder private conf
         NULL, //bool         (*setConfigurationData)(uint32_t l, uint8_t *d);   // Set the encoder private conf
-
+        NULL,
         ADM_UI_ALL, //ADM_UI_TYPE  UIType;                // Type of UI
         1,0,0, //uint32_t     major,minor,patch;     // Version of the plugin
         NULL  //void         *opaque;               // Hide stuff in here

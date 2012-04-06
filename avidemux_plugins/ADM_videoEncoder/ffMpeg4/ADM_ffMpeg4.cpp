@@ -2,7 +2,7 @@
                           \fn ADM_ffMpeg4
                           \brief Front end for libavcodec Mpeg4 asp encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -27,66 +27,15 @@
 #define aprintf printf
 #endif
 
-FFcodecSettings Mp4Settings=
-{
-    {
-    COMPRESS_CQ, //COMPRESSION_MODE  mode;
-    2,              // uint32_t          qz;           /// Quantizer
-    1500,           //uint32_t          bitrate;      /// In kb/s 
-    700,            //uint32_t          finalsize;    /// In ?
-    1500,           //uint32_t          avg_bitrate;  /// avg_bitrate is in kb/s!!
-    ADM_ENC_CAP_CBR+ADM_ENC_CAP_CQ+ADM_ENC_CAP_2PASS+ADM_ENC_CAP_2PASS_BR+ADM_ENC_CAP_GLOBAL+ADM_ENC_CAP_SAME
-    },
-    {
-        ADM_AVCODEC_SETTING_VERSION,
-        2, // Multithreaded
-          ME_EPZS,			// ME
-          0,				// GMC     
-          1,				// 4MV
-          0,				// _QPEL;   
-          1,				// _TREILLIS_QUANT
-          2,				// qmin;
-          31,				// qmax;
-          3,				// max_qdiff;
-          2,				// max_b_frames;
-          0,				// mpeg_quant;
-          1,				// is_luma_elim_threshold
-          -2,				// luma_elim_threshold;
-          1,				// is_chroma_elim_threshold
-          -5,				// chroma_elim_threshold;
-          0.05,				//lumi_masking;
-          1,				// is lumi
-          0.01,				//dark_masking; 
-          1,				// is dark
-          0.5,				// qcompress amount of qscale change between easy & hard scenes (0.0-1.0
-          0.5,				// qblur;    amount of qscale smoothing over time (0.0-1.0) 
-          0,				// min bitrate in kB/S
-          0,				// max bitrate
-          0,				// user matrix
-          250,				// gop size
-          0,				// interlaced
-          0,				// WLA: bottom-field-first
-          0,				// wide screen
-          2,				// mb eval = distortion
-          8000,				// vratetol 8Meg
-          0,				// is temporal
-          0.0,				// temporal masking
-          0,				// is spatial
-          0.0,				// spatial masking
-          0,				// NAQ
-          0,                // xvid rc
-          0,                // buffersize
-          0,                // override ratecontrol
-          0				    // DUMMY 
-    }
-};
+FFcodecSettings Mp4Settings = MPEG4_CONF_DEFAULT;
+
 /**
         \fn ADM_ffMpeg4Encoder
 */
 ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,&Mp4Settings,globalHeader)
 {
     printf("[ffMpeg4Encoder] Creating.\n");
-   
+
 
 }
 
@@ -95,7 +44,7 @@ ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src,bool globalHeade
 */
 bool ADM_ffMpeg4Encoder::setup(void)
 {
-    
+
     switch(Settings.params.mode)
     {
       case COMPRESS_2PASS:
@@ -126,14 +75,14 @@ bool ADM_ffMpeg4Encoder::setup(void)
 }
 
 
-/** 
+/**
     \fn ~ADM_ffMpeg4Encoder
 */
 ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 {
     printf("[ffMpeg4Encoder] Destroying.\n");
-   
-    
+
+
 }
 
 /**
@@ -156,7 +105,7 @@ again:
         return false;
     }
     q=image->_Qp;
-    
+
     if(!q) q=2;
     switch(Settings.params.mode)
     {
@@ -173,9 +122,9 @@ again:
       case COMPRESS_2PASS_BITRATE:
             switch(pass)
             {
-                case 1: 
+                case 1:
                         break;
-                case 2: 
+                case 2:
                         break; // Get Qz for this frame...
             }
       case COMPRESS_CQ:
@@ -188,20 +137,20 @@ again:
             return false;
     }
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
-                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
-    
+                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);
+
     _frame.reordered_opaque=image->Pts;
     if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
     {
         printf("[ffmpeg4] Error %d encoding video\n",sz);
         return false;
     }
-    
+
     if(sz==0) // no pic, probably pre filling, try again
         goto again;
 link:
     postEncode(out,sz);
-   
+
     return true;
 }
 
@@ -209,7 +158,7 @@ link:
     \fn isDualPass
 
 */
-bool         ADM_ffMpeg4Encoder::isDualPass(void) 
+bool         ADM_ffMpeg4Encoder::isDualPass(void)
 {
     if(Settings.params.mode==COMPRESS_2PASS || Settings.params.mode==COMPRESS_2PASS_BITRATE ) return true;
     return false;
@@ -222,7 +171,7 @@ bool         ADM_ffMpeg4Encoder::isDualPass(void)
 */
 
 bool         ffMpeg4Configure(void)
-{         
+{
 diaMenuEntry meE[]={
   {1,QT_TR_NOOP("None")},
   {2,QT_TR_NOOP("Full")},
@@ -230,29 +179,29 @@ diaMenuEntry meE[]={
   {4,QT_TR_NOOP("Phods")},
   {5,QT_TR_NOOP("EPZS")},
   {6,QT_TR_NOOP("X1")}
-};       
+};
 
 diaMenuEntry qzE[]={
   {0,QT_TR_NOOP("H.263")},
   {1,QT_TR_NOOP("MPEG")}
-};       
+};
 
 diaMenuEntry rdE[]={
   {0,QT_TR_NOOP("MB comparison")},
   {1,QT_TR_NOOP("Fewest bits (vhq)")},
   {2,QT_TR_NOOP("Rate distortion")}
-};     
+};
 diaMenuEntry threads[]={
   {0,QT_TR_NOOP("One thread")},
   {2,QT_TR_NOOP("Two threads)")},
   {3,QT_TR_NOOP("Three threads")},
   {99,QT_TR_NOOP("Auto (#cpu)")}
-};     
+};
 
 
         FFcodecSettings *conf=&Mp4Settings;
 
-uint32_t me=(uint32_t)conf->lavcSettings.me_method;  
+uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 #define PX(x) &(conf->lavcSettings.x)
 
          diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
@@ -261,48 +210,48 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
          diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
          diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
-         
+
          diaElemToggle    fourMv(PX(_4MV),QT_TR_NOOP("4_MV"));
          diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
-         
+
          diaElemToggle    qpel(PX(_QPEL),QT_TR_NOOP("_Quarter pixel"));
          diaElemToggle    gmc(PX(_GMC),QT_TR_NOOP("_GMC"));
 
-         
+
          diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
          diaElemMenu     qzM(PX(mpeg_quant),QT_TR_NOOP("_Quantization type:"),2,qzE);
-         
+
          diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
-         
+
          diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
-         
+
          diaElemFloat    qzComp(PX(qcompress),QT_TR_NOOP("_Quantizer compression:"),0,1);
          diaElemFloat    qzBlur(PX(qblur),QT_TR_NOOP("Quantizer _blur:"),0,1);
-         
-        diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,500); 
+
+        diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,500);
           /* First Tab : encoding mode */
         diaElem *diamode[]={&GopSize,&threadM,&bitrate};
         diaElemTabs tabMode(QT_TR_NOOP("User Interface"),3,diamode);
-        
+
         /* 2nd Tab : ME */
         diaElemFrame frameMe(QT_TR_NOOP("Advanced Simple Profile"));
-        
+
         frameMe.swallow(&max_b_frames);
         frameMe.swallow(&qpel);
         frameMe.swallow(&gmc);
-        
+
         diaElem *diaME[]={&fourMv,&frameMe};
         diaElemTabs tabME(QT_TR_NOOP("Motion Estimation"),2,diaME);
         /* 3nd Tab : Qz */
-        
+
          diaElem *diaQze[]={&qzM,&rdM,&qminM,&qmaxM,&qdiffM,&trellis};
         diaElemTabs tabQz(QT_TR_NOOP("Quantization"),6,diaQze);
-        
+
         /* 4th Tab : RControl */
-        
+
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
         diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
-        
+
          diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
         if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),4,tabs))
         {

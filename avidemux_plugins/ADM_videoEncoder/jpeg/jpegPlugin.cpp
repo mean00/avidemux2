@@ -2,7 +2,7 @@
                           \fn     jpegPlugin
                           \brief  Plugin for jpeg dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -23,6 +23,13 @@
 #include "jpeg_encoder_desc.cpp"
 
 extern bool         jpegConfigure(void);
+
+void resetConfigurationData()
+{
+	jpeg_encoder defaultConf = JPEG_CONF_DEFAULT;
+
+	memcpy(&jpegConf, &defaultConf, sizeof(jpeg_encoder));
+}
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_jpegEncoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("Mjpeg",

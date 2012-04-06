@@ -2,7 +2,7 @@
                           \fn     yv12Plugin
                           \brief  Plugin for YV12 dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -19,6 +19,7 @@
 #include "ADM_pngEncoder.h"
 #include "ADM_coreVideoEncoderInternal.h"
 
+void resetConfigurationData() {}
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_pngEncoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("PNG",

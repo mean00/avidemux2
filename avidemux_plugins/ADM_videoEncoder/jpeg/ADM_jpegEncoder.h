@@ -19,11 +19,15 @@
 #define ADM_jpeg_ENCODER_H
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "jpeg_encoder.h"
+
+#define JPEG_CONF_DEFAULT {ADM_COLOR_YV12,2}
+
 /**
         \class ADM_jpegEncoder
         \brief Dummy encoder that does nothing
 
 */
+
 extern jpeg_encoder jpegConf;
 class ADM_jpegEncoder : public ADM_coreVideoEncoderFFmpeg
 {

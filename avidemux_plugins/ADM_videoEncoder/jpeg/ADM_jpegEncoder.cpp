@@ -20,7 +20,7 @@
 #include "ADM_jpegEncoder.h"
 #include "DIA_factory.h"
 
-jpeg_encoder jpegConf= {ADM_COLOR_YV12,2};
+jpeg_encoder jpegConf= JPEG_CONF_DEFAULT;
 /**
         \fn ADM_jpegEncoder
 */

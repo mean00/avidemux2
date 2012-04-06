@@ -2,7 +2,7 @@
                           \fn     ffFlv1Plugin
                           \brief  Plugin for flv1 encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -22,6 +22,14 @@
 #include "../src/FFcodecSettings_desc.cpp"
 extern FFcodecSettings Flv1Settings;
 extern bool         ffFlv1Configure(void);
+
+void resetConfigurationData()
+{
+	FFcodecSettings defaultConf = FLV1_CONF_DEFAULT;
+
+	memcpy(&Flv1Settings, &defaultConf, sizeof(FFcodecSettings));
+}
+
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffFlv1Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffFlv1",

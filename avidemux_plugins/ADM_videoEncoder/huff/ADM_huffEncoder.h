@@ -19,6 +19,15 @@
 #define ADM_huff_ENCODER_H
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "huff_encoder.h"
+
+enum
+{
+    ADM_HUFF_YUV,
+    ADM_FF_HUFF_YUV
+};
+
+#define HUFF_CONF_DEFAULT {ADM_HUFF_YUV}
+
 /**
         \class ADM_huffEncoder
         \brief Dummy encoder that does nothing

@@ -2,7 +2,7 @@
                           \fn     jpegPlugin
                           \brief  Plugin for jpeg dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -22,6 +22,14 @@
 #include "mpeg2_encoder_desc.cpp"
 extern mpeg2_encoder Mp2Settings;
 extern bool         ffMpeg2Configure(void);
+
+void resetConfigurationData()
+{
+	mpeg2_encoder defaultConf = MPEG2_CONF_DEFAULT;
+
+	memcpy(&Mp2Settings, &defaultConf, sizeof(mpeg2_encoder));
+}
+
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffMpeg2Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg2",
                                "Mpeg2 (ff)",

@@ -2,7 +2,7 @@
                           \fn     jpegPlugin
                           \brief  Plugin for jpeg dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -22,6 +22,14 @@
 #include "../src/FFcodecSettings_desc.cpp"
 extern bool         ffMpeg4Configure(void);
 extern FFcodecSettings Mp4Settings;
+
+void resetConfigurationData()
+{
+	FFcodecSettings defaultConf = MPEG4_CONF_DEFAULT;
+
+	memcpy(&Mp4Settings, &defaultConf, sizeof(FFcodecSettings));
+}
+
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffMpeg4Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg4",
                                "Mpeg4 ASP (ff)",

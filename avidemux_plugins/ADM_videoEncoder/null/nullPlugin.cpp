@@ -2,7 +2,7 @@
                           \fn     nullEncoder
                           \brief  Plugin for  dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2010 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -20,6 +20,8 @@
 #include "ADM_coreVideoEncoderInternal.h"
 
 extern bool         nullConfigure(void);
+
+void resetConfigurationData() {}
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_nullEncoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("null",

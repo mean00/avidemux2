@@ -2,7 +2,7 @@
                           \fn     x264Plugin
                           \brief  Plugin for x264 dummy encoder
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean/gruntster
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -24,6 +24,14 @@ extern "C"
 }
 extern bool         x264Configure(void);
 extern x264_encoder x264Settings;
+
+void resetConfigurationData()
+{
+	x264_encoder defaultConf = X264_DEFAULT_CONF;
+
+	memcpy(&x264Settings, &defaultConf, sizeof(x264_encoder));
+}
+
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(x264Encoder);
 ADM_DECLARE_VIDEO_ENCODER_MAIN("x264",
                                "Mpeg4 AVC (x264)",

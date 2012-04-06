@@ -40,6 +40,7 @@ typedef struct
     bool         (*configure)(void);                                // Call UI to set it up
     bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
     bool         (*setConfigurationData)(CONFcouple *c,bool full);   // Set the encoder private conf
+	void         (*resetConfigurationData)();
 
     ADM_UI_TYPE  UIType;                // Type of UI
     uint32_t     major,minor,patch;     // Version of the plugin
@@ -104,6 +105,7 @@ static ADM_videoEncoderDesc encoderDesc={\
     configure,\
     getConfigurationData,\
     setConfigurationData,\
+    resetConfigurationData,\
     uiType,\
     maj,minV,patch,\
     NULL\
