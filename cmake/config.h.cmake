@@ -50,10 +50,6 @@
 /* Version number of package */
 #define VERSION "${VERSION}"
 
-/* use Nvwa memory leak detector */
-#cmakedefine FIND_LEAKS
-
-
 // FIXME - start
 #ifdef HAVE_GETTEXT
 #  include <libintl.h>

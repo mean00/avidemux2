@@ -1,7 +1,7 @@
-SET(ADM_core_SRCS 
+SET(ADM_core_SRCS
 	ADM_cpuCap.cpp  ADM_memsupport.cpp  ADM_threads.cpp  ADM_win32.cpp
 	ADM_memory.cpp  ADM_misc.cpp  TLK_clock.cpp  ADM_fileio.cpp ADM_dynamicLoading.cpp
-        ADM_debug.cpp 
+        ADM_debug.cpp
         ADM_queue.cpp
         ADM_benchmark.cpp
 )
@@ -33,12 +33,14 @@ if (HAVE_EXECINFO)
 	target_link_libraries(ADM_core6 "${LIBEXECINFO_LIBRARY_DIR}")
 endif (HAVE_EXECINFO)
 
-IF(UNIX)
-       TARGET_LINK_LIBRARIES(ADM_core6 dl) 
-ENDIF(UNIX)
- 
+if (UNIX)
+	target_link_libraries(ADM_core6 dl m)
+endif (UNIX)
 
-target_link_libraries(ADM_core6 m)
+if (ADM_DEBUG AND FIND_LEAKS)
+	add_subdirectory(ADM_nvwa)
+	target_link_libraries(ADM_core6 ADM_nvwa)
+endif (ADM_DEBUG AND FIND_LEAKS)
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 

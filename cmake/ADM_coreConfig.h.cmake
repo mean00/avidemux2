@@ -46,4 +46,7 @@
 #cmakedefine USE_SPIDERMONKEY
 #cmakedefine USE_TINYPY
 
+/* use Nvwa memory leak detector */
+#cmakedefine FIND_LEAKS
+
 #endif

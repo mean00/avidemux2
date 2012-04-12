@@ -66,10 +66,6 @@ ADD_EXECUTABLE(avidemux3_cli ${ADM_EXE_SRCS})
 ###########################################
 # Construct common libraries
 ###########################################
-IF (ADM_DEBUG AND FIND_LEAKS)
-	TARGET_LINK_LIBRARIES(avidemux3_cli ADM_nvwa)
-ENDIF (ADM_DEBUG AND FIND_LEAKS)
-
 FOREACH (_libName ${commonLibs1})
         TARGET_LINK_LIBRARIES(avidemux3_cli ${_libName})
 ENDFOREACH (_libName ${commonLibs1})
