@@ -46,6 +46,8 @@
  #include "audiofilter_conf.h"
  #include "audioencoderInternal.h"
 
+ #include "ADM_edActiveAudioTracks.h"
+
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
 /**
@@ -90,119 +92,9 @@ class PoolOfAudioTracks
                                 return true;
                         };
                 bool clear() {tracks.clear();return true;}
-                
-};
-/**
-    \class EditableAudioTrack
-*/
-class EditableAudioTrack
-{
-public:
-// source
-        ADM_edAudioTrack            *edTrack;
-// filter
-        VectorOfAudioFilter         EncodingVector;
-        ADM_AUDIOFILTER_CONFIG      audioEncodingConfig;
-        
-// encoder
-        int                         encoderIndex;
-        CONFcouple                  *encoderConf;
-        ADM_audioEncoder            *audioEncoder;
-        bool                        setEncoderByName(const char *name);
-        EditableAudioTrack()
-        {
-            encoderIndex=0;
-            encoderConf=NULL;
-            audioEncoder=NULL;
-            edTrack=NULL;
-        }
-        EditableAudioTrack(const EditableAudioTrack &src)
-        {
-            encoderIndex=src.encoderIndex;
-            edTrack=src.edTrack;
-            if(src.encoderConf)
-                encoderConf=CONFcouple::duplicate(src.encoderConf);
-            else
-                encoderConf=NULL;
-            audioEncoder=NULL;
-            EncodingVector=src.EncodingVector;
-            audioEncodingConfig=src.audioEncodingConfig;
-        }
-        ~EditableAudioTrack()
-        {
-            edTrack=NULL;
-            if(audioEncoder) delete audioEncoder;
-            audioEncoder=NULL;
-            EncodingVector.clear(); // memleak ?
-            if(encoderConf) delete encoderConf;
-            encoderConf=NULL;
-        }
-      
+
 };
 
-/**
-    \fn     ActiveAudioTracks
-    \brief  Tracks we are actually using 
-*/
-class ActiveAudioTracks
-{
- protected:
-                BVector <EditableAudioTrack *>tracks;
-        public:
-                    ActiveAudioTracks()  {};
-                    ~ActiveAudioTracks() {};
-                int size() const 
-                        {return tracks.size();}
-                EditableAudioTrack *atEditable(int ix)
-                {
-                    if(ix>=size())  
-                    {
-                        ADM_warning("Request to get track at %d, only %d tracks available\n",ix,size());
-                        return NULL;
-                    }
-                    return tracks[ix];
-                }
-                ADM_edAudioTrack *atEdAudio(int ix)
-                {
-                    EditableAudioTrack *e=atEditable(ix);
-                    return e->edTrack;
-                }
-                bool addTrack(EditableAudioTrack *x)
-                {
-                        if(!x) 
-                        {
-                            ADM_warning("Cannot add editable track to active track! \n");
-                            return false;
-                        }
-                        tracks.append(x) ;
-                        return true;
-                };
-
-                bool addTrack(ADM_edAudioTrack *x)
-                        {
-                                if(!x) 
-                                {
-                                    ADM_warning("Cannot add track to active track! \n");
-                                    return false;
-                                }
-                                EditableAudioTrack *e=new EditableAudioTrack;
-                                e->edTrack=x;
-                                tracks.append(e) ;
-                                return true;
-                        };
-                bool clear() 
-                {
-                    int n=size();
-                    for(int i=0;i<n;i++)
-                    {
-                        EditableAudioTrack *t=atEditable(i);
-                        if(t->edTrack->destroyable()) delete t->edTrack;
-                        delete t;
-                    }
-                    tracks.clear();
-                    return true;
-                }
-};
 /**
             \class ADM_Composer
             \brief Wrapper class that handles all the logic to seek/deal with multiple video files
@@ -412,7 +304,7 @@ public:
         bool        clearAudioTracks(void); /// remove all audio tracks
         bool        addAudioTrack(int poolIndex); /// Add an audio track in the active tracks
 
-        
-/********************************* /IEditor **********************************/                    
+
+/********************************* /IEditor **********************************/
 };
 #endif

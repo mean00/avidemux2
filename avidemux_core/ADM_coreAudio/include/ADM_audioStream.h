@@ -16,6 +16,7 @@
 #ifndef ADM_audioStream_H
 #define ADM_audioStream_H
 
+#include "ADM_default.h"
 #include "ADM_baseAudioStream.h"
 /**
         \fn      ADM_audioAccess
@@ -55,12 +56,12 @@ public:
                                     /// Grab extra data
                 virtual bool      getExtraData(uint32_t *l, uint8_t **d)
                                     {
-                                            *l=extraDataLen;    
+                                            *l=extraDataLen;
                                             *d=extraData;
                                             return true;
                                     };
 
-                
+
                 virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)=0;
 };
 /**
@@ -73,7 +74,7 @@ class ADM_audioStream
         protected:
                        WAVHeader                wavHeader;
 /// Access will be allocated externally, but will be destroy by ADM_audioStream when it is destroyed
-                       ADM_audioAccess          *access; 
+                       ADM_audioAccess          *access;
                        uint32_t                 lengthInBytes;
                        uint64_t                 position;
                        uint64_t                 lastDts;
@@ -88,7 +89,7 @@ class ADM_audioStream
                        bool                     advanceDtsByCustomSample(uint32_t samples,uint32_t fq);
         public:
 /// Default constructor
-                       ADM_audioStream(WAVHeader *header,ADM_audioAccess *access);  
+                       ADM_audioStream(WAVHeader *header,ADM_audioAccess *access);
               virtual  ~ADM_audioStream() {}
 /// Returns wavheader
 virtual                 WAVHeader                *getInfo(void) {return &wavHeader;}

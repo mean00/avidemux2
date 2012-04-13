@@ -1,6 +1,8 @@
 include_directories(../include)
 SET(ADM_editor_SRCS
-ADM_edCache.cpp 
+ADM_edActiveAudioTracks.cpp
+ADM_edCache.cpp
+ADM_edEditableAudioTrack.cpp
 ADM_edIdentify.cpp 
 ADM_edLoadSave.cpp 
 ADM_edSearch.cpp 

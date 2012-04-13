@@ -1,7 +1,7 @@
 
 /***************************************************************************
     \file  ADM_edAudioTrack
-    \brief Manage audio track(s) 
+    \brief Manage audio track(s)
 
     (c) 2012 Mean, fixounet@free.Fr
 
@@ -18,6 +18,9 @@
 
 #ifndef ADM_EDAUDIOTRACK
 #define ADM_EDAUDIOTRACK
+
+#include "ADM_inttype.h"
+#include "ADM_audioStream.h"
 
 #define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)
 
@@ -39,11 +42,11 @@ protected:
                     uint64_t packetBufferDts;
                     uint32_t packetBufferSamples;
 
-                    int64_t   _audioSample;     // current sample number                    
+                    int64_t   _audioSample;     // current sample number
 
                     ADM_Composer            *parent;
                     ADM_EDAUDIO_TRACK_TYPE  trackType;
-                    
+
 
 public:
                     ADM_edAudioTrack(ADM_EDAUDIO_TRACK_TYPE type, ADM_Composer *parent)
@@ -51,7 +54,7 @@ public:
                     {
                             trackType=type;
                             this->parent=parent;
-                            _audioSample=0; 
+                            _audioSample=0;
                             packetBufferSize=0;
                             packetBufferDts=ADM_NO_PTS;
                     }
@@ -72,7 +75,7 @@ public:
             virtual CHANNEL_TYPE    *getChannelMapping(void )=0;
             virtual bool            hasVBRAudio(void)=0;
 
-            virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) 
+            virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void)
                             {
                                     return NULL;
                             }
