@@ -36,7 +36,7 @@ static uint32_t ADM_maxConsumed = 0;
 static admMutex memAccess("MemAccess");
 static int doMemStat = 0;
 
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
+#if !defined(NDEBUG) && defined(FIND_LEAKS)
 #define _DEBUG_NEW_CALLER_ADDRESS __builtin_return_address(0)
 extern void* operator new(size_t size, const char* file, int line);
 extern void operator delete(void* pointer, const char* file, int line) throw();
@@ -73,7 +73,7 @@ void ADM_memStat(void)
 
 }
 
-#if !defined(ADM_DEBUG) || !defined(FIND_LEAKS)
+#if defined(NDEBUG) || !defined(FIND_LEAKS)
 /**
     \fn ADM_calloc(size_t nbElm,size_t elSize);
     \brief Replacement for system Calloc using our memory management
@@ -112,14 +112,14 @@ void *ADM_alloc(size_t size)
 	backdoor = (uint32_t*)(c - 8);
 	*backdoor = (0xdead << 16) + l - lorg;
 	backdoor[1] = size;
-    
+
     ADM_consumed += size;
     if(ADM_consumed>ADM_maxConsumed) ADM_maxConsumed=ADM_consumed;
 
     if(dome)
 		memAccess.unlock();
 
-	
+
 
 	return c;
 #endif

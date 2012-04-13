@@ -2,7 +2,7 @@
 // vim:tabstop=4:shiftwidth=4:expandtab:
 
 /*
- * Copyright (C) 2004-2005 Wu Yongwei <adah at users dot sourceforge dot net>
+ * Copyright (C) 2004-2011 Wu Yongwei <adah at users dot sourceforge dot net>
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any
@@ -13,8 +13,8 @@
  * it freely, subject to the following restrictions:
  *
  * 1. The origin of this software must not be misrepresented; you must
- *    not claim that you wrote the original software. If you use this
- *    software in a product, an acknowledgment in the product
+ *    not claim that you wrote the original software.  If you use this
+ *    software in a product, an acknowledgement in the product
  *    documentation would be appreciated but is not required.
  * 2. Altered source versions must be plainly marked as such, and must
  *    not be misrepresented as being the original software.
@@ -31,7 +31,7 @@
  *
  * Implementation of debug versions of new and delete to check leakage.
  *
- * @version 3.16, 2005/11/22
+ * @version 4.22, 2011/07/12
  * @author  Wu Yongwei
  *
  */
@@ -50,10 +50,6 @@
 #endif
 #include "fast_mutex.h"
 #include "static_assert.h"
-
-// GRUNTSTER
-static void* _malloc(size_t size);
-static void _free(void *ptr);
 
 #if !_FAST_MUTEX_CHECK_INITIALIZATION && !defined(_NOTHREADS)
 #error "_FAST_MUTEX_CHECK_INITIALIZATION not set: check_leaks may not work"
@@ -95,7 +91,7 @@ static void _free(void *ptr);
  */
 #ifndef _DEBUG_NEW_ERROR_ACTION
 #ifndef _DEBUG_NEW_ERROR_CRASH
-#define _DEBUG_NEW_ERROR_ACTION NULL //abort()
+#define _DEBUG_NEW_ERROR_ACTION abort()
 #else
 #define _DEBUG_NEW_ERROR_ACTION do { *((char*)0) = 0; abort(); } while (0)
 #endif
@@ -106,36 +102,19 @@ static void _free(void *ptr);
  *
  * The length of file name stored if greater than zero.  If it is zero,
  * only a const char pointer will be stored.  Currently the default
- * behaviour is to copy the file name, because I found that the exit
- * leakage check cannot access the address of the file name sometimes
- * (in my case, a core dump will occur when trying to access the file
- * name in a shared library after a \c SIGINT).  If the default value is
- * too small for you, try defining it to \c 52, which makes the size of
- * new_ptr_list_t 64 (it is 32 by default) on 32-bit platforms.
+ * value is non-zero (thus to copy the file name) on non-Windows
+ * platforms, because I once found that the exit leakage check could not
+ * access the address of the file name on Linux (in my case, a core dump
+ * occurred when check_leaks tried to access the file name in a shared
+ * library after a \c SIGINT).  This value makes the size of
+ * new_ptr_list_t \c 64 on non-Windows 32-bit platforms.
  */
 #ifndef _DEBUG_NEW_FILENAME_LEN
-#define _DEBUG_NEW_FILENAME_LEN 20
+#ifdef _WIN32
+#define _DEBUG_NEW_FILENAME_LEN 0
+#else
+#define _DEBUG_NEW_FILENAME_LEN 44
 #endif
-
-/**
- * @def _DEBUG_NEW_HASHTABLESIZE
- *
- * The size of the hash bucket for the table to store pointers to
- * allocated memory.  To ensure good performance, always make it a power
- * of two.
- */
-#ifndef _DEBUG_NEW_HASHTABLESIZE
-#define _DEBUG_NEW_HASHTABLESIZE 16384
-#endif
-
-/**
- * @def _DEBUG_NEW_HASH
- *
- * The hash function for the pointers.  This one has good performance in
- * test for me.
- */
-#ifndef _DEBUG_NEW_HASH
-#define _DEBUG_NEW_HASH(p) (((size_t)(p) >> 8) % _DEBUG_NEW_HASHTABLESIZE)
 #endif
 
 /**
@@ -155,6 +134,37 @@ static void _free(void *ptr);
 #endif
 
 /**
+ * @def _DEBUG_NEW_STD_OPER_NEW
+ *
+ * Macro to indicate whether the standard-conformant behaviour of
+ * <code>operator new</code> is wanted.  It is on by default now, but
+ * the user may set it to \c 0 to revert to the old behaviour.
+ */
+#ifndef _DEBUG_NEW_STD_OPER_NEW
+#define _DEBUG_NEW_STD_OPER_NEW 1
+#endif
+
+/**
+ * @def _DEBUG_NEW_TAILCHECK
+ *
+ * Macro to indicate whether a writing-past-end check will be performed.
+ * Define it to a positive integer as the number of padding bytes at the
+ * end of a memory block for checking.
+ */
+#ifndef _DEBUG_NEW_TAILCHECK
+#define _DEBUG_NEW_TAILCHECK 0
+#endif
+
+/**
+ * @def _DEBUG_NEW_TAILCHECK_CHAR
+ *
+ * Value of the padding bytes at the end of a memory block.
+ */
+#ifndef _DEBUG_NEW_TAILCHECK_CHAR
+#define _DEBUG_NEW_TAILCHECK_CHAR 0xCC
+#endif
+
+/**
  * @def _DEBUG_NEW_USE_ADDR2LINE
  *
  * Whether to use \e addr2line to convert a caller address to file/line
@@ -171,9 +181,12 @@ static void _free(void *ptr);
 #endif
 
 #ifdef _MSC_VER
-#pragma warning(disable: 4073)  // #pragma init_seg(lib) used
+#pragma warning(disable: 4074)  // #pragma init_seg(compiler) used
 #pragma warning(disable: 4290)  // C++ exception specification ignored
-#pragma init_seg(lib)
+#if _MSC_VER >= 1400            // Visual Studio 2005 or later
+#pragma warning(disable: 4996)  // Use the `unsafe' strncpy
+#endif
+#pragma init_seg(compiler)
 #endif
 
 #undef  _DEBUG_NEW_EMULATE_MALLOC
@@ -188,43 +201,74 @@ static void _free(void *ptr);
 /**
  * Gets the aligned value of memory block size.
  */
-#define align(s) \
+#define ALIGN(s) \
         (((s) + _DEBUG_NEW_ALIGNMENT - 1) & ~(_DEBUG_NEW_ALIGNMENT - 1))
+
+/**
+ * The platform memory alignment.  The current value works well in
+ * platforms I have tested: Windows XP, Windows 7 x64, and Mac OS X
+ * Leopard.  It may be smaller than the real alignment, but must be
+ * bigger than \c sizeof(size_t) for it work.  __debug_new_recorder uses
+ * it to detect misaligned pointer returned by `<code>new
+ * NonPODType[size]</code>'.
+ */
+const size_t PLATFORM_MEM_ALIGNMENT = sizeof(size_t) * 2;
 
 /**
  * Structure to store the position information where \c new occurs.
  */
 struct new_ptr_list_t
 {
-    new_ptr_list_t*     next;
+    new_ptr_list_t* next;       ///< Pointer to the next memory block
+    new_ptr_list_t* prev;       ///< Pointer to the previous memory block
+    size_t          size;       ///< Size of the memory block
     union
     {
 #if _DEBUG_NEW_FILENAME_LEN == 0
-    const char*         file;
+    const char*     file;       ///< Pointer to the file name of the caller
 #else
-    char                file[_DEBUG_NEW_FILENAME_LEN];
+    char            file[_DEBUG_NEW_FILENAME_LEN]; ///< File name of the caller
 #endif
-    void*               addr;
+    void*           addr;       ///< Address of the caller to \e new
     };
-    int                 line;
-    size_t              size;
+    unsigned        line   :31; ///< Line number of the caller; or \c 0
+    unsigned        is_array:1; ///< Non-zero iff <em>new[]</em> is used
+    unsigned        magic;      ///< Magic number for error detection
 };
+
+/**
+ * Definition of the constant magic number used for error detection.
+ */
+const unsigned MAGIC = 0x4442474E;
 
 /**
  * The extra memory allocated by <code>operator new</code>.
  */
-const int aligned_list_item_size = align(sizeof(new_ptr_list_t));
+const int ALIGNED_LIST_ITEM_SIZE = ALIGN(sizeof(new_ptr_list_t));
 
 /**
- * Array of pointer lists of a hash value.
+ * List of all new'd pointers.
  */
-static new_ptr_list_t* new_ptr_list[_DEBUG_NEW_HASHTABLESIZE];
+static new_ptr_list_t new_ptr_list = {
+    &new_ptr_list,
+    &new_ptr_list,
+    0,
+    {
+#if _DEBUG_NEW_FILENAME_LEN == 0
+        NULL
+#else
+        ""
+#endif
+    },
+    0,
+    0,
+    MAGIC
+};
 
 /**
- * Array of mutex guards to protect simultaneous access to the pointer
- * lists of a hash value.
+ * The mutex guard to protect simultaneous access to the pointer list.
  */
-static fast_mutex new_ptr_lock[_DEBUG_NEW_HASHTABLESIZE];
+static fast_mutex new_ptr_lock;
 
 /**
  * The mutex guard to protect simultaneous output to #new_output_fp.
@@ -378,7 +422,6 @@ static bool print_position_from_addr(const void*)
  */
 static void print_position(const void* ptr, int line)
 {
-    line &= ~INT_MIN;       // Result from new[] if highest bit set: Ignore
     if (line != 0)          // Is file/line information present?
     {
         fprintf(new_output_fp, "%s:%d", (const char*)ptr, line);
@@ -394,61 +437,146 @@ static void print_position(const void* ptr, int line)
     }
 }
 
+#if _DEBUG_NEW_TAILCHECK
 /**
- * Searches for the raw pointer given a user pointer.  The term `raw
- * pointer' here refers to the pointer to the pointer to originally
- * <em>malloc</em>'d memory.
+ * Checks whether the padding bytes at the end of a memory block is
+ * tampered with.
  *
- * @param pointer       user pointer to search for
- * @param hash_index    hash index of the user pointer
- * @return              the raw pointer if searching is successful; or
- *                      \c NULL otherwise
+ * @param ptr   pointer to a new_ptr_list_t struct
+ * @return      \c true if the padding bytes are untouched; \c false
+ *              otherwise
  */
-static new_ptr_list_t** search_pointer(void* pointer, size_t hash_index)
+static bool check_tail(new_ptr_list_t* ptr)
 {
-    new_ptr_list_t** raw_ptr = &new_ptr_list[hash_index];
-    while (*raw_ptr)
+    const unsigned char* const pointer = (unsigned char*)ptr +
+                            ALIGNED_LIST_ITEM_SIZE + ptr->size;
+    for (int i = 0; i < _DEBUG_NEW_TAILCHECK; ++i)
+        if (pointer[i] != _DEBUG_NEW_TAILCHECK_CHAR)
+            return false;
+    return true;
+}
+#endif
+
+/**
+ * Allocates memory and initializes control data.
+ *
+ * @param size      size of the required memory block
+ * @param file      null-terminated string of the file name
+ * @param line      line number
+ * @param is_array  boolean value whether this is an array operation
+ * @return          pointer to the user-requested memory area; \c NULL
+ *                  if memory allocation is not successful
+ */
+static void* alloc_mem(size_t size, const char* file, int line, bool is_array)
+{
+    assert(line >= 0);
+#if _DEBUG_NEW_TYPE == 1
+    STATIC_ASSERT(_DEBUG_NEW_ALIGNMENT >= PLATFORM_MEM_ALIGNMENT,
+                  Alignment_too_small);
+#endif
+    STATIC_ASSERT((_DEBUG_NEW_ALIGNMENT & (_DEBUG_NEW_ALIGNMENT - 1)) == 0,
+                  Alignment_must_be_power_of_two);
+    STATIC_ASSERT(_DEBUG_NEW_TAILCHECK >= 0, Invalid_tail_check_length);
+    size_t s = size + ALIGNED_LIST_ITEM_SIZE + _DEBUG_NEW_TAILCHECK;
+    new_ptr_list_t* ptr = (new_ptr_list_t*)malloc(s);
+    if (ptr == NULL)
     {
-        if ((char*)*raw_ptr + aligned_list_item_size == pointer)
-        {
-            return raw_ptr;
-        }
-        raw_ptr = &(*raw_ptr)->next;
+#if _DEBUG_NEW_STD_OPER_NEW
+        return NULL;
+#else
+        fast_mutex_autolock lock(new_output_lock);
+        fprintf(new_output_fp,
+                "Out of memory when allocating %lu bytes\n",
+                (unsigned long)size);
+        fflush(new_output_fp);
+        _DEBUG_NEW_ERROR_ACTION;
+#endif
     }
-    return NULL;
+    void* pointer = (char*)ptr + ALIGNED_LIST_ITEM_SIZE;
+#if _DEBUG_NEW_FILENAME_LEN == 0
+    ptr->file = file;
+#else
+    if (line)
+        strncpy(ptr->file, file, _DEBUG_NEW_FILENAME_LEN - 1)
+                [_DEBUG_NEW_FILENAME_LEN - 1] = '\0';
+    else
+        ptr->addr = (void*)file;
+#endif
+    ptr->line = line;
+    ptr->is_array = is_array;
+    ptr->size = size;
+    ptr->magic = MAGIC;
+    {
+        fast_mutex_autolock lock(new_ptr_lock);
+        ptr->prev = new_ptr_list.prev;
+        ptr->next = &new_ptr_list;
+        new_ptr_list.prev->next = ptr;
+        new_ptr_list.prev = ptr;
+    }
+#if _DEBUG_NEW_TAILCHECK
+    memset((char*)pointer + size, _DEBUG_NEW_TAILCHECK_CHAR,
+                                  _DEBUG_NEW_TAILCHECK);
+#endif
+    if (new_verbose_flag)
+    {
+        fast_mutex_autolock lock(new_output_lock);
+        fprintf(new_output_fp,
+                "new%s: allocated %p (size %lu, ",
+                is_array ? "[]" : "",
+                pointer, (unsigned long)size);
+        if (line != 0)
+            print_position(ptr->file, ptr->line);
+        else
+            print_position(ptr->addr, ptr->line);
+        fprintf(new_output_fp, ")\n");
+    }
+    total_mem_alloc += size;
+    return pointer;
 }
 
 /**
- * Frees memory and adjusts pointers relating to a raw pointer.  If the
- * highest bit of \c line (set from a previous <code>new[]</code> call)
- * does not agree with \c array_mode, program will abort with an error
- * message.
+ * Frees memory and adjusts pointers.
  *
- * @param raw_ptr       raw pointer to free
- * @param addr          pointer to the caller
- * @param array_mode    flag indicating whether it is invoked by a
- *                      <code>delete[]</code> call
+ * @param pointer   pointer to the previously allocated memory
+ * @param addr      pointer to the caller
+ * @param is_array  flag indicating whether it is invoked by a
+ *                  <code>delete[]</code> call
  */
-static void free_pointer(new_ptr_list_t** raw_ptr, void* addr, bool array_mode)
+static void free_pointer(void* pointer, void* addr, bool is_array)
 {
-    new_ptr_list_t* ptr = *raw_ptr;
-    int array_mode_mismatch = array_mode ^ ((ptr->line & INT_MIN) != 0);
-    if (array_mode_mismatch)
+    if (pointer == NULL)
+        return;
+    new_ptr_list_t* ptr =
+            (new_ptr_list_t*)((char*)pointer - ALIGNED_LIST_ITEM_SIZE);
+    if (ptr->magic != MAGIC)
+    {
+        {
+            fast_mutex_autolock lock(new_output_lock);
+            fprintf(new_output_fp, "delete%s: invalid pointer %p (",
+                    is_array ? "[]" : "", pointer);
+            print_position(addr, 0);
+            fprintf(new_output_fp, ")\n");
+        }
+        check_mem_corruption();
+        fflush(new_output_fp);
+        _DEBUG_NEW_ERROR_ACTION;
+    }
+    if (is_array != ptr->is_array)
     {
         const char* msg;
-        if (array_mode)
+        if (is_array)
             msg = "delete[] after new";
         else
             msg = "delete after new[]";
         fast_mutex_autolock lock(new_output_lock);
         fprintf(new_output_fp,
-                "%s: pointer %p (size %u)\n\tat ",
+                "%s: pointer %p (size %lu)\n\tat ",
                 msg,
-                (char*)ptr + aligned_list_item_size,
-                ptr->size);
+                (char*)ptr + ALIGNED_LIST_ITEM_SIZE,
+                (unsigned long)ptr->size);
         print_position(addr, 0);
         fprintf(new_output_fp, "\n\toriginally allocated at ");
-        if ((ptr->line & ~INT_MIN) != 0)
+        if (ptr->line != 0)
             print_position(ptr->file, ptr->line);
         else
             print_position(ptr->addr, ptr->line);
@@ -456,17 +584,31 @@ static void free_pointer(new_ptr_list_t** raw_ptr, void* addr, bool array_mode)
         fflush(new_output_fp);
         _DEBUG_NEW_ERROR_ACTION;
     }
-    total_mem_alloc -= ptr->size;
+#if _DEBUG_NEW_TAILCHECK
+    if (!check_tail(ptr))
+    {
+        check_mem_corruption();
+        fflush(new_output_fp);
+        _DEBUG_NEW_ERROR_ACTION;
+    }
+#endif
+    {
+        fast_mutex_autolock lock(new_ptr_lock);
+        total_mem_alloc -= ptr->size;
+        ptr->magic = 0;
+        ptr->prev->next = ptr->next;
+        ptr->next->prev = ptr->prev;
+    }
     if (new_verbose_flag)
     {
         fast_mutex_autolock lock(new_output_lock);
         fprintf(new_output_fp,
-                "delete: freeing  %p (size %u, %u bytes still allocated)\n",
-                (char*)ptr + aligned_list_item_size,
-                ptr->size, total_mem_alloc);
+                "delete%s: freed %p (size %lu, %lu bytes still allocated)\n",
+                is_array ? "[]" : "",
+                (char*)ptr + ALIGNED_LIST_ITEM_SIZE,
+                (unsigned long)ptr->size, (unsigned long)total_mem_alloc);
     }
-    *raw_ptr = ptr->next;
-    _free(ptr);
+    free(ptr);
     return;
 }
 
@@ -478,152 +620,272 @@ static void free_pointer(new_ptr_list_t** raw_ptr, void* addr, bool array_mode)
 int check_leaks()
 {
     int leak_cnt = 0;
-    for (int i = 0; i < _DEBUG_NEW_HASHTABLESIZE; ++i)
+    fast_mutex_autolock lock_ptr(new_ptr_lock);
+    fast_mutex_autolock lock_output(new_output_lock);
+    new_ptr_list_t* ptr = new_ptr_list.next;
+    while (ptr != &new_ptr_list)
     {
-        fast_mutex_autolock lock(new_ptr_lock[i]);
-        new_ptr_list_t* ptr = new_ptr_list[i];
-        if (ptr == NULL)
-            continue;
-        while (ptr)
+        const char* const pointer = (char*)ptr + ALIGNED_LIST_ITEM_SIZE;
+        if (ptr->magic != MAGIC)
         {
-            fast_mutex_autolock lock(new_output_lock);
             fprintf(new_output_fp,
-                    "Leaked object at %p (size %u, ",
-                    (char*)ptr + aligned_list_item_size,
-                    ptr->size);
-            if ((ptr->line & ~INT_MIN) != 0)
-                print_position(ptr->file, ptr->line);
-            else
-                print_position(ptr->addr, ptr->line);
-            fprintf(new_output_fp, ")\n");
-            ptr = ptr->next;
-            ++leak_cnt;
+                    "warning: heap data corrupt near %p\n",
+                    pointer);
         }
-    }
-    return leak_cnt;
-}
-
-void* operator new(size_t size, const char* file, int line)
-{
-    assert((line & INT_MIN) == 0);
-    STATIC_ASSERT((_DEBUG_NEW_ALIGNMENT & (_DEBUG_NEW_ALIGNMENT - 1)) == 0,
-                  Alignment_must_be_power_of_two);
-    size_t s = size + aligned_list_item_size;
-    new_ptr_list_t* ptr = (new_ptr_list_t*)_malloc(s);
-    if (ptr == NULL)
-    {
-        fast_mutex_autolock lock(new_output_lock);
-        fprintf(new_output_fp,
-                "new:  out of memory when allocating %u bytes\n",
-                size);
-        fflush(new_output_fp);
-        _DEBUG_NEW_ERROR_ACTION;
-    }
-    void* pointer = (char*)ptr + aligned_list_item_size;
-    size_t hash_index = _DEBUG_NEW_HASH(pointer);
-#if _DEBUG_NEW_FILENAME_LEN == 0
-    ptr->file = file;
-#else
-    if (line)
-        strncpy(ptr->file, file, _DEBUG_NEW_FILENAME_LEN - 1)
-                [_DEBUG_NEW_FILENAME_LEN - 1] = '\0';
-    else
-        ptr->addr = (void*)file;
+#if _DEBUG_NEW_TAILCHECK
+        if (!check_tail(ptr))
+        {
+            fprintf(new_output_fp,
+                    "warning: overwritten past end of object at %p\n",
+                    pointer);
+        }
 #endif
-    ptr->line = line;
-    ptr->size = size;
-    {
-        fast_mutex_autolock lock(new_ptr_lock[hash_index]);
-        ptr->next = new_ptr_list[hash_index];
-        new_ptr_list[hash_index] = ptr;
-    }
-    if (new_verbose_flag)
-    {
-        fast_mutex_autolock lock(new_output_lock);
         fprintf(new_output_fp,
-                "new:  allocated  %p (size %u, ",
-                pointer, size);
-        if (line != 0)
+                "Leaked object at %p (size %lu, ",
+                pointer,
+                (unsigned long)ptr->size);
+        if (ptr->line != 0)
             print_position(ptr->file, ptr->line);
         else
             print_position(ptr->addr, ptr->line);
         fprintf(new_output_fp, ")\n");
+        ptr = ptr->next;
+        ++leak_cnt;
     }
-    total_mem_alloc += size;
-    return pointer;
+    if (new_verbose_flag || leak_cnt)
+        fprintf(new_output_fp, "*** %d leaks found\n", leak_cnt);
+    return leak_cnt;
 }
 
+/**
+ * Checks for heap corruption.
+ *
+ * @return  zero if no problem is found; the number of found memory
+ *          corruptions otherwise
+ */
+int check_mem_corruption()
+{
+    int corrupt_cnt = 0;
+    fast_mutex_autolock lock_ptr(new_ptr_lock);
+    fast_mutex_autolock lock_output(new_output_lock);
+    fprintf(new_output_fp, "*** Checking for memory corruption: START\n");
+    for (new_ptr_list_t* ptr = new_ptr_list.next;
+            ptr != &new_ptr_list;
+            ptr = ptr->next)
+    {
+        const char* const pointer = (char*)ptr + ALIGNED_LIST_ITEM_SIZE;
+        if (ptr->magic == MAGIC
+#if _DEBUG_NEW_TAILCHECK
+                && check_tail(ptr)
+#endif
+                )
+            continue;
+#if _DEBUG_NEW_TAILCHECK
+        if (ptr->magic != MAGIC)
+        {
+#endif
+            fprintf(new_output_fp,
+                    "Heap data corrupt near %p (size %lu, ",
+                    pointer,
+                    (unsigned long)ptr->size);
+#if _DEBUG_NEW_TAILCHECK
+        }
+        else
+        {
+            fprintf(new_output_fp,
+                    "Overwritten past end of object at %p (size %lu, ",
+                    pointer,
+                    (unsigned long)ptr->size);
+        }
+#endif
+        if (ptr->line != 0)
+            print_position(ptr->file, ptr->line);
+        else
+            print_position(ptr->addr, ptr->line);
+        fprintf(new_output_fp, ")\n");
+        ++corrupt_cnt;
+    }
+    fprintf(new_output_fp, "*** Checking for memory corruption: %d FOUND\n",
+            corrupt_cnt);
+    return corrupt_cnt;
+}
+
+/**
+ * Processes the allocated memory and inserts file/line informatin.
+ * It will only be done when it can ensure the memory is allocated by
+ * one of our operator new variants.
+ *
+ * @param pointer   pointer returned by a new-expression
+ */
+void __debug_new_recorder::_M_process(void* pointer)
+{
+    if (pointer == NULL)
+        return;
+
+    // In an expression `new NonPODType[size]', the pointer returned is
+    // not the pointer returned by operator new[], but offset by size_t
+    // to leave room for the size.  It needs to be compensated here.
+    size_t offset = (char*)pointer - (char*)NULL;
+    if (offset % PLATFORM_MEM_ALIGNMENT != 0) {
+        offset -= sizeof(size_t);
+        if (offset % PLATFORM_MEM_ALIGNMENT != 0) {
+            return;
+        }
+        pointer = (char*)pointer - sizeof(size_t);
+    }
+
+    new_ptr_list_t* ptr =
+            (new_ptr_list_t*)((char*)pointer - ALIGNED_LIST_ITEM_SIZE);
+    if (ptr->magic != MAGIC || ptr->line != 0)
+    {
+        fast_mutex_autolock lock(new_output_lock);
+        fprintf(new_output_fp,
+                "warning: debug_new used with placement new (%s:%d)\n",
+                _M_file, _M_line);
+        return;
+    }
+    if (new_verbose_flag) {
+        fast_mutex_autolock lock(new_output_lock);
+        fprintf(new_output_fp,
+                "info: pointer %p allocated from %s:%d\n",
+                pointer, _M_file, _M_line);
+    }
+#if _DEBUG_NEW_FILENAME_LEN == 0
+    ptr->file = _M_file;
+#else
+    strncpy(ptr->file, _M_file, _DEBUG_NEW_FILENAME_LEN - 1)
+            [_DEBUG_NEW_FILENAME_LEN - 1] = '\0';
+#endif
+    ptr->line = _M_line;
+}
+
+/**
+ * Allocates memory with file/line information.
+ *
+ * @param size  size of the required memory block
+ * @param file  null-terminated string of the file name
+ * @param line  line number
+ * @return      pointer to the memory allocated; or \c NULL if memory is
+ *              insufficient (#_DEBUG_NEW_STD_OPER_NEW is 0)
+ * @throw bad_alloc memory is insufficient (#_DEBUG_NEW_STD_OPER_NEW is 1)
+ */
+void* operator new(size_t size, const char* file, int line)
+{
+    void* ptr = alloc_mem(size, file, line, false);
+#if _DEBUG_NEW_STD_OPER_NEW
+    if (ptr)
+        return ptr;
+    else
+        throw std::bad_alloc();
+#else
+    return ptr;
+#endif
+}
+
+/**
+ * Allocates array memory with file/line information.
+ *
+ * @param size  size of the required memory block
+ * @param file  null-terminated string of the file name
+ * @param line  line number
+ * @return      pointer to the memory allocated; or \c NULL if memory is
+ *              insufficient (#_DEBUG_NEW_STD_OPER_NEW is 0)
+ * @throw bad_alloc memory is insufficient (#_DEBUG_NEW_STD_OPER_NEW is 1)
+ */
 void* operator new[](size_t size, const char* file, int line)
 {
-    void* pointer = operator new(size, file, line);
-    new_ptr_list_t* ptr =
-            (new_ptr_list_t*)((char*)pointer - aligned_list_item_size);
-    assert((ptr->line & INT_MIN) == 0);
-    ptr->line |= INT_MIN;   // Result from new[] if highest bit set: Set
-    return pointer;
+    void* ptr = alloc_mem(size, file, line, true);
+#if _DEBUG_NEW_STD_OPER_NEW
+    if (ptr)
+        return ptr;
+    else
+        throw std::bad_alloc();
+#else
+    return ptr;
+#endif
 }
 
+/**
+ * Allocates memory without file/line information.
+ *
+ * @param size  size of the required memory block
+ * @return      pointer to the memory allocated; or \c NULL if memory is
+ *              insufficient (#_DEBUG_NEW_STD_OPER_NEW is 0)
+ * @throw bad_alloc memory is insufficient (#_DEBUG_NEW_STD_OPER_NEW is 1)
+ */
 void* operator new(size_t size) throw(std::bad_alloc)
 {
     return operator new(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
 }
 
+/**
+ * Allocates array memory without file/line information.
+ *
+ * @param size  size of the required memory block
+ * @return      pointer to the memory allocated; or \c NULL if memory is
+ *              insufficient (#_DEBUG_NEW_STD_OPER_NEW is 0)
+ * @throw bad_alloc memory is insufficient (#_DEBUG_NEW_STD_OPER_NEW is 1)
+ */
 void* operator new[](size_t size) throw(std::bad_alloc)
 {
     return operator new[](size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
 }
 
-#if !defined(__BORLANDC__) || __BORLANDC__ > 0x551
+/**
+ * Allocates memory with no-throw guarantee.
+ *
+ * @param size  size of the required memory block
+ * @return      pointer to the memory allocated; or \c NULL if memory is
+ *              insufficient
+ */
 void* operator new(size_t size, const std::nothrow_t&) throw()
 {
-    return operator new(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
+    return alloc_mem(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0, false);
 }
 
+/**
+ * Allocates array memory with no-throw guarantee.
+ *
+ * @param size  size of the required memory block
+ * @return      pointer to the memory allocated; or \c NULL if memory is
+ *              insufficient
+ */
 void* operator new[](size_t size, const std::nothrow_t&) throw()
 {
-    return operator new[](size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
+    return alloc_mem(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0, true);
 }
-#endif
 
+/**
+ * Deallocates memory.
+ *
+ * @param pointer   pointer to the previously allocated memory
+ */
 void operator delete(void* pointer) throw()
 {
-    if (pointer == NULL)
-        return;
-    size_t hash_index = _DEBUG_NEW_HASH(pointer);
-    fast_mutex_autolock lock(new_ptr_lock[hash_index]);
-    new_ptr_list_t** raw_ptr = search_pointer(pointer, hash_index);
-    if (raw_ptr == NULL)
-    {
-        fast_mutex_autolock lock(new_output_lock);
-        fprintf(new_output_fp, "delete: invalid pointer %p at ", pointer);
-        print_position(_DEBUG_NEW_CALLER_ADDRESS, 0);
-        fprintf(new_output_fp, "\n");
-        fflush(new_output_fp);
-        _DEBUG_NEW_ERROR_ACTION;
-    }
-    free_pointer(raw_ptr, _DEBUG_NEW_CALLER_ADDRESS, false);
+    free_pointer(pointer, _DEBUG_NEW_CALLER_ADDRESS, false);
 }
 
+/**
+ * Deallocates array memory.
+ *
+ * @param pointer   pointer to the previously allocated memory
+ */
 void operator delete[](void* pointer) throw()
 {
-    if (pointer == NULL)
-        return;
-    size_t hash_index = _DEBUG_NEW_HASH(pointer);
-    fast_mutex_autolock lock(new_ptr_lock[hash_index]);
-    new_ptr_list_t** raw_ptr = search_pointer(pointer, hash_index);
-    if (raw_ptr == NULL)
-    {
-        fast_mutex_autolock lock(new_output_lock);
-        fprintf(new_output_fp, "delete[]: invalid pointer %p at ", pointer);
-        print_position(_DEBUG_NEW_CALLER_ADDRESS, 0);
-        fprintf(new_output_fp, "\n");
-        fflush(new_output_fp);
-        _DEBUG_NEW_ERROR_ACTION;
-    }
-    free_pointer(raw_ptr, _DEBUG_NEW_CALLER_ADDRESS, true);
+    free_pointer(pointer, _DEBUG_NEW_CALLER_ADDRESS, true);
 }
 
-#if HAS_PLACEMENT_DELETE
+/**
+ * Placement deallocation function.  For details, please check Section
+ * 5.3.4 of the C++ 1998 Standard.
+ *
+ * @param pointer   pointer to the previously allocated memory
+ * @param file      null-terminated string of the file name
+ * @param line      line number
+ *
+ * @see   http://www.csci.csusb.edu/dick/c++std/cd2/expr.html#expr.new
+ * @see   http://wyw.dcweb.cn/leakage.htm
+ */
 void operator delete(void* pointer, const char* file, int line) throw()
 {
     if (new_verbose_flag)
@@ -638,6 +900,14 @@ void operator delete(void* pointer, const char* file, int line) throw()
     operator delete(pointer);
 }
 
+/**
+ * Placement deallocation function.  For details, please check Section
+ * 5.3.4 of the C++ 1998 Standard.
+ *
+ * @param pointer   pointer to the previously allocated memory
+ * @param file      null-terminated string of the file name
+ * @param line      line number
+ */
 void operator delete[](void* pointer, const char* file, int line) throw()
 {
     if (new_verbose_flag)
@@ -652,25 +922,39 @@ void operator delete[](void* pointer, const char* file, int line) throw()
     operator delete[](pointer);
 }
 
+/**
+ * Placement deallocation function.  For details, please check Section
+ * 5.3.4 of the C++ 1998 Standard.
+ *
+ * @param pointer   pointer to the previously allocated memory
+ */
 void operator delete(void* pointer, const std::nothrow_t&) throw()
 {
     operator delete(pointer, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
 }
 
+/**
+ * Placement deallocation function.  For details, please check Section
+ * 5.3.4 of the C++ 1998 Standard.
+ *
+ * @param pointer   pointer to the previously allocated memory
+ */
 void operator delete[](void* pointer, const std::nothrow_t&) throw()
 {
     operator delete[](pointer, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
 }
-#endif // HAS_PLACEMENT_DELETE
 
-int __debug_new_counter::_count = 0;
+/**
+ * Count of source files that use debug_new.
+ */
+int __debug_new_counter::_S_count = 0;
 
 /**
  * Constructor to increment the count.
  */
 __debug_new_counter::__debug_new_counter()
 {
-    ++_count;
+    ++_S_count;
 }
 
 /**
@@ -679,7 +963,7 @@ __debug_new_counter::__debug_new_counter()
  */
 __debug_new_counter::~__debug_new_counter()
 {
-    if (--_count == 0 && new_autocheck_flag)
+    if (--_S_count == 0 && new_autocheck_flag)
         if (check_leaks())
         {
             new_verbose_flag = true;
@@ -694,37 +978,10 @@ __debug_new_counter::~__debug_new_counter()
         }
 }
 
-// GRUNTSTER
-size_t getSizeFromPointer(void* ptr)
+size_t getSizeFromPointer(void* pointer)
 {
-	size_t hash_index = _DEBUG_NEW_HASH(ptr);
-    fast_mutex_autolock lock(new_ptr_lock[hash_index]);
-    new_ptr_list_t** raw_pointer = search_pointer(ptr, hash_index);
-	new_ptr_list_t* pointer = *raw_pointer;
+	new_ptr_list_t* ptr =
+		(new_ptr_list_t*)((char*)pointer - ALIGNED_LIST_ITEM_SIZE);
 
-	return pointer->size;
-}
-
-static void* _malloc(size_t size)
-{
-	char *ptr, *ptr2, *aligned_ptr;
-
-	ptr = (char *)malloc(size + 16 + sizeof(int));
-	if (ptr == NULL) return(NULL);
-
-	ptr2 = ptr + sizeof(int);
-	aligned_ptr = ptr2 + (16 - ((size_t)ptr2 & 15));
-
-	ptr2 = aligned_ptr - sizeof(int);
-	*((int *)ptr2)=(int)(aligned_ptr - ptr);
-
-	return(aligned_ptr);
-}
-
-static void _free(void *ptr)
-{
-	int *ptr2 = (int *)ptr - 1;
-	char *c = (char *)ptr;
-
-	free(c - *ptr2);
+	return ptr->size;
 }

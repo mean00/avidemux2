@@ -2,7 +2,7 @@
 // vim:tabstop=4:shiftwidth=4:expandtab:
 
 /*
- * Copyright (C) 2004-2005 Wu Yongwei <adah at users dot sourceforge dot net>
+ * Copyright (C) 2004-2010 Wu Yongwei <adah at users dot sourceforge dot net>
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any
@@ -13,8 +13,8 @@
  * it freely, subject to the following restrictions:
  *
  * 1. The origin of this software must not be misrepresented; you must
- *    not claim that you wrote the original software. If you use this
- *    software in a product, an acknowledgment in the product
+ *    not claim that you wrote the original software.  If you use this
+ *    software in a product, an acknowledgement in the product
  *    documentation would be appreciated but is not required.
  * 2. Altered source versions must be plainly marked as such, and must
  *    not be misrepresented as being the original software.
@@ -31,7 +31,7 @@
  *
  * A fast mutex implementation for POSIX and Win32.
  *
- * @version 1.18, 2005/05/06
+ * @version 1.20, 2010/05/16
  * @author  Wu Yongwei
  *
  */
@@ -176,6 +176,9 @@
 # endif // _PTHREADS
 
 # ifdef _WIN32THREADS
+#   ifndef WIN32_LEAN_AND_MEAN
+#     define WIN32_LEAN_AND_MEAN
+#   endif /* WIN32_LEAN_AND_MEAN */
 #   include <windows.h>
 /**
  * Macro alias to `volatile' semantics.  Here it is truly volatile since
@@ -295,7 +298,7 @@ class fast_mutex_autolock
 {
     fast_mutex& _M_mtx;
 public:
-    explicit fast_mutex_autolock(fast_mutex& __mtx) : _M_mtx(__mtx)
+    explicit fast_mutex_autolock(fast_mutex& mtx) : _M_mtx(mtx)
     {
         _M_mtx.lock();
     }

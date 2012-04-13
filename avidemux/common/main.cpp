@@ -97,10 +97,8 @@ extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern bool ADM_jobInit(void);
 
-// Spidermonkey/Scripting stuff
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
+#if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
-extern int check_leaks();
 #endif
 
 void onexit(void);
@@ -128,7 +126,7 @@ int main(int _argc, char *_argv[])
 	argc = _argc;
 #endif
 
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
+#if !defined(NDEBUG) && defined(FIND_LEAKS)
 	new_progname = argv[0];
 #endif
 
@@ -378,10 +376,6 @@ void onexit( void )
     ADM_memStatEnd();
 
     ADM_info("\nGoodbye...\n\n");
-
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
-	check_leaks();
-#endif
 }
 /**
     \fn setPrefsDefault

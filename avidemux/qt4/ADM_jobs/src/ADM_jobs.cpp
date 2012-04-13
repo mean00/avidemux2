@@ -53,6 +53,9 @@ extern uint8_t  quotaInit(void);
 extern uint8_t win32_netInit(void);
 extern bool jobRun(int ac, char **av);
 
+#if !defined(NDEBUG) && defined(FIND_LEAKS)
+extern const char* new_progname;
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -60,7 +63,7 @@ int main(int argc, char *argv[])
 	redirectStdoutToFile();
 #endif
 
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
+#if !defined(NDEBUG) && defined(FIND_LEAKS)
 	new_progname = argv[0];
 #endif
 
@@ -167,9 +170,5 @@ void onexit( void )
     ADM_memStatEnd(); 
     ADM_jobShutDown();   
     ADM_info("\nGoodbye...\n\n");
-
-#if defined(ADM_DEBUG) && defined(FIND_LEAKS)
-	check_leaks();
-#endif
 }
 //EOF
