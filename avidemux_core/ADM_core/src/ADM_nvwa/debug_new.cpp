@@ -47,6 +47,8 @@
 #endif
 #ifdef _WIN32
 #include <malloc.h>
+#include <windows.h>
+#include <imagehlp.h>
 #endif
 #include "fast_mutex.h"
 #include "static_assert.h"
@@ -322,6 +324,8 @@ static bool print_position_from_addr(const void* addr)
 {
     static const void* last_addr = NULL;
     static char last_info[256] = "";
+    const char *module_path = new_progname;
+
     if (addr == last_addr)
     {
         if (last_info[0] == '\0')
@@ -329,14 +333,21 @@ static bool print_position_from_addr(const void* addr)
         fprintf(new_output_fp, "%s", last_info);
         return true;
     }
-    if (new_progname)
+
+#ifdef _WIN32
+	HANDLE process = GetCurrentProcess();
+	DWORD moduleBase = SymGetModuleBase(process, (DWORD)addr);
+	char moduleFilename[MAX_PATH];
+
+	if (moduleBase && GetModuleFileName((HINSTANCE)moduleBase, moduleFilename, MAX_PATH))
+	{
+		module_path = moduleFilename;
+	}
+#endif
+
+    if (module_path)
     {
         const char addr2line_cmd[] = "addr2line -e ";
-#if   defined(__CYGWIN__) || defined(_WIN32)
-        const int  exeext_len = 4;
-#else
-        const int  exeext_len = 0;
-#endif
 #if  !defined(__CYGWIN__) && defined(__unix__)
         const char ignore_err[] = " 2>/dev/null";
 #elif defined(__CYGWIN__) || \
@@ -345,24 +356,15 @@ static bool print_position_from_addr(const void* addr)
 #else
         const char ignore_err[] = "";
 #endif
-        char* cmd = (char*)alloca(strlen(new_progname)
-                                  + exeext_len
+        char* cmd = (char*)alloca(strlen(module_path)
                                   + sizeof addr2line_cmd - 1
                                   + sizeof ignore_err - 1
                                   + sizeof(void*) * 2
                                   + 4 /* SP + "0x" + null */);
         strcpy(cmd, addr2line_cmd);
-        strcpy(cmd + sizeof addr2line_cmd - 1, new_progname);
+        strcpy(cmd + sizeof addr2line_cmd - 1, module_path);
         size_t len = strlen(cmd);
-#if   defined(__CYGWIN__) || defined(_WIN32)
-        if (len <= 4
-                || (strcmp(cmd + len - 4, ".exe") != 0 &&
-                    strcmp(cmd + len - 4, ".EXE") != 0))
-        {
-            strcpy(cmd + len, ".exe");
-            len += 4;
-        }
-#endif
+
         sprintf(cmd + len, " %p%s", addr, ignore_err);
         FILE* fp = popen(cmd, "r");
         if (fp)
@@ -384,10 +386,23 @@ static bool print_position_from_addr(const void* addr)
             {
                 last_addr = addr;
                 if (buffer[len - 1] == '0' && buffer[len - 2] == ':')
+				{
                     last_info[0] = '\0';
+
+#ifdef _WIN32
+					const char* fileName = strrchr(module_path, '\\') + 1;
+					fprintf(new_output_fp, "%s, ", fileName);
+#endif
+				}
                 else
                 {
                     fprintf(new_output_fp, "%s", buffer);
+
+#ifdef _WIN32
+					const char* fileName = strrchr(module_path, '\\') + 1;
+					fprintf(new_output_fp, ", %s", fileName);
+#endif
+
                     strcpy(last_info, buffer);
                     return true;
                 }
@@ -623,6 +638,13 @@ int check_leaks()
     fast_mutex_autolock lock_ptr(new_ptr_lock);
     fast_mutex_autolock lock_output(new_output_lock);
     new_ptr_list_t* ptr = new_ptr_list.next;
+
+#ifdef _WIN32
+	void *process = GetCurrentProcess();
+
+	SymInitialize(process, NULL, TRUE);
+#endif
+
     while (ptr != &new_ptr_list)
     {
         const char* const pointer = (char*)ptr + ALIGNED_LIST_ITEM_SIZE;
@@ -654,6 +676,11 @@ int check_leaks()
     }
     if (new_verbose_flag || leak_cnt)
         fprintf(new_output_fp, "*** %d leaks found\n", leak_cnt);
+
+#ifdef _WIN32
+	SymCleanup(process);
+#endif
+
     return leak_cnt;
 }
 
