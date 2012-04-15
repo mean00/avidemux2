@@ -578,6 +578,12 @@ static void free_pointer(void* pointer, void* addr, bool is_array)
     }
     if (is_array != ptr->is_array)
     {
+#ifdef _WIN32
+	void *process = GetCurrentProcess();
+
+	SymInitialize(process, NULL, TRUE);
+#endif
+
         const char* msg;
         if (is_array)
             msg = "delete[] after new";
@@ -597,6 +603,11 @@ static void free_pointer(void* pointer, void* addr, bool is_array)
             print_position(ptr->addr, ptr->line);
         fprintf(new_output_fp, "\n");
         fflush(new_output_fp);
+
+#ifdef _WIN32
+	SymCleanup(process);
+#endif
+
         _DEBUG_NEW_ERROR_ACTION;
     }
 #if _DEBUG_NEW_TAILCHECK
