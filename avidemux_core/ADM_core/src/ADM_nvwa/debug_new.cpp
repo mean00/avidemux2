@@ -49,6 +49,7 @@
 #include <malloc.h>
 #include <windows.h>
 #include <imagehlp.h>
+extern int addr2line(const char *file_name, intptr_t address, char *output);
 #endif
 #include "fast_mutex.h"
 #include "static_assert.h"
@@ -336,26 +337,34 @@ static bool print_position_from_addr(const void* addr)
 
 #ifdef _WIN32
 	HANDLE process = GetCurrentProcess();
-	DWORD moduleBase = SymGetModuleBase(process, (DWORD)addr);
+	DWORD_PTR moduleBase = SymGetModuleBase(process, (DWORD_PTR)addr);
 	char moduleFilename[MAX_PATH];
 
 	if (moduleBase && GetModuleFileName((HINSTANCE)moduleBase, moduleFilename, MAX_PATH))
 	{
 		module_path = moduleFilename;
 	}
-#endif
 
+	char buffer[sizeof last_info] = { '\0' };
+	size_t len = 0;
+	int res = addr2line(module_path, (intptr_t)addr, buffer);
+
+	len = strlen(buffer);
+
+	if (buffer[len - 1] == '\n')
+	{
+		buffer[--len] = '\0';
+	}
+#else
     if (module_path)
     {
         const char addr2line_cmd[] = "addr2line -e ";
 #if  !defined(__CYGWIN__) && defined(__unix__)
         const char ignore_err[] = " 2>/dev/null";
-#elif defined(__CYGWIN__) || \
-        (defined(_WIN32) && defined(WINVER) && WINVER >= 0x0500)
-        const char ignore_err[] = " 2>nul";
 #else
         const char ignore_err[] = "";
 #endif
+
         char* cmd = (char*)alloca(strlen(module_path)
                                   + sizeof addr2line_cmd - 1
                                   + sizeof ignore_err - 1
@@ -378,6 +387,7 @@ static bool print_position_from_addr(const void* addr)
                     buffer[--len] = '\0';
             }
             int res = pclose(fp);
+#endif
             // Display the file/line information only if the command
             // is executed successfully and the output points to a
             // valid position, but the result will be cached if only
@@ -407,8 +417,10 @@ static bool print_position_from_addr(const void* addr)
                     return true;
                 }
             }
+#ifndef _WIN32
         }
     }
+#endif
     return false;
 }
 #else
