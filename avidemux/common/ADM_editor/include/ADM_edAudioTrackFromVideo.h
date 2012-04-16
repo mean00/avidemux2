@@ -31,6 +31,7 @@ protected:
                     int         myTrackNumber; // Track number in video
                     bool        switchToNextAudioSegment(void);
                     bool        refillPacketBuffer(void);
+                    ADM_Composer *parent;
 public:
                                  ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
             virtual            ~ADM_edAudioTrackFromVideo();

@@ -21,6 +21,7 @@ ADM_edAudioPcm.cpp
 ADM_edAudioTrackFromVideo.cpp
 ADM_edAudioTrack.cpp
 ADM_editIface.cpp
+ADM_edAudioTrackExternal.cpp
 )
 
 ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})
