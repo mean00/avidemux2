@@ -51,7 +51,7 @@ static uint32_t Bitrate[8][16]=
 };
 
 
-uint8_t	getMpegFrameInfo(uint8_t *stream,uint32_t maxSearch, MpegAudioInfo *mpegInfo,MpegAudioInfo *templ,uint32_t *offset)
+uint8_t	getMpegFrameInfo(const uint8_t *stream,uint32_t maxSearch, MpegAudioInfo *mpegInfo,MpegAudioInfo *templ,uint32_t *offset)
 {
 uint32_t start=0,found=0;
 uint8_t  a[4];

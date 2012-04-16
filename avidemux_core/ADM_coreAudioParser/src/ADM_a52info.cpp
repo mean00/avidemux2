@@ -43,7 +43,7 @@ static uint8_t lfeon[8] = {0x10, 0x10, 0x04, 0x04, 0x04, 0x01, 0x04, 0x01};
             Need at least 6 bytes incoming
             Borrowed from a52dec
 */
-int ADM_a52_syncinfo (uint8_t * buf, int * flags, int * sample_rate, int * bit_rate)
+int ADM_a52_syncinfo (const uint8_t * buf, int * flags, int * sample_rate, int * bit_rate)
 {
     int frmsizecod;
     int bitrate;
@@ -86,7 +86,7 @@ int ADM_a52_syncinfo (uint8_t * buf, int * flags, int * sample_rate, int * bit_r
         \fn     ADM_AC3GetInfo
         \brief Extract infos from AC3 stream (used when muxing with external AC3)
 */
-uint8_t ADM_AC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *br, uint32_t *chan,uint32_t *syncoff)
+uint8_t ADM_AC3GetInfo(const uint8_t *buf, uint32_t len, uint32_t *fq, uint32_t *br, uint32_t *chan,uint32_t *syncoff)
 {
 uint32_t l;
 int ibr,ifq,flags;

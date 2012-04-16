@@ -23,7 +23,7 @@ typedef struct MpegAudioInfo
         uint32_t mode_extension;
 }MpegAudioInfo;
 
-uint8_t	getMpegFrameInfo(uint8_t *stream,uint32_t maxSearch, MpegAudioInfo *mpegInfo,MpegAudioInfo *templ,
+uint8_t	getMpegFrameInfo(const uint8_t *stream,uint32_t maxSearch, MpegAudioInfo *mpegInfo,MpegAudioInfo *templ,
 			uint32_t *offset);
 
 
