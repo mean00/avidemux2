@@ -52,8 +52,9 @@ uint64_t  ADM_audioAccessFile::getPos()
 
 bool    ADM_audioAccessFile::getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts)
 {
-    int n=fread(buffer,maxSize,1,_fd);
-    *dts=ADM_NO_PTS;
+    if(!getPos()) *dts=0;
+        else      *dts=ADM_NO_PTS;
+    int n=fread(buffer,1,maxSize,_fd);
     *size=n;
     if(n>0) return true;
         return false;
