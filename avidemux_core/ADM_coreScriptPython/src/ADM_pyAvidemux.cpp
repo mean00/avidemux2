@@ -20,13 +20,9 @@
 #include "DIA_fileSel.h"
 #include "DIA_coreToolkit.h"
 
-#if 0
-int pyChangeAudioStream(IEditor *editor, int track)
-{
-	editor->changeAudioStream(0, track);
-}
-#endif
-
+/**
+    \fn pyGetFps1000
+*/
 int pyGetFps1000(IEditor *editor)
 {
 	aviInfo info;
@@ -34,6 +30,9 @@ int pyGetFps1000(IEditor *editor)
 
 	return info.fps1000;
 }
+/**
+    \fn pyGetWidth
+*/
 
 int pyGetWidth(IEditor *editor)
 {
@@ -42,6 +41,9 @@ int pyGetWidth(IEditor *editor)
 
 	return info.width;
 }
+/**
+    \fn pyGetHeight
+*/
 
 int pyGetHeight(IEditor *editor)
 {
@@ -50,6 +52,9 @@ int pyGetHeight(IEditor *editor)
 
 	return info.height;
 }
+/**
+    \fn pyHexDumpFrame
+*/
 
 bool pyHexDumpFrame(IEditor *editor, int framenumber)
 {
@@ -69,6 +74,9 @@ bool pyHexDumpFrame(IEditor *editor, int framenumber)
 
 	return true;
 }
+/**
+    \fn pyPrintTiming
+*/
 
 int pyPrintTiming(IEditor *editor, int framenumber)
 {
@@ -83,10 +91,17 @@ int pyPrintTiming(IEditor *editor, int framenumber)
 		if (flags & AVI_BOTTOM_FIELD) field = 'B';
 		if (flags & AVI_TOP_FIELD) field = 'T';
 		if (pts != ADM_NO_PTS && dts != ADM_NO_PTS) delta = (int64_t)pts - (int64_t)dts;
+                printf("Frame  %05d",(int)framenumber);
+                printf(" Flags %04x",(int)flags);
+                printf(" DTS %s",ADM_us2plain(dts));
+                printf(" PTS %s\n",ADM_us2plain(pts));
 	}
 
 	return 0;
 }
+/**
+    \fn pyGetPts
+*/
 
 double pyGetPts(IEditor *editor, int frameNum)
 {
@@ -106,6 +121,9 @@ double pyGetPts(IEditor *editor, int frameNum)
 
 	return (double)pts;
 }
+/**
+    \fn pyGetDts
+*/
 
 double pyGetDts(IEditor *editor, int frameNum)
 {
@@ -125,6 +143,9 @@ double pyGetDts(IEditor *editor, int frameNum)
 
 	return (double)dts;
 }
+/**
+    \fn pyFileSelWrite
+*/
 
 char *pyFileSelWrite(IEditor *editor, const char *title)
 {
@@ -134,6 +155,9 @@ char *pyFileSelWrite(IEditor *editor, const char *title)
 
 	return me;
 }
+/**
+    \fn pyFileSelRead
+*/
 
 char *pyFileSelRead(IEditor *editor, const char *title)
 {
@@ -143,6 +167,9 @@ char *pyFileSelRead(IEditor *editor, const char *title)
 
 	return me;
 }
+/**
+    \fn pyDirSelect
+*/
 
 char *pyDirSelect(IEditor *editor, const char *title)
 {
@@ -155,16 +182,25 @@ char *pyDirSelect(IEditor *editor, const char *title)
 
 	return ADM_strdup(me);
 }
+/**
+    \fn pyDisplayError
+*/
 
 void pyDisplayError(IEditor *editor, const char *one, const char *two)
 {
 	GUI_Error_HIG(one, two);
 }
+/**
+    \fn pyDisplayInfo
+*/
 
 void pyDisplayInfo(IEditor *editor, const char *one, const char *two)
 {
 	GUI_Info_HIG(ADM_LOG_INFO, one, two);
 }
+/**
+    \fn pyTestCrash
+*/
 
 int pyTestCrash(void)
 {
@@ -172,9 +208,13 @@ int pyTestCrash(void)
 	*foobar = 0; // CRASH!
 	return true;
 }
+/**
+    \fn pyTestAssert
+*/
 
 int pyTestAssert(void)
 {
 	ADM_assert(0);
 	return true;
 }
+// EOF
