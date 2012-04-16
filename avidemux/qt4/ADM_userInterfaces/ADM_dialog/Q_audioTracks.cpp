@@ -13,6 +13,7 @@
  ***************************************************************************/
 #include "Q_audioTrackClass.h"
 #include "ADM_audioFilterInterface.h"
+#include "DIA_fileSel.h"
 extern const char *getStrFromAudioCodec( uint32_t codec);
 /**
     \fn audioTrackQt4
@@ -52,12 +53,43 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(enabledStateChanged(int)));
 
         }
-
+        QObject::connect(window->ui.pushButtonAddTrack,SIGNAL(clicked(bool)),
+                            this,SLOT(addTrack(bool)));
         // 
         window->show();
                                     
 };
 
+/**
+     \fn addTrack
+*/
+bool  audioTrackQt4::addTrack(bool state)
+{
+        ADM_info("Adding external audio track\n");
+        // start fileselector
+        #define MAX_SOURCE_LENGTH 1024
+        char fileName[MAX_SOURCE_LENGTH];
+        if(FileSel_SelectRead("Select audio file",fileName,MAX_SOURCE_LENGTH-1,NULL))
+        {
+            ADM_edAudioTrackExternal *ext=create_edAudioExternal(fileName);
+            if(!ext)
+            {
+                GUI_Error_HIG("Error","Cannot use that file as audio track");
+                delete ext;
+                ext=NULL;
+                return false;
+            }else
+            {
+                _pool->addInternalTrack(ext);
+                for(int i=0;i<NB_MENU;i++)
+                    setupMenu(i);
+
+            }
+        }
+        //
+        return true;
+
+}
 /**
      \fn enabledStateChanged
 */
@@ -248,6 +280,10 @@ void audioTrackQt4::setupMenu(int dex)
 {
     ADM_edAudioTrack *edTrack;
     
+    // 
+    window->inputs[dex]->clear();
+
+
     for(int i=0;i<_pool->size();i++)
     {
         QString str;
@@ -263,7 +299,17 @@ void audioTrackQt4::setupMenu(int dex)
                                 str=QString("Track ")+num+QString(" from video");
                                 }
                                 break;
-
+                case ADM_EDAUDIO_EXTERNAL:
+                                {
+                                ADM_edAudioTrackExternal *ext=edTrack->castToExternal() ;
+                                ADM_assert(ext);
+                                std::string name=ext->getMyName();
+                                str=QString("File ")+QString(name.c_str());
+                                }
+                                break;
+                default:
+                                ADM_assert(0);
+                                break;
         }
         // Get info about that track
         WAVHeader *hdr=_pool->at(i)->getInfo();
@@ -306,6 +352,8 @@ void audioTrackQt4::setupMenu(int dex)
                     window->inputs[dex]->setCurrentIndex(trackIndex);
                     }
                     break;
+             case ADM_EDAUDIO_EXTERNAL:
+                    
              default:
                     ADM_warning("Unknown track type at index %d\n",dex);
                     break;

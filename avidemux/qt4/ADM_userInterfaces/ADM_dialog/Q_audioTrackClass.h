@@ -8,6 +8,7 @@
 #include "ADM_edit.hxx"
 #include "DIA_audioTracks.h"
 #include "ADM_edAudioTrackFromVideo.h"
+#include "ADM_edAudioTrackExternal.h"
 extern void UI_purge(void);
 uint32_t audioEncoderGetNumberOfEncoders(void);
 const char  *audioEncoderGetDisplayName(int i);
@@ -34,4 +35,5 @@ public slots:
                        bool  filtersClicked(bool a);
                        bool  codecConfClicked(bool a);
                        bool  enabledStateChanged(int state);
+                       bool  addTrack(bool);
 };
