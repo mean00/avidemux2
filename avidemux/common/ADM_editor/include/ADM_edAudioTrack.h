@@ -32,6 +32,7 @@ typedef enum
 }ADM_EDAUDIO_TRACK_TYPE;
 class ADM_Composer;
 class ADM_edAudioTrackFromVideo;
+class ADM_edAudioTrackExternal;
 /**
     \class ADM_edAudioTrack
 */
@@ -45,17 +46,16 @@ protected:
 
                     int64_t   _audioSample;     // current sample number
 
-                    ADM_Composer            *parent;
+                    
                     ADM_EDAUDIO_TRACK_TYPE  trackType;
 
 
 public:
-                    ADM_edAudioTrack(ADM_EDAUDIO_TRACK_TYPE type, ADM_Composer *parent)
+                    ADM_edAudioTrack(ADM_EDAUDIO_TRACK_TYPE type, ADM_audioAccess *ccess)
                             : ADM_audioStream(NULL,NULL)
                     {
                             trackType=type;
-                            this->parent=parent;
-                            _audioSample=0;
+                            _audioSample=0; 
                             packetBufferSize=0;
                             packetBufferDts=ADM_NO_PTS;
                     }
@@ -65,22 +65,17 @@ public:
 
                     }
             virtual bool            destroyable()=0;
-            virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)=0;
+            virtual uint32_t      getOutputFrequency(void)=0; // sbr
+            virtual CHANNEL_TYPE * getChannelMapping(void )=0;
             virtual bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts)=0;
-            virtual bool            goToTime(uint64_t nbUs)=0;;
-            virtual bool            getExtraData(uint32_t *l, uint8_t **d)=0;
-            virtual uint64_t        getDurationInUs(void)=0;
-            virtual uint8_t			getAudioStream(ADM_audioStream **audio)=0;
-            virtual WAVHeader       *getInfo(void)=0;
-            virtual uint32_t        getOutputFrequency(void)=0; // sbr
-            virtual CHANNEL_TYPE    *getChannelMapping(void )=0;
-            virtual bool            hasVBRAudio(void)=0;
-
-            virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void)
+            virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) 
                             {
                                     return NULL;
                             }
-
+            virtual ADM_edAudioTrackExternal *castToExternal(void)
+                            {
+                                    return NULL;
+                            }
 
 
 };
