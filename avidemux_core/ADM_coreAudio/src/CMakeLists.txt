@@ -11,6 +11,7 @@ ADM_audioStreamPCM.cpp
 ADM_audioStreamConstantChunk.cpp
 ADM_audioWrite.cpp
 ADM_audioWriteWav.cpp
+ADM_audioIdentify.cpp
 )	
 #*************************************************
 #*************************************************
