@@ -27,6 +27,7 @@
 typedef enum
 {
     ADM_EDAUDIO_FROM_VIDEO,
+    ADM_EDAUDIO_EXTERNAL,
     ADM_EDAUDIO_LAST
 }ADM_EDAUDIO_TRACK_TYPE;
 class ADM_Composer;

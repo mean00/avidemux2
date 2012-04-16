@@ -246,12 +246,25 @@ void audioTrackQt4::disable(int i)
 */
 void audioTrackQt4::setupMenu(int dex)
 {
+    ADM_edAudioTrack *edTrack;
+    
     for(int i=0;i<_pool->size();i++)
     {
-        QString num;
-        num.setNum(i);
-        QString str=QString("Track ")+num;
-        
+        QString str;
+        //
+        edTrack=_pool->at(i);
+        switch(edTrack->getTrackType())
+        {
+                case ADM_EDAUDIO_FROM_VIDEO:
+                                {
+                                QString num;
+                                ADM_edAudioTrackFromVideo *fromVideo=edTrack->castToTrackFromVideo() ;
+                                num.setNum(fromVideo->getMyTrackIndex());
+                                str=QString("Track ")+num+QString(" from video");
+                                }
+                                break;
+
+        }
         // Get info about that track
         WAVHeader *hdr=_pool->at(i)->getInfo();
         if(hdr)
@@ -275,7 +288,8 @@ void audioTrackQt4::setupMenu(int dex)
         window->inputs[dex]->addItem(str); 
     }
     // set index if possible
-     EditableAudioTrack *ed=active.atEditable(dex);
+    EditableAudioTrack *ed;
+    ed=active.atEditable(dex);
 
     // set current track if it exists
     if(ed)

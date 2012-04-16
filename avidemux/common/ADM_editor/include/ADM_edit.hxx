@@ -73,7 +73,7 @@ class ADM_edAudioTrack;
 class PoolOfAudioTracks
 {
         protected:
-                BVector <ADM_edAudioTrackFromVideo *>tracks;
+                BVector <ADM_edAudioTrack *>tracks;
         public:
                     PoolOfAudioTracks()  {};
                     ~PoolOfAudioTracks() {};
@@ -81,12 +81,12 @@ class PoolOfAudioTracks
                 {
                         return tracks.size();
                 }
-                ADM_edAudioTrackFromVideo *at(int ix)
+                ADM_edAudioTrack *at(int ix)
                 {
                     if(ix>=size()) ADM_assert(0);
                     return tracks[ix];
                 }
-                bool addInternalTrack(ADM_edAudioTrackFromVideo *x)
+                bool addInternalTrack(ADM_edAudioTrack *x)
                         {
                                 tracks.append(x) ;
                                 return true;
