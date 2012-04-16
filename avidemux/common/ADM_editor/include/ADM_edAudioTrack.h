@@ -51,8 +51,8 @@ protected:
 
 
 public:
-                    ADM_edAudioTrack(ADM_EDAUDIO_TRACK_TYPE type, ADM_audioAccess *ccess)
-                            : ADM_audioStream(NULL,NULL)
+                    ADM_edAudioTrack(ADM_EDAUDIO_TRACK_TYPE type, WAVHeader *hdr,ADM_audioAccess *ccess)
+                            : ADM_audioStream(hdr,ccess)
                     {
                             trackType=type;
                             _audioSample=0; 

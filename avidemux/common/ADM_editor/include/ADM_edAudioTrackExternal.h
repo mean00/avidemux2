@@ -29,7 +29,7 @@ class ADM_edAudioTrackExternal : public ADM_edAudioTrack
 protected:
                     std::string  sourceFile;
 public:
-                                 ADM_edAudioTrackExternal(const char *file, ADM_audioAccess *ccess);
+                                 ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *ccess);
             virtual            ~ADM_edAudioTrackExternal();
                     bool        destroyable() {return true;};
                     bool        create(void);
@@ -39,7 +39,7 @@ public:
                     CHANNEL_TYPE *getChannelMapping(void );
                     uint32_t     getOutputFrequency(void); // sbr
             virtual bool         getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
-virtual ADM_edAudioTrackExternal *castToTrackExternal(void) {return this;}
+virtual ADM_edAudioTrackExternal *castToExternal(void) {return this;}
 
 
 };

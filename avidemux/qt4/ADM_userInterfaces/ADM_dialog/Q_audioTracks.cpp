@@ -75,8 +75,6 @@ bool  audioTrackQt4::addTrack(bool state)
             if(!ext)
             {
                 GUI_Error_HIG("Error","Cannot use that file as audio track");
-                delete ext;
-                ext=NULL;
                 return false;
             }else
             {

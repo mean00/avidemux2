@@ -27,8 +27,8 @@
 /**
     \fn ctor
 */
-ADM_edAudioTrackExternal:: ADM_edAudioTrackExternal(const char *file, ADM_audioAccess *cess)
-:  ADM_edAudioTrack(ADM_EDAUDIO_EXTERNAL,cess)
+ADM_edAudioTrackExternal:: ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *cess)
+:  ADM_edAudioTrack(ADM_EDAUDIO_EXTERNAL,hdr,cess)
 {
     ADM_info("Creating edAudio from external file %s\n",file);
     sourceFile=std::string(file);
@@ -109,7 +109,7 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
     // create access
     ADM_audioAccessFile *access=new ADM_audioAccessFile(name);
     // create ADM_edAudioTrack
-    ADM_edAudioTrackExternal *external=new ADM_edAudioTrackExternal(name, access);
+    ADM_edAudioTrackExternal *external=new ADM_edAudioTrackExternal(name, &hdr,access);
     if(!external->create())
     {
         delete external;
