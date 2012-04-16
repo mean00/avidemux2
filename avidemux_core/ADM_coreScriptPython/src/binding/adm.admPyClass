@@ -22,6 +22,7 @@
 /* METHOD */ int  pySetResample:audioSetResample             (int,int)
 /* METHOD */ int  pyGetResample:audioGetResample             (int)
 /* METHOD */ int  pyAddAudioTrack:audioAddTrack  (int)
+/* METHOD */ int  pyAddExternal:audioAddExternal (str)
 /* METHOD */ int  pyClearAudioTracks:audioClearTracks(void) 
 /* METHOD */ int  pySetPal2Film:audioSetPal2Film(int,int)
 /* METHOD */ int  pySetFilm2Pal:audioSetFilm2Pal(int,int)

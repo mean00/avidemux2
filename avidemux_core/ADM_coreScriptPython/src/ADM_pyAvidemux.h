@@ -23,6 +23,7 @@ int pyGetAudioChannels(IEditor *editor,int dex);
 int pyGetAudioFrequency(IEditor *editor,int dex);
 int pyGetAudioEncoding(IEditor *editor,int dex);
 int pyAddAudioTrack(IEditor *editor, int poolindex);
+int pyAddExternal(IEditor *editor, const char *fileName);
 int pyClearAudioTracks(IEditor *editor);
 
 /* Audio filters */

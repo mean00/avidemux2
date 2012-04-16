@@ -429,6 +429,20 @@ static tp_obj zzpy_setContainer(TP)
   int r =   editor->setContainer(p0,p1); 
   return tp_number(r);
 }
+// audioAddExternal -> int pyAddExternal (IEditor str ) 
+static tp_obj zzpy_audioAddExternal(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  const char *p1 = pm.asString();
+  int r =   pyAddExternal(p0,p1); 
+  return tp_number(r);
+}
 // audioSetPal2Film -> int pySetPal2Film (IEditor int int ) 
 static tp_obj zzpy_audioSetPal2Film(TP)
  {
@@ -598,6 +612,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_setContainer);
   }
+  if (!strcmp(key, "audioAddExternal"))
+  {
+     return tp_method(vm, self, zzpy_audioAddExternal);
+  }
   if (!strcmp(key, "audioSetPal2Film"))
   {
      return tp_method(vm, self, zzpy_audioSetPal2Film);
@@ -680,6 +698,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getWidth(IEditor)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "saveJpeg(str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setContainer(str, couples)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioAddExternal(IEditor,str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetPal2Film(IEditor,int,int)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioChannels(IEditor, int)");
 

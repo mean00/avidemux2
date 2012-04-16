@@ -241,6 +241,14 @@ int pyAddAudioTrack(IEditor *editor,int poolIndex)
     \fn
     \brief
 */
+int pyAddExternal(IEditor *editor, const char *fileName)
+{
+    return editor->addExternalAudioTrack(fileName);
+}
+/**
+    \fn
+    \brief
+*/
 int pyGetResample(IEditor *editor,int track)
 {
     return editor->getAudioResample(track);
