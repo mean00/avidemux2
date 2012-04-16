@@ -22,6 +22,8 @@
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackExternal.h"
+#include "ADM_audioIdentify.h"
+#include "ADM_audioAccessFile.h"
 /**
     \fn ctor
 */
@@ -46,7 +48,8 @@ ADM_edAudioTrackExternal::~ADM_edAudioTrackExternal()
 bool ADM_edAudioTrackExternal::create(void)
 {
     ADM_info("Initializing audio track from external %s \n",sourceFile.c_str());
-    return false;
+// TODO FIXME intialize codec etc..
+    return true;
 }
 /**
     \fn getChannelMapping
@@ -74,14 +77,48 @@ uint32_t    ADM_edAudioTrackExternal::getOutputFrequency(void)
 */
 ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
 {
+    #define EXTERNAL_PROBE_SIZE (1024*1024)
     // Identify file type
-
+    uint8_t buffer[EXTERNAL_PROBE_SIZE];
+    FILE *f=ADM_fopen(name,"rb");
+    if(!f)
+    {
+        ADM_warning("Cannot open %s\n",name);
+        return NULL;
+    }
+    fread(buffer,1,EXTERNAL_PROBE_SIZE,f);
+    fclose(f);
+    WAVHeader hdr;
+    if(false==ADM_identifyAudioStream(EXTERNAL_PROBE_SIZE,buffer,hdr))
+    {
+        ADM_warning("Cannot identify external audio track\n");
+        return NULL;
+    }
     // Try to create an access for the file...
-
+    switch(hdr.encoding)
+    {
+        case WAV_PCM:
+        case WAV_AC3:
+        case WAV_MP3:
+                break;
+        default:
+                ADM_warning("Unsupported external audio tracks \n");
+                return NULL;
+                break;
+    }
+    // create access
+    ADM_audioAccessFile *access=new ADM_audioAccessFile(name);
     // create ADM_edAudioTrack
-
+    ADM_edAudioTrackExternal *external=new ADM_edAudioTrackExternal(name, access);
+    if(!external->create())
+    {
+        delete external;
+        external=NULL;
+        ADM_warning("Failed to create external track from %s\n",name);
+        return NULL;
+    }
     // done!
-    return NULL;
+    return external;
 }
 
 // EOF

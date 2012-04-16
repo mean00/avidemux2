@@ -33,7 +33,7 @@ public:
             virtual            ~ADM_edAudioTrackExternal();
                     bool        destroyable() {return true;};
                     bool        create(void);
-           virtual bool        destroyable(){return true;}
+           
                     std::string   &getMyName() {return sourceFile; }
 
                     CHANNEL_TYPE *getChannelMapping(void );
@@ -43,7 +43,7 @@ virtual ADM_edAudioTrackExternal *castToTrackExternal(void) {return this;}
 
 
 };
-
+/// spawn
 ADM_edAudioTrackExternal *create_edAudioExternal(const char *name);
 
 #endif
