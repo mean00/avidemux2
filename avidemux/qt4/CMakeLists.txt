@@ -120,6 +120,7 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4
 	ADM_filtersQt4
 	ADM_UIQT46
 	ADM_dialogQt4
+           ADM_editor6
 	ADM_internalVideoFilter6
 	ADM_UIQT46
 	ADM_guiQt4
