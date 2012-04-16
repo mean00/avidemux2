@@ -46,6 +46,7 @@
 #include "ADM_videoFilters.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_videoFilterApi.h"
+#include "ADM_edAudioTrackExternal.h"
 
 #if 0
 /**
@@ -291,7 +292,22 @@ bool        ADM_Composer::addAudioTrack(int poolIndex)
     activeAudioTracks.addTrack(audioTrackPool.at(poolIndex));
     return true;
 }
-
+/**
+    \fn addExternalAudioTrack
+*/
+bool    ADM_Composer::addExternalAudioTrack(const char *fileName)
+{
+    ADM_edAudioTrackExternal *ext=create_edAudioExternal(fileName);
+    if(!ext)
+    {
+        ADM_warning("Error","Cannot use that file as audio track (%s)\n",fileName);
+        return false;
+    }else
+    {
+        audioTrackPool.addInternalTrack(ext);
+        return true;
+    }
+}
 
 #if 0
 #endif

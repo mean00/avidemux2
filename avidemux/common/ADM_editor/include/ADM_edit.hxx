@@ -303,6 +303,7 @@ public:
         ADM_audioStream    *getAudioStreamAt(int i);
         bool        clearAudioTracks(void); /// remove all audio tracks
         bool        addAudioTrack(int poolIndex); /// Add an audio track in the active tracks
+        bool        addExternalAudioTrack(const char *fileName); /// Add audio track from a file
 
 
 /********************************* /IEditor **********************************/

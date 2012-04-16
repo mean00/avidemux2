@@ -36,6 +36,7 @@
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterApi.h"
 #include "ADM_edAudioTrackFromVideo.h"
+#include "ADM_edAudioTrackExternal.h"
 #include "errno.h"
 /**
     \fn dumpConf
@@ -189,6 +190,13 @@ bool ppswap;
                 ADM_edAudioTrackFromVideo *vidTrack=track->edTrack->castToTrackFromVideo();
                 ADM_assert(vidTrack);
                 qfprintf(fd,"adm.audioAddTrack(%d)\n",vidTrack->getMyTrackIndex());
+                }
+                break;
+        case ADM_EDAUDIO_EXTERNAL:
+                {
+                ADM_edAudioTrackExternal *vidTrack=track->edTrack->castToExternal();
+                ADM_assert(vidTrack);
+                qfprintf(fd,"adm.audioAddExternal(\"%s\")\n",vidTrack->getMyName().c_str());
                 }
                 break;
          default:
