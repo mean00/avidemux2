@@ -176,20 +176,15 @@ bool ppswap;
 //______________________________________________
     qfprintf(fd,"\n#** Audio **\n");
     qfprintf(fd,"adm.audioClearTracks()\n");
-   // Codec
+    // Add external audio track if neeed
     for(int i=0;i<video_body->getNumberOfActiveAudioTracks();i++)
     {
-         qfprintf(fd,"\n#** Track %d **\n",i);        
          EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
          ADM_assert(track);
-         
          switch(track->edTrack->getTrackType())
         {
          case ADM_EDAUDIO_FROM_VIDEO:
                 {
-                ADM_edAudioTrackFromVideo *vidTrack=track->edTrack->castToTrackFromVideo();
-                ADM_assert(vidTrack);
-                qfprintf(fd,"adm.audioAddTrack(%d)\n",vidTrack->getMyTrackIndex());
                 }
                 break;
         case ADM_EDAUDIO_EXTERNAL:
@@ -203,7 +198,14 @@ bool ppswap;
                 ADM_warning("Unknown track type at index %d\n",i);
                 break;
          }
-         
+    }
+   // Map active track to pool
+    for(int i=0;i<video_body->getNumberOfActiveAudioTracks();i++)
+    {
+         qfprintf(fd,"\n#** Track %d **\n",i);        
+         EditableAudioTrack *track=video_body->getEditableAudioTrackAt(i);
+         ADM_assert(track);
+         qfprintf(fd,"adm.audioAddTrack(%d)\n",track->poolIndex);
          qfprintf(fd,"adm.audioCodec(%d,\"%s\"",i,audioCodecGetName(i)); 
          dumpConf(fd,track->encoderConf);
          qfprintf(fd,");\n");

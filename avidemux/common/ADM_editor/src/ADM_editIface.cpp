@@ -289,7 +289,7 @@ bool        ADM_Composer::clearAudioTracks(void)
 
 bool        ADM_Composer::addAudioTrack(int poolIndex)
 {
-    activeAudioTracks.addTrack(audioTrackPool.at(poolIndex));
+    activeAudioTracks.addTrack(poolIndex,audioTrackPool.at(poolIndex));
     return true;
 }
 /**
@@ -304,6 +304,7 @@ bool    ADM_Composer::addExternalAudioTrack(const char *fileName)
         return false;
     }else
     {
+        ADM_info("Adding %s as external audio track %d\n",fileName,audioTrackPool.size());
         audioTrackPool.addInternalTrack(ext);
         return true;
     }

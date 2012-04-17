@@ -38,7 +38,7 @@ bool ActiveAudioTracks::addTrack(EditableAudioTrack *x)
 	return true;
 }
 
-bool ActiveAudioTracks::addTrack(ADM_edAudioTrack *x)
+bool ActiveAudioTracks::addTrack(int poolIndex,ADM_edAudioTrack *x)
 {
 	if (!x)
 	{
@@ -47,6 +47,7 @@ bool ActiveAudioTracks::addTrack(ADM_edAudioTrack *x)
 	}
 
 	EditableAudioTrack *e = new EditableAudioTrack;
+    e->poolIndex=poolIndex;
 	e->edTrack = x;
 	tracks.append(e) ;
 	return true;

@@ -6,6 +6,7 @@ EditableAudioTrack::EditableAudioTrack()
 	encoderConf = NULL;
 	audioEncoder = NULL;
 	edTrack = NULL;
+    poolIndex=0;
 }
 
 EditableAudioTrack::EditableAudioTrack(const EditableAudioTrack &src)
@@ -25,6 +26,7 @@ EditableAudioTrack::EditableAudioTrack(const EditableAudioTrack &src)
 	audioEncoder = NULL;
 	EncodingVector = src.EncodingVector;
 	audioEncodingConfig = src.audioEncodingConfig;
+    poolIndex=src.poolIndex;
 }
 
 EditableAudioTrack::~EditableAudioTrack()

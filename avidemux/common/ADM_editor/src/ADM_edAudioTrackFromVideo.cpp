@@ -35,6 +35,7 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
     // Fill in wavHeader and access
     ADM_assert(track);
     wavHeader=track->wavheader;
+    
 }
 /**
     \fn dtor

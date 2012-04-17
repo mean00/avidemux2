@@ -225,7 +225,7 @@ bool  audioTrackQt4::updateActive(void)
             ADM_info("Processing input %d for track %d\n",i,done);
             EditableAudioTrack *src=active.atEditable(i);
             int trackIndex=window->inputs[i]->currentIndex();
-            _srcActive->addTrack(_pool->at(trackIndex));
+            _srcActive->addTrack(trackIndex,_pool->at(trackIndex));
             EditableAudioTrack *dest=_srcActive->atEditable(done);
             // set codec
             dest->encoderIndex=window->codec[i]->currentIndex();
@@ -340,23 +340,8 @@ void audioTrackQt4::setupMenu(int dex)
     {
         if(ed->edTrack)
         {
-            switch(ed->edTrack->getTrackType())
-           {
-             case ADM_EDAUDIO_FROM_VIDEO:
-                    {
-                    ADM_edAudioTrackFromVideo *vidTrack=ed->edTrack->castToTrackFromVideo();
-                    ADM_assert(vidTrack);
-                    int trackIndex=vidTrack->getMyTrackIndex();
-                    window->inputs[dex]->setCurrentIndex(trackIndex);
-                    }
-                    break;
-             case ADM_EDAUDIO_EXTERNAL:
-                    
-             default:
-                    ADM_warning("Unknown track type at index %d\n",dex);
-                    break;
-             }
-             
+            int poolIndex=ed->poolIndex;
+            window->inputs[dex]->setCurrentIndex(poolIndex);             
         }
      }
     // now add codecs
