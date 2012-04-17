@@ -76,7 +76,7 @@ class PoolOfAudioTracks
                 BVector <ADM_edAudioTrack *>tracks;
         public:
                     PoolOfAudioTracks()  {};
-                    ~PoolOfAudioTracks() {};
+                    ~PoolOfAudioTracks();
                 int size() const
                 {
                         return tracks.size();
@@ -92,6 +92,7 @@ class PoolOfAudioTracks
                                 return true;
                         };
                 bool clear() {tracks.clear();return true;}
+                bool dump(void);
 
 };
 

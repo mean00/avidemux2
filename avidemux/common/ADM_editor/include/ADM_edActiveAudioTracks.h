@@ -34,6 +34,7 @@ public:
 	bool addTrack(EditableAudioTrack *x);
 	bool addTrack(int poolIndex,ADM_edAudioTrack *x);
 	bool clear();
+    bool dump();
 };
 
 #endif

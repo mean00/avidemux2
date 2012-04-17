@@ -14,8 +14,7 @@
  ***************************************************************************/
 
 #include <string.h>
-#include "ADM_cpp.h"
-#include "ADM_default.h"
+#include "ADM_cpp.h"#include "ADM_default.h"
 #include <math.h>
 
 

@@ -289,7 +289,10 @@ bool        ADM_Composer::clearAudioTracks(void)
 
 bool        ADM_Composer::addAudioTrack(int poolIndex)
 {
+    ADM_info("** Adding active track from pool **\n");
     activeAudioTracks.addTrack(poolIndex,audioTrackPool.at(poolIndex));
+    ADM_info("Adding track %d\n",poolIndex);
+    activeAudioTracks.dump();
     return true;
 }
 /**
@@ -306,9 +309,56 @@ bool    ADM_Composer::addExternalAudioTrack(const char *fileName)
     {
         ADM_info("Adding %s as external audio track %d\n",fileName,audioTrackPool.size());
         audioTrackPool.addInternalTrack(ext);
+        audioTrackPool.dump();
         return true;
     }
 }
-
+/**
+     \fn dump
+*/
+bool PoolOfAudioTracks::dump(void)
+{
+    for(int i=0;i<size();i++)
+    {
+        ADM_edAudioTrack *track=at(i);
+        ADM_info("Track %d, pool index=%d : \n",i,i);
+        switch(track->getTrackType())
+        {
+            case ADM_EDAUDIO_FROM_VIDEO:
+                        {
+                        ADM_edAudioTrackFromVideo *vid=track->castToTrackFromVideo();
+                        ADM_assert(vid);
+                        ADM_info("\t track %d from video\n",vid->getMyTrackIndex());
+                        }
+                        break;
+            case ADM_EDAUDIO_EXTERNAL:
+                        {
+                        ADM_edAudioTrackExternal *vid=track->castToExternal();
+                        ADM_assert(vid);
+                        ADM_info("\t from file %s\n",vid->getMyName().c_str());
+                        }
+                        break;
+            default:
+                    ADM_assert(0);
+                    break;
+        }
+    }
+    return true;
+}
+PoolOfAudioTracks::~PoolOfAudioTracks()
+{
+    for(int i=0;i<size();i++)
+    {
+        ADM_edAudioTrack *track=at(i);
+        if(true==track->destroyable())
+                delete track;
+    }
+    clear();
+}
 #if 0
+ virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) 
+                            {
+                                    return NULL;
+                            }
+            virtual ADM_edAudioTrackExternal *castToExternal(void)
 #endif

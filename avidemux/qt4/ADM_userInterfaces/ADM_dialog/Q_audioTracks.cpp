@@ -223,13 +223,14 @@ bool  audioTrackQt4::updateActive(void)
         if(window->enabled[i]->checkState()==Qt::Checked)
         {
             ADM_info("Processing input %d for track %d\n",i,done);
-            EditableAudioTrack *src=active.atEditable(i);
             int trackIndex=window->inputs[i]->currentIndex();
             _srcActive->addTrack(trackIndex,_pool->at(trackIndex));
+            //
             EditableAudioTrack *dest=_srcActive->atEditable(done);
             // set codec
             dest->encoderIndex=window->codec[i]->currentIndex();
             // conf
+            EditableAudioTrack *src=active.atEditable(i);
             if(src)
             {
                 dest->encoderConf=CONFcouple::duplicate(src->encoderConf);
@@ -240,6 +241,7 @@ bool  audioTrackQt4::updateActive(void)
             done++;
         }
     }
+    _srcActive->dump();
     return true;
 }
 
