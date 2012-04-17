@@ -96,6 +96,7 @@ extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern bool ADM_jobInit(void);
+extern void cleanUp (void);
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
@@ -323,6 +324,7 @@ int startAvidemux(int argc, char *argv[])
     ADM_jobInit();
 
     UI_RunApp();
+    cleanUp();
 
     printf("Normal exit\n");
     return 0;

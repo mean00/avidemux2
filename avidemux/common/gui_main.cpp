@@ -74,7 +74,7 @@ extern uint8_t DIA_builtin(void);
 extern uint8_t DIA_pluginsInfo(void);
 
 static void ReSync (void);
-static void cleanUp (void);
+void cleanUp (void);
 void        updateLoaded (void);
 
 extern void GUI_OpenApplicationLog();
@@ -274,13 +274,7 @@ int nw;
         prefs->save ();
         return;
     case ACT_EXIT:
-      { bool saveprefsonexit;
-         prefs->get(FEATURES_SAVEPREFSONEXIT,&saveprefsonexit);
-         if( saveprefsonexit )
-            prefs->save ();
-      }
-      cleanUp ();
-      exit (0);
+	  UI_closeGui();
       break;
     default:
       break;
@@ -712,6 +706,15 @@ void ReSync (void)
 //
 void cleanUp (void)
 {
+	bool saveprefsonexit;
+
+	prefs->get(FEATURES_SAVEPREFSONEXIT, &saveprefsonexit);
+
+	if (saveprefsonexit)
+	{
+		prefs->save();
+	}
+
 	if (avifileinfo)
 	{
 		delete avifileinfo;

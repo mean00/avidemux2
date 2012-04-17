@@ -111,6 +111,8 @@ bool UI_End(void)
 {
     return true;
 }
+void UI_closeGui(void) {};
+
 bool UI_setDecoderName(const char *name) {return true;}
 int32_t UI_readJog(void) {return 0;};
 //EOF

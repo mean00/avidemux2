@@ -358,6 +358,13 @@ uint32_t w,h;
 
 	return ret;
 }
+
+void UI_closeGui(void)
+{
+	gtk_unregister_dialog(guiRootWindow);
+	gtk_widget_destroy(guiRootWindow);
+}
+
 /**
     \fn destroyGUI
 */
@@ -773,7 +780,7 @@ gboolean destroyCallback(GtkWidget * widget,
     UNUSED_ARG(widget);
     UNUSED_ARG(event);
     UNUSED_ARG(user_data);
-    HandleAction(ACT_EXIT);
+
     return 1;
 }
 /**

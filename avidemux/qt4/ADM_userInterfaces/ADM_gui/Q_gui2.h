@@ -85,7 +85,6 @@ protected:
 	void mousePressEvent(QMouseEvent* event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
-    void closeEvent ( QCloseEvent * event )  ;
     void customScript(int pool,int base,QObject *ptr);
 };
 #endif	// Q_gui2_h

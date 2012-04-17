@@ -700,21 +700,6 @@ MainWindow::~MainWindow()
     thumbSlider=NULL;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-static bool first=true;
-    ADM_warning("Close event\n");
-    if(first)
-    {
-        first=false;
-        HandleAction(ACT_EXIT);
-    }
-    event->accept();
-//         event->ignore();
-
-}
-
-
 static const UI_FUNCTIONS_T UI_Hooks=
     {
         ADM_RENDER_API_VERSION_NUMBER,
@@ -725,7 +710,7 @@ static const UI_FUNCTIONS_T UI_Hooks=
         UI_getPreferredRender
 
     };
-QApplication *myApplication=NULL;
+static QApplication *myApplication=NULL;
 /**
     \fn  UI_Init
     \brief First part of UI initialization
@@ -770,6 +755,12 @@ uint8_t initGUI(vector<IScriptEngine*> scriptEngines)
     UI_InitVUMeter(mw->ui.frameVU);
 
 	return 1;
+}
+
+void UI_closeGui(void)
+{
+	QuiMainWindows->close();
+	qtUnregisterDialog(QuiMainWindows);
 }
 
 /**
@@ -867,8 +858,13 @@ int UI_RunApp(void)
         UI_Qt4CleanGl();
 #endif
 	destroyTranslator();
+
+	delete QuiMainWindows;
     delete myApplication;
-    myApplication=NULL;
+
+    QuiMainWindows = NULL;
+    myApplication = NULL;
+
     return 1;
 }
 /**
