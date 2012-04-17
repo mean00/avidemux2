@@ -296,16 +296,16 @@ MainWindow::MainWindow(vector<IScriptEngine*> scriptEngines) : QMainWindow()
     buildMyMenu();
 
 	/* Build the custom menu */
-    jsMenu=new QMenu("javaScript");
-    pyMenu=new QMenu("tinyPython");
+    jsMenu=new QMenu("javaScript", this);
+    pyMenu=new QMenu("tinyPython", this);
     autoMenu=ui.menuAuto ;//new QMenu("autoPython");
     ui.menuCustom->addMenu(jsMenu);
     ui.menuCustom->addMenu(pyMenu);
     //ui.menuAuto->addMenu(autoMenu);
 	buildCustomMenu();
 
-    recentFiles=new QMenu("Recent Files");
-    recentProjects=new QMenu("Recent Projects");
+    recentFiles=new QMenu("Recent Files", this);
+    recentProjects=new QMenu("Recent Projects", this);
     ui.menuRecent->addMenu(recentFiles);
     ui.menuRecent->addMenu(recentProjects);
     connect( ui.menuRecent,SIGNAL(triggered(QAction*)),this,SLOT(searchRecentFiles(QAction*)));
