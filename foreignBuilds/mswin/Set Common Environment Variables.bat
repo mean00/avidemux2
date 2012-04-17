@@ -22,8 +22,15 @@ set SDLDIR=%usrLocalDir%
 set CFLAGS=%CFLAGS% -I%CMAKE_INCLUDE_PATH% -L%CMAKE_LIBRARY_PATH%
 set CXXFLAGS=%CXXFLAGS% -I%CMAKE_INCLUDE_PATH% -L%CMAKE_LIBRARY_PATH%
 set LDFLAGS=%LDFLAGS% -shared-libgcc -shared-libstdc++ -L%CMAKE_LIBRARY_PATH%
-set admBuildDir=%devDir%\avidemux_2.6_build%BuildBits%
-set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
+
+if "%Debug%" EQU "1" (
+	set admBuildDir=%devDir%\avidemux_2.6_build%BuildBits%-dbg
+	set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%-dbg_sdk
+	set qtDir=%qtDir%-dbg
+) else (
+	set admBuildDir=%devDir%\avidemux_2.6_build%BuildBits%
+	set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
+)
 
 if "%BuildBits%" == "32" (
 	set CFLAGS=%CFLAGS% -m32

@@ -23,6 +23,7 @@ if errorlevel 4 (
 	echo.
 	goto :start	)
 if errorlevel 3 (
+	set Debug=1
 	set DebugFlags=-DCMAKE_BUILD_TYPE=Debug
 	echo.
 	echo -- Debug mode set --
