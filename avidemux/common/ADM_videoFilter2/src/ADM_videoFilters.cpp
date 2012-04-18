@@ -62,7 +62,7 @@ ADM_coreVideoFilter *last=NULL;
         }
         last=bridge;
     }
-    else    
+    else
         last=ADM_VideoFilters[ADM_vf_getSize()-1].instance;
     return last;
 }
@@ -74,9 +74,9 @@ bool                    ADM_vf_addFilterFromTag(uint32_t tag,CONFcouple *c,bool 
 {
     ADM_info("Creating video filter using tag %"LU" \n",tag);
     // Fetch the descriptor...
-    
+
     ADM_coreVideoFilter *last=getLastVideoFilter();
- 
+
     ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,last,c);
     if(true==configure)
         if(nw->configure()==false)
@@ -98,7 +98,7 @@ static bool ADM_vf_recreateChain(void)
 {
     ADM_assert(bridge);
     ADM_coreVideoFilter *f=bridge;
-    
+
     BVector <ADM_coreVideoFilter *> bin;
     for(int i=0;i<ADM_VideoFilters.size();i++)
     {
@@ -123,7 +123,7 @@ static bool ADM_vf_recreateChain(void)
 }
 /**
     \fn ADM_vf_removeFilterAtIndex
-    
+
 */
 bool ADM_vf_removeFilterAtIndex(int index)
 {
@@ -133,7 +133,7 @@ bool ADM_vf_removeFilterAtIndex(int index)
     // last filter, destroy..
     ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
     delete e->instance;
-    ADM_VideoFilters.removeAt(index);        
+    ADM_VideoFilters.removeAt(index);
     return ADM_vf_recreateChain();
 }
 /**
@@ -235,7 +235,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
     // Last create the thread
 #if 1
     // Make sure there is no openGl filter in the queue, it is not thread safe...
-    
+
     if(openGl==true)
     {
         ADM_warning("The filter chain contains an openGl filter, disabling threads \n");
@@ -288,7 +288,7 @@ bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain)
         delete filter;
         (*chain)[i]=NULL;
     }
-    chain->clear();
+    delete chain;
     return true;
 }
 /**
