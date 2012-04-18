@@ -763,6 +763,11 @@ void UI_closeGui(void)
 	qtUnregisterDialog(QuiMainWindows);
 }
 
+void destroyGUI(void)
+{
+	renderDestroy();
+}
+
 /**
 
 */

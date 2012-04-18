@@ -33,7 +33,6 @@ uint8_t DIA_videoCodec(int *codecIndex) {return 0;}
 uint8_t DIA_audioCodec( int *codec ) {return 0;}
 uint8_t DIA_quota(char *) {return 0;}
 uint8_t DIA_RecentFiles( char **name ){return 0;}
-void destroyGUI(void) {}
 uint8_t DIA_glyphEdit(void){ return 0;};
 int32_t UI_readJog(void) {return 0;}
 struct THRESHOLD_PARAM;
