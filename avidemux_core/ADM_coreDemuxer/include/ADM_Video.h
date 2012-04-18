@@ -48,17 +48,6 @@ typedef struct
 } aviInfo;
 
 
-static uint8_t WAV2AudioInfo(WAVHeader *hdr,audioInfo *info)
-{
-    info->bitrate=(hdr->byterate*8)/1000;
-    info->channels=hdr->channels;
-    info->encoding=hdr->encoding;
-    info->frequency=hdr->frequency;
-    info->av_sync=0;
-    return 1;
-}
-
-
 /**
     \class vidHeader
     \brief Base Class for all demuxers
