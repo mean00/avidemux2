@@ -326,24 +326,39 @@ static bool print_position_from_addr(const void* addr)
     static const void* last_addr = NULL;
     static char last_info[256] = "";
     const char *module_path = new_progname;
+#ifdef _WIN32
+	static char last_moduleFilename[MAX_PATH] = "";
+#endif
 
     if (addr == last_addr)
     {
         if (last_info[0] == '\0')
             return false;
         fprintf(new_output_fp, "%s", last_info);
+
+#ifdef _WIN32
+		fprintf(new_output_fp, ", %s", last_moduleFilename);
+#endif
+
         return true;
     }
 
 #ifdef _WIN32
 	HANDLE process = GetCurrentProcess();
 	DWORD_PTR moduleBase = SymGetModuleBase(process, (DWORD_PTR)addr);
+	char modulePath[MAX_PATH];
 	char moduleFilename[MAX_PATH];
 
-	if (moduleBase && GetModuleFileName((HINSTANCE)moduleBase, moduleFilename, MAX_PATH))
+	if (moduleBase && GetModuleFileName((HINSTANCE)moduleBase, modulePath, MAX_PATH))
 	{
-		module_path = moduleFilename;
+		strcpy(moduleFilename, strrchr(modulePath, '\\') + 1);
 	}
+	else
+	{
+		strcpy(moduleFilename, "<unknown>");
+	}
+
+	module_path = modulePath;
 
 	char buffer[sizeof last_info] = { '\0' };
 	size_t len = 0;
@@ -395,29 +410,28 @@ static bool print_position_from_addr(const void* addr)
             if (res == 0 && len > 0)
             {
                 last_addr = addr;
+#ifdef _WIN32
+                strcpy(last_moduleFilename, moduleFilename);
+#endif
                 if (buffer[len - 1] == '0' && buffer[len - 2] == ':')
 				{
                     last_info[0] = '\0';
-
-#ifdef _WIN32
-					const char* fileName = strrchr(module_path, '\\') + 1;
-					fprintf(new_output_fp, "%s, ", fileName);
-#endif
 				}
                 else
                 {
                     fprintf(new_output_fp, "%s", buffer);
 
 #ifdef _WIN32
-					const char* fileName = strrchr(module_path, '\\') + 1;
-					fprintf(new_output_fp, ", %s", fileName);
+					fprintf(new_output_fp, ", %s", moduleFilename);
 #endif
 
                     strcpy(last_info, buffer);
                     return true;
                 }
             }
-#ifndef _WIN32
+#ifdef _WIN32
+			fprintf(new_output_fp, "%s, ", moduleFilename);
+#else
         }
     }
 #endif
