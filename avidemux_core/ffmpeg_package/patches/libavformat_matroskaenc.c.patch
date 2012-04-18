@@ -1,6 +1,6 @@
---- libavformat/matroskaenc.c	2011-08-10 14:16:41.000000000 +0200
-+++ libavformat/matroskaenc.c	2011-09-03 09:02:21.375349250 +0200
-@@ -409,6 +409,7 @@
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/matroskaenc.c	2012-04-18 15:14:07 +1000
++++ libavformat/matroskaenc.c	2012-04-18 15:14:07 +1000
+@@ -418,6 +418,7 @@
  
  static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecContext *codec)
  {
@@ -8,7 +8,7 @@
      uint8_t *header_start[3];
      int header_len[3];
      int first_header_size;
-@@ -433,6 +434,28 @@
+@@ -442,6 +443,28 @@
          avio_write(pb, header_start[j], header_len[j]);
  
      return 0;
@@ -37,7 +37,7 @@
  }
  
  static void get_aac_sample_rates(AVFormatContext *s, AVCodecContext *codec, int *sample_rate, int *output_sample_rate)
-@@ -536,6 +559,24 @@
+@@ -551,6 +574,24 @@
          put_ebml_uint (pb, MATROSKA_ID_TRACKNUMBER     , i + 1);
          put_ebml_uint (pb, MATROSKA_ID_TRACKUID        , i + 1);
          put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)

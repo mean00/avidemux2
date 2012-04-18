@@ -1,6 +1,6 @@
---- libavcodec/h263dec.c	2011-08-10 14:18:20.000000000 +0200
-+++ libavcodec/h263dec.c	2011-09-03 09:00:01.025349244 +0200
-@@ -115,6 +115,25 @@
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/h263dec.c	2012-04-18 15:14:06 +1000
++++ libavcodec/h263dec.c	2012-04-18 15:14:06 +1000
+@@ -119,6 +119,25 @@
  
      return 0;
  }

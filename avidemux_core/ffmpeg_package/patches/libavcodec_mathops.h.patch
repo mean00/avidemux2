@@ -1,0 +1,12 @@
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mathops.h	2012-04-18 15:14:06 +1000
++++ libavcodec/mathops.h	2012-04-18 15:14:06 +1000
+@@ -23,7 +23,9 @@
+ #define AVCODEC_MATHOPS_H
+ 
+ #include "libavutil/common.h"
++#ifndef ADM_LAV_NO_CONFIG
+ #include "config.h"
++#endif// ADM_LAV_NO_CONFIG
+ 
+ #if   ARCH_ARM
+ #   include "arm/mathops.h"

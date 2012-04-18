@@ -1,15 +1,15 @@
---- libavcodec/avcodec.h	2011-08-10 14:18:20.000000000 +0200
-+++ libavcodec/avcodec.h	2011-09-03 08:35:49.485349178 +0200
-@@ -619,6 +619,8 @@
- #define CODEC_FLAG2_PSY           0x00080000 ///< Use psycho visual optimizations.
- #define CODEC_FLAG2_SSIM          0x00100000 ///< Compute SSIM during encoding, error[] values are undefined.
- #define CODEC_FLAG2_INTRA_REFRESH 0x00200000 ///< Use periodic insertion of intra blocks instead of keyframes.
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/avcodec.h	2012-04-18 15:14:06 +1000
++++ libavcodec/avcodec.h	2012-04-18 15:14:06 +1000
+@@ -698,6 +698,8 @@
+ #define CODEC_FLAG2_INTRA_VLC     0x00000800 ///< Use MPEG-2 intra VLC table.
+ #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format.
+ #define CODEC_FLAG2_NON_LINEAR_QUANT 0x00010000 ///< Use MPEG-2 nonlinear quantizer.
 +//MEANX: NEVER EVER USE CLOSED GOP ?
 +#define CODEC_FLAG2_32_PULLDOWN   0x80000000
- 
- /* Unsupported options :
-  *              Syntax Arithmetic coding (SAC)
-@@ -1594,6 +1596,7 @@
+ #endif
+ #if FF_API_MJPEG_GLOBAL_OPTS
+ #define CODEC_FLAG_EXTERN_HUFF     0x1000   ///< Use external Huffman table (for MJPEG).
+@@ -1868,6 +1870,7 @@
       * - decoding: unused
       */
      int rc_max_rate;
@@ -17,7 +17,7 @@
  
      /**
       * minimum bitrate
-@@ -1608,6 +1611,8 @@
+@@ -1882,6 +1885,8 @@
       * - decoding: unused
       */
      int rc_buffer_size;

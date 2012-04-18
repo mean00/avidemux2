@@ -7,15 +7,11 @@ MACRO (xadd opt)
 	endif ("${ARGV1}" STREQUAL "")
 ENDMACRO (xadd)
 
- set(FFMPEG_VERSION "860")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
-#set(FFMPEG_VERSION "efb5fa79f5ca34140db357a00c999286097ab53e")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
-#set(FFMPEG_VERSION "8cb3c557a9f3b24bc55325e3f64a2150b983305c")	# http://git.ffmpeg.org/?p=ffmpeg;a=snapshot;h=2be4fa05c5528073bcfc472d1c23f2d77b679a9d;sf=tgz
-
-
+set(FFMPEG_VERSION "0.10.2")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
-set(FFMPEG_SOURCE_ARCHIVE "ffmpeg_r${FFMPEG_VERSION}.tar.gz")
-
+set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
+set(FFMPEG_SOURCE_ARCHIVE_DIR "ffmpeg-${FFMPEG_VERSION}")
 set(FFMPEG_EXTRACT_DIR "${CMAKE_BINARY_DIR}")
 set(FFMPEG_BASE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_SOURCE_DIR "${FFMPEG_BASE_DIR}/source")
@@ -41,11 +37,7 @@ set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES
 
 # Prepare FFmpeg source
 include(admFFmpegUtil)
-
-#if ((NOT WIN32) OR CROSS)
-	find_package(Tar)
-	include(admFFmpegPrepareTar)
-#endif ((NOT WIN32) OR CROSS)
+include(admFFmpegPrepareTar)
 
 if (NOT FFMPEG_PREPARED)
 	include(admFFmpegPrepareGit)

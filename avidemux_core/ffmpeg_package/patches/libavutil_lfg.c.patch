@@ -1,11 +1,11 @@
---- libavutil/lfg.c	2011-08-10 14:15:51.000000000 +0200
-+++ libavutil/lfg.c	2011-09-03 08:35:49.695349178 +0200
-@@ -39,7 +39,7 @@
-         c->state[i+2]= AV_RL32(tmp+8);
-         c->state[i+3]= AV_RL32(tmp+12);
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavutil/lfg.c	2012-04-18 15:14:08 +1000
++++ libavutil/lfg.c	2012-04-18 15:14:08 +1000
+@@ -41,7 +41,7 @@
+         c->state[i + 2] = AV_RL32(tmp + 8);
+         c->state[i + 3] = AV_RL32(tmp + 12);
      }
--    c->index=0;
-+    c->xindex=0;
+-    c->index = 0;
++    c->xindex = 0;
  }
  
  void av_bmg_get(AVLFG *lfg, double out[2])

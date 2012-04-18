@@ -1,0 +1,12 @@
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/libavcodec.v	2012-04-18 16:09:39 +1000
++++ libavcodec/libavcodec.v	2012-04-18 16:09:39 +1000
+@@ -27,5 +27,9 @@
+                 ff_jpeg_fdct*;
+                 #XBMC's configure checks for ff_vdpau_vc1_decode_picture()
+                 ff_vdpau_vc1_decode_picture;
++                ff_h264_info;
++                ff_golomb_vlc_len;
++                ff_ue_golomb_vlc_code;
++                ff_se_golomb_vlc_code;
+         local:  *;
+ };

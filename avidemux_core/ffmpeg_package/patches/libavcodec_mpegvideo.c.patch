@@ -1,15 +1,15 @@
---- libavcodec/mpegvideo.c	2011-08-10 14:18:20.000000000 +0200
-+++ libavcodec/mpegvideo.c	2011-09-03 08:35:49.565349178 +0200
-@@ -736,7 +736,11 @@
-     FF_ALLOCZ_OR_GOTO(s->avctx, s->prev_pict_types, PREV_PICT_TYPES_BUFFER_SIZE, fail);
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpegvideo.c	2012-04-18 15:14:07 +1000
++++ libavcodec/mpegvideo.c	2012-04-18 15:14:07 +1000
+@@ -1566,8 +1566,10 @@
+         }
+     }
  
-     s->parse_context.state= -1;
--    if((s->avctx->debug&(FF_DEBUG_VIS_QP|FF_DEBUG_VIS_MB_TYPE)) || (s->avctx->debug_mv)){
-+ //MEANX: Allocate them always, as they may be free when we decode 1st image
-+
-+    // MEANXif((s->avctx->debug&(FF_DEBUG_VIS_QP|FF_DEBUG_VIS_MB_TYPE)) || (s->avctx->debug_mv)){
-+if(1){ // MEANX
-+
-        s->visualization_buffer[0] = av_malloc((s->mb_width*16 + 2*EDGE_WIDTH) * s->mb_height*16 + 2*EDGE_WIDTH);
-        s->visualization_buffer[1] = av_malloc((s->mb_width*16 + 2*EDGE_WIDTH) * s->mb_height*16 + 2*EDGE_WIDTH);
-        s->visualization_buffer[2] = av_malloc((s->mb_width*16 + 2*EDGE_WIDTH) * s->mb_height*16 + 2*EDGE_WIDTH);
+-    if ((s->avctx->debug & (FF_DEBUG_VIS_QP | FF_DEBUG_VIS_MB_TYPE)) ||
+-        (s->avctx->debug_mv)) {
++	//MEANX: Allocate them always, as they may be free when we decode 1st image
++    /*if ((s->avctx->debug & (FF_DEBUG_VIS_QP | FF_DEBUG_VIS_MB_TYPE)) ||
++        (s->avctx->debug_mv)) {*/
++	{
+         const int shift = 1 + s->quarter_sample;
+         int mb_y;
+         uint8_t *ptr;

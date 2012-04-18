@@ -48,7 +48,7 @@ uint32_t of=0;
             AC3HeaderInfo hdr;
             GetBitContext gb;
             init_get_bits(&gb,buf,len*8);
-            if(ff_ac3_parse_header(&gb, &hdr))
+            if(avpriv_ac3_parse_header(&gb, &hdr))
             {
                 len--;
                 buf++;

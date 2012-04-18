@@ -1,30 +1,32 @@
---- libavcodec/mpegvideo_enc.c	2011-08-10 14:16:41.000000000 +0200
-+++ libavcodec/mpegvideo_enc.c	2011-09-03 08:35:49.565349178 +0200
-@@ -376,12 +376,14 @@
- 
-         av_log(avctx, AV_LOG_INFO, "Warning vbv_delay will be set to 0xFFFF (=VBR) as the specified vbv buffer is too large for the given bitrate!\n");
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpegvideo_enc.c	2012-04-18 15:14:07 +1000
++++ libavcodec/mpegvideo_enc.c	2012-04-18 15:14:07 +1000
+@@ -447,12 +447,14 @@
+                "specified vbv buffer is too large for the given bitrate!\n");
      }
-+#if 0 //MEANX
  
-     if((s->flags & CODEC_FLAG_4MV) && s->codec_id != CODEC_ID_MPEG4
-        && s->codec_id != CODEC_ID_H263 && s->codec_id != CODEC_ID_H263P && s->codec_id != CODEC_ID_FLV1){
++#if 0 //MEANX
+     if ((s->flags & CODEC_FLAG_4MV)  && s->codec_id != CODEC_ID_MPEG4 &&
+         s->codec_id != CODEC_ID_H263 && s->codec_id != CODEC_ID_H263P &&
+         s->codec_id != CODEC_ID_FLV1) {
          av_log(avctx, AV_LOG_ERROR, "4MV not supported by codec\n");
          return -1;
      }
 +#endif
  
-     if(s->obmc && s->avctx->mb_decision != FF_MB_DECISION_SIMPLE){
-         av_log(avctx, AV_LOG_ERROR, "OBMC is only supported with simple mb decision\n");
-@@ -422,10 +424,12 @@
+     if (s->obmc && s->avctx->mb_decision != FF_MB_DECISION_SIMPLE) {
+         av_log(avctx, AV_LOG_ERROR,
+@@ -511,12 +513,14 @@
          return -1;
      }
  
 +#if 0 //MEANX
-     if(s->mpeg_quant && s->codec_id != CODEC_ID_MPEG4){ //FIXME mpeg2 uses that too
-         av_log(avctx, AV_LOG_ERROR, "mpeg2 style quantization not supported by codec\n");
+     // FIXME mpeg2 uses that too
+     if (s->mpeg_quant && s->codec_id != CODEC_ID_MPEG4) {
+         av_log(avctx, AV_LOG_ERROR,
+                "mpeg2 style quantization not supported by codec\n");
          return -1;
      }
 +#endif
  
-     if((s->flags & CODEC_FLAG_CBP_RD) && !avctx->trellis){
+     if ((s->flags & CODEC_FLAG_CBP_RD) && !avctx->trellis) {
          av_log(avctx, AV_LOG_ERROR, "CBP RD needs trellis quant\n");

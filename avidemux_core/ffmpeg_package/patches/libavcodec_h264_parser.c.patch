@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c	2011-10-02 22:06:31.000000000 +0200
-+++ libavcodec/h264/h264_parser.c	2012-03-25 09:33:01.979321163 +0200
-@@ -29,7 +29,67 @@
+--- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/h264_parser.c	2012-04-18 15:14:06 +1000
++++ libavcodec/h264_parser.c	2012-04-18 15:14:06 +1000
+@@ -31,7 +31,67 @@
  #include "h264data.h"
  #include "golomb.h"
  
