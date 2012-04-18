@@ -26,47 +26,42 @@
 #endif
 #include "ADM_default.h"
 #include "T_vumeter.h"
-    
 
-static QFrame *hostFrame=NULL;
-static uint8_t *rgbDataBuffer=NULL;
-static uint32_t vuWidth=0,vuHeight=0;
+static ADM_Qvumeter *vuWidget = NULL;
 
-ADM_Qvumeter::ADM_Qvumeter(QWidget *z) : QWidget(z) {}
-ADM_Qvumeter::~ADM_Qvumeter() {}
+ADM_Qvumeter::ADM_Qvumeter(QWidget *z, int width, int height) : QWidget(z)
+{
+	this->resize(width, height);
+	z->resize(width + 2, height + 2);
+
+	rgbDataBuffer = new uint8_t[width * height * 4];
+	memset(rgbDataBuffer, 0, width * height * 4);
+}
+
+ADM_Qvumeter::~ADM_Qvumeter()
+{
+	delete [] rgbDataBuffer;
+}
 
 void ADM_Qvumeter::paintEvent(QPaintEvent *ev)
 {
-	if(!vuWidth || !vuWidth || !rgbDataBuffer )
-    {
-        ADM_warning("Vu meter: cannot update\n");
-		return ;
-    }
-		QImage image(rgbDataBuffer,vuWidth,vuHeight,QImage::Format_RGB32);
-		QPainter painter(this);
-		painter.drawImage(QPoint(1,1),image);
-		painter.end();
+	QImage image(this->rgbDataBuffer, this->width(), this->height(), QImage::Format_RGB32);
+	QPainter painter(this);
+	painter.drawImage(QPoint(1, 1), image);
+	painter.end();
 }
 
-ADM_Qvumeter *vuWidget=NULL;
 /**
     \fn UI_InitVUMeter
 */
 bool UI_InitVUMeter(QFrame *host)
 {
-    vuWidget=new ADM_Qvumeter(host);
-    hostFrame=host;
-    vuWidth=64;
-    vuHeight=64;
-    vuWidget->resize(vuWidth,vuHeight);
-    host->resize(vuWidth+2,vuHeight+2);
-    rgbDataBuffer=new uint8_t[vuWidth*vuHeight*4];
-    memset(rgbDataBuffer,0,vuWidth*vuHeight*4);
-    vuWidget->show();
-    return true;
-   
+	vuWidget = new ADM_Qvumeter(host, 64, 64);
+	vuWidget->show();
+
+	return true;
 }
-/** 
+/**
     \fn UI_vuUpdate
     \brief Update vumeter, input is volume per channel between 0 & 255
 */
@@ -77,14 +72,14 @@ bool UI_InitVUMeter(QFrame *host)
 
 bool UI_vuUpdate(uint32_t volume[6])
 {
-      memset(rgbDataBuffer,0,vuWidth*vuHeight*4);
+	  memset(vuWidget->rgbDataBuffer, 0, vuWidget->width() * vuWidget->height() * 4);
       // Draw lines
       for(int i=0;i<6;i++)
       {
             int vol=volume[i];
             if(vol>63) vol=63;
             if(vol<3) vol=3;
-            uint8_t *ptr=rgbDataBuffer+vuWidth*(2+10*i)*4;
+			uint8_t *ptr = vuWidget->rgbDataBuffer + vuWidget->width() * (2 + 10 * i) * 4;
             uint32_t *data=(uint32_t *)(ptr);
             for(int j=0;j<vol;j++)
             {
@@ -105,4 +100,4 @@ bool UI_vuUpdate(uint32_t volume[6])
       vuWidget->repaint();
       return true;
 }
-//EOF 
+//EOF

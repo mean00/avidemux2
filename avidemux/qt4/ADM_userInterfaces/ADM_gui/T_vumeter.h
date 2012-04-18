@@ -13,7 +13,9 @@ class  ADM_Qvumeter : public QWidget
 	Q_OBJECT
 
 public:
-	ADM_Qvumeter(QWidget *z);
+	uint8_t *rgbDataBuffer;
+
+	ADM_Qvumeter(QWidget *z, int width, int height);
 	~ADM_Qvumeter();
 	void paintEvent(QPaintEvent *ev);
 };
