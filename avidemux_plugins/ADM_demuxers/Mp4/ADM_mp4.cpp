@@ -157,6 +157,11 @@ MP4Header::~MP4Header()
 {
     close();
 
+	for (int audio = 0; audio < nbAudioTrack; audio++)
+	{
+		delete audioStream[audio];
+		delete audioAccess[audio];
+	}
 }
 uint8_t    MP4Header::close( void )
 {
@@ -385,7 +390,7 @@ uint8_t    MP4Header::open(const char *name)
             {
                 if(_tracks[1+audio].extraDataSize==2)
                 {
-                    // Channels 
+                    // Channels
                     uint32_t word=(_tracks[1+audio].extraData[0]<<8)+_tracks[1+audio].extraData[1];
                     uint32_t chan=(word>>3)&0xf;
                     uint32_t fqIndex=(word>>7)&0xf;
@@ -453,7 +458,7 @@ bool    MP4Header::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
     }
 
     MP4Index *idx=&(VDEO.index[frame]);
-    
+
     *dts=idx->dts; // FIXME
     *pts=idx->pts;
     return true;
