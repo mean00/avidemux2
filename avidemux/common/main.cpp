@@ -96,6 +96,7 @@ extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern bool ADM_jobInit(void);
+extern bool ADM_jobShutDown(void);
 extern void cleanUp (void);
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
@@ -372,6 +373,7 @@ void onexit( void )
   #endif
 #endif
 
+	ADM_jobShutDown();
     printf("--End of cleanup--\n");
     ADMImage_stat();
     ADM_memStat();

@@ -2,7 +2,7 @@
     \file   ADM_coreJobs
     \brief  Handle low level access to jobs
     \author (C) 2010 by mean fixounet@free.fr
-        
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -56,7 +56,7 @@ static bool ADM_jobInitializeDb(void)
     r=q.execute(createString1);
     r=q.execute(createString2);
     q.execute("COMMIT;");
-    
+
     if(r){
         // update version
         char s[256];
@@ -127,7 +127,7 @@ bool    ADM_jobInit(void)
     dbFile=new char[1024];
     strcpy(dbFile,ADM_getBaseDir());
     strcat(dbFile,"jobs.sql");
-    
+
     ADM_info("Initializing database (%s)\n",dbFile);
     if(!ADM_fileExist(dbFile))
     {
@@ -167,6 +167,11 @@ bool    ADM_jobInit(void)
 */
 bool    ADM_jobShutDown(void)
 {
+	if (dbFile)
+	{
+		delete [] dbFile;
+	}
+
     dbCleanup();
     ADM_info("Shutting down jobs database\n");
     return true;
@@ -230,7 +235,7 @@ bool    ADM_jobGet(vector <ADMJob> &jobs)
 	{
         printf("*\n");
 		db::Jobs oneJob(mydb,&q); // spawns an object from Query object
-        ADMJob newJob;  
+        ADMJob newJob;
         newJob.id=oneJob.GetId();
         newJob.jobName=oneJob.GetJobname();
         newJob.scriptName=oneJob.GetJscript();
@@ -242,7 +247,7 @@ bool    ADM_jobGet(vector <ADMJob> &jobs)
 	}
 	q.free_result();
     return true;
-    
+
 }
 /**
     \fn ADM_jobUpdate
