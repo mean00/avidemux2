@@ -117,7 +117,7 @@
      <item>
       <widget class="QLabel" name="label_3" >
        <property name="text" >
-        <string>© 2001 - 2010  Mean</string>
+        <string>© 2001 - 2012  Mean</string>
        </property>
        <property name="alignment" >
         <set>Qt::AlignCenter</set>

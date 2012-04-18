@@ -6,7 +6,7 @@
     <property name="border_width">6</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">Avidemux</property>
-    <property name="copyright" translatable="yes">Copyright © 2001–2011 Mean</property>
+    <property name="copyright" translatable="yes">Copyright © 2001–2012 Mean</property>
     <property name="comments" translatable="yes">Cross-platform video editor</property>
     <property name="website">http://www.avidemux.org</property>
     <property name="website_label" translatable="yes">http://www.avidemux.org</property>
