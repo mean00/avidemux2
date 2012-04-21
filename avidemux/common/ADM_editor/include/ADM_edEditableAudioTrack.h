@@ -36,7 +36,6 @@ public:
 // encoder
 	int                         encoderIndex;
 	CONFcouple                  *encoderConf;
-	ADM_audioEncoder            *audioEncoder;
     int                         poolIndex;
 
 	EditableAudioTrack();

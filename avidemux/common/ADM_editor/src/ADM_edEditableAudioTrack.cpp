@@ -18,7 +18,6 @@ EditableAudioTrack::EditableAudioTrack()
 {
 	encoderIndex = 0;
 	encoderConf = NULL;
-	audioEncoder = NULL;
 	edTrack = NULL;
     poolIndex=0;
 }
@@ -37,7 +36,6 @@ EditableAudioTrack::EditableAudioTrack(const EditableAudioTrack &src)
 		encoderConf = NULL;
 	}
 
-	audioEncoder = NULL;
 	EncodingVector = src.EncodingVector;
 	audioEncodingConfig = src.audioEncodingConfig;
     poolIndex=src.poolIndex;
@@ -46,13 +44,6 @@ EditableAudioTrack::EditableAudioTrack(const EditableAudioTrack &src)
 EditableAudioTrack::~EditableAudioTrack()
 {
 	edTrack = NULL;
-
-	if (audioEncoder)
-	{
-		delete audioEncoder;
-	}
-
-	audioEncoder = NULL;
 	EncodingVector.clear(); // memleak ?
 
 	if (encoderConf)
