@@ -47,6 +47,7 @@
  #include "audioencoderInternal.h"
 
  #include "ADM_edActiveAudioTracks.h"
+ #include "ADM_edPoolOfAudioTracks.h"
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
@@ -65,36 +66,6 @@ typedef enum
 
 class ADM_edAudioTrackFromVideo;
 class ADM_edAudioTrack;
-
-/**
-    \fn PoolOfAudioTracks
-    \brief All audio tracks coming from video
-*/
-class PoolOfAudioTracks
-{
-        protected:
-                BVector <ADM_edAudioTrack *>tracks;
-        public:
-                    PoolOfAudioTracks()  {};
-                    ~PoolOfAudioTracks();
-                int size() const
-                {
-                        return tracks.size();
-                }
-                ADM_edAudioTrack *at(int ix)
-                {
-                    if(ix>=size()) ADM_assert(0);
-                    return tracks[ix];
-                }
-                bool addInternalTrack(ADM_edAudioTrack *x)
-                        {
-                                tracks.append(x) ;
-                                return true;
-                        };
-                bool clear() {tracks.clear();return true;}
-                bool dump(void);
-
-};
 
 /**
             \class ADM_Composer

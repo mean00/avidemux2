@@ -5,6 +5,7 @@ ADM_edCache.cpp
 ADM_edEditableAudioTrack.cpp
 ADM_edIdentify.cpp 
 ADM_edLoadSave.cpp 
+ADM_edPoolOfAudioTracks.cpp
 ADM_edSearch.cpp 
 ADM_edFrameType.cpp 
 ADM_edit.cpp 

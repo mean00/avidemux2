@@ -19,6 +19,7 @@
 #ifndef ADM_EDAUDIOTRACKEXTERNAL
 #define ADM_EDAUDIOTRACKEXTERNAL
 
+#include <string>
 #include "ADM_edAudioTrack.h"
 
 /**
@@ -33,7 +34,7 @@ public:
             virtual            ~ADM_edAudioTrackExternal();
                     bool        destroyable() {return true;};
                     bool        create(void);
-           
+
                     std::string   &getMyName() {return sourceFile; }
 
                     CHANNEL_TYPE *getChannelMapping(void );

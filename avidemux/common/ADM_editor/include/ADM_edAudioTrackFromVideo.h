@@ -20,6 +20,9 @@
 #define ADM_EDAUDIOTRACKFROMVIDEO
 
 #include "ADM_edAudioTrack.h"
+#include "ADM_segment.h"
+
+class ADM_Composer;
 
 /**
     \class ADM_edAudioTrackFromVideo
