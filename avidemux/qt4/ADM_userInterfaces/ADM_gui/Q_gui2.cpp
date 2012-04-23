@@ -336,7 +336,7 @@ MainWindow::MainWindow(vector<IScriptEngine*> scriptEngines) : QMainWindow()
 	ui.volumeWidget->setTitleBarWidget(dummy3);
 	ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
-	this->resize(1, 1);
+	this->adjustSize();
 }
 /**
     \fn searchToolBar
