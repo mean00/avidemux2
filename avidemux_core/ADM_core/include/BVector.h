@@ -72,7 +72,7 @@ public:
         *@brief destructor
         */
         virtual ~BVector(){
-                
+
                 delete [] this->buffer;
                 this->buffer=NULL;
         }
@@ -116,7 +116,7 @@ public:
         virtual void append ( const T & inValue )
         {
 
-                setCapacity( size()+1);                
+                setCapacity( size()+1);
                 this->buffer[this->currentIndex++]=inValue;
         }
 
@@ -204,7 +204,7 @@ public:
                  memmove(this->buffer+1,this->buffer,sizeof(T)*(this->currentIndex));
                  this->buffer[0]=inValue;
                  this->currentIndex++;
-                    
+
         }
         /**
         *@brief remove a value at a position
@@ -238,7 +238,7 @@ void BVector<T>::setCapacity(int in_capacity){
         int targetCap=(this->capacity*3)/2;
         if(targetCap>in_capacity) in_capacity=targetCap;
 
-        T* nbuffer = new T[in_capacity]; 
+        T* nbuffer = new T[in_capacity];
 
         memcpy(&nbuffer[0],&this->buffer[0],sizeof(T)*currentSize);
 
@@ -250,7 +250,8 @@ template <typename T>
 void BVector<T>::insert ( int inPosition, T inValue )
 {
     int last=this->currentIndex;
-    if(last-1==inPosition)
+
+    if(last==inPosition)
     {
         append(inValue);
         return;
@@ -265,7 +266,7 @@ void BVector<T>::insert ( int inPosition, T inValue )
 template <typename T>
 void BVector<T>::removeAt( int inPosition )
 {
-    if(inPosition==currentIndex-1) 
+    if(inPosition==currentIndex-1)
     {
             popBack();
             return;
