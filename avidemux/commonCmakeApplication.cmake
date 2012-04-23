@@ -117,8 +117,6 @@ SET(commonLibs2
 ADM_coreJobs
 ADM_osSupport6
 ADM_requant6
-ADM_coreScriptPython
-ADM_coreScriptSpiderMonkey
 ADM_script6
 ADM_videoEncoder6
 ADM_internalVideoFilter6
