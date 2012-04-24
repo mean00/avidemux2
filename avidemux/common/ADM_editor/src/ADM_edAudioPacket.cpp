@@ -43,7 +43,7 @@ Todo:
 //#define AUDIOSEG 	_segments[_audioseg]._reference
 //#define SEG 		_segments[seg]._reference
 
-#define ADM_ALLOWED_DRIFT_US 40000 // Allow 4b0 ms jitter on audio
+
 
 #if 1
 #define vprintf(...) {}
@@ -99,31 +99,15 @@ bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
     if(!trk) return false;    
 
-    if(!trk->stream->getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
+    if(!getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
                         &packetBufferSamples,&dts))
     {
-              if(true==switchToNextAudioSegment())
-              {
-                 endOfAudio=false;
-                 return refillPacketBuffer();
-              }
              if(endOfAudio==false)
                 ADM_warning("End of audio\n");
              endOfAudio=true;
              return false;
     }
     //
-    // Ok we have a packet, rescale audio
-    if(dts==ADM_NO_PTS) packetBufferDts=ADM_NO_PTS;
-    else
-    {
-      if(dts>=seg->_refStartTimeUs) packetBufferDts=dts+seg->_startTimeUs-seg->_refStartTimeUs;
-      else
-        {
-          ADM_warning("Got PTS=%"LLU" which is too early for start=%"LLU"ms\n",dts/1000,seg->_refStartTimeUs);
-          return refillPacketBuffer();
-        }
-    }
     endOfAudio=false;
     return true;
 }

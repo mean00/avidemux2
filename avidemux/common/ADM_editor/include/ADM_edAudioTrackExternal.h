@@ -36,10 +36,17 @@ public:
                     bool        create(void);
 
                     std::string   &getMyName() {return sourceFile; }
+// We need the codec etc for external audio tracks
+                    ADM_Audiocodec   *codec;
+                    bool             vbr;
+                    uint64_t        duration;
+                    uint64_t        size;
+                    bool             refillPacketBuffer(void);
+//
+                    CHANNEL_TYPE    *getChannelMapping(void );
+                    uint32_t        getOutputFrequency(void); // sbr
+            virtual bool            getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
 
-                    CHANNEL_TYPE *getChannelMapping(void );
-                    uint32_t     getOutputFrequency(void); // sbr
-            virtual bool         getPCMPacket(float  *dest, uint32_t sizeMax, uint32_t *samples,uint64_t *odts);
 virtual ADM_edAudioTrackExternal *castToExternal(void) {return this;}
 
 

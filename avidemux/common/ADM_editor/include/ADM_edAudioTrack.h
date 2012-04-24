@@ -23,7 +23,7 @@
 #include "ADM_audioStream.h"
 
 #define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)
-
+#define ADM_ALLOWED_DRIFT_US 40000 // Allow 4b0 ms jitter on audio
 typedef enum
 {
     ADM_EDAUDIO_FROM_VIDEO,
