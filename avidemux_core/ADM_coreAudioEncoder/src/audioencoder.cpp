@@ -19,7 +19,10 @@
 #include "ADM_audioFilter.h"
 #include "audioencoder.h"
 #include "ADM_audioCodecEnum.h"
+#include "BVector.h"
+#include "audioencoderInternal.h"
 
+BVector <ADM_audioEncoder *> ListOfAudioEncoder;
 extern bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
 
 /**

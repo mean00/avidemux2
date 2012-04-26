@@ -1,7 +1,7 @@
 /***************************************************************************
                           audio_encoderPlugin.cpp  -  description
                              -------------------
-    
+
     copyright            : (C) 2008 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -14,8 +14,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <BVector.h>
+
 #include <string>
+#include "BVector.h"
 #include "ADM_default.h"
 #include "audioencoderInternal.h"
 #include "ADM_dynamicLoading.h"
@@ -34,7 +35,7 @@ class ADM_AudioEncoderLoader :public ADM_LibWrapper
 public:
         int                 initialised;
         ADM_audioEncoder    *encoderBlock;
-        
+
 
 
         ADM_AudioEncoderLoader(const char *file) : ADM_LibWrapper()
@@ -59,7 +60,7 @@ public:
                         encoderBlock=new ADM_audioEncoder;
                         *encoderBlock=*e;
                         encoderBlock->opaque=(void *)this;
-                    } 
+                    }
                 }else
                 {
                     printf("Symbol loading failed for %s\n",file);
@@ -71,17 +72,18 @@ public:
                     encoderBlock=new ADM_audioEncoder;
                     memset(encoderBlock,0,sizeof(*encoderBlock));
                     encoderBlock->codecName=name;
-                    encoderBlock->menuName=menuName;                    
+                    encoderBlock->menuName=menuName;
                     encoderBlock->opaque=(void *)this;
 		}
         ~ADM_AudioEncoderLoader()
         {
             if(encoderBlock) delete encoderBlock;
             encoderBlock=NULL;
-            
+
         }
 };
-static BVector <ADM_audioEncoder *> ListOfAudioEncoder;
+
+extern BVector <ADM_audioEncoder *> ListOfAudioEncoder;
 static BVector <ADM_AudioEncoderLoader *> ListOfAudioEncoderLoader;
 
 /**
@@ -116,7 +118,7 @@ static bool tryLoadingFilterPlugin(const char *file)
 {
 	ADM_AudioEncoderLoader *dll=new ADM_AudioEncoderLoader(file);
     if(!dll->initialised) Fail(CannotLoad);
-    
+
     ListOfAudioEncoderLoader.append(dll);
     ListOfAudioEncoder.append(dll->encoderBlock);  // will be destroyed when Loader is destroyed
     printf("[AudioEncoder] Registered filter %s as  %s\n",file,dll->encoderBlock->description);
@@ -182,14 +184,14 @@ bool ADM_ae_cleanup(void)
         delete a;
         ListOfAudioEncoderLoader[i]=NULL;
 	}
-    
+
     ListOfAudioEncoderLoader.clear();
     return true;
 }
 
 /**
     \fn ADM_encoderByName
-    \brief Returns the Id of the given string 
+    \brief Returns the Id of the given string
 
 */
 AUDIOENCODER ADM_encoderByName(const char *name)
@@ -201,7 +203,7 @@ AUDIOENCODER ADM_encoderByName(const char *name)
 		if(!strcasecmp(name,ListOfAudioEncoder[i]->codecName))
 		{
 			return i;
-		}	
+		}
 	}
 	printf("[AudioEncoder] Encoder not found :%s\n",name);
 	return (AUDIOENCODER)0;
@@ -283,9 +285,9 @@ AUDIOENCODER AVDM_getCurrentAudioEncoder( int dex)
 uint8_t DIA_audioCodec( int *codec );
 void audioCodecSelect( void )
 {
-#warning FIXME 
-#warning FIXME 
-#warning FIXME 
+#warning FIXME
+#warning FIXME
+#warning FIXME
 	//DIA_audioCodec( &currentEncoder );
 	audioPrintCurrentCodec(0);
 }
@@ -301,7 +303,7 @@ uint8_t audioCodecSetByName( int dex,const char *name)
         ADM_warning("Cannot set codec for track %d\n",dex);
         return 0;
     }
-    
+
 
 		for(uint32_t i=0;i<ListOfAudioEncoder.size();i++)
 		{
@@ -345,7 +347,7 @@ uint8_t audioCodecSetByIndex(int dex,int i)
 */
 const char *audioCodecGetName( int dex )
 {
-    
+
     EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
     if(!ed)
     {
@@ -478,7 +480,7 @@ ADM_AudioEncoder *audioEncoderCreate(int dex,AUDMAudioFilter *filter,bool global
 }
 /**
         \fn getAudioExtraConf
-        \brief 
+        \brief
 */
 
 bool getAudioExtraConf(int dex,CONFcouple **couple)
@@ -522,7 +524,7 @@ bool setAudioExtraConf(int dex,CONFcouple *c)
     if(c)
         ed->encoderConf=CONFcouple::duplicate(c);
     return true;
-}     
+}
 /**
         \fn audio_selectCodecByTag
         \brief Select the "best" encoder outputing tag codec
