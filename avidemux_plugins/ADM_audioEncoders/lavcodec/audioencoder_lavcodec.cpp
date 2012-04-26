@@ -31,8 +31,12 @@ extern "C" {
 #include "audioencoder_lavcodec.h"
 #include "lavcodec_encoder_desc.cpp"
 
+#define LAV_DEFAULT_CONF {128}
+static lav_encoder  defaultConfig = LAV_DEFAULT_CONF;
+
 static bool         configure (CONFcouple **setup);
-static lav_encoder  defaultConfig={128};
+static void getDefaultConfiguration(CONFcouple **c);
+
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lavcodec);
 
@@ -50,6 +54,7 @@ static ADM_audioEncoder encoderDesc = {
 
   100,                  // Priority
   NULL,         //** put your own function here**
+  getDefaultConfiguration,
   NULL
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG();
@@ -308,4 +313,10 @@ bool configure (CONFcouple **setup)
     return false;
 }
 
+void getDefaultConfiguration(CONFcouple **c)
+{
+	lav_encoder config = LAV_DEFAULT_CONF;
+
+	ADM_paramSave(c, lav_encoder_param, &config);
+}
 // EOF

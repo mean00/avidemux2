@@ -29,9 +29,11 @@ extern "C"
 }
 
 #define OPTIONS (twolame_options_struct *)_twolameOptions
+#define TWOLAME_DEFAULT_CONF {128}
+static lame_encoder defaultConfig = TWOLAME_DEFAULT_CONF;
 
 static bool configure (CONFcouple **setup);
-static lame_encoder defaultConfig={128};
+static void getDefaultConfiguration(CONFcouple **c);
 
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Twolame);
@@ -49,6 +51,7 @@ static ADM_audioEncoder encoderDesc = {
   WAV_MP2,
   200,                  // Priority
   NULL,                 //** setOption
+  getDefaultConfiguration,
   NULL                  // opaque
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG();
@@ -214,5 +217,12 @@ lame_encoder config=defaultConfig;
     }
 
     return false;
+}
+
+void getDefaultConfiguration(CONFcouple **c)
+{
+	lame_encoder config = TWOLAME_DEFAULT_CONF;
+
+	ADM_paramSave(c, lame_encoder_param, &config);
 }
 // EOF

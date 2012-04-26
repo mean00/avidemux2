@@ -20,9 +20,6 @@
 #include "audioencoderInternal.h"
 #include "audioencoder_pcm.h"
 
-
-
-
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_PCM);
 
@@ -39,6 +36,7 @@ static ADM_audioEncoder encoderDesc = {
   WAV_PCM,
   200,                  // Priority
   NULL,  // Defined by macro automatically
+  NULL,
   NULL   // Defined by macro automatically
 
 };

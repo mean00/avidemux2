@@ -31,16 +31,11 @@ extern "C"
 #include "aften_encoder_desc.cpp"
 
 #define _HANDLE ((AftenContext *)_handle)
-
-static aften_encoder defaultConfig={128,};
-/*
-static AFTEN_encoderParam aftenParam= {
-  128
-
-};*/
+#define AFTEN_DEFAULT_CONF {128}
+static aften_encoder defaultConfig = AFTEN_DEFAULT_CONF;
 
 static bool configure (CONFcouple **setup);
-
+static void getDefaultConfiguration(CONFcouple **c);
 
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Aften);
@@ -59,7 +54,7 @@ static ADM_audioEncoder encoderDesc = {
   200,                  // Priority
 
   NULL,         //** put your own function here**
-
+  getDefaultConfiguration,
   NULL
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG();
@@ -253,5 +248,12 @@ bool configure (CONFcouple **setup)
       return true;
     }
     return false;
+}
+
+void getDefaultConfiguration(CONFcouple **c)
+{
+	aften_encoder config = AFTEN_DEFAULT_CONF;
+
+	ADM_paramSave(c, aften_encoder_param, &config);
 }
 // EOF

@@ -25,14 +25,16 @@
 #include "lame_encoder.h"
 #include "lame_encoder_desc.cpp"
 
-static lame_encoder defaultConfig={128,ADM_LAME_PRESET_CBR,2,0};
-
+#define LAME_DEFAULT_CONF {128, ADM_LAME_PRESET_CBR, 2, 0}
+static lame_encoder defaultConfig = LAME_DEFAULT_CONF;
 
 extern "C"
 {
 static bool configure (CONFcouple **setup);
 static bool setOption(CONFcouple **c, const char *paramName, uint32_t value);
+static void getDefaultConfiguration(CONFcouple **c);
 };
+
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lame);
 
@@ -50,7 +52,7 @@ static ADM_audioEncoder encoderDesc = {
   200,                  // Priority
 
   setOption,         //** put your own function here**
-
+  getDefaultConfiguration,
   NULL
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG();
@@ -369,4 +371,12 @@ bool setOption(CONFcouple **c, const char *paramName, uint32_t value)
     ADM_error("Not supported\n");
     return 0;
 }
+
+void getDefaultConfiguration(CONFcouple **c)
+{
+	lame_encoder config = LAME_DEFAULT_CONF;
+
+	ADM_paramSave(c, lame_encoder_param, &config);
+}
+
 // EOF

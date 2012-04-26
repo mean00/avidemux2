@@ -28,8 +28,14 @@
 #include "audioencoder_faac.h"
 
 #include "faac_encoder_desc.cpp"
+
+#define FAAC_DEFAULT_CONF {128}
+
+static faac_encoder defaultConfig = FAAC_DEFAULT_CONF;
+
 static bool configure(CONFcouple **setup);
-static faac_encoder defaultConfig={128};
+static void getDefaultConfiguration(CONFcouple **c);
+
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Faac);
 
@@ -47,7 +53,7 @@ static ADM_audioEncoder encoderDesc = {
   200,                  // Priority
  
   NULL,         //** put your own function here**
-
+  getDefaultConfiguration,
   NULL
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG( );
@@ -295,5 +301,12 @@ bool configure (CONFcouple **setup)
         return true;
     }
     return false;
-}	
+}
+
+void getDefaultConfiguration(CONFcouple **c)
+{
+	faac_encoder config = FAAC_DEFAULT_CONF;
+
+	ADM_paramSave(c, faac_encoder_param, &config);
+}
 // EOF

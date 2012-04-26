@@ -46,16 +46,13 @@ typedef struct
     uint32_t     wavTag;                // const Avi fourcc
     uint32_t     priority;              // const Higher means the codec is prefered and should appear first in the list    
     bool         (*setOption)(CONFcouple **c,const char *paramName, uint32_t value);
+	void         (*getDefaultConfiguration)(CONFcouple **c);
     void         *opaque;               // Hide stuff in here
 }ADM_audioEncoder;
 
 // Macros to declare audio encoder
 /**************************************************************************/
 #define ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(Class) \
-static bool getConfigurationData (CONFcouple **conf); \
-static bool setConfigurationData (CONFcouple *conf);\
-static uint32_t     getBitrate(void); \
-static void         setBitrate(uint32_t br); \
 \
 static ADM_AudioEncoder * create (AUDMAudioFilter * head,bool globalHeader, CONFcouple *setup) \
 { \

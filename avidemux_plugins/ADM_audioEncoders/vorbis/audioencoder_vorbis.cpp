@@ -50,11 +50,12 @@ typedef enum
 
 }ADM_VORBIS_MODE;
 
-//
-static vorbis_encoder defaultConfig={128,ADM_VORBIS_VBR,9. };
-
+#define VORBIS_DEFAULT_CONF {128, ADM_VORBIS_VBR, 9.}
+static vorbis_encoder defaultConfig = VORBIS_DEFAULT_CONF;
 
 static bool configure(CONFcouple **setup);
+static void getDefaultConfiguration(CONFcouple **c);
+
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Vorbis);
 
@@ -72,7 +73,7 @@ static ADM_audioEncoder encoderDesc = {
   200,                  // Priority
 
   NULL,         //** put your own function here**
-
+  getDefaultConfiguration,
   NULL
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG();
@@ -346,4 +347,10 @@ bool configure(CONFcouple **setup)
   return 0;
 }
 
+void getDefaultConfiguration(CONFcouple **c)
+{
+	vorbis_encoder config = VORBIS_DEFAULT_CONF;
+
+	ADM_paramSave(c, vorbis_encoder_param, &config);
+}
 // EOF
