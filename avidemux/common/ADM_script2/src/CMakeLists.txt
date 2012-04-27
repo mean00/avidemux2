@@ -18,8 +18,8 @@ include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScript/incl
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScriptPython/include)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreScriptSpiderMonkey/include)
 
-find_library(SPIDERMONKEY_SCRIPT_PLUGIN ADM_coreScriptSpiderMonkey PATHS "${AVIDEMUX_LIB_DIR}")
-find_library(TINYPY_SCRIPT_PLUGIN ADM_coreScriptPython PATHS "${AVIDEMUX_LIB_DIR}")
+find_library(SPIDERMONKEY_SCRIPT_PLUGIN ADM_coreScriptSpiderMonkey PATHS ${AVIDEMUX_SEARCH_LIB_DIR})
+find_library(TINYPY_SCRIPT_PLUGIN ADM_coreScriptPython PATHS ${AVIDEMUX_SEARCH_LIB_DIR})
 
 if (SPIDERMONKEY_SCRIPT_PLUGIN)
 	target_link_libraries(ADM_script6 ${SPIDERMONKEY_SCRIPT_PLUGIN})
