@@ -28,6 +28,8 @@
 class ADM_edAudioTrackExternal : public ADM_edAudioTrack
 {
 protected:
+                    ADM_audioStream  *internalAudioStream;
+                    ADM_audioAccess  *internalAccess;
                     std::string  sourceFile;
 public:
                                  ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *ccess);
@@ -49,6 +51,13 @@ public:
 
 virtual ADM_edAudioTrackExternal *castToExternal(void) {return this;}
 
+virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
+                          {
+                                return internalAudioStream->getPacket(buffer,size,sizeMax,nbSample,dts);
+                            }
+virtual bool            goToTime(uint64_t nbUs) {return internalAudioStream->goToTime(nbUs);}
+virtual bool            getExtraData(uint32_t *l, uint8_t **d){return internalAudioStream->getExtraData(l,d);}
+         uint64_t        getDurationInUs(void) {return internalAudioStream->getDurationInUs();}
 
 };
 /// spawn

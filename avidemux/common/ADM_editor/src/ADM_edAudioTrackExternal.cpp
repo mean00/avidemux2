@@ -25,7 +25,7 @@
 #include "ADM_audioIdentify.h"
 #include "ADM_audioAccessFile.h"
 #include "ADM_vidMisc.h"
-#if 1
+#if 0
 #define vprintf ADM_info
 #else
 #define vprintf(...) {}
@@ -34,7 +34,7 @@
     \fn ctor
 */
 ADM_edAudioTrackExternal:: ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *cess)
-:  ADM_edAudioTrack(ADM_EDAUDIO_EXTERNAL,hdr,cess)
+:  ADM_edAudioTrack(ADM_EDAUDIO_EXTERNAL,hdr)
 {
     ADM_info("Creating edAudio from external file %s\n",file);
     sourceFile=std::string(file);
@@ -42,7 +42,8 @@ ADM_edAudioTrackExternal:: ADM_edAudioTrackExternal(const char *file, WAVHeader 
     vbr=false;
     duration=0;
     size=0;
-
+    internalAudioStream=NULL;
+    internalAccess=cess;
 }
 /**
     \fn dtor
@@ -52,6 +53,10 @@ ADM_edAudioTrackExternal::~ADM_edAudioTrackExternal()
     ADM_info("Destroying edAudio from external %s \n",sourceFile.c_str());
     if(codec) delete codec;
     codec=NULL;
+    if(internalAudioStream) delete internalAudioStream;
+    internalAudioStream=NULL;
+    if(internalAccess) delete internalAccess;
+    internalAccess=NULL;
     
 }
 /**
@@ -62,7 +67,8 @@ bool ADM_edAudioTrackExternal::create(void)
 {
     ADM_info("Initializing audio track from external %s \n",sourceFile.c_str());
     codec=getAudioCodec(wavHeader.encoding,&wavHeader,0,NULL);;
-    size=access->getLength();
+    size=internalAccess->getLength();
+    internalAudioStream=ADM_audioCreateStream(&wavHeader,internalAccess,true);
     return true;
 }
 /**
@@ -87,7 +93,7 @@ bool             ADM_edAudioTrackExternal::refillPacketBuffer(void)
    packetBufferSize=0; 
    uint64_t dts;
  
-    if(!getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
+    if(!internalAudioStream->getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
                         &packetBufferSamples,&dts))
     {           
              return false;
@@ -181,6 +187,7 @@ again:
     //  The packet is ok, decode it...
     //
     uint32_t nbOut=0; // Nb sample as seen by codec
+    vprintf("externalPCM: Sending %d bytes to codec\n",packetBufferSize);
     if(!codec->run(packetBuffer, packetBufferSize, dest, &nbOut))
     {
             packetBufferSize=0; // consume
@@ -203,9 +210,10 @@ again:
     // Update infos
     *samples=(decodedSample);
     *odts=lastDts;
+    vprintf("externalPCM: got %d samples, PTS is now %s\n",decodedSample,ADM_us2plain(*odts));
     advanceDtsByCustomSample(decodedSample,outFrequency);
-    vprintf("[Composer::getPCMPacket] Track %d:%x Adding %u decoded, Adding %u filler sample, dts is now %lu\n",
-                    0,(long int)0,  decodedSample,fillerSample,lastDts);
+    vprintf("[Composer::getPCMPacket] Track %d:%x Adding %u decoded, Adding %u filler sample,"
+        " dts is now %lu\n", 0,(long int)0,  decodedSample,fillerSample,lastDts);
     ADM_assert(sizeMax>=(fillerSample+decodedSample)*wavHeader.channels);
     vprintf("[getPCMext] %d samples, dts=%s\n",*samples,ADM_us2plain(*odts));
     return true;
