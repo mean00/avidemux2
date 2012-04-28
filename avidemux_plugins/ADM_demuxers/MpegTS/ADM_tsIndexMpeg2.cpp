@@ -116,7 +116,8 @@ bool bAppend=false;
                           val=pkt->readi32();                    //+4
                           video.w=val>>20;
                           video.w=((video.w+15)&~15);
-                          video.h= (((val>>8) & 0xfff)+15)& ~15;
+                          //video.h= (((val>>8) & 0xfff)+15)& ~15;
+                          video.h= ((val>>8) & 0xfff);
 
                           video.ar = (val >> 4) & 0xf;
                           video.fps= FPS[val & 0xf];
