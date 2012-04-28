@@ -34,7 +34,7 @@ ADM_audioAccessFile::~ADM_audioAccessFile()
 */
 bool      ADM_audioAccessFile::setPos(uint64_t pos)
 {
-    fseeko(_fd+_offset,pos,SEEK_SET);
+    fseeko(_fd,_offset+pos,SEEK_SET);
     return true;
 }
 /**
@@ -57,6 +57,7 @@ bool    ADM_audioAccessFile::getPacket(uint8_t *buffer, uint32_t *size, uint32_t
         else      *dts=ADM_NO_PTS;
     int n=fread(buffer,1,maxSize,_fd);
     *size=n;
+ //   ADM_info("ExternalTrack : Request for %d bytes, maxSize=%d\n",*size,maxSize);
     if(n>0) return true;
         return false;
 }
