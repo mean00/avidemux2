@@ -32,7 +32,9 @@ bool ADM_audioStreamBuffered::refill(void)
         }
         uint64_t newDts;
         uint32_t size;
-        if(true!=access->getPacket(buffer+limit, &size, 2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit,&newDts))
+        ADM_assert(limit<(2*ADM_AUDIOSTREAM_BUFFER_SIZE-16));
+        uint32_t toRead=2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit-16;
+        if(true!=access->getPacket(buffer+limit, &size, toRead,&newDts))
                 return false;
         // We introduce a small error as there might be some bytes left in the buffer
         // By construction, the error should be minimal
