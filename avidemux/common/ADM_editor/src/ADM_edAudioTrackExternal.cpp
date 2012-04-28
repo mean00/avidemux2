@@ -114,7 +114,8 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
     fread(buffer,1,EXTERNAL_PROBE_SIZE,f);
     fclose(f);
     WAVHeader hdr;
-    if(false==ADM_identifyAudioStream(EXTERNAL_PROBE_SIZE,buffer,hdr))
+    uint32_t offset;
+    if(false==ADM_identifyAudioStream(EXTERNAL_PROBE_SIZE,buffer,hdr,offset))
     {
         ADM_warning("Cannot identify external audio track\n");
         return NULL;
@@ -131,8 +132,9 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
                 return NULL;
                 break;
     }
+    ADM_info("Found external audio track, encoding =%d offset=%d\n",(int)hdr.encoding,(int)offset);
     // create access
-    ADM_audioAccessFile *access=new ADM_audioAccessFile(name);
+    ADM_audioAccessFile *access=new ADM_audioAccessFile(name,offset);
     // create ADM_edAudioTrack
     ADM_edAudioTrackExternal *external=new ADM_edAudioTrackExternal(name, &hdr,access);
     if(!external->create())

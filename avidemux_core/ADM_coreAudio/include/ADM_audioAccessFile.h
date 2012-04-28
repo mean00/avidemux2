@@ -27,9 +27,10 @@ protected:
                         /// must be allocated/freed if needed by derived class
                         FILE     *_fd;
                         uint64_t fileLength;
+                        int       _offset;
 
 public:
-                                  ADM_audioAccessFile(const char *fileName);
+                                  ADM_audioAccessFile(const char *fileName,int offset);
                 virtual           ~ADM_audioAccessFile() ;
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return false;}

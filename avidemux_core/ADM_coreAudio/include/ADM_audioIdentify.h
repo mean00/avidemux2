@@ -17,7 +17,7 @@
 #ifndef AUDIO_CORE_IDENTIFY_H
 #define AUDIO_CORE_IDENTIFY_H
 
-bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &info);
+bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &info,uint32_t &offset);
 
 #endif
 // EOF

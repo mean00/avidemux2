@@ -23,14 +23,16 @@
 #include "fourcc.h"
 
 extern void Endian_WavHeader(WAVHeader *w);
+#define INVALID_OFFSET 0XFFFFFFF
 /**
     \fn idMP2
     \brief return true if the tracks is mp2
 */
-static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info)
+static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
 {
         const uint8_t *mp2Buffer=data;
         const int limit=bufferSize;
+        offset=INVALID_OFFSET;
         // Now read buffer until we have 3 correctly decoded packet
         int probeIndex=0;
         int failAttempt=0;
@@ -51,6 +53,7 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info)
                     ADM_info("\t no sync\n");
                     return false;
             }
+            if(INVALID_OFFSET==offset) offset=syncoff;
           // Skip this packet
             int next=probeIndex+syncoff+mp2info.size;
             len=limit-next;
@@ -91,11 +94,12 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info)
  */
 #define wRead32(x) {x=( cur[0]+(cur[1]<<8)+(cur[2]<<16)+(cur[3]<<24));cur+=4;ADM_assert(cur<=tail);}
 #define wRead16(x) {x=( cur[0]+(cur[1]<<8));cur+=2;ADM_assert(cur<=tail);}
-static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info)
+static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
 {
 		const uint8_t *cur=data,*tail=data+bufferSize;
 	 	uint32_t t32;
 	 	uint32_t totalSize;
+        offset=0;
 	 	wRead32(t32);
         ADM_info("Checking if it is riff/wav...\n");
 	    if (!fourCC::check( t32, (uint8_t *) "RIFF"))
@@ -156,7 +160,8 @@ static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info)
 	    wRead32(t32);
 	    ADM_info(" %lu bytes data \n", totalSize);
 	    info.blockalign=1;
-        ADM_info("yes, it is riff/wav...\n");
+        offset=(uint32_t)(cur-data);
+        ADM_info("yes, it is riff/wav, data starts at %d...\n",(int)offset);
 	    return true;
 	  drop:
         ADM_info("No, not riff/wav...\n");
@@ -166,7 +171,7 @@ static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info)
     \fn idAC3
     \brief return true if the tracks is mp2
 */
-static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &info)
+static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
 {
     uint32_t fq,br,chan,syncoff;
     uint32_t fq2,br2,chan2,syncoff2;
@@ -176,6 +181,7 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &info)
             ADM_info("Not ac3\n");
             return false;
     }
+    offset=syncoff;
     // Need a 2nd packet...
     const uint8_t *second=data+syncoff;
     int size2=bufferSize-syncoff;
@@ -199,13 +205,17 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &info)
 }
 /**
     \fn ADM_identifyAudioStream
+    \param bufferSize : nb of bytes available for scanning
+    \param buffer     : buffer containing the data to scan
+    \param info       : wavheader to fill with detected codec/channels/etcc
+    \param offset     : offset in the file where payload starts
 */
-bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &info)
+bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &info,uint32_t &offset)
 {
     memset(&info,0,sizeof(info));
-    if(idWAV(bufferSize,buffer,info)) return true;
-    if(idMP2(bufferSize,buffer,info)) return true;
-    if(idAC3(bufferSize,buffer,info)) return true;
+    if(idWAV(bufferSize,buffer,info,offset)) return true;
+    if(idMP2(bufferSize,buffer,info,offset)) return true;
+    if(idAC3(bufferSize,buffer,info,offset)) return true;
 
     return false;
 }

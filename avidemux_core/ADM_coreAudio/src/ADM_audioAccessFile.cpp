@@ -11,9 +11,10 @@
     \brief
 */
 
-ADM_audioAccessFile::ADM_audioAccessFile(const char *fileName)
+ADM_audioAccessFile::ADM_audioAccessFile(const char *fileName,int offset)
 {
-        fileLength=ADM_fileSize(fileName);
+        _offset=offset;
+        fileLength=ADM_fileSize(fileName)-offset;
         _fd=ADM_fopen(fileName,"rb");
         ADM_assert(_fd);
 }
@@ -33,7 +34,7 @@ ADM_audioAccessFile::~ADM_audioAccessFile()
 */
 bool      ADM_audioAccessFile::setPos(uint64_t pos)
 {
-    fseeko(_fd,pos,SEEK_SET);
+    fseeko(_fd+_offset,pos,SEEK_SET);
     return true;
 }
 /**
@@ -42,7 +43,7 @@ bool      ADM_audioAccessFile::setPos(uint64_t pos)
 */
 uint64_t  ADM_audioAccessFile::getPos()
 {
-    uint64_t p=(uint64_t)ftello(_fd);
+    uint64_t p=(uint64_t)ftello(_fd)-_offset;
     return p;
 }
 /**
