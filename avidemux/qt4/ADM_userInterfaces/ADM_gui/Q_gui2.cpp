@@ -852,8 +852,9 @@ int UI_RunApp(void)
     prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
     if(enabled)
         UI_Qt4InitGl();
+    else
 #endif
-
+        ADM_info("OpenGL: Not enabled at built time or disabled in preferences");
 	if (global_argc >= 2)
 		automation();
 

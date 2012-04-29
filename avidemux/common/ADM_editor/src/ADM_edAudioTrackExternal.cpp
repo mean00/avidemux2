@@ -176,8 +176,8 @@ again:
         }
     }
     // We do now
-    vprintf("[PCMPacketExt]  TRK %d Got %d samples, time code %08lu  lastDts=%08lu delta =%08ld\n",
-                0,packetBufferSamples,packetBufferDts,lastDts,packetBufferDts-lastDts);
+    vprintf("[PCMPacketExt]  Packet size %d, Got %d samples, time code %08lu  lastDts=%08lu delta =%08ld\n",
+                packetBufferSize,packetBufferSamples,packetBufferDts,lastDts,packetBufferDts-lastDts);
 
 
     // If lastDts is not initialized....

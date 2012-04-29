@@ -68,7 +68,7 @@ void UI_Qt4InitGl(void)
     PROBE_GL_EXT(glUnmapBufferARB,setUnmapBuffer)
     PROBE_GL_EXT(glBufferDataARB,setBufferData)
 
-    ADM_info("Probing dine\n");
+    ADM_info("Probing done\n");
     if(ADM_glHasARB())
     {
         ADM_info("openGL ARB activated\n");
