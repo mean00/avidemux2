@@ -34,7 +34,7 @@
 #include "T_vumeter.h"
 #include "DIA_coreToolkit.h"
 #include "GUI_ui.h"
-
+#include "config.h"
 using namespace std;
 
 #ifdef USE_OPENGL
@@ -848,20 +848,31 @@ int UI_RunApp(void)
 	checkCrashFile();
     // Create an openGL context
 #ifdef USE_OPENGL
+    ADM_info("OpenGL enabled at built time, checking if we should run it..\n");
     bool enabled;
     prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
+    
     if(enabled)
+    {
+        ADM_info("OpenGL activated, initializing... \n");
         UI_Qt4InitGl();
-    else
+    }else
+    {
+        ADM_info("OpenGL not activated, not initialized\n");
+    }
+#else
+        ADM_info("OpenGL: Not enabled at built time.\n");
 #endif
-        ADM_info("OpenGL: Not enabled at built time or disabled in preferences");
 	if (global_argc >= 2)
 		automation();
 
     myApplication->exec();
 #ifdef USE_OPENGL
     if(enabled)
+    {
+        ADM_info("OpenGL: Cleaning up\n");
         UI_Qt4CleanGl();
+    }
 #endif
 	destroyTranslator();
 
