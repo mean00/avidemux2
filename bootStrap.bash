@@ -36,7 +36,7 @@ Process()
         cmake $PKG $FAKEROOT -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail make
 	if  [ "x$PKG" != "x" ] ; then
-          fakeroot make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
+          $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
 	fi
     	make install DESTDIR=$FAKEROOT_DIR
 }
@@ -87,6 +87,17 @@ usage()
         config 
 
 }
+#
+
+export FAKEROOT_COMMAND="fakeroot"
+CMAKE_VERSION=`cmake --version | sed "s/^.*2/2/g"`
+echo "CMAKE Version : $CMAKE_VERSION"
+case "$CMAKE_VERSION" in
+         2.8.8|2.8.7|2.8.9)
+                echo "Cmake version >=2.8.7 doesnt need fakeroot"
+                export FAKEROOT_COMMAND=""
+        ;;
+esac
 # Could probably do it with getopts...
 while [ $# != 0 ] ;do
         case "$1" in
