@@ -4,22 +4,20 @@
  *
  * This file is part of libass.
  *
- * libass is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
  *
- * libass is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with libass; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "ADM_coreConfig.h"
+#include "config.h"
 #include "ass_render.h"
 
 static void ass_reconfigure(ASS_Renderer *priv)
@@ -27,12 +25,9 @@ static void ass_reconfigure(ASS_Renderer *priv)
     ASS_Settings *settings = &priv->settings;
 
     priv->render_id++;
-    priv->cache.glyph_cache =
-        ass_glyph_cache_reset(priv->cache.glyph_cache);
-    priv->cache.bitmap_cache =
-        ass_bitmap_cache_reset(priv->cache.bitmap_cache);
-    priv->cache.composite_cache =
-        ass_composite_cache_reset(priv->cache.composite_cache);
+    ass_cache_empty(priv->cache.outline_cache, 0);
+    ass_cache_empty(priv->cache.bitmap_cache, 0);
+    ass_cache_empty(priv->cache.composite_cache, 0);
     ass_free_images(priv->prev_images_root);
     priv->prev_images_root = 0;
 
@@ -61,6 +56,17 @@ void ass_set_frame_size(ASS_Renderer *priv, int w, int h)
         }
         ass_reconfigure(priv);
     }
+}
+
+void ass_set_shaper(ASS_Renderer *priv, ASS_ShapingLevel level)
+{
+#ifdef CONFIG_HARFBUZZ
+    // select the complex shaper for illegal values
+    if (level == ASS_SHAPING_SIMPLE || level == ASS_SHAPING_COMPLEX)
+        priv->settings.shaper = level;
+    else
+        priv->settings.shaper = ASS_SHAPING_COMPLEX;
+#endif
 }
 
 void ass_set_margins(ASS_Renderer *priv, int t, int b, int l, int r)
