@@ -36,8 +36,8 @@ set sourceBaseFolder=Qt%BuildBits%
 
 if "%Debug%" == "1" (
 	set sourceBaseFolder=%sourceBaseFolder%-dbg
-	set LeakFlags=-L %admBuildDir% -l ADM_core6
-	set BuildType=debug
+	set LeakFlags=-L %admSdkBuildDir%\lib%BuildBits% -l ADM_core6
+	set BuildType=release
 ) else (
 	set BuildType=release
 )
@@ -84,7 +84,7 @@ patch -p0 -i "%curDir%\qmake%BuildBits%.conf.patch"
 
 echo.
 echo Configuring
-configure -confirm-license -opensource -%BuildType% -system-zlib -no-stl -no-qt3support -no-phonon-backend -no-webkit -no-multimedia -no-style-cleanlooks -no-style-plastique -no-style-motif -no-style-cde -qt-style-windowsxp -qt-style-windowsvista -no-xmlpatterns -nomake demos -nomake examples -platform win32-g++ -mmx -sse -sse2 -3dnow -I %CMAKE_INCLUDE_PATH% -L %CMAKE_LIBRARY_PATH% %LeakFlags%
+configure -confirm-license -opensource -%BuildType% -system-zlib -no-stl -no-qt3support -no-phonon -no-webkit -no-multimedia -no-declarative -no-style-cleanlooks -no-style-plastique -no-style-motif -no-style-cde -qt-style-windowsxp -qt-style-windowsvista -no-xmlpatterns -nomake demos -nomake examples -platform win32-g++ -mmx -sse -sse2 -3dnow -I %CMAKE_INCLUDE_PATH% -L %CMAKE_LIBRARY_PATH% %LeakFlags%
 
 if errorlevel 1 goto end
 echo.
@@ -93,7 +93,7 @@ pause
 mingw32-make
 if errorlevel 1 goto end
 
-if "%Debug%" == "1" set d=d
+if "%BuildType%" == "debug" set d=d
 
 copy "%devDir%\%sourceFolder%\bin\QtCore%d%4.dll" "%admBuildDir%"
 copy "%devDir%\%sourceFolder%\bin\QtGui%d%4.dll" "%admBuildDir%"

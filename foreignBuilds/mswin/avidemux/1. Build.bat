@@ -8,20 +8,12 @@ echo ========================
 echo 1. 32-bit build
 echo 2. 64-bit build
 echo 3. Debug build
-echo 4. Code::Blocks build
 echo X. Exit
 echo.
 
-choice /c 1234x
+choice /c 123x
 
-if errorlevel 5 goto end
-if errorlevel 4 (
-	set INCLUDE_MSYS_PATH=false
-	set BuildGenerator=CodeBlocks - MinGW Makefiles
-	echo.
-	echo -- Code::Blocks mode set --
-	echo.
-	goto :start	)
+if errorlevel 4 goto end
 if errorlevel 3 (
 	set Debug=1
 	set DebugFlags=-DCMAKE_BUILD_TYPE=Debug

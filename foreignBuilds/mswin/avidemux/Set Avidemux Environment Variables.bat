@@ -35,7 +35,6 @@ if exist "%ProgramFiles%\7-zip" (
 
 set buildFolder=build%BuildBits%
 
-if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" set buildFolder=%buildFolder%-cb
 if "%Debug%" == "1" set buildFolder=%buildFolder%-dbg
 
 set buildCoreFolder=%buildFolder%\core

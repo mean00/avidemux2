@@ -36,10 +36,6 @@ if errorlevel 1 goto end
 cd "%devDir%/%sourceFolder%"
 
 echo.
-echo Patching
-if "%BuildBits%" == "32" patch -p0 -i "%curDir%\configure32.patch"
-
-echo.
 echo Configuring
 if "%BuildBits%" == "32" sh ./configure --prefix=%usrLocalDir% --enable-shared --enable-win32thread
 if "%BuildBits%" == "64" sh ./configure --prefix=%usrLocalDir% --enable-shared --enable-win32thread --host=x86_64-pc-mingw32

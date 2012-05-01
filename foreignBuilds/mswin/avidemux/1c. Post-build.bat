@@ -1,8 +1,8 @@
 mkdir "%sdkBuildDir%\lib%BuildBits%"
-move "%buildDir%\lib\*.a" "%sdkBuildDir%\lib%BuildBits%"
-del /s "%buildDir%\*.a"
+rem move "%buildDir%\*.a" "%sdkBuildDir%\lib%BuildBits%"
+rem del /s "%buildDir%\*.a"
 
-if "%BuildBits%" == "32" (
+if "%BuildBits%" == "x" (
 	mkdir "%sdkBuildDir%\plugin-examples"
 	cd "%sdkBuildDir%\plugin-examples"
 	copy "%curDir%\Tools\Build Plugins.bat" "%sdkBuildDir%\plugin-examples"

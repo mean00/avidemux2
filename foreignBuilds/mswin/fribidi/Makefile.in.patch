@@ -1,0 +1,11 @@
+--- lib/Makefile.in.orig	2009-03-27 09:37:51 +1100
++++ lib/Makefile.in	2012-05-02 09:12:41 +1000
+@@ -222,7 +222,7 @@
+ lib_LTLIBRARIES = libfribidi.la
+ AM_CPPFLAGS = $(MISC_CFLAGS) $(am__append_2)
+ libfribidi_la_LDFLAGS = -no-undefined -version-info $(LT_VERSION_INFO) \
+-	-export-symbols-regex "^fribidi_.*" $(am__append_1)
++	-export-symbols-regex "^fribidi_.*" # $(am__append_1)
+ libfribidi_la_LIBADD = $(MISC_LIBS) $(am__append_3)
+ libfribidi_la_DEPENDENCIES = $(am__append_4)
+ libfribidi_la_headers = \
