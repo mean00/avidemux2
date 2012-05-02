@@ -21,7 +21,7 @@ class audioTrackQt4: public QObject,public DIA_audioTrackBase
 protected:
             audioTrackWindow *window;
             ActiveAudioTracks active;
-            void            setupMenu(int dex);
+            void            setupMenu(int dex,int forcedIndex=-1);
             void            enable(int i);
             void            disable(int i);
 public:
@@ -35,5 +35,5 @@ public slots:
                        bool  filtersClicked(bool a);
                        bool  codecConfClicked(bool a);
                        bool  enabledStateChanged(int state);
-                       bool  addTrack(bool);
+                       void  inputChanged(int signal);
 };

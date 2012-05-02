@@ -51,43 +51,67 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
                             this,SLOT(codecConfClicked(bool)));
             QObject::connect( window->enabled[i],SIGNAL(stateChanged(int)),
                             this,SLOT(enabledStateChanged(int)));
+            QObject::connect( window->inputs[i],SIGNAL(currentIndexChanged(int)),
+                            this,SLOT(inputChanged(int)));
+
 
         }
-        QObject::connect(window->ui.pushButtonAddTrack,SIGNAL(clicked(bool)),
-                            this,SLOT(addTrack(bool)));
         // 
         window->show();
                                     
 };
-
 /**
-     \fn addTrack
+    \fn inputChanged
 */
-bool  audioTrackQt4::addTrack(bool state)
+void audioTrackQt4::inputChanged(int signal)
 {
-        ADM_info("Adding external audio track\n");
+        int dex=-1;
+        QObject *ptr=sender();
+
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->inputs[i]) dex=i;
+        if(dex==-1)
+        {
+            ADM_warning("Cannot find originating input\n");
+            return;
+        }
+        //
+        QComboBox *me=(QComboBox *)ptr;
+        // get size
+        int count=me->count();
+        int thisIndex=me->currentIndex();
+        if(thisIndex!=count-1)
+        {
+           //printf("Not the last one\n");
+           return;
+        }
+        
+        ADM_info("Adding external audio track for index=%d\n",dex);
         // start fileselector
         #define MAX_SOURCE_LENGTH 1024
         char fileName[MAX_SOURCE_LENGTH];
-        if(FileSel_SelectRead("Select audio file",fileName,MAX_SOURCE_LENGTH-1,NULL))
+        if(!FileSel_SelectRead("Select audio file",fileName,MAX_SOURCE_LENGTH-1,NULL))
         {
-            ADM_edAudioTrackExternal *ext=create_edAudioExternal(fileName);
-            if(!ext)
-            {
-                GUI_Error_HIG("Error","Cannot use that file as audio track");
-                return false;
-            }else
-            {
-                _pool->addInternalTrack(ext);
-                for(int i=0;i<NB_MENU;i++)
-                    setupMenu(i);
-
-            }
+            ADM_info("No file selected as audioTrack\n");
+            return;
         }
-        //
-        return true;
 
+        ADM_edAudioTrackExternal *ext=create_edAudioExternal(fileName);
+        if(!ext)
+        {
+            GUI_Error_HIG("Error","Cannot use that file as audio track");
+            return ;
+        }
+        int poolIndex=_pool->size();
+        _pool->addInternalTrack(ext);
+        for(int i=0;i<NB_MENU;i++)
+        {
+            int forced=-1;
+            if(i==dex) forced=poolIndex;
+            setupMenu(i,forced);
+        }
+        return;
 }
+  
 /**
      \fn enabledStateChanged
 */
@@ -276,11 +300,12 @@ void audioTrackQt4::disable(int i)
 /**
     \fn setupMenu
 */
-void audioTrackQt4::setupMenu(int dex)
+void audioTrackQt4::setupMenu(int dex, int forcedIndex)
 {
     ADM_edAudioTrack *edTrack;
     
     // 
+    window->inputs[dex]->blockSignals(true);
     window->inputs[dex]->clear();
 
 
@@ -333,19 +358,25 @@ void audioTrackQt4::setupMenu(int dex)
         }
         window->inputs[dex]->addItem(str); 
     }
+    // add the "add audio track" item
+    window->inputs[dex]->addItem(QString(".... Add audio track"));
     // set index if possible
-    EditableAudioTrack *ed;
-    ed=active.atEditable(dex);
-
-    // set current track if it exists
-    if(ed)
+    if(forcedIndex==-1)
     {
-        if(ed->edTrack)
+        EditableAudioTrack *ed;
+        ed=active.atEditable(dex);
+
+        // set current track if it exists
+        if(ed)
         {
-            int poolIndex=ed->poolIndex;
-            window->inputs[dex]->setCurrentIndex(poolIndex);             
-        }
-     }
+            if(ed->edTrack)
+            {
+                int poolIndex=ed->poolIndex;
+                window->inputs[dex]->setCurrentIndex(poolIndex);             
+            }
+         }
+    }else
+                window->inputs[dex]->setCurrentIndex(forcedIndex);             
     // now add codecs
     int nbAud=audioEncoderGetNumberOfEncoders();
     window->codec[dex]->addItem(QString("copy"));
@@ -354,6 +385,7 @@ void audioTrackQt4::setupMenu(int dex)
 		QString name=QString(audioEncoderGetDisplayName(i));
 		window->codec[dex]->addItem(name);
 	}
+    
     if(active.atEditable(dex)->edTrack)
     {
         int selected=active.atEditable(dex)->encoderIndex;
@@ -362,7 +394,7 @@ void audioTrackQt4::setupMenu(int dex)
     }
     else    
         disable(dex);
-
+    window->inputs[dex]->blockSignals(false);
 }
 /**
         \fn createEncoding
