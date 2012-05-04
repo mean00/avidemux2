@@ -3,7 +3,9 @@
 
 #include <QtGui/QPaintEvent>
 #include <QtGui/QWidget>
-
+/**
+    \class ADM_Qvideo
+*/
 class  ADM_Qvideo : public QWidget
 {
 	Q_OBJECT

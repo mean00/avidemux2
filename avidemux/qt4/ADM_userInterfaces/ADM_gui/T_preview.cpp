@@ -43,7 +43,7 @@ void DIA_previewInit(uint32_t width, uint32_t height) {}
 uint8_t DIA_previewUpdate(uint8_t *data) {return 1;}
 void DIA_previewEnd(void) {}
 uint8_t DIA_previewStillAlive(void) {return 1;}
-
+extern void callBackQtWindowDestroyed();
 
 //****************************************************************************************************
 /*
@@ -83,7 +83,11 @@ setPalette( p );
 
 } //{setAutoFillBackground(false);}
 #endif // Haiku
-ADM_Qvideo::~ADM_Qvideo() {}
+ADM_Qvideo::~ADM_Qvideo() 
+{
+    printf("[Qvideo]Destroying QVideo\n");
+    callBackQtWindowDestroyed();
+}
 
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {

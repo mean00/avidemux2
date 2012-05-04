@@ -364,14 +364,6 @@ void onexit( void )
     ADM_vf_cleanup();
     ADM_dm_cleanup();
     ADM_ve6_cleanup();
-#if defined( USE_VDPAU)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("cleaning VDPAU...\n");
-    vdpauCleanup();
-  #else
-    printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif
 
 	ADM_jobShutDown();
     printf("--End of cleanup--\n");

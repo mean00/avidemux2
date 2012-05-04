@@ -82,7 +82,7 @@ QGraphicsView *drawWindow=NULL;
 extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
 extern bool ADM_QPreviewCleanup(void);
-
+extern void vdpauCleanup();
 
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
@@ -765,9 +765,21 @@ void UI_closeGui(void)
 
 void destroyGUI(void)
 {
-	renderDestroy();
-}
 
+}
+void callBackQtWindowDestroyed()
+{
+	renderDestroy();
+#if defined( USE_VDPAU)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    ADM_info("cleaning VDPAU...\n");
+    vdpauCleanup();
+  #else
+    ADM_info("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif
+
+}
 /**
 
 */
