@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>640</height>
+    <width>671</width>
+    <height>679</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -99,8 +99,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
-     <height>22</height>
+     <width>671</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -1272,8 +1272,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>120</width>
-     <height>0</height>
+     <width>132</width>
+     <height>143</height>
     </size>
    </property>
    <property name="features">
@@ -1565,9 +1565,6 @@
    <property name="text">
     <string>&amp;Open...</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
   </action>
   <action name="actionProperties">
    <property name="icon">
@@ -1594,9 +1591,6 @@
    </property>
    <property name="toolTip">
     <string>Save Video</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionLoad_run_project">
