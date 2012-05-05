@@ -79,6 +79,7 @@ void audioTrackQt4::inputChanged(int signal)
         // get size
         int count=me->count();
         int thisIndex=me->currentIndex();
+        printf("index=%d count=%d\n",thisIndex,count);
         if(thisIndex!=count-1)
         {
            //printf("Not the last one\n");
@@ -109,6 +110,10 @@ void audioTrackQt4::inputChanged(int signal)
             if(i==dex) forced=poolIndex;
             setupMenu(i,forced);
         }
+        // set enabled if needed
+          window->enabled[dex]->blockSignals(true);
+          enable(dex);
+          window->enabled[dex]->blockSignals(false);
         return;
 }
   
@@ -375,6 +380,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
                 window->inputs[dex]->setCurrentIndex(poolIndex);             
             }
          }
+        if(!_pool->size())   window->inputs[dex]->setCurrentIndex(-1);          
     }else
                 window->inputs[dex]->setCurrentIndex(forcedIndex);             
     // now add codecs
