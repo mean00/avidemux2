@@ -85,7 +85,8 @@ void audioTrackQt4::inputChanged(int signal)
            //printf("Not the last one\n");
            return;
         }
-        
+        // Trying to add a new track...
+        // ..........
         ADM_info("Adding external audio track for index=%d\n",dex);
         // start fileselector
         #define MAX_SOURCE_LENGTH 1024
@@ -93,6 +94,11 @@ void audioTrackQt4::inputChanged(int signal)
         if(!FileSel_SelectRead("Select audio file",fileName,MAX_SOURCE_LENGTH-1,NULL))
         {
             ADM_info("No file selected as audioTrack\n");
+            // deactivate me
+            me->blockSignals(true);
+            me->setCurrentIndex(-1);
+            me->blockSignals(false);
+            disable(dex); // just to be on the safe side..
             return;
         }
 
@@ -253,6 +259,11 @@ bool  audioTrackQt4::updateActive(void)
         {
             ADM_info("Processing input %d for track %d\n",i,done);
             int trackIndex=window->inputs[i]->currentIndex();
+            if(trackIndex>=_pool->size()) 
+            {
+                ADM_warning("Referencing a non existing track in pool (%d/%d)\n",trackIndex,_pool->size());
+                continue;
+            }
             _srcActive->addTrack(trackIndex,_pool->at(trackIndex));
             //
             EditableAudioTrack *dest=_srcActive->atEditable(done);
