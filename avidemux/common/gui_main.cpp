@@ -275,6 +275,7 @@ int nw;
         return;
     case ACT_EXIT:
 	  UI_closeGui();
+      return;
       break;
     default:
       break;
