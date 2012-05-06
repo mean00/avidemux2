@@ -147,7 +147,12 @@ void GUI_PlayAvi(void)
    ADM_info("Restoring display.\n");
    
    admPreview::setMainDimension(info.width,info.height,oldZoom);
-   admPreview::seekToTime(oldTimeFrame);
+    // If we are processing the video, the current time
+    // might not be matching a source video time => PROBLEM
+    // Go back to the beginning to be on safe ground
+    // In copy mode, we can keep the current position
+    if(getPreviewMode()!=ADM_PREVIEW_NONE)
+        admPreview::seekToTime(oldTimeFrame);
    UI_purge();
    
    admPreview::samePicture();
