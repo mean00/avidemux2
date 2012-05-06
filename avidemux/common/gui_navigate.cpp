@@ -141,11 +141,8 @@ static int ignore_change=0;
         GUI_NextPrevBlackFrame(-1);
 	  break;
       case ACT_End:
-            {
-                uint32_t nf = avifileinfo->nb_frames;
-                          GUI_GoToFrame(nf - 1);
-            }
-	  break;
+            GUI_GoToTime(video_body->getVideoDuration());
+            break;
       case ACT_Begin:
             video_body->rewind();
             admPreview::samePicture(); // Ugly FIXME TODO
