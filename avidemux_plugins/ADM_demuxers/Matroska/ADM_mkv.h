@@ -45,8 +45,23 @@ typedef BVector <mkvIndex > mkvListOfIndex;
     \struct mkvTrak
     \brief Hold information about a give track, the track #0  is always video.
 */
-typedef struct
+class mkvTrak
 {
+public:
+  mkvTrak()
+  {
+        streamIndex=0;
+        duration=0;
+        memset(&wavHeader,0,sizeof(wavHeader));
+        nbPackets=0;
+        nbFrames=0;
+        length=0;
+        extraData=NULL;
+        extraDataLen=0;
+        headerRepeatSize=0;
+        _sizeInBytes=0;
+        _defaultFrameDuration=0;
+  }
   /* Index in mkv */
   uint32_t  streamIndex;
   uint64_t  duration;  // Duration in us (timecode of the last frame)
@@ -66,7 +81,7 @@ typedef struct
 
   uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
-}mkvTrak;
+};
 
 #define MKV_MAX_LACES 31 // ?
 /**

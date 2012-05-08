@@ -522,7 +522,7 @@ uint8_t mkvHeader::close(void)
   _parser=NULL;
   _nbAudioTrack=0;
   _filename=NULL;
-  memset(_tracks,0,sizeof(_tracks));
+ // memset(_tracks,0,sizeof(_tracks));
   _reordered=0;
 
   _currentAudioTrack=0;
