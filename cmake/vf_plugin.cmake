@@ -21,7 +21,7 @@ ENDMACRO(INIT_VIDEO_FILTER _lib)
 ############## INSTALL_VIDEO_FILTER_INTERNAL ###################"
 MACRO(INSTALL_VIDEO_FILTER_INTERNAL _lib)
 	INSTALL(TARGETS ${_lib} DESTINATION "${VF_PLUGIN_DIR}")
-	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreVideoFilter6 ADM_coreImage6 ADM_coreUtils6)
+	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreVideoFilter6 ADM_coreImage6 ADM_coreUtils6 m)
 ENDMACRO(INSTALL_VIDEO_FILTER_INTERNAL)
 
 ############## INSTALL_VIDEO_FILTER ###################"
