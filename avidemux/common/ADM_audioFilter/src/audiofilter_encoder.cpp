@@ -131,7 +131,7 @@ ADM_audioStream *audioCreateEncodingStream(EditableAudioTrack *ed, bool globalHe
         return NULL;
     }
     // 3- Create access
-    ADMAudioFilter_Access *access=new ADMAudioFilter_Access(filter,encoder,0);
+    ADMAudioFilter_Access *access=new ADMAudioFilter_Access(filter,encoder,ed,0);
     if(!access)
     {
         printf("[Access] Cannot create access\n");

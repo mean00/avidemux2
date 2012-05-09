@@ -20,18 +20,19 @@
 #include "ADM_audioFilter.h"
 #include "audiofilter_access.h"
 #include "audioencoder.h"
-
-
+#include "ADM_edEditableAudioTrack.h"
+extern bool ADM_emptyFilterChain(VectorOfAudioFilter *vec);
 /**
     \fn ADMAudioFilter_Access
 */
-ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_AudioEncoder *encoder,uint64_t timeUs)
+ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_AudioEncoder *encoder,EditableAudioTrack *ed,uint64_t timeUs)
 {
     filter=incoming;
     this->encoder=encoder;
     ADM_assert(filter);
     startTimeUs=timeUs;
     samplesSeen=0;
+    editable=ed;
     printf("[FilterAccess] Created, starting at %"LU" ms\n",(uint32_t)(timeUs/1000));
 }
 /**
@@ -42,8 +43,7 @@ ADMAudioFilter_Access::~ADMAudioFilter_Access()
     printf("[FilterAccess] Destroyed\n");
     if(filter)
     {
-#warning memleak
-        //destroyEncodingFilter();
+        ADM_emptyFilterChain(&(editable->EncodingVector));
         filter=NULL;
     }
     if(encoder)
