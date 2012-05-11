@@ -29,7 +29,17 @@ static void *boomerang(void *x)
     a->run();
     return NULL;
 }
-
+static void emptyListOfPacket(ListOfQueuePacket &list)
+{
+    int nb=list.size();
+    for(int i=0;i<nb;i++)
+    {
+        ADM_queuePacket *pkt=&(list[i]);
+        if(pkt->data) delete [] pkt->data;
+        pkt->data=NULL;
+    }
+    list.clear();
+}
 /**
     \fn ADM_audioAccess_thread
     \brief
@@ -42,7 +52,7 @@ ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son) :ADM_thread
     {
             ADM_queuePacket pkt;
             pkt.data=new uint8_t[CHUNK_SIZE];
-            freeList.push_back(pkt);
+            freeList.append(pkt);
     }
     
 }
@@ -55,24 +65,8 @@ ADM_audioAccess_thread::~ADM_audioAccess_thread()
 {
     stopThread();
     // Empty the list...
-    int nb=list.size();
-    for(int i=0;i<nb;i++)
-    {
-        ADM_queuePacket *pkt=&(list[i]);
-        if(pkt->data) delete [] pkt->data;
-        pkt->data=NULL;
-    }
-    list.clear();
-
-    nb=freeList.size();
-    for(int i=0;i<nb;i++)
-    {
-        ADM_queuePacket *pkt=&(freeList[i]);
-        if(pkt->data) delete [] pkt->data;
-        pkt->data=NULL;
-    }
-    freeList.clear();
-
+    emptyListOfPacket(list);
+    emptyListOfPacket(freeList);
     // Thread stopped, we can kill the son
     delete son;
 }
@@ -123,7 +117,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
             //
             // Dequeue one item
             ADM_queuePacket pkt=list[0];
-            list.erase(list.begin());
+            list.popFront();
             mutex->unlock();
             ADM_assert(pkt.data);
             ADM_assert(pkt.dataLen<maxSize);
@@ -133,7 +127,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
             //printf("popping Packet with DTS=%"LLD", size=%d\n",*dts,(int)pkt->dataLen);
             *size=pkt.dataLen;
             mutex->lock();
-            freeList.push_back(pkt);
+            freeList.append(pkt);
             if(cond->iswaiting())
             {
                 cond->wakeup();
@@ -174,17 +168,18 @@ bool ADM_audioAccess_thread::runAction(void)
         }
         ADM_queuePacket pkt=(freeList[0]);
         ADM_assert(pkt.data);
-        freeList.erase(freeList.begin());
+        freeList.popFront();
         mutex->unlock();
 
         if(false==son->getPacket(pkt.data,&(pkt.dataLen),CHUNK_SIZE,&(pkt.dts)))
         {
             ADM_info("Audio Thread, no more data\n");
+            freeList.append(pkt);
             goto theEnd;
         }
       
         mutex->lock();
-        list.push_back(pkt);
+        list.append(pkt);
         //printf("Pushing Packet with DTS=%"LLD",size=%d\n",dts,(int)size);
         mutex->unlock();
     }

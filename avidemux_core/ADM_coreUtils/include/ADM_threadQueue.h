@@ -17,7 +17,7 @@
 #include "ADM_threads.h"
 
 using namespace std;
-#include <vector>
+#include "BVector.h"
 
 
 
@@ -32,7 +32,7 @@ typedef struct
     uint64_t pts;
 }ADM_queuePacket;
 
-typedef  vector <ADM_queuePacket> ListOfQueuePacket;
+typedef  BVector <ADM_queuePacket> ListOfQueuePacket;
 
 typedef enum
 {
@@ -55,7 +55,7 @@ class ADM_threadQueue
                 admMutex          *mutex;
                 admCond           *cond;
                 bool              started;
-volatile        RunState          threadState;
+volatile       RunState          threadState;
                 pthread_t         myThread;
   public:
 
