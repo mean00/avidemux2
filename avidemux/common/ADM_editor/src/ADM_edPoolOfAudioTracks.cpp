@@ -24,9 +24,18 @@ bool PoolOfAudioTracks::addInternalTrack(ADM_edAudioTrack *x)
 	tracks.append(x) ;
 	return true;
 };
-
+/**
+    \fn clear
+    \brief empty and deallocate list of audioTracks
+*/
 bool PoolOfAudioTracks::clear()
 {
+    int n=tracks.size();
+    for(int i=0;i<n;i++)
+    {
+            if(tracks[i]) delete tracks[i];
+            tracks[i]=NULL;
+    }
 	tracks.clear();
 	return true;
 }
@@ -67,18 +76,11 @@ bool PoolOfAudioTracks::dump(void)
 
 	return true;
 }
-
+/**
+    \fn dtor
+*/
 PoolOfAudioTracks::~PoolOfAudioTracks()
 {
-	for (int i = 0; i < size(); i++)
-	{
-		ADM_edAudioTrack *track = at(i);
-
-		if (true == track->destroyable())
-		{
-			delete track;
-		}
-	}
-
 	clear();
 }
+// EOF
