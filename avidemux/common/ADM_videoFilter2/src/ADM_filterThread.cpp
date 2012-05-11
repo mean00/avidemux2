@@ -30,7 +30,7 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
     {
         ADM_queuePacket item;
         item.data=(uint8_t *)new ADMImageDefault(info.width,info.height);
-        freeList.push_back(item);
+        freeList.append(item);
     }
 }
 /**
@@ -95,8 +95,8 @@ bool         ADM_videoFilterQueue::getNextFrameAs( ADM_HW_IMAGE type,uint32_t *f
                 image->duplicateFull(source);
                 if(type!=image->refType && type!=ADM_HW_ANY)
                     image->hwDownloadFromRef();
-                list.erase(list.begin());
-                freeList.push_back(pkt);
+                list.popFront();
+                freeList.append(pkt);
                 if(cond->iswaiting())
                 {
                     cond->wakeup();
@@ -152,7 +152,7 @@ bool         ADM_videoFilterQueue::runAction(void)
         ADM_queuePacket pkt=(freeList[0]);
         ADM_assert(pkt.data);
         ADMImage *source=(ADMImage *)pkt.data;
-        freeList.erase(freeList.begin());
+        freeList.popFront();
         mutex->unlock();
 
         if(false==previousFilter->getNextFrameAs(ADM_HW_ANY,&fn,source))
@@ -160,14 +160,14 @@ bool         ADM_videoFilterQueue::runAction(void)
            
             ADM_info("Video Thread, no more data\n");
             mutex->lock();
-            freeList.push_back(pkt);
+            freeList.append(pkt);
             mutex->unlock();
             goto theEnd;
         }
         // Got it, push it
         mutex->lock();
         pkt.pts=fn;
-        list.push_back(pkt);
+        list.append(pkt);
         mutex->unlock();
 
     }
