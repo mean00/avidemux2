@@ -67,21 +67,15 @@ bool muxerFFmpeg::closeMuxer()
             av_write_trailer(oc);
             url_fclose((oc->pb));
         }
+        avformat_free_context(oc);
+        oc=NULL;
     }
+    
     for(int i=0;i<ADM_MAX_AUDIO_STREAM;i++)
     {
-        if(audio_st[i])
-            av_free(audio_st[i]);
         audio_st[i]=NULL;
     }
-    if(video_st)
-    {
-         av_free(video_st);
-    }
     video_st=NULL;
-    if(oc)
-        av_free(oc);
-    oc=NULL;
     return true;
 }
 /**
