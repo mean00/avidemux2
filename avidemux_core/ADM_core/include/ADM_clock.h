@@ -43,7 +43,7 @@ public:
         void start(void);
         void end(void);
         void printResult(void);
-    
-
+        void getResult(float &avg, int &bmin,int &bmax);
 };
 #endif
+//EOF

@@ -68,4 +68,18 @@ void ADMBenchmark::printResult(void)
     ADM_info("Min Time     : %d ms\n",bMin);
     ADM_info("Max Time     : %d ms\n",bMax);
 }
+/**
+    \fn getResult
+    \brief get min,max & average benchmark result
+*/
+void ADMBenchmark::getResult(float &avg, int &bmin,int &bmax)
+{
+    avg=bCumul;
+    if(nbRound)
+        avg/=nbRound;
+    else    
+        avg=0;
+    bmin=bMin;
+    bmax=bMax;
+}
 // EOF
