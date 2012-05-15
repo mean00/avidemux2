@@ -36,7 +36,7 @@ typedef struct {
 /**
     \class ADMVideoMPD3Dlow
 */
-class ADMVideoMPD3D : public  ADM_coreVideoFilter
+class ADMVideoMPD3D : public  ADM_coreVideoFilterCached
 {
 protected:
                 ADMImage                        *original;

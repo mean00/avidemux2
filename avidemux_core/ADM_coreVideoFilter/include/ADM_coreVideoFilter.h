@@ -38,9 +38,8 @@ typedef struct
 class ADM_coreVideoFilter
 {
 protected:
-            FilterInfo           info;
+            FilterInfo            info;
             uint32_t             nextFrame; // next frame to fetch, it is reset to 0 after a seek!
-            VideoCache           *vidCache;
             const char           *myName;
 public:
                             ADM_coreVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
@@ -59,6 +58,21 @@ public:
 protected:
             ADM_coreVideoFilter *previousFilter;
 };
+/**
+ *  \class ADM_coreVideoFilterCached
+ *  \brief Same as above but we use a cache. Beware of flushing the cash upon seeking!
+ */
+class ADM_coreVideoFilterCached : public ADM_coreVideoFilter
+{
+protected:
+            VideoCache           *vidCache;
+public:
+                            ADM_coreVideoFilterCached(int cacheSize,ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
+       virtual             ~ADM_coreVideoFilterCached();
+
+       virtual bool         goToTime(uint64_t usSeek);                 /// Overide this if you have cleanup to do after a jump      
+};
+
 // Avisynth compatibility functions
 int PutHintingData(uint8_t *video, unsigned int hint);
 int GetHintingData(uint8_t *video, unsigned int *hint);

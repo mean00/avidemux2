@@ -26,7 +26,7 @@ Daniel Moreno <comac@comac.darktech.org>
 /**
     \class ADMVideoMPD3Dlow
 */
-class ADMVideoMPD3Dlow : public  ADM_coreVideoFilter
+class ADMVideoMPD3Dlow : public  ADM_coreVideoFilterCached
 {
 protected:
                 ADMImage        *original;

@@ -54,7 +54,7 @@ const PredefinedFps_t predefinedFps[]=
     \class resampleFps
 
 */
-class  resampleFps:public ADM_coreVideoFilter
+class  resampleFps:public ADM_coreVideoFilterCached
 {
 protected:
         confResampleFps     configuration;
@@ -107,7 +107,8 @@ static char buf[100];
 /**
     \fn ctor
 */
-resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : ADM_coreVideoFilter(previous,setup)
+resampleFps::resampleFps(  ADM_coreVideoFilter *previous,CONFcouple *setup) : 
+        ADM_coreVideoFilterCached(3,previous,setup)
 {
     baseTime=0;
     prefillDone=false;
@@ -153,7 +154,7 @@ bool resampleFps::refill(void)
 */
 bool         resampleFps::goToTime(uint64_t usSeek)
 {
-    if(false==ADM_coreVideoFilter::goToTime(usSeek)) return false;
+    if(false==ADM_coreVideoFilterCached::goToTime(usSeek)) return false;
     prefillDone=false;
     return true;
 }

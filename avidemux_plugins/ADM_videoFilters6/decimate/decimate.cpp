@@ -137,12 +137,12 @@ void Decimate::reset(void)
 		firsttime = true;
         all_video_cycle = true;
         hints_invalid=false;
-        vidCache->flush();
 }
 /**
     \fn Ctor
 */       
-Decimate::Decimate(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_coreVideoFilter(in,couples)
+Decimate::Decimate(	ADM_coreVideoFilter *in,CONFcouple *couples)      : 
+            ADM_coreVideoFilterCached(11,in,couples)
 {
 		
 		char buf[80];
@@ -162,7 +162,6 @@ Decimate::Decimate(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_core
 		}
 		
 		ADM_assert(_param->cycle);
-		vidCache=new VideoCache(_param->cycle*2+1,in);
 		
 		if (_param->mode == 0 || _param->mode == 2 || _param->mode == 3)
 		{
@@ -192,9 +191,6 @@ bool         Decimate::getCoupledConf(CONFcouple **couples)
 Decimate::~Decimate(void)
 {
 		if (sum != NULL) ADM_dealloc(sum);
-		if(vidCache) delete vidCache;
-
-		vidCache=NULL;
 		sum=NULL;
 }
 
@@ -605,6 +601,6 @@ bool Decimate::get3(uint32_t *fn,ADMImage *data)
 bool                Decimate::goToTime(uint64_t usSeek)
 {
     reset();
-    return ADM_coreVideoFilter::goToTime(usSeek);
+    return ADM_coreVideoFilterCached::goToTime(usSeek);
 }
 // EOF

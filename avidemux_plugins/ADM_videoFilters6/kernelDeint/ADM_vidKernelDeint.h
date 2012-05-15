@@ -5,12 +5,12 @@
 /**
     \class kernelDeint
 */
-class kernelDeint : public  ADM_coreVideoFilter
+class kernelDeint : public  ADM_coreVideoFilterCached
 {
 protected:
         kdeint       param;
         bool         debug;
-        bool         goToTime(uint64_t usSeek);
+        
 public:
                     kernelDeint(ADM_coreVideoFilter *previous,CONFcouple *conf);
                     ~kernelDeint();

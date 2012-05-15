@@ -172,10 +172,10 @@ uint8_t  ADMVideoMPD3Dlow::setup(void)
     \fn ctor
 */
 ADMVideoMPD3Dlow::ADMVideoMPD3Dlow(	ADM_coreVideoFilter *in,CONFcouple *couples) 
-        : ADM_coreVideoFilter(in,couples)
+        : ADM_coreVideoFilterCached(3,in,couples)
 {
 uint32_t page;
-  vidCache=new VideoCache(3,in);
+  
   Line=new uint8_t [in->getInfo()->width];
   page=info.width*info.height;
   

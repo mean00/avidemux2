@@ -299,11 +299,11 @@ uint8_t  ADMVideoMPD3D::setup(void)
     \fn ctor
 */
 ADMVideoMPD3D::ADMVideoMPD3D(	ADM_coreVideoFilter *in,CONFcouple *couples) 
-        : ADM_coreVideoFilter(in,couples)
+        : ADM_coreVideoFilterCached(3,in,couples)
 {
 uint32_t page;
   memset(&context,0,sizeof(context));
-  vidCache=new VideoCache(3,in);
+  
   context.Line=new unsigned int [in->getInfo()->width];
   page=info.width*info.height;
   
@@ -407,7 +407,7 @@ bool         ADMVideoMPD3D::goToTime(uint64_t usSeek)
         if(t) av_free(t);
     }
     // Flush 
-    return ADM_coreVideoFilter::goToTime(usSeek);
+    return ADM_coreVideoFilterCached::goToTime(usSeek);
 }
 // EOF
 

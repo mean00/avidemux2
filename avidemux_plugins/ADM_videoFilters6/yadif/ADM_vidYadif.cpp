@@ -51,7 +51,7 @@ void filter_line_mmx2(int mode, uint8_t *dst, const uint8_t *prev, const uint8_t
 /**
     \class yadifFilter
 */
-class yadifFilter : public  ADM_coreVideoFilter
+class yadifFilter : public  ADM_coreVideoFilterCached
 {
 protected:
                     ADMImage    *original;
@@ -84,7 +84,8 @@ static void filter_plane(int mode, uint8_t *dst, int dst_stride, const uint8_t *
 /**
     \fn constructor
 */
-yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVideoFilter(in,setup)
+yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup): 
+            ADM_coreVideoFilterCached(10,in,setup)
 {
     original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     if(!setup || !ADM_paramLoad(setup,yadif_param,&configuration))
@@ -93,7 +94,7 @@ yadifFilter::yadifFilter(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVi
         configuration.mode=0;
         configuration.order=1;
     }
-    vidCache = new VideoCache (10, in);
+    
     updateInfo();
     myName="yadif";
 }
@@ -105,8 +106,7 @@ yadifFilter::~yadifFilter()
         delete  original;
         original=NULL;
        
-        delete vidCache;
-        vidCache = NULL;
+       
 }
 /**
     \fn updateInfo

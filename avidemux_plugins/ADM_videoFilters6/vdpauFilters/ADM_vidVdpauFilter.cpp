@@ -30,7 +30,7 @@ extern "C" {
 /**
     \class vdpauVideoFilter
 */
-class vdpauVideoFilter : public  ADM_coreVideoFilter
+class vdpauVideoFilter : public  ADM_coreVideoFilterCached
 {
 protected:
                     ADMColorScalerSimple *scaler;
@@ -49,7 +49,7 @@ protected:
                     bool                 setIdentityCSC(void);
 
 public:
-        virtual bool         goToTime(uint64_t usSeek); 
+        
                              vdpauVideoFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                              ~vdpauVideoFilter();
 
@@ -87,14 +87,6 @@ bool vdpauVideoFilter::setIdentityCSC(void)
     return true;
 }
 //
-/**
-    \fn goToTime
-    \brief called when seeking. Need to cleanup our stuff.
-*/
-bool         vdpauVideoFilter::goToTime(uint64_t usSeek)
-{
-    return ADM_coreVideoFilter::goToTime(usSeek);
-}
 
 /**
     \fn resetVdpau
@@ -168,7 +160,8 @@ bool vdpauVideoFilter::cleanupVdpau(void)
 /**
     \fn constructor
 */
-vdpauVideoFilter::vdpauVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVideoFilter(in,setup)
+vdpauVideoFilter::vdpauVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup)
+        : ADM_coreVideoFilterCached(5,in,setup)
 {
     for(int i=0;i<ADM_NB_SURFACES;i++)
         input[i]=VDP_INVALID_HANDLE;
@@ -180,7 +173,7 @@ vdpauVideoFilter::vdpauVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup): 
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
     }
-    vidCache = new VideoCache (5, in);
+
     myName="vdpau";
     tempBuffer=NULL;
     passThrough=!setupVdpau();
@@ -192,9 +185,6 @@ vdpauVideoFilter::vdpauVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup): 
 */
 vdpauVideoFilter::~vdpauVideoFilter()
 {
-//        delete original;
-        delete vidCache;
-        vidCache = NULL;
         cleanupVdpau();
 }
 /**

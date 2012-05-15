@@ -56,15 +56,6 @@ extern int GetHintingData(uint8_t *video, unsigned int *hint);
 
 #define PROGRESSIVE  0x00000001
 
-/**
-    \fn goToTime
-    \brief called when seeking. Need to cleanup our stuff.
-*/
-bool         kernelDeint::goToTime(uint64_t usSeek)
-{
-    vidCache->flush();
-    return ADM_coreVideoFilter::goToTime(usSeek);
-}
 
 
 /**
@@ -112,8 +103,7 @@ const char *kernelDeint::getConfiguration(void)
 */
 kernelDeint::~kernelDeint()
 {
-    if(vidCache) delete vidCache;
-    vidCache=NULL;
+    
  	
 }
 
@@ -121,7 +111,7 @@ kernelDeint::~kernelDeint()
     \fn ctor
 */
  kernelDeint::kernelDeint(ADM_coreVideoFilter *previous,CONFcouple *setup)
-            :  ADM_coreVideoFilter(previous,setup)
+            :  ADM_coreVideoFilterCached(4,previous,setup)
 {
     if(!setup || !ADM_paramLoad(setup,kdeint_param,&param))
     {
@@ -133,7 +123,7 @@ kernelDeint::~kernelDeint()
         param.map=0;
     }  	  			
     debug=false;   
-	vidCache=new VideoCache(4,previous);
+	
 }
 /**
     \fn getNextFrame

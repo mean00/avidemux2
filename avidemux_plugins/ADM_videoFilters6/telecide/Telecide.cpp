@@ -57,7 +57,8 @@ DECLARE_VIDEO_FILTER(   Telecide,   // Class
 /**
     \fn Ctor
 */       
-Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_coreVideoFilter(in,couples)
+Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : 
+        ADM_coreVideoFilterCached(16,in,couples)
 {
 
 		int i;		
@@ -65,7 +66,7 @@ Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      : ADM_core
 		char *d, *dsaved;
 		unsigned int *p, *x;
         teleCide *_param=&configuration;		
-		vidCache=new VideoCache(16,in);
+		
 
 		if(!couples || !ADM_paramLoad(couples,teleCide_param,&configuration))
         {
@@ -149,8 +150,6 @@ Telecide::~Telecide()
         cache=NULL;
         sump=NULL;
         sumc=NULL;
-		delete vidCache;
-		vidCache=NULL;
 }
 /**
     \fn getCoupledConf
@@ -165,9 +164,7 @@ bool         Telecide::getCoupledConf(CONFcouple **couples)
 */
 bool                Telecide::goToTime(uint64_t usSeek)
 {
-    bool r=ADM_coreVideoFilter::goToTime(usSeek);
-    vidCache->flush();
     CachePurge();
-    return r;
+    return ADM_coreVideoFilterCached::goToTime(usSeek);
 }
 // EOF

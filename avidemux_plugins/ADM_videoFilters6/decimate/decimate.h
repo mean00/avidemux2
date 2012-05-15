@@ -33,7 +33,7 @@
     \class Telecide
 
 */
-class  Decimate:public ADM_coreVideoFilter
+class  Decimate:public ADM_coreVideoFilterCached
 {
 protected:
         deciMate           configuration;
@@ -54,7 +54,7 @@ protected:
         int xblocks, yblocks;
         unsigned int *sum, div;
         
-        VideoCache	*vidCache;
+        
 public:
                              Decimate(ADM_coreVideoFilter *previous,CONFcouple *conf);
                              ~Decimate();

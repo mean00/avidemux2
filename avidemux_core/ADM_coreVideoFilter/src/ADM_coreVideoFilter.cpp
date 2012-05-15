@@ -38,7 +38,6 @@ if needed.
 {
     previousFilter=previous;
     nextFrame=0;
-    vidCache=NULL;
     myName="default";
     if(previous) memcpy(&info,previous->getInfo(),sizeof(info));
 }
@@ -47,8 +46,6 @@ if needed.
 */
  ADM_coreVideoFilter:: ~ADM_coreVideoFilter()
 {
-        if(vidCache) delete vidCache;
-        vidCache=NULL;
 }
 /**
     \fn getConfiguration
@@ -85,7 +82,6 @@ bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
     float oldIncrement=previousFilter->getInfo()->frameIncrement;
     ADM_assert(thisIncrement);
     ADM_assert(oldIncrement);
-    if(vidCache) vidCache->flush();
     nextFrame=0;
 
     if(thisIncrement==oldIncrement) return previousFilter->goToTime(usSeek);
@@ -95,6 +91,32 @@ bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
     return  previousFilter->goToTime((uint64_t)newSeek);
 
 }
+/**
+    \fn ctor
+*/
+ADM_coreVideoFilterCached::ADM_coreVideoFilterCached(int cacheSize,ADM_coreVideoFilter *previous,CONFcouple *conf)
+    : ADM_coreVideoFilter(previous,conf)
+{
+    vidCache =new VideoCache(cacheSize,previous);
+}
+/**
+    \fn dtor
+*/
+ADM_coreVideoFilterCached::~ADM_coreVideoFilterCached()
+{
+    if(vidCache) delete vidCache;
+    vidCache=NULL;
+}
+/**
+    \fn goToTime
+    \brief flush the cache as frameNum goes back to 0 after a seek
+*/
+bool         ADM_coreVideoFilterCached::goToTime(uint64_t usSeek)
+{
+    vidCache->flush();
+    return ADM_coreVideoFilter::goToTime(usSeek);
+}
+
 // Some useful functions often used by Donald Graft filters
 #define MAGIC_NUMBER (0xdeadbeef)
 

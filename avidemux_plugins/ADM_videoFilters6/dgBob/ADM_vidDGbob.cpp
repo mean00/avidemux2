@@ -30,10 +30,9 @@
 /**
 	\class DGbob
 */
-class DGbob : public ADM_coreVideoFilter
+class DGbob : public ADM_coreVideoFilterCached
 {
         dgbob           _param;        
-        VideoCache      *vidCache;
         void            update(void); 
 public:
                                 
@@ -43,7 +42,7 @@ public:
        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual bool         configure(void) ;                 /// Start graphical user interface        
-       virtual bool         goToTime(uint64_t usSeek);
+       
 };
 
 // DECLARE FILTER 
@@ -102,10 +101,9 @@ const char *DGbob::getConfiguration(void)
 /**
     \fn ctor
 */
-DGbob::DGbob(ADM_coreVideoFilter *in,CONFcouple *couples)  : ADM_coreVideoFilter(in,couples)
+DGbob::DGbob(ADM_coreVideoFilter *in,CONFcouple *couples)  : ADM_coreVideoFilterCached(7,in,couples)
 
 {
-    vidCache=new VideoCache(7,in);
     if(!couples || !ADM_paramLoad(couples,dgbob_param,&_param))
     {
         // Default value
@@ -150,8 +148,6 @@ bool DGbob::getCoupledConf( CONFcouple **couples)
 DGbob::~DGbob(void)
 {
                 
-                if(vidCache) delete vidCache;                
-                vidCache=NULL;   
 }
 /**
     \fn getNextFrame
@@ -525,15 +521,6 @@ bool         DGbob::getNextFrame(uint32_t *fn,ADMImage *image)
     }        
     nextFrame++;
 	return true;
-}
-/**
-    \fn goToTime
-    \brief Since this filter is altering timing info, we have to empty the cache
-*/
-bool                DGbob::goToTime(uint64_t usSeek)
-{
-  vidCache->flush();
-  return ADM_coreVideoFilter::goToTime(usSeek);
 }
 //EOF
 

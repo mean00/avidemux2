@@ -83,7 +83,7 @@ VDPSlot::~VDPSlot()
 /**
     \class vdpauVideoFilterDeint
 */
-class vdpauVideoFilterDeint : public  ADM_coreVideoFilter
+class vdpauVideoFilterDeint : public  ADM_coreVideoFilterCached
 {
 protected:
                     VDPSlot              slots[3];
@@ -168,7 +168,7 @@ bool         vdpauVideoFilterDeint::goToTime(uint64_t usSeek)
     secondField=false;
     eof=false;
     clearSlots();
-    return ADM_coreVideoFilter::goToTime(usSeek);
+    return ADM_coreVideoFilterCached::goToTime(usSeek);
 }
 /**
     \fn setIdentityCSC
@@ -273,7 +273,8 @@ bool vdpauVideoFilterDeint::cleanupVdpau(void)
 /**
     \fn constructor
 */
-vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple *setup): ADM_coreVideoFilter(in,setup)
+vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple *setup): 
+        ADM_coreVideoFilterCached(5,in,setup)
 {
     eof=false;
     for(int i=0;i<ADM_NB_SURFACES;i++)
@@ -288,7 +289,7 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
     }
-    vidCache = new VideoCache (5, in);
+    
     myName="vdpauDeint";
     tempBuffer=NULL;
     passThrough=false;
@@ -301,9 +302,6 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
 */
 vdpauVideoFilterDeint::~vdpauVideoFilterDeint()
 {
-//        delete original;
-        delete vidCache;
-        vidCache = NULL;
         cleanupVdpau();
 }
 /**

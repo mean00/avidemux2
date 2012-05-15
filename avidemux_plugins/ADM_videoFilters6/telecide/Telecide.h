@@ -83,7 +83,7 @@ struct PREDICTION
     \class Telecide
 
 */
-class  Telecide:public ADM_coreVideoFilter
+class  Telecide:public ADM_coreVideoFilterCached
 {
 protected:
         teleCide           configuration;
