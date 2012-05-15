@@ -171,6 +171,7 @@ unsigned char *dstp;
     if(!src)
         return false; // EOF
 	blur=blurrImg;
+    dst->Pts=src->Pts;
 	{
 		for (int i=0;i<3;i++)
 		{
@@ -184,6 +185,7 @@ unsigned char *dstp;
 			if (!_param.mask) apply_filter(src, blur, dst, dstp, i);
 		}
 	}
+    *fn=nextFrame;
     nextFrame++;
 	vidCache->unlockAll();
 	return true;

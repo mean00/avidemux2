@@ -159,7 +159,7 @@ bool         DGbob::getNextFrame(uint32_t *fn,ADMImage *image)
     bool last=false;
 
     frame=nextFrame;
-
+    *fn=nextFrame;
 	if (_param.mode == 0) n = frame;
 	else n = frame/2;
 
