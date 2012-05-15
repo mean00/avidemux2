@@ -141,7 +141,8 @@ bool kernelDeint::getNextFrame(uint32_t *fn,ADMImage *image)
 	threshold=param.threshold;
 	sharp=param.sharp;
 	twoway=param.twoway;
-	map=param.map;				
+	map=param.map;		
+    *fn=nextFrame;            
     uint32_t frame_prev=nextFrame;
     if(frame_prev) frame_prev--;
     
