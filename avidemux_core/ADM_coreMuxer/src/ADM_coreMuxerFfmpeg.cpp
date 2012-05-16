@@ -28,6 +28,25 @@
 #define aprintf printf
 #endif
 /**
+    \fn ffmpuxerSetExtradata
+    \brief dupe the extradata if needed
+*/
+bool ffmpuxerSetExtradata(AVCodecContext *context, int size, const uint8_t *data)
+{
+    if(!size)
+    {
+        context->extradata=NULL;
+        context->extradata_size=0;
+        return true;
+    }
+    uint8_t *copy=(uint8_t *)av_malloc(size);;
+    memcpy(copy,data,size);
+    context->extradata=copy;
+    context->extradata_size=size;
+    return true;
+}
+
+/**
     \fn writePacket
 */
 bool muxerFFmpeg::writePacket(AVPacket *pkt)
@@ -138,11 +157,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
         uint8_t  *videoExtraData;
         stream->getExtraData(&videoExtraDataSize,&videoExtraData);
         printf("[FF] Using %d bytes for video extradata\n",(int)videoExtraDataSize);
-        if(videoExtraDataSize)
-        {
-                c->extradata=videoExtraData;
-                c->extradata_size= videoExtraDataSize;
-        }
+        ffmpuxerSetExtradata(c,videoExtraDataSize,videoExtraData);
 
         c->rc_buffer_size=8*1024*224;
         c->rc_max_rate=9500*1000;
@@ -295,8 +310,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           {
                   case WAV_OGG_VORBIS:
                                 c->codec_id = CODEC_ID_VORBIS;c->frame_size=6*256;
-                                c->extradata=audioextraData;
-                                c->extradata_size= audioextraSize;
+                                ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                 break;
                   case WAV_DTS: c->codec_id = CODEC_ID_DTS;c->frame_size=1024;break;
                   case WAV_EAC3: c->codec_id = CODEC_ID_EAC3;c->frame_size=6*256;break;
@@ -312,8 +326,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                   c->frame_size=4;
                                   c->codec_id = CODEC_ID_PCM_S16LE;break;
                   case WAV_AAC:
-                                  c->extradata=audioextraData;
-                                  c->extradata_size= audioextraSize;
+                                  ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                   c->codec_id = CODEC_ID_AAC;
                                   c->frame_size=1024;
                                   break;
