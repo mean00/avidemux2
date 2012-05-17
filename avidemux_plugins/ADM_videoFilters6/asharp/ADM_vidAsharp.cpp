@@ -60,7 +60,7 @@ DECLARE_VIDEO_FILTER(   ASharp,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category
                         "asharp",            // internal name (must be uniq!)
-                        "asharp",            // Display name
+                        "Asharp",            // Display name
                         QT_TR_NOOP("Adaptative sharpener by MarcFD.") // Description
                     );
 

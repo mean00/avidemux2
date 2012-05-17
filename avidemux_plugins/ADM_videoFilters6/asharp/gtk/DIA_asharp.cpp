@@ -292,4 +292,6 @@ uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in)
 {
     return 1;
 }
+uint8_t    flyASharp::download(void) {return 1;}
+uint8_t    flyASharp::upload(void) {return 1;}
 // EOF

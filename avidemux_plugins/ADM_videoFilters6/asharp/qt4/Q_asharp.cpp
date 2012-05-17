@@ -46,11 +46,11 @@
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+#define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); 
           SPINNER(Treshold);
           SPINNER(Strength);
           SPINNER(Block);
-          connect( ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
+          connect( ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int))); 
 
   }
   void Ui_asharpWindow::sliderUpdate(int foo)
@@ -70,11 +70,17 @@ Ui_asharpWindow::~Ui_asharpWindow()
   if(canvas) delete canvas;
   canvas=NULL;
 }
-void Ui_asharpWindow::valueChanged( int f )
+void Ui_asharpWindow::valueChanged2( int f )
 {
+    valueChanged(0);
+}
+void Ui_asharpWindow::valueChanged( double f )
+{
+  printf("Update \n");
   if(lock) return;
   lock++;
-  myCrop->update();
+  myCrop->download();
+  myCrop->sameImage();
   lock--;
 }
 
