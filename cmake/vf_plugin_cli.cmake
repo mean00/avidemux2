@@ -8,7 +8,7 @@ IF (DO_CLI)
 	ENDIF (GETTEXT_FOUND)
 
 
-        ADD_LIBRARY(${lib} SHARED ${ARGN} ${_srcsGtk})
+        ADM_ADD_SHARED_LIBRARY(${lib} ${ARGN} ${_srcsGtk})
 	AS_NEEDED(${lib})
         INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/cli/ADM_UIs/include/)
         TARGET_LINK_LIBRARIES( ${lib} ADM_UI_Cli6 ADM_render6_cli)

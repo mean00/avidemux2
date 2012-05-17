@@ -6,7 +6,7 @@ MACRO(INIT_VIDEO_FILTER_QT4  lib  _srcsQt _headersQt _srcQt_ui  )
 		QT4_WRAP_UI(qt4_ui ${_srcQt_ui}.ui)
 		QT4_WRAP_CPP(qt4_cpp ${_headersQt})
 
-		ADD_LIBRARY(${lib} SHARED ${ARGN} ${_srcsQt} ${qt4_cpp} ${qt4_ui})
+		ADM_ADD_SHARED_LIBRARY(${lib} ${ARGN} ${_srcsQt} ${qt4_cpp} ${qt4_ui})
 		AS_NEEDED(${lib})
 		ADD_TARGET_CFLAGS(${lib} "-DADM_UI_TYPE_BUILD=4")
 		TARGET_LINK_LIBRARIES( ${lib} ADM_UIQT46  ADM_render6_qt4)
