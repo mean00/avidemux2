@@ -11,6 +11,7 @@ class flyCrop : public FLY_DIALOG_TYPE
    uint8_t    upload(void);
    uint8_t    autocrop(void);
               flyCrop (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    void *canvas, void *slider) : FLY_DIALOG_TYPE(width, height,in,canvas, slider,0,RESIZE_LAST) {};
+                                    void *canvas, void *slider) 
+                : FLY_DIALOG_TYPE(width, height,in,canvas, slider,0,RESIZE_LAST) {};
 };
 #endif
