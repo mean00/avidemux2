@@ -74,8 +74,10 @@ Ui_chromaShiftWindow::~Ui_chromaShiftWindow()
 void Ui_chromaShiftWindow::valueChanged( int f )
 {
   if(lock) return;
+  //printf("Chroma : value changed\n");
   lock++;
-  myCrop->update();
+  myCrop->download();
+  myCrop->sameImage();
   lock--;
 }
 

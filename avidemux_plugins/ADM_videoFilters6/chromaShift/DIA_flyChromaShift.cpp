@@ -33,6 +33,7 @@ uint8_t  flyChromaShift::update(void)
 */
 uint8_t    flyChromaShift::processYuv(ADMImage* in, ADMImage *out)
 {
+        //printf("Chroma : Process YUV\n");
         in->copyPlane(in,out,PLANAR_Y);        
         ADMVideoChromaShift::shiftPlane(PLANAR_U,in,out,param.u);
         ADMVideoChromaShift::shiftPlane(PLANAR_V,in,out,param.v);

@@ -14,7 +14,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_toolkitGtk.h"
 #include "ADM_image.h"
 #include "DIA_flyDialog.h"
 #include "../chromashift.h"
