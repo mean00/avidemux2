@@ -32,7 +32,6 @@ uint8_t buildContrastTable( float coef,int8_t off, uint8_t *tableFlat,uint8_t *t
 				contrast					    _param;
 				uint8_t						_tableFlat[256];
 				uint8_t						_tableNZ[256];
-                ADMImage                       *_uncompressed;
  public:
                             ADMVideoContrast(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
       virtual              ~ADMVideoContrast();

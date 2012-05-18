@@ -5,6 +5,7 @@
 */
 #include "ADM_default.h"
 #include "ADM_audioStreamBuffered.h"
+#include "ADM_vidMisc.h"
 
 #define ADM_MAX_SKEW 40000
 
@@ -42,7 +43,9 @@ bool ADM_audioStreamBuffered::refill(void)
         {
             if( abs(newDts-lastDts)>ADM_MAX_SKEW)
             {
-                printf("[AudioStream] Warning skew in dts %"LLD"\n",(int64_t)newDts-(uint64_t)lastDts);
+                printf("[AudioStream] Warning skew in dts =%"LLD", \n",(int64_t)newDts-(uint64_t)lastDts);
+                printf("[AudioStream] Warning skew lastDts=%s \n",ADM_us2plain(lastDts));
+                printf("[AudioStream] Warning skew newDts=%s  \n",ADM_us2plain(newDts));
                 setDts(newDts);
             }
             // If we have a DTS and the buffer is empty, set the dts inconditionnaly

@@ -92,6 +92,7 @@ bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
        ADM_info("Consumed all data from this audio segment\n");
        switchToNextAudioSegment();
        seg=parent->_segments.getSegment(_audioSeg);
+       if(!seg) return false;
      }
 
 
@@ -107,6 +108,12 @@ bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
              endOfAudio=true;
              return false;
     }
+    // fixup dts
+    packetBufferDts=dts+seg->_startTimeUs;
+    if(packetBufferDts< seg->_refStartTimeUs)
+            packetBufferDts=0;
+    else
+        packetBufferDts-=seg->_refStartTimeUs;
     //
     endOfAudio=false;
     return true;

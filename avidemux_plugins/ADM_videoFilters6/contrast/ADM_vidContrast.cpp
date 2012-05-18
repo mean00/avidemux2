@@ -61,8 +61,7 @@ ADMVideoContrast::ADMVideoContrast(ADM_coreVideoFilter *in,CONFcouple *couples) 
               _param.doChromaU = 1;
               _param.doChromaV = 1;
         }
-        _uncompressed=new ADMImageDefault(info.width,info.height);
-        ADM_assert(_uncompressed);
+
         buildContrastTable (_param.coef, _param.offset, _tableFlat, _tableNZ);
 
 }
@@ -82,9 +81,6 @@ bool         ADMVideoContrast::getCoupledConf(CONFcouple **couples)
 
 ADMVideoContrast::~ADMVideoContrast()
 {
-	if(_uncompressed)
- 		delete _uncompressed;
-	_uncompressed=NULL;
 
 }
 
@@ -93,26 +89,18 @@ ADMVideoContrast::~ADMVideoContrast()
 */
 bool         ADMVideoContrast::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    if(!previousFilter->getNextFrame(fn,_uncompressed)) return false;
-
-    image->copyInfo(_uncompressed);
+    if(!previousFilter->getNextFrame(fn,image)) return false;    
 
     if(_param.doLuma)
-        doContrast(image,_uncompressed,_tableFlat,PLANAR_Y);
-    else
-        image->copyPlane(_uncompressed,image,PLANAR_Y);
-
+        doContrast(image,image,_tableFlat,PLANAR_Y);
+    
 
     if(_param.doChromaU)
-        doContrast(image,_uncompressed,_tableNZ,PLANAR_U);
-    else
-        image->copyPlane(_uncompressed,image,PLANAR_U);
-
+        doContrast(image,image,_tableNZ,PLANAR_U);
+    
     if(_param.doChromaV)
-        doContrast(image,_uncompressed,_tableNZ,PLANAR_V);
-    else
-        image->copyPlane(_uncompressed,image,PLANAR_V);
-
+        doContrast(image,image,_tableNZ,PLANAR_V);
+    
   return 1;
 }
 /**
@@ -132,7 +120,7 @@ uint8_t buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_
 	f = 0.;
       if (f > 255.)
 	f = 255.;
-      *(tableFlat + i) = (uint8_t) floor (f);
+      *(tableFlat + i) = (uint8_t) floor (f+0.49);
 
       f = i;
       f -= 128;
@@ -145,7 +133,7 @@ uint8_t buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_
       if (f > 127.)
 	f = 127.;
       f += 128.;
-      *(tableNZ + i) = (uint8_t) floor (f);
+      *(tableNZ + i) = (uint8_t) floor (f+0.49);
     }
   return 0;
 }
