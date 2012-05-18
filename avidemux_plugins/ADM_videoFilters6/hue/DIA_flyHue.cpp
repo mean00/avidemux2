@@ -20,11 +20,7 @@
  ***************************************************************************/
 #include "DIA_flyDialog.h"
 #include "ADM_default.h"
-#include "ADM_videoFilterDynamic.h"
-#include "DIA_factory.h"
-
-#include "ADM_vidHue.h"
-
+#include "ADM_image.h"
 #include "DIA_flyHue.h"
 
 #include "ADM_assert.h"
@@ -32,41 +28,39 @@
 #ifndef M_PI
 #define M_PI    3.14159265358979323846
 #endif
+extern void HueProcess_C( uint8_t *udst, uint8_t *vdst, 
+                            uint8_t *usrc, uint8_t *vsrc, 
+                            int dststride, int srcstride,   
+                            int w, int h, float hue, float sat);
 
 /************* COMMON PART *********************/
 uint8_t  flyHue::update(void)
 {
-    download();
-    process();
-	copyYuvFinalToRgb();
-    display();
     return 1;
 }        
-
-uint8_t  flyHue::process(void )
+/**
+    \fn processYuv
+*/
+uint8_t   flyHue::processYuv(ADMImage *in,ADMImage *out )
 {
 uint8_t *src,*dst;
 uint32_t stride;
 float hue,sat;
     hue=param.hue*M_PI/180.;
     sat=(100+param.saturation)/100.;
-    memcpy(YPLANE(_yuvBufferOut),YPLANE(_yuvBuffer),_w*_h); // copy luma
+    out->copyPlane(in,out,PLANAR_Y);
+   
     // Do it!
-    HueProcess_C(VPLANE(_yuvBufferOut), UPLANE(_yuvBufferOut),
-        VPLANE(_yuvBuffer), UPLANE(_yuvBuffer),
-        _w>>1,_w>>1,
-        _w>>1,_h>>1, 
-        hue, sat);
+    HueProcess_C(out->GetWritePtr(PLANAR_V), out->GetWritePtr(PLANAR_U),
+                 in->GetReadPtr(PLANAR_V), in->GetReadPtr(PLANAR_U),
+                 out->GetPitch(PLANAR_U),in->GetPitch(PLANAR_U), // assume u&v pitches are =
+                 in->GetWidth(PLANAR_U),in->GetHeight(PLANAR_U),
+                 hue, sat);
     // Copy half source to display
-    dst=_yuvBufferOut->data+_w*_h;
-    src=_yuvBuffer->data+_w*_h;
-    stride=_w>>1;
-    for(uint32_t y=0;y<_h;y++)   // We do both u & v!
-    {
-        memcpy(dst,src,stride>>1);
-        dst+=stride;
-        src+=stride;
-    }
+    in->copyLeftSideTo(out);
+    out->printString(1,1,"Original");
+    out->printString(in->GetWidth(PLANAR_Y)/20+1,1,"Processed");
+
     return 1;
 }
 //EOF

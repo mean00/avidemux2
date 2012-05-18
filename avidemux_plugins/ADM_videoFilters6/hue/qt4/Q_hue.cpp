@@ -27,7 +27,7 @@
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_hueWindow::Ui_hueWindow(QWidget *parent, Hue_Param *param,AVDMGenericVideoStream *in) : QDialog(parent)
+  Ui_hueWindow::Ui_hueWindow(QWidget *parent, hue *param,ADM_coreVideoFilter *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -39,7 +39,7 @@
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myCrop=new flyHue( width, height,in,canvas,ui.horizontalSlider);
-        memcpy(&(myCrop->param),param,sizeof(Hue_Param));
+        memcpy(&(myCrop->param),param,sizeof(hue));
         myCrop->_cookie=&ui;
         myCrop->upload();
         myCrop->sliderChanged();
@@ -55,11 +55,11 @@
   {
     myCrop->sliderChanged();
   }
-  void Ui_hueWindow::gather(Hue_Param *param)
+  void Ui_hueWindow::gather(hue *param)
   {
     
         myCrop->download();
-        memcpy(param,&(myCrop->param),sizeof(Hue_Param));
+        memcpy(param,&(myCrop->param),sizeof(hue));
   }
 Ui_hueWindow::~Ui_hueWindow()
 {
@@ -72,7 +72,8 @@ void Ui_hueWindow::valueChanged( int f )
 {
   if(lock) return;
   lock++;
-  myCrop->update();
+   myCrop->download();
+  myCrop->sameImage();
   lock--;
 }
 
@@ -99,7 +100,7 @@ return 1;
       \fn     DIA_getCropParams
       \brief  Handle crop dialog
 */
-uint8_t DIA_getHue(Hue_Param *param,AVDMGenericVideoStream *in)
+uint8_t DIA_getHue(hue *param,ADM_coreVideoFilter *in)
 {
         uint8_t ret=0;
         Ui_hueWindow dialog(qtLastRegisteredDialog(), param,in);

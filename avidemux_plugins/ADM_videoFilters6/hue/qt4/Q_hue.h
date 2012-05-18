@@ -3,9 +3,7 @@
 #include "DIA_flyDialog.h"
 #include "ui_hue.h"
 #include "ADM_image.h"
-#include "ADM_videoFilter.h"
-#include "ADM_vidHue.h"
-
+#include "hue.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyHue.h"
 
@@ -19,12 +17,12 @@ protected:
 public:
 	flyHue *myCrop;
 	ADM_QCanvas *canvas;
-	Ui_hueWindow(QWidget *parent, Hue_Param *param,AVDMGenericVideoStream *in);
+	Ui_hueWindow(QWidget *parent, hue *param,ADM_coreVideoFilter *in);
 	~Ui_hueWindow();
 	Ui_hueDialog ui;
 
 public slots:
-	void gather(Hue_Param *param);
+	void gather(hue *param);
 
 private slots:
 	void sliderUpdate(int foo);
