@@ -36,7 +36,7 @@ set sourceBaseFolder=Qt%BuildBits%
 
 if "%Debug%" == "1" (
 	set sourceBaseFolder=%sourceBaseFolder%-dbg
-	set LeakFlags=-L %admSdkBuildDir%\lib%BuildBits% -l ADM_core6
+	set LeakFlags=-L %admBuildDir%\lib%BuildBits% -l ADM_core6
 	set BuildType=release
 ) else (
 	set BuildType=release

@@ -17,9 +17,9 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=libvorbis-1.3.2.tar.gz
-set sourceFolder=libvorbis-1.3.2-%BuildBits%
-set tarFolder=libvorbis-1.3.2
+set package=libvorbis-1.3.3.tar.gz
+set sourceFolder=libvorbis-1.3.3-%BuildBits%
+set tarFolder=libvorbis-1.3.3
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 

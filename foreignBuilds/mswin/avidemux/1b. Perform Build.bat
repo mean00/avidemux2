@@ -4,7 +4,9 @@ set BuildGenerator=CodeBlocks - MinGW Makefiles
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.workspace" "%SourceDir%\%buildFolder%"
 
 rem ## Core ##
-if "%Debug%" EQU "1" set LeakFlags=-DFIND_LEAKS=ON
+if "%Debug%" EQU "1" (
+	if "%BuildBits" EQU "64" (
+		set LeakFlags=-DFIND_LEAKS=ON	))
 
 cd "%sourceDir%\%buildCoreFolder%"
 cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DBASH_DIR="%msysDir%\bin" %DebugFlags% %LeakFlags% -DUSE_SYSTEM_SPIDERMONKEY=ON -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" ../../avidemux_core

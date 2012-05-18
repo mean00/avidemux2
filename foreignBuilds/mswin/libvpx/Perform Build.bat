@@ -17,9 +17,9 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=libvpx-v1.0.0.tar.bz2
-set sourceFolder=libvpx-1.0.0-%BuildBits%
-set tarFolder=libvpx-v1.0.0
+set package=libvpx-v1.1.0.tar.bz2
+set sourceFolder=libvpx-1.1.0-%BuildBits%
+set tarFolder=libvpx-v1.1.0
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
@@ -49,14 +49,10 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 )
 
 echo.
-echo Patching
-patch -p0 -i "%curDir%\vp8_common.mk.patch"
-
-echo.
 echo Configuring
 
-if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86-win32-gcc
-if "%BuildBits%" == "64" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86_64-win64-gcc
+if "%BuildBits%" == "32" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86-win32-gcc --disable-examples
+if "%BuildBits%" == "64" sh ./configure --prefix="%usrLocalDir%" --disable-vp8-encoder --target=x86_64-win64-gcc --disable-examples
 
 if errorlevel 1 goto end
 echo.
