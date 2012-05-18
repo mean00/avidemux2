@@ -187,7 +187,7 @@ bool ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const ch
  */
 uint8_t ADM_vf_loadPlugins(const char *path)
 {
-#define MAX_EXTERNAL_FILTER 50
+#define MAX_EXTERNAL_FILTER 100
 
 	char *files[MAX_EXTERNAL_FILTER];
 	uint32_t nbFile;
