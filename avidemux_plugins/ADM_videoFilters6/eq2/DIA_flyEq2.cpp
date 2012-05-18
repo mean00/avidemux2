@@ -15,25 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 #include <math.h>
-
 #include "DIA_flyDialog.h"
-#include "ADM_videoFilterDynamic.h"
+#include "ADM_default.h"
+#include "ADM_image.h"
+
 #include "ADM_vidEq2.h"
 
 #include "DIA_flyEq2.h"
+typedef void lutMeType(oneSetting *par, ADMImage *i,ADMImage *o,ADM_PLANE plane);
 
 /************* COMMON PART *********************/
 uint8_t  flyEq2::update(void)
 {
-    download();
-    process();
-    copyYuvFinalToRgb();
-    display();
     return 1;
 }
-
-uint8_t flyEq2::process(void)
-
+/**
+    \fn process
+*/
+uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
 {
 	Eq2Settings mySettings;
 
@@ -55,7 +54,7 @@ uint8_t flyEq2::process(void)
 	
 	        update_lut(&mySettings,&param);
 	        
-typedef void lutMeType(oneSetting *par, unsigned char *dst, unsigned char *src, unsigned int w, unsigned int h);
+
 
 			lutMeType *lutMe=apply_lut;
 			
@@ -66,13 +65,13 @@ typedef void lutMeType(oneSetting *par, unsigned char *dst, unsigned char *src, 
 	        		lutMe=affine_1d_MMX;
 	        }
 #endif	
-	        lutMe(&(mySettings.param[0]),YPLANE(_yuvBufferOut),YPLANE(_yuvBuffer),_w,_h);
-	        lutMe(&(mySettings.param[2]),UPLANE(_yuvBufferOut),UPLANE(_yuvBuffer),_w>>1,_h>>1);
-	        lutMe(&(mySettings.param[1]),VPLANE(_yuvBufferOut),VPLANE(_yuvBuffer),_w>>1,_h>>1);       
-
+	        lutMe(&(mySettings.param[0]),in,out,PLANAR_Y);
+            lutMe(&(mySettings.param[2]),in,out,PLANAR_U);
+            lutMe(&(mySettings.param[1]),in,out,PLANAR_V);
+	        
 	        	
-	        	#if 1
-	        _yuvBuffer->copyLeftSideTo(_yuvBufferOut);
+#if 1
+	        in->copyLeftSideTo(out);
 #endif
 		return 1;
 }

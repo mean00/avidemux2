@@ -1,6 +1,10 @@
 /***************************************************************************
-                          Port of avisynth ColorYuv Filter
-    copyright            : (C) 2006 by mean
+                           Fly-Ui for hue & sat
+
+    copyright            : (C) 2004/5/7 by mean
+    email                : fixounet@free.fr
+    
+    
  ***************************************************************************/
 
 /***************************************************************************
@@ -11,26 +15,23 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_toolkitGtk.h"
+#include "ADM_image.h"
+#include "DIA_flyDialog.h"
 
-#ifndef ADM_VID_COLOR_YUV_PARAM_H
-#define ADM_VID_COLOR_YUV_PARAM_H
-typedef struct COLOR_YUV_PARAM
+
+#include "ADM_vidEq2.h"
+
+#include "DIA_flyEq2.h"
+
+/**
+ * 		\fn DIA_getEQ2Param
+ * 		\brief flyDialogGtk handling the mplayer EQ2 user Interface dialog.
+ */
+uint8_t DIA_getEQ2Param(eq2 *param, ADM_coreVideoFilter *in)
 {
-    double y_contrast, y_bright, y_gamma, y_gain;
-    double u_contrast, u_bright, u_gamma, u_gain;
-    double v_contrast, v_bright, v_gamma, v_gain;
-    int32_t matrix, levels, opt;
-    uint32_t colorbars, analyze, autowhite, autogain;
+    return false;
+}
+uint8_t    flyEq2::download(void) {return 1;}
+uint8_t    flyEq2::upload(void) {return 1;}
 
-}COLOR_YUV_PARAM;
-
-/*
-matrix : 0 : none   1: rec.709
-Level :  0 : none   1:"TV->PC", 2:"PC->TV", 3:"PC->TV.Y" 
-Opt :    0 : none   1: Coring
-
-
-
-*/
-
-#endif

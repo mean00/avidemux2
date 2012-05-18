@@ -21,7 +21,7 @@
 //	Video is in YV12 Colorspace
 //
 //
-  Ui_eq2Window::Ui_eq2Window(QWidget *parent, Eq2_Param *param,AVDMGenericVideoStream *in) : QDialog(parent)
+  Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) : QDialog(parent)
   {
     uint32_t width,height;
         ui.setupUi(this);
@@ -33,7 +33,7 @@
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myCrop=new flyEq2( width, height,in,canvas,ui.horizontalSlider);
-        memcpy(&(myCrop->param),param,sizeof(Eq2_Param));
+        memcpy(&(myCrop->param),param,sizeof(eq2));
         myCrop->_cookie=&ui;
         myCrop->upload();
         myCrop->sliderChanged();
@@ -57,11 +57,11 @@
   {
     myCrop->sliderChanged();
   }
-  void Ui_eq2Window::gather(Eq2_Param *param)
+  void Ui_eq2Window::gather(eq2 *param)
   {
     
         myCrop->download();
-        memcpy(param,&(myCrop->param),sizeof(Eq2_Param));
+        memcpy(param,&(myCrop->param),sizeof(eq2));
   }
 Ui_eq2Window::~Ui_eq2Window()
 {
@@ -74,7 +74,8 @@ void Ui_eq2Window::valueChanged( int f )
 {
   if(lock) return;
   lock++;
-  myCrop->update();
+  myCrop->download();
+  myCrop->sameImage();
   lock--;
 }
 
@@ -120,7 +121,7 @@ return 1;
       \fn     DIA_getEQ2Param
       \brief  Handle MPlayer EQ2 flyDialog
 */
-uint8_t DIA_getEQ2Param(Eq2_Param *param, AVDMGenericVideoStream *in)
+uint8_t DIA_getEQ2Param(eq2 *param, ADM_coreVideoFilter *in)
 {
         uint8_t ret=0;
         Ui_eq2Window dialog(qtLastRegisteredDialog(), param,in);

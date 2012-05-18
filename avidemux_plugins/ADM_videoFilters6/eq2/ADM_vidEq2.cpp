@@ -16,169 +16,149 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include "DIA_flyDialog.h"
 #include "ADM_default.h"
-#include "ADM_videoFilterDynamic.h"
+#include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
 
-#include <math.h>
-
 #include "ADM_vidEq2.h"
-static FILTER_PARAM Eq2Param={8,{"contrast","brightness","saturation",
-                                "gamma","gamma_weight","rgamma","ggamma","bgamma"}};
 
-/*=====================================*/
-/*=====================================*/
-class  ADMVideoEq2:public AVDMGenericVideoStream
+#include "eq2_desc.cpp"
+#include <math.h>
+/**
+    \class ADMVideoEq2
+*/
+class  ADMVideoEq2:public ADM_coreVideoFilterCached
 {
 
   protected:
-    AVDMGenericVideoStream  *_in;           
-    virtual char            *printConf(void);
-            void            update(void);
-            Eq2_Param       *_param;    
-            VideoCache      *vidCache; 
+            eq2             _param;    
             float           _hue;
             float           _saturation;
-            Eq2Settings     settings;            
+            Eq2Settings     settings;   
+            void            update(void);
   public:
                 
-                        ADMVideoEq2(  AVDMGenericVideoStream *in,CONFcouple *setup);
-    virtual             ~ADMVideoEq2();
-    virtual uint8_t     configure(AVDMGenericVideoStream *in);
-    virtual uint8_t     getFrameNumberNoAlloc(uint32_t frame, uint32_t *len,
-                                          ADMImage *data,uint32_t *flags);
+                            ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
+                            ~ADMVideoEq2();
+       virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
+       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
+	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+       virtual bool         configure(void) ;                 /// Start graphical user interface        
 
-             uint8_t     getCoupledConf( CONFcouple **couples);
 }     ;
 
-
-VF_DEFINE_FILTER_UI(ADMVideoEq2,Eq2Param,
-    eq2,
-                                QT_TR_NOOP("MPlayer eq2"),
-                                1,
-                                VF_COLORS,
-                                QT_TR_NOOP("Adjust contrast, brightness, saturation and gamma."));
-
-uint8_t ADMVideoEq2::configure(AVDMGenericVideoStream *in)
+// Add the hook to make it valid plugin
+DECLARE_VIDEO_FILTER(   ADMVideoEq2,   // Class
+                        1,0,0,              // Version
+                        ADM_UI_TYPE_BUILD,         // UI
+                        VF_COLORS,            // Category
+                        "eq2",            // internal name (must be uniq!)
+                        "MPlayer eq2",            // Display name
+                        QT_TR_NOOP("Adjust contrast, brightness, saturation and gamma.") // Description
+                    );
+/**
+    \fn configure
+*/
+bool  ADMVideoEq2::configure()
 {
   uint8_t r=1;
-  float h,s;
-  _in=in;   
-  r=DIA_getEQ2Param(_param,in);
+  float h,s; 
+  r=DIA_getEQ2Param(&_param,previousFilter);
   update();
   return r;        
 }
-char *ADMVideoEq2::printConf( void )
+/**
+    \fn getConfiguration
+*/
+const char   *ADMVideoEq2::getConfiguration(void)   
 {
-  ADM_FILTER_DECLARE_CONF(" Eq2 :Cont:%1.2f Brigh:%1.2f Sat:%1.2f",
-                _param->contrast,_param->brightness,_param->saturation);
-  
+    static char s[256];
+    snprintf(s,255," Eq2 :Cont:%1.2f Brigh:%1.2f Sat:%1.2f",
+                _param.contrast,_param.brightness,_param.saturation);
+    return s;
+        
 }
-
-ADMVideoEq2::ADMVideoEq2(  AVDMGenericVideoStream *in,CONFcouple *couples)
+/**
+    \fn ctor
+*/
+ADMVideoEq2::ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples) 
+        : ADM_coreVideoFilterCached(1,in,couples)
 {
-  
-  _in=in;         
-  memcpy(&_info,_in->getInfo(),sizeof(_info));    
-  _info.encoding=1; 
-  _param=new  Eq2_Param;
-  if(couples)
-  {                 
-    GET(contrast); 
-    GET(brightness);    
-    GET(saturation); 
-    GET(gamma); 
-    GET(gamma_weight); 
-    GET(rgamma); 
-    GET(ggamma); 
-    GET(bgamma); 
-  }
-  else
+  if(!couples || !ADM_paramLoad(couples,eq2_param,&_param))
   {
-    _param->contrast =1.0;                
-    _param->brightness=0.0;
-    _param->saturation =1.0;  
-    _param->gamma =1.0; 
-    _param->gamma_weight=1.0; 
-    _param->rgamma =1.0; 
-    _param->ggamma =1.0; 
-    _param->bgamma =1.0;    
+    _param.contrast =1.0;                
+    _param.brightness=0.0;
+    _param.saturation =1.0;  
+    _param.gamma =1.0; 
+    _param.gamma_weight=1.0; 
+    _param.rgamma =1.0; 
+    _param.ggamma =1.0; 
+    _param.bgamma =1.0;    
   }      
-  vidCache=new VideoCache(1,_in);
   update();
-    
-   
 }
+/**
+    \fn update
+    \brief recompute lut
+*/
 void ADMVideoEq2::update(void)
 {
-   update_lut(&settings,_param);      
+   update_lut(&settings,&_param);      
 }
+/**
+    \fn dtor
+*/
 ADMVideoEq2::~ADMVideoEq2()
 {
-  delete _param;
-  delete vidCache;
   
 }
-uint8_t ADMVideoEq2::getCoupledConf( CONFcouple **couples)
+/**
+    \fn getCoupledConf
+    \brief Return our current configuration as couple name=value
+*/
+bool         ADMVideoEq2::getCoupledConf(CONFcouple **couples)
 {
-  ADM_assert(_param);
-  *couples=new CONFcouple(8);
-
-
-                CSET(contrast);
-                CSET(brightness);
-                CSET(saturation);
-                CSET(gamma); 
-                CSET(gamma_weight); 
-                CSET(rgamma); 
-                CSET(ggamma); 
-                CSET(bgamma); 
-                return 1;
+    return ADM_paramSave(couples, eq2_param,&_param);
 }
 
-
-uint8_t ADMVideoEq2::getFrameNumberNoAlloc(uint32_t frame,
-                                             uint32_t *len,
-                                             ADMImage *data,
-                                             uint32_t *flags)
+/**
+    \fn getNextFrame
+*/
+ bool         ADMVideoEq2::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+
   ADMImage *mysrc=NULL;
   
-
-  if(frame>=_info.nb_frames) return 0;
-  
-  mysrc=vidCache->getImage(frame);
+  mysrc=vidCache->getImage(nextFrame);
   if(!mysrc) return 0;
-  
-  uint32_t w,h;
-  w=_info.width;
-  h=_info.height;
+  *fn=nextFrame++;
+  image->copyInfo(mysrc);
 
 #ifdef ADM_CPU_X86
   if(CpuCaps::hasMMX())
   {
-        affine_1d_MMX(&(settings.param[0]),YPLANE(data),YPLANE(mysrc),w,h);
-        w>>=1;
-        h>>=1;
-        affine_1d_MMX(&(settings.param[2]),UPLANE(data),UPLANE(mysrc),w,h);
-        affine_1d_MMX(&(settings.param[1]),VPLANE(data),VPLANE(mysrc),w,h);       
+        affine_1d_MMX(&(settings.param[0]),mysrc,image,PLANAR_Y);
+        affine_1d_MMX(&(settings.param[2]),mysrc,image,PLANAR_U);
+        affine_1d_MMX(&(settings.param[1]),mysrc,image,PLANAR_V);
    }
    else
 #endif
    {
-        apply_lut(&(settings.param[0]),YPLANE(data),YPLANE(mysrc),w,h);
-        w>>=1;
-        h>>=1;
-        apply_lut(&(settings.param[2]),UPLANE(data),UPLANE(mysrc),w,h);
-        apply_lut(&(settings.param[1]),VPLANE(data),VPLANE(mysrc),w,h);       
+        apply_lut(&(settings.param[0]),mysrc,image,PLANAR_Y);
+        apply_lut(&(settings.param[2]),mysrc,image,PLANAR_U);
+        apply_lut(&(settings.param[1]),mysrc,image,PLANAR_V);
     }
   vidCache->unlockAll();
   
   
   return 1;
 }
-
-void update_lut(Eq2Settings *settings,Eq2_Param *_param)
+/**
+    \fn update_lut
+*/
+void update_lut(Eq2Settings *settings,eq2 *_param)
 {
      memset(settings,0,sizeof(settings));
 
@@ -220,7 +200,9 @@ void update_lut(Eq2Settings *settings,Eq2_Param *_param)
     create_lut(&(settings->param[1]));
     create_lut(&(settings->param[2])); 
 }          
-
+/**
+    \fn create_lut
+*/
 void create_lut (oneSetting *par)
 {
   unsigned i;
@@ -266,9 +248,10 @@ void create_lut (oneSetting *par)
 }
 
 #ifdef ADM_CPU_X86
-
-void affine_1d_MMX (oneSetting *par, unsigned char *dst, unsigned char *src,
-  unsigned int w, unsigned int h)
+/**
+    \fn affine_1d_MMX
+*/  
+void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane)
 {
   unsigned i;
   int      contrast, brightness;
@@ -276,9 +259,14 @@ void affine_1d_MMX (oneSetting *par, unsigned char *dst, unsigned char *src,
   int      pel;
   short    int brvec[4];
   short    int contvec[4];
+
+  int h=srcImage->GetHeight(plane);
+  int w=srcImage->GetWidth(plane);
+
+
   w3=w>>3;
 //  printf("\nmmx: src=%p dst=%p w=%d h=%d ds=%d ss=%d\n",src,dst,w,h,dstride,sstride);
-  if(par->g!=1.0) return apply_lut(par,dst,src,w,h);
+  if(par->g!=1.0) return apply_lut(par,srcImage,destImage,plane);
   //printf("MMX\n");
   contrast = (int) (par->c * 256 * 16);
   brightness = ((int) (100.0 * par->b + 100.0) * 511) / 200 - 128 - contrast / 32;
@@ -286,13 +274,18 @@ void affine_1d_MMX (oneSetting *par, unsigned char *dst, unsigned char *src,
   brvec[0] = brvec[1] = brvec[2] = brvec[3] = brightness;
   contvec[0] = contvec[1] = contvec[2] = contvec[3] = contrast;
 
-  
   asm volatile (
         "movq (%0), %%mm3 \n\t"
         "movq (%1), %%mm4 \n\t"
         ::  "r" (brvec),"r" (contvec)
         
         );
+  uint8_t *src=srcImage->GetReadPtr(plane);
+  uint8_t *dst=destImage->GetWritePtr(plane);
+
+  int srcDelta=srcImage->GetPitch(plane)-w;
+  int dstDelta=destImage->GetPitch(plane)-w;
+
   while (h-- > 0) {
     asm volatile (
       "pxor %%mm0, %%mm0 \n\t"
@@ -327,15 +320,17 @@ void affine_1d_MMX (oneSetting *par, unsigned char *dst, unsigned char *src,
       }
       *dst++ = pel;
     }
-
+    src+=srcDelta;
+    dst+=dstDelta;
   }
 
   asm volatile ( "emms \n\t" ::: "memory" );
 }
 #endif
-
-void apply_lut (oneSetting *par, unsigned char *dst, unsigned char *src,
-  unsigned int w, unsigned int h)
+/**
+    \fn apply_lut
+*/
+void apply_lut (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane)
 {           
             
     
@@ -344,7 +339,13 @@ void apply_lut (oneSetting *par, unsigned char *dst, unsigned char *src,
   unsigned char *lut;
   uint16_t *lut16;
 
-   dstride=sstride=w;
+   dstride=destImage->GetPitch(plane);
+   sstride=srcImage->GetPitch(plane);
+   int w=srcImage->GetWidth(plane);
+   int h=srcImage->GetHeight(plane);
+
+   uint8_t *src=srcImage->GetReadPtr(plane);
+   uint8_t *dst=destImage->GetWritePtr(plane);
 
   lut = par->lut;
 #ifdef LUT16
@@ -382,4 +383,4 @@ void apply_lut (oneSetting *par, unsigned char *dst, unsigned char *src,
     dst += dstride;
   }
 }  
-
+// EOF
