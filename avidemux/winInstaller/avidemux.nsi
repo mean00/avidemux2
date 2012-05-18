@@ -510,12 +510,14 @@ SectionGroup Plugins SecGrpPlugin
 			SetOutPath $INSTDIR\plugins\audioEncoders
 			${File} plugins\audioEncoders\libADM_ae_lav_ac3.dll
 		${MementoSectionEnd}
-		${MementoSection} "DTS (dcaenc)" SecAudDecDcaEnc
-			SectionIn 1 2
-			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\audioEncoders
-			${File} plugins\audioEncoders\libADM_ae_dcaenc.dll
-		${MementoSectionEnd}
+		#${MementoSection} "DTS (dcaenc)" SecAudDecDcaEnc
+			#SectionIn 1 2
+			#SetOverwrite on
+			#SetOutPath $INSTDIR\plugins\audioEncoders
+			#${File} plugins\audioEncoders\libADM_ae_dcaenc.dll
+			#SetOutPath $INSTDIR
+			#${File} libdcaenc-0.dll
+		#${MementoSectionEnd}
 		${MementoSection} "MP2 (libavcodec)" SecAudEncLavMp2
 			SectionIn 1 2
 			SetOverwrite on
@@ -913,6 +915,48 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_colorYuv.dll
 			${MementoSectionEnd}
+			${MementoSection} "ChromaShift" SecVidFltChromaShift
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				!insertmacro SectionFlagIsSet ${SecUiCli} ${SF_SELECTED} InstallCli CheckGtk
+InstallCli:
+				${File} plugins\videoFilters\libADM_vf_chromaShiftCli.dll
+CheckGtk:
+!ifdef INST_GTK
+				!insertmacro SectionFlagIsSet ${SecUiGtk} ${SF_SELECTED} InstallGtk CheckQt
+InstallGtk:
+				${File} plugins\videoFilters\libADM_vf_chromaShiftGtk.dll
+CheckQt:
+!endif
+!ifdef INST_QT
+				!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} InstallQt End
+InstallQt:
+				${File} plugins\videoFilters\libADM_vf_chromaShiftQt4.dll
+End:
+!endif
+			${MementoSectionEnd}
+			${MementoSection} "Contrast" SecVidFltContrast
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				!insertmacro SectionFlagIsSet ${SecUiCli} ${SF_SELECTED} InstallCli CheckGtk
+InstallCli:
+				${File} plugins\videoFilters\libADM_vf_contrastCli.dll
+CheckGtk:
+!ifdef INST_GTK
+				!insertmacro SectionFlagIsSet ${SecUiGtk} ${SF_SELECTED} InstallGtk CheckQt
+InstallGtk:
+				${File} plugins\videoFilters\libADM_vf_contrastGtk.dll
+CheckQt:
+!endif
+!ifdef INST_QT
+				!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} InstallQt End
+InstallQt:
+				${File} plugins\videoFilters\libADM_vf_contrastQt4.dll
+End:
+!endif
+			${MementoSectionEnd}
 			${MementoSection} "Remove Plane" SecVidFltRemovePlane
 				SectionIn 1 2
 				SetOverwrite on
@@ -971,6 +1015,12 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_mpdelogoQt4.dll
 			${MementoSectionEnd}
+			${MementoSection} "MSharpen" SecVidFltMSharpen
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_msharpen.dll
+			${MementoSectionEnd}
 			${MementoSection} "Sharpen" SecVidFltSharpen
 				SectionIn 1 2
 				SetOverwrite on
@@ -985,6 +1035,7 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_ssa.dll
 				SetOutPath $INSTDIR
+				${File} libfribidi-0.dll
 				${File} libfontconfig-1.dll
 				SetOutPath $INSTDIR\etc\fonts
 				${Folder} etc\fonts
