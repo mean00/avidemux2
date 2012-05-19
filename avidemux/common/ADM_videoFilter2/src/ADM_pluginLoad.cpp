@@ -80,7 +80,7 @@ BVector<ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 /**
     \fn sortVideoCategoryByName
 */
-static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list)
+static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list,const int cat)
 {
     int n=list.size();
     for(int start=0;start<n-2;start++)
@@ -97,6 +97,12 @@ static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list)
             list[i+1]=left;
         }
     }
+    // rederive tag
+    for(int i=0;i<n;i++)
+    {
+            ADM_vf_plugin *left=list[i];
+            left->tag=i+cat*100;
+    }
     return true;
 }
 /**
@@ -106,7 +112,7 @@ static bool sortVideoFiltersByName(void)
 {
     for(int i=0;i<VF_MAX;i++)
     {
-        sortVideoCategoryByName(ADM_videoFilterPluginsList[i]);
+        sortVideoCategoryByName(ADM_videoFilterPluginsList[i],i);
     }
     return true;
     
