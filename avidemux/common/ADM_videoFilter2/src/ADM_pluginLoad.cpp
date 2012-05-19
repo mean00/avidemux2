@@ -76,6 +76,42 @@ class ADM_vf_plugin : public ADM_LibWrapper
 };
 
 BVector<ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
+
+/**
+    \fn sortVideoCategoryByName
+*/
+static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list)
+{
+    int n=list.size();
+    for(int start=0;start<n-2;start++)
+    for(int i=0;i<n-1;i++)
+    {
+         ADM_vf_plugin *left=list[i];
+         ADM_vf_plugin *right=list[i+1];
+     
+        const char       *    leftName=left->getDisplayName();
+        const char       *    rightName=right->getDisplayName();
+        if(strcasecmp(leftName,rightName)>0)
+        {
+            list[i]=right;
+            list[i+1]=left;
+        }
+    }
+    return true;
+}
+/**
+    \fn sortVideoFiltersByName
+*/
+static bool sortVideoFiltersByName(void)
+{
+    for(int i=0;i<VF_MAX;i++)
+    {
+        sortVideoCategoryByName(ADM_videoFilterPluginsList[i]);
+    }
+    return true;
+    
+}
+
 /**
  * 	\fn tryLoadingVideoFilterPlugin
  *  \brief try to load the plugin given as argument..
@@ -130,7 +166,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
         plugin->tag=ADM_videoFilterPluginsList[info->category].size()+info->category*100;
         ADM_videoFilterPluginsList[info->category].append(plugin);
     }
-
+    
 	return 1;
 
 Err_ad:
@@ -206,6 +242,7 @@ uint8_t ADM_vf_loadPlugins(const char *path)
 
 	printf("[ADM_vf_plugin] Scanning done, found %d video filer(s)\n", (int)ADM_vf_getNbFilters());
     clearDirectoryContent(nbFile,files);
+    sortVideoFiltersByName();
 	return 1;
 }
 /**
