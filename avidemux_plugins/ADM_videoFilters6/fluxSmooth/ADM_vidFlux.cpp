@@ -19,18 +19,24 @@
  ***************************************************************************/
  
 #include <math.h>
+
+
 #include "ADM_default.h"
-#include "ADM_videoFilterDynamic.h"
 #include "DIA_factory.h"
+#include "ADM_coreVideoFilterInternal.h"
 #include "ADM_vidFlux.h"
+#include "fluxsmooth_desc.cpp"
 
 static int16_t FUNNY_MANGLE_ARRAY(scaletab, 16);
 static uint64_t FUNNY_MANGLE_ARRAY(scaletab_MMX, 65535);
-
-void initScaleTab( void )
+static bool tableInited=false;
+/**
+    \fn initScaleTab
+*/
+static void initScaleTab( void )
 {
 //uint32_t i;
-
+        if(tableInited==true) return;
 		scaletab[1] = 32767;
 		for(int i = 2; i < 16; ++i)
 				scaletab[i] = (int)(32768.0 / i + 0.5);
@@ -41,22 +47,20 @@ void initScaleTab( void )
 							  (((uint64_t)scaletab[(i >>  8) & 15]) << 32) |
 							  (((uint64_t)scaletab[(i >> 12) & 15]) << 48);
 		}
+        tableInited=true;
 }
  
 
-static FILTER_PARAM fluxParam={2,{"temporal_threshold","spatial_threshold"}};
-
-//REGISTERX(VF_NOISE, "fluxsmooth",QT_TR_NOOP("FluxSmooth"),
-//QT_TR_NOOP("Spatio-temporal cleaner by Ross Thomas."),VF_FLUXSMOOTH,1,fluxsmooth_create,fluxsmooth_script);
-
 //********** Register chunk ************
 
-VF_DEFINE_FILTER(ADMVideoFlux,fluxParam,
-    fluxsmooth,
-                QT_TR_NOOP("FluxSmooth"),
-                1,
-                VF_NOISE,
-                QT_TR_NOOP("Spatio-temporal cleaner by Ross Thomas."));
+DECLARE_VIDEO_FILTER(   ADMVideoFlux,   // Class
+                        1,0,0,              // Version
+                        ADM_UI_ALL,         // UI
+                        VF_NOISE,            // Category
+                        "fluxsmooth",            // internal name (must be uniq!)
+                        "FluxSmooth",            // Display name
+                        QT_TR_NOOP("Spatio-temporal cleaner by Ross Thomas.") // Description
+                    );
 //********** Register chunk ************
 
 
@@ -75,212 +79,141 @@ static	 uint8_t * FUNNY_MANGLE(_l_prevp);
 static	 uint8_t * FUNNY_MANGLE(_l_nextp);
 static	 uint8_t * FUNNY_MANGLE(_l_destp);
 
-static uint32_t size;
+/**
 
-ADMVideoFlux::ADMVideoFlux(AVDMGenericVideoStream *in,CONFcouple *couples)
+*/
+
+/**
+    \fn ctor
+*/
+
+ADMVideoFlux::ADMVideoFlux(ADM_coreVideoFilter *in,CONFcouple *couples) :
+ADM_coreVideoFilterCached(5,in,couples)
 			
 {
-  
-	_in=in;
-	memcpy(&_info,in->getInfo(),sizeof(_info));
-	if(couples)
+    initScaleTab();
+	 if(!couples || !ADM_paramLoad(couples,fluxsmooth_param,&_param))
 	{
-		_param=NEW( FLUX_PARAM );
-		GET(temporal_threshold);
-		GET(spatial_threshold);
-	}
-	else
-	{
-		 _param=NEW( FLUX_PARAM );
-		 _param->spatial_threshold=7;
-		 _param->temporal_threshold=7;
+		 
+		 _param.spatial_threshold=7;
+		 _param.temporal_threshold=7;
 	}
   	num_frame=0xffff0000;
-	vidCache=new VideoCache(5,in);
+}
+/**
+    \fn dtor
+*/
+ADMVideoFlux::~ADMVideoFlux(void)
+{
+                
+}
+/**
+    \fn getCoupledConf
+*/
+bool ADMVideoFlux::getCoupledConf( CONFcouple **couples)
+{
+    return ADM_paramSave(couples, fluxsmooth_param,&_param);
 }
 
-uint8_t	ADMVideoFlux::getCoupledConf( CONFcouple **couples)
+/**
+    \fn configure
+*/
+bool ADMVideoFlux::configure()
 {
-
-			ADM_assert(_param);
-			*couples=new CONFcouple(2);
-
-#define CSET(x)  (*couples)->setCouple((char *)#x,(_param->x))
-	CSET(temporal_threshold);
-	CSET(spatial_threshold);
-		return 1;
-
-}
-uint8_t ADMVideoFlux::configure(AVDMGenericVideoStream *in)
-{
-UNUSED_ARG(in);
-int32_t temporal,spatial; // diaElem wants int32 not uint32
 uint8_t r;
-    temporal=_param->temporal_threshold;
-    spatial=_param->spatial_threshold;
+#define PX(X) &(_param.X##_threshold)
 
-    diaElemInteger Gtemporal(&temporal,QT_TR_NOOP("_Temporal threshold:"),0,255);
-    diaElemInteger Gspatial(&spatial,QT_TR_NOOP("_Spatial threshold:"),0,255);
+    diaElemUInteger Gtemporal(PX(temporal),QT_TR_NOOP("_Temporal threshold:"),0,255);
+    diaElemUInteger Gspatial(PX(spatial),QT_TR_NOOP("_Spatial threshold:"),0,255);
 	  
     diaElem *elems[2]={&Gtemporal,&Gspatial};
   
     r=diaFactoryRun(QT_TR_NOOP("FluxSmooth"),2,elems);
-    if(r)
-    {
-       _param->temporal_threshold=temporal;
-       _param->spatial_threshold=spatial;
-    }
     return r;
     
 }
-ADMVideoFlux::~ADMVideoFlux()
+
+/**
+    \fn getConfiguration
+    \brief Return current setting as a string
+*/
+const char *ADMVideoFlux::getConfiguration(void)
 {
-	DELETE(_param);
-	if(vidCache)
-		delete vidCache;
-	vidCache=NULL;
+    static char conf[80];
+    conf[0]=0;
+    snprintf(conf,80,"FluxSmooth: Spatial :%02"LU" Temporal:%02"LU,
+						_param.spatial_threshold,
+						_param.temporal_threshold);
+    return conf;
 }
 
-char	*ADMVideoFlux::printConf( void) 
+/**
+    \fn getNextFrame
+*/
+bool         ADMVideoFlux::getNextFrame(uint32_t *fn,ADMImage *output)
 {
-	static char conf[100];
-
-		sprintf(conf,"FluxSmooth: Spatial :%02lu Temporal:%02lu",
-						_param->spatial_threshold,
-						_param->temporal_threshold);
-		return conf;
-	
-}
-uint8_t ADMVideoFlux::getFrameNumberNoAlloc(uint32_t frame, uint32_t *len,
-          			ADMImage *data,uint32_t *flags)
-{
-UNUSED_ARG(flags);
-uint32_t dlen,dflags;
-uint32_t plane=_info.width*_info.height;
 ADMImage	*image,*next,*prev;
-
-                        if(frame>= _info.nb_frames) return 0;
-			*len=(plane*3)>>1;
-			
-			size=(_info.width*_info.height*3)>>1;
-			if(frame>_info.nb_frames-1) return 0;
+int frame=nextFrame++;
 			
 			image=vidCache->getImage(frame);
-			if(!image) return 0;
+            *fn=frame;
+			if(!image) return false;
 			
-			if(!frame || (frame==_info.nb_frames-1))
-			{
 
-				data->duplicate(image);
-				data->copyInfo(image);
-				vidCache->unlockAll();
-				return 1;
-			}
 			next=vidCache->getImage(frame+1);
-			if(!next)
+			if(!frame  || !next) // first or last image
 			{
+				output->duplicate(image);
+				output->copyInfo(image);
 				vidCache->unlockAll();
-				return 0;
+				return true;
 			}
+
 			prev=vidCache->getImage(frame-1);
-			if(!prev)
-			{
-				vidCache->unlockAll();
-				return 0;
-			}	    
-				
+            ADM_assert(prev);
 
-		   			
+		   	DoFlux *flux=	DoFilter_C;	
+#if defined(ADM_CPU_X86) && defined(ASM_FLUX)
+            flux=DoFilter_MMX;
+#endif
 // now we have everything
-		int dst_pitch = _info.width,
-		src_pitch = _info.width,
-		row_size  = _info.width,
-		height    = _info.height;
-		
- uint8_t   		*currp = YPLANE(image),
-			*prevp = YPLANE(prev),
-			*nextp = YPLANE(next);;
-	uint8_t		*destp = YPLANE(data);
-
-	// line 1 and last
-	memcpy(destp, currp, row_size);
-	memcpy(destp + dst_pitch * (height - 1),
-		currp + src_pitch * (height - 1), row_size);
-
-	// skip one line		
-	currp += src_pitch;
-	prevp += src_pitch;
-	nextp += src_pitch;
-	destp += dst_pitch;
-	
-	DoFilter_C(currp, prevp, nextp, src_pitch,
-			destp, dst_pitch, row_size, height - 2);
-	// U
- 
-	
-	dst_pitch = _info.width>>1;
-	src_pitch = _info.width>>1;
-  row_size  = _info.width>>1;
-	height = _info.height>>1;
-	
-	currp = UPLANE(image);
-	prevp = UPLANE(prev);
-	nextp = UPLANE(next);
-	destp = UPLANE(data);;
-
-	memcpy(destp, currp, row_size);
-	memcpy(destp + dst_pitch * (height - 1),
-		currp + src_pitch * (height - 1), row_size);
-
-	currp += src_pitch;
-	prevp += src_pitch;
-	nextp += src_pitch;
-	destp += dst_pitch;
-
-		DoFilter_C(currp, prevp, nextp, src_pitch,
-			destp, dst_pitch, row_size, height - 2);
-
-	// V
-
-  plane=(_info.width*_info.height*5)>>2;
-	
-	dst_pitch = _info.width>>1;
-	src_pitch = _info.width>>1;
-  row_size  = _info.width>>1;
-	height = _info.height>>1;
-	
-	currp = VPLANE(image);
-	prevp = VPLANE(prev);
-	nextp = VPLANE(next);
-	destp = VPLANE(data);;
-
-	memcpy(destp, currp, row_size);
-	memcpy(destp + dst_pitch * (height - 1),
-		currp + src_pitch * (height - 1), row_size);
-
-	currp += src_pitch;
-	prevp += src_pitch;
-	nextp += src_pitch;
-	destp += dst_pitch;
-
-	#if defined(ADM_CPU_X86) && defined(ASM_FLUX)
-        if(CpuCaps::hasMMX())
+        for(int i=0;i<3;i++)
         {
-		DoFilter_MMX(currp, prevp, nextp, src_pitch,
-			destp, dst_pitch, row_size, height - 2);
-	}else
-	#endif
-        {
-		DoFilter_C(currp, prevp, nextp, src_pitch,
-			destp, dst_pitch, row_size, height - 2);
-        }
-	
-	data->copyInfo(image);
-	vidCache->unlockAll();
-	return 1;
+            ADM_PLANE plane=(ADM_PLANE)i;
+            int dst_pitch = output->GetPitch(plane),
+                src_pitch = image->GetPitch(plane),
+                row_size  = image->GetWidth(plane),
+                height    = image->GetHeight(plane);
+
+            uint8_t   		*currp = image->GetReadPtr(plane),
+                            *prevp = prev->GetReadPtr(plane),
+                            *nextp = next->GetReadPtr(plane);
+            uint8_t		*destp =output->GetWritePtr(plane);
+
+                    // line 1 and last
+                    memcpy(destp, currp, row_size);
+                    memcpy(destp + dst_pitch * (height - 1),
+                        currp + src_pitch * (height - 1), row_size);
+
+                    // skip one line		
+                    currp += src_pitch;
+                    prevp += src_pitch;
+                    nextp += src_pitch;
+                    destp += dst_pitch;
+                    
+                    flux(currp, prevp, nextp, src_pitch,
+                            destp, dst_pitch, row_size, height - 2,_param);
+
+
+         }
+        output->copyInfo(image);
+        vidCache->unlockAll();
+        return 1;
 }	                           
 
-
+/**
+    \fn DoFilter_C
+*/
 void ADMVideoFlux::DoFilter_C(
  uint8_t * currp, 
  uint8_t * prevp,								  								  
@@ -289,7 +222,7 @@ void ADMVideoFlux::DoFilter_C(
  uint8_t * destp, 
  int dst_pitch,
  int row_size, 
- int height)
+ int height, const fluxsmooth &_param)
 {
 
 	 int skip = src_pitch - row_size + 1,
@@ -318,52 +251,52 @@ void ADMVideoFlux::DoFilter_C(
 					nb1 = currp[src_pitch - 1], nb2 = currp[src_pitch],
 					nb3 = currp[src_pitch + 1], sum = b, cnt = 1;
 
-				if(abs(pbt - b) <= _param->temporal_threshold)
+				if(abs(pbt - b) <= _param.temporal_threshold)
 				{
 					sum += pbt;
 					++cnt;
 				}
-				if(abs(nbt - b) <= _param->temporal_threshold)
+				if(abs(nbt - b) <= _param.temporal_threshold)
 				{
 					sum += nbt;
 					++cnt;
 				}
-				if(abs(pb1 - b) <= _param->spatial_threshold)
+				if(abs(pb1 - b) <= _param.spatial_threshold)
 				{
 					sum += pb1;
 					++cnt;
 				}
-				if(abs(pb2 - b) <= _param->spatial_threshold)
+				if(abs(pb2 - b) <= _param.spatial_threshold)
 				{
 					sum += pb2;
 					++cnt;
 				}
-				if(abs(pb3 - b) <= _param->spatial_threshold)
+				if(abs(pb3 - b) <= _param.spatial_threshold)
 				{
 					sum += pb3;
 					++cnt;
 				}
-				if(abs(b1 - b) <= _param->spatial_threshold)
+				if(abs(b1 - b) <= _param.spatial_threshold)
 				{
 					sum += b1;
 					++cnt;
 				}
-				if(abs(b2 - b) <= _param->spatial_threshold)
+				if(abs(b2 - b) <= _param.spatial_threshold)
 				{
 					sum += b2;
 					++cnt;
 				}
-				if(abs(nb1 - b) <= _param->spatial_threshold)
+				if(abs(nb1 - b) <= _param.spatial_threshold)
 				{
 					sum += nb1;
 					++cnt;
 				}
-				if(abs(nb2 - b) <= _param->spatial_threshold)
+				if(abs(nb2 - b) <= _param.spatial_threshold)
 				{
 					sum += nb2;
 					++cnt;
 				}
-				if(abs(nb3 - b) <= _param->spatial_threshold)
+				if(abs(nb3 - b) <= _param.spatial_threshold)
 				{
 					sum += nb3;
 					++cnt;
@@ -415,7 +348,9 @@ void ADMVideoFlux::DoFilter_C(
 
 #define EXPAND(x) { x=x+(x<<8)+(x<<16)+(x<<24)+(x<<32)+(x<<40) \
 										+(x<<48);}
-
+/**
+    \fn DoFilter_MMX
+*/
 
 void ADMVideoFlux::DoFilter_MMX(
 uint8_t * currp, 
@@ -425,7 +360,7 @@ uint8_t * currp,
  uint8_t * destp, 
  int dst_pitch,
  int row_size, 
- int height)
+ int height, const fluxsmooth &_param)
 {
 	  _l_xmax = row_size - 4;
 	 	ycnt 		= height;
@@ -441,8 +376,8 @@ uint8_t * currp,
 		_l_counter_init = 0x000b000b000b000bLL,
 		_l_indexer = 0x1000010000100001LL;
 		
-		spat_thresh = _param->spatial_threshold;
-		temp_thresh = _param->temporal_threshold;
+		spat_thresh = _param.spatial_threshold;
+		temp_thresh = _param.temporal_threshold;
 		EXPAND( spat_thresh);
 		EXPAND( temp_thresh);
 

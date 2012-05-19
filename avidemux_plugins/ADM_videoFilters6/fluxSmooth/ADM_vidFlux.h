@@ -17,41 +17,41 @@
  
 #ifndef __FLUX__
 #define __FLUX__   
-typedef struct FLUX_PARAM
-{
-	uint32_t temporal_threshold;
-	uint32_t spatial_threshold;
-	
-}FLUX_PARAM;
+#include "fluxsmooth.h"
+/**
+    \class ADMVideoFlux
+*/
 
-class  ADMVideoFlux:public AVDMGenericVideoStream
+typedef void DoFlux( uint8_t * currp,  uint8_t * prevp, uint8_t * nextp, 
+							 int src_pitch, uint8_t * destp,  int dst_pitch,
+							 int row_size,  int height, const fluxsmooth &_param);
+
+
+class  ADMVideoFlux:public ADM_coreVideoFilterCached
  {
 
  protected:
     	
-        			FLUX_PARAM		*_param;
+        			fluxsmooth		_param;
 
-				void DoFilter_C( uint8_t * currp,  uint8_t * prevp, uint8_t * nextp, 
+				static void DoFilter_C( uint8_t * currp,  uint8_t * prevp, uint8_t * nextp, 
 							 int src_pitch, uint8_t * destp,  int dst_pitch,
-							 int row_size,  int height);
-				void DoFilter_MMX( uint8_t * currp,  uint8_t * prevp, uint8_t * nextp, 
+							 int row_size,  int height, const fluxsmooth &_param);
+				static void DoFilter_MMX( uint8_t * currp,  uint8_t * prevp, uint8_t * nextp, 
 							 int src_pitch, uint8_t * destp,  int dst_pitch,
-							 int row_size,  int height);	 
+							 int row_size,  int height, const fluxsmooth &_param);	 
 				int32_t num_frame;
-		 		VideoCache		*vidCache;
+		 		
 			
  public:
  		
-
-						ADMVideoFlux(  AVDMGenericVideoStream *in,CONFcouple *setup);
-
-  						 ~ADMVideoFlux();
-		        virtual uint8_t 	getFrameNumberNoAlloc(uint32_t frame, uint32_t *len,
-          						ADMImage *data,uint32_t *flags);
-
-			virtual uint8_t 	configure( AVDMGenericVideoStream *instream);
-     			virtual char 		*printConf(void);
-			virtual uint8_t 	getCoupledConf( CONFcouple **couples);
+                            ADMVideoFlux(ADM_coreVideoFilter *in,CONFcouple *couples);    
+                             ~ADMVideoFlux(void);
+       virtual const char  *getConfiguration(void);          /// Return  current configuration as a human readable string
+       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
+       virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+       virtual bool         configure(void) ;                 /// Start graphical user interface        
+   
 							
  }     ;
 #endif
