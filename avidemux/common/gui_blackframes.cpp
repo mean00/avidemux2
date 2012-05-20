@@ -33,51 +33,12 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_render/GUI_render.h"
 #include "DIA_working.h"
-//#include "ADM_videoFilter.h"
-//#include "ADM_videoFilter_internal.h"
 #include "ADM_commonUI/DIA_busy.h"
 #include "ADM_commonUI/GUI_ui.h"
 
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
-
-//**********************************************************************
-
-uint8_t  countLightPixels(int darkness)
-{
-
-    uint32_t width = avifileinfo->width;
-    uint32_t height = avifileinfo->height;
-    uint32_t sz = width * height ;
-    const int maxnonb=(width* height)>>8;
-
-    return 0;
-#warning FIXME
-#warning FIXME
-#warning FIXME
-#if 0
-    uint8_t *buff;
-
-    int cnt4=0;
-
-    buff=rdr_decomp_buffer->data+ sz;
-
-    while(--buff>rdr_decomp_buffer->data)
-    {
-      if(*buff > darkness )
-	cnt4++;
-	if(cnt4>=maxnonb)
-	  return(1);
-    }
-#endif
-    return(0);
-}
-//**********************************************************************
-// Fast version to decide if a frame is black or not
-// Return 0 if the frame is black
-// return 1 else
-//**********************************************************************
 
 static const int  sliceOrder[8]={3,4,2,5,1,6,0,7};
 /**
@@ -86,18 +47,17 @@ static const int  sliceOrder[8]={3,4,2,5,1,6,0,7};
 */
 static int sliceScanNotBlack(int darkness, int maxnonb, int sliceNum,ADMImage *img)
 {
-
-
     uint32_t width = img->_width;
-    uint32_t height = img->_height>>3;
-    uint32_t sz = width * height ;    
+    int       stride=img->GetPitch(PLANAR_Y);
+    uint32_t height = img->_height;
+    uint32_t sliceOffset = (stride * height)>>3 ;    // 1/8 of an image
 
     uint8_t *buff,*start;
 
     int cnt4=0;
 
-    start=img->GetReadPtr(PLANAR_Y)+ sz*sliceNum;
-    buff=start+sz;
+    start=img->GetReadPtr(PLANAR_Y)+ sliceOffset*sliceNum;
+    buff=start+sliceOffset;
 
     while(--buff>start)
     {
@@ -135,141 +95,47 @@ uint8_t  fastIsNotBlack(int darkness,ADMImage *img)
 
     return(0);
 }
-
-
-//**********************************************************************
-
-void GUI_NextPrevBlackFrame(int dir)
+/**
+    \fn GUI_PrevBlackFrame
+    \brief lookup for a black frame
+*/
+void GUI_PrevBlackFrame(void)
 {
-#if 0
-   uint32_t f;
-   uint32_t flags;
-   uint16_t reresh_count=0;
-   uint32_t orgFrame;
-   uint32_t r=1;
-  if (playing)
+    GUI_Error_HIG("BlackFrame","This function is unsupported at the moment");
+}
+
+/**
+    \fn GUI_NextBlackFrame
+    \brief lookup for a black frame
+*/
+void GUI_NextBlackFrame(void)
+{
+    if (playing)
 		return;
     if (! avifileinfo)
        return;
-
-    ADMImage *buffer=admPreview::getBuffer();
-    if(!buffer) return;
-
-   const int darkness=40;
-
-   DIA_workingBase *work=createWorking(QT_TR_NOOP("Seeking"));
-   orgFrame=curframe;
-   int total;
-    // Avoid it being 0
-    if(dir=1) total=avifileinfo->nb_frames-curframe+1;
-        else total=curframe+1;
-   while(1)
-   {
-        int current=abs(curframe-orgFrame);
-      f=curframe+dir;
-      if(work->update(current,total)) break;
-
-      if((f==0 && dir==-1)|| (f==avifileinfo->nb_frames-1&&dir==1)) break;
-
-     if( !video_body->getUncompressedFrame(f ,buffer,&flags))
-       {
-          r=0;
-          break;
-       }
-    if(!work->isAlive())
-    {
-          r=0;
-          break;
-    }
-        curframe=f;
-
-        if(!fastIsNotBlack(darkness,buffer)) break;
-        reresh_count++;
-        if(reresh_count>100)
-        {
-                GUI_setCurrentFrameAndTime();
-                reresh_count=0;
-        }       
-   }
-   delete work;
-   if(!r)
-   {
-      curframe=orgFrame;
-   }
-//    admPreview::update( curframe) ;
-    GUI_setCurrentFrameAndTime();
-#endif
-   return ;
-}
-/**
-    \fn A_ListAllBlackFrames
-    \brief Scan for all black frames and output that in a separate (text) file
-*/
-uint8_t A_ListAllBlackFrames(char *name)
-{
-#if 0
-    uint32_t f;
-    uint32_t flags;
-    uint32_t startframe;
-    uint16_t mm,hh,ss,ms;
-
-    uint16_t reresh_count=0;
-
-    char *outfile;
-    FILE *fd;
-
-    outfile=name;    
-
-    if ( playing )
-        return 0;
-    if ( !avifileinfo )
-        return 0;
-   ADMImage *buffer=admPreview::getBuffer();
-    if(!buffer) return 0;
-   
-    if ( !outfile )
-        return 0;
-    fd=ADM_fopen(outfile, "wb");
-    if ( fd == NULL )
-    {
-        fprintf(stderr, "cannot create output file for list of black frames\n");
-        return 0;
-    }
-
     const int darkness=40;
-
-    startframe=curframe;
-    DIA_workingBase *work=createWorking(QT_TR_NOOP("Finding black frames"));
-    printf("\n** Listing all black frames **\n");
-
-    for (f=0; f<avifileinfo->nb_frames; f++) {
-       if( work->update( 100 * f / avifileinfo->nb_frames ) ) 
-            break;
-        if ( !video_body->getUncompressedFrame(f,buffer,&flags) ) 
-        {
-            break;
-        }
-
-        curframe=f;
-        if ( !fastIsNotBlack(darkness,buffer) ) 
-        {
-            frame2time(curframe,avifileinfo->fps1000,&hh,&mm,&ss,&ms);
-            printf("\tBlack frame: frame %d  time %02d:%02d:%02d.%03d\n", curframe, hh, mm, ss, ms);
-            fprintf(fd, "\tBlack frame: frame %d  time %02d:%02d:%02d.%03d\n", curframe, hh, mm, ss, ms);
-        }
-        reresh_count++;
-        if(reresh_count>100)
-        {
-                GUI_setCurrentFrameAndTime();
-                reresh_count=0;
-        }
+    admPreview::deferDisplay(true);
+    DIA_workingBase *work=createWorking(QT_TR_NOOP("Seeking"));
+    while(1)
+    {
+        UI_purge();
+        if(work->update(0,1))         
+                break;
+        if(!work->isAlive())
+                break;
+        if(false==admPreview::nextPicture())
+                break;
+        if(!fastIsNotBlack(darkness,admPreview::getBuffer()))
+                break;
+        // not black..
+        GUI_setCurrentFrameAndTime();
     }
-
-    printf("** done **\n\n");
-    fclose(fd);
     delete work;
-    GUI_GoToFrame(startframe);
-#endif
-    return 1;
+    admPreview::deferDisplay(false);
+    admPreview::samePicture();
+    return;
+
 }
+
 //EOF

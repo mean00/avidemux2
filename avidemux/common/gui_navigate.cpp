@@ -135,10 +135,10 @@ static int ignore_change=0;
         GUI_NextKeyFrame();
 	  break;
       case ACT_NextBlackFrame:
-        GUI_NextPrevBlackFrame(1);
+        GUI_NextBlackFrame();
 	  break;
       case ACT_PrevBlackFrame:
-        GUI_NextPrevBlackFrame(-1);
+        GUI_PrevBlackFrame();
 	  break;
       case ACT_End:
             GUI_GoToTime(video_body->getVideoDuration());
