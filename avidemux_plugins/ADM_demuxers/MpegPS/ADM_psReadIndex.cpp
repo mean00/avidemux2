@@ -68,7 +68,7 @@ bool psHeader::processAudioIndex(char *buffer)
         head=strstr(buffer," ");
         if(!head) return false;
         head++;
-        while(tail=strstr(head," "))
+        while((tail=strstr(head," ")))
         {
             if(4!=sscanf(head,"Pes:%"LX":%"LLX":%"LD":%"LLD" ",&pes,&startAt,&size,&dts))
             {

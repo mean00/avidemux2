@@ -83,6 +83,7 @@ bool AVDMFastVideoConvolution::processPlane(ADMImage *s,ADMImage *d,ADM_PLANE pl
 			x3+=sPitch; 
 			o1+=dPitch;                 
 		}
+        return true;
 }
 /**
     \fn getNextFrame

@@ -174,7 +174,7 @@ int16_t *run16;
         return 0;
 
 
-  if ((_me== WAV_IMAADPCM))// || (sh_audio->format == 0x1100736d))
+  if (_me== WAV_IMAADPCM)// || (sh_audio->format == 0x1100736d))
   {
         while((_tail-_head)>=ss_mul)
         {

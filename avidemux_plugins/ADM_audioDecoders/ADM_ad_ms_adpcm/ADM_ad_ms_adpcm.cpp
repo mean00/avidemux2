@@ -224,7 +224,7 @@ ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc, WAVHeader *info, 
         _me=info->encoding;
         _channels=info->channels;
 
-         if ((info->encoding == WAV_MSADPCM)      )
+         if (info->encoding == WAV_MSADPCM      )
         {
               ss_div = info->blockalign -   (MS_ADPCM_PREAMBLE_SIZE * info->channels) * 2;
               ss_mul = info->blockalign;

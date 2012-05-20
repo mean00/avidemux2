@@ -255,6 +255,6 @@ bool lavDeint::cleanup(void)
     pp_free_mode(ppmode);
     ppmode=NULL;
   }
-  
+  return true;
 } 
 //EOF
