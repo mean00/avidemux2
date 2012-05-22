@@ -26,8 +26,8 @@
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_vidFlux.h"
 
-static int16_t FUNNY_MANGLE_ARRAY(scaletab, 16);
-static uint64_t FUNNY_MANGLE_ARRAY(scaletab_MMX, 65535);
+static int16_t attribute_used  FUNNY_MANGLE_ARRAY(scaletab, 16);
+static uint64_t attribute_used FUNNY_MANGLE_ARRAY(scaletab_MMX, 65535);
 static bool tableInited=false;
 /**
     \fn initScaleTab
@@ -50,25 +50,25 @@ void initScaleTab( void )
 }
  
 
-static uint64_t FUNNY_MANGLE(spat_thresh) ASM_CONST =0LL;
-static uint64_t FUNNY_MANGLE(temp_thresh) ASM_CONST =0LL;
-static uint64_t ASM_CONST FUNNY_MANGLE(_l_counter_init),
-	FUNNY_MANGLE(_l_indexer), FUNNY_MANGLE(_l_prev_pels),
-	FUNNY_MANGLE(_l_next_pels);
-static long int FUNNY_MANGLE(_l_src_pitch) ASM_CONST =0;
-static long int FUNNY_MANGLE(_l_dst_pitch) ASM_CONST =0;
-static int FUNNY_MANGLE(_l_xmax) ASM_CONST=0;
+static uint64_t attribute_used FUNNY_MANGLE(spat_thresh) ASM_CONST =0LL;
+static uint64_t attribute_used FUNNY_MANGLE(temp_thresh) ASM_CONST =0LL;
+static uint64_t attribute_used ASM_CONST FUNNY_MANGLE(_l_counter_init),
+	attribute_used FUNNY_MANGLE(_l_indexer), FUNNY_MANGLE(_l_prev_pels),
+	attribute_used FUNNY_MANGLE(_l_next_pels);
+static long int attribute_used FUNNY_MANGLE(_l_src_pitch) ASM_CONST =0;
+static long int attribute_used FUNNY_MANGLE(_l_dst_pitch) ASM_CONST =0;
+static  int     attribute_used   FUNNY_MANGLE(_l_xmax) ASM_CONST=0;
 
-static int FUNNY_MANGLE(ycnt);
-static	uint8_t * FUNNY_MANGLE(_l_currp);
-static	 uint8_t * FUNNY_MANGLE(_l_prevp);
-static	 uint8_t * FUNNY_MANGLE(_l_nextp);
-static	 uint8_t * FUNNY_MANGLE(_l_destp);
+static  int     attribute_used   FUNNY_MANGLE(ycnt);
+static	 uint8_t attribute_used * FUNNY_MANGLE(_l_currp);
+static	 uint8_t attribute_used * FUNNY_MANGLE(_l_prevp);
+static	 uint8_t attribute_used * FUNNY_MANGLE(_l_nextp);
+static	 uint8_t attribute_used * FUNNY_MANGLE(_l_destp);
 
 /**
     \fn DoFilter_C
 */
-void ADMVideoFlux::DoFilter_C(
+void attribute_used ADMVideoFlux::DoFilter_C(
  uint8_t * currp, 
  uint8_t * prevp,								  								  
  uint8_t * nextp, 
