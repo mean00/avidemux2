@@ -1,18 +1,23 @@
-MACRO(checkFridibi)
+MACRO(checkFridibi minVersion)
 ########################################
 # FRIDIBI
 ########################################
 OPTION(FRIDIBI "" ON)
 
-MESSAGE(STATUS "Checking for Fridibi")
-MESSAGE(STATUS "********************")
+MESSAGE(STATUS "Checking for Fridibi (want ${minVersion})")
+MESSAGE(STATUS "**************************************")
 
 IF (FRIDIBI)
 	PKG_CHECK_MODULES(FRIDIBI fribidi)
 	PRINT_LIBRARY_INFO("Fribidi" FRIDIBI_FOUND "${FRIDIBI_CFLAGS}" "${FRIDIBI_LDFLAGS}")
-
 	IF (FRIDIBI_FOUND)
-		SET(USE_FRIDIBI 1)
+		# Warning does not work if we ask 0.19 and get 0.20
+		MESSAGE(STATUS "Fridibi version ${FRIDIBI_VERSION}")
+		IF("${FRIDIBI_VERSION}" MATCHES "${minVersion}.*")
+			SET(USE_FRIDIBI 1)
+		ELSE("${FRIDIBI_VERSION}" MATCHES "${minVersion}.*")
+			MESSAGE(STATUS "Your version of cmake is too old, we need  ${minVersion}.*")
+		ENDIF("${FRIDIBI_VERSION}" MATCHES "${minVersion}.*")
 	ENDIF (FRIDIBI_FOUND)
 ELSE (FRIDIBI)
 	MESSAGE("${MSG_DISABLE_OPTION}")

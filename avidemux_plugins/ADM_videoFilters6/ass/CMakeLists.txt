@@ -1,7 +1,7 @@
 INCLUDE(admCheckFreeType)
 INCLUDE(admCheckFridibi)
 checkFreeType()
-checkFridibi()
+checkFridibi("0.19")
 
 IF (USE_FREETYPE AND USE_FRIDIBI)
 	ADD_SUBDIRECTORY(ADM_libass)
