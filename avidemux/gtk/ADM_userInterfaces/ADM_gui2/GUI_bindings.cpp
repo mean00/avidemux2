@@ -363,6 +363,7 @@ void UI_closeGui(void)
 {
 	gtk_unregister_dialog(guiRootWindow);
 	gtk_widget_destroy(guiRootWindow);
+    gtk_main_quit();
 }
 
 /**
@@ -370,6 +371,7 @@ void UI_closeGui(void)
 */
 void destroyGUI(void)
 {
+	ADM_info("Destroying Gtk GUI\n");
 	renderDestroy();
 
 	for(int i=0;i<ADM_nbCustom;i++)
