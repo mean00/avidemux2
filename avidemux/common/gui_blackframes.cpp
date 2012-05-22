@@ -116,6 +116,7 @@ void GUI_NextBlackFrame(void)
        return;
     const int darkness=40;
     admPreview::deferDisplay(true);
+    ADMImage *rdr;
     DIA_workingBase *work=createWorking(QT_TR_NOOP("Seeking"));
     while(1)
     {
@@ -126,7 +127,17 @@ void GUI_NextBlackFrame(void)
                 break;
         if(false==admPreview::nextPicture())
                 break;
-        if(!fastIsNotBlack(darkness,admPreview::getBuffer()))
+        rdr=admPreview::getBuffer();
+        if(rdr->refType!=ADM_HW_NONE) // need to convert it to plain YV12
+        {
+            if(false==rdr->hwDownloadFromRef())
+            {
+                ADM_warning("Cannot convert hw image to yv12\n");
+                break;
+            }
+
+        }
+        if(!fastIsNotBlack(darkness,rdr))
                 break;
         // not black..
         GUI_setCurrentFrameAndTime();
