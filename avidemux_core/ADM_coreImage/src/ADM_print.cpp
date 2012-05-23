@@ -15,95 +15,55 @@
 
 #include "ADM_image.h"
 #include "ADM_print_priv.h"
+#define GLYPH_WIDTH  12
+#define GLYPH_HEIGHT 20
 
 // Borrowed from decomb
 // Borrowed from the author of IT.dll, whose name I
 // could not determine.
-
-void drawDigit(ADMImage *dst, int x, int y, int num) 
+/**
+    \fn drawGlyph
+*/
+static void drawGlyph(ADMImage *dst, int x, int y, int num,int offset, int color) 
 {
 
-	x = x * 10;
-	y = y * 20;
-
+	x = x * GLYPH_WIDTH;
+	y = y * GLYPH_HEIGHT;
+    uint16_t *glyphLine=font[num];
+    
 	int pitch = dst->GetPitch(PLANAR_Y);
-	for (int tx = 0; tx < 10; tx++) {
-		for (int ty = 0; ty < 20; ty++) {
-			unsigned char *dp = YPLANE(dst);
-                        dp+=(y+ty)*pitch+(x+tx)*2;
-//&dst->GetWritePtr()[(x + tx) * 2 + (y + ty) * pitch];
-			if (font[num][ty] & (1 << (15 - tx))) {
-				if (tx & 1) {
-					dp[0] = 250;
-					dp[-1] = 128;
-					dp[1] = 128;
-				} else {
-					dp[0] = 250;
-					dp[1] = 128;
-					dp[3] = 128;
-				}
-			} else {
-				if (tx & 1) {
-					dp[0] = (unsigned char) ((dp[0] * 3) >> 2);
-					dp[-1] = (unsigned char) ((dp[-1] + 128) >> 1);
-					dp[1] = (unsigned char) ((dp[1] + 128) >> 1);
-				} else {
-					dp[0] = (unsigned char) ((dp[0] * 3) >> 2);
-					dp[1] = (unsigned char) ((dp[1] + 128) >> 1);
-					dp[3] = (unsigned char) ((dp[3] + 128) >> 1);
-				}
-			}
-		}
-	}
+    uint8_t *top=dst->GetWritePtr(PLANAR_Y)+(y+offset)*pitch+(x+4+offset);
+
+    for (int ty = 0; ty < GLYPH_HEIGHT; ty++) 
+    {
+        uint16_t glyph=glyphLine[ty];
+        
+        for (int tx = 0; tx < GLYPH_WIDTH; tx++) 
+        {
+            if(glyph & 0x8000)
+                        top[tx]=color;
+            glyph<<=1;
+        }
+        top+=pitch;
+    }
 }
-static void drawDigitSmall(ADMImage *dst, int x, int y, int num) 
-{
 
-	x = x * 6;
-	y = y * 20;
 
-	int pitch = dst->GetPitch(PLANAR_Y);
-	for (int tx = 0; tx < 10; tx++) {
-		for (int ty = 0; ty < 20; ty++) 
-		{
-			unsigned char *dp = YPLANE(dst);
-
-			dp+=(y+ty)*pitch+(x+tx)*2;
-
-			if (font[num][ty] & (1 << (15 - tx))) 
-			{
-				
-					dp[0] = 250;
-			} else 
-			{
-					dp[0] = (unsigned char) ((dp[0] * 3) >> 2);
-						
-			}
-		}
-	}
-}
 /**
     \fn printString
 */
 bool     ADMImage::printString(uint32_t x,uint32_t y, const char *s)
 {
 	int len=strlen(s);
-	if( ((x+len)*20)<_width)
-	{
-		for (int xx = 0; *s; ++s, ++xx) 
-			{
-				if(*s==0x0d || *s==0x0a) continue;
-				drawDigit(this, x + xx, y, *s - ' ');
-			}	
-	}
-	else
-	{
-		for (int xx = 0; *s; ++s, ++xx) 
-				{
-					if(*s==0x0d || *s==0x0a) continue;
-					drawDigitSmall(this, x + xx, y, *s - ' ');
-				}	
-	}
+    for (int xx = 0; *s; ++s, ++xx) 
+    {
+        if(*s==0x0d || *s==0x0a) continue;
+        if( (x+xx+1)*GLYPH_WIDTH>_width)
+                break;
+        drawGlyph(this, x + xx, y, *s - ' ',1,0);
+        drawGlyph(this, x + xx, y, *s - ' ',0,0xF0);
+    }	
+
     return true;
 }
 
