@@ -59,7 +59,7 @@ float hue,sat;
     // Copy half source to display
     in->copyLeftSideTo(out);
     out->printString(1,1,"Original");
-    out->printString(in->GetWidth(PLANAR_Y)/20+1,1,"Processed");
+    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed");
 
     return 1;
 }

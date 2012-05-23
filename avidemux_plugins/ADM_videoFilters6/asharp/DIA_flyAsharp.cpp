@@ -103,7 +103,7 @@ uint32_t ww,hh;
         dst+=dstride*2;
     }
     out->printString(1,1,"Original");
-    out->printString(ww/20+1,1,"Processed");
+    out->printString(ww/24+1,1,"Processed");
     return 1;
 }
 //EOF
