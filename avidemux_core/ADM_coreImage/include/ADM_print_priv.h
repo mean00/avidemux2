@@ -1,4 +1,4 @@
-uint16_t font[][20] = {
+unsigned short font[][20] = {
 //out w=11
 // Char= , 32
 {
