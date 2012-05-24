@@ -877,6 +877,18 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_telecide.dll
 			${MementoSectionEnd}
+			${MementoSection} "DGBob" SecVidFltDgbob
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_DgBob.dll
+			${MementoSectionEnd}
+			${MementoSection} "Horizontal Stack Fields" SecVidFltHzStackFields
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_hzstackField.dll
+			${MementoSectionEnd}
 			${MementoSection} "Kernel Deint" SecVidFltKernelDeint
 				SectionIn 1 2
 				SetOverwrite on
@@ -888,6 +900,18 @@ End:
 				SetOverwrite on
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_lavDeint.dll
+			${MementoSectionEnd}
+			${MementoSection} "Merge Fields" SecVidFltMergeFields
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_mergeField.dll
+			${MementoSectionEnd}
+			${MementoSection} "Separate Fields" SecVidFltSeparateFields
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_separateField.dll
 			${MementoSectionEnd}
 			${MementoSection} "Stack Fields" SecVidFltStackFields
 				SectionIn 1 2
@@ -957,6 +981,48 @@ InstallQt:
 End:
 !endif
 			${MementoSectionEnd}
+			${MementoSection} "MPlater Eq2" SecVidFltMplayerEq2
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				!insertmacro SectionFlagIsSet ${SecUiCli} ${SF_SELECTED} InstallCli CheckGtk
+InstallCli:
+				${File} plugins\videoFilters\libADM_vf_eq2Cli.dll
+CheckGtk:
+!ifdef INST_GTK
+				!insertmacro SectionFlagIsSet ${SecUiGtk} ${SF_SELECTED} InstallGtk CheckQt
+InstallGtk:
+				${File} plugins\videoFilters\libADM_vf_eq2Gtk.dll
+CheckQt:
+!endif
+!ifdef INST_QT
+				!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} InstallQt End
+InstallQt:
+				${File} plugins\videoFilters\libADM_vf_eq2Qt4.dll
+End:
+!endif
+			${MementoSectionEnd}
+			${MementoSection} "MPlater Hue" SecVidFltMplayerHue
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				!insertmacro SectionFlagIsSet ${SecUiCli} ${SF_SELECTED} InstallCli CheckGtk
+InstallCli:
+				${File} plugins\videoFilters\libADM_vf_HueCli.dll
+CheckGtk:
+!ifdef INST_GTK
+				!insertmacro SectionFlagIsSet ${SecUiGtk} ${SF_SELECTED} InstallGtk CheckQt
+InstallGtk:
+				${File} plugins\videoFilters\libADM_vf_HueGtk.dll
+CheckQt:
+!endif
+!ifdef INST_QT
+				!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} InstallQt End
+InstallQt:
+				${File} plugins\videoFilters\libADM_vf_HueQt4.dll
+End:
+!endif
+			${MementoSectionEnd}
 			${MementoSection} "Remove Plane" SecVidFltRemovePlane
 				SectionIn 1 2
 				SetOverwrite on
@@ -971,6 +1037,12 @@ End:
 			${MementoSectionEnd}
 		SectionGroupEnd
 		SectionGroup "Noise Filters" SecGrpVideoFilterNoise
+			${MementoSection} "FluxSmooth" SecVidFltFluxSmooth
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_FluxSmooth.dll
+			${MementoSectionEnd}
 			${MementoSection} "Gaussian Convolution" SecVidFltGauss
 				SectionIn 1 2
 				SetOverwrite on
@@ -1001,6 +1073,18 @@ End:
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_denoise3d.dll
 			${MementoSectionEnd}
+			${MementoSection} "MPlayer Denoise 3D HQ" SecVidFltMPlayerDenoise3dHq
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_denoise3dhq.dll
+			${MementoSectionEnd}
+			${MementoSection} "MSharpen" SecVidFltMSharpen
+				SectionIn 1 2
+				SetOverwrite on
+				SetOutPath $INSTDIR\plugins\videoFilters
+				${File} plugins\videoFilters\libADM_vf_msharpen.dll
+			${MementoSectionEnd}
 		SectionGroupEnd
 		SectionGroup "Sharpness Filters" SecGrpVideoFilterSharpness
 			${MementoSection} "asharp" SecVidFltAsharp
@@ -1014,12 +1098,6 @@ End:
 				SetOverwrite on
 				SetOutPath $INSTDIR\plugins\videoFilters
 				${File} plugins\videoFilters\libADM_vf_mpdelogoQt4.dll
-			${MementoSectionEnd}
-			${MementoSection} "MSharpen" SecVidFltMSharpen
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_msharpen.dll
 			${MementoSectionEnd}
 			${MementoSection} "Sharpen" SecVidFltSharpen
 				SectionIn 1 2

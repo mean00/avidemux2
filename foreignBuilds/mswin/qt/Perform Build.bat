@@ -30,13 +30,13 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=4.8.1
+set version=4.8.2
 set package=qt-everywhere-opensource-src-%version%.tar.gz
 set sourceBaseFolder=Qt%BuildBits%
 
 if "%Debug%" == "1" (
 	set sourceBaseFolder=%sourceBaseFolder%-dbg
-	set LeakFlags=-L %admBuildDir%\lib%BuildBits% -l ADM_core6
+	set LeakFlags=-L %admBuildDir% -l ADM_core6
 	set BuildType=release
 ) else (
 	set BuildType=release
@@ -49,7 +49,7 @@ set curDir=%CD%
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://download.qt.nokia.com/qt/source/%package%
+	wget http://releases.qt-project.org/qt4/source/%package%
 )
 
 if errorlevel 1 goto end
