@@ -109,12 +109,7 @@ bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
              return false;
     }
     // fixup dts
-    packetBufferDts=dts+seg->_startTimeUs;
-    if(packetBufferDts< seg->_refStartTimeUs)
-            packetBufferDts=0;
-    else
-        packetBufferDts-=seg->_refStartTimeUs;
-    //
+    packetBufferDts=dts;
     endOfAudio=false;
     return true;
 }
