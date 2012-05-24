@@ -146,6 +146,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   CONTEXT->sample_rate  =  wavheader.frequency;
   CONTEXT->bit_rate     = (_config.bitrate*1000); // bits -> kbits
   CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_FLT;
+  CONTEXT->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
   if(true==_globalHeader)
   {
     ADM_info("Configuring audio codec to use global headers\n");
