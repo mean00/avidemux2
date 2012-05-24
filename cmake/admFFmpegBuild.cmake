@@ -7,7 +7,7 @@ MACRO (xadd opt)
 	endif ("${ARGV1}" STREQUAL "")
 ENDMACRO (xadd)
 
-set(FFMPEG_VERSION "0.10.2")
+set(FFMPEG_VERSION "0.10.3")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
