@@ -150,6 +150,7 @@ bool jobWindow::runOneJob( ADMJob &job)
     job.status=ADM_JOB_RUNNING;
     ADM_commandSocket *runSocket=NULL;
     ADM_jobUpdate(job);
+    refreshList();
     ADM_socketMessage msg;
     uint32_t v;
     

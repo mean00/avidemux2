@@ -76,6 +76,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="jobs.rsc"/>
+ </resources>
  <connections/>
 </ui>

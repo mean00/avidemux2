@@ -56,12 +56,12 @@ void jobWindow::refreshList(void)
      QTableWidgetItem *start=fromText("Start Time",255);
      QTableWidgetItem *end=fromText("End Time",255);
      QTableWidgetItem *duration=fromText("Duration",255);
-     ui.tableWidget->setHorizontalHeaderItem(0,jb);
-     ui.tableWidget->setHorizontalHeaderItem(1,outputFile);
-     ui.tableWidget->setHorizontalHeaderItem(2,start);
-     ui.tableWidget->setHorizontalHeaderItem(3,end);
-     ui.tableWidget->setHorizontalHeaderItem(4,duration);
-     ui.tableWidget->setHorizontalHeaderItem(5,status);
+     ui.tableWidget->setHorizontalHeaderItem(1,jb);
+     ui.tableWidget->setHorizontalHeaderItem(2,outputFile);
+     ui.tableWidget->setHorizontalHeaderItem(3,start);
+     ui.tableWidget->setHorizontalHeaderItem(4,end);
+     ui.tableWidget->setHorizontalHeaderItem(5,duration);
+     ui.tableWidget->setHorizontalHeaderItem(0,status);
 
 
       if(false==ADM_jobGet(listOfJob)) return ;
@@ -79,6 +79,7 @@ void jobWindow::refreshList(void)
            string start="X";
            string end="X";
            uint64_t timeTaken=0;
+           
             switch(listOfJob[i].status)
             {
                 case ADM_JOB_IDLE:
@@ -93,6 +94,7 @@ void jobWindow::refreshList(void)
                             end=date2String(listOfJob[i].endTime);
                             timeTaken=listOfJob[i].endTime-listOfJob[i].startTime;
                             dur=duration2String(timeTaken);
+                           
                             break;
                 case ADM_JOB_KO:
                             s=string("Failed");
@@ -109,12 +111,23 @@ void jobWindow::refreshList(void)
         QTableWidgetItem *startItem=fromText (start,i);
         QTableWidgetItem *endItem=fromText (end,i);
         QTableWidgetItem *durItem=fromText (dur,i);
-        list->setItem(i,0,nm);
-        list->setItem(i,1,out);
-        list->setItem(i,2,startItem);
-        list->setItem(i,3,endItem);
-        list->setItem(i,4,durItem);
-        list->setItem(i,5,status);
+
+#define MX(x,y) case ADM_JOB_##x:  status->setIcon(QIcon(":/jobs/"y));break;
+        switch(listOfJob[i].status)
+        {
+            MX(KO,"gtk-no.png");
+            MX(OK,"gtk-ok.png");        
+            MX(RUNNING,"gtk-media-play.png");
+            default:
+                break;
+        }
+        list->setItem(i,0+1,nm);
+        list->setItem(i,1+1,out);
+        list->setItem(i,2+1,startItem);
+        list->setItem(i,3+1,endItem);
+        list->setItem(i,4+1,durItem);
+        list->setItem(i,0,status);
+        
       }
       list->resizeColumnsToContents();
 }
@@ -181,6 +194,7 @@ bool        jobWindow::popup(const char *errorMessage)
 bool jobRun(int ac,char **av)
 {
     QApplication *app=new QApplication(ac,av,0);
+    Q_INIT_RESOURCE(jobs);
     jobWindow *jWindow=new jobWindow();
     jWindow->exec();
     delete jWindow;

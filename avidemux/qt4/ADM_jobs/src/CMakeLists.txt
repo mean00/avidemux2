@@ -11,6 +11,7 @@ include_directories(../include ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 #
 SET(UI uiJobs.ui uiProgress.ui)
 SET(headers ../include/T_jobs.h ../include/T_progress.h)
+QT4_ADD_RESOURCES(resource  jobs.rsc)
 QT4_WRAP_UI(ADM_JOBS_headers ${UI})
 QT4_WRAP_CPP(ADM_JOBS_source ${headers}
                 ADM_jobControl.cpp)
@@ -21,7 +22,7 @@ SET(ADM_JOB_SRCS
 		ADM_jobProgress.cpp
                 ${ADM_JOBS_headers}
                 ${ADM_JOBS_source}
-                
+               	${resource} 
         )
 
 ###########################################
