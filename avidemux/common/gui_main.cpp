@@ -977,7 +977,7 @@ void A_addJob(void)
         strcpy(fullname,base);
         strcat(fullname,"/");
         strcat(fullname,name);
-        strcat(fullname,".js");
+        strcat(fullname,".py");
 
         if(!video_body->saveAsScript(fullname,final))
         {

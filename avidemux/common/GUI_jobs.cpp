@@ -31,7 +31,7 @@ uint8_t GUI_jobs(void)
 uint32_t nb;
         memset(jobName,0,sizeof(jobName));
 char *jobDir=ADM_getJobDir();
-        if(!buildDirectoryContent(&nb,ADM_getJobDir(),jobName,MAX_JOBS,".js"))
+        if(!buildDirectoryContent(&nb,ADM_getJobDir(),jobName,MAX_JOBS,".py"))
         {
           delete [] jobDir;
           GUI_Error_HIG(QT_TR_NOOP("Oops"),QT_TR_NOOP("Something very wrong happened when building joblist."));

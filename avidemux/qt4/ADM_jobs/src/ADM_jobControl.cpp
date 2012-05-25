@@ -215,6 +215,10 @@ void jobWindow::runAction(JobAction action)
         ADMJob *j=&(listOfJob[index]);
         switch(action)
         {
+            case   JobAction_delete:
+                        ADM_jobDelete(*j);
+                        refreshList();
+                    break;
             case   JobAction_setReady:          
                         j->status=ADM_JOB_IDLE;
                         ADM_jobUpdate(*j);

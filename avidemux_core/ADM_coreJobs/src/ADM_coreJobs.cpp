@@ -205,7 +205,11 @@ int     ADM_jobCount(void)
 */
 bool    ADM_jobAdd(const ADMJob& job)
 {
-        if(!mydb) return false;
+        if(!mydb)
+        {   
+            ADM_warning("No database to save jobs\n");
+            return false;
+        }
         db::Jobs myJob(mydb);
 #define OP(x,y) myJob.Set##x(job.y);
 

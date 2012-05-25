@@ -56,7 +56,10 @@ extern bool jobRun(int ac, char **av);
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
 #endif
-
+static bool isPortableMode(int argc, char *argv[]);
+/**
+    \fn main
+*/
 int main(int argc, char *argv[])
 {
 #if defined(_WIN32)
@@ -71,7 +74,7 @@ int main(int argc, char *argv[])
 	// thx smurf uk :)
     installSigHandler();
 #endif
-
+    bool portableMode=isPortableMode(argc,argv);
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
   	if(ADM_SUBVERSION)
@@ -150,7 +153,7 @@ int main(int argc, char *argv[])
 #elif defined(_WIN32)
 	__try1(ExceptionHandler);
 #endif
-
+    ADM_initBaseDir(portableMode);
     // Init jobs
     ADM_jobInit();
     jobRun(argc,argv);
@@ -170,5 +173,33 @@ void onexit( void )
     ADM_memStatEnd(); 
     ADM_jobShutDown();   
     ADM_info("\nGoodbye...\n\n");
+}
+
+/**
+    \fn isPortableMode
+    \brief returns true if we are in portable mode
+*/
+bool isPortableMode(int argc, char *argv[])
+{
+	bool portableMode = false;
+    std::string mySelf=argv[0];
+    // if the name ends by "_portable.exe" => portable
+    int match=mySelf.find("portable");
+    if(match!=-1)
+    {
+        ADM_info("Portable mode\n");
+        return true;
+    }
+
+	for (int i = 0; i < argc; i++)
+	{
+		if (strcmp(argv[i], "--portable") == 0)
+		{
+			portableMode = true;
+			break;
+		}
+	}
+
+	return portableMode;
 }
 //EOF
