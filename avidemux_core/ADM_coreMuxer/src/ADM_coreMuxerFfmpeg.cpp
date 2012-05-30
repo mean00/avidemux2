@@ -22,6 +22,11 @@
 #include "ADM_coreMuxerFfmpeg.h"
 #include "ADM_muxerUtils.h"
 #include "ADM_coreCodecMapping.h"
+
+extern "C" {
+#include "libavformat/url.h"
+}
+
 #if 1
 #define aprintf(...) {}
 #else
@@ -84,7 +89,7 @@ bool muxerFFmpeg::closeMuxer()
         if(initialized==true)
         {
             av_write_trailer(oc);
-            url_fclose((oc->pb));
+            avio_close(oc->pb);
         }
         avformat_free_context(oc);
         oc=NULL;

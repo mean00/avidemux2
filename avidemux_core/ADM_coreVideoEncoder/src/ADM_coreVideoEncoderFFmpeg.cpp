@@ -344,7 +344,7 @@ bool ADM_coreVideoEncoderFFmpeg::loadStatFile(const char *file)
 */
 bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 {
-    int pict_type=FF_P_TYPE;
+    int pict_type=AV_PICTURE_TYPE_P;
     int keyframe=false;
     if(_context->coded_frame)
     {
@@ -361,7 +361,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     out->flags=0;
     if(keyframe)
         out->flags=AVI_KEY_FRAME;
-    else if(pict_type==FF_B_TYPE)
+    else if(pict_type==AV_PICTURE_TYPE_B)
         out->flags=AVI_B_FRAME;
 
     // Update PTS/Dts

@@ -1,5 +1,5 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/matroskaenc.c	2012-04-18 15:14:07 +1000
-+++ libavformat/matroskaenc.c	2012-04-18 15:14:07 +1000
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/matroskaenc.c	2012-05-29 18:39:47 +1000
++++ libavformat/matroskaenc.c	2012-05-29 18:39:47 +1000
 @@ -418,6 +418,7 @@
  
  static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecContext *codec)
@@ -24,13 +24,13 @@
 +      data[0]=codec->extradata+3*4;
 +      data[1]=data[0]+ptr[0];
 +      data[2]=data[1]+ptr[1];
-+      put_byte(pb, 2);                    // number packets - 1
++      avio_w8(pb, 2);                    // number packets - 1
 +      for (j = 0; j < 2; j++) 
 +      {
 +          put_xiph_size(pb, ptr[j]);
 +      }
 +      for (j = 0; j < 3; j++)
-+        put_buffer(pb, data[j], ptr[j]);
++        avio_write(pb, data[j], ptr[j]);
 +      
 +      return 0; // /MEANX
 +#endif

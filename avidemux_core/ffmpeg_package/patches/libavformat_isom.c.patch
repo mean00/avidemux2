@@ -1,6 +1,6 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/isom.c	2012-04-18 15:14:07 +1000
-+++ libavformat/isom.c	2012-04-18 15:14:07 +1000
-@@ -252,7 +252,10 @@
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/isom.c	2012-05-29 18:18:34 +1000
++++ libavformat/isom.c	2012-05-29 18:18:34 +1000
+@@ -257,7 +257,10 @@
      { CODEC_ID_MACE6,           MKTAG('M', 'A', 'C', '6') },
      { CODEC_ID_MP1,             MKTAG('.', 'm', 'p', '1') },
      { CODEC_ID_MP2,             MKTAG('.', 'm', 'p', '2') },

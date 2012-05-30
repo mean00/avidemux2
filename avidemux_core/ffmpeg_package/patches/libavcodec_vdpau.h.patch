@@ -1,6 +1,6 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/vdpau.h	2012-04-18 15:14:07 +1000
-+++ libavcodec/vdpau.h	2012-04-18 15:14:07 +1000
-@@ -66,7 +66,7 @@
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/vdpau.h	2012-05-29 18:18:34 +1000
++++ libavcodec/vdpau.h	2012-05-29 18:18:34 +1000
+@@ -72,7 +72,7 @@
      VdpVideoSurface surface; ///< Used as rendered surface, never changed.
  
      int state; ///< Holds FF_VDPAU_STATE_* values.

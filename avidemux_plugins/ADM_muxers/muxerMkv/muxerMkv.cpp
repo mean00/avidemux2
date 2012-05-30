@@ -97,22 +97,23 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         }
         
         // /audio
-        oc->mux_rate=10080*1000;
-        oc->preload=AV_TIME_BASE/10; // 100 ms preloading
-        oc->max_delay=200*1000; // 500 ms
-        if (av_set_parameters(oc, NULL) < 0)
-        {
-            printf("Lav: set param failed \n");
-            return false;
-        }
-        int er=avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+        int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+
         if (er)
         {
             ADM_error("[Mkv]: Failed to open file :%s, er=%d\n",file,er);
             return false;
         }
 
-        ADM_assert(av_write_header(oc)>=0);
+        AVDictionary *dict = NULL;
+		char buf[64];
+        
+        snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
+        av_dict_set(&dict, "preload", buf, 0);
+        av_dict_set(&dict, "max_delay", "200000", 0);
+		av_dict_set(&dict, "muxrate", "10080000", 0);
+
+        ADM_assert(avformat_write_header(oc, &dict) >= 0);
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;

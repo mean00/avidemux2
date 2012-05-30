@@ -1,5 +1,5 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpeg12enc.c	2012-04-18 15:14:07 +1000
-+++ libavcodec/mpeg12enc.c	2012-04-18 15:14:07 +1000
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpeg12enc.c	2012-05-29 18:18:34 +1000
++++ libavcodec/mpeg12enc.c	2012-05-29 18:18:34 +1000
 @@ -122,10 +122,19 @@
              s->frame_rate_index= i;
          }
@@ -20,7 +20,7 @@
  }
  
  static av_cold int encode_init(AVCodecContext *avctx)
-@@ -221,6 +230,7 @@
+@@ -217,6 +226,7 @@
              put_sbits(&s->pb, 12, s->width );
              put_sbits(&s->pb, 12, s->height);
  
@@ -28,7 +28,7 @@
              for(i=1; i<15; i++){
                  float error= aspect_ratio;
                  if(s->codec_id == CODEC_ID_MPEG1VIDEO || i <=1)
-@@ -235,20 +245,44 @@
+@@ -231,20 +241,44 @@
                      s->aspect_ratio_info= i;
                  }
              }
@@ -79,7 +79,7 @@
              else
                  /* VBV calculation: Scaled so that a VCD has the proper VBV size of 40 kilobytes */
                  vbv_buffer_size = (( 20 * s->bit_rate) / (1151929 / 2)) * 8 * 1024;
-@@ -281,8 +315,17 @@
+@@ -277,8 +311,17 @@
  
                  put_bits(&s->pb, 3, s->avctx->profile); //profile
                  put_bits(&s->pb, 4, s->avctx->level); //level
@@ -98,16 +98,16 @@
                  put_bits(&s->pb, 2, s->chroma_format);
                  put_bits(&s->pb, 2, s->width >>12);
                  put_bits(&s->pb, 2, s->height>>12);
-@@ -347,6 +390,8 @@
+@@ -343,6 +386,8 @@
  
- void mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
+ void ff_mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
  {
 +	int tff,rff; //MEANX
 +
      mpeg1_encode_sequence_header(s);
  
      /* mpeg1 picture header */
-@@ -383,6 +428,49 @@
+@@ -379,6 +424,49 @@
  
      s->frame_pred_frame_dct = 1;
      if(s->codec_id == CODEC_ID_MPEG2VIDEO){
@@ -157,7 +157,7 @@
          put_header(s, EXT_START_CODE);
          put_bits(&s->pb, 4, 8); //pic ext
          if (s->pict_type == AV_PICTURE_TYPE_P || s->pict_type == AV_PICTURE_TYPE_B) {
-@@ -401,11 +489,16 @@
+@@ -397,11 +485,16 @@
  
          assert(s->picture_structure == PICT_FRAME);
          put_bits(&s->pb, 2, s->picture_structure);
@@ -174,7 +174,7 @@
          /* XXX: optimize the generation of this flag with entropy
             measures */
          s->frame_pred_frame_dct = s->progressive_sequence;
-@@ -415,7 +508,10 @@
+@@ -411,7 +504,10 @@
          put_bits(&s->pb, 1, s->q_scale_type);
          put_bits(&s->pb, 1, s->intra_vlc_format);
          put_bits(&s->pb, 1, s->alternate_scan);

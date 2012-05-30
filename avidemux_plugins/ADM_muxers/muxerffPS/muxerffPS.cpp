@@ -106,26 +106,24 @@ const char *er;
         {
             audio_st[i]->codec->bit_rate=a[i]->getInfo()->byterate*8;        
         }
-        // /audio
-        oc->mux_rate=psMuxerConfig.muxRatekBits*1000;
-        // Also copy audio & video bitrate
 
+        int erx = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
 
-        oc->preload=0; // 100 ms preloading
-        oc->max_delay=2000; // 500 ms
-        if (av_set_parameters(oc, NULL) < 0)
-        {
-            printf("[ffPs]Lav: set param failed \n");
-            return false;
-        }
-        int erx=avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
         if (erx)
         {
             ADM_error("[PS]: Failed to open file :%s, er=%d\n",file,erx);
             return false;
         }
 
-        ADM_assert(av_write_header(oc)>=0);
+        AVDictionary *dict = NULL;
+		char buf[64];
+        
+        snprintf(buf, sizeof(buf), "%d", psMuxerConfig.muxRatekBits * 1000);
+		av_dict_set(&dict, "muxrate", buf, 0);
+        av_dict_set(&dict, "preload", "0", 0);
+        av_dict_set(&dict, "max_delay", "2000", 0);
+
+        ADM_assert(avformat_write_header(oc, &dict) >= 0);
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;

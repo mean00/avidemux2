@@ -59,7 +59,7 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
     uint32_t fcc=s->getFCC();
     bool r=true;
     char *fileTitle=NULL;
-        
+
      if(fourCC::check(fcc,(uint8_t *)"FLV1") || isVP6Compatible(fcc))
      {
 
@@ -93,15 +93,16 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         printf("[FLV] Failed to open muxer\n");
         return false;
     }
- 
-   if(initVideo(s)==false) 
+
+   if(initVideo(s)==false)
     {
         printf("[FLV] Failed to init video\n");
         return false;
     }
-  
-    AVCodecContext *c;
-    c = video_st->codec;   
+
+    AVCodecContext *c = video_st->codec;
+    AVDictionary *dict = NULL;
+
     rescaleFps(s->getAvgFps1000(),&(c->time_base));
     c->gop_size=15;
 
@@ -111,15 +112,6 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         return false;
     }
 
-        
-        oc->mux_rate=10080*1000;
-        oc->preload=AV_TIME_BASE/10; // 100 ms preloading
-        oc->max_delay=200*1000; // 500 ms
-        if (av_set_parameters(oc, NULL) < 0)
-        {
-            printf("[FLV]: set param failed \n");
-            return false;
-        }
         int er=avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
         if (er)
         {
@@ -128,7 +120,14 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             goto finish;
         }
 
-        if(av_write_header(oc)<0)
+		char buf[64];
+
+        snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
+        av_dict_set(&dict, "preload", buf, 0);
+        av_dict_set(&dict, "max_delay", buf, 0);
+		av_dict_set(&dict, "muxrate", "10080000", 0);
+
+        if (avformat_write_header(oc, &dict) < 0)
         {
             printf("[Flv Muxer] Muxer rejected the parameters\n");
             r=false;

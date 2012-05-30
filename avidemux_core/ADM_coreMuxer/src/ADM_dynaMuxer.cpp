@@ -14,10 +14,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <BVector.h>
+#include "BVector.h"
 #include "ADM_default.h"
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerProto.h"
+
+extern "C" {
+#include "libavformat/url.h"
+}
+
 void ADM_MuxersCleanup(void);
 
 ADM_muxer *ADM_muxerSpawn(uint32_t magic,const char *name);
@@ -266,7 +271,7 @@ void ADM_lavFormatInit(void)
 		}
 	}
 
-	URLProtocol *up = av_protocol_next(NULL);
+	URLProtocol *up = ffurl_protocol_next(NULL);
 
 	if (strcmp(up->name, "file") != 0)
 	{

@@ -1,6 +1,6 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavutil/avutil.h	2012-04-18 15:14:08 +1000
-+++ libavutil/avutil.h	2012-04-18 15:14:08 +1000
-@@ -108,6 +108,13 @@
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavutil/avutil.h	2012-05-29 18:18:34 +1000
++++ libavutil/avutil.h	2012-05-29 18:18:34 +1000
+@@ -107,6 +107,13 @@
   * @}
   */
  

@@ -39,7 +39,9 @@ updatePatch libavcodec put_bits.h
 updatePatch libavcodec vdpau.h
 updatePatch libavcodec/x86 fmtconvert_mmx.c
 updatePatch libavformat isom.c
+updatePatch libavformat libavformat.v
 updatePatch libavformat matroskaenc.c
+updatePatch libavformat mpegtsenc.c
 updatePatch libavutil avutil.h
 updatePatch libavutil lfg.c
 updatePatch libavutil lfg.h

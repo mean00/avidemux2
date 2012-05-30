@@ -257,13 +257,13 @@ uint32_t decoderFF::frameType (void)
   target = &_frame;
   switch (target->pict_type)
     {
-    case FF_B_TYPE:
+    case AV_PICTURE_TYPE_B:
       SET (AVI_B_FRAME);
       if (target->key_frame)
 	aprintf ("\n But keyframe is set\n");
       break;
 
-    case FF_I_TYPE:
+    case AV_PICTURE_TYPE_I:
       SET (AVI_KEY_FRAME);
       if (!target->key_frame)
 	{
@@ -275,9 +275,9 @@ uint32_t decoderFF::frameType (void)
 	    printf ("\n But keyframe is not set\n");
 	}
       break;
-    case FF_S_TYPE:
+    case AV_PICTURE_TYPE_S:
       _gmc = 1;			// No break, just inform that gmc is there
-    case FF_P_TYPE:
+    case AV_PICTURE_TYPE_P:
       SET (AVI_P_FRAME);
       if (target->key_frame)
 	aprintf ("\n But keyframe is set\n");
@@ -621,7 +621,6 @@ extern "C"
 */
 void ADM_lavInit(void)
 {
-    avcodec_init();
     avcodec_register_all();
     av_log_set_callback(adm_lavLogCallback);
 

@@ -2,10 +2,10 @@
             \file            muxerMP4
             \brief           i/f to lavformat mpeg4 muxer
                              -------------------
-    
+
     copyright            : (C) 2008 by mean
     email                : fixounet@free.fr
-        
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -40,7 +40,7 @@ mp4_muxer muxerConfig=
     \fn     muxerMP4
     \brief  Constructor
 */
-muxerMP4::muxerMP4() 
+muxerMP4::muxerMP4()
 {
 };
 /**
@@ -48,9 +48,9 @@ muxerMP4::muxerMP4()
     \brief  Destructor
 */
 
-muxerMP4::~muxerMP4() 
+muxerMP4::~muxerMP4()
 {
-   
+
 }
 /**
     \fn open
@@ -82,43 +82,44 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         printf("[MP4] Failed to open muxer\n");
         return false;
     }
- 
-   if(initVideo(s)==false) 
+
+   if(initVideo(s)==false)
     {
         printf("[MP4] Failed to init video\n");
         return false;
     }
-  
-    
+
+
         AVCodecContext *c;
         c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         c->gop_size=15;
-        
+
         if(initAudio(nbAudioTrack,a)==false)
         {
             printf("[MP4] Failed to init audio\n");
             return false;
         }
-        
+
         // /audio
-        oc->mux_rate=10080*1000;
-        oc->preload=AV_TIME_BASE/10; // 100 ms preloading
-        oc->max_delay=200*1000; // 500 ms
-        if (av_set_parameters(oc, NULL) < 0)
-        {
-            printf("Lav: set param failed \n");
-            return false;
-        }
-        int er=avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+        int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
+
         if (er)
         {
             ADM_error("[Mp4]: Failed to open file :%s, er=%d\n",file,er);
             return false;
         }
 
+        AVDictionary *dict = NULL;
+		char buf[64];
 
-        ADM_assert(av_write_header(oc)>=0);
+        snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
+        av_dict_set(&dict, "preload", buf, 0);
+        av_dict_set(&dict, "max_delay", "200000", 0);
+		av_dict_set(&dict, "muxrate", "10080000", 0);
+
+        ADM_assert(avformat_write_header(oc, &dict) >= 0);
+
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
@@ -129,7 +130,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 /**
     \fn save
 */
-bool muxerMP4::save(void) 
+bool muxerMP4::save(void)
 {
     const char *title=QT_TR_NOOP("Saving mp4");
     if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TR_NOOP("Saving PSP");
@@ -140,9 +141,9 @@ bool muxerMP4::save(void)
     \fn close
     \brief Cleanup is done in the dtor
 */
-bool muxerMP4::close(void) 
+bool muxerMP4::close(void)
 {
-   
+
     printf("[MP4] Closing\n");
     return closeMuxer();
 }

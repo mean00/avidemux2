@@ -1,6 +1,6 @@
---- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpegvideo.c	2012-05-21 21:53:33 +1000
-+++ libavcodec/mpegvideo.c	2012-05-21 21:53:33 +1000
-@@ -1491,7 +1491,8 @@
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpegvideo.c	2012-05-29 18:18:34 +1000
++++ libavcodec/mpegvideo.c	2012-05-29 18:18:34 +1000
+@@ -1498,7 +1498,8 @@
   */
  void ff_print_debug_info(MpegEncContext *s, AVFrame *pict)
  {
@@ -10,7 +10,7 @@
          return;
  
      if (s->avctx->debug & (FF_DEBUG_SKIP | FF_DEBUG_QP | FF_DEBUG_MB_TYPE)) {
-@@ -1565,8 +1566,10 @@
+@@ -1572,8 +1573,10 @@
          }
      }
  

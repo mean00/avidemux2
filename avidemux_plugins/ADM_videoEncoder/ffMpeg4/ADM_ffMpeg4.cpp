@@ -113,9 +113,9 @@ again:
                 // Keep same frame type & same Qz as the incoming frame...
             _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
 
-            if(image->flags & AVI_KEY_FRAME)    _frame.pict_type=FF_I_TYPE;
-            else if(image->flags & AVI_B_FRAME) _frame.pict_type=FF_B_TYPE;
-            else                                _frame.pict_type=FF_P_TYPE;
+            if(image->flags & AVI_KEY_FRAME)    _frame.pict_type = AV_PICTURE_TYPE_I;
+            else if(image->flags & AVI_B_FRAME) _frame.pict_type = AV_PICTURE_TYPE_B;
+            else                                _frame.pict_type = AV_PICTURE_TYPE_P;
 
             break;
       case COMPRESS_2PASS:

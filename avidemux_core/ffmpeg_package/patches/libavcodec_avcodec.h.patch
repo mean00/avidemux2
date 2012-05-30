@@ -1,15 +1,23 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/avcodec.h	2012-04-18 15:14:06 +1000
-+++ libavcodec/avcodec.h	2012-04-18 15:14:06 +1000
-@@ -698,6 +698,8 @@
- #define CODEC_FLAG2_INTRA_VLC     0x00000800 ///< Use MPEG-2 intra VLC table.
- #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format.
- #define CODEC_FLAG2_NON_LINEAR_QUANT 0x00010000 ///< Use MPEG-2 nonlinear quantizer.
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/avcodec.h	2012-05-29 18:18:33 +1000
++++ libavcodec/avcodec.h	2012-05-29 18:18:33 +1000
+@@ -614,6 +614,8 @@
+ #define CODEC_FLAG2_NO_OUTPUT     0x00000004 ///< Skip bitstream encoding.
+ #define CODEC_FLAG2_LOCAL_HEADER  0x00000008 ///< Place global headers at every keyframe instead of in extradata.
+ #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format. DEPRECATED!!!!
 +//MEANX: NEVER EVER USE CLOSED GOP ?
 +#define CODEC_FLAG2_32_PULLDOWN   0x80000000
- #endif
- #if FF_API_MJPEG_GLOBAL_OPTS
- #define CODEC_FLAG_EXTERN_HUFF     0x1000   ///< Use external Huffman table (for MJPEG).
-@@ -1868,6 +1870,7 @@
+ #if FF_API_MPV_GLOBAL_OPTS
+ #define CODEC_FLAG_CBP_RD         0x04000000 ///< Use rate distortion optimization for cbp.
+ #define CODEC_FLAG_QP_RD          0x08000000 ///< Use rate distortion optimization for qp selectioon.
+@@ -2282,6 +2284,7 @@
+      * - decoding: unused
+      */
+     int rc_buffer_size;
++    int rc_buffer_size_header;  /*< That one is set in the header MEANX*/
+ 
+     /**
+      * ratecontrol override, see RcOverride
+@@ -2304,6 +2307,7 @@
       * - decoding: unused
       */
      int rc_max_rate;
@@ -17,12 +25,3 @@
  
      /**
       * minimum bitrate
-@@ -1882,6 +1885,8 @@
-      * - decoding: unused
-      */
-     int rc_buffer_size;
-+    int rc_buffer_size_header;  /*< That one is set in the header MEANX*/
-+
-     float rc_buffer_aggressivity;
- 
-     /**
