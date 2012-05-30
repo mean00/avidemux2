@@ -50,9 +50,10 @@ protected:
                 uint32_t  _originalPriority;
                 encodingSample samples[ADM_ENCODING_SAMPLE];
                 uint32_t  sampleIndex;
+                bool       _useSystray;
         
 public:
-                             DIA_encodingBase( uint64_t duration );
+                             DIA_encodingBase( uint64_t duration,bool useSystray );
                 virtual      ~DIA_encodingBase( );
                 
                 virtual void reset( void );
@@ -83,5 +84,5 @@ public:
                 virtual void refresh(void);
 };
 //********************
-DIA_encodingBase *createEncoding(uint64_t duration);
+DIA_encodingBase *createEncoding(uint64_t duration,bool tray);
 #endif

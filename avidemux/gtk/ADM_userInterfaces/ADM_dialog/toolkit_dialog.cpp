@@ -351,7 +351,7 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
 }
 extern int GUI_Alternate(const char *title,const char *choice1,const char *choice2);
 extern DIA_workingBase *createWorking(const char *title);
-extern DIA_encodingBase *createEncoding(uint64_t duration);
+extern DIA_encodingBase *createEncoding(uint64_t duration,bool tray);
 extern DIA_audioTrackBase *createAudioTrack( PoolOfAudioTracks *pool, ActiveAudioTracks *active );
 
 void getVersion(uint32_t *maj,uint32_t *minor)

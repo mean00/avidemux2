@@ -22,7 +22,7 @@
 #include "avidemutils.h"
 #include "ADM_vidMisc.h"
 #include "ADM_toolkitQt.h"
-
+#include "GUI_ui.h"
 extern void UI_purge(void);
 static int stopReq=0;
 extern bool ADM_slaveReportProgress(uint32_t percent);
@@ -107,7 +107,7 @@ void encodingWindow::shutdownChanged(int state)
 /*************************************/
 static char stringMe[80];
 #define window ((encodingWindow *)WINDOW)
-DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration)
+DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encodingBase(duration,systray)
 {
         WINDOW=NULL;
         stopReq=0;
@@ -115,6 +115,13 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration) : DIA_encodingBase(duration
 		qtRegisterDialog(window);
         window->setModal(TRUE);
         window->show();
+        tray=NULL;
+        if(_useSystray)
+        {
+            window->hide();
+            UI_iconify();
+            tray=DIA_createTray(WINDOW);
+        }
 
 }
 /**
@@ -372,9 +379,9 @@ bool DIA_encodingQt4::isAlive( void )
 */
 namespace ADM_Qt4CoreUIToolkit
 {
-DIA_encodingBase *createEncoding(uint64_t duration)
+DIA_encodingBase *createEncoding(uint64_t duration,bool tray)
 {
-        return new DIA_encodingQt4(duration);
+        return new DIA_encodingQt4(duration,tray);
 }
 }
 //********************************************

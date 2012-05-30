@@ -32,7 +32,7 @@ extern bool ADM_slaveReportProgress(uint32_t percent);
 class DIA_encodingGtk : public DIA_encodingBase
 {
 public:
-    DIA_encodingGtk(uint64_t duration);
+    DIA_encodingGtk(uint64_t duration,bool useTray);
     ~DIA_encodingGtk();
     
 protected:
@@ -108,7 +108,7 @@ static void priorityChanged(GtkComboBox* combo, gpointer)
 /**
     \fn DIA_encodingGtk
 */
-DIA_encodingGtk::DIA_encodingGtk(uint64_t duration) : DIA_encodingBase(duration)
+DIA_encodingGtk::DIA_encodingGtk(uint64_t duration,bool tray) : DIA_encodingBase(duration,tray)
 {
     ADM_info("DIA_encodingGtk\n");
     stopReq=0;
@@ -359,8 +359,8 @@ bool DIA_encodingGtk::isAlive()
 */
 namespace ADM_GtkCoreUIToolkit
 {
-DIA_encodingBase *createEncoding(uint64_t duration)
+DIA_encodingBase *createEncoding(uint64_t duration,bool tray)
 {
-        return new DIA_encodingGtk(duration);
+        return new DIA_encodingGtk(duration,tray);
 }
 }

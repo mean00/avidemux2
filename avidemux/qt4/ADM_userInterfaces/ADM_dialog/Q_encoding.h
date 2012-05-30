@@ -22,6 +22,7 @@
 #include "ui_encoding.h"
 #include "ADM_inttype.h"
 #include "DIA_encoding.h"
+#include "ADM_tray.h"
 /**
     \class encodingWindow
 */
@@ -45,7 +46,7 @@ class encodingWindow : public QDialog
 class DIA_encodingQt4 : public DIA_encodingBase
 {
 public:
-    DIA_encodingQt4( uint64_t duration);
+    DIA_encodingQt4( uint64_t duration,bool useTray);
     ~DIA_encodingQt4( );
     
 protected:
@@ -59,6 +60,8 @@ protected:
     void setRemainingTimeMS(uint32_t nb);
     void setAverageQz(uint32_t nb);
     void setAverageBitrateKbits(uint32_t kb);
+
+    ADM_tray *tray;
 
 public:    
     void *WINDOW;

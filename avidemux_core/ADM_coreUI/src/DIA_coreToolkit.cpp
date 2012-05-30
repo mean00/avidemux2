@@ -247,9 +247,9 @@ DIA_audioTrackBase *createAudioTrack(PoolOfAudioTracks *pool, ActiveAudioTracks 
 /**
     \fn createEncoding
 */
-DIA_encodingBase *createEncoding(uint64_t duration)
+DIA_encodingBase *createEncoding(uint64_t duration,bool tray)
 {
-    if(Toolkit->createEncoding) return Toolkit->createEncoding(duration);
+    if(Toolkit->createEncoding) return Toolkit->createEncoding(duration,tray );
 //    return new DIA_encodingDummy(duration);
     return NULL;
 } 

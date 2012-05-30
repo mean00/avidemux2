@@ -17,18 +17,20 @@
 
 #ifndef ADM_TRAY_H
 #define ADM_TRAY_H
-
+/**
+	\class ADM_tray
+*/
 class ADM_tray
 {
 protected:
         void    *sys;
-		void *_parent;
+		const void *_parent;
 public:
-                ADM_tray(void *parent);
-                ~ADM_tray();
-        uint8_t setPercent(int percent);
-        uint8_t setStatus(int working);
+                ADM_tray(const void *parent) {};
+     virtual  ~ADM_tray() {};
+     virtual  uint8_t setPercent(int percent) {return 0;};
+     virtual  uint8_t setStatus(int working)  {return 0;};
 
 };
-
+ADM_tray *DIA_createTray(const void *parent);
 #endif

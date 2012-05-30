@@ -58,8 +58,19 @@ static void tray_icon_popup_menu(GtkStatusIcon *status_icon, guint button, guint
 	gtk_widget_show_all(popupMenu);
 	gtk_menu_popup(GTK_MENU(popupMenu), NULL, NULL, gtk_status_icon_position_menu, status_icon, button, activate_time);
 }
+/**
+	\class ADM_gtray
+*/	
+class ADM_gtray : public ADM_tray
+{
+public:
+	ADM_gtray(void* parent);
+virtual ~ADM_gtray();
+uint8_t setPercent(int percent);
+uint8_t setStatus(int working);
+};
 
-ADM_tray::ADM_tray(void* parent)
+ADM_gtray::ADM_gtray(void* parent) : ADM_tray(parent)
 {
 	_parent = parent;
 	lastIcon = 0;
@@ -84,13 +95,13 @@ ADM_tray::ADM_tray(void* parent)
 
 	sys = gtk_status_icon_new_from_pixbuf(pixbuf[0]);
 
-	g_signal_connect(G_OBJECT(sys), "activate", G_CALLBACK(tray_icon_on_click), _parent);
-	g_signal_connect(G_OBJECT(sys), "popup-menu", G_CALLBACK(tray_icon_popup_menu), _parent);
+	g_signal_connect(G_OBJECT(sys), "activate", G_CALLBACK(tray_icon_on_click), (gpointer) _parent);
+	g_signal_connect(G_OBJECT(sys), "popup-menu", G_CALLBACK(tray_icon_popup_menu), (gpointer) _parent);
 	gtk_status_icon_set_tooltip_text((GtkStatusIcon*)sys, "Avidemux");
 	gtk_status_icon_set_visible((GtkStatusIcon*)sys, TRUE);
 }
 
-ADM_tray::~ADM_tray()
+ADM_gtray::~ADM_gtray()
 {
 	if (sys)
 		gtk_status_icon_set_visible((GtkStatusIcon*)sys, FALSE);
@@ -98,7 +109,7 @@ ADM_tray::~ADM_tray()
 	sys = NULL;
 }
 
-uint8_t ADM_tray::setPercent(int percent)
+uint8_t ADM_gtray::setPercent(int percent)
 {
 	char percentS[40];
 
@@ -119,7 +130,7 @@ uint8_t ADM_tray::setPercent(int percent)
 	return 1;
 }
 
-uint8_t ADM_tray::setStatus(int working)
+uint8_t ADM_gtray::setStatus(int working)
 {
 	return 1;
 }
