@@ -1287,5 +1287,22 @@ bool UI_hasOpenGl(void)
     return enabled;
 #endif
 }
+/**
+    \fn UI_iconify
+*/
+void UI_iconify( void ) 
+{
+	QuiMainWindows->hide();
+
+}
+/**
+    \fn UI_deiconify
+*/
+void UI_deiconify( void ) 
+{
+    QuiMainWindows->showNormal();
+
+}
+
 //********************************************
 //EOF

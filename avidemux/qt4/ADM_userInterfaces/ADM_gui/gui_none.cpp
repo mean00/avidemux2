@@ -15,8 +15,6 @@
 
 void UI_setAProcessToggleStatus( uint8_t status ) {}
 void UI_setVProcessToggleStatus( uint8_t status ) {}
-void UI_iconify( void ) {}
-void UI_deiconify( void ) {}
 void UI_JumpDone(void) {}
 void UI_toogleSide(void) {}
 void UI_toogleMain(void) {}

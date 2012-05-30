@@ -92,9 +92,24 @@ ADM_qtray::ADM_qtray(const void* parent) : ADM_tray(parent)
 
 ADM_qtray::~ADM_qtray()
 {
-	delete (QSystemTrayIcon*)sys;
-	delete signalReceiver;
-	delete pixmap;
+    ADM_info("Deleting tray\n");
+    if(sys)
+    {
+        QSystemTrayIcon *t=(QSystemTrayIcon *)sys;
+        t->hide();
+        delete t;
+        sys=NULL;
+    }
+    if(signalReceiver)
+    {
+        delete signalReceiver;
+        signalReceiver=NULL;
+    }
+    if(pixmap)
+    {
+        delete [] pixmap;
+        pixmap=NULL;
+    }
 }
 
 uint8_t ADM_qtray::setPercent(int percent)

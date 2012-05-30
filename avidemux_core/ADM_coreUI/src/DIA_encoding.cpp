@@ -44,6 +44,7 @@ DIA_encodingBase::DIA_encodingBase( uint64_t duration,bool systray )
 
 DIA_encodingBase::~DIA_encodingBase( )
 {
+    ADM_info("DiaEncodingBase: Destroying\n");
 #ifdef __WIN32
 	setpriority(PRIO_PROCESS, 0, _originalPriority);
 #endif

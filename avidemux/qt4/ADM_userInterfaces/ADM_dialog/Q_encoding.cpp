@@ -140,7 +140,14 @@ void DIA_encodingQt4::setFps(uint32_t fps)
 */
 DIA_encodingQt4::~DIA_encodingQt4( )
 {
+    ADM_info("Destroying encoding qt4\n");
 	bool shutdownRequired = (window->ui.checkBoxShutdown->checkState() == Qt::Checked);
+    if(tray)
+    {
+        UI_deiconify();
+        delete tray;
+        tray=NULL;
+    }
     encodingWindow *w=window;
 	qtUnregisterDialog(w);
 	if(w) delete w;
@@ -208,6 +215,8 @@ void DIA_encodingQt4::setPercent(uint32_t p)
           printf("Percent:%u\n",p);
           WIDGET(progressBar)->setValue(p);
           ADM_slaveReportProgress(p);
+          if(tray)
+                tray->setPercent(p);
           UI_purge();
 }
 /**
