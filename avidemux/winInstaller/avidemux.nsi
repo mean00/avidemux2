@@ -523,6 +523,8 @@ SectionGroup Plugins SecGrpPlugin
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\audioEncoders
 			${File} plugins\audioEncoders\libADM_ae_lav_mp2.dll
+			SetOutPath $INSTDIR
+			${File} libtwolame-*.dll
 		${MementoSectionEnd}
 		${MementoSection} "MP2 (TwoLAME)" SecAudEncTwoLame
 			SectionIn 1 2
