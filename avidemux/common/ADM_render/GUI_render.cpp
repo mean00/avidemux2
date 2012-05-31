@@ -25,6 +25,7 @@
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
+#include "GUI_nullRender.h"
 
 #ifdef USE_XV
 #include "GUI_xvRender.h"
@@ -264,7 +265,7 @@ uint8_t renderExpose(void)
 */
 bool spawnRenderer(void)
 {
-        
+#if ADM_UI_TYPE_BUILD != ADM_UI_CLI
         int prefRenderer=MUI_getPreferredRender();
         bool r=false;
 
@@ -353,6 +354,10 @@ bool spawnRenderer(void)
             renderer->init(&xinfo,phyW,phyH,lastZoom);
         }
         return true;
+#else  // CLI render
+        renderer=new nullRender();
+        return true;
+#endif
 }
 
 /**
