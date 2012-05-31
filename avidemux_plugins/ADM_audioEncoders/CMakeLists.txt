@@ -1,7 +1,10 @@
 include (admCheckAudioEncoderLibs)
-ADD_SUBDIRECTORY(twolame)
 ADD_SUBDIRECTORY(pcm)
 ADD_SUBDIRECTORY(lavcodec)
+
+if(USE_TWOLAME)
+ADD_SUBDIRECTORY(twolame)
+endif(USE_TWOLAME)
 
 if(USE_LAME)
 ADD_SUBDIRECTORY(lame)

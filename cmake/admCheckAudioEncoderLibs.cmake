@@ -49,6 +49,32 @@ ENDIF (AFTEN)
 
 APPEND_SUMMARY_LIST("Audio Encoder" "Aften" "${USE_AFTEN}")
 MESSAGE("")
+########################################
+# TWOLAME
+########################################
+OPTION(TWOLAME "" ON)
+
+MESSAGE(STATUS "Checking for TWOLAME")
+MESSAGE(STATUS "*****************")
+
+IF (TWOLAME)
+	IF (UNIX)
+		SET(TWOLAME_REQUIRED_FLAGS "-lm")
+	ENDIF (UNIX)
+
+	FIND_HEADER_AND_LIB(TWOLAME twolame.h twolame twolame_close ${TWOLAME_REQUIRED_FLAGS})
+	PRINT_LIBRARY_INFO("TWOLAME" TWOLAME_FOUND "${TWOLAME_INCLUDE_DIR}" "${TWOLAME_LIBRARY_DIR}")
+
+	IF (TWOLAME_FOUND)
+		SET(USE_TWOLAME 1)
+	ENDIF (TWOLAME_FOUND)
+ELSE (TWOLAME)
+	MESSAGE("${MSG_DISABLE_OPTION}")
+ENDIF (TWOLAME)
+
+APPEND_SUMMARY_LIST("Audio Encoder" "TWOLAME" "${USE_TWOLAME}")
+MESSAGE("")
+
 
 ########################################
 # LAME
