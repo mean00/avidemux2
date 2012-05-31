@@ -220,19 +220,19 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->type=FF_BUFFER_TYPE_USER;
     render->state |= FF_VDPAU_STATE_USED_FOR_REFERENCE;
     pic->reordered_opaque= avctx->reordered_opaque;
+    // I dont really understand what it is used for ....
     if(pic->reference)
     {
-        pic->age=ip_age[0];
         ip_age[0]=ip_age[1]+1;
         ip_age[1]=1;
         b_age++;
     }else
     {
-        pic->age=b_age;
         ip_age[0]++;
         ip_age[1]++;
         b_age=1;
     }
+
     return 0;
 }
 /**
