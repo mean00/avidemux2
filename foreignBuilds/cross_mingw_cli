@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
+export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
+export CXXFLAGS="-I$MINGW/include -I/usr/i586-mingw32msvc/include"
+export CFLAGS="-I$MINGW/include -I/usr/i586-mingw32msvc/include"
+export CPPFLAGS="-I$MINGW/include -I/usr/i586-mingw32msvc/include"
+export LDFLAGS="-L$MINGW/lib -L/usr/i586-mingw32msvc/lib"
+export PATH=$MINGW/bin:$PATH
+pkg-config --list-all
+#export DEBUG="-DVERBOSE=1   -DCMAKE_BUILD_TYPE=Debug -G \"CodeBlocks - Unix Makefiles\"   "
+echo "<<<<<<<<<<<<Cross compiling core>>>>>>>>>>>>>>>"
+cmake   -DCROSS=$MINGW \
+        -DCMAKE_INCLUDE_PATH=$MINGW/include -DCMAKE_LIBRARY_PATH=$MINGW/lib \
+        -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
+        -DCMAKE_WINDRES=$CROSS_PREFIX-windres \
+        -DCMAKE_C_COMPILER:STRING=$CROSS_PREFIX-gcc \
+        -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
+        -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
+        -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
+        -DCMAKE_SYSTEM_NAME:STRING=Windows \
+        $DEBUG \
+         -G "CodeBlocks - Unix Makefiles"  \
+        -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
+        $TOP/avidemux/cli

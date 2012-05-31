@@ -39,6 +39,7 @@ cd $TOP
 export PARAL=""
 Process buildMingwQt4 cross_mingw_qt4 
 export PARAL="$O_PARAL"
+Process buildMingwCli cross_mingw_cli 
 #echo "** GTK **"
 #cd $TOP
 #Process buildGtk ../avidemux/gtk
@@ -46,6 +47,7 @@ echo "** Plugins **"
 cd $TOP
 Process buildMingwPluginsCommon cross_mingw_plugins -DPLUGIN_UI=COMMON
 Process buildMingwPluginsQt4 cross_mingw_plugins -DPLUGIN_UI=QT4
+Process buildMingwPluginsCli cross_mingw_plugins -DPLUGIN_UI=CLI
 echo "** All done **"
 cd $TOP
 echo "** ALL DONE **"
