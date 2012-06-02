@@ -195,9 +195,9 @@ ENDIF(DO_COMMON)
 ADD_SUBDIRECTORY(ADM_videoEncoder)
 ADD_SUBDIRECTORY(ADM_videoFilters6)
 IF(DO_QT4)
-        IF(USE_OPENGL)
+        IF(USE_OPENGL AND NOT WIN32)
          ADD_SUBDIRECTORY(ADM_videoFilters6_openGl)
-        ENDIF(USE_OPENGL)
+        ENDIF(USE_OPENGL AND NOT WIN32)
 ENDIF(DO_QT4)
 
 ########################################
