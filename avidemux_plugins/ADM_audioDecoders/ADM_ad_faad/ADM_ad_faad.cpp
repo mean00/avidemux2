@@ -33,6 +33,10 @@ class ADM_faad : public     ADM_Audiocodec
 		uint32_t head, tail;
         bool     monoFaadBug; // if true, the stream is mono, but faad outputs stereo
         uint32_t fq;
+    protected:
+        uint8_t     extraData[16]; // usually 2 bytes...
+        int         extraDataSize;
+        bool        initFaad(WAVHeader *info,uint32_t l,uint8_t *d);
 	public:
 		ADM_faad(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_faad();
@@ -64,7 +68,11 @@ uint32_t ADM_faad::getOutputFrequency(void)
     return fq;
 
 }
-ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   ADM_Audiocodec(fourcc,*info)
+/**
+    \fn initFaad
+
+*/
+bool ADM_faad::initFaad(WAVHeader *info,uint32_t l,uint8_t *d)
 {
 faacDecConfigurationPtr conf;
 #ifdef FAAD_OLD_PROTOTYPE
@@ -73,62 +81,75 @@ unsigned long int srate;
 uint32_t srate;
 #endif
 unsigned char chan;
+
+    _instance = faacDecOpen();
+    conf=faacDecGetCurrentConfiguration(_instance);
+    // Update the field we know about
+    conf->outputFormat=FAAD_FMT_FLOAT;
+    conf->defSampleRate=info->frequency;
+    conf->defObjectType =LC;
+    fq=info->frequency;
+    //
+    faacDecSetConfiguration(_instance, conf);
+    ADM_info("[FAAD] using %u bytes of extradata\n",l);
+    if(l)
+    {
+        for(int i=0;i<l;i++) ADM_info("%02x ",d[i]);
+        ADM_info("\n");
+    }
+    // if we have some extra data, it means we can init it from it
+    if(l)
+    {
         
+        faacDecInit2(_instance, d,l, &srate,&chan);
+        ADM_info("[FAAD]Found :%"LU" rate %"LU" channels\n",(uint32_t)srate,(uint32_t)chan);
+        if(srate!=info->frequency)
+        {
+            ADM_info("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
+            if(srate==2*info->frequency)
+            {
+                ADM_info("Sbr detected\n");
+                fq=srate;
+            }
+            
+            //info->frequency=srate;
+        }
+        if(chan!=info->channels) // Ask for stereo !
+        {
+            ADM_info("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
+            if(info->channels==1 && chan==2) 
+            {
+                    ADM_warning("Workaround Faad mono stream handling... \n");
+                    monoFaadBug=true;
+            }
+            
+        }
+        ADM_assert(l<16);
+        memcpy(extraData,d,l);
+        extraDataSize=l;
+    }
+    
+}
+/**
+    \fn ctor
+*/
+ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   ADM_Audiocodec(fourcc,*info)
+{
+        extraDataSize=0;
 		_inited=0;
 		_instance=NULL;
         head=tail=0;
         monoFaadBug=false;
-		_instance = faacDecOpen();
-		conf=faacDecGetCurrentConfiguration(_instance);
-		// Update the field we know about
-		conf->outputFormat=FAAD_FMT_FLOAT;
-		conf->defSampleRate=info->frequency;
-  	    conf->defObjectType =LC;
-        // Disable SBR...
-        //conf->dontUpSampleImplicitSBR=1;
-        fq=info->frequency;
-        //
-		faacDecSetConfiguration(_instance, conf);
-        ADM_info("[FAAD] using %u bytes of extradata\n",l);
+        initFaad(info,l,d);
         if(l)
         {
-            for(int i=0;i<l;i++) ADM_info("%02x ",d[i]);
-            ADM_info("\n");
+            _inited=1;
+            ADM_assert(l<16);
+            memcpy(extraData,d,l);
+            extraDataSize=l;
+            
         }
-		// if we have some extra data, it means we can init it from it
-		if(l)
-		{
-			_inited = 1;
-			faacDecInit2(_instance, d,l, &srate,&chan);
-			ADM_info("[FAAD]Found :%"LU" rate %"LU" channels\n",(uint32_t)srate,(uint32_t)chan);
-            if(srate!=info->frequency)
-            {
-                ADM_info("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
-                if(srate==2*info->frequency)
-                {
-                    ADM_info("Sbr detected\n");
-                    fq=srate;
-                }
-                
-                //info->frequency=srate;
-            }
-            if(chan!=info->channels) // Ask for stereo !
-            {
-                ADM_info("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
-                if(info->channels==1 && chan==2) 
-                {
-                        ADM_warning("Workaround Faad mono stream handling... \n");
-                        monoFaadBug=true;
-                }
-                
-            }
-		}
-		else // we will init it later on...
-		{
-			_inited=0;
-			ADM_info("No conf header, will try to init later\n");
 
-		}
         // Give our channel configuration
         switch(info->channels)
         {
@@ -178,6 +199,16 @@ bool ADM_faad::resetAfterSeek( void )
 {
 	 head=tail=0;
 	 faacDecPostSeekReset(_instance, 0);
+     // close then reopen, it's the only way to get rid of the glitch
+#if 1
+     if(extraDataSize)
+     {
+           
+            faacDecClose(_instance);
+            ADM_info("Resetting faad\n");
+            initFaad(&wavHeader,extraDataSize,extraData);
+     }
+#endif
      return 1;
 }
 /**
@@ -244,7 +275,7 @@ uint8_t first=0;
 			if(info.error)
 			{
 				ADM_warning("Faad: Error %d :%s\n",info.error,faacDecGetErrorMessage(info.error));
-				ADM_warning("Bye consumed %"LLU", bytes dropped %"LU" \n",info.bytesconsumed,tail-head);
+				ADM_warning("Bytes consumed %"LLU", bytes dropped %"LU" \n",info.bytesconsumed,tail-head);
 
                 head=tail=0; // Purge buffer
 				return 1;
