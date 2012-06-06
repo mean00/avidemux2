@@ -41,14 +41,7 @@ ADM_AudiocodecWavSwapped::~ADM_AudiocodecWavSwapped()
 
 }
 
-uint8_t ADM_AudiocodecWavSwapped::beginDecompress()
-{
-         return 1;
-}
-uint8_t ADM_AudiocodecWavSwapped::endDecompress()
-{
-       return 1;
-}
+
 
 uint8_t ADM_AudiocodecWavSwapped::isCompressed( void )
 {

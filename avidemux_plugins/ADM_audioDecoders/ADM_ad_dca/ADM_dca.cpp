@@ -41,8 +41,6 @@ class ADM_AudiocodecDCA : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecDCA(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_AudiocodecDCA();
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
@@ -128,15 +126,6 @@ ADM_AudiocodecDCA::~ADM_AudiocodecDCA( )
     }
 }
 
-uint8_t ADM_AudiocodecDCA::beginDecompress( void )
-{
-    return 1;
-}
-
-uint8_t ADM_AudiocodecDCA::endDecompress( void )
-{
-    return 1;
-}
 
 uint8_t ADM_AudiocodecDCA::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
 {

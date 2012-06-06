@@ -24,6 +24,9 @@ extern "C" {
 
 #define AC3_HANDLE ((a52_state_t *)ac3_handle)
 #define ADM_AC3_BUFFER (50000*2)
+/**
+    \class ADM_AudiocodecAC3
+*/
 class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 {
 	protected:
@@ -33,8 +36,6 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
 		virtual	~ADM_AudiocodecAC3();
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
@@ -91,15 +92,6 @@ ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
     
 }
 
-uint8_t ADM_AudiocodecAC3::beginDecompress( void )
-{
-		return 1;
-}
-
-uint8_t ADM_AudiocodecAC3::endDecompress( void )
-{
-    return 1;
-}
 
 uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   uint32_t *nbOut)
 {

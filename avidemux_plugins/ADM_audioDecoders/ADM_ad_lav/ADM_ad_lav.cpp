@@ -40,8 +40,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 	public:
 		ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_AudiocoderLavcodec() ;
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
+		virtual	bool    resetAfterSeek(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
         virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
@@ -79,21 +78,12 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 
 uint8_t scratchPad[SCRATCH_PAD_SIZE];
 /**
-        \fn beginDecompress
+        \fn resetAfterSeek
 */
-   uint8_t ADM_AudiocoderLavcodec::beginDecompress( void )
+   bool ADM_AudiocoderLavcodec::resetAfterSeek( void )
    {
             _tail=_head=0;
             return 1;
-   };
-/**
-        \fn endDecompress
-*/
-
-   uint8_t ADM_AudiocoderLavcodec::endDecompress( void )
-   {
-          _tail=_head=0;
-          return 1;
    };
 /**
         \fn ADM_AudiocoderLavcodec

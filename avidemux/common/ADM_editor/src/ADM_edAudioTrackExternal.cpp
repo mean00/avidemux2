@@ -218,4 +218,15 @@ again:
     vprintf("[getPCMext] %d samples, dts=%s\n",*samples,ADM_us2plain(*odts));
     return true;
 }
+/**
+    \fn goToTime
+*/
+bool            ADM_edAudioTrackExternal::goToTime(uint64_t nbUs) 
+{
+        if(codec)
+        {
+            codec->resetAfterSeek();
+        }
+        return internalAudioStream->goToTime(nbUs);
+}
 // EOF

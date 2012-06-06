@@ -21,7 +21,9 @@
 #include "ADM_ad_plugin.h"
 
 #define FAAD_BUFFER (10*1024)
-
+/**
+    \class ADM_faad
+*/
 class ADM_faad : public     ADM_Audiocodec
 {
 	protected:
@@ -38,8 +40,7 @@ class ADM_faad : public     ADM_Audiocodec
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
+		virtual	bool     resetAfterSeek(void);
         virtual uint32_t getOutputFrequency(void);
 };
 // Supported formats + declare our plugin
@@ -88,44 +89,44 @@ unsigned char chan;
         fq=info->frequency;
         //
 		faacDecSetConfiguration(_instance, conf);
-        printf("[FAAD] using %u bytes of extradata\n",l);
+        ADM_info("[FAAD] using %u bytes of extradata\n",l);
         if(l)
         {
-            for(int i=0;i<l;i++) printf("%02x ",d[i]);
-            printf("\n");
+            for(int i=0;i<l;i++) ADM_info("%02x ",d[i]);
+            ADM_info("\n");
         }
 		// if we have some extra data, it means we can init it from it
 		if(l)
 		{
 			_inited = 1;
 			faacDecInit2(_instance, d,l, &srate,&chan);
-			printf("[FAAD]Found :%"LU" rate %"LU" channels\n",(uint32_t)srate,(uint32_t)chan);
-                        if(srate!=info->frequency)
-                        {
-                            ADM_info("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
-                            if(srate==2*info->frequency)
-                            {
-                                ADM_info("Sbr detected\n");
-                                fq=srate;
-                            }
-                            
-                            //info->frequency=srate;
-                        }
-                        if(chan!=info->channels) // Ask for stereo !
-                        {
-                            printf("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
-                            if(info->channels==1 && chan==2) 
-                            {
-                                    ADM_warning("Workaround Faad mono stream handling... \n");
-                                    monoFaadBug=true;
-                            }
-                            
-                        }
+			ADM_info("[FAAD]Found :%"LU" rate %"LU" channels\n",(uint32_t)srate,(uint32_t)chan);
+            if(srate!=info->frequency)
+            {
+                ADM_info("[FAAD]Frequency mismatch!!! %d to %"LU" (SBR ?)\n",info->frequency,(uint32_t)srate);
+                if(srate==2*info->frequency)
+                {
+                    ADM_info("Sbr detected\n");
+                    fq=srate;
+                }
+                
+                //info->frequency=srate;
+            }
+            if(chan!=info->channels) // Ask for stereo !
+            {
+                ADM_info("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
+                if(info->channels==1 && chan==2) 
+                {
+                        ADM_warning("Workaround Faad mono stream handling... \n");
+                        monoFaadBug=true;
+                }
+                
+            }
 		}
 		else // we will init it later on...
 		{
 			_inited=0;
-			printf("No conf header, will try to init later\n");
+			ADM_info("No conf header, will try to init later\n");
 
 		}
         // Give our channel configuration
@@ -149,28 +150,31 @@ unsigned char chan;
                 break;
         }
 
-		printf("[FAAD]Faad decoder created\n");
+		ADM_info("[FAAD]Faad decoder created\n");
 }
+/**
+    \fn dtor
 
+*/
 ADM_faad::~ADM_faad()
 {
 	if(_instance)
 		faacDecClose(_instance);
 	_instance=NULL;
-	printf("Faad decoder closed\n");
+	ADM_info("Faad decoder closed\n");
 }
-
+/**
+    \fn purge
+*/
 void ADM_faad::purge(void)
 {
 	head=tail=0;
 	faacDecPostSeekReset(_instance, 0);
 }
-uint8_t ADM_faad:: beginDecompress( void )
-{
-	head=tail=0;
-    return 1;
-}
-uint8_t ADM_faad::endDecompress( void )
+/**
+    \fn resetAfterSeek
+*/
+bool ADM_faad::resetAfterSeek( void )
 {
 	 head=tail=0;
 	 faacDecPostSeekReset(_instance, 0);
@@ -200,11 +204,11 @@ uint8_t first=0;
 		if(!_inited) // we still have'nt initialized the codec
 		{
 			// Try
-			printf("Trying with %d bytes\n",nbIn);
+			ADM_info("Trying with %d bytes\n",nbIn);
 			res=(long int)faacDecInit(_instance,inptr,nbIn,&srate,&chan);
 			if(res>=0)
 			{
-				printf("Faad Inited : rate:%d chan:%d off:%ld\n",(int)srate,(int)chan,res);
+				ADM_info("Faad Inited : rate:%d chan:%d off:%ld\n",(int)srate,(int)chan,res);
 				_inited=1;
 				first=1;
 				head=tail=0;
@@ -214,7 +218,7 @@ uint8_t first=0;
 		}
 		if(!_inited)
 		{
-			printf("No dice...\n");
+			ADM_info("No dice...\n");
 			return 1;
 		}
 		// The codec is initialized, feed him
@@ -252,7 +256,11 @@ uint8_t first=0;
 				printf("SBR      : %d\n",info.sbr);
 			}
 			consumed=info.bytesconsumed ;
-			if(consumed>(tail-head)) {head=tail=0;}
+			if(consumed>(tail-head)) 
+            {
+                ADM_warning("Too much data consumed %d vs %d\n",(int)consumed,(int)(tail-head));
+                head=tail=0;
+                }
                 else head+=consumed;
 			if(info.samples)
 			{

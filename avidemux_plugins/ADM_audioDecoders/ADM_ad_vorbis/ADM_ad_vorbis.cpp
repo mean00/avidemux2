@@ -44,8 +44,6 @@ class ADM_vorbis : public     ADM_Audiocodec
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
-		virtual	uint8_t beginDecompress(void) {return 1;}
-		virtual	uint8_t endDecompress(void);
 };
 
 // Supported formats + declare our plugin

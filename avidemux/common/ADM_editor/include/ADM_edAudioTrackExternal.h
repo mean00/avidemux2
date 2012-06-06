@@ -55,7 +55,7 @@ virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeM
                           {
                                 return internalAudioStream->getPacket(buffer,size,sizeMax,nbSample,dts);
                             }
-virtual bool            goToTime(uint64_t nbUs) {return internalAudioStream->goToTime(nbUs);}
+virtual bool            goToTime(uint64_t nbUs);
 virtual bool            getExtraData(uint32_t *l, uint8_t **d){return internalAudioStream->getExtraData(l,d);}
          uint64_t        getDurationInUs(void) {return internalAudioStream->getDurationInUs();}
 

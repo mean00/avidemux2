@@ -64,6 +64,15 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
         _audioSeg++;
         _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
         ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+        //
+        ADM_Audiocodec *codec=NULL;
+        if(trk)
+            if(trk->codec)
+                codec=trk->codec;
+        if(codec)
+        {
+            codec->resetAfterSeek();
+        }
         // Go to beginning of the stream
         if(false==trk->stream->goToTime(seg->_refStartTimeUs))
           {
@@ -196,6 +205,12 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
       }
     uint64_t seekTime;
     seekTime=segTime+s->_refStartTimeUs;
+    ADM_Audiocodec *codec=trk->codec;
+    if(codec)
+    {
+        codec->resetAfterSeek();
+    }
+
     if(true==trk->stream->goToTime(seekTime))
     {
         _audioSeg=seg;

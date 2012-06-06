@@ -36,8 +36,7 @@ class ADM_AudiocodecMP3 : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecMP3(uint32_t fourcc,WAVHeader *info,uint32_t extraLength,uint8_t *extraData);
 		virtual	~ADM_AudiocodecMP3() ;
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
+		virtual	bool    resetAfterSeek(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
@@ -86,21 +85,17 @@ ADM_AudiocodecMP3::~ADM_AudiocodecMP3( )
     _synth=_synth=_stream=NULL;
     
 }
-uint8_t ADM_AudiocodecMP3::beginDecompress( void )
+bool ADM_AudiocodecMP3::resetAfterSeek( void )
 {
+        mad_synth_finish(Synth);
+        mad_frame_finish(Frame);
+        mad_stream_finish(Stream);
+
         mad_stream_init(Stream);
         mad_frame_init(Frame);
         mad_synth_init(Synth);
         _head=_tail=0;
         return 1;
-}
-uint8_t ADM_AudiocodecMP3::endDecompress( void )
-{
-    mad_synth_finish(Synth);
-    mad_frame_finish(Frame);
-    mad_stream_finish(Stream);
-    _head=_tail=0;
-    return 1;
 }
 
 uint8_t ADM_AudiocodecMP3::run(uint8_t * inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut)

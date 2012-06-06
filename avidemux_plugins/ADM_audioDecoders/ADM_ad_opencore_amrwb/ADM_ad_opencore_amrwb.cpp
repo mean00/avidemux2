@@ -34,8 +34,7 @@ protected:
 public:
 	ADM_AudiocodecOpencoreAmrWb(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
 	~ADM_AudiocodecOpencoreAmrWb();
-	uint8_t beginDecompress(void);
-	uint8_t endDecompress(void);
+	bool    resetAfterSeek(void);
 	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 	uint8_t isCompressed(void) { return 1; }
 	uint8_t isDecompressable(void) { return 1; }
@@ -49,7 +48,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocodecOpencoreAmrWb,	// Class
 Formats, 											// Supported formats
 "opencore-amrwb decoder plugin for Avidemux (c) Mean/Gruntster\n"); 	// Desc
 
-uint8_t ADM_AudiocodecOpencoreAmrWb::beginDecompress( void ) 
+bool ADM_AudiocodecOpencoreAmrWb::resetAfterSeek( void ) 
 {
 	_tail = _head = 0;
 

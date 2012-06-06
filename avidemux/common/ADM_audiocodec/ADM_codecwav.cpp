@@ -27,15 +27,6 @@ ADM_AudiocodecWav::~ADM_AudiocodecWav()
 
 }
 
-uint8_t ADM_AudiocodecWav::beginDecompress()
-{
-         return 1;
-}
-uint8_t ADM_AudiocodecWav::endDecompress()
-{
-       return 1;
-}
-
 uint8_t ADM_AudiocodecWav::isCompressed( void )
 {
  	return 0;

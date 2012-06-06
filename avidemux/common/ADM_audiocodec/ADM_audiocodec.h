@@ -35,8 +35,7 @@ class ADM_Audiocodec
         virtual uint32_t getOutputFrequency(void)  {return wavHeader.frequency;}
         virtual	        ~ADM_Audiocodec() {};
         virtual	        void purge(void) {}
-        virtual	uint8_t beginDecompress(void)=0;
-        virtual	uint8_t endDecompress(void)=0;
+        virtual	bool    resetAfterSeek(void) {return true;};
         virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)=0;
         virtual	uint8_t isCompressed(void)=0;
         virtual	bool    isDummy(void) {return false;};
@@ -51,8 +50,6 @@ class ADM_AudiocodecWav : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecWav(uint32_t fourcc,const WAVHeader &info);
 		virtual	~ADM_AudiocodecWav();
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut);
 		virtual	uint8_t isCompressed(void);
 };
@@ -62,8 +59,6 @@ class ADM_AudiocodecWavSwapped : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecWavSwapped(uint32_t fourcc,const WAVHeader &info);
 		virtual	~ADM_AudiocodecWavSwapped();
-		virtual	uint8_t beginDecompress(void);
-		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void);
 
@@ -74,8 +69,6 @@ class ADM_AudiocodecUnknown : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecUnknown(uint32_t fourcc,const WAVHeader &info) : ADM_Audiocodec(fourcc,info) {}
 		~ADM_AudiocodecUnknown() {}
-		uint8_t beginDecompress(void) {return 0;}
-		uint8_t endDecompress(void) {return 0;}
 		uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut) {*nbOut=0;return 0;}
 		uint8_t isCompressed(void) {return 1;}
         bool    isDummy(void) {return true;}
@@ -91,8 +84,6 @@ class ADM_Audiocodec8Bits : public     ADM_Audiocodec
 	public:
 		ADM_Audiocodec8Bits(uint32_t fourcc,const WAVHeader &info);
 		virtual	~ADM_Audiocodec8Bits();
-		virtual	uint8_t beginDecompress(void) {return 1;}
-		virtual	uint8_t endDecompress(void) {return 1;}
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 };

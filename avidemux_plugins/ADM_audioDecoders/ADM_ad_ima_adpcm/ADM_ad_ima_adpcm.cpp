@@ -55,8 +55,7 @@ class ADM_AudiocodecImaAdpcm : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecImaAdpcm(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_AudiocodecImaAdpcm();
-		virtual	uint8_t beginDecompress(void) {_head=_tail=0;return 1;}
-		virtual	uint8_t endDecompress(void) {_head=_tail=0;return 1;}
+		virtual	bool    resetAfterSeek(void) {_head=_tail=0;return 1;}
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 };

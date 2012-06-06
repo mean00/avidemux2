@@ -29,8 +29,6 @@
  	public:
 		ADM_AudiocodecUlaw(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_AudiocodecUlaw() ;
-		virtual	uint8_t beginDecompress(void) {return 1;}
-		virtual	uint8_t endDecompress(void) {return 1;}
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 };

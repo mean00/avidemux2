@@ -33,7 +33,7 @@ class ADM_AudiocodecAmrNb : public     ADM_Audiocodec
 	public:
 		ADM_AudiocodecAmrNb(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
 		virtual	~ADM_AudiocodecAmrNb() ;
-		virtual	uint8_t beginDecompress(void) ;
+		virtual	bool    resetAfterSeek(void) ;
 		virtual	uint8_t endDecompress(void);
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
@@ -50,12 +50,7 @@ class ADM_AudiocodecAmrNb : public     ADM_Audiocodec
    //********************************************************
 
    ///************************************************
-     uint8_t ADM_AudiocodecAmrNb::beginDecompress( void ) 
-      {
-               _tail=_head=0;
-               return 1;
-      };
-      uint8_t ADM_AudiocodecAmrNb::endDecompress( void ) 
+     bool  ADM_AudiocodecAmrNb::resetAfterSeek( void ) 
       {
                _tail=_head=0;
                return 1;
