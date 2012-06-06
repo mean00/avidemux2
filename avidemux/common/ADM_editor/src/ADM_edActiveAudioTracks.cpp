@@ -53,6 +53,7 @@ bool ActiveAudioTracks::dump()
             default : ADM_info("\t???\n");break; 
         }
     }
+    return true;
 }
 
 bool ActiveAudioTracks::addTrack(EditableAudioTrack *x)

@@ -95,6 +95,7 @@ bool qShell::print(IScriptEngine::EventType type,const char *s)
     {
         case IScriptEngine::Information: ui.textBrowser->setTextColor(QColor(0,0,0));break;
         case IScriptEngine::Error: ui.textBrowser->setTextColor(QColor(255,0,0));break;
+        default: break;
     }
     ui.textBrowser->insertPlainText(string);
     ui.textBrowser->setTextColor(QColor(0,0,0));

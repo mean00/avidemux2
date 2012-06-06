@@ -567,7 +567,7 @@ void ADM_EditorSegment::dumpRefVideos(void)
         printf("Videos :%d/%d\n",i,n);
         printf("\tfirstFramePts      :%08"LLU" %s\n",s->firstFramePts,ADM_us2plain(s->firstFramePts));
         printf("\ttimeIncrementInUs  :%08"LLU" %s\n",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
-        printf("\tnb frames    :%08"LLU"\n",s->_nb_video_frames);
+        printf("\tnb frames    :%04"LU"\n",s->_nb_video_frames);
     }
 
 }
