@@ -9,7 +9,7 @@
 #include "ADM_audiocodec.h"
 
 
-#define AD_API_VERSION 3
+#define AD_API_VERSION 4
 /* These are the 6 functions exported by each plugin ...*/
 typedef ADM_Audiocodec  *(ADM_ad_CreateFunction)(uint32_t fourcc, 
 								WAVHeader *info,uint32_t extraLength,uint8_t *extraData);
