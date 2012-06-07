@@ -55,11 +55,6 @@ bool ADM_AudiocodecOpencoreAmrNb::resetAfterSeek( void )
 	return 1;
 };
 
-uint8_t ADM_AudiocodecOpencoreAmrNb::endDecompress( void ) 
-{
-	_tail = _head = 0;
-	return 1;
-};
 
 ADM_AudiocodecOpencoreAmrNb::ADM_AudiocodecOpencoreAmrNb(
 	uint32_t fourcc, WAVHeader *info, uint32_t extraLength, uint8_t *extraData) : ADM_Audiocodec(fourcc,*info)

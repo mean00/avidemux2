@@ -44,6 +44,7 @@ class ADM_vorbis : public     ADM_Audiocodec
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
+        virtual	bool    resetAfterSeek(void) ;
 };
 
 // Supported formats + declare our plugin
@@ -215,16 +216,20 @@ int	nb_synth;
 	return 1;
 
 }
-// Try to flush the buffer
-// unsuccessfully :(
-  uint8_t ADM_vorbis::endDecompress( void )
+/**
+    \fn resetAfterSeek
+    \brief  Try to flush the buffer
+            unsuccessfully :(
+
+*/
+  bool    ADM_vorbis::resetAfterSeek(void) 
   {
   float **sample_pcm;
   ogg_packet packet;
 
   	//vorbis_synthesis_blockin(&STRUCT->vdsp,&STRUCT->vblock);
   	vorbis_synthesis_pcmout(&STRUCT->vdsp,&sample_pcm);
-        vorbis_synthesis_restart(&STRUCT->vdsp);
+    vorbis_synthesis_restart(&STRUCT->vdsp);
   	return 1;
   }
 
