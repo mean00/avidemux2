@@ -276,22 +276,12 @@ Section "Avidemux Core" SecCore
     SetOverwrite on
     ${File} "Build Info.txt"
     ${File} "Change Log.html"
-    ${File} zlib1.dll
-
-!if ${BUILD_BITS} == 32
-    ${File} freetype6.dll
-	${File} pthreadGC2-w32.dll
+	${File} libexpat-1.dll
+	${File} libfreetype-6.dll
 	${File} libgcc_s_sjlj-1.dll
 	${File} libstdc++-6.dll
-!endif
-
-!if ${BUILD_BITS} == 64
-    ${File} libfreetype-6.dll
-	${File} pthreadGC2-w64.dll
-	${File} libgcc_s_sjlj_64-1.dll
-	${File} libstdc++_64-6.dll
-!endif
-
+    ${File} libwinpthread-1.dll
+	${File} zlib1.dll
 	${File} nspr4.dll
     ${File} libjs.dll
 	${File} libADM_audioParser6.dll
@@ -316,7 +306,6 @@ Section "Avidemux Core" SecCore
 	${File} libADM_coreVideoCodec6.dll
 	${File} libADM_coreVideoEncoder6.dll
 	${File} libADM_coreVideoFilter6.dll
-    ${File} libxml2-*.dll
     ${File} AUTHORS.
     ${File} COPYING.
     ${File} README.
@@ -1121,38 +1110,38 @@ End:
 				${Folder} etc\fonts
 			${MementoSectionEnd}
 		SectionGroupEnd
-		SectionGroup "OpenGL Filters" SecGrpVideoFilterOpenGl
-			${MementoSection} "Fragment Shader" SecVidFltOpenGlFragmentShader
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_sampleGlFrag2.dll
-			${MementoSectionEnd}
-			${MementoSection} "Read Back Benchmark" SecVidFltOpenGlReadBack
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_glBenchmark.dll
-			${MementoSectionEnd}
-			${MementoSection} "Resize" SecVidFltOpenGlResize
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_glResize.dll
-			${MementoSectionEnd}
-			${MementoSection} "Rotate" SecVidFltOpenGlRotate
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_rotateGlFrag2.dll
-			${MementoSectionEnd}
-			${MementoSection} "Wave" SecVidFltOpenGlWave
-				SectionIn 1 2
-				SetOverwrite on
-				SetOutPath $INSTDIR\plugins\videoFilters
-				${File} plugins\videoFilters\libADM_vf_sampleGlVertex.dll
-			${MementoSectionEnd}
-		SectionGroupEnd
+		#SectionGroup "OpenGL Filters" SecGrpVideoFilterOpenGl
+			#${MementoSection} "Fragment Shader" SecVidFltOpenGlFragmentShader
+				#SectionIn 1 2
+				#SetOverwrite on
+				#SetOutPath $INSTDIR\plugins\videoFilters
+				#${File} plugins\videoFilters\libADM_vf_sampleGlFrag2.dll
+			#${MementoSectionEnd}
+			#${MementoSection} "Read Back Benchmark" SecVidFltOpenGlReadBack
+				#SectionIn 1 2
+				#SetOverwrite on
+				#SetOutPath $INSTDIR\plugins\videoFilters
+				#${File} plugins\videoFilters\libADM_vf_glBenchmark.dll
+			#${MementoSectionEnd}
+			#${MementoSection} "Resize" SecVidFltOpenGlResize
+				#SectionIn 1 2
+				#SetOverwrite on
+				#SetOutPath $INSTDIR\plugins\videoFilters
+				#${File} plugins\videoFilters\libADM_vf_glResize.dll
+			#${MementoSectionEnd}
+			#${MementoSection} "Rotate" SecVidFltOpenGlRotate
+				#SectionIn 1 2
+				#SetOverwrite on
+				#SetOutPath $INSTDIR\plugins\videoFilters
+				#${File} plugins\videoFilters\libADM_vf_rotateGlFrag2.dll
+			#${MementoSectionEnd}
+			#${MementoSection} "Wave" SecVidFltOpenGlWave
+				#SectionIn 1 2
+				#SetOverwrite on
+				#SetOutPath $INSTDIR\plugins\videoFilters
+				#${File} plugins\videoFilters\libADM_vf_sampleGlVertex.dll
+			#${MementoSectionEnd}
+		#SectionGroupEnd
 		SectionGroup "Miscellaneous Filters" SecGrpVideoFilterMiscellaneous
 			${MementoSection} "Print Information" SecVidFltPrintInfo
 				SectionIn 1 2

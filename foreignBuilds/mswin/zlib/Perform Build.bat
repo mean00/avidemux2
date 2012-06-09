@@ -1,7 +1,7 @@
 @echo off
 
-echo MSYS build for twolame
-echo ======================
+echo MSYS build for zlib
+echo ===================
 echo 1. 32-bit build
 echo 2. 64-bit build
 echo X. Exit
@@ -17,17 +17,17 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=0.3.13
-set package=twolame-%version%.tar.gz
-set sourceFolder=twolame-%version%-%BuildBits%
-set tarFolder=twolame-%version%
+set version=1.2.7
+set package=zlib-%version%.tar.gz
+set sourceFolder=zlib-%version%-%BuildBits%
+set tarFolder=zlib-%version%
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://sourceforge.net/projects/twolame/files/twolame/%version%/%package%/download
+	wget http://zlib.net/%package%
 )
 
 if errorlevel 1 goto end
@@ -48,19 +48,17 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
   move "%CD%\%tarFolder%\%%a" "%CD%"
 )
 
-echo.
-echo Configuring
-
-sh ./configure --prefix="%usrLocalDir%" --disable-static
-
-if errorlevel 1 goto end
-echo.
-pause
-
-make CFLAGS="%CFLAGS% -O3 -DLIBTWOLAME_DLL_EXPORTS" LDFLAGS="%LDFLAGS% -no-undefined" install-strip
+if "%BuildBits%" == "32" set RC=RC="windres -F pe-i386"
+mingw32-make -f win32/Makefile.gcc CFLAGS="%CFLAGS%" LDFLAGS="%LDFLAGS%" %RC%
 if errorlevel 1 goto end
 
-copy "%usrLocalDir%\bin\libtwolame-0.dll" "%admBuildDir%"
+copy zlib1.dll "%usrLocalDir%\bin"
+copy zconf.h "%usrLocalDir%\include"
+copy zlib.h "%usrLocalDir%\include"
+copy libz.a "%usrLocalDir%\lib"
+copy libz.dll.a "%usrLocalDir%\lib"
+
+copy "%usrLocalDir%\bin\zlib1.dll" "%admBuildDir%"
 
 goto end
 

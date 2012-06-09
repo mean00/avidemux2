@@ -20,7 +20,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=4.9
+set version=4.9.1
 set package=nspr-%version%.tar.gz
 set sourceFolder=nspr-%version%-%BuildBits%
 set tarFolder=nspr-%version%
@@ -53,19 +53,17 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 )
 
 echo.
-echo Patching
-patch -p0 -i "%curDir%\configure%BuildBits%.patch"
-
-echo.
 echo Configuring
 cd mozilla\nsprpub
-sh ./configure --prefix="%usrLocalDir%" --enable-strip --enable-win32-target=WIN95 --enable-optimize --disable-debug
+set LDFLAGS=-shared-libgcc
+sh ./configure --prefix="%usrLocalDir%" --enable-strip --enable-win32-target=WIN95 --enable-optimize="-O3 %CFLAGS%" --disable-debug
 
 if errorlevel 1 goto end
 echo.
 pause
 
-make
+if "%BuildBits%" == "32" set RC=RC="windres -F pe-i386" CC="gcc -m32"
+make %RC%
 if errorlevel 1 goto end
 
 make install

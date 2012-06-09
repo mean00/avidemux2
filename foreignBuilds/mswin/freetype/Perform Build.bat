@@ -1,7 +1,7 @@
 @echo off
 
-echo MSYS build for twolame
-echo ======================
+echo MSYS build for FreeType
+echo =======================
 echo 1. 32-bit build
 echo 2. 64-bit build
 echo X. Exit
@@ -17,17 +17,17 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=0.3.13
-set package=twolame-%version%.tar.gz
-set sourceFolder=twolame-%version%-%BuildBits%
-set tarFolder=twolame-%version%
+set version=2.4.9
+set package=freetype-%version%.tar.gz
+set sourceFolder=freetype-%version%-%BuildBits%
+set tarFolder=freetype-%version%
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://sourceforge.net/projects/twolame/files/twolame/%version%/%package%/download
+	wget http://sourceforge.net/projects/freetype/files/freetype2/%version%/%package%/download
 )
 
 if errorlevel 1 goto end
@@ -51,16 +51,18 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 echo.
 echo Configuring
 
+set CFLAGS=%CFLAGS% -O3
 sh ./configure --prefix="%usrLocalDir%" --disable-static
 
 if errorlevel 1 goto end
 echo.
 pause
 
-make CFLAGS="%CFLAGS% -O3 -DLIBTWOLAME_DLL_EXPORTS" LDFLAGS="%LDFLAGS% -no-undefined" install-strip
+make install
 if errorlevel 1 goto end
 
-copy "%usrLocalDir%\bin\libtwolame-0.dll" "%admBuildDir%"
+strip "%usrLocalDir%\bin\libfreetype-6.dll"
+copy "%usrLocalDir%\bin\libfreetype-6.dll" "%admBuildDir%"
 
 goto end
 

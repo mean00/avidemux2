@@ -17,9 +17,10 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=fontconfig-2.8.0.tar.gz
-set sourceFolder=fontconfig-2.8.0-%BuildBits%
-set tarFolder=fontconfig-2.8.0
+set version=2.9.0
+set package=fontconfig-%version%.tar.gz
+set sourceFolder=fontconfig-%version%-%BuildBits%
+set tarFolder=fontconfig-%version%
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
@@ -56,11 +57,10 @@ if errorlevel 1 goto end
 echo.
 pause
 
-make install
+make install-strip
 if errorlevel 1 goto end
 
 del "%usrLocalDir%\etc\fonts\fonts.conf.bak"
-strip "%usrLocalDir%\bin\libfontconfig-1.dll"
 copy "%usrLocalDir%\bin\libfontconfig-1.dll" "%admBuildDir%"
 xcopy /s/y "%usrLocalDir%\etc\fonts\*.*" "%admBuildDir%\etc\fonts\"
 

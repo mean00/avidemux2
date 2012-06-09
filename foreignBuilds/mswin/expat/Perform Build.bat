@@ -1,7 +1,7 @@
 @echo off
 
-echo MSYS build for twolame
-echo ======================
+echo MSYS build for expat
+echo ====================
 echo 1. 32-bit build
 echo 2. 64-bit build
 echo X. Exit
@@ -17,17 +17,17 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=0.3.13
-set package=twolame-%version%.tar.gz
-set sourceFolder=twolame-%version%-%BuildBits%
-set tarFolder=twolame-%version%
+set version=2.1.0
+set package=expat-%version%.tar.gz
+set sourceFolder=expat-%version%-%BuildBits%
+set tarFolder=expat-%version%
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://sourceforge.net/projects/twolame/files/twolame/%version%/%package%/download
+	wget http://sourceforge.net/projects/expat/files/expat/%version%/%package%/download
 )
 
 if errorlevel 1 goto end
@@ -57,10 +57,11 @@ if errorlevel 1 goto end
 echo.
 pause
 
-make CFLAGS="%CFLAGS% -O3 -DLIBTWOLAME_DLL_EXPORTS" LDFLAGS="%LDFLAGS% -no-undefined" install-strip
+make CFLAGS="%CFLAGS% -O3" install
 if errorlevel 1 goto end
 
-copy "%usrLocalDir%\bin\libtwolame-0.dll" "%admBuildDir%"
+strip "%usrLocalDir%\bin\libexpat-1.dll"
+copy "%usrLocalDir%\bin\libexpat-1.dll" "%admBuildDir%"
 
 goto end
 

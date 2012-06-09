@@ -84,7 +84,7 @@ patch -p0 -i "%curDir%\qmake%BuildBits%.conf.patch"
 
 echo.
 echo Configuring
-configure -confirm-license -opensource -%BuildType% -system-zlib -no-stl -no-qt3support -no-phonon -no-webkit -no-multimedia -no-declarative -no-style-cleanlooks -no-style-plastique -no-style-motif -no-style-cde -qt-style-windowsxp -qt-style-windowsvista -no-xmlpatterns -nomake demos -nomake examples -platform win32-g++ -mmx -sse -sse2 -3dnow -I %CMAKE_INCLUDE_PATH% -L %CMAKE_LIBRARY_PATH% %LeakFlags%
+configure -confirm-license -opensource -%BuildType% -system-zlib -no-stl -no-qt3support -no-phonon -no-webkit -no-multimedia -no-declarative -no-style-cleanlooks -no-style-plastique -no-style-motif -no-style-cde -qt-style-windowsxp -qt-style-windowsvista -no-xmlpatterns -nomake demos -nomake examples -platform win32-g++ -mmx -sse -sse2 -3dnow -I %CMAKE_INCLUDE_PATH:;= -I % -L %CMAKE_LIBRARY_PATH:;= -L % %LeakFlags%
 
 if errorlevel 1 goto end
 echo.

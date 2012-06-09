@@ -14,7 +14,7 @@
  QMAKE_LINK		= g++
  QMAKE_LINK_C		= gcc
 -QMAKE_LFLAGS		=
-+QMAKE_LFLAGS		= -m32 -shared-libgcc -shared-libstdc++
++QMAKE_LFLAGS		= -m32 -shared-libgcc
  QMAKE_LFLAGS_EXCEPTIONS_ON = -mthreads
  QMAKE_LFLAGS_EXCEPTIONS_OFF =
  QMAKE_LFLAGS_RELEASE	= -Wl,-s
