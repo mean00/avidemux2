@@ -14,9 +14,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef _WIN32
+#	include <winsock2.h>
+#endif
+
 #include "ADM_default.h"
 #include "ADM_coreCommandSocket.h"
-
 
 static bool     uint32_to_char(uint32_t v,uint8_t *p)
  {

@@ -1,6 +1,9 @@
 #if defined(_WIN32) && !defined ADM_CRASHDUMP_MSWIN_H
 #define ADM_CRASHDUMP_MSWIN_H
 
+#include <windows.h>
+#include <excpt.h>
+
 #if defined(_WIN64)
 LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
 #define installSigHandler() SetUnhandledExceptionFilter(ExceptionFilter)

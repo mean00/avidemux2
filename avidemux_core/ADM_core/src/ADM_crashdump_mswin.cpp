@@ -14,8 +14,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_crashdump.h"
 #include <stdio.h>
-#include <windows.h>
 #include <imagehlp.h>
 #include <cxxabi.h>
 
