@@ -3,7 +3,7 @@
     \file Q_mainfilter.cpp
     \brief UI for filters
     \author mean, fixount@free.fr 2007/2009
-    
+
     * We hide some info the the "type"
     * I.e.
     0--1000 : QT4 internal
@@ -12,8 +12,8 @@
                  ** 10 Categories MAX !!
     3000-4000  filterFamilyClick Filter
     8000-9000  Active Filter
-    
-    
+
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -36,6 +36,7 @@ using std::string;
 #include "DIA_coreToolkit.h"
 #include "ADM_edit.hxx"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_coreVideoFilterFunc.h"
 #include "ADM_filterCategory.h"
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
@@ -57,9 +58,11 @@ static int max=0;
 
 /*******************************************************/
 
+extern ADM_Composer *video_body;
+
 FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) {}
 
-bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event) 
+bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
 {
 	QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
 
@@ -121,12 +124,12 @@ void filtermainWindow::preview(bool b)
       printf("No selection\n");
       return;
    }
-    
+
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-     ADM_info("Rank : %d\n",itag); 
+     ADM_info("Rank : %d\n",itag);
      ADM_coreVideoFilter     *filter=ADM_vf_getInstance(itag);
      ADM_assert(filter);
 	if (previewDialog)
@@ -146,7 +149,7 @@ void filtermainWindow::preview(bool b)
 void filtermainWindow::closePreview()
 {
 	if (previewDialog)
-	{		
+	{
 		delete previewDialog;
 		previewDialog = NULL;
 	}
@@ -177,7 +180,7 @@ void filtermainWindow::add( bool b)
 
      if(itag<ALL_FILTER_BASE || itag >= ALL_FILTER_BASE+(VF_MAX*100))
      {
-            ADM_assert(0); 
+            ADM_assert(0);
      }
      // Extract family & index
      itag-=ALL_FILTER_BASE;
@@ -188,12 +191,12 @@ void filtermainWindow::add( bool b)
      tag=index; //filterCategories[family][index]->tag;
      ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
 
-     if(true==ADM_vf_addFilterFromTag(itag,NULL,true))
+     if(true==ADM_vf_addFilterFromTag(video_body, itag,NULL,true))
         {
             buildActiveFilterList();
             setSelected(nb_active_filter-1);
         }
-     
+
    }
 
 }
@@ -211,7 +214,7 @@ void filtermainWindow::remove( bool b)
       ADM_warning("No selection\n");
       return;
    }
-     
+
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
@@ -254,13 +257,13 @@ void filtermainWindow::configure( bool b)
       ADM_warning("No selection\n");
       return;
    }
-    
+
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-     ADM_info("Rank : %d\n",itag); 
-   
+     ADM_info("Rank : %d\n",itag);
+
    //   ADM_assert(itag);
      /**/
         ADM_vf_configureFilterAtIndex(itag);
@@ -279,12 +282,12 @@ void filtermainWindow::up( bool b)
       ADM_warning("No selection\n");
       return;
    }
-    
+
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
-      ADM_info("Rank : %d\n",itag); 
-     
+      ADM_info("Rank : %d\n",itag);
+
         if (!itag ) return;
         ADM_vf_moveFilterUp(itag);
         buildActiveFilterList ();
@@ -302,14 +305,14 @@ void filtermainWindow::down( bool b)
       ADM_warning("No selection\n");
       return;
    }
-    
+
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-      ADM_info("Rank : %d\n",itag); 
+      ADM_info("Rank : %d\n",itag);
      //ADM_assert(itag);
-     
+
     if (((int) itag < (int) (nb_active_filter - 1)))
         {
             ADM_vf_moveFilterDown(itag);
@@ -319,7 +322,7 @@ void filtermainWindow::down( bool b)
 }
 /**
         \fn     filtermainWindow::filterFamilyClick( QListWidgetItem  *item)
-        \brief  Select family among color etc... 
+        \brief  Select family among color etc...
 */
 
 void filtermainWindow::filterFamilyClick(QListWidgetItem *item)
@@ -340,9 +343,9 @@ void filtermainWindow::filterFamilyClick(int  m)
 void filtermainWindow::displayFamily(uint32_t family)
 {
 
-  
+
   ADM_assert(family<VF_MAX);
- 
+
   uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
     ADM_info("Video filter Family :%u, nb %d\n",family,nb);
   QSize sz;
@@ -353,7 +356,7 @@ void filtermainWindow::displayFamily(uint32_t family)
         uint32_t major,minor,patch;
           ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
           QString str = QString("<b>") + name + QString("</b><br>\n<small>") + desc + QString("</small>");
-         
+
           QListWidgetItem *item;
           item=new QListWidgetItem(str,availableList,ALL_FILTER_BASE+i+family*100);
           item->setToolTip(desc);
@@ -370,7 +373,7 @@ void filtermainWindow::displayFamily(uint32_t family)
 */
 void filtermainWindow::activeDoubleClick( QListWidgetItem  *item)
 {
-  
+
     configure(0);
 }
 /**
@@ -379,7 +382,7 @@ void filtermainWindow::activeDoubleClick( QListWidgetItem  *item)
 */
 void filtermainWindow::allDoubleClick( QListWidgetItem  *item)
 {
-  
+
     add(0);
 }
 /**
@@ -389,21 +392,21 @@ void filtermainWindow::allDoubleClick( QListWidgetItem  *item)
 void filtermainWindow::partial( bool b)
 {
 #if 0
-  printf("partial\n"); 
+  printf("partial\n");
    QListWidgetItem *item=activeList->currentItem();
    if(!item)
    {
       printf("No selection\n");
       return;
    }
-    
+
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
      itag-=ACTIVE_FILTER_BASE;
      /* Filter 0 is the decoder ...*/
-      ADM_info("Rank : %d\n",itag); 
+      ADM_info("Rank : %d\n",itag);
       //ADM_assert(itag);
-     
+
         AVDMGenericVideoStream *replace;
         CONFcouple *conf;
         conf = videofilters[itag].conf;
@@ -417,7 +420,7 @@ void filtermainWindow::partial( bool b)
                                       filter,
                                       videofilters[itag].tag,
                                       conf);
-        
+
         if(replace->configure (videofilters[itag - 1].filter))
         {
             delete videofilters[itag].filter;
@@ -435,11 +438,11 @@ void filtermainWindow::partial( bool b)
 }
 /**
         \fn setup
-        \brief Prepare 
+        \brief Prepare
 */
 void filtermainWindow::setupFilters(void)
 {
-  
+
 }
 
 /**
@@ -458,7 +461,7 @@ void filtermainWindow::buildActiveFilterList(void)
             const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
             const char *conf=instance->getConfiguration();
             printf("%d %s\n",i,name);
-#if 0            
+#if 0
 		const char *name = instance->;
 		const char *conf = videofilters[i].filter->printConf ();
 		int namelen = strlen (name);
@@ -483,10 +486,10 @@ void filtermainWindow::buildActiveFilterList(void)
   */
 filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
  {
-        
+
     ui.setupUi(this);
-    setupFilters();  
-      
+    setupFilters();
+
     availableList=ui.listWidgetAvailable;
     activeList=ui.listWidgetActive;
     connect(ui.listFilterCategory,SIGNAL(itemDoubleClicked(QListWidgetItem *)),
@@ -496,7 +499,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     connect(activeList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(activeDoubleClick(QListWidgetItem *)));
     connect(availableList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(allDoubleClick(QListWidgetItem *)));
-    
+
     connect((ui.toolButtonConfigure),SIGNAL(clicked(bool)),this,SLOT(configure(bool)));
     connect((ui.toolButtonAdd),SIGNAL(clicked(bool)),this,SLOT(add(bool)));
     connect((ui.pushButtonRemove),SIGNAL(clicked(bool)),this,SLOT(remove(bool)));
@@ -571,10 +574,10 @@ int GUI_handleVFilter(void)
 
 	return 0;
 }
-/** 
+/**
     \fn partialCb
     \brief Partial callback to configure the swallowed filter
-    
+
 */
 static void partialCb(void *cookie);
 void partialCb(void *cookie)
@@ -586,10 +589,10 @@ void partialCb(void *cookie)
   son->configure(previous);
 #endif
 }
-/** 
+/**
     \fn DIA_getPartial
     \brief Partial dialog
-    
+
 */
 #if 0
 uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous)
@@ -599,15 +602,15 @@ uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGen
   void *params[2]={son,previous};
          uint32_t fmax=previous->getInfo()->nb_frames;
          if(fmax) fmax--;
-         
+
          diaElemUInteger  start(PX(_start),QT_TR_NOOP("Partial Start Frame:"),0,fmax);
          diaElemUInteger  end(PX(_end),QT_TR_NOOP("Partial End Frame:"),0,fmax);
          diaElemButton    button(QT_TR_NOOP("Configure child"), partialCb,params);
-         
+
          diaElem *tabs[]={&start,&end,&button};
         return diaFactoryRun(QT_TR_NOOP("Partial Video Filter"),3,tabs);
 
-    
+
 }
 #endif
 

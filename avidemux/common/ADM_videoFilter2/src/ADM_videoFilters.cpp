@@ -19,10 +19,11 @@
 #include "ADM_videoFilterBridge.h"
 #include "ADM_filterChain.h"
 #include "ADM_filterThread.h"
-static ADM_coreVideoFilter *bridge=NULL;
-extern ADM_Composer* video_body;
+#include "ADM_coreVideoFilterFunc.h"
 
-BVector <ADM_VideoFilterElement> ADM_VideoFilters;
+extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
+extern ADM_coreVideoFilter *bridge;
+extern ADM_Composer *video_body;
 
 /**
     \fn ADM_vf_getSize
@@ -50,94 +51,7 @@ uint32_t                ADM_vf_getTag(int index)
     ADM_assert(index<ADM_vf_getSize());
     return ADM_VideoFilters[index].tag;
 }
-/**
-    \fn getLastVideoFilter
-*/
-static ADM_coreVideoFilter *getLastVideoFilter(void)
-{
-ADM_coreVideoFilter *last=NULL;
-   if(!ADM_vf_getSize())
-    {
-        if(!bridge)
-        {
-            bridge=new ADM_videoFilterBridge(video_body, 0,-1LL);
-        }
-        last=bridge;
-    }
-    else
-        last=ADM_VideoFilters[ADM_vf_getSize()-1].instance;
-    return last;
-}
-/**
-        \fn ADM_vf_addFilterFromTag
-        \brief Add a new video filter (identified by tag) at the end of the activate filter list
-*/
-bool                    ADM_vf_addFilterFromTag(uint32_t tag,CONFcouple *c,bool configure)
-{
-    ADM_info("Creating video filter using tag %"LU" \n",tag);
-    // Fetch the descriptor...
 
-    ADM_coreVideoFilter *last=getLastVideoFilter();
-
-    ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,last,c);
-    if(true==configure)
-        if(nw->configure()==false)
-        {
-            delete nw;
-            return false;
-        }
-    ADM_VideoFilterElement e;
-    e.tag=tag;
-    e.instance=nw;
-    ADM_VideoFilters.append(e);
-    return true;
-}
-/**
-    \fn ADM_vf_recreateChain
-    \brief Rebuild the whole filterchain
-*/
-static bool ADM_vf_recreateChain(void)
-{
-    ADM_assert(bridge);
-    ADM_coreVideoFilter *f=bridge;
-
-    BVector <ADM_coreVideoFilter *> bin;
-    for(int i=0;i<ADM_VideoFilters.size();i++)
-    {
-            // Get configuration
-            CONFcouple *c;
-            ADM_coreVideoFilter *old=ADM_VideoFilters[i].instance;
-            uint32_t tag=ADM_VideoFilters[i].tag;
-            old->getCoupledConf(&c);
-            ADM_coreVideoFilter *nw=ADM_vf_createFromTag(tag,f,c);
-            ADM_VideoFilters[i].instance=nw;
-            bin.append(old);
-            if(c) delete c;
-            f=nw;
-    }
-    // Now delete bin
-    for(int i=0;i<bin.size();i++)
-    {
-        delete bin[i];
-    }
-    bin.clear();
-    return true;
-}
-/**
-    \fn ADM_vf_removeFilterAtIndex
-
-*/
-bool ADM_vf_removeFilterAtIndex(int index)
-{
-    ADM_info("Deleting video filter at index %d\n",index);
-    //
-    ADM_assert(index<ADM_vf_getSize());
-    // last filter, destroy..
-    ADM_VideoFilterElement *e=&(ADM_VideoFilters[index]);
-    delete e->instance;
-    ADM_VideoFilters.removeAt(index);
-    return ADM_vf_recreateChain();
-}
 /**
     \fn ADM_vf_configureFilterAtIndex
 */
@@ -188,20 +102,6 @@ bool ADM_vf_moveFilterDown(int index)
     ADM_VideoFilters[top]=ADM_VideoFilters[top+1];
     ADM_VideoFilters[top+1]=scratch;
     return ADM_vf_recreateChain();
-}
-
-/**
-    \fn ADM_vf_clearFilters
-*/
-bool ADM_vf_clearFilters(void)
-{
-    ADM_info("clear filters\n");
-    //
-    int nb=ADM_VideoFilters.size();
-    for(int i=0;i<nb;i++)
-        delete ADM_VideoFilters[i].instance;
-    ADM_VideoFilters.clear();
-    return true;
 }
 
 /**

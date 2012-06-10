@@ -16,15 +16,7 @@
 #ifndef ADM_VIDEO_FILTERS_H
 #define ADM_VIDEO_FILTERS_H
 #include "BVector.h"
-class ADM_coreVideoFilter;
-/**
-    \struct ADM_VideoFilterElment
-*/
-typedef struct
-{
-    uint32_t            tag; // Temporary filter tag
-    ADM_coreVideoFilter *instance;
-}ADM_VideoFilterElement;
+#include "ADM_coreVideoFilter.h"
 
 extern BVector<ADM_VideoFilterElement> ADM_VideoFilters;
 
@@ -34,7 +26,6 @@ ADM_coreVideoFilter     *ADM_vf_getInstance(int index);
 uint32_t                ADM_vf_getTag(int index);
 bool                    ADM_vf_getConfigurationFromIndex(int index,CONFcouple **c);
 
-bool                    ADM_vf_addFilterFromTag(uint32_t tag,CONFcouple *c,bool runConfigure);
 bool                    ADM_vf_removeFilterAtIndex(int index);
 bool                    ADM_vf_configureFilterAtIndex(int index);
 bool                    ADM_vf_moveFilterDown(int index);

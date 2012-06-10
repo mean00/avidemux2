@@ -47,6 +47,7 @@
 #include "ADM_videoEncoderApi.h"
 #include "ADM_videoFilterApi.h"
 #include "ADM_edAudioTrackExternal.h"
+#include "ADM_coreVideoFilterFunc.h"
 
 #if 0
 /**
@@ -92,7 +93,7 @@ int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 
 	printf("Adding Filter %s -> %"LU"... \n", filter, filterTag);
 
-	bool r = ADM_vf_addFilterFromTag(filterTag, c, false);
+	bool r = ADM_vf_addFilterFromTag(this, filterTag, c, false);
 
 	if (c)
 	{

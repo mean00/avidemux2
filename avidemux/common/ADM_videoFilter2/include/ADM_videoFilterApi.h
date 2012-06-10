@@ -25,7 +25,6 @@ uint32_t    ADM_vf_getNbFiltersInCategory(VF_CATEGORY cat);
 bool        ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const char **desc, uint32_t *major,uint32_t *minor,uint32_t *patch);
 const char *ADM_vf_getDisplayNameFromTag(uint32_t tag);
 const char *ADM_vf_getInternalNameFromTag(uint32_t tag);
-ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag,ADM_coreVideoFilter *last,CONFcouple *couples);
 
 uint32_t    ADM_vf_getTagFromInternalName(const char *name);
 bool        ADM_vf_addFilter(uint32_t tag,CONFcouple *couples);

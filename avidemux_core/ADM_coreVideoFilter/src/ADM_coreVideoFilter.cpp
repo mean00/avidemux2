@@ -29,7 +29,12 @@ if needed.
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "ADM_coreVideoFilter.h"
+#include "BVector.h"
+#include "ADM_coreVideoFilterInternal.h"
+
+BVector <ADM_VideoFilterElement> ADM_VideoFilters;
+BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
+
 /**
     \fn ADM_coreVideoFilter
 
@@ -53,7 +58,7 @@ if needed.
 const char        *ADM_coreVideoFilter::getConfiguration(void)
 {
     return "base";
-}  
+}
 /**
     \fn getNextFrameAs
 */
@@ -129,7 +134,7 @@ int PutHintingData(uint8_t *video, unsigned int hint)
 	p = video;
 	for (i = 0; i < 32; i++)
 	{
-		*p &= ~1; 
+		*p &= ~1;
 		*p++ |= ((magic_number & (1 << i)) >> i);
 	}
 	for (i = 0; i < 32; i++)
@@ -165,4 +170,5 @@ int GetHintingData(uint8_t *video, unsigned int *hint)
 	}
 	return error;
 }
+
 // EOF

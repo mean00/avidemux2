@@ -1,6 +1,7 @@
 SET(ADM_CoreVideoFilter_SRCS
     ADM_videoFilterBridge.cpp
 	ADM_coreVideoFilter.cpp
+	ADM_coreVideoFilterFunc.cpp
         DIA_flyDialog.cpp
         ADM_videoFilterCache.cpp
 )

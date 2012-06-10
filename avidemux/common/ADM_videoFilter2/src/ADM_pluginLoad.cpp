@@ -15,9 +15,10 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilterFunc.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_videoFilterApi.h"
-#include <BVector.h>
+#include "BVector.h"
 
 #if 1
 #define aprintf printf
@@ -26,56 +27,23 @@
 #endif
 static uint32_t lastTag=100;
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
-/**
-    \struct admVideoFilterInfo
-*/
-typedef struct  
+extern BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
+
+ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
-        const char                  *internalName;
-        const char                  *displayName;
-        const char                  *desc;
-        VF_CATEGORY                 category;   
-}admVideoFilterInfo;
-
-/**
- *  \class ADM_vf_plugin
- *  \brief Base class for video filter loader
- */
-class ADM_vf_plugin : public ADM_LibWrapper
-{
-	public:
-		ADM_vf_CreateFunction		*create;
-		ADM_vf_DeleteFunction		*destroy;
-		ADM_vf_SupportedUI		    *supportedUI;
-        
-		ADM_vf_GetApiVersion		*getApiVersion;
-		ADM_vf_GetPluginVersion	    *getFilterVersion;
-		ADM_vf_GetString    	    *getDesc;
-        ADM_vf_GetString    	    *getInternalName;
-        ADM_vf_GetString    	    *getDisplayName;
-        ADM_vf_getCategory          *getCategory;
-
-        const char 					*nameOfLibrary;
-	    VF_FILTERS                  tag;
-        admVideoFilterInfo          info;
-
-		ADM_vf_plugin(const char *file) : ADM_LibWrapper()
-		{
-			initialised = (loadLibrary(file) && getSymbols(9,
-				&create, "create",
-				&destroy, "destroy",
-				&getApiVersion, "getApiVersion",
-				&supportedUI, "supportedUI",
-				&getFilterVersion, "getFilterVersion",
-				&getDesc, "getDesc",
-				&getInternalName, "getInternalName",
-				&getDisplayName, "getDisplayName",
-                &getCategory,"getCategory"
-                ));
-		};
+	initialised = (loadLibrary(file) && getSymbols(9,
+		&create, "create",
+		&destroy, "destroy",
+		&getApiVersion, "getApiVersion",
+		&supportedUI, "supportedUI",
+		&getFilterVersion, "getFilterVersion",
+		&getDesc, "getDesc",
+		&getInternalName, "getInternalName",
+		&getDisplayName, "getDisplayName",
+        &getCategory,"getCategory"
+        ));
 };
 
-BVector<ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 
 /**
     \fn sortVideoCategoryByName
@@ -88,7 +56,7 @@ static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list,const int ca
     {
          ADM_vf_plugin *left=list[i];
          ADM_vf_plugin *right=list[i+1];
-     
+
         const char       *    leftName=left->getDisplayName();
         const char       *    rightName=right->getDisplayName();
         if(strcasecmp(leftName,rightName)>0)
@@ -115,7 +83,7 @@ static bool sortVideoFiltersByName(void)
         sortVideoCategoryByName(ADM_videoFilterPluginsList[i],i);
     }
     return true;
-    
+
 }
 
 /**
@@ -166,13 +134,13 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
     {
         ADM_error("This filter has an unknown caregory!\n");
         goto Err_ad;
-    
-    }else   
+
+    }else
     {
         plugin->tag=ADM_videoFilterPluginsList[info->category].size()+info->category*100;
         ADM_videoFilterPluginsList[info->category].append(plugin);
     }
-    
+
 	return 1;
 
 Err_ad:
@@ -275,30 +243,10 @@ bool ADM_vf_cleanup(void)
     }
     return true;
 }
+
 /**
     \fn ADM_vf_getPluginFromTag
-    \brief 
-*/
-static ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag)
-{
-    for(int cat=0;cat<VF_MAX;cat++)
-    {
-        int nb=ADM_videoFilterPluginsList[cat].size();
-        for(int i=0;i<nb;i++)
-        {
-            if(ADM_videoFilterPluginsList[cat][i]->tag==tag)
-            {
-                return ADM_videoFilterPluginsList[cat][i];
-            }
-        }
-    }
-    ADM_error("Cannot get video filter from tag %"LU"\n",tag);
-    ADM_assert(0);
-    return NULL;
-}
-/**
-    \fn ADM_vf_getPluginFromTag
-    \brief 
+    \brief
 */
 static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
 {
@@ -334,15 +282,7 @@ VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
     ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
     return plugin->info.category;
 }
-/**
-    \fn ADM_vf_createFromTag
-    \brief Create a new filter from its tag
-*/
-ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag,ADM_coreVideoFilter *last,CONFcouple *couples)
-{
-     ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-     return plugin->create(last,couples);
-}
+
 /**
     \fn ADM_vf_getNameFromTag
     \brief return the uniq name of a filter from the tag , which can vary from one run to another
@@ -354,7 +294,7 @@ const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
 }
 /**
     \fn ADM_vf_getTagFromInternalName
-    \brief 
+    \brief
 */
 uint32_t    ADM_vf_getTagFromInternalName(const char *name)
 {

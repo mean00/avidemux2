@@ -19,6 +19,17 @@
 #include "ADM_confCouple.h"
 #include "ADM_image.h"
 #include "ADM_videoFilterCache.h"
+
+/**
+    \struct ADM_VideoFilterElement
+*/
+typedef struct
+{
+    uint32_t            tag; // Temporary filter tag
+    ADM_coreVideoFilter *instance;
+    int objectId;
+}ADM_VideoFilterElement;
+
 /**
     \struct FilterInfo
     \brief Describes the video stream at this point in the filter chain
