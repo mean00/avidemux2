@@ -50,7 +50,7 @@ bool ActiveAudioTracks::dump()
         {
             case   ADM_EDAUDIO_FROM_VIDEO: ADM_info("\t from video\n");break;
             case   ADM_EDAUDIO_EXTERNAL:   ADM_info("\t from external file\n");break;
-            default : ADM_info("\t???\n");break; 
+            default : ADM_info("\t???\n");break;
         }
     }
     return true;
@@ -97,4 +97,27 @@ bool ActiveAudioTracks::clear()
 
 	tracks.clear();
 	return true;
+}
+
+bool ActiveAudioTracks::insertTrack(int index, int poolIndex, ADM_edAudioTrack *x)
+{
+	if (!x)
+	{
+		ADM_warning("Cannot add track to active track! \n");
+		return false;
+	}
+
+	EditableAudioTrack *e = new EditableAudioTrack;
+
+	e->poolIndex = poolIndex;
+	e->edTrack = x;
+	tracks.insert(index, e);
+
+	return true;
+}
+
+void ActiveAudioTracks::removeTrack(int activeIndex)
+{
+	delete tracks[activeIndex];
+	tracks.removeAt(activeIndex);
 }

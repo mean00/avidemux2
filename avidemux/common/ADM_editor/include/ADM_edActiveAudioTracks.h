@@ -27,14 +27,16 @@ protected:
 
 public:
 	ActiveAudioTracks();
-	~ActiveAudioTracks();
-	int size() const;
-	EditableAudioTrack *atEditable(int ix);
-	ADM_edAudioTrack *atEdAudio(int ix);
-	bool addTrack(EditableAudioTrack *x);
-	bool addTrack(int poolIndex,ADM_edAudioTrack *x);
-	bool clear();
-    bool dump();
+	virtual ~ActiveAudioTracks();
+	virtual int size() const;
+	virtual EditableAudioTrack *atEditable(int ix);
+	virtual ADM_edAudioTrack *atEdAudio(int ix);
+	virtual bool addTrack(EditableAudioTrack *x);
+	virtual bool addTrack(int poolIndex,ADM_edAudioTrack *x);
+	virtual bool clear();
+    virtual bool dump();
+    virtual bool insertTrack(int index, int poolIndex, ADM_edAudioTrack *x);
+    virtual void removeTrack(int removeTrack);
 };
 
 #endif
