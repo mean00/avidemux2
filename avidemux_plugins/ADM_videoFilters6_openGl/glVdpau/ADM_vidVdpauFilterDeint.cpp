@@ -297,6 +297,11 @@ bool         vdpauVideoFilterDeint::getCoupledConf(CONFcouple **couples)
 {
    return ADM_paramSave(couples, vdpauFilterDeint_param,&configuration);
 }
+
+void vdpauVideoFilterDeint::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, vdpauFilterDeint_param, &configuration);
+}
 /**
     \fn getConfiguration
     \brief Return current setting as a string

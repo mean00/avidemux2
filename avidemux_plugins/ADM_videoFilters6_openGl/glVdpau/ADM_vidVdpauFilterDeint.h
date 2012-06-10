@@ -49,6 +49,7 @@ public:
         virtual const char   *getConfiguration(void) {return "none";};                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) {return true;}             /// Start graphical user interface
 
         bool                 surfaceToImage(VdpOutputSurface surf,ADMImage *image); /// VDPAU->openGL

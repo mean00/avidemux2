@@ -54,6 +54,7 @@ public:
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+		virtual void setCoupledConf(CONFcouple *couples);
                 bool         configure( void) ;
 };
 
@@ -158,6 +159,11 @@ bool openGlResize::getNextFrame(uint32_t *fn,ADMImage *image)
 bool         openGlResize::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, gl_resize_param,&configuration);
+}
+
+void openGlResize::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, gl_resize_param, &configuration);
 }
 /**
     \fn getConfiguration
