@@ -1,5 +1,4 @@
-SET(ADM_internalVideoFilter_SRCS 
-	ADM_videoFilterBridge.cpp
+SET(ADM_internalVideoFilter_SRCS
         ADM_pluginLoad.cpp
         ADM_videoFilters.cpp
         ADM_filterThread.cpp

@@ -19,6 +19,8 @@
 #define ADM_VIDEO_FILTER_BRIDGE_H
 
 #include "ADM_coreVideoFilter.h"
+#include "ADM_editor/include/IEditor.h"
+
 /**
     \class ADM_videoFilterBridge
     \brief Class that transform Editor API to coreVideoFilter API
@@ -31,17 +33,18 @@ protected:
         FilterInfo          bridgeInfo;
         bool                firstImage;
         uint32_t            lastSentImage;
-        bool                getNextFrameBase(uint32_t *frameNumber,ADMImage *image);      
+        bool                getNextFrameBase(uint32_t *frameNumber,ADMImage *image);
+        IEditor*            editor;
 public:
-                            ADM_videoFilterBridge(uint64_t startTime, uint64_t endTime);
+                            ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime);
        virtual             ~ADM_videoFilterBridge();
-       virtual bool         goToTime(uint64_t usSeek);  
-       virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);      
+       virtual bool         goToTime(uint64_t usSeek);
+       virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);
                bool         getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image);
        virtual FilterInfo  *getInfo(void);                                      /// Return picture parameters after this filter
        virtual bool         getCoupledConf(CONFcouple **couples) {*couples=NULL;return true;} ; /// Return the current filter configuration
-	   virtual void         setCoupledConf(CONFcouple *couples) {}
-       virtual uint64_t     getAbsoluteStartTime(void)  
+       virtual void         setCoupledConf(CONFcouple *couples) {}
+       virtual uint64_t     getAbsoluteStartTime(void)
                             {
                                     return startTime;
                             }

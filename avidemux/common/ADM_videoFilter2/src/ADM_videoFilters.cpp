@@ -13,12 +13,14 @@
  ***************************************************************************/
 #include "BVector.h"
 #include "ADM_default.h"
+#include "ADM_edit.hxx"
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterBridge.h"
 #include "ADM_filterChain.h"
 #include "ADM_filterThread.h"
 static ADM_coreVideoFilter *bridge=NULL;
+extern ADM_Composer* video_body;
 
 BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 
@@ -58,7 +60,7 @@ ADM_coreVideoFilter *last=NULL;
     {
         if(!bridge)
         {
-            bridge=new ADM_videoFilterBridge(0,-1LL);
+            bridge=new ADM_videoFilterBridge(video_body, 0,-1LL);
         }
         last=bridge;
     }
@@ -210,7 +212,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
 {
     ADM_videoFilterChain *chain=new ADM_videoFilterChain;
     // 1- Add bridge always # 1
-    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(startAt,endAt);
+    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(video_body, startAt,endAt);
     chain->push_back(bridge);
     ADM_coreVideoFilter *f=bridge;
     // Now create a clone of the videoFilterChain we have here
@@ -257,7 +259,7 @@ ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endA
 {
     ADM_videoFilterChain *chain=new ADM_videoFilterChain;
     // 1- Add bridge always # 1
-    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(startAt,endAt);
+    ADM_videoFilterBridge *bridge=new ADM_videoFilterBridge(video_body, startAt,endAt);
     chain->push_back(bridge);
     // Last create the thread
 #if 1
