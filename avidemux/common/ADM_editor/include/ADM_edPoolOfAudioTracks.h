@@ -11,12 +11,12 @@ protected:
 
 public:
 	PoolOfAudioTracks();
-	~PoolOfAudioTracks();
-	int size() const;
-	ADM_edAudioTrack *at(int ix);
-	bool addInternalTrack(ADM_edAudioTrack *x);
-	bool clear();
-	bool dump(void);
+	virtual ~PoolOfAudioTracks();
+	virtual int size() const;
+	virtual ADM_edAudioTrack *at(int ix);
+	virtual bool addInternalTrack(ADM_edAudioTrack *x);
+	virtual bool clear();
+	virtual bool dump(void);
 };
 
 #endif
