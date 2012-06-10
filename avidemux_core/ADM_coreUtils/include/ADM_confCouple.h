@@ -50,6 +50,7 @@ static      CONFcouple *duplicate(CONFcouple *source);
 
 			uint32_t getSize(void) { return nb;};
 
+			void	updateValue(int index, const char *val);
             bool     setInternalName(const char *name, const char *key);
 			bool     getInternalName(uint32_t n, char **nm, char **val);
 			void dump(void );

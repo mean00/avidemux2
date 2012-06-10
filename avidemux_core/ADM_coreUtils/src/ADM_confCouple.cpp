@@ -103,7 +103,7 @@ bool CONFcouple::writeAsBool(const char *myname,bool v)
 	name[cur]=ADM_strdup(myname);
     if(v==true) value[cur]=ADM_strdup("True");
         else value[cur]=ADM_strdup("False");
-	
+
 	cur++;
 	return 1;
 }
@@ -201,6 +201,15 @@ void CONFcouple::dump(void )
 	}
 }
 
+void CONFcouple::updateValue(int index, const char *val)
+{
+	ADM_assert(index < nb);
+
+	delete value[index];
+
+	value[index] = ADM_strdup(val);
+}
+
  bool     CONFcouple::setInternalName(const char *nm, const char *val)
 {
    ADM_assert(cur<nb);
@@ -211,8 +220,8 @@ void CONFcouple::dump(void )
 	return 1;
 }
 bool  CONFcouple::getInternalName(uint32_t n, char **nm, char **val)
-{ 
-    assert(n<nb); 
+{
+    assert(n<nb);
     *nm=name[n];
     *val=value[n];
     return true;
@@ -231,7 +240,7 @@ bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv)
   *conf=c;
     for(int i=0;i<nb;i++)
     {
-        
+
         char *dupe=   ADM_strdup(argv[i]);
         char *name,*value;
         // dupe is in the form name=value
@@ -240,7 +249,7 @@ bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv)
         char *tail=dupe+strlen(dupe);
         while(value<tail)
         {
-            if(*value=='=') 
+            if(*value=='=')
                 {
                     *value=0;
                     value++;
