@@ -31,6 +31,7 @@ public:
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) {return true;}             /// Start graphical user interface
 };
 
@@ -107,6 +108,11 @@ bool         lumaOnlyFilter::getCoupledConf(CONFcouple **couples)
     *couples=new CONFcouple(0); // Even if we dont have configuration we must allocate one 
     return true;
 }
+
+void lumaOnlyFilter::setCoupledConf(CONFcouple *couples)
+{
+}
+
 /**
     \fn getConfiguration
     \brief Return current setting as a string

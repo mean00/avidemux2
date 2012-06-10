@@ -69,6 +69,11 @@ bool         ADMVideoChromaShift::getCoupledConf(CONFcouple **couples)
     return ADM_paramSave(couples, chromashift_param,&_param);
 }
 
+void ADMVideoChromaShift::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, chromashift_param, &_param);
+}
+
 /**
     \fn
     \brief

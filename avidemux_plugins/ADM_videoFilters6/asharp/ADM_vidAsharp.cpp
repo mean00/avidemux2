@@ -1,12 +1,12 @@
 /**/
 /***************************************************************************
                           ADM_vidASharp  -  description
-                             -------------------   
+                             -------------------
     Port of avisynth one
 
  ***************************************************************************/
 /*
-        
+
         Copyright (C) 2003 Donald A. Graft
         Copyright (C) 2002 Marc Fauconneau
         This program is free software; you can redistribute it and/or modify
@@ -36,20 +36,21 @@
 class ASharp : public ADM_coreVideoFilter
 {
 private:
-        
-        
+
+
         asharp          _param;
         int32_t         T,D,B,B2;
-        
-public:    
+
+public:
                         ASharp(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
                         ~ASharp();
 
-               void         update(void); 
+               void         update(void);
        virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-       virtual bool         configure(void) ;                 /// Start graphical user interface        
+	   virtual void setCoupledConf(CONFcouple *couples);
+       virtual bool         configure(void) ;                 /// Start graphical user interface
 };
 
 
@@ -65,10 +66,10 @@ DECLARE_VIDEO_FILTER(   ASharp,   // Class
                     );
 
 void asharp_run_c(      uc* planeptr, int pitch,
-                                        int height, int width, 
+                                        int height, int width,
                                         int     T,int D, int B, int B2, bool bf );
 /**
-    \fn ASharp 
+    \fn ASharp
     \brief ctor
 */
 ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilter(in,couples)
@@ -82,19 +83,19 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
             _param.bf=false;
         }
         update();
-        
+
 }
 /**
-    \fn dtor 
+    \fn dtor
     \brief recompute parameters
 */
 
 ASharp::~ASharp(void)
 {
-        
+
 }
 /**
-    \fn update 
+    \fn update
     \brief recompute parameters
 */
 
@@ -128,6 +129,11 @@ bool         ASharp::getCoupledConf(CONFcouple **couples)
     return ADM_paramSave(couples, asharp_param,&_param);
 }
 
+void ASharp::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, asharp_param, &_param);
+}
+
 extern uint8_t DIA_getASharp(asharp *param, ADM_coreVideoFilter *in);
 
 /**
@@ -150,12 +156,12 @@ uint8_t r=0;
 /**
     \fn getConfiguration
 */
-const char   *ASharp::getConfiguration(void)   
+const char   *ASharp::getConfiguration(void)
 {
     static char s[256];
     snprintf(s,255,"Asharp by MarcFd");
     return s;
-        
+
 }
 /**
     \fn getNextFrame
@@ -165,11 +171,11 @@ const char   *ASharp::getConfiguration(void)
 ADMImage *dst;
 
         dst=image;
-        
+
         if(!previousFilter->getNextFrame(fn,dst)) return false;
 
         asharp_run_c(   dst->GetWritePtr(PLANAR_Y),
-                        dst->GetPitch(PLANAR_Y), 
+                        dst->GetPitch(PLANAR_Y),
                         info.height,
                         info.width,
                         T,
@@ -184,7 +190,7 @@ ADMImage *dst;
     \fn asharp_run_c
 */
 void asharp_run_c(      uc* planeptr, int pitch,
-                                        int height, int width, 
+                                        int height, int width,
                                         int     T,int D, int B, int B2, bool bf )
         {
                 uc* lineptr = new uc[width];
@@ -218,7 +224,7 @@ void asharp_run_c(      uc* planeptr, int pitch,
 
                                 #define CHECK(A) \
                                 if (abs(A-cfp[x])>dev) dev = abs(A-cfp[x]);
-                                
+
                                 if (bf) {
 
                                 if (y%8>0) {
@@ -276,5 +282,5 @@ void asharp_run_c(      uc* planeptr, int pitch,
                         cfp += pitch;
                 }
         delete[] lineptr;
-} 
+}
 //**********************************

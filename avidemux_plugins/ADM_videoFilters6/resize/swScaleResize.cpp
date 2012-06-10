@@ -67,6 +67,7 @@ public:
        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
        virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
 	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+	   virtual void setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;             /// Start graphical user interface
 };
 
@@ -146,6 +147,12 @@ bool         swScaleResizeFilter::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, swresize_param,&configuration);
 }
+
+void swScaleResizeFilter::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, swresize_param, &configuration);
+}
+
 /**
     \fn getConfiguration
     \brief Return current setting as a string

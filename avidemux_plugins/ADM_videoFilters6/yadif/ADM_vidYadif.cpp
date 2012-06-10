@@ -64,6 +64,7 @@ public:
         virtual const char   *getConfiguration(void);                 /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);           /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;                        /// Start graphical user interface
 };
 
@@ -158,6 +159,12 @@ bool         yadifFilter::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, yadif_param,&configuration);
 }
+
+void yadifFilter::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, yadif_param, &configuration);
+}
+
 /**
     \fn getConfiguration
     \brief Return current setting as a string

@@ -44,6 +44,7 @@
                     virtual const char   *getConfiguration(void); 
                     virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
                     virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+					virtual void setCoupledConf(CONFcouple *couples);
                     virtual bool         configure(void) ;           /// Start graphical user interface
             
 

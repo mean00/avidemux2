@@ -185,6 +185,11 @@ bool         Decimate::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, deciMate_param,&configuration);
 }
+
+void Decimate::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, deciMate_param, &configuration);
+}
 /**
     \fn dtor
 */

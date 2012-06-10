@@ -87,6 +87,12 @@ bool         kernelDeint::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, kdeint_param,&param);
 }
+
+void kernelDeint::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, kdeint_param, &param);
+}
+
 /**
     
 */

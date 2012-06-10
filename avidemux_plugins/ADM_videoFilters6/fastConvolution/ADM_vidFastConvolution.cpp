@@ -26,6 +26,11 @@ bool         AVDMFastVideoConvolution::getCoupledConf(CONFcouple **couples)
  return ADM_paramSave(couples, convolution_param,&param);
 }
 
+void AVDMFastVideoConvolution::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, convolution_param, &param);
+}
+
 /**
     \fn ctor
 */

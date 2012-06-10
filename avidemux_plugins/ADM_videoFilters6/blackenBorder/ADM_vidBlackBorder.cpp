@@ -38,7 +38,7 @@ const char *blackenBorders::getConfiguration(void)
     \fn ctor
 */
 blackenBorders::blackenBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
-{	
+{
 	 if(!setup || !ADM_paramLoad(setup,blackenBorder_param,&param))
     {
         // Default value
@@ -46,7 +46,7 @@ blackenBorders::blackenBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM
         param.right=0;
         param.top=0;
         param.bottom=0;
-    }  	  	
+    }
 }
 /**
     \fn dtor
@@ -64,6 +64,12 @@ bool         blackenBorders::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, blackenBorder_param,&param);
 }
+
+void blackenBorders::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, blackenBorder_param, &param);
+}
+
 #define Y_BLACK 16
 #define UV_BLACK 128
 static bool blackenHz(uint32_t w,uint32_t nbLine,uint8_t *ptr[3],uint32_t strides[3])
@@ -105,7 +111,7 @@ bool blackenBorders::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_info("[blackenBorder] Cannot get previous image\n");
         return false;
     }
- 
+
 
     // Top...
     uint8_t *ptr[3];
@@ -146,21 +152,21 @@ bool blackenBorders::configure(void)
           MAKEME(right);
           MAKEME(top);
           MAKEME(bottom);
-          
+
           width=previousFilter->getInfo()->width;
           height=previousFilter->getInfo()->height;
-          
+
           diaElemUInteger dleft(&left,QT_TR_NOOP("_Left border:"),       0,width/2);
           diaElemUInteger dright(&right,QT_TR_NOOP("_Right border:"),    0,width/2);
           diaElemUInteger dtop(&(top),QT_TR_NOOP("_Top border:"),          0,height/2);
           diaElemUInteger dbottom(&(bottom),QT_TR_NOOP("_Bottom border:"), 0,height/2);
-            
+
           diaElem *elems[4]={&dleft,&dright,&dtop,&dbottom};
           if(diaFactoryRun(QT_TR_NOOP("Blacken Borders"),4,elems))
           {
             if((left&1) || (right&1)|| (top&1) || (bottom&1))
             {
-              GUI_Error_HIG(QT_TR_NOOP("Incorrect parameters"),QT_TR_NOOP("All parameters must be even and within range.")); 
+              GUI_Error_HIG(QT_TR_NOOP("Incorrect parameters"),QT_TR_NOOP("All parameters must be even and within range."));
               continue;
             }
             else

@@ -61,6 +61,7 @@ public:
        virtual const char  *getConfiguration(void);          /// Return  current configuration as a human readable string
        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+	   virtual void setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface        
        
 };
@@ -103,6 +104,11 @@ Msharpen::Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)
 bool Msharpen::getCoupledConf( CONFcouple **couples)
 {
     return ADM_paramSave(couples, msharpen_param,&_param);
+}
+
+void Msharpen::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, msharpen_param, &_param);
 }
 /**
     \fn dtor

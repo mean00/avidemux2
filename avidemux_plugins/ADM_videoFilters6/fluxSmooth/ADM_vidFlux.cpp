@@ -71,6 +71,12 @@ bool ADMVideoFlux::getCoupledConf( CONFcouple **couples)
     return ADM_paramSave(couples, fluxsmooth_param,&_param);
 }
 
+void ADMVideoFlux::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, fluxsmooth_param, &_param);
+}
+
+
 /**
     \fn configure
 */

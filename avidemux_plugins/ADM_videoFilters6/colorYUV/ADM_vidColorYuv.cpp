@@ -175,6 +175,10 @@ bool         vidColorYuv::getCoupledConf(CONFcouple **couples)
     return ADM_paramSave(couples, colorYuv_param,&param);
 }
 
+void vidColorYuv::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, colorYuv_param, &param);
+}
 
 /**
     \fn dtor

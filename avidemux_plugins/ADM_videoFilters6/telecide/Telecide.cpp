@@ -158,6 +158,12 @@ bool         Telecide::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, teleCide_param,&configuration);
 }
+
+void Telecide::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, teleCide_param, &configuration);
+}
+
 /**
     \fn goToTime
     \brief Need to reset internals in case of seek

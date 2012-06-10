@@ -47,6 +47,7 @@ public:
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+        virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;           /// Start graphical user interface
 };
 
@@ -81,9 +82,9 @@ const char *subAss::getConfiguration(void)
 {
     static char buf[500];
     buf[0]=0;
- 
+
       sprintf((char *)buf," ASS/SSA Subtitles: ");
-      
+
       char *filename = (char*)param.subtitleFile;
       if(filename)
       {
@@ -93,7 +94,7 @@ const char *subAss::getConfiguration(void)
           buf[49] = 0;
       }else
       {
-        strcat(buf," (no sub)");       
+        strcat(buf," (no sub)");
       }
       return buf;
 }
@@ -101,7 +102,7 @@ const char *subAss::getConfiguration(void)
     \fn ctor
 */
 subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
-{	
+{
 	 if(!setup || !ADM_paramLoad(setup,ass_ssa_param,&param))
     {
             param.font_scale = 1.;
@@ -109,19 +110,19 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
             param.subtitleFile = NULL;
             param.fontDirectory = ADM_strdup(DEFAULT_FONT_DIR);
             param.extractEmbeddedFonts = 1;
-    }  	  	
+    }
         src=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
 
         /* ASS initialization */
         _ass_lib = NULL;
         _ass_track = NULL;
         _ass_rend = NULL;
-        
+
         if(param.subtitleFile)
         {
               if(!this->setup())
               {
-                GUI_Error_HIG("Format ?","Are you sure this is an ass file ?"); 
+                GUI_Error_HIG("Format ?","Are you sure this is an ass file ?");
               }
         }
 }
@@ -133,8 +134,8 @@ subAss::~subAss()
 {
       if(src) delete src;
       src=NULL;
-      
-        
+
+
         DELETE(param.subtitleFile);
         DELETE(param.fontDirectory);
         cleanup();
@@ -148,27 +149,32 @@ bool         subAss::getCoupledConf(CONFcouple **couples)
     return ADM_paramSave(couples, ass_ssa_param,&param);
 }
 
+void subAss::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, ass_ssa_param, &param);
+}
+
 /**
     \fn configure
 */
 bool subAss::configure(void)
 {
- 
+
 #define PX(x) &(param.x)
 #define MKME(x,y) x=(ELEM_TYPE_FLOAT)param.y
   ELEM_TYPE_FLOAT scale,spacing;
-  
+
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
-    
+
     diaElemFile       file(0,(char **)PX(subtitleFile),QT_TR_NOOP("_Subtitle file (ASS/SSA):"), NULL, QT_TR_NOOP("Select Subtitle file"));
     diaElemFloat      dSpacing(&spacing,QT_TR_NOOP("_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TR_NOOP("_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TR_NOOP("_Top margin:"),0,200);
     diaElemUInteger   dBottom(PX(bottomMargin),QT_TR_NOOP("Botto_m margin"),0,200);
-    
+
        diaElem *elems[5]={&file,&dSpacing,&dScale,&dTop,&dBottom};
-  
+
    if( diaFactoryRun(QT_TR_NOOP("ASS"),5,elems))
    {
 #undef MKME
@@ -187,18 +193,18 @@ bool subAss::configure(void)
 */
 bool subAss::cleanup(void)
 {
-        if(_ass_rend) 
+        if(_ass_rend)
         {
               ass_renderer_done(_ass_rend);
               _ass_rend = NULL;
          }
 
-        if(_ass_track) 
+        if(_ass_track)
         {
               ass_free_track(_ass_track);
               _ass_track = NULL;
         }
-        if(_ass_lib) 
+        if(_ass_lib)
         {
               ass_library_done(_ass_lib);
               _ass_lib = NULL;
@@ -215,8 +221,8 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         // update outpur image size
         memcpy(&info,previousFilter->getInfo(),sizeof(info));
         info.height += param.topMargin + param.bottomMargin;
-        
-        
+
+
         _ass_lib=ass_library_init();
         ADM_assert(_ass_lib);
 
@@ -226,7 +232,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         _ass_rend = ass_renderer_init(_ass_lib);
 
         ADM_assert(_ass_rend);
- 
+
         ass_set_frame_size(_ass_rend, info.width, info.height);
         ass_set_margins(_ass_rend, param.topMargin, param.bottomMargin, 0, 0);
         ass_set_use_margins(_ass_rend, use_margins);
@@ -242,7 +248,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         if(!_ass_track)
           GUI_Error_HIG("SSA Error","Cannot read_file for *%s*",(char*)param.subtitleFile);
         return 1;
-} 
+}
 
 //*******************************************
 #define _r(c)  ((c)>>24)
@@ -269,7 +275,7 @@ static bool blacken(ADMImage *src, uint32_t lineStart, uint32_t howto)
 
                 uint8_t *dy=src->GetWritePtr(plane);
                 uint32_t dpitch=src->GetPitch(plane);
-                
+
                 dy+=dpitch*lineOffset;
 
                 for(int y=0;y<count;y++)
@@ -290,14 +296,14 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_info("[blackenBorder] Cannot get previous image\n");
         return false;
     }
- 
+
         uint32_t  i, j, k, l, val;
         uint8_t y, u, v, opacity;
         int32_t orig_u, orig_v,klong,newu,newv;
         uint8_t orig_y;
         uint8_t *bitmap, *ydata, *udata, *vdata;
 
-       
+
        /* copy source to image */
 
         src->copyTo(image,0,param.topMargin);
@@ -313,9 +319,9 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
         if(!_ass_rend || !_ass_track || !_ass_lib)
         {
           printf("[Ass] No sub to render\n");
-          return true; 
+          return true;
         }
-        
+
         int changed=0;
         int64_t now=previousFilter->getAbsoluteStartTime()+src->Pts;
         now/=1000; // Ass works in ms
@@ -330,11 +336,11 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
 
                   opacity = 255 - _a(img->color);
 
-                  
+
 
                   uint8_t *planes[3];
                   uint32_t pitches[3];
-            
+
                   image->GetPitches(pitches);
                   image->GetWritePlanes(planes);
 
@@ -347,9 +353,9 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
 
                   // do y
                   bitmap = img->bitmap;
-                  for(i = 0; i < img->h; ++i) 
+                  for(i = 0; i < img->h; ++i)
                   {
-                          for(j = 0; j < img->w; ++j) 
+                          for(j = 0; j < img->w; ++j)
                           {
                                   k = *(bitmap+j) * opacity / 255;
                                   orig_y = *(ydata+j);
@@ -361,13 +367,13 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
                   }
                   // Now do u & v
                   bitmap = img->bitmap;
-                  
+
                   newu=u-128;
                   newv=v-128;
 
-                  for(i = 0; i < img->h; i += 2) 
+                  for(i = 0; i < img->h; i += 2)
                   {
-                          for(j = 0, l = 0; j < img->w; j += 2, ++l) 
+                          for(j = 0, l = 0; j < img->w; j += 2, ++l)
                           {
                                   val = 0;
                                   val += *(bitmap + j);

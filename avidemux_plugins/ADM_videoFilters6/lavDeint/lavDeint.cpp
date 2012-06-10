@@ -58,6 +58,7 @@ public:
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;     /// Start graphical user interface
 };
 
@@ -160,6 +161,12 @@ bool         lavDeint::getCoupledConf(CONFcouple **couples)
 {
    return ADM_paramSave(couples, lav_param,&param);
 }
+
+void lavDeint::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, lav_param, &param);
+}
+
 /**
     \fn getConfiguration
     \brief Return current setting as a string

@@ -32,6 +32,7 @@ public:
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;             /// Start graphical user interface
 };
 
@@ -122,6 +123,12 @@ bool         removePlaneFilter::getCoupledConf(CONFcouple **couples)
 {
       return ADM_paramSave(couples, removePlane_param,&config);
 }
+
+void removePlaneFilter::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, removePlane_param, &config);
+}
+
 /**
     \fn getConfiguration
     \brief Return current setting as a string

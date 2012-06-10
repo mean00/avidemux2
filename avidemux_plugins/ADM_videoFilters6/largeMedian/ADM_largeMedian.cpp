@@ -90,6 +90,11 @@ bool         largeMedian::getCoupledConf(CONFcouple **couples)
  return ADM_paramSave(couples, convolution_param,&param);
 }
 
+void largeMedian::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, convolution_param, &param);
+}
+
 /**
     \fn processPlane
 */

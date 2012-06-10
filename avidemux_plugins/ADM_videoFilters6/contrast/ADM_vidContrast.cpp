@@ -74,6 +74,11 @@ bool         ADMVideoContrast::getCoupledConf(CONFcouple **couples)
     return ADM_paramSave(couples, contrast_param,&_param);
 }
 
+void ADMVideoContrast::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, contrast_param, &_param);
+}
+
 /**
     \fn      dtor
     \brief

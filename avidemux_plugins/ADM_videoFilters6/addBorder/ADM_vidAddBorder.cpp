@@ -39,7 +39,7 @@ const char *addBorders::getConfiguration(void)
     \fn ctor
 */
 addBorders::addBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
-{	
+{
 	 if(!setup || !ADM_paramLoad(setup,addBorder_param,&param))
     {
         // Default value
@@ -47,11 +47,11 @@ addBorders::addBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVid
         param.right=0;
         param.top=0;
         param.bottom=0;
-        
+
     }
 	info.width=in->getInfo()->width+param.left+param.right;
     info.height=in->getInfo()->height+param.top+param.bottom;
-  	  	
+
 }
 /**
     \fn dtor
@@ -68,6 +68,11 @@ addBorders::~addBorders()
 bool         addBorders::getCoupledConf(CONFcouple **couples)
 {
     return ADM_paramSave(couples, addBorder_param,&param);
+}
+
+void addBorders::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, addBorder_param, &param);
 }
 #define Y_BLACK 16
 #define UV_BLACK 128
@@ -109,7 +114,7 @@ bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
     uint32_t smallHeight=previousFilter->getInfo()->height;
 
     ADMImageRefWrittable ref(smallWidth,smallHeight);
- 
+
     image->GetWritePlanes(ref._planes);
     image->GetPitches(ref._planeStride);
 
@@ -122,7 +127,7 @@ bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
     offset=(param.top>>1)*image->GetPitch(PLANAR_V);
     ref._planes[2]+=(param.left>>1)+offset;
 
-    
+
     if(false==previousFilter->getNextFrame(fn,&ref))
     {
         ADM_warning("FlipFilter : Cannot get frame\n");
@@ -170,21 +175,21 @@ bool addBorders::configure(void)
           MAKEME(right);
           MAKEME(top);
           MAKEME(bottom);
-          
+
           width=previousFilter->getInfo()->width;
           height=previousFilter->getInfo()->height;
-          
+
           diaElemUInteger dleft(&left,QT_TR_NOOP("_Left border:"),       0,width);
           diaElemUInteger dright(&right,QT_TR_NOOP("_Right border:"),    0,width);
           diaElemUInteger dtop(&(top),QT_TR_NOOP("_Top border:"),          0,height);
           diaElemUInteger dbottom(&(bottom),QT_TR_NOOP("_Bottom border:"), 0,height);
-            
+
           diaElem *elems[4]={&dleft,&dright,&dtop,&dbottom};
           if(diaFactoryRun(QT_TR_NOOP("Add Borders"),4,elems))
           {
             if((left&1) || (right&1)|| (top&1) || (bottom&1))
             {
-              GUI_Error_HIG(QT_TR_NOOP("Incorrect parameters"),QT_TR_NOOP("All parameters must be even and within range.")); 
+              GUI_Error_HIG(QT_TR_NOOP("Incorrect parameters"),QT_TR_NOOP("All parameters must be even and within range."));
               continue;
             }
             else

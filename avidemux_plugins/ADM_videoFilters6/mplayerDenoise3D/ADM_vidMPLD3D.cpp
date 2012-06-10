@@ -327,6 +327,12 @@ bool	ADMVideoMPD3D::getCoupledConf( CONFcouple **couples)
     return ADM_paramSave(couples, denoise3dhq_param,&param);
 	
 }
+
+void ADMVideoMPD3D::setCoupledConf(CONFcouple *couples)
+{
+    ADM_paramLoad(couples, denoise3dhq_param, &param);
+}
+
 /**
     \fn getNextFrame
 */
