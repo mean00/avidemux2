@@ -25,7 +25,7 @@ static bool translatorLoaded = false;
 
 static int loadTranslation(QTranslator *qTranslator, QString translation)
 {
-	ADM_info("[Locale] Loading language file %s ", translation.toUtf8().constData());	
+	ADM_info("[Locale] Loading language file %s ", translation.toUtf8().constData());
 
 	if (qTranslator->load(translation))
 	{
@@ -93,7 +93,7 @@ void loadTranslator(void)
 	{
 		mapIterator.next();
 
-		QByteArray translatedMessage = QApplication::translate("", mapIterator.key().toAscii().constData()).toUtf8();		
+		QByteArray translatedMessage = QApplication::translate("", mapIterator.key().toAscii().constData()).toUtf8();
 		char *buffer = mapIterator.value();
 		int copyLength = translatedMessage.length() + 1;
 
@@ -118,7 +118,7 @@ void destroyTranslator(void)
 		while (mapIterator.hasNext())
 		{
 			mapIterator.next();
-			delete(mapIterator.value());
+			delete [] mapIterator.value();
 		}
 
 		delete map;
