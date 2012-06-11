@@ -1653,3 +1653,4 @@ bool UI_setDecoderName(const char *name)
 }
 // EOF
 
+void GUI_ScriptHelp(void) {}

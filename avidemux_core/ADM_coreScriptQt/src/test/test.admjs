@@ -1,0 +1,130 @@
+function AssertException(message)
+{
+	this.message = message;
+}
+
+AssertException.prototype.toString = function()
+{
+	return 'AssertException: ' + this.message;
+}
+
+function assert(expression, message)
+{
+	if (!expression)
+	{
+		throw new AssertException(message);
+	}
+}
+
+function getTestVideo()
+{
+	return "C:\\Test\\test.avi";
+}
+
+function openTestVideo()
+{
+	return Editor.openVideo(getTestVideo());
+}
+
+function appendTestVideo()
+{
+	return Editor.appendVideo(getTestVideo());
+}
+
+function closeVideo()
+{
+	Editor.closeVideo();
+	testInitialState();
+}
+
+function testInitialState()
+{
+	assert(
+		Editor.currentFrameProperties == null && Editor.currentFrameTime == 0 &&
+		Editor.markerA == 0 && Editor.markerB == 0 &&
+		Editor.totalVideoDuration == 0 && Editor.videoCount == 0,
+		"Properties aren't initialised to zero or null");
+}
+
+function testSegments()
+{
+	var prop;
+	var relativeStartTime = 1000;
+	var segDuration = 4000
+
+	try
+	{
+		prop = Editor.addSegment(0, 0);
+		assert(false, "addSegment performed without open video");
+	}
+	catch (e) {}
+
+	openTestVideo();
+
+	var duration = Editor.totalVideoDuration;
+	prop = Editor.addSegment(relativeStartTime, segDuration);
+
+	assert(prop.absoluteStartTime != 0, "Absolute start time should be at end of video");
+	assert(prop.absoluteStartTime == duration, "Start of segment should be at end of video");
+	assert(prop.relativeStartTime == relativeStartTime, "Relative start time should be " + relativeStartTime);
+	assert(prop.duration == segDuration, "Duration should be " + segDuration);
+	assert(prop.videoIndex == 0, "Video index should be zero (first video)");
+
+	appendTestVideo();
+
+	prop = Editor.addSegment(relativeStartTime, segDuration, 1);
+
+	assert(prop.absoluteStartTime != 0, "Absolute start time should be at end of video");
+	assert(prop.absoluteStartTime == ((duration * 2) + segDuration), "Start of segment should be at end of video");
+	assert(prop.relativeStartTime == relativeStartTime, "Relative start time should be " + relativeStartTime);
+	assert(prop.duration == segDuration, "Duration should be " + segDuration);
+	assert(prop.videoIndex == 1, "Video index should be one (second video)");
+
+	closeVideo();
+}
+
+function testMarkers()
+{
+	var markerA = 1000;
+	var markerB = 4000;
+
+	openTestVideo();
+
+	assert(Editor.markerA == 0, "Marker A should be zero");
+	assert(Editor.markerB == Editor.totalVideoDuration, "Marker B should match duration");
+
+	Editor.markerA = markerA;
+	Editor.markerB = markerB;
+
+	assert(Editor.markerA == markerA, "Marker A should be " + markerA);
+	assert(Editor.markerB == markerB, "Marker B should be " + markerB);
+
+	Editor.clearMarkers();
+
+	assert(Editor.markerA == 0, "Marker A should be zero");
+	assert(Editor.markerB == Editor.totalVideoDuration, "Marker B should match duration");
+
+	Editor.setMarkers(markerA, markerB);
+
+	assert(Editor.markerA == markerA, "Marker A should be " + markerA);
+	assert(Editor.markerB == markerB, "Marker B should be " + markerB);
+
+	Editor.closeVideo();
+
+	assert(Editor.markerA == 0, "Marker A should be zero");
+	assert(Editor.markerB == 0, "Marker B should be zero");
+
+	Editor.clearMarkers();
+
+	assert(Editor.markerA == 0, "Marker A should be zero");
+	assert(Editor.markerB == 0, "Marker B should be zero");
+}
+
+print("QtScript test started");
+
+testInitialState();
+testSegments();
+testMarkers();
+dd
+
+print("QtScript test finished");

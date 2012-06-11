@@ -11,6 +11,7 @@ std::vector<IScriptEngine*> engines;
 
 std::vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor);
 void destroyScriptEngines();
+IScriptEngine* getQtScriptEngine();
 IScriptEngine* getPythonEngine();
 IScriptEngine* getSpiderMonkeyEngine();
 std::vector<IScriptEngine*> getScriptEngines();

@@ -43,6 +43,7 @@
 #endif // FTELLO
 #endif
 
+#cmakedefine USE_QTSCRIPT
 #cmakedefine USE_SPIDERMONKEY
 #cmakedefine USE_TINYPY
 

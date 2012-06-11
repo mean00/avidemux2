@@ -77,6 +77,13 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 				MenuEntry runProjectEntry = {MENU_SUBACTION, "Run Project...", NULL, firstMenuId, NULL, NULL};
 				it = fileMenu.insert(it + 1, runProjectEntry);
 
+				if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
+				{
+					MenuEntry debugEntry = {MENU_SUBACTION, "Debug Project...", NULL, (Action)(firstMenuId + 1), NULL, NULL};
+					it = fileMenu.insert(it + 1, debugEntry);
+					i++;
+				}
+
 				MenuEntry saveAsProjectEntry = {MENU_SUBACTION, "Save as Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL};
 				it = fileMenu.insert(it + 1, saveAsProjectEntry);
 				i += 3;

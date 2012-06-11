@@ -9,7 +9,8 @@ class IScriptEngine
 public:
 	enum Capabilities
 	{
-		None
+		None = 0,
+		Debugger = 1 << 0
 	};
 
 	enum EventType
@@ -21,7 +22,9 @@ public:
 
 	enum RunMode
 	{
-		Normal
+		Normal = 0,
+		Debug = 1 << 0,
+		DebugOnError = 1 << 1
 	};
 
 	struct EngineEvent

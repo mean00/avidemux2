@@ -14,6 +14,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
 
@@ -1303,6 +1304,18 @@ void UI_deiconify( void )
     QuiMainWindows->showNormal();
 
 }
+
+void GUI_ScriptHelp(void)
+{
+#ifdef __WIN32
+	QString helpDir = QCoreApplication::applicationDirPath() + "/help/";
+#else
+	QString helpDir = ADM_getInstallRelativePath("share", "avidemux6", "help");
+#endif
+
+    QDesktopServices::openUrl(QUrl("file:///" + helpDir + "index.html", QUrl::TolerantMode));
+}
+
 
 //********************************************
 //EOF

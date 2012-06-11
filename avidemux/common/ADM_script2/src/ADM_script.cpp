@@ -2,6 +2,10 @@
 #include "ADM_default.h"
 #include "ADM_script.h"
 
+#ifdef USE_QTSCRIPT
+#include "QtScriptEngine.h"
+#endif
+
 #ifdef USE_TINYPY
 #include "PythonEngine.h"
 #endif
@@ -48,6 +52,10 @@ vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
 	engines.push_back(new PythonEngine());
 #endif
 
+#ifdef USE_QTSCRIPT
+	engines.push_back(new QtScriptEngine());
+#endif
+
 #ifdef USE_SPIDERMONKEY
 	engines.push_back(new SpiderMonkeyEngine());
 #endif
@@ -84,6 +92,13 @@ static IScriptEngine* getEngine(vector<IScriptEngine*> engines, string engineNam
 
 	return engine;
 }
+
+#ifdef USE_QTSCRIPT
+IScriptEngine* getQtScriptEngine()
+{
+    return getEngine(engines, "QtScript");
+}
+#endif
 
 #ifdef USE_SPIDERMONKEY
 IScriptEngine* getSpiderMonkeyEngine()

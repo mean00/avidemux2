@@ -82,6 +82,8 @@ static const MenuEntry _myMenuAudio[] = {
 std::vector<MenuEntry> myMenuAudio(_myMenuAudio, _myMenuAudio + sizeof(_myMenuAudio) / sizeof(_myMenuAudio[0]));
 
 static const MenuEntry _myMenuHelp[] = {
+			{MENU_ACTION,"&Qt Scripting Reference",    NULL,ACT_SCRIPT_HELP        ,NULL,NULL},
+			{MENU_SEPARATOR, "-",          NULL,ACT_DUMMY              ,NULL,NULL},
             {MENU_ACTION,"Build Option",    NULL,ACT_BUILT_IN           ,NULL,NULL},
             {MENU_ACTION,"Plugins",         NULL,ACT_PLUGIN_INFO        ,NULL,NULL},
 #ifdef __WIN32

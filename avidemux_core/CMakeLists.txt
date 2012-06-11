@@ -56,6 +56,19 @@ endif (TINYPY)
 
 APPEND_SUMMARY_LIST("Scripting" "TinyPy" "${USE_TINYPY}")
 
+OPTION(QTSCRIPT "" ON)
+
+if (QTSCRIPT)
+	include(admCheckQt4)
+	checkQt4()
+
+	if (QT_QTSCRIPT_FOUND)
+		set(USE_QTSCRIPT 1)
+	endif (QT_QTSCRIPT_FOUND)
+endif (QTSCRIPT)
+
+APPEND_SUMMARY_LIST("Scripting" "QtScript" "${USE_QTSCRIPT}")
+
 ########################################
 # Checking if we should use ftello
 # or ftello64 (win32)
@@ -104,6 +117,10 @@ ADD_SUBDIRECTORY(ADM_coreJobs)
 ADD_SUBDIRECTORY(ADM_coreSocket)
 add_subdirectory(ADM_coreImageLoader)
 add_subdirectory(ADM_coreScript)
+
+if ("${USE_QTSCRIPT}" STREQUAL "1")
+	add_subdirectory(ADM_coreScriptQt)
+endif ("${USE_QTSCRIPT}" STREQUAL "1")
 
 if (SPIDERMONKEY)
 	add_subdirectory(ADM_coreScriptSpiderMonkey)

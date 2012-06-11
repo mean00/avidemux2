@@ -19,6 +19,10 @@ void    A_Resync(void);
 void    A_addJob(void);
 void    A_audioTrack(void);
 
+#ifdef USE_QTSCRIPT
+bool    A_parseQtScript(const char *name);
+#endif
+
 #ifdef USE_SPIDERMONKEY
 bool    A_parseECMAScript(const char *name);
 #endif

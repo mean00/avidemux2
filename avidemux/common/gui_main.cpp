@@ -72,6 +72,7 @@ extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
 extern uint8_t DIA_builtin(void);
 extern uint8_t DIA_pluginsInfo(void);
+extern void GUI_ScriptHelp(void);
 
 static void ReSync (void);
 void cleanUp (void);
@@ -95,7 +96,12 @@ static IScriptEngine *tempEngine;
 
 static void RunScript(const char *name)
 {
-	tempEngine->runScriptFile(name, IScriptEngine::Normal);
+	tempEngine->runScriptFile(name, IScriptEngine::DebugOnError);
+}
+
+static void DebugScript(const char *name)
+{
+	tempEngine->runScriptFile(name, IScriptEngine::Debug);
 }
 
 //
@@ -170,6 +176,10 @@ int nw;
 		{
 			case 0:
 				GUI_FileSelRead("Select script to run", RunScript);
+				break;
+
+			case 1:
+				GUI_FileSelRead("Select script to debug", DebugScript);
 				break;
 
 			case 2:
@@ -254,6 +264,9 @@ int nw;
     case ACT_ABOUT :
     		 DIA_about( );
 		 return;
+	case ACT_SCRIPT_HELP:
+		GUI_ScriptHelp();
+		return;
     case ACT_AUDIO_CODEC_CONFIGURE:
       audioCodecConfigure(0);
       return;
@@ -763,6 +776,13 @@ static bool parseScript(IScriptEngine *engine, const char *name)
 bool A_parseTinyPyScript(const char *name)
 {
 	return parseScript(getPythonEngine(), name);
+}
+#endif
+
+#ifdef USE_QTSCRIPT
+bool A_parseQtScript(const char *name)
+{
+	return parseScript(getQtScriptEngine(), name);
 }
 #endif
 
