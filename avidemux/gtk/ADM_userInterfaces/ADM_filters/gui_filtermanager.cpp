@@ -15,6 +15,8 @@
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_edit.hxx"
 
 #define nb_active_filter ADM_vf_getSize()
 
@@ -36,6 +38,8 @@ static GtkWidget* treeAvailable;
 static GtkWidget* storeAvailable;
 static GtkWidget* treeActive;
 static GtkWidget* storeActive;
+
+extern ADM_Composer *video_body;
 
 /**
     \fn GUI_handleVFilter
@@ -161,7 +165,7 @@ void addFilter(GtkButton* button=0, gpointer data=0)
     ADM_assert(family < VF_MAX);
     ADM_assert(index < ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family)); 
     
-    ADM_vf_addFilterFromTag(tag, NULL, true);
+    ADM_vf_addFilterFromTag(video_body, tag, NULL, true);
     buildActiveFilterList();
 }
 
