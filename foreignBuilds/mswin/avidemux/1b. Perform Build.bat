@@ -15,6 +15,7 @@ if errorlevel 1 goto error
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" admCore.layout
 pause
 
+rmdir /s /q "%buildDir%\help" 2> NUL
 mingw32-make install
 if errorlevel 1 goto error
 

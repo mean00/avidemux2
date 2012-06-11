@@ -26,7 +26,7 @@ set PATH=%PATH%;%msysDir%\bin
 if not exist %package% (
 	echo.
 	echo Downloading
-	wget http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/%package%/
+	wget http://ftp.gnome.org/pub/gnome/binaries/win64/dependencies/%package%
 )
 
 if errorlevel 1 goto error

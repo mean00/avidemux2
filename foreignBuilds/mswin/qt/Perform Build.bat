@@ -70,12 +70,13 @@ if errorlevel 1 goto end
 cd "%devDir%\%sourceFolder%"
 
 for /f "delims=" %%a in ('dir /b %tarFolder%') do (
-   move "%CD%\%tarFolder%\%%a" "%CD%"
+	move "%CD%\%tarFolder%\%%a" "%CD%"
+	if errorlevel 1 goto end
 )
 
 if "%Debug%" == "1" (
-	copy %admBuildDir%\libADM_core6.dll bin\
-	copy %admBuildDir%\pthreadGC2-w%BuildBits%.dll bin\
+	copy %admBuildDir:/=\%\libADM_core6.dll bin\
+	if errorlevel 1 goto end
 )
 
 echo.

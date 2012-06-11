@@ -298,6 +298,7 @@ Section "Avidemux Core" SecCore
 	${File} libADM_coreMuxer6.dll
 	${File} libADM_coreScript.dll
 	${File} libADM_coreScriptPython.dll
+	${File} libADM_coreScriptQt.dll
 	${File} libADM_coreScriptSpiderMonkey.dll
 	${File} libADM_coreSocket6.dll
 	${File} libADM_coreSqlLight3.dll
@@ -306,6 +307,10 @@ Section "Avidemux Core" SecCore
 	${File} libADM_coreVideoCodec6.dll
 	${File} libADM_coreVideoEncoder6.dll
 	${File} libADM_coreVideoFilter6.dll
+    ${File} QtCore4.dll
+	${File} QtGui4.dll
+	${File} QtScript4.dll
+	${File} QtScriptTools4.dll
     ${File} AUTHORS.
     ${File} COPYING.
     ${File} README.
@@ -314,6 +319,8 @@ Section "Avidemux Core" SecCore
     ${File} avutil-*.dll
     ${File} postproc-*.dll
     ${File} swscale-*.dll
+    SetOutPath $INSTDIR\help
+    ${Folder} help
     SetOutPath $INSTDIR\plugins\autoScripts
     ${Folder} plugins\autoScripts
 SectionEnd
@@ -383,8 +390,6 @@ SectionGroup /e "User interfaces" SecGrpUI
 		${File} avidemux_jobs.exe
         ${File} libADM_render6_qt4.dll
         ${File} libADM_UIQT46.dll
-        ${File} QtCore4.dll
-		${File} QtGui4.dll
 		${File} QtOpenGL4.dll
     ${MementoSectionEnd}
 !endif

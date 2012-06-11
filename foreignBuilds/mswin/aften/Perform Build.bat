@@ -52,6 +52,7 @@ if errorlevel 1 goto end
 nmake install
 if errorlevel 1 goto end
 
+del "%usrLocalDir%\lib\aften.lib"
 copy "%usrLocalDir%\bin\aften.dll" "%admBuildDir%"
 
 :end
