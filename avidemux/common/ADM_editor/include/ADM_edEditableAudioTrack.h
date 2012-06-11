@@ -28,6 +28,7 @@
 class EditableAudioTrack
 {
 public:
+	int objectId;
 // source
 	ADM_edAudioTrack            *edTrack;
 // filter
@@ -41,6 +42,9 @@ public:
 	EditableAudioTrack();
 	EditableAudioTrack(const EditableAudioTrack &src);
 	~EditableAudioTrack();
+
+private:
+	static int objectCount;
 };
 
 #endif

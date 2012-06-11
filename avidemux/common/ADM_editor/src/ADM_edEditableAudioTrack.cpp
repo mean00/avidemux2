@@ -20,6 +20,7 @@ EditableAudioTrack::EditableAudioTrack()
 	encoderConf = NULL;
 	edTrack = NULL;
     poolIndex=0;
+	objectId = objectCount++;
 }
 
 EditableAudioTrack::EditableAudioTrack(const EditableAudioTrack &src)
@@ -39,6 +40,7 @@ EditableAudioTrack::EditableAudioTrack(const EditableAudioTrack &src)
 	EncodingVector = src.EncodingVector;
 	audioEncodingConfig = src.audioEncodingConfig;
     poolIndex=src.poolIndex;
+	objectId = objectCount++;
 }
 
 EditableAudioTrack::~EditableAudioTrack()
@@ -53,3 +55,5 @@ EditableAudioTrack::~EditableAudioTrack()
 
 	encoderConf = NULL;
 }
+
+int EditableAudioTrack::objectCount = 0;
