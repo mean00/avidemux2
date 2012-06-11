@@ -6,9 +6,9 @@
 #ifndef ADM_PREVIEW_H
 #define ADM_PREVIEW_H
 #include "ADM_render/GUI_render.h"
-typedef enum 
+typedef enum
 {
-    ADM_PREVIEW_NONE, 
+    ADM_PREVIEW_NONE,
     ADM_PREVIEW_OUTPUT,
     ADM_PREVIEW_SIDE,
     ADM_PREVIEW_TOP,
@@ -36,7 +36,7 @@ class admPreview
       static void setMainDimension(uint32_t, uint32_t ,renderZoom);
       static void deferDisplay(bool onoff);
       static void displayNow(void);
-      static void cleanUp(void);  
+      static void cleanUp(void);
       static ADMImage *getBuffer(void);
       static uint64_t getCurrentPts(void);
       static bool nextKeyFrame(void);
@@ -46,5 +46,6 @@ class admPreview
       static bool updateImage(void);
       static ADM_HW_IMAGE getPreferedHwImageFormat(void);
       static renderZoom getCurrentZoom();
+	  static void getFrameFlags(uint32_t *flags, uint32_t *quantiser);
 };
 #endif

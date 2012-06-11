@@ -46,9 +46,6 @@
  #include "audiofilter_conf.h"
  #include "audioencoderInternal.h"
 
- #include "ADM_edActiveAudioTracks.h"
- #include "ADM_edPoolOfAudioTracks.h"
-
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
 /**
@@ -169,6 +166,8 @@ virtual                         ~ADM_Composer();
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
 					int         appendFile(const char *name);
+					void		closeFile(void);
+					bool		isFileOpen(void);
 					int			openFile(const char *name);
 					int 		saveFile(const char *name);
 					int 		saveImageBmp(const char *filename);
@@ -187,7 +186,9 @@ public:
 /************************************ Public API ***************************/
 public:
                     uint64_t    getCurrentFramePts(void);
+					bool		setCurrentFramePts(uint64_t pts);
                     bool        goToTimeVideo(uint64_t time);
+					void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
                     bool        nextPicture(ADMImage *image,bool dontcross=false);
                     bool        samePicture(ADMImage *image);
@@ -213,8 +214,10 @@ public:
                     ADM_BITMAPINFOHEADER 	*getBIH(void ) ;
 
                     uint8_t			getVideoInfo(aviInfo *info);
+                    _VIDEOS* 		getRefVideo(int videoIndex);
                     uint64_t        getVideoDuration(void);
                     uint64_t        getFrameIncrement(void); /// Returns the # of us between 2 frames or the smaller value of them
+					int				getVideoCount(void);
 
 /**************************************** /Video Info **************************/
 /***************************************** Project Handling ********************/
@@ -241,6 +244,7 @@ public:
                                         {
                                             return _segments.getNbSegments();
                                         }
+					_SEGMENT*			getSegment(int i);
 // For js
                     bool                dumpRefVideos(void);
                     void                dumpSegments(void);
@@ -255,7 +259,9 @@ public:
 /******************************** Info ************************************/
                     const char          *getVideoDecoderName(void);
 /********************************* IEditor **********************************/
+		ADM_dynMuxer* getCurrentMuxer();
         bool        setContainer(const char *cont, CONFcouple *c);
+		ADM_videoEncoder6* getCurrentVideoEncoder();
         int         setVideoCodec(const char *codec, CONFcouple *c);
         int         addVideoFilter(const char *filter, CONFcouple *c);
         void        clearFilters();
@@ -276,8 +282,11 @@ public:
         bool        clearAudioTracks(void); /// remove all audio tracks
         bool        addAudioTrack(int poolIndex); /// Add an audio track in the active tracks
         bool        addExternalAudioTrack(const char *fileName); /// Add audio track from a file
+		void		updateDefaultAudioTrack(void);
 
-
+		void seekFrame(int count);
+		void seekKeyFrame(int count);
+		void seekBlackFrame(int count);
 /********************************* /IEditor **********************************/
 };
 #endif

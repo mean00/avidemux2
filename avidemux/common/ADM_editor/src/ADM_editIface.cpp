@@ -21,13 +21,10 @@
 #include "audioEncoderApi.h"
 #include "ADM_muxerProto.h"
 #include "GUI_ui.h"
+#include "avi_vars.h"
 
 #include <fcntl.h>
 #include <errno.h>
-
-#if defined(__MINGW32__) || defined(ADM_BSD_FAMILY)
-#include <sys/stat.h>
-#endif
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
@@ -46,8 +43,22 @@
 #include "ADM_videoFilters.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_videoFilterApi.h"
+#include "ADM_preview.h"
 #include "ADM_edAudioTrackExternal.h"
 #include "ADM_coreVideoFilterFunc.h"
+#include "ADM_coreVideoFilterFunc.h"
+
+extern uint8_t GUI_close(void);
+extern bool GUI_GoToTime(uint64_t time);
+extern void GUI_NextFrame(uint32_t frameCount);
+extern void GUI_PrevFrame(uint32_t frameCount);
+extern void GUI_NextKeyFrame(void);
+extern void GUI_PreviousKeyFrame(void);
+extern void GUI_PrevBlackFrame(void);
+extern void GUI_NextBlackFrame(void);;
+
+extern BVector <ADM_dynMuxer *> ListOfMuxers;
+extern BVector <ADM_videoEncoder6 *> ListOfEncoders;
 
 #if 0
 /**
@@ -123,7 +134,7 @@ int ADM_Composer::appendFile(const char *name)
 */
 int ADM_Composer::saveAudio(int dex,const char *name)
 {
-	return A_audioSave(name); 
+	return A_audioSave(name);
 }
 
 
@@ -140,6 +151,16 @@ int	ADM_Composer::openFile(const char *name)
 int ADM_Composer::saveFile(const char *name)
 {
 	return A_Save(name);
+}
+
+ADM_dynMuxer* ADM_Composer::getCurrentMuxer()
+{
+	return ListOfMuxers[UI_GetCurrentFormat()];
+}
+
+ADM_videoEncoder6* ADM_Composer::getCurrentVideoEncoder()
+{
+	return ListOfEncoders[videoEncoder6_GetIndexFromName(videoEncoder6_GetCurrentEncoderName())];
 }
 
 bool ADM_Composer::setContainer(const char *cont, CONFcouple *c)
@@ -233,7 +254,7 @@ bool ADM_Composer::setAudioCodec(int dex,const char *codec, CONFcouple *c)
         ADM_warning("Cannot set configuration for codec %s, track %d\n",codec,dex);
         return false;
     }
-#warning memleak on *c ?    
+#warning memleak on *c ?
     return true;
 }
 
@@ -313,4 +334,106 @@ bool    ADM_Composer::addExternalAudioTrack(const char *fileName)
         audioTrackPool.dump();
         return true;
     }
+}
+
+int ADM_Composer::getVideoCount(void)
+{
+	return _segments.getNbRefVideos();
+}
+
+void ADM_Composer::closeFile(void)
+{
+	GUI_close();
+}
+
+_SEGMENT* ADM_Composer::getSegment(int i)
+{
+	return _segments.getSegment(i);
+}
+
+bool ADM_Composer::isFileOpen(void)
+{
+    return avifileinfo != NULL;
+}
+
+bool ADM_Composer::setCurrentFramePts(uint64_t pts)
+{
+    if (video_body->getPKFramePTS(&pts))
+    {
+        return GUI_GoToTime(pts);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void ADM_Composer::getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser)
+{
+    admPreview::getFrameFlags(flags, quantiser);
+}
+
+_VIDEOS* ADM_Composer::getRefVideo(int videoIndex)
+{
+	return _segments.getRefVideo(videoIndex);
+}
+
+void ADM_Composer::seekFrame(int count)
+{
+	if (count >= 0)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			GUI_NextFrame(1);
+		}
+	}
+	else
+	{
+		for (int i = 0; i < -count; i++)
+		{
+			GUI_PrevFrame(1);
+		}
+	}
+}
+
+void ADM_Composer::seekKeyFrame(int count)
+{
+	if (count >= 0)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			GUI_NextKeyFrame();
+		}
+	}
+	else
+	{
+		for (int i = 0; i < -count; i++)
+		{
+			GUI_PreviousKeyFrame();
+		}
+	}
+}
+
+void ADM_Composer::seekBlackFrame(int count)
+{
+	int direction = (count > 0) ? 1 : -1;
+	count = count * direction;
+
+	for (int i = 0; i < count; i++)
+	{
+		if (direction == 1)
+			GUI_NextBlackFrame();
+		else
+			GUI_PrevBlackFrame();
+	}
+}
+
+void ADM_Composer::updateDefaultAudioTrack(void)
+{
+	EditableAudioTrack *ed = this->getDefaultEditableAudioTrack();
+
+	if (ed)
+	{
+		UI_setAudioCodec(ed->encoderIndex);
+	}
 }

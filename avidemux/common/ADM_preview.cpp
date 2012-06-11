@@ -263,4 +263,11 @@ bool admPreview::updateImage(void)
         renderUpdateImage(rdrImage);                  
     return true;
 }
+
+void admPreview::getFrameFlags(uint32_t *flags, uint32_t *quantiser)
+{
+	*flags = rdrImage->flags;
+	*quantiser = rdrImage->_Qp;
+}
+
 // EOF
