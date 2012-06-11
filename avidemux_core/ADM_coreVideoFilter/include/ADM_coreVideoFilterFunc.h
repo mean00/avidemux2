@@ -9,6 +9,7 @@ ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag);
 bool ADM_vf_removeFilterAtIndex(int index);
 bool ADM_vf_recreateChain(void);
 ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *last, CONFcouple *couples);
+int ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int index);
 int ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, bool configure);
 ADM_coreVideoFilter *ADM_vf_getLastVideoFilter(IEditor *editor);
 

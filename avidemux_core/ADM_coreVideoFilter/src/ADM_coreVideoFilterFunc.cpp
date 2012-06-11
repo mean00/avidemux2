@@ -153,6 +153,26 @@ int                    ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CO
     return e.objectId;
 }
 
+int ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int index)
+{
+    ADM_info("Creating video filter using tag %"LU" \n", tag);
+    // Fetch the descriptor...
+
+    ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
+    ADM_coreVideoFilter *nw = ADM_vf_createFromTag(tag, last, c);
+    ADM_VideoFilterElement e;
+
+    e.tag = tag;
+    e.instance = nw;
+    e.objectId = objectCount++;
+
+    ADM_VideoFilters.insert(index, e);
+
+    ADM_vf_recreateChain();
+
+    return e.objectId;
+}
+
 /**
     \fn getLastVideoFilter
 */
