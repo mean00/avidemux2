@@ -97,11 +97,13 @@ static IScriptEngine *tempEngine;
 static void RunScript(const char *name)
 {
 	tempEngine->runScriptFile(name, IScriptEngine::DebugOnError);
+	A_Resync(); // total duration & stuff
 }
 
 static void DebugScript(const char *name)
 {
 	tempEngine->runScriptFile(name, IScriptEngine::Debug);
+    A_Resync(); // total duration & stuff
 }
 
 //
