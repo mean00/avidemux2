@@ -131,7 +131,7 @@ bool blackenBorders::getNextFrame(uint32_t *fn,ADMImage *image)
     // Bottom
     image->GetPitches(stride);
     image->GetWritePlanes(ptr);
-    uint32_t offsetLine=previousFilter->getInfo()->height-param.top;
+    uint32_t offsetLine=previousFilter->getInfo()->height-param.bottom;
     ptr[0]+=offsetLine*stride[0];
     ptr[1]+=(offsetLine/2)*stride[1];
     ptr[2]+=(offsetLine/2)*stride[2];
