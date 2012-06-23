@@ -191,10 +191,13 @@ void filtermainWindow::add( bool b)
      tag=index; //filterCategories[family][index]->tag;
      ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
 
-     if(true==ADM_vf_addFilterFromTag(video_body, itag,NULL,true))
+     if(ADM_vf_addFilterFromTag(video_body, itag,NULL,true)>=0)
         {
             buildActiveFilterList();
             setSelected(nb_active_filter-1);
+        }else
+        {
+            ADM_warning("Cannot add filter from tag\n");
         }
 
    }
@@ -454,6 +457,7 @@ void filtermainWindow::buildActiveFilterList(void)
 
 	activeList->clear();
     int nb=ADM_vf_getSize();
+    printf("%d active filters\n",nb);
 	for (uint32_t i = 0; i < nb; i++)
 	{
             uint32_t                instanceTag=ADM_vf_getTag(i);

@@ -141,7 +141,7 @@ int                    ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CO
     if (configure && nw->configure() == false)
     {
         delete nw;
-        return false;
+        return -1;
     }
 
     ADM_VideoFilterElement e;
