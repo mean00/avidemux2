@@ -34,7 +34,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG $FAKEROOT -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make  $PARAL >& /tmp/log$BUILDDIR || fail make
+        make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
 	fi
