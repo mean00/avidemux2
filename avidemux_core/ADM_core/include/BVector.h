@@ -228,7 +228,6 @@ public:
 template <typename T>
 void BVector<T>::setCapacity(int in_capacity){
         const int currentSize = this->currentIndex;
-        int pointOfStart = 0;
 
         if( in_capacity < this->capacity)
         {
