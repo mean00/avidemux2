@@ -279,6 +279,7 @@ Section "Avidemux Core" SecCore
 	${File} libexpat-1.dll
 	${File} libfreetype-6.dll
 	${File} libgcc_s_sjlj-1.dll
+	${File} libsqlite3-0.dll
 	${File} libstdc++-6.dll
     ${File} libwinpthread-1.dll
 	${File} zlib1.dll

@@ -24,18 +24,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#ifndef _SQLJOBS_H
+#define _SQLJOBS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ADM_sqlite3.h>
-#include <libsqlitewrapped.h>
 #include <map>
 
 #include <vector>
 #include <string>
 
-#ifndef _SQLJOBS_H
-#define _SQLJOBS_H
+#include <sqlite3.h>
+#include "libsqlitewrapped.h"
 
 #ifdef _WIN32
 #define strncasecmp strnicmp

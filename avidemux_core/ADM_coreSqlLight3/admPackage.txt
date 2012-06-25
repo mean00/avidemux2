@@ -1,4 +1,0 @@
-Name   : SQLite3
-URL    : http://www.sqlite.org
-License: Public Domain
-

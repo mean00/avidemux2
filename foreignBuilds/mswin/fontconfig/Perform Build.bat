@@ -17,7 +17,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=2.9.0
+set version=2.9.91
 set package=fontconfig-%version%.tar.gz
 set sourceFolder=fontconfig-%version%-%BuildBits%
 set tarFolder=fontconfig-%version%

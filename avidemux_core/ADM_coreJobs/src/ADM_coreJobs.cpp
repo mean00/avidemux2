@@ -15,9 +15,8 @@
  ***************************************************************************/
 #include "ADM_coreJobs.h"
 #include "ADM_default.h"
-#include "ADM_sqlite3.h"
-#include "libsqlitewrapped.h"
 #include "sqlJobs.h"
+
 static char *dbFile=NULL;
 Database    *mydb=NULL;
 

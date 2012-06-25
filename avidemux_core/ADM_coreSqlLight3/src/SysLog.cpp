@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #ifndef WIN32
 
-#include <ADM_sqlite3.h>
+#include <sqlite3.h>
 #include <syslog.h>
 #include <string.h> // MEANX
 

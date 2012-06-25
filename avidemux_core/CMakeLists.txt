@@ -76,6 +76,16 @@ APPEND_SUMMARY_LIST("Scripting" "QtScript" "${USE_QTSCRIPT}")
 checkFtello()
 
 ########################################
+# sqllite
+########################################
+MESSAGE(STATUS "Checking for sqllite")
+MESSAGE(STATUS "********************")
+
+FIND_HEADER_AND_LIB(SQLITE sqlite3.h sqlite3 sqlite3_close)
+PRINT_LIBRARY_INFO("SQLite" SQLITE_FOUND "${SQLITE_INCLUDE_DIR}" "${SQLITE_LIBRARY_DIR}" FATAL_ERROR)
+MESSAGE("")
+
+########################################
 # Generate config.h
 ########################################
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h")
