@@ -1,14 +1,14 @@
-#ifndef ADM_qtScript_SegmentProperties
-#define ADM_qtScript_SegmentProperties
+#ifndef ADM_qtScript_Segment
+#define ADM_qtScript_Segment
 
 #include "ADM_inttype.h"
 #include "QtScriptObject.h"
 
 namespace ADM_qtScript
 {
-	/** \brief The SegmentProperties %class holds the properties of a video segment.
+	/** \brief The Segment %class holds the properties of a video segment.
 	 */
-	class SegmentProperties : public QtScriptObject
+	class Segment : public QtScriptObject
 	{
 		Q_OBJECT
 
@@ -23,7 +23,7 @@ namespace ADM_qtScript
 
 	public:
 		/** \cond */
-		SegmentProperties(IEditor *editor, _SEGMENT* segment);
+		Segment(IEditor *editor, _SEGMENT* segment);
 		/** \endcond */
 
 		/** \brief Returns the start time (in milliseconds) of the video segment in the editor.

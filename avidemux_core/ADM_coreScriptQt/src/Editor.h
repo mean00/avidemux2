@@ -53,9 +53,7 @@ namespace ADM_qtScript
 		QScriptValue getMarkerB(void);
 		QScriptValue getMuxer(void);
 		QScriptValue getPosition(void);
-		QScriptValue getSegmentProperties(void);
-		QScriptValue getSegmentProperties(int segmentIndex);
-		QScriptValue getTotalSegmentDuration(void);
+		QScriptValue getSegments(void);
 		QScriptValue getVideoCount(void);
 		QScriptValue getVideoDecoders(void);
 		QScriptValue getVideoEncoder(void);
@@ -143,17 +141,9 @@ namespace ADM_qtScript
 
 		/** \brief Gets extended information about the video segments that have been added to the editor.
 		 *
-		 * \return Returns an array of SegmentProperties objects if a video is open in the editor; otherwise, null.
-		 *
-		 * \sa addSegment
+		 * \return Returns an array of Segment objects if a video is open in the editor; otherwise, null.
 		 */
-		Q_PROPERTY(QScriptValue /*% Array %*/ segmentProperties READ getSegmentProperties);
-
-		/** \brief Returns the total time (in milliseconds) of all video segments.
-		 *
-		 * \sa segmentProperties
-		 */
-		Q_PROPERTY(QScriptValue /*% Number %*/ totalSegmentDuration READ getTotalSegmentDuration);
+		Q_PROPERTY(QScriptValue /*% SegmentCollection %*/ segments READ getSegments);
 
 		/** \brief Returns the number of video files currently open in the editor.
 		 *
@@ -167,15 +157,6 @@ namespace ADM_qtScript
 		 * \sa openVideo and appendVideo
 		 */
 		Q_PROPERTY(QScriptValue /*% Array %*/ videoFileProperties READ getVideoFileProperties);
-
-		/** \brief Appends a segment of video to the end of the currently open video.
-		 *
-		 * The segment starting at the specified time (in milliseconds) and for the specified duration (in milliseconds) is sourced from the first open video unless a video index is specified.
-		 *
-		 * \return Returns a SegmentProperties object that contains extended information about the video segment that has been added to the editor.
-		 * \sa segmentProperties
-		 */
-		Q_INVOKABLE QScriptValue /*% SegmentProperties %*/ addSegment(QScriptValue /*% Number %*/ startTime, QScriptValue /*% Number %*/ duration, QScriptValue /*% Number %*/ videoIndex = 0);
 
 		/** \brief Appends an additional video file to the end of the currently open video.
 		 *

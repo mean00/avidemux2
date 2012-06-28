@@ -13,7 +13,7 @@ var searchData=
   ['readwrite',['ReadWrite',['../class_file.html#a3a70f8b621474c9885f80fe709e2dca2a3c4d2d19c91b345c33a83ca9f551f4e1',1,'File']]],
   ['refresh',['refresh',['../class_directory.html#a5f2e190b8261a98c97c2ea4e86670d54',1,'Directory::refresh()'],['../class_file_information.html#a5f2e190b8261a98c97c2ea4e86670d54',1,'FileInformation::refresh()']]],
   ['relativefilepath',['relativeFilePath',['../class_directory.html#aa34af8b79e68cdea0374a602c9848c50',1,'Directory']]],
-  ['relativestarttime',['relativeStartTime',['../class_segment_properties.html#aa666fbeba8e131a798d1bebdc392e570',1,'SegmentProperties']]],
+  ['relativestarttime',['relativeStartTime',['../class_segment.html#aa666fbeba8e131a798d1bebdc392e570',1,'Segment']]],
   ['remove',['remove',['../class_directory.html#a8b885ff89465e10d73c745a61922fab5',1,'Directory::remove()'],['../class_file.html#a56b779b52a295a229bf94eb652dafa6a',1,'File::remove()']]],
   ['removeat',['removeAt',['../class_audio_output_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'AudioOutputCollection::removeAt()'],['../class_video_filter_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'VideoFilterCollection::removeAt()']]],
   ['removedirectory',['removeDirectory',['../class_directory.html#a8abfca5ad75bb03956df6cfea594d50f',1,'Directory']]],

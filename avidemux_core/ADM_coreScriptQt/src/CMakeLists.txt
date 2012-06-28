@@ -1,8 +1,8 @@
 set(ADM_script_headers
 	AudioEncoder.h  AudioOutput.h  AudioOutputCollectionPrototype.h  AudioProperties.h
 	Directory.h  Editor.h  File.h  FileInformation.h  FrameProperties.h  Muxer.h
-	SegmentProperties.h  VideoDecoder.h  VideoEncoder.h  VideoFileProperties.h
-	VideoFilter.h  VideoFilterCollectionPrototype.h  VideoOutput.h)
+	Segment.h  SegmentCollectionPrototype.h  VideoDecoder.h  VideoEncoder.h
+	VideoFileProperties.h  VideoFilter.h  VideoFilterCollectionPrototype.h  VideoOutput.h)
 
 QT4_WRAP_CPP(ADM_qtScript_SRCS
 	${ADM_script_headers}  QtScriptObject.h  QtScriptConfigObject.h)
@@ -12,9 +12,10 @@ set(ADM_script_headers
 
 set(ADM_qtScript_SRCS
 	${ADM_qtScript_SRCS}  QtScriptEngine.cpp  QtScriptObject.cpp  QtScriptConfigObject.cpp
-	AudioEncoder.cpp  AudioOutput.cpp  AudioOutputCollection.cpp
-	AudioOutputCollectionPrototype.cpp  AudioProperties.cpp  Directory.cpp  Editor.cpp  File.cpp
-	FileInformation.cpp  FrameProperties.cpp  Muxer.cpp  SegmentProperties.cpp  VideoDecoder.cpp
+	AudioEncoder.cpp  AudioOutput.cpp
+	AudioOutputCollection.cpp  AudioOutputCollectionPrototype.cpp  AudioProperties.cpp
+	Directory.cpp  Editor.cpp  File.cpp  FileInformation.cpp  FrameProperties.cpp  Muxer.cpp
+	Segment.cpp  SegmentCollection.cpp  SegmentCollectionPrototype.cpp  VideoDecoder.cpp
 	VideoEncoder.cpp  VideoFileProperties.cpp  VideoFilter.cpp  VideoFilterCollection.cpp
 	VideoFilterCollectionPrototype.cpp  VideoOutput.cpp)
 

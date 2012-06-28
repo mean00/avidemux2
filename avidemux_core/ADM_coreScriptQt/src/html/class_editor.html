@@ -103,8 +103,6 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa81ad52483e02eb77135f9d3a4bad70b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_segment_properties.html">SegmentProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#aa81ad52483e02eb77135f9d3a4bad70b">addSegment</a> (Number startTime, Number duration, Number videoIndex=0)</td></tr>
-<tr class="memdesc:aa81ad52483e02eb77135f9d3a4bad70b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a segment of video to the end of the currently open video.  <a href="#aa81ad52483e02eb77135f9d3a4bad70b"></a><br/></td></tr>
 <tr class="memitem:adfe66891f2d4be283055d226bad09653"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_video_file_properties.html">VideoFileProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#adfe66891f2d4be283055d226bad09653">appendVideo</a> (String path)</td></tr>
 <tr class="memdesc:adfe66891f2d4be283055d226bad09653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends an additional video file to the end of the currently open video.  <a href="#adfe66891f2d4be283055d226bad09653"></a><br/></td></tr>
 <tr class="memitem:aac5965bf35ba39826df81af6aff2b2e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#aac5965bf35ba39826df81af6aff2b2e0">clearMarkers</a> ()</td></tr>
@@ -153,10 +151,8 @@ Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memdesc:aa8b1daee433fa206f78a9ee2b864ce7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the time (in milliseconds) of marker B (selection end).  <a href="#aa8b1daee433fa206f78a9ee2b864ce7f"></a><br/></td></tr>
 <tr class="memitem:ab91f1392544c4575e544cabf3517538f"><td class="memItemLeft" align="right" valign="top">Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#ab91f1392544c4575e544cabf3517538f">position</a></td></tr>
 <tr class="memdesc:ab91f1392544c4575e544cabf3517538f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the time (in milliseconds) of the editor's position.  <a href="#ab91f1392544c4575e544cabf3517538f"></a><br/></td></tr>
-<tr class="memitem:a6f3e6a3c76eb88bf77602562b81238fe"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#a6f3e6a3c76eb88bf77602562b81238fe">segmentProperties</a></td></tr>
-<tr class="memdesc:a6f3e6a3c76eb88bf77602562b81238fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets extended information about the video segments that have been added to the editor.  <a href="#a6f3e6a3c76eb88bf77602562b81238fe"></a><br/></td></tr>
-<tr class="memitem:a3b0f615f208baaa7bb73cdf67906e3b8"><td class="memItemLeft" align="right" valign="top">Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#a3b0f615f208baaa7bb73cdf67906e3b8">totalSegmentDuration</a></td></tr>
-<tr class="memdesc:a3b0f615f208baaa7bb73cdf67906e3b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total time (in milliseconds) of all video segments.  <a href="#a3b0f615f208baaa7bb73cdf67906e3b8"></a><br/></td></tr>
+<tr class="memitem:a280b1b4f8949ce49601df1e1058335f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_segment_collection.html">SegmentCollection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#a280b1b4f8949ce49601df1e1058335f0">segments</a></td></tr>
+<tr class="memdesc:a280b1b4f8949ce49601df1e1058335f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets extended information about the video segments that have been added to the editor.  <a href="#a280b1b4f8949ce49601df1e1058335f0"></a><br/></td></tr>
 <tr class="memitem:a642eebdef4ab4962230ae8caf9c174da"><td class="memItemLeft" align="right" valign="top">Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#a642eebdef4ab4962230ae8caf9c174da">videoCount</a></td></tr>
 <tr class="memdesc:a642eebdef4ab4962230ae8caf9c174da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of video files currently open in the editor.  <a href="#a642eebdef4ab4962230ae8caf9c174da"></a><br/></td></tr>
 <tr class="memitem:a101cc8a972bffed48517074448c1b763"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_editor.html#a101cc8a972bffed48517074448c1b763">videoFileProperties</a></td></tr>
@@ -218,43 +214,6 @@ Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aa81ad52483e02eb77135f9d3a4bad70b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_segment_properties.html">SegmentProperties</a> addSegment </td>
-          <td>(</td>
-          <td class="paramtype">Number&#160;</td>
-          <td class="paramname"><em>startTime</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Number&#160;</td>
-          <td class="paramname"><em>duration</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Number&#160;</td>
-          <td class="paramname"><em>videoIndex</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Appends a segment of video to the end of the currently open video. </p>
-<p>The segment starting at the specified time (in milliseconds) and for the specified duration (in milliseconds) is sourced from the first open video unless a video index is specified.</p>
-<dl class="section return"><dt>Returns:</dt><dd>Returns a <a class="el" href="class_segment_properties.html" title="The SegmentProperties class holds the properties of a video segment.">SegmentProperties</a> object that contains extended information about the video segment that has been added to the editor. </dd></dl>
-<dl class="section see"><dt>See also:</dt><dd><a class="el" href="class_editor.html#a6f3e6a3c76eb88bf77602562b81238fe" title="Gets extended information about the video segments that have been added to the editor.">segmentProperties</a> </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="adfe66891f2d4be283055d226bad09653"></a>
 <div class="memitem">
 <div class="memproto">
@@ -685,7 +644,7 @@ Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 
 </div>
 </div>
-<a class="anchor" id="a6f3e6a3c76eb88bf77602562b81238fe"></a>
+<a class="anchor" id="a280b1b4f8949ce49601df1e1058335f0"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -693,7 +652,7 @@ Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Array segmentProperties</td>
+          <td class="memname"><a class="el" href="class_segment_collection.html">SegmentCollection</a> segments</td>
         </tr>
       </table>
   </td>
@@ -704,31 +663,7 @@ Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </div><div class="memdoc">
 
 <p>Gets extended information about the video segments that have been added to the editor. </p>
-<dl class="section return"><dt>Returns:</dt><dd>Returns an array of <a class="el" href="class_segment_properties.html" title="The SegmentProperties class holds the properties of a video segment.">SegmentProperties</a> objects if a video is open in the editor; otherwise, null.</dd></dl>
-<dl class="section see"><dt>See also:</dt><dd><a class="el" href="class_editor.html#aa81ad52483e02eb77135f9d3a4bad70b" title="Appends a segment of video to the end of the currently open video.">addSegment</a> </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a3b0f615f208baaa7bb73cdf67906e3b8"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Number totalSegmentDuration</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">read</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns the total time (in milliseconds) of all video segments. </p>
-<dl class="section see"><dt>See also:</dt><dd><a class="el" href="class_editor.html#a6f3e6a3c76eb88bf77602562b81238fe" title="Gets extended information about the video segments that have been added to the editor.">segmentProperties</a> </dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>Returns an array of <a class="el" href="class_segment.html" title="The Segment class holds the properties of a video segment.">Segment</a> objects if a video is open in the editor; otherwise, null. </dd></dl>
 
 </div>
 </div>
@@ -782,7 +717,7 @@ Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </div><!-- contents -->
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 11 2012 18:11:36 for Avidemux 2.6 Scripting Reference by Doxygen 1.8.1.1
+Generated by Doxygen 1.8.1.1
 </small></address>
 </body>
 </html>

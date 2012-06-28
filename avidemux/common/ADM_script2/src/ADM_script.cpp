@@ -53,7 +53,7 @@ vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor)
 #endif
 
 #ifdef USE_QTSCRIPT
-	engines.push_back(new QtScriptEngine());
+	engines.push_back(new ADM_qtScript::QtScriptEngine());
 #endif
 
 #ifdef USE_SPIDERMONKEY

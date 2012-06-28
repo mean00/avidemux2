@@ -1,8 +1,8 @@
-#include "SegmentProperties.h"
+#include "Segment.h"
 
 namespace ADM_qtScript
 {
-    SegmentProperties::SegmentProperties(IEditor *editor, _SEGMENT* segment) : QtScriptObject(editor)
+    Segment::Segment(IEditor *editor, _SEGMENT* segment) : QtScriptObject(editor)
     {
         this->_videoIndex = segment->_reference;
         this->_duration = segment->_durationUs;
@@ -10,22 +10,22 @@ namespace ADM_qtScript
         this->_relativeStartTime = segment->_refStartTimeUs;
     }
 
-    QScriptValue SegmentProperties::getAbsoluteStartTime(void)
+    QScriptValue Segment::getAbsoluteStartTime(void)
     {
         return (double)this->_absoluteStartTime;
     }
 
-    QScriptValue SegmentProperties::getDuration(void)
+    QScriptValue Segment::getDuration(void)
     {
         return (double)this->_duration;
     }
 
-    QScriptValue SegmentProperties::getVideoIndex(void)
+    QScriptValue Segment::getVideoIndex(void)
     {
         return this->_videoIndex;
     }
 
-    QScriptValue SegmentProperties::getRelativeStartTime(void)
+    QScriptValue Segment::getRelativeStartTime(void)
     {
         return (double)this->_relativeStartTime;
     }

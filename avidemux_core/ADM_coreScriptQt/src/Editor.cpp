@@ -3,7 +3,7 @@
 
 #include "Editor.h"
 #include "FrameProperties.h"
-#include "SegmentProperties.h"
+#include "SegmentCollection.h"
 #include "VideoDecoder.h"
 #include "VideoFileProperties.h"
 #include "AudioOutputCollectionPrototype.h"
@@ -27,32 +27,6 @@ namespace ADM_qtScript
         this->_videoEncoders = videoEncoders;
     }
 
-    QScriptValue Editor::addSegment(
-        QScriptValue startTime, QScriptValue duration, QScriptValue videoIndex)
-    {
-        VALIDATE_OPEN_VIDEO()
-
-        QScriptValue result;
-
-        while (true)
-        {
-            result = this->validateNumber("videoIndex", videoIndex, 0, this->_editor->getVideoCount());
-
-            if (!result.isUndefined())
-            {
-                break;
-            }
-
-            this->_editor->addSegment(videoIndex.toNumber(), startTime.toNumber(), duration.toNumber());
-
-            result = this->getSegmentProperties(this->_editor->getNbSegment() - 1);
-
-            break;
-        }
-
-        return result;
-    }
-
     QScriptValue Editor::appendVideo(const QString& path)
     {
         if (!this->_editor->appendFile(path.toUtf8().constData()))
@@ -72,36 +46,6 @@ namespace ADM_qtScript
     void Editor::closeVideo()
     {
         this->_editor->closeFile();
-    }
-
-    QScriptValue Editor::getSegmentProperties(int segmentIndex)
-    {
-        _SEGMENT *segment = this->_editor->getSegment(segmentIndex);
-
-        return this->engine()->newQObject(
-                   new SegmentProperties(this->_editor, segment), QScriptEngine::ScriptOwnership);
-    }
-
-    QScriptValue Editor::getSegmentProperties()
-    {
-        int count = this->_editor->getNbSegment();
-
-        if (count == 0)
-        {
-            return QScriptValue(QScriptValue::NullValue);
-        }
-        else
-        {
-            QScriptValue segments = this->engine()->newArray(count);
-
-            for (int segmentIndex = 0; segmentIndex < count; segmentIndex++)
-            {
-                segments.setProperty(
-                    segmentIndex, this->getSegmentProperties(segmentIndex));
-            }
-
-            return segments;
-        }
     }
 
     QScriptValue Editor::getVideoFileProperties(int videoIndex)
@@ -294,9 +238,17 @@ namespace ADM_qtScript
         return (double)this->_editor->getCurrentFramePts();
     }
 
-    QScriptValue Editor::getTotalSegmentDuration(void)
+    QScriptValue Editor::getSegments(void)
     {
-        return (double)this->_editor->getVideoDuration();
+        if (this->_editor->isFileOpen())
+        {
+            return this->engine()->newObject(
+                       new SegmentCollection(this->engine(), this->_editor), QScriptEngine::ScriptOwnership);
+        }
+        else
+        {
+            return QScriptValue(QScriptValue::NullValue);
+        }
     }
 
     QScriptValue Editor::getVideoCount(void)
