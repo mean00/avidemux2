@@ -10,7 +10,7 @@
 #include "ADM_coreVideoEncoderInternal.h"
 #include "audioencoderInternal.h"
 
-class QMetaObject;
+struct QMetaObject;
 class QScriptContext;
 class QScriptEngine;
 class QScriptValue;
@@ -21,12 +21,14 @@ namespace ADM_qtScript
     class AudioEncoder;
     class Muxer;
     class VideoEncoder;
+    class AdmScriptMapper;
 
     class QtScriptEngine : public IScriptEngine
     {
     private:
         IEditor *_editor;
         std::set<eventHandlerFunc*> _eventHandlerSet;
+        ADM_qtScript::AdmScriptMapper *_mapper;
 
         void copyEnumsToScriptObject(QScriptEngine *engine, const QMetaObject *metaObject, QScriptValue *object);
         static QScriptValue executeFunction(QScriptContext *context, QScriptEngine *engine);
@@ -45,7 +47,9 @@ namespace ADM_qtScript
         bool runScript(const QString& script, const QString& name, RunMode mode);
 
     public:
+        QtScriptEngine();
         ~QtScriptEngine();
+
         void callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message);
         Capabilities capabilities();
         IEditor* editor();

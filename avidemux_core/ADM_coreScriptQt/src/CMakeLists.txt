@@ -12,7 +12,7 @@ set(ADM_script_headers
 
 set(ADM_qtScript_SRCS
 	${ADM_qtScript_SRCS}  QtScriptEngine.cpp  QtScriptObject.cpp  QtScriptConfigObject.cpp
-	AudioEncoder.cpp  AudioOutput.cpp
+	AdmScriptMapper.cpp  AudioEncoder.cpp  AudioOutput.cpp
 	AudioOutputCollection.cpp  AudioOutputCollectionPrototype.cpp  AudioProperties.cpp
 	Directory.cpp  Editor.cpp  File.cpp  FileInformation.cpp  FrameProperties.cpp  Muxer.cpp
 	Segment.cpp  SegmentCollection.cpp  SegmentCollectionPrototype.cpp  VideoDecoder.cpp

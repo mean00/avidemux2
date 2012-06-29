@@ -11,6 +11,7 @@
 #endif
 
 #include "MyQScriptEngine.h"
+#include "AdmScriptMapper.h"
 
 #include "AudioEncoder.h"
 #include "AudioOutput.h"
@@ -41,9 +42,16 @@ namespace ADM_qtScript
         this->wrapperEngine = wrapperEngine;
     }
 
+    QtScriptEngine::QtScriptEngine()
+    {
+        this->_mapper = new AdmScriptMapper();
+    }
+
     QtScriptEngine::~QtScriptEngine()
     {
         this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Closing QtScript");
+
+        delete _mapper;
     }
 
     IScriptEngine::Capabilities QtScriptEngine::capabilities()
@@ -243,12 +251,9 @@ namespace ADM_qtScript
         {
             ADM_audioEncoder* encoderPlugin = ListOfAudioEncoder[encoderIndex];
             AudioEncoder *encoder = new AudioEncoder(engine, this->_editor, encoderPlugin, encoderIndex);
-        QString encoderName = QString(encoderPlugin->codecName).toLower() + "AudioEncoder";
-
-        encoderName = encoderName[0].toUpper() + encoderName.mid(1);
 
             engine->globalObject().setProperty(
-            encoderName, engine->newFunction(
+                _mapper->getAudioEncoderClassName(encoderPlugin->codecName), engine->newFunction(
                     AudioEncoder::constructor, engine->newQObject(encoder, QScriptEngine::ScriptOwnership)));
         }
     }
@@ -261,11 +266,9 @@ namespace ADM_qtScript
         {
             ADM_dynMuxer* muxerPlugin = ListOfMuxers[muxerIndex];
             Muxer *muxer = new Muxer(engine, this->_editor, muxerPlugin);
-        QString muxerName = QString(muxerPlugin->name).toLower() + "Muxer";
 
-        muxerName = muxerName[0].toUpper() + muxerName.mid(1);
-
-        engine->globalObject().setProperty(muxerName, engine->newQObject(muxer, QScriptEngine::ScriptOwnership));
+            engine->globalObject().setProperty(
+                _mapper->getMuxerClassName(muxerPlugin->name), engine->newQObject(muxer, QScriptEngine::ScriptOwnership));
             muxers->insert(pair<ADM_dynMuxer*, Muxer*>(muxerPlugin, muxer));
         }
     }
@@ -279,12 +282,9 @@ namespace ADM_qtScript
         {
             ADM_videoEncoder6* encoderPlugin = ListOfEncoders[encoderIndex];
             VideoEncoder *encoder = new VideoEncoder(engine, this->_editor, encoderPlugin);
-        QString encoderName = QString(encoderPlugin->desc->encoderName).toLower() + "VideoEncoder";
-
-        encoderName = encoderName[0].toUpper() + encoderName.mid(1);
 
             engine->globalObject().setProperty(
-            encoderName, engine->newQObject(encoder, QScriptEngine::ScriptOwnership));
+                _mapper->getVideoEncoderClassName(encoderPlugin->desc->encoderName), engine->newQObject(encoder, QScriptEngine::ScriptOwnership));
             encoders->insert(pair<ADM_videoEncoder6*, VideoEncoder*>(encoderPlugin, encoder));
         }
     }
@@ -298,12 +298,9 @@ namespace ADM_qtScript
             {
                 ADM_vf_plugin* filterPlugin = ADM_videoFilterPluginsList[filterGroupIndex][filterIndex];
                 VideoFilter *filter = new VideoFilter(engine, this->_editor, filterPlugin);
-            QString filterName = QString(filterPlugin->getInternalName()).toLower() + "VideoFilter";
-
-            filterName = filterName[0].toUpper() + filterName.mid(1);
 
                 engine->globalObject().setProperty(
-                filterName, engine->newFunction(
+                    _mapper->getVideoFilterClassName(filterPlugin->getInternalName()), engine->newFunction(
                         VideoFilter::constructor, engine->newQObject(filter, QScriptEngine::ScriptOwnership)));
             }
         }

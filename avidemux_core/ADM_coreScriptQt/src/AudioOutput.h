@@ -6,12 +6,14 @@
 
 namespace ADM_qtScript
 {
+    class AdmScriptMapper;
+
 	/** \brief The AudioOutput %class provides an interface for configuring the output of an audio track.
 	 */
 	class AudioOutput : public QtScriptObject
 	{
 		Q_OBJECT
-		Q_ENUMS(AudioInputType MixerMode StretchAudioMode)
+		Q_ENUMS(AudioInputType GainMode MixerMode StretchAudioMode)
 
 	public:
 		/** \brief Specifies the type of audio track that will be encoded
@@ -60,6 +62,7 @@ namespace ADM_qtScript
 	private:
 		EditableAudioTrack *_track;
 		int _trackObjectId;
+		AdmScriptMapper *_mapper;
 
 		bool verifyTrack();
 
@@ -86,6 +89,7 @@ namespace ADM_qtScript
 	public:
 		/** \cond */
 		AudioOutput(IEditor *editor, EditableAudioTrack *track);
+		~AudioOutput();
 		/** \endcond */
 
 		/** \brief Gets or sets the path of the external audio file if an external file is to be encoded.
