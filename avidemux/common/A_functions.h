@@ -6,6 +6,7 @@
 #define A_FUNCTION_H
 
 #include "ADM_default.h"
+#include "IScriptEngine.h"
 
 int     A_delete(uint32_t start, uint32_t end);
 void    A_externalAudioTrack( void );
@@ -31,6 +32,8 @@ bool    A_parseECMAScript(const char *name);
 bool    A_parseTinyPyScript(const char *name);
 #endif
 
+void A_saveScript(IScriptEngine* engine, const char* name);
+
 //uint8_t A_autoDrive(Action action);
 uint8_t A_TimeShift(void);
 void    A_ResetMarkers(void);
@@ -48,8 +51,6 @@ int  A_saveJpg (const char *name);
 int  A_saveBunchJpg(const char *name);
 int  A_saveImg (const char *name);
 int  ADM_saveRaw (const char *name);
-void A_saveJsProject (const char *name);
-void A_savePyProject (const char *name);
 int  A_audioSave(const char *name);
 int  A_SaveWrapper(const char *name);
 int  A_saveAudioProcessed (const char *name);

@@ -36,6 +36,7 @@ public:
 	~PythonEngine();
 	void callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message);
 	Capabilities capabilities();
+	IScriptWriter* createScriptWriter();
 	IEditor* editor();
 	void initialise(IEditor *videoBody);
 	std::string name();

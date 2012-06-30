@@ -161,8 +161,6 @@ protected:
                                 ADM_Composer();
 virtual                         ~ADM_Composer();
                     void        clean( void );
-                    uint8_t     saveAsScript (const char *name, const char *out);
-                    bool        saveAsPyScript(const char *name);
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
 					int         appendFile(const char *name);

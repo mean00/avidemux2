@@ -275,3 +275,8 @@ IScriptEngine::Capabilities PythonEngine::capabilities()
 {
 	return IScriptEngine::None;
 }
+
+IScriptWriter* PythonEngine::createScriptWriter()
+{
+    return NULL;
+}

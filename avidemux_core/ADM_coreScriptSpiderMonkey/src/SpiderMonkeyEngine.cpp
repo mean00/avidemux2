@@ -191,3 +191,8 @@ IScriptEngine::Capabilities SpiderMonkeyEngine::capabilities()
 {
 	return IScriptEngine::None;
 }
+
+IScriptWriter* SpiderMonkeyEngine::createScriptWriter()
+{
+    return NULL;
+}

@@ -63,6 +63,11 @@ namespace ADM_qtScript
 #endif
     }
 
+    IScriptWriter* QtScriptEngine::createScriptWriter()
+    {
+        return NULL;
+    }
+
     IEditor* QtScriptEngine::editor()
     {
         return _editor;

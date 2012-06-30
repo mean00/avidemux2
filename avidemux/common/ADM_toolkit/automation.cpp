@@ -137,7 +137,6 @@ AUTOMATON reaction_table[]=
         {"load-workbench",	1,"load workbench file", (one_arg_type)A_openAvi},
         {"append",		1,"append video",			(one_arg_type)A_appendAvi},
         {"save",		1,"save avi",				(one_arg_type)save},
-        {"save-workbench",	1,"save workbench file",		(one_arg_type)A_saveJsProject},
 
         {"force-b-frame",	0,"Force detection of bframe in next loaded file", (one_arg_type)call_bframe},
         {"force-alt-h264",	0,"Force use of alternate read mode for h264", (one_arg_type)call_x264},

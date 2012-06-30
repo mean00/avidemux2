@@ -15,17 +15,12 @@ CALLBACK( close1                                ,ACT_CLOSE);
 
 
 CALLBACK( show_builtin_support1                 ,ACT_BUILT_IN);
-CALLBACK( open_video1         			,ACT_OPEN_VIDEO); 
+CALLBACK( open_video1         			,ACT_OPEN_VIDEO);
 CALLBACK( append_video1     			,ACT_APPEND_VIDEO);
 CALLBACK( save_audio1         			,ACT_SAVE_AUDIO);
 CALLBACK( save_as_avi1       			,ACT_SAVE_VIDEO);
 CALLBACK(avi_muxer_options1 			,ACT_ContainerConfigure);
 
-//CALLBACK(load_project         			,ACT_OpenAvi); 
-CALLBACK(save_project_as1              		    ,ACT_SAVE_PY_PROJECT);
-//CALLBACK(save_project1                          ,ACT_SaveCurrentWork);
-//CALLBACK(save_current_project                	,ACT_SaveCurrentWork);
- 
  CALLBACK(video_informations1	             ,ACT_VIDEO_PROPERTIES);
  CALLBACK(save_image1               		 ,ACT_SAVE_BMP);
  CALLBACK(save_jpg_image1              		 ,ACT_SAVE_JPG);
@@ -52,7 +47,7 @@ CALLBACK(save_project_as1              		    ,ACT_SAVE_PY_PROJECT);
 
  CALLBACK( search_previous_black_frame1 ,ACT_PrevBlackFrame);
  CALLBACK( search_next_black_frame1		,ACT_NextBlackFrame);
- 
+
 CALLBACK(reset_edits1                		,ACT_ResetSegments);
 
 CALLBACK(main_audio                                 ,ACT_AUDIO_SELECT_TRACK);
@@ -72,14 +67,13 @@ CALLBACK(audio_encoder1           		,ACT_AUDIO_CODEC_CONFIGURE);
  CALLBACK(preferences1   			,ACT_PREFERENCES);
 // CALLBACK(	check_frames			,ACT_VideoCheck);
  CALLBACK(quit1		   			,ACT_EXIT);
- 
- 
- CALLBACK(run_script1		   	        ,ACT_RUN_PY_PROJECT);
+
+
 // CALLBACK( ocr_vobsub_2_srt                     ,ACT_Ocr);
- 
+
 // CALLBACK( ocr_dvb                     ,ACT_DVB_Ocr);
- 
- 
+
+
 //CALLBACK(item1                                 ,ACT_AllBlackFrames);
 
 CALLBACK(first_frame1                          ,ACT_Begin);

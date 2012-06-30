@@ -1,7 +1,7 @@
 /** *************************************************************************
             \file gui_save.cpp
             \brief handle all kind of save
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -37,6 +37,8 @@
 #include "ADM_audioWrite.h"
 // Local prototypes
 #include "A_functions.h"
+#include "ADM_script2/include/ADM_script.h"
+
 int      A_Save(const char *name);
 extern   ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime,int32_t shift);
 
@@ -60,21 +62,13 @@ void HandleAction_Save(Action action)
                 diaElemFile wFile(1,&oFile,QT_TR_NOOP("Output file"),"");
                 diaElemText wText(&oText,QT_TR_NOOP("Job name"));
                 diaElem *elems[2]={&wText,&wFile};
-  
+
                 if(  diaFactoryRun(QT_TR_NOOP("Queue job to jobList"),2,elems))
                 {
                     A_queueJob(oText,oFile);
                 }
             }
             break;
-    case ACT_SAVE_PY_PROJECT:
-            GUI_FileSelWrite (QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
-            UI_refreshCustomMenu();
-            break;
-    case ACT_SAVE_JS_PROJECT:
-      GUI_FileSelWrite (QT_TR_NOOP("Select jsProject to Save"), A_saveJsProject);
-	  UI_refreshCustomMenu();
-      break;
 #if 0
    case ACT_SaveCurrentWork:
         {
@@ -87,7 +81,7 @@ void HandleAction_Save(Action action)
           }
         }
       break;
-#endif      
+#endif
     case ACT_SAVE_AUDIO:
       	{
           GUI_FileSelWrite (QT_TR_NOOP("Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
@@ -124,7 +118,7 @@ void HandleAction_Save(Action action)
 int A_audioSave(const char *name)
 {
     ADM_audioStream *stream;
-    if(false==video_body->getDefaultAudioTrack( &stream)) 
+    if(false==video_body->getDefaultAudioTrack( &stream))
     {
         ADM_error("[A_audioSave] No stream\n");
         return 0;
@@ -144,10 +138,10 @@ int A_audioSave(const char *name)
 
 /**
         \fn A_saveAudioCommon
-        \brief Save giveb stream 
+        \brief Save giveb stream
 */
 static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double duration)
-{ 
+{
   uint32_t written, max;
   uint64_t dts;
   DIA_workingBase *work;
@@ -199,7 +193,7 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
             break;
         if(!work->isAlive()) break;
         work->update(cur_sample>>10, tgt_sample>>10);
-        
+
     };
   if(hold)
   {
@@ -219,13 +213,13 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
         \brief Save current stream (generally avi...)     in raw mode
 */
 int A_saveAudioCopy (const char *name)
-{ 
+{
   uint32_t written, max;
   uint64_t dts;
 
 #define ONE_STRIKE (64*1024)
   ADM_audioStream *stream;
-  if(false==video_body->getDefaultAudioTrack( &stream)) 
+  if(false==video_body->getDefaultAudioTrack( &stream))
     {
         ADM_error("[A_audioSave] No stream\n");
         return false;
@@ -238,9 +232,9 @@ int A_saveAudioCopy (const char *name)
 
    timeStart=video_body->getMarkerAPts ();
    timeEnd=video_body->getMarkerBPts ();
-   
+
    duration=timeEnd-timeStart;
-   if(duration<0) 
+   if(duration<0)
     {
             stream->goToTime (timeEnd);
             duration=-duration;
@@ -252,7 +246,7 @@ int A_saveAudioCopy (const char *name)
    ADM_info("Saving to %s \n",ADM_us2plain(timeEnd));
    ADM_info("duration %s \n",ADM_us2plain((uint64_t)duration));
    return A_saveAudioCommon (name,stream,duration);
-   
+
 }
 
 
@@ -276,7 +270,7 @@ int A_saveAudioProcessed (const char *name)
    timeEnd=video_body->getMarkerBPts ();
    uint64_t start=timeStart;
    duration=timeEnd-timeStart;
-   if(duration<0) 
+   if(duration<0)
     {
             start=timeEnd;
             duration=-duration;
@@ -294,7 +288,7 @@ int A_saveAudioProcessed (const char *name)
   if(false==r)
         GUI_Error_HIG("Audio","Saving failed");
   return r;
-#endif   
+#endif
 }
 
 /**
@@ -391,24 +385,6 @@ int A_saveImg (const char *name)
 }
 
 /**
-    \fn A_saveWorkbench
-    \brief Save current workbench as ecmascript
-*/
-void A_saveJsProject (const char *name)
-{
-  video_body->saveAsScript(name,NULL);
-  video_body->setProjectName(name);
-}
-
-/**
-    \fn A_savePyProject
-    \brief Save workbench as pyscript
-*/
-void A_savePyProject (const char *name)
-{
-  video_body->saveAsPyScript(name);
-}
-/**
     \fn A_SaveWrapper
 
 */
@@ -444,8 +420,8 @@ void A_queueJob(const char *jobName,const char *outputFile)
             string completePath=string(ADM_getJobDir());
             completePath=completePath+string("/")+job.scriptName;
             // Save the script...
-            video_body->saveAsPyScript(completePath.c_str());
-            
+
+            A_saveScript(getScriptEngines()[0], completePath.c_str());
 }
 //EOF
 

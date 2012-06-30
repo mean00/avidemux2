@@ -42,6 +42,7 @@ public:
 	~SpiderMonkeyEngine();
 	void callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message);
 	Capabilities capabilities();
+	IScriptWriter* createScriptWriter();
 	IEditor* editor();
 	std::string name();
 	void initialise(IEditor *videoBody);

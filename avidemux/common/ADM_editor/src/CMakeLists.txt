@@ -3,26 +3,25 @@ SET(ADM_editor_SRCS
 ADM_edActiveAudioTracks.cpp
 ADM_edCache.cpp
 ADM_edEditableAudioTrack.cpp
-ADM_edIdentify.cpp 
-ADM_edLoadSave.cpp 
+ADM_edIdentify.cpp
 ADM_edPoolOfAudioTracks.cpp
-ADM_edSearch.cpp 
-ADM_edFrameType.cpp 
-ADM_edit.cpp 
-ADM_edRender.cpp 
-ADM_edRenderInternal.cpp 
+ADM_edSearch.cpp
+ADM_edFrameType.cpp
+ADM_edit.cpp
+ADM_edRender.cpp
+ADM_edRenderInternal.cpp
 ADM_edMarker.cpp
 ADM_edStub.cpp
 ADM_edPtsDts.cpp
 ADM_edVideoCopy.cpp
 ADM_segment.cpp
-ADM_edPySave.cpp
 ADM_edAudioPacket.cpp
 ADM_edAudioPcm.cpp
 ADM_edAudioTrackFromVideo.cpp
 ADM_edAudioTrack.cpp
 ADM_editIface.cpp
 ADM_edAudioTrackExternal.cpp
+ADM_edScriptGenerator.cpp
 )
 
 ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})

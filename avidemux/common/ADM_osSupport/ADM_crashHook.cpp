@@ -21,6 +21,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_edit.hxx"
 #include "A_functions.h"
+#include "../ADM_script2/include/ADM_script.h"
 
 extern ADM_Composer *video_body;
 
@@ -44,7 +45,9 @@ void saveCrashProject(void)
   strcpy(where,baseDir);
   strcat(where,name);
   printf("Saving crash file to %s\n",where);
-  video_body->saveAsPyScript (where);
+
+  A_saveScript(getScriptEngines()[0], where);
+
   delete[] where;
 }
 /**
@@ -71,7 +74,7 @@ void checkCrashFile(void)
     unlink(where);
   }else
   {
-    printf("No crash file (%s)\n",where); 
+    printf("No crash file (%s)\n",where);
   }
   delete [] where;
 #endif

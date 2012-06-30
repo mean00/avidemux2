@@ -2,6 +2,7 @@
 #define IScriptEngine_h
 
 #include <string>
+#include "IScriptWriter.h"
 #include "ADM_editor/include/IEditor.h"
 
 class IScriptEngine
@@ -40,6 +41,7 @@ public:
 
 	virtual ~IScriptEngine() {}
 	virtual Capabilities capabilities() = 0;
+	virtual IScriptWriter* createScriptWriter() = 0;
 	virtual IEditor* editor() = 0;
 	virtual void initialise(IEditor *videoBody) = 0;
 	virtual std::string name() = 0;

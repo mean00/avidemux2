@@ -353,10 +353,6 @@ toolBarTranslate toolbar[]=
 {"actionOpen",              ACT_OPEN_VIDEO},
 {"actionSave_video",        ACT_SAVE_VIDEO},
 {"actionProperties",        ACT_VIDEO_PROPERTIES},
-//{"actionLoad_run_project",  ACT_RUN_PY_PROJECT},
-//{"actionSave_project",      ACT_SAVE_PY_PROJECT},
-//{"actionPreviewInput",ACT_PreviewToggle},
-//{"actionPreviewOutput",ACT_PreviewToggle},
 
 {NULL,ACT_DUMMY}
 };
@@ -864,7 +860,7 @@ int UI_RunApp(void)
     ADM_info("OpenGL enabled at built time, checking if we should run it..\n");
     bool enabled;
     prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
-    
+
     if(enabled)
     {
         ADM_info("OpenGL activated, initializing... \n");
@@ -1291,7 +1287,7 @@ bool UI_hasOpenGl(void)
 /**
     \fn UI_iconify
 */
-void UI_iconify( void ) 
+void UI_iconify( void )
 {
 	QuiMainWindows->hide();
 
@@ -1299,7 +1295,7 @@ void UI_iconify( void )
 /**
     \fn UI_deiconify
 */
-void UI_deiconify( void ) 
+void UI_deiconify( void )
 {
     QuiMainWindows->showNormal();
 

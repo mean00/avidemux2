@@ -17,6 +17,7 @@
 #include "ADM_default.h"
 #include <math.h>
 #include <errno.h>
+#include <sstream>
 
 #include "fourcc.h"
 
@@ -42,6 +43,7 @@
 #include "avi_vars.h"
 #include "prototype.h" // FIXME
 #include "ADM_script2/include/ADM_script.h"
+#include "ADM_edScriptGenerator.h"
 
 renderZoom currentZoom=ZOOM_1_1;
 #include "DIA_audioTracks.h"
@@ -106,6 +108,10 @@ static void DebugScript(const char *name)
     A_Resync(); // total duration & stuff
 }
 
+static void SaveScript(const char *name)
+{
+    A_saveScript(tempEngine, name);
+}
 //
 //
 /**
@@ -185,16 +191,8 @@ int nw;
 				break;
 
 			case 2:
-				// Hack until save routines are moved to IScriptEngine
-				if (tempEngine->name().compare("SpiderMonkey") == 0)
-				{
-					GUI_FileSelWrite(QT_TR_NOOP("Select jsProject to Save"), A_saveJsProject);
-				}
-				else if (tempEngine->name().compare("Python") == 0)
-				{
-					GUI_FileSelWrite(QT_TR_NOOP("Select pyProject to Save"), A_savePyProject);
-				}
-
+				GUI_FileSelWrite(QT_TR_NOOP("Select script to save"), SaveScript);
+				UI_refreshCustomMenu();
 				break;
 		}
 
@@ -798,6 +796,22 @@ bool A_parseECMAScript(const char *name)
 }
 #endif
 
+void A_saveScript(IScriptEngine* engine, const char* name)
+{
+    IScriptWriter *writer = engine->createScriptWriter();
+    ADM_ScriptGenerator generator(video_body, writer);
+    std::stringstream stream(std::stringstream::in | std::stringstream::out);
+
+    generator.generateScript(stream);
+    delete writer;
+
+    FILE *file = ADM_fopen(name, "wt");
+    string script = stream.str();
+
+    ADM_fwrite(script.c_str(), script.length(), 1, file);
+    ADM_fclose(file);
+}
+
 /*
 	Unpack all frames without displaying them to check for error
 
@@ -1001,10 +1015,7 @@ void A_addJob(void)
         strcat(fullname,name);
         strcat(fullname,".py");
 
-        if(!video_body->saveAsScript(fullname,final))
-        {
-          GUI_Error_HIG(QT_TR_NOOP("Saving failed"),QT_TR_NOOP("Saving the job failed. Maybe you have permission issue with ~/.avidemux"));
-        }
+        A_saveScript(getScriptEngines()[0], final);
 
         delete [] fullname;
         delete [] base;
