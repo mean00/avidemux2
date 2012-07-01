@@ -3,6 +3,7 @@ SET(admScriptPython_SRCS
 	ADM_pyAvidemux.cpp
 	ADM_pyAvidemuxAudio.cpp
 	PythonEngine.cpp
+	PythonScriptWriter.cpp
 	TinyParams.cpp
 )
 

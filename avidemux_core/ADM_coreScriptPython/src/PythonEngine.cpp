@@ -16,6 +16,7 @@
 #include "ADM_assert.h"
 #include "ADM_pyAvidemux.h"
 #include "PythonEngine.h"
+#include "PythonScriptWriter.h"
 
 #include "TinyParams.h"
 #include "DIA_factory.h"
@@ -278,5 +279,5 @@ IScriptEngine::Capabilities PythonEngine::capabilities()
 
 IScriptWriter* PythonEngine::createScriptWriter()
 {
-    return NULL;
+    return new PythonScriptWriter();
 }
