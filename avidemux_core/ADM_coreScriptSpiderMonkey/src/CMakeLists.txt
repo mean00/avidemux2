@@ -15,6 +15,7 @@ SET(admScriptSpiderMonkey_SRCS
 	ADM_jsTestFactory.cpp
 	ADM_jsUtils.cpp
 	SpiderMonkeyEngine.cpp
+	SpiderMonkeyScriptWriter.cpp
 	ADM_coreScriptSpiderMonkey.v
 )
 

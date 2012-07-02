@@ -2,6 +2,7 @@
 
 #include "ADM_assert.h"
 #include "SpiderMonkeyEngine.h"
+#include "SpiderMonkeyScriptWriter.h"
 
 #include "src_dialogFactory/ADM_JSDFMenu.h"
 #include "src_dialogFactory/ADM_JSDFToggle.h"
@@ -194,5 +195,5 @@ IScriptEngine::Capabilities SpiderMonkeyEngine::capabilities()
 
 IScriptWriter* SpiderMonkeyEngine::createScriptWriter()
 {
-    return NULL;
+    return new SpiderMonkeyScriptWriter();
 }
