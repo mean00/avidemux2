@@ -3,44 +3,38 @@
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_videoFilterBridge.h"
 #include "MyQScriptEngine.h"
+#include "VideoFilterShim.h"
 
 extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 
 namespace ADM_qtScript
 {
-    class ADM_videoFilterKludgeCollaborator : public ADM_coreVideoFilter
+    VideoFilterShim::VideoFilterShim() : ADM_coreVideoFilter(NULL, NULL) {}
+
+    bool VideoFilterShim::getNextFrame(uint32_t *frameNumber, ADMImage *image)
     {
-    private:
-        FilterInfo _dummyInfo;
+        return false;
+    }
 
-    public:
-        ADM_videoFilterKludgeCollaborator() : ADM_coreVideoFilter(NULL, NULL) {}
+    FilterInfo* VideoFilterShim::getInfo(void)
+    {
+        return &this->_dummyInfo;
+    }
 
-        bool getNextFrame(uint32_t *frameNumber, ADMImage *image)
-        {
-            return false;
-        }
+    bool VideoFilterShim::getCoupledConf(CONFcouple **couples)
+    {
+        *couples = NULL;
 
-        FilterInfo *getInfo(void)
-        {
-            return &this->_dummyInfo;
-        }
+        return true;
+    }
 
-        bool getCoupledConf(CONFcouple **couples)
-        {
-            *couples = NULL;
-
-            return true;
-        }
-
-        void setCoupledConf(CONFcouple *couples) {}
-    };
+    void VideoFilterShim::setCoupledConf(CONFcouple *couples) {} 
 
     VideoFilter::VideoFilter(
         QScriptEngine *engine, IEditor *editor, ADM_vf_plugin *plugin) : QtScriptConfigObject(editor)
     {
         this->filterPlugin = plugin;
-        this->_filter = filterPlugin->create(new ADM_videoFilterKludgeCollaborator(), NULL);
+        this->_filter = filterPlugin->create(new VideoFilterShim(), NULL);
         this->_filter->getCoupledConf(&this->_defaultConf);
         this->_attachedToFilterChain = false;
 
@@ -52,7 +46,7 @@ namespace ADM_qtScript
         QScriptEngine *engine, IEditor *editor, ADM_VideoFilterElement *element) : QtScriptConfigObject(editor)
     {
         this->filterPlugin = ADM_vf_getPluginFromTag(element->tag);
-        ADM_coreVideoFilter *filter = filterPlugin->create(new ADM_videoFilterKludgeCollaborator(), NULL);
+        ADM_coreVideoFilter *filter = filterPlugin->create(new VideoFilterShim(), NULL);
 
         filter->getCoupledConf(&this->_defaultConf);
         delete filter;

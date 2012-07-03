@@ -11,7 +11,7 @@
 #endif
 
 #include "MyQScriptEngine.h"
-#include "AdmScriptMapper.h"
+#include "QtScriptWriter.h"
 
 #include "AudioEncoder.h"
 #include "AudioOutput.h"
@@ -65,7 +65,7 @@ namespace ADM_qtScript
 
     IScriptWriter* QtScriptEngine::createScriptWriter()
     {
-        return NULL;
+        return new QtScriptWriter();
     }
 
     IEditor* QtScriptEngine::editor()
@@ -315,7 +315,7 @@ namespace ADM_qtScript
     {
         QString output;
 
-        for (int i = 0; i < context->argumentCount(); ++i)
+        for (int i = 0; i < context->argumentCount(); i++)
         {
             if (i > 0)
             {
