@@ -6,6 +6,7 @@
 !include nsDialogs.nsh
 !include Memento.nsh
 !include FileFunc.nsh
+!include WinVer.nsh
 !include WordFunc.nsh
 !include ${NSIDIR}\revision.nsh
 
@@ -1341,7 +1342,9 @@ checkQuickLaunchQt:
 	!insertmacro SectionFlagIsSet ${SecQuickLaunchQt} ${SF_SELECTED} enableQuickLaunch end
 
 enableQuickLaunch:
-	StrCpy $CreateQuickLaunchIcon 1	
+	${If} ${AtMostWinVista}
+		StrCpy $CreateQuickLaunchIcon 1
+	${EndIf}
 
 end:
 FunctionEnd
@@ -1416,10 +1419,12 @@ Function InstallOptionsPage
 	${NSD_SetState} $chkStartMenu $CreateStartMenuGroup
 	${NSD_OnClick} $chkStartMenu UpdateInstallOptions
 
-	${NSD_CreateCheckBox} 0 54u 100% 12u "In my &Quick Launch bar"
-	Pop $chkQuickLaunch
-	${NSD_SetState} $chkQuickLaunch $CreateQuickLaunchIcon
-	${NSD_OnClick} $chkQuickLaunch UpdateInstallOptions
+	${If} ${AtMostWinVista}
+		${NSD_CreateCheckBox} 0 54u 100% 12u "In my &Quick Launch bar"
+		Pop $chkQuickLaunch
+		${NSD_SetState} $chkQuickLaunch $CreateQuickLaunchIcon
+		${NSD_OnClick} $chkQuickLaunch UpdateInstallOptions
+	${EndIf}
 
 	nsDialogs::Show
 FunctionEnd
