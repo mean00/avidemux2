@@ -1,17 +1,22 @@
 ##########################
 # Included files
 ##########################
+!addincludedir ${NSIDIR}
+!addplugindir ${NSIDIR}\plugin
+
 !include Sections.nsh
 !include MUI2.nsh
 !include nsDialogs.nsh
 !include Memento.nsh
 !include FileFunc.nsh
+!include UAC.nsh
 !include WinVer.nsh
 !include WordFunc.nsh
-!include ${NSIDIR}\revision.nsh
+!include revision.nsh
 
 SetCompressor /SOLID lzma
 SetCompressorDictSize 96
+RequestExecutionLevel user
 
 ##########################
 # Defines
@@ -1310,8 +1315,27 @@ SectionEnd
 # Installer functions
 ##########################
 Function .onInit
-	Call LoadPreviousSettings
+UAC_Elevate:
+	!insertmacro UAC_RunElevated
+	StrCmp 1223 $0 UAC_ElevationAborted
+	StrCmp 0 $0 0 UAC_Err
+	StrCmp 1 $1 0 UAC_Success
+	Quit
 
+UAC_Err:
+	MessageBox MB_ICONSTOP "Unable to elevate, error $0"
+	Abort
+
+UAC_ElevationAborted:
+	Abort
+
+UAC_Success:
+	StrCmp 1 $3 +4
+	StrCmp 3 $1 0 UAC_ElevationAborted
+	MessageBox MB_ICONSTOP "This installer requires admin access."
+	Goto UAC_Elevate
+
+	Call LoadPreviousSettings
 	ReadRegStr $PreviousVersion HKLM "${REGKEY}" Version
 
 	${If} $PreviousVersion != ""
@@ -1569,7 +1593,7 @@ Function RunAvidemux
     IntOp $0 $0 & ${SF_SELECTED}
 
     StrCmp $0 ${SF_SELECTED} 0 GTK
-        Exec "$INSTDIR\avidemux.exe"
+		!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR\avidemux.exe" "" "" ""
 
     Goto end
 GTK:
@@ -1580,7 +1604,7 @@ GTK:
     IntOp $0 $0 & ${SF_SELECTED}
 
     StrCmp $0 ${SF_SELECTED} 0 End
-        Exec "$INSTDIR\avidemux_gtk.exe"
+		!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR\avidemux_gtk.exe" "" "" ""
 !endif
 
 end:
@@ -1676,6 +1700,26 @@ FunctionEnd
 ##########################
 Function un.onInit
 	SetShellVarContext all
+
+UAC_Elevate:
+	!insertmacro UAC_RunElevated
+	StrCmp 1223 $0 UAC_ElevationAborted
+	StrCmp 0 $0 0 UAC_Err
+	StrCmp 1 $1 0 UAC_Success
+	Quit
+
+UAC_Err:
+	MessageBox MB_ICONSTOP "Unable to elevate, error $0"
+	Abort
+
+UAC_ElevationAborted:
+	Abort
+
+UAC_Success:
+	StrCmp 1 $3 +4
+	StrCmp 3 $1 0 UAC_ElevationAborted
+	MessageBox MB_ICONSTOP "This installer requires admin access."
+	Goto UAC_Elevate
 FunctionEnd
 
 ; TrimNewlines (copied from NSIS documentation)
