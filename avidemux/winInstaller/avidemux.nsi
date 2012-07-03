@@ -325,6 +325,13 @@ Section "Avidemux Core" SecCore
     ${Folder} help
     SetOutPath $INSTDIR\plugins\autoScripts
     ${Folder} plugins\autoScripts
+
+	WriteRegStr HKLM "${REGKEY}" CreateDesktopIcon $CreateDesktopIcon
+	WriteRegStr HKLM "${REGKEY}" CreateStartMenuGroup $CreateStartMenuGroup
+
+	${If} ${AtMostWinVista}
+		WriteRegStr HKLM "${REGKEY}" CreateQuickLaunchIcon $CreateQuickLaunchIcon
+	${EndIf}
 SectionEnd
 
 SectionGroup /e "User interfaces" SecGrpUI
@@ -1275,6 +1282,9 @@ Section Uninstall
     
     DeleteRegKey HKLM "${UNINST_REGKEY}"
     DeleteRegValue HKLM "${REGKEY}" Path
+	DeleteRegValue HKLM "${REGKEY}" CreateDesktopIcon
+	DeleteRegValue HKLM "${REGKEY}" CreateStartMenuGroup
+	DeleteRegValue HKLM "${REGKEY}" CreateQuickLaunchIcon
     DeleteRegKey /IfEmpty HKLM "${REGKEY}"
 
 	FileOpen $UninstallLogHandle "${UninstallLogPath}" r
@@ -1326,7 +1336,11 @@ checkStartMenuQt:
 	!insertmacro SectionFlagIsSet ${SecStartMenuQt} ${SF_SELECTED} enableStartMenu checkDesktopGtk
 
 enableStartMenu:
-	StrCpy $CreateStartMenuGroup 1
+	ReadRegStr $CreateStartMenuGroup HKLM "${REGKEY}" CreateStartMenuGroup
+
+	${If} $CreateStartMenuGroup == ""
+		StrCpy $CreateStartMenuGroup 1
+	${EndIf}
 
 checkDesktopGtk:
 	!insertmacro SectionFlagIsSet ${SecDesktopGtk} ${SF_SELECTED} enableDesktop checkDesktopQt
@@ -1334,8 +1348,12 @@ checkDesktopQt:
 	!insertmacro SectionFlagIsSet ${SecDesktopQt} ${SF_SELECTED} enableDesktop checkQuickLaunchGtk
 
 enableDesktop:
-	StrCpy $CreateDesktopIcon 1
-	
+	ReadRegStr $CreateDesktopIcon HKLM "${REGKEY}" CreateDesktopIcon
+
+	${If} $CreateDesktopIcon == ""
+		StrCpy $CreateDesktopIcon 1
+	${EndIf}
+
 checkQuickLaunchGtk:
 	!insertmacro SectionFlagIsSet ${SecQuickLaunchGtk} ${SF_SELECTED} enableQuickLaunch checkQuickLaunchQt
 checkQuickLaunchQt:
@@ -1343,7 +1361,11 @@ checkQuickLaunchQt:
 
 enableQuickLaunch:
 	${If} ${AtMostWinVista}
-		StrCpy $CreateQuickLaunchIcon 1
+		ReadRegStr $CreateQuickLaunchIcon HKLM "${REGKEY}" CreateQuickLaunchIcon
+
+		${If} $CreateQuickLaunchIcon == ""
+			StrCpy $CreateQuickLaunchIcon 1
+		${EndIf}
 	${EndIf}
 
 end:
