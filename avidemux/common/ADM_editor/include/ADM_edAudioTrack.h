@@ -19,7 +19,7 @@
 #ifndef ADM_EDAUDIOTRACK
 #define ADM_EDAUDIOTRACK
 
-#include "ADM_inttype.h"
+#include "ADM_default.h"
 #include "ADM_audioStream.h"
 
 #define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)

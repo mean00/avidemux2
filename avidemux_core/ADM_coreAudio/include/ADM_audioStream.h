@@ -16,7 +16,7 @@
 #ifndef ADM_audioStream_H
 #define ADM_audioStream_H
 
-#include "ADM_default.h"
+#include "ADM_assert.h"
 #include "ADM_baseAudioStream.h"
 /**
         \fn      ADM_audioAccess

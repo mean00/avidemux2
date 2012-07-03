@@ -18,7 +18,7 @@
  ***************************************************************************/
 #ifndef ADM_COREMUXERFFMPEG_H
 #define ADM_COREMUXERFFMPEG_H
-#include "ADM_default.h"
+
 #include "fourcc.h"
 #include "ADM_muxer.h"
 #include "ADM_muxerUtils.h"

@@ -27,6 +27,7 @@
 #include <QtGui/QX11Info>
 #endif
 
+#include "ADM_assert.h"
 #include "T_preview.h"
 #include "../ADM_render/GUI_render.h"
 #include "../ADM_render/GUI_accelRender.h"

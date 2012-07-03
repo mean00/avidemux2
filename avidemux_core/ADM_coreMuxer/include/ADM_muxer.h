@@ -6,7 +6,6 @@
  */
 #ifndef ADM_muxer_H
 #define ADM_muxer_H
-#include "ADM_default.h"
 #include "ADM_audioStream.h"
 #include "DIA_working.h"
 #include "DIA_coreToolkit.h"

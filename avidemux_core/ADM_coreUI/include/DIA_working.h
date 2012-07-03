@@ -20,6 +20,7 @@
 #ifndef __DIA_WK__
 #define __DIA_WK__
 #include "ADM_clock.h"
+#include "ADM_assert.h"
 /**
     \class DIA_workingBase
 */

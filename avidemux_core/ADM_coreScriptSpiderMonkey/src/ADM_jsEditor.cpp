@@ -1,5 +1,6 @@
 #include <sstream>
-#include "ADM_inttype.h"
+
+#include "ADM_default.h"
 #include "ADM_vidMisc.h"
 #include "SpiderMonkeyEngine.h"
 #include "ADM_jsEditor.h"

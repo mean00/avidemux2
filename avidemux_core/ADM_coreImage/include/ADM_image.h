@@ -23,7 +23,7 @@
 //
 #ifndef ADM_IMAGE
 #define ADM_IMAGE
-#include "ADM_assert.h"
+#include "ADM_inttype.h"
 #include "ADM_rgb.h"
 #include "ADM_colorspace.h"
 

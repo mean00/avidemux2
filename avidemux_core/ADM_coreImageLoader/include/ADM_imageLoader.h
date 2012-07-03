@@ -4,7 +4,7 @@
 //
 #ifndef ADM_IMAGE_LOADER
 #define ADM_IMAGE_LOADER
-#include "ADM_default.h"
+
 #include "ADM_image.h"
 typedef enum 
 {

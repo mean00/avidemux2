@@ -16,7 +16,9 @@
  ***************************************************************************/
 #ifndef __FOUR_CC__
 #define __FOUR_CC__
-#include "ADM_default.h"
+
+#include "ADM_inttype.h"
+
 class fourCC
 {
 public:

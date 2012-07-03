@@ -1,5 +1,4 @@
 #include "QtScriptWriter.h"
-#include "ADM_default.h"
 #include "ADM_editor/include/ADM_edEditableAudioTrack.h"
 #include "ADM_editor/include/ADM_edAudioTrackExternal.h"
 #include "audioencoderInternal.h"
