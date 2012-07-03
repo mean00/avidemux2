@@ -1,13 +1,10 @@
 /***************************************************************************
-                          DIA_crop.cpp  -  description
+                        Q_mpdelogo.cpp  -  description
                              -------------------
 
-			    GUI for cropping including autocrop
-			    +Revisted the Gtk2 way
-			     +Autocrop now in RGB space (more accurate)
+			   flyDialog for MPlayer DeLogo filter
 
-    begin                : Fri May 3 2002
-    copyright            : (C) 2002/2007 by mean
+    copyright            : (C) 2004/2007 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 

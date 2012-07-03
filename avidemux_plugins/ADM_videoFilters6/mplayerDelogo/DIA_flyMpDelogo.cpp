@@ -1,9 +1,9 @@
 /**/
 /***************************************************************************
-                          DIA_Asharp
+                          DIA_flyMpDelogo
                              -------------------
 
-                           Ui for Asharp
+                           Ui for MPlayer DeLogo filter
 
     begin                : 08 Apr 2005
     copyright            : (C) 2004/5 by mean

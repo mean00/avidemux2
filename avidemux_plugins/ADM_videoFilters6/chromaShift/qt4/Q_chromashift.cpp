@@ -1,10 +1,9 @@
 /***************************************************************************
-                          DIA_crop.cpp  -  description
+                          DIA_chromashift.cpp  -  description
                              -------------------
 
-			    GUI for cropping including autocrop
-			    +Revisted the Gtk2 way
-			     +Autocrop now in RGB space (more accurate)
+			     GUI for chroma shifting
+			     +Revisted the Gtk2 way
 
     begin                : Fri May 3 2002
     copyright            : (C) 2002/2007 by mean
