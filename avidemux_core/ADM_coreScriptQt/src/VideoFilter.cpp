@@ -3,13 +3,16 @@
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_videoFilterBridge.h"
 #include "MyQScriptEngine.h"
-#include "VideoFilterShim.h"
 
 extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 
 namespace ADM_qtScript
 {
-    VideoFilterShim::VideoFilterShim() : ADM_coreVideoFilter(NULL, NULL) {}
+    VideoFilterShim::VideoFilterShim() : ADM_coreVideoFilter(NULL, NULL)
+	{
+		this->_dummyInfo.width = 1;
+		this->_dummyInfo.height = 1;
+	}
 
     bool VideoFilterShim::getNextFrame(uint32_t *frameNumber, ADMImage *image)
     {
@@ -33,8 +36,9 @@ namespace ADM_qtScript
     VideoFilter::VideoFilter(
         QScriptEngine *engine, IEditor *editor, ADM_vf_plugin *plugin) : QtScriptConfigObject(editor)
     {
+		this->_videoFilterShim = new VideoFilterShim();
         this->filterPlugin = plugin;
-        this->_filter = filterPlugin->create(new VideoFilterShim(), NULL);
+        this->_filter = filterPlugin->create(_videoFilterShim, NULL);
         this->_filter->getCoupledConf(&this->_defaultConf);
         this->_attachedToFilterChain = false;
 
@@ -45,11 +49,15 @@ namespace ADM_qtScript
     VideoFilter::VideoFilter(
         QScriptEngine *engine, IEditor *editor, ADM_VideoFilterElement *element) : QtScriptConfigObject(editor)
     {
+		this->_videoFilterShim = NULL;
         this->filterPlugin = ADM_vf_getPluginFromTag(element->tag);
-        ADM_coreVideoFilter *filter = filterPlugin->create(new VideoFilterShim(), NULL);
+
+		VideoFilterShim* videoFilterShim = new VideoFilterShim();
+        ADM_coreVideoFilter *filter = filterPlugin->create(videoFilterShim, NULL);
 
         filter->getCoupledConf(&this->_defaultConf);
         delete filter;
+		delete videoFilterShim;
 
         this->_filter = element->instance;
         this->_attachedToFilterChain = true;
@@ -64,6 +72,7 @@ namespace ADM_qtScript
         if (!this->_attachedToFilterChain)
         {
             delete this->_filter;
+			delete this->_videoFilterShim;
         }
     }
 
@@ -142,6 +151,7 @@ namespace ADM_qtScript
     {
         this->_trackObjectId = trackObjectId;
         this->_attachedToFilterChain = true;
+		delete this->_videoFilterShim;
     }
 
     bool VideoFilter::verifyFilter()

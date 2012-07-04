@@ -3,6 +3,7 @@
 
 #include "QtScriptConfigObject.h"
 #include "ADM_coreVideoFilterInternal.h"
+#include "VideoFilterShim.h"
 
 namespace ADM_qtScript
 {
@@ -64,6 +65,7 @@ namespace ADM_qtScript
 		Q_OBJECT
 
 	private:
+		VideoFilterShim *_videoFilterShim;
 		QScriptValue _configObject;
 		ADM_coreVideoFilter* _filter;
 		CONFcouple *_defaultConf;
