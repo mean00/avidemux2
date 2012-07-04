@@ -43,7 +43,6 @@ decoderRGB16::~decoderRGB16()
 */
 bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 {
-	int xx = _w * _h;
 	int lineSize = (_w *bytePerPixel + 3) & ~3; // 4 bytes aligned ?
 	ADM_colorspace colorspace;
 	int i, j;

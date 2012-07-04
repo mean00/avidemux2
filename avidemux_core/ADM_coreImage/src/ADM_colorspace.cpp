@@ -47,7 +47,6 @@ static void swapRGB32(uint32_t w,uint32_t h, uint8_t *to)
 {
   uint32_t l=w*h;
     uint8_t *d=(uint8_t *)to;
-    int r,b,g,a;
     while(l--)
     {
         uint8_t s=d[0];
@@ -65,7 +64,7 @@ static void swapRGB24(uint32_t w,uint32_t h, uint8_t *to)
     uint32_t l=w*h;
     uint8_t *d=(uint8_t *)to;
     return;
-    int r,b,g;
+
     while(l--)
     {
         uint8_t s=d[0];

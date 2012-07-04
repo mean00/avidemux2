@@ -130,7 +130,7 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
 	oc->oformat = fmt;
 	snprintf(oc->filename,1000,"file://%s",filename);
     // probably a memeleak here
-    char *foo=ADM_strdup(filename);
+
 #warning use AV METADATA
 #if 0
     strcpy(oc->title,ADM_GetFileName(foo));
@@ -398,7 +398,6 @@ bool muxerFFmpeg::saveLoop(const char *title)
 
 
     ADM_info("avg fps=%u\n",vStream->getAvgFps1000());
-    AVRational *scale=&(video_st->codec->time_base);
     uint64_t videoDuration=vStream->getVideoDuration();
 
     initUI("Saving");

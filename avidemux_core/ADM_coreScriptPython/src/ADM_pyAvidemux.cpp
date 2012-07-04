@@ -86,10 +86,7 @@ int pyPrintTiming(IEditor *editor, int framenumber)
 	if (editor->getVideoPtsDts(framenumber, &flags, &pts, &dts))
 	{
 		int64_t delta = 0;
-		char field = 'F';
 
-		if (flags & AVI_BOTTOM_FIELD) field = 'B';
-		if (flags & AVI_TOP_FIELD) field = 'T';
 		if (pts != ADM_NO_PTS && dts != ADM_NO_PTS) delta = (int64_t)pts - (int64_t)dts;
                 printf("Frame  %05d",(int)framenumber);
                 printf(" Flags %04x",(int)flags);

@@ -66,7 +66,6 @@ uint8_t ADM_audioStreamEAC3::getPacket(uint8_t *obuffer,
 uint8_t data[ADM_LOOK_AHEAD];
 uint32_t offset;
 int size;
-int flags,sample_rate,bit_rate;
 ADM_EAC3_INFO info;
     while(1)
     {

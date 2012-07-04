@@ -113,7 +113,7 @@ bool admJson::addCompressParam(const char *key, const COMPRES_PARAMS &param)
 {
     char *str;
     ADM_compressWriteToString((COMPRES_PARAMS *)&param,&str);
-    bool r=addString(key,str);
+    addString(key,str);
     ADM_dealloc(str);
     return true;
 }

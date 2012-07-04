@@ -42,15 +42,15 @@ namespace ADM_qtScript
 
 		/** \brief Inserts a new audio output in to the collection at the specified index to encode an audio track from the open video.
 		 */
-		Q_INVOKABLE void insert(int /*% Number %*/ index, int /*% Number %*/ inputTrackIndex, QScriptValue /*% AudioEncoder %*/ encoder = QScriptValue::NullValue /*% new CopyAudioEncoder() %*/);
+		Q_INVOKABLE void insert(uint /*% Number %*/ index, int /*% Number %*/ inputTrackIndex, QScriptValue /*% AudioEncoder %*/ encoder = QScriptValue::NullValue /*% new CopyAudioEncoder() %*/);
 
 		/** \brief Inserts a new audio output in to the collection at the specified index to encode an external audio file.
 		 */
-		Q_INVOKABLE void insert(int /*% Number %*/ index, QString /*% String %*/ externalAudioFile, QScriptValue /*% AudioEncoder %*/ encoder = QScriptValue::NullValue /*% new CopyAudioEncoder() %*/);
+		Q_INVOKABLE void insert(uint /*% Number %*/ index, QString /*% String %*/ externalAudioFile, QScriptValue /*% AudioEncoder %*/ encoder = QScriptValue::NullValue /*% new CopyAudioEncoder() %*/);
 
 		/** \brief Removes the AudioOutput object at the specified index.
 		 */
-		Q_INVOKABLE void removeAt(int /*% Number %*/ index);
+		Q_INVOKABLE void removeAt(uint /*% Number %*/ index);
 
 		/** \brief Gets the AudioOutput object at the specified index.
 		 */

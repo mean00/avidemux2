@@ -90,9 +90,8 @@ void qfprintf(FILE *stream, const char *format, ...){
   char *p = buf;
   int numbytes;
   int fd = fileno(stream);
-  int rc;
+
   va_list ap;
-  char msg[msg_len];
 	va_start(ap,format);
 	numbytes = vsnprintf(buf,qfprintf_buf_len,format,ap);
 	va_end(ap);

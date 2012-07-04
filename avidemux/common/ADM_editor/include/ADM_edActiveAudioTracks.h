@@ -28,7 +28,7 @@ protected:
 public:
 	ActiveAudioTracks();
 	virtual ~ActiveAudioTracks();
-	virtual int size() const;
+	virtual unsigned int size() const;
 	virtual EditableAudioTrack *atEditable(int ix);
 	virtual ADM_edAudioTrack *atEdAudio(int ix);
 	virtual bool addTrack(EditableAudioTrack *x);

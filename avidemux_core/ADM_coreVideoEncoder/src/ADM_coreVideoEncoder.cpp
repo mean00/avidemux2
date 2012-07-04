@@ -147,7 +147,7 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
 /**
     \fn ADM_pluginSystemPath
 */
-static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
+static bool ADM_pluginSystemPath(const std::string& pluginName,int pluginVersion,std::string &rootPath)
 {
 
     std::string path=std::string(ADM_getSystemPluginSettingsDir());
@@ -165,7 +165,7 @@ static bool ADM_pluginSystemPath(const std::string pluginName,int pluginVersion,
     \fn ADM_pluginGetPath
     \brief returns the user plugin path, containing the presets for that plugin
 */
-bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::string &rootPath)
+bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath)
 {
     std::string path=std::string(ADM_getUserPluginSettingsDir());
     std::string version;
@@ -188,13 +188,13 @@ bool ADM_pluginGetPath(const std::string pluginName,int pluginVersion,std::strin
 static bool getFileNameAndExt(const std::string &input, std::string &output)
 {
     std::string s=input;
-    size_t lastSlash,lastBackSlash;
+    size_t lastSlash;
 
      lastSlash=s.find_last_of("/");
      if(lastSlash!=-1)
         s.replace(0,lastSlash+1,std::string(""));
 #ifdef __WIN32
-     lastBackSlash=s.find_last_of("\\");
+     size_t lastBackSlash=s.find_last_of("\\");
      if(lastBackSlash!=-1)
         s.replace(0,lastBackSlash+1,std::string(""));
 #endif
@@ -207,7 +207,7 @@ static bool getFileNameAndExt(const std::string &input, std::string &output)
     \fn ADM_pluginInstallSystem
     \brief Copy if needed the system presets to the user presets list
 */
-bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,int pluginVersion)
+bool ADM_pluginInstallSystem(const std::string& pluginName,const std::string& ext,int pluginVersion)
 {
     std::string sysPath,userPath;
     ADM_pluginSystemPath(pluginName,pluginVersion,sysPath);
@@ -240,7 +240,7 @@ bool ADM_pluginInstallSystem(const std::string pluginName,const std::string ext,
     \fn ADM_pluginGetPath
     \brief returns the user plugin path, containing the presets for that plugin
 */
-bool ADM_listFile(const std::string path,const std::string extension,vector <std::string > & listOut)
+bool ADM_listFile(const std::string& path,const std::string& extension,vector <std::string > & listOut)
 {
 #define NB 30
     char *list[NB];

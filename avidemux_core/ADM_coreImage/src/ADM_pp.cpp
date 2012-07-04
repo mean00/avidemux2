@@ -65,7 +65,6 @@ ADM_PP::~ADM_PP()
 bool ADM_PP::update(void)
 {
 char stringMode[60];
-char stringFQ[60];
 
 	stringMode[0]=0;
 	cleanup();
@@ -76,6 +75,8 @@ char stringFQ[60];
 	if(postProcType&4) strcat(stringMode,"dr:a,");
 	if(forcedQuant)  
 		{
+			char stringFQ[60];
+
 			sprintf(stringFQ,"fq:%d,",forcedQuant);
 			strcat(stringMode,stringFQ);
 		}

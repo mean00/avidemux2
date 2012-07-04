@@ -35,7 +35,6 @@ namespace ADM_qtScript
 		QScriptValue _configObject;
 		CONFcouple* _encoderConf;
 		EditableAudioTrack* _track;
-		ADM_audioEncoder* _encoder;
 
 		void getConfCouple(CONFcouple** conf, const QString& containerName = QString());
 		QScriptValue getConfiguration(void);

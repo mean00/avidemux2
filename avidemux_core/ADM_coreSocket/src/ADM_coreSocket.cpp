@@ -174,8 +174,6 @@ bool     ADM_socket::createBindAndAccept(uint32_t *port)
   *port=0;
   service.sin_port = 0; // bind to any port
 
-
-  int one=true;
   if (bind( mySocket,  (SADDR *)&service, sizeof(service))) 
   {
 		ADM_error("bind() failed  \n");

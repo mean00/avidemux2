@@ -54,7 +54,6 @@ static void drawGlyph(ADMImage *dst, int x, int y, int num,int offset, int color
 */
 bool     ADMImage::printString(uint32_t x,uint32_t y, const char *s)
 {
-	int len=strlen(s);
     for (int xx = 0; *s; ++s, ++xx) 
     {
         if(*s==0x0d || *s==0x0a) continue;

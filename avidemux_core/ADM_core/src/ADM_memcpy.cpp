@@ -160,7 +160,6 @@ static void * sse_memcpy(void * to, const void * from, size_t len)
   void *retval;
   uint8_t *ufrom=(uint8_t *)from;
   uint8_t *uto=(uint8_t *)to;
-  size_t i;
   retval = to;
 
   /* PREFETCH has effect even for MOVSB instruction ;) */
@@ -188,7 +187,7 @@ static void * sse_memcpy(void * to, const void * from, size_t len)
       len -= delta;
       small_memcpy(uto, ufrom, delta);
     }
-    i = len >> 6; /* len/64 */
+    size_t i = len >> 6; /* len/64 */
     len&=63;
     if(((intptr_t)ufrom) & 15)
       /* if SRC is misaligned */
@@ -250,7 +249,6 @@ static void * mmx_memcpy(void * to, const void * from, size_t len)
   void *retval;
   uint8_t *ufrom=(uint8_t *)from;
   uint8_t *uto=(uint8_t *)to;
-  size_t i;
   retval = uto;
 
   if(len >= MMX1_MIN_LEN)
@@ -264,7 +262,7 @@ static void * mmx_memcpy(void * to, const void * from, size_t len)
       len -= delta;
       small_memcpy(uto, ufrom, delta);
     }
-    i = len >> 6; /* len/64 */
+    size_t i = len >> 6; /* len/64 */
     len&=63;
     for(; i>0; i--)
     {
@@ -303,7 +301,6 @@ static void * mmx2_memcpy(void * to, const void * from, size_t len)
   void *retval;
   uint8_t *ufrom=(uint8_t *)from;
   uint8_t *uto=(uint8_t *)to;
-  size_t i;
   retval = to;
 
   /* PREFETCH has effect even for MOVSB instruction ;) */
@@ -331,7 +328,7 @@ static void * mmx2_memcpy(void * to, const void * from, size_t len)
       len -= delta;
       small_memcpy(uto, ufrom, delta);
     }
-    i = len >> 6; /* len/64 */
+    size_t i = len >> 6; /* len/64 */
     len&=63;
     for(; i>0; i--)
     {
@@ -422,9 +419,7 @@ uint8_t probe(adm_fast_memcpy func,char *name)
 extern "C" uint8_t ADM_InitMemcpy(void)
 {
   uint64_t          t;
-  char             *buf1, *buf2;
-  int               i, j, best;
-  int               config_flags = 0;
+
 #undef memcpy
         myAdmMemcpy=memcpy;
 #if defined(ADM_CPU_X86)

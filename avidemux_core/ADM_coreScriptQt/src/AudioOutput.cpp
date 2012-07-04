@@ -337,7 +337,7 @@ namespace ADM_qtScript
         ActiveAudioTracks* tracks = this->_editor->getPoolOfActiveAudioTrack();
         bool found = false;
 
-        for (int trackIndex = 0; trackIndex < tracks->size(); trackIndex++)
+        for (unsigned int trackIndex = 0; trackIndex < tracks->size(); trackIndex++)
         {
             EditableAudioTrack *track = tracks->atEditable(trackIndex);
 

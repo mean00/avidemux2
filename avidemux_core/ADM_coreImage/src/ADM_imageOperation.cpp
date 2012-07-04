@@ -102,7 +102,7 @@ bool ADMImage::blacken(void)
 {
         ADM_assert(isWrittable()==true); // could not duplicate to a linked data image
         uint32_t sourceStride,destStride;
-        uint8_t  *source,*dest;
+        uint8_t  *dest;
 
         for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
         {

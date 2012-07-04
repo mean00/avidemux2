@@ -267,7 +267,6 @@ void *ADM_realloc(void *ptr, size_t newsize)
 	// Do copy everytime (slower)
 	uint32_t *backdoor;
 	uint32_t size, offset;
-	char *c = (char*)ptr;
 
 	backdoor = (uint32_t*)ptr;
 	backdoor -= 2;

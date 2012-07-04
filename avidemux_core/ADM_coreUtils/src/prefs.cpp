@@ -154,8 +154,6 @@ preferences::~preferences()
 */
 bool preferences::load()
 {
-
-   char *home;
    char *dir_adm;
    std::string path;
 
@@ -186,7 +184,6 @@ bool preferences::load()
 */
 bool preferences::save()
 {
-   char *home;
    char *dir_adm;
    std::string path;
 
@@ -401,7 +398,6 @@ bool preferences::set(options option, const char *v)
 
 bool preferences::set_lastfile(const char* file)
 {
-    int idx=-1;
     char *lastFiles[NB_LAST_FILES];
     lastFiles[0]=myPrefs.lastfiles.file1;
     lastFiles[1]=myPrefs.lastfiles.file2;

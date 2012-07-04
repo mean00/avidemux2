@@ -65,6 +65,10 @@ void sig_segfault_handler(int signo)
 
 void ADM_backTrack(const char *info,int lineno,const char *file)
 {
+	if(mysaveFunction)
+		mysaveFunction();
+
+#if !defined(__HAIKU__)
 	char wholeStuff[2048];
     char buffer[4096];
     char in[2048];
@@ -74,10 +78,6 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 
 	wholeStuff[0]=0;
 
-	if(mysaveFunction)
-		mysaveFunction();
-
-#if !defined(__HAIKU__)
 	printf("\n*********** BACKTRACK **************\n");
 
 	count = backtrace(stack, 20);
@@ -110,6 +110,6 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 		myFatalFunction("Crash", wholeStuff); // FIXME
 
 	exit(-1); // _exit(1) ???
-}
 #endif
+}
 //EOF

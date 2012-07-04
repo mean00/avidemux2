@@ -35,11 +35,11 @@ namespace ADM_qtScript
 
 		/** \brief Inserts a new video filter in to the collection at the specified index.
 		 */
-		Q_INVOKABLE QScriptValue /*% void %*/ insert(int /*% Number %*/ index, QScriptValue /*% VideoFilter %*/ filter);
+		Q_INVOKABLE QScriptValue /*% void %*/ insert(uint /*% Number %*/ index, QScriptValue /*% VideoFilter %*/ filter);
 
         /** \brief Removes the VideoFilter object at the specified index.
 		 */
-        Q_INVOKABLE void removeAt(int /*% Number %*/ index);
+        Q_INVOKABLE void removeAt(uint /*% Number %*/ index);
 
         /** \brief Gets the VideoFilter object at the specified index.
 		 */

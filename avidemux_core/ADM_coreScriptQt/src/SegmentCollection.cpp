@@ -53,15 +53,13 @@ namespace ADM_qtScript
 	QScriptValue SegmentCollection::property(
 		const QScriptValue &object,	const QScriptString &name, uint id)
 	{
-		uint pos = id;
-
-		if ((pos < 0) || (pos >= this->_editor->getNbSegment()))
+		if (id >= this->_editor->getNbSegment())
 		{
 			return QScriptValue();
 		}
 
 		return this->engine()->newQObject(
-				   new Segment(this->_editor, this->_editor->getSegment(pos)), QScriptEngine::ScriptOwnership);
+				   new Segment(this->_editor, this->_editor->getSegment(id)), QScriptEngine::ScriptOwnership);
 	}
 
 	QScriptValue::PropertyFlags SegmentCollection::propertyFlags(
@@ -79,7 +77,7 @@ namespace ADM_qtScript
 		const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id)
 	{
 		bool isArrayIndex;
-		uint pos = name.toArrayIndex(&isArrayIndex);
+		quint32 pos = name.toArrayIndex(&isArrayIndex);
 
 		if (!isArrayIndex)
 		{

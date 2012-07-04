@@ -17,7 +17,7 @@ ActiveAudioTracks::ActiveAudioTracks() {}
 
 ActiveAudioTracks::~ActiveAudioTracks() {}
 
-int ActiveAudioTracks::size() const
+unsigned int ActiveAudioTracks::size() const
 {
 	return tracks.size();
 }

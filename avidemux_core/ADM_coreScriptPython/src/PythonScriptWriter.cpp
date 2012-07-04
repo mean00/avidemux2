@@ -5,6 +5,11 @@
 #include "ADM_edEditableAudioTrack.h"
 #include "ADM_edAudioTrackExternal.h"
 
+PythonScriptWriter::PythonScriptWriter()
+{
+	this->_stream = NULL;
+}
+
 void PythonScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
 {
 	if (track->edTrack->getTrackType() == ADM_EDAUDIO_EXTERNAL)

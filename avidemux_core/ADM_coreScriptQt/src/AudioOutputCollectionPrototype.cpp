@@ -79,12 +79,12 @@ namespace ADM_qtScript
 		this->_editor->clearAudioTracks();
 	}
 
-	void AudioOutputCollectionPrototype::insert(int index, int inputTrackIndex, QScriptValue encoder)
+	void AudioOutputCollectionPrototype::insert(uint index, int inputTrackIndex, QScriptValue encoder)
 	{
 		PoolOfAudioTracks* audioTracks = this->_editor->getPoolOfAudioTrack();
 		AudioEncoder* encoderObject = qobject_cast<AudioEncoder*>(encoder.toQObject());
 
-		if (index < 0 || index > this->_tracks->size())
+		if (index > this->_tracks->size())
 		{
 			this->throwError("Index is out of range");
 			return;
@@ -120,7 +120,7 @@ namespace ADM_qtScript
 		}
 	}
 
-	void AudioOutputCollectionPrototype::insert(int index, QString externalAudioFile, QScriptValue encoder)
+	void AudioOutputCollectionPrototype::insert(uint index, QString externalAudioFile, QScriptValue encoder)
 	{
 		PoolOfAudioTracks* audioTracks = this->_editor->getPoolOfAudioTrack();
 		AudioEncoder* encoderObject = qobject_cast<AudioEncoder*>(encoder.toQObject());
@@ -142,9 +142,9 @@ namespace ADM_qtScript
 		}
 	}
 
-	void AudioOutputCollectionPrototype::removeAt(int index)
+	void AudioOutputCollectionPrototype::removeAt(uint index)
 	{
-		if (index < 0 || index >= this->_tracks->size())
+		if (index >= this->_tracks->size())
 		{
 			this->throwError("Index is out of range");
 			return;

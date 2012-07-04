@@ -58,12 +58,12 @@ extern "C"{
 	// FIXME prefs->get(FEATURE_CPU_CAPS,&myCpuMask);
 
 #ifdef ADM_CPU_X86
-int rval = 0;
  int eax, ebx, ecx, edx;
- int max_std_level, max_ext_level, std_caps=0, ext_caps=0;
- long a, c;
+ int max_std_level, max_ext_level;
 
 #if !defined(ADM_CPU_64BIT) // 64 bits CPU have all cpuid
+ long a, c;
+
  __asm__ __volatile__ (
                        /* See if CPUID instruction is supported ... */
                        /* ... Get copies of EFLAGS into eax and ecx */
@@ -92,6 +92,8 @@ int rval = 0;
 
  if(max_std_level >= 1)
  {
+	 int std_caps = 0;
+
      cpuid(1, eax, ebx, ecx, std_caps);
      if (std_caps & (1<<23))
     	 myCpuCaps |= ADM_CPUCAP_MMX;
@@ -112,6 +114,8 @@ int rval = 0;
 
  if(max_ext_level >= 0x80000001)
  {
+	 int ext_caps = 0;
+
      cpuid(0x80000001, eax, ebx, ecx, ext_caps);
      if (ext_caps & (1<<31))
     	 myCpuCaps |= ADM_CPUCAP_3DNOW;

@@ -491,11 +491,11 @@ int splitMpeg4(uint8_t *frame,uint32_t dataSize,mpeg4unit *unit,int maxUnits)
         unit[j].len=(uint32_t)(unit[j+1].data-unit[j].data);
     }
     unit[nbUnit-1].len=(uint32_t)(end-unit[nbUnit-1].data);
-    for(int j=0;j<nbUnit;j++)
+    /*for(int j=0;j<nbUnit;j++)
     {
         mpeg4unit *u=unit+j;
-        //ADM_info("%x : %s, offset=%d size=%d\n",u->code,findUnit(u->code),(int)(u->data-frame),u->len);
-    }
+        ADM_info("%x : %s, offset=%d size=%d\n",u->code,findUnit(u->code),(int)(u->data-frame),u->len);
+    }*/
     return nbUnit;
 }
 /**

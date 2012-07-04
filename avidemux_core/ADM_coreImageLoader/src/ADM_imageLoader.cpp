@@ -310,7 +310,6 @@ ADMImage *createImageFromFile_png(const char *filename)
 {
 
 	ADM_BITMAPINFOHEADER bmph;
-    uint8_t fcc_tab[4];
     uint32_t offset,size;
     FILE *fd=NULL;
     uint32_t w,h;

@@ -412,7 +412,6 @@ uint32_t r1,r2;
 // so srcR=2*src-srcP
 static uint8_t tinySubstract(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
 {
-int delta;
 uint32_t ww,hh;
 uint8_t *s1,*s2,*d1;
 int a1,a2;

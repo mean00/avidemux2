@@ -27,8 +27,8 @@ namespace ADM_qtScript
         uint id() const;
 
     private:
-        int _index;
-        int _last;
+        unsigned int _index;
+        unsigned int _last;
     };
 
     VideoFilterCollection::VideoFilterCollection(QScriptEngine *engine, IEditor *editor) :
@@ -54,15 +54,13 @@ namespace ADM_qtScript
 	QScriptValue VideoFilterCollection::property(
 		const QScriptValue &object,	const QScriptString &name, uint id)
 	{
-		qint32 pos = id;
-
-		if ((pos < 0) || (pos >= ADM_VideoFilters.size()))
+		if (id >= ADM_VideoFilters.size())
 		{
 			return QScriptValue();
 		}
 
         return this->engine()->newQObject(
-				   new VideoFilter(this->engine(), this->_editor, &(ADM_VideoFilters[pos])), QScriptEngine::ScriptOwnership);
+				   new VideoFilter(this->engine(), this->_editor, &(ADM_VideoFilters[id])), QScriptEngine::ScriptOwnership);
 	}
 
 	QScriptValue::PropertyFlags VideoFilterCollection::propertyFlags(
@@ -80,7 +78,7 @@ namespace ADM_qtScript
 		const QScriptValue &object, const QScriptString &name, QueryFlags flags, uint *id)
 	{
 		bool isArrayIndex;
-		qint32 pos = name.toArrayIndex(&isArrayIndex);
+		quint32 pos = name.toArrayIndex(&isArrayIndex);
 
 		if (!isArrayIndex)
 		{

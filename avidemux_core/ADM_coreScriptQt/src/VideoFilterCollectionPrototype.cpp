@@ -48,9 +48,9 @@ namespace ADM_qtScript
         ADM_vf_clearFilters();
     }
 
-    QScriptValue VideoFilterCollectionPrototype::insert(int index, QScriptValue filter)
+    QScriptValue VideoFilterCollectionPrototype::insert(uint index, QScriptValue filter)
     {
-        if (index < 0 || index > ADM_VideoFilters.size())
+        if (index > ADM_VideoFilters.size())
 		{
 			return this->throwError("Index is out of range");
 		}
@@ -77,9 +77,9 @@ namespace ADM_qtScript
         return QScriptValue();
     }
 
-    void VideoFilterCollectionPrototype::removeAt(int index)
+    void VideoFilterCollectionPrototype::removeAt(uint index)
     {
-        if (index < 0 || index >= ADM_VideoFilters.size())
+        if (index >= ADM_VideoFilters.size())
         {
             this->throwError("Index is out of range");
             return;

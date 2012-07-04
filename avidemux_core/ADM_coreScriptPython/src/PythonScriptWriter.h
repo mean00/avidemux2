@@ -11,6 +11,8 @@ private:
     void dumpConfCouple(CONFcouple *c);
 
 public:
+	PythonScriptWriter();
+
     void addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track);
     void addSegment(uint32_t videoIndex, uint64_t startTime, uint64_t duration);
     void addVideoFilter(ADM_vf_plugin *plugin, ADM_VideoFilterElement *element);

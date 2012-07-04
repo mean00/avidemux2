@@ -252,7 +252,7 @@ namespace ADM_qtScript
 
     void QtScriptEngine::registerAudioEncoderPlugins(QScriptEngine *engine)
     {
-        for (int encoderIndex = 0; encoderIndex < ListOfAudioEncoder.size(); encoderIndex++)
+        for (unsigned int encoderIndex = 0; encoderIndex < ListOfAudioEncoder.size(); encoderIndex++)
         {
             ADM_audioEncoder* encoderPlugin = ListOfAudioEncoder[encoderIndex];
             AudioEncoder *encoder = new AudioEncoder(engine, this->_editor, encoderPlugin, encoderIndex);
@@ -267,7 +267,7 @@ namespace ADM_qtScript
     {
         muxers->clear();
 
-        for (int muxerIndex = 0; muxerIndex < ListOfMuxers.size(); muxerIndex++)
+        for (unsigned int muxerIndex = 0; muxerIndex < ListOfMuxers.size(); muxerIndex++)
         {
             ADM_dynMuxer* muxerPlugin = ListOfMuxers[muxerIndex];
             Muxer *muxer = new Muxer(engine, this->_editor, muxerPlugin);
@@ -283,7 +283,7 @@ namespace ADM_qtScript
     {
         encoders->clear();
 
-        for (int encoderIndex = 0; encoderIndex < ListOfEncoders.size(); encoderIndex++)
+        for (unsigned int encoderIndex = 0; encoderIndex < ListOfEncoders.size(); encoderIndex++)
         {
             ADM_videoEncoder6* encoderPlugin = ListOfEncoders[encoderIndex];
             VideoEncoder *encoder = new VideoEncoder(engine, this->_editor, encoderPlugin);
@@ -298,8 +298,7 @@ namespace ADM_qtScript
     {
         for (int filterGroupIndex = 0; filterGroupIndex < VF_MAX; filterGroupIndex++)
         {
-            for (int filterIndex = 0; filterIndex < ADM_videoFilterPluginsList[filterGroupIndex].size();
-                    filterIndex++)
+            for (unsigned int filterIndex = 0; filterIndex < ADM_videoFilterPluginsList[filterGroupIndex].size(); filterIndex++)
             {
                 ADM_vf_plugin* filterPlugin = ADM_videoFilterPluginsList[filterGroupIndex][filterIndex];
                 VideoFilter *filter = new VideoFilter(engine, this->_editor, filterPlugin);

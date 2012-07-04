@@ -40,9 +40,10 @@ extern "C"
 {
  void indirect_printf(int entity, const char *prf, ...)
   {
-  static char print_buffer[1024];
   	if(masked & entity)
 	{
+		static char print_buffer[1024];
+
 		va_list 	list;
 		va_start(list,	prf);
 		vsnprintf(print_buffer,1023,prf,list);
@@ -60,10 +61,11 @@ extern "C"
 
 void indirect_printf_long(int level,const char *modname,int entity,const char *prf,  ...)
 {
-  static char print_buffer[1024];
         if(level>thresholdLevel) return;
   	if(1) //masked & entity)
 	{
+		static char print_buffer[1024];
+
 		va_list 	list;
 		va_start(list,	prf);
 		vsnprintf(print_buffer,1023,prf,list);

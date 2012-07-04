@@ -117,7 +117,6 @@ VdpStatus admVdpau::mixerRender(VdpVideoMixer mixer,
                                 uint32_t targetWidth, 
                                 uint32_t targetHeight )
 {
-const VdpVideoSurface listOfSurface[1]={sourceSurface};
 const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
       VdpStatus e=ADM_coreVdpau::funcs.mixerRender(mixer,
                 VDP_INVALID_HANDLE,NULL,    // Background

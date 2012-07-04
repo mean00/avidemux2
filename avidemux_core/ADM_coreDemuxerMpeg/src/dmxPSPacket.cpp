@@ -716,7 +716,6 @@ bool psPacketLinearTracker::decodeVobuDSI(uint32_t size)
 */
 bool           psPacketLinearTracker::getPacketOfType(uint8_t pid,uint32_t maxSize, uint32_t *packetSize,uint64_t *pts,uint64_t *dts,uint8_t *buffer,uint64_t *startAt)
 {
- bool xit=false;
     uint8_t tmppid;
     while(1)
     {

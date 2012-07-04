@@ -37,7 +37,6 @@ admMutex::~admMutex()
 
 uint8_t admMutex::lock(void)
 {
-  int e;
   THR_CHECK(pthread_mutex_lock(&_tex));
   _locked=1;
   return 1;

@@ -226,7 +226,6 @@ static int XgetParamSize( const ADM_paramList *params)
 bool ADM_paramValidate(CONFcouple *couples, const    ADM_paramList *params)
 {
     int n=couples->getSize();
-    int found=0;
     int p=XgetParamSize(params);
     if(n!=p)
     {
@@ -279,9 +278,8 @@ bool ADM_paramValidatePartialList(CONFcouple *couples, const    ADM_paramList *p
 static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_paramList *params,void *s)
 {
     uint8_t *address=(uint8_t *)s;
-
-    int n=couples->getSize();
     int p=XgetParamSize(params);
+
     for(int i=0;i<p;i++)
     {
         const char *name=params[i].paramName;

@@ -56,14 +56,13 @@ bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANN
 	static uint8_t reorder[MAX_CHANNELS];
 	static bool reorder_on;
 	
-	
 		reorder_on = 0;
-		int j = 0;
         
 		// Should we reorder the channels (might be needed for encoder ?
 		if (channels > 2) 
 		{
-			CHANNEL_TYPE *p_ch_type;
+			int j = 0;
+
 			for (int i = 0; i < channels; i++) 
 			{
 				for (int c = 0; c < channels; c++) 

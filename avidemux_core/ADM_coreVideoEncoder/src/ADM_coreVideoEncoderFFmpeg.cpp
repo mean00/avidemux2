@@ -126,7 +126,6 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
 bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 {
     int w=getWidth();
-    int h=getHeight();
 
   switch(targetColorSpace)
     {
@@ -188,8 +187,6 @@ uint64_t         ADM_coreVideoEncoderFFmpeg::lavToTiming(int64_t val)
 */
 bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 {
-
-    uint8_t *from;
     uint32_t nb;
     if(source->getNextFrame(&nb,image)==false)
     {

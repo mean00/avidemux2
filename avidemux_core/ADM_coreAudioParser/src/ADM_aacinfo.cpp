@@ -65,7 +65,6 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
         return false;
     }
     int samplingFrequencyIndex=bits.get(4);
-    int extensionAudioObjectType=0;
     int fq=0;
     if(samplingFrequencyIndex==0xf)
     {
@@ -83,7 +82,7 @@ bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info)
     {
         case 2: // GASpecificConfig
                 {
-                bool frameLength=bits.get(1);
+                bits.get(1);	// frameLength
                 bool dependsOnCoreCoder=bits.get(1);
                 if(dependsOnCoreCoder) bits.skip(14);
                 bool extensionFlag=bits.get(1);

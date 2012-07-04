@@ -733,11 +733,12 @@ void ADM_PathStripName(char *str)
 const char *ADM_GetFileName(const char *str)
 {
 	const char *filename;
-	const char *filename2;
 
 #ifndef __WIN32
 	filename = strrchr(str, '/');
 #else
+	const char *filename2;
+
 	filename = strrchr(str, '\\');
 	filename2 = strrchr(str, '/');
 

@@ -163,7 +163,7 @@ namespace ADM_qtScript
 
         bool found = false;
 
-        for (int filterIndex = 0; filterIndex < ADM_VideoFilters.size(); filterIndex++)
+        for (unsigned int filterIndex = 0; filterIndex < ADM_VideoFilters.size(); filterIndex++)
         {
             ADM_VideoFilterElement *element = &ADM_VideoFilters[filterIndex];
 

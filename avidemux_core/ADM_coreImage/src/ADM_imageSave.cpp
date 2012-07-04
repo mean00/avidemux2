@@ -20,7 +20,7 @@ static inline void SwapMe(uint8_t *tgt,uint8_t *src,int nb);
 void SwapMe(uint8_t *tgt,uint8_t *src,int nb)
 {
     uint8_t r,g,b;
-   nb=nb;
+
    while(nb--)
    {
        r=*src++;

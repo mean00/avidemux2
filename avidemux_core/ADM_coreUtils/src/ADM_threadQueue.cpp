@@ -107,23 +107,27 @@ bool ADM_threadQueue::startThread(void)
 bool ADM_threadQueue::stopThread(void)
 {
         ADM_info("Destroying threadQueue\n");
-        int clockDown=10;
         mutex->lock();
+
         if(threadState==RunStateRunning)
         {
             threadState=RunStateStopOrder;
+
             if(cond->iswaiting())
             {
                 cond->wakeup();
             }
 
             mutex->unlock();
+
+			int clockDown=10;
+
             while(threadState!=RunStateStopped && clockDown)
             {
-
                 ADM_usleep(50*1000);
                 clockDown--;
             };
+
             ADM_info("Thread stopped, continuing dtor\n");
         }else
         {

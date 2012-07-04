@@ -45,7 +45,7 @@ protected:
         int capacity;                               /**< memory capacity*/
         static const int SizeOfT = sizeof(T);	   /**< size of the object*/
 
-        int currentIndex;                                 /**< start index*/
+        unsigned int currentIndex;                                 /**< start index*/
 
 public:
         /**
@@ -146,7 +146,7 @@ public:
         *@param inValue the value to test
         *@return the value occured number
         */
-        int size() const{
+        unsigned int size() const{
                 return this->currentIndex;
         }
 

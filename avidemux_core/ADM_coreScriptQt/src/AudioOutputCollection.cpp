@@ -26,8 +26,8 @@ namespace ADM_qtScript
 
 	private:
 		IEditor *_editor;
-		int _index;
-		int _last;
+		unsigned int _index;
+		unsigned int _last;
 	};
 
 	AudioOutputCollection::AudioOutputCollection(QScriptEngine *engine, IEditor *editor) :
@@ -55,15 +55,13 @@ namespace ADM_qtScript
 	{
 		ActiveAudioTracks* tracks = this->_editor->getPoolOfActiveAudioTrack();
 
-		qint32 pos = id;
-
-		if ((pos < 0) || (pos >= tracks->size()))
+		if (id >= tracks->size())
 		{
 			return QScriptValue();
 		}
 
 		return this->engine()->newQObject(
-				   new AudioOutput(this->_editor, tracks->atEditable(pos)), QScriptEngine::ScriptOwnership);
+				   new AudioOutput(this->_editor, tracks->atEditable(id)), QScriptEngine::ScriptOwnership);
 	}
 
 	QScriptValue::PropertyFlags AudioOutputCollection::propertyFlags(
@@ -82,7 +80,7 @@ namespace ADM_qtScript
 	{
 		ActiveAudioTracks* tracks = this->_editor->getPoolOfActiveAudioTrack();
 		bool isArrayIndex;
-		qint32 pos = name.toArrayIndex(&isArrayIndex);
+		quint32 pos = name.toArrayIndex(&isArrayIndex);
 
 		if (!isArrayIndex)
 		{

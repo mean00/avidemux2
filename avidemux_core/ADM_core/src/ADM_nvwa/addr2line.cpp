@@ -175,7 +175,6 @@ static int
 process_file(const char *file_name)
 {
 	bfd *abfd;
-	asection *section;
 	char **matching;
 
 	abfd = bfd_openr(file_name, NULL);

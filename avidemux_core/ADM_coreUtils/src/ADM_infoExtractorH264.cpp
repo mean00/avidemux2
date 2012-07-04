@@ -85,19 +85,25 @@ uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 static int hrd(getBits &bits)
 {
     //ADM_warning("hdr not implemented\n");
-    int count=bits.getUEG(); 
-    int bitRateScale=bits.get(4);
-    int scale=bits.get(4);
-    for(int i=0;i<=count;i++)
+    int count = bits.getUEG(); 
+    
+	bits.get(4);	// bitRateScale
+    bits.get(4);	// scale
+
+    for(int i = 0; i <= count; i++)
     {
-        int bitrate=bits.getUEG(); 
-        int sizeMinus1=bits.getUEG(); 
-        int cbrFlag=bits.get(1);
+        bits.getUEG();	// bitrate
+        bits.getUEG();  // sizeMinus1
+        bits.get(1);	// cbrFlag
     }
-    int initialRemovalDelay=bits.get(5);
+
+    bits.get(5);	// initialRemovalDelay
+
     int removalDelay=bits.get(5);
     int outputDelay=bits.get(5);
-    int timeOffset=bits.get(5);
+
+    bits.get(5);	// timeOffset
+
     return removalDelay+outputDelay+2 ;
 }
 /**
@@ -105,7 +111,6 @@ static int hrd(getBits &bits)
 */
 static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
 {
- bool str=false;
   if (bits.get(1))
     {
       unsigned int aspect_ratio_information = bits.get( 8);
@@ -468,7 +473,7 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
       head += 4;		// Skip nal lenth
       stream = *(head) & 0x1F;
       uint32_t recovery;
-      int sliceType;
+
       switch (stream)
         {
             case NAL_SEI:
@@ -600,10 +605,8 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
      {
          uint8_t *outptr=NULL;
          int outsize=0;
-         int consumed = av_parser_parse2(parser, ctx, 
-                                      &outptr, &outsize,
-                                      d, 0,
-                                      0, 0,0);
+
+         av_parser_parse2(parser, ctx, &outptr, &outsize, d, 0, 0, 0,0);
     }
     ADM_info("Width  : %d\n",ctx->width);
     ADM_info("Height : %d\n",ctx->height);

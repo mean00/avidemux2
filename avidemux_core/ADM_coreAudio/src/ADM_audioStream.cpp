@@ -147,7 +147,6 @@ bool    ADM_audioStream::advanceDtsByCustomSample(uint32_t samples,uint32_t fq)
 */
 ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool makeTimeMap)
 {
-uint8_t *data;
 uint32_t size;
     switch(wavheader->encoding)
     {

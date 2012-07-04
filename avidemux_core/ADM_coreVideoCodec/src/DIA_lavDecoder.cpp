@@ -21,8 +21,6 @@
 */
 uint8_t DIA_lavDecoder(bool  *swapUv, bool *showU)
 {
-int ret=0;	
-         
          diaElemToggle    swap(swapUv,QT_TR_NOOP("_Swap U and V"));
          diaElemToggle    show(showU,QT_TR_NOOP("Show motion _vectors"));
          diaElem *tabs[]={&swap,&show};

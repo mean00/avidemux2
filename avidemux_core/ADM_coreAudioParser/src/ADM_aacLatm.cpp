@@ -108,7 +108,7 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
 
     int audioObjectType=read31plus(bits);
     int samplingFrequencyIndex=bits.get(4);
-    int extensionAudioObjectType=0;
+
     if(samplingFrequencyIndex==0xf)
     {
             fq=(bits.get(8)<<16)+bits.get(16);
@@ -118,7 +118,7 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
     }
     int channelConfiguration=bits.get(4);
     channels=aacChannels[channelConfiguration];
-    bool sbrPresent=false;
+
     xdebug("ObjectType=%d\n",audioObjectType);
     
     
@@ -126,7 +126,7 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
     {
         case 2: // GASpecificConfig
                 {
-                bool frameLength=bits.get(1);
+                bits.get(1);	// frameLength
                 bool dependsOnCoreCoder=bits.get(1);
                 if(dependsOnCoreCoder) bits.skip(14);
                 bool extensionFlag=bits.get(1);
@@ -261,7 +261,7 @@ bool ADM_latm2aac::readStreamMuxConfig(getBits &bits)
         {
             LatmGetValue(bits); /* taraBufferFullness */
         }
-        int streamCnt=0;
+
         conf.allStreamsSameTimeFraming=bits.get(1);
         xdebug("AllSTreamSameTimeFraming =%d\n",conf.allStreamsSameTimeFraming);
         int numSubFrames=bits.get(6)+1;
@@ -281,11 +281,13 @@ bool ADM_latm2aac::readStreamMuxConfig(getBits &bits)
         for(int i=0;i<conf.nbLayers;i++)
         {
             bool useSameConfig=false;
-            int consumed=0;
+            
             if(i)
                 useSameConfig=bits.get(1);
             if(!useSameConfig)
             {
+				int consumed=0;
+
                 if(!conf.audioMuxVersion)
                 {  // audio specific config
                     if(false==AudioSpecificConfig(bits,consumed))
@@ -297,7 +299,7 @@ bool ADM_latm2aac::readStreamMuxConfig(getBits &bits)
                 }else
                 {
                     int ascLen=LatmGetValue(bits);
-                    int consumed;
+
                     //ascLen-=audioSpecicConfig
                     //fillBits(ascLen)
                     if(false==AudioSpecificConfig(bits,consumed))
@@ -328,11 +330,15 @@ bool ADM_latm2aac::readStreamMuxConfig(getBits &bits)
                 ADM_error("frameLengthType!=0 not supported (%d)\n",conf.frameLengthType[i]);
                 return false;
             }
-            int latmBufferFulless=bits.get(8);
+
+            bits.get(8);	// latmBufferFulless
+
             int otherData=bits.get(1);
-            int otherDataLen=0;
+            
             if(otherData)
             {
+				int otherDataLen=0;
+
                 if(conf.audioMuxVersion==1)
                     otherDataLen=LatmGetValue(bits);
                 else
