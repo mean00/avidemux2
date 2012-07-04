@@ -1,6 +1,5 @@
 SET(ADM_script_SRCS
 	ADM_script.cpp
-	ADM_jsEditor.cpp
 )
 
 IF (WIN32)
