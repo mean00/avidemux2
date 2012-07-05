@@ -68,6 +68,8 @@ namespace ADM_qtScript
         FileInformation(const Directory& /*% Directory %*/ directory, const QString& /*% String %*/ file);
 
         /** \cond */
+		FileInformation(const QFileInfo& fileInfo);
+
         static QScriptValue constructor(QScriptContext *context, QScriptEngine *engine);
         /** \endcond */
 

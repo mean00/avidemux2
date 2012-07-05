@@ -1,6 +1,7 @@
 #include <QtScript/QScriptEngine>
 
 #include "Directory.h"
+#include "FileInformation.h"
 
 namespace ADM_qtScript
 {
@@ -297,6 +298,45 @@ namespace ADM_qtScript
 		return array;
 	}
 
+	QScriptValue Directory::entryInfoList(Filter filters, Sort sort)
+	{
+		QFileInfoList list = _dir.entryInfoList(this->getQtFilters(filters), this->getQtSortFlags(sort));
+		QScriptValue array = this->engine()->newArray(list.length());
+
+		for (int listIndex = 0; listIndex < list.length(); listIndex++)
+		{
+			array.setProperty(listIndex, this->engine()->newQObject(
+				new FileInformation(list[listIndex]), QScriptEngine::ScriptOwnership));
+		}
+
+		return array;
+	}
+
+	QScriptValue Directory::entryInfoList(QScriptValue nameFilters, Filter filters, Sort sort)
+	{
+		QStringList filterList;
+
+		if (nameFilters.isArray())
+		{
+			qScriptValueToSequence(nameFilters, filterList);
+		}
+		else
+		{
+			return this->context()->throwError("nameFilters is an invalid type");
+		}
+
+		QFileInfoList list = _dir.entryInfoList(filterList, this->getQtFilters(filters), this->getQtSortFlags(sort));
+		QScriptValue array = this->engine()->newArray(list.length());
+
+		for (int listIndex = 0; listIndex < list.length(); listIndex++)
+		{
+			array.setProperty(listIndex, this->engine()->newQObject(
+				new FileInformation(list[listIndex]), QScriptEngine::ScriptOwnership));
+		}
+
+		return array;
+	}
+
 	bool Directory::makeDirectory(QString dirName)
 	{
 		return _dir.mkdir(dirName);
@@ -390,6 +430,20 @@ namespace ADM_qtScript
 	QString Directory::getTempPath()
 	{
 		return QDir::tempPath();
+	}
+
+	QScriptValue Directory::getDrives()
+	{
+		QFileInfoList list = _dir.drives();
+		QScriptValue array = this->engine()->newArray(list.length());
+
+		for (int listIndex = 0; listIndex < list.length(); listIndex++)
+		{
+			array.setProperty(listIndex, this->engine()->newQObject(
+				new FileInformation(list[listIndex]), QScriptEngine::ScriptOwnership));
+		}
+
+		return array;
 	}
 
 	bool Directory::match(QScriptValue filters, QString fileName)

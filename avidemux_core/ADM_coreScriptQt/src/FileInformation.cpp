@@ -20,6 +20,11 @@ namespace ADM_qtScript
         _fileInfo = QFileInfo(directory._dir, file);
     }
 
+	FileInformation::FileInformation(const QFileInfo& fileInfo)
+    {
+        _fileInfo = QFileInfo(fileInfo);
+    }
+
     QScriptValue FileInformation::constructor(QScriptContext *context, QScriptEngine *engine)
     {
         if (context->isCalledAsConstructor())

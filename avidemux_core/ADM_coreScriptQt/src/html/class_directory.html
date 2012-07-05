@@ -112,7 +112,7 @@ Public Types</h2></td></tr>
 <a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a> =  -1
 <br/>
  }</td></tr>
-<tr class="memdesc:adccf6e8a392b0d35f185df12521c474b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the filtering options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>; e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList().  <a href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">More...</a><br/></td></tr>
+<tr class="memdesc:adccf6e8a392b0d35f185df12521c474b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the filtering options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>; e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>.  <a href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">More...</a><br/></td></tr>
 <tr class="memitem:ab865d2a43d5c0a9363bf5112589ea852"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a> { <br/>
 &#160;&#160;<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a923b92502c8f8beef4a620fee49b89ae">Name</a> =  0x00, 
 <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a3045f33dbb706dfcf7d3467ec6e685af">Time</a> =  0x01, 
@@ -129,7 +129,7 @@ Public Types</h2></td></tr>
 <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a> =  -1
 <br/>
  }</td></tr>
-<tr class="memdesc:ab865d2a43d5c0a9363bf5112589ea852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the sort options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>, e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList().  <a href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">More...</a><br/></td></tr>
+<tr class="memdesc:ab865d2a43d5c0a9363bf5112589ea852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the sort options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>, e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>.  <a href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">More...</a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -146,6 +146,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:afb2f3143bbfa7b7172308f32ca6a062f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a> object pointing to the given directory path. If path is empty the program's working directory, ("."), is used. <br/></td></tr>
 <tr class="memitem:a5afc8d8b1a28f319773301e1a2245adb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a5afc8d8b1a28f319773301e1a2245adb">Directory</a> (String <a class="el" href="class_directory.html#adb85e16ac8c9f62df2d33b1262649843">path</a>, String nameFilter, <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a> sort=<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a>(<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a923b92502c8f8beef4a620fee49b89ae">Name</a>|<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852aba130475f566eccc004060107d9d798f">IgnoreCase</a>), <a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a> <a class="el" href="class_directory.html#a25ece2091d29d82ac7bdff9763e113b8">filter</a>=<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba160bfe5e14a450d26ddb1f97607409a6">AllEntries</a>)</td></tr>
 <tr class="memdesc:a5afc8d8b1a28f319773301e1a2245adb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a> object with specified path, that filters its entries by name using nameFilter and by attributes using filter. It also sorts the names using sort.  <a href="#a5afc8d8b1a28f319773301e1a2245adb"></a><br/></td></tr>
+<tr class="memitem:a3a0c6b8b010d31c7914aed3ee85d5a36"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36">entryInfoList</a> (<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a> filters=<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a>, <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a> sort=<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a>)</td></tr>
+<tr class="memdesc:a3a0c6b8b010d31c7914aed3ee85d5a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of <a class="el" href="class_file_information.html" title="The FileInformation class provides system-independent file information.">FileInformation</a> objects for all the files and directories in the directory, ordered according to the name and attribute filters previously set with the nameFilters and filter properties, and sorted according to the flags set with the sorting property.  <a href="#a3a0c6b8b010d31c7914aed3ee85d5a36"></a><br/></td></tr>
+<tr class="memitem:aad71a0f262426d1765a82d515834619b"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#aad71a0f262426d1765a82d515834619b">entryInfoList</a> (Array <a class="el" href="class_directory.html#ae766dd1212b52d6af1bd074abfc95a9b">nameFilters</a>, <a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a> filters=<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a>, <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a> sort=<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a>)</td></tr>
+<tr class="memdesc:aad71a0f262426d1765a82d515834619b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of <a class="el" href="class_file_information.html" title="The FileInformation class provides system-independent file information.">FileInformation</a> objects for all the files and directories in the directory, ordered according to the name and attribute filters previously set with the nameFilters and filter properties, and sorted according to the flags set with the sorting property.  <a href="#aad71a0f262426d1765a82d515834619b"></a><br/></td></tr>
 <tr class="memitem:a8a4bef112687c6c07f8c498c508c66e8"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8">entryList</a> (<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a> filters=<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a>, <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a> sort=<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a>)</td></tr>
 <tr class="memdesc:a8a4bef112687c6c07f8c498c508c66e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of the names of all the files and directories in the directory.  <a href="#a8a4bef112687c6c07f8c498c508c66e8"></a><br/></td></tr>
 <tr class="memitem:aba1d66a6be842b016b98da862ff9c8c3"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#aba1d66a6be842b016b98da862ff9c8c3">entryList</a> (Array <a class="el" href="class_directory.html#ae766dd1212b52d6af1bd074abfc95a9b">nameFilters</a>, <a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a> filters=<a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a>, <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a> sort=<a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a>)</td></tr>
@@ -197,10 +201,12 @@ String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memdesc:aa8b00c41410f62870995e886406d74c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the current path. <br/></td></tr>
 <tr class="memitem:afdc66ee487ea0393ba12842695f06124"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#afdc66ee487ea0393ba12842695f06124">directoryName</a></td></tr>
 <tr class="memdesc:afdc66ee487ea0393ba12842695f06124"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the directory.  <a href="#afdc66ee487ea0393ba12842695f06124"></a><br/></td></tr>
+<tr class="memitem:a12407aa55bbadf131f950518fa7f52bf"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a12407aa55bbadf131f950518fa7f52bf">drives</a></td></tr>
+<tr class="memdesc:a12407aa55bbadf131f950518fa7f52bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of the root directories on this system.  <a href="#a12407aa55bbadf131f950518fa7f52bf"></a><br/></td></tr>
 <tr class="memitem:a07af756cfcf0b01196fd0087f03a45b9"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a07af756cfcf0b01196fd0087f03a45b9">exists</a></td></tr>
 <tr class="memdesc:a07af756cfcf0b01196fd0087f03a45b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the directory exists; otherwise returns false.  <a href="#a07af756cfcf0b01196fd0087f03a45b9"></a><br/></td></tr>
 <tr class="memitem:a25ece2091d29d82ac7bdff9763e113b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a25ece2091d29d82ac7bdff9763e113b8">filter</a></td></tr>
-<tr class="memdesc:a25ece2091d29d82ac7bdff9763e113b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the filter used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList().  <a href="#a25ece2091d29d82ac7bdff9763e113b8"></a><br/></td></tr>
+<tr class="memdesc:a25ece2091d29d82ac7bdff9763e113b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the filter used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>.  <a href="#a25ece2091d29d82ac7bdff9763e113b8"></a><br/></td></tr>
 <tr class="memitem:a4b00ec0da35c6e109aa1d30b1a86dea9"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a4b00ec0da35c6e109aa1d30b1a86dea9">homePath</a></td></tr>
 <tr class="memdesc:a4b00ec0da35c6e109aa1d30b1a86dea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the absolute path of the user's home directory.  <a href="#a4b00ec0da35c6e109aa1d30b1a86dea9"></a><br/></td></tr>
 <tr class="memitem:acdee9b57b254fc8185f5370cbc32ae1b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acdee9b57b254fc8185f5370cbc32ae1b"></a>
@@ -214,7 +220,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a9cdc9c0346bcf03c78b7c18f49fcd420"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a9cdc9c0346bcf03c78b7c18f49fcd420">isRoot</a></td></tr>
 <tr class="memdesc:a9cdc9c0346bcf03c78b7c18f49fcd420"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the directory is the root directory; otherwise returns false.  <a href="#a9cdc9c0346bcf03c78b7c18f49fcd420"></a><br/></td></tr>
 <tr class="memitem:ae766dd1212b52d6af1bd074abfc95a9b"><td class="memItemLeft" align="right" valign="top">Array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#ae766dd1212b52d6af1bd074abfc95a9b">nameFilters</a></td></tr>
-<tr class="memdesc:ae766dd1212b52d6af1bd074abfc95a9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the name filters used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList().  <a href="#ae766dd1212b52d6af1bd074abfc95a9b"></a><br/></td></tr>
+<tr class="memdesc:ae766dd1212b52d6af1bd074abfc95a9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the name filters used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>.  <a href="#ae766dd1212b52d6af1bd074abfc95a9b"></a><br/></td></tr>
 <tr class="memitem:adb85e16ac8c9f62df2d33b1262649843"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#adb85e16ac8c9f62df2d33b1262649843">path</a></td></tr>
 <tr class="memdesc:adb85e16ac8c9f62df2d33b1262649843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the path of the <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a> object.  <a href="#adb85e16ac8c9f62df2d33b1262649843"></a><br/></td></tr>
 <tr class="memitem:a088ea10dc76926de7a16bf93e452a15c"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a088ea10dc76926de7a16bf93e452a15c">rootPath</a></td></tr>
@@ -223,7 +229,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memdesc:a30535296c56f958f8b176b964403c281"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the native directory separator: "/" under Unix (including Mac OS X) and "\" under Windows.  <a href="#a30535296c56f958f8b176b964403c281"></a><br/></td></tr>
 <tr class="memitem:ad8e70d93303f621cf1b171a9faaeb593"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad8e70d93303f621cf1b171a9faaeb593"></a>
 <a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#ad8e70d93303f621cf1b171a9faaeb593">sorting</a></td></tr>
-<tr class="memdesc:ad8e70d93303f621cf1b171a9faaeb593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the sort order used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList(). <br/></td></tr>
+<tr class="memdesc:ad8e70d93303f621cf1b171a9faaeb593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets or sets the sort order used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>. <br/></td></tr>
 <tr class="memitem:a5edd2d629fe20d415bdebca0f75e3a10"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_directory.html#a5edd2d629fe20d415bdebca0f75e3a10">tempPath</a></td></tr>
 <tr class="memdesc:a5edd2d629fe20d415bdebca0f75e3a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the absolute path of the system's temporary directory.  <a href="#a5edd2d629fe20d415bdebca0f75e3a10"></a><br/></td></tr>
 </table>
@@ -243,7 +249,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
       </table>
 </div><div class="memdoc">
 
-<p>Describes the filtering options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>; e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList(). </p>
+<p>Describes the filtering options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>; e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>. </p>
 <p>The filter value is specified by combining values from the following list using the bitwise OR operator: </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="adccf6e8a392b0d35f185df12521c474ba32ea63f178d7add08d59c0db8f6f6807"></a>Directories</em>&nbsp;</td><td>
@@ -307,7 +313,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
       </table>
 </div><div class="memdoc">
 
-<p>Describes the sort options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>, e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList(). </p>
+<p>Describes the sort options available to <a class="el" href="class_directory.html" title="The Directory class provides access to directory structures and their contents.">Directory</a>, e.g. for <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>. </p>
 <p>The sort value is specified by combining values from the following list using the bitwise OR operator. You can only specify one of the first four. If you specify both DirectoriesFirst and Reversed, directories are still put first, but in reverse order; the files will be listed after the directories, again in reverse order. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="ab865d2a43d5c0a9363bf5112589ea852a923b92502c8f8beef4a620fee49b89ae"></a>Name</em>&nbsp;</td><td>
@@ -471,6 +477,72 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
+<a class="anchor" id="a3a0c6b8b010d31c7914aed3ee85d5a36"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Array entryInfoList </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a>&#160;</td>
+          <td class="paramname"><em>filters</em> = <code><a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a>&#160;</td>
+          <td class="paramname"><em>sort</em> = <code><a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a list of <a class="el" href="class_file_information.html" title="The FileInformation class provides system-independent file information.">FileInformation</a> objects for all the files and directories in the directory, ordered according to the name and attribute filters previously set with the nameFilters and filter properties, and sorted according to the flags set with the sorting property. </p>
+<p>The name filter, file attribute filter, and sorting specification can be overridden using the nameFilters, filters, and sort arguments.</p>
+<p>Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification. </p>
+
+</div>
+</div>
+<a class="anchor" id="aad71a0f262426d1765a82d515834619b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Array entryInfoList </td>
+          <td>(</td>
+          <td class="paramtype">Array&#160;</td>
+          <td class="paramname"><em>nameFilters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474b">Filter</a>&#160;</td>
+          <td class="paramname"><em>filters</em> = <code><a class="el" href="class_directory.html#adccf6e8a392b0d35f185df12521c474ba58725710c5faf709d88ea461b95b8a2a">NoFilter</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852">Sort</a>&#160;</td>
+          <td class="paramname"><em>sort</em> = <code><a class="el" href="class_directory.html#ab865d2a43d5c0a9363bf5112589ea852a5a8e446403c6216f2e680693672c0f4a">NoSort</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a list of <a class="el" href="class_file_information.html" title="The FileInformation class provides system-independent file information.">FileInformation</a> objects for all the files and directories in the directory, ordered according to the name and attribute filters previously set with the nameFilters and filter properties, and sorted according to the flags set with the sorting property. </p>
+<p>The attribute filter and sorting specifications can be overridden using the filters and sort arguments.</p>
+<p>Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification. </p>
+
+</div>
+</div>
 <a class="anchor" id="a8a4bef112687c6c07f8c498c508c66e8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -499,7 +571,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <p>The list is ordered according to the name and attribute filters previously set with the nameFilters and filter properties. The list is also sorted according to the flags set with the sorting property.</p>
 <p>The attribute filter and sorting specifications can be overridden using the filters and sort arguments.</p>
 <p>Note: To list symlinks that point to non existing files, System must be passed to the filter.</p>
-<dl class="section return"><dt>Returns:</dt><dd>Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification. </dd></dl>
+<p>Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification. </p>
 
 </div>
 </div>
@@ -536,7 +608,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <p>Returns a list of the names of all the files and directories in the directory. </p>
 <p>The list is ordered according to the name and attribute filters previously set with the nameFilters and filter properties. The list is also sorted according to the flags set with the sorting property.</p>
 <p>The name filter, file attribute filter and sorting specification can be overridden using the nameFilters, filters, and sort arguments.</p>
-<dl class="section return"><dt>Returns:</dt><dd>Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification. </dd></dl>
+<p>Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification. </p>
 
 </div>
 </div>
@@ -893,6 +965,29 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
+<a class="anchor" id="a12407aa55bbadf131f950518fa7f52bf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Array drives</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">read</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a list of the root directories on this system. </p>
+<p>On Windows this returns a list of <a class="el" href="class_file_information.html" title="The FileInformation class provides system-independent file information.">FileInformation</a> objects containing "C:/", "D:/", etc. On other operating systems, it returns a list containing just one root directory (i.e. "/"). </p>
+
+</div>
+</div>
 <a class="anchor" id="a07af756cfcf0b01196fd0087f03a45b9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -934,8 +1029,8 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </table>
 </div><div class="memdoc">
 
-<p>Gets or sets the filter used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList(). </p>
-<p>The filter is used to specify the kind of files that should be returned by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList(). </p>
+<p>Gets or sets the filter used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>. </p>
+<p>The filter is used to specify the kind of files that should be returned by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>. </p>
 
 </div>
 </div>
@@ -1036,7 +1131,7 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </table>
 </div><div class="memdoc">
 
-<p>Gets or sets the name filters used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and entryInfoList(). </p>
+<p>Gets or sets the name filters used by <a class="el" href="class_directory.html#a8a4bef112687c6c07f8c498c508c66e8" title="Returns a list of the names of all the files and directories in the directory.">entryList()</a> and <a class="el" href="class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36" title="Returns a list of FileInformation objects for all the files and directories in the directory...">entryInfoList()</a>. </p>
 <p>Each name filter is a wildcard (globbing) filter that understands * and ? wildcards. </p>
 
 </div>

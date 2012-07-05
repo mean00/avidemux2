@@ -103,6 +103,7 @@ namespace ADM_qtScript
 		QString getHomePath();
 		QString getRootPath();
 		QString getTempPath();
+		QScriptValue getDrives();
 
 	public:
 	    /** \cond */
@@ -278,6 +279,13 @@ namespace ADM_qtScript
 		 */
 		Q_PROPERTY(QString /*% String %*/ tempPath READ getTempPath);
 
+		/** \brief Returns a list of the root directories on this system.
+		 *
+		 * On Windows this returns a list of FileInformation objects containing "C:/", "D:/", etc.
+		 * On other operating systems, it returns a list containing just one root directory (i.e. "/").
+		 */
+		Q_PROPERTY(QScriptValue /*% Array %*/ drives READ getDrives);
+
 		/** \brief Returns the path name of a file in the directory.
 		 *
 		 * Does not check if the file actually exists in the directory; but see Directory.exists.
@@ -345,7 +353,7 @@ namespace ADM_qtScript
 		 *
 		 * Note: To list symlinks that point to non existing files, System must be passed to the filter.
 		 *
-		 * \return Returns an empty list if the directory is unreadable, does not exist, or if nothing
+		 * Returns an empty list if the directory is unreadable, does not exist, or if nothing
 		 * matches the specification.
 		 */
 		Q_INVOKABLE QScriptValue /*% Array %*/ entryList(Filter filters = NoFilter, Sort sort = NoSort);
@@ -359,14 +367,30 @@ namespace ADM_qtScript
 		 * The name filter, file attribute filter and sorting specification can be overridden using
 		 * the nameFilters, filters, and sort arguments.
 		 *
-		 * \return Returns an empty list if the directory is unreadable, does not exist, or if nothing
+		 * Returns an empty list if the directory is unreadable, does not exist, or if nothing
 		 * matches the specification.
 		 */
 		Q_INVOKABLE QScriptValue /*% Array %*/ entryList(QScriptValue /*% Array %*/ nameFilters, Filter filters = NoFilter, Sort sort = NoSort);
 
-		//QFileInfoList entryInfoList(Filters filters = NoFilter, SortFlags sort = NoSort);
-		//QFileInfoList entryInfoList(const QStringList &nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort);
-		//QFileInfoList drives();
+		/** \brief Returns a list of FileInformation objects for all the files and directories in the directory,
+		 * ordered according to the name and attribute filters previously set with the nameFilters and filter properties, 
+		 * and sorted according to the flags set with the sorting property.
+		 *
+		 * The name filter, file attribute filter, and sorting specification can be overridden using the nameFilters, filters, and sort arguments.
+		 *
+		 * Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification.
+		 */
+		Q_INVOKABLE QScriptValue /*% Array %*/ entryInfoList(Filter filters = NoFilter, Sort sort = NoSort);
+
+		/** \brief Returns a list of FileInformation objects for all the files and directories in the directory,
+		 * ordered according to the name and attribute filters previously set with the nameFilters and filter properties,
+		 * and sorted according to the flags set with the sorting property.
+		 *
+		 * The attribute filter and sorting specifications can be overridden using the filters and sort arguments.
+		 *
+		 * Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification.
+		 */
+		Q_INVOKABLE QScriptValue /*% Array %*/ entryInfoList(QScriptValue /*% Array %*/ nameFilters, Filter filters = NoFilter, Sort sort = NoSort);
 
 		/** \brief Creates a sub-directory called dirName.
 		 * \return Returns true on success; otherwise returns false.

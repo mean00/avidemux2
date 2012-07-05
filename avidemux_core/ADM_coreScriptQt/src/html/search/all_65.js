@@ -2,6 +2,7 @@ var searchData=
 [
   ['editor',['Editor',['../class_editor.html',1,'']]],
   ['encoder',['encoder',['../class_audio_output.html#a542d762b1f51a0baf3a17dcc7ba9ed3d',1,'AudioOutput']]],
+  ['entryinfolist',['entryInfoList',['../class_directory.html#a3a0c6b8b010d31c7914aed3ee85d5a36',1,'Directory::entryInfoList(Filter filters=NoFilter, Sort sort=NoSort)'],['../class_directory.html#aad71a0f262426d1765a82d515834619b',1,'Directory::entryInfoList(Array nameFilters, Filter filters=NoFilter, Sort sort=NoSort)']]],
   ['entrylist',['entryList',['../class_directory.html#a8a4bef112687c6c07f8c498c508c66e8',1,'Directory::entryList(Filter filters=NoFilter, Sort sort=NoSort)'],['../class_directory.html#aba1d66a6be842b016b98da862ff9c8c3',1,'Directory::entryList(Array nameFilters, Filter filters=NoFilter, Sort sort=NoSort)']]],
   ['error',['error',['../class_file.html#a60573a2c2642a1a55624bde037291c4a',1,'File']]],
   ['errorstring',['errorString',['../class_file.html#ac24e859198fadbde73d046ff58161510',1,'File']]],

@@ -16,7 +16,7 @@ var searchData=
   ['setmarkers',['setMarkers',['../class_editor.html#a522de5bff87f57f86ef380f0d0d3282c',1,'Editor']]],
   ['setpermissions',['setPermissions',['../class_file.html#abad0a5fde8c7f77a96a780514ef37c54',1,'File']]],
   ['settextmodeenabled',['setTextModeEnabled',['../class_file.html#a64baa4b5deb2462fb0f5474e7d052581',1,'File']]],
-  ['size',['size',['../class_file.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'File::size()'],['../class_file_information.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'FileInformation::size()'],['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852aff9abf2b1a689f70a77a18da50c01d9f',1,'Directory::Size()']]],
+  ['size',['Size',['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852aff9abf2b1a689f70a77a18da50c01d9f',1,'Directory::Size()'],['../class_file.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'File::size()'],['../class_file_information.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'FileInformation::size()']]],
   ['sort',['Sort',['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852',1,'Directory']]],
   ['sorting',['sorting',['../class_directory.html#ad8e70d93303f621cf1b171a9faaeb593',1,'Directory']]],
   ['sourcevideo',['SourceVideo',['../class_audio_output.html#a11da5f516a5f7fdea1b2dd3aa58183aeac93da1c7b8ba13a36773b23f38f06d91',1,'AudioOutput']]],
