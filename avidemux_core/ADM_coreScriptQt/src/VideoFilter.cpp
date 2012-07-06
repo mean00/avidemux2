@@ -147,11 +147,14 @@ namespace ADM_qtScript
         return this->_attachedToFilterChain;
     }
 
-    void VideoFilter::setFilterAsUsed(int trackObjectId)
+    void VideoFilter::setFilterAsUsed(ADM_VideoFilterElement* element)
     {
-        this->_trackObjectId = trackObjectId;
-        this->_attachedToFilterChain = true;
 		delete this->_videoFilterShim;
+		delete this->_filter;
+
+        this->_trackObjectId = element->objectId;
+		this->_filter = element->instance;
+        this->_attachedToFilterChain = true;
     }
 
     bool VideoFilter::verifyFilter()

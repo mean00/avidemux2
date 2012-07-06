@@ -91,7 +91,7 @@ namespace ADM_qtScript
 
 		void getConfCouple(CONFcouple** conf, const QString& containerName = QString());
 		bool isFilterUsed();
-		void setFilterAsUsed(int trackObjectId);
+		void setFilterAsUsed(ADM_VideoFilterElement* element);
 		/** \endcond */
 
 		/** \brief Gets an object that holds parameters used to configure the video filter.

@@ -15,7 +15,7 @@ goto error
 set mingwDir=%devDir%/MinGW64
 set usrLocalDir=%msysDir%/local%BuildBits%
 set qtDir=%devDir%/Qt%BuildBits%
-set CMAKE_INCLUDE_PATH=%usrLocalDir%/include;%mingwDir%/x86_64-w64-mingw32/include
+set CMAKE_INCLUDE_PATH=%usrLocalDir%/include;%mingwDir%/x86_64-w64-mingw32/include;%mingwDir%/include
 set CMAKE_LIBRARY_PATH=%usrLocalDir%/lib
 set PKG_CONFIG_PATH=%usrLocalDir%\lib\pkgconfig
 set SDLDIR=%usrLocalDir%

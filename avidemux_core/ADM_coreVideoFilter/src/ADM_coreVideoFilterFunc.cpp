@@ -130,7 +130,7 @@ ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *las
         \fn ADM_vf_addFilterFromTag
         \brief Add a new video filter (identified by tag) at the end of the activate filter list
 */
-int                    ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, bool configure)
+ADM_VideoFilterElement* ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, bool configure)
 {
     ADM_info("Creating video filter using tag %"LU" \n", tag);
     // Fetch the descriptor...
@@ -141,7 +141,7 @@ int                    ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CO
     if (configure && nw->configure() == false)
     {
         delete nw;
-        return -1;
+        return NULL;
     }
 
     ADM_VideoFilterElement e;
@@ -150,10 +150,10 @@ int                    ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CO
     e.objectId = objectCount++;
     ADM_VideoFilters.append(e);
 
-    return e.objectId;
+    return &ADM_VideoFilters[ADM_VideoFilters.size() - 1];
 }
 
-int ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int index)
+ADM_VideoFilterElement* ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int index)
 {
     ADM_info("Creating video filter using tag %"LU" \n", tag);
     // Fetch the descriptor...
@@ -170,7 +170,7 @@ int ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int
 
     ADM_vf_recreateChain();
 
-    return e.objectId;
+    return &ADM_VideoFilters[index];
 }
 
 /**

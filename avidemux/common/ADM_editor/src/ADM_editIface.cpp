@@ -104,7 +104,7 @@ int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 
 	printf("Adding Filter %s -> %"LU"... \n", filter, filterTag);
 
-	bool r = ADM_vf_addFilterFromTag(this, filterTag, c, false);
+	bool r = (ADM_vf_addFilterFromTag(this, filterTag, c, false) != NULL);
 
 	if (c)
 	{

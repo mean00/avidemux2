@@ -258,8 +258,12 @@ bool ADMVideoMPD3D::configure(void)
 */
 ADMVideoMPD3D::~ADMVideoMPD3D()
 {
-    if(context.Line) av_free(context.Line);
-    context.Line=NULL;
+    if (context.Line)
+	{
+		delete [] context.Line;
+		context.Line=NULL;
+	}
+
     for(int i=0;i<3;i++)
     {
         unsigned short *t=context.Frame[i];

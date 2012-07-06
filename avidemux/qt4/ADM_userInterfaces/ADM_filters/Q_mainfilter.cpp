@@ -191,7 +191,7 @@ void filtermainWindow::add( bool b)
      tag=index; //filterCategories[family][index]->tag;
      ADM_info("Tag : %d->family=%d, index=%d\n",itag,family,tag);
 
-     if(ADM_vf_addFilterFromTag(video_body, itag,NULL,true)>=0)
+     if(ADM_vf_addFilterFromTag(video_body, itag,NULL,true) != NULL)
         {
             buildActiveFilterList();
             setSelected(nb_active_filter-1);
