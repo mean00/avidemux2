@@ -8,7 +8,7 @@ QT4_WRAP_CPP(ADM_qtScript_SRCS
 	${ADM_script_headers}  QtScriptObject.h  QtScriptConfigObject.h)
 
 set(ADM_script_headers
-	${ADM_script_headers}  Doxygen_MainPage.h  Doxygen_Functions.h)
+	${ADM_script_headers}  Doxygen_MainPage.h  Doxygen_Functions.h  Doxygen_Examples.h)
 
 set(ADM_qtScript_SRCS
 	${ADM_qtScript_SRCS}  QtScriptEngine.cpp  QtScriptObject.cpp  QtScriptConfigObject.cpp

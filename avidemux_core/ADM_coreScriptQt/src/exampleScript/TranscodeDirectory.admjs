@@ -1,0 +1,115 @@
+var _outputSizeX = 320;
+var _outputSizeY = 240;
+var _sourceDir = "C:/Test/input/";
+var _sourceFileExt = "*.avi";
+var _destinationDir = "C:/Test/output/";
+
+function processFile(inputPath, outputDirectory)
+{
+    Editor.openVideo(inputPath);
+
+    // Resize filter
+    var targetX = _outputSizeX;
+    var targetY = _outputSizeY;
+    var width = Editor.videoFileProperties[0].width;
+    var height = Editor.videoFileProperties[0].height;
+
+    var rX = width / targetX;
+    var rY = height / targetY;
+    var newX;
+    var newY;
+
+    if (rX > rY)
+    {
+        // resize by X
+        newX = targetX;
+        newY = Math.round(height / rX);
+    }
+    else
+    {
+        // resize by Y
+        newY = targetY;
+        newX = Math.round(width / rY);
+    }
+
+    // resize to multiple of 4
+    newX -= newX % 4;
+    newY -= newY % 4;
+
+    if (newX != width || newY != height)
+    {
+        var videoFilter = new SwscaleVideoFilter();
+
+        videoFilter.configuration.width = newX;
+        videoFilter.configuration.height = newY;
+
+        Editor.appliedVideoFilters.add(videoFilter);
+    }
+
+    // Black bar filter
+    var barX = targetX - newX;
+    var barY = targetY - newY;
+
+    if (barX || barY)
+    {
+        var videoFilter = new AddborderVideoFilter();
+
+        videoFilter.configuration.left = barX >> 1;
+        videoFilter.configuration.right = barX >> 1;
+        videoFilter.configuration.top = barY >> 1;
+        videoFilter.configuration.bottom = barY >> 1;
+
+        Editor.appliedVideoFilters.add(videoFilter);
+    }
+
+    // Video encoder
+    Editor.currentVideoEncoder = Xvid4VideoEncoder;
+
+    // Audio output
+    Editor.audioOutputs.clear();
+
+    audioOutput = new FaacAudioEncoder();
+    Editor.audioOutputs.add(0, audioOutput);
+
+    if (Editor.videoFileProperties[0].audioProperties.channels != 2)
+    {
+        Editor.audioOutputs[0].mixer = AudioOutput.MixerMode.StereoMix;
+    }
+
+    // Muxer
+    Editor.currentMuxer = Mp4v2Muxer;
+
+    // Clip source extension and save to destination with default muxer extension
+    var directory = new Directory(outputDirectory);
+
+    if (!directory.exists)
+    {
+        directory.makePath(outputDirectory);
+    }
+
+    Editor.saveVideo(outputDirectory + new FileInformation(inputPath).baseName + "." + Editor.currentMuxer.defaultFileExtension);
+}
+
+function processDirectory(inputDirectory, inputExt, outputDirectory)
+{
+    var entryInfoList = new Directory(inputDirectory).entryInfoList(
+        [inputExt],
+        Directory.Filter.AllDirectories | Directory.Filter.Files | Directory.Filter.Readable | Directory.Filter.NoDotAndDotDot,
+        Directory.Sort.NoSort);
+
+    for (var index = 0; index < entryInfoList.length; index++)
+    {
+        var fileInfo = entryInfoList[index];
+
+        if (fileInfo.isDirectory())
+        {
+            processDirectory(fileInfo.absoluteFilePath, inputExt, outputDirectory + fileInfo.baseName);
+        }
+        else
+        {
+            processFile(fileInfo.absoluteFilePath, outputDirectory);
+        }
+    }
+}
+
+processDirectory(_sourceDir, _sourceFileExt, _destinationDir);

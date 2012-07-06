@@ -1,4 +1,4 @@
-# Doxyfile 1.8.1
+# Doxyfile 1.8.1.1
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project.
@@ -45,7 +45,7 @@ PROJECT_BRIEF          =
 # exceed 55 pixels and the maximum width should not exceed 200 pixels.
 # Doxygen will copy the logo to the output directory.
 
-PROJECT_LOGO           = ${CMAKE_SOURCE_DIR}/ADM_userInterfaces/ADM_gui/pics/avidemux_icon_small.png
+PROJECT_LOGO           = ${CMAKE_SOURCE_DIR}/../avidemux/qt4/ADM_userInterfaces/ADM_gui/pics/avidemux_icon_small.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
@@ -578,7 +578,7 @@ FILE_VERSION_FILTER    =
 
 # The LAYOUT_FILE tag can be used to specify a layout file which will be parsed
 # by doxygen. The layout file controls the global structure of the generated
-# output files in an output format independent way. The create the layout file
+# output files in an output format independent way. To create the layout file
 # that represents doxygen's defaults, run doxygen with the -l option.
 # You can optionally specify a file name after the option, if omitted
 # DoxygenLayout.xml will be used as the name of the layout file.
@@ -715,7 +715,7 @@ EXCLUDE_SYMBOLS        =
 # directories that contain example code fragments that are included (see
 # the \include command).
 
-EXAMPLE_PATH           =
+EXAMPLE_PATH           = ${CMAKE_CURRENT_SOURCE_DIR}\exampleScript
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
@@ -791,7 +791,7 @@ INLINE_SOURCES         = NO
 
 # Setting the STRIP_CODE_COMMENTS tag to YES (the default) will instruct
 # doxygen to hide any special comment blocks from generated source code
-# fragments. Normal C and C++ comments will always remain visible.
+# fragments. Normal C, C++ and Fortran comments will always remain visible.
 
 STRIP_CODE_COMMENTS    = YES
 

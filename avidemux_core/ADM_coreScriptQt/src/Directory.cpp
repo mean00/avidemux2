@@ -8,7 +8,7 @@ namespace ADM_qtScript
 	static const QDir::Filter qtFilter[] =
 	{
 		QDir::Dirs, QDir::Files, QDir::Drives, QDir::NoSymLinks, QDir::Readable, QDir::Writable,
-		QDir::Executable, QDir::Modified, QDir::Hidden, QDir::System, QDir::CaseSensitive,
+		QDir::Executable, QDir::Modified, QDir::Hidden, QDir::System, QDir::AllDirs, QDir::CaseSensitive,
 		QDir::NoDotAndDotDot, QDir::NoFilter
 	};
 
@@ -16,8 +16,8 @@ namespace ADM_qtScript
 	{
 		Directory::Directories, Directory::Files, Directory::Drives, Directory::NoSymLinks,
 		Directory::Readable, Directory::Writable, Directory::Executable, Directory::Modified,
-		Directory::Hidden, Directory::System, Directory::CaseSensitive, Directory::NoDotAndDotDot,
-		Directory::NoFilter
+		Directory::Hidden, Directory::System, Directory::AllDirectories, Directory::CaseSensitive,
+		Directory::NoDotAndDotDot, Directory::NoFilter
 	};
 
 	static const QDir::SortFlag qtSort[] =
