@@ -123,9 +123,12 @@ void SpiderMonkeyScriptWriter::setPostProcessing(uint32_t type, uint32_t strengt
 
 void SpiderMonkeyScriptWriter::setVideoEncoder(ADM_videoEncoder6* videoEncoder)
 {
-	CONFcouple *configuration;
+	CONFcouple *configuration = NULL;
 
-	videoEncoder->desc->getConfigurationData(&configuration);
+	if (videoEncoder->desc->getConfigurationData)
+	{
+		videoEncoder->desc->getConfigurationData(&configuration);
+	}
 
     *(this->_stream) << "adm.videoCodec(\"" << videoEncoder->desc->encoderName << "\"";
     this->dumpConfCouple(configuration);

@@ -155,19 +155,23 @@ namespace ADM_qtScript
     void QtScriptWriter::setVideoEncoder(ADM_videoEncoder6* videoEncoder)
     {
         QString encoderClassName = _mapper.getVideoEncoderClassName(videoEncoder->desc->encoderName);
-		CONFcouple *configuration, *defaultConfiguration;
 
         *(this->_stream) << std::endl;
 
-		videoEncoder->desc->getConfigurationData(&configuration);
-		videoEncoder->desc->resetConfigurationData();
-		videoEncoder->desc->getConfigurationData(&defaultConfiguration);
-		videoEncoder->desc->setConfigurationData(configuration, true);
+		if (videoEncoder->desc->getConfigurationData)
+		{
+			CONFcouple *configuration, *defaultConfiguration;
 
-        this->dumpConfCoupleDiff((encoderClassName + ".configuration.").toUtf8().constData(), defaultConfiguration, configuration);
+			videoEncoder->desc->getConfigurationData(&configuration);
+			videoEncoder->desc->resetConfigurationData();
+			videoEncoder->desc->getConfigurationData(&defaultConfiguration);
+			videoEncoder->desc->setConfigurationData(configuration, true);
 
-		delete configuration;
-		delete defaultConfiguration;
+			this->dumpConfCoupleDiff((encoderClassName + ".configuration.").toUtf8().constData(), defaultConfiguration, configuration);
+
+			delete configuration;
+			delete defaultConfiguration;
+		}
 
         *(this->_stream) << "Editor.currentVideoEncoder = " << encoderClassName.toUtf8().constData() << ";" << std::endl;
     }
