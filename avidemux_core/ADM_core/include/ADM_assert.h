@@ -112,28 +112,19 @@ void            ADM_usleep(unsigned long us);
 #ifdef __cplusplus
 }
 #endif
-// Compatibility with fprintf etc.. with long long & win32
+
+#define LLX PRIx64
+#define LLU PRIu64
+#define LLD PRId64
+#define LX  PRIx32
+#define LD  PRIi32
+#define LU  PRIu32
+
 // ADM_cleanupPath returns a cleaned up copy of the parameter
 #ifdef __WIN32
-        #define LLX "I64x"
-        #define LLU "I64u"
-        #define LLD "I64d"
-        #define LU  "lu"
-        #define LD  "ld"
-        #define LX  "lx"
-
 		char *ADM_slashToBackSlash(const char *in);
         #define ADM_cleanupPath(x) ADM_slashToBackSlash(x)
 #else
-    
-        #define LLX PRIx64
-        #define LLU PRIu64
-        #define LLD PRId64
-        #define LX  PRIx32
-        #define LD  PRIi32
-        #define LU  PRIu32
-
-    
         #define ADM_cleanupPath(x) ADM_strdup(x)
 #endif
 
