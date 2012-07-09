@@ -40,6 +40,7 @@ public:
 	IEditor* editor();
 	void initialise(IEditor *videoBody);
 	std::string name();
+	void openDebuggerShell();
 	void registerEventHandler(eventHandlerFunc *func);
 	bool runScript(std::string script, RunMode mode);
 	bool runScriptFile(std::string name, RunMode mode);

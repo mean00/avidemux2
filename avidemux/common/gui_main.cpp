@@ -199,22 +199,28 @@ int nw;
 		return;
 	}
 
+	if (action >= ACT_SCRIPT_ENGINE_SHELL_FIRST && action < ACT_SCRIPT_ENGINE_SHELL_LAST)
+	{
+		IScriptEngine *shellEngine = getScriptEngines()[action - ACT_SCRIPT_ENGINE_SHELL_FIRST];
+
+		if ((shellEngine->capabilities() & IScriptEngine::DebuggerShell) == IScriptEngine::DebuggerShell)
+		{
+			shellEngine->openDebuggerShell();
+		}
+		else
+		{
+			interactiveScript(shellEngine);
+		}
+
+		return;
+	}
+
   switch (action)
     {
         case ACT_TimeShift:
         case ACT_Goto:
                                 brokenAct();
                                 return;
-#ifdef USE_TINYPY
-        case ACT_PY_SHELL:
-                                interactiveScript(getPythonEngine());
-                                return;
-#endif
-#ifdef USE_SPIDERMONKEY
-        case ACT_JS_SHELL:
-                                interactiveScript(getSpiderMonkeyEngine());
-                                return;
-#endif
         case ACT_AVS_PROXY:
                                 GUI_avsProxy();
                                 return;

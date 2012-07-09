@@ -57,7 +57,7 @@ namespace ADM_qtScript
     IScriptEngine::Capabilities QtScriptEngine::capabilities()
     {
 #ifdef QT_SCRIPTTOOLS
-        return IScriptEngine::Debugger;
+        return (IScriptEngine::Capabilities)(IScriptEngine::Debugger | IScriptEngine::DebuggerShell);
 #else
         return IScriptEngine::None;
 #endif
@@ -85,6 +85,13 @@ namespace ADM_qtScript
     {
         return string("QtScript");
     }
+
+	void QtScriptEngine::openDebuggerShell()
+	{
+#ifdef QT_SCRIPTTOOLS
+		this->runScript("debugger;", "", IScriptEngine::DebugOnError);
+#endif
+	}
 
     void QtScriptEngine::registerEventHandler(eventHandlerFunc *func)
     {

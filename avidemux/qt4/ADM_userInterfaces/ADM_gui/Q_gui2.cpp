@@ -294,6 +294,7 @@ MainWindow::MainWindow(vector<IScriptEngine*> scriptEngines) : QMainWindow()
 
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
+	addScriptShellsToToolsMenu(myMenuTool);
     buildMyMenu();
 
 	/* Build the custom menu */

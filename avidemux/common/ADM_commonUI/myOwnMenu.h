@@ -97,17 +97,7 @@ static const MenuEntry _myMenuHelp[] = {
         };
 
 std::vector<MenuEntry> myMenuHelp(_myMenuHelp, _myMenuHelp + sizeof(_myMenuHelp) / sizeof(_myMenuHelp[0]));
-
-static const MenuEntry _myMenuTool[] = {
-#ifdef USE_SPIDERMONKEY
-            {MENU_ACTION,"JavaScript Shell",NULL,ACT_JS_SHELL           ,NULL,NULL},
-#endif
-#ifdef USE_TINYPY
-            {MENU_ACTION,"TinyPy Shell",    NULL,ACT_PY_SHELL           ,NULL,NULL},
-#endif
-        };
-
-std::vector<MenuEntry> myMenuTool(_myMenuTool, _myMenuTool + sizeof(_myMenuTool) / sizeof(_myMenuTool[0]));
+std::vector<MenuEntry> myMenuTool;
 
 static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,"Play/Stop",           NULL,ACT_PlayAvi        ,MKICON(player_play),   "Space"},

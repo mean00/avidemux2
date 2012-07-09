@@ -45,6 +45,7 @@ public:
 	IScriptWriter* createScriptWriter();
 	IEditor* editor();
 	std::string name();
+	void openDebuggerShell();
 	void initialise(IEditor *videoBody);
 	void registerEventHandler(eventHandlerFunc *func);
 	bool runScript(std::string script, RunMode mode);

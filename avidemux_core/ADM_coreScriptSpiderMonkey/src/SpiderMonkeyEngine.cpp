@@ -197,3 +197,5 @@ IScriptWriter* SpiderMonkeyEngine::createScriptWriter()
 {
     return new SpiderMonkeyScriptWriter();
 }
+
+void SpiderMonkeyEngine::openDebuggerShell() {}

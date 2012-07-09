@@ -11,7 +11,8 @@ public:
 	enum Capabilities
 	{
 		None = 0,
-		Debugger = 1 << 0
+		Debugger = 1 << 0,
+		DebuggerShell = 1 << 1
 	};
 
 	enum EventType
@@ -45,6 +46,7 @@ public:
 	virtual IEditor* editor() = 0;
 	virtual void initialise(IEditor *videoBody) = 0;
 	virtual std::string name() = 0;
+	virtual void openDebuggerShell() = 0;
 	virtual void registerEventHandler(eventHandlerFunc *func) = 0;
 	virtual bool runScript(std::string script, RunMode mode) = 0;
 	virtual bool runScriptFile(std::string name, RunMode mode) = 0;

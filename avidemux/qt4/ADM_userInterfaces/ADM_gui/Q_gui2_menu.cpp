@@ -74,23 +74,42 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 				MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
 				it = fileMenu.insert(it, dummyEntry);
 
-				MenuEntry runProjectEntry = {MENU_SUBACTION, "Run Project...", NULL, firstMenuId, NULL, NULL};
+				MenuEntry runProjectEntry = {MENU_SUBACTION, "&Run Project...", NULL, firstMenuId, NULL, NULL};
 				it = fileMenu.insert(it + 1, runProjectEntry);
 
 				if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
 				{
-					MenuEntry debugEntry = {MENU_SUBACTION, "Debug Project...", NULL, (Action)(firstMenuId + 1), NULL, NULL};
+					MenuEntry debugEntry = {MENU_SUBACTION, "&Debug Project...", NULL, (Action)(firstMenuId + 1), NULL, NULL};
 					it = fileMenu.insert(it + 1, debugEntry);
 					i++;
 				}
 
-				MenuEntry saveAsProjectEntry = {MENU_SUBACTION, "Save as Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL};
+				MenuEntry saveAsProjectEntry = {MENU_SUBACTION, "Save &As Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL};
 				it = fileMenu.insert(it + 1, saveAsProjectEntry);
 				i += 3;
 			}
 
 			break;
 		}
+	}
+}
+
+void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
+{
+	vector<MenuEntry>::iterator it = toolMenu.begin();
+
+	for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+	{
+		string itemName = "Shell";
+
+		if (engineIndex > 0)
+		{
+			itemName = string(_scriptEngines[engineIndex]->name()) + " " + itemName;
+		}
+
+		MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL};
+
+		it = toolMenu.insert(it, entry) + 1;
 	}
 }
 

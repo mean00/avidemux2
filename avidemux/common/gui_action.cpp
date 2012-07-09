@@ -111,6 +111,7 @@ Action lookupActionByName (const char * name)
 const char * getActionName (Action act)
 {
 	if(act==ACT_DUMMY) return "ACT_DUMMY";
+	if(act>=ACT_SCRIPT_ENGINE_SHELL_FIRST) return "ACT_SCRIPT_ENGINE_SHELL";
 	if(act>=ACT_SCRIPT_ENGINE_FIRST) return "ACT_SCRIPT_ENGINE";
     if(act>=ACT_CUSTOM_BASE_PY) return "ACT_PY_SCRIPT";
     if(act>=ACT_CUSTOM_BASE_JS) return "ACT_JS_SCRIPT";

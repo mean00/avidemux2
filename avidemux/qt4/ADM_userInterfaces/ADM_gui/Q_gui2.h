@@ -77,6 +77,7 @@ protected:
 	std::vector<IScriptEngine*> _scriptEngines;
 
 	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
+	void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
     bool buildMyMenu(void);
     bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
     void searchMenu(QAction * action,MenuEntry *menu, int nb);

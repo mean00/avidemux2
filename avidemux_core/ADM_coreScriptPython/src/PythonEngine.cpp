@@ -281,3 +281,5 @@ IScriptWriter* PythonEngine::createScriptWriter()
 {
     return new PythonScriptWriter();
 }
+
+void PythonEngine::openDebuggerShell() {}
