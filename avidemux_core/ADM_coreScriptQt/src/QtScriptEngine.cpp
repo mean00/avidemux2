@@ -121,12 +121,6 @@ namespace ADM_qtScript
         map<ADM_dynMuxer*, Muxer*> muxers;
         map<ADM_videoEncoder6*, VideoEncoder*> videoEncoders;
 
-        this->registerAudioEncoderPlugins(&engine);
-        this->registerMuxerPlugins(&engine, &muxers);
-        this->registerVideoEncoderPlugins(&engine, &videoEncoders);
-        this->registerVideoFilterPlugins(&engine);
-        this->registerScriptClasses(&engine, &muxers, &videoEncoders);
-
 #ifdef QT_SCRIPTTOOLS
         QScriptEngineDebugger debugger;
 
@@ -143,6 +137,12 @@ namespace ADM_qtScript
         }
 
 #endif
+
+        this->registerAudioEncoderPlugins(&engine);
+        this->registerMuxerPlugins(&engine, &muxers);
+        this->registerVideoEncoderPlugins(&engine, &videoEncoders);
+        this->registerVideoFilterPlugins(&engine);
+        this->registerScriptClasses(&engine, &muxers, &videoEncoders);
 
         QScriptValue result = engine.evaluate(script, name);
         bool success = false;
@@ -253,6 +253,13 @@ namespace ADM_qtScript
         QScriptValue includeFunc = engine->newFunction(includeFunction);
         engine->globalObject().setProperty("include", includeFunc);
 
+		QScriptValue debugPrintFunc = engine->globalObject().property("print");
+
+		if (debugPrintFunc.isValid())
+		{
+			engine->globalObject().setProperty("printDebug", debugPrintFunc);
+		}
+
         QScriptValue printFunc = engine->newFunction(printFunction);
         engine->globalObject().setProperty("print", printFunc);
     }
@@ -319,6 +326,13 @@ namespace ADM_qtScript
 
     QScriptValue QtScriptEngine::printFunction(QScriptContext *context, QScriptEngine *engine)
     {
+		QScriptValue debugPrintFunc = engine->globalObject().property("printDebug");
+
+		if (debugPrintFunc.isValid())
+		{
+			debugPrintFunc.call(context->thisObject(), context->argumentsObject());
+		}
+
         QString output;
 
         for (int i = 0; i < context->argumentCount(); i++)

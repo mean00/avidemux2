@@ -11,7 +11,7 @@ void execute(String command, ...);
  */
 void include(String scriptPath);
 
-/** \brief Writes the passed arguments to the standard output.
+/** \brief Writes the passed arguments to the standard output and the Debug Output widget of the script debugger.
  * It is intended to be used for simple debugging purposes.
  */
 void print(...);
