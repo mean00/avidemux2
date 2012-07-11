@@ -12,39 +12,17 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
-#include "config.h"
-#include "ADM_inttype.h"
+
 #include <string>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <QtCore/QUrl>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QGraphicsView>
 
+#include "config.h"
 #include "Q_gui2.h"
-#include "ADM_default.h"
-
-#include "gui_action.hxx"
-#include "DIA_fileSel.h"
-#include "ADM_vidMisc.h"
-#include "prefs.h"
-#include "avi_vars.h"
-
-#include "ADM_render/GUI_renderInternal.h"
-#include "ADM_coreVideoEncoderInternal.h"
-#include "ADM_muxerProto.h"
-#include "T_vumeter.h"
-#include "DIA_coreToolkit.h"
+#include "FileAction.h"
+#include "A_functions.h"
 
 using std::string;
-
-#define JS_CUSTOM 0
-#define PY_CUSTOM 1
-#define PY_AUTO   2
-#define NB_POOL 3
-static char     *customNames[3][ADM_MAX_CUSTOM_SCRIPT];
-static QAction  *customActions[3][ADM_MAX_CUSTOM_SCRIPT];
-static uint32_t ADM_nbCustom[3]={0,0,0};
 
 void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 {
@@ -66,9 +44,9 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 				Action firstMenuId = (Action)(ACT_SCRIPT_ENGINE_FIRST + (engineIndex * 3));
 				string itemName = "Project";
 
-				if (engineIndex > 0)
+				if (this->_scriptEngines.size() > 1)
 				{
-					itemName = string(_scriptEngines[engineIndex]->name()) + " " + itemName;
+					itemName = this->_scriptEngines[engineIndex]->name() + " " + itemName;
 				}
 
 				MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
@@ -102,9 +80,9 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 	{
 		string itemName = "Shell";
 
-		if (engineIndex > 0)
+		if (this->_scriptEngines.size() > 1)
 		{
-			itemName = string(_scriptEngines[engineIndex]->name()) + " " + itemName;
+			itemName = this->_scriptEngines[engineIndex]->name() + " " + itemName;
 		}
 
 		MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL};
@@ -113,208 +91,72 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 	}
 }
 
-/**
-    \fn clearCustomMenu
-*/
-void MainWindow::clearCustomMenu(void)
+void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts)
 {
-    for(int pool=0;pool<NB_POOL;pool++)
-	if (ADM_nbCustom[pool])
+	QFileInfoList scriptFileList = QDir(dir).entryInfoList(
+		fileExts, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Readable, QDir::DirsFirst | QDir::Name);
+
+	for (int index = 0; index < scriptFileList.size(); index++)
 	{
-		for(int i = 0; i < ADM_nbCustom[pool]; i++)
+		QFileInfo fileInfo = scriptFileList.at(index);
+
+		if (fileInfo.isDir())
 		{
-            switch(pool)
-            {
-            case PY_CUSTOM:
-                disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(customPy()));
-                break;
-            case JS_CUSTOM:
-                disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(customJs()));
-                break;
-            case PY_AUTO:
-                disconnect(customActions[pool][i], SIGNAL(triggered()), this, SLOT(autoPy()));
-                break;
-            default:
-                ADM_assert(0);
-                break;
-            }
-			delete customActions[pool][i];
-			delete customNames[pool][i];
+			if (fileInfo.completeBaseName() != "lib")
+			{
+				QMenu *dirMenu = new QMenu(fileInfo.completeBaseName(), scriptMenu);
+
+				scriptMenu->addMenu(dirMenu);
+				this->addScriptDirToMenu(dirMenu, fileInfo.absoluteFilePath(), fileExts);
+			}
 		}
-		ADM_nbCustom[pool] = 0;
+		else
+		{
+			FileAction *action = new FileAction(fileInfo.baseName(), fileInfo.absoluteFilePath(), scriptMenu);
+
+			scriptMenu->addAction(action);
+			connect(action, SIGNAL(triggered()), this, SLOT(scriptFileActionHandler()));
+		}
 	}
-    pyMenu->clear();
-    jsMenu->clear();
-    autoMenu->clear();
 }
+
+void MainWindow::scriptFileActionHandler()
+{
+	QString filePath = ((FileAction*)sender())->filePath();
+	QString fileExt = QFileInfo(filePath).suffix();
+
+	for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+	{
+		if (fileExt == _scriptEngines[engineIndex]->defaultFileExtension().c_str())
+		{
+			printf("Executing %s with %s engine\n", filePath.toUtf8().constData(), _scriptEngines[engineIndex]->name().c_str());
+
+			A_parseScript(_scriptEngines[engineIndex], filePath.toUtf8().constData());
+		}
+	}
+}
+
 /**
     \fn buildCustomMenu
 */
 void MainWindow::buildCustomMenu(void)
 {
-	clearCustomMenu();
+	QStringList fileExts;
 
-	char *customdir = ADM_getCustomDir();
-    char *autoDir =   ADM_getAutoDir();
-    ADM_info("Auto script folder %s\n",autoDir);
-	if (!customdir)
+	for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
 	{
-		printf("No custom dir...\n");
-		return;
+		fileExts << QString("*.") + _scriptEngines[engineIndex]->defaultFileExtension().c_str();
 	}
-    string customFolder(customdir);
-    string autoFolder(autoDir);
-    string topDir;
-    for(int pool=0;pool<NB_POOL;pool++)
-    {
-        string myDir,subDir;
-        string ext,topDir;
-        /* Collect the name */
-        switch(pool)
-        {
-            case JS_CUSTOM:
-                subDir=string("js");
-                ext=string(".js");
-                topDir=customFolder;
-                break;
-            case PY_CUSTOM:
-                subDir=string("py");
-                ext=string(".py");
-                topDir=customFolder;
-                break;
-            case PY_AUTO:
-                subDir=string("");
-                ext=string(".py");
-                topDir=autoFolder;
-                break;
-            default:
-                ADM_assert(0);
-                break;
-        }
-        myDir=topDir+subDir;
-        ADM_info("Scanning %s\n",myDir.c_str());
-        if (! buildDirectoryContent(&(ADM_nbCustom[pool]), myDir.c_str(), customNames[pool], ADM_MAX_CUSTOM_SCRIPT,ext.c_str()))
-        {
-            ADM_warning("Failed to build custom dir content (%s)\n",myDir.c_str());
-            continue;
-        }
 
-        if(ADM_nbCustom[pool])
-        {
-            ADM_info("Found %u custom script(s), adding them (%s)\n", ADM_nbCustom[pool],subDir.c_str());
+	ui.menuCustom->clear();
+	ui.menuAuto->clear();
 
-            for(int i=0; i < ADM_nbCustom[pool]; i++)
-            {
-                const char *menuName=ADM_GetFileName(customNames[pool][i]);
-                char *dot=(char *)menuName; // Same as menuName but writtable
-                if(pool==PY_AUTO)
-                {
-                    if(!strncmp(menuName,"ADM_",4)) // Dont display py script starting by ADM_
-                            continue;
-                }
-                // Remove .py or .js
-                uint32_t strLen=strlen(menuName);
-                if(strLen>3 && menuName[strLen-3]=='.')
-                        dot[strLen-3]=0;
-                //
-                QAction *action= new QAction(QString::fromUtf8(menuName), NULL);
-                //ADM_info("\t%s\n",ADM_GetFileName(customNames[pool][i]));
-                customActions[pool][i] = action;
-                switch(pool)
-                {
-                case JS_CUSTOM:
-                {
-                    jsMenu->addAction(action);
-                    connect(action, SIGNAL(triggered()), this, SLOT(customJs()));
-                    break;
-                }
-                case PY_CUSTOM:
-                {
-                    pyMenu->addAction(action);
-                    connect(action, SIGNAL(triggered()), this, SLOT(customPy()));
-                    break;
-                }
-                case PY_AUTO:
-                    autoMenu->addAction(action);
-                    connect(action, SIGNAL(triggered()), this, SLOT(autoPy()));
-                    break;
-                default:
-                    ADM_assert(0);
-                    break;
+	const char *customDir = ADM_getCustomDir();
+	const char *autoDir = ADM_getAutoDir();
 
-                }
-            }
-        }
-        else
-            ADM_info("No custom scripts in %s\n",myDir.c_str());
-    }
-	ADM_info("Custom menu built\n");
+	this->addScriptDirToMenu(ui.menuCustom, customDir, fileExts);
+	this->addScriptDirToMenu(ui.menuAuto, autoDir, fileExts);
+
+	delete [] customDir;
+	delete [] autoDir;
 }
-
-/**
-\fn     custom
-\brief  Invoked when one of the custom script has been called
-*/
-void MainWindow::customScript(int pool,int base,QObject *ptr)
-{
-
-	for(int i=0;i<ADM_nbCustom[pool];i++)
-	{
-		if(customActions[pool][i]==ptr)
-		{
-			printf("[Custom] %d/%d scripts\n",i,(int)ADM_nbCustom[pool]);
-			HandleAction( (Action)(base+i));
-			return;
-		}
-	}
-	printf("[Custom] Not found\n");
-
-}
-void MainWindow::customJs(void)
-{
-	printf("[Custom] Js Invoked\n");
-	QObject *ptr=sender();
-	if(!ptr) return;
-    customScript(JS_CUSTOM,ACT_CUSTOM_BASE_JS,ptr);
-}
-void MainWindow::customPy(void)
-{
-	printf("[Custom] Python Invoked\n");
-	QObject *ptr=sender();
-	if(!ptr) return;
-    customScript(PY_CUSTOM,ACT_CUSTOM_BASE_PY,ptr);
-}
-void MainWindow::autoPy(void)
-{
-	printf("[auto] Python Invoked\n");
-	QObject *ptr=sender();
-	if(!ptr) return;
-    customScript(PY_AUTO,ACT_AUTO_BASE_PY,ptr);
-}
-
-/**
-    Get the custom entry
-
-*/
-
-const char * GUI_getCustomJsScript(uint32_t nb)
-{
-	ADM_assert(nb<ADM_nbCustom[JS_CUSTOM]);
-	return customNames[JS_CUSTOM][nb];
-
-}
-const char * GUI_getCustomPyScript(uint32_t nb)
-{
-	ADM_assert(nb<ADM_nbCustom[PY_CUSTOM]);
-	return customNames[PY_CUSTOM][nb];
-
-}
-const char * GUI_getAutoPyScript(uint32_t nb)
-{
-	ADM_assert(nb<ADM_nbCustom[PY_AUTO]);
-	return customNames[PY_AUTO][nb];
-
-}
-
-//********************************************
-//EOF

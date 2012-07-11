@@ -693,7 +693,6 @@ void MainWindow::nextIntraFrame(void)
 
 MainWindow::~MainWindow()
 {
-	clearCustomMenu();
     delete thumbSlider;
     thumbSlider=NULL;
 }

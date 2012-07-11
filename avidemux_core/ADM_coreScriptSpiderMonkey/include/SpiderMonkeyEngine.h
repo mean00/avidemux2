@@ -43,6 +43,7 @@ public:
 	void callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message);
 	Capabilities capabilities();
 	IScriptWriter* createScriptWriter();
+	std::string defaultFileExtension();
 	IEditor* editor();
 	std::string name();
 	void openDebuggerShell();

@@ -283,3 +283,8 @@ IScriptWriter* PythonEngine::createScriptWriter()
 }
 
 void PythonEngine::openDebuggerShell() {}
+
+string PythonEngine::defaultFileExtension()
+{
+	return string("py");
+}

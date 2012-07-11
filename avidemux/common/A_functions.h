@@ -20,6 +20,8 @@ void    A_Resync(void);
 void    A_addJob(void);
 void    A_audioTrack(void);
 
+bool A_parseScript(IScriptEngine *engine, const char *name);
+
 #ifdef USE_QTSCRIPT
 bool    A_parseQtScript(const char *name);
 #endif

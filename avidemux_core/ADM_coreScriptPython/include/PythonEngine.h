@@ -37,6 +37,7 @@ public:
 	void callEventHandlers(EventType eventType, const char *fileName, int lineNo, const char *message);
 	Capabilities capabilities();
 	IScriptWriter* createScriptWriter();
+	std::string defaultFileExtension();
 	IEditor* editor();
 	void initialise(IEditor *videoBody);
 	std::string name();

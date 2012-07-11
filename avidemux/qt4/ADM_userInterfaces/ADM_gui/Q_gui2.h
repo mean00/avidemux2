@@ -42,9 +42,6 @@ protected:
 public slots:
 	void timeChanged(int);
 	void buttonPressed(void);
-	void autoPy(void);
-	void customPy(void);
-    void customJs(void);
 	void toolButtonPressed(bool z);
 
 	void comboChanged(int z);
@@ -73,19 +70,20 @@ public slots:
     void searchRecentFiles(QAction * action);
     void searchToolBar(QAction *);
 
+	void scriptFileActionHandler();
+
 protected:
 	std::vector<IScriptEngine*> _scriptEngines;
 
+	void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
 	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
 	void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
     bool buildMyMenu(void);
     bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
     void searchMenu(QAction * action,MenuEntry *menu, int nb);
-	void clearCustomMenu(void);
 	bool eventFilter(QObject* watched, QEvent* event);
 	void mousePressEvent(QMouseEvent* event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
-    void customScript(int pool,int base,QObject *ptr);
 };
 #endif	// Q_gui2_h

@@ -68,6 +68,11 @@ namespace ADM_qtScript
         return new QtScriptWriter();
     }
 
+	string QtScriptEngine::defaultFileExtension()
+	{
+		return string("admjs");
+	}
+
     IEditor* QtScriptEngine::editor()
     {
         return _editor;

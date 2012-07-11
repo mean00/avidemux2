@@ -139,40 +139,6 @@ void HandleAction (Action action)
   // handle out of band actions
   // independant load not loaded
 //------------------------------------------------
-int nw;
-#ifdef USE_SPIDERMONKEY
-  if(action>=ACT_CUSTOM_BASE_JS && action <ACT_CUSTOM_END_JS)
-  {
-      string script;
-      if(true==getScriptName( action, ACT_CUSTOM_BASE_JS,GUI_getCustomJsScript,"js",script))
-      {
-            A_parseECMAScript(script.c_str());
-      }
-      return ;
-  }
-#endif
-
-#ifdef USE_TINYPY
-  if(action>=ACT_CUSTOM_BASE_PY && action <ACT_CUSTOM_END_PY)
-  {
-      string script;
-      if(true==getScriptName( action, ACT_CUSTOM_BASE_PY,GUI_getCustomPyScript,"py",script))
-      {
-            A_parseTinyPyScript(script.c_str());
-      }
-      return ;
-  }
-  if(action>=ACT_AUTO_BASE_PY && action <ACT_AUTO_END_PY)
-  {
-      string script;
-      if(true==getScriptName( action, ACT_AUTO_BASE_PY,GUI_getAutoPyScript,"py",script))
-      {
-            A_parseTinyPyScript(script.c_str());
-      }
-      return ;
-  }
-#endif
-
 	if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
 	{
 		int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
@@ -250,13 +216,17 @@ int nw;
             return;
             }
     case ACT_VIDEO_CODEC_CHANGED:
-    		nw=UI_getCurrentVCodec();
+		{
+    		int nw=UI_getCurrentVCodec();
     		videoEncoder6_SetCurrentEncoder(nw);
             return;
+		}
    case ACT_AUDIO_CODEC_CHANGED:
-            nw=UI_getCurrentACodec();
+	   {
+            int nw=UI_getCurrentACodec();
             audioCodecSetByIndex(0,nw);
             return;
+	   }
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
@@ -753,7 +723,7 @@ void cleanUp (void)
 
 #warning fixme
 
-static bool parseScript(IScriptEngine *engine, const char *name)
+bool A_parseScript(IScriptEngine *engine, const char *name)
 {
 	bool ret;
 	char *longname = ADM_PathCanonize(name);
@@ -781,14 +751,14 @@ static bool parseScript(IScriptEngine *engine, const char *name)
 */
 bool A_parseTinyPyScript(const char *name)
 {
-	return parseScript(getPythonEngine(), name);
+	return A_parseScript(getPythonEngine(), name);
 }
 #endif
 
 #ifdef USE_QTSCRIPT
 bool A_parseQtScript(const char *name)
 {
-	return parseScript(getQtScriptEngine(), name);
+	return A_parseScript(getQtScriptEngine(), name);
 }
 #endif
 
@@ -798,7 +768,7 @@ bool A_parseQtScript(const char *name)
 */
 bool A_parseECMAScript(const char *name)
 {
-	return parseScript(getSpiderMonkeyEngine(), name);
+	return A_parseScript(getSpiderMonkeyEngine(), name);
 }
 #endif
 

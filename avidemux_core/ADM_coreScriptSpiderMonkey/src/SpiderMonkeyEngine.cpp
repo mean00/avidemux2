@@ -199,3 +199,8 @@ IScriptWriter* SpiderMonkeyEngine::createScriptWriter()
 }
 
 void SpiderMonkeyEngine::openDebuggerShell() {}
+
+string SpiderMonkeyEngine::defaultFileExtension()
+{
+	return string("js");
+}

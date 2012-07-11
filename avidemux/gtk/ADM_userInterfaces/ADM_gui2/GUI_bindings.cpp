@@ -82,8 +82,7 @@ static int keyPressHandlerId=0;
 
 static gint       jogChange( void );
 static void volumeChange(GtkScaleButton *button, gdouble value, gpointer user_data);
-static char     *customNames[ADM_MAX_CUSTOM_SCRIPT];
-static uint32_t ADM_nbCustom=0;
+
 // Needed for DND
 // extern int A_openAvi (char *name);
 extern int A_appendAvi (const char *name);
@@ -94,8 +93,6 @@ static void on_video_change(void);
 static void on_preview_change(void);
 static void on_format_change(void);
 static int update_ui=0;
-static void GUI_initCustom(void);
-const char * GUI_getCustomScript(uint32_t nb);
 
 uint32_t audioEncoderGetNumberOfEncoders(void);
 const char  *audioEncoderGetDisplayName(uint32_t i);
@@ -354,7 +351,6 @@ uint32_t w,h;
 
     ui_setMenus();
     UI_updateRecentMenu(  );
-    GUI_initCustom();
 
 	return ret;
 }
@@ -374,31 +370,12 @@ void destroyGUI(void)
 	ADM_info("Destroying Gtk GUI\n");
 	renderDestroy();
 
-	for(int i=0;i<ADM_nbCustom;i++)
-		delete(customNames[i]);
 #ifdef USE_JOG
         physical_jog_shuttle->deregisterCBs (NULL);
         delete physical_jog_shuttle;
 #endif
 }
 
-/**
-    Get the custom entry
-
-*/
-const char * GUI_getCustomJsScript(uint32_t nb)
-{
-    ADM_assert(nb<ADM_nbCustom);
-    return customNames[nb];
-}
-const char * GUI_getCustomPyScript(uint32_t nb)
-{
-   return NULL;
-}
-const char * GUI_getAutoPyScript(uint32_t nb)
-{
-   return NULL;
-}
 /**
     \fn populateCombobox
 */
@@ -566,58 +543,7 @@ uint8_t  bindGUI( void )
     return 1;
 
 }
-/**
-    \fn GUI_initCustom
-*/
-void GUI_initCustom(void )
-{
-  GtkWidget *menuEntry=glade.getWidget("custom1");
-  char *customdir=ADM_getCustomDir();
-  if(!menuEntry)
-  {
-      printf("No custom menu...\n");
-      delete [] customdir;
-      return;
-  }
-  if(!customdir)
-  {
-      printf("No custom dir...\n");
-      return;
-  }
-  /* Collect the name */
-   if(! buildDirectoryContent(&ADM_nbCustom,customdir,   customNames,ADM_MAX_CUSTOM_SCRIPT,".js"))
-    {
-      printf("Failed to build custom dir content");
-      delete [] customdir;
-      return;
-    }
-  delete [] customdir;
-  if(!ADM_nbCustom)
-  {
-      printf("No custom script\n");
-  }
-  printf("Found %u custom scripts, adding them\n",ADM_nbCustom);
- GtkWidget *go,*menu;
- int rank;
 
-  menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuEntry), menu);
-
-#define CALLBACK(x,y) g_signal_connect(x, "activate", \
-                      G_CALLBACK(guiCallback),                   (void *) y)
-
-  for(int i=0;i<ADM_nbCustom;i++)
-  {
-    go = gtk_menu_item_new_with_mnemonic (ADM_GetFileName(customNames[i]));
-    gtk_widget_show (go);
-    gtk_container_add (GTK_CONTAINER (menu), go);
-    rank=ACT_CUSTOM_BASE_JS+i;
-    CALLBACK( go                 ,rank);
-  }
-
-  #undef CALLBACK
-  printf("Menu built\n");
-}
 gboolean  on_drawingarea1_draw_signal(GtkWidget *widget,  cairo_t *cr, gpointer user_data)
 {
 UNUSED_ARG(widget);
