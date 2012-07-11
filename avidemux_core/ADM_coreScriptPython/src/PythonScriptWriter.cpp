@@ -17,8 +17,8 @@ void PythonScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encode
 		*(this->_stream) << "adm.audioAddExternal(\"" << track->edTrack->castToExternal()->getMyName() << "\")" << std::endl;
 	}
 
-    *(this->_stream) << "adm.audioAddTrack(" << trackIndex << ")" << std::endl;
-    *(this->_stream) << "adm.audioCodec(" << track->poolIndex << ", \"" << encoder->codecName << "\"";
+    *(this->_stream) << "adm.audioAddTrack(" << track->poolIndex << ")" << std::endl;
+    *(this->_stream) << "adm.audioCodec(" << trackIndex << ", \"" << encoder->codecName << "\"";
     this->dumpConfCouple(track->encoderConf);
     *(this->_stream) << ");" << std::endl;
 }

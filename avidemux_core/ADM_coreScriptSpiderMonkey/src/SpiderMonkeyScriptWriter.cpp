@@ -11,7 +11,7 @@ SpiderMonkeyScriptWriter::SpiderMonkeyScriptWriter()
 
 void SpiderMonkeyScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
 {
-    *(this->_stream) << "adm.audioCodec(" << track->poolIndex << ", \"" << encoder->codecName << "\"";
+    *(this->_stream) << "adm.audioCodec(" << trackIndex << ", \"" << encoder->codecName << "\"";
     this->dumpConfCouple(track->encoderConf);
     *(this->_stream) << ");" << std::endl;
 }
