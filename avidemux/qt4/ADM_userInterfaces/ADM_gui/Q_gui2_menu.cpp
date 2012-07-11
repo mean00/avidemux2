@@ -156,7 +156,4 @@ void MainWindow::buildCustomMenu(void)
 
 	this->addScriptDirToMenu(ui.menuCustom, customDir, fileExts);
 	this->addScriptDirToMenu(ui.menuAuto, autoDir, fileExts);
-
-	delete [] customDir;
-	delete [] autoDir;
 }
