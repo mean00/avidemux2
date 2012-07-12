@@ -21,19 +21,6 @@ void    A_addJob(void);
 void    A_audioTrack(void);
 
 bool A_parseScript(IScriptEngine *engine, const char *name);
-
-#ifdef USE_QTSCRIPT
-bool    A_parseQtScript(const char *name);
-#endif
-
-#ifdef USE_SPIDERMONKEY
-bool    A_parseECMAScript(const char *name);
-#endif
-
-#ifdef USE_TINYPY
-bool    A_parseTinyPyScript(const char *name);
-#endif
-
 void A_saveScript(IScriptEngine* engine, const char* name);
 
 //uint8_t A_autoDrive(Action action);

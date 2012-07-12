@@ -745,33 +745,6 @@ bool A_parseScript(IScriptEngine *engine, const char *name)
 	return ret;
 }
 
-#ifdef USE_TINYPY
-/**
-    \fn A_parseTinyPyScript
-*/
-bool A_parseTinyPyScript(const char *name)
-{
-	return A_parseScript(getPythonEngine(), name);
-}
-#endif
-
-#ifdef USE_QTSCRIPT
-bool A_parseQtScript(const char *name)
-{
-	return A_parseScript(getQtScriptEngine(), name);
-}
-#endif
-
-#ifdef USE_SPIDERMONKEY
-/**
-    \fn A_parseECMAScript
-*/
-bool A_parseECMAScript(const char *name)
-{
-	return A_parseScript(getSpiderMonkeyEngine(), name);
-}
-#endif
-
 void A_saveScript(IScriptEngine* engine, const char* name)
 {
     IScriptWriter *writer = engine->createScriptWriter();

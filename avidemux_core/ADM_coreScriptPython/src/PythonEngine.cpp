@@ -71,7 +71,7 @@ PythonEngine::~PythonEngine()
 
 string PythonEngine::name()
 {
-    return string("Python");
+    return string("Tinypy");
 }
 
 void PythonEngine::initialise(IEditor *editor)

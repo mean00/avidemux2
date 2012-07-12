@@ -7,14 +7,11 @@
 #ifndef __DECLARE__
 extern
 #endif
-std::vector<IScriptEngine*> engines;
 
 std::vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor);
 void destroyScriptEngines();
-IScriptEngine* getQtScriptEngine();
-IScriptEngine* getPythonEngine();
-IScriptEngine* getSpiderMonkeyEngine();
-std::vector<IScriptEngine*> getScriptEngines();
+const std::vector<IScriptEngine*>& getScriptEngines();
+IScriptEngine* getDefaultScriptEngine();
 void interactiveScript(IScriptEngine *engine);
 
 #endif

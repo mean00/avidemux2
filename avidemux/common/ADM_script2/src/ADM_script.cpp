@@ -1,4 +1,3 @@
-#define __DECLARE__
 #include "ADM_default.h"
 #include "ADM_script.h"
 
@@ -18,6 +17,8 @@
 #include "A_functions.h"
 
 using namespace std;
+
+static std::vector<IScriptEngine*> engines;
 
 static void consoleEventHandler(IScriptEngine::EngineEvent *event)
 {
@@ -77,45 +78,40 @@ void destroyScriptEngines()
 	}
 }
 
-static IScriptEngine* getEngine(vector<IScriptEngine*> engines, string engineName)
+static int getEngineMaturityRanking(IScriptEngine* engine)
+{
+	if (engine->name().compare("QtScript"))
+	{
+		return 2;
+	}
+	else if (engine->name().compare("Tinypy"))
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+IScriptEngine* getDefaultScriptEngine()
 {
     IScriptEngine *engine = NULL;
+	int lastRank = -1;
 
     for (int i = 0; i < engines.size(); i++)
 	{
-		if (engines[i]->name().compare(engineName) == 0)
+		int rank = getEngineMaturityRanking(engines[i]);
+
+		if (rank > lastRank)
 		{
-		    engine = engines[i];
-		    break;
+			engine = engines[i];
 		}
 	}
 
 	return engine;
 }
 
-#ifdef USE_QTSCRIPT
-IScriptEngine* getQtScriptEngine()
-{
-    return getEngine(engines, "QtScript");
-}
-#endif
-
-#ifdef USE_SPIDERMONKEY
-IScriptEngine* getSpiderMonkeyEngine()
-{
-    return getEngine(engines, "SpiderMonkey");
-}
-#endif
-
-#ifdef USE_TINYPY
-IScriptEngine* getPythonEngine()
-{
-    return getEngine(engines, "Python");
-}
-#endif
-
 // This shouldn't really be used but since the UI isn't very OOP it's kinda necessary at the moment
-vector<IScriptEngine*> getScriptEngines()
+const vector<IScriptEngine*>& getScriptEngines()
 {
 	return engines;
 }

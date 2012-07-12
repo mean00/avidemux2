@@ -14,50 +14,29 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "ADM_cpp.h"
-#include <stdlib.h>
-#include <signal.h>
-#ifndef __WIN32
-#include <unistd.h>
-#endif
 #include <math.h>
-#include <ctype.h>
-#include "ADM_default.h"
+#include "ADM_cpp.h"
+
 #include "avi_vars.h"
-
-
-#include "gui_action.hxx"
+#include "ADM_script2/include/ADM_script.h"
 #include "prefs.h"
-#include "gtkgui.h"
 #include "A_functions.h"
-
 
 #include "ADM_debugID.h"
 #define MODULE_NAME  MODULE_COMMANDLINE
 #include "ADM_debug.h"
 #include "avidemutils.h"
 
-
 #include "ADM_vidMisc.h"
-#include "ADM_coreVideoEncoder.h"
 #include "ADM_videoEncoderApi.h"
-#include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
+#include "DIA_factory.h"
+#include "ADM_slave.h"
 
-extern bool ADM_slaveConnect(uint32_t port);
-
-
-extern void GUI_Quiet( void);
-extern void GUI_Verbose( void);
-extern void show_info(char *p);
 extern const char *getStrFromAudioCodec( uint32_t codec);
-extern void frame2time(uint32_t frame, uint32_t fps, uint16_t * hh, uint16_t * mm, uint16_t * ss, uint16_t * ms);
-extern uint8_t A_rebuildKeyFrame (void);
-extern uint8_t scriptAddVar(char *var,char *value);
 
-/*#
-#
-#*/
+static uint8_t scriptAddVar(char *var,char *value);
+static void show_info(char *p);
+static void call_scriptEngine(const char *scriptFile);
 static void call_buildtimemap( char *p);
 static void call_quit(char *p) ;
 static void setBegin(char *p)   ;
@@ -117,14 +96,7 @@ AUTOMATON reaction_table[]=
         //{"js",                  0,"Dump the javascript functions",(one_arg_type)ADM_dumpJSHooks},
         {"nogui",               0,"Run in silent mode",		(one_arg_type)GUI_Quiet}   ,
         {"slave",			1,"run as slave, master is on port arg",		(one_arg_type)call_slave},
-
-#ifdef USE_SPIDERMONKEY
-        {"run",			1,"load and run a script",		(one_arg_type)A_parseECMAScript},
-#endif
-
-#ifdef USE_TINYPY
-        {"runpy",			1,"load and run a pyScript",		(one_arg_type)A_parseTinyPyScript},
-#endif
+        {"run",			1,"load and run a script",		(one_arg_type)call_scriptEngine},
 
         {"save-jpg",		1,"save a jpeg",			(one_arg_type)A_saveJpg}        ,
         {"begin",		1,"set start frame",			(one_arg_type)setBegin},
@@ -253,11 +225,37 @@ int searchReactionTable(char *string)
     return -1;
 }
 
-//_________________________________________________________________________
-//_________________________________________________________________________
-//_________________________________________________________________________
-//_________________________________________________________________________
-//_________________________________________________________________________
+void call_scriptEngine(const char *scriptFile)
+{
+	char *root, *ext;
+	bool executed = false;
+
+	std::vector<IScriptEngine*> engines = getScriptEngines();
+	ADM_PathSplit(scriptFile, &root, &ext);
+
+	if (engines.size() == 1)
+	{
+		A_parseScript(engines[0], scriptFile);
+		executed = true;
+	}
+	else
+	{
+		for (int i = 0; i < engines.size(); i++)
+		{
+			if (engines[i]->defaultFileExtension().compare(ext) == 0)
+			{
+				A_parseScript(engines[i], scriptFile);
+				executed = true;
+				break;
+			}
+		}
+	}
+
+	if (!executed)
+	{
+		printf("Unable to appropriate script engine for script file\n");
+	}
+}
 
 void call_quit        (char *p) { UNUSED_ARG(p); exit(0);                            }
 // The form is name=value
