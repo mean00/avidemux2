@@ -22,7 +22,7 @@ mkdir etc\fonts\conf.d
 copy "%buildDir%\etc\fonts\conf.d" etc\fonts\conf.d\
 move $_OUTDIR\conf.avail etc\fonts
 
-move $_OUTDIR\search help
+move $_OUTDIR\search help\QtScript
 move $_OUTDIR\lib plugins\autoScripts
 
 mkdir plugins\pluginSettings\x264
