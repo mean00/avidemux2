@@ -1,7 +1,7 @@
 ADM_coreScriptQt
 {
 global:
-	*QtScriptEngine*;
+	createEngine;
 local:
 	*;
 };

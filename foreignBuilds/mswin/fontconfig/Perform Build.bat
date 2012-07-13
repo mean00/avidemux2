@@ -17,7 +17,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=2.9.91
+set version=2.9.92
 set package=fontconfig-%version%.tar.gz
 set sourceFolder=fontconfig-%version%-%BuildBits%
 set tarFolder=fontconfig-%version%
@@ -51,7 +51,7 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 
 echo.
 echo Configuring
-sh ./configure --prefix="%usrLocalDir%" --disable-static
+sh ./configure --prefix="%usrLocalDir%" --disable-static --disable-docs
 
 if errorlevel 1 goto end
 echo.

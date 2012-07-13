@@ -8,7 +8,7 @@ if "%Debug%" EQU "1" (
 	set LeakFlags=-DFIND_LEAKS=ON	)
 
 cd "%sourceDir%\%buildCoreFolder%"
-cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DBASH_DIR="%msysDir%\bin" %DebugFlags% %LeakFlags% -DUSE_SYSTEM_SPIDERMONKEY=ON -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" ../../avidemux_core
+cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DBASH_DIR="%msysDir%\bin" %DebugFlags% %LeakFlags% ../../avidemux_core
 
 if errorlevel 1 goto error
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" admCore.layout
@@ -20,7 +20,7 @@ if errorlevel 1 goto error
 
 rem ## Qt4 ##
 cd "%sourceDir%\%buildQtFolder%"
-cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" %DebugFlags% -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" ../../avidemux/qt4
+cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" %DebugFlags% ../../avidemux/qt4
 
 if errorlevel 1 goto error
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" (
@@ -30,7 +30,7 @@ pause
 
 rem ## CLI ##
 cd "%sourceDir%\%buildCliFolder%"
-cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" %DebugFlags% -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" ../../avidemux/cli
+cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" %DebugFlags% ../../avidemux/cli
 
 if errorlevel 1 goto error
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" Avidemux_cli.layout
@@ -38,7 +38,7 @@ pause
 
 rem ## GTK ##
 rem cd "%sourceDir%\%buildGtkFolder%"
-rem cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" %DebugFlags% -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" ../../avidemux/gtk
+rem cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" %DebugFlags% ../../avidemux/gtk
 
 rem if errorlevel 1 goto error
 rem if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" Avidemux_gtk.layout
@@ -62,7 +62,7 @@ rem if errorlevel 1 goto error
 rem ## Plugins ##
 set msysSourceDir=%sourceDir:\=/%
 cd "%sourceDir%\%buildPluginFolder%"
-cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DAVIDEMUX_SOURCE_DIR="%msysSourceDir%" -DPLUGIN_UI=ALL %DebugFlags% ../../avidemux_plugins
+cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DAVIDEMUX_SOURCE_DIR="%msysSourceDir%" -DPLUGIN_UI=ALL -DUSE_SYSTEM_SPIDERMONKEY=ON -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" %DebugFlags% ../../avidemux_plugins
 
 if errorlevel 1 goto error
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" "%sourceDir%\%buildPluginFolder%\AdmPlugins.layout"

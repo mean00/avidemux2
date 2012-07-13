@@ -14,7 +14,6 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
-#include <QtGui/QDesktopServices>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
 
@@ -222,10 +221,8 @@ void MainWindow::currentTimeChanged(void)
 /**
     \fn ctor
 */
-MainWindow::MainWindow(vector<IScriptEngine*> scriptEngines) : QMainWindow()
+MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEngines(scriptEngines), QMainWindow()
 {
-	this->_scriptEngines = scriptEngines;
-
 	qtRegisterDialog(this);
 	ui.setupUi(this);
 
@@ -296,15 +293,8 @@ MainWindow::MainWindow(vector<IScriptEngine*> scriptEngines) : QMainWindow()
     addScriptEnginesToFileMenu(myMenuFile);
 	addScriptShellsToToolsMenu(myMenuTool);
     buildMyMenu();
-
-	/* Build the custom menu */
-    jsMenu=new QMenu("javaScript", this);
-    pyMenu=new QMenu("tinyPython", this);
-    autoMenu=ui.menuAuto ;//new QMenu("autoPython");
-    ui.menuCustom->addMenu(jsMenu);
-    ui.menuCustom->addMenu(pyMenu);
-    //ui.menuAuto->addMenu(autoMenu);
 	buildCustomMenu();
+	addScriptReferencesToHelpMenu();
 
     recentFiles=new QMenu("Recent Files", this);
     recentProjects=new QMenu("Recent Projects", this);
@@ -732,7 +722,7 @@ int UI_Init(int nargc, char **nargv)
 	return 1;
 }
 
-uint8_t initGUI(vector<IScriptEngine*> scriptEngines)
+uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 {
 	MainWindow *mw = new MainWindow(scriptEngines);
 	mw->show();
@@ -1300,18 +1290,5 @@ void UI_deiconify( void )
     QuiMainWindows->showNormal();
 
 }
-
-void GUI_ScriptHelp(void)
-{
-#ifdef __WIN32
-	QString helpDir = QCoreApplication::applicationDirPath() + "/help/";
-#else
-	QString helpDir = ADM_getInstallRelativePath("share", "avidemux6", "help");
-#endif
-
-    QDesktopServices::openUrl(QUrl("file:///" + helpDir + "index.html", QUrl::TolerantMode));
-}
-
-
 //********************************************
 //EOF

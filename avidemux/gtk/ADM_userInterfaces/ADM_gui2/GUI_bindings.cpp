@@ -307,7 +307,7 @@ void jogRing (void *, gfloat angle) // angle is -1.0 to 0 to +1.0
         \fn initGUI
         \brief Create main window and bind to it
 */
-uint8_t initGUI(vector<IScriptEngine*> scriptEngines)
+uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 {
 uint8_t ret=0;
 uint32_t w,h;
@@ -320,7 +320,7 @@ uint32_t w,h;
 		// create top window
 		guiRootWindow=glade.getWidget("mainWindow");
 
-		if(!guiRootWindow) 
+		if(!guiRootWindow)
         {
             return 0;
         }
@@ -463,12 +463,12 @@ uint8_t  bindGUI( void )
 			}else
             {
                 ADD_SIGNAL(bt,buttonCallback[i].signal,buttonCallback[i].action);
-                
+
                 gtk_widget_set_can_focus(bt, FALSE);
             }
 		}
 
-	
+
 
 // set some tuning
     gtk_widget_set_size_request(guiDrawingArea, 512, 288);
@@ -521,8 +521,8 @@ uint8_t  bindGUI( void )
                        G_CALLBACK(on_format_change),
                        NULL);
 
-        
-        
+
+
     //
     //CYB 2005.02.22: DND (START)
     // Set up avidemux as an available drag'n'drop target.
@@ -652,7 +652,7 @@ double  UI_readScale( void )
 }
 /**
     \fn UI_updateFrameCount
-	
+
 */
 
 void UI_updateFrameCount(uint32_t curFrame)
@@ -817,7 +817,7 @@ char text[500];
     timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
 	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
-	
+
     gtk_button_set_label(GTK_BUTTON(WOD(buttonGotoA)), text);
 
 	timems=(uint32_t)(b);
@@ -865,7 +865,7 @@ gint b;
 */
 GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, vector<MenuEntry> *desc)
 {
-    
+
     GtkWidget *window;
     GtkWidget *menu;
     GtkWidget *menu_bar;
@@ -903,7 +903,7 @@ GtkWidget *ui_fillOneMenu(GtkWidget *rootMenu, vector<MenuEntry> *desc)
                      menu_items = gtk_menu_item_new_with_label (m.text.c_str());
                      gtk_menu_shell_append (GTK_MENU_SHELL (target), menu_items);
                      gtk_widget_show (menu_items);
-                     g_signal_connect(menu_items, "activate", 
+                     g_signal_connect(menu_items, "activate",
                         G_CALLBACK(guiCallback),                   (void *) m.event);
                      break;
                     }
@@ -1328,14 +1328,14 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
                      menu_items = gtk_menu_item_new_with_label (names[i]);
                      gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);
                      gtk_widget_show (menu_items);
-                     g_signal_connect(menu_items, "activate", 
+                     g_signal_connect(menu_items, "activate",
                         G_CALLBACK(guiCallback),                   (void *) recent[i]);
                      gtk_widget_show (menu_items);
         }
-      
+
     gtk_widget_show(menu);
     gtk_widget_show(guiRecentMenu);
-    }  
+    }
     return;
 }
 
@@ -1578,5 +1578,3 @@ bool UI_setDecoderName(const char *name)
     return true;
 }
 // EOF
-
-void GUI_ScriptHelp(void) {}

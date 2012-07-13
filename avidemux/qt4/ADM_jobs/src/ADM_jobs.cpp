@@ -27,8 +27,6 @@ extern "C" {
 };
 
 void onexit( void );
-extern uint8_t initGUI( void );
-extern void destroyGUI(void);
 extern uint8_t initFileSelector(void);
 extern void ADM_memStat( void );
 extern void ADM_memStatInit( void );

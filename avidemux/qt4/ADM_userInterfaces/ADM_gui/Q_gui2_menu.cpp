@@ -16,6 +16,8 @@
 #include <string>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QUrl>
+#include <QtGui/QDesktopServices>
 
 #include "config.h"
 #include "Q_gui2.h"
@@ -26,114 +28,170 @@ using std::string;
 
 void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 {
-	for (int i = 0; i < fileMenu.size(); i++)
-	{
-		if (fileMenu[i].type == MENU_SEPARATOR)
-		{
-			if (this->_scriptEngines.size() > 0)
-			{
-				MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
+    for (int i = 0; i < fileMenu.size(); i++)
+    {
+        if (fileMenu[i].type == MENU_SEPARATOR)
+        {
+            if (this->_scriptEngines.size() > 0)
+            {
+                MenuEntry separatorEntry = {MENU_SEPARATOR, "-", NULL, ACT_DUMMY, NULL, NULL};
 
-				fileMenu.insert(fileMenu.begin() + i, separatorEntry);
-				i++;
-			}
+                fileMenu.insert(fileMenu.begin() + i, separatorEntry);
+                i++;
+            }
 
-			for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
-			{
-				vector<MenuEntry>::iterator it = fileMenu.begin() + i;
-				Action firstMenuId = (Action)(ACT_SCRIPT_ENGINE_FIRST + (engineIndex * 3));
-				string itemName = "Project";
+            for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+            {
+                vector<MenuEntry>::iterator it = fileMenu.begin() + i;
+                Action firstMenuId = (Action)(ACT_SCRIPT_ENGINE_FIRST + (engineIndex * 3));
+                string itemName;
 
-				if (this->_scriptEngines.size() > 1)
-				{
-					itemName = this->_scriptEngines[engineIndex]->name() + " " + itemName;
-				}
+                if (this->_scriptEngines.size() == 1)
+                {
+                    itemName = "Project Script";
+                }
+                else
+                {
+                    itemName = this->_scriptEngines[engineIndex]->name() + " Project";
+                }
 
-				MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
-				it = fileMenu.insert(it, dummyEntry);
+                MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
+                it = fileMenu.insert(it, dummyEntry);
 
-				MenuEntry runProjectEntry = {MENU_SUBACTION, "&Run Project...", NULL, firstMenuId, NULL, NULL};
-				it = fileMenu.insert(it + 1, runProjectEntry);
+                MenuEntry runProjectEntry = {MENU_SUBACTION, "&Run Project...", NULL, firstMenuId, NULL, NULL};
+                it = fileMenu.insert(it + 1, runProjectEntry);
 
-				if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
-				{
-					MenuEntry debugEntry = {MENU_SUBACTION, "&Debug Project...", NULL, (Action)(firstMenuId + 1), NULL, NULL};
-					it = fileMenu.insert(it + 1, debugEntry);
-					i++;
-				}
+                if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
+                {
+                    MenuEntry debugEntry = {MENU_SUBACTION, "&Debug Project...", NULL, (Action)(firstMenuId + 1), NULL, NULL};
+                    it = fileMenu.insert(it + 1, debugEntry);
+                    i++;
+                }
 
-				MenuEntry saveAsProjectEntry = {MENU_SUBACTION, "Save &As Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL};
-				it = fileMenu.insert(it + 1, saveAsProjectEntry);
-				i += 3;
-			}
+                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, "Save &As Project...", NULL, (Action)(firstMenuId + 2), NULL, NULL};
+                it = fileMenu.insert(it + 1, saveAsProjectEntry);
+                i += 3;
+            }
 
-			break;
-		}
-	}
+            break;
+        }
+    }
 }
 
 void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 {
-	vector<MenuEntry>::iterator it = toolMenu.begin();
+    vector<MenuEntry>::iterator it = toolMenu.begin();
 
-	for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
-	{
-		string itemName = "Shell";
+    for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+    {
+        string itemName;
 
-		if (this->_scriptEngines.size() > 1)
-		{
-			itemName = this->_scriptEngines[engineIndex]->name() + " " + itemName;
-		}
+        if (this->_scriptEngines.size() == 1)
+        {
+            itemName = "Scripting Shell";
+        }
+        else
+        {
+            itemName = this->_scriptEngines[engineIndex]->name() + " Shell";
+        }
 
-		MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL};
+        MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL};
 
-		it = toolMenu.insert(it, entry) + 1;
-	}
+        it = toolMenu.insert(it, entry) + 1;
+    }
+}
+
+void MainWindow::addScriptReferencesToHelpMenu()
+{
+    bool referenceAdded = false;
+    QAction *beforeAction = ui.menuHelp->actions()[0];
+
+    for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+    {
+        string itemName;
+
+        if (this->_scriptEngines[engineIndex]->referenceUrl().length() > 0)
+        {
+            if (this->_scriptEngines.size() == 1)
+            {
+                itemName = "Scripting Reference";
+            }
+            else
+            {
+                itemName = this->_scriptEngines[engineIndex]->name() + " Reference";
+            }
+
+            FileAction *action = new FileAction(
+                itemName.c_str(), (this->_scriptEngines[engineIndex]->name() + "/" +
+                                   this->_scriptEngines[engineIndex]->referenceUrl()).c_str(), ui.menuHelp);
+
+            referenceAdded = true;
+            ui.menuHelp->insertAction(beforeAction, action);
+            connect(action, SIGNAL(triggered()), this, SLOT(scriptReferenceActionHandler()));
+        }
+    }
+
+    if (referenceAdded)
+    {
+        ui.menuHelp->insertSeparator(beforeAction);
+    }
+}
+
+void MainWindow::scriptReferenceActionHandler()
+{
+#ifdef __WIN32
+    QString referenceFile = QCoreApplication::applicationDirPath() + "/help/" + ((FileAction*)sender())->filePath();
+#else
+    QString referenceFile = ADM_getInstallRelativePath(
+                                "share", "avidemux6/help", ((FileAction*)sender())->filePath().toUtf8().constData());
+#endif
+
+    QDesktopServices::openUrl(QUrl("file:///" + referenceFile, QUrl::TolerantMode));
 }
 
 void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts)
 {
-	QFileInfoList scriptFileList = QDir(dir).entryInfoList(
-		fileExts, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Readable, QDir::DirsFirst | QDir::Name);
+    QFileInfoList scriptFileList = QDir(dir).entryInfoList(
+                                       fileExts, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Readable, QDir::DirsFirst | QDir::Name);
 
-	for (int index = 0; index < scriptFileList.size(); index++)
-	{
+    for (int index = 0; index < scriptFileList.size(); index++)
+    {
 		QFileInfo fileInfo = scriptFileList.at(index);
 
-		if (fileInfo.isDir())
-		{
-			if (fileInfo.completeBaseName() != "lib")
-			{
-				QMenu *dirMenu = new QMenu(fileInfo.completeBaseName(), scriptMenu);
+        if (fileInfo.isDir())
+        {
+            if (fileInfo.completeBaseName() != "lib")
+            {
+                QMenu *dirMenu = new QMenu(fileInfo.completeBaseName(), scriptMenu);
 
-				scriptMenu->addMenu(dirMenu);
-				this->addScriptDirToMenu(dirMenu, fileInfo.absoluteFilePath(), fileExts);
-			}
-		}
-		else
-		{
-			FileAction *action = new FileAction(fileInfo.baseName(), fileInfo.absoluteFilePath(), scriptMenu);
+                scriptMenu->addMenu(dirMenu);
+                this->addScriptDirToMenu(dirMenu, fileInfo.absoluteFilePath(), fileExts);
+            }
+        }
+        else
+        {
+            FileAction *action = new FileAction(fileInfo.baseName(), fileInfo.absoluteFilePath(), scriptMenu);
 
-			scriptMenu->addAction(action);
-			connect(action, SIGNAL(triggered()), this, SLOT(scriptFileActionHandler()));
-		}
-	}
+            scriptMenu->addAction(action);
+            connect(action, SIGNAL(triggered()), this, SLOT(scriptFileActionHandler()));
+        }
+    }
 }
 
 void MainWindow::scriptFileActionHandler()
 {
-	QString filePath = ((FileAction*)sender())->filePath();
-	QString fileExt = QFileInfo(filePath).suffix();
+    QString filePath = ((FileAction*)sender())->filePath();
+    QString fileExt = QFileInfo(filePath).suffix();
 
-	for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
-	{
-		if (fileExt == _scriptEngines[engineIndex]->defaultFileExtension().c_str())
-		{
-			printf("Executing %s with %s engine\n", filePath.toUtf8().constData(), _scriptEngines[engineIndex]->name().c_str());
+    for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+    {
+        if (fileExt == this->_scriptEngines[engineIndex]->defaultFileExtension().c_str())
+        {
+            printf("Executing %s with %s engine\n", filePath.toUtf8().constData(), this->_scriptEngines[engineIndex]->name().c_str());
 
-			A_parseScript(_scriptEngines[engineIndex], filePath.toUtf8().constData());
-		}
-	}
+            A_parseScript(this->_scriptEngines[engineIndex], filePath.toUtf8().constData());
+        }
+    }
 }
 
 /**
@@ -141,19 +199,16 @@ void MainWindow::scriptFileActionHandler()
 */
 void MainWindow::buildCustomMenu(void)
 {
-	QStringList fileExts;
+    QStringList fileExts;
 
-	for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
-	{
-		fileExts << QString("*.") + _scriptEngines[engineIndex]->defaultFileExtension().c_str();
-	}
+    for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
+    {
+        fileExts << QString("*.") + this->_scriptEngines[engineIndex]->defaultFileExtension().c_str();
+    }
 
-	ui.menuCustom->clear();
-	ui.menuAuto->clear();
+    ui.menuCustom->clear();
+    ui.menuAuto->clear();
 
-	const char *customDir = ADM_getCustomDir();
-	const char *autoDir = ADM_getAutoDir();
-
-	this->addScriptDirToMenu(ui.menuCustom, customDir, fileExts);
-	this->addScriptDirToMenu(ui.menuAuto, autoDir, fileExts);
+    this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir(), fileExts);
+    this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
 }

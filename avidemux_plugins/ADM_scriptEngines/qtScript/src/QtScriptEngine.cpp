@@ -35,6 +35,14 @@ extern BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 
 using namespace std;
 
+extern "C"
+{
+	IScriptEngine* createEngine()
+	{
+		return new ADM_qtScript::QtScriptEngine();
+	}
+}
+
 namespace ADM_qtScript
 {
     MyQScriptEngine::MyQScriptEngine(QtScriptEngine *wrapperEngine) : QScriptEngine()
@@ -70,7 +78,7 @@ namespace ADM_qtScript
 
 	string QtScriptEngine::defaultFileExtension()
 	{
-		return string("admjs");
+		return "admjs";
 	}
 
     IEditor* QtScriptEngine::editor()
@@ -88,7 +96,12 @@ namespace ADM_qtScript
 
     string QtScriptEngine::name()
     {
-        return string("QtScript");
+        return "QtScript";
+    }
+
+    int QtScriptEngine::maturityRanking()
+    {
+        return 2;
     }
 
 	void QtScriptEngine::openDebuggerShell()
@@ -96,6 +109,11 @@ namespace ADM_qtScript
 #ifdef QT_SCRIPTTOOLS
 		this->runScript("debugger;", "", IScriptEngine::DebugOnError);
 #endif
+	}
+
+	string QtScriptEngine::referenceUrl()
+	{
+        return "index.html";
 	}
 
     void QtScriptEngine::registerEventHandler(eventHandlerFunc *func)

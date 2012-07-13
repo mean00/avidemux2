@@ -30,7 +30,6 @@
 extern int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
 #endif
 
-
 // By default the library is silent, being part of ADM_core cannot use the debug_id funcs
 #if 1
 #define aprintf(...) {}
@@ -83,7 +82,6 @@ bool ADM_LibWrapper::loadLibrary(const char* path)
 	utf8StringToWideChar(path, -1, wcPath);
 
 	hinstLib = LoadLibraryW(wcPath);
-
 
 	if (hinstLib == NULL)
 	{
@@ -169,5 +167,6 @@ bool ADM_LibWrapper::getSymbols(int symCount, ...)
     }
 
     va_end(va);
+
     return true;
 }

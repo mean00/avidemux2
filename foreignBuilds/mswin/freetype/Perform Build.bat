@@ -17,7 +17,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=2.4.9
+set version=2.4.10
 set package=freetype-%version%.tar.gz
 set sourceFolder=freetype-%version%-%BuildBits%
 set tarFolder=freetype-%version%

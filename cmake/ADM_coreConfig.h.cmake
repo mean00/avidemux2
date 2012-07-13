@@ -43,10 +43,6 @@
 #endif // FTELLO
 #endif
 
-#cmakedefine USE_QTSCRIPT
-#cmakedefine USE_SPIDERMONKEY
-#cmakedefine USE_TINYPY
-
 /* use Nvwa memory leak detector */
 #cmakedefine FIND_LEAKS
 

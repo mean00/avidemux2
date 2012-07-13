@@ -1,0 +1,8 @@
+OPTION(TINYPY "" ON)
+
+if (TINYPY)
+    ADD_SUBDIRECTORY(src)
+    set(USE_TINYPY 1)
+endif (TINYPY)
+
+APPEND_SUMMARY_LIST("Scripting" "TinyPy" "${USE_TINYPY}")

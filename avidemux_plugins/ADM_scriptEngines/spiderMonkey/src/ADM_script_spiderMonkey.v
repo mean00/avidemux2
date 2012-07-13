@@ -1,7 +1,7 @@
 ADM_coreScriptSpiderMoney
 {
 global:
-	*SpiderMonkeyEngine*;
+	createEngine;
 local:
 	*;
 };

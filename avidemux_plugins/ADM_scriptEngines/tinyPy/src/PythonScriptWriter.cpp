@@ -131,9 +131,9 @@ void PythonScriptWriter::setPostProcessing(uint32_t type, uint32_t strength, uin
 
 void PythonScriptWriter::setVideoEncoder(ADM_videoEncoder6* videoEncoder)
 {
-    CONFcouple *configuration = NULL;
+	CONFcouple *configuration = NULL;
 
-    if (videoEncoder->desc->getConfigurationData)
+	if (videoEncoder->desc->getConfigurationData)
     {
         videoEncoder->desc->getConfigurationData(&configuration);
     }

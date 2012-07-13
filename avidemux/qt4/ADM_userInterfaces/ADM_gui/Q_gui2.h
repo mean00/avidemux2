@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
 public:
 	Ui_MainWindow ui;
 
-	MainWindow(std::vector<IScriptEngine*> scriptEngines);
+	MainWindow(const std::vector<IScriptEngine*>& scriptEngines);
 	virtual ~MainWindow();
 
 	void buildCustomMenu(void);
@@ -71,13 +71,15 @@ public slots:
     void searchToolBar(QAction *);
 
 	void scriptFileActionHandler();
+	void scriptReferenceActionHandler();
 
 protected:
-	std::vector<IScriptEngine*> _scriptEngines;
+	const std::vector<IScriptEngine*>& _scriptEngines;
 
 	void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
 	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
 	void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
+	void addScriptReferencesToHelpMenu();
     bool buildMyMenu(void);
     bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
     void searchMenu(QAction * action,MenuEntry *menu, int nb);

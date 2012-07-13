@@ -74,7 +74,6 @@ extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
 extern uint8_t DIA_builtin(void);
 extern uint8_t DIA_pluginsInfo(void);
-extern void GUI_ScriptHelp(void);
 
 static void ReSync (void);
 void cleanUp (void);
@@ -240,9 +239,6 @@ void HandleAction (Action action)
     case ACT_ABOUT :
     		 DIA_about( );
 		 return;
-	case ACT_SCRIPT_HELP:
-		GUI_ScriptHelp();
-		return;
     case ACT_AUDIO_CODEC_CONFIGURE:
       audioCodecConfigure(0);
       return;

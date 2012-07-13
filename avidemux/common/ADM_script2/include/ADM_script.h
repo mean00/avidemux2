@@ -4,11 +4,7 @@
 #include <vector>
 #include "IScriptEngine.h"
 
-#ifndef __DECLARE__
-extern
-#endif
-
-std::vector<IScriptEngine*> initialiseScriptEngines(IEditor *editor);
+const std::vector<IScriptEngine*>& initialiseScriptEngines(const char *path, IEditor *editor);
 void destroyScriptEngines();
 const std::vector<IScriptEngine*>& getScriptEngines();
 IScriptEngine* getDefaultScriptEngine();

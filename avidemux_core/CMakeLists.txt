@@ -38,38 +38,6 @@ IF (VERBOSE)
 ENDIF (VERBOSE)
 
 ########################################
-# Scripting Engine Options (before generating config header)
-########################################
-OPTION(SPIDERMONKEY "" ON)
-
-if (SPIDERMONKEY)
-	set(USE_SPIDERMONKEY 1)
-endif (SPIDERMONKEY)
-
-APPEND_SUMMARY_LIST("Scripting" "SpiderMonkey" "${USE_SPIDERMONKEY}")
-
-OPTION(TINYPY "" ON)
-
-if (TINYPY)
-	set(USE_TINYPY 1)
-endif (TINYPY)
-
-APPEND_SUMMARY_LIST("Scripting" "TinyPy" "${USE_TINYPY}")
-
-OPTION(QTSCRIPT "" ON)
-
-if (QTSCRIPT)
-	include(admCheckQt4)
-	checkQt4()
-
-	if (QT_QTSCRIPT_FOUND)
-		set(USE_QTSCRIPT 1)
-	endif (QT_QTSCRIPT_FOUND)
-endif (QTSCRIPT)
-
-APPEND_SUMMARY_LIST("Scripting" "QtScript" "${USE_QTSCRIPT}")
-
-########################################
 # Checking if we should use ftello
 # or ftello64 (win32)
 ########################################
@@ -127,18 +95,6 @@ ADD_SUBDIRECTORY(ADM_coreJobs)
 ADD_SUBDIRECTORY(ADM_coreSocket)
 add_subdirectory(ADM_coreImageLoader)
 add_subdirectory(ADM_coreScript)
-
-if ("${USE_QTSCRIPT}" STREQUAL "1")
-	add_subdirectory(ADM_coreScriptQt)
-endif ("${USE_QTSCRIPT}" STREQUAL "1")
-
-if (SPIDERMONKEY)
-	add_subdirectory(ADM_coreScriptSpiderMonkey)
-endif (SPIDERMONKEY)
-
-if (TINYPY)
-	add_subdirectory(ADM_coreScriptPython)
-endif (TINYPY)
 
 if (USE_VDPAU)
 	ADD_SUBDIRECTORY(ADM_coreVdpau)

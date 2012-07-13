@@ -58,7 +58,7 @@ extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
 extern void register_Encoders( void )  ;
 
-extern uint8_t initGUI( vector<IScriptEngine*> engines );
+extern uint8_t initGUI(const vector<IScriptEngine*>& engines);
 extern void destroyGUI(void);
 extern uint8_t initFileSelector(void);
 extern void AUDMEncoder_initDither(void);
@@ -263,6 +263,7 @@ int startAvidemux(int argc, char *argv[])
     char *vePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoEncoders");
     char *vdPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoDecoders");
     char *vfPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoFilters");
+	char *sePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "scriptEngines");
 
     ADM_mx_loadPlugins(mxPlugins);
     delete [] mxPlugins;
@@ -302,11 +303,13 @@ int startAvidemux(int argc, char *argv[])
 
 	//***************Plugins *********************
 
-	if(!initGUI(initialiseScriptEngines(video_body)))
+	if(!initGUI(initialiseScriptEngines(sePlugins, video_body)))
 	{
 		printf("\n Fatal : could not init GUI\n");
 		exit(-1);
 	}
+
+    delete [] sePlugins;
 
     ADM_lavInit();
     AVDM_audioInit();

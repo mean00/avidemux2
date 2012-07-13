@@ -1,7 +1,7 @@
 ADM_coreScriptPython
 {
 global:
-	*PythonEngine*;
+	createEngine;
 local:
 	*;
 };

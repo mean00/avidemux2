@@ -5,7 +5,6 @@
 #ifndef A_FUNCTION_H
 #define A_FUNCTION_H
 
-#include "ADM_default.h"
 #include "IScriptEngine.h"
 
 int     A_delete(uint32_t start, uint32_t end);

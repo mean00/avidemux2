@@ -18,6 +18,8 @@
 #define ADM_DYNAMICLOADING_H
 
 #ifdef __WIN32
+#include "ADM_inttype.h"
+
 #define SHARED_LIB_EXT "dll"
 #elif defined(__APPLE__)
 #define SHARED_LIB_EXT "dylib"
@@ -34,14 +36,13 @@ class ADM_LibWrapper
 	#ifdef __WIN32
 		virtual char* formatMessage(uint32_t msgCode);
 	#endif
+
     public:
 		ADM_LibWrapper();
-		virtual ~ADM_LibWrapper();		
+		virtual ~ADM_LibWrapper();
 		virtual bool loadLibrary(const char* path);
 		virtual void* getSymbol(const char* name);
 		virtual bool getSymbols(int symCount, ...);
-
-	public:
 		virtual bool isAvailable();
 };
 
