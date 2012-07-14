@@ -46,10 +46,14 @@ checkFtello()
 ########################################
 # sqllite
 ########################################
-MESSAGE(STATUS "Checking for sqllite")
-MESSAGE(STATUS "********************")
+MESSAGE(STATUS "Checking for sqlite")
+MESSAGE(STATUS "*******************")
 
-FIND_HEADER_AND_LIB(SQLITE sqlite3.h sqlite3 sqlite3_close)
+IF (UNIX)
+	SET(SQLITE_REQUIRED_FLAGS "-ldl")
+ENDIF (UNIX)
+
+FIND_HEADER_AND_LIB(SQLITE sqlite3.h sqlite3 sqlite3_close ${SQLITE_REQUIRED_FLAGS})
 PRINT_LIBRARY_INFO("SQLite" SQLITE_FOUND "${SQLITE_INCLUDE_DIR}" "${SQLITE_LIBRARY_DIR}" FATAL_ERROR)
 MESSAGE("")
 
