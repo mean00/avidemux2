@@ -542,8 +542,8 @@ bool aviWrite::setVideoStreamInfo (ADMFile * fo,
 
   // Place holder for odml super index
   uint64_t pos;
-  alist->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
-  printf("[ODML] videoTrack : using ODML placeholder of size %u bytes at pos 0x%"LLX"\n",AVI_INDEX_CHUNK_SIZE,pos);  
+  alist->writeDummyChunk(AVI_SUPER_INDEX_CHUNK_SIZE,&pos);
+  printf("[ODML] videoTrack : using ODML placeholder of size %u bytes at pos 0x%"LLX"\n",AVI_SUPER_INDEX_CHUNK_SIZE,pos);  
   openDmlHeaderPosition[0]=pos;
   alist->End ();
   delete alist;
@@ -576,9 +576,9 @@ bool aviWrite::setAudioStreamInfo (ADMFile * fo,
 
   
   uint64_t pos;
-  alist->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+  alist->writeDummyChunk(AVI_SUPER_INDEX_CHUNK_SIZE,&pos);
   ADM_info("[ODML] Audio track %d, using ODML placeholder of size %u bytes, odmltrack=%d, pos=0x%"LLX"\n",
-                            audioTrackNumber,AVI_INDEX_CHUNK_SIZE,1+audioTrackNumber,pos);  
+                            audioTrackNumber,AVI_SUPER_INDEX_CHUNK_SIZE,1+audioTrackNumber,pos);  
   openDmlHeaderPosition[1+audioTrackNumber]=pos;
   alist->End ();
   delete alist;

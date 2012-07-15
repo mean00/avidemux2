@@ -15,7 +15,8 @@
 #pragma once
 #include "aviIndex.h"
 #include "aviIndexAvi.h" // needed to convert type1 to type2
-#define AVI_INDEX_CHUNK_SIZE (16*1024)
+#define AVI_SUPER_INDEX_CHUNK_SIZE (16*1024)
+#define AVI_REGULAR_INDEX_CHUNK_SIZE (2*1024*1024)
 
 #define AVI_INDEX_SUPERINDEX 0
 #define AVI_INDEX_INDEX      1

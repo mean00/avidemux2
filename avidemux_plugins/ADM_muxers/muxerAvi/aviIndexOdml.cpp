@@ -143,7 +143,7 @@ bool           aviIndexOdml::writeRegularIndex(int trackNumber)
         odmlOneSuperIndex *super=superIndex.trackIndeces+trackNumber;
         odmlIndecesDesc supEntry;
         supEntry.offset=cur->indexPosition;
-        supEntry.size=AVI_INDEX_CHUNK_SIZE;
+        supEntry.size=AVI_REGULAR_INDEX_CHUNK_SIZE;
         supEntry.duration=nbEntries; // Fixme ??
         super->indeces.push_back(supEntry);
     }
@@ -178,7 +178,7 @@ void        odmlOneSuperIndex::serialize(AviListAvi *parentList)
             list.Write32(ix.duration);
        }
        // write filler...
-       list.fill(AVI_INDEX_CHUNK_SIZE);
+       list.fill(AVI_SUPER_INDEX_CHUNK_SIZE);
        list.End();
 
 }
@@ -218,7 +218,7 @@ bool        odmlRegularIndex::serialize(AviListAvi *parentList,uint32_t fccTag,i
             else
                 list.Write32(0x80000000LL+ix.size);
        }
-       list.fill(AVI_INDEX_CHUNK_SIZE);
+       list.fill(AVI_REGULAR_INDEX_CHUNK_SIZE);
        list.End();
        return true;
 }
@@ -237,7 +237,7 @@ bool  aviIndexOdml::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
         LMovie->WriteChunk(fourccs[0],len,data);
         // Create place holder for index
         uint64_t pos;
-        LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+        LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
         indexes[0].indexPosition=pos;
         odmIndexEntry ix;
         ix.flags=flags;
@@ -276,7 +276,7 @@ bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8
             LMovie->WriteChunk(fourccs[1+trackNo],len,data);
             // Create place holder for index
             uint64_t pos;
-            LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+            LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
             thisIndex->indexPosition=pos;
             odmIndexEntry ix;
             ix.flags=flags;
@@ -331,14 +331,19 @@ bool aviIndexOdml::startNewRiffIfNeeded(int trackNo,int len)
     // Case 1: we exceed riff boundary (4 GB)
         uint64_t currentPosition=LMovie->Tell();
         uint64_t start=_masterList->TellBegin();
-
-        if(len+currentPosition-start> ((1LL<<32)-(1LL<<20)))
+        uint64_t riffSize=currentPosition-start;
+        riffSize+=len;
+        if(riffSize> ((1LL<<32)-10*(1LL<<20)))
+        {
+            ADM_info("Riff is now %"LLU" bytes, break needed\n",riffSize);
             breakNeeded=true;
+        }
 
     // Case 2 : the current index is full
-        int available=(AVI_INDEX_CHUNK_SIZE-64)/8; // nb index entry
+        int available=(AVI_REGULAR_INDEX_CHUNK_SIZE-64)/8; // nb index entry
         if(indexes[trackNo].listOfChunks.size()>=available)
         {
+            ADM_info("Index for track %d is full\n",trackNo);
             breakNeeded=true;
         }
         if(breakNeeded)
@@ -368,7 +373,7 @@ bool aviIndexOdml::startNewRiff()
     for(int i=0;i<nbAudioTrack+1;i++)
     {
              
-             LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+             LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
              indexes[i].baseOffset=indexes[i].indexPosition=pos;
     }
     return true;
