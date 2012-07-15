@@ -46,7 +46,6 @@ public:
         uint8_t     WriteChunk(uint32_t fcc,uint32_t len,const uint8_t *p);
         uint64_t    Tell(void );    		// glue for index.... ugly
         uint64_t    TellBegin(void );   // same story here
-        uint8_t	 Begin( const char *subchunk );
         uint8_t	 Begin( void );
         uint8_t     Seek(uint64_t to);
         uint8_t	 End (void );

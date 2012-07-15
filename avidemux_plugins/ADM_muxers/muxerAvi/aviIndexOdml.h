@@ -15,7 +15,7 @@
 #pragma once
 #include "aviIndex.h"
 
-#define AVI_INDEX_CHUNK_SIZE 1024
+#define AVI_INDEX_CHUNK_SIZE (16*1024)
 
 #define AVI_INDEX_SUPERINDEX 0
 #define AVI_INDEX_INDEX      1
@@ -29,10 +29,12 @@ typedef struct
             uint32_t size;
             uint32_t duration;
 }odmlIndecesDesc;
+/**
+    \class odmlOneSuperIndex
+*/
 class odmlOneSuperIndex
 {
 public:
-            uint64_t   superIndexPosition;
             uint32_t   fcc;
             std::vector <odmlIndecesDesc> indeces;
             void        serialize(AviListAvi *list);
@@ -63,10 +65,10 @@ typedef struct
 class odmlRegularIndex
 {
 public:
-        uint32_t   trackNumber;
         uint64_t   baseOffset;
+        uint64_t   indexPosition;
         std::vector <odmIndexEntry> listOfChunks;
-        bool        serialize(AviListAvi *list);
+        bool        serialize(AviListAvi *list,uint32_t fccTag,int trackNumber);
 };
 //------------------------------------------------------------
 /**
@@ -75,11 +77,12 @@ public:
 class aviIndexOdml : public aviIndexBase
 {
 protected:
-           bool           writeSuperIndex();
-           bool           writeIndex(int trackNumber);
+           bool             writeSuperIndex();
+           bool             writeRegularIndex(int trackNumber);
            odmlSuperIndex   superIndex;
            odmlRegularIndex indexes[1+ADM_AVI_MAX_AUDIO_TRACK];
            int              nbVideoFrame;
+           int              audioFrameCount[ADM_AVI_MAX_AUDIO_TRACK];
 public:
                         aviIndexOdml(aviWrite *father) ;
            virtual      ~aviIndexOdml();

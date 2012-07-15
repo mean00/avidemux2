@@ -90,6 +90,7 @@ aviWrite::aviWrite( void )
     _file=NULL;
 
     memset(&(audioTracks),0,sizeof(audioTracks));
+    memset(openDmlHeaderPosition,0,sizeof(openDmlHeaderPosition));
     
 }
 /**
@@ -115,6 +116,7 @@ aviWrite::~aviWrite()
 uint8_t aviWrite::updateHeader (MainAVIHeader * mainheader,
 			AVIStreamHeader  *videostream)
 {
+        return 1;
         ADM_assert(_file);
         printf("[Avi] Updating headers...\n");
         _file->seek(32);
@@ -122,20 +124,7 @@ uint8_t aviWrite::updateHeader (MainAVIHeader * mainheader,
         tmpList.writeMainHeaderStruct(_mainheader);
         _file->seek(0x6c);
         tmpList.writeStreamHeaderStruct(_videostream);
-
-  // update audio headers
-    for(int i=0;i<nb_audio;i++)
-    {
-        _file->seek(audioTracks[i].audioHeaderOffset);
-/*
-        setStreamInfo (_file,
-			(uint8_t *) header,
-	 		(uint8_t *) &wav, sizeof (WAVHeader),
-			odml_audio_super_idx_size,odml_stream_nbr,
-			extra,extraLen, 0x1000);
-*/
-    }
-  return 1;
+        return 1;
 }
 
 /**
@@ -150,7 +139,7 @@ uint8_t aviWrite::writeVideoHeader( uint8_t *extra, uint32_t extraLen )
       ADM_assert (_file);
       _videostream.fccType = fourCC::get ((uint8_t *) "vids");
       _bih.biSize=sizeof(_bih)+extraLen;
-      setVideoStreamInfo(_file,_videostream,_bih, 512,0,
+      setVideoStreamInfo(_file,_videostream,_bih, 
                     extra,extraLen, 0x1000);
 	return 1;
 }
@@ -331,7 +320,7 @@ uint32_t extraLen=0;
 	setAudioStreamInfo (_file,
 			*header,
 	 		wav,
-			512,trackNumber,
+			trackNumber,
 			extra,extraLen, 0x1000);
 
   return 1;
@@ -395,27 +384,28 @@ uint8_t aviWrite::saveBegin (
 
       _file->seek(0);
       LAll = new AviListAvi ("RIFF", _file);
-      LAll->Begin ("AVI ");
+      LAll->Begin();
+      LAll->Write32("AVI ");
 
 
       // Header chunk
       AviListAvi *LMain = new AviListAvi ("LIST", _file);
-      LMain->Begin ("hdrl");
+      LMain->Begin();
+      LMain->Write32("hdrl");
       LMain->Write32 ("avih");
       LMain->Write32 (sizeof (MainAVIHeader));
       LMain->writeMainHeaderStruct(_mainheader);
- 
- 	writeVideoHeader(videoextra,videoextraLen );
-    for(int i=0;i<nb_audio;i++)
-    {
-        audioTracks[i].audioHeaderOffset=LMain->Tell();
-        writeAudioHeader(audiostream[i],&(audioTracks[i].header),i+1);
-    }
-	LMain->writeDummyChunk(16,&openDmlHeaderPosition);
+ 	  writeVideoHeader(videoextra,videoextraLen );
+      for(int i=0;i<nb_audio;i++)
+        {
+            writeAudioHeader(audiostream[i],&(audioTracks[i].header),i);
+        }
 
 	LMain->End();
 	delete LMain;
 	LMain=NULL;
+    for(int i=0;i<3;i++)
+        ADM_info("SuperIndex position so far %d : %"LLD"\n",i,openDmlHeaderPosition[i]);
   //___________________________________
   // Write the beginning of the movie part
   //___________________________________
@@ -499,46 +489,27 @@ uint8_t aviWrite::setEnd (void)
 bool aviWrite::setVideoStreamInfo (ADMFile * fo,
 			 const AVIStreamHeader      &stream,
 			 const ADM_BITMAPINFOHEADER &bih,
-			 int odml_headerlen,
-			 int trackNumber,
 			 uint8_t * extra, uint32_t extraLen,
 			 uint32_t maxxed)
 {
   AviListAvi * alist;
-  uint8_t * junk;
-  int32_t junklen;
 
   alist = new AviListAvi ("LIST", fo);
   // 12 LIST
   // 8 strf subchunk
   // 8 strl subchunk
   // 8 defaultoffset
-  alist->Begin ("strl");
+  alist->Begin();
+  alist->Write32("strl");
   // sub chunk 1
   alist->writeStrh(stream);
   alist->writeStrfBih(bih,extraLen,extra);
 
-
-    // compute junkLen, it might also hold the oldml superindex
-    uint32_t consumed=odml_headerlen*4;
-  junklen = (consumed+maxxed-1)/maxxed;
-  junklen=junklen*maxxed;
-
-  printf("[ODML] using ODML placeholder of size %u bytes\n",junklen);
-  junk = (uint8_t *) ADM_alloc (junklen);
-  ADM_assert (junk);
-  memset (junk,0, junklen);
-  //
-  // Fill junk with out info string
-  uint32_t len=strlen("Avidemux");
-
-  if(junklen>len)
-  	memcpy(junk,"Avidemux",len);
-
-    // Place holder for odml super index
-  indexMaker->superIndexPosition[trackNumber]=alist->Tell();
-  alist->WriteChunk ((uint8_t *) "JUNK", junklen, junk);
-  ADM_dealloc (junk);
+  // Place holder for odml super index
+  uint64_t pos;
+  alist->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+  printf("[ODML] videoTrack : using ODML placeholder of size %u bytes at pos 0x%"LLX"\n",AVI_INDEX_CHUNK_SIZE,pos);  
+  openDmlHeaderPosition[0]=pos;
   alist->End ();
   delete alist;
   return 1;
@@ -550,44 +521,29 @@ bool aviWrite::setVideoStreamInfo (ADMFile * fo,
 bool aviWrite::setAudioStreamInfo (ADMFile * fo,
 			 const AVIStreamHeader      &stream,
 			 const WAVHeader &wav,
-			 int odml_headerlen,
-			 int trackNumber,
+			 int audioTrackNumber,
 			 uint8_t * extra, uint32_t extraLen,
 			 uint32_t maxxed)
 {
   AviListAvi * alist;
-  uint8_t * junk;
-  int32_t junklen;
-
+  
   alist = new AviListAvi ("LIST", fo);  
   // 12 LIST
   // 8 strf subchunk
   // 8 strl subchunk
   // 8 defaultoffset
-  alist->Begin ("strl");
+  alist->Begin();
+  alist->Write32("strl");
   // sub chunk 1
   alist->writeStrh(stream);
   alist->writeStrfWav(wav,extraLen,extra);
 
-
-  // compute junkLen, it might also hold the oldml superindex
-    uint32_t consumed=odml_headerlen*4;
-  junklen = (consumed+maxxed-1)/maxxed;
-  junklen=junklen*maxxed;
-
-  printf("[ODML] using ODML placeholder of size %u bytes\n",junklen);
-  junk = (uint8_t *) ADM_alloc (junklen);
-  ADM_assert (junk);
-  memset (junk,0, junklen);
-  //
-  // Fill junk with out info string
-  uint32_t len=strlen("Avidemux");
-
-  if(junklen>len)
-  	memcpy(junk,"Avidemux",len);
-  indexMaker->superIndexPosition[trackNumber]=alist->Tell();
-  alist->WriteChunk ((uint8_t *) "JUNK", junklen, junk);
-  ADM_dealloc (junk);
+  
+  uint64_t pos;
+  alist->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+  ADM_info("[ODML] Audio track %d, using ODML placeholder of size %u bytes, odmltrack=%d, pos=0x%"LLX"\n",
+                            audioTrackNumber,AVI_INDEX_CHUNK_SIZE,1+audioTrackNumber,pos);  
+  openDmlHeaderPosition[1+audioTrackNumber]=pos;
   alist->End ();
   delete alist;
   return 1;

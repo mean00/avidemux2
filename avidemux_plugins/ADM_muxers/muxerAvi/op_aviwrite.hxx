@@ -39,7 +39,6 @@ typedef struct
     AVIStreamHeader  header;
     uint32_t        sizeInBytes;
     uint32_t        nbBlocks;
-    uint32_t        audioHeaderOffset;
 }aviAudioTrack;
 
 
@@ -66,7 +65,7 @@ friend class aviIndexOdml;
 
 		AviListAvi *LAll ;		
 
-        uint64_t   openDmlHeaderPosition; // position of the openDml sindex
+        uint64_t   openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK]; // position of the openDml sindex
 
 protected:
 		
@@ -77,14 +76,12 @@ protected:
         bool setVideoStreamInfo (ADMFile * fo,
 			 const AVIStreamHeader      &stream,
 			 const ADM_BITMAPINFOHEADER &bih,
-			 int odml_headerlen,
-			 int trackNumber,
 			 uint8_t * extra, uint32_t extraLen,
 			 uint32_t maxxed);
+
         bool setAudioStreamInfo (ADMFile * fo,
 			 const AVIStreamHeader      &stream,
 			 const WAVHeader &wav,
-			 int   odml_headerlen,
 			 int   trackNumber,
 			 uint8_t * extra, uint32_t extraLen,
 			 uint32_t maxxed);

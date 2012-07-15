@@ -31,7 +31,8 @@ aviIndexAvi::aviIndexAvi(aviWrite *father ): aviIndexBase(father)
 {
   		
     LMovie = new AviListAvi ("LIST", father->_file);
-    LMovie->Begin ("movi");
+    LMovie->Begin();
+    LMovie->Write32("movi");
 }
 /**
     \fn dtor

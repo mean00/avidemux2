@@ -46,7 +46,7 @@ public:
                                     }
 
                             };
-           virtual      ~aviIndexBase() {};
+           virtual        ~aviIndexBase() {};
            virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data)=0;
            virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data)=0;
            virtual bool  writeIndex()=0;

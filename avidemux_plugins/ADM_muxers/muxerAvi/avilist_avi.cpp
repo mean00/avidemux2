@@ -28,7 +28,7 @@
 
 #include "avilist_avi.h"
 
-#define aprintf(...) {}
+#define aprintf printf
 
 #define w32(x) write32(hdr.x);
 #define w16(x) write16(hdr.x);
@@ -237,12 +237,12 @@ bool  AviListAvi::writeDummyChunk(int size, uint64_t *pos)
 */
 bool  AviListAvi::fill(uint32_t maxSize)
 {
-    uint64_t pos=Tell();
-    uint64_t start=TellBegin()+8;
-    uint64_t end=start+maxSize;
-    if(pos>end)
+    uint64_t pos=Tell();          // Current position
+    uint64_t start=TellBegin()+8; // Payload start
+    uint64_t end=start+maxSize;   // Next chunk
+    if(pos>end) // overwrite!
     {
-        ADM_warning("Chunk already bigger than filler\n");
+        ADM_error("Chunk already bigger than filler ( %d, filler=%d)\n",(int)pos-start,maxSize);
         return false;
     }
     if(pos==end)
@@ -251,6 +251,7 @@ bool  AviListAvi::fill(uint32_t maxSize)
         return true;
     }
     int toFill=(int)(end-pos);
+    printf("Current pos=%"LLU", next chunk at %"LLU", filling with %d\n",pos,end,toFill);
     uint8_t *buffer=new uint8_t[toFill];
     memset(buffer,0,toFill);
     Write(buffer,toFill);

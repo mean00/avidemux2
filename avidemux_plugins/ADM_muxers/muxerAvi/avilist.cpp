@@ -40,19 +40,7 @@ AviList::AviList(const char *name, ADMFile * f)
     ADM_assert(_ff);
     _begin=_end=0;
 }
-/**
-    \fn
-    \brief  Mark begin
-*/
-uint8_t AviList::Begin(const char *subchunk)
-{
-    
-    _begin=_ff->tell();
-    Write32((_fcc));
-    Write32((uint32_t) 0);	// size
-    Write32((fourCC::get((uint8_t *) subchunk)));
-    return 1;
-}
+//fourCC::get((uint8_t *) subchunk)
 /**
     \fn
     \brief  Mark begin
@@ -179,6 +167,7 @@ uint8_t AviList::Write32(uint8_t * c)
     Write32(fcc);
     return 1;
 }
+    
 /**
     \fn
     \brief
