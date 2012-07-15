@@ -51,17 +51,31 @@ LAll
 #include "aviIndex.h"
 #include "aviIndexAvi.h"
 #include "aviIndexOdml.h"
-
-//------------
-typedef struct VBRext
-    {
-  uint16_t   	    cbsize ;
+#include "ADM_memio.h"
+/**
+    \class VBRext
+*/
+class VBRext
+{
+public:
+  uint16_t   	     cbsize ;
   uint16_t          wId ;
   uint32_t          fdwflags ;
   uint16_t          nblocksize ;
   uint16_t          nframesperblock  ;
   uint16_t          ncodecdelay ;
-} VBRext;
+  void               serialize(uint8_t *to)
+                     {
+                        ADMMemio io(14);
+                        io.write16(cbsize);
+                        io.write16(wId);
+                        io.write32(fdwflags);
+                        io.write16(nblocksize);
+                        io.write16(nframesperblock);
+                        io.write16(ncodecdelay);
+                        memcpy(to,io.getBuffer(),14);
+                     }
+};
 
 
 //________________________________________________
@@ -156,26 +170,19 @@ uint8_t aviWrite::writeVideoHeader( uint8_t *extra, uint32_t extraLen )
 /**
     \fn createAudioHeader
 */
-bool aviWrite::createAudioHeader(WAVHeader *wav,ADM_audioStream *stream, AVIStreamHeader *header,uint32_t sizeInBytes,int	trackNumber, uint8_t *extra, int *extraLen)
+bool aviWrite::createAudioHeader(WAVHeader *wav,ADM_audioStream *stream, AVIStreamHeader *header,
+                uint32_t sizeInBytes,int	trackNumber, uint8_t *extra, int *extraLen)
 {
-uint8_t wmaheader[12];
-uint8_t aacHeader[12];
+uint8_t wmaheader[16];
 VBRext   mp3vbr;
 
 	if(!stream) return true;
-	memset(wmaheader,0,12);
-    memset(aacHeader,0,12);
+	
     
 	memset(&mp3vbr,0,sizeof(mp3vbr));
 
     memcpy(wav,stream->getInfo(),sizeof(*wav));
-
-	wmaheader[16-16]=0x0a;
-	wmaheader[19-16]=0x08;
-	wmaheader[22-16]=0x01;
-	wmaheader[24-16]=0x74;
-	wmaheader[25-16]=01;
-
+    
 
       memset (header, 0, sizeof (AVIStreamHeader));
       header->fccType = fourCC::get ((uint8_t *) "auds");
@@ -198,7 +205,7 @@ VBRext   mp3vbr;
                 header->dwSuggestedBufferSize=2048;
                 break;
 		case WAV_AAC:
-		{
+          {
             // nb sample in stream
             // since it is vbr, assume N packet of 1024 samples
 			double len;
@@ -222,30 +229,26 @@ VBRext   mp3vbr;
             uint8_t  *aData;
             stream->getExtraData(&aLen,&aData);
 
-            aacHeader[0]=0x2;
-            aacHeader[1]=0x0;
+            extra[0]=0x2;
+            extra[1]=0x0;
             if(2==aLen)
             {
-                aacHeader[2]=aData[0];
-                aacHeader[3]=aData[1];
+                extra[2]=aData[0];
+                extra[3]=aData[1];
             }else
             {
                 int SRI=4;	// Default 44.1 khz
                 for(int i=0;i<16;i++) if(wav->frequency==aacBitrate[i]) SRI=i;
             
-                aacHeader[2]=(2<<3)+(SRI>>1); // Profile LOW
-                aacHeader[3]=((SRI&1)<<7)+((wav->channels)<<3);
+                extra[2]=(2<<3)+(SRI>>1); // Profile LOW
+                extra[3]=((SRI&1)<<7)+((wav->channels)<<3);
             }
-
-
-            extra=&(aacHeader[0]);
             *extraLen=4;
-            }
-            break;
+          }
+          break;
 
         case WAV_DTS:
         case WAV_AC3: // Vista compatibility
-                      extra=(uint8_t *)wmaheader;
                       extra[0]=0;
                       extra[1]=0;
                       *extraLen=2;
@@ -256,10 +259,10 @@ VBRext   mp3vbr;
            {
           int samplePerFrame=1152; // see http://msdn.microsoft.com/en-us/library/ms787304(VS.85).aspx
 		  // then update VBR fields
-		  mp3vbr.cbsize = R16(12);
-		  mp3vbr.wId = R16(1);
-		  mp3vbr.fdwflags = R32(2);
-	      mp3vbr.nframesperblock = R16(1);
+		  mp3vbr.cbsize = 12;
+		  mp3vbr.wId =1;
+		  mp3vbr.fdwflags = 2;
+	      mp3vbr.nframesperblock = 1;
 		  mp3vbr.ncodecdelay = 0;
 
 		  wav->bitspersample = 0;
@@ -267,43 +270,51 @@ VBRext   mp3vbr;
 
 		  header->dwScale = 1;
 	  	  header->dwInitialFrames = 1;
-          extra=(uint8_t *)&mp3vbr;
+          
 		  *extraLen=sizeof(mp3vbr);
           if (1) // FIXME stream->isVBR()) //wav->blockalign ==1152)	// VBR audio
 		  {			// We do like nandub do
-		  	//ADM_assert (audiostream->asTimeTrack ());
-            if(wav->frequency>=32000)  // mpeg1
-            {
-                samplePerFrame=1152;
-            }else                       // Mpeg2 , we assume layer3
-            {
-                samplePerFrame=576;
-            }
-		  	wav->blockalign = samplePerFrame;	// just a try
-            wav->bitspersample = 16;
-            header->dwRate 	= wav->frequency;	//wav->byterate;
-			header->dwScale = wav->blockalign;
-			header->dwLength= _videostream.dwLength;
-  			header->dwSampleSize = 0;
-			mp3vbr.nblocksize=samplePerFrame;
-
+                //ADM_assert (audiostream->asTimeTrack ());
+                if(wav->frequency>=32000)  // mpeg1
+                {
+                    samplePerFrame=1152;
+                }else                       // Mpeg2 , we assume layer3
+                {
+                    samplePerFrame=576;
+                }
+                wav->blockalign = samplePerFrame;	// just a try
+                wav->bitspersample = 16;
+                header->dwRate 	= wav->frequency;	//wav->byterate;
+                header->dwScale = wav->blockalign;
+                header->dwLength= _videostream.dwLength;
+                header->dwSampleSize = 0;
+                mp3vbr.nblocksize=samplePerFrame;
 		   }
 		   else
            {
-             wav->blockalign=1;
+                wav->blockalign=1;
            }
-           }
+           mp3vbr.serialize(extra);
+           *extraLen=14;
+          }
 		  break;
 
 
 	case WAV_WMA:
-			header->dwScale 	= wav->blockalign;
+          {
+            memset(extra,0,12);
+            extra[16-16]=0x0a;
+            extra[19-16]=0x08;
+            extra[22-16]=0x01;
+            extra[24-16]=0x74;
+            extra[25-16]=01;
+			header->dwScale 	    = wav->blockalign;
 			header->dwSampleSize 	= wav->blockalign;
 			header->dwInitialFrames =1;
 			header->dwSuggestedBufferSize=10*wav->blockalign;
-			extra=(uint8_t *)&wmaheader;
 			*extraLen=12;
-			break;
+          }
+		  break;
     case WAV_PCM:
     case WAV_LPCM:
             header->dwScale=header->dwSampleSize=wav->blockalign=2*wav->channels; // Realign
@@ -336,7 +347,7 @@ uint8_t aviWrite::writeAudioHeader(ADM_audioStream *stream, AVIStreamHeader *hea
 WAVHeader wav;
 // pre compute some headers with extra data in...
 
-uint8_t extra[12];
+uint8_t extra[16];
 int extraLen=0;
 
     if(!createAudioHeader(&wav,stream,header,sizeInBytes,trackNumber,extra,&extraLen))

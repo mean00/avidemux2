@@ -81,6 +81,9 @@ protected:
            bool             writeRegularIndex(int trackNumber);
            odmlSuperIndex   superIndex;
            odmlRegularIndex indexes[1+ADM_AVI_MAX_AUDIO_TRACK];
+           bool             startNewRiffIfNeeded(int trackNo,int len);
+           bool             startNewRiff();
+
 public:
                         aviIndexOdml(aviWrite *father,aviIndexAvi *cousin );
                         aviIndexOdml(aviWrite *father,AviListAvi *lst) ;

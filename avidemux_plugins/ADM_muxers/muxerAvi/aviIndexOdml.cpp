@@ -247,17 +247,7 @@ bool  aviIndexOdml::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
         nbVideoFrame++;
         return true;
     }
-     //  Check if we need a new index...
-        int available=(AVI_INDEX_CHUNK_SIZE-64)/8; // nb index entry
-        if(indexes[0].listOfChunks.size()>=available)
-        {
-            // 1- Flush old index
-             writeRegularIndex(0);
-             uint64_t pos;
-            // 2- Create  new index
-             LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
-             indexes[0].baseOffset=indexes[0].indexPosition=pos;
-        }
+        startNewRiffIfNeeded(0,len);
         odmIndexEntry ix;
         ix.flags=flags;
         ix.offset=LMovie->Tell();
@@ -299,16 +289,7 @@ bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8
         }
         //
         //  Check if we need a new index...
-        int available=(AVI_INDEX_CHUNK_SIZE-64)/8; // nb index entry
-        if(thisIndex->listOfChunks.size()>=available)
-        {
-            // 1- Flush old index
-             writeRegularIndex(1+trackNo);
-             uint64_t pos;
-            // 2- Create  new index
-             LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
-             thisIndex->indexPosition=thisIndex->baseOffset=pos;
-        }
+        startNewRiffIfNeeded(1+trackNo,len);
         odmIndexEntry ix;
         ix.flags=flags;
         ix.offset=LMovie->Tell();
@@ -339,6 +320,59 @@ bool  aviIndexOdml::writeIndex()
             delete _masterList;
             _masterList=NULL;
             return true;
+}
+/**
+    \fn startNewRiffIfNeeded
+*/
+bool aviIndexOdml::startNewRiffIfNeeded(int trackNo,int len)
+{
+    bool breakNeeded=false;
+
+    // Case 1: we exceed riff boundary (4 GB)
+        uint64_t currentPosition=LMovie->Tell();
+        uint64_t start=_masterList->TellBegin();
+
+        if(len+currentPosition-start> ((1LL<<32)-(1LL<<20)))
+            breakNeeded=true;
+
+    // Case 2 : the current index is full
+        int available=(AVI_INDEX_CHUNK_SIZE-64)/8; // nb index entry
+        if(indexes[trackNo].listOfChunks.size()>=available)
+        {
+            breakNeeded=true;
+        }
+        if(breakNeeded)
+            startNewRiff();
+        return true;
+}
+/**
+    \fn startNewRiffIfNeeded
+*/
+bool aviIndexOdml::startNewRiff()
+{
+    uint64_t pos;
+    pos=LMovie->Tell();
+    ADM_info("Starting new riff at position %"LLU" (0x%"LLX")",pos,pos);
+    // 1- Write all pending regular index
+    for(int i=0;i<nbAudioTrack+1;i++)
+        writeRegularIndex(i);
+
+    // 2- Start a new RIFF
+    LMovie->End();          // Close current riff
+    _masterList->End();
+    _masterList->Begin();
+    _masterList->Write32("AVIX");
+    LMovie->Begin();
+    LMovie->Write32("movi");
+    // 3- Write placeHolder for odml index
+    for(int i=0;i<nbAudioTrack+1;i++)
+    {
+             
+             LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
+             indexes[i].baseOffset=indexes[i].indexPosition=pos;
+    }
+    return true;
+    
 }
 /**
     \fn getNbVideoFrameForHeaders
