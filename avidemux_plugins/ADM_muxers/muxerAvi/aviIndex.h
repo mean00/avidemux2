@@ -41,7 +41,7 @@ public:
                                     for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
                                     {
                                         char txt[10]="01wd";
-                                        txt[2]+=i;
+                                        txt[1]+=i;
                                         fourccs[i+1]=fourCC::get (( uint8_t *)txt);
                                     }
 

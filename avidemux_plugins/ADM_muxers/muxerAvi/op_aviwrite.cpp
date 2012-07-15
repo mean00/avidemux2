@@ -116,7 +116,7 @@ aviWrite::~aviWrite()
 uint8_t aviWrite::updateHeader (MainAVIHeader * mainheader,
 			AVIStreamHeader  *videostream)
 {
-        return 1;
+        
         ADM_assert(_file);
         printf("[Avi] Updating headers...\n");
         _file->seek(32);

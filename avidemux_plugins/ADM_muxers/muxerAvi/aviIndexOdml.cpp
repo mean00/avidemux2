@@ -24,7 +24,11 @@
 #include "aviIndexOdml.h"
 #include "op_aviwrite.hxx"
 #include "fourcc.h"
+#if 0
 #define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
 
 /**
     \fn ctor
@@ -36,6 +40,14 @@ aviIndexOdml::aviIndexOdml(aviWrite *father ): aviIndexBase(father)
     LMovie->Write32("movi");
     nbVideoFrame=0;
     memset(audioFrameCount,0,sizeof(audioFrameCount));
+    // Prepare fcc for superIndex
+    superIndex.trackIndeces[0].fcc=fourCC::get((uint8_t *)"00dc");
+    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
+    {
+        char txt[5]="01wb";
+        txt[1]+=i;
+        superIndex.trackIndeces[1+i].fcc=fourCC::get((uint8_t *)txt);
+    }
 }
 /**
     \fn dtor
@@ -75,7 +87,8 @@ bool           aviIndexOdml::writeRegularIndex(int trackNumber)
     uint64_t off=LMovie->Tell();
     aprintf("Writing index part for track %d\n",trackNumber);
     odmlRegularIndex *cur=indexes+trackNumber;
-    if(cur->listOfChunks.size())
+    int nbEntries=cur->listOfChunks.size();
+    if(nbEntries)
     {
         // Write index
         ADM_info("Writing regular index for track %d, at position 0x%"LLX"\n",trackNumber,cur->indexPosition);
@@ -88,7 +101,7 @@ bool           aviIndexOdml::writeRegularIndex(int trackNumber)
         odmlIndecesDesc supEntry;
         supEntry.offset=cur->indexPosition;
         supEntry.size=AVI_INDEX_CHUNK_SIZE;
-        supEntry.duration=0; // Fixme
+        supEntry.duration=nbEntries; // Fixme ??
         super->indeces.push_back(supEntry);
     }
     
@@ -103,7 +116,7 @@ void        odmlOneSuperIndex::serialize(AviListAvi *parentList)
        ADMFile *f=parentList->getFile() ;       
        AviListAvi list("indx",f);
        list.Begin();
-       list.Write32(4); // Size of each entry
+       list.Write16(4); // Size of each entry
        list.Write8(0);
        list.Write8(AVI_INDEX_SUPERINDEX);
        int n=indeces.size();
@@ -112,6 +125,7 @@ void        odmlOneSuperIndex::serialize(AviListAvi *parentList)
        list.Write32((uint32_t)0);
        list.Write32((uint32_t)0);
        list.Write32((uint32_t)0);
+       aprintf("We have %d entries in that superIndex\n",n);
        for(int i=0;i<n;i++)
        {
             odmlIndecesDesc ix=indeces[i];
@@ -136,7 +150,7 @@ bool        odmlRegularIndex::serialize(AviListAvi *parentList,uint32_t fccTag,i
        fcc[3]+=trackNumber;
        AviListAvi list(fcc,f);
        list.Begin();
-       list.Write32(2); // Size of each entry in dword
+       list.Write16(2); // Size of each entry in dword
        list.Write8(0);
        list.Write8(AVI_INDEX_INDEX);
        int n=listOfChunks.size();
@@ -184,7 +198,7 @@ bool  aviIndexOdml::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
         indexes[0].indexPosition=pos;
         odmIndexEntry ix;
         ix.flags=flags;
-        ix.offset=0;
+        ix.offset=indexes[0].baseOffset;
         ix.size=len;
         indexes[0].listOfChunks.push_back(ix);
         nbVideoFrame++;
@@ -219,42 +233,43 @@ bool  aviIndexOdml::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
 
 bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8_t *data)
 {
+        odmlRegularIndex *thisIndex=indexes+1+trackNo;
         // check riff break
         if(!audioFrameCount[trackNo])
         {
 
-            indexes[1+trackNo].baseOffset=LMovie->Tell();
+            thisIndex->baseOffset=LMovie->Tell();
             // Write video frame
             LMovie->WriteChunk(fourccs[1+trackNo],len,data);
             // Create place holder for index
             uint64_t pos;
             LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
-            indexes[1+trackNo].indexPosition=pos;
+            thisIndex->indexPosition=pos;
             odmIndexEntry ix;
             ix.flags=flags;
-            ix.offset=0;
+            ix.offset=thisIndex->baseOffset;
             ix.size=len;
-            indexes[1+trackNo].listOfChunks.push_back(ix);
+            thisIndex->listOfChunks.push_back(ix);
             audioFrameCount[trackNo]++;
             return true;
         }
         //
         //  Check if we need a new index...
         int available=(AVI_INDEX_CHUNK_SIZE-64)/8; // nb index entry
-        if(indexes[1+trackNo].listOfChunks.size()>=available)
+        if(thisIndex->listOfChunks.size()>=available)
         {
             // 1- Flush old index
              writeRegularIndex(1+trackNo);
              uint64_t pos;
             // 2- Create  new index
              LMovie->writeDummyChunk(AVI_INDEX_CHUNK_SIZE,&pos);
-             indexes[1+trackNo].indexPosition=indexes[1+trackNo].baseOffset=pos;
+             thisIndex->indexPosition=thisIndex->baseOffset=pos;
         }
         odmIndexEntry ix;
         ix.flags=flags;
         ix.offset=LMovie->Tell();
         ix.size=len;
-        indexes[1+trackNo].listOfChunks.push_back(ix);
+        thisIndex->listOfChunks.push_back(ix);
 
         LMovie->WriteChunk(fourccs[1+trackNo],len,data);
         audioFrameCount[trackNo]++;
