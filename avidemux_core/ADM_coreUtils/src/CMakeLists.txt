@@ -18,7 +18,7 @@ ADM_getbits.cpp
 ADM_writeRiff.cpp
 prefs.cpp
 prefs2_json.cpp
-
+ADM_memio.cpp
 ADM_json.cpp
 )
 

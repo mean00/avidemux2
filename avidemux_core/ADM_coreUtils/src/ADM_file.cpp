@@ -92,7 +92,7 @@ uint8_t ADMFile::seek(uint64_t where)
 //
 // Buffered write
 //
-uint8_t ADMFile::write(uint8_t *data,uint32_t how)
+uint8_t ADMFile::write(const uint8_t *data,uint32_t how)
 {
         uint32_t oneshot;
 #ifdef ADMF_DEBUG        

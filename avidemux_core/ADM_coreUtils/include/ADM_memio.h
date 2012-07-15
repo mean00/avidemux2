@@ -1,8 +1,8 @@
 /** *************************************************************************
-    \fn ADM_fileio.h
-    \brief Handle file access through a class
+    \fn ADM_memio.h
+    \brief Handle buffer access through a class
                       
-    copyright            : (C) 2008 by mean
+    copyright            : (C) 2012 by mean
     
  ***************************************************************************/
 
@@ -14,29 +14,30 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
-#ifndef ADM_FILE_IO
-#define ADM_FILE_IO
+#ifndef ADM_MEM_IO
+#define ADM_MEM_IO
 
+/**
+    \class ADMMemio
+*/
 
-
-class ADMFile
+class ADMMemio
 {
 protected:
-        FILE            *_out;
-        uint32_t        _fill;
-        uint8_t         *_buffer;	  
-        uint64_t        _curPos;
+        uint8_t         *buffer;
+        uint8_t         *cur;
+        uint8_t         *tail;
 public:
-                        ADMFile();
-                        ~ADMFile();
-        uint8_t         open(FILE *in);
-        uint8_t         write(const uint8_t *in, uint32_t size);
-        uint8_t         flush(void);
-        uint8_t         seek(uint64_t where);
-        uint64_t        tell(void);
-	  
+                         ADMMemio(int size);
+        virtual         ~ADMMemio();
+        int             size() const {return (int)(cur-buffer);};
+        const uint8_t  *getBuffer() const {return buffer;}
 
-
+        void            write32(uint32_t w);
+        void            write16(uint16_t w);
+        void            write8(uint8_t w);
+        void            write(int len, const uint8_t *data);
+        void            reset() {cur=buffer;}
 };
 
 #endif
