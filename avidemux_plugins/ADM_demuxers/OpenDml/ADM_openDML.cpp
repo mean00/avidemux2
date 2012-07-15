@@ -23,9 +23,12 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_odml_audio.h"
 
-#define aprintf(...) {}
+
 #ifdef ADM_DEBUG
-	//#define OPENDML_VERBOSE
+	#define OPENDML_VERBOSE
+    #define aprintf printf
+#else
+    #define aprintf(...) {}
 #endif
 #define QT_TR_NOOP(x) x
 
