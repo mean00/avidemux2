@@ -173,7 +173,7 @@ uint8_t AviList::Write32(uint8_t * c)
     \brief
 */
 
-uint8_t AviList::WriteChunk(uint8_t * chunkid, uint32_t len, const uint8_t * p)
+uint8_t AviList::WriteChunk(const uint8_t * chunkid, uint32_t len, const uint8_t * p)
 {
     uint32_t fcc;
 
@@ -191,7 +191,7 @@ uint8_t AviList::WriteChunk(uint8_t * chunkid, uint32_t len, const uint8_t * p)
 /**
     \fn WriteChunk
 */
-uint8_t     AviList::WriteChunk(uint32_t fcc,uint32_t len,const uint8_t *p)
+uint8_t     AviList::WriteChunk(const uint32_t fcc,uint32_t len,const uint8_t *p)
 {
     ADM_assert(fcc);
     Write32(fcc);

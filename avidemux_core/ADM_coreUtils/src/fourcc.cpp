@@ -88,7 +88,7 @@ int fourCC::check(uint8_t * in, uint8_t * cc)
 }
 
 //_____________________________________
-uint32_t fourCC::get(uint8_t * cc)
+uint32_t fourCC::get(const uint8_t * cc)
 {
     uint32_t inb;
 

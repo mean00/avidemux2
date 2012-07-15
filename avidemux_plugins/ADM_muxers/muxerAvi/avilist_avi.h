@@ -42,6 +42,7 @@ public:
         bool  WriteMem(const ADMMemio &meme);        
         bool  writeDummyChunk(int size, uint64_t *pos);
         bool  fill(uint32_t maxSize);
+        bool  WriteChunkMem(const char *foo, ADMMemio &mem);
         
 };
 #include "avi_utils.h"

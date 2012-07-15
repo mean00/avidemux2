@@ -18,7 +18,9 @@
 #define __FOUR_CC__
 
 #include "ADM_inttype.h"
-
+/**
+    \class fourCC
+*/
 class fourCC
 {
 public:
@@ -27,7 +29,7 @@ public:
 	static void 			printBE(uint32_t four);
 	static int  			check(uint32_t in,const uint8_t *cc);
 	static int  			check(const uint8_t *cc,uint32_t in);
-	static  uint32_t 	    get(uint8_t *in)   ;
+	static  uint32_t 	    get(const uint8_t *in)   ;
 	static char 		    *tostring(uint32_t fourcc);
     static char            *tostringBE(uint32_t fourcc);
 

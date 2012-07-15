@@ -152,11 +152,9 @@ bool AviListAvi::WriteMem(const ADMMemio &mem)
 */
 bool  AviListAvi::writeStrh(const AVIStreamHeader &hdr)
 {
-    ADMMemioAvi mem(sizeof(AVIStreamHeader)+4+4);
-    mem.write(4,(const uint8_t *)"strh");
-    mem.write32(sizeof(AVIStreamHeader));
+    ADMMemioAvi mem(sizeof(AVIStreamHeader));
     mem.writeStreamHeaderStruct(hdr);
-    WriteMem(mem);
+    WriteChunkMem("strh",mem);
     return true;
 }
 
@@ -167,13 +165,11 @@ bool  AviListAvi::writeStrfBih(const ADM_BITMAPINFOHEADER &bih, int extraLen, ui
 {
 
     int toWrite=sizeof(bih)+extraLen;
-    ADMMemioAvi mem(toWrite+4+4+extraLen);
-    mem.write(4,(const uint8_t *)"strf");
-    mem.write32(toWrite);
+    ADMMemioAvi mem(toWrite);
     mem.writeBihStruct(bih);
     if(extraLen)
         mem.write(extraLen,extraData);
-    WriteMem(mem);
+    WriteChunkMem("strf",mem);
     return true;
 }
 
@@ -183,13 +179,11 @@ bool  AviListAvi::writeStrfBih(const ADM_BITMAPINFOHEADER &bih, int extraLen, ui
 bool  AviListAvi::writeStrfWav(const WAVHeader &wav, int extraLen, uint8_t *extraData)
 {
     int toWrite=sizeof(wav)+extraLen;
-    ADMMemioAvi mem(toWrite+4+4+extraLen);
-    mem.write(4,(const uint8_t *)"strf");
-    mem.write32(toWrite);
+    ADMMemioAvi mem(toWrite);
     mem.writeWavStruct(wav);
     if(extraLen)
         mem.write(extraLen,extraData);
-    WriteMem(mem);
+    WriteChunkMem("strf",mem);
     return true;
 }
 /**
@@ -226,7 +220,7 @@ bool  AviListAvi::writeDummyChunk(int size, uint64_t *pos)
 		uint8_t* dummy=(uint8_t*)ADM_alloc (size);
 		memset(dummy,0,size);
 		// write dummy chunk
-		WriteChunk ((uint8_t *) "JUNK", size, dummy);
+		WriteChunk ( (const uint8_t  *)"JUNK", size, dummy);
 		// clean up
 		ADM_dealloc (dummy);
         return true;
@@ -258,5 +252,14 @@ bool  AviListAvi::fill(uint32_t maxSize)
     delete [] buffer;
     return true;
 }
+/**
+    \fn writeChunkMem
+    \brief 
+*/
+bool  AviListAvi::WriteChunkMem(const char *name,ADMMemio &mem)
+{
+        return WriteChunk((const uint8_t *)name,mem.size(),mem.getBuffer());
+}
+
 // EOF
 

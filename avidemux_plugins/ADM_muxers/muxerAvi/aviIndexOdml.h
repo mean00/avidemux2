@@ -59,7 +59,7 @@ public:
 */
 typedef struct 
 {
-    uint32_t offset;
+    uint64_t offset;
     uint32_t size;
     uint32_t flags;
 }odmIndexEntry;
