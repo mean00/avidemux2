@@ -83,9 +83,10 @@ protected:
            odmlRegularIndex indexes[1+ADM_AVI_MAX_AUDIO_TRACK];
 public:
                         aviIndexOdml(aviWrite *father,aviIndexAvi *cousin );
-                        aviIndexOdml(aviWrite *father) ;
+                        aviIndexOdml(aviWrite *father,AviListAvi *lst) ;
            virtual      ~aviIndexOdml();
            virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data);
            virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data);
            virtual bool  writeIndex();
+           virtual int   getNbVideoFrameForHeaders();
 };

@@ -34,7 +34,7 @@
     \fn ctor
     \brief this one is used when converting a type 1 avi to type 2
 */
-aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin ): aviIndexBase(father)  
+aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin ): aviIndexBase(father,cousin->_masterList)  
 {
     ADM_info("Creating Odml file from avi/type1... \n");
     LMovie = cousin->LMovie; // steal movie from cousin
@@ -78,7 +78,7 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin ): aviIndexBase(
 /**
     \fn ctor
 */
-aviIndexOdml::aviIndexOdml(aviWrite *father ): aviIndexBase(father)  
+aviIndexOdml::aviIndexOdml(aviWrite *father,AviListAvi *lst ): aviIndexBase(father,lst)  
 {
     LMovie = new AviListAvi ("LIST", father->_file);
     LMovie->Begin();
@@ -108,13 +108,13 @@ aviIndexOdml::~aviIndexOdml()
 */
 bool aviIndexOdml::writeSuperIndex()
 {
-    int nb= 1+_father->nb_audio;
+    int nb= 1+nbAudioTrack;
     uint64_t off=LMovie->Tell();
     
     for(int i=0;i<nb;i++)
     {
         odmlOneSuperIndex *cur=superIndex.trackIndeces+i; 
-        uint64_t pos=_father->openDmlHeaderPosition[i];
+        uint64_t pos=openDmlHeaderPosition[i];
         ADM_info("Writing  superIndex %d at %"LLX"\n",i,pos);
         LMovie->Seek(pos);       
         cur->serialize(LMovie);
@@ -325,14 +325,26 @@ bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8
 bool  aviIndexOdml::writeIndex()
 {
             ADM_info("Writing type 2 Avi index\n");
-            for(int i=0;i<1+_father->nb_audio;i++)
+            for(int i=0;i<1+nbAudioTrack;i++)
                 writeRegularIndex(i);
             ADM_info("Writing type 2 Avi SuperIndex\n");
             writeSuperIndex();
             LMovie->End();
             delete LMovie;  
             LMovie=NULL;
+
+            _masterList->End();
+            delete _masterList;
+            _masterList=NULL;
             return true;
+}
+/**
+    \fn getNbVideoFrameForHeaders
+    \brief for type1 avi, just return the actual # of frames
+*/
+int   aviIndexOdml::getNbVideoFrameForHeaders()
+{
+        return superIndex.trackIndeces[0].indeces.size();
 }
 
 // EOF

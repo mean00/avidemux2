@@ -31,32 +31,23 @@ public:
             uint64_t         superIndexPosition[ADM_AVI_MAX_AUDIO_TRACK+1];
 protected:
             uint32_t         fourccs[ADM_AVI_MAX_AUDIO_TRACK+1];
-            aviWrite          *_father;
             uint64_t         currentBaseOffset;
             AviListAvi	      *LMovie ;
+            AviListAvi        *_masterList;
             int              nbVideoFrame;
+            int              nbAudioTrack;
             int              audioFrameCount[ADM_AVI_MAX_AUDIO_TRACK];
+            uint64_t        openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK];
 
 public:
-                        aviIndexBase(aviWrite *father) 
-                            {
-                                  nbVideoFrame=0;   
-                                  memset(audioFrameCount,0,sizeof(audioFrameCount));
-                                  _father=father;
-                                  currentBaseOffset=0;
-                                  fourccs[0]=fourCC::get ((uint8_t *)"00dc");
-                                    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
-                                    {
-                                        char txt[10]="01wd";
-                                        txt[1]+=i;
-                                        fourccs[i+1]=fourCC::get (( uint8_t *)txt);
-                                    }
-
-                            };
+                        aviIndexBase(aviWrite *father,AviListAvi *lst) ;
+                            
            virtual        ~aviIndexBase() {};
            virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data)=0;
            virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data)=0;
            virtual bool  writeIndex()=0;
+           virtual int   getNbVideoFrameForHeaders()=0;
+                    
 
 };
 //EOF

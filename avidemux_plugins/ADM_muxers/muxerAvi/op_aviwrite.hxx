@@ -61,9 +61,7 @@ friend class aviIndexOdml;
         aviAudioTrack         audioTracks[ADM_AVI_MAX_AUDIO_TRACK];
 
         aviIndexBase        *indexMaker;
-		uint32_t vframe;
-
-		AviListAvi *LAll ;		
+		uint32_t vframe;	
 
         uint64_t   openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK]; // position of the openDml sindex
 

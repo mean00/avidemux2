@@ -27,7 +27,7 @@
 /**
     \fn ctor
 */
-aviIndexAvi::aviIndexAvi(aviWrite *father ): aviIndexBase(father)  
+aviIndexAvi::aviIndexAvi(aviWrite *father,AviListAvi *lst ): aviIndexBase(father,lst)  
 {
   		
     LMovie = new AviListAvi ("LIST", father->_file);
@@ -93,18 +93,52 @@ bool  aviIndexAvi::writeIndex()
     ADM_info("Writing type 1 Avi index\n");
     // Write index
     int curindex=myIndex.size();
-    _father->LAll->Write32 ("idx1");
-    _father->LAll->Write32 (curindex * 16);
+    AviListAvi *lst=new AviListAvi("idx1",_masterList->getFile());
     ADMMemio memIo(4*4);
     for (uint32_t i = 0; i < curindex; i++)
     {
         memIo.reset();
         ix32(fcc);ix32(flags);ix32(offset);ix32(len);
-        _father->LAll->WriteMem (memIo);
+        lst->WriteMem (memIo);
     }
+    delete lst;
+    lst=NULL;
+    _masterList->End();
+    delete _masterList;
+    _masterList=NULL;
     ADM_info("Done writing type 1 Avi index\n");
     return true;
 }
+/**
+    \fn getNbVideoFrameForHeaders
+    \brief for type1 avi, just return the actual # of frames
+*/
+int   aviIndexAvi::getNbVideoFrameForHeaders()
+{
+        return nbVideoFrame;
+}
 
+//-------------------------------------------------
+/**
+    \fn ctor
+    \brief constructor for base class
+*/
+aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst)
+{
+      _masterList=lst;
+      nbVideoFrame=0;   
+      memset(audioFrameCount,0,sizeof(audioFrameCount));
+      nbAudioTrack=father->nb_audio;
+      currentBaseOffset=0;
+      fourccs[0]=fourCC::get ((uint8_t *)"00dc");
+        for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
+        {
+            char txt[10]="01wd";
+            txt[1]+=i;
+            fourccs[i+1]=fourCC::get (( uint8_t *)txt);
+        }
+        for(int i=0;i<1+ADM_AVI_MAX_AUDIO_TRACK;i++)
+               openDmlHeaderPosition[i]=father->openDmlHeaderPosition[i];
 
+}
 // EOF

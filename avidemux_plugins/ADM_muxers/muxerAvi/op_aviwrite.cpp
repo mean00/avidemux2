@@ -86,7 +86,6 @@ static 	uint32_t aacBitrate[16]=
 aviWrite::aviWrite( void )
 {
 	_out=NULL;
-	LAll=NULL;
     _file=NULL;
 
     memset(&(audioTracks),0,sizeof(audioTracks));
@@ -99,13 +98,10 @@ aviWrite::aviWrite( void )
 
 aviWrite::~aviWrite()
 {
-	if (LAll)
-		delete LAll;
 
     if(indexMaker)
         delete indexMaker;
 
-	LAll = NULL;
     indexMaker=NULL;
 }
 
@@ -121,8 +117,10 @@ uint8_t aviWrite::updateHeader (MainAVIHeader * mainheader,
         printf("[Avi] Updating headers...\n");
         _file->seek(32);
         AviListAvi tmpList("dummy",_file);
+        _mainheader.dwTotalFrames=indexMaker->getNbVideoFrameForHeaders();
         tmpList.writeMainHeaderStruct(_mainheader);
         _file->seek(0x6c);
+        _videostream.dwLength=vframe;
         tmpList.writeStreamHeaderStruct(_videostream);
         return 1;
 }
@@ -383,7 +381,7 @@ uint8_t aviWrite::saveBegin (
 
 
       _file->seek(0);
-      LAll = new AviListAvi ("RIFF", _file);
+      AviListAvi *LAll = new AviListAvi ("RIFF", _file);
       LAll->Begin();
       LAll->Write32("AVI ");
 
@@ -413,16 +411,16 @@ uint8_t aviWrite::saveBegin (
     {
         case AVI_MUXER_TYPE1:
         case AVI_MUXER_AUTO:
-                indexMaker=new aviIndexAvi(this);   
+                indexMaker=new aviIndexAvi(this,LAll);   
                 break;
         case AVI_MUXER_TYPE2:
-                indexMaker=new aviIndexOdml(this);   
+                indexMaker=new aviIndexOdml(this,LAll);   
                 break;
         default:
                 ADM_assert(0);
                 break;
     }
-    
+  LAll=NULL; // it now belongs to index
   
   vframe = 0;
   return 1;
@@ -457,10 +455,7 @@ uint8_t aviWrite::setEnd (void)
 
   // First close the movie
   indexMaker->writeIndex();
-  // and delete everything...
-  LAll->End ();
-  delete    LAll;
-  LAll = NULL;
+
   _mainheader.dwTotalFrames = vframe;
   _videostream.dwLength = vframe;
 
