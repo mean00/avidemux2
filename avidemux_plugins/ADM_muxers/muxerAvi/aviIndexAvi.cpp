@@ -74,6 +74,8 @@ bool  aviIndexAvi::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8_
       entry.offset = offset;
       myIndex.push_back(entry);
       LMovie->WriteChunk (entry.fcc, len, data);
+      audioSizeCount[trackNo]+=len;
+      audioFrameCount[trackNo]++;      
       return true;
 }
 /**
@@ -128,6 +130,7 @@ aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst)
       _masterList=lst;
       nbVideoFrame=0;   
       memset(audioFrameCount,0,sizeof(audioFrameCount));
+      memset(audioSizeCount,0,sizeof(audioSizeCount));
       nbAudioTrack=father->nb_audio;
       currentBaseOffset=0;
       fourccs[0]=fourCC::get ((uint8_t *)"00dc");
@@ -137,7 +140,7 @@ aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst)
             txt[1]+=i;
             fourccs[i+1]=fourCC::get (( uint8_t *)txt);
         }
-        for(int i=0;i<1+ADM_AVI_MAX_AUDIO_TRACK;i++)
+        for(int i=0;i<1+ADM_AVI_MAX_AUDIO_TRACK;i++)       
                openDmlHeaderPosition[i]=father->openDmlHeaderPosition[i];
 
 }

@@ -294,6 +294,7 @@ bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8
             ix.size=len;
             thisIndex->listOfChunks.push_back(ix);
             audioFrameCount[trackNo]++;
+            audioSizeCount[trackNo]+=len;
             return true;
         }
         //
@@ -316,6 +317,7 @@ bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8
 
         LMovie->WriteChunk(fourccs[1+trackNo],len,data);
         audioFrameCount[trackNo]++;
+        audioSizeCount[trackNo]+=len;
         return true;
 }
 /**

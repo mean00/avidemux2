@@ -37,16 +37,18 @@ protected:
             int              nbVideoFrame;
             int              nbAudioTrack;
             int              audioFrameCount[ADM_AVI_MAX_AUDIO_TRACK];
+            int              audioSizeCount[ADM_AVI_MAX_AUDIO_TRACK];
             uint64_t        openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK];
 
 public:
-                        aviIndexBase(aviWrite *father,AviListAvi *lst) ;
+                                aviIndexBase(aviWrite *father,AviListAvi *lst) ;
                             
-           virtual        ~aviIndexBase() {};
-           virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data)=0;
-           virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data)=0;
-           virtual bool  writeIndex()=0;
-           virtual int   getNbVideoFrameForHeaders()=0;
+           virtual              ~aviIndexBase() {};
+           virtual bool         addVideoFrame( int len,uint32_t flags,const uint8_t *data)=0;
+           virtual bool         addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data)=0;
+           virtual bool         writeIndex()=0;
+           virtual int          getNbVideoFrameForHeaders()=0;
+                    uint32_t    getSizeInBytesForAudioTrack(int i){ return audioSizeCount[i];}
                     
 
 };

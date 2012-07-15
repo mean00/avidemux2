@@ -54,6 +54,7 @@ friend class aviIndexOdml;
  protected:
 		FILE 		         *_out;
         ADMFile              *_file;
+        ADM_audioStream      **_audioStreams;
 		MainAVIHeader	     _mainheader;
 		AVIStreamHeader      _videostream;
 		ADM_BITMAPINFOHEADER _bih;       
@@ -64,11 +65,11 @@ friend class aviIndexOdml;
 		uint32_t vframe;	
 
         uint64_t   openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK]; // position of the openDml sindex
-
+        uint32_t   audioStreamHeaderPosition[ADM_AVI_MAX_AUDIO_TRACK];
 protected:
 		
 		uint8_t writeVideoHeader( uint8_t *extra, uint32_t extraLen );
-        uint8_t writeAudioHeader(ADM_audioStream *stream, AVIStreamHeader *header,int	trackNumber);
+        uint8_t writeAudioHeader(ADM_audioStream *stream, AVIStreamHeader *header,uint32_t sizeInByte,int	trackNumber);
         uint8_t updateHeader(MainAVIHeader *mainheader,	AVIStreamHeader *videostream);
 
         bool setVideoStreamInfo (ADMFile * fo,
@@ -84,7 +85,8 @@ protected:
 			 uint8_t * extra, uint32_t extraLen,
 			 uint32_t maxxed);
 
-	
+        bool createAudioHeader(WAVHeader *wav,ADM_audioStream *stream, AVIStreamHeader *header,
+                                uint32_t sizeInBytes,int	trackNumber, uint8_t *extra, int *extraLen);
 	
 	public:
                 aviWrite(void);	
