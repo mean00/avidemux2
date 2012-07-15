@@ -18,35 +18,30 @@ Especially AVI in our case
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef __AVILIST__
-#define __AVILIST__
-#include "ADM_fileio.h"
+#ifndef __AVILIST_AVI__
+#define __AVILIST_AVI__
+#include "avilist.h"
 /**
     \class AviList
     \brief small helper class to write tag/len/value chunks in avi
 */
-class AviList
+class AviListAvi: public AviList
 {
 protected:
-		ADMFile		*_ff;
-		uint32_t _fcc;
-		uint64_t _begin,_end;
-
 public:
-                     AviList(const char *name,ADMFile *ff);
+        AviListAvi(const char *name,ADMFile *ff) : AviList(name,ff)
+        {
 
-        void        Write64(uint64_t val);
-        void        Write16(uint16_t val);
-        void        Write8(uint8_t val);
-        uint8_t     Write32(uint32_t val) ;
-        uint8_t     Write32(uint8_t *c);
-        uint8_t     Write32(const char  *c) {Write32((uint8_t *)c);return 1;};
-        uint8_t     Write(uint8_t *p,uint32_t len);
-        uint8_t     WriteChunk(uint8_t *chunkid,uint32_t len,uint8_t *p);
-        uint64_t    Tell(void );    		// glue for index.... ugly
-        uint64_t    TellBegin(void );   // same story here
-        uint8_t	 Begin( const char *subchunk );
-        uint8_t	 End (void );
+        }
+        bool  writeMainHeaderStruct(  const MainAVIHeader &hdr);
+        bool  writeStreamHeaderStruct(const AVIStreamHeader &hdr);
+        bool  writeBihStruct(  const ADM_BITMAPINFOHEADER &hdr);
+        bool  writeWavStruct( const WAVHeader &hdr);
+
+        bool  writeStrh(const AVIStreamHeader &hdr);
+        bool  writeStrfBih(const ADM_BITMAPINFOHEADER &hdr, int extraLen, uint8_t *extraData);
+        bool  writeStrfWav(const WAVHeader &hdr, int extraLen, uint8_t *extraData);
+
 };
 #include "avi_utils.h"
 #endif

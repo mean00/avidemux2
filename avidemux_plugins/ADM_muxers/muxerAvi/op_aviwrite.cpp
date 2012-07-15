@@ -28,7 +28,7 @@
 #include "avifmt2.h"
 #include "fourcc.h"
 
-#include "avilist.h"
+#include "avilist_avi.h"
 #include "op_aviwrite.hxx"
 
 #include "ADM_quota.h"
@@ -43,7 +43,7 @@
 #endif
 
 
-uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
+
 //------------
 typedef struct VBRext
     {
@@ -71,9 +71,6 @@ static 	uint32_t aacBitrate[16]=
 	0,     0,     0,     0
 };
 //
-static void mx_bihFromVideo(ADM_BITMAPINFOHEADER *_bih,ADM_videoStream *video);
-static void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video);
-static void mx_streamHeaderFromVideo(AVIStreamHeader *header,ADM_videoStream *video);
 
 /**
     \fn aviWrite
@@ -129,29 +126,14 @@ uint8_t aviWrite::sync( void )
 uint8_t aviWrite::updateHeader (MainAVIHeader * mainheader,
 			AVIStreamHeader  *videostream)
 {
-
-
         ADM_assert(_file);
         printf("[Avi] Updating headers...\n");
         _file->seek(32);
-// Update main header
-#ifdef ADM_BIG_ENDIAN
-	MainAVIHeader ma;
-    AVIStreamHeader as;
+        AviListAvi tmpList("dummy",_file);
+        tmpList.writeMainHeaderStruct(_mainheader);
+        _file->seek(0x6c);
+        tmpList.writeStreamHeaderStruct(_videostream);
 
-	memcpy(&ma,mainheader,sizeof(MainAVIHeader));
-	Endian_AviMainHeader(&ma);
-  	_file->write ((uint8_t *)&ma, sizeof (ma));
-    _file->seek(0x6c);
-
-	memcpy(&as,videostream,sizeof(as));
-	Endian_AviStreamHeader(&as);
-  	_file->write ((uint8_t *)&as, sizeof (as));
-#else
-    _file->write ((uint8_t *)mainheader, sizeof (MainAVIHeader));
-    _file->seek(0x6c);
-    _file->write ((uint8_t *)videostream, sizeof (AVIStreamHeader));
-#endif
   // update audio headers
     for(int i=0;i<nb_audio;i++)
     {
@@ -181,22 +163,15 @@ uint8_t aviWrite::writeMainHeader( void )
   _file->seek(0);
 
 
-  LAll = new AviList ("RIFF", _file);
+  LAll = new AviListAvi ("RIFF", _file);
   LAll->Begin ("AVI ");
   // Header chunk
-  LMain = new AviList ("LIST", _file);
+  LMain = new AviListAvi ("LIST", _file);
   LMain->Begin ("hdrl");
   LMain->Write32 ("avih");
   LMain->Write32 (sizeof (MainAVIHeader));
-#ifdef ADM_BIG_ENDIAN
-	MainAVIHeader ma;
-	memcpy(&ma,&_mainheader,sizeof(ma));
-	Endian_AviMainHeader(&ma);
-	LMain->Write((uint8_t *)&ma,sizeof(ma));
-#else
-  	LMain->Write ((uint8_t *) &_mainheader, sizeof (MainAVIHeader));
-#endif
-	return 1;
+  LMain->writeMainHeaderStruct(_mainheader);
+  return 1;
 }
 /**
     \fn writeVideoHeader
@@ -218,28 +193,8 @@ uint32_t odml_video_super_idx_size;
         {
             odml_video_super_idx_size=24+odml_indexes[0].odml_nbrof_index*16;
         }
-#ifdef ADM_BIG_ENDIAN
-	// in case of Little endian, do the usual swap crap
-
-	AVIStreamHeader as;
-	ADM_BITMAPINFOHEADER b;
-	memcpy(&as,&_videostream,sizeof(as));
-	Endian_AviStreamHeader(&as);
-	memcpy(&b,&_bih,sizeof(_bih));
-	Endian_BitMapInfo( &b );
-  	setStreamInfo (_file, (uint8_t *) &as,
-		  (uint8_t *)&b,sizeof(ADM_BITMAPINFOHEADER),
-            odml_video_super_idx_size,0,
-            extra,extraLen,
-            0x1000);
-#else
-  	setStreamInfo (_file, (uint8_t *) &_videostream,
-		  (uint8_t *)&_bih,sizeof(ADM_BITMAPINFOHEADER),
-            odml_video_super_idx_size,0,
-            extra,extraLen,
-            0x1000);
-
-#endif
+        setVideoStreamInfo(_file,_videostream,_bih, odml_video_super_idx_size,0,
+                    extra,extraLen, 0x1000);
 	return 1;
 }
 
@@ -423,28 +378,11 @@ uint32_t extraLen=0;
 			wav.blockalign=1;
 			break;
     }
-#ifdef ADM_BIG_ENDIAN
-	// in case of Little endian, do the usual swap crap
-
-	AVIStreamHeader as;
-	WAVHeader w;
-	memcpy(&as,header,sizeof(as));
-	Endian_AviStreamHeader(&as);
-	memcpy(&w,&wav,sizeof(w));
-	Endian_WavHeader( &w );
-  	setStreamInfo (_file,
-		(uint8_t *) &as,
-		(uint8_t *)&w,sizeof(WAVHeader),
-		odml_audio_super_idx_size,odml_stream_nbr,
-		extra,extraLen,
-		0x1000);
-#else
-	setStreamInfo (_file,
-			(uint8_t *) header,
-	 		(uint8_t *) &wav, sizeof (WAVHeader),
+	setAudioStreamInfo (_file,
+			*header,
+	 		wav,
 			odml_audio_super_idx_size,odml_stream_nbr,
 			extra,extraLen, 0x1000);
-#endif
 
   return 1;
 }
@@ -577,7 +515,7 @@ uint8_t aviWrite::saveBegin (
   //___________________________________
   ADM_assert (!LMovie);
 
-  LMovie = new AviList ("LIST", _file);
+  LMovie = new AviListAvi ("LIST", _file);
   LMovie->Begin ("movi");
   curindex = 0;
   // the *2 is for audio and video
@@ -781,44 +719,31 @@ uint8_t aviWrite::setEnd (void)
 
 }
 /**
-        \fn setStreamInfo
+        \fn setVideoStreamInfo
 
 */
-
-uint8_t aviWrite::setStreamInfo (ADMFile * fo,
-			 uint8_t * stream,
-			 uint8_t * info, uint32_t infolen,
+bool aviWrite::setVideoStreamInfo (ADMFile * fo,
+			 const AVIStreamHeader      &stream,
+			 const ADM_BITMAPINFOHEADER &bih,
 			 uint32_t odml_headerlen,
 			 uint8_t odml_stream_nbr,
 			 uint8_t * extra, uint32_t extraLen,
 			 uint32_t maxxed)
 {
-
-
-  AviList * alist;
+  AviListAvi * alist;
   uint8_t * junk;
   int32_t junklen;
 
-  alist = new AviList ("LIST", fo);
-
-
+  alist = new AviListAvi ("LIST", fo);
   // 12 LIST
   // 8 strf subchunk
   // 8 strl subchunk
   // 8 defaultoffset
   alist->Begin ("strl");
-
   // sub chunk 1
-  alist->WriteChunk ((uint8_t *) "strh", sizeof (AVIStreamHeader),
-		     (uint8_t *) stream);
+  alist->writeStrh(stream);
+  alist->writeStrfBih(bih,extraLen,extra);
 
-  uint8_t *buf=new uint8_t[infolen+extraLen];
-
-	memcpy(buf,info,infolen);
-	if(extraLen)
-		memcpy(infolen+buf,extra,extraLen);
-
-  alist->WriteChunk ((uint8_t *) "strf", infolen+extraLen, buf);
 
     // compute junkLen, it might also hold the oldml superindex
     uint32_t consumed=odml_headerlen*4;
@@ -843,21 +768,66 @@ uint8_t aviWrite::setStreamInfo (ADMFile * fo,
   }
   alist->WriteChunk ((uint8_t *) "JUNK", junklen, junk);
   ADM_dealloc (junk);
-
-  // MOD Feb 2005 by GMV: ODML header
-// MOVEINDEX
-#ifndef MOVINDEX
-  //odml_write_dummy_chunk(alist, &odml_indexes[odml_stream_nbr].fpos, odml_headerlen);
-#endif
-  // END MOD Feb 2005 by GMV
-
   alist->End ();
   delete alist;
-  delete[] buf;
   return 1;
-
-
 }
+/**
+        \fn setVideoStreamInfo
+
+*/
+bool aviWrite::setAudioStreamInfo (ADMFile * fo,
+			 const AVIStreamHeader      &stream,
+			 const WAVHeader &wav,
+			 uint32_t odml_headerlen,
+			 uint8_t odml_stream_nbr,
+			 uint8_t * extra, uint32_t extraLen,
+			 uint32_t maxxed)
+{
+  AviListAvi * alist;
+  uint8_t * junk;
+  int32_t junklen;
+
+  alist = new AviListAvi ("LIST", fo);  
+  // 12 LIST
+  // 8 strf subchunk
+  // 8 strl subchunk
+  // 8 defaultoffset
+  alist->Begin ("strl");
+  // sub chunk 1
+  alist->writeStrh(stream);
+  alist->writeStrfWav(wav,extraLen,extra);
+
+
+    // compute junkLen, it might also hold the oldml superindex
+    uint32_t consumed=odml_headerlen*4;
+  junklen = (consumed+maxxed-1)/maxxed;
+  junklen=junklen*maxxed;
+
+  printf("[ODML] using ODML placeholder of size %u bytes\n",junklen);
+  junk = (uint8_t *) ADM_alloc (junklen);
+  ADM_assert (junk);
+  memset (junk,0, junklen);
+  //
+  // Fill junk with out info string
+  uint32_t len=strlen("Avidemux");
+
+  if(junklen>len)
+  	memcpy(junk,"Avidemux",len);
+
+  if(doODML!=NO)
+  {
+    odml_indexes[odml_stream_nbr].fpos=_file->tell();
+    odml_indexes[odml_stream_nbr].pad=junklen;
+  }
+  alist->WriteChunk ((uint8_t *) "JUNK", junklen, junk);
+  ADM_dealloc (junk);
+  alist->End ();
+  delete alist;
+  return 1;
+}
+
+
 /**
         \fn getPos
         \brief return position in file after the index (not written yet)
@@ -1123,78 +1093,6 @@ void aviWrite::odml_riff_break(uint32_t len){	// advance to the next riff if req
 			}
 		}
 	}
-}
-/**
-    \fn mx_bihFromVideo
-    \brief build a bih from video
-*/
-void mx_bihFromVideo(ADM_BITMAPINFOHEADER *bih,ADM_videoStream *video)
-{
-        //
-         bih->biSize=sizeof(ADM_BITMAPINFOHEADER); //uint32_t 	biSize;
-         bih->biWidth=video->getWidth(); //uint32_t  	biWidth;
-         bih->biHeight=video->getHeight(); //uint32_t  	biHeight;
-         bih->biPlanes=1; //    uint16_t 	biPlanes;
-         bih->biBitCount=24; //
-         bih->biCompression=video->getFCC(); //    uint32_t 	biCompression;
-         bih->biSizeImage=(bih->biWidth*bih->biHeight*3)>>1;//    uint32_t 	biSizeImage;
-         bih->biXPelsPerMeter=0;
-         bih->biYPelsPerMeter=0;
-         bih->biClrUsed=0;
-         bih->biClrImportant=0;
-        // Recompute image size
-        uint32_t is;
-            is=bih->biWidth*bih->biHeight;
-            is*=(bih->biBitCount+7)/8;
-            bih->biSizeImage=is;
-}
-/**
-        \fn mx_mainHeaderFromVideoStream
-        \brief Write MainAVIHeader from video
-*/
-void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
-{
-    header->dwMicroSecPerFrame= ADM_UsecFromFps1000(video->getAvgFps1000()); //int32_t	dwMicroSecPerFrame;	// frame display rate (or 0L)
-    header->dwMaxBytesPerSec=8*1000*1000; //int32_t	dwMaxBytesPerSec;	// max. transfer rate
-    header->dwPaddingGranularity=0; //int32_t	dwPaddingGranularity;	// pad to multiples of this
-					// size; normally 2K.
-    header->dwFlags=0; // FIXME HAS INDEX //int32_t	dwFlags;		// the ever-present flags
-    //header->dwTotalFrames=0; //int32_t	dwTotalFrames;		// # frames in file
-    header->dwInitialFrames=0; //int32_t	dwInitialFrames;
-   // Must be set by caller  header->dwStreams=int32_t	dwStreams;
-    header->dwSuggestedBufferSize=64*1024;// int32_t	dwSuggestedBufferSize;
-
-    header->dwWidth=video->getWidth();//int32_t	dwWidth;
-    header->dwHeight=video->getHeight();//int32_t	dwHeight;
-}
-/**
-    \fn mx_streamHeaderFromVideo
-    \fill in AVIStreamHeader from video. Only for video stream header of course.
-
-*/
-static void mx_streamHeaderFromVideo(AVIStreamHeader *header,ADM_videoStream *video)
-{
-	header->fccType=fourCC::get((uint8_t *)"vids");  //uint32_t	fccType;
-	header->fccHandler=video->getFCC(); //uint32_t	fccHandler;
-	header->dwFlags=0; //int32_t	dwFlags;	/* Contains AVITF_* flags */
-	header->wPriority=0; //int16_t	wPriority;	/* dwPriority - splited for audio */
-	header->wLanguage=0; //int16_t	wLanguage;
-	header->dwInitialFrames=0;//int32_t	dwInitialFrames;
-	header->dwScale=1000;//  int32_t	dwScale;
-	header->dwRate=video->getAvgFps1000();// int32_t	dwRate;		/* dwRate / dwScale == samples/second */
-	header->dwStart=0;// int32_t	dwStart;
-	header->dwLength=0; // int32_t	dwLength;	/* In units above... */
-	header->dwSuggestedBufferSize=1000000;// int32_t	dwSuggestedBufferSize;
-	header->dwQuality=0;// int32_t	dwQuality;
-	header->dwSampleSize=0;// int32_t	dwSampleSize;
-/*
-	struct {
-		int16_t left;
-		int16_t top;
-		int16_t right;
-		int16_t bottom;
-	} rcFrame;
-*/
 }
 
 // EOF

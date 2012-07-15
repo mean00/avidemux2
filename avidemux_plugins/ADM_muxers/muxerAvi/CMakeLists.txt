@@ -5,6 +5,8 @@ SET(ADM_avi_SRCS
         muxerAviConfig.cpp
         op_aviwrite.cpp
         avilist.cpp
+        avilist_avi.cpp
+	avi_utils.cpp
 
 )
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxer/include")

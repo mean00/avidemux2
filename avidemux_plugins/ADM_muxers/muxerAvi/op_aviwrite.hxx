@@ -20,7 +20,7 @@
  #ifndef __op_avi__
  #define __op_avi__
 #include "ADM_audioStream.h"
-#include "avilist.h"
+#include "avilist_avi.h"
 #define ADM_AVI_MAX_AUDIO_TRACK 5
 
 // GMV
@@ -72,7 +72,7 @@ typedef struct
 */
 typedef struct
 {
-    AVIStreamHeader header;
+    AVIStreamHeader  header;
     uint32_t        sizeInBytes;
     uint32_t        nbBlocks;
     uint32_t        audioHeaderOffset;
@@ -99,16 +99,31 @@ typedef struct
 		uint32_t vframe;
 
 		uint32_t curindex;
-		AviList *LAll ;
-		AviList	*LMovie ;
-		AviList *LMain;
+		AviListAvi *LAll ;
+		AviListAvi	*LMovie ;
+		AviListAvi *LMain;
 
         uint8_t saveFrame(uint32_t len,uint32_t flags,uint8_t *data,uint8_t *fcc);
 		uint8_t writeMainHeader( void );
 		uint8_t writeVideoHeader( uint8_t *extra, uint32_t extraLen );
         uint8_t writeAudioHeader(ADM_audioStream *stream, AVIStreamHeader *header,uint8_t	odml_stream_nbr);
-        uint8_t setStreamInfo(ADMFile *fo,
-							uint8_t 	*stream,
+        bool setVideoStreamInfo (ADMFile * fo,
+			 const AVIStreamHeader      &stream,
+			 const ADM_BITMAPINFOHEADER &bih,
+			 uint32_t odml_headerlen,
+			 uint8_t odml_stream_nbr,
+			 uint8_t * extra, uint32_t extraLen,
+			 uint32_t maxxed);
+        bool setAudioStreamInfo (ADMFile * fo,
+			 const AVIStreamHeader      &stream,
+			 const WAVHeader &wav,
+			 uint32_t odml_headerlen,
+			 uint8_t odml_stream_nbr,
+			 uint8_t * extra, uint32_t extraLen,
+			 uint32_t maxxed);
+
+        bool setStreamInfo(ADMFile *fo,
+							const AVIStreamHeader 	&stream,
                             uint8_t 	*info,
 							uint32_t 	infolen,
                             // MOD Feb 2005 by GMV: ODML super index
@@ -153,8 +168,8 @@ public:
 
       uint8_t setEnd(void);
 
-	uint8_t     saveVideoFrame(uint32_t len,uint32_t flags,uint8_t *data);
-	uint8_t     saveAudioFrame(uint32_t index,uint32_t len,uint8_t *data) ;
+	uint8_t    saveVideoFrame(uint32_t len,uint32_t flags,uint8_t *data);
+	uint8_t    saveAudioFrame(uint32_t index,uint32_t len,uint8_t *data) ;
 	uint32_t	getPos( void );
 	uint8_t 	sync( void );
 
