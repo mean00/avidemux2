@@ -39,6 +39,7 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 */
 void mx_bihFromVideo(ADM_BITMAPINFOHEADER *bih,ADM_videoStream *video)
 {
+        memset(bih,0,sizeof(*bih));
         //
          bih->biSize=sizeof(ADM_BITMAPINFOHEADER); //uint32_t 	biSize;
          bih->biWidth=video->getWidth(); //uint32_t  	biWidth;
@@ -63,6 +64,7 @@ void mx_bihFromVideo(ADM_BITMAPINFOHEADER *bih,ADM_videoStream *video)
 */
 void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 {
+    memset(header,0,sizeof(*header));
     header->dwMicroSecPerFrame= ADM_UsecFromFps1000(video->getAvgFps1000()); //int32_t	dwMicroSecPerFrame;	// frame display rate (or 0L)
     header->dwMaxBytesPerSec=8*1000*1000; //int32_t	dwMaxBytesPerSec;	// max. transfer rate
     header->dwPaddingGranularity=0; //int32_t	dwPaddingGranularity;	// pad to multiples of this
@@ -83,6 +85,7 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 */
  void mx_streamHeaderFromVideo(AVIStreamHeader *header,ADM_videoStream *video)
 {
+    memset(header,0,sizeof(*header));
 	header->fccType=fourCC::get((uint8_t *)"vids");  //uint32_t	fccType;
 	header->fccHandler=video->getFCC(); //uint32_t	fccHandler;
 	header->dwFlags=0; //int32_t	dwFlags;	/* Contains AVITF_* flags */

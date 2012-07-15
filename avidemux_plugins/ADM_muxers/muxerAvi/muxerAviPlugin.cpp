@@ -27,7 +27,6 @@ ADM_MUXER_BEGIN( "avi",muxerAvi,
                     "AVI Muxer", // DIsplay name
                     AviConfigure,
                     avi_muxer_param, //template
-                    &muxerConfig,
-                    sizeof(avi_muxer)
+                    NULL,0
                 );
 

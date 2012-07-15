@@ -41,8 +41,9 @@ public:
         uint8_t     Write32(uint32_t val) ;
         uint8_t     Write32(uint8_t *c);
         uint8_t     Write32(const char  *c) {Write32((uint8_t *)c);return 1;};
-        uint8_t     Write(uint8_t *p,uint32_t len);
-        uint8_t     WriteChunk(uint8_t *chunkid,uint32_t len,uint8_t *p);
+        uint8_t     Write(const uint8_t *p,uint32_t len);
+        uint8_t     WriteChunk(uint8_t *chunkid,uint32_t len,const uint8_t *p);
+        uint8_t     WriteChunk(uint32_t fcc,uint32_t len,const uint8_t *p);
         uint64_t    Tell(void );    		// glue for index.... ugly
         uint64_t    TellBegin(void );   // same story here
         uint8_t	 Begin( const char *subchunk );

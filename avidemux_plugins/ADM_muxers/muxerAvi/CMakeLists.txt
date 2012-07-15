@@ -7,6 +7,8 @@ SET(ADM_avi_SRCS
         avilist.cpp
         avilist_avi.cpp
 	avi_utils.cpp
+	aviIndexAvi.cpp
+	aviIndexOdml.cpp
 
 )
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxer/include")

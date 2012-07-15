@@ -1,11 +1,9 @@
 /** *************************************************************************
-        \file op_aviwrite.cpp
-        \brief low level avi muxer
-
-		etc...
+        \file  avilist_avi
+        \brief avi extension to avilist
 
 
-    copyright            : (C) 2002 by mean
+    copyright            : (C) 2002/2012 by mean
                            (C) Feb 2005 by GMV: ODML write support
     GPL V2.0
  ***************************************************************************/
@@ -29,14 +27,30 @@
 #include "fourcc.h"
 
 #include "avilist_avi.h"
-#define w32(x) Write32(hdr.x);
-#define w16(x) Write16(hdr.x);
+
+#define aprintf(...) {}
+
+#define w32(x) write32(hdr.x);
+#define w16(x) write16(hdr.x);
 /**
-    \fn writeMainHeader
+    \class ADMMemioAvi
+    \brief Serialize structure into memory prior to writing them
 */
-bool  AviListAvi::writeMainHeaderStruct(const MainAVIHeader &hdr)
+class ADMMemioAvi : public ADMMemio
 {
-    
+public:
+              ADMMemioAvi(int sz) : ADMMemio(sz) {}
+    virtual ~ADMMemioAvi() {}
+    bool    writeMainHeaderStruct(const MainAVIHeader &hdr);
+    bool    writeStreamHeaderStruct(const AVIStreamHeader &hdr);
+    bool    writeBihStruct(const ADM_BITMAPINFOHEADER &hdr);
+    bool    writeWavStruct(const WAVHeader &hdr);
+};
+
+
+#ifndef ADM_CPU_X86 //-----------------------------------------------------
+bool    ADMMemioAvi::writeMainHeaderStruct(const MainAVIHeader &hdr)
+{
     w32(dwMicroSecPerFrame);	// frame display rate (or 0L)
     w32(dwMaxBytesPerSec);	// max. transfer rate
     w32(dwPaddingGranularity);	// pad to multiples of this
@@ -50,17 +64,16 @@ bool  AviListAvi::writeMainHeaderStruct(const MainAVIHeader &hdr)
     w32(dwWidth);
     w32(dwHeight);
 
-    for(int i=0;i<4;i++)
-        Write32((uint32_t)0);
+   
+    write32(0);
+    write32(0);
+    write32(0);
+    write32(0);
     return true;
 }
-/**
-    \fn writeStreamHeader
-*/
-bool  AviListAvi::writeStreamHeaderStruct(const AVIStreamHeader &hdr)
+bool    ADMMemioAvi::writeStreamHeaderStruct(const AVIStreamHeader &hdr)
 {
-
-	w32(	fccType);
+    w32(	fccType);
 	w32(	fccHandler);
 	w32(	dwFlags);	/* Contains AVITF_* flags */
 	w16(	wPriority);	/* dwPriority - splited for audio */
@@ -79,22 +92,7 @@ bool  AviListAvi::writeStreamHeaderStruct(const AVIStreamHeader &hdr)
     w16( rcFrame.bottom);
     return true;
 }
-/**
-     \fn writeStrh
-     \brief write a complete strh chunk
-*/
-bool  AviListAvi::writeStrh(const AVIStreamHeader &hdr)
-{
-    
-    Write32((uint8_t *) "strh");
-    Write32(sizeof (AVIStreamHeader));
-    writeStreamHeaderStruct(hdr);
-    return true;
-}
-/**
-        \fn writeBihStruct
-*/
-bool AviListAvi::writeBihStruct(const ADM_BITMAPINFOHEADER &hdr)
+bool    ADMMemioAvi::writeBihStruct(const ADM_BITMAPINFOHEADER &hdr)
 {
     w32( 	biSize);
     w32(  	biWidth);
@@ -109,10 +107,7 @@ bool AviListAvi::writeBihStruct(const ADM_BITMAPINFOHEADER &hdr)
     w32( 	biClrImportant);
     return true;
 }
-/**
-        \fn writeWavStruct
-*/
-bool AviListAvi::writeWavStruct(const WAVHeader &hdr)
+bool    ADMMemioAvi::writeWavStruct(const WAVHeader &hdr)
 {
     w16(	encoding);	
     w16(	channels);					/* 1 = mono, 2 = stereo */
@@ -122,6 +117,49 @@ bool AviListAvi::writeWavStruct(const WAVHeader &hdr)
     w16(	bitspersample);		/* One of 8, 1 */
     return true;
 }
+#else // -------------------------------------------------------
+bool    ADMMemioAvi::writeMainHeaderStruct(const MainAVIHeader &hdr)
+{
+    write(sizeof(hdr),(const uint8_t *)&hdr);
+    return true;
+}
+bool    ADMMemioAvi::writeStreamHeaderStruct(const AVIStreamHeader &hdr)
+{
+    write(sizeof(hdr),(const uint8_t *)&hdr);
+    return true;
+}
+bool    ADMMemioAvi::writeBihStruct(const ADM_BITMAPINFOHEADER &hdr)
+{
+    write(sizeof(hdr),(const uint8_t *)&hdr);
+    return true;
+}
+bool    ADMMemioAvi::writeWavStruct(const WAVHeader &hdr)
+{
+    write(sizeof(hdr),(const uint8_t *)&hdr);
+    return true;
+}
+#endif  //------------------------------------------------------------------
+
+bool AviListAvi::WriteMem(const ADMMemio &mem)
+{
+    Write( mem.getBuffer(),mem.size());
+    return true;
+}
+
+/**
+     \fn writeStrh
+     \brief write a complete strh chunk
+*/
+bool  AviListAvi::writeStrh(const AVIStreamHeader &hdr)
+{
+    ADMMemioAvi mem(sizeof(AVIStreamHeader)+4+4);
+    mem.write(4,(const uint8_t *)"strh");
+    mem.write32(sizeof(AVIStreamHeader));
+    mem.writeStreamHeaderStruct(hdr);
+    WriteMem(mem);
+    return true;
+}
+
 /**
     \fn writeStrfBih
 */
@@ -129,12 +167,13 @@ bool  AviListAvi::writeStrfBih(const ADM_BITMAPINFOHEADER &bih, int extraLen, ui
 {
 
     int toWrite=sizeof(bih)+extraLen;
- 
-    Write32((uint8_t *) "strf");
-    Write32(toWrite);
-    writeBihStruct(bih);
+    ADMMemioAvi mem(toWrite+4+4+extraLen);
+    mem.write(4,(const uint8_t *)"strf");
+    mem.write32(toWrite);
+    mem.writeBihStruct(bih);
     if(extraLen)
-        Write(extraData,extraLen);
+        mem.write(extraLen,extraData);
+    WriteMem(mem);
     return true;
 }
 
@@ -144,15 +183,53 @@ bool  AviListAvi::writeStrfBih(const ADM_BITMAPINFOHEADER &bih, int extraLen, ui
 bool  AviListAvi::writeStrfWav(const WAVHeader &wav, int extraLen, uint8_t *extraData)
 {
     int toWrite=sizeof(wav)+extraLen;
-  
-    Write32((uint8_t *) "strf");
-    Write32(toWrite);
-    writeWavStruct(wav);
+    ADMMemioAvi mem(toWrite+4+4+extraLen);
+    mem.write(4,(const uint8_t *)"strf");
+    mem.write32(toWrite);
+    mem.writeWavStruct(wav);
     if(extraLen)
-        Write(extraData,extraLen);
+        mem.write(extraLen,extraData);
+    WriteMem(mem);
     return true;
 }
+/**
 
+*/
+ bool    AviListAvi::writeMainHeaderStruct(const MainAVIHeader &hdr)
+{
+    ADMMemioAvi mem(sizeof(hdr));
+    mem.writeMainHeaderStruct(hdr);
+    WriteMem(mem);
+    return true;
+}
+/**
 
+*/
+bool    AviListAvi::writeStreamHeaderStruct(const AVIStreamHeader &hdr)
+{
+    ADMMemioAvi mem(sizeof(hdr));
+    mem.writeStreamHeaderStruct(hdr);
+    WriteMem(mem);
+    return true;
+
+}
+/**
+    \fn writeDummyChunk
+    \brief write a placeholder dummy chunk
+*/
+bool  AviListAvi::writeDummyChunk(int size, uint64_t *pos)
+{
+	// save file position
+		*pos=Tell();
+		aprintf("[ODML]write dummy chunk at file position %"LLU" with data size %"LU"\n",*pos, size);
+		// generate dummy data
+		uint8_t* dummy=(uint8_t*)ADM_alloc (size);
+		memset(dummy,0,size);
+		// write dummy chunk
+		WriteChunk ((uint8_t *) "JUNK", size, dummy);
+		// clean up
+		ADM_dealloc (dummy);
+        return true;
+}
 // EOF
 

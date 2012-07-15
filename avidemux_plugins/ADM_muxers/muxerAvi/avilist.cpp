@@ -2,7 +2,7 @@
                           avilist.cpp  -  description
                              -------------------
     begin                : Thu Nov 15 2001
-    copyright            : (C) 2001 by mean, (C) 2005 GMV
+    copyright            : (C) 2001/2012 by mean, (C) 2005 GMV
     email                : fixounet@free.fr
 
 	This class deals with LIST chunk
@@ -144,7 +144,7 @@ uint8_t AviList::Write32(uint32_t val)
     \brief
 */
 
-uint8_t AviList::Write(uint8_t * p, uint32_t len)
+uint8_t AviList::Write(const uint8_t * p, uint32_t len)
 {
         return _ff->write(p,len);
 }
@@ -166,7 +166,7 @@ uint8_t AviList::Write32(uint8_t * c)
     \brief
 */
 
-uint8_t AviList::WriteChunk(uint8_t * chunkid, uint32_t len, uint8_t * p)
+uint8_t AviList::WriteChunk(uint8_t * chunkid, uint32_t len, const uint8_t * p)
 {
     uint32_t fcc;
 
@@ -181,5 +181,19 @@ uint8_t AviList::WriteChunk(uint8_t * chunkid, uint32_t len, uint8_t * p)
       }
     return 1;
 }
-
+/**
+    \fn WriteChunk
+*/
+uint8_t     AviList::WriteChunk(uint32_t fcc,uint32_t len,const uint8_t *p)
+{
+    ADM_assert(fcc);
+    Write32(fcc);
+    Write32(len);
+    Write(p, len);
+    if (len & 1)
+      {				// pad to be a multiple of 2, nicer ...
+	  Write(p, 1);
+      }
+    return 1;
+}
 // EOF

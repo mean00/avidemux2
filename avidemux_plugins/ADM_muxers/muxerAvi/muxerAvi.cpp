@@ -3,7 +3,7 @@
             \brief           Avi openDML muxer
                              -------------------
     TODO: Fill in drops/holes in audio as for video
-    copyright            : (C) 2008 by mean
+    copyright            : (C) 2008/2012 by mean
     email                : fixounet@free.fr
 
  ***************************************************************************/
@@ -29,11 +29,6 @@
 #else
 #define aprintf printf
 #endif
-
-avi_muxer muxerConfig=
-{
-    HIDDEN
-};
 
 
 /**
