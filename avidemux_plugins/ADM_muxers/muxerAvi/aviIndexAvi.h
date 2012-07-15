@@ -22,12 +22,13 @@ typedef struct
   uint32_t offset;
   uint32_t len;
 }IdxEntry;
-
+class aviIndexOdml;
 /**
     \class aviIndexBase
 */
 class aviIndexAvi : public aviIndexBase
 {
+friend class aviIndexOdml;
 protected:
            
            std::vector <IdxEntry > myIndex;

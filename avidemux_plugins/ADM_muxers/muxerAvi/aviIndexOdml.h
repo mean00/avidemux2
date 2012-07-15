@@ -14,7 +14,7 @@
  ***************************************************************************/
 #pragma once
 #include "aviIndex.h"
-
+#include "aviIndexAvi.h" // needed to convert type1 to type2
 #define AVI_INDEX_CHUNK_SIZE (16*1024)
 
 #define AVI_INDEX_SUPERINDEX 0
@@ -81,9 +81,8 @@ protected:
            bool             writeRegularIndex(int trackNumber);
            odmlSuperIndex   superIndex;
            odmlRegularIndex indexes[1+ADM_AVI_MAX_AUDIO_TRACK];
-           int              nbVideoFrame;
-           int              audioFrameCount[ADM_AVI_MAX_AUDIO_TRACK];
 public:
+                        aviIndexOdml(aviWrite *father,aviIndexAvi *cousin );
                         aviIndexOdml(aviWrite *father) ;
            virtual      ~aviIndexOdml();
            virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data);

@@ -22,13 +22,58 @@
 #include "ADM_default.h"
 #include "vector"
 #include "aviIndexOdml.h"
+
 #include "op_aviwrite.hxx"
 #include "fourcc.h"
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
 #endif
+/**
+    \fn ctor
+    \brief this one is used when converting a type 1 avi to type 2
+*/
+aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin ): aviIndexBase(father)  
+{
+    ADM_info("Creating Odml file from avi/type1... \n");
+    LMovie = cousin->LMovie; // steal movie from cousin
+    cousin->LMovie=NULL;
+    nbVideoFrame=cousin->nbVideoFrame;
+    memset(audioFrameCount,0,sizeof(audioFrameCount));
+    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
+        audioFrameCount[i]=cousin->audioFrameCount[i];
+    // Prepare fcc for superIndex
+    superIndex.trackIndeces[0].fcc=fourCC::get((uint8_t *)"00dc");
+    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
+    {
+        char txt[5]="01wb";
+        txt[1]+=i;
+        superIndex.trackIndeces[1+i].fcc=fourCC::get((uint8_t *)txt);
+    }
+    // Convert cousin's index
+    int n=cousin->myIndex.size();
+    for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
+    {
+        uint32_t trackFcc=superIndex.trackIndeces[j].fcc;
+        for(int i=0;i<n;i++)
+        {
+            IdxEntry trx=cousin->myIndex[i];
+            // 
+            if(trx.fcc==trackFcc)
+            {
+                    odmIndexEntry ix;
+                    ix.flags=trx.flags;
+                    ix.offset=trx.offset;
+                    ix.size=trx.len;
+                    indexes[j].listOfChunks.push_back(ix);
+            }
+        }
+    }
+    cousin->myIndex.clear(); // empty cousin index
+    for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
+        printf("Track %d, found %d entries\n",j,(int)indexes[j].listOfChunks.size());
+}
 
 /**
     \fn ctor
@@ -38,8 +83,6 @@ aviIndexOdml::aviIndexOdml(aviWrite *father ): aviIndexBase(father)
     LMovie = new AviListAvi ("LIST", father->_file);
     LMovie->Begin();
     LMovie->Write32("movi");
-    nbVideoFrame=0;
-    memset(audioFrameCount,0,sizeof(audioFrameCount));
     // Prepare fcc for superIndex
     superIndex.trackIndeces[0].fcc=fourCC::get((uint8_t *)"00dc");
     for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
@@ -163,13 +206,13 @@ bool        odmlRegularIndex::serialize(AviListAvi *parentList,uint32_t fccTag,i
        for(int i=0;i<n;i++)
        {
             odmIndexEntry ix=listOfChunks[i];
-            if(ix.offset<baseOffset)
+            if(ix.offset+8<baseOffset)
             {
                     ADM_warning("Fatal error : Chunk is at %"LLU" but base is at %"LLU"\n",ix.offset,baseOffset);
                     exit(-1);
             }
             
-            list.Write32(ix.offset-baseOffset);
+            list.Write32(ix.offset+8-baseOffset);
             if(ix.flags & AVI_KEY_FRAME)
                 list.Write32(ix.size);
             else
@@ -286,6 +329,9 @@ bool  aviIndexOdml::writeIndex()
                 writeRegularIndex(i);
             ADM_info("Writing type 2 Avi SuperIndex\n");
             writeSuperIndex();
+            LMovie->End();
+            delete LMovie;  
+            LMovie=NULL;
             return true;
 }
 

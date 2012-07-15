@@ -42,7 +42,7 @@ LAll
 
 #include "muxerAvi.h"
 
-#if 1
+#if 0
     #define aprintf printf
 #else
     #define aprintf(...) {}
