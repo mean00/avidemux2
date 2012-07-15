@@ -20,20 +20,17 @@
 #include "fourcc.h"
 extern "C" bool AviConfigure(void)
 {
-#if 0
         uint32_t fmt=(uint32_t)muxerConfig.odmlType;
-        diaMenuEntry format[]={{NO,"Avi"},{HIDDEN,"AUTO"},{NORMAL,"OPENDML"}};
+        diaMenuEntry format[]={{AVI_MUXER_TYPE1,"Avi"},{AVI_MUXER_AUTO,"AUTO"},{AVI_MUXER_TYPE2,"OPENDML"}};
         diaElemMenu  menuFormat(&fmt,"Muxing Format",3,format,"");
 
         diaElem *tabs[]={&menuFormat};
         if( diaFactoryRun(("Avi Muxer"),1,tabs))
         {
-            muxerConfig.odmlType=(doODML_t)fmt;
+            muxerConfig.odmlType=fmt;
             return true;
         }
         return false;
-#endif
-    return true;
 }
 
 

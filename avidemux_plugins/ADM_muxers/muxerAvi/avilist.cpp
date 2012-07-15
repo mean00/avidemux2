@@ -55,6 +55,19 @@ uint8_t AviList::Begin(const char *subchunk)
 }
 /**
     \fn
+    \brief  Mark begin
+*/
+uint8_t AviList::Begin(void)
+{
+    
+    _begin=_ff->tell();
+    Write32((_fcc));
+    Write32((uint32_t) 0);	// size
+    return 1;
+}
+
+/**
+    \fn
     \brief  Mark End
 */
 
@@ -81,6 +94,11 @@ uint64_t AviList::TellBegin(void)
 {
     return _begin;
 
+}
+
+uint8_t AviList::Seek(uint64_t to)
+{
+    return _ff->seek(to);
 }
 /**
     \fn

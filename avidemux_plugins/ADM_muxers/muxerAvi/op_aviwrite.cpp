@@ -50,6 +50,7 @@ LAll
 
 #include "aviIndex.h"
 #include "aviIndexAvi.h"
+#include "aviIndexOdml.h"
 
 //------------
 typedef struct VBRext
@@ -418,7 +419,20 @@ uint8_t aviWrite::saveBegin (
   //___________________________________
   // Write the beginning of the movie part
   //___________________________________
-    indexMaker=new aviIndexAvi(this);   
+    switch(muxerConfig.odmlType)
+    {
+        case AVI_MUXER_TYPE1:
+        case AVI_MUXER_AUTO:
+                indexMaker=new aviIndexAvi(this);   
+                break;
+        case AVI_MUXER_TYPE2:
+                indexMaker=new aviIndexOdml(this);   
+                break;
+        default:
+                ADM_assert(0);
+                break;
+    }
+    
   
   vframe = 0;
   return 1;
@@ -522,7 +536,7 @@ bool aviWrite::setVideoStreamInfo (ADMFile * fo,
   	memcpy(junk,"Avidemux",len);
 
     // Place holder for odml super index
-  
+  indexMaker->superIndexPosition[trackNumber]=alist->Tell();
   alist->WriteChunk ((uint8_t *) "JUNK", junklen, junk);
   ADM_dealloc (junk);
   alist->End ();
@@ -571,7 +585,7 @@ bool aviWrite::setAudioStreamInfo (ADMFile * fo,
 
   if(junklen>len)
   	memcpy(junk,"Avidemux",len);
-
+  indexMaker->superIndexPosition[trackNumber]=alist->Tell();
   alist->WriteChunk ((uint8_t *) "JUNK", junklen, junk);
   ADM_dealloc (junk);
   alist->End ();

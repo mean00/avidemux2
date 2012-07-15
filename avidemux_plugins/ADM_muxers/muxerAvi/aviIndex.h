@@ -19,15 +19,24 @@ class aviWrite;
 */
 #define ADM_AVI_MAX_AUDIO_TRACK 5 // Fixme : dupe
 #include "fourcc.h"
+#include "avilist_avi.h"
+/**
+    \class aviIndexBase
+*/
 class aviIndexBase
 {
+public:
+            uint64_t         superIndexPosition[ADM_AVI_MAX_AUDIO_TRACK+1];
 protected:
             uint32_t         fourccs[ADM_AVI_MAX_AUDIO_TRACK+1];
             aviWrite          *_father;
+            uint64_t         currentBaseOffset;
+            AviListAvi	      *LMovie ;
 public:
                         aviIndexBase(aviWrite *father) 
                             {
                                   _father=father;
+                                  currentBaseOffset=0;
                                   fourccs[0]=fourCC::get ((uint8_t *)"00dc");
                                     for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
                                     {

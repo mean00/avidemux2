@@ -19,7 +19,7 @@
 #include "avi_muxer_desc.cpp"
 #include "fourcc.h"
  extern "C" bool AviConfigure(void);
-
+extern avi_muxer muxerConfig;
 ADM_MUXER_BEGIN( "avi",muxerAvi,
                     1,0,0,
                     "AVI",    // Internal name
@@ -27,6 +27,6 @@ ADM_MUXER_BEGIN( "avi",muxerAvi,
                     "AVI Muxer", // DIsplay name
                     AviConfigure,
                     avi_muxer_param, //template
-                    NULL,0
+                    &muxerConfig,sizeof(muxerConfig)
                 );
 

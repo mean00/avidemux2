@@ -51,6 +51,7 @@ typedef struct
  {
 friend class aviIndexBase;
 friend class aviIndexAvi;
+friend class aviIndexOdml;
  protected:
 		FILE 		         *_out;
         ADMFile              *_file;

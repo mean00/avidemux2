@@ -231,5 +231,31 @@ bool  AviListAvi::writeDummyChunk(int size, uint64_t *pos)
 		ADM_dealloc (dummy);
         return true;
 }
+/**
+    \fn fill
+    \brief fill a chunk till the payload = maxSize
+*/
+bool  AviListAvi::fill(uint32_t maxSize)
+{
+    uint64_t pos=Tell();
+    uint64_t start=TellBegin()+8;
+    uint64_t end=start+maxSize;
+    if(pos>end)
+    {
+        ADM_warning("Chunk already bigger than filler\n");
+        return false;
+    }
+    if(pos==end)
+    {
+        ADM_info("Chunk already right size, nothing to do\n");
+        return true;
+    }
+    int toFill=(int)(end-pos);
+    uint8_t *buffer=new uint8_t[toFill];
+    memset(buffer,0,toFill);
+    Write(buffer,toFill);
+    delete [] buffer;
+    return true;
+}
 // EOF
 

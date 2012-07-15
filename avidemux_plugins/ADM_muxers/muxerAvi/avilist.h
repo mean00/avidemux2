@@ -47,7 +47,10 @@ public:
         uint64_t    Tell(void );    		// glue for index.... ugly
         uint64_t    TellBegin(void );   // same story here
         uint8_t	 Begin( const char *subchunk );
+        uint8_t	 Begin( void );
+        uint8_t     Seek(uint64_t to);
         uint8_t	 End (void );
+        ADMFile      *getFile() { return _ff;}
 };
 #include "avi_utils.h"
 #endif

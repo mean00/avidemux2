@@ -31,7 +31,8 @@ class aviIndexAvi : public aviIndexBase
 protected:
            
            std::vector <IdxEntry > myIndex;
-           AviListAvi	*LMovie ;
+           
+
 public:
                         aviIndexAvi(aviWrite *father) ;
            virtual      ~aviIndexAvi();

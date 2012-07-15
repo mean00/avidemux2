@@ -41,6 +41,7 @@ public:
         bool  writeStrfWav(const WAVHeader &hdr, int extraLen, uint8_t *extraData);
         bool  WriteMem(const ADMMemio &meme);        
         bool  writeDummyChunk(int size, uint64_t *pos);
+        bool  fill(uint32_t maxSize);
         
 };
 #include "avi_utils.h"

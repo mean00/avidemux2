@@ -19,6 +19,13 @@
 #include "op_aviwrite.hxx"
 #include "ADM_audioClock.h"
 #include "avi_muxer.h"
+/**
+    \enum set muxer type, i.e. generate openDml or plain avi
+*/
+enum
+{
+    AVI_MUXER_TYPE1=0,AVI_MUXER_AUTO=1,AVI_MUXER_TYPE2=2
+};
 
 #define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
 extern avi_muxer muxerConfig;
