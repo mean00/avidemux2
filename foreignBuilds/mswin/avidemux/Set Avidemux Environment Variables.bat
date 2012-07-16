@@ -41,7 +41,8 @@ set buildCoreFolder=%buildFolder%\core
 set buildCliFolder=%buildFolder%\cli
 set buildGtkFolder=%buildFolder%\gtk
 set buildQtFolder=%buildFolder%\qt
-set buildPluginFolder=%buildFolder%\plugins
+set buildPluginCommonFolder=%buildFolder%\pluginCommon
+set buildPluginQtFolder=%buildFolder%\pluginQt
 
 set buildDir=%admBuildDir%
 set sdkBuildDir=%admSdkBuildDir%

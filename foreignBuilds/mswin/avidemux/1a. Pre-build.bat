@@ -12,7 +12,8 @@ mkdir "%buildCoreFolder%"
 mkdir "%buildCliFolder%"
 mkdir "%buildGtkFolder%"
 mkdir "%buildQtFolder%"
-mkdir "%buildPluginFolder%"
+mkdir "%buildPluginCommonFolder%"
+mkdir "%buildPluginQtFolder%"
 mkdir "%sdkBuildDir%"
 
 echo.

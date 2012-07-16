@@ -6,27 +6,28 @@
 
 namespace ADM_qtScript
 {
-	class QtScriptConfigObject : public QtScriptObject
-	{
-		Q_OBJECT
+    class QtScriptConfigObject : public QtScriptObject
+    {
+        Q_OBJECT
 
-	private:
-		QScriptValue createConfigContainer(
-			QScriptEngine* engine, const QString& parentContainerName, QScriptEngine::FunctionSignature getSetFunction,
-			std::map<const QString, QScriptEngine::FunctionSignature>* configSubGroups);
+    private:
+        QScriptValue createConfigContainer(
+            QScriptEngine* engine, const QString& parentContainerName, QScriptEngine::FunctionSignature getSetFunction,
+            std::map<const QString, QScriptEngine::FunctionSignature>* configSubGroups);
 
-	protected:
-		QScriptValue createConfigContainer(
-			QScriptEngine* engine, QScriptEngine::FunctionSignature getSetFunction = defaultConfigGetterSetter,
-			std::map<const QString, QScriptEngine::FunctionSignature>* configSubGroups = NULL);
-		static QScriptValue defaultConfigGetterSetter(QScriptContext * context, QScriptEngine * engine);
-		virtual void getConfCouple(CONFcouple** conf, const QString& containerName) = 0;
-		void registerConfigSubGroup(
-			const QString& confName, QScriptEngine::FunctionSignature getSetFunction = defaultConfigGetterSetter);
-		virtual void setConfCouple(CONFcouple* conf, const QString& containerName) = 0;
+    protected:
+        std::map<const QString, std::map<const QString, const QString> > propertyNameMappings;
+        QScriptValue createConfigContainer(
+            QScriptEngine* engine, QScriptEngine::FunctionSignature getSetFunction = defaultConfigGetterSetter,
+            std::map<const QString, QScriptEngine::FunctionSignature>* configSubGroups = NULL);
+        QString createPropertyNameMapping(const QString containerName, QString propertyName);
+        static QScriptValue defaultConfigGetterSetter(QScriptContext * context, QScriptEngine * engine);
+        virtual void getConfCouple(CONFcouple** conf, const QString& containerName) = 0;
+        virtual void setConfCouple(CONFcouple* conf, const QString& containerName) = 0;
 
-	public:
-		QtScriptConfigObject(IEditor *_editor);
-	};
+    public:
+        QtScriptConfigObject(IEditor *_editor);
+        const QString& getOriginalPropertyName(const QString containerName, const QString propertyName);
+    };
 }
 #endif

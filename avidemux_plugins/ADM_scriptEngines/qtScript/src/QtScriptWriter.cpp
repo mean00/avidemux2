@@ -223,13 +223,13 @@ namespace ADM_qtScript
 					}
 					else
 					{
-						*(this->_stream) << prefix.toUtf8().constData() << name << " = \"" << newValue << "\";" << std::endl;
+						*(this->_stream) << prefix.toUtf8().constData() << QString(name).replace('.', '_').toUtf8().constData() << " = \"" << newValue << "\";" << std::endl;
 					}
 				}
 			}
 			else
 			{
-				*(this->_stream) << prefix.toUtf8().constData() << name << " = \"" << newValue << "\";" << std::endl;
+				*(this->_stream) << prefix.toUtf8().constData() << QString(name).replace('.', '_').toUtf8().constData() << " = \"" << newValue << "\";" << std::endl;
 			}
 		}
 	}
