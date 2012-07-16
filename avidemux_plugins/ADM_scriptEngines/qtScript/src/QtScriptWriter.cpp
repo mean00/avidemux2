@@ -33,7 +33,7 @@ namespace ADM_qtScript
 
 		if (track->edTrack->getTrackType() == ADM_EDAUDIO_EXTERNAL)
 		{
-			*(this->_stream) << track->edTrack->castToExternal()->getMyName();
+			*(this->_stream) << "\"" << track->edTrack->castToExternal()->getMyName() << "\"";
 		}
 		else
 		{
