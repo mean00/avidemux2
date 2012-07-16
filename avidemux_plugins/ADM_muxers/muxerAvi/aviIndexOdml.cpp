@@ -34,7 +34,8 @@
     \fn ctor
     \brief this one is used when converting a type 1 avi to type 2
 */
-aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin ): aviIndexBase(father,cousin->_masterList)  
+aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlPos )
+    : aviIndexBase(father,cousin->_masterList,odmlPos)  
 {
     ADM_info("Creating Odml file from avi/type1... \n");
     LMovie = cousin->LMovie; // steal movie from cousin
@@ -78,7 +79,7 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin ): aviIndexBase(
 /**
     \fn ctor
 */
-aviIndexOdml::aviIndexOdml(aviWrite *father,AviListAvi *lst ): aviIndexBase(father,lst)  
+aviIndexOdml::aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk ): aviIndexBase(father,lst,odmlChunk)  
 {
     LMovie = new AviListAvi ("LIST", father->_file);
     LMovie->Begin();
@@ -91,6 +92,7 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,AviListAvi *lst ): aviIndexBase(fath
         txt[1]+=i;
         superIndex.trackIndeces[1+i].fcc=fourCC::get((uint8_t *)txt);
     }
+    riffCount=0;
 }
 /**
     \fn dtor
@@ -302,17 +304,49 @@ bool  aviIndexOdml::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8
         return true;
 }
 /**
+    \fn writeOdmlChunk
+*/
+
+bool aviIndexOdml::writeOdmlChunk()
+{
+            uint64_t off=LMovie->Tell();
+
+            LMovie->Seek(odmlChunkPosition);
+            AviListAvi dum("LIST",LMovie->getFile());
+            dum.Begin();
+            dum.Write32("odml");
+            dum.Write32("dmlh");
+            dum.Write32(4);
+            dum.Write32(nbVideoFrame); // Real number of video frames
+            dum.EndAndPaddTilleSizeMatches(248+12);
+            
+
+
+            LMovie->Seek(off);
+            return true;
+}
+
+/**
     \fn writeIndex
 */
 
 bool  aviIndexOdml::writeIndex()
 {
-            ADM_info("Writing type 2 Avi index\n");
+            // super index needed ?
+            ADM_info("Writting openDml chunk\n");
+            writeOdmlChunk();
+            ADM_info("Writting type 2 Avi index\n");
             for(int i=0;i<1+nbAudioTrack;i++)
                 writeRegularIndex(i);
-            ADM_info("Writing type 2 Avi SuperIndex\n");
+            ADM_info("Writting type 2 Avi SuperIndex\n");
             writeSuperIndex();
             LMovie->End();
+            if(!riffCount)
+            {
+                ADM_info("Writting legacy index\n");
+                writeLegacyIndex();
+            }
+
             delete LMovie;  
             LMovie=NULL;
 
@@ -332,8 +366,14 @@ bool aviIndexOdml::startNewRiffIfNeeded(int trackNo,int len)
         uint64_t currentPosition=LMovie->Tell();
         uint64_t start=_masterList->TellBegin();
         uint64_t riffSize=currentPosition-start;
+        uint64_t limit=((1LL<<31)-10*(1LL<<20)); // 2GB per riff chunk
         riffSize+=len;
-        if(riffSize> ((1LL<<32)-10*(1LL<<20)))
+        if(!riffCount) // take into account legacy index
+        {
+            for(int i=0;i<1+nbAudioTrack;i++)
+                limit-=4*4*indexes[i].listOfChunks.size();
+        }
+        if(riffSize> limit)
         {
             ADM_info("Riff is now %"LLU" bytes, break needed\n",riffSize);
             breakNeeded=true;
@@ -358,12 +398,18 @@ bool aviIndexOdml::startNewRiff()
     uint64_t pos;
     pos=LMovie->Tell();
     ADM_info("Starting new riff at position %"LLU" (0x%"LLX")",pos,pos);
+
+    // 0- Write legacy index, else WMP is not happy...
+
     // 1- Write all pending regular index
     for(int i=0;i<nbAudioTrack+1;i++)
         writeRegularIndex(i);
 
     // 2- Start a new RIFF
     LMovie->End();          // Close current riff
+    if(!riffCount)
+        writeLegacyIndex();
+
     _masterList->End();
     _masterList->Begin();
     _masterList->Write32("AVIX");
@@ -376,6 +422,7 @@ bool aviIndexOdml::startNewRiff()
              LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
              indexes[i].baseOffset=indexes[i].indexPosition=pos;
     }
+    riffCount++;    
     return true;
     
 }
@@ -387,5 +434,25 @@ int   aviIndexOdml::getNbVideoFrameForHeaders()
 {
         return superIndex.trackIndeces[0].indeces.size();
 }
+/**
+    \fn writeLegacyIndex
+*/
+bool aviIndexOdml::writeLegacyIndex()
+{
+    uint64_t pos;
+    pos=LMovie->Tell();
+    ADM_info("Writting legacy index at %"LLX"\n",pos);
+    //---
+    AviListAvi lst("idx1",LMovie->getFile());
+    lst.Begin();
+    int *idx=new int[1+nbAudioTrack];
+    for(int i=0;i<1+nbAudioTrack;i++) idx[i]=0;
 
+
+    delete []idx;
+    lst.End();
+    //--
+   // LMovie->Seek(pos);
+    return true;
+}
 // EOF

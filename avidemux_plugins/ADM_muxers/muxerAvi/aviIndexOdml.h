@@ -84,10 +84,13 @@ protected:
            odmlRegularIndex indexes[1+ADM_AVI_MAX_AUDIO_TRACK];
            bool             startNewRiffIfNeeded(int trackNo,int len);
            bool             startNewRiff();
+           bool             writeOdmlChunk();
+           int              riffCount;
+           bool             writeLegacyIndex();
 
 public:
-                        aviIndexOdml(aviWrite *father,aviIndexAvi *cousin );
-                        aviIndexOdml(aviWrite *father,AviListAvi *lst) ;
+                        aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlChunk );
+                        aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk) ;
            virtual      ~aviIndexOdml();
            virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data);
            virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data);

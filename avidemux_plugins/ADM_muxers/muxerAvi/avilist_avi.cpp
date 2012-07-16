@@ -253,6 +253,47 @@ bool  AviListAvi::fill(uint32_t maxSize)
     return true;
 }
 /**
+    \fn EndAndPaddTilleSizeMatchesAviListAvi
+    \brief Warning we assume everything is even
+*/
+bool  AviListAvi::EndAndPaddTilleSizeMatches(int sizeFilled)
+{
+    uint64_t pos=Tell();            // Current position
+    uint64_t start=TellBegin()+8;   // Payload start
+    uint64_t end=start+sizeFilled;  // Next chunk
+    if(pos&1)
+        ADM_backTrack("[AVI]CHUNK is at a even position",__LINE__,__FILE__);
+    if(pos+8>end)
+    {
+        ADM_error("No space to add junk chunk ( %d, filler=%d)\n",(int)pos-start,sizeFilled);
+        if(end<=pos)
+        {
+            ADM_error("CHUNK OVERFLOW ( %d, filler=%d)\n",(int)pos-start,sizeFilled);
+            ADM_error("CHUNK OVERFLOW ( %d, filler=%d)\n",(int)pos-start,sizeFilled);
+            ADM_error("CHUNK OVERFLOW ( %d, filler=%d)\n",(int)pos-start,sizeFilled);
+            ADM_error("CHUNK OVERFLOW ( %d, filler=%d)\n",(int)pos-start,sizeFilled);       
+            ADM_backTrack("CHUNK overflow",__LINE__,__FILE__);
+            return false;
+        }
+
+        int left=(int)(end-pos);
+        for(int i=0;i<left;i++) Write8(0); // we dont have enough space to put a junk()
+        End();
+        return true;
+ 
+    }
+    End();
+    uint64_t left=end-8-pos;
+    AviListAvi junk("JUNK",getFile());
+    junk.Begin();
+    for(int i=0;i<left;i++)  // Inefficient, but can be fairly large
+            junk.Write8(0);
+    junk.End();
+    return true;
+
+}
+
+/**
     \fn writeChunkMem
     \brief 
 */
@@ -262,4 +303,5 @@ bool  AviListAvi::WriteChunkMem(const char *name,ADMMemio &mem)
 }
 
 // EOF
+
 

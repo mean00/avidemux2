@@ -27,7 +27,7 @@
 /**
     \fn ctor
 */
-aviIndexAvi::aviIndexAvi(aviWrite *father,AviListAvi *lst ): aviIndexBase(father,lst)  
+aviIndexAvi::aviIndexAvi(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk ): aviIndexBase(father,lst,odmlChunk)  
 {
   		
     LMovie = new AviListAvi ("LIST", father->_file);
@@ -125,8 +125,9 @@ int   aviIndexAvi::getNbVideoFrameForHeaders()
     \fn ctor
     \brief constructor for base class
 */
-aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst)
+aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk)
 {
+      odmlChunkPosition=odmlChunk;
       _masterList=lst;
       nbVideoFrame=0;   
       memset(audioFrameCount,0,sizeof(audioFrameCount));

@@ -43,6 +43,7 @@ public:
         bool  writeDummyChunk(int size, uint64_t *pos);
         bool  fill(uint32_t maxSize);
         bool  WriteChunkMem(const char *foo, ADMMemio &mem);
+        bool  EndAndPaddTilleSizeMatches(int sizeFilled);
         
 };
 #include "avi_utils.h"

@@ -35,7 +35,7 @@ protected:
            
 
 public:
-                        aviIndexAvi(aviWrite *father,AviListAvi *lst) ;
+                        aviIndexAvi(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk) ;
            virtual      ~aviIndexAvi();
            virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data);
            virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data);

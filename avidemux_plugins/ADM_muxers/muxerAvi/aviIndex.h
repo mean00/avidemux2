@@ -39,9 +39,10 @@ protected:
             int              audioFrameCount[ADM_AVI_MAX_AUDIO_TRACK];
             int              audioSizeCount[ADM_AVI_MAX_AUDIO_TRACK];
             uint64_t        openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK];
+            uint64_t        odmlChunkPosition;
 
 public:
-                                aviIndexBase(aviWrite *father,AviListAvi *lst) ;
+                                aviIndexBase(aviWrite *father,AviListAvi *lst,uint64_t odmlChunkPosition) ;
                             
            virtual              ~aviIndexBase() {};
            virtual bool         addVideoFrame( int len,uint32_t flags,const uint8_t *data)=0;

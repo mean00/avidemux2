@@ -438,7 +438,10 @@ uint8_t aviWrite::saveBegin (
         {
             writeAudioHeader(audiostream[i],&(audioTracks[i].header),0,i);
         }
-
+    // Put a place holder for the futur odml
+    // size = 248+12
+        uint64_t odmlChunkPosition;
+        LMain->writeDummyChunk(248+12,&odmlChunkPosition);    
 	LMain->End();
 	delete LMain;
 	LMain=NULL;
@@ -451,10 +454,10 @@ uint8_t aviWrite::saveBegin (
     {
         case AVI_MUXER_TYPE1:
         case AVI_MUXER_AUTO:
-                indexMaker=new aviIndexAvi(this,LAll);   
+                indexMaker=new aviIndexAvi(this,LAll,odmlChunkPosition);   
                 break;
         case AVI_MUXER_TYPE2:
-                indexMaker=new aviIndexOdml(this,LAll);   
+                indexMaker=new aviIndexOdml(this,LAll,odmlChunkPosition);   
                 break;
         default:
                 ADM_assert(0);
