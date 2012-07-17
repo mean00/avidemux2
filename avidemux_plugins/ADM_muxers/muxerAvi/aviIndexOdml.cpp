@@ -433,10 +433,14 @@ int   aviIndexOdml::getNbVideoFrameForHeaders()
 {
         return superIndex.trackIndeces[0].indeces.size();
 }
-static int compareEntryFunc(IdxEntry *a,IdxEntry *b)
+static int compareEntryFunc(const void *a, const void *b)
 {
-    if(a->offset==b->offset) return 0;
-    if(a->offset<b->offset) return -1;
+	const IdxEntry *idxEntry1 = static_cast<const IdxEntry*>(a);
+	const IdxEntry *idxEntry2 = static_cast<const IdxEntry*>(b);
+
+    if (idxEntry1->offset == idxEntry2->offset) return 0;
+    if (idxEntry1->offset < idxEntry2->offset) return -1;
+
     return 1;
 }
 /**
@@ -467,7 +471,7 @@ bool aviIndexOdml::writeLegacyIndex()
     }
     ADM_info("Preparing legacy index of size %d\n",nbEntries);
     // 2- sort it
-    qsort (legacy, nbEntries, sizeof(IdxEntry),  (__compar_fn_t)compareEntryFunc);
+    qsort (legacy, nbEntries, sizeof(IdxEntry), compareEntryFunc);
 
     // 3-write legacy index
     uint64_t pos;
