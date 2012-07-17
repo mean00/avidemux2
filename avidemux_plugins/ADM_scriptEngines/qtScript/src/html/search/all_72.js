@@ -15,7 +15,7 @@ var searchData=
   ['relativefilepath',['relativeFilePath',['../class_directory.html#aa34af8b79e68cdea0374a602c9848c50',1,'Directory']]],
   ['relativestarttime',['relativeStartTime',['../class_segment.html#aa666fbeba8e131a798d1bebdc392e570',1,'Segment']]],
   ['remove',['remove',['../class_directory.html#a8b885ff89465e10d73c745a61922fab5',1,'Directory::remove()'],['../class_file.html#a56b779b52a295a229bf94eb652dafa6a',1,'File::remove()']]],
-  ['removeat',['removeAt',['../class_audio_output_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'AudioOutputCollection::removeAt()'],['../class_video_filter_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'VideoFilterCollection::removeAt()']]],
+  ['removeat',['removeAt',['../class_audio_output_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'AudioOutputCollection::removeAt()'],['../class_combo_box_item_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'ComboBoxItemCollection::removeAt()'],['../class_control_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'ControlCollection::removeAt()'],['../class_video_filter_collection.html#a5e8a37a662c5dcfddcfd2993a758e75e',1,'VideoFilterCollection::removeAt()']]],
   ['removedirectory',['removeDirectory',['../class_directory.html#a8abfca5ad75bb03956df6cfea594d50f',1,'Directory']]],
   ['removeerror',['RemoveError',['../class_file.html#a0fc5ca7b299e9bb9272800a18217d21da690737c95295cfe55cea87d457a2bf3c',1,'File']]],
   ['removepath',['removePath',['../class_directory.html#a45d3127ff16cd2d89e998d8507dd360b',1,'Directory']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['value',['value',['../class_combo_box_item.html#a32147dacf0dd0bda3c39144c67347bf3',1,'ComboBoxItem::value()'],['../class_double_spin_box_control.html#aad1a0cadf6a67187c0478db7f1842f25',1,'DoubleSpinBoxControl::value()'],['../class_line_edit_control.html#a32147dacf0dd0bda3c39144c67347bf3',1,'LineEditControl::value()'],['../class_slider_control.html#aad1a0cadf6a67187c0478db7f1842f25',1,'SliderControl::value()'],['../class_spin_box_control.html#aad1a0cadf6a67187c0478db7f1842f25',1,'SpinBoxControl::value()']]],
   ['videocount',['videoCount',['../class_editor.html#a642eebdef4ab4962230ae8caf9c174da',1,'Editor']]],
   ['videodecoder',['VideoDecoder',['../class_video_decoder.html',1,'']]],
   ['videoencoder',['VideoEncoder',['../class_video_encoder.html',1,'']]],

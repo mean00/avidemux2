@@ -15,12 +15,20 @@
 
 #include "AudioEncoder.h"
 #include "AudioOutput.h"
+#include "CheckBoxControl.h"
+#include "ComboBoxControl.h"
+#include "ComboBoxItem.h"
+#include "Dialog.h"
 #include "Directory.h"
+#include "DoubleSpinBoxControl.h"
 #include "Editor.h"
 #include "File.h"
 #include "FileInformation.h"
 #include "FrameProperties.h"
+#include "LineEditControl.h"
 #include "Muxer.h"
+#include "SliderControl.h"
+#include "SpinBoxControl.h"
 #include "VideoEncoder.h"
 #include "VideoFilter.h"
 
@@ -165,6 +173,7 @@ namespace ADM_qtScript
         this->registerMuxerPlugins(&engine, &muxers);
         this->registerVideoEncoderPlugins(&engine, &videoEncoders);
         this->registerVideoFilterPlugins(&engine);
+		this->registerDialogClasses(&engine);
         this->registerScriptClasses(&engine, &muxers, &videoEncoders);
 
         QScriptValue result = engine.evaluate(script, name);
@@ -226,6 +235,49 @@ namespace ADM_qtScript
             object->setProperty(metaEnum.name(), enumClass);
         }
     }
+
+	void QtScriptEngine::registerDialogClasses(QScriptEngine *engine)
+	{
+		// Register Dialog class
+        QScriptValue dialogObject = engine->newFunction(Dialog::constructor);
+
+        engine->globalObject().setProperty("Dialog", dialogObject);
+
+		// Register CheckBoxControl class
+        QScriptValue checkBoxObject = engine->newFunction(CheckBoxControl::constructor);
+
+        engine->globalObject().setProperty("CheckBoxControl", checkBoxObject);
+
+		// Register ComboBoxControl class
+        QScriptValue comboBoxObject = engine->newFunction(ComboBoxControl::constructor);
+
+        engine->globalObject().setProperty("ComboBoxControl", comboBoxObject);
+
+		// Register ComboBoxItem class
+        QScriptValue comboBoxItemObject = engine->newFunction(ComboBoxItem::constructor);
+
+        engine->globalObject().setProperty("ComboBoxItem", comboBoxItemObject);
+
+		// Register DoubleSpinBoxControl class
+        QScriptValue doubleSpinBoxObject = engine->newFunction(DoubleSpinBoxControl::constructor);
+
+        engine->globalObject().setProperty("DoubleSpinBoxControl", doubleSpinBoxObject);
+
+		// Register LineEditControl class
+        QScriptValue lineEditObject = engine->newFunction(LineEditControl::constructor);
+
+        engine->globalObject().setProperty("LineEditControl", lineEditObject);
+
+		// Register SliderControl class
+        QScriptValue sliderObject = engine->newFunction(SliderControl::constructor);
+
+        engine->globalObject().setProperty("SliderControl", sliderObject);
+
+		// Register SpinBoxControl class
+        QScriptValue spinBoxObject = engine->newFunction(SpinBoxControl::constructor);
+
+        engine->globalObject().setProperty("SpinBoxControl", spinBoxObject);
+	}
 
     void QtScriptEngine::registerScriptEnums(
         QScriptEngine *engine, const QString& parentPropertyName, const QMetaObject* metaObject)

@@ -36,6 +36,7 @@ namespace ADM_qtScript
         static QScriptValue printFunction(QScriptContext *context, QScriptEngine *engine);
         void registerAudioEncoderPlugins(QScriptEngine *engine);
         void registerMuxerPlugins(QScriptEngine *engine, std::map<ADM_dynMuxer*, ADM_qtScript::Muxer*>* muxers);
+		void registerDialogClasses(QScriptEngine *engine);
         void registerScriptClasses(
             QScriptEngine *engine, std::map<ADM_dynMuxer*, ADM_qtScript::Muxer*>* muxers,
             std::map<ADM_videoEncoder6*, ADM_qtScript::VideoEncoder*>* videoEncoders);

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['decimals',['decimals',['../class_double_spin_box_control.html#aa320cfa5ff5286c3004bf90c73ecd74f',1,'DoubleSpinBoxControl']]],
   ['defaultfileextension',['defaultFileExtension',['../class_muxer.html#ab84aa1099d70c8e424759d0ae50b5747',1,'Muxer']]],
   ['directory',['directory',['../class_file_information.html#a61ba2799c174d913c2a6d86ee90756c6',1,'FileInformation']]],
   ['directoryname',['directoryName',['../class_directory.html#afdc66ee487ea0393ba12842695f06124',1,'Directory']]],

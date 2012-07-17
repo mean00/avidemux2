@@ -1,7 +1,8 @@
 set(ADM_script_headers
-	AudioEncoder.h  AudioOutput.h  AudioOutputCollectionPrototype.h  AudioProperties.h
-	Directory.h  Editor.h  File.h  FileInformation.h  FrameProperties.h  Muxer.h
-	Segment.h  SegmentCollectionPrototype.h  VideoDecoder.h  VideoEncoder.h
+	AudioEncoder.h  AudioOutput.h  AudioOutputCollectionPrototype.h  AudioProperties.h  CheckBoxControl.h
+	ComboBoxControl.h  ComboBoxItem.h  ComboBoxItemCollectionPrototype.h  Control.h  ControlCollectionPrototype.h
+	Dialog.h  Directory.h  DoubleSpinBoxControl.h  Editor.h  File.h  FileInformation.h  FrameProperties.h  LineEditControl.h
+	Muxer.h  	Segment.h  SegmentCollectionPrototype.h  SliderControl.h  SpinBoxControl.h  VideoDecoder.h  VideoEncoder.h
 	VideoFileProperties.h  VideoFilter.h  VideoFilterCollectionPrototype.h  VideoOutput.h)
 
 QT4_WRAP_CPP(ADM_qtScript_SRCS
@@ -13,11 +14,12 @@ set(ADM_script_headers
 set(ADM_qtScript_SRCS
 	${ADM_qtScript_SRCS}  QtScriptEngine.cpp  QtScriptObject.cpp  QtScriptConfigObject.cpp
 	QtScriptWriter.cpp  AdmScriptMapper.cpp  AudioEncoder.cpp  AudioOutput.cpp
-	AudioOutputCollection.cpp  AudioOutputCollectionPrototype.cpp  AudioProperties.cpp
-	Directory.cpp  Editor.cpp  File.cpp  FileInformation.cpp  FrameProperties.cpp  Muxer.cpp
-	Segment.cpp  SegmentCollection.cpp  SegmentCollectionPrototype.cpp  VideoDecoder.cpp
-	VideoEncoder.cpp  VideoFileProperties.cpp  VideoFilter.cpp  VideoFilterCollection.cpp
-	VideoFilterCollectionPrototype.cpp  VideoOutput.cpp)
+	AudioOutputCollection.cpp  AudioOutputCollectionPrototype.cpp  AudioProperties.cpp  CheckBoxControl.cpp
+	ComboBoxControl.cpp  ComboBoxItem.cpp  Control.cpp  Dialog.cpp  Directory.cpp  DoubleSpinBoxControl.cpp
+	Editor.cpp  File.cpp  FileInformation.cpp  FrameProperties.cpp  LineEditControl.cpp  Muxer.cpp  Segment.cpp
+	SegmentCollection.cpp  SegmentCollectionPrototype.cpp  SliderControl.cpp  SpinBoxControl.cpp  VideoDecoder.cpp
+	VideoEncoder.cpp  VideoFileProperties.cpp  VideoFilter.cpp  VideoFilterCollection.cpp  VideoFilterCollectionPrototype.cpp
+	VideoOutput.cpp)
 
 include_directories(
 	"${CMAKE_CURRENT_BINARY_DIR}"
@@ -29,7 +31,7 @@ add_definitions(-Werror -Wall)
 ADD_SCRIPT_ENGINE(ADM_script_qt SHARED ${ADM_qtScript_SRCS})
 target_link_libraries(
 	ADM_script_qt  ADM_coreAudioEncoder6  ADM_core6  ADM_coreDemuxer6  ADM_coreMuxer6
-	ADM_coreVideoEncoder6  ADM_coreVideoFilter6  ADM_coreUtils6  ADM_coreAudio6
+	ADM_coreUI6  ADM_coreVideoEncoder6  ADM_coreVideoFilter6  ADM_coreUtils6  ADM_coreAudio6
 	${QT_QTSCRIPT_LIBRARY}  ${QT_QTCORE_LIBRARY})
 INSTALL_SCRIPT_ENGINE(ADM_script_qt)
 

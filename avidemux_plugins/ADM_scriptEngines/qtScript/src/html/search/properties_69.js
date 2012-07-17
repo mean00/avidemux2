@@ -7,5 +7,6 @@ var searchData=
   ['isroot',['isRoot',['../class_directory.html#a9cdc9c0346bcf03c78b7c18f49fcd420',1,'Directory']]],
   ['issequential',['isSequential',['../class_file.html#a3c3d91b17c3cdbeb4a14a0307346a55a',1,'File']]],
   ['istextmodeenabled',['isTextModeEnabled',['../class_file.html#a4052de4fbe2f0e8a37f6bb302d8941f3',1,'File']]],
-  ['iswritable',['isWritable',['../class_file.html#a3ff311766c2c1c647d7ad7f478d3c427',1,'File']]]
+  ['iswritable',['isWritable',['../class_file.html#a3ff311766c2c1c647d7ad7f478d3c427',1,'File']]],
+  ['items',['items',['../class_combo_box_control.html#a9ae8741ea726bf471bf1b0ccb20a1641',1,'ComboBoxControl']]]
 ];

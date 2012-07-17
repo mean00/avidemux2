@@ -4,7 +4,7 @@ var searchData=
   ['ignorecase',['IgnoreCase',['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852aba130475f566eccc004060107d9d798f',1,'Directory']]],
   ['imagetype',['ImageType',['../class_editor.html#a3154c405c975616503bac23f51b78fc0',1,'Editor']]],
   ['include',['include',['../group__global_functions.html#gaa83a65ac17a82a1b2aeef63e38796a79',1,'Doxygen_Functions.h']]],
-  ['insert',['insert',['../class_audio_output_collection.html#ab66e06c6f6a5c01a2145de4b446aedbb',1,'AudioOutputCollection::insert(Number index, Number inputTrackIndex, AudioEncoder encoder=new CopyAudioEncoder())'],['../class_audio_output_collection.html#a00264873cdabd5038686a05acc51f608',1,'AudioOutputCollection::insert(Number index, String externalAudioFile, AudioEncoder encoder=new CopyAudioEncoder())'],['../class_video_filter_collection.html#af622456058a97848e1506ffc445b8c2a',1,'VideoFilterCollection::insert()']]],
+  ['insert',['insert',['../class_audio_output_collection.html#ab66e06c6f6a5c01a2145de4b446aedbb',1,'AudioOutputCollection::insert(Number index, Number inputTrackIndex, AudioEncoder encoder=new CopyAudioEncoder())'],['../class_audio_output_collection.html#a00264873cdabd5038686a05acc51f608',1,'AudioOutputCollection::insert(Number index, String externalAudioFile, AudioEncoder encoder=new CopyAudioEncoder())'],['../class_combo_box_item_collection.html#a0c7304b1a0a24e5ea91a3bdda1b44be4',1,'ComboBoxItemCollection::insert(Number index, ComboBoxItem item)'],['../class_combo_box_item_collection.html#a045deef86c4e3cf9950ab4fb04f3b26e',1,'ComboBoxItemCollection::insert(Number index, String title, String value=&quot;&quot;)'],['../class_control_collection.html#acf7a4d126350158070e60ca637b199b9',1,'ControlCollection::insert()'],['../class_video_filter_collection.html#af622456058a97848e1506ffc445b8c2a',1,'VideoFilterCollection::insert()']]],
   ['intra',['Intra',['../class_editor.html#ad1df5ca2be5fb8fbfd1f8de96375999ca8e8a60e31f7af35bff2631556c2e9a20',1,'Editor']]],
   ['isabsolute',['isAbsolute',['../class_directory.html#acdee9b57b254fc8185f5370cbc32ae1b',1,'Directory::isAbsolute()'],['../class_file_information.html#a49a223d9190249c794c0b131a462057d',1,'FileInformation::isAbsolute()']]],
   ['isbundle',['isBundle',['../class_file_information.html#a7fed106fdab84eb147a5d4abd930578d',1,'FileInformation']]],
@@ -20,5 +20,6 @@ var searchData=
   ['issymlink',['isSymLink',['../class_file_information.html#a71f2c2b7c32c24ac8d04bc34c881f417',1,'FileInformation']]],
   ['istextmodeenabled',['isTextModeEnabled',['../class_file.html#a4052de4fbe2f0e8a37f6bb302d8941f3',1,'File']]],
   ['isvideoopen',['isVideoOpen',['../class_editor.html#a0c02b583c10a26a4bfcd483bdb94e355',1,'Editor']]],
-  ['iswritable',['isWritable',['../class_file.html#a3ff311766c2c1c647d7ad7f478d3c427',1,'File::isWritable()'],['../class_file_information.html#a7797c77a18993d90d184eb1ad4d19e04',1,'FileInformation::isWritable()']]]
+  ['iswritable',['isWritable',['../class_file.html#a3ff311766c2c1c647d7ad7f478d3c427',1,'File::isWritable()'],['../class_file_information.html#a7797c77a18993d90d184eb1ad4d19e04',1,'FileInformation::isWritable()']]],
+  ['items',['items',['../class_combo_box_control.html#a9ae8741ea726bf471bf1b0ccb20a1641',1,'ComboBoxControl']]]
 ];

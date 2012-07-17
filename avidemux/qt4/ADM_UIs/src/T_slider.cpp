@@ -127,8 +127,8 @@ void diaElemUSlider::setMe(void *dialog, void *opaque,uint32_t line)
   text->setBuddy (slider);
 
   QGridLayout *layout = (QGridLayout*) opaque;
-  layout->addWidget(text,line,0,1,2);
-  layout->addWidget(slider,line + 1,0,1,2);
+  layout->addWidget(text,line,0);
+  layout->addWidget(slider,line,1);
 }
 
 void diaElemUSlider::getMe(void)
@@ -184,8 +184,8 @@ void diaElemSlider::setMe(void *dialog, void *opaque,uint32_t line)
   text->setBuddy (slider);
 
   QGridLayout *layout = (QGridLayout*) opaque;
-  layout->addWidget(text,line,0,1,2);
-  layout->addWidget(slider,line + 1,0,1,2);
+  layout->addWidget(text,line,0);
+  layout->addWidget(slider,line,1);
 }
 
 void diaElemSlider::getMe(void)

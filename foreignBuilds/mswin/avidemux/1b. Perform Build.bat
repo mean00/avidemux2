@@ -61,30 +61,16 @@ rem if errorlevel 1 goto error
 
 rem ## Plugins ##
 set msysSourceDir=%sourceDir:\=/%
-set cmakePluginArgs=-G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DAVIDEMUX_SOURCE_DIR="%msysSourceDir%" %DebugFlags% ../../avidemux_plugins
-
-cd "%sourceDir%\%buildPluginCommonFolder%"
-cmake %cmakePluginArgs% -DPLUGIN_UI=COMMON -DUSE_SYSTEM_SPIDERMONKEY=ON -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%"
+cd "%sourceDir%\%buildPluginFolder%"
+cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DAVIDEMUX_SOURCE_DIR="%msysSourceDir%" -DPLUGIN_UI=ALL -DUSE_SYSTEM_SPIDERMONKEY=ON -DCMAKE_INCLUDE_PATH="%SpiderMonkeySourceDir%" -DCMAKE_LIBRARY_PATH="%SpiderMonkeyLibDir%" %DebugFlags% ../../avidemux_plugins
 
 if errorlevel 1 goto error
-if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" "%sourceDir%\%buildPluginCommonFolder%\AdmPlugins.layout"
-pause
-
-cd "%sourceDir%\%buildPluginQtFolder%"
-cmake %cmakePluginArgs% -DPLUGIN_UI=QT4
-
-if errorlevel 1 goto error
-if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" "%sourceDir%\%buildPluginQtFolder%\AdmPlugins.layout"
+if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" "%sourceDir%\%buildPluginFolder%\AdmPlugins.layout"
 pause
 
 rem ## Plugins ##
+cd "%sourceDir%\%buildPluginFolder%"
 rmdir /s /q "%buildDir%\plugins" 2> NUL
-
-cd "%sourceDir%\%buildPluginCommonFolder%"
-mingw32-make install
-if errorlevel 1 goto error
-
-cd "%sourceDir%\%buildPluginQtFolder%"
 mingw32-make install
 if errorlevel 1 goto error
 
