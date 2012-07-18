@@ -18,7 +18,7 @@
 #include "config.h"
 #include <gtk/gtk.h>
 
-#ifdef __WIN32
+#ifdef _WIN32
 #include <gdk/gdkwin32.h>
 #elif defined(__APPLE__)
 extern "C"
@@ -106,7 +106,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 		win = gtk_widget_get_window(widget);
 		parentWin = gtk_widget_get_parent_window(widget);
 
-#ifdef __WIN32
+#ifdef _WIN32
 		xinfo->display = (void*)GDK_WINDOW_HWND(win);
 #elif defined(__APPLE__)
 		xinfo->display = 0;

@@ -301,7 +301,7 @@ void TLK_getDate(ADM_date *date)
 
 bool shutdown(void)
 {
-#ifdef __WIN32
+#ifdef _WIN32
 	return (shutdown_win32() == 0);
 #else
 	return (system("shutdown -P 0") == 0);

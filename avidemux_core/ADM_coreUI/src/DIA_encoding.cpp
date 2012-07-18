@@ -32,7 +32,7 @@ DIA_encodingBase::DIA_encodingBase( uint64_t duration,bool systray )
         _originalPriority=getpriority(PRIO_PROCESS, 0);
         #endif
         _totalDurationUs=duration;
-#ifdef __WIN32
+#ifdef _WIN32
         _originalPriority=getpriority(PRIO_PROCESS, 0);
 #endif
         _useSystray=systray;
@@ -45,7 +45,7 @@ DIA_encodingBase::DIA_encodingBase( uint64_t duration,bool systray )
 DIA_encodingBase::~DIA_encodingBase( )
 {
     ADM_info("DiaEncodingBase: Destroying\n");
-#ifdef __WIN32
+#ifdef _WIN32
 	setpriority(PRIO_PROCESS, 0, _originalPriority);
 #endif
 }

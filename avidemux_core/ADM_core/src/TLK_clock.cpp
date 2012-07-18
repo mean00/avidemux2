@@ -43,7 +43,7 @@ static uint8_t inited=0;
 static struct timeval _itimev;
 static uint32_t getAbsTime( void );
 
-#ifndef __WIN32
+#ifndef _WIN32
 #include <unistd.h>
 
 void ADM_usleep(unsigned long us)

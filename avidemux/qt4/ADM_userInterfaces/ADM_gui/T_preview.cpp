@@ -23,7 +23,7 @@
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
-#elif !defined(__WIN32)
+#elif !defined(_WIN32)
 #include <QtGui/QX11Info>
 #endif
 
@@ -196,7 +196,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 	QWidget* widget = videoWindow->parentWidget();
     xinfo->widget = videoWindow;
 
-#if defined(__WIN32)
+#if defined(_WIN32)
 	xinfo->display=videoWindow->winId();
 #elif defined(__APPLE__)
 	#if defined(ADM_CPU_X86_64)

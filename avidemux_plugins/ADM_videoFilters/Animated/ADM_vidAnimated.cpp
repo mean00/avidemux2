@@ -116,7 +116,7 @@ ADMVideoAnimated::ADMVideoAnimated(AVDMGenericVideoStream *in,CONFcouple *couple
             MKP(isNTSC,0);
             MKP(vignetteW,160);
             MKP(vignetteH,120);
-#ifdef __WIN32
+#ifdef _WIN32
        MKP(backgroundImg,(ADM_filename *)ADM_strdup("c:\\test.jpg"));
 #else
             MKP(backgroundImg,(ADM_filename *)ADM_strdup("/tmp/taist.jpg"));

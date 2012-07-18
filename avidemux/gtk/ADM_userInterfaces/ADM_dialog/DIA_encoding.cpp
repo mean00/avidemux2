@@ -73,7 +73,7 @@ static gboolean windowClosed(GtkWidget*, GdkEvent*, gpointer)
 
 static void shutdownChanged(GtkToggleButton* togglebutton, gpointer) 
 {
-#ifndef __WIN32
+#ifndef _WIN32
     if (getuid() != 0)
     {
         g_signal_handler_block(togglebutton, id1);
@@ -87,7 +87,7 @@ static void shutdownChanged(GtkToggleButton* togglebutton, gpointer)
 
 static void priorityChanged(GtkComboBox* combo, gpointer)
 {
-#ifndef __WIN32
+#ifndef _WIN32
     if (getuid() != 0)
     {
         g_signal_handler_block(combo, id2);
@@ -123,7 +123,7 @@ DIA_encodingGtk::DIA_encodingGtk(uint64_t duration,bool tray) : DIA_encodingBase
 
     GtkWidget* combo = GW(comboboxPriority);
 
-#ifndef __WIN32
+#ifndef _WIN32
     if (getuid() != 0)
     {
         // set priority to normal, regardless of preferences
@@ -140,7 +140,7 @@ DIA_encodingGtk::DIA_encodingGtk(uint64_t duration,bool tray) : DIA_encodingBase
 
     prefs->get(PRIORITY_ENCODING, &priority);
 
-#ifndef __WIN32
+#ifndef _WIN32
     //check for root privileges
     if (getuid() == 0)
     {

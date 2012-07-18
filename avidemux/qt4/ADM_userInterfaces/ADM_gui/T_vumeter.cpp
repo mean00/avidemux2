@@ -21,7 +21,7 @@
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
-#elif !defined(__WIN32)
+#elif !defined(_WIN32)
 #include <QtGui/QX11Info>
 #endif
 #include "ADM_default.h"

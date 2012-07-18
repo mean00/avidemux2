@@ -154,7 +154,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 					** you cannot overwrite segment data files, all files are kept open and
 					** are detected here
 					*/
-#ifndef __WIN32
+#ifndef _WIN32
 					if( stat(name,&buf) == -1 ){
 						fprintf(stderr,"stat(%s) failed\n",name);
 						return;

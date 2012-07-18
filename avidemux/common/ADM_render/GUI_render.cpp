@@ -326,7 +326,7 @@ bool spawnRenderer(void)
 
 #if  defined(USE_SDL)
 			case RENDER_SDL:
-#ifdef __WIN32
+#ifdef _WIN32
 			case RENDER_DIRECTX:
 #endif
 				renderer=new sdlRender();

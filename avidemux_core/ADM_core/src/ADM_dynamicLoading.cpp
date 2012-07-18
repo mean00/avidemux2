@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#ifdef __WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dlfcn.h>
@@ -26,7 +26,7 @@
 
 #include "ADM_default.h"
 #include "ADM_dynamicLoading.h"
-#ifdef __WIN32
+#ifdef _WIN32
 extern int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
 #endif
 
@@ -49,7 +49,7 @@ ADM_LibWrapper::~ADM_LibWrapper()
 	{
 		aprintf("Unloading library 0x%08x\n", hinstLib);
 
-	#ifdef __WIN32
+	#ifdef _WIN32
 		FreeLibrary((HINSTANCE) hinstLib);
 	#else
 		dlclose(hinstLib);
@@ -62,7 +62,7 @@ bool ADM_LibWrapper::isAvailable()
 	return initialised;
 }
 
-#ifdef __WIN32
+#ifdef _WIN32
 char* ADM_LibWrapper::formatMessage(uint32_t msgCode)
 {
 	char* lpMsgBuf;
@@ -75,7 +75,7 @@ char* ADM_LibWrapper::formatMessage(uint32_t msgCode)
 
 bool ADM_LibWrapper::loadLibrary(const char* path)
 {
-#ifdef __WIN32
+#ifdef _WIN32
 	int pathLength = utf8StringToWideChar(path, -1, NULL);
 	wchar_t wcPath[pathLength];
 
@@ -118,7 +118,7 @@ bool ADM_LibWrapper::loadLibrary(const char* path)
 
 void* ADM_LibWrapper::getSymbol(const char* name)
 {
-#ifdef __WIN32
+#ifdef _WIN32
 	void* procAddr = (void*)GetProcAddress((HINSTANCE) hinstLib, name);
 
 	if (procAddr == NULL)

@@ -105,7 +105,7 @@ bool jobWindow::runProcess(spawnData *data)
     argv[1]=string(str);
     argv[2]=string("--runpy \"")+data->script+string("\" ");
     argv[3]=string("--save \"")+data->outputFile+string("\" ");
-#ifndef __WIN32
+#ifndef _WIN32
     argv[4]=string("--quit > /tmp/prout.log");
 #else
     argv[4]=string("--quit ");

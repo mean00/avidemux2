@@ -17,7 +17,7 @@
 #ifndef ADM_DYNAMICLOADING_H
 #define ADM_DYNAMICLOADING_H
 
-#ifdef __WIN32
+#ifdef _WIN32
 #include "ADM_inttype.h"
 
 #define SHARED_LIB_EXT "dll"
@@ -33,7 +33,7 @@ class ADM_LibWrapper
 		void* hinstLib;
 		bool initialised;
 
-	#ifdef __WIN32
+	#ifdef _WIN32
 		virtual char* formatMessage(uint32_t msgCode);
 	#endif
 

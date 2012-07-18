@@ -59,7 +59,7 @@ uint8_t DIA_builtin(void)
         freetype=1;
 #endif
 
-#ifdef __WIN32
+#ifdef _WIN32
         win32=1;
 #endif
 

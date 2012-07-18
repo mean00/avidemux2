@@ -26,7 +26,7 @@
  #include <Carbon/Carbon.h>
 #else
  #include <fcntl.h>
- #ifdef __WIN32
+ #ifdef _WIN32
   #include <direct.h>
   #include <shlobj.h>
  #endif
@@ -34,7 +34,7 @@
 
 #include "ADM_default.h"
 
-#ifdef __WIN32
+#ifdef _WIN32
 static const char *SEPARATOR="\\";
 #else
 static const char *SEPARATOR="/";
@@ -144,7 +144,7 @@ FILE *ADM_fopen(const char *file, const char *mode)
 #endif
 }
 
-#if __WIN32
+#if _WIN32
 extern "C"
 {
 	// libavformat uses open (in the file_open function) so we need to override that too.
@@ -349,7 +349,7 @@ char *ADM_getHomeRelativePath(const char *base1, const char *base2, const char *
 
 char *ADM_getInstallRelativePath(const char *base1, const char *base2, const char *base3)
 {
-#ifdef __WIN32
+#ifdef _WIN32
 	wchar_t wcModuleName[MAX_PATH];
 
 	GetModuleFileNameW(0, wcModuleName, sizeof(wcModuleName) / sizeof(wchar_t));
@@ -403,7 +403,7 @@ void ADM_initBaseDir(bool portableMode)
 	char *home = NULL;
 
 	// Get the base directory
-#ifdef __WIN32
+#ifdef _WIN32
     if (portableMode)
     {
         // Portable mode...
@@ -476,7 +476,7 @@ void ADM_initBaseDir(bool portableMode)
 	}
 }
 
-#ifdef __WIN32
+#ifdef _WIN32
 #define DIR _WDIR
 #define dirent _wdirent
 #define opendir _wopendir
@@ -492,7 +492,7 @@ uint8_t ADM_mkdir(const char *dirname)
 {
 	DIR *dir = NULL;
 
-#ifdef __WIN32
+#ifdef _WIN32
 	int dirNameLength = utf8StringToWideChar(dirname, -1, NULL);
 	wchar_t dirname2[dirNameLength];
 
@@ -510,7 +510,7 @@ uint8_t ADM_mkdir(const char *dirname)
 		closedir(dir);
 		return 1;
 	}
-#ifdef __WIN32
+#ifdef _WIN32
 	if (_wmkdir(dirname2))
 	{
 		printf("Oops: mkdir failed on %s\n", dirname);
@@ -543,7 +543,7 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 
 	ADM_assert(extlen);
 
-#ifdef __WIN32
+#ifdef _WIN32
 	int dirNameLength = utf8StringToWideChar(base, -1, NULL);
 	wchar_t base2[dirNameLength];
 
@@ -558,7 +558,7 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 
 	while ((direntry = readdir(dir)))
 	{
-#ifdef __WIN32
+#ifdef _WIN32
 		int dirLength = wideCharStringToUtf8(direntry->d_name, -1, NULL);
 		char d_name[dirLength];
 
@@ -665,7 +665,7 @@ char *ADM_PathCanonize(const char *tmpname)
 	{
 		out = new char[strlen(path) + 2];
 		strcpy(out, path);
-#ifndef __WIN32
+#ifndef _WIN32
 		strcat(out, "/");
 #else
 		strcat(out, "\\");
@@ -673,7 +673,7 @@ char *ADM_PathCanonize(const char *tmpname)
 		printf("\n Canonizing null string ??? (%s)\n", out);
 	}
 	else if (tmpname[0] == '/'
-#if defined(__WIN32)
+#if defined(_WIN32)
 		|| tmpname[1] == ':'
 #endif
 		)
@@ -687,7 +687,7 @@ char *ADM_PathCanonize(const char *tmpname)
 	{
 		out = new char[strlen(path) + strlen(tmpname) + 6];
 		strcpy(out, path);
-#ifndef __WIN32
+#ifndef _WIN32
 		strcat(out, "/");
 #else
 		strcat(out, "\\");
@@ -714,7 +714,7 @@ void ADM_PathStripName(char *str)
 
 	len--;
 
-#ifndef __WIN32
+#ifndef _WIN32
 	while (*(str + len) != '/' && len)
 #else
 	while (*(str + len) != '\\' && len)
@@ -734,7 +734,7 @@ const char *ADM_GetFileName(const char *str)
 {
 	const char *filename;
 
-#ifndef __WIN32
+#ifndef _WIN32
 	filename = strrchr(str, '/');
 #else
 	const char *filename2;

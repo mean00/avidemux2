@@ -1,4 +1,4 @@
-#ifdef __WIN32
+#ifdef _WIN32
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -540,4 +540,4 @@ void freeUtf8CommandLine(int argc, char *argv[])
 	delete [] argv;
 }
 
-#endif	// __WIN32
+#endif	// _WIN32

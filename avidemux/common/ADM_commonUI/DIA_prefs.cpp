@@ -23,7 +23,7 @@
 
 #include "DIA_factory.h"
 
-#ifdef __WIN32
+#ifdef _WIN32
 #include "ADM_render/GUI_sdlRender.h"
 #endif
 
@@ -243,7 +243,7 @@ bool     hasOpenGl=false;
 #endif
 
 #ifdef USE_SDL
-#ifdef __WIN32
+#ifdef _WIN32
                              ,{RENDER_SDL,      QT_TR_NOOP("MS Windows GDI (SDL)"),NULL}
 							 ,{RENDER_DIRECTX,      QT_TR_NOOP("MS Windows DirectX (SDL)"),NULL}
 #else
@@ -440,7 +440,7 @@ bool     hasOpenGl=false;
                 // Alternate mp3 tag (haali)
                 prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 
-			#if defined(__WIN32) && defined(USE_SDL)
+			#if defined(_WIN32) && defined(USE_SDL)
 				// Initialise SDL again as driver may have changed
 				initSdl(render);
 			#endif

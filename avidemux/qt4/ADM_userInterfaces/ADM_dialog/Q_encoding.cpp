@@ -31,7 +31,7 @@ encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitl
  {
 	ui.setupUi(this);
 
-#ifndef __WIN32
+#ifndef _WIN32
 	//check for root privileges
 	if (getuid() == 0)
 	{
@@ -49,7 +49,7 @@ encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitl
 
 	prefs->get(PRIORITY_ENCODING,&priority);	
 
-#ifndef __WIN32
+#ifndef _WIN32
 	// check for root privileges
 	if (getuid() == 0)
 	{
@@ -68,7 +68,7 @@ void encodingWindow::buttonPressed(void)
 
 void encodingWindow::priorityChanged(int priorityLevel)
 {
-#ifndef __WIN32
+#ifndef _WIN32
 	if (getuid() != 0)
 	{
 		ui.comboBoxPriority->disconnect(SIGNAL(currentIndexChanged(int)));
@@ -88,7 +88,7 @@ void encodingWindow::priorityChanged(int priorityLevel)
 
 void encodingWindow::shutdownChanged(int state)
 {
-#ifndef __WIN32
+#ifndef _WIN32
 	if (getuid() != 0)
 	{
 		ui.checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));

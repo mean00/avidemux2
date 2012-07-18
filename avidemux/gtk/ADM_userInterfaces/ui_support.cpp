@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 
-#ifdef __WIN32
+#ifdef _WIN32
 #include <gdk/gdkwin32.h>
 #elif defined(__APPLE__)
 extern "C" int getMainNSWindow(void);
@@ -58,7 +58,7 @@ void getMainWindowHandles(long int *handle,long int *nativeHandle)
 {
 	*handle = (long int)guiRootWindow;
 
-#ifdef __WIN32
+#ifdef _WIN32
 	*nativeHandle = (long int)gtk_widget_get_window(guiRootWindow);
 #elif defined(__APPLE__)
 	*nativeHandle = (long int)getMainNSWindow();

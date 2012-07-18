@@ -121,7 +121,7 @@ void            ADM_usleep(unsigned long us);
 #define LU  PRIu32
 
 // ADM_cleanupPath returns a cleaned up copy of the parameter
-#ifdef __WIN32
+#ifdef _WIN32
 		char *ADM_slashToBackSlash(const char *in);
         #define ADM_cleanupPath(x) ADM_slashToBackSlash(x)
 #else

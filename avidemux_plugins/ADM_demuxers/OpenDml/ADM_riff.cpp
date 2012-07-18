@@ -23,7 +23,7 @@
 
 uint64_t riffParser::getPos( void ) 
 { 
-#ifdef __WIN32
+#ifdef _WIN32
         aprintf("pos : %I64u / %I64u \n",curPos,ftello(fd));
 #else
 	aprintf("pos : %llu / %llu \n",curPos,ftello(fd));
@@ -52,7 +52,7 @@ uint8_t riffParser::skip(uint32_t s)
 }
 uint8_t riffParser::endReached(void)
 {
-#ifdef __WIN32
+#ifdef _WIN32
         aprintf("Cur : %I64u end : %I64u left: %I64u\n",curPos,endPos,endPos-curPos);
 #else
 	aprintf("Cur : %llu end : %llu left: %llu\n",curPos,endPos,endPos-curPos);

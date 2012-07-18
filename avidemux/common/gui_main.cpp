@@ -575,7 +575,7 @@ int A_openAvi (const char *name)
         }
 	for(i=strlen(longname);i>=0;i--)
     {
-#ifdef __WIN32
+#ifdef _WIN32
 		if( longname[i] == '\\' || longname[i] == '/' )
 #else
 		if( longname[i] == '/' )
@@ -1149,7 +1149,7 @@ ADM_RENDER_TYPE UI_getPreferredRender(void)
   unsigned int renderI;
   ADM_RENDER_TYPE render;
 
-#if !defined __WIN32 && !defined(__APPLE__)
+#if !defined _WIN32 && !defined(__APPLE__)
         // First check if local
         // We do it in a very wrong way : If DISPLAY!=:0.0 we assume remote display
         // in that case we do not even try to use accel

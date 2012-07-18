@@ -42,7 +42,7 @@ extern EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptio
 extern void installSigHandler(void);
 #endif
 
-#ifdef __WIN32
+#ifdef _WIN32
 extern bool getWindowsVersion(char* version);
 extern void redirectStdoutToFile(void);
 #endif
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
 	printf("Build Target: ");
 
-#if defined(__WIN32)
+#if defined(_WIN32)
 	printf("Microsoft Windows");
 #elif defined(__APPLE__)
 	printf("Apple");
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 
 	printf("\n");
 
-#ifdef __WIN32
+#ifdef _WIN32
 	char version[250];
 
 	if (getWindowsVersion(version))

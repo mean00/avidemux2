@@ -84,7 +84,7 @@ std::vector<MenuEntry> myMenuAudio(_myMenuAudio, _myMenuAudio + sizeof(_myMenuAu
 static const MenuEntry _myMenuHelp[] = {
             {MENU_ACTION,"Build Option",    NULL,ACT_BUILT_IN           ,NULL,NULL},
             {MENU_ACTION,"Plugins",         NULL,ACT_PLUGIN_INFO        ,NULL,NULL},
-#ifdef __WIN32
+#ifdef _WIN32
 			{MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},
 			{MENU_SUBMENU, "&Advanced", NULL, ACT_DUMMY, NULL, NULL},
 			{MENU_SUBACTION, "Open Application &Log", NULL, ACT_OPEN_APP_LOG, NULL, NULL},

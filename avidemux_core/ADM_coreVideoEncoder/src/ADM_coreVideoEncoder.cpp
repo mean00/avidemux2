@@ -29,7 +29,7 @@ extern "C"
 #include "libavcodec/avcodec.h"
 }
 
-#ifdef __WIN32
+#ifdef _WIN32
 const std::string slash=std::string("\\");
 #else
 const std::string slash=std::string("/");
@@ -193,7 +193,7 @@ static bool getFileNameAndExt(const std::string &input, std::string &output)
      lastSlash=s.find_last_of("/");
      if(lastSlash!=-1)
         s.replace(0,lastSlash+1,std::string(""));
-#ifdef __WIN32
+#ifdef _WIN32
      size_t lastBackSlash=s.find_last_of("\\");
      if(lastBackSlash!=-1)
         s.replace(0,lastBackSlash+1,std::string(""));

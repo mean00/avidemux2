@@ -52,7 +52,7 @@ static uint8_t sdl_running=0;
 static SDL_Overlay *sdl_overlay=NULL;
 static SDL_Surface *sdl_display=NULL;
 static SDL_Rect disp;
-#ifdef __WIN32
+#ifdef _WIN32
 HWND sdlWin32;
 #endif
 /**
@@ -117,7 +117,7 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
 
 
     // Hack to get SDL to use GTK window, ugly but works
-#if !defined(__WIN32) && !defined(__APPLE__)
+#if !defined(_WIN32) && !defined(__APPLE__)
 	char SDL_windowhack[32];
     int winId=(int)window->window;
 
@@ -135,7 +135,7 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
     ADM_info("SDL subsystem init ok\n");
     // Do it twice as the 1st time does not work
     // Hack to get SDL to use GTK window, ugly but works
-#if !defined(__WIN32) && !defined(__APPLE__)
+#if !defined(_WIN32) && !defined(__APPLE__)
     putenv(SDL_windowhack);
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
@@ -150,7 +150,7 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
     flags = SDL_ANYFORMAT | SDL_HWPALETTE | SDL_HWSURFACE | SDL_NOFRAME;
     bpp= SDL_VideoModeOK( w, h,  32, flags );
 
-#ifdef __WIN32
+#ifdef _WIN32
 	// SDL window is created and displayed before we get a chance to set the parent.
 	// Therefore, align the SDL overlay with the client area before it is displayed.
 	POINT screenPoint = {};
@@ -192,7 +192,7 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
 
     SDL_LockSurface(sdl_display);
 
-#ifdef __WIN32
+#ifdef _WIN32
 	struct SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
 
@@ -261,7 +261,7 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
 */
 bool sdlRender::displayImage(ADMImage *pic)
 {
-#ifdef __WIN32
+#ifdef _WIN32
 	// DirectX playback doesn't refresh correctly if the parent window is moved.
 	// Detect when the parent window has moved and force a coordinate update.
 	if (strcmp(getenv("SDL_VIDEODRIVER"), "directx") == 0)
@@ -354,7 +354,7 @@ void initSdl(int videoDevice)
 
     printf("[SDL] Version: %u.%u.%u\n",SDL_Linked_Version()->major, SDL_Linked_Version()->minor, SDL_Linked_Version()->patch);
 
-#ifdef __WIN32
+#ifdef _WIN32
 	if(videoDevice == RENDER_DIRECTX)
 	{
 		printf("[SDL] Setting video driver to Microsoft DirectX\n");

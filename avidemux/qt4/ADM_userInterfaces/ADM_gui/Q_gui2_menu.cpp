@@ -139,7 +139,7 @@ void MainWindow::addScriptReferencesToHelpMenu()
 
 void MainWindow::scriptReferenceActionHandler()
 {
-#ifdef __WIN32
+#ifdef _WIN32
     QString referenceFile = QCoreApplication::applicationDirPath() + "/help/" + ((FileAction*)sender())->filePath();
 #else
     QString referenceFile = ADM_getInstallRelativePath(

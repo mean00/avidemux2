@@ -68,7 +68,7 @@ typedef enum
 #ifdef USE_SDL
         RENDER_SDL=2,
 
-#ifdef __WIN32
+#ifdef _WIN32
 		RENDER_DIRECTX=3,
 #endif
 #endif

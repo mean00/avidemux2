@@ -55,7 +55,7 @@ const char      *ADM_epochToString(uint64_t epoch);
 	#endif
 #endif
 
-#ifdef __WIN32
+#ifdef _WIN32
 	#define PRIO_MIN -20
 	#define PRIO_MAX 20
 	#define PRIO_PROCESS 0
