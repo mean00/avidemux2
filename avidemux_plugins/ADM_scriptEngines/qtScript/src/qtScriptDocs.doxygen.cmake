@@ -1,4 +1,4 @@
-# Doxyfile 1.8.1.1
+# Doxyfile 1.8.1.2
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project.
@@ -735,7 +735,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see
 # the \image command).
 
-IMAGE_PATH             =
+IMAGE_PATH             = ${CMAKE_CURRENT_SOURCE_DIR}\image
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program
@@ -897,7 +897,7 @@ HTML_FOOTER            = ${CMAKE_CURRENT_SOURCE_DIR}/footer.html
 # fine-tune the look of the HTML output. If the tag is left blank doxygen
 # will generate a default style sheet. Note that doxygen will try to copy
 # the style sheet file to the HTML output directory, so don't put your own
-# stylesheet in the HTML output directory as well, or it will be erased!
+# style sheet in the HTML output directory as well, or it will be erased!
 
 HTML_STYLESHEET        =
 
@@ -911,7 +911,7 @@ HTML_STYLESHEET        =
 HTML_EXTRA_FILES       =
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output.
-# Doxygen will adjust the colors in the stylesheet and background images
+# Doxygen will adjust the colors in the style sheet and background images
 # according to this color. Hue is specified as an angle on a colorwheel,
 # see http://en.wikipedia.org/wiki/Hue for more information.
 # For instance the value 0 represents red, 60 is yellow, 120 is green,
@@ -1339,7 +1339,7 @@ COMPACT_RTF            = NO
 
 RTF_HYPERLINKS         = NO
 
-# Load stylesheet definitions from file. Syntax is similar to doxygen's
+# Load style sheet definitions from file. Syntax is similar to doxygen's
 # config file, i.e. a series of assignments. You only have to provide
 # replacements, missing definitions are set to their default value.
 

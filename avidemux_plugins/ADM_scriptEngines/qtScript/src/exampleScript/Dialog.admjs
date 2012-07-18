@@ -1,0 +1,29 @@
+var dialog = new Dialog("Test Window");
+var checkBox = new CheckBoxControl("Test CheckBox", true);
+var spinBox = new SpinBoxControl("Test SpinBox:", 0, 100, 43);
+var doubleSpinBox = new DoubleSpinBoxControl("Test DoubleSpinBox:", 0, 100, 48.3);
+var lineEdit = new LineEditControl("Test LineEdit:", "text");
+var slider = new SliderControl("Test Slider:", 0, 100, 13, 5);
+var comboBox = new ComboBoxControl("Test ComboBox:");
+
+comboBox.items.add("item 1", "value 1");
+comboBox.items.add(new ComboBoxItem("item 2", "value 2"));
+comboBox.selectedItemIndex = 1;
+
+dialog.controls.add(checkBox);
+dialog.controls.add(spinBox);
+dialog.controls.add(doubleSpinBox);
+dialog.controls.add(lineEdit);
+dialog.controls.add(slider);
+dialog.controls.add(comboBox);
+
+print("Dialog Result: " + dialog.show());
+
+print("CheckBox - Value: " + checkBox.checked);
+print("SpinBox - Value: " + spinBox.value);
+print("DoubleSpinBox - Value: " + doubleSpinBox.value);
+print("LineEdit - Value: " + lineEdit.value);
+print("Slider - Value: " + slider.value);
+print("ComboBox - Selected Index: " + comboBox.selectedItemIndex);
+print("ComboBox - Selected Item Title: " + comboBox.selectedItem.title);
+print("ComboBox - Selected Item Value: " + comboBox.selectedItem.value);
