@@ -746,11 +746,17 @@ void A_saveScript(IScriptEngine* engine, const char* name)
     IScriptWriter *writer = engine->createScriptWriter();
     ADM_ScriptGenerator generator(video_body, writer);
     std::stringstream stream(std::stringstream::in | std::stringstream::out);
+	std::string fileName = name;
 
     generator.generateScript(stream);
     delete writer;
 
-    FILE *file = ADM_fopen(name, "wt");
+	if (fileName.rfind(".") == std::string::npos)
+	{
+		fileName += "." + engine->defaultFileExtension();
+	}
+
+    FILE *file = ADM_fopen(fileName.c_str(), "wt");
     string script = stream.str();
 
     ADM_fwrite(script.c_str(), script.length(), 1, file);
