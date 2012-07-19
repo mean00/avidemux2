@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "ADM_script.h"
 #include "ADM_ScriptEngineLoader.h"
 #include "ScriptShell.h"
@@ -31,6 +33,11 @@ static void consoleEventHandler(IScriptEngine::EngineEvent *event)
     }
 
     printf("%s\n", event->message);
+}
+
+bool compareEngineRank(IScriptEngine *engine1, IScriptEngine *engine2)
+{
+	return engine1->maturityRanking() > engine2->maturityRanking();
 }
 
 const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor *editor)
@@ -72,6 +79,8 @@ const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor 
         }
     }
 
+	sort(engines.begin(), engines.end(), compareEngineRank);
+
     return engines;
 }
 
@@ -80,27 +89,17 @@ void destroyScriptEngines()
     for (int i = 0; i < engines.size(); i++)
     {
         delete engines[i];
-        delete engineLoaders[i];
     }
+
+	for (int i = 0; i < engines.size(); i++)
+	{
+		delete engineLoaders[i];
+	}
 }
 
 IScriptEngine* getDefaultScriptEngine()
 {
-    IScriptEngine *engine = NULL;
-    int lastRank = -1;
-
-    for (int i = 0; i < engines.size(); i++)
-    {
-        int rank = engines[i]->maturityRanking();
-
-        if (rank > lastRank)
-        {
-            engine = engines[i];
-            lastRank = rank;
-        }
-    }
-
-    return engine;
+	return engines.size() == 0 ? NULL : engines[0];
 }
 
 // This shouldn't really be used but since the UI isn't very OOP it's kinda necessary at the moment
