@@ -19,10 +19,10 @@ IF (NOT APPLE)
 ENDIF (NOT APPLE)
 
 ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS})
+include_directories("${PTHREAD_INCLUDE_DIR}")
 
 IF (MINGW)
 	TARGET_LINK_LIBRARIES(ADM_core6 "${PTHREAD_LIBRARIES}" imagehlp ws2_32)
-	ADD_TARGET_CFLAGS(ADM_core6 "-I${PTHREAD_INCLUDE_DIR}")
 ELSEIF (APPLE)
 	target_link_libraries(ADM_core6 "-framework Carbon")
 ENDIF (MINGW)

@@ -22,15 +22,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef __HAIKU__
-#include <pthread.h>
-#endif
+
 #include "ADM_coreConfig.h"
 #include "ADM_inttype.h"
-#ifdef __HAIKU__
-#include <pthread.h>
-#endif
 #include "ADM_assert.h"
+
 #define ADM_NO_PTS 0xffffffffffffffffLL
 #ifdef __cplusplus
 #include "ADM_cpuCap.h"

@@ -15,7 +15,7 @@
  ***************************************************************************/
 #ifndef ADM_ASSERT_H
 #define ADM_ASSERT_H
-#include <pthread.h>
+
 #include <assert.h>
 #include "ADM_inttype.h"
 
