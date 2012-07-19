@@ -15,10 +15,9 @@
  ***************************************************************************/
 
 #ifdef __MINGW32__
-#include <windows.h>
-#include <winbase.h>
-#include <io.h>
 #include <winsock2.h>
+#include <windows.h>
+#include <io.h>
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
