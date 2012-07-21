@@ -132,7 +132,7 @@ again:
             return false;
     }
     out->len=image.dataLength;
-    ADM_assert(out->len<out->bufferSize);
+    ADM_assert(out->len<=out->bufferSize);
 #if 0
     if(image.demuxerPts!=ADM_NO_PTS)
         if(image.demuxerPts<startTimePts)   

@@ -87,6 +87,9 @@ protected:
            bool             writeOdmlChunk();
            int              riffCount;
            bool             writeLegacyIndex();
+           bool             prepareLegacyIndex();
+           IdxEntry         *legacyIndex;
+           int              legacyIndexCount;
 
 public:
                         aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlChunk );

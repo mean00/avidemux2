@@ -50,7 +50,7 @@ aviIndexAvi::~aviIndexAvi()
 bool  aviIndexAvi::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
 {
       IdxEntry entry;
-      uint64_t offset=LMovie->Tell () - 8 - LMovie->TellBegin ();
+      uint64_t offset=LMovie->Tell ();
       entry.fcc = fourccs[0];
       entry.len = len;
       entry.flags = flags;
@@ -67,7 +67,7 @@ bool  aviIndexAvi::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
 bool  aviIndexAvi::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8_t *data)
 {
  IdxEntry entry;
-    uint64_t offset=LMovie->Tell () - 8 - LMovie->TellBegin ();
+    uint64_t offset=LMovie->Tell ();
       entry.fcc = entry.fcc = fourccs[trackNo+1];
       entry.len = len;
       entry.flags = flags;
@@ -85,7 +85,8 @@ bool  aviIndexAvi::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8_
 
 bool  aviIndexAvi::writeIndex()
 {
-    // End the movie atom
+  // End the movie atom
+  uint32_t base=LMovie->TellBegin()+8;
   LMovie->End ();
   delete LMovie;
   LMovie = NULL;
@@ -97,12 +98,14 @@ bool  aviIndexAvi::writeIndex()
     int curindex=myIndex.size();
     AviListAvi *lst=new AviListAvi("idx1",_masterList->getFile());
     ADMMemio memIo(4*4);
+    lst->Begin();
     for (uint32_t i = 0; i < curindex; i++)
     {
         memIo.reset();
-        ix32(fcc);ix32(flags);ix32(offset);ix32(len);
+        ix32(fcc);ix32(flags);memIo.write32(myIndex[i].offset-base);ix32(len);
         lst->WriteMem (memIo);
     }
+    lst->End();
     delete lst;
     lst=NULL;
     _masterList->End();

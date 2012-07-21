@@ -93,6 +93,7 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk )
         superIndex.trackIndeces[1+i].fcc=fourCC::get((uint8_t *)txt);
     }
     riffCount=0;
+    legacyIndex=NULL;
 }
 /**
     \fn dtor
@@ -102,7 +103,12 @@ aviIndexOdml::~aviIndexOdml()
 {
     if(LMovie)
         delete LMovie;
-    LMovie=NULL;
+    LMovie=NULL;    
+    if(legacyIndex) 
+    {
+        delete [] legacyIndex;
+        legacyIndex=NULL;
+    }
 }
 
 /**
@@ -333,10 +339,7 @@ bool aviIndexOdml::writeOdmlChunk()
 bool  aviIndexOdml::writeIndex()
 {
             if(!riffCount)
-            {
-                ADM_info("Writting legacy index\n");
-                writeLegacyIndex();
-            }
+                prepareLegacyIndex();
             // super index needed ?
             ADM_info("Writting openDml chunk\n");
             writeOdmlChunk();
@@ -346,6 +349,11 @@ bool  aviIndexOdml::writeIndex()
             ADM_info("Writting type 2 Avi SuperIndex\n");
             writeSuperIndex();
             LMovie->End();
+            if(!riffCount)
+            {
+                ADM_info("Writting legacy index\n");
+                writeLegacyIndex();
+            }
             delete LMovie;  
             LMovie=NULL;
 
@@ -404,7 +412,10 @@ bool aviIndexOdml::startNewRiff()
     // 2- Start a new RIFF
     LMovie->End();          // Close current riff
     if(!riffCount)
+    {
+        prepareLegacyIndex();
         writeLegacyIndex();
+    }
     // 1- Write all pending regular index
     for(int i=0;i<nbAudioTrack+1;i++)
         writeRegularIndex(i);
@@ -444,15 +455,16 @@ static int compareEntryFunc(const void *a, const void *b)
     return 1;
 }
 /**
-    \fn writeLegacyIndex
+    \fn prepareLegacyIndex
 */
-bool aviIndexOdml::writeLegacyIndex()
-{
+bool aviIndexOdml::prepareLegacyIndex()
+{    
     int nbEntries=0;
     // 0 Evaluate size
      for(int i=0;i<1+nbAudioTrack;i++)
             nbEntries+=indexes[i].listOfChunks.size();
-    IdxEntry *legacy=new IdxEntry[nbEntries+10];
+    legacyIndex=new IdxEntry[nbEntries+10];
+    legacyIndexCount=nbEntries;
     // 1 Convert index so far into legacy index
     int soFar=0;
     for(int i=0;i<1+nbAudioTrack;i++)
@@ -461,7 +473,7 @@ bool aviIndexOdml::writeLegacyIndex()
         int n=in->size();
         for(int j=0;j<n;j++)
         {
-            IdxEntry *ix=legacy+soFar++;
+            IdxEntry *ix=legacyIndex+soFar++;
             
             ix->fcc=fourccs[i];
             ix->flags=(*in)[j].flags;
@@ -471,28 +483,36 @@ bool aviIndexOdml::writeLegacyIndex()
     }
     ADM_info("Preparing legacy index of size %d\n",nbEntries);
     // 2- sort it
-    qsort (legacy, nbEntries, sizeof(IdxEntry), compareEntryFunc);
-
+    qsort (legacyIndex, nbEntries, sizeof(IdxEntry), compareEntryFunc);
+    return true;
+}
+/**
+    \fn writeLegacyIndex
+*/
+bool aviIndexOdml::writeLegacyIndex()
+{
+   
     // 3-write legacy index
     uint64_t pos;
-    pos=LMovie->Tell();
+    pos=_masterList->Tell();
     ADM_info("Writting legacy index at %"LLX"\n",pos);
     //---
-    AviListAvi lst("idx1",LMovie->getFile());
+    AviListAvi lst("idx1",_masterList->getFile());
     lst.Begin();
 
-    int n=nbEntries;
+    int n=legacyIndexCount;
     ADMMemio memIo(4*4);
-    #define ix32(a)  memIo.write32(legacy[i].a)
+    #define ix32(a)  memIo.write32(legacyIndex[i].a)
+    uint32_t base=LMovie->TellBegin()+8; // movi tag
     for(int i=0;i<n;i++)
     {
         memIo.reset();
-        ix32(fcc);ix32(flags);ix32(offset);ix32(len);
+        ix32(fcc);ix32(flags);memIo.write32(legacyIndex[i].offset-base);ix32(len);
         lst.WriteMem (memIo);
     }
     lst.End();    
-    delete [] legacy;
-    legacy=NULL;
+    delete [] legacyIndex;
+    legacyIndex=NULL;
     return true;
 }
 // EOF
