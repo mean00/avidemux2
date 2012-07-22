@@ -38,6 +38,8 @@
 extern void UI_purge(void);
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss);
 bool   GUI_GoToTime(uint64_t time);
+bool   GUI_SeekByTime(int64_t time);
+
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**
     \fn HandleAction_Navigate
@@ -86,16 +88,6 @@ static int ignore_change=0;
                  
             }
             break;
-      case ACT_Back25Frames:
-#if 0
-          if (video_body->getCurrentFrame() >= 25)
-          {
-              DIA_StartBusy();
-              GUI_GoToFrame (video_body->getCurrentFrame() - 25);
-              DIA_StopBusy();
-          }
-#endif
-	  break;
 
       case ACT_PreviousKFrame:
         GUI_PreviousKeyFrame();
@@ -103,31 +95,30 @@ static int ignore_change=0;
       case ACT_PreviousFrame:
         GUI_PrevFrame();
         break;
-      case ACT_Forward100Frames:
-        //GUI_GoToKFrame (curframe + (avifileinfo->fps1000 / 1000 * 4));
+      case ACT_Forward4Seconds:
+        GUI_SeekByTime(4000000LL);
         break;
 
-      case ACT_Back100Frames:
-        //GUI_GoToKFrame (curframe - (avifileinfo->fps1000 / 1000 * 4));
+      case ACT_Forward2Seconds:
+        GUI_SeekByTime(2000000LL);
+	break;
+
+      case ACT_Forward1Second:
+        GUI_SeekByTime(1000000LL);
         break;
 
+      case ACT_Back4Seconds:
+        GUI_SeekByTime(-4000000LL);
+        break;
 
-      case ACT_Forward50Frames:
-	  // GUI_GoToFrame (curframe + 50);
-	  break;
+      case ACT_Back2Seconds:
+        GUI_SeekByTime(-2000000LL);
+        break;
 
-      case ACT_Forward25Frames:
-	  // GUI_GoToFrame (curframe + 25);
-	  break;
+      case ACT_Back1Second:
+        GUI_SeekByTime(-1000000LL);
+	break;
 
-      case ACT_Back50Frames:
-	  // if (curframe >= 50)
-	  {
-	      DIA_StartBusy();
-	      // GUI_GoToFrame (curframe - 50);
-	      DIA_StopBusy();
-	  }
-	  break;
       case ACT_NextFrame:
         GUI_NextFrame();
 	  break;
@@ -141,7 +132,7 @@ static int ignore_change=0;
         GUI_PrevBlackFrame();
 	  break;
       case ACT_End:
-            GUI_GoToTime(video_body->getVideoDuration());
+            GUI_GoToTime(video_body->getVideoDuration()-1000000);
             break;
       case ACT_Begin:
             video_body->rewind();
@@ -281,7 +272,7 @@ void GUI_PreviousKeyFrame(void)
     if (!admPreview::previousKeyFrame())
       {
 	  GUI_Error_HIG(QT_TR_NOOP("Error"),
-			QT_TR_NOOP("Cannot go to next keyframe"));
+			QT_TR_NOOP("Cannot go to previous keyframe"));
 	  return;
       }
     GUI_setCurrentFrameAndTime();
@@ -303,10 +294,10 @@ void GUI_PrevFrame(uint32_t frameCount)
      if (playing)	    return;
     if (!avifileinfo)	return;
 
-
     if (!admPreview::previousPicture())
       {
-            GUI_Error_HIG(QT_TR_NOOP("Error"),	QT_TR_NOOP("Cannot go to previous frame"));
+//		We're probably at the beginning of the file ...
+//            GUI_Error_HIG(QT_TR_NOOP("Error"),	QT_TR_NOOP("Cannot go to previous frame"));
             return;
       }
     GUI_setCurrentFrameAndTime();
@@ -429,6 +420,23 @@ uint64_t pts;
         return GUI_GoToTime(pts);
 
 }
+/**
+    \fn GUI_SeekByTime
+*/
+bool GUI_SeekByTime(int64_t time)
+{
+   uint64_t pts=admPreview::getCurrentPts(); 
+
+   if (time < 0 && pts < -time) 
+         pts = 0; 
+   else
+         pts += time;
+
+   ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));  
+   if(video_body->getPKFramePTS(&pts))
+       GUI_GoToTime(pts);
+}
+
 /**
     \fn GUI_GoToTime
 */

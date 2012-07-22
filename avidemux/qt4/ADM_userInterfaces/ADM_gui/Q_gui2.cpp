@@ -516,25 +516,29 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 		case QEvent::KeyPress:
 			keyEvent = (QKeyEvent*)event;
 
-			if (watched == slider)
+//			if (watched == slider)
 			{
 				switch (keyEvent->key())
 				{
 					case Qt::Key_Left:
 						if (keyEvent->modifiers() == Qt::ShiftModifier)
-							HandleAction(ACT_Back25Frames);
+							HandleAction(ACT_Back1Second);
 						else if (keyEvent->modifiers() == Qt::ControlModifier)
-							HandleAction(ACT_Back50Frames);
+							HandleAction(ACT_Back2Seconds);
+						else if (keyEvent->modifiers() == Qt::ControlModifier | Qt::ShiftModifier)
+							HandleAction(ACT_Back4Seconds);
 						else
 							HandleAction(ACT_PreviousFrame);
 
 						return true;
 					case Qt::Key_Right:
-						if (keyEvent->modifiers() == Qt::ShiftModifier)
-							HandleAction(ACT_Forward25Frames);
-						else if (keyEvent->modifiers() == Qt::ControlModifier)
-							HandleAction(ACT_Forward50Frames);
-						else
+						if (keyEvent->modifiers() == Qt::ShiftModifier) 
+							HandleAction(ACT_Forward1Second);
+						else if (keyEvent->modifiers() == Qt::ControlModifier) 
+							HandleAction(ACT_Forward2Seconds);
+						else if (keyEvent->modifiers() == Qt::ControlModifier | Qt::ShiftModifier) 
+							HandleAction(ACT_Forward4Seconds);
+						else 
 							HandleAction(ACT_NextFrame);
 
 						return true;
@@ -549,7 +553,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 						break;
 				}
 			}
-			else if (keyEvent->key() == Qt::Key_Space)
+			/* else */ if (keyEvent->key() == Qt::Key_Space)
 			{
 				HandleAction(ACT_PlayAvi);
 				return true;
