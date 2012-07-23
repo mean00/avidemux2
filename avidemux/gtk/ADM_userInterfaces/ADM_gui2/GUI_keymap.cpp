@@ -90,17 +90,17 @@ gboolean UI_on_key_press(GtkWidget *widget, GdkEventKey* event, gpointer user_da
                 // 100 frames
                 else if((shift == TRUE) && (ctrl == TRUE))
                 {
-                        action = ACT_Back100Frames;
+                        action = ACT_Back4Seconds;
                 }
 		// 50 frames
 		else if(ctrl == TRUE)
 		{
-			action = ACT_Back50Frames;
+			action = ACT_Back2Seconds;
 		}
 		// 25 frames
 		else
 		{
-			action = ACT_Back25Frames;
+			action = ACT_Back1Second;
 		}
 		break;
 
@@ -113,16 +113,16 @@ gboolean UI_on_key_press(GtkWidget *widget, GdkEventKey* event, gpointer user_da
                 // 100 frames
                 else if((shift == TRUE) && (ctrl == TRUE))
                 {
-                        action = ACT_Forward100Frames;
+                        action = ACT_Forward4Seconds;
                 }
 
 		else if(ctrl == TRUE)
 		{
-			action = ACT_Forward50Frames;
+			action = ACT_Forward2Seconds;
 		}
 		else
 		{
-			action = ACT_Forward25Frames;
+			action = ACT_Forward1Second;
 		}
 		break;
 		
