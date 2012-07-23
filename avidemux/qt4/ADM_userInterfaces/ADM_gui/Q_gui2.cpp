@@ -551,6 +551,16 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 					case Qt::Key_Shift:
 						shiftKeyHeld = 1;
 						break;
+
+					case Qt::Key_BracketLeft:
+                                                if (keyEvent->modifiers() == Qt::ControlModifier)
+                                                        HandleAction(ACT_GotoMarkA);
+                                                return true;
+
+					case Qt::Key_BracketRight:
+						if (keyEvent->modifiers() == Qt::ControlModifier)
+							HandleAction(ACT_GotoMarkB);
+						return true;
 				}
 			}
 			/* else */ if (keyEvent->key() == Qt::Key_Space)
