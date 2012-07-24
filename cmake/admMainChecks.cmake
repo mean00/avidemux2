@@ -127,13 +127,11 @@ IF (NOT SYSTEM_HEADERS_CHECKED)
 	INCLUDE(CheckIncludeFiles)
 	INCLUDE(CheckFunctionExists)
 
+	set(CMAKE_REQUIRED_INCLUDES ${CMAKE_INCLUDE_PATH})
 	CHECK_FUNCTION_EXISTS(gettimeofday HAVE_GETTIMEOFDAY)
 
-	CHECK_INCLUDE_FILES(byteswap.h   HAVE_BYTESWAP_H)	# libavutil
 	CHECK_INCLUDE_FILES(inttypes.h   HAVE_INTTYPES_H)	# internal use, mpeg2enc, mplex
 	CHECK_INCLUDE_FILES(stdint.h     HAVE_STDINT_H)		# internal use, mpeg2enc, mplex
-	CHECK_INCLUDE_FILES(sys/types.h  HAVE_SYS_TYPES_H)	# mad, mpeg2enc
-	CHECK_INCLUDE_FILES(malloc.h     HAVE_MALLOC_H)		# libavcodec, libavutil, libpostproc, libswscale, mplex
 	SET(SYSTEM_HEADERS_CHECKED 1 CACHE BOOL "")
 	MARK_AS_ADVANCED(SYSTEM_HEADERS_CHECKED)
 

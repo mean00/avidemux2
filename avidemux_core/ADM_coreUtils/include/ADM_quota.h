@@ -17,7 +17,7 @@
 #define ADM_quota_h
 
 #include <stdio.h>
-#include <unistd.h>
+
 #include "ADM_coreConfig.h"
 
 /* qfopen stands for quota-fopen() */

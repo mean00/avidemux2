@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 /*
    	The maximum width/height is MAXIMUM_SIZE 768*768 for now

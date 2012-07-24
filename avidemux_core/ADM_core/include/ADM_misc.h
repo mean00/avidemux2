@@ -36,10 +36,20 @@ uint64_t        ADM_getSecondsSinceEpoch(void);
 const char      *ADM_epochToString(uint64_t epoch);
 
 #ifdef HAVE_GETTIMEOFDAY
+	#include <sys/time.h>
+
 	#define TIMZ struct timezone
 #else
-	#ifndef HAVE_STRUCT_TIMESPEC
-	#define HAVE_STRUCT_TIMESPEC
+#	ifdef _WIN32
+#		include <WinSock.h>
+#	endif
+
+#	ifndef HAVE_STRUCT_TIMESPEC
+#	define HAVE_STRUCT_TIMESPEC
+
+#		ifndef _TIMESPEC_DEFINED
+#		define _TIMESPEC_DEFINED
+
 	extern "C"
 	{
 		typedef struct timespec
@@ -47,12 +57,13 @@ const char      *ADM_epochToString(uint64_t epoch);
 			time_t tv_sec;
 			long int tv_nsec;
 		};
+	};
+#		endif
 
-		//void gettimeofday(struct timeval *p, void *tz);
-		};
-		#define timezone int
-		#define TIMZ int
-	#endif
+#	define TIMZ int
+#	endif
+
+	extern "C" void gettimeofday(struct timeval *p, TIMZ *tz);
 #endif
 
 #ifdef _WIN32

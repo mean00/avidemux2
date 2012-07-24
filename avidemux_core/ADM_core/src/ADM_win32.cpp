@@ -1,9 +1,8 @@
 #ifdef _WIN32
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <winsock2.h>
 #include <windows.h>
+#include <fcntl.h>
+#include <io.h>
 
 #include "ADM_default.h" 
 
@@ -33,10 +32,10 @@ uint8_t win32_netInit(void)
 #ifndef HAVE_GETTIMEOFDAY
 extern "C"
 {
-void gettimeofday(struct timeval *p, void *tz);
+void gettimeofday(struct timeval *p, TIMZ *tz);
 }
 
-void gettimeofday(struct timeval *p, void *tz)
+void gettimeofday(struct timeval *p, TIMZ *tz)
 {
     unsigned long int sec;
     SYSTEMTIME  tme;
@@ -493,7 +492,7 @@ int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength
 int ansiStringToUtf8(const char *ansiString, int ansiStringLength, char *utf8String)
 {
 	int wideCharStringLen = ansiStringToWideChar(ansiString, ansiStringLength, NULL);
-	wchar_t wideCharString[wideCharStringLen];
+	wchar_t *wideCharString = new wchar_t[wideCharStringLen];
 
 	ansiStringToWideChar(ansiString, ansiStringLength, wideCharString);
 
@@ -501,6 +500,8 @@ int ansiStringToUtf8(const char *ansiString, int ansiStringLength, char *utf8Str
 
 	if (utf8String)
 		wideCharStringToUtf8(wideCharString, wideCharStringLen, utf8String);
+
+	delete [] wideCharString;
 
 	return multiByteStringLen;
 }

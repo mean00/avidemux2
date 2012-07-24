@@ -24,7 +24,6 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include <sys/time.h>
 
 #include "ADM_default.h"
 #include "ADM_assert.h"

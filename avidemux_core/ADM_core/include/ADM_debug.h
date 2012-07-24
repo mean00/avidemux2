@@ -24,8 +24,8 @@
 #define ADM_PRINT_VERY_VERBOSE  3
 
 #if !defined(ADM_DEBUG)
-         #define aprintf(prt, args...) ;
-         #define adm_printf(level,prt,args...) ;
+         #define aprintf(prt, ...) ;
+         #define adm_printf(level,prt,...) ;
 #else
         #if (MODULE_NAME !=0x8000)
 	#ifdef __cplusplus

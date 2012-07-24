@@ -13,23 +13,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
 
-#include "ADM_win32.h"
-
 #if defined(__APPLE__)
- #include <Carbon/Carbon.h>
+#	include <Carbon/Carbon.h>
 #else
- #include <fcntl.h>
- #ifdef _WIN32
-  #include <direct.h>
-  #include <shlobj.h>
- #endif
+#	include <fcntl.h>
+#endif
+
+#ifdef _WIN32
+#	include <io.h>
+#	include <direct.h>
+#	include <shlobj.h>
+#	include "ADM_win32.h"
+#else
+#	include <unistd.h>
 #endif
 
 #include "ADM_default.h"
@@ -89,51 +89,57 @@ int64_t ADM_fileSize(const char *file)
 */
 FILE *ADM_fopen(const char *file, const char *mode)
 {
-#ifdef __MINGW32__
+#ifdef _WIN32
 	// Override fopen to handle Unicode filenames and to ensure exclusive access when initially writing to a file.
 	int fileNameLength = utf8StringToWideChar(file, -1, NULL);
-	wchar_t wcFile[fileNameLength];
+	wchar_t *wcFile = new wchar_t[fileNameLength];
 	int creation = 0, access = 0;
 	HANDLE hFile;
 
 	utf8StringToWideChar(file, -1, wcFile);
 
-	if (strchr(mode, 'w'))
+	while (true)
 	{
-		creation = CREATE_ALWAYS;
-		access = GENERIC_WRITE;
-
-		if (strchr(mode, '+'))
-			access |= GENERIC_READ;
-	}
-	else if (strchr(mode, 'r'))
-	{
-		creation = OPEN_EXISTING;
-		access = GENERIC_READ;
-
-		if (strchr(mode, '+'))
+		if (strchr(mode, 'w'))
+		{
+			creation = CREATE_ALWAYS;
 			access = GENERIC_WRITE;
+
+			if (strchr(mode, '+'))
+				access |= GENERIC_READ;
+		}
+		else if (strchr(mode, 'r'))
+		{
+			creation = OPEN_EXISTING;
+			access = GENERIC_READ;
+
+			if (strchr(mode, '+'))
+				access = GENERIC_WRITE;
+		}
+		else if (strchr(mode, 'a'))
+		{
+			creation = OPEN_ALWAYS;
+			access = GENERIC_WRITE;
+
+			if (strchr(mode, '+'))
+				access |= GENERIC_READ;
+		}
+
+		if (creation & GENERIC_WRITE)
+		{
+			hFile = CreateFileW(wcFile, access, 0, NULL, creation, 0, NULL);
+
+			if (hFile == INVALID_HANDLE_VALUE)
+				break;
+			else
+				CloseHandle(hFile);
+		}
+
+		hFile = CreateFileW(wcFile, access, FILE_SHARE_READ, NULL, creation, 0, NULL);
+		break;
 	}
-	else if (strchr(mode, 'a'))
-	{
-		creation = OPEN_ALWAYS;
-		access = GENERIC_WRITE;
 
-		if (strchr(mode, '+'))
-			access |= GENERIC_READ;
-	}
-
-	if (creation & GENERIC_WRITE)
-	{
-		hFile = CreateFileW(wcFile, access, 0, NULL, creation, 0, NULL);
-
-		if (hFile == INVALID_HANDLE_VALUE)
-			return NULL;
-		else
-			CloseHandle(hFile);
-	}
-
-	hFile = CreateFileW(wcFile, access, FILE_SHARE_READ, NULL, creation, 0, NULL);
+	delete [] wcFile;
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return NULL;
@@ -152,11 +158,13 @@ extern "C"
 	int ADM_open(const char *path, int oflag, ...)
 	{
 		int fileNameLength = utf8StringToWideChar(path, -1, NULL);
-		wchar_t wcFile[fileNameLength];
+		wchar_t *wcFile = new wchar_t[fileNameLength];
 		int creation = 0, access = 0;
 		HANDLE hFile;
 
 		utf8StringToWideChar(path, -1, wcFile);
+
+		delete [] wcFile;
 
 		if (oflag & O_WRONLY || oflag & O_RDWR)
 		{
@@ -355,7 +363,7 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 	GetModuleFileNameW(0, wcModuleName, sizeof(wcModuleName) / sizeof(wchar_t));
 
 	int len = wideCharStringToUtf8(wcModuleName, -1, NULL);
-	char moduleName[len];
+	char *moduleName = new char[len];
 
 	wideCharStringToUtf8(wcModuleName, -1, moduleName);
 
@@ -364,7 +372,12 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 	if (slash)
 		*slash = '\0';
 
-	return ADM_getRelativePath(moduleName, base1, base2, base3);
+	char *relativePath = ADM_getRelativePath(moduleName, base1, base2, base3);
+
+	delete [] moduleName;
+
+	return relativePath;
+
 #elif defined(__APPLE__)
 #define MAX_PATH_SIZE 1024
 
@@ -491,43 +504,56 @@ void ADM_initBaseDir(bool portableMode)
 uint8_t ADM_mkdir(const char *dirname)
 {
 	DIR *dir = NULL;
+	uint8_t retVal = 0;
 
 #ifdef _WIN32
 	int dirNameLength = utf8StringToWideChar(dirname, -1, NULL);
-	wchar_t dirname2[dirNameLength];
+	wchar_t *dirname2 = new wchar_t[dirNameLength];
 
 	utf8StringToWideChar(dirname, -1, dirname2);
 #else
 	const char* dirname2 = dirname;
 #endif
 
-	// Check it already exists ?
-	dir = opendir(dirname2);
-
-	if (dir)
-	{ 
-		printf("Directory %s exists.Good.\n", dirname);
-		closedir(dir);
-		return 1;
-	}
-#ifdef _WIN32
-	if (_wmkdir(dirname2))
+	while (true)
 	{
-		printf("Oops: mkdir failed on %s\n", dirname);
-		return 0;
-	}
-#else
-	printf("Creating dir :%s\n", dirname2);
-	mkdir(dirname2,0755);
+		// Check it already exists ?
+		dir = opendir(dirname2);
 
+		if (dir)
+		{
+			printf("Directory %s exists.Good.\n", dirname);
+			closedir(dir);
+
+			retVal = 1;
+			break;
+		}
+#ifdef _WIN32
+		if (_wmkdir(dirname2))
+		{
+			printf("Oops: mkdir failed on %s\n", dirname);
+			break;
+		}
+#else
+		printf("Creating dir :%s\n", dirname2);
+		mkdir(dirname2,0755);
 #endif
 
-	if ((dir = opendir(dirname2)) == NULL)
-		return 0;
+		if ((dir = opendir(dirname2)) == NULL)
+			break;
 
-	closedir(dir);
+		closedir(dir);
 
-	return 1;
+		retVal = 1;
+
+		break;
+	}
+
+#ifdef _WIN32
+	delete [] dirname2;
+#endif
+
+	return retVal;
 }
 /**
  *  \fn buildDirectoryContent
@@ -545,7 +571,7 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 
 #ifdef _WIN32
 	int dirNameLength = utf8StringToWideChar(base, -1, NULL);
-	wchar_t base2[dirNameLength];
+	wchar_t *base2 = new wchar_t[dirNameLength];
 
 	utf8StringToWideChar(base, -1, base2);
 #else
@@ -553,14 +579,27 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 #endif
 
 	dir = opendir(base2);
+
+#ifdef _WIN32
+	delete [] base2;
+#endif
+
 	if (!dir)
+	{
 		return 0;
+	}
+
+#ifdef _WIN32
+	char *d_name = NULL;
+#endif
 
 	while ((direntry = readdir(dir)))
 	{
 #ifdef _WIN32
+		delete [] d_name;
+
 		int dirLength = wideCharStringToUtf8(direntry->d_name, -1, NULL);
-		char d_name[dirLength];
+		d_name = new char[dirLength];
 
 		wideCharStringToUtf8(direntry->d_name, -1, d_name);
 #else
@@ -592,6 +631,10 @@ uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[]
 			break;
 		}
 	}
+
+#ifdef _WIN32
+	delete [] d_name;
+#endif
 
 	closedir(dir);
 	*outnb = dirmax;

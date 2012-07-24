@@ -77,11 +77,13 @@ bool ADM_LibWrapper::loadLibrary(const char* path)
 {
 #ifdef _WIN32
 	int pathLength = utf8StringToWideChar(path, -1, NULL);
-	wchar_t wcPath[pathLength];
+	wchar_t *wcPath = new wchar_t[pathLength];
 
 	utf8StringToWideChar(path, -1, wcPath);
 
 	hinstLib = LoadLibraryW(wcPath);
+
+	delete [] wcPath;
 
 	if (hinstLib == NULL)
 	{

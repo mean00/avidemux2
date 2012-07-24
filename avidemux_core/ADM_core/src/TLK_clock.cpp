@@ -30,8 +30,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <unistd.h>
-#include <sys/time.h>
 
 #include "ADM_default.h"
 

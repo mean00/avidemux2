@@ -6,6 +6,11 @@
 #include <errno.h>
 #include <string>
 #include <stdarg.h>
+
+#ifdef _WIN32
+#	include <io.h>
+#endif
+
 using std::string;
 
 #include "ADM_default.h"

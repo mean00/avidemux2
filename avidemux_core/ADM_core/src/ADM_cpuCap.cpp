@@ -12,7 +12,7 @@
 #include "ADM_coreConfig.h"
 #include "ADM_default.h"
 
-#if defined(__MINGW32__)
+#if defined(_WIN32)
 #include <pthread.h>
 #elif defined(__APPLE__) || defined(ADM_BSD_FAMILY) && !defined(__HAIKU__)
 #include <sys/types.h>
@@ -150,7 +150,7 @@ extern "C"{
 // Stolen from x264
 int ADM_cpu_num_processors(void)
 {
-#if defined(__MINGW32__)
+#if defined(_WIN32)
     return pthread_num_processors_np();
 #elif defined(__APPLE__) || defined(ADM_BSD_FAMILY) && !defined(__HAIKU__)
     int np;
