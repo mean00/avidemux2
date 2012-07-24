@@ -5,6 +5,7 @@
 //
 //
 
+#include <unistd.h>
 
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
