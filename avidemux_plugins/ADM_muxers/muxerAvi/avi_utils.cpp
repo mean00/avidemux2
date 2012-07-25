@@ -69,7 +69,7 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
     header->dwMaxBytesPerSec=8*1000*1000; //int32_t	dwMaxBytesPerSec;	// max. transfer rate
     header->dwPaddingGranularity=0; //int32_t	dwPaddingGranularity;	// pad to multiples of this
 					// size; normally 2K.
-    header->dwFlags=0; // FIXME HAS INDEX //int32_t	dwFlags;		// the ever-present flags
+    header->dwFlags= AVIF_HASINDEX + AVIF_ISINTERLEAVED; // FIXME HAS INDEX //int32_t	dwFlags;		// the ever-present flags
     //header->dwTotalFrames=0; //int32_t	dwTotalFrames;		// # frames in file
     header->dwInitialFrames=0; //int32_t	dwInitialFrames;
    // Must be set by caller  header->dwStreams=int32_t	dwStreams;
