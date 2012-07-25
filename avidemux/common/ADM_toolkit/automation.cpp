@@ -36,7 +36,7 @@ extern const char *getStrFromAudioCodec( uint32_t codec);
 
 static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
-static void call_scriptEngine(const char *scriptFile);
+void call_scriptEngine(const char *scriptFile);
 static void call_buildtimemap( char *p);
 static void call_quit(char *p) ;
 static void setBegin(char *p)   ;

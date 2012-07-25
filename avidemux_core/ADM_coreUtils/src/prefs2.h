@@ -25,6 +25,14 @@ struct  {
 	char * file3;
 	char * file4;
 }lastfiles;
+struct  {
+	char * lastdir_read;
+	char * lastdir_write;
+	char * file1;
+	char * file2;
+	char * file3;
+	char * file4;
+}lastprojects;
 uint32_t message_level;
 struct  {
 	char * audiodevice;

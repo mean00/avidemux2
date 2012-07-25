@@ -126,6 +126,7 @@ uint8_t UI_setTimeShift(int onoff,int value)
 }
 
 void UI_updateRecentMenu( void ) {}
+void UI_updateRecentProjectMenu() {}
 
 uint8_t UI_arrow_enabled(void)
 {

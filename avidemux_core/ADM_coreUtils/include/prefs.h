@@ -19,6 +19,7 @@ class preferences {
 
 //		const char * get_str_min(options option);
 //		const char * get_str_max(options option);
+		void setFile(const char* file, char** const file1, int maxFiles);
 
 	public:
 		preferences();
@@ -40,7 +41,9 @@ class preferences {
 		
 
 		bool  set_lastfile(const char* file);
+		bool  set_lastprojectfile(const char* file);
 		const char **get_lastfiles(void);
+		const char **get_lastprojectfiles(void);		
 };
 
 extern preferences *prefs;

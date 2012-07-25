@@ -44,6 +44,7 @@ void UI_toogleMain(void);
 
 
 void UI_updateRecentMenu( void );
+void UI_updateRecentProjectMenu();
 
 uint8_t UI_arrow_enabled(void);
 uint8_t UI_arrow_disabled(void);

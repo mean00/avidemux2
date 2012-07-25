@@ -1339,6 +1339,10 @@ static Action recent[4]={ACT_RECENT0,ACT_RECENT1,ACT_RECENT2,ACT_RECENT3};
     return;
 }
 
+void UI_updateRecentProjectMenu()
+{
+}
+
 // Override arrow keys to quickly navigate
 uint8_t UI_arrow_enabled(void)
 {

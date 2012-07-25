@@ -91,20 +91,22 @@ void HandleAction (Action action);
 void HandleAction_Navigate(Action action);
 void HandleAction_Save(Action action);
 
+extern void call_scriptEngine(const char *scriptFile);
+
+static bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode);
+
 // Hacky functions because we currently don't have versatile
 // file dialogs
 static IScriptEngine *tempEngine;
 
 static void RunScript(const char *name)
 {
-	tempEngine->runScriptFile(name, IScriptEngine::DebugOnError);
-	A_Resync(); // total duration & stuff
+	parseScript(tempEngine, name, IScriptEngine::DebugOnError);
 }
 
 static void DebugScript(const char *name)
 {
-	tempEngine->runScriptFile(name, IScriptEngine::Debug);
-    A_Resync(); // total duration & stuff
+	parseScript(tempEngine, name, IScriptEngine::Debug);
 }
 
 static void SaveScript(const char *name)
@@ -196,6 +198,7 @@ void HandleAction (Action action)
         case ACT_RECENT1:
         case ACT_RECENT2:
         case ACT_RECENT3:
+			{
                 const char **name;
                 int rank;
 
@@ -204,7 +207,20 @@ void HandleAction (Action action)
                 ADM_assert(name[rank]);
                 A_openAvi (name[rank]);
                 return;
-		return;
+			}
+        case ACT_RECENT_PROJECT0:
+        case ACT_RECENT_PROJECT1:
+        case ACT_RECENT_PROJECT2:
+        case ACT_RECENT_PROJECT3:
+			{
+                const char **name = prefs->get_lastprojectfiles();
+                int rank = (int)action - ACT_RECENT_PROJECT0;
+
+                ADM_assert(name[rank]);
+                call_scriptEngine(name[rank]);
+
+                return;
+			}
 	case ACT_VIDEO_CODEC_CONFIGURE:
     		videoEncoder6Configure();
             return;
@@ -719,7 +735,7 @@ void cleanUp (void)
 
 #warning fixme
 
-bool A_parseScript(IScriptEngine *engine, const char *name)
+bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
 	bool ret;
 	char *longname = ADM_PathCanonize(name);
@@ -737,8 +753,17 @@ bool A_parseScript(IScriptEngine *engine, const char *name)
 		video_body->setProjectName(longname);
 	}
 
-	ADM_dealloc(longname);
+	prefs->set_lastprojectfile(longname);
+	UI_updateRecentProjectMenu();
+
+	delete [] longname;
+
 	return ret;
+}
+
+bool A_parseScript(IScriptEngine *engine, const char *name)
+{
+	return parseScript(engine, name, IScriptEngine::Normal);
 }
 
 void A_saveScript(IScriptEngine* engine, const char* name)

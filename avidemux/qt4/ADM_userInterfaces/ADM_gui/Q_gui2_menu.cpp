@@ -212,3 +212,62 @@ void MainWindow::buildCustomMenu(void)
     this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir(), fileExts);
     this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
 }
+
+void MainWindow::buildRecentMenu(QMenu *menu, const char **files, QAction **actions)
+{
+	menu->clear();
+
+	for (int i = 0; i < NB_LAST_FILES; i++)
+	{
+		if (files[i])
+		{
+			actions[i] = menu->addAction(QString('0' + i) + QString(":") + QString::fromUtf8(files[i]));
+		}
+		else
+		{
+			actions[i] = NULL;
+		}
+	}
+}
+
+/**
+    \fn buildRecentMenu
+*/
+void MainWindow::buildRecentMenu(void)
+{
+	this->buildRecentMenu(this->recentFiles, prefs->get_lastfiles(), this->recentFileAction);
+}
+
+void MainWindow::buildRecentProjectMenu(void)
+{
+	this->buildRecentMenu(this->recentProjects, prefs->get_lastprojectfiles(), this->recentProjectAction);
+}
+
+void MainWindow::searchRecentFiles(QAction *action, QAction **actionList, int firstEventId)
+{
+	for (int i = 0; i < NB_LAST_FILES; i++)
+	{
+		QAction *a = actionList[i];
+
+		if (!a) continue;
+
+		if (a == action)
+		{
+			HandleAction((Action)(firstEventId + i));
+			return;
+		}
+	}
+}
+
+/**
+\fn searchRecentFiles
+*/
+void MainWindow::searchRecentFiles(QAction * action)
+{
+	this->searchRecentFiles(action, this->recentFileAction, ACT_RECENT0);
+}
+
+void MainWindow::searchRecentProjects(QAction * action)
+{
+	this->searchRecentFiles(action, this->recentProjectAction, ACT_RECENT_PROJECT0);
+}

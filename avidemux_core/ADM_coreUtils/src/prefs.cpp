@@ -14,6 +14,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <vector>
+#include <string>
 
 #include "ADM_cpp.h"
 #include "ADM_default.h"
@@ -396,22 +398,40 @@ bool preferences::set(options option, const char *v)
 //--------------------------------------------------
 #define PRT_LAFI(x,y,z) fprintf(stderr,"Prefs: %s%u %s\n",x,y,(z?z:"NULL"))
 
+void preferences::setFile(const char* file, char** const file1, int maxFiles)
+{
+	std::vector<std::string> files;
+
+	files.push_back(file);
+
+	for (int index = 0; index < maxFiles; index++)
+	{
+		const char* nextFile = *(file1 + index);
+		
+		if (strcmp(file, nextFile) != 0)
+		{
+			files.push_back(nextFile);
+		}
+
+		ADM_dealloc(nextFile);
+	}
+
+	for (int index = 0; index < maxFiles; index++)
+	{
+		*(file1 + index) = ADM_strdup(index < files[index].size() ? files[index].c_str() : "");
+	}
+}
+
 bool preferences::set_lastfile(const char* file)
 {
-    char *lastFiles[NB_LAST_FILES];
-    lastFiles[0]=myPrefs.lastfiles.file1;
-    lastFiles[1]=myPrefs.lastfiles.file2;
-    lastFiles[2]=myPrefs.lastfiles.file3;
-    lastFiles[3]=myPrefs.lastfiles.file4;
-    for(int i=0;i<NB_LAST_FILES;i++)
-        if(!strcmp(lastFiles[i],file))
-            return true;
-    // 3 goes out, everybody shifts...
-    ADM_dealloc(lastFiles[3]);
-    myPrefs.lastfiles.file1=ADM_strdup(file);
-    myPrefs.lastfiles.file2=lastFiles[0];
-    myPrefs.lastfiles.file3=lastFiles[1];;
-    myPrefs.lastfiles.file4=lastFiles[2];;
+	this->setFile(file, &myPrefs.lastfiles.file1, NB_LAST_FILES);
+
+	return RC_OK;
+}
+
+bool preferences::set_lastprojectfile(const char* file)
+{
+	this->setFile(file, &myPrefs.lastprojects.file1, NB_LAST_FILES);
 
 	return RC_OK;
 }
@@ -427,7 +447,20 @@ const char **preferences::get_lastfiles(void)
     lastFiles[1]=myPrefs.lastfiles.file2;
     lastFiles[2]=myPrefs.lastfiles.file3;
     lastFiles[3]=myPrefs.lastfiles.file4;
+
 	return lastFiles;
+}
+
+const char **preferences::get_lastprojectfiles(void)
+{
+    static const char *lastProjectFiles[NB_LAST_FILES];
+    
+    lastProjectFiles[0] = myPrefs.lastprojects.file1;
+    lastProjectFiles[1] = myPrefs.lastprojects.file2;
+    lastProjectFiles[2] = myPrefs.lastprojects.file3;
+    lastProjectFiles[3] = myPrefs.lastprojects.file4;
+
+	return lastProjectFiles;
 }
 
 // EOF

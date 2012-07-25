@@ -300,7 +300,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     recentProjects=new QMenu("Recent Projects", this);
     ui.menuRecent->addMenu(recentFiles);
     ui.menuRecent->addMenu(recentProjects);
-    connect( ui.menuRecent,SIGNAL(triggered(QAction*)),this,SLOT(searchRecentFiles(QAction*)));
+    connect(this->recentFiles, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentFiles(QAction*)));
+	connect(this->recentProjects, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentProjects(QAction*)));
 
 	this->installEventFilter(this);
 	slider->installEventFilter(this);
@@ -593,41 +594,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 	return QObject::eventFilter(watched, event);
 }
-/**
-    \fn buildRecentMenu
-*/
-void MainWindow::buildRecentMenu(void)
-{
-    const char **names;
-	names=prefs->get_lastfiles();
-    // Purge entries...
-    recentFiles->clear();
-    for(int i=0;i<4;i++)
-    {
-        if(names[i])
-        {
-            recentFileAction[i]=recentFiles->addAction(QString('0'+i)+QString(":")+QString::fromUtf8(names[i]));
-        }else
-            recentFileAction[i]=NULL;
-    }
-}
-/**
-    \fn searchRecentFiles
-*/
-void MainWindow::searchRecentFiles(QAction * action)
-{
-    for(int i=0;i<4;i++)
-    {
-            QAction *a= recentFileAction[i];
-            if(!a) continue;
 
-            if(a==action)
-            {
-                HandleAction((Action)(ACT_RECENT0+i));
-                return;
-            }
-    }
-}
 void MainWindow::mousePressEvent(QMouseEvent* event)
 {
 	this->setFocus(Qt::OtherFocusReason);
@@ -750,6 +717,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 
 	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
 	UI_updateRecentMenu();
+	UI_updateRecentProjectMenu();
 
     // Init vumeter
     VuMeter=mw->ui.frameVU;
@@ -921,6 +889,12 @@ void UI_updateRecentMenu( void )
 {
     ((MainWindow *)QuiMainWindows)->buildRecentMenu();
 }
+
+void UI_updateRecentProjectMenu()
+{
+	((MainWindow *)QuiMainWindows)->buildRecentProjectMenu();
+}
+
 /**
   \fn    setupMenus(void)
   \brief Fill in video & audio co
