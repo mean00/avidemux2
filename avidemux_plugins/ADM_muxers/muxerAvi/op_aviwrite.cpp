@@ -487,7 +487,7 @@ uint8_t aviWrite::saveAudioFrame (uint32_t index,uint32_t len, uint8_t * data)
     aviAudioTrack *trk=&(audioTracks[index]);
     trk->sizeInBytes+=len;
     trk->nbBlocks++;
-    return indexMaker->addAudioFrame(index,len,0,data);
+    return indexMaker->addAudioFrame(index,len,AVI_KEY_FRAME,data);
 }
 /**
     \fn setEnd
