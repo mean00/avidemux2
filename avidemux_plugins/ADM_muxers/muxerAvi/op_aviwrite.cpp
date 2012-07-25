@@ -75,6 +75,15 @@ public:
                         io.write16(ncodecdelay);
                         memcpy(to,io.getBuffer(),14);
                      }
+                    VBRext()
+                    {
+                          cbsize = 12;
+                          wId =1;
+                          fdwflags = 2;
+                          nframesperblock = 1;
+                          nblocksize=0;
+                          ncodecdelay = 0;
+                    }
 };
 
 
@@ -259,11 +268,6 @@ VBRext   mp3vbr;
            {
           int samplePerFrame=1152; // see http://msdn.microsoft.com/en-us/library/ms787304(VS.85).aspx
 		  // then update VBR fields
-		  mp3vbr.cbsize = 12;
-		  mp3vbr.wId =1;
-		  mp3vbr.fdwflags = 2;
-	      mp3vbr.nframesperblock = 1;
-		  mp3vbr.ncodecdelay = 0;
 
 		  wav->bitspersample = 0;
 		  mp3vbr.nblocksize=samplePerFrame; //384; // ??
