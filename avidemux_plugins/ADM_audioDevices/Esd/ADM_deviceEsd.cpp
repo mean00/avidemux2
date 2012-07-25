@@ -15,16 +15,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include <sys/time.h>
+#include <unistd.h>
+#include <esd.h>
+
 #include "ADM_default.h"
 #include "ADM_audiodevice.h"
+#include "ADM_audioDeviceInternal.h"
+#include "ADM_deviceEsd.h"
 
-
-#include  "ADM_audiodevice.h"
-#include  "ADM_audioDeviceInternal.h"
-
-#include  "ADM_deviceEsd.h"
-#include <esd.h>
-#include <sys/time.h>
 ADM_DECLARE_AUDIODEVICE(Esd,esdAudioDevice,1,0,1,"Esd audio device (c) mean");
 /**
         \fn getLatencyMs
