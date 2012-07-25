@@ -107,8 +107,6 @@ int main(int argc, char *argv[])
 	printf(" (x86)");
 #elif defined(ADM_CPU_X86_64)
 	printf(" (x86-64)");
-#elif defined(ADM_CPU_PPC)
-	printf(" (PowerPC)");
 #endif
 
 	printf("\n");

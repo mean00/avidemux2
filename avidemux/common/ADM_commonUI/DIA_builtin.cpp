@@ -51,9 +51,6 @@ uint8_t DIA_builtin(void)
 #ifdef USE_FONTCONFIG
   adm_fontconfig=1;
 #endif
-#ifdef ADM_CPU_ALTIVEC
-        altivec=1;
-#endif
 
 #ifdef USE_FREETYPE
         freetype=1;
@@ -76,9 +73,6 @@ uint8_t DIA_builtin(void)
 #ifdef ADM_CPU_X86_64
 	x86_64=1;
 #endif
-#ifdef ADM_CPU_PPC
-	adm_powerpc=1;
-#endif
 #ifdef HAVE_GETTEXT
 	adm_gettext=1;
 #endif
@@ -91,18 +85,16 @@ uint8_t DIA_builtin(void)
 	diaElemNotch tXvideo(xvideo, QT_TR_NOOP("XVideo"));
     diaElemNotch tVdpau(adm_vdpau, QT_TR_NOOP("VDPAU"));
 
-	diaElemNotch tAltivec(altivec, QT_TR_NOOP("AltiVec"));
-	diaElemNotch tPowerPc(adm_powerpc, QT_TR_NOOP("PowerPC"));
 	diaElemNotch tX86(x86, QT_TR_NOOP("x86"));
 	diaElemNotch tX86_64(x86_64, QT_TR_NOOP("x86-64"));
 
 
 	diaElem *libsElems[] = { &tFontConfig, &tFreetype, &tGettext, &tSdl, &tXvideo,&tVdpau};
-	diaElem *CPUElems[] = {&tAltivec, &tPowerPc, &tX86, &tX86_64};
+	diaElem *CPUElems[] = {&tX86, &tX86_64};
 
 	
 	diaElemTabs tabLibs(QT_TR_NOOP("Libraries"), 6, libsElems);
-	diaElemTabs tabCPU(QT_TR_NOOP("CPU"), 4, CPUElems);
+	diaElemTabs tabCPU(QT_TR_NOOP("CPU"), 2, CPUElems);
 
 	diaElemTabs *tabs[] = {&tabLibs, &tabCPU};
 
