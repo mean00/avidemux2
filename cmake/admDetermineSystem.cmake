@@ -6,8 +6,6 @@
 #  ADM_CPU_X86     - x86 CPU architecture was detected
 #  ADM_CPU_X86_32  - x86 32-bit CPU architecture was detected
 #  ADM_CPU_X86_64  - x86 64-bit CPU architecture was detected
-#  ADM_CPU_MMX2    - x86 CPU with MMX2 instructions is supported
-#  ADM_CPU_SSSE3   - x86 CPU with SSSE3 instructions is supported
 
 MACRO (PERFORM_SYSTEM_TEST testFile testName testSupportedVarName)
 	IF (${ARGC} EQUAL 4)
@@ -25,7 +23,7 @@ MACRO (PERFORM_SYSTEM_TEST testFile testName testSupportedVarName)
 	ENDIF (${testSupportedVarName})
 
 	IF (${testSupportedVarName} OR VERBOSE)
-		MESSAGE(STATUS "Check if GCC is ${testName} - ${testResult}")
+		MESSAGE(STATUS "Checking if compiler supports ${testName} - ${testResult}")
 	ENDIF (${testSupportedVarName} OR VERBOSE)
 
 	IF (NOT ${testSupportedVarName} AND VERBOSE)
@@ -42,8 +40,8 @@ SET(WIN32)
 
 INCLUDE(TestBigEndian)
 
-MESSAGE(STATUS "Checking GCC support")
-MESSAGE(STATUS "********************")
+MESSAGE(STATUS "Checking Compiler support")
+MESSAGE(STATUS "*************************")
 
 ########################################
 # Check OS support
@@ -62,18 +60,6 @@ IF (UNIX_SUPPORTED)
 		IF (APPLE_SUPPORTED)
 			SET(APPLE 1)
 		ENDIF (APPLE_SUPPORTED)
-	ELSE (BSD_SUPPORTED)
-		PERFORM_SYSTEM_TEST(os_cygwin_check.cpp "Cygwin" CYGWIN_SUPPORTED)
-
-		IF (CYGWIN_SUPPORTED)
-			SET(CYGWIN 1)
-
-			PERFORM_SYSTEM_TEST(os_win32_check.cpp "Win32" WIN32_SUPPORTED "-mwin32")
-
-			IF (WIN32_SUPPORTED)
-				SET(WIN32 1)
-			ENDIF (WIN32_SUPPORTED)
-		ENDIF (CYGWIN_SUPPORTED)
 	ENDIF (BSD_SUPPORTED)
 ELSE (UNIX_SUPPORTED)
 	PERFORM_SYSTEM_TEST(os_win32_check.cpp "Win32" WIN32_SUPPORTED)
@@ -112,20 +98,6 @@ ELSE (X86_64_SUPPORTED)
         ENDIF(ARMEL_SUPPORTED)
 	ENDIF (X86_32_SUPPORTED)
 ENDIF (X86_64_SUPPORTED)
-
-IF (ADM_CPU_X86)
-	PERFORM_SYSTEM_TEST(cpu_mmx2_check.cpp "MMX2 capable" MMX2_SUPPORTED)
-
-	IF (MMX2_SUPPORTED)
-		SET(ADM_CPU_MMX2 1)
-	ENDIF (MMX2_SUPPORTED)
-
-	PERFORM_SYSTEM_TEST(cpu_ssse3_check.cpp "SSSE3 capable" SSSE3_SUPPORTED)
-
-	IF (SSSE3_SUPPORTED)
-		SET(ADM_CPU_SSSE3 1)
-	ENDIF (SSSE3_SUPPORTED)
-ENDIF (ADM_CPU_X86)
 
 IF (NOT ADM_CPU_X86_32 AND NOT ADM_CPU_X86_64 AND NOT ADM_CPU_ARMEL)
 	MESSAGE(FATAL_ERROR "CPU not supported")
