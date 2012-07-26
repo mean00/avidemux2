@@ -34,7 +34,8 @@ MACRO(FIND_HEADER_AND_LIB prefix headerFile)
 		SET(_proceed 1)
 
 		IF (NOT ${headerFile} STREQUAL "")
-			FIND_PATH(${prefix}_INCLUDE_DIR ${headerFile})
+			FIND_PATH(${prefix}_INCLUDE_DIR ${headerFile}
+					PATHS /usr/include/x86_64-linux-gnu) # Needed for 64 bits linux
 			MARK_AS_ADVANCED(${prefix}_INCLUDE_DIR)
 
 			IF (${prefix}_INCLUDE_DIR)
