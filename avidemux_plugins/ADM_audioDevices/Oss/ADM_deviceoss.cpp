@@ -14,16 +14,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <unistd.h>
 #include "ADM_default.h"
 
-#include  "ADM_audiodevice.h"
-#include  "ADM_audioDeviceInternal.h"
-
-#include <errno.h>
-
-#include <fcntl.h>
-#include <sys/ioctl.h>
 
 #if defined(ADM_BSD_FAMILY) && !defined(__FreeBSD__) && !defined(__OpenBSD__)
 	#include <soundcard.h>
@@ -39,6 +32,13 @@
 	const char *dsp = "/dev/dsp";
         const char *device_mixer = "/dev/mixer";
 #endif
+#include  "ADM_audiodevice.h"
+#include  "ADM_audioDeviceInternal.h"
+
+#include <errno.h>
+
+#include <fcntl.h>
+#include <sys/ioctl.h>
 
 #include  "ADM_deviceoss.h"
 
