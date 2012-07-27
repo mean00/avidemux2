@@ -31,13 +31,6 @@ MACRO (PERFORM_SYSTEM_TEST testFile testName testSupportedVarName)
 	ENDIF (NOT ${testSupportedVarName} AND VERBOSE)
 ENDMACRO (PERFORM_SYSTEM_TEST)
 
-# clear previous settings
-SET(APPLE)
-SET(CYGWIN)
-SET(MINGW)
-SET(UNIX)
-SET(WIN32)
-
 INCLUDE(TestBigEndian)
 
 MESSAGE(STATUS "Checking Compiler support")
@@ -46,34 +39,13 @@ MESSAGE(STATUS "*************************")
 ########################################
 # Check OS support
 ########################################
-PERFORM_SYSTEM_TEST(os_unix_check.cpp "Unix" UNIX_SUPPORTED)
-
-IF (UNIX_SUPPORTED)
-	SET(UNIX 1)
-
+IF (UNIX)
 	PERFORM_SYSTEM_TEST(os_bsd_check.cpp "BSD family" BSD_SUPPORTED)
 
 	IF (BSD_SUPPORTED)
 		SET(ADM_BSD_FAMILY 1)
-		PERFORM_SYSTEM_TEST(os_apple_check.cpp "Apple" APPLE_SUPPORTED)
-
-		IF (APPLE_SUPPORTED)
-			SET(APPLE 1)
-		ENDIF (APPLE_SUPPORTED)
 	ENDIF (BSD_SUPPORTED)
-ELSE (UNIX_SUPPORTED)
-	PERFORM_SYSTEM_TEST(os_win32_check.cpp "Win32" WIN32_SUPPORTED)
-
-	IF (WIN32_SUPPORTED)
-		SET(WIN32 1)
-
-		PERFORM_SYSTEM_TEST(os_mingw_check.cpp "MinGW" MINGW_SUPPORTED)
-
-		IF (MINGW_SUPPORTED)
-			SET(MINGW 1)
-		ENDIF (MINGW_SUPPORTED)
-	ENDIF (WIN32_SUPPORTED)
-ENDIF (UNIX_SUPPORTED)
+ENDIF (UNIX)
 
 ########################################
 # Check CPU support
