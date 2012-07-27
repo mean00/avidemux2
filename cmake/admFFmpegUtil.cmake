@@ -83,3 +83,16 @@ MACRO (registerFFmpeg sourceDir binaryDir installed)
 		endif (${CMAKE_VERSION} VERSION_GREATER 2.8.3)
 	endif (${installed})
 ENDMACRO (registerFFmpeg)
+
+MACRO (convertPathToUnix pathVariableName bashExecutable)
+	if (WIN32)
+		get_filename_component(directory ${${pathVariableName}} PATH)
+		get_filename_component(fileName ${${pathVariableName}} NAME)
+
+		execute_process(COMMAND ${bashExecutable} -c "echo $PWD" WORKING_DIRECTORY "${directory}"
+						OUTPUT_VARIABLE ${pathVariableName})
+
+		string(REGEX REPLACE "(\r?\n)+$" "" ${pathVariableName} "${${pathVariableName}}")
+		set(${pathVariableName} "${${pathVariableName}}/${fileName}")
+	endif (WIN32)
+ENDMACRO (convertPathToUnix)

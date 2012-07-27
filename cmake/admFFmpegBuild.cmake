@@ -188,6 +188,7 @@ endif (NOT EXISTS "${FFMPEG_BINARY_DIR}/Makefile")
 
 if (FFMPEG_PERFORM_BUILD)
 	find_package(Bourne)
+	find_package(GnuMake)
 
 	message(STATUS "Configuring FFmpeg")
 	set(LAST_FFMPEG_FLAGS "${FFMPEG_FLAGS}" CACHE STRING "" FORCE)
@@ -196,16 +197,9 @@ if (FFMPEG_PERFORM_BUILD)
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
 	file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg_g${CMAKE_EXECUTABLE_SUFFIX}")
 
-	get_filename_component(bash_directory ${BASH_EXECUTABLE} PATH)
-
-	if (WIN32)
-		# make path compatible with bash
-		set(ffmpeg_bash_directory "/${bash_directory}")
-		string(REPLACE ":" "" ffmpeg_bash_directory ${ffmpeg_bash_directory})
-	else (WIN32)
-		set(ffmpeg_bash_directory "${bash_directory}")
-	endif (WIN32)
-
+	set(ffmpeg_bash_directory ${BASH_EXECUTABLE})
+	convertPathToUnix(ffmpeg_bash_directory ${BASH_EXECUTABLE})
+	get_filename_component(ffmpeg_bash_directory ${ffmpeg_bash_directory} PATH)
 	configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_configure.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_configure.sh")
 
 	execute_process(COMMAND ${BASH_EXECUTABLE} ffmpeg_configure.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
@@ -226,14 +220,6 @@ if (FFMPEG_PERFORM_BUILD)
 		if (NOT FF_YASM)
 			message(FATAL_ERROR "Yasm was not found.")
 		endif (NOT FF_YASM)
-
-		if (WIN32 AND (NOT CROSS))
-			string(REGEX MATCH "#define[ ]+CONFIG_DXVA2[ ]+1" FF_DXVA2 "${FF_CONFIG_H}")
-			
-			if (NOT FF_DXVA2)
-				message(FATAL_ERROR "DXVA2 not detected.  Ensure the dxva2api.h system header exists (available from Microsoft or http://downloads.videolan.org/pub/videolan/testing/contrib/dxva2api.h).")
-			endif (NOT FF_DXVA2)
-		endif (WIN32 AND (NOT CROSS))
 	endif (ADM_CPU_X86)
 
 	execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "libavutil"
@@ -258,9 +244,12 @@ endif (FFMPEG_PERFORM_BUILD)
 
 # Build FFmpeg
 getFfmpegLibNames("${FFMPEG_SOURCE_DIR}")
+
+set(ffmpeg_gnumake_executable ${GNUMAKE_EXECUTABLE})
+convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
 configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
 
-  add_custom_command(OUTPUT
+add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
 						"${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
 						"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"

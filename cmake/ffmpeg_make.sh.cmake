@@ -1,2 +1,2 @@
-export PATH=$PATH:${ffmpeg_bash_directory}
-make  V=1 VERBOSE=1
+export PATH=${FF_ENV_PATH}:$PATH
+"${ffmpeg_gnumake_executable}" V=1

@@ -8,7 +8,7 @@ if "%Debug%" EQU "1" (
 	set LeakFlags=-DFIND_LEAKS=ON	)
 
 cd "%sourceDir%\%buildCoreFolder%"
-cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DBASH_DIR="%msysDir%\bin" %DebugFlags% %LeakFlags% ../../avidemux_core
+cmake -G"%BuildGenerator%" -DCMAKE_INSTALL_PREFIX="%buildDir%" -DBASH_DIR="%msysDir%\bin" -DGNUMAKE_DIR="%msysDir%\bin" -DFF_ENV_PATH="/usr/bin" %DebugFlags% %LeakFlags% ../../avidemux_core
 
 if errorlevel 1 goto error
 if "%BuildGenerator%" == "CodeBlocks - MinGW Makefiles" copy "%curDir%\Tools\avidemux.layout" admCore.layout
