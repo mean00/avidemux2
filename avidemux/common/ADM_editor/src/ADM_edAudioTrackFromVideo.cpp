@@ -38,6 +38,17 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
     
 }
 /**
+    \fn isCBR
+*/
+bool ADM_edAudioTrackFromVideo::isCBR()
+{
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    if(!seg) return false;
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+    if(!trk) return false;
+    return trk->stream->isCBR();
+}
+/**
     \fn dtor
 */
 ADM_edAudioTrackFromVideo::~ADM_edAudioTrackFromVideo()

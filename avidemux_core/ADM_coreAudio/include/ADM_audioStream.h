@@ -103,6 +103,11 @@ virtual bool            goToTime(uint64_t nbUs);
 virtual bool            getExtraData(uint32_t *l, uint8_t **d);
 /// Returns or compute duration. If the access cannot provide it, it will be computed here
         uint64_t        getDurationInUs(void) {return durationInUs;}
+virtual bool            isCBR()
+                            {
+                                if(!access) return false;
+                                return access->isCBR();
+                            }
 };
 /**
    \fn ADM_audioCreateStream

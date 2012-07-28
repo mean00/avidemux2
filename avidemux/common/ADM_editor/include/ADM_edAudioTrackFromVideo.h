@@ -57,7 +57,7 @@ public:
               ADM_audioStreamTrack *getCurrentTrack(void);
 
             virtual ADM_edAudioTrackFromVideo *castToTrackFromVideo(void) {return this;}
-
+            virtual bool isCBR();
 
 };
 #endif

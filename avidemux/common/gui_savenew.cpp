@@ -113,7 +113,8 @@ int A_Save(const char *name)
         chain=NULL;
         audio=NULL;
         video=NULL;
-        audioAccess[0]=NULL;
+        for(int i=0;i<ADM_MAX_AUDIO_STREAM;i++)
+            audioAccess[i]=NULL;
         markerA=video_body->getMarkerAPts();
         markerB=video_body->getMarkerBPts();
         startAudioTime=markerA; // Actual start time (for both audio & video ), 

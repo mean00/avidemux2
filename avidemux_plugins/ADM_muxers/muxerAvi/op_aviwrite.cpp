@@ -81,7 +81,7 @@ public:
                           wId =1;
                           fdwflags = 2;
                           nframesperblock = 1;
-                          nblocksize=0;
+                          nblocksize=384;
                           ncodecdelay = 0;
                     }
 };
@@ -186,10 +186,7 @@ uint8_t wmaheader[16];
 VBRext   mp3vbr;
 
 	if(!stream) return true;
-	
-    
-	memset(&mp3vbr,0,sizeof(mp3vbr));
-
+	   
     memcpy(wav,stream->getInfo(),sizeof(*wav));
     
 
@@ -275,9 +272,10 @@ VBRext   mp3vbr;
 		  header->dwScale = 1;
 	  	  header->dwInitialFrames = 1;
           
-		  *extraLen=sizeof(mp3vbr);
-          if (1) // FIXME stream->isVBR()) //wav->blockalign ==1152)	// VBR audio
+		  
+          if (!stream->isCBR()) // FIXME stream->isVBR()) //wav->blockalign ==1152)	// VBR audio
 		  {			// We do like nandub do
+                ADM_info("[avi] : VBR mp3\n");
                 //ADM_assert (audiostream->asTimeTrack ());
                 if(wav->frequency>=32000)  // mpeg1
                 {
@@ -293,13 +291,15 @@ VBRext   mp3vbr;
                 header->dwLength= _videostream.dwLength;
                 header->dwSampleSize = 0;
                 mp3vbr.nblocksize=samplePerFrame;
+                
 		   }
 		   else
            {
+                ADM_info("[avi] : CBR mp3\n");
                 wav->blockalign=1;
            }
-           mp3vbr.serialize(extra);
-           *extraLen=14;
+            mp3vbr.serialize(extra);
+            *extraLen=14;
           }
 		  break;
 

@@ -38,8 +38,9 @@ class ADM_audioStreamCopy : public ADM_audioStream
 virtual                 WAVHeader                *getInfo(void) {return in->getInfo();};
 virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
 //virtual bool            goToTime(uint64_t nbUs);
-virtual bool            getExtraData(uint32_t *l, uint8_t **d);
-        uint64_t        getDurationInUs(void);
+virtual bool             getExtraData(uint32_t *l, uint8_t **d);
+         uint64_t        getDurationInUs(void);
+         bool            isCBR();
 };
 // Pass Through class, just do the timing
 
@@ -51,6 +52,12 @@ ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTi
     in->goToTime(startTime);
 #warning handle shift ???
 }
+
+bool ADM_audioStreamCopy::isCBR()
+{
+    return in->isCBR();
+}
+
 bool            ADM_audioStreamCopy::getExtraData(uint32_t *l, uint8_t **d)
 {
     return in->getExtraData(l,d); 
