@@ -408,10 +408,17 @@ int A_SaveWrapper(const char *name)
 void A_queueJob(const char *jobName,const char *outputFile)
 {
     ADMJob job;
+    IScriptEngine *engine=getPythonScriptEngine();
+            if(!engine)
+            {
+                GUI_Error_HIG("Queue","Cannot get tinyPÿ script engine");
+                return;
+            }
+
             job.outputFileName=string(outputFile);
             job.jobName=string(jobName);
 #warning make sure it is unique
-            job.scriptName=string(jobName);
+            job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
             if(false==ADM_jobAdd(job))
             {
                 GUI_Error_HIG("Queue","Cannot add job %s",jobName);
@@ -421,7 +428,7 @@ void A_queueJob(const char *jobName,const char *outputFile)
             completePath=completePath+string("/")+job.scriptName;
             // Save the script...
 
-            A_saveScript(getScriptEngines()[0], completePath.c_str());
+            A_saveScript(engine, completePath.c_str());
 }
 //EOF
 
