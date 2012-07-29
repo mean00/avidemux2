@@ -101,6 +101,22 @@ IScriptEngine* getDefaultScriptEngine()
 {
 	return engines.size() == 0 ? NULL : engines[0];
 }
+/**
+    \fn getPythonScriptEngine
+*/
+IScriptEngine* getPythonScriptEngine()
+{
+    int n=engines.size();
+    if(!n) return NULL;
+    for(int i=0;i<n;i++)
+    {
+        IScriptEngine *ng=engines[i];
+        if(!ng->defaultFileExtension().compare("py"))
+                return ng;
+    }
+	return NULL;
+}
+
 
 // This shouldn't really be used but since the UI isn't very OOP it's kinda necessary at the moment
 const vector<IScriptEngine*>& getScriptEngines()

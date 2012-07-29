@@ -9,5 +9,5 @@ void destroyScriptEngines();
 const std::vector<IScriptEngine*>& getScriptEngines();
 IScriptEngine* getDefaultScriptEngine();
 void interactiveScript(IScriptEngine *engine);
-
+IScriptEngine* getPythonScriptEngine();
 #endif
