@@ -103,7 +103,7 @@ bool jobWindow::runProcess(spawnData *data)
     sprintf(str,"--slave %d",localPort);
     argv[0]=string("--nogui ");
     argv[1]=string(str);
-    argv[2]=string("--runpy \"")+data->script+string("\" ");
+    argv[2]=string("--run \"")+data->script+string("\" ");
     argv[3]=string("--save \"")+data->outputFile+string("\" ");
 #ifndef _WIN32
     argv[4]=string("--quit > /tmp/prout.log");
