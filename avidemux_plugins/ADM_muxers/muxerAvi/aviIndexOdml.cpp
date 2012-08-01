@@ -31,19 +31,11 @@
 #define aprintf printf
 #endif
 /**
-    \fn ctor
-    \brief this one is used when converting a type 1 avi to type 2
+    \fn commonInit
 */
-aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlPos )
-    : aviIndexBase(father,cousin->_masterList,odmlPos)  
+bool aviIndexOdml::commonInit()
 {
-    ADM_info("Creating Odml file from avi/type1... \n");
-    LMovie = cousin->LMovie; // steal movie from cousin
-    cousin->LMovie=NULL;
-    nbVideoFrame=cousin->nbVideoFrame;
-    memset(audioFrameCount,0,sizeof(audioFrameCount));
-    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
-        audioFrameCount[i]=cousin->audioFrameCount[i];
+   
     // Prepare fcc for superIndex
     superIndex.trackIndeces[0].fcc=fourCC::get((uint8_t *)"00dc");
     for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
@@ -52,6 +44,27 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlPos
         txt[1]+=i;
         superIndex.trackIndeces[1+i].fcc=fourCC::get((uint8_t *)txt);
     }
+    riffCount=0;
+    legacyIndex=NULL;
+    memset(audioFrameCount,0,sizeof(audioFrameCount));
+}
+
+/**
+    \fn ctor
+    \brief this one is used when converting a type 1 avi to type 2
+*/
+aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin )
+    : aviIndexBase(father,cousin->_masterList,cousin->odmlChunkPosition)  
+{
+    commonInit();
+    ADM_info("Creating Odml file from avi/type1... \n");
+    LMovie = cousin->LMovie; // steal movie from cousin
+    cousin->LMovie=NULL;
+    nbVideoFrame=cousin->nbVideoFrame;
+    
+    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
+        audioFrameCount[i]=cousin->audioFrameCount[i];
+  
     // Convert cousin's index
     int n=cousin->myIndex.size();
     for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
@@ -59,7 +72,7 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlPos
         uint32_t trackFcc=superIndex.trackIndeces[j].fcc;
         for(int i=0;i<n;i++)
         {
-            IdxEntry trx=cousin->myIndex[i];
+            IdxEntry trx=cousin->myIndex[i];            
             // 
             if(trx.fcc==trackFcc)
             {
@@ -71,9 +84,19 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlPos
             }
         }
     }
+    // create our first index
+    for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
+    {
+        indexes[j].indexPosition=cousin->placeHolder[j];
+        if(indexes[j].listOfChunks.size())
+            indexes[j].baseOffset=indexes[j].listOfChunks[0].offset;
+    }
+    //
+    
     cousin->myIndex.clear(); // empty cousin index
     for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
         printf("Track %d, found %d entries\n",j,(int)indexes[j].listOfChunks.size());
+    startNewRiff();
 }
 
 /**
@@ -81,19 +104,10 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlPos
 */
 aviIndexOdml::aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk ): aviIndexBase(father,lst,odmlChunk)  
 {
+    commonInit();
     LMovie = new AviListAvi ("LIST", father->_file);
     LMovie->Begin();
-    LMovie->Write32("movi");
-    // Prepare fcc for superIndex
-    superIndex.trackIndeces[0].fcc=fourCC::get((uint8_t *)"00dc");
-    for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
-    {
-        char txt[5]="01wb";
-        txt[1]+=i;
-        superIndex.trackIndeces[1+i].fcc=fourCC::get((uint8_t *)txt);
-    }
-    riffCount=0;
-    legacyIndex=NULL;
+    LMovie->Write32("movi");   
 }
 /**
     \fn dtor
@@ -413,6 +427,7 @@ bool aviIndexOdml::startNewRiff()
     LMovie->End();          // Close current riff
     if(!riffCount)
     {
+        ADM_info("Dealing with legacy index\n");
         prepareLegacyIndex();
         writeLegacyIndex();
     }

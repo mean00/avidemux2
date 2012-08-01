@@ -15,8 +15,6 @@
 #pragma once
 #include "aviIndex.h"
 #include "aviIndexAvi.h" // needed to convert type1 to type2
-#define AVI_SUPER_INDEX_CHUNK_SIZE (16*1024)
-#define AVI_REGULAR_INDEX_CHUNK_SIZE (128*1024)
 
 #define AVI_INDEX_SUPERINDEX 0
 #define AVI_INDEX_INDEX      1
@@ -90,13 +88,15 @@ protected:
            bool             prepareLegacyIndex();
            IdxEntry         *legacyIndex;
            int              legacyIndexCount;
-
+           bool             commonInit();
 public:
-                        aviIndexOdml(aviWrite *father,aviIndexAvi *cousin,uint64_t odmlChunk );
-                        aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk) ;
-           virtual      ~aviIndexOdml();
-           virtual bool  addVideoFrame( int len,uint32_t flags,const uint8_t *data);
-           virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data);
-           virtual bool  writeIndex();
-           virtual int   getNbVideoFrameForHeaders();
+                             aviIndexOdml(aviWrite *father,aviIndexAvi *cousin );
+                             aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk) ;
+           virtual          ~aviIndexOdml();
+           virtual bool     addVideoFrame( int len,uint32_t flags,const uint8_t *data);
+           virtual bool     addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data);
+           virtual bool     writeIndex();
+           virtual int      getNbVideoFrameForHeaders();
 };
+
+// EOF

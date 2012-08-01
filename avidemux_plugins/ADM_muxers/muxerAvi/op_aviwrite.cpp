@@ -479,6 +479,15 @@ uint8_t aviWrite::saveBegin (
 */
 uint8_t aviWrite::saveVideoFrame (uint32_t len, uint32_t flags, uint8_t * data)
 {
+    if(indexMaker->switchToType2Needed(len))
+    {
+            ADM_info("Switching to type2 index\n");
+            aviIndexAvi *oldIndex=(aviIndexAvi *)indexMaker;
+            aviIndexOdml *nwIndex=new aviIndexOdml( this,oldIndex);
+            oldIndex->handOver();
+            delete oldIndex;
+            indexMaker=nwIndex;
+    }
     vframe++;   
     return indexMaker->addVideoFrame(len, flags,data);
 }

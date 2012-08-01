@@ -32,7 +32,7 @@ friend class aviIndexOdml;
 protected:
            
            std::vector <IdxEntry > myIndex;
-           
+           uint64_t      placeHolder[1+ADM_AVI_MAX_AUDIO_TRACK];
 
 public:
                         aviIndexAvi(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk) ;
@@ -41,5 +41,7 @@ public:
            virtual bool  addAudioFrame(int trackNo, int len,uint32_t flags,const uint8_t *data);
            virtual bool  writeIndex();
            virtual int   getNbVideoFrameForHeaders();
+           virtual bool  switchToType2Needed(int len);
+                    bool  handOver(); // used to switch to type2
 
 };

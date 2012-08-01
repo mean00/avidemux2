@@ -22,7 +22,7 @@
 #include "muxerAvi.h"
 
 
-avi_muxer muxerConfig={AVI_MUXER_TYPE2};
+avi_muxer muxerConfig={AVI_MUXER_AUTO};
 
 #if 1
 #define aprintf(...) {}

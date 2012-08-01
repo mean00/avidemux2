@@ -55,9 +55,16 @@ bool  aviIndexAvi::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
       entry.len = len;
       entry.flags = flags;
       entry.offset = offset;
-      myIndex.push_back(entry);
     
       LMovie->WriteChunk (entry.fcc, len, data);
+      if(!myIndex.size())
+      {
+            // place holder...
+            uint64_t pos;
+            LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
+            placeHolder[0]=pos;
+      }
+      myIndex.push_back(entry);    
       return true;
 }
 /**
@@ -66,8 +73,8 @@ bool  aviIndexAvi::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
 
 bool  aviIndexAvi::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8_t *data)
 {
- IdxEntry entry;
-    uint64_t offset=LMovie->Tell ();
+    IdxEntry entry;
+    uint64_t offset=LMovie->Tell ();    
       entry.fcc = entry.fcc = fourccs[trackNo+1];
       entry.len = len;
       entry.flags = flags;
@@ -75,7 +82,14 @@ bool  aviIndexAvi::addAudioFrame(int trackNo,int len,uint32_t flags,const uint8_
       myIndex.push_back(entry);
       LMovie->WriteChunk (entry.fcc, len, data);
       audioSizeCount[trackNo]+=len;
-      audioFrameCount[trackNo]++;      
+      
+      if(!audioFrameCount[trackNo])
+        {  // place holder...
+            uint64_t pos;
+            LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
+            placeHolder[1+trackNo]=pos;
+        }  
+      audioFrameCount[trackNo]++;    
       return true;
 }
 /**
@@ -140,7 +154,7 @@ aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk)
       fourccs[0]=fourCC::get ((uint8_t *)"00dc");
         for(int i=0;i<ADM_AVI_MAX_AUDIO_TRACK;i++)
         {
-            char txt[10]="01wd";
+            char txt[10]="01wb";
             txt[1]+=i;
             fourccs[i+1]=fourCC::get (( uint8_t *)txt);
         }
@@ -148,4 +162,23 @@ aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk)
                openDmlHeaderPosition[i]=father->openDmlHeaderPosition[i];
 
 }
+/**
+    \fn 
+*/
+#define AVI_TYPE1_THRESHOLD 4*1024LL*1024LL*1024LL
+//#define AVI_TYPE1_THRESHOLD 10*1024*1024LL
+bool         aviIndexAvi::switchToType2Needed(int len) 
+{
+    uint64_t delta=_masterList->Tell()-_masterList->TellBegin();
+    delta+=12*myIndex.size();
+    delta+=len;
+    delta+=2*1024*1024; // margin
+    if(delta>AVI_TYPE1_THRESHOLD) return true;
+    return false;
+}
+bool         aviIndexAvi::handOver() 
+{
+    return false;
+}
+
 // EOF

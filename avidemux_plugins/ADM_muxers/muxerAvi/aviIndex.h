@@ -18,6 +18,9 @@ class aviWrite;
     \class aviIndexBase
 */
 #define ADM_AVI_MAX_AUDIO_TRACK 5 // Fixme : dupe
+#define AVI_SUPER_INDEX_CHUNK_SIZE (16*1024)
+#define AVI_REGULAR_INDEX_CHUNK_SIZE (128*1024)
+
 #include "fourcc.h"
 #include "avilist_avi.h"
 class aviIndexOdml;
@@ -50,7 +53,7 @@ public:
            virtual bool         writeIndex()=0;
            virtual int          getNbVideoFrameForHeaders()=0;
                     uint32_t    getSizeInBytesForAudioTrack(int i){ return audioSizeCount[i];}
-                    
+           virtual bool         switchToType2Needed(int len) {return false;}
 
 };
 //EOF
