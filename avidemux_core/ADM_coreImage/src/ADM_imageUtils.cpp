@@ -15,12 +15,9 @@
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "ADM_bitmap.h"
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "ADM_bitstream.h"
 #include "DIA_coreToolkit.h"
 
-#define QT_TR_NOOP(x) x // No translation in core*
 static uint8_t tinyAverage(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
 {
 

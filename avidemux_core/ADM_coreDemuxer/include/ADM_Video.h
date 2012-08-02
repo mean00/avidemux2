@@ -19,13 +19,16 @@
 
 #ifndef __VIDHEADER__
 #define __VIDHEADER__
+
+#ifdef _WIN32
+#	include <windows.h>
+#endif
+
+#include "ADM_inttype.h"
 #include "avifmt.h"
 #include "avifmt2.h"
-
-
 #include "ADM_compressedImage.h"
 #include "ADM_audioStream.h"
-
 #include "ADM_colorspace.h"
 
 

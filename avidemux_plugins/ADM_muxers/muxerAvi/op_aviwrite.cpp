@@ -30,8 +30,6 @@ LAll
 #include <math.h>
 #include "ADM_muxer.h"
 
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "fourcc.h"
 
 #include "avilist_avi.h"

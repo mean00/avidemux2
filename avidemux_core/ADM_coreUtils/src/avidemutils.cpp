@@ -18,6 +18,9 @@
 #include "ADM_default.h"
 #include <math.h>
 
+#ifdef _WIN32
+#	include <windows.h>
+#endif
 
 #include "avifmt.h"
 #include "avifmt2.h"

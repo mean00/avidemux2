@@ -15,9 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef _WIN32
+#	include <windows.h>
+#endif
+
 #include "ADM_default.h"
 #include "avifmt.h"
-#include "avifmt2.h"
 #include "fourcc.h"
 
 void fourCC::print(uint32_t fourcc)

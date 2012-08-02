@@ -14,9 +14,6 @@
 
 #ifndef __ODMLHEADER__
 #define __ODMLHEADER__
-#include "avifmt.h"
-#include "avifmt2.h"
-
 #include "ADM_Video.h"
 #include "ADM_riff.h"
 #include "ADM_audioStream.h"

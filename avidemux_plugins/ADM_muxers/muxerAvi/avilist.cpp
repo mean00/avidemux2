@@ -20,12 +20,8 @@
  
 
 #include "ADM_default.h"
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "fourcc.h"
 #include "avilist.h"
-
-
 
 /**
     \fn     Ctor

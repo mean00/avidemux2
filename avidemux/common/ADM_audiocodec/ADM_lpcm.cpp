@@ -19,11 +19,7 @@
 #include "ADM_default.h"
 #include <math.h>
 
-
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
-
 
 ADM_AudiocodecWavSwapped::ADM_AudiocodecWavSwapped( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {
@@ -41,13 +37,10 @@ ADM_AudiocodecWavSwapped::~ADM_AudiocodecWavSwapped()
 
 }
 
-
-
 uint8_t ADM_AudiocodecWavSwapped::isCompressed( void )
 {
  	return 1;
 }
-
 
 uint8_t ADM_AudiocodecWavSwapped::run(uint8_t * inptr, uint32_t nbIn, float *outptr, uint32_t * nbOut)
 {

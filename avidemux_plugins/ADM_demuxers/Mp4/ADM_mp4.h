@@ -19,13 +19,8 @@
 
 #ifndef __3GPHEADER__
 #define __3GPHEADER__
-#include "avifmt.h"
-#include "avifmt2.h"
-
 #include "ADM_Video.h"
-//#include "ADM_audio/aviaudio.hxx"
 #include "ADM_atom.h"
-
 
 class MPsampleinfo
 {

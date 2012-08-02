@@ -14,8 +14,6 @@
  ***************************************************************************/
 #ifndef AVS_PROXY_H
 #define AVS_PROXY_H
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 #include "ADM_avsproxy_net.h"

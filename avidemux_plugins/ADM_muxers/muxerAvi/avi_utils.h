@@ -13,6 +13,10 @@
  ***************************************************************************/
 
 #pragma once
+#ifdef _WIN32
+#	include <windows.h>
+#endif
+
 #include "avifmt.h"
 #include "avifmt2.h"
 class ADM_videoStream;

@@ -12,9 +12,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 #include "ADM_default.h"
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "fourcc.h"
 #include "ADM_uyvy.h"
 /**

@@ -19,9 +19,6 @@
 
 #ifndef __PICHEADER__
 #define __PICHEADER__
-#include "avifmt.h"
-#include "avifmt2.h"
-
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 

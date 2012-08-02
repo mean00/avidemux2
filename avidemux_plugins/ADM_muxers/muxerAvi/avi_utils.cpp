@@ -24,10 +24,7 @@
 #include <math.h>
 #include "ADM_muxer.h"
 
-#include "avifmt.h"
-#include "avifmt2.h"
 #include "fourcc.h"
-
 #include "avilist.h"
 
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);

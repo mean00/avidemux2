@@ -15,6 +15,11 @@ INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreAudio/inclu
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreAudioDevice/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreAudioEncoder/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreDemuxer/include)
+
+if (UNIX)
+	include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreDemuxer/include/unix)
+endif (UNIX)
+
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreDemuxerMpeg/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreImage/include)
 INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreMuxer/include)
