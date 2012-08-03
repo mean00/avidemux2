@@ -23,10 +23,7 @@
 	#include <_mingw.h>
 
 	#if defined(__MINGW64_VERSION_STR)
-		#if defined (__WIN64)
-			#include <intrin.h>
-		#endif
-
+		#include <intrin.h>
 		#include <wchar.h>
 	#endif
 #endif
@@ -90,7 +87,7 @@ void            ADM_usleep(unsigned long us);
 #define fopen   ADM_fopen
 #define fclose  ADM_fclose
 
-#if !defined(__APPLE__) && !defined(__WIN64) 
+#if !defined(__APPLE__) && !defined(_WIN64) 
 #ifndef ADM_LEGACY_PROGGY
   #define malloc #error
   #define realloc #error

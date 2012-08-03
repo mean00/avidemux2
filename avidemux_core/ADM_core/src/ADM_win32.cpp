@@ -368,7 +368,7 @@ bool getWindowsVersion(char* version)
 	index += sprintf(version + index, " (%d.%d.%d", osvi.dwMajorVersion, osvi.dwMinorVersion, osvi.dwBuildNumber & 0xFFFF);
 
 // 64-bit Windows
-#ifdef __WIN64
+#ifdef _WIN64
 	index += sprintf(version + index, "; 64-bit");
 #else
 	bool isWow64 = false;
