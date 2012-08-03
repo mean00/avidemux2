@@ -19,14 +19,6 @@
 #include <imagehlp.h>
 #include <cxxabi.h>
 
-extern "C"
-{
-typedef void ADM_saveFunction(void);
-typedef void ADM_fatalFunction(const char *title, const char *info);
-void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal);
-void ADM_backTrack(const char *info, int lineno, const char *file);
-}
-
 static ADM_saveFunction *mysaveFunction = NULL;
 static ADM_fatalFunction *myFatalFunction = NULL;
 

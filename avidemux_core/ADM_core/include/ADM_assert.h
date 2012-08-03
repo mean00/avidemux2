@@ -17,7 +17,6 @@
 #define ADM_ASSERT_H
 
 #include <assert.h>
-#include "ADM_inttype.h"
 
 #if defined(__MINGW32__)
 	#include <_mingw.h>
@@ -28,6 +27,8 @@
 	#endif
 #endif
 
+#include "ADM_inttype.h"
+#include "ADM_crashdump.h"
 
 #define ADM_assert(x) { if(!(x)) {ADM_backTrack("Assert failed :"#x,__LINE__,__FILE__);  }}
 
@@ -36,13 +37,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Our crash  / assert functions */
-typedef void ADM_saveFunction(void);
-typedef void ADM_fatalFunction(const char *title, const char *info);
-
-void            ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal);
-void            ADM_backTrack(const char *info,int lineno,const char *file);
-/* Our crash  / assert functions */
 
 /* Replacement for fread & friends */
 size_t          ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream);
