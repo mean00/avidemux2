@@ -52,7 +52,6 @@ public:
 bool    ADM_jobInit(void);
 bool    ADM_jobShutDown(void);
 
-int     ADM_jobCount(void);
 bool    ADM_jobAdd(const ADMJob& job);
 bool    ADM_jobDelete(const ADMJob& job);
 bool    ADM_jobGet(vector <ADMJob> &jobs);

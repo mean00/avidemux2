@@ -190,14 +190,7 @@ bool ADM_jobDump(const ADMJob &job)
     printf("End      :%"LLD"\n",job.endTime);
     return true;
 }
-/**
-    \fn ADM_jobCount
-    \brief returns the number of jobs in the database
-*/
-int     ADM_jobCount(void)
-{
 
-}
 /**
     \fn ADM_jobAdd
     \brief add a job
