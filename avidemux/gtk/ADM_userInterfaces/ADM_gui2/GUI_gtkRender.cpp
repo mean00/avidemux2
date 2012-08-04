@@ -29,7 +29,7 @@ extern "C"
 #include <gdk/gdkx.h>
 #endif
 #include "ADM_toolkitGtk.h"
-
+#include "DIA_coreToolkit.h"
 #include "ADM_misc.h"
 
 #include "../ADM_render/GUI_render.h"

@@ -23,7 +23,7 @@
 #include "ADM_vidMisc.h"
 #include "ADM_toolkitQt.h"
 #include "GUI_ui.h"
-extern void UI_purge(void);
+
 static int stopReq=0;
 extern bool ADM_slaveReportProgress(uint32_t percent);
 

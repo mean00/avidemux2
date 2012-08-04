@@ -19,8 +19,6 @@
 #include "Q_ocr.h"
 #include "ADM_toolkitQt.h"
 
-extern void UI_purge(void);
-
 //*********************************************
      
 void Ui_ocrWindow::setGlyph(admGlyph *glyph,admGlyph *head,char *decodedString)

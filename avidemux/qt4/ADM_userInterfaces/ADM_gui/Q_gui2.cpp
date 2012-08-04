@@ -113,7 +113,7 @@ static Action searchTranslationTable(const char *name);
 int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms);
 void UI_updateFrameCount(uint32_t curFrame);
 void UI_updateTimeCount(uint32_t curFrame,uint32_t fps);
-extern void UI_purge(void);
+
 /*
     Declare the class that will be our main window
 

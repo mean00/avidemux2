@@ -18,7 +18,7 @@
 #include "ADM_toolkitGtk.h"
 #include "ADM_edit.hxx"
 #include "DIA_audioTracks.h"
-extern void UI_purge(void);
+
 /**
     \fn audioTrackGtk
 */

@@ -35,7 +35,6 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
-extern void UI_purge(void);
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss);
 bool   GUI_GoToTime(uint64_t time);
 bool   GUI_SeekByTime(int64_t time);

@@ -73,7 +73,6 @@ struct MenuMapping;
 //void *ADM_ocrUiSetup(void) {return 0;}
 //uint8_t ADM_ocrSetRedrawSize(void *ui,uint32_t w,uint32_t h) {return 0;}
 //ReplyType glyphToText(admGlyph *glyph,admGlyph *head,char *decodedString) {return ReplyOk;}
-extern void UI_purge(void);
 extern ADM_RENDER_TYPE UI_getPreferredRender(void);
 
 static const UI_FUNCTIONS_T UI_Hooks=

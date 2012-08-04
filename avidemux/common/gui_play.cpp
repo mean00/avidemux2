@@ -38,9 +38,6 @@
 #define EVEN(x) (x&0xffffffe)
 //___________________________________
 
-extern void UI_purge(void);
-
-//___________________________________
 uint8_t stop_req;
 
 extern ADM_Composer *video_body;

@@ -18,8 +18,7 @@
 #include "ADM_vidMisc.h"
 #include "DIA_working.h"
 #include "ADM_toolkitQt.h"
-
-extern void UI_purge(void);
+#include "DIA_coreToolkit.h"
 
 workWindow::workWindow(QWidget *parent) : QDialog(parent)
  {

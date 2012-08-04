@@ -20,7 +20,7 @@
 #include <math.h>
 
 #include "ADM_toolkitGtk.h"
-
+#include "DIA_coreToolkit.h"
 #include "ADM_misc.h"
 
 #include "ADM_debugID.h"

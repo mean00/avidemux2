@@ -20,7 +20,6 @@ email                : fixounet@free.fr
 
 #include "ADM_default.h"
 
-void UI_purge(void);
 uint8_t getSelectionNumber(uint32_t nb, GtkWidget *tree, GtkListStore *store, uint32_t *number);
 uint8_t setSelectionNumber(uint32_t nb, GtkWidget *tree, GtkListStore *store, uint32_t number);
 int gtk_read_entry(GtkWidget *entry);

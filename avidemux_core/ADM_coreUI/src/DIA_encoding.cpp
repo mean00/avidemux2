@@ -7,9 +7,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
-
-
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 #include "avidemutils.h"
@@ -20,7 +17,6 @@
 #include <math.h>
 #define  ETA_SAMPLE_PERIOD 60000 //Use last n millis to calculate ETA
 #define  GUI_UPDATE_RATE 1000    // Ms
-extern void UI_purge(void);
 
 #define aprintf(...) {}
 /**
