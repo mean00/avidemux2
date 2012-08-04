@@ -123,6 +123,17 @@ namespace ADM_qtScript
             return QScriptValue(QScriptValue::UndefinedValue);
         }
     }
+    QScriptValue AudioOutput::getDrcMode()
+    {
+        if (this->verifyTrack())
+        {
+                return this->_track->audioEncodingConfig.drcEnabled;
+        }
+        else
+        {
+            return QScriptValue(QScriptValue::UndefinedValue);
+        }
+    }
 
     QScriptValue AudioOutput::getResample()
     {
@@ -244,7 +255,15 @@ namespace ADM_qtScript
             }
         }
     }
+    void AudioOutput::setDrcMode(QScriptValue drc)
+    {
+        QScriptValue validateResult = this->validateNumber("drc", drc);
 
+        if (this->verifyTrack() && validateResult.isUndefined())
+        {
+            this->_track->audioEncodingConfig.drcEnabled = drc.toNumber();
+        }
+    }
     void AudioOutput::setGainMode(QScriptValue gainMode)
     {
         QScriptValue validateResult = this->validateNumber("gainMode", gainMode);

@@ -271,6 +271,8 @@ public:
         bool        setAudioFilterNormalise(int dex,ADM_GAINMode mode, uint32_t gain);
         uint32_t    getAudioResample(int dex);
         void        setAudioResample(int dex,uint32_t newfq);
+        bool        setAudioDrc(int track, bool mode);
+        bool        getAudioDrc(int track);
         int         saveAudio(int dex,const char *name);
         bool 		getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain);
         FILMCONV 	getAudioFilterFrameRate(int dex);

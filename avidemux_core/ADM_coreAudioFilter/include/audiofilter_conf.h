@@ -21,6 +21,7 @@
 #include "audiofilter_mixer.h"
 #include "audiofilter_SRC.h"
 #include "audiofilter_normalize.h"
+#include "audiofilter_limiter.h"
 
 /**
     \class ADM_AUDIOFILTER_CONFIG
@@ -44,6 +45,8 @@ public    :
                         film2pal    =FILMCONV_NONE;
                         gainParam.mode=ADM_NO_GAIN;
                         gainParam.gain10=10;
+                        drcEnabled=false;
+                        drcConf=drcConfDefault;
                         return true;
                 }
 
@@ -59,8 +62,13 @@ public    :
     FILMCONV     film2pal;
     // Gain filter
     GAINparam    gainParam;
+    // DRC / limiter
+    bool         drcEnabled;
+    DRCparam      drcConf;
 
 public: // accessor
+    bool            audioFilterGetDrcMode(void) {return drcEnabled;};
+    bool            audioFilterSetDrcMode(bool m) { drcEnabled=m;return true;};
     bool            audioFilterConfigure(void);
     bool            audioFilterSetResample(uint32_t newfq);  // Set 0 to disable frequency
     uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency

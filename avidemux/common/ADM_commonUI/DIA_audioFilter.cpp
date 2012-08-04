@@ -54,6 +54,8 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   {CHANNEL_DOLBY_PROLOGIC2, QT_TR_NOOP("Dolby Pro Logic II")}
     };
   //*************************
+    diaElemToggle    tDRC(PX(drcEnabled),QT_TR_NOOP("DRC"));
+//*************************
   diaMenuEntry menuGain[]={
   {ADM_NO_GAIN,       QT_TR_NOOP("None")},
   {ADM_GAIN_AUTOMATIC,QT_TR_NOOP("Automatic (max -3 dB)")},
@@ -64,13 +66,14 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
     diaElemFloat  eGainValue(&vGainValue,QT_TR_NOOP("G_ain value:"),-10,40);
      eGain.link(&(menuGain[2]),1,&eGainValue);
   //****************************
+
  diaElemMenu      eMixer(&vChan,QT_TR_NOOP("_Mixer:"),11,menuMixer);
  bool bMixer=config->mixerEnabled;
  diaElemToggle    tMixer(&bMixer,QT_TR_NOOP("Remix:"));
  tMixer.link(1,&eMixer);
  /************************************/
- diaElem *elems[]={&eFPS, &tMixer,&eMixer, &eResample,&eGain,&eGainValue};
-  if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),4+2,elems))
+ diaElem *elems[]={&eFPS, &tDRC,&tMixer,&eMixer, &eResample,&eGain,&eGainValue};
+  if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),4+3,elems))
     {
         config->mixerConf=(CHANNEL_CONF)vChan;
         config->film2pal=(FILMCONV)vFilm;

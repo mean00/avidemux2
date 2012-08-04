@@ -115,7 +115,7 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream)
 		{
 			this->_scriptWriter->setAudioResample(i, track->audioEncodingConfig.audioFilterGetResample());
 		}
-
+        this->_scriptWriter->setAudioDrc(i,track->audioEncodingConfig.audioFilterGetDrcMode());
 		// Change fps?
 		FILMCONV fps = track->audioEncodingConfig.audioFilterGetFrameRate();
 

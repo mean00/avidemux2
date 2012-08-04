@@ -359,6 +359,21 @@ static tp_obj zzpy_audioSetNormalize(TP)
   int r =   pySetNormalize(p0,p1,p2,p3); 
   return tp_number(r);
 }
+// audioSetDrc -> int pySetDrc (IEditor int int ) 
+static tp_obj zzpy_audioSetDrc(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int r =   pySetDrc(p0,p1,p2); 
+  return tp_number(r);
+}
 // videoCodec -> int editor->setVideoCodec (str  couples ) 
 static tp_obj zzpy_videoCodec(TP)
  {
@@ -592,6 +607,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_audioSetNormalize);
   }
+  if (!strcmp(key, "audioSetDrc"))
+  {
+     return tp_method(vm, self, zzpy_audioSetDrc);
+  }
   if (!strcmp(key, "videoCodec"))
   {
      return tp_method(vm, self, zzpy_videoCodec);
@@ -693,6 +712,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioEncoding(IEditor, int)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "appendVideo(str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetNormalize(IEditor,int,int,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetDrc(IEditor,int,int)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodec(str, couples)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetMixer(int,str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getWidth(IEditor)");

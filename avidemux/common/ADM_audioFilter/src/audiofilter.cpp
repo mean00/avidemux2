@@ -123,6 +123,12 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
         AUDMAudioFilterMixer *mixer=new AUDMAudioFilterMixer(last,config->mixerConf);
         ADD_FILTER(mixer);
     }
+    if (config->drcEnabled)
+    {
+            AUDMAudioFilterLimiter *pdrc = NULL;
+            pdrc = new AUDMAudioFilterLimiter(last,&config->drcConf);
+            ADD_FILTER(pdrc);
+     }
     // Pal 2 film & friends
     switch(config->film2pal)
     {

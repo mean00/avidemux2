@@ -72,6 +72,7 @@ namespace ADM_qtScript
 		QScriptValue getEncoder();
 		QScriptValue getGainMode();
 		QScriptValue getGainValue();
+        QScriptValue getDrcMode();
 		QScriptValue getMixer();
 		QScriptValue getResample();
 		QScriptValue getStretchAudioMode();
@@ -80,6 +81,7 @@ namespace ADM_qtScript
 		void setAudioInputIndex(QScriptValue inputIndex);
 		void setEncoder(QScriptValue encoder);
 		void setGainMode(QScriptValue gainMode);
+        void setDrcMode(QScriptValue drcMode);
 		void setGainValue(QScriptValue gainValue);
 		void setMixer(QScriptValue mixer);
 		void setResample(QScriptValue resample);
@@ -117,6 +119,10 @@ namespace ADM_qtScript
 		 */
 		Q_PROPERTY(QScriptValue /*% GainMode %*/ gainMode READ getGainMode WRITE setGainMode);
 
+		/** \brief Gets or sets the drc of the Gain audio filter.
+		 * \sa drcMode
+		 */
+		Q_PROPERTY(QScriptValue /*% drcMode %*/ drc READ getDrcMode WRITE setDrcMode);
 		/** \brief Gets or sets the level of gain adjustment (in decibels) that will be applied to the input
 		 * audio during encoding.
 		 *

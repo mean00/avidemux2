@@ -35,6 +35,15 @@
 #include "ADM_audioFilter.h"
 #include "audiofilter_limiter.h"
 
+const DRCparam drcConfDefault=
+{
+  1,
+  0.001,//double   mFloor;
+  0.2, //double   mAttackTime;
+  1.0, //double   mDecayTime;
+  2.0, //double   mRatio;
+  -12.0 ,//double   mThresholdDB;
+};
 
 
 AUDMAudioFilterLimiter::AUDMAudioFilterLimiter(AUDMAudioFilter *previous, DRCparam *param):AUDMAudioFilter (previous)
@@ -50,7 +59,7 @@ uint32_t nbChan=previous->getInfo()->channels;
     mCircleSize=DRC_WINDOW;
     mCircleSize=mCircleSize-(mCircleSize%nbChan);
     drc_cleanup();
-    printf("[DRC] Created DRC:%u Window:%u nbChan %u\n",mCircleSize,DRC_WINDOW,nbChan);
+    ADM_info("[DRC] Created DRC:%u Window:%u nbChan %u\n",mCircleSize,DRC_WINDOW,nbChan);
 
 };
 void AUDMAudioFilterLimiter::drc_cleanup(void)
@@ -88,7 +97,7 @@ void AUDMAudioFilterLimiter::drc_cleanup(void)
 //
 AUDMAudioFilterLimiter::~AUDMAudioFilterLimiter()
 {
-  printf("[DRC] Destroyed\n");
+  ADM_info("[DRC] Destroyed\n");
 }
 
 uint32_t   AUDMAudioFilterLimiter::fill(uint32_t max,float *output,AUD_Status *status)

@@ -18,6 +18,11 @@
 
 #include "ADM_audioFilter.h"
 #include "audiofilter_limiter_param.h"
+
+extern const DRCparam drcConfDefault;
+/**
+    \class AUDMAudioFilterLimiter
+*/
 class AUDMAudioFilterLimiter : public AUDMAudioFilter
 {
   protected:

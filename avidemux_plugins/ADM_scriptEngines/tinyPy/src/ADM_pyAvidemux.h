@@ -27,6 +27,8 @@ int pyAddExternal(IEditor *editor, const char *fileName);
 int pyClearAudioTracks(IEditor *editor);
 
 /* Audio filters */
+int pyGetDrc(IEditor *editor,int track);
+int pySetDrc(IEditor *editor,int track, int onoff);
 int pyGetResample(IEditor *editor,int track);
 int pySetResample(IEditor *editor,int track,int fq);
 int32_t pyGetPal2Film(IEditor *editor);

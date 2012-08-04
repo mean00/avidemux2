@@ -31,6 +31,7 @@ public:
     void setPostProcessing(uint32_t type, uint32_t strength, uint32_t swapUv);
     void setVideoEncoder(ADM_videoEncoder6* videoEncoder);
     void stretchAudio(int trackIndex, FILMCONV fps);
+    void setAudioDrc(int trackIndex, bool active);
 };
 
 #endif

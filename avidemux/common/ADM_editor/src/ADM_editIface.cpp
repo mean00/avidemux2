@@ -222,6 +222,29 @@ void ADM_Composer::resetAudioFilter(int dex)
 
 }
 /**
+    \fn setAudioDrc
+*/
+
+bool        ADM_Composer::setAudioDrc(int dex, bool mode)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterSetDrcMode(mode);
+}
+
+/**
+    \fn getAudioDrc
+*/
+
+bool        ADM_Composer::getAudioDrc(int dex)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    return ed->audioEncodingConfig.audioFilterGetDrcMode();
+}
+
+
+/**
     \fn getAudioResample
 */
 uint32_t ADM_Composer::getAudioResample(int dex)

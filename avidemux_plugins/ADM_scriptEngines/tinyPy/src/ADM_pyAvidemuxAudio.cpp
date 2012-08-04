@@ -262,5 +262,24 @@ int pySetResample(IEditor *editor,int track,int fq)
     editor->setAudioResample(track,fq);
     return true;
 }
+/**
+    \fn
+    \brief
+*/
+
+int pyGetDrc(IEditor *editor,int track)
+{
+    return editor->getAudioDrc(track);
+}
+/**
+    \fn
+    \brief
+*/
+
+int pySetDrc(IEditor *editor,int track, int onoff)
+{
+    editor->setAudioDrc(track,onoff);
+    return true;
+}
 
 // EOF
