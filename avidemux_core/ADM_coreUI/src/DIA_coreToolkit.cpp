@@ -137,6 +137,17 @@ int             GUI_Question(const char *alertstring)
 	ADM_assert(Toolkit);
 	return Toolkit->question(alertstring);	
 }
+
+//
+//    Sleep for n ms
+//
+void GUI_Sleep(uint32_t ms)
+{
+    if (ms < 10)
+	return;
+    ADM_usleep(ms*1000);
+}
+
 /**
  * 	\fn GUI_Alternate
  *  \brief Ask to choose between choice1 and choice2

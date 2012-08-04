@@ -32,16 +32,6 @@
 #include "ADM_vidMisc.h"
 #undef fopen
 #undef fclose
-//
-//    Sleep for n ms
-//
-void GUI_Sleep(uint32_t ms)
-{
-    if (ms < 10)
-	return;
-    ADM_usleep(ms*1000);
-}
-
 
 // Get tick (in ms)
 // Call with a 0 to initialize
