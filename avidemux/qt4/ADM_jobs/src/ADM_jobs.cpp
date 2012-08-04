@@ -22,15 +22,10 @@
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "ADM_coreJobs.h"
-extern "C" {
-     extern uint8_t     ADM_InitMemcpy(void);
-};
+#include "ADM_memsupport.h"
 
 void onexit( void );
 extern uint8_t initFileSelector(void);
-extern void ADM_memStat( void );
-extern void ADM_memStatInit( void );
-extern void ADM_memStatEnd( void );
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
 

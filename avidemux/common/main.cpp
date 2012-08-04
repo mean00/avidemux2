@@ -24,6 +24,7 @@
 #include "ADM_preview.h"
 #include "ADM_win32.h"
 #include "ADM_crashdump.h"
+#include "ADM_memsupport.h"
 #include "ADM_script2/include/ADM_script.h"
 
 #define __DECLARE__
@@ -50,9 +51,6 @@ extern void  ADM_lavInit();
 extern void  ADM_lavDestroy();
 extern void  ADM_lavFormatInit(void);
 extern bool  vdpauProbe(void);
-extern "C" {
-     extern uint8_t     ADM_InitMemcpy(void);
-};
 
 extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
@@ -62,9 +60,6 @@ extern uint8_t initGUI(const vector<IScriptEngine*>& engines);
 extern void destroyGUI(void);
 extern uint8_t initFileSelector(void);
 extern void AUDMEncoder_initDither(void);
-extern void ADM_memStat( void );
-extern void ADM_memStatInit( void );
-extern void ADM_memStatEnd( void );
 extern void getUIDescription(char*);
 extern uint8_t ADM_ad_loadPlugins(const char *path);
 extern uint8_t ADM_vf_loadPlugins(const char *path);

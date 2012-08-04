@@ -25,6 +25,7 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_threads.h"
+#include "ADM_memsupport.h"
 
 #undef memalign
 #undef malloc

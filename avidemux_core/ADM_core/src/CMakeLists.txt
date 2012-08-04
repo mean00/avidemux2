@@ -1,10 +1,6 @@
 SET(ADM_core_SRCS
-	ADM_cpuCap.cpp  ADM_memsupport.cpp  ADM_threads.cpp  ADM_win32.cpp
-	ADM_memory.cpp  ADM_misc.cpp  TLK_clock.cpp  ADM_fileio.cpp ADM_dynamicLoading.cpp
-        ADM_debug.cpp
-        ADM_queue.cpp
-        ADM_benchmark.cpp
-)
+	ADM_cpuCap.cpp  ADM_memsupport.cpp  ADM_threads.cpp  ADM_win32.cpp  ADM_misc.cpp  ADM_debug.cpp
+	TLK_clock.cpp  ADM_fileio.cpp  ADM_dynamicLoading.cpp  ADM_queue.cpp  ADM_benchmark.cpp)
 
 IF (MINGW)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mswin.cpp)
