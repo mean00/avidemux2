@@ -9,9 +9,10 @@
 #ifndef ADM_THREADS_H
 #define ADM_THREADS_H
 
+#include "ADM_core6_export.h"
 #include <pthread.h>
 
-class admMutex
+class ADM_CORE6_EXPORT admMutex
 {
   private:
     uint8_t       _locked;
@@ -25,7 +26,7 @@ class admMutex
     uint8_t isLocked(void);
 };
 
-class admCond
+class ADM_CORE6_EXPORT admCond
 {
   private:
     pthread_cond_t  _cond;
@@ -42,5 +43,5 @@ class admCond
     uint8_t abort(void);
                 
 };
-extern admMutex sharedMutex;
+
 #endif

@@ -17,17 +17,19 @@
 #ifndef ADM_DYNAMICLOADING_H
 #define ADM_DYNAMICLOADING_H
 
-#ifdef _WIN32
-#include "ADM_inttype.h"
+#include "ADM_core6_export.h"
 
-#define SHARED_LIB_EXT "dll"
+#ifdef _WIN32
+#	include "ADM_inttype.h"
+
+#	define SHARED_LIB_EXT "dll"
 #elif defined(__APPLE__)
-#define SHARED_LIB_EXT "dylib"
+#	define SHARED_LIB_EXT "dylib"
 #else
-#define SHARED_LIB_EXT "so"
+#	define SHARED_LIB_EXT "so"
 #endif
 
-class ADM_LibWrapper
+class ADM_CORE6_EXPORT ADM_LibWrapper
 {
 	protected:
 		void* hinstLib;

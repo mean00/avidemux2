@@ -5,6 +5,7 @@
 #include <io.h>
 
 #include "ADM_default.h" 
+#include "ADM_win32.h"
 
 void ADM_usleep(unsigned long us)
 {

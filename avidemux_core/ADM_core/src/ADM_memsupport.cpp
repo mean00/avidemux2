@@ -51,10 +51,6 @@ extern "C"
 	void *av_realloc(void *ptr, unsigned int size);
 }
 
-void ADM_memStat(void);
-void ADM_memStatInit(void);
-void ADM_memStatEnd(void);
-
 void ADM_memStatInit(void)
 {
 	ADM_consumed = 0;

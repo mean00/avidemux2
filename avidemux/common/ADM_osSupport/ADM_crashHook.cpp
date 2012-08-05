@@ -28,7 +28,6 @@ extern ADM_Composer *video_body;
 #define CRASH_FILE "crash.py"
 
 void saveCrashProject(void);
-extern char *ADM_getBaseDir(void);
 
 /**
     \fn saveCrashProject

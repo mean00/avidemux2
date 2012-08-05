@@ -16,6 +16,7 @@
 #ifndef ADM_ASSERT_H
 #define ADM_ASSERT_H
 
+#include "ADM_core6_export.h"
 #include <assert.h>
 
 #if defined(__MINGW32__)
@@ -39,32 +40,32 @@ extern "C" {
 #endif
 
 /* Replacement for fread & friends */
-size_t          ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream);
-size_t          ADM_fwrite (const void *ptr, size_t size, size_t n, FILE *sstream);
-FILE            *ADM_fopen (const char *file, const char *mode);
-int             ADM_fclose (FILE *file);
-uint8_t         ADM_fileExist(const char *name);
-uint8_t         ADM_mkdir(const char *name);
-uint8_t         ADM_eraseFile(const char *name);
-int64_t         ADM_fileSize(const char *file);
+ADM_CORE6_EXPORT size_t          ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream);
+ADM_CORE6_EXPORT size_t          ADM_fwrite (const void *ptr, size_t size, size_t n, FILE *sstream);
+ADM_CORE6_EXPORT FILE            *ADM_fopen (const char *file, const char *mode);
+ADM_CORE6_EXPORT int             ADM_fclose (FILE *file);
+ADM_CORE6_EXPORT uint8_t         ADM_fileExist(const char *name);
+ADM_CORE6_EXPORT uint8_t         ADM_mkdir(const char *name);
+ADM_CORE6_EXPORT uint8_t         ADM_eraseFile(const char *name);
+ADM_CORE6_EXPORT int64_t         ADM_fileSize(const char *file);
 /* Replacements for memory allocation functions */
-extern void     *ADM_alloc(size_t size);
-extern void     *ADM_calloc(size_t nbElm,size_t elSize);
-extern void     *ADM_realloc(void *in,size_t size);
-extern void     ADM_dezalloc(void *ptr);
-extern char     *ADM_strdup( const char *in);
+ADM_CORE6_EXPORT void     *ADM_alloc(size_t size);
+ADM_CORE6_EXPORT void     *ADM_calloc(size_t nbElm,size_t elSize);
+ADM_CORE6_EXPORT void     *ADM_realloc(void *in,size_t size);
+ADM_CORE6_EXPORT void     ADM_dezalloc(void *ptr);
+ADM_CORE6_EXPORT char     *ADM_strdup( const char *in);
 /* Endianness stuff */
 uint64_t 	ADM_swap64(uint64_t in);
-uint32_t 	ADM_swap32(uint32_t in);
-uint16_t 	ADM_swap16(uint16_t in);
+ADM_CORE6_EXPORT uint32_t 	ADM_swap32(uint32_t in);
+ADM_CORE6_EXPORT uint16_t 	ADM_swap16(uint16_t in);
 //static inline uint32_t dontswap(uint32_t in) {return in;};
 
 /* */
-void            ADM_usleep(unsigned long us);
+ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 
 #ifndef __APPLE__
   typedef void *(* adm_fast_memcpy)(void *to, const void *from, size_t len);
-  extern adm_fast_memcpy myAdmMemcpy;
+  extern ADM_CORE6_EXPORT adm_fast_memcpy myAdmMemcpy;
 #endif
 
 #define ADM_memalign(x,y) ADM_alloc(y)
@@ -113,12 +114,10 @@ void            ADM_usleep(unsigned long us);
 
 // ADM_cleanupPath returns a cleaned up copy of the parameter
 #ifdef _WIN32
-		char *ADM_slashToBackSlash(const char *in);
-        #define ADM_cleanupPath(x) ADM_slashToBackSlash(x)
+	ADM_CORE6_EXPORT char *ADM_slashToBackSlash(const char *in);
+	#define ADM_cleanupPath(x) ADM_slashToBackSlash(x)
 #else
-        #define ADM_cleanupPath(x) ADM_strdup(x)
+	#define ADM_cleanupPath(x) ADM_strdup(x)
 #endif
-
-
 #endif
 // EOF

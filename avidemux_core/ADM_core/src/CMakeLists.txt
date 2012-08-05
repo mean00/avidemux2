@@ -14,6 +14,7 @@ IF (NOT APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_memcpy.cpp)
 ENDIF (NOT APPLE)
 
+add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS})
 include_directories("${PTHREAD_INCLUDE_DIR}")
 

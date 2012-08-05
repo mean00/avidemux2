@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ADM_core6_export.h"
 #include "ADM_coreConfig.h"
 #include "ADM_inttype.h"
 #include "ADM_assert.h"
@@ -38,9 +39,9 @@
 extern "C" 
 {
 #endif
-void ADM_warning2(const char *f,const char *st, ...) ;
-void ADM_info2(const char *f,const char *st, ...) ;
-void ADM_error2(const char *f,const char *st, ...) ;
+ADM_CORE6_EXPORT void ADM_warning2(const char *f,const char *st, ...) ;
+ADM_CORE6_EXPORT void ADM_info2(const char *f,const char *st, ...) ;
+ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
 
 #define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
 #define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)

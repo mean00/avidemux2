@@ -12,5 +12,5 @@ if (UNIX)
 endif (UNIX)
 
 if (MINGW)
-	target_link_libraries(ADM_nvwa  bfd  iberty)
+	target_link_libraries(ADM_nvwa  bfd  iberty  imagehlp)
 endif (MINGW)

@@ -16,7 +16,10 @@
 
 #ifndef ADM_CLOCK_H
 #define ADM_CLOCK_H
-class Clock
+
+#include "ADM_core6_export.h"
+
+class ADM_CORE6_EXPORT Clock
 {
 	private: 
             uint32_t _startTime;

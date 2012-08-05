@@ -19,7 +19,6 @@
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
 
-extern int ADM_cpu_num_processors(void);
 extern "C"
 {
     static void ADM_releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);

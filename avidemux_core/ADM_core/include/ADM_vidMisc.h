@@ -16,18 +16,17 @@
 #ifndef __ADM_VIDMISC__
 #define __ADM_VIDMISC__
 
-void            frame2time(uint32_t frame, uint32_t fps, uint32_t * hh, uint32_t * mm,
-                                uint32_t * ss, uint32_t * ms);
-void            time2frame(uint32_t *frame, uint32_t fps, uint32_t hh, uint32_t mm,
-                                uint32_t ss, uint32_t ms);
+#include "ADM_core6_export.h"
+
+ADM_CORE6_EXPORT void            frame2time(uint32_t frame, uint32_t fps, uint32_t * hh, uint32_t * mm, uint32_t * ss, uint32_t * ms);
+ADM_CORE6_EXPORT void            time2frame(uint32_t *frame, uint32_t fps, uint32_t hh, uint32_t mm, uint32_t ss, uint32_t ms);
 char*			ms2timedisplay(uint32_t ms);
-uint8_t         ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s,uint32_t *mms);
+ADM_CORE6_EXPORT uint8_t         ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s,uint32_t *mms);
 
 #define FRAME_PAL 1
 #define FRAME_FILM 2
 #define FRAME_NTSC 3
 
 uint8_t 	identMovieType(uint32_t fps1000); // identify the movie type (mainly for mpeg1/2) 
-uint8_t 	ms2time(uint32_t ms, uint32_t *h,uint32_t *m, uint32_t *s,uint32_t *mms);
-const char *ADM_us2plain(uint64_t ams);
+ADM_CORE6_EXPORT const char *ADM_us2plain(uint64_t ams);
 #endif

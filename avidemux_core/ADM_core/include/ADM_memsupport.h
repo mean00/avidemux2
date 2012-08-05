@@ -1,9 +1,12 @@
 #ifndef ADM_MEMSUPPORT_H
 #define ADM_MEMSUPPORT_H
 
-void ADM_memStat(void);
-void ADM_memStatInit(void);
-void ADM_memStatEnd(void);
-uint8_t ADM_InitMemcpy(void);
+#include "ADM_core6_export.h"
+#include "ADM_inttype.h"
 
-#endif ADM_MEMSUPPORT_H
+ADM_CORE6_EXPORT void ADM_memStat(void);
+ADM_CORE6_EXPORT void ADM_memStatInit(void);
+ADM_CORE6_EXPORT void ADM_memStatEnd(void);
+ADM_CORE6_EXPORT uint8_t ADM_InitMemcpy(void);
+
+#endif

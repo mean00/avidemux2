@@ -23,27 +23,15 @@
 #include "ADM_threads.h"
 #include "ADM_coreJobs.h"
 #include "ADM_memsupport.h"
+#include "ADM_crashdump.h"
+#include "ADM_win32.h"
 
 void onexit( void );
 extern uint8_t initFileSelector(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
 
-#if defined(_WIN64)
-extern LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
-#elif defined(_WIN32)
-extern EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord, void *establisherFrame, struct _CONTEXT *contextRecord, void *dispatcherContext);
-#else
-extern void installSigHandler(void);
-#endif
-
-#ifdef _WIN32
-extern bool getWindowsVersion(char* version);
-extern void redirectStdoutToFile(void);
-#endif
-
 extern uint8_t  quotaInit(void);
-extern uint8_t win32_netInit(void);
 extern bool jobRun(int ac, char **av);
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)

@@ -16,6 +16,7 @@
 #ifndef ADM_CPUCAP_H
 #define ADM_CPUCAP_H
 
+#include "ADM_core6_export.h"
 #include "ADM_coreConfig.h"
 
 #ifdef ADM_CPU_X86
@@ -45,7 +46,7 @@ typedef enum
     \class CpuCaps
     \brief Helper class to get CPU capabilities (MMX/SSE/...)
 */
-class CpuCaps
+class ADM_CORE6_EXPORT CpuCaps
 {
 public:
         static uint32_t      myCpuCaps;
@@ -63,5 +64,5 @@ public:
 
 
 };
-int ADM_cpu_num_processors(void); // Returns the # of cores/CPUs
+ADM_CORE6_EXPORT int ADM_cpu_num_processors(void); // Returns the # of cores/CPUs
 #endif

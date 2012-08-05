@@ -29,7 +29,7 @@
 
 #define CONFIG "config2"
 #define FILE_SIZE_MAX (20*1024)
-extern char *ADM_getBaseDir(void);
+
 static char *checkDirAccess(char *home);
 extern char *ADM_escape(const ADM_filename *incoming);
 class preferences *prefs;
