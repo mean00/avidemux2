@@ -185,7 +185,7 @@ bool bAppend=false;
                           type=7 & (val>>3);
                           if( type<1 ||  type>3)
                           {
-                                  printf("[Indexer]Met illegal pic at %"PRIx64" + %"PRIx64"\n",
+                                  printf("[Indexer]Met illegal pic at %"PRIx64" + %"PRIx32"\n",
                                                   thisUnit.packetInfo.startAt,thisUnit.packetInfo.offset);
                                   continue;
                           }

@@ -28,7 +28,7 @@
 ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent)
 :  ADM_edAudioTrack(ADM_EDAUDIO_FROM_VIDEO,NULL)
 {
-    ADM_info("Creating edAudio from video track %d at %"PRIx64"\n",trackNumber,this);
+    ADM_info("Creating edAudio from video track %d at %"PRIx32"\n",trackNumber,this);
     myTrackNumber=trackNumber;
     this->parent=parent;
     _audioSeg=0;
@@ -53,7 +53,7 @@ bool ADM_edAudioTrackFromVideo::isCBR()
 */
 ADM_edAudioTrackFromVideo::~ADM_edAudioTrackFromVideo()
 {
-    ADM_info("Destroying edAudio from video track %d at %"PRIx64"\n",myTrackNumber,this);
+    ADM_info("Destroying edAudio from video track %d at %"PRIx32"\n",myTrackNumber,this);
     // No need to destroy, we are just a wrapper
 }
 /**

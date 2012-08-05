@@ -267,7 +267,7 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
             data.beginPts=pic->pts;
             data.beginDts=pic->dts;
             // start a new line
-            qfprintf(index,"\nVideo at:%08"PRIx64":%04"PRIx64" Pts:%08"PRId64":%08"PRId64" ",
+            qfprintf(index,"\nVideo at:%08"PRIx64":%04"PRIx32" Pts:%08"PRId64":%08"PRId64" ",
                         p->startAt,p->offset-unit->overRead,pic->pts,pic->dts);
         }
        
@@ -282,7 +282,7 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
 
 
         qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct&3]);
-        qfprintf(index,":%06"PRIx64,nextConsumed-beginConsuming);
+        qfprintf(index,":%06"PRIx32,nextConsumed-beginConsuming);
         qfprintf(index,":%"PRId64":%"PRId64,deltaPts,deltaDts);
     
         beginConsuming=nextConsumed;

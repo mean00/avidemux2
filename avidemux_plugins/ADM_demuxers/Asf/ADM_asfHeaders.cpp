@@ -108,11 +108,11 @@ uint8_t gid[16];
         for(int z=0;z<16;z++) printf(":%02x",s->read8());
         printf("\n");
         printf("Reserved    : %08"PRIx64"\n",s->read64());
-        printf("Total Size  : %04"PRIx64"\n",s->read32());
-        printf("Size        : %04"PRIx64"\n",s->read32());
+        printf("Total Size  : %04"PRIx32"\n",s->read32());
+        printf("Size        : %04"PRIx32"\n",s->read32());
         sid=s->read16();
         printf("Stream nb   : %04d\n",sid);
-        printf("Reserved    : %04"PRIx64"\n",s->read32());
+        printf("Reserved    : %04"PRIx32"\n",s->read32());
         switch(audiovideo)
         {
           case 1: // Video
@@ -275,7 +275,7 @@ uint8_t asfHeader::getHeaders(void)
             printf("Play duration : %s\n",ADM_us2plain(playDuration));
             printf("Send duration : %s\n",ADM_us2plain(sendDuration));
             printf("Preroll   3   : %s\n",ADM_us2plain(s->read64()/10LL));
-            printf("Flags         : %04"PRIx64"\n",s->read32());
+            printf("Flags         : %04"PRIx32"\n",s->read32());
             mx=s->read32();
             mn=s->read32();
             if(mx!=mn)
@@ -285,9 +285,9 @@ uint8_t asfHeader::getHeaders(void)
               return 0; 
             }
             _packetSize=mx;
-            printf("Min size      : %04"PRIx64"\n",mx);
-            printf("Max size      : %04"PRIx64"\n",mn);
-            printf("Uncompres.size: %04"PRIx64"\n",s->read32());
+            printf("Min size      : %04"PRIx32"\n",mx);
+            printf("Max size      : %04"PRIx32"\n",mn);
+            printf("Uncompres.size: %04"PRIx32"\n",s->read32());
           }
           break;
       case ADM_CHUNK_STREAM_HEADER_CHUNK:

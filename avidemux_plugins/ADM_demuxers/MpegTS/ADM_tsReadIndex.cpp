@@ -78,7 +78,7 @@ bool tsHeader::processAudioIndex(char *buffer)
         head++;
         while((tail=strstr(head," ")))
         {
-            if(4!=sscanf(head,"Pes:%"PRIx64":%"PRIx64":%"PRIi32":%"PRId64" ",&pes,&startAt,&size,&dts))
+            if(4!=sscanf(head,"Pes:%"PRIx32":%"PRIx64":%"PRIi32":%"PRId64" ",&pes,&startAt,&size,&dts))
             {
 // qfprintf(index,"Pes:%x:%08"PRIx64":%"PRIi32":%PRId64 ",e,s->startAt,s->startSize,s->startDts);
                 printf("[tsHeader::processAudioIndex] Reading index %s failed\n",buffer);
@@ -88,7 +88,7 @@ bool tsHeader::processAudioIndex(char *buffer)
             track->push(startAt,dts,size);
 
             trackNb++;
-            //printf("[%s] => %"PRIx64" Dts:%"PRId64" Size:%"PRId64"\n",buffer,pes,dts,size);
+            //printf("[%s] => %"PRIx32" Dts:%"PRId64" Size:%"PRId64"\n",buffer,pes,dts,size);
             if(strlen(head)<4) break;
         }
         return true;
@@ -104,7 +104,7 @@ bool tsHeader::processVideoIndex(char *buffer)
             char *head=buffer;
             uint64_t pts,dts,startAt;
             uint32_t offset;
-            if(4!=sscanf(head,"at:%"PRIx64":%"PRIx64" Pts:%"PRId64":%"PRId64,&startAt,&offset,&pts,&dts))
+            if(4!=sscanf(head,"at:%"PRIx64":%"PRIx32" Pts:%"PRId64":%"PRId64,&startAt,&offset,&pts,&dts))
             {
                     printf("[TsDemuxerer] cannot read fields in  :%s\n",buffer);
                     return false;
@@ -134,7 +134,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                 cur++;
                 next=strstr(start," ");
                 int64_t ppts,ddts;
-                ADM_assert(3==sscanf(cur,"%"PRIx64":%"PRId64":%"PRId64,&len,&ppts,&ddts));
+                ADM_assert(3==sscanf(cur,"%"PRIx32":%"PRId64":%"PRId64,&len,&ppts,&ddts));
                 
                 
                 dmxFrame *frame=new dmxFrame;

@@ -372,7 +372,7 @@ bool bAppend=false;
                           type=7 & (val>>3);
                           if( type<1 ||  type>3)
                           {
-                                  printf("[Indexer]Met illegal pic at %"PRIx64" + %"PRIx64"\n",
+                                  printf("[Indexer]Met illegal pic at %"PRIx64" + %"PRIx32"\n",
                                                   info.startAt,info.offset);
                                   continue;
                           }
@@ -452,7 +452,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
         if(data->nbPics)
         {
             // Write previous image data (size) : TODO
-            qfprintf(index,":%06"PRIx64" ",data->pkt->getConsumed()+offset); // Size
+            qfprintf(index,":%06"PRIx32" ",data->pkt->getConsumed()+offset); // Size
         }
         else data->pkt->getConsumed();
     }
@@ -474,7 +474,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
                 
             }
             // start a new line
-            qfprintf(index,"\nVideo at:%08"PRIx64":%04"PRIx64" Pts:%08"PRId64":%08"PRId64" ",data->startAt,data->offset,info->pts,info->dts);
+            qfprintf(index,"\nVideo at:%08"PRIx64":%04"PRIx32" Pts:%08"PRId64":%08"PRId64" ",data->startAt,data->offset,info->pts,info->dts);
             data->gopStartDts=info->dts;
             data->nextOffset=-2;
         }

@@ -660,7 +660,7 @@ bool               ADM_Composer::dumpTiming(void)
 
             v->_aviheader->getFlags(i,&flags);
             v->_aviheader->getPtsDts(i,&pts,&dts);
-            printf("%"PRIu32" flags:%04"PRIx64" ",i,flags);
+            printf("%"PRIu32" flags:%04"PRIx32" ",i,flags);
             printf("pts :%s ",ADM_us2plain(pts));
             printf("dts :%s \n",ADM_us2plain(dts));
     }

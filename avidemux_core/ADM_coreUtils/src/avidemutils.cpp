@@ -84,7 +84,7 @@ void mixDump(uint8_t * ptr, uint32_t len)
 
 		  if ((i % 16) == 15)
 		    {
-					printf("\n %04"PRIx64" : %s %s", (i >> 4) << 4, str, str2);
+					printf("\n %04"PRIx32" : %s %s", (i >> 4) << 4, str, str2);
 					*str = 0;
 					*str2 = 0;
 		    }
@@ -92,7 +92,7 @@ void mixDump(uint8_t * ptr, uint32_t len)
 	// left over
 	if(len%16!=0)
 	{
-		 printf("\n %04"PRIx64" : %s %s", (len >> 4) << 4, str, str2);
+		 printf("\n %04"PRIx32" : %s %s", (len >> 4) << 4, str, str2);
 	}
 }
 /*

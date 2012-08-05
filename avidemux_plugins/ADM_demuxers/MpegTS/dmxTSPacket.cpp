@@ -782,7 +782,7 @@ bool    tsPacketLinear::seek(uint64_t packetStart, uint32_t offset)
     }
     if(!refill())
     {
-        printf("[tsPacketLinear] Seek to %"PRIx64":%"PRIx64" failed\n",packetStart,offset);
+        printf("[tsPacketLinear] Seek to %"PRIx64":%"PRIx32" failed\n",packetStart,offset);
         return false;
     }
     ADM_assert(offset<pesPacket->payloadSize);
