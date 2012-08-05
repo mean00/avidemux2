@@ -72,7 +72,7 @@ bool psHeader::updatePtsDts(void)
             {
                 double deltaBytes=(*seekPoints)[point].size;
                 double deltaTime=0;
-                printf("Computing DTS for seek point %d, bytes %"LLU", with reference bytes %"LLU" time %"LLU" us\n",
+                printf("Computing DTS for seek point %d, bytes %"PRIu64", with reference bytes %"PRIu64" time %"PRIu64" us\n",
                                     point,(uint64_t)deltaBytes,bytes,future);
                 if(deltaBytes>bytes)
                 {
@@ -84,7 +84,7 @@ bool psHeader::updatePtsDts(void)
                 deltaTime=deltaBytes/byteRate;
                 if(deltaTime>future)
                 {
-                        ADM_error("Computed time correction too big : %"LLU" max=%"LLU"\n",
+                        ADM_error("Computed time correction too big : %"PRIu64" max=%"PRIu64"\n",
                                             (uint64_t)deltaTime, (uint64_t)future);
                         (*seekPoints)[point].dts=0;
                 }else
@@ -189,7 +189,7 @@ next:
         for(int i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *frame=ListOfFrames[i];
-            aprintf("[psUpdate] frame:%d raw DTS: %"LLD" PTS:%"LLD"\n",i,frame->dts,frame->pts);
+            aprintf("[psUpdate] frame:%d raw DTS: %"PRId64" PTS:%"PRId64"\n",i,frame->dts,frame->pts);
             if(frame->pts==ADM_NO_PTS || frame->dts==ADM_NO_PTS)
             {
                 noUpdate++;
@@ -206,7 +206,7 @@ next:
                     uint64_t oldDts=lastDts;
                     frame->dts=lastDts=timeConvert(frame->dts);
                     frame->pts=lastPts=timeConvert(frame->pts);
-                    if(oldDts>lastDts) printf("[psRead] Warning DTS going backward frame %d, old:%"LLD" new:%"LLD" delta=%"LLD"\n",
+                    if(oldDts>lastDts) printf("[psRead] Warning DTS going backward frame %d, old:%"PRId64" new:%"PRId64" delta=%"PRId64"\n",
                                                        i,oldDts/1000,lastDts/1000,(oldDts-lastDts)/1000);
 
                 }else
@@ -245,7 +245,7 @@ next:
             dts=frame->dts;
             if(pts!=ADM_NO_PTS) pts/=1000;
             if(dts!=ADM_NO_PTS) dts/=1000;
-            printf("[psVideo] Framex %d PTS:%"LLD" ms DTS:%"LLD" ms, delta %"LLD" ms\n",i,pts,dts,pts-dts);
+            printf("[psVideo] Framex %d PTS:%"PRId64" ms DTS:%"PRId64" ms, delta %"PRId64" ms\n",i,pts,dts,pts-dts);
         }
 #endif
         return 1;

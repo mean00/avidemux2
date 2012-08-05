@@ -94,7 +94,7 @@ uint8_t       DIA_progressIndexing::update(uint32_t done,uint32_t total, uint32_
         sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
         gtk_label_set_text(GTK_LABEL(WID(labelTime)),string);
 
-        sprintf(string,"%0"LU,nbImage);
+        sprintf(string,"%0"PRIu32,nbImage);
         gtk_label_set_text(GTK_LABEL(WID(labelNbImage)),string);
 
         f=done;

@@ -28,17 +28,17 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     width=encoder->getWidth();
     height=encoder->getHeight();
     fcc=encoder->getFourcc();
-    printf("[StreamProcess] Stream %"LU"x%"LU", codec : %s\n",width,height,fcc);
+    printf("[StreamProcess] Stream %"PRIu32"x%"PRIu32", codec : %s\n",width,height,fcc);
     fourCC=fourCC::get((uint8_t *)fcc);
     frameIncrement=encoder->getFrameIncrement();
     float f=encoder->getFrameIncrement();
     if(f) f=1000000000./f;
         else f=25000;
     averageFps1000=(uint32_t)f;
-    printf("[StreamProcess] Average FPS1000=%"LU"\n",averageFps1000);
+    printf("[StreamProcess] Average FPS1000=%"PRIu32"\n",averageFps1000);
     isCFR=false;
     videoDelay=encoder->getEncoderDelay();
-    printf("[StreamProcess] Video Encoder Delay=%"LLU"ms\n",videoDelay/1000);
+    printf("[StreamProcess] Video Encoder Delay=%"PRIu64"ms\n",videoDelay/1000);
 }
 /**
     \fn ADM_videoStreamProcess

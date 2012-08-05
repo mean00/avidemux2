@@ -78,7 +78,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
             splitFile=ADM_splitSequencedFile(filename, &left, &right,&decimals,&base);
             if(splitFile)
             {   
-                aprintf("left:<%s>, right=<%s>,base=%"LU",digit=%"LU"\n",left,right,base,decimals);
+                aprintf("left:<%s>, right=<%s>,base=%"PRIu32",digit=%"PRIu32"\n",left,right,base,decimals);
             }else       
             {
                 aprintf("No.\n");
@@ -104,7 +104,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                  newFd.fileSizeCumul=0;
                 _size=newFd.fileSize;
                 listOfFd.append(newFd);
-                aprintf( " file: %s, size: %"LLU"\n", filename, newFd.fileSize );
+                aprintf( " file: %s, size: %"PRIu64"\n", filename, newFd.fileSize );
                 aprintf( " found 1 files \n" );
                 aprintf( "Done \n" );
                 return 1;
@@ -162,7 +162,7 @@ uint8_t fileParser::open( const char *filename,FP_TYPE *multi )
                 myFd.fileSizeCumul = total;
                 total+=  myFd.fileSize;
 
-                aprintf( " file %d: %s, size: %"LLU"\n", (count + 1), outName.c_str(),
+                aprintf( " file %d: %s, size: %"PRIu64"\n", (count + 1), outName.c_str(),
                                             myFd.fileSize );
 
                 listOfFd.append(myFd);
@@ -247,7 +247,7 @@ uint8_t fileParser::setpos(uint64_t o)
                                                   return 1;
                                         }
                         }
-                        printf("\n cannot seek to %"LLU"\n",o);
+                        printf("\n cannot seek to %"PRIu64"\n",o);
                         return 0;
 }
 //
@@ -262,7 +262,7 @@ uint32_t val,hnt;
         // preload
         if((4+_off)>=_size)
         {
-                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%u)\n",_off,_size,(unsigned int)listOfFd.size());
+                printf("Dmx IO: End of file met (%"PRIu64" / %"PRIu64" seg:%u)\n",_off,_size,(unsigned int)listOfFd.size());
                 return 0;
         }
         hnt=(read8i()<<16) + (read8i()<<8) +read8i();
@@ -295,7 +295,7 @@ uint32_t val,hnt;
         // preload
         if((5+_off)>=_size)
         {
-                printf("Dmx IO: End of file met (%"LLU" / %"LLU" seg:%u)\n",_off,_size,(unsigned int)listOfFd.size());
+                printf("Dmx IO: End of file met (%"PRIu64" / %"PRIu64" seg:%u)\n",_off,_size,(unsigned int)listOfFd.size());
                 return 0;
         }
         hnt=(read8i()<<24)+(read8i()<<16) + (read8i()<<8) +read8i();

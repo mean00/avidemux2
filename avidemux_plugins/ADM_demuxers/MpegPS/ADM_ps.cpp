@@ -67,7 +67,7 @@ uint8_t psHeader::open(const char *name)
         goto abt;
     }
     append=index.getAsUint32("Append");
-    printf("[psDemux] Append=%"LU"\n",append);
+    printf("[psDemux] Append=%"PRIu32"\n",append);
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))
     {

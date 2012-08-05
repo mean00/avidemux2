@@ -53,13 +53,13 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     {
         uint64_t delta=ptsStart;
         video_body->getPtsDtsDelta(&delta);
-        ADM_info("PTS/DTS delta=%"LLU" us\n",delta);
+        ADM_info("PTS/DTS delta=%"PRIu64" us\n",delta);
         //videoDelay
         if(delta>ptsStart)
         {
             videoDelay=delta-ptsStart;
             dtsStart=0;
-            ADM_info("Dts is too early, delaying everything by %"LLU" ms\n",videoDelay/1000);
+            ADM_info("Dts is too early, delaying everything by %"PRIu64" ms\n",videoDelay/1000);
         }else
         {
             dtsStart=ptsStart-delta;
@@ -75,7 +75,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     rewind();
     
     ADM_info(" Fixating start time by %d\n",abs((int)(startTime-startTimeDts)));
-    ADM_info(" Starting DTS=%"LLU", PTS=%"LLU" ms\n",startTimeDts/1000,startTimePts/1000);
+    ADM_info(" Starting DTS=%"PRIu64", PTS=%"PRIu64" ms\n",startTimeDts/1000,startTimePts/1000);
 }
 /**
 
@@ -107,8 +107,8 @@ uint64_t  ADM_videoStreamCopy::rescaleTs(uint64_t in)
     if(in==ADM_NO_PTS) return in;
     if(in>=startTimeDts) return in-startTimeDts;
     ADM_warning("Negative time!\n");
-    ADM_warning("Current time = %"LLU"\n",in);
-    ADM_warning("start time = %"LLU"\n",startTimeDts);
+    ADM_warning("Current time = %"PRIu64"\n",in);
+    ADM_warning("start time = %"PRIu64"\n",startTimeDts);
     return 0;
 }
 /**
@@ -139,7 +139,7 @@ again:
         {
             if(image.flags & AVI_B_FRAME) 
             {
-                ADM_warning("Dropping orphean B frame (PTS=%"LLU" ms)\n",image.demuxerPts/1000);
+                ADM_warning("Dropping orphean B frame (PTS=%"PRIu64" ms)\n",image.demuxerPts/1000);
                 goto again;
             }
         }
@@ -152,7 +152,7 @@ again:
           {
             if(image.demuxerPts<image.demuxerDts)
               {
-                ADM_warning("PTS<DTS : PTS=%"LLU" ms , DTS=%"LLU"ms\n",image.demuxerPts/1000,image.demuxerDts/1000);
+                ADM_warning("PTS<DTS : PTS=%"PRIu64" ms , DTS=%"PRIu64"ms\n",image.demuxerPts/1000,image.demuxerDts/1000);
 
               }
 

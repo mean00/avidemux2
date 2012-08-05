@@ -293,7 +293,7 @@ uint8_t    MP4Header::open(const char *name)
                                           if(of>fileSize) of=hi;
                                         }
                                         fseeko(_fd,of,SEEK_SET);
-                                        printf("Header starts at %"LLX"\n",of);
+                                        printf("Header starts at %"PRIx64"\n",of);
                                         delete atom;
                                         atom=new adm_atom(_fd);
         }
@@ -338,7 +338,7 @@ uint8_t    MP4Header::open(const char *name)
                 uint32_t w,h,ti;
                 if(extractMpeg4Info(VDEO.extraData,VDEO.extraDataSize,&w,&h,&ti))
                 {
-                    printf("MP4 Corrected size : %"LU" x %"LU"\n",w,h);
+                    printf("MP4 Corrected size : %"PRIu32" x %"PRIu32"\n",w,h);
                     _video_bih.biWidth=_mainaviheader.dwWidth=w ;
                     _video_bih.biHeight=_mainaviheader.dwHeight=h;
                 }
@@ -365,13 +365,13 @@ uint8_t    MP4Header::open(const char *name)
                         {
                         if(extractH263Info(bfer,sz,&w,&h))
                         {
-                            printf("H263 Corrected size : %"LU" x %"LU"\n",w,h);
+                            printf("H263 Corrected size : %"PRIu32" x %"PRIu32"\n",w,h);
                             _video_bih.biWidth=_mainaviheader.dwWidth=w ;
                             _video_bih.biHeight=_mainaviheader.dwHeight=h;
                         }
                         else
                         {
-                                  printf("H263 COULD NOT EXTRACT SIZE, using : %"LU" x %"LU"\n",
+                                  printf("H263 COULD NOT EXTRACT SIZE, using : %"PRIu32" x %"PRIu32"\n",
                                       _video_bih.biWidth,  _video_bih.biHeight);
                         }
                         }
@@ -453,7 +453,7 @@ bool    MP4Header::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 
     if(frame>=VDEO.nbIndex)
     {
-      printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,VDEO.nbIndex);
+      printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,VDEO.nbIndex);
       return 0;
     }
 
@@ -470,7 +470,7 @@ bool    MP4Header::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
     if(frame>=VDEO.nbIndex)
     {
-      printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,VDEO.nbIndex);
+      printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,VDEO.nbIndex);
       return 0;
     }
 

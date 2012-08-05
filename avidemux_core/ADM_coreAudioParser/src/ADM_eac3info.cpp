@@ -55,7 +55,7 @@ uint32_t of=0;
                 printf("Sync failed..continuing\n");
                 continue;
             }
-//            printf("Sync found at offset %"LU"\n",of);
+//            printf("Sync found at offset %"PRIu32"\n",of);
             *syncoff=of;
             info->frequency=(uint32_t)hdr.sample_rate;
             info->byterate=(uint32_t)hdr.bit_rate>>3;

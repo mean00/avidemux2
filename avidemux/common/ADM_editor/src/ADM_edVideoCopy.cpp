@@ -68,8 +68,8 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
         // After a seg switch we are at the keyframe before or equal to where we want to go
         // if the dts do not match, it means we went back too much
         // When re-encoding, it's not a problem, it is when copying.
-        ADM_info("seg:%d refDTS=%"LLU"\n",seg->_reference,seg->_refStartDts);
-        ADM_info("seg:%d imgDTS=%"LLU"\n",seg->_reference,img.demuxerDts);
+        ADM_info("seg:%d refDTS=%"PRIu64"\n",seg->_reference,seg->_refStartDts);
+        ADM_info("seg:%d imgDTS=%"PRIu64"\n",seg->_reference,img.demuxerDts);
         if(!seg->_refStartDts && !seg->_reference)
         {
             ADM_info("Ignoring first seg (unreliable DTS)\n");
@@ -129,7 +129,7 @@ againGet:
     // Get next pic?
     if(false==demuxer->getFrame (vid->lastSentFrame,img))
     {
-        ADM_info("Failed to get next frame for ref %"LU"\n",seg->_reference);
+        ADM_info("Failed to get next frame for ref %"PRIu32"\n",seg->_reference);
         goto nextSeg;
     }
 
@@ -144,7 +144,7 @@ againGet:
         {
             if(seg->_dropBframes==2) 
             {
-                ADM_warning("%"LU" Dropping bframes\n",fn);
+                ADM_warning("%"PRIu32" Dropping bframes\n",fn);
                 goto againGet;
             }
         }else
@@ -174,7 +174,7 @@ againGet:
     tail=seg->_refStartTimeUs+seg->_durationUs;
     // Guess DTS
     //
-   // ADM_info("Frame : Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
+   // ADM_info("Frame : Flags :%X, DTS:%"PRId64" PTS=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
     if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
     
@@ -210,7 +210,7 @@ againGet:
         {
             if(_nextFrameDts>signedDts+vid->timeIncrementInUs/10)
             {
-                ADM_error("Frame %"LU" DTS is going back in time : expected : %"LLD" ms got : %"LLD" ms\n",
+                ADM_error("Frame %"PRIu32" DTS is going back in time : expected : %"PRId64" ms got : %"PRId64" ms\n",
                                                 fn,_nextFrameDts/1000,signedDts/1000);
             }
         }
@@ -226,20 +226,20 @@ againGet:
         int64_t nextDts=nextSeg->_startTimeUs+nextSeg->_refStartDts;
         if(nextDts<nextSeg->_refStartTimeUs)
         {
-            ADM_warning("%"LU" next DTS is negative %"LLU" %"LLU" ms\n",fn,nextDts,nextSeg->_refStartTimeUs);
+            ADM_warning("%"PRIu32" next DTS is negative %"PRIu64" %"PRIu64" ms\n",fn,nextDts,nextSeg->_refStartTimeUs);
         }else       
         {
             nextDts-=nextSeg->_refStartTimeUs;
             if(signedDts>=nextDts)
             {
-                ADM_warning("%"LU" have to switch segment, DTS limit reached %"LLU" %"LLU"\n",fn,img->demuxerDts/1000,nextDts/1000);
+                ADM_warning("%"PRIu32" have to switch segment, DTS limit reached %"PRIu64" %"PRIu64"\n",fn,img->demuxerDts/1000,nextDts/1000);
                 goto nextSeg;
             }
         }
 
 
     }
-   // ADM_info("Frame after RECAL: Flags :%X, DTS:%"LLD" PTS=%"LLD" tail=%"LLD"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
+   // ADM_info("Frame after RECAL: Flags :%X, DTS:%"PRId64" PTS=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     img->demuxerDts=signedDts+videoDelay;
     img->demuxerPts=signedPts+videoDelay;
     return true;
@@ -276,7 +276,7 @@ bool        ADM_Composer::getDirectImageForDebug(uint32_t frameNum,ADMCompressed
     // Get next pic?
     if(false==demuxer->getFrame (frameNum,img))
     {
-        ADM_info("Failed to get next frame for ref %"LU"\n",seg->_reference);
+        ADM_info("Failed to get next frame for ref %"PRIu32"\n",seg->_reference);
         return false;
     }
    return true;

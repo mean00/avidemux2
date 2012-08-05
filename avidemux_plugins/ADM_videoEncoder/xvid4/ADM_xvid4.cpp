@@ -325,7 +325,7 @@ again:
     // Store Pts/DTS
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=image->Pts+getEncoderDelay();
-    aprintf("Pushing fn=%d Time=%"LLU"\n",frameNum,map.realTS);
+    aprintf("Pushing fn=%d Time=%"PRIu64"\n",frameNum,map.realTS);
    
     map.internalTS=frameNum++;
     mapper.push_back(map);
@@ -523,7 +523,7 @@ bool xvid4Encoder::postAmble (ADMBitstream * out,xvid_enc_stats_t *stat,int size
 int xvid4Encoder::hook (void *handle, int opt, void *param1, void *param2)
 {
   xvid_plg_data_t *data = (xvid_plg_data_t *) param1;
- //printf("plugin called with %u (%"LLX" %"LLX")\n",opt,param1,param2);
+ //printf("plugin called with %u (%"PRIx64" %"PRIx64")\n",opt,param1,param2);
  
   if (opt==XVID_PLG_FRAME )//|| opt==XVID_PLG_FRAME)
     {

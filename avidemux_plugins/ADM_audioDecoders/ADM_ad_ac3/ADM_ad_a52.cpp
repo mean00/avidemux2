@@ -107,7 +107,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
         if(nbIn<7)
         {
             if(nbIn)
-                ADM_warning("[a52]: no enough data to decode, available %"LU" bytes, need at least 7\n",nbIn);
+                ADM_warning("[a52]: no enough data to decode, available %"PRIu32" bytes, need at least 7\n",nbIn);
             break;
         }
         length = a52_syncinfo(inptr, &flags, &samprate, &bitrate);

@@ -57,7 +57,7 @@ bool ffmpuxerSetExtradata(AVCodecContext *context, int size, const uint8_t *data
 bool muxerFFmpeg::writePacket(AVPacket *pkt)
 {
 #if 0
-        printf("Track :%d size :%d PTS:%"LLD" DTS:%"LLD"\n",
+        printf("Track :%d size :%d PTS:%"PRId64" DTS:%"PRId64"\n",
                     pkt->stream_index,pkt->size,pkt->pts,pkt->dts);
 #endif
     int ret =av_write_frame(oc, pkt);
@@ -420,9 +420,9 @@ bool muxerFFmpeg::saveLoop(const char *title)
             int64_t xdts=(int64_t)out.dts;
             if(out.pts==ADM_NO_PTS) xpts=-1;
             if(out.dts==ADM_NO_PTS) xdts=-1;
-            aprintf("[FF:V] Pts: %"LLD" DTS:%"LLD" ms\n",xpts/1000,xdts/1000);
+            aprintf("[FF:V] Pts: %"PRId64" DTS:%"PRId64" ms\n",xpts/1000,xdts/1000);
 
-            aprintf("[FF:V] LastDts:%08"LLU" Dts:%08"LLU" (%04"LLU") Delta : %"LLU"\n",
+            aprintf("[FF:V] LastDts:%08"PRIu64" Dts:%08"PRIu64" (%04"PRIu64") Delta : %"PRIu64"\n",
                         lastVideoDts,out.dts,out.dts/1000000,out.dts-lastVideoDts);
             rawDts=out.dts;
             if(rawDts==ADM_NO_PTS)
@@ -434,7 +434,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             }
             if(out.pts==ADM_NO_PTS)
             {
-                ADM_warning("No PTS information for frame %"LU"\n",written);
+                ADM_warning("No PTS information for frame %"PRIu32"\n",written);
                 missingPts++;
                 out.pts=lastVideoDts;
             }
@@ -444,7 +444,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
             muxerRescaleVideoTime(&(out.pts));
             aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
-            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%"LLU" Dts:%"LLU"\n",out.len,out.flags,out.pts,out.dts);
+            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%"PRIu64" Dts:%"PRIu64"\n",out.len,out.flags,out.pts,out.dts);
 
             av_init_packet(&pkt);
             pkt.dts=out.dts;
@@ -490,14 +490,14 @@ bool muxerFFmpeg::saveLoop(const char *title)
                                 ADM_info("No more audio packets for audio track %d\n",audio);
                                 break;
                         }
-                       // printf("Track %d , new audio packet DTS=%"LLD" size=%"LU"\n",audioTrack->dts,audioTrack->size);
+                       // printf("Track %d , new audio packet DTS=%"PRId64" size=%"PRIu32"\n",audioTrack->dts,audioTrack->size);
                         audioTrack->present=true;
                         // Delay audio by the delay induce by encoder
                         if(audioTrack->dts!=ADM_NO_PTS) audioTrack->dts+=audioDelay;
                     }
                     if(audioTrack->dts!=ADM_NO_PTS)
                     {
-                        //printf("Audio PTS:%"LLD", limit=%"LLD"\n",audioTrack->dts,lastVideoDts+videoIncrement);
+                        //printf("Audio PTS:%"PRId64", limit=%"PRId64"\n",audioTrack->dts,lastVideoDts+videoIncrement);
                         if(audioTrack->dts>lastVideoDts+videoIncrement) break; // This packet is in the future
                     }
                     // Write...
@@ -506,7 +506,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     rescaledDts=audioTrack->dts;
                     encoding->pushAudioFrame(audioTrack->size);
                     muxerRescaleAudioTime(audio,&rescaledDts,a->getInfo()->frequency);
-                   //printf("[FF] A: Video frame  %d, audio Dts :%"LLU" size :%"LU" nbSample : %"LU" rescaled:%"LLU"\n",
+                   //printf("[FF] A: Video frame  %d, audio Dts :%"PRIu64" size :%"PRIu32" nbSample : %"PRIu32" rescaled:%"PRIu64"\n",
                      //               written,audioTrack->dts,audioTrack->size,audioTrack->samples,rescaledDts);
                     av_init_packet(&pkt);
 
@@ -523,7 +523,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
                         ADM_warning("[FF]Error writing audio packet\n");
                         break;
                     }
-                   // printf("[FF] A:%"LU" ms vs V: %"LU" ms\n",(uint32_t)audioTrack->dts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
+                   // printf("[FF] A:%"PRIu32" ms vs V: %"PRIu32" ms\n",(uint32_t)audioTrack->dts/1000,(uint32_t)(lastVideoDts+videoIncrement)/1000);
                 }
                 //if(!nb) printf("[FF] A: No audio for video frame %d\n",written);
             }

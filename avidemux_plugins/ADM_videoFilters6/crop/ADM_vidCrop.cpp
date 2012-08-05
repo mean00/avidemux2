@@ -143,7 +143,7 @@ FilterInfo  *prevInfo=previousFilter->getInfo();
                         src,srcPitch,
                         w,h);
             }
-            //printf("Cropt:Dts = %"LLU"\n",image->Pts);
+            //printf("Cropt:Dts = %"PRIu64"\n",image->Pts);
             image->copyInfo(original);     
             return 1;
 }
@@ -169,7 +169,7 @@ const char *CropFilter::getConfiguration(void)
 {
     static char conf[80];
     conf[0]=0;
-    snprintf(conf,80,"Crop : %"LU"x%"LU" => %"LU"x%"LU,
+    snprintf(conf,80,"Crop : %"PRIu32"x%"PRIu32" => %"PRIu32"x%"PRIu32,
                 previousFilter->getInfo()->width,
                 previousFilter->getInfo()->height,
                 info.width,info.height

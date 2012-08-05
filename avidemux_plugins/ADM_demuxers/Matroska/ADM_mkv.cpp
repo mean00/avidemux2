@@ -57,7 +57,7 @@ uint8_t mkvHeader::open(const char *name)
         uint64_t timeBase=walkAndFind(&father,MKV_TIMECODE_SCALE);
         if(timeBase)
         {
-            ADM_info("TimeBase found : %"LLU" ns\n",timeBase);
+            ADM_info("TimeBase found : %"PRIu64" ns\n",timeBase);
             _timeBase=timeBase/1000; // We work in us
         }
   }
@@ -100,7 +100,7 @@ uint8_t mkvHeader::open(const char *name)
 
   // Now dump some infos about the track
     for(int i=0;i<1+_nbAudioTrack;i++)
-        ADM_info("Track %"LU" has an index size of %d entries\n",i,_tracks[i].index.size());
+        ADM_info("Track %"PRIu32" has an index size of %d entries\n",i,_tracks[i].index.size());
 
 
   // Delay frames + recompute frame duration
@@ -146,7 +146,7 @@ uint8_t mkvHeader::open(const char *name)
         }
         if(enforePtsGreaterThanDts)
         {
-                ADM_info("Have to delay by %"LU" ms so that PTS>DTS\n",enforePtsGreaterThanDts);
+                ADM_info("Have to delay by %"PRIu32" ms so that PTS>DTS\n",enforePtsGreaterThanDts);
                 for(int i=0;i<_nbAudioTrack+1;i++)
                 delayTrack(i,&(_tracks[i]),enforePtsGreaterThanDts);
         }
@@ -254,17 +254,17 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             if(delta<0) delta=-delta;
             if(delta<minDelta) minDelta=delta;
             if(delta>maxDelta) maxDelta=delta;
-            //printf("\/=%"LLD" Min %"LLD" MAX %"LLD"\n",delta,minDelta,maxDelta);
+            //printf("\/=%"PRId64" Min %"PRId64" MAX %"PRId64"\n",delta,minDelta,maxDelta);
         }
     }
     if(nbBFrame) *bFramePresent=true;
-    ADM_info("Minimum delta found %"LLD" us\n",minDelta);
-    ADM_info("Maximum delta found %"LLD" us\n",maxDelta);
+    ADM_info("Minimum delta found %"PRId64" us\n",minDelta);
+    ADM_info("Maximum delta found %"PRId64" us\n",maxDelta);
     if(minDelta)
     {
         if(minDelta<track->_defaultFrameDuration && abs(minDelta-track->_defaultFrameDuration)>1000)
         {
-            ADM_info("Changing default frame duration from %"LLU" to %"LLU" us\n",
+            ADM_info("Changing default frame duration from %"PRIu64" to %"PRIu64" us\n",
                     track->_defaultFrameDuration,minDelta);
             track->_defaultFrameDuration=minDelta;
             // updated fps also
@@ -274,11 +274,11 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             _videostream.dwRate=(uint32_t)(f*1000.);
         }else
         {
-            ADM_info("Keeping default frame duration  %"LLU" us\n", track->_defaultFrameDuration);
+            ADM_info("Keeping default frame duration  %"PRIu64" us\n", track->_defaultFrameDuration);
         }
 
     }
-    ADM_info("First frame pts     %"LLD" us\n",track->index[0].Pts);
+    ADM_info("First frame pts     %"PRId64" us\n",track->index[0].Pts);
     uint64_t adj=0;
     int limit=32;
     if(limit>nb) limit=nb;
@@ -293,8 +293,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     }
     if(adj) // need to correct
     {
-        ADM_info("Delaying video by %"LLU" us\n",adj);
-        ADM_info("[mkv] Delaying audio by %"LLU" us\n",adj);
+        ADM_info("Delaying video by %"PRIu64" us\n",adj);
+        ADM_info("[mkv] Delaying audio by %"PRIu64" us\n",adj);
         for(int i=0;i<_nbAudioTrack+1;i++)
             delayTrack(i,&(_tracks[i]),adj);
     }
@@ -345,7 +345,7 @@ uint8_t mkvHeader::analyzeTracks(void *head,uint32_t headlen)
       father.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%"LLX" not found (len %"LLU")\n",id,len);
+        printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
         father.skip(len);
         continue;
       }
@@ -376,7 +376,7 @@ uint8_t mkvHeader::walk(void *seed)
       father->readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%"LLX" not found (len %"LLU")\n",id,len);
+        printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
         father->skip(len);
         continue;
       }
@@ -388,10 +388,10 @@ uint8_t mkvHeader::walk(void *seed)
                   printf("%s skipped\n",ss);
                   break;
         case ADM_MKV_TYPE_UINTEGER:
-                  printf("%s:%"LLU"\n",ss,father->readUnsignedInt(len));
+                  printf("%s:%"PRIu64"\n",ss,father->readUnsignedInt(len));
                   break;
         case ADM_MKV_TYPE_INTEGER:
-                  printf("%s:%"LLD"\n",ss,father->readSignedInt(len));
+                  printf("%s:%"PRId64"\n",ss,father->readSignedInt(len));
                   break;
         case ADM_MKV_TYPE_STRING:
         {
@@ -426,7 +426,7 @@ uint64_t mkvHeader::walkAndFind(void *seed,MKV_ELEM_ID searched)
       father->readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%"LLX" not found (len %"LLU")\n",id,len);
+        printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
         father->skip(len);
         continue;
       }
@@ -442,11 +442,11 @@ uint64_t mkvHeader::walkAndFind(void *seed,MKV_ELEM_ID searched)
                   uint64_t v=father->readUnsignedInt(len);
                   if(id==searched)
                         value=v;
-                  printf("%s:%"LLU"\n",ss,v);
+                  printf("%s:%"PRIu64"\n",ss,v);
                   }
                   break;
         case ADM_MKV_TYPE_INTEGER:
-                  printf("%s:%"LLD"\n",ss,father->readSignedInt(len));
+                  printf("%s:%"PRId64"\n",ss,father->readSignedInt(len));
                   break;
         case ADM_MKV_TYPE_STRING:
         {
@@ -723,7 +723,7 @@ bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
      ADM_assert(_parser);
      if(frame>=_tracks[0].index.size()) 
      {
-            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,(uint32_t)_tracks[0].index.size());
+            printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,(uint32_t)_tracks[0].index.size());
             return false;
      }
     mkvIndex *dx=&(_tracks[0].index[frame]);
@@ -740,7 +740,7 @@ bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
       ADM_assert(_parser);
      if(frame>=_tracks[0].index.size()) 
      {
-            printf("[MKV] Frame %"LU" exceeds # of frames %"LU"\n",frame,(uint32_t)_tracks[0].index.size());
+            printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,(uint32_t)_tracks[0].index.size());
             return false;
      }
     mkvIndex *dx=&(_tracks[0].index[frame]);

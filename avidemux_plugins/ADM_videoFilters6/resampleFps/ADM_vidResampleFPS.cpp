@@ -196,7 +196,7 @@ again:
     
     uint64_t frame1Dts=frames[0]->Pts;
     uint64_t frame2Dts=frames[1]->Pts;
-    aprintf("Frame : %d, timeIncrement %d ms, Wanted : %"LLU", available %"LLU" and %"LLU"\n",
+    aprintf("Frame : %d, timeIncrement %d ms, Wanted : %"PRIu64", available %"PRIu64" and %"PRIu64"\n",
                     nextFrame,info.frameIncrement/1000,thisTime,frame1Dts,frame2Dts);
     if(thisTime>frame1Dts && thisTime>frame2Dts)
     {

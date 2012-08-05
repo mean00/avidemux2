@@ -55,23 +55,23 @@ static int ignore_change=0;
           uint32_t nf;
           ignore_change++;
           nf = GUI_GetScale ();
-          ADM_info("Scale :%"LU"\n",nf);
+          ADM_info("Scale :%"PRIu32"\n",nf);
           double tme=nf;
           tme*=video_body->getVideoDuration();
           tme/=ADM_SCALE_SIZE;
           uint64_t pts=(uint64_t)tme;
-          ADM_info("Scale Time:%"LLU" ms (total=%"LLU" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
+          ADM_info("Scale Time:%"PRIu64" ms (total=%"PRIu64" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
           ADM_info("Scale Time:%s ms \n",ADM_us2plain(pts));
            if(false==video_body->getPKFramePTS(&pts))
             {
-                ADM_warning("Cannot seek to %"LLU" ms\n",pts/1000);
+                ADM_warning("Cannot seek to %"PRIu64" ms\n",pts/1000);
                 ignore_change--;
                 break;
             }
              ADM_info("Seeking to  Time:%s ms \n",ADM_us2plain(pts));
             if(true!=admPreview::seekToIntraPts(pts))
             {
-                ADM_warning("Scale: Seeking to intra at %"LLU" ms failed\n",pts/1000);
+                ADM_warning("Scale: Seeking to intra at %"PRIu64" ms failed\n",pts/1000);
             }
             GUI_setCurrentFrameAndTime();
             ignore_change--;
@@ -445,7 +445,7 @@ bool GUI_GoToTime(uint64_t time)
     // We have to call the editor as the frames needed to decode the target frame may be hidden
     if(false==video_body->goToTimeVideo(time))
     {
-        GUI_Error_HIG("Seek", "Error seekting to %"LLU" ms",time/1000);
+        GUI_Error_HIG("Seek", "Error seekting to %"PRIu64" ms",time/1000);
     }
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();

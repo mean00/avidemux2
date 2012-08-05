@@ -92,7 +92,7 @@ bool    psPacket::setPos(uint64_t pos)
 {
     if(!_file->setpos(pos))
     {
-        printf("[psPacket] Cannot seek to %"LLX"\n", pos);
+        printf("[psPacket] Cannot seek to %"PRIx64"\n", pos);
         return false;
     }
     return true;
@@ -113,7 +113,7 @@ _again2:
         {
                 uint64_t pos;
                 _file->getpos(&pos);
-                printf("[DmxPS] cannot sync  at %"LLU"/%"LLU"\n",pos,_size);
+                printf("[DmxPS] cannot sync  at %"PRIu64"/%"PRIu64"\n",pos,_size);
                 return false;
         }
 // Position of this packet just before startcode
@@ -433,7 +433,7 @@ bool psPacketLinear::refill(void)
             bufferIndex=bufferLen=0;
             return false;
         }
-        //printf("Refill : At :%"LLX" size :%"LD"\n",startAt,bufferLen);
+        //printf("Refill : At :%"PRIx64" size :%"PRIi32"\n",startAt,bufferLen);
         bufferIndex=0;
         return true;
 }
@@ -574,12 +574,12 @@ bool    psPacketLinear::seek(uint64_t packetStart, uint32_t offset)
 {
     if(!_file->setpos(packetStart))
     {
-        printf("[psPacket] Cannot seek to %"LLX"\n",packetStart);
+        printf("[psPacket] Cannot seek to %"PRIx64"\n",packetStart);
         return 0;
     }
     if(!refill())
     {
-        printf("[PsPacketLinear] Seek to %"LLX":%"LX" failed\n",packetStart,offset);
+        printf("[PsPacketLinear] Seek to %"PRIx64":%"PRIx64" failed\n",packetStart,offset);
         return false;
     }
     ADM_assert(offset<bufferLen);
@@ -672,7 +672,7 @@ bool psPacketLinearTracker::decodeVobuPCI(uint32_t size,uint8_t *data)
         nextVobuEnd=end;
         _file->getpos(&nextVobuPosition);
 #if 0
-        ADM_info("At : 0x%"LLX", Vobu start : %d end: %d seqEnd:%d\n",nextVobuPosition,start,end,seqEnd);
+        ADM_info("At : 0x%"PRIx64", Vobu start : %d end: %d seqEnd:%d\n",nextVobuPosition,start,end,seqEnd);
       
 #endif
 

@@ -94,7 +94,7 @@ bool UI_vuUpdate(uint32_t volume[6])
             }
       }
 #if 0
-      ADM_info("VU : LEFT %"LU" CENTER %"LU" RIGHT %"LU" REARLEFT %"LU" REARRIGHT %"LU"\n",
+      ADM_info("VU : LEFT %"PRIu32" CENTER %"PRIu32" RIGHT %"PRIu32" REARLEFT %"PRIu32" REARRIGHT %"PRIu32"\n",
                     volume[0],volume[1],volume[2],volume[3],volume[4]);
 #endif
       vuWidget->repaint();

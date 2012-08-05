@@ -186,8 +186,8 @@ bool ADM_jobDump(const ADMJob &job)
     printf("Script   :%s\n",job.scriptName.c_str());
     printf("Output   :%s\n",job.outputFileName.c_str());
     printf("Status   :%d\n",job.status);
-    printf("Start    :%"LLD"\n",job.startTime);
-    printf("End      :%"LLD"\n",job.endTime);
+    printf("Start    :%"PRId64"\n",job.startTime);
+    printf("End      :%"PRId64"\n",job.endTime);
     return true;
 }
 

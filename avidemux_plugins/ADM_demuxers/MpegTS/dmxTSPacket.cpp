@@ -145,7 +145,7 @@ bool    tsPacket::setPos(uint64_t pos)
 {
     if(!_file->setpos(pos))
     {
-        printf("[tsPacket] Cannot seek to %"LLX"\n", pos);
+        printf("[tsPacket] Cannot seek to %"PRIx64"\n", pos);
         return false;
     }
     return true;
@@ -385,7 +385,7 @@ nextPack3:
     zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
-        printf("[Ts Demuxer] No PES startcode at 0x%"LLX"\n",pkt.startAt);
+        printf("[Ts Demuxer] No PES startcode at 0x%"PRIx64"\n",pkt.startAt);
         printf("0x:%02x %02x %02x %02x\n",pkt.payload[4],pkt.payload[5],pkt.payload[6],pkt.payload[7]);
         goto nextPack3;
     }
@@ -777,12 +777,12 @@ bool    tsPacketLinear::seek(uint64_t packetStart, uint32_t offset)
 {
     if(!_file->setpos(packetStart))
     {
-        printf("[tsPacket] Cannot seek to %"LLX"\n",packetStart);
+        printf("[tsPacket] Cannot seek to %"PRIx64"\n",packetStart);
         return 0;
     }
     if(!refill())
     {
-        printf("[tsPacketLinear] Seek to %"LLX":%"LX" failed\n",packetStart,offset);
+        printf("[tsPacketLinear] Seek to %"PRIx64":%"PRIx64" failed\n",packetStart,offset);
         return false;
     }
     ADM_assert(offset<pesPacket->payloadSize);

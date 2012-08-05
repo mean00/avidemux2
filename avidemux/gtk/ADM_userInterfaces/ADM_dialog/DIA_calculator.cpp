@@ -184,7 +184,7 @@ aviInfo info;
 
 	audioSize*=videoDuration;
 	audioSize>>=20;
-	sprintf(string,"%"LU,audioSize);
+	sprintf(string,"%"PRIu32,audioSize);
 	gtk_label_set_text(GTK_LABEL(GW(labelAudio)),string);
 
 	// Compute total size (for Avi)
@@ -220,7 +220,7 @@ aviInfo info;
 		default:
 			ADM_assert(0);
 	}
-	sprintf(string,"%"LU,totalSize);
+	sprintf(string,"%"PRIu32,totalSize);
 	gtk_label_set_text(GTK_LABEL(GW(labelTotal)),string);
 
 	// Compute muxing overhead size
@@ -282,12 +282,12 @@ aviInfo info;
 			// convert to kb per sec
 			avg=(avg*8)/1000;
 			videoBitrate=(uint32_t)avg;
-			sprintf(string,"%"LU,(uint32_t)videoBitrate);
+			sprintf(string,"%"PRIu32,(uint32_t)videoBitrate);
 
 			gtk_label_set_text(GTK_LABEL(GW(labelBitrate)),string);
 
 			//
-			sprintf(string,"%"LU,videoSize);
+			sprintf(string,"%"PRIu32,videoSize);
 	                gtk_label_set_text(GTK_LABEL(GW(labelVideo)),string);
                         // Bpp
                         bpp=videoBitrate;

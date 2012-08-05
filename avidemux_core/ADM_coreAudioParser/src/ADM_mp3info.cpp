@@ -192,7 +192,7 @@ uint32_t nfq,fqindex,brindex,index;
 			}
 			if(*offset)
 				{
-					printf("MP3: Skipped %"LU" bytes\n",*offset);
+					printf("MP3: Skipped %"PRIu32" bytes\n",*offset);
 
 				}
 #if 0

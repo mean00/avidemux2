@@ -320,7 +320,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
             bit=NULL;
             if(delta<230)
             {
-              printf("[ASF] Very suspicious delta :%"LU"\n",delta);
+              printf("[ASF] Very suspicious delta :%"PRIu32"\n",delta);
             }
             continue; 
           }

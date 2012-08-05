@@ -33,7 +33,7 @@ ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_Audio
     startTimeUs=timeUs;
     samplesSeen=0;
     editable=ed;
-    printf("[FilterAccess] Created, starting at %"LU" ms\n",(uint32_t)(timeUs/1000));
+    printf("[FilterAccess] Created, starting at %"PRIu32" ms\n",(uint32_t)(timeUs/1000));
 }
 /**
     \fn ~ADMAudioFilter_Access
@@ -108,7 +108,7 @@ static bool endMet=false;
     {
         *dts=startTimeUs+(uint64_t)d;
     }
-    //printf("EncoderAccess: dts=%"LLD"\n",*dts);
+    //printf("EncoderAccess: dts=%"PRId64"\n",*dts);
     samplesSeen+=samples;
     endMet=false;
     return true;

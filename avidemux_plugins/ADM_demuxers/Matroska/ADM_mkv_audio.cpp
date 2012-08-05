@@ -160,7 +160,7 @@ int      clus=-1;
             ADM_info("[MKVAUDIO] Asked for %s , go to block %d\n",ADM_us2plain(timeUs),clus);
             ADM_info("[MKVAUDIO] This block starts at %s\n",ADM_us2plain((*dex)[clus].Dts));
             targetUs-=(*dex)[clus].Dts; // now the time is relative
-            ADM_info("[MKVAUDIO] Offset=%"LLU" us\n",targetUs);
+            ADM_info("[MKVAUDIO] Offset=%"PRIu64" us\n",targetUs);
             goToBlock(clus);
 
             
@@ -206,7 +206,7 @@ bool mkvAccess::initLaces(uint32_t nbLaces,uint64_t time)
                     uint64_t deltaTime=_track->index[_currentBlock].Dts;
                     deltaTime-=time;
                     _laceIncrementUs=deltaTime/nbLaces;
-                    vprintf("***************DeltaTime : %"LLU" inc:%"LLU"\n",deltaTime,_laceIncrementUs);
+                    vprintf("***************DeltaTime : %"PRIu64" inc:%"PRIu64"\n",deltaTime,_laceIncrementUs);
                 } // else keep lastIncrement, which is as good as a random value
                 return true;
 }
@@ -230,7 +230,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
       ADM_assert(*packlen<maxSize);
       vprintf("Continuing lacing : %u bytes, lacing %u/%u\n",*packlen,_currentLace,_maxLace);
       *timecode=_lastDtsBase+_laceIncrementUs*_currentLace;
-       vprintf(">>>>>>>>> %"LLU" \n",*timecode);
+       vprintf(">>>>>>>>> %"PRIu64" \n",*timecode);
       _currentLace++;
       return true;
     }

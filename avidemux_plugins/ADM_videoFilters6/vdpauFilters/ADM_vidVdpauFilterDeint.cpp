@@ -645,7 +645,7 @@ endit:
     nextFrame++;
     image->Pts=nextPts;
     if(next) nextPts=next->Pts;
-   // printf("VDPAU OUT PTS= %"LLU"\n",image->Pts);
+   // printf("VDPAU OUT PTS= %"PRIu64"\n",image->Pts);
     return r;
 }
 #else // USE_VDPAU

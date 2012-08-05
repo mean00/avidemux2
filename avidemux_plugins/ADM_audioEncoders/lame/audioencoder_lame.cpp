@@ -124,7 +124,7 @@ bool AUDMEncoder_Lame::initialize (void)
 
 
   frequence = wavheader.frequency;
-  printf ("[Lame] output frequency : %"LU"\n", frequence);
+  printf ("[Lame] output frequency : %"PRIu32"\n", frequence);
   ret = lame_set_out_samplerate (MYFLAGS, frequence);
 
   ret = lame_set_quality (MYFLAGS, 2);
@@ -273,7 +273,7 @@ bool AUDMEncoder_Lame::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 cont:
   if (nbout < 0)
     {
-      printf ("[Lame] Error !!! : %"LD"\n", nbout);
+      printf ("[Lame] Error !!! : %"PRIi32"\n", nbout);
       return false;
     }
   *len = nbout;

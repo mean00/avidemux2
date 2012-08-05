@@ -124,7 +124,7 @@ bool    ADM_audioAccess_thread::getPacket(uint8_t *buffer, uint32_t *size, uint3
             ADM_assert(pkt.dataLen<CHUNK_SIZE);
             memcpy(buffer,pkt.data,pkt.dataLen);
             *dts=pkt.dts;
-            //printf("popping Packet with DTS=%"LLD", size=%d\n",*dts,(int)pkt->dataLen);
+            //printf("popping Packet with DTS=%"PRId64", size=%d\n",*dts,(int)pkt->dataLen);
             *size=pkt.dataLen;
             mutex->lock();
             freeList.append(pkt);
@@ -180,7 +180,7 @@ bool ADM_audioAccess_thread::runAction(void)
       
         mutex->lock();
         list.append(pkt);
-        //printf("Pushing Packet with DTS=%"LLD",size=%d\n",dts,(int)size);
+        //printf("Pushing Packet with DTS=%"PRId64",size=%d\n",dts,(int)size);
         mutex->unlock();
     }
 

@@ -69,7 +69,7 @@ bool admPreview::seekToTime(uint64_t timeframe)
 {
     if(!video_body->goToTimeVideo(timeframe)) 
     {
-        ADM_warning(" seeking for frame at %"LLU" ms failed\n",timeframe/1000LL);
+        ADM_warning(" seeking for frame at %"PRIu64" ms failed\n",timeframe/1000LL);
         return false;
     }
     return samePicture();
@@ -85,7 +85,7 @@ bool admPreview::seekToIntraPts(uint64_t timeframe)
 {
     if(!video_body->goToIntraTimeVideo(timeframe)) 
     {
-        ADM_warning(" seeking for frame at %"LLU" ms failed\n",timeframe/1000LL);
+        ADM_warning(" seeking for frame at %"PRIu64" ms failed\n",timeframe/1000LL);
         return false;
     }
     return samePicture();
@@ -131,13 +131,13 @@ uint8_t admPreview::previousPicture(void)
 bool admPreview::nextKeyFrame(void)
 {
     uint64_t pts=getCurrentPts();
-    ADM_info("Current PTS :%"LLD" ms\n",pts/1000LL);
+    ADM_info("Current PTS :%"PRId64" ms\n",pts/1000LL);
     if(false==video_body->getNKFramePTS(&pts))
     {
         ADM_warning("Cannot find next keyframe\n");
         return false;
     }
-    ADM_info("next kf PTS :%"LLD" ms\n",pts/1000LL);
+    ADM_info("next kf PTS :%"PRId64" ms\n",pts/1000LL);
     return seekToIntraPts(pts);
 }
 /**
@@ -147,13 +147,13 @@ bool admPreview::nextKeyFrame(void)
 bool admPreview::previousKeyFrame(void)
 {
     uint64_t pts=getCurrentPts();
-    ADM_info("Current PTS :%"LLD" ms\n",pts/1000LL);
+    ADM_info("Current PTS :%"PRId64" ms\n",pts/1000LL);
     if(false==video_body->getPKFramePTS(&pts))
     {
         ADM_warning("Cannot find previous keyframe\n");
         return false;
     }
-    ADM_info("next kf PTS :%"LLD" ms\n",pts/1000LL);
+    ADM_info("next kf PTS :%"PRId64" ms\n",pts/1000LL);
     return seekToIntraPts(pts);
 }
 // EOF

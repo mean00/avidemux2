@@ -138,7 +138,7 @@ pa_channel_map map,*pmap=NULL;
     }
     pa_simple_drain(INSTANCE,&er);
     latency=ticktock.getElapsedMS();
-    ADM_info("[Pulse] Latency :%"LU", total %"LU"\n",latency,pa_simple_get_latency(INSTANCE,&er)/1000);
+    ADM_info("[Pulse] Latency :%"PRIu32", total %"PRIu32"\n",latency,pa_simple_get_latency(INSTANCE,&er)/1000);
 #endif
     ADM_info("[PulseSimple] open ok\n");
     return 1;

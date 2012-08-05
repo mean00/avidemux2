@@ -71,7 +71,7 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
         packetStats *stat=packet->getStat(i);
         if(stat->count)
         {
-            ADM_info("[PsProbeAudo] Pid:%x count:%"LX" size:%"LD"\n",i,stat->count,stat->size);
+            ADM_info("[PsProbeAudo] Pid:%x count:%"PRIx64" size:%"PRIi32"\n",i,stat->count,stat->size);
             if(stat->count>=PROBE_MIN_PACKET && stat->size>PROBE_MIN_SIZE)
             {
                 packet->setPos(fileSize/2);
@@ -225,7 +225,7 @@ again:
     }
     if(off2) // false detectio ?
     {
-        printf("[psAudioProbe] Mp2 : False MP2 header at %"LU"\n",off);
+        printf("[psAudioProbe] Mp2 : False MP2 header at %"PRIu32"\n",off);
         if(dataSize<4) return false;
         data+=3;
         dataSize-=3;

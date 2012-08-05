@@ -217,7 +217,7 @@ bool AUDMEncoder_DcaEnc::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 cont:
   if (nbout < 0)
     {
-      printf ("[dcaenc] Error !!! : %"LD"\n", nbout);
+      printf ("[dcaenc] Error !!! : %"PRIi32"\n", nbout);
       return false;
     }
   *len = nbout;

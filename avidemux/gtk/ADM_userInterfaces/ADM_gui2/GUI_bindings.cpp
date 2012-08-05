@@ -659,7 +659,7 @@ void UI_updateFrameCount(uint32_t curFrame)
 {
     //char text[80];
     // frames
-    //sprintf(text, "%"LU" ", curFrame);
+    //sprintf(text, "%"PRIu32" ", curFrame);
 //    gtk_label_set_text((GtkLabel *) guiCurFrame, text);
 //	gtk_write_entry(guiCurFrame,curFrame);
 
@@ -816,13 +816,13 @@ char text[500];
     b/=1000;
     timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
+	snprintf(text,79,"%02"PRIu32":%02"PRIu32":%02"PRIu32".%02"PRIu32,hh,mm,ss,ms);
 
     gtk_button_set_label(GTK_BUTTON(WOD(buttonGotoA)), text);
 
 	timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"LU":%02"LU":%02"LU".%02"LU,hh,mm,ss,ms);
+	snprintf(text,79,"%02"PRIu32":%02"PRIu32":%02"PRIu32".%02"PRIu32,hh,mm,ss,ms);
 	gtk_button_set_label(GTK_BUTTON(WOD(buttonGotoB)), text);
     //gtk_markscale_setA(guiSlider, a);
     //gtk_markscale_setB(guiSlider, b);

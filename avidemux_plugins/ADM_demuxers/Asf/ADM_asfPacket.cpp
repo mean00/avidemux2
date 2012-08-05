@@ -144,7 +144,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    int r82=read8();
    if(r82!=0x82) 
    {
-     printf("[ASF PACKET]At pos 0x%"LLX" \n",(uint64_t)ftello(_fd));
+     printf("[ASF PACKET]At pos 0x%"PRIx64" \n",(uint64_t)ftello(_fd));
      printf("[ASF PACKET]not a 82 packet but 0x%x\n",r82);
      return 0;
    }
@@ -366,7 +366,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
  {
    uint32_t go;
    go=packetStart+ pakSize;
-   aprintf("Pos 0x%"LLX"\n",(uint64_t)ftello(_fd));
+   aprintf("Pos 0x%"PRIx64"\n",(uint64_t)ftello(_fd));
    fseeko(_fd,go,SEEK_SET);
    aprintf("Skipping to %x\n",go);
   

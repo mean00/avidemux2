@@ -165,7 +165,7 @@ uint64_t    avsHeader::frameToTime(uint32_t frame)
     f*=1000000000; // Want us
     f/=_videostream.dwRate;
     uint64_t t=(uint64_t)f;
-    //printf("%"LU" -> %"LLU"\n",frame,t);
+    //printf("%"PRIu32" -> %"PRIu64"\n",frame,t);
     return t;
 }
 /**
@@ -195,7 +195,7 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
     img->dataLength=page;
     img->demuxerDts=frameToTime(framenum);
     img->demuxerPts=img->demuxerDts;
-    //printf("Frame :%"LU" Time=%"LLU"\n",framenum,img->demuxerPts);
+    //printf("Frame :%"PRIu32" Time=%"PRIu64"\n",framenum,img->demuxerPts);
     return 1;
 }
 /**

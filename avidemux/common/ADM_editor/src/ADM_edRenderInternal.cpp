@@ -49,13 +49,13 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     if(_segments.isKeyFrameByTime(ref,timeToSeek))
     {
         seekTime=timeToSeek;
-        ADM_info("First frame of the new segment is a keyframe at %"LU"ms\n",seekTime/1000);
+        ADM_info("First frame of the new segment is a keyframe at %"PRIu32"ms\n",seekTime/1000);
         found=true;
     }else   
     {
         if(false==searchPreviousKeyFrameInRef(ref,timeToSeek,&seekTime))
         {
-            ADM_warning("Cannot identify the keyframe before %"LLU" ms\n",seekTime/1000);
+            ADM_warning("Cannot identify the keyframe before %"PRIu64" ms\n",seekTime/1000);
             return false;
         }
     }
@@ -70,7 +70,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     
     if(false==DecodePictureUpToIntra(ref,frame))
     {
-        ADM_warning("Cannot decode up to intra %"LLU" at %"LLU" ms\n",frame,seekTime/1000);
+        ADM_warning("Cannot decode up to intra %"PRIu64" at %"PRIu64" ms\n",frame,seekTime/1000);
         return false;
     }
     if(found==true) return true;
@@ -86,16 +86,16 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         vid->lastReadPts=pts;
         if(pts==timeToSeek)
         {
-            ADM_info("Image found, pts=%"LLU" ms\n",pts/1000);
+            ADM_info("Image found, pts=%"PRIu64" ms\n",pts/1000);
             return true;
         }
         if(pts>timeToSeek)
         {
-            ADM_info("Image not found,searching %"LLU" ms, got  pts=%"LLU" ms\n",timeToSeek/1000,pts/1000);
+            ADM_info("Image not found,searching %"PRIu64" ms, got  pts=%"PRIu64" ms\n",timeToSeek/1000,pts/1000);
             return false;
         }
     }
-    ADM_warning("seekToFrame failed for frame at PTS= %"LLU" ms, next image failed\n",timeToSeek/1000);
+    ADM_warning("seekToFrame failed for frame at PTS= %"PRIu64" ms, next image failed\n",timeToSeek/1000);
     return false;
 }
 /**
@@ -116,7 +116,7 @@ bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
   ADMImage *in=cache->getByPts(vid->lastDecodedPts);
   if(!in)
   {
-    printf("[ADM_Composer::getSamePicture] Failed, while looking for Pts=%"LLU" ms\n",vid->lastDecodedPts);
+    printf("[ADM_Composer::getSamePicture] Failed, while looking for Pts=%"PRIu64" ms\n",vid->lastDecodedPts);
     cache->dump();
     return false;
   }
@@ -158,7 +158,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
             // Duplicate
             if(out)
             {
-                aprintf("[getNextPicture] Looking for after> %"LLU", got %"LLU" delta=%"LD" ms\n",vid->lastReadPts,img->Pts,(img->Pts-vid->lastReadPts)/1000);
+                aprintf("[getNextPicture] Looking for after> %"PRIu64", got %"PRIu64" delta=%"PRIi32" ms\n",vid->lastReadPts,img->Pts,(img->Pts-vid->lastReadPts)/1000);
                 out->duplicate(img);
                 vid->lastReadPts=img->Pts;
                 currentFrame++;
@@ -166,7 +166,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
             return true;
         }else   
         {
-            aprintf("[getNextPic] Loop:%d, looking for pts> :%"LLU" ms %"LLU" us\n",loop,vid->lastReadPts/1000,vid->lastReadPts);
+            aprintf("[getNextPic] Loop:%d, looking for pts> :%"PRIu64" ms %"PRIu64" us\n",loop,vid->lastReadPts/1000,vid->lastReadPts);
 #ifdef VERBOSE
             cache->dump();
 #endif
@@ -174,7 +174,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
         }
     }
     ADM_warning("nextPictureInternal Failed\n");
-    ADM_warning("while looking for %"LLU" us, %"LLU" ms\n",vid->lastReadPts,vid->lastReadPts/1000);
+    ADM_warning("while looking for %"PRIu64" us, %"PRIu64" ms\n",vid->lastReadPts,vid->lastReadPts/1000);
     cache->dump();
     return false;
 }
@@ -211,7 +211,7 @@ uint8_t ret = 0;
      aprintf("[Editor] Decoding frame %u\n",frame);
      if (!demuxer->getFrame (frame,&img))
      {
-            ADM_warning("getFrame failed for frame %"LU"\n",vid->lastSentFrame);
+            ADM_warning("getFrame failed for frame %"PRIu32"\n",vid->lastSentFrame);
             return false;
      }
 
@@ -219,17 +219,17 @@ uint8_t ret = 0;
      result=cache->getFreeImage();
      if(!result)
      {
-            ADM_warning(" Cache full for frame %"LU"\n",vid->lastSentFrame);
+            ADM_warning(" Cache full for frame %"PRIu32"\n",vid->lastSentFrame);
             return false;
       }
-        aprintf("Demuxed frame %"LU" with pts=%"LLD" us, %"LLD" ms\n",
+        aprintf("Demuxed frame %"PRIu32" with pts=%"PRId64" us, %"PRId64" ms\n",
             frame,
             img.demuxerPts,
             img.demuxerPts/1000);
     
       if(!decompressImage(result,&img,ref))
       {
-         ADM_info("Decoding error for frame %"LU", not necessarily a problem\n",vid->lastSentFrame);
+         ADM_info("Decoding error for frame %"PRIu32", not necessarily a problem\n",vid->lastSentFrame);
          cache->invalidate(result);
          return true; // Not an error in itself
       }
@@ -246,7 +246,7 @@ uint8_t ret = 0;
                 aprintf("[Editor] got PTS\n");
                 vid->lastDecodedPts=pts;
             }
-    aprintf(">>Decoded frame %"LU" with pts=%"LLD" us, %"LLD" ms, ptsdelta=%"LLD" ms \n",
+    aprintf(">>Decoded frame %"PRIu32" with pts=%"PRId64" us, %"PRId64" ms, ptsdelta=%"PRId64" ms \n",
         frame,
         vid->lastDecodedPts,
         vid->lastDecodedPts/1000,
@@ -254,7 +254,7 @@ uint8_t ret = 0;
 
     if(old>vid->lastDecodedPts) 
     {
-        ADM_warning(">>>>> PTS going backward by %"LLD" ms\n",(old-vid->lastDecodedPts)/1000);
+        ADM_warning(">>>>> PTS going backward by %"PRId64" ms\n",(old-vid->lastDecodedPts)/1000);
         ADM_warning("Dropping frame!\n");
         cache->invalidate(result);
         return false;
@@ -315,7 +315,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
             // Fill in with black
             return true;
         }
-        aprintf("[::Decompress] in:%"LU" out:%"LU" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
+        aprintf("[::Decompress] in:%"PRIu32" out:%"PRIu32" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
 	// If not quant and it is already YV12, we can stop here
     // Also, if the image is decoded through hw, dont do post proc
 	if(tmpImage->refType!=ADM_HW_NONE || 
@@ -412,7 +412,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
          
          if (!demuxer->getFrame (vid->lastSentFrame,&img))
          {
-                ADM_warning(" getFrame failed for frame %"LU"\n",vid->lastSentFrame);
+                ADM_warning(" getFrame failed for frame %"PRIu32"\n",vid->lastSentFrame);
                 //cache->flush();
                 return false;
          }
@@ -424,14 +424,14 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
          }
          if(!result)
          {
-                ADM_warning(" Cache full for frame %"LU"\n",vid->lastSentFrame);
+                ADM_warning(" Cache full for frame %"PRIu32"\n",vid->lastSentFrame);
                 return false;
           }
-           aprintf("[Decoder] Demuxer Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,img.demuxerPts/1000,
+           aprintf("[Decoder] Demuxer Frame %"PRIu32" pts=%"PRIu64" ms, %"PRIu64" us\n",vid->lastSentFrame,img.demuxerPts/1000,
                                                                     img.demuxerPts);
           if(!decompressImage(result,&img,ref))
           {
-             ADM_info(" decode error for frame %"LU", not necessarily a problem\n",vid->lastSentFrame);
+             ADM_info(" decode error for frame %"PRIu32", not necessarily a problem\n",vid->lastSentFrame);
              //cache->dump();
              cache->invalidate(result);
              //cache->dump();
@@ -441,7 +441,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
             {
                 
                 uint64_t pts=result->Pts;
-                aprintf("[Decoder] Decoder Frame %"LU" pts=%"LLU" ms, %"LLU" us\n",vid->lastSentFrame,
+                aprintf("[Decoder] Decoder Frame %"PRIu32" pts=%"PRIu64" ms, %"PRIu64" us\n",vid->lastSentFrame,
                                                         result->Pts/1000,result->Pts);
                 if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
                 {
@@ -476,7 +476,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     }
     if(found==false)
     {
-        ADM_warning(" Could not find decoded frame, wanted PTS :%"LU" PTS=%"LLU" ms, %"LLU" us\n",frame,wantedPts/1000,wantedPts);
+        ADM_warning(" Could not find decoded frame, wanted PTS :%"PRIu32" PTS=%"PRIu64" ms, %"PRIu64" us\n",frame,wantedPts/1000,wantedPts);
         cache->dump();
         return false;
     }

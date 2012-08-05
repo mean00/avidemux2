@@ -48,7 +48,7 @@ bool        ADM_EditorSegment::updateRefVideo(void)
         demuxer->getPtsDts(0,&pts,&dts);
         if(pts!=ADM_NO_PTS && pts >0)
         {
-            ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
+            ADM_warning("Updating firstFramePTS, The first frame has a PTS >0, adjusting to %"PRIu64" ms\n",pts/1000);
             ref->firstFramePts=pts;
         }else
         {
@@ -62,7 +62,7 @@ bool        ADM_EditorSegment::updateRefVideo(void)
     {
     _SEGMENT *seg=getSegment(n-1);
     uint64_t dur=ref->_aviheader->getVideoDuration();
-    printf("Current duration %"LLU" ms real one %"LLU" ms\n",dur/1000,seg->_durationUs/1000);
+    printf("Current duration %"PRIu64" ms real one %"PRIu64" ms\n",dur/1000,seg->_durationUs/1000);
     }
 
     return true;
@@ -89,7 +89,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   frameD=1/frameD;
   frameD*=1000000;
   ref->timeIncrementInUs=(uint64_t)frameD;
-  ADM_info("[Editor] About %"LLU" microseconds per frame\n",ref->timeIncrementInUs);
+  ADM_info("[Editor] About %"PRIu64" microseconds per frame\n",ref->timeIncrementInUs);
   ref->_nb_video_frames = info.nb_frames;
   //
   //  And automatically create the segment
@@ -114,7 +114,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         if(pts==ADM_NO_PTS) ADM_warning("First frame has unknown PTS\n");
         if(pts!=ADM_NO_PTS &&pts)
         {
-            ADM_warning("The first frame has a PTS >0, adjusting to %"LLU" ms\n",pts/1000);
+            ADM_warning("The first frame has a PTS >0, adjusting to %"PRIu64" ms\n",pts/1000);
             ref->firstFramePts=pts;
         }
 
@@ -343,7 +343,7 @@ bool        ADM_EditorSegment::getRefFromTime(uint64_t xtime,uint32_t *refVideo)
     uint64_t segTime;
     if(false== convertLinearTimeToSeg(  xtime, &seg, &segTime))
     {
-        ADM_warning("Cannot identify segment for time %"LLU" ms\n",xtime/1000);
+        ADM_warning("Cannot identify segment for time %"PRIu64" ms\n",xtime/1000);
         return false;
     }
     _SEGMENT *s=getSegment(seg);
@@ -392,7 +392,7 @@ bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint
             return true;
         }
     }
-    ADM_warning("Cannot find segment matching time %"LLU"ms \n",frameTime/1000);
+    ADM_warning("Cannot find segment matching time %"PRIu64"ms \n",frameTime/1000);
     return false;
 }
 bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime)
@@ -426,7 +426,7 @@ static bool TimeToFrame(_VIDEOS *v,uint64_t time,uint32_t *frame,uint32_t *oflag
             {
                 if(dts>time)
                 {
-                    ADM_error("We reached frame %d with a PTS of %"LLU" when looking for PTS %"LLU"\n",
+                    ADM_error("We reached frame %d with a PTS of %"PRIu64" when looking for PTS %"PRIu64"\n",
                                             i,dts,time);
                     warn=true;
                 }
@@ -446,7 +446,7 @@ uint32_t    ADM_EditorSegment::intraTimeToFrame(uint32_t refVideo,uint64_t seekT
         ADM_assert(v);
         if(false==TimeToFrame(v,seekTime,&frame,&flags))
         {
-            ADM_error("Cannot find frame with time %"LLU"ms\n",seekTime/1000);
+            ADM_error("Cannot find frame with time %"PRIu64"ms\n",seekTime/1000);
             ADM_assert(0);
         }
         ADM_assert(flags & AVI_KEY_FRAME);
@@ -475,21 +475,21 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     uint32_t startSeg,endSeg;
     uint64_t startOffset,endOffset;
 
-    ADM_info("Cutting from %"LLU" to %"LLU" ms\n",from/1000,to/1000);
+    ADM_info("Cutting from %"PRIu64" to %"PRIu64" ms\n",from/1000,to/1000);
     dump();
     if(false==convertLinearTimeToSeg( from,&startSeg,&startOffset))
     {
-        ADM_warning("Cannot get starting point (%"LLU" ms\n",from/1000);
+        ADM_warning("Cannot get starting point (%"PRIu64" ms\n",from/1000);
         return false;
     }
     if(false==convertLinearTimeToSeg( to,&endSeg,&endOffset))
     {
-        ADM_warning("Cannot get starting point (%"LLU" ms\n",from/1000);
+        ADM_warning("Cannot get starting point (%"PRIu64" ms\n",from/1000);
         return false;
     }
 
-    ADM_info("Start, seg %"LU" Offset :%"LLU" ms\n",startSeg,startOffset);
-    ADM_info("End  , seg %"LU" Offset :%"LLU" ms\n",endSeg,endOffset);
+    ADM_info("Start, seg %"PRIu32" Offset :%"PRIu64" ms\n",startSeg,startOffset);
+    ADM_info("End  , seg %"PRIu32" Offset :%"PRIu64" ms\n",endSeg,endOffset);
 
 
     if(startSeg==endSeg)
@@ -545,11 +545,11 @@ void       ADM_EditorSegment::dumpSegment(int i)
         _SEGMENT *s=getSegment(i);
 
         printf("Segment :%d/%d\n",i,n);
-        printf("\tReference    :%"LU"    %s\n",s->_reference,ADM_us2plain(s->_reference));
-        printf("\tstartLinear  :%08"LLU" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
-        printf("\tduration     :%08"LLU" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
-        printf("\trefStartPts  :%08"LLU" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
-        printf("\trefStartDts  :%08"LLU" %s\n",s->_refStartDts,ADM_us2plain(s->_refStartDts));
+        printf("\tReference    :%"PRIu32"    %s\n",s->_reference,ADM_us2plain(s->_reference));
+        printf("\tstartLinear  :%08"PRIu64" %s\n",s->_startTimeUs,ADM_us2plain(s->_startTimeUs));
+        printf("\tduration     :%08"PRIu64" %s\n",s->_durationUs,ADM_us2plain(s->_durationUs));
+        printf("\trefStartPts  :%08"PRIu64" %s\n",s->_refStartTimeUs,ADM_us2plain(s->_refStartTimeUs));
+        printf("\trefStartDts  :%08"PRIu64" %s\n",s->_refStartDts,ADM_us2plain(s->_refStartDts));
 }
 /**
     \fn dumpRefVideos
@@ -565,9 +565,9 @@ void ADM_EditorSegment::dumpRefVideos(void)
         _VIDEOS *s=getRefVideo(i);
 
         printf("Videos :%d/%d\n",i,n);
-        printf("\tfirstFramePts      :%08"LLU" %s\n",s->firstFramePts,ADM_us2plain(s->firstFramePts));
-        printf("\ttimeIncrementInUs  :%08"LLU" %s\n",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
-        printf("\tnb frames    :%04"LU"\n",s->_nb_video_frames);
+        printf("\tfirstFramePts      :%08"PRIu64" %s\n",s->firstFramePts,ADM_us2plain(s->firstFramePts));
+        printf("\ttimeIncrementInUs  :%08"PRIu64" %s\n",s->timeIncrementInUs,ADM_us2plain(s->timeIncrementInUs));
+        printf("\tnb frames    :%04"PRIu32"\n",s->_nb_video_frames);
     }
 
 }
@@ -585,7 +585,7 @@ void ADM_EditorSegment::dumpRefVideos(void)
     vidHeader *demuxer=vid->_aviheader;
     if(false==TimeToFrame(vid,pts,&frame,&flags))
     {
-            ADM_warning("Cannot get frame with pts=%"LLU" ms\n",pts/1000);
+            ADM_warning("Cannot get frame with pts=%"PRIu64" ms\n",pts/1000);
             return false;
     }
     // Now get DTS..
@@ -614,7 +614,7 @@ void ADM_EditorSegment::dumpRefVideos(void)
     }
     if(deltaFrame<0)
     {
-        ADM_warning("Cannot find a valid DTS for pts=%"LLU"ms\n",pts/1000);
+        ADM_warning("Cannot find a valid DTS for pts=%"PRIu64"ms\n",pts/1000);
         *dts=pts;
         return false;
     }
@@ -653,12 +653,12 @@ bool        ADM_EditorSegment::LinearToRefTime(int segNo,uint64_t linear,uint64_
     ADM_assert(seg);
     if(linear<seg->_startTimeUs)
     {
-        ADM_warning("This given time is not in the segment: Given time %"LLU", seg start at %"LLU"\n",
+        ADM_warning("This given time is not in the segment: Given time %"PRIu64", seg start at %"PRIu64"\n",
                         linear, seg->_startTimeUs);
     }
     if(linear>=seg->_startTimeUs+seg->_durationUs)
     {
-        ADM_warning("This given time is not in the segment: Given time %"LLU", seg end at %"LLU"\n",
+        ADM_warning("This given time is not in the segment: Given time %"PRIu64", seg end at %"PRIu64"\n",
                         linear, seg->_startTimeUs+seg->_durationUs);
 
     }

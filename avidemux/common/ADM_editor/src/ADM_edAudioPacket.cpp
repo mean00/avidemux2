@@ -60,7 +60,7 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
         // Try to switch segment
         if(_audioSeg+1>=parent->_segments.getNbSegments()) return false;
 
-        ADM_warning("Switching to segment %"LU"\n",_audioSeg+1);
+        ADM_warning("Switching to segment %"PRIu32"\n",_audioSeg+1);
         _audioSeg++;
         _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
         ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
@@ -76,10 +76,10 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
         // Go to beginning of the stream
         if(false==trk->stream->goToTime(seg->_refStartTimeUs))
           {
-            ADM_warning("Fail to seek audio to %"LLU"ms\n",seg->_refStartTimeUs/1000);
+            ADM_warning("Fail to seek audio to %"PRIu64"ms\n",seg->_refStartTimeUs/1000);
             return false;
           }
-        ADM_info("Switched ok to audio segment %"LU", with a ref time=%s\n",
+        ADM_info("Switched ok to audio segment %"PRIu32", with a ref time=%s\n",
             _audioSeg,ADM_us2plain(seg->_refStartTimeUs));
         return true;
 
@@ -154,11 +154,11 @@ zgain:
     {
         if(*odts<seg->_refStartTimeUs)
         {
-            ADM_warning("Audio packet is too early %"LLU" ms, this segment starts at %"LLU"ms\n",*odts,seg->_refStartTimeUs);
+            ADM_warning("Audio packet is too early %"PRIu64" ms, this segment starts at %"PRIu64"ms\n",*odts,seg->_refStartTimeUs);
             goto zgain;
         }
 #if 0
-        ADM_info("Audio DTS:%"LLU" ms, ref StartTime :%"LLU" Delta:%"LLU" duration :%"LLU"\n",
+        ADM_info("Audio DTS:%"PRIu64" ms, ref StartTime :%"PRIu64" Delta:%"PRIu64" duration :%"PRIu64"\n",
                     *odts/1000,seg->_refStartTimeUs/1000,(*odts-seg->_refStartTimeUs)/1000,seg->_durationUs/1000);
 #endif
         *odts-=seg->_refStartTimeUs;
@@ -192,7 +192,7 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
     ADM_info(" go to time %02.2f secs\n",((float)ustime)/1000000.);
     if(false==parent->_segments.convertLinearTimeToSeg(ustime,&seg,&segTime))
       {
-        ADM_warning("Cannot convert %"LLU" to linear time\n",ustime/1000);
+        ADM_warning("Cannot convert %"PRIu64" to linear time\n",ustime/1000);
         return false;
       }
     ADM_info("=> seg %d, rel time %02.2f secs\n",(int)seg,((float)segTime)/1000000.);
@@ -200,7 +200,7 @@ bool ADM_edAudioTrackFromVideo::goToTime (uint64_t ustime)
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(s->_reference);
     if(!trk)
       {
-        ADM_warning("No audio for segment %"LU"\n",seg);
+        ADM_warning("No audio for segment %"PRIu32"\n",seg);
         return false;
       }
     uint64_t seekTime;

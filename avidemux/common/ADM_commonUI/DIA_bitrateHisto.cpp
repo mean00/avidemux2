@@ -66,7 +66,7 @@ uint32_t maxBFrame=0;
 	round= (fps1000+990)/1000; // round up of fps
 	if(!round) return;
 
-    printf("[Histogram] fps roundup %"LU" fps, time increment=%"LLU" us\n",round,increment);
+    printf("[Histogram] fps roundup %"PRIu32" fps, time increment=%"PRIu64" us\n",round,increment);
 	video_body->getFrameSize (start, &len);
 	for(k=0;k<round;k++) average[k]=0;
 

@@ -223,9 +223,9 @@ bool bAppend=false;
                 printf("[PsProbe] Found audio Track %d, pid=%x\n",i,(*audioTracks)[i]->esID);
                 WAVHeader *hdr=&((*audioTracks)[i]->header);
                 printf("[PsProbe] codec    : 0x%x \n",hdr->encoding);
-                printf("[PsProbe] frequency: %"LU" Hz\n",hdr->frequency);
-                printf("[PsProbe] channel  : %"LU" \n",hdr->channels);
-                printf("[PsProbe] byterate : %"LU" Byte/s\n",hdr->byterate);
+                printf("[PsProbe] frequency: %"PRIu32" Hz\n",hdr->frequency);
+                printf("[PsProbe] channel  : %"PRIu32" \n",hdr->channels);
+                printf("[PsProbe] byterate : %"PRIu32" Byte/s\n",hdr->byterate);
 
         }
 
@@ -372,13 +372,13 @@ bool bAppend=false;
                           type=7 & (val>>3);
                           if( type<1 ||  type>3)
                           {
-                                  printf("[Indexer]Met illegal pic at %"LLX" + %"LX"\n",
+                                  printf("[Indexer]Met illegal pic at %"PRIx64" + %"PRIx64"\n",
                                                   info.startAt,info.offset);
                                   continue;
                           }
                           //
 #if 0
-                            printf("Found pic of type %d at 0x%"LLX" dts=%s pts=%s\n",type,info.startAt,ADM_us2plain(timeConvert(info.dts)),ADM_us2plain(timeConvert(info.pts)));
+                            printf("Found pic of type %d at 0x%"PRIx64" dts=%s pts=%s\n",type,info.startAt,ADM_us2plain(timeConvert(info.dts)),ADM_us2plain(timeConvert(info.pts)));
 #endif
                           //
                           if(lastValidVideoDts!=ADM_NO_PTS && info.dts!=ADM_NO_PTS)
@@ -411,9 +411,9 @@ theEnd:
         // Dump progressive/frame gop
         Mark(&data,&info,markStart);
         
-        qfprintf(index,"\n# Found %"LU" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %"LU" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %"LU" field pictures\n",video.fieldCount); // Size
+        qfprintf(index,"\n# Found %"PRIu32" images \n",data.nbPics); // Size
+        qfprintf(index,"# Found %"PRIu32" frame pictures\n",video.frameCount); // Size
+        qfprintf(index,"# Found %"PRIu32" field pictures\n",video.fieldCount); // Size
 
        
         // Now write the header
@@ -452,7 +452,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
         if(data->nbPics)
         {
             // Write previous image data (size) : TODO
-            qfprintf(index,":%06"LX" ",data->pkt->getConsumed()+offset); // Size
+            qfprintf(index,":%06"PRIx64" ",data->pkt->getConsumed()+offset); // Size
         }
         else data->pkt->getConsumed();
     }
@@ -463,30 +463,30 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,markType update)
             // If audio, also dump audio
             if(audioTracks)
             {
-                qfprintf(index,"\nAudio bf:%08"LLX" ",data->startAt);
+                qfprintf(index,"\nAudio bf:%08"PRIx64" ",data->startAt);
                 for(int i=0;i<audioTracks->size();i++)
                 {
                     uint8_t e=(*audioTracks)[i]->esID;
                     packetStats *s=pkt->getStat(e);
                     
-                    qfprintf(index,"Pes:%x:%08"LLX":%"LD":%"LLD" ",e,s->startAt,s->startSize,s->startDts);
+                    qfprintf(index,"Pes:%x:%08"PRIx64":%"PRIi32":%"PRId64" ",e,s->startAt,s->startSize,s->startDts);
                 }
                 
             }
             // start a new line
-            qfprintf(index,"\nVideo at:%08"LLX":%04"LX" Pts:%08"LLD":%08"LLD" ",data->startAt,data->offset,info->pts,info->dts);
+            qfprintf(index,"\nVideo at:%08"PRIx64":%04"PRIx64" Pts:%08"PRId64":%08"PRId64" ",data->startAt,data->offset,info->pts,info->dts);
             data->gopStartDts=info->dts;
             data->nextOffset=-2;
         }
         int64_t deltaDts,deltaPts;
 #if 0
-        printf("Dts%"LLD",PTS:%"LLD"\n",info->dts, info->pts);
+        printf("Dts%"PRId64",PTS:%"PRId64"\n",info->dts, info->pts);
 #endif
         if(info->dts==-1 || data->gopStartDts==-1) deltaDts=-1;
                 else deltaDts=(int64_t)info->dts-(int64_t)data->gopStartDts;
         if(info->pts==-1 || data->gopStartDts==-1) deltaPts=-1;
                 else deltaPts=(int64_t)info->pts-(int64_t)data->gopStartDts;
-        qfprintf(index,"%c%c:%"LLD":%"LLD,Type[data->frameType],Structure[data->picStructure&3],
+        qfprintf(index,"%c%c:%"PRId64":%"PRId64,Type[data->frameType],Structure[data->picStructure&3],
                     deltaPts,deltaDts);
     }
     if(update==markEnd || update==markNow)
@@ -540,8 +540,8 @@ bool PsIndexer::writeScrReset(void)
         char head[30];
         sprintf(head,"Reset%1d",i);
         qfprintf(index,"#%s\n",ADM_us2plain(timeConvert(listOfScrReset[i].timeOffset)));
-        qfprintf(index,"%s.position=%"LLD"\n",head,listOfScrReset[i].position);
-        qfprintf(index,"%s.timeOffset=%"LLD"\n",head,listOfScrReset[i].timeOffset);
+        qfprintf(index,"%s.position=%"PRId64"\n",head,listOfScrReset[i].position);
+        qfprintf(index,"%s.timeOffset=%"PRId64"\n",head,listOfScrReset[i].timeOffset);
     }
     return true;
 }
@@ -595,7 +595,7 @@ bool PsIndexer::handleScrReset(uint64_t dts)
         uint64_t newDts=dts+newOffset;
         if(newDts>lastValidVideoDts+timeOffset)
         {
-              ADM_info("SCR reset, using vobu to correct. New time offset %s, position 0x%"LLX"\n",
+              ADM_info("SCR reset, using vobu to correct. New time offset %s, position 0x%"PRIx64"\n",
                         PRETTY(newOffset),newPosition);
               ADM_warning("last Valid Dts %s\n",PRETTY(lastValidVideoDts));
               timeOffset=newOffset;

@@ -137,7 +137,7 @@ bool aviIndexOdml::writeSuperIndex()
     {
         odmlOneSuperIndex *cur=superIndex.trackIndeces+i; 
         uint64_t pos=openDmlHeaderPosition[i];
-        ADM_info("Writing  superIndex %d at %"LLX"\n",i,pos);
+        ADM_info("Writing  superIndex %d at %"PRIx64"\n",i,pos);
         LMovie->Seek(pos);       
         cur->serialize(LMovie);
     }
@@ -156,7 +156,7 @@ bool           aviIndexOdml::writeRegularIndex(int trackNumber)
     if(nbEntries)
     {
         // Write index
-        ADM_info("Writing regular index for track %d, at position 0x%"LLX"\n",trackNumber,cur->indexPosition);
+        ADM_info("Writing regular index for track %d, at position 0x%"PRIx64"\n",trackNumber,cur->indexPosition);
         LMovie->Seek(cur->indexPosition);
         cur->serialize(LMovie,fourccs[trackNumber],trackNumber);
         cur->listOfChunks.clear();
@@ -230,7 +230,7 @@ bool        odmlRegularIndex::serialize(AviListAvi *parentList,uint32_t fccTag,i
             odmIndexEntry ix=listOfChunks[i];
             if(ix.offset+8<baseOffset)
             {
-                    ADM_warning("Fatal error : Chunk is at %"LLU" but base is at %"LLU"\n",ix.offset,baseOffset);
+                    ADM_warning("Fatal error : Chunk is at %"PRIu64" but base is at %"PRIu64"\n",ix.offset,baseOffset);
                     exit(-1);
             }
             
@@ -396,7 +396,7 @@ bool aviIndexOdml::startNewRiffIfNeeded(int trackNo,int len)
         }
         if(riffSize> limit)
         {
-            ADM_info("Riff is now %"LLU" bytes, break needed\n",riffSize);
+            ADM_info("Riff is now %"PRIu64" bytes, break needed\n",riffSize);
             breakNeeded=true;
         }
 
@@ -418,7 +418,7 @@ bool aviIndexOdml::startNewRiff()
 {
     uint64_t pos;
     pos=LMovie->Tell();
-    ADM_info("Starting new riff at position %"LLU" (0x%"LLX")",pos,pos);
+    ADM_info("Starting new riff at position %"PRIu64" (0x%"PRIx64")",pos,pos);
 
     // 0- Write legacy index, else WMP is not happy...
 
@@ -510,7 +510,7 @@ bool aviIndexOdml::writeLegacyIndex()
     // 3-write legacy index
     uint64_t pos;
     pos=_masterList->Tell();
-    ADM_info("Writting legacy index at %"LLX"\n",pos);
+    ADM_info("Writting legacy index at %"PRIx64"\n",pos);
     //---
     AviListAvi lst("idx1",_masterList->getFile());
     lst.Begin();

@@ -258,7 +258,7 @@ again:
     }
     if(off2) // false detectio ?
     {
-        printf("[psAudioProbe] Mp2 : False MP2 header at %"LU"\n",off);
+        printf("[psAudioProbe] Mp2 : False MP2 header at %"PRIu32"\n",off);
         if(dataSize<4) return false;
         data+=3;
         dataSize-=3;

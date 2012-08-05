@@ -428,7 +428,7 @@ uint32_t ref;
   {
     if(false==_segments.getRefFromTime(time,&ref))
     {
-        ADM_warning("Cannot get ref from time %"LLD" ms\n",time/1000);
+        ADM_warning("Cannot get ref from time %"PRId64" ms\n",time/1000);
         return false;
     }
     _segments.getRefVideo(ref)->decoder->setParam ();
@@ -465,7 +465,7 @@ uint32_t ref;
 
     if(false==_segments.getRefFromTime(xtime,&ref))
     {
-        ADM_warning("[Editor] getAudioStreamsInfo failed for time %"LLD" ms\n",xtime);
+        ADM_warning("[Editor] getAudioStreamsInfo failed for time %"PRId64" ms\n",xtime);
         return false;
     }
 
@@ -504,7 +504,7 @@ uint32_t ref;
 
         if(false==_segments.getRefFromTime(xtime,&ref))
         {
-            ADM_warning("[Editor::getCurrentAudioStreamNumber] Cannot get ref video for time %"LLD" ms\n",xtime/1000);
+            ADM_warning("[Editor::getCurrentAudioStreamNumber] Cannot get ref video for time %"PRId64" ms\n",xtime/1000);
             return 0;
         }
 
@@ -660,7 +660,7 @@ bool               ADM_Composer::dumpTiming(void)
 
             v->_aviheader->getFlags(i,&flags);
             v->_aviheader->getPtsDts(i,&pts,&dts);
-            printf("%"LU" flags:%04"LX" ",i,flags);
+            printf("%"PRIu32" flags:%04"PRIx64" ",i,flags);
             printf("pts :%s ",ADM_us2plain(pts));
             printf("dts :%s \n",ADM_us2plain(dts));
     }

@@ -192,12 +192,12 @@ bool ADM_compressWriteToString(COMPRES_PARAMS *params,  char **str)
     char tmp[256];
     switch(params->mode)
     {
-        case COMPRESS_CQ:    sprintf(tmp,"CQ=%"LU,params->qz);break;
-        case COMPRESS_CBR:   sprintf(tmp,"CBR=%"LU,params->bitrate);break;
-        case COMPRESS_2PASS: sprintf(tmp,"2PASS=%"LU,params->finalsize);break;
+        case COMPRESS_CQ:    sprintf(tmp,"CQ=%"PRIu32,params->qz);break;
+        case COMPRESS_CBR:   sprintf(tmp,"CBR=%"PRIu32,params->bitrate);break;
+        case COMPRESS_2PASS: sprintf(tmp,"2PASS=%"PRIu32,params->finalsize);break;
         case COMPRESS_SAME:  sprintf(tmp,"SAME");break;
-        case COMPRESS_2PASS_BITRATE: sprintf(tmp,"2PASSBITRATE=%"LU,params->avg_bitrate);break;
-        case COMPRESS_AQ:    sprintf(tmp,"AQ=%"LU,params->qz);break;
+        case COMPRESS_2PASS_BITRATE: sprintf(tmp,"2PASSBITRATE=%"PRIu32,params->avg_bitrate);break;
+        case COMPRESS_AQ:    sprintf(tmp,"AQ=%"PRIu32,params->qz);break;
         default:
             ADM_error("Unknown compressin mode \n");
             return false;

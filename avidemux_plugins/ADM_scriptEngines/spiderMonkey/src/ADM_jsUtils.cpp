@@ -48,7 +48,7 @@ bool ADM_jsArg2Vars(const char *caller, int argc, jsval *argv, int paramNumber, 
                         if(JSVAL_IS_INT(j)) 
                         {
                             v=(int64_t)JSVAL_TO_INT(j);
-                            //ADM_warning("Value is int :%"LLD"\n",JSVAL_TO_INT(j));
+                            //ADM_warning("Value is int :%"PRId64"\n",JSVAL_TO_INT(j));
                         }
                         if(JSVAL_IS_DOUBLE(j)) 
                         {

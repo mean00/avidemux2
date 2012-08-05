@@ -65,8 +65,8 @@ void ADM_memStatEnd(void)
 void ADM_memStat(void)
 {
 	printf("Global mem stat\n______________\n");
-	printf("\tMemory consumed: %"LU" (MB)\n", ADM_consumed >> 20);
-    printf("\tMax consumed   : %"LU" (MB)\n", ADM_maxConsumed >> 20);
+	printf("\tMemory consumed: %"PRIu32" (MB)\n", ADM_consumed >> 20);
+    printf("\tMax consumed   : %"PRIu32" (MB)\n", ADM_maxConsumed >> 20);
 
 }
 

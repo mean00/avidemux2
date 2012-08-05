@@ -137,7 +137,7 @@ double  scriptGetPts(JSContext *cx, int frameNum)
 
 	if(!videoBody->getVideoPtsDts(frameNum, &flags, &pts, &dts))
 	{
-		ADM_warning("Cannot get PTS for frame %"LU"\n", frameNum);
+		ADM_warning("Cannot get PTS for frame %"PRIu32"\n", frameNum);
 		return -1;
 	}
 
@@ -157,7 +157,7 @@ double  scriptGetDts(JSContext *cx, int frameNum)
 
 	if(!videoBody->getVideoPtsDts(frameNum, &flags, &pts, &dts))
 	{
-		ADM_warning("Cannot get DTS for frame %"LU"\n", frameNum);
+		ADM_warning("Cannot get DTS for frame %"PRIu32"\n", frameNum);
 		return -1;
 	}
 

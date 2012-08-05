@@ -156,7 +156,7 @@ static int index;
     argc=global_argc;
 	argv = global_argv;
 
-          printf("\n *** Automated : %"LU" entries*************\n",(uint32_t)NB_AUTO);
+          printf("\n *** Automated : %"PRIu32" entries*************\n",(uint32_t)NB_AUTO);
           // we need to process
           argc-=1;
           cur=1;
@@ -296,7 +296,7 @@ void call_setAudio (char *p)
 {
 
 		int32_t i;
-		sscanf(p,"%"LD,&i);
+		sscanf(p,"%"PRIi32,&i);
 //		audioFilterDelay(i);
 }
 void call_audiocodec(char *p)
@@ -339,8 +339,8 @@ static void call_videoconf(char *p)
 void call_slave(char *p)
 {
 		uint32_t i;
-		sscanf(p,"%"LU,&i);
-		printf("Slace on port  %"LU"\n",i);
+		sscanf(p,"%"PRIu32,&i);
+		printf("Slace on port  %"PRIu32"\n",i);
 		if(!ADM_slaveConnect(i))
         {
                 ADM_error("Cannot connect to master\n");
@@ -370,7 +370,7 @@ void call_autosplit(char *p)
 {
 
 		int32_t i;
-		sscanf(p,"%"LD,&i);
+		sscanf(p,"%"PRIi32,&i);
 //		ADM_aviSetSplitSize(i);
 }
 

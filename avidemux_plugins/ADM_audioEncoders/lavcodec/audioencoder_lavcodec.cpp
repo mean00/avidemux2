@@ -138,7 +138,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   wavheader.byterate=(_config.bitrate*1000)>>3;
 
   _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
-  ADM_info("[Lavcodec]Incoming : fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
+  ADM_info("[Lavcodec]Incoming : fq : %"PRIu32", channel : %"PRIu32" bitrate: %"PRIu32" \n",
   wavheader.frequency,wavheader.channels,_config.bitrate);
 
 
@@ -263,7 +263,7 @@ cnt:
   }
   if (nbout < 0)
   {
-    ADM_error("[Lavcodec] Error !!! : %"LD"\n", nbout);
+    ADM_error("[Lavcodec] Error !!! : %"PRIi32"\n", nbout);
     return 0;
   }
   *len=nbout;

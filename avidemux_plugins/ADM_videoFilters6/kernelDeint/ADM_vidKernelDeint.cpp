@@ -100,7 +100,7 @@ const char *kernelDeint::getConfiguration(void)
 {
  	static char conf[100];
     conf[0]=0;
-    snprintf(conf,100,"kdeint Borders : order:%"LU" threshold:%"LU" sharp:%"LU" twoway:%"LU" map:%"LU"\n",
+    snprintf(conf,100,"kdeint Borders : order:%"PRIu32" threshold:%"PRIu32" sharp:%"PRIu32" twoway:%"PRIu32" map:%"PRIu32"\n",
                 param.order,param.threshold,param.sharp,param.twoway,param.map);
     return conf;
 }

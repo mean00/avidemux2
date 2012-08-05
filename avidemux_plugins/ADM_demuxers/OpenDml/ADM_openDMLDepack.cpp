@@ -106,7 +106,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 		working->update(img,nbFrame);
 		if(!getFrame(img,&image))
         {
-            printf("[Avi] Error could not get frame %"LU"\n",img);
+            printf("[Avi] Error could not get frame %"PRIu32"\n",img);
             goto _abortUnpack;
         }
 		aprintf("--Frame:%lu/%lu, len %lu, nbDuped%u\n",img,nbFrame,image.dataLength,nbDuped);
@@ -221,7 +221,7 @@ _abortUnpack:
 		delete [] newIndex;
 		printf("[Avi] Could not unpack this...\n");
 	}
-	printf("[Avi] Initial # of images : %"LU", now we have %"LU" \n",nbFrame,targetIndex);
+	printf("[Avi] Initial # of images : %"PRIu32", now we have %"PRIu32" \n",nbFrame,targetIndex);
 	nbFrame=targetIndex;
 
 	#ifndef __HAIKU__

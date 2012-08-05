@@ -112,7 +112,7 @@ bool AUDMEncoder_Twolame::initialize(void)
   _chunk = 1152*channels;
 
 
-  printf("[TwoLame]Incoming :fq : %"LU", channel : %"LU" bitrate: %"LU" \n",
+  printf("[TwoLame]Incoming :fq : %"PRIu32", channel : %"PRIu32" bitrate: %"PRIu32" \n",
         wavheader.frequency,channels,_config.bitrate);
 
 

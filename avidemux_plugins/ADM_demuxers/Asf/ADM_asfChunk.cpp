@@ -114,7 +114,7 @@ uint8_t   asfChunk::nextChunk(int shortChunk)
   chunkLen<<=32;
   chunkLen+=low;
   
-  printf("Next chunk from %"LX" +%"LLX" to %"LLX"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
+  printf("Next chunk from %"PRIx64" +%"PRIx64" to %"PRIx64"\n",_chunkStart,chunkLen,chunkLen+_chunkStart);
   
   return 1;
   
@@ -123,9 +123,9 @@ uint8_t   asfChunk::skipChunk(void)
 {
   uint32_t go;
   go=_chunkStart+ chunkLen;
-  printf("Pos 0x%"LLX"\n",ftello(_fd));
+  printf("Pos 0x%"PRIx64"\n",ftello(_fd));
   fseeko(_fd,go,SEEK_SET);
-  printf("Skipping to 0x%"LX"\n",go);
+  printf("Skipping to 0x%"PRIx64"\n",go);
   
   return 1; 
 }
@@ -182,8 +182,8 @@ uint8_t   asfChunk::dump(void)
   const chunky *id;
   id=chunkId();
   printf("Chunk type  : <<<<%s>>>>\n",id->name);
-  printf("Chunk Start : %"LX"\n",_chunkStart);
-  printf("Chunk Len   : %"LU"\n",(uint32_t)chunkLen);
+  printf("Chunk Start : %"PRIx64"\n",_chunkStart);
+  printf("Chunk Len   : %"PRIu32"\n",(uint32_t)chunkLen);
   printf("%02x%02x%02x%02x-%02x%02x-xxxx",guId[3],guId[2],guId[1],guId[0],guId[5],guId[4]);
   for(int i=0;i<16;i++) printf("%02x ",guId[i]);
   printf("\n");

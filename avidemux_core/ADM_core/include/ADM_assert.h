@@ -105,13 +105,6 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 }
 #endif
 
-#define LLX PRIx64
-#define LLU PRIu64
-#define LLD PRId64
-#define LX  PRIx32
-#define LD  PRIi32
-#define LU  PRIu32
-
 // ADM_cleanupPath returns a cleaned up copy of the parameter
 #ifdef _WIN32
 	ADM_CORE6_EXPORT char *ADM_slashToBackSlash(const char *in);

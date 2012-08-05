@@ -27,7 +27,7 @@
 uint32_t ref,refOffset;\
     if(false== _segments.getRefFromFrame( frame,&ref,&refOffset))  \
     { \
-        ADM_warning(#func " cannot translate fame %"LD"\n",frame); \
+        ADM_warning(#func " cannot translate fame %"PRIi32"\n",frame); \
         return false; \
     }
 /**

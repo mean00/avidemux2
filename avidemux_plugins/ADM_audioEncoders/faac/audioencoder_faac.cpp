@@ -124,11 +124,11 @@ int channels=wavheader.channels;
                                 &max_bytes_output);
     if(!_handle)
     {
-          printf("[FAAC]Cannot open faac with fq=%"LU" chan=%"LU" br=%"LU"\n",
+          printf("[FAAC]Cannot open faac with fq=%"PRIu32" chan=%"PRIu32" br=%"PRIu32"\n",
           wavheader.frequency,channels,_config.bitrate);
           return 0;
     }
-    printf(" [FAAC] : Sample input:%"LU", max byte output%"LU" \n",(uint32_t)samples_input,(uint32_t)max_bytes_output);
+    printf(" [FAAC] : Sample input:%"PRIu32", max byte output%"PRIu32" \n",(uint32_t)samples_input,(uint32_t)max_bytes_output);
     cfg= faacEncGetCurrentConfiguration(_handle);
     
     // Set default conf, same as ffmpeg
@@ -143,7 +143,7 @@ int channels=wavheader.channels;
     cfg->useLfe=0;	
     if (!(ret=faacEncSetConfiguration(_handle, cfg))) 
     {
-        printf("[FAAC] Cannot set conf for faac with fq=%"LU" chan=%"LU" br=%"LU" (err:%d)\n",
+        printf("[FAAC] Cannot set conf for faac with fq=%"PRIu32" chan=%"PRIu32" br=%"PRIu32" (err:%d)\n",
 				wavheader.frequency,channels,_config.bitrate,ret);
 	return 0;
     }
@@ -171,10 +171,10 @@ int channels=wavheader.channels;
     printf("[Faac] Initialized :\n");
     
     printf("[Faac]Version        : %s\n",cfg->name);
-    printf("[Faac]Bitrate        : %"LU"\n",(uint32_t)cfg->bitRate);
+    printf("[Faac]Bitrate        : %"PRIu32"\n",(uint32_t)cfg->bitRate);
     printf("[Faac]Mpeg2 (1)/4(0) : %u\n",cfg->mpegVersion);
     printf("[Faac]Use lfe      ) : %u\n",cfg->useLfe);
-    printf("[Faac]Sample output  : %"LU"\n",_chunk / channels);
+    printf("[Faac]Sample output  : %"PRIu32"\n",_chunk / channels);
     printf("[Faac]Bitrate        : %lu\n",cfg->bitRate*channels);
 
     

@@ -139,7 +139,7 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 				fclose(fd);
 				return NULL;
 		    }
-		    ADM_info("[imageLoader] %"LU" x %"LU".., total Size : %u, offset %u\n", w, h,_imgSize,off);
+		    ADM_info("[imageLoader] %"PRIu32" x %"PRIu32".., total Size : %u, offset %u\n", w, h,_imgSize,off);
 
 		// Load the binary coded image
 		    uint8_t *data=new uint8_t[_imgSize];
@@ -286,7 +286,7 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
  	    }
  	    w = bmph.biWidth;
  	    h = bmph.biHeight;
- 	    ADM_info("[imageLoader] BMP2 W: %"LU" H: %"LU" offset : %"LU"\n", w, h, offset);
+ 	    ADM_info("[imageLoader] BMP2 W: %"PRIu32" H: %"PRIu32" offset : %"PRIu32"\n", w, h, offset);
 // Load the binary coded image
  	fseek(fd,offset,SEEK_SET);
     uint8_t *data=new uint8_t[w*h*3];

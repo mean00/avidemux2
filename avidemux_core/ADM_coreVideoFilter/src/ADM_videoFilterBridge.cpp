@@ -26,7 +26,7 @@
 */
 ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime) : ADM_coreVideoFilter(NULL, NULL)
 {
-    printf("[VideoFilterBridge] Creating bridge from %"LU" s to %"LU" s\n", (uint32_t)(startTime / 1000000LL), (uint32_t)(endTime / 1000000LL));
+    printf("[VideoFilterBridge] Creating bridge from %"PRIu32" s to %"PRIu32" s\n", (uint32_t)(startTime / 1000000LL), (uint32_t)(endTime / 1000000LL));
     this->startTime = startTime;
     this->editor = editor;
 
@@ -82,13 +82,13 @@ again:
 
     if (pts > endTime)
     {
-        ADM_warning("[VideoBridge] This frame is too late (%"LLD" vs %"LLU")\n", pts, endTime);
+        ADM_warning("[VideoBridge] This frame is too late (%"PRId64" vs %"PRIu64")\n", pts, endTime);
         return false;
     }
 
     if (pts < startTime)
     {
-        ADM_warning("[VideoBridge] This frame is too early (%"LLD" vs %"LLU")\n", pts, startTime);
+        ADM_warning("[VideoBridge] This frame is too early (%"PRId64" vs %"PRIu64")\n", pts, startTime);
         goto again;
     }
 

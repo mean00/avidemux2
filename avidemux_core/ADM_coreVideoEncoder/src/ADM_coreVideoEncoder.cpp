@@ -93,7 +93,7 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
     }
     int nn,dd;
     av_reduce(&nn,&dd, useconds, 1000000, 0xFFF0); // mpeg4 allows a maximum of 1<<16-1 as time base, should be enough for most case
-    ADM_info("%"LLU" us -> %d / %d (old)\n",useconds,nn,dd);
+    ADM_info("%"PRIu64" us -> %d / %d (old)\n",useconds,nn,dd);
     *n=nn;
     *d=dd;
 
@@ -127,7 +127,7 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
                     uint64_t newDts=lastDts+getFrameIncrement();
                     if(newDts<=*pts)
                     {
-                            ADM_warning("Using newDts=%"LLU"\n",newDts);
+                            ADM_warning("Using newDts=%"PRIu64"\n",newDts);
                             *dts=newDts;
                             return true;
                     }
@@ -138,8 +138,8 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
             return true;
         }
     }
-    ADM_warning("Cannot find PTS : %"LLU"\n",val);
-    for(int i=0;i<n;i++) ADM_warning("%d : %"LLU"\n",i,mapper[i].internalTS);
+    ADM_warning("Cannot find PTS : %"PRIu64"\n",val);
+    for(int i=0;i<n;i++) ADM_warning("%d : %"PRIu64"\n",i,mapper[i].internalTS);
     ADM_assert(0);
     return false;
 

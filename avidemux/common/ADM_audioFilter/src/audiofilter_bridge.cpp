@@ -43,7 +43,7 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   _hold=0;
   rewind();
   
-  ADM_info("[Bridge] Starting with time %"LU" ms, shift %"LD" ms\n",startInMs,-shiftMs);
+  ADM_info("[Bridge] Starting with time %"PRIu32" ms, shift %"PRIi32" ms\n",startInMs,-shiftMs);
   // If shiftMS is > 0, it means we have to go in the future, just increse _startTime
   if(shiftMs>0)
   {
@@ -149,7 +149,7 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
         break;
       }
       endMet=false;
-      //printf("Bridge : Packet width DTS=%"LLD"\n",dts);
+      //printf("Bridge : Packet width DTS=%"PRId64"\n",dts);
       _tail+=got;
       if(_hold>0)
       {

@@ -197,7 +197,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 
     uint64_t p=image->Pts;
     queueOfDts.push_back(p);
-    aprintf("Incoming frame PTS=%"LLU", delay=%"LLU"\n",p,getEncoderDelay());
+    aprintf("Incoming frame PTS=%"PRIu64", delay=%"PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
     _frame.pts= timingToLav(p);    //
     if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
@@ -207,8 +207,8 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     map.internalTS=_frame.pts;
     mapper.push_back(map);
 
-    aprintf("Codec> incoming pts=%"LLU"\n",image->Pts);
-    //printf("--->>[PTS] :%"LLU", raw %"LLU" num:%"LU" den:%"LU"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
+    aprintf("Codec> incoming pts=%"PRIu64"\n",image->Pts);
+    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
     {
@@ -372,7 +372,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     // update lastDts
     lastDts=out->dts;
 
-    aprintf("Codec>Out pts=%"LLU" us, out Dts=%"LLU"\n",out->pts,out->dts);
+    aprintf("Codec>Out pts=%"PRIu64" us, out Dts=%"PRIu64"\n",out->pts,out->dts);
 
     // Update quant
     if(!_context->coded_frame->quality)
@@ -525,7 +525,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
                 averageBitrate=(uint32_t)avg*1000; // convert from kb/s to b/s
             }
 
-        printf("[ffmpeg4] Average bitrate =%"LU" kb/s\n",averageBitrate/1000);
+        printf("[ffmpeg4] Average bitrate =%"PRIu32" kb/s\n",averageBitrate/1000);
         _context->bit_rate=averageBitrate;
         switch(pass)
         {

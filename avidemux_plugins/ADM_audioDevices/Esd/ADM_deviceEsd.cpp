@@ -79,7 +79,7 @@ esd_server_info_t *esdInfo;
 
     format=ESD_STREAM | ESD_PLAY | ESD_BITS16;
     format |=_channels<<4;
-    printf("[ESD]  : %"LU" Hz, %"LU" channels\n", _frequency, _channels);
+    printf("[ESD]  : %"PRIu32" Hz, %"PRIu32" channels\n", _frequency, _channels);
     esdDevice=esd_play_stream(format,_frequency,NULL,"avidemux");
     if(esdDevice<=0)
     {

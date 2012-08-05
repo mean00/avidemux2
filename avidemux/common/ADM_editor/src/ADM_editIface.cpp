@@ -102,7 +102,7 @@ int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 {
 	uint32_t filterTag = ADM_vf_getTagFromInternalName(filter);
 
-	printf("Adding Filter %s -> %"LU"... \n", filter, filterTag);
+	printf("Adding Filter %s -> %"PRIu32"... \n", filter, filterTag);
 
 	bool r = (ADM_vf_addFilterFromTag(this, filterTag, c, false) != NULL);
 

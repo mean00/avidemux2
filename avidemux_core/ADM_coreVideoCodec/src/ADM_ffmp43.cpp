@@ -102,8 +102,8 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
       out->quant = NULL;
     }
     uint64_t pts_opaque=(uint64_t)(src->reordered_opaque);
-    //printf("[LAVC] Old pts :%"LLD" new pts :%"LLD"\n",out->Pts, pts_opaque);
-    //printf("[LAVC] pts: %"LLU"\n",src->pts);
+    //printf("[LAVC] Old pts :%"PRId64" new pts :%"PRId64"\n",out->Pts, pts_opaque);
+    //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
     out->Pts= (uint64_t)(pts_opaque);
 
     return 1;
@@ -372,7 +372,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
    out->Pts=in->demuxerPts;
     _context->reordered_opaque=in->demuxerPts;
   //_frame.opaque=(void *)out->Pts;
-  //printf("Incoming Pts :%"LLD"\n",out->Pts);
+  //printf("Incoming Pts :%"PRId64"\n",out->Pts);
   AVPacket pkt;
   av_init_packet(&pkt);
   pkt.data=in->data;
@@ -489,7 +489,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       return 0;
     }
     clonePic (&_frame, out);
-    //printf("[AvCodec] Pts : %llu Out Pts:%llu \n",_frame.pts,out->Pts);
+    //printf("[AvCodec] Pts : %"PRIu64" Out Pts:%"PRIu64" \n",_frame.pts,out->Pts);
 
   return 1;
 }

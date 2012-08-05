@@ -174,7 +174,7 @@ DIA_encodingGtk::~DIA_encodingGtk()
 */
 void DIA_encodingGtk::setFps(uint32_t fps)
 {
-    snprintf(stringMe, 79, "%"LU, fps);
+    snprintf(stringMe, 79, "%"PRIu32, fps);
     WRITE(labelFps);
 }
 
@@ -193,7 +193,7 @@ void DIA_encodingGtk::setPhasis(const char *n)
 */
 void DIA_encodingGtk::setFrameCount(uint32_t nb)
 {
-    snprintf(stringMe, 79, "%"LU, nb);
+    snprintf(stringMe, 79, "%"PRIu32, nb);
     WRITE(labelFrames);
 }
 
@@ -233,7 +233,7 @@ void DIA_encodingGtk::setVideoCodec(const char *n)
 */
 void DIA_encodingGtk::setBitrate(uint32_t br,uint32_t globalbr)
 {
-    snprintf(stringMe, 79, "%"LU" kb/s", br);
+    snprintf(stringMe, 79, "%"PRIu32" kb/s", br);
     WRITE(labelBitrate);
 }
 
@@ -252,7 +252,7 @@ void DIA_encodingGtk::setContainer(const char *container)
 */
 void DIA_encodingGtk::setQuantIn(int size)
 {
-    sprintf(stringMe, "%"LU, size);
+    sprintf(stringMe, "%"PRIu32, size);
     WRITE(labelQuantiser);
 }
 
@@ -263,7 +263,7 @@ void DIA_encodingGtk::setQuantIn(int size)
 void DIA_encodingGtk::setTotalSize(uint64_t size)
 {
     uint64_t mb = size>>20;
-    sprintf(stringMe, "%"LU" MB", (int)mb);
+    sprintf(stringMe, "%"PRIu32" MB", (int)mb);
     WRITE(labelTotalSize);
 }
 
@@ -274,7 +274,7 @@ void DIA_encodingGtk::setTotalSize(uint64_t size)
 void DIA_encodingGtk::setVideoSize(uint64_t size)
 {
     uint64_t mb = size>>20;
-    sprintf(stringMe, "%"LU" MB", (int)mb);
+    sprintf(stringMe, "%"PRIu32" MB", (int)mb);
     WRITE(labelVideoSize);
 }
 
@@ -285,7 +285,7 @@ void DIA_encodingGtk::setVideoSize(uint64_t size)
 void DIA_encodingGtk::setAudioSize(uint64_t size)
 {
     uint64_t mb = size>>20;
-    sprintf(stringMe, "%"LU" MB", (int)mb);
+    sprintf(stringMe, "%"PRIu32" MB", (int)mb);
     WRITE(labelAudioSize);
 }
 
@@ -297,7 +297,7 @@ void DIA_encodingGtk::setElapsedTimeMs(uint32_t nb)
 {
     uint32_t h, m, s, mms;
     ms2time(nb, &h, &m, &s, &mms);
-    sprintf(stringMe, "%02"LU":%02"LU":%02"LU, h, m, s);
+    sprintf(stringMe, "%02"PRIu32":%02"PRIu32":%02"PRIu32, h, m, s);
     WRITE(labelElapsed);
 }
 
@@ -309,7 +309,7 @@ void DIA_encodingGtk::setRemainingTimeMS(uint32_t nb)
 {
     uint32_t h, m, s, mms;
     ms2time(nb, &h, &m, &s, &mms);
-    sprintf(stringMe, "%02"LU":%02"LU":%02"LU, h, m, s);
+    sprintf(stringMe, "%02"PRIu32":%02"PRIu32":%02"PRIu32, h, m, s);
     WRITE(labelRemaining);
 }
 
@@ -319,7 +319,7 @@ void DIA_encodingGtk::setRemainingTimeMS(uint32_t nb)
 */
 void DIA_encodingGtk::setAverageQz(uint32_t nb)
 {
-    snprintf(stringMe, 79, "%"LU, nb);
+    snprintf(stringMe, 79, "%"PRIu32, nb);
     WRITE(labelQuantiser);
 }
 
@@ -329,7 +329,7 @@ void DIA_encodingGtk::setAverageQz(uint32_t nb)
 */
 void DIA_encodingGtk::setAverageBitrateKbits(uint32_t kb)
 {
-    snprintf(stringMe, 79, "%"LU" kb/s", kb);
+    snprintf(stringMe, 79, "%"PRIu32" kb/s", kb);
     WRITE(labelBitrate);
 }
 

@@ -69,9 +69,9 @@ bool ADM_verifyDts(vidHeader *hdr,uint64_t timeIncrementUs)
             {
                 if(dts3>got_dts &&dts2>got_dts && dts2>dts3)
                 {
-                    ADM_warning("Out of order dts at frame %d %"LLU",%"LLU",%"LLU"\n",i,got_dts,dts2,dts3);
+                    ADM_warning("Out of order dts at frame %d %"PRIu64",%"PRIu64",%"PRIu64"\n",i,got_dts,dts2,dts3);
                     dts2=got_dts+timeIncrementUs;
-                    ADM_info("Setting to %"LLU"\n",dts2);
+                    ADM_info("Setting to %"PRIu64"\n",dts2);
                     hdr->setPtsDts(i,pts2,dts2);
                 }
             }
@@ -92,12 +92,12 @@ bool ADM_verifyDts(vidHeader *hdr,uint64_t timeIncrementUs)
             hdr->getPtsDts(i+1,&pts3,&dts3);
             if(dts2!=ADM_NO_PTS && dts3!=ADM_NO_PTS)
             {
-                //ADM_info("%d %"LLU" %"LLU" %"LLU"\n",i,got_dts,dts2,dts3);
+                //ADM_info("%d %"PRIu64" %"PRIu64" %"PRIu64"\n",i,got_dts,dts2,dts3);
                 if(dts3>got_dts &&dts2<got_dts )
                 {
-                    ADM_warning("Low dts : Out of order dts at frame %d %"LLU",%"LLU",%"LLU"\n",i,got_dts,dts2,dts3);
+                    ADM_warning("Low dts : Out of order dts at frame %d %"PRIu64",%"PRIu64",%"PRIu64"\n",i,got_dts,dts2,dts3);
                     dts2=got_dts+timeIncrementUs;
-                    ADM_info("Setting to %"LLU"\n",dts2);
+                    ADM_info("Setting to %"PRIu64"\n",dts2);
                     hdr->setPtsDts(i,pts2,dts2);
                 }
             }
@@ -189,7 +189,7 @@ bool guessH264(vidHeader *hdr,uint64_t timeIncrementUs,int missingIndex)
                         neighbour[j]=pts1;
                     }
             }
-        //for(int i=0;i<n;i++) ADM_info("%d: %"LLU"\n",i,neighbour[i]);
+        //for(int i=0;i<n;i++) ADM_info("%d: %"PRIu64"\n",i,neighbour[i]);
         // Now look for the biggest hole in the sorted list
         uint64_t maxDelta=0;
         int maxIndex=-1;
@@ -201,7 +201,7 @@ bool guessH264(vidHeader *hdr,uint64_t timeIncrementUs,int missingIndex)
                 maxDelta=d;
                 maxIndex=i;
             }
-            //ADM_info("%d Delta=%"LLU"\n",i,d);
+            //ADM_info("%d Delta=%"PRIu64"\n",i,d);
         }
         if(maxIndex==-1) 
         {
@@ -210,18 +210,18 @@ bool guessH264(vidHeader *hdr,uint64_t timeIncrementUs,int missingIndex)
         }
         if(maxDelta>=2*timeIncrementUs)
         {
-            ADM_info("Our best guess is at %"LLU"\n",neighbour[maxIndex]);
+            ADM_info("Our best guess is at %"PRIu64"\n",neighbour[maxIndex]);
             uint64_t pts,dts,pts2;
             pts2=neighbour[maxIndex]+timeIncrementUs;
             hdr->getPtsDts(missingIndex,&pts,&dts); 
             if(pts2>dts)
             {
-                ADM_error("Our guessed PTS is too early, aborting (%"LLU"/%"LLU")\n",pts2,dts);
+                ADM_error("Our guessed PTS is too early, aborting (%"PRIu64"/%"PRIu64")\n",pts2,dts);
             }else
                 hdr->setPtsDts(missingIndex,pts2,dts);   
         }else   
             ADM_info("Gap found but too small\n");
-        //for(int i=0;i<n;i++) ADM_info("%d: %"LLU"\n",i,neighbour[i]);
+        //for(int i=0;i<n;i++) ADM_info("%d: %"PRIu64"\n",i,neighbour[i]);
     return true;
 }
 
@@ -270,7 +270,7 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
             continue;
         }
     }
-    ADM_info("H264 AVC scheme: %"LU"/%"LU" failures.\n",fail,nbFrames/2);
+    ADM_info("H264 AVC scheme: %"PRIu32"/%"PRIu32" failures.\n",fail,nbFrames/2);
     if(fail) goto nextScheme;
     {
     ADM_info("Filling 2nd field PTS\n");
@@ -366,9 +366,9 @@ bool ADM_computeMP124MissingPtsDts(vidHeader *hdr,uint64_t timeIncrementUs,uint6
             nDts++;
     }
 next:
-        ADM_info("Out of %"LD" frames, we have %"LD" valid DTS and %"LD" valid PTS\n",info.nb_frames,nDts,nPts);
-        ADM_info("We also have %"LD" bframes\n",nbB);
-        ADM_info("We have %"LU" fields and %"LU" frames\n",nbFields,nbFrames);
+        ADM_info("Out of %"PRIi32" frames, we have %"PRIi32" valid DTS and %"PRIi32" valid PTS\n",info.nb_frames,nDts,nPts);
+        ADM_info("We also have %"PRIi32" bframes\n",nbB);
+        ADM_info("We have %"PRIu32" fields and %"PRIu32" frames\n",nbFields,nbFrames);
         if(nbFields>2)
         {
             ADM_info("Cannot recompute PTS/DTS for field encoded picture.\n");
@@ -421,7 +421,7 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
         uint64_t pts,dts;
         if(true!=hdr->getPtsDts(i,&pts,&dts))
         {
-            printf("[Editor] GetPtsDts failed for frame %"LU"\n",i);
+            printf("[Editor] GetPtsDts failed for frame %"PRIu32"\n",i);
             return false;
         }
         int k=0;
@@ -432,7 +432,7 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
             case GOT_BOTH : // Got both
                 if(pts!=dts)
                             {
-                                    printf("[Editor] Pts!=Dts for frame %"LU"\n",i);
+                                    printf("[Editor] Pts!=Dts for frame %"PRIu32"\n",i);
                             }
                 first=pts; // do nothing since we already have both...
                 continue;            
@@ -460,7 +460,7 @@ bool setPtsEqualDts(vidHeader *hdr,uint64_t timeIncrementUs)
         // update
         if(true!=hdr->setPtsDts(i,pts,dts))
         {
-            printf("[Editor] SetPtsDts failed for frame %"LU"\n",i);
+            printf("[Editor] SetPtsDts failed for frame %"PRIu32"\n",i);
             return false;
         }
     }
@@ -657,7 +657,7 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
     for(int i=0;i<nbFrames;i++)
     {
         hdr->getPtsDts(i,&pts,&dts);
-        //printf("Frame %d dts=%"LLU,i,dts);
+        //printf("Frame %d dts=%"PRIu64,i,dts);
         if(dts!=ADM_NO_PTS) dts+=myDelay;
         if(dts==ADM_NO_PTS) 
         {
@@ -665,7 +665,7 @@ bool updatePtsAndDts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *delay)
             updated++;
         }
         hdr->setPtsDts(i,pts,dts);
-        //printf("new dts=%"LLU"\n",dts);
+        //printf("new dts=%"PRIu64"\n",dts);
         curDts=dts+timeIncrementUs;
     }
     ADM_info("Updated %d Dts, now computing PTS\n",updated);

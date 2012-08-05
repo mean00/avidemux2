@@ -437,7 +437,7 @@ bool glYadif::getNextFrame2(uint32_t *fn,ADMImage *image)
             if(nextFrame&1)
                 image->Pts+= info.frameIncrement;
       }
-      //printf("out PTs=%"LLU", nextFrame=%d,inc=%d\n",image->Pts,(int)nextFrame,(int)info.frameIncrement);
+      //printf("out PTs=%"PRIu64", nextFrame=%d,inc=%d\n",image->Pts,(int)nextFrame,(int)info.frameIncrement);
       nextFrame++;
       
       return 1;

@@ -135,7 +135,7 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       if(*dts>shift) *dts-=shift;
         else
         {
-            ADM_error("ASF audio : Cannot shift, DTS=%"LLU", shift=%"LLU"\n",*dts,shift);
+            ADM_error("ASF audio : Cannot shift, DTS=%"PRIu64", shift=%"PRIu64"\n",*dts,shift);
             *dts=ADM_NO_PTS;
         }
       storageQueue.push_back(bit);

@@ -48,7 +48,7 @@ void DIA_properties( void )
     dialog = glade.getWidget("dialogProperties");
     gtk_register_dialog(dialog);
     
-        sprintf(text, QT_TR_NOOP("%"LU" x %"LU), avifileinfo->width,avifileinfo->height);
+        sprintf(text, QT_TR_NOOP("%"PRIu32" x %"PRIu32), avifileinfo->width,avifileinfo->height);
         FILL_ENTRY(label_size);
 
         sprintf(text, QT_TR_NOOP("%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
@@ -98,9 +98,9 @@ void DIA_properties( void )
                 }
                 FILL_ENTRY(label1_audiomode);
 
-                sprintf(text, QT_TR_NOOP("%"LU" Hz"), wavinfo->frequency);
+                sprintf(text, QT_TR_NOOP("%"PRIu32" Hz"), wavinfo->frequency);
                 FILL_ENTRY(label_fq);
-                sprintf(text, QT_TR_NOOP("%"LU" Bps / %"LU" kbps"), wavinfo->byterate,      wavinfo->byterate * 8 / 1000);
+                sprintf(text, QT_TR_NOOP("%"PRIu32" Bps / %"PRIu32" kbps"), wavinfo->byterate,      wavinfo->byterate * 8 / 1000);
                 FILL_ENTRY(label_bitrate);
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
                 FILL_ENTRY(label1_audiofourcc);

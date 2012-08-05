@@ -32,7 +32,7 @@ bool r;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
     {
-        ADM_warning(" Cannot find seg for time %"LLD"\n",*frameTime);
+        ADM_warning(" Cannot find seg for time %"PRId64"\n",*frameTime);
         return false;
     }   
     // 
@@ -83,7 +83,7 @@ bool r;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
     {
-        ADM_warning(" Cannot find seg for time %"LLD"\n",*frameTime);
+        ADM_warning(" Cannot find seg for time %"PRId64"\n",*frameTime);
         return false;
     }   
     // Special case : The very first frame FIXME
@@ -97,7 +97,7 @@ bool r;
               uint64_t pts=vid->firstFramePts;
               //
               *frameTime+=pts;
-              ADM_warning("This video does not start at 0 but at %"LLU" ms, compensating\n",pts/1000);
+              ADM_warning("This video does not start at 0 but at %"PRIu64" ms, compensating\n",pts/1000);
               _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime);
            }
       }
@@ -124,7 +124,7 @@ again:
     {
         if(!seg)
         {
-            ADM_warning(" No previous previous keyfr for frameTime %"LLU" in ref %"LU" seg:%"LU" nkTime %"LLU" refTime:%"LLU" ms startTime=%"LLU" r=%d\n",
+            ADM_warning(" No previous previous keyfr for frameTime %"PRIu64" in ref %"PRIu32" seg:%"PRIu32" nkTime %"PRIu64" refTime:%"PRIu64" ms startTime=%"PRIu64" r=%d\n",
                             *frameTime,ref,seg,nkTime/1000,refTime/1000,s->_refStartTimeUs/1000,r);
             return false;
         }
@@ -150,7 +150,7 @@ bool r;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
     {
-        ADM_warning(" Cannot find seg for time %"LLD"\n",*frameTime);
+        ADM_warning(" Cannot find seg for time %"PRId64"\n",*frameTime);
         return false;
     }   
     // 
@@ -169,7 +169,7 @@ bool r;
     uint64_t dts;
     if(false==_segments.dtsFromPts(ref,refTime,&dts))
     {
-        ADM_error("Cannot get dtsFromDts for time %"LLU"\n",refTime);
+        ADM_error("Cannot get dtsFromDts for time %"PRIu64"\n",refTime);
         *frameTime=0;
         return false;
     }
@@ -204,7 +204,7 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
             uint32_t hh,mm,ss,ms,ms2;
             ms=pts/1000;
             ms2time(ms,&hh,&mm,&ss,&ms2);
-            ADM_info("Found nextkeyframe %"LLU" %u:%u:%u at frame %"LU"\n",ms,hh,mm,ss,i);
+            ADM_info("Found nextkeyframe %"PRIu64" %u:%u:%u at frame %"PRIu32"\n",ms,hh,mm,ss,i);
             *nkTime=pts;
             return true;
         }
@@ -239,7 +239,7 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
             return true;
         }
     }
-    ADM_warning("Cannot find keyframe with PTS less than %"LU"ms\n",refTime/1000);
+    ADM_warning("Cannot find keyframe with PTS less than %"PRIu32"ms\n",refTime/1000);
     return false;
 }
 
@@ -256,7 +256,7 @@ uint32_t seg;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *time, &seg, &segTime))
     {
-        ADM_warning(" Cannot find seg for time %"LLD"\n",*time);
+        ADM_warning(" Cannot find seg for time %"PRId64"\n",*time);
         return false;
     }  
     _SEGMENT *s=_segments.getSegment(seg);
@@ -266,7 +266,7 @@ uint32_t seg;
     uint64_t dts;
     if(false==_segments.dtsFromPts(s->_reference,pts,&dts))
     {
-        ADM_warning("Cannot get DTS from PTS=%"LLU"ms\n",pts/1000);
+        ADM_warning("Cannot get DTS from PTS=%"PRIu64"ms\n",pts/1000);
         return false;
     }
     dts=dts+s->_startTimeUs;

@@ -140,7 +140,7 @@ bool alsaAudioDevice::localInit( void )
     dir=0;
     exact_rate = snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &_frequency, &dir);
     if (dir != 0) {
-      fprintf(stderr, "[Alsa]The rate %"LU" Hz is not supported by your hardware.\n  ==> Using %d Hz instead.\n", _frequency, exact_rate);
+      fprintf(stderr, "[Alsa]The rate %"PRIu32" Hz is not supported by your hardware.\n  ==> Using %d Hz instead.\n", _frequency, exact_rate);
     }
 
     /* Set number of channels */
@@ -390,7 +390,7 @@ uint8_t alsaAudioDevice::setVolume(int volume){
 				if( (rc=snd_mixer_selem_set_playback_volume_all(elem,volume*max/100)) < 0 ){
 					printf("[Alsa]: snd_mixer_selem_set_playback_volume_all failed: %d\n",rc);
 				}
-				printf("[Alsa]: new %s val: %"LU"\n",(which_vol?"master":"pcm"),volume);
+				printf("[Alsa]: new %s val: %"PRIu32"\n",(which_vol?"master":"pcm"),volume);
 				break;
 			}
 		}

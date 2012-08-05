@@ -64,15 +64,15 @@ bool psHeader::processAudioIndex(char *buffer)
     uint32_t pes;
     char *head,*tail;
     int trackNb=0;
-        sscanf(buffer,"bf:%"LLX,&startAt);
+        sscanf(buffer,"bf:%"PRIx64,&startAt);
         head=strstr(buffer," ");
         if(!head) return false;
         head++;
         while((tail=strstr(head," ")))
         {
-            if(4!=sscanf(head,"Pes:%"LX":%"LLX":%"LD":%"LLD" ",&pes,&startAt,&size,&dts))
+            if(4!=sscanf(head,"Pes:%"PRIx64":%"PRIx64":%"PRIi32":%"PRId64" ",&pes,&startAt,&size,&dts))
             {
-// qfprintf(index,"Pes:%x:%08"LLX":%"LD":%LLD ",e,s->startAt,s->startSize,s->startDts);
+// qfprintf(index,"Pes:%x:%08"PRIx64":%"PRIi32":%PRId64 ",e,s->startAt,s->startSize,s->startDts);
                 printf("[PsHeader::processAudioIndex] Reading index %s failed\n",buffer);
             }
             head=tail+1;
@@ -80,7 +80,7 @@ bool psHeader::processAudioIndex(char *buffer)
             track->push(startAt,dts,size);
 
             trackNb++;
-            //printf("[%s] => %"LX" Dts:%"LLD" Size:%"LLD"\n",buffer,pes,dts,size);
+            //printf("[%s] => %"PRIx64" Dts:%"PRId64" Size:%"PRId64"\n",buffer,pes,dts,size);
             if(strlen(head)<4) break;
         }
         return true;
@@ -96,7 +96,7 @@ bool psHeader::processVideoIndex(char *buffer)
             char *head=buffer;
             uint64_t pts,dts,startAt;
             uint32_t offset;
-            if(4!=sscanf(head,"at:%"LLX":%"LX" Pts:%"LLD":%"LLD,&startAt,&offset,&pts,&dts))
+            if(4!=sscanf(head,"at:%"PRIx64":%"PRIx64" Pts:%"PRId64":%"PRId64,&startAt,&offset,&pts,&dts))
             {
                     printf("[psDemuxer] cannot read fields in  :%s\n",buffer);
                     return false;
@@ -133,9 +133,9 @@ bool psHeader::processVideoIndex(char *buffer)
                     vector <string> result;
                     ADM_splitString(":",me,result);
                     
-                    ADM_assert(1==sscanf(result[2].c_str(),"%"LX,&len));
-                    ADM_assert(1==sscanf(result[0].c_str(),"%"LLD,&framePts));
-                    ADM_assert(1==sscanf(result[1].c_str(),"%"LLD,&frameDts));
+                    ADM_assert(1==sscanf(result[2].c_str(),"%"PRIx64,&len));
+                    ADM_assert(1==sscanf(result[0].c_str(),"%"PRId64,&framePts));
+                    ADM_assert(1==sscanf(result[1].c_str(),"%"PRId64,&frameDts));
                 }
                 
                 dmxFrame *frame=new dmxFrame;
@@ -234,8 +234,8 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
         char body[40];
         uint32_t fq,chan,br,codec,pid;
         sprintf(header,"Track%d.",i);
-#define readInt(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint32(body);printf("%02d:"#y"=%"LU"\n",i,x);}
-#define readHex(x,y) {sprintf(body,"%s"#y,header);x=index->getAsHex(body);printf("%02x:"#y"=%"LU"\n",i,x);}
+#define readInt(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint32(body);printf("%02d:"#y"=%"PRIu32"\n",i,x);}
+#define readHex(x,y) {sprintf(body,"%s"#y,header);x=index->getAsHex(body);printf("%02x:"#y"=%"PRIu32"\n",i,x);}
         readInt(fq,fq);
         readInt(br,br);
         readInt(chan,chan);
@@ -284,7 +284,7 @@ bool    psHeader::readScrReset(indexFile *index)
         char body[40];
         sprintf(header,"Reset%d.",i);
         uint64_t position,timeOffset;
-#define readInt64(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint64(body);printf("->%02d:"#y"=%"LLU"\n",i,x);}
+#define readInt64(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint64(body);printf("->%02d:"#y"=%"PRIu64"\n",i,x);}
         
         readInt64(position,position);
         readInt64(timeOffset,timeOffset);

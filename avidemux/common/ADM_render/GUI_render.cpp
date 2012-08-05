@@ -164,7 +164,7 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 {
         bool create=false;
         enableDraw=false;
-        ADM_info("Render to %"LU"x%"LU" zoom=%d\n",w,h,zoom);
+        ADM_info("Render to %"PRIu32"x%"PRIu32" zoom=%d\n",w,h,zoom);
         if(!renderer) create=true;
         else
         {
