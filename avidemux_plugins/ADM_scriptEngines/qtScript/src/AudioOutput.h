@@ -119,10 +119,10 @@ namespace ADM_qtScript
 		 */
 		Q_PROPERTY(QScriptValue /*% GainMode %*/ gainMode READ getGainMode WRITE setGainMode);
 
-		/** \brief Gets or sets the drc of the Gain audio filter.
-		 * \sa drcMode
+		/** \brief Gets or sets whether Dynamic Range Compression will be applied to the input audio during encoding.
 		 */
-		Q_PROPERTY(QScriptValue /*% drcMode %*/ drc READ getDrcMode WRITE setDrcMode);
+		Q_PROPERTY(QScriptValue /*% Boolean %*/ drcEnabled READ getDrcMode WRITE setDrcMode);
+
 		/** \brief Gets or sets the level of gain adjustment (in decibels) that will be applied to the input
 		 * audio during encoding.
 		 *

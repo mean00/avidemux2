@@ -11,6 +11,7 @@ var searchData=
   ['dolbyprologiciimix',['DolbyProLogicIIMix',['../class_audio_output.html#a15cd28a624d00baf94c98ff5b91daeeca203265a14037851b0ae4cc8f0ccb9acd',1,'AudioOutput']]],
   ['dolbyprologicmix',['DolbyProLogicMix',['../class_audio_output.html#a15cd28a624d00baf94c98ff5b91daeecadeb5d84cf802da0e5f51e6bfe630c5f0',1,'AudioOutput']]],
   ['doublespinboxcontrol',['DoubleSpinBoxControl',['../class_double_spin_box_control.html',1,'DoubleSpinBoxControl'],['../class_double_spin_box_control.html#ae7f2e6169d505736543da35d097837d7',1,'DoubleSpinBoxControl::DoubleSpinBoxControl()']]],
+  ['drcenabled',['drcEnabled',['../class_audio_output.html#ad0e6ca5164a8bfd602accfb61dcf8245',1,'AudioOutput']]],
   ['drives',['drives',['../class_directory.html#a12407aa55bbadf131f950518fa7f52bf',1,'Directory::drives()'],['../class_directory.html#adccf6e8a392b0d35f185df12521c474baa3cd573dae26e6818f6f30557233478e',1,'Directory::Drives()']]],
   ['duration',['duration',['../class_segment.html#a263e7939bc401578b62d515eae3002de',1,'Segment::duration()'],['../class_video_file_properties.html#a263e7939bc401578b62d515eae3002de',1,'VideoFileProperties::duration()'],['../class_video_output.html#a263e7939bc401578b62d515eae3002de',1,'VideoOutput::duration()']]]
 ];

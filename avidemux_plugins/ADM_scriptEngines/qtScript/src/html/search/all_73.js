@@ -19,7 +19,7 @@ var searchData=
   ['setpermissions',['setPermissions',['../class_file.html#abad0a5fde8c7f77a96a780514ef37c54',1,'File']]],
   ['settextmodeenabled',['setTextModeEnabled',['../class_file.html#a64baa4b5deb2462fb0f5474e7d052581',1,'File']]],
   ['show',['show',['../class_dialog.html#a66b1024634693953802613256826b9e1',1,'Dialog']]],
-  ['size',['size',['../class_file.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'File::size()'],['../class_file_information.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'FileInformation::size()'],['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852aff9abf2b1a689f70a77a18da50c01d9f',1,'Directory::Size()']]],
+  ['size',['Size',['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852aff9abf2b1a689f70a77a18da50c01d9f',1,'Directory::Size()'],['../class_file.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'File::size()'],['../class_file_information.html#a7794bce72f769d9123cf9b9ba3ffc53a',1,'FileInformation::size()']]],
   ['slidercontrol',['SliderControl',['../class_slider_control.html',1,'SliderControl'],['../class_slider_control.html#aadb5275f9b6e4afa2d238a20c557797f',1,'SliderControl::SliderControl()']]],
   ['sort',['Sort',['../class_directory.html#ab865d2a43d5c0a9363bf5112589ea852',1,'Directory']]],
   ['sorting',['sorting',['../class_directory.html#ad8e70d93303f621cf1b171a9faaeb593',1,'Directory']]],

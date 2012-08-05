@@ -111,10 +111,12 @@ namespace ADM_qtScript
             *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].gainValue = " << ((double)gainValue) / 10 << ";" << std::endl;
         }
     }
+
     void QtScriptWriter::setAudioDrc(int trackIndex, bool active)
     {
-            *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].drc = " << (int)active << ";" << std::endl;
+            *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].drcEnabled = " << (active ? "true" : "false") << ";" << std::endl;
     }
+
     void QtScriptWriter::setAudioMixer(int trackIndex, CHANNEL_CONF mixer)
     {
         *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].mixer = " << _mapper.toScriptValueName(mixer).toUtf8().constData() << ";" << std::endl;
