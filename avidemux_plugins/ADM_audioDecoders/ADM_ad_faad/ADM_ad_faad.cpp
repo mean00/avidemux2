@@ -21,6 +21,7 @@
 #include "ADM_ad_plugin.h"
 
 #define FAAD_BUFFER (10*1024)
+#define FAAD_EXTRA_BUFFER_SIZE 32
 /**
     \class ADM_faad
 */
@@ -34,7 +35,7 @@ class ADM_faad : public     ADM_Audiocodec
         bool     monoFaadBug; // if true, the stream is mono, but faad outputs stereo
         uint32_t fq;
     protected:
-        uint8_t     extraData[16]; // usually 2 bytes...
+        uint8_t     extraData[FAAD_EXTRA_BUFFER_SIZE]; // usually 2 bytes...
         int         extraDataSize;
         bool        initFaad(WAVHeader *info,uint32_t l,uint8_t *d);
 	public:
@@ -124,7 +125,7 @@ unsigned char chan;
             }
             
         }
-        ADM_assert(l<16);
+        ADM_assert(l<FAAD_EXTRA_BUFFER_SIZE);
         memcpy(extraData,d,l);
         extraDataSize=l;
     }
@@ -144,7 +145,7 @@ ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   
         if(l)
         {
             _inited=1;
-            ADM_assert(l<16);
+            ADM_assert(l<FAAD_EXTRA_BUFFER_SIZE);
             memcpy(extraData,d,l);
             extraDataSize=l;
             
