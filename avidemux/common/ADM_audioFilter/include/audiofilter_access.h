@@ -15,8 +15,10 @@
 #ifndef AUDM_ACCESS_H
 #define AUDM_ACCESS_H
 
+#include "ADM_coreConfig.h"
 #include "ADM_audioStream.h"
 #include "audioencoder.h"
+
 class EditableAudioTrack;
 /**
     \class ADMAudioFilter_Access
@@ -52,7 +54,7 @@ class ADMAudioFilter_Access : public ADM_audioAccess
                                     /// Grab extra data
                 virtual bool      getExtraData(uint32_t *l, uint8_t **d);
 
-                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts) __attribute__((force_align_arg_pointer));
+                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts) attribute_align_arg;
                 virtual bool    isCBR(void);
 };
 

@@ -36,6 +36,12 @@
 #endif // FTELLO
 #endif
 
+#if defined(ADM_CPU_X86_32) && defined(__GNUC__)
+#    define attribute_align_arg __attribute__((force_align_arg_pointer))
+#else
+#    define attribute_align_arg
+#endif
+
 /* use Nvwa memory leak detector */
 #cmakedefine FIND_LEAKS
 
