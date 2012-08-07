@@ -61,8 +61,6 @@ extern void destroyTranslator(void);
 extern ADM_RENDER_TYPE UI_getPreferredRender(void);
 extern int A_openAvi(const char *name);
 extern int A_appendAvi(const char *name);
-extern void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file);
-
 
 int SliderIsShifted=0;
 static void setupMenus(void);

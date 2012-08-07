@@ -16,6 +16,7 @@
 #ifndef ADM_ENCODING_H
 #define ADM_ENCODING_H
 
+#include "ADM_coreUI6_export.h"
 #include "ADM_clock.h"
 /**
     \class DIA_encodingBase
@@ -29,7 +30,7 @@ typedef struct
     uint32_t qz;
 }encodingSample;
 
-class DIA_encodingBase
+class ADM_COREUI6_EXPORT DIA_encodingBase
 {
 protected:
                 Clock	  clock;
@@ -84,5 +85,5 @@ public:
                 virtual void refresh(void);
 };
 //********************
-DIA_encodingBase *createEncoding(uint64_t duration,bool tray);
+ADM_COREUI6_EXPORT DIA_encodingBase *createEncoding(uint64_t duration,bool tray);
 #endif

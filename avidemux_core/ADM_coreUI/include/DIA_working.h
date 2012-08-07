@@ -19,6 +19,7 @@
 
 #ifndef __DIA_WK__
 #define __DIA_WK__
+#include "ADM_coreUI6_export.h"
 #include "ADM_clock.h"
 #include "ADM_assert.h"
 /**
@@ -61,6 +62,6 @@ public:
         
 };
 #endif
-DIA_workingBase *createWorking(const char *title);
+ADM_COREUI6_EXPORT DIA_workingBase *createWorking(const char *title);
 
 #endif

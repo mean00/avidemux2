@@ -19,6 +19,9 @@
 
 #ifndef __DIA_AUDIO_TRACKS__
 #define __DIA_AUDIO_TRACKS__
+
+#include "ADM_coreUI6_export.h"
+
 class PoolOfAudioTracks;
 class ActiveAudioTracks;
 /**
@@ -40,7 +43,7 @@ class DIA_audioTrackBase
             virtual   bool      run(void)=0;
             
 };
-DIA_audioTrackBase *createAudioTrack(PoolOfAudioTracks *pool, ActiveAudioTracks *active );
+ADM_COREUI6_EXPORT DIA_audioTrackBase *createAudioTrack(PoolOfAudioTracks *pool, ActiveAudioTracks *active );
 #endif
 // EOF
 

@@ -110,10 +110,6 @@ uint8_t FileSel_SelectDir(const char *title,char *target,uint32_t max, const cha
 	return fileSelDescriptor->fileSelectDirectory(title,target,max, source);
 }
 
-#warning QT_TR_NOOP
-#ifndef QT_TR_NOOP
-#define QT_TR_NOOP(x) x
-#endif
 void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *actual_workbench_file)
 {
 	if(name)

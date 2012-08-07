@@ -19,6 +19,8 @@
 #ifndef ADM_COREUI_TOOLKIT__
 #define ADM_COREUI_TOOLKIT__
 
+#include "ADM_coreUI6_export.h"
+
 typedef enum 
 {
         ADM_LOG_NONE=0,
@@ -29,29 +31,29 @@ typedef enum
 } ADM_LOG_LEVEL;
 
 // Display a warning/info/debug message. The primary field is the "title" of the window, secondary format is printf like
-void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format, ...);
+ADM_COREUI6_EXPORT void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format, ...);
 // Display an error message. The primary field is the "title" of the window, secondary format is printf like
-void            GUI_Error_HIG(const char *primary, const char *secondary_format, ...);
+ADM_COREUI6_EXPORT void            GUI_Error_HIG(const char *primary, const char *secondary_format, ...);
 // ask for confirmation. The button_confirm will be the title of the button (accept, do it,...) 
-int             GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format, ...);
+ADM_COREUI6_EXPORT int             GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const char *secondary_format, ...);
 // Ask for yes/no. Yes will return 1, No will return 0
-int             GUI_YesNo(const char *primary, const char *secondary_format, ...);
+ADM_COREUI6_EXPORT int             GUI_YesNo(const char *primary, const char *secondary_format, ...);
 // About the same as GUI_YesNo, the button will be ok/cancel
-int             GUI_Question(const char *alertstring);
+ADM_COREUI6_EXPORT int             GUI_Question(const char *alertstring);
 // Give some time to the UI to handle its events
-void            GUI_Sleep(uint32_t ms);
+ADM_COREUI6_EXPORT void            GUI_Sleep(uint32_t ms);
 // Ask to choose between choice1 and choice2
-int             GUI_Alternate(const char *title,const char *choice1,const char *choice2);
+ADM_COREUI6_EXPORT int             GUI_Alternate(const char *title,const char *choice1,const char *choice2);
 
 
 // Set ui in verbose mode (default). Show all popup & questions
-void            GUI_Verbose(void);
+ADM_COREUI6_EXPORT void            GUI_Verbose(void);
 // Set the ui in silent mode. All popups & questions will be answered with their default value
-void            GUI_Quiet(void);
+ADM_COREUI6_EXPORT void            GUI_Quiet(void);
 // Is the UI in quiet mode ?
 uint8_t			GUI_isQuiet(void);
 //
-void            UI_purge(void);
+ADM_COREUI6_EXPORT void            UI_purge(void);
 //
 
 #endif

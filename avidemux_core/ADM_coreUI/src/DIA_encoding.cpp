@@ -9,7 +9,6 @@
 
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
-#include "avidemutils.h"
 #include "DIA_working.h"
 #include "DIA_encoding.h"
 #include "ADM_vidMisc.h"

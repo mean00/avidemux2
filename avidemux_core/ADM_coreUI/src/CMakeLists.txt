@@ -6,6 +6,7 @@ SET(ADM_coreUI_SRCS
         DIA_encoding.cpp
 )
 
+add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreUI6 ${ADM_coreUI_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreUI6 ADM_core6)
 

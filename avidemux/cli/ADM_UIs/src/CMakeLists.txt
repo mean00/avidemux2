@@ -2,7 +2,6 @@ SET(ADM_LIB ADM_UI_Cli6)
 
 SET(${ADM_LIB}_SRCS 
 	DIA_dialogFactory.cpp
-	FAC_toggle.cpp
 	DIA_flyDialogCli.cpp
 	DIA_none.cpp
 )

@@ -15,12 +15,15 @@
  ***************************************************************************/
 #ifndef DIA_COREUI_INTERNAL_H
 #define DIA_COREUI_INTERNAL_H
+
+#include "ADM_coreUI6_export.h"
 #include "DIA_enter.h"
 #include "DIA_fileSel.h"
 #include "DIA_factory.h"
 #include "DIA_working.h"
 #include "DIA_encoding.h"
 #include "DIA_audioTracks.h"
+
 #define ADM_CORE_TOOLKIT_MAJOR 1
 #define ADM_CORE_TOOLKIT_MINOR 3
 // Dia enter
@@ -37,7 +40,7 @@ typedef struct
 }DIA_FILESEL_DESC_T;
 
 // Call this to hook your fileSelector functions
-uint8_t DIA_fileSelInit(DIA_FILESEL_DESC_T *d);
+ADM_COREUI6_EXPORT uint8_t DIA_fileSelInit(DIA_FILESEL_DESC_T *d);
 
 
 //
@@ -116,7 +119,7 @@ typedef struct
 	DELETE_DIA_ELEM_T    *DestroySlider;
 }FactoryDescriptor;
 //
-uint8_t DIA_factoryInit(FactoryDescriptor *d);
+ADM_COREUI6_EXPORT uint8_t DIA_factoryInit(FactoryDescriptor *d);
 
 // This is for coreToolkit UI elements
 typedef void            GET_CORE_TOOLKIT_VERSION(uint32_t *maj, uint32_t *minor);
@@ -133,7 +136,7 @@ typedef DIA_workingBase    *CREATE_GUI_WORKING(const char *title);
 typedef DIA_encodingBase   *CREATE_GUI_ENCODING(uint64_t duration,bool useTray);
 typedef DIA_audioTrackBase *CREATE_GUI_AUDIOTRACKBASE(PoolOfAudioTracks * pool,ActiveAudioTracks *active);
 typedef void             UI_PURGE(void);
-// GUI_Sleep is internal
+
 typedef struct
 {
     GET_CORE_TOOLKIT_VERSION    *getVersion;
@@ -153,5 +156,5 @@ typedef struct
     
 }CoreToolkitDescriptor;
 //
-uint8_t  DIA_toolkitInit(CoreToolkitDescriptor *d);
+ADM_COREUI6_EXPORT uint8_t  DIA_toolkitInit(CoreToolkitDescriptor *d);
 #endif

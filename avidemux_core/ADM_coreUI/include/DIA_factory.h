@@ -19,6 +19,7 @@
 #ifndef DIA_FACTORY_H
 #define DIA_FACTORY_H
 
+#include "ADM_coreUI6_export.h"
 #include "ADM_assert.h"
 
 #define ADM_COREUI_MAJOR 1
@@ -97,7 +98,7 @@ typedef void      FINALIZE_DIA_ELEM_T(void);
 typedef void      COREUI_GET_VERSION(uint32_t *maj,uint32_t *min,uint32_t *patch);
 /*********************************************/
 typedef diaElem  *(CREATE_BUTTON_T)(const char *toggleTitle, ADM_FAC_CALLBACK *cb,void *cookie,const char *tip);
-class diaElemButton : public diaElem
+class ADM_COREUI6_EXPORT diaElemButton : public diaElem
 {
   protected:
   public:
@@ -114,7 +115,7 @@ class diaElemButton : public diaElem
 /*********************************************/
 typedef diaElem  *(CREATE_MATRIX_T)(uint8_t *trix,const char *toggleTitle, uint32_t trixSize,const char *tip);
 
-class diaElemMatrix : public diaElem
+class ADM_COREUI6_EXPORT diaElemMatrix : public diaElem
 {
   protected:
   public:
@@ -154,7 +155,7 @@ public:
   uint8_t   setDigits(uint32_t digits) ;
   int getRequiredLayout(void);
 };
-class diaElemSlider : public diaElemSliderBase
+class ADM_COREUI6_EXPORT diaElemSlider : public diaElemSliderBase
 {
   protected:
     
@@ -184,7 +185,7 @@ public:
   virtual uint8_t   link(uint32_t onoff,diaElem *w)=0;
 };
 typedef diaElem *CREATE_TOGGLE_T(bool *toggleValue,const char *toggleTitle, const char *tip);
-class diaElemToggle : public diaElemToggleBase
+class ADM_COREUI6_EXPORT diaElemToggle : public diaElemToggleBase
 {
   protected:
 public:
@@ -201,7 +202,7 @@ public:
 /*********************************************/
 typedef diaElem *CREATE_TOGGLE_UINT(uint32_t *toggleValue,const char *toggleTitle, uint32_t *uintval, 
 								const char *name,uint32_t min,uint32_t max,const char *tip);
-class diaElemToggleUint : public diaElem
+class ADM_COREUI6_EXPORT diaElemToggleUint : public diaElem
 {
   protected:
         uint32_t *emb;
@@ -221,7 +222,7 @@ public:
 };
 typedef diaElem *CREATE_TOGGLE_INT(uint32_t *toggleValue,const char *toggleTitle, int32_t *intval, 
 									const char *name,int32_t min,int32_t max,const char *tip);
-class diaElemToggleInt : public diaElem
+class ADM_COREUI6_EXPORT diaElemToggleInt : public diaElem
 {
   protected:
 	  		 int32_t *emb;
@@ -242,7 +243,7 @@ public:
 /*********************************************/
 typedef diaElem  *(CREATE_INTEGER_T)(int32_t *intValue,const char *toggleTitle,int32_t min, int32_t max,const char *tip);
 typedef diaElem  *(CREATE_UINTEGER_T)(uint32_t *intValue,const char *toggleTitle,uint32_t min, uint32_t max,const char *tip);
-class diaElemInteger : public diaElem
+class ADM_COREUI6_EXPORT diaElemInteger : public diaElem
 {
 
 public:
@@ -255,7 +256,7 @@ public:
   int getRequiredLayout(void);
 };
 /* Same but unsigned */
-class diaElemUInteger : public diaElem
+class ADM_COREUI6_EXPORT diaElemUInteger : public diaElem
 {
 
 public:
@@ -270,7 +271,7 @@ public:
 /*************************************************/
 typedef diaElem  *(CREATE_BAR_T)(uint32_t percent,const char *toggleTitle);
 
-class diaElemBar : public diaElem
+class ADM_COREUI6_EXPORT diaElemBar : public diaElem
 {
   protected :
         uint32_t per;
@@ -286,7 +287,7 @@ public:
 /*********************************************/
 typedef diaElem  *(CREATE_FLOAT_T)(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,
         ELEM_TYPE_FLOAT max,const char *tip, int decimals);
-class diaElemFloat : public diaElem
+class ADM_COREUI6_EXPORT diaElemFloat : public diaElem
 {
 protected:
 	int decimals;
@@ -357,7 +358,7 @@ public:
   virtual uint8_t   link(diaMenuEntryDynamic *entry,uint32_t onoff,diaElem *w)=0;
 };
 
-class diaElemMenuDynamic : public diaElemMenuDynamicBase
+class ADM_COREUI6_EXPORT diaElemMenuDynamic : public diaElemMenuDynamicBase
 {
 public:
   diaElemMenuDynamic(uint32_t *intValue,const char *itle, uint32_t nb, 
@@ -385,7 +386,7 @@ public:
 	virtual ~diaElemMenuBase(void) {};
 	virtual uint8_t   link(diaMenuEntry *entry,uint32_t onoff,diaElem *w)=0;
 };
-class diaElemMenu : public diaElemMenuBase
+class ADM_COREUI6_EXPORT diaElemMenu : public diaElemMenuBase
 {
 
 diaElemMenuDynamic  *dyna;
@@ -419,7 +420,7 @@ public:
   virtual ~diaElemBitrateBase() {} ;
   virtual void setMaxQz(uint32_t qz)=0;
 };
-class diaElemBitrate : public diaElemBitrateBase
+class ADM_COREUI6_EXPORT diaElemBitrate : public diaElemBitrateBase
 {
   protected:
 public:
@@ -450,7 +451,7 @@ public:
   uint32_t _write;
 
 };
-class diaElemFile : public diaElemFileBase
+class ADM_COREUI6_EXPORT diaElemFile : public diaElemFileBase
 {
 
 protected:
@@ -478,7 +479,7 @@ public:
   virtual ~diaElemDirSelectBase() {} ;
   virtual void changeFile(void)=0;
 };
-class diaElemDirSelect : public diaElemDirSelectBase
+class ADM_COREUI6_EXPORT diaElemDirSelect : public diaElemDirSelectBase
 {
 
 public:
@@ -495,7 +496,7 @@ public:
 /*************************************************/
 /* The text MUST be copied internally ! */
 typedef diaElem *(CREATE_READONLYTEXT_T )(const char *readOnly,const char *toggleTitle, const char *tip);
-class diaElemReadOnlyText : public diaElem
+class ADM_COREUI6_EXPORT diaElemReadOnlyText : public diaElem
 {
 
 public:
@@ -509,7 +510,7 @@ public:
 /*************************************************/
 typedef diaElem *(CREATE_TEXT_T )(char **readOnly,const char *toggleTitle, const char *tip);
 /* The text MUST be copied internally ! */
-class diaElemText : public diaElem
+class ADM_COREUI6_EXPORT diaElemText : public diaElem
 {
 
 public:
@@ -524,7 +525,7 @@ public:
 
 /*********************************************/
 typedef diaElem *(CREATE_NOTCH_T )(uint32_t yes,const char *toggleTitle, const char *tip);
-class diaElemNotch : public diaElem
+class ADM_COREUI6_EXPORT diaElemNotch : public diaElem
 {
   uint32_t yesno;
 public:
@@ -570,7 +571,7 @@ public:
   virtual void swallow(diaElem *widget)=0;
 };
 typedef diaElem *(CREATE_FRAME_T )(const char *toggleTitle, const char *tip);
-class diaElemFrame : public diaElemFrameBase
+class ADM_COREUI6_EXPORT diaElemFrame : public diaElemFrameBase
 {
   
 public:
@@ -586,7 +587,7 @@ public:
 };
 /**********************************************/
 typedef diaElem *(CREATE_HEX_T )(const char *toggleTitle, uint32_t dataSize,uint8_t *data);
-class diaElemHex : public diaElem
+class ADM_COREUI6_EXPORT diaElemHex : public diaElem
 {
   uint32_t dataSize;
   uint8_t  *data;
@@ -602,7 +603,7 @@ public:
 };
 /**********************************************/
 typedef diaElem *(CREATE_THREADCOUNT_T)(uint32_t *value, const char *title, const char *tip );
-class diaElemThreadCount : public diaElem
+class ADM_COREUI6_EXPORT diaElemThreadCount : public diaElem
 {
 
 public:
@@ -630,7 +631,7 @@ public:
 };
 
 /*********************************************/
-uint8_t diaFactoryRun(const char *title,uint32_t nb,diaElem **elems);
-uint8_t diaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs);
+ADM_COREUI6_EXPORT uint8_t diaFactoryRun(const char *title,uint32_t nb,diaElem **elems);
+ADM_COREUI6_EXPORT uint8_t diaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs);
 /*********************************************/
 #endif
