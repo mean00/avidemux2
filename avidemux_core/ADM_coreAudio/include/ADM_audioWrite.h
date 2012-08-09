@@ -17,6 +17,8 @@
 #ifndef ADM_AUDIO_WRITE_H
 #define ADM_AUDIO_WRITE_H
 
+#include "ADM_coreAudio6_export.h"
+
 class ADM_audioWrite
 {
 protected:
@@ -30,5 +32,5 @@ virtual      bool init(ADM_audioStream *stream, const char *fileName);
 virtual      bool write(uint32_t size, uint8_t *buffer);
 };
 
-ADM_audioWrite *admCreateAudioWriter(ADM_audioStream *stream);
+ADM_COREAUDIO6_EXPORT ADM_audioWrite *admCreateAudioWriter(ADM_audioStream *stream);
 #endif

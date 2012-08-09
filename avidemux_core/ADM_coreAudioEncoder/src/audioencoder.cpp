@@ -23,7 +23,6 @@
 #include "audioencoderInternal.h"
 
 BVector <ADM_audioEncoder *> ListOfAudioEncoder;
-extern bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
 
 /**
 

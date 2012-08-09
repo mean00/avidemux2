@@ -14,7 +14,7 @@
 #include "Q_audioTrackClass.h"
 #include "ADM_audioFilterInterface.h"
 #include "DIA_fileSel.h"
-extern const char *getStrFromAudioCodec( uint32_t codec);
+
 /**
     \fn audioTrackQt4
     \brief ctor

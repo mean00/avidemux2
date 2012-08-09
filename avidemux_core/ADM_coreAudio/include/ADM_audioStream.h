@@ -16,8 +16,10 @@
 #ifndef ADM_audioStream_H
 #define ADM_audioStream_H
 
+#include "ADM_coreAudio6_export.h"
 #include "ADM_assert.h"
 #include "ADM_baseAudioStream.h"
+
 /**
         \fn      ADM_audioAccess
         \brief   Access layer to the file. That one is re-instancied by each demuxer.
@@ -69,7 +71,7 @@ public:
         \brief Base class for audio stream
 
 */
-class ADM_audioStream
+class ADM_COREAUDIO6_EXPORT ADM_audioStream
 {
         protected:
                        WAVHeader                wavHeader;
@@ -113,7 +115,7 @@ virtual bool            isCBR()
    \fn ADM_audioCreateStream
     \brief Create the appropriate audio stream. It will be a derivated class of audioStream if possible (MP3/AC3)
 */
-ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool createTimeMap=true);
+ADM_COREAUDIO6_EXPORT ADM_audioStream  *ADM_audioCreateStream(WAVHeader *wavheader, ADM_audioAccess *access,bool createTimeMap=true);
 #endif
 // EOF
 

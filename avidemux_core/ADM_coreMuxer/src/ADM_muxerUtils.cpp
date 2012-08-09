@@ -21,7 +21,7 @@
 #include "fourcc.h"
 #include "ADM_vidMisc.h"
 #include "prefs.h"
-extern const char *getStrFromAudioCodec( uint32_t codec);
+
 /**
     \fn rescaleFps
     \brief Rescale fps to be accurate (i.e. 23.976 become 24000/1001)

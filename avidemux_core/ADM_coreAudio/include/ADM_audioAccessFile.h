@@ -15,13 +15,15 @@
 #ifndef ADM_audioStreamFile_H
 #define ADM_audioStreamFile_H
 
+#include "ADM_coreAudio6_export.h"
 #include "ADM_audioStream.h"
+
 /**
         \fn      ADM_audioAccessFile
         \brief   Input is a plain file
 */
 
-class ADM_audioAccessFile  : public ADM_audioAccess
+class ADM_COREAUDIO6_EXPORT ADM_audioAccessFile  : public ADM_audioAccess
 {
 protected:
                         /// must be allocated/freed if needed by derived class

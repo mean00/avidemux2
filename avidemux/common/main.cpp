@@ -59,7 +59,6 @@ extern void register_Encoders( void )  ;
 extern uint8_t initGUI(const vector<IScriptEngine*>& engines);
 extern void destroyGUI(void);
 extern uint8_t initFileSelector(void);
-extern void AUDMEncoder_initDither(void);
 extern void getUIDescription(char*);
 extern uint8_t ADM_ad_loadPlugins(const char *path);
 extern uint8_t ADM_vf_loadPlugins(const char *path);

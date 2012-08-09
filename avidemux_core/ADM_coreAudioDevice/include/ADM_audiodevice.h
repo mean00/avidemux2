@@ -20,7 +20,7 @@
 #define AUDIO_DEVICE_STARTED  1
 #define AUDIO_DEVICE_STOP_REQ 2
 #define AUDIO_DEVICE_STOP_GR  3
-extern bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output);
+
 /**
     \class audioDevice
     \brief Base class for audioDeviceThreaded, the one actually used.

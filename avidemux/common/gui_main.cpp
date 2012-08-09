@@ -888,7 +888,7 @@ bool swap;
  	}
 
 }
-extern const char *getStrFromAudioCodec( uint32_t codec);
+
 /**
 
 */

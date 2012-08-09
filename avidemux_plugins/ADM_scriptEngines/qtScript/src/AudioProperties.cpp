@@ -1,7 +1,5 @@
 #include "AudioProperties.h"
 
-extern const char *getStrFromAudioCodec(uint32_t codec);
-
 namespace ADM_qtScript
 {
 	AudioProperties::AudioProperties(

@@ -32,8 +32,6 @@
 #include "DIA_factory.h"
 #include "ADM_slave.h"
 
-extern const char *getStrFromAudioCodec( uint32_t codec);
-
 static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
 void call_scriptEngine(const char *scriptFile);

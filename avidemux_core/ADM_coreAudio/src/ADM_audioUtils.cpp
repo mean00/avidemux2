@@ -50,7 +50,7 @@ void dither16(float *start, uint32_t len, uint8_t channels)
         \fn ADM_audioReorderChannels
 */
 bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output)
-{
+{    
 
     float tmp [channels];
 	static uint8_t reorder[MAX_CHANNELS];
@@ -87,4 +87,18 @@ bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANN
 		}
 
     return true;
+}
+
+void printWavHeader(WAVHeader *hdr)
+{
+#undef X_DUMP
+#define X_DUMP(x) printf(#x":\t\t:%"PRIu32"\n",hdr->x);
+
+          X_DUMP(encoding);
+          X_DUMP(channels);	/* 1 = mono, 2 = stereo */
+          X_DUMP(frequency);	/* One of 11025, 22050, or 44100 Hz */
+          X_DUMP(byterate);	/* Average bytes per second */
+          X_DUMP(blockalign);	/* Bytes per sample block */
+          X_DUMP(bitspersample);	/* One of 8, 12, 16, or 4 for ADPCM */
+
 }

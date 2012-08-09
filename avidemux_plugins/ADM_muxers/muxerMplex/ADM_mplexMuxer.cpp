@@ -152,7 +152,6 @@ uint8_t mplexMuxer::open(const char *filename, uint32_t inbitrate,ADM_MUXER_TYPE
         return 1;
 }
 
-extern const char *getStrFromAudioCodec( uint32_t codec);
 static uint8_t wavToStreamType(WAVHeader *hdr,mplexStreamDescriptor *desc)
 {
     ADM_assert(hdr);

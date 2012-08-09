@@ -21,7 +21,6 @@
 #include "ADM_toolkitQt.h"
 
 static const char *yesno[2]={QT_TR_NOOP("No"),QT_TR_NOOP("Yes")};
-extern const char *getStrFromAudioCodec( uint32_t codec);
 
 propWindow::propWindow(QWidget *parent) : QDialog(parent)
  {
