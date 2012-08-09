@@ -85,7 +85,6 @@ extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
 extern uint8_t  quotaInit(void);
-extern void ADMImage_stat( void );
 
 extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);

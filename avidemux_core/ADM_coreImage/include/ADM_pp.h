@@ -11,11 +11,14 @@
 //
 #ifndef ADMPP
 #define ADMPP
+
+#include "ADM_coreImage6_export.h"
+
 /**
     \class ADM_PP
     \brief wrapper around libavcodec postprocessing
 */
-class ADM_PP
+class ADM_COREIMAGE6_EXPORT ADM_PP
 {
 protected:
     void    			*ppContext; // pp_context_t

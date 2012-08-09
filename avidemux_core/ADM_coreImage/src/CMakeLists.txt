@@ -19,8 +19,10 @@ SET(ADM_coreImage_SRCS
         ADM_imageOperation.cpp
 )
 
+add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreImage6 ${ADM_coreImage_SRCS})
 ADD_SOURCE_CFLAGS(DIA_flyDialog.cpp " -DADM_UI_TYPE_BUILD=99")
+
 IF (APPLE)
     IF (NOT ADM_CPU_X86_64)
         TARGET_LINK_LIBRARIES(ADM_coreImage6 -Wl,-read_only_relocs,suppress)

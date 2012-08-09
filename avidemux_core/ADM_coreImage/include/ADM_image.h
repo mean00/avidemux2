@@ -23,6 +23,7 @@
 //
 #ifndef ADM_IMAGE
 #define ADM_IMAGE
+#include "ADM_coreImage6_export.h"
 #include "ADM_inttype.h"
 #include "ADM_rgb.h"
 #include "ADM_colorspace.h"
@@ -87,7 +88,7 @@ class ADMImageDefault;
     \brief Stores image
 
 */
-class ADMImage
+class ADM_COREIMAGE6_EXPORT ADMImage
 {
 public: // half public/protected, only in  ADMImageRef case it is really public
         uint8_t         *_planes[3];     /// In case of linked data store y/u/v pointers
@@ -170,7 +171,7 @@ static  uint32_t lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise);
 /**
     \class ADMImageDefault
 */
-class ADMImageDefault: public ADMImage
+class ADM_COREIMAGE6_EXPORT ADMImageDefault: public ADMImage
 {
 protected:
                     uint8_t         *data;
@@ -186,7 +187,7 @@ public:
     \class ADMImageRef
     \brief That image is a shell for another image. You cannot write to it!
 */
-class ADMImageRef: public ADMImage
+class ADM_COREIMAGE6_EXPORT ADMImageRef: public ADMImage
 {
 public:
 
@@ -215,7 +216,8 @@ public:
 //void drawString(ADMImage *dst, int x, int y, const char *s) ;
 
 // Misc utilities
-bool BitBlit(uint8_t *dst, uint32_t pitchDest,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height);
+ADM_COREIMAGE6_EXPORT bool BitBlit(uint8_t *dst, uint32_t pitchDest,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height);
 bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height,uint32_t alpha);
+ADM_COREIMAGE6_EXPORT void ADMImage_stat(void);
 
 #endif

@@ -14,9 +14,6 @@
 #include "ADM_default.h"
 #include "ADM_image.h"
 
-//#include "ADM_assert.h"
-void ADMImage_stat( void );
-
 static uint32_t imgMaxMem=0;
 static uint32_t imgCurMem=0;
 static uint32_t imgMaxNb=0;

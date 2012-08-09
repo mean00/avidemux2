@@ -14,7 +14,10 @@
  ***************************************************************************/
 #ifndef ADM_COLORSPACE_H
 #define ADM_COLORSPACE_H
+
+#include "ADM_coreImage6_export.h"
 #include "ADM_rgb.h" // To have colors
+
 class ADMImage;
 typedef enum 
 {
@@ -30,7 +33,7 @@ typedef enum
 /**
     \class ADMColorScaler
 */
-class ADMColorScalerFull
+class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
 {
   protected:
     void            *context;
@@ -69,7 +72,7 @@ public:
 };
 
 // Some misc functions
-bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *source, uint8_t *destination);
+ADM_COREIMAGE6_EXPORT bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *source, uint8_t *destination);
 #endif
 //EOF
 
