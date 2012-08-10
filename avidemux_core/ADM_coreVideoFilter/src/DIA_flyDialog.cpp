@@ -156,6 +156,8 @@ uint8_t ADM_flyDialog::cleanup(void)
 	DEL2(_yuvBuffer);
 	DEL1(_rgbBufferDisplay);
     DEL2(action);
+
+	return 1;
 }
 /**
     \fn ~ADM_flyDialog
