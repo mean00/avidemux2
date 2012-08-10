@@ -1,8 +1,5 @@
 #include "VideoEncoder.h"
-
-extern void getCoupleFromString(CONFcouple **couples, const char *str, const ADM_paramList *tmpl);
-extern const ADM_paramList FFcodecContext_param[];
-extern void lavCoupleToString(CONFcouple *couples, char **str);
+#include "FFcodecContext_param.h"
 
 namespace ADM_qtScript
 {

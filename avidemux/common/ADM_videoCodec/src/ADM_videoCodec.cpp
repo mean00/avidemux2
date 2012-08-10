@@ -19,7 +19,6 @@
 #include "ADM_default.h"
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
-#include "avidemutils.h"
 #include "fourcc.h"
 #include "ADM_codecVdpau.h"
 #include "DIA_coreToolkit.h"

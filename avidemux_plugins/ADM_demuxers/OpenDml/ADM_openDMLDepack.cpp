@@ -42,12 +42,6 @@ It is an fopen/fwrite lookalike interface to chunks
 
 #define MAX_VOP 10
 
-/* Forward declaration */
-bool    ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
-bool    ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
-uint8_t extractVopInfo(uint8_t *data, uint32_t len,uint32_t timeincbits,uint32_t *vopType,uint32_t *modulo, uint32_t *time_inc,uint32_t *vopcoded);
-uint8_t extractMpeg4Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h,uint32_t *time_inc);
-
 /* Static ones */
 
 static const char *s_voptype[4]={"I frame","P frame","B frame","D frame"};

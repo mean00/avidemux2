@@ -14,9 +14,9 @@
 #include "DIA_working.h"
 #include "DIA_encoding.h"
 #include "DIA_coreToolkit.h"
-#include "avidemutils.h"
 #include "ADM_vidMisc.h"
 #include "DIA_encoding_none.h"
+
 extern bool ADM_slaveReportProgress(uint32_t p);
 DIA_encodingCli::DIA_encodingCli( uint64_t fps1000,bool tray ) : DIA_encodingBase(fps1000,tray)
 {

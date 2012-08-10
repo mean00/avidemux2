@@ -12,6 +12,8 @@
  ***************************************************************************/
 #ifndef ADM_CORE_JSON_H
 #define ADM_CORE_JSON_H
+
+#include "ADM_coreUtils6_export.h"
 #include "ADM_cpp.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
@@ -21,7 +23,7 @@
     \class admJson
     \brief Wrap libjson writter
 */
-class admJson
+class ADM_COREUTILS6_EXPORT admJson
 {
 protected:
        
@@ -53,7 +55,7 @@ public:
     \class admJsonToCouple
     \brief create conf couple from a json file
 */
-class admJsonToCouple
+class ADM_COREUTILS6_EXPORT admJsonToCouple
 {
 protected:
         typedef struct  

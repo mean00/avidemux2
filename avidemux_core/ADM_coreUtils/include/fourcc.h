@@ -18,10 +18,12 @@
 #define __FOUR_CC__
 
 #include "ADM_inttype.h"
+#include "ADM_coreUtils6_export.h"
+
 /**
     \class fourCC
 */
-class fourCC
+class ADM_COREUTILS6_EXPORT fourCC
 {
 public:
     static int  		    check(uint8_t *,uint8_t *);
@@ -34,5 +36,5 @@ public:
     static char            *tostringBE(uint32_t fourcc);
 
 };
-void mixDump(uint8_t *ptr, uint32_t len);
+ADM_COREUTILS6_EXPORT void mixDump(uint8_t *ptr, uint32_t len);
 #endif

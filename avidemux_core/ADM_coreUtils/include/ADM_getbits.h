@@ -14,7 +14,9 @@
 #ifndef ADM_GETBITS_H
 #define ADM_GETBITS_H
 
-class getBits
+#include "ADM_coreUtils6_export.h"
+
+class ADM_COREUTILS6_EXPORT getBits
 {
 protected:
          void *ctx;

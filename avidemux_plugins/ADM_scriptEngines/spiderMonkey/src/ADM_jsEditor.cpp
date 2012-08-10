@@ -7,8 +7,6 @@
 
 using namespace std;
 
-void mixDump(uint8_t *ptr, uint32_t len);
-
 /**
 \fn jsPrintTiming
 */

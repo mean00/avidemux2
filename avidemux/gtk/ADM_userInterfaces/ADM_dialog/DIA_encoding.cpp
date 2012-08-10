@@ -14,8 +14,8 @@
 #include "prefs.h"
 #include "DIA_encoding.h"
 #include "DIA_coreToolkit.h"
-#include "avidemutils.h"
 #include "ADM_vidMisc.h"
+#include "ADM_coreUtils.h"
 
 #define GW(x) glade.getWidget(#x)
 #define WRITEM(x,y) gtk_label_set_text(GTK_LABEL(GW(x)), y)

@@ -17,8 +17,9 @@
 #ifndef ADM_STRING_H
 #define ADM_STRING_H
 
+#include "ADM_coreUtils6_export.h"
 #include "ADM_image.h"
 
-bool        ADM_splitString(const string &separator, const string &source, vector<string>& result);
+ADM_COREUTILS6_EXPORT bool        ADM_splitString(const string &separator, const string &source, vector<string>& result);
 #endif
 //EOF

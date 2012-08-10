@@ -41,8 +41,6 @@
 bool        
 tsGetAudioInfo(tsPacketLinear *p,tsAudioTrackInfo *trackInfo);
 static bool tsCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
-void        mixDump(uint8_t *ptr, uint32_t len);
-
 
 /**
     \fn addAudioTrack

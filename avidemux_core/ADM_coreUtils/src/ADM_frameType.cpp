@@ -16,7 +16,7 @@
 #include "ADM_default.h"
 #include "ADM_frameType.h"
 #include "ADM_codecType.h"
-#include "avidemutils.h"
+#include "ADM_coreUtils.h"
 
 /**
     \fn mpeg12FrameIdentifier

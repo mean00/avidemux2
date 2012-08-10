@@ -27,24 +27,12 @@
 #include "fourcc.h"
 
 #include "ADM_bitmap.h"
-#include "avidemutils.h"
 #include "ADM_coreUtils.h"
 
 #define QT_TR_NOOP(x) x
 
 uint8_t  mk_hex(uint8_t a, uint8_t b);
-char    *ADM_escape(const ADM_filename *incoming);
-bool     ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 void     memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);
-uint32_t ADM_computeBitrate(uint32_t fps1000, uint32_t nbFrame, uint32_t sizeInMB);
-bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);
-uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
-uint32_t ADM_Fps1000FromUs(uint64_t us);
-//_________________________________________________
-//      Convert a frame number into equivalent in ms
-//_________________________________________________
-
-
 
 // misc dump functions
 extern "C"
@@ -490,11 +478,13 @@ bool ADM_splitSequencedFile(const char *filename, char **left, char **right,uint
         aleft[(dot - filename - decimals)] = '\0';
 
         // <number> part
-        char number[decimals + 1];
+        char *number = new char[decimals + 1];
         strncpy( number, (dot - decimals), decimals );
         number[decimals] = '\0';
         *base=atoi(number);
         *nbDigit=decimals;
+
+		delete [] number;
 
         // <right> part
         *right = new char[ strlen(dot)+1 ];

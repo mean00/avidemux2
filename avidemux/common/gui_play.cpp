@@ -26,11 +26,11 @@
 #include "DIA_coreToolkit.h"
 #include "gtkgui.h"
 #include "ADM_render/GUI_render.h"
-#include "avidemutils.h"
 #include "ADM_preview.h"
 #include "audiofilter.h"
 #include "ADM_filterChain.h"
 #include "GUI_ui.h"
+#include "ADM_coreUtils.h"
 
 //___________________________________
 // In 10 ms chunks

@@ -22,8 +22,9 @@ ADM_memio.cpp
 ADM_json.cpp
 )
 
-include_directories(../include Source)
+include_directories(../include Source "${PTHREAD_INCLUDE_DIR}")
 
+add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreUtils6 ${ADM_coreUtils_SRCS})
 TARGET_LINK_LIBRARIES(ADM_coreUtils6 ADM_json ADM_core6 ADM_coreUI6 ADM_libavutil ADM_libavcodec )
 

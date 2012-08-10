@@ -20,7 +20,6 @@ using std::string;
 #include "ADM_edit.hxx"
 #include "ADM_coreUtils.h"
 extern ADM_Composer *video_body; // Fixme!
-extern bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
 
 #if 1
 #define aprintf ADM_info

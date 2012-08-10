@@ -16,6 +16,7 @@
 #ifndef ADM_PARAM_LIST_H
 #define ADM_PARAM_LIST_H
 
+#include "ADM_coreUtils6_export.h"
 #include "ADM_confCouple.h"
 /**
         \enum ADM_paramType
@@ -48,12 +49,13 @@ typedef struct
 }ADM_paramList;
 
 /// Couple -> structure
-bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s);
-bool ADM_paramLoadPartial(CONFcouple *couples, const ADM_paramList *params,void *s);
+ADM_COREUTILS6_EXPORT bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s);
+ADM_COREUTILS6_EXPORT bool ADM_paramLoadPartial(CONFcouple *couples, const ADM_paramList *params,void *s);
 
 /// Structure -> couples
-bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s);
-
+ADM_COREUTILS6_EXPORT bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s);
+ADM_COREUTILS6_EXPORT void getCoupleFromString(CONFcouple **couples, const char *str,const ADM_paramList *tmpl);
+ADM_COREUTILS6_EXPORT void lavCoupleToString(CONFcouple *couples, char **str);
 
 #endif
 //EOF

@@ -17,6 +17,9 @@
  ***************************************************************************/
 #ifndef ADM_CORE_CODEC_MAPPING_H
 #define ADM_CORE_CODEC_MAPPING_H
+
+#include "ADM_coreUtils6_export.h"
+
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
@@ -33,6 +36,6 @@ typedef struct
 /**
     \fn getCodecIdFromFourcc
 */
-const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc);
-CodecID ADM_codecIdFindByFourcc(const char *fcc);
+ADM_COREUTILS6_EXPORT const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc);
+ADM_COREUTILS6_EXPORT CodecID ADM_codecIdFindByFourcc(const char *fcc);
 #endif

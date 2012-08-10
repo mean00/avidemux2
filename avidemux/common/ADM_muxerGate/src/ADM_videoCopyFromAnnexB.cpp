@@ -22,13 +22,7 @@ using std::string;
 #include "ADM_h264_tag.h"
 #include "ADM_videoInfoExtractor.h"
 
-
-
 extern ADM_Composer *video_body; // Fixme!
-
-extern bool ADM_findH264StartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
-extern bool ADM_findMpegStartCode(uint8_t *start, uint8_t *end,uint8_t *outstartcode,uint32_t *offset);
-extern void mixDump(uint8_t *ptr, uint32_t len);
 
 #warning fixme : double definition
 
@@ -44,14 +38,12 @@ extern void mixDump(uint8_t *ptr, uint32_t len);
 
 #define MAX_NALU_PER_CHUNK 20
 
-
 static uint32_t readBE32(uint8_t *p)
 {
     uint32_t v=(p[0]<<8)+p[1];
     uint32_t u=(p[2]<<8)+p[3];
     return (v<<16)+u;
 }
-
 
 static const char *nalType[13]=
 {

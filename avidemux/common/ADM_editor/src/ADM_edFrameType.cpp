@@ -21,7 +21,6 @@
 
 #include "ADM_edit.hxx"
 #include "DIA_coreToolkit.h"
-#include "avidemutils.h"
 #include "ADM_frameType.h"
 #include "DIA_working.h"
  

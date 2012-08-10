@@ -1,6 +1,7 @@
 #ifndef _preferences_h_
 #define _preferences_h_
 
+#include "ADM_coreUtils6_export.h"
 #include "ADM_default.h"
 
 #define RC_OK     true
@@ -14,7 +15,7 @@ LAST_PREF
 } options;
 // </prefs_gen>
 
-class preferences {
+class ADM_COREUTILS6_EXPORT preferences {
 	private:
 
 //		const char * get_str_min(options option);
@@ -46,7 +47,7 @@ class preferences {
 		const char **get_lastprojectfiles(void);		
 };
 
-extern preferences *prefs;
-bool initPrefs(  void );
-bool destroyPrefs(  void );
+extern ADM_COREUTILS6_EXPORT preferences *prefs;
+ADM_COREUTILS6_EXPORT bool initPrefs(  void );
+ADM_COREUTILS6_EXPORT bool destroyPrefs(  void );
 #endif

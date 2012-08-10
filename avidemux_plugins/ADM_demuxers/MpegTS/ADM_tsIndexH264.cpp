@@ -13,8 +13,6 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 #include "DIA_coreToolkit.h"
-bool ADM_probeSequencedFile(const char *fileName);
-
 #include "ADM_tsIndex.h"
 
 

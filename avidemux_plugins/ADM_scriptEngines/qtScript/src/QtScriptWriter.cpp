@@ -3,9 +3,7 @@
 #include "ADM_editor/include/ADM_edAudioTrackExternal.h"
 #include "audioencoderInternal.h"
 #include "VideoFilterShim.h"
-
-extern void getCoupleFromString(CONFcouple **couples, const char *str, const ADM_paramList *tmpl);
-extern const ADM_paramList FFcodecContext_param[];
+#include "FFcodecContext_param.h"
 
 namespace ADM_qtScript
 {

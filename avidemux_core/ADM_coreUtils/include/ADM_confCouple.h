@@ -16,7 +16,9 @@
  #ifndef __CONFCOUPLE__
  #define __CONFCOUPLE__
 
-class CONFcouple
+#include "ADM_coreUtils6_export.h"
+
+class ADM_COREUTILS6_EXPORT CONFcouple
 {
 	private:
 			uint32_t    nb;
@@ -56,5 +58,5 @@ static      CONFcouple *duplicate(CONFcouple *source);
 			void dump(void );
 
 };
-bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv);
+ADM_COREUTILS6_EXPORT bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv);
 #endif

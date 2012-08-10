@@ -17,11 +17,13 @@
 #ifndef ADM_MEM_IO
 #define ADM_MEM_IO
 
+#include "ADM_coreUtils6_export.h"
+
 /**
     \class ADMMemio
 */
 
-class ADMMemio
+class ADM_COREUTILS6_EXPORT ADMMemio
 {
 protected:
         uint8_t         *buffer;

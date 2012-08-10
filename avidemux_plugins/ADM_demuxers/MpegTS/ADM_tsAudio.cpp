@@ -21,13 +21,14 @@
 #include <math.h>
 
 #include "ADM_ts.h"
+#include "ADM_coreUtils.h"
 
 #if 0
     #define aprintf printf
 #else
     #define aprintf(...) {}
 #endif
-void        mixDump(uint8_t *ptr, uint32_t len);
+
 /**
     \fn ADM_tsAccess
     \param name   [in] Name of the file to take audio from

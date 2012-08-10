@@ -17,8 +17,8 @@
 #include "ADM_ts.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
-#include "avidemutils.h"
 #include "ADM_tsPatPmt.h"
+
 ADM_DEMUXER_BEGIN( tsHeader, 90,
                     1,0,0,
                     "ts",

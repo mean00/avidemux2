@@ -17,9 +17,9 @@
 #ifndef ADM_FILE_IO
 #define ADM_FILE_IO
 
+#include "ADM_coreUtils6_export.h"
 
-
-class ADMFile
+class ADM_COREUTILS6_EXPORT ADMFile
 {
 protected:
         FILE            *_out;

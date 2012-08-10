@@ -17,11 +17,14 @@
 
 #ifndef ADM_WRITE_RIFF_H
 #define ADM_WRITE_RIFF_H
+
+#include "ADM_coreUtils6_export.h"
+
 /**
     \class riffWritter
     \brief helper class to write riff files (Wav,Avi,...)
 */
-class riffWritter
+class ADM_COREUTILS6_EXPORT riffWritter
 {
 protected:
 		FILE    *_ff;

@@ -17,7 +17,7 @@
 #include "ADM_ps.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
-#include "avidemutils.h"
+#include "ADM_coreUtils.h"
 
 ADM_DEMUXER_BEGIN( psHeader, 10,
                     1,0,0,

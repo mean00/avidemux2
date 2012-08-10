@@ -19,17 +19,14 @@
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
-
 #include "dmxPSPacket.h"
-
-#include "avidemutils.h"
 #include "ADM_quota.h"
 #include "ADM_psAudioProbe.h"
 #include "DIA_working.h"
 #include "ADM_indexFile.h"
 #include "ADM_vidMisc.h"
 #include "DIA_coreToolkit.h"
-bool ADM_probeSequencedFile(const char *fileName);
+#include "ADM_coreUtils.h"
 
 static const char Type[5]={'X','I','P','B','P'};  // Frame type
 static const char Structure[4]={'X','T','B','F'}; // X Top Bottom Frame

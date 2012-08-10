@@ -23,6 +23,7 @@
 #include <stddef.h>
 #include "ADM_encoderConf.h"
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
+#include "FFcodecContext_param.h"
 #include "../src/FFcodecContext_desc.cpp"
 #define MAX_LAV_STRING 1024
 /**

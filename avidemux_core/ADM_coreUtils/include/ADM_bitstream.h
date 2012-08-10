@@ -19,6 +19,8 @@
 #define ADM_BITSTREAM_H
 #define ADM_NO_TIMING 0xffffffff
 
+#include "ADM_coreUtils6_export.h"
+
 /*
     BIG WARNING : BUFFER SIZE MUST BE SET: SOME CODECS CHECK& USE IT
     ESPECIALLY LAVCODEC!
@@ -27,7 +29,7 @@
     \class ADMBitstream
 
 */
-class ADMBitstream
+class ADM_COREUTILS6_EXPORT ADMBitstream
 {
     public:
         uint32_t len;                   // Size of the payload

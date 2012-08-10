@@ -13,7 +13,7 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 #include "DIA_coreToolkit.h"
-bool ADM_probeSequencedFile(const char *fileName);
+
 static const uint32_t FPS[16]={
                 0,                      // 0
                 23976,          // 1 (23.976 fps) - FILM

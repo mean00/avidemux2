@@ -3,11 +3,10 @@
 #include "ADM_toolkitGtk.h"
 #include "DIA_coreToolkit.h"
 #include "GUI_glade.h"
-
-#include "avidemutils.h"
 #include "ADM_vidMisc.h"
-
 #include "avi_vars.h"
+#include "ADM_coreUtils.h"
+
 #define FILL_ENTRY(x) gtk_label_set_text((GtkLabel *) glade.getWidget(#x), text);
 #define SET_YES(x,y) gtk_label_set_text((GtkLabel *) glade.getWidget(#x), yesno[y])
 #define DISABLE_WIDGET(x) gtk_widget_set_sensitive(glade.getWidget(#x), false);

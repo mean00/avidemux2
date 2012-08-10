@@ -25,7 +25,6 @@
 #include "ADM_debugID.h"
 #define MODULE_NAME  MODULE_COMMANDLINE
 #include "ADM_debug.h"
-#include "avidemutils.h"
 
 #include "ADM_vidMisc.h"
 #include "ADM_videoEncoderApi.h"

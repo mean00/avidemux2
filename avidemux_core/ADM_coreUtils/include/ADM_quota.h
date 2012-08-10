@@ -16,23 +16,25 @@
 #ifndef ADM_quota_h
 #define ADM_quota_h
 
+#include "ADM_coreUtils6_export.h"
 #include <stdio.h>
 
 #include "ADM_coreConfig.h"
 
 /* qfopen stands for quota-fopen() */
 
-FILE *qfopen(const char *, const char *);
+ADM_COREUTILS6_EXPORT FILE *qfopen(const char *, const char *);
 #ifdef __cplusplus
-FILE *qfopen(const std::string &name, const char *);
+ADM_COREUTILS6_EXPORT FILE *qfopen(const std::string &name, const char *);
 #endif
 /* qfprintf stands for quota-fprintf() */
-void qfprintf(FILE *, const char *, ...);
+ADM_COREUTILS6_EXPORT void qfprintf(FILE *, const char *, ...);
 size_t qfwrite(const void *ptr, size_t size, size_t  nmemb, FILE *stream);
 ssize_t qwrite(int fd, const void *buf, size_t numbytes);
 
 /* qfclose stands for quota-fclose() */
-int qfclose(FILE *);
+ADM_COREUTILS6_EXPORT int qfclose(FILE *);
 
+ADM_COREUTILS6_EXPORT uint8_t  quotaInit(void);
 
 #endif

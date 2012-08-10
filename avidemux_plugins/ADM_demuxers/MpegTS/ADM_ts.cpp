@@ -20,7 +20,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
-#include "ADM_coreUtils.h"
+#include "ADM_videoInfoExtractor.h"
 
 #define MY_CLASS tsHeader
 #include "ADM_coreDemuxerMpegTemplate.cpp"

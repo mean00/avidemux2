@@ -19,10 +19,10 @@
 #include "DIA_working.h"
 #include "DIA_encoding.h"
 #include "DIA_coreToolkit.h"
-#include "avidemutils.h"
 #include "ADM_vidMisc.h"
 #include "ADM_toolkitQt.h"
 #include "GUI_ui.h"
+#include "ADM_coreUtils.h"
 
 static int stopReq=0;
 extern bool ADM_slaveReportProgress(uint32_t percent);

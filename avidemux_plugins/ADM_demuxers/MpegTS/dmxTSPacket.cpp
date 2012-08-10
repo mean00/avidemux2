@@ -28,7 +28,6 @@
 #include "ADM_getbits.h"
 #include "ADM_tsCrc.cpp"
 
-extern void mixDump(uint8_t *ptr, uint32_t len);
 /**
     \fn tsPacket
     \brief ctor

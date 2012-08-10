@@ -18,6 +18,12 @@
 #include "ADM_getbits.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
+#include "ADM_coreUtils.h"
+
+extern "C"
+{
+#include "libavutil/common.h"
+}
 
 #define aprintf(...) {}
 
@@ -28,25 +34,6 @@
 #define MP4_VISUAL_OBJ  0xB5
 #define MP4_VOP         0xB6         
 
-bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
-			    uint8_t * outstartcode, uint32_t * offset);
-
-extern const uint8_t ff_log2_tab[256];
-static  int av_log2_c(unsigned int v)
-{
-    int n = 0;
-    if (v & 0xffff0000) {
-        v >>= 16;
-        n += 16;
-    }
-    if (v & 0xff00) {
-        v >>= 8;
-        n += 8;
-    }
-    n += ff_log2_tab[v];
-
-    return n;
-}
 /*
     Extract width & height from vol header passed as arg
 */

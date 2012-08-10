@@ -14,12 +14,11 @@
  ***************************************************************************/
 #ifndef ADM_THREAD_QUEUE_H
 #define ADM_THREAD_QUEUE_H
+#include "ADM_coreUtils6_export.h"
 #include "ADM_threads.h"
 
 using namespace std;
 #include "BVector.h"
-
-
 
 /**
     \struct ADM_audioPacket
@@ -47,7 +46,7 @@ typedef enum
     \brief Wrap queue/thread
 
 */
-class ADM_threadQueue
+class ADM_COREUTILS6_EXPORT ADM_threadQueue
 {
   protected:
                 ListOfQueuePacket list;

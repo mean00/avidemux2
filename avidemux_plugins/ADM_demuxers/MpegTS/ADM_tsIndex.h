@@ -23,10 +23,7 @@ using std::string;
 #include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
 #include "fourcc.h"
-
 #include "dmxTSPacket.h"
-
-#include "avidemutils.h"
 #include "ADM_quota.h"
 #include "ADM_tsAudioProbe.h"
 #include "DIA_working.h"

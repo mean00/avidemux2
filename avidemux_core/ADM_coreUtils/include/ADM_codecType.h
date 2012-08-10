@@ -16,13 +16,15 @@
 #ifndef ADM_CODECTYPE_H
 #define ADM_CODECTYPE_H
 
-bool isMpeg4Compatible  (uint32_t fourcc);
-bool isH264Compatible   (uint32_t fourcc);
-bool isMSMpeg4Compatible(uint32_t fourcc);
-bool isDVCompatible     (uint32_t fourcc);
-bool isVP6Compatible    (uint32_t fourcc);
-bool isMpeg12Compatible (uint32_t fourcc);
-bool isVC1Compatible    (uint32_t fourcc);
+#include "ADM_coreUtils6_export.h"
+
+ADM_COREUTILS6_EXPORT bool isMpeg4Compatible  (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isH264Compatible   (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isMSMpeg4Compatible(uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isDVCompatible     (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isVP6Compatible    (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isMpeg12Compatible (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isVC1Compatible    (uint32_t fourcc);
 
 #endif
 //EOF
