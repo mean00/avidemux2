@@ -16,6 +16,7 @@
 #ifndef __ADM_CODECS__
 #define __ADM_CODECS__
 
+#include "ADM_coreVideoCodec6_export.h"
 #include "ADM_image.h"
 #include "ADM_frameType.h"
 #include "ADM_codecType.h"
@@ -84,7 +85,7 @@ public:
 /* This function is to be implemented by the application, it is just here for reference */
 decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
 /* This function is implemented in coreVideoCodec, it will return a codec if it can find a suitable one, NULL if not */
-decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
+ADM_COREVIDEOCODEC6_EXPORT decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, uint8_t * extraData,uint32_t bpp=0);
 /**
 
 */
@@ -93,7 +94,7 @@ typedef enum
     ADM_CORE_CODEC_FEATURE_VDPAU=1
 }ADM_CORE_CODEC_FEATURE;
 
-bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat);
+ADM_COREVIDEOCODEC6_EXPORT bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat);
 
 
 #endif

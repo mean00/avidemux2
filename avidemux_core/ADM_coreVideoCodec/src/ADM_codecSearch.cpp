@@ -36,7 +36,6 @@ extern "C"
 #include "ADM_codecEmpty.h"
 #include "ADM_ffmp43.h"
 #include "ADM_codecFFsimple.h"
-#include "avidemutils.h"
 #include "fourcc.h"
 
 

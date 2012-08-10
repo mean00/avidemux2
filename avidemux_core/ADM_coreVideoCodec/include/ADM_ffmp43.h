@@ -20,6 +20,8 @@
 #ifndef ADM_FFMP43_H
 #define ADM_FFMP43_H
 
+#include "ADM_coreVideoCodec6_export.h"
+
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
@@ -31,7 +33,7 @@ extern "C" {
     \class decoderFF
     \brief Base class for lavcodec based decoder
 */
-class decoderFF:public decoders
+class ADM_COREVIDEOCODEC6_EXPORT decoderFF:public decoders
 {
 protected:
   bool  hurryUp;
@@ -153,6 +155,9 @@ class decoderFFPng : public decoderFF
 public:
 	decoderFFPng(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp);
 };
+
+ADM_COREVIDEOCODEC6_EXPORT void ADM_lavInit(void);
+ADM_COREVIDEOCODEC6_EXPORT void ADM_lavDestroy(void);
 
 #endif
 

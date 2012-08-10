@@ -26,6 +26,7 @@
 #include "ADM_crashdump.h"
 #include "ADM_memsupport.h"
 #include "ADM_script2/include/ADM_script.h"
+#include "ADM_ffmp43.h"
 
 #define __DECLARE__
 #include "avi_vars.h"
@@ -47,8 +48,6 @@ extern "C" {
 #endif
 
 static bool setPrefsDefault(void);
-extern void  ADM_lavInit();
-extern void  ADM_lavDestroy();
 extern void  ADM_lavFormatInit(void);
 extern bool  vdpauProbe(void);
 
