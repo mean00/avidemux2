@@ -23,7 +23,7 @@
 #include "ADM_mp4.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_getbits.h"
-
+#include "ADM_coreUtils.h"
 #include "ADM_mp4Tree.h"
 
 #if 1
@@ -39,7 +39,6 @@
 #define TRACK_AUDIO 1
 #define TRACK_VIDEO 2
 
-uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 // 14496-1 / 8.2.1
 typedef enum
 {

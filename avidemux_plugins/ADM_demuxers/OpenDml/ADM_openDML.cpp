@@ -22,7 +22,7 @@
 #include "ADM_openDML.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_odml_audio.h"
-
+#include "ADM_coreUtils.h"
 
 #ifdef ADM_DEBUG
 	#define OPENDML_VERBOSE

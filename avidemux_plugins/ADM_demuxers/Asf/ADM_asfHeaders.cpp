@@ -24,6 +24,7 @@
 #include "ADM_asfPacket.h"
 #include "DIA_working.h"
 #include "ADM_vidMisc.h"
+#include "ADM_coreUtils.h"
 
 #if 0
 #define aprintf printf

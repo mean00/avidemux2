@@ -23,10 +23,6 @@
 
 #include "ADM_bitmap.h"
 
-void printBih(ADM_BITMAPINFOHEADER *bi);
-
-
-
 typedef struct _avistdindex_chunk 
 {
         uint16_t 	wLongsPerEntry;		// must be sizeof(aIndex[0])/sizeof(DWORD)
@@ -42,11 +38,6 @@ typedef struct _avistdindex_chunk
 
 #include "ADM_imageFlags.h"
 #include "ADM_coreAudio.h"
-
-void Endian_AviMainHeader(MainAVIHeader *m);
-void Endian_BitMapInfo( ADM_BITMAPINFOHEADER *b);
-void Endian_AviStreamHeader(AVIStreamHeader *s);
-void Endian_WavHeader(WAVHeader *w);
 
 #endif
 //EOF
