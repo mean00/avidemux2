@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _QUERY_H_SQLITE
 #define _QUERY_H_SQLITE
 
+#include "ADM_coreSqlLight3_export.h"
+
 #include <string>
 #include <map>
 #ifdef WIN32
@@ -52,7 +54,7 @@ namespace SQLITEW_NAMESPACE {
 
 
 /** SQL Statement execute / result. */
-class Query 
+class ADM_CORESQLLIGHT3_EXPORT Query 
 {
 public:
 	/** Constructor accepting reference to database object. */

@@ -5,6 +5,7 @@ SET(ADM_coreSqlLight3_SRCS
         SysLog.cpp
 )
 
+add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreSqlLight3 ${ADM_coreSqlLight3_SRCS})
 
 IF (APPLE)

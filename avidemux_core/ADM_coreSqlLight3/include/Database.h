@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _DATABASE_H_SQLITE
 #define _DATABASE_H_SQLITE
 
+#include "ADM_coreSqlLight3_export.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -58,7 +60,7 @@ class Mutex;
 
 
 /** Connection information and pool. */
-class Database 
+class ADM_CORESQLLIGHT3_EXPORT Database 
 {
 public:
 	/** Mutex container class, used by Lock. 
