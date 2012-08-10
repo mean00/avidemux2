@@ -18,6 +18,8 @@
 #ifndef __Audio_ENG_Process__
 #define __Audio_ENG_Process__
 
+#include "ADM_coreAudioFilterAPI6_export.h"
+
 #define AUD_PROCESS_BUFFER_SIZE 48000*4*4 // should be enougth 4 seconds of stereo
 #include "ADM_coreAudio.h"
 /**
@@ -42,7 +44,7 @@ typedef enum
   This class is the base class for all audio filter.
   Note that all datas are handled as float!
 */
-class AUDMAudioFilter
+class ADM_COREAUDIOFILTERAPI6_EXPORT AUDMAudioFilter
 {
   protected:
     //! This will be used to store data coming from the previous filter
