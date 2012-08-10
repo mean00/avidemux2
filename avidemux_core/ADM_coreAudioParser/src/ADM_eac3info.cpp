@@ -13,7 +13,6 @@
 extern "C"
 {
 #define sign_extend
-#include "libavcodec/internal.h"
 #include "libavcodec/ac3_parser.h"
 
 };

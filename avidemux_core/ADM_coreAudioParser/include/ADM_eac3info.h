@@ -9,6 +9,9 @@
 
 #ifndef ADM_EAC3INFO_H
 #define ADM_EAC3INFO_H
+
+#include "ADM_audioParser6_export.h"
+
 /**
     \struct ADM_EAC3_INFO
 */
@@ -21,5 +24,5 @@ typedef struct
     uint32_t samples;
 }ADM_EAC3_INFO;
 
-bool     ADM_EAC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *syncoff,ADM_EAC3_INFO *info);
+ADM_AUDIOPARSER6_EXPORT bool     ADM_EAC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *syncoff,ADM_EAC3_INFO *info);
 #endif //ADM_EAC3INFO_H

@@ -21,6 +21,8 @@
 
 #ifndef ADM_AAC_LATM
 #define ADM_AAC_LATM
+
+#include "ADM_audioParser6_export.h"
 #include "ADM_getbits.h"
 #include <list>
 /**
@@ -50,7 +52,7 @@ typedef struct
         uint64_t dts;
 }latmBuffer;
 
-class ADM_latm2aac
+class ADM_AUDIOPARSER6_EXPORT ADM_latm2aac
 {
 private:
                 latmBuffer buffers[LATM_NB_BUFFERS];

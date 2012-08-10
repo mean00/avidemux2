@@ -14,11 +14,14 @@
 
 #ifndef ADM_AAC_ADTS
 #define ADM_AAC_ADTS
+
+#include "ADM_audioParser6_export.h"
+
 /**
     \class ADM_adts2aac
 */
 #define ADTS_BUFFER_SIZE 16000
-class ADM_adts2aac
+class ADM_AUDIOPARSER6_EXPORT ADM_adts2aac
 {
 private:
         bool    hasExtra;

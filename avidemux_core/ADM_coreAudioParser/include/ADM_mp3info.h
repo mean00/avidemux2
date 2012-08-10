@@ -6,6 +6,8 @@
 #ifndef ADM__MP3__INFO
 #define ADM__MP3__INFO
 
+#include "ADM_audioParser6_export.h"
+
 typedef struct MpegAudioInfo
 {
 	
@@ -23,7 +25,7 @@ typedef struct MpegAudioInfo
         uint32_t mode_extension;
 }MpegAudioInfo;
 
-uint8_t	getMpegFrameInfo(const uint8_t *stream,uint32_t maxSearch, MpegAudioInfo *mpegInfo,MpegAudioInfo *templ,
+ADM_AUDIOPARSER6_EXPORT uint8_t	getMpegFrameInfo(const uint8_t *stream,uint32_t maxSearch, MpegAudioInfo *mpegInfo,MpegAudioInfo *templ,
 			uint32_t *offset);
 
 

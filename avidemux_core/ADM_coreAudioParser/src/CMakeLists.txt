@@ -13,6 +13,8 @@ ADD_DEFINITIONS(-DADM_LEGACY_PROGGY)
 ADD_DEFINITIONS(-DHAVE_LRINT -DHAVE_LRINTF)
 ADD_DEFINITIONS(-DCPU_CLIPS_POSITIVE=0 -DCPU_CLIPS_NEGATIVE=0)
 #*************************************************
+
+add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_audioParser6 ${ADMaudioParser_SRCS})
 TARGET_LINK_LIBRARIES(ADM_audioParser6 ADM_core6 ADM_coreUtils6 ADM_coreUI6  ADM_libavcodec ADM_libavformat ADM_libavutil)
 
