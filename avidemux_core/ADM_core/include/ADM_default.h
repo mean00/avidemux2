@@ -23,11 +23,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef _WIN32 // needed for unlink
+#include <unistd.h>
+#endif
+
 #include "ADM_core6_export.h"
 #include "ADM_coreConfig.h"
 #include "ADM_inttype.h"
 #include "ADM_assert.h"
-
 #define ADM_NO_PTS 0xffffffffffffffffLL
 #ifdef __cplusplus
 #include "ADM_cpuCap.h"
