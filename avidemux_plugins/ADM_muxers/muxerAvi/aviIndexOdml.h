@@ -89,6 +89,7 @@ protected:
            IdxEntry         *legacyIndex;
            int              legacyIndexCount;
            bool             commonInit();
+           bool             convertIndex(odmlRegularIndex *dex, int trackNo);
 public:
                              aviIndexOdml(aviWrite *father,aviIndexAvi *cousin );
                              aviIndexOdml(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk) ;

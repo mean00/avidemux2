@@ -165,8 +165,6 @@ aviIndexBase::aviIndexBase(aviWrite *father,AviListAvi *lst,uint64_t odmlChunk)
 /**
     \fn 
 */
-#define AVI_TYPE1_THRESHOLD 4*1024LL*1024LL*1024LL
-//#define AVI_TYPE1_THRESHOLD 10*1024*1024LL
 bool         aviIndexAvi::switchToType2Needed(int len) 
 {
     uint64_t delta=_masterList->Tell()-_masterList->TellBegin();

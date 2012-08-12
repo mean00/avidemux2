@@ -48,7 +48,39 @@ bool aviIndexOdml::commonInit()
     legacyIndex=NULL;
     memset(audioFrameCount,0,sizeof(audioFrameCount));
 }
+/**
+    \fn convertIndex
+    \brief append a data entry from a legacy index into a odml index. Create indexes if needed
 
+*/
+bool aviIndexOdml::convertIndex(odmlRegularIndex *dex, int trackNo)
+{
+    const int available=(AVI_REGULAR_INDEX_CHUNK_SIZE-64)/8; // nb index entry
+    int nbEntries=dex->listOfChunks.size();
+    if(nbEntries>=available)
+    {
+        uint64_t off=LMovie->Tell(),pos;  
+        ADM_info("Index for track %d is full\n",trackNo);
+        // write an index and add it to superIndex
+        LMovie->Seek(dex->indexPosition);
+        // Offset is always at data[0]
+        dex->baseOffset=dex->listOfChunks[0].offset;
+        dex->serialize(LMovie,fourccs[trackNo],trackNo);
+        dex->listOfChunks.clear();
+        LMovie->Seek(off); // rewind
+        // add to super index
+        odmlOneSuperIndex *super=superIndex.trackIndeces+trackNo;
+        odmlIndecesDesc supEntry;
+        
+        supEntry.offset=dex->indexPosition;
+        supEntry.size=AVI_REGULAR_INDEX_CHUNK_SIZE;
+        supEntry.duration=nbEntries; // Fixme ??
+        super->indeces.push_back(supEntry);
+        LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
+        dex->indexPosition=pos;
+    }
+    return true;
+}
 /**
     \fn ctor
     \brief this one is used when converting a type 1 avi to type 2
@@ -67,6 +99,12 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin )
   
     // Convert cousin's index
     int n=cousin->myIndex.size();
+  
+    bool done[1+ADM_AVI_MAX_AUDIO_TRACK];
+    for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
+    {
+        indexes[j].indexPosition=cousin->placeHolder[j];
+    }
     for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
     {
         uint32_t trackFcc=superIndex.trackIndeces[j].fcc;
@@ -76,21 +114,16 @@ aviIndexOdml::aviIndexOdml(aviWrite *father,aviIndexAvi *cousin )
             // 
             if(trx.fcc==trackFcc)
             {
-                    odmIndexEntry ix;
-                    ix.flags=trx.flags;
-                    ix.offset=trx.offset;
-                    ix.size=trx.len;
-                    indexes[j].listOfChunks.push_back(ix);
+                odmIndexEntry ix;
+                ix.flags=trx.flags;
+                ix.offset=trx.offset;
+                ix.size=trx.len;
+                indexes[j].listOfChunks.push_back(ix);
+                convertIndex(indexes+j,j);
             }
         }
     }
-    // create our first index
-    for(int j=0;j<ADM_AVI_MAX_AUDIO_TRACK+1;j++)
-    {
-        indexes[j].indexPosition=cousin->placeHolder[j];
-        if(indexes[j].listOfChunks.size())
-            indexes[j].baseOffset=indexes[j].listOfChunks[0].offset;
-    }
+    
     //
     
     cousin->myIndex.clear(); // empty cousin index
@@ -418,7 +451,7 @@ bool aviIndexOdml::startNewRiff()
 {
     uint64_t pos;
     pos=LMovie->Tell();
-    ADM_info("Starting new riff at position %"PRIu64" (0x%"PRIx64")",pos,pos);
+    ADM_info("Starting new riff at position %"PRIu64" (0x%"PRIx64")\n",pos,pos);
 
     // 0- Write legacy index, else WMP is not happy...
 

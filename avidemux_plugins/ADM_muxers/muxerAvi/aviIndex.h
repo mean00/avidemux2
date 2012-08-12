@@ -19,7 +19,16 @@ class aviWrite;
 */
 #define ADM_AVI_MAX_AUDIO_TRACK 5 // Fixme : dupe
 #define AVI_SUPER_INDEX_CHUNK_SIZE (16*1024)
-#define AVI_REGULAR_INDEX_CHUNK_SIZE (128*1024)
+
+
+
+#if 0
+    #define AVI_REGULAR_INDEX_CHUNK_SIZE (256) // short index for debug
+    #define AVI_TYPE1_THRESHOLD 10*1024*1024LL
+#else    
+    #define AVI_REGULAR_INDEX_CHUNK_SIZE (128*1024)
+    #define AVI_TYPE1_THRESHOLD 4*1024LL*1024LL*1024LL
+#endif
 
 #include "fourcc.h"
 #include "avilist_avi.h"
@@ -41,8 +50,8 @@ protected:
             int              nbAudioTrack;
             int              audioFrameCount[ADM_AVI_MAX_AUDIO_TRACK];
             int              audioSizeCount[ADM_AVI_MAX_AUDIO_TRACK];
-            uint64_t        openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK];
-            uint64_t        odmlChunkPosition;
+            uint64_t         openDmlHeaderPosition[1+ADM_AVI_MAX_AUDIO_TRACK];
+            uint64_t         odmlChunkPosition;
 
 public:
                                 aviIndexBase(aviWrite *father,AviListAvi *lst,uint64_t odmlChunkPosition) ;
