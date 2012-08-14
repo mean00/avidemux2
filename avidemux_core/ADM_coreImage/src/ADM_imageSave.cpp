@@ -88,7 +88,7 @@ bool  ADMImage::saveAsBmp(const char *filename)
         converter.convertImage(this,out);
         uint32_t ww=bmph.biWidth;
         uint32_t hh=bmph.biHeight;
-        uint8_t swap[ww*3];
+        uint8_t *swap = new uint8_t[ww*3];
         uint8_t *up=out;
         uint8_t *down=out+(hh-1)*ww*3;
         
@@ -100,6 +100,8 @@ bool  ADMImage::saveAsBmp(const char *filename)
             down-=3*ww;
             up+=3*ww;
         }
+
+		delete [] swap;
 
         fd = ADM_fopen (filename, "wb");
         if (!fd)
@@ -150,8 +152,8 @@ AVCodecContext   *context=NULL;
 AVFrame          frame;     
 bool             result=false;
 AVCodec          *codec=NULL;
-uint8_t          buffer[_width*_height*4];
 int              sz=0,r=0;
+uint8_t          *buffer = NULL;
 
     context=avcodec_alloc_context();
     if(!context) 
@@ -193,7 +195,9 @@ int              sz=0,r=0;
     // Encode!
       context->flags |= CODEC_FLAG_QSCALE;
       frame.quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
-        
+
+	  buffer = new uint8_t[_width*_height*4];
+
         if ((sz = avcodec_encode_video (context, buffer, _width*_height*4, &frame)) < 0)
         {
             printf("[jpeg] Error %d encoding video\n",sz);
@@ -221,6 +225,12 @@ jpgCleanup:
         avcodec_close (context);
         av_free (context);
     }
+
+	if (buffer)
+	{
+		delete [] buffer;
+	}
+
     context=NULL;
     return result;
 }

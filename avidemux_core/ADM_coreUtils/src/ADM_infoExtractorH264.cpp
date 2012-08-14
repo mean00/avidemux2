@@ -12,6 +12,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef _MSC_VER
+#	include <malloc.h>
+#endif
+
 #include "ADM_default.h"
 
 extern "C"
@@ -237,7 +241,7 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
   uint32_t chroma_format_idc = 1; // this defaults to 1 when it's missing
   uint32_t separate_colour_plane_flag = 0;
   uint32_t chroma_array_type = 0;
-  uint8_t buf[len];
+  uint8_t *buf = new uint8_t[len];
   uint32_t outlen;
   uint32_t id, dum;
 
@@ -247,7 +251,7 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 
   outlen = ADM_unescapeH264 (len, data, buf);
   getBits bits(outlen,buf);
-  
+  delete [] buf;
 
   profile = bits.get(8);
   constraint = bits.get( 8) >> 5;
@@ -559,7 +563,7 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 {
     static const uint8_t sig[5]={0,0,0,1,0};
     uint32_t myLen=len+5+5+FF_INPUT_BUFFER_PADDING_SIZE;
-    uint8_t myData[myLen];
+    uint8_t *myData = new uint8_t[myLen];
     bool r=false;
 
     memset(myData,myLen,1);
@@ -639,6 +643,9 @@ theEnd:
     }
     if(parser)
         av_parser_close(parser);
+
+	delete [] myData;
+
     return r;
 }
 

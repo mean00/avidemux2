@@ -117,7 +117,7 @@ void decoderFF::decoderMultiThread (void)
   uint32_t threads = 0;
 
  // prefs->get(FEATURE_THREADING_LAVC, &threads);
-#warning Fixme
+//#warning Fixme
     threads=1;
   if (threads == 0)
 	  threads = ADM_cpu_num_processors();

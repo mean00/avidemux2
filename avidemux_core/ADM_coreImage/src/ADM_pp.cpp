@@ -131,7 +131,7 @@ uint32_t border;
     ADM_assert(ppMode);
     ADM_assert(ppContext);
 
-	#warning FIXME should be FF_I_TYPE/B/P
+//	#warning FIXME should be FF_I_TYPE/B/P
 	if(src->flags & AVI_KEY_FRAME) type=1;
 		else if(src->flags & AVI_B_FRAME) type=3;
 			else type=2;

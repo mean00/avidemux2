@@ -19,13 +19,9 @@
 #include "ADM_core6_export.h"
 #include <assert.h>
 
-#if defined(__MINGW32__)
-	#include <_mingw.h>
-
-	#if defined(__MINGW64_VERSION_STR)
-		#include <intrin.h>
-		#include <wchar.h>
-	#endif
+#ifdef _WIN32
+	#include <intrin.h>
+	#include <wchar.h>
 #endif
 
 #include "ADM_inttype.h"

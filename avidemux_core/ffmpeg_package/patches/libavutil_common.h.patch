@@ -1,0 +1,14 @@
+--- /d/dev/adm_2.6_vc/avidemux_core/ffmpeg_package/patches/ffmpeg/libavutil/common.h	2012-08-07 11:32:07 +1000
++++ libavutil/common.h	2012-08-07 11:32:07 +1000
+@@ -62,7 +62,11 @@
+ #define FFALIGN(x, a) (((x)+(a)-1)&~((a)-1))
+ 
+ /* misc math functions */
++#ifdef _MSC_VER
++extern __declspec(dllimport) const uint8_t ff_log2_tab[256];
++#else
+ extern const uint8_t ff_log2_tab[256];
++#endif
+ 
+ /**
+  * Reverse the order of the bits of an 8-bits unsigned integer.

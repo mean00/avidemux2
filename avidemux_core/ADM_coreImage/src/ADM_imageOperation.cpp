@@ -21,7 +21,7 @@
 */
 bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
 {
-#warning handle swap
+//#warning handle swap
         // Sanity check
         ADM_assert(src->_width==_width);
         ADM_assert(src->_height==_height);

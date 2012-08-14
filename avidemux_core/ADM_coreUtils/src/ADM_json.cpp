@@ -196,7 +196,7 @@ CONFcouple *admJsonToCouple::readFromFile(const char *file)
         fseek(f,0,SEEK_END);
         uint32_t fileSize=ftell(f);
         fseek(f,0,SEEK_SET);
-        char buffer[fileSize+1];
+        char *buffer = new char[fileSize+1];
         char *head=buffer;
         while(fgets(head,fileSize,f))
         {
@@ -205,6 +205,9 @@ CONFcouple *admJsonToCouple::readFromFile(const char *file)
         fclose(f);
         // Now parse and build a tree out of it...
         JSONNODE *n = json_parse(buffer);
+
+		delete [] buffer;
+
         if(true==scan(n,""))
         {
 

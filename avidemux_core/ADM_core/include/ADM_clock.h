@@ -35,7 +35,7 @@ class ADM_CORE6_EXPORT Clock
 /**
     \class ADMBenchmark
 */
-class ADMBenchmark
+class ADM_CORE6_EXPORT ADMBenchmark
 {
 protected:
         uint32_t bMin,bMax,bCumul;

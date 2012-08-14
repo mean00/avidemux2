@@ -32,4 +32,8 @@ if (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
 	add_dependencies(ADM_coreUtils6 libavcodec libavutil)
 endif (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
 
+if (MSVC)
+	add_definitions(-DNDEBUG)
+endif (MSVC)
+
 ADM_INSTALL_LIB(ADM_coreUtils6)

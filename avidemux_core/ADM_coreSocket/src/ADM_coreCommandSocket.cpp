@@ -182,7 +182,7 @@ bool     ADM_socketMessage::setPayloadAsUint32_t(uint32_t v)
 */
 ADM_commandSocket *ADM_commandSocket::waitForConnect(uint32_t timeoutMs)
 {
-#warning fixme badly
+//#warning fixme badly
     return (ADM_commandSocket *)ADM_socket::waitForConnect(timeoutMs);
 }
 /**

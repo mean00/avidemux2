@@ -30,6 +30,7 @@ function updatePatch {
 updatePatch . configure
 updatePatch libavcodec avcodec.h
 updatePatch libavcodec dxva2_internal.h
+updatePatch libavcodec golomb.h
 updatePatch libavcodec h263dec.c
 updatePatch libavcodec h264_parser.c
 updatePatch libavcodec libavcodec.v
@@ -45,5 +46,6 @@ updatePatch libavformat libavformat.v
 updatePatch libavformat matroskaenc.c
 updatePatch libavformat mpegtsenc.c
 updatePatch libavutil avutil.h
+updatePatch libavutil common.h
 updatePatch libavutil lfg.c
 updatePatch libavutil lfg.h

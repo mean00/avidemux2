@@ -129,7 +129,12 @@ IF (NOT SYSTEM_HEADERS_CHECKED)
 	INCLUDE(CheckIncludeFiles)
 	INCLUDE(CheckFunctionExists)
 
-	set(CMAKE_REQUIRED_INCLUDES ${CMAKE_INCLUDE_PATH})
+	if (MSVC)
+		include_directories("${AVIDEMUX_TOP_SOURCE_DIR}/foreignBuilds/msvc/include")
+		set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} "${AVIDEMUX_TOP_SOURCE_DIR}/foreignBuilds/msvc/include")
+	endif (MSVC)
+
+	set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${CMAKE_INCLUDE_PATH})
 	CHECK_FUNCTION_EXISTS(gettimeofday HAVE_GETTIMEOFDAY)
 
 	CHECK_INCLUDE_FILES(inttypes.h   HAVE_INTTYPES_H)	# internal use, mpeg2enc, mplex

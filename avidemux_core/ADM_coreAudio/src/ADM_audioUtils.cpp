@@ -8,6 +8,10 @@
 #include "ADM_coreAudio.h"
 #include <math.h>
 
+#ifdef _MSC_VER
+inline float roundf(float num) { return num > 0 ? floorf(num + 0.5f) : ceilf(num - 0.5f); }
+#endif
+
 static float rand_table[DITHER_CHANNELS][DITHER_SIZE];
 
 void AUDMEncoder_initDither(void)
@@ -51,8 +55,6 @@ void dither16(float *start, uint32_t len, uint8_t channels)
 */
 bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output)
 {    
-
-    float tmp [channels];
 	static uint8_t reorder[MAX_CHANNELS];
 	static bool reorder_on;
 	
@@ -79,12 +81,18 @@ bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANN
 	
 
 	if (reorder_on)
+	{
+		float *tmp = new float[channels];
+
 		for (int i = 0; i < nb; i++) 
         {
 			memcpy(tmp, data, sizeof(tmp));
 			for (int c = 0; c < channels; c++)
 				*data++ = tmp[reorder[c]];
 		}
+
+		delete [] tmp;
+	}
 
     return true;
 }

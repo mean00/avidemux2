@@ -18,6 +18,7 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <io.h>
+#include <ws2tcpip.h>
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -40,7 +41,7 @@
 #define aprintf(...) {}
 //#define DEBUG_NET
 
-#ifdef __MINGW32__
+#ifdef _WIN32
         #define SADDR    SOCKADDR
         #define SADDR_IN struct sockaddr_in
         #define SERROR   SOCKET_ERROR

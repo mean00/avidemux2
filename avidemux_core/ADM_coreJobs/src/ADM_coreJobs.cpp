@@ -254,7 +254,7 @@ bool    ADM_jobUpdate(const ADMJob & job)
     if(!mydb) return false;
     int id=job.id;
     db::Jobs myJob(*mydb,id);
-#warning detect invalid one ?
+//#warning detect invalid one ?
     myJob.SetStarttime(job.startTime);
     myJob.SetEndtime(job.endTime);
     myJob.SetStatus(job.status);

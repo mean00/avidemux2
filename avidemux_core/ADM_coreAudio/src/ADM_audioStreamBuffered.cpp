@@ -7,6 +7,10 @@
 #include "ADM_audioStreamBuffered.h"
 #include "ADM_vidMisc.h"
 
+#ifdef _MSC_VER
+#define abs(x) _abs64(x)
+#endif
+
 #define ADM_MAX_SKEW 40000
 
 /**

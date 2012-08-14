@@ -59,7 +59,7 @@ uint8_t ADM_audioStreamPCM::getPacket(uint8_t *obuffer,uint32_t *osize,
 uint64_t thisDts=0;
     if(!access->getPacket(obuffer,osize,sizeMax,&thisDts)) return 0;
     uint32_t bytesPerSample=wavHeader.channels*2; 
-#warning fixme handle mono
+//#warning fixme handle mono
     *nbSample=(uint32_t)(*osize/bytesPerSample);
     if(thisDts!=ADM_NO_PTS) 
             setDts(thisDts);

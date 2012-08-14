@@ -131,7 +131,7 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
 	snprintf(oc->filename,1000,"file://%s",filename);
     // probably a memeleak here
 
-#warning use AV METADATA
+//#warning use AV METADATA
 #if 0
     strcpy(oc->title,ADM_GetFileName(foo));
     strcpy(oc->author,"Avidemux");
@@ -322,7 +322,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                   case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
                   case WAV_MP2: c->codec_id = CODEC_ID_MP2;c->frame_size=1152;break;
                   case WAV_MP3:
-  #warning FIXME : Probe deeper
+//  #warning FIXME : Probe deeper
                               c->frame_size=1152;
                               c->codec_id = CODEC_ID_MP3;
                               break;

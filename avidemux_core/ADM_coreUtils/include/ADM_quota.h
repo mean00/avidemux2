@@ -19,6 +19,12 @@
 #include "ADM_coreUtils6_export.h"
 #include <stdio.h>
 
+#ifdef _MSC_VER
+#	include <windows.h>
+
+	typedef SSIZE_T ssize_t;
+#endif
+
 #include "ADM_coreConfig.h"
 
 /* qfopen stands for quota-fopen() */

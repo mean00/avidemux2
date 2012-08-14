@@ -30,9 +30,6 @@ struct qfile_t {
 #define msg_len 512
 static qfile_t qfile[qfile_len];
 
-#include "DIA_coreToolkit.h"
-
-
 uint8_t  quotaInit(void)
 {
             memset(qfile,0,sizeof(qfile));  
@@ -57,7 +54,7 @@ FILE *qfopen(const char *path, const char *mode){
 	while( !FD ){
 		FD = ADM_fopen (path,mode);
 		if( !FD && (errno == ENOSPC 
-#ifndef __MINGW32__
+#ifndef _WIN32
 || errno == EDQUOT
 #endif
 ) ){
@@ -139,7 +136,7 @@ ssize_t qwrite(int fd, const void *buf, size_t numbytes){
 			continue;
 		}
 		if( rc == -1 && (errno == ENOSPC 
-#ifndef __MINGW32__
+#ifndef _WIN32
 || errno == EDQUOT
 #endif
 ) ){

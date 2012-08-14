@@ -86,7 +86,7 @@ bool CONFcouple::writeAsInt32(const char *myname,int32_t val)
 	cur++;
 	return 1;
 }
-#warning TODO: ESCAPE!
+//#warning TODO: ESCAPE!
 bool CONFcouple::writeAsString(const char *myname,const char *val)
 {
 	ADM_assert(cur<nb);
@@ -141,7 +141,7 @@ bool CONFcouple::readAsInt32(const char *myname,int32_t *val)
 bool CONFcouple::readAsString(const char *myname,char **val)
 {
 	int32_t index=lookupName(myname);
-#warning TODO : unescape
+//#warning TODO : unescape
 	ADM_assert(index!=-1);
 	ADM_assert(index<(int)nb);
 	*val=ADM_strdup(value[index]);

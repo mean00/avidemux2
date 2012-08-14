@@ -1,0 +1,19 @@
+--- /d/dev/adm_2.6_vc/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/golomb.h	2012-08-07 11:32:06 +1000
++++ libavcodec/golomb.h	2012-08-07 11:32:06 +1000
+@@ -36,9 +36,16 @@
+ 
+ #define INVALID_VLC           0x80000000
+ 
++#ifdef _MSC_VER
++extern __declspec(dllimport) const uint8_t ff_golomb_vlc_len[512];
++extern __declspec(dllimport) const uint8_t ff_ue_golomb_vlc_code[512];
++extern __declspec(dllimport) const  int8_t ff_se_golomb_vlc_code[512];
++#else
+ extern const uint8_t ff_golomb_vlc_len[512];
+ extern const uint8_t ff_ue_golomb_vlc_code[512];
+ extern const  int8_t ff_se_golomb_vlc_code[512];
++#endif
++
+ extern const uint8_t ff_ue_golomb_len[256];
+ 
+ extern const uint8_t ff_interleaved_golomb_vlc_len[256];
