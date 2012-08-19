@@ -65,7 +65,7 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
       return 1;
     }
   uint8_t *ptrY, *ptrU, *ptrV, *ptr;
-  ADM_assert(out->_imageType=ADM_IMAGE_DEFAULT);
+  ADM_assert(out->_imageType==ADM_IMAGE_DEFAULT);
   ptr = in->data;
   ptrY = YPLANE(out);
   ptrV = VPLANE(out);
