@@ -6,6 +6,7 @@ MESSAGE("")
 
 SET(ADM_PROJECT AdmLogoVideoFilter)
 SET(PLUGINS TRUE)
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
 ########################################
 # Where is the top dir ?
@@ -52,8 +53,6 @@ INCLUDE(vf_plugin)
 SET(ADM_vf_logo_SRCS ADM_vidLogo.cpp)
 
 ADD_VIDEO_FILTER(ADM_vf_logo ${ADM_vf_logo_SRCS})
-IF(DO_COMMON)
 TARGET_LINK_LIBRARIES(ADM_vf_logo ADM_coreImageLoader6 )
-ENDIF(DO_COMMON)
 INIT_VIDEO_FILTER(ADM_vf_logo)
 INSTALL_VIDEO_FILTER(ADM_vf_logo)
