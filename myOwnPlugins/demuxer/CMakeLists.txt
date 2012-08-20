@@ -40,6 +40,7 @@ ENDIF (NOT AVIDEMUX_SOURCE_DIR)
 # Common definitions...
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
 include(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/commonCmakeApplication.cmake)
+include(${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admAsNeeded.cmake)
 ########################################
 # Add include dirs
 ########################################
@@ -72,7 +73,7 @@ SET(ADM_wtv_SRCS
         ADM_wtvPlugin.cpp
 )
 
-ADD_LIBRARY(ADM_dm_wtv SHARED ${ADM_wtv_SRCS})
+ADD_DEMUXER(ADM_dm_wtv ${ADM_wtv_SRCS})
 
 INIT_DEMUXER(ADM_dm_wtv)
 INSTALL_DEMUXER(ADM_dm_wtv)

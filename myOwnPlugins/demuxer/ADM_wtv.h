@@ -20,7 +20,7 @@
 #include <vector>
 using std::vector;
 #include "ADM_Video.h"
-#include "ADM_queue.h"
+//#include "ADM_queue.h"
 
 
 #define ASF_MAX_AUDIO_TRACK 8
@@ -71,7 +71,7 @@ class wtvAudioAccess : public ADM_audioAccess
     uint32_t                _streamId;
     uint32_t                _dataStart;
     FILE                    *_fd;
-    ADM_queue               readQueue;
+    //ADM_queue               readQueue;
     uint32_t                _packetSize;
     class wtvHeader         *_father;
     wtvAudioTrak            *_track;
