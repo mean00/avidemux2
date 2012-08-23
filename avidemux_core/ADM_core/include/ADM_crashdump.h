@@ -2,8 +2,9 @@
 #define ADM_CRASHDUMP_H
 
 #include "ADM_core6_export.h"
-#include "ADM_crashdump_mswin.h"
+#include "ADM_crashdump_mingw.h"
 #include "ADM_crashdump_apple.h"
+#include "ADM_crashdump_other.h"
 #include "ADM_crashdump_unix.h"
 
 #ifdef __cplusplus

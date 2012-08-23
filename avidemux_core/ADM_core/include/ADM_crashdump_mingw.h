@@ -1,5 +1,5 @@
-#if defined(_WIN32) && !defined ADM_CRASHDUMP_MSWIN_H
-#define ADM_CRASHDUMP_MSWIN_H
+#if defined(__MINGW32__) && !defined ADM_CRASHDUMP_MINGW_H
+#define ADM_CRASHDUMP_MINGW_H
 
 #include <windows.h>
 #include <excpt.h>

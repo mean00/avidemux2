@@ -3,7 +3,7 @@ SET(ADM_core_SRCS
 	TLK_clock.cpp  ADM_fileio.cpp  ADM_dynamicLoading.cpp  ADM_queue.cpp  ADM_benchmark.cpp)
 
 IF (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mswin.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp)
 ELSEIF (APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_apple.cpp)
 ELSEIF (UNIX)
