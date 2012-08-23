@@ -17,6 +17,7 @@
 #ifndef AUDIO_ENCODER_H
 #define AUDIO_ENCODER_H
 
+#include "ADM_coreAudioEncoder6_export.h"
 #include "ADM_coreAudio.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioFilter.h" 
@@ -39,7 +40,7 @@ typedef enum
 
 */
 #define ADM_AUDIO_ENCODER_BUFFER_SIZE (6*32*1024)
-class ADM_AudioEncoder 
+class ADM_COREAUDIOENCODER6_EXPORT ADM_AudioEncoder 
 {
   protected:
 

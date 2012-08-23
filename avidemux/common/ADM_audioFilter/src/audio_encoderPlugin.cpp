@@ -83,7 +83,6 @@ public:
         }
 };
 
-extern BVector <ADM_audioEncoder *> ListOfAudioEncoder;
 static BVector <ADM_AudioEncoderLoader *> ListOfAudioEncoderLoader;
 
 /**

@@ -3,8 +3,6 @@
 #include "ADM_editor/include/ADM_edAudioTrack.h"
 #include "ADM_editor/include/ADM_edAudioTrackExternal.h"
 
-extern BVector <ADM_audioEncoder *> ListOfAudioEncoder;
-
 namespace ADM_qtScript
 {
     AudioOutput::AudioOutput(IEditor* editor, EditableAudioTrack *track) : QtScriptObject(editor)

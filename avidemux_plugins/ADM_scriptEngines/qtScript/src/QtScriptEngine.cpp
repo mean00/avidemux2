@@ -38,7 +38,6 @@
 
 extern BVector <ADM_dynMuxer *> ListOfMuxers;
 extern BVector <ADM_videoEncoder6 *> ListOfEncoders;
-extern BVector <ADM_audioEncoder *> ListOfAudioEncoder;
 extern BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 
 using namespace std;

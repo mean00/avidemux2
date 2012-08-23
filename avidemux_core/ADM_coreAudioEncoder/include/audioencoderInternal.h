@@ -17,9 +17,13 @@
 
 #define ADM_AUDIO_ENCODER_API_VERSION 7
 #include <stddef.h>
+
+#include "ADM_coreAudioEncoder6_export.h"
 #include "audioencoder.h"
 #include "ADM_paramList.h"
 #include "ADM_confCouple.h"
+#include "BVector.h"
+
 class AUDMEncoder;
 class ADM_AudioEncoder;
 
@@ -70,6 +74,8 @@ extern "C" ADM_audioEncoder *getInfo (void) \
 { \
   return &encoderDesc; \
 }
+
+extern ADM_COREAUDIOENCODER6_EXPORT BVector <ADM_audioEncoder *> ListOfAudioEncoder;
 
 #endif
 //EOF
