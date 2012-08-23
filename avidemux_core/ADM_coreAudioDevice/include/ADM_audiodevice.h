@@ -13,6 +13,7 @@
 #define ADM_AUDIODEVICE_H
 
 // Converts float to int16_t with dithering
+#include "ADM_coreAudioDevice6_export.h"
 #include "ADM_coreAudio.h"
 #include "ADM_threads.h"
 
@@ -20,6 +21,8 @@
 #define AUDIO_DEVICE_STARTED  1
 #define AUDIO_DEVICE_STOP_REQ 2
 #define AUDIO_DEVICE_STOP_GR  3
+
+ADM_COREAUDIODEVICE6_EXPORT uint8_t ADM_av_loadPlugins(const char *path);
 
 /**
     \class audioDevice
@@ -48,7 +51,7 @@
 */
 #define ADM_THREAD_BUFFER_SIZE (8*1024*1024)
 #define MODULO_THREADED(x)  (x&(ADM_THREAD_BUFFER_SIZE-1))
-class audioDeviceThreaded: public audioDevice
+class ADM_COREAUDIODEVICE6_EXPORT audioDeviceThreaded: public audioDevice
 {
 protected:
             CHANNEL_TYPE incomingMapping[MAX_CHANNELS];
