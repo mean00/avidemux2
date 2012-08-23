@@ -15,8 +15,11 @@
  ***************************************************************************/
 #ifndef ADM_COREJOBS_H
 #define ADM_COREJOBS_H
+
+#include "ADM_coreJobs_export.h"
 #include "ADM_cpp.h"
 #include "ADM_default.h"
+
 /**
     \enum ADM_JOB_STATUS
 */
@@ -49,13 +52,13 @@ public:
 /*
     Our tiny tiny interface
 */
-bool    ADM_jobInit(void);
-bool    ADM_jobShutDown(void);
+ADM_COREJOBS_EXPORT bool    ADM_jobInit(void);
+ADM_COREJOBS_EXPORT bool    ADM_jobShutDown(void);
 
-bool    ADM_jobAdd(const ADMJob& job);
-bool    ADM_jobDelete(const ADMJob& job);
-bool    ADM_jobGet(vector <ADMJob> &jobs);
-bool    ADM_jobUpdate(const ADMJob & job);
+ADM_COREJOBS_EXPORT bool    ADM_jobAdd(const ADMJob& job);
+ADM_COREJOBS_EXPORT bool    ADM_jobDelete(const ADMJob& job);
+ADM_COREJOBS_EXPORT bool    ADM_jobGet(vector <ADMJob> &jobs);
+ADM_COREJOBS_EXPORT bool    ADM_jobUpdate(const ADMJob & job);
 
 bool    ADM_jobDump(const ADMJob &job);
 bool    ADM_jobDropAllJobs(void);
