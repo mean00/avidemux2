@@ -14,6 +14,8 @@
  ***************************************************************************/
 #ifndef ADM_CORE_COMMAND_SOCKET_H
 #define ADM_CORE_COMMAND_SOCKET_H
+
+#include "ADM_coreSocket6_export.h"
 #include "ADM_coreSocket.h"
 
 #define ADM_COMMAND_SOCKET_VERSION 2
@@ -33,7 +35,7 @@ typedef enum
 /**
         \struct ADM_socketMessage
 */
-class ADM_socketMessage
+class ADM_CORESOCKET6_EXPORT ADM_socketMessage
 {
 public:
     ADM_socketCommand command;
@@ -48,7 +50,7 @@ public:
     \class ADM_commandSocket
     \brief Wrapper around socket/tcp
 */
-class ADM_commandSocket : public ADM_socket       
+class ADM_CORESOCKET6_EXPORT ADM_commandSocket : public ADM_socket       
 {
     protected:
     public:

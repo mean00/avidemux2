@@ -14,13 +14,15 @@
  ***************************************************************************/
 #ifndef ADM_CORE_SOCKET_H
 #define ADM_CORE_SOCKET_H
+
+#include "ADM_coreSocket6_export.h"
 #include "ADM_threads.h"
 
 /**
     \class ADM_socket
     \brief Wrapper around socket/tcp
 */
-class ADM_socket       
+class ADM_CORESOCKET6_EXPORT ADM_socket       
 {
     protected:
         int         mySocket;
