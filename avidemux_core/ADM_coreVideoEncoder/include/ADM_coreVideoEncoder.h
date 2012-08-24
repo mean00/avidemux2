@@ -18,6 +18,7 @@
 #ifndef ADM_CORE_VIDEO_ENCODER_H
 #define ADM_CORE_VIDEO_ENCODER_H
 
+#include "ADM_coreVideoEncoder6_export.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_bitstream.h"
 #include "ADM_frameType.h"
@@ -46,7 +47,7 @@ typedef struct
     \class ADM_coreVideoEncoder
     \brief base class for VideoEncoder
 */
-class ADM_coreVideoEncoder
+class ADM_COREVIDEOENCODER6_EXPORT ADM_coreVideoEncoder
 {
 protected:
                             ADM_coreVideoFilter *source;
@@ -73,9 +74,9 @@ virtual        bool        setPassAndLogFile(int pass,const char *name) {return 
                uint64_t    getEncoderDelay(void){return encoderDelay;}
                uint64_t    lastDts; //
 };
-bool usSecondsToFrac(uint64_t useconds, int *n,int *d);
-bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath);
-bool ADM_pluginInstallSystem(const std::string& pluginName,const std::string& ext,int pluginVersion);
-bool ADM_listFile(const std::string& path,const std::string& extension,vector <std::string > & list);
+ADM_COREVIDEOENCODER6_EXPORT bool usSecondsToFrac(uint64_t useconds, int *n,int *d);
+ADM_COREVIDEOENCODER6_EXPORT bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath);
+ADM_COREVIDEOENCODER6_EXPORT bool ADM_pluginInstallSystem(const std::string& pluginName,const std::string& ext,int pluginVersion);
+ADM_COREVIDEOENCODER6_EXPORT bool ADM_listFile(const std::string& path,const std::string& extension,vector <std::string > & list);
 #endif
 

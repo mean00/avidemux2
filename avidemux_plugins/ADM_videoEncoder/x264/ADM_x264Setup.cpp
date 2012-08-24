@@ -22,6 +22,8 @@
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
+#include "ADM_coreUtils.h"
+
 #if 1
     #define aprintf(...) {}
     #define avsnprintf(...) {}
@@ -43,7 +45,6 @@ static void        logger( void *cooki, int i_level, const char *psz, va_list li
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 extern x264_encoder x264Settings;
-extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);;
 /**
     \fn setup
 */

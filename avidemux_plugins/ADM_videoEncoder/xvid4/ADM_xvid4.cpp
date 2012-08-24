@@ -20,14 +20,13 @@
 #include "ADM_xvid4.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
+#include "ADM_coreUtils.h"
 
 #if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
 #endif
-
-extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);;
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 

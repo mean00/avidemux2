@@ -16,6 +16,9 @@
 #define VIDEOENCODERINTERNAL_H
 
 #define ADM_VIDEO_ENCODER_API_VERSION 5
+
+#include "ADM_coreVideoEncoder6_export.h"
+#include "BVector.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_dynamicLoading.h"
 #include "DIA_uiTypes.h"
@@ -76,6 +79,8 @@ public:
                 }
         }
 };
+
+extern ADM_COREVIDEOENCODER6_EXPORT BVector <ADM_videoEncoder6 *> ListOfEncoders;
 
 // Macros to declare audio encoder
 /**************************************************************************/

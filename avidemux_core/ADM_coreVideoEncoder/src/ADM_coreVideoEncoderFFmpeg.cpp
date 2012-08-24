@@ -19,6 +19,8 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
+#include "ADM_coreUtils.h"
+
 extern "C"
 {
 char *av_strdup(const char *s);
@@ -32,7 +34,7 @@ void *av_malloc(size_t size) ;
 #endif
 
 #define LAVS(x) Settings.lavcSettings.x
-extern bool ADM_computeAverageBitrateFromDuration(uint64_t duration, uint32_t sizeInMB, uint32_t *avgInKbits);
+
 /**
     \fn ADM_coreVideoEncoderFFmpeg
     \brief Constructor

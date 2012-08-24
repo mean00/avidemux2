@@ -18,6 +18,7 @@
 #ifndef ADM_CORE_VIDEO_ENCODER_FF_H
 #define ADM_CORE_VIDEO_ENCODER_FF_H
 
+#include "ADM_coreVideoEncoder6_export.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_colorspace.h"
 #include "ADM_encoderConf.h"
@@ -29,7 +30,7 @@
     \class ADM_coreVideoEncoderFFmpeg
     \brief base class for VideoEncoder based on libavcodec
 */
-class ADM_coreVideoEncoderFFmpeg :public ADM_coreVideoEncoder
+class ADM_COREVIDEOENCODER6_EXPORT ADM_coreVideoEncoderFFmpeg :public ADM_coreVideoEncoder
 {
 protected:
                FFcodecSettings  Settings;

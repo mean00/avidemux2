@@ -24,7 +24,6 @@
 #include "BVector.h"
 
 static int currentVideoCodec=0;
-extern BVector <ADM_videoEncoder6 *> ListOfEncoders;
 
 ADM_videoEncoderDesc copyDesc={
         "Copy",
