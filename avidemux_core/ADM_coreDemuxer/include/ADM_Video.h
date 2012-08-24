@@ -24,6 +24,7 @@
 #	include <windows.h>
 #endif
 
+#include "ADM_coreDemuxer6_export.h"
 #include "ADM_inttype.h"
 #include "avifmt.h"
 #include "avifmt2.h"
@@ -55,7 +56,7 @@ typedef struct
     \class vidHeader
     \brief Base Class for all demuxers
 */
-class vidHeader
+class ADM_COREDEMUXER6_EXPORT vidHeader
 {
 protected:
           MainAVIHeader 	_mainaviheader;

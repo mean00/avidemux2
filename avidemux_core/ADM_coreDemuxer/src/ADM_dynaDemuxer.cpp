@@ -15,13 +15,12 @@
  ***************************************************************************/
 #include <BVector.h>
 #include "ADM_default.h"
+#include "ADM_coreDemuxer.h"
 #include "ADM_demuxerInternal.h"
-bool ADM_dm_cleanup(void);
+
 void ADM_demuxersCleanup(void);
-vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
 
 BVector <ADM_demuxer *> ListOfDemuxers;
-
 
 /**
         \fn ADM_dm_getNbDemuxers
