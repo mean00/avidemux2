@@ -17,12 +17,13 @@
 #ifndef _ADM_scriptDFInteger_H
 #define _ADM_scriptDFInteger_H
 
+#include "ADM_coreScript_export.h"
 #include "DIA_factory.h"
 #include "ADM_scriptDF.h"
 /**
     \class ADM_JSDFIntegerHelper
 */
-class ADM_scriptDFIntegerHelper : public ADM_scriptDFBaseHelper
+class ADM_CORESCRIPT_EXPORT ADM_scriptDFIntegerHelper : public ADM_scriptDFBaseHelper
 {
 private:
 	char                *_title;

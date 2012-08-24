@@ -3,6 +3,6 @@
 
 #include "IScriptEngine.h"
 
-void ADM_startShell(IScriptEngine *engine);
+bool ADM_startShell(IScriptEngine *engine);
 
 #endif

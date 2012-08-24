@@ -17,13 +17,14 @@
 #ifndef _ADM_scriptDialogFactory_H
 #define _ADM_scriptDialogFactory_H
 
+#include "ADM_coreScript_export.h"
 #include "DIA_factory.h"
 #include "ADM_scriptDFMenu.h"
 #include <vector>
 /**
     \class ADM_scriptDialogFactoryHelper
 */
-class ADM_scriptDialogFactoryHelper
+class ADM_CORESCRIPT_EXPORT ADM_scriptDialogFactoryHelper
 {
 private:
 	char        *_title;
