@@ -57,7 +57,6 @@ extern void GUI_PreviousKeyFrame(void);
 extern void GUI_PrevBlackFrame(void);
 extern void GUI_NextBlackFrame(void);;
 
-extern BVector <ADM_dynMuxer *> ListOfMuxers;
 extern BVector <ADM_videoEncoder6 *> ListOfEncoders;
 
 #if 0

@@ -19,6 +19,7 @@
 #ifndef ADM_COREMUXERFFMPEG_H
 #define ADM_COREMUXERFFMPEG_H
 
+#include "ADM_coreMuxer6_export.h"
 #include "fourcc.h"
 #include "ADM_muxer.h"
 #include "ADM_muxerUtils.h"
@@ -32,7 +33,7 @@ extern "C"
 /**
     \class muxerFFmpeg
 */
-class muxerFFmpeg : public ADM_muxer
+class ADM_COREMUXER6_EXPORT muxerFFmpeg : public ADM_muxer
 {
 protected:
         bool    writePacket(AVPacket *pkt);

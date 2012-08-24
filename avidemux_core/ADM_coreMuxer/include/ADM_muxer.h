@@ -6,6 +6,8 @@
  */
 #ifndef ADM_muxer_H
 #define ADM_muxer_H
+
+#include "ADM_coreMuxer6_export.h"
 #include "ADM_audioStream.h"
 #include "DIA_working.h"
 #include "DIA_coreToolkit.h"
@@ -45,7 +47,7 @@ virtual     uint64_t getVideoDuration(void) {return 1;}
  *      \class ADM_muxer
  *
  */
-class ADM_muxer
+class ADM_COREMUXER6_EXPORT ADM_muxer
 {
 protected:
                 ADM_videoStream *vStream;       // Internal copy of the parameters

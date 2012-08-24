@@ -20,6 +20,7 @@ extern "C"
 #include "libavformat/avformat.h"
 };
 
+#include "ADM_coreMuxer6_export.h"
 #include "ADM_codecType.h"
 
 /**
@@ -27,13 +28,13 @@ extern "C"
     \brief Rescale fps to be accurate (i.e. 23.976 become 24000/1001)
 
 */
-void  rescaleFps(uint32_t fps1000, AVRational *rational);
+ADM_COREMUXER6_EXPORT void  rescaleFps(uint32_t fps1000, AVRational *rational);
 
 /**
         \fn rescaleLavPts
         \brief Rescale PTS/DTS the lavformat way, i.e. relative to the scale.
 */
-uint64_t rescaleLavPts(uint64_t us, AVRational *scale);
+ADM_COREMUXER6_EXPORT uint64_t rescaleLavPts(uint64_t us, AVRational *scale);
 
 #endif
 
