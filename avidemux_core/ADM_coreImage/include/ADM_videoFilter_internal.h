@@ -19,23 +19,6 @@
 #include "DIA_uiTypes.h"
 #include "ADM_videoFilter_iface.h"
 
-typedef enum
-{
-	VF_TRANSFORM=0,
-	VF_INTERLACING=1,
-	VF_COLORS=2,
-	VF_NOISE=3,
-	VF_SHARPNESS=4,
-	VF_SUBTITLE=5,
-	VF_MISC=6,
-	VF_MAX=7
-}VF_CATEGORY;
-#define VF_INVALID 		  0
-
-#define VF_PARTIAL_FILTER 9
-#define VF_START_TAG 	  10
-
-typedef uint32_t VF_FILTERS ;
 typedef AVDMGenericVideoStream *(ADM_createT) (AVDMGenericVideoStream *in, CONFcouple *);
 typedef AVDMGenericVideoStream *(ADM_create_from_scriptT) (AVDMGenericVideoStream *in, int n,Arg *args);
 
