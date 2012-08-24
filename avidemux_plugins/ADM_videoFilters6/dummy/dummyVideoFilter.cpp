@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 
 /**
     \class dummyVideoFilter

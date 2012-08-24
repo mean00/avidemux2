@@ -27,7 +27,6 @@
 #endif
 static uint32_t lastTag=100;
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
-extern BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {

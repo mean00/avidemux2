@@ -4,8 +4,6 @@
 #include "VideoFilterCollection.h"
 #include "VideoFilterCollectionPrototype.h"
 
-extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
-
 namespace ADM_qtScript
 {
     class VideoFilterCollectionClassPropertyIterator : public QScriptClassPropertyIterator

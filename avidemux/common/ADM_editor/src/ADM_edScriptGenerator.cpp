@@ -7,8 +7,6 @@
 #include "ADM_muxerProto.h"
 #include "ADM_coreVideoFilterFunc.h"
 
-extern BVector<ADM_VideoFilterElement> ADM_VideoFilters;
-
 ADM_ScriptGenerator::ADM_ScriptGenerator(IEditor *editor, IScriptWriter* scriptWriter)
 {
 	this->_editor = editor;

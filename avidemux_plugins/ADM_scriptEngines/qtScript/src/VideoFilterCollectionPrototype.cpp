@@ -3,8 +3,6 @@
 #include "ADM_coreVideoFilterFunc.h"
 #include "VideoFilterCollectionPrototype.h"
 
-extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
-
 namespace ADM_qtScript
 {
     VideoFilterCollectionPrototype::VideoFilterCollectionPrototype(QObject* parent, IEditor* editor) :

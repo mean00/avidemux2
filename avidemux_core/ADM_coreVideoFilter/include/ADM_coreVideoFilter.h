@@ -16,9 +16,13 @@
 #ifndef ADM_CORE_VIDEO_FILTER
 #define  ADM_CORE_VIDEO_FILTER
 
+#include "ADM_coreVideoFilter6_export.h"
+#include "BVector.h"
 #include "ADM_confCouple.h"
 #include "ADM_image.h"
 #include "ADM_videoFilterCache.h"
+#include "ADM_filterCategory.h"
+#include "ADM_coreVideoFilterInternal.h"
 
 /**
     \struct ADM_VideoFilterElement
@@ -46,7 +50,7 @@ typedef struct
  *  \class ADM_coreVideoFilter
  *  \brief base class for all video filters
  */
-class ADM_coreVideoFilter
+class ADM_COREVIDEOFILTER6_EXPORT ADM_coreVideoFilter
 {
 protected:
             FilterInfo            info;
@@ -74,7 +78,7 @@ protected:
  *  \class ADM_coreVideoFilterCached
  *  \brief Same as above but we use a cache. Beware of flushing the cash upon seeking!
  */
-class ADM_coreVideoFilterCached : public ADM_coreVideoFilter
+class ADM_COREVIDEOFILTER6_EXPORT ADM_coreVideoFilterCached : public ADM_coreVideoFilter
 {
 protected:
             VideoCache           *vidCache;
@@ -86,7 +90,10 @@ public:
 };
 
 // Avisynth compatibility functions
-int PutHintingData(uint8_t *video, unsigned int hint);
-int GetHintingData(uint8_t *video, unsigned int *hint);
+ADM_COREVIDEOFILTER6_EXPORT int PutHintingData(uint8_t *video, unsigned int hint);
+ADM_COREVIDEOFILTER6_EXPORT int GetHintingData(uint8_t *video, unsigned int *hint);
+
+extern ADM_COREVIDEOFILTER6_EXPORT BVector <ADM_VideoFilterElement> ADM_VideoFilters;
+extern ADM_COREVIDEOFILTER6_EXPORT BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 #endif
 // EOF

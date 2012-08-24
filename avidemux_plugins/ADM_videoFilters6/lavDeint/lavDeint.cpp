@@ -21,7 +21,7 @@ extern "C" {
 #include "libpostproc/postprocess.h"
 }
 
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "DIA_factory.h"
 #include "lav.h"
 #include "lav_desc.cpp"

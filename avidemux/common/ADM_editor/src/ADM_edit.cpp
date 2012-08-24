@@ -21,6 +21,7 @@
 #include "audioEncoderApi.h"
 #include "ADM_muxerProto.h"
 #include "GUI_ui.h"
+#include "ADM_coreVideoFilterFunc.h"
 
 #include <fcntl.h>
 #include <errno.h>

@@ -7,7 +7,7 @@
 #include "audiofilter_normalize_param.h"
 #include "ADM_audiodef.h"
 #include "audioencoderInternal.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 
 class ADM_videoEncoder6;
 class ADM_dynMuxer;

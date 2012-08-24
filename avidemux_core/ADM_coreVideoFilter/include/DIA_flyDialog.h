@@ -29,6 +29,8 @@ The yuv/rgb specific part is implement through ADM_flyDialogAction (yuv/rgb)
 #ifndef ADM_FLY_DIALOG_H
 #define ADM_FLY_DIALOG_H
 
+#include "ADM_coreVideoFilter6_export.h"
+
 #if !defined(ADM_FLY_INTERNAL)
 #if !defined(ADM_UI_TYPE_BUILD)
 #error No ADM_UI_TYPE_BUILD defined
@@ -108,7 +110,7 @@ typedef float gfloat;
     \class ADM_flyDialog
     \brief Base class for flyDialog
 */
-class ADM_flyDialog
+class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
 {
     friend class ADM_flyDialogAction;
     friend class ADM_flyDialogActionYuv;

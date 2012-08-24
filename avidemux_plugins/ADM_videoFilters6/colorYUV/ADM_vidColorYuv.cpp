@@ -46,7 +46,7 @@
  ***************************************************************************/
 #include <math.h>
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidColorYuv.h"
 #include "DIA_factory.h"

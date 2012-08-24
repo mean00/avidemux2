@@ -1,10 +1,8 @@
 #include "ADM_default.h"
-#include "BVector.h"
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_videoFilterBridge.h"
+#include "ADM_coreVideoFilter.h"
 
-extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
-extern BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
 ADM_coreVideoFilter *bridge = NULL;
 
 static int objectCount = 0;

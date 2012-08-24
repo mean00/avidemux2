@@ -13,6 +13,8 @@
 #ifndef __ADM_CACHE__
 #define __ADM_CACHE__
 class ADM_coreVideoFilter;
+
+#include "ADM_coreVideoFilter6_export.h"
 #include "ADM_image.h"
 /**
     \struct videoCacheEntry
@@ -29,7 +31,7 @@ typedef struct vidCacheEntry
 /**
     \class VideoCache
 */
-class VideoCache
+class ADM_COREVIDEOFILTER6_EXPORT VideoCache
 {
 	private:
 		vidCacheEntry	    *entry;

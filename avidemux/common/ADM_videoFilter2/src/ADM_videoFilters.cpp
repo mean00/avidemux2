@@ -21,7 +21,6 @@
 #include "ADM_filterThread.h"
 #include "ADM_coreVideoFilterFunc.h"
 
-extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 extern ADM_coreVideoFilter *bridge;
 extern ADM_Composer *video_body;
 

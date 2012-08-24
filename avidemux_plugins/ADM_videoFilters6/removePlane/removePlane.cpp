@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "DIA_factory.h"
 #include "rplane.h"
 #include "rplane_desc.cpp"

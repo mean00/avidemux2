@@ -35,7 +35,7 @@
 */
 
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidKernelDeint.h"
 #include "kdeint_desc.cpp"
@@ -50,9 +50,6 @@ DECLARE_VIDEO_FILTER(   kernelDeint,   // Class
                         "Kernel Deint.",            // Display name
                         "Port of Donald Graft Kernel Deinterlacer." // Description
                     );
-
-extern int PutHintingData(uint8_t *video, unsigned int hint);
-extern int GetHintingData(uint8_t *video, unsigned int *hint);
 
 #define PROGRESSIVE  0x00000001
 

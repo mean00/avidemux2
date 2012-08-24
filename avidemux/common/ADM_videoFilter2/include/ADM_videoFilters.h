@@ -18,17 +18,13 @@
 #include "BVector.h"
 #include "ADM_coreVideoFilter.h"
 
-extern BVector<ADM_VideoFilterElement> ADM_VideoFilters;
-
 // Get list
 uint32_t                ADM_vf_getSize(void);
 ADM_coreVideoFilter     *ADM_vf_getInstance(int index);
 uint32_t                ADM_vf_getTag(int index);
 bool                    ADM_vf_getConfigurationFromIndex(int index,CONFcouple **c);
 
-bool                    ADM_vf_removeFilterAtIndex(int index);
 bool                    ADM_vf_configureFilterAtIndex(int index);
 bool                    ADM_vf_moveFilterDown(int index);
 bool                    ADM_vf_moveFilterUp(int index);
-bool                    ADM_vf_clearFilters(void);
 #endif

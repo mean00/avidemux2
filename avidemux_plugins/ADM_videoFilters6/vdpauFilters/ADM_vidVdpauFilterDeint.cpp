@@ -22,7 +22,7 @@ extern "C" {
 #include "libavcodec/vdpau.h"
 }
 
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
 #include "ADM_vidMisc.h"

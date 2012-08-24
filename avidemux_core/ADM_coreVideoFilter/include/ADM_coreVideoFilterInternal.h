@@ -7,11 +7,12 @@
 #include <stddef.h>
 
 #include "DIA_uiTypes.h"
-#include "ADM_coreVideoFilter.h"
 #include "ADM_filterCategory.h"
 #include "ADM_paramList.h"
 #include "ADM_coreUtils.h"
 #include "ADM_dynamicLoading.h"
+
+class ADM_coreVideoFilter;
 
 #define VF_API_VERSION 4
 

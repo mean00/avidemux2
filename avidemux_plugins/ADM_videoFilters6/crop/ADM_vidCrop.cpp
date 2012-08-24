@@ -17,7 +17,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "DIA_factory.h"
 #include "crop.h"
 #include "crop_desc.cpp"

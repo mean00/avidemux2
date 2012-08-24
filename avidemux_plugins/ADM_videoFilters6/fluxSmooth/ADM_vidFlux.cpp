@@ -23,7 +23,7 @@
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_vidFlux.h"
 #include "fluxsmooth_desc.cpp"
 extern void initScaleTab( void );

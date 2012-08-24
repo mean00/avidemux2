@@ -22,7 +22,7 @@ Resynced with ffmpeg lavfilter
  ***************************************************************************/
 #include <math.h>
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
 

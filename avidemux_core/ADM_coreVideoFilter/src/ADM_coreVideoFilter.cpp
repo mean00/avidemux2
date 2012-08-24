@@ -30,7 +30,7 @@ if needed.
 
 #include "ADM_default.h"
 #include "BVector.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 
 BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];

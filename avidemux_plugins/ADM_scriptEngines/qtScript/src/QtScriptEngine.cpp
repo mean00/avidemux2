@@ -37,8 +37,6 @@
 #include "ADM_coreVideoFilterInternal.h"
 #include "ADM_muxerProto.h"
 
-extern BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
-
 using namespace std;
 
 extern "C"

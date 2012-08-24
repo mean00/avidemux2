@@ -4,8 +4,6 @@
 #include "ADM_videoFilterBridge.h"
 #include "MyQScriptEngine.h"
 
-extern BVector <ADM_VideoFilterElement> ADM_VideoFilters;
-
 namespace ADM_qtScript
 {
     VideoFilterShim::VideoFilterShim() : ADM_coreVideoFilter(NULL, NULL)
