@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilter.h"
 #include "logo.h"
 #include "logo_desc.cpp"
 #include "ADM_imageLoader.h"
