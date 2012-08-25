@@ -24,10 +24,16 @@ ADM_libsamplerate/src_zoh.c
 )
 # Needed by libsamplerate
 ADD_DEFINITIONS(-DADM_LEGACY_PROGGY)
-ADD_DEFINITIONS(-DHAVE_LRINT -DHAVE_LRINTF)
 ADD_DEFINITIONS(-DCPU_CLIPS_POSITIVE=0 -DCPU_CLIPS_NEGATIVE=0)
 ADD_DEFINITIONS(-I${CMAKE_CURRENT_SOURCE_DIR})
 
-#
+if (MSVC)
+	remove_definitions(-W3)
+	add_definitions(-W1 -Dinline=__inline)
+else (MSVC)
+	add_definitions(-DHAVE_LRINT -DHAVE_LRINTF)
+endif (MSVC)
+
+include_directories("${PTHREAD_INCLUDE_DIR}")
 ADD_LIBRARY(ADM_audioFilter6 STATIC ${ADM_audioFilter_SRCS})
 # END
