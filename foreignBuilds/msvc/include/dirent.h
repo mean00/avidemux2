@@ -1,49 +1,52 @@
-#ifndef DIRENT_INCLUDED
-#define DIRENT_INCLUDED
-
 /*
+ * DIRENT.H (formerly DIRLIB.H)
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER within the package.
+ *
+ */
 
-    Declaration of POSIX directory browsing functions and types for Win32.
+#ifndef _DIRENT_H_
+#define _DIRENT_H_
 
-    Author:  Kevlin Henney (kevlin@acm.org, kevlin@curbralan.com)
-    History: Created March 1997. Updated June 2003.
-    Rights:  See end of file.
-    
-*/
+#define _UNICODE
 
 #include <wchar.h>
+#include <tchar.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct _WDIR _WDIR;
-
 struct _wdirent
 {
-    wchar_t *d_name;
+	long		d_ino;		/* Always zero. */
+	unsigned short	d_reclen;	/* Always zero. */
+	unsigned short	d_namlen;	/* Length of name in d_name. */
+	wchar_t		d_name[260]; /* [FILENAME_MAX] */ /* File name. */
 };
 
-_WDIR         *_wopendir(const wchar_t *);
-int           _wclosedir(_WDIR *);
-struct _wdirent *_wreaddir(_WDIR *);
-void          _wrewinddir(_WDIR *);
+typedef struct
+{
+	struct _wfinddata_t	dd_dta;
+	struct _wdirent		dd_dir;
+	intptr_t		dd_handle;
+	int			dd_stat;
+	wchar_t			dd_name[1];
+} _WDIR;
 
-/*
+#define _tdirent	_wdirent
+#define _TDIR       _WDIR
+#define _topendir	_wopendir
+#define _tclosedir	_wclosedir
+#define _treaddir	_wreaddir
+#define _trewinddir	_wrewinddir
 
-    Copyright Kevlin Henney, 1997, 2003. All rights reserved.
-
-    Permission to use, copy, modify, and distribute this software and its
-    documentation for any purpose is hereby granted without fee, provided
-    that this copyright and permissions notice appear in all copies and
-    derivatives.
-    
-    This software is supplied "as is" without express or implied warranty.
-
-    But that said, if there are any problems please get in touch.
-
-*/
+_TDIR *_topendir (const _TCHAR *szPath);
+int _tclosedir (_TDIR * dirp);
+struct _tdirent *_treaddir (_TDIR * dirp);
+void _trewinddir (_TDIR * dirp);
 
 #ifdef __cplusplus
 }
