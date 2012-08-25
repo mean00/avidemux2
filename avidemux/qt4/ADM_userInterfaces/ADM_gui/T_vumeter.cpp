@@ -65,7 +65,7 @@ bool UI_InitVUMeter(QFrame *host)
     \fn UI_vuUpdate
     \brief Update vumeter, input is volume per channel between 0 & 255
 */
-  #warning Assume rgb bbuffer is 32bits aligned...
+//  #warning Assume rgb bbuffer is 32bits aligned...
 #define GREEN  0x0000FF00
 #define YELLOW 0x00A0C000
 #define RED    0x00FF0000

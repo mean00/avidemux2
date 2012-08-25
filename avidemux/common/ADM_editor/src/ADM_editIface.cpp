@@ -274,7 +274,7 @@ bool ADM_Composer::setAudioCodec(int dex,const char *codec, CONFcouple *c)
         ADM_warning("Cannot set configuration for codec %s, track %d\n",codec,dex);
         return false;
     }
-#warning memleak on *c ?
+//#warning memleak on *c ?
     return true;
 }
 

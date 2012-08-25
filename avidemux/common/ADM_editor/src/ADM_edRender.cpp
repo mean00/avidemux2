@@ -507,7 +507,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
                 }
                 // nothing to do
 //                if(_pp.swapuv)
-#warning handle swap uv
+//#warning handle swap uv
                 dst->duplicate(src);
                 return 1;
 }

@@ -50,7 +50,7 @@ ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTi
     in=input;
     this->startTime=startTime;
     in->goToTime(startTime);
-#warning handle shift ???
+//#warning handle shift ???
 }
 
 bool ADM_audioStreamCopy::isCBR()

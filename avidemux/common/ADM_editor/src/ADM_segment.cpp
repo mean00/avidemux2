@@ -100,7 +100,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         seg._startTimeUs=0;
   }else
   {
-      #warning todo compute cumulative time
+//      #warning todo compute cumulative time
    }
    seg._durationUs=ref->_aviheader->getVideoDuration();
 

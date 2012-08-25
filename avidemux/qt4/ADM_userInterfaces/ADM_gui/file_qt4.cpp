@@ -42,14 +42,11 @@ namespace ADM_QT4_fileSel
 
 		if (prefs->get(pref_entry,&tmpname))
 		{
-			DIR *dir;
 			str = ADM_PathCanonize(tmpname);
 			ADM_PathStripName(str);
 
 			/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
-			if ((dir = opendir(str)))
-				closedir(dir);
-			else 
+			if (!QDir(str).exists())
 			{
 				delete [] str;
 				str = NULL;

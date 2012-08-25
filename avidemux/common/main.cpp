@@ -27,6 +27,9 @@
 #include "ADM_memsupport.h"
 #include "ADM_script2/include/ADM_script.h"
 #include "ADM_ffmp43.h"
+#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_coreDemuxer.h"
+#include "ADM_muxerProto.h"
 
 #define __DECLARE__
 #include "avi_vars.h"
@@ -48,7 +51,6 @@ extern "C" {
 #endif
 
 static bool setPrefsDefault(void);
-extern void  ADM_lavFormatInit(void);
 extern bool  vdpauProbe(void);
 
 extern void registerVideoFilters( void );
@@ -57,24 +59,19 @@ extern void register_Encoders( void )  ;
 
 extern uint8_t initGUI(const vector<IScriptEngine*>& engines);
 extern void destroyGUI(void);
-extern uint8_t initFileSelector(void);
+extern void initFileSelector(void);
 extern void getUIDescription(char*);
 extern uint8_t ADM_ad_loadPlugins(const char *path);
 extern uint8_t ADM_vf_loadPlugins(const char *path);
 extern uint8_t ADM_vd6_loadPlugins(const char *path);
 extern uint8_t ADM_av_loadPlugins(const char *path);
 extern uint8_t ADM_ae_loadPlugins(const char *path);
-extern uint8_t ADM_dm_loadPlugins(const char *path);
-extern uint8_t ADM_mx_loadPlugins(const char *path);
 extern uint8_t ADM_ve6_loadPlugins(const char *path);
 
 extern bool ADM_ad_cleanup(void);
 extern bool ADM_ae_cleanup(void);
-extern bool ADM_mx_cleanup(void);
 extern bool ADM_vf_cleanup(void);
-extern bool ADM_dm_cleanup(void);
 extern void ADM_ve6_cleanup(void);
-extern bool ADM_vf_clearFilters(void);
 
 extern bool vdpauProbe(void);
 extern bool vdpauCleanup(void);

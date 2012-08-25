@@ -14,10 +14,6 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 
-#ifdef __MINGW32__
-#include <windows.h>
-#endif
-
 #include "config.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
@@ -27,9 +23,6 @@
 #include "ADM_win32.h"
 
 void onexit( void );
-extern uint8_t initFileSelector(void);
-extern void InitFactory(void);
-extern void InitCoreToolkit(void);
 
 extern uint8_t  quotaInit(void);
 extern bool jobRun(int ac, char **av);
@@ -51,10 +44,8 @@ int main(int argc, char *argv[])
 	new_progname = argv[0];
 #endif
 
-#ifndef __MINGW32__
-	// thx smurf uk :)
     installSigHandler();
-#endif
+
     bool portableMode=isPortableMode(argc,argv);
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
@@ -112,7 +103,7 @@ int main(int argc, char *argv[])
 #endif
 	atexit(onexit);
 
-#ifdef __MINGW32__
+#ifdef _WIN32
     win32_netInit();
 #endif
 
@@ -127,19 +118,12 @@ int main(int argc, char *argv[])
     quotaInit();
 
 
-#if defined(_WIN64)
-	SetUnhandledExceptionFilter(ExceptionFilter);
-#elif defined(_WIN32)
-	__try1(ExceptionHandler);
-#endif
     ADM_initBaseDir(portableMode);
     // Init jobs
     ADM_jobInit();
     jobRun(argc,argv);
 
-#if defined(_WIN32) && defined(_X86_)
-	__except1;
-#endif
+	uninstallSigHandler();
 
     printf("Normal exit\n");
     return 0;

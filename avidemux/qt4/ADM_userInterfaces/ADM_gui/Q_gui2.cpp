@@ -430,7 +430,11 @@ bool MainWindow::buildMyMenu(void)
     buildMenu(ui.menuHelp, &myMenuHelp[0], myMenuHelp.size());
 
     connect( ui.menuTools,SIGNAL(triggered(QAction*)),this,SLOT(searchToolMenu(QAction*)));
-    buildMenu(ui.menuTools, &myMenuTool[0], myMenuTool.size());
+
+	if (myMenuTool.size() > 0)
+	{
+		buildMenu(ui.menuTools, &myMenuTool[0], myMenuTool.size());
+	}
 
     connect( ui.menuGo,SIGNAL(triggered(QAction*)),this,SLOT(searchGoMenu(QAction*)));
     buildMenu(ui.menuGo, &myMenuGo[0], myMenuGo.size());

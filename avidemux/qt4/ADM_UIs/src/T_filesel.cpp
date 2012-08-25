@@ -68,7 +68,7 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 			r=FileSel_SelectRead(selectDesc,buffer,MAX_SEL,txt);
 			break;
 		case ADM_FILEMODE_WRITE:
-#warning FIXME
+//#warning FIXME
 #if 0
 			if (defaultSuffix)
 			{

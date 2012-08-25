@@ -412,7 +412,7 @@ uint64_t pts;
         pts+=ms;
         pts*=1000;
         // Try to find a frame just before pts...
-#warning Fixme, be more accurate
+//#warning Fixme, be more accurate
         if(false==video_body->getPKFramePTS(&pts)) return false;
 
         //
@@ -433,7 +433,9 @@ bool GUI_SeekByTime(int64_t time)
 
    ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));  
    if(video_body->getPKFramePTS(&pts))
-       GUI_GoToTime(pts);
+       return GUI_GoToTime(pts);
+
+   return false;
 }
 
 /**

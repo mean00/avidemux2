@@ -36,8 +36,6 @@
 #define MAGIC_NUMBER (0xdeadbeef)
 #define IN_PATTERN   0x00000002
 
-extern uint8_t PutHintingData(unsigned char *video, unsigned int hint);
-
 class vidHardPDRemoval:public AVDMGenericVideoStream
 {
 

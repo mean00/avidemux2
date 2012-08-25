@@ -34,6 +34,8 @@ public:
             virtual   bool      run(void)
                         {
                             ADM_info("Running Cli audioTrack GUI\n");
+
+							return true;
                         }
               
 };

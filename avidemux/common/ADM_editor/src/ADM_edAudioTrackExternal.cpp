@@ -18,13 +18,17 @@
 #include "ADM_default.h"
 #include <math.h>
 
-
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackExternal.h"
 #include "ADM_audioIdentify.h"
 #include "ADM_audioAccessFile.h"
 #include "ADM_vidMisc.h"
+
+#ifdef _MSC_VER
+#define abs(x) _abs64(x)
+#endif
+
 #if 0
 #define vprintf ADM_info
 #else

@@ -25,7 +25,7 @@
  *  \class ADM_coreVideoFilterQtGl
  *  \brief base class for all QtGl video filters
  */
-class ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter
+class ADM_UIQT46_EXPORT ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter
 {
 protected:
                             GLuint                bufferARB   ;

@@ -79,4 +79,6 @@ void initFileSelector(void)
 uint8_t UI_getPhysicalScreenSize(void *window, uint32_t *w,uint32_t *h)
 {
   *w=*h=10000; 
+
+  return 1;
 }

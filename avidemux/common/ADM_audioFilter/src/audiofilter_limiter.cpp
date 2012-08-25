@@ -80,7 +80,7 @@ void AUDMAudioFilterLimiter::drc_cleanup(void)
    mThreshold = pow(10.0, _param.mThresholdDB/10); // factor of 10 because it's power
 
    if (_param.mUseGain)
-      mGain = pow(10.0, mGainDB/20); // factor of 20 because it's amplitude
+      mGain = powf(10.0, mGainDB/20); // factor of 20 because it's amplitude
    else
       mGain = 1.0;
 
@@ -242,7 +242,7 @@ float AUDMAudioFilterLimiter::DoCompression(float value, float env)
    float out;
 
    if (env > mThreshold)
-      mult = mGain * pow(mThreshold/env, 1.0/_param.mRatio);
+      mult = mGain * powf(mThreshold/env, 1.0/_param.mRatio);
    else
       mult = mGain;
 

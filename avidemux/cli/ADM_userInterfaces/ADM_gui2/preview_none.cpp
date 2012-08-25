@@ -1,16 +1,9 @@
 #include "config.h"
  
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <time.h>
-#include <sys/time.h>
 #include "ADM_cpp.h"
 #include "ADM_assert.h"
 #include "fourcc.h"
 #include "ADM_edit.hxx"
-
 #include "ADM_render/GUI_render.h"
 
 void UI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr) {}

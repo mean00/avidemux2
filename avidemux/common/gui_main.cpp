@@ -554,7 +554,7 @@ int A_openAvi (const char *name)
 	/* check myself it is a project file (transparent detected and read
         ** by video_body->addFile (name);
 	*/
-#warning FIXME
+//#warning FIXME
 #if 0
 	if( (fd = ADM_fopen(longname,"rb"))  ){
 		if( fread(magic,4,1,fd) == 4 ){
@@ -733,7 +733,7 @@ void cleanUp (void)
 	admPreview::cleanUp();
 }
 
-#warning fixme
+//#warning fixme
 
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {

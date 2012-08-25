@@ -43,8 +43,8 @@
 #include "ADM_videoFilters.h"
 #include "ADM_videoEncoderApi.h"
 #include "ADM_videoFilterApi.h"
-
-vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name);
+#include "ADM_coreVideoFilterFunc.h"
+#include "ADM_coreDemuxer.h"
 
 //#define TEST_MPEG2DEC
 /**
@@ -568,7 +568,7 @@ uint8_t ADM_Composer::updateAudioTrack (uint32_t seg)
 #endif
   return 1;
 
-#warning FIXME, does not work if audio track is shorter
+//#warning FIXME, does not work if audio track is shorter
 
 }
 

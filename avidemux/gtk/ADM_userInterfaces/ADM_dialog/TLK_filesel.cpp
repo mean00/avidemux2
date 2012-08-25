@@ -40,7 +40,7 @@ extern void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const ch
 namespace ADM_GTK_fileSel 
 {
 static void GUI_FileSel(const char *label, SELFILE_CB cb, int rw, char **name = NULL);
-uint8_t initFileSelector(void);
+void initFileSelector(void);
 
 static GtkFileFilter *filter_avi = NULL, *filter_mpeg = NULL, *filter_image = NULL, *filter_all = NULL;
 static uint8_t setFilter(GtkWidget *dialog);
@@ -416,7 +416,7 @@ void GUI_FileSel(const char *label, SELFILE_CB cb, int rw,char **rname)
 
 /* Mean:It seems it is attached to the dialog & destroyed with it
 As it leads to crash if we don't recreate them each time....*/
-uint8_t initFileSelector(void)
+void initFileSelector(void)
 {
 #define ADD_PAT(x,y) gtk_file_filter_add_pattern(x,"*."#y);
 
@@ -448,8 +448,6 @@ uint8_t initFileSelector(void)
 
 	gtk_file_filter_set_name(filter_all, QT_TR_NOOP("All"));
 	gtk_file_filter_add_pattern(filter_all, "*");
-
-	return 1;
 }
 
 uint8_t setFilter(GtkWidget *dialog)

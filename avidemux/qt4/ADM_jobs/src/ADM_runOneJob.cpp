@@ -63,7 +63,7 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
     // utf8 -> utf16
     const char *c=command.c_str();
     int size=utf8StringToWideChar(c,strlen(c),NULL);
-    wchar_t w[size+1];
+    wchar_t* w = new wchar_t[size+1];
 
     utf8StringToWideChar(c,strlen(c),w);
     // Start the child process. 
@@ -80,9 +80,12 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
         &pi )           // Pointer to PROCESS_INFORMATION structure
     )
     {
+		delete [] w;
         ADM_error("Cannot spawn process! (%s)\n",c);
         return false;
     }
+
+	delete [] w;
     
 #else
     system(command.c_str());

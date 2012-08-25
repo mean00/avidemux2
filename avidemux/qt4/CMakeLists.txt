@@ -83,16 +83,24 @@ if (WIN32)
 	ENDIF (ADM_CPU_X86_64)
 
 	SET(AVIDEMUX_ICON "adm.ico")
-	SET(ADM_WIN_RES "adm.obj")
-	SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${ADM_WIN_RES})
-        include(admWindRes)
 	CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admWin32.rc.in" ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
-	ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+
+	if (MINGW)
+		SET(ADM_WIN_RES "adm.obj")
+		SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${ADM_WIN_RES})
+        include(admWindRes)	
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+	endif (MINGW)
+
+	if (MSVC)
+		SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc)
+	endif (MSVC)
 endif (WIN32)
 
 ###########################################
 # Executable
 ###########################################
+include_directories("${PTHREAD_INCLUDE_DIR}")
 ADD_EXECUTABLE(avidemux3_qt4 ${ADM_EXE_SRCS})
 
 ###########################################
@@ -159,9 +167,9 @@ if (WIN32 OR APPLE)
 	set_property(TARGET avidemux3_qt4 PROPERTY OUTPUT_NAME avidemux)
 endif (WIN32 OR APPLE)
 
-IF (WIN32)
+IF (MINGW)
 	target_link_libraries(avidemux3_qt4 winmm -mwindows -Wl,--export-all-symbols)
-ENDIF (WIN32)
+ENDIF (MINGW)
 
 IF (APPLE)
 	IF (USE_SDL)

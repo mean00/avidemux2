@@ -263,7 +263,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         uint8_t *extra;
         uint32_t extraLen;
         video_body->getExtraHeaderData(&extraLen,&extra);
-#warning do something better
+//#warning do something better
         ADM_videoStreamCopy *copy=NULL;
         if(isH264Compatible(info.fcc))
         {

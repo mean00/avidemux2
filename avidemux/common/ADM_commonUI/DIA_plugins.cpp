@@ -16,6 +16,7 @@
 //#include "xonfig.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
+#include "ADM_coreDemuxer.h"
 
 /* Functions we need to get infos */
 uint32_t ADM_ad_getNbFilters(void);
@@ -26,8 +27,6 @@ uint32_t ADM_ve_getNbEncoders(void);
 bool     ADM_ve_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_ae_getPluginNbEncoders(void);
 bool     ADM_ae_getAPluginEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
-uint32_t ADM_dm_getNbDemuxers(void);
-bool     ADM_dm_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_mx_getNbMuxers(void);
 bool     ADM_mx_getMuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);

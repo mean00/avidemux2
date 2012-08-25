@@ -84,7 +84,6 @@ ADM_coreAudioFilterAPI6
 ADM_coreAudioDevice6
 ADM_coreAudioEncoder6
 ADM_coreDemuxer6
-ADM_coreDemuxerMpeg6
 ADM_coreImage6
 ADM_coreMuxer6
 ADM_coreUI6
@@ -92,7 +91,6 @@ ADM_coreUtils6
 ADM_coreSocket6
 ADM_coreVideoEncoder6
 ADM_coreVideoFilter6
-ADM_coreImageLoader6
 )
 
 #############################################

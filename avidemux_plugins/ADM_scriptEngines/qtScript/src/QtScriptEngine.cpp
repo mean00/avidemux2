@@ -33,9 +33,8 @@
 #include "VideoFilter.h"
 
 #include "BVector.h"
-#include "ADM_muxerInternal.h"
-#include "ADM_coreVideoFilterInternal.h"
 #include "ADM_muxerProto.h"
+#include "ADM_coreVideoFilterInternal.h"
 
 using namespace std;
 

@@ -24,7 +24,7 @@ using std::string;
 
 extern ADM_Composer *video_body; // Fixme!
 
-#warning fixme : double definition
+//#warning fixme : double definition
 
 //#define ANNEX_B_DEBUG
 

@@ -51,6 +51,9 @@
 #include <assert.h>
 #include <math.h>
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
 
 // MEANX
 #include "tcrequant.h"
@@ -173,14 +176,14 @@ static uint64 cnt_b_i, cnt_b_ni;
 
 #if 1 //ndef NDEBUG
 	#define DEB(msg) fprintf (stderr, "%s:%d " msg, __FILE__, __LINE__)
-	#define DEBF(format, args...) fprintf (stderr, "%s:%d " format, __FILE__, __LINE__, args)
+	#define DEBF(format, ...) fprintf (stderr, "%s:%d " format, __FILE__, __LINE__, __VA_ARGS__)
 #else
 	#define DEB(msg)
 	#define DEBF(format, args...)
 #endif
 
 #define LOG(msg) if (verbose > 1) fprintf (stderr, msg)
-#define LOGF(format, args...) if (verbose > 1) fprintf (stderr, format, args)
+#define LOGF(format, ...) if (verbose > 1) fprintf (stderr, format, __VA_ARGS__)
 
 #define BUF_SIZE (16*1024*1024)
 #define MIN_READ (1*1024*1024)

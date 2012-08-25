@@ -43,17 +43,25 @@ if (WIN32)
 	ENDIF (ADM_CPU_X86_64)
 
 	SET(AVIDEMUX_ICON "adm.ico")
-	SET(ADM_WIN_RES "adm.obj")
-	SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${ADM_WIN_RES})
-        include(admWindRes)
 	CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/admWin32.rc.in" ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
-	ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+
+	if (MINGW)
+		SET(ADM_WIN_RES "adm.obj")
+		SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${ADM_WIN_RES})
+        include(admWindRes)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
+	endif (MINGW)
+
+	if (MSVC)
+		SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc)
+	endif (MSVC)
 endif (WIN32)
 
 ###########################################
 # Executable
 ###########################################
 include(admCoreIncludes)
+include_directories("${PTHREAD_INCLUDE_DIR}")
 ADD_EXECUTABLE(avidemux3_jobs ${ADM_JOB_SRCS})
 ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
 
@@ -68,9 +76,9 @@ if (WIN32 OR APPLE)
 	set_property(TARGET avidemux3_jobs PROPERTY OUTPUT_NAME avidemux_jobs)
 endif (WIN32 OR APPLE)
 
-IF (WIN32)
+IF (MINGW)
 	target_link_libraries(avidemux3_jobs winmm -mwindows)
-ENDIF (WIN32)
+ENDIF (MINGW)
 
 IF (APPLE)
 	target_link_libraries(avidemux3_jobs "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
@@ -78,6 +86,7 @@ IF (APPLE)
 	# for Leopard but it doesn't hurt Tiger
 	target_link_libraries(avidemux3_jobs "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF (APPLE)
+
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreJobs)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreUtils6)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_core6)

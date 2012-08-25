@@ -29,15 +29,17 @@ Todo:
 #include "ADM_default.h"
 #include <math.h>
 
-
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
 #include "ADM_debugID.h"
 #define MODULE_NAME MODULE_AUDIO_EDITOR
 #include "ADM_debug.h"
-
 #include "ADM_vidMisc.h"
+
+#ifdef _MSC_VER
+#define abs(x) _abs64(x)
+#endif
 
 #define ADM_ALLOWED_DRIFT_US 40000 // Allow 4b0 ms jitter on audio
 

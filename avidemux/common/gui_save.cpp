@@ -282,7 +282,7 @@ int A_saveAudioProcessed (const char *name)
         GUI_Error_HIG("Audio","Cannot create stream");
         return false;
     }
-  #warning Fixme,duration can change! e.g. pal2film /film2pal
+//  #warning Fixme,duration can change! e.g. pal2film /film2pal
   bool r=A_saveAudioCommon (name,access,duration);
   delete access;
   if(false==r)
@@ -417,7 +417,7 @@ void A_queueJob(const char *jobName,const char *outputFile)
 
             job.outputFileName=string(outputFile);
             job.jobName=string(jobName);
-#warning make sure it is unique
+//#warning make sure it is unique
             job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
             if(false==ADM_jobAdd(job))
             {

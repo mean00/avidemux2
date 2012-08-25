@@ -284,9 +284,9 @@ AUDIOENCODER AVDM_getCurrentAudioEncoder( int dex)
 uint8_t DIA_audioCodec( int *codec );
 void audioCodecSelect( void )
 {
-#warning FIXME
-#warning FIXME
-#warning FIXME
+//#warning FIXME
+//#warning FIXME
+//#warning FIXME
 	//DIA_audioCodec( &currentEncoder );
 	audioPrintCurrentCodec(0);
 }
