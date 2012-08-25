@@ -14,6 +14,8 @@
  ***************************************************************************/
 #ifndef T_OPENGL_FILTER_H
 #define T_OPENGL_FILTER_H
+
+#include "ADM_UIQT46_export.h"
 #include "T_openGL.h"
 
 #include "ADM_assert.h"
@@ -57,7 +59,7 @@ protected:
 };
 // Hooks
 // Get our top widget
-bool ADM_setGlWidget(QGLWidget *w);
+ADM_UIQT46_EXPORT bool ADM_setGlWidget(QGLWidget *w);
 QGLWidget *ADM_getGlWidget(void);
 #endif
 

@@ -21,6 +21,7 @@ SET(${ADM_LIB}_SRCS
 	FAC_float.cpp  FAC_hex.cpp    FAC_readOnlyText.cpp  toolkit.cpp
 	FAC_matrix.cpp  DIA_none.cpp  ${${ADM_LIB}_source}  ${${ADM_LIB}_T})
 
+add_compiler_export_flags()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})

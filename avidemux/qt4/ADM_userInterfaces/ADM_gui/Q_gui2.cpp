@@ -46,7 +46,6 @@ void UI_Qt4CleanGl(void);
 extern int global_argc;
 extern char **global_argv;
 
-extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
 extern int automation(void );
 extern void HandleAction(Action a);
 extern int encoderGetEncoderCount (void);

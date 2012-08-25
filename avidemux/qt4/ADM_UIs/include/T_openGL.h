@@ -14,6 +14,9 @@
  ***************************************************************************/
 #ifndef T_OPENGL_H
 #define T_OPENGL_H
+
+#include "ADM_UIQT46_export.h"
+
 #define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>
@@ -30,8 +33,11 @@ typedef GLvoid* (* PFNGLMAPBUFFERPROC) (GLenum target, GLenum access);
 typedef GLboolean (* PFNGLUNMAPBUFFERPROC) (GLenum target);
 typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
 #else
+#	ifdef _WIN32
+#		include <windows.h>
+#	endif
 #	include <GL/gl.h>
-#       include <GL/glu.h>
+#   include <GL/glu.h>
 #	include <GL/glext.h>
 #endif
 
@@ -39,7 +45,7 @@ typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, cons
 /**
     \class ADM_glExt
 */
-class ADM_glExt
+class ADM_UIQT46_EXPORT ADM_glExt
 {
 public:
  static       void setActivateTexture(void *func);
@@ -60,8 +66,8 @@ public:
 };
 
 
-bool ADM_GlHasActiveTexture(void);
-bool ADM_GlHasARB(void);
+ADM_UIQT46_EXPORT bool ADM_glHasActiveTexture(void);
+ADM_UIQT46_EXPORT bool ADM_glHasARB(void);
 #endif
 
 

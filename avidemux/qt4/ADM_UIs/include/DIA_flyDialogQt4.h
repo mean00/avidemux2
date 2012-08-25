@@ -16,6 +16,8 @@
  ***************************************************************************/
 #ifndef ADM_FLY_DIALOG_QT4H
 #define ADM_FLY_DIALOG_QT4H
+
+#include "ADM_UIQT46_export.h"
 #include "ADM_image.h"
 #include "DIA_flyDialog.h"
 
@@ -31,7 +33,7 @@ protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 };
 
-class ADM_flyDialogQt4 : public ADM_flyDialog
+class ADM_UIQT46_EXPORT ADM_flyDialogQt4 : public ADM_flyDialog
 {
 public:
   ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
@@ -48,7 +50,7 @@ public:
 };
 
 
-class ADM_QCanvas : public QWidget
+class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
 protected:
 	uint32_t _w,_h;

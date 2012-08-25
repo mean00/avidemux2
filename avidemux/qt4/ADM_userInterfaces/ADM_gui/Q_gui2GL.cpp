@@ -32,7 +32,7 @@
 dummyGLWidget *topGlWidget=NULL;
 dummyGLWidget *topGlWidgetRoot=NULL;
 extern QWidget *VuMeter;
-extern bool ADM_glHasARB(void);
+
 /**
     \fn UI_Qt4InitGl
 */

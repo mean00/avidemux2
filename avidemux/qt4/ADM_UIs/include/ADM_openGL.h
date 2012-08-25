@@ -20,6 +20,9 @@
 #	include <OpenGL/glext.h>
 #	define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
 #else
+#	ifdef _WIN32
+#		include <windows.h>
+#	endif
 #	include <GL/gl.h>
 #	include <GL/glext.h>
 #endif

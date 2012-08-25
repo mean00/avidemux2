@@ -22,9 +22,10 @@
 #include "ADM_default.h"
 #include "DIA_flyDialog.h"
 #include "DIA_flyDialogQt4.h"
+#include "ADM_toolkitQt.h"
 
 extern float UI_calcZoomToFitScreen(QWidget* window, QWidget* canvas, uint32_t imageWidth, uint32_t imageHeight);
-extern uint8_t UI_getPhysicalScreenSize(void* window, uint32_t *w, uint32_t *h);
+
 /**
     \fn    FlyDialogEventFilter
     \brief
