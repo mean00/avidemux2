@@ -16,8 +16,11 @@
  ***************************************************************************/
 #ifndef ADM_FLY_DIALOG_CLI_H
 #define ADM_FLY_DIALOG_CLI_H
+
+#include "ADM_UI_Cli6_export.h"
 #include "DIA_flyDialog.h"
-class ADM_flyDialogCli : public ADM_flyDialog
+
+class ADM_UI_CLI6_EXPORT ADM_flyDialogCli : public ADM_flyDialog
 {
 public:
   ADM_flyDialogCli(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,

@@ -13,8 +13,9 @@
  ***************************************************************************/
 
 #include "DIA_factory.h"
+#include "ADM_UI_Cli6_export.h"
 
-void InitFactory(void)
+ADM_UI_CLI6_EXPORT void InitFactory(void)
 {
 	
 }

@@ -5,6 +5,8 @@ SET(${ADM_LIB}_SRCS
 	DIA_flyDialogCli.cpp
 	DIA_none.cpp
 )
+
+add_compiler_export_flags()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 ADD_LIBRARY(${ADM_LIB}  SHARED ${${ADM_LIB}_SRCS})
 ADD_SOURCE_CFLAGS(DIA_flyDialogCli.cpp " -DADM_UI_TYPE_BUILD=1")
