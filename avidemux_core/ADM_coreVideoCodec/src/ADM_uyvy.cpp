@@ -49,6 +49,7 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
             ptr2+=4;
       }
     }
+    out->Pts=in->demuxerPts;
     out->flags = AVI_KEY_FRAME;
     return 1;
 
@@ -78,10 +79,10 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
 	if (!(y & 1))
 	  {
 	    *ptrY++ = *ptr++;
-	    *ptrU++ = (*(ptr) + *(ptr + _w * 2)) >> 1;
+	    *ptrV++ = (*(ptr) + *(ptr + _w * 2)) >> 1;
 	    ptr++;
 	    *ptrY++ = *ptr++;
-	    *ptrV++ = (*(ptr) + *(ptr + _w * 2)) >> 1;
+	    *ptrU++ = (*(ptr) + *(ptr + _w * 2)) >> 1;
 	    ptr++;
 
 	  }
@@ -93,7 +94,7 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
 	  }
       }
 
-
+  out->Pts=in->demuxerPts;
   out->flags = AVI_KEY_FRAME;
   return 1;
 
