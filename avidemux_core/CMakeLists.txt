@@ -29,12 +29,6 @@ include(admMainChecks)
 include(admCheckFtello)
 include(admAsNeeded)
 
-if (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
-	include(GenerateExportHeader)
-else (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
-	include(_GenerateExportHeader)
-endif (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
-
 #########################################
 # Debug Summary
 ########################################

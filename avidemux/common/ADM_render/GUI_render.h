@@ -18,7 +18,7 @@
 #ifndef GUI_RENDER_H
 #define GUI_RENDER_H
 
-
+#include "ADM_render6_export.h"
 #include "ADM_image.h"
 typedef bool (*refreshSB)(void);
 #include "ADM_windowInfo.h"
@@ -34,21 +34,21 @@ typedef enum
         ZOOM_INVALID
 }renderZoom;
 
-uint8_t renderInit( void );
-void    renderDestroy(void);
-uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom);
+ADM_RENDER6_EXPORT uint8_t renderInit( void );
+ADM_RENDER6_EXPORT void    renderDestroy(void);
+ADM_RENDER6_EXPORT uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom);
 uint8_t renderRefresh(void);
-uint8_t renderExpose(void);
-uint8_t renderUpdateImage(ADMImage *img);
+ADM_RENDER6_EXPORT uint8_t renderExpose(void);
+ADM_RENDER6_EXPORT uint8_t renderUpdateImage(ADMImage *img);
 uint8_t renderUpdateImageBlit(uint8_t *ptr,uint32_t startx, uint32_t starty, uint32_t w, uint32_t,uint32_t primary);
 bool    renderCompleteRedrawRequest(void); // will call admPreview 
-uint8_t renderStartPlaying( void );
-uint8_t renderStopPlaying( void );
-bool    renderExposeEventFromUI(void); // This is called by UI, return true if UI should redraw, false else
-ADM_HW_IMAGE renderGetPreferedImageFormat(void);
-uint8_t renderLock(void);
-uint8_t renderUnlock(void);
-bool renderHookRefreshRequest(refreshSB cb);
+ADM_RENDER6_EXPORT uint8_t renderStartPlaying( void );
+ADM_RENDER6_EXPORT uint8_t renderStopPlaying( void );
+ADM_RENDER6_EXPORT bool    renderExposeEventFromUI(void); // This is called by UI, return true if UI should redraw, false else
+ADM_RENDER6_EXPORT ADM_HW_IMAGE renderGetPreferedImageFormat(void);
+ADM_RENDER6_EXPORT uint8_t renderLock(void);
+ADM_RENDER6_EXPORT uint8_t renderUnlock(void);
+ADM_RENDER6_EXPORT bool renderHookRefreshRequest(refreshSB cb);
 
 /* These functions are trampolined through render as they are UI dependant */
 

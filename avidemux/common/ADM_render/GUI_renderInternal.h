@@ -17,7 +17,9 @@
 #define GUI_RENDER_INTERNAL_H
 
 #define ADM_RENDER_API_VERSION_NUMBER 3
+#include "ADM_render6_export.h"
 #include "GUI_render.h"
+
 typedef struct
 {
   int   apiVersion;
@@ -29,5 +31,5 @@ typedef struct
   
 }UI_FUNCTIONS_T;
 
-uint8_t ADM_renderLibInit(const UI_FUNCTIONS_T *funcs);
+ADM_RENDER6_EXPORT uint8_t ADM_renderLibInit(const UI_FUNCTIONS_T *funcs);
 #endif

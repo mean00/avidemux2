@@ -27,9 +27,14 @@ IF (${Avidemux_SOURCE_DIR} MATCHES ${Avidemux_BINARY_DIR})
 	MESSAGE(FATAL_ERROR "in-tree-build detected")
 ENDIF (${Avidemux_SOURCE_DIR} MATCHES ${Avidemux_BINARY_DIR})
 
+if (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
+	include(GenerateExportHeader)
+else (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
+	include(_GenerateExportHeader)
+endif (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
+
 INCLUDE(admConfigHelper)
 include( admGetRevision)
-
 
 IF (FRESH_BUILD)
 	MESSAGE("")

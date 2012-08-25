@@ -22,7 +22,7 @@
 
 #include "ADM_default.h"
 #include "audioencoder.h"
-#include "ADM_render/GUI_render.cpp"
+#include "ADM_render/GUI_renderInternal.h"
 #include "IScriptEngine.h"
 
 using std::vector;
@@ -105,7 +105,10 @@ int UI_RunApp(void)
 	printf("End of program..\n");
 	printf("*********************************\n");
 	printf("*********************************\n");
+
+	return 0;
 }
+
 bool UI_End(void)
 {
     return true;

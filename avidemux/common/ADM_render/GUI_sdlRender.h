@@ -12,11 +12,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "GUI_render.h"
-#include "GUI_accelRender.h"
 
 #ifndef TSDLRENDER_H
 #define TSDLRENDER_H
+
+#include "GUI_render.h"
+#include "GUI_accelRender.h"
+#include "ADM_render6_export.h"
+
 /**
     \class sdlRender
 */
@@ -33,6 +36,6 @@ class sdlRender: public VideoRenderBase
               virtual   bool usingUIRedraw(void) {return true;};
 };
 
-void initSdl(int videoDevice);
-void quitSdl(void);
+ADM_RENDER6_EXPORT void initSdl(int videoDevice);
+ADM_RENDER6_EXPORT void quitSdl(void);
 #endif

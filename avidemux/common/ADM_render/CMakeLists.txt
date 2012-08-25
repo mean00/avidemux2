@@ -18,6 +18,7 @@ IF (APPLE)
 	ENDIF(USE_SDL)
 ENDIF (APPLE)
 
+add_compiler_export_flags()
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})
 TARGET_LINK_LIBRARIES( ${ADM_LIB} ADM_core6 ADM_coreUI6 ADM_coreImage6)
 
