@@ -6,7 +6,7 @@ MESSAGE("")
 
 SET(ADM_PROJECT AdmLogoVideoFilter)
 SET(PLUGINS TRUE)
-
+SET(DO_COMMON TRUE)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
 ########################################
 # Where is the top dir ?
