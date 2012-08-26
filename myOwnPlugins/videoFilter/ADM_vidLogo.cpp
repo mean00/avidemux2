@@ -47,8 +47,8 @@ DECLARE_VIDEO_FILTER(   addLogopFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
-                        "addLogo",            // internal name (must be uniq!)
-                        "Add logo.",            // Display name
+                        "addLogo_sample",            // internal name (must be uniq!)
+                        "Add logo (sample).",            // Display name
                         "Put a logo on top of video, with alpha blending." // Description
                     );
 
