@@ -1,3 +1,5 @@
+#include <ctype.h>
+
 #include "config.h"
 
 #include "ADM_default.h"
