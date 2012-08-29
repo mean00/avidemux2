@@ -28,10 +28,183 @@
 #define adm_printf(...) {}
 
 #define QT_TR_NOOP(x) x
-
-uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
-
 #define MAX_CHUNK_SIZE (4*1024)
+uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
+/**
+ * \fn splitAudio
+ * \brief Split audio chunks into small enough pieces
+ * @param track
+ * @param vinfo
+ * @return 
+ */
+bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackScale,int extraBlocks )
+{
+        
+        uint64_t audioClock=0;
+        uint32_t newNbCo=track->nbIndex+extraBlocks*2; // *2 is enough, should be.
+        uint32_t w=0;
+        uint32_t one_go;
+
+       one_go=MAX_CHUNK_SIZE/info->SzIndentical;
+       one_go=one_go*info->SzIndentical;
+       printf("One go :%u\n",one_go);
+       MP4Index *newindex=new MP4Index[newNbCo];
+
+      int64_t time_increment; // Nb sample*duration of one sample
+      printf("Time increment = %d\n",(int)time_increment);
+      for(int i=0;i<track->nbIndex;i++)
+      {
+        uint32_t sz;
+            sz=track->index[i].size;
+            if(sz<MAX_CHUNK_SIZE)
+            {
+                memcpy(&(newindex[w]),&(track->index[i]),sizeof(MP4Index));
+                w++;
+                continue;
+            }
+            // We have to split it...
+            int part=0;
+            time_increment=track->index[i].dts/(1+(sz/MAX_CHUNK_SIZE));
+            while(sz>one_go)
+            {
+                  newindex[w].offset=track->index[i].offset+part*one_go;
+                  newindex[w].size=one_go;
+                  newindex[w].dts=time_increment*part;
+                  newindex[w].pts=ADM_COMPRESSED_NO_PTS; // No seek
+                  ADM_assert(w<newNbCo);
+                  w++;
+                  part++;
+                  sz-=one_go;
+            }
+            // The last one...
+                  newindex[w].offset=track->index[i].offset+part*one_go;
+                  newindex[w].size=sz;
+                  newindex[w].dts=track->index[i].dts+part*time_increment; 
+                  newindex[w].pts=ADM_COMPRESSED_NO_PTS;
+                  w++;
+      }
+      delete [] track->index;
+      track->index=newindex;
+      track->nbIndex=w;
+      uint32_t total=0;
+      for(int i=0;i<track->nbIndex;i++)
+          total+=track->index[i].size;
+      printf("After split, we have %u bytes\n",total);
+      
+      return true;
+}
+/**
+ *      \fn processAudio
+ */
+uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampleinfo *info,uint32_t *outNbChunk)
+{
+    uint64_t audioClock=0;
+    
+    uint32_t totalBytes=info->SzIndentical*info->nbSz;
+    printf("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
+    //
+    // Each chunk contains N samples=N bytes
+    int *samplePerChunk=(int *)alloca(info->nbCo*sizeof(int));
+    memset(samplePerChunk,0,info->nbCo*sizeof(int));
+    int total=0;
+    for(int i=0;i<info->nbSc;i++)
+    {
+
+        for(int j=info->Sc[i]-1;j<info->nbCo;j++)
+        {
+              adm_printf(ADM_PRINT_VERY_VERBOSE,"For chunk %lu, %lu samples\n",j,info->Sn[i]);
+              samplePerChunk[j]=info->Sn[i];
+        }
+    }
+    /**/
+    for(int i=0;i<info->nbCo;i++)
+      total+=samplePerChunk[i];
+
+    printf("Total size in sample : %u\n",total);
+    printf("Sample size          : %u\n",info->SzIndentical);
+    track->index=new MP4Index[info->nbCo];
+    memset(track->index,0,info->nbCo*sizeof(MP4Index));
+    track->nbIndex=info->nbCo;;
+    int max=0;
+    totalBytes=0;
+    if(info->SzIndentical!=1)
+    {
+          for(int i=0;i<info->nbCo;i++)
+          {
+              uint32_t sz;
+              track->index[i].offset=info->Co[i];
+              sz=samplePerChunk[i];
+              /* Sz is in sample, convert it to bytes */
+              sz=sz*info->SzIndentical;
+              /* */
+              track->index[i].size=sz;
+              track->index[i].dts=0; // No seek
+              track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
+              if(sz>MAX_CHUNK_SIZE)
+              {
+                  max+=sz/MAX_CHUNK_SIZE;
+              }
+
+              totalBytes+=track->index[i].size;
+          }
+    }
+    else
+    {
+          for(int i=0;i<info->nbCo;i++)
+          {
+              uint32_t sz;
+#define PACK_SIZE info->bytePerFrame // perPacket ??
+
+              track->index[i].offset=info->Co[i];
+              sz=samplePerChunk[i];
+              /* Sz is in sample, convert it to bytes */
+              sz/=info->samplePerPacket;
+              if(sz*info->samplePerPacket!=samplePerChunk[i])
+              {
+                printf("Warning sample per packet not divider of sample per chunk (per packet :%u , chunk :%u)\n",
+                          info->samplePerPacket, samplePerChunk[i]); 
+              }
+              sz*=PACK_SIZE;
+              /* */
+              track->index[i].size=sz;
+              track->index[i].dts=0; // No seek
+              track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
+              if(sz>MAX_CHUNK_SIZE)
+              {
+                  max+=sz/MAX_CHUNK_SIZE;
+              }
+
+              totalBytes+=track->index[i].size;
+          }
+    }
+    printf("Found %u bytes\n",totalBytes);
+    // Now time to update the time...
+    // Normally they have all the same duration
+    if(info->nbStts!=1) printf("WARNING: Same size, different duration\n");
+
+      double sampleDuration,totalDuration=0;
+
+      for(int i=0;i<info->nbCo;i++)
+      {
+              track->index[i].dts=info->SttsC[i]*info->SttsN[i]; // duration in clock
+              track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
+              adm_printf(ADM_PRINT_VERY_VERBOSE,"Audio chunk : %lu time :%lu\n",i,track->index[i].time);
+              
+      }
+      if(max ) // We have some big chunks we need to split them
+      {
+          splitAudio(track,info,trackScale,max);
+      }
+      // rescale clock duration  to  dts (in us)
+      uint64_t sum=0;
+      for(int i=0;i< track->nbIndex;i++)
+      {
+          track->index[i].dts=sum/trackScale;
+          sum+=track->index[i].dts*1000*1000;
+      }
+    printf("Index done\n");
+    return 1;
+}
 /**
         \fn indexify
         \brief build the index from the stxx atoms
@@ -65,166 +238,8 @@ uint32_t i,j,cur;
         //*********************************************************
 	if(info->SzIndentical && isAudio)// in that case they are all the same size, i.e.audio
 	{
-          
-          
-          uint32_t totalBytes=info->SzIndentical*info->nbSz;
-          printf("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
-              //
-              // Each chunk contains N samples=N bytes
-              int *samplePerChunk=(int *)alloca(info->nbCo*sizeof(int));
-              memset(samplePerChunk,0,info->nbCo*sizeof(int));
-              int total=0;
-              for( i=0;i<info->nbSc;i++)
-              {
-
-                  for(int j=info->Sc[i]-1;j<info->nbCo;j++)
-                  {
-                        adm_printf(ADM_PRINT_VERY_VERBOSE,"For chunk %lu, %lu samples\n",j,info->Sn[i]);
-                        samplePerChunk[j]=info->Sn[i];
-                  }
-              }
-              /**/
-              for(i=0;i<info->nbCo;i++)
-                total+=samplePerChunk[i];
-              
-              printf("Total size in sample : %u\n",total);
-              printf("Sample size          : %u\n",info->SzIndentical);
-              track->index=new MP4Index[info->nbCo];
-              memset(track->index,0,info->nbCo*sizeof(MP4Index));
-              track->nbIndex=info->nbCo;;
-              int max=0;
-              totalBytes=0;
-              if(info->SzIndentical!=1)
-              {
-                 for(i=0;i<info->nbCo;i++)
-                    {
-                        uint32_t sz;
-                        track->index[i].offset=info->Co[i];
-                        sz=samplePerChunk[i];
-                        /* Sz is in sample, convert it to bytes */
-                        sz=sz*info->SzIndentical;
-                        /* */
-                        track->index[i].size=sz;
-                        track->index[i].dts=0; // No seek
-                        track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
-                        if(sz>MAX_CHUNK_SIZE)
-                        {
-                            max+=sz/MAX_CHUNK_SIZE;
-                        }
-                        
-                        totalBytes+=track->index[i].size;
-                    }
-              }
-              else
-              {
-                    for(i=0;i<info->nbCo;i++)
-                    {
-                        uint32_t sz;
-      #define PACK_SIZE info->bytePerFrame // perPacket ??
-                        
-                        track->index[i].offset=info->Co[i];
-                        sz=samplePerChunk[i];
-                        /* Sz is in sample, convert it to bytes */
-                        sz/=info->samplePerPacket;
-                        if(sz*info->samplePerPacket!=samplePerChunk[i])
-                        {
-                          printf("Warning sample per packet not divider of sample per chunk (per packet :%u , chunk :%u)\n",
-                                    info->samplePerPacket, samplePerChunk[i]); 
-                        }
-                        sz*=PACK_SIZE;
-                        /* */
-                        track->index[i].size=sz;
-                        track->index[i].dts=0; // No seek
-                        track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
-                        if(sz>MAX_CHUNK_SIZE)
-                        {
-                            max+=sz/MAX_CHUNK_SIZE;
-                        }
-                        
-                        totalBytes+=track->index[i].size;
-                    }
-              }
-              printf("Found %u bytes\n",totalBytes);
-              // Now time to update the time...
-              // Normally they have all the same duration
-              if(info->nbStts!=1) printf("WARNING: Same size, different duration\n");
-
-              double sampleDuration,totalDuration=0;
-              
-                sampleDuration=info->SttsC[0];
-                sampleDuration*=1000.*1000.;
-                sampleDuration/=trackScale;    // Duration of one sample
-                for(i=0;i<info->nbCo;i++)
-                {
-                        track->index[i].dts=(uint64_t)floor(totalDuration);
-                        track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
-                        totalDuration+=sampleDuration*samplePerChunk[i];
-                        adm_printf(ADM_PRINT_VERY_VERBOSE,"Audio chunk : %lu time :%lu\n",i,track->index[i].time);
-                }
-                if(max && isAudio) // We have some big chunks we need to split them
-                {
-                      // rebuild a new index
-                      printf("We have %u chunks but it should be split into \n",info->nbCo);
-                      printf("around %u chunks. adjusting..(SzIdentical %u)\n",info->nbCo+max,info->SzIndentical);
-                      printf("info->SttsC[0]=%d\n",(int)info->SttsC[0]);
-                      printf("trackScale=%d\n",(int)trackScale);
-                      printf("Sample duration =%f\n",(float)sampleDuration);
-                      uint32_t newNbCo=track->nbIndex+max*2; // *2 is enough, should be.
-                      uint32_t w=0;
-                      uint32_t one_go;
-
-                        one_go=MAX_CHUNK_SIZE/info->SzIndentical;
-                        one_go=one_go*info->SzIndentical;
-                        printf("One go :%u\n",one_go);
-                     MP4Index *newindex=new MP4Index[newNbCo];
-
-                    int64_t time_increment=(int64_t)((one_go/info->SzIndentical)*sampleDuration);  // Nb sample*duration of one sample
-                    printf("Time increment = %d\n",(int)time_increment);
-                    for(i=0;i<track->nbIndex;i++)
-                    {
-                      uint32_t sz;
-                          sz=track->index[i].size;
-                          if(sz<MAX_CHUNK_SIZE)
-                          {
-                              memcpy(&(newindex[w]),&(track->index[i]),sizeof(MP4Index));
-                              w++;
-                              continue;
-                          }
-                          // We have to split it...
-                          int part=0;
-                          while(sz>one_go)
-                          {
-                                newindex[w].offset=track->index[i].offset+part*one_go;
-                                newindex[w].size=one_go;
-                                newindex[w].dts=track->index[i].dts+part*time_increment; 
-                                newindex[w].pts=ADM_COMPRESSED_NO_PTS; // No seek
-                                ADM_assert(w<newNbCo);
-                                w++;
-                                part++;
-                                sz-=one_go;
-                          }
-                          // The last one...
-                                newindex[w].offset=track->index[i].offset+part*one_go;
-                                newindex[w].size=sz;
-                                newindex[w].dts=track->index[i].dts+part*time_increment; 
-                                newindex[w].pts=ADM_COMPRESSED_NO_PTS;
-                                w++;
-                    }
-                    delete [] track->index;
-                    track->index=newindex;
-                    track->nbIndex=w;
-                    total=0;
-                    for(int i=0;i<track->nbIndex;i++)
-                        total+=track->index[i].size;
-                    printf("After split, we have %u bytes\n",total);
-                }
-          printf("Index done\n");
-          return 1;
-      }
-          // Else we build an index per sample
-          //
-	
-		
+            processAudio(track,trackScale,info,outNbChunk);
+        }
 	// We have different packet size
 	// Probably video
         track->index=new MP4Index[info->nbSz];

@@ -128,6 +128,8 @@ protected:
           uint32_t                      _videoScale;
           int64_t						_movieDuration; // in ms
           uint32_t                      _videoFound;
+          uint8_t                       processAudio( MP4Track *track,  uint32_t trackScale,  MPsampleinfo *info,uint32_t *outNbChunk);
+          bool                          splitAudio(MP4Track *track,MPsampleinfo *vinfo, uint32_t trackScale,int extraBlocks );
           uint8_t	                     indexify(
                                                 MP4Track *track,   
                                                 uint32_t trackScale,
