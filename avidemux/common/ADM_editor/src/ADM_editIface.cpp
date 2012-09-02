@@ -260,6 +260,26 @@ void ADM_Composer::setAudioResample(int dex, uint32_t newfq)
     ed->audioEncodingConfig.audioFilterSetResample(newfq);
 }
 /**
+    \fn setAudioShift
+*/
+bool ADM_Composer::setAudioShift(int dex, bool mode, int32_t shiftms)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    ed->audioEncodingConfig.audioFilterSetShift(mode,shiftms);
+    return true;
+}
+/**
+    \fn getAudioShift
+*/
+bool ADM_Composer::getAudioShift(int dex, bool *mode, int32_t *shiftms)
+{
+    EditableAudioTrack *ed=getEditableAudioTrackAt(dex);
+    if(!ed) return false;
+    ed->audioEncodingConfig.audioFilterGetShift(mode,shiftms);
+    return true;
+}
+/**
     \fn setAudioCodec
 */
 bool ADM_Composer::setAudioCodec(int dex,const char *codec, CONFcouple *c)

@@ -354,8 +354,14 @@ bool  GUIPlayback::initializeAudio(void)
 
     wavbuf = 0;
     uint64_t startPts=firstPts;
-
-    playbackAudio = createPlaybackFilter(startPts,0);
+    int32_t shift=0; // unit is ms, + => delay audio, -=> advance audio
+    
+    // if audio shift is activated, take it into account
+    //
+    EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+    if(ed->audioEncodingConfig.shiftEnabled)
+        shift=ed->audioEncodingConfig.shiftInMs;
+    playbackAudio = createPlaybackFilter(startPts,shift);
     if(!playbackAudio) 
     {
         ADM_info("No audio\n");

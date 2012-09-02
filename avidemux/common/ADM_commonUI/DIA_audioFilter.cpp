@@ -25,6 +25,8 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   uint32_t vChan=config->mixerConf;
   uint32_t vFilm=config->film2pal;
   uint32_t vGainMode=(uint32_t)config->gainParam.mode;
+  int32_t  vShift=config->shiftInMs;
+  uint32_t bShiftEnabled=config->shiftEnabled;
   ELEM_TYPE_FLOAT vGainValue=config->gainParam.gain10/10;
 
 #define PX(x) (&(config->x))
@@ -71,15 +73,20 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
  bool bMixer=config->mixerEnabled;
  diaElemToggle    tMixer(&bMixer,QT_TR_NOOP("Remix:"));
  tMixer.link(1,&eMixer);
+ //****************************
+ diaElemToggleInt eShift(&bShiftEnabled,QT_TR_NOOP("Shift audio:"),&vShift, QT_TR_NOOP("Shift Value (ms):"),-30000,30000);
  /************************************/
- diaElem *elems[]={&eFPS, &tDRC,&tMixer,&eMixer, &eResample,&eGain,&eGainValue};
-  if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),4+3,elems))
+ diaElem *elems[]={&eFPS, &tDRC,&tMixer,&eMixer, &eResample,&eGain,&eGainValue,&eShift};
+  if( diaFactoryRun(QT_TR_NOOP("Audio Filters"),4+4,elems))
     {
         config->mixerConf=(CHANNEL_CONF)vChan;
         config->film2pal=(FILMCONV)vFilm;
         config->gainParam.mode=(ADM_GAINMode)vGainMode;
         config->gainParam.gain10=vGainValue*10;
         config->mixerEnabled=bMixer;
+	config->shiftInMs=vShift;
+        config->shiftEnabled=bShiftEnabled;
+        
       return true;
     }
     

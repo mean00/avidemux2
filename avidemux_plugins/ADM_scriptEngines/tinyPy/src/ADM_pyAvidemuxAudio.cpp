@@ -281,5 +281,27 @@ int pySetDrc(IEditor *editor,int track, int onoff)
     editor->setAudioDrc(track,onoff);
     return true;
 }
+/**
+    \fn
+    \brief
+*/
+
+int pySetAudioShift(IEditor *editor,int track, int onoff,int value)
+{
+    editor->setAudioShift(track,onoff,value);
+    return true;
+}
+/**
+    \fn
+    \brief
+*/
+
+int pyGetAudioShift(IEditor *editor,int track, int *onoff,int *value)
+{
+    bool bon;
+    editor->getAudioShift(track,&bon,value);
+    *onoff=bon;
+    return true;
+}
 
 // EOF

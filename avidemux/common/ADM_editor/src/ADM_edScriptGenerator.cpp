@@ -113,6 +113,10 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream)
 			this->_scriptWriter->setAudioResample(i, track->audioEncodingConfig.audioFilterGetResample());
 		}
         this->_scriptWriter->setAudioDrc(i,track->audioEncodingConfig.audioFilterGetDrcMode());
+        bool shiftEnabled=false;
+	int32_t shiftValue=0;
+        track->audioEncodingConfig.audioFilterGetShift(&shiftEnabled,&shiftValue);
+        this->_scriptWriter->setAudioShift(i,shiftEnabled,shiftValue);
 		// Change fps?
 		FILMCONV fps = track->audioEncodingConfig.audioFilterGetFrameRate();
 

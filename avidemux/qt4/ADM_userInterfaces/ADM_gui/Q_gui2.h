@@ -44,6 +44,7 @@ protected:
 
 public slots:
 	void timeChanged(int);
+        void checkChanged(int);
 	void buttonPressed(void);
 	void toolButtonPressed(bool z);
 
@@ -71,7 +72,7 @@ public slots:
     void searchViewMenu(QAction * action);
     void searchGoMenu(QAction * action);
     void searchRecentFiles(QAction * action);
-	void searchRecentProjects(QAction * action);
+    void searchRecentProjects(QAction * action);
     void searchToolBar(QAction *);
 
 	void scriptFileActionHandler();
@@ -84,10 +85,10 @@ protected:
 	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
 	void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
 	void addScriptReferencesToHelpMenu();
-    bool buildMyMenu(void);
-    bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
+        bool buildMyMenu(void);
+        bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
 	void buildRecentMenu(QMenu *menu, const char **files, QAction **actions);
-    void searchMenu(QAction * action,MenuEntry *menu, int nb);
+        void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
 	bool eventFilter(QObject* watched, QEvent* event);
 	void mousePressEvent(QMouseEvent* event);

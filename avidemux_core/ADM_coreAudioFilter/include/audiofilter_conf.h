@@ -47,10 +47,14 @@ public    :
                         gainParam.gain10=10;
                         drcEnabled=false;
                         drcConf=drcConfDefault;
+			shiftEnabled=false;
+    			shiftInMs=0;
                         return true;
                 }
 
     uint64_t     startTimeInUs;
+    //
+    bool         shiftEnabled;
     int32_t      shiftInMs;
     // Mixer
     uint32_t     mixerEnabled;
@@ -74,6 +78,8 @@ public: // accessor
     uint32_t        audioFilterGetResample(void);  // Set 0 to disable frequency
     bool            audioFilterSetFrameRate(FILMCONV conf);
     FILMCONV        audioFilterGetFrameRate(void);
+    bool            audioFilterSetShift( bool enabled ,int32_t shift);
+    bool            audioFilterGetShift( bool *enabled,int32_t *shift);
     bool            audioFilterSetNormalize( ADM_GAINMode mode,uint32_t gain);
     bool            audioFilterGetNormalize( ADM_GAINMode *mode,uint32_t *gain);
 

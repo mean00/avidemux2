@@ -27,6 +27,8 @@ int pyAddExternal(IEditor *editor, const char *fileName);
 int pyClearAudioTracks(IEditor *editor);
 
 /* Audio filters */
+int pySetAudioShift(IEditor *editor,int track, int onoff, int value);
+int pyGetAudioShift(IEditor *editor,int track, int *onoff, int *value);
 int pyGetDrc(IEditor *editor,int track);
 int pySetDrc(IEditor *editor,int track, int onoff);
 int pyGetResample(IEditor *editor,int track);

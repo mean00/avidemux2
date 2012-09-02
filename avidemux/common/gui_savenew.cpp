@@ -47,7 +47,7 @@
 */
 //ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 #include "ADM_muxerProto.h"
-extern ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime,int32_t shift);
+extern ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
 extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
 
 /**
@@ -354,7 +354,7 @@ bool admSaver::setupAudio()
             {
                 // Access..
                 ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s(encoding with encoder=%d)\n",i,ADM_us2plain(startAudioTime),ed->encoderIndex);
-                access=audioCreateEncodingStream(ed,muxer->useGlobalHeader(),startAudioTime,0); // FIXME LEAK FIXME 
+                access=audioCreateEncodingStream(ed,muxer->useGlobalHeader(),startAudioTime); // FIXME LEAK FIXME 
             }else // copy mode...
             {
                 ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s(copy)\n",i,ADM_us2plain(startAudioTime));

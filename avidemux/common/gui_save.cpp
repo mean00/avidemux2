@@ -40,7 +40,7 @@
 #include "ADM_script2/include/ADM_script.h"
 
 int      A_Save(const char *name);
-extern   ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime,int32_t shift);
+extern   ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
 
 /**
     \fn HandleAction_Navigate
@@ -276,7 +276,7 @@ int A_saveAudioProcessed (const char *name)
             duration=-duration;
     }
   EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
-  ADM_audioStream *access=audioCreateEncodingStream(ed,false,start,0);
+  ADM_audioStream *access=audioCreateEncodingStream(ed,false,start);
   if(!access)
     {
         GUI_Error_HIG("Audio","Cannot create stream");

@@ -47,6 +47,10 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     ADM_AUDIOFILTER_CONFIG playback;
     playback.startTimeInUs=startTime;
     playback.shiftInMs=shift;
+    if(shift)
+        playback.shiftEnabled=true;
+    else
+        playback.shiftEnabled=false;
     playback.mixerEnabled=true;
     if(prefs->get(DEFAULT_DOWNMIXING,&downmix)!=RC_OK)
     {
@@ -113,8 +117,10 @@ bool ADM_buildFilterChain(ADM_edAudioTrack *source,VectorOfAudioFilter *vec,ADM_
     AUDMAudioFilter *last=NULL;
     ADM_emptyFilterChain(vec);
     // Bridge
-    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(source,(uint32_t)( config->startTimeInUs/1000),
-                                                                                config->shiftInMs);
+    int32_t actualShift=config->shiftInMs;
+    if(!config->shiftEnabled)
+        actualShift=0;
+    AUDMAudioFilter_Bridge *nw=new AUDMAudioFilter_Bridge(source,(uint32_t)( config->startTimeInUs/1000),actualShift);
     ADD_FILTER(nw);
 
     // Mixer

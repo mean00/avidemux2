@@ -42,7 +42,10 @@ void SpiderMonkeyScriptWriter::setAudioDrc(int trackIndex, bool active)
 {
 
 }
-void SpiderMonkeyScriptWriter::clearAudioTracks()
+void SpiderMonkeyScriptWriter::setAudioShift(int trackIndex, bool active,int32_t value)
+{
+
+}void SpiderMonkeyScriptWriter::clearAudioTracks()
 {
 
 }

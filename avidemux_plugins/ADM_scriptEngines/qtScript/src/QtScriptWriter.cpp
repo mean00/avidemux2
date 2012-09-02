@@ -114,6 +114,11 @@ namespace ADM_qtScript
     {
             *(this->_stream) << "Editor.audioOutputs[" << trackIndex << "].drcEnabled = " << (active ? "true" : "false") << ";" << std::endl;
     }
+    void QtScriptWriter::setAudioShift(int trackIndex, bool active,int32_t value)
+    {
+	
+            *(this->_stream) << "# NOT IMPLEMENTED : setAudioShift" << std::endl;
+    }
 
     void QtScriptWriter::setAudioMixer(int trackIndex, CHANNEL_CONF mixer)
     {

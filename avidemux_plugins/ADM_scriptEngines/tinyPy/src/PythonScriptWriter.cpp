@@ -103,6 +103,11 @@ void PythonScriptWriter::setAudioDrc(int trackIndex, bool active)
 {
     *(this->_stream) << "adm.audioSetDrc(" << trackIndex << ", " << active << ")" << std::endl;
 }
+void PythonScriptWriter::setAudioShift(int trackIndex, bool active,int32_t value)
+{
+    *(this->_stream) << "adm.audioSetShift(" << trackIndex << ", " << active << "," << value << ")" << std::endl;
+}
+
 
 void PythonScriptWriter::setAudioResample(int trackIndex, uint32_t resample)
 {

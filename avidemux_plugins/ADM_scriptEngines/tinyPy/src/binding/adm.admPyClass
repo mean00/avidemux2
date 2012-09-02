@@ -28,6 +28,7 @@
 /* METHOD */ int  pySetFilm2Pal:audioSetFilm2Pal(int,int)
 /* METHOD */ int  pySetNormalize:audioSetNormalize(int,int,int)
 /* METHOD */ int  pySetDrc:audioSetDrc(int,int)
+/* METHOD */ int  pySetAudioShift:audioSetShift(int,int,int)
 #
 #  Audio info...
 #

@@ -185,6 +185,8 @@ void HandleAction (Action action)
   switch (action)
     {
         case ACT_TimeShift:
+                                A_TimeShift();
+                                return;
         case ACT_Goto:
                                 brokenAct();
                                 return;
@@ -472,6 +474,9 @@ void HandleAction (Action action)
    case ACT_SIZE_DUMP:
       GUI_showSize();
       break;
+   case ACT_TimeShift:
+      A_TimeShift();
+      break;
     default:
       printf ("\n unhandled action %d\n", action);
       ADM_assert (0);
@@ -734,7 +739,13 @@ void cleanUp (void)
 }
 
 //#warning fixme
-
+/**
+ * \fn parseScript
+ * @param engine
+ * @param name
+ * @param mode
+ * @return 
+ */
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
 	bool ret;
@@ -755,7 +766,13 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
 
 	prefs->set_lastprojectfile(longname);
 	UI_updateRecentProjectMenu();
-
+        // update main menu shift
+        EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+        if(ed)
+        {
+            UI_setAudioCodec(ed->encoderIndex);
+            UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
+        }
 	delete [] longname;
 
 	return ret;
@@ -913,6 +930,7 @@ void A_audioTrack( void )
         if(ed)
         {
             UI_setAudioCodec(ed->encoderIndex);
+            UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
         }
 
 }
@@ -1238,6 +1256,30 @@ void brokenAct(void)
 {
     GUI_Error_HIG("Oops","This function is disabled or no longer valid");
 }
-
+/**
+ * \fn A_TimeShift
+ * @return 
+ */
+bool A_TimeShift(void)
+{
+static int update=0;
+int onoff;
+int value;
+    if(update) return 1; // prevent looping when updating the UI
+    update=1;
+    // Read and update
+    update=0;
+    UI_getTimeShift(&onoff,&value);
+    printf("Shift enabled=%d value=%d\n",onoff,value);
+    EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+    if(!ed) 
+    {
+        update=0;
+        return 0;
+    }
+    ed->audioEncodingConfig.shiftEnabled=onoff;
+    ed->audioEncodingConfig.shiftInMs=value;
+    update=0; 
+}
 //
 // EOF

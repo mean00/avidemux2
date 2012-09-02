@@ -23,7 +23,7 @@ bool A_parseScript(IScriptEngine *engine, const char *name);
 void A_saveScript(IScriptEngine* engine, const char* name);
 
 //uint8_t A_autoDrive(Action action);
-uint8_t A_TimeShift(void);
+bool    A_TimeShift(void);
 void    A_ResetMarkers(void);
 void    A_Rewind(void);
 void    A_jog(void);

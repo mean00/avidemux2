@@ -32,6 +32,7 @@ public:
     void setVideoEncoder(ADM_videoEncoder6* videoEncoder);
     void stretchAudio(int trackIndex, FILMCONV fps);
     void setAudioDrc(int trackIndex, bool active);
+    void setAudioShift(int trackIndex, bool active,int32_t value);
 };
 
 #endif

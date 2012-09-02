@@ -71,13 +71,12 @@ extern ADM_audioAccess *ADM_threadifyAudioAccess(ADM_audioAccess *son);
         @param StartTime in us
         @param shift in ms
 */
-AUDMAudioFilter *createEncodingFilter(EditableAudioTrack *ed, uint64_t startTime,int32_t shift)
+AUDMAudioFilter *createEncodingFilter(EditableAudioTrack *ed, uint64_t startTime)
 {
     //
     if(!ed) return NULL;
     ADM_info("Creating audio encoding filter with start time %s\n",ADM_us2plain(startTime));
     ed->audioEncodingConfig.startTimeInUs=startTime;
-    ed->audioEncodingConfig.shiftInMs=shift;
     //
     ADM_buildFilterChain(ed->edTrack,&(ed->EncodingVector),&( ed->audioEncodingConfig));
     //
@@ -100,7 +99,7 @@ bool            destroyEncodingFilter(EditableAudioTrack *ed)
 /**
     \fn createEncodingAccess
 */
-ADM_audioStream *audioCreateEncodingStream(EditableAudioTrack *ed, bool globalHeader,uint64_t startTime,int32_t shift)
+ADM_audioStream *audioCreateEncodingStream(EditableAudioTrack *ed, bool globalHeader,uint64_t startTime)
 {
     if(!ed)
     {
@@ -108,7 +107,7 @@ ADM_audioStream *audioCreateEncodingStream(EditableAudioTrack *ed, bool globalHe
     }
     printf("[AccessFilter] Creating access filter, startime %s, globalHeader %d\n",ADM_us2plain(startTime),globalHeader);
     // 1-Create access filter
-    AUDMAudioFilter *filter=createEncodingFilter(ed, startTime,shift);
+    AUDMAudioFilter *filter=createEncodingFilter(ed, startTime);
     if(!filter)
     {
         printf("[Access] Cannot create audio filter\n");

@@ -55,5 +55,7 @@ bool UI_setVUMeter( uint32_t volume[6]); // Volume between 0 and 255.
 bool UI_setDecoderName(const char *name);
 bool UI_hasOpenGl(void);
 void UI_closeGui(void);
+bool UI_getTimeShift(int *onoff,int *value);
+bool UI_setTimeShift(int onoff,int value);
 #endif
 // EOF

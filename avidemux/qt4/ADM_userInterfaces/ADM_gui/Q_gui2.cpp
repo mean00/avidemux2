@@ -275,7 +275,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	ui.pushButtonAudioFilter->setEnabled(b);
 
 	/* Time Shift */
-	connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(timeChanged(int)));
+	connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
 	connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
 	connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
 
@@ -444,7 +444,21 @@ bool MainWindow::buildMyMenu(void)
 
     return true;
 }
-
+/**
+ * \fn checkChanged
+ * \brief the checkbox protecting timeshift value has changed
+ * @param state
+ */
+void MainWindow::checkChanged(int state)
+{
+    bool b=true;
+    if(state)
+        b=true;
+    else 
+        b=false;
+    ui.spinBox_TimeValue->setEnabled(b);
+    timeChanged(0);
+}
 /**
     \fn timeChanged
     \brief Called whenever timeshift is on/off'ed or value changes
@@ -1210,7 +1224,7 @@ void 	UI_SetCurrentFormat( uint32_t fmt )
       \fn UI_getTimeShift
       \brief get state (on/off) and value for time Shift
 */
-uint8_t UI_getTimeShift(int *onoff,int *value)
+bool UI_getTimeShift(int *onoff,int *value)
 {
 	if(WIDGET(checkBox_TimeShift)->checkState()==Qt::Checked)
 		*onoff=1;
@@ -1224,7 +1238,7 @@ uint8_t UI_getTimeShift(int *onoff,int *value)
       \brief get state (on/off) and value for time Shift
 */
 
-uint8_t UI_setTimeShift(int onoff,int value)
+bool UI_setTimeShift(int onoff,int value)
 {
 	if (onoff && value)
 		WIDGET(checkBox_TimeShift)->setCheckState(Qt::Checked);

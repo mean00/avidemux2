@@ -35,6 +35,7 @@ public:
     virtual void setVideoEncoder(ADM_videoEncoder6* videoEncoder) = 0;
     virtual void stretchAudio(int trackIndex, FILMCONV fps) = 0;
     virtual void setAudioDrc(int trackIndex, bool active) = 0;
+    virtual void setAudioShift(int trackIndex, bool active,int32_t shiftMs) = 0;
 };
 
 #endif

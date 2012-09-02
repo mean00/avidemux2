@@ -136,7 +136,23 @@ CHANNEL_CONF    ADM_AUDIOFILTER_CONFIG::audioFilterGetMixer(void) // Invalid to 
     if( mixerEnabled==false) return CHANNEL_INVALID;
     return mixerConf;
 }
+/**
 
+*/
+bool            ADM_AUDIOFILTER_CONFIG::audioFilterSetShift( bool enabled ,int32_t shift)
+{
+	shiftEnabled=enabled;
+	shiftInMs=shift;
+	return true;	
+}
+/**
+*/
+bool            ADM_AUDIOFILTER_CONFIG::audioFilterGetShift( bool *enabled,int32_t *shift)
+{
+	*enabled=shiftEnabled;
+	*shift=shiftInMs;
+	return true;
+}
 // EOF
 
 

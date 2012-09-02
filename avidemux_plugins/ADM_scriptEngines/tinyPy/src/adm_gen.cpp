@@ -145,6 +145,22 @@ static tp_obj zzpy_audioSetResample(TP)
   int r =   pySetResample(p0,p1,p2); 
   return tp_number(r);
 }
+// audioSetShift -> int pySetAudioShift (IEditor int int int ) 
+static tp_obj zzpy_audioSetShift(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int p2 = pm.asInt();
+  int p3 = pm.asInt();
+  int r =   pySetAudioShift(p0,p1,p2,p3); 
+  return tp_number(r);
+}
 // addSegment -> int editor->addSegment (int  double  double ) 
 static tp_obj zzpy_addSegment(TP)
  {
@@ -547,6 +563,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_audioSetResample);
   }
+  if (!strcmp(key, "audioSetShift"))
+  {
+     return tp_method(vm, self, zzpy_audioSetShift);
+  }
   if (!strcmp(key, "addSegment"))
   {
      return tp_method(vm, self, zzpy_addSegment);
@@ -697,6 +717,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getFps1000(IEditor)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "saveAudio(int,str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetResample(IEditor,int,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetShift(IEditor,int,int,int)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addSegment(int, double, double)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "clearVideoFilters(void)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioAddTrack(IEditor,int)");

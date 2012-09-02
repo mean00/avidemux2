@@ -77,6 +77,8 @@ public:
 	virtual int     setAudioMixer(int dex,const char *s) = 0;
     virtual bool    setAudioDrc(int track, bool mode)=0;
     virtual bool    getAudioDrc(int track)=0;
+    virtual bool    setAudioShift(int track, bool mode,int32_t value)=0;
+    virtual bool    getAudioShift(int track, bool *mode,int32_t *value)=0;
 	virtual void    setAudioResample(int dex,uint32_t newfq) = 0;
 	virtual FILMCONV getAudioFilterFrameRate(int dex) = 0;
 	virtual bool    getAudioFilterNormalise(int dex,ADM_GAINMode *mode, uint32_t *gain) = 0;
