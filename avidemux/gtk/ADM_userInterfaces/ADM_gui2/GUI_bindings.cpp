@@ -1581,4 +1581,20 @@ bool UI_setDecoderName(const char *name)
 	gtk_label_set_text( wid,name);
     return true;
 }
+/**
+	\fn UI_setTimeShift
+
+*/
+bool UI_setTimeShift(int onoff, int value)
+{
+ return true;
+}
+/**
+	\fn UI_getTimeShift
+*/
+bool UI_getTimeShift(int *onoff, int *value)
+{
+ *onoff=*value=0;
+ return true;
+}
 // EOF
