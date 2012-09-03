@@ -120,7 +120,7 @@ bool UI_getTimeShift(int *onoff,int *value)
   *value=0;
   return 1;
 }
-uint8_t UI_setTimeShift(int onoff,int value)
+bool UI_setTimeShift(int onoff,int value)
 {
   return 1;
 }
