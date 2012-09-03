@@ -114,7 +114,7 @@ void UI_toogleSide(void)
 void UI_toogleMain(void)
 {}
 
-uint8_t UI_getTimeShift(int *onoff,int *value)
+bool UI_getTimeShift(int *onoff,int *value)
 {
   *onoff=0;
   *value=0;
