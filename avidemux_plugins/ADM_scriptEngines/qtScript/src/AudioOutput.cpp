@@ -169,7 +169,14 @@ namespace ADM_qtScript
     {
         if (this->verifyTrack())
         {
-            return this->_track->audioEncodingConfig.shiftInMs;
+			if (this->_track->audioEncodingConfig.shiftEnabled)
+			{
+				return this->_track->audioEncodingConfig.shiftInMs;
+			}
+			else
+			{
+				return 0;
+			}
         }
         else
         {
@@ -346,7 +353,17 @@ namespace ADM_qtScript
 
         if (this->verifyTrack() && validateResult.isUndefined())
         {
-            this->_track->audioEncodingConfig.shiftInMs = timeShift.toNumber();
+			int shift = timeShift.toNumber();
+
+            if (shift == 0)
+			{
+				this->_track->audioEncodingConfig.shiftEnabled = false;
+			}
+			else
+			{
+				this->_track->audioEncodingConfig.shiftEnabled = true;
+				this->_track->audioEncodingConfig.shiftInMs = timeShift.toNumber();
+			}
         }
     }
 
