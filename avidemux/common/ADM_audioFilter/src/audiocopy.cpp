@@ -18,6 +18,7 @@
 using std::string;
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
+#include "ADM_vidMisc.h"
 #include <math.h>
 
 extern ADM_Composer *video_body;
@@ -32,6 +33,7 @@ class ADM_audioStreamCopy : public ADM_audioStream
         protected:
                         ADM_audioStream *in;
                         uint64_t        startTime;
+                        int64_t         shift;
         public:
 
                        ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTime, int64_t shift);  
@@ -50,7 +52,7 @@ ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTi
     in=input;
     this->startTime=startTime;
     in->goToTime(startTime);
-//#warning handle shift ???
+    this->shift=shift;
 }
 
 bool ADM_audioStreamCopy::isCBR()
@@ -70,8 +72,14 @@ uint8_t         ADM_audioStreamCopy::getPacket(uint8_t *buffer,uint32_t *size, u
 {
 again:
     if(false==in->getPacket(buffer,size,sizeMax,nbSample,dts)) return false;
-    if(*dts!=ADM_NO_PTS && *dts<startTime) goto again;
-    *dts=*dts-startTime;
+    if(*dts!=ADM_NO_PTS)
+    {
+        
+        int64_t corrected=*dts;
+        corrected+=shift;
+        if(corrected<startTime) goto again; // cant have <0 dts
+        *dts=corrected-startTime; 
+    }
     return true;
 
 }
@@ -80,6 +88,28 @@ again:
 */
 ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input)
 {
+  shift*=-1000; // ms -> us
+  // fixup startTime and shift
+  if(shift>0) 
+  {
+        startTime+=shift;
+        shift=0;
+  }
+  else
+  {
+      int64_t comp=-shift;
+      if(comp<startTime)
+      {
+          startTime-=comp;
+          shift=0;
+      }else
+      {
+          shift-=startTime;
+          startTime=0;
+      }
+  }
+  ADM_info("Creating audio stream copy with compensation : startTime=%s\n",ADM_us2plain(startTime));
+  ADM_info("and shift =%s\n",ADM_us2plain(shift));
   return new ADM_audioStreamCopy(input,startTime,shift);
 }
 

@@ -358,7 +358,13 @@ bool admSaver::setupAudio()
             }else // copy mode...
             {
                 ADM_info("[audioTrack %d] Creating audio encoding stream, starttime %s(copy)\n",i,ADM_us2plain(startAudioTime));
-                access=audioCreateCopyStream(startAudioTime,0,ed->edTrack);
+                int32_t shift=0;
+                if(ed->audioEncodingConfig.shiftEnabled)
+                {
+                    shift=ed->audioEncodingConfig.shiftInMs;
+                    ADM_info("Using shift of %d ms\n",(int)shift);
+                }
+                access=audioCreateCopyStream(startAudioTime,shift,ed->edTrack);
             }
             if(!access)
             {
