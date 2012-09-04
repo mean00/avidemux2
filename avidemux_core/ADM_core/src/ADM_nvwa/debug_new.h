@@ -41,6 +41,7 @@
 
 #include <new>
 #include <stdio.h>
+#include "ADM_core6_export.h"
 
 /**
  * @def _DEBUG_NEW_REDEFINE_NEW
@@ -88,10 +89,13 @@
 /* Prototypes */
 int check_leaks();
 int check_mem_corruption();
-void* operator new(size_t size, const char* file, int line);
-void* operator new[](size_t size, const char* file, int line);
-void operator delete(void* pointer, const char* file, int line) throw();
-void operator delete[](void* pointer, const char* file, int line) throw();
+
+ADM_CORE6_EXPORT void* operator new(size_t size, const char* file, int line);
+ADM_CORE6_EXPORT void* operator new[](size_t size, const char* file, int line);
+ADM_CORE6_EXPORT void operator delete(void* pointer, const char* file, int line) throw();
+ADM_CORE6_EXPORT void operator delete[](void* pointer, const char* file, int line) throw();
+ADM_CORE6_EXPORT size_t getSizeFromPointer(void* pointer);
+
 #if defined(_MSC_VER) && _MSC_VER < 1300
 // MSVC 6 requires the following declarations; or the non-placement
 // new[]/delete[] will not compile.
@@ -103,7 +107,7 @@ void operator delete[](void*) throw();
 extern bool new_autocheck_flag; // default to true: call check_leaks() on exit
 extern bool new_verbose_flag;   // default to false: no verbose information
 extern FILE* new_output_fp;     // default to stderr: output to console
-extern const char* new_progname;// default to NULL; should be assigned argv[0]
+extern ADM_CORE6_EXPORT const char* new_progname;// default to NULL; should be assigned argv[0]
 
 /**
  * @def DEBUG_NEW

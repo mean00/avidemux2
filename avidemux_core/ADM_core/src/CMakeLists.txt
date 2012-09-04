@@ -20,12 +20,20 @@ IF (NOT APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_memcpy.cpp)
 ENDIF (NOT APPLE)
 
+if (ADM_DEBUG AND FIND_LEAKS)
+	set(ADM_core_SRCS ${ADM_core_SRCS} ADM_nvwa/debug_new.cpp)
+
+	if (MINGW)
+		set(ADM_core_SRCS ${ADM_core_SRCS} ADM_nvwa/addr2line.cpp)
+	endif (MINGW)
+endif (ADM_DEBUG AND FIND_LEAKS)
+
 add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS})
 include_directories("${PTHREAD_INCLUDE_DIR}")
 
 IF (WIN32)
-	TARGET_LINK_LIBRARIES(ADM_core6 imagehlp ws2_32)
+	target_link_libraries(ADM_core6 imagehlp ws2_32)
 ELSEIF (APPLE)
 	target_link_libraries(ADM_core6 "-framework Carbon")
 elseif (UNIX)
@@ -38,8 +46,15 @@ if (HAVE_EXECINFO)
 endif (HAVE_EXECINFO)
 
 if (ADM_DEBUG AND FIND_LEAKS)
-	add_subdirectory(ADM_nvwa)
-	target_link_libraries(ADM_core6 ADM_nvwa)
+	add_definitions(-D_DEBUG_NEW_ERROR_ACTION=NULL -DPACKAGE=1 -DPACKAGE_VERSION=1)
+
+	if (UNIX)
+		add_definitions(-fPIC)
+	endif (UNIX)
+
+	if (MINGW)
+		target_link_libraries(ADM_core6  bfd  iberty  imagehlp)
+	endif (MINGW)
 endif (ADM_DEBUG AND FIND_LEAKS)
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
