@@ -485,8 +485,13 @@ int call_forcesmart(void)
 	video_body->setEnv(ENV_EDITOR_SMART);
 	return 1;
 }
-int set_output_format(const char *str){
-  	//return A_setContainer(str);
+int set_output_format(const char *str)
+{
+    if(false==video_body->setContainer(str,NULL))
+    {
+        printf("Cannot set that container\n");
+        
+    }
     return 0;
 }
 
