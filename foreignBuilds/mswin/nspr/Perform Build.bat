@@ -20,7 +20,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=4.9.1
+set version=4.9.2
 set package=nspr-%version%.tar.gz
 set sourceFolder=nspr-%version%-%BuildBits%
 set tarFolder=nspr-%version%

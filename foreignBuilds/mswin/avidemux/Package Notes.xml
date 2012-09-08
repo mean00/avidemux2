@@ -1,5 +1,43 @@
 <?xml version="1.0"?>
 <log>
+  <buildentry revision="8179 [2.6.0 Final]" date="2012-09-08" />
+  <buildentry revision="8171" date="2012-09-03" />
+  <buildentry revision="8164" date="2012-08-26" />
+  <buildentry revision="8142" date="2012-08-21">
+    <comment>Updated NSPR to version 4.9.2.</comment>
+  </buildentry>
+  <buildentry revision="8121" date="2012-08-05" />
+  <buildentry revision="8121" date="2012-08-05" />
+  <buildentry revision="8108" date="2012-08-01">
+    <comment>Updated Fontconfig to version 2.10.1.</comment>
+  </buildentry>
+  <buildentry revision="8097" date="2012-07-25" />
+  <buildentry revision="8080" date="2012-07-19">
+    <comment>Updated Fontconfig to version 2.10.0.</comment>
+    <comment>Updated x264 to r2208.</comment>
+  </buildentry>
+  <buildentry revision="8071" date="2012-07-16" />
+  <buildentry revision="8054" date="2012-07-13" />
+  <buildentry revision="8048" date="2012-07-10" />
+  <buildentry revision="8044" date="2012-07-07" />
+  <buildentry revision="8039" date="2012-07-04" />
+  <buildentry revision="8027" date="2012-06-25">
+    <comment>Compiled with GCC 4.7.1.</comment>
+    <comment>Updated Fontconfig to version 2.9.92.</comment>
+    <comment>Updated Freetype to version 2.4.10.</comment>
+    <comment>Updated SQLite to version 3.7.13.</comment>
+  </buildentry>
+  <buildentry revision="8020" date="2012-06-11" />
+  <buildentry revision="8005" date="2012-06-09">
+    <comment>Compiled with GCC 4.7.0.</comment>
+    <comment>Updated Aften to git version 89aee3d496bb2a89f046025402626ee12a12969f.</comment>
+    <comment>Updated Expat to version 2.1.0.</comment>
+    <comment>Updated Fontconfig to version 2.9.0.</comment>
+    <comment>Updated Freetype to version 2.4.9.</comment>
+    <comment>Updated NSPR to version 4.9.1.</comment>
+    <comment>Updated TwoLAME to version 0.3.13.</comment>
+    <comment>Updated zlib to version 1.2.7.</comment>
+  </buildentry>
   <buildentry revision="7990" date="2012-05-30" />
   <buildentry revision="7984" date="2012-05-24">
     <comment>Updated Qt to version 4.8.2.</comment>

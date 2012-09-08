@@ -12,10 +12,10 @@ echo Error - BuildBits variable not set
 goto error
 
 :setVars
-set mingwDir=%devDir%/MinGW64
+set mingwDir=%devDir%/mingw
 set usrLocalDir=%msysDir%/local%BuildBits%
 set qtDir=%devDir%/Qt%BuildBits%
-set CMAKE_INCLUDE_PATH=%usrLocalDir%/include;%mingwDir%/x86_64-w64-mingw32/include;%mingwDir%/include
+set CMAKE_INCLUDE_PATH=%usrLocalDir%/include;%mingwDir%/i686-w64-mingw32/include;%mingwDir%/include
 set CMAKE_LIBRARY_PATH=%usrLocalDir%/lib
 set PKG_CONFIG_PATH=%usrLocalDir%\lib\pkgconfig
 set SDLDIR=%usrLocalDir%
@@ -32,10 +32,10 @@ if "%Debug%" EQU "1" (
 	set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
 )
 
-if "%BuildBits%" == "32" (
-	set CFLAGS=%CFLAGS% -m32
-	set CXXFLAGS=%CXXFLAGS% -m32
-	set LDFLAGS=%LDFLAGS% -m32
+if "%BuildBits%" == "64" (
+	set CFLAGS=%CFLAGS% -m64
+	set CXXFLAGS=%CXXFLAGS% -m64
+	set LDFLAGS=%LDFLAGS% -m64
 )
 
 if exist "%qtDir%" (
@@ -72,7 +72,7 @@ if not exist "%nsisDir%" (
 
 set PATH=%cmakeDir%;%mingwDir%\bin;%usrLocalDir%\bin;%msysDir%\local-shared\bin;%qtDir%\bin;%devDir%\strawberry\perl\bin;%PATH%
 
-if "%BuildBits%" == "32" set PATH=%mingwDir%\x86_64-w64-mingw32\lib32;%PATH%
+if "%BuildBits%" == "64" set PATH=%mingwDir%\i686-w64-mingw32\lib64;%PATH%
 
 goto end
 
