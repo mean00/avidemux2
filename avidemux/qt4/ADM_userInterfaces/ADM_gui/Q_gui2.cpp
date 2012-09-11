@@ -111,10 +111,16 @@ int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms);
 void UI_updateFrameCount(uint32_t curFrame);
 void UI_updateTimeCount(uint32_t curFrame,uint32_t fps);
 
-/*
-    Declare the class that will be our main window
+class FileDropEvent : public QEvent
+{
+public:
+	QList<QUrl> files;
 
-*/
+	FileDropEvent(QList<QUrl> files) : QEvent(QEvent::User)
+	{
+		this->files = files;
+	}
+};
 
 void MainWindow::comboChanged(int z)
 {
@@ -601,10 +607,9 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 				shiftKeyHeld = 0;
 
 			break;
-		case QEvent::FocusOut:
-            break;
-        default:
-            break;
+		case QEvent::User:
+			this->openFiles(((FileDropEvent*)event)->files);
+			break;
 	}
 
 	return QObject::eventFilter(watched, event);
@@ -623,42 +628,31 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-	QList<QUrl> urlList;
-	QString fileName;
-	QFileInfo info;
-    const char *cFileName;
-
 	if (event->mimeData()->hasUrls())
 	{
-		urlList = event->mimeData()->urls();
+		QCoreApplication::postEvent(this, new FileDropEvent(event->mimeData()->urls()));
 
-		for (int fileIndex = 0; fileIndex < urlList.size(); fileIndex++)
+		event->acceptProposedAction();
+	}
+}
+
+void MainWindow::openFiles(QList<QUrl> urlList)
+{
+	QFileInfo info;
+
+	for (int fileIndex = 0; fileIndex < urlList.size(); fileIndex++)
+	{
+		QString fileName = urlList[fileIndex].toLocalFile();
+		QFileInfo info(fileName);
+
+		if (info.isFile())
 		{
-			fileName = urlList[fileIndex].toLocalFile();
-			info.setFile(fileName);
-            cFileName=ADM_strdup(fileName.toUtf8().constData());
-            ADM_info("Drop event %s\n",cFileName);
-			if (info.isFile())
-			{
-				if (avifileinfo)
-                {
-                    ADM_info("Appending..\n");
-                    A_appendAvi(cFileName);
-                }
-				else
-                {
-                    ADM_info("Opening..\n");
-                    A_openAvi(cFileName);
-                }
-			}else
-            {
-                ADM_warning("Dropped item is not a file\n");
-            }
-            ADM_dealloc(cFileName);
+			if (avifileinfo)
+				A_appendAvi(fileName.toUtf8().constData());
+			else
+				A_openAvi(fileName.toUtf8().constData());
 		}
 	}
-
-	event->acceptProposedAction();
 }
 
 void MainWindow::previousIntraFrame(void)

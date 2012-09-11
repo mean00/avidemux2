@@ -4,6 +4,7 @@
 #define MKICON(x) ":/new/prefix1/pics/"#x".png"
 
 #include <vector>
+#include <QtCore/QUrl>
 #include <QtGui/QSlider>
 #include <QtGui/QWidget>
 
@@ -94,5 +95,6 @@ protected:
 	void mousePressEvent(QMouseEvent* event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
+	void openFiles(QList<QUrl>);
 };
 #endif	// Q_gui2_h
