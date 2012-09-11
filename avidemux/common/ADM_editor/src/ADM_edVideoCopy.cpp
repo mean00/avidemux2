@@ -174,7 +174,8 @@ againGet:
     tail=seg->_refStartTimeUs+seg->_durationUs;
     // Guess DTS
     //
-   // ADM_info("Frame : Flags :%X, DTS:%"PRId64" PTS=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
+//**
+   // ADM_info("Frame : Flags :%X, DTS:%"PRId64" PTS=%"PRId64" nextDts=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,_nextFrameDts,tail);
     if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
     if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
     
@@ -200,8 +201,18 @@ againGet:
     // From here we are in linear time...
     if(img->demuxerDts==ADM_NO_PTS)
     {
-        img->demuxerDts=_nextFrameDts;
-        signedDts=_nextFrameDts;
+	// border case due to rounding we can have pts slighly above dts
+	uint64_t target=_nextFrameDts;
+	if(img->demuxerPts!=ADM_NO_PTS && target!=ADM_NO_PTS)
+	{
+		if(target>img->demuxerPts)
+		{
+			target=img->demuxerPts;
+			// not sure it is correct. We may want to do it the other way around, i.e. bumping pts
+			ADM_warning("Compensating for rounding error with PTS=%"PRId64"ms DTS=%"PRId64"ms \n",img->demuxerPts,_nextFrameDts);
+		}
+	}
+        img->demuxerDts=signedDts=target;
     }else
     {
 // It means that the incoming image is earlier than the expected time.
@@ -239,6 +250,7 @@ againGet:
 
 
     }
+// **
    // ADM_info("Frame after RECAL: Flags :%X, DTS:%"PRId64" PTS=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
     img->demuxerDts=signedDts+videoDelay;
     img->demuxerPts=signedPts+videoDelay;
