@@ -198,21 +198,20 @@ againGet:
             recalibrateSigned(&(signedPts),seg);
     }
     
-    // From here we are in linear time...
-    if(img->demuxerDts==ADM_NO_PTS)
+    // From here we are in linear time, guess DTS if missing...
+    if(signedDts==ADM_NO_PTS)
     {
 	// border case due to rounding we can have pts slighly above dts
-	uint64_t target=_nextFrameDts;
-	if(img->demuxerPts!=ADM_NO_PTS && target!=ADM_NO_PTS)
+	if(signedPts!=ADM_NO_PTS && _nextFrameDts!=ADM_NO_PTS)
 	{
-		if(target>img->demuxerPts)
+                signedDts=_nextFrameDts;
+                if(signedPts != ADM_NO_PTS && signedDts>signedPts)
 		{
-			target=img->demuxerPts;
 			// not sure it is correct. We may want to do it the other way around, i.e. bumping pts
-			ADM_warning("Compensating for rounding error with PTS=%"PRId64"ms DTS=%"PRId64"ms \n",img->demuxerPts,_nextFrameDts);
+			ADM_warning("Compensating for rounding error with PTS=%"PRId64"ms DTS=%"PRId64"ms \n",signedPts,signedDts);
+                        signedPts=signedDts;
 		}
 	}
-        img->demuxerDts=signedDts=target;
     }else
     {
 // It means that the incoming image is earlier than the expected time.
