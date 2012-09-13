@@ -118,6 +118,7 @@ muxerMp4v2::muxerMp4v2()
         ADM_info("[Mp4v2Muxer] Creating\n");
         handle=NULL;
         audioTrackIds=NULL;
+	audioPackets=NULL;
         videoBuffer[0]=NULL;
         videoBuffer[1]=NULL;
         scratchBuffer=NULL;
