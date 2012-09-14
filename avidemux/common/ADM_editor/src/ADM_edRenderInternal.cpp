@@ -20,8 +20,9 @@
 #include <math.h>
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
+#include "ADM_vidMisc.h"
 
-#if defined(ADM_DEBUG) && 0
+#if defined(ADM_DEBUG) && 1
 #define aprintf printf
 #else
 #define aprintf(...) {}// printf
@@ -202,7 +203,7 @@ uint8_t ret = 0;
     img.data=compBuffer;
     img.cleanup(vid->lastSentFrame+1);
 
-	ADM_assert(cache);
+    ADM_assert(cache);
     vid->lastSentFrame++;
 
     uint32_t frame=vid->lastSentFrame;
@@ -239,7 +240,18 @@ uint8_t ret = 0;
         if(pts==ADM_COMPRESSED_NO_PTS) // No PTS available ?
         {
                 aprintf("[Editor] No PTS, guessing value\n");
+                aprintf("Image Pts : %s\n",ADM_us2plain(img.demuxerPts));
+                aprintf("Image Dts : %s\n",ADM_us2plain(img.demuxerDts));
                 vid->lastDecodedPts+=vid->timeIncrementInUs;
+                if(img.demuxerDts!=ADM_NO_PTS && vid->_aviheader->providePts()==false)
+                {
+                    if(img.demuxerDts>vid->lastDecodedPts)
+                    {
+                        aprintf("Dts > Guessed Pts, cranking pts\n");
+                        vid->lastDecodedPts=img.demuxerDts;
+                    }
+                }
+               
                 result->Pts=vid->lastDecodedPts;
         }else
            {
