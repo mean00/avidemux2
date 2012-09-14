@@ -50,6 +50,7 @@ typedef enum
   ELEM_MATRIX,
   ELEM_COUNT,
   ELEM_ASPECT_RATIO,
+  ELEM_TIMESTAMP,
   ELEM_MAX=ELEM_COUNT-1
 }elemEnum;
 typedef void ADM_FAC_CALLBACK(void *cookie);
@@ -283,6 +284,22 @@ public:
   void getMe(void);
   int getRequiredLayout(void);
 };
+/*************************************************/
+typedef diaElem  *(CREATE_TIMESTAMP_T)(uint32_t *value,const char *toggleTitle,const uint32_t valMin, const uint32_t valMax);
+
+class ADM_COREUI6_EXPORT diaElemTimeStamp : public diaElem
+{
+  protected :
+        uint32_t value;
+public:
+  
+  diaElemTimeStamp(uint32_t *value,const char *toggleTitle,const uint32_t valMin, const uint32_t valMax);
+  virtual ~diaElemTimeStamp() ;
+  void setMe(void *dialog, void *opaque,uint32_t line);
+  void getMe(void);
+  int getRequiredLayout(void);
+};
+
 
 /*********************************************/
 typedef diaElem  *(CREATE_FLOAT_T)(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,

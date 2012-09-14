@@ -18,7 +18,7 @@ endif(USE_OPENGL)
 
 SET(${ADM_LIB}_SRCS
 	FAC_bar.cpp    FAC_frame.cpp  FAC_integer.cpp  FAC_aspectRatio.cpp
-	FAC_float.cpp  FAC_hex.cpp    FAC_readOnlyText.cpp  toolkit.cpp
+	FAC_float.cpp  FAC_hex.cpp    FAC_readOnlyText.cpp  toolkit.cpp FAC_timeStamp.cpp
 	FAC_matrix.cpp  DIA_none.cpp  ${${ADM_LIB}_source}  ${${ADM_LIB}_T})
 
 add_compiler_export_flags()

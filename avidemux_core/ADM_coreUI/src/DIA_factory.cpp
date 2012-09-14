@@ -90,6 +90,20 @@ diaElemBar ::~diaElemBar()
 	internalPointer=NULL;
 }
 DIA_MKSTUBS(diaElemBar)
+// ****************** TimeStamp ********************
+diaElemTimeStamp ::diaElemTimeStamp(uint32_t *value,const char *toggleTitle,const uint32_t valMin,const uint32_t valMax) :diaElem(ELEM_TIMESTAMP)
+{
+	ADM_assert(Factory); 
+	internalPointer=Factory->CreateTimeStamp(value,toggleTitle,valMin,valMax);
+}
+diaElemTimeStamp ::~diaElemTimeStamp()
+{
+	ADM_assert(Factory); 
+	Factory->DestroyBar(internalPointer);
+	internalPointer=NULL;
+}
+DIA_MKSTUBS(diaElemTimeStamp)
+
 
 // ****************** Buttons ********************
 diaElemFloat ::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min,

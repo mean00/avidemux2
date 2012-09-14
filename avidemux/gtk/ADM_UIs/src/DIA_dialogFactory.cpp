@@ -340,8 +340,11 @@ extern CREATE_TOGGLE_T      gtkCreateToggle;
 extern DELETE_DIA_ELEM_T    gtkDestroyToggle;
 extern CREATE_USLIDER_T     gtkCreateUSlider;
 extern DELETE_DIA_ELEM_T    gtkDestroyUSlider;
-extern 	CREATE_SLIDER_T     gtkCreateSlider;
-extern 	DELETE_DIA_ELEM_T   gtkDestroySlider;
+extern CREATE_SLIDER_T      gtkCreateSlider;
+extern DELETE_DIA_ELEM_T    gtkDestroySlider;
+extern CREATE_TIMESTAMP_T   gtkCreateTimeStamp;
+extern DELETE_DIA_ELEM_T    gtkDestroyTimeStamp;
+
 /**
  *  \fn gtkFactoryGetVersion
  * 	\brief returns the version this has been compiled with
@@ -421,7 +424,10 @@ static FactoryDescriptor GtkFactoryDescriptor=
 	&gtkCreateUSlider,
 	&gtkDestroyUSlider,
 	&gtkCreateSlider,
-	&gtkDestroySlider
+	&gtkDestroySlider,
+        &gtkCreateTimeStamp,
+        &gtkDestroyTimeStamp
+	
 };
 
 /**

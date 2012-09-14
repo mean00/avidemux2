@@ -117,6 +117,9 @@ typedef struct
 // Slider
 	CREATE_SLIDER_T      *CreateSlider;
 	DELETE_DIA_ELEM_T    *DestroySlider;
+// TimeStamp
+	CREATE_TIMESTAMP_T   *CreateTimeStamp;
+	DELETE_DIA_ELEM_T    *DestroyTimeStamp;
 }FactoryDescriptor;
 //
 ADM_COREUI6_EXPORT uint8_t DIA_factoryInit(FactoryDescriptor *d);
