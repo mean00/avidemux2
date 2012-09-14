@@ -17,6 +17,9 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QProgressBar>
+#include <QtGui/QSpinBox>
+
+
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
@@ -33,7 +36,8 @@ namespace ADM_Qt4Factory
 class diaElemTimeStamp : public diaElem
 {
   protected :
-        uint32_t *value;
+        uint32_t valueMin;
+        uint32_t valueMax;
 public:
   
   diaElemTimeStamp(uint32_t *v,const char *toggleTitle,const uint32_t vmin, const uint32_t vmax);
@@ -51,7 +55,9 @@ public:
 diaElemTimeStamp::diaElemTimeStamp(uint32_t *v,const char *toggleTitle,const uint32_t vmin, const uint32_t vmax)
   : diaElem(ELEM_TIMESTAMP)
 {
-  value=v;
+  param=v;
+  valueMin=vmin;
+  valueMax=vmax;
   paramTitle=shortkey(toggleTitle);
  }
 /**
@@ -64,31 +70,47 @@ diaElemTimeStamp::~diaElemTimeStamp()
     delete paramTitle;
 }
 /**
- * \fn setMe
+ * \fn          setMe
+ * \brief       construct UI to display editable timestamp
  * @param dialog
  * @param opaque
  * @param line
  */
 void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
 {
-#if 0
-  QProgressBar *box=new QProgressBar((QWidget *)dialog);
+QSpinBox *box=new QSpinBox((QWidget *)dialog);
   QGridLayout *layout=(QGridLayout*) opaque;
+  QHBoxLayout *hboxLayout = new QHBoxLayout();
+ myWidget=(void *)box; 
+   
+ box->setValue(*(uint32_t *)param);
  
-  box->setMinimum(0);
-  box->setMaximum(100);
-  box->setValue(per);
-  box->show();
- 
- QLabel *text=new QLabel(QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
  text->setBuddy(box);
+
+ QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+ hboxLayout->addWidget(box);
+ hboxLayout->addItem(spacer);
+
  layout->addWidget(text,line,0);
- layout->addWidget(box,line,1);
-#endif
+ layout->addLayout(hboxLayout,line,1);
  
 }
+/**
+ * \fn getMe
+ * \brief retrieve value from UI
+ */
 void diaElemTimeStamp::getMe(void)
 {
+        uint32_t val;
+        QSpinBox *box=(QSpinBox *)myWidget;
+        val=box->value();
+        if(val<valueMin) val=valueMin;
+        if(val>valueMax) val=valueMax;
+        *(uint32_t *)param=val;
+ 
 }
 
 int diaElemTimeStamp::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
