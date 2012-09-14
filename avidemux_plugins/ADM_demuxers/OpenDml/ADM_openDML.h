@@ -65,17 +65,17 @@ protected:
 	  FILE 				*_fd;
 	  odmlIndex 		*_idx;
 	  odmlAudioTrack                *_audioTracks;
-      ADM_audioStream              **_audioStreams;
-      uint32_t                       _nbAudioTracks;
-      uint32_t                       _currentAudioTrack;
+          ADM_audioStream              **_audioStreams;
+          uint32_t                       _nbAudioTracks;
+          uint32_t                       _currentAudioTrack;
 
-      odmlIndex                     *_audioIdx;
+          odmlIndex                     *_audioIdx;
 	  
 	  void 				walk(riffParser *p) ;
 	  uint32_t			_nbTrack;
 	  uint8_t			_recHack;
       //
-      bool              ptsAvailable;
+          bool              ptsAvailable;
 	  //_________________________________________
 	  // This is temporary stuff to read the avi
 	  //_________________________________________
@@ -90,9 +90,9 @@ protected:
 	  
 	  
           char                         *myName;
-	  uint32_t 			    countAudioTrack( void );
+	  uint32_t 			countAudioTrack( void );
 	  uint32_t  			searchAudioTrack(uint32_t which);
-        uint64_t            frameToUs(uint32_t frame);
+          uint64_t                      frameToUs(uint32_t frame);
 	  // _____________________________________________
 	  //		indexer, vanilla, odml and others
 	  // _____________________________________________
@@ -115,10 +115,10 @@ protected:
                                                 return (i[3]<<24)+(i[2]<<16)+(i[1]<<8)+i[0];
                                         };
 
-	  uint8_t           computePtsDts(void);
-      uint8_t           mpegReorder(void);
+	  uint8_t                       computePtsDts(void);
+          uint8_t                       mpegReorder(void);
 	  uint8_t			unpackPacked( void );	
-      bool              removeEmptyFrames (void);
+          bool                          removeEmptyFrames (void);
 public:
 	  
 virtual   void 				Dump(void) ;
@@ -138,7 +138,7 @@ virtual 	uint8_t			close(void) ;
 
 virtual 	WAVHeader              *getAudioInfo(uint32_t i )  ;
 virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio);
-virtual     uint8_t                 getNbAudioStreams(void);
+virtual         uint8_t                 getNbAudioStreams(void);
 // Frames
   //__________________________
   //				 video
@@ -149,12 +149,12 @@ virtual 	uint32_t getFlags(uint32_t frame,uint32_t *flags);
 virtual 	uint8_t  getFrame(uint32_t framenum,ADMCompressedImage *img);
 virtual 	uint8_t  getFrameSize(uint32_t frame,uint32_t *size) ;
 	     	 		
-virtual	    uint8_t	 getExtraHeaderData(uint32_t *len, uint8_t **data);
-virtual     uint64_t getTime(uint32_t frameNum);
-virtual     uint64_t getVideoDuration(void);
-virtual     bool     providePts(void) {return ptsAvailable;};
-bool                 getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
-bool                 setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+virtual	    uint8_t	getExtraHeaderData(uint32_t *len, uint8_t **data);
+virtual     uint64_t    getTime(uint32_t frameNum);
+virtual     uint64_t    getVideoDuration(void);
+virtual     bool        providePts(void) {return ptsAvailable;};
+bool                    getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+bool                    setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
 
 };
 

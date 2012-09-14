@@ -111,11 +111,10 @@ uint64_t offset=_idx[framenum].offset; //+_mdatOffset;
  	fseeko(_fd,offset,SEEK_SET);
  	fread(img->data, _idx[framenum].size, 1, _fd);
   	img->dataLength=_idx[framenum].size;
-    img->flags=_idx[framenum].intra;
-    img->demuxerDts=_idx[framenum].dts; // FIXME
-    img->demuxerPts=_idx[framenum].pts;
-    
-    
+        img->flags=_idx[framenum].intra;
+        img->demuxerDts=_idx[framenum].dts; // FIXME
+        img->demuxerPts=_idx[framenum].pts;
+        
 	aprintf("Size: %lu\n",_idx[framenum].size);
 //	if(offset & 1) printf("odd!\n");
  	return 1;
@@ -539,10 +538,10 @@ uint32_t rd;
                 printf("\nOpenDML file successfully read..\n");
                 if(ret==1) 
                 {
-                    removeEmptyFrames();
                     computePtsDts();
-                    
+                    removeEmptyFrames();
                 }
+                ADM_info("PtsAvailable : %d\n",(int)ptsAvailable);
                 return ret;
 }
 /**
@@ -573,6 +572,15 @@ bool OpenDMLHeader::removeEmptyFrames(void)
     _mainaviheader.dwTotalFrames=_videostream.dwLength=index;
     delete [] _idx;
     _idx=nwIdx;
+    if(index)
+    {   // make sure the first frame is ok (Intra + have PTS)
+         _idx[0].intra |=AVI_KEY_FRAME;
+         if(_idx[0].pts==ADM_NO_PTS)
+         {
+             if(_idx[0].dts!=ADM_NO_PTS) _idx[0].pts=_idx[0].dts;
+             else  _idx[0].pts=0;
+         }
+    }
     return true;
 }
 /**
