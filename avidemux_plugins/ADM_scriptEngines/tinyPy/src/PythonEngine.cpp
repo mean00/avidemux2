@@ -22,6 +22,7 @@
 #include "DIA_factory.h"
 #include "ADM_scriptDF.h"
 #include "ADM_scriptDFInteger.h"
+#include "ADM_scriptDFTimeStamp.h"
 #include "ADM_scriptDFMenu.h"
 #include "ADM_scriptDFToggle.h"
 #include "ADM_scriptDialogFactory.h"
@@ -55,6 +56,7 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 #include "pyDFInteger_gen.cpp"
 #include "pyDFMenu_gen.cpp"
 #include "pyDFToggle_gen.cpp"
+#include "pyDFTimeStamp_gen.cpp"
 #include "pyDialogFactory_gen.cpp"
 #include "pyHelpers_gen.cpp"
 #include "tinypy/init_math.cpp"
@@ -115,6 +117,7 @@ void PythonEngine::registerFunctions()
 	this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
 	this->registerClass("DFInteger", initClasspyDFInteger, "UI element : integer");
 	this->registerClass("DFMenu", initClasspyDFMenu, "UI element : drop down menu");
+	this->registerClass("DFTimeStamp", initClasspyDFTimeStamp, "UI element : timestamp");
 	this->registerClass("DialogFactory", initClasspyDialogFactory, "UI manager, handle all UI elements");
 	this->registerFunction("test", pyHelpers_functions);
 }

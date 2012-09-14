@@ -4,6 +4,7 @@ SET(admScript_SRCS
 	ADM_scriptDFToggle.cpp
 	ADM_scriptDialogFactory.cpp
 	ADM_ScriptEngineLoader.cpp
+        ADM_scriptDFTimeStamp.cpp
 )
 
 add_compiler_export_flags()

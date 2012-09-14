@@ -1,0 +1,7 @@
+#           name    cookie id
+/* CLASS */ pyDFTimeStamp : ADM_scriptDFTimeStampHelper : ADM_PYID_DF_INTEGER
+#              cname:pyname
+/* CTOR */   (str,int,int) 
+#
+/* ATTRIBUTES */ int value:setValue,value
+#
