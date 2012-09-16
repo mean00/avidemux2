@@ -12,4 +12,4 @@ addons/*
 install/*
 avidemux/qt4/common
 oldcrap/*
-nbproject/*
+*nbproject/*
