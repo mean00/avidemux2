@@ -13,7 +13,7 @@
 	"MinIdr" : 0,
 	"MaxIdr" : 250,
 	"MaxBFrame" : 2,
-	"i_bframe_adaptative" : 0,
+	"i_bframe_adaptive" : 0,
 	"i_bframe_bias" : 0,
 	"i_bframe_pyramid" : 2,
 	"b_deblocking_filter" : false,
