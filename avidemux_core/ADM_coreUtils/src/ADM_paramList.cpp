@@ -265,10 +265,13 @@ bool ADM_paramValidatePartialList(CONFcouple *couples, const    ADM_paramList *p
         if(true==couples->exist(name))
         {
             found++;
+        }else
+        {
+                ADM_warning("\tParam : <%s> not found\n",name);
         }
     }
     if(found==n) return true;
-    ADM_warning("Some parameters are not in the parameter list, typo ?\n");
+    ADM_warning("Some parameters are not in the parameter list, typo ?(%d vs %d)\n",(int)found,(int)n);
     return false;;
 }
 
