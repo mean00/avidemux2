@@ -27,9 +27,7 @@ function updatePatch {
 	dos2unix ${1//\//_}_$2.patch
 }
 
-updatePatch . configure
 updatePatch libavcodec avcodec.h
-updatePatch libavcodec dxva2_internal.h
 updatePatch libavcodec golomb.h
 updatePatch libavcodec h263dec.c
 updatePatch libavcodec h264_parser.c
