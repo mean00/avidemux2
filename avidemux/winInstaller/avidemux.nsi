@@ -849,6 +849,12 @@ InstallQt:
 End:
 !endif
 		${MementoSectionEnd}
+		${MementoSection} "Fade" SecVidFltFade
+			SectionIn 1 2
+			SetOverwrite on
+			SetOutPath $INSTDIR\plugins\videoFilters
+			${File} plugins\videoFilters\libADM_vf_fadeToBlack.dll
+		${MementoSectionEnd}
 		${MementoSection} "Greyscale" SecVidFltLumaOnly
 			SectionIn 1 2
 			SetOverwrite on

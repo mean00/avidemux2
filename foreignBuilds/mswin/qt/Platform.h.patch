@@ -1,0 +1,11 @@
+--- src/3rdparty/javascriptcore/JavaScriptCore/wtf/Platform.h.orig	2012-09-11 11:36:49 +1000
++++ src/3rdparty/javascriptcore/JavaScriptCore/wtf/Platform.h	2012-09-15 22:35:57 +1000
+@@ -1019,7 +1019,7 @@
+ /* Pick which allocator to use; we only need an executable allocator if the assembler is compiled in.
+    On x86-64 we use a single fixed mmap, on other platforms we mmap on demand. */
+ #if ENABLE(ASSEMBLER)
+-#if CPU(X86_64)
++#if CPU(X86_64) && !COMPILER(MINGW64)
+ #define ENABLE_EXECUTABLE_ALLOCATOR_FIXED 1
+ #else
+ #define ENABLE_EXECUTABLE_ALLOCATOR_DEMAND 1

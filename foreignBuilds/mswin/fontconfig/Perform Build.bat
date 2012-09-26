@@ -22,7 +22,7 @@ set package=fontconfig-%version%.tar.gz
 set sourceFolder=fontconfig-%version%-%BuildBits%
 set tarFolder=fontconfig-%version%
 set curDir=%CD%
-set PATH=%PATH%;%msysDir%\bin
+set PATH=%msysDir%\bin;%PATH%
 
 if not exist %package% (
 	echo.

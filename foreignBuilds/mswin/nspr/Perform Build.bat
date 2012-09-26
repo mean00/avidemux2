@@ -63,6 +63,7 @@ echo.
 pause
 
 if "%BuildBits%" == "32" set RC=RC="windres -F pe-i386" CC="gcc -m32"
+if "%BuildBits%" == "64" set RC=RC="windres -F pe-x86-64" CC="gcc -m64"
 make %RC%
 if errorlevel 1 goto end
 
@@ -74,7 +75,7 @@ copy "%usrLocalDir%\bin\nspr4.dll" "%admBuildDir%"
 
 pexports "%usrLocalDir%/bin/nspr4.dll" > nspr4.def
 if "%BuildBits%" == "32" dlltool -d nspr4.def -l "%usrLocalDir%/lib/nspr4.dll.a" -m i386 --as-flags=--32
-if "%BuildBits%" == "64" dlltool -d nspr4.def -l "%usrLocalDir%/lib/nspr4.dll.a"
+if "%BuildBits%" == "64" dlltool -d nspr4.def -l "%usrLocalDir%/lib/nspr4.dll.a" -m i386:x86-64 --as-flags=--64
 
 goto end
 

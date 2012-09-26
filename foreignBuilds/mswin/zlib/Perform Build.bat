@@ -49,6 +49,7 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 )
 
 if "%BuildBits%" == "32" set RC=RC="windres -F pe-i386"
+if "%BuildBits%" == "64" set RC=RC="windres -F pe-x86-64"
 mingw32-make -f win32/Makefile.gcc CFLAGS="%CFLAGS%" LDFLAGS="%LDFLAGS%" %RC%
 if errorlevel 1 goto end
 

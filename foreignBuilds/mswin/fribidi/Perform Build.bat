@@ -17,11 +17,11 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=fribidi-0.19.2.tar.gz
-set sourceFolder=fribidi-0.19.2-%BuildBits%
-set tarFolder=fribidi-0.19.2
+set package=fribidi-0.19.4.tar.bz2
+set sourceFolder=fribidi-0.19.4-%BuildBits%
+set tarFolder=fribidi-0.19.4
 set curDir=%CD%
-set PATH=%PATH%;%msysDir%\bin
+set PATH=%msysDir%\bin;%PATH%
 
 if not exist %package% (
 	echo.
@@ -39,10 +39,15 @@ if errorlevel 1 goto end
 mkdir "%devDir%\%sourceFolder%"
 if errorlevel 1 goto end
 
-tar xfz "%package%" -C "%devDir%/%sourceFolder%"
+cd "%devDir%\%sourceFolder%"
+
+set SevenZipDir=%ProgramFiles%\7-zip
+
+"%SevenZipDir%"\7z x "%curDir%\%package%"
 if errorlevel 1 goto end
 
-cd "%devDir%\%sourceFolder%"
+"%SevenZipDir%"\7z x "%tarFolder%.tar"
+if errorlevel 1 goto end
 
 for /f "delims=" %%a in ('dir /b %tarFolder%') do (
   move "%CD%\%tarFolder%\%%a" "%CD%"
@@ -51,7 +56,6 @@ for /f "delims=" %%a in ('dir /b %tarFolder%') do (
 echo.
 echo Patching
 patch -p0 -i "%curDir%\Makefile.in.patch"
-patch -p0 -i "%curDir%\fribidi-benchmark.c.patch"
 
 echo.
 echo Configuring

@@ -32,11 +32,9 @@ if "%Debug%" EQU "1" (
 	set admSdkBuildDir=%devDir%\avidemux_2.6_build%BuildBits%_sdk
 )
 
-if "%BuildBits%" == "64" (
-	set CFLAGS=%CFLAGS% -m64
-	set CXXFLAGS=%CXXFLAGS% -m64
-	set LDFLAGS=%LDFLAGS% -m64
-)
+set CFLAGS=%CFLAGS% -m%BuildBits%
+set CXXFLAGS=%CXXFLAGS% -m%BuildBits%
+set LDFLAGS=%LDFLAGS% -m%BuildBits%
 
 if exist "%qtDir%" (
 	for /f %%d in ('dir /b /ad /on "%qtDir%"') do set qtVer=%%d

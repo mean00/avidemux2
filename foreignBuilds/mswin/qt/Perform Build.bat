@@ -30,7 +30,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=4.8.2
+set version=4.8.3
 set package=qt-everywhere-opensource-src-%version%.tar.gz
 set sourceBaseFolder=Qt%BuildBits%
 
@@ -82,10 +82,11 @@ if "%Debug%" == "1" (
 echo.
 echo Patching
 patch -p0 -i "%curDir%\qmake%BuildBits%.conf.patch"
+patch -p0 -i "%curDir%\Platform.h.patch"
 
 echo.
 echo Configuring
-configure -confirm-license -opensource -%BuildType% -system-zlib -no-stl -no-qt3support -no-phonon -no-webkit -no-multimedia -no-declarative -no-style-cleanlooks -no-style-plastique -no-style-motif -no-style-cde -qt-style-windowsxp -qt-style-windowsvista -no-xmlpatterns -nomake demos -nomake examples -platform win32-g++ -mmx -sse -sse2 -3dnow -I %CMAKE_INCLUDE_PATH:;= -I % -L %CMAKE_LIBRARY_PATH:;= -L % %LeakFlags%
+configure -confirm-license -opensource -%BuildType% -system-zlib -no-stl -no-qt3support -no-phonon -no-webkit -no-multimedia -no-declarative -no-style-cleanlooks -no-style-plastique -no-style-motif -no-style-cde -qt-style-windowsxp -qt-style-windowsvista -no-xmlpatterns -nomake demos -nomake examples -platform win32-g++-4.6 -mmx -sse -sse2 -3dnow -I %CMAKE_INCLUDE_PATH:;= -I % -L %CMAKE_LIBRARY_PATH:;= -L % %LeakFlags%
 
 if errorlevel 1 goto end
 echo.

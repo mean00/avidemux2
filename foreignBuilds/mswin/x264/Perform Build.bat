@@ -37,6 +37,7 @@ cd "%devDir%/%sourceFolder%"
 
 echo.
 echo Configuring
+if "%BuildBits%" == "32" set CFLAGS=%CFLAGS% -mfpmath=387
 if "%BuildBits%" == "32" sh ./configure --prefix=%usrLocalDir% --enable-shared --enable-win32thread
 if "%BuildBits%" == "64" sh ./configure --prefix=%usrLocalDir% --enable-shared --enable-win32thread --host=x86_64-pc-mingw32
 

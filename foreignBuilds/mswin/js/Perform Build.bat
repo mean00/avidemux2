@@ -60,7 +60,7 @@ patch -p0 -i "%curDir%\jsnum.c.patch"
 echo.
 cd src
 if "%BuildBits%" == "32" windres -i js3240.rc -o jsres.o -O coff -F pe-i386
-if "%BuildBits%" == "64" windres -i js3240.rc -o jsres.o -O coff
+if "%BuildBits%" == "64" windres -i js3240.rc -o jsres.o -O coff -F pe-x86-64
 
 set CFLAGS=%CFLAGS% -I"%usrLocalDir%/include/nspr"
 make -f Makefile.ref JS_DIST="%usrLocalDir%" BUILD_OPT=1 JS_HAS_FILE_OBJECT=1 XLDFLAGS="%LDFLAGS% jsres.o -L%usrLocalDir%/lib -lnspr4"

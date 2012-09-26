@@ -17,10 +17,10 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=3.7.13
-set package=sqlite-autoconf-3071300.tar.gz
+set version=3.7.14
+set package=sqlite-autoconf-3071400.tar.gz
 set sourceFolder=sqlite-%version%-%BuildBits%
-set tarFolder=sqlite-autoconf-3071300
+set tarFolder=sqlite-autoconf-3071400
 set curDir=%CD%
 set PATH=%PATH%;%msysDir%\bin
 
