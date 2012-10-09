@@ -1,13 +1,11 @@
---- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/mpegtsenc.c	2012-05-29 18:24:33 +1000
-+++ libavformat/mpegtsenc.c	2012-05-29 18:24:33 +1000
-@@ -1016,8 +1016,8 @@
- 
+--- libavformat/mpegtsenc.c.org	2012-10-08 09:17:26.421957498 +0200
++++ libavformat/mpegtsenc.c	2012-10-08 09:18:05.057958007 +0200
+@@ -1093,7 +1093,7 @@
          if (pkt->size < 5 || AV_RB32(pkt->data) != 0x0000001) {
              av_log(s, AV_LOG_ERROR, "H.264 bitstream malformed, "
--                   "no startcode found, use the h264_mp4toannexb bitstream filter (-bsf h264_mp4toannexb)\n");
--            return AVERROR_INVALIDDATA;
-+                   "no startcode found, use the h264_mp4toannexb bitstream filter ( size=%d %02x:%02x:%02x:%02x:%02x\n )",pkt->size,pkt->data[0],pkt->data[1],pkt->data[2],pkt->data[3],pkt->data[4]);
-+            //return AVERROR_INVALIDDATA; MEANX Avidemux does not align well the packet + does not work with short packet
+                    "no startcode found, use the h264_mp4toannexb bitstream filter (-bsf h264_mp4toannexb)\n");
+-            return AVERROR(EINVAL);
++            // MEANX : Avidemux does not align the packet well, ignore this error    return AVERROR(EINVAL);
          }
  
          do {

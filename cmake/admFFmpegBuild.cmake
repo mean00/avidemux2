@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "0.11.2")
+set(FFMPEG_VERSION "1.0.0")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -29,6 +29,7 @@ set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
 xadd("--enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe")
+xadd("--enable-swscale --disable-swresample")
 
 if (NOT CROSS)
 	xadd(--prefix ${CMAKE_INSTALL_PREFIX})

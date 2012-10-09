@@ -1,11 +1,11 @@
---- common.mak.orig	2012-01-27 09:15:59 +1100
-+++ common.mak	2012-04-18 18:06:22 +1000
-@@ -79,7 +79,7 @@
+--- common.mak.org	2012-10-08 21:46:12.701137958 +0200
++++ common.mak	2012-10-08 22:01:03.413149631 +0200
+@@ -82,7 +82,7 @@
  FFLIBS    := $(FFLIBS-yes) $(FFLIBS)
  TESTPROGS += $(TESTPROGS-yes)
  
--FFEXTRALIBS := $(FFLIBS:%=-l%$(BUILDSUF)) $(EXTRALIBS)
-+FFEXTRALIBS := $(FFLIBS:%=-lADM6%$(BUILDSUF)) $(EXTRALIBS)
+-LDLIBS       = $(FFLIBS:%=%$(BUILDSUF))
++LDLIBS       = $(FFLIBS:%=ADM6%$(BUILDSUF))
+ FFEXTRALIBS := $(LDLIBS:%=$(LD_LIB)) $(EXTRALIBS)
  
  EXAMPLES  := $(EXAMPLES:%=$(SUBDIR)%-example$(EXESUF))
- OBJS      := $(sort $(OBJS:%=$(SUBDIR)%))

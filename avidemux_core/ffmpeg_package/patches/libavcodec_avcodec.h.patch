@@ -1,6 +1,6 @@
---- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/avcodec.h	2012-05-29 18:18:33 +1000
-+++ libavcodec/avcodec.h	2012-05-29 18:18:33 +1000
-@@ -614,6 +614,8 @@
+--- libavcodec/avcodec.h.old	2012-10-08 09:31:19.589968418 +0200
++++ libavcodec/avcodec.h	2012-10-08 09:32:22.581969243 +0200
+@@ -687,6 +687,8 @@
  #define CODEC_FLAG2_NO_OUTPUT     0x00000004 ///< Skip bitstream encoding.
  #define CODEC_FLAG2_LOCAL_HEADER  0x00000008 ///< Place global headers at every keyframe instead of in extradata.
  #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format. DEPRECATED!!!!
@@ -9,7 +9,7 @@
  #if FF_API_MPV_GLOBAL_OPTS
  #define CODEC_FLAG_CBP_RD         0x04000000 ///< Use rate distortion optimization for cbp.
  #define CODEC_FLAG_QP_RD          0x08000000 ///< Use rate distortion optimization for qp selectioon.
-@@ -2282,6 +2284,7 @@
+@@ -2428,6 +2430,7 @@
       * - decoding: unused
       */
      int rc_buffer_size;
@@ -17,7 +17,7 @@
  
      /**
       * ratecontrol override, see RcOverride
-@@ -2304,6 +2307,7 @@
+@@ -2450,6 +2453,7 @@
       * - decoding: unused
       */
      int rc_max_rate;

@@ -1,18 +1,18 @@
---- /c/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/x86/fmtconvert_mmx.c	2012-04-18 15:14:07 +1000
-+++ libavcodec/x86/fmtconvert_mmx.c	2012-04-18 15:14:07 +1000
-@@ -127,6 +127,7 @@
-                 c->float_to_int16_interleave = float_to_int16_interleave_3dn2;
+--- libavcodec/x86/fmtconvert_init.c.org	2012-10-08 09:29:46.977967202 +0200
++++ libavcodec/x86/fmtconvert_init.c	2012-10-08 09:30:31.697967791 +0200
+@@ -132,6 +132,7 @@
+                 c->float_to_int16_interleave = float_to_int16_interleave_3dnowext;
              }
          }
-+#if 0 // MEANX : Disable as we cant guarantee output buffer is aligned
-         if (HAVE_SSE && mm_flags & AV_CPU_FLAG_SSE) {
++#if 0 // MEANX : Cant guarantee proper alignment
+         if (EXTERNAL_SSE(mm_flags)) {
              c->int32_to_float_fmul_scalar = ff_int32_to_float_fmul_scalar_sse;
              c->float_to_int16 = ff_float_to_int16_sse;
-@@ -138,6 +139,7 @@
+@@ -143,6 +144,7 @@
              c->float_to_int16 = ff_float_to_int16_sse2;
              c->float_to_int16_interleave = float_to_int16_interleave_sse2;
          }
-+#endif
++#endif // MEANX
      }
- #endif
+ #endif /* HAVE_YASM */
  }

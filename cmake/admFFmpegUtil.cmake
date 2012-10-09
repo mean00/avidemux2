@@ -10,7 +10,7 @@ MACRO (getFfmpegLibNames sourceDir)
 	getFfmpegVersionFromHeader("libavutil" "${sourceDir}/libavutil/avutil.h" LIBAVUTIL_VERSION_MAJOR LIBAVUTIL_VERSION)
 	getFfmpegVersionFromHeader("libpostproc" "${sourceDir}/libpostproc/postprocess.h" LIBPOSTPROC_VERSION_MAJOR LIBPOSTPROC_VERSION)
 	getFfmpegVersionFromHeader("libswscale" "${sourceDir}/libswscale/swscale.h" LIBSWSCALE_VERSION_MAJOR LIBSWSCALE_VERSION)
-
+        SET(VERBOSE 1)
 	if (VERBOSE)
 		MESSAGE(STATUS "AVFORMAT : ${LIBAVFORMAT_VERSION}, Major : ${LIBAVFORMAT_VERSION_MAJOR}")
 		MESSAGE(STATUS "AVCODEC  : ${LIBAVCODEC_VERSION}, Major : ${LIBAVCODEC_VERSION_MAJOR}")
