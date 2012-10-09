@@ -140,6 +140,16 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
     return true;
 }
 /**
+        \fn setAvCodec
+*/
+static bool setAvCodec(AVCodecContext *c,enum AVCodecID id)
+{
+        AVCodec *d=avcodec_find_decoder(id);
+        ADM_assert(d);
+        c->codec=d;
+        return true;
+}
+/**
     \fn initVideo
     \brief setup video part of muxer
 */
@@ -202,9 +212,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                             c->max_b_frames=0;
                         }
                         c->codec_id = CODEC_ID_H264;
-                        c->codec=new AVCodec;
-                        memset(c->codec,0,sizeof(AVCodec));
-                        c->codec->name=ADM_strdup("H264");
+                         setAvCodec(c,CODEC_ID_H264);
                 }
                 else
                 {
@@ -220,9 +228,8 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 
                            if(isVP6Compatible(stream->getFCC()))
                                 {
-                                         c->codec=new AVCodec;
                                          c->codec_id=CODEC_ID_VP6F;
-                                         c->codec->name=ADM_strdup("VP6F");
+                                         setAvCodec(c,CODEC_ID_VP6F);
                                          c->has_b_frames=0; // No PTS=cannot handle CTS...
                                          c->max_b_frames=0;
                                 }else
@@ -231,10 +238,8 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                                 c->has_b_frames=0; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=0;
                                                 c->codec_id=CODEC_ID_FLV1;
+                                                setAvCodec(c,CODEC_ID_FLV1);
 
-                                                c->codec=new AVCodec;
-                                                memset(c->codec,0,sizeof(AVCodec));
-                                                c->codec->name=ADM_strdup("FLV1");
                                         }else
                                         {
                                             if(fourCC::check(stream->getFCC(),(uint8_t *)"MPEG1"))

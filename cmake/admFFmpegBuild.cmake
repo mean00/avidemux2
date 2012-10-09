@@ -273,6 +273,7 @@ install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMU
 
 install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
 	"${FFMPEG_SOURCE_DIR}/libavcodec/version.h" 
+	"${FFMPEG_SOURCE_DIR}/libavcodec/old_codec_ids.h" 
 	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec")
 install(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
 	"${FFMPEG_SOURCE_DIR}/libavformat/version.h" 
@@ -284,7 +285,11 @@ install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/error.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/dict.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/version.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/time.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/intfloat.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/samplefmt.h" "${FFMPEG_SOURCE_DIR}/libavutil/audioconvert.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil")
 install(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc")
 install(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale")
+install(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale")
