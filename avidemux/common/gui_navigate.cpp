@@ -35,7 +35,7 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
-extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss);
+extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 bool   GUI_GoToTime(uint64_t time);
 bool   GUI_SeekByTime(int64_t time);
 
@@ -156,9 +156,9 @@ static int ignore_change=0;
 
 	      uint32_t mm, hh, ss, ms;
             ms2time((uint32_t)(pts/1000),&hh,&mm,&ss,&ms);
-	      if (DIA_gotoTime(&hh, &mm, &ss))
+	      if (DIA_gotoTime(&hh, &mm, &ss,&ms))
           {
-		    A_jumpToTime(hh, mm, ss, 0);
+		    A_jumpToTime(hh, mm, ss, ms);
           }
 	  }
 	  break;

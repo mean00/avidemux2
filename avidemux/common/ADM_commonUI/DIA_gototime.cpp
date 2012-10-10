@@ -1,20 +1,41 @@
+/**
+ * \file DIA_gototime.cpp
+ */
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 #include "config.h"
 #include "ADM_default.h"
 #include "DIA_factory.h"
-
-uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss)
+#include "ADM_vidMisc.h"
+/**
+ * \fn DIA_gotoTime
+ * \brief Popup a display to enter hour/minutes/seconds/ms
+ * @param hh
+ * @param mm
+ * @param ss
+ * @param ms
+ * @return 
+ */
+uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms)
 {
-uint32_t h=*hh,m=*mm,s=*ss;
+uint32_t v=(*hh)*3600*1000+(*mm)*60*1000+(*ss)*1000+*ms;
 
-diaElemUInteger   eh(&h,QT_TR_NOOP("_Hours:"),0,24);
-diaElemUInteger   em(&m,QT_TR_NOOP("_Minutes:"),0,59);
-diaElemUInteger   es(&s,QT_TR_NOOP("_Seconds:"),0,59);
-        diaElem *allWidgets[]={&eh,&em,&es};
+diaElemTimeStamp   eh(&v,QT_TR_NOOP("TimeStamp:"),0,24);
+diaElem *allWidgets[]={&eh};
 
-  if(!diaFactoryRun(QT_TR_NOOP("Go to Time"),3,allWidgets)) return 0;
-    *hh=h;
-    *mm=m;
-    *ss=s;
-    return 1;
+  if(!diaFactoryRun(QT_TR_NOOP("Go to Time"),1,allWidgets)) return 0;
+
+//
+ms2time(v,hh,mm,ss,ms);
+return 1;
 
 }
+// EOF
