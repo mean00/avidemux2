@@ -70,8 +70,8 @@ while(1)
     
     uint32_t mx=9*3600*1000;
     diaElemMenu     menu(&(eInOut),QT_TR_NOOP("_Fade type:"), 2,menuE);
-    diaElemUInteger start(&(param.startFade),QT_TR_NOOP("_Start time (ms):"),0,mx);
-    diaElemUInteger end(&(param.endFade),QT_TR_NOOP("_End time (ms):"),0,mx);
+    diaElemTimeStamp start(&(param.startFade),QT_TR_NOOP("_Start time (ms):"),0,mx);
+    diaElemTimeStamp end(&(param.endFade),QT_TR_NOOP("_End time (ms):"),0,mx);
    // diaElemToggle   black(&(param.toBlack),QT_TR_NOOP("Fade to _black"));
     
     //diaElem *elems[4]={&menu,&start,&end,&black};
