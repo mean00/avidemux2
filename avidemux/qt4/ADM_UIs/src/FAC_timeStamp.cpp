@@ -24,8 +24,19 @@
 #include "ADM_default.h"
 #include "DIA_factory.h"
 #include "ADM_dialogFactoryQt4.h"
+#include "ADM_vidMisc.h"
 
 extern const char *shortkey(const char *);
+/**
+ *      \struct myTimeWidget
+ */
+typedef struct
+{
+    QSpinBox *hours;
+    QSpinBox *minutes;
+    QSpinBox *seconds;
+    QSpinBox *mseconds;
+}myTimeWidget;
 
 namespace ADM_Qt4Factory
 {
@@ -66,6 +77,9 @@ diaElemTimeStamp::diaElemTimeStamp(uint32_t *v,const char *toggleTitle,const uin
  */
 diaElemTimeStamp::~diaElemTimeStamp()
 {
+  myTimeWidget *w=(myTimeWidget *)myWidget;
+  myWidget=NULL;
+  if(w) delete w;
   if(paramTitle)
     delete paramTitle;
 }
@@ -78,20 +92,49 @@ diaElemTimeStamp::~diaElemTimeStamp()
  */
 void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
 {
-QSpinBox *box=new QSpinBox((QWidget *)dialog);
+  myTimeWidget *myTWidget = new myTimeWidget;
+  myTWidget->minutes=new QSpinBox((QWidget *)dialog);
+  myTWidget->hours=new QSpinBox((QWidget *)dialog);
+  myTWidget->seconds=new QSpinBox((QWidget *)dialog);
+  myTWidget->mseconds=new QSpinBox((QWidget *)dialog);
+  myWidget=(void *)myTWidget; 
+  
+  myTWidget->minutes->setRange(0,59);
+  myTWidget->seconds->setRange(0,59);
+  myTWidget->mseconds->setRange(0,999);
+  
+  QLabel *textSemiColumn=new QLabel( "h:");
+  QLabel *textSemiColumn2=new QLabel( "m:");
+  QLabel *textComma=new QLabel( "s,");
+  
   QGridLayout *layout=(QGridLayout*) opaque;
   QHBoxLayout *hboxLayout = new QHBoxLayout();
- myWidget=(void *)box; 
-   
- box->setValue(*(uint32_t *)param);
+  
+  uint32_t ms=*(uint32_t *)param;
+  // split time in ms into hh/mm/ss
+  uint32_t hh,mm,ss,msec;
+  ms2time(ms,&hh,&mm,&ss,&msec);
+  myTWidget->hours->setValue(hh);
+  myTWidget->minutes->setValue(mm);
+  myTWidget->seconds->setValue(ss);
+  myTWidget->mseconds->setValue(msec);
  
  QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
- text->setBuddy(box);
+// text->setBuddy(box);
 
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
- hboxLayout->addWidget(box);
+ hboxLayout->addWidget(myTWidget->hours);
+ hboxLayout->addWidget(textSemiColumn);
+ 
+ hboxLayout->addWidget(myTWidget->minutes);
+ hboxLayout->addWidget(textSemiColumn2);
+ 
+ hboxLayout->addWidget(myTWidget->seconds);
+ hboxLayout->addWidget(textComma);
+ hboxLayout->addWidget(myTWidget->mseconds);
+ 
  hboxLayout->addItem(spacer);
 
  layout->addWidget(text,line,0);
@@ -105,11 +148,15 @@ QSpinBox *box=new QSpinBox((QWidget *)dialog);
 void diaElemTimeStamp::getMe(void)
 {
         uint32_t val;
-        QSpinBox *box=(QSpinBox *)myWidget;
-        val=box->value();
-        if(val<valueMin) val=valueMin;
-        if(val>valueMax) val=valueMax;
-        *(uint32_t *)param=val;
+        myTimeWidget *widget=(myTimeWidget *)myWidget;
+        uint32_t hh=widget->hours->value();
+        uint32_t mm=widget->minutes->value();
+        uint32_t ss=widget->seconds->value();
+        uint32_t ms=widget->mseconds->value();
+        
+        uint32_t valueInMs;
+        valueInMs=hh*3600*1000+mm*60*1000+ss*1000+ms;
+        *(uint32_t *)param=valueInMs;
  
 }
 

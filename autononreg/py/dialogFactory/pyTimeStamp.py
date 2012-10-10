@@ -1,10 +1,11 @@
-teger = DFTimeStamp("Integer(10/20):",10,20);
+teger = DFTimeStamp("TimeStamp (1:2:3,4):",0,30000);
 dlgWizard = DialogFactory("Dialog Factory : TimeStamp");
 
 
-teger.value=15;
+teger.value=1*3600*1000+2*60*1000+3*1000+4;
 dlgWizard.addControl(teger);
-
+print("Dialog input ");
+print(teger.value);
 res=dlgWizard.show()
 print("Dialog output ");
 print(res);
