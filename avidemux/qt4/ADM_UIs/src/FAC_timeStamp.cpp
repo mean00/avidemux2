@@ -93,8 +93,8 @@ diaElemTimeStamp::~diaElemTimeStamp()
 void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
 {
   myTimeWidget *myTWidget = new myTimeWidget;
-  myTWidget->minutes=new QSpinBox((QWidget *)dialog);
   myTWidget->hours=new QSpinBox((QWidget *)dialog);
+  myTWidget->minutes=new QSpinBox((QWidget *)dialog);
   myTWidget->seconds=new QSpinBox((QWidget *)dialog);
   myTWidget->mseconds=new QSpinBox((QWidget *)dialog);
   myWidget=(void *)myTWidget; 
