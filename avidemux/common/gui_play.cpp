@@ -359,6 +359,8 @@ bool  GUIPlayback::initializeAudio(void)
     // if audio shift is activated, take it into account
     //
     EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+    if(!ed)
+        return false;
     if(ed->audioEncodingConfig.shiftEnabled)
         shift=ed->audioEncodingConfig.shiftInMs;
     playbackAudio = createPlaybackFilter(startPts,shift);
