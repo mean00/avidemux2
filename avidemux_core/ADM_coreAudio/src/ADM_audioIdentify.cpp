@@ -66,7 +66,7 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
             {
                     if(!syncoff2)
                     {
-                            ADM_warning("\tProbably MP2 : Fq=%d br=%d chan=%d\n", (int)mp2info.samplerate,
+                            ADM_warning("\tProbably MP2/3 : Fq=%d br=%d chan=%d\n", (int)mp2info.samplerate,
                                                                 (int)mp2info.bitrate,
                                                                 (int)mp2info.mode);
                             // fill in info
@@ -74,11 +74,18 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
                             info.byterate=(mp2info.bitrate>>3)*1000;
                             if(mp2info.layer==1) info.encoding=WAV_MP2;
                                 else             info.encoding=WAV_MP3;
-                            if(mp2info.mode==1)
-                                            info.channels=1;
-                            else
+                            switch(mp2info.mode)
+                            {
+                                 case 1: // Joint stereo
+                                 case 0: // Stereo
+                                 case 2: // dual channel
+                                 default:
                                             info.channels=2;
-            
+                                            break;
+                                 case 3: // mono
+                                            info.channels=1;
+                                            break;
+                            }
                             return true;
                     }
                     failAttempt++;
