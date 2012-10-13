@@ -104,7 +104,9 @@ bool             ADM_edAudioTrackExternal::refillPacketBuffer(void)
     }
     //
     // Ok we have a packet, rescale audio
-    if(dts==ADM_NO_PTS) packetBufferDts=ADM_NO_PTS;
+    //if(dts==ADM_NO_PTS) packetBufferDts=ADM_NO_PTS;
+    packetBufferDts=dts; // Could have a small error here..
+    vprintf("Refilling buffer dts=%s\n",ADM_us2plain(packetBufferDts));
     return true;
 }
 /**
@@ -185,8 +187,8 @@ again:
 
 
     // If lastDts is not initialized....
-    if(lastDts==ADM_AUDIO_NO_DTS) lastDts=packetBufferDts;
-    
+    if(lastDts==ADM_AUDIO_NO_DTS) setDts(packetBufferDts);
+    vprintf("Last Dts=%s\n",ADM_us2plain(lastDts));
     //
     //  The packet is ok, decode it...
     //
@@ -231,6 +233,7 @@ bool            ADM_edAudioTrackExternal::goToTime(uint64_t nbUs)
         {
             codec->resetAfterSeek();
         }
+        lastDts=ADM_NO_PTS;
         return internalAudioStream->goToTime(nbUs);
 }
 // EOF
