@@ -10,6 +10,12 @@ GPL-v2
 #include "ADM_mp3info.h"
 #include "DIA_working.h"
 #include "ADM_clock.h"
+
+#if 1 
+#define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
 /**
     \fn ADM_audioStreamMP3
     \brief constructor
@@ -171,12 +177,6 @@ DIA_workingBase *work=createWorking("Building time map");
             seekPoints.append(seek);
             markCounter=0;
         }
-
-        if(false==access->getPacket(buffer+limit, &size, 2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit,&newDts))
-        {
-            break;
-        }
-        limit+=size;
         // Shrink ?
         if(limit>ADM_AUDIOSTREAM_BUFFER_SIZE && start> 10*1024)
         {
@@ -184,6 +184,14 @@ DIA_workingBase *work=createWorking("Building time map");
             limit-=start;
             start=0;
         }
+
+        if(false==access->getPacket(buffer+limit, &size, 2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit,&newDts))
+        {
+            aprintf("Get packet failed\n");
+            break;
+        }
+        aprintf("Got MP3 packet : size =%d\n",(int)size);
+        limit+=size;
         // Start at...
         pos=access->getPos();
         uint32_t now=clk->getElapsedMS();
