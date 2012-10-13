@@ -10,6 +10,7 @@ GPL-v2
 #include "ADM_mp3info.h"
 #include "DIA_working.h"
 #include "ADM_clock.h"
+#include "ADM_vidMisc.h"
 
 #if 1 
 #define aprintf(...) {}
@@ -90,6 +91,13 @@ bool         ADM_audioStreamMP3::goToTime(uint64_t nbUs)
         ADM_error("VBR MP2/MP3 stream with no time map, cannot seek");
         return false;
     }
+    if(nbUs<=seekPoints[0]->timeStamp) // too early
+    {
+            start=limit=0;
+            access->setPos(0);
+            setDts(0);
+            return true;
+    }
     // Search the switching point..
     for(int i=0;i<seekPoints.size()-1;i++)
     {
@@ -99,9 +107,12 @@ bool         ADM_audioStreamMP3::goToTime(uint64_t nbUs)
             start=limit=0;
             access->setPos(seekPoints[i]->offset);
             setDts(seekPoints[i]->timeStamp);
+            ADM_info("MP3 : Time map : Seek request for %s\n",ADM_us2plain(nbUs));
+            ADM_info("MP3 : Sync found at %s\n",ADM_us2plain(seekPoints[i]->timeStamp));
             return true;
         }
     }
+    ADM_error("VBR MP2/MP3 request for time outside of time map, cannot seek");
     return false;
 }
 /**
@@ -113,10 +124,15 @@ uint8_t ADM_audioStreamMP3::getPacket(uint8_t *buffer,uint32_t *size, uint32_t s
 uint8_t data[ADM_LOOK_AHEAD];
 MpegAudioInfo info;
 uint32_t offset;
+int nbSyncBytes=0;
     while(1)
     {
         // Do we have enough ? Refill if needed ?
-        if(needBytes(ADM_LOOK_AHEAD)==false) return 0;
+        if(needBytes(ADM_LOOK_AHEAD)==false) 
+        {
+            ADM_warning("MP3: Not enough data to lookup header\n");
+                return 0;
+        }
         // Peek
         peek(ADM_LOOK_AHEAD,data);
         if(getMpegFrameInfo(data,ADM_LOOK_AHEAD, &info,NULL,&offset))
@@ -132,12 +148,15 @@ uint32_t offset;
             //    printf("MP3 DTS =%"PRId64" ->",*dts);
                 advanceDtsBySample(*nbSample);
                 //printf("%"PRId64" , size=%d\n",*dts,*size);
+                if(nbSyncBytes)
+                        ADM_info("[MP3 Stream] Sync found after %d bytes...\n",nbSyncBytes);
                 return 1;
             }
             
         }
         //discard one byte
-        printf("[MP3 Stream] Syncing...\n");
+        nbSyncBytes++;
+        
         read8();
     }
 }
@@ -167,7 +186,7 @@ DIA_workingBase *work=createWorking("Building time map");
     while(1)
     {
         // Push where we are...
-        markCounter++;
+        
         if(markCounter>SAVE_EVERY_N_BLOCKS)
         {
             MP3_seekPoint *seek=new MP3_seekPoint;
@@ -218,6 +237,7 @@ DIA_workingBase *work=createWorking("Building time map");
             {
                 start+=info.size;
                 advanceDtsBySample(info.samples);
+                markCounter++;
                 continue;
             }
             break;
