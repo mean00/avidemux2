@@ -141,7 +141,11 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
       // don't ask too much front.
       asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
       asked/=_wavHeader.channels; // float->samples
-      _incoming->getPCMPacket(&(_incomingBuffer[_tail]), asked, &got,&dts);
+      if(false==_incoming->getPCMPacket(&(_incomingBuffer[_tail]), asked, &got,&dts))
+      {
+          got=0;
+          dts=ADM_NO_PTS;
+      }
       uint64_t endDts=dts+got*sampleToUs;
       aprintf("StartTime : %s\n",ADM_us2plain(_startTime*1000));
       aprintf("packet start : %s\n",ADM_us2plain(dts));
@@ -149,7 +153,8 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
       
       if(dts!=ADM_NO_PTS && endDts < _startTime*1000)
       {
-          ADM_info("Packet too early, dropping it...");
+          ADM_info("Packet too early, dropping it... :%s",ADM_us2plain(dts));
+          ADM_info("/ start is at :%s\n",ADM_us2plain(_startTime*1000));
           continue;
       }
       got*=_wavHeader.channels; // sample->float
