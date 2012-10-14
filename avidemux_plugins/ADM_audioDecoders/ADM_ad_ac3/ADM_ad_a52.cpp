@@ -32,6 +32,8 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 	protected:
 		void *ac3_handle;
 		void *ac3_sample;
+                bool init();
+                bool clean();
 
 	public:
 		ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
@@ -39,6 +41,7 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 		virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
 		virtual	uint8_t isCompressed(void) {return 1;}
 		virtual	uint8_t isDecompressable(void) {return 1;}
+                virtual bool    resetAfterSeek(void);
 
    };
 // Supported formats + declare our plugin
@@ -53,11 +56,20 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraData)
 		:   ADM_Audiocodec(fourcc,*info)
 {
-    int flags=0;
     
     ADM_assert(fourcc==WAV_AC3);
     ac3_handle=NULL;
     ac3_sample=NULL;
+    init();
+      
+}
+/**
+        \fn init
+*/
+bool ADM_AudiocodecAC3::init()
+{
+    int flags=0;
+    
 #ifdef ADM_CPU_X86
 #define CHK(x,y) if(CpuCaps::has##x()) flags|=MM_ACCEL_X86_##y;
     CHK(MMX,MMX);
@@ -78,10 +90,12 @@ ADM_AudiocodecAC3::ADM_AudiocodecAC3( uint32_t fourcc, WAVHeader *info,uint32_t 
         ADM_assert(0);
     }
 
-      
+   return true;      
 }
-
-ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
+/**
+        \fn clean
+*/
+bool ADM_AudiocodecAC3::clean( )
 {
     if(ac3_handle)
     {
@@ -89,7 +103,23 @@ ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
         ac3_handle=NULL;
         ac3_sample=NULL;
     }
+   return true;      
     
+}
+
+ADM_AudiocodecAC3::~ADM_AudiocodecAC3( )
+{
+        clean();
+}
+/**
+        \fn resetAfterSeek
+*/
+bool    ADM_AudiocodecAC3::resetAfterSeek(void)
+{
+        ADM_info(" flushing after seek \n");
+        clean();
+        init();
+        return true;
 }
 
 
