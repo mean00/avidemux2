@@ -117,9 +117,9 @@ bool      ADM_audioStreamBuffered::peek(uint32_t n,uint8_t *d)
 */
 bool      ADM_audioStreamBuffered::goToTime(uint64_t nbUs)
 {
+    limit=start=0;
     if(true==ADM_audioStream::goToTime(nbUs))
     {
-        limit=start=0;
         return true;
     }
     return false;
