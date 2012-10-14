@@ -202,7 +202,7 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
             ADM_warning("\tProbably AC3 : Fq=%d br=%d chan=%d\n",(int)fq,(int)br,(int)chan);
             info.encoding=WAV_AC3;
             info.channels=chan;
-            info.byterate=(br>>3)*1000;
+            info.byterate=br; // already in bytes/sec
             info.frequency=fq;
             return true;
         }
