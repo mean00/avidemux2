@@ -33,7 +33,7 @@ uint8_t   psIndexer(const char *file);
 
 extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
 {
-char *index=(char *)alloca(strlen(fileName)+4);
+char *index=(char *)alloca(strlen(fileName)+6);
 int count=0;
     if(!detectPs(fileName))
     {

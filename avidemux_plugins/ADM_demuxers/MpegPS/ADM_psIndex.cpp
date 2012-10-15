@@ -191,7 +191,7 @@ bool bAppend=false;
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-    char *indexName=(char *)alloca(strlen(file)+5);
+    char *indexName=(char *)alloca(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
 
     FP_TYPE append=FP_DONT_APPEND;
