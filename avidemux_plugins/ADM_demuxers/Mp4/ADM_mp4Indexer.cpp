@@ -112,7 +112,7 @@ uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampl
 
         for(int j=info->Sc[i]-1;j<info->nbCo;j++)
         {
-              adm_printf(ADM_PRINT_VERY_VERBOSE,"For chunk %lu, %lu samples\n",j,info->Sn[i]);
+              aprintf("For chunk %lu, %lu samples\n",j,info->Sn[i]);
               samplePerChunk[j]=info->Sn[i];
         }
     }
@@ -177,7 +177,7 @@ uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampl
               totalBytes+=track->index[i].size;
           }
     }
-    printf("Found %u bytes\n",totalBytes);
+    printf("Found %u bytes, spred over %d blocks\n",totalBytes,info->nbCo);
     // Now time to update the time...
     // Normally they have all the same duration
     if(info->nbStts!=1) printf("WARNING: Same size, different duration\n");
@@ -186,9 +186,11 @@ uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampl
 
       for(int i=0;i<info->nbCo;i++)
       {
+              printf("SttC = %d",(int)info->SttsC[i]);
+              printf("SttN = %d\n",(int)info->SttsN[i]);
               track->index[i].dts=info->SttsC[i]*info->SttsN[i]; // duration in clock
               track->index[i].pts=ADM_COMPRESSED_NO_PTS; // No seek
-              adm_printf(ADM_PRINT_VERY_VERBOSE,"Audio chunk : %lu time :%lu\n",i,track->index[i].time);
+              ADM_info("Audio chunk : %lu time :%lu\n",i,track->index[i].dts);
               
       }
       if(max ) // We have some big chunks we need to split them
@@ -202,7 +204,7 @@ uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampl
           track->index[i].dts=sum/trackScale;
           sum+=track->index[i].dts*1000*1000;
       }
-    printf("Index done\n");
+    printf("Index done (sample same size)\n");
     return 1;
 }
 /**
@@ -238,7 +240,7 @@ uint32_t i,j,cur;
         //*********************************************************
 	if(info->SzIndentical && isAudio)// in that case they are all the same size, i.e.audio
 	{
-            processAudio(track,trackScale,info,outNbChunk);
+           return  processAudio(track,trackScale,info,outNbChunk);
         }
 	// We have different packet size
 	// Probably video
