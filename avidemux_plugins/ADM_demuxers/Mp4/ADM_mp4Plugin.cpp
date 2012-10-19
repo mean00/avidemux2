@@ -37,12 +37,19 @@ uint8_t head[8];
     fread(head,8,1,f);
     fclose(f);
     uint8_t *z=&(head[4]);
- if(fourCC::check(z,(uint8_t *)"ftyp") ||
-    fourCC::check(z,(uint8_t *)"pnot") ||
-	fourCC::check(z,(uint8_t *)"mdat") ||
-	fourCC::check(z,(uint8_t *)"moov") ||
-	fourCC::check(z,(uint8_t *)"wide") ||
-        fourCC::check(magic,(uint8_t *)"skip"))
+    
+    const char *allowedType[]={
+                "ftyp","pnot","mdat","moov","wide","skip"
+                }    ;
+    const int nbAllowedType=sizeof(allowedType)/sizeof(const char *);
+    bool found=false;
+    for(int i=0;i<nbAllowedType && found==false;i++)
+        if(fourCC::check(z,(uint8_t *)allowedType[i]))
+        {
+            printf("Match %s\n",allowedType[i]);
+            found=true;
+        }
+    if(found)
     {
             printf (" [MP4]MP4/MOV/3GP file detected...\n");
 	        return 100;
