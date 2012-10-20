@@ -26,7 +26,7 @@
 #include "ADM_coreUtils.h"
 #include "ADM_mp4Tree.h"
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf(...) printf
@@ -1124,6 +1124,11 @@ nextAtom:
             {
               printf("Overriding size %"PRIu32" -> %"PRIu32"\n", info.SzIndentical,info.SzIndentical*2*ADIO.channels);
               info.SzIndentical=info.SzIndentical*2*ADIO.channels;
+            }
+            if(info.SzIndentical ==1 && (ADIO.encoding==WAV_ULAW ))
+            {
+              printf("Overriding size %"PRIu32" -> %"PRIu32"\n", info.SzIndentical,info.SzIndentical*ADIO.channels);
+              info.SzIndentical=info.SzIndentical*ADIO.channels;
             }
             r=indexify(&(_tracks[1+nbAudioTrack]),trackScale,&info,1,&nbo);
             printf("Indexed audio, nb blocks:%u\n",nbo);
