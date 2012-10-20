@@ -26,12 +26,10 @@
 #include "ADM_coreUtils.h"
 #include "ADM_mp4Tree.h"
 
-#if 1
-#define adm_printf(...) {}
+#if 0
 #define aprintf(...) {}
 #else
-#define adm_printf(a,b...) ADM_info(b)
-#define aprintf(...) ADM_info
+#define aprintf(...) printf
 #endif
 
 #define QT_TR_NOOP(x) x
@@ -97,7 +95,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
   printf("Analyzing file and atoms\n");
   if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_MOOV,&moov))
   {
-       adm_printf(ADM_PRINT_ERROR,"Cannot locate moov atom\n");
+       aprintf(ADM_PRINT_ERROR,"Cannot locate moov atom\n");
        return 0;
   }
   ADM_assert(moov);
@@ -106,7 +104,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
     adm_atom son(moov);
     if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
     {
-      adm_printf(ADM_PRINT_DEBUG,"Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+      aprintf("Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
     }
     else
     {
@@ -120,7 +118,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
             } ;
             break;
         default :
-                adm_printf(ADM_PRINT_DEBUG,"atom %s not handled\n",fourCC::tostringBE(son.getFCC()));
+                aprintf("atom %s not handled\n",fourCC::tostringBE(son.getFCC()));
                 break;
       }
 
@@ -186,11 +184,11 @@ uint8_t MP4Header::parseTrack(void *ztom)
      adm_atom son(tom);
      if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
      {
-       adm_printf(ADM_PRINT_DEBUG,"Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+       aprintf("Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
        son.skipAtom();
        continue;
      }
-     adm_printf(ADM_PRINT_DEBUG,"\tProcessing atom %s \n",fourCC::tostringBE(son.getFCC()));
+     aprintf("\tProcessing atom %s \n",fourCC::tostringBE(son.getFCC()));
      switch(id)
      {
        case ADM_MP4_TKHD:
@@ -204,12 +202,12 @@ uint8_t MP4Header::parseTrack(void *ztom)
 				  else
 					  tom->skipBytes(8);
 
-				  adm_printf(ADM_PRINT_DEBUG,"Track Id: %"PRIu32"\n", son.read32());
+				  aprintf("Track Id: %"PRIu32"\n", son.read32());
 				  son.skipBytes(4);
 
 				  uint64_t duration = (version == 1) ? son.read64() : son.read32();
 
-				  adm_printf(ADM_PRINT_DEBUG, "Duration: %"PRIu32" (ms)\n", (duration * 1000) / _videoScale);
+				  aprintf( "Duration: %"PRIu32" (ms)\n", (duration * 1000) / _videoScale);
 				  son.skipBytes(8);
 				  son.skipBytes(8);
 				  son.skipBytes(36);
@@ -217,7 +215,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
 				  w = son.read32() >> 16;
 				  h = son.read32() >> 16;
 
-				  adm_printf(ADM_PRINT_DEBUG,"tkhd: %ld %ld\n", w, h);
+				  aprintf("tkhd: %ld %ld\n", w, h);
 				  break;
               }
         case ADM_MP4_MDIA:
@@ -257,7 +255,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
      adm_atom son(tom);
      if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
      {
-       adm_printf(ADM_PRINT_DEBUG,"[MDIA]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+       aprintf("[MDIA]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
        son.skipAtom();
        continue;
      }
@@ -276,16 +274,16 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
 
 		   trackScale = son.read32();
 
-		   adm_printf(ADM_PRINT_DEBUG, "MDHD, Trackscale in mdhd: %u\n", trackScale);
+		   aprintf( "MDHD, Trackscale in mdhd: %u\n", trackScale);
 
 		   if (!trackScale)
 			   trackScale = 600; // default
 
 		   uint64_t duration = (version == 1) ? son.read64() : son.read32();
 
-		   adm_printf(ADM_PRINT_DEBUG, "MDHD, duration in mdhd: %u (unscaled)\n", duration);
+		   aprintf( "MDHD, duration in mdhd: %u (unscaled)\n", duration);
 		   duration = (duration * 1000.) / trackScale;
-		   adm_printf(ADM_PRINT_DEBUG, "MDHD, duration in mdhd: %u (scaled ms)\n", duration);
+		   aprintf( "MDHD, duration in mdhd: %u (scaled ms)\n", duration);
 		   trackDuration = duration;
 //		   printf("MDHD, Track duration: %s, trackScale: %u\n", ms2timedisplay((1000 * duration) / trackScale), trackScale);
 
@@ -338,7 +336,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
               adm_atom grandson(&son);
               if(!ADM_mp4SearchAtomName(grandson.getFCC(), &id,&container))
               {
-                adm_printf(ADM_PRINT_DEBUG,"[MINF]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+                aprintf("[MINF]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
                 grandson.skipAtom();
                 continue;
               }
@@ -356,7 +354,7 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
        }
        break;
         default:
-            adm_printf(ADM_PRINT_DEBUG,"** atom  NOT HANDLED [%s] \n",fourCC::tostringBE(son.getFCC()));
+            aprintf("** atom  NOT HANDLED [%s] \n",fourCC::tostringBE(son.getFCC()));
      }
 
      son.skipAtom();
@@ -380,7 +378,7 @@ uint8_t       MP4Header::parseEdts(void *ztom)
      adm_atom son(tom);
      if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
      {
-       adm_printf(ADM_PRINT_DEBUG,"[EDTS]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+       aprintf("[EDTS]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
        son.skipAtom();
        continue;
      }
@@ -405,7 +403,7 @@ uint8_t       MP4Header::parseEdts(void *ztom)
        }
        break;
         default:
-            adm_printf(ADM_PRINT_DEBUG,"** atom  NOT HANDLED [%s] \n",fourCC::tostringBE(son.getFCC()));
+            aprintf("** atom  NOT HANDLED [%s] \n",fourCC::tostringBE(son.getFCC()));
      }
    }
    
@@ -433,7 +431,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
      adm_atom son(tom);
      if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
      {
-       adm_printf(ADM_PRINT_DEBUG,"[STBL]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+       aprintf("[STBL]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
        son.skipAtom();
        continue;
      }
@@ -469,7 +467,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
 
                         info.SttsN[i]=son.read32();
                         info.SttsC[i]=son.read32();
-                        adm_printf(ADM_PRINT_VERY_VERBOSE,"stts: count:%u size:%u (unscaled)\n",info.SttsN[i],info.SttsC[i]);
+                        aprintf("stts: count:%u size:%u (unscaled)\n",info.SttsN[i],info.SttsC[i]);
                         //dur*=1000.*1000.;; // us
                         //dur/=myScale;
                 }
@@ -487,7 +485,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                         info.Sc[j]=son.read32();
                         info.Sn[j]=son.read32();
                         son.read32();
-                        adm_printf(ADM_PRINT_VERY_VERBOSE,"\t sc  %d : sc start:%u sc count: %u\n",j,info.Sc[j],info.Sn[j]);
+                        aprintf("\t sc  %d : sc start:%u sc count: %u\n",j,info.Sc[j],info.Sn[j]);
                 }
 
             }
@@ -502,7 +500,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
               printf("%"PRIu32" frames /%"PRIu32" nbsz..\n",n,info.nbSz);
               if(n)
                       {
-                            adm_printf(ADM_PRINT_VERY_VERBOSE,"\t\t%"PRIu32" frames of the same size %"PRIu32" , n=%"PRIu32"\n",
+                            aprintf("\t\t%"PRIu32" frames of the same size %"PRIu32" , n=%"PRIu32"\n",
                                 info.nbSz,info.SzIndentical,n);
                             info.SzIndentical=n;
                             info.Sz=NULL;
@@ -545,7 +543,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                 {
                     if(i<20)
                     {
-                        adm_printf(ADM_PRINT_VERY_VERBOSE,"Ctts: nb: %u (%x) val:%u (%x)\n",count[i],count[i],values[i],values[i]);
+                        aprintf("Ctts: nb: %u (%x) val:%u (%x)\n",count[i],count[i],values[i],values[i]);
                     }
                     for(k=0;k<count[i];k++)
                     {
@@ -576,7 +574,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
 		   for(int j = 0; j < info.nbCo; j++)
 		   {
 			   info.Co[j] = son.read32();
-			   adm_printf(ADM_PRINT_VERY_VERBOSE, "Chunk offset: %u / %u : %"PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
+			   aprintf( "Chunk offset: %u / %u : %"PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
 		   }
        }
        break;
@@ -592,7 +590,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
 		   for(int j = 0; j< info.nbCo; j++)
 		   {
 			   info.Co[j] = son.read64();
-			   adm_printf(ADM_PRINT_VERY_VERBOSE, "Chunk offset: %u / %u : %"PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
+			   aprintf( "Chunk offset: %u / %u : %"PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
 		   }
        }
        break;
@@ -601,7 +599,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                 son.read32(); // flags & version
                 int nbEntries=son.read32();
                 int left;
-                adm_printf(ADM_PRINT_DEBUG,"[STSD]Found %d entries\n",nbEntries);
+                aprintf("[STSD]Found %d entries\n",nbEntries);
                 for(int i=0;i<nbEntries;i++)
                 {
                    int entrySize=son.read32();
