@@ -63,6 +63,7 @@ public slots:
     void        runNow(void); 
     void        quit(void);
     void        runAllJob(void);
+    void        cleanup(void);
 };
 #endif	// Q_gui2_h
 

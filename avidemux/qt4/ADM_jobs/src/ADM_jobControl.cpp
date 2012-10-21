@@ -160,6 +160,7 @@ jobWindow::jobWindow(void) : QDialog()
 
    connect(ui.pushButtonQuit,SIGNAL(pressed()),this,SLOT(quit()));
    connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
+   connect(ui.pushButtonCleanup,SIGNAL(pressed()),this,SLOT(cleanup()));
 
     // Start our socket
    if(false==mySocket.createBindAndAccept(&localPort))
@@ -285,6 +286,43 @@ void jobWindow::runNow(void)
 void jobWindow::quit(void)
 {
     done(1);
+}
+/**
+ * \fn cleanup
+ * \brief purge finished jobs
+ */
+void jobWindow::cleanup(void)
+{
+    int n=listOfJob.size();
+    ADM_info("Cleaning up %d jobs\n",n);
+    std::vector <int> toDel;
+    for(int i=0;i<n;i++)
+    {
+            ADMJob *j=&(listOfJob[i]);
+
+            if(j->status==ADM_JOB_OK)
+            {
+                toDel.push_back(i);
+            }
+    }
+    n=toDel.size();
+    if(!n) 
+    {
+        ADM_info("Nothing to do ..\n");
+        return;
+    }
+    ADM_info("%d jobs done to delete\n",n);
+    for(int i=n-1;i>=0;i--)
+    {
+        int dex=toDel[i];
+        ADM_info("Deleting job %d\n",dex);
+        ADMJob *j=&(listOfJob[dex]);
+        ADM_jobDelete(*j);
+    }
+    toDel.clear();
+    ADM_info("%d jobs to delete\n");
+    refreshList();
+    return ;
 }
 /**
     \fn runAllJob
