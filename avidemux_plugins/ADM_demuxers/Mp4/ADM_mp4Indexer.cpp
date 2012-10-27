@@ -32,7 +32,7 @@
 
 
 #define QT_TR_NOOP(x) x
-#define MAX_CHUNK_SIZE (4*1024)
+#define MAX_CHUNK_SIZE (16*1024)
 uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
 /**
  * \fn splitAudio
@@ -41,59 +41,66 @@ uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
  * @param vinfo
  * @return 
  */
-bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackScale,int extraBlocks )
+bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackScale)
 {
+        uint32_t maxChunkSize=(MAX_CHUNK_SIZE>>5)<<5;
+        // Probe if it is needed
+        int extra=0;
+        for(int i=0;i<track->nbIndex;i++)
+        {
+            int x=track->index[i].size/(maxChunkSize+1);
+            extra+=x;
+        }
+        if(!extra)
+        {
+            ADM_info("No very large blocks found\n");
+            return true;
+        }   
+        ADM_info("%d large blocks found, splitting into %d bytes block\n",extra,maxChunkSize);
         
-        uint64_t audioClock=0;
-        uint32_t newNbCo=track->nbIndex+extraBlocks*2; // *2 is enough, should be.
-        uint32_t w=0;
-        uint32_t one_go;
+        uint32_t newNbCo=track->nbIndex+extra*2; // *2 is enough, should be.       
+        MP4Index *newindex=new MP4Index[newNbCo];
+        int w=0;
 
-       one_go=MAX_CHUNK_SIZE/info->SzIndentical;
-       one_go=one_go*info->SzIndentical;
-       printf("Splitting large audio blocks : One go :%u\n",one_go);
-       MP4Index *newindex=new MP4Index[newNbCo];
-
-      int64_t time_increment; // Nb sample*duration of one sample
-      printf("Time increment = %d\n",(int)time_increment);
-      for(int i=0;i<track->nbIndex;i++)
-      {
-        uint32_t sz;
-            sz=track->index[i].size;
-            if(sz<MAX_CHUNK_SIZE)
-            {
-                memcpy(&(newindex[w]),&(track->index[i]),sizeof(MP4Index));
-                w++;
-                continue;
-            }
-            // We have to split it...
-            int part=0;
-            time_increment=track->index[i].dts/(1+(sz/MAX_CHUNK_SIZE));
-            while(sz>one_go)
-            {
-                  newindex[w].offset=track->index[i].offset+part*one_go;
-                  newindex[w].size=one_go;
-                  newindex[w].dts=time_increment*part;
-                  newindex[w].pts=ADM_COMPRESSED_NO_PTS; // No seek
-                  ADM_assert(w<newNbCo);
-                  w++;
-                  part++;
-                  sz-=one_go;
-            }
-            // The last one...
-                  newindex[w].offset=track->index[i].offset+part*one_go;
+          for(int i=0;i<track->nbIndex;i++)
+          {
+                uint32_t sz;
+                sz=track->index[i].size;
+                if(sz<=maxChunkSize)
+                {
+                    memcpy(&(newindex[w]),&(track->index[i]),sizeof(MP4Index));
+                    w++;
+                    continue;
+                }
+                // We have to split it...
+                int part=0;
+                
+                uint64_t offset=track->index[i].offset;
+                while(sz>maxChunkSize)
+                {
+                      newindex[w].offset=offset+part*maxChunkSize;
+                      newindex[w].size=maxChunkSize;
+                      newindex[w].dts=ADM_COMPRESSED_NO_PTS;
+                      newindex[w].pts=ADM_COMPRESSED_NO_PTS; // No seek
+                      ADM_assert(w<newNbCo);
+                      w++;
+                      part++;
+                      sz-=maxChunkSize;
+                }
+                // The last one...
+                  newindex[w].offset=offset+part*maxChunkSize;
                   newindex[w].size=sz;
-                  newindex[w].dts=track->index[i].dts+part*time_increment; 
+                  newindex[w].dts=ADM_COMPRESSED_NO_PTS; 
                   newindex[w].pts=ADM_COMPRESSED_NO_PTS;
                   w++;
-      }
+        }
       delete [] track->index;
       track->index=newindex;
       track->nbIndex=w;
       uint32_t total=0;
       for(int i=0;i<track->nbIndex;i++)
           total+=track->index[i].size;
-      printf("After split, we have %u bytes\n",total);
+      printf("After split, we have %u bytes across %d blocks\n",total,w);
       
       return true;
 }
@@ -107,7 +114,8 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
  * @param outNbChunk
  * @return 
  */
-uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampleinfo *info,uint32_t *outNbChunk)
+bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  
+                                    MPsampleinfo *info,uint32_t *nbOut)
 {
     uint64_t audioClock=0;
     
@@ -193,11 +201,18 @@ uint8_t	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,  MPsampl
     if(info->nbCo)
         track->index[0].dts=track->index[0].pts=0;
     printf("Found %u bytes, spred over %d blocks\n",totalBytes,info->nbCo);
+    //
+    // split large chunk into smaller ones if needed
+    splitAudio(track,info, trackScale);
+
+
     // Now time to update the time...
     // Normally they have all the same duration with a time increment of 
     // 1 per sample
     // so we have so far all samples with a +1 time increment
       
+
+    
       double sampleDuration,totalDuration=0;
       // Set Dts & Pts accordingly
       uint64_t totalSize=0;
