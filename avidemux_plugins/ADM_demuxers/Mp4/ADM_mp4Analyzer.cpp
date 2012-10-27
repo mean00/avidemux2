@@ -740,7 +740,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                             break;
                                   case MKFCCR('d','v','c',' ') : //'dvc ':
                                   case MKFCCR('d','v','c','p'): //'dvcp':
-                                          commonPart(DVDS);
+                                          commonPart(DVSD);
                                           break;
                                   case MKFCCR('c','v','i','d'): //'cvid'
                                           commonPart(cvid);
