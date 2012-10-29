@@ -912,15 +912,31 @@ nextAtom:
                                     case MKFCCR('t','w','o','s'):
                                             audioCodec(LPCM);
                                             ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
+                                            if(info.bytePerPacket<2)
+                                            {
+                                                info.bytePerPacket=2;
+                                                info.bytePerFrame=2*ADIO.channels;
+                                                
+                                                ADM_info("[MP4] Overriding bytePer packet with %d\n",info.bytePerPacket);
+                                            }
                                             break;
 
                                     case MKFCCR('u','l','a','w'):
                                             audioCodec(ULAW);
                                             ADIO.byterate=ADIO.frequency;
+                                            info.bytePerFrame=ADIO.channels;
                                             break;
                                     case MKFCCR('s','o','w','t'):
                                             audioCodec(PCM);
                                             ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
+                                            if(info.bytePerPacket<2)
+                                            {
+                                                info.bytePerPacket=2;
+                                                info.bytePerFrame=2*ADIO.channels;
+                                                
+                                                ADM_info("[MP4] Overriding bytePer packet with %d\n",info.bytePerPacket);
+                                            }
+
                                             break;
                                     case MKFCCR('.','m','p','3'): //.mp3
                                             audioCodec(MP3);
@@ -1120,16 +1136,20 @@ nextAtom:
           break;
     case TRACK_AUDIO:
           printf("Cur audio track :%u\n",nbAudioTrack);
+#if 0
           if(info.SzIndentical ==1 && (ADIO.encoding==WAV_LPCM || ADIO.encoding==WAV_PCM ))
             {
               printf("Overriding size %"PRIu32" -> %"PRIu32"\n", info.SzIndentical,info.SzIndentical*2*ADIO.channels);
               info.SzIndentical=info.SzIndentical*2*ADIO.channels;
             }
+
+
             if(info.SzIndentical ==1 && (ADIO.encoding==WAV_ULAW ))
             {
               printf("Overriding size %"PRIu32" -> %"PRIu32"\n", info.SzIndentical,info.SzIndentical*ADIO.channels);
               info.SzIndentical=info.SzIndentical*ADIO.channels;
             }
+#endif
             r=indexify(&(_tracks[1+nbAudioTrack]),trackScale,&info,1,&nbo);
             printf("Indexed audio, nb blocks:%u\n",nbo);
             if(r)
