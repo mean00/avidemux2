@@ -167,7 +167,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     totalBytes=0;
     
     // all the same size & duration...
-    
+    bool warn=true;
     for(int i=0;i<info->nbCo;i++)
     {
         uint32_t sz;
@@ -177,10 +177,12 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
         sz=samplePerChunk[i];
         /* Sz is in sample, convert it to bytes */
         sz/=info->bytePerFrame;
-        if(sz*info->samplePerPacket!=samplePerChunk[i])
+        if(warn && sz*info->samplePerPacket!=samplePerChunk[i])
         {
-          printf("Warning sample per packet not divider of sample per chunk (per packet :%u , chunk :%u)\n",
-                    info->samplePerPacket, samplePerChunk[i]); 
+          warn=false;
+          ADM_warning("Warning sample per packet not divider of sample per chunk \n");
+          ADM_warning(" sz * perPacket == perChunk, with sz=%d \n",sz);
+          ADM_warning("(per packet :%u , chunk :%u)\n",  info->samplePerPacket, samplePerChunk[i]); 
         }
         sz*=PACK_SIZE;
         /* */
