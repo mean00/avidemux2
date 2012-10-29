@@ -176,7 +176,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
         track->index[i].offset=info->Co[i];
         sz=samplePerChunk[i];
         /* Sz is in sample, convert it to bytes */
-        sz/=info->samplePerPacket;
+        sz/=info->bytePerFrame;
         if(sz*info->samplePerPacket!=samplePerChunk[i])
         {
           printf("Warning sample per packet not divider of sample per chunk (per packet :%u , chunk :%u)\n",
@@ -184,7 +184,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
         }
         sz*=PACK_SIZE;
         /* */
-        track->index[i].size=sz*info->SzIndentical;
+        track->index[i].size=sz*info->bytePerFrame;
         track->index[i].dts=ADM_NO_PTS; // No seek
         track->index[i].pts=ADM_NO_PTS; // No seek
         /*
@@ -216,10 +216,10 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
       double sampleDuration,totalDuration=0;
       // Set Dts & Pts accordingly
       uint64_t totalSize=0;
-      for(int i=0;i<info->nbCo;i++)
+      for(int i=0;i< track->nbIndex;i++)
       {     
             double v=totalSize; // convert offset in sample to regular time (us)
-            v=v/(trackScale*info->SzIndentical);
+            v=v/(trackScale*info->bytePerFrame);
             v*=1000LL*1000LL;
             track->index[i].dts=track->index[i].pts=(uint64_t)v;
             totalSize+=track->index[i].size;
