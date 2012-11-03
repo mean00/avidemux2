@@ -11,7 +11,9 @@ FIND_PACKAGE(PkgConfig)
 
 if (${CMAKE_VERSION} VERSION_EQUAL 2.8.8)
 	# workaround for bug in CMake 2.8.8 (http://www.cmake.org/Bug/view.php?id=13125)
-	set(PKG_CONFIG_FOUND ${PKGCONFIG_FOUND})
+        if (DEFINED PKGCONFIG_FOUND)
+          set(PKG_CONFIG_FOUND ${PKGCONFIG_FOUND})
+       endif (DEFINED PKGCONFIG_FOUND)
 endif (${CMAKE_VERSION} VERSION_EQUAL 2.8.8)
 
 IF (NOT PKG_CONFIG_FOUND)
