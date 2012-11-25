@@ -105,7 +105,7 @@ bool r;
 again:
     _SEGMENT *s=_segments.getSegment(seg);
     int64_t delta=*frameTime-s->_startTimeUs; // Delta compared to the beginning of this seg
-    
+    if(delta >= s->_durationUs) delta=s->_durationUs-1;
     delta+=s->_refStartTimeUs;
     if(delta<0)
     {
