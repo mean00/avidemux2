@@ -64,25 +64,33 @@ uint8_t flvHeader::read(uint32_t len, uint8_t *where)
 uint8_t flvHeader::read8(void)
 {
   uint8_t r;
+    aprintf("[Read]At 0x%x ",ftello(_fd));
     fread(&r,1,1,_fd);
+    aprintf("uint8_t =%d ",r);
     return r;
 }
 uint32_t flvHeader::read16(void)
 {
   uint8_t r[2];
+    aprintf("[Read]At 0x%x ",ftello(_fd));
     fread(r,2,1,_fd);
+    aprintf("uint16_t =%d ",(r[0]<<8)+r[1]);
     return (r[0]<<8)+r[1];
 }
 uint32_t flvHeader::read24(void)
 {
   uint8_t r[3];
+    aprintf("[Read]At 0x%x ",ftello(_fd));
     fread(r,3,1,_fd);
+    aprintf("uint24_t =%d ",(r[0]<<16)+(r[1]<<8)+r[2]);
     return (r[0]<<16)+(r[1]<<8)+r[2];
 }
 uint32_t flvHeader::read32(void)
 {
   uint8_t r[4];
+    aprintf("[Read]At 0x%x ",ftello(_fd));
     fread(r,4,1,_fd);
+    aprintf("uint32_t =%d ",(r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3]);
     return (r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3];
 }
 /**
@@ -136,26 +144,40 @@ void flvHeader::setProperties(const char *name,float value)
     }
 
 }
+#define Nest() {for(int xxx=0;xxx<nesting;xxx++) printf("\t");}
 /**
     \fn parseOneMeta
 */
-bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos)
+bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
 {
+            static int nesting=0;
+            nesting++;
             int type=read8();
-            printf("type :%d : ",type);
+            Nest();
+            
+            printf("\n>> type :%d ",type);
+            aprintf("nesting = %d, at %d, : ,end=%d",nesting,ftello(_fd),endPos);
             switch(type)
             {
                 case AMF_DATA_TYPE_OBJECT_END:
-                                fseek(_fd,endPos,SEEK_SET);
+                                Nest(); printf("** Object end**.\n");
+                                if(ftello(_fd)>=endPos-4)
+                                {
+                                    fseek(_fd,endPos,SEEK_SET);
+                                }
+                                end=true;
+                                nesting--;
                                 break;
                 case AMF_DATA_TYPE_OBJECT: 
                 {
                         printf("\n");
-                        while(ftello(_fd)<endPos-4)
+                        bool myEnd=false;
+                        while(ftello(_fd)<endPos-4 && myEnd==false)
                         {
+                                Nest();aprintf("Pos = %d, end=%d (object)\n",ftello(_fd),endPos-4);
                                 char *o=readFlvString();
-                                printf("\t Object:%s",o);
-                                if(false==parseOneMeta(o,endPos)) return false;
+                               Nest(); printf("\t ** Object**:%s",o);
+                                if(false==parseOneMeta(o,endPos,myEnd)) return false;
 /*
                                 char objType=read8();
                                 printf("-->%d",objType);
@@ -172,6 +194,7 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos)
                                 }
                                 break;
 */
+
                         }
                         break;
                         
@@ -179,10 +202,11 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos)
                 case AMF_DATA_TYPE_ARRAY:
                                     {
                                             uint32_t len=read32();
-                                            printf("\n\t[FLV] Array : %"PRIu32" entries\n",len);
-                                            for(int i=0;i<len;i++) 
-                                                if(false==parseOneMeta("",endPos)) return false;
-                                            printf("\n");
+                                            Nest();printf("\n**[FLV] Array : %"PRIu32" entries**\n",len);
+                                            bool theend;
+                                            for(int i=0;i<len && ftello(_fd)<endPos-4;i++) 
+                                                if(false==parseOneMeta("",endPos,theend)) return false;
+                                            Nest();printf("\n");
                                             break;
                                     }
                 case AMF_DATA_TYPE_DATE: Skip(8+2);break;
@@ -197,7 +221,24 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos)
                                             setProperties(stri,val);
                                         }
                                         ;break;
-                case AMF_DATA_TYPE_STRING: {int r=read16();Skip(r);}break;
+                case AMF_DATA_TYPE_STRING: 
+                                                {
+                                                int r=read16();
+                                                
+                                                
+                                                #if 1
+                                                    Nest();printf("<");
+                                                    for(int i=0;i<r;i++)
+                                                    {
+                                                        printf("%c",read8());
+                                                    }
+                                                    printf(">");
+                                                #else
+                                                            Skip(r);}
+                                                #endif
+                                                }
+                                                
+                                                break;
                 case AMF_DATA_TYPE_BOOL: read8();break;
                 case AMF_DATA_TYPE_MIXEDARRAY:
                                             {
@@ -205,20 +246,24 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos)
                                                  while(ftello(_fd)<endPos-4)
                                                 {
                                                             char *o=readFlvString();
+                                                            bool theend;
                                                             if(!o) break;
-                                                            printf("\t MixedArray:%s",o);
-                                                            if(false==parseOneMeta(o,endPos)) return false;
+                                                            Nest();printf("** MixedArray:%s **",o);
+                                                            if(false==parseOneMeta(o,endPos,theend)) return false;
                                                             
                                                 }
                                                 if(read8()!=AMF_END_OF_OBJECT) return false;
 
                                              }
                                             break;
-                default : printf("\n");ADM_assert(0);
+                default : printf("Unknown type=%d\n",type);ADM_assert(0);
             }
             printf("\n");
+
+            nesting--;
             return true;
 xxer:
+    nesting --;
     return false;
 }
 /**
@@ -239,7 +284,9 @@ uint8_t flvHeader::parseMetaData(uint32_t remaining)
     // Normally the next one is mixed array
     while(ftello(_fd)<endPos-4)
     {
-        if(false==parseOneMeta("meta",endPos)) goto endit;
+        bool theend;
+        printf("\n----------------------- Parse---------------------\n");
+        if(false==parseOneMeta("meta",endPos,theend)) goto endit;
     }
 
 endit:

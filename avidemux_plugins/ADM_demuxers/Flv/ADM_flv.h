@@ -121,7 +121,7 @@ class flvHeader         :public vidHeader
     uint8_t     parseMetaData(uint32_t remaining);
     void        setProperties(const char *name,float value);
     uint32_t    searchMinimum(void);
-    bool        parseOneMeta(const char *key,uint64_t endPos);
+    bool        parseOneMeta(const char *key,uint64_t endPos,bool &end);
     bool        updateDimensionWithMeta(uint32_t codec);
   public:
 
