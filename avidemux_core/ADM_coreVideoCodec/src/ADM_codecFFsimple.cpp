@@ -30,9 +30,16 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     ADM_assert(c);
     CodecID id=c->codecId;
     ADM_assert(id!=CODEC_ID_NONE);
+    uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+    }
     if(true==c->extraData)
     {
-         _context->extradata = (uint8_t *) extraData;
+         _context->extradata = (uint8_t *) extraCopy;
          _context->extradata_size = (int) extraDataLen;
     }
     if(true==c->refCopy)

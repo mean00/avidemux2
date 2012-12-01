@@ -511,7 +511,14 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   ADM_info ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", (int)extraDataLen);
 
   _refCopy = 1;			// YUV420 only
-  _context->extradata = (uint8_t *) extraData;
+   uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+    }
+  _context->extradata = extraCopy;
   _context->extradata_size = (int)extraDataLen  ;
   _context->codec_tag=fcc;
   _context->stream_codec_tag=fcc;
@@ -534,9 +541,16 @@ bool decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
 decoderFFDV::decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) extraData;
-  _context->extradata_size = (int) extraDataLen;
-  WRAP_Open (CODEC_ID_DVVIDEO);
+    uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+    }
+    _context->extradata = extraCopy;
+    _context->extradata_size = (int)extraDataLen  ;
+    WRAP_Open (CODEC_ID_DVVIDEO);
 
 }
 decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
@@ -555,8 +569,15 @@ decoderFFPng::decoderFFPng(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraD
 decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
 :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) extraData;
-  _context->extradata_size = (int) extraDataLen;
+    uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+    }
+  _context->extradata = extraCopy;
+  _context->extradata_size = (int)extraDataLen  ;
   _context->bits_per_coded_sample=bpp;
   ADM_info ("[lavc] FFhuff: We have %d bytes of extra data\n", (int)extraDataLen);
   WRAP_Open (CODEC_ID_FFVHUFF);
@@ -565,9 +586,15 @@ decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_
 decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
         :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-
+    uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+    }
+  _context->extradata = extraCopy;
   _refCopy = 1;			// YUV420 only
-  _context->extradata = (uint8_t *) extraData;
   _context->extradata_size = (int) extraDataLen;
   decoderMultiThread ();
   ADM_info ("[lavc] Initializing H264 decoder with %d extradata\n", (int)extraDataLen);
@@ -599,7 +626,14 @@ bool   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
 decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-  _context->extradata = (uint8_t *) extraData;
+    uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+    }
+  _context->extradata = extraCopy;    
   _context->extradata_size = (int) extraDataLen;
   _context->bits_per_coded_sample = bpp;
   WRAP_Open (CODEC_ID_HUFFYUV);
