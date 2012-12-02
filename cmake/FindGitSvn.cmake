@@ -45,8 +45,8 @@ IF(GIT_EXECUTABLE)
         		RESULT_VARIABLE result 
         		OUTPUT_VARIABLE output
         		)
-        		#MESSAGE(STATUS "Git Svn Revision : <${output}>")
-        		STRING(REGEX REPLACE ".*branch_.*@" "" rev "${output}")
+#        		MESSAGE(STATUS "Git Svn Revision : <${output}>")
+        		STRING(REGEX REPLACE ".*_.*@" "" rev "${output}")
         		STRING(REGEX REPLACE " .*$" "" rev "${rev}")
         		MESSAGE(STATUS "Git Svn Revision : <${rev}>")
         		SET( ${_rev} ${rev})
