@@ -76,7 +76,8 @@ static bool tryLoadingEncoderPlugin(const char *file)
 	ADM_videoEncoder6 *dll=new ADM_videoEncoder6(file);
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->desc->apiVersion!=ADM_VIDEO_ENCODER_API_VERSION) Fail(WrongApiVersion);
-//fixme todo also check uiType
+	if((dll->desc->UIType & ADM_UI_TYPE_BUILD) != ADM_UI_TYPE_BUILD) Fail(WrongUI);
+
     ListOfEncoders.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[VideoEncoder6] Registered filter %s as  %s\n",file,dll->desc->description);
     return true;
