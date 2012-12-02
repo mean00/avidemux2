@@ -137,13 +137,13 @@ bool checkMarker(uint8_t *buffer, uint32_t bufferSize,uint32_t block)
     {
         if(*buffer!=TS_MARKER)
         {
-            while(*buffer!=TS_MARKER && buffer<end) 
+            while(buffer<end && *buffer!=TS_MARKER  ) 
             {
                 buffer++;
             }
             syncKo++;
         }
-        if(*buffer!=TS_MARKER) break;
+        if(buffer>=end || *buffer!=TS_MARKER) break;
         while(buffer+block<end && buffer[block]==TS_MARKER)
         {   
                 syncOk++,
