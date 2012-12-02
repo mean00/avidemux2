@@ -116,6 +116,7 @@ again:
                 // There is a "hole" in audio
                 // Let's add some filler
                 // Compute filler size
+                *odts=lastDts;
                 float f=packetBufferDts-lastDts; // in us
                 f*=outFrequency;
                 f/=1000000.;
