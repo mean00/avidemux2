@@ -1,6 +1,6 @@
---- libavcodec/mpegvideo_enc.c.old	2012-10-08 09:33:37.893970228 +0200
-+++ libavcodec/mpegvideo_enc.c	2012-10-08 09:35:05.981971383 +0200
-@@ -455,14 +455,14 @@
+--- /d/admDev/adm_all_dev/avidemux_2.6_branch_mean/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/mpegvideo_enc.c	2012-12-06 12:26:24 +1100
++++ libavcodec/mpegvideo_enc.c	2012-12-06 12:26:24 +1100
+@@ -481,14 +481,14 @@
                 "Warning vbv_delay will be set to 0xFFFF (=VBR) as the "
                 "specified vbv buffer is too large for the given bitrate!\n");
      }
@@ -17,7 +17,7 @@
      if (s->obmc && s->avctx->mb_decision != FF_MB_DECISION_SIMPLE) {
          av_log(avctx, AV_LOG_ERROR,
                 "OBMC is only supported with simple mb decision\n");
-@@ -535,13 +535,14 @@
+@@ -561,13 +561,14 @@
          av_log(avctx, AV_LOG_ERROR, "interlacing not supported by codec\n");
          return -1;
      }

@@ -27,22 +27,18 @@ function updatePatch {
 	dos2unix ${1//\//_}_$2.patch
 }
 
-updatePatch . configure
 updatePatch libavcodec avcodec.h
-updatePatch libavcodec dxva2_internal.h
 updatePatch libavcodec golomb.h
 updatePatch libavcodec h263dec.c
 updatePatch libavcodec h264_parser.c
 updatePatch libavcodec libavcodec.v
 updatePatch libavcodec mathops.h
 updatePatch libavcodec mpeg12enc.c
-updatePatch libavcodec mpegvideo.c
 updatePatch libavcodec mpegvideo_enc.c
 updatePatch libavcodec put_bits.h
 updatePatch libavcodec vdpau.h
-updatePatch libavcodec/x86 fmtconvert_mmx.c
+updatePatch libavcodec/x86 fmtconvert_init.c
 updatePatch libavformat isom.c
-updatePatch libavformat libavformat.v
 updatePatch libavformat matroskaenc.c
 updatePatch libavformat mpegtsenc.c
 updatePatch libavutil avutil.h
