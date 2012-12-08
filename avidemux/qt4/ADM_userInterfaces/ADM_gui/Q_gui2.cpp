@@ -124,9 +124,9 @@ public:
 
 void MainWindow::comboChanged(int z)
 {
-	const char *source=qPrintable(sender()->objectName());
+	QObject *obj = sender();
 
-	if(!strcmp(source,"comboBoxVideo"))
+	if (obj == ui.comboBoxVideo)
 	{
 		bool b=FALSE;
 		if(ui.comboBoxVideo->currentIndex())
@@ -137,7 +137,7 @@ void MainWindow::comboChanged(int z)
 		ui.pushButtonVideoFilter->setEnabled(b);
 		HandleAction (ACT_VIDEO_CODEC_CHANGED) ;
 	}
-	else if(!strcmp(source,"comboBoxAudio"))
+	else if (obj == ui.comboBoxAudio)
 	{
 		bool b=FALSE;
 		if(ui.comboBoxAudio->currentIndex())
@@ -148,8 +148,6 @@ void MainWindow::comboChanged(int z)
 		ui.pushButtonAudioFilter->setEnabled(b);
 		HandleAction (ACT_AUDIO_CODEC_CHANGED) ;
 	}
-	else
-		printf("From +: %s\n",source);
 }
 
 void MainWindow::sliderValueChanged(int u)
