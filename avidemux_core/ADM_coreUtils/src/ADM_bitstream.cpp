@@ -18,7 +18,7 @@
 
 ADMBitstream::ADMBitstream(uint32_t size)
 {
-    memset(this,0,sizeof(this));
+    memset(this,0,sizeof(*this));
     bufferSize=size;
 }
 ADMBitstream::~ADMBitstream()
