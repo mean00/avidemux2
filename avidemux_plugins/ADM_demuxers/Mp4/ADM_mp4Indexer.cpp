@@ -263,7 +263,7 @@ uint32_t i,j,cur;
         //*********************************************************
 	if(info->SzIndentical && isAudio)// in that case they are all the same size, i.e.audio
 	{
-           return  processAudio(track,trackScale,info,outNbChunk);
+           //return  processAudio(track,trackScale,info,outNbChunk);
         }
 	// We have different packet size
 	// Probably video
@@ -353,8 +353,8 @@ uint32_t i,j,cur;
 			{
 				for(uint32_t j=0;j<info->SttsN[i];j++)
 				{
-                    track->index[start].dts=(uint64_t)info->SttsC[i];
-                    track->index[start].pts=ADM_COMPRESSED_NO_PTS;
+                                        track->index[start].dts=(uint64_t)info->SttsC[i];
+                                        track->index[start].pts=ADM_COMPRESSED_NO_PTS;
 					start++;
 					ADM_assert(start<=nbChunk);
 				}	
@@ -362,14 +362,26 @@ uint32_t i,j,cur;
 		}
 		else
 		{
-			// All same duration
-			for(uint32_t i=0;i<nbChunk;i++)
-            {
-                track->index[i].dts=(uint64_t)info->SttsC[0]; // this is not an error!
-                track->index[i].pts=ADM_COMPRESSED_NO_PTS;
-            }
+                        // All same duration
+                        if(isAudio)
+                        {
+                                 delete [] track->index;
+                                 track->index=NULL;
+                                 processAudio(track,trackScale,info,outNbChunk);
+                                 return true;
+                         } // video
+                         {
+
+                            for(uint32_t i=0;i<nbChunk;i++)
+                            {
+                                track->index[i].dts=(uint64_t)info->SttsC[0]; // this is not an error!
+                                track->index[i].pts=ADM_COMPRESSED_NO_PTS;
+                            }
+                         }
 		
 		}
+                if(isAudio)
+                     splitAudio(track,info, trackScale);
 		// now collapse
 		uint64_t total=0;
 		float    ftot;
