@@ -86,6 +86,7 @@ GUIPlayback::GUIPlayback(void)
     videoFilter=NULL;
     videoChain=NULL;
     initialized=false;
+    vuMeterPts=0;
 }
 /**
     \fn ~GUIPlayback
