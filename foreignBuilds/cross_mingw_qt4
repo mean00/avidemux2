@@ -13,11 +13,11 @@ echo "<<<<<<<<<<<<Cross compiling core>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$MINGW \
         -DCMAKE_INCLUDE_PATH=$MINGW/include -DCMAKE_LIBRARY_PATH=$MINGW/lib \
         -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
-        -DCMAKE_WINDRES=$CROSS_PREFIX-windres \
         -DCMAKE_C_COMPILER:STRING=$CROSS_PREFIX-gcc \
         -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
         -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
+	-DCMAKE_RC_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-windres \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         -DQT_HOME:STRING=$QT_HOME \
         $DEBUG \

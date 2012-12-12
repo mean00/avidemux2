@@ -9,6 +9,7 @@ if(CROSS)
         SET(CMAKE_CXX_COMPILER ${PFIX}-g++)
         SET(CMAKE_LINKER ${PFIX}-ld)
         SET(CMAKE_AR ${PFIX}-ar)
+        SET(CMAKE_RC_COMPILER ${PFIX}-windres)
         
         # here is the target environment located
         SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc ${CROSS} )
