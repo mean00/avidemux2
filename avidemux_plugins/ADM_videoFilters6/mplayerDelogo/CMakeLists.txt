@@ -28,11 +28,11 @@ ENDIF(DO_QT4)
 #INIT_VIDEO_FILTER_GTK(ADM_vf_mpdelogoGtk ${mpdelogoGtk_SRCS} ${mpdelogoCommon_SRCS})
 
 #------------ Cli Version ----------------
-#INCLUDE(vf_plugin_cli)
-#SET(mpdelogoCli_SRCS cli/DIA_mpdelogo.cpp)
-#IF(DO_CLI)
-  #INIT_VIDEO_FILTER_CLI(  ADM_vf_mpdelogoCli ${mpdelogoCli_SRCS} ${mpdelogoCommon_SRCS})
-  #addDeps(ADM_vf_mpdelogoCli)
-#ENDIF(DO_CLI)
+INCLUDE(vf_plugin_cli)
+SET(mpdelogoCli_SRCS cli/DIA_mpdelogo.cpp)
+IF(DO_CLI)
+  INIT_VIDEO_FILTER_CLI(  ADM_vf_mpdelogoCli ${mpdelogoCli_SRCS} ${mpdelogoCommon_SRCS})
+  addDeps(ADM_vf_mpdelogoCli)
+ENDIF(DO_CLI)
 ##%%%%%%%%%%%%%%%%%%
 
