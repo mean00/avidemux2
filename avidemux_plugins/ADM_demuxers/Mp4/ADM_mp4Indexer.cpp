@@ -131,7 +131,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     
       if(info->SttsC[0]!=1)
       {
-          ADM_warning("Not regular (time increment is not 1)\n");
+          ADM_warning("Not regular (time increment is not 1=%d)\n",(int)info->SttsC[0]);
           return 1;
       }
     //
@@ -344,10 +344,10 @@ uint32_t i,j,cur;
 	// then sum them up to get the absolute time position
 
         uint32_t nbChunk=track->nbIndex;
-	if(info->nbStts)		//uint32_t nbStts,	uint32_t *SttsN,uint32_t SttsC,
+	if(info->nbStts )		//uint32_t nbStts,	uint32_t *SttsN,uint32_t SttsC,
 	{
 		uint32_t start=0;
-		if(info->nbStts>1)
+		if(info->nbStts>1 ||  info->SttsC[0]!=1)
 		{
 			for(uint32_t i=0;i<info->nbStts;i++)
 			{
