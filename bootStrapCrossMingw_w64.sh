@@ -4,7 +4,7 @@ export PATH=$PATH:/mingw/bin
 export CROSS_PREFIX=x86_64-w64-mingw32
 export SDLDIR=/mingw
 export MINGW=/mingw
-export QT_HOME=/mingw/Qt/qt471win64
+export QT_HOME=/mingw/Qt/current
 export CFLAGS="-fpermissive"
 export O_PARAL="-j 2"
 # ** Put your config here **
