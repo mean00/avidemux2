@@ -576,6 +576,8 @@ uint8_t asfHeader::buildIndex(void)
           printf("Unmapped stream %u\n",bit->stream); 
         }
       }
+      delete [] bit->data;
+      bit->data=NULL;
       storageQueue.push_back(bit);
     }
     //working->update(packet,_nbPackets);
