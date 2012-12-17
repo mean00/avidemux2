@@ -17,9 +17,9 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set package=fribidi-0.19.4.tar.bz2
-set sourceFolder=fribidi-0.19.4-%BuildBits%
-set tarFolder=fribidi-0.19.4
+set package=fribidi-0.19.5.tar.bz2
+set sourceFolder=fribidi-0.19.5-%BuildBits%
+set tarFolder=fribidi-0.19.5
 set curDir=%CD%
 set PATH=%msysDir%\bin;%PATH%
 

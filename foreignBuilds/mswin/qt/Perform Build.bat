@@ -30,7 +30,7 @@ verify >nul
 call "../Set Common Environment Variables"
 if errorlevel 1 goto end
 
-set version=4.8.3
+set version=4.8.4
 set package=qt-everywhere-opensource-src-%version%.tar.gz
 set sourceBaseFolder=Qt%BuildBits%
 
@@ -82,7 +82,6 @@ if "%Debug%" == "1" (
 echo.
 echo Patching
 patch -p0 -i "%curDir%\qmake%BuildBits%.conf.patch"
-patch -p0 -i "%curDir%\Platform.h.patch"
 
 echo.
 echo Configuring

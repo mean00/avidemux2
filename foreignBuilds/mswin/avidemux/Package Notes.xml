@@ -1,5 +1,28 @@
 <?xml version="1.0"?>
 <log>
+  <buildentry revision="8295" date="2012-12-04">
+    <comment>Updated Fontconfig to version 2.10.2.</comment>
+    <comment>Updated fribidi to version 0.19.5.</comment>
+    <comment>Updated NSPR to version 4.9.3.</comment>
+    <comment>Updated Qt to version 4.8.4.</comment>
+    <comment>Updated SQLite to version 3.7.14.1.</comment>
+    <comment>Updated x264 to r2230.</comment>
+  </buildentry>
+  <buildentry revision="8266" date="2012-10-29" />
+  <buildentry revision="8241" date="2012-10-16" />
+  <buildentry revision="8219" date="2012-10-13" />
+  <buildentry revision="8209" date="2012-10-11" />
+  <buildentry revision="8196" date="2012-09-29">
+    <comment>Compiled with GCC 4.7.2.</comment>
+    <comment>Updated fribidi to version 0.19.4.</comment>
+  </buildentry>
+  <buildentry revision="8194" date="2012-09-16">
+    <comment>Updated Qt to version 4.8.3.</comment>
+  </buildentry>
+  <buildentry revision="8186" date="2012-09-13">
+    <comment>Updated SQLite to version 3.7.14.</comment>
+    <comment>Updated x264 to r2216.</comment>
+  </buildentry>
   <buildentry revision="8179 [2.6.0 Final]" date="2012-09-08" />
   <buildentry revision="8171" date="2012-09-03" />
   <buildentry revision="8164" date="2012-08-26" />
