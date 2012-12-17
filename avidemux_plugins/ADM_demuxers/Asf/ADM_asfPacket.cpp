@@ -43,6 +43,7 @@ bool freeQueue(queueOfAsfBits *q)
     {
         asfBit *bit=q->front();
         q->pop_front();
+		delete [] bit->data;
         delete bit;
     }
     return true;
@@ -320,6 +321,7 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
     {
         bit=storage->front();
         storage->pop_front();
+		delete [] bit->data;
     }
 
    aprintf("Pushing packet stream=%d len=%d offset=%d seq=%d packet=%d dts=%s \n",
