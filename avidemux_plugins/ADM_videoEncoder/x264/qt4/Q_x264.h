@@ -36,6 +36,9 @@ private slots:
         void quantiserSlider_valueChanged(int value);
         void quantiserSpinBox_valueChanged(int value);
         void targetRateControlSpinBox_valueChanged(int value);
+        void loopFilterCheckBox_toggled(bool checked);
+        void mbTreeCheckBox_toggled(bool checked);
+        void aqVarianceCheckBox_toggled(bool checked);
 	
         void configurationComboBox_currentIndexChanged(int index);
         void saveAsButton_pressed(void);
@@ -47,7 +50,6 @@ private slots:
 #if 0
         void maxCrfSlider_valueChanged(int value);
         void maxCrfSpinBox_valueChanged(int value);
-        void mbTreeCheckBox_toggled(bool checked);
 #endif
 
 };

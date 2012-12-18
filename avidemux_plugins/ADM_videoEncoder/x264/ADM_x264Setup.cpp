@@ -89,11 +89,12 @@ bool x264Encoder::setup(void)
         }
     }
 #define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
-#define MKPARAMF(x,y) {param.x = (float)x264Settings.y / 100; aprintf("[x264] "#x" = %.2f\n",param.x);}
+#define MKPARAMF(x,y) {param.x = (float)x264Settings.y; aprintf("[x264] "#x" = %.2f\n",param.x);}
 #define MKPARAMB(x,y) {param.x = x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
   MKPARAM(i_frame_reference,MaxRefFrames);
   MKPARAM(i_keyint_min,MinIdr);
   MKPARAM(i_keyint_max,MaxIdr);
+  MKPARAM(i_scenecut_threshold,i_scenecut_threshold);
   MKPARAM(i_bframe,MaxBFrame);
 
   MKPARAM(i_bframe_adaptive,i_bframe_adaptive);
@@ -107,12 +108,23 @@ bool x264Encoder::setup(void)
   }
   MKPARAMB(b_cabac,cabac);
   MKPARAMB(b_interlaced,interlaced);
+
+  // -------------- vui------------
+#undef MKPARAM
+#undef MKPARAMF
+#undef MKPARAMB
+#define MKPARAM(x,y) {param.vui.x = x264Settings.vui.y;aprintf("[x264] vui."#x" = %d\n",param.vui.x);}
+#define MKPARAMF(x,y) {param.vui.x = (float)x264Settings.vui.y; aprintf("[x264] vui."#x" = %.2f\n",param.vui.x);}
+#define MKPARAMB(x,y) {param.vui.x = x264Settings.vui.y ;aprintf("[x264] vui."#x" = %s\n",TrueFalse[param.vui.x&1]);}
+   MKPARAM (i_sar_width,sar_width) 
+   MKPARAM (i_sar_height,sar_height) 
+
   // -------------- analyze------------
 #undef MKPARAM
 #undef MKPARAMF
 #undef MKPARAMB
 #define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyse.x);}
-#define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y / 100; aprintf("[x264] analyse."#x" = %.2f\n",param.analyse.x);}
+#define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y; aprintf("[x264] analyse."#x" = %.2f\n",param.analyse.x);}
 #define MKPARAMB(x,y) {param.analyse.x = x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyse.x&1]);}
 #define MKFLAGS(fieldout,fieldin,mask) {if(x264Settings.analyze.fieldin) param.analyse.fieldout|=mask;}
    MKPARAMB(b_transform_8x8,b_8x8)
@@ -120,6 +132,7 @@ bool x264Encoder::setup(void)
    MKPARAM (i_weighted_pred,weighted_pred) 
    MKPARAM (i_direct_mv_pred,direct_mv_pred) 
    MKPARAM (i_me_method,me_method) 
+   MKPARAM (i_mv_range,mv_range) 
    MKPARAM (i_subpel_refine,subpel_refine) 
    MKPARAMB(b_chroma_me,chroma_me) 
    MKPARAMB(b_mixed_references,mixed_references) 
@@ -127,6 +140,10 @@ bool x264Encoder::setup(void)
    MKPARAMB(b_fast_pskip,fast_pskip) 
    MKPARAMB(b_dct_decimate,dct_decimate) 
    MKPARAMB(b_psy,psy) 
+   MKPARAMF(f_psy_rd,psy_rd) 
+   MKPARAMF(f_psy_trellis,psy_trellis) 
+   MKPARAM (i_luma_deadzone[0],inter_luma) 
+   MKPARAM (i_luma_deadzone[1],intra_luma) 
 
    MKFLAGS(inter,b_i4x4,X264_ANALYSE_I4x4)
    MKFLAGS(inter,b_i8x8,X264_ANALYSE_I8x8)
@@ -139,11 +156,13 @@ bool x264Encoder::setup(void)
 #undef MKPARAMF
 #undef MKPARAMB
 #define MKPARAM(x,y)  {param.rc.x = x264Settings.ratecontrol.y;aprintf("[x264] rc."#x" = %d\n",param.rc.x);}
-#define MKPARAMF(x,y) {param.rc.x = (float)x264Settings.ratecontrol.y / 100; aprintf("[x264] rc."#x" = %.2f\n",param.rc.x);}
+#define MKPARAMF(x,y) {param.rc.x = (float)x264Settings.ratecontrol.y; aprintf("[x264] rc."#x" = %.2f\n",param.rc.x);}
 #define MKPARAMB(x,y) {param.rc.x = x264Settings.ratecontrol.y ;aprintf("[x264] rc."#x" = %s\n",TrueFalse[param.rc.x&1]);}
 
     MKPARAMB(b_mb_tree,mb_tree);
     MKPARAM(i_lookahead,lookahead);
+    MKPARAM(i_aq_mode,aq_mode);
+    MKPARAMF(f_aq_strength,aq_strength);
   // -------------------------
   
 
@@ -319,6 +338,7 @@ void dumpx264Setup(x264_param_t *param)
     PI(b_constrained_intra);
 
 #define AI(x) printf(#x"\t:%d\n",(int)param->analyse.x);
+#define AF(x) printf(#x"\t:%f\n",(float)param->analyse.x);
     printf("*************************************\n");
     printf("*********     Analyse       *********\n");
     printf("*************************************\n");
@@ -343,8 +363,8 @@ void dumpx264Setup(x264_param_t *param)
 
     AI(b_dct_decimate);
     AI(i_noise_reduction);
-    AI(f_psy_rd);
-    AI(f_psy_trellis);
+    AF(f_psy_rd);
+    AF(f_psy_trellis);
     AI(b_psy);
 
     PI(b_aud);
@@ -352,6 +372,8 @@ void dumpx264Setup(x264_param_t *param)
     PI(b_annexb);
     PI(b_vfr_input);
     
+    AI(i_luma_deadzone[0]);
+    AI(i_luma_deadzone[1]);
 
     PI(i_sps_id);
 

@@ -2,7 +2,7 @@
 #include "ADM_default.h"
 #include "ADM_paramList.h"
 #include "ADM_coreJson.h"
-#include "x264_encoder.h"
+#include "../avidemux_plugins/ADM_videoEncoder/x264/x264_encoder.h"
 bool  x264_encoder_jserialize(const char *file, const x264_encoder *key){
 admJson json;
 json.addNode("general");
@@ -18,6 +18,7 @@ json.endNode();
 json.addUint32("MaxRefFrames",key->MaxRefFrames);
 json.addUint32("MinIdr",key->MinIdr);
 json.addUint32("MaxIdr",key->MaxIdr);
+json.addUint32("i_scenecut_threshold",key->i_scenecut_threshold);
 json.addUint32("MaxBFrame",key->MaxBFrame);
 json.addUint32("i_bframe_adaptive",key->i_bframe_adaptive);
 json.addUint32("i_bframe_bias",key->i_bframe_bias);
@@ -39,14 +40,19 @@ json.addBool("weighted_bipred",key->analyze.weighted_bipred);
 json.addUint32("direct_mv_pred",key->analyze.direct_mv_pred);
 json.addUint32("chroma_offset",key->analyze.chroma_offset);
 json.addUint32("me_method",key->analyze.me_method);
+json.addUint32("mv_range",key->analyze.mv_range);
 json.addUint32("subpel_refine",key->analyze.subpel_refine);
 json.addBool("chroma_me",key->analyze.chroma_me);
 json.addBool("mixed_references",key->analyze.mixed_references);
 json.addUint32("trellis",key->analyze.trellis);
+json.addFloat("psy_rd",key->analyze.psy_rd);
+json.addFloat("psy_trellis",key->analyze.psy_trellis);
 json.addBool("fast_pskip",key->analyze.fast_pskip);
 json.addBool("dct_decimate",key->analyze.dct_decimate);
 json.addUint32("noise_reduction",key->analyze.noise_reduction);
 json.addBool("psy",key->analyze.psy);
+json.addUint32("intra_luma",key->analyze.intra_luma);
+json.addUint32("inter_luma",key->analyze.inter_luma);
 json.endNode();
 json.addNode("ratecontrol");
 json.addUint32("rc_method",key->ratecontrol.rc_method);

@@ -50,6 +50,7 @@ extern "C"
     2, /* uint32_t MaxRefFrames */ \
     100, /* uint32_t MinIdr */ \
     500, /* uint32_t MaxIdr */ \
+    40, /* uint32_t i_scenecut_threshold */ \
     2, /* uint32_t MaxBFrame */ \
     0, /* uint32_t i_bframe_adaptative */ \
     0, /* uint32_t i_bframe_bias */ \
@@ -70,14 +71,19 @@ extern "C"
     0, /*    uint32_t direct_mv_pred */ \
     0, /*    uint32_t chroma_offset */ \
     0, /*    uint32_t me_method */ \
+    16, /*   uint32_t mv_range */ \
     7, /*    uint32_t subpel_refine */ \
     false, /*    bool chroma_me */ \
     false, /*    bool mixed_references */ \
     1, /*    uint32_t trellis */ \
+    0.0, /*     float psy_rd */ \
+    0.0, /*     float psy_trellis */ \
     true, /*    bool fast_pskip */ \
     false, /*    bool dct_decimate */ \
     0, /*    uint32_t noise_reduction */ \
     true, /*    bool psy */ \
+    21, /*   uint32_t intra_luma */ \
+    21, /*   uint32_t inter_luma */ \
 }
 
 /**

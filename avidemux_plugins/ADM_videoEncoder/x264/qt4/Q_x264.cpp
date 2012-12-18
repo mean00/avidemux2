@@ -38,7 +38,7 @@ typedef struct
 }idcToken;
 
 static const idcToken listOfIdc[]={
-        {0,"Auto"},
+        {-1,"Auto"},
         {10,"1"},
         {11,"1.1"},
         {12,"1.2"},
@@ -57,6 +57,22 @@ static const idcToken listOfIdc[]={
 
 };
 #define NB_IDC sizeof(listOfIdc)/sizeof(idcToken)
+
+typedef struct
+{
+    uint32_t sarWidth;
+    uint32_t sarHeight;
+}aspectRatio;
+
+static const aspectRatio predefinedARs[]={
+    {16,15},
+    {64,45},
+    {8,9},
+    {32,27},
+    
+};
+
+#define NB_SAR sizeof(predefinedARs)/sizeof(aspectRatio)
 /**
     \fn x264_ui
     \brief hook to enter UI specific dialog
@@ -91,10 +107,12 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
         connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
         connect(ui.targetRateControlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(targetRateControlSpinBox_valueChanged(int)));
+        connect(ui.loopFilterCheckBox, SIGNAL(toggled(bool)), this, SLOT(loopFilterCheckBox_toggled(bool)));
+        connect(ui.mbTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(mbTreeCheckBox_toggled(bool)));
+        connect(ui.aqVarianceCheckBox, SIGNAL(toggled(bool)), this, SLOT(aqVarianceCheckBox_toggled(bool)));
 #if 0
         connect(ui.maxCrfSlider, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSlider_valueChanged(int)));
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
-        connect(ui.mbTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(mbTreeCheckBox_toggled(bool)));
 #endif
        memcpy(&myCopy,param,sizeof(myCopy));
 #define ENCODING(x)  myCopy.general.params.x       
@@ -148,6 +166,7 @@ bool x264Dialog::updatePresetList(void)
 #define MK_UINT(x,y)  ui.x->setValue(myCopy.y)
 #define DISABLE(x) ui.x->setEnabled(false);
 #define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
+#define MK_RADIOBUTTON(x) ui.x->setChecked(true);
 bool x264Dialog::upload(void)
 {
           
@@ -161,6 +180,10 @@ bool x264Dialog::upload(void)
           MK_CHECKBOX(p8x8CheckBox,analyze.b_p16x16);
           MK_CHECKBOX(b8x8CheckBox,analyze.b_b16x16);
           MK_CHECKBOX(trellisCheckBox,analyze.trellis);
+          MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
+          MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);
+          MK_UINT(intraLumaSpinBox,analyze.intra_luma);
+          MK_UINT(interLumaSpinBox,analyze.inter_luma);
           if(myCopy.analyze.trellis)
           {
                 ui.trellisComboBox->setCurrentIndex(myCopy.analyze.trellis-1);
@@ -176,11 +199,23 @@ bool x264Dialog::upload(void)
           MK_UINT(refFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
+          MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
           MK_UINT(meSpinBox,analyze.subpel_refine);
+
+          uint32_t aq_mode = myCopy.ratecontrol.aq_mode;
+          if (aq_mode > 0)
+          {
+                ui.aqVarianceCheckBox->setChecked(true);
+                ui.aqAlgoComboBox->setCurrentIndex(aq_mode-1);
+                MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
+          }
 
           MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
           MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
           
+          MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
+          MK_UINT(alphaC0SpinBox,i_deblocking_filter_alphac0);
+          MK_UINT(betaSpinBox,i_deblocking_filter_beta);
 
           MK_MENU(meMethodComboBox,analyze.me_method);
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
@@ -188,6 +223,7 @@ bool x264Dialog::upload(void)
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
+          MK_UINT(mvRangeSpinBox,analyze.mv_range);
 
           // udate idc
           QComboBox *idc=ui.idcLevelComboBox;
@@ -231,34 +267,52 @@ bool x264Dialog::upload(void)
             default: ADM_assert(0);break;
         }
 
+        bool predefined = false;
 
-          DISABLE(loopFilterCheckBox);
+        for (int i= 0;i<NB_SAR;i++)
+	{
+                if (myCopy.vui.sar_width == predefinedARs[i].sarWidth && myCopy.vui.sar_height == predefinedARs[i].sarHeight)
+                {
+                     MK_RADIOBUTTON(sarPredefinedRadioButton);
+                     ui.sarPredefinedComboBox->setCurrentIndex(i);
+                     predefined = true;
+                     break;
+                }
+	}
+
+	if (!predefined)
+	{
+                MK_RADIOBUTTON(sarCustomRadioButton);
+                MK_UINT(sarCustomSpinBox1,vui.sar_width);
+                MK_UINT(sarCustomSpinBox2,vui.sar_height);
+	}
+
           DISABLE(openGopCheckBox);
           DISABLE(interlacedCheckBox);
           DISABLE(intraRefreshCheckBox);
           DISABLE(noiseReductionSpinBox);
-          DISABLE(mvRangeSpinBox);
-          DISABLE(mvLengthSpinBox);
-          DISABLE(minThreadBufferSpinBox);
+          DISABLE(mvLengthCheckBox);
+          DISABLE(minThreadBufferCheckBox);
           DISABLE(constrainedIntraCheckBox);
-          DISABLE(IFrameThresholdSpinBox);
-          DISABLE(intraLumaSpinBox);
-          DISABLE(interLumaSpinBox);
           DISABLE(groupBox_14);
           DISABLE(tab_7);
-          DISABLE(tab_6);
           DISABLE(tab_9);
           DISABLE(tab);
           DISABLE(maxCrfCheckBox);
-          DISABLE(psychoRdoSpinBox);
+          DISABLE(sarAsInputRadioButton);
+          DISABLE(groupBox_4);
+          DISABLE(groupBox_3);
+          DISABLE(accessUnitCheckBox);
           return true;
 }
 #undef MK_CHECKBOX
 #undef MK_UINT
 #undef MK_MENU
+#undef MK_RADIOBUTTON
 #define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked()
 #define MK_UINT(x,y)        myCopy.y=ui.x->value()
 #define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
+#define MK_RADIOBUTTON(x,y)   myCopy.y=ui.x->setChecked(true);
 bool x264Dialog::download(void)
 {
           MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
@@ -281,6 +335,7 @@ bool x264Dialog::download(void)
           MK_UINT(refFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
+          MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
           MK_UINT(meSpinBox,analyze.subpel_refine);
           MK_UINT(BFrameBiasSpinBox,i_bframe_bias);
 
@@ -289,11 +344,31 @@ bool x264Dialog::download(void)
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
 
+          int a=ui.aqAlgoComboBox->currentIndex();
+          if(!ui.aqVarianceCheckBox->isChecked())
+          {
+                myCopy.ratecontrol.aq_mode=0;
+          }else
+          {
+                myCopy.ratecontrol.aq_mode=a+1;
+                MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
+          }
+          
           MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
           MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
 
-          MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
+          MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
+          MK_UINT(alphaC0SpinBox,i_deblocking_filter_alphac0);
+          MK_UINT(betaSpinBox,i_deblocking_filter_beta);
 
+          MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
+          MK_UINT(mvRangeSpinBox,analyze.mv_range);
+
+          MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
+          MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);
+          MK_UINT(intraLumaSpinBox,analyze.intra_luma);
+          MK_UINT(interLumaSpinBox,analyze.inter_luma);
+          
           QComboBox *idc=ui.idcLevelComboBox;
           int dex=idc->currentIndex();
           ADM_assert(dex<NB_IDC);
@@ -314,6 +389,17 @@ bool x264Dialog::download(void)
                 myCopy.analyze.trellis=0;
           }else
                 myCopy.analyze.trellis=t+1;
+
+          if(ui.sarPredefinedRadioButton->isChecked())
+          {
+                const aspectRatio *r=predefinedARs+ui.sarPredefinedComboBox->currentIndex();
+                myCopy.vui.sar_width=r->sarWidth;
+                myCopy.vui.sar_height=r->sarHeight;
+          }else
+          {
+                MK_UINT(sarCustomSpinBox1,vui.sar_width);
+                MK_UINT(sarCustomSpinBox2,vui.sar_height);
+          }
 
           return true;
 }
@@ -392,6 +478,37 @@ void x264Dialog::targetRateControlSpinBox_valueChanged(int value)
 	else
 		lastBitrate = value;
 }
+
+void x264Dialog::loopFilterCheckBox_toggled(bool checked)
+{
+	if (!checked)
+	{
+                ui.alphaC0SpinBox->setValue(0);
+                ui.betaSpinBox->setValue(0);
+	}
+}
+
+void x264Dialog::mbTreeCheckBox_toggled(bool checked)
+{
+	if (checked && !ui.aqVarianceCheckBox->isChecked())
+	{
+		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
+			ui.aqVarianceCheckBox->setChecked(true);
+		else
+			ui.mbTreeCheckBox->setChecked(false);
+	}
+}
+
+void x264Dialog::aqVarianceCheckBox_toggled(bool checked)
+{
+	if (!checked && ui.mbTreeCheckBox->isChecked())
+	{
+		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
+			ui.mbTreeCheckBox->setChecked(false);
+		else
+			ui.aqVarianceCheckBox->setChecked(true);
+	}
+}
 #if 0
 void x264Dialog::maxCrfSlider_valueChanged(int value)
 {
@@ -401,17 +518,6 @@ void x264Dialog::maxCrfSlider_valueChanged(int value)
 void x264Dialog::maxCrfSpinBox_valueChanged(int value)
 {
 	ui.maxCrfSlider->setValue(value);
-}
-
-void x264Dialog::mbTreeCheckBox_toggled(bool checked)
-{
-	if (!disableGenericSlots && checked && !ui.aqVarianceCheckBox->isChecked())
-	{
-		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
-			ui.aqVarianceCheckBox->setChecked(true);
-		else
-			ui.mbTreeCheckBox->setChecked(false);
-	}
 }
 #endif
 

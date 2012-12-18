@@ -15,6 +15,7 @@ struct  {
 uint32_t MaxRefFrames;
 uint32_t MinIdr;
 uint32_t MaxIdr;
+uint32_t i_scenecut_threshold;
 uint32_t MaxBFrame;
 uint32_t i_bframe_adaptive;
 uint32_t i_bframe_bias;
@@ -36,14 +37,19 @@ struct  {
 	uint32_t direct_mv_pred;
 	uint32_t chroma_offset;
 	uint32_t me_method;
+	uint32_t mv_range;
 	uint32_t subpel_refine;
 	bool chroma_me;
 	bool mixed_references;
 	uint32_t trellis;
+	float psy_rd;
+	float psy_trellis;
 	bool fast_pskip;
 	bool dct_decimate;
 	uint32_t noise_reduction;
 	bool psy;
+	uint32_t intra_luma;
+	uint32_t inter_luma;
 }analyze;
 struct  {
 	uint32_t rc_method;
