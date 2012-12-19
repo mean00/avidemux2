@@ -260,7 +260,8 @@ bool x264Dialog::upload(void)
                             break;
 
             case COMPRESS_CQ:
-                            encodingModeComboBox_currentIndexChanged(1);
+                            ui.encodingModeComboBox->setCurrentIndex(1);
+                            //encodingModeComboBox_currentIndexChanged(1);
                             ui.quantiserSpinBox->setValue(ENCODING(qz));
                             break;
 
