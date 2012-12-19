@@ -35,7 +35,7 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
     // Fill in wavHeader and access
     ADM_assert(track);
     wavHeader=track->wavheader;
-    
+    durationInUs = track->stream->getDurationInUs();    
 }
 /**
     \fn isCBR
@@ -62,7 +62,6 @@ ADM_edAudioTrackFromVideo::~ADM_edAudioTrackFromVideo()
 uint64_t ADM_edAudioTrackFromVideo::getDurationInUs()
 {
     // get duration...
-// #warning fixme
-    return 1;
+    return durationInUs;
 }
 // EOF
