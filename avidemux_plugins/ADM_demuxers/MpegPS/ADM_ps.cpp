@@ -170,13 +170,19 @@ uint8_t psHeader::close(void)
         if(ListOfFrames[i]) delete ListOfFrames[i];
         ListOfFrames[i]=0;
     }
-    ListOfFrames.clear();
     if(psPacket)
     {
         psPacket->close();
         delete psPacket;
         psPacket=NULL;
     }
+    nb=listOfAudioTracks.size();
+    for(int i=0;i<nb;i++)
+    {
+        delete listOfAudioTracks[i];
+        listOfAudioTracks[i] = 0;
+    }
+    listOfAudioTracks.clear();
     return 1;
 }
 /**
