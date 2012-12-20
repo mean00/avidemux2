@@ -27,7 +27,13 @@
 
 #include "fourcc.h"
 #include "ADM_atom.h"
-#define aprintf(...) {}
+#if 1
+        #define aprintf(...) {}
+#else
+    #define aprintf printf
+    #define _3G_LOGO
+    #define ATOM_DEBUG
+#endif
 
 adm_atom::adm_atom(adm_atom *atom)
 {
@@ -85,6 +91,10 @@ int64_t orgpos;
 uint8_t adm_atom::skipBytes( uint32_t nb )
 {
 int64_t pos;
+#ifdef ATOM_DEBUG
+        printf("Atom: Skipping %d bytes\n",nb);
+#endif
+
 	fseeko(_fd,nb,SEEK_CUR);
 	pos=ftello(_fd);
 	if(pos>_atomStart+_atomSize+1) ADM_assert(0);
