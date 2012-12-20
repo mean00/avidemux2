@@ -299,6 +299,10 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
                 printf("[HDLR]\n");
                 switch(type)
                 {
+                default:
+                       *trackType=TRACK_OTHER;
+                       printf("Found other type track\n");
+                       break;
                 case MKFCCR('v','i','d','e')://'vide':
                         *trackType=TRACK_VIDEO;
                         printf("hdlr video found \n ");
@@ -861,42 +865,44 @@ nextAtom:
                                 printf("[STSD]Fq       :%d\n",ADIO.frequency); // Bps
                                         son.skipBytes(2); // Fixed point
                                 left-=4;
-                                if(atomVersion)
-                                {
-                                    
-                                    info.samplePerPacket=son.read32();
-                                    info.bytePerPacket=son.read32();
-                                    info.bytePerFrame=son.read32();
-                                        #define ADM_NOT_NULL(x)          if(!info.x) info.x=1;
-                                    printf("[STSD] Sample per packet %u\n",info.samplePerPacket);
-                                    printf("[STSD] Bytes per packet  %u\n",info.bytePerPacket);
-                                    printf("[STSD] Bytes per frame   %u\n",info.bytePerFrame);
-                                    printf("[STSD] Bytes per sample   %u\n",son.read32());
-                                    ADM_NOT_NULL(samplePerPacket);  
-                                    ADM_NOT_NULL(bytePerPacket);
-                                    ADM_NOT_NULL(bytePerFrame);
-                                    
-                                    left-=16;
-                                }else
-                                {
-                                  info.samplePerPacket=1;
-                                  info.bytePerPacket=1;
-                                  info.bytePerFrame=1;
-                                }
+                                printf("Bytes left : %d\n",left);
+                                info.samplePerPacket=1;
+                                info.bytePerPacket=1;
+                                info.bytePerFrame=1;
+
                                 switch(atomVersion)
                                 {
-                                  case 0:break;
-                                  case 1: break;
-                                  case 2:
-                                          ADIO.frequency=44100; // FIXME
-                                          ADIO.channels=son.read32();
-                                          printf("Channels            :%d\n",ADIO.channels); // Channels
-                                          printf("Tak(7F000)          :%x\n",son.read32()); // Channels
-                                          printf("Bits  per channel   :%d\n",son.read32());  // Vendor
-                                          printf("Format specific     :%x\n",son.read32());  // Vendor
-                                          printf("Byte per audio packe:%x\n",son.read32());  // Vendor
-                                          printf("LPCM                :%x\n",son.read32());  // Vendor
-                                          left-=(5*4+4+16);
+                                        case 0:break;
+                                case 1 :
+                                        {                                    
+                                            info.samplePerPacket=son.read32();
+                                            info.bytePerPacket=son.read32();
+                                            info.bytePerFrame=son.read32();
+                                                #define ADM_NOT_NULL(x)          if(!info.x) info.x=1;
+                                            printf("[STSD] Sample per packet %u\n",info.samplePerPacket);
+                                            printf("[STSD] Bytes per packet  %u\n",info.bytePerPacket);
+                                            printf("[STSD] Bytes per frame   %u\n",info.bytePerFrame);
+                                            printf("[STSD] Bytes per sample   %u\n",son.read32());
+                                            ADM_NOT_NULL(samplePerPacket);  
+                                            ADM_NOT_NULL(bytePerPacket);
+                                            ADM_NOT_NULL(bytePerFrame);
+
+                                            left-=16;
+                                        }
+                                        break;
+                                case 2:
+                                        {
+                                          son.skipBytes(4);
+                                          son.skipBytes(4);son.skipBytes(4); // sample rate
+                                          int nbChan=son.read32();
+                                          printf("Channels = %d\n",nbChan);
+                                          son.skipBytes(4); // 0x7f000
+                                          son.skipBytes(4); // bits per coded channel
+                                          son.skipBytes(4); // lpcm flags
+                                          son.skipBytes(4); // byte per frame
+                                          son.skipBytes(4); // sample per frame
+                                          left-=4*8;
+                                        }
                                           break;
                                 }
                                 printf("[STSD] chan:%u bpp:%u encoding:%u fq:%u (left %u)\n",channels,bpp,encoding,fq,left);
