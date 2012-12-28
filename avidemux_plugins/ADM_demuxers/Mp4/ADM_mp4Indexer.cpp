@@ -32,7 +32,7 @@
 
 
 #define QT_TR_NOOP(x) x
-#define MAX_CHUNK_SIZE (16*1024)
+#define MAX_CHUNK_SIZE (4*1024)
 uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
 /**
  * \fn splitAudio
@@ -76,12 +76,16 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
                 int part=0;
                 
                 uint64_t offset=track->index[i].offset;
+                uint32_t samples=track->index[i].dts;
+                uint32_t totalSamples=samples;
+                uint32_t originalSize=sz;
                 while(sz>maxChunkSize)
                 {
                       newindex[w].offset=offset+part*maxChunkSize;
                       newindex[w].size=maxChunkSize;
-                      newindex[w].dts=ADM_COMPRESSED_NO_PTS;
+                      newindex[w].dts=(samples*maxChunkSize)/originalSize;
                       newindex[w].pts=ADM_COMPRESSED_NO_PTS; // No seek
+                      totalSamples-=newindex[w].dts;
                       ADM_assert(w<newNbCo);
                       w++;
                       part++;
@@ -90,7 +94,7 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
                 // The last one...
                   newindex[w].offset=offset+part*maxChunkSize;
                   newindex[w].size=sz;
-                  newindex[w].dts=ADM_COMPRESSED_NO_PTS; 
+                  newindex[w].dts=totalSamples; 
                   newindex[w].pts=ADM_COMPRESSED_NO_PTS;
                   w++;
         }
@@ -120,7 +124,9 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     uint64_t audioClock=0;
     
     uint32_t totalBytes=info->SzIndentical*info->nbSz;
+    uint32_t totalSamples=0;
     printf("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
+    printf("Byte per frame =%d\n",(int)info->bytePerFrame);
     printf("SttsC[0] = %d, sttsN[0]=%d\n",info->SttsC[0],info->SttsN[0]);
     
     if(info->nbStts!=1) 
@@ -143,13 +149,16 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     {
         for(int j=info->Sc[i]-1;j<info->nbCo;j++)
         {
-              aprintf("For chunk %lu, %lu samples\n",j,info->Sn[i]);
+              aprintf("For chunk %lu, %lu samples size=%d\n",j,info->Sn[i],(int)info->nbCo[j]);
               samplePerChunk[j]=info->Sn[i];
         }
     }
     /**/
     for(int i=0;i<info->nbCo;i++)
-      total+=samplePerChunk[i];
+    {
+        aprintf("Chunk %d Samples=%d\n",i,samplePerChunk[i]);
+        total+=samplePerChunk[i];
+    }
 
     printf("Total size in sample : %u\n",total);
     printf("Sample size          : %u\n",info->SzIndentical);
@@ -165,44 +174,30 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     track->nbIndex=info->nbCo;;
     
     totalBytes=0;
+    totalSamples=0;
+   
     
-    // all the same size & duration...
-    bool warn=true;
     for(int i=0;i<info->nbCo;i++)
     {
         uint32_t sz;
-#define PACK_SIZE info->bytePerFrame // perPacket ??
 
         track->index[i].offset=info->Co[i];
         sz=samplePerChunk[i];
-        /* Sz is in sample, convert it to bytes */
-        sz/=info->bytePerFrame;
-        if(warn && sz*info->samplePerPacket!=samplePerChunk[i])
-        {
-          warn=false;
-          ADM_warning("Warning sample per packet not divider of sample per chunk \n");
-          ADM_warning(" sz * perPacket == perChunk, with sz=%d \n",sz);
-          ADM_warning("(per packet :%u , chunk :%u)\n",  info->samplePerPacket, samplePerChunk[i]); 
-        }
-        sz*=PACK_SIZE;
-        /* */
-        track->index[i].size=sz*info->bytePerFrame;
-        track->index[i].dts=ADM_NO_PTS; // No seek
+        sz=sz/info->samplePerPacket;
+        sz*=info->bytePerPacket*track->_rdWav.channels;;
+        
+        track->index[i].size=sz;
+        track->index[i].dts=samplePerChunk[i]; // No seek
         track->index[i].pts=ADM_NO_PTS; // No seek
-        /*
-        if(sz>MAX_CHUNK_SIZE)
-        {
-            max+=sz/MAX_CHUNK_SIZE;
-        }
-         */
 
         totalBytes+=track->index[i].size;
-        aprintf("Block %d , size=%d,total=%d\n",i,track->index[i].size,totalBytes);
+        totalSamples+=samplePerChunk[i];
+        aprintf("Block %d , size=%d,total=%d,samples=%d,total samples=%d\n",i,track->index[i].size,totalBytes,samplePerChunk[i],totalSamples);
     }
 
     if(info->nbCo)
         track->index[0].dts=track->index[0].pts=0;
-    printf("Found %u bytes, spred over %d blocks\n",totalBytes,info->nbCo);
+    printf("Found %u bytes, spread over %d blocks\n",totalBytes,info->nbCo);
     //
     // split large chunk into smaller ones if needed
     splitAudio(track,info, trackScale);
@@ -213,20 +208,25 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     // 1 per sample
     // so we have so far all samples with a +1 time increment
       
-
-    
-      double sampleDuration,totalDuration=0;
-      // Set Dts & Pts accordingly
-      uint64_t totalSize=0;
+      uint32_t scale=trackScale*track->_rdWav.channels;
+      if(track->_rdWav.encoding==WAV_ULAW) // Wtf ?
+          scale/=track->_rdWav.channels;
+      uint32_t samplesSoFar=0;
       for(int i=0;i< track->nbIndex;i++)
       {     
-            double v=totalSize; // convert offset in sample to regular time (us)
-            v=v/(trackScale*info->bytePerFrame);
+          uint32_t thisSample=track->index[i].dts;
+            double v=samplesSoFar; // convert offset in sample to regular time (us)
+            v=(v)/(scale);
             v*=1000LL*1000LL;
+#if 1
             track->index[i].dts=track->index[i].pts=(uint64_t)v;
-            totalSize+=track->index[i].size;
+#else
+            track->index[i].dts=track->index[i].pts=ADM_NO_PTS;
+#endif
+            samplesSoFar+=thisSample;
+            aprintf("Block %d, size=%d, dts=%d\n",i,track->index[i].size,track->index[i].dts);
       }
-   
+//      track->index[0].dts=0;
     printf("Index done (sample same size)\n");
     return 1;
 }
