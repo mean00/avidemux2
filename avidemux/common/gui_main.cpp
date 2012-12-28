@@ -249,10 +249,10 @@ void HandleAction (Action action)
             return;
 	case ACT_OPEN_APP_LOG:
 		GUI_OpenApplicationLog();
-		break;
+		return;
 	case ACT_OPEN_APP_FOLDER:
 		GUI_OpenApplicationDataFolder();
-		break;
+		return;
 
     case ACT_ABOUT :
     		 DIA_about( );
