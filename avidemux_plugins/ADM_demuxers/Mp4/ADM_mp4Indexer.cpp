@@ -125,6 +125,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     
     uint32_t totalBytes=info->SzIndentical*info->nbSz;
     uint32_t totalSamples=0;
+    double   skewFactor=1;
     printf("All the same size: %u (total size %u bytes)\n",info->SzIndentical,totalBytes);
     printf("Byte per frame =%d\n",(int)info->bytePerFrame);
     printf("SttsC[0] = %d, sttsN[0]=%d\n",info->SttsC[0],info->SttsN[0]);
@@ -207,14 +208,25 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     // Normally they have all the same duration with a time increment of 
     // 1 per sample
     // so we have so far all samples with a +1 time increment
-      
-      uint32_t scale=trackScale*track->_rdWav.channels;
-      if(track->_rdWav.encoding==WAV_ULAW) // Wtf ?
-          scale/=track->_rdWav.channels;
       uint32_t samplesSoFar=0;
+      double scale=trackScale*track->_rdWav.channels;
+      switch(track->_rdWav.encoding)
+      {
+        default:break;
+        case WAV_ULAW: // Wtf ?
+        case WAV_IMAADPCM:
+        case WAV_MSADPCM:
+                scale/=track->_rdWav.channels;
+                break;
+      }
+      if(info->bytePerPacket!=info->samplePerPacket)
+      {
+          printf("xx Byte per packet =%d\n",info->bytePerPacket);
+          printf("xx Sample per packet =%d\n",info->samplePerPacket);
+      }
       for(int i=0;i< track->nbIndex;i++)
       {     
-          uint32_t thisSample=track->index[i].dts;
+            uint32_t thisSample=track->index[i].dts;
             double v=samplesSoFar; // convert offset in sample to regular time (us)
             v=(v)/(scale);
             v*=1000LL*1000LL;
@@ -226,7 +238,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
             samplesSoFar+=thisSample;
             aprintf("Block %d, size=%d, dts=%d\n",i,track->index[i].size,track->index[i].dts);
       }
-//      track->index[0].dts=0;
+     // track->index[0].dts=0;
     printf("Index done (sample same size)\n");
     return 1;
 }
