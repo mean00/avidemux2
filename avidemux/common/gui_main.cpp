@@ -277,8 +277,14 @@ void HandleAction (Action action)
         prefs->save ();
         return;
     case ACT_EXIT:
+          if(playing)
+          {
+              ADM_info("Stopping playback...\n");
+              GUI_PlayAvi();
+          }
+          ADM_info("Closing ui\n");
 	  UI_closeGui();
-      return;
+          return;
       break;
     default:
       break;

@@ -76,8 +76,15 @@ public slots:
     void searchRecentProjects(QAction * action);
     void searchToolBar(QAction *);
 
-	void scriptFileActionHandler();
-	void scriptReferenceActionHandler();
+    void scriptFileActionHandler();
+    void scriptReferenceActionHandler();
+
+     void closeEvent(QCloseEvent *event)
+        {
+                printf("Close event!\n");
+                //QMainWindow::closeEvent(event);
+                HandleAction(ACT_EXIT);
+        }
 
 protected:
 	const std::vector<IScriptEngine*>& _scriptEngines;
