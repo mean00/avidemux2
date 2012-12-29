@@ -80,12 +80,12 @@ bool spawnProcess(const char *processName, int argc, const string argv[])
         &pi )           // Pointer to PROCESS_INFORMATION structure
     )
     {
-		delete [] w;
+        delete [] w;
         ADM_error("Cannot spawn process! (%s)\n",c);
         return false;
     }
 
-	delete [] w;
+    delete [] w;
     
 #else
     system(command.c_str());
@@ -162,17 +162,20 @@ bool jobWindow::runOneJob( ADMJob &job)
     string ScriptFullPath;
     
 #ifdef _WIN32
-    #define MKEXE(x) "avidemux3_"#x".exe"
+    #define MKCLI() "avidemux_cli.exe"
+    #define MKQT()  "avidemux.exe"
     string slash=string("\\");
 #else
-    #define MKEXE(x) "avidemux3_"#x
+    #define MKCLI() "avidemux3_cli"
+    #define MKQT() "avidemux3_qt4"
     string slash=string("/");
 #endif
+    
     ScriptFullPath=string(ADM_getJobDir())+slash+string(job.scriptName);
-    const char *avidemuxVersion=MKEXE(cli);
+    const char *avidemuxVersion=MKCLI();
     if(ui.checkBoxUseQt4->isChecked())
     {
-        avidemuxVersion=MKEXE(qt4);
+        avidemuxVersion=MKQT();
     }
     if(false==spawnChild(avidemuxVersion,ScriptFullPath,job.outputFileName))
     {
