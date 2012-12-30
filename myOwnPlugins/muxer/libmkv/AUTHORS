@@ -1,0 +1,4 @@
+Most of this code was taken from Mike Mastnev's matroska muxer included in
+x264.
+
+Glue provided by saintdev@gmail.com

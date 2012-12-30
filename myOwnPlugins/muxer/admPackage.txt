@@ -1,0 +1,3 @@
+URL    : https://github.com/saintdev/libmkv.git
+License:  GPL
+Rev: 0.6.5.1 / d2906c03cc8f91fca0074e02bb14504a0e85bce6
