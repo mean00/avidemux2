@@ -150,6 +150,12 @@ bool ADM_socket::create(void)
 {
       mySocket = socket(AF_INET, SOCK_STREAM, 0);
       if(mySocket<0) return false;
+      int flag = 1;
+      int result = setsockopt(mySocket,  IPPROTO_TCP,  TCP_NODELAY, (char *) &flag, sizeof(int));
+      if(result<0)
+      {
+          ADM_warning("Cannot set TCP_NO_DELAY\n");
+      }
       return true;
 
 }
