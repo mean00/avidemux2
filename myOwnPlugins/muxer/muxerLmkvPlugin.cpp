@@ -25,7 +25,7 @@ static bool dummy(void)
 ADM_MUXER_BEGIN( "mkv",muxerLmkv,
                     1,0,0,
                     "Lmkv",    // Internal name
-                    "libmkv muxer plugin (c) Mean 2012",
+                    "Libmkv muxer plugin (c) Mean 2012",
                     "libmkv Muxer", // DIsplay name
                     dummy,
                     NULL, //template

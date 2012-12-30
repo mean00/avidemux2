@@ -20,7 +20,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
  *****************************************************************************/
-#include "config.h"
+#include "ADM_coreConfig.h"
 #include "libmkv.h"
 #include "matroska.h"
 #include "md5.h"
@@ -162,7 +162,7 @@ int mk_writeHeader(mk_Writer *w, const char *writingApp)
 	w->seek_data.segmentinfo = w->root->d_cur - w->segment_ptr;
 	/* Reserve space for a SegmentUID (16 bytes + 1 byte longer EBML ID), to be written it later. */
 	CHECK(mk_writeVoid(c, 16 + 1));
-	CHECK(mk_writeStr(c, MATROSKA_ID_MUXINGAPP, PACKAGE_STRING));	/* MuxingApp */
+	CHECK(mk_writeStr(c, MATROSKA_ID_MUXINGAPP, "libmkv0.6.5.1"));	/* MuxingApp */
 	CHECK(mk_writeStr(c, MATROSKA_ID_WRITINGAPP, writingApp));	/* WritingApp */
 	CHECK(mk_writeUInt(c, MATROSKA_ID_TIMECODESCALE, w->timescale));	/* TimecodeScale */
 	CHECK(mk_writeFloat(c, MATROSKA_ID_DURATION, 0));	/* Duration */

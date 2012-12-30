@@ -10,6 +10,9 @@ MESSAGE("")
 SET(ADM_PROJECT AdmLibMkvMuxer)
 SET(PLUGINS TRUE)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
+
+ADD_DEFINITIONS("-fPIC")
+
 ########################################
 # Where is the top dir ?
 ########################################
@@ -51,6 +54,7 @@ OPTION(VERBOSE "" OFF)
 ###############################################
 
 include(mx_plugin)
+SUBDIRS(libmkv)
 SET(ADM_lmkv_SRCS
 	muxerLmkvPlugin.cpp
 	muxerLmkv.cpp
@@ -59,6 +63,7 @@ SET(ADM_lmkv_SRCS
 	muxerLmkvConfig.cpp
 )
 ADD_MUXER(ADM_mx_libmkv SHARED ${ADM_lmkv_SRCS})
+TARGET_LINK_LIBRARIES(ADM_mx_libmkv  ADMlibmkv)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INIT_MUXER(ADM_mx_libmkv)
 INSTALL_MUXER(ADM_mx_libmkv)

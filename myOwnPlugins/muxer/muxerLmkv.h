@@ -18,7 +18,7 @@
 #include "ADM_muxer.h"
 #include "ADM_audioClock.h"
 #include "ADM_paramList.h"
-
+#include "libmkv/include/libmkv.h"
 /**
     \class mp4v2AudioPacket
 */
@@ -56,7 +56,9 @@ class mp4v2AudioPacket
 class muxerLmkv : public ADM_muxer
 {
 protected:
-
+        mk_Writer *instance;
+        mk_Track  *videoTrack;
+        ADM_videoStream *videoStream;
 protected: // video
 protected: // audio
 protected:
