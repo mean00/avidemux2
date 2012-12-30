@@ -81,7 +81,7 @@ bool ADM_slaveSendResult(bool result)
     msg.setPayloadAsUint32_t(result);
     msg.command=ADM_socketCommand_End;
     mySocket->sendMessage(msg);
-    ADM_usleep(1000000); // wait 5 sec to make sure the data is delivered
+    ADM_usleep(5*1000000); // wait 5 sec to make sure the data is delivered
     return true;
 }
 
