@@ -56,12 +56,18 @@ class mp4v2AudioPacket
 class muxerLmkv : public ADM_muxer
 {
 protected:
-        mk_Writer *instance;
-        mk_Track  *videoTrack;
+        mk_Writer       *instance;
+        int             scale;
+protected: // video part
+        mk_Track        *videoTrack;
         ADM_videoStream *videoStream;
-protected: // video
+        ADMBitstream    s[2];
+        int             videoToggle;
+        uint64_t        videoFrameDuration;
+        bool            writeVideo(uint64_t &videoDts);
 protected: // audio
 protected:
+    bool setupVideo(ADM_videoStream *vid);
 public:
                 muxerLmkv();
         virtual ~muxerLmkv();

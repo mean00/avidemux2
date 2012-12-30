@@ -42,6 +42,11 @@ muxerLmkv::muxerLmkv()
         ADM_info("[muxerLmkv] Creating\n");
         instance=NULL;
         videoTrack=NULL;
+        s[0].data=NULL;
+        s[1].data=NULL;
+        scale=1000;
+        videoToggle=0;
+        videoFrameDuration=40000;
 };
 /**
     \fn     muxerLmkv
@@ -51,11 +56,7 @@ muxerLmkv::muxerLmkv()
 muxerLmkv::~muxerLmkv()
 {
     ADM_info("[muxerLmkv] Destroying\n");
-    if(instance)
-    {
-        mk_close(instance);
-        instance=NULL;
-    }
+    close();
 }
 /**
     \fn open
@@ -64,38 +65,20 @@ muxerLmkv::~muxerLmkv()
 
 bool muxerLmkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
-        videoStream=s;
-        instance=mk_createWriter(file,1000000000LL,false);// ns
+       
+        instance=mk_createWriter(file,1000LL,true);// unit is us so it's in us
         if(!instance)
         {
             ADM_warning("Cannot create instance\n");
             return false;
         }
         
-        // Create video track
-        mk_TrackConfig videoConf;
-        memset(&videoConf,0,sizeof(videoConf));
-        videoConf.trackType=MK_TRACK_VIDEO;
-        videoConf.flagEnabled=true;
-        videoConf.codecID=MK_VCODEC_MP4AVC;
-        uint8_t *extraData;
-        uint32_t extraDataLen;
-        s->getExtraData(&extraDataLen,&extraData);
-        
-        videoConf.codecPrivate=extraData;
-        videoConf.codecPrivateSize=extraDataLen;
-        
-        videoTrack=mk_createTrack(instance,&videoConf);
-        if(!videoTrack)
-        {
-            ADM_warning("Cannot create video track\n");
+        if(!setupVideo(s))
             goto fail;
-        }
         mk_writeHeader(instance,"adm26");
         return true;
 fail:
-        mk_close(instance);
-        instance=NULL;
+        ADM_warning("Opening of libmkv failed\n");
         return false;
 }
 /**
@@ -103,35 +86,25 @@ fail:
 */
 bool muxerLmkv::save(void)
 {
-    uint32_t size=videoStream->getWidth()*videoStream->getHeight()*3;
-    uint8_t *buffer=new uint8_t[size];
-    ADMBitstream s(size);
-    s.data=buffer;
+   
+    int toggle=0;
+    bool result=true;
     
+    
+ 
     printf("...\n");
-    while(videoStream->getPacket(&s))
+    
+    bool running=true;
+    uint64_t videoDts=0;
+    while(running)
     {
-        int r;
-        r=mk_startFrame(instance,videoTrack);
-        cprintf("Start :%d\n",r);
-        
-        r=mk_addFrameData(instance,videoTrack, s.data,s.len);
-        cprintf("addData :%d\n",r);
-        
-        int key=0;
-        if(s.flags & AVI_KEY_FRAME)
-        {
-            key=1;
-        }
-        r= mk_setFrameFlags(instance,videoTrack,0,key,0); // us -> ns
-	cprintf("setFlags :%d\n",r);				 
-        
-        r=mk_flushFrame(instance,videoTrack);
-        cprintf("Flush :%d\n",r);
+        if(!writeVideo(videoDts))            
+            running=false;
     }
-    delete [] buffer;
-    buffer=NULL;
-    return false;
+
+theEnd:
+
+    return result;
 }
 /**
     \fn close
@@ -139,6 +112,21 @@ bool muxerLmkv::save(void)
 */
 bool muxerLmkv::close(void)
 {
+    if(instance)
+    {
+        mk_close(instance);
+        instance=NULL;
+    }
+    if(s[0].data)
+    {
+        delete [] s[0].data;
+        s[0].data=NULL;
+    }
+    if(s[1].data)
+    {
+        delete [] s[1].data;
+        s[1].data=NULL;
+    }
 
     return true;
 }

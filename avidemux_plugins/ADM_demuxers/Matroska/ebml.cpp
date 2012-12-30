@@ -24,7 +24,7 @@
 #define aprintf(...) {}
 
 #include "ADM_assert.h"
-#if 0
+#if 1
 #define vprintf printf
 #else
 #define vprintf(...) {}

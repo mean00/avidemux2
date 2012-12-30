@@ -23,225 +23,156 @@
 #include "ADM_codecType.h"
 #include "ADM_imageFlags.h"
 #include "ADM_videoInfoExtractor.h"
-#if 1
+#include "muxerLmkv.h"
+
+#define cprintf(...) {}
+
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf printf
 #endif
-#if 0
-/**
-    \fn loadNextVideoFrame
-    \brief Load buffer, convert to annexB if needed
-*/
-bool muxerMp4v2::loadNextVideoFrame(ADMBitstream *bs)
+
+static char *idFromFourcc(uint32_t fcc)
 {
-    if(true==needToConvertFromAnnexB)
-        {
-            ADMBitstream tmp;
-            tmp.data=scratchBuffer;
-            tmp.bufferSize=videoBufferSize;
-            if(false==vStream->getPacket(&tmp))
-                return false;
-            bs->dts=tmp.dts;
-            bs->pts=tmp.pts;
-            bs->flags=tmp.flags;
-            bs->len=ADM_convertFromAnnexBToMP4(scratchBuffer,tmp.len, bs->data,videoBufferSize);
-            goto goOn;
-        }
-    if(false==vStream->getPacket(bs))
-        {
-            return false;
-        }
-goOn:
-    if(bs->dts==ADM_NO_PTS)
-    {
-        bs->dts=lastVideoDts+vStream->getFrameIncrement();
-    }
-    lastVideoDts=bs->dts;
-    return true;
+    if(isH264Compatible(fcc))
+        return MK_VCODEC_MP4AVC;
+    if(isMpeg4Compatible(fcc))
+        return MK_VCODEC_MP4ASP;
+    if(isMpeg12Compatible(fcc))
+        return MK_VCODEC_MPEG2;
+    if(fourCC::check(fcc,(uint8_t *)"DIV3"))
+        return MK_VCODEC_MSMP4V3;
+    return NULL;
+
 }
+
 /**
-    \fn setEsdsAtom
-    \brief extract esds atom from extradata or for first frame. In all cases read the first frame
-*/
-bool muxerMp4v2::initMpeg4(void)
+ * \fn setupVideo
+ * @param vid
+ * @return 
+ */
+bool muxerLmkv::setupVideo(ADM_videoStream *vid)
 {
-    bool removeVol=false;
-    // Preload first image
-    if(false==loadNextVideoFrame(&(in[0])))
+        videoStream=vid;
+       // Create video track
+        mk_TrackConfig videoConf;
+        memset(&videoConf,0,sizeof(videoConf));
+        
+        
+        // Main setup ...
+        
+        videoConf.trackType=MK_TRACK_VIDEO;
+        videoConf.flagEnabled=true;
+        videoConf.flagDefault=1;
+        
+        double fps=vid->getAvgFps1000();
+        if(!fps) fps=25000;
+                
+        fps=1000000000000./fps;
+        videoConf.defaultDuration=(uint64_t)fps;
+        videoFrameDuration=(uint64_t)(fps/1000LL); // ns -> us
+        aprintf("Default video frame duration =%d ns\n",(int)fps);
+        aprintf("Default video frame duration =%d us\n",(int)videoFrameDuration);
+        videoConf.codecID=idFromFourcc(vid->getFCC());
+        if(!videoConf.codecID)
         {
-            ADM_error("Cannot read 1st video frame\n");
+            ADM_warning("Unsupported video codec\n");
             return false;
         }
-        nextWrite=1;
-
-    videoTrackId=MP4AddVideoTrack(handle,90000,MP4_INVALID_DURATION,
-    vStream->getWidth(),vStream->getHeight(),MP4_MPEG4_VIDEO_TYPE);
-    if(MP4_INVALID_TRACK_ID==videoTrackId)
+        
+        // Fill in description of video
+        
+        videoConf.extra.video.aspectRatioType=MK_ASPECTRATIO_FREE;
+        videoConf.extra.video.pixelWidth=vid->getWidth();
+        videoConf.extra.video.pixelHeight=vid->getHeight();
+        
+        videoConf.extra.video.displayWidth=videoConf.extra.video.pixelWidth;
+        videoConf.extra.video.displayHeight=videoConf.extra.video.pixelHeight;
+        
+        videoConf.extra.video.displayUnit=0; // in pixels
+        
+        // Get extradata if needed...
+        uint8_t *extraData;
+        uint32_t extraDataLen;
+        vid->getExtraData(&extraDataLen,&extraData);        
+        videoConf.codecPrivate=extraData;
+        videoConf.codecPrivateSize=extraDataLen;
+        
+        videoTrack=mk_createTrack(instance,&videoConf);
+        if(!videoTrack)
         {
-            ADM_error("Cannot add mpeg4 video Track \n");
+            ADM_warning("Cannot create video track\n");
             return false;
         }
-    ADM_info("Setting mpeg4 (a)SP ESDS...\n");
-    if(0) //false==vStream->getPacket(&in) )
-     {
-        ADM_error("Cannot read first frame\n");
-        return false;
-     }
-     uint8_t *esdsData=NULL;
-     uint32_t esdsLen=0;
-        if(false==vStream->getExtraData(&esdsLen,&esdsData))
+        uint32_t size=vid->getWidth()*videoStream->getHeight()*3;
+        uint8_t *buffer=new uint8_t[size];
+        uint8_t *buffer2=new uint8_t[size];
+        
+        s[0].data=buffer;
+        s[1].data=buffer2;
+        s[0].bufferSize=size;
+        s[1].bufferSize=size;
+        
+        // Preload first image..
+        if(!videoStream->getPacket(s))
         {
-            ADM_info("No extradata, geting ESDS from first frame...\n");
-        }else
-        {
-            ADM_info("Got esds from extradata\n");
-        }
-        if(!esdsLen) // We dont have extraData, look into the 1st frame
-        {
-            ADM_info("Trying to get VOL header from first frame...\n");
-            if(!extractVolHeader(in[0].data,in[0].len,&esdsData,&esdsLen))
-            {
-                ADM_error("Cannot get ESDS, aborting\n");
-                return false;
-            }
-            // Remove VOL Header from Fist frame...
-            removeVol=true;
-        }
-        //
-        if(!esdsLen)
-        {
-            ADM_error("ESDS not found, aborting\n");
+            ADM_warning("Cannot get 1st frame\n");
             return false;
         }
-        if(!esdsData[0] && !esdsData[1] && esdsData[2]==1)
-        {
-            // Remove startcode
-            if(esdsLen<4)
-            {
-                ADM_error("ESDS too short\n");
-                return false;
-            }
-            esdsData+=4;
-            esdsLen-=4;
-        }
-
-        ADM_info("Esds:\n"); mixDump(esdsData,esdsLen);ADM_info("\n");            
-        if(false==MP4SetTrackESConfiguration(handle,videoTrackId,esdsData,esdsLen))
-        {
-            ADM_error("SetTracEsConfiguration failed\n");
-            return false;
-        }
-        ADM_info("ESDS atom set\n");
-        if(removeVol)
-        {
-            uint32_t size=(uint32_t)((in[0].data+in[0].len)-(esdsData+esdsLen));
-            memmove(in[0].data,esdsData+esdsLen,size);
-            in[0].len=size;
-        }
+        videoToggle=1;
         return true;
 }
 /**
-       \fn initH264
-       \brief format header for H264
-*/
-bool muxerMp4v2::initH264(void)
+ * \fn writeVideo
+ * \brief write one video frame, videoDts is the output DTS of the written frame
+ * @param videoDts
+ * @return 
+ */
+bool muxerLmkv::writeVideo(uint64_t &videoDts)
 {
-//
-            bool result=false;
-            uint32_t spsLen;
-            uint8_t  *spsData=NULL;
-            uint32_t ppsLen;
-            uint8_t  *ppsData=NULL;
-            // Extract sps & pps            
-            uint8_t *extra=NULL;
-            uint32_t extraLen=0;
-            if(false==vStream->getExtraData(&extraLen,&extra))
-            {
-                ADM_error("Cannot get extradata\n");
-                return false;
-            }
-            if(extraLen)
-                mixDump(extra,extraLen);
-            ADM_info("\n");
-            if(false==ADM_getH264SpsPpsFromExtraData(extraLen,extra,&spsLen,&spsData,&ppsLen,&ppsData))
-            {
-                ADM_error("Wrong extra data for h264\n");
-                return false;
-            }
-            
-            // if we dont have extraData, it is annexB 100 % sure
-            needToConvertFromAnnexB=true;
-            if(extraLen)
-                if(extra[0]==1) needToConvertFromAnnexB=false;
-            if(false==loadNextVideoFrame(&(in[0])))
-            {
-                ADM_error("Cannot read 1st video frame\n");
-                return false;
-            }
-            nextWrite=1;
-            //
-            videoTrackId=MP4AddH264VideoTrack(handle,90000,MP4_INVALID_DURATION,
-                    vStream->getWidth(),vStream->getHeight(),spsData[1],spsData[2],spsData[3],3);
-            if(MP4_INVALID_TRACK_ID==videoTrackId)
-            {
-                ADM_error("Cannot add h264 video Track \n");
-                return false;
-            }
-            ADM_info("SPS (%d) :",spsLen);
-            mixDump(spsData,spsLen);
-            ADM_info("PPS (%d) :",ppsLen);
-            mixDump(ppsData,ppsLen);
-            ADM_info("\n");
-
-            MP4AddH264SequenceParameterSet(handle,videoTrackId, spsData,spsLen );
-            MP4AddH264PictureParameterSet( handle,videoTrackId, ppsData,ppsLen);
-            // MP4AddIPodUUID
-            result=true;
-clnup:
-            if(spsData) delete [] spsData;
-            if(ppsData) delete [] ppsData;
-            spsData=NULL;
-            ppsData=NULL;
-            return result;
-}
-/**
-    \fn initVideo
-*/
-bool muxerMp4v2::initVideo(void)
-{
-        uint32_t fcc=vStream->getFCC();
-       
-        ADM_info("Setting video..\n");
-        if(isMpeg4Compatible(fcc))
+    
+        if(!videoStream->getPacket(s+videoToggle))
         {
-           
-            if(false==initMpeg4())
-            {
-                ADM_error("Cannot set ESDS atom\n");
-                return false;
-            }
+            ADM_warning("[LMKV] Cant get video frame\n");
+            return false;
         }
-        if(isH264Compatible(fcc))
+        int r;
+        
+        ADMBitstream *thisOne=s+(videoToggle^1);
+        ADMBitstream *nextOne=s+videoToggle;
+        videoToggle^=1;
+        
+        r=mk_startFrame(instance,videoTrack);
+        cprintf("Start :%d\n",r);
+        
+        r=mk_addFrameData(instance,videoTrack, thisOne->data,thisOne->len);
+        cprintf("addData :%d\n",r);
+        
+        int key=0;
+        if(thisOne->flags & AVI_KEY_FRAME)
         {
-            if(false==initH264())
-            {
-                ADM_error("Cannot add h264 track\n");
-                return false;
-            }
+            key=1;
         }
-        double inc=vStream->getAvgFps1000();
-        inc=inc/1000;
-        if(inc>0.005) inc=1/inc;
-                else inc=0.005;
-        ADM_info("Frame increment =%d ms\n",(int)(inc*1000));
-        inc*=90000;
-        setMaxDurationPerChunk(videoTrackId, inc);
-        ADM_info("[MP4V2] Video correctly initalized\n");
+        uint64_t timeStamp=thisOne->pts;
+        printf("Incoming pts= %d\n",(int)timeStamp);
+        if(timeStamp==ADM_NO_PTS) 
+                timeStamp=0;
+        else
+                timeStamp*=scale; // us -> ns
+        int64_t duration=0;
+        if(thisOne->dts!=ADM_NO_PTS && nextOne->dts!=ADM_NO_PTS)
+            duration=(nextOne->dts-thisOne->dts)*scale;
+        else
+            duration=0;
+        r= mk_setFrameFlags(instance,videoTrack,timeStamp,key,duration); // us -> ns
+	cprintf("setFlags :%d\n",r);				 
+       // printf("Writting frame with pts=%d duration=%d\n",(int)timeStamp,(int)duration);
+        r=mk_flushFrame(instance,videoTrack);
+        cprintf("Flush :%d\n",r);
+    
+        videoDts=thisOne->dts;
         return true;
 }
-#endif
-//EOF
 
-
-
+// EOF
