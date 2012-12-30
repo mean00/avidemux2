@@ -129,7 +129,7 @@ bool ADM_commandSocket::pollMessage(ADM_socketMessage &msg)
         struct timeval timeout; 
 
         timeout.tv_sec=0;
-        timeout.tv_usec=10*1000; // us
+        timeout.tv_usec=1000*1000; // 1 sec
         //ADM_info("Selecting\n");
         int evt=select(1+mySocket,&set,NULL,&er,&timeout);
         if(evt<0) 
@@ -138,17 +138,16 @@ bool ADM_commandSocket::pollMessage(ADM_socketMessage &msg)
             close();
             return false;
         }
-        
+        if(FD_ISSET(mySocket,&set))
+        {
+            return getMessage(msg);
+        }
         if(FD_ISSET(mySocket,&er))
         {
             ADM_error("OOPs socket is in error\n");
         }
-        if(!evt)
-        {
-            printf(".");
-            return false;
-        }
-        return getMessage(msg);
+        ADM_warning("Timeout on socket\n");
+        return false;
 }
 
 /**
