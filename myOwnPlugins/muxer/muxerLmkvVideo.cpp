@@ -54,7 +54,7 @@ static char *idFromFourcc(uint32_t fcc)
  */
 bool muxerLmkv::setupVideo(ADM_videoStream *vid)
 {
-        videoStream=vid;
+        vStream=vid;
        // Create video track
         mk_TrackConfig videoConf;
         memset(&videoConf,0,sizeof(videoConf));
@@ -105,7 +105,7 @@ bool muxerLmkv::setupVideo(ADM_videoStream *vid)
             ADM_warning("Cannot create video track\n");
             return false;
         }
-        uint32_t size=vid->getWidth()*videoStream->getHeight()*3;
+        uint32_t size=vid->getWidth()*vid->getHeight()*3;
         uint8_t *buffer=new uint8_t[size];
         uint8_t *buffer2=new uint8_t[size];
         
@@ -115,7 +115,7 @@ bool muxerLmkv::setupVideo(ADM_videoStream *vid)
         s[1].bufferSize=size;
         
         // Preload first image..
-        if(!videoStream->getPacket(s))
+        if(!vid->getPacket(s))
         {
             ADM_warning("Cannot get 1st frame\n");
             return false;
@@ -129,12 +129,17 @@ bool muxerLmkv::setupVideo(ADM_videoStream *vid)
  * @param videoDts
  * @return 
  */
+
+#warning fixme : we are loosing one frame stuck in the buffer here
+
 bool muxerLmkv::writeVideo(uint64_t &videoDts)
 {
     
-        if(!videoStream->getPacket(s+videoToggle))
+        if(!vStream->getPacket(s+videoToggle))
         {
             ADM_warning("[LMKV] Cant get video frame\n");
+            // Flush last video
+            
             return false;
         }
         int r;

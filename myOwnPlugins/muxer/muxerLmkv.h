@@ -60,7 +60,7 @@ protected:
         int             scale;
 protected: // video part
         mk_Track        *videoTrack;
-        ADM_videoStream *videoStream;
+        
         ADMBitstream    s[2];
         int             videoToggle;
         uint64_t        videoFrameDuration;

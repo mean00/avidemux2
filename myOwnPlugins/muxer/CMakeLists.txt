@@ -11,7 +11,7 @@ SET(ADM_PROJECT AdmLibMkvMuxer)
 SET(PLUGINS TRUE)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
 
-ADD_DEFINITIONS("-fPIC")
+ADD_DEFINITIONS("-fPIC -g")
 
 ########################################
 # Where is the top dir ?

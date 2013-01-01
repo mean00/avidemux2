@@ -89,21 +89,22 @@ bool muxerLmkv::save(void)
    
     int toggle=0;
     bool result=true;
-    
-    
+    initUI("Saving as mkv");
+    encoding->setContainer("MKV (libmkv)");
  
-    printf("...\n");
+    
     
     bool running=true;
     uint64_t videoDts=0;
     while(running)
     {
+        updateUI();
         if(!writeVideo(videoDts))            
             running=false;
     }
 
 theEnd:
-
+    closeUI();
     return result;
 }
 /**
