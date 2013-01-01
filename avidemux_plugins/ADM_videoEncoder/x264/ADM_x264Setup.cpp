@@ -276,7 +276,12 @@ bool x264Encoder::setup(void)
   
   ADM_info("x264, setup ok\n");
   if (globalHeader)
-    return createHeader ();
+  {
+      ADM_info("Creating global header\n");
+      return createHeader ();
+  }else
+      ADM_info("No need for global header\n");
+    
   return true;
 }
 /**

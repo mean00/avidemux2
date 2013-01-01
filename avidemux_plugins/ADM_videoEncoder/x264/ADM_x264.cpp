@@ -40,7 +40,7 @@ x264_encoder x264Settings = X264_DEFAULT_CONF;
 */
 x264Encoder::x264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
 {
-    ADM_info("[x264] Creating.\n");
+    ADM_info("[x264] Creating with globalHeader=%d\n",globalHeader);
     handle=NULL;
     extraData=NULL;
     extraDataLen=0;
