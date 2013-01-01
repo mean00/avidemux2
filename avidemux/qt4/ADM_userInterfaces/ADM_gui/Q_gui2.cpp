@@ -82,6 +82,8 @@ extern bool ADM_QPreviewCleanup(void);
 extern void vdpauCleanup();
 
 
+static bool uiRunning=false;
+
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -732,11 +734,16 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 
 	return 1;
 }
-
+/**
+ * \fn UI_closeGui
+ */
 void UI_closeGui(void)
 {
+        if(!uiRunning) return;
+        uiRunning=false;
 	QuiMainWindows->close();
 	qtUnregisterDialog(QuiMainWindows);
+        
 }
 
 void destroyGUI(void)
@@ -830,8 +837,8 @@ static void FatalFunctionQt(const char *title, const char *info)
 */
 int UI_RunApp(void)
 {
-
-	setupMenus();
+    uiRunning=true;
+    setupMenus();
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	checkCrashFile();
     // Create an openGL context
