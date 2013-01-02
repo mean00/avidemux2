@@ -48,7 +48,7 @@
 //ADM_muxer               *ADM_MuxerSpawnFromIndex(int index);
 #include "ADM_muxerProto.h"
 extern ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
-extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input);
+extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input, bool needPerfectAudio);
 
 /**
     \class admSaver
@@ -364,7 +364,7 @@ bool admSaver::setupAudio()
                     shift=ed->audioEncodingConfig.shiftInMs;
                     ADM_info("Using shift of %d ms\n",(int)shift);
                 }
-                access=audioCreateCopyStream(startAudioTime,shift,ed->edTrack);
+                access=audioCreateCopyStream(startAudioTime,shift,ed->edTrack,!muxer->canDealWithTimeStamps());
             }
             if(!access)
             {

@@ -34,9 +34,10 @@ class ADM_audioStreamCopy : public ADM_audioStream
                         ADM_audioStream *in;
                         uint64_t        startTime;
                         int64_t         shift;
+                        bool            needPerfectAudio;
         public:
 
-                       ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTime, int64_t shift);  
+                       ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTime, int64_t shift,bool needPerfectAudio);  
 virtual                 WAVHeader                *getInfo(void) {return in->getInfo();};
 virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
 //virtual bool            goToTime(uint64_t nbUs);
@@ -46,13 +47,16 @@ virtual bool             getExtraData(uint32_t *l, uint8_t **d);
 };
 // Pass Through class, just do the timing
 
-ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTime, int64_t shift) : 
+ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTime, int64_t shift,bool needPerfectAudio) : 
                     ADM_audioStream(NULL,NULL)
 {
+    ADM_info("Creating copy stream, startTime=%s, needPerfectAudio=%d, shift=%d\n",
+                ADM_us2plain(startTime),needPerfectAudio,(int)shift);
     in=input;
     this->startTime=startTime;
     in->goToTime(startTime);
     this->shift=shift;
+    this->needPerfectAudio=needPerfectAudio;
 }
 
 bool ADM_audioStreamCopy::isCBR()
@@ -77,7 +81,7 @@ again:
         
         int64_t corrected=*dts;
         corrected+=shift;
-        if(corrected<startTime) goto again; // cant have <0 dts
+        if(corrected<(int64_t)startTime) goto again; // cant have <0 dts
         *dts=corrected-startTime; 
     }
     return true;
@@ -86,7 +90,7 @@ again:
 /**
         \fn audioCreateCopyStream
 */
-ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input)
+ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input,bool needPerfectAudio)
 {
   shift*=-1000; // ms -> us
   // fixup startTime and shift
@@ -110,7 +114,7 @@ ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audi
   }
   ADM_info("Creating audio stream copy with compensation : startTime=%s\n",ADM_us2plain(startTime));
   ADM_info("and shift =%s\n",ADM_us2plain(shift));
-  return new ADM_audioStreamCopy(input,startTime,shift);
+  return new ADM_audioStreamCopy(input,startTime,shift,needPerfectAudio);
 }
 
 // EOF

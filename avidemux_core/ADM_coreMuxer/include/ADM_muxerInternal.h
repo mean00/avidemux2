@@ -16,7 +16,7 @@
 #ifndef  ADM_muxerInternal_H
 #define  ADM_muxerInternal_H
 
-#define ADM_MUXER_API_VERSION 8
+#define ADM_MUXER_API_VERSION 9
 #include <stddef.h>
 #include "ADM_dynamicLoading.h"
 #include "ADM_muxer.h"

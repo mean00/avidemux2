@@ -73,6 +73,7 @@ public:
         virtual  bool     closeUI(void);
         virtual  bool     useGlobalHeader(void) {return false;}
         virtual  bool     preferH264AnnexB(void) {return false;};
+        virtual  bool     canDealWithTimeStamps(void) {return true;}; // If yes, muxer can deal with track not starting at 0 + discontinuous
 
 };
 #endif
