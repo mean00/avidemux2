@@ -283,8 +283,11 @@ bool muxerMp4v2::save(void)
     }
     // Write last frame
     nextWrite=!nextWrite;
+    int scale;
+    if(videoIncrement>5000) scale=(1000000.0/videoIncrement);
+        else       scale=100; // 10 ms
     MP4WriteSample(handle,videoTrackId,in[nextWrite].data,in[nextWrite].len,
-                        90000/100, // duration=10ms
+                        (MP4Duration)90000/scale, 
                         0, // pts/dts offset
                         0 // Sync Sample
                         );
