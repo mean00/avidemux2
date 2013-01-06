@@ -34,21 +34,17 @@ extern ADM_Composer *video_body;
 class ADM_audioStreamCopy : public ADM_audioStream
 {
         protected:
-                      
-            
                         ADM_audioStream *in;
                         uint64_t        startTime;
                         int64_t         shift;
-                                              
         public:
-
                         ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTime, int64_t shift);  
 virtual                 ~ADM_audioStreamCopy();
-virtual                 WAVHeader                *getInfo(void) {return in->getInfo();};
+virtual WAVHeader      *getInfo(void) {return in->getInfo();};
 virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
-virtual bool             getExtraData(uint32_t *l, uint8_t **d);
-         uint64_t        getDurationInUs(void);
-         bool            isCBR();
+virtual bool            getExtraData(uint32_t *l, uint8_t **d);
+         uint64_t       getDurationInUs(void);
+         bool           isCBR();
 };
 /**
         \class ADM_audioStreamCopyPerfect
