@@ -19,13 +19,13 @@ using std::string;
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
-#include "ADM_queue.h"
+#include "ADM_ptrQueue.h"
 #include "ADM_audioClock.h"
 #include <math.h>
 
 
 extern ADM_Composer *video_body;
-
+#define MAX_SKEW 35000
 /**
         \fn ADM_audioStream
         \brief Base class for audio stream
@@ -52,19 +52,66 @@ virtual bool            getExtraData(uint32_t *l, uint8_t **d);
 class ADM_audioStreamCopyPerfect : public ADM_audioStreamCopy
 {
         protected:
+                        /**
+                         *      \class perfectAudioPacket
+                         */
+                        class perfectAudioPacket
+                        {
+                        protected:
+                                uint64_t dts;
+                                uint32_t size;
+                                uint32_t samples;
+                                uint8_t  *data;
+                        public:
+                                perfectAudioPacket(uint8_t *data, uint32_t size, uint64_t dts, uint32_t samples)
+                                {
+                                    this->data=new uint8_t[size];
+                                    memcpy(this->data,data,size);
+                                    this->size=size;
+                                    this->samples=samples;
+                                    this->dts=dts;
+                                }
+                                ~perfectAudioPacket()
+                                {
+                                    delete [] data;
+                                    data=NULL;
+                                    size=0;
+                                };
+                                bool clone(uint8_t *dst, uint32_t *s, uint64_t *d, uint32_t *sam)
+                                {
+                                    memcpy(dst,data,size);
+                                    *s=size;
+                                    *d=dts;
+                                    *sam=samples;
+                                    return true;
+                                }
+                        };
+        protected:
                         typedef enum
                         {
                             StreamCopyIdle,StreamCopyDuping,StreamCopyFlushing
                         }StreamCopyState;
-                                    
+#define changeState(x) {state=StreamCopy##x;}
                         // Needed for duplication
+                        ADM_ptrQueue <perfectAudioPacket>       audioQueue;
                         bool            needPerfectAudio;
                         bool            firstPacket;
                         audioClock      *clock;
+                        uint64_t        nextDts;
                         StreamCopyState state;
                         uint32_t        channels;
                         bool            dupePacket(uint8_t *data, uint32_t size, uint32_t nbSamples, uint64_t dts)
                         {
+                            perfectAudioPacket *packet=new perfectAudioPacket(data,size,nbSamples,dts);
+                            audioQueue.pushBack(packet);
+                            return true;
+                        }
+                        bool popBackPacket(uint8_t *data, uint32_t *size, uint32_t *nbSample,uint64_t *dts)
+                        {
+                            perfectAudioPacket *p= audioQueue.pop();
+                            ADM_assert(p);
+                            p->clone(data,size,dts,nbSample);
+                            delete p;
                             return true;
                         }
         public:
@@ -97,6 +144,7 @@ ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTi
     this->startTime=startTime;
     in->goToTime(startTime);
     this->shift=shift;
+    
 }
 /**
  * \fn isCBR
@@ -179,7 +227,7 @@ ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audi
   }
   ADM_info("Creating audio stream copy with compensation : startTime=%s\n",ADM_us2plain(startTime));
   ADM_info("and shift =%s\n",ADM_us2plain(shift));
-  if(needPerfectAudio && false)
+  if(needPerfectAudio )
         return new ADM_audioStreamCopyPerfect(input,startTime,shift);
   else
         return new ADM_audioStreamCopy(input,startTime,shift);
@@ -202,6 +250,7 @@ ADM_audioStreamCopyPerfect::ADM_audioStreamCopyPerfect(ADM_audioStream *input,ui
     state=StreamCopyIdle;
     clock=new audioClock(in->getInfo()->frequency);
     channels=in->getInfo()->channels;
+    nextDts=0;
 }
 /**
  * \fn dtor
@@ -224,53 +273,104 @@ ADM_audioStreamCopyPerfect::~ADM_audioStreamCopyPerfect()
  * @param dts
  * @return 
  */
-uint8_t         ADM_audioStreamCopyPerfect::getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts)
+uint8_t         ADM_audioStreamCopyPerfect::getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,
+                                                      uint32_t *nbSample,uint64_t *dts)
 {
     
 again:
-    bool wasFirst=firstPacket;
-    firstPacket=false;
-    if(state==StreamCopyFlushing)
-    {
-        // pop packet & go back to  idle if needed
-        
-    }
+     if(state==StreamCopyFlushing)
+      {
+            if(audioQueue.isEmpty())
+            {
+                changeState(Idle);
+                goto again;;
+            }
+            bool r=popBackPacket(buffer,  size,  nbSample, dts);
+            clock->advanceBySample(*nbSample);
+            return r;
+       }
+        // if we can't get an new packet...
     if(false==in->getPacket(buffer,size,sizeMax,nbSample,dts)) 
     {
-        // empty queue
-        if(state==StreamCopyDuping)
+        switch(state)
         {
+        case StreamCopyDuping:
+            {
             state=StreamCopyFlushing;
             goto again;
+            break;
+            }
+     
+        case StreamCopyIdle:
+                // done processing that
+                return false;
+                break;
+        default: ADM_assert(0);break;
         }
-        // done processing that
-       return false;
     }
-        if(wasFirst && *dts==ADM_NO_PTS)
+            
+    // Either we are duping or just passing data around        
+    // fix up the DTS..
+    if(*dts!=ADM_NO_PTS)
+    {
+        int64_t fixup=*dts;
+        fixup+=shift;
+        if(fixup < (int64_t)startTime) goto again ; // too early...
+        fixup-=startTime;
+        *dts=(uint64_t)fixup;
+    }else
+    {
+        *dts=clock->getTimeUs();
+    }
+        
+    switch(state)
+    {
+        case StreamCopyIdle:
         {
-            ADM_warning("First audio packet has no DTS\n");
-        }
-        if(state==StreamCopyIdle && wasFirst && *dts!=ADM_NO_PTS)
-        {
-            // should we engage duping mode ?
-            if(0)
+            uint64_t targetTime=clock->getTimeUs();
+            if( fabs((float)*dts-(float)targetTime)<MAX_SKEW)
             {
-                state=StreamCopyDuping;
-                // Dupe packet
-                dupePacket(buffer,*size,*nbSample,*dts);
-                *dts=0;
-                clock->setTimeUs(0);
-                clock->advanceBySample(*nbSample/channels);
+                *dts=targetTime; // correct some varying around ideal value
+                clock->advanceBySample(*nbSample);
                 return true;
             }
-        if(*dts!=ADM_NO_PTS)
-        {
-
+            if(*dts<targetTime)
+            {
+                // in the past, drop
+                ADM_warning("Audio packet in the past, dropping\n");
+                goto again;
+            }
+            // in the future
+            nextDts=*dts;
+            changeState(Duping);
+            dupePacket(buffer,*size,*nbSample,*dts);
+            clock->advanceBySample(*nbSample);
+            return true;
         }
-        int64_t corrected=*dts;
-        corrected+=shift;
-        if(corrected<(int64_t)startTime) goto again; // cant have <0 dts
-        *dts=corrected-startTime; 
+            break;
+        case StreamCopyDuping:
+            if( fabs((float)nextDts-(float)clock->getTimeUs()<MAX_SKEW))
+            {
+                changeState(Flushing);
+            }
+            dupePacket(buffer,*size,*nbSample,*dts);
+            *dts=clock->getTimeUs();
+            clock->advanceBySample(*nbSample);
+            return true;
+            break;
+        case StreamCopyFlushing:
+        {
+             if(audioQueue.isEmpty())
+             {
+                changeState(Idle);
+                goto again;
+             }
+             bool r=popBackPacket(buffer,  size,  nbSample, dts);
+             clock->advanceBySample(*nbSample);
+             return r;
+        }
+             break;
+    default: ADM_assert(0);break;
     }
     return true;
 
