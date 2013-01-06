@@ -68,7 +68,7 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 	if (argc < 2)
 		return JS_FALSE;
 
-	if (JSVAL_IS_STRING(argv[1]) == false || JSVAL_IS_INT(argv[0]))
+	if (!JSVAL_IS_STRING(argv[1]) || !JSVAL_IS_INT(argv[0]))
 		return JS_FALSE;
 
 	for (int i = 2; i < argc; i++)
@@ -78,8 +78,7 @@ JSBool jsAdmaudioCodec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, js
 	// Get Codec...
     int dex=JSVAL_TO_INT(argv[0]);
 	char *name = JS_GetStringBytes(JSVAL_TO_STRING(argv[1]));
-	// begin set bitrate
-	uint32_t bitrate = JSVAL_TO_INT(argv[2]);
+
 	// Construct couples
 	CONFcouple *c = NULL;
 
