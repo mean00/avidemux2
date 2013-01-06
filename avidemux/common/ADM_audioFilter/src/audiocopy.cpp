@@ -23,9 +23,17 @@ using std::string;
 #include "ADM_audioClock.h"
 #include <math.h>
 
+#if 1
+#define changeState(x) {state=StreamCopy##x;}
+#define aprintf(...) {}
+#else
+#define changeState(x) {printf("Changing state from %d to %d\n",state,StreamCopy##x);state=StreamCopy##x;}
+#define aprintf ADM_info
+#endif
 
 extern ADM_Composer *video_body;
-#define MAX_SKEW 35000
+#define MAX_SKEW 80000
+#define MIN_SKEW 10000
 /**
         \fn ADM_audioStream
         \brief Base class for audio stream
@@ -91,18 +99,15 @@ class ADM_audioStreamCopyPerfect : public ADM_audioStreamCopy
                         {
                             StreamCopyIdle,StreamCopyDuping,StreamCopyFlushing
                         }StreamCopyState;
-#define changeState(x) {state=StreamCopy##x;}
                         // Needed for duplication
                         ADM_ptrQueue <perfectAudioPacket>       audioQueue;
-                        bool            needPerfectAudio;
-                        bool            firstPacket;
                         audioClock      *clock;
                         uint64_t        nextDts;
                         StreamCopyState state;
                         uint32_t        channels;
                         bool            dupePacket(uint8_t *data, uint32_t size, uint32_t nbSamples, uint64_t dts)
                         {
-                            perfectAudioPacket *packet=new perfectAudioPacket(data,size,nbSamples,dts);
+                            perfectAudioPacket *packet=new perfectAudioPacket(data,size,dts,nbSamples);
                             audioQueue.pushBack(packet);
                             return true;
                         }
@@ -240,13 +245,11 @@ ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audi
  * @param needPerfectAudio
  */
 ADM_audioStreamCopyPerfect::ADM_audioStreamCopyPerfect(ADM_audioStream *input,uint64_t startTime, int64_t shift) : 
-                    ADM_audioStreamCopy(in,startTime,shift)
+                    ADM_audioStreamCopy(input,startTime,shift)
 {
-    ADM_info("Creating Perfect copy stream, startTime=%s, needPerfectAudio=%d, shift=%d\n",
-                ADM_us2plain(startTime),needPerfectAudio,(int)shift);
+    ADM_info("Creating Perfect copy stream, startTime=%s,  shift=%d\n",
+                ADM_us2plain(startTime),(int)shift);
 
-    this->needPerfectAudio=needPerfectAudio;
-    firstPacket=true;
     state=StreamCopyIdle;
     clock=new audioClock(in->getInfo()->frequency);
     channels=in->getInfo()->channels;
@@ -280,13 +283,17 @@ uint8_t         ADM_audioStreamCopyPerfect::getPacket(uint8_t *buffer,uint32_t *
 again:
      if(state==StreamCopyFlushing)
       {
+            
             if(audioQueue.isEmpty())
             {
                 changeState(Idle);
+                aprintf("Flushed\n");
                 goto again;;
             }
-            bool r=popBackPacket(buffer,  size,  nbSample, dts);
+            bool r=popBackPacket(buffer,  size,  nbSample, dts);//int8_t *data, uint32_t *size, uint32_t *nbSample,uint64_t *dts
+            *dts=clock->getTimeUs();
             clock->advanceBySample(*nbSample);
+            aprintf("Flushing time=%d\n",*dts);
             return r;
        }
         // if we can't get an new packet...
@@ -322,16 +329,25 @@ again:
     {
         *dts=clock->getTimeUs();
     }
-        
+    aprintf("[PerfectAudio] target=%d current=%d\n",(int)clock->getTimeUs(),(int)*dts);
     switch(state)
     {
         case StreamCopyIdle:
         {
             uint64_t targetTime=clock->getTimeUs();
-            if( fabs((float)*dts-(float)targetTime)<MAX_SKEW)
+            int skew=(int) fabs((float)*dts-(float)targetTime);
+            aprintf("Skew= %d\n",skew);
+            if(skew>MIN_SKEW)
             {
+                ADM_warning("[PerfectAudio]Warning skew of %d us\n",skew);
+                ADM_warning("[PerfectAudio]Warning target=%d current=%d\n",(int)targetTime,*dts);
+            }
+            if(skew<MAX_SKEW)
+            {
+                
                 *dts=targetTime; // correct some varying around ideal value
                 clock->advanceBySample(*nbSample);
+                aprintf("copying : Dts=%d\n",(int)*dts);
                 return true;
             }
             if(*dts<targetTime)
@@ -341,22 +357,29 @@ again:
                 goto again;
             }
             // in the future
+            
             nextDts=*dts;
             changeState(Duping);
             dupePacket(buffer,*size,*nbSample,*dts);
+            *dts=clock->getTimeUs();
             clock->advanceBySample(*nbSample);
+            aprintf("In the future, dts=%d, syncDts=%d\n",*dts,nextDts);
             return true;
         }
             break;
         case StreamCopyDuping:
-            if( fabs((float)nextDts-(float)clock->getTimeUs()<MAX_SKEW))
+        {
+            uint64_t currentClock=clock->getTimeUs();
+            aprintf("Duping clockDts=%d, syncDts=%d\n",currentClock,nextDts);
+            if( fabs((float)nextDts-(float)currentClock<MAX_SKEW))
             {
                 changeState(Flushing);
             }
             dupePacket(buffer,*size,*nbSample,*dts);
-            *dts=clock->getTimeUs();
+            *dts=currentClock;
             clock->advanceBySample(*nbSample);
             return true;
+        }
             break;
         case StreamCopyFlushing:
         {
