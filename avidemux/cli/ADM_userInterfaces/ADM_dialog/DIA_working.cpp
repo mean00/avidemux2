@@ -44,24 +44,26 @@ public:
 //**********************************
 DIA_workingNone::DIA_workingNone( const char *title ) : DIA_workingBase(title)
 {
+	this->postCtor();
 }
+
 void DIA_workingNone :: postCtor( void )
 {
-
-		lastper=0;
-		_nextUpdate=0;
+	lastper=0;
+	_nextUpdate=0;
 }
+
 uint8_t DIA_workingNone::update(uint32_t percent)
 {
-	#define  GUI_UPDATE_RATE 1000
-
                 if(!_priv) return 1;
                 if(!percent) return 0;
+
                 if(percent==lastper)
                 {
-
                    return 0;
                 }
+
+				lastper=percent;
                 aprintf("DIA_working::update(%lu) called\n", percent);
                 elapsed=_clock.getElapsedMS();
                 if(elapsed<_nextUpdate) 
@@ -70,8 +72,6 @@ uint8_t DIA_workingNone::update(uint32_t percent)
                   return 0;
                 }
                 _nextUpdate=elapsed+1000;
-                lastper=percent;
-  
         
 		//
 		// 100/totalMS=percent/elapsed
@@ -107,7 +107,7 @@ uint8_t DIA_workingNone::update(uint32_t cur, uint32_t total)
 		uint32_t percent;
 		if(!_priv) return 1;
 
-		aprintf("DIA_working::update(uint32_t %lu,uint32_t %lu) called\n", cur, total);
+		//aprintf("DIA_working::update(uint32_t %lu,uint32_t %lu) called\n", cur, total);
 		if(!total) return 0;
 
 		d=total;
