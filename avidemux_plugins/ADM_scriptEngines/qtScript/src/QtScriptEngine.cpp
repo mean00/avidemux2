@@ -144,8 +144,8 @@ namespace ADM_qtScript
     bool QtScriptEngine::runScript(const QString& script, const QString& name, RunMode mode)
     {
 		QCoreApplication *coreApplication = NULL;
+		char **argv = NULL;
 		int argc;
-		char **argv;
 
 		if (QCoreApplication::instance() == NULL)
 		{
@@ -203,10 +203,10 @@ namespace ADM_qtScript
             success = true;
         }
 
-		if (coreApplication)
+		if (coreApplication && argv)
 		{
-			delete argv[0];
-			delete argv;
+			delete [] argv[0];
+			delete [] argv;
 			delete coreApplication;
 		}
 
