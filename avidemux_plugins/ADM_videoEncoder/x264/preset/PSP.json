@@ -4,7 +4,7 @@
 		"threads" : 99,
 		"fast_first_pass" : true
 	},
-	"level" : 31,
+	"level" : 30,
 	"vui" : {
 		"sar_height" : 1,
 		"sar_width" : 1
@@ -25,9 +25,9 @@
 		"b_8x8" : false,
 		"b_i4x4" : true,
 		"b_i8x8" : false,
-		"b_p8x8" : false,
-		"b_p16x16" : true,
-		"b_b16x16" : true,
+		"b_p8x8" : true,
+		"b_p16x16" : false,
+		"b_b16x16" : false,
 		"weighted_pred" : 2,
 		"weighted_bipred" : true,
 		"direct_mv_pred" : 3,
