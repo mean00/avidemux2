@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-SET(VERSION 2.6.0)
+SET(VERSION 2.6.1)
 SET(ADM_PROJECT Avidemux_qt4)
 
 MESSAGE("")

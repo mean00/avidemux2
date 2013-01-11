@@ -23,7 +23,7 @@ RequestExecutionLevel user
 ##########################
 
 !define CORE_VERSION "2.6"
-!define PRODUCT_VERSION "${CORE_VERSION}.0.${REVISION}"
+!define PRODUCT_VERSION "${CORE_VERSION}.1.${REVISION}"
 !define PRODUCT_NAME "Avidemux ${CORE_VERSION}"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit beta)"
 

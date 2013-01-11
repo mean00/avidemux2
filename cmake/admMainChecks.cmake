@@ -87,7 +87,7 @@ endif (CMAKE_COMPILER_IS_GNUCC)
 ########################################
 # Standard Avidemux defines
 ########################################
-SET(VERSION 2.6.0)
+SET(VERSION 2.6.1)
 
 # Define internal flags for GTK+ and Qt4 builds.  These are turned off
 # if a showstopper is found.  CLI is automatically assumed as possible
