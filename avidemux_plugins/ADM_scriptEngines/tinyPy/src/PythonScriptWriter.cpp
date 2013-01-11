@@ -184,22 +184,21 @@ void PythonScriptWriter::dumpConfCouple(CONFcouple *c)
         return;
     }
 
-    int count = 0;
-
+    std::string str;
     for (unsigned int j = 0; j < c->getSize(); j++)
     {
         char *name, *value;
 
         c->getInternalName(j, &name, &value);
-        *(this->_stream) << ", \"" << name << "=" << value << "\"";
-
+        str=str+std::string(", \"")+std::string(name)+std::string("=")+std::string(value)+std::string("\"");
+        
         // tinyPy does not like line > 1024 chars
-        if (count >= 20)
+        if (str.length() >= 900)
         {
+            *(this->_stream) << str;
             *(this->_stream) << std::endl;
-            count = 0;
+            str="";
         }
-
-        count++;
     }
+    *(this->_stream) << str;
 }
