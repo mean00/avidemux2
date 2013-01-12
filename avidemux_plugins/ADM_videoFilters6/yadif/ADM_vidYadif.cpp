@@ -118,7 +118,6 @@ void yadifFilter::updateInfo(void)
    memcpy(&info,previousFilter->getInfo(),sizeof(info)); 
   if(configuration.mode &1 ) // Bob
   {
-    info.totalDuration*=2;
     info.frameIncrement/=2;
   }
 }
