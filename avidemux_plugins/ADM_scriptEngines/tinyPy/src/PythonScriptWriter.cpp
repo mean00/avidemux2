@@ -193,7 +193,7 @@ void PythonScriptWriter::dumpConfCouple(CONFcouple *c)
         str=str+std::string(", \"")+std::string(name)+std::string("=")+std::string(value)+std::string("\"");
         
         // tinyPy does not like line > 1024 chars
-        if (str.length() >= 900)
+        if (str.length() >= 200)
         {
             *(this->_stream) << str;
             *(this->_stream) << std::endl;
