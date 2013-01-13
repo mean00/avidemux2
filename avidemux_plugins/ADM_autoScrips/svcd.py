@@ -66,21 +66,21 @@ source.apply_resize(resizer)
 ############################
 # Handle audio....
 ############################
-encoding=adm.audioEncoding
-fq=adm.audioEncoding
-channels=adm.audioChannels
+encoding=adm.audioEncoding(0)
+fq=adm.audioFrequency(0)
+channels=adm.audioChannels(0)
 reencode=False
 # 1 check frequency
 if(fq != 44100):
-    adm.audioResample=44100
+    adm.audioSetResample(0,44100)
     reencode=True
 if(not(encoding in supported)):
     reencode=True
 if(channels!=2):
-    adm.audioMixer="STEREO"
+    adm.audioSetMixer(0,"STEREO")
     reencode=True
 if(True==reencode):
-    adm.audioCodec("TwoLame",160)
+    adm.audioCodec(0,"TwoLame","bitrate=160")
 ##################################
 #  Video
 ##################################
