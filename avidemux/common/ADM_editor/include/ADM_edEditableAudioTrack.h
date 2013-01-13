@@ -37,7 +37,7 @@ public:
 // encoder
 	int                         encoderIndex;
 	CONFcouple                  *encoderConf;
-    int                         poolIndex;
+        int                         poolIndex;
 
 	EditableAudioTrack();
 	EditableAudioTrack(const EditableAudioTrack &src);
