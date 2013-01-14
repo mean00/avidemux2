@@ -8,10 +8,11 @@ import ADM_image
 finalSizeWidth=720               # Start with DVD target, we'll adjust later
 finalSizeHeight=[ 480,576]
 #
+adm=Avidemux()
+gui=Gui()
 #
 MP2=80
 supported=[MP2]
-adm=Avidemux()
 ##########################
 # Compute resize...
 ##########################
@@ -66,21 +67,27 @@ source.apply_resize(resizer)
 ############################
 # Handle audio....
 ############################
-encoding=adm.audioEncoding(0)
-fq=adm.audioFrequency(0)
-channels=adm.audioChannels(0)
-reencode=False
-# 1 check frequency
-if(fq != 44100):
-    adm.audioSetResample(0,44100)
-    reencode=True
-if(not(encoding in supported)):
-    reencode=True
-if(channels!=2):
-    adm.audioSetMixer(0,"STEREO")
-    reencode=True
-if(True==reencode):
-    adm.audioCodec(0,"TwoLame","bitrate=160")
+tracks=adm.audioTracksCount()
+print("We have "+str(tracks)+ " audio tracks.")
+if tracks==0:
+     gui.displayError("Audio","No audio tracks!")
+     exit()
+for i in range(0,tracks):
+  encoding=adm.audioEncoding(i)
+  fq=adm.audioFrequency(i)
+  channels=adm.audioChannels(i)
+  reencode=False
+  # 1 check frequency
+  if(fq != 44100):
+      adm.audioSetResample(i,44100)
+      reencode=True
+  if(not(encoding in supported)):
+      reencode=True
+  if(channels!=2):
+      adm.audioSetMixer(i,"STEREO")
+      reencode=True
+  if(True==reencode):
+      adm.audioCodec(i,"TwoLame","bitrate=224")
 ##################################
 #  Video
 ##################################

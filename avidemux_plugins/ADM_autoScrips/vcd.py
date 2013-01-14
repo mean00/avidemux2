@@ -5,12 +5,14 @@
 
 import ADM_imageInfo
 import ADM_image
+
+adm=Avidemux()
+gui=Gui()
 finalSizeWidth=352
 finalSizeHeight=[ 240,288]
 #
 MP2=80
 supported=[MP2]
-adm=Avidemux()
 ##########################
 # Compute resize...
 ##########################
@@ -59,6 +61,11 @@ source.apply_resize(resizer)
 ############################
 # Handle audio....
 ############################
+tracks=adm.audioTracksCount()
+print("We have "+str(tracks)+ " audio tracks.")
+if(tracks!=1):
+  gui.displayError("Error","Please have only one audio track for VCD!")
+  exit()
 encoding=adm.audioEncoding(0)
 fq=adm.audioFrequency(0)
 channels=adm.audioChannels(0)

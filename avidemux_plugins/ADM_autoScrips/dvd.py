@@ -1,11 +1,13 @@
 ###############################################
 #      Convert to DVD adm tinypy script
-#      Mean 2011
+#      Mean 2011/2013
 ###############################################
 
 import ADM_imageInfo
 import ADM_image
 
+adm=Avidemux()
+gui=Gui()
 finalSizeWidth=720
 finalSizeHeight=[ 480,576]
 #
@@ -14,7 +16,6 @@ MP2=80
 AC3=0x2000
 DTS=0x2001
 supported=[MP2,AC3,DTS]
-adm=Avidemux()
 ##########################
 # Compute resize...
 ##########################
@@ -63,20 +64,27 @@ source.apply_resize(resizer)
 ############################
 # Handle audio....
 ############################
-encoding=adm.audioEncoding(0)
-fq=adm.audioFrequency(0)
-channels=adm.audioChannels(0)
-reencode=False
-# 1 check frequency
-if(fq != 48000):
-    adm.audioSetResample(0,48000)
-    reencode=True
-if(not(encoding in supported)):
-    reencode=True
-if(True==reencode):
-    if(channels!=2):
-        adm.audioSetMixer(0,"STEREO")
-    adm.audioCodec(0,"Aften","bitrate=224","mode=0")
+tracks=adm.audioTracksCount()
+print("We have "+str(tracks)+ " audio tracks.")
+if tracks==0:
+     gui.displayError("Audio","No audio tracks!")
+     exit()
+for i in range(0,tracks):
+  print("Processing track "+str(i))
+  encoding=adm.audioEncoding(i)
+  fq=adm.audioFrequency(i)
+  channels=adm.audioChannels(i)
+  reencode=False
+  # 1 check frequency
+  if(fq != 48000):
+      adm.audioSetResample(i,48000)
+      reencode=True
+  if(not(encoding in supported)):
+      reencode=True
+  if(True==reencode):
+      if(channels!=2):
+          adm.audioSetMixer(i,"STEREO")
+      adm.audioCodec(i,"Aften","bitrate=224","mode=0")
 ##################################
 #  Video
 ##################################
