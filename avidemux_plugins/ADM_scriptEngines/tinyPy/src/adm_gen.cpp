@@ -49,6 +49,19 @@ static tp_obj zzpy_clearSegments(TP)
   int r =   editor->clearSegment(); 
   return tp_number(r);
 }
+// audioTracksCount -> int pyGetNumberOfAudioTracks (IEditor ) 
+static tp_obj zzpy_audioTracksCount(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int r =   pyGetNumberOfAudioTracks(p0); 
+  return tp_number(r);
+}
 // audioResetFilter -> void editor->resetAudioFilter (int ) 
 static tp_obj zzpy_audioResetFilter(TP)
  {
@@ -535,6 +548,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_clearSegments);
   }
+  if (!strcmp(key, "audioTracksCount"))
+  {
+     return tp_method(vm, self, zzpy_audioTracksCount);
+  }
   if (!strcmp(key, "audioResetFilter"))
   {
      return tp_method(vm, self, zzpy_audioResetFilter);
@@ -710,6 +727,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "loadVideo(str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARWidth(void)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "clearSegments(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioTracksCount(IEditor)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioResetFilter(int)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "save(str)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodecChangeParam(str, couples)");

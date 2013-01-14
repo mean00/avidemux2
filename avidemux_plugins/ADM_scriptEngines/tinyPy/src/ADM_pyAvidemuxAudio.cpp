@@ -63,6 +63,15 @@ int pyGetAudioChannels(IEditor *editor,int dex)
 	return h.channels;
 }
 /**
+    \fn pyGetAudioChannels
+    \brief
+*/
+
+int pyGetNumberOfAudioTracks(IEditor *editor)
+{
+        return editor->getNumberOfActiveAudioTracks();
+}
+/**
     \fn
     \brief
 */

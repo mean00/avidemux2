@@ -70,6 +70,7 @@ public:
     /* Audio related */
     virtual bool    clearAudioTracks(void)=0; /// remove all audio tracks
     virtual bool    addAudioTrack(int poolIndex)=0; /// Add an audio track in the active tracks
+    virtual int     getNumberOfActiveAudioTracks(void)=0; // returns # of audio tracks
     virtual bool    addExternalAudioTrack(const char *fileName)=0; /// add an external audio track to the pool
 	virtual bool    setAudioCodec(int dex,const char *codec, CONFcouple *c) = 0;
 	virtual bool    setAudioFilterFrameRate(int dex,FILMCONV conf) = 0;
