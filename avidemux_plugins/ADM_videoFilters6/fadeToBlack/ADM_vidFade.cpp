@@ -72,9 +72,6 @@ while(1)
     diaElemMenu     menu(&(eInOut),QT_TR_NOOP("_Fade type:"), 2,menuE);
     diaElemTimeStamp start(&(param.startFade),QT_TR_NOOP("_Start time (ms):"),0,mx);
     diaElemTimeStamp end(&(param.endFade),QT_TR_NOOP("_End time (ms):"),0,mx);
-   // diaElemToggle   black(&(param.toBlack),QT_TR_NOOP("Fade to _black"));
-    
-    //diaElem *elems[4]={&menu,&start,&end,&black};
     diaElem *elems[3]={&menu,&start,&end};
   
     if( diaFactoryRun(QT_TR_NOOP("Fade to black"),3+0*1,elems))
@@ -161,19 +158,17 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
       ADM_info("[Fade] Cant get image \n");
       return false;
   }
-  ADMImage *nextnext= vidCache->getImage(nextFrame+1);
+  
   image->Pts=next->Pts;
   
   bool out_of_scope=false;
   if(next->Pts<param.startFade*1000LL) out_of_scope=true;
   if(next->Pts>param.endFade*1000LL)   out_of_scope=true;
-  if(!nextnext) out_of_scope=true;
   
-  if(!nextFrame || out_of_scope)
+  
+  if( out_of_scope)
   {
-      // first image, let it as it is
       image->duplicate(next);
-     
       nextFrame++;
       vidCache->unlockAll();
       return true;
@@ -228,48 +223,7 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
     nextFrame++;
     return 1;
   }
-#if 0        
-        uint32_t x,alpha;
-        ADMImage *final;
 
-        final=vidCache->getImage(_param->endFade-_info.orgFrame);
-        if(!final)
-        {
-              data->duplicate(src);
-              vidCache->unlockAll();
-              return 1;
-        }
-
-        s2=final->data;
-
-        index=lookupLuma[w];
-        
-        invertedIndex=lookupLuma[255-w];
-        for(int i=0;i<count;i++)
-        {
-          *d++=(index[*s++]+invertedIndex[*s2++])>>8;
-        }
-        // Now do chroma
-        count>>=2;
-        s=UPLANE(src);
-        d=UPLANE(data);
-        s2=UPLANE(final);
-        index=lookupChroma[w];
-        invertedIndex=lookupChroma[255-w];
-        for(int i=0;i<count;i++)
-        {
-            *d++=(index[*s++]+invertedIndex[*s2++]-(128<<8))>>8;
-        }
-        s=VPLANE(src);
-        d=VPLANE(data);
-        s2=VPLANE(final);
-        for(int i=0;i<count;i++)
-        {
-            *d++=(index[*s++]+invertedIndex[*s2++]-(128<<8))>>8;
-            
-        }
-  }
-#endif
   vidCache->unlockAll();
   nextFrame++;
   return 1;
