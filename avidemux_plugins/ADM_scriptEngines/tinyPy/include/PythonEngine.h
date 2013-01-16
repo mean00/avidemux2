@@ -48,6 +48,7 @@ public:
 	bool runScript(std::string script, RunMode mode);
 	bool runScriptFile(std::string name, RunMode mode);
 	void unregisterEventHandler(eventHandlerFunc *func);
+virtual void raise(const char *exception);
 };
 
 #endif

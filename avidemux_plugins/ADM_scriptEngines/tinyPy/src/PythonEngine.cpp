@@ -36,6 +36,12 @@
 #define ADM_PYID_DF_INTEGER  202
 #define ADM_PYID_DF_MENU     203
 
+void pyRaise(tp_vm *vm,const char *exception)
+{
+        PythonEngine *engine = (PythonEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
+        engine->raise(exception);
+        
+}
 void pyPrintf(tp_vm *vm, const char *fmt, ...)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
@@ -72,7 +78,10 @@ extern "C"
 		return new PythonEngine();
 	}
 }
-
+void PythonEngine::raise(const char *exception)
+{
+    GUI_Error_HIG("TinyPy:Exception","%s",exception);
+}
 PythonEngine::~PythonEngine()
 {
 	this->callEventHandlers(IScriptEngine::Information, NULL, -1, "Closing Python");

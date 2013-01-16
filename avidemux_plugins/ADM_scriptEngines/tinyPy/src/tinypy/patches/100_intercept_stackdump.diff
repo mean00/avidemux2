@@ -1,0 +1,58 @@
+diff --git a/avidemux_plugins/ADM_scriptEngines/tinyPy/src/tinypy/tinypy.cpp b/avidemux_plugins/ADM_scriptEngines/tinyPy/src/tinypy/tinypy.cpp
+index bfb3433..bf101f1 100644
+--- a/avidemux_plugins/ADM_scriptEngines/tinyPy/src/tinypy/tinypy.cpp
++++ b/avidemux_plugins/ADM_scriptEngines/tinyPy/src/tinypy/tinypy.cpp
+@@ -103,7 +103,7 @@ Agreement.
+ #include <math.h>
+ #include <time.h>
+ #include <unistd.h>
+-
++#include <string> // meanx
+ #ifdef __GNUC__
+ #define tp_inline __inline__
+ #endif
+@@ -123,6 +123,7 @@ Agreement.
+ // MEANX : Redirect printf
+ struct tp_vm;
+ void pyPrintf(tp_vm *vm, const char *fmt,...);
++extern void pyRaise(tp_vm *vm,const char *e);
+ #define printf(x, args...) pyPrintf(tp, x, ##args)
+ // MEANX : Need to use ADM_fopen for WIN32 support
+ #define uint8_t unsigned char
+@@ -2249,17 +2250,34 @@ void _tp_raise(TP,tp_obj e) {
+     longjmp(tp->buf,1);
+ }
+ 
++std::string tp_string2std(tp_obj *obj)
++{
++        std::string s;
++        s=std::string(obj->string.val,obj->string.len);
++        return s;
++}
+ void tp_print_stack(TP) {
+     int i;
+     printf("\n");
++    std::string report;
++    char buffer[16];
+     for (i=0; i<=tp->cur; i++) {
+         if (!tp->frames[i].lineno) { continue; }
+-        printf("File \""); tp_echo(tp,tp->frames[i].fname); printf("\", ");
+-        printf("line %d, in ",tp->frames[i].lineno);
++        tp_obj *obj=&(tp->frames[i].fname);
++
++        std::string fileName=tp_string2std(obj);
++        int  lineno=tp->frames[i].lineno;
++        snprintf(buffer,10,"%d",lineno);
++        report+=std::string("File:")+fileName+std::string(", line ")+std::string(buffer);
++        if(i) report+=std::string("\n");
+         tp_echo(tp,tp->frames[i].name); printf("\n ");
+         tp_echo(tp,tp->frames[i].line); printf("\n");
++ 
+     }
+     printf("\nException:\n"); tp_echo(tp,tp->ex); printf("\n");
++    tp_obj *ex=&(tp->ex);
++    report=std::string("Exception :")+tp_string2std(ex)+std::string("\nBackTrack:\n")+report;
++    pyRaise(tp,report.c_str());
+ }
+ 
+ void tp_handle(TP) {
