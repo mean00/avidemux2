@@ -223,7 +223,22 @@ bool x264Dialog::upload(void)
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
-          MK_UINT(mvRangeSpinBox,analyze.mv_range);
+          MK_UINT(mvRangeSpinBox,analyze.me_range);
+          
+          int32_t mv_range = myCopy.analyze.mv_range;
+          if(mv_range >= 0)
+          {
+              ui.mvLengthCheckBox->setChecked(true);
+              MK_UINT(mvLengthSpinBox,analyze.mv_range);
+          }
+          
+          int32_t mv_range_thread = myCopy.analyze.mv_range_thread;
+          
+          if(mv_range_thread >= 0)
+          {
+              ui.minThreadBufferCheckBox->setChecked(true);
+              MK_UINT(minThreadBufferSpinBox,analyze.mv_range_thread);
+          }
 
           // udate idc
           QComboBox *idc=ui.idcLevelComboBox;
@@ -292,8 +307,6 @@ bool x264Dialog::upload(void)
           DISABLE(interlacedCheckBox);
           DISABLE(intraRefreshCheckBox);
           DISABLE(noiseReductionSpinBox);
-          DISABLE(mvLengthCheckBox);
-          DISABLE(minThreadBufferCheckBox);
           DISABLE(constrainedIntraCheckBox);
           DISABLE(groupBox_14);
           DISABLE(tab_7);
@@ -363,7 +376,17 @@ bool x264Dialog::download(void)
           MK_UINT(betaSpinBox,i_deblocking_filter_beta);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
-          MK_UINT(mvRangeSpinBox,analyze.mv_range);
+          MK_UINT(mvRangeSpinBox,analyze.me_range);
+          
+          if(ui.mvLengthCheckBox->isChecked())
+              MK_UINT(mvLengthSpinBox,analyze.mv_range);
+          else
+              myCopy.analyze.mv_range=-1;
+          
+          if(ui.minThreadBufferCheckBox->isChecked())
+              MK_UINT(minThreadBufferSpinBox,analyze.mv_range_thread);
+          else
+              myCopy.analyze.mv_range_thread=-1;
 
           MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
           MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);

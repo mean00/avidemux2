@@ -71,7 +71,9 @@ extern "C"
     0, /*    uint32_t direct_mv_pred */ \
     0, /*    uint32_t chroma_offset */ \
     0, /*    uint32_t me_method */ \
-    16, /*   uint32_t mv_range */ \
+    16, /*   uint32_t me_range */ \
+    -1, /*   int32_t mv_range */ \
+    -1, /*   int32_t mv_range_thread */ \
     7, /*    uint32_t subpel_refine */ \
     false, /*    bool chroma_me */ \
     false, /*    bool mixed_references */ \

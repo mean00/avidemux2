@@ -132,7 +132,9 @@ bool x264Encoder::setup(void)
    MKPARAM (i_weighted_pred,weighted_pred) 
    MKPARAM (i_direct_mv_pred,direct_mv_pred) 
    MKPARAM (i_me_method,me_method) 
+   MKPARAM (i_me_range,me_range)
    MKPARAM (i_mv_range,mv_range) 
+   MKPARAM (i_mv_range_thread,mv_range_thread)
    MKPARAM (i_subpel_refine,subpel_refine) 
    MKPARAMB(b_chroma_me,chroma_me) 
    MKPARAMB(b_mixed_references,mixed_references) 
@@ -359,6 +361,7 @@ void dumpx264Setup(x264_param_t *param)
     
     AI(i_me_method);
     AI(i_me_range);
+    AI(i_mv_range);
     AI(i_mv_range_thread);
     AI(i_subpel_refine);
     AI(b_chroma_me);
