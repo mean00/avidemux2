@@ -152,6 +152,7 @@ AVDM_Fade::~AVDM_Fade(void)
  */
 bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+  *fn=nextFrame;
   ADMImage *next= vidCache->getImage(nextFrame);
   if(!next)
   {
