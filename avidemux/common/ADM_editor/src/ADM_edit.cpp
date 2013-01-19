@@ -187,8 +187,8 @@ bool ADM_Composer::addFile (const char *name)
     	if(!prefs->get(AVISYNTH_AVISYNTH_LOCALPORT, &portValue) || portValue == 0)
 			if(!prefs->get(AVISYNTH_AVISYNTH_DEFAULTPORT, &portValue))
 				portValue = 9999;
-    	char dummy[] = { portValue , portValue >> 8};
-    	ret = video._aviheader->open(dummy);
+    	uint8_t dummy[] = { portValue , portValue >> 8};
+    	ret = video._aviheader->open((char *)dummy);
     }
     else
     	ret = video._aviheader->open(name);
