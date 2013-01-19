@@ -104,18 +104,18 @@ uint32_t defaultPortAvisynth = 9999;
     	CPU_CAPS(SSSE3);
 
     	//Avisynth
-    	if(!prefs->get(AVISYNTH_ALWAYS_ASK, &askPortAvisynth)){
-    		printf("ASK nichts gefunden\n");
+    	if(!prefs->get(AVISYNTH_ALWAYS_ASK, &askPortAvisynth))
+        {
+    		ADM_info("Always ask not set\n");
     		askPortAvisynth=0;
     	}
 
-    	if(!prefs->get(AVISYNTH_DEFAULTPORT, &defaultPortAvisynth)){
-    			printf("PORT nichts gefunden\n");
-    				defaultPortAvisynth=9999;
+    	if(!prefs->get(AVISYNTH_DEFAULTPORT, &defaultPortAvisynth))
+        {
+    			printf("Port not set\n");
+                        defaultPortAvisynth=9999;
     	}
-    	printf("Port wurde bestimmt zu: %d\n",defaultPortAvisynth);
-
-
+    	ADM_info("Avisynth port: %d\n",defaultPortAvisynth);
     
         // Alsa
 #ifdef ALSA_SUPPORT
@@ -444,12 +444,12 @@ uint32_t defaultPortAvisynth = 9999;
                 // number of threads
                 prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
 
-				// Encoding priority
-				prefs->set(PRIORITY_ENCODING, encodePriority);
-				// Indexing / unpacking priority
-				prefs->set(PRIORITY_INDEXING, indexPriority);
-				// Playback priority
-				prefs->set(PRIORITY_PLAYBACK, playbackPriority);
+                // Encoding priority
+                prefs->set(PRIORITY_ENCODING, encodePriority);
+                // Indexing / unpacking priority
+                prefs->set(PRIORITY_INDEXING, indexPriority);
+                // Playback priority
+                prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 
                 // Auto swap A/B
                 prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
@@ -463,14 +463,14 @@ uint32_t defaultPortAvisynth = 9999;
                 // Alternate mp3 tag (haali)
                 prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 
-			#if defined(_WIN32) && defined(USE_SDL)
+			
                 // Avisynth
                 prefs->set(AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
                 prefs->set(AVISYNTH_ALWAYS_ASK, askPortAvisynth);
-
-				// Initialise SDL again as driver may have changed
-				initSdl(render);
-			#endif
+#if defined(_WIN32) && defined(USE_SDL)
+                // Initialise SDL again as driver may have changed
+                initSdl(render);
+#endif
                 
 	}
         for(int i=0;i<nbAudioDevice+1;i++)
