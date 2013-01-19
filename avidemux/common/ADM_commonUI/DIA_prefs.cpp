@@ -72,6 +72,9 @@ bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 bool     hasOpenGl=false;
 
+bool     askPortAvisynth=false;
+uint32_t defaultPortAvisynth = 9999;
+
 #ifdef USE_OPENGL
           prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
 #endif
@@ -99,6 +102,20 @@ bool     hasOpenGl=false;
     	CPU_CAPS(SSE2);
     	CPU_CAPS(SSE3);
     	CPU_CAPS(SSSE3);
+
+    	//Avisynth
+    	if(!prefs->get(AVISYNTH_ALWAYS_ASK, &askPortAvisynth)){
+    		printf("ASK nichts gefunden\n");
+    		askPortAvisynth=0;
+    	}
+
+    	if(!prefs->get(AVISYNTH_DEFAULTPORT, &defaultPortAvisynth)){
+    			printf("PORT nichts gefunden\n");
+    				defaultPortAvisynth=9999;
+    	}
+    	printf("Port wurde bestimmt zu: %d\n",defaultPortAvisynth);
+
+
     
         // Alsa
 #ifdef ALSA_SUPPORT
@@ -345,12 +362,18 @@ bool     hasOpenGl=false;
 		diaElem *diaThreading[]={&frameThread, &framePriority};
 		diaElemTabs tabThreading(QT_TR_NOOP("Threading"),2,(diaElem **)diaThreading);
 
+		/* Avisynth tab */
+		diaElemToggle togAskAvisynthPort(&askPortAvisynth,"_Always ask which port to use");
+		diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,"Default port to use",1024,65535);
+		diaElem *diaAvisynth[]={&togAskAvisynthPort, &uintDefaultPortAvisynth};
+		diaElemTabs tabAvisynth("Avisynth",2,(diaElem **)diaAvisynth);
+
         /* Global Glyph tab */
 
                                     
 // SET
-        diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading};
-        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),6,tabs))
+        diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading, &tabAvisynth};
+        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),7,tabs))
 	{
         	//
 #ifdef USE_OPENGL
@@ -441,6 +464,10 @@ bool     hasOpenGl=false;
                 prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 
 			#if defined(_WIN32) && defined(USE_SDL)
+                // Avisynth
+                prefs->set(AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
+                prefs->set(AVISYNTH_ALWAYS_ASK, askPortAvisynth);
+
 				// Initialise SDL again as driver may have changed
 				initSdl(render);
 			#endif

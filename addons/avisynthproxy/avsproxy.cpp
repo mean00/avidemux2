@@ -52,10 +52,24 @@ int __cdecl main(int argc, const char* argv[])
 	printf("AvsSocket Proxy, derivated from avs2yuv by  Loren Merritt "MY_VERSION" \n");
 	fflush(stdout);
 	
-	
-		if(argc>=2)
+	uint32_t port = DEFAULT_PORT_TO_USE;
+			if(argc>=2)
 		{
-			infile = argv[1];
+			// check if port option is given
+			if (argc >=3 && strlen(argv[1]) == strlen(PORT_COMMAND) && strcmp(argv[1],PORT_COMMAND) == 0){
+				char *endPtr;
+				long int readValue = strtol(argv[2], &endPtr, 10);
+				if(errno != 0  || endPtr != argv[2]+strlen(argv[2]) || readValue < 1024 || readValue > 65536 ){
+					fflush(stderr);
+					fprintf(stderr,"Invalid port number given: '%s'\n",argv[2]);
+					exit (-2 );
+				} else{
+					port = (uint32_t)readValue;
+					infile = argv[3];
+				}
+			} else{
+				infile = argv[1];
+			}
 			const char *dot = strrchr(infile, '.');
 			if(!dot || strcmp(".avs", dot))
 			{
@@ -70,7 +84,7 @@ int __cdecl main(int argc, const char* argv[])
 		}
 	if(!infile) {
 		fprintf(stderr, MY_VERSION "\n"
-		"Usage: avs2yuv  in.avs \n");
+		"Usage: avs2yuv  [--port PORT_NUMBER] in.avs \n");
 		fflush(stderr);
 		return 2;
 	}
@@ -106,7 +120,7 @@ int __cdecl main(int argc, const char* argv[])
 		Buffer=new char[vid_width*vid_height*2]; // Too much but who cares
 		
 		//
-		Sket *sket=new Sket();
+		Sket *sket=new Sket(port);
 		if(!sket->waitConnexion())
 		{
 			printf("Accept/listen error\n");

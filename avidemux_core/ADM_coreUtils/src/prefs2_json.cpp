@@ -53,6 +53,9 @@ json.addUint32("postproc_value",key->Default.postproc_value);
 json.addUint32("downmixing",key->Default.downmixing);
 json.endNode();
 json.addUint32("mpegsplit_autosplit",key->mpegsplit_autosplit);
+json.addNode("avisynth");
+json.addBool("avisynth_always_ask",key->avisynth.avisynth_always_ask);
+json.addUint32("avisynth_defaultport",key->avisynth.avisynth_defaultport);
 return json.dumpToFile(file);
 };
 bool  my_prefs_struct_jdeserialize(const char *file, const ADM_paramList *tmpl,my_prefs_struct *key){

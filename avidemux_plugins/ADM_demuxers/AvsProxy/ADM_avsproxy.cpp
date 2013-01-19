@@ -58,8 +58,8 @@ uint8_t avsHeader::close()
 */
 uint8_t avsHeader::open(const char *name)
 {
-   
-    if(!network.bindMe(9999))
+    uint32_t port = name[0] | name[1] << 8; //restore little endian value
+    if(!network.bindMe(port))
     {
         printf("[avsProxy]Open failed\n");
         return 0;

@@ -46,4 +46,6 @@ int  A_Save(const char *name);
 
 void A_queueJob(const char *jobName,const char *outputFile);
 
+void A_set_avisynth_port(char *port_number_as_text);
+
 #endif

@@ -535,7 +535,13 @@ int A_openAvi (const char *name)
   ** we may get a relative path by cmdline
   */
   longname = ADM_PathCanonize(name);
-  res = video_body->addFile (longname);
+  
+  // check if avisynth input is given
+  if(fourCC::check (id, (uint8_t *) "ADAP"))
+    res = video_body->addFile(AVS_PROXY_DUMMY_FILE);
+  else
+    res = video_body->addFile (longname);
+
 //  DIA_StopBusy ();
 
   // forget last project file
@@ -1287,5 +1293,30 @@ int value;
     ed->audioEncodingConfig.shiftInMs=value;
     update=0; 
 }
+
+void A_set_avisynth_port(char *port_number_as_text){
+	// somehow strtol seems to die with EAGAIN
+	int input_length = strlen(port_number_as_text);
+	uint32_t portNumber =0;
+	int idx = 0;
+
+	for ( ; idx<input_length ; idx++ )
+		if(port_number_as_text[idx] <= '9' && port_number_as_text[idx] >= '0')
+			portNumber = portNumber*10 + port_number_as_text[0] - '0';
+		else
+		{
+			fprintf(stderr,"Invalid character in port number\n");
+			fflush(stderr);
+			exit(-1);
+		}
+	if (portNumber < 1024 || portNumber > 65535)
+	{
+		fprintf(stderr,"Invalid port number! Valid range is [1024, 65535]\n");
+		fflush(stderr);
+		exit(-1);
+	}
+	prefs->set(AVISYNTH_LOCALPORT,portNumber );
+}
+
 //
 // EOF

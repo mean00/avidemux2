@@ -152,9 +152,13 @@ bool ADM_Composer::addFile (const char *name)
   aviInfo    info;
   uint32_t   magic;
   _VIDEOS video;
+  bool		 avisynth_used = false;
 
 	if(!strcmp(name, AVS_PROXY_DUMMY_FILE))
+	{
         magic=0;
+        avisynth_used = true;
+	}
     else
     {
         FILE *f=ADM_fopen(name,"r");
@@ -165,7 +169,7 @@ bool ADM_Composer::addFile (const char *name)
         magic=(buffer[3]<<24)+(buffer[2]<<16)+(buffer[1]<<8)+(buffer[0]);
     }
 
-  // First find the demuxer....
+	// First find the demuxer....
    	video._aviheader=ADM_demuxerSpawn(magic,name);
     if(!video._aviheader)
     {
@@ -175,7 +179,20 @@ bool ADM_Composer::addFile (const char *name)
       GUI_Error_HIG(str,NULL);
       return false;
     }
-    ret = video._aviheader->open(name);
+
+	// use "file name" to share the port number (using little endian)
+    if(avisynth_used)
+    {
+    	uint32_t portValue;
+    	if(!prefs->get(AVISYNTH_LOCALPORT, &portValue) || portValue == 0)
+			if(!prefs->get(AVISYNTH_DEFAULTPORT, &portValue))
+				portValue = 9999;
+    	char dummy[] = { portValue , portValue >> 8};
+    	ret = video._aviheader->open(dummy);
+    }
+    else
+    	ret = video._aviheader->open(name);
+
    // check opening was successful
    if (ret == 0) {
      char str[512+1];

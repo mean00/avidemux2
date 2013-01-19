@@ -14,10 +14,10 @@
 #include <stdio.h>
 #include "sket.h"
 
-Sket::Sket(void)
+Sket::Sket(uint32_t port_number)
 {
 	mySocket=0;
-	port=9999;
+	port=port_number;
 
 	 mySocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 

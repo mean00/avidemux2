@@ -88,6 +88,7 @@ typedef struct
 }AUTOMATON;
 //_________________________________________________________________________
 
+#define avs_port_change "avisynth-port"
 AUTOMATON reaction_table[]=
 {
         //{"js",                  0,"Dump the javascript functions",(one_arg_type)ADM_dumpJSHooks},
@@ -126,7 +127,8 @@ AUTOMATON reaction_table[]=
         {"var",                 1       ,"set var (--var myvar=3)", (one_arg_type)setVar},
         {"help",		0,"print this",		(one_arg_type)call_help},
         {"quit",		0,"exit avidemux",	(one_arg_type)call_quit},
-        {"probePat",		1,"Probe for PAT//PMT..",	(one_arg_type)call_probePat}
+        {"probePat",		1,"Probe for PAT//PMT..",	(one_arg_type)call_probePat},
+        {avs_port_change,   1,"set avsproxy port accordingly", (one_arg_type)A_set_avisynth_port}
 
 }  ;
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
@@ -152,6 +154,27 @@ static two_arg_type two;
 static int index;
     argc=global_argc;
 	argv = global_argv;
+
+          //the port change has to be done before the video load
+          for( int runParaSearch=2 ; runParaSearch < argc ; ){
+		      if(*argv[runParaSearch] == '-' && *(argv[runParaSearch]+1) == '-')
+			  {
+			      index = searchReactionTable(argv[runParaSearch]+2);
+				  if(index != -1)
+				  {
+                      if(!strcmp(avs_port_change, argv[runParaSearch] +2 ))
+				  	  {
+                          A_set_avisynth_port(argv[runParaSearch+1]);
+                          break;
+				  	  }
+			          runParaSearch += reaction_table[index].have_arg +1;
+			      }
+				  else
+				      runParaSearch += 1;
+		      }
+			  else
+			      runParaSearch += 1;
+		  }
 
           printf("\n *** Automated : %"PRIu32" entries*************\n",(uint32_t)NB_AUTO);
           // we need to process
@@ -395,6 +418,7 @@ void call_help(char *p)
           }
 
       }
+    printf("\n");
 
                     call_quit(NULL);
 }

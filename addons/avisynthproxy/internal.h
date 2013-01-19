@@ -31,7 +31,11 @@
 #define __int64_t long long int
 #define in64 (__int64)(unsigned short)
 
+
 #define ATHLON  // comment this out if using the Intel compiler, or you need Pentium/K6 support
+
+#define DEFAULT_PORT_TO_USE 9999
+#define PORT_COMMAND "--port"
 
 typedef unsigned long	Pixel;
 typedef unsigned long	Pixel32;

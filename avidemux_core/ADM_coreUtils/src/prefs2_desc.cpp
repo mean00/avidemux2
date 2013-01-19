@@ -36,5 +36,8 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"Default.postproc_value",offsetof(my_prefs_struct,Default.postproc_value),"uint32_t",ADM_param_uint32_t},
  {"Default.downmixing",offsetof(my_prefs_struct,Default.downmixing),"uint32_t",ADM_param_uint32_t},
  {"mpegsplit_autosplit",offsetof(my_prefs_struct,mpegsplit_autosplit),"uint32_t",ADM_param_uint32_t},
+ {"avisynth.avisynth_always_ask",offsetof(my_prefs_struct,avisynth.avisynth_always_ask),"bool",ADM_param_bool},
+ {"avisynth.avisynth_defaultport",offsetof(my_prefs_struct,avisynth.avisynth_defaultport),"uint32_t",ADM_param_uint32_t},
+ {"avisynth.avisynth_localport",offsetof(my_prefs_struct,avisynth.avisynth_localport),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

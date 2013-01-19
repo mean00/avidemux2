@@ -10,6 +10,7 @@
 //#define DEBUG
 #define MAGGIC 0xDEADBEEF
 
+
 typedef struct SktHeader
 {
 	uint32_t cmd;
@@ -25,7 +26,7 @@ private:
 	SOCKET workSocket;
 	int port;
 public:
-	Sket(void);
+	Sket(uint32_t port_number);
 	~Sket(void);
 
 	int getPort(void);
