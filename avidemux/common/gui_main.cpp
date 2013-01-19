@@ -270,6 +270,7 @@ void HandleAction (Action action)
         if(playing) return;
     	if(DIA_Preferences())
         {
+            ADM_info("Saving prefs\n");
             prefs->save ();
         }
         return;
@@ -1315,7 +1316,7 @@ void A_set_avisynth_port(char *port_number_as_text){
 		fflush(stderr);
 		exit(-1);
 	}
-	prefs->set(AVISYNTH_LOCALPORT,portNumber );
+	prefs->set(AVISYNTH_AVISYNTH_LOCALPORT,portNumber );
 }
 
 //

@@ -47,8 +47,8 @@ static optionDesc myOptions[]={
 { DEFAULT_POSTPROC_VALUE,"Default.postproc_value"                     ,ADM_param_uint32_t	,"3",	0,	5},
 { DEFAULT_DOWNMIXING,"Default.downmixing"                             ,ADM_param_uint32_t	,"2",	0,	2},
 { MPEGSPLIT_AUTOSPLIT,"mpegsplit_autosplit"                           ,ADM_param_uint32_t	,"790",	400,	5000},
-{ AVISYNTH_ALWAYS_ASK,"avisynth.avisynth_always_ask"                  ,ADM_param_bool    	,"0",	0,	1},
-{ AVISYNTH_DEFAULTPORT,"avisynth.avisynth_defaultport"                ,ADM_param_uint32_t	,"9999",	1024,	65635},
-{ AVISYNTH_LOCALPORT,"avisynth.avisynth_localport"                    ,ADM_param_uint32_t	,"0",	1024,	65635},
+{ AVISYNTH_AVISYNTH_ALWAYS_ASK,"avisynth.avisynth_always_ask"         ,ADM_param_bool    	,"0",	0,	1},
+{ AVISYNTH_AVISYNTH_DEFAULTPORT,"avisynth.avisynth_defaultport"       ,ADM_param_uint32_t	,"9999",	1024,	65535},
+{ AVISYNTH_AVISYNTH_LOCALPORT,"avisynth.avisynth_localport"           ,ADM_param_uint32_t	,"0",	1024,	65535},
 };
 

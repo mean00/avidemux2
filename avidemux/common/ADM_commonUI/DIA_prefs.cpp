@@ -104,13 +104,13 @@ uint32_t defaultPortAvisynth = 9999;
     	CPU_CAPS(SSSE3);
 
     	//Avisynth
-    	if(!prefs->get(AVISYNTH_ALWAYS_ASK, &askPortAvisynth))
+    	if(!prefs->get(AVISYNTH_AVISYNTH_ALWAYS_ASK, &askPortAvisynth))
         {
     		ADM_info("Always ask not set\n");
     		askPortAvisynth=0;
     	}
 
-    	if(!prefs->get(AVISYNTH_DEFAULTPORT, &defaultPortAvisynth))
+    	if(!prefs->get(AVISYNTH_AVISYNTH_DEFAULTPORT, &defaultPortAvisynth))
         {
     			printf("Port not set\n");
                         defaultPortAvisynth=9999;
@@ -465,8 +465,8 @@ uint32_t defaultPortAvisynth = 9999;
 
 			
                 // Avisynth
-                prefs->set(AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
-                prefs->set(AVISYNTH_ALWAYS_ASK, askPortAvisynth);
+                prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
+                prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
 #if defined(_WIN32) && defined(USE_SDL)
                 // Initialise SDL again as driver may have changed
                 initSdl(render);
