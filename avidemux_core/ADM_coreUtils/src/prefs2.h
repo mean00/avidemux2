@@ -50,10 +50,10 @@ struct  {
 	uint32_t downmixing;
 }Default;
 uint32_t mpegsplit_autosplit;
-struct	{
-    bool  avisynth_always_ask;
-    uint32_t avisynth_defaultport;
-    uint32_t avisynth_localport;
+struct  {
+	bool avisynth_always_ask;
+	uint32_t avisynth_defaultport;
+	uint32_t avisynth_localport;
 }avisynth;
 }my_prefs_struct;
 #endif

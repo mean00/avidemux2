@@ -56,6 +56,7 @@ json.addUint32("mpegsplit_autosplit",key->mpegsplit_autosplit);
 json.addNode("avisynth");
 json.addBool("avisynth_always_ask",key->avisynth.avisynth_always_ask);
 json.addUint32("avisynth_defaultport",key->avisynth.avisynth_defaultport);
+json.addUint32("avisynth_localport",key->avisynth.avisynth_localport);
 json.endNode();
 return json.dumpToFile(file);
 };
