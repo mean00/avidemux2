@@ -139,6 +139,13 @@ public:
 			 snprintf(num_str_result, 63, FLOAT_STRING, (EXTRA_LONG double)value);
 		  #endif
 	   #endif
+           // MEANX Convert "," to "." if needed, "," is used as entry separator for json
+          for(json_char * pos = &num_str_result[0]; *pos; ++pos)
+                {
+                        if(*pos==',') {*pos='.'; break;}
+                }
+           // MEANX /Convert , to . if needed
+
 	   //strip the trailing zeros
 	   for(json_char * pos = &num_str_result[0]; *pos; ++pos){
 		  if (json_unlikely(*pos == '.')){  //only care about after the decimal

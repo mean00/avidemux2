@@ -17,7 +17,7 @@
 
 #include "ADM_default.h"
 #include "ADM_confCouple.h"
-
+#include "math.h"
 static char tmpstring[1024]; // should be enougth
 
 CONFcouple::CONFcouple(uint32_t nub)
@@ -73,6 +73,12 @@ bool CONFcouple::writeAsFloat(const char *myname,float val)
 	name[cur]=ADM_strdup(myname);
 	sprintf(tmpstring,"%f",val);
 	value[cur]=ADM_strdup(tmpstring);
+        // make sure the decimal separator is a .
+        for(char * pos = value[cur]; *pos; ++pos)
+        {
+                if(*pos==',') {*pos='.'; break;}
+        }
+       
 	cur++;
 	return 1;
 }
@@ -107,7 +113,67 @@ bool CONFcouple::writeAsBool(const char *myname,bool v)
 	cur++;
 	return 1;
 }
+/*
+ * \fn safeAtoF
+ *  \brief Separator is always a '.', taken from libjson
+ */
+#define y(x) x
+static float safeAtoF(const char *num)
+{
 
+        float sign = (float)1.0;
+
+        //sign
+        if (*num== ('-')){
+               sign = -1.0;
+               ++num;
+        }
+
+        //skip leading zeros
+        while (*num ==  ('0')){
+               ++num;
+        }
+
+        // Number
+        float n = (float)0.0;
+        if (*num >=  y('1') && *num <=  y('9'))
+        {
+               do {
+                      n = (n * 10.0) + (*num++ -  y('0'));
+               } while (*num >=  y('0') && *num <=  y('9'));
+        }
+
+        // Fractional part
+        float scale = (float)0.0;
+        if (*num== ('.')) {
+               ++num;
+               do {
+                      n = (n * 10.0) + (*num++ -  y('0'));
+                      --scale;
+               } while (*num>= y('0') && *num<= y('9'));
+        }
+
+        // Exponent
+        int subscale = 0, signsubscale = 1;
+        if ( (*num ==  y('e') || *num ==  y('E'))){
+               ++num;
+               switch(*num){
+                      case  y('+'):
+                          ++num;
+                          break;
+                      case  y('-'):
+                          signsubscale = -1;
+                          ++num;
+                          break;
+               }
+               while (*num >=  y('0') && *num <=  y('9')){
+                      subscale=(subscale * 10) + (*num++ -  y('0'));
+               }
+        }
+
+        return sign * n * pow(10.0, scale + subscale * signsubscale);	// number = +/- number.fraction * 10^+/- exponent
+ }
+#undef y
 // ******************************************
 bool CONFcouple::readAsBool(const char *myname,bool *v)
 {
@@ -154,7 +220,8 @@ bool CONFcouple::readAsFloat(const char *myname,float *val)
 
 	ADM_assert(index!=-1);
 	ADM_assert(index<(int)nb);
-	sscanf(value[index],"%f",val);;
+        *val=safeAtoF(value[index]);
+	//sscanf(value[index],"%f",val);;
 	return 1;
 }
 /**
