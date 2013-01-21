@@ -115,6 +115,7 @@ public:
     #endif
 
     static json_string _ftoa(json_number value) json_nothrow {
+#if 0        // MEANX
 	   #ifndef JSON_LIBRARY
 		  if (json_unlikely(value > 0.0 && _floatsAreEqual(value, (json_number)((unsigned EXTRA_LONG long)value)))){
 			 return _uitoa<unsigned EXTRA_LONG long>((unsigned EXTRA_LONG long)value);
@@ -123,7 +124,7 @@ public:
 		  if (json_unlikely(_floatsAreEqual(value, (json_number)((long EXTRA_LONG)value)))){
 			 return _itoa<long EXTRA_LONG>((long EXTRA_LONG)value);
 		  }
-
+#endif
 	   #ifdef JSON_LESS_MEMORY
 		  json_auto<json_char> s(64);
 	   #else
@@ -133,7 +134,7 @@ public:
 		  swprintf(num_str_result, 63, LFLOAT_STRING, (EXTRA_LONG double)value);
 	   #else
 		  //Thanks to Salvor Hardin for this Visual C++ fix
-		  #ifdef _MSC_VER
+		  #if 0 //def _MSC_VER MEANX
 			 _snprintf_s(num_str_result, 63, 63, FLOAT_STRING, (EXTRA_LONG double)value); //yes, 63 appears twice using _snprintf_s()
 		  #else
 			 snprintf(num_str_result, 63, FLOAT_STRING, (EXTRA_LONG double)value);
