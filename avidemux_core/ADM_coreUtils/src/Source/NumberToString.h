@@ -115,31 +115,8 @@ public:
     #endif
 
     static json_string _ftoa(json_number value) json_nothrow {
-#if 0        // MEANX
-	   #ifndef JSON_LIBRARY
-		  if (json_unlikely(value > 0.0 && _floatsAreEqual(value, (json_number)((unsigned EXTRA_LONG long)value)))){
-			 return _uitoa<unsigned EXTRA_LONG long>((unsigned EXTRA_LONG long)value);
-		  } else
-	   #endif
-		  if (json_unlikely(_floatsAreEqual(value, (json_number)((long EXTRA_LONG)value)))){
-			 return _itoa<long EXTRA_LONG>((long EXTRA_LONG)value);
-		  }
-#endif
-	   #ifdef JSON_LESS_MEMORY
-		  json_auto<json_char> s(64);
-	   #else
-		  json_char num_str_result[64];
-	   #endif
-	   #ifdef JSON_UNICODE
-		  swprintf(num_str_result, 63, LFLOAT_STRING, (EXTRA_LONG double)value);
-	   #else
-		  //Thanks to Salvor Hardin for this Visual C++ fix
-		  #if 0 //def _MSC_VER MEANX
-			 _snprintf_s(num_str_result, 63, 63, FLOAT_STRING, (EXTRA_LONG double)value); //yes, 63 appears twice using _snprintf_s()
-		  #else
-			 snprintf(num_str_result, 63, FLOAT_STRING, (EXTRA_LONG double)value);
-		  #endif
-	   #endif
+            json_char num_str_result[64];
+            snprintf(num_str_result, 63, "%f", value); // MEANX : dont cast to double, win32 does not like it
            // MEANX Convert "," to "." if needed, "," is used as entry separator for json
           for(json_char * pos = &num_str_result[0]; *pos; ++pos)
                 {
