@@ -32,7 +32,7 @@ namespace ADM_QT4_fileSel
 	void GUI_FileSelSelect(const char *label, char **name, uint32_t access)
 	{
 		char *tmpname = NULL;
-		char *str = NULL;
+		QString str ;
 		options pref_entry = LASTFILES_LASTDIR_READ;
 
 		*name = NULL;
@@ -42,15 +42,12 @@ namespace ADM_QT4_fileSel
 
 		if (prefs->get(pref_entry,&tmpname))
 		{
-			str = ADM_PathCanonize(tmpname);
-			ADM_PathStripName(str);
+                        str = QFileInfo(QString::fromUtf8(tmpname)).canonicalPath();
+
 
 			/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
 			if (!QDir(str).exists())
-			{
-				delete [] str;
-				str = NULL;
-			}
+                                str.clear();
 		}
 
 		QString fileName;
@@ -68,8 +65,6 @@ namespace ADM_QT4_fileSel
 			prefs->set(pref_entry, (char *)*name);
 		}
 
-		if (str)
-			delete [] str;
 	}
 
 	void GUI_FileSelRead(const char *label, char **name)
