@@ -53,21 +53,6 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         uint64_t delta=ptsStart;
         video_body->getPtsDtsDelta(&delta);
 
-// The next DTS must be used if the first one is 0 and the second one is more than a frame later (DTS can be e.g. 0,800,820...)
-        _SEGMENT *seg0=video_body->getSegment(0);
-        if (startTime<seg0->_startTimeUs+seg0->_durationUs)
-        {
-        uint64_t seg0Pts=seg0->_refStartTimeUs,pts,dts,dts2;
-        uint32_t flags;
-
-        if (video_body->getVideoPtsDts(1,&flags,&pts,&dts2) && dts2>frameIncrement && dts2!=ADM_NO_PTS
-        && video_body->getVideoPtsDts(0,&flags,&pts,&dts) && dts==0
-        && (seg0Pts==0 || pts==seg0Pts) && (startTime==0 || startTime==pts))
-         {
-             delta=pts-(dts2-frameIncrement);
-         }
-        }
-
         ADM_info("PTS/DTS delta=%"PRIu64" us\n",delta);
         //videoDelay
         if(delta>ptsStart)

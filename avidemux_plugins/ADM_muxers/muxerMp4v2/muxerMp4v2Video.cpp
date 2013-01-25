@@ -231,10 +231,8 @@ bool muxerMp4v2::initVideo(void)
                 return false;
             }
         }
-        double inc=vStream->getAvgFps1000();
-        inc=inc/1000;
-        if(inc>0.005) inc=1/inc;
-                else inc=0.005;
+        double inc=vStream->getFrameIncrement();
+        inc=inc/1000000;
         ADM_info("Frame increment =%d ms\n",(int)(inc*1000));
         inc*=90000;
         setMaxDurationPerChunk(videoTrackId, inc);

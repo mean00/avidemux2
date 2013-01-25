@@ -89,6 +89,28 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   frameD=1/frameD;
   frameD*=1000000;
   ref->timeIncrementInUs=(uint64_t)frameD;
+
+  // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
+  uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
+  int firstNonZeroDtsFrame;
+  for (int frame=0; frame<info.nb_frames && frame<100; frame++)
+  {
+      if (ref->_aviheader->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
+      {
+          if (firstNonZeroDts==ADM_NO_PTS)
+          {
+              firstNonZeroDts=dts;
+              firstNonZeroDtsFrame=frame;
+              continue;
+          }
+
+          uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
+          if (probedTimeIncrement==ref->timeIncrementInUs*2 || probedTimeIncrement==ref->timeIncrementInUs/2)
+              ref->timeIncrementInUs=probedTimeIncrement;
+          break;
+      }
+  }
+
   ADM_info("[Editor] About %"PRIu64" microseconds per frame\n",ref->timeIncrementInUs);
   ref->_nb_video_frames = info.nb_frames;
   //
@@ -107,7 +129,6 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     // Set the default startTime to the pts of first Pic
     vidHeader *demuxer=	ref->_aviheader;
     uint32_t flags;
-    uint64_t pts,dts;
         demuxer->getFlags(0,&flags);
         demuxer->getPtsDts(0,&pts,&dts);
         ref->firstFramePts=0;
