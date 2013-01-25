@@ -42,7 +42,7 @@ namespace ADM_QT4_fileSel
 
 		if (prefs->get(pref_entry,&tmpname))
 		{
-                        str = QFileInfo(QString::fromUtf8(tmpname)).canonicalPath();
+                        str = QFileInfo(QString::fromUtf8(tmpname)).path();
 
 
 			/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
