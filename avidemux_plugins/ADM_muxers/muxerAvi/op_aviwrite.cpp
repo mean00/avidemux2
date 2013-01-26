@@ -135,18 +135,21 @@ uint8_t aviWrite::updateHeader (MainAVIHeader * mainheader,
 {
         
         ADM_assert(_file);
-        printf("[Avi] Updating headers...\n");
+        ADM_info("[Avi] Updating headers...\n");
         _file->seek(32);
         AviListAvi tmpList("dummy",_file);
         _mainheader.dwTotalFrames=indexMaker->getNbVideoFrameForHeaders();
+        ADM_info("=>Main header nb frame = %d\n",(int) _mainheader.dwTotalFrames);
         tmpList.writeMainHeaderStruct(_mainheader);
         _file->seek(0x6c);
         _videostream.dwLength=vframe;
+        ADM_info("=>Video stream nb frames = %d\n",(int) vframe);
         tmpList.writeStreamHeaderStruct(_videostream);
         for(int i=0;i<nb_audio;i++)
         {
             // update header
             uint32_t size=indexMaker->getSizeInBytesForAudioTrack(i);
+            ADM_info("=>Audio stream %d size %d\n",i,(int)size);
             _file->seek(audioStreamHeaderPosition[i]);
             WAVHeader wav;
             AVIStreamHeader header;
@@ -375,7 +378,7 @@ int extraLen=0;
 //_______________________________________________________
 uint8_t aviWrite::saveBegin (
              const char         *name,
-		     ADM_videoStream    *video,
+             ADM_videoStream    *video,
              uint32_t           nbAudioStreams,
              ADM_audioStream 	*audiostream[])
 {
@@ -435,7 +438,7 @@ uint8_t aviWrite::saveBegin (
       LMain->Write32 ("avih");
       LMain->Write32 (sizeof (MainAVIHeader));
       LMain->writeMainHeaderStruct(_mainheader);
- 	  writeVideoHeader(videoextra,videoextraLen );
+      writeVideoHeader(videoextra,videoextraLen );
       for(int i=0;i<nb_audio;i++)
         {
             writeAudioHeader(audiostream[i],&(audioTracks[i].header),0,i);

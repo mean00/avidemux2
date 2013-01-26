@@ -64,7 +64,8 @@ bool  aviIndexAvi::addVideoFrame(int len,uint32_t flags,const uint8_t *data)
             LMovie->writeDummyChunk(AVI_REGULAR_INDEX_CHUNK_SIZE,&pos);
             placeHolder[0]=pos;
       }
-      myIndex.push_back(entry);    
+      myIndex.push_back(entry);  
+      nbVideoFrame++;
       return true;
 }
 /**
