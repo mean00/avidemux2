@@ -82,7 +82,7 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 */
  void mx_streamHeaderFromVideo(AVIStreamHeader *header,ADM_videoStream *video)
 {
-    memset(header,0,sizeof(*header));
+        memset(header,0,sizeof(*header));
 	header->fccType=fourCC::get((uint8_t *)"vids");  //uint32_t	fccType;
 	header->fccHandler=video->getFCC(); //uint32_t	fccHandler;
 	header->dwFlags=0; //int32_t	dwFlags;	/* Contains AVITF_* flags */
@@ -96,14 +96,8 @@ void mx_mainHeaderFromVideoStream(MainAVIHeader  *header,ADM_videoStream *video)
 	header->dwSuggestedBufferSize=1000000;// int32_t	dwSuggestedBufferSize;
 	header->dwQuality=0;// int32_t	dwQuality;
 	header->dwSampleSize=0;// int32_t	dwSampleSize;
-/*
-	struct {
-		int16_t left;
-		int16_t top;
-		int16_t right;
-		int16_t bottom;
-	} rcFrame;
-*/
+        header->rcFrame.right=video->getWidth();// int32_t	dwSampleSize;
+        header->rcFrame.bottom=video->getHeight();// int32_t	dwSampleSize;
 }
 
 // EOF
