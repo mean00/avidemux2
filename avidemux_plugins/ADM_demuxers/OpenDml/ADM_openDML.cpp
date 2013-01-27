@@ -714,13 +714,15 @@ void OpenDMLHeader::Dump( void )
         printf(  "______________________\n" );  
 
 #define X_DUMP(x) printf("[Avi] "#x":\t\t:%d\n",_mainaviheader.x);
-    	X_DUMP(dwStreams);
+    	
     	X_DUMP(dwMicroSecPerFrame) ;
 	X_DUMP(dwMaxBytesPerSec);
     	X_DUMP(dwPaddingGranularity);
     	X_DUMP(dwFlags);
     	X_DUMP(dwTotalFrames);
-    	X_DUMP(dwInitialFrames);	
+    	X_DUMP(dwInitialFrames);
+        X_DUMP(dwStreams);
+        X_DUMP(dwSuggestedBufferSize);
     	X_DUMP(dwWidth);
     	X_DUMP(dwHeight);
  	printf("\n");
@@ -743,14 +745,24 @@ void OpenDMLHeader::Dump( void )
 	fourCC::print(_videostream.fccHandler);printf("\n");
 
 	X_DUMP(dwFlags);
+	X_DUMP(	wPriority);	/* dwPriority - splited for audio */
+	X_DUMP(	wLanguage);
+	
 	X_DUMP(dwInitialFrames);
+        X_DUMP(dwScale);
 	X_DUMP(dwRate);
-	X_DUMP(dwStart);
+        X_DUMP(dwStart);
+        X_DUMP(dwLength); 
+        X_DUMP(dwSuggestedBufferSize);
+        X_DUMP(dwQuality);
 	X_DUMP(dwSampleSize);
-	X_DUMP(dwScale);
-	X_DUMP(dwLength); 
-    	X_DUMP(dwQuality);
-	X_DUMP(dwSampleSize);
+	
+	
+    	
+	X_DUMP(rcFrame.left);
+        X_DUMP(rcFrame.right);
+        X_DUMP(rcFrame.top);
+        X_DUMP(rcFrame.bottom);
 	printf("\n");
 	  	  
         printBih(&_video_bih);
