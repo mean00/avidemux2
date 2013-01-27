@@ -28,6 +28,7 @@ bool	ADM_Composer::getNKFramePTS(uint64_t *frameTime)
 uint64_t refTime,nkTime,segTime;
 int lastSeg=_segments.getNbSegments();
 uint32_t seg;
+bool switchedSeg=false;
 bool r;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
@@ -43,6 +44,8 @@ again:
     // The time in reference = relTime+segmentStartTime
     refTime=s->_refStartTimeUs+segTime; // Absolute time in the reference image
     
+    if(switchedSeg && refTime>0) refTime--; // The next segment may start with a keyframe
+
     r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
 
     // 3- if it does not belong to the same seg  ....
@@ -60,6 +63,8 @@ again:
             return false;
         }
         seg++;
+        switchedSeg=true;
+        segTime=0;
         goto again;
     }
     // Gotit, now convert it to the linear time
@@ -204,7 +209,7 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
             uint32_t hh,mm,ss,ms,ms2;
             ms=pts/1000;
             ms2time(ms,&hh,&mm,&ss,&ms2);
-            ADM_info("Found nextkeyframe %"PRIu64" %u:%u:%u at frame %"PRIu32"\n",ms,hh,mm,ss,i);
+            ADM_info("Found nextkeyframe %"PRIu32" %u:%u:%u at frame %"PRIu32"\n",ms,hh,mm,ss,i);
             *nkTime=pts;
             return true;
         }

@@ -269,7 +269,7 @@ np_nextSeg:
             seg=_segments.getSegment(_currentSegment);
             samePictureInternal(seg->_reference,image);
             updateImageTiming(seg,image);
-            SET_CURRENT_PTS(pts);
+            SET_CURRENT_PTS(image->Pts);
             return true;
         } 
         ADM_warning("Cannot get next picture. Last segment\n");
