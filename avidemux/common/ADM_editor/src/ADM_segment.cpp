@@ -93,7 +93,10 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
   uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
   int firstNonZeroDtsFrame;
-  for (int frame=0; frame<info.nb_frames && frame<100; frame++)
+  ADM_info("[editor] Original frame increment %s\n",ADM_us2plain(ref->timeIncrementInUs));
+  uint64_t minDelta=100000;
+  uint64_t maxDelta=0;
+  for (int frame=0; frame<info.nb_frames; frame++)
   {
       if (ref->_aviheader->getPtsDts(frame,&pts,&dts) && dts!=ADM_NO_PTS && dts!=0)
       {
@@ -105,12 +108,19 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
           }
 
           uint64_t probedTimeIncrement=(dts-firstNonZeroDts)/(frame-firstNonZeroDtsFrame);
-          if (probedTimeIncrement==ref->timeIncrementInUs*2 || probedTimeIncrement==ref->timeIncrementInUs/2)
-              ref->timeIncrementInUs=probedTimeIncrement;
-          break;
+          if(probedTimeIncrement<minDelta) minDelta=probedTimeIncrement;
+          if(probedTimeIncrement>maxDelta) maxDelta=probedTimeIncrement;
+          firstNonZeroDts=dts;
+          firstNonZeroDtsFrame=frame;
       }
   }
+  ADM_info("[Editor] min increment %s\n",ADM_us2plain(minDelta));
+  ADM_info("[Editor] max increment %s\n",ADM_us2plain(maxDelta));
+  
+  if (minDelta==ref->timeIncrementInUs*2)
+              ref->timeIncrementInUs=minDelta;
 
+  
   ADM_info("[Editor] About %"PRIu64" microseconds per frame\n",ref->timeIncrementInUs);
   ref->_nb_video_frames = info.nb_frames;
   //
