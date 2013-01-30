@@ -149,6 +149,7 @@ protected:
         ADM_audioStream               *audioStream[_3GP_MAX_TRACKS-1];
         uint32_t                      nbAudioTrack;
         bool                          refineAudio(WAVHeader *head,uint32_t extraLen, uint8_t *extra);
+        bool                          shiftTimeBy(uint64_t shift);
          /*********************************/
 	uint32_t                         readPackedLen(adm_atom *tom );
 	

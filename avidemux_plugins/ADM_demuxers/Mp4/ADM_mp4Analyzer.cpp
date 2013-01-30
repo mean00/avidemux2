@@ -1260,7 +1260,7 @@ uint8_t MP4Header::updateCtts(MPsampleinfo *info )
     uint32_t scope=info->nbCtts;
     float f;
     if(scope>_videostream.dwLength) scope=_videostream.dwLength;
-    printf("[MP4]**************** Updating CTTS **********************\n");
+    ADM_info("[MP4]**************** Updating CTTS **********************\n");
     for(int i=0;i<scope;i++)
     {
         f=(int32_t)info->Ctts[i];

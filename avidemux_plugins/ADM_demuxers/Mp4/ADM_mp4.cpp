@@ -380,6 +380,27 @@ uint8_t    MP4Header::open(const char *name)
             }
         }
         /*
+         * Veryfy DTS<=PTS
+         */
+        int nb=(int)_tracks[0].nbIndex;
+        uint64_t delta,maxDelta=0;
+        for(int i=0;i<nb;i++)
+        {
+            uint64_t pts,dts;
+            dts=VDEO.index[i].dts;
+            pts=VDEO.index[i].pts;
+            if(pts==ADM_COMPRESSED_NO_PTS || dts==ADM_COMPRESSED_NO_PTS) continue;
+            if(dts>=pts)
+            {
+                uint64_t delta=(uint64_t)(dts-pts);
+                if(delta>maxDelta) maxDelta=delta;
+            }
+        }
+        if(maxDelta)
+        {
+            shiftTimeBy(maxDelta);
+        }
+        /*
                 Now build audio tracks
         */
         if(nbAudioTrack) _isaudiopresent=1; // Still needed ?
@@ -402,7 +423,7 @@ uint8_t    MP4Header::open(const char *name)
         }
         fseeko(_fd,0,SEEK_SET);
         ADM_info("3gp/mov file successfully read..\n");
-        int nb=(int)_tracks[0].nbIndex;
+        
         ADM_info("Nb images      : %d\n",nb);
         ADM_info("Movie duration : %s\n",ADM_us2plain(_movieDuration*1000LL));
         ADM_info("Last video PTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].pts));
@@ -410,7 +431,41 @@ uint8_t    MP4Header::open(const char *name)
 
         return 1;
 }
+/**
+ * \fn shiftTimeBy
+ * \brief increase pts by shift, fix some mp4 where dts is too low
+ * @param shift
+ * @return 
+ */
+bool MP4Header::shiftTimeBy(uint64_t shift)
+{
+        
+        ADM_warning("MP4, Must increase pts by %d us\n",(int)shift);
+        int nb=(int)_tracks[0].nbIndex;
+        for(int i=0;i<nb;i++)
+        {
+           uint64_t pts;
+            pts=VDEO.index[i].pts;
+            if(pts==ADM_COMPRESSED_NO_PTS) continue;
+            pts+=shift;
+            VDEO.index[i].pts=pts;
+        }
 
+        for(int audioTrack=0;audioTrack<nbAudioTrack;audioTrack++)
+        {
+            nb=(int)_tracks[1+audioTrack].nbIndex;
+            for(int i=0;i<nb;i++)
+            {
+                     uint64_t dts;
+                        dts=_tracks[audioTrack+1].index[i].dts;
+                        if(dts==ADM_COMPRESSED_NO_PTS) continue;
+                        dts+=shift;
+                        _tracks[audioTrack+1].index[i].dts=dts;
+             }
+        }
+        return true;
+        
+}
 //
 //	That tag are coded like this
 //	Each 8 bits is in fact a 7 Bits part while b7=1
