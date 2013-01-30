@@ -165,6 +165,14 @@ bool tsHeader::updateIdr()
                 default: break;
             }
         }
+    }else // I & IDR are all keyframes
+    {
+        for(int i=0;i<ListOfFrames.size();i++)
+        {
+            if(ListOfFrames[i]->type==4)
+                ListOfFrames[i]->type=1;
+        }
+        
     }
     return true;
 }
