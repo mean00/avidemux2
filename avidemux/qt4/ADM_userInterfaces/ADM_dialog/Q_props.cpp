@@ -35,17 +35,16 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     text[0] = 0;
     if (!avifileinfo)
         return;
-#if 0  
-        // Fetch info
-        info=video_body->getSpecificMpeg4Info();
-        vop=!!(info & ADM_VOP_ON);
-        qpel=!!(info & ADM_QPEL_ON);
-        gmc=!!(info & ADM_GMC_ON);
-#endif
+
 #define FILLTEXT(a,b,c) {snprintf(text,79,b,c);ui.a->setText(text);}
 #define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d);ui.a->setText(text);}
 #define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e);ui.a->setText(text);}
+#define SET_YES(a,b) ui.a->setText(yesno[b])
+#define FILLQT_TR_NOOP(q) ui.q->setText(text);
         
+    
+        //------------------------------------
+    
         FILLTEXT4(labeImageSize,QT_TR_NOOP("%"PRIu32" x %"PRIu32), avifileinfo->width,avifileinfo->height);
         FILLTEXT(labelFrameRate, QT_TR_NOOP("%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
         FILLTEXT(label4CC, "%s",      fourCC::tostring(avifileinfo->fcc));
@@ -58,12 +57,27 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
         har=video_body->getPARHeight();
         getAspectRatioFromAR(war,har, &s);
         FILLTEXT5(LabelAspectRatio,QT_TR_NOOP("%s (%u:%u)"), s,war,har);
-#define SET_YES(a,b) ui.a->setText(yesno[b])
-#define FILLQT_TR_NOOP(q) ui.q->setText(text);
-        SET_YES(LabelPackedBitstream,vop);
-        SET_YES(LabelQuarterPixel,qpel);
-        SET_YES(LabelGMC,gmc);
         
+        uint32_t extraLen;
+        uint8_t *extraData;
+        video_body->getExtraHeaderData(&extraLen,&extraData);
+        FILLTEXT(LabelExtraDataSize,"%02d",extraLen);
+        if(extraLen)
+        {
+            int capped=extraLen;
+            if(capped>10) capped=10;
+            QString string;
+            char    small[10];
+            for(int i=0;i<capped;i++)
+            {
+                snprintf(small,4,"%02X ",extraData[i]);
+                string+=QString(small);
+            }
+            ui.LabelExtraData->setText(string);
+        }else
+            ui.LabelExtraData->clear();
+        
+        //------------------------------------
          WAVHeader *wavinfo=NULL;
          ADM_audioStream *st;
          video_body->getDefaultAudioTrack(&st);

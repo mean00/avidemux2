@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>271</width>
-    <height>531</height>
+    <width>291</width>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -120,45 +120,31 @@
       <property name="spacing">
        <number>6</number>
       </property>
+      <item row="0" column="1">
+       <widget class="QLabel" name="LabelExtraDataSize">
+        <property name="text">
+         <string> </string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Global Motion Compensation:</string>
+         <string>ExtraDataSize:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="LabelPackedBitstream">
+       <widget class="QLabel" name="LabelExtraData">
         <property name="text">
-         <string>TextLabel</string>
+         <string> </string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Packed Bitstream:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="LabelQuarterPixel">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Quarter Pixel:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="LabelGMC">
-        <property name="text">
-         <string>TextLabel</string>
+         <string>Extra data :</string>
         </property>
        </widget>
       </item>
