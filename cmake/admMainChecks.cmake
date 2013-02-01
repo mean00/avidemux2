@@ -87,8 +87,6 @@ endif (CMAKE_COMPILER_IS_GNUCC)
 ########################################
 # Standard Avidemux defines
 ########################################
-SET(VERSION 2.6.1)
-
 # Define internal flags for GTK+ and Qt4 builds.  These are turned off
 # if a showstopper is found.  CLI is automatically assumed as possible
 # since it uses the minimum set of required libraries and CMake will 
@@ -108,8 +106,13 @@ ENDIF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 MESSAGE("")
 MESSAGE(STATUS "Checking for SCM")
 MESSAGE(STATUS "****************")
+IF(RELEASE)
+SET( ADM_SUBVERSION 0)
+ELSE(RELEASE)
 admGetRevision( ${AVIDEMUX_TOP_SOURCE_DIR} ADM_SUBVERSION)
+ENDIF(RELEASE)
 MESSAGE("")
+include(avidemuxVersion)
 
 
 ########################################

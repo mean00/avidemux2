@@ -6,6 +6,7 @@ if (NOT PLUGINS)
 endif (NOT PLUGINS)
 
 SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
+include(avidemuxVersion)
 
 IF (WIN32)
 	SET(ADM_PLUGIN_DIR "plugins")
