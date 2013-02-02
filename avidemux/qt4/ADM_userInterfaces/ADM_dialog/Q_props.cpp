@@ -67,11 +67,11 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
             int capped=extraLen;
             if(capped>10) capped=10;
             QString string;
-            char    small[10];
+            char    smallx[10];
             for(int i=0;i<capped;i++)
             {
-                snprintf(small,4,"%02X ",extraData[i]);
-                string+=QString(small);
+                snprintf(smallx,4,"%02X ",extraData[i]);
+                string+=QString(smallx);
             }
             ui.LabelExtraData->setText(string);
         }else
