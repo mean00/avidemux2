@@ -42,6 +42,7 @@ AUDMAudioFilter *createPlaybackFilter(uint64_t startTime,int32_t shift)
     //
     ADM_edAudioTrack *trk=video_body->getDefaultEdAudioTrack();
     if(!trk) return NULL;
+    trk->goToTime(startTime);
     //
     uint32_t downmix;
     ADM_AUDIOFILTER_CONFIG playback;
