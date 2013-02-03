@@ -161,6 +161,10 @@ protected:
                                 ADM_Composer();
 virtual                         ~ADM_Composer();
                     void        clean( void );
+                    bool        undo(void)
+                                {
+                                    return _segments.undo();
+                                }
                     uint8_t     resetSeg( void );
                     bool     	addFile (const char *name);
 					int         appendFile(const char *name);

@@ -51,6 +51,7 @@ static const MenuEntry _myMenuFile[] = {
 std::vector<MenuEntry> myMenuFile(_myMenuFile, _myMenuFile + sizeof(_myMenuFile) / sizeof(_myMenuFile[0]));
 
 static const MenuEntry _myMenuEdit[] = {
+            {MENU_ACTION,"Undo",        NULL,ACT_Undo       ,NULL,"Ctrl+Z"},
             {MENU_ACTION,"Reset Edit",  NULL,ACT_ResetSegments,NULL,NULL},
             {MENU_ACTION,"Cut",         NULL,ACT_Cut        ,NULL,"Ctrl+X"},
             {MENU_ACTION,"Copy",        NULL,ACT_Copy       ,NULL,"Ctrl+C"},

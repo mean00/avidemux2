@@ -17,6 +17,7 @@
 #ifndef ADM_SEGMENT_H
 #define ADM_SEGMENT_H
 #include <vector>
+#include <list>
 class ADM_audioStream;
 class ADM_Audiocodec;
 class decoders;
@@ -132,6 +133,7 @@ class ADM_EditorSegment
 {
 protected:
         ListOfSegments segments;
+        std::list <ListOfSegments> undoSegments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
 
@@ -148,6 +150,7 @@ public:
             bool        updateRefVideo(void);
             bool        deleteAll(void);
 
+            bool        undo(void);
             bool        resetSegment(void);
             bool        deleteSegments(void);
             bool        addSegment(_SEGMENT *seg);

@@ -430,6 +430,23 @@ void HandleAction (Action action)
             break;
       break;
 
+    case ACT_Undo:
+        if (avifileinfo)
+        {
+            uint64_t currentPts=video_body->getCurrentFramePts();
+
+            if(video_body->undo())
+            {
+                video_body->getVideoInfo(avifileinfo);
+                ReSync();
+                A_ResetMarkers();
+                A_Rewind();
+
+                if(currentPts<=video_body->getVideoDuration()) GUI_GoToTime(currentPts);
+            }
+        }
+        break;
+
     case ACT_ResetSegments:
        if(avifileinfo)
          if(GUI_Question(QT_TR_NOOP("Are you sure?")))

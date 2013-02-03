@@ -149,6 +149,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
             ref->firstFramePts=pts;
         }
 
+    if(!segments.empty()) undoSegments.push_back(segments);
+
     segments.push_back(seg);
     videos.push_back(*ref);
     updateStartTime();
@@ -162,6 +164,7 @@ bool        ADM_EditorSegment::deleteSegments()
 {
     ADM_info("Clearing a new segment\n");
     segments.clear();
+    undoSegments.clear();
     return true;
 }
 /**
@@ -171,6 +174,7 @@ bool        ADM_EditorSegment::deleteSegments()
 bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
 {
     ADM_info("Adding a new segment\n");
+    undoSegments.push_back(segments);
     segments.push_back(*seg);
     updateStartTime();
     return true;
@@ -225,10 +229,24 @@ bool ADM_EditorSegment::deleteAll (void)
 
     videos.clear();
     segments.clear();
+    undoSegments.clear();
     return true;
 }
 
 
+/**
+    \fn undo
+    \brief
+*/
+bool        ADM_EditorSegment::undo(void)
+{
+    if(undoSegments.empty()) return false;
+
+    segments=undoSegments.back(); 
+    undoSegments.pop_back();
+    updateStartTime();
+    return true;
+}
 /**
     \fn resetSegment
     \brief Redo a 1:1 mapping between videos and segments
@@ -238,6 +256,7 @@ bool        ADM_EditorSegment::resetSegment(void)
     //
     aviInfo info;
     segments.clear();
+    undoSegments.clear();
     int n=videos.size();
     for(int i=0;i<n;i++)
     {
@@ -522,6 +541,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     ADM_info("Start, seg %"PRIu32" Offset :%"PRIu64" ms\n",startSeg,startOffset);
     ADM_info("End  , seg %"PRIu32" Offset :%"PRIu64" ms\n",endSeg,endOffset);
 
+    undoSegments.push_back(segments);
 
     if(startSeg==endSeg)
     {
