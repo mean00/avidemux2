@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
-    <height>638</height>
+    <width>607</width>
+    <height>770</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,12 +17,6 @@
   <layout class="QVBoxLayout" name="_11">
    <item>
     <layout class="QHBoxLayout">
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <property name="margin">
-      <number>0</number>
-     </property>
      <item>
       <spacer name="spacer_8">
        <property name="orientation">
@@ -104,7 +98,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
@@ -125,12 +119,6 @@
        <layout class="QGridLayout" name="gridLayout_6">
         <item row="0" column="0">
          <layout class="QGridLayout">
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="spacing">
-           <number>6</number>
-          </property>
           <item row="1" column="0">
            <widget class="QLabel" name="targetRateControlLabel1">
             <property name="text">
@@ -140,12 +128,6 @@
           </item>
           <item row="0" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QComboBox" name="encodingModeComboBox">
               <property name="currentIndex">
@@ -202,12 +184,6 @@
           </item>
           <item row="1" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QSpinBox" name="targetRateControlSpinBox">
               <property name="prefix">
@@ -263,12 +239,6 @@
         </item>
         <item row="2" column="0">
          <layout class="QHBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
           <item>
            <spacer name="horizontalSpacer_3">
             <property name="orientation">
@@ -290,23 +260,14 @@
             <property name="spacing">
              <number>12</number>
             </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <layout class="QVBoxLayout">
               <property name="spacing">
                <number>0</number>
               </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <layout class="QHBoxLayout">
                 <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="margin">
                  <number>0</number>
                 </property>
                 <item>
@@ -436,12 +397,6 @@
         </item>
         <item row="4" column="0">
          <layout class="QHBoxLayout" name="_16">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
           <item>
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
@@ -463,23 +418,14 @@
             <property name="spacing">
              <number>12</number>
             </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <layout class="QVBoxLayout" name="_18">
               <property name="spacing">
                <number>0</number>
               </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <layout class="QHBoxLayout" name="_19">
                 <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="margin">
                  <number>0</number>
                 </property>
                 <item>
@@ -632,12 +578,6 @@
         </item>
         <item row="8" column="0">
          <layout class="QHBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
           <item>
            <widget class="QLabel" name="lblLookahead">
             <property name="text">
@@ -676,20 +616,8 @@
         </item>
         <item row="9" column="0">
          <layout class="QGridLayout" name="_20">
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="spacing">
-           <number>6</number>
-          </property>
           <item row="0" column="1">
            <layout class="QHBoxLayout" name="_21">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QComboBox" name="idcLevelComboBox">
               <property name="currentIndex">
@@ -801,12 +729,6 @@
           </item>
           <item row="1" column="1">
            <layout class="QHBoxLayout" name="_22">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QComboBox" name="spsiComboBox">
               <item>
@@ -886,32 +808,14 @@
        <string>Motion</string>
       </attribute>
       <layout class="QVBoxLayout">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="margin">
-        <number>9</number>
-       </property>
        <item>
         <widget class="QGroupBox" name="groupBox_11">
          <property name="title">
           <string>Motion Estimation</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QLabel" name="label_38">
               <property name="text">
@@ -921,12 +825,6 @@
             </item>
             <item>
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="meMethodComboBox">
                 <property name="currentIndex">
@@ -978,34 +876,19 @@
           </item>
           <item>
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <layout class="QHBoxLayout">
               <property name="spacing">
                <number>12</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
               </property>
               <item>
                <layout class="QVBoxLayout">
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <property name="margin">
-                 <number>0</number>
-                </property>
                 <item>
                  <layout class="QHBoxLayout">
                   <property name="spacing">
-                   <number>0</number>
-                  </property>
-                  <property name="margin">
                    <number>0</number>
                   </property>
                   <item>
@@ -1132,28 +1015,10 @@
           <string>Motion Vector</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="mvLengthSpinBox">
                 <property name="enabled">
@@ -1191,12 +1056,6 @@
             </item>
             <item row="2" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="minThreadBufferSpinBox">
                 <property name="enabled">
@@ -1233,12 +1092,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="mvRangeSpinBox">
                 <property name="maximum">
@@ -1289,28 +1142,10 @@
           <string>Prediction</string>
          </property>
          <layout class="QGridLayout">
-          <property name="margin">
-           <number>9</number>
-          </property>
-          <property name="spacing">
-           <number>6</number>
-          </property>
           <item row="0" column="0">
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="weightedPPredictComboBox">
                 <item>
@@ -1361,12 +1196,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="predictModeComboBox">
                 <property name="currentIndex">
@@ -1448,32 +1277,14 @@
        <string>Partition</string>
       </attribute>
       <layout class="QVBoxLayout">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="margin">
-        <number>9</number>
-       </property>
        <item>
         <widget class="QGroupBox" name="groupBox_10">
          <property name="title">
           <string>Partition Search</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QVBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QCheckBox" name="dct8x8CheckBox">
               <property name="text">
@@ -1565,12 +1376,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QLabel" name="alphaC0Label">
                 <property name="enabled">
@@ -1751,12 +1556,6 @@
             </item>
             <item>
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="refFramesSpinBox">
                 <property name="minimum">
@@ -1793,12 +1592,6 @@
           <string>B-frames</string>
          </property>
          <layout class="QGridLayout">
-          <property name="margin">
-           <number>9</number>
-          </property>
-          <property name="spacing">
-           <number>6</number>
-          </property>
           <item row="4" column="0">
            <widget class="QLabel" name="label_33">
             <property name="text">
@@ -1808,12 +1601,6 @@
           </item>
           <item row="4" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QComboBox" name="bFrameRefComboBox">
               <item>
@@ -1850,12 +1637,6 @@
           </item>
           <item row="3" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QComboBox" name="adaptiveBFrameComboBox">
               <item>
@@ -1892,12 +1673,6 @@
           </item>
           <item row="1" column="1" rowspan="2">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QSpinBox" name="BFrameBiasSpinBox">
               <property name="minimum">
@@ -1925,12 +1700,6 @@
           </item>
           <item row="0" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QSpinBox" name="maxBFramesSpinBox">
               <property name="maximum">
@@ -2068,12 +1837,6 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="IFrameThresholdSpinBox">
                 <property name="maximum">
@@ -2131,12 +1894,6 @@
        <string>Analysis</string>
       </attribute>
       <layout class="QVBoxLayout">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="margin">
-        <number>9</number>
-       </property>
        <item>
         <widget class="QGroupBox" name="groupBox_12">
          <property name="title">
@@ -2159,12 +1916,6 @@
           </item>
           <item>
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QCheckBox" name="trellisCheckBox">
               <property name="text">
@@ -2336,20 +2087,8 @@
           <string>Luma Quantisation Deadzone</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_44">
               <property name="text">
@@ -2366,12 +2105,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="intraLumaSpinBox">
                 <property name="maximum">
@@ -2399,12 +2132,6 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="interLumaSpinBox">
                 <property name="maximum">
@@ -2441,20 +2168,8 @@
           <string>Quantisation Matrix</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QVBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QRadioButton" name="matrixFlatRadioButton">
               <property name="text">
@@ -2474,12 +2189,6 @@
             </item>
             <item>
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QRadioButton" name="matrixCustomRadioButton">
                 <property name="text">
@@ -2543,28 +2252,10 @@
           <string>Quantiser Control</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="2" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="quantiserMaxStepSpinBox">
                 <property name="maximum">
@@ -2606,19 +2297,13 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="quantiserMinSpinBox">
                 <property name="maximum">
-                 <number>51</number>
+                 <number>69</number>
                 </property>
                 <property name="value">
-                 <number>10</number>
+                 <number>0</number>
                 </property>
                </widget>
               </item>
@@ -2639,12 +2324,6 @@
             </item>
             <item row="5" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QDoubleSpinBox" name="quantiserPbRatioSpinBox">
                 <property name="decimals">
@@ -2681,12 +2360,6 @@
             </item>
             <item row="3" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="avgBitrateToleranceSpinBox">
                 <property name="minimum">
@@ -2731,12 +2404,6 @@
             </item>
             <item row="6" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="chromaLumaOffsetSpinBox">
                 <property name="minimum">
@@ -2785,19 +2452,13 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="quantiserMaxSpinBox">
                 <property name="maximum">
-                 <number>51</number>
+                 <number>69</number>
                 </property>
                 <property name="value">
-                 <number>51</number>
+                 <number>69</number>
                 </property>
                </widget>
               </item>
@@ -2825,12 +2486,6 @@
             </item>
             <item row="4" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QDoubleSpinBox" name="quantiserIpRatioSpinBox">
                 <property name="decimals">
@@ -2876,20 +2531,8 @@
           <string>Quantiser Curve Compression</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QLabel" name="label_8">
               <property name="text">
@@ -2899,12 +2542,6 @@
             </item>
             <item>
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="quantiserCurveCompressSpinBox">
                 <property name="maximum">
@@ -2941,12 +2578,6 @@
           </item>
           <item>
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_21">
               <property name="text">
@@ -2956,12 +2587,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QDoubleSpinBox" name="quantiserBeforeCompressSpinBox">
                 <property name="decimals">
@@ -2992,12 +2617,6 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QDoubleSpinBox" name="quantiserAfterCompressSpinBox">
                 <property name="decimals">
@@ -3164,12 +2783,6 @@
        <string>Advanced 1</string>
       </attribute>
       <layout class="QVBoxLayout">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="margin">
-        <number>9</number>
-       </property>
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
@@ -3182,20 +2795,8 @@
           <string>Video Buffer Verifier</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_9">
               <property name="text">
@@ -3212,12 +2813,6 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="vbvBufferSizeSpinBox">
                 <property name="maximum">
@@ -3249,12 +2844,6 @@
             </item>
             <item row="2" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="vbvBufferOccupancySpinBox">
                 <property name="maximum">
@@ -3289,12 +2878,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="vbvMaxBitrateSpinBox">
                 <property name="maximum">
@@ -3342,12 +2925,6 @@
           <string>Slicing</string>
          </property>
          <layout class="QGridLayout">
-          <property name="margin">
-           <number>9</number>
-          </property>
-          <property name="spacing">
-           <number>6</number>
-          </property>
           <item row="2" column="0">
            <widget class="QLabel" name="label_25">
             <property name="text">
@@ -3364,12 +2941,6 @@
           </item>
           <item row="0" column="1" colspan="2">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QSpinBox" name="maxSliceSizeSpinBox">
               <property name="maximum">
@@ -3408,12 +2979,6 @@
           </item>
           <item row="1" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QSpinBox" name="maxSliceMbSpinBox">
               <property name="maximum">
@@ -3438,12 +3003,6 @@
           </item>
           <item row="2" column="1">
            <layout class="QHBoxLayout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QSpinBox" name="slicesPerFrameSpinBox">
               <property name="maximum">
@@ -3475,12 +3034,6 @@
           <string>Zones</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QHBoxLayout" name="_12">
             <item>
@@ -3549,20 +3102,8 @@
           <string>Multithreading</string>
          </property>
          <layout class="QVBoxLayout" name="_2">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QVBoxLayout" name="_4">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QRadioButton" name="threadDisableRadioButton">
               <property name="text">
@@ -3582,12 +3123,6 @@
             </item>
             <item>
              <layout class="QHBoxLayout" name="_14">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QRadioButton" name="threadCustomRadioButton">
                 <property name="text">
@@ -3641,12 +3176,6 @@
           </item>
           <item>
            <layout class="QHBoxLayout" name="_15">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="margin">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QCheckBox" name="threadedLookaheadCheckBox">
               <property name="text">
@@ -3712,24 +3241,12 @@
        <string>Output 1</string>
       </attribute>
       <layout class="QVBoxLayout">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <property name="margin">
-        <number>9</number>
-       </property>
        <item>
         <widget class="QGroupBox" name="groupBox_16">
          <property name="title">
           <string>Output</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <widget class="QCheckBox" name="accessUnitCheckBox">
             <property name="text">
@@ -3746,20 +3263,8 @@
           <string>Pixel Aspect Ratio</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>9</number>
-          </property>
           <item>
            <layout class="QGridLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item row="0" column="0">
              <widget class="QRadioButton" name="sarCustomRadioButton">
               <property name="text">
@@ -3779,12 +3284,6 @@
             </item>
             <item row="2" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QLabel" name="sarAsInputLabel">
                 <property name="enabled">
@@ -3812,12 +3311,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="sarCustomSpinBox1">
                 <property name="minimum">
@@ -3875,12 +3368,6 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="sarPredefinedComboBox">
                 <property name="enabled">
@@ -3991,12 +3478,6 @@
             </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout" name="_6">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="overscanComboBox">
                 <item>
@@ -4040,12 +3521,6 @@
             </item>
             <item row="1" column="1">
              <layout class="QHBoxLayout" name="_8">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="videoFormatComboBox">
                 <property name="currentIndex">
@@ -4107,12 +3582,6 @@
             </item>
             <item row="2" column="1">
              <layout class="QHBoxLayout" name="_9">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="colourPrimariesComboBox">
                 <item>
@@ -4176,12 +3645,6 @@
             </item>
             <item row="3" column="1">
              <layout class="QHBoxLayout" name="_5">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="transferCharacteristicsComboBox">
                 <item>
@@ -4255,12 +3718,6 @@
             </item>
             <item row="4" column="1">
              <layout class="QHBoxLayout" name="_7">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QComboBox" name="colourMatrixComboBox">
                 <item>
@@ -4372,12 +3829,6 @@
             </item>
             <item row="6" column="1">
              <layout class="QHBoxLayout" name="_10">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
               <item>
                <widget class="QSpinBox" name="chromaSampleSpinBox">
                 <property name="maximum">
@@ -4431,12 +3882,6 @@
    </item>
    <item>
     <layout class="QHBoxLayout">
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <property name="margin">
-      <number>0</number>
-     </property>
      <item>
       <widget class="QDialogButtonBox" name="buttonBox">
        <property name="orientation">

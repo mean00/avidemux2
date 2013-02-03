@@ -2,7 +2,7 @@
 #include "ADM_default.h"
 #include "ADM_paramList.h"
 #include "ADM_coreJson.h"
-#include "../avidemux_plugins/ADM_videoEncoder/x264/x264_encoder.h"
+#include "x264_encoder.h"
 bool  x264_encoder_jserialize(const char *file, const x264_encoder *key){
 admJson json;
 json.addNode("general");
@@ -19,6 +19,7 @@ json.addUint32("MaxRefFrames",key->MaxRefFrames);
 json.addUint32("MinIdr",key->MinIdr);
 json.addUint32("MaxIdr",key->MaxIdr);
 json.addUint32("i_scenecut_threshold",key->i_scenecut_threshold);
+json.addBool("intra_refresh",key->intra_refresh);
 json.addUint32("MaxBFrame",key->MaxBFrame);
 json.addUint32("i_bframe_adaptive",key->i_bframe_adaptive);
 json.addUint32("i_bframe_bias",key->i_bframe_bias);
@@ -28,6 +29,9 @@ json.addInt32("i_deblocking_filter_alphac0",key->i_deblocking_filter_alphac0);
 json.addInt32("i_deblocking_filter_beta",key->i_deblocking_filter_beta);
 json.addBool("cabac",key->cabac);
 json.addBool("interlaced",key->interlaced);
+json.addBool("constrained_intra",key->constrained_intra);
+json.addBool("tff",key->tff);
+json.addBool("fake_interlaced",key->fake_interlaced);
 json.addNode("analyze");
 json.addBool("b_8x8",key->analyze.b_8x8);
 json.addBool("b_i4x4",key->analyze.b_i4x4);
@@ -63,6 +67,7 @@ json.addUint32("qp_min",key->ratecontrol.qp_min);
 json.addUint32("qp_max",key->ratecontrol.qp_max);
 json.addUint32("qp_step",key->ratecontrol.qp_step);
 json.addUint32("bitrate",key->ratecontrol.bitrate);
+json.addFloat("rate_tolerance",key->ratecontrol.rate_tolerance);
 json.addUint32("vbv_max_bitrate",key->ratecontrol.vbv_max_bitrate);
 json.addUint32("vbv_buffer_size",key->ratecontrol.vbv_buffer_size);
 json.addUint32("vbv_buffer_init",key->ratecontrol.vbv_buffer_init);

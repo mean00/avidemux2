@@ -45,47 +45,71 @@ extern "C"
     99, /* Threads : auto */ \
     true /* Fast first pass */ \
     }, \
-    31, /* Level */ \
+    -1, /* Level */ \
     {1,1}, /* Sar width/height */ \
-    2, /* uint32_t MaxRefFrames */ \
-    100, /* uint32_t MinIdr */ \
-    500, /* uint32_t MaxIdr */ \
+    3, /* uint32_t MaxRefFrames */ \
+    25, /* uint32_t MinIdr */ \
+    250, /* uint32_t MaxIdr */ \
     40, /* uint32_t i_scenecut_threshold */ \
-    2, /* uint32_t MaxBFrame */ \
-    0, /* uint32_t i_bframe_adaptative */ \
+    false, /* bool intra_refresh */ \
+    3, /* uint32_t MaxBFrame */ \
+    1, /* uint32_t i_bframe_adaptative */ \
     0, /* uint32_t i_bframe_bias */ \
-    0, /* uint32_t i_bframe_pyramid */ \
-    0, /* bool b_deblocking_filter */ \
+    2, /* uint32_t i_bframe_pyramid */ \
+    1, /* bool b_deblocking_filter */ \
     0, /* int32_t i_deblocking_filter_alphac0 */ \
     0, /* int32_t i_deblocking_filter_beta */ \
     true, /* bool cabac */ \
     false, /* bool interlaced */ \
+    false, /* bool constrained_intra */ \
+	true, /* bool tff */ \
+	false, /* bool fake_interlaced */ \
+	{ /* Analysis */ \
     true, /*    bool b_8x8 */ \
-    false, /*    bool b_i4x4 */ \
-    false, /*    bool b_i8x8 */ \
-    false, /*    bool b_p8x8 */ \
+    true, /*    bool b_i4x4 */ \
+    true, /*    bool b_i8x8 */ \
+    true, /*    bool b_p8x8 */ \
     false, /*    bool b_p16x16 */ \
     false, /*    bool b_b16x16 */ \
-    0, /*    uint32_t weighted_pred */ \
-    0, /*    bool weighted_bipred */ \
-    0, /*    uint32_t direct_mv_pred */ \
+    2, /*    uint32_t weighted_pred */ \
+    1, /*    bool weighted_bipred */ \
+    1, /*    uint32_t direct_mv_pred */ \
     0, /*    uint32_t chroma_offset */ \
-    0, /*    uint32_t me_method */ \
+    1, /*    uint32_t me_method */ \
     16, /*   uint32_t me_range */ \
     -1, /*   int32_t mv_range */ \
     -1, /*   int32_t mv_range_thread */ \
     7, /*    uint32_t subpel_refine */ \
-    false, /*    bool chroma_me */ \
-    false, /*    bool mixed_references */ \
+    true, /*    bool chroma_me */ \
+    true, /*    bool mixed_references */ \
     1, /*    uint32_t trellis */ \
-    0.0, /*     float psy_rd */ \
+    1.0, /*     float psy_rd */ \
     0.0, /*     float psy_trellis */ \
     true, /*    bool fast_pskip */ \
-    false, /*    bool dct_decimate */ \
+    true, /*    bool dct_decimate */ \
     0, /*    uint32_t noise_reduction */ \
     true, /*    bool psy */ \
-    21, /*   uint32_t intra_luma */ \
-    21, /*   uint32_t inter_luma */ \
+    11, /*   uint32_t intra_luma */ \
+    21 /*   uint32_t inter_luma */ \
+	}, \
+	{ /* Rate Control */ \
+	0,	/* uint32_t rc_method; */ \
+	0,	/* uint32_t qp_constant; */ \
+	0,	/* uint32_t qp_min; */ \
+	69,	/* uint32_t qp_max; */ \
+	4,	/* uint32_t qp_step; */ \
+	0,	/* uint32_t bitrate; */ \
+	1.0,	/* float rate_tolerance; */ \
+	0,	/* uint32_t vbv_max_bitrate; */ \
+	0,	/* uint32_t vbv_buffer_size; */ \
+	0.9,	/* uint32_t vbv_buffer_init; */ \
+	1.4,	/* float ip_factor; */ \
+	1.3,	/* float pb_factor; */ \
+	1,	/* uint32_t aq_mode; */ \
+	1.0,	/* float aq_strength; */ \
+	true,	/* bool mb_tree; */ \
+	40	/* uint32_t lookahead; */ \
+	} \
 }
 
 /**

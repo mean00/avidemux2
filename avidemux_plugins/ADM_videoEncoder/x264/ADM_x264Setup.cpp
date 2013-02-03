@@ -95,6 +95,7 @@ bool x264Encoder::setup(void)
   MKPARAM(i_keyint_min,MinIdr);
   MKPARAM(i_keyint_max,MaxIdr);
   MKPARAM(i_scenecut_threshold,i_scenecut_threshold);
+  MKPARAMB(b_intra_refresh,intra_refresh);
   MKPARAM(i_bframe,MaxBFrame);
 
   MKPARAM(i_bframe_adaptive,i_bframe_adaptive);
@@ -108,6 +109,9 @@ bool x264Encoder::setup(void)
   }
   MKPARAMB(b_cabac,cabac);
   MKPARAMB(b_interlaced,interlaced);
+  MKPARAMB(b_constrained_intra,constrained_intra);
+  MKPARAMB(b_tff,tff);
+  MKPARAMB(b_fake_interlaced,fake_interlaced);
 
   // -------------- vui------------
 #undef MKPARAM
@@ -130,7 +134,9 @@ bool x264Encoder::setup(void)
    MKPARAMB(b_transform_8x8,b_8x8)
    MKPARAMB(b_weighted_bipred,weighted_bipred) 
    MKPARAM (i_weighted_pred,weighted_pred) 
-   MKPARAM (i_direct_mv_pred,direct_mv_pred) 
+   MKPARAM (i_direct_mv_pred,direct_mv_pred)
+   MKPARAM (i_chroma_qp_offset,chroma_offset)
+
    MKPARAM (i_me_method,me_method) 
    MKPARAM (i_me_range,me_range)
    MKPARAM (i_mv_range,mv_range) 
@@ -143,7 +149,8 @@ bool x264Encoder::setup(void)
    MKPARAMB(b_dct_decimate,dct_decimate) 
    MKPARAMB(b_psy,psy) 
    MKPARAMF(f_psy_rd,psy_rd) 
-   MKPARAMF(f_psy_trellis,psy_trellis) 
+   MKPARAMF(f_psy_trellis,psy_trellis)
+   MKPARAM (i_noise_reduction,noise_reduction)
    MKPARAM (i_luma_deadzone[0],inter_luma) 
    MKPARAM (i_luma_deadzone[1],intra_luma) 
 
@@ -161,6 +168,12 @@ bool x264Encoder::setup(void)
 #define MKPARAMF(x,y) {param.rc.x = (float)x264Settings.ratecontrol.y; aprintf("[x264] rc."#x" = %.2f\n",param.rc.x);}
 #define MKPARAMB(x,y) {param.rc.x = x264Settings.ratecontrol.y ;aprintf("[x264] rc."#x" = %s\n",TrueFalse[param.rc.x&1]);}
 
+    MKPARAM(i_qp_min,qp_min);
+    MKPARAM(i_qp_max,qp_max);
+    MKPARAM(i_qp_step,qp_step);
+    MKPARAM(f_rate_tolerance,rate_tolerance);
+    MKPARAM(f_ip_factor,ip_factor);
+    MKPARAM(f_pb_factor,pb_factor);
     MKPARAMB(b_mb_tree,mb_tree);
     MKPARAM(i_lookahead,lookahead);
     MKPARAM(i_aq_mode,aq_mode);
@@ -325,9 +338,9 @@ void dumpx264Setup(x264_param_t *param)
         
     PI(i_frame_reference);
     PI(i_keyint_max);
-
     PI(i_keyint_min);
     PI(i_scenecut_threshold);
+    PI(b_intra_refresh);
 
     PI(i_bframe);
     PI(i_bframe_adaptive);
@@ -342,6 +355,8 @@ void dumpx264Setup(x264_param_t *param)
     PI(i_cabac_init_idc);
 
     PI(b_interlaced);
+    PI(b_tff);
+    PI(b_fake_interlaced);
     PI(b_constrained_intra);
 
 #define AI(x) printf(#x"\t:%d\n",(int)param->analyse.x);
@@ -356,7 +371,6 @@ void dumpx264Setup(x264_param_t *param)
     AI(b_transform_8x8);
     AI(i_weighted_pred);
     AI(b_weighted_bipred);
-    AI(i_weighted_pred);
     AI(i_chroma_qp_offset);
     
     AI(i_me_method);

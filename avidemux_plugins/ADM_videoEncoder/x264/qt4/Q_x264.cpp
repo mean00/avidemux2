@@ -182,6 +182,7 @@ bool x264Dialog::upload(void)
           MK_CHECKBOX(trellisCheckBox,analyze.trellis);
           MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
           MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);
+          MK_UINT(noiseReductionSpinBox,analyze.noise_reduction);
           MK_UINT(intraLumaSpinBox,analyze.intra_luma);
           MK_UINT(interLumaSpinBox,analyze.inter_luma);
           if(myCopy.analyze.trellis)
@@ -190,6 +191,20 @@ bool x264Dialog::upload(void)
           }
 
           MK_CHECKBOX(cabacCheckBox,cabac);
+          if (myCopy.interlaced || myCopy.fake_interlaced) {
+        	  ui.interlacedCheckBox->setChecked(true);
+          } else {
+        	  ui.interlacedCheckBox->setChecked(false);
+          }
+          if (myCopy.fake_interlaced) {
+        	  ui.interlacedComboBox->setCurrentIndex(2);
+          } else {
+        	  if (myCopy.tff) {
+        		  ui.interlacedComboBox->setCurrentIndex(1);
+        	  } else {
+        		  ui.interlacedComboBox->setCurrentIndex(0);
+        	  }
+          }
     
           MK_CHECKBOX(mixedRefsCheckBox,analyze.mixed_references);
           MK_CHECKBOX(chromaMotionEstCheckBox,analyze.chroma_me);
@@ -200,8 +215,16 @@ bool x264Dialog::upload(void)
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
+          MK_CHECKBOX(intraRefreshCheckBox,intra_refresh);
           MK_UINT(meSpinBox,analyze.subpel_refine);
 
+          MK_UINT(quantiserMinSpinBox,ratecontrol.qp_min);
+          MK_UINT(quantiserMaxSpinBox,ratecontrol.qp_max);
+          MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
+          MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
+          MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
+          MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
+          MK_UINT(chromaLumaOffsetSpinBox,analyze.chroma_offset);
           uint32_t aq_mode = myCopy.ratecontrol.aq_mode;
           if (aq_mode > 0)
           {
@@ -221,6 +244,7 @@ bool x264Dialog::upload(void)
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
+          MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
           MK_UINT(mvRangeSpinBox,analyze.me_range);
@@ -303,18 +327,14 @@ bool x264Dialog::upload(void)
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
 	}
 
-          DISABLE(openGopCheckBox);
-          DISABLE(interlacedCheckBox);
-          DISABLE(intraRefreshCheckBox);
-          DISABLE(noiseReductionSpinBox);
-          DISABLE(constrainedIntraCheckBox);
-          DISABLE(groupBox_14);
+	      DISABLE(spsiComboBox);
+	      DISABLE(openGopCheckBox);
+          DISABLE(groupBox_14); // quant matrix
           DISABLE(tab_7);
           DISABLE(tab_9);
           DISABLE(tab);
           DISABLE(maxCrfCheckBox);
           DISABLE(sarAsInputRadioButton);
-          DISABLE(groupBox_4);
           DISABLE(groupBox_3);
           DISABLE(accessUnitCheckBox);
           return true;
@@ -340,6 +360,15 @@ bool x264Dialog::download(void)
           MK_CHECKBOX(b8x8CheckBox,analyze.b_b16x16);
 
           MK_CHECKBOX(cabacCheckBox,cabac);
+          if (ui.interlacedCheckBox->isChecked()) {
+        	  myCopy.interlaced = (ui.interlacedComboBox->currentIndex() < 2);
+        	  myCopy.fake_interlaced = (ui.interlacedComboBox->currentIndex() == 2);
+        	  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
+          } else {
+        	  myCopy.interlaced = false;
+        	  myCopy.fake_interlaced = false;
+        	  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
+          }
     
           MK_CHECKBOX(mixedRefsCheckBox,analyze.mixed_references);
           MK_CHECKBOX(chromaMotionEstCheckBox,analyze.chroma_me);
@@ -350,6 +379,7 @@ bool x264Dialog::download(void)
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
+          MK_CHECKBOX(intraRefreshCheckBox,intra_refresh);
           MK_UINT(meSpinBox,analyze.subpel_refine);
           MK_UINT(BFrameBiasSpinBox,i_bframe_bias);
 
@@ -357,7 +387,16 @@ bool x264Dialog::download(void)
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
+          MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
 
+          MK_UINT(quantiserMinSpinBox,ratecontrol.qp_min);
+          MK_UINT(quantiserMaxSpinBox,ratecontrol.qp_max);
+          MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
+          MK_UINT(avgBitrateToleranceSpinBox, ratecontrol.rate_tolerance);
+          myCopy.ratecontrol.rate_tolerance /= 100.0;
+          MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
+          MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
+          MK_UINT(chromaLumaOffsetSpinBox,analyze.chroma_offset);
           int a=ui.aqAlgoComboBox->currentIndex();
           if(!ui.aqVarianceCheckBox->isChecked())
           {
@@ -390,6 +429,7 @@ bool x264Dialog::download(void)
 
           MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
           MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);
+          MK_UINT(noiseReductionSpinBox,analyze.noise_reduction);
           MK_UINT(intraLumaSpinBox,analyze.intra_luma);
           MK_UINT(interLumaSpinBox,analyze.inter_luma);
           
@@ -471,10 +511,12 @@ void x264Dialog::encodingModeComboBox_currentIndexChanged(int index)
 	ui.targetRateControlLabel2->setEnabled(!enableQp);
 	ui.targetRateControlSpinBox->setEnabled(!enableQp);
 
+#if 0
 	if (!enableMaxCrf)
 		ui.maxCrfCheckBox->setChecked(false);
 
 	ui.maxCrfCheckBox->setEnabled(enableMaxCrf);
+#endif
 }
 
 void x264Dialog::quantiserSlider_valueChanged(int value)

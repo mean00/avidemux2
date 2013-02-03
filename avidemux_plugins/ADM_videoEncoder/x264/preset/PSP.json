@@ -21,6 +21,8 @@
 	"i_deblocking_filter_beta" : 0,
 	"cabac" : true,
 	"interlaced" : false,
+	"tff" : true,
+	"fake_interlaced" : false,
 	"analyze" : {
 		"b_8x8" : false,
 		"b_i4x4" : true,
