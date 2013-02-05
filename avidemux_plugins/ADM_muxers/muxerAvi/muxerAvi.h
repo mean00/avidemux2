@@ -58,6 +58,7 @@ protected:
         uint8_t         *videoBuffer;
         audioClock      **clocks;
         uint64_t        audioDelay;
+        uint64_t        firstPacketOffset;
 public:
                 muxerAvi();
         virtual ~muxerAvi();
@@ -66,6 +67,7 @@ public:
         virtual bool close(void) ;
         virtual bool preferH264AnnexB(void) {return true;};
         virtual bool canDealWithTimeStamps(void) {return false;}; // need perfect audio
+                bool prefill(ADMBitstream *in);
 
 };
 

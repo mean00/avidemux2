@@ -20,6 +20,7 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "muxerAvi.h"
+#include "ADM_vidMisc.h"
 
 
 avi_muxer muxerConfig={AVI_MUXER_AUTO};
@@ -40,6 +41,7 @@ muxerAvi::muxerAvi()
     audioPackets=NULL;
     videoBuffer=NULL;
     clocks=NULL;
+    firstPacketOffset=0;
 };
 /**
     \fn     muxerAVI
@@ -117,6 +119,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                             if(aPacket->dts!=ADM_NO_PTS) 
                             {
                                 aPacket->dts+=audioDelay;
+                                aPacket->dts-=firstPacketOffset;
                             }
                             aprintf("[Audio] Packet size %"PRIu32" sample:%"PRIu32" dts:%"PRIu64" target :%"PRIu64"\n",
                                             aPacket->sizeInBytes,aPacket->nbSamples,aPacket->dts,targetDts);
@@ -130,10 +133,16 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                             aPacket->present=true;
                     }
                     // We now have a packet stored
+                    aprintf("Audio packet dts =%s\n",ADM_us2plain(aPacket->dts));
                     if(aPacket->dts!=ADM_NO_PTS)
-                        if(aPacket->dts>targetDts) break; // this one is in the future
+                        if(aPacket->dts>targetDts) 
+                        {
+                            aprintf("In the future..\n");
+                            break; // this one is in the future
+                        }
                     nb=writter.saveAudioFrame(audioIndex,aPacket->sizeInBytes,aPacket->buffer) ;
                     encoding->pushAudioFrame(aPacket->sizeInBytes);
+                    aprintf("writting audio packet\n");
                     clk->advanceBySample(aPacket->nbSamples);
                     aPacket->present=false;
                     //printf("%u vs %u\n",audioDts/1000,(lastVideoDts+videoIncrement)/1000);
@@ -141,6 +150,69 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
             }
 
             return true;
+}
+/**
+ * 
+ * @param in
+ * @param off
+ */
+static void rescaleVideo(ADMBitstream *in,uint64_t off)
+{
+      if(in->dts!=ADM_NO_PTS) in->dts-=off;
+      if(in->pts!=ADM_NO_PTS) in->pts-=off;
+}
+/**
+ * \fn prefill
+ *  \brief load first audio & video packets to get the 1st packet offset
+ *        Needed to avoid adding fillers for both audio & video at the beginning
+ * @return 
+ */
+bool muxerAvi::prefill(ADMBitstream *in)
+{
+    
+    uint64_t dts=0;
+    if(false==vStream->getPacket(in)) 
+    {
+        ADM_error("Cannot get first video frame\n");
+        return false;
+    }
+    dts=in->dts;
+    for(int audioIndex=0;audioIndex<nbAStreams;audioIndex++)
+    {
+                ADM_audioStream*a=aStreams[audioIndex];
+                audioClock *clk=clocks[audioIndex];
+                aviAudioPacket *aPacket=audioPackets+audioIndex;
+                if(!a->getPacket(aPacket->buffer,
+                                 &(aPacket->sizeInBytes),
+                                 AUDIO_BUFFER_SIZE,
+                                 &(aPacket->nbSamples),
+                                 &(aPacket->dts)))
+                {
+                        ADM_warning("Cannot get audio packet for stream %d\n",audioIndex);
+                        aPacket->eos=true;
+                        aPacket->present=false;
+                        continue;
+                }
+                aPacket->present=true;
+                if(aPacket->dts!=ADM_NO_PTS) 
+                {
+                        aPacket->dts+=audioDelay;
+                }
+                if(dts==ADM_NO_PTS) dts=aPacket->dts;
+                if(aPacket->dts!=ADM_NO_PTS && dts!=ADM_NO_PTS)
+                        if(aPacket->dts<dts) dts=aPacket->dts;
+    }
+    ADM_info("Min 1st packet time :%s\n",ADM_us2plain(dts));
+    if(dts!=ADM_NO_PTS) firstPacketOffset=dts;
+    
+    rescaleVideo(in,firstPacketOffset);
+    for(int audioIndex=0;audioIndex<nbAStreams;audioIndex++)
+    {
+         aviAudioPacket *aPacket=audioPackets+audioIndex;
+         if(!aPacket->present) continue;
+         if(aPacket->dts!=ADM_NO_PTS) aPacket->dts-=firstPacketOffset;
+    }
+    return true;
 }
 /**
     \fn save
@@ -169,20 +241,19 @@ bool muxerAvi::save(void)
 
     initUI("Saving Avi");
     encoding->setContainer("AVI/OpenDML");
-    if(false==vStream->getPacket(&in)) 
-    {
-        ADM_error("Cannot get first video frame\n");
-        goto abt;
-    }
+    if(false==prefill(&in)) goto abt;
     while(1)
     {
-            
+            aprintf("Current clock=%s\n",ADM_us2plain(aviTime));
+            aprintf("Video in dts=%s\n",ADM_us2plain(in.dts));
             if(in.dts>aviTime+videoIncrement)
             {
+                aprintf("Too far in the future, writting dummy frame\n");
                 writter.saveVideoFrame( 0, 0,videoBuffer); // Insert dummy video frame
                 encoding->pushVideoFrame(0,0,in.dts);
             }else
             {
+                aprintf("Writting video frame\n");
                 if(!writter.saveVideoFrame( in.len, in.flags,videoBuffer))  // Put our real video
                 {
                         ADM_warning("[AviMuxer] Error writting video frame\n");
@@ -194,7 +265,8 @@ bool muxerAvi::save(void)
                 if(in.dts==ADM_NO_PTS)
                 {
                     in.dts=lastVideoDts+videoIncrement;
-                }
+                }else
+                    rescaleVideo(&in,firstPacketOffset);
                 lastVideoDts=in.dts;
             }
 
