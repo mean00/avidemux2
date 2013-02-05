@@ -102,6 +102,19 @@ static tp_obj zzpy_dumpAllSegments(TP)
   editor->dumpSegments(); 
  return tp_None;
 }
+// getFrameSize -> int editor->getFrameSize (int ) 
+static tp_obj zzpy_getFrameSize(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_EDITOR);
+
+  int p0 = pm.asInt();
+  int r =   editor->getFrameSize(p0); 
+  return tp_number(r);
+}
 // getPts -> double pyGetPts (IEditor int ) 
 static tp_obj zzpy_getPts(TP)
  {
@@ -156,6 +169,10 @@ tp_obj zzpy__pyEditor_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_dumpAllSegments);
   }
+  if (!strcmp(key, "getFrameSize"))
+  {
+     return tp_method(vm, self, zzpy_getFrameSize);
+  }
   if (!strcmp(key, "getPts"))
   {
      return tp_method(vm, self, zzpy_getPts);
@@ -199,6 +216,7 @@ static tp_obj zzpy__pyEditor_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpRefVideo(void)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nbSegments(void)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpAllSegments(void)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getFrameSize(int)");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPts(IEditor,int)");
 
 	return tp_None;

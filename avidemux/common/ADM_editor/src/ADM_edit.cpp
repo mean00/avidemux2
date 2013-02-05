@@ -714,5 +714,24 @@ const char          *ADM_Composer::getVideoDecoderName(void)
     if(!v->decoder) return "????";
     return v->decoder->getDecoderName();
 }
-
+/**
+ *      \fn getFrameSize
+ *      \brief return frame size in bytes of frame "frame"
+ */
+uint32_t           ADM_Composer::getFrameSize(int frame)
+{
+    if(!_segments.getNbRefVideos()) return 0;
+    _VIDEOS *v=_segments.getRefVideo(0);
+    if(!v) return 0;
+    aviInfo info;
+    v->_aviheader->getVideoInfo(&info);
+    int nb=info.nb_frames;
+    if(frame>=nb)
+    {
+        return 0;
+    }
+    uint32_t sz=0;
+    v->_aviheader->getFrameSize(frame,&sz);
+    return sz;
+}
 // EOF

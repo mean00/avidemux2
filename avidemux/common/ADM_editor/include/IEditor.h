@@ -97,5 +97,6 @@ public:
 	virtual void seekFrame(int count) = 0;
 	virtual void seekKeyFrame(int count) = 0;
 	virtual void seekBlackFrame(int count) = 0;
+        virtual uint32_t getFrameSize(int count) = 0;
 };
 #endif

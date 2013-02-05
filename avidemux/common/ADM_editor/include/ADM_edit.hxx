@@ -253,6 +253,7 @@ public:
                     void                dumpSegment(int i);
                     bool                dumpTiming(void);
                     bool                getVideoPtsDts(uint32_t frame, uint32_t *flags,uint64_t *pts, uint64_t *dts);
+                    uint32_t            getFrameSize(int frame);
 /******************************* /Editing **********************************/
 /******************************* Misc ************************************/
                     uint8_t             setEnv(_ENV_EDITOR_FLAGS newflag);
