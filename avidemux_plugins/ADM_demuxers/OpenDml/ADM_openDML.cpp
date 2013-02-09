@@ -135,7 +135,7 @@ uint64_t OpenDMLHeader::getTime(uint32_t frameNum)
 uint64_t  OpenDMLHeader::getVideoDuration(void)
 {
     if(!_videostream.dwLength) return 0;
-    return _idx[_videostream.dwLength-1].dts; 
+    return _idx[_videostream.dwLength-1].dts+frameToUs(1); 
 }
 
 OpenDMLHeader::~OpenDMLHeader()
