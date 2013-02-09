@@ -25,11 +25,12 @@
 #include "ADM_getbits.h"
 #include "ADM_coreUtils.h"
 #include "ADM_mp4Tree.h"
+#include "ADM_vidMisc.h"
 
 #if 1
 #define aprintf(...) {}
 #else
-#define aprintf(...) printf
+#define aprintf printf
 #endif
 
 #define QT_TR_NOOP(x) x
@@ -95,7 +96,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
   printf("Analyzing file and atoms\n");
   if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_MOOV,&moov))
   {
-       aprintf(ADM_PRINT_ERROR,"Cannot locate moov atom\n");
+       ADM_warning("Cannot locate moov atom\n");
        return 0;
   }
   ADM_assert(moov);
@@ -529,6 +530,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                   {
                     break;
                   }
+                  aprintf("Found %d ctts elements\n",n);
                 uint32_t *values=new uint32_t [n];
                 uint32_t *count=new uint32_t [n];
                 for(i=0;i<n;i++)
@@ -1268,6 +1270,8 @@ uint8_t MP4Header::updateCtts(MPsampleinfo *info )
         f*=1000000; // us
         f+=_tracks[0].index[i].dts;
         _tracks[0].index[i].pts=(uint64_t)f;
+        aprintf(" Frame :%d DTS=%s",i,ADM_us2plain(_tracks[0].index[i].dts));
+        aprintf(" PTS=%s\n",ADM_us2plain(_tracks[0].index[i].pts));
     }
 
   return 1;
