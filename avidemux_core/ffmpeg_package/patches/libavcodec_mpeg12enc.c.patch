@@ -1,35 +1,15 @@
---- libavcodec/mpeg12enc.c.old	2012-10-08 09:58:59.609990164 +0200
-+++ libavcodec/mpeg12enc.c	2012-10-08 10:00:07.469991056 +0200
-@@ -122,10 +122,19 @@
-             s->frame_rate_index= i;
-         }
-     }
-+// MEANX
-+#if 0
-     if(dmin)
-         return -1;
-     else
-         return 0;
-+#else
-+   if(dmin>4)
-+   {
-+        av_log(0,AV_LOG_ERROR,"We did a roundup ! Expect async!\n");
-+   }
-+   return 0; //MEANX
-+#endif // MEANX
- }
+--- libavcodec/mpeg12enc.c.org	2013-02-09 15:07:32.870660318 +0100
++++ libavcodec/mpeg12enc.c	2013-02-09 15:05:13.658658493 +0100
+@@ -245,7 +245,7 @@
  
- static av_cold int encode_init(AVCodecContext *avctx)
-@@ -216,7 +225,7 @@
- 
-             put_sbits(&s->pb, 12, s->width );
-             put_sbits(&s->pb, 12, s->height);
+             put_sbits(&s->pb, 12, s->width  & 0xFFF);
+             put_sbits(&s->pb, 12, s->height & 0xFFF);
 -
 +#if 0 // MEANX
              for(i=1; i<15; i++){
                  float error= aspect_ratio;
                  if(s->codec_id == AV_CODEC_ID_MPEG1VIDEO || i <=1)
-@@ -231,12 +240,41 @@
+@@ -260,12 +260,41 @@
                      s->aspect_ratio_info= i;
                  }
              }
@@ -76,7 +56,7 @@
                  if (v > 0x3ffff && s->codec_id == AV_CODEC_ID_MPEG1VIDEO)
                      v = 0x3ffff;
              }else{
-@@ -278,7 +316,19 @@
+@@ -307,7 +336,19 @@
                  put_bits(&s->pb, 3, s->avctx->profile); //profile
                  put_bits(&s->pb, 4, s->avctx->level); //level
  
@@ -97,7 +77,7 @@
                  put_bits(&s->pb, 2, s->chroma_format);
                  put_bits(&s->pb, 2, s->width >>12);
                  put_bits(&s->pb, 2, s->height>>12);
-@@ -343,6 +393,7 @@
+@@ -372,6 +413,7 @@
  
  void ff_mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
  {
@@ -105,7 +85,7 @@
      mpeg1_encode_sequence_header(s);
  
      /* mpeg1 picture header */
-@@ -379,6 +430,46 @@
+@@ -408,6 +450,46 @@
  
      s->frame_pred_frame_dct = 1;
      if(s->codec_id == AV_CODEC_ID_MPEG2VIDEO){
@@ -152,7 +132,7 @@
          put_header(s, EXT_START_CODE);
          put_bits(&s->pb, 4, 8); //pic ext
          if (s->pict_type == AV_PICTURE_TYPE_P || s->pict_type == AV_PICTURE_TYPE_B) {
-@@ -397,11 +488,15 @@
+@@ -426,11 +508,15 @@
  
          av_assert0(s->picture_structure == PICT_FRAME);
          put_bits(&s->pb, 2, s->picture_structure);
@@ -168,7 +148,7 @@
          /* XXX: optimize the generation of this flag with entropy
             measures */
          s->frame_pred_frame_dct = s->progressive_sequence;
-@@ -411,7 +506,8 @@
+@@ -440,7 +526,8 @@
          put_bits(&s->pb, 1, s->q_scale_type);
          put_bits(&s->pb, 1, s->intra_vlc_format);
          put_bits(&s->pb, 1, s->alternate_scan);

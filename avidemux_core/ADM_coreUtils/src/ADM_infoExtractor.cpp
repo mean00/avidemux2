@@ -24,7 +24,6 @@ extern "C"
 {
 #include "libavutil/common.h"
 }
-
 #define aprintf(...) {}
 
 #define MP4_VOL         0x20
@@ -113,7 +112,7 @@ extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
 	      bits.get( 2);	//  Shape
 	      bits.get( 1);	//  Marker
 	      timeVal = bits.get( 16);	// Time increment
-	      *time_inc = av_log2_c (timeVal - 1) + 1;
+	      *time_inc = log2 (timeVal - 1) + 1;
 	      if (*time_inc < 1)
 		 *time_inc = 1;
 	      bits.get( 1);	//  Marker
