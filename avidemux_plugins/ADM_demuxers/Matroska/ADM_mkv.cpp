@@ -577,7 +577,7 @@ uint64_t mkvHeader::getVideoDuration(void)
 {
     uint32_t limit=_tracks[0].index.size();
     if(!limit) return 0;
-    return _tracks[0].index[limit-1].Pts;
+    return _tracks[0].index[limit-1].Pts+_tracks[0]._defaultFrameDuration;
 }
 
 /**
