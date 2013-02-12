@@ -150,7 +150,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     {
         for(int j=info->Sc[i]-1;j<info->nbCo;j++)
         {
-              aprintf("For chunk %lu, %lu samples size=%d\n",j,info->Sn[i],(int)info->nbCo[j]);
+              aprintf("For chunk %lu, %lu \n",j,info->Sn[i] );
               samplePerChunk[j]=info->Sn[i];
         }
     }
@@ -176,8 +176,11 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     
     totalBytes=0;
     totalSamples=0;
-   
-    
+#if 0   
+#define ADM_PER info->bytePerPacket
+#else
+#define ADM_PER info->bytePerFrame    
+#endif
     for(int i=0;i<info->nbCo;i++)
     {
         uint32_t sz;
@@ -185,7 +188,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
         track->index[i].offset=info->Co[i];
         sz=samplePerChunk[i];
         sz=sz/info->samplePerPacket;
-        sz*=info->bytePerPacket*track->_rdWav.channels;;
+        sz*=ADM_PER; //*track->_rdWav.channels;;
         
         track->index[i].size=sz;
         track->index[i].dts=samplePerChunk[i]; // No seek
