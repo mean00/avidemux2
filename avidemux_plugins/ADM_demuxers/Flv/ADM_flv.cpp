@@ -508,7 +508,7 @@ uint8_t flvHeader::open(const char *name)
   } // while
 
   // Udpate frame count etc..
-  printf("[FLV] Found %u frames\n",videoTrack->_nbIndex);
+  ADM_info("\n[FLV] Found %u frames\n",videoTrack->_nbIndex);
    _videostream.dwLength= _mainaviheader.dwTotalFrames=videoTrack->_nbIndex;
    // Compute average fps
     float f=_videostream.dwLength;
@@ -564,8 +564,10 @@ uint8_t flvHeader::open(const char *name)
 */
 uint64_t flvHeader::getVideoDuration(void)
 {
-     uint64_t dur=videoTrack->_index[videoTrack->_nbIndex-1].dtsUs;
-    return dur;
+    uint64_t pts=videoTrack->_index[videoTrack->_nbIndex-1].ptsUs;
+    if(pts==ADM_NO_PTS) pts=videoTrack->_index[videoTrack->_nbIndex-1].dtsUs;
+    pts+=frameToUs(1);
+    return pts;
 }
 
 /**

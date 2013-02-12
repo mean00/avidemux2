@@ -87,19 +87,6 @@ uint8_t OpenDMLHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
 
 }
 /**
-    \fn frameToUs
-    \brief convert a framenumber to us
-*/
-uint64_t OpenDMLHeader::frameToUs(uint32_t frame)
-{
-    float f=frame;
-    f*=_videostream.dwScale;
-    f/=_videostream.dwRate;
-    f*=1000000.;
-    aprintf("[openDML]%u->%f\n",frame,f);
-    return (uint64_t)f;
-}
-/**
     \fn getFrame
     \return frame # framenum in img
 */

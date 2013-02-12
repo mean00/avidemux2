@@ -79,6 +79,14 @@ virtual	  uint8_t		getExtraHeaderData(uint32_t *len, uint8_t **data);
 // AVI io
 virtual 	uint8_t		open(const char *name)=0;
 virtual 	uint8_t		close(void)=0;
+virtual         uint64_t        frameToUs(uint32_t frame)
+                                {
+                                    float f=frame;
+                                    f*=_videostream.dwScale;
+                                    f/=_videostream.dwRate;
+                                    f*=1000000.;
+                                    return (uint64_t)f;
+                                }
   //__________________________
   //				 Info
   //__________________________

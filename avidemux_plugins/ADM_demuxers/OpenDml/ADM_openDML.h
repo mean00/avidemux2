@@ -92,7 +92,6 @@ protected:
           char                         *myName;
 	  uint32_t 			countAudioTrack( void );
 	  uint32_t  			searchAudioTrack(uint32_t which);
-          uint64_t                      frameToUs(uint32_t frame);
 	  // _____________________________________________
 	  //		indexer, vanilla, odml and others
 	  // _____________________________________________
