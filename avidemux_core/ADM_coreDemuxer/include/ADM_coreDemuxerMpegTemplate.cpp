@@ -84,7 +84,7 @@ uint64_t MY_CLASS::getVideoDuration(void)
     g+=f;
     uint64_t duration=(uint64_t)g;
     ADM_info("Using duration of %s\n",ADM_us2plain(duration));
-    return duration;
+    return duration+frameToUs(1);
 }
 
 /**
