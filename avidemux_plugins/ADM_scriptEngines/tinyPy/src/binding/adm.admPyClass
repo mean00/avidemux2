@@ -41,7 +41,7 @@
 #              cname:pyname
 #  Codec, container
 /* METHOD */ int editor->setVideoCodec:videoCodec(str, couples) 
-/* METHOD */ int editor->setVideoCodec:videoCodecChangeParam(str, couples) 
+/* METHOD */ int editor->changeVideoParam:videoCodecChangeParam(str, couples) 
 /* METHOD */ int editor->setAudioCodec:audioCodec(int,str,  couples) 
 /* METHOD */ int editor->setContainer:setContainer(str, couples) 
 /* METHOD */ int editor->addVideoFilter:addVideoFilter(str, couples) 

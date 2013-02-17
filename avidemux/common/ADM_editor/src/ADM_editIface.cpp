@@ -94,7 +94,37 @@ int ADM_Composer::setVideoCodec(const char *codec, CONFcouple *c)
 
 	return true;
 }
+/**
+ * \fn changeVideoParam
+ * \brief same as above but you can only change one param
+ * @param codec
+ * @param c
+ * @return 
+ */
+int ADM_Composer::changeVideoParam(const char *codec, CONFcouple *c)
+{
+   int idx = videoEncoder6_GetIndexFromName(codec);
 
+	if (idx == -1)
+	{
+		ADM_error("No such encoder :%s\n", codec);
+		return false;
+	}
+
+	// Select by index
+	videoEncoder6_SetCurrentEncoder(idx);
+	UI_setVideoCodec(idx);
+
+	if (c)
+	{
+		bool r = videoEncoder6_SetConfiguration(c, false);
+		delete c;
+
+		return r;
+	}
+
+	return true; 
+}
 int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 {
 	uint32_t filterTag = ADM_vf_getTagFromInternalName(filter);

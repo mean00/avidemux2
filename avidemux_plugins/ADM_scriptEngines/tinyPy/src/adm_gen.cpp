@@ -88,7 +88,7 @@ static tp_obj zzpy_save(TP)
   int r =   editor->saveFile(p0); 
   return tp_number(r);
 }
-// videoCodecChangeParam -> int editor->setVideoCodec (str  couples ) 
+// videoCodecChangeParam -> int editor->changeVideoParam (str  couples ) 
 static tp_obj zzpy_videoCodecChangeParam(TP)
  {
   tp_obj self = tp_getraw(tp);
@@ -100,7 +100,7 @@ static tp_obj zzpy_videoCodecChangeParam(TP)
   const char *p0 = pm.asString();
   CONFcouple *p1 = NULL;
   pm.makeCouples(&p1);
-  int r =   editor->setVideoCodec(p0,p1); 
+  int r =   editor->changeVideoParam(p0,p1); 
   return tp_number(r);
 }
 // audioClearTracks -> int pyClearAudioTracks (IEditor ) 
