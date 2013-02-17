@@ -18,22 +18,41 @@
 #define ADM_CLOCK_H
 
 #include "ADM_core6_export.h"
-
+/**
+ *      \class Clock
+ *      \brief a simple time counting class
+ */
 class ADM_CORE6_EXPORT Clock
 {
 	private: 
-            uint32_t _startTime;
+            uint32_t    _startTime;
 
 	public:
 			Clock(void );
 			~Clock( );
 			uint32_t getElapsedMS( void );
 			uint8_t reset( void );
+};
+/**
+        \class ADMCountdown
+        \brief a simple passive countdown clock (sort of timer)
+*/
+class ADM_CORE6_EXPORT  ADMCountdown
+{
+protected: 
+            Clock       _clock;
+            bool        _running;
+            uint32_t    _clockStartTime;
 
-
+public:
+                    ADMCountdown(uint32_t valueMs );
+                    ~ADMCountdown();
+            bool    done( void );
+            void    reset( void );
 };
 /**
     \class ADMBenchmark
+    \brief a class to measure the time it takes to do something. Returns min/max/avg value
 */
 class ADM_CORE6_EXPORT ADMBenchmark
 {

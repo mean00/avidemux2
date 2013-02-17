@@ -35,10 +35,12 @@
 #include "ADM_vidMisc.h"
 #include "ADM_preview.h"
 
+static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
+
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 bool   GUI_GoToTime(uint64_t time);
 bool   GUI_SeekByTime(int64_t time);
-
+static void A_timedError(const char *s);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**
     \fn HandleAction_Navigate
@@ -201,7 +203,7 @@ void GUI_NextKeyFrame(void)
 
     if (!admPreview::nextKeyFrame())
       {
-        GUI_Error_HIG(QT_TR_NOOP("Error"),QT_TR_NOOP("Cannot go to next keyframe"));
+        A_timedError("Cannot go to next keyframe");
         return;
       }
     GUI_setCurrentFrameAndTime();
@@ -270,8 +272,7 @@ void GUI_PreviousKeyFrame(void)
 
     if (!admPreview::previousKeyFrame())
       {
-	  GUI_Error_HIG(QT_TR_NOOP("Error"),
-			QT_TR_NOOP("Cannot go to previous keyframe"));
+          A_timedError("Cannot go to previous keyframe");
 	  return;
       }
     GUI_setCurrentFrameAndTime();
@@ -453,4 +454,18 @@ bool GUI_GoToTime(uint64_t time)
     GUI_setCurrentFrameAndTime();
     return true;
 }   
+/**
+ * \fn A_timedError
+ * \brief display error unless the last error is too recent
+ * @param s
+ */
+void A_timedError(const char *s)
+{
+    if(NaggingCountDown.done()) // still running, do not nag
+    {
+	  GUI_Error_HIG(QT_TR_NOOP("Error"),QT_TR_NOOP(s));
+    }
+    NaggingCountDown.reset();
+}
+
 // EOF

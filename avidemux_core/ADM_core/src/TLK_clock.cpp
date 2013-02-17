@@ -101,3 +101,43 @@ uint8_t Clock::reset(void)
 	_startTime=getAbsTime();
     return true;
 }
+
+
+//------------------------------------
+/**
+ * \fn ctor
+ * @return 
+ */
+ADMCountdown::ADMCountdown(uint32_t valueMs)
+{
+    _running=false;
+    _clockStartTime=valueMs;
+}
+/**
+ * \fn dtor
+ * @return 
+ */
+ADMCountdown::~ADMCountdown()
+{
+}
+/**
+ * \fn done
+ * @return true if countdown elasped
+ */
+bool ADMCountdown::done()
+{
+    if(!_running) return false;
+    if(_clock.getElapsedMS()>_clockStartTime) return true;
+    return false;
+}
+/**
+ * \fn reset
+ * @brief reset countdown
+ */
+void ADMCountdown::reset()
+{
+        _running=true;
+        _clock.reset();
+}
+
+// EOF
