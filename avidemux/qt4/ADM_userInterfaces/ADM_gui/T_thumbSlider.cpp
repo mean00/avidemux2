@@ -1,3 +1,17 @@
+/***************************************************************************
+    \file  T_thumbslider
+    \brief Manage thumbslider/navigator widget
+    \author JM
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #include "T_thumbSlider.h"
 
 #include <QtGui/QStyle>
@@ -18,6 +32,8 @@ void ThumbSlider::timerEvent(QTimerEvent *event)
 
 	if (!r)
 		return;
+	if (lock)
+		return;
 
 	if (count)
 		count--;
@@ -27,8 +43,6 @@ void ThumbSlider::timerEvent(QTimerEvent *event)
 
 	count = (r > 9 ? jogScale[9] : jogScale[r]);
 
-	if (lock)
-		return;
 
 	lock++;
 
