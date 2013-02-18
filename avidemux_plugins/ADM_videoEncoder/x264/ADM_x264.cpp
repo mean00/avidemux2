@@ -138,10 +138,18 @@ x264Encoder::~x264Encoder()
 /**
     \fn setPassAndLogFile
 */
+#if _WIN32
+extern std::string utf8StringToAnsi(const char *utf8String, int utf8StringLength);
+#endif
 bool         x264Encoder::setPassAndLogFile(int pass,const char *name)
 {
     ADM_info("Initializing pass %d, log file =%s\n",pass,name);
+#if _WIN32
+    std::string ansi=utf8StringToAnsi(name,strlen(name));
+    logFile=ADM_strdup(ansi.c_str());
+#else
     logFile=ADM_strdup(name);
+#endif
     passNumber=pass;
     return true;
 

@@ -477,6 +477,21 @@ int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *
 
 	return wideCharStringLength;
 }
+// Convert UTF-8 string to Ansi (cp)
+std::string utf8StringToAnsi(const char *utf8String, int utf8StringLength)
+{
+        // 1 convert utf8 to wide char
+        wchar_t *wc=new wchar_t[utf8StringLength*3];
+        int len=utf8StringToWideChar(utf8String, utf8StringLength,wc)
+        // convert wide char to ansi
+         int dirtyAnsiPathLength = wideCharStringToAnsi(wc, -1, NULL, "?");
+         char *dirtyAnsiPath = new char[dirtyAnsiPathLength];
+         wideCharStringToAnsi(wc, -1, dirtyAnsiPath, "?");
+         std::string s=std::string(dirtyAnsiPath);
+         delete [] dirtyAnsiPath;
+         delete [] wc;
+         return s;
+}
 
 // Convert Wide Char string to UTF-8
 int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength, char *utf8String)
