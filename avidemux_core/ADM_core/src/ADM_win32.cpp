@@ -479,6 +479,22 @@ int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *
 
 	return wideCharStringLength;
 }
+// Convert string from Wide Char to ANSI code page
+int wideCharStringToAnsi(const wchar_t *wideCharString, int wideCharStringLength, char *ansiString, const char *filler)
+{
+	int flags = WC_COMPOSITECHECK;
+
+	if (filler)
+		flags |= WC_NO_BEST_FIT_CHARS | WC_DEFAULTCHAR;
+
+	int ansiStringLen = WideCharToMultiByte(CP_ACP, flags, wideCharString, wideCharStringLength, NULL, 0, filler, NULL);
+
+	if (ansiString)
+		WideCharToMultiByte(CP_ACP, flags, wideCharString, wideCharStringLength, ansiString, ansiStringLen, filler, NULL);
+
+	return ansiStringLen;
+}
+
 /**
  *      \fn utf8StringToAnsi
  *      \brief Convert UTF-8 string to Ansi (cp), used for filename
@@ -486,19 +502,19 @@ int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *
 std::string utf8StringToAnsi(const char *utf8String)
 {
         // 0 split path and name
-       char *path=ADM_strdup(utf8String);
+       char *pathOnly=ADM_strdup(utf8String);
        char *name=ADM_strdup(utf8String);
        
-       char *nameOnly=ADM_GetFileName(name);
-       char *pathOnly=ADM_PathStripName(path);
+       const char *nameOnly=ADM_GetFileName(name);
+       ADM_PathStripName(pathOnly);
        
         // 1 convert utf8 to wide char
        int dirLength= utf8StringToWideChar(pathOnly, strlen(pathOnly), NULL) + 1;
        int fileLength= utf8StringToWideChar(nameOnly, strlen(nameOnly), NULL) + 1;
 
         wchar_t *wcDirectory=new wchar_t[dirLength];
-        memset(wcDirectory,0,dirLength*sizeof(w_char_t));
-        utf8StringToWideChar(pathOnly, dirLength,wcDirectory)
+        memset(wcDirectory,0,dirLength*sizeof(wchar_t));
+        utf8StringToWideChar(pathOnly, dirLength,wcDirectory);
         // Get short directory
 	int shortDirLength = GetShortPathNameW(wcDirectory, NULL, 0);
         int reserved=shortDirLength + fileLength;
@@ -516,15 +532,16 @@ std::string utf8StringToAnsi(const char *utf8String)
 
 	// Clean converted path
 	std::string cleanPath = std::string(dirtyAnsiPath);
-	std::string::iterator lastPos = std::remove(cleanPath.begin(), cleanPath.end(), '?');
-	cleanPath.erase(lastPos, cleanPath.end());
+	unsigned int lastPos = cleanPath.find_first_of('?');
+	if(lastPos!=std::string::npos)
+	   cleanPath[lastPos]=0;
         
          delete [] dirtyAnsiPath;
          delete [] wcShortDir;
          delete [] wcDirectory;
-         free(path);
-         free(name);
-         return cleanpath;
+         ADM_dealloc(pathOnly);
+         ADM_dealloc(name);
+         return cleanPath;
 }
 
 // Convert Wide Char string to UTF-8
