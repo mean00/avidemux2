@@ -3,9 +3,11 @@
 #include <windows.h>
 #include <fcntl.h>
 #include <io.h>
+#include <string>
 
 #include "ADM_default.h" 
 #include "ADM_win32.h"
+#include "ADM_misc.h"
 
 void ADM_usleep(unsigned long us)
 {
@@ -477,20 +479,52 @@ int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *
 
 	return wideCharStringLength;
 }
-// Convert UTF-8 string to Ansi (cp)
-std::string utf8StringToAnsi(const char *utf8String, int utf8StringLength)
+/**
+ *      \fn utf8StringToAnsi
+ *      \brief Convert UTF-8 string to Ansi (cp), used for filename
+ */
+std::string utf8StringToAnsi(const char *utf8String)
 {
+        // 0 split path and name
+       char *path=ADM_strdup(utf8String);
+       char *name=ADM_strdup(utf8String);
+       
+       char *nameOnly=ADM_GetFileName(name);
+       char *pathOnly=ADM_PathStripName(path);
+       
         // 1 convert utf8 to wide char
-        wchar_t *wc=new wchar_t[utf8StringLength*3];
-        int len=utf8StringToWideChar(utf8String, utf8StringLength,wc)
-        // convert wide char to ansi
-         int dirtyAnsiPathLength = wideCharStringToAnsi(wc, -1, NULL, "?");
-         char *dirtyAnsiPath = new char[dirtyAnsiPathLength];
-         wideCharStringToAnsi(wc, -1, dirtyAnsiPath, "?");
-         std::string s=std::string(dirtyAnsiPath);
+       int dirLength= utf8StringToWideChar(pathOnly, strlen(pathOnly), NULL) + 1;
+       int fileLength= utf8StringToWideChar(nameOnly, strlen(nameOnly), NULL) + 1;
+
+        wchar_t *wcDirectory=new wchar_t[dirLength];
+        memset(wcDirectory,0,dirLength*sizeof(w_char_t));
+        utf8StringToWideChar(pathOnly, dirLength,wcDirectory)
+        // Get short directory
+	int shortDirLength = GetShortPathNameW(wcDirectory, NULL, 0);
+        int reserved=shortDirLength + fileLength;
+	wchar_t *wcShortDir = new wchar_t[reserved];
+	memset(wcShortDir, 0, reserved * sizeof(wchar_t));
+	GetShortPathNameW(wcDirectory, wcShortDir, shortDirLength);
+        
+        // Add filename
+        utf8StringToWideChar(nameOnly, fileLength, wcShortDir + (shortDirLength - 1));
+	// Convert path to ANSI
+	int dirtyAnsiPathLength = wideCharStringToAnsi(wcShortDir, -1, NULL, "?");
+	char *dirtyAnsiPath = new char[dirtyAnsiPathLength];
+
+	wideCharStringToAnsi(wcShortDir, -1, dirtyAnsiPath, "?");
+
+	// Clean converted path
+	std::string cleanPath = std::string(dirtyAnsiPath);
+	std::string::iterator lastPos = std::remove(cleanPath.begin(), cleanPath.end(), '?');
+	cleanPath.erase(lastPos, cleanPath.end());
+        
          delete [] dirtyAnsiPath;
-         delete [] wc;
-         return s;
+         delete [] wcShortDir;
+         delete [] wcDirectory;
+         free(path);
+         free(name);
+         return cleanpath;
 }
 
 // Convert Wide Char string to UTF-8
