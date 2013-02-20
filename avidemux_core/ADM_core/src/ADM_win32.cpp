@@ -8,7 +8,7 @@
 #include "ADM_default.h" 
 #include "ADM_win32.h"
 #include "ADM_misc.h"
-
+#include <algorithm>
 void ADM_usleep(unsigned long us)
 {
 	Sleep(us/1000);
@@ -528,12 +528,12 @@ std::string utf8StringToAnsi(const char *utf8String)
 	
 
 	// Convert directory to wide char
-	int wcDirLength = utf8StringToWideChar(path, directoryLength, NULL) + 1;
+	int wcDirLength = utf8StringToWideChar(utf8String, directoryLength, NULL) + 1;
 	int wcFileLength = utf8StringToWideChar(filename, filenameLength, NULL) + 1;
 	wchar_t *wcDirectory = new wchar_t[wcDirLength];
 
 	memset(wcDirectory, 0, wcDirLength * sizeof(wchar_t));
-	utf8StringToWideChar(path, directoryLength, wcDirectory);
+	utf8StringToWideChar(utf8String, directoryLength, wcDirectory);
 
 	// Get short directory
 	int shortDirLength = GetShortPathNameW(wcDirectory, NULL, 0);
