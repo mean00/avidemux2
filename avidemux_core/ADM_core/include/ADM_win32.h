@@ -13,6 +13,7 @@ int ansiStringToWideChar(const char *ansiString, int ansiStringLength, wchar_t *
 ADM_CORE6_EXPORT int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
 int wideCharStringToUtf8(const wchar_t *wideCharString, int wideCharStringLength, char *utf8String);
 int ansiStringToUtf8(const char *ansiString, int ansiStringLength, char *utf8String);
+ADM_CORE6_EXPORT  std::string utf8StringToAnsi(const char *utf8String);
 
 ADM_CORE6_EXPORT void getUtf8CommandLine(int *argc, char **argv[]);
 ADM_CORE6_EXPORT void freeUtf8CommandLine(int argc, char *argv[]);
