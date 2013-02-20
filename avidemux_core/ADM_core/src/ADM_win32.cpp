@@ -514,50 +514,6 @@ static int convert_to_short_dir(wchar_t *in, wchar_t **out,int fileLength)
         *out=wcShortDir;
         return shortDirLength;
 }
-/**
- *      \fn utf8StringToAnsi
- *      \brief Convert UTF-8 string to Ansi (cp), used for filename
- */
-
-{
-       ADM_assert(0); // does not work, dont have windows to debug it
-        // 0 split path and name
-       char *pathOnly=ADM_strdup(utf8String);
-       char *name=ADM_strdup(utf8String);
-       
-       const char *nameOnly=ADM_GetFileName(name);
-       ADM_PathStripName(pathOnly);
-       
-        // 1 convert utf8 to wide char
-       int dirLength= utf8StringToWideChar(pathOnly, strlen(pathOnly), NULL) + 1;
-       int fileLength= utf8StringToWideChar(nameOnly, strlen(nameOnly), NULL) + 1;
-
-        wchar_t *wcDirectory=NULL;
-        int dirLength=utf8_to_wc(pathOnly,&wcDirectory);
-        ADM_dealloc(pathOnly);;pathOnly=NULL;
-        // Get short directory
-        int shortDirLength=convert_to_short_dir(wcDirectory,&wcShortDir,fileLength);   
-        // Add filename
-        utf8StringToWideChar(nameOnly, fileLength, wcShortDir + (shortDirLength - 1));
-	// Convert path to ANSI
-	int dirtyAnsiPathLength = wideCharStringToAnsi(wcShortDir, -1, NULL, "?");
-	char *dirtyAnsiPath = new char[dirtyAnsiPathLength];
-
-	wideCharStringToAnsi(wcShortDir, -1, dirtyAnsiPath, "?");
-
-	// Clean converted path
-	std::string cleanPath = std::string(dirtyAnsiPath);
-	unsigned int lastPos = cleanPath.find_first_of('?');
-	if(lastPos!=std::string::npos)
-	   cleanPath[lastPos]=0;
-        
-         delete [] dirtyAnsiPath;
-         delete [] wcShortDir;
-         delete [] wcDirectory;
-
-         ADM_dealloc(name);
-         return cleanPath;
-}
 
 /**
  * \fn utf8StringToAnsi

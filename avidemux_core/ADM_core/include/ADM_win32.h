@@ -2,6 +2,7 @@
 #define ADM_WIN32_H
 
 #include "ADM_core6_export.h"
+#include <string>
 #include "ADM_inttype.h"
 
 ADM_CORE6_EXPORT uint8_t win32_netInit(void);
