@@ -150,7 +150,7 @@ bool         x264Encoder::setPassAndLogFile(int pass,const char *name)
 #else
     logFile=ADM_strdup(name);
 #endif
-    ADM_info("Creating system file =<%s>\n",logFile.c_str());
+    ADM_info("Creating system file =<%s>\n",logFile);
     passNumber=pass;
     return true;
 
