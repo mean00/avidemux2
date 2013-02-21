@@ -554,12 +554,14 @@ std::string utf8StringToAnsi(const char *utf8String)
 
 	// Clean converted path
 	std::string cleanPath = std::string(dirtyAnsiPath);
+        printf("Dirty path=%s\n",dirtyAnsiPath);
 	std::string::iterator lastPos = std::remove(cleanPath.begin(), cleanPath.end(), '?');
 
 	cleanPath.erase(lastPos, cleanPath.end());
 	delete [] dirtyAnsiPath;
 
 	delete [] wcShortDir;
+        printf("clean path=%s\n",cleanPath.c_str());
         std::replace( cleanPath.begin(), cleanPath.end(), '/', '\\');
         
         printf("Shortpath =%s\n",cleanPath.c_str());
