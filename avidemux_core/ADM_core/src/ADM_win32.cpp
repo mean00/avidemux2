@@ -560,6 +560,9 @@ std::string utf8StringToAnsi(const char *utf8String)
 	delete [] dirtyAnsiPath;
 
 	delete [] wcShortDir;
+        std::replace( cleanPath.begin(), cleanPath.end(), '/', '\\');
+        
+        printf("Shortpath =%s\n",cleanPath.c_str());
         return cleanPath;
 }
 
