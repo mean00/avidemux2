@@ -63,7 +63,12 @@ typedef enum
 
 class ADM_edAudioTrackFromVideo;
 class ADM_edAudioTrack;
-
+typedef enum
+{
+    ADM_trustAll=0,
+    ADM_dontTrustB=1,
+    ADM_onlyTrustI=2
+}ADM_trustType;
 /**
             \class ADM_Composer
             \brief Wrapper class that handles all the logic to seek/deal with multiple video files
@@ -74,6 +79,7 @@ class ADM_Composer : public IEditor
   friend class ADM_edAudioTrackFromVideo;
   private:
                     std::string currentProjectName;
+                    ADM_trustType trust;
   private:
 //*********************************PRIVATE API *******************************************
                     //bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);

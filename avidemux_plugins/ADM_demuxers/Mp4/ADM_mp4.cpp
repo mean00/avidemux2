@@ -66,6 +66,7 @@ version 2 media descriptor :
 #include "ADM_vidMisc.h"
 
 #include "ADM_videoInfoExtractor.h"
+#include "ADM_codecType.h"
 
 #define aprintf(...) {}
 
@@ -535,5 +536,15 @@ bool    MP4Header::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
     idx->pts=pts;
     return true;
 }
-
+/**
+ * \fn unreliableBFramePts
+ * \brief with mp4+h264, bframe PTS are unreliable
+ * @return 
+ */
+bool         MP4Header::unreliableBFramePts (void)
+{
+    if(isH264Compatible(_videostream.fccHandler))
+        return true;
+    return false;
+}
 //EOF

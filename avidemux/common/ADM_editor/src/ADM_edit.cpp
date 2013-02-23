@@ -66,6 +66,13 @@ uint32_t type,value;
   _currentPts = 0;
   markerAPts = 0;
   markerBPts = 0;
+  trust=ADM_trustAll;
+  uint32_t prefTrust;
+  if(prefs->get(FEATURES_TRUSTPTS,&prefTrust))
+  {
+      trust=(ADM_trustType)prefTrust;
+      printf("Trust level is %d\n",(int)trust);
+  }
 }
 /**
 	Remap 1:1 video to segments

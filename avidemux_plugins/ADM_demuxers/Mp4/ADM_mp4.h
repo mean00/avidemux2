@@ -171,8 +171,8 @@ virtual   uint8_t                       getExtraHeaderData(uint32_t *len, uint8_
 
 virtual 	WAVHeader              *getAudioInfo(uint32_t i )  ;
 virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio);
-virtual     uint8_t                 getNbAudioStreams(void);
-
+virtual     uint8_t                     getNbAudioStreams(void);
+virtual        bool                     unreliableBFramePts (void);
 // Frames
   //__________________________
   //				 video

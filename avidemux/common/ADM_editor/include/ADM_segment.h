@@ -60,7 +60,7 @@ public:
       vidHeader *_aviheader; /// Demuxer
       decoders *decoder; /// Video codec
       ADMColorScalerSimple *color; /// Color conversion if needed
-
+      bool              dontTrustBFramePts;
       /* Audio part */
       uint32_t currentAudioStream;
       std::vector <ADM_audioStreamTrack *>  audioTracks;

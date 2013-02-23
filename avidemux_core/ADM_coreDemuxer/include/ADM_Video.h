@@ -87,6 +87,7 @@ virtual         uint64_t        frameToUs(uint32_t frame)
                                     f*=1000000.;
                                     return (uint64_t)f;
                                 }
+virtual        bool             unreliableBFramePts (void) { return false;} // By default frames are reliable
   //__________________________
   //				 Info
   //__________________________

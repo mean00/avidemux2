@@ -78,7 +78,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   aviInfo       info;
   _SEGMENT      seg;
 
-
+  ref->dontTrustBFramePts=ref->_aviheader->unreliableBFramePts();
   ref->_aviheader->getVideoInfo (&info);
   ref->_aviheader->getExtraHeaderData (&l, &d);
   ref->decoder = ADM_getDecoder (info.fcc,  info.width, info.height, l, d,info.bpp);
