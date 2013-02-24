@@ -81,14 +81,14 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         ADM_info("Found %d to be the min value for PTS/DTS delta\n",(int)minDelta);
         minDelta+=(minDelta>>2);
         int processed=0;
-        for(int i=0;i<totalFrames;i++)
+        for(int i=1;i<totalFrames;i++) // cannot touch first frame
         {
             uint64_t pts,dts;
             vid->_aviheader->getPtsDts(i,&pts,&dts);
             if(pts!=ADM_NO_PTS && dts!=ADM_NO_PTS)
             {
                 delta=pts-dts;
-                if(delta<minDelta)
+                if(delta<=minDelta)
                 {
                         vid->_aviheader->setPtsDts(i,ADM_NO_PTS,dts);
                         processed++;
