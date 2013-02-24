@@ -149,9 +149,10 @@ MP4Index *idx=&(VDEO.index[framenum]);
 
     img->demuxerDts=idx->dts;
     img->demuxerPts=idx->pts;
+    /*
     if(img->demuxerPts==ADM_COMPRESSED_NO_PTS)
         img->demuxerPts=img->demuxerDts;
-
+    */
     return 1;
 }
 MP4Header::~MP4Header()
