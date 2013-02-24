@@ -191,8 +191,10 @@ if(CROSS)
         TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
         TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
 endif(CROSS)
-
-
+#
+# i18n
+#
+ADD_SUBDIRECTORY(i18n)
 ###########################################
 # Install
 ###########################################

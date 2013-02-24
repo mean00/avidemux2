@@ -87,6 +87,8 @@ void loadTranslator(void)
         return;
     ADM_info("Updating translations...\n");
 	// Re-translate existing map (to take care of global strings already allocated)
+        if(!map)
+            map = new QMap<QString, char*>;
 	QMapIterator<QString, char*> mapIterator(*map);
 
 	while (mapIterator.hasNext())
