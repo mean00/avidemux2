@@ -63,12 +63,32 @@ typedef enum
 
 class ADM_edAudioTrackFromVideo;
 class ADM_edAudioTrack;
-typedef enum
+
+/**
+ *      \class ADM_decodeStats
+ *      \brief keep some statistics on decoding
+ */
+class ADM_decodeStats
 {
-    ADM_trustAll=0,
-    ADM_dontTrustB=1,
-    ADM_onlyTrustI=2
-}ADM_trustType;
+public:
+    int nbBFrames;
+    int nbPFrames;
+    int nbIFrames;
+    int nbNoImage;
+    int nbPtsgoingBack;
+    void reset()
+    {
+     nbBFrames=0;
+     nbPFrames=0;
+     nbIFrames=0;
+     nbNoImage=0;
+     nbPtsgoingBack=0;
+    }
+    ADM_decodeStats()
+    {
+        reset();
+    }
+};
 /**
             \class ADM_Composer
             \brief Wrapper class that handles all the logic to seek/deal with multiple video files
@@ -79,7 +99,6 @@ class ADM_Composer : public IEditor
   friend class ADM_edAudioTrackFromVideo;
   private:
                     std::string currentProjectName;
-                    ADM_trustType trust;
   private:
 //*********************************PRIVATE API *******************************************
                     //bool		decodeCache(uint32_t ref, uint32_t frame,ADMImage *image);
@@ -111,7 +130,8 @@ protected:
 
                     bool        searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
                     bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
-
+                    ADM_decodeStats stats;
+                    bool        checkForValidPts (_SEGMENT *vid);
 
 
 //******************************************************************************************

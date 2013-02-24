@@ -231,6 +231,7 @@ uint8_t ret = 0;
       if(!decompressImage(result,&img,ref))
       {
          ADM_info("Decoding error for frame %"PRIu32", not necessarily a problem\n",vid->lastSentFrame);
+         stats.nbNoImage++;
          cache->invalidate(result);
          return true; // Not an error in itself
       }
@@ -266,6 +267,7 @@ uint8_t ret = 0;
 
     if(old>vid->lastDecodedPts) 
     {
+        stats.nbPtsgoingBack++;
         ADM_warning(">>>>> PTS going backward by %"PRId64" ms\n",(old-vid->lastDecodedPts)/1000);
         ADM_warning("Dropping frame!\n");
         cache->invalidate(result);
@@ -274,31 +276,10 @@ uint8_t ret = 0;
     {
         cache->validate(result);
     }
+    if(result->flags & AVI_KEY_FRAME) stats.nbIFrames++;
+    else if(result->flags & AVI_B_FRAME) stats.nbBFrames++;
+     else  stats.nbPFrames++;
     return true;
-}
-
-/**
-    \fn trustPtsOrNot
-    \brief If the source has unreliable PTS (h264 in mp4 seems to be unreliable)
-                        then depending on the user choice distrust B and/or PT
- *                      frame PTS
-*/
-
-static void trustPtsOrNot(ADMImage *out, ADM_trustType trust)
-{
-    aprintf("Flags = %x\n",out->flags&(0x4010)); 
-    switch(trust)
-    {
-        case ADM_trustAll:      return;break;
-        case ADM_dontTrustB:
-                                if(out->flags&AVI_B_FRAME) out->Pts=ADM_NO_PTS;
-                                break;
-        case ADM_onlyTrustI:
-                                if(!(out->flags&AVI_KEY_FRAME)) out->Pts=ADM_NO_PTS;
-                                break;
-    default: ADM_assert(0);
-                                
-    }
 }
 /**
     \fn decompressImage
@@ -311,9 +292,6 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
  ADMImage *tmpImage=NULL;
  _VIDEOS  *v=_segments.getRefVideo(ref);
  uint32_t refOnly=v->decoder->dontcopy(); // can we skip one memcpy ?
- bool dontTrustBFrame=v->dontTrustBFramePts;
- ADM_trustType trustThis=ADM_trustAll;
- if(dontTrustBFrame) trustThis=trust;
  // get settings from pref...
  
 // This is only an empty Shell
@@ -362,7 +340,6 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 	{
 		out->_Qp=2;
 		out->duplicate(tmpImage);
-                trustPtsOrNot(out,trustThis);
 		aprintf("[decompressImage] : No quant avail\n");
 		return true;
 	}
@@ -388,7 +365,6 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 
     // update average Q
 	tmpImage->_Qp=out->_Qp=(uint32_t)floor(sum);
-        trustPtsOrNot(tmpImage,trustThis);
 	// Pp deactivated ?
 	if(!_pp->postProcType || !_pp->postProcStrength || tmpImage->_colorspace!=ADM_COLOR_YV12)
         {

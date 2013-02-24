@@ -66,13 +66,7 @@ uint32_t type,value;
   _currentPts = 0;
   markerAPts = 0;
   markerBPts = 0;
-  trust=ADM_trustAll;
-  uint32_t prefTrust;
-  if(prefs->get(FEATURES_TRUSTPTS,&prefTrust))
-  {
-      trust=(ADM_trustType)prefTrust;
-      printf("Trust level is %d\n",(int)trust);
-  }
+  stats.reset();
 }
 /**
 	Remap 1:1 video to segments
@@ -346,7 +340,9 @@ bool ADM_Composer::addFile (const char *name)
       info.fps1000 = 25 * 1000;
       updateVideoInfo (&info);
     }
+    
     _segments.addReferenceVideo(&video);
+    
     // we only try if we got everything needed...
     // Verify DTS is monotonous
     ADM_verifyDts(video._aviheader,video.timeIncrementInUs);
@@ -384,6 +380,12 @@ bool ADM_Composer::addFile (const char *name)
                 _segments.updateRefVideo();
         }
      }
+    int lastVideo=_segments.getNbSegments();
+    if(lastVideo && video._aviheader->unreliableBFramePts()&& isH264Compatible(info.fcc))
+    {
+        ADM_info("H264 in mp4 sometimes has invalid timestamps which confuse avidemux, checking\n");
+        checkForValidPts(_segments.getSegment(lastVideo-1)); 
+    }
 
   return 1;
 }

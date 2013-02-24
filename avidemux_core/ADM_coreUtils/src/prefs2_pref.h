@@ -24,7 +24,6 @@ static optionDesc myOptions[]={
 { FEATURES_ALTERNATE_MP3_TAG,"features.alternate_mp3_tag"             ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_VDPAU,"features.vdpau"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ENABLE_OPENGL,"features.enable_opengl"                     ,ADM_param_bool    	,"0",	0,	1},
-{ FEATURES_TRUSTPTS,"features.trustpts"                               ,ADM_param_uint32_t	,"0",	0,	2},
 { LASTFILES_LASTDIR_READ,"lastfiles.lastdir_read"                     ,ADM_param_string  	,"",	0,	0},
 { LASTFILES_LASTDIR_WRITE,"lastfiles.lastdir_write"                   ,ADM_param_string  	,"",	0,	0},
 { LASTFILES_FILE1,"lastfiles.file1"                                   ,ADM_param_string  	,"",	0,	0},

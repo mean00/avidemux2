@@ -13,7 +13,6 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.alternate_mp3_tag",offsetof(my_prefs_struct,features.alternate_mp3_tag),"bool",ADM_param_bool},
  {"features.vdpau",offsetof(my_prefs_struct,features.vdpau),"bool",ADM_param_bool},
  {"features.enable_opengl",offsetof(my_prefs_struct,features.enable_opengl),"bool",ADM_param_bool},
- {"features.trustpts",offsetof(my_prefs_struct,features.trustpts),"uint32_t",ADM_param_uint32_t},
  {"lastfiles.lastdir_read",offsetof(my_prefs_struct,lastfiles.lastdir_read),"char *",ADM_param_string},
  {"lastfiles.lastdir_write",offsetof(my_prefs_struct,lastfiles.lastdir_write),"char *",ADM_param_string},
  {"lastfiles.file1",offsetof(my_prefs_struct,lastfiles.file1),"char *",ADM_param_string},

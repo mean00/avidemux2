@@ -16,7 +16,6 @@ struct  {
 	bool alternate_mp3_tag;
 	bool vdpau;
 	bool enable_opengl;
-	uint32_t trustpts;
 }features;
 struct  {
 	char * lastdir_read;

@@ -57,7 +57,6 @@ uint32_t playbackPriority=0;
 uint32_t downmix;
 bool     mpeg_no_limit=0;
 uint32_t msglevel=2;
-uint32_t trust=0;
 
 uint32_t mixer=0;
 
@@ -83,7 +82,6 @@ uint32_t defaultPortAvisynth = 9999;
 	olddevice=newdevice=AVDM_getCurrentDevice();
 
         // Default pp
-         prefs->get(FEATURES_TRUSTPTS,&trust);
          if(!prefs->get(DEFAULT_POSTPROC_TYPE,&pp_type)) pp_type=3;
          if(!prefs->get(DEFAULT_POSTPROC_VALUE,&pp_value)) pp_value=3;
 #define DOME(x,y) y=!!(pp_type & x)
@@ -279,13 +277,7 @@ uint32_t defaultPortAvisynth = 9999;
                              ,{1,      QT_TR_NOOP("Display only error alerts"),NULL}
                              ,{2,      QT_TR_NOOP("Display all alerts"),NULL}
         };
-        diaMenuEntry trustEntries[]={
-                             {0,       QT_TR_NOOP("Trust all"),NULL}
-                             ,{1,      QT_TR_NOOP("Partially trust"),NULL}
-                             ,{2,      QT_TR_NOOP("Dont trust"),NULL}
-        };
         diaElemMenu menuMessage(&msglevel,QT_TR_NOOP("_Message level:"), sizeof(msgEntries)/sizeof(diaMenuEntry),msgEntries,"");
-        diaElemMenu menuTrust(&trust,QT_TR_NOOP("Timestamp confidence:"), sizeof(trustEntries)/sizeof(diaMenuEntry),trustEntries,"");
         
         
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
@@ -332,8 +324,8 @@ uint32_t defaultPortAvisynth = 9999;
      
 
         /* User Interface */
-        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuTrust};
-        diaElemTabs tabUser(QT_TR_NOOP("User Interface"),3,diaUser);
+        diaElem *diaUser[]={&useSysTray,&menuMessage};
+        diaElemTabs tabUser(QT_TR_NOOP("User Interface"),2,diaUser);
         
          /* Automation */
         
@@ -451,7 +443,6 @@ uint32_t defaultPortAvisynth = 9999;
                 
                 // number of threads
                 prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
-                prefs->set(FEATURES_TRUSTPTS,trust);
                 // Encoding priority
                 prefs->set(PRIORITY_ENCODING, encodePriority);
                 // Indexing / unpacking priority

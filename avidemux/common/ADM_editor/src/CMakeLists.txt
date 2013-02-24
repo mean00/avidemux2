@@ -22,6 +22,7 @@ ADM_edAudioTrack.cpp
 ADM_editIface.cpp
 ADM_edAudioTrackExternal.cpp
 ADM_edScriptGenerator.cpp
+ADM_edCheckForInvalidPts.cpp
 )
 
 ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})
