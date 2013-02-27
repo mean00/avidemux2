@@ -465,7 +465,8 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       // we do it or not
       out->_colorspace = ADM_COLOR_YV12;
       break;
-	case PIX_FMT_RGB24:
+   case PIX_FMT_BGR24:
+   case PIX_FMT_RGB24:
 	  out->_colorspace = ADM_COLOR_BGR24;
 	  break;
     case PIX_FMT_BGRA:
