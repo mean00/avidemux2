@@ -47,9 +47,9 @@
 	"ratecontrol" : {
 		"rc_method" : 0,
 		"qp_constant" : 0,
-		"qp_min" : 0,
-		"qp_max" : 0,
-		"qp_step" : 0,
+		"qp_min" : 10,
+		"qp_max" : 51,
+		"qp_step" : 4,
 		"bitrate" : 0,
 		"vbv_max_bitrate" : 0,
 		"vbv_buffer_size" : 0,

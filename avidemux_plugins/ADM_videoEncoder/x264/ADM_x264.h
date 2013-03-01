@@ -95,8 +95,8 @@ extern "C"
 	{ /* Rate Control */ \
 	0,	/* uint32_t rc_method; */ \
 	0,	/* uint32_t qp_constant; */ \
-	0,	/* uint32_t qp_min; */ \
-	69,	/* uint32_t qp_max; */ \
+	10,	/* uint32_t qp_min; */ \
+	51,	/* uint32_t qp_max; */ \
 	4,	/* uint32_t qp_step; */ \
 	0,	/* uint32_t bitrate; */ \
 	1.0,	/* float rate_tolerance; */ \
