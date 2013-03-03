@@ -83,6 +83,11 @@ ENDIF (WIN32)
 if (CMAKE_COMPILER_IS_GNUCC)
 	add_definitions("-Werror=attributes")
 endif (CMAKE_COMPILER_IS_GNUCC)
+# MacOsX stuff
+IF(APPLE)
+	set (CMAKE_OSX_ARCHITECTURES "x86_64")
+        SET(CMAKE_INSTALL_NAME_DIR @executable_path/../lib) # Make sure we are relative to bundle
+ENDIF(APPLE)
 
 ########################################
 # Standard Avidemux defines
