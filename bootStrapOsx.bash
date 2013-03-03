@@ -187,9 +187,11 @@ python $TOP/cmake/osx_libs.py
 echo "* Copying make files **"
 cp $TOP/cmake/osx/Info.plist $PREFIX/../
 mkdir -p $PREFIX/../MacOS
-cp $TOP/cmake/osx/Avidemux2.6 $PREFIX/../MacOS
-chmod +x $PREFIX/../MacOS/Avidemux2.6
+cp $TOP/cmake/osx/Avidemux2.6 $PREFIX/../MacOS/Avidemux2.6.app
+chmod +x $PREFIX/../MacOS/Avidemux2.6.app
 # Copy icons
-cp $TOP/cmake/osx/*.icns $PREFIX/..
+echo "Copying icons"
+cp $TOP/cmake/osx/*.icns $PREFIX/
+
 echo "** Preparing packaging **"
 echo "** ALL DONE **"
