@@ -5,7 +5,12 @@
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
 export BASE_INSTALL_DIR="/";
-export PREFIX="/Users/fx/fake"
+export BASE_APP="/Users/fx/Avidemux2.6.app/"
+export PREFIX="${BASE_APP}/Contents/Resources/"
+rm -Rf $BASE_APP/*
+mkdir -p $BASE_APP
+mkdir -p $BASE_APP/Contents
+mkdir -p $BASE_APP/Contents/Resources
 
 packages_ext=""
 do_core=1
@@ -20,7 +25,7 @@ fail()
         exit 1
 }
 
-
+rm -Rf $PREFIX/*
 Process()
 {
         export BUILDDIR=$1
@@ -179,5 +184,12 @@ echo "** Copying Qt nib files**"
 cp -Rap /opt/local/Library/Frameworks/QtGui.framework/Resources/qt_menu.nib $PREFIX/bin/
 echo "**  Changing link path**"
 python $TOP/cmake/osx_libs.py
+echo "* Copying make files **"
+cp $TOP/cmake/osx/Info.plist $PREFIX/../
+mkdir -p $PREFIX/../MacOS
+cp $TOP/cmake/osx/Avidemux2.6 $PREFIX/../MacOS
+chmod +x $PREFIX/../MacOS/Avidemux2.6
+# Copy icons
+cp $TOP/cmake/osx/*.icns $PREFIX/..
 echo "** Preparing packaging **"
 echo "** ALL DONE **"

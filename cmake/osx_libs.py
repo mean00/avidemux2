@@ -5,8 +5,9 @@ import re
 import subprocess
 import os
 print "Preparing independant bundle..."
-libFolder="/Users/fx/fake/lib"
-binFolder="/Users/fx/fake/bin"
+rootFolder="/Users/fx/Avidemux2.6.app/Contents/Resources"
+libFolder=rootFolder+"/lib"
+binFolder=rootFolder+"/bin"
 
 #
 #
