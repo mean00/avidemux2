@@ -192,6 +192,9 @@ chmod +x $PREFIX/../MacOS/Avidemux2.6.app
 # Copy icons
 echo "Copying icons"
 cp $TOP/cmake/osx/*.icns $PREFIX/
-
+# creating dmg file
+cd /Users/fx
+rm -f Avidemux2.6.dmg
+hdiutil create Avidemux2.6.dmg -srcfolder Avidemux2.6.app/ -ov
 echo "** Preparing packaging **"
 echo "** ALL DONE **"
