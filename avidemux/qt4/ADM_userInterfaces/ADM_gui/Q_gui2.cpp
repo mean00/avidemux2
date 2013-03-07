@@ -16,6 +16,7 @@
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGraphicsView>
+#include <QtCore/QDir>
 
 #include "ADM_cpp.h"
 #define MENU_DECLARE
@@ -705,6 +706,14 @@ int UI_Init(int nargc, char **nargv)
 	Q_INIT_RESOURCE(filter);
 
 	myApplication=new QApplication (global_argc, global_argv);
+#if defined(__APPLE__)
+ printf("Setting qt plugin folder\n");
+ QDir dir(QApplication::applicationDirPath());
+ dir.cdUp();
+ dir.cdUp();
+ dir.cd("plugins");
+ QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
+#endif
 	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
 
 	loadTranslator();

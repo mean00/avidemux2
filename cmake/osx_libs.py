@@ -9,6 +9,7 @@ rootFolder="/Users/fx/Avidemux2.6.app/Contents/Resources"
 libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
+qtPluginFolder=rootFolder+"/../plugins"
 qts = ['QtCore', 'QtGui', 'QtOpenGl']
 
 #
@@ -120,6 +121,8 @@ def copyQtDeps(components,libFolder):
                        print("Copying:"+shortName)
                        shutil.copy(dep,libFolder)
                        copied+=1
+    # copy plugins deps too
+    copyFiles(qtPluginFolder+'/imageformats',libFolder)
     return copied
 ##
 #
@@ -159,6 +162,17 @@ def changeLibLinkPath(folder):
            changeLocalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
            shortName="@executable_path/../lib/"+re.sub("^.*\/","",absPath)
+           cmd="/usr/bin/install_name_tool -id "+shortName+" "+absPath
+           log(cmd)
+           subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+def changeQtPluginLinkPath(folder):
+    for dirname, dirnames, filenames in os.walk(folder):
+       for filename in filenames:
+           absPath=os.path.join(dirname, filename)
+           changeGlobalLinkPathForOne(absPath)
+           changeLocalLinkPathForOne(absPath)
+           changeQtLinkPathForOne(absPath)
+           shortName="@executable_path/../../plugins/imageformats/"+re.sub("^.*\/","",absPath)
            cmd="/usr/bin/install_name_tool -id "+shortName+" "+absPath
            log(cmd)
            subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -239,7 +253,9 @@ def copyQtFiles(targetFolder):
                    changeQtFileSelfLinkPath(dst+q,q)
                    changeQtLinkPathForOne(dst+q) 
                    changeGlobalLinkPathForOne(dst+q)
-
+        # Also copy plugins
+        myMkDir(qtPluginFolder)
+        myCopyTree('/opt/local/share/qt4/plugins/imageformats',qtPluginFolder+'/imageformats')
 #################################################################
 # Step 1 : Copy system files so we have a standalone package
 #
@@ -261,6 +277,7 @@ while not processed == 0:
 print "Adjusting dependencies"
 changeBinLinkPath(binFolder)
 changeLibLinkPath(libFolder)
+changeQtPluginLinkPath(qtPluginFolder)
 subFolders=["audioDecoder",    "audioEncoders",   "autoScripts",     "demuxers",        "muxers",          "scriptEngines",   "videoEncoders",   "videoFilters"]
 for s in subFolders:
         relFolder="ADM_plugins6/"+s
