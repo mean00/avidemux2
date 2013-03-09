@@ -4,8 +4,9 @@ import shutil
 import re
 import subprocess
 import os
-print "Preparing independant bundle..."
-rootFolder="/Users/fx/Avidemux2.6.app/Contents/Resources"
+home=os.getenv("HOME")
+print "Preparing independant bundle, home="+home+"..."
+rootFolder=home+"/Avidemux2.6.app/Contents/Resources"
 libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
