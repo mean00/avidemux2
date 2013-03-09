@@ -4,6 +4,7 @@
 
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
+export REV=`git log | grep branch_mean | head -1 | sed 's/^.*branch_mean.//g' | sed 's/ .*$//g'`
 export BASE_INSTALL_DIR="/";
 export BASE_APP="$HOME/Avidemux2.6.app/"
 export PREFIX="${BASE_APP}/Contents/Resources/"
@@ -12,7 +13,7 @@ rm -Rf $BASE_APP/*
 mkdir -p $BASE_APP
 mkdir -p $BASE_APP/Contents
 mkdir -p $BASE_APP/Contents/Resources
-
+echo "Revision : $REV"
 packages_ext=""
 do_core=1
 do_cli=0
@@ -194,8 +195,8 @@ chmod +x $PREFIX/../MacOS/Avidemux2.6.app
 echo "Copying icons"
 cp $TOP/cmake/osx/*.icns $PREFIX/
 # creating dmg file
-cd $HOME
-rm -f Avidemux2.6.dmg
-hdiutil create Avidemux2.6.dmg -srcfolder Avidemux2.6.app/ -ov
+cd $TOP
+rm -f *.dmg
+hdiutil create Avidemux2.6_r${REV}.dmg -srcfolder $HOME/Avidemux2.6.app/ -ov
 echo "** Preparing packaging **"
 echo "** ALL DONE **"
