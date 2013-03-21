@@ -31,6 +31,7 @@ RequestExecutionLevel user
 !define EXEDIR "${NSIDIR}/install"
 
 !define CORE_VERSION "2.6"
+!define POINT_RELEASE "2"
 !define PRODUCT_VERSION "${CORE_VERSION}.2.${SVN_VERSION}"
 !define PRODUCT_NAME "Avidemux ${CORE_VERSION}"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit Release)"
@@ -48,7 +49,7 @@ RequestExecutionLevel user
 !define COMPANY "Free Software Foundation"
 !define URL "http://www.avidemux.org"
 
-OutFile "${EXEDIR}/avidemux_${CORE_VERSION}_r${REVISION}_win${BUILD_BITS}.exe"
+OutFile "${EXEDIR}/avidemux_${CORE_VERSION}.${POINT_RELEASE}_r${REVISION}_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME}"
 
 ##########################
@@ -162,7 +163,7 @@ LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUn
 	File "${FILEREGEX}"
 	!define Index 'Line${__LINE__}'
 	${GetFileName} "${FILEREGEX}" $R0
-	FindFirst $0 $1 "$OUTDIR/$R0"
+	FindFirst $0 $1 "$OUTDIR\$R0"
 	StrCmp $0 "" "${Index}-End"
 "${Index}-Loop:"
 	StrCmp $1 "" "${Index}-End"
@@ -184,7 +185,7 @@ LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUn
 Function InstallFolderInternal
 	Pop $9
 	!define Index 'Line${__LINE__}'
-	FindFirst $0 $1 "$9/*"
+	FindFirst $0 $1 "$9\*"
 	StrCmp $0 "" "${Index}-End"
 "${Index}-Loop:"
 	StrCmp $1 "" "${Index}-End"
@@ -252,9 +253,7 @@ Section "Avidemux Core" SecCore
     ${File} ${ADM_SYSDIR}/libgcc_s_sjlj-1.dll
     ${File} ${ADM_SYSDIR}/../lib/sqlite3.dll
     ${File} /usr/lib/gcc/i686-w64-mingw32/4.6/libstdc++-6.dll
-    #${File} ${ADM_SYSDIR}/libstdc++-6.dll
     ${File} ${ADM_SYSDIR}/../lib/pthreadGC2.dll
-    #${File} ${ADM_SYSDIR}/libz.dll
     ${File} ${ADM_DIR}/libADM_audioParser6.dll
     ${File} ${ADM_DIR}/libADM_core6.dll
     ${File} ${ADM_DIR}/libADM_coreAudio6.dll
@@ -478,7 +477,7 @@ SectionGroup "Avisynth" SecGrpAvisynth
 		SectionIn 2
 		SetOutPath $INSTDIR
 		SetOverwrite on
-		#${File} avsproxy.exe
+		${File} ${ADM_SYSDIR}/avsproxy3.exe
 		#${File} avsproxy_gui.exe
 	${MementoSectionEnd}
 	${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
@@ -1046,7 +1045,7 @@ ${MementoSectionEnd}
 
 ${MementoSection} "-Quick Launch Qt" SecQuickLaunchQt
     SetOutPath $INSTDIR
-    CreateShortcut "$QUICKLAUNCH/${SHORTCUT_NAME}.lnk" $INSTDIR/avidemux.exe
+    CreateShortcut "$QUICKLAUNCH\${SHORTCUT_NAME}.lnk" $INSTDIR\avidemux.exe
 ${MementoSectionEnd}
 
 
@@ -1110,7 +1109,7 @@ UninstallEnd:
 	FileClose $UninstallLogHandle
 	Delete "${UninstallLogPath}"
 	Delete "$INSTDIR\uninstall.exe"
-	Push "/"
+	Push "\"
 	Call un.RemoveEmptyDirs
 	RMDir "$INSTDIR"
 SectionEnd
@@ -1330,7 +1329,7 @@ Function ConfigureFinishPage
     IntOp $0 $0 & ${SF_SELECTED}
     StrCmp $0 ${SF_SELECTED} end
 
-    DeleteINISec "$PLUGINSDIR/ioSpecial.ini" "Field 4"
+    DeleteINISec "$PLUGINSDIR\ioSpecial.ini" "Field 4"
 
 end:
 FunctionEnd
@@ -1341,7 +1340,7 @@ Function RunAvidemux
     SectionGetFlags ${SecUiQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
 
-	!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR/avidemux.exe" "" "" ""
+	!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR\avidemux.exe" "" "" ""
 
     Goto end
 
@@ -1474,8 +1473,8 @@ Function un.TrimNewlines
 loop:
 	IntOp $R1 $R1 - 1
 	StrCpy $R2 $R0 1 $R1
-	StrCmp $R2 "$/r" loop
-	StrCmp $R2 "$/n" loop
+	StrCmp $R2 "$\r" loop
+	StrCmp $R2 "$\n" loop
 	IntOp $R1 $R1 + 1
 	IntCmp $R1 0 no_trim_needed
 	StrCpy $R0 $R0 $R1
@@ -1498,7 +1497,7 @@ Function un.RemoveEmptyDirs
 	Push $0
 	Push $1
 	Push $9
-	Push "$9$1/"
+	Push "$9$1\"
 	Call un.RemoveEmptyDirs
 	Pop $9
 	Pop $1
