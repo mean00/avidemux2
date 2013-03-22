@@ -146,6 +146,35 @@ InstallDirRegKey HKLM "${REGKEY}" Path
 BrandingText "Packaged by Gruntster"
 InstType Standard
 InstType Full
+#########################################
+#
+#########################################
+Function GetAfterChar
+  Exch $0 ; chop char
+  Exch
+  Exch $1 ; input string
+  Push $2
+  Push $3
+  StrCpy $2 0
+  loop:
+    IntOp $2 $2 - 1
+    StrCpy $3 $1 1 $2
+    StrCmp $3 "" 0 +3
+      StrCpy $0 ""
+      Goto exit2
+    StrCmp $3 $0 exit1
+    Goto loop
+  exit1:
+    IntOp $2 $2 + 1
+    StrCpy $0 $1 "" $2
+  exit2:
+    Pop $3
+    Pop $2
+    Pop $1
+    Exch $0 ; output
+FunctionEnd
+##################################################################### 
+!define StrReplace '!insertmacro "_Name"'
 
 ##########################
 # Uninstaller macros
@@ -158,20 +187,15 @@ Var UninstallLogHandle
 
 ; Uninstall log file missing.
 LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUninstallation cannot proceed!"
-
-!macro InstallFile FILEREGEX
-	File "${FILEREGEX}"
-	!define Index 'Line${__LINE__}'
-	${GetFileName} "${FILEREGEX}" $R0
-	FindFirst $0 $1 "$OUTDIR\$R0"
-	StrCmp $0 "" "${Index}-End"
-"${Index}-Loop:"
-	StrCmp $1 "" "${Index}-End"
-	FileWrite $UninstallLogHandle "$OUTDIR\$1$\r$\n"
-	FindNext $0 $1
-	Goto "${Index}-Loop"
-"${Index}-End:"
-	!undef Index
+# Regexep Does not work with cross
+# Use only one file at a time
+!macro InstallFile FILEZ
+	File "${FILEZ}"
+	Push "${FILEZ}"
+	Push "/"
+	Call GetAfterChar
+	Pop $R0
+	FileWrite $UninstallLogHandle "$OUTDIR\$R0$\r$\n"
 !macroend
 !define File "!insertmacro InstallFile"
  
@@ -245,8 +269,8 @@ Section "Avidemux Core" SecCore
     SectionIn 1 2 RO
     SetOutPath $INSTDIR
     SetOverwrite on
-    ${File} "Build Info.txt"
-    ${File} "Change Log.html"
+    ${File} "./Build Info.txt"
+    ${File} "./Change Log.html"
     #${File} ${ADM_SYSDIR}/libexpat-1.dll
     ${File} ${ADM_SYSDIR}/mgwz.dll
     ${File} ${ADM_SYSDIR}/libfreetype.dll
@@ -477,8 +501,8 @@ SectionGroup "Avisynth" SecGrpAvisynth
 		SectionIn 2
 		SetOutPath $INSTDIR
 		SetOverwrite on
-		${File} ${ADM_SYSDIR}/avsproxy3.exe
-		#${File} avsproxy_gui.exe
+		${File} ${ADM_SYSDIR}/avsproxy.exe
+		${File} ${ADM_SYSDIR}/avsproxy_gui.exe
 	${MementoSectionEnd}
 	${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
 		SectionIn 2

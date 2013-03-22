@@ -6,5 +6,5 @@ mkdir -p install
 export REV=`git log | grep branch_mean | head -1 | sed 's/^.*branch_mean.//g' | sed 's/ .*$//g'`
 echo "Revision : $REV"
 echo "Creating NSIS Package"
-makensis -DSVN_VERSION="${REV}_8" -DNSIDIR=$PWD avidemux_cross.nsi
+makensis -DSVN_VERSION="${REV}" -DNSIDIR=$PWD avidemux_cross.nsi
 echo "Done"
