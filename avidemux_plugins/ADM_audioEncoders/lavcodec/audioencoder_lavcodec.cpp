@@ -37,7 +37,7 @@ static lav_encoder  defaultConfig = LAV_DEFAULT_CONF;
 
 static bool         configure (CONFcouple **setup);
 static void getDefaultConfiguration(CONFcouple **c);
-#if 1
+#if 0
 #define cprintf printf
 #else
 #define cprintf(...) {}
@@ -156,6 +156,8 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   wavheader.byterate=(_config.bitrate*1000)>>3;
 
   _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
+  planarBuffer=new float[_chunk];
+  planarBufferSize=_chunk;
   ADM_info("[Lavcodec]Incoming : fq : %"PRIu32", channel : %"PRIu32" bitrate: %"PRIu32" \n",
   wavheader.frequency,wavheader.channels,_config.bitrate);
 
@@ -173,6 +175,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   CONTEXT->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
   CONTEXT->frame_size=_chunk/wavheader.channels;
   CONTEXT->channel_layout=av_get_default_channel_layout(wavheader.channels);
+  
   if(true==_globalHeader)
   {
     ADM_info("Configuring audio codec to use global headers\n");
@@ -188,6 +191,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
                 return 0;
      
    }
+    //ADM_info("Frame size : %d, %d\n",CONTEXT->frame_size,_chunk/wavheader.channels);
     _frame->format=CONTEXT->sample_fmt;    
     outputFlavor=asFloatPlanar;
     ADM_info("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
@@ -212,6 +216,63 @@ bool	AUDMEncoder_Lavcodec::encodeBlock(int count, uint8_t *dest,int &encoded)
     else return encodeBlockSimple(count,dest,encoded);
 }
 /**
+ * \fn lastBlock
+ * \brief purge internal data if any
+ * @param encoded
+ * @return 
+ */
+bool AUDMEncoder_Lavcodec::lastBlock(AVPacket *pkt,int &encoded)
+{
+    int gotPacket;
+    int nbout=avcodec_encode_audio2(CONTEXT, pkt,NULL,&gotPacket);
+         if(nbout<0)
+         {
+             printError("Encoding lastBlock",nbout);
+             return false;
+         }
+         if(gotPacket)
+               encoded=pkt->size;
+         return true;
+}
+/**
+ * \fn reorder
+ * 
+ * @param sample_in
+ * @param sample_out
+ * @param samplePerChannel
+ * @param mapIn
+ * @param mapOut
+ * @return 
+ */
+bool AUDMEncoder_Lavcodec::reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut)
+{
+        // build matrix 
+        int channel=wavheader.channels;
+#if 0
+        for(int i=0;i<channel;i++)
+        {
+                uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout,i);
+                cprintf("Channel %s ",av_get_channel_name(chan))  ;
+        }
+#endif
+    for(int i=0;i<channel;i++)
+    {
+        int chanIn=-1;
+        for(int z=0;z<channel;z++)
+            if(mapOut[i]==mapIn[z]) chanIn=z;
+        ADM_assert(chanIn!=-1);
+        float *in=sample_in+chanIn;
+        float *out=sample_out+(i*samplePerChannel);
+        for(int j=0;j<samplePerChannel;j++)
+        {
+            *out++=*in;
+            in+=channel;
+        }
+    }
+    return true;
+}
+
+/**
  * \fn encodeBlockMultiChannel
  * \brief encode a block when # of channels is > 2
  * @param count
@@ -219,34 +280,30 @@ bool	AUDMEncoder_Lavcodec::encodeBlock(int count, uint8_t *dest,int &encoded)
  */
 bool	AUDMEncoder_Lavcodec::encodeBlockMultiChannels(int count, uint8_t *dest,int &encoded)
 {
-    
      encoded=0;
      AVPacket pkt; // out
-     int gotPacket;
-     int channel=wavheader.channels;
-     _frame->channel_layout=CONTEXT->channel_layout;
      av_init_packet(&pkt);
+     pkt.size=5000;
+     pkt.data=dest;
+
      
       if(!count)
       {
-          int nbout=avcodec_encode_audio2(CONTEXT, &pkt,NULL,&gotPacket);
-          if(nbout<0)
-          {
-              printError("Encoding lastBlock",nbout);
-              return false;
-          }
-          if(gotPacket)
-                encoded=pkt.size;
-          return true;
+          return lastBlock(&pkt,encoded);
       }
-      int nbBlocks=count/channel;
-      _frame->nb_samples=count/channel;
+     
+     int gotPacket;
+     int channel=wavheader.channels;
+     int nbBlocks=count/channel;
+     _frame->channels=wavheader.channels;
+     _frame->channel_layout=CONTEXT->channel_layout;     
+     _frame->nb_samples=nbBlocks;
 
         CHANNEL_TYPE *f=_incoming->getChannelMapping();
         CHANNEL_TYPE *o=channelMapping;
      
-        
-    //    reorder(&(tmpbuffer[tmphead]),planarBuffer,count/channel,f,o);
+        // reorder and de-interleave
+        reorder(&(tmpbuffer[tmphead]),planarBuffer,nbBlocks,f,o);
       
     
         int er=avcodec_fill_audio_frame(_frame, channel,
@@ -257,14 +314,11 @@ bool	AUDMEncoder_Lavcodec::encodeBlockMultiChannels(int count, uint8_t *dest,int
             printError("Fill audio",er);
             return false;
         }
-        pkt.size=5000;
-        pkt.data=dest;
-     
-     
+         
     int  nbout = avcodec_encode_audio2(CONTEXT, &pkt,_frame,&gotPacket);
     if(nbout>=0 && gotPacket)
     {
-        printf("Got %d bytes \n",pkt.size);
+        cprintf("Got %d bytes \n",pkt.size);
         encoded=pkt.size;
     }
     else
@@ -292,12 +346,7 @@ float * AUDMEncoder_Lavcodec::i2p(int count)
     if(wavheader.channels==1) 
                 return ss;
 
-    if(!planarBuffer)
-     {
-         planarBuffer=new float[_chunk];
-         planarBufferSize=_chunk;
-
-     }
+   
     float *d=planarBuffer;
     for(int c=0;c<wavheader.channels;c++)
     {
@@ -312,30 +361,27 @@ float * AUDMEncoder_Lavcodec::i2p(int count)
  }
 
 /**
+ * \fn encodeBlockSimple
+ * \brief mono or stereo
  */
 bool	AUDMEncoder_Lavcodec::encodeBlockSimple(int count, uint8_t *dest,int &encoded)
 {
-      encoded=0;
+     encoded=0;
      AVPacket pkt; // out
-     int gotPacket;
-     int channel=wavheader.channels;
-     _frame->channel_layout=CONTEXT->channel_layout;
      av_init_packet(&pkt);
+     pkt.size=5000;
+     pkt.data=dest;     
      
       if(!count)
       {
-          int nbout=avcodec_encode_audio2(CONTEXT, &pkt,NULL,&gotPacket);
-          if(nbout<0)
-          {
-              printError("Encoding lastBlock",nbout);
-              return false;
-          }
-          if(gotPacket)
-                encoded=pkt.size;
-          return true;
+          return lastBlock(&pkt,encoded);
       }
-      int nbBlocks=count/channel;
-      _frame->nb_samples=count/channel;
+     int gotPacket;
+     int channel=wavheader.channels;
+     _frame->channel_layout=CONTEXT->channel_layout;
+
+     int nbBlocks=count/channel;
+      _frame->nb_samples=nbBlocks;
       float *in=i2p(count);
       int er=avcodec_fill_audio_frame(_frame, channel,
                               AV_SAMPLE_FMT_FLTP, (uint8_t *)in,
@@ -345,14 +391,12 @@ bool	AUDMEncoder_Lavcodec::encodeBlockSimple(int count, uint8_t *dest,int &encod
         printError("Fill audio",er);
         return false;
      }
-     pkt.size=5000;
-     pkt.data=dest;
      
      
     int  nbout = avcodec_encode_audio2(CONTEXT, &pkt,_frame,&gotPacket);
     if(nbout>=0 && gotPacket)
     {
-        printf("Got %d bytes \n",pkt.size);
+        cprintf("Got %d bytes \n",pkt.size);
         encoded=pkt.size;
     }
     else
