@@ -37,7 +37,11 @@ static lav_encoder  defaultConfig = LAV_DEFAULT_CONF;
 
 static bool         configure (CONFcouple **setup);
 static void getDefaultConfiguration(CONFcouple **c);
-
+#if 1
+#define cprintf printf
+#else
+#define cprintf(...) {}
+#endif
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Lavcodec);
 
@@ -155,37 +159,6 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   ADM_info("[Lavcodec]Incoming : fq : %"PRIu32", channel : %"PRIu32" bitrate: %"PRIu32" \n",
   wavheader.frequency,wavheader.channels,_config.bitrate);
 
-  CONTEXT->channel_layout=av_get_default_channel_layout(wavheader.channels);
-  
-  char tmp[1024];
-   av_get_channel_layout_string(tmp,1023, wavheader.channels, CONTEXT->channel_layout);
-   ADM_warning("Channel layout : %s\n",tmp);
-   CHANNEL_TYPE *f=channelMapping;
-   for(int i=0;i<wavheader.channels;i++)
-   {
-       uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout, i);
-       ADM_info(" Channel:%d, %s\n",i,av_get_channel_name(chan));
-       switch(chan)
-       {
-#define CHN(x) case AV_CH_##x: *f++=ADM_CH_##x;break;
-#define CHM(x,y) case AV_CH_##x: *f++=ADM_CH_##y;break;
-                CHN(FRONT_LEFT)
-                CHN(FRONT_RIGHT)
-                CHN(FRONT_CENTER)
-                CHM(BACK_LEFT,REAR_LEFT)
-                CHM(BACK_RIGHT,REAR_RIGHT)
-                CHM(LOW_FREQUENCY,LFE)
-                default: ADM_warning("Unmanaged channel!");break; 
-       }
-       
-       
-   }
-   CHANNEL_TYPE *in=_incoming->getChannelMapping();
-   for(int i=0;i<wavheader.channels;i++)
-   {
-      // maybe not initialized yet:   ADM_info(" In channel =%s",ADM_printChannel(in[i]));
-        ADM_info("   => Out channel =%s\n",ADM_printChannel(channelMapping[i]));
-   }
     if(wavheader.channels>2) 
     {
         ADM_warning("Channel remapping activated\n");
@@ -199,14 +172,14 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_FLT;
   CONTEXT->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
   CONTEXT->frame_size=_chunk/wavheader.channels;
+  CONTEXT->channel_layout=av_get_default_channel_layout(wavheader.channels);
   if(true==_globalHeader)
   {
     ADM_info("Configuring audio codec to use global headers\n");
     CONTEXT->flags|=CODEC_FLAG_GLOBAL_HEADER;
   }
-
-
   
+    computeChannelLayout();
     CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_FLTP;
     ret = avcodec_open2(CONTEXT, codec,NULL);
     if (ret<0)
@@ -215,36 +188,12 @@ bool AUDMEncoder_Lavcodec::initialize(void)
                 return 0;
      
    }
-    _frame->format=CONTEXT->sample_fmt;
-    _frame->channel_layout=CONTEXT->channel_layout;
-   outputFlavor=asFloatPlanar;
-  ADM_info("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
-  return 1;
+    _frame->format=CONTEXT->sample_fmt;    
+    outputFlavor=asFloatPlanar;
+    ADM_info("[Lavcodec]Lavcodec successfully initialized,wavTag : 0x%x\n",makeName(WAV));
+    return 1;
 }
-/**
- * \fn i2p
- * \brief convert interleaved float to planar float
- * @param count
- * @return 
- */
-bool AUDMEncoder_Lavcodec::i2p(int count)
-{
-    int nbBlock=count/wavheader.channels;
-    if(nbBlock*wavheader.channels!=count)
-        ADM_warning("Bloc does not match : count=%d, channels=%d\n",count,wavheader.channels);
-    float *d=planarBuffer;
-    float *ss=&(tmpbuffer[tmphead]);
-    for(int c=0;c<wavheader.channels;c++)
-    {
-        float *s=ss+c;
-        for( int block=0;block<nbBlock;block++)
-        {
-            *d++=*s;
-            s+=wavheader.channels;
-        }
-    }
-    return true;
-}
+
 /**
  * \fn printError
  * @param s : banner
@@ -257,67 +206,145 @@ void AUDMEncoder_Lavcodec::printError(const char *s,int er)
                 ADM_error("[Lavcodec] %s,err : %d %s!\n",s,er,strer);
                 
 }
+bool	AUDMEncoder_Lavcodec::encodeBlock(int count, uint8_t *dest,int &encoded)
+{
+    if(wavheader.channels>2) return encodeBlockMultiChannels(count,dest,encoded);
+    else return encodeBlockSimple(count,dest,encoded);
+}
 /**
- * \fn encodeBlock
- * \brief encode a block, take care of format conversion
+ * \fn encodeBlockMultiChannel
+ * \brief encode a block when # of channels is > 2
  * @param count
  * @return 
  */
-bool	AUDMEncoder_Lavcodec::encodeBlock(int count, uint8_t *dest,int &encoded)
+bool	AUDMEncoder_Lavcodec::encodeBlockMultiChannels(int count, uint8_t *dest,int &encoded)
 {
+    
      encoded=0;
      AVPacket pkt; // out
      int gotPacket;
+     int channel=wavheader.channels;
      _frame->channel_layout=CONTEXT->channel_layout;
      av_init_packet(&pkt);
      
       if(!count)
       {
-          return  avcodec_encode_audio2(CONTEXT, &pkt,NULL,&gotPacket);
-      }
-      if(needChannelRemapping)
-      {
-          CHANNEL_TYPE *in=_incoming->getChannelMapping();
-#if 1
-          static bool once=true;
-          if(once)
+          int nbout=avcodec_encode_audio2(CONTEXT, &pkt,NULL,&gotPacket);
+          if(nbout<0)
           {
-            for(int i=0;i<wavheader.channels;i++)
-            {
-                ADM_info("%s =>",ADM_printChannel(in[i]));
-                ADM_info("%s \n",ADM_printChannel(channelMapping[i]));
-
-            }
-            once=false;
+              printError("Encoding lastBlock",nbout);
+              return false;
           }
-           for(int i=0;i<wavheader.channels;i++)
-           {
-                uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout, i);
-                ADM_info(" Out : Channel:%d, %s\n",i,av_get_channel_name(chan));
-                ADM_info(" In  : %s\n",ADM_printChannel(_incoming->getChannelMapping()[i]));
-           }
-#endif
-          reorderChannels(&(tmpbuffer[tmphead]),count/wavheader.channels,in,channelMapping);
+          if(gotPacket)
+                encoded=pkt.size;
+          return true;
       }
-        if(!planarBuffer)
-        {
-            planarBuffer=new float[_chunk];
-            planarBufferSize=_chunk;
+      int nbBlocks=count/channel;
+      _frame->nb_samples=count/channel;
 
-        }
-        float *toEncode=planarBuffer;
-        // interleaved => planar
-        i2p(count);
-        int nbBlocks=count/wavheader.channels;
-        _frame->nb_samples=count/wavheader.channels;
-        int er=avcodec_fill_audio_frame(_frame, wavheader.channels,
-                              AV_SAMPLE_FMT_FLTP, (uint8_t *)toEncode,
+        CHANNEL_TYPE *f=_incoming->getChannelMapping();
+        CHANNEL_TYPE *o=channelMapping;
+     
+        
+    //    reorder(&(tmpbuffer[tmphead]),planarBuffer,count/channel,f,o);
+      
+    
+        int er=avcodec_fill_audio_frame(_frame, channel,
+                              AV_SAMPLE_FMT_FLTP, (uint8_t *)planarBuffer,
                                count*sizeof(float), 0);
         if(er<0)
         {
             printError("Fill audio",er);
             return false;
         }
+        pkt.size=5000;
+        pkt.data=dest;
+     
+     
+    int  nbout = avcodec_encode_audio2(CONTEXT, &pkt,_frame,&gotPacket);
+    if(nbout>=0 && gotPacket)
+    {
+        printf("Got %d bytes \n",pkt.size);
+        encoded=pkt.size;
+    }
+    else
+    {
+        printError("Encoding",nbout);
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * \fn i2p
+ * \brief convert interleaved float to planar float
+ * @param count
+ * @return 
+ */
+float * AUDMEncoder_Lavcodec::i2p(int count)
+{
+    
+    int nbBlock=count/wavheader.channels;
+    if(nbBlock*wavheader.channels!=count)
+          ADM_warning("Bloc does not match : count=%d, channels=%d\n",count,wavheader.channels);
+    float *ss=&(tmpbuffer[tmphead]);
+    if(wavheader.channels==1) 
+                return ss;
+
+    if(!planarBuffer)
+     {
+         planarBuffer=new float[_chunk];
+         planarBufferSize=_chunk;
+
+     }
+    float *d=planarBuffer;
+    for(int c=0;c<wavheader.channels;c++)
+    {
+        float *s=ss+c;
+        for( int block=0;block<nbBlock;block++)
+        {
+            *d++=*s;
+            s+=wavheader.channels;
+        }
+    }
+    return planarBuffer;
+ }
+
+/**
+ */
+bool	AUDMEncoder_Lavcodec::encodeBlockSimple(int count, uint8_t *dest,int &encoded)
+{
+      encoded=0;
+     AVPacket pkt; // out
+     int gotPacket;
+     int channel=wavheader.channels;
+     _frame->channel_layout=CONTEXT->channel_layout;
+     av_init_packet(&pkt);
+     
+      if(!count)
+      {
+          int nbout=avcodec_encode_audio2(CONTEXT, &pkt,NULL,&gotPacket);
+          if(nbout<0)
+          {
+              printError("Encoding lastBlock",nbout);
+              return false;
+          }
+          if(gotPacket)
+                encoded=pkt.size;
+          return true;
+      }
+      int nbBlocks=count/channel;
+      _frame->nb_samples=count/channel;
+      float *in=i2p(count);
+      int er=avcodec_fill_audio_frame(_frame, channel,
+                              AV_SAMPLE_FMT_FLTP, (uint8_t *)in,
+                               count*sizeof(float), 0);
+     if(er<0)
+     {
+        printError("Fill audio",er);
+        return false;
+     }
      pkt.size=5000;
      pkt.data=dest;
      
@@ -334,6 +361,35 @@ bool	AUDMEncoder_Lavcodec::encodeBlock(int count, uint8_t *dest,int &encoded)
         return false;
     }
     return true;
+}
+/**
+ * \fn computeChannelLayout
+ * @return 
+ */
+bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
+{
+#define CHANMIX(x,y) case AV_CH_##y: *o=ADM_CH_##x;cprintf(" =>%s\n",ADM_printChannel(*o));o++;break;
+    
+        int channels=wavheader.channels;
+        CHANNEL_TYPE *o=channelMapping;
+        for(int i=0;i<channels;i++)
+        {
+          uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout,i);
+          cprintf("Channel %s ",av_get_channel_name(chan))  ;
+          switch(chan)
+          {
+              CHANMIX(FRONT_LEFT,FRONT_LEFT)
+              CHANMIX(FRONT_RIGHT,FRONT_RIGHT)
+              CHANMIX(LFE,LOW_FREQUENCY)
+              CHANMIX(FRONT_CENTER,FRONT_CENTER)
+              CHANMIX(REAR_LEFT,BACK_LEFT)
+              CHANMIX(REAR_RIGHT,BACK_RIGHT)
+                default:
+                    ADM_warning("Channel no mapped : %s\n");
+                    *o++=ADM_CH_FRONT_LEFT;
+                    break;
+          }
+        }
 }
 /**
     \fn encode
@@ -453,3 +509,4 @@ void getDefaultConfiguration(CONFcouple **c)
 	ADM_paramSave(c, lav_encoder_param, &config);
 }
 // EOF
+     

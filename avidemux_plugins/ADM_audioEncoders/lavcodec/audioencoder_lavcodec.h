@@ -30,8 +30,11 @@ class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
     ADM_outputFlavor     outputFlavor;
     float                *planarBuffer;
     int                  planarBufferSize;
-    bool                i2p(int count);
+    float               *i2p(int count);
     bool                encodeBlock(int count, uint8_t *dest,int &encoded);
+    bool                encodeBlockSimple(int count, uint8_t *dest,int &encoded);
+    bool                encodeBlockMultiChannels(int count, uint8_t *dest,int &encoded);
+    bool                computeChannelLayout(void);
     CHANNEL_TYPE        channelMapping[8];
     bool                needChannelRemapping;
     AVFrame             *_frame;
@@ -42,7 +45,7 @@ class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
             bool        initialize(void);
    virtual             ~AUDMEncoder_Lavcodec();
                         AUDMEncoder_Lavcodec(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *c);
-   virtual bool  	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+   virtual bool  	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
    uint8_t              extraData(uint32_t *l,uint8_t **d);
 };
 
