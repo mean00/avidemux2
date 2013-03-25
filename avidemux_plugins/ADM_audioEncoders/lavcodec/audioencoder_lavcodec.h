@@ -19,11 +19,23 @@
 class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
 {
   protected:
-    bool               _useFloat;
-    void              *_context;
-    uint32_t            _chunk;
-    bool               _globalHeader;
-
+     typedef enum 
+            {
+                asInt16,asFloat,asFloatPlanar
+            }ADM_outputFlavor;
+  protected:
+    void                *_context;
+    uint32_t             _chunk;
+    bool                 _globalHeader;
+    ADM_outputFlavor     outputFlavor;
+    float                *planarBuffer;
+    int                  planarBufferSize;
+    bool                i2p(int count);
+    bool                encodeBlock(int count, uint8_t *dest,int &encoded);
+    CHANNEL_TYPE        channelMapping[8];
+    bool                needChannelRemapping;
+    AVFrame             *_frame;
+    void                printError(const char *s,int er);
 
   public:
             lav_encoder _config;

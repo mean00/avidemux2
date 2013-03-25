@@ -64,8 +64,30 @@ typedef enum
 }CHANNEL_TYPE;
 // returns true if channel mapping is identical
 bool ADM_audioCompareChannelMapping(WAVHeader *wh1, WAVHeader *wh2,CHANNEL_TYPE *map1,CHANNEL_TYPE *map2);
+/**
+\fn ADM_printChannel
+\brief return the name of the channel
+*/
 
-
+inline const char *ADM_printChannel(CHANNEL_TYPE c)
+{
+#define CX(c) case ADM_CH_##c: return #c;
+        switch(c)
+        {
+                CX(INVALID)
+                CX(MONO)
+                CX(FRONT_LEFT)
+                CX(FRONT_RIGHT)
+                CX(FRONT_CENTER)
+                CX(REAR_LEFT)
+                CX(REAR_RIGHT)
+                CX(REAR_CENTER)
+                CX(SIDE_LEFT)
+                CX(SIDE_RIGHT)
+                CX(LFE)
+        }
+         return "unkown channel";
+}
 
 typedef struct
 {
