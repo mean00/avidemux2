@@ -32,9 +32,9 @@ Ui_aboutWindow::Ui_aboutWindow(QWidget* parent) : QDialog(parent)
 
 	char subversion[20];
 	if (!ADM_SUBVERSION)
-		strcpy(subversion, VERSION);
+		strcpy(subversion, ADM_VERSION);
 	else
-		sprintf(subversion,"%s (r%04u)", VERSION, ADM_SUBVERSION);
+		sprintf(subversion,"%s (r%04u)", ADM_VERSION, ADM_SUBVERSION);
 	ui.versionLabel->setText(ui.versionLabel->text() + subversion);
 }
 
