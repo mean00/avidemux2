@@ -32,7 +32,7 @@ RequestExecutionLevel user
 
 !define CORE_VERSION "2.6"
 !define POINT_RELEASE "3"
-!define PRODUCT_VERSION "${CORE_VERSION}.2.${SVN_VERSION}"
+!define PRODUCT_VERSION "${CORE_VERSION}.${POINT_RELEASE}.${SVN_VERSION}"
 !define PRODUCT_NAME "Avidemux ${CORE_VERSION}"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit Release)"
 
