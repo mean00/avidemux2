@@ -95,7 +95,8 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         AVCodecContext *c;
         c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
-
+        myTimeBase=video_st->time_base=c->time_base;
+        myTimeBase.num=1;
 
         c->gop_size=15;
         

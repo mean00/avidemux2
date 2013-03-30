@@ -104,6 +104,10 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
     AVDictionary *dict = NULL;
 
     rescaleFps(s->getAvgFps1000(),&(c->time_base));
+    myTimeBase=video_st->time_base=c->time_base;
+    myTimeBase.num=1;
+
+    
     c->gop_size=15;
 
     if(initAudio(nbAudioTrack,a)==false)
