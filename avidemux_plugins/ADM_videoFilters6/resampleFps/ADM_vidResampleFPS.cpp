@@ -189,7 +189,7 @@ void resampleFps::setCoupledConf(CONFcouple *couples)
     float offset=configuration.newFpsDen;
     offset*=1000000LL;
     offset*=nextFrame;
-    offset/=configuration.newFpsNum;
+    offset=(offset+(configuration.newFpsNum/2-1))/configuration.newFpsNum;
     uint64_t thisTime=baseTime+(uint64_t)offset;
 
 again:
