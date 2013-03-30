@@ -93,6 +93,8 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         AVCodecContext *c;
         c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
+        myTimeBase=video_st->time_base=c->time_base;
+        ADM_info("Video stream time base :%d,%d\n",video_st->time_base.num,video_st->time_base.den);
         c->gop_size=15;
 
         if(initAudio(nbAudioTrack,a)==false)
@@ -104,6 +106,9 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         // /audio
         int er = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
 
+        
+        ADM_info("Timebase In  = %d/%d\n",myTimeBase.num,myTimeBase.den);
+        
         if (er)
         {
             ADM_error("[Mp4]: Failed to open file :%s, er=%d\n",file,er);
@@ -120,6 +125,14 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
 
+        ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
+        ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
+        if(myTimeBase.den!=video_st->time_base.den || video_st->time_base.num!=1)
+        {
+            ADM_warning("Timebase changed, taking lav one\n");
+            myTimeBase=video_st->time_base;
+        }
+        
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
