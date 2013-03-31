@@ -11,7 +11,7 @@ libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
 qtPluginFolder=rootFolder+"/../plugins"
-qts = ['QtCore', 'QtGui', 'QtOpenGl']
+qts = ['QtCore', 'QtGui', 'QtOpenGl','QtScript']
 
 #
 #
@@ -126,6 +126,14 @@ def copyQtDeps(components,libFolder):
     copyFiles(qtPluginFolder+'/imageformats',libFolder)
     return copied
 ##
+def changeSymbol(target,oldName,newName):
+        cmd="/usr/bin/install_name_tool -change "+oldName+" "+newName+" "+target
+        log(cmd)
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+def changeId(target,newId):
+           cmd="/usr/bin/install_name_tool -id "+newId+" "+target
+           log(cmd)
+           subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 #
 #
 def renameSymbols(libs):
@@ -144,17 +152,12 @@ def changeGlobalLinkPathForOne(f):
     for d in deps:
         shortName=getShortName(d)
         shortName="@executable_path/../lib/"+shortName
-        cmd="/usr/bin/install_name_tool -change "+d+" "+shortName+" "+f
-        log(cmd)
-        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        changeSymbol(f,d,shortName)
 def changeLocalLinkPathForOne(f):
     deps=getLocalDeps(f)
     for d in deps:
         shortName="@executable_path/../lib/"+re.sub("^.*\/","",d)
-        cmd="/usr/bin/install_name_tool -change "+d+" "+shortName+" "+f
-        log(cmd)
-        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-              
+        changeSymbol(f,d,shortName)
 def changeLibLinkPath(folder):
     for dirname, dirnames, filenames in os.walk(folder):
        for filename in filenames:
@@ -163,9 +166,7 @@ def changeLibLinkPath(folder):
            changeLocalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
            shortName="@executable_path/../lib/"+re.sub("^.*\/","",absPath)
-           cmd="/usr/bin/install_name_tool -id "+shortName+" "+absPath
-           log(cmd)
-           subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+           changeId(absPath,shortName)
 def changeQtPluginLinkPath(folder):
     for dirname, dirnames, filenames in os.walk(folder):
        for filename in filenames:
@@ -174,9 +175,7 @@ def changeQtPluginLinkPath(folder):
            changeLocalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
            shortName="@executable_path/../../plugins/imageformats/"+re.sub("^.*\/","",absPath)
-           cmd="/usr/bin/install_name_tool -id "+shortName+" "+absPath
-           log(cmd)
-           subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+           changeId(absPath,shortName)
 def changeBinLinkPath(folder):
     for dirname, dirnames, filenames in os.walk(folder):
        for filename in filenames:
@@ -185,9 +184,7 @@ def changeBinLinkPath(folder):
            changeLocalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
            shortName="@executable_path/bin/"+re.sub("^.*\/","",absPath)
-           cmd="/usr/bin/install_name_tool -id "+shortName+" "+absPath
-           log(cmd)
-           subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+           changeId(absPath,shortName)
             
 def changePluginLinkPath(folder,relFolder):
     for dirname, dirnames, filenames in os.walk(folder):
@@ -196,9 +193,7 @@ def changePluginLinkPath(folder,relFolder):
            changeGlobalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
            shortName="@executable_path/lib/"+relFolder+re.sub("^.*\/","",absPath)
-           cmd="/usr/bin/install_name_tool -id "+shortName+" "+absPath
-           log(cmd)
-           subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+           changeId(absPath,shortName)
 #
 #
 #
@@ -212,9 +207,7 @@ def changeQtLinkPathForOne(f):
     for d in deps:
         shortName=getShortName(d)
         shortName="@executable_path/../../Frameworks/"+shortName+".framework/Versions/4/"+shortName
-        cmd="/usr/bin/install_name_tool -change "+d+" "+shortName+" "+f
-        log(cmd)
-        subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        changeSymbol(f,d,shortName)
 
 #
 def myMkDir(target):
