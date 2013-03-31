@@ -78,6 +78,7 @@ muxerFFmpeg::muxerFFmpeg()
     video_st=NULL;
     audioDelay=0;
     initialized=false;
+    roundup=0;
 }
 /**
     \fn closeMuxer

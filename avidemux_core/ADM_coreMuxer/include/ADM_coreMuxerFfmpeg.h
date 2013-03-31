@@ -42,10 +42,11 @@ protected:
              AVRational *scale=&(video_st->time_base);
             *time=rescaleLavPts(*time,scale);
             // round up / down to the nearest to my timebase
-            int num=myTimeBase.num;
-           // printf("DSq=%d\n",num);
-            *time=(*time+num/2)/(num);
-            *time=*time*num;
+            if(roundup)
+            {
+                *time=(*time+roundup/2)/(roundup);
+                *time=*time*roundup;
+            }
             return true;
         }
         virtual bool muxerRescaleAudioTime(int trk,uint64_t *time,uint32_t fq)
@@ -67,7 +68,7 @@ protected:
 protected:
         AVOutputFormat *fmt;
         AVFormatContext *oc;
-        AVRational      myTimeBase;
+        int             roundup;
         AVStream *audio_st[ADM_MAX_AUDIO_STREAM];
         AVStream *video_st;
         double audio_pts, video_pts;

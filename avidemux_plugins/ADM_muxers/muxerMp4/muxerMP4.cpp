@@ -91,6 +91,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
 
         AVCodecContext *c;
+        AVRational myTimeBase;
         c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         myTimeBase=video_st->time_base=c->time_base;
@@ -127,10 +128,11 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
-        if(myTimeBase.den!=video_st->time_base.den || video_st->time_base.num!=1)
+        if(myTimeBase.den==video_st->time_base.den && video_st->time_base.num==1)
         {
-            ADM_warning("Timebase changed, taking lav one\n");
-            myTimeBase=video_st->time_base;
+            roundup=myTimeBase.num;
+            ADM_warning("Timebase roundup = %d\n",roundup);
+
         }
         
         vStream=s;
