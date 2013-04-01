@@ -34,6 +34,7 @@ class ADM_AudiocodecAC3 : public     ADM_Audiocodec
 		void *ac3_sample;
                 bool init();
                 bool clean();
+                bool doChannelMapping(int flags);
 
 	public:
 		ADM_AudiocodecAC3(uint32_t fourcc, WAVHeader *info,uint32_t extraLength,uint8_t *extraDatab);
@@ -121,7 +122,63 @@ bool    ADM_AudiocodecAC3::resetAfterSeek(void)
         init();
         return true;
 }
+/**
+ * \fn doChannelMapping
+ * @param flags
+ * @return 
+ */
+bool ADM_AudiocodecAC3::doChannelMapping(int flags)
+{
+    CHANNEL_TYPE *p_ch_type = channelMapping;
+    if (flags & A52_LFE) {
+            *(p_ch_type++) = ADM_CH_LFE;
+    }
+    switch (flags & A52_CHANNEL_MASK) 
+    {
+            case A52_CHANNEL:
+            case A52_MONO:
+                    *(p_ch_type++) = ADM_CH_MONO;
+                    break;
+            case A52_STEREO:
+            case A52_DOLBY:
+                    *(p_ch_type++) = ADM_CH_FRONT_LEFT;
+                    *(p_ch_type++) = ADM_CH_FRONT_RIGHT;
+                    break;
+            case A52_3F:
+                    *(p_ch_type++) = ADM_CH_FRONT_LEFT;
+                    *(p_ch_type++) = ADM_CH_FRONT_CENTER;
+                    *(p_ch_type++) = ADM_CH_FRONT_RIGHT;
+                    break;
+            case A52_2F1R:
+                    *(p_ch_type++) = ADM_CH_FRONT_LEFT;
+                    *(p_ch_type++) = ADM_CH_FRONT_RIGHT;
+                    *(p_ch_type++) = ADM_CH_REAR_CENTER;
+                    break;
+            case A52_3F1R:
+                    *(p_ch_type++) = ADM_CH_FRONT_LEFT;
+                    *(p_ch_type++) = ADM_CH_FRONT_CENTER;
+                    *(p_ch_type++) = ADM_CH_FRONT_RIGHT;
+                    *(p_ch_type++) = ADM_CH_REAR_CENTER;
+                    break;
+            case A52_2F2R:
+                    *(p_ch_type++) = ADM_CH_FRONT_LEFT;
+                    *(p_ch_type++) = ADM_CH_FRONT_RIGHT;
+                    *(p_ch_type++) = ADM_CH_REAR_LEFT;
+                    *(p_ch_type++) = ADM_CH_REAR_RIGHT;
+                    break;
 
+            case A52_3F2R:// LFE, left, center, right, left surround, right surround.
+                    *(p_ch_type++) = ADM_CH_FRONT_LEFT;
+                    *(p_ch_type++) = ADM_CH_FRONT_CENTER;
+                    *(p_ch_type++) = ADM_CH_FRONT_RIGHT;
+                    *(p_ch_type++) = ADM_CH_REAR_LEFT;
+                    *(p_ch_type++) = ADM_CH_REAR_RIGHT;
+                    break;
+            default:
+                    ADM_assert(0);
+    }
+    return true;
+}
 
 uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   uint32_t *nbOut)
 {
@@ -130,7 +187,7 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
     int flags = 0, samprate = 0, bitrate = 0;
     uint8_t chan = wavHeader.channels;
     *nbOut=0;
-
+    bool done=false;
     //  Ready to decode
     while(nbIn)
     {
@@ -152,55 +209,11 @@ uint8_t ADM_AudiocodecAC3::run(uint8_t *inptr, uint32_t nbIn, float *outptr,   u
             break;
         }
 
-
-		CHANNEL_TYPE *p_ch_type = channelMapping;
-		if (flags & A52_LFE) {
-			*(p_ch_type++) = ADM_CH_LFE;
-		}
-		switch (flags & A52_CHANNEL_MASK) {
-            case A52_CHANNEL:
-			case A52_MONO:
-				*(p_ch_type++) = ADM_CH_MONO;
-			break;
-			case A52_STEREO:
-			case A52_DOLBY:
-				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
-				*(p_ch_type++) = ADM_CH_FRONT_RIGHT;
-			break;
-			case A52_3F:
-				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
-				*(p_ch_type++) = ADM_CH_FRONT_CENTER;
-				*(p_ch_type++) = ADM_CH_FRONT_RIGHT;
-			break;
-			case A52_2F1R:
-				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
-				*(p_ch_type++) = ADM_CH_FRONT_RIGHT;
-				*(p_ch_type++) = ADM_CH_REAR_CENTER;
-			break;
-			case A52_3F1R:
-				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
-				*(p_ch_type++) = ADM_CH_FRONT_CENTER;
-				*(p_ch_type++) = ADM_CH_FRONT_RIGHT;
-				*(p_ch_type++) = ADM_CH_REAR_CENTER;
-			break;
-			case A52_2F2R:
-				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
-				*(p_ch_type++) = ADM_CH_FRONT_RIGHT;
-				*(p_ch_type++) = ADM_CH_REAR_LEFT;
-				*(p_ch_type++) = ADM_CH_REAR_RIGHT;
-			break;
-            
-			case A52_3F2R:
-				*(p_ch_type++) = ADM_CH_FRONT_LEFT;
-				*(p_ch_type++) = ADM_CH_FRONT_CENTER;
-				*(p_ch_type++) = ADM_CH_FRONT_RIGHT;
-				*(p_ch_type++) = ADM_CH_REAR_LEFT;
-				*(p_ch_type++) = ADM_CH_REAR_RIGHT;
-			break;
-			default:
-				ADM_assert(0);
-		}
-
+        if(!done)
+        {
+                doChannelMapping(flags);
+                done=true;
+        }
 
         sample_t level = 1, bias = 0;
 
