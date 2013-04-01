@@ -14,54 +14,74 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
-
-#ifdef __APPLE__
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <CoreServices/CoreServices.h>
 #include <AudioUnit/AudioUnit.h>
+#include <AudioToolbox/AudioToolbox.h>
 
+#include <AudioUnit/AudioUnit.h>
 #include "ADM_default.h"
-#include "ADM_assert.h"
 #include "ADM_audiodevice.h"
-#include "ADM_audiodevice/ADM_deviceAudioCore.h"
-#include "ADM_osSupport/ADM_debugID.h"
-#define MODULE_NAME  MODULE_ADEVICE
-#include "ADM_osSupport/ADM_debug.h"
-
+#include "ADM_audioDeviceInternal.h"
+#include "ADM_deviceAudioCore.h"
 #define BUFFER_SIZE (500*48000)
+#define aprintf(...) {}
+ADM_DECLARE_AUDIODEVICE(CoreAudio,coreAudioDevice,1,0,2,"PulseAudioSimple audio device (c) mean");
 
+static admMutex mutex;
 static Component comp = NULL;
 static int16_t audioBuffer[BUFFER_SIZE];
 static AudioUnit theOutputUnit;
 static uint32_t rd_ptr = 0;
 static uint32_t wr_ptr = 0;
-static pthread_mutex_t lock;
 
 static OSStatus MyRenderer(void *inRefCon, AudioUnitRenderActionFlags *inActionFlags,
 	const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
 static OSStatus OverloadListenerProc(AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput,
 	AudioDevicePropertyID inPropertyID, void* inClientData);
+/**
 
+*/
 OSStatus OverloadListenerProc(AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput,
 	AudioDevicePropertyID inPropertyID, void* inClientData)
 {
-	printf ("[CoreAudio] *** Overload detected on device playing audio ***\n");
+	ADM_info ("[CoreAudio] *** Overload detected on device playing audio ***\n");
 	return noErr;
 }
+/**
 
-uint8_t coreAudioDevice::setVolume(int volume) {}
+*/
+uint8_t coreAudioDevice::setVolume(int volume) 
+{
+        return 1;
+}
+/**
 
+*/
+uint32_t coreAudioDevice::getLatencyMs(void)
+{
+        return 0;
+}
+/**
+
+*/
 coreAudioDevice::coreAudioDevice(void) 
 {
-	printf("[CoreAudio] Creating CoreAudio device\n");
+	ADM_info("[CoreAudio] Creating CoreAudio device\n");
 	_inUse=0;
-	pthread_mutex_init(&lock, NULL);
-	pthread_mutex_unlock(&lock);
 }
+/**
 
-uint8_t coreAudioDevice::stop(void) 
+*/
+coreAudioDevice::~coreAudioDevice() 
+{
+	ADM_info("[CoreAudio]  destroying\n");
+}
+/**
+*/
+bool coreAudioDevice::localStop(void) 
 {
 	if (_inUse)
 		verify_noerr(AudioOutputUnitStop(theOutputUnit));
@@ -72,15 +92,15 @@ uint8_t coreAudioDevice::stop(void)
 
 	return 1;
 }
-
+/**
+*/
 OSStatus MyRenderer(void *inRefCon, AudioUnitRenderActionFlags *inActionFlags, const AudioTimeStamp *inTimeStamp,
 	UInt32 inBusNumber, UInt32 inChannel, AudioBufferList *ioData)
 {
-	pthread_mutex_lock(&lock);
 	uint32_t nb_sample = ioData->mBuffers[0].mDataByteSize >> 1;
 	uint32_t left = 0;
 	uint8_t *in, *out;
-
+        mutex.lock();
 	in = (uint8_t*)&audioBuffer[rd_ptr];
 	out = (uint8_t*)ioData->mBuffers[0].mData;
 	aprintf("[CoreAudio] Fill: rd %lu, wr %lu, nb asked %lu\n", rd_ptr, wr_ptr, nb_sample);
@@ -123,21 +143,21 @@ OSStatus MyRenderer(void *inRefCon, AudioUnitRenderActionFlags *inActionFlags, c
 			rd_ptr=nb_sample;	
 		}
 	}
-
-	pthread_mutex_unlock(&lock);
+        mutex.unlock();
 	return 0;
 }
 
 #define CHECK_RESULT(msg) \
     if (err != noErr) \
 	{ \
-		printf("[CoreAudio] Failed to initialise CoreAudio: " msg "\n"); \
+		ADM_info("[CoreAudio] Failed to initialise CoreAudio: " msg "\n"); \
         return 0; \
     }
-
-uint8_t coreAudioDevice::init(uint8_t channels, uint32_t fq) 
+/**
+        \fn localInit
+*/
+bool coreAudioDevice::localInit(void) 
 {
-	_channels = channels;
 
 	OSStatus err;
 	ComponentDescription desc;
@@ -155,7 +175,7 @@ uint8_t coreAudioDevice::init(uint8_t channels, uint32_t fq)
 
 	if (comp == NULL)
 	{
-		printf("[CoreAudio] Failed to find component\n");
+		ADM_info("[CoreAudio] Failed to find component\n");
 		return 0;
 	}
 
@@ -177,14 +197,14 @@ uint8_t coreAudioDevice::init(uint8_t channels, uint32_t fq)
 					sizeof(input));
 	CHECK_RESULT("AudioUnitSetProperty [SetInputCallback]")
 
-	streamFormat.mSampleRate = fq;
+	streamFormat.mSampleRate = _frequency;
 	streamFormat.mFormatID = kAudioFormatLinearPCM;
 	streamFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked;
 
-	streamFormat.mBytesPerPacket = channels * sizeof (UInt16);
+	streamFormat.mBytesPerPacket = _channels * sizeof (UInt16);
 	streamFormat.mFramesPerPacket = 1;
-	streamFormat.mBytesPerFrame = channels * sizeof (UInt16);
-	streamFormat.mChannelsPerFrame = channels;
+	streamFormat.mBytesPerFrame = _channels * sizeof (UInt16);
+	streamFormat.mChannelsPerFrame = _channels;
 	streamFormat.mBitsPerChannel = sizeof (UInt16) * 8;
 	
 	err = AudioUnitSetProperty(theOutputUnit,
@@ -195,66 +215,72 @@ uint8_t coreAudioDevice::init(uint8_t channels, uint32_t fq)
 		sizeof(streamFormat));
 	CHECK_RESULT("AudioUnitSetProperty [StreamFormat]")
 	
-	printf("[CoreAudio] Rendering source:\n");
-	printf("[CoreAudio] \tSampleRate = %f,\n", streamFormat.mSampleRate);
-	printf("[CoreAudio] \tBytesPerPacket = %ld,\n", streamFormat.mBytesPerPacket);
-	printf("[CoreAudio] \tFramesPerPacket = %ld,\n", streamFormat.mFramesPerPacket);
-	printf("[CoreAudio] \tBytesPerFrame = %ld,\n", streamFormat.mBytesPerFrame);
-	printf("[CoreAudio] \tBitsPerChannel = %ld,\n", streamFormat.mBitsPerChannel);
-	printf("[CoreAudio] \tChannelsPerFrame = %ld\n", streamFormat.mChannelsPerFrame);
+	ADM_info("[CoreAudio] Rendering source:\n");
+	ADM_info("[CoreAudio] \tSampleRate = %f,\n", streamFormat.mSampleRate);
+	ADM_info("[CoreAudio] \tBytesPerPacket = %ld,\n", streamFormat.mBytesPerPacket);
+	ADM_info("[CoreAudio] \tFramesPerPacket = %ld,\n", streamFormat.mFramesPerPacket);
+	ADM_info("[CoreAudio] \tBytesPerFrame = %ld,\n", streamFormat.mBytesPerFrame);
+	ADM_info("[CoreAudio] \tBitsPerChannel = %ld,\n", streamFormat.mBitsPerChannel);
+	ADM_info("[CoreAudio] \tChannelsPerFrame = %ld\n", streamFormat.mChannelsPerFrame);
 
     return 1;
 }
 
-uint8_t coreAudioDevice::play(uint32_t len, float *data)
+void coreAudioDevice::sendData()
  {
  	// First put stuff into the buffer
 	uint8_t *src;
 	uint32_t left;
 
-	dither16(data, len, _channels);
-
-	pthread_mutex_lock(&lock);
-
-	// Check we have room left
-	if(wr_ptr>=rd_ptr)
-		left=BUFFER_SIZE-(wr_ptr-rd_ptr);
-	else
-		left=rd_ptr-wr_ptr;
-
-	if(len+1>left)
-	{
-		printf("[CoreAudio] Buffer full!\n");
-		pthread_mutex_unlock(&lock);
-		return 0;
-	}
+        mutex.lock();
+        uint32_t avail=wrIndex-rdIndex;
+        if(!avail)
+        {
+                mutex.unlock();
+                // send silence
+                //pa_simple_write(INSTANCE,silence, sizeOf10ms,&er);
+        
+                return ;
+        }
+ 
 
 	// We have room left, copy it
+        uint8_t *data=audioBuffer+rdIndex;
+        int len=avail/2;
 	src=(uint8_t *)&audioBuffer[wr_ptr];
 
-	if(wr_ptr+len<BUFFER_SIZE)
-	{
 		memcpy(src,data,len*2);
-		wr_ptr+=len;
-	}
-	else
-	{
-		left=BUFFER_SIZE-wr_ptr-1;
-		memcpy(src,data,left*2);
-		memcpy(audioBuffer,data+left*2,(len-left)*2);
-		wr_ptr=len-left;	
-	}
+		rdIndex+=len*2;
 	//aprintf("AudioCore: Putting %lu bytes rd:%lu wr:%lu \n",len*2,rd_ptr,wr_ptr);
-	pthread_mutex_unlock(&lock);	
+	mutex.unlock();	
 
 	_inUse=1;
 	verify_noerr(AudioOutputUnitStart(theOutputUnit));
 
-	return 1;
+	return ;
 }
-#else
-void dummy_ac_func(void);
-void dummy_ac_func(void)
+
+/**
+    \fn getWantedChannelMapping
+*/
+static const CHANNEL_TYPE mono[MAX_CHANNELS]={ADM_CH_MONO};
+static const CHANNEL_TYPE stereo[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT};
+static const CHANNEL_TYPE fiveDotOne[MAX_CHANNELS]={ADM_CH_FRONT_LEFT,ADM_CH_FRONT_RIGHT,ADM_CH_FRONT_CENTER,
+                                             ADM_CH_REAR_LEFT,ADM_CH_REAR_RIGHT,ADM_CH_LFE};
+/**
+*/
+const CHANNEL_TYPE *coreAudioDevice::getWantedChannelMapping(uint32_t channels)
 {
+    switch(channels)
+    {
+        case 1: return mono;break;
+        case 2: return stereo;break;
+        default:
+                return fiveDotOne;
+                break;
+    }
+    return NULL;
 }
-#endif
+
+
+

@@ -9,18 +9,18 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifdef __APPLE__
-
-	        class coreAudioDevice : public audioDevice
-	 {
-		 protected :
-					uint8_t				_inUse;
-		  public:
-		  				coreAudioDevice(void);
-		     		virtual uint8_t init(uint8_t channels, uint32_t fq);
-	    			virtual uint8_t play(uint32_t len, float *data);
-		      		virtual uint8_t stop(void);
-					virtual uint8_t setVolume(int volume);
-		 }     ;
-
-#endif
+class coreAudioDevice : public audioDeviceThreaded
+ {
+     protected :
+                     bool     _inUse;
+         virtual     bool     localInit(void);
+         virtual     bool     localStop(void);
+         virtual     void     sendData(void); 
+         virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
+      public:
+                                coreAudioDevice(void);  
+         virtual                ~coreAudioDevice();
+                
+                uint32_t getLatencyMs(void);
+                uint8_t  setVolume(int volume);
+     }     ;
