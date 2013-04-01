@@ -28,23 +28,14 @@
 #include "ADM_deviceAudioCore.h"
 #define BUFFER_SIZE (500*48000)
 #define aprintf(...) {}
-ADM_DECLARE_AUDIODEVICE(CoreAudio,coreAudioDevice,1,0,2,"PulseAudioSimple audio device (c) mean");
 
-static admMutex mutex;
-static Component comp = NULL;
-static int16_t audioBuffer[BUFFER_SIZE];
-static AudioUnit theOutputUnit;
-static uint32_t rd_ptr = 0;
-static uint32_t wr_ptr = 0;
 
-static OSStatus MyRenderer(void *inRefCon, AudioUnitRenderActionFlags *inActionFlags,
-	const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
-static OSStatus OverloadListenerProc(AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput,
-	AudioDevicePropertyID inPropertyID, void* inClientData);
+ADM_DECLARE_AUDIODEVICE(CoreAudio,coreAudioDevice,1,0,2,"Core Audio Plugin  (c) mean");
+
 /**
 
 */
-OSStatus OverloadListenerProc(AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput,
+static OSStatus OverloadListenerProc(AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput,
 	AudioDevicePropertyID inPropertyID, void* inClientData)
 {
 	ADM_info ("[CoreAudio] *** Overload detected on device playing audio ***\n");
@@ -71,6 +62,7 @@ coreAudioDevice::coreAudioDevice(void)
 {
 	ADM_info("[CoreAudio] Creating CoreAudio device\n");
 	_inUse=0;
+        comp=NULL;
 }
 /**
 
@@ -89,63 +81,65 @@ bool coreAudioDevice::localStop(void)
 	// Clean up
 	CloseComponent(theOutputUnit);
 	_inUse=0;
-
+        ADM_usleep(10*1000);
 	return 1;
 }
 /**
 */
-OSStatus MyRenderer(void *inRefCon, AudioUnitRenderActionFlags *inActionFlags, const AudioTimeStamp *inTimeStamp,
+OSStatus coreAudioDevice::MyRenderer(void *inRefCon, AudioUnitRenderActionFlags *inActionFlags, const AudioTimeStamp *inTimeStamp,
 	UInt32 inBusNumber, UInt32 inChannel, AudioBufferList *ioData)
 {
 	uint32_t nb_sample = ioData->mBuffers[0].mDataByteSize >> 1;
-	uint32_t left = 0;
-	uint8_t *in, *out;
+	uint8_t *out = (uint8_t*)ioData->mBuffers[0].mData;
+        coreAudioDevice *me=(coreAudioDevice *)inRefCon;
+        me->sendMoreData(nb_sample,out);
+        return 0;
+}
+/**
+
+*/
+bool coreAudioDevice::sendMoreData(int nbSample, uint8_t *where)
+{
+        if(!_inUse) return false;
         mutex.lock();
-	in = (uint8_t*)&audioBuffer[rd_ptr];
-	out = (uint8_t*)ioData->mBuffers[0].mData;
-	aprintf("[CoreAudio] Fill: rd %lu, wr %lu, nb asked %lu\n", rd_ptr, wr_ptr, nb_sample);
 
-	if(wr_ptr>rd_ptr)
-	{
-		left=wr_ptr-rd_ptr-1;
+        uint32_t avail=(wrIndex-rdIndex)>>1;
+        int filler=0;
+        if(nbSample<avail) avail=nbSample;
+        if(nbSample>avail) filler=nbSample-avail;
+        //printf("Audio : avail =%d samples,requested=%d,filler=%d\n",avail,nbSample,filler);
+	uint8_t *in;
+	in = (uint8_t*)&audioBuffer[rdIndex];
+        if(avail)
+                memcpy(where,in,avail*2);
+        if(filler)
+                memset(where+avail*2,0,filler*2);
+        rdIndex+=avail*2;
 
-		if(left>nb_sample)
-		{
-			memcpy(out,in,nb_sample*2);
-			rd_ptr+=nb_sample;
-		}
-
-		else
-		{
-			memcpy(out,in,left*2);
-			memset(out+left*2,0,(nb_sample-left)*2);
-			rd_ptr+=left;
-		}
-	}
-	else
-	{
-		// wrap
-		left=BUFFER_SIZE-rd_ptr-1;
-		if(left>nb_sample)
-		{
-			memcpy(out,in,nb_sample*2);
-			rd_ptr+=nb_sample;
-		}
-		else
-		{
-			memcpy(out,in,left*2);
-			out+=left*2;
-			rd_ptr=0;
-			in=(uint8_t *)&audioBuffer[0];
-			nb_sample-=left;
-			if(nb_sample>wr_ptr-1) nb_sample=wr_ptr-1;
-			memcpy(out,in,nb_sample*2);
-			rd_ptr=nb_sample;	
-		}
-	}
         mutex.unlock();
 	return 0;
 }
+
+void coreAudioDevice::sendData()
+ {
+        if(!_inUse)
+        {
+	        _inUse=1;
+	        verify_noerr(AudioOutputUnitStart(theOutputUnit));
+        }
+  again:
+        mutex.lock();
+        int avail=wrIndex-rdIndex;
+        if(avail>sizeOf10ms*5) // buffer filling up, sleep a bit
+        {
+                mutex.unlock();
+                ADM_usleep(20*1000);
+                goto again;
+        }
+        mutex.unlock();
+	return ;
+}
+
 
 #define CHECK_RESULT(msg) \
     if (err != noErr) \
@@ -187,7 +181,7 @@ bool coreAudioDevice::localInit(void)
 	
 	// Set up a callback function to generate output to the output unit
 	input.inputProc = MyRenderer;
-	input.inputProcRefCon = NULL;
+	input.inputProcRefCon = this;
 	
 	err = AudioUnitSetProperty(theOutputUnit, 
 					kAudioUnitProperty_SetRenderCallback,
@@ -225,41 +219,6 @@ bool coreAudioDevice::localInit(void)
 
     return 1;
 }
-
-void coreAudioDevice::sendData()
- {
- 	// First put stuff into the buffer
-	uint8_t *src;
-	uint32_t left;
-
-        mutex.lock();
-        uint32_t avail=wrIndex-rdIndex;
-        if(!avail)
-        {
-                mutex.unlock();
-                // send silence
-                //pa_simple_write(INSTANCE,silence, sizeOf10ms,&er);
-        
-                return ;
-        }
- 
-
-	// We have room left, copy it
-        uint8_t *data=audioBuffer+rdIndex;
-        int len=avail/2;
-	src=(uint8_t *)&audioBuffer[wr_ptr];
-
-		memcpy(src,data,len*2);
-		rdIndex+=len*2;
-	//aprintf("AudioCore: Putting %lu bytes rd:%lu wr:%lu \n",len*2,rd_ptr,wr_ptr);
-	mutex.unlock();	
-
-	_inUse=1;
-	verify_noerr(AudioOutputUnitStart(theOutputUnit));
-
-	return ;
-}
-
 /**
     \fn getWantedChannelMapping
 */
