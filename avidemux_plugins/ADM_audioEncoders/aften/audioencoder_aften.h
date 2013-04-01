@@ -26,6 +26,8 @@ protected:
          uint32_t       _chunk;
          bool           _globalHeader;
          aften_encoder  _config;
+         bool           reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut);
+         float          *ordered;
 public:
                 bool    initialize(void);
     virtual     bool    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);

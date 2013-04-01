@@ -106,7 +106,7 @@ AUDMEncoder_Aften::AUDMEncoder_Aften(AUDMAudioFilter * instream,bool globalHeade
         *f++ = ADM_CH_LFE;
         break;
   }
-
+  ordered=new float[256*6*wavheader.channels];
 };
 
 /**
@@ -121,6 +121,8 @@ AUDMEncoder_Aften::~AUDMEncoder_Aften()
       aften_encode_close(_HANDLE);
     delete(_HANDLE);
     _handle=NULL;
+    if(ordered) delete [] ordered;
+    ordered=NULL;
 };
 
 
@@ -164,8 +166,52 @@ unsigned int mask;
       return false;
     }
     _chunk=256*6*wavheader.channels;
+    
     ADM_info("[Aften] Initialized with fd %u Channels %u bitrate %u\n",_HANDLE->samplerate,
                                                                     _HANDLE->channels,_HANDLE->params.bitrate);
+    return true;
+}
+/**
+ * 
+ * @param sample_in
+ * @param sample_out
+ * @param samplePerChannel
+ * @param mapIn
+ * @param mapOut
+ * @return 
+ */
+bool AUDMEncoder_Aften::reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut)
+{
+        // build matrix 
+        int channel=wavheader.channels;
+    for(int i=0;i<channel;i++)
+    {
+        CHANNEL_TYPE chanin=mapIn[i];
+        int chanout=-1;
+        for(int j=0;j<channel;j++)
+        {
+            if(mapOut[j]==chanin)
+            {
+                chanout=j;
+                //printf("Channel %s in source at %d, at exit at %d\n",ADM_printChannel(chanin),i,j);
+                break;
+            }
+        }
+        if(chanout==-1)
+        {
+            ADM_warning("Cannot map channel %d : %s\n",i,ADM_printChannel(chanin));
+            continue; 
+        }
+        float *xin=sample_in+i;
+        float *xout=sample_out+chanout;
+        for(int x=0;x<samplePerChannel;x++)
+        {
+            *xout=*xin;
+            xout+=channel;
+            xin+=channel;
+        }
+        
+    }
     return true;
 }
 
@@ -185,10 +231,10 @@ _again:
         {
           return 0;
         }
-        ptr=(void *)&(tmpbuffer[tmphead]);
+        
         ADM_assert(tmptail>=tmphead);
-        reorderChannels(&(tmpbuffer[tmphead]),256*6,_incoming->getChannelMapping(),outputChannelMapping);
-        r=aften_encode_frame(_HANDLE, dest,(void *)ptr
+        reorder(&(tmpbuffer[tmphead]),ordered,256*6,_incoming->getChannelMapping(),outputChannelMapping);
+        r=aften_encode_frame(_HANDLE, dest,(void *)ordered
 #ifndef AFTEN_08
       ,256*6
 #endif
