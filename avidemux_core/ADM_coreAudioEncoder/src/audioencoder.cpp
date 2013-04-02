@@ -93,12 +93,47 @@ bool  ADM_AudioEncoder::refillBuffer(int minimum)
     return true;
 }
 /**
-        \fn reorderChannels
-*/
-bool   ADM_AudioEncoder::reorderChannels(float *data, uint32_t nb,CHANNEL_TYPE *input,CHANNEL_TYPE *output)
+ * 
+ * @param sample_in
+ * @param sample_out
+ * @param samplePerChannel
+ * @param mapIn
+ * @param mapOut
+ * @return 
+ */
+bool ADM_AudioEncoder::reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut)
 {
-int channels=wavheader.channels;
-       return ADM_audioReorderChannels(channels,data,nb,input,output);
+        // build matrix 
+        int channel=wavheader.channels;
+    for(int i=0;i<channel;i++)
+    {
+        CHANNEL_TYPE chanin=mapIn[i];
+        int chanout=-1;
+        for(int j=0;j<channel;j++)
+        {
+            if(mapOut[j]==chanin)
+            {
+                chanout=j;
+                //printf("Channel %s in source at %d, at exit at %d\n",ADM_printChannel(chanin),i,j);
+                break;
+            }
+        }
+        if(chanout==-1)
+        {
+            ADM_warning("Cannot map channel %d : %s\n",i,ADM_printChannel(chanin));
+            continue; 
+        }
+        float *xin=sample_in+i;
+        float *xout=sample_out+chanout;
+        for(int x=0;x<samplePerChannel;x++)
+        {
+            *xout=*xin;
+            xout+=channel;
+            xin+=channel;
+        }
+        
+    }
+    return true;
 }
 
 //EOF

@@ -24,11 +24,12 @@ protected:
          uint8_t        refillBuffer(int minimum);
          bool           _globalHeader;
          faac_encoder   _config;
+         float          *ordered;
 public:
-                 bool   initialize(void);
+            bool        initialize(void);
     virtual             ~AUDMEncoder_Faac();
                         AUDMEncoder_Faac(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *setup);
-    virtual bool	    encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
+    virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 
 #endif

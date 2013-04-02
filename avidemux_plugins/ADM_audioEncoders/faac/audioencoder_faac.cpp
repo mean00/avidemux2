@@ -100,7 +100,8 @@ AUDMEncoder_Faac::~AUDMEncoder_Faac()
     if(_handle)
         faacEncClose(_handle);
     _handle=NULL;
-
+    if(ordered) delete [] ordered;
+    ordered=NULL;
     printf("[FAAC] Deleting faac\n");
 
 };
@@ -167,7 +168,7 @@ int channels=wavheader.channels;
 
     _chunk=samples_input;
 
-
+    ordered=new float[_chunk];
     printf("[Faac] Initialized :\n");
     
     printf("[Faac]Version        : %s\n",cfg->name);
@@ -248,8 +249,8 @@ _again:
           return 0; 
         }
         ADM_assert(tmptail>=tmphead);
-        reorderChannels(&(tmpbuffer[tmphead]),*samples,_incoming->getChannelMapping(),outputChannelMapping);
-        *len = faacEncEncode(_handle, (int32_t *)&(tmpbuffer[tmphead]), _chunk, dest, FA_BUFFER_SIZE);
+        reorder(&(tmpbuffer[tmphead]),ordered,*samples,_incoming->getChannelMapping(),outputChannelMapping);
+        *len = faacEncEncode(_handle, (int32_t *)ordered, _chunk, dest, FA_BUFFER_SIZE);
         if(!*len) 
         {
           count++;
