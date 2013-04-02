@@ -57,7 +57,8 @@ class ADM_COREAUDIOENCODER6_EXPORT ADM_AudioEncoder
     bool            refillBuffer(int minimum); // Mininum is in float
       
     bool            reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut);
-    
+    bool            reorderToPlanar(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut);
+    bool            reorderToPlanar2(float *sample_in,float **sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut);
     // The encoder can remap the audio channel (or not). If so, let's store the the configuration here
     CHANNEL_TYPE    outputChannelMapping[MAX_CHANNELS];
     WAVHeader       wavheader;  /// To be filled by the encoder, especially byterate and codec Id.

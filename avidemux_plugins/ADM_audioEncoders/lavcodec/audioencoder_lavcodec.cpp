@@ -234,43 +234,6 @@ bool AUDMEncoder_Lavcodec::lastBlock(AVPacket *pkt,int &encoded)
                encoded=pkt->size;
          return true;
 }
-/**
- * \fn reorder
- * 
- * @param sample_in
- * @param sample_out
- * @param samplePerChannel
- * @param mapIn
- * @param mapOut
- * @return 
- */
-bool AUDMEncoder_Lavcodec::reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut)
-{
-        // build matrix 
-        int channel=wavheader.channels;
-#if 0
-        for(int i=0;i<channel;i++)
-        {
-                uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout,i);
-                cprintf("Channel %s ",av_get_channel_name(chan))  ;
-        }
-#endif
-    for(int i=0;i<channel;i++)
-    {
-        int chanIn=-1;
-        for(int z=0;z<channel;z++)
-            if(mapOut[i]==mapIn[z]) chanIn=z;
-        ADM_assert(chanIn!=-1);
-        float *in=sample_in+chanIn;
-        float *out=sample_out+(i*samplePerChannel);
-        for(int j=0;j<samplePerChannel;j++)
-        {
-            *out++=*in;
-            in+=channel;
-        }
-    }
-    return true;
-}
 
 /**
  * \fn encodeBlockMultiChannel
@@ -303,7 +266,7 @@ bool	AUDMEncoder_Lavcodec::encodeBlockMultiChannels(int count, uint8_t *dest,int
         CHANNEL_TYPE *o=channelMapping;
      
         // reorder and de-interleave
-        reorder(&(tmpbuffer[tmphead]),planarBuffer,nbBlocks,f,o);
+        reorderToPlanar(&(tmpbuffer[tmphead]),planarBuffer,nbBlocks,f,o);
       
     
         int er=avcodec_fill_audio_frame(_frame, channel,

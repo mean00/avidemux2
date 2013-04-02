@@ -93,6 +93,71 @@ bool  ADM_AudioEncoder::refillBuffer(int minimum)
     return true;
 }
 /**
+ * \fn reorderToPlanar
+ * 
+ * @param sample_in
+ * @param sample_out
+ * @param samplePerChannel
+ * @param mapIn
+ * @param mapOut
+ * @return 
+ */
+bool ADM_AudioEncoder::reorderToPlanar(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut)
+{
+        // build matrix 
+    int channel=wavheader.channels;
+    for(int i=0;i<channel;i++)
+    {
+        int chanIn=-1;
+        for(int z=0;z<channel;z++)
+            if(mapOut[i]==mapIn[z]) chanIn=z;
+        ADM_assert(chanIn!=-1);
+        float *in=sample_in+chanIn;
+        float *out=sample_out+(i*samplePerChannel);
+        for(int j=0;j<samplePerChannel;j++)
+        {
+            *out++=*in;
+            in+=channel;
+        }
+    }
+    return true;
+}
+/**
+ * \fn reorderToPlanar
+ * 
+ * @param sample_in
+ * @param sample_out
+ * @param samplePerChannel
+ * @param mapIn
+ * @param mapOut
+ * @return 
+ */
+bool ADM_AudioEncoder::reorderToPlanar2(float *sample_in,float **sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut)
+{
+        // build matrix 
+    int channel=wavheader.channels;
+    for(int i=0;i<channel;i++)
+    {
+        int chanIn=-1;
+        for(int z=0;z<channel;z++)        
+            if(mapOut[i]==mapIn[z]) 
+            {
+                chanIn=z;
+                break;
+            }
+        ADM_assert(chanIn!=-1);
+        float *in=sample_in+chanIn;
+        float *out=sample_out[i];
+        for(int j=0;j<samplePerChannel;j++)
+        {
+            *out++=*in;
+            in+=channel;
+        }
+    }
+    return true;
+}
+
+/**
  * 
  * @param sample_in
  * @param sample_out

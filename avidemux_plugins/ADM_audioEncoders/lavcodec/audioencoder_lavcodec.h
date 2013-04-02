@@ -36,7 +36,6 @@ class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
     bool                encodeBlockMultiChannels(int count, uint8_t *dest,int &encoded);
     bool                lastBlock(AVPacket *p,int &encoded);
     bool                computeChannelLayout(void);
-    bool                reorder(float *sample_in,float *sample_out,int samplePerChannel,CHANNEL_TYPE *mapIn,CHANNEL_TYPE *mapOut);
     CHANNEL_TYPE        channelMapping[8];
     bool                needChannelRemapping;
     AVFrame             *_frame;

@@ -267,13 +267,16 @@ bool	AUDMEncoder_Vorbis::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
     float_samples=vorbis_analysis_buffer(&VD, nbSample) ;
     int index=tmphead;
     // Put our samples in incoming buffer
-    reorderChannels(&(tmpbuffer[tmphead]), nbSample,_incoming->getChannelMapping(),outputChannelMapping);
+    //reorderChannels(&(tmpbuffer[tmphead]), nbSample,_incoming->getChannelMapping(),outputChannelMapping);
+    reorderToPlanar2(&(tmpbuffer[tmphead]),float_samples,nbSample,_incoming->getChannelMapping(),outputChannelMapping);
+#if 0
     for (int i = 0; i < nbSample; i++)
       for (int j = 0; j < channels; j++) {
       float_samples[j][i] = tmpbuffer[index++];
       if (float_samples[j][i] > 1) float_samples[j][i] = 1;
       if (float_samples[j][i] < -1) float_samples[j][i] = -1;
       }
+#endif
       // Buffer full, go go go
       vorbis_analysis_wrote(&VD, nbSample) ;
       tmphead+=nbSample*channels;
