@@ -91,12 +91,29 @@ AUDMEncoder_Vorbis::AUDMEncoder_Vorbis(AUDMAudioFilter * instream,bool globalHea
   wavheader.encoding=WAV_OGG_VORBIS;
   _oldpos=0;
   _handle=(void *)new  vorbisStruct;
-  outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
-  outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
-  outputChannelMapping[2] = ADM_CH_REAR_LEFT;
-  outputChannelMapping[3] = ADM_CH_REAR_RIGHT;
-  outputChannelMapping[4] = ADM_CH_FRONT_CENTER;
-  outputChannelMapping[5] = ADM_CH_LFE;
+  CHANNEL_TYPE *f=outputChannelMapping;
+  //http://www.xiph.org/vorbis/doc/Vorbis_I_spec.html#x1-800004.3.9
+  switch(wavheader.channels)
+  {
+        case 1: f[0] = ADM_CH_MONO; break;
+        case 2: *f++=ADM_CH_FRONT_LEFT;*f++=ADM_CH_FRONT_RIGHT;break;
+        case 3:
+                *f++=ADM_CH_FRONT_LEFT;
+                *f++=ADM_CH_FRONT_CENTER;
+                *f++=ADM_CH_FRONT_RIGHT;
+                break;
+        case 6:
+        default:
+                f[5]=ADM_CH_LFE;
+        case 5:
+                *f++=ADM_CH_FRONT_LEFT;
+                *f++=ADM_CH_FRONT_CENTER;
+                *f++=ADM_CH_FRONT_RIGHT;
+                *f++=ADM_CH_REAR_LEFT;
+                *f++=ADM_CH_REAR_RIGHT;
+              
+                break;
+  }
   _config=defaultConfig;
   if(setup) // load config if possible
     ADM_paramLoad(setup,vorbis_encoder_param,&_config);
