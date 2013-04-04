@@ -57,7 +57,7 @@ renderZoom currentZoom=ZOOM_1_1;
 extern const char * GUI_getCustomJsScript(uint32_t nb);
 extern const char * GUI_getCustomPyScript(uint32_t nb);
 extern const char * GUI_getAutoPyScript(uint32_t nb);
-
+extern void call_scriptEngine(const char *scriptFile);
 extern int     GUI_handleVFilter (void);
 // Debug functions
        void    GUI_showCurrentFrameHex(void);
@@ -76,6 +76,7 @@ extern uint8_t DIA_builtin(void);
 extern uint8_t DIA_pluginsInfo(void);
 
 static void ReSync (void);
+static void A_RunScript(const char *a);
 void cleanUp (void);
 void        updateLoaded (void);
 
@@ -140,6 +141,12 @@ void HandleAction (Action action)
   // handle out of band actions
   // independant load not loaded
 //------------------------------------------------
+        if(action==ACT_RUN_SCRIPT)
+        {
+            GUI_FileSelRead("Select script/project to run", A_RunScript);
+            
+            return;
+        }
 	if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
 	{
 		int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
@@ -1335,6 +1342,13 @@ void A_set_avisynth_port(char *port_number_as_text){
 	}
 	prefs->set(AVISYNTH_AVISYNTH_LOCALPORT,portNumber );
 }
-
+/**
+ * \fn A_RunScript
+ * @param a
+ */
+void A_RunScript(const char *a)
+{
+    call_scriptEngine(a);            
+}
 //
 // EOF
