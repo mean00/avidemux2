@@ -61,7 +61,7 @@ Name "${PRODUCT_FULLNAME}"
 ##########################
 # MUI defines
 ##########################
-!define MUI_ICON "${NSISDIR}/Contrib/Graphics/Icons/modern-install-blue-full.ico"
+!define MUI_ICON "${NSIDIR}/../common/xpm/adm.ico"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_BITMAP "${NSIDIR}/PageHeader.bmp"
