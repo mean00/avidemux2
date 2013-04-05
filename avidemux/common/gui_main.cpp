@@ -345,6 +345,29 @@ void HandleAction (Action action)
 
   switch (action)
     {
+       case ACT_SAVE_PY_SCRIPT:
+       {
+           IScriptEngine *engine=getPythonScriptEngine();
+                if(!engine)
+                {
+                    GUI_Error_HIG("No engine","tinyPy script is not enabled in this build");
+                    break;
+                }
+                char fileName[1024];
+                if(FileSel_SelectWrite("Saving tinypy project",fileName,1000, NULL))
+                {
+                        int l=strlen(fileName);
+                        if(l>3)
+                        {
+                            char *tail=fileName+l-3;
+                            if(tail[0]!='.'|| tail[1]!='p'|| tail[2]!='y')
+                                strcat(fileName,".py");
+                        }
+                        A_saveScript(engine, fileName);
+                }
+                 break;
+       }
+                break;
        case ACT_JOG:
                 A_jog();
                 break;

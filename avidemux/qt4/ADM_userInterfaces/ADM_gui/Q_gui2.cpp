@@ -350,7 +350,7 @@ toolBarTranslate toolbar[]=
 {"actionSave_video",        ACT_SAVE_VIDEO},
 {"actionProperties",        ACT_VIDEO_PROPERTIES},
 {"actionLoad_run_project",  ACT_RUN_SCRIPT},
-//{"actionSave_project", ACT_SAVE_SCRIPT},
+{"actionSave_project",      ACT_SAVE_PY_SCRIPT},
 
 {NULL,ACT_DUMMY}
 };
