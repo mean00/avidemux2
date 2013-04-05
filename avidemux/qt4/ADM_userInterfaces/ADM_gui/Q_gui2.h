@@ -17,6 +17,47 @@
 #include "prefs.h"
 
 /**
+ * \class myQApplication
+ * \brief make sure the checkCrash & friends are done after Qt init
+ * @return 
+ */
+extern void checkCrashFile(void);
+extern int automation(void);
+extern int global_argc;
+extern char **global_argv;
+
+class myQApplication : public QApplication
+{
+    Q_OBJECT
+        public:
+                virtual int exec()
+                {
+                    emit postInit();
+                    return QApplication::exec();
+
+                }
+
+                virtual ~myQApplication()
+                {
+                    ADM_warning("Exiting app\n");
+                }
+                myQApplication(int &argc, char **argv) : QApplication(argc,argv)
+                {
+                     
+                }
+        public slots:
+                void postInit(void)
+                {
+                        ADM_info("myQApplication exec\n");
+                        ADM_info("Checking for crash...\n");
+                        checkCrashFile();
+                        if (global_argc >= 2)
+                                automation();
+                }
+};
+
+
+/**
     \class MainWindow
 */
 class MainWindow : public QMainWindow

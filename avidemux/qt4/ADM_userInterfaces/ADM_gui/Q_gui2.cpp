@@ -690,7 +690,9 @@ static const UI_FUNCTIONS_T UI_Hooks=
         UI_getPreferredRender
 
     };
-static QApplication *myApplication=NULL;
+
+
+static myQApplication *myApplication=NULL;
 /**
     \fn  UI_Init
     \brief First part of UI initialization
@@ -704,10 +706,10 @@ int UI_Init(int nargc, char **nargv)
 	global_argc=nargc;
 	global_argv=nargv;
 	ADM_renderLibInit(&UI_Hooks);
-    Q_INIT_RESOURCE(avidemux);
+        Q_INIT_RESOURCE(avidemux);
 	Q_INIT_RESOURCE(filter);
 
-	myApplication=new QApplication (global_argc, global_argv);
+	myApplication=new myQApplication (global_argc, global_argv);
 #if defined(__APPLE__)
  printf("Setting qt plugin folder\n");
  QDir dir(QApplication::applicationDirPath());
@@ -851,7 +853,7 @@ int UI_RunApp(void)
     uiRunning=true;
     setupMenus();
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
-	checkCrashFile();
+	
     // Create an openGL context
 #ifdef USE_OPENGL
     ADM_info("OpenGL enabled at built time, checking if we should run it..\n");
@@ -869,9 +871,8 @@ int UI_RunApp(void)
 #else
         ADM_info("OpenGL: Not enabled at built time.\n");
 #endif
-	if (global_argc >= 2)
-		automation();
-
+        ADM_info("Checking for crash... \n");
+    
     myApplication->exec();
 #ifdef USE_OPENGL
     if(enabled)

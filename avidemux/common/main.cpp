@@ -223,7 +223,7 @@ int startAvidemux(int argc, char *argv[])
 
 	video_body = new ADM_Composer;
 
-	UI_Init(argc, argv);
+    UI_Init(argc, argv);
     AUDMEncoder_initDither();
 
     // Hook our UI...
