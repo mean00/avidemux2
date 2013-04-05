@@ -37,6 +37,10 @@ static uint32_t ADM_maxConsumed = 0;
 static admMutex memAccess("MemAccess");
 static int doMemStat = 0;
 
+#if defined(__linux__) //defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
+        #define NO_ADM_MEMCHECK
+#endif
+
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 #define _DEBUG_NEW_CALLER_ADDRESS __builtin_return_address(0)
 extern void* operator new(size_t size, const char* file, int line);
@@ -87,7 +91,7 @@ void *ADM_calloc(size_t nbElm, size_t elSize)
 
 void *ADM_alloc(size_t size)
 {
-#if defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
+#if defined(NO_ADM_MEMCHECK)
 	return malloc(size);
 #else
 	char *c;
@@ -124,7 +128,7 @@ void *ADM_alloc(size_t size)
 
 void ADM_dezalloc(void *ptr)
 {
-#if defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
+#if defined(NO_ADM_MEMCHECK)
 	if (!ptr)
 		return;
 
@@ -235,7 +239,7 @@ extern "C"
  */
 void *ADM_realloc(void *ptr, size_t newsize)
 {
-#if defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
+#if defined(NO_ADM_MEMCHECK)
 	if(!ptr)
 		return ADM_alloc(newsize);
 
