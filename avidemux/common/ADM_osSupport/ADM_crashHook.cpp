@@ -62,20 +62,33 @@ void checkCrashFile(void)
   char *where=new char[strlen(baseDir)+strlen(name)+2];
   strcpy(where,baseDir);
   strcat(where,name);
+  
+#if 1  
+  uint32_t nbFile;
+  char *files[20];
+
+    if(buildDirectoryContent(&nbFile, baseDir, files, 20, "py"))
+     {
+        for(int i=0;i<nbFile;i++) printf("%d : %s\n",i,files[i]);
+                 printf("[ADM_ae_plugin] Cannot parse plugin\n");
+        clearDirectoryContent(nbFile,files);
+      }
+#endif
+  
+  
   if(ADM_fileExist(where))
   {
 	  IScriptEngine *engine = getDefaultScriptEngine();
 
 	  if (engine != NULL)
 	  {
-    if(GUI_Confirmation_HIG(QT_TR_NOOP("Load it"),QT_TR_NOOP("Crash file"),
-       QT_TR_NOOP("I have detected a crash file. \nDo you want to load it  ?\n(It will be deleted in all cases, you should save it if you want to keep it)")))
-    {
-       A_parseScript(engine,where);
-    }
+            if(GUI_Confirmation_HIG(QT_TR_NOOP("Load it"),QT_TR_NOOP("Crash file"),
+               QT_TR_NOOP("I have detected a crash file. \nDo you want to load it  ?\n(It will be deleted in all cases, you should save it if you want to keep it)")))
+            {
+               A_parseScript(engine,where);
+            }
 	  }
-
-    unlink(where);
+        unlink(where);
   }else
   {
     printf("No crash file (%s)\n",where);
