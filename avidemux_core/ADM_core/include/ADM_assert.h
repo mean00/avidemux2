@@ -46,6 +46,7 @@ ADM_CORE6_EXPORT uint8_t         ADM_eraseFile(const char *name);
 ADM_CORE6_EXPORT int64_t         ADM_fileSize(const char *file);
 /* Replacements for memory allocation functions */
 ADM_CORE6_EXPORT void     *ADM_alloc(size_t size);
+ADM_CORE6_EXPORT void     *ADM_memalign(size_t align,size_t size);
 ADM_CORE6_EXPORT void     *ADM_calloc(size_t nbElm,size_t elSize);
 ADM_CORE6_EXPORT void     *ADM_realloc(void *in,size_t size);
 ADM_CORE6_EXPORT void     ADM_dezalloc(void *ptr);
@@ -64,7 +65,6 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
   extern ADM_CORE6_EXPORT adm_fast_memcpy myAdmMemcpy;
 #endif
 
-#define ADM_memalign(x,y) ADM_alloc(y)
 
 #define ADM_dealloc(x) ADM_dezalloc( (void *)x)
 
@@ -78,7 +78,12 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 #define fopen   ADM_fopen
 #define fclose  ADM_fclose
 
-#if !defined(__APPLE__) && !defined(_WIN64) 
+#if defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
+        #define NO_ADM_MEMCHECK
+#endif
+
+  
+#if !defined(NO_ADM_MEMCHECK)
 #ifndef ADM_LEGACY_PROGGY
   #define malloc #error
   #define realloc #error
@@ -90,7 +95,7 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 #else
   #define malloc ADM_alloc
   #define realloc ADM_realloc
-  #define memalign(x,y) ADM_alloc(y)
+  #define memalign(x,y) ADM_memalign(x,y)
   #define free  ADM_dezalloc
   #undef strdup
   #define strdup ADM_strdup

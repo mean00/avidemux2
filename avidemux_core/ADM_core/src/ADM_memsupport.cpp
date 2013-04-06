@@ -37,9 +37,6 @@ static uint32_t ADM_maxConsumed = 0;
 static admMutex memAccess("MemAccess");
 static int doMemStat = 0;
 
-#if defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
-        #define NO_ADM_MEMCHECK
-#endif
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 #define _DEBUG_NEW_CALLER_ADDRESS __builtin_return_address(0)
@@ -89,11 +86,45 @@ void *ADM_calloc(size_t nbElm, size_t elSize)
 	return out;
 }
 
+#if defined(NO_ADM_MEMCHECK)
 void *ADM_alloc(size_t size)
 {
-#if defined(NO_ADM_MEMCHECK)
 	return malloc(size);
+}
+void ADM_dezalloc(void *ptr)
+{
+	if (!ptr)
+		return;
+
+	free(ptr);
+}
+void *ADM_realloc(void *ptr, size_t newsize)
+{
+	if(!ptr)
+		return ADM_alloc(newsize);
+
+	if (!newsize)
+	{
+		ADM_dealloc(ptr);
+		return NULL;
+	}
+
+	return realloc(ptr, newsize);
+}
+
+void     *ADM_memalign(size_t align,size_t size)
+{
+    return memalign(align,size);
+}
 #else
+void     *ADM_memalign(size_t align,size_t size)
+{
+    ADM_assert(align<=16);
+    return ADM_alloc(size);
+}
+
+void *ADM_alloc(size_t size)
+{
 	char *c;
 
 	uint64_t l, lorg;
@@ -114,26 +145,16 @@ void *ADM_alloc(size_t size)
 	*backdoor = (0xdead << 16) + l - lorg;
 	backdoor[1] = size;
 
-    ADM_consumed += size;
-    if(ADM_consumed>ADM_maxConsumed) ADM_maxConsumed=ADM_consumed;
+        ADM_consumed += size;
+        if(ADM_consumed>ADM_maxConsumed) ADM_maxConsumed=ADM_consumed;
 
-    if(dome)
-		memAccess.unlock();
-
-
-
+        if(dome)
+                    memAccess.unlock();
 	return c;
-#endif
 }
 
 void ADM_dezalloc(void *ptr)
 {
-#if defined(NO_ADM_MEMCHECK)
-	if (!ptr)
-		return;
-
-	free(ptr);
-#else
 	int dome = doMemStat;
 	uint32_t *backdoor;
 	uint32_t size, offset;
@@ -165,9 +186,51 @@ void ADM_dezalloc(void *ptr)
 
 	if(dome)
 		memAccess.unlock();
-#endif
 }
+/**
+ * av_realloc semantics (same as glibc): if ptr is NULL and size > 0,
+ * identical to malloc(size). If size is zero, it is identical to
+ * free(ptr) and NULL is returned.
+ */
+void *ADM_realloc(void *ptr, size_t newsize)
+{
+	void *nalloc;
 
+	if(!ptr)
+		return ADM_alloc(newsize);
+
+	if(!newsize)
+	{
+		ADM_dealloc(ptr);
+		return NULL;
+	}
+
+	// now we either shrink them or expand them
+	// in case of shrink, we do nothing
+	// in case of expand we have to copy
+	// Do copy everytime (slower)
+	uint32_t *backdoor;
+	uint32_t size, offset;
+
+	backdoor = (uint32_t*)ptr;
+	backdoor -= 2;
+
+	ADM_assert(((*backdoor) >> 16) == 0xdead);
+
+	offset = backdoor[0] & 0xffff;
+	size = backdoor[1];
+
+	if(size >= newsize) // do nothing
+		return ptr;
+
+	// Allocate a new one
+	nalloc = ADM_alloc(newsize);
+	memcpy(nalloc, ptr, size);
+	ADM_dealloc(ptr);
+
+	return nalloc;
+}
+#endif
 void *operator new( size_t t)
 {
 	return ADM_alloc(t);
@@ -231,65 +294,6 @@ extern "C"
 		return ptr;
 	}
 }
-#endif
-/**
- * av_realloc semantics (same as glibc): if ptr is NULL and size > 0,
- * identical to malloc(size). If size is zero, it is identical to
- * free(ptr) and NULL is returned.
- */
-void *ADM_realloc(void *ptr, size_t newsize)
-{
-#if defined(NO_ADM_MEMCHECK)
-	if(!ptr)
-		return ADM_alloc(newsize);
-
-	if (!newsize)
-	{
-		ADM_dealloc(ptr);
-		return NULL;
-	}
-
-	return realloc(ptr, newsize);
-#else
-	void *nalloc;
-
-	if(!ptr)
-		return ADM_alloc(newsize);
-
-	if(!newsize)
-	{
-		ADM_dealloc(ptr);
-		return NULL;
-	}
-
-	// now we either shrink them or expand them
-	// in case of shrink, we do nothing
-	// in case of expand we have to copy
-	// Do copy everytime (slower)
-	uint32_t *backdoor;
-	uint32_t size, offset;
-
-	backdoor = (uint32_t*)ptr;
-	backdoor -= 2;
-
-	ADM_assert(((*backdoor) >> 16) == 0xdead);
-
-	offset = backdoor[0] & 0xffff;
-	size = backdoor[1];
-
-	if(size >= newsize) // do nothing
-		return ptr;
-
-	// Allocate a new one
-	nalloc = ADM_alloc(newsize);
-	memcpy(nalloc, ptr, size);
-	ADM_dealloc(ptr);
-
-	return nalloc;
-#endif
-}
-
-#if defined(WRAP_LAV_ALLOC)
 void *av_realloc(void *ptr, unsigned int newsize)
 {
 	return ADM_realloc(ptr,newsize);
