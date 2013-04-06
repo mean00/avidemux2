@@ -37,7 +37,7 @@ static uint32_t ADM_maxConsumed = 0;
 static admMutex memAccess("MemAccess");
 static int doMemStat = 0;
 
-#if defined(__linux__) //defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
+#if defined(__APPLE__) || defined(_WIN64) || defined(__HAIKU__)
         #define NO_ADM_MEMCHECK
 #endif
 
