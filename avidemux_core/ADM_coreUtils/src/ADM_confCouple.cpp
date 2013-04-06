@@ -47,6 +47,19 @@ CONFcouple::~CONFcouple()
 
 
 };
+static char *strupDupeAsNew(const char *in)
+{
+    if(!in)
+    {
+        char *s=new char[1];
+        s[0]=0;
+        return s;
+    }
+    int l=strlen(in);
+    char *s=new char[l+1];
+    memcpy(s,in,l+1);
+    return s;
+}
 /**
     \fn exist
 */
@@ -60,9 +73,9 @@ bool CONFcouple::writeAsUint32(const char *myname,uint32_t val)
 {
 	ADM_assert(cur<nb);
 
-	name[cur]=ADM_strdup(myname);
+	name[cur]=strupDupeAsNew(myname);
 	sprintf(tmpstring,"%"PRIu32,val);
-	value[cur]=ADM_strdup(tmpstring);
+	value[cur]=strupDupeAsNew(tmpstring);
 	cur++;
 	return 1;
 }
@@ -70,9 +83,9 @@ bool CONFcouple::writeAsFloat(const char *myname,float val)
 {
 	ADM_assert(cur<nb);
 
-	name[cur]=ADM_strdup(myname);
+	name[cur]=strupDupeAsNew(myname);
 	sprintf(tmpstring,"%f",val);
-	value[cur]=ADM_strdup(tmpstring);
+	value[cur]=strupDupeAsNew(tmpstring);
         // make sure the decimal separator is a .
         for(char * pos = value[cur]; *pos; ++pos)
         {
@@ -86,9 +99,9 @@ bool CONFcouple::writeAsInt32(const char *myname,int32_t val)
 {
 	ADM_assert(cur<nb);
 
-	name[cur]=ADM_strdup(myname);
+	name[cur]=strupDupeAsNew(myname);
 	sprintf(tmpstring,"%"PRIi32,val);
-	value[cur]=ADM_strdup(tmpstring);
+	value[cur]=strupDupeAsNew(tmpstring);
 	cur++;
 	return 1;
 }
@@ -97,8 +110,8 @@ bool CONFcouple::writeAsString(const char *myname,const char *val)
 {
 	ADM_assert(cur<nb);
 
-	name[cur]=ADM_strdup(myname);
-	value[cur]=ADM_strdup(val);
+	name[cur]=strupDupeAsNew(myname);
+	value[cur]=strupDupeAsNew(val);
 	cur++;
 	return 1;
 }
@@ -106,9 +119,9 @@ bool CONFcouple::writeAsBool(const char *myname,bool v)
 {
 	ADM_assert(cur<nb);
 
-	name[cur]=ADM_strdup(myname);
-    if(v==true) value[cur]=ADM_strdup("True");
-        else value[cur]=ADM_strdup("False");
+	name[cur]=strupDupeAsNew(myname);
+    if(v==true) value[cur]=strupDupeAsNew("True");
+        else value[cur]=strupDupeAsNew("False");
 
 	cur++;
 	return 1;
@@ -210,7 +223,7 @@ bool CONFcouple::readAsString(const char *myname,char **val)
 //#warning TODO : unescape
 	ADM_assert(index!=-1);
 	ADM_assert(index<(int)nb);
-	*val=ADM_strdup(value[index]);
+	*val=strupDupeAsNew(value[index]);
 	return 1;
 }
 
@@ -274,15 +287,15 @@ void CONFcouple::updateValue(int index, const char *val)
 
 	delete value[index];
 
-	value[index] = ADM_strdup(val);
+	value[index] = strupDupeAsNew(val);
 }
 
  bool     CONFcouple::setInternalName(const char *nm, const char *val)
 {
    ADM_assert(cur<nb);
 
-	name[cur]=ADM_strdup(nm);
-	value[cur]=ADM_strdup(val);
+	name[cur]=strupDupeAsNew(nm);
+	value[cur]=strupDupeAsNew(val);
 	cur++;
 	return 1;
 }
@@ -308,7 +321,7 @@ bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv)
     for(int i=0;i<nb;i++)
     {
 
-        char *dupe=   ADM_strdup(argv[i]);
+        char *dupe=   strupDupeAsNew(argv[i]);
         char *name,*value;
         // dupe is in the form name=value
         name=dupe;
