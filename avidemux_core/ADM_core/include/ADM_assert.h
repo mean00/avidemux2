@@ -94,8 +94,6 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
   #define strdup #error
   #define calloc #error
 #else
-  extern void *ADM_alloc(size_t size);
-  extern void ADM_dezalloc(void *ptr);
   #define malloc ADM_alloc
   #define realloc ADM_realloc
   #define memalign(x,y) ADM_memalign(x,y)
