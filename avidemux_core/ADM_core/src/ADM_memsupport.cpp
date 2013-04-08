@@ -231,25 +231,6 @@ void *ADM_realloc(void *ptr, size_t newsize)
 	return nalloc;
 }
 #endif
-void *operator new( size_t t)
-{
-	return ADM_alloc(t);
-}
-
-void *operator new[] ( size_t t)
-{
-	return ADM_alloc(t);
-}
-
-void operator delete (void *c)
-{
-	ADM_dezalloc(c);
-}
-
-void operator delete[] (void *c)
-{
-	ADM_dezalloc(c);
-}
 //********************************
 // lavcodec wrapper
 //********************************
