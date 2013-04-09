@@ -7,6 +7,7 @@
 #include <QtCore/QUrl>
 #include <QtGui/QSlider>
 #include <QtGui/QWidget>
+#include <QtCore/QTimer>
 
 #include "ADM_qslider.h"
 #include "T_thumbSlider.h"
@@ -32,7 +33,9 @@ class myQApplication : public QApplication
         public:
                 virtual int exec()
                 {
-                    emit postInit();
+                    connect(&timer, SIGNAL(timeout()), this, SLOT(postInit()));
+                    timer.setSingleShot(true);
+                    timer.start(10);
                     return QApplication::exec();
 
                 }
@@ -45,6 +48,8 @@ class myQApplication : public QApplication
                 {
                      
                 }
+        protected:
+                QTimer timer;
         public slots:
                 void postInit(void)
                 {
