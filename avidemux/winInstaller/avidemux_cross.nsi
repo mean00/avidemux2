@@ -25,6 +25,7 @@ RequestExecutionLevel user
 !define QT_DIR /mingw/Qt/current/bin/
 !define ADM_SYSDIR /mingw/bin
 !define ADM_DIR /mingw/Release
+!define TOOLCHAIN_DIR /home/fx/rub/mingw32/
 #!define NSIDIR "/home/fx/hudson/workspace/mingw_2.6.2_nsis/avidemux/winInstaller"
 #!define SVN_VERSION 6
 !define REVISION ${SVN_VERSION}
@@ -274,10 +275,12 @@ Section "Avidemux Core" SecCore
     #${File} ${ADM_SYSDIR}/libexpat-1.dll
     ${File} ${ADM_SYSDIR}/mgwz.dll
     ${File} ${ADM_SYSDIR}/libfreetype.dll
-    ${File} ${ADM_SYSDIR}/libgcc_s_sjlj-1.dll
     ${File} ${ADM_SYSDIR}/../lib/sqlite3.dll
-    ${File} /usr/lib/gcc/i686-w64-mingw32/4.6/libstdc++-6.dll
-    ${File} ${ADM_SYSDIR}/../lib/pthreadGC2.dll
+    ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libstdc++-6.dll
+    ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libgcc_s_sjlj-1.dll
+    ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libwinpthread-1.dll
+    #${File} ${ADM_SYSDIR}/../lib/pthreadGC2.dll
+    #${File} ${ADM_SYSDIR}/libgcc_s_sjlj-1.dll
     ${File} ${ADM_DIR}/libADM_audioParser6.dll
     ${File} ${ADM_DIR}/libADM_core6.dll
     ${File} ${ADM_DIR}/libADM_coreAudio6.dll
