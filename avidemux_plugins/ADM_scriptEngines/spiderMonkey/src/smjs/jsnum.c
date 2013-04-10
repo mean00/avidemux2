@@ -64,6 +64,10 @@
 #include "jsopcode.h"
 #include "jsprf.h"
 #include "jsstr.h"
+// compatibility with newer toolchain / mingw32
+#ifndef MCW_EM
+#define MCW_EM _MCW_EM
+#endif
 
 static JSBool
 num_isNaN(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
