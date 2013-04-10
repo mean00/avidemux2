@@ -339,8 +339,8 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ADM_DIR}/libADM_render6_qt4.dll
         ${File} ${ADM_DIR}/libADM_UIQT46.dll
         ${File} ${QT_DIR}/QtOpenGL4.dll
-        ${File} ${QT_DIR}/libgcc_s_dw2-1.dll
-        ${File} ${QT_DIR}/mingwm10.dll
+        #${File} ${QT_DIR}/libgcc_s_dw2-1.dll
+        #${File} ${QT_DIR}/mingwm10.dll
     ${MementoSectionEnd}
 SectionGroupEnd
 

@@ -1,10 +1,6 @@
 #!/bin/bash
 export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
 export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
-export CXXFLAGS="-I$MINGW/include -I/usr/i586-mingw32msvc/include"
-export CFLAGS="-I$MINGW/include -I/usr/i586-mingw32msvc/include"
-export CPPFLAGS="-I$MINGW/include -I/usr/i586-mingw32msvc/include"
-export LDFLAGS="-L$MINGW/lib -L/usr/i586-mingw32msvc/lib"
 export PATH=$MINGW/bin:$PATH
 pkg-config --list-all
 #export DEBUG="-DVERBOSE=1   -DCMAKE_BUILD_TYPE=Debug -G \"CodeBlocks - Unix Makefiles\"   "

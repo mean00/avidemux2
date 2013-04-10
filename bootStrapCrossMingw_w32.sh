@@ -4,6 +4,7 @@ export PATH=$PATH:/mingw/bin
 export CROSS_PREFIX=i686-w64-mingw32
 export SDLDIR=/mingw
 export MINGW=/mingw
+export TOOLCHAIN_LOCATION=/home/fx/rub/mingw32/i686-w64-mingw32/
 export QT_HOME=/mingw/Qt/current
 export O_PARAL="-j 2"
 # ** Put your config here **
