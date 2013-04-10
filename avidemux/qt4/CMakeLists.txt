@@ -157,7 +157,7 @@ ENDIF (USE_SDL)
 ###########################################
 # UI Specific
 ###########################################
-TARGET_LINK_LIBRARIES(avidemux3_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
+TARGET_LINK_LIBRARIES(avidemux3_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${PTHREAD_LIBRARIES})
 
 ###########################################
 # OS Specific
