@@ -274,7 +274,7 @@ Section "Avidemux Core" SecCore
     ${File} "./Change Log.html"
     #${File} ${ADM_SYSDIR}/libexpat-1.dll
     ${File} ${ADM_SYSDIR}/mgwz.dll
-    ${File} ${ADM_SYSDIR}/libfreetype.dll
+    ${File} ${ADM_DIR}/libfreetype-6.dll
     ${File} ${ADM_SYSDIR}/../lib/sqlite3.dll
     ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libstdc++-6.dll
     ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libgcc_s_sjlj-1.dll
@@ -996,7 +996,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_ssa.dll
 			SetOutPath $INSTDIR
-			${File} ${ADM_SYSDIR}/libfribidi.dll
+			${File} ${ADM_DIR}/libfribidi-0.dll
+			${File} ${ADM_DIR}/iconv.dll
 			#${File} ${ADM_SYSDIR}/libfontconfig-1.dll
 			#SetOutPath $INSTDIR/etc/fonts
 			#${Folder} etc/fonts
