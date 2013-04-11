@@ -1280,12 +1280,12 @@ Function InstallOptionsPage
 		${NSD_SetState} $chkQuickLaunch $CreateQuickLaunchIcon
 		${NSD_OnClick} $chkQuickLaunch UpdateInstallOptions
 	${EndIf}
-  	${If} ${IsWin2003}
-		WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" "$INSTDIR\avidemux.exe" "WIN2000"
-	${EndIf}
-  	${If} ${IsWinXp}
-		WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" "$INSTDIR\avidemux.exe" "WIN2000"
-	${EndIf}
+  	#${If} ${IsWin2003}
+		#WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" "$INSTDIR\avidemux.exe" "WIN2000"
+	#${EndIf}
+  	#${If} ${IsWinXp}
+		#WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers" "$INSTDIR\avidemux.exe" "WIN2000"
+	#${EndIf}
 	nsDialogs::Show
 FunctionEnd
 
