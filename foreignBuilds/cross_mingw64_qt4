@@ -2,15 +2,12 @@
 #
 export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
 export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
-export CXXFLAGS="-I$MINGW/include"
-export CFLAGS="-I$MINGW/include"
-export CPPFLAGS="-I$MINGW/include"
-export LDFLAGS="-L$MINGW/lib"
 export PATH=$MINGW/bin:$PATH
 pkg-config --list-all
 #export DEBUG="-DVERBOSE=1   -DCMAKE_BUILD_TYPE=Debug -G \"CodeBlocks - Unix Makefiles\"   "
 echo "<<<<<<<<<<<<Cross compiling core>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$MINGW \
+	-DTOOLCHAIN_LOCATION=$TOOLCHAIN_LOCATION  \
         -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
         -DQT_HOME:STRING=$QT_HOME \
 	-DCMAKE_CROSS_PREFIX=$CROSS_PREFIX \

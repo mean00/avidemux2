@@ -7,6 +7,7 @@ export MINGW=/mingw
 export QT_HOME=/mingw/Qt/current
 export CFLAGS="-fpermissive"
 export O_PARAL="-j 2"
+export TOOLCHAIN_LOCATION=/home/fx/rub/mingw64/x86_64-w64-mingw32/
 # ** Put your config here **
 
 fail()
