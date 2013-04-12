@@ -114,7 +114,7 @@ void *ADM_realloc(void *ptr, size_t newsize)
 
 void     *ADM_memalign(size_t align,size_t size)
 {
-#ifdef _MINGW32_
+#ifdef __MINGW32__
     return malloc(size); //memalign(align,size);
 #else
     return memalign(align,size);
