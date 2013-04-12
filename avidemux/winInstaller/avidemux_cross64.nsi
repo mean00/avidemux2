@@ -405,15 +405,15 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_Mad.dll
 	${MementoSectionEnd}
-	#${MementoSection} "Vorbis" SecAudDecVorbis
-		#SectionIn 1 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\audioDecoder
-		#${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_vorbis.dll
-		#SetOutPath $INSTDIR
-		#${File} ${ADM_SYSDIR}/libogg-0.dll
-		#${File} ${ADM_SYSDIR}/libvorbis-0.dll
-	#${MementoSectionEnd}
+	${MementoSection} "Vorbis" SecAudDecVorbis
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\audioDecoder
+		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_vorbis.dll
+		SetOutPath $INSTDIR
+		${File} ${ADM_SYSDIR}/libogg-0.dll
+		${File} ${ADM_SYSDIR}/libvorbis-0.dll
+	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Audio Devices" SecGrpAudioDevice
 	${MementoSection} "Waveform" SecAudDevWaveform
@@ -488,16 +488,17 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 		SetOutPath $INSTDIR\plugins\audioEncoders
 		${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_pcm.dll
 	${MementoSectionEnd}
-	#${MementoSection} "Vorbis" SecAudEncVorbis
-		#SectionIn 1 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\audioEncoders
-		#${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_vorbis.dll
-		#SetOutPath $INSTDIR
-		#${File} ${ADM_SYSDIR}/libogg-0.dll
-		#${File} ${ADM_SYSDIR}/libvorbis-0.dll
-		#${File} ${ADM_SYSDIR}/libvorbisenc-2.dll
-	#${MementoSectionEnd}
+	${MementoSection} "Vorbis" SecAudEncVorbis
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\audioEncoders
+		${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_vorbis.dll
+		SetOutPath $INSTDIR
+		${File} ${ADM_SYSDIR}/libogg-0.dll
+		${File} ${ADM_SYSDIR}/libvorbis-0.dll
+		${File} ${ADM_SYSDIR}/libvorbisenc-2.dll
+		${File} ${ADM_SYSDIR}/libvorbisfile-3.dll
+	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Avisynth" SecGrpAvisynth
 	#${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
