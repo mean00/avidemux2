@@ -95,7 +95,7 @@ void *ADM_realloc(void *ptr, size_t newsize)
 #ifdef __MINGW32__
 void *ADM_aligned_alloc(size_t size)
 {
-    return _aligned_malloc(size);
+    return _aligned_malloc(size,16);
 }
 void ADM_aligned_free(void *ptr)
 {
@@ -103,12 +103,12 @@ void ADM_aligned_free(void *ptr)
 }
 void *ADM_aligned_realloc(void *ptr,size_t size)
 {
-    return _aligned_realloc(ptr,size);
+    return _aligned_realloc(ptr,size,16);
 }
-void ADM_aligned_memalign(size_t align,size_t size)
+void *ADM_aligned_memalign(size_t align,size_t size)
 {
     ADM_assert(align<=16);
-    return _aligned_alloc(size);
+    return ADM_aligned_alloc(size);
 }
 #else
 void *ADM_aligned_alloc(size_t size)
