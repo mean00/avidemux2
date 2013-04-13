@@ -96,8 +96,8 @@ int main(int argc, char *argv[])
 	printf("\nLarge file available: %d offset\n", __USE_FILE_OFFSET64);
 #endif
 
-	// Start counting memory
-	ADM_memStatInit();
+	
+	
 #ifndef __APPLE__
     ADM_InitMemcpy();
 #endif
@@ -131,9 +131,7 @@ int main(int argc, char *argv[])
 
 void onexit( void )
 {
-	printf("Cleaning up\n");
-    ADM_memStat();
-    ADM_memStatEnd(); 
+    printf("Cleaning up\n");
     ADM_jobShutDown();   
     ADM_info("\nGoodbye...\n\n");
 }

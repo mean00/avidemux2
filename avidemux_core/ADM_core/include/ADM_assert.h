@@ -105,27 +105,6 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 #endif    // __APPLE__
 #ifdef __cplusplus
 }
-#if !defined(NO_ADM_MEMCHECK)  
-        inline void *operator new( size_t t) 
-        {
-                return ADM_alloc(t);
-        }
-
-        inline void *operator new[] ( size_t t)
-        {
-                return ADM_alloc(t);
-        }
-
-        inline void operator delete (void *c) throw()
-        {
-        	ADM_dezalloc(c);
-        }
-
-        inline void operator delete[] (void *c) throw()
-        {
-                ADM_dezalloc(c);
-        }
-#endif        
   
 #endif
 

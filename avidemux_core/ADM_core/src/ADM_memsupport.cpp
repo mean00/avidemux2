@@ -23,9 +23,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <malloc.h>
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "ADM_memsupport.h"
+
 
 #undef memalign
 #undef malloc
@@ -37,13 +39,11 @@ static uint32_t ADM_maxConsumed = 0;
 static admMutex memAccess("MemAccess");
 static int doMemStat = 0;
 
+static void *ADM_aligned_alloc(size_t size);
+static void ADM_aligned_free(void *ptr);
+static void *ADM_aligned_realloc(void *ptr,size_t size);
+static void *ADM_aligned_memalign(size_t align,size_t size);
 
-#if !defined(NDEBUG) && defined(FIND_LEAKS)
-#define _DEBUG_NEW_CALLER_ADDRESS __builtin_return_address(0)
-extern void* operator new(size_t size, const char* file, int line);
-extern void operator delete(void* pointer, const char* file, int line) throw();
-extern size_t getSizeFromPointer(void* ptr);
-#endif
 
 extern "C"
 {
@@ -52,26 +52,7 @@ extern "C"
 	void *av_realloc(void *ptr, unsigned int size);
 }
 
-void ADM_memStatInit(void)
-{
-	ADM_consumed = 0;
-	doMemStat = 1;
-}
 
-void ADM_memStatEnd(void)
-{
-	doMemStat = 0;
-}
-
-void ADM_memStat(void)
-{
-	printf("Global mem stat\n______________\n");
-	printf("\tMemory consumed: %"PRIu32" (MB)\n", ADM_consumed >> 20);
-    printf("\tMax consumed   : %"PRIu32" (MB)\n", ADM_maxConsumed >> 20);
-
-}
-
-#if defined(NDEBUG) || !defined(FIND_LEAKS)
 /**
     \fn ADM_calloc(size_t nbElm,size_t elSize);
     \brief Replacement for system Calloc using our memory management
@@ -81,22 +62,21 @@ void ADM_memStat(void)
 */
 void *ADM_calloc(size_t nbElm, size_t elSize)
 {
-	void *out = ADM_alloc(nbElm * elSize);
+	void *out = ADM_aligned_alloc(nbElm * elSize);
 	memset(out, 0, nbElm * elSize);
 	return out;
 }
 
-#if defined(NO_ADM_MEMCHECK)
 void *ADM_alloc(size_t size)
 {
-	return malloc(size);
+	return ADM_aligned_alloc(size);
 }
 void ADM_dezalloc(void *ptr)
 {
 	if (!ptr)
 		return;
 
-	free(ptr);
+	ADM_aligned_free(ptr);
 }
 void *ADM_realloc(void *ptr, size_t newsize)
 {
@@ -109,130 +89,44 @@ void *ADM_realloc(void *ptr, size_t newsize)
 		return NULL;
 	}
 
-	return realloc(ptr, newsize);
+	return ADM_aligned_realloc(ptr, newsize);
 }
 
-void     *ADM_memalign(size_t align,size_t size)
-{
 #ifdef __MINGW32__
-    return malloc(size); //memalign(align,size);
-#else
-    return memalign(align,size);
-#endif
+void *ADM_aligned_alloc(size_t size)
+{
+    return _aligned_malloc(size);
 }
-#else
-void     *ADM_memalign(size_t align,size_t size)
+void ADM_aligned_free(void *ptr)
+{
+    return _aligned_free(ptr);
+}
+void *ADM_aligned_realloc(void *ptr,size_t size)
+{
+    return _aligned_realloc(ptr,size);
+}
+void ADM_aligned_memalign(size_t align,size_t size)
 {
     ADM_assert(align<=16);
-    return ADM_alloc(size);
+    return _aligned_alloc(size);
 }
-
-void *ADM_alloc(size_t size)
+#else
+void *ADM_aligned_alloc(size_t size)
 {
-	char *c;
-
-	uint64_t l, lorg;
-	uint32_t *backdoor;
-	int dome = doMemStat;
-
-	if(dome)
-		memAccess.lock();
-
-	l = (uint64_t)malloc(size + 32);
-
-	// Get next boundary
-	lorg = l;
-	l = (l + 15) & 0xfffffffffffffff0LL;
-	l += 16;
-	c = (char*)l;
-	backdoor = (uint32_t*)(c - 8);
-	*backdoor = (0xdead << 16) + l - lorg;
-	backdoor[1] = size;
-
-        ADM_consumed += size;
-        if(ADM_consumed>ADM_maxConsumed) ADM_maxConsumed=ADM_consumed;
-
-        if(dome)
-                    memAccess.unlock();
-	return c;
+    return memalign(16,size);
 }
-
-void ADM_dezalloc(void *ptr)
+void ADM_aligned_free(void *ptr)
 {
-	int dome = doMemStat;
-	uint32_t *backdoor;
-	uint32_t size, offset;
-	char *c = (char*)ptr;
-
-	if (!ptr)
-		return;
-
-	backdoor = (uint32_t*)ptr;
-	backdoor -= 2;
-
-	if (*backdoor == 0xbeefbeef)
-	{
-		printf("Double free gotcha!\n");
-		ADM_assert(0);
-	}
-
-	ADM_assert(((*backdoor) >> 16) == 0xdead);
-
-	offset = backdoor[0] & 0xffff;
-	size = backdoor[1];
-	*backdoor = 0xbeefbeef; // Scratch sig
-
-	if (dome)
-		memAccess.lock();
-
-	free(c - offset);
-	ADM_consumed -= size;
-
-	if(dome)
-		memAccess.unlock();
+    return free(ptr);
 }
-/**
- * av_realloc semantics (same as glibc): if ptr is NULL and size > 0,
- * identical to malloc(size). If size is zero, it is identical to
- * free(ptr) and NULL is returned.
- */
-void *ADM_realloc(void *ptr, size_t newsize)
+void *ADM_aligned_realloc(void *ptr,size_t size)
 {
-	void *nalloc;
-
-	if(!ptr)
-		return ADM_alloc(newsize);
-
-	if(!newsize)
-	{
-		ADM_dealloc(ptr);
-		return NULL;
-	}
-
-	// now we either shrink them or expand them
-	// in case of shrink, we do nothing
-	// in case of expand we have to copy
-	// Do copy everytime (slower)
-	uint32_t *backdoor;
-	uint32_t size, offset;
-
-	backdoor = (uint32_t*)ptr;
-	backdoor -= 2;
-
-	ADM_assert(((*backdoor) >> 16) == 0xdead);
-
-	offset = backdoor[0] & 0xffff;
-	size = backdoor[1];
-
-	if(size >= newsize) // do nothing
-		return ptr;
-
-	// Allocate a new one
-	nalloc = ADM_alloc(newsize);
-	memcpy(nalloc, ptr, size);
-	ADM_dealloc(ptr);
-
-	return nalloc;
+    return realloc(ptr,size);
+}
+void *ADM_aligned_memalign(size_t align,size_t size)
+{
+    ADM_assert(align<=16);
+    return ADM_aligned_alloc(size);
 }
 #endif
 //********************************
@@ -305,117 +199,5 @@ char *ADM_strdup(const char *in)
 	return out;
 }
 
-#else
 
-void *ADM_alloc(size_t size)
-{
-	return operator new(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-}
-
-void *ADM_calloc(size_t nbElm,size_t elSize)
-{
-	void *out = operator new(nbElm*elSize, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-
-	memset(out,0,nbElm*elSize);
-	return out;
-}
-
-char *ADM_strdup(const char *in)
-{
-    if(!in)
-		return NULL;
-
-	int size = strlen(in) + 1;
-	char *out = (char *)(operator new(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0));
-
-	memcpy(out, in, size);
-
-	return out;
-}
-
-void ADM_dezalloc(void *ptr)
-{
-	operator delete(ptr, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-}
-
-void *ADM_realloc(void *ptr, size_t newsize)
-{
-	void *nalloc;
-
-    if(!ptr)
-		return operator new(newsize, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-
-    if(!newsize)
-    {
-		operator delete(ptr, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-		return NULL;
-    }
-
-	uint32_t size = getSizeFromPointer(ptr);
-
-	if (size >= newsize)
-		return ptr;
-
-	nalloc = operator new(newsize, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-	memcpy(nalloc,ptr,getSizeFromPointer(ptr));
-	operator delete(ptr, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-
-	return nalloc;
-}
-#if defined(WRAP_LAV_ALLOC)
-
-extern "C"
-{
-	void *av_malloc(unsigned int size)
-	{
-		return operator new(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-	}
-	void av_freep(void *arg)
-	{
-		void **ptr = (void**)arg;
-		av_free(*ptr);
-		*ptr = NULL;
-	}
-
-	void *av_mallocz(unsigned int size)
-	{
-		void *ptr;
-
-		ptr = operator new(size, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-
-		if (ptr)
-			memset(ptr, 0, size);
-
-		return ptr;
-	}
-}
-
-char *av_strdup(const char *s)
-{
-    char *ptr;
-    int len;
-    len = strlen(s) + 1;
-	ptr = (char *)operator new(len, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-
-    if (ptr)
-        memcpy(ptr, s, len);
-
-    return ptr;
-}
-
-void *av_realloc(void *ptr, unsigned int newsize)
-{
-	if(!ptr)
-		return operator new(newsize, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-	else
-		return ADM_realloc(ptr,newsize);
-}
-
-void av_free(void *ptr)
-{
-	if(ptr)
-		operator delete(ptr, (char*)_DEBUG_NEW_CALLER_ADDRESS, 0);
-}
-#endif
-#endif
 // EOF

@@ -194,8 +194,6 @@ int startAvidemux(int argc, char *argv[])
 		printf("%d: %s\n", i, argv[i]);
 	}
 
-	// Start counting memory
-	ADM_memStatInit();
 #ifndef __APPLE__
     ADM_InitMemcpy();
 #endif
@@ -353,11 +351,9 @@ void onexit( void )
     ADM_dm_cleanup();
     ADM_ve6_cleanup();
 
-	ADM_jobShutDown();
+    ADM_jobShutDown();
     printf("--End of cleanup--\n");
     ADMImage_stat();
-    ADM_memStat();
-    ADM_memStatEnd();
 
     ADM_info("\nGoodbye...\n\n");
 }
