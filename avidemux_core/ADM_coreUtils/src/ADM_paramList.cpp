@@ -315,7 +315,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                                 return false;
                         }
                         bool r=compressReadFromString((COMPRES_PARAMS *)(address+params[i].offset),lavString);
-                        ADM_dezalloc(lavString);
+                        delete [] lavString;
                         if(false==r)
                             {
                                     ADM_error("Error reading codecParam string");
@@ -332,7 +332,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                                 return false;
                         }
                         bool r=lavReadFromString((FFcodecContext *)(address+params[i].offset),lavString);
-                        ADM_dezalloc(lavString);
+                        delete [] lavString;
                         if(false==r)
                             {
                                     ADM_error("Error reading lavcodec string");
@@ -345,7 +345,9 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                     {
                         char   *var;
                         couples->readAsString(name,&var);
-                        *(char  **)(address+params[i].offset)=var;
+                        char *clone=ADM_strdup(var); // parm want alloc/free but ConfCouple create new [] / Delete []
+                        *(char  **)(address+params[i].offset)=clone;
+                        delete [] var;
                     }
                     break;
             default:

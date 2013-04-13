@@ -339,7 +339,7 @@ bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv)
         }
         c->setInternalName(name,value);
         //printf("%s -> [%s,%s]\n",param,name,value);
-        ADM_dezalloc(dupe);
+        delete [] dupe;
     }
     return true;
 }
