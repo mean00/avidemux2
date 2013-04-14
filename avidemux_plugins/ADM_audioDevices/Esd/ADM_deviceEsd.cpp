@@ -108,7 +108,7 @@ void esdAudioDevice::sendData(void)
     uint32_t avail=wrIndex-rdIndex;
     if(avail>sizeOf10ms) avail=sizeOf10ms;
     mutex.unlock();
-	int w=write(esdDevice, audioBuffer+rdIndex, avail);
+	int w=write(esdDevice, audioBuffer.at(rdIndex), avail);
     mutex.lock();
     rdIndex+=avail;
     mutex.unlock();
