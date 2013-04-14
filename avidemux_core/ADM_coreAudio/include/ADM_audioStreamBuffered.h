@@ -17,7 +17,7 @@
 #define ADM_audioStreamBuffered_H
 
 #include "ADM_audioStream.h"
-
+#include "ADM_byteBuffer.h"
 /**
         \fn ADM_audioStreamBuffered
         \brief Base class for byte oriented audio streams
@@ -27,7 +27,7 @@
 class ADM_audioStreamBuffered : public ADM_audioStream
 {
         protected:
-                       uint8_t  buffer[2*ADM_AUDIOSTREAM_BUFFER_SIZE];
+                       ADM_byteBuffer  buffer;
                        uint32_t limit;
                        uint32_t start;
                        void     rewind(void) {limit=start=0;lastDts=0;}

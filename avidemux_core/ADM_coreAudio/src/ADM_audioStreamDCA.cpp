@@ -86,7 +86,7 @@ ADM_DCA_INFO info;
             continue;
         }
 
-        if(false== ADM_DCAGetInfo(buffer+start, limit-start,&info,&offset))
+        if(false== ADM_DCAGetInfo(buffer.at(start), limit-start,&info,&offset))
         {
             read8();
             read8();

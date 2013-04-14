@@ -109,7 +109,7 @@ bool coreAudioDevice::sendMoreData(int nbSample, uint8_t *where)
         if(nbSample>avail) filler=nbSample-avail;
         //printf("Audio : avail =%d samples,requested=%d,filler=%d\n",avail,nbSample,filler);
 	uint8_t *in;
-	in = (uint8_t*)&audioBuffer[rdIndex];
+	in = (uint8_t*)audioBuffer.at(rdIndex);
         if(avail)
                 memcpy(where,in,avail*2);
         if(filler)

@@ -160,13 +160,13 @@ int er;
     if(!avail)
     {
         mutex.unlock();
-        pa_simple_write(INSTANCE,silence, sizeOf10ms,&er);
+        pa_simple_write(INSTANCE,silence.at(0), sizeOf10ms,&er);
         
         return ;
     }
     if(avail>sizeOf10ms) avail=sizeOf10ms;
     
-    uint8_t *data=audioBuffer+rdIndex;
+    uint8_t *data=audioBuffer.at(rdIndex);
     mutex.unlock();
     pa_simple_write(INSTANCE,data, avail,&er);
     mutex.lock();

@@ -79,7 +79,7 @@ ADM_EAC3_INFO info;
             read8();
             continue;
         }
-        if(!ADM_EAC3GetInfo(buffer+start, limit-start, &offset,&info))
+        if(!ADM_EAC3GetInfo(buffer.at(+start), limit-start, &offset,&info))
         {
             printf("[EAC3 Stream] Syncing...\n");
             read8();

@@ -199,12 +199,12 @@ DIA_workingBase *work=createWorking("Building time map");
         // Shrink ?
         if(limit>ADM_AUDIOSTREAM_BUFFER_SIZE && start> 10*1024)
         {
-            memmove(buffer, buffer+start,limit-start);
+            memmove(buffer.at(0), buffer.at(start),limit-start);
             limit-=start;
             start=0;
         }
 
-        if(false==access->getPacket(buffer+limit, &size, 2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit,&newDts))
+        if(false==access->getPacket(buffer.at(limit), &size, 2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit,&newDts))
         {
             aprintf("Get packet failed\n");
             break;
@@ -227,7 +227,7 @@ DIA_workingBase *work=createWorking("Building time map");
         while(1)
         {
             if(limit-start<ADM_LOOK_AHEAD) break;
-            if(!getMpegFrameInfo(buffer+start,ADM_LOOK_AHEAD, &info,NULL,&offset))
+            if(!getMpegFrameInfo(buffer.at(start),ADM_LOOK_AHEAD, &info,NULL,&offset))
             {
                 start++;
                 continue;

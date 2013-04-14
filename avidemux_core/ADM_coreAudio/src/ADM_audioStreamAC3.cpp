@@ -77,7 +77,7 @@ int flags,sample_rate,bit_rate;
             continue;
         }
         // 
-        size= ADM_a52_syncinfo (buffer+start, &flags, &sample_rate, &bit_rate);
+        size= ADM_a52_syncinfo (buffer.at(start), &flags, &sample_rate, &bit_rate);
         
         if(!size)
         {

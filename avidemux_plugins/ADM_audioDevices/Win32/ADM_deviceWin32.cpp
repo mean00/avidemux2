@@ -159,7 +159,7 @@ void win32AudioDevice::sendData(void)
 			else
 				waveHdr[i].dwBufferLength = len;
 
-			memcpy(waveHdr[i].lpData, audioBuffer+rdIndex, waveHdr[i].dwBufferLength);
+			memcpy(waveHdr[i].lpData, audioBuffer.at(rdIndex), waveHdr[i].dwBufferLength);
 			rdIndex += waveHdr[i].dwBufferLength;
 			len -= waveHdr[i].dwBufferLength;
             mutex.unlock();

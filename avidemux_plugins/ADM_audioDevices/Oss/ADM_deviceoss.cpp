@@ -162,7 +162,7 @@ void    ossAudioDevice::sendData(void)
 	mutex.lock();
     if(wrIndex-rdIndex<pack) pack=wrIndex-rdIndex;
     mutex.unlock();
-    w = write(oss_fd, audioBuffer+rdIndex, pack);
+    w = write(oss_fd, audioBuffer.at(rdIndex), pack);
     mutex.lock();
     rdIndex+=pack;
     mutex.unlock();

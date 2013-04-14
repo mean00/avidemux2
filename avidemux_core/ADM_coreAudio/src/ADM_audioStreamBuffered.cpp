@@ -21,6 +21,7 @@ ADM_audioStreamBuffered::ADM_audioStreamBuffered(WAVHeader *header,ADM_audioAcce
 {
     limit=0;
     start=0;
+    buffer.setSize(2*ADM_AUDIOSTREAM_BUFFER_SIZE);
 }
 /**
         \fn refill
@@ -31,7 +32,7 @@ bool ADM_audioStreamBuffered::refill(void)
         if(limit>ADM_AUDIOSTREAM_BUFFER_SIZE && start> 10*1024)
         {
             //printf("[Shrink]\n");
-            memmove(buffer, buffer+start,limit-start);
+            memmove(buffer.at(0), buffer.at(start),limit-start);
             limit-=start;
             start=0;
         }
@@ -39,7 +40,7 @@ bool ADM_audioStreamBuffered::refill(void)
         uint32_t size;
         ADM_assert(limit<(2*ADM_AUDIOSTREAM_BUFFER_SIZE-16));
         uint32_t toRead=2*ADM_AUDIOSTREAM_BUFFER_SIZE-limit-16;
-        if(true!=access->getPacket(buffer+limit, &size, toRead,&newDts))
+        if(true!=access->getPacket(buffer.at(limit), &size, toRead,&newDts))
                 return false;
         // We introduce a small error as there might be some bytes left in the buffer
         // By construction, the error should be minimal
@@ -97,7 +98,7 @@ bool      ADM_audioStreamBuffered::read(uint32_t n,uint8_t *d)
 {
         if(start+n>limit) refill();
         if(start+n>limit) return false;
-        memcpy(d,buffer+start,n);
+        memcpy(d,buffer.at(start),n);
         start+=n;
         return true;
 }
@@ -109,7 +110,7 @@ bool      ADM_audioStreamBuffered::peek(uint32_t n,uint8_t *d)
 {
         if(start+n>=limit) refill();
         if(start+n>=limit) return false;
-        memcpy(d,buffer+start,n);
+        memcpy(d,buffer.at(start),n);
         return true;
 }
 /**

@@ -254,7 +254,7 @@ _again:
         mutex.unlock();
         return ;
     }
-        uint8_t *start=audioBuffer+rdIndex;
+        uint8_t *start=audioBuffer.at(rdIndex);
         int ret;
 
         mutex.unlock(); // There is a race here....
