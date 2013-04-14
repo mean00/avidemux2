@@ -18,6 +18,7 @@
 #ifndef ADM_MXF_H
 #define ADM_MXF_H
 
+#include "ADM_assert.h"
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
 

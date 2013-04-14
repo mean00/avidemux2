@@ -48,7 +48,7 @@ class ADM_COREAUDIOFILTERAPI6_EXPORT AUDMAudioFilter
 {
   protected:
     //! This will be used to store data coming from the previous filter
-    float           _incomingBuffer[AUD_PROCESS_BUFFER_SIZE]; 
+    ADM_floatBuffer   _incomingBuffer;
     //! Pointer to read/write indeces in the _incomingBuffer
     uint32_t        _head;
     uint32_t        _tail;

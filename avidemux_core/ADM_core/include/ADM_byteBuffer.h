@@ -56,8 +56,56 @@ class ADM_byteBuffer
                         ADM_dezalloc(data);
                     data=NULL;
                     len=0;
+                    return true;
                 }
         protected:
                 uint8_t *data;
+                int len;
+};
+/**
+ * \class ADM_floatBuffer
+  */
+class ADM_floatBuffer
+{
+        public:
+                ADM_floatBuffer()
+                {
+                    data=NULL;
+                    len=0;
+                }                
+                ADM_floatBuffer(int size)
+                {
+                    setSize(size);
+                }
+                virtual ~ADM_floatBuffer()
+                {
+                    clean();
+                }
+                void setSize(int size)
+                {
+                    ADM_assert(!data);
+                    data=(float *)ADM_alloc(size*sizeof(float));
+                    len=size;
+                }
+                float  *at(int size)
+                {
+                    return data+size;
+                }
+                float & operator[]( int ad ) 
+                {
+                    ADM_assert(data);
+                    return data[ad];
+                }
+                
+                bool clean()
+                {
+                    if(data)    
+                        ADM_dezalloc(data);
+                    data=NULL;
+                    len=0;
+                    return true;
+                }
+        protected:
+                float *data;
                 int len;
 };

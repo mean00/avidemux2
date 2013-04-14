@@ -1,9 +1,10 @@
 #ifndef ADM_ScriptEngineLoader_h
 #define ADM_ScriptEngineLoader_h
-
+#include "ADM_assert.h"
 #include "ADM_coreScript_export.h"
 #include "ADM_dynamicLoading.h"
 #include "IScriptEngine.h"
+#include "ADM_byteBuffer.h"
 
 typedef IScriptEngine* (ADM_ScriptEngine_CreateFunction)();
 

@@ -99,7 +99,7 @@ uint8_t AUDMAudioFilterNormalize::preprocess(void)
       for(int i=0;i<_wavHeader.channels;i++) max[i]=0;
       while (1)
       {
-          int ready=_previous->fill(AUD_PROCESS_BUFFER_SIZE>>2,_incomingBuffer,&status);
+          int ready=_previous->fill(AUD_PROCESS_BUFFER_SIZE>>2,_incomingBuffer.at(0),&status);
           if(!ready)
           {
             if(status==AUD_END_OF_STREAM) 
@@ -172,7 +172,7 @@ uint32_t AUDMAudioFilterNormalize::fill( uint32_t max, float * buffer,AUD_Status
 
     *status=AUD_OK;
     if(!_scanned) preprocess();
-    rd = _previous->fill(max, _incomingBuffer,status);
+    rd = _previous->fill(max, _incomingBuffer.at(0),status);
     if(!rd)
     {
       if(*status==AUD_END_OF_STREAM) return 0;

@@ -22,7 +22,7 @@
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioFilter.h" 
 #include "ADM_confCouple.h"
-
+#include "ADM_byteBuffer.h"
 #define AUDIOENC_COPY 0
 
 
@@ -51,7 +51,7 @@ class ADM_COREAUDIOENCODER6_EXPORT ADM_AudioEncoder
     AUDMAudioFilter *_incoming;
 
     
-    float           tmpbuffer[ADM_AUDIO_ENCODER_BUFFER_SIZE*2];  // incoming samples are stored here before encoding
+    ADM_floatBuffer tmpbuffer;  // incoming samples are stored here before encoding
     uint32_t        tmphead,tmptail;
 
     bool            refillBuffer(int minimum); // Mininum is in float

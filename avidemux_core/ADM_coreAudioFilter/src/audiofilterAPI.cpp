@@ -36,6 +36,7 @@ AUDMAudioFilter::AUDMAudioFilter(AUDMAudioFilter *previous)
       _length=previous->getLength();
   }
   _head=_tail=0; 
+  _incomingBuffer.setSize(AUD_PROCESS_BUFFER_SIZE); 
 }
 AUDMAudioFilter::~AUDMAudioFilter()
 {
@@ -51,7 +52,7 @@ uint8_t AUDMAudioFilter::shrink(void)
 {
   if(_tail>AUD_PROCESS_BUFFER_SIZE/2)
   {
-    memmove(&_incomingBuffer[0],&_incomingBuffer[_head],sizeof(float)*(_tail-_head));
+    memmove(_incomingBuffer.at(0),_incomingBuffer.at(_head),sizeof(float)*(_tail-_head));
     _tail-=_head;
     _head=0;
   }
@@ -77,7 +78,7 @@ uint8_t AUDMAudioFilter::fillIncomingBuffer(AUD_Status *status)
       // don't ask too much front.
     asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
     //asked = _incoming->readDecompress(asked, &(_incomingBuffer[_tail]));
-    asked=_previous->fill(asked,&(_incomingBuffer[_tail]),status);
+    asked=_previous->fill(asked,_incomingBuffer.at(_tail),status);
 
     if (!asked )
     {

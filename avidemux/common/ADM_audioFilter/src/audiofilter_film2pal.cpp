@@ -75,7 +75,7 @@ uint32_t AUDMAudioFilterFilmChange::fill( uint32_t max, float * buffer,AUD_Statu
         uint32_t nbIn=len;
         uint32_t nbInTaken=0;
         float *from,*to;
-        from=_incomingBuffer+_head;
+        from=_incomingBuffer.at(_head);
         to=buffer;
         if(true!=resampler.process(from,to, 
                     nbIn,

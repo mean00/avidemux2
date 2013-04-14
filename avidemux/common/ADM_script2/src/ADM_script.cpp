@@ -1,5 +1,5 @@
 #include <algorithm>
-
+#include "ADM_assert.h"
 #include "ADM_script.h"
 #include "ADM_ScriptEngineLoader.h"
 #include "ScriptShell.h"

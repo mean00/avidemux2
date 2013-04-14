@@ -8,6 +8,8 @@
 #include "ADM_coreAudio6_export.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audiodef.h"
+#include "ADM_assert.h"
+#include "ADM_byteBuffer.h"
 
 #define MINUS_ONE 0xffffffff
 #define DITHER_SIZE 4800

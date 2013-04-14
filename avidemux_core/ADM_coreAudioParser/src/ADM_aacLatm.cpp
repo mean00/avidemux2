@@ -492,7 +492,7 @@ bool ADM_latm2aac::getData(uint64_t *time,uint32_t *len, uint8_t *data, uint32_t
         return false;
 
     }
-    memcpy(data,b->buffer,b->bufferLen);
+    memcpy(data,b->buffer.at(0),b->bufferLen);
     *len=b->bufferLen;
     b->bufferLen=0;
     *time=b->dts;

@@ -28,6 +28,7 @@
  #define __ADM_composer__
  #include <string>
 
+#include "ADM_assert.h"
  #include "IEditor.h"
  #include "ADM_Video.h"
  #include "ADM_codec.h"

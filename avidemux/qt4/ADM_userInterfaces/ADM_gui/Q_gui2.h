@@ -17,6 +17,7 @@
 #include "IScriptEngine.h"
 #include "prefs.h"
 
+
 /**
  * \class myQApplication
  * \brief make sure the checkCrash & friends are done after Qt init

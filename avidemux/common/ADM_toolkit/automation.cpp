@@ -16,7 +16,7 @@
 
 #include <math.h>
 #include "ADM_cpp.h"
-
+#include "ADM_assert.h"
 #include "avi_vars.h"
 #include "ADM_script2/include/ADM_script.h"
 #include "prefs.h"
@@ -30,7 +30,6 @@
 #include "ADM_videoEncoderApi.h"
 #include "DIA_factory.h"
 #include "ADM_slave.h"
-
 static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
 void call_scriptEngine(const char *scriptFile);

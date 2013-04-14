@@ -150,10 +150,10 @@ bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint
 ADMImageDefault::ADMImageDefault(uint32_t w, uint32_t h) : ADMImage(w,h,ADM_IMAGE_DEFAULT)
 {
     uint32_t pitch=(w+31)&(~31);
-    data=new uint8_t [32+(pitch*h*3)/2];
-    _planes[0]=data;
-    _planes[1]=data+pitch*h;
-    _planes[2]=data+pitch*h +((pitch*h)>>2);
+    data.setSize(32+(pitch*h*3)/2);
+    _planes[0]=data.at(0);
+    _planes[1]=data.at(pitch*h);
+    _planes[2]=data.at(pitch*h +((pitch*h)>>2));
     _planeStride[0]=pitch;
     _planeStride[1]=pitch/2;
     _planeStride[2]=pitch/2;
@@ -164,8 +164,7 @@ ADMImageDefault::ADMImageDefault(uint32_t w, uint32_t h) : ADMImage(w,h,ADM_IMAG
 */
 ADMImageDefault::~ADMImageDefault()
 {
-    if(data) delete [] data;
-    data=NULL;
+    data.clean();
 }
 bool           ADMImageDefault::isWrittable(void) {return true;}
 uint32_t       ADMImageDefault::GetPitch(ADM_PLANE plane)

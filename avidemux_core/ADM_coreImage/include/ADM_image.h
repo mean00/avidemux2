@@ -27,6 +27,8 @@
 #include "ADM_inttype.h"
 #include "ADM_rgb.h"
 #include "ADM_colorspace.h"
+#include "ADM_assert.h"
+#include "ADM_byteBuffer.h"
 
 typedef enum 
 {
@@ -174,7 +176,7 @@ static  uint32_t lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise);
 class ADM_COREIMAGE6_EXPORT ADMImageDefault: public ADMImage
 {
 protected:
-                    uint8_t         *data;
+                    ADM_byteBuffer  data;
 public:
                                     ADMImageDefault(uint32_t w, uint32_t h);
         virtual      ~ADMImageDefault();

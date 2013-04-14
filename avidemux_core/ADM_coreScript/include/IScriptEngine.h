@@ -2,6 +2,7 @@
 #define IScriptEngine_h
 
 #include <string>
+#include "ADM_assert.h"
 #include "IScriptWriter.h"
 #include "ADM_editor/include/IEditor.h"
 

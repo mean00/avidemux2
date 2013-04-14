@@ -40,6 +40,7 @@ ADM_AudioEncoder::ADM_AudioEncoder(AUDMAudioFilter *in, CONFcouple *setup)
     // Copy channels etc.. from incoming
     wavheader.channels=info->channels;
     wavheader.frequency=info->frequency;
+    tmpbuffer.setSize(2*ADM_AUDIO_ENCODER_BUFFER_SIZE);
 }
 /**
 
@@ -69,19 +70,19 @@ bool  ADM_AudioEncoder::refillBuffer(int minimum)
   
     if(tmphead && tmptail>filler/2)
     {
-      memmove(&tmpbuffer[0],&tmpbuffer[tmphead],(tmptail-tmphead)*sizeof(float)); 
+      memmove(tmpbuffer.at(0),tmpbuffer.at(tmphead),(tmptail-tmphead)*sizeof(float)); 
       tmptail-=tmphead;
       tmphead=0;
     }
     ADM_assert(filler>tmptail);
-    nb=_incoming->fill( (filler-tmptail)/2,&tmpbuffer[tmptail],&status);
+    nb=_incoming->fill( (filler-tmptail)/2,tmpbuffer.at(tmptail),&status);
     if(!nb)
     {
       if(status!=AUD_END_OF_STREAM) ADM_assert(0);
       
       if((tmptail-tmphead)<minimum)
       {
-        memset(&tmpbuffer[tmptail],0,sizeof(float)*(minimum-(tmptail-tmphead)));
+        memset(tmpbuffer.at(tmptail),0,sizeof(float)*(minimum-(tmptail-tmphead)));
         tmptail=tmphead+minimum;
         _state=AudioEncoderNoInput;  
         return true;

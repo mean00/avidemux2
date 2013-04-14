@@ -91,7 +91,7 @@ uint32_t AUDMAudioFilterSrc::fill(uint32_t max,float *output,AUD_Status *status)
         uint32_t nbIn=nb_in;
         uint32_t nbInTaken=0;
         float *from,*to;
-        from=_incomingBuffer+_head;
+        from=_incomingBuffer.at(_head);
         to=output;
         if(true!=resampler.process(from,to, 
                     nbIn,

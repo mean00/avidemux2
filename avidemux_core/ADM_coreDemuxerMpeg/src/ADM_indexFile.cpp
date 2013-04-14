@@ -78,6 +78,7 @@ uint64_t v;
 indexFile::indexFile()
 {
     file=NULL;
+    buffer.setSize(ADM_INDEX_BUFFER);
 }
 /**
 
@@ -149,12 +150,12 @@ char match[100];
     fseek(file,0,SEEK_SET);
     while(1)
     {
-        if(!fgets((char*)buffer,ADM_INDEX_BUFFER,file) )
+        if(!fgets((char*)buffer.at(0),ADM_INDEX_BUFFER,file) )
         {
             printf("[indexFile] Cannot find section %s,%s*\n",section,match);
             return false;
         }
-        if(!strcasecmp((char*)buffer,match)) return true;
+        if(!strcasecmp((char*)buffer.at(0),match)) return true;
     }
     return false;
 }
@@ -170,13 +171,13 @@ bool indexFile::readSection(const char *section)
     //
     while(1)
     {
-        if(!readString(ADM_INDEX_BUFFER,buffer)) break;
+        if(!readString(ADM_INDEX_BUFFER,buffer.at(0))) break;
         if(buffer[0]=='[') break; // end of section
         // Now search the = and replace it by a zero
         char *head,*tail;
-        head=(char *)buffer;
-        tail=(char *)buffer;
-        tail=strstr((char *)buffer,"=");
+        head=(char *)buffer.at(0);
+        tail=(char *)buffer.at(0);
+        tail=strstr((char *)buffer.at(0),"=");
         if(!tail) 
         {
             if(buffer[0]=='#') // Comment
@@ -184,7 +185,7 @@ bool indexFile::readSection(const char *section)
 
             }else   
             {
-                printf("[psIndexer]Weird line :%s\n",buffer);
+                printf("[psIndexer]Weird line :%s\n",buffer.at(0));
                 break;
             }
         }else

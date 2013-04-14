@@ -1,6 +1,6 @@
 #ifndef ADM_SCRIPT_H
 #define ADM_SCRIPT_H
-
+#include "ADM_assert.h"
 #include <vector>
 #include "IScriptEngine.h"
 

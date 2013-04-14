@@ -105,7 +105,7 @@ bool ADM_adts2aac::convert(int incomingLen,uint8_t *inData,int *outLen,uint8_t *
     if(tail>ADTS_BUFFER_SIZE)
     {
         int size=head-tail;
-        memmove(buffer,buffer+tail,size);
+        memmove(buffer.at(0),buffer.at(tail),size);
         head=size;
         tail=0;
     }
@@ -115,7 +115,7 @@ bool ADM_adts2aac::convert(int incomingLen,uint8_t *inData,int *outLen,uint8_t *
         ADM_error("Adts buffer overflow\n");
         ADM_assert(0);
     }
-    memcpy(buffer+head,inData,incomingLen);
+    memcpy(buffer.at(head),inData,incomingLen);
     head+=incomingLen;
     // ok , done
     aprintf("********** LOOP *******\n");
@@ -133,11 +133,11 @@ again:
     int nbFrames=0;
     bool crc=false;
     int match;
-    for( p=(buffer+tail);p<(buffer+head-2);p++)
+    for( p=(buffer.at(tail));p<(buffer.at(head-2));p++)
     {
         if(p[0]==0xff && p[1]&0xf0==0xf0)
         {
-            match=p-buffer; // offset of syncword
+            match=p-buffer.at(0); // offset of syncword
             packetLen=((p[3]&0x3)<<11)+(p[4]<<3)+(p[5]>>5);
             nbFrames=1+(p[6]&3);
             if(!p[1]&1)
@@ -146,8 +146,8 @@ again:
             }
             if(nbFrames!=1) continue;
             aprintf("Packet len=%d, nbframes=%d\n",packetLen,nbFrames);
-            aprintf("Found sync at offset %d, buffer size=%d\n",(int)(p-buffer),(int)(head-tail));
-            aprintf("Dropping %d bytes\n",(int)(p-buffer-tail));
+            aprintf("Found sync at offset %d, buffer size=%d\n",(int)(p-buffer.at(0)),(int)(head-tail));
+            aprintf("Dropping %d bytes\n",(int)(p-buffer.at(0)-tail));
             if(match==tail && match+packetLen==head)
             {
                 aprintf("Perfect match\n");
@@ -230,6 +230,7 @@ ADM_adts2aac::ADM_adts2aac(void)
     hasExtra=false;
     extra[0]=extra[1]=0;
     head=tail=0;
+    buffer.setSize(ADTS_BUFFER_SIZE*2);
 }
 /**
     \fn dtor

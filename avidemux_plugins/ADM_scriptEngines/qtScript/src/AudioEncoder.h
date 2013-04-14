@@ -1,6 +1,6 @@
 #ifndef ADM_qtScript_AudioEncoder
 #define ADM_qtScript_AudioEncoder
-
+#include "ADM_assert.h"
 #include "QtScriptConfigObject.h"
 #include "audioencoderInternal.h"
 

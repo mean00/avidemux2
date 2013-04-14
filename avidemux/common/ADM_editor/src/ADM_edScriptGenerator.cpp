@@ -1,3 +1,4 @@
+#include "ADM_assert.h"
 #include "ADM_edScriptGenerator.h"
 #include "ADM_videoFilters.h"
 #include "ADM_videoFilterApi.h"

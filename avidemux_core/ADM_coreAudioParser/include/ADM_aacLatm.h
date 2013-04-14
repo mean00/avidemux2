@@ -24,6 +24,7 @@
 
 #include "ADM_audioParser6_export.h"
 #include "ADM_getbits.h"
+#include "ADM_byteBuffer.h"
 #include <list>
 /**
     \class ADM_latm2aac
@@ -44,13 +45,20 @@ typedef struct
     bool     gotConfig;
 }latmConf_t;
 
-
-typedef struct
+/**
+ * \class latmBuffer
+ */
+class latmBuffer
 {
-        uint8_t  buffer[LATM_MAX_BUFFER_SIZE];
+public:    
+        ADM_byteBuffer  buffer;
         uint32_t bufferLen;
         uint64_t dts;
-}latmBuffer;
+        latmBuffer()
+        {
+                buffer.setSize(LATM_MAX_BUFFER_SIZE);
+        }
+};
 
 class ADM_AUDIOPARSER6_EXPORT ADM_latm2aac
 {

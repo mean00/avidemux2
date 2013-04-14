@@ -18,6 +18,7 @@
 #ifndef ADM_INDEXFILE_H
 #define ADM_INDEXFILE_H
 #include <BVector.h>
+#include "ADM_byteBuffer.h"
 /**
     \class indexFile
     \brief Read a index file easily
@@ -52,7 +53,7 @@ public:
 class indexFile
 {
 protected:
-    uint8_t         buffer[ADM_INDEX_BUFFER];
+    ADM_byteBuffer buffer;
     dmxToken        *searchToken(const char *name);
     void            purgeTokens(void);
 

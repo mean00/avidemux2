@@ -16,7 +16,7 @@
 #define ADM_AAC_ADTS
 
 #include "ADM_audioParser6_export.h"
-
+#include "ADM_byteBuffer.h"
 /**
     \class ADM_adts2aac
 */
@@ -26,7 +26,7 @@ class ADM_AUDIOPARSER6_EXPORT ADM_adts2aac
 private:
         bool    hasExtra;
         uint8_t extra[2];
-        uint8_t buffer[ADTS_BUFFER_SIZE*2];
+        ADM_byteBuffer buffer;
         int     head,tail;
 		
 public:
