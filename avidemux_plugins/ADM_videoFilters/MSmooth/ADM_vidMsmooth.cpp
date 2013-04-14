@@ -482,7 +482,7 @@ uint32_t off;
 			off=x<<3;
 			
 			__asm__(
-			ADM_ALIGN16
+			ADM_ASM_ALIGN16
 			"pxor  %%mm7,%%mm7\n"
 			"movq  (%0),%%mm0\n"
 			"movq  %%mm0,%%mm6\n"

@@ -270,12 +270,12 @@ int wh ,ww,hh;
   int off;
 #ifdef GCC_2_95_X
         __asm__(
-                        ADM_ALIGN16
+                        ADM_ASM_ALIGN16
                         "pxor  %mm7,%mm7\n"
                 : : );
 #else
         __asm__(
-                        ADM_ALIGN16
+                        ADM_ASM_ALIGN16
                         "pxor  %%mm7,%%mm7\n"
                 : : );
 #endif
@@ -286,7 +286,7 @@ int wh ,ww,hh;
                 {
                         off=x<<3;                        
                         __asm__(
-                        ADM_ALIGN16
+                        ADM_ASM_ALIGN16
                         "movq  (%0),%%mm0\n"
                         "movq  %%mm0,%%mm6\n"
                         "punpckhbw %%mm7,%%mm0\n" // High part extended to 16 bits

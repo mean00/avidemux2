@@ -17,7 +17,7 @@ uint32_t x;
 	for(;x>0;x--)
 	{
 	 __asm__(
-                ADM_ALIGN16
+                ADM_ASM_ALIGN16
 	 	"movq  (%1), %%mm0 \n"
 		"movq  (%2), %%mm2 \n"
 		"pavgb %%mm0,%%mm1 \n"
@@ -39,7 +39,7 @@ int isse_scenechange_32(const uint8_t *c_plane, const uint8_t *tplane, int heigh
   int returnvalue=0xbadbad00;
     
     __asm__(
-    ADM_ALIGN16
+    ADM_ASM_ALIGN16
     "pxor %%mm6,%%mm6\n"
     "pxor %%mm7,%%mm7\n"
     ::);
@@ -48,7 +48,7 @@ int isse_scenechange_32(const uint8_t *c_plane, const uint8_t *tplane, int heigh
 	for(uint32_t x=0;x<wp;x++)
 	{
 		__asm__(
-    		ADM_ALIGN16
+    		ADM_ASM_ALIGN16
     		"movq (%0),%%mm0 \n"
 		"movq 8(%0),%%mm2 \n"
 		"movq (%1),%%mm1 \n"
@@ -78,7 +78,7 @@ int isse_scenechange_32(const uint8_t *c_plane, const uint8_t *tplane, int heigh
 	tplane+=width-wp*32;
     }
     __asm__(
-    ADM_ALIGN16
+    ADM_ASM_ALIGN16
     "paddd %%mm6,%%mm7\n"
     "movd %%mm7,(%0)\n"
     "emms \n"
@@ -94,7 +94,7 @@ int isse_scenechange_16(const uint8_t *c_plane, const uint8_t *tplane, int heigh
   int returnvalue=0xbadbad00;
     
     __asm__(
-    ADM_ALIGN16
+    ADM_ASM_ALIGN16
     "pxor %%mm6,%%mm6\n"
     "pxor %%mm7,%%mm7\n"
     ::);
@@ -103,7 +103,7 @@ int isse_scenechange_16(const uint8_t *c_plane, const uint8_t *tplane, int heigh
 	for(uint32_t x=0;x<wp;x++)
 	{
 		__asm__(
-    		ADM_ALIGN16
+    		ADM_ASM_ALIGN16
     		"movq (%0),%%mm0 \n"
 		"movq 8(%0),%%mm2 \n"
 		"movq (%1),%%mm1 \n"
@@ -124,7 +124,7 @@ int isse_scenechange_16(const uint8_t *c_plane, const uint8_t *tplane, int heigh
 	tplane+=width-wp*16;
     }
     __asm__(
-    ADM_ALIGN16
+    ADM_ASM_ALIGN16
     "paddd %%mm6,%%mm7\n"
     "movd %%mm7,(%0)\n"
     "emms \n"
@@ -140,7 +140,7 @@ int isse_scenechange_8(const uint8_t *c_plane, const uint8_t *tplane, int height
   int returnvalue=0xbadbad00;
     
     __asm__(
-    ADM_ALIGN16
+    ADM_ASM_ALIGN16
     "pxor %%mm6,%%mm6\n"
     "pxor %%mm7,%%mm7\n"
     ::);
@@ -149,7 +149,7 @@ int isse_scenechange_8(const uint8_t *c_plane, const uint8_t *tplane, int height
 	for(uint32_t x=0;x<wp;x++)
 	{
 		__asm__(
-    		ADM_ALIGN16
+    		ADM_ASM_ALIGN16
     		"movq (%0),%%mm0 \n"		
 		"movq (%1),%%mm1 \n"		
 		"psadbw %%mm1,%%mm0\n"		
@@ -165,7 +165,7 @@ int isse_scenechange_8(const uint8_t *c_plane, const uint8_t *tplane, int height
 	tplane+=width-wp*8;
     }
     __asm__(
-    ADM_ALIGN16
+    ADM_ASM_ALIGN16
     "movd %%mm6,(%0)\n"
     "emms \n"
     : : "r" (&returnvalue)

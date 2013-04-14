@@ -50,7 +50,7 @@
 
 #define Mangle MANGLE
 
-#define ADM_ALIGN16 ".p2align 4\n"
+#define ADM_ASM_ALIGN16 ".p2align 4\n"
 /* Regiter renaming */
 #ifdef ADM_CPU_X86_64
 #define REG_a  "rax" 
