@@ -119,7 +119,9 @@ diaElemToggle::~diaElemToggle()
  // if(box) delete box;
   myWidget=NULL;
   if(paramTitle)
-    delete paramTitle;
+  {
+    ADM_dealloc(paramTitle);
+  }
 }
 void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t l)
 {
