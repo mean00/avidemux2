@@ -81,7 +81,7 @@ diaElemTimeStamp::~diaElemTimeStamp()
   myWidget=NULL;
   if(w) delete w;
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc(paramTitle);
 }
 /**
  * \fn          setMe

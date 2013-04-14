@@ -63,7 +63,7 @@ void diaElemFrame::swallow(diaElem *widget)
 diaElemFrame::~diaElemFrame()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc(paramTitle);
 }
 
 void diaElemFrame::setMe(void *dialog, void *opaque,uint32_t line)

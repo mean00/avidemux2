@@ -153,7 +153,7 @@ diaElemFile::diaElemFile(uint32_t writemode,char **filename,const char *toggleTi
 diaElemFile::~diaElemFile()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc(paramTitle);
 }
 
 void diaElemFile::setMe(void *dialog, void *opaque,uint32_t line)

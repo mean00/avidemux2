@@ -111,7 +111,7 @@ diaElemThreadCount::diaElemThreadCount(uint32_t *value, const char *title, const
 
 diaElemThreadCount::~diaElemThreadCount()
 {
-	delete paramTitle;
+	ADM_dealloc(paramTitle);
 }
 
 void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)

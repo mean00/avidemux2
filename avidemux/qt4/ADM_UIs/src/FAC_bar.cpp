@@ -50,7 +50,7 @@ diaElemBar::diaElemBar(uint32_t percent,const char *toggleTitle)
 diaElemBar::~diaElemBar()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc(paramTitle);
 }
 void diaElemBar::setMe(void *dialog, void *opaque,uint32_t line)
 {

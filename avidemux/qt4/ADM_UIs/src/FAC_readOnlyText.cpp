@@ -64,7 +64,7 @@ diaElemReadOnlyText::diaElemReadOnlyText(const char *readyOnly,const char *toggl
 diaElemReadOnlyText::~diaElemReadOnlyText()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc(paramTitle);
   ADM_dealloc(readOnly);
 }
 void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)

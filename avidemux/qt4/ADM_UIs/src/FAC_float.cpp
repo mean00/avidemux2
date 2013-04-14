@@ -60,7 +60,7 @@ diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, EL
 diaElemFloat::~diaElemFloat()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc(paramTitle);
 }
 void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
 {

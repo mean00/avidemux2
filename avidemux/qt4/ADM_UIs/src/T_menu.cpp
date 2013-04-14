@@ -142,7 +142,9 @@ diaElemMenuDynamic::diaElemMenuDynamic(uint32_t *intValue,const char *itle, uint
 diaElemMenuDynamic::~diaElemMenuDynamic()
 {
   if(paramTitle)
-    delete paramTitle;
+  {
+    ADM_dealloc( paramTitle);
+  }
 }
 void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
 {

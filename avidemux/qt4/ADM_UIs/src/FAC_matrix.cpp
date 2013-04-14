@@ -65,7 +65,7 @@ diaElemMatrix::~diaElemMatrix()
 		  myWidget=NULL;
 	  }
 	  if(paramTitle)
-	      delete paramTitle;
+	      ADM_dealloc(paramTitle);
 	  paramTitle=NULL;
 }
 void diaElemMatrix::setMe(void *dialog, void *opaque,uint32_t line)

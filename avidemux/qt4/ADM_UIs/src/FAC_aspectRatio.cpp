@@ -51,7 +51,7 @@ diaElemAspectRatio::diaElemAspectRatio(uint32_t *num, uint32_t *den, const char 
 diaElemAspectRatio::~diaElemAspectRatio()
 {
 	if(paramTitle)
-		delete paramTitle;
+		ADM_dealloc( paramTitle);
 }
 
 void diaElemAspectRatio::setMe(void *dialog, void *opaque, uint32_t line)
