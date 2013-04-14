@@ -84,25 +84,6 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 #endif
 
   
-#if !defined(NO_ADM_MEMCHECK)
-#ifndef ADM_LEGACY_PROGGY
-  #define malloc #error
-  #define realloc #error
-  #define memalign #error
-  #define free  #error
-  #undef strdup
-  #define strdup #error
-  #define calloc #error
-#else
-  #define malloc ADM_alloc
-  #define realloc ADM_realloc
-  #define memalign(x,y) ADM_memalign(x,y)
-  #define free  ADM_dezalloc
-  #undef strdup
-  #define strdup ADM_strdup
-  #define calloc ADM_calloc
-#endif
-#endif    // __APPLE__
 #ifdef __cplusplus
 }
   
