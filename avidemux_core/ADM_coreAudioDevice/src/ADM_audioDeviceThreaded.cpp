@@ -36,8 +36,7 @@ const char *i2state(int a)
 */
 audioDeviceThreaded::audioDeviceThreaded(void)
 {
-    audioBuffer=NULL;
-    silence=NULL;
+    stopRequest=AUDIO_DEVICE_STOPPED;
 }
 /**
     \fn audioDeviceThreaded
@@ -84,9 +83,9 @@ uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *c
     _frequency=fq;
     sizeOf10ms=(_channels*_frequency*2)/100;
     sizeOf10ms&=~15; // make sure it is a multiple of 16
-    silence=new uint8_t[sizeOf10ms];
-    memset(silence,0,sizeOf10ms);
-    audioBuffer=new uint8_t[ADM_THREAD_BUFFER_SIZE];
+    silence.setSize(sizeOf10ms);
+    memset(silence.at(0),0,sizeOf10ms);
+    audioBuffer.setSize(ADM_THREAD_BUFFER_SIZE);
     rdIndex=wrIndex=0;
     CHANGE_STATE(AUDIO_DEVICE_STOPPED);
     //
@@ -133,13 +132,8 @@ uint8_t audioDeviceThreaded::stop()
         ADM_error("Audio device did not stop cleanly\n");
     }
     localStop();
-    if(audioBuffer)
-    {
-        delete [] audioBuffer;
-        audioBuffer=NULL;
-    }
-    if(silence) delete [] silence;
-    silence=NULL;
+    audioBuffer.clean();
+    silence.clean();
     CHANGE_STATE(AUDIO_DEVICE_STOPPED);
     return 1;
 }
@@ -153,7 +147,7 @@ bool        audioDeviceThreaded::writeData(uint8_t *data,uint32_t lenInByte)
     mutex.lock();
     if(wrIndex>ADM_THREAD_BUFFER_SIZE/2 && rdIndex>ADM_THREAD_BUFFER_SIZE/4)
     {
-        memmove(audioBuffer,audioBuffer+rdIndex,wrIndex-rdIndex);
+        memmove(audioBuffer.at(0),audioBuffer.at(rdIndex),wrIndex-rdIndex);
         wrIndex-=rdIndex;
         rdIndex=0;
     }
@@ -164,7 +158,7 @@ bool        audioDeviceThreaded::writeData(uint8_t *data,uint32_t lenInByte)
         return false;
     }
 
-    memcpy(audioBuffer+wrIndex,data,lenInByte);
+    memcpy(audioBuffer.at(wrIndex),data,lenInByte);
    
     wrIndex+=lenInByte;
     mutex.unlock();
@@ -181,7 +175,7 @@ bool        audioDeviceThreaded::readData(uint8_t *data,uint32_t lenInByte)
         printf("[AudioDevice] Underflow, wanted %u, only have %u\n",lenInByte,wrIndex-rdIndex);
         return false;
     }
-    memcpy(data,audioBuffer+rdIndex,lenInByte);
+    memcpy(data,audioBuffer.at(rdIndex),lenInByte);
     rdIndex+=lenInByte;
     mutex.unlock();
     return true;
@@ -228,7 +222,7 @@ bool        audioDeviceThreaded::getVolumeStats(uint32_t *vol)
         return true;
     }
 #define USE_MEAN_SQUARE
-    uint8_t *base8=rdIndex+audioBuffer;
+    uint8_t *base8=audioBuffer.at(rdIndex);
     int16_t *base=(int16_t *)(base8);
     for(int i=0;i<samples;i++)
         for(int chan=0;chan<_channels;chan++)

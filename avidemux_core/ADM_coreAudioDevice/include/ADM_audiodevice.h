@@ -16,6 +16,7 @@
 #include "ADM_coreAudioDevice6_export.h"
 #include "ADM_coreAudio.h"
 #include "ADM_threads.h"
+#include "ADM_byteBuffer.h"
 
 #define AUDIO_DEVICE_STOPPED  0
 #define AUDIO_DEVICE_STARTED  1
@@ -57,12 +58,12 @@ protected:
             CHANNEL_TYPE incomingMapping[MAX_CHANNELS];
             uint32_t    rdIndex;
             uint32_t    wrIndex;
-            uint8_t     *audioBuffer;
+            ADM_byteBuffer     audioBuffer;
             admMutex    mutex;
             uint8_t     stopRequest;
             pthread_t   myThread;
             uint32_t    sizeOf10ms; /// Nb of bytes to make 10 ms
-            uint8_t     *silence;   /// Silence
+            ADM_byteBuffer  silence;   /// Silence
 public:
                             audioDeviceThreaded();
     virtual                 ~audioDeviceThreaded() ;
