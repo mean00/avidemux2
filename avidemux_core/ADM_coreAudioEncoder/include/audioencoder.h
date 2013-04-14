@@ -51,7 +51,7 @@ class ADM_COREAUDIOENCODER6_EXPORT ADM_AudioEncoder
     AUDMAudioFilter *_incoming;
 
     
-    float           tmpbuffer[ADM_AUDIO_ENCODER_BUFFER_SIZE*2];  // incoming samples are stored here before encofing
+    float           tmpbuffer[ADM_AUDIO_ENCODER_BUFFER_SIZE*2];  // incoming samples are stored here before encoding
     uint32_t        tmphead,tmptail;
 
     bool            refillBuffer(int minimum); // Mininum is in float
