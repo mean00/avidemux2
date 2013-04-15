@@ -63,7 +63,10 @@ ADM_threadQueue::~ADM_threadQueue()
                 ADM_usleep(1000*100); // Slep 100 ms
             }
         }else mutex->unlock();
+        void *ret;
+        pthread_join(myThread, &ret);
     }
+    
     if(cond) delete cond;
     if(mutex) delete mutex;
     cond=NULL;
@@ -87,7 +90,10 @@ void ADM_threadQueue::run(void)
 bool ADM_threadQueue::startThread(void)
 {
       ADM_info("Starting thread...\n");
-        if(pthread_create(&myThread,NULL, boomerang, this))
+      pthread_attr_t attr;
+      pthread_attr_init(&attr);
+      pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+        if(pthread_create(&myThread,&attr, boomerang, this))
         {
             ADM_error("ERROR CREATING THREAD\n");
             ADM_assert(0);
