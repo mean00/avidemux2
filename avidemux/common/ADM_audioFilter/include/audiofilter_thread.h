@@ -17,7 +17,7 @@
 
 #include "ADM_audioStream.h"
 #include "ADM_threadQueue.h"
-
+#include "ADM_byteBuffer.h"
 
 /**
     \class ADM_audioAccess_thread
@@ -28,7 +28,7 @@ class ADM_audioAccess_thread : public ADM_audioAccess,public ADM_threadQueue
 {
   protected:
                 ADM_audioAccess   *son;
-              
+                BVector <ADM_byteBuffer *> ListOfByteBuffers;
   public:
 
 

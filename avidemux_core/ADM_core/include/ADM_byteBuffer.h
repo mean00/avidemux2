@@ -28,6 +28,8 @@ class ADM_byteBuffer
                 }                
                 ADM_byteBuffer(int size)
                 {
+                    data=NULL;
+                    len=0;
                     setSize(size);
                 }
                 virtual ~ADM_byteBuffer()

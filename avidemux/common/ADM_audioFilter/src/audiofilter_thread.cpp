@@ -35,7 +35,6 @@ static void emptyListOfPacket(ListOfQueuePacket &list)
     for(int i=0;i<nb;i++)
     {
         ADM_queuePacket *pkt=&(list[i]);
-        if(pkt->data) delete [] pkt->data;
         pkt->data=NULL;
     }
     list.clear();
@@ -50,9 +49,12 @@ ADM_audioAccess_thread::ADM_audioAccess_thread(ADM_audioAccess *son) :ADM_thread
     ADM_info("Swallowing audio access into a thread\n");
     for(int i=0;i<MAX_CHUNK_IN_QUEUE;i++)
     {
+            ADM_byteBuffer *buff=new ADM_byteBuffer(CHUNK_SIZE);
             ADM_queuePacket pkt;
-            pkt.data=new uint8_t[CHUNK_SIZE];
+            pkt.data=buff->at(0);
             freeList.append(pkt);
+            ListOfByteBuffers.append(buff);
+
     }
     
 }
@@ -67,6 +69,14 @@ ADM_audioAccess_thread::~ADM_audioAccess_thread()
     // Empty the list...
     emptyListOfPacket(list);
     emptyListOfPacket(freeList);
+    int n=ListOfByteBuffers.size();
+    for(int i=0;i<n;i++)
+    {
+        ADM_byteBuffer *b=ListOfByteBuffers[i];
+        ListOfByteBuffers[i]=NULL;
+        delete b;
+    }
+    ListOfByteBuffers.clear();
     // Thread stopped, we can kill the son
     delete son;
 }
