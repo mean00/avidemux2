@@ -207,7 +207,7 @@ diaElemDirSelect::diaElemDirSelect(char **filename,const char *toggleTitle,const
 diaElemDirSelect::~diaElemDirSelect() 
 {
 if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc( paramTitle);
 }
 
 void diaElemDirSelect::setMe(void *dialog, void *opaque,uint32_t line)

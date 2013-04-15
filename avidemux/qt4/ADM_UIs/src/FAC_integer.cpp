@@ -129,7 +129,7 @@ diaElemUInteger::diaElemUInteger(uint32_t *intValue,const char *toggleTitle, uin
 diaElemUInteger::~diaElemUInteger()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc( paramTitle);
 }
 void diaElemUInteger::setMe(void *dialog, void *opaque,uint32_t line)
 {

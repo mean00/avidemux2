@@ -220,7 +220,7 @@ diaElemToggleUint::diaElemToggleUint(uint32_t *toggleValue,const char *toggleTit
 diaElemToggleUint::~diaElemToggleUint()
 {
    if(paramTitle)
-    delete paramTitle;
+        ADM_dealloc( paramTitle);
 }
 void diaElemToggleUint::setMe(void *dialog, void *opaque,uint32_t line)
 {

@@ -104,7 +104,7 @@ diaElemText::diaElemText(char **text,const char *toggleTitle,const char *tip)
 diaElemText::~diaElemText()
 {
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc( paramTitle);
 }
 void diaElemText::setMe(void *dialog, void *opaque,uint32_t line)
 {

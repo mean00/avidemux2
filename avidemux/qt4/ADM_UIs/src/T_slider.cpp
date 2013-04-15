@@ -169,7 +169,7 @@ diaElemSlider::diaElemSlider(int32_t *value,const char *toggleTitle, int32_t min
 diaElemSlider::~diaElemSlider()
 { 
   if(paramTitle)
-    delete paramTitle;
+    ADM_dealloc( paramTitle);
 }
 
 void diaElemSlider::setMe(void *dialog, void *opaque,uint32_t line)
