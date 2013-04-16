@@ -323,20 +323,20 @@ ADMImage *createImageFromFile_png(const char *filename)
  	   w=read32(fd);
  	   h=read32(fd);
  	   fseek(fd,0,SEEK_SET);
- 	   uint8_t *data=new uint8_t[size];
- 	   fread(data,size,1,fd);
+           ADM_byteBuffer buffer(size);
+ 	   
+ 	   fread(buffer.at(0),size,1,fd);
  	   fclose(fd);
  	   ADMImageRef tmpImage(w,h);
     	// Decode PNG
         decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"PNG "),   w,   h, 0 , NULL,0);
     	if(!dec)
         {
-        	delete [] data;
             ADM_warning("Cannot get PNG decoder");
             return NULL;
         }
     	ADMCompressedImage bin;
-    	bin.data=data;
+    	bin.data=buffer.at(0);
     	bin.dataLength=size; // This is more than actually, but who cares...
 
     	dec->uncompress (&bin, &tmpImage);
@@ -344,7 +344,6 @@ ADMImage *createImageFromFile_png(const char *filename)
     	ADMImage *image=new ADMImageDefault(w,h);
         ADM_ConvertRgb24ToYV12(true,w,h,tmpImage._planes[0],YPLANE(image));
 
-    	delete [] data;
         delete dec;
         dec=NULL;
     	return image;
