@@ -208,8 +208,6 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _context->pix_fmt = PIX_FMT_YUV420P;	//PIX_FMT_RGBA32
   //_context->debug=1;
 
-  _internalBuffer = new uint8_t[w * h * 3];
-
 #define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
 //#define FF_SHOW               (FF_DEBUG_VIS_MV_P_FOR)
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
@@ -235,7 +233,6 @@ decoderFF::~decoderFF ()
   delete _context;
 #endif
  _context=NULL;
-  delete[]_internalBuffer;
   printf ("[lavc] Destroyed\n");
 }
 

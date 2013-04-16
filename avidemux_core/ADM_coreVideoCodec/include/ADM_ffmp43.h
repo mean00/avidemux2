@@ -41,7 +41,6 @@ protected:
   uint8_t _refCopy;
   AVCodecContext *_context;
   AVFrame _frame;
-  uint8_t *_internalBuffer;
   uint8_t _allowNull;
   uint32_t frameType (void);
   uint8_t clonePic (AVFrame * src, ADMImage * out);
