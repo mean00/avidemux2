@@ -37,7 +37,7 @@ protected:
                AVCodecContext   *_context;      // Context 
                AVFrame          _frame;     
                ADMColorScalerSimple    *colorSpace;    // Colorspace converter if needed
-               uint8_t          *rgbBuffer;     // Buffer for colorspace converter if needed
+               ADM_byteBuffer   rgbByteBuffer;     // Buffer for colorspace converter if needed
                ADM_colorspace   targetColorSpace; // Wanted colorspace
                bool             loadStatFile(const char *file);
                char             *statFileName;

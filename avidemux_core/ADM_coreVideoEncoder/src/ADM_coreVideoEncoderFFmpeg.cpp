@@ -58,7 +58,7 @@ uint32_t w,h;
     _context->width = w;
     _context->height = h;
     _context->strict_std_compliance = -1;
-    rgbBuffer=new uint8_t [(w+7)*(h+7)*4];
+    rgbByteBuffer.setSize((w+7)*(h+7)*4);
     colorSpace=NULL;
     pass=0;
     statFileName=NULL;
@@ -106,11 +106,6 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
     {
         delete colorSpace;
         colorSpace=NULL;
-    }
-    if(rgbBuffer)
-    {
-        delete [] rgbBuffer;
-        rgbBuffer=NULL;
     }
     if(statFile)
     {
@@ -225,23 +220,23 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
               int w=getWidth();
               int h=getHeight();
 
-                if(!colorSpace->convertImage(image,rgbBuffer))
+                if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
                 }
-                _frame.data[0] = rgbBuffer;
-                _frame.data[2] = rgbBuffer+(w*h);
-                _frame.data[1] = rgbBuffer+(w*h*3)/2;
+                _frame.data[0] = rgbByteBuffer.at(0);
+                _frame.data[2] = rgbByteBuffer.at(0)+(w*h);
+                _frame.data[1] = rgbByteBuffer.at(0)+(w*h*3)/2;
                 break;
         }
         case ADM_COLOR_RGB32A:
-                if(!colorSpace->convertImage(image,rgbBuffer))
+                if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
                 {
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
                 }
-                _frame.data[0] = rgbBuffer;
+                _frame.data[0] = rgbByteBuffer.at(0);
                 _frame.data[2] = NULL;
                 _frame.data[1] = NULL;
                 break;
