@@ -153,7 +153,7 @@ AVFrame          frame;
 bool             result=false;
 AVCodec          *codec=NULL;
 int              sz=0,r=0;
-uint8_t          *buffer = NULL;
+ADM_byteBuffer   byteBuffer;
 
     context=avcodec_alloc_context();
     if(!context) 
@@ -196,9 +196,10 @@ uint8_t          *buffer = NULL;
       context->flags |= CODEC_FLAG_QSCALE;
       frame.quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
 
-	  buffer = new uint8_t[_width*_height*4];
+      byteBuffer.setSize(_width*_height*4);
+	  
 
-        if ((sz = avcodec_encode_video (context, buffer, _width*_height*4, &frame)) < 0)
+        if ((sz = avcodec_encode_video (context, byteBuffer.at(0), _width*_height*4, &frame)) < 0)
         {
             printf("[jpeg] Error %d encoding video\n",sz);
             goto  jpgCleanup;
@@ -208,7 +209,7 @@ uint8_t          *buffer = NULL;
             FILE *f=ADM_fopen(filename,"wb");
             if(f)
             {
-                fwrite(buffer,sz,1,f);
+                fwrite(byteBuffer.at(0),sz,1,f);
                 fclose(f);
                 result=true;
             }else
@@ -225,11 +226,6 @@ jpgCleanup:
         avcodec_close (context);
         av_free (context);
     }
-
-	if (buffer)
-	{
-		delete [] buffer;
-	}
 
     context=NULL;
     return result;
