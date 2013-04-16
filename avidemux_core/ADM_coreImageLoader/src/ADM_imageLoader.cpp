@@ -257,47 +257,47 @@ ADMImage *createImageFromFile_Bmp(const char *filename)
 ADMImage *createImageFromFile_Bmp2(const char *filename)
 {
 
-	ADM_BITMAPINFOHEADER bmph;
+    ADM_BITMAPINFOHEADER bmph;
     uint8_t fcc_tab[4];
     uint32_t offset;
     FILE *fd=NULL;
     uint32_t w,h;
 
-		fd = ADM_fopen(filename, "rb");
- 	    fseek(fd, 10, SEEK_SET);
+	fd = ADM_fopen(filename, "rb");
+ 	fseek(fd, 10, SEEK_SET);
 
  #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
  						(fcc_tab[3]<<24))
 
- 	    fread(fcc_tab, 4, 1, fd);
- 	    offset = MK32();
- 	    // size, width height follow as int32
- 	    fread(&bmph, sizeof(bmph), 1, fd);
+        fread(fcc_tab, 4, 1, fd);
+        offset = MK32();
+        // size, width height follow as int32
+        fread(&bmph, sizeof(bmph), 1, fd);
  #ifdef ADM_BIG_ENDIAN
  	    Endian_BitMapInfo(&bmph);
  #endif
- 	    if (bmph.biCompression != 0)
- 	    {
- 	    	ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp\n");
- 	    	fclose(fd);
- 	    	return NULL;
- 	    }
- 	    w = bmph.biWidth;
- 	    h = bmph.biHeight;
- 	    ADM_info("[imageLoader] BMP2 W: %"PRIu32" H: %"PRIu32" offset : %"PRIu32"\n", w, h, offset);
+        if (bmph.biCompression != 0)
+        {
+            ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp\n");
+            fclose(fd);
+            return NULL;
+        }
+        w = bmph.biWidth;
+        h = bmph.biHeight;
+        ADM_info("[imageLoader] BMP2 W: %"PRIu32" H: %"PRIu32" offset : %"PRIu32"\n", w, h, offset);
 // Load the binary coded image
  	fseek(fd,offset,SEEK_SET);
-    uint8_t *data=new uint8_t[w*h*3];
-    fread(data,w*h*3,1,fd);
-    fclose(fd);
+        
+        ADM_byteBuffer buffer(w*h*3);
+        
+        fread(buffer.at(0),w*h*3,1,fd);
+        fclose(fd);
 
   // Colorconversion
 
     	ADMImage *image=new ADMImageDefault(w,h);
-        ADM_ConvertRgb24ToYV12(true,w,h,data,YPLANE(image));
+        ADM_ConvertRgb24ToYV12(true,w,h,buffer.at(0),YPLANE(image));
 
-
-    	delete [] data;
     	return image;
 }
 /**
