@@ -197,58 +197,58 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 ADMImage *createImageFromFile_Bmp(const char *filename)
 {
 
-	FILE *fd;
-	uint32_t _imgSize;
-	uint32_t w = 0, h = 0;
+    FILE *fd;
+    uint32_t _imgSize;
+    uint32_t w = 0, h = 0;
     uint16_t  s16;
     uint32_t s32;
 
-		fd = ADM_fopen(filename, "rb");
-		fseek(fd, 0, SEEK_END);
-		_imgSize = ftell(fd);
-		fseek(fd, 0, SEEK_SET);
+        fd = ADM_fopen(filename, "rb");
+        fseek(fd, 0, SEEK_END);
+        _imgSize = ftell(fd);
+        fseek(fd, 0, SEEK_SET);
 
-		//Retrieve width & height
-		//_______________________
-		   		ADM_BITMAPINFOHEADER bmph;
+        //Retrieve width & height
+        //_______________________
+            ADM_BITMAPINFOHEADER bmph;
 
-			    fread(&s16, 2, 1, fd);
-			    if (s16 != 0x4D42)
-			    {
-			    	ADM_warning("[imageLoader] incorrect bmp sig.\n");
-			    	fclose(fd);
-			    	return NULL;
-			    }
-			    fread(&s32, 4, 1, fd);
-			    fread(&s32, 4, 1, fd);
-			    fread(&s32, 4, 1, fd);
-			    fread(&bmph, sizeof(bmph), 1, fd);
-			    if (bmph.biCompression != 0)
-			    {
-			    	ADM_warning("[imageLoader]cannot handle compressed bmp\n");
-			    	fclose(fd);
-			    	return NULL;
-			    }
+        fread(&s16, 2, 1, fd);
+        if (s16 != 0x4D42)
+        {
+            ADM_warning("[imageLoader] incorrect bmp sig.\n");
+            fclose(fd);
+            return NULL;
+        }
+        fread(&s32, 4, 1, fd);
+        fread(&s32, 4, 1, fd);
+        fread(&s32, 4, 1, fd);
+        fread(&bmph, sizeof(bmph), 1, fd);
+        if (bmph.biCompression != 0)
+        {
+            ADM_warning("[imageLoader]cannot handle compressed bmp\n");
+            fclose(fd);
+            return NULL;
+        }
 
-			    w = bmph.biWidth;
-			    h = bmph.biHeight;
-
-
-			    ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
-
-		// Load the binary coded image
-		    uint8_t *data=new uint8_t[w*h*3];
-		    fread(data,w*h*3,1,fd);
-		    fclose(fd);
-
-		  // Colorconversion
-
-            ADMImage *image=new ADMImageDefault(w,h);
-            ADM_ConvertRgb24ToYV12(false,w,h,data,YPLANE(image));
+        w = bmph.biWidth;
+        h = bmph.biHeight;
 
 
-		    delete [] data;
-		    return image;
+        ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
+
+    // Load the binary coded image
+        ADM_byteBuffer buffer(w*h*3);
+
+        fread(buffer.at(0),w*h*3,1,fd);
+        fclose(fd);
+
+      // Colorconversion
+
+        ADMImage *image=new ADMImageDefault(w,h);
+        ADM_ConvertRgb24ToYV12(false,w,h,buffer.at(0),YPLANE(image));
+
+
+        return image;
 }
 /**
  * 	\fn createImageFromFile_bmp2
