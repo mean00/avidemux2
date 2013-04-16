@@ -94,8 +94,8 @@ public:
 class ADM_flyDialogActionRgb: public ADM_flyDialogAction
 {
 protected:
-          uint8_t       *_rgbBuffer;
-          uint8_t       *_rgbBufferOut;
+          ADM_byteBuffer     _rgbByteBuffer;
+          ADM_byteBuffer     _rgbByteBufferOut;
           ADMColorScalerFull *yuv2rgb;
           ADMColorScalerFull *rgb2rgb;
 public:
@@ -126,7 +126,7 @@ class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
           ADM_coreVideoFilter *_in;
       
           ADMImage      *_yuvBuffer;
-          uint8_t       *_rgbBufferDisplay;
+          ADM_byteBuffer _rgbByteBufferDisplay;
 
 
           
