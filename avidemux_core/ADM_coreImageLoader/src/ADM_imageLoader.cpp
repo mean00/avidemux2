@@ -142,9 +142,9 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    ADM_info("[imageLoader] %"PRIu32" x %"PRIu32".., total Size : %u, offset %u\n", w, h,_imgSize,off);
 
 		// Load the binary coded image
-		    uint8_t *data=new uint8_t[_imgSize];
+                    ADM_byteBuffer buffer(_imgSize);
 		    fseek(fd, 0, SEEK_SET);
-		    fread(data,_imgSize,1,fd);
+		    fread(buffer.at(0),_imgSize,1,fd);
 		    fclose(fd);
 		  //
 
@@ -153,12 +153,11 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
             decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"MJPG"),   w,   h, 0 , NULL,0);
             if(!dec)
             {
-            	delete [] data;
                 ADM_warning("Cannot find decoder for mpjeg");
                 return NULL;
             }
 		    ADMCompressedImage bin;
-		    bin.data=data;
+		    bin.data=buffer.at(0);
 		    bin.dataLength=_imgSize; // This is more than actually, but who cares...
 
 		    dec->uncompress (&bin, &tmpImage);
@@ -189,7 +188,6 @@ ADMImage *createImageFromFile_jpeg(const char *filename)
 		    // Cannot destroy decoder earlier as tmpImage has pointers to its internals
 		    delete dec;
 		    dec=NULL;
-		    delete [] data;
 		    return image;
 }
 /**
