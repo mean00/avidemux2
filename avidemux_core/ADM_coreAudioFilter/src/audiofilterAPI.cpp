@@ -77,7 +77,7 @@ uint8_t AUDMAudioFilter::fillIncomingBuffer(AUD_Status *status)
   {
       // don't ask too much front.
     asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
-    //asked = _incoming->readDecompress(asked, &(_incomingBuffer[_tail]));
+    //asked = _incoming->readDecompress(asked, &(_incoingBuffer[_tail]));
     asked=_previous->fill(asked,_incomingBuffer.at(_tail),status);
 
     if (!asked )

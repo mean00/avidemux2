@@ -113,7 +113,7 @@ uint32_t   AUDMAudioFilter_Bridge::fill(uint32_t max,float *output,AUD_Status *s
   ADM_assert(_tail>=_head);
   available=_tail-_head;
   if(available>max) available=max;
-  memcpy(output,&(_incomingBuffer[_head]),available*sizeof(float));
+  memcpy(output,_incomingBuffer.at(_head),available*sizeof(float));
   _head+=available;
   if(!available)
   {
@@ -141,7 +141,7 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
       // don't ask too much front.
       asked = (3*AUD_PROCESS_BUFFER_SIZE)/4-_tail;
       asked/=_wavHeader.channels; // float->samples
-      if(false==_incoming->getPCMPacket(&(_incomingBuffer[_tail]), asked, &got,&dts))
+      if(false==_incoming->getPCMPacket(_incomingBuffer.at(_tail), asked, &got,&dts))
       {
           got=0;
           dts=ADM_NO_PTS;

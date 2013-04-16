@@ -583,7 +583,7 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
     {
       if(*status==AUD_END_OF_STREAM && _head)
       {
-        memset(&_incomingBuffer[_head],0,sizeof(float) * input_channels);
+        memset(_incomingBuffer.at(_head),0,sizeof(float) * input_channels);
         _tail=_head+input_channels;
         printf("[Mixer] Warning asked %u symbols\n",max);
       }
@@ -612,11 +612,11 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
 			_previous->getChannelMapping(),outputChannelMapping))
 	{
 		
-		rd= (uint32_t)MCOPY(&_incomingBuffer[_head],output,available,input_channels);
+		rd= (uint32_t)MCOPY(_incomingBuffer.at(_head),output,available,input_channels);
 	} else 
 	{
 		MIXER *call=matrixCall[_output];
-		rd= (uint32_t)call(&_incomingBuffer[_head],output,available,input_channels,_previous->getChannelMapping());
+		rd= (uint32_t)call(_incomingBuffer.at(_head),output,available,input_channels,_previous->getChannelMapping());
 	}
 
     _head+=available*input_channels;
