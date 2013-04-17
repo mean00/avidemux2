@@ -115,6 +115,7 @@ while [ $# != 0 ] ;do
          --deb)
                 packages_ext=deb
                 PKG="$PKG -DAVIDEMUX_PACKAGER=deb"
+                rm -f debs/*
                 ;;
          --rpm)
                 packages_ext=rpm

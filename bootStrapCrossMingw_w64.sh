@@ -50,7 +50,8 @@ echo "** Plugins **"
 cd $TOP
 Process buildMingwPluginsCommon cross_mingw64_plugins -DPLUGIN_UI=COMMON
 Process buildMingwPluginsQt4 cross_mingw64_plugins -DPLUGIN_UI=QT4
-Process buildMingwPluginsCli cross_mingw_plugins -DPLUGIN_UI=CLI
+Process buildMingwPluginsCli cross_mingw64_plugins -DPLUGIN_UI=CLI
+Process buildMingwPluginsSettings cross_mingw64_plugins -DPLUGIN_UI=SETTINGS
 echo "** All done **"
 cd $TOP
 echo "** ALL DONE **"
