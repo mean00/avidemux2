@@ -226,6 +226,12 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         cd $TOP
         Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI
 fi
+if [ "x$do_plugins" = "x1"  ] ; then 
+        echo "** Plugins Settings **"
+        cd $TOP
+        Process buildPluginsSettings ../avidemux_plugins -DPLUGIN_UI=SETTINGS
+fi
+
 
 echo "** Preparing debs **"
 cd $TOP

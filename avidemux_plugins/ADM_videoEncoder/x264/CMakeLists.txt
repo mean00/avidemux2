@@ -1,5 +1,6 @@
 
 INCLUDE(ve_plugin)
+INCLUDE(ve_settings_plugin)
 
 SET(x264_SRCS 
         ADM_x264.cpp
@@ -36,13 +37,11 @@ IF(X264_FOUND)
     INSTALL_VIDEO_ENCODER(ADM_ve_x264_other)
   endif((DO_GTK) OR (DO_CLI))
   # ------------- PRESET -----------
-  if((DO_GTK) OR (DO_CLI) OR (DO_QT4))
-    SET(PRESET_DIR "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/pluginSettings/x264/1/")
-
+  if(DO_SETTINGS)
     FILE(GLOB json_files ${CMAKE_CURRENT_SOURCE_DIR}/preset/*.json)
     message(STATUS "Presets found : ${json_files}")
-    install(FILES ${json_files} DESTINATION "${PRESET_DIR}")
-  endif((DO_GTK) OR (DO_CLI) OR (DO_QT4))
+    INSTALL_VIDEO_ENCODER_SETTINGS(x264 VERSION 1 FILES ${json_files})
+  endif(DO_SETTINGS)
 ELSE(X264_FOUND)
   MESSAGE(STATUS "x264 disabled.")
 ENDIF(X264_FOUND)
