@@ -997,7 +997,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_ssa.dll
 			SetOutPath $INSTDIR
 			${File} ${ADM_DIR}/libfribidi-0.dll
-			${File} ${ADM_DIR}/iconv.dll
+			${File} ${ADM_SYSDIR}/libiconv-2.dll
+			${File} ${ADM_SYSDIR}/libfreetype-6.dll
 			#${File} ${ADM_SYSDIR}/libfontconfig-1.dll
 			#SetOutPath $INSTDIR/etc/fonts
 			#${Folder} etc/fonts
