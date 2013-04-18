@@ -391,7 +391,9 @@ static hb_font_t *get_hb_font(ASS_Shaper *shaper, GlyphInfo *info)
                 font->faces[info->face_index], NULL);
     }
 
-    ass_face_set_size(font->faces[info->face_index], info->font_size);
+    // XXX: this is a rather crude hack
+    const double ft_size = 256.0;
+    ass_face_set_size(font->faces[info->face_index], ft_size);
     update_hb_size(hb_fonts[info->face_index], font->faces[info->face_index]);
 
     // update hash key for cached metrics
@@ -421,7 +423,7 @@ static void shape_harfbuzz(ASS_Shaper *shaper, GlyphInfo *glyphs, size_t len)
         hb_buffer_t *buf;
         hb_font_t *font;
     } runs[MAX_RUNS];
-
+    const double ft_size = 256.0;
 
     for (i = 0; i < len && run < MAX_RUNS; i++, run++) {
         // get length and level of the current run
@@ -474,10 +476,10 @@ static void shape_harfbuzz(ASS_Shaper *shaper, GlyphInfo *glyphs, size_t len)
             // set position and advance
             info->skip = 0;
             info->glyph_index = glyph_info[j].codepoint;
-            info->offset.x    = pos[j].x_offset * info->scale_x;
-            info->offset.y    = -pos[j].y_offset * info->scale_y;
-            info->advance.x   = pos[j].x_advance * info->scale_x;
-            info->advance.y   = -pos[j].y_advance * info->scale_y;
+            info->offset.x    = pos[j].x_offset * info->scale_x * (info->font_size / ft_size);
+            info->offset.y    = -pos[j].y_offset * info->scale_y * (info->font_size / ft_size);
+            info->advance.x   = pos[j].x_advance * info->scale_x * (info->font_size / ft_size);
+            info->advance.y   = -pos[j].y_advance * info->scale_y * (info->font_size / ft_size);
 
             // accumulate advance in the root glyph
             root->cluster_advance.x += info->advance.x;
@@ -590,6 +592,29 @@ void ass_shaper_set_level(ASS_Shaper *shaper, ASS_ShapingLevel level)
 }
 
 /**
+  * \brief Remove all zero-width invisible characters from the text.
+  * \param text_info text
+  */
+static void ass_shaper_skip_characters(TextInfo *text_info)
+{
+    int i;
+    GlyphInfo *glyphs = text_info->glyphs;
+
+    for (i = 0; i < text_info->length; i++) {
+        // Skip direction override control characters
+        if ((glyphs[i].symbol <= 0x202e && glyphs[i].symbol >= 0x202a)
+                || (glyphs[i].symbol <= 0x200f && glyphs[i].symbol >= 0x200b)
+                || (glyphs[i].symbol <= 0x2063 && glyphs[i].symbol >= 0x2060)
+                || glyphs[i].symbol == 0xfeff
+                || glyphs[i].symbol == 0x00ad
+                || glyphs[i].symbol == 0x034f) {
+            glyphs[i].symbol = 0;
+            glyphs[i].skip++;
+        }
+    }
+}
+
+/**
  * \brief Shape an event's text. Calculates directional runs and shapes them.
  * \param text_info event's text
  */
@@ -625,6 +650,7 @@ void ass_shaper_shape(ASS_Shaper *shaper, TextInfo *text_info)
     switch (shaper->shaping_level) {
     case ASS_SHAPING_SIMPLE:
         shape_fribidi(shaper, glyphs, text_info->length);
+        ass_shaper_skip_characters(text_info);
         break;
     case ASS_SHAPING_COMPLEX:
         shape_harfbuzz(shaper, glyphs, text_info->length);
@@ -632,19 +658,8 @@ void ass_shaper_shape(ASS_Shaper *shaper, TextInfo *text_info)
     }
 #else
         shape_fribidi(shaper, glyphs, text_info->length);
+        ass_shaper_skip_characters(text_info);
 #endif
-
-
-    // clean up
-    for (i = 0; i < text_info->length; i++) {
-        // Skip direction override control characters
-        // NOTE: Behdad said HarfBuzz is supposed to remove these, but this hasn't
-        // been implemented yet
-        if (glyphs[i].symbol <= 0x202F && glyphs[i].symbol >= 0x202a) {
-            glyphs[i].symbol = 0;
-            glyphs[i].skip++;
-        }
-    }
 }
 
 /**
@@ -713,16 +728,17 @@ FriBidiStrIndex *ass_shaper_reorder(ASS_Shaper *shaper, TextInfo *text_info)
 }
 
 /**
- * \brief Resolve a Windows font encoding number to a suitable
+ * \brief Resolve a Windows font charset number to a suitable
  * base direction. 177 and 178 are Hebrew and Arabic respectively, and
- * they map to RTL. 1 is autodetection and is mapped to just that.
- * Everything else is mapped to LTR.
+ * they map to RTL. Everything else maps to LTR for compatibility
+ * reasons. The special value -1, which is not a legal Windows font charset
+ * number, can be used for autodetection.
  * \param enc Windows font encoding
  */
 FriBidiParType resolve_base_direction(int enc)
 {
     switch (enc) {
-        case 1:
+        case -1:
             return FRIBIDI_PAR_ON;
         case 177:
         case 178:
