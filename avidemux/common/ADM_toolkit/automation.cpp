@@ -30,6 +30,9 @@
 #include "ADM_videoEncoderApi.h"
 #include "DIA_factory.h"
 #include "ADM_slave.h"
+
+extern void UI_setVideoCodec( int i);
+
 static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
 void call_scriptEngine(const char *scriptFile);
@@ -345,7 +348,14 @@ void call_probePat(char *p)
 }
 void call_videocodec(char *p)
 {
-	videoEncoder6SelectByName(p);
+    int ix=videoEncoder6_GetIndexFromName(p);
+    if(ix!=-1)
+    {
+
+        videoEncoder6_SetCurrentEncoder(ix);
+        UI_setVideoCodec(ix);
+    }
+	
 
 }
 static void call_videoconf(char *p)
