@@ -201,7 +201,7 @@ LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUn
 !define File "!insertmacro InstallFile"
  
 !macro InstallFolder FILEREGEX
-	File /r "${FILEREGEX}\*"
+	File /r "${FILEREGEX}/*"
 	Push "$OUTDIR"
 	Call InstallFolderInternal
 !macroend
@@ -210,7 +210,7 @@ LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUn
 Function InstallFolderInternal
 	Pop $9
 	!define Index 'Line${__LINE__}'
-	FindFirst $0 $1 "$9\*"
+	FindFirst $0 $1 "$9/*"
 	StrCmp $0 "" "${Index}-End"
 "${Index}-Loop:"
 	StrCmp $1 "" "${Index}-End"
@@ -272,9 +272,7 @@ Section "Avidemux Core" SecCore
     SetOverwrite on
     ${File} "./Build Info.txt"
     ${File} "./Change Log.html"
-    #${File} ${ADM_SYSDIR}/libexpat-1.dll
     ${File} ${ADM_SYSDIR}/mgwz.dll
-    ${File} ${ADM_DIR}/libfreetype-6.dll
     ${File} ${ADM_SYSDIR}/../lib/sqlite3.dll
     ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libstdc++-6.dll
     ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libgcc_s_sjlj-1.dll
@@ -996,12 +994,13 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_ssa.dll
 			SetOutPath $INSTDIR
-			${File} ${ADM_DIR}/libfribidi-0.dll
+			${File} ${ADM_SYSDIR}/libfribidi-0.dll
 			${File} ${ADM_SYSDIR}/libiconv-2.dll
 			${File} ${ADM_SYSDIR}/libfreetype-6.dll
-			#${File} ${ADM_SYSDIR}/libfontconfig-1.dll
-			#SetOutPath $INSTDIR/etc/fonts
-			#${Folder} etc/fonts
+			${File} ${ADM_SYSDIR}/libfontconfig-1.dll
+			${File} ${ADM_SYSDIR}/libexpat-1.dll
+			SetOutPath $INSTDIR\etc\fonts
+			${Folder} ${ADM_DIR}/etc/fonts
 		${MementoSectionEnd}
 	SectionGroupEnd
 	#SectionGroup "OpenGL Filters" SecGrpVideoFilterOpenGl
