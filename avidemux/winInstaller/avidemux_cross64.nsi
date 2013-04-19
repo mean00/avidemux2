@@ -991,18 +991,18 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 		${MementoSectionEnd}
 	SectionGroupEnd
 	SectionGroup "Subtitle Filters" SecGrpVideoFilterSubtitle
-		#${MementoSection} "ASS, SSA" SecVidFltAssSsa
-			#SectionIn 1 2
-			#SetOverwrite on
-			#SetOutPath $INSTDIR\plugins\videoFilters
-			#${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_ssa.dll
-			#SetOutPath $INSTDIR
-			#${File} ${ADM_DIR}/libfribidi-0.dll
-			#${File} ${ADM_DIR}/iconv.dll
-			##${File} ${ADM_SYSDIR}/libfontconfig-1.dll
-			##SetOutPath $INSTDIR/etc/fonts
-			##${Folder} etc/fonts
-		#${MementoSectionEnd}
+		${MementoSection} "ASS, SSA" SecVidFltAssSsa
+			SectionIn 1 2
+			SetOverwrite on
+			SetOutPath $INSTDIR\plugins\videoFilters
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_ssa.dll
+			SetOutPath $INSTDIR
+			${File} ${ADM_SYSDIR}/libfribidi-0.dll
+			${File} ${ADM_SYSDIR}/libiconv-2.dll
+			#${File} ${ADM_SYSDIR}/libfontconfig-1.dll
+			#SetOutPath $INSTDIR/etc/fonts
+			#${Folder} etc/fonts
+		${MementoSectionEnd}
 	SectionGroupEnd
 	#SectionGroup "OpenGL Filters" SecGrpVideoFilterOpenGl
 		#${MementoSection} "Fragment Shader" SecVidFltOpenGlFragmentShader
