@@ -1000,6 +1000,7 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			${File} ${ADM_SYSDIR}/libfribidi-0.dll
 			${File} ${ADM_SYSDIR}/libiconv-2.dll
 			${File} ${ADM_SYSDIR}/libfontconfig-1.dll
+			${File} ${ADM_SYSDIR}/libexpat-1.dll
 			#${File} ${ADM_SYSDIR}/libfontconfig-1.dll
 			#SetOutPath $INSTDIR/etc/fonts
 			#${Folder} etc/fonts
