@@ -201,7 +201,7 @@ LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUn
 !define File "!insertmacro InstallFile"
  
 !macro InstallFolder FILEREGEX
-	File /r "${FILEREGEX}\*"
+	File /r "${FILEREGEX}/*"
 	Push "$OUTDIR"
 	Call InstallFolderInternal
 !macroend
@@ -210,7 +210,7 @@ LangString UninstallLogMissing ${LANG_ENGLISH} "uninstall.log not found!$\r$\nUn
 Function InstallFolderInternal
 	Pop $9
 	!define Index 'Line${__LINE__}'
-	FindFirst $0 $1 "$9\*"
+	FindFirst $0 $1 "$9/*"
 	StrCmp $0 "" "${Index}-End"
 "${Index}-Loop:"
 	StrCmp $1 "" "${Index}-End"
@@ -1001,9 +1001,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			${File} ${ADM_SYSDIR}/libiconv-2.dll
 			${File} ${ADM_SYSDIR}/libfontconfig-1.dll
 			${File} ${ADM_SYSDIR}/libexpat-1.dll
-			#${File} ${ADM_SYSDIR}/libfontconfig-1.dll
-			#SetOutPath $INSTDIR/etc/fonts
-			#${Folder} etc/fonts
+			SetOutPath $INSTDIR\etc\fonts
+			${Folder} ${ADM_DIR}/etc/fonts
 		${MementoSectionEnd}
 	SectionGroupEnd
 	#SectionGroup "OpenGL Filters" SecGrpVideoFilterOpenGl

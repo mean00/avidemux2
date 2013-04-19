@@ -5,6 +5,7 @@ export REV=`git log | grep branch_mean | head -1 | sed 's/^.*branch_mean.//g' | 
 cp /mingw/bin/libfribidi.dll /mingw/Release/libfribidi-0.dll
 cp /mingw/bin/libfreetype.dll /mingw/Release/libfreetype-6.dll
 cp /mingw/bin/iconv.dll /mingw/Release/
+tar -xzlf ~/adm_fonts.tgz -C /mingw/Release/
 echo "Revision : $REV"
 echo "Creating NSIS Package"
 makensis -DSVN_VERSION="${REV}" -DNSIDIR=$PWD avidemux_cross.nsi
