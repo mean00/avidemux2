@@ -32,6 +32,8 @@
 #include "ADM_slave.h"
 
 extern void UI_setVideoCodec( int i);
+extern void UI_setAudioCodec( int i);
+extern uint8_t audioCodecSetByName( int dex,const char *name);
 
 static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
@@ -323,24 +325,8 @@ void call_setAudio (char *p)
 }
 void call_audiocodec(char *p)
 {
-#if 0
-	if(!strcasecmp(p,"MP2"))
-		audio_selectCodecByTag(WAV_MP2);
-	else if(!strcasecmp(p,"AC3"))
-		audio_selectCodecByTag( WAV_AC3 );
-	else if(!strcasecmp(p,"MP3"))
-		 audio_selectCodecByTag( WAV_MP3 );
-	else if(!strcasecmp(p,"PCM"))
-		audio_selectCodecByTag( WAV_PCM );
-	else if(!strcasecmp(p,"VORBIS"))
-		audio_selectCodecByTag( WAV_OGG );
-	else if(!strcasecmp(p,"COPY"))
-		audio_setCopyCodec();
-	else{
-		audio_selectCodecByTag( WAV_PCM );
-		fprintf(stderr,"audio codec \"%s\" unknown.\n",p);
-	}
-#endif
+     audioCodecSetByName( 0,p);    
+     
 }
 void call_probePat(char *p)
 {

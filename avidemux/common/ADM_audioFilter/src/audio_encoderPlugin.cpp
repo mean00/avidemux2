@@ -297,6 +297,7 @@ void audioCodecSelect( void )
 uint8_t audioCodecSetByName( int dex,const char *name)
 {
     EditableAudioTrack *ed=video_body->getEditableAudioTrackAt(dex);
+    ADM_info("Setting %s audio codec for track %d\n",name,dex);
     if(!ed)
     {
         ADM_warning("Cannot set codec for track %d\n",dex);
@@ -310,13 +311,14 @@ uint8_t audioCodecSetByName( int dex,const char *name)
 			{
 
 				ed->encoderIndex=i;
-                if(!dex)
-                    audioPrintCurrentCodec(dex); // Update UI
+                                if(!dex)
+                                        audioPrintCurrentCodec(dex); // Update UI
+                                ADM_info("Audio codec %s set for track %d (index=%d)\n",name,dex,i);
 				return 1;
 			}
 
 		}
-		printf("\n Mmmm Select audio codec by name failed...(%s) for track %d\n",name,dex);
+		ADM_warning("\n Mmmm Select audio codec by name failed...(%s) for track %d\n",name,dex);
 		return 0;
 }
 /**
