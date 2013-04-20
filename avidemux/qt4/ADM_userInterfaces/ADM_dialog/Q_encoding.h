@@ -32,7 +32,12 @@ class encodingWindow : public QDialog
 
  public:
      encodingWindow(QWidget *parent);
-     Ui_encodingDialog ui;
+     virtual ~encodingWindow()
+     {
+         delete ui;
+         ui=NULL;
+     }
+     Ui_encodingDialog *ui;
 
  public slots:
 	void buttonPressed(void);

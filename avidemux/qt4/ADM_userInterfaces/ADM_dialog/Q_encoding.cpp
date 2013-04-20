@@ -29,20 +29,21 @@ extern bool ADM_slaveReportProgress(uint32_t percent);
 
 encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint)
  {
-	ui.setupUi(this);
+        ui=new Ui_encodingDialog;
+	ui->setupUi(this);
 
 #ifndef _WIN32
 	//check for root privileges
 	if (getuid() == 0)
 	{
 		// set priority to normal, regardless of preferences
-		ui.comboBoxPriority->setCurrentIndex(2);
+		ui->comboBoxPriority->setCurrentIndex(2);
 	}
 #endif
 
-	connect(ui.checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
-	connect(ui.pushButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
-	connect(ui.comboBoxPriority, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
+	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
+	connect(ui->pushButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
+	connect(ui->comboBoxPriority, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
 
 	// set priority
 	uint32_t priority;
@@ -53,10 +54,10 @@ encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitl
 	// check for root privileges
 	if (getuid() == 0)
 	{
-		ui.comboBoxPriority->setCurrentIndex(priority);
+		ui->comboBoxPriority->setCurrentIndex(priority);
 	}
 #else
-	ui.comboBoxPriority->setCurrentIndex(priority);
+	ui->comboBoxPriority->setCurrentIndex(priority);
 #endif
  }
 
@@ -71,9 +72,9 @@ void encodingWindow::priorityChanged(int priorityLevel)
 #ifndef _WIN32
 	if (getuid() != 0)
 	{
-		ui.comboBoxPriority->disconnect(SIGNAL(currentIndexChanged(int)));
-		ui.comboBoxPriority->setCurrentIndex(2);
-		connect(ui.checkBoxShutdown, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
+		ui->comboBoxPriority->disconnect(SIGNAL(currentIndexChanged(int)));
+		ui->comboBoxPriority->setCurrentIndex(2);
+		connect(ui->checkBoxShutdown, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
 
 		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
 
@@ -91,9 +92,9 @@ void encodingWindow::shutdownChanged(int state)
 #ifndef _WIN32
 	if (getuid() != 0)
 	{
-		ui.checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
-		ui.checkBoxShutdown->setCheckState(Qt::Unchecked);
-		connect(ui.checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
+		ui->checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
+		ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
+		connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
 
 		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
 	}
@@ -101,8 +102,8 @@ void encodingWindow::shutdownChanged(int state)
 }
 
 //*******************************************
-#define WIDGET(x) (window->ui.x)
-#define WRITEM(x,y) window->ui.x->setText(y)
+#define WIDGET(x) (window->ui->x)
+#define WRITEM(x,y) window->ui->x->setText(y)
 #define WRITE(x) WRITEM(x,stringMe)
 /*************************************/
 static char stringMe[80];
@@ -141,7 +142,7 @@ void DIA_encodingQt4::setFps(uint32_t fps)
 DIA_encodingQt4::~DIA_encodingQt4( )
 {
     ADM_info("Destroying encoding qt4\n");
-	bool shutdownRequired = (window->ui.checkBoxShutdown->checkState() == Qt::Checked);
+	bool shutdownRequired = (window->ui->checkBoxShutdown->checkState() == Qt::Checked);
     if(tray)
     {
         UI_deiconify();

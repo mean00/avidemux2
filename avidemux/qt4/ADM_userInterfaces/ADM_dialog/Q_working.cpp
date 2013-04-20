@@ -22,15 +22,17 @@
 
 workWindow::workWindow(QWidget *parent) : QDialog(parent)
  {
-     ui.setupUi(this);
+     ui=new Ui_workingDialog();
+     ui->setupUi(this);
      active=true;
      setWindowModality(Qt::ApplicationModal);
-     connect( ui.buttonCancel,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
+     connect( ui->buttonCancel,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
  }
  void workWindow::stop(bool a) 
 {
     ADM_info("Stop Request\n");
     active=false;
+    delete ui;
 }
 //*******************************************
 
@@ -58,7 +60,7 @@ DIA_workingQt4::DIA_workingQt4(const char *title) : DIA_workingBase(title)
 {
 	workWindow *wind = new workWindow(qtLastRegisteredDialog());
 	qtRegisterDialog(wind);
-    _priv=(void *)wind;
+        _priv=(void *)wind;
 	wind->setWindowTitle(title);
 	postCtor();  
 }
@@ -102,8 +104,8 @@ uint8_t DIA_workingQt4::update(uint32_t percent)
 
         workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
 //        wind->ui.labelTimeLeft->setText(ms2timedisplay((uint32_t) floor(((elapsed * 100.) / percent) - elapsed)));
-		wind->ui.labelElapsed->setText(string);
-        wind->ui.progressBar->setValue(percent);
+        wind->ui->labelElapsed->setText(string);
+        wind->ui->progressBar->setValue(percent);
        
         return 0;
 }

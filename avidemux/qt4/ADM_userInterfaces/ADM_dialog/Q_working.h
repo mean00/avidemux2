@@ -10,7 +10,7 @@ class workWindow : public QDialog
 public:
     bool active;
 	workWindow(QWidget *parent);
-	Ui_workingDialog ui;
+	Ui_workingDialog *ui;
 public slots:
     void stop(bool a);
 };
