@@ -23,7 +23,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifndef __APPLE__
 #include <malloc.h>
+#endif
 #include "ADM_default.h"
 #include "ADM_threads.h"
 #include "ADM_memsupport.h"
@@ -92,6 +94,25 @@ void *ADM_realloc(void *ptr, size_t newsize)
 	return ADM_aligned_realloc(ptr, newsize);
 }
 
+#ifdef __APPLE__
+void *ADM_aligned_alloc(size_t size)
+{
+    return malloc(size);
+}
+void ADM_aligned_free(void *ptr)
+{
+    return free(ptr);
+}
+void *ADM_aligned_realloc(void *ptr,size_t size)
+{
+    return realloc(ptr,size);
+}
+void *ADM_aligned_memalign(size_t align,size_t size)
+{
+    ADM_assert(align<=16);
+    return ADM_aligned_alloc(size);
+}
+#else
 #ifdef __MINGW32__
 void *ADM_aligned_alloc(size_t size)
 {
@@ -128,6 +149,7 @@ void *ADM_aligned_memalign(size_t align,size_t size)
     ADM_assert(align<=16);
     return ADM_aligned_alloc(size);
 }
+#endif
 #endif
 //********************************
 // lavcodec wrapper
