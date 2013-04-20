@@ -279,8 +279,6 @@ Section "Avidemux Core" SecCore
     ${File} ${TOOLCHAIN_DIR}/x86_64-w64-mingw32/lib/libstdc++-6.dll
     ${File} ${TOOLCHAIN_DIR}/x86_64-w64-mingw32/lib/libgcc_s_sjlj-1.dll
     ${File} ${TOOLCHAIN_DIR}/x86_64-w64-mingw32/lib/libwinpthread-1.dll
-    #${File} ${ADM_SYSDIR}/../lib/pthreadGC2.dll
-    #${File} ${ADM_SYSDIR}/libgcc_s_sjlj-1.dll
     ${File} ${ADM_DIR}/libADM_audioParser6.dll
     ${File} ${ADM_DIR}/libADM_core6.dll
     ${File} ${ADM_DIR}/libADM_coreAudio6.dll
@@ -707,6 +705,7 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		${Folder} ${ADM_DIR}/plugins/pluginSettings/x264
 		SetOutPath $INSTDIR
 		${File} ${ADM_SYSDIR}/libx264-*.dll
+		${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
 	${MementoSectionEnd}
 	${MementoSection} "PNG" SecVidEncLavPng
 		SectionIn 1 2

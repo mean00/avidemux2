@@ -704,6 +704,7 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		${Folder} ${ADM_DIR}/plugins/pluginSettings/x264
 		SetOutPath $INSTDIR
 		${File} ${ADM_SYSDIR}/libx264-*.dll
+		${File} ${ADM_SYSDIR}/pthreadGC2.dll
 	${MementoSectionEnd}
 	${MementoSection} "PNG" SecVidEncLavPng
 		SectionIn 1 2
