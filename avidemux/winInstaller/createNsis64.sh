@@ -13,5 +13,7 @@ tar -xzlf ~/adm_fonts.tgz -C /mingw/Release/
 #cp /mingw/bin/iconv.dll /mingw/Release/
 echo "Revision : $REV"
 echo "Creating NSIS Package"
+mkdir -p install
+rm -f install/*
 makensis -DSVN_VERSION="${REV}" -DNSIDIR=$PWD avidemux_cross64.nsi
 echo "Done"
