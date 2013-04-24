@@ -43,7 +43,6 @@ static int doMemStat = 0;
 
 static void *ADM_aligned_alloc(size_t size);
 static void ADM_aligned_free(void *ptr);
-static void *ADM_aligned_realloc(void *ptr,size_t size);
 static void *ADM_aligned_memalign(size_t align,size_t size);
 
 
@@ -80,20 +79,6 @@ void ADM_dezalloc(void *ptr)
 
 	ADM_aligned_free(ptr);
 }
-void *ADM_realloc(void *ptr, size_t newsize)
-{
-	if(!ptr)
-		return ADM_alloc(newsize);
-
-	if (!newsize)
-	{
-		ADM_dealloc(ptr);
-		return NULL;
-	}
-
-	return ADM_aligned_realloc(ptr, newsize);
-}
-
 #ifdef __APPLE__
 void *ADM_aligned_alloc(size_t size)
 {
@@ -103,10 +88,6 @@ void ADM_aligned_free(void *ptr)
 {
     return free(ptr);
 }
-void *ADM_aligned_realloc(void *ptr,size_t size)
-{
-    return realloc(ptr,size);
-}
 void *ADM_aligned_memalign(size_t align,size_t size)
 {
     ADM_assert(align<=16);
@@ -114,17 +95,14 @@ void *ADM_aligned_memalign(size_t align,size_t size)
 }
 #else
 #ifdef __MINGW32__
+#include "mm_malloc.h"
 void *ADM_aligned_alloc(size_t size)
 {
-    return _aligned_malloc(size,16);
+    return _mm_malloc(size,16);
 }
 void ADM_aligned_free(void *ptr)
 {
-    return _aligned_free(ptr);
-}
-void *ADM_aligned_realloc(void *ptr,size_t size)
-{
-    return _aligned_realloc(ptr,size,16);
+    return _mm_free(ptr);
 }
 void *ADM_aligned_memalign(size_t align,size_t size)
 {
@@ -139,10 +117,6 @@ void *ADM_aligned_alloc(size_t size)
 void ADM_aligned_free(void *ptr)
 {
     return free(ptr);
-}
-void *ADM_aligned_realloc(void *ptr,size_t size)
-{
-    return realloc(ptr,size);
 }
 void *ADM_aligned_memalign(size_t align,size_t size)
 {
