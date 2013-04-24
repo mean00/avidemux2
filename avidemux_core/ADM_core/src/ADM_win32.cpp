@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <io.h>
 #include <string>
+#include <winnls.h>
 
 #include "ADM_default.h" 
 #include "ADM_win32.h"
@@ -150,10 +151,10 @@ int shutdown_win32(void)
 	}
 
 	// Shut down the system and force all applications to close.
-	if (!ExitWindowsEx(EWX_POWEROFF | EWX_FORCE, SHTDN_REASON_FLAG_PLANNED))
-	{
-		return -1;
-	}
+	//if (!ExitWindowsEx(EWX_POWEROFF | EWX_FORCE, SHTDN_REASON_FLAG_PLANNED))
+	//{
+		//return -1;
+	//}
 
 	return 0;
 }
@@ -573,8 +574,8 @@ std::string utf8StringToAnsi(const char *utf8String)
 	delete [] wcShortDir;
         printf("clean path=%s\n",cleanPath.c_str());
         
-	free(dupe);
-	free(filename);
+	ADM_dealloc(dupe);
+	ADM_dealloc(filename);
         return cleanPath;
 }
 
