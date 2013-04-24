@@ -191,7 +191,7 @@ bool bAppend=false;
     memset(&video,0,sizeof(video));
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-    char *indexName=(char *)alloca(strlen(file)+6);
+    char *indexName=(char *)malloc(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
 
     FP_TYPE append=FP_DONT_APPEND;
@@ -207,6 +207,7 @@ bool bAppend=false;
     if(!index)
     {
         printf("[PsIndex] Cannot create %s\n",indexName);
+        free(indexName);        
         return false;
     }
     writeSystem(file,bAppend);
@@ -424,6 +425,7 @@ theEnd:
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
+	free(indexName);
         return 1; 
 }
 /**
