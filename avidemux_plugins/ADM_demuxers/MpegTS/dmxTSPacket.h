@@ -78,13 +78,21 @@ public:
                     ADM_dealloc(payload);
                     payload=NULL;
                 }
+    bool        expandPayload()
+		{
+                        payloadLimit*=2;
+			uint8_t *newPayload=(uint8_t *)ADM_alloc(payloadLimit);
+			memcpy(newPayload,payload,payloadSize);
+			ADM_dealloc(payload);
+			payload=newPayload;
+			return true;
+
+		}
     bool        addData(uint32_t len,uint8_t *data)
                 {
                     if(len+payloadSize>payloadLimit)
                     {
-                       // printf("[Ts] Realloc %d -> %d\n",payloadLimit,payloadLimit*2);
-                        payloadLimit*=2;
-                        payload=(uint8_t *)ADM_realloc(payload,payloadLimit);
+				expandPayload();
                     }
                     memcpy(payload+payloadSize,data,len);
                     payloadSize+=len;
@@ -99,8 +107,7 @@ public:
      {
             if(payloadSize>=payloadLimit)
             {
-                        payloadLimit*=2;
-                        payload=(uint8_t *)ADM_realloc(payload,payloadLimit);
+			expandPayload();
             }
             payload[payloadSize++]=byte;
             return true;
