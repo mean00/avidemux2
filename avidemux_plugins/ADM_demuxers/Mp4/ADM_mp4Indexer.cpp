@@ -143,7 +143,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
       }
     //
     // Each chunk contains N samples=N bytes
-    int *samplePerChunk=(int *)alloca(info->nbCo*sizeof(int));
+    int *samplePerChunk=(int *)malloc(info->nbCo*sizeof(int));
     memset(samplePerChunk,0,info->nbCo*sizeof(int));
     int total=0;
     for(int i=0;i<info->nbSc;i++)
@@ -167,6 +167,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
       if(info->SttsN[0]!=total)
       {
           ADM_warning("Not regular (Nb sequential samples (%d)!= total samples (%d))\n",info->SttsN[0],total);
+          free(samplePerChunk);
           return 1;
       }
     
@@ -198,7 +199,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
         totalSamples+=samplePerChunk[i];
         aprintf("Block %d , size=%d,total=%d,samples=%d,total samples=%d\n",i,track->index[i].size,totalBytes,samplePerChunk[i],totalSamples);
     }
-
+    free(samplePerChunk);
     if(info->nbCo)
         track->index[0].dts=track->index[0].pts=0;
     printf("Found %u bytes, spread over %d blocks\n",totalBytes,info->nbCo);
