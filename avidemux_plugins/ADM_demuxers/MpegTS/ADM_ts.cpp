@@ -36,7 +36,7 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
 uint8_t tsHeader::open(const char *name)
 {
-    char *idxName=(char *)alloca(strlen(name)+6);
+    char *idxName=(char *)malloc(strlen(name)+6);
     bool r=false;
     FP_TYPE appendType=FP_DONT_APPEND;
     uint32_t append;
@@ -49,6 +49,7 @@ uint8_t tsHeader::open(const char *name)
     if(!index.open(idxName))
     {
         printf("[tsDemux] Cannot open index file %s\n",idxName);
+        free(idxName);
         return false;
     }
     if(!index.readSection("System"))
@@ -120,6 +121,7 @@ uint8_t tsHeader::open(const char *name)
         }
     }
 abt:
+    free(idxName);
     index.close();
     printf("[tsDemuxer] Loaded %d\n",r);
     return r;
