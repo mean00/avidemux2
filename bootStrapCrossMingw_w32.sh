@@ -8,7 +8,7 @@ export TOOLCHAIN_LOCATION=/home/fx/mxe-octave/usr/i686-pc-mingw32/
 export QT_HOME=/mingw/Qt/current
 export O_PARAL="-j 2"
 // 0x501 = windows XP
-export CFLAGS="-DWINVER=0x501"
+export CFLAGS="-DWINVER=0x501 -DNEED_STDINT_GCC=1"
 export CXXFLAGS="$CFLAGS"
 # ** Put your config here **
 
