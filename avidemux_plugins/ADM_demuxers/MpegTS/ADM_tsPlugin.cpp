@@ -34,12 +34,13 @@ uint8_t   tsIndexer(const char *file);
 
 extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
 {
-char *index=(char *)alloca(strlen(fileName)+6);
+char *index=(char *)malloc(strlen(fileName)+6);
 int count=0;
     printf("[TS Demuxer] Probing...\n");
     if( !detectTs(fileName))
     {
         printf(" [TS Demuxer] Not a ts file\n");
+        free(index);
         return false;
     }
     sprintf(index,"%s.idx2",fileName);
@@ -61,12 +62,14 @@ again:
                  {
                     printf("[tsDemux] Cannot open index file %s\n",index);
                     indexFile.close();
+                    free(index);
                     return false;
                   }
                  if(!indexFile.readSection("System"))
                 {
                     printf("[tsDemux] Cannot read system section\n");
                     indexFile.close();
+                    free(index);
                     return false;
                 }
                 type=indexFile.getAsString("Type");
@@ -74,6 +77,7 @@ again:
                     {
                         printf("[TsDemux] Incorrect or not found type\n");
                         indexFile.close();
+                        free(index);
                         return false;
                     }
                 return 50;
@@ -85,7 +89,7 @@ again:
     if(count) return false;
     printf("[TSDemuxer] Analyzing file..\n");
     count++;
-
+    free(index);
   
     if(true==tsIndexer(fileName)) goto again;
     printf("[TSDemuxer] Failed..\n");
