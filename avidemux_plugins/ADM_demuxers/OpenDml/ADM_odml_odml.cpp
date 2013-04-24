@@ -195,10 +195,11 @@ uint32_t 	i,j;
 
 
 
-	OPENDML_ENTRY *superEntries=(OPENDML_ENTRY *)alloca(masterIndex.nbEntryInUse*sizeof(OPENDML_ENTRY));
+	OPENDML_ENTRY *superEntries=(OPENDML_ENTRY *)malloc(masterIndex.nbEntryInUse*sizeof(OPENDML_ENTRY));
 	printf("[AVI]We have %"PRIu32" indeces\n",masterIndex.nbEntryInUse);
         if(!readSuperEntries(superEntries,masterIndex.nbEntryInUse,_fd)) //if(1!=fread(superEntries,sizeof(OPENDML_ENTRY)*masterIndex.nbEntryInUse,1,_fd))
 	{
+                free(superEntries);
 		printf("[AVI]Problem reading indices\n");
 		return 0;
 	}
@@ -239,6 +240,7 @@ _cntue:
                 if(!readSecondary(&second,_fd))
 		{
 			printf("Problem reading secondary index (%u/%u) trying to continue \n",i,masterIndex.nbEntryInUse);
+                        free(superEntries);
 			return 1;
 		}
 
@@ -272,7 +274,7 @@ _cntue:
 
 		}
 	}
-
+        free(superEntries);
 	return 1;
 }
 
