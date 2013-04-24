@@ -25,7 +25,8 @@ RequestExecutionLevel user
 !define QT_DIR /mingw/Qt/current/bin/
 !define ADM_SYSDIR /mingw/bin
 !define ADM_DIR /mingw/Release
-!define TOOLCHAIN_DIR /home/fx/rub/mingw32/
+!define TOOLCHAIN_DIR /home/fx/mxe-octave/usr/lib/gcc/i686-pc-mingw32/4.7.2/
+#/home/fx/rub/mingw32/
 #!define NSIDIR "/home/fx/hudson/workspace/mingw_2.6.2_nsis/avidemux/winInstaller"
 #!define SVN_VERSION 6
 !define REVISION ${SVN_VERSION}
@@ -272,13 +273,18 @@ Section "Avidemux Core" SecCore
     SetOverwrite on
     ${File} "./Build Info.txt"
     ${File} "./Change Log.html"
-    ${File} ${ADM_SYSDIR}/mgwz.dll
-    ${File} ${ADM_SYSDIR}/../lib/sqlite3.dll
-    ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libstdc++-6.dll
-    ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libgcc_s_sjlj-1.dll
-    ${File} ${TOOLCHAIN_DIR}/i686-w64-mingw32/lib/libwinpthread-1.dll
-    #${File} ${ADM_SYSDIR}/../lib/pthreadGC2.dll
-    #${File} ${ADM_SYSDIR}/libgcc_s_sjlj-1.dll
+#
+#
+    ${File} ${TOOLCHAIN_DIR}/libstdc++-6.dll
+    ${File} ${TOOLCHAIN_DIR}/../libgcc_s_dw2-1.dll
+#
+#
+    ${File} ${ADM_SYSDIR}/libsqlite3-0.dll
+    ${File} ${ADM_SYSDIR}/libz.dll
+    ${File} ${ADM_SYSDIR}/libpng15-15.dll
+    ${File} ${ADM_SYSDIR}/libpthread.dll
+#
+#
     ${File} ${ADM_DIR}/libADM_audioParser6.dll
     ${File} ${ADM_DIR}/libADM_core6.dll
     ${File} ${ADM_DIR}/libADM_coreAudio6.dll
@@ -337,8 +343,6 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ADM_DIR}/libADM_render6_qt4.dll
         ${File} ${ADM_DIR}/libADM_UIQT46.dll
         ${File} ${QT_DIR}/QtOpenGL4.dll
-        #${File} ${QT_DIR}/libgcc_s_dw2-1.dll
-        #${File} ${QT_DIR}/mingwm10.dll
     ${MementoSectionEnd}
 SectionGroupEnd
 
@@ -355,7 +359,6 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_faad.dll
 		#SetOutPath $INSTDIR
-		#${File} ${ADM_SYSDIR}/libfaad2.dll
 	${MementoSectionEnd}
 	${MementoSection} "AAC, AC-3, ADPCM IMA AMV, DTS, E-AC-3, MP2, MP3, Nellymoser, QDesign, WMA (libavcodec)" SecAudDecAvcodec
 		SectionIn 1 2
@@ -381,22 +384,22 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_ms_adpcm.dll
 	${MementoSectionEnd}
-	${MementoSection} "AMR-NB" SecAudDecOpencoreAmrNb
-		SectionIn 1 2
-		SetOverwrite on
-		SetOutPath $INSTDIR\plugins\audioDecoder
-		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrnb.dll
-		SetOutPath $INSTDIR
+	#${MementoSection} "AMR-NB" SecAudDecOpencoreAmrNb
+		#SectionIn 1 2
+		#SetOverwrite on
+		#SetOutPath $INSTDIR\plugins\audioDecoder
+		#${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrnb.dll
+		#SetOutPath $INSTDIR
 		#${File} ${ADM_DIR}/libopencore-amrnb-*.dll
-	${MementoSectionEnd}
-	${MementoSection} "AMR-WB" SecAudDecOpencoreAmrWb
-		SectionIn 1 2
-		SetOverwrite on
-		SetOutPath $INSTDIR\plugins\audioDecoder
-		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrwb.dll
-		SetOutPath $INSTDIR
+	#${MementoSectionEnd}
+	#${MementoSection} "AMR-WB" SecAudDecOpencoreAmrWb
+		#SectionIn 1 2
+		#SetOverwrite on
+		#SetOutPath $INSTDIR\plugins\audioDecoder
+		#${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrwb.dll
+		#SetOutPath $INSTDIR
 		#${File} ${ADM_DIR}/libopencore-amrwb-*.dll
-	${MementoSectionEnd}
+	#${MementoSectionEnd}
 	${MementoSection} "MP2, MP3 (MAD)" SecAudDecMad
 		SectionIn 1 2
 		SetOverwrite on
@@ -428,7 +431,6 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 		SetOutPath $INSTDIR\plugins\audioEncoders
 		${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_faac.dll
 		#SetOutPath $INSTDIR
-		#${File} ${ADM_SYSDIR}libfaac.dll
 	${MementoSectionEnd}
 	${MementoSection} "AAC (libavcodec)" SecAudEncLavAac
 		SectionIn 1 2
@@ -464,14 +466,13 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 		SetOutPath $INSTDIR\plugins\audioEncoders
 		${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_lav_mp2.dll
 		SetOutPath $INSTDIR
-		#${File} ${ADM_SYSDIR}/libtwolame-*.dll
 	${MementoSectionEnd}
-	${MementoSection} "MP2 (TwoLAME)" SecAudEncTwoLame
-		SectionIn 1 2
-		SetOverwrite on
-		SetOutPath $INSTDIR\plugins\audioEncoders
-		${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_twolame.dll
-	${MementoSectionEnd}
+	#${MementoSection} "MP2 (TwoLAME)" SecAudEncTwoLame
+		#SectionIn 1 2
+		#SetOverwrite on
+		#SetOutPath $INSTDIR\plugins\audioEncoders
+		#${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_twolame.dll
+	#${MementoSectionEnd}
 	${MementoSection} "MP3" SecAudEncLame
 		SectionIn 1 2
 		SetOverwrite on
@@ -593,12 +594,12 @@ SectionGroup "Muxers" SecGrpMuxers
 		SetOutPath $INSTDIR\plugins\muxers
 		${File} ${ADM_DIR}/plugins/muxers/libADM_mx_mp4.dll
 	${MementoSectionEnd}
-	${MementoSection} "MP4 (MP4v2)" SecMuxMp4v2
-		SectionIn 1 2
-		SetOverwrite on
-		SetOutPath $INSTDIR\plugins\muxers
-		${File} ${ADM_DIR}/plugins/muxers/libADM_mx_mp4v2.dll
-	${MementoSectionEnd}
+	#${MementoSection} "MP4 (MP4v2)" SecMuxMp4v2
+		#SectionIn 1 2
+		#SetOverwrite on
+		#SetOutPath $INSTDIR\plugins\muxers
+		#${File} ${ADM_DIR}/plugins/muxers/libADM_mx_mp4v2.dll
+	#${MementoSectionEnd}
 	${MementoSection} "MPEG-PS" SecMuxLavMpegPs
 		SectionIn 1 2
 		SetOverwrite on
@@ -704,7 +705,7 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		${Folder} ${ADM_DIR}/plugins/pluginSettings/x264
 		SetOutPath $INSTDIR
 		${File} ${ADM_SYSDIR}/libx264-*.dll
-		${File} ${ADM_SYSDIR}/pthreadGC2.dll
+		#${File} ${ADM_SYSDIR}/pthreadGC2.dll
 	${MementoSectionEnd}
 	${MementoSection} "PNG" SecVidEncLavPng
 		SectionIn 1 2
