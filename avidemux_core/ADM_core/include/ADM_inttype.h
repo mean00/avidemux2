@@ -28,7 +28,9 @@ typedef unsigned char ADM_filename;
 #include <stdint.h>
 #define GOT_TYPES
 #endif
-
+#ifdef NEED_STDINT_GCC
+#include <stdint-gcc.h>
+#endif NEED_STDINT_GCC
 #ifdef HAVE_INTTYPES_H
 	#define __STDC_FORMAT_MACROS
 	#include <inttypes.h>
