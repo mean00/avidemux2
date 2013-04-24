@@ -20,7 +20,7 @@
 #include <assert.h>
 
 #ifdef _WIN32
-	#include <intrin.h>
+	//#include <intrin.h>
 	#include <wchar.h>
 #endif
 
