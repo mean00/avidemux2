@@ -379,7 +379,7 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
     
-    uint8_t *payload=(uint8_t *)alloca(nalSize+16);
+    uint8_t *payload=(uint8_t *)malloc(nalSize+16);
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
     uint8_t *tail=payload+nalSize;
@@ -408,6 +408,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                             break;
                 }
     }
+    free(payload);
     return r;
 }
 /**
@@ -417,7 +418,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
 */
 static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int recovery)
 {
-    uint8_t *out=(uint8_t *)alloca(tail-head);
+    uint8_t *out=(uint8_t *)malloc(tail-head);
     int size=ADM_unescapeH264(tail-head,head,out);
    
     getBits bits(size,out);
@@ -429,6 +430,7 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
     if (sliceType > 9)
     {
       ADM_warning ("Weird Slice %d\n", sliceType);
+      free(out);
       return false;
     }
     if (sliceType > 4)
@@ -446,6 +448,7 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
         
     }
 
+      free(out);
     return true;
 }
 
