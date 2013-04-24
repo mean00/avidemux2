@@ -173,7 +173,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   {
     if( isMpeg4Compatible(_videostream.fccHandler))
     {
-        uint8_t *buffer=(uint8_t *)alloca((rpt+size)*sizeof(uint8_t));
+        uint8_t *buffer=(uint8_t *)malloc((rpt+size)*sizeof(uint8_t));
             if(rpt)
                 memcpy(buffer,_tracks[0].headerRepeat,rpt);
             parser->readBin(buffer+rpt,size-3);
@@ -184,11 +184,12 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
              vops[0].type=AVI_KEY_FRAME;
              ADM_searchVop(buffer,buffer+rpt+size-3,&nb,vops, &timeinc);
              ix.flags=vops[0].type;
+        free(buffer);
         
     }else
     if(isH264Compatible(_videostream.fccHandler))
     {
-                uint8_t *buffer=(uint8_t *)alloca(size+rpt);
+                uint8_t *buffer=(uint8_t *)malloc(size+rpt);
                 uint32_t flags=AVI_KEY_FRAME;
                 
                 if(rpt)
@@ -202,6 +203,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 ix.flags=flags;
                 if(Track->index.size()) ix.Dts=ADM_NO_PTS;
                 //printf("[] Flags=%x\n",flags);
+        	free(buffer);
 
     }
   }
