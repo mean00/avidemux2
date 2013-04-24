@@ -33,11 +33,12 @@ uint8_t   psIndexer(const char *file);
 
 extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
 {
-char *index=(char *)alloca(strlen(fileName)+6);
+char *index=(char *)malloc(strlen(fileName)+6);
 int count=0;
     if(!detectPs(fileName))
     {
         printf(" [PS Demuxer] Not a ps file\n");
+	free(index);
         return false;
     }
 
@@ -59,12 +60,14 @@ again:
              {
                 printf("[psDemux] Cannot open index file %s\n",index);
                 indexFile.close();
+                free(index);
                 return false;
               }
              if(!indexFile.readSection("System"))
             {
                 printf("[psDemux] Cannot read system section\n");
                 indexFile.close();
+                free(index);
                 return false;
             }
             type=indexFile.getAsString("Type");
@@ -72,18 +75,25 @@ again:
                 {
                     printf("[psDemux] Incorrect or not found type\n");
                     indexFile.close();
+                    free(index);
                     return false;
                 }
+            free(index);
             return 50;
         }
         printf("[PsDemuxer] Not a valid index\n");
         return false;
     }
-    if(count) return false;
+    if(count) 
+    {
+        free(index);
+        return false;
+    }
     printf("[PSDemuxer] Creating index..\n");
     count++;
     if(true==psIndexer(fileName)) goto again;
     printf("[PSDemuxer] Failed..\n");
+    free(index);
    return 0;
 }
 #define PROBE_SIZE (1024*1024)
