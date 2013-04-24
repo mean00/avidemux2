@@ -33,6 +33,9 @@ public:
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
 		virtual void setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) {return true;}             /// Start graphical user interface
+protected:
+            void                flipMe(uint8_t *data, uint32_t w,uint32_t h,uint32_t stride);
+            uint8_t             *scratch;
 };
 
 // Add the hook to make it valid plugin
@@ -53,6 +56,7 @@ DECLARE_VIDEO_FILTER(   verticalFlipFilter,   // Class
 verticalFlipFilter::verticalFlipFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
 {
 UNUSED_ARG(setup);
+scratch=(uint8_t *)malloc(info.width);
 
     // By default the info field contains the output of previous filter
     // Tweak it here if you change fps, duration, width,...
@@ -63,12 +67,13 @@ UNUSED_ARG(setup);
 */
 verticalFlipFilter::~verticalFlipFilter()
 {
-		
+    free(scratch);
+    scratch=NULL;
 }
 
-static void flipMe(uint8_t *data, uint32_t w,uint32_t h,uint32_t stride)
+void verticalFlipFilter::flipMe(uint8_t *data, uint32_t w,uint32_t h,uint32_t stride)
 {
-    uint8_t *scratch=(uint8_t *)alloca(w);
+    
     int count=h>>1;
     for(int i=0;i<count;i++)
     {
@@ -78,6 +83,7 @@ static void flipMe(uint8_t *data, uint32_t w,uint32_t h,uint32_t stride)
         memcpy(top, bottom,w);
         memcpy(bottom,scratch,w);
     }
+    free(scratch);
 }
 /**
     \fn getFrame
