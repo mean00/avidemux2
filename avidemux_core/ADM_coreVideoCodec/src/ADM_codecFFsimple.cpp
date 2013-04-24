@@ -33,7 +33,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            extraCopy=(uint8_t *)malloc(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(extraCopy,extraData,extraDataLen);
     }
@@ -61,6 +61,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
                     { 
                             printf("[lavc] Decoder init: %x video decoder initialized! (%s)\n",fcc,codec->long_name); 
                     } 
+    if(extraCopy) free(extraCopy);
 }
 /**
     \fn admCreateFFSimple

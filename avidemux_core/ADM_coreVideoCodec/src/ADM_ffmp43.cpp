@@ -512,7 +512,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
    uint8_t *extraCopy=NULL;
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            extraCopy=(uint8_t *)malloc(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(extraCopy,extraData,extraDataLen);
     }
@@ -523,6 +523,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   decoderMultiThread ();
   //  _context->flags|=FF_DEBUG_VIS_MV;
   WRAP_Open (CODEC_ID_MPEG4);
+  if(extraCopy) free(extraCopy);
 }
 bool decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
@@ -542,13 +543,14 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            extraCopy=(uint8_t *)malloc(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(extraCopy,extraData,extraDataLen);
     }
     _context->extradata = extraCopy;
     _context->extradata_size = (int)extraDataLen  ;
     WRAP_Open (CODEC_ID_DVVIDEO);
+  if(extraCopy) free(extraCopy);
 
 }
 decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
@@ -570,7 +572,7 @@ decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            extraCopy=(uint8_t *)malloc(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(extraCopy,extraData,extraDataLen);
     }
@@ -579,6 +581,7 @@ decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_
   _context->bits_per_coded_sample=bpp;
   ADM_info ("[lavc] FFhuff: We have %d bytes of extra data\n", (int)extraDataLen);
   WRAP_Open (CODEC_ID_FFVHUFF);
+  if(extraCopy) free(extraCopy);
 
 }
 decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
@@ -587,7 +590,7 @@ decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extr
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            extraCopy=(uint8_t *)malloc(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(extraCopy,extraData,extraDataLen);
     }
@@ -597,6 +600,7 @@ decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extr
   decoderMultiThread ();
   ADM_info ("[lavc] Initializing H264 decoder with %d extradata\n", (int)extraDataLen);
   WRAP_Open(CODEC_ID_H264);
+  if(extraCopy) free(extraCopy);
 }
 //*********************
 extern "C" {int av_getAVCStreamInfo(AVCodecContext *avctx, uint32_t  *nalSize, uint32_t *isAvc);}
@@ -627,7 +631,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            extraCopy=(uint8_t *)malloc(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(extraCopy,extraData,extraDataLen);
     }
@@ -635,6 +639,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   _context->extradata_size = (int) extraDataLen;
   _context->bits_per_coded_sample = bpp;
   WRAP_Open (CODEC_ID_HUFFYUV);
+  if(extraCopy) free(extraCopy);
 }
 
 //***************
