@@ -120,7 +120,7 @@ if (CROSS)
 		xadd(--prefix /mingw)
 		xadd(--host-cc gcc)
 		xadd(--nm ${CMAKE_CROSS_PREFIX}-nm) 
-		xadd(--sysroot /mingw/include)
+		#xadd(--sysroot /mingw/include)
 
 		set(CROSS_OS mingw32)	
 
