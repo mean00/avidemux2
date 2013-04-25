@@ -30,11 +30,11 @@ class image:
         self.width=0
         self.height=0
     def getFormat(self,fps1000):
-        if(fps1000 >24800 and fps1000 < 25200):
+        if((fps1000 >24800 and fps1000 < 25200) or (fps1000 >24800*2 and fps1000<25200*2)):
                 return FMT_PAL
-        if(fps1000 >23700 and fps1000 < 24200):
+        if((fps1000 >23700 and fps1000 < 24200) or (fps1000 >23700*2 and fps1000<24200*2)):
                 return FMT_FILM
-        if(fps1000 >29700 and fps1000 < 30200):
+        if((fps1000 >29700 and fps1000 < 30200) or (fps1000 >29700*2 and fps1000<30200*2)):
                 return FMT_NTSC
         return FMT_UNKNOWN
     #
@@ -46,13 +46,21 @@ class image:
         fmt=source.fmt
         sr_mul=aspectRatio[fmt][sar]
         dst_mul=aspectRatio[fmt][dar]
+        #for f in (0,1,2):
+           #for j in (0,1,2):
+               #print("Ratio "+str(f)+" "+str(j)+"="+str(aspectRatio[f][j]))
+        #print("fmt ="+str(fmt))
+        #print("dar ="+str(dar))
         #print("source mul="+str(sr_mul))
         #print("dest   mul="+str(dst_mul))
         ar=source.width/((source.height*dst_mul)/(sr_mul))
+        #print("ar   ="+str(ar))
         if(False==useHeightAsReference):
             dest.height=dest.width/ar
+            #print("dest.height   ="+str(dest.height))
         else:
             dest.width=dest.height*ar
+            #print("dest.width   ="+str(dest.width))
         # Round up to 16
         dest.width=(dest.width+7)&0xfffff0
         dest.height=(dest.height+7)&0xfffff0
