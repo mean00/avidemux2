@@ -26,7 +26,7 @@ ADM_scriptDFMenuHelper::ADM_scriptDFMenuHelper(const char *title)
 ADM_scriptDFMenuHelper::~ADM_scriptDFMenuHelper(void)
 {
 	if (_title)
-		delete _title;
+		ADM_dealloc( _title);
 
 	_title = NULL;
 

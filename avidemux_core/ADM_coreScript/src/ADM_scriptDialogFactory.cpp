@@ -23,7 +23,7 @@ ADM_scriptDialogFactoryHelper::ADM_scriptDialogFactoryHelper(const char *title)
 ADM_scriptDialogFactoryHelper::~ADM_scriptDialogFactoryHelper(void)
 {
 	if (_title)
-		delete _title;
+		ADM_dealloc( _title);
 
 	_title = NULL;
 }

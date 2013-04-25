@@ -27,7 +27,7 @@ ADM_scriptDFIntegerHelper::ADM_scriptDFIntegerHelper(const char *title,int32_t m
 ADM_scriptDFIntegerHelper::~ADM_scriptDFIntegerHelper(void)
 {
 	if (_title)
-		delete _title;
+		ADM_dealloc( _title);
 
 	_title = NULL;
 

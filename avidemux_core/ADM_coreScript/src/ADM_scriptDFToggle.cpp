@@ -25,7 +25,7 @@ ADM_scriptDFToggleHelper::ADM_scriptDFToggleHelper(const char *title)
 ADM_scriptDFToggleHelper::~ADM_scriptDFToggleHelper(void)
 {
 	if (_title)
-		delete _title;
+		ADM_dealloc( _title);
 
 	_title = NULL;
 

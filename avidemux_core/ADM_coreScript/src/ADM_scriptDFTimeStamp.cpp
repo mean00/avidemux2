@@ -32,7 +32,7 @@ ADM_scriptDFTimeStampHelper::ADM_scriptDFTimeStampHelper(const char *title,uint3
 ADM_scriptDFTimeStampHelper::~ADM_scriptDFTimeStampHelper(void)
 {
 	if (_title)
-		delete _title;
+		ADM_dealloc( _title);
 	_title = NULL;
 }
 
