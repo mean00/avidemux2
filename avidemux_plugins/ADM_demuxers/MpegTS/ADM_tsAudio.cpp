@@ -91,12 +91,23 @@ uint32_t  ADM_tsAccess::getLength(void)
 }
 /**
     \fn getDurationInUs
+    \brief Rememember seekPoint.dts time is already scaled and in us
 */
 uint64_t  ADM_tsAccess::getDurationInUs(void)
 {
     if(!seekPoints.size()) return 0;
     // Take last seek point; should be accurate enough
-    return timeConvert(seekPoints[seekPoints.size()-1].dts);
+    int offset=seekPoints.size()-1;
+    while(offset)
+    {
+        uint64_t dts=seekPoints[offset].dts;
+        if(dts==ADM_NO_PTS)
+        {
+            offset--;
+            continue;
+        }
+        return dts;
+    }
 }
 /**
     \fn goToTime
