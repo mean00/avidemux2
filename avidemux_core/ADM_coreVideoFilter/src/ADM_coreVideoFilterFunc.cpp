@@ -22,6 +22,12 @@ bool ADM_vf_clearFilters(void)
     }
 
     ADM_VideoFilters.clear();
+    // delete bridge also...
+    if(bridge)
+    {
+        delete bridge;
+        bridge=NULL;
+    }
 
     return true;
 }
