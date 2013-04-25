@@ -1162,6 +1162,35 @@ tp_obj tp_printf(TP, char const *fmt,...) {
     va_end(arg);
     return tp_track(tp,r);
 }
+// force decimal separator to be a "."
+tp_obj tp_printfFloat(TP, char const *fmt,...) {
+    int l;
+    tp_obj r;
+    char *s;
+    va_list arg;
+    va_start(arg, fmt);
+    l = vsnprintf(NULL, 0, fmt,arg);
+    r = tp_string_t(tp,l);
+    s = r.string.info->s;
+    va_end(arg);
+    va_start(arg, fmt);
+    vsprintf(s,fmt,arg);
+    int length=strlen(s);
+    char *a=s,*end=s+length;
+    while(a<end)
+    {
+        if(*a==',') 
+        {
+                *a='.';
+                break;
+        }
+        a++;
+    }
+    va_end(arg);
+    return tp_track(tp,r);
+}
+
+
 
 int _tp_str_index(tp_obj s, tp_obj k) {
     int i=0;
@@ -1853,7 +1882,7 @@ tp_obj tp_str(TP,tp_obj self) {
     if (type == TP_NUMBER) {
         tp_num v = self.number.val;
         if ((fabs(v)-fabs((long)v)) < 0.000001) { return tp_printf(tp,"%ld",(long)v); }
-        return tp_printf(tp,"%f",v);
+        return tp_printfFloat(tp,"%f",v);
     } else if(type == TP_DICT) {
         return tp_printf(tp,"<dict 0x%x>",self.dict.val);
     } else if(type == TP_LIST) {
