@@ -89,9 +89,10 @@ again:
     if(count) return false;
     printf("[TSDemuxer] Analyzing file..\n");
     count++;
-    free(index);
+    
   
     if(true==tsIndexer(fileName)) goto again;
+    free(index);
     printf("[TSDemuxer] Failed..\n");
    return 0;
 }

@@ -142,6 +142,8 @@ protected:
         // H264
         bool                    addUnit(indexerData &data,int unitType,const H264Unit &unit,uint32_t overRead);
         bool                    dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket);
+        #define                 ADM_NAL_BUFFER_SIZE (2*1024) // only used to decode SEI, should plenty enough
+        uint8_t                 payloadBuffer[ADM_NAL_BUFFER_SIZE];
 public:
                 TsIndexer(listOfTsAudioTracks *tr);
                 ~TsIndexer();

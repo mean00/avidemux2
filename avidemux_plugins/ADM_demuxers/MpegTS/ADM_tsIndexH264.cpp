@@ -26,7 +26,8 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                 pictureStructure *picStruct)
 {
     
-    uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
+    
+    ADM_assert(nalSize+16<ADM_NAL_BUFFER_SIZE)
     uint8_t *payload=payloadBuffer;
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
@@ -85,8 +86,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                             break;
                 }
     }
-    if(payload+1<tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
-    free(payloadBuffer);
+    //if(payload+1<tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
     return r;
 }
 
