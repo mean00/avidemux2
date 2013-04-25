@@ -160,6 +160,7 @@ static float safeAtoF(const char *num)
         float scale = (float)0.0;
         if (*num== ('.')) {
                ++num;
+               if(*num) // handle 1. case (i.e. not 1.03 but 1.)
                do {
                       n = (n * 10.0) + (*num++ -  y('0'));
                       --scale;
