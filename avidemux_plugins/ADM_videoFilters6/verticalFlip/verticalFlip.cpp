@@ -83,7 +83,6 @@ void verticalFlipFilter::flipMe(uint8_t *data, uint32_t w,uint32_t h,uint32_t st
         memcpy(top, bottom,w);
         memcpy(bottom,scratch,w);
     }
-    free(scratch);
 }
 /**
     \fn getFrame
