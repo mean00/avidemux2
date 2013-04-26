@@ -40,16 +40,17 @@ private:
 
         asharp          _param;
         int32_t         T,D,B,B2;
+        uint8_t         *lineptr;
 
 public:
-                        ASharp(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
-                        ~ASharp();
+                            ASharp(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
+                            ~ASharp();
 
                void         update(void);
        virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-	   virtual void setCoupledConf(CONFcouple *couples);
+	   virtual bool     getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
+	   virtual void     setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface
 };
 
@@ -67,7 +68,7 @@ DECLARE_VIDEO_FILTER(   ASharp,   // Class
 
 void asharp_run_c(      uc* planeptr, int pitch,
                                         int height, int width,
-                                        int     T,int D, int B, int B2, bool bf );
+                                        int     T,int D, int B, int B2, bool bf,uint8_t *lineptr );
 /**
     \fn ASharp
     \brief ctor
@@ -82,6 +83,7 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
             _param.b=-1;
             _param.bf=false;
         }
+        lineptr=new uint8_t[info.width];
         update();
 
 }
@@ -92,7 +94,7 @@ ASharp::ASharp(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilte
 
 ASharp::~ASharp(void)
 {
-
+    delete [] lineptr;
 }
 /**
     \fn update
@@ -182,26 +184,28 @@ ADMImage *dst;
                         D,
                         B,
                         B2,
-                        _param.bf);
+                        _param.bf,lineptr);
         return 1;
 }
 
 /**
     \fn asharp_run_c
 */
-void asharp_run_c(      uc* planeptr, int pitch,
-                                        int height, int width,
-                                        int     T,int D, int B, int B2, bool bf )
+void asharp_run_c(      uc* planeptr,   int pitch,
+                        int height,     int width,
+                        int     T,      int D, int B, int B2, bool bf , uint8_t *lineptr)
         {
-                uc* lineptr = new uc[width];
                 int p = pitch;
                 int y,x;
                 uc* cfp = planeptr+pitch;
                 uc* lp = lineptr;
+                // initialize buffer
                 memcpy(lp,planeptr,width);
-                for (y=1;y<height-1;y++) {
+                for (y=1;y<height-2;y++) 
+                {
                         int last = cfp[0];
-                        for (x=0;x<width-1;x++) {
+                        for (x=1;x<width-2;x++) 
+                        {
 
                                 int avg = 0;
                                 int dev = 0;
@@ -222,65 +226,78 @@ void asharp_run_c(      uc* planeptr, int pitch,
                                 avg *= (65535/9);
                                 avg >>= 16;
 
-                                #define CHECK(A) \
-                                if (abs(A-cfp[x])>dev) dev = abs(A-cfp[x]);
-
-                                if (bf) {
-
-                                if (y%8>0) {
-                                        if (x%8>0) CHECK(lp[x-1])
-                                        CHECK(lp[x  ])
-                                        if (x%8<7) CHECK(lp[x+1])
-                                }
-                                if (x%8>0) CHECK(last)
-                                if (x%8<7) CHECK(cfp[x  +1])
-                                if (y%8<7) {
-                                        if (x%8>0) CHECK(cfp[x+p-1])
-                                        CHECK(cfp[x+p  ])
-                                        if (x%8<7) CHECK(cfp[x+p+1])
-                                }
+                                #define CHECK(A)  {int dif=abs(A-current);if(dif>dev) dev=dif;}
+                                uc current=cfp[x];
+                                int xmod8=x&7;
+                                int ymod8=y&7;
+                                if (bf) 
+                                {
+                                        if (ymod8) //if (y%8>0)
+                                        {
+                                                if (xmod8&7) CHECK(lp[x-1])
+                                                CHECK(lp[x  ])
+                                                if (xmod8<7) CHECK(lp[x+1])
+                                        }
+                                        if ((xmod8)) CHECK(last)
+                                        if (xmod8<7) CHECK(cfp[x  +1])
+                                        if (ymod8<7) 
+                                        {
+                                                if (xmod8>0) CHECK(cfp[x+p-1])
+                                                CHECK(cfp[x+p  ])
+                                                if (xmod8<7) CHECK(cfp[x+p+1])
+                                        }
 
                                 } else {
-                                        CHECK(lp[x-p-1])
-                                        CHECK(lp[x-p  ])
-                                        CHECK(lp[x-p+1])
+                                        CHECK(cfp[x-p-1])
+                                        CHECK(cfp[x-p  ])
+                                        CHECK(cfp[x-p+1])
                                         CHECK(last)
-                                        CHECK(cfp[x  +1])
+                                        CHECK(cfp[x+1  ])
                                         CHECK(cfp[x+p-1])
                                         CHECK(cfp[x+p  ])
                                         CHECK(cfp[x+p+1])
                                 }
 
                                 T2 = T;
-                                diff = cfp[x]-avg;
+                                diff = current-avg;
                                 int D2 = D;
 
-                                if (x%8==6) D2=(D2*B2)>>8;
-                                if (x%8==7) D2=(D2*B)>>8;
-                                if (x%8==0) D2=(D2*B)>>8;
-                                if (x%8==1) D2=(D2*B2)>>8;
-                                if (y%8==6) D2=(D2*B2)>>8;
-                                if (y%8==7) D2=(D2*B)>>8;
-                                if (y%8==0) D2=(D2*B)>>8;
-                                if (y%8==1) D2=(D2*B2)>>8;
-
+                                
+                                switch(xmod8)
+                                {
+                                        case 6: D2=(D2*B2)>>8;break;
+                                        case 7: D2=(D2*B)>>8;break;
+                                        case 0: D2=(D2*B)>>8;break;
+                                        case 1: D2=(D2*B2)>>8;break;
+                                        default:break;
+                                }
+                                
+                                
+                                switch(ymod8)
+                                {
+                                        case 6: D2=(D2*B2)>>8;break;
+                                        case 7: D2=(D2*B)>>8;break;
+                                        case 0: D2=(D2*B)>>8;break;
+                                        case 1: D2=(D2*B2)>>8;break;
+                                        default:break;
+                                }
+                                
                                 int Da = -32+(D>>7);
                                 if (D>0) T2 = ((((dev<<7)*D2)>>16)+Da)<<4;
 
                                 if (T2>T) T2=T;
                                 if (T2<-32) T2=-32;
 
-                                tmp = (((diff<<7)*T2)>>16)+cfp[x];
+                                tmp = (((diff<<7)*T2)>>16)+current;
 
                                 if (tmp < 0) tmp = 0;
                                 if (tmp > 255) tmp = 255;
                                 lp[x-1] = last;
-                                last = cfp[x];
+                                last = current;
                                 cfp[x] = tmp;
                         }
                         lp[x] = cfp[x];
                         cfp += pitch;
                 }
-        delete[] lineptr;
 }
 //**********************************

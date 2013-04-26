@@ -25,7 +25,7 @@ class flyASharp : public FLY_DIALOG_TYPE
 
 void asharp_run_c(      uc* planeptr, int pitch,
                                         int height, int width, 
-                                        int     T,int D, int B, int B2, bool bf );
+                                        int     T,int D, int B, int B2, bool bf,uint8_t *line );
 
 
 #endif

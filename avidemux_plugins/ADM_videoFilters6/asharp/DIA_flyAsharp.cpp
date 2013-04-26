@@ -72,6 +72,7 @@ uint32_t ww,hh;
                 if (B2>256) B2 = 256;
 
                 out->duplicateFull(in);
+                uint8_t *line=new uint8_t[ww];
                 asharp_run_c(     
                         out->GetWritePtr(PLANAR_Y),
                         out->GetPitch(PLANAR_Y), 
@@ -81,7 +82,8 @@ uint32_t ww,hh;
                         D,
                         B,
                         B2,
-                        param.bf);
+                        param.bf,line);
+                delete [] line;
     
     // Copy back half source to display
     dst=out->GetWritePtr(PLANAR_Y);
