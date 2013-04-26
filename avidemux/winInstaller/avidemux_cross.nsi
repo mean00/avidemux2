@@ -272,6 +272,7 @@ Section "Avidemux Core" SecCore
     SetOutPath $INSTDIR
     SetOverwrite on
     ${File} "./Build Info.txt"
+    ${File} "./last_changes.txt"
     ${File} "./Change Log.html"
 #
 #
