@@ -436,7 +436,8 @@ void ADM_initBaseDir(bool portableMode)
         else
         {
             printf("Oops: can't determine the Application Data folder.");
-            home = ADM_strdup("c:\\");
+            home=new char[10];
+            strcpy(home,"c:\\");
         }
     }
 #else
