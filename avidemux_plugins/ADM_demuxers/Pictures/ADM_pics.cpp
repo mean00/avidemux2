@@ -109,7 +109,7 @@ uint8_t picHeader::close(void)
 
 	if (_fileMask)
 	{
-		delete [] _fileMask;
+		ADM_dealloc(_fileMask);
 		_fileMask = NULL;
 	}
 

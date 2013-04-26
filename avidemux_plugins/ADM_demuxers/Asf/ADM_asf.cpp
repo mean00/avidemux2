@@ -87,7 +87,7 @@ uint8_t asfHeader::close(void)
   }
   if(myName)
   {
-    delete myName;
+    ADM_dealloc(myName);
     myName=NULL; 
   }
   if(_videoExtraData)
