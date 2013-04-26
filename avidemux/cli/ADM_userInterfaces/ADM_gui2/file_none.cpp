@@ -82,3 +82,8 @@ uint8_t UI_getPhysicalScreenSize(void *window, uint32_t *w,uint32_t *h)
 
   return 1;
 }
+
+void UI_setAudioTrackCount( int nb )
+{
+    
+}

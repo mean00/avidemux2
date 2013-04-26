@@ -1597,4 +1597,11 @@ bool UI_getTimeShift(int *onoff, int *value)
  *onoff=*value=0;
  return true;
 }
+/**
+        \fn UI_setAudioTrackCount
+*/
+void UI_setAudioTrackCount( int nb )
+{
+        return;
+}
 // EOF

@@ -1304,5 +1304,16 @@ void UI_deiconify( void )
     QuiMainWindows->showNormal();
 
 }
+/**
+    \fn UI_deiconify
+*/
+void UI_setAudioTrackCount( int nb )
+{
+    char txt[50];
+    sprintf(txt," (%d track(s))",nb);
+     WIDGET(TrackCountLabel)->setText(QString(txt));
+
+}
+
 //********************************************
 //EOF

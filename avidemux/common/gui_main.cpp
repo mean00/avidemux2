@@ -713,6 +713,7 @@ void  updateLoaded ()
     GUI_setAllFrameAndTime();
     A_ResetMarkers();
     A_Rewind();
+    UI_setAudioTrackCount( video_body->getNumberOfActiveAudioTracks() );
     ADM_info(" conf updated \n");
     UI_setDecoderName(video_body->getVideoDecoderName());
 
@@ -992,7 +993,7 @@ void A_audioTrack( void )
             UI_setAudioCodec(ed->encoderIndex);
             UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
         }
-
+        UI_setAudioTrackCount( video_body->getNumberOfActiveAudioTracks() );
 }
 #if 0
         audioInfo *infos=NULL;
