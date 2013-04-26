@@ -142,11 +142,11 @@ static tp_obj zzpy__pyGui_help(TP)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileWriteSelect(IEditor,str)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayError(IEditor,str,str)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dirSelect(IEditor,str)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayInfo(IEditor,str,str)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileReadSelect(IEditor,str)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileWriteSelect(IEditor,str)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayError(IEditor,str,str)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dirSelect(IEditor,str)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayInfo(IEditor,str,str)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileReadSelect(IEditor,str)\n");
 
 	return tp_None;
 };

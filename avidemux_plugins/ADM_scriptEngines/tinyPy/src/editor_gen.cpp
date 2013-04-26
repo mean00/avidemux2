@@ -208,16 +208,16 @@ static tp_obj zzpy__pyEditor_help(TP)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "printTiming(IEditor,int)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "hexDumpFrame(IEditor,int)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoDuration(void)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getDts(IEditor,int)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpSegment(int)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpRefVideo(void)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nbSegments(void)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpAllSegments(void)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getFrameSize(int)");
-	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPts(IEditor,int)");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "printTiming(IEditor,int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "hexDumpFrame(IEditor,int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoDuration(void)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getDts(IEditor,int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpSegment(int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpRefVideo(void)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "nbSegments(void)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dumpAllSegments(void)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getFrameSize(int)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPts(IEditor,int)\n");
 
 	return tp_None;
 };
