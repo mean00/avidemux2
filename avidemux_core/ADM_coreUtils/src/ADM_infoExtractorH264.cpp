@@ -379,7 +379,8 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
     
-    uint8_t *payload=(uint8_t *)malloc(nalSize+16);
+    uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
+    uint8_t *payload=payloadBuffer;
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
     uint8_t *tail=payload+nalSize;
@@ -408,7 +409,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                             break;
                 }
     }
-    free(payload);
+    free(payloadBuffer);
     return r;
 }
 /**
